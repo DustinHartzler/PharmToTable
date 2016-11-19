@@ -18,6 +18,7 @@ class SyncDeactivate
 		if ('1' === SyncOptions::get('remove', '0')) {
 			$this->remove_database_tables();
 			$this->remove_options();
+			$this->remove_transients();
 		}
 
 		return TRUE;
@@ -33,7 +34,7 @@ class SyncDeactivate
 		$tables = array(
 			'sync_log',
 			'sync',
-			'sources',
+			'sync_sources',
 			'sync_media',
 		);
 
@@ -53,6 +54,20 @@ class SyncDeactivate
 
 		foreach ($options as $option)
 			delete_option($option);
+	}
+
+	/**
+	 * Removes all transients
+	 */
+	protected function remove_transients()
+	{
+		$trans_keys = array(
+			'wpsitesync_extension_list',
+		);
+
+		foreach ($trans_keys as $trans_key) {
+			delete_transient($trans_key);
+		}
 	}
 
 	/**

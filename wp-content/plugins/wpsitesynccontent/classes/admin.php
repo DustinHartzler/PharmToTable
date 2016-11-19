@@ -58,7 +58,6 @@ class SyncAdmin
 		wp_register_script('sync-settings', WPSiteSyncContent::get_asset('js/settings.js'), array('jquery'), WPSiteSyncContent::PLUGIN_VERSION, TRUE);
 
 		wp_register_style('sync-admin', WPSiteSyncContent::get_asset('css/sync-admin.css'), array(), WPSiteSyncContent::PLUGIN_VERSION, 'all');
-		wp_register_style('font-awesome', WPSiteSyncContent::get_asset('css/font-awesome.min.css'), array(), WPSiteSyncContent::PLUGIN_VERSION, 'all');
 
 		$screen = get_current_screen();
 		// load resources only on Sync settings page or page/post editor
@@ -68,7 +67,7 @@ class SyncAdmin
 			if ('post.php' === $hook_suffix && 'add' !== $screen->action)
 				wp_enqueue_script('sync');
 
-			$option_data = array('site_key' => WPSiteSyncContent::get_option('site_key'));
+			$option_data = array('site_key' => SyncOptions::get('site_key'));
 			wp_localize_script('sync-settings', 'syncdata', $option_data);
 
 			wp_enqueue_style('sync-admin');
@@ -122,7 +121,7 @@ class SyncAdmin
 		echo '<div class="sync-panel sync-panel-left">';
 		echo '<span>', __('Push content to Target: ', 'wpsitesynccontent'), '<br/>',
 			sprintf('<span title="%2$s"><b>%1$s</b></span>',
-				WPSiteSyncContent::get_option('host'),
+				SyncOptions::get('host'),
 				esc_attr(__('The "Target" is the WordPress install that the Content will be pushed to.', 'wpsitesynccontent'))),
 			'</span>';
 		echo '</div>'; // .sync-panel-left
@@ -185,7 +184,7 @@ class SyncAdmin
 		echo '<div id="sync-working-msg"><img src="', WPSiteSyncContent::get_asset('imgs/ajax-loader.gif'), '" />', '</div>';
 		echo '<div id="sync-success-msg">', __('Content successfully sent to Target system.', 'wpsitesynccontent'), '</div>';
 		if (!class_exists('WPSiteSync_Pull', FALSE))
-				echo '<div id="sync-pull-msg"><div style="color: #0085ba;">', __('Coming soon in Premium Membership!', 'wpsitesynccontent'), '</div></div>';
+				echo '<div id="sync-pull-msg"><div style="color: #0085ba;">', __('Please activate the Pull extension.', 'wpsitesynccontent'), '</div></div>';
 		echo '</div>';
 
 		echo '</div>'; // #sync-contents
@@ -262,7 +261,7 @@ SyncDebug::log(__METHOD__.'():' . __LINE__ . ' - result data: ' . var_export($re
 						$pull_active = FALSE;
 					} else if (0 !== $response_body->error_code) {
 						$msg = $api->error_code_to_string($response_body->error_code);
-						echo '<p>', sprintf(__('Error #%1$d: %2$s', 'wpsitesync-pull'), $response_body->error_code, $msg), '</p>';
+						echo '<p>', sprintf(__('Error #%1$d: %2$s', 'wpsitesynccontent'), $response_body->error_code, $msg), '</p>';
 						$pull_active = FALSE;
 					}
 				}

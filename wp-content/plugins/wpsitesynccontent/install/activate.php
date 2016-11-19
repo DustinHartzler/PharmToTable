@@ -126,8 +126,17 @@ SyncDebug::log(__METHOD__.'()');
 		$charset_collate = '';
 		if (!empty($wpdb->charset))
 			$charset_collate = " DEFAULT CHARACTER SET {$wpdb->charset} ";
-		if (!empty($wpdb->collate))
-			$charset_collate .= " COLLATE {$wpdb->collate} ";
+
+		// determine default collation for tables being created
+		$collate = NULL;
+		if (defined('DB_COLLATE'))
+			$collate = DB_COLLATE;							// if the constant is declared, use it
+		if ('utf8_unicode_ci' === $collate)					// fix for CREATE TABLEs on WPEngine
+			$collate = 'utf8mb4_unicode_ci';
+		if (empty($collate) && !empty($wpdb->collate))		// otherwise allow wpdb class to specify
+			$collate = $wpdb->collate;
+		if (!empty($collate))
+			$charset_collate .= " COLLATE {$collate} ";
 
 		$aTables = $this->get_table_data();
 		foreach ($aTables as $table => $sql) {

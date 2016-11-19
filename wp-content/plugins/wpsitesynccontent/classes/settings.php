@@ -10,7 +10,7 @@ class SyncSettings extends SyncInput
 {
 	private static $_instance = NULL;
 
-	private $_options = array();
+//	private $_options = array();
 	private $_tab = '';
 
 	const SETTINGS_PAGE = 'sync';		// TODO: update name
@@ -21,7 +21,7 @@ class SyncSettings extends SyncInput
 		add_action('admin_init', array(&$this, 'settings_api_init'));
 		add_action('load-settings_page_sync', array(&$this, 'contextual_help'));
 
-		$this->_options = SyncOptions::get_all();
+//		$this->_options = SyncOptions::get_all();
 	}
 
 	/*
@@ -40,11 +40,13 @@ class SyncSettings extends SyncInput
 	 * @param string $option The key for the option under OPTION_KEY
 	 * @param string $default (optional) The default value to be returned
 	 * @return mixed The value if it exists, else $default
+	 * @deprecated
 	 */
-	public function get_option($option, $default = NULL)
+/*	public function get_option($option, $default = NULL)
 	{
+		// TODO: remove this method
 		return isset($this->_options[$option]) ? $this->_options[$option] : $default;
-	}
+	} */
 
 	/**
 	 * Adds the Sync settings menu to the Setting section.
@@ -82,7 +84,6 @@ class SyncSettings extends SyncInput
 	{
 //SyncDebug::log(__METHOD__.'() tab=' . $this->_tab);
 		wp_enqueue_script('sync-settings');
-		wp_enqueue_style('font-awesome');
 
 		do_action('spectrom_sync_before_render_settings');
 		$extensions = SyncExtensionModel::get_extensions(TRUE);
@@ -137,6 +138,8 @@ class SyncSettings extends SyncInput
 			break;
 
 		case 'extensions':
+//			$ext = SyncExtensionSettings::get_instance();
+//			$ext->show_settings();
 			break;
 
 		case 'license':
@@ -153,7 +156,7 @@ class SyncSettings extends SyncInput
 		do_settings_sections('sync');
 		submit_button(); 
 		echo '</form>';
-		echo '<p>', __('WPSiteSync for Content Site key: ', 'wpsitesynccontent'), '<b>', $this->get_option('site_key'), '</b></p>';
+		echo '<p>', __('WPSiteSync for Content Site key: ', 'wpsitesynccontent'), '<b>', SyncOptions::get('site_key'), '</b></p>';
 		echo '</div><!-- #tab_container -->';
 	}
 
@@ -173,6 +176,8 @@ class SyncSettings extends SyncInput
 			$this->_init_general_settings();
 			break;
 		case 'extensions':
+//			$ext = SyncExtensionSettings::get_instance();
+//			$ext->init_settings();
 			break;
 		case 'license':
 			$lic = new SyncLicenseSettings();
@@ -191,7 +196,7 @@ class SyncSettings extends SyncInput
 	private function _init_general_settings()
 	{
 //SyncDebug::log(__METHOD__.'() tab=' . $this->_tab);
-		$option_values = $this->_options;
+		$option_values = SyncOptions::get_all(); // $this->_options;
 
 		$default_values = apply_filters('spectrom_sync_default_settings',
 			// TODO: get this list from the SyncOptions class
@@ -250,7 +255,7 @@ class SyncSettings extends SyncInput
 				'name' => 'username',
 				'size' => '50',
 				'value' => $data['username'],
-				'description' => __('Username on Target to authenticate API calls with. Must be able to create Content with this username.', 'wpsitesynccontent'),
+				'description' => __('Username on Target for authentication. Must be able to create Content with this username.', 'wpsitesynccontent'),
 			)
 		);
 
@@ -390,6 +395,19 @@ class SyncSettings extends SyncInput
 	}
 
 	/**
+	 * Renders a message as part of the settings/form
+	 * @param array $args Arguments used to construct the message
+	 */
+	public function render_message_field($args)
+	{
+		$class = '';
+		if (!empty($args['class']))
+			$class = ' class="' . $args['class'] . '" ';
+		if (!empty($args['description']))
+			echo "<p {$class}>", esc_html($args['description']), '</p>';
+	}
+
+	/**
 	 * Renders the radio buttons used for the control
 	 * @param array $args Arguments used to render the radio buttons
 	 */
@@ -458,22 +476,28 @@ class SyncSettings extends SyncInput
 			return array();
 
 //SyncDebug::log(__METHOD__.'() values=' . var_export($values, TRUE));
-		$settings = $this->_options;
+		$settings = SyncOptions::get_all(); // $this->_options;
 //SyncDebug::log(__METHOD__.'() settings: ' . var_export($settings, TRUE));
 
 		// start with a copy of the current settings so that 'site_key' and other hidden values are preserved on update
 		$out = array_merge($settings, array());
 
 		$missing_error = FALSE;
+		$re_auth = FALSE;
 		foreach ($values as $key => $value) {
 //SyncDebug::log(" key={$key}  value=[{$value}]");
 			if (empty($values[$key]) && 'password' === $key) {
 				// ignore this so that passwords are not required on every settings update
-//				$out[$key] = $settings[$key];
 			} else {
-				if ('host' === $key && FALSE === filter_var($value, FILTER_VALIDATE_URL)) {
-					add_settings_error('sync_options_group', 'invalid-url', __('Invalid URL.', 'wpsitesynccontent'));
-					$out[$key] = $settings[$key];
+				if ('host' === $key) {
+					if (FALSE === $this->_is_valid_url($value)) {
+						add_settings_error('sync_options_group', 'invalid-url', __('Invalid URL.', 'wpsitesynccontent'));
+						$out[$key] = $settings[$key];
+					} else {
+						$out[$key] = $value;
+						if ($out[$key] !== $settings[$key])
+							$re_auth = TRUE;
+					}
 				} else if (0 === strlen(trim($value))) {
 					if (!$missing_error) {
 						add_settings_error('sync_options_group', 'missing-field', __('All fields are required.', 'wpsitesynccontent'));
@@ -486,13 +510,19 @@ class SyncSettings extends SyncInput
 						$out[$key] = $value;
 				} else {
 					$out[$key] = $value;
+					if ('username' === $key && $out[$key] !== $settings[$key])
+						$re_auth = TRUE;
 				}
 			}
 		}
 //SyncDebug::log(__METHOD__.'()  output array: ' . var_export($out, TRUE));
 
-		// authenticate if there was a password provided
-		if (!empty($out['password'])) {
+		// authenticate if there was a password provided or the host/username are different
+		if ($re_auth && empty($out['password'])) {
+			add_settings_error('sync_options_group', 'no-password', __('Changed Host Name of Target or Username but did not provide password.', 'wpsitesynccontent'));
+			$re_auth = FALSE;
+		}
+		if (!empty($out['password']) || $re_auth) {
 			$out['auth'] = 0;
 
 //SyncDebug::log(__METHOD__.'() authenticating with data ' . var_export($out, TRUE));
@@ -523,6 +553,25 @@ class SyncSettings extends SyncInput
 	}
 
 	/**
+	 * Performs validation on URL. Note: filter_var() checks for schema but does not validate it. Also allows trailing '.' characters
+	 * @param string $url The URL to validate
+	 * @return boolean TRUE on successful validation; FALSE on failure
+	 */
+	private function _is_valid_url($url)
+	{
+		$res = filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED);
+		if (FALSE === $res)
+			return FALSE;
+
+		if (0 !== stripos($url, 'http://') && 0 !== stripos($url, 'https://'))
+			return FALSE;
+		else if ('.' === substr($url, -1))
+			return FALSE;
+
+		return TRUE;
+	}
+
+	/**
 	 * Callback for adding contextual help to Sync Settings page
 	 */
 	public function contextual_help()
@@ -534,11 +583,11 @@ class SyncSettings extends SyncInput
 		$screen->set_help_sidebar(
 			'<p><strong>' . __('For more information:', 'wpsitesynccontent') . '</strong></p>' .
 			'<p>' . sprintf(__('Visit the <a href="%s" target="_blank">documentation</a> on the WPSiteSync for Content website.', 'wpsitesynccontent'),
-						esc_url('https://wpsitesync.com/documentation/')) . '</p>' .
+						esc_url('http://wpsitesync.com/knowledgebase/use-wpsitesync-content/')) . '</p>' .
 			'<p>' . sprintf(
 						__('<a href="%s" target="_blank">Post an issue</a> on <a href="%s" target="_blank">GitHub</a>.', 'wpsitesynccontent'),
-						esc_url('https://github.com/ServerPress/sync/issues'),
-						esc_url('https://github.com/ServerPress/sync/')) .
+						esc_url('https://github.com/ServerPress/wpsitesync/issues'),
+						esc_url('https://github.com/ServerPress/wpsitesync')) .
 			'</p>'
 		);
 

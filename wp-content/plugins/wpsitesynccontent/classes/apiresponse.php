@@ -27,9 +27,16 @@ class SyncApiResponse implements SyncApiHeaders
 
 	public $data = array();
 
+	private $_headers_sent = FALSE;				// TRUE when headers are sent on instantiation
+	private $_capture = FALSE;					// TRUE when capturing output
+
 	// constructor
-	public function __construct()
+	public function __construct($send_headers = FALSE)
 	{
+		if ($send_headers) {
+			$this->_send_headers(TRUE);
+		}
+
 		if (!is_user_logged_in())
 			$this->session_timeout = 1;
 	}
@@ -169,10 +176,7 @@ if ('error' === $sName) SyncDebug::log(__METHOD__.'() called with data value "er
 		if ($this->nosend)
 			return;
 
-		global $wp_version;
-		header(self::HEADER_SYNC_VERSION . ': ' . WPSiteSyncContent::PLUGIN_VERSION);		// send this header so sources will know that they're talking to SYNC
-		header(self::HEADER_WP_VERSION . ': ' . $wp_version);								// send this header so sources will know that they're talking to WP
-		header('Content-Type: application/json');
+		$this->_send_headers();
 
 		if ($this->has_errors()) {
 			$this->success = 0;					// force this
@@ -184,6 +188,31 @@ if ('error' === $sName) SyncDebug::log(__METHOD__.'() called with data value "er
 
 		if ($exit)
 			exit(0);							// stop script
+	}
+
+	/**
+	 * Send the HTTP headers for the JSON response
+	 */
+	private function _send_headers($capture = FALSE)
+	{
+		if (!$this->_headers_sent) {
+			global $wp_version;
+
+			header(self::HEADER_SYNC_VERSION . ': ' . WPSiteSyncContent::PLUGIN_VERSION);		// send this header so sources will know that they're talking to SYNC
+			header(self::HEADER_WP_VERSION . ': ' . $wp_version);								// send this header so sources will know that they're talking to WP
+			header('Content-Type: application/json');
+			$this->_headers_sent = TRUE;
+
+			if ($this->_capture) {
+				// headers have already been sent and ob_start() has been called.
+				// clear the output buffer so our JSON data can be sent
+				ob_get_clean();
+			}
+			if ($capture) {
+				ob_start();
+				$this->_capture = TRUE;
+			}
+		}
 	}
 
 	/**

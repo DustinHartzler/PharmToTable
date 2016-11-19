@@ -181,12 +181,16 @@ SyncDebug::log(__METHOD__.'() sql=' . $sql . ' returned ' . var_export($ret, TRU
 		$args = array(
 			'p' => $post_id,
 			'post_type' => apply_filters('spectrom_sync_allowed_post_types', array('post', 'page')),
+			'post_status' => array('publish', 'pending', 'draft', 'future', 'private', 'trash'),
 			'posts_per_page' => 1,
 		);
 
 		$query = new WP_Query($args);
 		// TODO: add failure checking
 SyncDebug::log(__METHOD__.'() post id=' . $post_id);
+
+		if (0 === $query->found_posts)
+			return $push_data;
 
 		$push_data['post_data'] = (array) $query->posts[0];
 

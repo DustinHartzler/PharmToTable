@@ -35,7 +35,6 @@ class SyncAuth extends SyncInput
 
 //SyncDebug::log(__METHOD__.'() authenticating via token');
 //SyncDebug::log(' - source: ' . $source . ' site_key: ' . $site_key . ' user: ' . $username . ' token: ' . $token);
-### $site_key = ''; ###
 			$user_signon = $source_model->check_auth($source, $site_key, $username, $token);
 //SyncDebug::log(__METHOD__.'() source->check_auth() returned ' . var_export($user_signon, TRUE));
 		} else {
@@ -151,7 +150,9 @@ class SyncAuth extends SyncInput
 		$iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
 		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
 		$cleartext = mcrypt_decrypt(MCRYPT_BLOWFISH, $key, $decoded, MCRYPT_MODE_ECB, $iv);
-//SyncDebug::log('  cleartext: ' . $cleartext);
+//SyncDebug::log('  cleartext: ' . var_export($cleartext, TRUE));
+		$cleartext = trim($cleartext, "\0");
+//SyncDebug::log('  cleartext: ' . var_export($cleartext, TRUE));
 		return $cleartext;
 	}
 

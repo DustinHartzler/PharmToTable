@@ -3,7 +3,7 @@ Contributors: serverpress, spectromtech, davejesch, Steveorevo
 Donate link: http://wpsitesync.com
 Tags: attachments, content, content sync, data migration, desktopserver, export, import, migrate content, moving data, staging, synchronization, taxonomies
 Requires at least: 3.5
-Tested up to: 4.5
+Tested up to: 4.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -20,16 +20,16 @@ WPSiteSync for Content helps Designers, Developers and Content Creators Synchron
 
 [youtube https://www.youtube.com/watch?v=KpeiTMbdj_Y]
 
-><strong>Support Details:</strong> We are happy to provide support and help troubleshoot issues. Visit our Contact page at <a href="http://serverpress.com/contact/" target="_blank">http://serverpress.com/contact/</a>. Users should know however, that we check the WordPress.org support forums once a week on Fridays from 10am to 12pm PST (UTC -8).
+><strong>Support Details:</strong> We are happy to provide support and help troubleshoot issues. Visit our Contact page at <a href="http://serverpress.com/contact/" target="_blank">http://serverpress.com/contact/</a>. Users should know however, that we check the WordPress.org support forums once a week on Wednesdays from 6pm to 8pm PST (UTC -8).
 
 The <em>WPSiteSync for Content</em> plugin was specifically designed to ease your workflow when creating content between development, staging and live servers. The tool removes the need to migrate an entire database, potentially overwriting new content on the live site, just to update a few pages or posts. Now you can easily move your content from one install to another with the click of a button, reducing errors and saving you time.
 
-While WPSiteSync for Content is optimized to work with local development tools such as DesktopServer, it is designed to be fully functional in any WordPress environment.
+WPSiteSync for Content is fully functional in any WordPress environment.  We recommend using DesktopServer, but it is not a requirement.
 
 
 <strong>This benefits the Development Workflow in more ways than one:</strong>
 
-* Real-Time Sync eliminates data loss such as Comments.
+* Real-Time LIVE Sync eliminates data loss such as Comments.
 * Saving development time with No files to backup, download and upload.
 * Limit mistakes copying and pasting.
 * Client Approval on Staging site is now Faster and Easier than ever.
@@ -46,12 +46,16 @@ While WPSiteSync for Content is optimized to work with local development tools s
 * Taxonomy such as Tags and Categories
 * And much much more
 
-<strong>In our Early Adopter Add-On Program, you will also Receive:</strong>
+<strong>In our Early Adopter Trailblazer Program, you will also Receive:</strong>
 
 * WPSiteSync for Bi-Directional Pull (Syncing from Live to Staging)
 * WPSiteSync for Custom Post Types
 * WPSiteSync for Author Attribution
-* WPSiteSync for Comments (coming soon!)
+* WPSiteSync for Comments
+* WPSiteSync for BulkActions
+* WPSiteSync for BeaverBuilder
+* WPSiteSync for Genesis Settings
+* WPSiteSync for WooCommerce Products
 * FULL access to ALL future Premium Extensions
 
 <strong>For more perks such as Early Access</strong> and <strong>Exclusive Preview</strong> of upcoming Features, please visit us at <a href="https://wpsitesync.com">WPSiteSync.com</a>
@@ -106,6 +110,31 @@ More complex data, such as WooCommerce products, Forms (like Gravity Forms or Ni
 2. WPSiteSync for Content metabox.
 
 == Changelog ==
+= 1.2.2 - Oct 7, 2016 =
+* Fix: Add missing file.
+
+= 1.2.1 - Oct 7, 2016 =
+* Fix: Update collation on created table for some hosts.
+* Enhancement: Add checks for updates to add-ons via WPSiteSync.com site.
+* Fix: Sanitize password hash for encryption algorithms. (thanks Jonah W.)
+* Enhancement: Specify timeout for API calls.
+* Enhancement: Remove any error output interfering with JSON data in API calls.
+* Enhancement: Improve error handling/recovery on API calls.
+* Fix: Update checks for allowed post types. (thanks Cathy E.)
+* Enhancement: Improve UX for License Keys.
+
+= 1.2 - Sep 7, 2016 =
+* Fix: Changes to resolve authentication issues. (thanks to Craig S., Cathy E., Josh C. and Jason H.)
+* Enhancement: Some optimizations and code cleanup.
+* Enhancement: Updates in the Settings page for validating URLs. (thanks to Craig S.)
+* Fix: Fixing a table name reference when removing tables on uninstall.
+* Enhancement: Code to protect JSON data being returned via API calls when third-party plugins throw runtime errors.
+* Fix: Fix URL references in the Help text. (thanks to Pedro M.)
+* Fix: Fix text domain reference. (thanks to Pedro M.)
+* Fix: authentication token save. (thanks to Jeff C.)
+* Enhancement: Changes to allow new features in upcoming add-ons.
+* Enhancement: Change API code to work with any Permalink setting on Target site.
+
 = 1.1.1 - Jul 20, 2016 =
 * Fix for authentication issues that sometimes occur after initial credentials are entered.
 

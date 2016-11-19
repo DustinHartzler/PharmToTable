@@ -27,7 +27,7 @@ class SyncApiModel
 		if (is_admin())
 			return;
 
-SyncDebug::log(__METHOD__.'() request uri=' . $_SERVER['REQUEST_URI']);
+//SyncDebug::log(__METHOD__.'() request uri=' . $_SERVER['REQUEST_URI']);
 		add_filter('request', array(&$this, 'set_query_var'));
 		// hook in late to allow other plugins to operate earlier
 		add_action('template_redirect', array(&$this, 'render'), 100);
@@ -75,6 +75,7 @@ SyncDebug::log(__METHOD__.'() request uri=' . $_SERVER['REQUEST_URI']);
 	 */
 	public function set_query_var(array $vars)
 	{
+//SyncDebug::log(__METHOD__.'() vars=' . var_export($vars, TRUE));
 		if (!empty($vars[$this->options['name']]))
 			return $vars;
 
@@ -103,7 +104,7 @@ SyncDebug::log(__METHOD__.'() api=' . var_export($api, TRUE));
 			return;
 
 		$parts = explode('/', $api);
-SyncDebug::log(__METHOD__.'() parts=' . var_export($parts, TRUE));
+//SyncDebug::log(__METHOD__.'() parts=' . var_export($parts, TRUE));
 
 		// spectrom - using json only for now
 		// $type = array_shift($parts);
@@ -112,13 +113,16 @@ SyncDebug::log(__METHOD__.'() parts=' . var_export($parts, TRUE));
 
 		// TODO: this can be simplified. assume only Sync callback are made, which will always be array type
 		if (is_string($callback)) {
+//SyncDebug::log(__METHOD__.'() string callback');
 			call_user_func($callback, $values);
 		} else if (is_array($callback)) {
+//SyncDebug::log(__METHOD__.'() array callback');
 			if ('__construct' === $callback[1])
 				new $callback[0]($values);
 			else if (is_callable($callback))
 				call_user_func($callback, $values);
 		} else {
+//SyncDebug::log(__METHOD__.'() no callback');
 			// TODO: use exception
 			trigger_error(
 				sprintf(__('Cannot call your callback: %s', 'wpsitesynccontent'), var_export($callback, TRUE)),
@@ -127,6 +131,7 @@ SyncDebug::log(__METHOD__.'() parts=' . var_export($parts, TRUE));
 		}
 
 		// WP will render main page if we leave this out
+		// TODO: shouldn't be needed. SyncApiController calls die() when sending results
 		exit;
 	}
 

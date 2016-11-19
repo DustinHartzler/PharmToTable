@@ -16,6 +16,9 @@
 	background-size: contain; /* 100px 82px; */
 	vertical-align: top;
 }
+.notice #sync-logo {
+	margin-top: .5rem;
+}
 #spectrom_sync {
 /*	border-color: #21759b; */
 	border: 1px solid #4accf6;
@@ -163,25 +166,6 @@ width: 100%;
 	width: 80px;
 	margin: 0 .7rem;
 }
-/* TODO: can be removed?? */
-/*.spectrom-sync-settings div.spectrom-mkt-right {
-  float: right;
-  display: inline-block;
-  width: 300px;
-  padding: 0 5px;
-  margin: 25px 0 0 0;
-  height: 100%;
-  min-height: 100px;
-}
-.spectrom-sync-settings div.spectrom-mkt-right div.spectrom-logo {
-	width: 100%;
-width: 260px;
-	height: 150px;
-	background-image: url('../imgs/spectrom.png');
-	background-repeat: no-repeat;
-	background-size: contain;
-	background-position: center;
-} */
 
 .spectrom-sync-settings div.spectrom-page {
 	float: left;

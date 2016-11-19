@@ -35,6 +35,7 @@ class SyncApiController extends SyncInput implements SyncApiHeaders
 	 */
 	public function __construct($args)
 	{
+//SyncDebug::log(__METHOD__.'() args=' . var_export($args, TRUE));
 		self::$_instance = $this;
 		$this->args = $args;
 
@@ -46,7 +47,7 @@ class SyncApiController extends SyncInput implements SyncApiHeaders
 		if (isset($args['response']))
 			$response = $args['response'];
 		else
-			$response = new SyncApiResponse();
+			$response = new SyncApiResponse(TRUE);
 
 		if (isset($args['site_key']))
 			$response->nosend = TRUE;
@@ -68,8 +69,10 @@ SyncDebug::log(' sync_nonce=' . $this->get('_spectrom_sync_nonce') . '  site_key
 //			$response->error_code(SyncApiRequest::ERROR_SESSION_EXPIRED);
 			$response->send();		// calls die()
 		}
+
+//SyncDebug::log(__METHOD__.'():' . __LINE__ . ' checking auth argument args=' . var_export($args, TRUE));
 		if (isset($args['auth']) && 0 === $args['auth']) {
-SyncDebug::log(__METHOD__.'() skipping authentication as per args');
+//SyncDebug::log(__METHOD__.'() skipping authentication as per args');
 			$this->_auth = 0;
 		} else {
 			if ('auth' !== $action) {
@@ -77,11 +80,13 @@ SyncDebug::log(__METHOD__.'() checking credentials');
 				$auth = new SyncAuth();
 				$user = $auth->check_credentials($response);
 				// check to see if credentials passed
+//SyncDebug::log(__METHOD__.'():' . __LINE__ . ' auth failed ' . var_export($user, TRUE));
 				if ($response->has_errors())
 					$response->send();
 			}
 		}
 
+//SyncDebug::log(__METHOD__.'():' . __LINE__ . ' check action: ' . $action);
 		switch ($action) {
 		case '':
 			$response->error_code(SyncApiRequest::ERROR_UNRECOGNIZED_REQUEST);
@@ -170,11 +175,17 @@ SyncDebug::log(__METHOD__."('{$cap}')");
 	{
 		if (NULL === $this->_headers) {
 			if (!function_exists('apache_request_headers')) {
-				$this->_headers = $this->_get_request_headers();
+//SyncDebug::log(__METHOD__.'() using _get_request_headers()');
+				$hdrs = $this->_get_request_headers();
 			} else {
-				$this->_headers = apache_request_headers();
+//SyncDebug::log(__METHOD__.'() using apache_request_headers()');
+				$hdrs = apache_request_headers();
 			}
-SyncDebug::log(__METHOD__.'() read request headers: ' . var_export($this->_headers, TRUE));
+			$this->_headers = array();
+			foreach ($hdrs as $key => $value) {
+				$this->_headers[strtolower($key)] = $value;
+			}
+//SyncDebug::log(__METHOD__.'() read request headers: ' . var_export($this->_headers, TRUE));
 		}
 
 		// TODO: fallback in case site key isn't found in headers. need to resolve
@@ -211,6 +222,7 @@ SyncDebug::log(__METHOD__.'() read request headers: ' . var_export($this->_heade
 				$arh[$arh_key] = $val;
 			}
 		}
+//SyncDebug::log(__METHOD__.'() headers: ' . var_export($arh, TRUE));
 		return $arh;
 	}
 
@@ -222,7 +234,7 @@ SyncDebug::log(__METHOD__.'() read request headers: ' . var_export($this->_heade
 	{
 SyncDebug::log(__METHOD__.'()');
 SyncDebug::log(' post data: ' . var_export($_POST, TRUE));
-SyncDebug::log(' request data: ' . var_export($_REQUEST, TRUE));
+//SyncDebug::log(' request data: ' . var_export($_REQUEST, TRUE));
 		// TODO: need to assume failure, not success - then set to success when successful
 		$response->success(TRUE);
 
@@ -234,7 +246,9 @@ SyncDebug::log(' request data: ' . var_export($_REQUEST, TRUE));
 		$post_data = $this->post_raw('post_data', array());
 //SyncDebug::log(__METHOD__.'():' . __LINE__ . ' - post_data=' . var_export($post_data, TRUE));
 
-		$this->source_post_id = intval($post_data['ID']);
+		$this->source_post_id = abs($post_data['ID']);
+//		if (0 === $this->source_post_id && isset($post_data['post_id']))
+//			$this->source_post_id = abs($post_data['post_id']);
 SyncDebug::log('- syncing post data Source ID#'. $this->source_post_id . ' - "' . $post_data['post_title'] . '"');
 
 		// Check if a post_id was specified, indicating an update to a previously synced post
@@ -272,9 +286,8 @@ SyncDebug::log('- found post: ' . var_export($post, TRUE));
 
 
 		// do not allow the push if it's not a recognized post type
-		if (NULL !== $post &&
-			(!in_array($post->post_type, apply_filters('spectrom_sync_allowed_post_types', array('post', 'page'))))) {
-SyncDebug::log(' - checking post type: ' . $post->post_type);
+		if (!in_array($post_data['post_type']/*$post->post_type*/, apply_filters('spectrom_sync_allowed_post_types', array('post', 'page')))) {
+SyncDebug::log(' - checking post type: ' . $post_data['post_type']/*$post->post_type*/);
 			$response->error_code(SyncApiRequest::ERROR_INVALID_POST_TYPE);
 			return;
 		}
@@ -290,12 +303,10 @@ SyncDebug::log(__METHOD__.'() looking up parent post #' . $post_data['post_paren
 				$response->error_code(SyncApiRequest::ERROR_UNRESOLVED_PARENT);
 				return;
 			}
-			// fixup the parent post id with the Target's id value
+			// fixup the Source's parent post id with the Target's id value
 SyncDebug::log(__METHOD__.'() setting parent post to #' . $parent_post->target_content_id);
 			$post_data['post_parent'] = intval($parent_post->target_content_id);
 		}
-
-		// TODO: also check the post_type in the $post_data array
 
 		// change references to source URL to target URL
 		$post_data['post_content'] = str_replace($this->source, site_url(), $post_data['post_content']);
@@ -310,9 +321,12 @@ SyncDebug::log(' ' . __LINE__ . ' - check permission for updating post id#' . $p
 			if ($this->has_permission('edit_post', $post->ID)) {
 //SyncDebug::log(' - has permission');
 				$target_post_id = $post_data['ID'] = $post->ID;
-				wp_update_post($post_data); // ;here;
+				$res = wp_update_post($post_data, TRUE); // ;here;
+				if (is_wp_error($res)) {
+					$response->error_code(SyncApiRequest::ERROR_CONTENT_UPDATE_FAILED, $res->get_error_message());
+				}
 			} else {
-				$response->error_code(SyncApiResponse::ERROR_NO_PERMISSION);
+				$response->error_code(SyncApiRequest::ERROR_NO_PERMISSION);
 				$response->send();
 			}
 		} else {
@@ -323,11 +337,12 @@ SyncDebug::log(' - check permission for creating new post from source id#' . $po
 				unset($new_post_data['ID']);
 				$target_post_id = wp_insert_post($new_post_data); // ;here;
 			} else {
-				$response->error_code(SyncApiResponse::ERROR_NO_PERMISSION);
+				$response->error_code(SyncApiRequest::ERROR_NO_PERMISSION);
 				$response->send();
 			}
 		}
 		$this->post_id = $target_post_id;
+SyncDebug::log(__METHOD__ . '():' . __LINE__. '  performing sync');
 
 		// save the source and target post information for later reference
 		$model = new SyncModel();

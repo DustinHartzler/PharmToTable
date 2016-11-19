@@ -35,7 +35,7 @@ class SyncSourcesModel
 	 * @param string $site_key The Source site's Site Key
 	 * @param string $name The username to authenticate
 	 * @param string $token The user's Token to authenticate against
-	 * @return object The found row if the user is authenticated; otherwise NULL
+	 * @return WP_User|WP_Error The user associated with the found row if the user is authenticated; otherwise WP_Error
 	 */
 	public function check_auth($source, $site_key, $name, $token)
 	{
@@ -68,10 +68,20 @@ $prep = $wpdb->prepare($sql, $source, $site_key, $name, $token, $name, $token);
 	 * @param string $site_key The Site Key to match with the Source's domain name
 	 * @return object The Source site's information that matches the $domain and $site_key; or NULL if not found
 	 */
-	public function find_source($source, $site_key)
+	public function find_source($source, $site_key, $auth_name = NULL)
 	{
 		global $wpdb;
 		$source = $this->_fix_domain($source);
+
+		if (NULL !== $auth_name) {
+			$sql = "SELECT *
+					FROM `{$this->_sources_table}`
+					WHERE `site_key`=%s AND `domain`=%s AND `auth_name`=%s";
+			$res = $wpdb->get_row($exec = $wpdb->prepare($sql, $site_key, $source, $auth_name));
+//SyncDebug::log(__METHOD__.'():' . __LINE__ . ' sql=' . $exec . ' res=' . var_export($res, TRUE));
+			if (NULL !== $res)
+				return $res;
+		}
 
 		$sql = "SELECT *
 				FROM `{$this->_sources_table}`
@@ -89,7 +99,7 @@ $prep = $wpdb->prepare($sql, $source, $site_key, $name, $token, $name, $token);
 	public function add_source($data)
 	{
 		global $wpdb;
-//SyncDebug::log(__METHOD__.'() data=' . var_export($data, TRUE));
+//SyncDebug::log(__METHOD__.'() data=' . var_export($data, TRUE), TRUE);
 		$token = '';
 		$data['domain'] = $this->_fix_domain($data['domain']);
 		// TODO: remove after SyncApiController ensures presence of Site Key
@@ -110,16 +120,18 @@ $prep = $wpdb->prepare($sql, $source, $site_key, $name, $token, $name, $token);
 			} else {
 //SyncDebug::log(__METHOD__.'() - existing');
 				// update existing source token
+				if (empty($data['token']))
+					$data['token'] = $this->_make_token();
 				if ($row->token !== $data['token'])
 					$wpdb->update($this->_sources_table, array('token' => $data['token']), array('id' => $row->id));
-				$token = $data['token;']; // $row->token
+				$token = $data['token']; // $row->token
 			}
 		} else {
 			// there is a site_key. we're adding a record for a Source site on the Target site
 //SyncDebug::log(__METHOD__.'() - adding source');
 			// first, check to see if the domain already exists
-			$row = $this->find_source($data['domain'], $data['site_key']);
-			if (NULL === $row) {
+			$row = $this->find_source($data['domain'], $data['site_key'], $data['auth_name']);
+			if (NULL === $row || $row->auth_name !== $data['auth_name']) {
 //SyncDebug::log(__METHOD__.'() - adding ' . __LINE__);
 				// no record found, add it
 				$token = $this->_insert_source($data);
@@ -127,15 +139,39 @@ $prep = $wpdb->prepare($sql, $source, $site_key, $name, $token, $name, $token);
 //SyncDebug::log(__METHOD__.'() - existing ' . __LINE__);
 				// update existing source
 //SyncDebug::log(__METHOD__.'() updating id ' . $row->id . ' with token '); //  . $data['token']);
-				if ($row->token !== $data['token'])
+				if (empty($data['token']) || $row->token !== $data['token']) {
+					// TODO: ensure no duplicate tokens
+					$data['token'] = $this->_make_token();
 					$wpdb->update($this->_sources_table, array('token' => $data['token']), array('id' => $row->id));
+				}
 				$token = $data['token']; // $row->token
 			}
 		}
+//$this->_show_sources();
 //SyncDebug::log(__METHOD__.'() last query: ' . $wpdb->last_query);
 //SyncDebug::log(__METHOD__.'() returning token ' . $token);
 		return $token;
 	}
+
+	/**
+	 * Method used for debugging
+	 */
+/*	private function _show_sources()
+	{
+		global $wpdb;
+
+		$sql = "SELECT *
+				FROM `{$this->_sources_table}`";
+		$res = $wpdb->get_results($sql, ARRAY_A);
+		if (NULL !== $res) {
+SyncDebug::log(__METHOD__.'()');
+			foreach ($res as $row) {
+				$vals = array_values($row);
+SyncDebug::log(' ' . implode(', ', $vals));
+			}
+SyncDebug::log(' ' . count($res) . ' rows');
+		}
+	} */
 
 	/**
 	 * Inserts a new record into the sources table, creating a unique token
@@ -150,7 +186,7 @@ $prep = $wpdb->prepare($sql, $source, $site_key, $name, $token, $name, $token);
 		$count = 1;
 		if (empty($data['token'])) {
 			do {
-				$token = wp_generate_password(48, FALSE);
+				$token = $this->_make_token();
 //SyncDebug::log(__METHOD__ . '() looking for token ' . $token);
 				// this finds a match, regardless of the value of `allowed`
 				$sql = "SELECT `id`
@@ -216,5 +252,10 @@ if (++$count > 20) die;
 	{
 		global $wpdb;
 		$wpdb->update($this->_sources, array('allowed' => 1), array('site_key' => $site_key, 'auth_name' => $user));
+	}
+
+	private function _make_token()
+	{
+		return wp_generate_password(48, FALSE);
 	}
 }

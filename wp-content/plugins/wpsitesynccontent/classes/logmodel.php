@@ -39,6 +39,8 @@ class SyncLogModel
 			$data['source_site'] = '';
 		if (!isset($data['source_user']))
 			$data['source_user'] = 0;
+		if (!isset($data['post_title']))
+			$data['post_title'] = '';
 
 		return $wpdb->insert($this->_log_table, $data);
 	}

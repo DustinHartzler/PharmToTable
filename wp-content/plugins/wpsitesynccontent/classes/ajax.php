@@ -23,7 +23,8 @@ class SyncAjax extends SyncInput
 	{
 		// also include the user name of the user on the Source site that is Pushing the Content
 		$current_user = wp_get_current_user();
-		if (0 !== $current_user->ID) {
+//SyncDebug::log(__METHOD__.'() current user=' . var_export($current_user, TRUE));
+		if (NULL !== $current_user && 0 !== $current_user->ID) {
 			$data['username'] = $current_user->user_login;
 			$data['user_id'] = $current_user->ID;
 		}
@@ -35,11 +36,20 @@ class SyncAjax extends SyncInput
 	 */
 	public function dispatch()
 	{
-		// TODO: add authentication checking: must be logged in, an 'Author' role or higher, check nonce
-
 		$operation = $this->post('operation');
 SyncDebug::log(__METHOD__."('{$operation}')");
-		$response = new SyncApiResponse();
+		$response = new SyncApiResponse(TRUE);
+
+		// perform authentication checking: must be logged in, an 'Author' role or higher
+		if (!is_user_logged_in()) {
+			$response->error_code(SyncApiRequest::ERROR_SESSION_EXPIRED, $operation);
+			$response->send();
+		}
+		if (!current_user_can('publish_posts')) {
+			$response->error_code(SyncApiRequest::ERROR_NO_PERMISSION, $operation);
+			$response->send();
+		}
+		// TODO: check nonce
 
 		switch ($operation) {
 		case 'activate':
@@ -73,7 +83,7 @@ SyncDebug::log(__METHOD__."('{$operation}')");
 			// allow add-ons a chance to handle their own AJAX request operation types
 			if (FALSE === apply_filters('spectrom_sync_ajax_operation', FALSE, $operation, $response)) {
 				// No method found, fallback to error message.
-				$response->success(FALSE);
+//				$response->success(FALSE);
 				$response->error_code(SyncApiRequest::ERROR_EXTENSION_MISSING, $operation);
 				// TODO: error_code() data parameter
 				$response->error(sprintf(__('Method `%s` not found.', 'wpsitesynccontent'), $operation));
@@ -94,7 +104,7 @@ SyncDebug::log(__METHOD__."('{$operation}')");
 	{
 		$input = new SyncInput();
 		$settings = array_merge(
-			get_option(SyncOptions::OPTION_NAME),
+			SyncOptions::get_all(), // get_option(SyncOptions::OPTION_NAME),
 			$input->post(SyncOptions::OPTION_NAME)
 		);
 
