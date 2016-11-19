@@ -26,6 +26,9 @@ abstract class NF_Abstracts_MergeTags
 
         add_filter( 'ninja_forms_run_action_settings',  array( $this, 'replace' ) );
         add_filter( 'ninja_forms_run_action_settings_preview',  array( $this, 'replace' ) );
+
+        /* Manually trigger Merge Tag replacement */
+        add_filter( 'ninja_forms_merge_tags', array( $this, 'replace' ) );
     }
 
     public function replace( $subject )

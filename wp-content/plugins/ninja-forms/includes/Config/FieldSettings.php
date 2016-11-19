@@ -155,9 +155,9 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'group' => 'primary',
         // 'value' => 'option-repeater',
         'value' => array(
-            array( 'label'  => 'One', 'value' => 'one', 'calc' => '', 'selected' => 0, 'order' => 0 ),
-            array( 'label'  => 'Two', 'value' => 'two', 'calc' => '', 'selected' => 0, 'order' => 1 ),
-            array( 'label'  => 'Three', 'value' => 'three', 'calc' => '', 'selected' => 0, 'order' => 2 ),
+            array( 'label'  => __( 'One', 'ninja-forms' ), 'value' => __( 'one', 'ninja-forms' ), 'calc' => '', 'selected' => 0, 'order' => 0 ),
+            array( 'label'  => __( 'Two', 'ninja-forms' ), 'value' => __( 'two', 'ninja-forms' ), 'calc' => '', 'selected' => 0, 'order' => 1 ),
+            array( 'label'  => __( 'Three', 'ninja-forms' ), 'value' => __( 'three', 'ninja-forms' ), 'calc' => '', 'selected' => 0, 'order' => 2 ),
         ),
         'columns'           => array(
            'label'          => array(
@@ -323,7 +323,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
 
      'default' => array(
          'name' => 'default',
-         'label' => __( 'Default Value' ),
+         'label' => __( 'Default Value', 'ninja-forms' ),
          'type' => 'textbox',
          'width' => 'full',
          'value' => '',
@@ -380,31 +380,31 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'group'         => 'primary',
         'options'       => array(
             array(
-                'label' => 'DD/MM/YYYY',
+                'label' => __( 'DD/MM/YYYY', 'ninja-forms' ),
                 'value' => 'DD/MM/YYYY',
             ),
             array(
-                'label' => 'DD-MM-YYYY',
+                'label' => __( 'DD-MM-YYYY', 'ninja-forms' ),
                 'value' => 'DD-MM-YYYY',
             ),
             array(
-                'label' => 'MM/DD/YYYY',
+                'label' => __( 'MM/DD/YYYY', 'ninja-forms' ),
                 'value' => 'MM/DD/YYYY',
             ),
             array(
-                'label' => 'MM-DD-YYYY',
+                'label' => __( 'MM-DD-YYYY', 'ninja-forms' ),
                 'value' => 'MM-DD-YYYY',
             ),
             array(
-                'label' => 'YYYY-MM-DD',
+                'label' => __( 'YYYY-MM-DD', 'ninja-forms' ),
                 'value' => 'YYYY-MM-DD',
             ),
             array(
-                'label' => 'YYYY/MM/DD',
+                'label' => __( 'YYYY/MM/DD', 'ninja-forms' ),
                 'value' => 'YYYY/MM/DD',
             ),
             array(
-                'label' => 'Friday, November 18, 2019',
+                'label' => __( 'Friday, November 18, 2019', 'ninja-forms' ),
                 'value' => 'dddd, MMMM D YYYY',
             ),
         ),
@@ -874,7 +874,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'label' => __( 'Price', 'ninja-forms' ),
         'width' => 'one-half',
         'group' => 'primary',
-        'value' => '0.00',
+        'value' => '1.00',
         'mask' => array(
             'type' => 'currency', // 'numeric', 'currency', 'custom'
             'options' => array()
@@ -951,9 +951,9 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'width'             => 'full',
         'group'             => 'primary',
         'value'             => array(
-            array( 'label'  => 'One', 'value' => '1.00', 'order' => 0 ),
-            array( 'label'  => 'Two', 'value' => '2.00', 'order' => 1 ),
-            array( 'label'  => 'Three', 'value' => '3.00', 'order' => 2 ),
+            array( 'label'  => __( 'One', 'ninja-forms' ), 'value' => '1.00', 'order' => 0 ),
+            array( 'label'  => __( 'Two', 'ninja-forms' ), 'value' => '2.00', 'order' => 1 ),
+            array( 'label'  => __( 'Three', 'ninja-forms' ), 'value' => '3.00', 'order' => 2 ),
         ),
          'columns'          => array(
             'label'         => array(

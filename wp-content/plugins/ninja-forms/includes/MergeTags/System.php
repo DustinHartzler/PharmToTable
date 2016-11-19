@@ -36,4 +36,9 @@ final class NF_MergeTags_System extends NF_Abstracts_MergeTags
         return apply_filters( 'ninja_forms-get_ip', apply_filters( 'nf_get_ip', $ip ) );
     }
 
+    protected function admin_email()
+    {
+        return get_option( 'admin_email' );
+    }
+
 } // END CLASS NF_MergeTags_System

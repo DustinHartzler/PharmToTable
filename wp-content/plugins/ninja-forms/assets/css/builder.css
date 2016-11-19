@@ -1,6 +1,15 @@
 /*
 Normalize WordPress admin for Ninja Forms App
 ---------------------------------------------*/
+html {
+  overflow: hidden;
+  width: 100%;
+  float: left;
+  left: 0; }
+
+#wp-auth-check-wrap #wp-auth-check {
+  z-index: 1000000000000; }
+
 .ninja-forms-app {
   height: 0; }
   .ninja-forms-app #adminmenumain,
@@ -145,11 +154,13 @@ Header and Nav for Ninja Forms App
 #nf-main-content,
 #nf-main-header {
   margin: 0 auto;
-  max-width: 800px;
+  max-width: 860px;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
-          user-select: none; }
+          user-select: none;
+  padding: 0 80px;
+  position: relative; }
 
 #nf-main-header .nf-button {
   float: right; }
@@ -165,10 +176,45 @@ Header and Nav for Ninja Forms App
 #the-list tr.flagged th:first-child {
   border-left: 5px solid yellow; }
 
+#nf-main-gutter-left,
+#nf-main-gutter-right {
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: 450px; }
+  #nf-main-gutter-left .fa-chevron-circle-left,
+  #nf-main-gutter-left .fa-chevron-circle-right,
+  #nf-main-gutter-left .fa-plus-circle,
+  #nf-main-gutter-right .fa-chevron-circle-left,
+  #nf-main-gutter-right .fa-chevron-circle-right,
+  #nf-main-gutter-right .fa-plus-circle {
+    color: #eee;
+    font-size: 86px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); }
+    #nf-main-gutter-left .fa-chevron-circle-left:hover,
+    #nf-main-gutter-left .fa-chevron-circle-right:hover,
+    #nf-main-gutter-left .fa-plus-circle:hover,
+    #nf-main-gutter-right .fa-chevron-circle-left:hover,
+    #nf-main-gutter-right .fa-chevron-circle-right:hover,
+    #nf-main-gutter-right .fa-plus-circle:hover {
+      color: #1EA9EA;
+      cursor: pointer; }
+
+#nf-main-gutter-left {
+  left: 0;
+  padding-left: 6px; }
+
+#nf-main-gutter-right {
+  right: 0;
+  padding-right: 6px; }
+
 .nf-fields-empty {
   padding: 0 40px; }
   .nf-fields-empty h3 {
-    font-size: 30px; }
+    font-size: 30px;
+    line-height: 32px; }
   .nf-fields-empty p {
     font-size: 18px; }
   .nf-fields-empty a {
@@ -204,6 +250,12 @@ Header and Nav for Ninja Forms App
     box-shadow: 0 0 20px #1EA9EA;
     color: #1EA9EA;
     transition: all 0.2s ease-in-out 0.1s, box-shadow 0.2s ease-in-out 0.1s; }
+  .nf-drawer-opened .template-box {
+    width: 50%; }
+
+@media only screen and (max-width: 1400px) {
+  .nf-drawer-opened .template-box {
+    width: 100%; } }
 
 .nf-setting-wrap {
   cursor: pointer;
@@ -233,6 +285,7 @@ Form field placeholders for the fields a user has added to their form
 ----------------------------------------------------------------------- */
 .nf-item-controls {
   height: 30px;
+  width: 30px;
   float: right;
   margin: 0;
   position: absolute;
@@ -615,6 +668,7 @@ All styles used within the drawer
   display: inline-block;
   font-size: 17px;
   padding: 10px 30px;
+  text-align: center;
   text-decoration: none;
   text-transform: uppercase;
   -webkit-appearance: none;
@@ -681,7 +735,7 @@ All styles used within the drawer
 .ninja-forms-app textarea {
   background: #f9f9f9;
   border: 0;
-  margin-top: 5px;
+  margin-top: 7px;
   padding: 12px 15px;
   width: 100%;
   height: 41px;
@@ -822,7 +876,7 @@ All styles used within the drawer
   content: "";
   display: block; }
 
-.nf-reservoir.nf-droppable-active {
+.nf-reservoir.nf-droppable-active, .nf-reservoir.nf-staged-fields-active {
   background: #F8F8F9;
   border: 4px solid #F8F8F9;
   border-radius: 4px;
@@ -894,12 +948,10 @@ All styles used within the drawer
     text-indent: -99999px; }
 
 .nf-action-items.available .nf-item.nf-has-img {
-  -webkit-filter: grayscale(100%);
-          filter: grayscale(100%);
+  filter: grayscale(100%);
   opacity: 0.6; }
   .nf-action-items.available .nf-item.nf-has-img:hover {
-    -webkit-filter: grayscale(0);
-            filter: grayscale(0);
+    filter: grayscale(0);
     opacity: 1.0; }
 
 .nf-field-type-button {
@@ -1092,7 +1144,7 @@ input[type=checkbox].nf-toggle {
     background: #f9f9f9;
     height: 41px;
     position: absolute;
-    bottom: 2px;
+    bottom: 1px;
     width: 100%;
     z-index: 1; }
   .ninja-forms-app .nf-select div::after {
@@ -2093,92 +2145,6 @@ WP Color Picker (Iris) Styles
   .nf-saved .nf-item::after {
     padding: 14px; } }
 
-.rtl.ninja-forms-app #wpcontent {
-  margin-right: 140px; }
-  .rtl.ninja-forms-app #wpcontent #wpbody {
-    right: 160px;
-    left: 0; }
-
-.rtl.ninja-forms-app.folded #wpcontent {
-  margin-right: 16px; }
-  .rtl.ninja-forms-app.folded #wpcontent #wpbody {
-    right: 36px;
-    left: 0; }
-
-.rtl #nf-header #nf-logo {
-  float: right; }
-
-.rtl #nf-header ul li {
-  float: right; }
-  .rtl #nf-header ul li a.preview .dashicons {
-    margin-right: 10px; }
-
-.rtl #nf-header input[type=submit] {
-  float: left; }
-
-.rtl #nf-header .nf-cancel {
-  float: left;
-  margin-left: 20px; }
-
-.rtl .nf-add-new {
-  padding: 0 46px 0 0; }
-  .rtl .nf-add-new:after {
-    right: 0;
-    line-height: 14px; }
-  .rtl .nf-add-new.nf-open-drawer {
-    right: 40px;
-    left: 0; }
-
-.rtl #nf-main {
-  right: 0;
-  left: auto; }
-
-.rtl #nf-main-header .nf-button {
-  float: left; }
-
-.rtl .nf-item-controls {
-  float: left; }
-  .rtl .nf-item-controls li {
-    float: right; }
-    .rtl .nf-item-controls li.nf-item-duplicate .nf-tooltip {
-      left: -32px; }
-      .rtl .nf-item-controls li.nf-item-duplicate .nf-tooltip:after {
-        left: 36px; }
-    .rtl .nf-item-controls li.nf-item-edit .nf-tooltip {
-      left: -16px; }
-      .rtl .nf-item-controls li.nf-item-edit .nf-tooltip:after {
-        left: 20px; }
-  .rtl .nf-item-controls.nf-editing .nf-item-edit .dashicons {
-    margin-left: 12px; }
-
-.rtl #nf-drawer {
-  right: auto;
-  left: -1400px; }
-  .rtl #nf-drawer.nf-drawer-expand {
-    width: 100%; }
-
-.rtl .nf-drawer-header h2 {
-  float: right; }
-  .rtl .nf-drawer-header h2 .dashicons {
-    margin-left: 10px; }
-
-.rtl .nf-drawer-header .nf-button {
-  float: left; }
-
-.rtl .nf-search input[type=search] {
-  padding: 12px 50px 12px 0; }
-
-.rtl .nf-search::before {
-  right: 10px;
-  left: 0; }
-
-.rtl .nf-drawer-opened #nf-drawer {
-  left: 0;
-  right: auto; }
-
-.rtl .nf-drawer-opened #nf-app-sub-header h2 {
-  padding-right: 0; }
-
 #nf-app-admin-header {
   background: #EBEDEE;
   height: 60px;
@@ -2240,5 +2206,119 @@ WP Color Picker (Iris) Styles
 
 body.fakescroll-grabbed {
   cursor: -webkit-grabbing; }
+
+.rtl.ninja-forms-app #wpcontent {
+  margin-right: 140px; }
+  .rtl.ninja-forms-app #wpcontent #wpbody {
+    right: 160px;
+    left: 0; }
+
+.rtl.ninja-forms-app.folded #wpcontent {
+  margin-right: 16px; }
+  .rtl.ninja-forms-app.folded #wpcontent #wpbody {
+    right: 36px;
+    left: 0; }
+
+.rtl #nf-app-admin-header #nf-logo {
+  float: right; }
+
+.rtl #nf-app-admin-header .fa-times {
+  right: auto;
+  left: 0; }
+
+.rtl .nf-app-buttons {
+  float: left; }
+
+.rtl #nf-app-header .nf-app-menu li {
+  float: right; }
+  .rtl #nf-app-header .nf-app-menu li a.preview .dashicons {
+    margin-right: 10px; }
+
+.rtl .nf-master-control {
+  right: auto;
+  left: 30px; }
+  .rtl .nf-master-control .fa {
+    margin: 15px 16px 0 0; }
+
+.rtl input[type=submit] {
+  float: left; }
+
+.rtl .nf-cancel {
+  float: left;
+  margin-left: 20px; }
+
+.rtl .nf-add-new {
+  margin: 0;
+  padding: 0; }
+  .rtl .nf-add-new:after {
+    right: 0;
+    left: auto;
+    line-height: 14px; }
+
+.rtl #nf-main {
+  right: 0;
+  left: auto; }
+
+.rtl #nf-main-header .nf-button {
+  float: left; }
+
+.rtl .nf-field-label {
+  margin-left: 0;
+  margin-right: 16px; }
+
+.rtl .nf-item-controls {
+  right: auto;
+  left: 0; }
+  .rtl .nf-item-controls .nf-item-control {
+    right: auto;
+    left: 0; }
+  .rtl .nf-item-controls:hover .nf-item-duplicate {
+    right: auto;
+    left: 80px; }
+  .rtl .nf-item-controls:hover .nf-item-delete {
+    right: auto;
+    left: 40px; }
+
+.rtl #nf-drawer {
+  right: auto;
+  left: -1400px; }
+  .rtl #nf-drawer.nf-drawer-expand {
+    width: 100%; }
+
+.rtl .nf-drawer-header h2 {
+  float: right; }
+  .rtl .nf-drawer-header h2 .dashicons {
+    margin-left: 10px; }
+
+.rtl .nf-drawer-header .nf-button {
+  float: left; }
+
+.rtl .nf-search input[type=search] {
+  padding: 12px 50px 12px 0; }
+
+.rtl .nf-search::before {
+  right: 10px;
+  left: 0; }
+
+.rtl .nf-drawer-opened #nf-drawer {
+  left: 0;
+  right: auto; }
+
+.rtl .nf-drawer-opened #nf-app-sub-header h2 {
+  padding-right: 0; }
+
+.rtl .nf-settings h3 .dashicons {
+  margin: -4px -30px 0 10px; }
+  .rtl .nf-settings h3 .dashicons.dashicons-arrow-right::before {
+    content: "\f141"; }
+
+.rtl .nf-item .fa {
+  left: auto;
+  right: 0; }
+
+.rtl .nf-one-half,
+.rtl .nf-one-third,
+.rtl .nf-one-fourth {
+  float: right; }
 
 /*# sourceMappingURL=builder.css.map */

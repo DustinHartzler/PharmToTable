@@ -56,14 +56,6 @@ abstract class NF_Abstracts_Submenu
      */
     public function __construct()
     {
-        if( ! $this->menu_title ) {
-            $this->menu_title = $this->page_title;
-        }
-
-        if( ! $this->menu_slug ) {
-            $this->menu_slug = 'nf-' . strtolower( preg_replace( '/[^A-Za-z0-9-]+/', '-', $this->menu_title ) );
-        }
-
         add_action( 'admin_menu', array( $this, 'register' ), $this->priority );
     }
 
@@ -76,10 +68,10 @@ abstract class NF_Abstracts_Submenu
 
         add_submenu_page(
             $this->parent_slug,
-            $this->page_title,
-            $this->menu_title,
-            apply_filters( 'ninja_forms_submenu_' . $this->menu_slug . '_capability', $this->capability ),
-            $this->menu_slug,
+            $this->get_page_title(),
+            $this->get_menu_title(),
+            apply_filters( 'ninja_forms_submenu_' . $this->get_menu_slug() . '_capability', $this->get_capability() ),
+            $this->get_menu_slug(),
             $function
         );
 
@@ -93,6 +85,26 @@ abstract class NF_Abstracts_Submenu
         }
 
         return $classes;
+    }
+
+    public function get_page_title()
+    {
+        return $this->page_title;
+    }
+
+    public function get_menu_title()
+    {
+        return ( $this->menu_title ) ? $this->menu_title : $this->get_page_title();
+    }
+
+    public function get_menu_slug()
+    {
+        return ( $this->menu_slug ) ? $this->menu_slug : 'nf-' . strtolower( preg_replace( '/[^A-Za-z0-9-]+/', '-', $this->get_menu_title() ) );
+    }
+
+    public function get_capability()
+    {
+        return $this->capability;
     }
 
     /**

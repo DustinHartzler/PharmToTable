@@ -12,7 +12,7 @@ return apply_filters( 'ninja_forms_from_calculation_settings', array(
         'label'             => ' <a href="#" class="nf-add-new">' . __( 'Add New', 'ninja-forms' ) . '</a>',
         'width'             => 'full',
         'group'             => 'primary',
-        'tmpl_row'          => 'nf-tmpl-edit-setting-calculation-repeater-row',
+        'tmpl_row'          => 'tmpl-nf-edit-setting-calculation-repeater-row',
         'columns'           => array(
             'name'          => array(
                 'header'    => __( 'Variable Name', 'ninja-forms' ),

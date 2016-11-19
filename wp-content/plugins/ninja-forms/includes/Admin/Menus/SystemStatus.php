@@ -4,13 +4,23 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
 {
     public $parent_slug = 'ninja-forms';
 
-    public $page_title = 'Get Help';
+    public $menu_slug = 'nf-system-status';
 
     public $priority = 12;
 
     public function __construct()
     {
         parent::__construct();
+    }
+
+    public function get_page_title()
+    {
+        return __( 'Get Help', 'ninja-forms' );
+    }
+
+    public function get_capability()
+    {
+        return apply_filters( 'ninja_forms_admin_status_capabilities', $this->capability );
     }
 
     public function display()
@@ -26,7 +36,7 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
         if ( is_multisite() ) {
             $multisite = __( 'Yes', 'ninja-forms' );
         } else {
-            $multisite =  __( 'No', 'ninja-forms' );
+            $multisite = __( 'No', 'ninja-forms' );
          }
 
          //TODO: Possible refactor
@@ -119,11 +129,11 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
             __( 'MySQL Version','ninja-forms' ) => $wpdb->db_version(),
             __( 'PHP Locale','ninja-forms' ) =>  $data,
             //TODO: Possibly move the ninja_forms_letters_to_numbers function over.
-            __( 'WP Memory Limit','ninja-forms' ) => number_format_i18n( WP_MEMORY_LIMIT ),
+            __( 'WP Memory Limit','ninja-forms' ) => WP_MEMORY_LIMIT,
             __( 'WP Debug Mode', 'ninja-forms' ) => $debug,
             __( 'WP Language', 'ninja-forms' ) => $lang,
             __( 'WP Max Upload Size','ninja-forms' ) => size_format( wp_max_upload_size() ),
-            __('PHP Post Max Size','ninja-forms' ) => number_format_i18n( ini_get('post_max_size') ),
+            __('PHP Post Max Size','ninja-forms' ) => ini_get( 'post_max_size' ),
             __('Max Input Nesting Level','ninja-forms' ) => ini_get('max_input_nesting_level'),
             __('PHP Time Limit','ninja-forms' ) => ini_get('max_execution_time'),
             __( 'PHP Max Input Vars','ninja-forms' ) => ini_get('max_input_vars'),

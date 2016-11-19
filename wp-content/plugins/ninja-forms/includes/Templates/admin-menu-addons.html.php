@@ -6,7 +6,7 @@
 
         <div class="nf-addon-notice">
             <p>
-                <strong><?php echo $notice[ 'title' ]; ?></strong> requires an update. You have version <strong><?php echo $notice[ 'old_version' ]; ?></strong> installed. The current version is <strong><?php echo $notice[ 'new_version' ]; ?></strong>.
+                <strong><?php echo $notice[ 'title' ]; ?></strong> <?php _e( ' requires an update. You have version ', 'ninja-forms' );?><strong><?php echo $notice[ 'old_version' ]; ?></strong><?php _e( ' installed. The current version is ', 'ninja-forms' ); ?><strong><?php echo $notice[ 'new_version' ]; ?></strong>.
             </p>
         </div>
 

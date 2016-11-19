@@ -62,6 +62,12 @@ class NF_Abstracts_ModelFactory
 
         $this->_object = new NF_Database_Models_Form( $this->_db, $id );
 
+        $form_cache = get_option( 'nf_form_' . $id, false );
+
+        if( $form_cache ){
+            $this->_object->update_settings( $form_cache[ 'settings' ] );
+        }
+
         return $this;
     }
 
@@ -114,7 +120,23 @@ class NF_Abstracts_ModelFactory
      */
     public function import_form( $import, $id = FALSE, $is_conversion = FALSE )
     {
-        $import = maybe_unserialize( $import );
+        if( ! is_array( $import ) ){
+            $data = json_decode( html_entity_decode( $import ), true );
+
+            if( ! is_array( $data ) ) {
+                $data = json_decode($import, true);
+            }
+
+            if( ! is_array( $data ) ){
+                $data = maybe_unserialize( $import );
+
+                if( ! is_array( $data ) ){
+                    return false;
+                }
+            }
+            $import = $data;
+        }
+
         return NF_Database_Models_Form::import( $import, $id, $is_conversion );
     }
 
@@ -163,12 +185,22 @@ class NF_Abstracts_ModelFactory
 
             $form_id = $this->_object->get_id();
 
-            $model_shell = new NF_Database_Models_Field( $this->_db, 0 );
+            $form_cache = get_option( 'nf_form_' . $form_id, false );
 
-            $fields = $model_shell->find( $form_id, $where );
+            if( ! $form_cache ) {
+                $model_shell = new NF_Database_Models_Field($this->_db, 0);
 
-            foreach( $fields as $field ){
-                $this->_fields[ $field->get_id() ] = $field;
+                $fields = $model_shell->find($form_id, $where);
+
+                foreach ($fields as $field) {
+                    $this->_fields[$field->get_id()] = $field;
+                }
+            } else {
+                foreach( $form_cache[ 'fields' ] as $cached_field ){
+                    $field = Ninja_Forms()->form( $form_id )->get_field( $cached_field[ 'id' ] );
+                    $field->update_settings( $cached_field[ 'settings' ] );
+                    $this->_fields[$field->get_id()] = $field;
+                }
             }
         }
 
@@ -236,12 +268,12 @@ class NF_Abstracts_ModelFactory
 
             $form_id = $this->_object->get_id();
 
-            $model_shell = new NF_Database_Models_Action( $this->_db, 0 );
+            $model_shell = new NF_Database_Models_Action($this->_db, 0);
 
-            $actions = $model_shell->find( $form_id, $where );
+            $actions = $model_shell->find($form_id, $where);
 
-            foreach( $actions as $action ){
-                $this->_actions[ $action->get_id() ] = $action;
+            foreach ($actions as $action) {
+                $this->_actions[$action->get_id()] = $action;
             }
         }
 

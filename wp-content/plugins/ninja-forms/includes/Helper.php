@@ -199,4 +199,20 @@ final class WPN_Helper
         return sanitize_text_field( $data );
     }
 
+    public static function get_plugin_version( $plugin )
+    {
+        $plugins = get_plugins();
+
+        if( ! isset( $plugins[ $plugin ] ) ) return false;
+
+        return $plugins[ $plugin ][ 'Version' ];
+    }
+
+    public static function is_func_disabled( $function )
+    {
+        if( ! function_exists( $function ) ) return true;
+        $disabled = explode( ',',  ini_get( 'disable_functions' ) );
+        return in_array( $function, $disabled );
+    }
+
 } // End Class WPN_Helper

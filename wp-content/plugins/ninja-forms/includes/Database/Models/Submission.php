@@ -327,7 +327,13 @@ final class NF_Database_Models_Submission
 
                 if( ! is_int( $field_id ) ) continue;
 
-                $value[ $field_id ] = $sub->get_field_value( $field_id );
+                $field_value = $sub->get_field_value( $field_id );
+
+                if( is_array( $field_value ) ){
+                    $field_value = implode( ' | ', $field_value );
+                }
+
+                $value[ $field_id ] = $field_value;
             }
 
             $value_array[] = $value;
