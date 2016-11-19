@@ -1,0 +1,154 @@
+# Copyright (C) 2016 Storefront Blog Customiser
+# This file is distributed under the same license as the Storefront Blog Customiser package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Storefront Blog Customiser 1.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/storefront-blog-"
+"customiser\n"
+"POT-Creation-Date: 2016-05-09 13:18:29+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: storefront-blog-customiser.php:146 storefront-blog-customiser.php:155
+msgid "Cheatin&#8217; huh?"
+msgstr ""
+
+#: storefront-blog-customiser.php:175
+msgid ""
+"%sThanks for installing the Storefront Blog Customiser extension. To get "
+"started, visit the %sCustomizer%s.%s %sOpen the Customizer%s"
+msgstr ""
+
+#: storefront-blog-customiser.php:279
+msgid "Blog"
+msgstr ""
+
+#: storefront-blog-customiser.php:280
+msgid "Customise the appearance of your blog posts and archives."
+msgstr ""
+
+#: storefront-blog-customiser.php:287
+msgid "Archives"
+msgstr ""
+
+#: storefront-blog-customiser.php:289
+msgid "Customise the look & feel of the blog archives"
+msgstr ""
+
+#: storefront-blog-customiser.php:297
+msgid "Single posts"
+msgstr ""
+
+#: storefront-blog-customiser.php:299
+msgid "Customise the look & feel of the blog post pages"
+msgstr ""
+
+#: storefront-blog-customiser.php:307
+msgid "Homepage"
+msgstr ""
+
+#: storefront-blog-customiser.php:309
+msgid "Configure the display of blog posts on the homepage template"
+msgstr ""
+
+#: storefront-blog-customiser.php:322 storefront-blog-customiser.php:379
+#: storefront-blog-customiser.php:455
+msgid "Post meta display"
+msgstr ""
+
+#: storefront-blog-customiser.php:328 storefront-blog-customiser.php:385
+#: storefront-blog-customiser.php:461
+msgid "Left of content"
+msgstr ""
+
+#: storefront-blog-customiser.php:329 storefront-blog-customiser.php:386
+#: storefront-blog-customiser.php:462
+msgid "Right of content"
+msgstr ""
+
+#: storefront-blog-customiser.php:330 storefront-blog-customiser.php:387
+#: storefront-blog-customiser.php:463
+msgid "Above content"
+msgstr ""
+
+#: storefront-blog-customiser.php:331 storefront-blog-customiser.php:388
+#: storefront-blog-customiser.php:464
+msgid "Beneath content"
+msgstr ""
+
+#: storefront-blog-customiser.php:332 storefront-blog-customiser.php:389
+#: storefront-blog-customiser.php:465
+msgid "Hidden"
+msgstr ""
+
+#: storefront-blog-customiser.php:345 storefront-blog-customiser.php:402
+msgid "Full width"
+msgstr ""
+
+#: storefront-blog-customiser.php:346
+msgid "Display blog archives in a full width layout."
+msgstr ""
+
+#: storefront-blog-customiser.php:362
+msgid "Magazine layout"
+msgstr ""
+
+#: storefront-blog-customiser.php:363
+msgid "Apply a \"magazine\" layout to blog archives."
+msgstr ""
+
+#: storefront-blog-customiser.php:403
+msgid "Give the single blog post pages a full width layout."
+msgstr ""
+
+#: storefront-blog-customiser.php:419
+msgid "Display blog posts"
+msgstr ""
+
+#: storefront-blog-customiser.php:420
+msgid "Toggle the display of blog posts on the homepage."
+msgstr ""
+
+#: storefront-blog-customiser.php:432 storefront-blog-customiser.php:649
+msgid "Recent Blog Posts"
+msgstr ""
+
+#: storefront-blog-customiser.php:438
+msgid "Blog post title"
+msgstr ""
+
+#: storefront-blog-customiser.php:478
+msgid "Blog post columns"
+msgstr ""
+
+#: storefront-blog-customiser.php:500
+msgid "Number of posts to display"
+msgstr ""
+
+#: storefront-blog-customiser.php:673
+msgid "Sorry, no posts matched your criteria."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Storefront Blog Customiser"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://woothemes.com/products/storefront-blog-customiser/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Adds blog customisation settings to the Storefront theme"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WooThemes"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://woothemes.com/"
+msgstr ""
