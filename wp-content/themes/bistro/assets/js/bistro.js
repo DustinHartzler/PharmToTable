@@ -5,7 +5,7 @@
 		jQuery( '.site-search' ).toggleClass( 'active' );
 	});
 
-	jQuery( '.site-header-cart' ).click( function() {
+	jQuery( 'body:not(.woocommerce-checkout) .site-header-cart, body:not(.woocommerce-cart) .site-header-cart' ).click( function() {
 		jQuery( '.site-header-cart' ).toggleClass( 'active' );
 	});
 

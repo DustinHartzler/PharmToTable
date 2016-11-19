@@ -45,6 +45,8 @@ if ( ! class_exists( 'Bistro_Customizer' ) ) {
 
 			// Footer
 			$args['storefront_footer_background_color']     = '#EEEBE2';
+			$args['storefront_footer_text_color']           = '#4B3918';
+			$args['storefront_footer_heading_color']        = '#401A18';
 
 			// Typography.
 			$args['storefront_accent_color']                = '#EE6948';
@@ -164,17 +166,17 @@ if ( ! class_exists( 'Bistro_Customizer' ) ) {
 					border-bottom-color: ' . $button_alt_bg . ';
 				}
 
-				.woocommerce-breadcrumb a + a,
+				.woocommerce-breadcrumb a + span + a,
 				.storefront-product-section .slick-prev:hover,
 				.storefront-product-section .slick-next:hover {
 					background-color: ' . storefront_adjust_color_brightness( $button_alt_bg, 10 ) . ';
 				}
 
-				.woocommerce-breadcrumb a + a + a {
+				.woocommerce-breadcrumb a + span + a + span + a {
 					background-color: ' . storefront_adjust_color_brightness( $button_alt_bg, 20 ) . ';
 				}
 
-				.woocommerce-breadcrumb a + a + a + a {
+				.woocommerce-breadcrumb a + span + a + span + a + span + a {
 					background-color: ' . storefront_adjust_color_brightness( $button_alt_bg, 30 ) . ';
 				}
 
@@ -182,15 +184,15 @@ if ( ! class_exists( 'Bistro_Customizer' ) ) {
 					border-left-color: ' . $button_alt_bg . ';
 				}
 
-				.woocommerce-breadcrumb a + a:after {
+				.woocommerce-breadcrumb a + span + a:after {
 					border-left-color: ' . storefront_adjust_color_brightness( $button_alt_bg, 10 ) . ';
 				}
 
-				.woocommerce-breadcrumb a + a + a:after {
+				.woocommerce-breadcrumb a + span + a + span + a:after {
 					border-left-color: ' . storefront_adjust_color_brightness( $button_alt_bg, 20 ) . ';
 				}
 
-				.woocommerce-breadcrumb a + a + a + a:after {
+				.woocommerce-breadcrumb a + span + a + span + a + span + a:after {
 					border-left-color: ' . storefront_adjust_color_brightness( $button_alt_bg, 30 ) . ';
 				}
 
@@ -212,6 +214,10 @@ if ( ! class_exists( 'Bistro_Customizer' ) ) {
 				@media (min-width: 768px) {
 					.site-header .main-navigation ul.menu > li > a:before, .site-header .main-navigation ul.nav-menu > li > a:before {
 						background-color: ' . $accent_color . ';
+					}
+
+					.woocommerce-cart .site-header .site-header-cart:before {
+						color: ' . $header_link_color . ' !important;
 					}
 
 					.site-header .site-search .widget_product_search form label:hover:before,

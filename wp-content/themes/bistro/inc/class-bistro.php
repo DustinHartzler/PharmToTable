@@ -85,7 +85,7 @@ if ( ! class_exists( 'Bistro' ) ) {
 		 * @return array           thre breadcrumb defaults
 		 */
 		public function change_breadcrumb_delimiter( $defaults ) {
-			$defaults['delimiter'] = '';
+			$defaults['delimiter'] = '<span class="breadcrumb-separator"> / </span>';
 			return $defaults;
 		}
 

@@ -1,7 +1,7 @@
 {
   "name": "bistro",
-  "description": "Child theme starter for Storefront",
-  "version": "1.0.0",
+  "description": "A storefront child theme for fresh good and organic food stores.",
+  "version": "1.0.2",
   "private": "true",
   "repository": {
     "type": "git",

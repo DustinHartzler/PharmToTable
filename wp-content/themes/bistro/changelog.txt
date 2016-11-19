@@ -1,4 +1,10 @@
 *** Bistro Changelog ***
 
-20XX.XX.XX - version 1.0.0
+2016.10.11 - version 1.0.2
+ * Fix - Breadcrumb when paginating through product categories.
+
+2016.10.03 - version 1.0.1
+ * Fix - Menu dropdown animation.
+
+2016.09.06 - version 1.0.0
  * Initial release.
