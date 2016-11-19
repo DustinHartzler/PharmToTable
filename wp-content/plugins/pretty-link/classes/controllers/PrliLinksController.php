@@ -62,7 +62,7 @@ class PrliLinksController
 	else if(empty($params['group']))
 	  $prli_message = prli_get_main_message();
 	else
-	  $prli_message = __("Links in Group: ", 'pretty-link') . $wpdb->get_var("SELECT name FROM " . $prli_group->table_name . " WHERE id=".$params['group']);
+	  $prli_message = __("Links in Group: ", 'pretty-link') . $wpdb->get_var("SELECT name FROM " . $prli_group->table_name . " WHERE id=".(int)$params['group']);
     
 	self::display_links_list($params, $prli_message);
   }
@@ -148,7 +148,7 @@ class PrliLinksController
   public static function update_link($params) {
 	global $prli_link, $prli_group;
     $errors = $prli_link->validate($_POST);
-    $id = $_POST['id'];
+    $id = (int)$_POST['id'];
     
     $errors = apply_filters( "prli_validate_link", $errors );
     
@@ -161,7 +161,7 @@ class PrliLinksController
     }
     else
     {
-      $record = $prli_link->update( $_POST['id'], $_POST );
+      $record = $prli_link->update( (int)$_POST['id'], $_POST );
     
       do_action( "prli_update_link", $id );
     

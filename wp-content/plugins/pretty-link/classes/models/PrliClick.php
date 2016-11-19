@@ -6,7 +6,7 @@ class PrliClick
 {
     var $table_name;
 
-    function PrliClick()
+    function __construct()
     {
       global $wpdb;
       $this->table_name = "{$wpdb->prefix}prli_clicks";

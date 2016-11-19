@@ -175,8 +175,8 @@ if(!defined('ABSPATH'))
         <?php if( $link->redirect_type != 'pixel' )
         {
         ?>
-          <a href="<?php echo $link->url; ?>" target="_blank" title="Visit Target URL: <?php echo $link->url; ?> in a New Window"><img src="<?php echo PRLI_IMAGES_URL . '/url_icon.gif'; ?>" width="13px" height="13px" name="Visit" alt="Visit"/></a>&nbsp;
-          <a href="<?php echo $pretty_link_url; ?>" target="_blank" title="Visit Pretty Link: <?php echo $pretty_link_url; ?> in a New Window"><img src="<?php echo PRLI_IMAGES_URL . '/url_icon.gif'; ?>" width="13px" height="13px" name="Visit" alt="Visit"/></a>&nbsp;
+          <a href="<?php echo esc_url($link->url); ?>" target="_blank" title="Visit Target URL: <?php echo esc_attr($link->url); ?> in a New Window"><img src="<?php echo PRLI_IMAGES_URL . '/url_icon.gif'; ?>" width="13px" height="13px" name="Visit" alt="Visit"/></a>&nbsp;
+          <a href="<?php echo esc_url($pretty_link_url); ?>" target="_blank" title="Visit Pretty Link: <?php echo esc_attr($pretty_link_url); ?> in a New Window"><img src="<?php echo PRLI_IMAGES_URL . '/url_icon.gif'; ?>" width="13px" height="13px" name="Visit" alt="Visit"/></a>&nbsp;
         <?php
         }
         do_action('prli-special-link-action',$link->id);
@@ -184,18 +184,18 @@ if(!defined('ABSPATH'))
         <a class="slug_name" href="<?php echo admin_url('admin.php?page=pretty-link&action=edit&id=' . $link->id); ?>" title="Edit <?php echo esc_html(stripslashes($link->name)); ?>"><?php echo esc_html(stripslashes($link->name)); ?></a>
           <br/>
           <div class="link_actions">
-            <a href="<?php echo admin_url('admin.php?page=pretty-link&action=edit&id=' . $link->id); ?>" title="Edit <?php echo $link->slug; ?>"><?php _e('Edit', 'pretty-link'); ?></a>&nbsp;|
-            <a href="<?php echo admin_url('admin.php?page=pretty-link&action=destroy&id=' . $link->id); ?>"  onclick="return confirm('Are you sure you want to delete your <?php echo esc_html($link->name); ?> Pretty Link? This will delete the Pretty Link and all of the statistical data about it in your database.');" title="Delete <?php echo $link->slug; ?>"><?php _e('Delete', 'pretty-link'); ?></a>
+            <a href="<?php echo admin_url('admin.php?page=pretty-link&action=edit&id=' . $link->id); ?>" title="Edit <?php echo esc_attr($link->slug); ?>"><?php _e('Edit', 'pretty-link'); ?></a>&nbsp;|
+            <a href="<?php echo admin_url('admin.php?page=pretty-link&action=destroy&id=' . $link->id); ?>"  onclick="return confirm('Are you sure you want to delete your <?php echo esc_html($link->name); ?> Pretty Link? This will delete the Pretty Link and all of the statistical data about it in your database.');" title="Delete <?php echo esc_html($link->slug); ?>"><?php _e('Delete', 'pretty-link'); ?></a>
             |&nbsp;<a href="<?php echo admin_url('admin.php?page=pretty-link&action=reset&id=' . $link->id); ?>"  onclick="return confirm('Are you sure you want to reset your <?php echo esc_html($link->name); ?> Pretty Link? This will delete all of the statistical data about this Pretty Link in your database.');" title="Reset <?php echo esc_html($link->name); ?>"><?php _e('Reset', 'pretty-link'); ?></a>
             <?php if( $link->track_me and $prli_options->extended_tracking!='count' ) { ?>
-            |&nbsp;<a href="<?php echo admin_url("admin.php?page=pretty-link/prli-clicks.php&l={$link->id}"); ?>" title="View clicks for <?php echo $link->slug; ?>"><?php _e('Hits', 'pretty-link'); ?></a>
+            |&nbsp;<a href="<?php echo admin_url("admin.php?page=pretty-link/prli-clicks.php&l={$link->id}"); ?>" title="View clicks for <?php echo esc_attr($link->slug); ?>"><?php _e('Hits', 'pretty-link'); ?></a>
             <?php do_action('prli-link-action',$link->id); ?>
             <?php } ?>
             <?php if( $link->redirect_type != 'pixel' )
             {
             ?>
-            |&nbsp;<a href="http://twitter.com/home?status=<?php echo $pretty_link_url; ?>" target="_blank" title="Post <?php echo $pretty_link_url; ?> to Twitter"><?php _e('Tweet', 'pretty-link'); ?></a>&nbsp;|
-            <a href="mailto:?subject=Pretty Link&body=<?php echo $pretty_link_url; ?>" target="_blank" title="Send <?php echo $pretty_link_url; ?> in an Email"><?php _e('Email', 'pretty-link'); ?></a>
+            |&nbsp;<a href="http://twitter.com/home?status=<?php echo esc_url($pretty_link_url); ?>" target="_blank" title="Post <?php echo esc_attr($pretty_link_url); ?> to Twitter"><?php _e('Tweet', 'pretty-link'); ?></a>&nbsp;|
+            <a href="mailto:?subject=Pretty Link&body=<?php echo esc_url($pretty_link_url); ?>" target="_blank" title="Send <?php echo esc_attr($pretty_link_url); ?> in an Email"><?php _e('Email', 'pretty-link'); ?></a>
             <?php
             }
             ?>
@@ -204,21 +204,21 @@ if(!defined('ABSPATH'))
         <?php do_action('prli_link_column_row',$link->id); ?>
         <td>
           <?php if($prli_options->extended_tracking!='count')
-                  echo (($link->track_me)?"<a href=\"". admin_url( "admin.php?page=pretty-link/prli-clicks.php&l={$link->id}" ) . "\" title=\"View clicks for $link->slug\">" . (empty($link->clicks)?0:$link->clicks) . "/" . (empty($link->uniques)?0:$link->uniques) . "</a>":"<img src=\"".PRLI_IMAGES_URL."/not_tracking.png\" title=\"This link isn't being tracked\"/>");
+                  echo (($link->track_me)?"<a href=\"". admin_url( "admin.php?page=pretty-link/prli-clicks.php&l={$link->id}" ) . "\" title=\"View clicks for " . esc_attr($link->slug) . "\">" . (empty($link->clicks)?0:$link->clicks) . "/" . (empty($link->uniques)?0:$link->uniques) . "</a>":"<img src=\"".PRLI_IMAGES_URL."/not_tracking.png\" title=\"This link isn't being tracked\"/>");
                 else
                   echo (($link->track_me)?(empty($link->clicks)?0:$link->clicks) . "/" . (empty($link->uniques)?0:$link->uniques):"<img src=\"".PRLI_IMAGES_URL."/not_tracking.png\" title=\"This link isn't being tracked\"/>");
           ?>
         </td>
-        <td><a href="<?php echo admin_url( "admin.php?page=pretty-link&group={$link->group_id}"); ?>"><?php echo $link->group_name; ?></a></td>
+        <td><a href="<?php echo admin_url( "admin.php?page=pretty-link&group={$link->group_id}"); ?>"><?php echo esc_html($link->group_name); ?></a></td>
         <td><?php echo $link->created_at; ?></td>
         </td>
         <td>
-        <input type='text' style="font-size: 10px; width: 100%;" readonly="true" onclick='this.select();' onfocus='this.select();' value='<?php echo $pretty_link_url; ?>' />
-        <span class="list-clippy prli-clipboard"><?php echo $pretty_link_url; ?></span>
+        <input type='text' style="font-size: 10px; width: 100%;" readonly="true" onclick='this.select();' onfocus='this.select();' value='<?php echo esc_attr($pretty_link_url); ?>' />
+        <span class="list-clippy prli-clipboard"><?php echo esc_url($pretty_link_url); ?></span>
         <?php if( $link->redirect_type != 'pixel' )
         {
         ?>
-        <span style="font-size: 8px;" title="<?php echo $link->url; ?>"><strong><?php _e('Target URL:', 'pretty-link'); ?></strong> <?php echo htmlentities((substr($link->url,0,47) . ((strlen($link->url) >= 47)?'...':'')),ENT_COMPAT,'UTF-8'); ?></span></td>
+        <span style="font-size: 8px;" title="<?php echo esc_attr($link->url); ?>"><strong><?php _e('Target URL:', 'pretty-link'); ?></strong> <?php echo htmlentities((substr($link->url,0,47) . ((strlen($link->url) >= 47)?'...':'')),ENT_COMPAT,'UTF-8'); ?></span></td>
         <?php
         }
         ?>

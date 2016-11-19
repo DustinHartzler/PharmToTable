@@ -3,8 +3,8 @@ Contributors: supercleanse
 Donate link: http://prettylinkpro.com
 Tags: links, link, url, urls, affiliate, affiliates, pretty, marketing, redirect, forward, plugin, twitter, tweet, rewrite, shorturl, hoplink, hop, shortlink, short, shorten, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
 Requires at least: 3.9
-Tested up to: 4.5.1
-Stable tag: 1.6.9
+Tested up to: 4.6
+Stable tag: 1.7.2
 
 Shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!
 
@@ -65,6 +65,14 @@ http://blairwilliams.com/w7a
 3. Make sure you have changed your permalink Common Settings in Settings -> Permalinks away from "Default" to something else. I prefer using custom and then "/%year%/%month%/%postname%/" for the simplest possible URL slugs with the best performance.
 
 == Changelog ==
+
+= 1.7.2 =
+* Fixed available security exploits - recommended all users update to 1.7.2 as soon as possible. Thanks to Stephen Sandison for bringing this to our attention!
+
+= 1.7.1 =
+* Fixed slug already taken issue
+* Fixed http banner issue
+* Fixed compatibility with PHP 7+ issue
 
 = 1.6.9 =
 * Fixed deprecated get_currentuserinfo() call

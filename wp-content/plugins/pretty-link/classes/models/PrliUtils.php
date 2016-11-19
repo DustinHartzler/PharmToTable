@@ -101,11 +101,11 @@ class PrliUtils
     $slug = $slug_components[0];
   
     // Check slug uniqueness against posts, pages and categories
-    $postname = $wpdb->get_var($wpdb->prepare("SELECT post_name FROM {$wpdb->posts} WHERE post_name=%s LIMIT 1",$slug));
+    // $postname = $wpdb->get_var($wpdb->prepare("SELECT post_name FROM {$wpdb->posts} WHERE post_name=%s LIMIT 1",$slug));
     $taxonomy = $wpdb->get_var($wpdb->prepare("SELECT taxonomy FROM {$wpdb->term_taxonomy} WHERE taxonomy=%s LIMIT 1",$slug));
   
     // If anything was returned for these two calls then the slug has been taken
-    if( $postname or $taxonomy )
+    if(/*  $postname or  */$taxonomy )
       return false;
   
     // Check slug against files on the root wordpress install

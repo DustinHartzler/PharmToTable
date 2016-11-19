@@ -63,7 +63,7 @@ function prli_get_main_message($message='',$expiration=1800) // Get new messages
   if(!$messages)
   {
 	$remote_controller = $prli_update->pro_is_installed_and_authorized() ? 'prlipro' : 'prli';
-	$message_mothership = "http://prettylinkpro.com/index.php?controller={$remote_controller}&action=json_messages";
+	$message_mothership = "https://prettylinkpro.com/index.php?controller={$remote_controller}&action=json_messages";
 
     if( !class_exists( 'WP_Http' ) )
       include_once( ABSPATH . WPINC . '/class-http.php' );
