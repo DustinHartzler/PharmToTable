@@ -54,3 +54,6 @@ wp-content/*
 !wp-content/mu-plugins/
 !wp-content/plugins/
 !wp-content/themes/
+wp-content/plugins/homepage-control/
+
+wp-content/plugins/storefront-parallax-hero/
