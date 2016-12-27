@@ -3,7 +3,7 @@
 Plugin Name: Ninja Forms
 Plugin URI: http://ninjaforms.com/
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 3.0.15
+Version: 3.0.20
 Author: The WP Ninjas
 Author URI: http://ninjaforms.com
 Text Domain: ninja-forms
@@ -51,7 +51,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
         /**
          * @since 3.0
          */
-        const VERSION = '3.0.15';
+        const VERSION = '3.0.20';
 
         /**
          * @var Ninja_Forms
@@ -133,6 +133,11 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
          * @var NF_Session
          */
         protected $session = '';
+
+        /**
+         * @var NF_Tracking
+         */
+        public $tracking;
 
         /**
          * Plugin Settings
@@ -280,6 +285,11 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
                 self::$instance->notices = new NF_Admin_Notices();
 
                 self::$instance->widgets[] = new NF_Widget();
+
+                /*
+                 * Opt-In Tracking
+                 */
+                self::$instance->tracking = new NF_Tracking();
 
                 /*
                  * Activation Hook
@@ -691,4 +701,64 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
             $migrations->nuke(TRUE, TRUE);
         }
     }
+
+    // Scheduled Action Hook
+    function nf_optin_send_admin_email( ) {
+        /*
+         * If we aren't opted in, or we've specifically opted out, then return false.
+         */
+        if ( ! Ninja_Forms()->tracking->is_opted_in() || Ninja_Forms()->tracking->is_opted_out() ) {
+            return false;
+        }
+
+        /*
+         * If we haven't already submitted our email to api.ninjaforms.com, submit it and set an option saying we have.
+         */
+        
+        if ( get_option ( 'ninja_forms_optin_admin_email', false ) ) {
+            return false;
+        }
+
+        /*
+         * Ping api.ninjaforms.com
+         */
+        
+        $admin_email = get_option('admin_email');
+        $url = home_url();
+        $response = wp_remote_post(
+            'http://api.ninjaforms.com',
+            array(
+                'body' => array( 'admin_email' => $admin_email, 'url' => $url ),
+            )
+        );
+
+        if( is_array($response) ) {
+            $header = $response['headers']; // array of http header lines
+            $body = $response['body']; // use the content
+        }
+
+        update_option( 'ninja_forms_optin_admin_email', true );
+    }
+
+    add_action( 'nf_optin_cron', 'nf_optin_send_admin_email' );
+
+    // Custom Cron Recurrences
+    function nf_custom_cron_job_recurrence( $schedules ) {
+        $schedules['nf-monthly'] = array(
+            'display' => __( 'Once per month', 'textdomain' ),
+            'interval' => 2678400,
+        );
+        return $schedules;
+    }
+    add_filter( 'cron_schedules', 'nf_custom_cron_job_recurrence' );
+
+    // Schedule Cron Job Event
+    function nf_optin_send_admin_email_cron_job() {
+        if ( ! wp_next_scheduled( 'nf_optin_cron' ) ) {
+            nf_optin_send_admin_email();
+            wp_schedule_event( current_time( 'timestamp' ), 'nf-monthly', 'nf_optin_cron' );
+        }
+    }
+
+    add_action( 'wp', 'nf_optin_send_admin_email_cron_job' );
 }

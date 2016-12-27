@@ -8,11 +8,11 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
 
     public function __construct()
     {
-        add_action( 'plugins_loaded', array( $this, 'import_form_listener' ) );
-        add_action( 'plugins_loaded', array( $this, 'export_form_listener' ) );
+        add_action( 'init', array( $this, 'import_form_listener' ), 0 );
+        add_action( 'init', array( $this, 'export_form_listener' ), 0 );
 
-        add_action( 'plugins_loaded', array( $this, 'import_fields_listener' ) );
-        add_action( 'plugins_loaded', array( $this, 'export_fields_listener' ) );
+        add_action( 'init', array( $this, 'import_fields_listener' ), 0 );
+        add_action( 'init', array( $this, 'export_fields_listener' ), 0 );
 
         add_filter( 'ninja_forms_before_import_fields', array( $this, 'import_fields_backwards_compatibility' ) );
 
@@ -26,7 +26,9 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
 
     public function import_form_listener()
     {
-        if( ! current_user_can( apply_filters( 'ninja_forms_admin_import_form_capabilities', 'manage_options' ) ) ) return;
+        $capability = apply_filters( 'ninja_forms_admin_import_export_capabilities', 'manage_options' );
+        $capability = apply_filters( 'ninja_forms_admin_import_form_capabilities',   $capability      );
+        if( ! current_user_can( $capability ) ) return;
 
         if( ! isset( $_FILES[ 'nf_import_form' ] ) || ! $_FILES[ 'nf_import_form' ] ) return;
 
@@ -47,7 +49,9 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
 
     public function export_form_listener()
     {
-        if( ! current_user_can( apply_filters( 'ninja_forms_admin_export_form_capabilities', 'manage_options' ) ) ) return;
+        $capability = apply_filters( 'ninja_forms_admin_import_export_capabilities', 'manage_options' );
+        $capability = apply_filters( 'ninja_forms_admin_export_form_capabilities',   $capability      );
+        if( ! current_user_can( $capability ) ) return;
 
         if( isset( $_REQUEST[ 'nf_export_form' ] ) && $_REQUEST[ 'nf_export_form' ] ){
             $form_id = $_REQUEST[ 'nf_export_form' ];

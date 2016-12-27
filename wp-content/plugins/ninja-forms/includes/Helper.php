@@ -34,6 +34,18 @@ final class WPN_Helper
     }
 
     /**
+     * @param $input
+     * @return array|string
+     */
+    public static function utf8_decode( $input ){
+        if ( is_array( $input ) )    {
+            return array_map( array( 'self', 'utf8_decode' ), $input );
+        }else{
+            return utf8_decode( $input );
+        }
+    }
+
+    /**
      * @param $search
      * @param $replace
      * @param $subject

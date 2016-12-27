@@ -33,7 +33,7 @@ class NF_Fields_ListSelect extends NF_Abstracts_List
         if( isset( $field[ 'options' ] ) ) {
             foreach ($field['options'] as $option ) {
                 if( ! isset( $option[ 'value' ] ) || $value != $option[ 'value' ] || ! isset( $option[ 'calc' ] ) ) continue;
-                $value =  $option[ 'calc' ];
+                return $option[ 'calc' ];
             }
         }
         return $value;

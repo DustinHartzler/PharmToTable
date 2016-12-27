@@ -41,4 +41,30 @@ return apply_filters( 'ninja_forms_merge_tags_system', array(
         'callback' => 'system_ip'
     ),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Site Title
+    |--------------------------------------------------------------------------
+    */
+
+    'site_title' => array(
+        'id' => 'site_title',
+        'tag' => '{site:title}',
+        'label' => __( 'Site Title', 'ninja_forms' ),
+        'callback' => 'site_title'
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Site URL
+    |--------------------------------------------------------------------------
+    */
+
+    'site_url' => array(
+        'id' => 'site_url',
+        'tag' => '{site:url}',
+        'label' => __( 'Site URL', 'ninja_forms' ),
+        'callback' => 'site_url'
+    ),
+
 ));

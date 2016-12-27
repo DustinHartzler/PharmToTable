@@ -37,6 +37,8 @@ final class NF_Display_Render
 
     public static function localize( $form_id )
     {
+        global $wp_locale;
+
         $capability = apply_filters( 'ninja_forms_display_test_values_capabilities', 'read' );
         if( isset( $_GET[ 'ninja_forms_test_values' ] ) && current_user_can( $capability ) ){
             self::$use_test_values = TRUE;
@@ -84,7 +86,7 @@ final class NF_Display_Render
             // TODO: Optimize Query
             global $wpdb;
             $count = 0;
-            $subs = $wpdb->get_results( "SELECT post_id FROM wp_postmeta WHERE `meta_key` = '_form_id' AND `meta_value` = $form_id" );
+            $subs = $wpdb->get_results( "SELECT post_id FROM " . $wpdb->postmeta . " WHERE `meta_key` = '_form_id' AND `meta_value` = $form_id" );
             foreach( $subs as $sub ){
                 if( 'publish' == get_post_status( $sub->post_id ) ) $count++;
             }
@@ -175,7 +177,11 @@ final class NF_Display_Render
                 if( ! is_string( $field_type ) ) continue;
 
                 if( ! isset( Ninja_Forms()->fields[ $field_type ] ) ) {
-                    $field = NF_Fields_Unknown::create( $field );
+                    $unknown_field = NF_Fields_Unknown::create( $field );
+                    $field = array(
+                        'settings' => $unknown_field->get_settings(),
+                        'id' => $unknown_field->get_id()
+                    );
                     $field_type = $field[ 'settings' ][ 'type' ];
                 }
 
@@ -230,8 +236,9 @@ final class NF_Display_Render
                     $settings[ 'options' ] = apply_filters( 'ninja_forms_render_options_' . $field_type, $settings[ 'options' ], $settings );
                 }
 
-                if (isset($settings['default'])) {
-                    $default_value = apply_filters('ninja_forms_render_default_value', $settings['default'], $field_type, $settings);
+                $default_value = ( isset( $settings[ 'default' ] ) ) ? $settings[ 'default' ] : null;
+                $default_value = apply_filters('ninja_forms_render_default_value', $default_value, $field_type, $settings);
+                if ( $default_value ) {
 
                     $default_value = preg_replace( '/{.*}/', '', $default_value );
 
@@ -248,15 +255,25 @@ final class NF_Display_Render
                     }
                 }
 
+                $thousands_sep = $wp_locale->number_format[ 'thousands_sep'];
+                $decimal_point = $wp_locale->number_format[ 'decimal_point' ];
+                   
                 // TODO: Find a better way to do this.
                 if ('shipping' == $settings['type']) {
-                    $settings['shipping_cost'] = preg_replace ('/[^\d,\.]/', '', $settings['shipping_cost']);
-                    $settings['shipping_cost'] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $settings['shipping_cost']);
-                    $settings['shipping_cost'] = number_format($settings['shipping_cost'], 2);
+                    $settings[ 'shipping_cost' ] = preg_replace ('/[^\d,\.]/', '', $settings[ 'shipping_cost' ] );
+                    $settings[ 'shipping_cost' ] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $settings[ 'shipping_cost' ] );
+                    
+                    $settings[ 'shipping_cost' ] = str_replace( $decimal_point, '||', $settings[ 'shipping_cost' ] );
+                    $settings[ 'shipping_cost' ] = str_replace( $thousands_sep, '', $settings[ 'shipping_cost' ] );
+                    $settings[ 'shipping_cost' ] = str_replace( '||', '.', $settings[ 'shipping_cost' ] );
                 } elseif ('product' == $settings['type']) {
                     $settings['product_price'] = preg_replace ('/[^\d,\.]/', '', $settings[ 'product_price' ] );
                     $settings['product_price'] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $settings['product_price']);
-                    $settings['product_price'] = number_format($settings['product_price'], 2);
+
+                    $settings[ 'product_price' ] = str_replace( $decimal_point, '||', $settings[ 'product_price' ] );
+                    $settings[ 'product_price' ] = str_replace( $thousands_sep, '', $settings[ 'product_price' ] );
+                    $settings[ 'product_price' ] = str_replace( '||', '.', $settings[ 'product_price' ] );
+
                 } elseif ('total' == $settings['type'] && isset($settings['value'])) {
                     $settings['value'] = number_format($settings['value'], 2);
                 }
@@ -286,7 +303,7 @@ final class NF_Display_Render
                     array_push( self::$form_uses_textarea_media, $form_id );
                 }
                 if( isset( $field[ 'settings' ][ 'help_text' ] ) && strip_tags( $field[ 'settings' ][ 'help_text' ] ) ){
-                    array_push( self::$form_uses_textarea_media, $form_id );
+                    array_push( self::$form_uses_helptext, $form_id );
                 }
             }
 
@@ -424,8 +441,9 @@ final class NF_Display_Render
                     $field['settings'][ 'options' ] = apply_filters( 'ninja_forms_render_options_' . $field['settings'][ 'type' ], $field['settings'][ 'options' ], $field['settings'] );
                 }
 
-                if (isset($field['settings']['default'])) {
-                    $default_value = apply_filters('ninja_forms_render_default_value', $field['settings']['default'], $field_type, $field['settings']);
+                $default_value = ( isset( $field[ 'settings' ][ 'default' ] ) ) ? $field[ 'settings' ][ 'default' ] : null;
+                $default_value = apply_filters( 'ninja_forms_render_default_value', $default_value, $field_type, $field[ 'settings' ]);
+                if( $default_value ){
 
                     $default_value = preg_replace( '/{.*}/', '', $default_value );
 
@@ -492,6 +510,7 @@ final class NF_Display_Render
 
     public static function enqueue_scripts( $form_id, $is_preview = false )
     {
+        global $wp_locale;
         $form = Ninja_Forms()->form( $form_id )->get();
 
         $ver     = Ninja_Forms::VERSION;
@@ -514,7 +533,7 @@ final class NF_Display_Render
 
         if( $is_preview || in_array( $form_id, self::$form_uses_recaptcha ) ) {
             $recaptcha_lang = Ninja_Forms()->get_setting('recaptcha_lang');
-            wp_enqueue_script('google-recaptcha', 'https://www.google.com/recaptcha/api.js?hl=' . $recaptcha_lang, array( 'jquery' ), $ver );
+            wp_enqueue_script('google-recaptcha', 'https://www.google.com/recaptcha/api.js?hl=' . $recaptcha_lang . '&onload=nfRenderRecaptcha&render=explicit', array( 'jquery', 'nf-front-end-deps' ), $ver, TRUE );
         }
 
         if( $is_preview || in_array( $form_id, self::$form_uses_datepicker ) ) {
@@ -527,7 +546,7 @@ final class NF_Display_Render
         }
 
          if( $is_preview || in_array( $form_id, self::$form_uses_rte ) ) {
-             if( $is_preview || self::form_uses_textarea_media( $form_id ) ) {
+             if( $is_preview || in_array( $form_id, self::$form_uses_textarea_media ) ) {
                 wp_enqueue_media();
              }
 

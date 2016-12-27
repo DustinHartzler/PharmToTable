@@ -56,14 +56,34 @@ class NF_Fields_Unknown extends NF_Fields_Hidden
     public static function create( $field )
     {
         $unknown = Ninja_Forms()->form()->field()->get();
-        $unknown->update_settings(array(
-            'id'      => $field->get_id(),
-            'label'   => $field->get_setting( 'label' ),
-            'order'   => $field->get_setting( 'order' ),
-            'key'     => $field->get_setting( 'key' ),
-            'type'    => 'unknown',
-            'message' => sprintf( __( 'Field type "%s" not found.', 'ninja-forms' ), $field->get_setting( 'type' ) )
-        ));
+        if( is_object( $field ) ){
+            $unknown->update_settings(array(
+                'id'      => $field->get_id(),
+                'label'   => $field->get_setting( 'label' ),
+                'order'   => $field->get_setting( 'order' ),
+                'key'     => $field->get_setting( 'key' ),
+                'type'    => 'unknown',
+                'message' => sprintf( __( 'Field type "%s" not found.', 'ninja-forms' ), $field->get_setting( 'type' ) )
+            ));
+        } elseif( isset( $field[ 'settings' ] ) ){
+            $unknown->update_settings(array(
+                'id'      => $field[ 'id' ],
+                'label'   => $field[ 'settings' ][ 'label' ],
+                'order'   => $field[ 'settings' ][ 'order' ],
+                'key'     => $field[ 'settings' ][ 'key' ],
+                'type'    => 'unknown',
+                'message' => sprintf( __( 'Field type "%s" not found.', 'ninja-forms' ), $field[ 'settings' ][ 'type' ] )
+            ));
+        } else {
+            $unknown->update_settings(array(
+                'id'      => $field[ 'id' ],
+                'label'   => $field[ 'label' ],
+                'order'   => $field[ 'order' ],
+                'key'     => $field[ 'key' ],
+                'type'    => 'unknown',
+                'message' => sprintf( __( 'Field type "%s" not found.', 'ninja-forms' ), $field[ 'type' ] )
+            ));
+        }
         return $unknown;
     }
 }

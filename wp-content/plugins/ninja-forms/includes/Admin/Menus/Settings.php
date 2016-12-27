@@ -108,7 +108,7 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
 
     public function update_settings()
     {
-        if( ! current_user_can( apply_filters( 'ninja_forms_admin_form_settings_capabilities', 'manage_options' ) ) ) return;
+        if( ! current_user_can( apply_filters( 'ninja_forms_admin_settings_capabilities', 'manage_options' ) ) ) return;
 
         if( ! isset( $_POST[ $this->_prefix ] ) ) return;
 

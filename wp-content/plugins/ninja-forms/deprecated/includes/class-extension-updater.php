@@ -43,7 +43,7 @@ class NF_Extension_Updater
 		}
 
 		$this->version = $version;
-		$this->file = $file;
+		$this->file = str_replace( '/deprecated', '', $file );
 		$this->author = $author;
 
 		$this->add_license_fields();

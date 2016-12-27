@@ -52,10 +52,12 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         $attachments = $this->_get_attachments( $action_settings, $data );
 
         if( 'html' == $action_settings[ 'email_format' ] ) {
-            $message =  $action_settings['email_message'];
+            $message = $action_settings['email_message'];
         } else {
             $message = $this->format_plain_text_message( $action_settings[ 'email_message_plain' ] );
         }
+
+        $message = apply_filters( 'ninja_forms_action_email_message', $message, $data, $action_settings );
 
         $sent = wp_mail(
             $action_settings['to'],
@@ -133,7 +135,12 @@ final class NF_Actions_Email extends NF_Abstracts_Action
 
                 if( ! $email ) continue;
 
-                $headers[] = $this->_format_recipient($type, $email);
+                $matches = array();
+                if (preg_match('/^"?(?<name>[^<"]+)"? <(?<email>[^>]+)>$/', $email, $matches)) {
+                    $headers[] = $this->_format_recipient($type, $matches['email'], $matches['name']);
+                } else {
+                    $headers[] = $this->_format_recipient($type, $email);
+                }
             }
         }
 

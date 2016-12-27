@@ -139,9 +139,7 @@ class NF_Admin_CPT_DownloadAllSubmissions extends NF_Step_Processing {
             ?>
             <script type="text/javascript">
                 jQuery(document).ready(function() {
-                    jQuery('<option>').val('export').text('<?php _e('Export')?>').appendTo("select[name='action']");
-                    jQuery('<option>').val('export').text('<?php _e('Export')?>').appendTo("select[name='action2']");
-                    <?php
+                     <?php
                     if ( ( isset ( $_POST['action'] ) && $_POST['action'] == 'export' ) || ( isset ( $_POST['action2'] ) && $_POST['action2'] == 'export' ) ) {
                     ?>
                     setInterval(function(){

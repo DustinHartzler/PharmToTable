@@ -331,8 +331,10 @@ class NF_Abstracts_Model
      */
     public function update_settings( $data )
     {
-        foreach( $data as $key => $value ){
-            $this->update_setting( $key, $value );
+        if( is_array( $data ) ) {
+            foreach ($data as $key => $value) {
+                $this->update_setting($key, $value);
+            }
         }
 
         return $this;

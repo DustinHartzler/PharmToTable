@@ -121,10 +121,10 @@ class NF_Abstracts_ModelFactory
     public function import_form( $import, $id = FALSE, $is_conversion = FALSE )
     {
         if( ! is_array( $import ) ){
-            $data = json_decode( html_entity_decode( $import ), true );
+            $data = WPN_Helper::utf8_decode( json_decode( html_entity_decode( $import ), true ) );
 
             if( ! is_array( $data ) ) {
-                $data = json_decode($import, true);
+                $data = WPN_Helper::utf8_decode( json_decode(  $import , true ) );
             }
 
             if( ! is_array( $data ) ){

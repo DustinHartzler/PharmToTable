@@ -37,6 +37,16 @@ final class NF_MergeTags_Calcs extends NF_Abstracts_MergeTags
             'callback' => $callback,
             'calc_value' => $calculated_value
         );
+
+        $callback .= '2';
+
+        $this->merge_tags[ $callback ] = array(
+            'id' => $key,
+            'tag' => "{calc:$key:2}",
+//            'label' => __( '', 'ninja_forms' ),
+            'callback' => $callback,
+            'calc_value' => number_format( $calculated_value, 2 )
+        );
     }
 
 } // END CLASS NF_MergeTags_Calcs

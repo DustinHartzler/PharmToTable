@@ -16,7 +16,10 @@ final class NF_MergeTags_System extends NF_Abstracts_MergeTags
 
     protected function system_date()
     {
-        $format = 'm/d/Y';
+        $format = Ninja_Forms()->get_setting( 'date_format' );
+        if ( empty( $format ) ) {
+            $format = 'Y/m/d';
+        }
         return date( $format, time() );
     }
 
@@ -39,6 +42,16 @@ final class NF_MergeTags_System extends NF_Abstracts_MergeTags
     protected function admin_email()
     {
         return get_option( 'admin_email' );
+    }
+
+    protected function site_title()
+    {
+        return get_bloginfo( 'name' );
+    }
+
+    protected function site_url()
+    {
+        return get_bloginfo( 'url' );
     }
 
 } // END CLASS NF_MergeTags_System

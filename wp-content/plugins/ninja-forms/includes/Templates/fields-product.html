@@ -6,7 +6,7 @@
 
 <script id="tmpl-nf-product-single" type="text/template">
     <span class="nf-product-price-label">{{{ nfi18n.fieldsProductsPrice }}}</span>
-    <span class="nf-product-price">{{{ data.currencySymbol() }}}{{{ data.product_price }}}</span>
+    <span class="nf-product-price">{{{ data.renderCurrencyFormatting( data.product_price ) }}}</span>
     {{{ data.renderProductQuantity() }}}
 </script>
 

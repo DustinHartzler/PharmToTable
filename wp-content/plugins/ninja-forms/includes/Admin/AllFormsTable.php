@@ -34,6 +34,12 @@ class NF_Admin_AllFormsTable extends WP_List_Table
      */
     public function prepare_items()
     {
+
+        wp_enqueue_script( 'nf-all-forms', Ninja_Forms::$url . 'assets/js/all-forms.js' );
+        wp_localize_script( 'nf-all-forms', 'nfi18n', array(
+            'confirm_delete' => __( 'Really Delete This Form? This will remove all fields and submission data. Recovery is not possible.', 'ninja-forms' ),
+        ) );
+
         $columns = $this->get_columns();
         $hidden = $this->get_hidden_columns();
         $sortable = $this->get_sortable_columns();
