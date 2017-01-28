@@ -6067,7 +6067,7 @@ msgstr "เส้นแบ่งหน้าจอ"
 msgid "Select"
 msgstr "เลือก"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "จังหวัด"
 

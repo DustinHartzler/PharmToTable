@@ -6134,7 +6134,7 @@ msgstr "Divider"
 msgid "Select"
 msgstr "Seçiniz"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "İl"
 

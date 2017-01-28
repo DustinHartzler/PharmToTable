@@ -2,8 +2,8 @@
 Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, wpnzach, aman086, daveshine, mordauk, bftrick, helgatheviking
 Tags: form, forms, contact form, custom form, form builder, form creator, form manager, form creation, contact forms, custom forms, forms builder, forms creator, forms manager, forms creation, form administration,
 Requires at least: 4.5
-Tested up to: 4.7
-Stable tag: 3.0.20
+Tested up to: 4.7.1
+Stable tag: 3.0.25
 License: GPLv2 or later
 
 Drag and drop fields in an intuitive UI to create create contact forms, email subscription forms, order forms, payment forms, send emails and more!
@@ -102,25 +102,70 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 == Upgrade Notice ==
 
-= 3.0.20 (21 December 2016) =
+= 3.0.25 (26 January 2017) =
 
 *Changes:*
 
-* Added a prompt before deleting forms on the all-forms table.
-* Added the ability to use: {field:name} <{field:email}> to get Name - Address formatting in email actions CC, BCC, Reply-To Field.
-* Updated the third-party EDD library.
-* Removed references to the modernizer library from the builder.
-* Added Twilio and Videomail to the list of available actions.
+* Increasing the performance of submissions and form builder loading.
+* Improved compatibility with popular caching plugins.
 
 *Bugs:*
 
-* Fixed a bug that caused fields to be out of order when exporting or editing submissions.
-* Product fields should now respect locale-specific number formating.
-* Fixed a bug with restarting form submit. This caused issues with PayPal Express and other add-ons.
-* When adding new list options, the 'value' should auto-populate from 'label' setting.
-* The tab order for list options should now work properly.
+* Field tags should now properly populate in calculation merge tags.
+* Submission exports should now always order properly.
+* Fixed a bug with submissions exporting non-Ninja Forms data.
+* Importing forms with non-UTF8 characters should now import properly.
+* Fixed a bug with converting froms from 2.9.x to 3.0.
 
 == Changelog ==
+
+= 3.0.25 (26 January 2017) =
+
+*Changes:*
+
+* Increasing the performance of submissions and form builder loading.
+* Improved compatibility with popular caching plugins.
+
+*Bugs:*
+
+* Field tags should now properly populate in calculation merge tags.
+* Submission exports should now always order properly.
+* Fixed a bug with submissions exporting non-Ninja Forms data.
+* Importing forms with non-UTF8 characters should now import properly.
+* Fixed a bug with converting froms from 2.9.x to 3.0.
+
+= 3.0.24 (15 January 2017) =
+
+*Bugs:*
+
+* Fixed a bug with Google reCaptcha and the deprecated, 2.9.x codebase.
+
+= 3.0.23 (12 January 2017) =
+
+*Bugs:*
+
+* Fixed a bug with form duplication.
+
+= 3.0.22 (11 January 2017) =
+
+*Bugs:*
+
+* Fixed a bug that caused installations to crash on older, unsecure versions of PHP.
+
+= 3.0.21 (11 January 2017) =
+
+*Changes:*
+
+* Added an import for list options.
+* Refactored form submissions so that they are more responsive for longer forms with more submissions.
+* Moved the 'reply_to' setting to the primary section in email actions.
+* Added error handling for invalid "TO" email addresses.
+
+*Bugs:*
+
+* Fixed a bug with calculations that caused brackets to appear in calculation fields.
+* On/off settings should now save properly in all situations.
+* Dragging a field should now properly scroll the screen.
 
 = 3.0.20 (21 December 2016) =
 

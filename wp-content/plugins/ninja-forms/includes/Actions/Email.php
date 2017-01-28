@@ -47,6 +47,8 @@ final class NF_Actions_Email extends NF_Abstracts_Action
 
     public function process( $action_settings, $form_id, $data )
     {
+        $errors = $this->check_for_errors( $action_settings );
+
         $headers = $this->_get_headers( $action_settings );
 
         $attachments = $this->_get_attachments( $action_settings, $data );
@@ -59,20 +61,46 @@ final class NF_Actions_Email extends NF_Abstracts_Action
 
         $message = apply_filters( 'ninja_forms_action_email_message', $message, $data, $action_settings );
 
-        $sent = wp_mail(
-            $action_settings['to'],
-            $action_settings['email_subject'],
-            $message,
-            $headers,
-            $attachments
-        );
+        try {
+            $sent = wp_mail($action_settings['to'], $action_settings['email_subject'], $message, $headers, $attachments);
+        } catch ( Exception $e ){
+            $sent = false;
+            $errors[ 'email_sent' ] = $e->getMessage();
+        }
 
         $data[ 'actions' ][ 'email' ][ 'to' ] = $action_settings['to'];
         $data[ 'actions' ][ 'email' ][ 'sent' ] = $sent;
         $data[ 'actions' ][ 'email' ][ 'headers' ] = $headers;
         $data[ 'actions' ][ 'email' ][ 'attachments' ] = $attachments;
 
+        if( $errors ){
+            $data[ 'errors' ][ 'form' ] = $errors;
+        }
+
         return $data;
+    }
+
+    protected function check_for_errors( $action_settings )
+    {
+        $errors = array();
+
+        $email_address_settings = array( 'to', 'from_address', 'reply_to', 'cc', 'bcc' );
+
+        foreach( $email_address_settings as $setting ){
+            if( ! isset( $action_settings[ $setting ] ) ) continue;
+            if( ! $action_settings[ $setting ] ) continue;
+
+
+            $email_addresses = is_array( $action_settings[ $setting ] ) ? $action_settings[ $setting ] : explode( ',', $action_settings[ $setting ] );
+            foreach( (array) $email_addresses as $email ){
+                $email = trim( $email );
+                if( ! is_email( $email ) ) {
+                    $errors[ 'email_' . $email ] = sprintf( __( 'Your email action "%s" has an invalid value for the "TO" setting. Please check this setting and try again.', 'ninja-forms'), $action_settings[ 'label' ] );
+                }
+            }
+        }
+
+        return $errors;
     }
 
     private function _get_headers( $settings )

@@ -16,6 +16,7 @@ final class NF_MergeTags_QueryStrings extends NF_Abstracts_MergeTags
             '' => array(
                 'tag' => '{query_string_key}',
                 'label' => __( 'Query String', 'ninja_forms' ),
+                'callback' => null,
             ),
         );
 

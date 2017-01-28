@@ -150,7 +150,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
     'options' => array(
         'name' => 'options',
         'type' => 'option-repeater',
-        'label' => __( 'Options', 'ninja-forms' ) . ' <a href="#" class="nf-add-new">' . __( 'Add New', 'ninja-forms' ) . '</a>',
+        'label' => __( 'Options', 'ninja-forms' ) . ' <a href="#" class="nf-add-new">' . __( 'Add New', 'ninja-forms' ) . '</a> <a href="#" class="extra nf-open-import-tooltip"><i class="fa fa-sign-in" aria-hidden="true"></i> ' . __( 'Import', 'ninja-forms' ) . '</a>',
         'width' => 'full',
         'group' => 'primary',
         // 'value' => 'option-repeater',

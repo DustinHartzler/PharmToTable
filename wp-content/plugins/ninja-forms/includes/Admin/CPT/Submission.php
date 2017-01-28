@@ -115,13 +115,12 @@ class NF_Admin_CPT_Submission
 
     public function post_row_actions( $actions, $sub )
     {
-        if( $this->cpt_slug == get_post_type() ){
+        if ( $this->cpt_slug == get_post_type() ){
             unset( $actions[ 'view' ] );
             unset( $actions[ 'inline hide-if-no-js' ] );
+            $export_url = add_query_arg( array( 'action' => 'export', 'post[]' => $sub->ID ) );
+            $actions[ 'export' ] = sprintf( '<a href="%s">%s</a>', $export_url, __( 'Export', 'ninja-forms' ) );
         }
-
-        $export_url = add_query_arg( array( 'action' => 'export', 'post[]' => $sub->ID ) );
-        $actions[ 'export' ] = sprintf( '<a href="%s">%s</a>', $export_url, __( 'Export', 'ninja-forms' ) );
 
         return $actions;
     }
@@ -132,6 +131,10 @@ class NF_Admin_CPT_Submission
 
         $form_id = absint( $_GET[ 'form_id' ] );
 
+        static $columns;
+
+        if( $columns ) return $columns;
+        
         $columns = array(
             'cb'    => '<input type="checkbox" />',
             'id' => __( '#', 'ninja-forms' ),
@@ -139,8 +142,7 @@ class NF_Admin_CPT_Submission
 
         $form_cache = get_option( 'nf_form_' . $form_id );
 
-        $form_fields = $form_cache[ 'fields' ];
-        if( empty( $form_fields ) ) $form_fields = Ninja_Forms()->form( $form_id )->get_fields();
+        $form_fields = Ninja_Forms()->form( $form_id )->get_fields();
 
         foreach( $form_fields as $field ) {
 
@@ -178,7 +180,12 @@ class NF_Admin_CPT_Submission
 
         if( is_numeric( $column ) ){
             $value = $sub->get_field_value( $column );
-            $field = Ninja_Forms()->form()->get_field( $column );
+
+            static $fields;
+            if( ! isset( $fields[ $column ] ) ) {
+                $fields[$column] = Ninja_Forms()->form()->get_field($column);
+            }
+            $field = $fields[$column];
             echo apply_filters( 'ninja_forms_custom_columns', $value, $field, $sub_id );
         }
 
@@ -255,8 +262,6 @@ class NF_Admin_CPT_Submission
         $sub = Ninja_Forms()->form()->get_sub( $post->ID );
 
         $fields = Ninja_Forms()->form( $form_id )->get_fields();
-
-        usort( $fields, array( $this, 'sort_fields' ) );
 
         $hidden_field_types = apply_filters( 'nf_sub_hidden_field_types', array() );
 

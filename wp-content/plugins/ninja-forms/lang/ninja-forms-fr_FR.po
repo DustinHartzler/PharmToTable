@@ -6148,7 +6148,7 @@ msgstr "Séparateur"
 msgid "Select"
 msgstr "Choisir"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "Province"
 

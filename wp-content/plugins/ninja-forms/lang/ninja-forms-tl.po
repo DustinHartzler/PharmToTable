@@ -6111,7 +6111,7 @@ msgstr "Divider"
 msgid "Select"
 msgstr "Pumili"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "Estado"
 

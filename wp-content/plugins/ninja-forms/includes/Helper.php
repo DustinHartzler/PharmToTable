@@ -227,4 +227,22 @@ final class WPN_Helper
         return in_array( $function, $disabled );
     }
 
+    public static function maybe_unserialize( $original )
+    {
+        // Repalcement for https://codex.wordpress.org/Function_Reference/maybe_unserialize
+        if ( is_serialized( $original ) ){
+            // Ported with php5.2 support from https://magp.ie/2014/08/13/php-unserialize-string-after-non-utf8-characters-stripped-out/
+            $parsed = preg_replace_callback( '!s:(\d+):"(.*?)";!s', array( 'self', 'parse_utf8_serialized' ), $original );
+            return unserialize( $parsed );
+        }
+        return $original;
+    }
+
+    private static function parse_utf8_serialized( $matches )
+    {
+        if ( isset( $matches[2] ) ){
+            return 's:'.strlen($matches[2]).':"'.$matches[2].'";';
+        }
+    }
+
 } // End Class WPN_Helper

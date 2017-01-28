@@ -97,6 +97,8 @@ final class NF_Display_Render
             }
         }
 
+        if( ! apply_filters( 'ninja_forms_display_show_form', true, $form_id, $form ) ) return;
+
         $currency = $form->get_setting( 'currency', Ninja_Forms()->get_setting( 'currency' ) );
         $currency_symbol = Ninja_Forms::config( 'CurrencySymbol' );
         $form->update_setting( 'currency_symbol', ( isset( $currency_symbol[ $currency ] ) ) ? $currency_symbol[ $currency ] : '' );
@@ -116,9 +118,7 @@ final class NF_Display_Render
         $after_form = apply_filters( 'ninja_forms_display_after_form', '', $form_id );
         $form->update_setting( 'afterForm', $after_form );
 
-        $form_cache = get_option( 'nf_form_' . $form_id, false );
-        $form_fields = $form_cache[ 'fields' ];
-        if( empty( $form_fields ) ) $form_fields = Ninja_Forms()->form( $form_id )->get_fields();
+        $form_fields = Ninja_Forms()->form( $form_id )->get_fields();
         $fields = array();
 
         if( empty( $form_fields ) ){
@@ -257,12 +257,12 @@ final class NF_Display_Render
 
                 $thousands_sep = $wp_locale->number_format[ 'thousands_sep'];
                 $decimal_point = $wp_locale->number_format[ 'decimal_point' ];
-                   
+
                 // TODO: Find a better way to do this.
                 if ('shipping' == $settings['type']) {
                     $settings[ 'shipping_cost' ] = preg_replace ('/[^\d,\.]/', '', $settings[ 'shipping_cost' ] );
                     $settings[ 'shipping_cost' ] = str_replace( Ninja_Forms()->get_setting( 'currency_symbol' ), '', $settings[ 'shipping_cost' ] );
-                    
+
                     $settings[ 'shipping_cost' ] = str_replace( $decimal_point, '||', $settings[ 'shipping_cost' ] );
                     $settings[ 'shipping_cost' ] = str_replace( $thousands_sep, '', $settings[ 'shipping_cost' ] );
                     $settings[ 'shipping_cost' ] = str_replace( '||', '.', $settings[ 'shipping_cost' ] );
@@ -323,17 +323,17 @@ final class NF_Display_Render
         <script>
             var formDisplay = 1;
 
-            // Maybe initialize nfForms object
+            /* Maybe initialize nfForms object */
             var nfForms = nfForms || [];
 
-            // Build Form Data
+            /* Build Form Data */
             var form = [];
             form.id = '<?php echo $form_id; ?>';
             form.settings = <?php echo wp_json_encode( $form->get_settings() ); ?>;
 
             form.fields = <?php echo wp_json_encode( $fields ); ?>;
 
-            // Add Form Data to nfForms object
+            /* Add Form Data to nfForms object */
             nfForms.push( form );
         </script>
 
@@ -517,19 +517,7 @@ final class NF_Display_Render
         $js_dir  = Ninja_Forms::$url . 'assets/js/min/';
         $css_dir = Ninja_Forms::$url . 'assets/css/';
 
-
-        switch( Ninja_Forms()->get_setting( 'opinionated_styles' ) ) {
-            case 'light':
-                wp_enqueue_style( 'nf-display',      $css_dir . 'display-opinions-light.css', array( 'dashicons' ) );
-                wp_enqueue_style( 'nf-font-awesome', $css_dir . 'font-awesome.min.css'       );
-                break;
-            case 'dark':
-                wp_enqueue_style( 'nf-display',      $css_dir . 'display-opinions-dark.css', array( 'dashicons' )  );
-                wp_enqueue_style( 'nf-font-awesome', $css_dir . 'font-awesome.min.css'      );
-                break;
-            default:
-                wp_enqueue_style( 'nf-display',      $css_dir . 'display-structure.css', array( 'dashicons' ) );
-        }
+        self::enqueue_styles_display( $css_dir );
 
         if( $is_preview || in_array( $form_id, self::$form_uses_recaptcha ) ) {
             $recaptcha_lang = Ninja_Forms()->get_setting('recaptcha_lang');
@@ -590,6 +578,26 @@ final class NF_Display_Render
         do_action( 'ninja_forms_enqueue_scripts', array( 'form_id' => $form_id ) );
 
         do_action( 'nf_display_enqueue_scripts' );
+    }
+
+	/**
+	 * Enqueue NF frontend basic display styles.
+	 *
+	 * @param string $css_dir
+	 */
+    public static function enqueue_styles_display( $css_dir ) {
+	    switch( Ninja_Forms()->get_setting( 'opinionated_styles' ) ) {
+		    case 'light':
+			    wp_enqueue_style( 'nf-display',      $css_dir . 'display-opinions-light.css', array( 'dashicons' ) );
+			    wp_enqueue_style( 'nf-font-awesome', $css_dir . 'font-awesome.min.css'       );
+			    break;
+		    case 'dark':
+			    wp_enqueue_style( 'nf-display',      $css_dir . 'display-opinions-dark.css', array( 'dashicons' )  );
+			    wp_enqueue_style( 'nf-font-awesome', $css_dir . 'font-awesome.min.css'      );
+			    break;
+		    default:
+			    wp_enqueue_style( 'nf-display',      $css_dir . 'display-structure.css', array( 'dashicons' ) );
+	    }
     }
 
     protected static function load_template( $file_name = '' )

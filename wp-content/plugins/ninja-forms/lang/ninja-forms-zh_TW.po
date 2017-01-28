@@ -5956,7 +5956,7 @@ msgstr "Divider"
 msgid "Select"
 msgstr "選擇"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "州"
 

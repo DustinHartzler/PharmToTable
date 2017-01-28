@@ -21,6 +21,11 @@ class NF_Abstracts_ModelFactory
     protected $_object;
 
     /**
+     * Form
+     */
+     protected $_form;
+
+    /**
      * Fields
      *
      * An array of field model objects.
@@ -60,7 +65,7 @@ class NF_Abstracts_ModelFactory
     {
         $this->_db = $db;
 
-        $this->_object = new NF_Database_Models_Form( $this->_db, $id );
+        $this->_object = $this->_form = new NF_Database_Models_Form( $this->_db, $id );
 
         $form_cache = get_option( 'nf_form_' . $id, false );
 
@@ -78,7 +83,9 @@ class NF_Abstracts_ModelFactory
      */
     public function get()
     {
-        return $this->_object;
+        $object = $this->_object;
+        $this->_object = $this->_form;
+        return $object;
     }
 
     /**
@@ -121,6 +128,7 @@ class NF_Abstracts_ModelFactory
     public function import_form( $import, $id = FALSE, $is_conversion = FALSE )
     {
         if( ! is_array( $import ) ){
+
             $data = WPN_Helper::utf8_decode( json_decode( html_entity_decode( $import ), true ) );
 
             if( ! is_array( $data ) ) {
@@ -128,7 +136,7 @@ class NF_Abstracts_ModelFactory
             }
 
             if( ! is_array( $data ) ){
-                $data = maybe_unserialize( $import );
+                $data = WPN_Helper::maybe_unserialize( $import );
 
                 if( ! is_array( $data ) ){
                     return false;
@@ -181,9 +189,12 @@ class NF_Abstracts_ModelFactory
      */
     public function get_fields( $where = array(), $fresh = FALSE)
     {
-        if( $where || $fresh || ! $this->_fields ){
 
-            $form_id = $this->_object->get_id();
+        $field_by_key = array();
+
+        $form_id = $this->_object->get_id();
+
+        if( $where || $fresh || ! $this->_fields ){
 
             $form_cache = get_option( 'nf_form_' . $form_id, false );
 
@@ -194,17 +205,32 @@ class NF_Abstracts_ModelFactory
 
                 foreach ($fields as $field) {
                     $this->_fields[$field->get_id()] = $field;
+                    $field_by_key[ $field->get_setting( 'key' ) ] = $field;
                 }
             } else {
                 foreach( $form_cache[ 'fields' ] as $cached_field ){
                     $field = Ninja_Forms()->form( $form_id )->get_field( $cached_field[ 'id' ] );
                     $field->update_settings( $cached_field[ 'settings' ] );
                     $this->_fields[$field->get_id()] = $field;
+                    $field_by_key[ $field->get_setting( 'key' ) ] = $field;
                 }
+            }
+
+            /*
+             * If a filter is registered to modify field order, then use that filter.
+             * If not, then usort??.
+             */
+            $order = apply_filters( 'ninja_forms_get_fields_sorted', array(), $this->_fields, $field_by_key, $form_id );
+
+            if ( ! empty( $order ) ) {
+                $this->_fields = $order;
             }
         }
 
-        usort( $this->_fields, "NF_Abstracts_Field::sort_by_order" );
+        /*
+         * Broke the sub edit screen order when I have this enabled.
+         */
+        // usort( $this->_fields, "NF_Abstracts_Field::sort_by_order" );
 
         return $this->_fields;
     }
@@ -273,6 +299,7 @@ class NF_Abstracts_ModelFactory
             $actions = $model_shell->find($form_id, $where);
 
             foreach ($actions as $action) {
+                $action->get_setting( 'type' ); // Pre-load the type of action for usort()
                 $this->_actions[$action->get_id()] = $action;
             }
         }
@@ -384,15 +411,15 @@ class NF_Abstracts_ModelFactory
      * @param bool|FALSE $fresh
      * @return array
      */
-    public function get_subs( $where = array(), $fresh = FALSE )
+    public function get_subs( $where = array(), $fresh = FALSE, $sub_ids = array() )
     {
-        if( $where || $fresh || ! $this->_objects ){
+        if( $where || $fresh || $sub_ids || ! $this->_objects ){
 
             $form_id = $this->_object->get_id();
 
             $model_shell = new NF_Database_Models_Submission( 0 );
 
-            $objects = $model_shell->find( $form_id, $where );
+            $objects = $model_shell->find( $form_id, $where, $sub_ids );
 
             foreach( $objects as $object ){
                 $this->_objects[ $object->get_id() ] = $object;

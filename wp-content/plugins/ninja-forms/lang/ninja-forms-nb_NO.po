@@ -6124,7 +6124,7 @@ msgstr "Deler"
 msgid "Select"
 msgstr "Velg"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "Stat"
 

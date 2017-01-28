@@ -5954,7 +5954,7 @@ msgstr "分隔符"
 msgid "Select"
 msgstr "选择"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "省/直辖市/自治区"
 

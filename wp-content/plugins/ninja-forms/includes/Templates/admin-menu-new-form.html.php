@@ -401,6 +401,31 @@
     </div>
 </script>
 
+<script id="tmpl-nf-edit-setting-option-repeater-wrap" type="text/template">
+    <div class="{{{ data.renderClasses() }}}" {{{ data.renderVisible() }}}>
+        {{{ data.renderSetting() }}}
+        <span class="nf-setting-error"></span>
+        <span class="nf-import-options" style="display:none">
+            <?php _e( 'Please use the following format', 'ninja-forms' ); ?>:
+            <br>
+            <br>
+            <strong><?php _e( 'Label, Value, Calc Value', 'ninja-forms' ); ?></strong>
+            <br>
+            <br>
+            <em>
+            Example:
+            </em>
+            <pre>
+Label One, value-one, 1
+Label Two, value-two, 2
+Label Three, value-three, 3
+            </pre>
+            <textarea></textarea>
+            <a href="#" class="nf-button primary nf-import extra"><?php _e( 'Import', 'ninja-forms' ); ?></a>
+        </span>
+    </div>
+</script>
+
 <script id="tmpl-nf-edit-setting-error" type="text/template">
     <div>{{{ data.error }}}</div>
 </script>
@@ -530,7 +555,7 @@
 </script>
 
 <script id="tmpl-nf-edit-setting-option-repeater-error" type="text/template">
-    {{{ data.errors[ Object.keys( errors )[0] ] }}}
+    {{{ data.renderErrors() }}}
 </script>
 
 <script id="tmpl-nf-edit-setting-option-repeater-default-row" type="text/template">

@@ -6119,7 +6119,7 @@ msgstr "Роздільник"
 msgid "Select"
 msgstr "Виберіть"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "Штат"
 

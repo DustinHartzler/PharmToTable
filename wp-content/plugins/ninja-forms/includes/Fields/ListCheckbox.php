@@ -26,6 +26,7 @@ class NF_Fields_ListCheckbox extends NF_Abstracts_List
         $this->_nicename = __( 'Checkbox List', 'ninja-forms' );
 
         add_filter( 'ninja_forms_merge_tag_calc_value_' . $this->_type, array( $this, 'get_calc_value' ), 10, 2 );
+        add_filter( 'ninja_forms_subs_export_field_value_' . $this->_type, array( $this, 'export_value' ), 10 );
     }
 
     public function admin_form_element( $id, $value )
@@ -52,5 +53,9 @@ class NF_Fields_ListCheckbox extends NF_Abstracts_List
             }
         }
         return $value;
+    }
+
+    public function export_value( $value ) {
+        return implode( ',', maybe_unserialize( $value ) );
     }
 }

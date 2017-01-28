@@ -220,18 +220,53 @@ class NF_Abstracts_Model
         // If the ID is not set, then we cannot pull settings from the Database.
         if( ! $this->_id ) return $this->_settings;
 
-        $form_cache = get_option( 'nf_form_' . $this->_parent_id );
-        if( $form_cache ){
+        if( ! $this->_settings && 'field' == $this->_type ) {
+            global $wpdb;
+            $results = $wpdb->get_results(
+                "
+                SELECT Meta.key, Meta.value
+                FROM $this->_table_name as Object
+                JOIN $this->_meta_table_name as Meta
+                ON Object.id = Meta.parent_id
+                WHERE Object.id = '$this->_id'
+                "
+            , ARRAY_A );
 
-            if( 'field'== $this->_type ) {
+            foreach( $results as $result ) {
+                $key = $result[ 'key' ];
+                $this->_settings[ $key ] = $result[ 'value' ];
+            }
 
-                if (isset($form_cache[ 'fields' ])) {
+            $field = $wpdb->get_row(
+                "
+                SELECT `label`, `key`, `type`
+                FROM $this->_table_name
+                WHERE `id` = '$this->_id'
+                ",
+                ARRAY_A
+            );
 
-                    foreach ($form_cache[ 'fields' ] as $object) {
-                        if ($this->_id != $object[ 'id' ]) continue;
+            if( ! is_wp_error( $field ) ){
+                $this->_settings[ 'label' ] = $field[ 'label' ];
+                $this->_settings[ 'key' ] = $field[ 'key' ];
+                $this->_settings[ 'type' ] = $field[ 'type' ];
+            }
+        }
 
-                        $this->update_settings($object['settings']);
-                        break;
+        if( ! $this->_settings ) {
+            $form_cache = get_option('nf_form_' . $this->_parent_id);
+            if ($form_cache) {
+
+                if ('field' == $this->_type) {
+
+                    if (isset($form_cache['fields'])) {
+
+                        foreach ($form_cache['fields'] as $object) {
+                            if ($this->_id != $object['id']) continue;
+
+                            $this->update_settings($object['settings']);
+                            break;
+                        }
                     }
                 }
             }
@@ -488,7 +523,7 @@ class NF_Abstracts_Model
 
     /**
      * Cache Flag
-     * 
+     *
      * @param string $cache
      * @return $this
      */

@@ -6111,7 +6111,7 @@ msgstr "Pembahagi"
 msgid "Select"
 msgstr "Pilih"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "Negeri"
 

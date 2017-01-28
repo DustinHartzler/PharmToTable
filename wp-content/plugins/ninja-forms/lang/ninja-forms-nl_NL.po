@@ -6133,7 +6133,7 @@ msgstr "Scheiding"
 msgid "Select"
 msgstr "Selecteer"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "Provincie"
 

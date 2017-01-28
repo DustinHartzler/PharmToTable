@@ -6144,7 +6144,7 @@ msgstr "Divisor"
 msgid "Select"
 msgstr "Seleccionar"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "Estado / Región"
 

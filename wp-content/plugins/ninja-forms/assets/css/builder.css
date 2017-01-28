@@ -758,6 +758,12 @@ All styles used within the drawer
     content: "\f147";
     font: 400 30px/1 dashicons; }
 
+.ninja-forms-app .jBox-wrapper.import-options {
+  padding: 12px 20px 0px !important; }
+
+.ninja-forms-app .jBox-wrapper.import-options.jBox-pointerPosition-top.jBox-closeButton-box:before {
+  right: 10px; }
+
 .ninja-forms-app .nf-list-options {
   padding-bottom: 20px; }
   .ninja-forms-app .nf-list-options .nf-add-new {
@@ -801,6 +807,18 @@ All styles used within the drawer
     .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row div .dashicons {
       color: #999;
       margin-top: 10px; }
+
+.ninja-forms-app .options {
+  position: relative; }
+  .ninja-forms-app .options legend .nf-open-import-tooltip {
+    background: #EBEDEE;
+    color: #1EA9EA;
+    font-size: 16px;
+    padding: 6px 15px;
+    text-decoration: none;
+    position: absolute;
+    right: 15px;
+    top: 0; }
 
 .nf-drawer-buttons {
   display: none;

@@ -6127,7 +6127,7 @@ msgstr "Jakaja"
 msgid "Select"
 msgstr "Valinta"
 
-#: includes/Fields/LIstState.php:26
+#: includes/Fields/ListState.php:26
 msgid "State"
 msgstr "Lääni"
 

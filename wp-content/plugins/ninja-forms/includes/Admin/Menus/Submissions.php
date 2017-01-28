@@ -77,6 +77,10 @@ final class NF_Admin_Menus_Submissions extends NF_Abstracts_Submenu
 
         if( ! $form_id ) return array();
 
+        static $cols;
+
+        if( $cols ) return $cols;
+
         $cols = array(
             'cb'    => '<input type="checkbox" />',
             'seq_num' => __( '#', 'ninja-forms' ),
