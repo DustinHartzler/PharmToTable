@@ -1,0 +1,140 @@
+.prli-shared-header {
+  font-size: 14px !important;
+  font-weight: bold !important;
+  float: right !important;
+  text-align: right !important;
+  padding-top: 0px !important;
+  padding-right: 10px !important;
+  display: block;
+}
+
+.prli-shared-header img.prli-icon {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+ul.prli-social-button-checkboxes {
+  padding-top: 15px;
+  cursor: move;
+}
+
+ul.prli-social-button-checkboxes li {
+  display: inline-block;
+  margin-right: 5px;
+  padding: 10px;
+  width: 60px !important;
+}
+
+ul.prli-social-button-checkboxes.ui-sortable li {
+  width: 75px !important;
+}
+
+ul.prli-social-button-checkboxes li input,
+ul.prli-social-button-checkboxes li img {
+  vertical-align: middle;
+}
+
+ul.prli-social-button-checkboxes i {
+  color: #FFFFFF !important;
+  font-size: 18px;
+}
+
+.pl-icon {
+  color: #666666;
+  font-size: 16px;
+}
+
+.pl-icon.pl-16 {
+  font-size: 16px !important;
+}
+
+.pl-icon.pl-18 {
+  font-size: 18px !important;
+}
+
+.pl-icon.pl-20 {
+  font-size: 20px !important;
+}
+
+.pl-icon.pl-22 {
+  font-size: 22px !important;
+}
+
+.pl-icon.pl-24 {
+  font-size: 24px !important;
+}
+
+.pl-icon.pl-32 {
+  font-size: 32px !important;
+}
+
+.pl-icon.pl-48 {
+  font-size: 48px !important;
+}
+
+.pl-icon.pl-64 {
+  font-size: 64px !important;
+}
+
+a i.pl-icon {
+  text-decoration: none;
+}
+
+a i.pl-icon:hover {
+  color: #aeaeae;
+}
+
+.prli-tooltip {
+  vertical-align: middle;
+}
+
+.prli-tooltip:hover i {
+  color: #aeaeae;
+}
+
+.prli-hidden {
+  display: none;
+}
+
+.updated.prli-updated {
+  margin-left: 0 !important;
+  padding: 10px;
+  margin-top: 10px;
+  width: 95%;
+}
+
+.prli_invalid {
+  border: 1px solid red !important;
+}
+
+img.prli_loader {
+  vertical-align:-2px;
+  display:none;
+}
+
+.prli_admin_branding {
+  /* background: url(../images/pl-logo-horiz-RGB.png) no-repeat; */
+  float: right !important;
+  padding-right: 25px !important;
+  height:32px !important;
+  width:200px !important;
+  background: url(../images/pl-logo-horiz-RGB.svg) no-repeat !important;
+  background-size: 200px 32px !important;
+}
+
+.tablenav .tablenav-pages a.disabled ,
+.tablenav .tablenav-pages a.disabled:hover {
+  cursor:default;
+  background:#ccc;
+  border-color:#ccc;
+  color:#fff;
+}
+
+.prli-red {
+  color: red !important;
+}
+
+.prli-green {
+  color: green !important;
+}
+

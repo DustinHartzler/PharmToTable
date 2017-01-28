@@ -1,189 +1,538 @@
-# Copyright (C) 2013 Pretty Link Lite
-# This file is distributed under the same license as the Pretty Link Lite package.
+# Copyright (C) 2017 Pretty Link
+# This file is distributed under the same license as the Pretty Link package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Link Lite 1.6.5\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/tag/pretty-link\n"
-"POT-Creation-Date: 2013-12-09 22:09:36+00:00\n"
+"Project-Id-Version: Pretty Link 2.0.3\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
+"POT-Creation-Date: 2017-01-20 01:57:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: classes/controllers/PrliAppController.php:47
+#: app/controllers/PrliAppController.php:36
+#: app/controllers/PrliAppController.php:45
+msgid "Pretty Link | Manage Pretty Links"
+msgstr ""
+
+#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.0.3)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: app/controllers/PrliAppController.php:37
+#: app/controllers/PrliAppController.php:46 app/views/links/form.php:47
+#: app/views/shared/tinymce_form_popup.php:109 app/views/widgets/widget.php:17
+#: pro/app/views/links/prettybar.php:191
+msgid "Pretty Link"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:53
+msgid "Pretty Link | Add New Link"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:54
+msgid "Add New Link"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:62
+msgid "Pretty Link | Groups"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:63 app/views/groups/list.php:6
+msgid "Groups"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:72
+msgid "Pretty Link | Clicks"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:73 app/models/PrliClick.php:230
+#: app/views/clicks/list.php:4 app/views/groups/list.php:69
+#: pro/app/helpers/PlpPostsHelper.php:61 pro/app/views/links/form.php:36
+#: pro/app/views/links/form.php:48 pro/app/views/reports/custom-report.php:31
+#: pro/app/views/reports/custom-report.php:64
+#: pro/app/views/reports/split-test-report.php:28
+#: pro/app/views/reports/split-test-report.php:60
+msgid "Clicks"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:82
+msgid "Pretty Link | Tools"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:83 app/views/tools/form.php:3
+msgid "Tools"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:91
+msgid "Pretty Link | Options"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:92 app/views/options/form.php:3
+msgid "Options"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:99
+#: app/controllers/PrliAppController.php:102
+#: app/controllers/PrliAppController.php:120
+msgid "Activate Pro"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:105
+#: app/controllers/PrliAppController.php:125
+#: app/views/admin/update/license.php:27 app/views/shared/nav.php:9
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:116
+#: app/controllers/PrliAppController.php:122
+#: app/controllers/PrliAppController.php:126
+msgid "Docs"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:117
+msgid "Activate"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:121
+msgid "Buy"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:252
 msgid ""
-"Database Upgrade is required for Pretty Link to work properly<br/>"
-"%1$sAutomatically Upgrade your Database%2$s"
+"You're almost done!<br/>%1$sFinish your Re-Install of Pretty Link Pro%2$s"
 msgstr ""
 
-#: classes/controllers/PrliAppController.php:83
-msgid "Your Database Has Been Successfully Upgraded."
+#: app/controllers/PrliAppController.php:259
+msgid "Pretty Link Pro Successfully Uninstalled."
 msgstr ""
 
-#: classes/controllers/PrliGroupsController.php:17
+#: app/controllers/PrliAppController.php:314
+msgid "Pretty Link Quick Add"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:352
+#: app/controllers/PrliAppController.php:371
+msgid ""
+"Your Pretty Link Pro installation isn't quite complete yet.<br/>"
+"%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
+msgstr ""
+
+#: app/controllers/PrliClicksController.php:89
+msgid "IP Address: "
+msgstr ""
+
+#: app/controllers/PrliClicksController.php:94
+msgid "Visitor: "
+msgstr ""
+
+#: app/controllers/PrliClicksController.php:100
+msgid "Group: "
+msgstr ""
+
+#: app/controllers/PrliClicksController.php:105
+msgid "All Links"
+msgstr ""
+
+#: app/controllers/PrliGroupsController.php:40
 msgid "An unknown error occurred when creating your group."
 msgstr ""
 
-#: classes/controllers/PrliGroupsController.php:26
+#: app/controllers/PrliGroupsController.php:49
 msgid "Group Created"
 msgstr ""
 
-#: classes/controllers/PrliGroupsController.php:32
+#: app/controllers/PrliGroupsController.php:56
 msgid "A name must be specified for your new group name"
 msgstr ""
 
-#: classes/controllers/PrliGroupsController.php:36
+#: app/controllers/PrliGroupsController.php:61
 msgid "Cannot add group because security nonce failed"
 msgstr ""
 
-#: classes/controllers/PrliLinksController.php:65
+#: app/controllers/PrliGroupsController.php:71
+msgid "Create a group and use it to organize your Pretty Links."
+msgstr ""
+
+#: app/controllers/PrliGroupsController.php:95
+msgid "Your Pretty Link Group was Successfully Created"
+msgstr ""
+
+#: app/controllers/PrliGroupsController.php:125
+msgid "Your Pretty Link Group was Successfully Updated"
+msgstr ""
+
+#: app/controllers/PrliGroupsController.php:134
+msgid "Your Pretty Link Group was Successfully Deleted"
+msgstr ""
+
+#: app/controllers/PrliLinksController.php:45
 msgid "Links in Group: "
 msgstr ""
 
-#: classes/controllers/PrliLinksController.php:110
-#: classes/controllers/PrliLinksController.php:133
+#: app/controllers/PrliLinksController.php:91
+#: app/controllers/PrliLinksController.php:112
 msgid "Your Pretty Link was Successfully Created"
 msgstr ""
 
-#: classes/controllers/PrliLinksController.php:168
+#: app/controllers/PrliLinksController.php:145
 msgid "Your Pretty Link was Successfully Updated"
 msgstr ""
 
-#: classes/controllers/PrliLinksController.php:183
+#: app/controllers/PrliLinksController.php:160
 msgid "Your links were updated successfully"
 msgstr ""
 
-#: classes/controllers/PrliLinksController.php:200
-#: classes/controllers/PrliLinksController.php:239
+#: app/controllers/PrliLinksController.php:177
+#: app/controllers/PrliLinksController.php:217
 msgid "You are unauthorized to view this page."
 msgstr ""
 
-#: classes/controllers/PrliLinksController.php:206
+#: app/controllers/PrliLinksController.php:184
 msgid "Your Pretty Link was Successfully Reset"
 msgstr ""
 
-#: classes/controllers/PrliLinksController.php:213
+#: app/controllers/PrliLinksController.php:191
 msgid "Your Pretty Link was Successfully Destroyed"
 msgstr ""
 
-#: classes/controllers/PrliLinksController.php:226
+#: app/controllers/PrliLinksController.php:204
 msgid "Your links were deleted successfully"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:14 classes/views/prli-links/form.php:44
-#: pro/classes/views/prlipro-options/form.php:104
-#: pro/classes/views/prlipro-options/form.php:137
-#: pro/classes/views/prlipro-options/form.php:216
-#: pro/classes/views/prlipro-options/form.php:362 pro/pretty-link-pro.php:1548
-#: pro/prlipro-create-public-link-widget.php:68
+#: app/controllers/PrliLocalApiController.php:101
+#: app/controllers/PrliLocalApiController.php:160
+msgid "An error prevented your Pretty Link from being created"
+msgstr ""
+
+#: app/controllers/PrliLocalApiController.php:125
+msgid "Pretty Link ID must be set for successful update."
+msgstr ""
+
+#: app/controllers/PrliOptionsController.php:61
+msgid "Options saved."
+msgstr ""
+
+#: app/controllers/PrliOptionsController.php:75
+msgid ""
+"Excluded IP Addresses must be a comma separated list of IPv4 or IPv6 "
+"addresses or ranges."
+msgstr ""
+
+#: app/controllers/PrliOptionsController.php:79
+msgid ""
+"Whitlist IP Addresses must be a comma separated list of IPv4 or IPv6 "
+"addresses or ranges."
+msgstr ""
+
+#: app/controllers/PrliToolsController.php:89
+msgid "Click Database was Cleared."
+msgstr ""
+
+#: app/controllers/PrliToolsController.php:95
+msgid "Clicks older than %1$d days (%2$d Clicks) were deleted"
+msgstr ""
+
+#: app/controllers/PrliToolsController.php:98
+msgid "No clicks older than %1$d days were found, so nothing was deleted"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:72
+msgid "Why you creepin'?"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:302
+msgid "Check for Update"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:371
+msgid "You had an HTTP error connecting to Caseproof's Mothership API"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:383
+msgid "Your License Key was invalid"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:409
+msgid "You do not have access."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:413
+msgid "Edge updates couldn't be updated."
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:36
+#: app/controllers/PrliXmlRpcController.php:98
+#: app/controllers/PrliXmlRpcController.php:145
+#: app/controllers/PrliXmlRpcController.php:200
+#: app/controllers/PrliXmlRpcController.php:229
+#: app/controllers/PrliXmlRpcController.php:257
+#: app/controllers/PrliXmlRpcController.php:290
+#: app/controllers/PrliXmlRpcController.php:322
+msgid "Sorry, XML-RPC Not enabled for this website"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:39
+#: app/controllers/PrliXmlRpcController.php:101
+#: app/controllers/PrliXmlRpcController.php:148
+#: app/controllers/PrliXmlRpcController.php:203
+#: app/controllers/PrliXmlRpcController.php:232
+#: app/controllers/PrliXmlRpcController.php:260
+#: app/controllers/PrliXmlRpcController.php:293
+#: app/controllers/PrliXmlRpcController.php:325
+msgid "Sorry, Login failed"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:45
+#: app/controllers/PrliXmlRpcController.php:107
+#: app/controllers/PrliXmlRpcController.php:154
+#: app/controllers/PrliXmlRpcController.php:209
+#: app/controllers/PrliXmlRpcController.php:238
+#: app/controllers/PrliXmlRpcController.php:266
+#: app/controllers/PrliXmlRpcController.php:299
+#: app/controllers/PrliXmlRpcController.php:331
+msgid "Sorry, you must be an administrator to access this resource"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:111
+msgid "You must provide a target URL"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:137
+#: app/controllers/PrliXmlRpcController.php:185
+msgid "There was an error creating your Pretty Link"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:158
+msgid "You must provide the id of the link you want to update"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:214
+msgid "There was an error fetching the Pretty Link Groups"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:243
+msgid "There was an error fetching the Pretty Links"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:269
+msgid "Sorry, you must provide a slug to lookup"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:276
+#: app/controllers/PrliXmlRpcController.php:309
+msgid "There was an error fetching your Pretty Link"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:302
+#: app/controllers/PrliXmlRpcController.php:334
+msgid "Sorry, you must provide an id to lookup"
+msgstr ""
+
+#: app/controllers/PrliXmlRpcController.php:341
+msgid "There was an error fetching your Pretty Link URL"
+msgstr ""
+
+#: app/helpers/PrliAppHelper.php:23 app/helpers/PrliLinksHelper.php:14
+#: app/views/links/form.php:100 app/views/shared/tinymce_form_popup.php:106
+#: app/views/shared/tinymce_form_popup.php:110 pro/app/views/links/form.php:185
+#: pro/app/views/options/form.php:703 pro/app/views/tools/generator.php:59
+#: pro/app/widgets/PlpPublicLinksWidget.php:80
 msgid "None"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:38 classes/views/prli-links/form.php:8
+#: app/helpers/PrliLinksHelper.php:37 app/views/links/form.php:15
+#: app/views/shared/tinymce_form_popup.php:63
 msgid "307 (Temporary)"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:39 classes/views/prli-links/form.php:9
+#: app/helpers/PrliLinksHelper.php:38 app/views/links/form.php:16
+#: app/views/shared/tinymce_form_popup.php:64
+msgid "302 (Temporary)"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:39 app/views/links/form.php:17
+#: app/views/shared/tinymce_form_popup.php:65
 msgid "301 (Permanent)"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:49
+#: app/helpers/PrliLinksHelper.php:49
 msgid "Bulk Actions"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:50
-#: classes/views/prli-groups/list.php:64 classes/views/prli-links/list.php:187
-#: pro/classes/views/prli-reports/list.php:63
+#: app/helpers/PrliLinksHelper.php:50 app/views/groups/list.php:66
+#: pro/app/views/reports/list.php:55
 msgid "Edit"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:51
-#: classes/views/prli-groups/list.php:65 classes/views/prli-links/list.php:188
-#: pro/classes/views/prli-reports/list.php:64
+#: app/helpers/PrliLinksHelper.php:51 app/views/groups/list.php:67
+#: pro/app/views/reports/list.php:56
 msgid "Delete"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:53
+#: app/helpers/PrliLinksHelper.php:53
 msgid "Are you sure you want to delete the selected links?"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:53
+#: app/helpers/PrliLinksHelper.php:53
 msgid "Apply"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:63 classes/views/prli-links/list.php:88
-#: classes/views/prli-links/list.php:91
+#: app/helpers/PrliLinksHelper.php:63 app/views/links/list.php:71
+#: app/views/links/list.php:74
 msgid "- No Change -"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:64
+#: app/helpers/PrliLinksHelper.php:64
 msgid "Off"
 msgstr ""
 
-#: classes/helpers/PrliLinksHelper.php:65
+#: app/helpers/PrliLinksHelper.php:65
 msgid "On"
 msgstr ""
 
-#: classes/models/PrliClick.php:235 pro/pretty-link-pro.php:170
+#: app/helpers/PrliLinksHelper.php:75
+msgid "PrettyBar Redirection"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:78
+msgid "Cloaked Redirection"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:81
+msgid "Pixel Tracking Redirection"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:84
+msgid "Meta Refresh Redirection"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:87
+msgid "Javascript Redirection"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:90
+msgid "Temporary (307) Redirection"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:93
+msgid "Temporary (302) Redirection"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:96
+msgid "Permanent (301) Redirection"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:100
+msgid "Nofollow Enabled"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:104
+msgid "Parameter Forwarding Enabled"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:114 app/views/groups/list.php:63
+#: app/views/groups/list.php:66
+msgid "Edit %s"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:115
+msgid ""
+"Are you sure you want to delete your %s Pretty Link? This will delete the "
+"Pretty Link and all of the statistical data about it in your database."
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:115
+msgid "Delete %s"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:116
+msgid ""
+"Are you sure you want to reset your %s Pretty Link? This will delete all of "
+"the statistical data about this Pretty Link in your database."
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:116
+msgid "Reset %s"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:119 app/views/clicks/list.php:161
+msgid "View clicks for %s"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:124
+msgid "Post %s to Twitter"
+msgstr ""
+
+#: app/helpers/PrliLinksHelper.php:125
+msgid "Send %s in an Email"
+msgstr ""
+
+#: app/models/PrliClick.php:208
+msgid "group: '%s'"
+msgstr ""
+
+#: app/models/PrliClick.php:211
+msgid "all links"
+msgstr ""
+
+#: app/models/PrliClick.php:218
+msgid "All clicks"
+msgstr ""
+
+#: app/models/PrliClick.php:221
+msgid "Unique hits"
+msgstr ""
+
+#: app/models/PrliClick.php:225 pro/app/helpers/PlpPostsHelper.php:66
 msgid "Pretty Link:"
 msgstr ""
 
-#: classes/models/PrliClick.php:235
+#: app/models/PrliClick.php:225
 msgid "on"
 msgstr ""
 
-#: classes/models/PrliClick.php:235 pro/classes/models/PrliReport.php:449
+#: app/models/PrliClick.php:225 pro/app/models/PlpReport.php:385
 msgid "between"
 msgstr ""
 
-#: classes/models/PrliClick.php:235 pro/classes/models/PrliReport.php:282
-#: pro/classes/models/PrliReport.php:449
+#: app/models/PrliClick.php:225 pro/app/models/PlpReport.php:244
+#: pro/app/models/PlpReport.php:385
 msgid "and"
 msgstr ""
 
-#: classes/models/PrliClick.php:239
+#: app/models/PrliClick.php:230 pro/app/views/links/form.php:35
+#: pro/app/views/links/form.php:68
 msgid "Date"
 msgstr ""
 
-#: classes/models/PrliClick.php:239 classes/views/prli-clicks/list.php:6
-#: classes/views/prli-groups/list.php:67 classes/views/prli-links/list.php:191
-#: pro/classes/views/prli-reports/custom-report.php:31
-#: pro/classes/views/prli-reports/custom-report.php:64
-#: pro/classes/views/prli-reports/split-test-report.php:31
-#: pro/classes/views/prli-reports/split-test-report.php:64
-#: pro/pretty-link-pro.php:169
-msgid "Hits"
-msgstr ""
-
-#: classes/models/PrliLink.php:463
+#: app/models/PrliLink.php:538
 msgid "Target URL can't be blank"
 msgstr ""
 
-#: classes/models/PrliLink.php:466
+#: app/models/PrliLink.php:542
 msgid "Pretty Link can't be blank"
 msgstr ""
 
-#: classes/models/PrliLink.php:469
+#: app/models/PrliLink.php:546
 msgid "Target URL must be different than the Pretty Link"
 msgstr ""
 
-#: classes/models/PrliLink.php:474
+#: app/models/PrliLink.php:550
 msgid "Link URL must be a correctly formatted url"
 msgstr ""
 
-#: classes/models/PrliLink.php:477
+#: app/models/PrliLink.php:554
 msgid ""
 "Pretty Link slugs must not contain question marks, ampersands or number "
 "signs."
 msgstr ""
 
-#: classes/models/PrliLink.php:480
+#: app/models/PrliLink.php:558
 msgid "Pretty Link slugs must not end with a slash (\"/\")"
 msgstr ""
 
-#: classes/models/PrliLink.php:484
+#: app/models/PrliLink.php:563
 msgid ""
 "This Pretty Link Slug is already taken. Check to make sure it isn't being "
 "used by another pretty link, post, page, category or tag slug. If none of "
@@ -191,521 +540,776 @@ msgid ""
 "the root folder of your wordpress install."
 msgstr ""
 
-#: classes/models/PrliLink.php:487
-msgid ""
-"If Custom Parameter Forwarding has been selected then you must specify a "
-"forwarding format."
+#: app/models/PrliUtils.php:93
+msgid "*** Pretty Links Debug: %s"
 msgstr ""
 
-#: classes/models/PrliLink.php:490
-msgid ""
-"Your parameter forwarding must have at least one parameter specified in the "
-"format ex: <code>/%var1%/%var_two%/%varname3% ...</code>"
-msgstr ""
-
-#: classes/models/PrliUpdate.php:44
-msgid "Pretty Link Pro Username"
-msgstr ""
-
-#: classes/models/PrliUpdate.php:45
-msgid "Pretty Link Pro Password"
-msgstr ""
-
-#: classes/models/PrliUpdate.php:46
-msgid "Your Pretty Link Pro Username or Password was Invalid"
-msgstr ""
-
-#: classes/models/PrliUpdate.php:153
-msgid ""
-"Your Username & Password was accepted<br/>Now you can %1$sUpgrade "
-"Automatically!%2$s"
-msgstr ""
-
-#: classes/models/PrliUpdate.php:163
-msgid ""
-"Your Username & Password was accepted<br/>Now you can %1$sGet Started!%2$s"
-msgstr ""
-
-#: classes/models/PrliUpdate.php:173 classes/views/shared/errors.php:12
-#: pro/classes/views/prlipro-public/form.php:24
+#: app/views/admin/errors.php:7 app/views/shared/errors.php:12
 msgid "ERROR"
 msgstr ""
 
-#: classes/models/PrliUpdate.php:208
-#: pro/classes/views/prlipro-options/form.php:423
-msgid "Save"
+#: app/views/admin/update/activation_warning.php:4
+msgid "Error with PRETTYLINK_LICENSE_KEY: %s"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:7
+#: app/views/admin/update/activation_warning.php:7
+#: app/views/admin/update/activation_warning.php:14
+msgid "Pretty Link Pro isn't able to get critical automatic updates"
+msgstr ""
+
+#: app/views/admin/update/activation_warning.php:8
+msgid ""
+"It looks like you used to have Pretty Link Pro activated with a username and "
+"password but now you need a license key to activate it."
+msgstr ""
+
+#: app/views/admin/update/activation_warning.php:9
+msgid ""
+"You can get your license key by logging in at %1$sPrettyLinkPro.com.%2$s"
+msgstr ""
+
+#: app/views/admin/update/activation_warning.php:10
+msgid ""
+"After you paste your license key on the %1$s\"Pretty Link\" -> \"Activate Pro"
+"\" admin page,%2$s you'll start getting updates again."
+msgstr ""
+
+#: app/views/admin/update/activation_warning.php:15
+msgid ""
+"You can retrieve or purchase a license key at %1$sPrettyLinkPro.com%2$s to "
+"enable automatic updates today."
+msgstr ""
+
+#: app/views/admin/update/activation_warning.php:16
+msgid ""
+"After you paste your license key on the %1$s\"Pretty Link\" -> \"Activate Pro"
+"\" admin page,%2$s you'll start getting automatic updates."
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:4
+msgid "ACTION REQUIRED"
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:5
+msgid ""
+"The %s features in your Pretty Link options have been moved from Pretty Link "
+"into a separate plugin."
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:6
+msgid ""
+"Why you ask? Well, it's to streamline and increase the performance of Pretty "
+"Link for you."
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:9
+msgid ""
+"And good for you, it looks like you've already got the %1$s Add-on "
+"installed. Just click the \"Activate %2$s Add-on\" button below and you'll "
+"get all these features back now."
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:11
+msgid ""
+"Luckily it's easy to get these features back now. Just click the \"Install "
+"%s Add-on\" button below."
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:12
+msgid ""
+"If you have problems with the auto-install please refer to %1$sthe user "
+"manual%2$s for manual install instructions."
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:18
+msgid "Activate %s Add-on"
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:20
+msgid "Install %s Add-on"
+msgstr ""
+
+#: app/views/admin/update/addon_popup.php:22
+msgid "Don't Show This Message Again"
+msgstr ""
+
+#: app/views/admin/update/addons.php:3
+msgid "Pretty Link Add-ons"
+msgstr ""
+
+#: app/views/admin/update/addons.php:8
+msgid "There were no Add-ons found for your license or lack thereof..."
+msgstr ""
+
+#: app/views/admin/update/addons.php:14
+msgid "Add-on"
+msgstr ""
+
+#: app/views/admin/update/addons.php:15
+msgid "Description"
+msgstr ""
+
+#: app/views/admin/update/addons.php:16 app/views/admin/update/addons.php:54
+msgid "Install"
+msgstr ""
+
+#: app/views/admin/update/addons.php:42
+msgid "(Update Available)"
+msgstr ""
+
+#: app/views/admin/update/addons.php:50
+msgid "Installed & Active"
+msgstr ""
+
+#: app/views/admin/update/addons.php:52
+msgid "Installed & Inactive"
+msgstr ""
+
+#: app/views/admin/update/edge_updates.php:4
+msgid ""
+"Include Pretty Link Pro edge (development) releases in automatic updates "
+"(not recommended for production websites)"
+msgstr ""
+
+#: app/views/admin/update/edge_updates.php:4
+msgid "Loading..."
+msgstr ""
+
+#: app/views/admin/update/license.php:4
+msgid "Pretty Link Pro License"
+msgstr ""
+
+#: app/views/admin/update/license.php:7
+msgid ""
+"You must have a License Key to enable automatic updates for Pretty Link Pro. "
+"If you don't have a License please go to %1$s to get one. If you do have a "
+"license you can login at %2$s to manage your licenses and site activations."
+msgstr ""
+
+#: app/views/admin/update/license.php:13
+msgid "Enter Your Pretty Link Pro License Key:"
+msgstr ""
+
+#: app/views/admin/update/license.php:20
+msgid "Activate License Key on %s"
+msgstr ""
+
+#: app/views/admin/update/license.php:30 app/views/links/form.php:221
+msgid ""
+"It looks like you're missing out on quite a few awesome features because you "
+"haven't %1$sUpgraded to Pretty Link Pro%2$s yet. Here are just a few of the "
+"features you're missing out on:"
+msgstr ""
+
+#: app/views/admin/update/license.php:36 app/views/links/form.php:225
+msgid "Cloaked Redirects"
+msgstr ""
+
+#: app/views/admin/update/license.php:37 app/views/links/form.php:226
+msgid "Keyword Link Replacements"
+msgstr ""
+
+#: app/views/admin/update/license.php:38 app/views/links/form.php:227
+msgid "Weighted Link Rotations"
+msgstr ""
+
+#: app/views/admin/update/license.php:39 app/views/links/form.php:228
+msgid "Link Expirations"
+msgstr ""
+
+#: app/views/admin/update/license.php:40 app/views/links/form.php:229
+#: pro/app/views/links/form.php:281 pro/app/views/links/form.php:284
+msgid "Geographic Redirects"
+msgstr ""
+
+#: app/views/admin/update/license.php:41 app/views/links/form.php:230
+msgid "Technology Based Redirects"
+msgstr ""
+
+#: app/views/admin/update/license.php:42 app/views/links/form.php:231
+#: pro/app/views/links/form.php:309 pro/app/views/links/form.php:312
+msgid "Time Period Redirects"
+msgstr ""
+
+#: app/views/admin/update/license.php:43 app/views/links/form.php:232
+msgid "Double Redirects"
+msgstr ""
+
+#: app/views/admin/update/license.php:44 app/views/links/form.php:233
+msgid "Split Tests"
+msgstr ""
+
+#: app/views/admin/update/license.php:45 app/views/links/form.php:234
+msgid "Automated Link Disclosures"
+msgstr ""
+
+#: app/views/admin/update/license.php:46 app/views/links/form.php:235
+msgid "... and much more"
+msgstr ""
+
+#: app/views/admin/update/license.php:51 app/views/links/form.php:238
+msgid "Upgrade to Pro today!"
+msgstr ""
+
+#: app/views/admin/update/license.php:55
+msgid "Active License Key Information:"
+msgstr ""
+
+#: app/views/admin/update/license.php:58
+msgid "License Key:"
+msgstr ""
+
+#: app/views/admin/update/license.php:62
+msgid "Status:"
+msgstr ""
+
+#: app/views/admin/update/license.php:63
+msgid "<b>Active on %s</b>"
+msgstr ""
+
+#: app/views/admin/update/license.php:66
+msgid "Product:"
+msgstr ""
+
+#: app/views/admin/update/license.php:70
+msgid "Activations:"
+msgstr ""
+
+#: app/views/admin/update/license.php:74
+msgid ""
+"Are you sure? Pretty Link Pro will not be functional on %s if this License "
+"Key is deactivated."
+msgstr ""
+
+#: app/views/admin/update/license.php:74
+msgid "Deactivate License Key on %s"
+msgstr ""
+
+#: app/views/admin/update/license.php:77
+msgid "Upgrade plugin to Pro"
+msgstr ""
+
+#: app/views/admin/update/license.php:82
+msgid "You're currently running version %s of Pretty Link Pro"
+msgstr ""
+
+#: app/views/admin/update/ui.php:3
+msgid "Activate Pretty Link Pro"
+msgstr ""
+
+#: app/views/admin/update/ui.php:16
+msgid "License"
+msgstr ""
+
+#: app/views/admin/update/ui.php:17
+msgid "Add-Ons"
+msgstr ""
+
+#: app/views/clicks/csv_download.php:3
+msgid "Download Clicks"
+msgstr ""
+
+#: app/views/clicks/csv_download.php:6
+msgid "Click Reports:"
+msgstr ""
+
+#: app/views/clicks/csv_download.php:7
+msgid "All clicks on %s"
+msgstr ""
+
+#: app/views/clicks/csv_download.php:24
+msgid "Clicks %d-%d (%d Records)"
+msgstr ""
+
+#: app/views/clicks/list.php:6
 msgid "For"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:13
-#: pro/classes/views/prli-reports/custom-report.php:12
-#: pro/classes/views/prli-reports/split-test-report.php:12
+#: app/views/clicks/list.php:11 pro/app/views/reports/custom-report.php:12
+#: pro/app/views/reports/split-test-report.php:9
 msgid "Customize Report"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:19
-#: pro/classes/views/prli-reports/split-test-report.php:12
+#: app/views/clicks/list.php:18 pro/app/views/reports/split-test-report.php:9
 msgid "Back to Links"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:21
-msgid "Back to Hits"
+#: app/views/clicks/list.php:21
+msgid "Back to Clicks"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:31
+#: app/views/clicks/list.php:30
 msgid "Type:"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:33
-msgid "All Hits"
+#: app/views/clicks/list.php:32 pro/app/models/PlpReport.php:251
+#: pro/app/models/PlpReport.php:260 pro/app/models/PlpReport.php:397
+#: pro/app/models/PlpReport.php:404
+msgid "All Clicks"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:34
-msgid "Unique Hits"
+#: app/views/clicks/list.php:33 pro/app/models/PlpReport.php:251
+#: pro/app/models/PlpReport.php:260 pro/app/models/PlpReport.php:397
+#: pro/app/models/PlpReport.php:404
+msgid "Unique Clicks"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:38
-#: pro/classes/views/prli-reports/custom-report.php:16
-#: pro/classes/views/prli-reports/split-test-report.php:16
+#: app/views/clicks/list.php:37 pro/app/views/reports/custom-report.php:16
+#: pro/app/views/reports/split-test-report.php:13
 msgid "Date Range:"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:40
+#: app/views/clicks/list.php:39
 msgid "to"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:44 classes/views/prli-clicks/list.php:68
-#: classes/views/prli-groups/edit.php:59 classes/views/prli-groups/list.php:22
-#: classes/views/prli-groups/new.php:62 classes/views/prli-links/edit.php:23
-#: classes/views/prli-links/new.php:23
-#: pro/classes/views/prli-reports/custom-report.php:22
-#: pro/classes/views/prli-reports/list.php:20
-#: pro/classes/views/prli-reports/new.php:118
-msgid "or"
-msgstr ""
-
-#: classes/views/prli-clicks/list.php:44 classes/views/prli-groups/edit.php:59
-#: classes/views/prli-groups/new.php:62 classes/views/prli-links/edit.php:23
-#: classes/views/prli-links/list.php:104 classes/views/prli-links/new.php:23
-#: pro/classes/views/prli-reports/custom-report.php:22
-#: pro/classes/views/prli-reports/edit.php:117
-#: pro/classes/views/prli-reports/new.php:118
+#: app/views/clicks/list.php:43 app/views/groups/edit.php:54
+#: app/views/groups/new.php:58 app/views/links/edit.php:16
+#: app/views/links/list.php:87 app/views/links/new.php:15
+#: pro/app/views/reports/custom-report.php:22
+#: pro/app/views/reports/edit.php:109 pro/app/views/reports/new.php:109
 msgid "Cancel"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:68 classes/views/prli-groups/list.php:22
-#: classes/views/prli-links/list.php:35 classes/views/prli-links/list.php:189
-#: pro/classes/views/prli-reports/list.php:20
+#: app/views/clicks/list.php:64 app/views/groups/list.php:24
+#: app/views/links/list.php:30 pro/app/views/reports/list.php:20
 msgid "Reset"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:79
-#: classes/views/prli-clicks/list.php:147
+#: app/views/clicks/list.php:73 app/views/clicks/list.php:171
 msgid "Browser"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:83
-#: classes/views/prli-clicks/list.php:149
+#: app/views/clicks/list.php:75 app/views/clicks/list.php:172
+msgid "OS"
+msgstr ""
+
+#: app/views/clicks/list.php:79 app/views/clicks/list.php:174
 msgid "IP"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:87
-#: classes/views/prli-clicks/list.php:151
+#: app/views/clicks/list.php:83 app/views/clicks/list.php:176
 msgid "Visitor"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:91
-#: classes/views/prli-clicks/list.php:153
+#: app/views/clicks/list.php:87 app/views/clicks/list.php:178
 msgid "Timestamp"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:95
-#: classes/views/prli-clicks/list.php:155
+#: app/views/clicks/list.php:91 app/views/clicks/list.php:180
 msgid "Host"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:99
-#: classes/views/prli-clicks/list.php:157
+#: app/views/clicks/list.php:95 app/views/clicks/list.php:182
 msgid "URI"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:102
-#: classes/views/prli-clicks/list.php:158
+#: app/views/clicks/list.php:98 app/views/clicks/list.php:183
 msgid "Referrer"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:105
-#: classes/views/prli-clicks/list.php:159
+#: app/views/clicks/list.php:101 app/views/clicks/list.php:184
+#: pro/app/models/PlpReport.php:251 pro/app/models/PlpReport.php:260
 msgid "Link"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:115
-msgid "No Hits have been recorded yet"
+#: app/views/clicks/list.php:111
+msgid "No Clicks have been recorded yet"
 msgstr ""
 
-#: classes/views/prli-clicks/list.php:164
+#: app/views/clicks/list.php:147
+msgid "View All Activity for IP Address: %s"
+msgstr ""
+
+#: app/views/clicks/list.php:150
+msgid "View All Activity for Visitor: %s"
+msgstr ""
+
+#: app/views/clicks/list.php:190
 msgid "Download CSV"
 msgstr ""
 
-#: classes/views/prli-dashboard-widget/widget.php:3
-msgid "Add a Pretty Link from your Dashboard:"
-msgstr ""
-
-#: classes/views/prli-dashboard-widget/widget.php:11
-msgid "Target URL"
-msgstr ""
-
-#: classes/views/prli-dashboard-widget/widget.php:15 prli-main.php:20
-msgid "Pretty Link"
-msgstr ""
-
-#: classes/views/prli-groups/edit.php:7
+#: app/views/groups/edit.php:4
 msgid "Edit Group"
 msgstr ""
 
-#: classes/views/prli-groups/edit.php:20
-#: pro/classes/views/prli-reports/edit.php:20
+#: app/views/groups/edit.php:15 pro/app/views/reports/edit.php:15
 msgid "Name:"
 msgstr ""
 
-#: classes/views/prli-groups/edit.php:22 classes/views/prli-groups/new.php:24
+#: app/views/groups/edit.php:17 app/views/groups/new.php:23
 msgid "This is how you'll identify your Group."
 msgstr ""
 
-#: classes/views/prli-groups/edit.php:25 classes/views/prli-groups/new.php:27
+#: app/views/groups/edit.php:20 app/views/groups/new.php:26
 msgid "Description:"
 msgstr ""
 
-#: classes/views/prli-groups/edit.php:27 classes/views/prli-groups/new.php:29
+#: app/views/groups/edit.php:22 app/views/groups/new.php:28
 msgid "A Description of this group."
 msgstr ""
 
-#: classes/views/prli-groups/edit.php:30 classes/views/prli-groups/new.php:32
+#: app/views/groups/edit.php:25 app/views/groups/new.php:31
 msgid "Links:"
 msgstr ""
 
-#: classes/views/prli-groups/edit.php:35 classes/views/prli-groups/list.php:39
-#: classes/views/prli-groups/list.php:79 classes/views/prli-groups/new.php:37
-#: classes/views/prli-links/list.php:63 classes/views/prli-links/list.php:232
-#: pro/classes/views/prli-links/form.php:61
-#: pro/classes/views/prli-reports/edit.php:93
-#: pro/classes/views/prli-reports/list.php:37
-#: pro/classes/views/prli-reports/list.php:78
-#: pro/classes/views/prli-reports/new.php:93
+#: app/views/groups/edit.php:30 app/views/groups/list.php:39
+#: app/views/groups/list.php:81 app/views/groups/new.php:36
+#: app/views/links/list.php:46 app/views/links/list.php:150
+#: pro/app/views/reports/edit.php:85 pro/app/views/reports/list.php:30
+#: pro/app/views/reports/list.php:70 pro/app/views/reports/new.php:85
 msgid "Name"
 msgstr ""
 
-#: classes/views/prli-groups/edit.php:36 classes/views/prli-groups/new.php:38
+#: app/views/groups/edit.php:31 app/views/groups/new.php:37
 msgid "Current Group"
 msgstr ""
 
-#: classes/views/prli-groups/edit.php:53 classes/views/prli-groups/new.php:55
+#: app/views/groups/edit.php:48 app/views/groups/new.php:52
 msgid ""
 "Select some links for this group. <strong>Note: each link can only be in one "
 "group at a time.</strong>"
 msgstr ""
 
-#: classes/views/prli-groups/list.php:9
-msgid "Groups"
+#: app/views/groups/edit.php:54 app/views/links/edit.php:16
+#: app/views/links/list.php:88 app/views/options/form.php:194
+#: pro/app/views/reports/edit.php:109
+msgid "Update"
 msgstr ""
 
-#: classes/views/prli-groups/list.php:30
-msgid "Add a Pretty Link Group"
+#: app/views/groups/list.php:7
+msgid "Add Group"
 msgstr ""
 
-#: classes/views/prli-groups/list.php:40 classes/views/prli-groups/list.php:66
-#: classes/views/prli-groups/list.php:80 classes/views/prli-links/list.php:10
-#: classes/views/prli-links/list.php:68 classes/views/prli-links/list.php:237
-#: pro/classes/views/prli-reports/list.php:39
-#: pro/classes/views/prli-reports/list.php:80
+#: app/views/groups/list.php:40 app/views/groups/list.php:68
+#: app/views/groups/list.php:82 app/views/links/list.php:7
+#: app/views/links/list.php:51 app/views/links/list.php:155
+#: app/views/options/form.php:39 pro/app/views/reports/list.php:32
+#: pro/app/views/reports/list.php:72
 msgid "Links"
 msgstr ""
 
-#: classes/views/prli-groups/list.php:41 classes/views/prli-groups/list.php:81
-#: classes/views/prli-links/list.php:67 classes/views/prli-links/list.php:236
-#: pro/classes/views/prli-reports/list.php:40
-#: pro/classes/views/prli-reports/list.php:81
+#: app/views/groups/list.php:41 app/views/groups/list.php:83
+#: app/views/links/list.php:50 app/views/links/list.php:154
+#: pro/app/views/reports/list.php:33 pro/app/views/reports/list.php:73
 msgid "Created"
 msgstr ""
 
-#: classes/views/prli-groups/list.php:50
+#: app/views/groups/list.php:50
 msgid "No Pretty Link Groups were found"
 msgstr ""
 
-#: classes/views/prli-groups/new.php:9
+#: app/views/groups/list.php:67
+msgid "Are you sure you want to delete your %s Pretty Link Group?"
+msgstr ""
+
+#: app/views/groups/list.php:69
+msgid "View hits in %s"
+msgstr ""
+
+#: app/views/groups/new.php:9
 msgid "New Group"
 msgstr ""
 
-#: classes/views/prli-groups/new.php:22
-#: pro/classes/views/prli-reports/new.php:20
+#: app/views/groups/new.php:21 pro/app/views/reports/new.php:14
 msgid "Name*:"
 msgstr ""
 
-#: classes/views/prli-links/edit.php:7
+#: app/views/groups/new.php:58 app/views/links/new.php:15
+msgid "Create"
+msgstr ""
+
+#: app/views/links/edit.php:4
 msgid "Edit Link"
 msgstr ""
 
-#: classes/views/prli-links/form.php:5
-msgid "Redirection Type*:"
+#: app/views/links/form.php:6
+msgid "Redirection*"
 msgstr ""
 
-#: classes/views/prli-links/form.php:16
+#: app/views/links/form.php:9 app/views/options/form.php:58
+#: app/views/options/form.php:60
+msgid "Redirection Type"
+msgstr ""
+
+#: app/views/links/form.php:10
+msgid "This is the method of redirection for your link."
+msgstr ""
+
+#: app/views/links/form.php:24
 msgid ""
 "To Enable Cloaked, Meta-Refresh, Javascript, Pixel and Pretty Bar "
 "Redirection, upgrade to %sPretty Link Pro%s"
 msgstr ""
 
-#: classes/views/prli-links/form.php:21
-msgid "Target URL*:"
+#: app/views/links/form.php:31
+msgid "Target URL*"
 msgstr ""
 
-#: classes/views/prli-links/form.php:25
-msgid "Pretty Link*:"
+#: app/views/links/form.php:34 app/views/shared/tinymce_form_popup.php:44
+#: app/views/shared/tinymce_form_popup.php:105 app/views/widgets/widget.php:13
+msgid "Target URL"
 msgstr ""
 
-#: classes/views/prli-links/form.php:29
-msgid "Title:"
+#: app/views/links/form.php:35
+msgid "This is the URL that your Pretty Link will redirect to."
 msgstr ""
 
-#: classes/views/prli-links/form.php:35 classes/views/prli-options/form.php:7
-#: pro/classes/views/prlipro-options/form.php:7
-msgid "Options"
+#: app/views/links/form.php:44
+msgid "Pretty Link*"
 msgstr ""
 
-#: classes/views/prli-links/form.php:36 classes/views/prli-options/form.php:51
-msgid "Advanced"
+#: app/views/links/form.php:48
+msgid ""
+"This is how your pretty link will appear. You can edit the Pretty Link slug "
+"here."
 msgstr ""
 
-#: classes/views/prli-links/form.php:41 classes/views/prli-links/list.php:66
-#: classes/views/prli-links/list.php:90 classes/views/prli-links/list.php:235
-#: pro/classes/views/prli-links/form.php:62
-#: pro/classes/views/prli-reports/edit.php:94
-#: pro/classes/views/prli-reports/new.php:94
+#: app/views/links/form.php:57 app/views/links/form.php:60
+msgid "Title"
+msgstr ""
+
+#: app/views/links/form.php:61
+msgid ""
+"Leave this blank and Pretty Link will attempt to detect the title from the "
+"target url. Alternatively you can enter a custom title here."
+msgstr ""
+
+#: app/views/links/form.php:70 app/views/links/form.php:73
+msgid "Notes"
+msgstr ""
+
+#: app/views/links/form.php:74
+msgid ""
+"This is a field where you can enter notes about a particular link. This "
+"notes field is mainly for your own link management needs. It isn't currently "
+"used anywhere on the front end."
+msgstr ""
+
+#: app/views/links/form.php:84
+msgid "Advanced Options"
+msgstr ""
+
+#: app/views/links/form.php:91 app/views/links/list.php:49
+#: app/views/links/list.php:73 app/views/links/list.php:153
+#: pro/app/views/options/autocreate.php:30 pro/app/views/reports/edit.php:86
+#: pro/app/views/reports/new.php:86
 msgid "Group"
 msgstr ""
 
-#: classes/views/prli-links/form.php:54
-#: pro/classes/views/prlipro-options/form.php:113
-#: pro/classes/views/prlipro-options/form.php:146
-msgid "Add a New Group"
+#: app/views/links/form.php:94
+msgid "Link Group"
 msgstr ""
 
-#: classes/views/prli-links/form.php:55
+#: app/views/links/form.php:95
 msgid "Select a Group for this Link"
 msgstr ""
 
-#: classes/views/prli-links/form.php:58
-msgid "SEO Options"
+#: app/views/links/form.php:109 pro/app/views/options/autocreate.php:41
+msgid "Add a New Group"
 msgstr ""
 
-#: classes/views/prli-links/form.php:60
-msgid "'Nofollow' this Link"
+#: app/views/links/form.php:114
+msgid "No Follow"
 msgstr ""
 
-#: classes/views/prli-links/form.php:61
+#: app/views/links/form.php:117
+msgid "Nofollow Link"
+msgstr ""
+
+#: app/views/links/form.php:118
 msgid "Add a nofollow and noindex to this link's http redirect header"
 msgstr ""
 
-#: classes/views/prli-links/form.php:65
-msgid "Delay Redirect (Seconds):"
+#: app/views/links/form.php:127 app/views/links/form.php:130
+msgid "Delay Redirect"
 msgstr ""
 
-#: classes/views/prli-links/form.php:68
+#: app/views/links/form.php:131
 msgid "Time in seconds to wait before redirecting"
 msgstr ""
 
-#: classes/views/prli-links/form.php:73
+#: app/views/links/form.php:140 app/views/links/form.php:143
 msgid "Parameter Forwarding"
 msgstr ""
 
-#: classes/views/prli-links/form.php:75
-msgid "Parameter Forwarding Enabled"
-msgstr ""
-
-#: classes/views/prli-links/form.php:76
+#: app/views/links/form.php:144
 msgid "Forward parameters passed to this link onto the Target URL"
 msgstr ""
 
-#: classes/views/prli-links/form.php:78
-msgid "Tracking Options"
+#: app/views/links/form.php:153 app/views/links/form.php:156
+#: app/views/shared/tinymce_form_popup.php:85
+msgid "Tracking"
 msgstr ""
 
-#: classes/views/prli-links/form.php:80
-msgid "Track Hits on this Link"
-msgstr ""
-
-#: classes/views/prli-links/form.php:81
+#: app/views/links/form.php:157
 msgid "Enable Pretty Link's built-in hit (click) tracking"
 msgstr ""
 
-#: classes/views/prli-links/form.php:83
-msgid "Enable Google Analytics Tracking on this Link"
+#: app/views/links/form.php:166 pro/app/models/PlpUtils.php:42
+#: pro/app/views/links/bulk-edit.php:10
+msgid "Google Analytics"
 msgstr ""
 
-#: classes/views/prli-links/form.php:84
-#: pro/classes/views/prli-links/link-options.php:3
+#: app/views/links/form.php:169
+msgid "Google Analytics Tracking"
+msgstr ""
+
+#: app/views/links/form.php:170
 msgid ""
-"Requires the Google Analyticator, Google Analytics for WordPress or Google "
-"Analytics Plugin installed and configured for this to work."
+"Requires the Google Analyticator, Google Analytics by MonsterInsights "
+"(formerly Yoast) or Google Analytics Plugin installed and configured for "
+"this to work."
 msgstr ""
 
-#: classes/views/prli-links/form.php:90
+#: app/views/links/form.php:180
 msgid ""
 "It appears that <strong>%s</strong> is currently installed. Pretty Link will "
 "attempt to use its settings to track this link."
 msgstr ""
 
-#: classes/views/prli-links/form.php:94
+#: app/views/links/form.php:185
 msgid ""
 "No Google Analytics Plugin is currently installed. Pretty Link cannot track "
 "links using Google Analytics until one is."
 msgstr ""
 
-#: classes/views/prli-links/form.php:115
-msgid ""
-"To enable Double Redirection, Keyword Replacements, URL Replacements, URL "
-"Rotations, Split Tests, and more, %sUpgrade to Pretty Link Pro%s today!"
+#: app/views/links/form.php:198
+msgid "Pro Options"
 msgstr ""
 
-#: classes/views/prli-links/list.php:18
+#: app/views/links/form.php:218
+msgid "Oops!"
+msgstr ""
+
+#: app/views/links/list.php:8
+msgid "Add Pretty Link"
+msgstr ""
+
+#: app/views/links/list.php:14
 msgid ""
 "WordPress Must be Configured:</strong> Pretty Link won't work until you "
 "select a Permalink Structure other than 'Default'"
 msgstr ""
 
-#: classes/views/prli-links/list.php:18 classes/views/prli-options/form.php:14
+#: app/views/links/list.php:14 app/views/options/form.php:12
 msgid "Permalink Settings"
 msgstr ""
 
-#: classes/views/prli-links/list.php:43
-msgid "Add a Pretty Link"
-msgstr ""
-
-#: classes/views/prli-links/list.php:44
-msgid "Watch Pretty Link Intro Video"
-msgstr ""
-
-#: classes/views/prli-links/list.php:54
+#: app/views/links/list.php:39
 msgid "Back to Groups"
 msgstr ""
 
-#: classes/views/prli-links/list.php:65 classes/views/prli-links/list.php:234
-msgid "Hits / Uniq"
+#: app/views/links/list.php:48 app/views/links/list.php:152
+msgid "Clicks / Uniq"
 msgstr ""
 
-#: classes/views/prli-links/list.php:79
+#: app/views/links/list.php:62
 msgid "Bulk Edit"
 msgstr ""
 
-#: classes/views/prli-links/list.php:86
+#: app/views/links/list.php:69
 msgid "Basic Link Options"
 msgstr ""
 
-#: classes/views/prli-links/list.php:87
+#: app/views/links/list.php:70 app/views/shared/tinymce_form_popup.php:60
 msgid "Redirect Type"
 msgstr ""
 
-#: classes/views/prli-links/list.php:93
+#: app/views/links/list.php:76
 msgid "Track"
 msgstr ""
 
-#: classes/views/prli-links/list.php:95
+#: app/views/links/list.php:78 app/views/shared/tinymce_form_popup.php:77
 msgid "Nofollow"
 msgstr ""
 
-#: classes/views/prli-links/list.php:97
+#: app/views/links/list.php:80
 msgid "Forward Params"
 msgstr ""
 
-#: classes/views/prli-links/list.php:105
-msgid "Update"
-msgstr ""
-
-#: classes/views/prli-links/list.php:105
+#: app/views/links/list.php:88
 msgid "Bulk Update"
 msgstr ""
 
-#: classes/views/prli-links/list.php:116
-msgid "Watch this video to see how to get started!"
+#: app/views/links/list.php:98
+msgid "No Pretty Links were found, %sCreate One%s"
 msgstr ""
 
-#: classes/views/prli-links/list.php:116
-msgid "Get More Video Tutorials like this one"
-msgstr ""
-
-#: classes/views/prli-links/list.php:144
-msgid "Meta Refresh Redirection"
-msgstr ""
-
-#: classes/views/prli-links/list.php:147
-msgid "Javascript Redirection"
-msgstr ""
-
-#: classes/views/prli-links/list.php:197
-msgid "Tweet"
-msgstr ""
-
-#: classes/views/prli-links/list.php:198
-msgid "Email"
-msgstr ""
-
-#: classes/views/prli-links/list.php:221
+#: app/views/links/list.php:139
 msgid "Target URL:"
 msgstr ""
 
-#: classes/views/prli-links/new.php:7
+#: app/views/links/new.php:4
 msgid "Add Link"
 msgstr ""
 
-#: classes/views/prli-options/form.php:14
+#: app/views/options/form.php:4
+msgid "User Manual"
+msgstr ""
+
+#: app/views/options/form.php:12
 msgid "WordPress Must be Configured:"
 msgstr ""
 
-#: classes/views/prli-options/form.php:14
+#: app/views/options/form.php:12
 msgid ""
 "Pretty Link won't work until you select a Permalink Structure other than "
 "'Default'"
 msgstr ""
 
-#: classes/views/prli-options/form.php:19
-#: pro/classes/views/prlipro-options/form.php:9
-msgid "Pretty Link Admin"
+#: app/views/options/form.php:37
+msgid "General"
 msgstr ""
 
-#: classes/views/prli-options/form.php:25
-msgid "Link Options"
+#: app/views/options/form.php:40
+msgid "Reporting"
 msgstr ""
 
-#: classes/views/prli-options/form.php:28
-msgid "Link Defaults:"
+#: app/views/options/form.php:47
+msgid "General Options"
 msgstr ""
 
-#: classes/views/prli-options/form.php:29
-msgid "Track Link"
+#: app/views/options/form.php:53
+msgid "Default Link Options"
 msgstr ""
 
-#: classes/views/prli-options/form.php:30
+#: app/views/options/form.php:61
+msgid ""
+"Select the type of redirection you want your newly created links to have."
+msgstr ""
+
+#: app/views/options/form.php:70 app/views/options/form.php:72
+msgid "Enable Tracking"
+msgstr ""
+
+#: app/views/options/form.php:73
 msgid "Default all new links to be tracked."
 msgstr ""
 
-#: classes/views/prli-options/form.php:33
-msgid "Add <code>nofollow</code> to Link"
+#: app/views/options/form.php:82
+msgid "Enable No Follow"
 msgstr ""
 
-#: classes/views/prli-options/form.php:34
-msgid "Add the <code>nofollow</code> attribute by default to new links."
+#: app/views/options/form.php:84
+msgid "Add No Follow"
 msgstr ""
 
-#: classes/views/prli-options/form.php:37
-msgid "Use a prefix from your Permalink structure in your Pretty Links"
+#: app/views/options/form.php:85
+msgid "Add the 'nofollow' attribute by default to new links."
 msgstr ""
 
-#: classes/views/prli-options/form.php:38
+#: app/views/options/form.php:94
+msgid "Enable Permalink Fix"
+msgstr ""
+
+#: app/views/options/form.php:96
+msgid "Use fix for index.php Permalink Structure"
+msgstr ""
+
+#: app/views/options/form.php:97
 msgid ""
-"This option should only be checked if you have elements in your permalink "
+"This option should ONLY be checked if you have elements in your permalink "
 "structure that must be present in any link on your site. For example, some "
 "WordPress installs don't have the benefit of full rewrite capabilities and "
 "in this case you'd need an index.php included in each link (http://example."
@@ -714,560 +1318,976 @@ msgid ""
 "will want to keep this unchecked."
 msgstr ""
 
-#: classes/views/prli-options/form.php:41
-msgid "Default Link Redirection Type:"
-msgstr ""
-
-#: classes/views/prli-options/form.php:43
-msgid "Temporary (307)"
-msgstr ""
-
-#: classes/views/prli-options/form.php:44
-msgid "Permanent (301)"
-msgstr ""
-
-#: classes/views/prli-options/form.php:47
-msgid ""
-"Select the type of redirection you want your newly created links to have."
-msgstr ""
-
-#: classes/views/prli-options/form.php:52
-msgid "WordPress Redirection Action:"
-msgstr ""
-
-#: classes/views/prli-options/form.php:54
-msgid "WordPress 'init' Action"
-msgstr ""
-
-#: classes/views/prli-options/form.php:55
-msgid "WordPress 'template_redirect' Action"
-msgstr ""
-
-#: classes/views/prli-options/form.php:57
-msgid ""
-"Defaults to use WordPress' 'init' action. Init works more reliably for many "
-"users but the better option for performance and compatibility is to use the "
-"'template_redirect' action."
-msgstr ""
-
-#: classes/views/prli-options/form.php:61
+#: app/views/options/form.php:110
 msgid "Reporting Options"
 msgstr ""
 
-#: classes/views/prli-options/form.php:64
-msgid "Excluded IP Addresses:"
+#: app/views/options/form.php:115 app/views/options/form.php:117
+msgid "Tracking Style"
 msgstr ""
 
-#: classes/views/prli-options/form.php:67
+#: app/views/options/form.php:118
 msgid ""
-"Enter IP Addresses or IP Ranges you want to exclude from your Hit data and "
-"Stats. Each IP Address should be separated by commas. Example: "
-"<code>192.168.0.1, 192.168.2.1, 192.168.3.4 or 192.168.*.*</code>"
+"Changing your tracking style can affect the accuracy of your existing "
+"statistics. Extended mode must be used for Conversion reporting."
 msgstr ""
 
-#: classes/views/prli-options/form.php:68
-msgid "Your Current IP Address is"
-msgstr ""
-
-#: classes/views/prli-options/form.php:73
-msgid "Filter Robots"
-msgstr ""
-
-#: classes/views/prli-options/form.php:74
-msgid ""
-"Filter known Robots and unidentifiable browser clients from your hit data, "
-"stats and reports. <code>IMPORTANT: Any robot hits recorded with any version "
-"of Pretty Link before 1.4.22 won't be filtered by this setting.</code>"
-msgstr ""
-
-#: classes/views/prli-options/form.php:77
-msgid "Whitelist IP Addresses:"
-msgstr ""
-
-#: classes/views/prli-options/form.php:80
-msgid ""
-"Enter IP Addresses or IP Ranges you want to always include in your Hit data "
-"and Stats even if they are flagged as robots. Each IP Address should be "
-"separated by commas. Example: <code>192.168.0.1, 192.168.2.1, 192.168.3.4 or "
-"192.168.*.*</code>"
-msgstr ""
-
-#: classes/views/prli-options/form.php:88
-msgid "Tracking Style:"
-msgstr ""
-
-#: classes/views/prli-options/form.php:88
-msgid ""
-"Note: Changing your tracking style can affect the accuracy of your existing "
-"statistics."
-msgstr ""
-
-#: classes/views/prli-options/form.php:92
+#: app/views/options/form.php:122
 msgid "Normal Tracking"
 msgstr ""
 
-#: classes/views/prli-options/form.php:95
+#: app/views/options/form.php:123
 msgid "Extended Tracking (more stats / slower performance)"
 msgstr ""
 
-#: classes/views/prli-options/form.php:98
+#: app/views/options/form.php:124
 msgid "Simple Click Count Tracking (less stats / faster performance)"
 msgstr ""
 
-#: classes/views/prli-options/form.php:107
-msgid "Update Options"
+#: app/views/options/form.php:130
+msgid "Excluded IP Addresses:"
 msgstr ""
 
-#: classes/views/prli-options/form.php:111
-msgid "Trim Hit Database"
+#: app/views/options/form.php:132
+msgid "Excluded IP Addresses"
 msgstr ""
 
-#: classes/views/prli-options/form.php:114
+#: app/views/options/form.php:133
 msgid ""
-"***WARNING*** If you click OK you will delete ALL of the Hit data that is "
-"older than 30 days. Your data will be gone forever -- no way to retreive it. "
-"Do not click OK unless you are absolutely sure you want to delete this data "
-"because there is no going back!"
+"Enter IP Addresses or IP Ranges you want to exclude from your Click data and "
+"Stats. Each IP Address should be separated by commas. Example: 192.168.0.1, "
+"192.168.2.1, 192.168.3.4 or 192.168.*.*<br/><br/><strong>FYI, your current "
+"IP address is %s."
 msgstr ""
 
-#: classes/views/prli-options/form.php:114
-msgid "Delete Hits older than 30 days"
+#: app/views/options/form.php:143
+msgid "Auto-Trim Clicks"
 msgstr ""
 
-#: classes/views/prli-options/form.php:115
-msgid "This will clear all hits in your database that are older than 30 days."
+#: app/views/options/form.php:145
+msgid "Automatically Trim Clicks"
 msgstr ""
 
-#: classes/views/prli-options/form.php:117
+#: app/views/options/form.php:146
 msgid ""
-"***WARNING*** If you click OK you will delete ALL of the Hit data that is "
-"older than 90 days. Your data will be gone forever -- no way to retreive it. "
-"Do not click OK unless you are absolutely sure you want to delete this data "
-"because there is no going back!"
+"Will automatically delete all hits older than 90 days. We strongly recommend "
+"doing this to keep your database performance up. This will permanently "
+"delete this click data, and is not undo-able. "
 msgstr ""
 
-#: classes/views/prli-options/form.php:117
-msgid "Delete Hits older than 90 days"
+#: app/views/options/form.php:155 app/views/options/form.php:157
+msgid "Filter Robots"
 msgstr ""
 
-#: classes/views/prli-options/form.php:118
-msgid "This will clear all hits in your database that are older than 90 days."
-msgstr ""
-
-#: classes/views/prli-options/form.php:121
+#: app/views/options/form.php:158
 msgid ""
-"***WARNING*** If you click OK you will delete ALL of the Hit data in your "
-"Database. Your data will be gone forever -- no way to retreive it. Do not "
-"click OK unless you are absolutely sure you want to delete all your data "
-"because there is no going back!"
+"Filter known Robots and unidentifiable browser clients from your click data, "
+"stats and reports. Works best if Tracking Style above is set to 'Extended "
+"Tracking'."
 msgstr ""
 
-#: classes/views/prli-options/form.php:121
-msgid "Delete All Hits"
+#: app/views/options/form.php:174
+msgid "Whitelist IP Addresses"
 msgstr ""
 
-#: classes/views/prli-options/form.php:122
+#: app/views/options/form.php:176
+msgid "Whiltelist IP Addresses"
+msgstr ""
+
+#: app/views/options/form.php:177
 msgid ""
-"Seriously, only click this link if you want to delete all the Hit data in "
-"your database."
+"Enter IP Addresses or IP Ranges you want to always include in your Click "
+"data and Stats even if they are flagged as robots. Each IP Address should be "
+"separated by commas. Example: 192.168.0.1, 192.168.2.1, 192.168.3.4 or "
+"192.168.*.*"
 msgstr ""
 
-#: classes/views/prli-options/pro-settings.php:7
-msgid "Pro Account Information"
+#: app/views/shared/link-table-nav.php:13
+#: app/views/shared/link-table-nav.php:104 app/views/shared/table-nav.php:12
+msgid "Displaying"
 msgstr ""
 
-#: classes/views/prli-options/pro-settings.php:9
-msgid "Pretty Link Pro Account Information"
+#: app/views/shared/nav.php:6
+msgid "Pro Manual"
 msgstr ""
 
-#: classes/views/prli-options/pro-settings.php:11
-#: pro/classes/views/prli-reports/list.php:28
-#: pro/classes/views/prlipro-import-export/form.php:8
-#: pro/classes/views/prlipro-options/form.php:9
-msgid "User Manual"
+#: app/views/shared/nav.php:14
+msgid "Connect:"
 msgstr ""
 
-#: classes/views/prli-options/pro-settings.php:15
-msgid "Pretty Link Pro is Installed"
+#: app/views/shared/nav.php:18
+msgid "Get Help:"
 msgstr ""
 
-#: classes/views/prli-options/pro-settings.php:15
-msgid ""
-"Are you sure you want to Un-Install Pretty Link Pro? This will delete your "
-"pro username & password from your local database, remove all the pro "
-"software but will leave all your data intact incase you want to reinstall "
-"sometime :) ..."
+#: app/views/shared/nav.php:19
+msgid "Tutorials"
 msgstr ""
 
-#: classes/views/prli-options/pro-settings.php:15
-msgid "Downgrade to Pretty Link Standard"
+#: app/views/shared/public_link.php:19
+msgid "Here is your Pretty Link"
 msgstr ""
 
-#: classes/views/prli-options/pro-settings.php:15
-msgid "Edit/Update Your Profile:"
+#: app/views/shared/public_link.php:35
+msgid "Here's your pretty link for:"
 msgstr ""
 
-#: classes/views/prli-options/pro-settings.php:15
-msgid ""
-"Use your account username and password to log in to your Account and "
-"Affiliate Control Panel"
-msgstr ""
-
-#: classes/views/prli-options/pro-settings.php:15
-msgid "Account"
-msgstr ""
-
-#: classes/views/prli-options/pro-settings.php:15
-msgid "Affiliate Control Panel"
-msgstr ""
-
-#: classes/views/prli-options/pro-settings.php:18
-msgid "Ready to take your marketing efforts to the next level?"
-msgstr ""
-
-#: classes/views/prli-options/pro-settings.php:19 pro/prlipro-hooks.php:25
-#: pro/prlipro-hooks.php:35
-msgid "Pretty Link Pro"
-msgstr ""
-
-#: classes/views/prli-options/pro-settings.php:19
-msgid ""
-"will help you automate, share, test and get more clicks and conversions from "
-"your Pretty Links!"
-msgstr ""
-
-#: classes/views/prli-options/pro-settings.php:19
-msgid "Learn More"
-msgstr ""
-
-#: classes/views/prli-tools/bookmarklet.php:19
-msgid "Here's your Pretty Link"
-msgstr ""
-
-#: classes/views/prli-tools/bookmarklet.php:61
-msgid "here's your pretty link for:"
-msgstr ""
-
-#: classes/views/prli-tools/bookmarklet.php:63
-#: pro/classes/views/prlipro-public/display.php:44
+#: app/views/shared/public_link.php:39
 msgid "send this link to:"
 msgstr ""
 
-#: classes/views/prli-tools/bookmarklet.php:81
+#: app/views/shared/public_link.php:42
 msgid "back"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:17
-msgid "Tools"
+#: app/views/shared/tinymce_form_popup.php:4
+msgid "Insert Pretty Link"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:18
-msgid "Bookmarklet:"
+#: app/views/shared/tinymce_form_popup.php:41
+msgid "Create New Pretty Link"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:19 pro/pretty-link-pro.php:1516
-msgid "Get PrettyLink"
+#: app/views/shared/tinymce_form_popup.php:48
+msgid "Slug"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:20
+#: app/views/shared/tinymce_form_popup.php:51
+msgid "valid"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:52
+msgid "invalid"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:56
+#: app/views/shared/tinymce_form_popup.php:113
+msgid "Link Text"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:62
+#: app/views/shared/tinymce_form_popup.php:79
+#: app/views/shared/tinymce_form_popup.php:87
+#: pro/app/views/tools/generator.php:46 pro/app/views/tools/generator.php:51
+#: pro/app/widgets/PlpPublicLinksWidget.php:59
+#: pro/app/widgets/PlpPublicLinksWidget.php:71
+msgid "Default"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:68
+#: pro/app/controllers/PlpLinksController.php:628
+#: pro/app/controllers/PlpLinksController.php:684
+#: pro/app/views/options/nav.php:5
+msgid "Pretty Bar"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:69
+#: pro/app/controllers/PlpLinksController.php:629
+msgid "Cloaked"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:70
+#: pro/app/controllers/PlpLinksController.php:630
+#: pro/app/controllers/PlpLinksController.php:686
+msgid "Pixel"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:71
+#: pro/app/controllers/PlpLinksController.php:631
+#: pro/app/controllers/PlpLinksController.php:687
+msgid "Meta Refresh"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:72
+#: pro/app/controllers/PlpLinksController.php:632
+#: pro/app/controllers/PlpLinksController.php:688
+msgid "Javascript"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:80
+#: app/views/shared/tinymce_form_popup.php:88
+msgid "Enabled"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:81
+#: app/views/shared/tinymce_form_popup.php:89
+msgid "Disabled"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:94
+#: app/views/shared/tinymce_form_popup.php:118
+msgid "Open this Pretty Link in a new window/tab"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:97
+msgid "Insert New Pretty Link"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:101
+msgid "Use Existing Pretty Link"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:103
+msgid "Search by Slug, Title, or Target URL..."
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:122
+msgid "Insert Existing Pretty Link"
+msgstr ""
+
+#: app/views/tools/form.php:18 app/views/tools/form.php:25
+msgid "Bookmarklet"
+msgstr ""
+
+#: app/views/tools/form.php:19 app/views/tools/form.php:48
+msgid "Trim Clicks"
+msgstr ""
+
+#: app/views/tools/form.php:26 pro/app/views/tools/generator.php:31
+#: pro/app/views/tools/generator.php:41
+msgid "Get Pretty Link"
+msgstr ""
+
+#: app/views/tools/form.php:28
+msgid "Install Pretty Link Bookmarklet"
+msgstr ""
+
+#: app/views/tools/form.php:29
 msgid ""
 "Just drag this \"Get PrettyLink\" link to your toolbar to install the "
 "bookmarklet. As you browse the web, you can just click this bookmarklet to "
-"create a pretty link from the current url you're looking at.  <a href="
+"create a pretty link from the current url you're looking at. <a href="
 "\"http://blairwilliams.com/pretty-link-bookmarklet/\">(more help)</a>"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:21
+#: app/views/tools/form.php:31
 msgid "Show iPhone Bookmarklet Instructions"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:22
+#: app/views/tools/form.php:35
 msgid ""
 "<strong>Note:</strong> iPhone users can install this bookmarklet in their "
 "Safari to create Pretty Links with the following steps:"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:24
+#: app/views/tools/form.php:37
 msgid "Copy this text:"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:25
+#: app/views/tools/form.php:38
 msgid "Tap the + button at the bottom of the screen"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:26
+#: app/views/tools/form.php:39
 msgid ""
-"Choose \"Add Bookmark\", rename your bookmark to \"Get PrettyLink\" (or "
+"Choose to share the page, then click on \"Bookmark\". We recommend saving it "
+"in your Favorites folder. Rename your bookmark to \"Get PrettyLink\" (or "
 "whatever you want) and then \"Save\""
 msgstr ""
 
-#: classes/views/prli-tools/form.php:27
+#: app/views/tools/form.php:40
 msgid ""
-"Navigate through your Bookmarks folders until you find the new bookmark and "
-"click \"Edit\""
+"Navigate through your Bookmarks until you find the new bookmark and click "
+"\"Edit\""
 msgstr ""
 
-#: classes/views/prli-tools/form.php:28
+#: app/views/tools/form.php:41
 msgid "Delete all the text from the address"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:29
+#: app/views/tools/form.php:42
 msgid "Paste the text you copied in Step 1 into the address field"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:30
+#: app/views/tools/form.php:43
 msgid "To save the changes hit \"Bookmarks\" and <strong>you're done!"
 msgstr ""
 
-#: classes/views/prli-tools/form.php:30
+#: app/views/tools/form.php:43
 msgid ""
 "Now when you find a page you want to save off as a Pretty Link, just click "
-"the \"Bookmarks\" icon at the bottom of the screen and select your link."
+"the \"Bookmarks\" icon at the bottom of the screen and select your \"Get "
+"PrettyLink\" bookmarklet."
 msgstr ""
 
-#: classes/views/shared/link-table-nav.php:10
-#: classes/views/shared/link-table-nav.php:110
-#: classes/views/shared/table-nav.php:8
-msgid "Displaying"
-msgstr ""
-
-#: classes/views/shared/nav.php:8
-msgid "Pro Manual"
-msgstr ""
-
-#: classes/views/shared/nav.php:10
-msgid "Upgrade to Pro"
-msgstr ""
-
-#: classes/views/shared/nav.php:12
-msgid "Connect"
-msgstr ""
-
-#: classes/views/shared/nav.php:12
-msgid "Get Help"
-msgstr ""
-
-#: classes/views/shared/nav.php:12
-msgid "Tutorials"
-msgstr ""
-
-#: classes/views/shared/nav.php:12
-msgid "One on One"
-msgstr ""
-
-#: prli-api.php:99 prli-api.php:159
-msgid "An error prevented your Pretty Link from being created"
-msgstr ""
-
-#: prli-api.php:124
-msgid "Pretty Link ID must be set for successful update."
-msgstr ""
-
-#: prli-clicks.php:52
-msgid "IP Address: "
-msgstr ""
-
-#: prli-clicks.php:58
-msgid "Visitor: "
-msgstr ""
-
-#: prli-clicks.php:65
-msgid "Group: "
-msgstr ""
-
-#: prli-clicks.php:71
-msgid "All Links"
-msgstr ""
-
-#: prli-groups.php:12
-msgid "Create a group and use it to organize your Pretty Links."
-msgstr ""
-
-#: prli-groups.php:32
-msgid "Your Pretty Link Group was Successfully Created"
-msgstr ""
-
-#: prli-groups.php:56
-msgid "Your Pretty Link Group was Successfully Updated"
-msgstr ""
-
-#: prli-groups.php:63
-msgid "Your Pretty Link Group was Successfully Deleted"
-msgstr ""
-
-#: prli-main.php:20
-msgid "Pretty Link | Manage Pretty Links"
-msgstr ""
-
-#: prli-main.php:21
-msgid "Pretty Link | Add New Link"
-msgstr ""
-
-#: prli-main.php:21
-msgid "Add New Link"
-msgstr ""
-
-#: prli-main.php:161
-msgid "Pretty Link Quick Add"
-msgstr ""
-
-#: prli-main.php:357 prli-main.php:376
+#: app/views/tools/form.php:50
 msgid ""
-"Your Pretty Link Pro installation isn't quite complete yet.<br/>"
-"%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
+"Pretty Link is already automatically trimming Clicks older than 90 days. "
+"Although not necessary, you can still use the buttons below to force click "
+"trimming."
 msgstr ""
 
-#: prli-options.php:61 pro/prlipro-options.php:195
-msgid "Options saved."
-msgstr ""
-
-#: prli-options.php:68
-msgid "Hit Database was Cleared."
-msgstr ""
-
-#: prli-options.php:77
-msgid "No hits older than 30 days were found, so nothing was deleted"
-msgstr ""
-
-#: prli-options.php:86
-msgid "No hits older than 90 days were found, so nothing was deleted"
-msgstr ""
-
-#: prli-pro-settings.php:25
+#: app/views/tools/form.php:53
 msgid ""
-"You're almost done!<br/>%1$sFinish your Re-Install of Pretty Link Pro%2$s"
+"***WARNING*** If you click OK you will delete ALL of the Click data that is "
+"older than 30 days. Your data will be gone forever -- no way to retreive it. "
+"Do not click OK unless you are absolutely sure you want to delete this data "
+"because there is no going back!"
 msgstr ""
 
-#: prli-pro-settings.php:33
-msgid "Pretty Link Pro Successfully Uninstalled."
+#: app/views/tools/form.php:53
+msgid "Delete Clicks older than 30 days"
 msgstr ""
 
-#: prli-xmlrpc.php:22 prli-xmlrpc.php:85 prli-xmlrpc.php:133
-#: prli-xmlrpc.php:189 prli-xmlrpc.php:219 prli-xmlrpc.php:248
-#: prli-xmlrpc.php:282 prli-xmlrpc.php:315
-msgid "Sorry, XML-RPC Not enabled for this website"
+#: app/views/tools/form.php:55
+msgid "Clear clicks 30 days or older"
 msgstr ""
 
-#: prli-xmlrpc.php:25 prli-xmlrpc.php:88 prli-xmlrpc.php:136
-#: prli-xmlrpc.php:192 prli-xmlrpc.php:222 prli-xmlrpc.php:251
-#: prli-xmlrpc.php:285 prli-xmlrpc.php:318
-msgid "Sorry, Login failed"
+#: app/views/tools/form.php:56
+msgid ""
+"This will clear all clicks in your database that are older than 30 days."
 msgstr ""
 
-#: prli-xmlrpc.php:31 prli-xmlrpc.php:94 prli-xmlrpc.php:142
-#: prli-xmlrpc.php:198 prli-xmlrpc.php:228 prli-xmlrpc.php:257
-#: prli-xmlrpc.php:291 prli-xmlrpc.php:324
-msgid "Sorry, you must be an administrator to access this resource"
+#: app/views/tools/form.php:58
+msgid ""
+"***WARNING*** If you click OK you will delete ALL of the Click data that is "
+"older than 90 days. Your data will be gone forever -- no way to retreive it. "
+"Do not click OK unless you are absolutely sure you want to delete this data "
+"because there is no going back!"
 msgstr ""
 
-#: prli-xmlrpc.php:98
-msgid "You must provide a target URL"
+#: app/views/tools/form.php:58
+msgid "Delete Clicks older than 90 days"
 msgstr ""
 
-#: prli-xmlrpc.php:124 prli-xmlrpc.php:173
-msgid "There was an error creating your Pretty Link"
+#: app/views/tools/form.php:60
+msgid "Clear clicks 90 days or older"
 msgstr ""
 
-#: prli-xmlrpc.php:146
-msgid "You must provide the id of the link you want to update"
+#: app/views/tools/form.php:61
+msgid ""
+"This will clear all clicks in your database that are older than 90 days."
 msgstr ""
 
-#: prli-xmlrpc.php:203
-msgid "There was an error fetching the Pretty Link Groups"
+#: app/views/tools/form.php:65
+msgid ""
+"***WARNING*** If you click OK you will delete ALL of the Click data in your "
+"Database. Your data will be gone forever -- no way to retreive it. Do not "
+"click OK unless you are absolutely sure you want to delete all your data "
+"because there is no going back!"
 msgstr ""
 
-#: prli-xmlrpc.php:233
-msgid "There was an error fetching the Pretty Links"
+#: app/views/tools/form.php:65
+msgid "Delete All Clicks"
 msgstr ""
 
-#: prli-xmlrpc.php:260
-msgid "Sorry, you must provide a slug to lookup"
+#: app/views/tools/form.php:67
+msgid "Clear all clicks"
 msgstr ""
 
-#: prli-xmlrpc.php:267 prli-xmlrpc.php:301
-msgid "There was an error fetching your Pretty Link"
+#: app/views/tools/form.php:68
+msgid ""
+"Seriously, only click this link if you want to delete all the Click data in "
+"your database."
 msgstr ""
 
-#: prli-xmlrpc.php:294 prli-xmlrpc.php:327
-msgid "Sorry, you must provide an id to lookup"
+#: pro/app/controllers/PlpAppController.php:165
+msgid "ERROR: Your Pretty Link was unable to be created"
 msgstr ""
 
-#: prli-xmlrpc.php:334
-msgid "There was an error fetching your Pretty Link URL"
+#: pro/app/controllers/PlpAppController.php:169
+msgid "Unauthorized"
 msgstr ""
 
-#: pro/classes/models/PrliProPostOptions.php:55
+#: pro/app/controllers/PlpImportExportController.php:12
+msgid "Pretty Link Pro | Import/Export"
+msgstr ""
+
+#: pro/app/controllers/PlpImportExportController.php:13
+msgid "Pro Import/Export"
+msgstr ""
+
+#: pro/app/controllers/PlpKeywordsController.php:66
+msgid "Pretty Link Post Build Index"
+msgstr ""
+
+#: pro/app/controllers/PlpKeywordsController.php:459
+#: pro/app/views/links/form.php:128
+msgid "Keywords"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:213
+msgid ""
+"Your URL Replacements must be formatted as a comma separated list of "
+"properly formatted URLs (http[s]://example.com/whatever)"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:224
+msgid "Date must be valid and formatted YYYY-MM-DD."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:236
+msgid "Expire Clicks must be a number greater than zero."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:243
+msgid "Expired URL must be a valid URL."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:255
+msgid "Your URL Rotations must all be properly formatted URLs."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:264
+msgid "Your Link Rotation Weights must add up to 100%."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:274
+msgid "Your Geographic Redirect URLs must all be properly formatted."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:278
+msgid "Your Geographic Redirects URLs must not be empty."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:282
+msgid "Your Geographic Redirect Countries must not be empty."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:293
+msgid "Your Technology Redirect URLs must all be properly formatted."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:297
+msgid "Your Technology Redirects URLs must not be empty."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:308
+msgid "Your Time Period Redirect URLs must all be properly formatted."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:312
+msgid "Your Time Period Redirects URLs must not be empty."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:317
+msgid "Your Time Period Redirect start time must not be empty."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:320
+msgid "Your Time Period Redirect start time must be a properly formatted date."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:326
+msgid "Your Time Period Redirect end time must not be empty."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:329
+msgid "Your Time Period Redirect end time must be a properly formatted date."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:337
+msgid "Your Time Period Redirect start time must come before the end time."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:345
+msgid "Delay Redirect must be a number"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:685
+#: pro/app/widgets/PlpPublicLinksWidget.php:64
+msgid "Cloak"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:753
+msgid "View QR Code for this link: %s"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:757
+msgid "Download QR Code for this link: %s"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:828
+msgid "This link expired on %1$s and will now cause a 404 error when visited"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:831
+msgid "This link expired on %1$s and now redirects to %2$s"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:835
+msgid "This link is set to expire after the date %s"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:846
+msgid ""
+"This link expired after %d clicks and will now cause a 404 error when visited"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:849
+msgid "This link expired after %1$d clicks and now redirects to %2$s"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:853
+msgid "This link is set to expire after %d clicks"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:861
+msgid "This link has additional Target URL rotations"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:864
+msgid "This link has additional Geographic Target URLs"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:867
+msgid "This link has additional Technology Dependent Conditional Target URLs"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:872
+msgid ""
+"A Time Period Redirect is currently active for this link. When visited it "
+"will currently redirect to %s rather than the Target URL unless the link is "
+"expired."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:876
+msgid ""
+"Time Period Redirects have been setup for this link but the current time is "
+"not within any of them currently."
+msgstr ""
+
+#: pro/app/controllers/PlpOptionsController.php:102
+msgid "Keywords Per Page is required"
+msgstr ""
+
+#: pro/app/controllers/PlpOptionsController.php:106
+msgid "Keyword Links Per Page is required"
+msgstr ""
+
+#: pro/app/controllers/PlpOptionsController.php:111
+msgid ""
+"You need to enter a valid Pretty Link Base URL now that you have selected "
+"\"Use an alternate base url for your Pretty Links\""
+msgstr ""
+
+#: pro/app/controllers/PlpOptionsController.php:116
+msgid ""
+"You need to enter a valid Public Link Display URL now that you have selected "
+"\"Use a custom public link display page\""
+msgstr ""
+
+#: pro/app/controllers/PlpOptionsController.php:122
+msgid "Pretty Bar Attribution URL must be a correctly formatted URL"
+msgstr ""
+
+#: pro/app/controllers/PlpPostsController.php:50
+msgid "Pretty Link Pro"
+msgstr ""
+
+#: pro/app/controllers/PlpPostsController.php:54
+msgid "Pretty Link Pro Options"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:50
+msgid "Logo Image URL must be a correctly formatted URL"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:54
+msgid "Background Image URL must be a correctly formatted URL"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:60
+msgid "PrettyBar Background Color must be an actual RGB Value"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:64
+msgid "PrettyBar Text Color must be an actual RGB Value"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:68
+msgid "PrettyBar Link Color must be an actual RGB Value"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:72
+#: pro/app/controllers/PlpPrettyBarController.php:76
+msgid "PrettyBar Hover Color must be an actual RGB Value"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:80
+msgid "PrettyBar Title Character Limit must not be blank"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:84
+msgid "PrettyBar Description Character Limit must not be blank"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:88
+msgid "PrettyBar Link Character Limit must not be blank"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:92
+msgid "PrettyBar Title Character Limit must be a number"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:96
+msgid "PrettyBar Description Character Limit must be a number"
+msgstr ""
+
+#: pro/app/controllers/PlpPrettyBarController.php:100
+msgid "PrettyBar Link Character Limit must be a number"
+msgstr ""
+
+#: pro/app/controllers/PlpPublicLinksController.php:98
+#: pro/app/helpers/PlpPublicLinksHelper.php:6
+msgid "Enter a URL:"
+msgstr ""
+
+#: pro/app/controllers/PlpPublicLinksController.php:99
+#: pro/app/helpers/PlpPublicLinksHelper.php:7
+msgid "Shrink"
+msgstr ""
+
+#: pro/app/controllers/PlpReportsController.php:12
+msgid "Pretty Link Pro | Reports"
+msgstr ""
+
+#: pro/app/controllers/PlpReportsController.php:13
+msgid "Pro Reports"
+msgstr ""
+
+#: pro/app/controllers/PlpReportsController.php:49
+msgid "Create a custom link report and analyze your data."
+msgstr ""
+
+#: pro/app/controllers/PlpReportsController.php:60
+msgid "View the Split Test Report for %s"
+msgstr ""
+
+#: pro/app/controllers/PlpReportsController.php:86
+msgid "Your Pretty Link Report was Successfully Created"
+msgstr ""
+
+#: pro/app/controllers/PlpReportsController.php:116
+msgid "Your Pretty Link Report was Successfully Updated"
+msgstr ""
+
+#: pro/app/controllers/PlpReportsController.php:125
+msgid "Your Pretty Link Report was Successfully Deleted"
+msgstr ""
+
+#: pro/app/helpers/PlpLinksHelper.php:18 pro/app/views/links/form.php:209
+msgid "weight:"
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:19
+msgid "Hide Social Buttons on this post."
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:26
+msgid "Disable Keyword Replacements on this post."
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:44
+msgid "A Pretty Link will be created on Publish"
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:63
+#: pro/app/views/reports/custom-report.php:32
+#: pro/app/views/reports/custom-report.php:65
+#: pro/app/views/reports/split-test-report.php:29
+#: pro/app/views/reports/split-test-report.php:61
+msgid "Uniques"
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:68
+msgid "edit"
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:70
+msgid "Visit Pretty Link:"
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:70
+msgid "in a New Window"
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:70
+msgid "visit"
+msgstr ""
+
+#: pro/app/helpers/PlpPostsHelper.php:76
+msgid ""
+"A Pretty Link hasn't been generated for this entry yet. Click \"Update Post"
+"\" to generate."
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:99
+msgid "Facebook"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:106
+msgid "Twitter"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:113
+msgid "Google+"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:120
+msgid "Pinterest"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:127
+msgid "LinkedIn"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:134
+msgid "Reddit"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:141
+msgid "StumbleUpon"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:148
+msgid "Digg"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:155
+msgid "Email"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:238
+msgid "Affiliate Link Disclosures"
+msgstr ""
+
+#: pro/app/models/PlpOptions.php:247
+msgid "(aff)"
+msgstr ""
+
+#: pro/app/models/PlpPostOptions.php:33
 msgid "This pretty link slug is already taken, please choose a different one"
 msgstr ""
 
-#: pro/classes/models/PrliProUtils.php:272
-msgid "Google Analyticator"
-msgstr ""
-
-#: pro/classes/models/PrliProUtils.php:274
-msgid "Google Analytics for WordPress"
-msgstr ""
-
-#: pro/classes/models/PrliProUtils.php:276
-#: pro/classes/views/prli-links/bulk-edit.php:12
-msgid "Google Analytics"
-msgstr ""
-
-#: pro/classes/models/PrliReport.php:166
+#: pro/app/models/PlpReport.php:149
 msgid "Report must have a name."
 msgstr ""
 
-#: pro/classes/models/PrliReport.php:169
+#: pro/app/models/PlpReport.php:153
 msgid "At least one link must be selected for analysis."
 msgstr ""
 
-#: pro/classes/models/PrliReport.php:282
-msgid "Pretty Link Pro: Hits for"
+#: pro/app/models/PlpReport.php:244
+msgid "Pretty Link Pro: Clicks for"
 msgstr ""
 
-#: pro/classes/models/PrliReport.php:282
+#: pro/app/models/PlpReport.php:244
 msgid "report between"
 msgstr ""
 
-#: pro/classes/models/PrliReport.php:449
+#: pro/app/models/PlpReport.php:251 pro/app/models/PlpReport.php:397
+#: pro/app/views/reports/custom-report.php:34
+#: pro/app/views/reports/custom-report.php:67
+#: pro/app/views/reports/split-test-report.php:31
+#: pro/app/views/reports/split-test-report.php:63
+msgid "Conversions"
+msgstr ""
+
+#: pro/app/models/PlpReport.php:385
 msgid "Pretty Link Pro: Split Report for"
 msgstr ""
 
-#: pro/classes/views/prli-links/bulk-edit.php:6
+#: pro/app/models/PlpReport.php:397 pro/app/models/PlpReport.php:404
+#: pro/app/views/links/form.php:186
+msgid "Rotation"
+msgstr ""
+
+#: pro/app/models/PlpUtils.php:36
+msgid "Google Analyticator"
+msgstr ""
+
+#: pro/app/models/PlpUtils.php:39
+msgid "Google Analytics by MonsterInsights"
+msgstr ""
+
+#: pro/app/views/import-export/form.php:4
+msgid "Import / Export Links"
+msgstr ""
+
+#: pro/app/views/import-export/form.php:9
+#: pro/app/views/import-export/form.php:12
+msgid "Export Pretty Links"
+msgstr ""
+
+#: pro/app/views/import-export/form.php:13
+msgid "Export Links to a CSV File"
+msgstr ""
+
+#: pro/app/views/import-export/form.php:17
+msgid "Export"
+msgstr ""
+
+#: pro/app/views/import-export/form.php:22
+#: pro/app/views/import-export/form.php:25
+msgid "Import Pretty Links"
+msgstr ""
+
+#: pro/app/views/import-export/form.php:26
+msgid ""
+"There are two ways to import a file.<br/><br/>1) Importing to update "
+"existing links and<br/><br/>2) Importing to generate new links. When "
+"Importing to generate new links, you must delete the \"id\" column from the "
+"CSV before importing. If the \"id\" column is present, Pretty Link Pro will "
+"attempt to update existing links."
+msgstr ""
+
+#: pro/app/views/import-export/form.php:36
+msgid "Import"
+msgstr ""
+
+#: pro/app/views/import-export/form.php:39
+msgid "Links Import File"
+msgstr ""
+
+#: pro/app/views/import-export/form.php:40
+msgid ""
+"Select a file that has been formatted as a Pretty Link CSV import file and "
+"click \"Import\""
+msgstr ""
+
+#: pro/app/views/import-export/form.php:48
+msgid "Import/Export Help"
+msgstr ""
+
+#: pro/app/views/import-export/import.php:4
+msgid "Import Results"
+msgstr ""
+
+#: pro/app/views/import-export/import.php:5
+msgid "Total Rows:"
+msgstr ""
+
+#: pro/app/views/import-export/import.php:7
+msgid "Pretty Links were Successfully Created"
+msgstr ""
+
+#: pro/app/views/import-export/import.php:8
+msgid "Pretty Links were Successfully Updated"
+msgstr ""
+
+#: pro/app/views/import-export/import.php:13
+msgid "Pretty Links were unable to be Created:"
+msgstr ""
+
+#: pro/app/views/import-export/import.php:17
+msgid "Error(s) for Pretty Link with Slug:"
+msgstr ""
+
+#: pro/app/views/import-export/import.php:32
+msgid "Pretty Links were unable to be Updated:"
+msgstr ""
+
+#: pro/app/views/import-export/import.php:36
+msgid "Error(s) for Pretty Link with id:"
+msgstr ""
+
+#: pro/app/views/links/bulk-edit.php:6
 msgid "Advanced Link Options"
 msgstr ""
 
-#: pro/classes/views/prli-links/bulk-edit.php:7
-msgid "Double Redirect"
-msgstr ""
-
-#: pro/classes/views/prli-links/cloaked-redirect.php:20
+#: pro/app/views/links/cloaked-redirect.php:36
 msgid "Your browser does not support frames."
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:7
-msgid "Double Redirect:"
+#: pro/app/views/links/form.php:7
+msgid "Expire"
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:11
-msgid "Use a double redirect to erase all referrer information"
+#: pro/app/views/links/form.php:10
+msgid "Expire Link"
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:18
-msgid "Keywords:"
+#: pro/app/views/links/form.php:11
+msgid "Set this link to expire after a specific date or number of clicks."
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:21
+#: pro/app/views/links/form.php:26
+msgid "Expire After"
+msgstr ""
+
+#: pro/app/views/links/form.php:29
+msgid "Expiration Type"
+msgstr ""
+
+#: pro/app/views/links/form.php:30
+msgid ""
+"Select the type of expiration you want for this link.<br/><br/><b>Date</b> "
+"Select this option if you'd like to expire your link after a certain date."
+"<br/><br/><b>Clicks</b>: Select this option to expire this link after it has "
+"been clicked a specific number of times."
+msgstr ""
+
+#: pro/app/views/links/form.php:51
+msgid "Number of Clicks"
+msgstr ""
+
+#: pro/app/views/links/form.php:52
+msgid ""
+"Enter the number of times this link can be clicked before it expires.<br/"
+"><br/><b>Note: Expirations based on clicks wouldn't work properly if you had "
+"tracking turned off for this link so as long as this is set to Clicks, "
+"Pretty Link will ensure tracking is turned on for this link as well.</b>"
+msgstr ""
+
+#: pro/app/views/links/form.php:71
+msgid "Expiration Date"
+msgstr ""
+
+#: pro/app/views/links/form.php:72
+msgid ""
+"Enter a date here in the format YYYY-MM-DD to set when this link should "
+"expire."
+msgstr ""
+
+#: pro/app/views/links/form.php:88
+msgid "Expired Redirect"
+msgstr ""
+
+#: pro/app/views/links/form.php:91
+msgid "Redirect to URL when Expired"
+msgstr ""
+
+#: pro/app/views/links/form.php:92
+msgid ""
+"When this link expires, do you want to redirect to a specific URL. You can "
+"use this to redirect to a page you've setup to indicate that the link is "
+"expired.<br/><br/><b>Note: If this is not set the link will throw a 404 "
+"error when expired</b>."
+msgstr ""
+
+#: pro/app/views/links/form.php:107 pro/app/views/options/form.php:165
+msgid "URL"
+msgstr ""
+
+#: pro/app/views/links/form.php:110
+msgid "Expired URL"
+msgstr ""
+
+#: pro/app/views/links/form.php:111
+msgid ""
+"This is the URL that this link will redirect to after the expiration date "
+"above."
+msgstr ""
+
+#: pro/app/views/links/form.php:131
+msgid "Auto-Replace Keywords"
+msgstr ""
+
+#: pro/app/views/links/form.php:132
 msgid ""
 "Enter a comma separated list of keywords / keyword phrases that you'd like "
 "to replace with this link in your Posts &amp; Pages."
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:24
-msgid "URL Replacements:"
+#: pro/app/views/links/form.php:140
+msgid "URL Replacements"
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:27
+#: pro/app/views/links/form.php:143
+msgid "Auto-Replace URLs"
+msgstr ""
+
+#: pro/app/views/links/form.php:144
 msgid ""
 "Enter a comma separated list of the URLs that you'd like to replace with "
 "this Pretty Link in your Posts &amp; Pages. These must be formatted as URLs "
@@ -1275,367 +2295,716 @@ msgid ""
 "product_id=53</code>"
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:32
-msgid "Target URL Rotations:"
+#: pro/app/views/links/form.php:159 pro/app/views/links/form.php:162
+msgid "Head Scripts"
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:34
+#: pro/app/views/links/form.php:163
+msgid ""
+"Useful for adding Google Analytics tracking, Facebook retargeting pixels, or "
+"any other kind of tracking script to the HTML head for this pretty link.<br/"
+"><br/>These scripts will be in addition to any global one's you've defined "
+"in the options.<br/><br/><b>NOTE:</b> This does NOT work with 301, 302 and "
+"307 type redirects."
+msgstr ""
+
+#: pro/app/views/links/form.php:176
+msgid "Dynamic Redirection"
+msgstr ""
+
+#: pro/app/views/links/form.php:179
+msgid "Dynamic Redirection Options"
+msgstr ""
+
+#: pro/app/views/links/form.php:180
+msgid ""
+"These powerful options are available to give you dynamic control over "
+"redirection for this pretty link."
+msgstr ""
+
+#: pro/app/views/links/form.php:187
+msgid "Geographic"
+msgstr ""
+
+#: pro/app/views/links/form.php:188
+msgid "Technology"
+msgstr ""
+
+#: pro/app/views/links/form.php:189
+msgid "Time"
+msgstr ""
+
+#: pro/app/views/links/form.php:199 pro/app/views/links/form.php:202
+msgid "Target URL Rotations"
+msgstr ""
+
+#: pro/app/views/links/form.php:203
 msgid ""
 "Enter the Target URLs that you'd like to rotate through when this Pretty "
 "Link is Clicked. These must be formatted as URLs example: <code>http://"
 "example.com</code> or <code>http://example.com?product_id=53</code>"
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:37
-#: pro/classes/views/prli-links/form.php:42
-msgid "weight:"
+#: pro/app/views/links/form.php:208
+msgid "Target URL (above)"
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:50
+#: pro/app/views/links/form.php:220
+msgid "Add Link Rotation"
+msgstr ""
+
+#: pro/app/views/links/form.php:226
+msgid "Split Test"
+msgstr ""
+
+#: pro/app/views/links/form.php:229
 msgid "Split Test This Link"
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:51
+#: pro/app/views/links/form.php:230
 msgid ""
-"This works best when you have multiple link rotation URLs entered -- that's "
-"the whole point of split testing ..."
+"Split testing will enable you to track the effectiveness of several links "
+"against each other. This works best when you have multiple link rotation "
+"URLs entered."
 msgstr ""
 
-#: pro/classes/views/prli-links/form.php:57
-msgid "Split Test Goal Link:"
-msgstr ""
-
-#: pro/classes/views/prli-links/form.php:77
-msgid "This is the goal link for your split test."
-msgstr ""
-
-#: pro/classes/views/prli-links/link-options.php:2
-msgid "Enable Google Analytics"
-msgstr ""
-
-#: pro/classes/views/prli-links/link-options.php:6
-msgid "Generate Downloadable %sQR Codes%s for Pretty Links"
-msgstr ""
-
-#: pro/classes/views/prli-links/link-options.php:7
-msgid ""
-"This will enable a link in your pretty link admin that will allow you to "
-"automatically download a %sQR Code%s for each individual Pretty Link."
-msgstr ""
-
-#: pro/classes/views/prli-reports/custom-report.php:7
-msgid "Link Report"
-msgstr ""
-
-#: pro/classes/views/prli-reports/custom-report.php:8
-msgid "Report:"
-msgstr ""
-
-#: pro/classes/views/prli-reports/custom-report.php:10
-msgid "For Goal Link:"
-msgstr ""
-
-#: pro/classes/views/prli-reports/custom-report.php:12
-msgid "Back to Link Reports"
-msgstr ""
-
-#: pro/classes/views/prli-reports/custom-report.php:30
-#: pro/classes/views/prli-reports/custom-report.php:63
-msgid "Link Name"
-msgstr ""
-
-#: pro/classes/views/prli-reports/custom-report.php:32
-#: pro/classes/views/prli-reports/custom-report.php:65
-#: pro/classes/views/prli-reports/split-test-report.php:32
-#: pro/classes/views/prli-reports/split-test-report.php:65
-#: pro/pretty-link-pro.php:169
-msgid "Uniques"
-msgstr ""
-
-#: pro/classes/views/prli-reports/custom-report.php:34
-#: pro/classes/views/prli-reports/custom-report.php:67
-#: pro/classes/views/prli-reports/split-test-report.php:34
-#: pro/classes/views/prli-reports/split-test-report.php:67
-msgid "Conversions"
-msgstr ""
-
-#: pro/classes/views/prli-reports/custom-report.php:35
-#: pro/classes/views/prli-reports/custom-report.php:68
-#: pro/classes/views/prli-reports/split-test-report.php:35
-#: pro/classes/views/prli-reports/split-test-report.php:68
-msgid "Conv Rate"
-msgstr ""
-
-#: pro/classes/views/prli-reports/edit.php:7
-msgid "Edit Link Report"
-msgstr ""
-
-#: pro/classes/views/prli-reports/edit.php:22
-#: pro/classes/views/prli-reports/new.php:22
-msgid "This is how you'll identify your Report."
-msgstr ""
-
-#: pro/classes/views/prli-reports/edit.php:28
-#: pro/classes/views/prli-reports/new.php:28
-msgid "Select Links to Analyze in this Report:"
-msgstr ""
-
-#: pro/classes/views/prli-reports/edit.php:86
-#: pro/classes/views/prli-reports/new.php:86
-msgid "Select some links to be analyzed in this report."
-msgstr ""
-
-#: pro/classes/views/prli-reports/edit.php:89
-#: pro/classes/views/prli-reports/new.php:89
-msgid "Select Your Goal Link (optional):"
-msgstr ""
-
-#: pro/classes/views/prli-reports/edit.php:111
-#: pro/classes/views/prli-reports/new.php:111
-msgid ""
-"If you want to enable conversion tracking in this report then select a goal "
-"link."
-msgstr ""
-
-#: pro/classes/views/prli-reports/list.php:7
-#: pro/classes/views/prli-reports/reports.php:10
-msgid "Link Reports"
-msgstr ""
-
-#: pro/classes/views/prli-reports/list.php:28
-msgid "Add a Pretty Link Report"
-msgstr ""
-
-#: pro/classes/views/prli-reports/list.php:38
-#: pro/classes/views/prli-reports/list.php:79
+#: pro/app/views/links/form.php:246 pro/app/views/reports/list.php:31
+#: pro/app/views/reports/list.php:71
 msgid "Goal Link"
 msgstr ""
 
-#: pro/classes/views/prli-reports/list.php:49
-msgid "No Pretty Link Reports were found"
+#: pro/app/views/links/form.php:249
+msgid "Goal Link for Split Test"
 msgstr ""
 
-#: pro/classes/views/prli-reports/list.php:65
-msgid "View"
+#: pro/app/views/links/form.php:250
+msgid "This is the goal link for your split test."
 msgstr ""
 
-#: pro/classes/views/prli-reports/new.php:7
-msgid "Add Link Report"
+#: pro/app/views/links/form.php:261
+msgid "id: %1$s | slug: %3$s | name: %2$s%4$s"
 msgstr ""
 
-#: pro/classes/views/prli-reports/reports.php:7
-msgid "Reports"
-msgstr ""
-
-#: pro/classes/views/prli-reports/split-test-report.php:7
-msgid "Link Split-Test Report"
-msgstr ""
-
-#: pro/classes/views/prli-reports/split-test-report.php:8
-msgid "For Link:"
-msgstr ""
-
-#: pro/classes/views/prli-reports/split-test-report.php:10
-msgid "Goal Link:"
-msgstr ""
-
-#: pro/classes/views/prli-reports/split-test-report.php:30
-msgid "Link Rotation URL"
-msgstr ""
-
-#: pro/classes/views/prli-reports/split-test-report.php:63
-msgid "Rotation URL"
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:7
-msgid "Import / Export Links"
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:9
-msgid "Export Pretty Links"
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:10
-msgid "Export"
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:11
-msgid "Export Links into a CSV File"
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:13
-msgid "Import Pretty Links"
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:18
-msgid "Choose a file to import:"
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:19
-msgid "Select a file that has been formatted as a Pretty Link CSV import file."
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:20
-msgid "Import File"
-msgstr ""
-
-#: pro/classes/views/prlipro-import-export/form.php:23
+#: pro/app/views/links/form.php:285
 msgid ""
-"Note: There are two ways to import a file. 1) Importing to update existing "
-"links and 2) Importing to generate new links. When Importing to generate new "
-"links, you must delte the \"id\" column from the CSV before importing. If "
-"the \"id\" column is present, Pretty Link Pro will attempt to update "
-"existing links."
+"This will enable you to setup specific target urls that this pretty link "
+"will redirect to based on the country of the person visiting the url."
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:7
-msgid "Import Results"
+#: pro/app/views/links/form.php:290 pro/app/views/links/form.php:304
+#: pro/app/views/links/form.php:318
+msgid "Add"
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:8
-msgid "Total Rows:"
+#: pro/app/views/links/form.php:295 pro/app/views/links/form.php:298
+msgid "Technology Redirects"
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:10
-msgid "Pretty Links were Successfully Created"
+#: pro/app/views/links/form.php:299
+msgid ""
+"This will allow you to redirect based on your visitor's device, operating "
+"system and/or browser"
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:11
-msgid "Pretty Links were Successfully Updated"
+#: pro/app/views/links/form.php:313
+msgid ""
+"This will allow you to redirect based on the time period in which your "
+"visitor visits this link.<br/><br/><b>Note: If your visitor doesn't visit "
+"the link during any of the specified time periods set here, they'll simply "
+"be redirected to the main target url.</b>"
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:17
-msgid "Pretty Links were unable to be Created:"
+#: pro/app/views/links/geo_row.php:12
+msgid "Countries:"
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:22
-msgid "Error(s) for Pretty Link with Slug:"
+#: pro/app/views/links/geo_row.php:15
+msgid "Technology Redirection Countries"
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:39
-msgid "Pretty Links were unable to be Updated:"
+#: pro/app/views/links/geo_row.php:16
+msgid ""
+"This is a comma-separated list of countries that this redirect will match "
+"on. Just start typing a country's name and an autocomplete dropdown will "
+"appear to select from. Once a country is selected, feel free to start typing "
+"the name of another country. You can add as many as you'd like this redirect "
+"to match on"
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:44
-msgid "Error(s) for Pretty Link with id:"
+#: pro/app/views/links/geo_row.php:25 pro/app/views/links/tech_row.php:79
+#: pro/app/views/links/time_row.php:39
+msgid "URL:"
 msgstr ""
 
-#: pro/classes/views/prlipro-import-export/import.php:59
-msgid "Back"
+#: pro/app/views/links/geo_row.php:28
+msgid "Geographic Redirection URL"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:15
-msgid "Keyword & URL Replacement Options"
+#: pro/app/views/links/geo_row.php:29
+msgid ""
+"This is the URL that this Pretty Link will redirect to if the visitor's "
+"country match the settings here."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:20
-msgid "Enable Keywords and URL Pretty Link Automatic Replacement"
+#: pro/app/views/links/geo_row.php:38 pro/app/views/links/tech_row.php:92
+#: pro/app/views/links/time_row.php:52
+msgid "Remove"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:21
+#: pro/app/views/links/link-has-expired.php:9
+msgid "Link Not Found"
+msgstr ""
+
+#: pro/app/views/links/link-has-expired.php:33
+msgid "Sorry, this link has expired"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:3
+#: pro/app/views/links/link-options.php:5
+msgid "Base Slug Prefix"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:6
+msgid ""
+"Use this to prefix all newly generated pretty links with a directory of your "
+"choice. For example set to <b>out</b> to make your pretty links look like "
+"http://site.com/<b>out</b>/xyz. Changing this option will NOT affect "
+"existing pretty links. If you do not wish to use a directory prefix, leave "
+"this text field blank. Whatever you type here will be sanitized and modified "
+"to ensure it is URL-safe. So <b>Hello World</b> might get changed to "
+"something like <b>hello-world</b> instead. Lowercase letters, numbers, "
+"dashes, and underscores are allowed."
+msgstr ""
+
+#: pro/app/views/links/link-options.php:16
+#: pro/app/views/links/link-options.php:18
+msgid "Slug Character Count"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:19
+msgid ""
+"The number of characters to use when auto-generating a random slug for "
+"pretty links. The default is 4. You cannot use less than 2."
+msgstr ""
+
+#: pro/app/views/links/link-options.php:29
+#: pro/app/views/links/link-options.php:30
+msgid "Enable Google Analytics"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:31
+msgid ""
+"Requires Google Analyticator, Google Analytics by MonsterInsights (formerly "
+"Yoast), or the Google Analytics Plugin to be installed and configured on "
+"your site."
+msgstr ""
+
+#: pro/app/views/links/link-options.php:41
+msgid "Enable %sQR Codes%s"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:43
+msgid "Generate QR Codes"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:44
+msgid ""
+"This will enable a link in your pretty link admin that will allow you to "
+"automatically download a QR Code for each individual Pretty Link."
+msgstr ""
+
+#: pro/app/views/links/link-options.php:54
+#: pro/app/views/links/link-options.php:56
+msgid "Global Head Scripts"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:57
+msgid ""
+"Useful for adding Google Analytics tracking, Facebook retargeting pixels, or "
+"any other kind of tracking script to the HTML head.<br/><br/>What you enter "
+"in this box will be applied to all supported pretty links.<br/><br/><b>NOTE:"
+"</b> This does NOT work with 301, 302 and 307 type redirects."
+msgstr ""
+
+#: pro/app/views/links/prettybar.php:174
+msgid "Share on Twitter"
+msgstr ""
+
+#: pro/app/views/links/prettybar.php:191
+msgid "Powered by"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:14
+msgid "Device:"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:17
+msgid "Technology Redirection Device"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:18
+msgid ""
+"<b>Desktop</b> will match on any conventional laptop or desktop computer.<br/"
+"><br/><b>Mobile</b> will match on any phone, tablet or other portable device."
+"<br/><br/><b>Phone</b> will match on any phone or similarly small device.<br/"
+"><br/><b>Tablet</b> will match on any tablet sized device."
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:23 pro/app/views/links/tech_row.php:42
+#: pro/app/views/links/tech_row.php:62
+msgid "Any"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:24
+msgid "Desktop"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:25
+msgid "Mobile"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:26
+msgid "Phone"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:27
+msgid "Tablet"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:33
+msgid "Operating System:"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:36
+msgid "Technology Redirection OS"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:37
+msgid ""
+"Use this dropdown to select which Operating System this redirect will match "
+"on."
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:43 pro/app/views/links/tech_row.php:64
+msgid "Android"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:44
+msgid "iOS"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:45
+msgid "Linux"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:46
+msgid "Mac"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:47
+msgid "Windows"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:53
+msgid "Browser:"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:56
+msgid "Technology Redirection Browser"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:57
+msgid "Use this dropdown to select which Browser this redirect will match on."
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:63
+msgid "Amazon Silk"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:65
+msgid "Chrome"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:66
+msgid "Chromium"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:67
+msgid "Edge"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:68
+msgid "Firefox"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:69
+msgid "Internet Explorer"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:70
+msgid "Kindle"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:71
+msgid "Opera"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:72
+msgid "Opera Coast"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:73
+msgid "Safari"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:82
+msgid "Technology Redirection URL"
+msgstr ""
+
+#: pro/app/views/links/tech_row.php:83
+msgid ""
+"This is the URL that this Pretty Link will redirect to if the visitor's "
+"device, os and browser match the settings here."
+msgstr ""
+
+#: pro/app/views/links/time_row.php:13
+msgid "Start Time:"
+msgstr ""
+
+#: pro/app/views/links/time_row.php:16
+msgid "Start of Time Period"
+msgstr ""
+
+#: pro/app/views/links/time_row.php:17
+msgid ""
+"This is where you'll enter the beginning of the time period for this redirect"
+msgstr ""
+
+#: pro/app/views/links/time_row.php:26
+msgid "End Time:"
+msgstr ""
+
+#: pro/app/views/links/time_row.php:29
+msgid "End of Time Period"
+msgstr ""
+
+#: pro/app/views/links/time_row.php:30
+msgid "This is where you'll enter the end of the time period for this redirect"
+msgstr ""
+
+#: pro/app/views/links/time_row.php:42
+msgid "Time Period Redirect URL"
+msgstr ""
+
+#: pro/app/views/links/time_row.php:43
+msgid ""
+"This is the URL that this Pretty Link will redirect to when the visitor "
+"visits the link in the associated time period."
+msgstr ""
+
+#: pro/app/views/options/autocreate.php:7
+msgid "%s Shortlinks"
+msgstr ""
+
+#: pro/app/views/options/autocreate.php:10
+msgid "Create Pretty Links for %s"
+msgstr ""
+
+#: pro/app/views/options/autocreate.php:11
+msgid "Automatically Create a Pretty Link for each of your published %s"
+msgstr ""
+
+#: pro/app/views/options/autocreate.php:33
+msgid "%s Auto Link Group"
+msgstr ""
+
+#: pro/app/views/options/autocreate.php:34
+msgid "Group that Pretty Links for %s will be automatically added to."
+msgstr ""
+
+#: pro/app/views/options/autocreate.php:47
+msgid "Show Social Buttons"
+msgstr ""
+
+#: pro/app/views/options/autocreate.php:50
+msgid "Show Social Buttons on %s"
+msgstr ""
+
+#: pro/app/views/options/autocreate.php:51
+msgid ""
+"If this button is checked then you'll have the ability to include a social "
+"buttons bar on your %s."
+msgstr ""
+
+#: pro/app/views/options/form.php:4
+msgid "Keyword &amp; URL Auto Replacements Options"
+msgstr ""
+
+#: pro/app/views/options/form.php:13
+msgid "Enable Replacements"
+msgstr ""
+
+#: pro/app/views/options/form.php:15
+msgid "Enable Keyword and URL Auto Replacement"
+msgstr ""
+
+#: pro/app/views/options/form.php:16
 msgid ""
 "If checked, this will enable you to automatically replace keywords and/or "
 "URLs on your blog with pretty links. You will specify the specific keywords "
 "and urls from your Pretty Link edit page."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:26
+#: pro/app/views/options/form.php:34
+msgid "Thresholds"
+msgstr ""
+
+#: pro/app/views/options/form.php:36
 msgid "Set Keyword Replacement Thresholds"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:27
+#: pro/app/views/options/form.php:37
 msgid ""
-"Do not want to have too many keyword replacements per page? Select to set "
+"Don't want to have too many keyword replacements per page? Select to set "
 "some reasonable keyword replacement thresholds."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:33
-msgid "Maximum Keywords per Page*:"
+#: pro/app/views/options/form.php:54
+msgid "Max Keywords"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:35
+#: pro/app/views/options/form.php:56
+msgid "Set Maximum Keywords per Page"
+msgstr ""
+
+#: pro/app/views/options/form.php:57
 msgid ""
 "Maximum number of unique keyword / keyphrases you can replace with Pretty "
 "Links per page."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:39
-msgid "Maximum Replacements per Keyword per Page*:"
+#: pro/app/views/options/form.php:68
+msgid "Max Replacements"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:41
-msgid ""
-"Maximum number of Pretty Link replacements per Keyword / Keyphrase per page."
+#: pro/app/views/options/form.php:70
+msgid "Set Maximum Replacements per Keyword"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:48
-msgid "Open Keyword Pretty Links in a new Window"
+#: pro/app/views/options/form.php:71
+msgid "Maximum number of Pretty Link replacements per Keyword / Keyphrase."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:49
+#: pro/app/views/options/form.php:87
+msgid "Open in New Window"
+msgstr ""
+
+#: pro/app/views/options/form.php:89
+msgid "Open Keyword Replacement Links in New Window"
+msgstr ""
+
+#: pro/app/views/options/form.php:90
 msgid ""
 "Ensure that these keyword replacement links are opened in a separate window. "
 "<strong>Note:</strong> This does not apply to url replacements--only keyword "
 "replacements."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:52
-msgid "Add the html nofollow attribute to all Keyword Pretty Links"
+#: pro/app/views/options/form.php:101
+msgid "Add No Follows"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:53
+#: pro/app/views/options/form.php:103
+msgid "Add 'nofollow' attribute to all Keyword Pretty Links"
+msgstr ""
+
+#: pro/app/views/options/form.php:104
 msgid ""
 "This adds the html <code>NOFOLLOW</code> attribute to all keyword "
 "replacement links. <strong>Note:</strong> This does not apply to url "
 "replacements--only keyword replacements."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:58
-msgid "Custom CSS Styling for your Keyword Replacements:"
+#: pro/app/views/options/form.php:115
+msgid "Custom CSS"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:61
+#: pro/app/views/options/form.php:117
+msgid "Add custom CSS to your keyword replacement links"
+msgstr ""
+
+#: pro/app/views/options/form.php:118
 msgid ""
-"Add some custom formatting to your keyword pretty links. <strong>Note:</"
-"strong> This does not apply to url replacements--only keyword replacements."
+"Add some custom formatting to your keyword pretty link replacements. "
+"<strong>Note:</strong> This does not apply to url replacements--only keyword "
+"replacements."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:65
-msgid "Custom Hover CSS Styling for your Keyword Replacements:"
+#: pro/app/views/options/form.php:129
+msgid "Custom Hover CSS"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:68
+#: pro/app/views/options/form.php:131
+msgid "Add custom hover CSS to your keyword replacement links"
+msgstr ""
+
+#: pro/app/views/options/form.php:132
 msgid ""
 "Add some custom formatting to the hover attribute of your keyword pretty "
 "links. <strong>Note:</strong> This does not apply to url replacements--only "
 "keyword replacements."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:74
+#: pro/app/views/options/form.php:143
+msgid "Link to Disclosures"
+msgstr ""
+
+#: pro/app/views/options/form.php:146
+msgid "Automatically Add a Link to Disclosures"
+msgstr ""
+
+#: pro/app/views/options/form.php:147
+msgid ""
+"When enabled, this will add a link to your official affiliate link "
+"disclosure page to any page, post or custom post type that have any keyword "
+"or URL replacements. You'll also be able to customize the URL and position "
+"of the disclosure link."
+msgstr ""
+
+#: pro/app/views/options/form.php:168
+msgid "Disclosures Link URL"
+msgstr ""
+
+#: pro/app/views/options/form.php:169
+msgid ""
+"This is the URL of the page that contains your official affiliate link "
+"disclosures. This URL will be used in the link that will be generated."
+msgstr ""
+
+#: pro/app/views/options/form.php:180
+msgid "Text"
+msgstr ""
+
+#: pro/app/views/options/form.php:183
+msgid "Disclosures Link Text"
+msgstr ""
+
+#: pro/app/views/options/form.php:184
+msgid ""
+"This is the text of the link to your disclosures. This text will be visible "
+"to your visitors when the link is displayed."
+msgstr ""
+
+#: pro/app/views/options/form.php:195
+msgid "Position"
+msgstr ""
+
+#: pro/app/views/options/form.php:198
+msgid "Disclosures Link Position"
+msgstr ""
+
+#: pro/app/views/options/form.php:199
+msgid ""
+"This is the position of the link to your disclosures in relation to your "
+"post content."
+msgstr ""
+
+#: pro/app/views/options/form.php:205 pro/app/views/options/form.php:701
+msgid "Bottom"
+msgstr ""
+
+#: pro/app/views/options/form.php:206 pro/app/views/options/form.php:700
+msgid "Top"
+msgstr ""
+
+#: pro/app/views/options/form.php:207 pro/app/views/options/form.php:702
+msgid "Top and Bottom"
+msgstr ""
+
+#: pro/app/views/options/form.php:219
+msgid "Keyword Disclosures"
+msgstr ""
+
+#: pro/app/views/options/form.php:222
+msgid "Automatically Add Affiliate Link Disclosures to Keyword Replacements"
+msgstr ""
+
+#: pro/app/views/options/form.php:223
+msgid ""
+"When enabled, this will add an affiliate link disclosure next to each one of "
+"your keyword replacements. <b>Note:</b> This does not apply to url "
+"replacements--only keyword replacements."
+msgstr ""
+
+#: pro/app/views/options/form.php:241
+msgid "Disclosure Text"
+msgstr ""
+
+#: pro/app/views/options/form.php:244
+msgid "Keyword Link Disclosure Text"
+msgstr ""
+
+#: pro/app/views/options/form.php:245
+msgid ""
+"This is the text that will be added after each keyword replacement to "
+"indicate that the link is an affiliate link."
+msgstr ""
+
+#: pro/app/views/options/form.php:261
+msgid "Replace All URLs"
+msgstr ""
+
+#: pro/app/views/options/form.php:263
 msgid "Replace All non-Pretty Link URLs With Pretty Link URLs"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:75
+#: pro/app/views/options/form.php:264
 msgid ""
 "This feature will take each url it finds and create or use an existing "
 "pretty link pointing to the url and replace it with the pretty link."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:78
+#: pro/app/views/options/form.php:281
+msgid "Domain Blacklist"
+msgstr ""
+
+#: pro/app/views/options/form.php:283
+msgid "Do not replace links from these domains"
+msgstr ""
+
+#: pro/app/views/options/form.php:284
+msgid ""
+"Any links on your site which point to domains you define here will not be "
+"replaced automatically with Pretty Links. Place one domain per line.<br/><br/"
+">You MUST enter http:// or https:// in front of the domain names and do NOT "
+"include any /'s or other text after the domain name.<br/><br/>Proper entry "
+"example:<br/><b>https://www.google.com</b><br/><b>http://mysite.org</b><br/"
+"><br/>Improperly entered domains will be removed upon saving the Options."
+msgstr ""
+
+#: pro/app/views/options/form.php:300
+msgid "Replace in Comments"
+msgstr ""
+
+#: pro/app/views/options/form.php:302
 msgid "Replace Keywords and URLs in Comments"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:79
+#: pro/app/views/options/form.php:303
 msgid ""
 "This option will enable the keyword / URL replacement routine to run in "
 "Comments."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:82
+#: pro/app/views/options/form.php:314
+msgid "Replace in Feeds"
+msgstr ""
+
+#: pro/app/views/options/form.php:316
 msgid "Replace Keywords and URLs in Feeds"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:83
+#: pro/app/views/options/form.php:317
 msgid ""
 "This option will enable the keyword / URL replacement routine to run in RSS "
 "Feeds.<br/><strong>Note:</strong> This option can slow the load speed of "
@@ -1647,275 +3016,385 @@ msgid ""
 "will have keywords replaced in them as well."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:93
-msgid "Page and Post Options"
+#: pro/app/views/options/form.php:328 pro/app/views/options/form.php:330
+msgid "Index Replacements"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:95
-msgid "Auto Create Pretty Links and Post to Twitter:"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:99
-msgid "Create Pretty Links for Posts"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:100
-msgid "Automatically Create a Pretty Link for each of your published Posts"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:114
-msgid "Group that Post Pretty Links will be automatically added to."
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:117
-msgid "Show Tweet Badge on Posts"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:120
-msgid "Show Twitter Comments for Posts"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:123
-msgid "Show Social Network Button Bar on Posts"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:126
-msgid "Automatically post to Twitter when a Post is published"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:132
-msgid "Create Pretty Links for Pages"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:133
-msgid "Automatically Create a Pretty Link for each of your published Pages"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:147
-msgid "Group that Page Pretty Links will be automatically added to."
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:150
-msgid "Show Tweet Badge on Pages"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:153
-msgid "Show Twitter Comments for Pages"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:156
-msgid "Show Social Network Button Bar on Pages"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:159
-msgid "Automatically post to Twitter when a Page is published"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:167
-msgid "Twitter Options"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:170
-msgid "Authenticated Twitter Accounts:"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:186
-msgid "Twitter Account"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:197
+#: pro/app/views/options/form.php:331
 msgid ""
-"To add multiple twitter accounts you must make sure you are logged out of "
-"the previous twitter account before adding another (<a href=\"http://twitter."
-"com\" target=\"_blank\">Logout of Twitter Here</a>)."
+"This feature will index all of your keyword & URL replacements to "
+"dramatically improve performance.<br/><br/>If your site has a large number "
+"of replacements and/or posts then this feature may increase the load on your "
+"server temporarily and your replacements may not show up on your posts for a "
+"day or two initially (until all posts are indexed).<br/><br/><strong>Note:</"
+"strong> this feature requires the use of wp-cron."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:200
-msgid "Tweet Badge Placement:"
+#: pro/app/views/options/form.php:348 pro/app/views/options/form.php:350
+msgid "Keyword Index Status"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:200
+#: pro/app/views/options/form.php:351
 msgid ""
-"This determines where your Tweet Badges should appear in relation to content "
-"on Pages and/or Posts. <code>Note:</code> If you want your badges to appear "
-"then you must enable them by selecting Create Pretty Links for Posts/Pages "
-"and then selecting Show Tweet Badge on Posts/Pages in the options above."
+"This shows how many posts have keywords indexed for and are ready for "
+"replacement."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:204
-#: pro/classes/views/prlipro-options/form.php:353
-msgid "Top"
+#: pro/app/views/options/form.php:359 pro/app/views/options/form.php:382
+msgid "%1$s out of %2$s Posts Indexed"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:207
-msgid "Top Left with Text Wrap"
+#: pro/app/views/options/form.php:363 pro/app/views/options/form.php:386
+msgid "%1$s out of %2$s Comments Indexed"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:210
-msgid "Top Right with Text Wrap"
+#: pro/app/views/options/form.php:371
+msgid "URL Index Status"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:213
-#: pro/classes/views/prlipro-options/form.php:356
-msgid "Bottom"
+#: pro/app/views/options/form.php:373
+msgid "URL Replacements Index Status"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:217
+#: pro/app/views/options/form.php:374
 msgid ""
-"If you select none, you can still show your Twitter badges by manually "
-"adding the <code>[tweetbadge]</code> shortcode to your blog posts or "
-"<code>&lt;?php the_tweetbadge(); ?&gt;</code> template tag to your WordPress "
-"Theme."
+"This shows how many posts have url replacements indexed for and are ready "
+"for replacement."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:222
-msgid "Display Twitter Badge in Feed:"
+#: pro/app/views/options/form.php:402
+msgid "Auto-Create Shortlink Options"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:224
-msgid "Show Twitter Badge in your RSS Feed"
+#: pro/app/views/options/form.php:423
+msgid "Pretty Bar Options"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:227
-msgid "Twitter Comments Display Options:"
+#: pro/app/views/options/form.php:429
+msgid "Image URL"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:231
-msgid "Twitter Comments Headline:"
+#: pro/app/views/options/form.php:431
+msgid "Pretty Bar Image URL"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:234
+#: pro/app/views/options/form.php:432
 msgid ""
-"This is what will display above the Twitter Comments Box if it is enabled in "
-"Page and Post Options."
+"If set, this will replace the logo image on the Pretty Bar. The image that "
+"this URL references should be 48x48 Pixels to fit."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:238
-msgid "Twitter Comments Height:"
+#: pro/app/views/options/form.php:443
+msgid "Background Image URL"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:241
+#: pro/app/views/options/form.php:445
+msgid "Pretty Bar Background Image URL"
+msgstr ""
+
+#: pro/app/views/options/form.php:446
 msgid ""
-"This is the height (in pixels) of the Twitter Comments Box if it is enabled "
-"in Page and Post Options. If it is left blank, there will be no limit to the "
-"height."
+"If set, this will replace the background image on Pretty Bar. The image that "
+"this URL references should be 65px tall - this image will be repeated "
+"horizontally across the bar."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:247
-msgid "Main Tweet User"
+#: pro/app/views/options/form.php:457
+msgid "Background Color"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:251
-msgid "Main Tweet User:"
+#: pro/app/views/options/form.php:459
+msgid "Pretty Bar Background Color"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:254
+#: pro/app/views/options/form.php:460
 msgid ""
-"Modify this to determine what twitter user to send Tweet Button tweets from."
+"This will alter the background color of the Pretty Bar if you haven't "
+"specified a Pretty Bar background image."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:260
-#: pro/classes/views/prlipro-options/form.php:264
-msgid "Tweet Hash Tags:"
+#: pro/app/views/options/form.php:471
+msgid "Text Color"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:267
+#: pro/app/views/options/form.php:473
+msgid "Pretty Bar Text Color"
+msgstr ""
+
+#: pro/app/views/options/form.php:474
 msgid ""
-"Modify this to customize your hash tag for your auto-tweets and re-tweets."
+"If not set, this defaults to black (RGB value <code>#000000</code>) but you "
+"can change it to whatever color you like."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:274
-msgid "Social Network Options"
+#: pro/app/views/options/form.php:485
+msgid "Link Color"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:276
+#: pro/app/views/options/form.php:487
+msgid "Pretty Bar Link Color"
+msgstr ""
+
+#: pro/app/views/options/form.php:488
 msgid ""
-"Select which buttons you want to be visible on the Social Network Button "
-"Bar. <code>Note:</code> In order for the Social Network Button Bar to be "
-"visible on Pages and or Posts, you must first enable it in the \"Page &amp; "
-"Post Options\" section above."
+"If not set, this defaults to blue (RGB value <code>#0000ee</code>) but you "
+"can change it to whatever color you like."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:349
-msgid "Social Network Button Bar Placement:"
+#: pro/app/views/options/form.php:499
+msgid "Link Hover Color"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:349
+#: pro/app/views/options/form.php:501
+msgid "Pretty Bar Link Hover Color"
+msgstr ""
+
+#: pro/app/views/options/form.php:502
 msgid ""
-"This determines where your Social Network Button Bar should appear in "
-"relation to content on Pages and/or Posts. <code>Note:</code> If you want "
-"this bar to appear then you must enable it in the \"Page and Post Options\" "
-"above."
+"If not set, this defaults to RGB value <code>#ababab</code> but you can "
+"change it to whatever color you like."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:359
-msgid "Top and Bottom"
+#: pro/app/views/options/form.php:513
+msgid "Visited Link Color"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:364
+#: pro/app/views/options/form.php:515
+msgid "Pretty Bar Visited Link Color"
+msgstr ""
+
+#: pro/app/views/options/form.php:516
 msgid ""
-"If you select none, you can still show your Social Network Buttons by "
-"manually adding the <code>[social_buttons_bar]</code> shortcode to your blog "
-"posts or <code>&lt;?php the_social_buttons_bar(); ?&gt;</code> template tag "
-"to your WordPress Theme."
+"If not set, this defaults to RGB value <code>#551a8b</code> but you can "
+"change it to whatever color you like."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:368
-msgid "Social Buttons Display Spacing:"
+#: pro/app/views/options/form.php:527
+msgid "Title Char Limit"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:370
+#: pro/app/views/options/form.php:529
+msgid "Pretty Bar Title Char Limit"
+msgstr ""
+
+#: pro/app/views/options/form.php:530
 msgid ""
-"Determines the spacing (in pixels) between the buttons on the social buttons "
-"bar."
+"If your Website has a long title then you may need to adjust this value so "
+"that it will all fit on the Pretty Bar. It is recommended that you keep this "
+"value to <code>30</code> characters or less so the Pretty Bar's format looks "
+"good across different browsers and screen resolutions."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:376
-msgid "Display Social Buttons in Feed:"
+#: pro/app/views/options/form.php:541
+msgid "Description Char Limit"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:378
-msgid "Show Social Buttons in your RSS Feed"
+#: pro/app/views/options/form.php:543
+msgid "Pretty Bar Description Char Limit"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:382
-msgid "Public Link Creation Options"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:384
-msgid "Customize Public Link Creation"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:384
-#: pro/classes/views/prlipro-options/form.php:402 pro/pretty-link-pro.php:194
-msgid "(help)"
-msgstr ""
-
-#: pro/classes/views/prlipro-options/form.php:386
+#: pro/app/views/options/form.php:544
 msgid ""
-"Allow Public Link Creation on this website\n"
-"    <br/><span class=\"description\">This option will give you the ability "
-"to turn your website into a link shortening service for your users. Once "
-"selected, you can enable the Pretty Link Pro Sidebar Widget or just display "
-"the link creation form with the <code>[prli_create_form]</code> shortcode in "
-"any post or page on your website."
+"If your Website has a long Description (tagline) then you may need to adjust "
+"this value so that it will all fit on the Pretty Bar. It is recommended that "
+"you keep this value to <code>40</code> characters or less so the Pretty "
+"Bar's format looks good across different browsers and screen resolutions."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:389
+#: pro/app/views/options/form.php:555
+msgid "Target URL Char Limit"
+msgstr ""
+
+#: pro/app/views/options/form.php:557
+msgid "Pretty Bar Target URL Char Limit"
+msgstr ""
+
+#: pro/app/views/options/form.php:558
 msgid ""
-"Use Public Link Display Page\n"
-"      <br/><span class=\"description\">When a link is created using the "
-"public form, the user is typically redirected to a simple page displaying "
-"their new pretty link. But, you can specify a page that you want them to be "
-"redirected to on your website, using your branding instead by selecting this "
-"box and entering the url of the page you want them to go to."
+"If you link to a lot of large Target URLs you may want to adjust this value. "
+"It is recommended that you keep this value to <code>40</code> or below so "
+"the Pretty Bar's format looks good across different browsers and URL sizes"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:392
-msgid "Public Pretty Link Creation Display URL:"
+#: pro/app/views/options/form.php:569
+msgid "Show Title"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:393
+#: pro/app/views/options/form.php:571
+msgid "Pretty Bar Show Title"
+msgstr ""
+
+#: pro/app/views/options/form.php:572
+msgid ""
+"Make sure this is checked if you want the title of your blog (and link) to "
+"show up on the Pretty Bar."
+msgstr ""
+
+#: pro/app/views/options/form.php:583
+msgid "Show Description"
+msgstr ""
+
+#: pro/app/views/options/form.php:585
+msgid "Pretty Bar Show Description"
+msgstr ""
+
+#: pro/app/views/options/form.php:586
+msgid ""
+"Make sure this is checked if you want your site description to show up on "
+"the Pretty Bar."
+msgstr ""
+
+#: pro/app/views/options/form.php:597
+msgid "Show Share Links"
+msgstr ""
+
+#: pro/app/views/options/form.php:599
+msgid "Pretty Bar Show Share Links"
+msgstr ""
+
+#: pro/app/views/options/form.php:600
+msgid ""
+"Make sure this is checked if you want \"share links\" to show up on the "
+"Pretty Bar."
+msgstr ""
+
+#: pro/app/views/options/form.php:611
+msgid "Show Target URL"
+msgstr ""
+
+#: pro/app/views/options/form.php:613
+msgid "Pretty Bar Show Target URL Links"
+msgstr ""
+
+#: pro/app/views/options/form.php:614
+msgid ""
+"Make sure this is checked if you want a link displaying the Target URL to "
+"show up on the Pretty Bar."
+msgstr ""
+
+#: pro/app/views/options/form.php:625 pro/app/views/options/form.php:627
+msgid "Hide Attribution Link"
+msgstr ""
+
+#: pro/app/views/options/form.php:628
+msgid ""
+"Check this to hide the pretty link attribution link on the pretty bar.<br/"
+"><br/><strong>Wait, before you do this, you might want to leave this un-"
+"checked and set the alternate URL of this link to your <em>Pretty Link Pro</"
+"em> <a href=\"http://prettylinkpro.com/affiliate-dashboard/\">Affiliate URL</"
+"a> to earn a few bucks while you are at it."
+msgstr ""
+
+#: pro/app/views/options/form.php:646
+msgid "Attribution URL"
+msgstr ""
+
+#: pro/app/views/options/form.php:648
+msgid "Alternate Pretty Bar Attribution URL"
+msgstr ""
+
+#: pro/app/views/options/form.php:649
+msgid ""
+"If set, this will replace the Pretty Bars attribution URL. This is a very "
+"good place to put your <em>Pretty Link Pro</em> <a href=\"http://"
+"prettylinkpro.com/affiliate-dashboard/\">Affiliate Link</a>."
+msgstr ""
+
+#: pro/app/views/options/form.php:663
+msgid "Social Buttons Options"
+msgstr ""
+
+#: pro/app/views/options/form.php:666
+msgid "Buttons"
+msgstr ""
+
+#: pro/app/views/options/form.php:668
+msgid "Social Buttons"
+msgstr ""
+
+#: pro/app/views/options/form.php:669
+msgid ""
+"Select which buttons you want to be visible on the Social Buttons Bar.<br/"
+"><br/><code>Note:</code> In order for the Social Buttons Bar to be visible "
+"on Pages and or Posts, you must first enable it in the \"Page &amp; Post "
+"Options\" section above."
+msgstr ""
+
+#: pro/app/views/options/form.php:692
+msgid "Buttons Placement"
+msgstr ""
+
+#: pro/app/views/options/form.php:694
+msgid "Social Buttons Placement"
+msgstr ""
+
+#: pro/app/views/options/form.php:695
+msgid ""
+"This determines where your Social Buttons Placement should appear in "
+"relation to content on Pages and/or Posts.<br/><br/><code>Note:</code> If "
+"you want this bar to appear then you must enable it in the \"Page and Post "
+"Options\" above."
+msgstr ""
+
+#: pro/app/views/options/form.php:705
+msgid "Social Buttons Manual Placement"
+msgstr ""
+
+#: pro/app/views/options/form.php:706
+msgid ""
+"If you select none, you can still show your Social Buttons by manually "
+"adding the <code>[social_buttons_bar]</code> shortcode to your blog posts or "
+"<code>&lt;?php the_social_buttons_bar(); ?&gt;</code> template tag to your "
+"WordPress Theme."
+msgstr ""
+
+#: pro/app/views/options/form.php:731
+msgid "Public Links Creation Options"
+msgstr ""
+
+#: pro/app/views/options/form.php:737
+msgid "Enable Public Links"
+msgstr ""
+
+#: pro/app/views/options/form.php:739
+msgid "Enable Public Link Creation on this Site"
+msgstr ""
+
+#: pro/app/views/options/form.php:740
+msgid ""
+"This option will give you the ability to turn your website into a link "
+"shortening service for your users. Once selected, you can enable the Pretty "
+"Link Pro Sidebar Widget or just display the link creation form with the "
+"<code>[prli_create_form]</code> shortcode in any post or page on your "
+"website."
+msgstr ""
+
+#: pro/app/views/options/form.php:757
+msgid "Use Display Page"
+msgstr ""
+
+#: pro/app/views/options/form.php:759
+msgid "Use Public Link Display Page"
+msgstr ""
+
+#: pro/app/views/options/form.php:760
+msgid ""
+"When a link is created using the public form, the user is typically "
+"redirected to a simple page displaying their new pretty link. But, you can "
+"specify a page that you want them to be redirected to on your website, using "
+"your branding instead by selecting this box and entering the url of the page "
+"you want them to go to."
+msgstr ""
+
+#: pro/app/views/options/form.php:777
+msgid "Display Page"
+msgstr ""
+
+#: pro/app/views/options/form.php:779
+msgid "Public Pretty Link Creation Display URL"
+msgstr ""
+
+#: pro/app/views/options/form.php:780
 msgid ""
 "To set this up, create a new page on your WordPress site and make sure the "
 "<code>[prli_create_display]</code> appears somewhere on this page -- "
@@ -1924,262 +3403,227 @@ msgid ""
 "(/)."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:400
-msgid "Global Options"
+#: pro/app/views/options/general.php:8
+msgid "Use Shortlink URL"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:402
-msgid "Customize your Pretty Links Base URL"
+#: pro/app/views/options/general.php:10
+msgid "Use an Alternate Shortlink URL"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:404
+#: pro/app/views/options/general.php:11
 msgid ""
-"Use an alternate Base Url for your Pretty Links\n"
-"    <br/><span class=\"description\">You must have another valid domain name "
-"pointing to this WordPress install before you enable this option. If you are "
-"using this option to just get rid of the www in the beginning of your url "
-"that is fine -- just make sure your domain works without the www before "
-"enabling this option."
+"Use this option if you want to substitute your actual blog's url with "
+"another URL. You must have another valid domain name pointing to this "
+"WordPress install before you enable this option. If you are using this "
+"option to just get rid of the www in the beginning of your url that is fine "
+"-- just make sure your domain works without the www before enabling this "
+"option."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:407
-msgid "Pretty Link Base URL:"
+#: pro/app/views/options/general.php:28 pro/app/views/options/general.php:30
+msgid "Shortlink URL"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:408
+#: pro/app/views/options/general.php:31
 msgid ""
 "Enter a valid base url that points at this WordPress install. Make sure this "
 "URL does not end with a slash (/)."
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:411
+#: pro/app/views/options/general.php:47
+msgid "Minimum Admin Role"
+msgstr ""
+
+#: pro/app/views/options/general.php:49
 msgid "Set Minimum Role Required To Access Pretty Link"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:414
+#: pro/app/views/options/general.php:50
+msgid ""
+"Use this option to set the minimum role of users who can access the Admin "
+"interface for Pretty Link."
+msgstr ""
+
+#: pro/app/views/options/general.php:56
 msgid "Administrator"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:415
+#: pro/app/views/options/general.php:57
 msgid "Editor"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:416
+#: pro/app/views/options/general.php:58
 msgid "Author"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:417
+#: pro/app/views/options/general.php:59
 msgid "Contributor"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/form.php:418
+#: pro/app/views/options/general.php:60
 msgid "Subscriber"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/head.php:237
-msgid "Twitter Username"
+#: pro/app/views/options/nav.php:3
+msgid "Replacements"
 msgstr ""
 
-#: pro/classes/views/prlipro-options/head.php:237
-msgid "Password:"
+#: pro/app/views/options/nav.php:4
+msgid "Auto-Create Links"
 msgstr ""
 
-#: pro/classes/views/prlipro-public/display.php:11
-msgid "Here is your Pretty Link"
+#: pro/app/views/options/nav.php:6
+msgid "Social"
 msgstr ""
 
-#: pro/classes/views/prlipro-public/display.php:42
-msgid "here is your pretty link for:"
+#: pro/app/views/options/nav.php:7
+msgid "Public"
 msgstr ""
 
-#: pro/classes/views/prlipro-public/display.php:46
-msgid "home"
+#: pro/app/views/public/form.php:29
+msgid "ERROR:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:107
-msgid "Hide the Twitter Badge on this post."
+#: pro/app/views/reports/custom-report.php:7
+msgid "Link Report"
 msgstr ""
 
-#: pro/pretty-link-pro.php:116
-msgid "Hide Social Buttons on this post."
+#: pro/app/views/reports/custom-report.php:8
+msgid "Report:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:125
-msgid "Hide Twitter Comments on this post."
+#: pro/app/views/reports/custom-report.php:10
+msgid "For Goal Link:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:133
-msgid "Disable Keyword Replacements on this post."
+#: pro/app/views/reports/custom-report.php:30
+#: pro/app/views/reports/custom-report.php:63
+msgid "Link Name"
 msgstr ""
 
-#: pro/pretty-link-pro.php:153
-msgid "A Pretty Link will be created on Publish"
+#: pro/app/views/reports/custom-report.php:35
+#: pro/app/views/reports/custom-report.php:68
+#: pro/app/views/reports/split-test-report.php:32
+#: pro/app/views/reports/split-test-report.php:64
+msgid "Conv Rate"
 msgstr ""
 
-#: pro/pretty-link-pro.php:171
-msgid "edit"
+#: pro/app/views/reports/edit.php:4
+msgid "Edit Link Report"
 msgstr ""
 
-#: pro/pretty-link-pro.php:171
-msgid "Visit Pretty Link:"
+#: pro/app/views/reports/edit.php:17 pro/app/views/reports/new.php:16
+msgid "This is how you'll identify your Report."
 msgstr ""
 
-#: pro/pretty-link-pro.php:171
-msgid "in a New Window"
+#: pro/app/views/reports/edit.php:23 pro/app/views/reports/new.php:23
+msgid "Select Links to Analyze in this Report:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:171
-msgid "visit"
+#: pro/app/views/reports/edit.php:77 pro/app/views/reports/new.php:77
+msgid "Select some links to be analyzed in this report."
 msgstr ""
 
-#: pro/pretty-link-pro.php:185
-msgid "Has already been tweeted"
+#: pro/app/views/reports/edit.php:80 pro/app/views/reports/new.php:80
+msgid "Select Your Goal Link (optional):"
 msgstr ""
 
-#: pro/pretty-link-pro.php:187
-msgid "Hasn't been Tweeted yet"
-msgstr ""
-
-#: pro/pretty-link-pro.php:192
-msgid "Tweet It"
-msgstr ""
-
-#: pro/pretty-link-pro.php:194
-msgid "Twitter Message Format:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:196
-msgid "Post to Twitter"
-msgstr ""
-
-#: pro/pretty-link-pro.php:211
+#: pro/app/views/reports/edit.php:103 pro/app/views/reports/new.php:103
 msgid ""
-"A Pretty Link hasn't been generated for this entry yet. Click \"Update Post"
-"\" to generate."
+"If you want to enable conversion tracking in this report then select a goal "
+"link."
 msgstr ""
 
-#: pro/pretty-link-pro.php:228
-msgid "Auto Tweet on Publish"
+#: pro/app/views/reports/list.php:4 pro/app/views/reports/reports.php:7
+msgid "Link Reports"
 msgstr ""
 
-#: pro/pretty-link-pro.php:228
-msgid "Customize Tweet"
+#: pro/app/views/reports/list.php:5
+msgid "Add Report"
 msgstr ""
 
-#: pro/pretty-link-pro.php:270
-msgid "ERROR: Your Pretty Link was unable to be created"
+#: pro/app/views/reports/list.php:41
+msgid "No Pretty Link Reports were found"
 msgstr ""
 
-#: pro/pretty-link-pro.php:273
-msgid "Unauthorized"
+#: pro/app/views/reports/list.php:57
+msgid "View"
 msgstr ""
 
-#: pro/pretty-link-pro.php:916
-msgid ""
-"Your URL Replacements must be formatted as a comma separated list of "
-"properly formatted URLs (http[s]://example.com/whatever)"
+#: pro/app/views/reports/new.php:4
+msgid "Add Link Report"
 msgstr ""
 
-#: pro/pretty-link-pro.php:936
-msgid "Your Link Rotation Weights must add up to 100%"
+#: pro/app/views/reports/reports.php:4
+msgid "Reports"
 msgstr ""
 
-#: pro/pretty-link-pro.php:941
-msgid "Delay Redirect must be a number"
+#: pro/app/views/reports/split-test-report.php:4
+msgid "Link Split-Test Report"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1004
-msgid "This Link Has additional Target URL rotations"
+#: pro/app/views/reports/split-test-report.php:5
+msgid "For Link:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1244
-msgid "Keywords <code>(PRO)</code>"
+#: pro/app/views/reports/split-test-report.php:7
+msgid "Goal Link:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1269
-msgid "Split-Test Report"
+#: pro/app/views/reports/split-test-report.php:27
+msgid "Link Rotation URL"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1295
-msgid ""
-"Twitter has changed the way it authenticates users:</strong> Auto-Posting to "
-"Twitter with Pretty Link Pro will not work until you update your <a href="
-"\"admin.php?page=pretty-link/pro/prlipro-options.php\">Twitter Credentials "
-"Here</a>"
+#: pro/app/views/reports/split-test-report.php:59
+msgid "Rotation URL"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1382
-msgid "Pretty Bar Attribution URL must be a correctly formatted URL"
+#: pro/app/views/tools/generator.php:6 pro/app/views/tools/nav.php:3
+msgid "End-Point URL"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1403
-msgid "Hide Pretty Bar Attribution Link"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1404
-msgid "Check this to hide the pretty link attribution link on the pretty bar."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1404
-msgid ""
-"Wait, before you do this, you might want to leave this un-checked and set "
-"the alternate URL of this link to your <em>Pretty Link Pro</em> <a href="
-"\"http://prettylinkpro.com/amember/aff_member.php\">Affiliate URL</a> to "
-"earn a few bucks while you are at it."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1407
-msgid "Alternate Pretty Bar Attribution URL:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1410
-msgid ""
-"If set, this will replace the PrettyBars attribution URL. This is a very "
-"good place to put your <em>Pretty Link Pro</em> <a href=\"http://"
-"prettylinkpro.com/amember/aff_member.php\">Affiliate Link</a>."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1499
-msgid "End-Point URL:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1500
+#: pro/app/views/tools/generator.php:7
 msgid "This can be used to integrate with your twitter client."
 msgstr ""
 
-#: pro/pretty-link-pro.php:1503
+#: pro/app/views/tools/generator.php:11
 msgid "Show TweetDeck Integration Instructions"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1505 pro/pretty-link-pro.php:1511
+#: pro/app/views/tools/generator.php:15 pro/app/views/tools/generator.php:24
 msgid "Follow the"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1505
+#: pro/app/views/tools/generator.php:15
 msgid "TweetDeck Custom URL Instructions"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1505
+#: pro/app/views/tools/generator.php:15
 msgid " and add the following URL to TweetDeck"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1509
+#: pro/app/views/tools/generator.php:20
 msgid "Show Twitter for iPhone Integration Instructions"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1511
+#: pro/app/views/tools/generator.php:24
 msgid "Twitter for iPhone Custom URL Instructions"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1511
+#: pro/app/views/tools/generator.php:24
 msgid " and add the following URL to Twitter for iPhone"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1515
-msgid "Custom Bookmarklet (Pro):"
+#: pro/app/views/tools/generator.php:30
+msgid "Custom Bookmarklet:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1517
+#: pro/app/views/tools/generator.php:33
+msgid "Customize Pretty Link Bookmarklet"
+msgstr ""
+
+#: pro/app/views/tools/generator.php:34
 msgid ""
 "Alter the options below to customize this Bookmarklet. As you modify the "
 "label, redirect type, tracking and group, you will see this bookmarklet "
@@ -2188,389 +3632,1053 @@ msgid ""
 "different settings."
 msgstr ""
 
-#: pro/pretty-link-pro.php:1518 pro/prlipro-create-public-link-widget.php:44
+#: pro/app/views/tools/generator.php:37
+#: pro/app/widgets/PlpPublicLinksWidget.php:55
 msgid "Pretty Link Options"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1521
+#: pro/app/views/tools/generator.php:40
 msgid "Label:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1526 pro/prlipro-create-public-link-widget.php:46
+#: pro/app/views/tools/generator.php:45
+#: pro/app/widgets/PlpPublicLinksWidget.php:57
 msgid "Redirection:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1528 pro/pretty-link-pro.php:1539
-#: pro/prlipro-create-public-link-widget.php:48
-#: pro/prlipro-create-public-link-widget.php:59
-msgid "Default"
+#: pro/app/views/tools/generator.php:49
+msgid "Tracking:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1529 pro/prlipro-create-public-link-widget.php:49
-msgid "Permanent/301"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1530 pro/prlipro-create-public-link-widget.php:50
-msgid "Temporary/307"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1531 pro/prlipro-create-public-link-widget.php:51
-msgid "PrettyBar"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1532 pro/pretty-link-pro.php:1785
-#: pro/prlipro-create-public-link-widget.php:52
-msgid "Cloak"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1537 pro/prlipro-create-public-link-widget.php:57
-msgid "Tracking Enabled:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1540 pro/prlipro-create-public-link-widget.php:60
+#: pro/app/views/tools/generator.php:52
+#: pro/app/widgets/PlpPublicLinksWidget.php:72
 msgid "Yes"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1541 pro/prlipro-create-public-link-widget.php:61
+#: pro/app/views/tools/generator.php:53
+#: pro/app/widgets/PlpPublicLinksWidget.php:73
 msgid "No"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1546 pro/prlipro-create-public-link-widget.php:66
+#: pro/app/views/tools/generator.php:57
+#: pro/app/widgets/PlpPublicLinksWidget.php:78
 msgid "Group:"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1634
-msgid "Could not connect to Twitter. Refresh the page or try again later."
+#: pro/app/views/tools/nav.php:4
+msgid "Custom Bookmarklet"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1652 pro/pretty-link-pro.php:1692
-msgid "There was an error saving your Twitter account."
+#: pro/app/widgets/PlpPublicLinksWidget.php:7
+msgid "Create a Short URL"
 msgstr ""
 
-#: pro/pretty-link-pro.php:1688
-msgid "Your Twitter Account was successfully saved."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1706 pro/pretty-link-pro.php:1784
-msgid "Pretty Bar"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1707
-msgid "Cloaked"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1708 pro/pretty-link-pro.php:1786
-msgid "Pixel"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1709 pro/pretty-link-pro.php:1787
-msgid "Meta Refresh"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1710 pro/pretty-link-pro.php:1788
-msgid "Javascript"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1813
-msgid "PrettyBar Options"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1816
-msgid "Image URL:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1819
-msgid ""
-"If set, this will replace the logo image on the PrettyBar. The image that "
-"this URL references should be 48x48 Pixels to fit."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1823
-msgid "Background Image URL:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1826
-msgid ""
-"If set, this will replace the background image on PrettyBar. The image that "
-"this URL references should be 65px tall - this image will be repeated "
-"horizontally across the bar."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1830
-msgid "Background Color:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1833
-msgid ""
-"This will alter the background color of the PrettyBar if you haven't "
-"specified a PrettyBar background image."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1837
-msgid "Text Color:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1840
-msgid ""
-"If not set, this defaults to black (RGB value <code>#000000</code>) but you "
-"can change it to whatever color you like."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1844
-msgid "Link Color:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1847
-msgid ""
-"If not set, this defaults to blue (RGB value <code>#0000ee</code>) but you "
-"can change it to whatever color you like."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1851
-msgid "Link Hover Color:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1854
-msgid ""
-"If not set, this defaults to RGB value <code>#ababab</code> but you can "
-"change it to whatever color you like."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1858
-msgid "Visited Link Color:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1861
-msgid ""
-"If not set, this defaults to RGB value <code>#551a8b</code> but you can "
-"change it to whatever color you like."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1865
-msgid "Title Char Limit*:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1868
-msgid ""
-"If your Website has a long title then you may need to adjust this value so "
-"that it will all fit on the PrettyBar. It is recommended that you keep this "
-"value to <code>30</code> characters or less so the PrettyBar's format looks "
-"good across different browsers and screen resolutions."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1872
-msgid "Description Char Limit*:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1875
-msgid ""
-"If your Website has a long Description (tagline) then you may need to adjust "
-"this value so that it will all fit on the PrettyBar. It is recommended that "
-"you keep this value to <code>40</code> characters or less so the PrettyBar's "
-"format looks good across different browsers and screen resolutions."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1879
-msgid "Target URL Char Limit*:"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1882
-msgid ""
-"If you link to a lot of large Target URLs you may want to adjust this value. "
-"It is recommended that you keep this value to <code>40</code> or below so "
-"the PrettyBar's format looks good across different browsers and URL sizes"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1887
-msgid "Show Pretty Bar Title"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1888
-msgid ""
-"Make sure this is checked if you want the title of your blog (and link) to "
-"show up on the PrettyBar."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1893
-msgid "Show Pretty Bar Description"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1894
-msgid ""
-"Make sure this is checked if you want your site description to show up on "
-"the PrettyBar."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1899
-msgid "Show Pretty Bar Share Links"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1900
-msgid ""
-"Make sure this is checked if you want \"share links\" to show up on the "
-"PrettyBar."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1905
-msgid "Show Pretty Bar Target URL"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1906
-msgid ""
-"Make sure this is checked if you want a link displaying the Target URL to "
-"show up on the PrettyBar."
-msgstr ""
-
-#: pro/pretty-link-pro.php:1936
-msgid "Logo Image URL must be a correctly formatted URL"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1939
-msgid "Background Image URL must be a correctly formatted URL"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1942
-msgid "PrettyBar Background Color must be an actual RGB Value"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1945
-msgid "PrettyBar Text Color must be an actual RGB Value"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1948
-msgid "PrettyBar Link Color must be an actual RGB Value"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1951 pro/pretty-link-pro.php:1954
-msgid "PrettyBar Hover Color must be an actual RGB Value"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1957
-msgid "PrettyBar Title Character Limit must not be blank"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1960
-msgid "PrettyBar Description Character Limit must not be blank"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1963
-msgid "PrettyBar Link Character Limit must not be blank"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1966
-msgid "PrettyBar Title Character Limit must be a number"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1969
-msgid "PrettyBar Description Character Limit must be a number"
-msgstr ""
-
-#: pro/pretty-link-pro.php:1972
-msgid "PrettyBar Link Character Limit must be a number"
-msgstr ""
-
-#: pro/pretty-link-pro.php:2095
-msgid "You are unauthorized to view this resource"
-msgstr ""
-
-#: pro/pretty-link-pro.php:2125
-msgid "View QR Code for this link: %s"
-msgstr ""
-
-#: pro/pretty-link-pro.php:2133
-msgid "Download QR Code for this link: %s"
-msgstr ""
-
-#: pro/pretty-link-pro.php:2226
-msgid "Double Redirection Enabled"
-msgstr ""
-
-#: pro/prlipro-create-public-link-widget.php:42
+#: pro/app/widgets/PlpPublicLinksWidget.php:53
 msgid "Label Text:"
 msgstr ""
 
-#: pro/prlipro-create-public-link-widget.php:43
+#: pro/app/widgets/PlpPublicLinksWidget.php:54
 msgid "Button Text:"
 msgstr ""
 
-#: pro/prlipro-create-public-link-widget.php:43
+#: pro/app/widgets/PlpPublicLinksWidget.php:54
 msgid "if left blank, no button will display"
 msgstr ""
 
-#: pro/prlipro-hooks.php:19
-msgid "Pretty Link Pro | Reports"
+#: pro/app/widgets/PlpPublicLinksWidget.php:60
+msgid "Permanent/301"
 msgstr ""
 
-#: pro/prlipro-hooks.php:19
-msgid "<code>Pro</code> Reports"
+#: pro/app/widgets/PlpPublicLinksWidget.php:61
+msgid "Temporary/302"
 msgstr ""
 
-#: pro/prlipro-hooks.php:20
-msgid "Pretty Link Pro | Import/Export"
+#: pro/app/widgets/PlpPublicLinksWidget.php:62
+msgid "Temporary/307"
 msgstr ""
 
-#: pro/prlipro-hooks.php:20
-msgid "<code>Pro</code> Import/Export"
+#: pro/app/widgets/PlpPublicLinksWidget.php:63
+msgid "PrettyBar"
 msgstr ""
 
-#: pro/prlipro-hooks.php:21
-msgid "Pretty Link Pro | Pro Options"
+#: pro/app/widgets/PlpPublicLinksWidget.php:69
+msgid "Tracking Enabled:"
 msgstr ""
 
-#: pro/prlipro-hooks.php:21
-msgid "<code>Pro</code> Options"
+#: pro/i18n/countries.php:5
+msgid "Afghanistan"
 msgstr ""
 
-#: pro/prlipro-hooks.php:31 pro/prlipro-hooks.php:41
-msgid "Pretty Link Pro Options"
+#: pro/i18n/countries.php:6
+msgid "&#197;land Islands"
 msgstr ""
 
-#: pro/prlipro-options.php:9
-msgid "Your Keyword Replacement Cache was successfully deleted"
+#: pro/i18n/countries.php:7
+msgid "Albania"
 msgstr ""
 
-#: pro/prlipro-options.php:36
-msgid "Your Duplicate Tweets were Successfully Trimmed"
+#: pro/i18n/countries.php:8
+msgid "Algeria"
 msgstr ""
 
-#: pro/prlipro-options.php:104
-msgid "Keywords Per Page is required"
+#: pro/i18n/countries.php:9
+msgid "Andorra"
 msgstr ""
 
-#: pro/prlipro-options.php:107
-msgid "Keyword Links Per Page is required"
+#: pro/i18n/countries.php:10
+msgid "Angola"
 msgstr ""
 
-#: pro/prlipro-options.php:110
-msgid ""
-"You need to enter a valid Pretty Link Base URL now that you have selected "
-"\"Use an alternate base url for your Pretty Links\""
+#: pro/i18n/countries.php:11
+msgid "Anguilla"
 msgstr ""
 
-#: pro/prlipro-options.php:113
-msgid ""
-"You need to enter a valid Public Link Display URL now that you have selected "
-"\"Use a custom public link display page\""
+#: pro/i18n/countries.php:12
+msgid "Antarctica"
 msgstr ""
 
-#: pro/prlipro-options.php:116
-msgid "Twitter Comment Height must either be blank or a number."
+#: pro/i18n/countries.php:13
+msgid "Antigua and Barbuda"
 msgstr ""
 
-#: pro/prlipro-reports.php:14
-msgid "Create a custom link report and analyze your data."
+#: pro/i18n/countries.php:14
+msgid "Argentina"
 msgstr ""
 
-#: pro/prlipro-reports.php:36
-msgid "Your Pretty Link Report was Successfully Created"
+#: pro/i18n/countries.php:15
+msgid "Armenia"
 msgstr ""
 
-#: pro/prlipro-reports.php:62
-msgid "Your Pretty Link Report was Successfully Updated"
+#: pro/i18n/countries.php:16
+msgid "Aruba"
 msgstr ""
 
-#: pro/prlipro-reports.php:69
-msgid "Your Pretty Link Report was Successfully Deleted"
+#: pro/i18n/countries.php:17
+msgid "Australia"
+msgstr ""
+
+#: pro/i18n/countries.php:18
+msgid "Austria"
+msgstr ""
+
+#: pro/i18n/countries.php:19
+msgid "Azerbaijan"
+msgstr ""
+
+#: pro/i18n/countries.php:20
+msgid "Bahamas"
+msgstr ""
+
+#: pro/i18n/countries.php:21
+msgid "Bahrain"
+msgstr ""
+
+#: pro/i18n/countries.php:22
+msgid "Bangladesh"
+msgstr ""
+
+#: pro/i18n/countries.php:23
+msgid "Barbados"
+msgstr ""
+
+#: pro/i18n/countries.php:24
+msgid "Belarus"
+msgstr ""
+
+#: pro/i18n/countries.php:25
+msgid "Belgium"
+msgstr ""
+
+#: pro/i18n/countries.php:26
+msgid "Belau"
+msgstr ""
+
+#: pro/i18n/countries.php:27
+msgid "Belize"
+msgstr ""
+
+#: pro/i18n/countries.php:28
+msgid "Benin"
+msgstr ""
+
+#: pro/i18n/countries.php:29
+msgid "Bermuda"
+msgstr ""
+
+#: pro/i18n/countries.php:30
+msgid "Bhutan"
+msgstr ""
+
+#: pro/i18n/countries.php:31
+msgid "Bolivia"
+msgstr ""
+
+#: pro/i18n/countries.php:32
+msgid "Bonaire, Saint Eustatius and Saba"
+msgstr ""
+
+#: pro/i18n/countries.php:33
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: pro/i18n/countries.php:34
+msgid "Botswana"
+msgstr ""
+
+#: pro/i18n/countries.php:35
+msgid "Bouvet Island"
+msgstr ""
+
+#: pro/i18n/countries.php:36
+msgid "Brazil"
+msgstr ""
+
+#: pro/i18n/countries.php:37
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: pro/i18n/countries.php:38
+msgid "British Virgin Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:39
+msgid "Brunei"
+msgstr ""
+
+#: pro/i18n/countries.php:40
+msgid "Bulgaria"
+msgstr ""
+
+#: pro/i18n/countries.php:41
+msgid "Burkina Faso"
+msgstr ""
+
+#: pro/i18n/countries.php:42
+msgid "Burundi"
+msgstr ""
+
+#: pro/i18n/countries.php:43
+msgid "Cambodia"
+msgstr ""
+
+#: pro/i18n/countries.php:44
+msgid "Cameroon"
+msgstr ""
+
+#: pro/i18n/countries.php:45
+msgid "Canada"
+msgstr ""
+
+#: pro/i18n/countries.php:46
+msgid "Cape Verde"
+msgstr ""
+
+#: pro/i18n/countries.php:47
+msgid "Cayman Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:48
+msgid "Central African Republic"
+msgstr ""
+
+#: pro/i18n/countries.php:49
+msgid "Chad"
+msgstr ""
+
+#: pro/i18n/countries.php:50
+msgid "Chile"
+msgstr ""
+
+#: pro/i18n/countries.php:51
+msgid "China"
+msgstr ""
+
+#: pro/i18n/countries.php:52
+msgid "Christmas Island"
+msgstr ""
+
+#: pro/i18n/countries.php:53
+msgid "Cocos/Keeling Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:54
+msgid "Colombia"
+msgstr ""
+
+#: pro/i18n/countries.php:55
+msgid "Comoros"
+msgstr ""
+
+#: pro/i18n/countries.php:56
+msgid "Congo (Brazzaville)"
+msgstr ""
+
+#: pro/i18n/countries.php:57
+msgid "Congo (Kinshasa)"
+msgstr ""
+
+#: pro/i18n/countries.php:58
+msgid "Cook Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:59
+msgid "Costa Rica"
+msgstr ""
+
+#: pro/i18n/countries.php:60
+msgid "Croatia"
+msgstr ""
+
+#: pro/i18n/countries.php:61
+msgid "Cuba"
+msgstr ""
+
+#: pro/i18n/countries.php:62
+msgid "Cura&Ccedil;ao"
+msgstr ""
+
+#: pro/i18n/countries.php:63
+msgid "Cyprus"
+msgstr ""
+
+#: pro/i18n/countries.php:64
+msgid "Czech Republic"
+msgstr ""
+
+#: pro/i18n/countries.php:65
+msgid "Denmark"
+msgstr ""
+
+#: pro/i18n/countries.php:66
+msgid "Djibouti"
+msgstr ""
+
+#: pro/i18n/countries.php:67
+msgid "Dominica"
+msgstr ""
+
+#: pro/i18n/countries.php:68
+msgid "Dominican Republic"
+msgstr ""
+
+#: pro/i18n/countries.php:69
+msgid "Ecuador"
+msgstr ""
+
+#: pro/i18n/countries.php:70
+msgid "Egypt"
+msgstr ""
+
+#: pro/i18n/countries.php:71
+msgid "El Salvador"
+msgstr ""
+
+#: pro/i18n/countries.php:72
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: pro/i18n/countries.php:73
+msgid "Eritrea"
+msgstr ""
+
+#: pro/i18n/countries.php:74
+msgid "Estonia"
+msgstr ""
+
+#: pro/i18n/countries.php:75
+msgid "Ethiopia"
+msgstr ""
+
+#: pro/i18n/countries.php:76
+msgid "Falkland Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:77
+msgid "Faroe Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:78
+msgid "Fiji"
+msgstr ""
+
+#: pro/i18n/countries.php:79
+msgid "Finland"
+msgstr ""
+
+#: pro/i18n/countries.php:80
+msgid "France"
+msgstr ""
+
+#: pro/i18n/countries.php:81
+msgid "French Guiana"
+msgstr ""
+
+#: pro/i18n/countries.php:82
+msgid "French Polynesia"
+msgstr ""
+
+#: pro/i18n/countries.php:83
+msgid "French Southern Territories"
+msgstr ""
+
+#: pro/i18n/countries.php:84
+msgid "Gabon"
+msgstr ""
+
+#: pro/i18n/countries.php:85
+msgid "Gambia"
+msgstr ""
+
+#: pro/i18n/countries.php:86
+msgid "Georgia"
+msgstr ""
+
+#: pro/i18n/countries.php:87
+msgid "Germany"
+msgstr ""
+
+#: pro/i18n/countries.php:88
+msgid "Ghana"
+msgstr ""
+
+#: pro/i18n/countries.php:89
+msgid "Gibraltar"
+msgstr ""
+
+#: pro/i18n/countries.php:90
+msgid "Greece"
+msgstr ""
+
+#: pro/i18n/countries.php:91
+msgid "Greenland"
+msgstr ""
+
+#: pro/i18n/countries.php:92
+msgid "Grenada"
+msgstr ""
+
+#: pro/i18n/countries.php:93
+msgid "Guadeloupe"
+msgstr ""
+
+#: pro/i18n/countries.php:94
+msgid "Guatemala"
+msgstr ""
+
+#: pro/i18n/countries.php:95
+msgid "Guernsey"
+msgstr ""
+
+#: pro/i18n/countries.php:96
+msgid "Guinea"
+msgstr ""
+
+#: pro/i18n/countries.php:97
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: pro/i18n/countries.php:98
+msgid "Guyana"
+msgstr ""
+
+#: pro/i18n/countries.php:99
+msgid "Haiti"
+msgstr ""
+
+#: pro/i18n/countries.php:100
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:101
+msgid "Honduras"
+msgstr ""
+
+#: pro/i18n/countries.php:102
+msgid "Hong Kong"
+msgstr ""
+
+#: pro/i18n/countries.php:103
+msgid "Hungary"
+msgstr ""
+
+#: pro/i18n/countries.php:104
+msgid "Iceland"
+msgstr ""
+
+#: pro/i18n/countries.php:105
+msgid "India"
+msgstr ""
+
+#: pro/i18n/countries.php:106
+msgid "Indonesia"
+msgstr ""
+
+#: pro/i18n/countries.php:107
+msgid "Iran"
+msgstr ""
+
+#: pro/i18n/countries.php:108
+msgid "Iraq"
+msgstr ""
+
+#: pro/i18n/countries.php:109
+msgid "Republic of Ireland"
+msgstr ""
+
+#: pro/i18n/countries.php:110
+msgid "Isle of Man"
+msgstr ""
+
+#: pro/i18n/countries.php:111
+msgid "Israel"
+msgstr ""
+
+#: pro/i18n/countries.php:112
+msgid "Italy"
+msgstr ""
+
+#: pro/i18n/countries.php:113
+msgid "Ivory Coast"
+msgstr ""
+
+#: pro/i18n/countries.php:114
+msgid "Jamaica"
+msgstr ""
+
+#: pro/i18n/countries.php:115
+msgid "Japan"
+msgstr ""
+
+#: pro/i18n/countries.php:116
+msgid "Jersey"
+msgstr ""
+
+#: pro/i18n/countries.php:117
+msgid "Jordan"
+msgstr ""
+
+#: pro/i18n/countries.php:118
+msgid "Kazakhstan"
+msgstr ""
+
+#: pro/i18n/countries.php:119
+msgid "Kenya"
+msgstr ""
+
+#: pro/i18n/countries.php:120
+msgid "Kiribati"
+msgstr ""
+
+#: pro/i18n/countries.php:121
+msgid "Kuwait"
+msgstr ""
+
+#: pro/i18n/countries.php:122
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: pro/i18n/countries.php:123
+msgid "Laos"
+msgstr ""
+
+#: pro/i18n/countries.php:124
+msgid "Latvia"
+msgstr ""
+
+#: pro/i18n/countries.php:125
+msgid "Lebanon"
+msgstr ""
+
+#: pro/i18n/countries.php:126
+msgid "Lesotho"
+msgstr ""
+
+#: pro/i18n/countries.php:127
+msgid "Liberia"
+msgstr ""
+
+#: pro/i18n/countries.php:128
+msgid "Libya"
+msgstr ""
+
+#: pro/i18n/countries.php:129
+msgid "Liechtenstein"
+msgstr ""
+
+#: pro/i18n/countries.php:130
+msgid "Lithuania"
+msgstr ""
+
+#: pro/i18n/countries.php:131
+msgid "Luxembourg"
+msgstr ""
+
+#: pro/i18n/countries.php:132
+msgid "Macao S.A.R., China"
+msgstr ""
+
+#: pro/i18n/countries.php:133
+msgid "Macedonia"
+msgstr ""
+
+#: pro/i18n/countries.php:134
+msgid "Madagascar"
+msgstr ""
+
+#: pro/i18n/countries.php:135
+msgid "Malawi"
+msgstr ""
+
+#: pro/i18n/countries.php:136
+msgid "Malaysia"
+msgstr ""
+
+#: pro/i18n/countries.php:137
+msgid "Maldives"
+msgstr ""
+
+#: pro/i18n/countries.php:138
+msgid "Mali"
+msgstr ""
+
+#: pro/i18n/countries.php:139
+msgid "Malta"
+msgstr ""
+
+#: pro/i18n/countries.php:140
+msgid "Marshall Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:141
+msgid "Martinique"
+msgstr ""
+
+#: pro/i18n/countries.php:142
+msgid "Mauritania"
+msgstr ""
+
+#: pro/i18n/countries.php:143
+msgid "Mauritius"
+msgstr ""
+
+#: pro/i18n/countries.php:144
+msgid "Mayotte"
+msgstr ""
+
+#: pro/i18n/countries.php:145
+msgid "Mexico"
+msgstr ""
+
+#: pro/i18n/countries.php:146
+msgid "Micronesia"
+msgstr ""
+
+#: pro/i18n/countries.php:147
+msgid "Moldova"
+msgstr ""
+
+#: pro/i18n/countries.php:148
+msgid "Monaco"
+msgstr ""
+
+#: pro/i18n/countries.php:149
+msgid "Mongolia"
+msgstr ""
+
+#: pro/i18n/countries.php:150
+msgid "Montenegro"
+msgstr ""
+
+#: pro/i18n/countries.php:151
+msgid "Montserrat"
+msgstr ""
+
+#: pro/i18n/countries.php:152
+msgid "Morocco"
+msgstr ""
+
+#: pro/i18n/countries.php:153
+msgid "Mozambique"
+msgstr ""
+
+#: pro/i18n/countries.php:154
+msgid "Myanmar"
+msgstr ""
+
+#: pro/i18n/countries.php:155
+msgid "Namibia"
+msgstr ""
+
+#: pro/i18n/countries.php:156
+msgid "Nauru"
+msgstr ""
+
+#: pro/i18n/countries.php:157
+msgid "Nepal"
+msgstr ""
+
+#: pro/i18n/countries.php:158
+msgid "Netherlands"
+msgstr ""
+
+#: pro/i18n/countries.php:159
+msgid "Netherlands Antilles"
+msgstr ""
+
+#: pro/i18n/countries.php:160
+msgid "New Caledonia"
+msgstr ""
+
+#: pro/i18n/countries.php:161
+msgid "New Zealand"
+msgstr ""
+
+#: pro/i18n/countries.php:162
+msgid "Nicaragua"
+msgstr ""
+
+#: pro/i18n/countries.php:163
+msgid "Niger"
+msgstr ""
+
+#: pro/i18n/countries.php:164
+msgid "Nigeria"
+msgstr ""
+
+#: pro/i18n/countries.php:165
+msgid "Niue"
+msgstr ""
+
+#: pro/i18n/countries.php:166
+msgid "Norfolk Island"
+msgstr ""
+
+#: pro/i18n/countries.php:167
+msgid "North Korea"
+msgstr ""
+
+#: pro/i18n/countries.php:168
+msgid "Norway"
+msgstr ""
+
+#: pro/i18n/countries.php:169
+msgid "Oman"
+msgstr ""
+
+#: pro/i18n/countries.php:170
+msgid "Pakistan"
+msgstr ""
+
+#: pro/i18n/countries.php:171
+msgid "Palestinian Territory"
+msgstr ""
+
+#: pro/i18n/countries.php:172
+msgid "Panama"
+msgstr ""
+
+#: pro/i18n/countries.php:173
+msgid "Papua New Guinea"
+msgstr ""
+
+#: pro/i18n/countries.php:174
+msgid "Paraguay"
+msgstr ""
+
+#: pro/i18n/countries.php:175
+msgid "Peru"
+msgstr ""
+
+#: pro/i18n/countries.php:176
+msgid "Philippines"
+msgstr ""
+
+#: pro/i18n/countries.php:177
+msgid "Pitcairn"
+msgstr ""
+
+#: pro/i18n/countries.php:178
+msgid "Poland"
+msgstr ""
+
+#: pro/i18n/countries.php:179
+msgid "Portugal"
+msgstr ""
+
+#: pro/i18n/countries.php:180
+msgid "Qatar"
+msgstr ""
+
+#: pro/i18n/countries.php:181
+msgid "Reunion"
+msgstr ""
+
+#: pro/i18n/countries.php:182
+msgid "Romania"
+msgstr ""
+
+#: pro/i18n/countries.php:183
+msgid "Russia"
+msgstr ""
+
+#: pro/i18n/countries.php:184
+msgid "Rwanda"
+msgstr ""
+
+#: pro/i18n/countries.php:185
+msgid "Saint Barth&eacute;lemy"
+msgstr ""
+
+#: pro/i18n/countries.php:186
+msgid "Saint Helena"
+msgstr ""
+
+#: pro/i18n/countries.php:187
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#: pro/i18n/countries.php:188
+msgid "Saint Lucia"
+msgstr ""
+
+#: pro/i18n/countries.php:189
+msgid "Saint Martin (French part)"
+msgstr ""
+
+#: pro/i18n/countries.php:190
+msgid "Saint Martin (Dutch part)"
+msgstr ""
+
+#: pro/i18n/countries.php:191
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+#: pro/i18n/countries.php:192
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#: pro/i18n/countries.php:193
+msgid "San Marino"
+msgstr ""
+
+#: pro/i18n/countries.php:194
+msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe"
+msgstr ""
+
+#: pro/i18n/countries.php:195
+msgid "Saudi Arabia"
+msgstr ""
+
+#: pro/i18n/countries.php:196
+msgid "Senegal"
+msgstr ""
+
+#: pro/i18n/countries.php:197
+msgid "Serbia"
+msgstr ""
+
+#: pro/i18n/countries.php:198
+msgid "Seychelles"
+msgstr ""
+
+#: pro/i18n/countries.php:199
+msgid "Sierra Leone"
+msgstr ""
+
+#: pro/i18n/countries.php:200
+msgid "Singapore"
+msgstr ""
+
+#: pro/i18n/countries.php:201
+msgid "Slovakia"
+msgstr ""
+
+#: pro/i18n/countries.php:202
+msgid "Slovenia"
+msgstr ""
+
+#: pro/i18n/countries.php:203
+msgid "Solomon Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:204
+msgid "Somalia"
+msgstr ""
+
+#: pro/i18n/countries.php:205
+msgid "South Africa"
+msgstr ""
+
+#: pro/i18n/countries.php:206
+msgid "South Georgia/Sandwich Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:207
+msgid "South Korea"
+msgstr ""
+
+#: pro/i18n/countries.php:208
+msgid "South Sudan"
+msgstr ""
+
+#: pro/i18n/countries.php:209
+msgid "Spain"
+msgstr ""
+
+#: pro/i18n/countries.php:210
+msgid "Sri Lanka"
+msgstr ""
+
+#: pro/i18n/countries.php:211
+msgid "Sudan"
+msgstr ""
+
+#: pro/i18n/countries.php:212
+msgid "Suriname"
+msgstr ""
+
+#: pro/i18n/countries.php:213
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#: pro/i18n/countries.php:214
+msgid "Swaziland"
+msgstr ""
+
+#: pro/i18n/countries.php:215
+msgid "Sweden"
+msgstr ""
+
+#: pro/i18n/countries.php:216
+msgid "Switzerland"
+msgstr ""
+
+#: pro/i18n/countries.php:217
+msgid "Syria"
+msgstr ""
+
+#: pro/i18n/countries.php:218
+msgid "Taiwan"
+msgstr ""
+
+#: pro/i18n/countries.php:219
+msgid "Tajikistan"
+msgstr ""
+
+#: pro/i18n/countries.php:220
+msgid "Tanzania"
+msgstr ""
+
+#: pro/i18n/countries.php:221
+msgid "Thailand"
+msgstr ""
+
+#: pro/i18n/countries.php:222
+msgid "Timor-Leste"
+msgstr ""
+
+#: pro/i18n/countries.php:223
+msgid "Togo"
+msgstr ""
+
+#: pro/i18n/countries.php:224
+msgid "Tokelau"
+msgstr ""
+
+#: pro/i18n/countries.php:225
+msgid "Tonga"
+msgstr ""
+
+#: pro/i18n/countries.php:226
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: pro/i18n/countries.php:227
+msgid "Tunisia"
+msgstr ""
+
+#: pro/i18n/countries.php:228
+msgid "Turkey"
+msgstr ""
+
+#: pro/i18n/countries.php:229
+msgid "Turkmenistan"
+msgstr ""
+
+#: pro/i18n/countries.php:230
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: pro/i18n/countries.php:231
+msgid "Tuvalu"
+msgstr ""
+
+#: pro/i18n/countries.php:232
+msgid "Uganda"
+msgstr ""
+
+#: pro/i18n/countries.php:233
+msgid "Ukraine"
+msgstr ""
+
+#: pro/i18n/countries.php:234
+msgid "United Arab Emirates"
+msgstr ""
+
+#: pro/i18n/countries.php:235
+msgid "United Kingdom (UK)"
+msgstr ""
+
+#: pro/i18n/countries.php:236
+msgid "United States"
+msgstr ""
+
+#: pro/i18n/countries.php:237
+msgid "Uruguay"
+msgstr ""
+
+#: pro/i18n/countries.php:238
+msgid "Uzbekistan"
+msgstr ""
+
+#: pro/i18n/countries.php:239
+msgid "Vanuatu"
+msgstr ""
+
+#: pro/i18n/countries.php:240
+msgid "Vatican"
+msgstr ""
+
+#: pro/i18n/countries.php:241
+msgid "Venezuela"
+msgstr ""
+
+#: pro/i18n/countries.php:242
+msgid "Vietnam"
+msgstr ""
+
+#: pro/i18n/countries.php:243
+msgid "Wallis and Futuna"
+msgstr ""
+
+#: pro/i18n/countries.php:244
+msgid "Western Sahara"
+msgstr ""
+
+#: pro/i18n/countries.php:245
+msgid "Western Samoa"
+msgstr ""
+
+#: pro/i18n/countries.php:246
+msgid "Yemen"
+msgstr ""
+
+#: pro/i18n/countries.php:247
+msgid "Zambia"
+msgstr ""
+
+#: pro/i18n/countries.php:248
+msgid "Zimbabwe"
 msgstr ""
 
 #: script/i18n/pomo/sample/app.php:56
@@ -2585,12 +4693,8 @@ msgstr ""
 msgid "Bye\n"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
-msgid "Pretty Link Lite"
-msgstr ""
-
 #. Plugin URI of the plugin/theme
-msgid "http://blairwilliams.com/pretty-link"
+msgid "http://prettylinkpro.com"
 msgstr ""
 
 #. Description of the plugin/theme
@@ -2599,9 +4703,9 @@ msgid ""
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "Caseproof"
+msgid "Blair Williams"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "http://caseproof.com"
+msgid "http://blairwilliams.com"
 msgstr ""

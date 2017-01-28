@@ -1,0 +1,31 @@
+body {
+  font-family: Arial;
+  text-align: center;
+  margin-top: 25px;
+}
+
+h4 {
+  font-size: 18px;
+  color: #aaaaaa;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+h2 a {
+  text-decoration: none;
+  color: #1f487e;
+}
+
+h2 a:hover {
+  text-decoration: none;
+  color: blue;
+}
+
+.clippy {
+  width: 132px !important;
+  padding-left: 84px;
+}
+
