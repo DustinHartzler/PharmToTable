@@ -2140,6 +2140,8 @@ WP Color Picker (Iris) Styles
     margin-left: 0; }
   #nf-builder {
     padding: 80px 20px 10px; }
+    #nf-builder .nf-cta-bubble {
+      display: none !important; }
   #nf-main {
     padding: 20px 0 80px; }
   #nf-drawer {
@@ -2194,6 +2196,33 @@ WP Color Picker (Iris) Styles
     opacity: 1.0;
     filter: alpha(opacity=100);
     transition: all 1.0s ease; }
+  #nf-app-admin-header .nf-cta-bubble {
+    background: #1EA9EA;
+    border: 1px solid #1EA9EA;
+    border-radius: 6px;
+    color: #fff;
+    display: block;
+    float: left;
+    font-size: 14px;
+    margin: 6px 0 0 20px;
+    padding: 5px 10px;
+    position: relative;
+    text-decoration: none;
+    width: 360px; }
+    #nf-app-admin-header .nf-cta-bubble::after {
+      display: block;
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 10px solid #1EA9EA;
+      position: absolute;
+      left: -10px;
+      top: 13px; }
+    #nf-app-admin-header .nf-cta-bubble:hover {
+      background: #fff;
+      color: #1EA9EA; }
 
 .scrollWrap {
   overflow: hidden;

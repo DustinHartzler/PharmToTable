@@ -308,29 +308,10 @@ final class NF_Database_Models_Submission
          * TODO: This is probably not the most effecient way to handle this. It should be re-thought.
          */
         if ( ! has_filter( 'ninja_forms_get_fields_sorted' ) ) {
-            usort( $fields, array( 'NF_Database_Models_Submission', 'sort_fields' ) );
+            uasort( $fields, array( 'NF_Database_Models_Submission', 'sort_fields' ) );
         }
 
         $hidden_field_types = apply_filters( 'nf_sub_hidden_field_types', array() );
-
-        $fields_order_by = array();
-        $field_type_filters = array();
-        $i = 0;
-        foreach( $fields as $field ){
-
-            if( in_array( $field->get_setting( 'type' ), $hidden_field_types ) ) continue;
-            if ( $field->get_setting( 'admin_label' ) ) {
-                $field_labels[ $field->get_id() ] = $field->get_setting( 'admin_label' );
-            } else {
-                $field_labels[ $field->get_id() ] = $field->get_setting( 'label' );
-            }
-            $fields_order_by[] = $field->get_id();
-            if( has_filter( 'ninja_forms_subs_export_field_value_' . $field->get_setting( 'type' ) ) ){
-                // $i represents the relative field order for later reference when running filters on a specific value.
-                $field_type_filters[ $i ] = $field->get_setting( 'type' );
-            }
-            $i++;
-        }
 
         /*
          * Submissions
@@ -343,55 +324,31 @@ final class NF_Database_Models_Submission
             $value[ '_seq_num' ] = $sub->get_seq_num();
             $value[ '_date_submitted' ] = $sub->get_sub_date( $date_format );
 
-            if( has_filter( 'nf_subs_export_pre_value' ) || has_filter( 'ninja_forms_subs_export_pre_value' ) ) {
+            foreach ($fields as $field_id => $field) {
 
-                /*
-                 * DEPRECATED - Individual value filters are inefficient.
-                 */
+              if (!is_int($field_id)) continue;
+                if( in_array( $field->get_setting( 'type' ), $hidden_field_types ) ) continue;
 
-                foreach ($field_labels as $field_id => $label) {
-
-                    if (!is_int($field_id)) continue;
-
-                    $field_value = $sub->get_field_value($field_id);
-                    $field_value = apply_filters('nf_subs_export_pre_value', $field_value, $field_id);
-                    $field_value = apply_filters('ninja_forms_subs_export_pre_value', $field_value, $field_id, $form_id);
-
-                    if (is_array($field_value)) {
-                        $field_value = implode(' | ', $field_value);
-                    }
-
-                    $value[$field_id] = maybe_unserialize( $field_value );
+                if ( $field->get_setting( 'admin_label' ) ) {
+                    $field_labels[ $field->get_id() ] = $field->get_setting( 'admin_label' );
+                } else {
+                    $field_labels[ $field->get_id() ] = $field->get_setting( 'label' );
                 }
 
-                $value_array[] = $value;
-            } else {
+                $field_value = maybe_unserialize( $sub->get_field_value( $field_id ) );
 
-                /*
-                 * OPTIMIZED
-                 */
+                $field_value = apply_filters('nf_subs_export_pre_value', $field_value, $field_id);
+                $field_value = apply_filters('ninja_forms_subs_export_pre_value', $field_value, $field_id, $form_id);
+                $field_value = apply_filters( 'ninja_forms_subs_export_field_value_' . $field->get_setting( 'type' ), $field_value );
 
-                global $wpdb;
-                $field_values = $wpdb->get_col( "
-                    SELECT IFNULL( meta_value, '' )
-                    FROM ". $wpdb->postmeta . " as postmeta
-                    RIGHT JOIN (
-                        SELECT id FROM wp_nf3_fields
-                        WHERE id IN ( " . implode( ',', $fields_order_by ) . " ) 
-                        ORDER BY FIELD( id, " . implode( ',', $fields_order_by ) . " )
-                    ) as fields
-                    ON postmeta.meta_key LIKE CONCAT( '%', fields.id, '%' )
-                        AND postmeta.post_id = " . $sub->get_id()
-                );
-
-                if( is_array( $field_type_filters ) && ! empty( $field_type_filters ) ){
-                    foreach( $field_type_filters as $i => $type ){
-                        $field_values[ $i ] = apply_filters( 'ninja_forms_subs_export_field_value_' . $type, $field_values[ $i ] );
-                    }
+                if ( is_array($field_value ) ) {
+                    $field_value = implode( ',', $field_value );
                 }
 
-                $value_array[] = array_merge( $value, array_values( $field_values ) );
+                $value[ $field_id ] = $field_value;
             }
+
+            $value_array[] = $value;
         }
 
         $value_array = WPN_Helper::stripslashes( $value_array );

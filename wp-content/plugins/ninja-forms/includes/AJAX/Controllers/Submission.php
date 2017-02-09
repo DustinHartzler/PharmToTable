@@ -79,6 +79,7 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
     {
         // Init Field Merge Tags.
         $field_merge_tags = Ninja_Forms()->merge_tags[ 'fields' ];
+        $field_merge_tags->set_form_id( $this->_form_id );
 
         // Init Calc Merge Tags.
         $calcs_merge_tags = Ninja_Forms()->merge_tags[ 'calcs' ];

@@ -94,8 +94,12 @@ final class NF_Actions_Email extends NF_Abstracts_Action
             $email_addresses = is_array( $action_settings[ $setting ] ) ? $action_settings[ $setting ] : explode( ',', $action_settings[ $setting ] );
             foreach( (array) $email_addresses as $email ){
                 $email = trim( $email );
+                if ( false !== strpos( $email, '<' ) && false !== strpos( $email, '>' ) ) {
+                    preg_match('/(?<=<).*?(?=>)/', $email, $email);
+                    $email = $email[ 0 ];
+                }
                 if( ! is_email( $email ) ) {
-                    $errors[ 'email_' . $email ] = sprintf( __( 'Your email action "%s" has an invalid value for the "TO" setting. Please check this setting and try again.', 'ninja-forms'), $action_settings[ 'label' ] );
+                    $errors[ 'email_' . $email ] = sprintf( __( 'Your email action "%s" has an invalid value for the "%s" setting. Please check this setting and try again.', 'ninja-forms'), $action_settings[ 'label' ], $setting );
                 }
             }
         }

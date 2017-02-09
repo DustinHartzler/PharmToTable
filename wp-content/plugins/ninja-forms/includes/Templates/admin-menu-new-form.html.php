@@ -3,7 +3,29 @@
 <div id="nf-builder" class="grey"></div>
 
 <script id="tmpl-nf-builder" type="text/template">
-    <div id="nf-app-admin-header"><div id="nf-logo"></div><a href="admin.php?page=ninja-forms" class="fa fa-times"></a></div>
+    <div id="nf-app-admin-header">
+        <div id="nf-logo"></div>
+        <?php
+        /*
+         * TODO: Make this much more dynamic.
+         */
+        $nf_settings = get_option( 'ninja_forms_settings' );
+        $disable_admin_notices = ( isset ( $nf_settings[ 'disable_admin_notices' ] ) ) ? $nf_settings[ 'disable_admin_notices' ] : false;
+
+        if( ! function_exists( 'NF_Layouts' ) && ! $disable_admin_notices ) {
+            $u_id = get_option( 'nf_aff', false );
+            if ( !$u_id ) $u_id = apply_filters( 'ninja_forms_affiliate_id', false );
+            $link = 'https://ninjaforms.com/extensions/layout-styles/?utm_medium=plugin&utm_source=plugin-builder&utm_campaign=Ninja+Forms+Builder&utm_content=Layout+and+Styles';
+            if ( $u_id ) {
+                $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+            }
+        ?>
+            <a href="<?php echo $link; ?>" target="_blank" class="nf-cta-bubble"><?php printf( __( "Create multi-column form layouts with Layout & Styles...%slearn more now!%s", 'ninja-forms' ), '<span>', '</span>' ); ?></a>
+        <?php
+        }
+        ?>
+
+        <a href="admin.php?page=ninja-forms" class="fa fa-times"></a></div>
     <div id="nf-overlay"></div>
     <div id="nf-header"></div>
     <div id="nf-main" class="nf-app-main"></div>

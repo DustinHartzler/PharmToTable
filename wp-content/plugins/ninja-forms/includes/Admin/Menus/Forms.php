@@ -27,6 +27,13 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
     public function admin_init()
     {
+        /*
+         * If we aren't on the Ninja Forms menu page, don't admin_init.
+         */
+        if ( empty( $_GET[ 'page' ] ) || 'ninja-forms' !== $_GET[ 'page' ] ) {
+            return false;
+        }
+
         if( isset( $_GET[ 'form_id' ] ) && ! is_numeric( $_GET[ 'form_id' ] ) && 'new' != $_GET[ 'form_id' ] ) {
             if( current_user_can( apply_filters( 'ninja_forms_admin_import_template_capabilities', 'manage_options' ) ) ) {
                 $this->import_from_template();

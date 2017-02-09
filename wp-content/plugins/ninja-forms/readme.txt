@@ -2,8 +2,8 @@
 Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, wpnzach, aman086, daveshine, mordauk, bftrick, helgatheviking
 Tags: form, forms, contact form, custom form, form builder, form creator, form manager, form creation, contact forms, custom forms, forms builder, forms creator, forms manager, forms creation, form administration,
 Requires at least: 4.5
-Tested up to: 4.7.1
-Stable tag: 3.0.25
+Tested up to: 4.7.2
+Stable tag: 3.0.27
 License: GPLv2 or later
 
 Drag and drop fields in an intuitive UI to create create contact forms, email subscription forms, order forms, payment forms, send emails and more!
@@ -102,22 +102,36 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 == Upgrade Notice ==
 
-= 3.0.25 (26 January 2017) =
-
-*Changes:*
-
-* Increasing the performance of submissions and form builder loading.
-* Improved compatibility with popular caching plugins.
+= 3.0.27 (2 February 2017) =
 
 *Bugs:*
 
-* Field tags should now properly populate in calculation merge tags.
-* Submission exports should now always order properly.
-* Fixed a bug with submissions exporting non-Ninja Forms data.
-* Importing forms with non-UTF8 characters should now import properly.
-* Fixed a bug with converting froms from 2.9.x to 3.0.
+* Field data should populate properly in all submission exports.
 
 == Changelog ==
+
+= 3.0.27 (2 February 2017) =
+
+*Bugs:*
+
+* Field data should populate properly in all submission exports.
+
+
+= 3.0.26 (30 January 2017) =
+
+*Bugs:*
+
+* Field data should populate properly in submission exports.
+* Email errors upon form submission should be clearer.
+* Fixed a compatibility bug with other plugins that use the WP List Table.
+
+= 3.0.26 (30 January 2017) =
+
+*Bugs:*
+
+* Field data should populate properly in submission exports.
+* Email errors upon form submission should be clearer.
+* Fixed a compatibility bug with other plugins that use the WP List Table.
 
 = 3.0.25 (26 January 2017) =
 
