@@ -36,7 +36,7 @@ if ( class_exists( 'Jetpack' ) ) {
 	$storefront->jetpack = require 'inc/jetpack/class-storefront-jetpack.php';
 }
 
-if ( is_woocommerce_activated() ) {
+if ( storefront_is_woocommerce_activated() ) {
 	$storefront->woocommerce = require 'inc/woocommerce/class-storefront-woocommerce.php';
 
 	require 'inc/woocommerce/storefront-woocommerce-template-hooks.php';
@@ -49,5 +49,5 @@ if ( is_admin() ) {
 
 /**
  * Note: Do not add any custom code here. Please use a custom plugin so that your customizations aren't lost during updates.
- * https://github.com/woothemes/theme-customisations
+ * https://github.com/woocommerce/theme-customisations
  */

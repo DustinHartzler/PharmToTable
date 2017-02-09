@@ -63,4 +63,23 @@
 			jQuery( this ).parents().toggleClass( 'focus' );
 		});
 	});
+
+	if ( is_touch_device() && jQuery( window ).width() > 767 ) {
+		// Add an identifying class to dropdowns when on a touch device
+		// This is required to switch the dropdown hiding method from a negative `left` value to `display: none`.
+		jQuery( '.main-navigation ul ul, .secondary-navigation ul ul, .site-header-cart .widget_shopping_cart' ).addClass( 'sub-menu--is-touch-device' );
+
+		// Ensure the dropdowns close when user taps outside the site header
+		jQuery( '.site-content, .header-widget-region, .site-footer, .site-header:not(a)' ).on( 'click', function() {
+			return;
+		});
+	}
+
+	/**
+	 * Check if the device is touch enabled
+	 * @return Boolean
+	 */
+	function is_touch_device() {
+		return 'ontouchstart' in window || navigator.maxTouchPoints;
+	}
 } )();
