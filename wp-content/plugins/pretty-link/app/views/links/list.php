@@ -1,6 +1,11 @@
 <?php
-if(!defined('ABSPATH'))
-  die('You are not allowed to call this page directly.');
+if(!defined('ABSPATH')) { die('You are not allowed to call this page directly.'); }
+
+$group      = (isset($_REQUEST['group']))?(int)$_REQUEST['group']:'';
+$size       = (isset($_REQUEST['size']))?(int)$_REQUEST['size']:'10';
+$search     = (isset($_REQUEST['search']))?sanitize_text_field($_REQUEST['search']):'';
+
+$url_params = "&group={$group}&size={$size}&search={$search}"
 ?>
 
 <div class="wrap">
@@ -43,12 +48,12 @@ if(!defined('ABSPATH'))
   <table class="prli-edit-table widefat post fixed" cellspacing="0">
     <thead>
     <tr>
-      <th class="manage-column" width="30%"><input type="checkbox" name="check-all" class="select-all-link-action-checkboxes" style="margin-left: 1px;"/>&nbsp;&nbsp;<a href="<?php echo admin_url('admin.php?page=pretty-link&sort=name' . (($sort_str == 'name' and $sdir_str == 'asc')?'&sdir=desc':'') . $group_param); ?>"><?php _e('Name', 'pretty-link'); echo (($sort_str == 'name')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.(($sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
+      <th class="manage-column" width="30%"><input type="checkbox" name="check-all" class="select-all-link-action-checkboxes" style="margin-left: 1px;"/>&nbsp;&nbsp;<a href="<?php echo admin_url('admin.php?page=pretty-link&sort=name' . (($sort_str == 'name' and $sdir_str == 'asc')?'&sdir=desc':'') . $url_params); ?>"><?php _e('Name', 'pretty-link'); echo (($sort_str == 'name')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.(($sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
       <?php do_action('prli_link_column_header'); ?>
-      <th class="manage-column" width="10%"><a href="<?php echo admin_url('admin.php?page=pretty-link&sort=clicks' . (($sort_str == 'clicks' and $sdir_str == 'asc')?'&sdir=desc':'') . $group_param); ?>"><?php _e('Clicks / Uniq', 'pretty-link'); echo (($sort_str == 'clicks')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.(($sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
-      <th class="manage-column" width="5%"><a href="<?php echo admin_url('admin.php?page=pretty-link&sort=group_name' . (($sort_str == 'group_name' and $sdir_str == 'asc')?'&sdir=desc':'') . $group_param) ?>"><?php _e('Group', 'pretty-link'); echo (($sort_str == 'group_name')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.(($sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
-      <th class="manage-column" width="12%"><a href="<?php echo admin_url('admin.php?page=pretty-link&sort=created_at' . (($sort_str == 'created_at' and $sdir_str == 'asc')?'&sdir=desc':'') . $group_param); ?>"><?php _e('Created', 'pretty-link'); echo ((empty($sort_str) or $sort_str == 'created_at')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.((empty($sort_str) or $sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
-      <th class="manage-column" width="20%"><a href="<?php echo admin_url('admin.php?page=pretty-link&sort=slug' . (($sort_str == 'slug' and $sdir_str == 'asc')?'&sdir=desc':'') . $group_param); ?>"><?php _e('Links', 'pretty-link'); echo (($sort_str == 'slug')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.(($sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
+      <th class="manage-column" width="10%"><a href="<?php echo admin_url('admin.php?page=pretty-link&sort=clicks' . (($sort_str == 'clicks' and $sdir_str == 'asc')?'&sdir=desc':'') . $url_params); ?>"><?php _e('Clicks / Uniq', 'pretty-link'); echo (($sort_str == 'clicks')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.(($sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
+      <th class="manage-column" width="5%"><a href="<?php echo admin_url('admin.php?page=pretty-link&sort=group_name' . (($sort_str == 'group_name' and $sdir_str == 'asc')?'&sdir=desc':'') . $url_params) ?>"><?php _e('Group', 'pretty-link'); echo (($sort_str == 'group_name')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.(($sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
+      <th class="manage-column" width="12%"><a href="<?php echo admin_url('admin.php?page=pretty-link&sort=created_at' . (($sort_str == 'created_at' and $sdir_str == 'asc')?'&sdir=desc':'') . $url_params); ?>"><?php _e('Created', 'pretty-link'); echo ((empty($sort_str) or $sort_str == 'created_at')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.((empty($sort_str) or $sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
+      <th class="manage-column" width="20%"><a href="<?php echo admin_url('admin.php?page=pretty-link&sort=slug' . (($sort_str == 'slug' and $sdir_str == 'asc')?'&sdir=desc':'') . $url_params); ?>"><?php _e('Links', 'pretty-link'); echo (($sort_str == 'slug')?'&nbsp;&nbsp;&nbsp;<img src="'.PRLI_IMAGES_URL . '/'.(($sdir_str == 'desc')?'arrow_down.png':'arrow_up.png').'"/>':'') ?></a></th>
     </tr>
     </thead>
     <tr id="bulk-edit" class="inline-edit-row inline-edit-row-post inline-edit-post bulk-edit-row bulk-edit-row-post bulk-edit-post" style="display: none;">

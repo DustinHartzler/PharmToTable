@@ -1,7 +1,11 @@
 <?php if(!defined('ABSPATH')) { die('You are not allowed to call this page directly.'); }
 
-$curr_size = isset($_REQUEST['size']) ? $_REQUEST['size'] : 10;
-$curr_url = esc_html($_REQUEST['page'].$page_params);
+$curr_size  = (isset($_REQUEST['size']))?(int)$_REQUEST['size']:10;
+$curr_url   = esc_html($_REQUEST['page'].$page_params);
+$group      = (isset($_REQUEST['group']))?(int)$_REQUEST['group']:'';
+$sort       = (isset($_REQUEST['sort']))?sanitize_text_field($_REQUEST['sort']):'';
+$sdir       = (isset($_REQUEST['sdir']))?sanitize_text_field($_REQUEST['sdir']):'';
+$search     = (isset($_REQUEST['search']))?sanitize_text_field($_REQUEST['search']):'';
 
 // Only show the pager bar if there is more than 1 page
 if($page_count > 1) {
@@ -84,7 +88,7 @@ if($page_count > 1) {
         <?php
       }
       ?>
-      <select class="prli-page-size" data-url="<?php echo admin_url("admin.php?page=pretty-link&paged=1&size="); ?>">
+      <select class="prli-page-size" data-url="<?php echo admin_url("admin.php?page=pretty-link&paged=1&sort={$sort}&sdir={$sdir}&group={$group}&search={$search}&size="); ?>">
         <option value="10" selected="selected">10</option>
         <option value="25" <?php if($curr_size == 25) echo 'selected="selected"'; ?>>25</option>
         <option value="50" <?php if($curr_size == 50) echo 'selected="selected"'; ?>>50</option>
@@ -102,7 +106,7 @@ else {
   <div class="tablenav"<?php echo (isset($navstyle)?" style=\"$navstyle\"":''); ?>>
     <div class='tablenav-pages'>
       <span class="displaying-num"><?php _e('Displaying', 'pretty-link'); ?> <?php echo "$page_first_record&#8211;$page_last_record of $record_count"; ?></span>
-      <select class="prli-page-size" data-url="<?php echo admin_url("admin.php?page=pretty-link&paged=1&size="); ?>">
+      <select class="prli-page-size" data-url="<?php echo admin_url("admin.php?page=pretty-link&paged=1&sort={$sort}&sdir={$sdir}&group={$group}&search={$search}&size="); ?>">
         <option value="10" selected="selected">10</option>
         <option value="25" <?php if($curr_size == 25) echo 'selected="selected"'; ?>>25</option>
         <option value="50" <?php if($curr_size == 50) echo 'selected="selected"'; ?>>50</option>

@@ -3,7 +3,7 @@
 Plugin Name: Pretty Link
 Plugin URI: http://prettylinkpro.com
 Description: Shrink, track and share any URL on the Internet from your WordPress website!
-Version: 2.0.3
+Version: 2.0.4
 Author: Blair Williams
 Author URI: http://blairwilliams.com
 Text Domain: pretty-link
