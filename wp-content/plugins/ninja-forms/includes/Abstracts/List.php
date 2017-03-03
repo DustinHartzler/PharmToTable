@@ -35,7 +35,9 @@ abstract class NF_Abstracts_List extends NF_Abstracts_Field
 
     public function admin_form_element( $id, $value )
     {
-        $field = Ninja_Forms()->form()->get_field( $id );
+        $form_id = get_post_meta( absint( $_GET[ 'post' ] ), '_form_id', true );
+
+        $field = Ninja_Forms()->form( $form_id )->get_field( $id );
 
         $options = '<option>--</option>';
         if ( is_array( $field->get_setting( 'options' ) ) ) {

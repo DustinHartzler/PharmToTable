@@ -233,7 +233,9 @@ final class WPN_Helper
         if ( is_serialized( $original ) ){
             // Ported with php5.2 support from https://magp.ie/2014/08/13/php-unserialize-string-after-non-utf8-characters-stripped-out/
             $parsed = preg_replace_callback( '!s:(\d+):"(.*?)";!s', array( 'self', 'parse_utf8_serialized' ), $original );
-            return unserialize( $parsed );
+            $parsed = @unserialize( $parsed );
+
+            return ( $parsed ) ? $parsed : unserialize( $original ); // Fallback if parse error.
         }
         return $original;
     }

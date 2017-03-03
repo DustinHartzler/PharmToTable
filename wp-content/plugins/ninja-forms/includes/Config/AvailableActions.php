@@ -114,4 +114,12 @@ return apply_filters( 'ninja_forms_available_actions', array(
         'plugin_path' => 'ninja-forms-videomail/ninja-forms-videomail.php'
     ),
 
+    'trello' => array(
+        'name' => "trello",
+        'nicename' => "Trello",
+        'image' => "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAr0AAABkCAMAAAC8VHgkAAABgFBMVEX94Lz9///30aZrqtJnNhkFBQb+7dSzi2pNmcx3Syvqs4JulKzbsYgZRno4GgpVc4X948EqLDFqb3X+6s1HTlZaotHp9/7/8tmUbk4TUYv0zqT627W0rq31sSf73bohMWXGmG0scalwhpVaKRHyxJSodU3zyZ7S7vzlxaXo18Xju5JXk7rQycroqHOTVSXxxppJZXfXxbR3QiDpwpmCr8yHTSEKEC+HUSy7o4tMKBKAkJ0aK1N1aVPm5uc0OTwnZp21g1r/++XUqIBRV1+ARh/Iu7CFWTjn07aee2KYlKSbXS1TIw395sYdPG0/HAvwwmODo7hGIg81gLo+NSutlIM/jcdbRjBeMBb21a7lzrMgIiScgnGvonLaxJ3z6eBpXEj12bjuvIz4zJ0qICD/96n61q2SXjb42LNgY2jxwJCin6BvPR1dgZgZEw+nZjBxnrsUID3uv5BAQEne3NKgvc3p4Nb14ML45Mx4e4Ofgjibp5Hu4tOOaiPw7u0eXZVNoNWSmJ3/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QIcAw8uKMt2mQAAAZdJREFUeNrt3DEOgkAURVGMe6CnYgOuhIT1zNZtiRIJoAMPz20/1csJ5TQ3KbXGBKJXoleiV/RK9Er0SvSKXoleiV7Rq5WNm7Mdval2AaY32i6+9CbjxZfeZL340ntEw5eyJL300qv6evGll156RS+9f6a3LNBuP95NSe+Beueu/QJPeuk9hd52A+7lu+itoXfbnV56c/UWeumll17RSy+99NJLr+ill17RSy+99NJLr+ill1566aWXXtFLL72il1566aWXXtFLL72il1566aWXXnpFL7300ksvvaL3lHpHeumN1es1EnrppVe/1Dv7wYNeeiP0vn1TvN9Lb5Ber0/TS6/opZdeeumll17RSy+9opdeeumll17RSy+9opdeeumll156RS+99NJL7xX03umlN0DvsO/XSy+99esm9S+3sVuRKek9VO+uTEkvvfSKXnrppZdeekUvvfSKXnrppZfeS/A1JL2xeu1IbyxfK9Iby9eG9Mb6NSC9oleiV6JXolf0SvRK9IpeE4heiV6JXtEr0SvRK016AkbKn4/DmuepAAAAAElFTkSuQmCC",
+        'link' => "https://ninjaforms.com/extensions/trello/?utm_medium=plugin&utm_source=plugin&utm_campaign=Ninja+Forms+Actions+Drawer&utm_content=Trello",
+        'plugin_path' => "ninja-forms-trello/ninja-forms-trello.php"
+    ),
+
 ) );

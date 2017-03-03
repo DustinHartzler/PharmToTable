@@ -3,7 +3,7 @@
 Plugin Name: Ninja Forms
 Plugin URI: http://ninjaforms.com/
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 3.0.27
+Version: 3.0.30
 Author: The WP Ninjas
 Author URI: http://ninjaforms.com
 Text Domain: ninja-forms
@@ -15,6 +15,7 @@ Copyright 2016 WP Ninjas.
 require_once dirname( __FILE__ ) . '/lib/NF_VersionSwitcher.php';
 require_once dirname( __FILE__ ) . '/lib/NF_Tracking.php';
 require_once dirname( __FILE__ ) . '/lib/NF_Conversion.php';
+require_once dirname( __FILE__ ) . '/lib/NF_ExceptionHandlerJS.php';
 require_once dirname( __FILE__ ) . '/lib/Conversion/Calculations.php';
 
 function ninja_forms_three_table_exists(){
@@ -51,7 +52,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
         /**
          * @since 3.0
          */
-        const VERSION = '3.0.27';
+        const VERSION = '3.0.30';
 
         /**
          * @var Ninja_Forms
@@ -290,6 +291,11 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
                  * Opt-In Tracking
                  */
                 self::$instance->tracking = new NF_Tracking();
+
+                /*
+                 * JS Exception Handler
+                 */
+                self::$instance->exception_handler_js = new NF_ExceptionHandlerJS();
 
                 /*
                  * Activation Hook

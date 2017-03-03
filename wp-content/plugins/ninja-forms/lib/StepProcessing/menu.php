@@ -94,7 +94,7 @@ function nf_output_step_processing_page() {
             /*background-size: 100% auto;*/
             background-color: #FFF;
             background-repeat: repeat;
-            background-image: url(<?php echo NF_PLUGIN_URL . 'assets/images/pbar-ani.gif'; ?>);
+            background-image: url(<?php echo NF_PLUGIN_URL . 'assets/img/pbar-ani.gif'; ?>);
         }
 
     </style>

@@ -3,7 +3,7 @@ Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, wpnzach,
 Tags: form, forms, contact form, custom form, form builder, form creator, form manager, form creation, contact forms, custom forms, forms builder, forms creator, forms manager, forms creation, form administration,
 Requires at least: 4.5
 Tested up to: 4.7.2
-Stable tag: 3.0.27
+Stable tag: 3.0.30
 License: GPLv2 or later
 
 Drag and drop fields in an intuitive UI to create create contact forms, email subscription forms, order forms, payment forms, send emails and more!
@@ -102,20 +102,58 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 == Upgrade Notice ==
 
-= 3.0.27 (2 February 2017) =
+= 3.0.30 (28 February 2017) =
 
 *Bugs:*
 
-* Field data should populate properly in all submission exports.
+* Publishing a form should now populate the backup database properly in all environments.
+* Editing submissions that have selects or other lists should now work properly.
+
+*Changes:*
+
+* Added Trello to the available actions list.
+* Added a JS exception catcher to help debug when forms don't display because of JS errors.
 
 == Changelog ==
 
+= 3.0.30 (28 February 2017) =
+
+*Bugs:*
+
+* Publishing a form should now populate the backup database properly in all environments.
+* Editing submissions that have selects or other lists should now work properly.
+
+*Changes:*
+
+* Added Trello to the available actions list.
+* Added a JS exception catcher to help debug when forms don't display because of JS errors.
+
+= 3.0.29 (21 February 2017) =
+
+*Bugs:*
+
+* Fixed a bug that could cause previewed forms from submitting properly.
+
+= 3.0.28 (21 February 2017) =
+
+*Bugs:*
+
+* Fixed a JS notice caused by the use of jQuery.attr() instead of jQuery.prop().
+* Modified the approach to form publishing to improve performance for larger forms and prevent bugs when saving.
+* Google reCaptcha should now work properly when a field has an error.
+
+*Changes:*
+
+* Added a jQuery event: "nfFormReady" to the document that can be used to fire JS code when a form has loaded.
+* Using jQuery.val() should now properly work for Ninja Forms fields.
+* Updated the update check URL for add-ons.
+* Added a filter for form settings upon form display localization.
+
 = 3.0.27 (2 February 2017) =
 
 *Bugs:*
 
 * Field data should populate properly in all submission exports.
-
 
 = 3.0.26 (30 January 2017) =
 

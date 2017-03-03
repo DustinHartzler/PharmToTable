@@ -30,7 +30,9 @@ class NF_Fields_ListCheckbox extends NF_Abstracts_List
 
     public function admin_form_element( $id, $value )
     {
-        $field = Ninja_Forms()->form()->get_field( $id );
+        $form_id = get_post_meta( absint( $_GET[ 'post' ] ), '_form_id', true );
+
+        $field = Ninja_Forms()->form( $form_id )->get_field( $id );
 
         $list = '';
         foreach( $field->get_setting( 'options' ) as $option ){

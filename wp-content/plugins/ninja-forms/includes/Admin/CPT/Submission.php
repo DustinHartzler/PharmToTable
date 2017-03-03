@@ -178,12 +178,14 @@ class NF_Admin_CPT_Submission
             echo apply_filters( 'nf_sub_table_seq_num', $sub->get_seq_num(), $sub_id, $column );
         }
 
+        $form_id = absint( $_GET[ 'form_id' ] );
+
         if( is_numeric( $column ) ){
             $value = $sub->get_field_value( $column );
 
             static $fields;
             if( ! isset( $fields[ $column ] ) ) {
-                $fields[$column] = Ninja_Forms()->form()->get_field($column);
+                $fields[$column] = Ninja_Forms()->form( $form_id )->get_field( $column );
             }
             $field = $fields[$column];
             echo apply_filters( 'ninja_forms_custom_columns', $value, $field, $sub_id );

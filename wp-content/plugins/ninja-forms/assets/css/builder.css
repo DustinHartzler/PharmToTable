@@ -725,10 +725,17 @@ All styles used within the drawer
   padding: 0 10px; }
 
 .ninja-forms-app .nf-setting-label, .ninja-forms-app label, .ninja-forms-app legend {
+  position: relative;
   color: #424242;
   display: block;
   font-size: 13px;
   text-transform: uppercase; }
+  .ninja-forms-app .nf-setting-label .open-media-manager, .ninja-forms-app label .open-media-manager, .ninja-forms-app legend .open-media-manager {
+    position: absolute;
+    color: #ccc;
+    right: 15px;
+    top: 5px;
+    text-decoration: none; }
 
 .ninja-forms-app input[type=text],
 .ninja-forms-app input[type=number],
@@ -1149,7 +1156,6 @@ input[type=checkbox].nf-toggle {
   .ninja-forms-app .nf-select select {
     background: transparent;
     border: 0;
-    box-shadow: 0 0 0;
     margin-top: 7px;
     height: 41px !important;
     padding: 0 30px 0 15px;

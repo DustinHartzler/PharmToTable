@@ -111,6 +111,7 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
          * For performance reasons, this should be the only time that the fields array is traversed.
          * Anything needing to loop through fields should integrate here.
          */
+         $validate_fields = apply_filters( 'ninja_forms_validate_fields', true, $this->_data );
         foreach( $form_fields as $key => $field ){
 
             if( is_object( $field ) ) {
@@ -156,7 +157,9 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
             $field = array_merge( $field, $field[ 'settings' ] );
 
             /** Validate the Field */
-            $this->validate_field( $field );
+            if( $validate_fields ){
+                $this->validate_field( $field );
+            }
 
             /** Process the Field */
             $this->process_field( $field );

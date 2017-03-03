@@ -459,6 +459,13 @@ Label Three, value-three, 3
     </label>
 </script>
 
+<script id="tmpl-nf-edit-setting-media" type="text/template">
+    <label for="{{{ data.name }}}" class="{{{ data.renderLabelClasses() }}} has-merge-tags">{{{ data.label }}} {{{ data.renderTooltip() }}}
+        <input type="text" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" {{{ data.renderPlaceholder() }}} />
+        <span class="extra open-media-manager dashicons dashicons-admin-media merge-tags"></span>
+    </label>
+</script>
+
 <script id="tmpl-nf-edit-setting-datepicker" type="text/template">
     <label for="{{{ data.name }}}" class="{{{ data.renderLabelClasses() }}}">{{{ data.label }}} {{{ data.renderTooltip() }}}
         <input type="text" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" {{{ data.renderPlaceholder() }}} />
@@ -533,7 +540,7 @@ Label Three, value-three, 3
 <script id="tmpl-nf-edit-setting-toggle" type="text/template">
 
     <span class="nf-setting-label">{{{ data.label }}}{{{ data.renderTooltip() }}}</span>
-    <input type="checkbox" id="{{{ data.name }}}" class="nf-toggle setting" {{{ ( 1 == data.value ) ? 'checked' : '' }}} />
+    <input type="checkbox" data-setting="{{{ data.settingName }}}" id="{{{ data.name }}}" class="nf-toggle setting" {{{ ( 1 == data.value ) ? 'checked' : '' }}} />
     <label for="{{{ data.name }}}">{{{ data.label }}}</label>
 
 </script>

@@ -175,9 +175,30 @@ class NF_Abstracts_ModelFactory
      */
     public function get_field( $id )
     {
-        $form_id = $this->_object->get_id();
+    	if( isset( $this->_fields[ $id ] ) ){
+            return $this->_fields[ $id ];
+        }
 
-        return $this->_fields[ $id ] = new NF_Database_Models_Field( $this->_db, $id, $form_id );
+        /* MISSING FORM ID FALLBACK */
+        /*
+        if( ! $form_id ){
+            $form_id = $wpdb->get_var( $wpdb->prepare(
+                "SELECT parent_id from {$wpdb->prefix}nf3_fields WHERE id = %d", $id
+            ));
+            $this->_object = $this->_form = new NF_Database_Models_Form( $this->_db, $id );
+        }
+        */
+
+        if( ! $this->_fields ){
+			$this->get_fields();
+        }
+
+        if( ! isset( $this->_fields[ $id ] ) ){
+            $form_id = $this->_object->get_id();
+            $this->_fields[ $id ] = new NF_Database_Models_Field( $this->_db, $id, $form_id );
+        }
+
+        return $this->_fields[ $id ];
     }
 
     /**
@@ -209,7 +230,7 @@ class NF_Abstracts_ModelFactory
                 }
             } else {
                 foreach( $form_cache[ 'fields' ] as $cached_field ){
-                    $field = Ninja_Forms()->form( $form_id )->get_field( $cached_field[ 'id' ] );
+                    $field = new NF_Database_Models_Field( $this->_db, $cached_field[ 'id' ], $form_id );
                     $field->update_settings( $cached_field[ 'settings' ] );
                     $this->_fields[$field->get_id()] = $field;
                     $field_by_key[ $field->get_setting( 'key' ) ] = $field;
