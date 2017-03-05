@@ -149,20 +149,47 @@ class PrliAppController extends PrliBaseController {
     $ui = $wp_scripts->query('jquery-ui-core');
     $url = "//ajax.googleapis.com/ajax/libs/jqueryui/{$ui->ver}/themes/smoothness/jquery-ui.css";
 
-    if(strstr($hook, 'pretty') !== false) {
-      wp_enqueue_style('pl-ui-smoothness', $url);
-      wp_enqueue_script('jquery');
-      wp_enqueue_script('jquery-ui-datepicker');
+    if(strstr($hook, 'pretty-link') !== false) {
+      wp_register_style('pl-ui-smoothness', $url);
+      wp_register_style('prli-simplegrid', PRLI_CSS_URL.'/simplegrid.css', array(), PRLI_VERSION);
+      wp_register_style('prli-social', PRLI_CSS_URL.'/social_buttons.css', array(), PRLI_VERSION);
+      wp_enqueue_style(
+        'prli-admin-shared',
+        PRLI_CSS_URL.'/admin_shared.css',
+        array(
+          'wp-pointer',
+          'prli-simplegrid',
+          'prli-social',
+        ),
+        PRLI_VERSION
+      );
 
-      wp_enqueue_style('prli-simplegrid', PRLI_CSS_URL.'/simplegrid.css', array(), PRLI_VERSION);
-      wp_enqueue_style('prli-admin-shared', PRLI_CSS_URL.'/admin_shared.css', array('wp-pointer','prli-simplegrid'), PRLI_VERSION);
-      wp_enqueue_style('prli-social', PRLI_CSS_URL.'/social_buttons.css', array(), PRLI_VERSION);
 
-      wp_enqueue_script('prli-tooltip', PRLI_JS_URL.'/tooltip.js', array('jquery', 'wp-pointer'), PRLI_VERSION);
-      wp_localize_script('prli-tooltip', 'PrliTooltip', array( 'show_about_notice' => $this->show_about_notice(),
-                                                               'about_notice' => $this->about_notice() ));
-
-      wp_enqueue_script('prli-admin-shared', PRLI_JS_URL.'/admin_shared.js', array('jquery','jquery-ui-sortable'), PRLI_VERSION);
+      wp_register_script(
+        'prli-tooltip',
+        PRLI_JS_URL.'/tooltip.js',
+        array('jquery', 'wp-pointer'),
+        PRLI_VERSION
+      );
+      wp_localize_script(
+        'prli-tooltip',
+        'PrliTooltip',
+        array(
+          'show_about_notice' => $this->show_about_notice(),
+          'about_notice' => $this->about_notice()
+        )
+      );
+      wp_enqueue_script(
+        'prli-admin-shared',
+        PRLI_JS_URL.'/admin_shared.js',
+        array(
+          'jquery',
+          'jquery-ui-datepicker',
+          'jquery-ui-sortable',
+          'prli-tooltip'
+        ),
+        PRLI_VERSION
+      );
     }
 
     if( in_array( $hook, array( 'toplevel_page_pretty-link', 'pretty-link_page_add-new-pretty-link' ) ) ) {
@@ -308,9 +335,15 @@ class PrliAppController extends PrliBaseController {
 
   // Create the function use in the action hook
   public function add_dashboard_widgets() {
+    global $plp_options;
     $current_user = PrliUtils::get_currentuserinfo();
 
-    if($current_user->user_level >= 8) {
+    $role = 'administrator';
+    if(isset($plp_options->min_role)) {
+      $role = $plp_options->min_role;
+    }
+
+    if(current_user_can($role)) {
       wp_add_dashboard_widget('prli_dashboard_widget', __('Pretty Link Quick Add', 'pretty-link'), array($this,'dashboard_widget_function'));
 
       // Globalize the metaboxes array, this holds all the widgets for wp-admin

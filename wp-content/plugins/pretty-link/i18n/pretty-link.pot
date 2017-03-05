@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Pretty Link package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Link 2.0.4\n"
+"Project-Id-Version: Pretty Link 2.0.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
-"POT-Creation-Date: 2017-02-09 22:28:15+00:00\n"
+"POT-Creation-Date: 2017-02-23 13:51:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,7 +17,7 @@ msgstr ""
 msgid "Pretty Link | Manage Pretty Links"
 msgstr ""
 
-#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.0.4)  #-#-#-#-#
+#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.0.6)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: app/controllers/PrliAppController.php:37
 #: app/controllers/PrliAppController.php:46 app/views/links/form.php:47
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Pretty Link | Clicks"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:73 app/models/PrliClick.php:230
+#: app/controllers/PrliAppController.php:73 app/models/PrliClick.php:259
 #: app/views/clicks/list.php:4 app/views/groups/list.php:69
 #: pro/app/helpers/PlpPostsHelper.php:61 pro/app/views/links/form.php:36
 #: pro/app/views/links/form.php:48 pro/app/views/reports/custom-report.php:31
@@ -98,21 +98,21 @@ msgstr ""
 msgid "Buy"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:252
+#: app/controllers/PrliAppController.php:279
 msgid ""
 "You're almost done!<br/>%1$sFinish your Re-Install of Pretty Link Pro%2$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:259
+#: app/controllers/PrliAppController.php:286
 msgid "Pretty Link Pro Successfully Uninstalled."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:314
+#: app/controllers/PrliAppController.php:347
 msgid "Pretty Link Quick Add"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:352
-#: app/controllers/PrliAppController.php:371
+#: app/controllers/PrliAppController.php:385
+#: app/controllers/PrliAppController.php:404
 msgid ""
 "Your Pretty Link Pro installation isn't quite complete yet.<br/>"
 "%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
@@ -223,6 +223,30 @@ msgstr ""
 msgid ""
 "Whitlist IP Addresses must be a comma separated list of IPv4 or IPv6 "
 "addresses or ranges."
+msgstr ""
+
+#: app/controllers/PrliPopupController.php:62
+msgid "An unknown error occurred."
+msgstr ""
+
+#: app/controllers/PrliPopupController.php:89
+msgid "Forbidden"
+msgstr ""
+
+#: app/controllers/PrliPopupController.php:93
+msgid "Must specify a popup"
+msgstr ""
+
+#: app/controllers/PrliPopupController.php:99
+msgid "Invalid popup"
+msgstr ""
+
+#: app/controllers/PrliPopupController.php:104
+msgid "The popup was successfully delayed"
+msgstr ""
+
+#: app/controllers/PrliPopupController.php:108
+msgid "The popup was successfully stopped"
 msgstr ""
 
 #: app/controllers/PrliToolsController.php:89
@@ -468,71 +492,71 @@ msgstr ""
 msgid "Send %s in an Email"
 msgstr ""
 
-#: app/models/PrliClick.php:208
+#: app/models/PrliClick.php:237
 msgid "group: '%s'"
 msgstr ""
 
-#: app/models/PrliClick.php:211
+#: app/models/PrliClick.php:240
 msgid "all links"
 msgstr ""
 
-#: app/models/PrliClick.php:218
+#: app/models/PrliClick.php:247
 msgid "All clicks"
 msgstr ""
 
-#: app/models/PrliClick.php:221
+#: app/models/PrliClick.php:250
 msgid "Unique hits"
 msgstr ""
 
-#: app/models/PrliClick.php:225 pro/app/helpers/PlpPostsHelper.php:66
+#: app/models/PrliClick.php:254 pro/app/helpers/PlpPostsHelper.php:66
 msgid "Pretty Link:"
 msgstr ""
 
-#: app/models/PrliClick.php:225
+#: app/models/PrliClick.php:254
 msgid "on"
 msgstr ""
 
-#: app/models/PrliClick.php:225 pro/app/models/PlpReport.php:385
+#: app/models/PrliClick.php:254 pro/app/models/PlpReport.php:385
 msgid "between"
 msgstr ""
 
-#: app/models/PrliClick.php:225 pro/app/models/PlpReport.php:244
+#: app/models/PrliClick.php:254 pro/app/models/PlpReport.php:244
 #: pro/app/models/PlpReport.php:385
 msgid "and"
 msgstr ""
 
-#: app/models/PrliClick.php:230 pro/app/views/links/form.php:35
+#: app/models/PrliClick.php:259 pro/app/views/links/form.php:35
 #: pro/app/views/links/form.php:68
 msgid "Date"
 msgstr ""
 
-#: app/models/PrliLink.php:538
+#: app/models/PrliLink.php:550
 msgid "Target URL can't be blank"
 msgstr ""
 
-#: app/models/PrliLink.php:542
+#: app/models/PrliLink.php:554
 msgid "Pretty Link can't be blank"
 msgstr ""
 
-#: app/models/PrliLink.php:546
+#: app/models/PrliLink.php:558
 msgid "Target URL must be different than the Pretty Link"
 msgstr ""
 
-#: app/models/PrliLink.php:550
+#: app/models/PrliLink.php:562
 msgid "Link URL must be a correctly formatted url"
 msgstr ""
 
-#: app/models/PrliLink.php:554
+#: app/models/PrliLink.php:566
 msgid ""
 "Pretty Link slugs must not contain question marks, ampersands or number "
 "signs."
 msgstr ""
 
-#: app/models/PrliLink.php:558
+#: app/models/PrliLink.php:570
 msgid "Pretty Link slugs must not end with a slash (\"/\")"
 msgstr ""
 
-#: app/models/PrliLink.php:563
+#: app/models/PrliLink.php:575
 msgid ""
 "This Pretty Link Slug is already taken. Check to make sure it isn't being "
 "used by another pretty link, post, page, category or tag slug. If none of "
@@ -546,6 +570,74 @@ msgstr ""
 
 #: app/views/admin/errors.php:7 app/views/shared/errors.php:12
 msgid "ERROR"
+msgstr ""
+
+#: app/views/admin/popups/rating.php:6
+msgid "Rate Pretty Link"
+msgstr ""
+
+#: app/views/admin/popups/rating.php:7
+msgid ""
+"If you enjoy using Pretty Link would you mind taking a moment to rate it on "
+"WordPress.org? It won't take more than a minute."
+msgstr ""
+
+#: app/views/admin/popups/rating.php:8
+msgid "Thanks for your support!"
+msgstr ""
+
+#: app/views/admin/popups/rating.php:13 app/views/admin/popups/upgrade.php:22
+msgid "Remind Me Later"
+msgstr ""
+
+#: app/views/admin/popups/rating.php:14
+msgid "Review Pretty Link"
+msgstr ""
+
+#: app/views/admin/popups/rating.php:16 app/views/admin/popups/upgrade.php:25
+msgid "Never Remind Me Again"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:6
+msgid "Upgrade Pretty Link PRO"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:7
+msgid "Upgrading will enable you to:"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:9
+msgid "Cloak links"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:10
+msgid "Redirect based on location"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:11
+msgid "Auto-prettylink your Pages &amp; Posts"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:12
+msgid "Auto-replace links throughout your site with Pretty Links"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:13
+msgid "And much, much more!"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:16
+msgid ""
+"Plus, upgrading is fast, easy and won't disrupt any of your existing links "
+"or data. And there's even a 14 day money back guarantee."
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:17
+msgid "We think you'll love it!"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:23
+msgid "Upgrade to Pretty Link Pro"
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:4

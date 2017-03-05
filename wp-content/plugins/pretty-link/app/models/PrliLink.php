@@ -2,12 +2,24 @@
 if(!defined('ABSPATH')) { die('You are not allowed to call this page directly.'); }
 
 class PrliLink {
-    public $table_name;
+  public $table_name;
 
-    public function __construct() {
-      global $wpdb;
-      $this->table_name = "{$wpdb->prefix}prli_links";
-    }
+  public function __construct() {
+    global $wpdb;
+    $this->table_name = "{$wpdb->prefix}prli_links";
+  }
+
+  public static function get_count() {
+    global $wpdb, $prli_link;
+    $q = "SELECT COUNT(*) FROM {$prli_link->table_name}";
+    return $wpdb->get_var($q);
+  }
+
+  public static function get_first_date() {
+    global $wpdb, $prli_link;
+    $q = "SELECT min(created_at) FROM {$prli_link->table_name}";
+    return $wpdb->get_var($q);
+  }
 
     public function create( $values ) {
       global $wpdb, $prli_link_meta;

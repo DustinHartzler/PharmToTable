@@ -10,6 +10,35 @@ class PrliClick {
     $this->table_name = "{$wpdb->prefix}prli_clicks";
   }
 
+  public static function get_count() {
+    global $wpdb, $prli_options, $prli_click;
+
+    if($prli_options->extended_tracking != 'count') {
+      $q = "SELECT COUNT(*) FROM {$prli_click->table_name}";
+    }
+    else {
+      $q = "
+        SELECT SUM(CAST(meta_value AS SIGNED))
+          FROM {$wpdb->prefix}prli_link_metas
+         WHERE meta_key='static-clicks'
+      ";
+    }
+
+    return $wpdb->get_var($q);
+  }
+
+  public static function get_first_date() {
+    global $wpdb, $prli_options, $prli_click;
+
+    if($prli_options->extended_tracking != 'count') {
+      $q = "SELECT min(created_at) FROM {$prli_click->table_name}";
+      return $wpdb->get_var($q);
+    }
+    else {
+      return false;
+    }
+  }
+
   public function get_exclude_where_clause( $where = '', $abbr = 'cl') {
     global $prli_options;
     $exclude_list = trim($prli_options->prli_exclude_ips);
