@@ -157,12 +157,14 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
             $field = array_merge( $field, $field[ 'settings' ] );
 
             /** Validate the Field */
-            if( $validate_fields ){
+            if( $validate_fields && ! isset( $this->_data[ 'resume' ] ) ){
                 $this->validate_field( $field );
             }
 
             /** Process the Field */
-            $this->process_field( $field );
+            if( ! isset( $this->_data[ 'resume' ] ) ) {
+                $this->process_field($field);
+            }
             $field = array_merge( $field, $this->_form_data[ 'fields' ][ $field_id ] );
 
             /** Populate Field Merge Tag */

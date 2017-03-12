@@ -715,17 +715,18 @@ All styles used within the drawer
   display: block;
   margin-bottom: 20px; }
 
-.ninja-forms-app label::after {
-  clear: both;
-  content: "";
-  display: block; }
+.ninja-forms-app label {
+  position: relative; }
+  .ninja-forms-app label::after {
+    clear: both;
+    content: "";
+    display: block; }
 
 .ninja-forms-app legend {
   margin: 0 3px 10px;
   padding: 0 10px; }
 
 .ninja-forms-app .nf-setting-label, .ninja-forms-app label, .ninja-forms-app legend {
-  position: relative;
   color: #424242;
   display: block;
   font-size: 13px;

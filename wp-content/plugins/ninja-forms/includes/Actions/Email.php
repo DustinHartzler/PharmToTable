@@ -76,6 +76,10 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         if( $errors ){
             $data[ 'errors' ][ 'form' ] = $errors;
         }
+        
+        if ( ! empty( $attachments ) ) {
+            $this->_drop_csv();
+        }
 
         return $data;
     }
@@ -197,6 +201,8 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         foreach( $fields as $field ){
 
             if( ! isset( $field[ 'label' ] ) ) continue;
+            if( 'hr' == $field['type'] ) continue;
+            if( 'submit' == $field['type'] ) continue;
 
             $csv_array[ 0 ][] = $field[ 'label' ];
             $csv_array[ 1 ][] = WPN_Helper::stripslashes( $field[ 'value' ] );
@@ -235,6 +241,23 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         // move file
         rename( $dir.'/'.$basename, $dir.'/'.$new_name.'.csv' );
         return $dir.'/'.$new_name.'.csv';
+    }
+    
+    /**
+     * Function to delete csv file from temp directory after Email Action has completed.
+     */
+    private function _drop_csv()
+    {
+        $upload_dir = wp_upload_dir();
+        $path = trailingslashit( $upload_dir['path'] );
+
+        // create name for file
+        $new_name = apply_filters( 'ninja_forms_submission_csv_name', 'ninja-forms-submission' );
+
+        // remove a file if it already exists
+        if( file_exists( $path.'/'.$new_name.'.csv' ) ) {
+            unlink( $path.'/'.$new_name.'.csv' );
+        }
     }
 
     /*

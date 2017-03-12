@@ -100,7 +100,13 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
     {
         $template = sanitize_title( $_GET['form_id'] );
 
-        $form = Ninja_Forms::template( $template . '.nff', array(), TRUE );
+        $templates = Ninja_Forms::config( 'NewFormTemplates' );
+
+        if( isset( $templates[ $template ] ) && ! empty( $templates[ $template ][ 'form' ] ) ) {
+            $form = $templates[ $template ][ 'form' ];
+        } else {
+            $form = Ninja_Forms::template( $template . '.nff', array(), TRUE );
+        }
 
         if( ! $form ) die( 'Template not found' );
 

@@ -800,7 +800,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'type' => 'field-select',
         'label' => __( 'Confirm', 'ninja-forms' ),
         'width' => 'full',
-        'group' => 'advanced'
+        'group' => 'primary'
     ),
 
     /*

@@ -3,7 +3,7 @@ Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, wpnzach,
 Tags: form, forms, contact form, custom form, form builder, form creator, form manager, form creation, contact forms, custom forms, forms builder, forms creator, forms manager, forms creation, form administration,
 Requires at least: 4.5
 Tested up to: 4.7.2
-Stable tag: 3.0.30
+Stable tag: 3.0.31
 License: GPLv2 or later
 
 Drag and drop fields in an intuitive UI to create create contact forms, email subscription forms, order forms, payment forms, send emails and more!
@@ -102,19 +102,33 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 == Upgrade Notice ==
 
-= 3.0.30 (28 February 2017) =
+= 3.0.31 (07 March 2017) =
 
 *Bugs:*
 
-* Publishing a form should now populate the backup database properly in all environments.
-* Editing submissions that have selects or other lists should now work properly.
+* Confirmed password fields should work properly.
+* Fixed a bug with List Fields that caused the Import button to overlap the Add New button.
+* Closed a possible security vulnerability by escaping HTML in the builder.
+* CSV files should now be deleted from the server after they are emailed when attached to an email action.
 
 *Changes:*
 
-* Added Trello to the available actions list.
-* Added a JS exception catcher to help debug when forms don't display because of JS errors.
+* Added a filter so that add-ons and custom code can add forms to the templates section of the New Form builder.
 
 == Changelog ==
+
+= 3.0.31 (07 March 2017) =
+
+*Bugs:*
+
+* Confirmed password fields should work properly.
+* Fixed a bug with List Fields that caused the Import button to overlap the Add New button.
+* Closed a possible security vulnerability by escaping HTML in the builder.
+* CSV files should now be deleted from the server after they are emailed when attached to an email action.
+
+*Changes:*
+
+* Added a filter so that add-ons and custom code can add forms to the templates section of the New Form builder.
 
 = 3.0.30 (28 February 2017) =
 
