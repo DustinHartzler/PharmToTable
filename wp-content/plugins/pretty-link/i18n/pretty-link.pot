@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Pretty Link package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Link 2.0.6\n"
+"Project-Id-Version: Pretty Link 2.0.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
-"POT-Creation-Date: 2017-02-23 13:51:57+00:00\n"
+"POT-Creation-Date: 2017-03-08 17:52:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,7 +17,7 @@ msgstr ""
 msgid "Pretty Link | Manage Pretty Links"
 msgstr ""
 
-#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.0.6)  #-#-#-#-#
+#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.0.7)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: app/controllers/PrliAppController.php:37
 #: app/controllers/PrliAppController.php:46 app/views/links/form.php:47
@@ -166,38 +166,42 @@ msgstr ""
 msgid "Your Pretty Link Group was Successfully Deleted"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:45
+#: app/controllers/PrliLinksController.php:52
 msgid "Links in Group: "
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:91
-#: app/controllers/PrliLinksController.php:112
+#: app/controllers/PrliLinksController.php:98
+#: app/controllers/PrliLinksController.php:119
 msgid "Your Pretty Link was Successfully Created"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:145
+#: app/controllers/PrliLinksController.php:152
 msgid "Your Pretty Link was Successfully Updated"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:160
+#: app/controllers/PrliLinksController.php:167
 msgid "Your links were updated successfully"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:177
-#: app/controllers/PrliLinksController.php:217
+#: app/controllers/PrliLinksController.php:184
+#: app/controllers/PrliLinksController.php:224
 msgid "You are unauthorized to view this page."
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:184
+#: app/controllers/PrliLinksController.php:191
 msgid "Your Pretty Link was Successfully Reset"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:191
+#: app/controllers/PrliLinksController.php:198
 msgid "Your Pretty Link was Successfully Destroyed"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:204
+#: app/controllers/PrliLinksController.php:211
 msgid "Your links were deleted successfully"
+msgstr ""
+
+#: app/controllers/PrliLinksController.php:503
+msgid "Pretty Link Cleanup Visitor Locks"
 msgstr ""
 
 #: app/controllers/PrliLocalApiController.php:101
@@ -265,23 +269,23 @@ msgstr ""
 msgid "Why you creepin'?"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:302
+#: app/controllers/PrliUpdateController.php:303
 msgid "Check for Update"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:371
+#: app/controllers/PrliUpdateController.php:372
 msgid "You had an HTTP error connecting to Caseproof's Mothership API"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:383
+#: app/controllers/PrliUpdateController.php:384
 msgid "Your License Key was invalid"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:409
+#: app/controllers/PrliUpdateController.php:410
 msgid "You do not have access."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:413
+#: app/controllers/PrliUpdateController.php:414
 msgid "Edge updates couldn't be updated."
 msgstr ""
 
@@ -360,7 +364,7 @@ msgstr ""
 #: app/helpers/PrliAppHelper.php:23 app/helpers/PrliLinksHelper.php:14
 #: app/views/links/form.php:100 app/views/shared/tinymce_form_popup.php:106
 #: app/views/shared/tinymce_form_popup.php:110 pro/app/views/links/form.php:185
-#: pro/app/views/options/form.php:703 pro/app/views/tools/generator.php:59
+#: pro/app/views/options/form.php:703 pro/app/views/tools/generator.php:35
 #: pro/app/widgets/PlpPublicLinksWidget.php:80
 msgid "None"
 msgstr ""
@@ -530,33 +534,33 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: app/models/PrliLink.php:550
+#: app/models/PrliLink.php:559
 msgid "Target URL can't be blank"
 msgstr ""
 
-#: app/models/PrliLink.php:554
+#: app/models/PrliLink.php:563
 msgid "Pretty Link can't be blank"
 msgstr ""
 
-#: app/models/PrliLink.php:558
+#: app/models/PrliLink.php:567
 msgid "Target URL must be different than the Pretty Link"
 msgstr ""
 
-#: app/models/PrliLink.php:562
+#: app/models/PrliLink.php:571
 msgid "Link URL must be a correctly formatted url"
 msgstr ""
 
-#: app/models/PrliLink.php:566
+#: app/models/PrliLink.php:575
 msgid ""
 "Pretty Link slugs must not contain question marks, ampersands or number "
 "signs."
 msgstr ""
 
-#: app/models/PrliLink.php:570
+#: app/models/PrliLink.php:579
 msgid "Pretty Link slugs must not end with a slash (\"/\")"
 msgstr ""
 
-#: app/models/PrliLink.php:575
+#: app/models/PrliLink.php:584
 msgid ""
 "This Pretty Link Slug is already taken. Check to make sure it isn't being "
 "used by another pretty link, post, page, category or tag slug. If none of "
@@ -586,7 +590,7 @@ msgstr ""
 msgid "Thanks for your support!"
 msgstr ""
 
-#: app/views/admin/popups/rating.php:13 app/views/admin/popups/upgrade.php:22
+#: app/views/admin/popups/rating.php:13 app/views/admin/popups/upgrade.php:23
 msgid "Remind Me Later"
 msgstr ""
 
@@ -594,7 +598,7 @@ msgstr ""
 msgid "Review Pretty Link"
 msgstr ""
 
-#: app/views/admin/popups/rating.php:16 app/views/admin/popups/upgrade.php:25
+#: app/views/admin/popups/rating.php:16 app/views/admin/popups/upgrade.php:26
 msgid "Never Remind Me Again"
 msgstr ""
 
@@ -606,37 +610,49 @@ msgstr ""
 msgid "Upgrading will enable you to:"
 msgstr ""
 
-#: app/views/admin/popups/upgrade.php:9
-msgid "Cloak links"
+#: app/views/admin/popups/upgrade.php:9 app/views/admin/update/license.php:36
+#: app/views/links/form.php:225
+msgid "Auto-replace keywords throughout your site with Pretty Links"
 msgstr ""
 
-#: app/views/admin/popups/upgrade.php:10
-msgid "Redirect based on location"
+#: app/views/admin/popups/upgrade.php:10 app/views/admin/update/license.php:37
+#: app/views/links/form.php:226
+msgid "Protect your affiliate links by using Cloaked Redirects"
 msgstr ""
 
-#: app/views/admin/popups/upgrade.php:11
+#: app/views/admin/popups/upgrade.php:11 app/views/admin/update/license.php:38
+#: app/views/links/form.php:227
+msgid "Redirect based on a visitor's location"
+msgstr ""
+
+#: app/views/admin/popups/upgrade.php:12 app/views/admin/update/license.php:39
+#: app/views/links/form.php:228
 msgid "Auto-prettylink your Pages &amp; Posts"
 msgstr ""
 
-#: app/views/admin/popups/upgrade.php:12
-msgid "Auto-replace links throughout your site with Pretty Links"
+#: app/views/admin/popups/upgrade.php:13 app/views/admin/update/license.php:40
+#: app/views/links/form.php:229
+msgid "Find out what works and what doesn't by split testing your links"
 msgstr ""
 
-#: app/views/admin/popups/upgrade.php:13
+#: app/views/admin/popups/upgrade.php:14 app/views/admin/update/license.php:41
+#: app/views/links/form.php:230
 msgid "And much, much more!"
 msgstr ""
 
-#: app/views/admin/popups/upgrade.php:16
+#: app/views/admin/popups/upgrade.php:17 app/views/admin/update/license.php:45
+#: app/views/links/form.php:233
 msgid ""
 "Plus, upgrading is fast, easy and won't disrupt any of your existing links "
 "or data. And there's even a 14 day money back guarantee."
 msgstr ""
 
-#: app/views/admin/popups/upgrade.php:17
+#: app/views/admin/popups/upgrade.php:18 app/views/admin/update/license.php:47
+#: app/views/links/form.php:235
 msgid "We think you'll love it!"
 msgstr ""
 
-#: app/views/admin/popups/upgrade.php:23
+#: app/views/admin/popups/upgrade.php:24
 msgid "Upgrade to Pretty Link Pro"
 msgstr ""
 
@@ -788,100 +804,53 @@ msgstr ""
 
 #: app/views/admin/update/license.php:30 app/views/links/form.php:221
 msgid ""
-"It looks like you're missing out on quite a few awesome features because you "
-"haven't %1$sUpgraded to Pretty Link Pro%2$s yet. Here are just a few of the "
-"features you're missing out on:"
+"It looks like you haven't %1$supgraded to Pretty Link Pro%2$s yet. Here are "
+"just a few things you could be doing with pro:"
 msgstr ""
 
-#: app/views/admin/update/license.php:36 app/views/links/form.php:225
-msgid "Cloaked Redirects"
-msgstr ""
-
-#: app/views/admin/update/license.php:37 app/views/links/form.php:226
-msgid "Keyword Link Replacements"
-msgstr ""
-
-#: app/views/admin/update/license.php:38 app/views/links/form.php:227
-msgid "Weighted Link Rotations"
-msgstr ""
-
-#: app/views/admin/update/license.php:39 app/views/links/form.php:228
-msgid "Link Expirations"
-msgstr ""
-
-#: app/views/admin/update/license.php:40 app/views/links/form.php:229
-#: pro/app/views/links/form.php:281 pro/app/views/links/form.php:284
-msgid "Geographic Redirects"
-msgstr ""
-
-#: app/views/admin/update/license.php:41 app/views/links/form.php:230
-msgid "Technology Based Redirects"
-msgstr ""
-
-#: app/views/admin/update/license.php:42 app/views/links/form.php:231
-#: pro/app/views/links/form.php:309 pro/app/views/links/form.php:312
-msgid "Time Period Redirects"
-msgstr ""
-
-#: app/views/admin/update/license.php:43 app/views/links/form.php:232
-msgid "Double Redirects"
-msgstr ""
-
-#: app/views/admin/update/license.php:44 app/views/links/form.php:233
-msgid "Split Tests"
-msgstr ""
-
-#: app/views/admin/update/license.php:45 app/views/links/form.php:234
-msgid "Automated Link Disclosures"
-msgstr ""
-
-#: app/views/admin/update/license.php:46 app/views/links/form.php:235
-msgid "... and much more"
-msgstr ""
-
-#: app/views/admin/update/license.php:51 app/views/links/form.php:238
+#: app/views/admin/update/license.php:49 app/views/links/form.php:237
 msgid "Upgrade to Pro today!"
 msgstr ""
 
-#: app/views/admin/update/license.php:55
+#: app/views/admin/update/license.php:53
 msgid "Active License Key Information:"
 msgstr ""
 
-#: app/views/admin/update/license.php:58
+#: app/views/admin/update/license.php:56
 msgid "License Key:"
 msgstr ""
 
-#: app/views/admin/update/license.php:62
+#: app/views/admin/update/license.php:60
 msgid "Status:"
 msgstr ""
 
-#: app/views/admin/update/license.php:63
+#: app/views/admin/update/license.php:61
 msgid "<b>Active on %s</b>"
 msgstr ""
 
-#: app/views/admin/update/license.php:66
+#: app/views/admin/update/license.php:64
 msgid "Product:"
 msgstr ""
 
-#: app/views/admin/update/license.php:70
+#: app/views/admin/update/license.php:68
 msgid "Activations:"
 msgstr ""
 
-#: app/views/admin/update/license.php:74
+#: app/views/admin/update/license.php:72
 msgid ""
 "Are you sure? Pretty Link Pro will not be functional on %s if this License "
 "Key is deactivated."
 msgstr ""
 
-#: app/views/admin/update/license.php:74
+#: app/views/admin/update/license.php:72
 msgid "Deactivate License Key on %s"
 msgstr ""
 
-#: app/views/admin/update/license.php:77
+#: app/views/admin/update/license.php:75
 msgid "Upgrade plugin to Pro"
 msgstr ""
 
-#: app/views/admin/update/license.php:82
+#: app/views/admin/update/license.php:80
 msgid "You're currently running version %s of Pretty Link Pro"
 msgstr ""
 
@@ -1130,8 +1099,9 @@ msgstr ""
 
 #: app/views/links/form.php:24
 msgid ""
-"To Enable Cloaked, Meta-Refresh, Javascript, Pixel and Pretty Bar "
-"Redirection, upgrade to %sPretty Link Pro%s"
+"Make your life easier by upgrading to %1$sPretty Link Pro%2$s -- get more "
+"redirection types, speed, automations and <b>results from your links</b> by "
+"%1$sgoing pro today!%2$s"
 msgstr ""
 
 #: app/views/links/form.php:31
@@ -1559,7 +1529,7 @@ msgstr ""
 #: app/views/shared/tinymce_form_popup.php:62
 #: app/views/shared/tinymce_form_popup.php:79
 #: app/views/shared/tinymce_form_popup.php:87
-#: pro/app/views/tools/generator.php:46 pro/app/views/tools/generator.php:51
+#: pro/app/views/tools/generator.php:22 pro/app/views/tools/generator.php:27
 #: pro/app/widgets/PlpPublicLinksWidget.php:59
 #: pro/app/widgets/PlpPublicLinksWidget.php:71
 msgid "Default"
@@ -1634,8 +1604,8 @@ msgstr ""
 msgid "Trim Clicks"
 msgstr ""
 
-#: app/views/tools/form.php:26 pro/app/views/tools/generator.php:31
-#: pro/app/views/tools/generator.php:41
+#: app/views/tools/form.php:26 pro/app/views/tools/generator.php:7
+#: pro/app/views/tools/generator.php:17
 msgid "Get Pretty Link"
 msgstr ""
 
@@ -1788,11 +1758,11 @@ msgstr ""
 msgid "Pro Import/Export"
 msgstr ""
 
-#: pro/app/controllers/PlpKeywordsController.php:66
+#: pro/app/controllers/PlpKeywordsController.php:67
 msgid "Pretty Link Post Build Index"
 msgstr ""
 
-#: pro/app/controllers/PlpKeywordsController.php:463
+#: pro/app/controllers/PlpKeywordsController.php:464
 #: pro/app/views/links/form.php:128
 msgid "Keywords"
 msgstr ""
@@ -2477,6 +2447,10 @@ msgstr ""
 msgid "id: %1$s | slug: %3$s | name: %2$s%4$s"
 msgstr ""
 
+#: pro/app/views/links/form.php:281 pro/app/views/links/form.php:284
+msgid "Geographic Redirects"
+msgstr ""
+
 #: pro/app/views/links/form.php:285
 msgid ""
 "This will enable you to setup specific target urls that this pretty link "
@@ -2496,6 +2470,10 @@ msgstr ""
 msgid ""
 "This will allow you to redirect based on your visitor's device, operating "
 "system and/or browser"
+msgstr ""
+
+#: pro/app/views/links/form.php:309 pro/app/views/links/form.php:312
+msgid "Time Period Redirects"
 msgstr ""
 
 #: pro/app/views/links/form.php:313
@@ -3373,8 +3351,8 @@ msgid ""
 "Check this to hide the pretty link attribution link on the pretty bar.<br/"
 "><br/><strong>Wait, before you do this, you might want to leave this un-"
 "checked and set the alternate URL of this link to your <em>Pretty Link Pro</"
-"em> <a href=\"http://prettylinkpro.com/affiliate-dashboard/\">Affiliate URL</"
-"a> to earn a few bucks while you are at it."
+"em> <a href=\"https://prettylinkpro.com/plp/options/aff-attribution"
+"\">Affiliate URL</a> to earn a few bucks while you are at it."
 msgstr ""
 
 #: pro/app/views/options/form.php:646
@@ -3388,8 +3366,8 @@ msgstr ""
 #: pro/app/views/options/form.php:649
 msgid ""
 "If set, this will replace the Pretty Bars attribution URL. This is a very "
-"good place to put your <em>Pretty Link Pro</em> <a href=\"http://"
-"prettylinkpro.com/affiliate-dashboard/\">Affiliate Link</a>."
+"good place to put your <em>Pretty Link Pro</em> <a href=\"https://"
+"prettylinkpro.com/plp/options/aff-attribution-2\">Affiliate Link</a>."
 msgstr ""
 
 #: pro/app/views/options/form.php:663
@@ -3671,51 +3649,15 @@ msgstr ""
 msgid "Rotation URL"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:6 pro/app/views/tools/nav.php:3
-msgid "End-Point URL"
-msgstr ""
-
-#: pro/app/views/tools/generator.php:7
-msgid "This can be used to integrate with your twitter client."
-msgstr ""
-
-#: pro/app/views/tools/generator.php:11
-msgid "Show TweetDeck Integration Instructions"
-msgstr ""
-
-#: pro/app/views/tools/generator.php:15 pro/app/views/tools/generator.php:24
-msgid "Follow the"
-msgstr ""
-
-#: pro/app/views/tools/generator.php:15
-msgid "TweetDeck Custom URL Instructions"
-msgstr ""
-
-#: pro/app/views/tools/generator.php:15
-msgid " and add the following URL to TweetDeck"
-msgstr ""
-
-#: pro/app/views/tools/generator.php:20
-msgid "Show Twitter for iPhone Integration Instructions"
-msgstr ""
-
-#: pro/app/views/tools/generator.php:24
-msgid "Twitter for iPhone Custom URL Instructions"
-msgstr ""
-
-#: pro/app/views/tools/generator.php:24
-msgid " and add the following URL to Twitter for iPhone"
-msgstr ""
-
-#: pro/app/views/tools/generator.php:30
+#: pro/app/views/tools/generator.php:6
 msgid "Custom Bookmarklet:"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:33
+#: pro/app/views/tools/generator.php:9
 msgid "Customize Pretty Link Bookmarklet"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:34
+#: pro/app/views/tools/generator.php:10
 msgid ""
 "Alter the options below to customize this Bookmarklet. As you modify the "
 "label, redirect type, tracking and group, you will see this bookmarklet "
@@ -3724,40 +3666,40 @@ msgid ""
 "different settings."
 msgstr ""
 
-#: pro/app/views/tools/generator.php:37
+#: pro/app/views/tools/generator.php:13
 #: pro/app/widgets/PlpPublicLinksWidget.php:55
 msgid "Pretty Link Options"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:40
+#: pro/app/views/tools/generator.php:16
 msgid "Label:"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:45
+#: pro/app/views/tools/generator.php:21
 #: pro/app/widgets/PlpPublicLinksWidget.php:57
 msgid "Redirection:"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:49
+#: pro/app/views/tools/generator.php:25
 msgid "Tracking:"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:52
+#: pro/app/views/tools/generator.php:28
 #: pro/app/widgets/PlpPublicLinksWidget.php:72
 msgid "Yes"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:53
+#: pro/app/views/tools/generator.php:29
 #: pro/app/widgets/PlpPublicLinksWidget.php:73
 msgid "No"
 msgstr ""
 
-#: pro/app/views/tools/generator.php:57
+#: pro/app/views/tools/generator.php:33
 #: pro/app/widgets/PlpPublicLinksWidget.php:78
 msgid "Group:"
 msgstr ""
 
-#: pro/app/views/tools/nav.php:4
+#: pro/app/views/tools/nav.php:3
 msgid "Custom Bookmarklet"
 msgstr ""
 
@@ -4786,7 +4728,7 @@ msgid "Bye\n"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://prettylinkpro.com"
+msgid "https://prettylinkpro.com/pl/plugin-uri"
 msgstr ""
 
 #. Description of the plugin/theme

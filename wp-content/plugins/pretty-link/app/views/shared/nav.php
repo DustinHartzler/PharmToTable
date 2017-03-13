@@ -3,10 +3,10 @@
 global $plp_update;
 
 if($plp_update->is_installed()) {
-  $support_link = "&nbsp;|&nbsp;<a href=\"http://prettylinkpro.com/user-manual\" target=\"_blank\">" . __('Pro Manual', 'pretty-link') . '</a>';
+  $support_link = "&nbsp;|&nbsp;<a href=\"https://prettylinkpro.com/pl/nav/um\" target=\"_blank\">" . __('Pro Manual', 'pretty-link') . '</a>';
 }
 else {
-  $support_link = "&nbsp;|&nbsp;<a href=\"http://prettylinkpro.com\" target=\"_blank\">" . __('Upgrade to Pro', 'pretty-link') . '</a>';
+  $support_link = "&nbsp;|&nbsp;<a href=\"https://prettylinkpro.com/pl/nav/upgrade\" target=\"_blank\">" . __('Upgrade to Pro', 'pretty-link') . '</a>';
 }
 
 ?>

@@ -230,6 +230,9 @@ class PrliLink {
       if(!$include_stats && isset($cached[$slug])) {
         return $cached[$slug];
       }
+      elseif($include_stats && isset($cached[$slug]['stats'])) {
+        return $cached[$slug]['stats'];
+      }
 
       if($include_stats) {
         $query = 'SELECT li.*, ';
@@ -258,6 +261,9 @@ class PrliLink {
       $query  = $wpdb->prepare($query, $slug);
       $link   = $wpdb->get_row($query, $return_type);
 
+      //get_row returns a null if not found - we don't want nulls
+      if(!$link) { $link = false; }
+
       if($include_stats and $link and $prli_options->extended_tracking == 'count') {
         $link->clicks  = $prli_link_meta->get_link_meta($link->id,'static-clicks',true);
         $link->uniques = $prli_link_meta->get_link_meta($link->id,'static-uniques',true);
@@ -266,6 +272,9 @@ class PrliLink {
       //Cache this to prevent multiple queries
       if(!$include_stats) {
         $cached[$slug] = $link;
+      }
+      else {
+        $cached[$slug]['stats'] = $link;
       }
 
       return $link;

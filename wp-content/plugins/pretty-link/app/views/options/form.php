@@ -1,7 +1,7 @@
 <?php if(!defined('ABSPATH')) { die('You are not allowed to call this page directly.'); } ?>
 <div class="wrap">
   <?php echo PrliAppHelper::page_title(__('Options', 'pretty-link')); ?>
-  <a href="https://prettylinkpro.com/user-manual-2/" class="page-title-action"><?php _e('User Manual', 'pretty-link'); ?></a>
+  <a href="https://prettylinkpro.com/options/um" class="page-title-action"><?php _e('User Manual', 'pretty-link'); ?></a>
   <hr class="wp-header-end">
 
   <?php

@@ -295,7 +295,6 @@ class PrliUtils {
         $visitor_uid = $_COOKIE[$visitor_cookie];
       }
 
-
       if(isset($prli_options->extended_tracking) and $prli_options->extended_tracking == 'extended') {
         $click_browser = $this->php_get_browser();
         $click_host = gethostbyaddr($click_ip);
@@ -309,7 +308,8 @@ class PrliUtils {
       // This is to prevent duplicate clicks being recorded due to things like
       // Browser pre-fetching especially, which is no longer detectable using
       // HTTP headers so we have to resort to this not-as-accurate approach
-      $visitor_uid_store_key = "{$visitor_cookie}_{$visitor_uid}";
+
+      $visitor_uid_store_key = "{$visitor_cookie}_{$pretty_link->id}_{$visitor_uid}";
       $visitor_uid_store_time = 10; // 10 seconds
       if(!($visitor_uid_store = get_transient($visitor_uid_store_key))) {
         set_transient($visitor_uid_store_key, $visitor_uid, $visitor_uid_store_time);
@@ -844,20 +844,16 @@ class PrliUtils {
     global $prli_options, $prli_link, $prli_link_meta, $prli_click, $wpdb;
     $db_version = (int)get_option('prli_db_version');
 
-    if(!$db_version)
-      return;
+    if(empty($db_version)) { return; }
 
-    if($db_version and $db_version < 5)
-    {
+    if($db_version and $db_version < 5) {
       // Migrate pretty-link-posted-to-twitter
       $query = "SELECT * FROM {$wpdb->prefix}postmeta WHERE meta_key=%s";
       $query = $wpdb->prepare($query,'pretty-link-posted-to-twitter');
       $posts_posted = $wpdb->get_results($query);
 
-      foreach($posts_posted as $postmeta)
-      {
-        if($postmeta->meta_value == '1')
-        {
+      foreach($posts_posted as $postmeta) {
+        if($postmeta->meta_value == '1') {
           $link_id = PrliUtils::get_prli_post_meta($postmeta->post_id,'pretty-link',true);
           $prli_link_meta->update_link_meta($link_id,'pretty-link-posted-to-twitter','1');
         }
@@ -1178,6 +1174,19 @@ class PrliUtils {
     }
 
     return self::current_user_can($role);
+  }
+
+  public static function full_request_url() {
+    $current_url = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
+    $current_url .= $_SERVER["SERVER_NAME"];
+
+    if($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443") {
+      $current_url .= ":".$_SERVER["SERVER_PORT"];
+    }
+
+    $current_url .= $_SERVER["REQUEST_URI"];
+
+    return $current_url;
   }
 
 /* PLUGGABLE FUNCTIONS AS TO NOT STEP ON OTHER PLUGINS' CODE */

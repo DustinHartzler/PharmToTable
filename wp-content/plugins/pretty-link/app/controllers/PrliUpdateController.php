@@ -183,6 +183,7 @@ class PrliUpdateController {
 
   public function deactivate($hide_form = false) {
     $domain = urlencode(PrliUtils::site_domain());
+    $message = '';
 
     try {
       $args = compact('domain');
@@ -280,7 +281,7 @@ class PrliUpdateController {
         'id'          => $curr_version,
         'slug'        => 'pretty-link',
         'new_version' => $curr_version,
-        'url'         => 'http://prettylinkpro.com',
+        'url'         => 'https://prettylinkpro.com/pl/update/url',
         'package'     => $download_url
       );
     }

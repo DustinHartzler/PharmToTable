@@ -4,7 +4,7 @@
 <div class="prli-page-title"><?php _e('Pretty Link Pro License', 'pretty-link'); ?></div>
 
 <?php if( !isset($li) or empty($li) ): ?>
-  <p class="description"><?php printf(__('You must have a License Key to enable automatic updates for Pretty Link Pro. If you don\'t have a License please go to %1$s to get one. If you do have a license you can login at %2$s to manage your licenses and site activations.', 'pretty-link'), '<a href="https://prettylinkpro.com">prettylinkpro.com</a>', '<a href="http://prettylinkpro.com/login">prettylinkpro.com/login</a>'); ?></p>
+  <p class="description"><?php printf(__('You must have a License Key to enable automatic updates for Pretty Link Pro. If you don\'t have a License please go to %1$s to get one. If you do have a license you can login at %2$s to manage your licenses and site activations.', 'pretty-link'), '<a href="https://prettylinkpro.com/pl/license-alert/buy">prettylinkpro.com</a>', '<a href="https://prettylinkpro.com/pl/license-alert/login">prettylinkpro.com/login</a>'); ?></p>
   <form name="activation_form" method="post" action="">
     <?php wp_nonce_field('activation_form'); ?>
 
@@ -27,28 +27,26 @@
     <div class="prli-page-title"><?php _e('Upgrade to Pro', 'pretty-link'); ?></div>
 
     <div>
-      <?php printf(__('It looks like you\'re missing out on quite a few awesome features because you haven\'t %1$sUpgraded to Pretty Link Pro%2$s yet. Here are just a few of the features you\'re missing out on:', 'pretty-link'),'<a href="http://prettylinkpro.com" target="_blank">',"</a>") ?>
+      <?php printf(__('It looks like you haven\'t %1$supgraded to Pretty Link Pro%2$s yet. Here are just a few things you could be doing with pro:', 'pretty-link'),'<a href="https://prettylinkpro.com/pl/license-alert/upgrade" target="_blank">','</a>') ?>
     </div>
 
     <div>&nbsp;</div>
 
-    <ul style="padding-left: 25px">
-      <li>&bullet; <?php _e('Cloaked Redirects', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Keyword Link Replacements', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Weighted Link Rotations', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Link Expirations', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Geographic Redirects', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Technology Based Redirects', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Time Period Redirects', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Double Redirects', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Split Tests', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('Automated Link Disclosures', 'pretty-link'); ?></li>
-      <li>&bullet; <?php _e('... and much more', 'pretty-link'); ?></li>
+    <ul style="padding-left: 25px;">
+      <li>&bullet; <?php _e('Auto-replace keywords throughout your site with Pretty Links', 'pretty-link'); ?></li>
+      <li>&bullet; <?php _e('Protect your affiliate links by using Cloaked Redirects', 'pretty-link'); ?></li>
+      <li>&bullet; <?php _e('Redirect based on a visitor\'s location', 'pretty-link'); ?></li>
+      <li>&bullet; <?php _e('Auto-prettylink your Pages &amp; Posts', 'pretty-link'); ?></li>
+      <li>&bullet; <?php _e('Find out what works and what doesn\'t by split testing your links', 'pretty-link'); ?></li>
+      <li>&bullet; <?php _e('And much, much more!', 'pretty-link'); ?></li>
     </ul>
 
     <div>&nbsp;</div>
-
-    <div><a href="https://prettylinkpro.com" class="button button-primary"><?php _e('Upgrade to Pro today!', 'pretty-link'); ?></a></div>
+    <div><?php _e('Plus, upgrading is fast, easy and won\'t disrupt any of your existing links or data. And there\'s even a 14 day money back guarantee.', 'pretty-link'); ?></div>
+    <div>&nbsp;</div>
+    <div><?php _e('We think you\'ll love it!', 'pretty-link'); ?></div>
+    <div>&nbsp;</div>
+    <div><a href="https://prettylinkpro.com/pl/license-alert/upgrade-1" class="button button-primary"><?php _e('Upgrade to Pro today!', 'pretty-link'); ?></a></div>
   <?php endif; ?>
 <?php else: ?>
   <div class="prli-license-active">

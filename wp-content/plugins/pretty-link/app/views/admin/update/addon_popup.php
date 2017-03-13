@@ -9,7 +9,7 @@
     <p><?php printf(__('And good for you, it looks like you\'ve already got the %1$s Add-on installed. Just click the "Activate %2$s Add-on" button below and you\'ll get all these features back now.', 'pretty-link'), $a->name, $a->name); ?></p>
   <?php else: ?>
     <p><?php printf(__('Luckily it\'s easy to get these features back now. Just click the "Install %s Add-on" button below.', 'pretty-link'), $a->name); ?></p>
-    <p><?php printf(__('If you have problems with the auto-install please refer to %1$sthe user manual%2$s for manual install instructions.', 'pretty-link'), '<a href="https://www.prettylinkpro.com/marketing/" target="_blank">', '</a>'); ?></p>
+    <p><?php printf(__('If you have problems with the auto-install please refer to %1$sthe user manual%2$s for manual install instructions.', 'pretty-link'), '<a href="https://prettylinkpro.com/pl/addon-popup/um/manual-installation" target="_blank">', '</a>'); ?></p>
   <?php endif; ?>
   <br/>
   <center>

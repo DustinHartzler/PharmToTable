@@ -113,17 +113,17 @@ class PrliAppController extends PrliBaseController {
     $pllinks = array();
 
     if($plp_update->is_installed_and_activated()) {
-      $pllinks[] = '<a href="https://prettylinkpro.com/user-manual-2/" target="_blank">'.__('Docs', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/activated/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
       $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'">'.__('Activate', 'pretty-link').'</a>';
     }
     else if($plp_update->is_installed()) {
       $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'" class="prli-menu-red">'.__('Activate Pro', 'pretty-link').'</a>';
-      $pllinks[] = '<a href="https://prettylinkpro.com/pricing/" target="_blank" class="prli-menu-red">'.__('Buy', 'pretty-link').'</a>';
-      $pllinks[] = '<a href="https://prettylinkpro.com/user-manual-2/" target="_blank">'.__('Docs', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/installed/buy" target="_blank" class="prli-menu-red">'.__('Buy', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/installed/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
     }
     else {
-      $pllinks[] = '<a href="https://prettylinkpro.com/pricing/" class="prli-menu-red" target="_blank">'.__('Upgrade to Pro', 'pretty-link').'</a>';
-      $pllinks[] = '<a href="https://prettylinkpro.com/user-manual-2/" target="_blank">'.__('Docs', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/lite/upgrade" class="prli-menu-red" target="_blank">'.__('Upgrade to Pro', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/lite/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
     }
 
     return array_merge($pllinks, $links);
@@ -260,7 +260,7 @@ class PrliAppController extends PrliBaseController {
     }
 
     // Install Pro DB maybe
-    if($plp_update->is_activated() && $prli_utils->should_install_pro_db()) {
+    if($plp_update->is_installed() && $prli_utils->should_install_pro_db()) {
       @ignore_user_abort(true);
       @set_time_limit(0);
       $prli_utils->install_pro_db();

@@ -3,6 +3,13 @@
 class PrliLinksController extends PrliBaseController {
   public function load_hooks() {
     // nothing yet
+    add_filter( 'cron_schedules', array($this,'intervals') );
+    add_action( 'prli_cleanup_visitor_locks_worker', array($this,'cleanup_visitor_locks') );
+    add_action( 'admin_init', array($this,'maybe_cleanup_visitor_locks') );
+
+    if(!($snapshot_timestamp = wp_next_scheduled('prli_cleanup_visitor_locks_worker'))) {
+      wp_schedule_event( time(), 'prli_cleanup_visitor_locks_interval', 'prli_cleanup_visitor_locks_worker' );
+    }
   }
 
   public static function route() {
@@ -439,6 +446,64 @@ class PrliLinksController extends PrliBaseController {
     }
 
     return $values;
+  }
+
+  public function maybe_cleanup_visitor_locks() {
+    $cleanup = get_transient('prli_cleanup_visitor_locks');
+
+    if(empty($cleanup)) {
+      set_transient('prli_cleanup_visitor_locks', 1, DAY_IN_SECONDS);
+      $this->cleanup_visitor_locks();
+    }
+  }
+
+  /** Delete visitor locks so we don't explode the size of peoples' databases */
+  public function cleanup_visitor_locks() {
+    global $wpdb;
+
+    //|   1127004 | _transient_timeout_prli_visitor_58b12712690d5           | 1488004892    | no       |
+    //|   1127005 | _transient_prli_visitor_58b12712690d5                   | 58b12712690d5 | no       |
+
+    $q = $wpdb->prepare("
+        SELECT option_name
+          FROM {$wpdb->options}
+         WHERE option_name LIKE %s
+           AND option_value < %s
+         ORDER BY option_value
+      ",
+      '_transient_timeout_prli_visitor_%',
+      time()
+    );
+
+    $timeouts = $wpdb->get_col($q);
+
+    foreach($timeouts as $i => $timeout_key) {
+      // figure out the transient_key from the timeout_key
+      $transient_key = preg_replace(
+        '/^_transient_timeout_prli_visitor_/',
+        '_transient_prli_visitor_',
+        $timeout_key
+      );
+
+      $tq = $wpdb->prepare("
+          DELETE FROM {$wpdb->options}
+           WHERE option_name IN (%s,%s)
+        ",
+        $timeout_key,
+        $transient_key
+      );
+
+      $res = $wpdb->query($tq);
+    }
+  }
+
+  public function intervals( $schedules ) {
+    $schedules['prli_cleanup_visitor_locks_interval'] = array(
+      'interval' => HOUR_IN_SECONDS,
+      'display' => __('Pretty Link Cleanup Visitor Locks', 'pretty-link'),
+    );
+
+    return $schedules;
   }
 }
 
