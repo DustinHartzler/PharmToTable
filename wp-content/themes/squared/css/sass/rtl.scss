@@ -1,0 +1,98 @@
+@import "bourbon";
+
+$experimental-support-for-svg: true;
+
+body {
+  direction: rtl;
+  unicode-bidi: embed;
+}
+
+header {
+  #nav_right {
+    text-align: right;
+  }
+  #logo, #text_logo {
+    text-align: right;
+  }
+  nav {
+    li.col-no-2,
+    li.col-no-3,
+    li.col-no-4 {
+      .colch {
+        text-align: left;
+      }
+    }
+    ul li > ul li a {
+      text-align: right;
+      text-indent: 0;
+      padding: 0 20px;
+    }
+  }
+}
+
+.cnt {
+  section footer ul li:last-child {
+    text-align: left;
+  }
+  .bpd .out {
+    margin-right: -2500px;
+  }
+}
+
+.fullWidth {
+  .out {
+    margin-right: -2500px;
+  }
+}
+
+.bSe {
+  table td,
+  table th {
+    text-align: right;
+  }
+}
+
+#wp-calendar caption {
+  text-align: right;
+}
+
+.hui .hut {
+  text-align: right;
+}
+
+.pgi {
+  .scbg & {
+    h5, p {
+      text-align: right;
+    }
+  }
+}
+
+.port .prtt {
+  text-align: left;
+}
+
+.gallery {
+  dl {
+    text-align: right !important;
+  }
+}
+
+.lost ul {
+  text-align: left;
+}
+
+.pt .pt_in ul.check li:before {
+  float: right;
+  margin-left: 5px;
+}
+
+footer .ftw section[id*="categories-"] ul li a:after,
+footer .ftw section[id*="nav_menu"] ul li a:after {
+  right: -10px;
+  top: 12px;
+}
+
+.mbi .mbr {
+  text-align: right;
+}

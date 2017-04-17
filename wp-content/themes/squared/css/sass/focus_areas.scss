@@ -1,0 +1,826 @@
+@import url('//fonts.googleapis.com/css?family=Lato:400,300,700&subset=latin,latin-ext');
+
+@font-face {
+  font-family: 'squared-icomoon';
+  src: url('../fonts/squared-icomoon.eot?fo7wd8');
+  src: url('../fonts/squared-icomoon.eot?#iefix-fo7wd8') format('embedded-opentype'),
+  url('../fonts/squared-icomoon.woff?fo7wd8') format('woff'),
+  url('../fonts/squared-icomoon.ttf?fo7wd8') format('truetype'),
+  url('../fonts/squared-icomoon.svg?fo7wd8#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'squared-icomoon2';
+  src: url('../fonts/squared-icomoon2.eot?p6oh27');
+  src: url('../fonts/squared-icomoon2.eot?#iefixp6oh27') format('embedded-opentype'),
+  url('../fonts/squared-icomoon2.woff?p6oh27') format('woff'),
+  url('../fonts/squared-icomoon2.ttf?p6oh27') format('truetype'),
+  url('../fonts/squared-icomoon2.svg?p6oh27#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import "bourbon";
+
+$experimental-support-for-svg: true;
+@import "variables.scss";
+@import "mixins.scss";
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.clear {
+  clear: both;
+}
+
+a {
+  text-decoration: none;
+}
+
+.upp {
+  text-transform: uppercase;
+}
+
+.wrp {
+  margin: 0 auto;
+  width: 1080px;
+}
+
+.fullWidth .in, .fullWidth .cck {
+  margin: 0 auto;
+  width: 1080px;
+}
+
+.bpd .in, .bpd .cck {
+  margin: 0 auto;
+  width: 807px;
+}
+
+.bpd .in.pddbg, .fullWidth .in.pddbg {
+  width: auto;
+}
+
+.oab {
+  background: $gray;
+  footer & {
+    background: #000;
+  }
+  color: $lightGray;
+  text-align: center;
+  padding: 20px 10px;
+  &.light_cta {
+    color: $gray;
+  }
+  .op-r {
+    margin-bottom: 10px;
+  }
+  h3 {
+    color: $lightGray;
+    margin-top: 0px;
+  }
+  p {
+    .cnt & {
+      color: $lightGray;
+      font-size: $normalSize;
+      font-weight: 300;
+      line-height: $normalSize * 1.4;
+    }
+  }
+  .ctaLink {
+    border-radius: 3px;
+    cursor: pointer;
+    display: block;
+    font-size: $normalSize * 0.722;
+    font-weight: 700;
+    margin-top: 25px;
+    padding: 18px 12px;
+    text-transform: uppercase;
+    word-wrap: break-all;
+  }
+  input[type="text"] {
+    border: none;
+    background: $content_gray;
+    color: $textGray;
+    font-size: $normalSize;
+    font-family: 'Lato';
+    font-weight: 300;
+    height: 44px;
+    margin-bottom: 10px;
+    padding: 0 7%;
+    width: 86%;
+    &:focus {
+      @include transition(all, 0.5s, linear);
+      background: #fff;
+      color: #000;
+    }
+  }
+  input[type="text"]::-webkit-input-placeholder {
+    color: $textGray;
+  }
+  input[type="text"]:focus::-webkit-input-placeholder {
+    color: #000;
+  }
+  input[type="submit"] {
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    font-size: $normalSize * 0.722;
+    font-weight: 700;
+    padding: 16px 0px;
+    text-transform: uppercase;
+    width: 100%;
+  }
+  .ofr {
+    margin-top: 20px;
+  }
+}
+
+@each $color in $color_pallete {
+  .oab.#{nth($color, 1)}_cta {
+    .ctaLink, input[type='submit'] {
+      box-shadow: 0px 3px 0px 0px nth($color, 3);
+      background: nth($color, 2);
+      color: #fff !important;
+    }
+  }
+}
+
+@each $color in $color_pallete {
+  .oab.#{nth($color, 1)}_cta {
+    .ctaLink:hover, input[type='submit']:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+@each $color in $color_pallete {
+  .oab.#{nth($color, 1)}_cta {
+    .ctaLink:active, input[type='submit']:active {
+      box-shadow: 0px 3px 0px 0px nth($color, 4);
+      background: nth($color, 4);
+    }
+  }
+}
+
+.oab.light_cta {
+  .ctaLink {
+    color: #4e4e4e !important;
+  }
+}
+
+.oab.dark_cta {
+  background: $lightGray;
+  h3, p {
+    color: $gray;
+  }
+  .ctaLink:active {
+    background: $gray;
+  }
+}
+
+section {
+  .ttl + .oab {
+    margin-top: 20px;
+  }
+}
+
+.oab {
+  img {
+    margin: 0px 0px 20px 0px;
+  }
+  &.opt {
+    img {
+      margin-top: 10px;
+    }
+  }
+  p, h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+//ribbon focus areas
+.rbn {
+  @include transition(all, 200ms, linear);
+  padding: 8px 0px;
+  .rbin {
+    display: table;
+    font-size: $normalSize * 1.154;
+    margin: 0 auto;
+    .awe {
+      font-family: 'squared-icomoon';
+      font-size: $normalSize;
+      line-height: $normalSize;
+    }
+  }
+  &:hover {
+    padding: 10px 0px;
+  }
+}
+
+//regular focus areas
+
+.far {
+  img {
+    max-width: 100%;
+  }
+  &.f1, &.f2 {
+    @include transition(background, 0.5s, ease-in-out);
+    background: $lightGray;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    width: 100%;
+    &:hover {
+      @include transition(background, 0.5s, ease-in-out);
+      h3, .awe, a {
+        color: #fff;
+      }
+    }
+    h3, a {
+      color: $textGray;
+      font-weight: 400;
+      margin: 0;
+    }
+    .awe {
+      color: $textGray;
+      display: inline-block;
+      margin-left: 10px;
+    }
+    &.fat {
+      .op-r {
+        display: inline-block;
+      }
+      .frmH {
+        input[type="text"] {
+          height: 32px;
+          min-width: 260px;
+        }
+        input[type="submit"] {
+          min-width: 170px;
+        }
+      }
+    }
+    &.fab {
+      .frmH {
+        input[type="text"] {
+          height: 45px;
+          margin-top: 5px;
+          min-width: 320px;
+        }
+        input[type="submit"] {
+          padding: 19px 0px;
+          min-width: 320px;
+        }
+      }
+    }
+    .frmH {
+      display: none;
+    }
+    .frmH {
+      input[type="text"] {
+        @include transition(all, 0.5s, ease-in-out);
+        border: none;
+        background: $content_gray;
+        color: $textGray;
+        font-family: 'Lato';
+        font-size: $normalSize;
+        font-weight: 300;
+        margin-right: 20px;
+        padding-left: 10px;
+        &:focus {
+          @include transition(all, 0.5s, ease-in-out);
+          background: #FFF;
+          color: $gray;
+        }
+      }
+      input[type="text"]::-webkit-input-placeholder {
+        color: $textGray;
+      }
+      input[type="text"]::-webkit-input-placeholder {
+        color: $gray;
+      }
+      .btn {
+        margin-bottom: 0px;
+      }
+      input[type="submit"] {
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+    }
+    &.light {
+      .frmH {
+        input[type="text"] {
+          border: 1px solid $lightGray;
+          &:focus {
+            border: 1px solid $gray;
+          }
+        }
+      }
+    }
+    &.fof {
+      @include transition(padding, 0.25s, linear);
+      padding: 9px 0px 12px 0px;
+      h3 {
+        display: none;
+      }
+      .frmH {
+        display: block;
+        .frm {
+          display: table;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+  &.f1 {
+    &.fat {
+      margin-top: 1px;
+      padding: 17px 0px;
+    }
+    &.fab {
+      padding: 45px 0px;
+    }
+  }
+  &.f2 {
+    &.fat {
+      margin-top: 1px;
+      a {
+        display: block;
+        padding: 17px 0px;
+      }
+    }
+    &.fab {
+      a {
+        display: block;
+        padding: 45px 0px;
+      }
+    }
+  }
+  //  h3, a {
+  //    color: $textGray;
+  //    font-weight: 400;
+  //    margin: 0;
+  //  }
+  //  .awe {
+  //    color: $textGray;
+  //    display: inline-block;
+  //    margin-left: 10px;
+  //  }
+  //  &.fat {
+  //    .frmH {
+  //      input[type="text"] {
+  //        height: 32px;
+  //        min-width: 260px;
+  //      }
+  //      input[type="submit"] {
+  //        min-width: 170px;
+  //      }
+  //    }
+  //  }
+  //  &.fab {
+  //    .frmH {
+  //      input[type="text"] {
+  //        height: 45px;
+  //        margin-top: 5px;
+  //        min-width: 320px;
+  //      }
+  //      input[type="submit"] {
+  //        padding: 19px 0px;
+  //        min-width: 320px;
+  //      }
+  //    }
+  //  }
+  //  .frmH {
+  //    display: none;
+  //  }
+  //  .frmH {
+  //    input[type="text"] {
+  //      @include transition(all, 0.5s, ease-in-out);
+  //      border: none;
+  //      background: $content_gray;
+  //      color: $textGray;
+  //      font-family: 'Lato';
+  //      font-size: $normalSize;
+  //      font-weight: 300;
+  //      margin-right: 20px;
+  //      padding-left: 10px;
+  //      &:focus {
+  //        @include transition(all, 0.5s, ease-in-out);
+  //        background: #FFF;
+  //        color: $gray;
+  //      }
+  //    }
+  //    .btn {
+  //      margin-bottom: 0px;
+  //    }
+  //    input[type="submit"] {
+  //      background: none;
+  //      border: none;
+  //      cursor: pointer;
+  //      text-transform: uppercase;
+  //    }
+  //  }
+  //  &.light {
+  //    .frmH {
+  //      input[type="text"] {
+  //        border: 1px solid $lightGray;
+  //        &:focus {
+  //          border: 1px solid $gray;
+  //        }
+  //      }
+  //    }
+  //  }
+  //  &.fof {
+  //    @include transition(padding, 0.25s, linear);
+  //    padding: 9px 0px 12px 0px;
+  //    h3 {
+  //      display: none;
+  //    }
+  //    .frmH {
+  //      display: block;
+  //      .frm {
+  //        display: table;
+  //        margin: 0 auto;
+  //      }
+  //    }
+  //  }
+}
+
+@each $color in $color_pallete {
+  .f1, .f2 {
+    &.far.#{nth($color, 1)}:hover {
+      background: nth($color, 2);
+    }
+    &.far.fof.#{nth($color, 1)} {
+      background: nth($color, 2);
+    }
+  }
+  .f4 {
+    &.far.#{nth($color, 1)} {
+      background: nth($color, 2);
+    }
+  }
+}
+
+//.far.light:hover {
+//  h3, .awe, a {
+//    color: $gray;
+//  }
+//}
+
+.f1, .f2 {
+  &.far.light:hover {
+    h3, .awe, a {
+      color: $gray;
+    }
+  }
+}
+
+.bSeCont {
+  .far {
+    .wrp {
+      width: 100%;
+      input[type="text"] {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.fullWidth {
+  .f1, .f2 {
+    margin-left: -2500px;
+    width: 6040px;
+  }
+}
+
+.bpd {
+  .f1, .f2 {
+    margin-left: -2500px;
+    width: 5820px;
+  }
+}
+
+.far {
+  &.f3, &.f4 {
+    margin-bottom: 33px;
+    padding: 25px 20px 25px 15px;
+    .tw {
+      h4, p {
+        font-family: 'Lato';
+        margin: 0;
+      }
+      p {
+        margin-top: 20px;
+      }
+    }
+  }
+}
+
+.far {
+  &.f4 {
+    .tg {
+      width: 15%;
+    }
+    .tw {
+      margin-left: 20px;
+      width: 82%;
+      h4, p {
+        color: #fff;
+      }
+    }
+  }
+
+  &.f3 {
+    background: $content_gray;
+    .tg {
+      width: 15%;
+    }
+    .tw {
+      margin-left: 20px;
+      width: 82%;
+      h4, p {
+        color: $gray;
+      }
+      p {
+        font-size: $normalSize *0.963;
+        font-weight: 300;
+      }
+    }
+  }
+  &.f3, &.f4 {
+    .i1 {
+      input[type="text"], .op-r {
+        width: 48%;
+      }
+      .fob {
+        width: 49%;
+      }
+    }
+    .i2 {
+      input[type="text"], .op-r {
+        width: 34%;
+      }
+      .fob {
+        width: 26%;
+      }
+    }
+    .i3 {
+      input[type="text"], .op-r {
+        margin-bottom: 15px;
+        width: 48%;
+        &:nth-child(2) {
+          margin-right: 0;
+        }
+      }
+      .fob {
+        width: 49%;
+      }
+    }
+    .i4 {
+      input[type="text"], .op-r {
+        margin-bottom: 15px;
+        width: 33%;
+      }
+      .fob {
+      }
+    }
+    .frm {
+      margin-top: 25px;
+    }
+    input:focus::-webkit-input-placeholder {
+      color: $black;
+    }
+    input:hover::-webkit-input-placeholder {
+      color: $black;
+    }
+    input[type="text"] {
+      background: #fff;
+      border: 0;
+      color: $textGray;
+      display: block;
+      float: left;
+      font-family: 'Lato';
+      font-size: $normalSize *0.963;
+      font-weight: 300;
+      height: 45px;
+      margin-right: 2%;
+      padding: 0px 0px 0px 1%;
+      &:hover, &:focus {
+        color: $black;
+      }
+    }
+    .op-r {
+      float: left;
+    }
+    .fob {
+      float: left;
+      input[type="submit"] {
+        box-sizing: border-box;
+        background: none;
+        border: 0;
+        font-size: $normalSize *0.722;
+        margin-bottom: 0;
+        padding: 15px 40px;
+        width: 100%;
+      }
+    }
+  }
+  //  .frm {
+  //    margin-top: 25px;
+  //
+  //  }
+  //  .btn {
+  //    margin: 0;
+  //  }
+}
+
+//buttons
+
+.btn, .btn > span, .btn button[type="submit"], .btn input[type="submit"] {
+  display: inline-block;
+}
+
+.btn {
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 1em;
+  margin-bottom: 15px;
+  position: relative;
+  outline: none;
+  overflow: visible; /* removes extra side padding in IE */
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  white-space: normal;
+  &:active {
+    position: relative;
+    &.small {
+      top: 2px;
+    }
+    &.medium {
+      top: 3px;
+    }
+    &.big {
+      top: 5px;
+    }
+  }
+}
+
+button::-moz-focus-inner {
+  border: none;
+}
+
+button.button {
+  margin: 0;
+  padding: 0;
+}
+
+a.button, a.button:hover {
+  text-decoration: none;
+}
+
+.btn > span, .btn button[type="submit"], .btn input[type="submit"] {
+  font-family: 'Lato';
+  font-weight: 800;
+  font-size: $normalSize;
+  line-height: 1em;
+  position: relative;
+  padding: .6em 1.3em;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+}
+
+.btn {
+  text-transform: uppercase;
+  &.small > span, &.small button[type="submit"], &.small input[type="submit"] {
+    font-size: $normalSize * 0.750;
+    padding: 12px;
+  }
+  &.medium > span, &.medium button[type="submit"], &.medium input[type="submit"] {
+    font-size: $normalSize * 0.813;
+    padding: 20px 50px;
+  }
+  &.big > span, &.big button[type="submit"], &.big input[type="submit"] {
+    font-size: $normalSize * 1.313;
+    padding: 35px 70px;
+  }
+  &.aligncenter {
+    display: table;
+    margin: 0 auto 15px auto;
+  }
+}
+
+@each $color in $color_pallete {
+  .btn.#{nth($color, 1)} {
+    background: nth($color, 2);
+    color: #fff !important;
+    button[type="submit"], input[type="submit"], > span {
+      color: #fff !important;
+    }
+    &.small {
+      box-shadow: 0px 2px 0px 0px nth($color, 3);
+    }
+    &.medium {
+      box-shadow: 0px 3px 0px 0px nth($color, 3);
+    }
+    &.big {
+      box-shadow: 0px 5px 0px 0px nth($color, 3);
+    }
+  }
+
+}
+
+@each $color in $color_pallete {
+  .btn.#{nth($color, 1)}:hover {
+    opacity: 0.9;
+  }
+}
+
+@each $color in $color_pallete {
+  .btn.#{nth($color, 1)}:active {
+    background: nth($color, 4);
+    &.small {
+      box-shadow: none;
+    }
+    &.medium {
+      box-shadow: none;
+    }
+    &.big {
+      box-shadow: none;
+    }
+  }
+}
+
+.btn.light {
+  color: #4e4e4e !important;
+  button[type="submit"], input[type="submit"],  > span {
+    color: #4e4e4e !important;
+  }
+  &.small {
+    box-shadow: 0px 2px 0px 0px #e6e6e6;
+  }
+  &.medium {
+    box-shadow: 0px 3px 0px 0px #e6e6e6;
+  }
+  &.big {
+    box-shadow: 0px 5px 0px 0px #e6e6e6;
+  }
+  &:hover {
+    background: #f9f9f9;
+  }
+  &:active {
+    background: #e6e6e6;
+  }
+}
+
+.btn.dark:active {
+  background: #242424;
+  color: #fff !important;
+  button[type="submit"], input[type="submit"], > span {
+    color: #fff !important;
+  }
+  &.small {
+    box-shadow: 0px 2px 0px 0px #242424;
+  }
+  &.medium {
+    box-shadow: 0px 3px 0px 0px #242424;
+  }
+  &.big {
+    box-shadow: 0px 5px 0px 0px #242424;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  button.btn > span {
+    margin-top: -1px;
+    margin-right: -2px;
+    margin-left: -2px;
+  }
+}
+
+.btn.full {
+  width: 100%;
+  text-align: center;
+}
+
+.focus_submit {
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  width: 100%;
+}
+

@@ -1,0 +1,76 @@
+<?php
+$options = thrive_get_theme_options();
+
+$main_content_class = ( $options['sidebar_alignement'] == "right" ) ? "left" : "right";
+$sidebar_is_active  = is_active_sidebar( 'sidebar-1' );
+$next_page_link     = get_next_posts_link();
+$prev_page_link     = get_previous_posts_link();
+$exclude_woo_pages  = array(
+	intval( get_option( 'woocommerce_cart_page_id' ) ),
+	intval( get_option( 'woocommerce_checkout_page_id' ) ),
+	intval( get_option( 'woocommerce_pay_page_id' ) ),
+	intval( get_option( 'woocommerce_thanks_page_id' ) ),
+	intval( get_option( 'woocommerce_myaccount_page_id' ) ),
+	intval( get_option( 'woocommerce_edit_address_page_id' ) ),
+	intval( get_option( 'woocommerce_view_order_page_id' ) ),
+	intval( get_option( 'woocommerce_terms_page_id' ) )
+);
+if ( ! $sidebar_is_active ) {
+	$main_content_class = "bpd";
+}
+?>
+
+<?php get_header(); ?>
+
+<?php if ( $options['sidebar_alignement'] == "left" && $sidebar_is_active ): ?>
+	<?php get_sidebar(); ?>
+<?php endif; ?>
+
+<?php if ( $sidebar_is_active ): ?>
+<div class="bSeCont">
+	<?php endif; ?>
+	<section class="bSe <?php echo $main_content_class; ?>">
+
+		<?php if ( have_posts() ): ?>
+			<?php
+			$position = 1;
+			while ( have_posts() ):
+				?>
+				<?php the_post(); ?>
+				<?php if ( in_array( get_the_ID(), $exclude_woo_pages ) ): continue; endif; ?>
+				<?php get_template_part( 'content', get_post_format() ); ?>
+				<?php if ( thrive_check_blog_focus_area( $position ) ): ?>
+				<?php thrive_render_top_focus_area( "between_posts", $position ); ?>
+				<div class="spr"></div>
+			<?php endif; ?>
+				<?php
+				$position ++;
+			endwhile;
+			?>
+
+			<?php if ( _thrive_check_focus_area_for_pages( "archive", "bottom" ) ): ?>
+				<?php if ( strpos( $options['blog_layout'], 'masonry' ) === false && strpos( $options['blog_layout'], 'grid' ) === false ): ?>
+					<?php thrive_render_top_focus_area( "bottom", "archive" ); ?>
+					<div class="spr"></div>
+				<?php endif; ?>
+			<?php endif; ?>
+
+			<?php if ( $next_page_link || $prev_page_link && ( $next_page_link != "" || $prev_page_link != "" ) ): ?>
+				<div class="awr pgn clearfix">
+					<?php thrive_pagination(); ?>
+				</div>
+				<div class="bspr"></div>
+			<?php endif; ?>
+		<?php else: ?>
+			<!--No contents-->
+		<?php endif ?>
+	</section>
+	<?php if ( $sidebar_is_active ): ?>
+</div>
+<?php endif; ?>
+
+<?php if ( $options['sidebar_alignement'] == "right" && $sidebar_is_active ): ?>
+	<?php get_sidebar(); ?>
+<?php endif; ?>
+<div class="clear"></div>
+<?php get_footer(); ?>
