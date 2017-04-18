@@ -3,7 +3,7 @@ Contributors: automattic, mikejolley, jameskoster, claudiosanches, jshreve, code
 Tags: ecommerce, e-commerce, store, sales, sell, shop, cart, checkout, downloadable, downloads, paypal, storefront, woo commerce
 Requires at least: 4.4
 Tested up to: 4.7
-Stable tag: 3.0.1
+Stable tag: 3.0.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -161,6 +161,50 @@ Yes you can! Join in on our [GitHub repository](http://github.com/woocommerce/wo
 
 == Changelog ==
 
+= 3.0.3 - 2017-04-13 =
+* Fix - Fixed an issue with variation tax-classes when set to 'parent'. This made taxes apply on top of the tax inclusive price in certain setups.
+* Fix - Escaped attribute translations in the `cart.php` template and bumped the template version to match.
+* Fix - Corrected the display of refund dates on the order screen.
+* Fix - Fixed the grouped product visibility check in the grouped.php template and bumped the template version to match.
+* Fix - Fixed the sale badge display for grouped products.
+* Fix - Added the `itemReviewed` structured data for product reviews to make it validate.
+* Fix - Made the `get_attribute` method work on variation objects.
+* Tweak - Turned off the deferred email sending by default which was added in 3.0. Whilst it does improve performance, there were compatibility problems on some servers. It can be enabled with a filter if desired.
+* Dev - Added backtrace information to the deprecation messages to help find problem plugins.
+
+= 3.0.2 - 2017-04-12 =
+* Fix - Removed required states for GP, GF, KW, LB, MQ, RE and YT countries.
+* Fix - Made cache in the [products] shortcode respect filters from plugins.
+* Fix - Added missing `woocommerce_cross_sells_columns` filter.
+* Fix - Fixed shortcode rendering on the shop page.
+* Fix - Fixed incorrect sale dates when bulk editing variations.
+* Fix - Fixed calls to wc_reduce_stock_levels in PayPal and Simplify gateways.
+* Fix - Exclude "location" meta when reading customer meta data.
+* Fix - Updated `emails/email-addresses.php`, `emails/email-order-details.php`, `content-single-product.php`, `checkout/form-shipping.php`, `myaccount/form-add-payment-method.php`, `myaccount/form-edit-address.php`, `myaccount/form-lost-password.php`, `myaccount/form-reset-password.php`, `myaccount/orders.php` and `myaccount/view-order.php` template version to 3.0.0 since they had changes since 2.6.
+* Fix - Fixed default behavior of variation tax classes when originally set to "parent".
+* Fix - When duplicating products, do not copy slug, append "(Copy)" to the product name, correctly copy all meta data, and prevent children of grouped products being duplicated too.
+* Fix - Removed duplicated items when outputting cross sells on the cart page.
+* Fix - Fixed output of default "add to cart" text of external products in loops.
+* Fix - Fixed backwards compatibility of guest checkout rules when being altered by plugins directly.
+* Fix - Use correct thumbnail sizes for variation images in the new gallery.
+* Fix - Fixed captions on thumbnails and main image in the new gallery.
+* Fix - Trigger wc_fragments_loaded after add to cart fragment refresh.
+* Fix - Download permissions; Convert dates to timestamp on read so UTC is preserved.
+* Fix - Fixed notices under PHP 7.1 when sorting products by name (numeric).
+* Fix - Added additional checks to ensure objects are read before using class methods to avoid errors.
+* Fix - Removed legacy suggest.js code which was causing JS error on bulk edit.
+* Fix - Fixed warnings on the "Lost password" page and when loading a product with invalid attributes.
+* Fix - Made background emailer update the queue after a successful send so duplicate mails are less likely.
+* Fix - Typo in flexslider_enabled option in new gallery script.
+* Fix - woocommerce_notify_low_stock and woocommerce_notify_no_stock options had no effect.
+* Tweak - For downloadable files, only validate file type when dealing with relative paths.
+* Tweak - Improved automatic variation name generation.
+* Dev - Added product visibility terms to system status report to help debug.
+* Dev - Introduced `woocommerce_admin_order_date_format` filter to replace missing `post_date_column_time`.
+* Dev - Introduced `woocommerce_update_customer_args` filter to prevent updates to user objects if needed.
+* REST API - Fixed saving of variations in legacy REST API v3.
+* REST API - Fixed backwards compatibility of line_items meta in legacy REST API.
+
 = 3.0.1 - 2017-04-06 =
 * Fix - Show catalog hidden products within grouped products.
 * Fix - Fade in the gallery in if no images are set or it's custom.
@@ -275,5 +319,5 @@ Yes you can! Join in on our [GitHub repository](http://github.com/woocommerce/wo
 
 == Upgrade Notice ==
 
-= 3.0.1 =
-3.0 is a major update. It is important that you make backups and ensure themes and extensions are 3.0 compatible before upgrading.
+= 3.0.3 =
+3.0 is a major update. [Make a full site backup](https://docs.woocommerce.com/document/backup-wordpress-content), update your theme and extensions, and [review update best practices](https://docs.woocommerce.com/document/how-to-update-your-site) before upgrading.
