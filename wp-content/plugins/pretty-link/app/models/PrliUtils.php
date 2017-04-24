@@ -1033,28 +1033,18 @@ class PrliUtils {
     return apply_filters('prli-get-page-title', $title, $url, $slug);
   }
 
-  //public static function is_date($str) {
-  //   return ( preg_match('/^(\d\d\d\d)-(\d\d)-(\d\d)$/', $str, $m) &&
-  //            (int)$m[1] >= 1900 && (int)$m[1] <= 2200 && // Validate Year
-  //            (int)$m[2] >= 1 && (int)$m[2] <= 12 && // Validate Month
-  //            (int)$m[3] >= 1 && (int)$m[3] <= 31 ); // Validate Day
-  //  }
-  //}
-
   public static function is_date($str) {
     if(!is_string($str)) { return false; }
     $d = strtotime($str);
     return ($d !== false);
   }
 
-  //public static function is_url($url) {
-  //  return ( preg_match('/^http.?:\/\/.*\..*$/', $url ) ||
-  //           preg_match('!^(http|https)://(localhost|127\.0\.0\.1)(:\d+)?(/[\w- ./?%&=]*)?!', $url ) );
-  //}
-
-  // This uses the @diegoperini URL matching regex adapted for PHP from https://gist.github.com/dperini/729294
   public static function is_url($str) {
-    return preg_match('_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$_iuS', $str);
+    // This uses the @diegoperini URL matching regex adapted for PHP from https://gist.github.com/dperini/729294
+    // return preg_match('_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$_iuS', $str);
+
+    //Let's see how PHP's built in validator does instead?
+    return apply_filters('prli_is_valid_url', (filter_var($str, FILTER_VALIDATE_URL) !== FALSE), $str);
   }
 
   public static function is_email($str) {
