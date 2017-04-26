@@ -2,8 +2,8 @@
 Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, wpnzach, aman086, daveshine, mordauk, bftrick, helgatheviking
 Tags: form, forms, contact form, custom form, form builder, form creator, form manager, form creation, contact forms, custom forms, forms builder, forms creator, forms manager, forms creation, form administration,
 Requires at least: 4.5
-Tested up to: 4.7.2
-Stable tag: 3.0.31
+Tested up to: 4.7
+Stable tag: 3.0.34.1
 License: GPLv2 or later
 
 Drag and drop fields in an intuitive UI to create create contact forms, email subscription forms, order forms, payment forms, send emails and more!
@@ -102,20 +102,60 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 == Upgrade Notice ==
 
-= 3.0.31 (07 March 2017) =
+= 3.0.34.1 (25 April 2017) =
+
+*Security:*
+
+* Fixed a possible security export related to WP Sessions. Please update as soon as possible.
+
+== Changelog ==
+
+= 3.0.34.1 (25 April 2017) =
+
+*Security:*
+
+* Fixed a possible security export related to WP Sessions. Please update as soon as possible.
+
+= 3.0.34 (18 April 2017) =
 
 *Bugs:*
 
-* Confirmed password fields should work properly.
-* Fixed a bug with List Fields that caused the Import button to overlap the Add New button.
-* Closed a possible security vulnerability by escaping HTML in the builder.
-* CSV files should now be deleted from the server after they are emailed when attached to an email action.
+* Fixed a bug that could cause emails to fail with a 500 internal server error.
+
+= 3.0.33 (11 April 2017) =
 
 *Changes:*
 
-* Added a filter so that add-ons and custom code can add forms to the templates section of the New Form builder.
+* Added an admin warning notice if Contact Form 7 is installed.
+* Users who upgrade to version 3.0 will now see an admin notice instructing them to check their converted forms.
+* Added the TLS version, if installed, to the get help page.
+* Fixed a bug that could cause a PHP fatal error with older, insecure versions of PHP.
 
-== Changelog ==
+*Bugs:*
+
+* Fixed a bug that caused field labels to be output multiple times in submission exports.
+* Removed several PHP Warnings related to publishing longer forms.
+* Updated inline email check so that it should work on longer domains, i.e. co.uk.
+* Editing submissions with single checkboxes should now save properly.
+* Fields should be properly sorted in CSV files attached to emails.
+* Sequential IDs for submissions on converted or imported forms should not reset.
+
+= 3.0.32 (11 April 2017) =
+
+*Changes:*
+
+* Added an admin warning notice if Contact Form 7 is installed.
+* Users who upgrade to version 3.0 will now see an admin notice instructing them to check their converted forms.
+* Added the TLS version, if installed, to the get help page.
+
+*Bugs:*
+
+* Fixed a bug that caused field labels to be output multiple times in submission exports.
+* Removed several PHP Warnings related to publishing longer forms.
+* Updated inline email check so that it should work on longer domains, i.e. co.uk.
+* Editing submissions with single checkboxes should now save properly.
+* Fields should be properly sorted in CSV files attached to emails.
+* Sequential IDs for submissions on converted or imported forms should not reset.
 
 = 3.0.31 (07 March 2017) =
 

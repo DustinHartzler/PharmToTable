@@ -239,6 +239,45 @@ final class WPN_Helper
         }
         return $original;
     }
+    
+        
+    /**
+     * Function to get this installation's TLS version
+     * 
+     * Since 3.0
+     * 
+     * @return float OR false
+     */
+    public static function get_tls()
+    {
+        $php_ver = phpversion();
+        // If we have a php version lower than 5.6, bail.
+        if( version_compare( $php_ver, '5.6.0', '<' ) ) return false;
+        // Get the user's TLS version.
+
+        // If we have a php version of 7.0 or higher...
+        if( version_compare( $php_ver, '7.0.0', '>=' ) ) {
+            $meta = stream_get_meta_data( fopen( 'https://ninjaforms.com/', 'r' ) );
+            $tls = $meta[ 'crypto' ][ 'protocol' ];            
+        }
+        // Otherwise (php version between 5.6 and 7.0)...
+        else {
+            $ctx = stream_context_create( array( 'ssl' => array(
+                'capture_session_meta' => TRUE
+            ) ) );
+            $html = file_get_contents( 'https://ninjaforms.com/', FALSE, $ctx );
+            $meta = stream_context_get_options( $ctx );
+            $tls = $meta[ 'ssl' ][ 'session_meta' ][ 'protocol' ];
+            unset( $ctx );
+        }
+        // If we got a TLS version number...
+        if( false !== strpos( $tls, 'TLSv' ) ) {
+            $ver = substr( $tls, strpos( $tls, 'TLSv' ) + 4 );
+            return floatval( $ver );
+        } else {
+            return false;
+        }
+    }
 
     private static function parse_utf8_serialized( $matches )
     {

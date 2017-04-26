@@ -37,6 +37,8 @@ class NF_AJAX_Controllers_Form extends NF_Abstracts_Controller
         } else {
             $form = Ninja_Forms()->form($form_data['id'])->get();
         }
+        
+        unset( $form_data[ 'settings' ][ '_seq_num' ] );
 
         $form->update_settings( $form_data[ 'settings' ] )->save();
 

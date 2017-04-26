@@ -32,7 +32,7 @@ final class NF_Actions_Save extends NF_Abstracts_Action
     {
         parent::__construct();
 
-        $this->_nicename = __( 'Save', 'ninja-forms' );
+        $this->_nicename = __( 'Store Submission', 'ninja-forms' );
     }
 
     /*

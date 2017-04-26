@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 
-return array(
+return apply_filters( 'ninja_forms_admin_notices', array(
 
     /*
     |--------------------------------------------------------------------------
@@ -33,4 +33,4 @@ return array(
 //        'int' => 14
 //    ),
 
-);
+));

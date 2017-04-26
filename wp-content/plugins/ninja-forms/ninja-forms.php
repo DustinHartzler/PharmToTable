@@ -3,7 +3,7 @@
 Plugin Name: Ninja Forms
 Plugin URI: http://ninjaforms.com/
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 3.0.31
+Version: 3.0.34.1
 Author: The WP Ninjas
 Author URI: http://ninjaforms.com
 Text Domain: ninja-forms
@@ -52,7 +52,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
         /**
          * @since 3.0
          */
-        const VERSION = '3.0.31';
+        const VERSION = '3.0.34.1';
 
         /**
          * @var Ninja_Forms
@@ -115,6 +115,14 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
          * @var array
          */
         public $merge_tags = array();
+
+        /**
+         * Metaboxes
+         *
+         * @since 3.0
+         * @var array
+         */
+        public $metaboxes = array();
 
         /**
          * Model Factory
@@ -305,7 +313,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
                  */
                 register_activation_hook( __FILE__, array( self::$instance, 'activation' ) );
 
-                new NF_Admin_Metaboxes_AppendAForm();
+                self::$instance->metaboxes[ 'append-form' ] = new NF_Admin_Metaboxes_AppendAForm();
 
                 /*
                  * Require EDD auto-update file
@@ -435,7 +443,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
         public function form( $id = '' )
         {
             global $wpdb;
-            
+
             static $forms;
             if ( isset ( $forms[ $id ] ) ) {
                 return $forms[ $id ];

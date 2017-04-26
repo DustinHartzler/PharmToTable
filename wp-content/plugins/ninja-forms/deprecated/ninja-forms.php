@@ -265,7 +265,7 @@ class Ninja_Forms {
 
         // Plugin version
         if ( ! defined( 'NF_PLUGIN_VERSION' ) )
-            define( 'NF_PLUGIN_VERSION', '3.0.31' );
+            define( 'NF_PLUGIN_VERSION', '3.0.34.1' );
 
         // Plugin Folder Path
         if ( ! defined( 'NF_PLUGIN_DIR' ) )
@@ -797,29 +797,44 @@ function ninja_forms_three_admin_notice(){
     if( ! in_array( $currentScreen->id, array( 'toplevel_page_ninja-forms' ) ) ) return;
     wp_enqueue_style( 'nf-admin-notices', NINJA_FORMS_URL .'assets/css/admin-notices.css?nf_ver=' . NF_PLUGIN_VERSION );
 
-    if( ninja_forms_three_calc_check() && ninja_forms_three_addons_version_check() && ninja_forms_three_addons_check() ){
+    if( ! isset( $_GET[ 'nf-rollback' ] ) ){
+        if( ninja_forms_three_calc_check() && ninja_forms_three_addons_version_check() && ninja_forms_three_addons_check() ){
+            ?>
+            <div id="nf-admin-notice-upgrade" class="update-nag nf-admin-notice">
+                <div class="nf-notice-logo"></div>
+                <p class="nf-notice-title">Achievement Unlocked</p>
+                <p class="nf-notice-body">
+                    Cowabunga! You just unlocked Ninja Forms THREE.
+                </p>
+                <ul class="nf-notice-body nf-red">
+                    <li><span class="dashicons dashicons-awards"></span><a href="<?php echo admin_url( 'admin.php?page=ninja-forms-three' ); ?>">Upgrade to THREE</a></li>
+                </ul>
+            </div>
+            <?php
+        } else {
+            include plugin_dir_path( __FILE__ ) . 'upgrade/tmpl-notice.html.php';
+            $three_link = nf_aff_link( 'https://ninjaforms.com/three/?utm_medium=plugin&utm_source=admin-notice&utm_campaign=Ninja+Forms+THREE&utm_content=Learn+More' );
+            ?>
+            <div id="nf-admin-notice-three-is-coming" class="update-nag nf-admin-notice">
+                <div class="nf-notice-logo"></div>
+                <p class="nf-notice-title">THREE is coming! </p>
+                <p class="nf-notice-body">A major update is coming to Ninja Forms. <a target="_blank"
+                                                                                      href="<?php echo $three_link; ?>">Learn
+                        more about new features, backwards compatibility, and more Frequently Asked Questions.</a></p>
+            </div>
+            <?php
+        }
+    } else {
         ?>
         <div id="nf-admin-notice-upgrade" class="update-nag nf-admin-notice">
             <div class="nf-notice-logo"></div>
-            <p class="nf-notice-title">Achievement Unlocked</p>
+            <p class="nf-notice-title">Rollback Restored</p>
             <p class="nf-notice-body">
-                Cowabunga! You just unlocked Ninja Forms THREE.
+                Your forms have been restored to the state prior to the upgrade.
             </p>
             <ul class="nf-notice-body nf-red">
-                <li><span class="dashicons dashicons-awards"></span><a href="<?php echo admin_url( 'admin.php?page=ninja-forms-three' ); ?>">Upgrade to THREE</a></li>
+                <li><span class="dashicons dashicons-sos"></span><a href="https://ninjaforms.com/contact/?utm_medium=plugin&utm_source=admin-notice&utm_campaign=Ninja+Forms+Rollback&utm_content=Ninja+Forms+Support" target="_blank">Contact Support</a></li>
             </ul>
-        </div>
-        <?php
-    } else {
-        include plugin_dir_path( __FILE__ ) . 'upgrade/tmpl-notice.html.php';
-        $three_link = nf_aff_link( 'https://ninjaforms.com/three/?utm_medium=plugin&utm_source=admin-notice&utm_campaign=Ninja+Forms+THREE&utm_content=Learn+More' );
-        ?>
-        <div id="nf-admin-notice-three-is-coming" class="update-nag nf-admin-notice">
-            <div class="nf-notice-logo"></div>
-            <p class="nf-notice-title">THREE is coming! </p>
-            <p class="nf-notice-body">A major update is coming to Ninja Forms. <a target="_blank"
-                                                                                  href="<?php echo $three_link; ?>">Learn
-                    more about new features, backwards compatibility, and more Frequently Asked Questions.</a></p>
         </div>
         <?php
     }

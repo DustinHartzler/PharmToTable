@@ -64,9 +64,11 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
         $field_id  = $field[ 'id' ];
         $callback  = 'field_' . $field_id;
 
-        $this->merge_tags[ 'all_fields' ][ 'fields' ][ $field_id ] = $field;
-
         if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ',', $field[ 'value' ] );
+
+        $field[ 'value' ] = strip_shortcodes( $field[ 'value' ] );
+
+        $this->merge_tags[ 'all_fields' ][ 'fields' ][ $field_id ] = $field;
 
 	    $value = apply_filters('ninja_forms_merge_tag_value_' . $field['type'], $field['value'], $field);
 

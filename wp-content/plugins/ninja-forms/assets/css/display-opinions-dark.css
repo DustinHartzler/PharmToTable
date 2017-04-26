@@ -10,6 +10,9 @@ Normalize Ninja Forms fields with default structure
   -ms-box-sizing: border-box;
   box-sizing: border-box; }
 
+.nf-response-msg {
+  display: none; }
+
 .nf-field-container,
 #ninja_forms_required_items {
   clear: both;
@@ -815,7 +818,6 @@ ADJUST SOME LABEL LEFT & RIGHT ISSUES
 .label-right .listradio-wrap .nf-field-label,
 .label-right .listcheckbox-wrap .nf-field-label {
   -ms-flex-align: start;
-      -ms-grid-row-align: flex-start;
       align-items: flex-start; }
 
 .label-left .textarea-wrap .nf-field-label,

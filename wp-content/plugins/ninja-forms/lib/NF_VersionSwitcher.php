@@ -10,6 +10,8 @@ final class NF_VersionSwitcher
 
         add_action( 'admin_init', array( $this, 'listener' )  );
 
+        add_filter( 'ninja_forms_admin_notices', array( $this, 'upgrade_complete_notice' ) );
+
         if( defined( 'NF_DEV' ) && NF_DEV ) {
             add_action('admin_bar_menu', array( $this, 'admin_bar_menu'), 999);
         }
@@ -48,19 +50,25 @@ final class NF_VersionSwitcher
 
         if( isset( $_GET[ 'nf-switcher' ] ) ){
 
+            $notice = '';
+
             switch( $_GET[ 'nf-switcher' ] ){
                 case 'upgrade':
                     update_option( 'ninja_forms_load_deprecated', FALSE );
+                    update_option( 'ninja_forms_upgrade_complete', true );
                     do_action( 'ninja_forms_upgrade' );
+                    $notice = '&nf-upgrade=complete';
                     break;
                 case 'rollback':
                     update_option( 'ninja_forms_load_deprecated', TRUE );
+                    update_option( 'ninja_forms_upgrade_complete', false );
                     $this->rollback_activation();
                     do_action( 'ninja_forms_rollback' );
+                    $notice = '&nf-rollback=complete';
                     break;
             }
 
-            header( 'Location: ' . admin_url( 'admin.php?page=ninja-forms' ) );
+            header( 'Location: ' . admin_url( 'admin.php?page=ninja-forms' . $notice ) );
         }
     }
 
@@ -247,6 +255,24 @@ final class NF_VersionSwitcher
             exit;
         }
 
+    }
+
+    public function upgrade_complete_notice( $notices )
+    {
+        if( get_option( 'ninja_forms_upgrade_complete', false ) ){
+
+            // Persistance notice, until dismissed.
+            $notices[ 'upgrade_compelte_notice' ] = array(
+                'title' => __( 'How do I look?', 'ninja-forms' ),
+                'msg' => __( 'Your forms were upgraded. Take a look around and make sure everything looks right.', 'ninja-forms' ),
+                'link' => '<li><span class="dashicons dashicons-welcome-learn-more"></span><a target="_blank" href="https://ninjaforms.com/documentation/?utm_medium=plugin&utm_source=admin-notice&utm_campaign=Ninja+Forms+Upsell&utm_content=Ninja+Forms+Docs">' . __( 'Learn More', 'ninja-forms' ) . '</a></li>
+                            <li><span class="dashicons dashicons-sos"></span><a target="_blank" href="https://ninjaforms.com/docs/rollback/">' . __( 'Something is wrong...', 'ninja-forms' ) . '</a></li>
+                            <li><span class="dashicons dashicons-thumbs-up"></span><a href="' . add_query_arg( array( 'nf_admin_notice_ignore' => __( 'upgrade_compelte_notice', 'ninja-forms' ) ) ) . '">' . __( 'Looks Good!' ,'ninja-forms' ) . '</a></li>',
+                'int' => 0,
+                'pages' => array( 'ninja-forms' )
+            );
+        }
+        return $notices;
     }
 
 }

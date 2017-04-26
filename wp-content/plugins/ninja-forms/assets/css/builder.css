@@ -518,6 +518,15 @@ All styles used within the drawer
   .nf-drawer-header .nf-button {
     float: right; }
 
+.nf-drawer-error {
+  background-color: #FFBABA;
+  border: 1px solid #FFBABA;
+  border-radius: 5px;
+  color: #D8000C;
+  font-size: 12px;
+  margin: 10px 0px;
+  padding: 10px 10px; }
+
 .nf-settings h3 {
   color: #424242;
   font-size: 14px;
@@ -974,12 +983,10 @@ All styles used within the drawer
     text-indent: -99999px; }
 
 .nf-action-items.available .nf-item.nf-has-img {
-  -webkit-filter: grayscale(100%);
-          filter: grayscale(100%);
+  filter: grayscale(100%);
   opacity: 0.6; }
   .nf-action-items.available .nf-item.nf-has-img:hover {
-    -webkit-filter: grayscale(0);
-            filter: grayscale(0);
+    filter: grayscale(0);
     opacity: 1.0; }
 
 .nf-field-type-button {

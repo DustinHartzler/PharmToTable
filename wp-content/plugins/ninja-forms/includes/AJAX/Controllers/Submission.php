@@ -101,8 +101,7 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
         |--------------------------------------------------------------------------
         */
 
-        $form_fields = $this->_form_cache['fields'];
-        if( empty( $form_fields ) ) $form_fields = Ninja_Forms()->form( $this->_form_id )->get_fields();
+        $form_fields = Ninja_Forms()->form( $this->_form_id )->get_fields();
 
         /**
          * The Field Processing Loop.
@@ -166,6 +165,12 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
                 $this->process_field($field);
             }
             $field = array_merge( $field, $this->_form_data[ 'fields' ][ $field_id ] );
+
+	        // Check for field errors after processing.
+	        if ( isset( $this->_form_data['errors']['fields'][ $field_id ] ) ) {
+		        $this->_errors['fields'][ $field_id ] = $this->_form_data['errors']['fields'][ $field_id ];
+		        $this->_respond();
+	        }
 
             /** Populate Field Merge Tag */
             $field_merge_tags->add_field( $field );

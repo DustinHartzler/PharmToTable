@@ -50,6 +50,21 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         $errors = $this->check_for_errors( $action_settings );
 
         $headers = $this->_get_headers( $action_settings );
+        
+        if ( has_filter( 'ninja_forms_get_fields_sorted' ) ) {
+            $fields_by_key = array();
+            foreach( $data[ 'fields' ] as $field ){
+                if( is_null( $field ) ) continue;
+                if( is_array( $field ) ){
+                    if( ! isset( $field[ 'key' ] ) ) continue;
+                    $key = $field[ 'key' ];
+                } else {
+                    $key = $field->get_setting('key');
+                }
+                $fields_by_key[ $key ] = $field;
+            }
+            $data[ 'fields' ] = apply_filters( 'ninja_forms_get_fields_sorted', array(), $data[ 'fields' ], $fields_by_key, $form_id );
+        }
 
         $attachments = $this->_get_attachments( $action_settings, $data );
 
@@ -197,15 +212,38 @@ final class NF_Actions_Email extends NF_Abstracts_Action
     private function _create_csv( $fields )
     {
         $csv_array = array();
+        
+        // Get our current date.
+        $date_format = Ninja_Forms()->get_setting( 'date_format' );
+        $today = date( $date_format, current_time( 'timestamp' ) );
+        $csv_array[ 0 ][] = 'Date Submitted';
+        $csv_array[ 1 ][] = $today;
 
         foreach( $fields as $field ){
+            
+            $ignore = array(
+                'hr',
+                'submit',
+                'html'
+            );
+
+            $ignore = apply_filters( 'ninja_forms_csv_ignore_fields', $ignore );
 
             if( ! isset( $field[ 'label' ] ) ) continue;
-            if( 'hr' == $field['type'] ) continue;
-            if( 'submit' == $field['type'] ) continue;
+            if( in_array( $field[ 'type' ], $ignore ) ) continue;
+            
+            $label = ( '' != $field[ 'admin_label' ] ) ? $field[ 'admin_label' ] : $field[ 'label' ];
+            
+            $value = WPN_Helper::stripslashes( $field[ 'value' ] );
+            if ( empty( $value ) ) {
+                $value = '';
+            }
+            if ( is_array( $value ) ) {
+                $value = implode( ',', $value );
+            }
 
-            $csv_array[ 0 ][] = $field[ 'label' ];
-            $csv_array[ 1 ][] = WPN_Helper::stripslashes( $field[ 'value' ] );
+            $csv_array[ 0 ][] = $label;
+            $csv_array[ 1 ][] = $value;
         }
 
         $csv_content = WPN_Helper::str_putcsv( $csv_array,
