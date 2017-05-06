@@ -1,33 +1,33 @@
 # ignore everything in the root except the "wp-content" directory.
 /*
 !wp-content/
- 
+
 # ignore all files starting with .
 .*
- 
+
 # track this file .gitignore (i.e. do NOT ignore it)
 !.gitignore
- 
+
 # track readme.md in the root (i.e. do NOT ignore it)
 !readme.md
- 
+
 # ignore all files that start with ~
 ~*
- 
+
 # ignore OS generated files
 ehthumbs.db
 Thumbs.db
- 
+
 # ignore Editor files
 *.sublime-project
 *.sublime-workspace
 *.komodoproject
- 
+
 # ignore log files and databases
 *.log
 *.sql
 *.sqlite
- 
+
 # ignore compiled files
 *.com
 *.class
@@ -35,7 +35,7 @@ Thumbs.db
 *.exe
 *.o
 *.so
- 
+
 # ignore packaged files
 *.7z
 *.dmg
@@ -45,7 +45,7 @@ Thumbs.db
 *.rar
 *.tar
 *.zip
- 
+
 # ignore everything in the "wp-content" directory, except:
 # "mu-plugins" directory
 # "plugins" directory
@@ -54,6 +54,7 @@ wp-content/*
 !wp-content/mu-plugins/
 !wp-content/plugins/
 !wp-content/themes/
+wp-content/plugins/vaultpress/
 wp-content/plugins/homepage-control/
 
 wp-content/plugins/storefront-parallax-hero/
