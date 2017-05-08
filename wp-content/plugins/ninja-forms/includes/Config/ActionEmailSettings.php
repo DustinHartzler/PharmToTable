@@ -65,7 +65,11 @@ return apply_filters( 'ninja_forms_action_email_settings', array(
         'placeholder' => '',
         'value' => '',
         'width' => 'full',
-        'use_merge_tags' => TRUE,
+        'use_merge_tags' => array(
+            'include' => array(
+                'calcs',
+            ),
+        ),
         'deps' => array(
             'email_format' => 'html'
         )

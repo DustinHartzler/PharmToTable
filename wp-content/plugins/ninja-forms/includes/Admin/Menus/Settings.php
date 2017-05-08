@@ -21,6 +21,17 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
         // Catch Contact Form 7 reCAPTCHA conflict.
         add_action( 'admin_init', array( $this, 'nf_cf7_notice_dismissed' ) );
         add_action( 'admin_notices', array( $this, 'ninja_forms_cf7_notice' ) );
+        add_action( 'admin_body_class', array( $this, 'body_class' ) );
+    }
+
+    public function body_class( $classes )
+    {
+        // Add class for the builder.
+        if( isset( $_GET['page'] ) && $_GET['page'] == $this->menu_slug ) {
+            $classes = "$classes ninja-forms-settings";
+        }
+
+        return $classes;
     }
     
     /**

@@ -98,7 +98,7 @@ class NF_Admin_AllFormsTable extends WP_List_Table
     {
         return array(
             'title' => array( __( 'title', 'ninja-forms' ),   TRUE ),
-            'date'  => array( __( 'updated', 'ninja-forms' ), TRUE ),
+            'date'  => array( __( 'date', 'ninja-forms' ), TRUE ),
         );
     }
 

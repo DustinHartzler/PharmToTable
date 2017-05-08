@@ -78,17 +78,6 @@ abstract class NF_Abstracts_Menu
             $this->icon_url,
             $this->position
         );
-
-        add_filter( 'admin_body_class', array( $this, 'body_class' ) );
-    }
-
-    public function body_class( $classes )
-    {
-        if( isset( $_GET['page'] ) && $_GET['page'] == $this->menu_slug ) {
-            $classes = "$classes ninja-forms-app";
-        }
-
-        return $classes;
     }
 
     public function get_page_title()

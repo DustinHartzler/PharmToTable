@@ -818,6 +818,7 @@ ADJUST SOME LABEL LEFT & RIGHT ISSUES
 .label-right .listradio-wrap .nf-field-label,
 .label-right .listcheckbox-wrap .nf-field-label {
   -ms-flex-align: start;
+      -ms-grid-row-align: flex-start;
       align-items: flex-start; }
 
 .label-left .textarea-wrap .nf-field-label,

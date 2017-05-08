@@ -113,7 +113,11 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
             $site_wide_plugins = implode( ', <br/>', $all_plugins );
         }
 
-        $server_ip = $_SERVER['SERVER_ADDR'];
+        $server_ip = '';
+        if( array_key_exists( 'SERVER_ADDR', $_SERVER ) )
+            $server_ip = $_SERVER[ 'SERVER_ADDR' ];
+        elseif( array_key_exists( 'LOCAL_ADDR', $_SERVER ) )
+            $server_ip = $_SERVER[ 'LOCAL_ADDR' ];
         $host_name = gethostbyaddr( $server_ip );
         
         $tls = WPN_Helper::get_tls();

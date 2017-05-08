@@ -14,7 +14,11 @@ return array(
         'placeholder' => '',
         'width' => 'full',
         'value' => __( 'Your form has been successfully submitted.', 'ninja-forms' ),
-        'use_merge_tags' => TRUE,
+        'use_merge_tags' => array(
+            'include' => array(
+                'calcs',
+            ),
+        ),
     ),
 
 );

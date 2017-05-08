@@ -22,6 +22,10 @@ return apply_filters( 'ninja_forms_from_calculation_settings', array(
                 'header'    => __( 'Equation', 'ninja-forms' ),
                 'default'   => '',
             ),
+            'dec'           => array(
+                'header'    => __( 'Precision', 'ninja-forms' ),
+                'default'   => '2',
+            ),
         ),
         'use_merge_tags'    => array(
             'exclude'       => array(

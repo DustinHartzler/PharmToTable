@@ -1,12 +1,12 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 
-final class NF_Admin_Menus_AllForms extends NF_Abstracts_Submenu
+final class NF_Admin_Menus_Dashboard extends NF_Abstracts_Submenu
 {
     public $parent_slug = 'ninja-forms';
 
-    public $page_title = 'All Forms';
+    public $page_title = 'Dashboard';
 
-    public $menu_slug = 'admin.php?page=ninja-forms';
+    public $menu_slug = 'ninja-forms';
 
     public $priority = 1;
 
@@ -17,7 +17,10 @@ final class NF_Admin_Menus_AllForms extends NF_Abstracts_Submenu
 
     public function get_page_title()
     {
-        return __( 'All Forms', 'ninja-forms' );
+        if( isset( $_GET[ 'form_id' ] ) ) {
+            return __( 'Form Builder', 'ninja-forms' );
+        }
+        return __( 'Dashboard', 'ninja-forms' );
     }
 
     public function get_capability()

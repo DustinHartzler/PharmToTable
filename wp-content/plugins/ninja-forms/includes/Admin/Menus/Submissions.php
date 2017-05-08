@@ -298,7 +298,10 @@ final class NF_Admin_Menus_Submissions extends NF_Abstracts_Submenu
 
         if ((isset ($_REQUEST['action']) && $_REQUEST['action'] == 'export') || (isset ($_REQUEST['action2']) && $_REQUEST['action2'] == 'export')) {
 
-            $sub_ids = WPN_Helper::esc_html($_REQUEST['post']);
+            $sub_ids = array();
+            if (isset($_REQUEST['post'])) {
+              $sub_ids = WPN_Helper::esc_html($_REQUEST['post']);
+            }
 
             Ninja_Forms()->form( $_REQUEST['form_id'] )->export_subs( $sub_ids );
         }

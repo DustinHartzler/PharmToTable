@@ -322,7 +322,7 @@ Form field placeholders for the fields a user has added to their form
     .nf-item-controls .nf-item-control.nf-item-edit {
       opacity: 100;
       visibility: visible;
-      z-index: 100; }
+      z-index: auto; }
   .nf-item-controls:hover a {
     background: #1EA9EA;
     color: #fff; }
@@ -425,7 +425,7 @@ All styles used within the drawer
   bottom: 0;
   right: -1400px;
   overflow: hidden;
-  z-index: 101;
+  z-index: auto;
   transition: width 0.75s ease;
   -webkit-overflow-scrolling: touch; }
   #nf-drawer.nf-drawer-expand {
@@ -802,6 +802,8 @@ All styles used within the drawer
     padding: 20px 5px 5px; }
     .ninja-forms-app .nf-list-options .nf-div-table .nf-table-row.nf-table-header div:nth-child(1), .ninja-forms-app .nf-list-options .nf-div-table .nf-table-row.nf-table-header div:nth-child(6) {
       padding: 0 25px; }
+  .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-header div:nth-child(4) {
+    display: none; }
   .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row div {
     vertical-align: top;
     position: relative; }
@@ -815,7 +817,8 @@ All styles used within the drawer
       width: 70%; }
     .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row div textarea {
       margin: 0;
-      height: 100px; }
+      height: 100px;
+      padding-right: 40px; }
     .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row div .merge-tags {
       color: #999;
       position: absolute;
@@ -824,6 +827,22 @@ All styles used within the drawer
     .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row div .dashicons {
       color: #999;
       margin-top: 10px; }
+  .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row .calc-left div {
+    display: inline-block; }
+    .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row .calc-left div:nth-child(1) {
+      width: 100%;
+      padding: 0px; }
+    .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row .calc-left div:nth-child(2) {
+      width: 60%;
+      text-align: right;
+      font-size: 12px;
+      float: left;
+      padding-top: 20px;
+      padding-right: 10px; }
+    .ninja-forms-app .nf-list-options.calculations .nf-div-table .nf-table-row .calc-left div:nth-child(3) {
+      width: 50px;
+      float: left;
+      padding-top: 10px; }
 
 .ninja-forms-app .options {
   position: relative; }
@@ -983,10 +1002,12 @@ All styles used within the drawer
     text-indent: -99999px; }
 
 .nf-action-items.available .nf-item.nf-has-img {
-  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+          filter: grayscale(100%);
   opacity: 0.6; }
   .nf-action-items.available .nf-item.nf-has-img:hover {
-    filter: grayscale(0);
+    -webkit-filter: grayscale(0);
+            filter: grayscale(0);
     opacity: 1.0; }
 
 .nf-field-type-button {
@@ -1202,43 +1223,61 @@ input[type=checkbox].nf-toggle {
 /*
 All styles used for displaying table content
 -------------------------------------------- */
-.ninja-forms-app table {
-  width: 100%;
-  border-collapse: collapse; }
-  .ninja-forms-app table td, .ninja-forms-app table th {
+.nf-actions-table,
+.nf-table-display {
+  border-collapse: collapse;
+  width: 100%; }
+  .nf-actions-table td, .nf-actions-table th,
+  .nf-table-display td,
+  .nf-table-display th {
     border-bottom: 1px solid #ECEDEE;
     font-size: 14px;
-    padding: 15px; }
-  .ninja-forms-app table th {
+    padding: 15px;
+    vertical-align: top;
+    position: relative; }
+  .nf-actions-table th,
+  .nf-table-display th {
     color: #666;
     text-align: left;
     text-transform: uppercase; }
-  .ninja-forms-app table td {
+  .nf-actions-table td,
+  .nf-table-display td {
     color: #676F75;
-    white-space: nowrap;
     position: relative; }
-    .ninja-forms-app table td:nth-child(2) {
+    .nf-actions-table td:nth-child(2),
+    .nf-table-display td:nth-child(2) {
       width: 90%; }
-  .ninja-forms-app table .deactivated td {
+  .nf-actions-table .deactivated td,
+  .nf-table-display .deactivated td {
     color: #BCBDBF; }
-    .ninja-forms-app table .deactivated td a {
+    .nf-actions-table .deactivated td a,
+    .nf-table-display .deactivated td a {
       color: #ddd; }
-  .ninja-forms-app table input[type=checkbox].nf-toggle + label {
+  .nf-actions-table input[type=checkbox].nf-toggle + label,
+  .nf-table-display input[type=checkbox].nf-toggle + label {
+    z-index: 0;
     margin: 2px 0 0; }
-  .ninja-forms-app table .active td {
+  .nf-actions-table .active td,
+  .nf-table-display .active td {
     color: #84CC1E;
     font-weight: bold; }
-  .ninja-forms-app table .active .nf-item-controls {
+  .nf-actions-table .active .nf-item-controls,
+  .nf-table-display .active .nf-item-controls {
     font-weight: normal;
     float: right; }
-    .ninja-forms-app table .active .nf-item-controls a {
+    .nf-actions-table .active .nf-item-controls a,
+    .nf-table-display .active .nf-item-controls a {
       color: #84CC1E; }
-    .ninja-forms-app table .active .nf-item-controls .nf-item-delete,
-    .ninja-forms-app table .active .nf-item-controls .nf-item-duplicate {
+    .nf-actions-table .active .nf-item-controls .nf-item-delete,
+    .nf-actions-table .active .nf-item-controls .nf-item-duplicate,
+    .nf-table-display .active .nf-item-controls .nf-item-delete,
+    .nf-table-display .active .nf-item-controls .nf-item-duplicate {
       display: none; }
-    .ninja-forms-app table .active .nf-item-controls .nf-item-editing {
+    .nf-actions-table .active .nf-item-controls .nf-item-editing,
+    .nf-table-display .active .nf-item-controls .nf-item-editing {
       display: inline !important; }
-    .ninja-forms-app table .active .nf-item-controls .nf-item-edit .dashicons {
+    .nf-actions-table .active .nf-item-controls .nf-item-edit .dashicons,
+    .nf-table-display .active .nf-item-controls .nf-item-edit .dashicons {
       margin-right: 12px; }
 
 .ui-droppable {
@@ -1634,6 +1673,120 @@ label.has-merge-tags .merge-tags {
   width: 28px;
   height: 28px;
   background: #1EA9EA; }
+
+/* MERGE TAG BOX STYLES */
+#merge-tags-box {
+  display: none;
+  background-color: #DBDDDD;
+  max-height: 360px;
+  z-index: 1001;
+  position: absolute;
+  top: -1px;
+  left: 12px;
+  right: 10px; }
+  #merge-tags-box .merge-tag-container {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: justify;
+        justify-content: space-between; }
+  #merge-tags-box .merge-tag-sections,
+  #merge-tags-box .merge-tag-list {
+    float: left;
+    font-size: 14px;
+    background-color: #fff;
+    height: 300px;
+    overflow-y: auto; }
+  #merge-tags-box .merge-tag-sections {
+    background-color: #DBDDDD; }
+    #merge-tags-box .merge-tag-sections ul {
+      margin: 0; }
+      #merge-tags-box .merge-tag-sections ul li {
+        background: #DBDDDD;
+        border-bottom: 1px solid #fff;
+        cursor: pointer;
+        font-size: 14px;
+        margin: 0;
+        padding: 8px 26px 8px 16px; }
+        #merge-tags-box .merge-tag-sections ul li:hover {
+          background: #f6f6f6; }
+        #merge-tags-box .merge-tag-sections ul li.active {
+          position: relative; }
+        #merge-tags-box .merge-tag-sections ul li.active::after {
+          clear: both;
+          content: "";
+          display: block;
+          width: 0;
+          height: 0;
+          border-top: 17px solid transparent;
+          border-bottom: 17px solid transparent;
+          border-right: 24px solid #fff;
+          position: absolute;
+          top: 0;
+          right: 0; }
+        #merge-tags-box .merge-tag-sections ul li:hover {
+          color: #1EA9EA; }
+  #merge-tags-box .merge-tag-list {
+    -ms-flex-positive: 1;
+        flex-grow: 1;
+    padding-top: 10px; }
+    #merge-tags-box .merge-tag-list div div {
+      line-height: 22px; }
+    #merge-tags-box .merge-tag-list:hover li {
+      color: black !important; }
+      #merge-tags-box .merge-tag-list:hover li:hover {
+        color: #1EA9EA !important; }
+    #merge-tags-box .merge-tag-list ul {
+      margin: 0; }
+    #merge-tags-box .merge-tag-list li {
+      cursor: pointer;
+      margin-bottom: 0; }
+      #merge-tags-box .merge-tag-list li span {
+        padding: 4px 16px;
+        display: block; }
+        #merge-tags-box .merge-tag-list li span small {
+          font-family: "Courier New", Courier, monospace, sans-serif; }
+      #merge-tags-box .merge-tag-list li:first-of-type {
+        color: #1EA9EA; }
+  #merge-tags-box .merge-tag-filter {
+    border-bottom: 2px solid #DBDDDD;
+    margin: 3px 10px 10px 10px;
+    clear: both; }
+
+.merge-tag-focus {
+  position: relative;
+  z-index: 1000; }
+
+.merge-tag-focus-overlay:before {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100; }
+
+.merge-tag-focus-overlay.note-editor:before {
+  z-index: 0; }
+
+#merge-tags-box.one-half--first {
+  width: 538px;
+  left: 12px; }
+
+#merge-tags-box.one-half--second {
+  width: 538px;
+  right: 10px;
+  left: auto; }
+
+.setting + .merge-tags {
+  color: rgba(204, 204, 204, 0.3); }
+
+.setting:focus + .merge-tags,
+.merge-tag-focus-overlay .merge-tags {
+  color: #cccccc; }
+
+.merge-tag-focus-overlay .merge-tags {
+  z-index: 1000; }
 
 .note-popover {
   display: none !important; }

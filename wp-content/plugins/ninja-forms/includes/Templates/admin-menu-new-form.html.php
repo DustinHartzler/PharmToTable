@@ -32,7 +32,27 @@
     <div id="nf-menu-drawer"></div>
     <div id="nf-drawer"></div>
     <span class="merge-tags-content" style="display:none;"></span>
+    <div id="merge-tags-box"></div>
 </script>
+
+<!-- MERGE TAGS BOX TEMPLATES -->
+<script id="tmpl-nf-merge-tag-box" type="text/template">
+    <div class="merge-tag-filter"></div>
+    <div class="merge-tag-container">
+        <div class="merge-tag-sections"></div>
+        <div class="merge-tag-list"></div>
+    </div>
+</script>
+<script id="tmpl-nf-merge-tag-box-section" type="text/template">
+    {{{ data.label }}}
+</script>
+<script id="tmpl-nf-merge-tag-box-tag" type="text/template">
+    <span data-tag="{{{data.tag}}}">{{{ data.label }}} <small>{{{data.tag}}}</small></span>
+</script>
+<script id="tmpl-nf-merge-tag-box-filter" type="text/template">
+    <input type="text" placeholder="Search for merge tags" >
+</script>
+<!-- END: MERGE TAGS BOX TEMPLATES -->
 
 <script id="tmpl-nf-admin-header" type="text/template">
     <div id="nf-app-admin-header"></div>
@@ -125,10 +145,7 @@
 <script id="tmpl-nf-main-content-fields-empty" type="text/template">
     <div class="nf-fields-empty">
         <h3><?php _e( 'Add form fields', 'ninja-forms' ); ?></h3>
-        <p><?php _e( 'Get started by adding your first form field.', 'ninja-forms' ); ?> <a class="nf-open-drawer" title="<?php _e( 'Add New Field', 'ninja-forms' ); ?>" href="#" data-drawerid="addField"><?php _e( 'Just click here and select the fields you want.', 'ninja-forms' ); ?> </a><?php _e( "It's that easy. Or...", 'ninja-forms' ); ?>
-        <h3><?php _e( 'Start from a template', 'ninja-forms' ); ?></h3>
-        <?php Ninja_Forms::template( 'NewFormTemplates.html.php' ); ?>
-
+        <p><?php _e( 'Get started by adding your first form field.', 'ninja-forms' ); ?> <?php _e( "It's that easy.", 'ninja-forms' ); ?>
     </div>
 </script>
 
@@ -624,9 +641,16 @@ Label Three, value-three, 3
     <div>
         <span class="dashicons dashicons-menu handle"></span>
     </div>
-    <div>
-        <input type="text" class="setting" value="{{{ data.name }}}" data-id="name">
-        <span class="nf-option-error"></span>
+    <div class="calc-left">
+        <div>
+            <input type="text" class="setting" value="{{{ data.name }}}" data-id="name">
+            <span class="nf-option-error"></span>
+        </div>
+        <div><?php _e( 'Decimals', 'ninja-forms' ); ?></div>
+        <div>
+            <input type="text" class="setting" value="{{{ data.dec }}}" data-id="dec">
+            <span class="nf-option-error"></span>
+        </div>
     </div>
     <div>
         <textarea class="setting" data-id="eq">{{{ data.eq }}}</textarea>

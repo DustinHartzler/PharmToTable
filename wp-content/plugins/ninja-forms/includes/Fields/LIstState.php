@@ -9,7 +9,7 @@ class NF_Fields_ListState extends NF_Abstracts_List
 
     protected $_type = 'liststate';
 
-    protected $_nicename = 'State';
+    protected $_nicename = 'US States';
 
     protected $_section = 'userinfo';
 
@@ -23,7 +23,7 @@ class NF_Fields_ListState extends NF_Abstracts_List
     {
         parent::__construct();
 
-        $this->_nicename = __( 'State', 'ninja-forms' );
+        $this->_nicename = __( 'US States', 'ninja-forms' );
 
         $this->_settings[ 'options' ][ 'value' ] = $this->get_options();
     }
