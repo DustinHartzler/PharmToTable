@@ -117,12 +117,13 @@ class PrliAppController extends PrliBaseController {
       $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'">'.__('Activate', 'pretty-link').'</a>';
     }
     else if($plp_update->is_installed()) {
-      $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'" class="prli-menu-red">'.__('Activate Pro', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'" class="prli-menu-green">'.__('Activate Pro License', 'pretty-link').'</a>';
       $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/installed/buy" target="_blank" class="prli-menu-red">'.__('Buy', 'pretty-link').'</a>';
       $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/installed/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
     }
     else {
       $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/lite/upgrade" class="prli-menu-red" target="_blank">'.__('Upgrade to Pro', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'" class="prli-menu-green">'.__('Activate Pro License', 'pretty-link').'</a>';
       $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/lite/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
     }
 
@@ -372,7 +373,6 @@ class PrliAppController extends PrliBaseController {
     }
   }
 
-
   public function pro_action_needed( $plugin ) {
     global $plp_update;
 
@@ -381,9 +381,13 @@ class PrliAppController extends PrliBaseController {
       $inst_install_url = $plp_update->update_plugin_url();
 
       ?>
-        <td colspan="3" class="plugin-update" style="border-left: 4px solid #d54e21; background-color: #fef7f1;">
-          <div class="update-message"><?php printf(__('Your Pretty Link Pro installation isn\'t quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s', 'pretty-link'), '<a href="'.$inst_install_url.'">', '</a>'); ?></div>
-        </td>
+        <tr class="plugin-update-tr active" id="pretty-link-upgrade" data-slug="pretty-link" data-plugin="pretty-link/pretty-link.php">
+          <td colspan="3" class="plugin-update colspanchange">
+            <div class="update-message notice inline notice-error notice-alt">
+              <p><?php printf(__('Your Pretty Link Pro installation isn\'t quite complete yet. %1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s', 'pretty-link'), '<a href="'.$inst_install_url.'">', '</a>'); ?></p>
+            </div>
+          </td>
+        </tr>
       <?php
     }
   }

@@ -256,7 +256,7 @@ class PrliUtils {
     $pretty_link_target = apply_filters( 'prli_target_url', array( 'url' => $pretty_link->url, 'link_id' => $pretty_link->id, 'redirect_type' => $pretty_link->redirect_type ) );
 
     // Error out when url is blank
-    if(!isset($pretty_link_target['url']) || empty($pretty_link_target['url'])) {
+    if($pretty_link->redirect_type != 'pixel' && (!isset($pretty_link_target['url']) || empty($pretty_link_target['url']))) {
       return false;
     }
 
@@ -1040,11 +1040,14 @@ class PrliUtils {
   }
 
   public static function is_url($str) {
+    //For now we're not going to validate this - there's too many possible protocols/schemes to validate now
+    return true;
+
     // This uses the @diegoperini URL matching regex adapted for PHP from https://gist.github.com/dperini/729294
-    // return preg_match('_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$_iuS', $str);
+    // return preg_match('_^(?::/?/?)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$_iuS', $str);
 
     //Let's see how PHP's built in validator does instead?
-    return apply_filters('prli_is_valid_url', (filter_var($str, FILTER_VALIDATE_URL) !== FALSE), $str);
+    //return apply_filters('prli_is_valid_url', (filter_var($str, FILTER_VALIDATE_URL) !== FALSE), $str);
   }
 
   public static function is_email($str) {
@@ -1359,6 +1362,28 @@ class PrliUtils {
     $codes = self::http_status_codes();
     header("HTTP/1.1 {$status} {$codes[$status]}", true, $status);
     exit($message);
+  }
+
+  //Coupons rely on this be careful changing it
+  public static function get_date_from_ts($ts, $format = 'M d, Y') {
+    if($ts > 0) {
+      return gmdate($format, $ts);
+    }
+    else {
+      return gmdate($format, time());
+    }
+  }
+
+  public static function db_date_to_ts($mysql_date) {
+    return strtotime($mysql_date);
+  }
+
+  public static function ts_to_mysql_date($ts, $format='Y-m-d H:i:s') {
+    return gmdate($format, $ts);
+  }
+
+  public static function db_now($format='Y-m-d H:i:s') {
+    return self::ts_to_mysql_date(time(),$format);
   }
 }
 

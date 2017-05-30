@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Pretty Link package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Link 2.0.8\n"
+"Project-Id-Version: Pretty Link 2.0.9\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
-"POT-Creation-Date: 2017-04-11 22:17:29+00:00\n"
+"POT-Creation-Date: 2017-05-23 22:57:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,6 +17,8 @@ msgstr ""
 msgid "Pretty Link | Manage Pretty Links"
 msgstr ""
 
+#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.0.9)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
 #: app/controllers/PrliAppController.php:37
 #: app/controllers/PrliAppController.php:46 app/views/links/form.php:47
 #: app/views/shared/tinymce_form_popup.php:109 app/views/widgets/widget.php:17
@@ -72,7 +74,6 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:99
 #: app/controllers/PrliAppController.php:102
-#: app/controllers/PrliAppController.php:120
 msgid "Activate Pro"
 msgstr ""
 
@@ -84,7 +85,7 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:116
 #: app/controllers/PrliAppController.php:122
-#: app/controllers/PrliAppController.php:126
+#: app/controllers/PrliAppController.php:127
 msgid "Docs"
 msgstr ""
 
@@ -92,25 +93,38 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
+#: app/controllers/PrliAppController.php:120
+#: app/controllers/PrliAppController.php:126
+msgid "Activate Pro License"
+msgstr ""
+
 #: app/controllers/PrliAppController.php:121
 msgid "Buy"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:279
-msgid "You're almost done!<br/>%1$sFinish your Re-Install of Pretty Link Pro%2$s"
+#: app/controllers/PrliAppController.php:280
+msgid ""
+"You're almost done!<br/>%1$sFinish your Re-Install of Pretty Link Pro%2$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:286
+#: app/controllers/PrliAppController.php:287
 msgid "Pretty Link Pro Successfully Uninstalled."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:347
+#: app/controllers/PrliAppController.php:348
 msgid "Pretty Link Quick Add"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:385
-#: app/controllers/PrliAppController.php:404
-msgid "Your Pretty Link Pro installation isn't quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
+#: app/controllers/PrliAppController.php:387
+msgid ""
+"Your Pretty Link Pro installation isn't quite complete yet. "
+"%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:408
+msgid ""
+"Your Pretty Link Pro installation isn't quite complete yet.<br/>"
+"%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
 msgstr ""
 
 #: app/controllers/PrliClicksController.php:89
@@ -213,11 +227,15 @@ msgid "Options saved."
 msgstr ""
 
 #: app/controllers/PrliOptionsController.php:75
-msgid "Excluded IP Addresses must be a comma separated list of IPv4 or IPv6 addresses or ranges."
+msgid ""
+"Excluded IP Addresses must be a comma separated list of IPv4 or IPv6 "
+"addresses or ranges."
 msgstr ""
 
 #: app/controllers/PrliOptionsController.php:79
-msgid "Whitlist IP Addresses must be a comma separated list of IPv4 or IPv6 addresses or ranges."
+msgid ""
+"Whitlist IP Addresses must be a comma separated list of IPv4 or IPv6 "
+"addresses or ranges."
 msgstr ""
 
 #: app/controllers/PrliPopupController.php:62
@@ -456,7 +474,9 @@ msgid "Edit %s"
 msgstr ""
 
 #: app/helpers/PrliLinksHelper.php:115
-msgid "Are you sure you want to delete your %s Pretty Link? This will delete the Pretty Link and all of the statistical data about it in your database."
+msgid ""
+"Are you sure you want to delete your %s Pretty Link? This will delete the "
+"Pretty Link and all of the statistical data about it in your database."
 msgstr ""
 
 #: app/helpers/PrliLinksHelper.php:115
@@ -464,7 +484,9 @@ msgid "Delete %s"
 msgstr ""
 
 #: app/helpers/PrliLinksHelper.php:116
-msgid "Are you sure you want to reset your %s Pretty Link? This will delete all of the statistical data about this Pretty Link in your database."
+msgid ""
+"Are you sure you want to reset your %s Pretty Link? This will delete all of "
+"the statistical data about this Pretty Link in your database."
 msgstr ""
 
 #: app/helpers/PrliLinksHelper.php:116
@@ -538,7 +560,9 @@ msgid "Link URL must be a correctly formatted url"
 msgstr ""
 
 #: app/models/PrliLink.php:575
-msgid "Pretty Link slugs must not contain question marks, ampersands or number signs."
+msgid ""
+"Pretty Link slugs must not contain question marks, ampersands or number "
+"signs."
 msgstr ""
 
 #: app/models/PrliLink.php:579
@@ -546,7 +570,11 @@ msgid "Pretty Link slugs must not end with a slash (\"/\")"
 msgstr ""
 
 #: app/models/PrliLink.php:584
-msgid "This Pretty Link Slug is already taken. Check to make sure it isn't being used by another pretty link, post, page, category or tag slug. If none of these are true then check to see that this slug isn't the name of a file in the root folder of your wordpress install."
+msgid ""
+"This Pretty Link Slug is already taken. Check to make sure it isn't being "
+"used by another pretty link, post, page, category or tag slug. If none of "
+"these are true then check to see that this slug isn't the name of a file in "
+"the root folder of your wordpress install."
 msgstr ""
 
 #: app/models/PrliUtils.php:93
@@ -562,7 +590,9 @@ msgid "Rate Pretty Link"
 msgstr ""
 
 #: app/views/admin/popups/rating.php:7
-msgid "If you enjoy using Pretty Link would you mind taking a moment to rate it on WordPress.org? It won't take more than a minute."
+msgid ""
+"If you enjoy using Pretty Link would you mind taking a moment to rate it on "
+"WordPress.org? It won't take more than a minute."
 msgstr ""
 
 #: app/views/admin/popups/rating.php:8
@@ -621,7 +651,9 @@ msgstr ""
 
 #: app/views/admin/popups/upgrade.php:17 app/views/admin/update/license.php:45
 #: app/views/links/form.php:233
-msgid "Plus, upgrading is fast, easy and won't disrupt any of your existing links or data. And there's even a 14 day money back guarantee."
+msgid ""
+"Plus, upgrading is fast, easy and won't disrupt any of your existing links "
+"or data. And there's even a 14 day money back guarantee."
 msgstr ""
 
 #: app/views/admin/popups/upgrade.php:18 app/views/admin/update/license.php:47
@@ -643,23 +675,32 @@ msgid "Pretty Link Pro isn't able to get critical automatic updates"
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:8
-msgid "It looks like you used to have Pretty Link Pro activated with a username and password but now you need a license key to activate it."
+msgid ""
+"It looks like you used to have Pretty Link Pro activated with a username and "
+"password but now you need a license key to activate it."
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:9
-msgid "You can get your license key by logging in at %1$sPrettyLinkPro.com.%2$s"
+msgid ""
+"You can get your license key by logging in at %1$sPrettyLinkPro.com.%2$s"
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:10
-msgid "After you paste your license key on the %1$s\"Pretty Link\" -> \"Activate Pro\" admin page,%2$s you'll start getting updates again."
+msgid ""
+"After you paste your license key on the %1$s\"Pretty Link\" -> \"Activate Pro"
+"\" admin page,%2$s you'll start getting updates again."
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:15
-msgid "You can retrieve or purchase a license key at %1$sPrettyLinkPro.com%2$s to enable automatic updates today."
+msgid ""
+"You can retrieve or purchase a license key at %1$sPrettyLinkPro.com%2$s to "
+"enable automatic updates today."
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:16
-msgid "After you paste your license key on the %1$s\"Pretty Link\" -> \"Activate Pro\" admin page,%2$s you'll start getting automatic updates."
+msgid ""
+"After you paste your license key on the %1$s\"Pretty Link\" -> \"Activate Pro"
+"\" admin page,%2$s you'll start getting automatic updates."
 msgstr ""
 
 #: app/views/admin/update/addon_popup.php:4
@@ -667,23 +708,34 @@ msgid "ACTION REQUIRED"
 msgstr ""
 
 #: app/views/admin/update/addon_popup.php:5
-msgid "The %s features in your Pretty Link options have been moved from Pretty Link into a separate plugin."
+msgid ""
+"The %s features in your Pretty Link options have been moved from Pretty Link "
+"into a separate plugin."
 msgstr ""
 
 #: app/views/admin/update/addon_popup.php:6
-msgid "Why you ask? Well, it's to streamline and increase the performance of Pretty Link for you."
+msgid ""
+"Why you ask? Well, it's to streamline and increase the performance of Pretty "
+"Link for you."
 msgstr ""
 
 #: app/views/admin/update/addon_popup.php:9
-msgid "And good for you, it looks like you've already got the %1$s Add-on installed. Just click the \"Activate %2$s Add-on\" button below and you'll get all these features back now."
+msgid ""
+"And good for you, it looks like you've already got the %1$s Add-on "
+"installed. Just click the \"Activate %2$s Add-on\" button below and you'll "
+"get all these features back now."
 msgstr ""
 
 #: app/views/admin/update/addon_popup.php:11
-msgid "Luckily it's easy to get these features back now. Just click the \"Install %s Add-on\" button below."
+msgid ""
+"Luckily it's easy to get these features back now. Just click the \"Install "
+"%s Add-on\" button below."
 msgstr ""
 
 #: app/views/admin/update/addon_popup.php:12
-msgid "If you have problems with the auto-install please refer to %1$sthe user manual%2$s for manual install instructions."
+msgid ""
+"If you have problems with the auto-install please refer to %1$sthe user "
+"manual%2$s for manual install instructions."
 msgstr ""
 
 #: app/views/admin/update/addon_popup.php:18
@@ -731,7 +783,9 @@ msgid "Installed & Inactive"
 msgstr ""
 
 #: app/views/admin/update/edge_updates.php:4
-msgid "Include Pretty Link Pro edge (development) releases in automatic updates (not recommended for production websites)"
+msgid ""
+"Include Pretty Link Pro edge (development) releases in automatic updates "
+"(not recommended for production websites)"
 msgstr ""
 
 #: app/views/admin/update/edge_updates.php:4
@@ -743,7 +797,10 @@ msgid "Pretty Link Pro License"
 msgstr ""
 
 #: app/views/admin/update/license.php:7
-msgid "You must have a License Key to enable automatic updates for Pretty Link Pro. If you don't have a License please go to %1$s to get one. If you do have a license you can login at %2$s to manage your licenses and site activations."
+msgid ""
+"You must have a License Key to enable automatic updates for Pretty Link Pro. "
+"If you don't have a License please go to %1$s to get one. If you do have a "
+"license you can login at %2$s to manage your licenses and site activations."
 msgstr ""
 
 #: app/views/admin/update/license.php:13
@@ -755,7 +812,9 @@ msgid "Activate License Key on %s"
 msgstr ""
 
 #: app/views/admin/update/license.php:30 app/views/links/form.php:221
-msgid "It looks like you haven't %1$supgraded to Pretty Link Pro%2$s yet. Here are just a few things you could be doing with pro:"
+msgid ""
+"It looks like you haven't %1$supgraded to Pretty Link Pro%2$s yet. Here are "
+"just a few things you could be doing with pro:"
 msgstr ""
 
 #: app/views/admin/update/license.php:49 app/views/links/form.php:237
@@ -787,7 +846,9 @@ msgid "Activations:"
 msgstr ""
 
 #: app/views/admin/update/license.php:72
-msgid "Are you sure? Pretty Link Pro will not be functional on %s if this License Key is deactivated."
+msgid ""
+"Are you sure? Pretty Link Pro will not be functional on %s if this License "
+"Key is deactivated."
 msgstr ""
 
 #: app/views/admin/update/license.php:72
@@ -975,7 +1036,9 @@ msgid "Current Group"
 msgstr ""
 
 #: app/views/groups/edit.php:48 app/views/groups/new.php:52
-msgid "Select some links for this group. <strong>Note: each link can only be in one group at a time.</strong>"
+msgid ""
+"Select some links for this group. <strong>Note: each link can only be in one "
+"group at a time.</strong>"
 msgstr ""
 
 #: app/views/groups/edit.php:54 app/views/links/edit.php:16
@@ -1044,7 +1107,10 @@ msgid "This is the method of redirection for your link."
 msgstr ""
 
 #: app/views/links/form.php:24
-msgid "Make your life easier by upgrading to %1$sPretty Link Pro%2$s -- get more redirection types, speed, automations and <b>results from your links</b> by %1$sgoing pro today!%2$s"
+msgid ""
+"Make your life easier by upgrading to %1$sPretty Link Pro%2$s -- get more "
+"redirection types, speed, automations and <b>results from your links</b> by "
+"%1$sgoing pro today!%2$s"
 msgstr ""
 
 #: app/views/links/form.php:31
@@ -1065,7 +1131,9 @@ msgid "Pretty Link*"
 msgstr ""
 
 #: app/views/links/form.php:48
-msgid "This is how your pretty link will appear. You can edit the Pretty Link slug here."
+msgid ""
+"This is how your pretty link will appear. You can edit the Pretty Link slug "
+"here."
 msgstr ""
 
 #: app/views/links/form.php:57 app/views/links/form.php:60
@@ -1073,7 +1141,9 @@ msgid "Title"
 msgstr ""
 
 #: app/views/links/form.php:61
-msgid "Leave this blank and Pretty Link will attempt to detect the title from the target url. Alternatively you can enter a custom title here."
+msgid ""
+"Leave this blank and Pretty Link will attempt to detect the title from the "
+"target url. Alternatively you can enter a custom title here."
 msgstr ""
 
 #: app/views/links/form.php:70 app/views/links/form.php:73
@@ -1081,7 +1151,10 @@ msgid "Notes"
 msgstr ""
 
 #: app/views/links/form.php:74
-msgid "This is a field where you can enter notes about a particular link. This notes field is mainly for your own link management needs. It isn't currently used anywhere on the front end."
+msgid ""
+"This is a field where you can enter notes about a particular link. This "
+"notes field is mainly for your own link management needs. It isn't currently "
+"used anywhere on the front end."
 msgstr ""
 
 #: app/views/links/form.php:84
@@ -1154,15 +1227,22 @@ msgid "Google Analytics Tracking"
 msgstr ""
 
 #: app/views/links/form.php:170
-msgid "Requires the Google Analyticator, Google Analytics by MonsterInsights (formerly Yoast) or Google Analytics Plugin installed and configured for this to work."
+msgid ""
+"Requires the Google Analyticator, Google Analytics by MonsterInsights "
+"(formerly Yoast) or Google Analytics Plugin installed and configured for "
+"this to work."
 msgstr ""
 
 #: app/views/links/form.php:180
-msgid "It appears that <strong>%s</strong> is currently installed. Pretty Link will attempt to use its settings to track this link."
+msgid ""
+"It appears that <strong>%s</strong> is currently installed. Pretty Link will "
+"attempt to use its settings to track this link."
 msgstr ""
 
 #: app/views/links/form.php:185
-msgid "No Google Analytics Plugin is currently installed. Pretty Link cannot track links using Google Analytics until one is."
+msgid ""
+"No Google Analytics Plugin is currently installed. Pretty Link cannot track "
+"links using Google Analytics until one is."
 msgstr ""
 
 #: app/views/links/form.php:198
@@ -1178,7 +1258,9 @@ msgid "Add Pretty Link"
 msgstr ""
 
 #: app/views/links/list.php:19
-msgid "WordPress Must be Configured:</strong> Pretty Link won't work until you select a Permalink Structure other than 'Default'"
+msgid ""
+"WordPress Must be Configured:</strong> Pretty Link won't work until you "
+"select a Permalink Structure other than 'Default'"
 msgstr ""
 
 #: app/views/links/list.php:19 app/views/options/form.php:12
@@ -1242,7 +1324,9 @@ msgid "WordPress Must be Configured:"
 msgstr ""
 
 #: app/views/options/form.php:12
-msgid "Pretty Link won't work until you select a Permalink Structure other than 'Default'"
+msgid ""
+"Pretty Link won't work until you select a Permalink Structure other than "
+"'Default'"
 msgstr ""
 
 #: app/views/options/form.php:37
@@ -1262,7 +1346,8 @@ msgid "Default Link Options"
 msgstr ""
 
 #: app/views/options/form.php:61
-msgid "Select the type of redirection you want your newly created links to have."
+msgid ""
+"Select the type of redirection you want your newly created links to have."
 msgstr ""
 
 #: app/views/options/form.php:70 app/views/options/form.php:72
@@ -1294,7 +1379,14 @@ msgid "Use fix for index.php Permalink Structure"
 msgstr ""
 
 #: app/views/options/form.php:97
-msgid "This option should ONLY be checked if you have elements in your permalink structure that must be present in any link on your site. For example, some WordPress installs don't have the benefit of full rewrite capabilities and in this case you'd need an index.php included in each link (http://example.com/index.php/mycoolslug instead of http://example.com/mycoolslug). If this is the case for you then check this option but the vast majority of users will want to keep this unchecked."
+msgid ""
+"This option should ONLY be checked if you have elements in your permalink "
+"structure that must be present in any link on your site. For example, some "
+"WordPress installs don't have the benefit of full rewrite capabilities and "
+"in this case you'd need an index.php included in each link (http://example."
+"com/index.php/mycoolslug instead of http://example.com/mycoolslug). If this "
+"is the case for you then check this option but the vast majority of users "
+"will want to keep this unchecked."
 msgstr ""
 
 #: app/views/options/form.php:110
@@ -1306,7 +1398,9 @@ msgid "Tracking Style"
 msgstr ""
 
 #: app/views/options/form.php:118
-msgid "Changing your tracking style can affect the accuracy of your existing statistics. Extended mode must be used for Conversion reporting."
+msgid ""
+"Changing your tracking style can affect the accuracy of your existing "
+"statistics. Extended mode must be used for Conversion reporting."
 msgstr ""
 
 #: app/views/options/form.php:122
@@ -1330,7 +1424,11 @@ msgid "Excluded IP Addresses"
 msgstr ""
 
 #: app/views/options/form.php:133
-msgid "Enter IP Addresses or IP Ranges you want to exclude from your Click data and Stats. Each IP Address should be separated by commas. Example: 192.168.0.1, 192.168.2.1, 192.168.3.4 or 192.168.*.*<br/><br/><strong>FYI, your current IP address is %s."
+msgid ""
+"Enter IP Addresses or IP Ranges you want to exclude from your Click data and "
+"Stats. Each IP Address should be separated by commas. Example: 192.168.0.1, "
+"192.168.2.1, 192.168.3.4 or 192.168.*.*<br/><br/><strong>FYI, your current "
+"IP address is %s."
 msgstr ""
 
 #: app/views/options/form.php:143
@@ -1342,7 +1440,10 @@ msgid "Automatically Trim Clicks"
 msgstr ""
 
 #: app/views/options/form.php:146
-msgid "Will automatically delete all hits older than 90 days. We strongly recommend doing this to keep your database performance up. This will permanently delete this click data, and is not undo-able. "
+msgid ""
+"Will automatically delete all hits older than 90 days. We strongly recommend "
+"doing this to keep your database performance up. This will permanently "
+"delete this click data, and is not undo-able. "
 msgstr ""
 
 #: app/views/options/form.php:155 app/views/options/form.php:157
@@ -1350,7 +1451,10 @@ msgid "Filter Robots"
 msgstr ""
 
 #: app/views/options/form.php:158
-msgid "Filter known Robots and unidentifiable browser clients from your click data, stats and reports. Works best if Tracking Style above is set to 'Extended Tracking'."
+msgid ""
+"Filter known Robots and unidentifiable browser clients from your click data, "
+"stats and reports. Works best if Tracking Style above is set to 'Extended "
+"Tracking'."
 msgstr ""
 
 #: app/views/options/form.php:174
@@ -1362,7 +1466,11 @@ msgid "Whiltelist IP Addresses"
 msgstr ""
 
 #: app/views/options/form.php:177
-msgid "Enter IP Addresses or IP Ranges you want to always include in your Click data and Stats even if they are flagged as robots. Each IP Address should be separated by commas. Example: 192.168.0.1, 192.168.2.1, 192.168.3.4 or 192.168.*.*"
+msgid ""
+"Enter IP Addresses or IP Ranges you want to always include in your Click "
+"data and Stats even if they are flagged as robots. Each IP Address should be "
+"separated by commas. Example: 192.168.0.1, 192.168.2.1, 192.168.3.4 or "
+"192.168.*.*"
 msgstr ""
 
 #: app/views/shared/link-table-nav.php:17
@@ -1515,7 +1623,11 @@ msgid "Install Pretty Link Bookmarklet"
 msgstr ""
 
 #: app/views/tools/form.php:29
-msgid "Just drag this \"Get PrettyLink\" link to your toolbar to install the bookmarklet. As you browse the web, you can just click this bookmarklet to create a pretty link from the current url you're looking at. <a href=\"http://blairwilliams.com/pretty-link-bookmarklet/\">(more help)</a>"
+msgid ""
+"Just drag this \"Get PrettyLink\" link to your toolbar to install the "
+"bookmarklet. As you browse the web, you can just click this bookmarklet to "
+"create a pretty link from the current url you're looking at. <a href="
+"\"http://blairwilliams.com/pretty-link-bookmarklet/\">(more help)</a>"
 msgstr ""
 
 #: app/views/tools/form.php:31
@@ -1523,7 +1635,9 @@ msgid "Show iPhone Bookmarklet Instructions"
 msgstr ""
 
 #: app/views/tools/form.php:35
-msgid "<strong>Note:</strong> iPhone users can install this bookmarklet in their Safari to create Pretty Links with the following steps:"
+msgid ""
+"<strong>Note:</strong> iPhone users can install this bookmarklet in their "
+"Safari to create Pretty Links with the following steps:"
 msgstr ""
 
 #: app/views/tools/form.php:37
@@ -1535,11 +1649,16 @@ msgid "Tap the + button at the bottom of the screen"
 msgstr ""
 
 #: app/views/tools/form.php:39
-msgid "Choose to share the page, then click on \"Bookmark\". We recommend saving it in your Favorites folder. Rename your bookmark to \"Get PrettyLink\" (or whatever you want) and then \"Save\""
+msgid ""
+"Choose to share the page, then click on \"Bookmark\". We recommend saving it "
+"in your Favorites folder. Rename your bookmark to \"Get PrettyLink\" (or "
+"whatever you want) and then \"Save\""
 msgstr ""
 
 #: app/views/tools/form.php:40
-msgid "Navigate through your Bookmarks until you find the new bookmark and click \"Edit\""
+msgid ""
+"Navigate through your Bookmarks until you find the new bookmark and click "
+"\"Edit\""
 msgstr ""
 
 #: app/views/tools/form.php:41
@@ -1555,15 +1674,25 @@ msgid "To save the changes hit \"Bookmarks\" and <strong>you're done!"
 msgstr ""
 
 #: app/views/tools/form.php:43
-msgid "Now when you find a page you want to save off as a Pretty Link, just click the \"Bookmarks\" icon at the bottom of the screen and select your \"Get PrettyLink\" bookmarklet."
+msgid ""
+"Now when you find a page you want to save off as a Pretty Link, just click "
+"the \"Bookmarks\" icon at the bottom of the screen and select your \"Get "
+"PrettyLink\" bookmarklet."
 msgstr ""
 
 #: app/views/tools/form.php:50
-msgid "Pretty Link is already automatically trimming Clicks older than 90 days. Although not necessary, you can still use the buttons below to force click trimming."
+msgid ""
+"Pretty Link is already automatically trimming Clicks older than 90 days. "
+"Although not necessary, you can still use the buttons below to force click "
+"trimming."
 msgstr ""
 
 #: app/views/tools/form.php:53
-msgid "***WARNING*** If you click OK you will delete ALL of the Click data that is older than 30 days. Your data will be gone forever -- no way to retreive it. Do not click OK unless you are absolutely sure you want to delete this data because there is no going back!"
+msgid ""
+"***WARNING*** If you click OK you will delete ALL of the Click data that is "
+"older than 30 days. Your data will be gone forever -- no way to retreive it. "
+"Do not click OK unless you are absolutely sure you want to delete this data "
+"because there is no going back!"
 msgstr ""
 
 #: app/views/tools/form.php:53
@@ -1575,11 +1704,16 @@ msgid "Clear clicks 30 days or older"
 msgstr ""
 
 #: app/views/tools/form.php:56
-msgid "This will clear all clicks in your database that are older than 30 days."
+msgid ""
+"This will clear all clicks in your database that are older than 30 days."
 msgstr ""
 
 #: app/views/tools/form.php:58
-msgid "***WARNING*** If you click OK you will delete ALL of the Click data that is older than 90 days. Your data will be gone forever -- no way to retreive it. Do not click OK unless you are absolutely sure you want to delete this data because there is no going back!"
+msgid ""
+"***WARNING*** If you click OK you will delete ALL of the Click data that is "
+"older than 90 days. Your data will be gone forever -- no way to retreive it. "
+"Do not click OK unless you are absolutely sure you want to delete this data "
+"because there is no going back!"
 msgstr ""
 
 #: app/views/tools/form.php:58
@@ -1591,11 +1725,16 @@ msgid "Clear clicks 90 days or older"
 msgstr ""
 
 #: app/views/tools/form.php:61
-msgid "This will clear all clicks in your database that are older than 90 days."
+msgid ""
+"This will clear all clicks in your database that are older than 90 days."
 msgstr ""
 
 #: app/views/tools/form.php:65
-msgid "***WARNING*** If you click OK you will delete ALL of the Click data in your Database. Your data will be gone forever -- no way to retreive it. Do not click OK unless you are absolutely sure you want to delete all your data because there is no going back!"
+msgid ""
+"***WARNING*** If you click OK you will delete ALL of the Click data in your "
+"Database. Your data will be gone forever -- no way to retreive it. Do not "
+"click OK unless you are absolutely sure you want to delete all your data "
+"because there is no going back!"
 msgstr ""
 
 #: app/views/tools/form.php:65
@@ -1607,7 +1746,9 @@ msgid "Clear all clicks"
 msgstr ""
 
 #: app/views/tools/form.php:68
-msgid "Seriously, only click this link if you want to delete all the Click data in your database."
+msgid ""
+"Seriously, only click this link if you want to delete all the Click data in "
+"your database."
 msgstr ""
 
 #: pro/app/controllers/PlpAppController.php:165
@@ -1636,7 +1777,9 @@ msgid "Keywords"
 msgstr ""
 
 #: pro/app/controllers/PlpLinksController.php:213
-msgid "Your URL Replacements must be formatted as a comma separated list of properly formatted URLs (http[s]://example.com/whatever)"
+msgid ""
+"Your URL Replacements must be formatted as a comma separated list of "
+"properly formatted URLs (http[s]://example.com/whatever)"
 msgstr ""
 
 #: pro/app/controllers/PlpLinksController.php:224
@@ -1737,7 +1880,8 @@ msgid "This link is set to expire after the date %s"
 msgstr ""
 
 #: pro/app/controllers/PlpLinksController.php:846
-msgid "This link expired after %d clicks and will now cause a 404 error when visited"
+msgid ""
+"This link expired after %d clicks and will now cause a 404 error when visited"
 msgstr ""
 
 #: pro/app/controllers/PlpLinksController.php:849
@@ -1761,11 +1905,16 @@ msgid "This link has additional Technology Dependent Conditional Target URLs"
 msgstr ""
 
 #: pro/app/controllers/PlpLinksController.php:872
-msgid "A Time Period Redirect is currently active for this link. When visited it will currently redirect to %s rather than the Target URL unless the link is expired."
+msgid ""
+"A Time Period Redirect is currently active for this link. When visited it "
+"will currently redirect to %s rather than the Target URL unless the link is "
+"expired."
 msgstr ""
 
 #: pro/app/controllers/PlpLinksController.php:876
-msgid "Time Period Redirects have been setup for this link but the current time is not within any of them currently."
+msgid ""
+"Time Period Redirects have been setup for this link but the current time is "
+"not within any of them currently."
 msgstr ""
 
 #: pro/app/controllers/PlpOptionsController.php:102
@@ -1777,11 +1926,15 @@ msgid "Keyword Links Per Page is required"
 msgstr ""
 
 #: pro/app/controllers/PlpOptionsController.php:111
-msgid "You need to enter a valid Pretty Link Base URL now that you have selected \"Use an alternate base url for your Pretty Links\""
+msgid ""
+"You need to enter a valid Pretty Link Base URL now that you have selected "
+"\"Use an alternate base url for your Pretty Links\""
 msgstr ""
 
 #: pro/app/controllers/PlpOptionsController.php:116
-msgid "You need to enter a valid Public Link Display URL now that you have selected \"Use a custom public link display page\""
+msgid ""
+"You need to enter a valid Public Link Display URL now that you have selected "
+"\"Use a custom public link display page\""
 msgstr ""
 
 #: pro/app/controllers/PlpOptionsController.php:122
@@ -1924,7 +2077,9 @@ msgid "visit"
 msgstr ""
 
 #: pro/app/helpers/PlpPostsHelper.php:76
-msgid "A Pretty Link hasn't been generated for this entry yet. Click \"Update Post\" to generate."
+msgid ""
+"A Pretty Link hasn't been generated for this entry yet. Click \"Update Post"
+"\" to generate."
 msgstr ""
 
 #: pro/app/models/PlpOptions.php:99
@@ -2039,7 +2194,12 @@ msgid "Import Pretty Links"
 msgstr ""
 
 #: pro/app/views/import-export/form.php:26
-msgid "There are two ways to import a file.<br/><br/>1) Importing to update existing links and<br/><br/>2) Importing to generate new links. When Importing to generate new links, you must delete the \"id\" column from the CSV before importing. If the \"id\" column is present, Pretty Link Pro will attempt to update existing links."
+msgid ""
+"There are two ways to import a file.<br/><br/>1) Importing to update "
+"existing links and<br/><br/>2) Importing to generate new links. When "
+"Importing to generate new links, you must delete the \"id\" column from the "
+"CSV before importing. If the \"id\" column is present, Pretty Link Pro will "
+"attempt to update existing links."
 msgstr ""
 
 #: pro/app/views/import-export/form.php:36
@@ -2051,7 +2211,9 @@ msgid "Links Import File"
 msgstr ""
 
 #: pro/app/views/import-export/form.php:40
-msgid "Select a file that has been formatted as a Pretty Link CSV import file and click \"Import\""
+msgid ""
+"Select a file that has been formatted as a Pretty Link CSV import file and "
+"click \"Import\""
 msgstr ""
 
 #: pro/app/views/import-export/form.php:48
@@ -2119,7 +2281,11 @@ msgid "Expiration Type"
 msgstr ""
 
 #: pro/app/views/links/form.php:30
-msgid "Select the type of expiration you want for this link.<br/><br/><b>Date</b> Select this option if you'd like to expire your link after a certain date.<br/><br/><b>Clicks</b>: Select this option to expire this link after it has been clicked a specific number of times."
+msgid ""
+"Select the type of expiration you want for this link.<br/><br/><b>Date</b> "
+"Select this option if you'd like to expire your link after a certain date."
+"<br/><br/><b>Clicks</b>: Select this option to expire this link after it has "
+"been clicked a specific number of times."
 msgstr ""
 
 #: pro/app/views/links/form.php:51
@@ -2127,7 +2293,11 @@ msgid "Number of Clicks"
 msgstr ""
 
 #: pro/app/views/links/form.php:52
-msgid "Enter the number of times this link can be clicked before it expires.<br/><br/><b>Note: Expirations based on clicks wouldn't work properly if you had tracking turned off for this link so as long as this is set to Clicks, Pretty Link will ensure tracking is turned on for this link as well.</b>"
+msgid ""
+"Enter the number of times this link can be clicked before it expires.<br/"
+"><br/><b>Note: Expirations based on clicks wouldn't work properly if you had "
+"tracking turned off for this link so as long as this is set to Clicks, "
+"Pretty Link will ensure tracking is turned on for this link as well.</b>"
 msgstr ""
 
 #: pro/app/views/links/form.php:71
@@ -2135,7 +2305,9 @@ msgid "Expiration Date"
 msgstr ""
 
 #: pro/app/views/links/form.php:72
-msgid "Enter a date here in the format YYYY-MM-DD to set when this link should expire."
+msgid ""
+"Enter a date here in the format YYYY-MM-DD to set when this link should "
+"expire."
 msgstr ""
 
 #: pro/app/views/links/form.php:88
@@ -2147,7 +2319,11 @@ msgid "Redirect to URL when Expired"
 msgstr ""
 
 #: pro/app/views/links/form.php:92
-msgid "When this link expires, do you want to redirect to a specific URL. You can use this to redirect to a page you've setup to indicate that the link is expired.<br/><br/><b>Note: If this is not set the link will throw a 404 error when expired</b>."
+msgid ""
+"When this link expires, do you want to redirect to a specific URL. You can "
+"use this to redirect to a page you've setup to indicate that the link is "
+"expired.<br/><br/><b>Note: If this is not set the link will throw a 404 "
+"error when expired</b>."
 msgstr ""
 
 #: pro/app/views/links/form.php:107 pro/app/views/options/form.php:165
@@ -2159,7 +2335,9 @@ msgid "Expired URL"
 msgstr ""
 
 #: pro/app/views/links/form.php:111
-msgid "This is the URL that this link will redirect to after the expiration date above."
+msgid ""
+"This is the URL that this link will redirect to after the expiration date "
+"above."
 msgstr ""
 
 #: pro/app/views/links/form.php:131
@@ -2167,7 +2345,9 @@ msgid "Auto-Replace Keywords"
 msgstr ""
 
 #: pro/app/views/links/form.php:132
-msgid "Enter a comma separated list of keywords / keyword phrases that you'd like to replace with this link in your Posts &amp; Pages."
+msgid ""
+"Enter a comma separated list of keywords / keyword phrases that you'd like "
+"to replace with this link in your Posts &amp; Pages."
 msgstr ""
 
 #: pro/app/views/links/form.php:140
@@ -2179,7 +2359,11 @@ msgid "Auto-Replace URLs"
 msgstr ""
 
 #: pro/app/views/links/form.php:144
-msgid "Enter a comma separated list of the URLs that you'd like to replace with this Pretty Link in your Posts &amp; Pages. These must be formatted as URLs for example: <code>http://example.com</code> or <code>http://example.com?product_id=53</code>"
+msgid ""
+"Enter a comma separated list of the URLs that you'd like to replace with "
+"this Pretty Link in your Posts &amp; Pages. These must be formatted as URLs "
+"for example: <code>http://example.com</code> or <code>http://example.com?"
+"product_id=53</code>"
 msgstr ""
 
 #: pro/app/views/links/form.php:159 pro/app/views/links/form.php:162
@@ -2187,7 +2371,12 @@ msgid "Head Scripts"
 msgstr ""
 
 #: pro/app/views/links/form.php:163
-msgid "Useful for adding Google Analytics tracking, Facebook retargeting pixels, or any other kind of tracking script to the HTML head for this pretty link.<br/><br/>These scripts will be in addition to any global one's you've defined in the options.<br/><br/><b>NOTE:</b> This does NOT work with 301, 302 and 307 type redirects."
+msgid ""
+"Useful for adding Google Analytics tracking, Facebook retargeting pixels, or "
+"any other kind of tracking script to the HTML head for this pretty link.<br/"
+"><br/>These scripts will be in addition to any global one's you've defined "
+"in the options.<br/><br/><b>NOTE:</b> This does NOT work with 301, 302 and "
+"307 type redirects."
 msgstr ""
 
 #: pro/app/views/links/form.php:176
@@ -2199,7 +2388,9 @@ msgid "Dynamic Redirection Options"
 msgstr ""
 
 #: pro/app/views/links/form.php:180
-msgid "These powerful options are available to give you dynamic control over redirection for this pretty link."
+msgid ""
+"These powerful options are available to give you dynamic control over "
+"redirection for this pretty link."
 msgstr ""
 
 #: pro/app/views/links/form.php:187
@@ -2219,7 +2410,10 @@ msgid "Target URL Rotations"
 msgstr ""
 
 #: pro/app/views/links/form.php:203
-msgid "Enter the Target URLs that you'd like to rotate through when this Pretty Link is Clicked. These must be formatted as URLs example: <code>http://example.com</code> or <code>http://example.com?product_id=53</code>"
+msgid ""
+"Enter the Target URLs that you'd like to rotate through when this Pretty "
+"Link is Clicked. These must be formatted as URLs example: <code>http://"
+"example.com</code> or <code>http://example.com?product_id=53</code>"
 msgstr ""
 
 #: pro/app/views/links/form.php:208
@@ -2239,7 +2433,10 @@ msgid "Split Test This Link"
 msgstr ""
 
 #: pro/app/views/links/form.php:230
-msgid "Split testing will enable you to track the effectiveness of several links against each other. This works best when you have multiple link rotation URLs entered."
+msgid ""
+"Split testing will enable you to track the effectiveness of several links "
+"against each other. This works best when you have multiple link rotation "
+"URLs entered."
 msgstr ""
 
 #: pro/app/views/links/form.php:246 pro/app/views/reports/list.php:31
@@ -2264,7 +2461,9 @@ msgid "Geographic Redirects"
 msgstr ""
 
 #: pro/app/views/links/form.php:285
-msgid "This will enable you to setup specific target urls that this pretty link will redirect to based on the country of the person visiting the url."
+msgid ""
+"This will enable you to setup specific target urls that this pretty link "
+"will redirect to based on the country of the person visiting the url."
 msgstr ""
 
 #: pro/app/views/links/form.php:290 pro/app/views/links/form.php:304
@@ -2277,7 +2476,9 @@ msgid "Technology Redirects"
 msgstr ""
 
 #: pro/app/views/links/form.php:299
-msgid "This will allow you to redirect based on your visitor's device, operating system and/or browser"
+msgid ""
+"This will allow you to redirect based on your visitor's device, operating "
+"system and/or browser"
 msgstr ""
 
 #: pro/app/views/links/form.php:309 pro/app/views/links/form.php:312
@@ -2285,7 +2486,11 @@ msgid "Time Period Redirects"
 msgstr ""
 
 #: pro/app/views/links/form.php:313
-msgid "This will allow you to redirect based on the time period in which your visitor visits this link.<br/><br/><b>Note: If your visitor doesn't visit the link during any of the specified time periods set here, they'll simply be redirected to the main target url.</b>"
+msgid ""
+"This will allow you to redirect based on the time period in which your "
+"visitor visits this link.<br/><br/><b>Note: If your visitor doesn't visit "
+"the link during any of the specified time periods set here, they'll simply "
+"be redirected to the main target url.</b>"
 msgstr ""
 
 #: pro/app/views/links/geo_row.php:12
@@ -2297,7 +2502,12 @@ msgid "Technology Redirection Countries"
 msgstr ""
 
 #: pro/app/views/links/geo_row.php:16
-msgid "This is a comma-separated list of countries that this redirect will match on. Just start typing a country's name and an autocomplete dropdown will appear to select from. Once a country is selected, feel free to start typing the name of another country. You can add as many as you'd like this redirect to match on"
+msgid ""
+"This is a comma-separated list of countries that this redirect will match "
+"on. Just start typing a country's name and an autocomplete dropdown will "
+"appear to select from. Once a country is selected, feel free to start typing "
+"the name of another country. You can add as many as you'd like this redirect "
+"to match on"
 msgstr ""
 
 #: pro/app/views/links/geo_row.php:25 pro/app/views/links/tech_row.php:79
@@ -2310,7 +2520,9 @@ msgid "Geographic Redirection URL"
 msgstr ""
 
 #: pro/app/views/links/geo_row.php:29
-msgid "This is the URL that this Pretty Link will redirect to if the visitor's country match the settings here."
+msgid ""
+"This is the URL that this Pretty Link will redirect to if the visitor's "
+"country match the settings here."
 msgstr ""
 
 #: pro/app/views/links/geo_row.php:38 pro/app/views/links/tech_row.php:92
@@ -2332,7 +2544,15 @@ msgid "Base Slug Prefix"
 msgstr ""
 
 #: pro/app/views/links/link-options.php:6
-msgid "Use this to prefix all newly generated pretty links with a directory of your choice. For example set to <b>out</b> to make your pretty links look like http://site.com/<b>out</b>/xyz. Changing this option will NOT affect existing pretty links. If you do not wish to use a directory prefix, leave this text field blank. Whatever you type here will be sanitized and modified to ensure it is URL-safe. So <b>Hello World</b> might get changed to something like <b>hello-world</b> instead. Lowercase letters, numbers, dashes, and underscores are allowed."
+msgid ""
+"Use this to prefix all newly generated pretty links with a directory of your "
+"choice. For example set to <b>out</b> to make your pretty links look like "
+"http://site.com/<b>out</b>/xyz. Changing this option will NOT affect "
+"existing pretty links. If you do not wish to use a directory prefix, leave "
+"this text field blank. Whatever you type here will be sanitized and modified "
+"to ensure it is URL-safe. So <b>Hello World</b> might get changed to "
+"something like <b>hello-world</b> instead. Lowercase letters, numbers, "
+"dashes, and underscores are allowed."
 msgstr ""
 
 #: pro/app/views/links/link-options.php:16
@@ -2341,7 +2561,9 @@ msgid "Slug Character Count"
 msgstr ""
 
 #: pro/app/views/links/link-options.php:19
-msgid "The number of characters to use when auto-generating a random slug for pretty links. The default is 4. You cannot use less than 2."
+msgid ""
+"The number of characters to use when auto-generating a random slug for "
+"pretty links. The default is 4. You cannot use less than 2."
 msgstr ""
 
 #: pro/app/views/links/link-options.php:29
@@ -2350,7 +2572,10 @@ msgid "Enable Google Analytics"
 msgstr ""
 
 #: pro/app/views/links/link-options.php:31
-msgid "Requires Google Analyticator, Google Analytics by MonsterInsights (formerly Yoast), or the Google Analytics Plugin to be installed and configured on your site."
+msgid ""
+"Requires Google Analyticator, Google Analytics by MonsterInsights (formerly "
+"Yoast), or the Google Analytics Plugin to be installed and configured on "
+"your site."
 msgstr ""
 
 #: pro/app/views/links/link-options.php:41
@@ -2362,7 +2587,9 @@ msgid "Generate QR Codes"
 msgstr ""
 
 #: pro/app/views/links/link-options.php:44
-msgid "This will enable a link in your pretty link admin that will allow you to automatically download a QR Code for each individual Pretty Link."
+msgid ""
+"This will enable a link in your pretty link admin that will allow you to "
+"automatically download a QR Code for each individual Pretty Link."
 msgstr ""
 
 #: pro/app/views/links/link-options.php:54
@@ -2371,7 +2598,11 @@ msgid "Global Head Scripts"
 msgstr ""
 
 #: pro/app/views/links/link-options.php:57
-msgid "Useful for adding Google Analytics tracking, Facebook retargeting pixels, or any other kind of tracking script to the HTML head.<br/><br/>What you enter in this box will be applied to all supported pretty links.<br/><br/><b>NOTE:</b> This does NOT work with 301, 302 and 307 type redirects."
+msgid ""
+"Useful for adding Google Analytics tracking, Facebook retargeting pixels, or "
+"any other kind of tracking script to the HTML head.<br/><br/>What you enter "
+"in this box will be applied to all supported pretty links.<br/><br/><b>NOTE:"
+"</b> This does NOT work with 301, 302 and 307 type redirects."
 msgstr ""
 
 #: pro/app/views/links/prettybar.php:174
@@ -2391,7 +2622,11 @@ msgid "Technology Redirection Device"
 msgstr ""
 
 #: pro/app/views/links/tech_row.php:18
-msgid "<b>Desktop</b> will match on any conventional laptop or desktop computer.<br/><br/><b>Mobile</b> will match on any phone, tablet or other portable device.<br/><br/><b>Phone</b> will match on any phone or similarly small device.<br/><br/><b>Tablet</b> will match on any tablet sized device."
+msgid ""
+"<b>Desktop</b> will match on any conventional laptop or desktop computer.<br/"
+"><br/><b>Mobile</b> will match on any phone, tablet or other portable device."
+"<br/><br/><b>Phone</b> will match on any phone or similarly small device.<br/"
+"><br/><b>Tablet</b> will match on any tablet sized device."
 msgstr ""
 
 #: pro/app/views/links/tech_row.php:23 pro/app/views/links/tech_row.php:42
@@ -2424,7 +2659,9 @@ msgid "Technology Redirection OS"
 msgstr ""
 
 #: pro/app/views/links/tech_row.php:37
-msgid "Use this dropdown to select which Operating System this redirect will match on."
+msgid ""
+"Use this dropdown to select which Operating System this redirect will match "
+"on."
 msgstr ""
 
 #: pro/app/views/links/tech_row.php:43 pro/app/views/links/tech_row.php:64
@@ -2504,7 +2741,9 @@ msgid "Technology Redirection URL"
 msgstr ""
 
 #: pro/app/views/links/tech_row.php:83
-msgid "This is the URL that this Pretty Link will redirect to if the visitor's device, os and browser match the settings here."
+msgid ""
+"This is the URL that this Pretty Link will redirect to if the visitor's "
+"device, os and browser match the settings here."
 msgstr ""
 
 #: pro/app/views/links/time_row.php:13
@@ -2516,7 +2755,8 @@ msgid "Start of Time Period"
 msgstr ""
 
 #: pro/app/views/links/time_row.php:17
-msgid "This is where you'll enter the beginning of the time period for this redirect"
+msgid ""
+"This is where you'll enter the beginning of the time period for this redirect"
 msgstr ""
 
 #: pro/app/views/links/time_row.php:26
@@ -2536,7 +2776,9 @@ msgid "Time Period Redirect URL"
 msgstr ""
 
 #: pro/app/views/links/time_row.php:43
-msgid "This is the URL that this Pretty Link will redirect to when the visitor visits the link in the associated time period."
+msgid ""
+"This is the URL that this Pretty Link will redirect to when the visitor "
+"visits the link in the associated time period."
 msgstr ""
 
 #: pro/app/views/options/autocreate.php:7
@@ -2568,7 +2810,9 @@ msgid "Show Social Buttons on %s"
 msgstr ""
 
 #: pro/app/views/options/autocreate.php:51
-msgid "If this button is checked then you'll have the ability to include a social buttons bar on your %s."
+msgid ""
+"If this button is checked then you'll have the ability to include a social "
+"buttons bar on your %s."
 msgstr ""
 
 #: pro/app/views/options/form.php:4
@@ -2584,7 +2828,10 @@ msgid "Enable Keyword and URL Auto Replacement"
 msgstr ""
 
 #: pro/app/views/options/form.php:16
-msgid "If checked, this will enable you to automatically replace keywords and/or URLs on your blog with pretty links. You will specify the specific keywords and urls from your Pretty Link edit page."
+msgid ""
+"If checked, this will enable you to automatically replace keywords and/or "
+"URLs on your blog with pretty links. You will specify the specific keywords "
+"and urls from your Pretty Link edit page."
 msgstr ""
 
 #: pro/app/views/options/form.php:34
@@ -2596,7 +2843,9 @@ msgid "Set Keyword Replacement Thresholds"
 msgstr ""
 
 #: pro/app/views/options/form.php:37
-msgid "Don't want to have too many keyword replacements per page? Select to set some reasonable keyword replacement thresholds."
+msgid ""
+"Don't want to have too many keyword replacements per page? Select to set "
+"some reasonable keyword replacement thresholds."
 msgstr ""
 
 #: pro/app/views/options/form.php:54
@@ -2608,7 +2857,9 @@ msgid "Set Maximum Keywords per Page"
 msgstr ""
 
 #: pro/app/views/options/form.php:57
-msgid "Maximum number of unique keyword / keyphrases you can replace with Pretty Links per page."
+msgid ""
+"Maximum number of unique keyword / keyphrases you can replace with Pretty "
+"Links per page."
 msgstr ""
 
 #: pro/app/views/options/form.php:68
@@ -2632,7 +2883,10 @@ msgid "Open Keyword Replacement Links in New Window"
 msgstr ""
 
 #: pro/app/views/options/form.php:90
-msgid "Ensure that these keyword replacement links are opened in a separate window. <strong>Note:</strong> This does not apply to url replacements--only keyword replacements."
+msgid ""
+"Ensure that these keyword replacement links are opened in a separate window. "
+"<strong>Note:</strong> This does not apply to url replacements--only keyword "
+"replacements."
 msgstr ""
 
 #: pro/app/views/options/form.php:101
@@ -2644,7 +2898,10 @@ msgid "Add 'nofollow' attribute to all Keyword Pretty Links"
 msgstr ""
 
 #: pro/app/views/options/form.php:104
-msgid "This adds the html <code>NOFOLLOW</code> attribute to all keyword replacement links. <strong>Note:</strong> This does not apply to url replacements--only keyword replacements."
+msgid ""
+"This adds the html <code>NOFOLLOW</code> attribute to all keyword "
+"replacement links. <strong>Note:</strong> This does not apply to url "
+"replacements--only keyword replacements."
 msgstr ""
 
 #: pro/app/views/options/form.php:115
@@ -2656,7 +2913,10 @@ msgid "Add custom CSS to your keyword replacement links"
 msgstr ""
 
 #: pro/app/views/options/form.php:118
-msgid "Add some custom formatting to your keyword pretty link replacements. <strong>Note:</strong> This does not apply to url replacements--only keyword replacements."
+msgid ""
+"Add some custom formatting to your keyword pretty link replacements. "
+"<strong>Note:</strong> This does not apply to url replacements--only keyword "
+"replacements."
 msgstr ""
 
 #: pro/app/views/options/form.php:129
@@ -2668,7 +2928,10 @@ msgid "Add custom hover CSS to your keyword replacement links"
 msgstr ""
 
 #: pro/app/views/options/form.php:132
-msgid "Add some custom formatting to the hover attribute of your keyword pretty links. <strong>Note:</strong> This does not apply to url replacements--only keyword replacements."
+msgid ""
+"Add some custom formatting to the hover attribute of your keyword pretty "
+"links. <strong>Note:</strong> This does not apply to url replacements--only "
+"keyword replacements."
 msgstr ""
 
 #: pro/app/views/options/form.php:143
@@ -2680,7 +2943,11 @@ msgid "Automatically Add a Link to Disclosures"
 msgstr ""
 
 #: pro/app/views/options/form.php:147
-msgid "When enabled, this will add a link to your official affiliate link disclosure page to any page, post or custom post type that have any keyword or URL replacements. You'll also be able to customize the URL and position of the disclosure link."
+msgid ""
+"When enabled, this will add a link to your official affiliate link "
+"disclosure page to any page, post or custom post type that have any keyword "
+"or URL replacements. You'll also be able to customize the URL and position "
+"of the disclosure link."
 msgstr ""
 
 #: pro/app/views/options/form.php:168
@@ -2688,7 +2955,9 @@ msgid "Disclosures Link URL"
 msgstr ""
 
 #: pro/app/views/options/form.php:169
-msgid "This is the URL of the page that contains your official affiliate link disclosures. This URL will be used in the link that will be generated."
+msgid ""
+"This is the URL of the page that contains your official affiliate link "
+"disclosures. This URL will be used in the link that will be generated."
 msgstr ""
 
 #: pro/app/views/options/form.php:180
@@ -2700,7 +2969,9 @@ msgid "Disclosures Link Text"
 msgstr ""
 
 #: pro/app/views/options/form.php:184
-msgid "This is the text of the link to your disclosures. This text will be visible to your visitors when the link is displayed."
+msgid ""
+"This is the text of the link to your disclosures. This text will be visible "
+"to your visitors when the link is displayed."
 msgstr ""
 
 #: pro/app/views/options/form.php:195
@@ -2712,7 +2983,9 @@ msgid "Disclosures Link Position"
 msgstr ""
 
 #: pro/app/views/options/form.php:199
-msgid "This is the position of the link to your disclosures in relation to your post content."
+msgid ""
+"This is the position of the link to your disclosures in relation to your "
+"post content."
 msgstr ""
 
 #: pro/app/views/options/form.php:205 pro/app/views/options/form.php:701
@@ -2736,7 +3009,10 @@ msgid "Automatically Add Affiliate Link Disclosures to Keyword Replacements"
 msgstr ""
 
 #: pro/app/views/options/form.php:223
-msgid "When enabled, this will add an affiliate link disclosure next to each one of your keyword replacements. <b>Note:</b> This does not apply to url replacements--only keyword replacements."
+msgid ""
+"When enabled, this will add an affiliate link disclosure next to each one of "
+"your keyword replacements. <b>Note:</b> This does not apply to url "
+"replacements--only keyword replacements."
 msgstr ""
 
 #: pro/app/views/options/form.php:241
@@ -2748,7 +3024,9 @@ msgid "Keyword Link Disclosure Text"
 msgstr ""
 
 #: pro/app/views/options/form.php:245
-msgid "This is the text that will be added after each keyword replacement to indicate that the link is an affiliate link."
+msgid ""
+"This is the text that will be added after each keyword replacement to "
+"indicate that the link is an affiliate link."
 msgstr ""
 
 #: pro/app/views/options/form.php:261
@@ -2760,7 +3038,9 @@ msgid "Replace All non-Pretty Link URLs With Pretty Link URLs"
 msgstr ""
 
 #: pro/app/views/options/form.php:264
-msgid "This feature will take each url it finds and create or use an existing pretty link pointing to the url and replace it with the pretty link."
+msgid ""
+"This feature will take each url it finds and create or use an existing "
+"pretty link pointing to the url and replace it with the pretty link."
 msgstr ""
 
 #: pro/app/views/options/form.php:281
@@ -2772,7 +3052,13 @@ msgid "Do not replace links from these domains"
 msgstr ""
 
 #: pro/app/views/options/form.php:284
-msgid "Any links on your site which point to domains you define here will not be replaced automatically with Pretty Links. Place one domain per line.<br/><br/>You MUST enter http:// or https:// in front of the domain names and do NOT include any /'s or other text after the domain name.<br/><br/>Proper entry example:<br/><b>https://www.google.com</b><br/><b>http://mysite.org</b><br/><br/>Improperly entered domains will be removed upon saving the Options."
+msgid ""
+"Any links on your site which point to domains you define here will not be "
+"replaced automatically with Pretty Links. Place one domain per line.<br/><br/"
+">You MUST enter http:// or https:// in front of the domain names and do NOT "
+"include any /'s or other text after the domain name.<br/><br/>Proper entry "
+"example:<br/><b>https://www.google.com</b><br/><b>http://mysite.org</b><br/"
+"><br/>Improperly entered domains will be removed upon saving the Options."
 msgstr ""
 
 #: pro/app/views/options/form.php:300
@@ -2784,7 +3070,9 @@ msgid "Replace Keywords and URLs in Comments"
 msgstr ""
 
 #: pro/app/views/options/form.php:303
-msgid "This option will enable the keyword / URL replacement routine to run in Comments."
+msgid ""
+"This option will enable the keyword / URL replacement routine to run in "
+"Comments."
 msgstr ""
 
 #: pro/app/views/options/form.php:314
@@ -2796,7 +3084,15 @@ msgid "Replace Keywords and URLs in Feeds"
 msgstr ""
 
 #: pro/app/views/options/form.php:317
-msgid "This option will enable the keyword / URL replacement routine to run in RSS Feeds.<br/><strong>Note:</strong> This option can slow the load speed of your RSS feed -- unless used in conjunction with a caching plugin like W3 Total Cache or WP Super Cache.<br/><strong>Note #2</strong> This option will only work if you have \"Full Text\" selected in your General WordPress Reading settings.<br/><strong>Note #3:</strong> If this option is used along with \"Replace Keywords and URLs in Comments\" then your post comment feeds will have keywords replaced in them as well."
+msgid ""
+"This option will enable the keyword / URL replacement routine to run in RSS "
+"Feeds.<br/><strong>Note:</strong> This option can slow the load speed of "
+"your RSS feed -- unless used in conjunction with a caching plugin like W3 "
+"Total Cache or WP Super Cache.<br/><strong>Note #2</strong> This option will "
+"only work if you have \"Full Text\" selected in your General WordPress "
+"Reading settings.<br/><strong>Note #3:</strong> If this option is used along "
+"with \"Replace Keywords and URLs in Comments\" then your post comment feeds "
+"will have keywords replaced in them as well."
 msgstr ""
 
 #: pro/app/views/options/form.php:328 pro/app/views/options/form.php:330
@@ -2804,7 +3100,13 @@ msgid "Index Replacements"
 msgstr ""
 
 #: pro/app/views/options/form.php:331
-msgid "This feature will index all of your keyword & URL replacements to dramatically improve performance.<br/><br/>If your site has a large number of replacements and/or posts then this feature may increase the load on your server temporarily and your replacements may not show up on your posts for a day or two initially (until all posts are indexed).<br/><br/><strong>Note:</strong> this feature requires the use of wp-cron."
+msgid ""
+"This feature will index all of your keyword & URL replacements to "
+"dramatically improve performance.<br/><br/>If your site has a large number "
+"of replacements and/or posts then this feature may increase the load on your "
+"server temporarily and your replacements may not show up on your posts for a "
+"day or two initially (until all posts are indexed).<br/><br/><strong>Note:</"
+"strong> this feature requires the use of wp-cron."
 msgstr ""
 
 #: pro/app/views/options/form.php:348 pro/app/views/options/form.php:350
@@ -2812,7 +3114,9 @@ msgid "Keyword Index Status"
 msgstr ""
 
 #: pro/app/views/options/form.php:351
-msgid "This shows how many posts have keywords indexed for and are ready for replacement."
+msgid ""
+"This shows how many posts have keywords indexed for and are ready for "
+"replacement."
 msgstr ""
 
 #: pro/app/views/options/form.php:359 pro/app/views/options/form.php:382
@@ -2832,7 +3136,9 @@ msgid "URL Replacements Index Status"
 msgstr ""
 
 #: pro/app/views/options/form.php:374
-msgid "This shows how many posts have url replacements indexed for and are ready for replacement."
+msgid ""
+"This shows how many posts have url replacements indexed for and are ready "
+"for replacement."
 msgstr ""
 
 #: pro/app/views/options/form.php:402
@@ -2852,7 +3158,9 @@ msgid "Pretty Bar Image URL"
 msgstr ""
 
 #: pro/app/views/options/form.php:432
-msgid "If set, this will replace the logo image on the Pretty Bar. The image that this URL references should be 48x48 Pixels to fit."
+msgid ""
+"If set, this will replace the logo image on the Pretty Bar. The image that "
+"this URL references should be 48x48 Pixels to fit."
 msgstr ""
 
 #: pro/app/views/options/form.php:443
@@ -2864,7 +3172,10 @@ msgid "Pretty Bar Background Image URL"
 msgstr ""
 
 #: pro/app/views/options/form.php:446
-msgid "If set, this will replace the background image on Pretty Bar. The image that this URL references should be 65px tall - this image will be repeated horizontally across the bar."
+msgid ""
+"If set, this will replace the background image on Pretty Bar. The image that "
+"this URL references should be 65px tall - this image will be repeated "
+"horizontally across the bar."
 msgstr ""
 
 #: pro/app/views/options/form.php:457
@@ -2876,7 +3187,9 @@ msgid "Pretty Bar Background Color"
 msgstr ""
 
 #: pro/app/views/options/form.php:460
-msgid "This will alter the background color of the Pretty Bar if you haven't specified a Pretty Bar background image."
+msgid ""
+"This will alter the background color of the Pretty Bar if you haven't "
+"specified a Pretty Bar background image."
 msgstr ""
 
 #: pro/app/views/options/form.php:471
@@ -2888,7 +3201,9 @@ msgid "Pretty Bar Text Color"
 msgstr ""
 
 #: pro/app/views/options/form.php:474
-msgid "If not set, this defaults to black (RGB value <code>#000000</code>) but you can change it to whatever color you like."
+msgid ""
+"If not set, this defaults to black (RGB value <code>#000000</code>) but you "
+"can change it to whatever color you like."
 msgstr ""
 
 #: pro/app/views/options/form.php:485
@@ -2900,7 +3215,9 @@ msgid "Pretty Bar Link Color"
 msgstr ""
 
 #: pro/app/views/options/form.php:488
-msgid "If not set, this defaults to blue (RGB value <code>#0000ee</code>) but you can change it to whatever color you like."
+msgid ""
+"If not set, this defaults to blue (RGB value <code>#0000ee</code>) but you "
+"can change it to whatever color you like."
 msgstr ""
 
 #: pro/app/views/options/form.php:499
@@ -2912,7 +3229,9 @@ msgid "Pretty Bar Link Hover Color"
 msgstr ""
 
 #: pro/app/views/options/form.php:502
-msgid "If not set, this defaults to RGB value <code>#ababab</code> but you can change it to whatever color you like."
+msgid ""
+"If not set, this defaults to RGB value <code>#ababab</code> but you can "
+"change it to whatever color you like."
 msgstr ""
 
 #: pro/app/views/options/form.php:513
@@ -2924,7 +3243,9 @@ msgid "Pretty Bar Visited Link Color"
 msgstr ""
 
 #: pro/app/views/options/form.php:516
-msgid "If not set, this defaults to RGB value <code>#551a8b</code> but you can change it to whatever color you like."
+msgid ""
+"If not set, this defaults to RGB value <code>#551a8b</code> but you can "
+"change it to whatever color you like."
 msgstr ""
 
 #: pro/app/views/options/form.php:527
@@ -2936,7 +3257,11 @@ msgid "Pretty Bar Title Char Limit"
 msgstr ""
 
 #: pro/app/views/options/form.php:530
-msgid "If your Website has a long title then you may need to adjust this value so that it will all fit on the Pretty Bar. It is recommended that you keep this value to <code>30</code> characters or less so the Pretty Bar's format looks good across different browsers and screen resolutions."
+msgid ""
+"If your Website has a long title then you may need to adjust this value so "
+"that it will all fit on the Pretty Bar. It is recommended that you keep this "
+"value to <code>30</code> characters or less so the Pretty Bar's format looks "
+"good across different browsers and screen resolutions."
 msgstr ""
 
 #: pro/app/views/options/form.php:541
@@ -2948,7 +3273,11 @@ msgid "Pretty Bar Description Char Limit"
 msgstr ""
 
 #: pro/app/views/options/form.php:544
-msgid "If your Website has a long Description (tagline) then you may need to adjust this value so that it will all fit on the Pretty Bar. It is recommended that you keep this value to <code>40</code> characters or less so the Pretty Bar's format looks good across different browsers and screen resolutions."
+msgid ""
+"If your Website has a long Description (tagline) then you may need to adjust "
+"this value so that it will all fit on the Pretty Bar. It is recommended that "
+"you keep this value to <code>40</code> characters or less so the Pretty "
+"Bar's format looks good across different browsers and screen resolutions."
 msgstr ""
 
 #: pro/app/views/options/form.php:555
@@ -2960,7 +3289,10 @@ msgid "Pretty Bar Target URL Char Limit"
 msgstr ""
 
 #: pro/app/views/options/form.php:558
-msgid "If you link to a lot of large Target URLs you may want to adjust this value. It is recommended that you keep this value to <code>40</code> or below so the Pretty Bar's format looks good across different browsers and URL sizes"
+msgid ""
+"If you link to a lot of large Target URLs you may want to adjust this value. "
+"It is recommended that you keep this value to <code>40</code> or below so "
+"the Pretty Bar's format looks good across different browsers and URL sizes"
 msgstr ""
 
 #: pro/app/views/options/form.php:569
@@ -2972,7 +3304,9 @@ msgid "Pretty Bar Show Title"
 msgstr ""
 
 #: pro/app/views/options/form.php:572
-msgid "Make sure this is checked if you want the title of your blog (and link) to show up on the Pretty Bar."
+msgid ""
+"Make sure this is checked if you want the title of your blog (and link) to "
+"show up on the Pretty Bar."
 msgstr ""
 
 #: pro/app/views/options/form.php:583
@@ -2984,7 +3318,9 @@ msgid "Pretty Bar Show Description"
 msgstr ""
 
 #: pro/app/views/options/form.php:586
-msgid "Make sure this is checked if you want your site description to show up on the Pretty Bar."
+msgid ""
+"Make sure this is checked if you want your site description to show up on "
+"the Pretty Bar."
 msgstr ""
 
 #: pro/app/views/options/form.php:597
@@ -2996,7 +3332,9 @@ msgid "Pretty Bar Show Share Links"
 msgstr ""
 
 #: pro/app/views/options/form.php:600
-msgid "Make sure this is checked if you want \"share links\" to show up on the Pretty Bar."
+msgid ""
+"Make sure this is checked if you want \"share links\" to show up on the "
+"Pretty Bar."
 msgstr ""
 
 #: pro/app/views/options/form.php:611
@@ -3008,7 +3346,9 @@ msgid "Pretty Bar Show Target URL Links"
 msgstr ""
 
 #: pro/app/views/options/form.php:614
-msgid "Make sure this is checked if you want a link displaying the Target URL to show up on the Pretty Bar."
+msgid ""
+"Make sure this is checked if you want a link displaying the Target URL to "
+"show up on the Pretty Bar."
 msgstr ""
 
 #: pro/app/views/options/form.php:625 pro/app/views/options/form.php:627
@@ -3016,7 +3356,12 @@ msgid "Hide Attribution Link"
 msgstr ""
 
 #: pro/app/views/options/form.php:628
-msgid "Check this to hide the pretty link attribution link on the pretty bar.<br/><br/><strong>Wait, before you do this, you might want to leave this un-checked and set the alternate URL of this link to your <em>Pretty Link Pro</em> <a href=\"https://prettylinkpro.com/plp/options/aff-attribution\">Affiliate URL</a> to earn a few bucks while you are at it."
+msgid ""
+"Check this to hide the pretty link attribution link on the pretty bar.<br/"
+"><br/><strong>Wait, before you do this, you might want to leave this un-"
+"checked and set the alternate URL of this link to your <em>Pretty Link Pro</"
+"em> <a href=\"https://prettylinkpro.com/plp/options/aff-attribution"
+"\">Affiliate URL</a> to earn a few bucks while you are at it."
 msgstr ""
 
 #: pro/app/views/options/form.php:646
@@ -3028,7 +3373,10 @@ msgid "Alternate Pretty Bar Attribution URL"
 msgstr ""
 
 #: pro/app/views/options/form.php:649
-msgid "If set, this will replace the Pretty Bars attribution URL. This is a very good place to put your <em>Pretty Link Pro</em> <a href=\"https://prettylinkpro.com/plp/options/aff-attribution-2\">Affiliate Link</a>."
+msgid ""
+"If set, this will replace the Pretty Bars attribution URL. This is a very "
+"good place to put your <em>Pretty Link Pro</em> <a href=\"https://"
+"prettylinkpro.com/plp/options/aff-attribution-2\">Affiliate Link</a>."
 msgstr ""
 
 #: pro/app/views/options/form.php:663
@@ -3044,7 +3392,11 @@ msgid "Social Buttons"
 msgstr ""
 
 #: pro/app/views/options/form.php:669
-msgid "Select which buttons you want to be visible on the Social Buttons Bar.<br/><br/><code>Note:</code> In order for the Social Buttons Bar to be visible on Pages and or Posts, you must first enable it in the \"Page &amp; Post Options\" section above."
+msgid ""
+"Select which buttons you want to be visible on the Social Buttons Bar.<br/"
+"><br/><code>Note:</code> In order for the Social Buttons Bar to be visible "
+"on Pages and or Posts, you must first enable it in the \"Page &amp; Post "
+"Options\" section above."
 msgstr ""
 
 #: pro/app/views/options/form.php:692
@@ -3056,7 +3408,11 @@ msgid "Social Buttons Placement"
 msgstr ""
 
 #: pro/app/views/options/form.php:695
-msgid "This determines where your Social Buttons Placement should appear in relation to content on Pages and/or Posts.<br/><br/><code>Note:</code> If you want this bar to appear then you must enable it in the \"Page and Post Options\" above."
+msgid ""
+"This determines where your Social Buttons Placement should appear in "
+"relation to content on Pages and/or Posts.<br/><br/><code>Note:</code> If "
+"you want this bar to appear then you must enable it in the \"Page and Post "
+"Options\" above."
 msgstr ""
 
 #: pro/app/views/options/form.php:705
@@ -3064,7 +3420,11 @@ msgid "Social Buttons Manual Placement"
 msgstr ""
 
 #: pro/app/views/options/form.php:706
-msgid "If you select none, you can still show your Social Buttons by manually adding the <code>[social_buttons_bar]</code> shortcode to your blog posts or <code>&lt;?php the_social_buttons_bar(); ?&gt;</code> template tag to your WordPress Theme."
+msgid ""
+"If you select none, you can still show your Social Buttons by manually "
+"adding the <code>[social_buttons_bar]</code> shortcode to your blog posts or "
+"<code>&lt;?php the_social_buttons_bar(); ?&gt;</code> template tag to your "
+"WordPress Theme."
 msgstr ""
 
 #: pro/app/views/options/form.php:731
@@ -3080,7 +3440,12 @@ msgid "Enable Public Link Creation on this Site"
 msgstr ""
 
 #: pro/app/views/options/form.php:740
-msgid "This option will give you the ability to turn your website into a link shortening service for your users. Once selected, you can enable the Pretty Link Pro Sidebar Widget or just display the link creation form with the <code>[prli_create_form]</code> shortcode in any post or page on your website."
+msgid ""
+"This option will give you the ability to turn your website into a link "
+"shortening service for your users. Once selected, you can enable the Pretty "
+"Link Pro Sidebar Widget or just display the link creation form with the "
+"<code>[prli_create_form]</code> shortcode in any post or page on your "
+"website."
 msgstr ""
 
 #: pro/app/views/options/form.php:757
@@ -3092,7 +3457,12 @@ msgid "Use Public Link Display Page"
 msgstr ""
 
 #: pro/app/views/options/form.php:760
-msgid "When a link is created using the public form, the user is typically redirected to a simple page displaying their new pretty link. But, you can specify a page that you want them to be redirected to on your website, using your branding instead by selecting this box and entering the url of the page you want them to go to."
+msgid ""
+"When a link is created using the public form, the user is typically "
+"redirected to a simple page displaying their new pretty link. But, you can "
+"specify a page that you want them to be redirected to on your website, using "
+"your branding instead by selecting this box and entering the url of the page "
+"you want them to go to."
 msgstr ""
 
 #: pro/app/views/options/form.php:777
@@ -3104,7 +3474,12 @@ msgid "Public Pretty Link Creation Display URL"
 msgstr ""
 
 #: pro/app/views/options/form.php:780
-msgid "To set this up, create a new page on your WordPress site and make sure the <code>[prli_create_display]</code> appears somewhere on this page -- otherwise the link will never get created. Once this page is created, just enter the full URL to it here. Make sure this URL does npt end with a slash (/)."
+msgid ""
+"To set this up, create a new page on your WordPress site and make sure the "
+"<code>[prli_create_display]</code> appears somewhere on this page -- "
+"otherwise the link will never get created. Once this page is created, just "
+"enter the full URL to it here. Make sure this URL does npt end with a slash "
+"(/)."
 msgstr ""
 
 #: pro/app/views/options/general.php:8
@@ -3116,7 +3491,13 @@ msgid "Use an Alternate Shortlink URL"
 msgstr ""
 
 #: pro/app/views/options/general.php:11
-msgid "Use this option if you want to substitute your actual blog's url with another URL. You must have another valid domain name pointing to this WordPress install before you enable this option. If you are using this option to just get rid of the www in the beginning of your url that is fine -- just make sure your domain works without the www before enabling this option."
+msgid ""
+"Use this option if you want to substitute your actual blog's url with "
+"another URL. You must have another valid domain name pointing to this "
+"WordPress install before you enable this option. If you are using this "
+"option to just get rid of the www in the beginning of your url that is fine "
+"-- just make sure your domain works without the www before enabling this "
+"option."
 msgstr ""
 
 #: pro/app/views/options/general.php:28 pro/app/views/options/general.php:30
@@ -3124,7 +3505,9 @@ msgid "Shortlink URL"
 msgstr ""
 
 #: pro/app/views/options/general.php:31
-msgid "Enter a valid base url that points at this WordPress install. Make sure this URL does not end with a slash (/)."
+msgid ""
+"Enter a valid base url that points at this WordPress install. Make sure this "
+"URL does not end with a slash (/)."
 msgstr ""
 
 #: pro/app/views/options/general.php:47
@@ -3136,7 +3519,9 @@ msgid "Set Minimum Role Required To Access Pretty Link"
 msgstr ""
 
 #: pro/app/views/options/general.php:50
-msgid "Use this option to set the minimum role of users who can access the Admin interface for Pretty Link."
+msgid ""
+"Use this option to set the minimum role of users who can access the Admin "
+"interface for Pretty Link."
 msgstr ""
 
 #: pro/app/views/options/general.php:56
@@ -3224,7 +3609,9 @@ msgid "Select Your Goal Link (optional):"
 msgstr ""
 
 #: pro/app/views/reports/edit.php:103 pro/app/views/reports/new.php:103
-msgid "If you want to enable conversion tracking in this report then select a goal link."
+msgid ""
+"If you want to enable conversion tracking in this report then select a goal "
+"link."
 msgstr ""
 
 #: pro/app/views/reports/list.php:4 pro/app/views/reports/reports.php:7
@@ -3280,7 +3667,12 @@ msgid "Customize Pretty Link Bookmarklet"
 msgstr ""
 
 #: pro/app/views/tools/generator.php:10
-msgid "Alter the options below to customize this Bookmarklet. As you modify the label, redirect type, tracking and group, you will see this bookmarklet update -- when the settings are how you want them, drag the bookmarklet into your toolbar. You can create as many bookmarklets as you want each with different settings."
+msgid ""
+"Alter the options below to customize this Bookmarklet. As you modify the "
+"label, redirect type, tracking and group, you will see this bookmarklet "
+"update -- when the settings are how you want them, drag the bookmarklet into "
+"your toolbar. You can create as many bookmarklets as you want each with "
+"different settings."
 msgstr ""
 
 #: pro/app/views/tools/generator.php:13
@@ -4343,16 +4735,14 @@ msgstr ""
 #: script/i18n/pomo/sample/app.php:62
 msgid "Bye\n"
 msgstr ""
-#. Plugin Name of the plugin/theme
-msgid "Pretty Link"
-msgstr ""
 
 #. Plugin URI of the plugin/theme
 msgid "https://prettylinkpro.com/pl/plugin-uri"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Shrink, track and share any URL on the Internet from your WordPress website!"
+msgid ""
+"Shrink, track and share any URL on the Internet from your WordPress website!"
 msgstr ""
 
 #. Author of the plugin/theme

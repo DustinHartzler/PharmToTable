@@ -129,6 +129,7 @@ class PrliDb {
               id int(11) NOT NULL auto_increment,
               meta_key varchar(255) default NULL,
               meta_value longtext default NULL,
+              meta_order int(4) default 0,
               link_id int(11) NOT NULL,
               created_at datetime NOT NULL,
               PRIMARY KEY  (id),

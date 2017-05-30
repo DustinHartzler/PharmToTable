@@ -21,14 +21,21 @@ class PrliLinkMeta {
       return $cached[$link_id][$meta_key][(int)$return_var];
     }
 
-    $query_str  = "SELECT meta_value FROM {$this->table_name} WHERE meta_key=%s and link_id=%d";
-    $query      = $wpdb->prepare($query_str,$meta_key,$link_id);
+    $query = $wpdb->prepare("
+        SELECT meta_value
+          FROM {$this->table_name}
+         WHERE meta_key=%s
+           AND link_id=%d
+      ",
+      $meta_key,
+      $link_id
+    );
 
     if($return_var) {
       $res = $wpdb->get_var("{$query} LIMIT 1");
     }
     else {
-      $res = $wpdb->get_col($query, 0);
+      $res = $wpdb->get_col("{$query} ORDER BY meta_order, id", 0);
     }
 
     $cached[$link_id][$meta_key][(int)$return_var] = $res;
@@ -36,13 +43,9 @@ class PrliLinkMeta {
     return $res;
   }
 
+  // This is just an alias for update_link_meta
   public function add_link_meta($link_id, $meta_key, $meta_value) {
-    global $wpdb;
-
-    $query_str = "INSERT INTO {$this->table_name} " .
-                 '(meta_key,meta_value,link_id,created_at) VALUES (%s,%s,%d,NOW())';
-    $query = $wpdb->prepare($query_str, $meta_key, $meta_value, $link_id);
-    return $wpdb->query($query);
+    return $this->update_link_meta($link_id, $meta_key, $meta_value);
   }
 
   public function update_link_meta($link_id, $meta_key, $meta_values) {
@@ -54,19 +57,43 @@ class PrliLinkMeta {
 
     $status = false;
 
-    foreach($meta_values as $meta_value) {
-      $status = $this->add_link_meta($link_id, $meta_key, $meta_value);
+    foreach($meta_values as $meta_order => $meta_value) {
+      $status = $this->add_link_meta_item($link_id, $meta_key, $meta_value, $meta_order);
     }
 
     return $status;
   }
 
+  // Add a single link meta item
+  private function add_link_meta_item($link_id, $meta_key, $meta_value, $meta_order=0) {
+    global $wpdb;
+
+    $query = $wpdb->prepare("
+        INSERT INTO {$this->table_name}
+               (meta_key,meta_value,link_id,meta_order,created_at)
+        VALUES (%s,%s,%d,%d,%s)
+      ",
+      $meta_key,
+      $meta_value,
+      $link_id,
+      $meta_order,
+      PrliUtils::db_now()
+    );
+
+    return $wpdb->query($query);
+  }
+
   public function delete_link_meta($link_id, $meta_key) {
     global $wpdb;
 
-    $query_str = "DELETE FROM {$this->table_name} " .
-                 "WHERE meta_key=%s AND link_id=%d";
-    $query = $wpdb->prepare($query_str, $meta_key, $link_id);
+    $query = $wpdb->prepare("
+        DELETE FROM {$this->table_name}
+         WHERE meta_key=%s
+           AND link_id=%d
+      ",
+      $meta_key,
+      $link_id
+    );
 
     return $wpdb->query($query);
   }
@@ -74,9 +101,15 @@ class PrliLinkMeta {
   public function delete_link_metas($link_id) {
     global $wpdb;
 
-    $query_str = "DELETE FROM {$this->table_name} WHERE link_id=%d";
-    $query = $wpdb->prepare($query_str, $meta_key, $link_id);
+    $query = $wpdb->prepare("
+        DELETE FROM {$this->table_name}
+         WHERE link_id=%d
+      ",
+      $link_id
+    );
 
     return $wpdb->query($query);
   }
+
 } //End class
+
