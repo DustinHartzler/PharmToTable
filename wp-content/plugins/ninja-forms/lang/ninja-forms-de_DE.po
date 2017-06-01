@@ -1,16 +1,15 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Ninja Forms 3.0\n"
 "POT-Creation-Date: 2016-08-29 09:53-0500\n"
-"PO-Revision-Date: 2016-08-29 08:57-0500\n"
+"PO-Revision-Date: 2017-05-08 09:49-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.5.7\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_x;_ex\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -31,7 +30,9 @@ msgstr "Felder mit einem %s*%s müssen ausgefüllt werden"
 
 #: deprecated/ninja-forms.php:676
 msgid "Please ensure all required fields are completed."
-msgstr "Bitte stellen Sie sicher, dass alle erforderlichen Felder vollständig ausgefüllt sind."
+msgstr ""
+"Bitte stellen Sie sicher, dass alle erforderlichen Felder vollständig "
+"ausgefüllt sind."
 
 #: deprecated/ninja-forms.php:677
 msgid "This is a required field"
@@ -106,8 +107,8 @@ msgid ""
 msgstr ""
 "Wussten Sie schon, dass Sie die Conversions steigern können, indem Sie lange "
 "Formulare in kleinere, sozusagen leichter verdauliche Formularteile "
-"aufsplitten?<p>Die Erweiterung Multi-Part Forms für mehrteilige Formulare für "
-"Ninja Forms erledigt diese Aufgabe einfach und schnell.</p>"
+"aufsplitten?<p>Die Erweiterung Multi-Part Forms für mehrteilige Formulare "
+"für Ninja Forms erledigt diese Aufgabe einfach und schnell.</p>"
 
 #: deprecated/classes/notices-multipart.php:64
 msgid "Learn More About Multi-Part Forms"
@@ -120,7 +121,8 @@ msgstr "Vielleicht später"
 
 #: deprecated/classes/notices-multipart.php:66
 #: deprecated/classes/notices-save-progress.php:66
-#: deprecated/includes/admin/notices.php:57 includes/Config/AdminNotices.php:16
+#: deprecated/includes/admin/notices.php:57
+#: includes/Config/AdminNotices.php:16
 msgid "Dismiss"
 msgstr "Schliessen"
 
@@ -370,11 +372,12 @@ msgstr "Mehr Typen abrufen"
 msgid "Email & Actions"
 msgstr "E-Mail und Aktionen"
 
-#: deprecated/classes/notifications.php:219 deprecated/classes/subs-cpt.php:118
-#: deprecated/includes/admin/admin.php:6
+#: deprecated/classes/notifications.php:219
+#: deprecated/classes/subs-cpt.php:118 deprecated/includes/admin/admin.php:6
 #: deprecated/includes/admin/admin.php:101
-#: deprecated/includes/fields/list.php:149 includes/Admin/CPT/Submission.php:47
-#: includes/Config/FieldSettings.php:153 includes/Config/FieldSettings.php:950
+#: deprecated/includes/fields/list.php:149
+#: includes/Admin/CPT/Submission.php:47 includes/Config/FieldSettings.php:153
+#: includes/Config/FieldSettings.php:950
 #: includes/Config/FormCalculationSettings.php:12
 msgid "Add New"
 msgstr "Hinzufügen"
@@ -472,8 +475,9 @@ msgstr "#"
 #: deprecated/includes/fields/textbox.php:175
 #: includes/Admin/CPT/Submission.php:111
 #: includes/Admin/Menus/Submissions.php:92
-#: includes/Config/FieldSettings.php:214 includes/Config/MergeTagsSystem.php:27
-#: includes/Database/MockData.php:620 includes/Fields/Date.php:30
+#: includes/Config/FieldSettings.php:214
+#: includes/Config/MergeTagsSystem.php:27 includes/Database/MockData.php:620
+#: includes/Fields/Date.php:30
 msgid "Date"
 msgstr "Datum"
 
@@ -486,7 +490,8 @@ msgid "Export this item"
 msgstr "Dieses Objekt exportieren"
 
 #: deprecated/classes/subs-cpt.php:390 deprecated/classes/subs-cpt.php:691
-#: deprecated/classes/subs-cpt.php:692 includes/Admin/Menus/Submissions.php:234
+#: deprecated/classes/subs-cpt.php:692
+#: includes/Admin/Menus/Submissions.php:234
 #: includes/Admin/Menus/Submissions.php:235
 msgid "Export"
 msgstr "Exportieren"
@@ -550,11 +555,23 @@ msgstr "%s aktualisiert."
 
 #: deprecated/classes/subs-cpt.php:647
 msgid "Custom field updated."
-msgstr "Benutzerdefiniertes\n \nFeld\n \naktualisiert\n."
+msgstr ""
+"Benutzerdefiniertes\n"
+" \n"
+"Feld\n"
+" \n"
+"aktualisiert\n"
+"."
 
 #: deprecated/classes/subs-cpt.php:648
 msgid "Custom field deleted."
-msgstr "Benutzerdefiniertes\n \nFeld\n \ngelöscht\n."
+msgstr ""
+"Benutzerdefiniertes\n"
+" \n"
+"Feld\n"
+" \n"
+"gelöscht\n"
+"."
 
 #: deprecated/classes/subs-cpt.php:651
 #, php-format
@@ -582,14 +599,18 @@ msgid ""
 "%1$s scheduled for: <strong>%2$s</strong>. <a href=\"%3$s\" target=\"_blank"
 "\">Preview %4$s</a>"
 msgstr ""
-"%1$s geplant für: <strong>%2$s</strong>. <a href=\"%3$s\" target=\"_blank\">Vorschau%4$s</a>"
+"%1$s geplant für: <strong>%2$s</strong>. <a href=\"%3$s\" target=\"_blank"
+"\">Vorschau%4$s</a>"
 
 #: deprecated/classes/subs-cpt.php:656
 #, php-format
 msgid "%1$s draft updated. <a href=\"%2$s\" target=\"_blank\">Preview %3$s</a>"
-msgstr "%1$s Entwurf aktualisiert. <a href=\"%2$s\" target=\"_blank\">Vorschau%3$s</a>"
+msgstr ""
+"%1$s Entwurf aktualisiert. <a href=\"%2$s\" target=\"_blank\">Vorschau%3$s</"
+"a>"
 
-#: deprecated/classes/subs-cpt.php:709 includes/Admin/Menus/Submissions.php:252
+#: deprecated/classes/subs-cpt.php:709
+#: includes/Admin/Menus/Submissions.php:252
 msgid "Download All Submissions"
 msgstr "Alle Einträge herunterladen"
 
@@ -624,8 +645,8 @@ msgstr "Status"
 
 #: deprecated/classes/subs-cpt.php:1002
 #: deprecated/includes/admin/pages/ninja-forms/tabs/form-list/form-list.php:119
-#: includes/Admin/AllFormsTable.php:20 includes/Admin/Menus/ImportExport.php:99
-#: includes/MergeTags/Form.php:15
+#: includes/Admin/AllFormsTable.php:20
+#: includes/Admin/Menus/ImportExport.php:99 includes/MergeTags/Form.php:15
 msgid "Form"
 msgstr "Formular"
 
@@ -669,7 +690,8 @@ msgstr "Schlüssel"
 #: deprecated/includes/class-extension-updater.php:152
 #: includes/Integrations/EDD/class-extension-updater.php:88
 msgid "Could not activate license. Please verify your license key"
-msgstr "Lizenz konnte nicht aktiviert werden. Bitte prüfen Sie Ihren Lizenzschlüssel"
+msgstr ""
+"Lizenz konnte nicht aktiviert werden. Bitte prüfen Sie Ihren Lizenzschlüssel"
 
 #: deprecated/includes/class-extension-updater.php:276
 msgid "Deactivate License"
@@ -682,7 +704,9 @@ msgstr "Vom Benutzer eingegebene Daten:"
 
 #: deprecated/includes/deprecated.php:664
 msgid "Thank you for filling out this form."
-msgstr "Vielen Dank, dass Sie sich die Zeit genommen haben, dieses Formular auszufüllen!"
+msgstr ""
+"Vielen Dank, dass Sie sich die Zeit genommen haben, dieses Formular "
+"auszufüllen!"
 
 #: deprecated/includes/EDD_SL_Plugin_Updater.php:177
 #: includes/Integrations/EDD/EDD_SL_Plugin_Updater.php:177
@@ -691,8 +715,8 @@ msgid ""
 "There is a new version of %1$s available. <a target=\"_blank\" class="
 "\"thickbox\" href=\"%2$s\">View version %3$s details</a>."
 msgstr ""
-"Eine neue Version von %1$s ist verfügbar. <a target=\"_blank\" "
-"class=\"thickbox\" href=\"%2$s\">Details zur Version %3$s anzeigen</a>."
+"Eine neue Version von %1$s ist verfügbar. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">Details zur Version %3$s anzeigen</a>."
 
 #: deprecated/includes/EDD_SL_Plugin_Updater.php:184
 #: includes/Integrations/EDD/EDD_SL_Plugin_Updater.php:184
@@ -702,9 +726,9 @@ msgid ""
 "\"thickbox\" href=\"%2$s\">View version %3$s details</a> or <a href=\"%4$s"
 "\">update now</a>."
 msgstr ""
-"Eine neue Version von %1$s ist verfügbar. <a target=\"_blank\" "
-"class=\"thickbox\" href=\"%2$s\">Details zur Version %3$s anzeigen</a> oder "
-"<a href=\"%4$s\">jetzt aktualisieren</a>."
+"Eine neue Version von %1$s ist verfügbar. <a target=\"_blank\" class="
+"\"thickbox\" href=\"%2$s\">Details zur Version %3$s anzeigen</a> oder <a "
+"href=\"%4$s\">jetzt aktualisieren</a>."
 
 #: deprecated/includes/EDD_SL_Plugin_Updater.php:324
 #: includes/Integrations/EDD/EDD_SL_Plugin_Updater.php:324
@@ -856,7 +880,8 @@ msgid ""
 "You are eligible to upgrade to the Ninja Forms THREE Release Candidate! "
 "%sUpgrade Now%s"
 msgstr ""
-"Sie können ein Upgrade auf die Version Ninja Forms THREE vornehmen! %sJetzt upgraden%s"
+"Sie können ein Upgrade auf die Version Ninja Forms THREE vornehmen! %sJetzt "
+"upgraden%s"
 
 #: deprecated/includes/admin/notices.php:38
 msgid "THREE is coming!"
@@ -871,11 +896,13 @@ msgstr ""
 "Für Ninja Forms erscheint in Kürze ein großes Update. %sErfahren Sie mehr "
 "über neue Funktionen, Rückwärtskompatibilität und Häufig gestellte Fragen.%s"
 
-#: deprecated/includes/admin/notices.php:53 includes/Config/AdminNotices.php:12
+#: deprecated/includes/admin/notices.php:53
+#: includes/Config/AdminNotices.php:12
 msgid "How's It Going?"
 msgstr "Wie sieht's aus?"
 
-#: deprecated/includes/admin/notices.php:54 includes/Config/AdminNotices.php:13
+#: deprecated/includes/admin/notices.php:54
+#: includes/Config/AdminNotices.php:13
 msgid ""
 "Thank you for using Ninja Forms! We hope that you've found everything you "
 "need, but if you have any questions:"
@@ -883,11 +910,13 @@ msgstr ""
 "Wir freuen uns, dass Sie Ninja Forms verwenden! Wir hoffen, dass Sie alles "
 "gefunden haben, was Sie benötigen. Falls noch Fragen offen sind, können Sie:"
 
-#: deprecated/includes/admin/notices.php:55 includes/Config/AdminNotices.php:14
+#: deprecated/includes/admin/notices.php:55
+#: includes/Config/AdminNotices.php:14
 msgid "Check out our documentation"
 msgstr "Unsere Dokumentation aufrufen"
 
-#: deprecated/includes/admin/notices.php:56 includes/Config/AdminNotices.php:15
+#: deprecated/includes/admin/notices.php:56
+#: includes/Config/AdminNotices.php:15
 msgid "Get Some Help"
 msgstr "Hilfe erhalten"
 
@@ -943,7 +972,8 @@ msgstr "Wird gespeichert ..."
 
 #: deprecated/includes/admin/scripts.php:75
 msgid "Remove this field? It will be removed even if you do not save."
-msgstr "Dieses Feld entfernen? Es wird entfernt, auch wenn Sie nicht speichern."
+msgstr ""
+"Dieses Feld entfernen? Es wird entfernt, auch wenn Sie nicht speichern."
 
 #: deprecated/includes/admin/sidebar.php:155
 #: deprecated/includes/admin/pages/ninja-forms/tabs/form-list/form-list.php:192
@@ -1185,9 +1215,9 @@ msgid ""
 "the order you want them to appear. Each field will have an assortment of "
 "options such as label, label position, and placeholder."
 msgstr ""
-"Hier erstellen Sie Ihr Formular, indem Sie Felder hinzufügen und diese an die "
-"gewünschte Stelle ziehen. Für jedes Feld stehen verschiedene Optionen wie "
-"Beschriftung, Position der Beschriftung und Platzhalter zur Verfügung."
+"Hier erstellen Sie Ihr Formular, indem Sie Felder hinzufügen und diese an "
+"die gewünschte Stelle ziehen. Für jedes Feld stehen verschiedene Optionen "
+"wie Beschriftung, Position der Beschriftung und Platzhalter zur Verfügung."
 
 #: deprecated/includes/admin/welcome.php:332
 #: includes/Templates/ui-nf-header.html.php:6
@@ -1201,10 +1231,11 @@ msgid ""
 "submit, you can set those up on this tab. You can create an unlimited number "
 "of emails, including emails sent to the user who filled out the form."
 msgstr ""
-"Wenn Sie eine E-Mail erhalten möchten, wenn ein Benutzer für Ihr Formular auf "
-"\"Absenden\" klickt, können Sie dies auf dieser Registerkarte einstellen. Sie "
-"können eine unbegrenzte Anzahl E-Mails einrichten einschließlich einer "
-"E-Mail, die an den Benutzer gesendet wird, der das Formular ausgefüllt hat."
+"Wenn Sie eine E-Mail erhalten möchten, wenn ein Benutzer für Ihr Formular "
+"auf \"Absenden\" klickt, können Sie dies auf dieser Registerkarte "
+"einstellen. Sie können eine unbegrenzte Anzahl E-Mails einrichten "
+"einschließlich einer E-Mail, die an den Benutzer gesendet wird, der das "
+"Formular ausgefüllt hat."
 
 #: deprecated/includes/admin/welcome.php:336
 msgid ""
@@ -1260,8 +1291,8 @@ msgid ""
 "space."
 msgstr ""
 "Ninja Forms bietet ein Widget, das Sie in jedem Widget-Bereich Ihrer Website "
-"positionieren können, und Sie können genau auswählen, welches Formular an der "
-"Stelle angezeigt werden soll."
+"positionieren können, und Sie können genau auswählen, welches Formular an "
+"der Stelle angezeigt werden soll."
 
 #: deprecated/includes/admin/welcome.php:369
 #: deprecated/includes/admin/pages/ninja-forms/tabs/form-list/form-list.php:159
@@ -1306,8 +1337,9 @@ msgid ""
 "possible. If you encounter a problem or have a question, %splease contact us"
 "%s."
 msgstr ""
-"Wir tun alles, um jedem Ninja Forms-Benutzer bestmöglichen Support zu bieten. "
-"Wenn Sie auf ein Problem stoßen oder eine Frage haben, %skontaktieren Sie uns bitte%s."
+"Wir tun alles, um jedem Ninja Forms-Benutzer bestmöglichen Support zu "
+"bieten. Wenn Sie auf ein Problem stoßen oder eine Frage haben, "
+"%skontaktieren Sie uns bitte%s."
 
 #: deprecated/includes/admin/welcome.php:413
 #, php-format
@@ -1324,7 +1356,8 @@ msgid ""
 "the #1 WordPress community form creation plugin."
 msgstr ""
 "Ninja Forms wird von einem weltweiten Team aus Entwicklern erstellt, deren "
-"Ziel es ist, das Plugin Nr. 1 der WordPress-Community zur Formularerstellung bereitzustellen."
+"Ziel es ist, das Plugin Nr. 1 der WordPress-Community zur Formularerstellung "
+"bereitzustellen."
 
 #: deprecated/includes/admin/welcome.php:436
 msgid "No valid changelog was found."
@@ -1492,7 +1525,8 @@ msgid "Inside Element"
 msgstr "Innerhalb des Elements"
 
 #: deprecated/includes/admin/edit-field/label.php:56
-#: deprecated/includes/fields/calc.php:127 includes/Config/FieldSettings.php:35
+#: deprecated/includes/fields/calc.php:127
+#: includes/Config/FieldSettings.php:35
 #: includes/Templates/admin-menu-forms.html.php:25
 msgid "Label Position"
 msgstr "Position der Beschriftung"
@@ -1557,7 +1591,9 @@ msgstr "Admin-Bezeichnung"
 
 #: deprecated/includes/admin/edit-field/sub-settings.php:68
 msgid "This is the label used when viewing/editing/exporting submissions."
-msgstr "Diese Bezeichnung wird beim Anzeigen/Bearbeiten/Export der Einreichungen verwendet."
+msgstr ""
+"Diese Bezeichnung wird beim Anzeigen/Bearbeiten/Export der Einreichungen "
+"verwendet."
 
 #: deprecated/includes/admin/edit-field/user-info-fields.php:28
 msgid "Billing"
@@ -1590,7 +1626,8 @@ msgstr "Benutzerdefinierte Feldgruppe"
 #: deprecated/includes/admin/pages/system-status-html.php:3
 #: includes/Templates/admin-menu-system-status.html.php:14
 msgid "Please include this information when requesting support:"
-msgstr "Geben Sie bitte die folgenden Informationen an, wenn Sie Support anfragen:"
+msgstr ""
+"Geben Sie bitte die folgenden Informationen an, wenn Sie Support anfragen:"
 
 #: deprecated/includes/admin/pages/system-status-html.php:4
 #: includes/Templates/admin-menu-system-status.html.php:16
@@ -1794,7 +1831,9 @@ msgstr ""
 
 #: deprecated/includes/admin/pages/system-status-html.php:171
 msgid "wp_remote_post() failed. PayPal IPN may not work with your server."
-msgstr "wp_remote_post() fehlgeschlagen. PayPal IPN wird mit Ihrem Server ggf. nicht funktionieren."
+msgstr ""
+"wp_remote_post() fehlgeschlagen. PayPal IPN wird mit Ihrem Server ggf. nicht "
+"funktionieren."
 
 #: deprecated/includes/admin/pages/system-status-html.php:178
 #: includes/Templates/admin-menu-system-status.html.php:42
@@ -1823,11 +1862,14 @@ msgstr "Version"
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/field-settings/field-settings.php:44
 msgid "Give your form a title. This is how you'll find the form later."
-msgstr "Geben Sie dem Formular einen Namen. So finden Sie das Formular später einfach wieder."
+msgstr ""
+"Geben Sie dem Formular einen Namen. So finden Sie das Formular später "
+"einfach wieder."
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/field-settings/field-settings.php:49
 msgid "You have not added a submit button to your form."
-msgstr "Sie haben für Ihr Formular keine Schaltfläche für das Absenden hinzugefügt."
+msgstr ""
+"Sie haben für Ihr Formular keine Schaltfläche für das Absenden hinzugefügt."
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/field-settings/help.php:7
 #: deprecated/includes/fields/textbox.php:170
@@ -1843,7 +1885,8 @@ msgid ""
 msgstr ""
 "Jedes Zeichen, welches Sie in die Box für die \"Eigene Maske\" (Custom Mask) "
 "einfügen und dass nicht in der Liste unten enthalten ist, wird automatisch "
-"für den Benutzer eingefügt, während dieser tippt - und es ist nicht entfernbar!"
+"für den Benutzer eingefügt, während dieser tippt - und es ist nicht "
+"entfernbar!"
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/field-settings/help.php:16
 msgid "These are the predefined masking characters"
@@ -1854,14 +1897,15 @@ msgid ""
 "a - Represents an alpha character (A-Z,a-z) - Only allows letters to be "
 "entered"
 msgstr ""
-"a - Repräsentiert alphanumerische Zeichen (A-Z,a-z) - Erlaubt nur die Eingabe "
-"von Buchstaben"
+"a - Repräsentiert alphanumerische Zeichen (A-Z,a-z) - Erlaubt nur die "
+"Eingabe von Buchstaben"
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/field-settings/help.php:19
 msgid ""
 "9 - Represents a numeric character (0-9) - Only allows numbers to be entered"
 msgstr ""
-"9 - Repräsentiert numerische Zeichen (0-9) - Erlaubt nur die Eingabe von Nummern"
+"9 - Repräsentiert numerische Zeichen (0-9) - Erlaubt nur die Eingabe von "
+"Nummern"
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/field-settings/help.php:20
 msgid ""
@@ -1883,11 +1927,14 @@ msgstr ""
 msgid ""
 "The 9s would represent any number, and the -s would be automatically added"
 msgstr ""
-"Die 9'er repräsentieren eine Zahl. Die Bindestriche würden automatisch hinzugefügt."
+"Die 9'er repräsentieren eine Zahl. Die Bindestriche würden automatisch "
+"hinzugefügt."
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/field-settings/help.php:24
 msgid "This would prevent the user from putting in anything other than numbers"
-msgstr "Dies verhindert, dass der Benutzer etwas anderes als Zahlen in das Formular eingibt."
+msgstr ""
+"Dies verhindert, dass der Benutzer etwas anderes als Zahlen in das Formular "
+"eingibt."
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/field-settings/help.php:27
 msgid "You can also combine these for specific applications"
@@ -2037,8 +2084,8 @@ msgid ""
 "If this box is checked, Ninja Forms will hide the form after it has been "
 "successfully submitted."
 msgstr ""
-"Aktivieren Sie dieses Kontrollkästchen, wenn das Formular ausgeblendet werden "
-"soll, wenn es erfolgreich abgeschickt wurde."
+"Aktivieren Sie dieses Kontrollkästchen, wenn das Formular ausgeblendet "
+"werden soll, wenn es erfolgreich abgeschickt wurde."
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/form-settings/form-settings.php:105
 #: includes/Config/FormSettingsTypes.php:12
@@ -2061,9 +2108,8 @@ msgid ""
 "Message shown to users if the \"logged in\" checkbox above is checked and "
 "they are not logged-in."
 msgstr ""
-"Diese Meldung wird Benutzern angezeigt, wenn das "
-"\"Angemeldet\"-Kontrollkästchen oben aktiviert ist und die Benutzer nicht "
-"angemeldet sind."
+"Diese Meldung wird Benutzern angezeigt, wenn das \"Angemeldet\"-"
+"Kontrollkästchen oben aktiviert ist und die Benutzer nicht angemeldet sind."
 
 #: deprecated/includes/admin/pages/ninja-forms/tabs/form-settings/form-settings.php:127
 #: includes/Config/FormRestrictionSettings.php:45
@@ -2287,7 +2333,9 @@ msgstr "Siteschlüssel für reCAPTCHA"
 #: includes/Config/PluginSettingsReCaptcha.php:15
 #, php-format
 msgid "Get a site key for your domain by registering  %shere%s"
-msgstr "Holen Sie sich einen Siteschlüssel für Ihre Domain, indem Sie sich %shier%sregistrieren."
+msgstr ""
+"Holen Sie sich einen Siteschlüssel für Ihre Domain, indem Sie sich %shier"
+"%sregistrieren."
 
 #: deprecated/includes/admin/pages/ninja-forms-settings/tabs/general-settings/general-settings.php:68
 #: includes/Config/PluginSettingsReCaptcha.php:27
@@ -2305,8 +2353,8 @@ msgstr "Sprache für reCAPTCHA"
 msgid ""
 "Language used by reCAPTCHA. To get the code for your language click %shere%s"
 msgstr ""
-"Von reCAPTCHA verwendete Sprache. Wenn Sie den Code für Ihre Sprache erhalten "
-"möchten, klicken Sie %shier%s."
+"Von reCAPTCHA verwendete Sprache. Wenn Sie den Code für Ihre Sprache "
+"erhalten möchten, klicken Sie %shier%s."
 
 #: deprecated/includes/admin/pages/ninja-forms-settings/tabs/general-settings/general-settings.php:94
 #: includes/Config/PluginSettingsAdvanced.php:15
@@ -2316,9 +2364,9 @@ msgid ""
 "database upon deletion. %sAll form and submission data will be unrecoverable."
 "%s"
 msgstr ""
-"Wenn dieses Feld aktiviert ist, werden bei der Löschung ALLE Ninja "
-"Forms-Daten aus der Datenbank entfernt. %sFormular- und Einreichungsdaten "
-"können nicht wiederhergestellt werden.%s"
+"Wenn dieses Feld aktiviert ist, werden bei der Löschung ALLE Ninja Forms-"
+"Daten aus der Datenbank entfernt. %sFormular- und Einreichungsdaten können "
+"nicht wiederhergestellt werden.%s"
 
 #: deprecated/includes/admin/pages/ninja-forms-settings/tabs/general-settings/general-settings.php:104
 #: includes/Config/PluginSettingsAdvanced.php:42
@@ -2341,8 +2389,9 @@ msgid ""
 "deletion. This includes SUBMISSIONS and FORMS. It cannot be undone."
 msgstr ""
 "Mit dieser Einstellung wird bei Löschen des Plugins alles, was mit Ninja "
-"Forms zusammenhängt, VOLLSTÄNDIG entfernt. Dazu zählen auch die EINREICHUNGEN "
-"und die FORMULARE. Diesen Vorgang können Sie nicht rückgängig machen."
+"Forms zusammenhängt, VOLLSTÄNDIG entfernt. Dazu zählen auch die "
+"EINREICHUNGEN und die FORMULARE. Diesen Vorgang können Sie nicht rückgängig "
+"machen."
 
 #: deprecated/includes/admin/pages/ninja-forms-settings/tabs/general-settings/general-settings.php:126
 #: deprecated/includes/admin/upgrades/convert-forms-reset.php:74
@@ -2372,7 +2421,9 @@ msgstr "Pflichtfeld-Symbol"
 
 #: deprecated/includes/admin/pages/ninja-forms-settings/tabs/label-settings/label-settings.php:40
 msgid "Error message given if all required fields are not completed"
-msgstr "Fehlermeldung, welche angezeigt wird, wenn erforderliche Felder nicht ausgefüllt wurden"
+msgstr ""
+"Fehlermeldung, welche angezeigt wird, wenn erforderliche Felder nicht "
+"ausgefüllt wurden"
 
 #: deprecated/includes/admin/pages/ninja-forms-settings/tabs/label-settings/label-settings.php:45
 msgid "Required Field Error"
@@ -2408,7 +2459,8 @@ msgid ""
 "\"submit\" to let them know it is processing."
 msgstr ""
 "Diese Meldung wird in der Schaltfläche für die Einreichung angezeigt, sobald "
-"ein Benutzer auf \"Absenden\" klickt. So weiß er, dass die Verarbeitung läuft."
+"ein Benutzer auf \"Absenden\" klickt. So weiß er, dass die Verarbeitung "
+"läuft."
 
 #: deprecated/includes/admin/pages/ninja-forms-settings/tabs/label-settings/label-settings.php:87
 msgid "Password Mismatch Label"
@@ -2464,7 +2516,8 @@ msgid ""
 msgstr ""
 "Wenn die Formulare nach dem Update auf 2.9 \"fehlen\", versucht diese "
 "Schaltfläche die alten Formulare erneut zu konvertieren, damit sie in 2.9 "
-"angezeigt werden.  Alle aktuellen Formulare verbleiben in der Tabelle \"Alle Formulare\"."
+"angezeigt werden.  Alle aktuellen Formulare verbleiben in der Tabelle \"Alle "
+"Formulare\"."
 
 #: deprecated/includes/admin/upgrades/convert-forms-reset.php:65
 msgid ""
@@ -2499,8 +2552,8 @@ msgid ""
 "Ninja Forms needs to update your email settings, click %shere%s to start the "
 "upgrade."
 msgstr ""
-"Ninja Forms muss Ihre E-Mail-Einstellungen aktualisieren. Klicken Sie "
-"%shier%s, um das Upgrade zu starten."
+"Ninja Forms muss Ihre E-Mail-Einstellungen aktualisieren. Klicken Sie %shier"
+"%s, um das Upgrade zu starten."
 
 #: deprecated/includes/admin/upgrades/upgrade-functions.php:55
 #, php-format
@@ -2527,7 +2580,8 @@ msgid ""
 msgstr ""
 "Ihre Version der Erweiterung Ninja Forms File Upload für das Hochladen von "
 "Dateien ist nicht mit Version 2.7 von Ninja Forms kompatibel. Sie muss "
-"mindestens Version 1.3.5 sein. Aktualisieren Sie diese Erweiterung bitte unter "
+"mindestens Version 1.3.5 sein. Aktualisieren Sie diese Erweiterung bitte "
+"unter "
 
 #: deprecated/includes/admin/upgrades/upgrade-functions.php:74
 msgid ""
@@ -2559,7 +2613,9 @@ msgstr "Ninja Forms Upgrade – Verarbeitung"
 #: deprecated/includes/admin/upgrades/upgrade-handler-page.html.php:41
 #, php-format
 msgid "Please %scontact support%s with the error seen above."
-msgstr "Bitte %swenden Sie sich an den Support%s und geben Sie dabei die oben stehende Fehlermeldung an."
+msgstr ""
+"Bitte %swenden Sie sich an den Support%s und geben Sie dabei die oben "
+"stehende Fehlermeldung an."
 
 #: deprecated/includes/admin/upgrades/upgrade-handler-page.html.php:52
 msgid "Ninja Forms has completed all available upgrades!"
@@ -2588,8 +2644,8 @@ msgid ""
 "Ninja Forms needs to process %s upgrade(s). This may take a few minutes to "
 "complete. %sStart Upgrade%s"
 msgstr ""
-"Ninja Forms muss %s Upgrade(s) verarbeiten. Das kann ein paar Minuten dauern. "
-"%sUpgrade starten%s"
+"Ninja Forms muss %s Upgrade(s) verarbeiten. Das kann ein paar Minuten "
+"dauern. %sUpgrade starten%s"
 
 #: deprecated/includes/admin/upgrades/upgrades.php:41
 #, php-format
@@ -2633,7 +2689,8 @@ msgstr "- Land auswählen"
 #: deprecated/includes/display/form/honeypot.php:14
 #: deprecated/includes/fields/honeypot.php:10
 msgid "If you are a human and are seeing this field, please leave it blank."
-msgstr "Wenn Sie ein Mensch sind und dieses Feld sehen, lassen Sie es bitte leer."
+msgstr ""
+"Wenn Sie ein Mensch sind und dieses Feld sehen, lassen Sie es bitte leer."
 
 #: deprecated/includes/display/form/required-label.php:16
 msgid "Fields marked with a * are required."
@@ -2699,7 +2756,8 @@ msgid ""
 "Use the following shortcode to insert the final calculation: "
 "[ninja_forms_calc]"
 msgstr ""
-"Verwenden Sie den folgenden Shortcode, um die finale Berechnung einzufügen: <code>[ninja_forms_calc]</code>"
+"Verwenden Sie den folgenden Shortcode, um die finale Berechnung einzufügen: "
+"<code>[ninja_forms_calc]</code>"
 
 #: deprecated/includes/fields/calc.php:188
 #, php-format
@@ -2707,9 +2765,9 @@ msgid ""
 "You can enter calculation equations here using field_x where x is the ID of "
 "the field you want to use. For example, %sfield_53 + field_28 + field_65%s."
 msgstr ""
-"Hier können Sie mithilfe von \"field_x\" Gleichungen zur Berechnung eingeben, "
-"wobei das x die ID des Felds ist, das Sie verwenden möchten. Beispiel: "
-"%sfield_53 + field_28 + field_65%s."
+"Hier können Sie mithilfe von \"field_x\" Gleichungen zur Berechnung "
+"eingeben, wobei das x die ID des Felds ist, das Sie verwenden möchten. "
+"Beispiel: %sfield_53 + field_28 + field_65%s."
 
 #: deprecated/includes/fields/calc.php:189
 #, php-format
@@ -2717,8 +2775,8 @@ msgid ""
 "Complex equations can be created by adding parentheses: %s( field_45 * "
 "field_2 ) / 2%s."
 msgstr ""
-"Komplexe Gleichungen können durch Hinzufügen von Klammern erstellt werden: "
-"%s( field_45 * field_2 ) / 2%s."
+"Komplexe Gleichungen können durch Hinzufügen von Klammern erstellt werden: %s"
+"( field_45 * field_2 ) / 2%s."
 
 #: deprecated/includes/fields/calc.php:190
 msgid ""
@@ -2789,8 +2847,8 @@ msgstr "Eigene CSS-Klasse"
 msgid "- Select a Field"
 msgstr "- Ein Feld auswählen"
 
-#: deprecated/includes/fields/checkbox.php:4 includes/Database/MockData.php:443
-#: includes/Database/MockData.php:531
+#: deprecated/includes/fields/checkbox.php:4
+#: includes/Database/MockData.php:443 includes/Database/MockData.php:531
 #: includes/Templates/admin-menu-forms.html.php:64
 #: includes/Templates/admin-menu-forms.html.php:92
 #: includes/Templates/admin-menu-forms.html.php:120
@@ -4334,7 +4392,9 @@ msgstr "Beschreibung Kartenprüfnummer"
 #: deprecated/includes/fields/credit-card.php:60
 #: deprecated/includes/fields/credit-card.php:149
 msgid "The 3 digit (back) or 4 digit (front) value on your card."
-msgstr "Wert der 3 Ziffern (Rückseite) ODER 4 Ziffern (Vorderseite) Ihrer Kreditkarte."
+msgstr ""
+"Wert der 3 Ziffern (Rückseite) ODER 4 Ziffern (Vorderseite) Ihrer "
+"Kreditkarte."
 
 #: deprecated/includes/fields/credit-card.php:67
 msgid "Card Name Label"
@@ -4370,7 +4430,9 @@ msgstr "Beschreibung Ablaufdatum Karte, Monat"
 #: deprecated/includes/fields/credit-card.php:92
 #: deprecated/includes/fields/credit-card.php:155
 msgid "The month your credit card expires, typically on the front of the card."
-msgstr "Der Monat, in dem Ihre Kreditkarte abläuft, üblicherweise auf der Vorderseite der Karte."
+msgstr ""
+"Der Monat, in dem Ihre Kreditkarte abläuft, üblicherweise auf der "
+"Vorderseite der Karte."
 
 #: deprecated/includes/fields/credit-card.php:99
 msgid "Card Expiry Year Label"
@@ -4388,7 +4450,9 @@ msgstr "Beschreibung Ablaufdatum Karte, Jahr"
 #: deprecated/includes/fields/credit-card.php:108
 #: deprecated/includes/fields/credit-card.php:158
 msgid "The year your credit card expires, typically on the front of the card."
-msgstr "Das Jahr, in dem Ihre Kreditkarte abläuft, üblicherweise auf der Vorderseite der Karte."
+msgstr ""
+"Das Jahr, in dem Ihre Kreditkarte abläuft, üblicherweise auf der Vorderseite "
+"der Karte."
 
 #: deprecated/includes/fields/desc.php:4
 msgid "Text"
@@ -4462,7 +4526,8 @@ msgstr "Querystring-Variable"
 #: deprecated/includes/fields/hidden.php:74
 #: deprecated/includes/fields/textbox.php:145
 msgid "This keyword is reserved by WordPress. Please try another."
-msgstr "Dieses Keyword ist von WordPress reserviert. Bitte wählen Sie ein anderes."
+msgstr ""
+"Dieses Keyword ist von WordPress reserviert. Bitte wählen Sie ein anderes."
 
 #: deprecated/includes/fields/hidden.php:94
 msgid "Is this an email address?"
@@ -4566,7 +4631,9 @@ msgstr "Importieren"
 
 #: deprecated/includes/fields/list.php:177
 msgid "To use this feature, you can paste your CSV into the textarea above."
-msgstr "Um diese Funktion zu verwenden, können Sie Ihre CSV-Daten in das mehrzeilige Textfeld oben einfügen."
+msgstr ""
+"Um diese Funktion zu verwenden, können Sie Ihre CSV-Daten in das mehrzeilige "
+"Textfeld oben einfügen."
 
 #: deprecated/includes/fields/list.php:178
 msgid "The format should look like the following:"
@@ -4643,8 +4710,8 @@ msgid ""
 "$ % ^ &amp; )."
 msgstr ""
 "Hinweis: Das Passwort sollte zumindest sieben Zeichen lang sein. Um es noch "
-"sicherer zu machen, sollten Sie Groß- und Kleinbuchstaben, Zahlen und Symbole "
-"wie z.B. ! \" ? $ % ^ &amp; ) verwenden."
+"sicherer zu machen, sollten Sie Groß- und Kleinbuchstaben, Zahlen und "
+"Symbole wie z.B. ! \" ? $ % ^ &amp; ) verwenden."
 
 #: deprecated/includes/fields/password.php:147
 #: includes/Fields/PasswordConfirm.php:72
@@ -4673,14 +4740,19 @@ msgstr "Bestätigen Sie, dass Sie kein Bot sind"
 msgid "Please complete the captcha field"
 msgstr "Bitte füllen Sie das Captcha-Feld aus"
 
-#: deprecated/includes/fields/recaptcha.php:98 includes/Fields/Recaptcha.php:63
+#: deprecated/includes/fields/recaptcha.php:98
+#: includes/Fields/Recaptcha.php:63
 msgid "Please make sure you have entered your Site & Secret keys correctly"
-msgstr "Bitte überprüfen Sie, ob Sie Ihre Website- und geheimen Schlüssel korrekt eingegeben haben"
+msgstr ""
+"Bitte überprüfen Sie, ob Sie Ihre Website- und geheimen Schlüssel korrekt "
+"eingegeben haben"
 
 #: deprecated/includes/fields/recaptcha.php:100
 #: includes/Fields/Recaptcha.php:65
 msgid "Captcha mismatch. Please enter the correct value in captcha field"
-msgstr "Captcha-Einträge stimmen nicht überein. Bitte geben Sie den richtigen Wert ins Captcha-Feld ein."
+msgstr ""
+"Captcha-Einträge stimmen nicht überein. Bitte geben Sie den richtigen Wert "
+"ins Captcha-Feld ein."
 
 #: deprecated/includes/fields/spam.php:4 includes/Fields/Spam.php:24
 msgid "Anti-Spam"
@@ -4717,8 +4789,8 @@ msgstr "Steuer-Prozentsatz"
 msgid "Should be entered as a percentage. e.g. 8.25%, 4%"
 msgstr "Sollte als ein Prozentsatz angegeben werden, z.B. 19%, 7%"
 
-#: deprecated/includes/fields/textarea.php:4 includes/Database/MockData.php:382
-#: includes/Database/MockData.php:526
+#: deprecated/includes/fields/textarea.php:4
+#: includes/Database/MockData.php:382 includes/Database/MockData.php:526
 #: includes/Templates/admin-menu-forms.html.php:61
 #: includes/Templates/admin-menu-forms.html.php:89
 #: includes/Templates/admin-menu-forms.html.php:117
@@ -4777,7 +4849,8 @@ msgstr "Zeitgesteuertes Absenden"
 
 #: deprecated/includes/fields/timed-submit.php:10
 msgid "Submit button text after timer expires"
-msgstr "Text auf der Schaltfläche zum Absenden, nachdem die Zeit abgelaufen ist"
+msgstr ""
+"Text auf der Schaltfläche zum Absenden, nachdem die Zeit abgelaufen ist"
 
 #: deprecated/includes/fields/timed-submit.php:18
 #: deprecated/includes/fields/timed-submit.php:69
@@ -4963,7 +5036,9 @@ msgstr "Auto-Summenfelder"
 
 #: includes/Admin/Menus/ImportExport.php:340
 msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini."
-msgstr "Die hochgeladene Datei überschreitet die upload_max_filesize-Richtlinie in php.ini."
+msgstr ""
+"Die hochgeladene Datei überschreitet die upload_max_filesize-Richtlinie in "
+"php.ini."
 
 #: includes/Admin/Menus/ImportExport.php:343
 msgid ""
@@ -5116,7 +5191,8 @@ msgstr "Verborgen"
 
 #: includes/Config/FieldSettings.php:65
 msgid "Select the position of your label relative to the field element itself."
-msgstr "Wählen Sie die Position Ihrer Beschriftung relativ zum Feldelement selbst."
+msgstr ""
+"Wählen Sie die Position Ihrer Beschriftung relativ zum Feldelement selbst."
 
 #: includes/Config/FieldSettings.php:76
 msgid "Required Field"
@@ -5182,7 +5258,9 @@ msgstr "Berechnungswert"
 
 #: includes/Config/FieldSettings.php:203
 msgid "Restricts the kind of input your users can put into this field."
-msgstr "Begrenzt die Art der Eingabe, die Ihre Benutzer in diesem Feld vornehmen können."
+msgstr ""
+"Begrenzt die Art der Eingabe, die Ihre Benutzer in diesem Feld vornehmen "
+"können."
 
 #: includes/Config/FieldSettings.php:206
 msgid "none"
@@ -5212,14 +5290,15 @@ msgid ""
 "                            letters to be entered.</li>\n"
 "                        </ul>"
 msgstr ""
-"<ul>\n                            <li>a - Stellt ein alphabetisches Zeichen "
-"dar (A-Z, a-z) - Es dürfen nur Buchstaben eingegeben werden.</li> "
-"\n                            <li>9 - Stellt ein numerisches Zeichen dar "
-"(0-9) - Es dürfen nur Zahlen eingegeben "
-"werden.</li>\n                            <li>* - Stellt ein alphanumerisches "
-"Zeichen dar (A-Z, a-z, 0-9) - Es dürfen Zahlen "
-"und\n                            Buchstaben eingegeben "
-"werden.</li>\n                        </ul>"
+"<ul>\n"
+"                            <li>a - Stellt ein alphabetisches Zeichen dar (A-"
+"Z, a-z) - Es dürfen nur Buchstaben eingegeben werden.</li> \n"
+"                            <li>9 - Stellt ein numerisches Zeichen dar (0-9) "
+"- Es dürfen nur Zahlen eingegeben werden.</li>\n"
+"                            <li>* - Stellt ein alphanumerisches Zeichen dar "
+"(A-Z, a-z, 0-9) - Es dürfen Zahlen und\n"
+"                            Buchstaben eingegeben werden.</li>\n"
+"                        </ul>"
 
 #: includes/Config/FieldSettings.php:255
 msgid "Limit Input to this Number"
@@ -5246,8 +5325,8 @@ msgid ""
 "Enter text you would like displayed in the field before a user enters any "
 "data."
 msgstr ""
-"Geben Sie Text ein, der in dem Feld angezeigt werden soll, bevor der Benutzer "
-"Daten eingibt."
+"Geben Sie Text ein, der in dem Feld angezeigt werden soll, bevor der "
+"Benutzer Daten eingibt."
 
 #: includes/Config/FieldSettings.php:344
 #: includes/Config/FormDisplaySettings.php:103
@@ -5349,8 +5428,9 @@ msgid ""
 "                        password and re-password textboxes will be output"
 msgstr ""
 "Verwenden Sie dies als Feld für das Registrierungspasswort. Wenn dieses Feld "
-"aktiviert ist, werden\n                        die Textfelder für das "
-"Passwort und die wiederholte Eingabe des Passworts ausgegeben."
+"aktiviert ist, werden\n"
+"                        die Textfelder für das Passwort und die wiederholte "
+"Eingabe des Passworts ausgegeben."
 
 #: includes/Config/FieldSettings.php:763 includes/Database/Models/Form.php:505
 msgid "Confirm"
@@ -5370,7 +5450,8 @@ msgstr "Berechnungswert aktiviert"
 
 #: includes/Config/FieldSettings.php:835
 msgid "This number will be used in calculations if the box is checked."
-msgstr "Wenn das Feld aktiviert ist, wird diese Zahl in Berechnungen verwendet."
+msgstr ""
+"Wenn das Feld aktiviert ist, wird diese Zahl in Berechnungen verwendet."
 
 #: includes/Config/FieldSettings.php:841
 msgid "Unchecked Calculation Value"
@@ -5378,7 +5459,8 @@ msgstr "Berechnungswert deaktiviert"
 
 #: includes/Config/FieldSettings.php:844
 msgid "This number will be used in calculations if the box is unchecked."
-msgstr "Wenn das Feld nicht aktiviert ist, wird diese Zahl in Berechnungen verwendet."
+msgstr ""
+"Wenn das Feld nicht aktiviert ist, wird diese Zahl in Berechnungen verwendet."
 
 #: includes/Config/FieldSettings.php:855
 msgid "Display This Calculation Variable"
@@ -5459,7 +5541,9 @@ msgstr "Antwort"
 
 #: includes/Config/FieldSettings.php:1023
 msgid "A case sensitive answer to help prevent spam submissions of your form."
-msgstr "Eine Antwort, bei der die Klein- und Großschreibung eine Rolle spielt, um Spam-Einreichungen Ihres Formulars zu vermeiden."
+msgstr ""
+"Eine Antwort, bei der die Klein- und Großschreibung eine Rolle spielt, um "
+"Spam-Einreichungen Ihres Formulars zu vermeiden."
 
 #: includes/Config/FieldSettings.php:1039
 msgid "Taxonomy"
@@ -5526,7 +5610,8 @@ msgstr "Gleichung"
 msgid "Default Label Position"
 msgstr "Standardbeschriftungsposition"
 
-#: includes/Config/FormDisplaySettings.php:111 includes/Fields/Recaptcha.php:30
+#: includes/Config/FormDisplaySettings.php:111
+#: includes/Fields/Recaptcha.php:30
 msgid "Wrapper"
 msgstr "Wrapper"
 
@@ -5536,7 +5621,9 @@ msgstr "Formular Schlüssel"
 
 #: includes/Config/FormDisplaySettings.php:139
 msgid "Programmatic name that can be used to reference this form."
-msgstr "Programmatischer Name, der als Referenz für dieses Formular verwendet werden kann."
+msgstr ""
+"Programmatischer Name, der als Referenz für dieses Formular verwendet werden "
+"kann."
 
 #: includes/Config/FormDisplaySettings.php:149
 msgid "Add Submit Button"
@@ -5597,7 +5684,8 @@ msgstr "In neuem Fenster öffnen"
 
 #: includes/Config/i18nBuilder.php:10
 msgid "If you are a human seeing this field, please leave it empty."
-msgstr "Wenn Sie ein Mensch sind und dieses Feld sehen, lassen Sie es bitte leer."
+msgstr ""
+"Wenn Sie ein Mensch sind und dieses Feld sehen, lassen Sie es bitte leer."
 
 #: includes/Config/i18nBuilder.php:11
 msgid "Available"
@@ -5926,7 +6014,8 @@ msgstr "Häufigkeit"
 msgid "Total"
 msgstr "Gesamtpreis"
 
-#: includes/Database/MockData.php:735 includes/Fields/CreditCardFullName.php:25
+#: includes/Database/MockData.php:735
+#: includes/Fields/CreditCardFullName.php:25
 msgid "Credit Card Full Name"
 msgstr "Kreditkarte Vollständiger Name"
 
@@ -6062,7 +6151,8 @@ msgstr "Meine zweite Berechnung"
 msgid ""
 "Calculations are returned with the AJAX response ( response -> data -> calcs"
 msgstr ""
-"Berechnungen werden mit AJAX-Response zurückgegeben (Response -> Daten -> Berechnungen)"
+"Berechnungen werden mit AJAX-Response zurückgegeben (Response -> Daten -> "
+"Berechnungen)"
 
 #: includes/Database/Models/Form.php:117
 msgid "copy"
@@ -6147,7 +6237,7 @@ msgstr "Trennung"
 
 #: includes/Fields/ListSelect.php:26
 msgid "Select"
-msgstr "AuswÃ¤hlen"
+msgstr "Auswählen"
 
 #: includes/Fields/ListState.php:26
 msgid "State"
@@ -6155,7 +6245,9 @@ msgstr "Staat / Bundesland"
 
 #: includes/Fields/Note.php:43
 msgid "Note text can be edited in the note field's advanced settings below."
-msgstr "Hinweistext kann im Hinweisfeld der erweiterten Einstellungen unten bearbeitet werden."
+msgstr ""
+"Hinweistext kann im Hinweisfeld der erweiterten Einstellungen unten "
+"bearbeitet werden."
 
 #: includes/Fields/Note.php:45
 msgid "Note"
@@ -6204,7 +6296,9 @@ msgstr "Begriffliste"
 #: includes/Fields/Terms.php:84
 #, php-format
 msgid "No available terms for this taxonomy. %sAdd a term%s"
-msgstr "Für diese Taxonomie stehen keine Begriffe zur Verfügung. %sBegriff hinzufügen%s"
+msgstr ""
+"Für diese Taxonomie stehen keine Begriffe zur Verfügung. %sBegriff hinzufügen"
+"%s"
 
 #: includes/Fields/Terms.php:99
 msgid "No taxonomy selected."
@@ -6497,7 +6591,9 @@ msgstr "Aktuelles Datum"
 
 #: includes/Templates/admin-menu-system-status.html.php:4
 msgid "Before requesting help from our support team please review:"
-msgstr "Bitte lesen Sie sich Folgendes durch, bevor Sie sich an unser Support-Team wenden:"
+msgstr ""
+"Bitte lesen Sie sich Folgendes durch, bevor Sie sich an unser Support-Team "
+"wenden:"
 
 #: includes/Templates/admin-menu-system-status.html.php:6
 msgid "Ninja Forms THREE documentation"
@@ -6563,7 +6659,8 @@ msgid ""
 "Oops! That addon is not yet compatible with Ninja Forms THREE. %sLearn More"
 "%s."
 msgstr ""
-"Ups! Das Add-on ist noch nicht mit Ninja Forms THREE kompatibel. %sWeitere Informationen%s."
+"Ups! Das Add-on ist noch nicht mit Ninja Forms THREE kompatibel. %sWeitere "
+"Informationen%s."
 
 #: lib/NF_AddonChecker.php:43
 #, php-format
@@ -6580,11 +6677,14 @@ msgid ""
 "to NinjaForms.com (this does NOT include your submissions)."
 msgstr ""
 "Wenn Sie sich einverstanden erklären, werden einige Daten über Ihre "
-"Installation von Ninja Forms an Ninja Forms.com gesendet (NICHT Ihre Einreichungen)."
+"Installation von Ninja Forms an Ninja Forms.com gesendet (NICHT Ihre "
+"Einreichungen)."
 
 #: lib/NF_Tracking.php:81
 msgid "If you skip this, that's okay! Ninja Forms will still work just fine."
-msgstr "Es ist in Ordnung, dies zu überspringen! Ninja Forms funktioniert dennoch einwandfrei."
+msgstr ""
+"Es ist in Ordnung, dies zu überspringen! Ninja Forms funktioniert dennoch "
+"einwandfrei."
 
 #: lib/NF_Tracking.php:84
 #, php-format

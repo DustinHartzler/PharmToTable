@@ -1075,6 +1075,9 @@ Various custom field styles
     top: 185px;
     left: 40px; }
 
+.nf-add-new.disabled {
+  display: none; }
+
 .nf-master-control {
   background: #1EA9EA;
   border: 2px solid #1EA9EA;

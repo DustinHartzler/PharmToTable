@@ -385,7 +385,7 @@
 
 <script id="tmpl-nf-staged-fields-drag" type="text/template">
     <div class="nf-staged-fields-drag">
-        <div id="drag-item-1" class="nf-staged-fields-drag-wrap">{{{ data.num }}}<? _e( ' Fields', 'ninja-forms' ); ?></div>
+        <div id="drag-item-1" class="nf-staged-fields-drag-wrap">{{{ data.num }}}<?php _e( ' Fields', 'ninja-forms' ); ?></div>
         <div id="drag-item-2" class="nf-staged-fields-drag-wrap">&nbsp;</div>
         <div id="drag-item-3" class="nf-staged-fields-drag-wrap">&nbsp;</div>
     </div>

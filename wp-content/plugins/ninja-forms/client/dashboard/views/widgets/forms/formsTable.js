@@ -56,8 +56,18 @@ define( [
         },
 
         sortFormsTable: function( event ){
+            this.getUI( 'sortable' ).removeClass( 'sorted-asc' );
+            this.getUI( 'sortable' ).removeClass( 'sorted-desc' );
             var sortBy = jQuery( event.target ).data( 'sort' );
             var reverse = jQuery( event.target ).data( 'reverse' ) || 0;
+            if( reverse ){
+                jQuery( event.target ).addClass( 'sorted-desc' );
+                jQuery( event.target ).removeClass( 'sorted-asc' );
+            } else {
+                jQuery( event.target ).addClass( 'sorted-asc' );
+                jQuery( event.target ).removeClass( 'sorted-desc' );
+            }
+
             var collection = this.getChildView( 'body' ).collection;
 
             collection.comparator = function( a, b ) {

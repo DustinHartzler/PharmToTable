@@ -192,11 +192,11 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
             foreach( $this->_form_cache[ 'settings' ][ 'calculations' ] as $calc ){
                 $eq = apply_filters( 'ninja_forms_calc_setting', $calc[ 'eq' ] );
                 $dec = ( isset( $calc[ 'dec' ] ) && $calc[ 'dec' ] ) ? $calc[ 'dec' ] : 2;
-                $calcs_merge_tags->set_merge_tags( $calc[ 'name' ], $eq, $dec );
+                $calcs_merge_tags->set_merge_tags( $calc[ 'name' ], $eq, $dec, $this->_form_data['settings']['decimal_point'], $this->_form_data['settings']['thousands_sep'] );
                 $this->_data[ 'extra' ][ 'calculations' ][ $calc[ 'name' ] ] = array(
                     'raw' => $calc[ 'eq' ],
                     'parsed' => $eq,
-                    'value' => $calcs_merge_tags->get_calc_value( $calc[ 'name' ] ),
+                    'value' => $calcs_merge_tags->get_formatted_calc_value( $calc[ 'name' ], $dec, $this->_form_data['settings']['decimal_point'], $this->_form_data['settings']['thousands_sep'] ),
                 );
             }
         }

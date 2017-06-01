@@ -97,9 +97,9 @@ final class NF_Admin_Menus_Submissions extends NF_Abstracts_Submenu
             if ( $field->get_setting( 'admin_label' ) ) {
                 $cols[ 'field_' . $field->get_id() ] = $field->get_setting( 'admin_label' );
             } else {
-                $cols[ 'field_' . $field->get_id() ] = $field->get_setting( 'label' );  
+                $cols[ 'field_' . $field->get_id() ] = $field->get_setting( 'label' );
             }
-            
+
         }
 
         $cols[ 'sub_date' ] = __( 'Date', 'ninja-forms' );
@@ -162,6 +162,7 @@ final class NF_Admin_Menus_Submissions extends NF_Abstracts_Submenu
             $form_options[ $form->get_id() ] = $form->get_setting( 'title' );
         }
         $form_options = apply_filters( 'ninja_forms_submission_filter_form_options', $form_options );
+        asort($form_options);
 
         if( isset( $_GET[ 'form_id' ] ) ) {
             $form_selected = $_GET[ 'form_id' ];

@@ -14,12 +14,12 @@
         <li>
             <p>
                 <span class="dashicons dashicons-welcome-widgets-menus"></span><strong>This is completely new form building experience</strong>
-                <br />The Ninja Forms 3.0 form builder looks nothing like what you're used to currenly. We've spent considerable resources to improve this over all experience, but we want you to be prepared for the difference.
+                <br />The Ninja Forms 3.0 form builder looks nothing like what you're used to currently. We've spent considerable resources to improve this over all experience, but we want you to be prepared for the difference.
             </p>
         </li>
         <li>
             <p>
-                <span class="dashicons dashicons-admin-page"></span><strong><a href='https://ninjaforms.com/docs-preview/'>Our documentation has been updated to assist through this change</a></strong>
+                <span class="dashicons dashicons-admin-page"></span><strong><a href='https://ninjaforms.com/documentation/'>Our documentation has been updated to assist through this change</a></strong>
                 <br />Ninja Forms documentation has been completely reworked in preparation of Ninja Forms 3.0. We will continue to invest time and energy to improve this resource.
             </p>
         </li>

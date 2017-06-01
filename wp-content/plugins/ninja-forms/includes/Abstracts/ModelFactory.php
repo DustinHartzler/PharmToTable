@@ -69,7 +69,7 @@ class NF_Abstracts_ModelFactory
 
         $form_cache = get_option( 'nf_form_' . $id, false );
 
-        if( $form_cache ){
+        if( $form_cache && isset ( $form_cache[ 'settings' ] ) ){
             $this->_object->update_settings( $form_cache[ 'settings' ] );
         }
 

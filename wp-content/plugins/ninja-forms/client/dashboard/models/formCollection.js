@@ -8,9 +8,7 @@
 define( ['models/formModel'], function( FormModel ) {
 	var collection = Backbone.Collection.extend( {
 		model: FormModel,
-		comparator: function( model ){
-            return parseInt( model.get( 'id' ) );
-        },
+		comparator: 'title',
 		tmpNum: 1,
         url: function() {
             return ajaxurl + "?action=nf_forms";
@@ -34,8 +32,8 @@ define( ['models/formModel'], function( FormModel ) {
         },
         
         modalConfirm: function( view ){
-            var message = '<div class="message">Once deleted, a Form cannot be recovered.<br />Are you sure you want to delete <em>' + view.model.get( 'title' ) + '</em>?</div>';
-            message +=  '<div class="confirm">Delete</div><div class="cancel">Cancel</div>';
+            var message = '<div class="message"><p>Once deleted, a Form cannot be recovered.<br />Are you sure you want to delete <em>' + view.model.get( 'title' ) + '</em>?</p></div>';
+            message +=  '<div class="buttons"><div class="confirm nf-button primary">Delete</div> <div style="float:right;" class="cancel nf-button secondary">Cancel</div></div>';
             
             this.modal.setContent( message );
             this.modal.setTitle( 'Confirm Delete' );
