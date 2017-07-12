@@ -3,7 +3,7 @@
  * Plugin Name: VaultPress
  * Plugin URI: http://vaultpress.com/?utm_source=plugin-uri&amp;utm_medium=plugin-description&amp;utm_campaign=1.0
  * Description: Protect your content, themes, plugins, and settings with <strong>realtime backup</strong> and <strong>automated security scanning</strong> from <a href="http://vaultpress.com/?utm_source=wp-admin&amp;utm_medium=plugin-description&amp;utm_campaign=1.0" rel="nofollow">VaultPress</a>. Activate, enter your registration key, and never worry again. <a href="http://vaultpress.com/help/?utm_source=wp-admin&amp;utm_medium=plugin-description&amp;utm_campaign=1.0" rel="nofollow">Need some help?</a>
- * Version: 1.9.0
+ * Version: 1.9.2
  * Author: Automattic
  * Author URI: http://vaultpress.com/?utm_source=author-uri&amp;utm_medium=plugin-description&amp;utm_campaign=1.0
  * License: GPL2+
@@ -18,7 +18,7 @@ class VaultPress {
 	var $option_name          = 'vaultpress';
 	var $auto_register_option = 'vaultpress_auto_register';
 	var $db_version           = 4;
-	var $plugin_version       = '1.9.0';
+	var $plugin_version       = '1.9.2';
 
 	function __construct() {
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
@@ -1856,8 +1856,9 @@ JS;
 		}
 
 		$signature = $this->sign_string( $to_sign, $secret, $sig[1] );
-		if ( $sig[0] === $signature )
+		if ( hash_equals( $sig[0], $signature ) ) {
 			return true;
+		}
 
 		$__vp_validate_error = array( 'error' => 'invalid_signed_data' );
 		return false;
