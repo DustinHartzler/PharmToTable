@@ -295,6 +295,10 @@ jBox
   .jBox-Modal .jBox-content {
     padding: 10px;
     width: 100%; }
+  .jBox-Modal .buttons::after {
+    clear: none;
+    content: "";
+    display: block; }
 
 /*
 Loading Spinner

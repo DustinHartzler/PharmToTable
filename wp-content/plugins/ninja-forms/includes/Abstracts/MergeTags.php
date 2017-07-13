@@ -37,7 +37,7 @@ abstract class NF_Abstracts_MergeTags
             return $subject;
         }
 
-        preg_match_all("/{(.*?)}/", $subject, $matches );
+        preg_match_all("/{([^}]*)}/", $subject, $matches );
 
         if( empty( $matches[0] ) ) return $subject;
 
@@ -46,8 +46,14 @@ abstract class NF_Abstracts_MergeTags
 
             if( ! isset($merge_tag[ 'callback' ])) continue;
 
-            $replace = ( is_callable( array( $this, $merge_tag[ 'callback' ] ) ) ) ? $this->{$merge_tag[ 'callback' ]}() : '';
-
+            if ( is_callable( array( $this, $merge_tag[ 'callback' ] ) ) ) {
+				$replace = $this->{$merge_tag[ 'callback' ]}();
+			} elseif ( is_callable( $merge_tag[ 'callback' ] ) ) {
+				$replace = $merge_tag[ 'callback' ]();
+			} else {
+				$replace = '';
+			}
+            
             $subject = str_replace( $merge_tag[ 'tag' ], $replace, $subject );
         }
 

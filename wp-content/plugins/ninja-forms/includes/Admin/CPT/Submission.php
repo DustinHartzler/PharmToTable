@@ -134,7 +134,7 @@ class NF_Admin_CPT_Submission
         static $columns;
 
         if( $columns ) return $columns;
-        
+
         $columns = array(
             'cb'    => '<input type="checkbox" />',
             'id' => __( '#', 'ninja-forms' ),
@@ -291,7 +291,11 @@ class NF_Admin_CPT_Submission
 
         $status = ucwords( $sub->get_status() );
 
-        $user = apply_filters( 'nf_edit_sub_username', $sub->get_user()->data->user_nicename, $post->post_author );
+        if ($sub->get_user()) {
+            $user = apply_filters('nf_edit_sub_username', $sub->get_user()->data->user_nicename, $post->post_author);
+        } else {
+            $user = __( 'Anonymous', 'ninja-forms' );
+        }
 
         $form_title = $sub->get_form_title();
 

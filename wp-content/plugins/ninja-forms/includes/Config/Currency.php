@@ -58,7 +58,7 @@ return apply_filters( 'ninja_forms_currency', array(
         'value' => 'PLN'
     ),
     'GBP' => array(
-        'label' => __( 'Pound Sterling', 'ninja-forms' ),
+        'label' => __( 'British Pounds Sterling', 'ninja-forms' ),
         'value' => 'GBP'
     ),
     'SGD' => array(

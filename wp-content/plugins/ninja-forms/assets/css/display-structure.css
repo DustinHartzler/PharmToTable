@@ -96,7 +96,6 @@ RADIO & CHECKBOX LISTS
   text-indent: initial !important; }
   .list-radio-wrap .nf-field-element li label,
   .list-checkbox-wrap .nf-field-element li label {
-    display: inline-block;
     float: initial;
     margin: 0;
     width: auto; }
@@ -757,9 +756,7 @@ LABEL RIGHT
 ----------------------------------*/
 .label-right .field-wrap {
   -ms-flex-direction: row;
-      flex-direction: row;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap; }
+      flex-direction: row; }
 
 .label-right .nf-field-label {
   display: -ms-flexbox;

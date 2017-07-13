@@ -96,7 +96,6 @@ RADIO & CHECKBOX LISTS
   text-indent: initial !important; }
   .list-radio-wrap .nf-field-element li label,
   .list-checkbox-wrap .nf-field-element li label {
-    display: inline-block;
     float: initial;
     margin: 0;
     width: auto; }
@@ -757,9 +756,7 @@ LABEL RIGHT
 ----------------------------------*/
 .label-right .field-wrap {
   -ms-flex-direction: row;
-      flex-direction: row;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap; }
+      flex-direction: row; }
 
 .label-right .nf-field-label {
   display: -ms-flexbox;
@@ -983,25 +980,25 @@ FIELD DESCRIPTION POSITIONS
   height: 50px;
   margin: 0;
   display: block; }
+  .checkbox-container.label-above label::before {
+    left: -2px;
+    bottom: -16px; }
   .checkbox-container.label-above label::after {
     left: 0;
-    bottom: 0; }
-  .checkbox-container.label-above label.nf-checked-label::before {
-    left: -2px;
-    bottom: 0; }
+    bottom: -16px; }
 
 .checkbox-container.label-below label {
   margin: 0;
   display: block;
   margin-top: 20px; }
+  .checkbox-container.label-below label::before {
+    left: -2px;
+    bottom: auto;
+    top: -27px; }
   .checkbox-container.label-below label::after {
     left: 0;
     bottom: auto;
     top: -25px; }
-  .checkbox-container.label-below label.nf-checked-label::before {
-    left: -2px;
-    bottom: auto;
-    top: -27px; }
 
 .checkbox-container.label-left .nf-field-label {
   width: 38%;
@@ -1013,14 +1010,14 @@ FIELD DESCRIPTION POSITIONS
 .checkbox-container.label-left label {
   margin: 0;
   display: block; }
+  .checkbox-container.label-left label::before {
+    left: auto;
+    top: -2px;
+    right: -36px; }
   .checkbox-container.label-left label::after {
     left: auto;
-    bottom: 0;
+    top: 0;
     right: -31px; }
-  .checkbox-container.label-left label.nf-checked-label::before {
-    left: auto;
-    bottom: 0;
-    right: -36px; }
 
 .checkbox-container.label-right .nf-field-label {
   padding: 0;
@@ -1037,13 +1034,10 @@ FIELD DESCRIPTION POSITIONS
   display: block; }
   .checkbox-container.label-right label::before {
     left: -30px;
-    bottom: 0; }
+    top: 0; }
   .checkbox-container.label-right label::after {
     left: -28px;
-    bottom: 0; }
-  .checkbox-container.label-right label.nf-checked-label::before {
-    left: -30px;
-    bottom: 0; }
+    top: 0; }
 
 .checkbox-container.label-right .field-wrap {
   display: -ms-flexbox;
@@ -1052,7 +1046,7 @@ FIELD DESCRIPTION POSITIONS
     width: 100%; }
 
 .checkbox-container.label-right label::after {
-  bottom: 2px !important; }
+  top: 2px !important; }
 
 .checkbox-container.label-hidden label {
   height: 0;
@@ -1077,7 +1071,12 @@ FIELD DESCRIPTION POSITIONS
 .listcheckbox-container .nf-field-element label {
   margin-left: 30px !important; }
   .listcheckbox-container .nf-field-element label::before {
-    left: -30px; }
+    top: 1px;
+    left: -30px;
+    bottom: auto; }
+  .listcheckbox-container .nf-field-element label::after {
+    top: 3px;
+    bottom: auto; }
 
 .listcheckbox-container.label-above .nf-field-label label, .listcheckbox-container.label-below .nf-field-label label, .listcheckbox-container.label-right .nf-field-label label {
   margin: 0; }

@@ -25,6 +25,11 @@ define( [], function() {
             if( this.get( 'id' ) ) {
                 this.initShortcode( this.get( 'id' ) );
             }
+
+            // Strip HTML tags from the form title.
+            if ( this.get( 'title' ) ) {
+               this.set( 'title', this.get( 'title' ).replace(/<\/?[^>]+(>|$)/g, "") ); 
+            }
         },
         
         initShortcode: function( id ) {

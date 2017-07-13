@@ -20,7 +20,6 @@ define( ['models/formModel'], function( FormModel ) {
             this.listenTo( nfRadio.channel( 'dashboard' ), 'forms:duplicate', this.duplicate );
             this.modal = new jBox( 'Modal', {
                 width: 300,
-                height: 120,
                 addClass: 'dashboard-modal',
                 overlay: true,
                 closeOnClick: 'body'

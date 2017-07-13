@@ -30,10 +30,12 @@ final class NF_Database_Models_Submission
 
         if( $this->_id ){
             $sub = get_post( $this->_id );
-            $this->_status = $sub->post_status;
-            $this->_user_id = $sub->post_author;
-            $this->_sub_date = $sub->post_date;
-            $this->_mod_date = $sub->post_modified;
+            if ($sub) {
+                $this->_status = $sub->post_status;
+                $this->_user_id = $sub->post_author;
+                $this->_sub_date = $sub->post_date;
+                $this->_mod_date = $sub->post_modified;
+            }
         }
 
         if( $this->_id && ! $this->_form_id ){
