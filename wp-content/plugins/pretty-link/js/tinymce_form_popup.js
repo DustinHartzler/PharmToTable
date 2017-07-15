@@ -3,16 +3,12 @@ function prliHasWhiteSpace(s) {
   return /\s/g.test(s);
 }
 
-var ButtonDialog = {
-  local_ed : 'ed',
-  init : function(ed) {
-    ButtonDialog.local_ed = ed;
-    tinyMCEPopup.resizeToInnerSize();
-
+var PrliPopUpHandler = {
+  init : function() {
     //Used in our insert function for link text
-    prli_selected_text = ed.selection.getContent();
+    prli_selected_text = parent.tinymce.activeEditor.selection.getContent({format: 'text'});
   },
-  insert_new : function insertButton(ed) {
+  insert_new : function() {
     jQuery('#errors').html('');
 
     //Setup the vars
@@ -87,8 +83,8 @@ var ButtonDialog = {
 
           output += '>' + link_text + '</a>';
 
-          tinyMCEPopup.execCommand('mceReplaceContent', false, output);
-          tinyMCEPopup.close();
+          parent.tinymce.activeEditor.execCommand('mceReplaceContent', false, output);
+          parent.tinymce.activeEditor.windowManager.close();
         } else {
           //Link didn't save for some reason
           jQuery("#errors").append("* Link failed to be saved, double check your input below.").hide().fadeIn();
@@ -101,7 +97,7 @@ var ButtonDialog = {
       return false;
     }
   },
-  insert_existing : function insertButton(ed) {
+  insert_existing : function() {
     jQuery('#errors').html('');
 
     var output      = '';
@@ -129,8 +125,8 @@ var ButtonDialog = {
 
       output += '>' + link_text + '</a>';
 
-      tinyMCEPopup.execCommand('mceReplaceContent', false, output);
-      tinyMCEPopup.close();
+      parent.tinymce.activeEditor.execCommand('mceReplaceContent', false, output);
+      parent.tinymce.activeEditor.windowManager.close();
     }
     else {
       jQuery("#errors").append("* You must search for and select an existing Pretty Link first.").hide().fadeIn();
@@ -139,12 +135,12 @@ var ButtonDialog = {
   }
 };
 
-//Init the pop-up stuff
-tinyMCEPopup.onInit.add(ButtonDialog.init, ButtonDialog);
-
 //jQuery event stuff
 (function($) {
   $(document).ready(function() {
+    //Init the function that does the stuff yo
+    PrliPopUpHandler.init();
+
     //Add a small delay so that prli_selected_text will be avaiable
     setTimeout(function() {
       //Nothing selected

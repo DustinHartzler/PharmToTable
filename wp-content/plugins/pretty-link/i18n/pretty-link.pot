@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Pretty Link package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Link 2.0.9\n"
+"Project-Id-Version: Pretty Link 2.1.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
-"POT-Creation-Date: 2017-05-23 22:57:21+00:00\n"
+"POT-Creation-Date: 2017-06-22 17:24:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,11 +17,11 @@ msgstr ""
 msgid "Pretty Link | Manage Pretty Links"
 msgstr ""
 
-#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.0.9)  #-#-#-#-#
+#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.1.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: app/controllers/PrliAppController.php:37
 #: app/controllers/PrliAppController.php:46 app/views/links/form.php:47
-#: app/views/shared/tinymce_form_popup.php:109 app/views/widgets/widget.php:17
+#: app/views/shared/tinymce_form_popup.php:108 app/views/widgets/widget.php:17
 #: pro/app/views/links/prettybar.php:191
 msgid "Pretty Link"
 msgstr ""
@@ -371,25 +371,25 @@ msgid "There was an error fetching your Pretty Link URL"
 msgstr ""
 
 #: app/helpers/PrliAppHelper.php:23 app/helpers/PrliLinksHelper.php:14
-#: app/views/links/form.php:100 app/views/shared/tinymce_form_popup.php:106
-#: app/views/shared/tinymce_form_popup.php:110 pro/app/views/links/form.php:185
+#: app/views/links/form.php:100 app/views/shared/tinymce_form_popup.php:105
+#: app/views/shared/tinymce_form_popup.php:109 pro/app/views/links/form.php:185
 #: pro/app/views/options/form.php:703 pro/app/views/tools/generator.php:35
 #: pro/app/widgets/PlpPublicLinksWidget.php:80
 msgid "None"
 msgstr ""
 
 #: app/helpers/PrliLinksHelper.php:37 app/views/links/form.php:15
-#: app/views/shared/tinymce_form_popup.php:63
+#: app/views/shared/tinymce_form_popup.php:62
 msgid "307 (Temporary)"
 msgstr ""
 
 #: app/helpers/PrliLinksHelper.php:38 app/views/links/form.php:16
-#: app/views/shared/tinymce_form_popup.php:64
+#: app/views/shared/tinymce_form_popup.php:63
 msgid "302 (Temporary)"
 msgstr ""
 
 #: app/helpers/PrliLinksHelper.php:39 app/views/links/form.php:17
-#: app/views/shared/tinymce_form_popup.php:65
+#: app/views/shared/tinymce_form_popup.php:64
 msgid "301 (Permanent)"
 msgstr ""
 
@@ -1117,8 +1117,8 @@ msgstr ""
 msgid "Target URL*"
 msgstr ""
 
-#: app/views/links/form.php:34 app/views/shared/tinymce_form_popup.php:44
-#: app/views/shared/tinymce_form_popup.php:105 app/views/widgets/widget.php:13
+#: app/views/links/form.php:34 app/views/shared/tinymce_form_popup.php:43
+#: app/views/shared/tinymce_form_popup.php:104 app/views/widgets/widget.php:13
 msgid "Target URL"
 msgstr ""
 
@@ -1209,7 +1209,7 @@ msgid "Forward parameters passed to this link onto the Target URL"
 msgstr ""
 
 #: app/views/links/form.php:153 app/views/links/form.php:156
-#: app/views/shared/tinymce_form_popup.php:85
+#: app/views/shared/tinymce_form_popup.php:84
 msgid "Tracking"
 msgstr ""
 
@@ -1283,7 +1283,7 @@ msgstr ""
 msgid "Basic Link Options"
 msgstr ""
 
-#: app/views/links/list.php:75 app/views/shared/tinymce_form_popup.php:60
+#: app/views/links/list.php:75 app/views/shared/tinymce_form_popup.php:59
 msgid "Redirect Type"
 msgstr ""
 
@@ -1291,7 +1291,7 @@ msgstr ""
 msgid "Track"
 msgstr ""
 
-#: app/views/links/list.php:83 app/views/shared/tinymce_form_popup.php:77
+#: app/views/links/list.php:83 app/views/shared/tinymce_form_popup.php:76
 msgid "Nofollow"
 msgstr ""
 
@@ -1514,94 +1514,94 @@ msgstr ""
 msgid "Insert Pretty Link"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:41
+#: app/views/shared/tinymce_form_popup.php:40
 msgid "Create New Pretty Link"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:48
+#: app/views/shared/tinymce_form_popup.php:47
 msgid "Slug"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:51
+#: app/views/shared/tinymce_form_popup.php:50
 msgid "valid"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:52
+#: app/views/shared/tinymce_form_popup.php:51
 msgid "invalid"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:56
-#: app/views/shared/tinymce_form_popup.php:113
+#: app/views/shared/tinymce_form_popup.php:55
+#: app/views/shared/tinymce_form_popup.php:112
 msgid "Link Text"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:62
-#: app/views/shared/tinymce_form_popup.php:79
-#: app/views/shared/tinymce_form_popup.php:87
+#: app/views/shared/tinymce_form_popup.php:61
+#: app/views/shared/tinymce_form_popup.php:78
+#: app/views/shared/tinymce_form_popup.php:86
 #: pro/app/views/tools/generator.php:22 pro/app/views/tools/generator.php:27
 #: pro/app/widgets/PlpPublicLinksWidget.php:59
 #: pro/app/widgets/PlpPublicLinksWidget.php:71
 msgid "Default"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:68
+#: app/views/shared/tinymce_form_popup.php:67
 #: pro/app/controllers/PlpLinksController.php:628
-#: pro/app/controllers/PlpLinksController.php:684
+#: pro/app/controllers/PlpLinksController.php:675
 #: pro/app/views/options/nav.php:5
 msgid "Pretty Bar"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:69
+#: app/views/shared/tinymce_form_popup.php:68
 #: pro/app/controllers/PlpLinksController.php:629
 msgid "Cloaked"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:70
+#: app/views/shared/tinymce_form_popup.php:69
 #: pro/app/controllers/PlpLinksController.php:630
-#: pro/app/controllers/PlpLinksController.php:686
+#: pro/app/controllers/PlpLinksController.php:677
 msgid "Pixel"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:71
+#: app/views/shared/tinymce_form_popup.php:70
 #: pro/app/controllers/PlpLinksController.php:631
-#: pro/app/controllers/PlpLinksController.php:687
+#: pro/app/controllers/PlpLinksController.php:678
 msgid "Meta Refresh"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:72
+#: app/views/shared/tinymce_form_popup.php:71
 #: pro/app/controllers/PlpLinksController.php:632
-#: pro/app/controllers/PlpLinksController.php:688
+#: pro/app/controllers/PlpLinksController.php:679
 msgid "Javascript"
+msgstr ""
+
+#: app/views/shared/tinymce_form_popup.php:79
+#: app/views/shared/tinymce_form_popup.php:87
+msgid "Enabled"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:80
 #: app/views/shared/tinymce_form_popup.php:88
-msgid "Enabled"
-msgstr ""
-
-#: app/views/shared/tinymce_form_popup.php:81
-#: app/views/shared/tinymce_form_popup.php:89
 msgid "Disabled"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:94
-#: app/views/shared/tinymce_form_popup.php:118
+#: app/views/shared/tinymce_form_popup.php:93
+#: app/views/shared/tinymce_form_popup.php:117
 msgid "Open this Pretty Link in a new window/tab"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:97
+#: app/views/shared/tinymce_form_popup.php:96
 msgid "Insert New Pretty Link"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:101
+#: app/views/shared/tinymce_form_popup.php:100
 msgid "Use Existing Pretty Link"
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:103
+#: app/views/shared/tinymce_form_popup.php:102
 msgid "Search by Slug, Title, or Target URL..."
 msgstr ""
 
-#: app/views/shared/tinymce_form_popup.php:122
+#: app/views/shared/tinymce_form_popup.php:121
 msgid "Insert Existing Pretty Link"
 msgstr ""
 
@@ -1854,64 +1854,64 @@ msgstr ""
 msgid "Delay Redirect must be a number"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:685
+#: pro/app/controllers/PlpLinksController.php:676
 #: pro/app/widgets/PlpPublicLinksWidget.php:64
 msgid "Cloak"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:753
+#: pro/app/controllers/PlpLinksController.php:744
 msgid "View QR Code for this link: %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:757
+#: pro/app/controllers/PlpLinksController.php:748
 msgid "Download QR Code for this link: %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:828
+#: pro/app/controllers/PlpLinksController.php:819
 msgid "This link expired on %1$s and will now cause a 404 error when visited"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:831
+#: pro/app/controllers/PlpLinksController.php:822
 msgid "This link expired on %1$s and now redirects to %2$s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:835
+#: pro/app/controllers/PlpLinksController.php:826
 msgid "This link is set to expire after the date %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:846
+#: pro/app/controllers/PlpLinksController.php:837
 msgid ""
 "This link expired after %d clicks and will now cause a 404 error when visited"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:849
+#: pro/app/controllers/PlpLinksController.php:840
 msgid "This link expired after %1$d clicks and now redirects to %2$s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:853
+#: pro/app/controllers/PlpLinksController.php:844
 msgid "This link is set to expire after %d clicks"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:861
+#: pro/app/controllers/PlpLinksController.php:852
 msgid "This link has additional Target URL rotations"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:864
+#: pro/app/controllers/PlpLinksController.php:855
 msgid "This link has additional Geographic Target URLs"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:867
+#: pro/app/controllers/PlpLinksController.php:858
 msgid "This link has additional Technology Dependent Conditional Target URLs"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:872
+#: pro/app/controllers/PlpLinksController.php:863
 msgid ""
 "A Time Period Redirect is currently active for this link. When visited it "
 "will currently redirect to %s rather than the Target URL unless the link is "
 "expired."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:876
+#: pro/app/controllers/PlpLinksController.php:867
 msgid ""
 "Time Period Redirects have been setup for this link but the current time is "
 "not within any of them currently."

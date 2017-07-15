@@ -22,11 +22,10 @@
     <script language="javascript" type="text/javascript" src="<?php echo includes_url('/js/jquery/ui/menu.min.js'); ?>"></script>
     <script language="javascript" type="text/javascript" src="<?php echo includes_url('/js/jquery/ui/autocomplete.min.js'); ?>"></script>
     <script language="javascript" type="text/javascript" src="<?php echo includes_url('/js/jquery/ui/accordion.min.js'); ?>"></script>
-    <script language="javascript" type="text/javascript" src="<?php echo includes_url('/js/tinymce/tiny_mce_popup.js'); ?>"></script>
     <script type="text/javascript">
       //Setting up some JS variables for the tinymce_form_popup.js file
       //Doing this here becuase I have access to PHP
-      var prli_selected_text  = ''; //Updated on ButtonDialog.init
+      var prli_selected_text  = ''; //Updated on PrliPopUpHandler.init
       var home_url            = '<?php echo $home_url; ?>';
       var default_redirect    = '<?php echo $default_redirect; ?>';
       var default_nofollow    = '<?php echo $default_nofollow; ?>';
@@ -94,7 +93,7 @@
           <input type="checkbox" name="prli_insert_link_new_tab" id="prli_insert_link_new_tab" /> <?php _e('Open this Pretty Link in a new window/tab', 'pretty-link'); ?>
         </div>
         <div class="prlitinymce-options-row" id="prlitinymce-insert">
-          <a href="javascript:ButtonDialog.insert_new(ButtonDialog.local_ed)" class="prli_button"><?php _e('Insert New Pretty Link', 'pretty-link'); ?></a>
+          <a href="javascript:PrliPopUpHandler.insert_new()" class="prli_button"><?php _e('Insert New Pretty Link', 'pretty-link'); ?></a>
           <span id="insert_loading" class="prlitinymce-hidden"><img src="<?php echo includes_url('/js/thickbox/loadingAnimation.gif'); ?>" width="150" /></span>
         </div>
       </div>
@@ -119,7 +118,7 @@
         </div>
         <div class="prlitinymce-options-row" id="existing_link_insert">
           <input type="hidden" name="existing_link_nofollow" id="existing_link_nofollow" value="0" />
-          <a href="javascript:ButtonDialog.insert_existing(ButtonDialog.local_ed)" class="prli_button"><?php _e('Insert Existing Pretty Link', 'pretty-link'); ?></a>
+          <a href="javascript:PrliPopUpHandler.insert_existing()" class="prli_button"><?php _e('Insert Existing Pretty Link', 'pretty-link'); ?></a>
         </div>
       </div>
     </div>
