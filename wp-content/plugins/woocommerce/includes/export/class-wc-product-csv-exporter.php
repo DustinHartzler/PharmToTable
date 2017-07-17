@@ -152,7 +152,7 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 
 				// Filter for 3rd parties.
 				if ( has_filter( "woocommerce_product_export_{$this->export_type}_column_{$column_id}" ) ) {
-					$value = apply_filters( "woocommerce_product_export_{$this->export_type}_column_{$column_id}", '', $product );
+					$value = apply_filters( "woocommerce_product_export_{$this->export_type}_column_{$column_id}", '', $product, $column_id );
 
 				// Handle special columns which don't map 1:1 to product data.
 				} elseif ( is_callable( array( $this, "get_column_value_{$column_id}" ) ) ) {
@@ -531,9 +531,11 @@ class WC_Product_CSV_Exporter extends WC_CSV_Batch_Exporter {
 			$meta_data = $product->get_meta_data();
 
 			if ( count( $meta_data ) ) {
+				$meta_keys_to_skip = apply_filters( 'woocommerce_product_export_skip_meta_keys', array(), $product );
+
 				$i = 1;
 				foreach ( $meta_data as $meta ) {
-					if ( ! is_scalar( $meta->value ) ) {
+					if ( ! is_scalar( $meta->value ) || in_array( $meta->key, $meta_keys_to_skip ) ) {
 						continue;
 					}
 					$column_key                        = 'meta:' . esc_attr( $meta->key );

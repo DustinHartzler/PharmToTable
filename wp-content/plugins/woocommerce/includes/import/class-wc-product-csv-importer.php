@@ -44,6 +44,10 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 		$this->params = wp_parse_args( $params, $default_args );
 		$this->file   = $file;
 
+		if ( isset( $this->params['mapping']['from'], $this->params['mapping']['to'] ) ) {
+			$this->params['mapping'] = array_combine( $this->params['mapping']['from'], $this->params['mapping']['to'] );
+		}
+
 		$this->read_file();
 	}
 
@@ -380,7 +384,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 
 	/**
 	 * Parse dates from a CSV.
-	 * Dates requires the format YYYY-MM-DD.
+	 * Dates requires the format YYYY-MM-DD and time is optional.
 	 *
 	 * @param  string $field Field value.
 	 * @return string|null
@@ -390,8 +394,9 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 			return null;
 		}
 
-		if ( preg_match( '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $field ) ) {
-			return $field;
+		if ( preg_match( '/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])([ 01-9:]*)$/', $field ) ) {
+			// Don't include the time if the field had time in it.
+			return current( explode( ' ', $field ) );
 		}
 
 		return null;
@@ -657,6 +662,7 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 	protected function set_parsed_data() {
 		$parse_functions = $this->get_formating_callback();
 		$mapped_keys     = $this->get_mapped_keys();
+		$use_mb          = function_exists( 'mb_convert_encoding' );
 
 		// Parse the data.
 		foreach ( $this->raw_data as $row ) {
@@ -672,6 +678,18 @@ class WC_Product_CSV_Importer extends WC_Product_Importer {
 				// Skip ignored columns.
 				if ( empty( $mapped_keys[ $id ] ) ) {
 					continue;
+				}
+
+				// Convert UTF8.
+				if ( $use_mb ) {
+					$encoding = mb_detect_encoding( $value, mb_detect_order(), true );
+					if ( $encoding ) {
+						$value = mb_convert_encoding( $value, 'UTF-8', $encoding );
+					} else {
+						$value = mb_convert_encoding( $value, 'UTF-8', 'UTF-8' );
+					}
+				} else {
+					$value = wp_check_invalid_utf8( $value, true );
 				}
 
 				$data[ $mapped_keys[ $id ] ] = call_user_func( $parse_functions[ $id ], $value );
