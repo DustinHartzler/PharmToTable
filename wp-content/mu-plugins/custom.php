@@ -32,7 +32,7 @@ function signature_shortcode( $atts , $content = null ) {
 	);
 
 	// Code
-	return $signature .'<div class="signature">Dr. Hartzler';
+	return $signature .'<div class="signature">Dr. Hartzler</div>';
 
 }
 add_shortcode( 'drh', 'signature_shortcode' );
