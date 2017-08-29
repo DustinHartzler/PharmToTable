@@ -46,7 +46,7 @@
 			  </span>
 			</form>
 		</div>
-		<a class="close-reveal-modal"><img src="<?php bloginfo('template_url'); ?>/img/404/ico-close.png" alt=""/></a>
+		<a class="close-reveal-modal"><img src="<?php bloginfo('template_url'); ?>/images/newsletter/ico-close.png" alt=""/></a>
 		<div class="cl"></div>
 	</div>
 </div>
