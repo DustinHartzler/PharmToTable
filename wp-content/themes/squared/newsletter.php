@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: 404 Page
+Template Name: Newsletter Page
 */
 ?>
 <?php get_header(); ?>
