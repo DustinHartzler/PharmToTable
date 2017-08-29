@@ -41,6 +41,11 @@ if ( $options['navigation_type'] == "float" || $options['navigation_type'] == "s
 	<?php if ( isset( $options['custom_css'] ) && $options['custom_css'] != "" ): ?>
 		<style type="text/css"><?php echo $options['custom_css']; ?></style>
 	<?php endif; ?>
+
+			<!-- Web Fonts  -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800%7CShadows+Into+Light" rel="stylesheet" type="text/css">
+		<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200italic,200,300,300italic,400italic,600,600italic,700,700italic,900,900italic|Raleway:400,700,600,500&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css' />
+
 	<?php tha_head_bottom(); ?>
 
 </head>
