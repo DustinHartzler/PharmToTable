@@ -14,7 +14,6 @@ Template Name: Newsletter Page
 
             <div class="right-side">
                 <div class="arrow-box"></div>
-                <img src="<?php bloginfo('template_url'); ?>/img/404/book.png" id="book"><p class="title">Indispensible Notes on Essential Oils</p>
                 <div class="cl"></div>
                 <button href="#" class="button" data-reveal-id="myModal">Send My eBook Now!</button>
                 <a class="link" data-reveal-id="myModal">Click Here For Free Instant Access</a>
