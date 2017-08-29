@@ -1306,3 +1306,10 @@ function thrive_fb_comments_moderators() {
  * include the main dashboard javascript
  */
 add_filter( 'tve_dash_enqueue_frontend', '__return_true' );
+
+
+		wp_register_script( '404-functions', get_stylesheet_directory_uri() . '/js/404/functions.js', array('jquery'), false, true );
+        wp_enqueue_script( '404-functions' );
+
+		wp_register_script( '404-script', get_stylesheet_directory_uri() . '/js/404/html5shiv.js', array('jquery'), false, true );
+		wp_enqueue_script( '404-script' );
