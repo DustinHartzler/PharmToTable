@@ -6,8 +6,8 @@
 		<div class="pop-right">
 			<!-- pop header -->
 			<div id="pop-head">
-				<p class="head">The 50 Most Useful<br />WordPress Plugins</p>
-				<p class="sub-headline">(Including Ones I Personally Use)</p>
+				<p class="head">Indispensible Notes on</p>
+				<p class="sub-headline">Essential Oils</p>
 			</div>
 			<div id="ck_success_msg" style="display:none;">
 			  <p>Success! Now check your email to confirm your subscription.</p>
