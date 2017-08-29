@@ -30,11 +30,11 @@ p{font-size: 20px; font-weight: 400; color: #313742;}
 .wrapper{width: 960px;}
 .body-container{padding-top: 50px; padding-bottom: 30px;background: url('img/404/background_.png') 0 0 repeat #f3f2f2;}
 .arrow-box{height: 60px;width: 60px;background: url('img/404/box-arrow.png') 0 0 no-repeat;position: relative;float: left;margin-left: -62px;margin-top: 92px;}
-.left{width: 400px; text-align: center; float: left;}
-.left p{ font-size: 18px;}
-.left p.style2{margin-bottom: 0px; margin-top: 10px; font-size: 30px; color: #118cef; font-weight: 900;}
-.left p.style3{margin-top: 5px; font-weight: 800;}
-.left p.style3 a{color: #fea007; text-decoration: none;}
+.left-side{width: 400px; text-align: center; float: left;}
+.left-side p{ font-size: 18px;}
+.left-side p.style2{margin-bottom: 0px; margin-top: 10px; font-size: 30px; color: #118cef; font-weight: 900;}
+.left-side p.style3{margin-top: 5px; font-weight: 800;}
+.left-side p.style3 a{color: #fea007; text-decoration: none;}
 .right-side{float: right; text-align: center; width: 500px; border: 1px solid #efefef; border-radius: 10px; -webkit-border-radius: 10px; background-color: #feffff; padding: 50px 10px 10px 10px; margin-top: 20px;-webkit-box-shadow:  0px 1px 1px 0px #e0e0e0;box-shadow:  0px 1px 1px 0px #e0e0e0;}
 #logo2{margin-top:10px;}
 #book{display:inline-block;vertical-align: top;}
