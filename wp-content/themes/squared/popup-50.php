@@ -2,7 +2,7 @@
 <div class="popup-container reveal-modal" id="myModal">
 	<div class="popup" id="register_popup">
 		<!-- book image-->
-		<img class="book-pop" src="<?php bloginfo('template_url'); ?>/img/404/book.png" id="book-popup"/>
+		<img class="book-pop" src="https://pharmtotable.life/wp-content/uploads/2017/08/freeebook.png" id="book-popup"/>
 		<div class="pop-right">
 			<!-- pop header -->
 			<div id="pop-head">
@@ -23,14 +23,12 @@
 <div id="mc_embed_signup">
 <form action="//YourWebsiteEngineer.us2.list-manage.com/subscribe/post?u=52e28e4b77d42ca4c190e39ef&amp;id=b0b7b955f6" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
     <div id="mc_embed_signup_scroll">
-	<h2>Subscribe to our mailing list</h2>
-<div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
 <div class="mc-field-group">
 	<label for="mce-NAME">Name </label>
 	<input type="text" value="" name="NAME" class="" id="mce-NAME">
 </div>
 <div class="mc-field-group">
-	<label for="mce-EMAIL">Email Address  <span class="asterisk">*</span>
+	<label for="mce-EMAIL">Email Address 
 </label>
 	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
 </div>
