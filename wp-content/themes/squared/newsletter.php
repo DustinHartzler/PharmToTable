@@ -8,7 +8,7 @@ Template Name: Newsletter Page
         <div class="body wrapper-404 clearfix">
 
             <div class="left-side">
-                <img src="<?php bloginfo('template_url'); ?>/img/404/404.png" id="logo2" class="leadstyle-image" style="max-width: 268px;"><p class="leadstyle-text">Holy Smokes! Unfortunately, the information you're looking for is unavailable.</p>
+                <img src="https://pharmtotable.life/wp-content/uploads/2017/08/freeebook.png" id="logo2" class="leadstyle-image" style="max-width: 268px;"><p class="leadstyle-text">Holy Smokes! Unfortunately, the information you're looking for is unavailable.</p>
                 <p class="style2">BUT WAIT!</p>
                 <p class="style3">Don't leave empty handed. <br />Grab this <a href="#" data-reveal-id="myModal">free ebook</a>!</p>
             </div>

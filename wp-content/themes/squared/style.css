@@ -91,8 +91,8 @@ border-radius:5px;width: 100%;min-height: 54px;display: block;margin: 10px auto 
 }
 @media only screen and (max-width: 1000px) {
 	.wrapper{width: 100%;}
-	.left{float: none; display: block; margin: 10px auto;}
-	.right{float: none; display: block; margin: 10px auto;}
+	.left-side{float: none; display: block; margin: 10px auto;}
+	.right-side{float: none; display: block; margin: 10px auto;}
 	.arrow-box{display: none;}
 }
 
@@ -104,8 +104,8 @@ border-radius:5px;width: 100%;min-height: 54px;display: block;margin: 10px auto 
 	.pop-right{display: block; float: none; margin: 10px auto;width: 100%;}
 }
 @media only screen and (max-width: 600px) {
-	.right{width: 83%;}
-	.left{width: 66%;}
+	.right-side{width: 83%;}
+	.left-side{width: 66%;}
 
 }
 @media only screen and (max-width: 530px) {
