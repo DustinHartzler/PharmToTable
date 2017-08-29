@@ -13,7 +13,7 @@ Template Name: Newsletter Page
                 <p class="style3">Don't leave empty handed. <br />Grab this <a href="#" data-reveal-id="myModal">free ebook</a>!</p>
             </div>
 
-            <div class="right">
+            <div class="right-side">
                 <div class="arrow-box"></div>
                 <img src="<?php bloginfo('template_url'); ?>/img/404/book.png" id="book"><p class="title">The most useful plugins in the WordPress Repository</p>
                 <div class="cl"></div>

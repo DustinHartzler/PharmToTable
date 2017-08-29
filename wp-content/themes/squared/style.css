@@ -35,7 +35,7 @@ p{font-size: 20px; font-weight: 400; color: #313742;}
 .left p.style2{margin-bottom: 0px; margin-top: 10px; font-size: 30px; color: #118cef; font-weight: 900;}
 .left p.style3{margin-top: 5px; font-weight: 800;}
 .left p.style3 a{color: #fea007; text-decoration: none;}
-.right{float: right; text-align: center; width: 500px; border: 1px solid #efefef; border-radius: 10px; -webkit-border-radius: 10px; background-color: #feffff; padding: 50px 10px 10px 10px; margin-top: 20px;-webkit-box-shadow:  0px 1px 1px 0px #e0e0e0;box-shadow:  0px 1px 1px 0px #e0e0e0;}
+.right-side{float: right; text-align: center; width: 500px; border: 1px solid #efefef; border-radius: 10px; -webkit-border-radius: 10px; background-color: #feffff; padding: 50px 10px 10px 10px; margin-top: 20px;-webkit-box-shadow:  0px 1px 1px 0px #e0e0e0;box-shadow:  0px 1px 1px 0px #e0e0e0;}
 #logo2{margin-top:10px;}
 #book{display:inline-block;vertical-align: top;}
 p.title{display:inline-block; vertical-align:top;width: 60%; text-align: center; margin: 0 auto; font-family: 'Raleway';font-size: 28px; color: #34485f; font-weight: 700; line-height: 43px; letter-spacing: 0px; margin-top: 15px;}
