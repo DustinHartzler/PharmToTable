@@ -2,7 +2,7 @@
 <div class="popup-container reveal-modal" id="myModal">
 	<div class="popup" id="register_popup">
 		<!-- book image-->
-		<img class="book-pop" src="https://pharmtotable.life/wp-content/uploads/2017/08/freeebook.png" id="book-popup"/>
+		<img class="book-pop" src="https://pharmtotable.life/wp-content/uploads/2017/08/freeebook-small.png" id="book-popup"/>
 		<div class="pop-right">
 			<!-- pop header -->
 			<div id="pop-head">
@@ -25,7 +25,7 @@
     <div id="mc_embed_signup_scroll">
 <div class="mc-field-group">
 	<label for="mce-NAME">Name </label>
-	<input type="text" value="" name="NAME" class="" id="mce-NAME">
+	<input type="text" value="" name="NAME" class="required" id="mce-NAME">
 </div>
 <div class="mc-field-group">
 	<label for="mce-EMAIL">Email Address 
