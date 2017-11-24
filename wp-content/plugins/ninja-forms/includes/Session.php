@@ -57,7 +57,8 @@ class NF_Session {
         add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
         add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 
-        add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
+        // Since we only loading this as needed, we will need to call init() manually.
+        // add_action( 'plugins_loaded', array( $this, 'init' ), -1 );
 
     }
     /**

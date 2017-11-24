@@ -44,6 +44,19 @@ return apply_filters( 'ninja_forms_plugin_settings_advanced', array(
     ),
 
     /*
+     |--------------------------------------------------------------------------
+     | Tracking Opt-in
+     |--------------------------------------------------------------------------
+     */
+
+    'allow_tracking' => array(
+        'id'    => 'allow_tracking',
+        'type'  => 'checkbox',
+        'label' => __( 'Allow Tracking', 'ninja-forms' ),
+        'desc'  => __( 'If you opt-in, some data about your installation of Ninja Forms will be sent to NinjaForms.com (this does NOT include your submissions).', 'ninja-forms' )
+    ),
+
+    /*
     |--------------------------------------------------------------------------
     | Opinionated Styles
     |--------------------------------------------------------------------------
@@ -80,7 +93,7 @@ return apply_filters( 'ninja_forms_plugin_settings_advanced', array(
     'rollback' => array(
         'id'    => 'rollback',
         'type'  => 'html',
-        'html' => '<a href="' . admin_url( 'admin.php?page=ninja-forms&nf-switcher=rollback' ) . '" class="button">' . __( 'Rollback', 'ninja-forms' ) . '</a>',
+        'html' => '<a id="nfRollback" href="' . admin_url( 'admin.php?page=ninja-forms&nf-switcher=rollback' ) . '" class="button">' . __( 'Rollback', 'ninja-forms' ) . '</a>',
         'label' => __( 'Rollback to v2.9.x', 'ninja-forms' ),
         'desc'  => __( 'Rollback to the most recent 2.9.x release.', 'ninja-forms' ) . '<br /><div style="color: red">' . __( 'IMPORTANT: All 3.0 data will be removed.', 'ninja-forms' ) . '<br />' . __( 'Please export any forms or submissions you do not want to be lost during this process.', 'ninja-forms' ) . '</div>',
     ),

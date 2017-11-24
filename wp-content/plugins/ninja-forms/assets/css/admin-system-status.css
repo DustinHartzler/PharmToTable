@@ -2,7 +2,8 @@
     background: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
-    padding: 10px;
+    display: inline-block;
+    padding: 20px;
 }
 
 #debug-report {
@@ -12,14 +13,19 @@
     height: 200px;
     width: 300px;
 }
-p.debug-report {
+.debug-report {
     display: inline-block;
-    padding: .5em 0;
+    padding: 0;
 }
+.debug-report h3:first-child {
+    margin-top: 0;
+}
+
 .nf-status-table {
     background: #f1f1f1;
     border-radius: 4px 4px 0 0;
-    width: 100%;
+    margin-right: 20px;
+    max-width: 1150px;
 }
 .nf-status-table th {
     border-color: #ccc;
@@ -43,7 +49,13 @@ p.debug-report {
 .nf-status-table td:first-child {
     border-left: 1px solid #ccc;
     border-right-width: 0;
+    min-width: 200px;
 }
 .nf-status-table tbody:last-child td {
     border-bottom-width: 1px;
+}
+
+.jBox-content {
+    font-size: 28px;
+    padding: 40px !important;
 }

@@ -1,6 +1,9 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 global $wp_locale;
 
+$date_format = Ninja_Forms()->get_setting( 'date_format' );
+if( ! $date_format ) $date_format = get_option( 'date_format' );
+
 return apply_filters( 'ninja_forms_i18n_front_end', array(
 
     'ninjaForms'                            => __( 'Ninja Forms', 'ninja-forms' ),
@@ -21,4 +24,7 @@ return apply_filters( 'ninja_forms_i18n_front_end', array(
     'fieldsMarkedRequired'                  => sprintf( __( 'Fields marked with an %s*%s are required', 'ninja-forms' ), '<span class="ninja-forms-req-symbol">', '</span>' ),
     'thousands_sep'                         => $wp_locale->number_format[ 'thousands_sep' ],
     'decimal_point'                         => $wp_locale->number_format[ 'decimal_point' ],
+    'dateFormat'                            => $date_format,
+    'startOfWeek'                           => get_option( 'start_of_week' ),
+    'of'                                    => __( 'of', 'ninja-forms' )
 ));

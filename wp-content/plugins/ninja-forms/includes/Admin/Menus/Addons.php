@@ -10,7 +10,10 @@ final class NF_Admin_Menus_Addons extends NF_Abstracts_Submenu
 
     public function __construct()
     {
-        parent::__construct();
+        $disable_marketing = false;
+        if ( ! apply_filters( 'ninja_forms_disable_marketing', $disable_marketing ) ) {
+            parent::__construct();
+        }
     }
 
     public function get_page_title()

@@ -17,9 +17,11 @@ jQuery.wc_strPad = function(i,l,s,w) {
     }
     return o;
 };
-jQuery('.debug-report a').click(function(){
+jQuery('#copy-system-status' ).click( function(){
+
     var paragraphContainer = jQuery( this ).parent();
     var report = "";
+
     jQuery('.nf-status-table thead, .nf-status-table tbody').each(function(){
         if ( jQuery( this ).is('thead') ) {
             report = report + "\n### " + jQuery.trim( jQuery( this ).text() ) + " ###\n\n";
@@ -43,11 +45,28 @@ jQuery('.debug-report a').click(function(){
             });
         }
     } );
+
     try {
-        jQuery("#debug-report").slideDown();
-        jQuery("#debug-report textarea").val( report ).focus().select();
-        paragraphContainer.slideUp();
+
+        var tmp = jQuery("<textarea>");
+        jQuery("body").append(tmp);
+        tmp.val( report ).select();
+        document.execCommand("copy");
+        tmp.remove();
+
+        var myModal = new jBox( 'Modal', {
+          content: '<i class="fa fa-clipboard" aria-hidden="true"></i> Copied!',
+          onOpen: function() {
+            setTimeout(function(){ myModal.close() }, 700);
+          }
+        } );
+         
+        myModal.open();
+
         return false;
-    } catch(e){ console.log( e ); }
+    } catch(e) {
+        console.log( e );
+    }
+
     return false;
 });

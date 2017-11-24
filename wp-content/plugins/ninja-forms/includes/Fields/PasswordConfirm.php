@@ -26,6 +26,15 @@ class NF_Fields_PasswordConfirm extends NF_Fields_Password
         $this->_settings[ 'confirm_field' ][ 'value' ] = __( 'password', 'ninja-forms' );
         $this->_settings[ 'confirm_field' ][ 'field_types' ] = array( 'password' );
         $this->_settings[ 'confirm_field' ][ 'field_value_format' ] = 'key';
+
+        add_filter( 'nf_sub_hidden_field_types', array( $this, 'hide_field_type' ) );
+    }
+
+    function hide_field_type( $field_types )
+    {
+        $field_types[] = $this->_name;
+
+        return $field_types;
     }
 
     public function validate( $field, $data )

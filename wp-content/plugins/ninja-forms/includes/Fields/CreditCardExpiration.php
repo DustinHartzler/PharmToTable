@@ -26,6 +26,12 @@ class NF_Fields_CreditCardExpiration extends NF_Abstracts_Input
         $this->_nicename = __( 'Credit Card Expiration', 'ninja-forms' );
 
         add_filter( 'nf_sub_hidden_field_types', array( $this, 'hide_field_type' ) );
+        
+        $this->_settings[ 'mask' ] = array(
+            'name' => 'mask',
+            'value' => '99/9999',
+        );
+        
     }
 
     function hide_field_type( $field_types )

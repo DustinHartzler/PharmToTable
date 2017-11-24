@@ -30,6 +30,16 @@ abstract class NF_AJAX_REST_Controller extends NF_Abstracts_Controller
 
         $method = strtolower( $_SERVER['REQUEST_METHOD'] );
 
+        /*
+         * Request Method Override
+         * Allows for a POST request to function as another Request Method
+         *   by passing a `method_override` value as a request parameter.
+         * For example, some servers do not support the DELETE request method.
+         */
+        if( 'post' == $method and isset( $_REQUEST[ 'method_override' ] ) ){
+            $method = sanitize_text_field( $_REQUEST[ 'method_override' ] );
+        }
+
         if( ! method_exists( $this, $method ) ){
             $this->_errors[] = __( 'Endpoint does not exist.', 'ninja-forms' );
             $this->_respond();

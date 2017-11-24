@@ -36,6 +36,8 @@ class NF_Fields_Terms extends NF_Fields_ListCheckbox
         add_filter( 'ninja_forms_localize_field_' . $this->_type, array( $this, 'add_term_options' ) );
         add_filter( 'ninja_forms_localize_field_' . $this->_type . '_preview', array( $this, 'add_term_options' ) );
 
+        add_filter( 'ninja_forms_merge_tag_value_' . $this->_type, array( $this, 'merge_tag_value' ), 10, 2 );
+
         $this->_settings[ 'options' ][ 'group' ] = '';
     }
 
@@ -157,6 +159,20 @@ class NF_Fields_Terms extends NF_Fields_ListCheckbox
         }
 
         return $field;
+    }
+
+    public function merge_tag_value( $value, $field )
+    {
+        $terms = explode( ',', $value );
+        if( ! is_array( $terms ) ) return $value;
+
+        $term_names = array();
+        foreach( $terms as $term_id ){
+            $term = get_term_by( 'id', $term_id, $field[ 'taxonomy' ] );
+            $term_names[] = ( $term ) ? $term->name : $term_id; // If the term is `false`, fallback to the term_id.
+        }
+
+        return implode( ',', $term_names );
     }
 
     public function get_parent_type()

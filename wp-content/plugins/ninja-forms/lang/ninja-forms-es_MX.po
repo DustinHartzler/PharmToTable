@@ -2642,7 +2642,7 @@ msgstr "Campos marcados con un * son obligatorios."
 #: deprecated/includes/display/processing/req-fields-pre-process.php:65
 #: includes/Config/i18nFrontEnd.php:15
 msgid "This is a required field."
-msgstr "Esto no es un campo obligatorio."
+msgstr "Esto es un campo obligatorio."
 
 #: deprecated/includes/display/processing/req-fields-pre-process.php:71
 msgid "Please check required fields."

@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * MODIFICATIONS
+ * - Renamed with prefix to avoid naming collisions.
+ */
+
 /**
  * Basic Stack Class.
  *
@@ -13,7 +18,7 @@
  * @subpackage EOS
  * @version 2.0
  */
-class Stack {
+class NF_EOS_Stack {
     private $index;
     private $locArray;
 

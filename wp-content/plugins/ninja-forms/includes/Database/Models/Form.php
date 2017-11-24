@@ -75,6 +75,11 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         */
         $form = Ninja_Forms()->form( $id )->get();
         $form->update_settings( $import[ 'settings' ] );
+        
+        if( ! $is_conversion ) {
+            $form->update_setting( 'created_at', current_time( 'mysql' ) );
+        }
+		
         $form->save();
         $form_id = $form->get_id();
 
@@ -86,11 +91,13 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         );
         $update_process = Ninja_Forms()->background_process( 'update-fields' );
         foreach( $import[ 'fields' ] as $settings ){
+			
             if( $is_conversion ) {
                 $field_id = $settings[ 'id' ];
                 $field = Ninja_Forms()->form($form_id)->field( $field_id )->get();
             } else {
                 unset( $settings[ 'id' ] );
+                $settings[ 'created_at' ] = current_time( 'mysql' );
                 $field = Ninja_Forms()->form($form_id)->field()->get();
                 $field->save();
             }
@@ -113,6 +120,10 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
 
             $action = Ninja_Forms()->form($form_id)->action()->get();
 
+            if( ! $is_conversion ) {
+                $settings[ 'created_at' ] = current_time( 'mysql' );
+            }
+
             $action->update_settings( $settings )->save();
 
             array_push( $form_cache[ 'actions' ], array(
@@ -121,7 +132,7 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
             ));
         }
 
-        update_option( 'nf_form_' . $form_id, WPN_Helper::utf8_encode( $form_cache ) );
+        update_option( 'nf_form_' . $form_id, $form_cache );
 
         add_action( 'admin_notices', array( 'NF_Database_Models_Form', 'import_admin_notice' ) );
 
@@ -137,45 +148,91 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
 
     public static function duplicate( $form_id )
     {
-        $form = Ninja_Forms()->form( $form_id )->get();
+        global $wpdb;
 
-        $settings = $form->get_settings();
+        // Duplicate the Form Object.
+        $wpdb->query( $wpdb->prepare(
+            "
+                INSERT INTO {$wpdb->prefix}nf3_forms ( `title` )
+                SELECT CONCAT( `title`, ' - ', %s )
+                FROM {$wpdb->prefix}nf3_forms 
+                WHERE  id = %d;
+            ", __( 'copy', 'ninja-forms' ), $form_id
+        ) );
+        $new_form_id = $wpdb->insert_id;
 
-        $new_form = Ninja_Forms()->form()->get();
-        $new_form->update_settings( $settings );
+        // Duplicate the Form Meta.
+        $wpdb->query( $wpdb->prepare(
+           "
+           INSERT INTO {$wpdb->prefix}nf3_form_meta ( `parent_id`, `key`, `value` )
+                SELECT %d, `key`, CASE WHEN `key` = '_seq_num' THEN 0 ELSE `value` END
+                FROM   {$wpdb->prefix}nf3_form_meta
+                WHERE  parent_id = %d;
+           ", $new_form_id, $form_id
+        ));
 
-        $form_title = $form->get_setting( 'title' );
+        // Get the fields to duplicate
+        $old_fields = $wpdb->get_results( $wpdb->prepare(
+            "
+            SELECT `id`
+            FROM {$wpdb->prefix}nf3_fields
+            WHERE parent_id = %d
+            ", $form_id
+        ));
 
-        $new_form_title = $form_title . " - " . __( 'copy', 'ninja-forms' );
-
-        $new_form->update_setting( 'title', $new_form_title );
-
-        $new_form->update_setting( 'lock', 0 );
-
-        $new_form->save();
-
-        $new_form_id = $new_form->get_id();
-
-        $fields = Ninja_Forms()->form( $form_id )->get_fields();
-
-        foreach( $fields as $field ){
-
-            $field_settings = $field->get_settings();
-
-            $field_settings[ 'parent_id' ] = $new_form_id;
-
-            $new_field = Ninja_Forms()->form( $new_form_id )->field()->get();
-            $new_field->update_settings( $field_settings )->save();
+        foreach( $old_fields as $old_field ){
+            // Duplicate the Field Object.
+            $wpdb->query( $wpdb->prepare(
+               "
+               INSERT INTO {$wpdb->prefix}nf3_fields ( `label`, `key`, `type`, `parent_id` )
+               SELECT `label`, `key`, `type`, %d
+               FROM {$wpdb->prefix}nf3_fields
+               WHERE id = %d
+               ", $new_form_id, $old_field->id
+            ));
+            $new_field_id = $wpdb->insert_id;
+            // Duplicate the Field Meta.
+            $wpdb->query( $wpdb->prepare(
+                "
+                INSERT INTO {$wpdb->prefix}nf3_field_meta ( `parent_id`, `key`, `value` )
+                SELECT %d, `key`, `value`
+                FROM   {$wpdb->prefix}nf3_field_meta
+                WHERE  parent_id = %d;
+                ", $new_field_id, $old_field->id
+            ));
         }
 
-        $actions = Ninja_Forms()->form( $form_id )->get_actions();
+        // Duplicate the Actions.
 
-        foreach( $actions as $action ){
+        // Get the actions to duplicate
+        $old_actions = $wpdb->get_results( $wpdb->prepare(
+            "
+            SELECT `id`
+            FROM {$wpdb->prefix}nf3_actions
+            WHERE parent_id = %d
+            ", $form_id
+        ));
 
-            $action_settings = $action->get_settings();
-
-            $new_action = Ninja_Forms()->form( $new_form_id )->action()->get();
-            $new_action->update_settings( $action_settings )->save();
+        foreach( $old_actions as $old_action ){
+            // Duplicate the Action Object.
+            $wpdb->query( $wpdb->prepare(
+                "
+               INSERT INTO {$wpdb->prefix}nf3_actions ( `title`, `key`, `type`, `active`, `parent_id` )
+               SELECT `title`, `key`, `type`, `active`, %d
+               FROM {$wpdb->prefix}nf3_actions
+               WHERE id = %d
+               ", $new_form_id, $old_action->id
+            ));
+            $new_action_id = $wpdb->insert_id;
+            // Duplicate the Action Meta.
+            $wpdb->query( $wpdb->prepare(
+                "
+                INSERT INTO {$wpdb->prefix}nf3_action_meta ( `parent_id`, `key`, `value` )
+                SELECT %d, `key`, `value`
+                FROM   {$wpdb->prefix}nf3_action_meta
+                WHERE  parent_id = %d;
+                ", $new_action_id, $old_action->id
+            ));
         }
 
         return $new_form_id;
@@ -187,6 +244,10 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         $date_format = 'm/d/Y';
 
         $form = Ninja_Forms()->form( $form_id )->get();
+        
+        $form_title = $form->get_setting( 'title' );
+        $form_title = preg_replace( "/[^A-Za-z0-9 ]/", '', $form_title );
+        $form_title = str_replace( ' ', '_', $form_title );
 
         $export = array(
             'settings' => $form->get_settings(),
@@ -211,7 +272,7 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         } else {
 
             $today = date( $date_format, current_time( 'timestamp' ) );
-            $filename = apply_filters( 'ninja_forms_form_export_filename', 'nf_form_' . $today );
+            $filename = apply_filters( 'ninja_forms_form_export_filename', 'nf_form_' . $today . '_' . $form_title );
             $filename = $filename . ".nff";
 
             header( 'Content-type: application/json');
@@ -277,6 +338,11 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
                 continue;
             }
 
+            if( ! $field[ 'type' ] ) {
+                unset( $import[ 'fields'][ $key ] );
+                continue;
+            }
+
             // TODO: Split Credit Card field into multiple fields.
             $field = $this->import_field_backwards_compatibility( $field );
 
@@ -339,9 +405,17 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
                     // Convert Shortcodes
                     $shortcode = "[ninja_forms_field id=$field_id]";
                     if( ! is_array( $value ) ) {
-                        if (FALSE !== strpos($value, $shortcode)) {
-                            $value = str_replace($shortcode, '{field:' . $field_key . '}', $value);
+                        if ( FALSE !== strpos( $value, $shortcode ) ) {
+                            $value = str_replace( $shortcode, '{field:' . $field_key . '}', $value );
                         }
+                    }
+                }
+
+                //Checks for the nf_sub_seq_num short code and replaces it with the submission sequence merge tag
+                $sub_seq = '[nf_sub_seq_num]';
+                if( ! is_array( $value ) ) {
+                    if( FALSE !== strpos( $value, $sub_seq ) ){
+                        $value = str_replace( $sub_seq, '{submission:sequence}', $value );
                     }
                 }
 
@@ -366,8 +440,11 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         }
 
         if( 'email' == $action[ 'type' ] ){
-            $action[ 'to' ]            = str_replace( '`', ',', $action[ 'to' ] );
-            $action[ 'email_subject' ] = str_replace( '`', ',', $action[ 'email_subject' ] );
+            $action[ 'to' ]            	= str_replace( '`', ',', $action[ 'to' ] );
+            $action[ 'email_subject' ] 	= str_replace( '`', ',', $action[ 'email_subject' ] );
+            $action[ 'cc' ] 		= str_replace( '`', ',', $action[ 'cc' ] );
+            $action[ 'bcc' ] 		= str_replace( '`', ',', $action[ 'bcc' ] );
+            $action[ 'email_message' ] = nl2br( $action[ 'email_message' ] );
         }
 
         // Convert `name` to `label`
@@ -425,26 +502,26 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         if( isset( $field[ 'default_value_type' ] ) ){
 
             /* User Data */
-            if( '_user_id' == $field[ 'default_value_type' ] )           $field[ 'default' ] = '{user:id}';
-            if( '_user_email' == $field[ 'default_value_type' ] )        $field[ 'default' ] = '{user:email}';
-            if( '_user_lastname' == $field[ 'default_value_type' ] )     $field[ 'default' ] = '{user:last_name}';
-            if( '_user_firstname' == $field[ 'default_value_type' ] )    $field[ 'default' ] = '{user:first_name}';
-            if( '_user_display_name' == $field[ 'default_value_type' ] ) $field[ 'default' ] = '{user:display_name}';
+            if( '_user_id' == $field[ 'default_value_type' ] )           $field[ 'default' ] = '{wp:user_id}';
+            if( '_user_email' == $field[ 'default_value_type' ] )        $field[ 'default' ] = '{wp:user_email}';
+            if( '_user_lastname' == $field[ 'default_value_type' ] )     $field[ 'default' ] = '{wp:user_last_name}';
+            if( '_user_firstname' == $field[ 'default_value_type' ] )    $field[ 'default' ] = '{wp:user_first_name}';
+            if( '_user_display_name' == $field[ 'default_value_type' ] ) $field[ 'default' ] = '{wp:user_display_name}';
 
             /* Post Data */
-            if( 'post_id' == $field[ 'default_value_type' ] )    $field[ 'default' ] = '{post:id}';
-            if( 'post_url' == $field[ 'default_value_type' ] )   $field[ 'default' ] = '{post:url}';
-            if( 'post_title' == $field[ 'default_value_type' ] ) $field[ 'default' ] = '{post:title}';
+            if( 'post_id' == $field[ 'default_value_type' ] )    $field[ 'default' ] = '{wp:post_id}';
+            if( 'post_url' == $field[ 'default_value_type' ] )   $field[ 'default' ] = '{wp:post_url}';
+            if( 'post_title' == $field[ 'default_value_type' ] ) $field[ 'default' ] = '{wp:post_title}';
 
             /* System Data */
-            if( 'today' == $field[ 'default_value_type' ] ) $field[ 'default' ] = '{system:date}';
+            if( 'today' == $field[ 'default_value_type' ] ) $field[ 'default' ] = '{other:date}';
 
             /* Miscellaneous */
             if( '_custom' == $field[ 'default_value_type' ] && isset( $field[ 'default_value' ] ) ){
                 $field[ 'default' ] = $field[ 'default_value' ];
             }
             if( 'querystring' == $field[ 'default_value_type' ] && isset( $field[ 'default_value' ] ) ){
-                $field[ 'default' ] = '{' . $field[ 'default_value' ] . '}';
+                $field[ 'default' ] = '{querystring:' . $field[ 'default_value' ] . '}';
             }
 
             unset( $field[ 'default_value' ] );
@@ -599,6 +676,14 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
             }
             $field[ 'label_pos' ] = 'hidden';
         }
+
+        if( isset( $field[ 'desc_text' ] ) ){
+            $field[ 'desc_text' ] = nl2br( $field[ 'desc_text' ] );
+        }
+        if( isset( $field[ 'help_text' ] ) ){
+            $field[ 'help_text' ] = nl2br( $field[ 'help_text' ] );
+        }
+
 
         return apply_filters( 'ninja_forms_upgrade_field', $field );
     }

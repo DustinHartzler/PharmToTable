@@ -311,7 +311,7 @@
 </script>
 
 <script id="tmpl-nf-drawer-staged-field" type="text/template">
-     <span class="nf-item-dock" id="{{{ data.id }}}" data-id="{{{ data.slug }}}"><span class="fa fa-{{{ data.icon }}}"></span>{{{ data.nicename }}}<span class="dashicons dashicons-dismiss"></span>
+     <span class="nf-item-dock" id="{{{ data.id }}}" data-id="{{{ data.slug }}}"><span class="fa fa-{{{ data.icon }}}" data-id="{{{ data.slug }}}"></span>{{{ data.nicename }}}<span class="dashicons dashicons-dismiss"></span>
 </script>
 
 <script id="tmpl-nf-drawer-field-type-section" type="text/template">
@@ -323,7 +323,7 @@
 
 <script id="tmpl-nf-drawer-field-type-button" type="text/template">
     <div class="nf-field-type-button nf-field-type-draggable {{{ data.savedField() }}}" data-id="{{{ data.id }}}">
-        <div class="nf-item" data-id="{{{ data.id }}}" tabindex="0"><span class="fa fa-{{{ data.icon }}}"></span>{{{ data.nicename }}}</div>
+        <div class="nf-item" data-id="{{{ data.id }}}" tabindex="0"><span class="fa fa-{{{ data.icon }}}" data-id="{{{ data.id }}}"></span>{{{ data.nicename }}}</div>
     </div>
 </script>
 
@@ -413,7 +413,7 @@
 <script id="tmpl-nf-edit-setting-wrap" type="text/template">
     <div class="{{{ data.renderClasses() }}}" {{{ data.renderVisible() }}}>
         {{{ data.renderSetting() }}}
-        <span class="nf-setting-error"></span>
+        <div class="nf-setting-error"></div>
     </div>
 </script>
 
@@ -443,7 +443,7 @@ Label Three, value-three, 3
 </script>
 
 <script id="tmpl-nf-edit-setting-error" type="text/template">
-    <div>{{{ data.error }}}</div>
+    <div>{{{ data.error || data.warning }}}</div>
 </script>
 
 <script id="tmpl-nf-edit-setting-textbox" type="text/template">

@@ -42,7 +42,7 @@ abstract class NF_Abstracts_MergeTags
         if( empty( $matches[0] ) ) return $subject;
 
         foreach( $this->merge_tags as $merge_tag ){
-            if( ! in_array( $merge_tag[ 'tag' ], $matches[0] ) ) continue;
+            if( ! isset( $merge_tag[ 'tag' ] ) || ! in_array( $merge_tag[ 'tag' ], $matches[0] ) ) continue;
 
             if( ! isset($merge_tag[ 'callback' ])) continue;
 

@@ -10,6 +10,8 @@ final class NF_Conversion_Calculations implements NF_Conversion
     );
     private $form = array();
 
+    private $tax_rate;
+
     public function __construct( $form_data )
     {
         $this->form = $form_data;
@@ -20,12 +22,18 @@ final class NF_Conversion_Calculations implements NF_Conversion
         // Extract Calculations from Fields
         foreach( $this->form[ 'fields' ] as $key => $field ){
 
+            if( 'tax' == $field[ 'type' ] ){
+                $this->set_tax( $field[ 'default_value' ] );
+                continue;
+            }
+
             if( 'calc' != $field[ 'type' ] ) continue;
 
             $calculation = array(
                 'order' => $key,
                 'name'  => $field[ 'key' ],
-                'eq'    => ''
+                'eq'    => '',
+                'dec' => $field[ 'calc_places' ]
             );
 
             switch( $field[ 'calc_method' ] ){
@@ -38,6 +46,14 @@ final class NF_Conversion_Calculations implements NF_Conversion
                 case 'auto':
                     $calculation[ 'eq' ] = trim( array_reduce( $this->form[ 'fields' ], array( $this, 'reduce_auto_total' ), '' ) );
                     break;
+            }
+
+            // Remove any leading `+`.
+            $calculation[ 'eq' ] = ltrim( $calculation[ 'eq' ], '+' );
+
+            // Handle opinionated "Total" calc and tax field.
+            if( 'total' == $field[ 'calc_name' ] && isset( $this->tax_rate ) ){
+                $calculation[ 'eq' ] = "( {$calculation[ 'eq' ]} ) * {$this->tax_rate}";
             }
 
             $this->form[ 'settings' ][ 'calculations' ][] = $calculation;
@@ -60,6 +76,12 @@ final class NF_Conversion_Calculations implements NF_Conversion
 
         // Convert Calc Fields to HTML Fields for displaying Calculations
         foreach( $this->form[ 'fields' ] as $key => $field ){
+
+            if( 'tax' == $field[ 'type' ] ){
+                $this->form[ 'fields' ][ $key ][ 'type' ] = 'html';
+                $this->form[ 'fields' ][ $key ][ 'default' ] = "<strong>{$field[ 'label' ]}</strong><br /> {$field[ 'default_value' ]}";
+                continue;
+            }
 
             if( 'calc' != $field[ 'type' ] ) continue;
 
@@ -99,6 +121,18 @@ final class NF_Conversion_Calculations implements NF_Conversion
         } else {
             return '{field:' . $tag . ':calc}';
         }
+    }
+
+    /**
+     * Sets a float formatted tax rate.
+     * @param string|int|float $tax
+     *
+     * @return float|int
+     */
+    private function set_tax( $tax )
+    {
+        // ex 15% -> 1.15
+        return $this->tax_rate = ( floatval( $tax ) + 100 ) / 100;
     }
 }
 

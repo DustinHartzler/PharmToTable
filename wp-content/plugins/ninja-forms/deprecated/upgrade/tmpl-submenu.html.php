@@ -155,3 +155,22 @@
 <!--    </div>-->
 
 </div>
+
+
+<div id="optin-modal" style="display:none;">
+    <h2>Help make Ninja Forms better!</h2>
+    <p>
+        If you agree, we'll collect some server data and information about how you use Ninja Forms. 
+        <em>No submission data will be collected.</em>
+        This data will help us troubleshoot errors and improve your Ninja Forms experience.
+    </p>
+    <p>    
+        <input id="optin-send-email" type="checkbox" checked="checked"> You can also occasionally send me an email about using Ninja Forms.
+    </p>
+    <span id="optin-spinner" class="spinner"></span>
+    <button id="optin" class="button-primary" style="margin-bottom: 10px; font-size: 16px;">Yes, I want to make Ninja Forms better!</button> <button id="optout" class="button-secondary" style="margin-bottom: 10px;">No, please don't collect errors or other data.</button>
+</div>
+
+<div id="optin-thankyou" style="display:none;">
+    Thank you for opting in!
+</div>

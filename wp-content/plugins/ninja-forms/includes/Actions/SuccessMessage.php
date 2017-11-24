@@ -66,7 +66,8 @@ final class NF_Actions_SuccessMessage extends NF_Abstracts_Action
                 $data[ 'debug' ][ 'console' ][] = sprintf( __( 'Shortcodes should return and not echo, see: %s', 'ninja-forms' ), 'https://codex.wordpress.org/Shortcode_API#Output' );
                 $data['actions']['success_message'] .= $action_settings['success_msg'];
             } else {
-                $data['actions']['success_message'] .= do_shortcode( $action_settings['success_msg'] );
+                $message = do_shortcode( $action_settings['success_msg'] );
+                $data['actions']['success_message'] .= wpautop( $message );
             }
         }
 

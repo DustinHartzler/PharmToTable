@@ -265,7 +265,7 @@ class Ninja_Forms {
 
         // Plugin version
         if ( ! defined( 'NF_PLUGIN_VERSION' ) )
-            define( 'NF_PLUGIN_VERSION', '3.1.6' );
+            define( 'NF_PLUGIN_VERSION', '3.2.4' );
 
         // Plugin Folder Path
         if ( ! defined( 'NF_PLUGIN_DIR' ) )
@@ -798,7 +798,7 @@ function ninja_forms_three_admin_notice(){
     wp_enqueue_style( 'nf-admin-notices', NINJA_FORMS_URL .'assets/css/admin-notices.css?nf_ver=' . NF_PLUGIN_VERSION );
 
     if( ! isset( $_GET[ 'nf-rollback' ] ) ){
-        if( ninja_forms_three_calc_check() && ninja_forms_three_addons_version_check() && ninja_forms_three_addons_check() ){
+        if( ninja_forms_three_calc_check() && ninja_forms_three_addons_version_check() && ( ninja_forms_three_addons_check() || ninja_forms_three_throttle() ) ){
             ?>
             <div id="nf-admin-notice-upgrade" class="update-nag nf-admin-notice">
                 <div class="nf-notice-logo"></div>

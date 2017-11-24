@@ -85,4 +85,8 @@ return apply_filters( 'ninja_forms_currency', array(
         'label' => __( 'U.S. Dollars', 'ninja-forms' ),
         'value' => 'USD'
     ),
+    'ZAR' => array(
+        'label' => __( 'South African Rand', 'ninja-forms' ),
+        'value' => 'ZAR'
+    ),
 ));

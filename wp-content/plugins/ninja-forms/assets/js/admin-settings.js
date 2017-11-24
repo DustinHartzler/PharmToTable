@@ -16,4 +16,11 @@ jQuery(document).ready(function($) {
                 $( that ).closest( 'tr').fadeOut().remove();
             });
     });
+
+    $( '#nfRollback' ).on( 'click', function( event ){
+        var rollback = confirm( nf_settings.i18n.rollbackConfirm );
+        if( ! rollback ){
+            event.preventDefault();
+        }
+    });
 });

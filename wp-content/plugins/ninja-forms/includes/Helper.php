@@ -44,6 +44,22 @@ final class WPN_Helper
             return utf8_decode( $input );
         }
     }
+    
+    /**
+     * Function to clean json data before json_decode.
+     * @since 3.2
+     * @param $input String
+     * @return String
+     */
+    public static function json_cleanup( $input ) {
+
+        /*
+         * Remove any unwated (corrupted?) characters from either side of our object.
+         */
+        $l_trim = strpos( $input, '{' );
+        $r_trim = strrpos( $input, '}' ) - $l_trim + 1;
+        return substr( $input, $l_trim, $r_trim );
+    }
 
     /**
      * @param $search
@@ -257,6 +273,7 @@ final class WPN_Helper
 
         // If we have a php version of 7.0 or higher...
         if( version_compare( $php_ver, '7.0.0', '>=' ) ) {
+            if( ! function_exists( 'fopen' ) ) return false;
             $meta = stream_get_meta_data( fopen( 'https://ninjaforms.com/', 'r' ) );
             $tls = $meta[ 'crypto' ][ 'protocol' ];            
         }

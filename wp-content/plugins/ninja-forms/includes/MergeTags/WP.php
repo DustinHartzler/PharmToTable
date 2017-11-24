@@ -30,29 +30,19 @@ final class NF_MergeTags_WP extends NF_Abstracts_MergeTags
     {
         global $post;
 
+        // If in the admin, only run on Ninja Forms pages.
+        if( is_admin() && ( ! isset( $_GET[ 'page' ] ) || 'ninja-forms' !== $_GET[ 'page' ] ) ) return;
+
         $this->setup_post_meta( $this->post_id() );
     }
 
+    /**
+     * Custom replace() method for custom post meta or user meta.
+     * @param string|array $subject
+     * @return string
+     */
     public function replace( $subject )
     {
-
-        /*
-         * If we are dealing with a post meta merge tag, we need to overwrite the parent replace() method.
-         *
-         * Otherwise, we use the parent's method.
-         */
-
-        /**
-         * {post_meta:foo} --> meta key is 'foo'
-         */
-        if (is_string($subject)) {
-            preg_match_all("/{post_meta:(.*?)}/", $subject, $matches );
-        }
-
-        // If not matching merge tags are found, then return early.
-        if( empty( $matches[0] ) ) return parent::replace( $subject );
-
-
         // Recursively replace merge tags.
         if( is_array( $subject ) ){
             foreach( $subject as $i => $s ){
@@ -62,13 +52,40 @@ final class NF_MergeTags_WP extends NF_Abstracts_MergeTags
         }
 
         /**
-         * $matches[0][$i]  merge tag match     {post_meta:foo}
-         * $matches[1][$i]  captured meta key   foo
+         * Replace Custom Post Meta
+         * {post_meta:foo} --> meta key is 'foo'
          */
-        foreach( $matches[0] as $i => $search ){
-            $meta_key = $matches[ 1 ][ $i ];
-            if( ! isset( $this->post_meta[ $meta_key ] ) ) continue;
-            $subject = str_replace( $search, $this->post_meta[ $meta_key ], $subject );
+        preg_match_all( "/{post_meta:(.*?)}/", $subject, $post_meta_matches );
+        if( ! empty( $post_meta_matches[0] ) ) {
+            /**
+             * $matches[0][$i]  merge tag match     {post_meta:foo}
+             * $matches[1][$i]  captured meta key   foo
+             */
+            foreach( $post_meta_matches[0] as $i => $search ) {
+                $meta_key = $post_meta_matches[1][$i];
+                if ( isset( $this->post_meta[ $meta_key ] ) ) {
+                    $subject = str_replace( $search, $this->post_meta[$meta_key], $subject );
+                } else {
+                    $subject = str_replace( $search, '', $subject );
+                }
+            }
+        }
+
+        /**
+         * Replace Custom User Meta
+         * {user_meta:foo} --> meta key is 'foo'
+         */
+        preg_match_all( "/{user_meta:(.*?)}/", $subject, $user_meta_matches );
+        if( ! empty( $user_meta_matches[0] ) && $user_id = get_current_user_id() ) {
+            /**
+             * $matches[0][$i]  merge tag match     {user_meta:foo}
+             * $matches[1][$i]  captured meta key   foo
+             */
+            foreach( $user_meta_matches[0] as $i => $search ) {
+                $meta_key = $user_meta_matches[1][$i];
+                $meta_value = get_user_meta( $user_id, $meta_key, /* $single */ true );
+                $subject = str_replace( $search, $meta_value, $subject );
+            }
         }
 
       return parent::replace( $subject );

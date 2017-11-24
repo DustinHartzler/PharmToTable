@@ -2,6 +2,54 @@
 
 return apply_filters( 'ninja_forms_from_restriction_settings', array(
 
+    /*
+     * UNIQUE FIELD SET
+     */
+    
+    'unique-field-set' => array(
+        'name'    => 'unique-field-set',
+        'type'    => 'fieldset',
+        'label'   => __( 'Unique Field', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => 'primary',
+        'settings' => array(
+            /*
+             * SET A UNIQUE FIELD
+             */
+            'unique_field' => array(
+                'name' => 'unique_field',
+                'type' => 'field-select',
+                // 'label' => __( 'Unique Field', 'ninja-forms' ),
+                'width' => 'full',
+                'group' => 'primary',
+                'field_value_format' => 'key',
+                /* Optional */
+                'field_types' => array(
+                    'firstname',
+                    'lastname',
+                    'email',
+                    'textbox',
+                    'listselect',
+                    'listradio',
+                    'listmultiselect',
+                    'date'
+                ),
+            ),
+            
+            /*
+             * UNIQUE FIELD ERROR
+             */
+            'unique_field_error'    => array(
+                'name'              => 'unique_field_error',
+                'type'              => 'textbox',
+                'label'             => __( 'Unique Field Error Message', 'ninja-forms' ),
+                'width'             => 'full',
+                'group'             => 'primary',
+                'value'             => __( 'A form with this value has already been submitted.', 'ninja-forms' ),
+            ),
+        )
+    ),
+
     'logged-in-set' => array(
         'name'    => 'logged-in-set',
         'type'    => 'fieldset',
@@ -74,7 +122,7 @@ return apply_filters( 'ninja_forms_from_restriction_settings', array(
                 'label' => __( 'Limit Reached Message', 'ninja-forms' ),
                 'width' => 'full',
                 'group' => 'primary',
-                'value' => __( 'The Form has reached it\'s submission limit.', 'ninja-forms' )
+                'value' => __( 'The form has reached its submission limit.', 'ninja-forms' )
 
                 //TODO: Add following text below the WYSIWYG.
                 //Please enter a message that you want displayed when this form has reached its submission limit and will not
@@ -82,5 +130,4 @@ return apply_filters( 'ninja_forms_from_restriction_settings', array(
             ),
         )
     ),
-
 ));

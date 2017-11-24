@@ -350,7 +350,7 @@ final class NF_Admin_Menus_Submissions extends NF_Abstracts_Submenu
             ( isset( $_GET[ 'post_type' ] ) && 'nf_sub' == $_GET[ 'post_type'] ) ||
             'nf_sub' == get_post_type()
         ){
-            echo '<style type="text/css">.page-title-action{display: none;}</style>';
+            echo '<style type="text/css">.page-title-action, .subsubsub, .view-mode{display: none;}</style>';
         }
     }
 
@@ -377,7 +377,7 @@ final class NF_Admin_Menus_Submissions extends NF_Abstracts_Submenu
      */
     private function custom_columns_sub_date( $sub )
     {
-        return $sub->get_sub_date();
+        return $sub->get_sub_date( 'm/d/Y h:i A' );
     }
 
     /**
@@ -417,6 +417,9 @@ final class NF_Admin_Menus_Submissions extends NF_Abstracts_Submenu
 
         $begin_date = $_GET[ 'begin_date' ];
         $end_date = $_GET[ 'end_date' ];
+
+        // Include submissions on the end_date.
+        $end_date = date( 'm/d/Y', strtotime( '+1 day', strtotime( $end_date ) ) );
 
         if( $begin_date > $end_date ){
             $temp_date = $begin_date;

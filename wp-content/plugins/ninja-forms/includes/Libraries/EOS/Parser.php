@@ -1,7 +1,10 @@
 <?php
 
 /*
- * CHANGES: Removed `\` for php5.2 support (does not support namespaces).
+ * MODIFICATIONS
+ * - Removed `\` for php5.2 support (does not support namespaces).
+ * - Renamed with prefix to avoid naming collisions.
+ * - Updated references to the EOS Stack class to reflect name changes.
  */
 
 /**
@@ -60,7 +63,7 @@ require_once 'Stack.php';
  * @subpackage EOS
  * @version 2.2.1
  */
-class Parser {
+class NF_EOS_Parser {
 
     /**
      * No matching Open/Close pair
@@ -145,14 +148,14 @@ class Parser {
      */
     private function checkInfix($infix) {
         if(trim($infix) == "") {
-            throw new Exception("No Equation given", Parser::E_NO_EQ);
+            throw new Exception("No Equation given", NF_EOS_Parser::E_NO_EQ);
         }
         //Make sure we have the same number of '(' as we do ')'
         // and the same # of '[' as we do ']'
         if(substr_count($infix, '(') != substr_count($infix, ')')) {
-            throw new Exception("Mismatched parenthesis in '{$infix}'", Parser::E_NO_SET);
+            throw new Exception("Mismatched parenthesis in '{$infix}'", NF_EOS_Parser::E_NO_SET);
         } elseif(substr_count($infix, '[') != substr_count($infix, ']')) {
-            throw new Exception("Mismatched brackets in '{$infix}'", Parser::E_NO_SET);
+            throw new Exception("Mismatched brackets in '{$infix}'", NF_EOS_Parser::E_NO_SET);
         }
         $this->inFix = $infix;
         return true;
@@ -178,7 +181,7 @@ class Parser {
         //check to make sure 'valid' equation
         $this->checkInfix($infix);
         $pf = array();
-        $ops = new Stack();
+        $ops = new NF_EOS_Stack();
         //$vars = new Stack();
 
         // remove all white-space
@@ -226,7 +229,7 @@ class Parser {
                     if($nchr)
                         $pf[++$pfIndex] = $nchr;
                     else {
-                        throw new Exception("Error while searching for '". $this->SEP['open'][$key] ."' in '{$infix}'.", Parser::E_NO_SET);
+                        throw new Exception("Error while searching for '". $this->SEP['open'][$key] ."' in '{$infix}'.", NF_EOS_Parser::E_NO_SET);
                     }
                 }
                 $ops->pop();
@@ -320,7 +323,7 @@ class Parser {
                         break;
                     case '/':
                         if($temp[$hold-1] == 0) {
-                            throw new Exception("Division by 0 on: '{$temp[$hold-2]} / {$temp[$hold-1]}' in {$this->inFix}", Parser::E_DIV_ZERO);
+                            throw new Exception("Division by 0 on: '{$temp[$hold-2]} / {$temp[$hold-1]}' in {$this->inFix}", NF_EOS_Parser::E_DIV_ZERO);
                         }
                         $temp[$hold-2] = $temp[$hold-2] / $temp[$hold-1];
                         break;
@@ -333,7 +336,7 @@ class Parser {
                         break;
                     case '%':
                         if($temp[$hold-1] == 0) {
-                            throw new Exception("Division by 0 on: '{$temp[$hold-2]} % {$temp[$hold-1]}' in {$this->inFix}", Parser::E_DIV_ZERO);
+                            throw new Exception("Division by 0 on: '{$temp[$hold-2]} % {$temp[$hold-1]}' in {$this->inFix}", NF_EOS_Parser::E_DIV_ZERO);
                         }
                         $temp[$hold-2] = bcmod($temp[$hold-2], $temp[$hold-1]);
                         break;
@@ -379,14 +382,14 @@ class Parser {
 
         //remove all white-space
         $infix = preg_replace("/\s/", "", $infix);
-        if(Parser::$debug) {
+        if(NF_EOS_Parser::$debug) {
             $hand=fopen("eq.txt","a");
         }
 
         //replace scientific notation with normal notation (2e-9 to 2*10^-9)
         $infix = preg_replace('/([\d])([eE])(-?\d)/', '$1*10^$3', $infix);
 
-        if(Parser::$debug) {
+        if(NF_EOS_Parser::$debug) {
             fwrite($hand, "$infix\n");
         }
 
@@ -409,21 +412,21 @@ class Parser {
                 case "sec":
                     $tmp = cos($func);
                     if($tmp == 0) {
-                        throw new Exception("Division by 0 on: 'sec({$func}) = 1/cos({$func})' in {$this->inFix}", Parser::E_DIV_ZERO);
+                        throw new Exception("Division by 0 on: 'sec({$func}) = 1/cos({$func})' in {$this->inFix}", NF_EOS_Parser::E_DIV_ZERO);
                     }
                     $ans = 1/$tmp;
                     break;
                 case "csc":
                     $tmp = sin($func);
                     if($tmp == 0) {
-                        throw new Exception("Division by 0 on: 'csc({$func}) = 1/sin({$func})' in {$this->inFix}", Parser::E_DIV_ZERO);
+                        throw new Exception("Division by 0 on: 'csc({$func}) = 1/sin({$func})' in {$this->inFix}", NF_EOS_Parser::E_DIV_ZERO);
                     }
                     $ans = 1/$tmp;
                     break;
                 case "cot":
                     $tmp = tan($func);
                     if($tmp == 0) {
-                        throw new Exception("Division by 0 on: 'cot({$func}) = 1/tan({$func})' in {$this->inFix}", Parser::E_DIV_ZERO);
+                        throw new Exception("Division by 0 on: 'cot({$func}) = 1/tan({$func})' in {$this->inFix}", NF_EOS_Parser::E_DIV_ZERO);
                     }
                     $ans = 1/$tmp;
                     break;
@@ -433,18 +436,18 @@ class Parser {
                 case "log":
                     $ans = log($func);
                     if(is_nan($ans) || is_infinite($ans)) {
-                        throw new Exception("Result of 'log({$func}) = {$ans}' is either infinite or a non-number in {$this->inFix}", Parser::E_NAN);
+                        throw new Exception("Result of 'log({$func}) = {$ans}' is either infinite or a non-number in {$this->inFix}", NF_EOS_Parser::E_NAN);
                     }
                     break;
                 case "log10":
                     $ans = log10($func);
                     if(is_nan($ans) || is_infinite($ans)) {
-                        throw new Exception("Result of 'log10({$func}) = {$ans}' is either infinite or a non-number in {$this->inFix}", Parser::E_NAN);
+                        throw new Exception("Result of 'log10({$func}) = {$ans}' is either infinite or a non-number in {$this->inFix}", NF_EOS_Parser::E_NAN);
                     }
                     break;
                 case "sqrt":
                     if($func < 0) {
-                        throw new Exception("Result of 'sqrt({$func}) = i.  We can't handle imaginary numbers", Parser::E_NAN);
+                        throw new Exception("Result of 'sqrt({$func}) = i.  We can't handle imaginary numbers", NF_EOS_Parser::E_NAN);
                     }
                     $ans = sqrt($func);
                     break;
@@ -465,7 +468,7 @@ class Parser {
                 $match[3] = "";
             }
 
-            if(Parser::$debug)
+            if(NF_EOS_Parser::$debug)
                 fwrite($hand, "{$match[1]} || {$match[3]}\n");
             // Ensure that the variable has an operator or something of that sort in front and back - if it doesn't, add an implied '*'
             if((!in_array($match[1], array_merge($this->ST, $this->ST1, $this->ST2, $this->SEP['open'])) && $match[1] != "") || is_numeric($match[1])) //$this->SEP['close'] removed
@@ -484,7 +487,7 @@ class Parser {
                 $t = (strtolower($match[2])=='pi') ? pi() : exp(1);
                 $infix = str_replace($match[0], $match[1] . $front. $t. $back . $match[3], $infix);
             } elseif(!isset($vArray[$match[2]]) && (!is_array($vArray != "") && !is_numeric($vArray) && 0 !== $vArray)) {
-                throw new Exception("Variable replacement does not exist for '". substr($match[0], 1, 1). $match[2] ."' in {$this->inFix}", Parser::E_NO_VAR);
+                throw new Exception("Variable replacement does not exist for '". substr($match[0], 1, 1). $match[2] ."' in {$this->inFix}", NF_EOS_Parser::E_NO_VAR);
             } elseif(!isset($vArray[$match[2]]) && (!is_array($vArray != "") && is_numeric($vArray))) {
                 $infix = str_replace($match[0], $match[1] . $front. $vArray. $back . $match[3], $infix);
             } elseif(isset($vArray[$match[2]])) {
@@ -492,7 +495,7 @@ class Parser {
             }
         }
 
-        if(Parser::$debug)
+        if(NF_EOS_Parser::$debug)
             fclose($hand);
         return $this->solvePF($this->in2post($infix));
 
@@ -515,7 +518,7 @@ class Parser {
      */
     protected function factorial($num) {
         if($num < 0) {
-            throw new Exception("Factorial Error: Factorials don't exist for numbers < 0", Parser::E_NAN);
+            throw new Exception("Factorial Error: Factorials don't exist for numbers < 0", NF_EOS_Parser::E_NAN);
         }
         //A non-integer!  Gamma that sucker up!
         if(intval($num) != $num) {
@@ -561,7 +564,7 @@ class Parser {
     {
         //check validity of $z, throw error if not a valid number to be used with gamma
         if($z <= 0) {
-            throw new Exception("Gamma cannot be calculated on numbers less than or equal to 0", Parser::E_NAN);
+            throw new Exception("Gamma cannot be calculated on numbers less than or equal to 0", NF_EOS_Parser::E_NAN);
         }
         // Set up coefficients
         $p = array(

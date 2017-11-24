@@ -89,6 +89,11 @@ final class NF_MergeTags_Other extends NF_Abstracts_MergeTags
         return date( $format, time() );
     }
 
+    protected function system_time()
+    {
+        return date_i18n( get_option( 'time_format' ), current_time( 'timestamp' ) );
+    }
+
     protected function user_ip()
     {
         $ip = '127.0.0.1';

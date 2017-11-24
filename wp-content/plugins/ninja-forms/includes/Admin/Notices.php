@@ -60,11 +60,17 @@ class NF_Admin_Notices
         }
 
         foreach ( $admin_notices as $slug => $admin_notice ) {
-            // Call for spam protection
-            if ( $this->anti_notice_spam() ) {
-                return false;
+
+            if ( isset ( $admin_notice[ 'ignore_spam' ] ) && true == $admin_notice[ 'ignore_spam' ] ) {
+                $ignore_spam = true;
+            } else {
+                $ignore_spam = false;
             }
 
+            // Call for spam protection
+            if ( ! $ignore_spam && $this->anti_notice_spam() ) {
+                continue;
+            }
 
             // Check for proper page to display on
             if ( isset( $admin_notices[ $slug ][ 'pages' ] ) && is_array( $admin_notices[ $slug ][ 'pages' ] )
@@ -74,9 +80,11 @@ class NF_Admin_Notices
                 if( ( isset( $admin_notices[ $slug ][ 'blacklist' ] ) && $this->admin_notice_pages_blacklist( $admin_notices[ $slug ][ 'blacklist' ] ) )
                     || ( isset( $admin_notices[ $slug ][ 'pages' ] ) && ! $this->admin_notice_pages( $admin_notices[ $slug ][ 'pages' ] ) )
                 ) {
-                    return false;
+                    continue;
                 }
             }
+
+            
 
             // Check for required fields
             if ( ! $this->required_fields( $admin_notices[ $slug ] ) ) {
@@ -138,6 +146,8 @@ class NF_Admin_Notices
                 }
             }
         }
+
+        // die( 'done looping' );
     }
 
     // Spam protection check

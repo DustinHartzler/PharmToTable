@@ -17,6 +17,7 @@ class NF_Extension_Updater
     public $file = '';
     public $author = '';
     public $error = '';
+    private $_last_error;
 
     /**
      * Constructor function
@@ -87,6 +88,15 @@ class NF_Extension_Updater
 
         if ( 'invalid' == $license_data->license ) {
             $error = '<span style="color: red;">' . __( 'Could not activate license. Please verify your license key', 'ninja-forms' ) . '</span>';
+            
+            if ( isset ( $_REQUEST[ 'nf_debug' ] ) && 1 == absint( $_REQUEST[ 'nf_debug' ] ) ) {
+                // Add an error to our admin notice if nf_debug is turned on.
+                add_filter( 'nf_admin_notices', array( $this, 'show_license_error_notice' ) );
+                $this->_last_error = var_export( $license_data, true );
+            }
+          
+            Ninja_Forms()->logger()->emergency( var_export( $license_data, true ) );
+
         } else {
             $error = '';
         }
@@ -94,6 +104,17 @@ class NF_Extension_Updater
         Ninja_Forms()->update_setting( $this->product_name . '_license', $license_key );
         Ninja_Forms()->update_setting( $this->product_name . '_license_error', $error );
         Ninja_Forms()->update_setting( $this->product_name . '_license_status', $license_data->license );
+    }
+
+    public function show_license_error_notice( $notices ) {
+        $notices[ 'license_error' ] = array(
+            'title' => __( 'License Activation Error', 'ninja-forms' ),
+            'msg' => '<pre>' . $this->_last_error . '</pre>',
+            'int' => 0,
+            'ignore_spam' => true,
+        );
+
+        return $notices;
     }
 
     /*

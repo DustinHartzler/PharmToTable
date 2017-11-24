@@ -10,11 +10,11 @@ h1 {
     line-height: 32px;
 }
 h2 {
-    margin: 40px auto 20px;
+    /*margin: 40px auto 20px;*/
 }
 p {
     font-size: 16px;
-    padding-top: 20px;
+    /*padding-top: 20px;*/
 }
 ol {
     font-size: 16px;
@@ -142,4 +142,8 @@ ol .dashicons {
     color: #2BAAE7;
     border-color: #2BAAE7;
     background-color: white;
+}
+
+.jBox-Modal {
+    max-width: 500px
 }

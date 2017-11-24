@@ -3,10 +3,10 @@ Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, krmoorho
 Tags: form, forms, contact form, custom form, form builder, form creator, form manager, form creation, contact forms, custom forms, forms builder, forms creator, forms manager, forms creation, form administration,
 Requires at least: 4.6
 Tested up to: 4.8
-Stable tag: 3.1.6
+Stable tag: 3.2.4
 License: GPLv2 or later
 
-Drag and drop fields in an intuitive UI to create create contact forms, email subscription forms, order forms, payment forms, send emails and more!
+Drag and drop fields in an intuitive UI to create contact forms, email subscription forms, order forms, payment forms, send emails and more!
 
 == Description ==
 Ninja Forms is the ultimate FREE form creation tool for WordPress. Build forms within minutes using a simple yet powerful drag-and-drop form creator. For beginners, quickly and easily design complex forms with absolutely no code. For developers, utilize built-in hooks, filters, and even custom field templates to do whatever you need at any step in the form building or submission using Ninja Forms as a framework.
@@ -65,9 +65,6 @@ Want access to everything we offer, or perhaps just our form building toolkit "B
 
 [Find our more about our Ninja Forms Memberships here.](https://ninjaforms.com/pricing/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=Ninja+Forms+Readme&utm_content=Developer+Membership)
 
-= Demo Site =
-Please feel free to visit our [demo site](http://three.ninjaforms.com?utm_medium=referral&utm_source=wordpress.org&utm_campaign=Ninja+Forms+Readme) where you can test the features of Ninja Forms and all of our extensions.
-
 = For Developers =
 
 The Ninja Forms framework is on [GitHub](https://github.com/wpninjas/ninja-forms)! If you're a developer and want to help make Ninja Forms better, check it out. It's also a great resource for developers who are interested in creating add-ons for our online store.
@@ -114,17 +111,181 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 == Upgrade Notice ==
 
-= 3.1.6 (26 June 2017) =
+= 3.2.4 (7 November 2017) =
 
 *Bugs:*
 
-* Fixed a bug that could cause Recurly and Stripe add-ons to fail.
-* Fixed a bug with bad form titles that could cause the form dashboard to crash.
-* Calculations with whitespaces should be better handled on the front-end.
-* Checkbox label positioning should be correct in all setups.
-* Form deletion confirmation modal should now be styled correctly.
+* Multi-select fields can now be updated in the submission edit page.
+* Modified number fields to better handle rounding numbers with decimals.
+
+*Changes:*
+
+* Added the GNU license file.
 
 == Changelog ==
+
+= 3.2.4 (7 November 2017) =
+
+*Bugs:*
+
+* Multi-select fields can now be updated in the submission edit page.
+* Modified number fields to better handle rounding numbers with decimals.
+
+*Changes:*
+
+* Added the GNU license file.
+
+= 3.2.3 (19 October 2017) =
+
+*Bugs:*
+
+* Fixed a bug that caused some 2.9.x to 3.0 conversion to fail.
+
+= 3.2.2 (12 October 2017) =
+
+*Bugs:*
+
+* Required field validation should now work properly with the Layout and Styles add-on. 
+* The email action now removes extra comma separators from email settings like(To, BCC, CC, reply-to, and from address').
+* The date range on the submissions table will now show the correct submissions for the selected dates.
+* Fixed a bug that was causing form imports with extra characters at the beginning to break.
+* Forms that fail to load on the front-end will now remove the loading animation from the page. 
+* Calculations will display correctly on the front end in HTML fields if the Save Progress add-on is active on sites. 
+* The decimal setting in calculations will no longer break if non-numeric values are input into them.
+* Unique fields will no longer try to validate deleted submissions. 
+* Country fields should now be sorted alphabetically in non-English languages.
+* Calculations decimal setting now defaults to 2 decimal places if the setting is left empty. 
+* Fixed "This is not a required field" to read "This IS a required field" in Spanish locales. 
+* Added translatable text for the (of) in the input limit text. 
+
+*Changes:*
+
+* Created a merge tag for custom user meta. This will allow users to do things like pre-populate fields with custom user meta. 
+* Added placeholder for date field.
+* We now have currency support for South African Rand(ZAR). 
+* Added support for setting number of rows shown on a multi-select list on the front end. 
+* Created a confirm field. This will allow users to map another field on their form to it and will validate the input on the front end with the field it is mapped to. 
+* Added a new merge tag for submission time. This will display the time the form was submitted.
+* Added WordPress filter to disable all Ninja Forms in app sales banners.
+* The merge tag selector can now be used in the body of HTML fields.
+
+= 3.2.1 (14 September 2017) =
+
+*Bugs:*
+
+* Fixed a bug that caused opt-ins to show incorrectly.
+* Multiple Google reCaptchas on the same page should function properly.
+* Fixed the layout of description text for checkbox lists.
+* New lines in rich text areas should convert properly from version 2.9.x.
+* Merge Tag insertion should maintain the proper cursor position in all cases.
+* Form duplication should happen much more quickly.
+* Unknown field types will be removed upon upgrade to prevent forms from breaking in 3.0.
+* Fixed several issues with converting merge tags from version 2.9.x to 3.0.
+
+*Changes:*
+
+* A portion of users will begin to see upgrade notices for Ninja Forms 3.0. The number of users who see this notice will increase in future releases.
+* "Currency" has been added to the list of input mask options.
+* Basic error logging has been added to Ninja Forms; the "Get Help" page will now show the most recently recorded errors.
+* Added a setting for changing stat opt-in tracking.
+* License activation errors will now show more detail.
+
+= 3.2 (14 September 2017) =
+
+*Bugs:*
+
+* Multiple Google reCaptchas on the same page should function properly.
+* Fixed the layout of description text for checkbox lists.
+* New lines in rich text areas should convert properly from version 2.9.x.
+* Merge Tag insertion should maintain the proper cursor position in all cases.
+* Form duplication should happen much more quickly.
+* Unknown field types will be removed upon upgrade to prevent forms from breaking in 3.0.
+* Fixed several issues with converting merge tags from version 2.9.x to 3.0.
+
+*Changes:*
+
+* "Currency" has been added to the list of input mask options.
+* Basic error logging has been added to Ninja Forms; the "Get Help" page will now show the most recently recorded errors.
+* Added a setting for changing stat opt-in tracking.
+* License activation errors will now show more detail.
+
+= 3.1.9 (04 August 2017) =
+
+*Bugs:*
+
+* Fixed a bug that caused form submissions to fail with an NF_ESO_PARSER error.
+* The nf_sub_seq_num shortcode should now be properly converted when upgrading from 2.9.x to 3.0.
+* bcc and cc fields in email actions should convert properly when upgrading from 2.9.x to 3.0.
+* Clicking on icons and buttons in the builder should be much more consistent.
+* Scrolling in the drawer should work properly when viewing the form builder on a mobile device.
+* Fixed a bug that prevented the drawer from opening when editing a duplicated list field.
+
+= 3.1.8 (01 August 2017) =
+
+*Features:*
+
+* You can now limit form submissions based upon unique fields.
+
+*Changes:*
+
+* Simplified the collect payment action by making it easier to set a paymen total.
+* Form titles should appear in form export filenames.
+* Added a filter to submissions table view labels.
+* Removed the wrapper class for the ReCaptcha field.
+* WordPress date settings are now the default for datepicker fields.
+* Condensed admin notices into an easier to dismiss format.
+* Links to media files entered into the RTE for actions should now use the title of that media item.
+* Added a confirm dialog to the rollback button.
+* Term merge tags should use the term label now, rather than the ID.
+* Added a minimum WordPress version check to the Get Help->System Status page.
+
+*Bugs:*
+
+* Fixed a bug that could cause the dashboard to fail to display.
+* Updated form templates for consistency.
+* Email action errors should only show to admin users who are logged-in.
+* Translation of submission labels and text should work properly.
+* Password fields should not save in the database.
+* Empty h3 tags are no longer output when a form title is empty.
+* Merge tags should work more consistently in all contexts.
+* The delete animation on the dashboard should be clearer.
+* Fixed conflicts with other plugins using our EOS math library.
+* Created On dates for imported and duplicated forms should reflect the current date.
+* Fixed a bug with calculations that could cause a NaN error in JavaScript.
+* Merge tags should work properly when previewing a form with unpublished changes.
+
+= 3.1.7 (01 August 2017) =
+
+*Features:*
+
+* You can now limit form submissions based upon unique fields.
+
+*Changes:*
+
+* Simplified the collect payment action by making it easier to set a paymen total.
+* Form titles should appear in form export filenames.
+* Added a filter to submissions table view labels.
+* Removed the wrapper class for the ReCaptcha field.
+* WordPress date settings are now the default for datepicker fields.
+* Condensed admin notices into an easier to dismiss format.
+* Links to media files entered into the RTE for actions should now use the title of that media item.
+* Added a confirm dialog to the rollback button.
+* Term merge tags should use the term label now, rather than the ID.
+* Added a minimum WordPress version check to the Get Help->System Status page.
+
+*Bugs:*
+
+* Updated form templates for consistency.
+* Email action errors should only show to admin users who are logged-in.
+* Translation of submission labels and text should work properly.
+* Password fields should not save in the database.
+* Empty h3 tags are no longer output when a form title is empty.
+* Merge tags should work more consistently in all contexts.
+* The delete animation on the dashboard should be clearer.
+* Fixed conflicts with other plugins using our EOS math library.
+* Created On dates for imported and duplicated forms should reflect the current date.
+* Fixed a bug with calculations that could cause a NaN error in JavaScript.
+* Merge tags should work properly when previewing a form with unpublished changes.
 
 = 3.1.6 (26 June 2017) =
 
@@ -173,7 +334,7 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 *Bugs:*
 
 * Fixed several possible PHP notices.
-* Fixed a possible conflict with the BBpress plugin.
+* Fixed a possible conflict with the bbPress plugin.
 * Editing submissions with Checkbox List fields should work properly.
 * Product fields with costs over 1000 should now work properly.
 * Fixed a bug that caused duplicate submissions if a form wasn't hidden after submission.
@@ -335,7 +496,7 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 * Submission exports should now always order properly.
 * Fixed a bug with submissions exporting non-Ninja Forms data.
 * Importing forms with non-UTF8 characters should now import properly.
-* Fixed a bug with converting froms from 2.9.x to 3.0.
+* Fixed a bug with converting forms from 2.9.x to 3.0.
 
 = 3.0.24 (15 January 2017) =
 
@@ -353,7 +514,7 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 *Bugs:*
 
-* Fixed a bug that caused installations to crash on older, unsecure versions of PHP.
+* Fixed a bug that caused installations to crash on older, insecure versions of PHP.
 
 = 3.0.21 (11 January 2017) =
 
@@ -532,7 +693,7 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 *Bugs:*
 
-* Fixed a bug with loading the form builder form cache.
+* Fixed a bug with loading the form builder from cache.
 
 = 3.0.8 (11 October 2016) =
 

@@ -32,7 +32,12 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
     public function all_fields()
     {
-        $return = '<table>';
+        if( is_rtl() ){
+            $return = '<table style="direction: rtl;">';
+        } else {
+            $return = '<table>';
+        }
+
         $hidden_field_types = array( 'html', 'submit', 'password', 'passwordconfirm' );
 
         foreach( $this->get_fields_sorted() as $field ){
@@ -44,7 +49,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
             if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ', ', $field[ 'value' ] );
 
-            $return .= '<tr><td>' . $field[ 'label' ] .':</td><td>' . $field[ 'value' ] . '</td></tr>';
+            $return .= '<tr><td>' . apply_filters('ninja_forms_merge_label', $field[ 'label' ]) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
         }
         $return .= '</table>';
         return $return;
@@ -52,7 +57,11 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
     public function all_fields_table()
     {
-        $return = '<table>';
+        if( is_rtl() ){
+            $return = '<table style="direction: rtl;">';
+        } else {
+            $return = '<table>';
+        }
 
         $hidden_field_types = array( 'submit', 'password', 'passwordconfirm' );
 
@@ -64,7 +73,8 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
             $field[ 'value' ] = apply_filters( 'ninja_forms_merge_tag_value_' . $field[ 'type' ], $field[ 'value' ], $field );
             if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ', ', $field[ 'value' ] );
-            $return .= '<tr><td valign="top">' . $field[ 'label' ] .':</td><td>' . $field[ 'value' ] . '</td></tr>';
+
+            $return .= '<tr><td valign="top">' . apply_filters('ninja_forms_merge_label', $field[ 'label' ]) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
         }
         $return .= '</table>';
         return $return;
@@ -72,8 +82,13 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
     public function fields_table()
     {
-        $return = '<table>';
-        $hidden_field_types = array( 'html', 'submit', 'password', 'passwordconfirm' );
+        if( is_rtl() ){
+            $return = '<table style="direction: rtl;">';
+        } else {
+            $return = '<table>';
+        }
+
+        $hidden_field_types = array( 'html', 'submit', 'password', 'passwordconfirm', 'hidden' );
 
         foreach( $this->get_fields_sorted() as $field ){
 
@@ -92,7 +107,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
             if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ', ', $field[ 'value' ] );
 
-            $return .= '<tr><td valign="top">' . $field[ 'label' ] .':</td><td>' . $field[ 'value' ] . '</td></tr>';
+            $return .= '<tr><td valign="top">' . apply_filters('ninja_forms_merge_label', $field[ 'label' ]) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
         }
         $return .= '</table>';
         return $return;
@@ -121,6 +136,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
         if( in_array( $field[ 'type' ], $hidden_field_types )
             && 'html' != $field[ 'type' ] // Specifically allow the HTML field in merge tags.
+            && 'password' != $field[ 'type' ] // Specifically allow the Password field in merge tags for actions, ie User Management
         ) return;
 
         $field_id  = $field[ 'id' ];
@@ -195,7 +211,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
         }
         return ( $a[ 'order' ] < $b[ 'order' ] ) ? -1 : 1;
     }
-    
+
     public function calc_replace( $subject ) {
         if( is_array( $subject ) ){
             foreach( $subject as $i => $s ){
@@ -210,7 +226,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
         if( empty( $matches[0] ) ) return $subject;
 
         foreach( $this->merge_tags as $merge_tag ){
-            
+
             if( ! in_array( $merge_tag[ 'tag' ], $matches[0] ) ) continue;
 
             if( ! isset($merge_tag[ 'callback' ])) continue;

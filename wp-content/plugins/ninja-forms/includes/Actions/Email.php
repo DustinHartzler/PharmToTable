@@ -47,6 +47,8 @@ final class NF_Actions_Email extends NF_Abstracts_Action
 
     public function process( $action_settings, $form_id, $data )
     {
+        $action_settings = $this->sanitize_address_fields( $action_settings );
+
         $errors = $this->check_for_errors( $action_settings );
 
         $headers = $this->_get_headers( $action_settings );
@@ -69,7 +71,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         $attachments = $this->_get_attachments( $action_settings, $data );
 
         if( 'html' == $action_settings[ 'email_format' ] ) {
-            $message = $action_settings['email_message'];
+            $message = wpautop( $action_settings['email_message'] );
         } else {
             $message = $this->format_plain_text_message( $action_settings[ 'email_message_plain' ] );
         }
@@ -80,15 +82,19 @@ final class NF_Actions_Email extends NF_Abstracts_Action
             $sent = wp_mail($action_settings['to'], $action_settings['email_subject'], $message, $headers, $attachments);
         } catch ( Exception $e ){
             $sent = false;
-            $errors[ 'email_sent' ] = $e->getMessage();
+            $errors[ 'email_not_sent' ] = $e->getMessage();
         }
 
-        $data[ 'actions' ][ 'email' ][ 'to' ] = $action_settings['to'];
-        $data[ 'actions' ][ 'email' ][ 'sent' ] = $sent;
-        $data[ 'actions' ][ 'email' ][ 'headers' ] = $headers;
-        $data[ 'actions' ][ 'email' ][ 'attachments' ] = $attachments;
+        if( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+            $data[ 'actions' ][ 'email' ][ 'to' ] = $action_settings[ 'to' ];
+            $data[ 'actions' ][ 'email' ][ 'headers' ] = $headers;
+            $data[ 'actions' ][ 'email' ][ 'attachments' ] = $attachments;
+        }
 
-        if( $errors ){
+        $data[ 'actions' ][ 'email' ][ 'sent' ] = $sent;
+
+        // Only show errors to Administrators.
+        if( $errors && current_user_can( 'manage_options' ) ){
             $data[ 'errors' ][ 'form' ] = $errors;
         }
         
@@ -97,6 +103,55 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         }
 
         return $data;
+    }
+
+    /**
+     * Sanitizes email address settings
+     * @since 3.2.2
+     *
+     * @param  array $action_settings
+     * @return array
+     */
+    protected function sanitize_address_fields( $action_settings )
+    {
+        // Build a look array to compare our email address settings to.
+        $email_address_settings = array( 'to', 'from_address', 'reply_to', 'cc', 'bcc' );
+
+        // Loop over the look up values.
+        foreach( $email_address_settings as $setting ) {
+            // If the loop up values are not set in the action settings continue.
+            if ( ! isset( $action_settings[ $setting ] ) ) continue;
+
+            // If action settings do not match the look up values continue.
+            if ( ! $action_settings[ $setting ] ) continue;
+
+            // This is the array that will contain the sanitized email address values.
+            $sanitized_array = array();
+
+            /*
+             * Checks to see action settings is array,
+             * if not explodes to comma delimited array.
+             */
+            if( is_array( $action_settings[ $setting ] ) ) {
+                $email_addresses = $action_settings[ $setting ];
+            } else {
+                $email_addresses = explode( ',', $action_settings[ $setting ] );
+            }
+
+            // Loop over our email addresses.
+            foreach( $email_addresses as $email ) {
+
+                // Updated to trim values in case there is a value with spaces/tabs/etc to remove whitespace
+                $email = trim( $email );
+                if ( empty( $email ) ) continue;
+
+                // Build our array of the email addresses.
+                $sanitized_array[] = $email;
+            }
+            // Sanitized our array of settings.
+            $action_settings[ $setting ] = implode( ',' ,$sanitized_array );
+        }
+        return $action_settings;
     }
 
     protected function check_for_errors( $action_settings )
@@ -111,6 +166,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
 
 
             $email_addresses = is_array( $action_settings[ $setting ] ) ? $action_settings[ $setting ] : explode( ',', $action_settings[ $setting ] );
+
             foreach( (array) $email_addresses as $email ){
                 $email = trim( $email );
                 if ( false !== strpos( $email, '<' ) && false !== strpos( $email, '>' ) ) {
@@ -118,7 +174,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
                     $email = $email[ 1 ];
                 }
                 if( ! is_email( $email ) ) {
-                    $errors[ 'email_' . $email ] = sprintf( __( 'Your email action "%s" has an invalid value for the "%s" setting. Please check this setting and try again.', 'ninja-forms'), $action_settings[ 'label' ], $setting );
+                    $errors[ 'invalid_email' ] = sprintf( __( 'Your email action "%s" has an invalid value for the "%s" setting. Please check this setting and try again.', 'ninja-forms'), $action_settings[ 'label' ], $setting );
                 }
             }
         }

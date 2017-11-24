@@ -21,7 +21,7 @@ class NF_Fields_Date extends NF_Fields_Textbox
 
     protected $_settings = array( 'date_default', 'date_format', 'year_range' );
 
-    protected $_settings_exclude = array( 'default', 'placeholder', 'input_limit_set', 'disable_input' );
+    protected $_settings_exclude = array( 'default', 'input_limit_set', 'disable_input' );
 
     public function __construct()
     {
@@ -48,10 +48,6 @@ class NF_Fields_Date extends NF_Fields_Textbox
             'YYYY/MM/DD' => __( 'Y/m/d', 'ninja-forms' ),
             'YYYY.MM.DD' => __( 'Y.m.d', 'ninja-forms' ),
             'dddd, MMMM D YYYY' => __( 'l, F d Y', 'ninja-forms' ),
-            
-            
-            
-            
         );
 
         return ( isset( $lookup[ $format ] ) ) ? $lookup[ $format ] : $format;

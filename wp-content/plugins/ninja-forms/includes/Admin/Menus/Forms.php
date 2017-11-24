@@ -217,6 +217,8 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         wp_enqueue_script( 'nf-builder', Ninja_Forms::$url . 'assets/js/min/builder.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable', 'jquery-effects-bounce', 'wp-color-picker' ) );
         wp_localize_script( 'nf-builder', 'nfi18n', Ninja_Forms::config( 'i18nBuilder' ) );
 
+        $home_url = parse_url( home_url() );
+
         wp_localize_script( 'nf-builder', 'nfAdmin', array(
             'ajaxNonce'         => wp_create_nonce( 'ninja_forms_builder_nonce' ),
             'requireBaseUrl'    => Ninja_Forms::$url . 'assets/js/',
@@ -226,7 +228,8 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             'mobile'            => ( wp_is_mobile() ) ? 1: 0,
             'currencySymbols'   => array_merge( array( '' => Ninja_Forms()->get_setting( 'currency_symbol' ) ), Ninja_Forms::config( 'CurrencySymbol' ) ),
             'dateFormat'        => Ninja_Forms()->get_setting( 'date_format' ),
-            'formID'            => isset( $_GET[ 'form_id' ] ) ? absint( $_GET[ 'form_id' ] ) : 0
+            'formID'            => isset( $_GET[ 'form_id' ] ) ? absint( $_GET[ 'form_id' ] ) : 0,
+            'home_url_host'     => $home_url[ 'host' ]
         ));
 
         do_action( 'nf_admin_enqueue_scripts' );
@@ -250,11 +253,6 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         }
 
         $fields_settings = array();
-
-        // echo "<pre>";
-        // print_r( $fields );
-        // echo "</pre>";
-        // die();
 
         if( ! empty( $fields ) ) {
 
