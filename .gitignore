@@ -54,7 +54,15 @@ wp-content/*
 !wp-content/mu-plugins/
 !wp-content/plugins/
 !wp-content/themes/
-wp-content/plugins/vaultpress/
+wp-content/mu-plugins/bypass-login.php
+wp-content/mu-plugins/local-admin-bar-color.php
+wp-content/mu-plugins/local-by-flywheel-demo-urls.php
+wp-content/plugins/akismet
+wp-content/plugins/jetpack
+wp-content/plugins/polldaddy
+wp-content/plugins/vaultpress
+
 wp-content/plugins/homepage-control/
+
 
 wp-content/plugins/storefront-parallax-hero/
