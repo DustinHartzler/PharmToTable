@@ -1,7 +1,7 @@
 <?php if(!defined('ABSPATH')) { die('You are not allowed to call this page directly.'); } ?>
 
 <div class="wrap">
-  <?php echo PrliAppHelper::page_title(__('Add Link', 'pretty-link')); ?>
+  <?php echo PrliAppHelper::page_title(__('Add Pretty Link', 'pretty-link')); ?>
 
   <?php require(PRLI_VIEWS_PATH.'/shared/errors.php'); ?>
 

@@ -560,7 +560,7 @@ class PrliUtils {
     $upgrade_path = ABSPATH . 'wp-admin/includes/upgrade.php';
     require_once($upgrade_path);
 
-    // Pretty Link Pro Tables
+    // Pretty Links Pro Tables
     $keywords_table         = "{$wpdb->prefix}prli_keywords";
     $post_keywords_table    = "{$wpdb->prefix}prli_post_keywords";
     $post_urls_table        = "{$wpdb->prefix}prli_post_urls";
@@ -813,7 +813,7 @@ class PrliUtils {
 
     if($db_version and $db_version < 8)
     {
-      // Install / Upgrade Pretty Link Pro
+      // Install / Upgrade Pretty Links Pro
       $plp_username = get_option( 'prlipro_username' );
       $plp_password = get_option( 'prlipro_password' );
 

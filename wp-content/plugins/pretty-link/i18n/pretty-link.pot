@@ -1,10 +1,10 @@
-# Copyright (C) 2017 Pretty Link
-# This file is distributed under the same license as the Pretty Link package.
+# Copyright (C) 2017 Pretty Links
+# This file is distributed under the same license as the Pretty Links package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Link 2.1.1\n"
+"Project-Id-Version: Pretty Links 2.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
-"POT-Creation-Date: 2017-06-22 17:24:16+00:00\n"
+"POT-Creation-Date: 2017-08-31 20:48:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,20 +14,18 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:36
 #: app/controllers/PrliAppController.php:45
-msgid "Pretty Link | Manage Pretty Links"
+msgid "Pretty Links | Manage Pretty Links"
 msgstr ""
 
-#. #-#-#-#-#  pretty-link.pot (Pretty Link 2.1.1)  #-#-#-#-#
+#. #-#-#-#-#  pretty-link.pot (Pretty Links 2.1.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: app/controllers/PrliAppController.php:37
-#: app/controllers/PrliAppController.php:46 app/views/links/form.php:47
-#: app/views/shared/tinymce_form_popup.php:108 app/views/widgets/widget.php:17
-#: pro/app/views/links/prettybar.php:191
-msgid "Pretty Link"
+#: app/controllers/PrliAppController.php:46 app/views/links/list.php:12
+msgid "Pretty Links"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:53
-msgid "Pretty Link | Add New Link"
+msgid "Pretty Links | Add New Link"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:54
@@ -35,7 +33,7 @@ msgid "Add New Link"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:62
-msgid "Pretty Link | Groups"
+msgid "Pretty Links | Groups"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:63 app/views/groups/list.php:6
@@ -43,7 +41,7 @@ msgid "Groups"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:72
-msgid "Pretty Link | Clicks"
+msgid "Pretty Links | Clicks"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:73 app/models/PrliClick.php:259
@@ -57,7 +55,7 @@ msgid "Clicks"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:82
-msgid "Pretty Link | Tools"
+msgid "Pretty Links | Tools"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:83 app/views/tools/form.php:3
@@ -65,7 +63,7 @@ msgid "Tools"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:91
-msgid "Pretty Link | Options"
+msgid "Pretty Links | Options"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:92 app/views/options/form.php:3
@@ -104,11 +102,11 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:280
 msgid ""
-"You're almost done!<br/>%1$sFinish your Re-Install of Pretty Link Pro%2$s"
+"You're almost done!<br/>%1$sFinish your Re-Install of Pretty Links Pro%2$s"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:287
-msgid "Pretty Link Pro Successfully Uninstalled."
+msgid "Pretty Links Pro Successfully Uninstalled."
 msgstr ""
 
 #: app/controllers/PrliAppController.php:348
@@ -117,14 +115,14 @@ msgstr ""
 
 #: app/controllers/PrliAppController.php:387
 msgid ""
-"Your Pretty Link Pro installation isn't quite complete yet. "
-"%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
+"Your Pretty Links Pro installation isn't quite complete yet. "
+"%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:408
 msgid ""
-"Your Pretty Link Pro installation isn't quite complete yet.<br/>"
-"%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
+"Your Pretty Links Pro installation isn't quite complete yet.<br/>"
+"%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
 #: app/controllers/PrliClicksController.php:89
@@ -662,7 +660,7 @@ msgid "We think you'll love it!"
 msgstr ""
 
 #: app/views/admin/popups/upgrade.php:24
-msgid "Upgrade to Pretty Link Pro"
+msgid "Upgrade to Pretty Links Pro"
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:4
@@ -671,13 +669,13 @@ msgstr ""
 
 #: app/views/admin/update/activation_warning.php:7
 #: app/views/admin/update/activation_warning.php:14
-msgid "Pretty Link Pro isn't able to get critical automatic updates"
+msgid "Pretty Links Pro isn't able to get critical automatic updates"
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:8
 msgid ""
-"It looks like you used to have Pretty Link Pro activated with a username and "
-"password but now you need a license key to activate it."
+"It looks like you used to have Pretty Links Pro activated with a username "
+"and password but now you need a license key to activate it."
 msgstr ""
 
 #: app/views/admin/update/activation_warning.php:9
@@ -784,7 +782,7 @@ msgstr ""
 
 #: app/views/admin/update/edge_updates.php:4
 msgid ""
-"Include Pretty Link Pro edge (development) releases in automatic updates "
+"Include Pretty Links Pro edge (development) releases in automatic updates "
 "(not recommended for production websites)"
 msgstr ""
 
@@ -793,18 +791,19 @@ msgid "Loading..."
 msgstr ""
 
 #: app/views/admin/update/license.php:4
-msgid "Pretty Link Pro License"
+msgid "Pretty Links Pro License"
 msgstr ""
 
 #: app/views/admin/update/license.php:7
 msgid ""
-"You must have a License Key to enable automatic updates for Pretty Link Pro. "
-"If you don't have a License please go to %1$s to get one. If you do have a "
-"license you can login at %2$s to manage your licenses and site activations."
+"You must have a License Key to enable automatic updates for Pretty Links "
+"Pro. If you don't have a License please go to %1$s to get one. If you do "
+"have a license you can login at %2$s to manage your licenses and site "
+"activations."
 msgstr ""
 
 #: app/views/admin/update/license.php:13
-msgid "Enter Your Pretty Link Pro License Key:"
+msgid "Enter Your Pretty Links Pro License Key:"
 msgstr ""
 
 #: app/views/admin/update/license.php:20
@@ -813,7 +812,7 @@ msgstr ""
 
 #: app/views/admin/update/license.php:30 app/views/links/form.php:221
 msgid ""
-"It looks like you haven't %1$supgraded to Pretty Link Pro%2$s yet. Here are "
+"It looks like you haven't %1$supgraded to Pretty Links Pro%2$s yet. Here are "
 "just a few things you could be doing with pro:"
 msgstr ""
 
@@ -847,7 +846,7 @@ msgstr ""
 
 #: app/views/admin/update/license.php:72
 msgid ""
-"Are you sure? Pretty Link Pro will not be functional on %s if this License "
+"Are you sure? Pretty Links Pro will not be functional on %s if this License "
 "Key is deactivated."
 msgstr ""
 
@@ -860,11 +859,11 @@ msgid "Upgrade plugin to Pro"
 msgstr ""
 
 #: app/views/admin/update/license.php:80
-msgid "You're currently running version %s of Pretty Link Pro"
+msgid "You're currently running version %s of Pretty Links Pro"
 msgstr ""
 
 #: app/views/admin/update/ui.php:3
-msgid "Activate Pretty Link Pro"
+msgid "Activate Pretty Links Pro"
 msgstr ""
 
 #: app/views/admin/update/ui.php:16
@@ -1052,10 +1051,9 @@ msgid "Add Group"
 msgstr ""
 
 #: app/views/groups/list.php:40 app/views/groups/list.php:68
-#: app/views/groups/list.php:82 app/views/links/list.php:12
-#: app/views/links/list.php:56 app/views/links/list.php:160
-#: app/views/options/form.php:39 pro/app/views/reports/list.php:32
-#: pro/app/views/reports/list.php:72
+#: app/views/groups/list.php:82 app/views/links/list.php:56
+#: app/views/links/list.php:160 app/views/options/form.php:39
+#: pro/app/views/reports/list.php:32 pro/app/views/reports/list.php:72
 msgid "Links"
 msgstr ""
 
@@ -1108,7 +1106,7 @@ msgstr ""
 
 #: app/views/links/form.php:24
 msgid ""
-"Make your life easier by upgrading to %1$sPretty Link Pro%2$s -- get more "
+"Make your life easier by upgrading to %1$sPretty Links Pro%2$s -- get more "
 "redirection types, speed, automations and <b>results from your links</b> by "
 "%1$sgoing pro today!%2$s"
 msgstr ""
@@ -1128,6 +1126,11 @@ msgstr ""
 
 #: app/views/links/form.php:44
 msgid "Pretty Link*"
+msgstr ""
+
+#: app/views/links/form.php:47 app/views/shared/tinymce_form_popup.php:108
+#: app/views/widgets/widget.php:17 pro/app/views/links/prettybar.php:191
+msgid "Pretty Link"
 msgstr ""
 
 #: app/views/links/form.php:48
@@ -1253,7 +1256,7 @@ msgstr ""
 msgid "Oops!"
 msgstr ""
 
-#: app/views/links/list.php:13
+#: app/views/links/list.php:13 app/views/links/new.php:4
 msgid "Add Pretty Link"
 msgstr ""
 
@@ -1309,10 +1312,6 @@ msgstr ""
 
 #: app/views/links/list.php:144
 msgid "Target URL:"
-msgstr ""
-
-#: app/views/links/new.php:4
-msgid "Add Link"
 msgstr ""
 
 #: app/views/options/form.php:4
@@ -1760,7 +1759,7 @@ msgid "Unauthorized"
 msgstr ""
 
 #: pro/app/controllers/PlpImportExportController.php:12
-msgid "Pretty Link Pro | Import/Export"
+msgid "Pretty Links Pro | Import/Export"
 msgstr ""
 
 #: pro/app/controllers/PlpImportExportController.php:13
@@ -1942,11 +1941,11 @@ msgid "Pretty Bar Attribution URL must be a correctly formatted URL"
 msgstr ""
 
 #: pro/app/controllers/PlpPostsController.php:50
-msgid "Pretty Link Pro"
+msgid "Pretty Links Pro"
 msgstr ""
 
 #: pro/app/controllers/PlpPostsController.php:54
-msgid "Pretty Link Pro Options"
+msgid "Pretty Links Pro Options"
 msgstr ""
 
 #: pro/app/controllers/PlpPrettyBarController.php:50
@@ -2009,7 +2008,7 @@ msgid "Shrink"
 msgstr ""
 
 #: pro/app/controllers/PlpReportsController.php:12
-msgid "Pretty Link Pro | Reports"
+msgid "Pretty Links Pro | Reports"
 msgstr ""
 
 #: pro/app/controllers/PlpReportsController.php:13
@@ -2139,7 +2138,7 @@ msgid "At least one link must be selected for analysis."
 msgstr ""
 
 #: pro/app/models/PlpReport.php:244
-msgid "Pretty Link Pro: Clicks for"
+msgid "Pretty Links Pro: Clicks for"
 msgstr ""
 
 #: pro/app/models/PlpReport.php:244
@@ -2155,7 +2154,7 @@ msgid "Conversions"
 msgstr ""
 
 #: pro/app/models/PlpReport.php:385
-msgid "Pretty Link Pro: Split Report for"
+msgid "Pretty Links Pro: Split Report for"
 msgstr ""
 
 #: pro/app/models/PlpReport.php:397 pro/app/models/PlpReport.php:404
@@ -2198,7 +2197,7 @@ msgid ""
 "There are two ways to import a file.<br/><br/>1) Importing to update "
 "existing links and<br/><br/>2) Importing to generate new links. When "
 "Importing to generate new links, you must delete the \"id\" column from the "
-"CSV before importing. If the \"id\" column is present, Pretty Link Pro will "
+"CSV before importing. If the \"id\" column is present, Pretty Links Pro will "
 "attempt to update existing links."
 msgstr ""
 
@@ -3359,8 +3358,8 @@ msgstr ""
 msgid ""
 "Check this to hide the pretty link attribution link on the pretty bar.<br/"
 "><br/><strong>Wait, before you do this, you might want to leave this un-"
-"checked and set the alternate URL of this link to your <em>Pretty Link Pro</"
-"em> <a href=\"https://prettylinkpro.com/plp/options/aff-attribution"
+"checked and set the alternate URL of this link to your <em>Pretty Links Pro</"
+"em> <a href=\"https://prettylinks.com/plp/options/aff-attribution"
 "\">Affiliate URL</a> to earn a few bucks while you are at it."
 msgstr ""
 
@@ -3375,8 +3374,8 @@ msgstr ""
 #: pro/app/views/options/form.php:649
 msgid ""
 "If set, this will replace the Pretty Bars attribution URL. This is a very "
-"good place to put your <em>Pretty Link Pro</em> <a href=\"https://"
-"prettylinkpro.com/plp/options/aff-attribution-2\">Affiliate Link</a>."
+"good place to put your <em>Pretty Links Pro</em> <a href=\"https://"
+"prettylinks.com/plp/options/aff-attribution-2\">Affiliate Link</a>."
 msgstr ""
 
 #: pro/app/views/options/form.php:663
@@ -3443,7 +3442,7 @@ msgstr ""
 msgid ""
 "This option will give you the ability to turn your website into a link "
 "shortening service for your users. Once selected, you can enable the Pretty "
-"Link Pro Sidebar Widget or just display the link creation form with the "
+"Links Pro Sidebar Widget or just display the link creation form with the "
 "<code>[prli_create_form]</code> shortcode in any post or page on your "
 "website."
 msgstr ""
@@ -4737,7 +4736,7 @@ msgid "Bye\n"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "https://prettylinkpro.com/pl/plugin-uri"
+msgid "https://prettylinks.com/pl/plugin-uri"
 msgstr ""
 
 #. Description of the plugin/theme

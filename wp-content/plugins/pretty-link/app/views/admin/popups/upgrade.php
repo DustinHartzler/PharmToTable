@@ -21,7 +21,7 @@
 
   <center>
     <button data-popup="upgrade" class="prli-delay-popup button"><?php _e('Remind Me Later', 'pretty-link'); ?></button>
-    <button data-popup="upgrade" data-href="https://prettylinkpro.com/pl/popup/upgrade" class="prli-delay-popup button-primary"><?php _e('Upgrade to Pretty Link Pro', 'pretty-link'); ?></button>
+    <button data-popup="upgrade" data-href="https://prettylinks.com/pl/popup/upgrade" class="prli-delay-popup button-primary"><?php _e('Upgrade to Pretty Links Pro', 'pretty-link'); ?></button>
     <div>&nbsp;</div>
     <a href="" data-popup="upgrade" class="prli-stop-popup"><?php _e('Never Remind Me Again', 'pretty-link'); ?></a>
   </center>

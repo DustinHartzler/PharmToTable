@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Pretty Link
-Plugin URI: https://prettylinkpro.com/pl/plugin-uri
+Plugin Name: Pretty Links
+Plugin URI: https://prettylinks.com/pl/plugin-uri
 Description: Shrink, track and share any URL on the Internet from your WordPress website!
-Version: 2.1.1
+Version: 2.1.2
 Author: Blair Williams
 Author URI: http://blairwilliams.com
 Text Domain: pretty-link

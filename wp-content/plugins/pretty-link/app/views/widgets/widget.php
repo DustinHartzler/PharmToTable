@@ -1,7 +1,7 @@
 <?php if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');} ?>
 <div class="wrap">
   <p style="text-align: left;">
-    <a href="https://prettylinkpro.com/pl/widget/buy"><img style="border: 0px;" src="<?php echo PRLI_IMAGES_URL . '/pl-logo-horiz-RGB.svg'; ?>" width="75%" /></a>
+    <a href="https://prettylinks.com/pl/widget/buy"><img style="border: 0px;" src="<?php echo PRLI_IMAGES_URL . '/pl-logo-horiz-RGB.svg'; ?>" width="75%" /></a>
   </p>
 
   <form name="form1" method="post" action="<?php echo admin_url("admin.php?page=pretty-link"); ?>">

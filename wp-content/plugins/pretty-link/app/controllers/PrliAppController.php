@@ -33,24 +33,24 @@ class PrliAppController extends PrliBaseController {
       $role = $plp_options->min_role;
 
     $prli_menu_hook = add_menu_page(
-      __('Pretty Link | Manage Pretty Links', 'pretty-link'),
-      __('Pretty Link', 'pretty-link'),
+      __('Pretty Links | Manage Pretty Links', 'pretty-link'),
+      __('Pretty Links', 'pretty-link'),
       $role, 'pretty-link',
       'PrliLinksController::route',
       PRLI_IMAGES_URL.'/pretty-link-small.png'
     );
 
-    $prli_add_links_menu_hook = add_submenu_page(
+    $prli_menu_hook = add_submenu_page(
       'pretty-link',
-      __('Pretty Link | Manage Pretty Links', 'pretty-link'),
-      __('Pretty Link', 'pretty-link'),
+      __('Pretty Links | Manage Pretty Links', 'pretty-link'),
+      __('Pretty Links', 'pretty-link'),
       $role, 'pretty-link',
       'PrliLinksController::route'
     );
 
     $prli_add_links_menu_hook = add_submenu_page(
       'pretty-link',
-      __('Pretty Link | Add New Link', 'pretty-link'),
+      __('Pretty Links | Add New Link', 'pretty-link'),
       __('Add New Link', 'pretty-link'),
       $role, 'add-new-pretty-link',
       'PrliLinksController::new_link'
@@ -59,7 +59,7 @@ class PrliAppController extends PrliBaseController {
     $groups_ctrl = new PrliGroupsController();
     add_submenu_page(
       'pretty-link',
-      __('Pretty Link | Groups', 'pretty-link'),
+      __('Pretty Links | Groups', 'pretty-link'),
       __('Groups', 'pretty-link'),
       $role, 'pretty-link-groups',
       array( $groups_ctrl, 'route' )
@@ -69,7 +69,7 @@ class PrliAppController extends PrliBaseController {
       $clicks_ctrl = new PrliClicksController();
       add_submenu_page(
         'pretty-link',
-        __('Pretty Link | Clicks', 'pretty-link'),
+        __('Pretty Links | Clicks', 'pretty-link'),
         __('Clicks', 'pretty-link'),
         $role, 'pretty-link-clicks',
         array( $clicks_ctrl, 'route' )
@@ -79,7 +79,7 @@ class PrliAppController extends PrliBaseController {
     $routes_ctrl = new PrliToolsController();
     add_submenu_page(
       'pretty-link',
-      __('Pretty Link | Tools', 'pretty-link'),
+      __('Pretty Links | Tools', 'pretty-link'),
       __('Tools', 'pretty-link'),
       $role, 'pretty-link-tools',
       array($routes_ctrl,'route')
@@ -88,7 +88,7 @@ class PrliAppController extends PrliBaseController {
     $options_ctrl = new PrliOptionsController();
     add_submenu_page(
       'pretty-link',
-      __('Pretty Link | Options', 'pretty-link'),
+      __('Pretty Links | Options', 'pretty-link'),
       __('Options', 'pretty-link'),
       $role, 'pretty-link-options',
       array( $options_ctrl, 'route' )
@@ -113,18 +113,18 @@ class PrliAppController extends PrliBaseController {
     $pllinks = array();
 
     if($plp_update->is_installed_and_activated()) {
-      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/activated/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinks.com/pl/plugin-actions/activated/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
       $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'">'.__('Activate', 'pretty-link').'</a>';
     }
     else if($plp_update->is_installed()) {
       $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'" class="prli-menu-green">'.__('Activate Pro License', 'pretty-link').'</a>';
-      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/installed/buy" target="_blank" class="prli-menu-red">'.__('Buy', 'pretty-link').'</a>';
-      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/installed/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinks.com/pl/plugin-actions/installed/buy" target="_blank" class="prli-menu-red">'.__('Buy', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinks.com/pl/plugin-actions/installed/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
     }
     else {
-      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/lite/upgrade" class="prli-menu-red" target="_blank">'.__('Upgrade to Pro', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinks.com/pl/plugin-actions/lite/upgrade" class="prli-menu-red" target="_blank">'.__('Upgrade to Pro', 'pretty-link').'</a>';
       $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'" class="prli-menu-green">'.__('Activate Pro License', 'pretty-link').'</a>';
-      $pllinks[] = '<a href="https://prettylinkpro.com/pl/plugin-actions/lite/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="https://prettylinks.com/pl/plugin-actions/lite/docs" target="_blank">'.__('Docs', 'pretty-link').'</a>';
     }
 
     return array_merge($pllinks, $links);
@@ -193,7 +193,7 @@ class PrliAppController extends PrliBaseController {
       );
     }
 
-    if( in_array( $hook, array( 'toplevel_page_pretty-link', 'pretty-link_page_add-new-pretty-link' ) ) ) {
+    if( in_array( $hook, array( 'toplevel_page_pretty-link', 'pretty-links_page_add-new-pretty-link' ) ) ) {
       wp_enqueue_style( 'prli-admin-links', PRLI_CSS_URL . '/prli-admin-links.css', array(), PRLI_VERSION );
       wp_enqueue_script( 'jquery-clippy', PRLI_JS_URL . '/jquery.clippy.js', array('jquery'), PRLI_VERSION );
 
@@ -203,27 +203,27 @@ class PrliAppController extends PrliBaseController {
       wp_localize_script( 'prli-admin-link-list', 'PrliLink', array('clippy_url' => PRLI_JS_URL.'/clippy.swf') );
     }
 
-    if( $hook === 'pretty-link_page_pretty-link-groups' ) {
+    if( $hook === 'pretty-links_page_pretty-link-groups' ) {
       wp_enqueue_style('pl-groups', PRLI_CSS_URL.'/admin_groups.css', null, PRLI_VERSION);
       wp_enqueue_script('pl-groups', PRLI_JS_URL.'/admin_groups.js', array('jquery'), PRLI_VERSION);
     }
 
-    if( $hook === 'pretty-link_page_pretty-link-options' ) {
+    if( $hook === 'pretty-links_page_pretty-link-options' ) {
       wp_enqueue_style('pl-options', PRLI_CSS_URL.'/admin_options.css', null, PRLI_VERSION);
       wp_enqueue_script('pl-options', PRLI_JS_URL.'/admin_options.js', array('jquery'), PRLI_VERSION);
     }
 
     if(in_array($hook, array(
         'toplevel_page_pretty-link',
-        'pretty-link_page_add-new-pretty-link',
-        'pretty-link_page_pretty-link-tools',
-        'pretty-link_page_pretty-link-options'
+        'pretty-links_page_add-new-pretty-link',
+        'pretty-links_page_pretty-link-tools',
+        'pretty-links_page_pretty-link-options'
        ))) {
       wp_enqueue_style('pl-settings-table', PRLI_CSS_URL.'/settings_table.css', null, PRLI_VERSION);
       wp_enqueue_script('pl-settings-table', PRLI_JS_URL.'/settings_table.js', array('jquery'), PRLI_VERSION);
     }
 
-    if( $hook === 'pretty-link_page_pretty-link-clicks' ) {
+    if( $hook === 'pretty-links_page_pretty-link-clicks' ) {
       wp_enqueue_script('google-visualization-api', 'https://www.google.com/jsapi', null, PRLI_VERSION);
       wp_enqueue_style('pl-reports', PRLI_CSS_URL.'/admin_reports.css', null, PRLI_VERSION);
       wp_enqueue_script('pl-reports', PRLI_JS_URL.'/admin_reports.js', array('jquery','google-visualization-api'), PRLI_VERSION);
@@ -277,14 +277,14 @@ class PrliAppController extends PrliBaseController {
       $reinstall_url = wp_nonce_url('update.php?action=upgrade-plugin&plugin=pretty-link/pretty-link.php', 'upgrade-plugin_pretty-link/pretty-link.php');
       ?>
 
-      <div class="updated notice notice-success"><p><strong><?php printf(__('You\'re almost done!<br/>%1$sFinish your Re-Install of Pretty Link Pro%2$s', 'pretty-link'), '<a href="'.$reinstall_url.'">', '</a>'); ?></strong></p></div>
+      <div class="updated notice notice-success"><p><strong><?php printf(__('You\'re almost done!<br/>%1$sFinish your Re-Install of Pretty Links Pro%2$s', 'pretty-link'), '<a href="'.$reinstall_url.'">', '</a>'); ?></strong></p></div>
       <?php
     }
 
     if(isset($_GET['action']) and $_GET['action'] == 'pro-uninstall') {
       $prli_utils->uninstall_pro();
       ?>
-      <div class="updated notice notice-success is-dismissible"><p><strong><?php _e('Pretty Link Pro Successfully Uninstalled.' , 'pretty-link'); ?></strong></p></div>
+      <div class="updated notice notice-success is-dismissible"><p><strong><?php _e('Pretty Links Pro Successfully Uninstalled.' , 'pretty-link'); ?></strong></p></div>
       <?php
     }
 
@@ -384,7 +384,7 @@ class PrliAppController extends PrliBaseController {
         <tr class="plugin-update-tr active" id="pretty-link-upgrade" data-slug="pretty-link" data-plugin="pretty-link/pretty-link.php">
           <td colspan="3" class="plugin-update colspanchange">
             <div class="update-message notice inline notice-error notice-alt">
-              <p><?php printf(__('Your Pretty Link Pro installation isn\'t quite complete yet. %1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s', 'pretty-link'), '<a href="'.$inst_install_url.'">', '</a>'); ?></p>
+              <p><?php printf(__('Your Pretty Links Pro installation isn\'t quite complete yet. %1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s', 'pretty-link'), '<a href="'.$inst_install_url.'">', '</a>'); ?></p>
             </div>
           </td>
         </tr>
@@ -405,7 +405,7 @@ class PrliAppController extends PrliBaseController {
       $inst_install_url = wp_nonce_url('update.php?action=upgrade-plugin&plugin=' . PRLI_PLUGIN_SLUG, 'upgrade-plugin_' . PRLI_PLUGIN_SLUG);
 
       ?>
-        <div class="error" style="padding-top: 5px; padding-bottom: 5px;"><?php printf(__('Your Pretty Link Pro installation isn\'t quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s', 'pretty-link'), '<a href="'.$inst_install_url.'">','</a>'); ?></div>
+        <div class="error" style="padding-top: 5px; padding-bottom: 5px;"><?php printf(__('Your Pretty Links Pro installation isn\'t quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s', 'pretty-link'), '<a href="'.$inst_install_url.'">','</a>'); ?></div>
       <?php
     }
   }

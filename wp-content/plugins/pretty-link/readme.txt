@@ -1,38 +1,38 @@
-=== Pretty Link Lite ===
+=== Shortlinks by Pretty Links - Best WordPress Link Tracking Plugin ===
 Contributors: supercleanse
-Donate link: http://prettylinkpro.com
-Tags: links, link, url, urls, affiliate, affiliates, pretty, marketing, redirect, forward, plugin, twitter, tweet, rewrite, shorturl, hoplink, hop, shortlink, short, shorten, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
+Donate link: https://prettylinks.com
+Tags: links, link, url, urls, affiliate, affiliates, pretty, marketing, redirect, redirection, forward, plugin, twitter, tweet, rewrite, shorturl, hoplink, hop, shortlink, short, shorten, shortening, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
 Requires at least: 4.7
-Tested up to: 4.7.2
-Stable tag: 2.1.1
+Tested up to: 4.9
+Stable tag: 2.1.2
 
 Shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!
 
 == Description ==
 
-= Pretty Link Pro =
+= Pretty Links Pro =
 
-[Upgrade to Pretty Link Pro](http://prettylinkpro.com "Upgrade to Pretty Link Pro")
+[Upgrade to Pretty Links Pro](https://prettylinks.com/why-upgrade/ "Upgrade to Pretty Links Pro")
 
-*Pretty Link Pro* is a **significant upgrade** to *Pretty Link Lite* that adds many tools and redirection types that will allow you to create pretty links automatically, cloak links, replace keywords thoughout your blog with pretty links and much more.  You can learn more about *Pretty Link Pro* here:
+*Pretty Links Pro* is a **significant upgrade** that adds many tools and redirection types that will allow you to create pretty links automatically, cloak links, replace keywords thoughout your blog with pretty links and much more.  You can learn more about *Pretty Links Pro* here:
 
-[About](http://prettylinkpro.com/about "About") | [Features](http://prettylinkpro.com/features "Features") | [Pricing](http://prettylinkpro.com/pricing "Pricing")
+[Learn More](https://prettylinks.com/about "Learn More") | [Pricing](https://prettylinks.com/pricing/plans/ "Pricing")
 
-= Pretty Link Lite =
+= Pretty Links =
 
-Pretty Link enables you to shorten links using your own domain name (as opposed to using tinyurl.com, bit.ly, or any other link shrinking service)! In addition to creating clean links, Pretty Link tracks each hit on your URL and provides a full, detailed report of where the hit came from, the browser, os and host. Pretty Link is a killer plugin for people who want to clean up their affiliate links, track clicks from emails, their links on Twitter to come from their own domain, or generally increase the reach of their website by spreading these links on forums or comments on other blogs.
+Pretty Links enables you to shorten links using your own domain name (as opposed to using tinyurl.com, bit.ly, or any other link shrinking service)! In addition to creating clean links, Pretty Links tracks each hit on your URL and provides a full, detailed report of where the hit came from, the browser, os and host. Pretty Links is a killer plugin for people who want to clean up their affiliate links, track clicks from emails, their links on Twitter to come from their own domain, or generally increase the reach of their website by spreading these links on forums or comments on other blogs.
 
 = Link Examples =
 
-This is a link setup using Pretty Link that redirects to the Pretty Link Homepage where you can find more info about this Plugin:
+This is a link setup using Pretty Links that redirects to the Pretty Links Homepage where you can find more info about this Plugin:
 
 http://blairwilliams.com/pl
 
-Here's a named Pretty Link (I used the slug 'aweber') that does a 307 redirect to my affiliate link for aweber.com:
+Here's a named pretty link (I used the slug 'aweber') that does a 307 redirect to my affiliate link for aweber.com:
 
 http://blairwilliams.com/aweber
 
-Here's a link that Pretty Link generated a random slug for (similar to what bit.ly or tinyurl would do):
+Here's a link that Pretty Links generated a random slug for (similar to what bit.ly or tinyurl would do):
 
 http://blairwilliams.com/w7a
 
@@ -48,13 +48,13 @@ http://blairwilliams.com/w7a
 * Intuitive Javascript / AJAX Admin User Interface
 * Pass custom parameters to your scripts through pretty link and still have full tracking ability
 * Exclude IP Addresses from Stats
-* Enables you to send your Pretty Links via Email directly from your WordPress admin
-* Select Temporary (302 or 307) or Permanent (301) redirection for your Pretty Links
+* Enables you to send your pretty links via Email directly from your WordPress admin
+* Select Temporary (302 or 307) or Permanent (301) redirection for your pretty links
 * Cookie based system for tracking visitor activity across clicks
 * Organize Links into Groups
 * Create nofollow/noindex links
 * Turn tracking on / off on each link
-* Pretty Link Bookmarklet
+* Pretty Links Bookmarklet
 
 == Installation ==
 
@@ -139,44 +139,6 @@ http://blairwilliams.com/w7a
 * PRO Removed the Twitter Badge option ... this is now handled better with the social share bar or through another plugin like Social Warfare
 * PRO Removed the Auto-Tweet capability ... auto-tweeting is handled better on a service like Buffer or Hootsuite
 
-= 1.6.5 =
-* Fixed bug with some reports not showing
-* Fixed twitter auto-posting issue
-* Fixed scheduled posts not auto tweeting
-* Upgraded code to work with PHP 5.4+
-* Other minor bug fixes and code improvements
-
-= 1.6.4 =
-* i18n enhancements
-* Small fix to auto tweeting in pro
-* Fixed small IP address issue in hits
-* Added help text
-* Fixed small Google Analytics issue in pro
-* Fixed issue with meta refresh / javascript redirect in pro
-* Added titles to keywords in pro
-* Added redirect header hooks in pro
-* Security Fixes
-
-= 1.6.3 =
-* Security Fixes
-* Removed Open Flash Charts in favor of Google Charts
-* Fixed some javascript conflicts
-
-= 1.6.2 =
-* Additional Fixes
-
-= 1.6.1 =
-* Security Fixes
-* Fixed some issues with Pretty Link running in WordPress Multisite
-* Altered the way Keyword Replacements can be disabled on individual pages in Pro
-* Fixed an issue with import feature in Pro
-* Fixed an issue causing "ghost" update messages in Pro
-* Updated browscap file for more accurate click tracking
-* Fixed an issue that interfered with Pretty Link's option saving for some users
-
-= 1.6.0 =
-* *Fix* Fixed some potential security vulnerabilities
-
 == Upgrade Notice ==
 
 = 2.0.6 =
@@ -194,17 +156,3 @@ http://blairwilliams.com/w7a
 = 2.0.0 =
 * This is a major new release. To take advantage of the stability, security and performance fixes ... as well as the new features.
 
-= 1.6.4 =
-* This adds some security fixes. Everyone should upgrade.
-
-= 1.6.3 =
-* This adds some security fixes. Everyone should upgrade.
-
-= 1.6.2 =
-* Some additional fixes. Everyone should upgrade.
-
-= 1.6.1 =
-* This adds some security fixes. Everyone should upgrade.
-
-= 1.6.0 =
-* This adds some security fixes. Everyone should upgrade.

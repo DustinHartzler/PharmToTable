@@ -281,7 +281,7 @@ class PrliUpdateController {
         'id'          => $curr_version,
         'slug'        => 'pretty-link',
         'new_version' => $curr_version,
-        'url'         => 'https://prettylinkpro.com/pl/update/url',
+        'url'         => 'https://prettylinks.com/pl/update/url',
         'package'     => $download_url
       );
     }
@@ -389,7 +389,7 @@ class PrliUpdateController {
   }
 
   public function enqueue_scripts($hook) {
-    if($hook == 'pretty-link_page_pretty-link-updates') {
+    if($hook == 'pretty-links_page_pretty-link-updates') {
       wp_register_style('prli-settings-table', PRLI_CSS_URL.'/settings_table.css', array(), PRLI_VERSION);
       wp_enqueue_style('prli-activate-css', PRLI_CSS_URL.'/admin-activate.css', array('prli-settings-table'), PRLI_VERSION);
 

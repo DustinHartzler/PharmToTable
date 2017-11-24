@@ -9,7 +9,7 @@ $url_params = "&group={$group}&size={$size}&search={$search}"
 ?>
 
 <div class="wrap">
-  <?php echo PrliAppHelper::page_title(__('Links', 'pretty-link')); ?>
+  <?php echo PrliAppHelper::page_title(__('Pretty Links', 'pretty-link')); ?>
   <a href="<?php echo admin_url('admin.php?page=add-new-pretty-link'); ?>" class="page-title-action"><?php _e('Add Pretty Link', 'pretty-link'); ?></a>
   <hr class="wp-header-end">
 

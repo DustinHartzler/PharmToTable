@@ -1,6 +1,6 @@
 <?php if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');} ?>
 <div class="wrap">
-  <?php echo PrliAppHelper::page_title(__('Activate Pretty Link Pro', 'pretty-link')); ?>
+  <?php echo PrliAppHelper::page_title(__('Activate Pretty Links Pro', 'pretty-link')); ?>
   <?php require(PRLI_VIEWS_PATH.'/admin/errors.php'); ?>
 
   <div class="prli_spacer"></div>

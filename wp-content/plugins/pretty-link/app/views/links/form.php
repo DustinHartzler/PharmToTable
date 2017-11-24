@@ -21,7 +21,7 @@
         global $plp_update;
         if(!$plp_update->is_installed()) {
           ?>
-          <p class="description"><?php printf(__('Make your life easier by upgrading to %1$sPretty Link Pro%2$s -- get more redirection types, speed, automations and <b>results from your links</b> by %1$sgoing pro today!%2$s', 'pretty-link'),'<a href="https://prettylinkpro.com/pl/link-form/upgrade" target="_blank">','</a>') ?></p>
+          <p class="description"><?php printf(__('Make your life easier by upgrading to %1$sPretty Links Pro%2$s -- get more redirection types, speed, automations and <b>results from your links</b> by %1$sgoing pro today!%2$s', 'pretty-link'),'<a href="https://prettylinks.com/pl/link-form/upgrade" target="_blank">','</a>') ?></p>
           <?php
         } ?>
     </td>
@@ -218,7 +218,7 @@
         <h2><?php _e('Oops!', 'pretty-link'); ?></h2>
 
         <div>
-          <?php printf(__('It looks like you haven\'t %1$supgraded to Pretty Link Pro%2$s yet. Here are just a few things you could be doing with pro:', 'pretty-link'),'<a href="https://prettylinkpro.com/pl/link-form/upgrade-1" target="_blank">','</a>') ?>
+          <?php printf(__('It looks like you haven\'t %1$supgraded to Pretty Links Pro%2$s yet. Here are just a few things you could be doing with pro:', 'pretty-link'),'<a href="https://prettylinks.com/pl/link-form/upgrade-1" target="_blank">','</a>') ?>
         </div>
         <div>&nbsp;</div>
         <ul style="padding-left: 25px;">
@@ -234,7 +234,7 @@
         <div>&nbsp;</div>
         <div><?php _e('We think you\'ll love it!', 'pretty-link'); ?></div>
         <div>&nbsp;</div>
-        <div><a href="https://prettylinkpro.com/pl/link-form/upgrade-2" class="button button-primary"><?php _e('Upgrade to Pro today!', 'pretty-link'); ?></a></div>
+        <div><a href="https://prettylinks.com/pl/link-form/upgrade-2" class="button button-primary"><?php _e('Upgrade to Pro today!', 'pretty-link'); ?></a></div>
       <?php
       }
     ?>

@@ -73,22 +73,22 @@ msgid "Options"
 msgstr "Opciones"
 
 #: app/controllers/PrliAppController.php:99
-msgid "Pretty Link | Pretty Link Pro"
-msgstr "Pretty Link | Pretty Link Pro"
+msgid "Pretty Link | Pretty Links Pro"
+msgstr "Pretty Link | Pretty Links Pro"
 
 #: app/controllers/PrliAppController.php:100
 #: pro/app/controllers/PlpAppController.php:44
-msgid "Pretty Link Pro"
-msgstr "Pretty Link Pro"
+msgid "Pretty Links Pro"
+msgstr "Pretty Links Pro"
 
 #: app/controllers/PrliAppController.php:218
-msgid "You're almost done!<br/>%1$sFinish your Re-Install of Pretty Link Pro%2$s"
+msgid "You're almost done!<br/>%1$sFinish your Re-Install of Pretty Links Pro%2$s"
 msgstr ""
-"¡Casi listo!<br>%1$sCompletar su volver a instalar del Pretty Link Pro %2$s"
+"¡Casi listo!<br>%1$sCompletar su volver a instalar del Pretty Links Pro %2$s"
 
 #: app/controllers/PrliAppController.php:225
-msgid "Pretty Link Pro Successfully Uninstalled."
-msgstr "Pretty Link Pro fue correctamente desinstalado."
+msgid "Pretty Links Pro Successfully Uninstalled."
+msgstr "Pretty Links Pro fue correctamente desinstalado."
 
 #: app/controllers/PrliAppController.php:289
 msgid "Pretty Link Quick Add"
@@ -97,10 +97,10 @@ msgstr "Añadir Pretty Link Rápidamente"
 #: app/controllers/PrliAppController.php:329
 #: app/controllers/PrliAppController.php:347
 msgid ""
-"Your Pretty Link Pro installation isn't quite complete yet.<br/>"
-"%1$sAutomatically Upgrade to Enable Pretty Link Pro%2$s"
+"Your Pretty Links Pro installation isn't quite complete yet.<br/>"
+"%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
-"La instalación Pretty Link Pro no está completa aún.<br/>%1$sActualizar "
+"La instalación Pretty Links Pro no está completa aún.<br/>%1$sActualizar "
 "automaticamente para habilitar Pretty  Link Pro%2$s"
 
 #: app/controllers/PrliClicksController.php:73
@@ -508,16 +508,16 @@ msgstr ""
 "instalación de wordpress."
 
 #: app/models/PrliUpdate.php:26
-msgid "Pretty Link Pro Username"
-msgstr "Pretty Link Pro Usuario"
+msgid "Pretty Links Pro Username"
+msgstr "Pretty Links Pro Usuario"
 
 #: app/models/PrliUpdate.php:27
-msgid "Pretty Link Pro Password"
-msgstr "Pretty Link Pro Contraseña"
+msgid "Pretty Links Pro Password"
+msgstr "Pretty Links Pro Contraseña"
 
 #: app/models/PrliUpdate.php:28
-msgid "Your Pretty Link Pro Username or Password was Invalid"
-msgstr "Su Pretty Link Pro usuario o contraseña es inválido"
+msgid "Your Pretty Links Pro Username or Password was Invalid"
+msgstr "Su Pretty Links Pro usuario o contraseña es inválido"
 
 #: app/models/PrliUpdate.php:128
 msgid ""
@@ -782,10 +782,10 @@ msgstr "Este es el método de redirección para su enlace."
 #: app/views/links/form.php:23
 msgid ""
 "To Enable Cloaked, Meta-Refresh, Javascript, Pixel and Pretty Bar Redirection, "
-"upgrade to %sPretty Link Pro%s"
+"upgrade to %sPretty Links Pro%s"
 msgstr ""
 "Para activar Cloaked, Meta-Refresh, Javascript, Pixel y Pretty Bar redirección, "
-"actualizar a %sPretty Link Pro%s "
+"actualizar a %sPretty Links Pro%s "
 
 #: app/views/links/form.php:30
 msgid "Target URL*"
@@ -936,7 +936,7 @@ msgstr "Opciones de Pro"
 #: app/views/links/form.php:212
 msgid ""
 "To enable Double Redirection, Keyword Replacements, URL Replacements, URL "
-"Rotations, Split Tests, and more, %sUpgrade to Pretty Link Pro%s today!"
+"Rotations, Split Tests, and more, %sUpgrade to Pretty Links Pro%s today!"
 msgstr ""
 "Para habilitar la Redirección Doble, Reemplazos de Palabras Clave, URL "
 "Reemplazos, Rotaciones de Enlace, Rruebas de Split y más, ¡%sActualizar Pretty "
@@ -1189,8 +1189,8 @@ msgid "Pro Account Information"
 msgstr "Información de Cuenta Pro"
 
 #: app/views/options/pro-settings.php:8
-msgid "Pretty Link Pro Account Information"
-msgstr "Información de Cuenta Pretty Link Pro"
+msgid "Pretty Links Pro Account Information"
+msgstr "Información de Cuenta Pretty Links Pro"
 
 #: app/views/options/pro-settings.php:11 pro/app/views/import-export/form.php:5
 #: pro/app/views/reports/list.php:23
@@ -1198,16 +1198,16 @@ msgid "User Manual"
 msgstr "Manual del Usuario"
 
 #: app/views/options/pro-settings.php:18
-msgid "Pretty Link Pro is Installed"
-msgstr "Pretty Link Pro está instalado"
+msgid "Pretty Links Pro is Installed"
+msgstr "Pretty Links Pro está instalado"
 
 #: app/views/options/pro-settings.php:20
 msgid ""
-"Are you sure you want to Un-Install Pretty Link Pro? This will delete your pro "
+"Are you sure you want to Un-Install Pretty Links Pro? This will delete your pro "
 "username & password from your local database, remove all the pro software but "
 "will leave all your data intact incase you want to reinstall sometime :) ..."
 msgstr ""
-"¿Está seguro que desea desinstalar Pretty Link Pro? Esto borrará su pro usuario "
+"¿Está seguro que desea desinstalar Pretty Links Pro? Esto borrará su pro usuario "
 "y la contraseña de su base de datos local, quitará todo el software pro pero le "
 "salen todos sus datos intactos en caso que desee volver a instalar en algún "
 "momento :) ..."
@@ -1242,10 +1242,10 @@ msgstr "¿Listos para llevar sus esfuerzos de marketing al siguiente nivel?"
 
 #: app/views/options/pro-settings.php:35
 msgid ""
-"%1$sPretty Link Pro%2$s will help you automate, share, test and get more clicks "
+"%1$sPretty Links Pro%2$s will help you automate, share, test and get more clicks "
 "and conversions from your Pretty Links!"
 msgstr ""
-"%1$sPretty Link Pro%2$s le ayudará a automatizar, compartir, probar y obtener "
+"%1$sPretty Links Pro%2$s le ayudará a automatizar, compartir, probar y obtener "
 "más clics y conversiones de sus Pretty Links!"
 
 #: app/views/options/pro-settings.php:38
@@ -1558,24 +1558,24 @@ msgid "Add a Pretty Link from your Dashboard:"
 msgstr "Agregar un Pretty Link desde su panel de control:"
 
 #: pro/app/controllers/PlpAppController.php:22
-msgid "Pretty Link Pro | Reports"
-msgstr "Pretty Link Pro | Informes"
+msgid "Pretty Links Pro | Reports"
+msgstr "Pretty Links Pro | Informes"
 
 #: pro/app/controllers/PlpAppController.php:23 pro/app/views/reports/reports.php:7
 msgid "Reports"
 msgstr "Informes"
 
 #: pro/app/controllers/PlpAppController.php:31
-msgid "Pretty Link Pro | Import/Export"
-msgstr "Pretty Link Pro | Importar/Exportar"
+msgid "Pretty Links Pro | Import/Export"
+msgstr "Pretty Links Pro | Importar/Exportar"
 
 #: pro/app/controllers/PlpAppController.php:32
 msgid "Import/Export"
 msgstr "Importar/Exportar"
 
 #: pro/app/controllers/PlpAppController.php:48
-msgid "Pretty Link Pro Options"
-msgstr "Opciones de Pretty Link Pro"
+msgid "Pretty Links Pro Options"
+msgstr "Opciones de Pretty Links Pro"
 
 #: pro/app/controllers/PlpAppController.php:151
 msgid "ERROR: Your Pretty Link was unable to be created"
@@ -1749,11 +1749,11 @@ msgstr "Su Pretty Link informe fue borrado correctamente"
 #: pro/app/controllers/PlpTwitterController.php:74
 msgid ""
 "Twitter has changed the way it authenticates users:</strong> Auto-Posting to "
-"Twitter with Pretty Link Pro will not work until you update your <a href="
+"Twitter with Pretty Links Pro will not work until you update your <a href="
 "\"admin.php?page=pretty-link-options\">Twitter Credentials Here</a>"
 msgstr ""
 "Twitter ha cambiado la forma en autentica a los usuarios: Auto-publicar en "
-"Twitter con Pretty Link Pro no funcionará hasta que actualice sus <a href="
+"Twitter con Pretty Links Pro no funcionará hasta que actualice sus <a href="
 "\"admin.php?page=pretty-link-options\">Credenciales de Twitter aquí</a>"
 
 #: pro/app/controllers/PlpTwitterController.php:114
@@ -1907,8 +1907,8 @@ msgid "At least one link must be selected for analysis."
 msgstr "Debe seleccionar al menos un enlace para el análisis."
 
 #: pro/app/models/PlpReport.php:244
-msgid "Pretty Link Pro: Clicks for"
-msgstr "Pretty Link Pro: Clics para"
+msgid "Pretty Links Pro: Clicks for"
+msgstr "Pretty Links Pro: Clics para"
 
 #: pro/app/models/PlpReport.php:244
 msgid "report between"
@@ -1923,8 +1923,8 @@ msgid "Conversions"
 msgstr "Conversiones"
 
 #: pro/app/models/PlpReport.php:385
-msgid "Pretty Link Pro: Split Report for"
-msgstr "Pretty Link Pro: Split informe para"
+msgid "Pretty Links Pro: Split Report for"
+msgstr "Pretty Links Pro: Split informe para"
 
 #: pro/app/models/PlpReport.php:397 pro/app/models/PlpReport.php:404
 #: pro/app/views/links/form.php:74
@@ -1978,12 +1978,12 @@ msgid ""
 "Note: There are two ways to import a file. 1) Importing to update existing "
 "links and 2) Importing to generate new links. When Importing to generate new "
 "links, you must delte the \"id\" column from the CSV before importing. If the "
-"\"id\" column is present, Pretty Link Pro will attempt to update existing links."
+"\"id\" column is present, Pretty Links Pro will attempt to update existing links."
 msgstr ""
 "Nota: Hay dos formas para importar un archivo. 1) Importar para actualizar y 2) "
 "Importar para generar nuevos enlaces. Al importar para generar nuevos enlaces, "
 "debe borrar la columna \"id\" de la CSV antes de importar. Si la columna \"id\" "
-"está presente, Pretty Link Pro intentará actualizar enlaces existentes."
+"está presente, Pretty Links Pro intentará actualizar enlaces existentes."
 
 #: pro/app/views/import-export/import.php:4
 msgid "Import Results"
@@ -2938,14 +2938,14 @@ msgstr "Ocultar Enlace de Atribución"
 msgid ""
 "Check this to hide the pretty link attribution link on the pretty bar.<br/><br/"
 "><strong>Wait, before you do this, you might want to leave this un-checked and "
-"set the alternate URL of this link to your <em>Pretty Link Pro</em> <a href="
-"\"http://prettylinkpro.com/affiliate-dashboard/\">Affiliate URL</a> to earn a "
+"set the alternate URL of this link to your <em>Pretty Links Pro</em> <a href="
+"\"https://prettylinks.com/affiliate-dashboard/\">Affiliate URL</a> to earn a "
 "few bucks while you are at it."
 msgstr ""
 "Marque eso para ocultar el pretty link de atribución en la pretty bar.<br/><br/"
 "><strong>Espere</strong>, antes de hacer esto, usted puede dejarlo sin equipaje "
-"y configurar la URL alternativa de este enlace a su <em>Pretty Link Pro</em> <a "
-"href=\"http://prettylinkpro.com/affiliate-dashboard/\">URL de Afiliado</a> para "
+"y configurar la URL alternativa de este enlace a su <em>Pretty Links Pro</em> <a "
+"href=\"https://prettylinks.com/affiliate-dashboard/\">URL de Afiliado</a> para "
 "ganar unos cuantos dólares mientras está en el proceso."
 
 #: pro/app/views/options/form.php:573
@@ -2959,12 +2959,12 @@ msgstr "Alternativo URL de Atribución por la Pretty Bar"
 #: pro/app/views/options/form.php:576
 msgid ""
 "If set, this will replace the Pretty Bars attribution URL. This is a very good "
-"place to put your <em>Pretty Link Pro</em> <a href=\"http://prettylinkpro.com/"
+"place to put your <em>Pretty Links Pro</em> <a href=\"https://prettylinks.com/"
 "affiliate-dashboard/\">Affiliate Link</a>."
 msgstr ""
 "Si establece, esto va a reemplazar la URL de la atribución de Pretty Bars. Este "
-"es un muy buen lugar para poner su <em>Pretty Link Pro</em> <a href=\"http://"
-"prettylinkpro.com/affiliate-dashboard/\">Enlace Afiliado</a>."
+"es un muy buen lugar para poner su <em>Pretty Links Pro</em> <a href=\"https://"
+"prettylinks.com/affiliate-dashboard/\">Enlace Afiliado</a>."
 
 #: pro/app/views/options/form.php:590
 msgid "Social Buttons Options"
