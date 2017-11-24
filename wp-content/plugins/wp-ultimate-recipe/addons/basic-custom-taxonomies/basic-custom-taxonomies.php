@@ -121,6 +121,7 @@ if( !WPUltimateRecipe::is_premium_active() )
                         'show_ui' => true,
                         'show_tagcloud' => true,
                         'hierarchical' => true,
+                        'show_admin_column' => true,
                         'rewrite' => array(
                             'slug' => sanitize_title( $slug ),
                             'hierarchical' => true

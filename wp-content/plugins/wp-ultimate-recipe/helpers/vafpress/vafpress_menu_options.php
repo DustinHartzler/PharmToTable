@@ -280,6 +280,13 @@ $admin_menu = array(
                                     ),
                                     'validation' => 'required',
                                 ),
+                                array(
+                                    'type' => 'toggle',
+                                    'name' => 'recipe_metadata_opt_out_rich_pins',
+                                    'label' => __('Opt out of Pinterest Rich Pins', 'wp-ultimate-recipe'),
+                                    'description' => __( 'Enable this to tell Pinterest NOT to display your pins as rich pins.', 'wp-ultimate-recipe' ),
+                                    'default' => '0',
+                                ),
                             ),
                         ),
                         array(
@@ -892,7 +899,7 @@ $admin_menu = array(
                             'name' => 'recipe_sharing_enable',
                             'label' => __('Enable Sharing', 'wp-ultimate-recipe'),
                             'description' => __( 'Show sharing buttons.', 'wp-ultimate-recipe' ),
-                            'default' => '1',
+                            'default' => '0',
                         ),
                     ),
                 ),

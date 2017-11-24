@@ -4,6 +4,14 @@ class WPURP_Metadata {
 
     public function __construct()
     {
+        add_action( 'wp_head', array( $this, 'metadata_in_head' ) );
+    }
+
+    public function metadata_in_head()
+    {
+        if( WPUltimateRecipe::option( 'recipe_metadata_opt_out_rich_pins', '' ) == '1' ) {
+            echo '<meta name="pinterest-rich-pin" content="false" />';
+        }
     }
 
     public function get_metadata( $recipe )

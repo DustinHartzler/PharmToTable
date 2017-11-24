@@ -81,7 +81,7 @@ if( !isset( $required_fields ) ) $required_fields = array();
             <td class="recipe-general-form-field">
                 <input type="text" name="recipe_servings" id="recipe_servings" value="<?php echo esc_attr( $recipe->servings() ); ?>" />
                 <input type="text" name="recipe_servings_type" id="recipe_servings_type" value="<?php echo esc_attr( $recipe->servings_type() ); ?>" />
-                <span class="recipe-general-form-notes"> <?php _e( '(e.g. 2 people, 3 loafs, ...)', 'wp-ultimate-recipe' ); ?></span>
+                <span class="recipe-general-form-notes"> <?php _e( '(e.g. 2 people, 3 loaves, ...)', 'wp-ultimate-recipe' ); ?></span>
             </td>
         </tr>
         <tr class="recipe-general-form-prep-time">

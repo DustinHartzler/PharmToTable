@@ -151,6 +151,11 @@ html body .wpurp-container {
     margin: 10px 0;
     text-align: center; }
 
+.wpurp-print .wpurp-jump-to-recipe-shortcode,
+.wpurp-print .wpurp-print-recipe-shortcode,
+.wpurp-print .wpurp-recipe-snippets {
+  display: none; }
+
 @media (max-width: 600px) {
   html body .wpurp-container .wpurp-mediavine-desktop {
     float: none;

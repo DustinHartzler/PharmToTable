@@ -97,6 +97,7 @@ class WPURP_Recipe_Post_Type {
      */
     public function remove_recipe_slug_in_parse_request( $query ) {
         if(WPUltimateRecipe::option( 'remove_recipe_slug', '0' ) == '1' ) {
+            if ( 'subscriptions' === $query->get('name') ) return; // Fix for Mailpoet.
             if ( !$query->is_main_query() ) return;
             if ( 2 != count( $query->query ) || ! isset( $query->query['page'] ) ) {
                 return;

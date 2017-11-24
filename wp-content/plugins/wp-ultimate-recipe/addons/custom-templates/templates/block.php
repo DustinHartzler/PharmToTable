@@ -438,6 +438,7 @@ class WPURP_Template_Block {
                     $val = WPUltimateRecipe::option( 'favorite_recipes_enabled', '0' );
                 }
             } else if ( in_array( $condition['setting'], array(
+                'recipe_sharing_enable',
                 'recipe_linkback',
                 'partners_integrations_yummly_enable',
                 'partners_integrations_foodfanatic_enable',

@@ -3,7 +3,7 @@ Contributors: BrechtVds
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QG7KZMGFU325Y
 Tags: recipe, recipes, ingredients, food, nutrition, nutritional, cooking, seo, schema.org, json-ld, meal plan, meal planner
 Requires at least: 3.5
-Tested up to: 4.8
+Tested up to: 4.9
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -102,6 +102,14 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 10. WP Ultimate Recipe automatically formats your data so it can be picked up by Google Recipe Search and others. Great for SEO!
 
 == Changelog ==
+
+= 3.8.0 =
+* Feature: Adjustable servings in instructions with a shortcode
+* Feature: Setting to opt out of Pinterest Rich Pins
+* Feature: Show taxonomies on recipes admin overview
+* Improvement: Plugin header for translations
+* Improvement: Hide recipe snippets in print version
+* Fix: Mailpoet compatibility problem
 
 = 3.7.0 =
 * Feature: AdThrive partner integration
@@ -558,6 +566,9 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 * Very first version of this plugin
 
 == Upgrade notice ==
+
+= 3.8.0 =
+Update for a few new recipe features
 
 = 3.7.0 =
 Update to ensure WordPress 4.8 compatibility

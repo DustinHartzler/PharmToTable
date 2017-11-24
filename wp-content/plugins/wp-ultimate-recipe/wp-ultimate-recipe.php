@@ -3,12 +3,14 @@
 Plugin Name: WP Ultimate Recipe
 Plugin URI: http://www.wpultimaterecipe.com
 Description: Everything a Food Blog needs. Beautiful SEO friendly recipes, print versions, visitor interaction, ...
-Version: 3.7.0
+Version: 3.8.0
 Author: Bootstrapped Ventures
 Author URI: http://bootstrapped.ventures
 License: GPLv2
+Text Domain: wp-ultimate-recipe
+Domain Path: /lang
 */
-define( 'WPURP_VERSION', '3.7.0' );
+define( 'WPURP_VERSION', '3.8.0' );
 define( 'WPURP_POST_TYPE', 'recipe' );
 
 class WPUltimateRecipe {
@@ -179,6 +181,7 @@ class WPUltimateRecipe {
         $this->helper( 'vafpress_menu' );
         $this->helper( 'vafpress_shortcode' );
 
+        $this->helper( 'shortcodes/adjustable_shortcode' );
         $this->helper( 'shortcodes/index_shortcode' );
         $this->helper( 'shortcodes/jump_shortcode' );
         $this->helper( 'shortcodes/print_shortcode' );

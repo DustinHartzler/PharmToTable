@@ -242,6 +242,14 @@ html body .wpurp-container {
     }
 }
 
+.wpurp-print {
+    .wpurp-jump-to-recipe-shortcode,
+    .wpurp-print-recipe-shortcode,
+    .wpurp-recipe-snippets {
+        display: none;
+    }
+}
+
 @media (max-width: 600px) {
     html body .wpurp-container .wpurp-mediavine-desktop {
         float: none;

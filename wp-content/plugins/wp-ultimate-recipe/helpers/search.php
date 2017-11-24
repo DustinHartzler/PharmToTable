@@ -71,6 +71,17 @@ class WPURP_Search {
             $searchable_recipe .= ' - ';
             $searchable_recipe .= $recipe->notes();
 
+            // Custom fields searchable.
+            $custom_fields_addon = WPUltimateRecipe::addon( 'custom-fields' );
+            if ( $custom_fields_addon ) {
+                $custom_fields = $custom_fields_addon->get_custom_fields();
+
+                foreach( $custom_fields as $key => $custom_field ) {
+                    $searchable_recipe .= ' - ';
+                    $searchable_recipe .= $recipe->custom_field( $key );
+                }
+            }
+
             // Prevent shortcodes
             $searchable_recipe = str_replace( '[', '(', $searchable_recipe );
             $searchable_recipe = str_replace( ']', ')', $searchable_recipe );

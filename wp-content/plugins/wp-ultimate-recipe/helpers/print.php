@@ -93,7 +93,34 @@ class WPURP_Print {
             // Different print functions.
             switch ( $print_function ) {
                 case 'meal_plan_recipes':
+                    // TODO Clean up this mess.
                     $styles .= '<link rel="stylesheet" type="text/css" href="' . WPUltimateRecipe::get()->coreUrl . '/css/layout_base.css">';
+
+                    // Change servings of recipes.
+                    $scripts .= '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>';
+                    $scripts .= '<script src="' . WPUltimateRecipe::get()->coreUrl . '/vendor/fraction-js/index.js"></script>';
+                    $scripts .= '<script src="' . WPUltimateRecipe::get()->coreUrl . '/js/adjustable_servings.js"></script>';
+                    $scripts .= '<script>var wpurp_servings = {';
+                    $scripts .= 'precision: ' . intval( WPUltimateRecipe::option( 'recipe_adjustable_servings_precision', 2 ) ) . ',';
+                    $scripts .= 'decimal_character: "' . WPUltimateRecipe::option( 'recipe_decimal_character', '.' ) . '"';
+                    $scripts .= '}</script>';
+
+                    // TODO Use a JS file.
+                    $scripts .= '<script>var mealPlannerPrintSetServings = function(servings) {';
+                    $scripts .= 'for(var recipe_id in servings) {for(var i=0,l=servings[recipe_id].length; i<l; i++){';
+                    $scripts .= 'var old_servings = parseInt(jQuery("[id=wpurp-container-recipe-" + recipe_id + "]:eq(0)").data("servings-original"));';
+                    $scripts .= 'var new_servings = servings[recipe_id][i];';
+                    $scripts .= 'if(old_servings !== new_servings) {';
+                    $scripts .= 'var amounts = jQuery("[id=wpurp-container-recipe-" + recipe_id + "]:eq(" + i + ")").find(".wpurp-recipe-ingredient-quantity");';
+                    $scripts .= 'wpurp_adjustable_servings.updateAmounts(amounts, old_servings, new_servings);';
+                    $scripts .= 'wpurp_adjustable_servings.updateShortcode(jQuery("[id=wpurp-container-recipe-" + recipe_id + "]:eq(" + i + ")"), new_servings);';
+                    $scripts .= 'jQuery("[id=wpurp-container-recipe-" + recipe_id + "]:eq(" + i + ")").find(".wpurp-recipe-servings").text(new_servings);';
+                    $scripts .= '}}}};';
+                    $scripts .= '</script>';
+
+                    //var amounts = jQuery('.wpurp-recipe-ingredient-quantity');
+                    // wpurp_adjustable_servings.updateAmounts(amounts, old_servings, new_servings);
+                    // jQuery('.wpurp-recipe-servings').text(new_servings);
 
                     if( WPUltimateRecipe::is_premium_active() ) {
                         $styles .= '<link rel="stylesheet" type="text/css" href="' . WPUltimateRecipePremium::get()->premiumUrl . '/addons/nutritional-information/css/nutrition-label.css">';

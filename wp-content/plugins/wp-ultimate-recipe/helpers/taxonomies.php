@@ -44,7 +44,7 @@ class WPURP_Taxonomies {
 
         $taxonomies = $this->get();
 
-        foreach($taxonomies as $name => $options) {
+        foreach($taxonomies as $name => $options) {            
             register_taxonomy(
                 $name,
                 'recipe',
@@ -131,6 +131,10 @@ class WPURP_Taxonomies {
             ),
             $tag
         );
+
+        if ( 'ingredient' !== $tag ) {
+            $arr[$tag]['show_admin_column'] = true;
+        }
 
         return $arr;
     }

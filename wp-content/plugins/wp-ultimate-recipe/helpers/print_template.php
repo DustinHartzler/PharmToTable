@@ -9,13 +9,13 @@
 
     <link rel="stylesheet" type="text/css" href="<?php echo WPUltimateRecipe::get()->coreUrl; ?>/css/layout_base.css">
 
+    <script src="<?php echo WPUltimateRecipe::get()->coreUrl; ?>/js/adjustable_servings.js"></script>
+
 <?php if( WPUltimateRecipe::is_premium_active() ) { ?>
     <script src="<?php echo WPUltimateRecipePremium::get()->premiumUrl; ?>/addons/unit-conversion/vendor/js-quantities.js"></script>
     <script src="<?php echo WPUltimateRecipePremium::get()->premiumUrl; ?>/addons/unit-conversion/js/unit-conversion.js"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo WPUltimateRecipePremium::get()->premiumUrl; ?>/addons/nutritional-information/css/nutrition-label.css">
     <link rel="stylesheet" type="text/css" href="<?php echo WPUltimateRecipePremium::get()->premiumUrl; ?>/addons/user-ratings/css/user-ratings.css">
-<?php } else { ?>
-    <script src="<?php echo WPUltimateRecipe::get()->coreUrl; ?>/js/adjustable_servings.js"></script>
 <?php } ?>
 
 <?php if( $fonts ) { ?>
@@ -50,7 +50,8 @@
             var new_system = <?php echo $unit_system !== false ? $unit_system : 'old_system'; ?>;
 
             if(old_servings != new_servings) {
-                RecipeUnitConversion.adjustServings(ingredientList, old_servings, new_servings)
+                RecipeUnitConversion.adjustServings(ingredientList, old_servings, new_servings);
+                wpurp_adjustable_servings.updateShortcode(jQuery('.wpurp-container'), new_servings);
                 jQuery('.wpurp-recipe-servings').text(new_servings);
             }
 
@@ -61,6 +62,7 @@
             if(old_servings != new_servings) {
                 var amounts = jQuery('.wpurp-recipe-ingredient-quantity');
                 wpurp_adjustable_servings.updateAmounts(amounts, old_servings, new_servings);
+                wpurp_adjustable_servings.updateShortcode(jQuery('.wpurp-container'), new_servings);
                 jQuery('.wpurp-recipe-servings').text(new_servings);
             }
 <?php } ?>
@@ -69,7 +71,7 @@
         });
     </script>
 </head>
-<body class="<?php echo is_rtl() ? 'rtl' : ''; ?>">
+<body class="wpurp-print<?php echo is_rtl() ? ' rtl' : ''; ?>">
 <?php
 remove_filter( 'the_content', 'wpautop' );
 echo apply_filters( 'the_content', $recipe->output_string( 'print' ) );

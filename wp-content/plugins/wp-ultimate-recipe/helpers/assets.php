@@ -95,7 +95,7 @@ class WPURP_Assets {
             ),
             array(
                 'name' => 'sharrre',
-                'setting' => array( 'recipe_sharing_enable', '1' ),
+                'setting_inverse' => array( 'recipe_sharing_enable', '' ),
                 'file' => '/vendor/sharrre/jquery.sharrre.min.js',
                 'public' => true,
                 'deps' => array(
@@ -103,7 +103,7 @@ class WPURP_Assets {
                 ),
             ),
             array(
-                'setting' => array( 'recipe_sharing_enable', '1' ),
+                'setting_inverse' => array( 'recipe_sharing_enable', '' ),
                 'file' => '/js/sharing_buttons.js',
                 'public' => true,
                 'deps' => array(
@@ -231,7 +231,7 @@ class WPURP_Assets {
                                 break;
 
                             case 'meal_plan_form':
-                                if( !in_array( $hook, array( 'post.php', 'post-new.php' ) ) || ( isset( $_GET['post_type'] ) && $_GET['post_type'] != WPURP_MEAL_PLAN_POST_TYPE ) ) continue 2; // Switch is consider a loop statement for continue
+                                if( !in_array( $hook, array( 'post.php', 'post-new.php', 'recipe_page_wpurp_view_meal_plan' ) ) || ( 'recipe_page_wpurp_view_meal_plan' !== $hook && isset( $_GET['post_type'] ) && $_GET['post_type'] != WPURP_MEAL_PLAN_POST_TYPE ) ) continue 2; // Switch is consider a loop statement for continue
                                 break;
 
                             case 'recipe_settings':
