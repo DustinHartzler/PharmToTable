@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Your Website Engineer Admin Color Scheme
+ * Plugin Name: Custom Functions for Pharm To Table
  * Description: A custom admin color scheme generated with <a href="http://themergency.com/generators/admin-color-scheme-generator" target="_blank">Admin Color Scheme Generator</a>
  * Author: Dustin Hartzler
  * Version: 1.0
