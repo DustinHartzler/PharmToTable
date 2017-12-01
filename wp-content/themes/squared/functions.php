@@ -682,7 +682,7 @@ function thrive_exclude_category( $query ) {
 	return $query;
 }
 
-add_filter( 'pre_get_posts', 'thrive_exclude_category' );
+//add_filter( 'pre_get_posts', 'thrive_exclude_category' );
 
 // prevent wrapping of paragraph tags around shortcodes
 add_filter( 'the_content', 'thrive_remove_autop_shortcodes' );
