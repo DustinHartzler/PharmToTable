@@ -4,7 +4,7 @@ Donate link: https://prettylinks.com
 Tags: links, link, url, urls, affiliate, affiliates, pretty, marketing, redirect, redirection, forward, plugin, twitter, tweet, rewrite, shorturl, hoplink, hop, shortlink, short, shorten, shortening, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
 Requires at least: 4.7
 Tested up to: 4.9
-Stable tag: 2.1.2
+Stable tag: 2.1.4
 
 Shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!
 
@@ -65,6 +65,23 @@ http://blairwilliams.com/w7a
 3. Make sure you have changed your permalink Common Settings in Settings -> Permalinks away from "Default" to something else. I prefer using custom and then "/%year%/%month%/%postname%/" for the simplest possible URL slugs with the best performance.
 
 == Changelog ==
+
+= 2.1.4 =
+* Fixed IP conflict with Flywheel
+* Fixed wp_redirect race condition
+
+= 2.1.3 =
+* Addressed security vulnerabilities
+* Fixed content-type header
+* Fixed -1 PHP memory_limit error
+* Updated redirects to use wp_redirect()
+* PRO Enhanced WooCommerce keyword replacements
+* PRO Fixed replacing keywords in header and other HTML tags
+* PRO Fixed link expiration dates being 1 day off
+
+= 2.1.2 =
+* Updated user manual link
+* Rebranded from Pretty Link to Pretty Links
 
 = 2.1.1 =
 * Redeploy to WP Repo

@@ -28,7 +28,7 @@ class PrliAppController extends PrliBaseController {
   public function menu() {
     global $prli_options, $plp_options, $plp_update;
 
-    $role = 'administrator';
+    $role = 'manage_options';
     if(isset($plp_options->min_role))
       $role = $plp_options->min_role;
 

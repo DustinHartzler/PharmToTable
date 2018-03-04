@@ -3,7 +3,7 @@
 Plugin Name: Pretty Links
 Plugin URI: https://prettylinks.com/pl/plugin-uri
 Description: Shrink, track and share any URL on the Internet from your WordPress website!
-Version: 2.1.2
+Version: 2.1.4
 Author: Blair Williams
 Author URI: http://blairwilliams.com
 Text Domain: pretty-link
@@ -59,7 +59,7 @@ define('PRLI_EDITION', 'pretty-link-lite');
 
 // Let's give pretty link plenty of room to work with
 $mem = abs(intval(@ini_get('memory_limit')));
-if( $mem and $mem < 128 ) {
+if($mem && $mem > 1 && $mem < 128) { //$mem = 1 is probably abs(-1), -1 means "unlimited"
   @ini_set('memory_limit', '128M');
 }
 

@@ -85,6 +85,11 @@ class PrliPostsController extends PrliBaseController {
   public function create_pretty_link() {
     $valid_vars = array('target', 'slug', 'redirect', 'nofollow', 'tracking');
 
+    if(!PrliUtils::is_authorized()) {
+      echo "invalid_user";
+      die();
+    }
+
     if(!isset($_POST) || !($valid_vars == array_intersect($valid_vars, array_keys($_POST)))) {
       echo "invalid_inputs";
       die();

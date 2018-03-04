@@ -254,6 +254,7 @@ class PrliUtils {
     $query = "SELECT * FROM ".$prli_link->table_name." WHERE slug='$slug' LIMIT 1";
     $pretty_link = $wpdb->get_row($query);
     $pretty_link_target = apply_filters( 'prli_target_url', array( 'url' => $pretty_link->url, 'link_id' => $pretty_link->id, 'redirect_type' => $pretty_link->redirect_type ) );
+    $prli_edition = ucwords(preg_replace('/-/', ' ', PRLI_EDITION));
 
     // Error out when url is blank
     if($pretty_link->redirect_type != 'pixel' && (!isset($pretty_link_target['url']) || empty($pretty_link_target['url']))) {
@@ -380,28 +381,20 @@ class PrliUtils {
     header("Cache-Control: post-check=0, pre-check=0", false);
     header("Pragma: no-cache");
     header("Expires: Mon, 07 Jul 1777 07:07:07 GMT"); // Battle of Hubbardton
-    $prli_edition = ucwords(preg_replace('/-/', ' ', PRLI_EDITION));
     header("X-Redirect-Powered-By: {$prli_edition} " . PRLI_VERSION . " http://prettylink.com");
 
+    self::include_pluggables('wp_redirect');
     switch($pretty_link->redirect_type) {
       case '301':
-        header("HTTP/1.1 301 Moved Permanently");
-        header('Location: '.$pretty_link_url.$param_string, true, 301);
-        break;
-      case '302':
-        header("HTTP/1.1 302 Found");
-        header('Location: '.$pretty_link_url.$param_string, true, 302);
-        break;
+        wp_redirect("{$pretty_link_url}{$param_string}", 301);
+        exit;
+      case '307':
+        wp_redirect("{$pretty_link_url}{$param_string}", 307);
+        exit;
       default:
-        if( $pretty_link->redirect_type == '307' ||
-            !$plp_update->is_installed() ) {
-          if($_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.0') {
-            header("HTTP/1.1 302 Found");
-          }
-          else {
-            header("HTTP/1.1 307 Temporary Redirect");
-          }
-          header('Location: '.$pretty_link_url.$param_string, true, 307);
+        if($pretty_link->redirect_type == '302' || !$plp_update->is_installed()) {
+          wp_redirect("{$pretty_link_url}{$param_string}", 302);
+          exit;
         }
         else {
           do_action('prli_issue_cloaked_redirect', $pretty_link->redirect_type, $pretty_link, $pretty_link_url, $param_string);
@@ -428,6 +421,11 @@ class PrliUtils {
     }
     elseif(isset($_SERVER['HTTP_FORWARDED']) && $_SERVER['HTTP_FORWARDED'] != '127.0.0.1') {
       $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    }
+
+    $ips = explode(',', $ipaddress);
+    if(isset($ips[1])) {
+      $ipaddress = $ips[0]; //Fix for flywheel
     }
 
     return $ipaddress;
@@ -1148,11 +1146,11 @@ class PrliUtils {
   }
 
   public static function is_admin() {
-    return self::current_user_can('add_users');
+    return self::current_user_can('manage_options');
   }
 
   public static function is_subscriber() {
-    return (self::current_user_can('subscriber'));
+    return self::current_user_can('subscriber');
   }
 
   // Checks to see that the user is authorized to use Pretty Link based on the minimum role
@@ -1161,7 +1159,8 @@ class PrliUtils {
 
     $prli_update = new PrliUpdateController();
 
-    $role = 'add_users';
+    $role = 'manage_options';
+
     if($prli_update->is_installed_and_activated() && isset($plp_options) && isset($plp_options->min_role)) {
       $role = $plp_options->min_role;
     }

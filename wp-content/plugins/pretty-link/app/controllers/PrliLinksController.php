@@ -331,8 +331,7 @@ class PrliLinksController extends PrliBaseController {
   }
 
   // Set defaults and grab get or post of each possible param
-  public static function get_params_array()
-  {
+  public static function get_params_array() {
     return array(
        'action'     => (isset($_REQUEST['action'])?$_REQUEST['action']:'list'),
        'regenerate' => (isset($_REQUEST['regenerate'])?$_REQUEST['regenerate']:'false'),
@@ -343,7 +342,7 @@ class PrliLinksController extends PrliBaseController {
        'search'     => (isset($_REQUEST['search'])?$_REQUEST['search']:''),
        'sort'       => (isset($_REQUEST['sort'])?$_REQUEST['sort']:''),
        'sdir'       => (isset($_REQUEST['sdir'])?$_REQUEST['sdir']:''),
-       'message'    => (isset($_REQUEST['message'])?$_REQUEST['message']:'')
+       'message'    => (isset($_REQUEST['message'])?sanitize_text_field($_REQUEST['message']):'')
     );
   }
 

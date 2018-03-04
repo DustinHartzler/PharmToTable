@@ -21,7 +21,7 @@ class PrliUpdateController {
       add_filter('plugins_api', array($this, 'plugin_info'), 11, 3);
     }
 
-    //add_action('admin_init', array($this, 'activate_from_define'));
+    add_action('admin_init', array($this, 'activate_from_define'));
 
     add_action('admin_notices', array($this, 'activation_warning'));
     add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
@@ -146,11 +146,13 @@ class PrliUpdateController {
   }
 
   public function activate_from_define() {
-    if( defined('PRETTYLINK_LICENSE_KEY') &&
-        $this->mothership_license != PRETTYLINK_LICENSE_KEY ) {
+    if(!$this->is_installed()) { return; }
+
+    if(defined('PRETTYLINK_LICENSE_KEY') && $this->mothership_license != PRETTYLINK_LICENSE_KEY) {
       $message = '';
       $errors = array();
       $this->mothership_license = stripslashes(PRETTYLINK_LICENSE_KEY);
+      update_option($this->mothership_license_str, PRETTYLINK_LICENSE_KEY);
       $domain = urlencode(PrliUtils::site_domain());
 
       try {
@@ -162,6 +164,7 @@ class PrliUpdateController {
         }
 
         $act = $this->send_mothership_request("/license_keys/activate/".PRETTYLINK_LICENSE_KEY, $args, 'post');
+        update_option('prli_activated', true); // if we get here we're activated
 
         $this->manually_queue_update();
 

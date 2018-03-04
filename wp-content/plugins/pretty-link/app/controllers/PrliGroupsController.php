@@ -35,6 +35,11 @@ class PrliGroupsController extends PrliBaseController {
   public function ajax_new_group() {
     global $prli_group;
 
+    if(!PrliUtils::is_authorized()) {
+      return json_encode( array( 'status' => 'failure',
+                                 'message' => __('Cannot add group because current user is not authorized.', 'pretty-link') ) );
+    }
+
     // Default response
     $response = json_encode( array( 'status' => 'failure',
                                     'message' => __('An unknown error occurred when creating your group.', 'pretty-link') ) );

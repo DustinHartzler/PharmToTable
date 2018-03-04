@@ -1,14 +1,14 @@
-# Copyright (C) 2017 Pretty Links
+# Copyright (C) 2018 Pretty Links
 # This file is distributed under the same license as the Pretty Links package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Links 2.1.2\n"
+"Project-Id-Version: Pretty Links 2.1.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
-"POT-Creation-Date: 2017-08-31 20:48:45+00:00\n"
+"POT-Creation-Date: 2018-01-23 22:44:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -17,7 +17,7 @@ msgstr ""
 msgid "Pretty Links | Manage Pretty Links"
 msgstr ""
 
-#. #-#-#-#-#  pretty-link.pot (Pretty Links 2.1.2)  #-#-#-#-#
+#. #-#-#-#-#  pretty-link.pot (Pretty Links 2.1.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: app/controllers/PrliAppController.php:37
 #: app/controllers/PrliAppController.php:46 app/views/links/list.php:12
@@ -142,34 +142,38 @@ msgid "All Links"
 msgstr ""
 
 #: app/controllers/PrliGroupsController.php:40
+msgid "Cannot add group because current user is not authorized."
+msgstr ""
+
+#: app/controllers/PrliGroupsController.php:45
 msgid "An unknown error occurred when creating your group."
 msgstr ""
 
-#: app/controllers/PrliGroupsController.php:49
+#: app/controllers/PrliGroupsController.php:54
 msgid "Group Created"
 msgstr ""
 
-#: app/controllers/PrliGroupsController.php:56
+#: app/controllers/PrliGroupsController.php:61
 msgid "A name must be specified for your new group name"
 msgstr ""
 
-#: app/controllers/PrliGroupsController.php:61
+#: app/controllers/PrliGroupsController.php:66
 msgid "Cannot add group because security nonce failed"
 msgstr ""
 
-#: app/controllers/PrliGroupsController.php:71
+#: app/controllers/PrliGroupsController.php:76
 msgid "Create a group and use it to organize your Pretty Links."
 msgstr ""
 
-#: app/controllers/PrliGroupsController.php:95
+#: app/controllers/PrliGroupsController.php:100
 msgid "Your Pretty Link Group was Successfully Created"
 msgstr ""
 
-#: app/controllers/PrliGroupsController.php:125
+#: app/controllers/PrliGroupsController.php:130
 msgid "Your Pretty Link Group was Successfully Updated"
 msgstr ""
 
-#: app/controllers/PrliGroupsController.php:134
+#: app/controllers/PrliGroupsController.php:139
 msgid "Your Pretty Link Group was Successfully Deleted"
 msgstr ""
 
@@ -207,7 +211,7 @@ msgstr ""
 msgid "Your links were deleted successfully"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:503
+#: app/controllers/PrliLinksController.php:502
 msgid "Pretty Link Cleanup Visitor Locks"
 msgstr ""
 
@@ -276,23 +280,23 @@ msgstr ""
 msgid "Why you creepin'?"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:303
+#: app/controllers/PrliUpdateController.php:306
 msgid "Check for Update"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:372
+#: app/controllers/PrliUpdateController.php:375
 msgid "You had an HTTP error connecting to Caseproof's Mothership API"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:384
+#: app/controllers/PrliUpdateController.php:387
 msgid "Your License Key was invalid"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:410
+#: app/controllers/PrliUpdateController.php:413
 msgid "You do not have access."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:414
+#: app/controllers/PrliUpdateController.php:417
 msgid "Edge updates couldn't be updated."
 msgstr ""
 
@@ -1545,7 +1549,7 @@ msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:67
 #: pro/app/controllers/PlpLinksController.php:628
-#: pro/app/controllers/PlpLinksController.php:675
+#: pro/app/controllers/PlpLinksController.php:667
 #: pro/app/views/options/nav.php:5
 msgid "Pretty Bar"
 msgstr ""
@@ -1557,19 +1561,19 @@ msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:69
 #: pro/app/controllers/PlpLinksController.php:630
-#: pro/app/controllers/PlpLinksController.php:677
+#: pro/app/controllers/PlpLinksController.php:669
 msgid "Pixel"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:70
 #: pro/app/controllers/PlpLinksController.php:631
-#: pro/app/controllers/PlpLinksController.php:678
+#: pro/app/controllers/PlpLinksController.php:670
 msgid "Meta Refresh"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:71
 #: pro/app/controllers/PlpLinksController.php:632
-#: pro/app/controllers/PlpLinksController.php:679
+#: pro/app/controllers/PlpLinksController.php:671
 msgid "Javascript"
 msgstr ""
 
@@ -1766,11 +1770,11 @@ msgstr ""
 msgid "Pro Import/Export"
 msgstr ""
 
-#: pro/app/controllers/PlpKeywordsController.php:67
+#: pro/app/controllers/PlpKeywordsController.php:70
 msgid "Pretty Link Post Build Index"
 msgstr ""
 
-#: pro/app/controllers/PlpKeywordsController.php:464
+#: pro/app/controllers/PlpKeywordsController.php:467
 #: pro/app/views/links/form.php:128
 msgid "Keywords"
 msgstr ""
@@ -1853,64 +1857,64 @@ msgstr ""
 msgid "Delay Redirect must be a number"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:676
+#: pro/app/controllers/PlpLinksController.php:668
 #: pro/app/widgets/PlpPublicLinksWidget.php:64
 msgid "Cloak"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:744
+#: pro/app/controllers/PlpLinksController.php:736
 msgid "View QR Code for this link: %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:748
+#: pro/app/controllers/PlpLinksController.php:740
 msgid "Download QR Code for this link: %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:819
+#: pro/app/controllers/PlpLinksController.php:811
 msgid "This link expired on %1$s and will now cause a 404 error when visited"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:822
+#: pro/app/controllers/PlpLinksController.php:814
 msgid "This link expired on %1$s and now redirects to %2$s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:826
+#: pro/app/controllers/PlpLinksController.php:818
 msgid "This link is set to expire after the date %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:837
+#: pro/app/controllers/PlpLinksController.php:829
 msgid ""
 "This link expired after %d clicks and will now cause a 404 error when visited"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:840
+#: pro/app/controllers/PlpLinksController.php:832
 msgid "This link expired after %1$d clicks and now redirects to %2$s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:844
+#: pro/app/controllers/PlpLinksController.php:836
 msgid "This link is set to expire after %d clicks"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:852
+#: pro/app/controllers/PlpLinksController.php:844
 msgid "This link has additional Target URL rotations"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:855
+#: pro/app/controllers/PlpLinksController.php:847
 msgid "This link has additional Geographic Target URLs"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:858
+#: pro/app/controllers/PlpLinksController.php:850
 msgid "This link has additional Technology Dependent Conditional Target URLs"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:863
+#: pro/app/controllers/PlpLinksController.php:855
 msgid ""
 "A Time Period Redirect is currently active for this link. When visited it "
 "will currently redirect to %s rather than the Target URL unless the link is "
 "expired."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:867
+#: pro/app/controllers/PlpLinksController.php:859
 msgid ""
 "Time Period Redirects have been setup for this link but the current time is "
 "not within any of them currently."
