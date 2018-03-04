@@ -192,10 +192,14 @@ if( !function_exists('vp_post_dummy_editor') )
 		if( $dummy )
 		{
 			echo '<div style="display: none">';
-			add_filter( 'wp_default_editor', create_function('', 'return "tinymce";') );
+			add_filter( 'wp_default_editor', 'vp_post_dummy_editor_tinymce' );
 			wp_editor ( '', 'vp_dummy_editor' );
 			echo '</div>';		
 		}
+	}
+
+	function vp_post_dummy_editor_tinymce() {
+		return "tinymce";
 	}
 }
 

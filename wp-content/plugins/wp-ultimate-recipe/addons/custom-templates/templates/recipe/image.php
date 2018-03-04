@@ -124,7 +124,7 @@ class WPURP_Template_Recipe_Image extends WPURP_Template_Block {
         $full_image_url = $recipe->image_url( 'full' );
 
         $args['desktop'] = $args['desktop'] && $this->show_on_desktop;
-        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] ? ' itemprop="image"' : '';
+        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] ? ' itemprop="image"' : '';
 
         $title_tag = WPUltimateRecipe::option( 'recipe_image_title', 'attachment' ) == 'attachment' ? esc_attr( get_the_title( $recipe->image_ID() ) ) : esc_attr( $recipe->title() );
         $alt_tag = WPUltimateRecipe::option( 'recipe_image_alt', 'attachment' ) == 'attachment' ? esc_attr( get_post_meta( $recipe->image_ID(), '_wp_attachment_image_alt', true ) ) : esc_attr( $recipe->title() );

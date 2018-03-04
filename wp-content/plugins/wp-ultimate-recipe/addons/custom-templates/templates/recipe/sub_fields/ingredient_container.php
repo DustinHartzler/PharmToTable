@@ -45,7 +45,7 @@ class WPURP_Template_Recipe_Ingredient_Container extends WPURP_Template_Block {
         $args['max_width'] = $this->max_width && $args['max_width'] > $this->max_width ? $this->max_width : $args['max_width'];
         $args['max_height'] = $this->max_height && $args['max_height'] > $this->max_height ? $this->max_height : $args['max_height'];
         $args['desktop'] = $args['desktop'] && $this->show_on_desktop;
-        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] ? ' itemprop="recipeIngredient"' : '';
+        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] ? ' itemprop="recipeIngredient"' : '';
         $output = $this->before_output();
 
         ob_start();

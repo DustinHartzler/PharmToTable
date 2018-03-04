@@ -226,6 +226,10 @@ class WPURP_Assets {
                                 if( $hook != 'edit.php' || ( isset( $_GET['post_type'] ) && $_GET['post_type'] != 'recipe' ) ) continue 2; // Switch is consider a loop statement for continue
                                 break;
 
+                            case 'admin_posts_overview':
+                                if( $hook != 'edit.php' || ( isset( $_GET['post_type'] ) && ( $_GET['post_type'] != 'recipe' && $_GET['post_type'] != WPURP_MEAL_PLAN_POST_TYPE ) ) ) continue 2; // Switch is consider a loop statement for continue
+                                break;
+
                             case 'recipe_form':
                                 if( !in_array( $hook, array( 'post.php', 'post-new.php' ) ) || ( isset( $_GET['post_type'] ) && $_GET['post_type'] != 'recipe' ) ) continue 2; // Switch is consider a loop statement for continue
                                 break;

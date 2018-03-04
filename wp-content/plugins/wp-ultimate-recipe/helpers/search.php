@@ -71,6 +71,23 @@ class WPURP_Search {
             $searchable_recipe .= ' - ';
             $searchable_recipe .= $recipe->notes();
 
+            // Taxonomies searchable.
+            $taxonomies = WPUltimateRecipe::get()->tags();
+            unset( $taxonomies['ingredient'] );
+            $taxonomies['category'] = true;
+            $taxonomies['post_tag'] = true;
+
+            foreach( $taxonomies as $taxonomy => $options ) {
+                $terms = get_the_terms( $recipe->ID(), $taxonomy );
+
+                if (!is_wp_error($terms) && $terms) {
+                    foreach ($terms as $term) {
+                        $searchable_recipe .= ' - ';
+                        $searchable_recipe .= $term->name;
+                    }
+                }
+            }
+
             // Custom fields searchable.
             $custom_fields_addon = WPUltimateRecipe::addon( 'custom-fields' );
             if ( $custom_fields_addon ) {

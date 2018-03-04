@@ -103,6 +103,12 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 
 == Changelog ==
 
+= 3.9.0 =
+* Feature: Searchable recipe tags and categories
+* Improvement: WooCommerce Memberships compatibility
+* Fix: PHP 7.2 deprecated function
+* Fix: 404 error when using comment pagination
+
 = 3.8.0 =
 * Feature: Adjustable servings in instructions with a shortcode
 * Feature: Setting to opt out of Pinterest Rich Pins
@@ -139,7 +145,7 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 
 = 3.4 =
 * Improvement: Performance boost by not autoloading some options and templates
-* Improvement: Significantly reduced recipe cache size
+* Improvement: Significantly reduced cache size
 * Improvement: Change default to use JSON-LD and Inline Metadata
 * Improvement: Prevent recipe template max-width issues in Firefox
 * Fix: Use AMP template when recipe is included with shortcode
@@ -477,7 +483,7 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 
 = 1.0.1 =
 * Use your recipes just like normal posts
-* Contact support directly from Recipe Admin page
+* Contact support directly from the admin page
 * General Bug Fixes
 
 = 1.0.0 =
@@ -567,14 +573,17 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 
 == Upgrade notice ==
 
+= 3.9.0 =
+Update for bug fixes and recipe search improvements
+
 = 3.8.0 =
-Update for a few new recipe features
+Update for a few new features
 
 = 3.7.0 =
 Update to ensure WordPress 4.8 compatibility
 
 = 3.6.0 =
-Update for 2 brand new recipe shortcodes
+Update for 2 brand new shortcodes
 
 = 3.5.1 =
 Update to fix the recipe cache
@@ -598,7 +607,7 @@ Update highly recommended, some important metadata improvements
 Update if you're experiencing issues with printing
 
 = 3.2 =
-Update to get a setting for Pinterest Rich Pins compatibility and many other recipe improvements
+Update to get a setting for Pinterest Rich Pins compatibility and many other improvements
 
 = 3.1.5 =
 Intermediate fix version, update recommended
@@ -613,7 +622,7 @@ Update if you're experiencing issues with the print feature
 Update required if you're using an older version than PHP 5.3
 
 = 3.0 =
-Update for lots of great improvements and new recipe features
+Update for lots of great improvements and new features
 
 = 2.8.1 =
 Another update for the Pinterest button
@@ -631,25 +640,25 @@ Update for a nice clean print feature
 Update if you're using minified assets
 
 = 2.6 =
-Update for WordPress 4.4 compatibility and some new recipe features
+Update for WordPress 4.4 compatibility and some new features
 
 = 2.5 =
-Update for the latest and greatest wordpress recipe plugin
+Update for the latest and greatest plugin
 
 = 2.4 =
-Some esssential improvements and bug fixes for the best recipe plugin
+Some esssential improvements and bug fixes
 
 = 2.3.2 =
-Update if you were using WP Ultimate Recipe 2.3.1 or 2.3.2
+Update required if you were using version 2.3.1 or 2.3.2
 
 = 2.3.2 =
-Update if you were using WP Ultimate Recipe 2.3.1
+Update required if you were using version 2.3.1
 
 = 2.3.1 =
 Update to fix the Full Text Search feature
 
 = 2.3 =
-A few great new features for WP Ultimate Recipe
+A few great new features
 
 = 2.2.3 =
 Update to fix the shortcode editor button in the text editor
@@ -661,7 +670,7 @@ Tiny upgrade for the free version
 Update to improve memory usage of recipe templates
 
 = 2.2 =
-Update recommended to keep up with the best recipe plugin
+Update recommended
 
 = 2.1.8 =
 Update when experiencing JS issues
@@ -679,7 +688,7 @@ Update recommended. A few bug fixes
 Update required when using the minified assets
 
 = 2.1.3 =
-WP Ultimate Recipe has improved page load speeds after this update.
+Update for improved page load speeds
 
 = 2.1.2 =
 Update highly recommended. Improvements to CPU and memory load of the plugin.
@@ -691,7 +700,7 @@ Update if you're experiencing problems with the current version. New feature for
 A few fixes and improvements for the free version. Major update for WP Ultimate Recipe Premium.
 
 = 2.0.10 =
-Tiny update. Improves recipe metadata with recipe rating
+Tiny update. Improves metadata with recipe rating
 
 = 2.0.9 =
 Fix release, no new features
@@ -700,19 +709,19 @@ Fix release, no new features
 Update to fix your recipe metadata
 
 = 2.0.7 =
-Another fine WP Ultimate Recipe release
+Another fine release
 
 = 2.0.6 =
-Update to get the latest and greatest recipe & food plugin
+Update to get the latest and greatest plugin
 
 = 2.0.5 =
 Update not necessary if your recipes look fine
 
 = 2.0.4 =
-Update to fix the recipe settings page
+Update to fix the settings page
 
 = 2.0.3 =
-Update to fix the print version of your recipes
+Update to fix the print version
 
 = 2.0.2 =
 Update for RTL websites
@@ -721,14 +730,14 @@ Update for RTL websites
 Update recommended if your website is not in English
 
 = 2.0 =
-Important: If you are using WP Ultimate Recipe Premium you should just download WP Ultimate Recipe Premium 2.0 and install that, the core plugin is NOT needed anymore.
-Everyone else can safely update to the latest and greatest WordPress recipe plugin!
+Important: If you are using WP Ultimate Recipe Premium you should just download Premium version 2.0 and install that, the core plugin is NOT needed anymore.
+Everyone else can safely update!
 
 = 1.0.12 =
-A tiny WP Ultimate Recipe upgrade
+A tiny upgrade
 
 = 1.0.11 =
-Another WP Ultimate Recipe upgrade
+Another upgrade
 
 = 1.0.10 =
 Upgrade for some tiny improvements

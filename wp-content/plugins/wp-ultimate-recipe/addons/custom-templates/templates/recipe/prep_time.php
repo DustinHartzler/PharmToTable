@@ -14,7 +14,7 @@ class WPURP_Template_Recipe_Prep_Time extends WPURP_Template_Block {
         if( !$this->output_block( $recipe, $args ) ) return '';
 
         $args['desktop'] = $args['desktop'] && $this->show_on_desktop;
-        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] && $recipe->prep_time_meta() ? '<meta itemprop="prepTime" content="' . $recipe->prep_time_meta() . '">' : '';
+        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] && $recipe->prep_time_meta() ? '<meta itemprop="prepTime" content="' . $recipe->prep_time_meta() . '">' : '';
 
         $output = $this->before_output();
         $output .= '<span' . $this->style() . '>' . $meta . $recipe->prep_time() . '</span>';

@@ -13,6 +13,17 @@ class WPURP_Query_Posts {
         add_filter( 'get_previous_post_join', array( $this, 'adjacent_posts_join_fix' ) );
         add_filter( 'get_next_post_join', array( $this, 'adjacent_posts_join_fix' ) );
 
+        add_filter( 'rewrite_rules_array', array( $this, 'rewrite_rules_array' ) );
+
+    }
+
+    function rewrite_rules_array( $rules ){
+        $slug = WPUltimateRecipe::option( 'recipe_slug', 'recipe' );
+        $new_rules = array(
+            $slug . '/([^/]+)/comment-page-([0-9]{1,})/?$' => 'index.php?' . WPURP_POST_TYPE . '=$matches[1]&cpage=$matches[2]',
+        );
+
+        return array_merge( $new_rules, $rules );
     }
 
     function pre_get_posts_recipes( $query ) {

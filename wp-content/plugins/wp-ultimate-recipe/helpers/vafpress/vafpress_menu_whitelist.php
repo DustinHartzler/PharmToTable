@@ -110,7 +110,7 @@ function wpurp_admin_templates()
 
 function wpurp_admin_import_cooked()
 {
-    return '<a href="'.admin_url( 'edit.php?post_type=recipe&page=wpurp_import_cooked' ).'" class="button button-primary" target="_blank">'.__('Import Cooked recipes', 'wp-ultimate-recipe').'</a>';
+    return '<a href="'.admin_url( 'edit.php?post_type=recipe&page=wpurp_import_cooked' ).'" class="button button-primary" target="_blank">'.__('Import Cooked (Pre v1.2) recipes', 'wp-ultimate-recipe').'</a>';
 }
 
 function wpurp_admin_import_easyrecipe()

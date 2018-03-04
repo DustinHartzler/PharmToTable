@@ -41,8 +41,8 @@ class WPURP_Template_Container extends WPURP_Template_Block {
         $image = get_post_thumbnail_id( $recipe->ID() );
         $image_url = $image ? wp_get_attachment_url( $image ) : '';
 
-        $metadata = in_array( WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ), array( 'json', 'json-inline' ) ) && ( $args['template_type'] == 'recipe' || $args['template_type'] == 'metadata' ) ? WPUltimateRecipe::get()->helper( 'metadata' )->get_metadata( $recipe ) : '';
-        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ) != 'json' && ( $args['template_type'] == 'recipe' || $args['template_type'] == 'metadata' ) ? ' itemscope itemtype="http://schema.org/Recipe"' : '';
+        $metadata = in_array( WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ), array( 'json', 'json-inline' ) ) && ( $args['template_type'] == 'recipe' || $args['template_type'] == 'metadata' ) ? WPUltimateRecipe::get()->helper( 'metadata' )->get_metadata( $recipe ) : '';
+        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ) != 'json' && ( $args['template_type'] == 'recipe' || $args['template_type'] == 'metadata' ) ? ' itemscope itemtype="http://schema.org/Recipe"' : '';
 
         $output = $this->before_output();
         $output .= $metadata;
@@ -51,7 +51,7 @@ class WPURP_Template_Container extends WPURP_Template_Block {
 ?>
 <div<?php echo $meta; ?> id="wpurp-container-recipe-<?php echo $recipe->ID(); ?>" data-id="<?php echo $recipe->ID(); ?>" data-permalink="<?php echo $recipe->link(); ?>" data-custom-link="<?php echo esc_attr( $custom_link ); ?>" data-custom-link-behaviour="<?php echo esc_attr( $custom_link_behaviour ); ?>" data-image="<?php echo $image_url; ?>" data-servings-original="<?php echo $recipe->servings_normalized(); ?>"<?php echo $this->style(); ?>>
 
-<?php if( WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ) != 'json' && ( $args['template_type'] == 'recipe' || $args['template_type'] == 'metadata' ) ) { ?>
+<?php if( WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ) != 'json' && ( $args['template_type'] == 'recipe' || $args['template_type'] == 'metadata' ) ) { ?>
     <meta itemprop="url" content="<?php echo esc_attr( $recipe->link() ); ?>" />
     <meta itemprop="author" content="<?php echo esc_attr( $recipe->author() ); ?>">
     <meta itemprop="datePublished" content="<?php echo esc_attr( $recipe->date() ); ?>">
@@ -140,7 +140,7 @@ class WPURP_Template_Container extends WPURP_Template_Block {
     ?>
 <?php } ?>
 
-<?php if( WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ) != 'json' && $args['template_type'] == 'metadata' ) { ?>
+<?php if( WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ) != 'json' && $args['template_type'] == 'metadata' ) { ?>
 
     <meta itemprop="image" content="<?php echo esc_attr( $recipe->image_url( 'full' ) ); ?>">
     <meta itemprop="name" content="<?php echo esc_attr( $recipe->title() ); ?>">

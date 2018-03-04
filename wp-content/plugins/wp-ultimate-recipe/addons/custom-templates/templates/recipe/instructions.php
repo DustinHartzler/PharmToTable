@@ -141,7 +141,7 @@ class WPURP_Template_Recipe_Instructions extends WPURP_Template_Block {
 
             $style = !isset( $instructions[$i+1] ) || $instruction['group'] != $instructions[$i+1]['group'] ? array('li','li-last') : 'li';
 
-            $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] ? ' itemprop="recipeInstructions"' : '';
+            $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] ? ' itemprop="recipeInstructions"' : '';
 
             $out .= '<li class="wpurp-recipe-instruction"' . $this->style($style) . '>';
             $out .= '<span' . $this->style('instruction') . $meta . '>'.$instruction['description'].'</span>';

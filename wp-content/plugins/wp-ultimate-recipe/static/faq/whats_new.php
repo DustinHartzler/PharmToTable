@@ -7,37 +7,31 @@
 
     <div class="feature-section col two-col">
         <div class="col-1">
-            <h3>WP Ultimate Recipe 3.8</h3>
+            <h3>WP Ultimate Recipe 3.9</h3>
             <strong>New</strong>
             <ul>
-                <li>Feature: Adjustable servings in instructions with a shortcode</li>
-                <li>Feature: Setting to opt out of Pinterest Rich Pins</li>
-                <li>Feature: Show taxonomies on recipes admin overview</li>
-                <li>Improvement: Plugin header for translations</li>
-                <li>Improvement: Hide recipe snippets in print version</li>
+                <li>Feature: Searchable recipe tags and categories</li>
+                <li>Improvement: WooCommerce Memberships compatibility for recipes</li>
             </ul>
             <strong>Update</strong>
             <ul>
-                <li>Fix: Mailpoet compatibility problem</li>
+                <li>Fix: PHP 7.2 deprecated function</li>
+                <li>Fix: 404 error when using comment pagination</li>
             </ul>
         </div>
         <div class="col-2 last-feature">
-            <h3>WP Ultimate Recipe Premium 3.8</h3>
+            <h3>WP Ultimate Recipe Premium 3.9</h3>
             <strong>New</strong>
             <ul>
-                <li>Feature: Show adjusted servings when printing recipes in the Meal Planner</li>
-                <li>Feature: View Meal Planners by users on your website</li>
-                <li>Feature: Swipe to change dates in Meal Planner</li>
-                <li>Improvement: Custom fields searchable</li>
+                <li>Feature: Clone saved meal plans</li>
+                <li>Improvement: Include recipe tags and categories when cloning recipes</li>
+                <li>Improvement: Don't show "Custom Fields: " when required one is missing in User Submissions form</li>
+                <li>Improvement: Meal Plan swiping less sensitive</li>
             </ul>
             <strong>Update</strong>
             <ul>
-                <li>Fix: Saving problem when Meal Planner on same page as Saved Meal Plan</li>
-                <li>Fix: Meal Planner shopping list bug with slice as a unit</li>
-                <li>Fix: Recipe details not loading in saved meal plan admin</li>
-                <li>Fix: Days in stead of dates when printing saved meal plan</li>
-                <li>Fix: Performance issue when user doesn't have any favorite recipes</li>
-                <li>Fix: Meal Plan printing in Internet Explorer</li>
+                <li>Fix: Saved meal plan not showing adjusted servings in shopping list</li>
+                <li>Fix: Special characters in blog name when emailing shopping list</li>
             </ul>
         </div>
     </div>
@@ -46,6 +40,30 @@
 
     <div>
         <h3>Previous Versions</h3>
+
+        <h4>WP Ultimate Recipe Premium 3.8</h4>
+        <ul>
+            <li>Feature: Show adjusted servings when printing recipes in the Meal Planner</li>
+            <li>Feature: View Meal Planners by users on your website</li>
+            <li>Feature: Swipe to change dates in Meal Planner</li>
+            <li>Improvement: Custom fields searchable</li>
+            <li>Fix: Saving problem when Meal Planner on same page as Saved Meal Plan</li>
+            <li>Fix: Meal Planner shopping list bug with slice as a unit</li>
+            <li>Fix: Recipe details not loading in saved meal plan admin</li>
+            <li>Fix: Days in stead of dates when printing saved meal plan</li>
+            <li>Fix: Performance issue when user doesn't have any favorite recipes</li>
+            <li>Fix: Meal Plan printing in Internet Explorer</li>
+        </ul>
+
+        <h4>WP Ultimate Recipe 3.8</h4>
+        <ul>
+            <li>Feature: Adjustable servings in instructions with a shortcode</li>
+            <li>Feature: Setting to opt out of Pinterest Rich Pins</li>
+            <li>Feature: Show taxonomies on recipes admin overview</li>
+            <li>Improvement: Plugin header for translations</li>
+            <li>Improvement: Hide recipe snippets in print version</li>
+            <li>Fix: Mailpoet compatibility problem</li>
+        </ul>
 
         <h4>WP Ultimate Recipe Premium 3.7</h4>
         <ul>

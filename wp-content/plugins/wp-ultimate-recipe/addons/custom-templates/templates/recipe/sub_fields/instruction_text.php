@@ -14,7 +14,7 @@ class WPURP_Template_Recipe_Instruction_Text extends WPURP_Template_Block {
         if( !$this->output_block( $recipe, $args ) || !isset( $args['instruction_description'] ) || !$args['instruction_description'] ) return '';
 
         $args['desktop'] = $args['desktop'] && $this->show_on_desktop;
-        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json-inline' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] ? ' itemprop="recipeInstructions"' : '';
+        $meta = WPUltimateRecipe::option( 'recipe_metadata_type', 'json' ) != 'json' && $args['template_type'] == 'recipe' && $args['desktop'] ? ' itemprop="recipeInstructions"' : '';
 
         $output = $this->before_output();
 

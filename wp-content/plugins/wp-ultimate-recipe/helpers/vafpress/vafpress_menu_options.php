@@ -276,7 +276,7 @@ $admin_menu = array(
                                         ),
                                     ),
                                     'default' => array(
-                                        'json-inline',
+                                        'json',
                                     ),
                                     'validation' => 'required',
                                 ),
