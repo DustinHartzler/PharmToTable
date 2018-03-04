@@ -26,7 +26,7 @@ final class NF_Display_Preview
 
     public function pre_get_posts( $query )
     {
-        $query->set( 'posts_per_page', 1 );
+		$query->set( 'posts_per_page', 1 );
     }
 
     /**
@@ -47,6 +47,20 @@ final class NF_Display_Preview
     function the_content()
     {
         if ( ! is_user_logged_in() ) return __( 'You must be logged in to preview a form.', 'ninja-forms' );
+
+        // takes into account if we are trying to preview a non-published form
+        $tmp_id_test = explode( '-', $this->_form_id );
+
+        // if only 1 element, then is it numeric
+	    if( 1 === count( $tmp_id_test) && ! is_numeric( $tmp_id_test[ 0 ] ) ) {
+		    return __( 'You must provide a valid form ID.', 'ninja-forms' );
+	    }
+	    // if 2 array elements, is the first equal to 'tmp' and the second numeric
+	    elseif ( ( 2 === count( $tmp_id_test )
+	                 && ('tmp' != $tmp_id_test[ 0 ]
+                     || ! is_numeric( $tmp_id_test[ 1 ] ) ) ) ) {
+		    return __( 'You must provide a valid form ID.', 'ninja-forms' );
+	    }
 
         return do_shortcode( "[nf_preview id='{$this->_form_id}']" );
     }

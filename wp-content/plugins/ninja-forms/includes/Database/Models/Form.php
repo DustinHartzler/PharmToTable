@@ -165,9 +165,10 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         $wpdb->query( $wpdb->prepare(
            "
            INSERT INTO {$wpdb->prefix}nf3_form_meta ( `parent_id`, `key`, `value` )
-                SELECT %d, `key`, CASE WHEN `key` = '_seq_num' THEN 0 ELSE `value` END
+                SELECT %d, `key`, `value`
                 FROM   {$wpdb->prefix}nf3_form_meta
-                WHERE  parent_id = %d;
+                WHERE  parent_id = %d
+                AND `key` != '_seq_num';
            ", $new_form_id, $form_id
         ));
 
@@ -280,7 +281,11 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
             header( 'Pragma: no-cache');
             header( 'Expires: 0' );
 //            echo apply_filters( 'ninja_forms_form_export_bom',"\xEF\xBB\xBF" ) ; // Byte Order Mark
-            echo json_encode( WPN_Helper::utf8_encode( $export ) );
+	        if( $_REQUEST[ 'nf_export_form_turn_off_encoding' ] ) {
+		        echo json_encode( $export );
+	        } else {
+		        echo json_encode( WPN_Helper::utf8_encode( $export ) );
+	        }
 
             die();
         }
@@ -628,7 +633,7 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
             $passwordconfirm = array_merge( $field, array(
                 'id' => '',
                 'type' => 'passwordconfirm',
-                'label' => $field[ 'label' ] . ' ' . __( 'Confirm' ),
+                'label' => $field[ 'label' ] . ' ' . __( 'Confirm', 'ninja-forms' ),
                 'confirm_field' => 'password_' . $field[ 'id' ]
             ));
             $field[ 'new_fields' ][] = $passwordconfirm;

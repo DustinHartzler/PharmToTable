@@ -36,7 +36,7 @@ class NF_Fields_ListCountry extends NF_Abstracts_List
 
         add_filter( 'ninja_forms_custom_columns',                          array( $this, 'custom_columns'   ), 10, 2 );
         add_filter( 'ninja_forms_render_options_' . $this->_name,          array( $this, 'filter_options'   ), 10, 2 );
-        add_filter( 'ninja_forms_subs_export_field_value_' . $this->_name, array( $this, 'filter_csv_value' ), 10, 1 );
+        add_filter( 'ninja_forms_subs_export_field_value_' . $this->_name, array( $this, 'filter_csv_value' ), 10, 2 );
     }
 
     public function custom_columns( $value, $field )
@@ -126,7 +126,7 @@ class NF_Fields_ListCountry extends NF_Abstracts_List
         return $options;
     }
 
-    public function filter_csv_value( $field_value )
+    public function filter_csv_value( $field_value, $field )
     {
         $lookup = array_flip( Ninja_Forms()->config( 'CountryList' ) );
         if( isset( $lookup[ $field_value ] ) ) $field_value = $lookup[ $field_value ];

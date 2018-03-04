@@ -69,10 +69,6 @@ class NF_Step_Processing
             ignore_user_abort( true );
         }
 
-		if ( ! nf_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-			//set_time_limit( 0 );
-		}
-
 		add_action( 'wp_ajax_nf_' . $this->action, array( $this, 'processing' ) );
 	}
 

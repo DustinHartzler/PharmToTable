@@ -200,6 +200,7 @@
 .jBox-Notice {
 	-webkit-transition: margin .2s;
 	transition: margin .2s;
+    max-width: 80%;
 }
 
 .jBox-Notice .jBox-container {

@@ -28,8 +28,10 @@ final class WPN_Helper
     public static function utf8_encode( $input ){
         if ( is_array( $input ) )    {
             return array_map( array( 'self', 'utf8_encode' ), $input );
-        }else{
+        } elseif ( function_exists( 'utf8_encode' ) ) {
             return utf8_encode( $input );
+        } else {
+            return $input;
         }
     }
 
@@ -40,8 +42,10 @@ final class WPN_Helper
     public static function utf8_decode( $input ){
         if ( is_array( $input ) )    {
             return array_map( array( 'self', 'utf8_decode' ), $input );
-        }else{
+        } elseif ( function_exists( 'utf8_decode' ) ) {
             return utf8_decode( $input );
+        } else {
+            return $input;
         }
     }
     
@@ -254,46 +258,6 @@ final class WPN_Helper
             return ( $parsed ) ? $parsed : unserialize( $original ); // Fallback if parse error.
         }
         return $original;
-    }
-    
-        
-    /**
-     * Function to get this installation's TLS version
-     * 
-     * Since 3.0
-     * 
-     * @return float OR false
-     */
-    public static function get_tls()
-    {
-        $php_ver = phpversion();
-        // If we have a php version lower than 5.6, bail.
-        if( version_compare( $php_ver, '5.6.0', '<' ) ) return false;
-        // Get the user's TLS version.
-
-        // If we have a php version of 7.0 or higher...
-        if( version_compare( $php_ver, '7.0.0', '>=' ) ) {
-            if( ! function_exists( 'fopen' ) ) return false;
-            $meta = stream_get_meta_data( fopen( 'https://ninjaforms.com/', 'r' ) );
-            $tls = $meta[ 'crypto' ][ 'protocol' ];            
-        }
-        // Otherwise (php version between 5.6 and 7.0)...
-        else {
-            $ctx = stream_context_create( array( 'ssl' => array(
-                'capture_session_meta' => TRUE
-            ) ) );
-            $html = file_get_contents( 'https://ninjaforms.com/', FALSE, $ctx );
-            $meta = stream_context_get_options( $ctx );
-            $tls = $meta[ 'ssl' ][ 'session_meta' ][ 'protocol' ];
-            unset( $ctx );
-        }
-        // If we got a TLS version number...
-        if( false !== strpos( $tls, 'TLSv' ) ) {
-            $ver = substr( $tls, strpos( $tls, 'TLSv' ) + 4 );
-            return floatval( $ver );
-        } else {
-            return false;
-        }
     }
 
     private static function parse_utf8_serialized( $matches )

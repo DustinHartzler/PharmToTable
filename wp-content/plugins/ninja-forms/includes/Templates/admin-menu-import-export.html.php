@@ -5,7 +5,7 @@
     <h2 class="nav-tab-wrapper">
         <?php foreach( $tabs as $tab => $name ): ?>
             <?php if( $tab == $active_tab ): ?>
-                <span class="nav-tab nav-tab-active"><?php echo $name ?></span>
+                <span class="nav-tab nav-tab-active"><?php echo esc_html( $name ) ?></span>
             <?php else: ?>
                 <a href="<?php echo add_query_arg( 'tab', $tab );?>" target="" class="nav-tab "><?php echo $name ?></a>
             <?php endif; ?>

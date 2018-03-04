@@ -103,7 +103,7 @@
 </script>
 
 <script id="tmpl-nf-app-header-publish-button" type="text/template">
-    <a href="#" {{{ data.publishWidth }}} class="nf-button primary {{{ data.maybeDisabled() }}} publish" title="<?php _e( 'Publish', 'ninja-forms' ); ?>"><?php _e( 'PUBLISH', 'ninja-forms' ); ?></a>
+    <a href="#" style="width:{{{ data.publishWidth }}} !important" class="nf-button primary {{{ data.maybeDisabled() }}} publish" title="<?php _e( 'Publish', 'ninja-forms' ); ?>"><?php _e( 'PUBLISH', 'ninja-forms' ); ?></a>
 </script>
 
 <script id="tmpl-nf-add-header-publish-loading" type="text/template">
@@ -336,7 +336,7 @@
 
 <script id="tmpl-nf-drawer-action-type-button" type="text/template">
     <div class="nf-one-third nf-action-type-draggable" data-type="{{{ data.id }}}">
-        <div class="{{{ data.renderClasses() }}}" {{{ data.renderStyle() }}}>{{{ data.nicename }}}</div>
+        <div class="{{{ data.renderClasses() }}}" style="{{{ data.renderStyle() }}}">{{{ data.nicename }}}</div>
     </div>
 </script>
 
@@ -448,21 +448,21 @@ Label Three, value-three, 3
 
 <script id="tmpl-nf-edit-setting-textbox" type="text/template">
     <label for="{{{ data.name }}}" class="{{{ data.renderLabelClasses() }}}">{{{ data.label }}} {{{ data.renderTooltip() }}}
-        <input type="text" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" {{{ data.renderPlaceholder() }}} />
+        <input type="text" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" placeholder="{{{ data.placeholder }}}" />
         {{{ data.renderMergeTags() }}}
     </label>
 </script>
 
 <script id="tmpl-nf-edit-setting-media" type="text/template">
     <label for="{{{ data.name }}}" class="{{{ data.renderLabelClasses() }}} has-merge-tags">{{{ data.label }}} {{{ data.renderTooltip() }}}
-        <input type="text" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" {{{ data.renderPlaceholder() }}} />
+        <input type="text" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" placeholder="{{{ data.placeholder }}}" />
         <span class="extra open-media-manager dashicons dashicons-admin-media merge-tags"></span>
     </label>
 </script>
 
 <script id="tmpl-nf-edit-setting-datepicker" type="text/template">
     <label for="{{{ data.name }}}" class="{{{ data.renderLabelClasses() }}}">{{{ data.label }}} {{{ data.renderTooltip() }}}
-        <input type="text" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" {{{ data.renderPlaceholder() }}} />
+        <input type="text" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" placeholder="{{{ data.placeholder }}}" />
     </label>
 </script>
 

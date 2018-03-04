@@ -20,7 +20,7 @@ function ninja_forms_ajax_import_form(){
 
     delete_option( 'nf_form_' . $form_id ); // Bust the cache.
 
-    Ninja_Forms()->form()->import_form( $import, $form_id, TRUE );
+    Ninja_Forms()->form()->import_form( $import, TRUE, $form_id, TRUE );
 
     if( isset( $_POST[ 'flagged' ] ) && $_POST[ 'flagged' ] ){
         $form = Ninja_Forms()->form( $form_id )->get();

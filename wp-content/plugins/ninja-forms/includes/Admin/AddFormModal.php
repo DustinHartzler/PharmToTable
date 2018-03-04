@@ -38,7 +38,7 @@ class NF_Admin_AddFormModal {
                 margin: 0 2px 0 0;
             }
         </style>';
-        $html .= '<a href="#" class="button-secondary nf-insert-form"><span class="nf-insert-form dashicons dashicons-feedback"></span> ' . __( 'Add Form', 'ninja-forms' ) . '</a>';
+        $html .= '<a href="#" class="button nf-insert-form"><span class="nf-insert-form dashicons dashicons-feedback"></span> ' . __( 'Add Form', 'ninja-forms' ) . '</a>';
 
         wp_enqueue_script( 'nf-combobox', Ninja_Forms::$url . 'assets/js/lib/combobox.min.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-button', 'jquery-ui-autocomplete' ) );
         wp_enqueue_script( 'jBox', Ninja_Forms::$url . 'assets/js/lib/jBox.min.js', array( 'jquery' ) );
@@ -62,13 +62,13 @@ class NF_Admin_AddFormModal {
                     if ( strlen( $label ) > 30 )
                         $label = substr( $label, 0, 30 ) . '...';
 
-                    echo '<option value="' . $form_id . '">' . $label . ' - ID: ' . $form_id . '</option>';
+                    echo '<option value="' . intval( $form_id ) . '">' . $label . ' - ID: ' . $form_id . '</option>';
                 }
                 echo '</select>';
                 ?>
             </p>
             <p>
-                <input type="button" id="nf-insert-form" class="button-primary" value="Insert" />
+                <input type="button" id="nf-insert-form" class="button-primary" value="<?php _e( 'Insert', 'ninja-forms' )?>" />
             </p>
         </div>
         <?php
@@ -88,7 +88,7 @@ class NF_Admin_AddFormModal {
         <script type="text/javascript">
             jQuery( document ).ready( function( $ ) {
                 var jBox = jQuery( '.nf-insert-form' ).jBox( 'Modal', {
-                    title: 'Insert Form',
+                    title: '<?php _e( 'Insert Form', 'ninja-forms' )?>',
                     position: {
                         x: 'center',
                         y: 'center'
@@ -100,7 +100,7 @@ class NF_Admin_AddFormModal {
                     content: jQuery( '#nf-insert-form-modal' ),
                     onOpen: function() {
                         jQuery( '.nf-forms-combobox' ).combobox();
-                        jQuery( this )[0].content.find( '.ui-autocomplete-input' ).attr( 'placeholder', 'Select a form or type to search' );
+                        jQuery( this )[0].content.find( '.ui-autocomplete-input' ).attr( 'placeholder', '<?php _e( 'Select a form or type to search', 'ninja-forms' )?>' );
                         jQuery( this )[0].content.css( 'overflow', 'visible' );
                         jQuery( this )[0].content.find( '.ui-icon-triangle-1-s' ).addClass( 'dashicons dashicons-arrow-down' ).css( 'margin-left', '-7px' );
                     },

@@ -42,6 +42,13 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
 
         $this->_form_id = $this->_form_data['id'];
 
+        // If we don't have a numeric form ID...
+        if ( ! is_numeric( $this->_form_id ) ) {
+            // Kick the request out without processing.
+            $this->_errors[] = __( 'Form does not exist.', 'ninja-forms' );
+            $this->_respond();
+        }
+
         if( $this->is_preview() ) {
 
             $this->_form_cache = get_user_option( 'nf_form_preview_' . $this->_form_id );
@@ -230,7 +237,13 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
                 // Scrub unmerged tags (ie deleted/non-existent fields/calcs, etc).
                 $eq = preg_replace( '/{([a-zA-Z0-9]|:|_|-)*}/', 0, $eq);
 
-                $dec = ( isset( $calc[ 'dec' ] ) && ! empty( $calc[ 'dec' ] ) && 0 <= $calc[ 'dec' ] ) ? $calc[ 'dec' ] : 2;
+				/**
+				 * PHP doesn't evaluate empty strings to numbers. So check
+	             * for any string for the decimal place
+				**/
+                $dec = ( isset( $calc[ 'dec' ] ) && '' != $calc[ 'dec' ] ) ?
+	                $calc[ 'dec' ] : 2;
+                
                 $calcs_merge_tags->set_merge_tags( $calc[ 'name' ], $eq, $dec, $this->_form_data['settings']['decimal_point'], $this->_form_data['settings']['thousands_sep'] );
                 $this->_data[ 'extra' ][ 'calculations' ][ $calc[ 'name' ] ] = array(
                     'raw' => $calc[ 'eq' ],
@@ -447,7 +460,7 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
         if( $this->_form_data ) return;
 
         if( function_exists( 'json_last_error' ) // Function not supported in php5.2
-            && function_exists( 'json_last_error_msg' )// Function not supported in php5.2
+            && function_exists( 'json_last_error_msg' )// Function not supported in php5.4
             && json_last_error() ){
             $this->_errors[] = json_last_error_msg();
         } else {
@@ -461,5 +474,16 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
     {
         if( ! isset( $this->_form_data[ 'settings' ][ 'is_preview' ] ) ) return false;
         return $this->_form_data[ 'settings' ][ 'is_preview' ];
+    }
+
+    /*
+     * Overwrite method for parent class.
+     */
+    protected function _respond( $data = array() )
+    {
+        // Set a content type of JSON for the purpose of previnting XSS attacks.
+        header( 'Content-Type: application/json' );
+        // Call the parent method.
+        parent::_respond();
     }
 }

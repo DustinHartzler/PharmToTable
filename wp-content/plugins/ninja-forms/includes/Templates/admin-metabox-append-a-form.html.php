@@ -4,8 +4,8 @@
 
         <?php $id = $form->get_id(); ?>
 
-        <option value="<?php echo $id; ?>"<?php selected( $id, $form_id );?>>
-            <?php echo $form->get_setting( 'title' ); ?>
+        <option value="<?php echo intval( $id ); ?>"<?php selected( $id, $form_id );?>>
+            <?php echo esc_html( $form->get_setting( 'title' ) ); ?>
         </option>
 
     <?php endforeach; ?>

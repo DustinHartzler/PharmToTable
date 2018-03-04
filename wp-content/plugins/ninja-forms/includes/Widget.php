@@ -32,7 +32,7 @@ class NF_Widget extends WP_Widget {
 
         echo $args[ 'before_widget' ];
         if ( ! empty( $title ) AND $display_title == 1 )
-            echo $args[ 'before_title' ] . $title . $args[ 'after_title' ];
+            echo $args[ 'before_title' ] . esc_html( $title ) . $args[ 'after_title' ];
         Ninja_Forms()->display( $instance['form_id'] );
         echo $args[ 'after_widget' ];
     }
@@ -80,20 +80,20 @@ class NF_Widget extends WP_Widget {
         <p>
             <label>
                 <?php _e( 'Display Title', 'ninja-forms' ); ?>
-                <input type="hidden" value="0" name="<?php echo $this->get_field_name( 'display_title' ); ?>">
-                <input type="checkbox" value="1" id="<?php echo $this->get_field_id( 'display_title' ); ?>" name="<?php echo $this->get_field_name( 'display_title' ); ?>" <?php checked( $display_title, 1 );?>>
+                <input type="hidden" value="0" name="<?php echo esc_attr( $this->get_field_name( 'display_title' ) ); ?>">
+                <input type="checkbox" value="1" id="<?php echo esc_attr( $this->get_field_id( 'display_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'display_title' ) ); ?>" <?php checked( $display_title, 1 );?>>
             </label>
         </p>
         <p>
-            <select id="<?php echo $this->get_field_id( 'form_id' ); ?>" name="<?php echo $this->get_field_name( 'form_id' ); ?>">
+            <select id="<?php echo esc_attr( $this->get_field_id( 'form_id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'form_id' ) ); ?>">
                 <option value="0">-- <?php _e('None', 'ninja-forms');?></option>
                 <?php
                 $all_forms = Ninja_Forms()->form()->get_forms();
 
                 foreach($all_forms as $form){
                     ?>
-                    <option value="<?php echo $form->get_id();?>" <?php selected( $form->get_id(), $form_id );?>>
-                        <?php echo $form->get_setting( 'title' );?>
+                    <option value="<?php echo intval( $form->get_id() );?>" <?php selected( $form->get_id(), $form_id );?>>
+                        <?php echo esc_html( $form->get_setting( 'title' ) );?>
                     </option>
                     <?php
                 }
@@ -106,4 +106,13 @@ class NF_Widget extends WP_Widget {
 
 } // class Foo_Widget
 
-add_action( 'widgets_init', create_function( '', 'register_widget( "NF_Widget" );' ) );
+/**
+ * Register NF widget
+ *
+ * @see 'widgets_init'
+ */
+function NF_register_widgets() {
+    register_widget( 'NF_Widget' );
+}
+
+add_action( 'widgets_init', 'NF_register_widgets' );

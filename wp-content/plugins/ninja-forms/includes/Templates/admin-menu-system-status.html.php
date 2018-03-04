@@ -14,9 +14,9 @@
         <div class="submit debug-report">
     		<h3>To Get Help:</h3>
             <ol>
-                <li><?php _e( 'Copy your System Report first with the button below' ); ?> </li>
-                <li><?php _e( 'Click "Submit a Support Request" to be directed to our site.' ); ?> </li>
-                <li><?php _e( 'Include this information in your support request by pasting in the "System Status" portion of the form. (right click, choose "Paste" or use Ctrl+V)' ); ?> </li>
+                <li><?php _e( 'Copy your System Report first with the button below', 'ninja-forms' ); ?> </li>
+                <li><?php _e( 'Click "Submit a Support Request" to be directed to our site.', 'ninja-forms' ); ?> </li>
+                <li><?php _e( 'Include this information in your support request by pasting in the "System Status" portion of the form. (right click, choose "Paste" or use Ctrl+V)', 'ninja-forms' ); ?> </li>
             </ol>
             <h4><?php _e( 'This information is vital for addressing your issue in a timely manner. <em>For your security, do not post this information in public places, such as the WordPress.org support forums.</em>', 'ninja-forms' ); ?> </h4>
             <a href="#" id="copy-system-status" class="button-primary"><?php _e( 'Copy System Report', 'ninja-forms' ); ?></a>
@@ -38,8 +38,8 @@
 	<tbody>
         <?php foreach( $environment as $key => $value ): ?>
             <tr>
-                <td><?php echo $key . ':'; ?></td>
-                <td><?php echo $value; ?></td>
+                <td><?php echo esc_html( $key ) . ':'; ?></td>
+                <td><?php echo esc_html( $value ); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -54,19 +54,22 @@
             <td><?php echo $site_wide_plugins; ?></td>
         </tr>
     </tbody>
-    <thead>
-        <tr>
-            <th colspan="2"><?php _e( 'Recent Errors', 'ninja-forms' ); ?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td></td>
-            <td>
-                <?php foreach ( $error_log as $error ): ?>
-                    * <?php echo nl2br( $error ) ?> </br>
-                <?php endforeach; ?>
-            </td>
-        </tr>
-    </tbody>
 </table>
+
+<!--TODO: Add this section back in when error collected is fixed.-->
+<!--    <thead>-->
+<!--        <tr>-->
+<!--            <th colspan="2">--><?php //_e( 'Recent Errors', 'ninja-forms' ); ?><!--</th>-->
+<!--        </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--        <tr>-->
+<!--            <td></td>-->
+<!--            <td>-->
+<!--                --><?php //foreach ( $error_log as $error ): ?>
+<!--                    * --><?php //echo nl2br( $error ) ?><!-- </br>-->
+<!--                --><?php //endforeach; ?>
+<!--            </td>-->
+<!--        </tr>-->
+<!--    </tbody>-->
+

@@ -115,4 +115,8 @@ class Ninja_Forms_Widget extends WP_Widget {
 
 } // class Foo_Widget
 
-add_action( 'widgets_init', create_function( '', 'register_widget( "ninja_forms_widget" );' ) );
+function NF_register_widgets() {
+    register_widget( 'ninja_forms_widget' );
+}
+
+add_action( 'widgets_init', 'NF_register_widgets' );

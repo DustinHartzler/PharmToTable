@@ -135,10 +135,6 @@ function nf_v27_upgrade_subs_to_cpt() {
 		ignore_user_abort( true );
 	}
 
-	if ( ! nf_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-		//set_time_limit( 0 );
-	}
-
 	$step   = isset( $_GET['step'] )  ? absint( $_GET['step'] )  : 1;
 	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
 	$number  = isset( $_GET['custom'] ) ? absint( $_GET['custom'] ) : 1;

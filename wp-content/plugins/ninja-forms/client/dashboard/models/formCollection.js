@@ -31,10 +31,35 @@ define( ['models/formModel'], function( FormModel ) {
         },
 
         modalConfirm: function( view ){
-            var message = '<div class="message"><p>Once deleted, a Form cannot be recovered.<br />Are you sure you want to delete <em>' + view.model.get( 'title' ) + '</em>?</p></div>';
-            message +=  '<div class="buttons"><div class="confirm nf-button primary">Delete</div> <div style="float:right;" class="cancel nf-button secondary">Cancel</div></div>';
+            var message, container, messageBox, title, buttons, confirm, cancel, lineBreak;
+            container = document.createElement( 'div' );
+            messageBox = document.createElement( 'p' );
+            title = document.createElement( 'em' );
+            buttons = document.createElement( 'div' );
+            confirm = document.createElement( 'div' );
+            cancel = document.createElement( 'div' );
+            lineBreak = document.createElement( 'br' );
+            container.classList.add( 'message' );
+            title.innerHTML = view.model.get( 'title' );
+            messageBox.innerHTML += 'Once deleted, a Form cannot be recovered.';
+            messageBox.appendChild( lineBreak );
+            messageBox.innerHTML += 'Are you sure you want to delete ';
+            messageBox.appendChild( title );
+            messageBox.innerHTML += '?';
+            container.appendChild( messageBox );
+            confirm.innerHTML = 'Delete';
+            confirm.classList.add( 'confirm', 'nf-button', 'primary' );
+            cancel.innerHTML = 'Cancel';
+            cancel.classList.add( 'cancel', 'nf-button', 'secondary' );
+            cancel.style.float = 'right';
+            buttons.appendChild( confirm );
+            buttons.appendChild( cancel );
+            buttons.classList.add( 'buttons' );
+            container.appendChild( buttons );
+            message = document.createElement( 'div' );
+            message.appendChild( container );
 
-            this.modal.setContent( message );
+            this.modal.setContent( message.innerHTML );
             this.modal.setTitle( 'Confirm Delete' );
 
             this.modal.open();

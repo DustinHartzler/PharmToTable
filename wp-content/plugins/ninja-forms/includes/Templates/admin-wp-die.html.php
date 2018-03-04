@@ -1,7 +1,7 @@
-<h1><?php echo $title; ?></h1>
+<h1><?php echo esc_html( $title ); ?></h1>
 
 <p>
-    <?php echo $message; ?>
+    <?php echo esc_html( $message ); ?>
 </p>
 <p>
     <a style="cursor: pointer" onclick="nfWpDieShowMore()"><?php _e( 'Show More', 'ninja-forms' ); ?></a>

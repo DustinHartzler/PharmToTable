@@ -1,43 +1,44 @@
-window.onerror = function(message, url, lineNumber) {  
-  var data;
-
-  data = {
-  	'action': 'nf_log_js_error',
-  	'security': nfFrontEnd.ajaxNonce,
-  	'message': message,
-  	'url': url,
-  	'lineNumber': lineNumber
-  };
-
-  jQuery.ajax({
-	    url: nfFrontEnd.adminAjax,
-	    type: 'POST',
-	    data: data,
-	    cache: false,
-	   	success: function( data, textStatus, jqXHR ) {
-	   		try {
-		   		
-	   		} catch( e ) {
-	   			console.log( e );
-	   			console.log( 'Parse Error' );
-				console.log( e );
-	   		}
-
-	    },
-	    error: function( jqXHR, textStatus, errorThrown ) {
-	        // Handle errors here
-	        console.log('ERRORS: ' + errorThrown);
-			console.log( jqXHR );
-
-			try {
-			
-			} catch( e ) {
-				console.log( 'Parse Error' );
-			}
-		}
-	});
-  return false;
-};  
+// TODO: Fix error collecting.
+//window.onerror = function(message, url, lineNumber) {
+//  var data;
+//
+//  data = {
+//  	'action': 'nf_log_js_error',
+//  	'security': nfFrontEnd.ajaxNonce,
+//  	'message': message,
+//  	'url': url,
+//  	'lineNumber': lineNumber
+//  };
+//
+//  jQuery.ajax({
+//	    url: nfFrontEnd.adminAjax,
+//	    type: 'POST',
+//	    data: data,
+//	    cache: false,
+//	   	success: function( data, textStatus, jqXHR ) {
+//	   		try {
+//		   		
+//	   		} catch( e ) {
+//	   			console.log( e );
+//	   			console.log( 'Parse Error' );
+//				console.log( e );
+//	   		}
+//
+//	    },
+//	    error: function( jqXHR, textStatus, errorThrown ) {
+//	        // Handle errors here
+//	        console.log('ERRORS: ' + errorThrown);
+//			console.log( jqXHR );
+//
+//			try {
+//			
+//			} catch( e ) {
+//				console.log( 'Parse Error' );
+//			}
+//		}
+//	});
+//  return false;
+//};  
 
 var nfRadio = Backbone.Radio;
 

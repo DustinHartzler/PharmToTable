@@ -30,7 +30,15 @@ class NF_Fields_Terms extends NF_Fields_ListCheckbox
 
         $this->_nicename = __( 'Terms List', 'ninja-forms' );
 
-        add_action( 'admin_init', array( $this, 'init_settings' ) );
+        // If we are on the ninja-forms page...
+        // OR we're looking at nf_sub post types...
+        // OR we're editing a single post...
+        if ( ( ! empty( $_GET[ 'page' ] ) && 'ninja-forms' == $_GET[ 'page' ] ) ||
+           ( ! empty( $_GET[ 'post_type' ] ) && 'nf_sub' == $_GET[ 'post_type' ] ) ||
+           isset( $_GET[ 'post' ] ) ) {
+            // Initiate the termslist.
+            add_action( 'admin_init', array( $this, 'init_settings' ) );
+        }
 
         add_filter( 'ninja_forms_display_field', array( $this, 'active_taxonomy_field_check' ) );
         add_filter( 'ninja_forms_localize_field_' . $this->_type, array( $this, 'add_term_options' ) );
@@ -65,7 +73,8 @@ class NF_Fields_Terms extends NF_Fields_ListCheckbox
 
             foreach( $terms as $term ){
 
-                if( 1 == $term->term_id ) continue;
+                // Check the slug instead of term_id to ensure we ONLY remove 'uncategorized'.
+                if( 'uncategorized' == $term->slug ) continue;
 
                 $tax_term_settings[] =  array(
                     'name' => 'taxonomy_term_' . $term->term_id,
@@ -107,7 +116,7 @@ class NF_Fields_Terms extends NF_Fields_ListCheckbox
         $this->_settings[ 'taxonomy_terms' ] = array(
             'name' => 'taxonomy_terms',
             'type' => 'fieldset',
-            'label' => __( 'Available Terms' ),
+            'label' => __( 'Available Terms', 'ninja-forms' ),
             'width' => 'full',
             'group' => 'primary',
             'settings' => $term_settings
@@ -164,7 +173,14 @@ class NF_Fields_Terms extends NF_Fields_ListCheckbox
     public function merge_tag_value( $value, $field )
     {
         $terms = explode( ',', $value );
-        if( ! is_array( $terms ) ) return $value;
+        if( ! is_array( $terms ) ) {
+            $term = get_term_by( 'id', $value, $field[ 'taxonomy' ] );
+            if( $term ) {
+                return $term->name;
+            } else {
+                return $value;
+            }
+        }
 
         $term_names = array();
         foreach( $terms as $term_id ){

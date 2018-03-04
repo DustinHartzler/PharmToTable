@@ -124,8 +124,10 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             wp_enqueue_script( 'backbone-radio', Ninja_Forms::$url . 'assets/js/lib/backbone.radio.min.js', array( 'jquery', 'backbone' ) );
             wp_enqueue_script( 'backbone-marionette-3', Ninja_Forms::$url . 'assets/js/lib/backbone.marionette3.min.js', array( 'jquery', 'backbone' ) );
             wp_enqueue_script( 'nf-jbox', Ninja_Forms::$url . 'assets/js/lib/jBox.min.js', array( 'jquery' ) );
-            wp_enqueue_script( 'nf-moment', Ninja_Forms::$url . 'assets/js/lib/moment-with-locales.min.js', array( 'jquery' ) );
+            wp_enqueue_script( 'nf-moment', Ninja_Forms::$url . 'assets/js/lib/moment-with-locales.min.js', array( 'jquery', 'nf-dashboard' ) );
             wp_enqueue_script( 'nf-dashboard', Ninja_Forms::$url . 'assets/js/min/dashboard.min.js', array( 'backbone-radio', 'backbone-marionette-3' ) );
+
+            wp_localize_script( 'nf-dashboard', 'nfi18n', Ninja_Forms::config( 'i18nDashboard' ) );
 
             wp_enqueue_style( 'nf-builder', Ninja_Forms::$url . 'assets/css/builder.css' );
             wp_enqueue_style( 'nf-dashboard', Ninja_Forms::$url . 'assets/css/dashboard.min.css' );
@@ -203,7 +205,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         wp_enqueue_script( 'jquery-mobile-events', Ninja_Forms::$url . 'assets/js/lib/jquery.mobile-events.min.js', array( 'jquery' ) );
         wp_enqueue_script( 'jquery-ui-touch-punch', Ninja_Forms::$url . 'assets/js/lib/jquery.ui.touch-punch.min.js', array( 'jquery' ) );
         wp_enqueue_script( 'jquery-classy-wiggle', Ninja_Forms::$url . 'assets/js/lib/jquery.classywiggle.min.js', array( 'jquery' ) );
-        wp_enqueue_script( 'moment-with-locale', Ninja_Forms::$url . 'assets/js/lib/moment-with-locales.min.js', array( 'jquery' ) );
+        wp_enqueue_script( 'moment-with-locale', Ninja_Forms::$url . 'assets/js/lib/moment-with-locales.min.js', array( 'jquery', 'nf-builder' ) );
         wp_enqueue_script( 'pikaday', Ninja_Forms::$url . 'assets/js/lib/pikaday.min.js', array( 'moment-with-locale' ) );
         wp_enqueue_script( 'pikaday-responsive', Ninja_Forms::$url . 'assets/js/lib/pikaday-responsive.min.js', array( 'pikaday', 'modernizr' ) );
 
@@ -304,10 +306,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
                 $settings = ( is_object( $field ) ) ? $field->get_settings() : $field[ 'settings' ];
                 $settings[ 'id' ] =  $field_id;
 
-
-//                foreach ($settings as $key => $setting) {
-//                    if (is_numeric($setting)) $settings[$key] = floatval($setting);
-//                }
+                $settings = $this->null_data_check( $settings );
 
                 $fields_settings[] = $settings;
             }
@@ -328,6 +327,8 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
                 $settings = $action->get_settings();
                 $settings['id'] = $action->get_id();
+
+                $settings = $this->null_data_check( $settings );
 
                 $actions_settings[] = $settings;
             }
@@ -358,6 +359,27 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             // console.log( preloadedFormData );
         </script>
         <?php
+    }
+
+    /**
+     * Null Data Check
+     * Accepts array of settings and removes null data the array.
+     *
+     * @param $settings - a key/value pair of settings.
+     * @return array
+     */
+    private function null_data_check( $settings )
+    {
+        // Loop over the settings we receive.
+        foreach ($settings as $key => $setting) {
+            // Check for null values in the settings array.
+            if ( null === $setting ) {
+                // Remove null settings from the array.
+                unset( $settings[ $key ] );
+                continue;
+            }
+        }
+        return $settings;
     }
 
     private function _localize_field_type_data()
@@ -625,7 +647,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         foreach( $settings as $setting ){
 
             $name = ( isset( $setting[ 'name' ] ) ) ? $setting[ 'name' ] : '';
-            $default = ( isset( $setting[ 'value' ] ) ) ? $setting[ 'value' ] : '';
+            $default = ( isset( $setting[ 'value' ] ) ) ? $setting[ 'value' ] : null;
             $setting_defaults[ $name ] = $default;
         }
 

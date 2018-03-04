@@ -12,7 +12,7 @@
                     <ul>
                     <?php foreach( $fields as $field ): ?>
                         <li>
-                            <input type="checkbox" name="nf_export_fields[]" value="<?php echo $field->get_id(); ?>">
+                            <input type="checkbox" name="nf_export_fields[]" value="<?php echo intval( $field->get_id() ); ?>">
                             <?php echo $field->get_setting( 'label' ); ?>
                         </li>
                     <?php endforeach; ?>

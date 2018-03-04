@@ -87,12 +87,18 @@ define( [ 'views/sections/widgets.js', 'views/sections/apps.js', 'views/sections
             var that = this;
             return {
                 renderNav: function() {
-                    var content = '';
+                    var content = document.createElement( 'div' );
                     _.each( nfDashItems, function(section) {
-                        var classes = (that.currentView == section.slug ) ? ' active' : '';
-                        content += '<li class="' + section.slug + '"><a href="#' + section.slug + '" class="' + classes + '">' + section.niceName + '</a></li>';
+                        var item = document.createElement( 'li' );
+                        var link = document.createElement( 'a' );
+                        link.href = '#' + section.slug;
+                        if ( that.currentView == section.slug ) link.classList.add( 'active' );
+                        link.innerHTML = section.niceName;
+                        item.classList.add( section.slug );
+                        item.appendChild( link );
+                        content.appendChild( item );
                     } );
-                    return content;
+                    return content.innerHTML;
                 },
             }
         }

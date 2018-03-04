@@ -36,12 +36,23 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
 
         $data = file_get_contents( $_FILES[ 'nf_import_form' ][ 'tmp_name' ] );
 
-        $import = Ninja_Forms()->form()->import_form( $data );
+        // Check to see if the user turned off UTF-8 encoding
+        $decode_utf8 = TRUE;
+        if( $_REQUEST[ 'nf_import_form_turn_off_encoding' ] ) {
+        	$decode_utf8 = FALSE;
+        }
+
+        $import = Ninja_Forms()->form()->import_form( $data, $decode_utf8 );
 
         if( ! $import ){
+            
+            $err_msg = '';
+            if ( function_exists( 'json_last_error_msg' ) ) {
+                $err_msg = json_last_error_msg();
+            }
 
             wp_die(
-                __( 'There uploaded file is not a valid format.', 'ninja-forms' ) . ' ' . ( function_exists( 'json_last_error' ) ) ? json_last_error_msg() : '',
+                __( 'There uploaded file is not a valid format.', 'ninja-forms' ) . ' ' . $err_msg,
                 __( 'Invalid Form Upload.', 'ninja-forms' )
             );
         }
@@ -118,8 +129,15 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
         wp_enqueue_script('postbox');
         wp_enqueue_script('jquery-ui-draggable');
 
+	    wp_enqueue_style( 'nf-admin-settings', Ninja_Forms::$url . 'assets/css/admin-settings.css' );
+
         wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
         wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+
+	    wp_register_script( 'ninja_forms_admin_import_export',
+		    Ninja_Forms::$url . 'assets/js/admin-import-export.js', array( 'jquery' ), FALSE, TRUE );
+
+	    wp_enqueue_script( 'ninja_forms_admin_import_export' );
 
         Ninja_Forms::template( 'admin-menu-import-export.html.php', compact( 'tabs', 'active_tab' ) );
     }

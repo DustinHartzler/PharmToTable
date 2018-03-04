@@ -79,6 +79,20 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
         } else {
             $suhosin =  __( 'No', 'ninja-forms' );
         }
+        
+        //max_input_nesting_level check for 5.2.2
+        if ( version_compare( PHP_VERSION, '5.2.2', '>' ) ) {
+            $max_input_nesting_level = ini_get( 'max_input_nesting_level' );
+        } else {
+            $max_input_nesting_level = __( 'Unknown', 'ninja-forms' );
+        }
+        
+        //max_input_vars check for 5.3.8
+        if ( version_compare( PHP_VERSION, '5.3.8', '>' ) ) {
+            $max_input_vars = ini_get( 'max_input_vars' );
+        } else {
+            $max_input_vars = __( 'Unknown', 'ninja-forms' );
+        }
 
 
         //Time Zone Check
@@ -104,7 +118,7 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
                 // link the plugin name to the plugin url if available
                 $plugin_name = $plugin_data['Name'];
                 if ( ! empty( $plugin_data['PluginURI'] ) ) {
-                    $plugin_name = '<a href="' . $plugin_data['PluginURI'] . '" title="' . __( 'Visit plugin homepage' , 'ninja-forms' ) . '">' . $plugin_name . '</a>';
+                    $plugin_name = '<a href="' . esc_attr( $plugin_data[ 'PluginURI' ] ) . '" title="' . __( 'Visit plugin homepage' , 'ninja-forms' ) . '">' . $plugin_name . '</a>';
                 }
 
                 $all_plugins[] = $plugin_name . ' ' . __( 'by', 'ninja-forms' ) . ' ' . $plugin_data['Author'] . ' ' . __( 'version', 'ninja-forms' ) . ' ' . $plugin_data['Version'] . $version_string;
@@ -123,9 +137,6 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
         elseif( array_key_exists( 'LOCAL_ADDR', $_SERVER ) )
             $server_ip = $_SERVER[ 'LOCAL_ADDR' ];
         $host_name = gethostbyaddr( $server_ip );
-        
-        $tls = WPN_Helper::get_tls();
-        if ( ! $tls ) $tls = 'unknown';
 
         $wp_version = get_bloginfo('version');
         $wp_compatible = ( version_compare( $wp_version, Ninja_Forms::WP_MIN_VERSION ) >= 0 ) ? __( 'Supported', 'ninja-forms' ) : __( 'Not Supported', 'ninja-forms' );
@@ -157,7 +168,6 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
             __( 'WP Version','ninja-forms' ) => $wp_version . ' - ' . $wp_compatible,
             __( 'WP Multisite Enabled','ninja-forms' ) => $multisite,
             __( 'Web Server Info','ninja-forms' ) => esc_html( $_SERVER['SERVER_SOFTWARE'] ),
-            __( 'TLS Version','ninja-forms' ) => $tls,
             __( 'PHP Version','ninja-forms' ) => esc_html( phpversion() ),
             //TODO: Possibly Refactor with Ninja forms global $_db?
             __( 'MySQL Version','ninja-forms' ) => $wpdb->db_version(),
@@ -168,9 +178,9 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
             __( 'WP Language', 'ninja-forms' ) => $lang,
             __( 'WP Max Upload Size','ninja-forms' ) => size_format( wp_max_upload_size() ),
             __('PHP Post Max Size','ninja-forms' ) => ini_get( 'post_max_size' ),
-            __('Max Input Nesting Level','ninja-forms' ) => ini_get('max_input_nesting_level'),
+            __('Max Input Nesting Level','ninja-forms' ) => $max_input_nesting_level,
             __('PHP Time Limit','ninja-forms' ) => ini_get('max_execution_time'),
-            __( 'PHP Max Input Vars','ninja-forms' ) => ini_get('max_input_vars'),
+            __( 'PHP Max Input Vars','ninja-forms' ) => $max_input_vars,
             __( 'SUHOSIN Installed','ninja-forms' ) => $suhosin,
             __( 'Server IP Address', 'ninja-forms' ) => $server_ip,
             __( 'Host Name', 'ninja-forms' ) => $host_name,

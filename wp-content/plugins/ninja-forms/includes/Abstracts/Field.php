@@ -168,7 +168,7 @@ abstract class NF_Abstracts_Field
      */
     public function admin_form_element( $id, $value )
     {
-        return '<input class="widefat" name="fields[' . $id . ']" value="' . htmlentities( $value ) . '" />';
+        return '<input class="widefat" name="fields[' . intval( $id ) . ']" value="' . esc_attr( $value ) . '" />';
     }
 
     public function get_name()
@@ -239,7 +239,7 @@ abstract class NF_Abstracts_Field
         if ( $parent_class->isAbstract() ) {
 
             $parent_class_name = $parent_class->getName();
-            $parent_templates = call_user_func( $parent_class_name . '::get_base_template' ); // Parent Class' Static Property
+            $parent_templates = call_user_func( array( $parent_class_name, 'get_base_template' ) ); // Parent Class' Static Property
             return array_merge( $templates, (array) $parent_templates );
         }
 

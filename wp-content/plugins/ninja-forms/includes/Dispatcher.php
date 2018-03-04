@@ -71,15 +71,11 @@ final class NF_Dispatcher
             $multisite_enabled = 0;
         }
 
-        $tls = WPN_Helper::get_tls();
-        if ( ! $tls ) $tls = 'unknown';
-
         $environment = array(
             'nf_version'                => Ninja_Forms::VERSION,
             'wp_version'                => get_bloginfo('version'),
             'multisite_enabled'         => $multisite_enabled,
             'server_type'               => $_SERVER['SERVER_SOFTWARE'],
-            'tls_version'               => $tls,
             'php_version'               => phpversion(),
             'mysql_version'             => $wpdb->db_version(),
             'wp_memory_limit'           => WP_MEMORY_LIMIT,
