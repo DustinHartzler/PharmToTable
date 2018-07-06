@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Facebook Thumb Fixer
+Plugin Name: Thumbnail Fixer for Facebook.
 Plugin URI: https://wordpress.org/support/plugin/facebook-thumb-fixer
-Description: Control how your thumbnails are viewed when a post is shared on Facebook, Twitter and Google+.
+Description: Control how your thumbnails are viewed when a post is shared on Facebook.
 Author: Michael Ott
-Version: 1.7.5
+Version: 1.7.6
 Author URI: http://michaelott.id.au
 Text Domain: facebook-thumb-fixer
 Domain Path: /languages/

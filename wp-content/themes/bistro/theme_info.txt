@@ -1,3 +1,0 @@
-1822936
-58e753f91fddf40abe8ebe4486f8c378
-bistro/style.css

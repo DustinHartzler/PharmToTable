@@ -1,11 +1,11 @@
-=== Facebook Thumb Fixer ===
+=== Thumb Fixer for Facebook ===
 Contributors: mikeyott
 Tags: facebook, thumb, fixer, default, thumbnail, thumbnails, thumbs, og:image, og:description, og:title, open, graph, open graph
 Requires at least: 4.0
-Tested up to: 4.8.1
+Tested up to: 4.9.4
 Stable tag: trunk
 
-Control how your thumbnails are viewed when a post is shared on Facebook, Twitter and Google+.
+Control how your thumbnails are viewed when a post is shared on Facebook, Twitter Google+ (and other social media platforms that use Open Graph protcol).
 
 == Description ==
 
@@ -13,7 +13,7 @@ This plug-in is for those who have the problem where sharing a post on Facebook 
 
 It works by making sure the thumbnail is derived from the featured image of your post. If your post doesn't have a featured image then it will use a fall-back image that you can specify.
 
-The plug-in inserts the open graph meta properties which Facebook and other social services look for when someone shares your page. These properties specific information about the page and of course the image you specify.
+The plug-in inserts the open graph meta properties which Facebook and other social services look for when someone shares your page. These properties contain information such as the title, description (content), and of course the image you specify.
 
 == Installation ==
 
@@ -56,6 +56,12 @@ Note: If no selection is made for the home page then the Object Type will defaul
 Divi theme is not houring the WordPress strip_shortcodes() function, and so if you have a shortcode early on in a post you may see unexpected results when sharing on social media.
 
 == Changelog ==
+
+= 1.7.6 =
+
+Changed plugin name
+Branding changes to satisfy Facebook legal
+Testing on WP 4.9.4
 
 = 1.7.5 =
 
