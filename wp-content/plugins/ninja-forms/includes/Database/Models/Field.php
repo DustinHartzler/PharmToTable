@@ -25,6 +25,48 @@ final class NF_Database_Models_Field extends NF_Abstracts_Model
         parent::__construct( $db, $id, $parent_id );
     }
 
+	/**
+	 * Delete
+	 *
+	 * Delete the object, its children, and its relationships.
+	 *
+	 * Also deletes data associated with field
+	 *
+	 * @return bool
+	 */
+    public function delete() {
+    	$parent_results = parent::delete();
+
+    	// if parent returns false(no errors) delete data and return false
+    	if( false == $parent_results ) {
+		    // delete data for field if it exists
+		    $this->deleteData();
+		    return false;
+	    } else {
+    		// else return true for errors
+    		return true;
+	    }
+    }
+
+	/**
+	 * Delete data for the field
+	 *
+	 * @return bool
+	 */
+    private function deleteData() {
+
+    	// check for numeric ids only
+    	if( is_numeric( $this->_id ) ) {
+
+    		$query = "DELETE m FROM `" . $this->_db->prefix . "postmeta` m"
+			    . " JOIN `" . $this->_db->prefix . "posts` p ON m.post_id = p.ID"
+			    . " WHERE p.post_type='nf_sub' AND m.meta_key='_field_" .
+		             $this->_id . "'";
+    		// delete submitted values for deleted field
+		    $this->_db->query( $query );
+	    }
+    }
+
     public static function import( array $settings, $field_id = '', $is_conversion = FALSE )
     {
         $settings = apply_filters( 'ninja_forms_before_import_fields', $settings );

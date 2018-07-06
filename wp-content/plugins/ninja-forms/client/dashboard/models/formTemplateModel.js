@@ -10,11 +10,14 @@ define( [], function() {
 		defaults: {
             objectType: 'template',
             id: 'none',
-            title: 'unknown' 
+            title: 'unknown',
+            type: ''
 		},
 
 		initialize: function() {
             this.set( 'desc', this.get( 'template-desc' ) );
+            this.set( 'modal-content', this.get( 'modal-content' ) );
+            this.set( 'modal-title', this.get( 'modal-title' ) );
         }
         
 	} );

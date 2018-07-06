@@ -1,59 +1,5 @@
 jQuery(document).ready(function($) {
 
-    /**
-     * Show an opt-in modal if the user isn't currently opted in.
-     */
-    if ( 0 == nfThreeUpgrade.optedIn ) {
-        var optinModal = new jBox( 'Modal', {
-            content:        jQuery( '#optin-modal' ),
-            closeOnEsc:     false,
-            closeOnClick:   false
-        } );
-         
-        optinModal.open();
-
-        jQuery( '#optin' ).click( function( e ) {
-            var sendEmail;
-
-            if ( jQuery( '#optin-send-email' ).attr( 'checked' ) ) {
-                sendEmail = 1;
-            } else {
-                sendEmail = 0;
-            }
-
-            // Show spinner
-            jQuery( '#optin-spinner' ).css( 'visibility', 'visible' );
-            // Hit AJAX endpoint and opt-in.
-            jQuery.post( ajaxurl, { action: 'ninja_forms_optin', send_email: sendEmail }, function( response ) {
-                jQuery( '#optin-spinner' ).css( 'visibility', 'hidden' );
-                optinModal.setContent( jQuery( '#optin-thankyou' ) );
-                /**
-                 * When we get a response from our endpoint, show a thank you and set a timeout
-                 * to close the modal.
-                 */
-                setTimeout (
-                    function(){
-                        optinModal.close();
-                    },
-                    2000
-                );
-            } );            
-        } );
-
-
-        jQuery( '#optout' ).click( function( e ) {
-            // Show spinner
-            jQuery( '#optin-spinner' ).attr( 'visibility', 'visible' );
-            // Hit AJAX endpoint and opt-in.
-             jQuery.post( ajaxurl, { action: 'ninja_forms_optout' }, function( response ) {
-                jQuery( '#optin-spinner' ).attr( 'visibility', 'hidden' );
-                // When we get a response from our endpoint, close the modal. 
-                optinModal.close();
-            } );            
-        } );
-
-    }
-
     /*
      |--------------------------------------------------------------------------
      | Ninja Forms THREE Upgrade App
@@ -183,7 +129,7 @@ jQuery(document).ready(function($) {
                 return 'You have unsaved changes.';
             } );
 
-            $.post( ajaxurl, { nf2to3: 1, action: 'ninja_forms_ajax_migrate_database' }, function( response ) {
+            $.post( ajaxurl, { nf2to3: 1, action: 'ninja_forms_ajax_migrate_database', security: nfThreeUpgrade.nonce }, function( response ) {
 
                 $.post( ajaxurl, { action: 'nfThreeUpgrade_GetSerializedFields' }, function( fieldsExport ) {
                     $.post(ajaxurl, { nf2to3: 1, fields: fieldsExport.serialized, action: 'ninja_forms_ajax_import_fields' }, function ( fieldsImport ) {

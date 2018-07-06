@@ -653,6 +653,16 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'help' => __( 'This column in the submissions table will sort by number.', 'ninja-forms' ),
     ),
 
+    'personally_identifiable'   => array(
+	    'name'           => 'personally_identifiable',
+	    'type'           => 'toggle',
+	    'group'          => 'advanced',
+	    'label'          => __( 'This Field Is Personally Identifiable Data', 'ninja-forms' ),
+	    'width'          => 'full',
+	    'value'          => '',
+	    'help' => __( 'This option helps with privacy regulation compliance', 'ninja-forms' ),
+    ),
+
     /*
      |--------------------------------------------------------------------------
      | Display Settings

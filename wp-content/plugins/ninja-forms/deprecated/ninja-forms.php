@@ -265,7 +265,7 @@ class Ninja_Forms {
 
         // Plugin version
         if ( ! defined( 'NF_PLUGIN_VERSION' ) )
-            define( 'NF_PLUGIN_VERSION', '3.2.16' );
+            define( 'NF_PLUGIN_VERSION', '3.3.9' );
 
         // Plugin Folder Path
         if ( ! defined( 'NF_PLUGIN_DIR' ) )
@@ -792,13 +792,14 @@ function ninja_forms_three_admin_notice(){
 
     $settings = Ninja_Forms()->get_plugin_settings();
     if( isset( $settings[ 'disable_admin_notices' ] ) && $settings[ 'disable_admin_notices' ] ) return;
+    if ( get_option( 'ninja_forms_has_invalid_addons' ) ) return;
 
     $currentScreen = get_current_screen();
     if( ! in_array( $currentScreen->id, array( 'toplevel_page_ninja-forms' ) ) ) return;
     wp_enqueue_style( 'nf-admin-notices', NINJA_FORMS_URL .'assets/css/admin-notices.css?nf_ver=' . NF_PLUGIN_VERSION );
 
     if( ! isset( $_GET[ 'nf-rollback' ] ) ){
-        if( ninja_forms_three_calc_check() && ninja_forms_three_addons_version_check() && ( ninja_forms_three_addons_check() || ninja_forms_three_throttle() ) ){
+        if( ninja_forms_three_addons_version_check() && ( ninja_forms_three_addons_check() || ninja_forms_three_throttle() ) ){
             ?>
             <div id="nf-admin-notice-upgrade" class="update-nag nf-admin-notice">
                 <div class="nf-notice-logo"></div>
@@ -843,7 +844,6 @@ function ninja_forms_three_admin_notice(){
 add_action( 'nf_admin_before_form_list', 'ninja_forms_konami' );
 function ninja_forms_konami(){
 
-    if( ! ninja_forms_three_calc_check() ) return;
     if( ! ninja_forms_three_addons_version_check() ) return;
 
     wp_enqueue_script( 'cheet', NINJA_FORMS_URL . 'assets/js/lib/cheet.min.js', array( 'jquery' ) );
@@ -871,11 +871,6 @@ function ninja_forms_konami(){
         } );
     </script>
     <?php
-}
-
-function ninja_forms_three_calc_check()
-{
-    return true;
 }
 
 function ninja_forms_three_addons_version_check(){
@@ -907,25 +902,101 @@ function ninja_forms_three_addons_version_check(){
 }
 
 function ninja_forms_three_addons_check(){
-    $items = file_get_contents( dirname( __FILE__ ) . '/addons-feed.json' );
-    $items = json_decode($items, true);
-
+    
+    // Assume we have no add-ons.
     $has_addons = FALSE;
-    if( is_array( $items ) ) {
-        foreach ($items as $item) {
-            if (empty($item['plugin'])) continue;
-            if (!file_exists(WP_PLUGIN_DIR . '/' . $item['plugin'])) continue;
-            $has_addons = TRUE;
-            $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $item['plugin'], false, true);
-            if (!$plugin_data['Version']) continue;
-            if (version_compare($plugin_data['Version'], '3', '>=')) continue;
-            /*
-             * There are non-compatible add-ons installed.
-             */
-            return FALSE;
+    // If get_plugins is undefined...
+    if ( ! function_exists( 'get_plugins' ) ) {
+        // Require the core file.
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+    // Get a list of plugins.
+    $plugins = get_plugins();
+    $not_ours = array();
+    // For each plugin...
+    foreach( $plugins as $plugin => $data ){
+        // If this isn't Ninja Forms Core...
+        // AND If it includes a ninja-forms prefix...
+        if ( 'ninja-forms/ninja-forms.php' != $plugin && 0 === strncmp( $plugin, 'ninja-forms-', 12 ) ){
+            // Get the plugin slug.
+            $slug = explode( '/', $plugin );
+            // If the plugin is not active...
+            // Exit early.
+            if ( ! is_plugin_active( $plugin ) ) continue;
+            // If the plugin is not in our list...
+            if ( ! ninja_forms_valid_slug( $slug[ 0 ] ) ) {
+                // Add it onto our array of data
+                $not_ours[ $plugin ] = $data;
+            } // Otherwise... (It is in our list.)
+            else {
+                // There are add-ons installed.
+                $has_addons = TRUE;
+                // If the plugin version is not compatible with 3.0...
+                if ( version_compare( $data[ 'Version' ], '3', '<' ) ) {
+                    // There are non-compatible add-ons installed.
+                    return FALSE;
+                }
+            }
         }
     }
+//    $display = __( 'However, the following plugins are not compatible with Ninja Forms Three and could lead to issues with the upgrade process. Please deactivate and remove the following before attempting to upgrade:', 'ninja-forms' ) . '<br />';
+//    foreach( $not_ours as $plugin ) {
+//        $display .= $plugin[ 'Name' ] . ', ';
+//    }
+//    $display = substr( $display, 0, strlen( $display ) - 2 );
+    // If we have invalid add-ons...
+    if ( ! empty( $not_ours ) ) {
+        // Setup our option.
+        update_option( 'ninja_forms_has_invalid_addons', 1 );
+    } // Otherwise... (We don't have invalid add-ons.)
+    else {
+        // Remove our option.
+        update_option( 'ninja_forms_has_invalid_addons', 0 );
+    }
     return $has_addons;
+}
+
+function ninja_forms_valid_slug( $slug ) {
+    // Declare a list of expected slugs.
+    $nf_slugs = array(
+        // Release slugs.
+        'ninja-forms-aweber',
+        'ninja-forms-campaign-monitor',
+        'ninja-forms-capsule-crm',
+        'ninja-forms-cleverreach',
+        'ninja-forms-clicksend',
+        'ninja-forms-conditionals',
+        'ninja-forms-constant-contact',
+        'ninja-forms-elavon-payment-gateway',
+        'ninja-forms-emma',
+        'ninja-forms-excel-export',
+        'ninja-forms-uploads',
+        'ninja-forms-insightly-crm',
+        'ninja-forms-style',
+        'ninja-forms-mail-chimp',
+        'ninja-forms-multi-part',
+        'ninja-forms-paypal-express',
+        'ninja-forms-pdf-submissions',
+        'ninja-forms-post-creation',
+        'ninja-forms-salesforce-crm',
+        'ninja-forms-sendy',
+        'ninja-forms-slack',
+        'ninja-forms-stripe',
+        'ninja-forms-trello',
+        'ninja-forms-webhooks',
+        'ninja-forms-webmerge',
+        'ninja-forms-zapier',
+        'ninja-forms-zoho-crm',
+        // Developer slugs.
+        'ninja-forms-conditional-logic',
+        'ninja-forms-layout-styles',
+    );
+    // If the slug matches...
+    if ( in_array( $slug, $nf_slugs ) ) {
+        return true;
+    }
+    // Otherwise...
+    return false;
 }
 
 /*

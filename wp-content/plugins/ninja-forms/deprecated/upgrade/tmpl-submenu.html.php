@@ -157,6 +157,7 @@
 </div>
 
 
+<!--
 <div id="optin-modal" style="display:none;">
     <h2>Help make Ninja Forms better!</h2>
     <p>
@@ -170,7 +171,4 @@
     <span id="optin-spinner" class="spinner"></span>
     <button id="optin" class="button-primary" style="margin-bottom: 10px; font-size: 16px;">Yes, I want to make Ninja Forms better!</button> <button id="optout" class="button-secondary" style="margin-bottom: 10px;">No, please don't collect errors or other data.</button>
 </div>
-
-<div id="optin-thankyou" style="display:none;">
-    Thank you for opting in!
-</div>
+-->

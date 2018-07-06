@@ -24,7 +24,16 @@ abstract class NF_Abstracts_Migration
     public function charset_collate()
     {
         global $wpdb;
-        return $wpdb->get_charset_collate();
+        // If our mysql version is 5.5.3 or higher...
+        if ( version_compare( $wpdb->db_version(), '5.5.3', '>=' ) ) {
+            // We can use mb4.
+            return 'DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci';
+        } // Otherwise...
+        else {
+            // We use standard utf8.
+            return 'DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci';
+        }
+        
     }
 
     public function _run()
@@ -46,7 +55,7 @@ abstract class NF_Abstracts_Migration
         global $wpdb;
         if( ! $this->table_name ) return;
         if( 0 == $wpdb->query( $wpdb->prepare( "SHOW TABLES LIKE '%s'", $this->table_name() ) ) ) return;
-        $wpdb->query( $wpdb->prepare( "DROP TABLE %s", $this->table_name() ) );
+        $wpdb->query( "DROP TABLE " . $this->table_name() );
         return $this->drop();
     }
 

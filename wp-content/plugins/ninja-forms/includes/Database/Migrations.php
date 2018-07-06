@@ -16,12 +16,24 @@ class NF_Database_Migrations
         $this->migrations[ 'object_meta' ]   = new NF_Database_Migrations_ObjectMeta();
         $this->migrations[ 'relationships' ] = new NF_Database_Migrations_Relationships();
         $this->migrations[ 'settings' ]      = new NF_Database_Migrations_Settings();
+        $this->migrations[ 'upgrades' ]      = new NF_Database_Migrations_Upgrades();
+        $this->migrations[ 'chunks' ]        = new NF_Database_Migrations_Chunks();
     }
 
     public function migrate()
     {
         foreach( $this->migrations as $migration ){
             $migration->_run();
+        }
+    }
+    
+    /**
+     * Function to run all our stage one changes.
+     */
+    public function do_stage_one()
+    {
+        foreach( $this->migrations as $migration ) {
+            $migration->_stage_one();
         }
     }
 
@@ -85,10 +97,19 @@ class NF_Database_Migrations
         global $wpdb;
         /* Delete known options */
         delete_option( 'nf_admin_notice' );
-        delete_option( 'ninja_forms_settings' );
-        delete_option( 'ninja_forms_load_deprecated' );
+        delete_option( 'nf_form_tel_data' );
+        delete_option( 'nf_form_tel_sent' );
+        delete_option( 'nf_tel_collate' );
         delete_option( 'ninja_forms_allow_tracking' );
+        delete_option( 'ninja_forms_db_version' );
         delete_option( 'ninja_forms_do_not_allow_tracking' );
+        delete_option( 'ninja_forms_load_deprecated' );
+        delete_option( 'ninja_forms_mailchimp_interests' );
+        delete_option( 'ninja_forms_oauth_client_secret' );
+        delete_option( 'ninja_forms_optin_reported' );
+        delete_option( 'ninja_forms_settings' );
+        delete_option( 'ninja_forms_transactional_email_enabled' );
+        delete_option( 'ninja_forms_version' );
 
         /* Delete possible options */
         $wpdb->query( "DELETE FROM `{$wpdb->options}` WHERE `option_name` LIKE 'wp_nf_%'" );
@@ -123,11 +144,11 @@ class NF_Database_Migrations
         global $wpdb;
 
         /* Drop Deprecated Tables (v2.9.x) */
-        $wpdb->query( "DROP TABLE `{$wpdb->prefix}nf_objectmeta`" );
-        $wpdb->query( "DROP TABLE `{$wpdb->prefix}nf_objects`" );
-        $wpdb->query( "DROP TABLE `{$wpdb->prefix}nf_relationships`" );
-        $wpdb->query( "DROP TABLE `{$wpdb->prefix}ninja_forms_fav_fields`" );
-        $wpdb->query( "DROP TABLE `{$wpdb->prefix}ninja_forms_fields`" );
+        $wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}nf_objectmeta`" );
+        $wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}nf_objects`" );
+        $wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}nf_relationships`" );
+        $wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}ninja_forms_fav_fields`" );
+        $wpdb->query( "DROP TABLE IF EXISTS `{$wpdb->prefix}ninja_forms_fields`" );
 
         /* Delete Deprecated Options (v2.9.x) */
         delete_option( 'nf_upgrade_notice' );

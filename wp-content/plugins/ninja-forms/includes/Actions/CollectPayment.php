@@ -32,14 +32,32 @@ final class NF_Actions_CollectPayment extends NF_Abstracts_Action
 
     /**
      * Constructor
+     *
+     * @param string $cp_nice_name
+     * @param string $cp_name
      */
-    public function __construct()
+    public function __construct( $cp_nice_name = 'Collect Payment',
+	    $cp_name = 'collectpayment' )
     {
         parent::__construct();
 
-        $this->_nicename = __( 'Collect Payment', 'ninja-forms' );
+        // Set the nice name to what we passed in. 'Collect Payment' is default
+	    if( 'Collect Payment' == $cp_nice_name ) {
+	    	$cp_nice_name = __( 'Collect Payment', 'ninja-forms' );
+	    }
+        $this->_nicename = $cp_nice_name;
+        // Set name to what we passed in. 'collectpayment' is default
+        $this->_name = strtolower( $cp_name );
 
         $settings = Ninja_Forms::config( 'ActionCollectPaymentSettings' );
+
+        /**
+         * if we pass in something other than 'collectpayment', set the value
+         * of the gateway drop-down
+         **/
+        if ( 'collectpayment' != $this->_name ) {
+        	$settings[ 'payment_gateways' ][ 'value' ] = $this->_name;
+        }
 
         $this->_settings = array_merge( $this->_settings, $settings );
 
@@ -67,26 +85,29 @@ final class NF_Actions_CollectPayment extends NF_Abstracts_Action
          *
          * If we have selected "Field" as our total type, then we want to use payment_total_field
          *
-         * If we have selected "Custom" as our total type, then we want to use payment_total_custom
+         * If we have selected "Custom" as our total type, then we want to use payment_total_fixed
          */
-        $total_type = isset( $action_settings[ 'payment_total_type' ] ) ? $action_settings[ 'payment_total_type' ] : 'payment_total_custom';
-
-        switch ( $total_type ) {
-            case 'calculation':
-                $payment_total = $action_settings[ 'payment_total_calc' ];
-                break;
-            case 'field':
-                $payment_total = $action_settings[ 'payment_total_field' ];
-                break;
-            case 'custom':
-                $payment_total = $action_settings[ 'payment_total_custom' ];
-                break;
-            default:
-                $payment_total = $action_settings[ 'payment_total_custom' ];
-                break;
-        }
-
-        return $payment_gateway_class->process( $action_settings, $form_id, $data, $payment_total );
+//        $total_type = isset( $action_settings[ 'payment_total_type' ] ) ? $action_settings[ 'payment_total_type' ] : 'payment_total_fixed';
+//
+//        switch ( $total_type ) {
+//            case 'calc':
+//                $payment_total = $action_settings[ 'payment_total_calc' ];
+//                break;
+//            case 'field':
+//                $payment_total = $action_settings[ 'payment_total_field' ];
+//                break;
+//            case 'fixed':
+//                $payment_total = $action_settings[ 'payment_total_fixed' ];
+//                break;
+//            default:
+//                $payment_total = $action_settings[ 'payment_total_fixed' ];
+//                break;
+//        }
+//
+//        return $payment_gateway_class->process( $action_settings, $form_id, $data, $payment_total );
+        // The above block is not actually being used.
+        
+        return $payment_gateway_class->process( $action_settings, $form_id, $data );
     }
 
     public function register_payment_gateways()

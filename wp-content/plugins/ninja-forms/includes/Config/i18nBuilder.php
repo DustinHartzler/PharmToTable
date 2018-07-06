@@ -70,5 +70,15 @@ return apply_filters( 'ninja_forms_i18n_builder', array(
                                                 __( 'Th', 'ninja-forms' ),
                                                 __( 'Fr', 'ninja-forms' ),
                                                 __( 'Sa', 'ninja-forms' )
-                                            )
+                                            ),
+	'fieldDataDeleteMsg'   => sprintf( __( '%sThis will also DELETE all submission data associated with this field.%sYou will not be able to retrieve this data later!%s' ), '<p>', '</p><p>', '</p><br />' ),
+	'delete'    => __( 'Delete' ),
+	'cancel'    => __( 'Cancel' ),
+    'minVal'    => __( 'Min Value' ),
+    'maxVal'    => __( 'Max Value' ),
+    'valueChars' => __( 'In order to prevent errors, values may only contain'
+		. ' a specific subset of characters ( a-z, 0-9, -, _, @, space ). You'
+		. ' can use the option label in your success message(s) or email action(s) by adding'
+		. ' the :label attribute to your list field merge tags. For example:'
+		. ' {field:key:label}', 'ninja-forms' ),
 ));

@@ -1,8 +1,17 @@
 var nfRadio = Backbone.Radio;
 var nfDebug = false;
 
+if( ! useServices ){
+  /**
+   * If the feature flag isn't set then filter out the "Services" tab.
+   */
+  nfDashItems = nfDashItems.filter(function(item){
+    return 'services' !== item.slug;
+  });
+}
+
 jQuery( document ).ready( function( $ ) {
-    require( [ 'controllers/formsController', 'views/dashboardView' ], function( FormsController, DashboardView ) {
+    require( [ 'controllers/formsController', 'controllers/oauthController', 'controllers/servicesController', 'views/dashboardView' ], function( FormsController, OAuthController, ServicesController, DashboardView ) {
 
         var NinjaFormsDashboard = Marionette.Application.extend( {
 
@@ -31,6 +40,8 @@ jQuery( document ).ready( function( $ ) {
                 this.showView( new DashboardView() );
 
                 this.controllers.forms = new FormsController();
+                if( useServices ) this.controllers.oauth = new OAuthController();
+                if( useServices ) this.controllers.services = new ServicesController();
 
                 //var data = {id: 1, title: 'Contact Me', created: '10-23-2016'};
                 //var form = new FormModel(data);
@@ -61,18 +72,20 @@ jQuery( document ).ready( function( $ ) {
     } );
 } );
 
+
+
 /**
  * Submenu Routing
  */
 
-jQuery( 'a[href="admin.php?page=ninja-forms#new-form"]' ).on( 'click', function(){
+jQuery( 'a[href="admin.php?page=ninja-forms#new-form"]' ).on( 'click', function( event ){
     event.preventDefault();
     window.location.hash = 'new-form';
     nfRadio.channel( 'dashboard' ).request( 'show:widgets' );
     nfRadio.channel( 'widget-forms' ).request( 'show:newFormsGrid' );
 } );
 
-jQuery( 'a[href="admin.php?page=ninja-forms#apps"]' ).on( 'click', function(){
+jQuery( 'a[href="admin.php?page=ninja-forms#apps"]' ).on( 'click', function( event ){
     event.preventDefault();
     window.location.hash = 'apps';
     nfRadio.channel( 'dashboard' ).request( 'show:apps' );
@@ -85,3 +98,12 @@ jQuery( 'a[href="admin.php?page=ninja-forms"]' ).on( 'click', function( event ){
     nfRadio.channel( 'dashboard' ).request( 'show:widgets' );
     nfRadio.channel( 'widget-forms' ).request( 'show:formsTable' );
 } );
+
+/**
+ * Hash Change Routing Fallback
+ * To avoid the need to manually add listeners to views, this is a generic hash change listener.
+ */
+jQuery(window).on('hashchange', function() {
+  var hash = window.location.hash.substr(1);
+  nfRadio.channel( 'dashboard' ).request( 'show:' + hash );
+});

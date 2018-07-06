@@ -468,7 +468,10 @@ Label Three, value-three, 3
 
 <script id="tmpl-nf-edit-setting-number" type="text/template">
     <label for="{{{ data.name }}}">{{{ data.label }}} {{{ data.renderTooltip() }}}
-        <input type="number" class="setting" id="{{{ data.name }}}" value="{{{ data.value }}}" placeholder="{{{ ( 'undefined' != typeof data.placeholder ) ? data.placeholder : '' }}}" />
+        <input type="number" class="setting" id="{{{ data.name }}}"
+               value="{{{ data.value }}}" {{{ data.renderMinMax() }}}
+               placeholder="{{{ ('undefined' != typeof data.placeholder ) ? data.placeholder : '' }}}" />
+	    <em>{{{ data.renderMinMaxHelper() }}}</em>
     </label>
 </script>
 
@@ -499,6 +502,13 @@ Label Three, value-three, 3
         </select>
         <div></div>
     </label>
+</script>
+
+<script id="tmpl-nf-edit-setting-email-select" type="text/template">
+	<label for="{{{ data.name }}}" class="nf-select">{{{ data.label }}} {{{ data.renderTooltip() }}}
+			{{{ data.renderEmailFieldOptions() }}}
+		<div></div>
+	</label>
 </script>
 
 <script id="tmpl-nf-edit-setting-field-select" type="text/template">
@@ -536,6 +546,46 @@ Label Three, value-three, 3
     <span class="nf-setting-label">{{{ data.label }}}{{{ data.renderTooltip() }}}</span>
     <input type="checkbox" data-setting="{{{ data.settingName }}}" id="{{{ data.name }}}" class="nf-toggle setting" {{{ ( 1 == data.value ) ? 'checked' : '' }}} />
     <label for="{{{ data.name }}}">{{{ data.label }}}</label>
+
+</script>
+
+
+<script id="tmpl-nf-edit-setting-radio" type="text/template">
+
+    <span class="nf-setting-label">{{{ data.label }}}{{{ data.renderTooltip() }}}</span>
+    <#
+    _.each( data.options, function( option ) {
+    #>
+    <span class="nf-setting-label">{{{ option.label }}}</span>
+    <input type="radio" value="{{{ option.value }}}" name="{{{ data.name }}}" {{{ data.value == option.value ? "checked" : '' }}}></option>
+    <#
+    } );
+    #>
+
+</script>
+
+<script id="tmpl-nf-edit-setting-button-toggle" type="text/template">
+
+	<span class="nf-setting-label">{{{ data.label }}}{{{ data.renderTooltip() }}}</span>
+	<div class="nf-setting button-toggle">
+		<#
+		_.each( data.options, function( option ) {
+		#>
+			<label for="field-{{{ option.value }}}"
+				data-option_value="{{{ option.value }}}">
+				<input type="radio" id="field-{{{ option.value }}}"
+			       style="display:none;"
+			       class="nf-button-toggle setting"
+					value="{{{ option.value }}}" name="{{{data.name }}}"
+	                {{{ data.value == option.value ? "checked" : '' }}}>
+				<span class="nf-button primary {{{ data.value != option.value ?
+				"disabled": "" }}}">{{{ option.label }}}</span>
+			</label>
+			<#
+		} );
+		#>
+	</div>
+
 
 </script>
 
@@ -691,6 +741,22 @@ Label Three, value-three, 3
         <input type="button" class="cancel-link extra" value="Cancel">
         <input type="button" class="insert-link extra" value="Insert">
     </div>
+</script>
+
+<script id="nf-tmpl-save-field-repeater-row" type="text/template">
+	<div>
+		<span class="dashicons dashicons-menu handle"></span>
+	</div>
+	<div class="nf-select">
+		<# try { #>
+		{{{ data.renderNonSaveFieldSelect( 'field', data.field ) }}}
+		<# } catch ( err ) { #>
+		<input type="text" class="setting" value="{{ data.field }}" data-id="field" >
+		<# } #>
+	</div>
+	<div>
+		<span class="dashicons dashicons-dismiss nf-delete"></span>
+	</div>
 </script>
 
 <?php do_action( 'ninja_forms_builder_templates' ); ?>

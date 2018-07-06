@@ -12,21 +12,55 @@
 
 function nf_admin_notices( $notices ) {
 
-    if( ninja_forms_three_calc_check() && ninja_forms_three_addons_version_check() && ninja_forms_three_addons_check() ){
+    if( ! ninja_forms_three_addons_check() || ( ninja_forms_three_addons_version_check() && ninja_forms_three_addons_check() ) ){
 
 
         /*
          * Upgrade Now
          */
         $upgrade_link = admin_url( 'admin.php?page=ninja-forms-three' );
-        $notices['three_upgrade'] = array(
+        $notice = array(
             'title' => __( 'Upgrade to Ninja Forms THREE', 'ninja-forms' ),
-            'msg' => sprintf( __( 'You are eligible to upgrade to Ninja Forms THREE! %sUpgrade Now%s', 'ninja-forms' ), '<a target="_blank" href="' . $upgrade_link . '">', '</a>' ),
             'link' => '',
             'int' => 0,
             'blacklist' => array( 'ninja-forms', 'ninja-forms-three' ),
         );
-
+        if ( ! get_option( 'ninja_forms_has_invalid_addons' ) ) {
+            $notice[ 'msg' ] = sprintf( __( 'You are eligible to upgrade to Ninja Forms THREE! %sUpgrade Now%s', 'ninja-forms' ), '<a target="_blank" href="' . $upgrade_link . '">', '</a>' );
+        } else {
+            if ( ! function_exists( 'get_plugins' ) ) {
+                // Require the core file.
+                require_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+            // Get a list of plugins.
+            $plugins = get_plugins();
+            $not_ours = array();
+            // For each plugin...
+            foreach( $plugins as $plugin => $data ){
+                // If this isn't Ninja Forms Core...
+                // AND If it includes a ninja-forms prefix...
+                if ( 'ninja-forms/ninja-forms.php' != $plugin && 0 === strncmp( $plugin, 'ninja-forms-', 12 ) ){
+                    // Get the plugin slug.
+                    $slug = explode( '/', $plugin );
+                    // If the plugin is not active...
+                    // Exit early.
+                    if ( ! is_plugin_active( $plugin ) ) continue;
+                    // If the plugin is not in our list...
+                    if ( ! ninja_forms_valid_slug( $slug[ 0 ] ) ) {
+                        // Add it onto our array of data
+                        $not_ours[ $plugin ] = $data;
+                    }
+                }
+            }
+            $display = sprintf( __( 'You are eligible to upgrade to Ninja Forms THREE! However, the following plugins are not compatible with Ninja Forms THREE and could lead to issues with the upgrade process.%sPlease deactivate and remove the following before attempting to upgrade:%s', 'ninja-forms' ), '<br />', '<br />' );
+            foreach( $not_ours as $plugin ) {
+                $display .= __( $plugin[ 'Name' ], $plugin[ 'TextDomain' ] ) . ', ';
+            }
+            $display = substr( $display, 0, strlen( $display ) - 2 );
+            $notice[ 'msg' ] = $display;
+            $notice[ 'blacklist' ] = array( 'ninja-forms-three' );
+        }
+        $notices['three_upgrade'] = $notice;
     } else {
 
         /*

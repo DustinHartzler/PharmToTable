@@ -23,6 +23,9 @@ class NF_Fields_LastName extends NF_Abstracts_UserInfo
         parent::__construct();
 
         $this->_nicename = __( 'Last Name', 'ninja-forms' );
+
+	    $this->_settings[ 'custom_name_attribute' ][ 'value' ] = 'lname';
+	    $this->_settings[ 'personally_identifiable' ][ 'value' ] = '1';
     }
 
     public function filter_default_value( $default_value, $field_class, $settings )

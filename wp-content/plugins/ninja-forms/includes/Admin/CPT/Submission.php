@@ -41,6 +41,8 @@ class NF_Admin_CPT_Submission
 
         // Save our hidden columns by form id.
         add_action( 'wp_ajax_nf_hide_columns', array( $this, 'hide_columns' ) );
+        
+        add_action( 'trashed_post', array( $this, 'nf_trash_sub' ) );
     }
 
     /**
@@ -76,11 +78,12 @@ class NF_Admin_CPT_Submission
             'show_in_menu'        => false,
             'menu_position'       => 5,
             'show_in_admin_bar'   => false,
-            'show_in_nav_menus'   => true,
+            'show_in_nav_menus'   => false,
             'can_export'          => true,
-            'has_archive'         => true,
+            'has_archive'         => false,
             'exclude_from_search' => true,
-            'publicly_queryable'  => true,
+            'publicly_queryable'  => false,
+//            'rewrite'             => false,
             'capability_type' => 'nf_sub',
             'capabilities' => array(
                 'publish_posts' => 'nf_sub',
@@ -95,6 +98,23 @@ class NF_Admin_CPT_Submission
             ),
         );
         register_post_type( $this->cpt_slug, $args );
+    }
+    
+    public function nf_trash_sub( $post_id )
+    {   
+        // If this isn't a submission...
+        if ( 'nf_sub' != get_post_type( $post_id ) ) {
+            // Exit early.
+            return false;
+        }
+        global $pagenow;
+        // If we were on the post.php page...
+        if ( 'post.php' == $pagenow ) {
+            // Redirect the user to the submissions page for the form that submission belonged to.
+            wp_safe_redirect( admin_url( 'edit.php?post_status=all&post_type=nf_sub&form_id=' . get_post_meta( $post_id, '_form_id', true ) ) );
+            exit;
+        }
+        
     }
 
     public function enqueue_scripts()
@@ -140,7 +160,7 @@ class NF_Admin_CPT_Submission
             'id' => __( '#', 'ninja-forms' ),
         );
 
-        $form_cache = get_option( 'nf_form_' . $form_id );
+        $form_cache = WPN_Helper::get_nf_cache( $form_id );
 
         $form_fields = Ninja_Forms()->form( $form_id )->get_fields();
 
@@ -344,7 +364,7 @@ class NF_Admin_CPT_Submission
         $hidden_columns = get_user_option( 'manageedit-nf_subcolumnshidden-form-' . $form_id );
 
         // Checks to see if hidden columns are in the format expected for 2.9.x and converts formatting.
-        if( strpos( $hidden_columns[ 0 ], 'form_'  ) !== false ) {
+        if(  ! empty( $hidden_columns ) && strpos( $hidden_columns[ 0 ], 'form_'  ) !== false  ) {
             $hidden_columns = $this->convert_hidden_columns( $form_id, $hidden_columns );
         }
 

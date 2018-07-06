@@ -8,6 +8,7 @@ return apply_filters( 'ninja_forms_i18n_front_end', array(
 
     'ninjaForms'                            => __( 'Ninja Forms', 'ninja-forms' ),
     'changeEmailErrorMsg'                   => __( 'Please enter a valid email address!', 'ninja-forms' ),
+    'changeDateErrorMsg'                   => __( 'Please enter a valid date!', 'ninja-forms' ),
     'confirmFieldErrorMsg'                  => __( 'These fields must match!', 'ninja-forms' ),
     'fieldNumberNumMinError'                => __( 'Number Min Error', 'ninja-forms' ),
     'fieldNumberNumMaxError'                => __( 'Number Max Error', 'ninja-forms' ),

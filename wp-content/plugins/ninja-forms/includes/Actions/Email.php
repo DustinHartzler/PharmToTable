@@ -52,7 +52,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         $errors = $this->check_for_errors( $action_settings );
 
         $headers = $this->_get_headers( $action_settings );
-        
+
         if ( has_filter( 'ninja_forms_get_fields_sorted' ) ) {
             $fields_by_key = array();
             foreach( $data[ 'fields' ] as $field ){
@@ -79,7 +79,13 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         $message = apply_filters( 'ninja_forms_action_email_message', $message, $data, $action_settings );
 
         try {
-            $sent = wp_mail($action_settings['to'], $action_settings['email_subject'], $message, $headers, $attachments);
+            /**
+             * Hook into the email send to override functionality.
+             * @return bool True if already sent. False to fallback to default behavior. Throw a new Exception if there is an error.
+             */
+            if( ! $sent = apply_filters( 'ninja_forms_action_email_send', false, $action_settings, $message, $headers, $attachments ) ){
+              $sent = wp_mail($action_settings['to'], $action_settings['email_subject'], $message, $headers, $attachments);
+            }
         } catch ( Exception $e ){
             $sent = false;
             $errors[ 'email_not_sent' ] = $e->getMessage();
@@ -97,7 +103,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         if( $errors && current_user_can( 'manage_options' ) ){
             $data[ 'errors' ][ 'form' ] = $errors;
         }
-        
+
         if ( ! empty( $attachments ) ) {
             $this->_drop_csv();
         }
@@ -188,6 +194,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
 
         $headers[] = 'Content-Type: text/' . $settings[ 'email_format' ];
         $headers[] = 'charset=UTF-8';
+        $headers[] = 'X-Ninja-Forms:ninja-forms'; // Flag for transactional email.
 
         $headers[] = $this->_format_from( $settings );
 
@@ -268,7 +275,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
     private function _create_csv( $fields )
     {
         $csv_array = array();
-        
+
         // Get our current date.
         $date_format = Ninja_Forms()->get_setting( 'date_format' );
         $today = date( $date_format, current_time( 'timestamp' ) );
@@ -276,7 +283,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         $csv_array[ 1 ][] = $today;
 
         foreach( $fields as $field ){
-            
+
             $ignore = array(
                 'hr',
                 'submit',
@@ -292,9 +299,9 @@ final class NF_Actions_Email extends NF_Abstracts_Action
 
             if( ! isset( $field[ 'label' ] ) ) continue;
             if( in_array( $field[ 'type' ], $ignore ) ) continue;
-            
+
             $label = ( '' != $field[ 'admin_label' ] ) ? $field[ 'admin_label' ] : $field[ 'label' ];
-            
+
             $value = WPN_Helper::stripslashes( $field[ 'value' ] );
             if ( empty( $value ) ) {
                 $value = '';
@@ -341,7 +348,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
         rename( $dir.'/'.$basename, $dir.'/'.$new_name.'.csv' );
         return $dir.'/'.$new_name.'.csv';
     }
-    
+
     /**
      * Function to delete csv file from temp directory after Email Action has completed.
      */

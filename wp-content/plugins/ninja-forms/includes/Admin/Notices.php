@@ -115,6 +115,7 @@ class NF_Admin_Notices
                 $admin_display_msg = ( isset( $admin_notices[ $slug ][ 'msg' ] ) ? $admin_notices[ $slug ][ 'msg'] : '' );
                 $admin_display_title = ( isset( $admin_notices[ $slug ][ 'title' ] ) ? $admin_notices[ $slug ][ 'title'] : '' );
                 $admin_display_link = ( isset( $admin_notices[ $slug ][ 'link' ] ) ? $admin_notices[ $slug ][ 'link' ] : '' );
+                $admin_can_dismiss = ( isset( $admin_notices[ $slug ][ 'dismiss' ] ) ? $admin_notices[ $slug ][ 'dismiss' ] : 1 );
                 $output_css = false;
 
                 // Ensure the notice hasn't been hidden and that the current date is after the start date
@@ -135,7 +136,9 @@ class NF_Admin_Notices
                     echo '<ul class="nf-notice-body nf-red">
                           ' . $admin_display_link . '
                         </ul>';
-                    echo '<a href="' . wp_nonce_url( esc_attr( $query_str ) ) . '" class="dashicons dashicons-dismiss"></a>';
+                    if ( $admin_can_dismiss ) {
+                        echo '<a href="' . wp_nonce_url( esc_attr( $query_str ) ) . '" class="dashicons dashicons-dismiss"></a>';
+                    }
                     echo '</div>';
 
                     $this->notice_spam += 1;

@@ -3,6 +3,7 @@
 
 .jBox-wrapper {
 	text-align: left;
+    z-index: 100000000 !important;
 }
 
 .jBox-wrapper,
@@ -139,6 +140,11 @@
 
 .jBox-Modal .jBox-content {
 	padding: 12px 15px;
+}
+
+.ninja-forms-settings #jBox-overlay .jBox-closeButton,
+.ninja-forms-app #jBox-overlay .jBox-closeButton {
+    display: none;
 }
 
 /* jBox Confirm */
@@ -474,6 +480,7 @@
 	height: 100%;
 	background: #000;
 	background-color: rgba(0, 0, 0, .6);
+    z-index: 99999999 !important;
 }
 
 /* Block scrolling */
@@ -567,4 +574,47 @@ body[class*=" jBox-blockScroll-"] {
     text-align: center;
     font-size: 18px;
     color: #888;
+}
+
+/* Progress Bar */
+
+.jBox-content .nf-progress-bar {
+    height: 20px;
+    border-radius: 3px;
+    margin: 25px 0px;
+    border: 1px solid #1ea9ea;
+    position: relative;
+    overflow: hidden;
+}
+
+.jBox-content .nf-progress-bar-slider {
+    height: 20px;
+    width: 0%;
+    background-color: #1ea9ea;
+    transition: width 0.3s;
+}
+
+/* Buttons */
+
+.jBox-content .nf-button {
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 17px;
+    padding: 10px 30px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    appearance: none;
+}
+.jBox-content .nf-button.primary {
+        background: #1EA9EA;
+        border: 1px solid #1EA9EA;
+        color: #fff;
+}
+.jBox-content .nf-button.secondary {
+    background: #fff;
+    border: 1px solid #1EA9EA;
+    color: #1EA9EA;
 }

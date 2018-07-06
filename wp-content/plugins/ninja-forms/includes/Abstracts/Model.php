@@ -255,7 +255,7 @@ class NF_Abstracts_Model
         }
 
         if( ! $this->_settings ) {
-            $form_cache = get_option('nf_form_' . $this->_parent_id);
+            $form_cache = WPN_Helper::get_nf_cache( $this->_parent_id );
             if ($form_cache) {
 
                 if ('field' == $this->_type) {

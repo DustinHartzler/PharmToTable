@@ -67,7 +67,7 @@ class NF_Abstracts_ModelFactory
 
         $this->_object = $this->_form = new NF_Database_Models_Form( $this->_db, $id );
 
-        $form_cache = get_option( 'nf_form_' . $id, false );
+        $form_cache = WPN_Helper::get_nf_cache( $id );
 
         if( $form_cache && isset ( $form_cache[ 'settings' ] ) ){
             $this->_object->update_settings( $form_cache[ 'settings' ] );
@@ -230,7 +230,7 @@ class NF_Abstracts_ModelFactory
 
         if( $where || $fresh || ! $this->_fields ){
 
-            $form_cache = get_option( 'nf_form_' . $form_id, false );
+            $form_cache = WPN_Helper::get_nf_cache( $form_id );
 
             if( ! $form_cache ) {
                 $model_shell = new NF_Database_Models_Field($this->_db, 0);

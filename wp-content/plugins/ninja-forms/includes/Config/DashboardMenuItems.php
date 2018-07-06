@@ -6,6 +6,10 @@ return apply_filters( 'ninja_forms_dashboard_menu_items', array(
         'slug' => 'widgets',
         'niceName' => __( 'Forms', 'ninja-forms' ),
     ),
+    'services' => array(
+        'slug' => 'services',
+        'niceName' => __( 'Services', 'ninja-forms' ),
+    ),
     'apps' => array(
         'slug' => 'apps',
         'niceName' => __( 'Apps & Integrations', 'ninja-forms' ),

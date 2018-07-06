@@ -25,6 +25,7 @@ class NF_Admin_AddFormModal {
         if( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) ){
             return $context;
         }
+        
         $html = '<style>
             span.nf-insert-form {
                 color:#888;
@@ -41,9 +42,8 @@ class NF_Admin_AddFormModal {
         $html .= '<a href="#" class="button nf-insert-form"><span class="nf-insert-form dashicons dashicons-feedback"></span> ' . __( 'Add Form', 'ninja-forms' ) . '</a>';
 
         wp_enqueue_script( 'nf-combobox', Ninja_Forms::$url . 'assets/js/lib/combobox.min.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-button', 'jquery-ui-autocomplete' ) );
-        wp_enqueue_script( 'jBox', Ninja_Forms::$url . 'assets/js/lib/jBox.min.js', array( 'jquery' ) );
 
-        wp_enqueue_style( 'nf-combobox', Ninja_Forms::$url . 'assets/css/combobox.css' );
+        wp_enqueue_script( 'jBox', Ninja_Forms::$url . 'assets/js/lib/jBox.min.js', array( 'jquery' ) );
         wp_enqueue_style( 'jBox', Ninja_Forms::$url . 'assets/css/jBox.css' );
 
         // wp_enqueue_style( 'jquery-smoothness', NINJA_FORMS_URL .'css/smoothness/jquery-smoothness.css' );
@@ -51,14 +51,16 @@ class NF_Admin_AddFormModal {
          <div id="nf-insert-form-modal" style="display:none;">
             <p>
                 <?php
-                $all_forms = Ninja_Forms()->form()->get_forms();
-                $first_option = __( 'Select a form or type to search', 'ninja-forms' );
+                global $wpdb;
+                $all_forms = $wpdb->get_results( 'SELECT id, title FROM `' . $wpdb->prefix
+                    . 'nf3_forms` ORDER BY title' );
+//                $all_forms = Ninja_Forms()->form()->get_forms();
+//                $first_option = __( 'Select a form or type to search', 'ninja-forms' );
                 echo '<select class="nf-forms-combobox" id="nf-form-select" data-first-option="">';
                 echo '<option value=""></option>';
                 foreach( $all_forms as $form ) {
-                    // $form = Ninja_Forms()->form( $form_id )->get();
-                    $label = $form->get_setting( 'title' );
-                    $form_id = $form->get_id();
+                    $label = $form->title;
+                    $form_id = $form->id;
                     if ( strlen( $label ) > 30 )
                         $label = substr( $label, 0, 30 ) . '...';
 

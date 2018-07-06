@@ -61,8 +61,6 @@ class NF_THREE_Submenu
         add_action( 'admin_menu', array( $this, 'register' ), $this->priority );
 
         add_action( 'wp_ajax_ninja_forms_upgrade_check', array( $this, 'upgrade_check' ) );
-        add_action( 'wp_ajax_ninja_forms_optin', array( $this, 'optin' ) );
-        add_action( 'wp_ajax_ninja_forms_optout', array( $this, 'optout' ) );
 
         add_filter( 'nf_general_settings_advanced', array( $this, 'settings_upgrade_button' ) );
     }
@@ -72,7 +70,6 @@ class NF_THREE_Submenu
      */
     public function register()
     {
-        if( ! ninja_forms_three_calc_check() ) return;
         if( ! ninja_forms_three_addons_version_check() ) return;
 
         if( ! ninja_forms_three_addons_check() ){
@@ -125,6 +122,7 @@ class NF_THREE_Submenu
             'forms' => $all_forms,
             'redirectURL' => admin_url( 'admin.php?page=ninja-forms&nf-switcher=upgrade' ),
             'optedIn' => $opted_in,
+            'nonce' => wp_create_nonce( 'ninja_forms_upgrade_nonce' ),
         ) );
 
         include plugin_dir_path( __FILE__ ) . 'tmpl-submenu.html.php';
@@ -176,151 +174,6 @@ class NF_THREE_Submenu
     public function settings_upgrade_button_display()
     {
         include plugin_dir_path( __FILE__ ) . 'tmpl-settings-upgrade-button.html.php';
-    }
-
-    public function optin() {
-        if ( ! current_user_can( 'manage_options' ) ) return false;
-
-        $api_url = 'http://api.ninjaforms.com/';
-
-        /**
-         * Update our tracking option.
-         */
-        update_option( 'ninja_forms_allow_tracking', true );
-        update_option( 'ninja_forms_do_not_allow_tracking', false );
-
-        /**
-         * Gather site data before we send.
-         *
-         * We send the following site data with our passed data:
-         * IP Address
-         * Email
-         * Site Url
-         */
-
-        $ip_address = '';
-        if ( array_key_exists( 'SERVER_ADDR', $_SERVER ) ) {
-            $ip_address = $_SERVER[ 'SERVER_ADDR' ];
-        } else if ( array_key_exists( 'LOCAL_ADDR', $_SERVER ) ) {
-            $ip_address = $_SERVER[ 'LOCAL_ADDR' ];
-        }
-
-        /**
-         * Email address of the current user, defaulting to admin email if they do not have one.
-         */
-        $current_user = wp_get_current_user();
-        if ( ! empty ( $current_user->user_email ) ) {
-            $email = $current_user->user_email;
-        } else {
-            $email = get_option( 'admin_email' );
-        }        
-
-        $site_data = array(
-            'url'           => site_url(),
-            'ip_address'    => $ip_address,
-            'email'         => $email,
-        );
-
-        /**
-         * Send our environment variables.
-         */
-        
-        global $wpdb;
-
-        // Plugins
-        $active_plugins = (array) get_option( 'active_plugins', array() );
-
-        //WP_DEBUG
-        if ( defined('WP_DEBUG') && WP_DEBUG ){
-            $debug = 1;
-        } else {
-            $debug =  0;
-        }
-
-        //WPLANG
-        if ( defined( 'WPLANG' ) && WPLANG ) {
-            $lang = WPLANG;
-        } else {
-            $lang = 'default';
-        }
-
-        $ip_address = '';
-        if ( array_key_exists( 'SERVER_ADDR', $_SERVER ) ) {
-            $ip_address = $_SERVER[ 'SERVER_ADDR' ];
-        } else if ( array_key_exists( 'LOCAL_ADDR', $_SERVER ) ) {
-            $ip_address = $_SERVER[ 'LOCAL_ADDR' ];
-        }
-
-        $host_name = gethostbyaddr( $ip_address );
-
-        if ( is_multisite() ) {
-            $multisite_enabled = 1;
-        } else {
-            $multisite_enabled = 0;
-        }
-
-        $tls = 'unknown';
-
-        $environment = array(
-            'nf_version'                => NF_PLUGIN_VERSION,
-            'wp_version'                => get_bloginfo('version'),
-            'multisite_enabled'         => $multisite_enabled,
-            'server_type'               => $_SERVER['SERVER_SOFTWARE'],
-            'tls_version'               => $tls,
-            'php_version'               => phpversion(),
-            'mysql_version'             => $wpdb->db_version(),
-            'wp_memory_limit'           => WP_MEMORY_LIMIT,
-            'wp_debug_mode'             => $debug,
-            'wp_lang'                   => $lang,
-            'wp_max_upload_size'        => size_format( wp_max_upload_size() ),
-            'php_max_post_size'         => ini_get( 'post_max_size' ),
-            'hostname'                  => $host_name,
-            'smtp'                      => ini_get('SMTP'),
-            'smtp_port'                 => ini_get('smtp_port'),
-            'active_plugins'            => $active_plugins,
-        );
-
-        /*
-         * Send our data using wp_remote_post.
-         */
-        $response = wp_remote_post(
-            $api_url,
-            array(
-                'body' => array(
-                    'slug'          => 'update_environment_vars',
-                    'data'          => wp_json_encode( $environment ),
-                    'site_data'     => wp_json_encode( $site_data ),
-                ),
-            )
-        );
-
-        $send_email = absint( $_REQUEST[ 'send_email' ] );
-
-        /*
-         * Send our opt-in event using wp_remote_post.
-         */
-        $response = wp_remote_post(
-            $api_url,
-            array(
-                'body' => array(
-                    'slug'          => 'optin',
-                    'data'          => wp_json_encode( array( 'send_email' => $send_email ) ),
-                    'site_data'     => wp_json_encode( $site_data ),
-                ),
-            )
-        );
-        
-        die();
-    }
-
-    public function optout() {
-        if ( ! current_user_can( 'manage_options' ) ) return false;
-        /**
-         * Update our tracking option
-         */
-        update_option( 'ninja_forms_do_not_allow_tracking', true );
-
-        die();
     }
 }
 

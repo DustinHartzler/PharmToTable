@@ -11,6 +11,7 @@
         </div>
     </header>
     <div class="notices"></div>
+    <div class="promotions"></div>
     <nav class="sections">
         <ul>
             {{{ data.renderNav() }}}
@@ -19,15 +20,93 @@
     <main class="content"></main>
 </script>
 
-<!-- Auth Notice -->
-<script id="tmpl-nf-auth-notice" type="text/template">
-    [AUTH GOES HERE]
-    <div id="auth-notice"></div>
+<!-- OAuth -->
+<script id="tmpl-nf-notices-oauth" type="text/template">
+  <# if( null !== data.connected ) { #>
+    <# if( ! data.connected ){ #>
+    <!-- <a href="{{{ data.connect_url }}}" class="nf-oauth--connect">
+      Connect to My.NinjaForms.com
+    </a> -->
+    <# } else { #>
+    <div class="nf-oauth--connected">
+      Connected to My.NinjaForms.com &nbsp; <span style="cursor:pointer;" onclick="Backbone.Radio.channel( 'dashboard' ).request( 'oauth:learn-more' );">Learn More</span>
+      <span class="js--disconnect" style="float:right;cursor:pointer;">
+        <span class="dashicons dashicons-no"></span>
+      </span>
+    </div>
+    <# } #>
+  <# } else { #>
+    <div class="nf-oauth--checking">
+      Checking connection...
+    </div>
+  <# } #>
+</script>
+
+<!-- Promotion -->
+<script id="tmpl-nf-promotion" type="text/template">
+    <div
+      class="promotion--wrapper"
+      <# if( data.script ){ #>
+      onclick="{{{data.script}}}"
+      <# } #>
+      >
+      <div class="promotion--{{{ data.id }}}">
+        {{{ data.content }}}
+      </div>
+    </div>
 </script>
 
 <!-- Section: Widgets -->
 <script id="tmpl-nf-widgets" type="text/template">
     <div class="widget widget-forms"></div>
+</script>
+
+<!-- Section: Services -->
+<script id="tmpl-nf-services" type="text/template">
+  <div class="services"></div>
+</script>
+<script id="tmpl-nf-service" type="text/template">
+  <div class="nf-box-inside" style="padding:10px 20px;">
+    <h2>{{{ data.name }}}</h2>
+    <div class="nf-extend-content">
+      <p>{{{ data.description }}}</p>
+      <div class="nf-extend-buttons">
+        <# if( data.is_connected ){ #>
+          <# if( null !== data.enabled){ #>
+          <div style="float: left;">
+            <input id="nfServiceTransactionalEmail" class="nf-toggle setting" {{{ ( data.enabled ) ? 'checked="checked"' : '' }}} {{{ ( data.isUpdating ) ? 'disabled="disabled"' : '' }}} type="checkbox">
+            <label for="nfServiceTransactionalEmail"></label>
+          </div>
+          <# } #>
+          <# if( data.serviceLink ){ #>
+            <a
+              href="{{{ data.serviceLink.href }}}"
+              class="{{{data.serviceLink.classes}}}"
+              <# if( data.serviceLink.target ) { #>target="{{{ data.serviceLink.target }}}"<# } #>
+              style="float:right;">{{{data.serviceLink.text}}}</a>
+          <# } #>
+        <# } #>
+        <# if( data.learnMore ) { #>
+        <button class="nf-button secondary js--learn-more" style="float:left;">Learn More</button>
+        <# } #>
+        <# if( ( ! data.is_connected ) || ( data.slug && data.installPath ) ){ #>
+          <# if( ! data.is_installing ){ #>
+            <a href="#services" class="nf-button primary js--install" style="float:right;">
+              <# if( data.setupButtonText ){ #>
+                {{{ data.setupButtonText }}}
+              <# } else { #>
+                <?php echo __( 'Setup', 'ninja-forms' ); ?>
+              <# } #>
+            </a>
+          <# } else { #>
+            <a href="#services" class="nf-button primary" style="float:right;" disabled>
+              <span class="dashicons dashicons-update dashicons-update-spin"></span>
+            </a>
+          <# } #>
+        <# } #>
+      </div>
+    </div>
+  </div>
 </script>
 
 <!-- Section: Apps -->
@@ -229,7 +308,7 @@
 
 <!-- Widget: Forms - New Forms Templates -->
 <script id="tmpl-nf-widget-forms-template" type="text/template">
-    <div class="template">
+    <div class="template {{{ data.type }}}">
         <a href="admin.php?page=ninja-forms&form_id={{{ data.id }}}">
             <strong class="title">{{{ data.title }}}</strong>
             <div class="desc">{{{ data.desc }}}</div>

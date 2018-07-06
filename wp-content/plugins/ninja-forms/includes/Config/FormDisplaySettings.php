@@ -170,6 +170,12 @@ return apply_filters( 'ninja_forms_form_display_settings', array(
                 'label' => __( 'Please enter a valid email address!', 'ninja-forms' ),
                 'width' => 'full'
             ),
+	        array(
+		        'name' => 'changeDateErrorMsg',
+		        'type' => 'textbox',
+		        'label' => __( 'Please enter a valid date!', 'ninja-forms' ),
+		        'width' => 'full'
+	        ),
             array(
                 'name' => 'confirmFieldErrorMsg',
                 'type' => 'textbox',
