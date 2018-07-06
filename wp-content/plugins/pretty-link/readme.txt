@@ -4,7 +4,7 @@ Donate link: https://prettylinks.com
 Tags: links, link, url, urls, affiliate, affiliates, pretty, marketing, redirect, redirection, forward, plugin, twitter, tweet, rewrite, shorturl, hoplink, hop, shortlink, short, shorten, shortening, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
 Requires at least: 4.7
 Tested up to: 4.9
-Stable tag: 2.1.4
+Stable tag: 2.1.6
 
 Shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!
 
@@ -65,6 +65,14 @@ http://blairwilliams.com/w7a
 3. Make sure you have changed your permalink Common Settings in Settings -> Permalinks away from "Default" to something else. I prefer using custom and then "/%year%/%month%/%postname%/" for the simplest possible URL slugs with the best performance.
 
 == Changelog ==
+
+= 2.1.6 =
+* Fixed a conflict with Mulit-site variable name
+
+= 2.1.5 =
+* Fixed Target URL Rotations
+* Fixed domain mapping and home_url in Multi-site
+* Fixed GeoRedirect for IPv6
 
 = 2.1.4 =
 * Fixed IP conflict with Flywheel
