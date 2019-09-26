@@ -25,7 +25,8 @@ body.wait * {
 /* Allow wide tables to scroll sideways, only on "Edit" screen */
 body,
 #wpwrap,
-#wpbody-content {
+#wpbody-content,
+div#post-body.metabox-holder.columns-1 {
 	overflow: visible !important; /* !important is necessary to override an inline style that postboxes.js sets via JS */
 }
 
@@ -232,4 +233,9 @@ body #wp-link-backdrop {
 }
 #tablepress_edit-table-manipulation .column-2 {
 	width: 55%;
+}
+
+/* Align with checkbox labels */
+.checkbox-left {
+	padding-left: 24px; /* Checkboxes are 16px wide + 4px margin, with 4px :before */
 }
