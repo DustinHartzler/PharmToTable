@@ -53,7 +53,7 @@ class WPURP_Recipe_Post_Type {
                 'has_archive' => $has_archive,
                 'rewrite' => array(
                     'slug' => $slug,
-                    'ep_mask' => EP_RECIPE,
+                    'ep_mask' => EP_WPURP_RECIPE,
                 ),
                 'show_in_rest' => true,
             )

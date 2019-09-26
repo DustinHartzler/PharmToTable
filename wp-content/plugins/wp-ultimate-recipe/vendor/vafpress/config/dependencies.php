@@ -73,15 +73,15 @@ return array(
 				'deps'     => array(),
 				'ver'      => '1.0.0',
 			),
-			'select2' => array(
-				'path'     => VP_PUBLIC_URL . '/js/vendor/select2.min.js',
+			'select2vafpress' => array(
+				'path'     => VP_PUBLIC_URL . '/js/vendor/select2vafpress.min.js',
 				'deps'     => array('jquery'),
 				'ver'      => '3.3.2',
 				'override' => true,
 			),
-			'select2-sortable' => array(
-				'path'     => VP_PUBLIC_URL . '/js/vendor/select2.sortable.js',
-				'deps'     => array('jquery', 'jquery-ui-sortable', 'select2'),
+			'select2vafpress-sortable' => array(
+				'path'     => VP_PUBLIC_URL . '/js/vendor/select2vafpress.sortable.js',
+				'deps'     => array('jquery', 'jquery-ui-sortable', 'select2vafpress'),
 				'ver'      => '1.0.0',
 				'override' => true,
 			),
@@ -172,8 +172,8 @@ return array(
 				'path' => VP_PUBLIC_URL . '/css/vendor/font-awesome.min.css',
 				'deps' => array(),
 			),
-			'select2' => array(
-				'path' => VP_PUBLIC_URL . '/css/vendor/select2.css',
+			'select2vafpress' => array(
+				'path' => VP_PUBLIC_URL . '/css/vendor/select2vafpress.css',
 				'deps' => array(),
 			),
 			'reveal' => array(
@@ -200,13 +200,13 @@ return array(
 	 */
 	'rules'   => array(
 		'color'       => array( 'js' => array('bootstrap-colorpicker'), 'css' => array('bootstrap-colorpicker') ),
-		'select'      => array( 'js' => array('select2'), 'css' => array('select2') ),
-		'multiselect' => array( 'js' => array('select2'), 'css' => array('select2') ),
+		'select'      => array( 'js' => array('select2vafpress'), 'css' => array('select2vafpress') ),
+		'multiselect' => array( 'js' => array('select2vafpress'), 'css' => array('select2vafpress') ),
 		'slider'      => array( 'js' => array('jquery-ui-slider'), 'css' => array('jqui') ),
 		'date'        => array( 'js' => array('jquery-ui-datepicker'), 'css' => array('jqui') ),
 		'codeeditor'  => array( 'js' => array('ace-editor'), 'css' => array() ),
-		'sorter'      => array( 'js' => array('select2-sortable'), 'css' => array('select2', 'jqui') ),
-		'fontawesome' => array( 'js' => array('select2'), 'css' => array('select2') ),
+		'sorter'      => array( 'js' => array('select2vafpress-sortable'), 'css' => array('select2vafpress', 'jqui') ),
+		'fontawesome' => array( 'js' => array('select2vafpress'), 'css' => array('select2vafpress') ),
 		'wpeditor'    => array( 'js' => array('kia-metabox'), 'css' => array() ),
 	)
 

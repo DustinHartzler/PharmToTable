@@ -256,30 +256,30 @@ $admin_menu = array(
                             'title' => __('Metadata', 'wp-ultimate-recipe'),
                             'name' => 'section_metadata',
                             'fields' => array(
-                                array(
-                                    'type' => 'select',
-                                    'name' => 'recipe_metadata_type',
-                                    'label' => __('Metadata Type', 'wp-ultimate-recipe'),
-                                    'description' => __( 'Format to use for the recipe metadata.', 'wp-ultimate-recipe' ),
-                                    'items' => array(
-                                        array(
-                                            'value' => 'json',
-                                            'label' => __('JSON-LD', 'wp-ultimate-recipe'),
-                                        ),
-                                        array(
-                                            'value' => 'inline',
-                                            'label' => __('Inline Meta Tags', 'wp-ultimate-recipe'),
-                                        ),
-                                        array(
-                                            'value' => 'json-inline',
-                                            'label' => __('Use both JSON-LD and Inline Meta Tags', 'wp-ultimate-recipe'),
-                                        ),
-                                    ),
-                                    'default' => array(
-                                        'json',
-                                    ),
-                                    'validation' => 'required',
-                                ),
+                                // array(
+                                //     'type' => 'select',
+                                //     'name' => 'recipe_metadata_type',
+                                //     'label' => __('Metadata Type', 'wp-ultimate-recipe'),
+                                //     'description' => __( 'Format to use for the recipe metadata.', 'wp-ultimate-recipe' ),
+                                //     'items' => array(
+                                //         array(
+                                //             'value' => 'json',
+                                //             'label' => __('JSON-LD', 'wp-ultimate-recipe'),
+                                //         ),
+                                //         array(
+                                //             'value' => 'inline',
+                                //             'label' => __('Inline Meta Tags', 'wp-ultimate-recipe'),
+                                //         ),
+                                //         array(
+                                //             'value' => 'json-inline',
+                                //             'label' => __('Use both JSON-LD and Inline Meta Tags', 'wp-ultimate-recipe'),
+                                //         ),
+                                //     ),
+                                //     'default' => array(
+                                //         'json',
+                                //     ),
+                                //     'validation' => 'required',
+                                // ),
                                 array(
                                     'type' => 'toggle',
                                     'name' => 'recipe_metadata_opt_out_rich_pins',
@@ -1814,6 +1814,13 @@ $admin_menu = array(
                     'name' => 'section_meal_planner_add_to_meal_plan_select',
                     'fields' => array(
                         array(
+                            'type' => 'toggle',
+                            'name' => 'meal_planner_cached_mode',
+                            'label' => __('Cached Mode', 'wp-ultimate-recipe'),
+                            'description' => __( 'Enable when you have a lot of recipes on your website. This will disable the different group by options and use a cached dropdown for a performance improvement.', 'wp-ultimate-recipe' ),
+                            'default' => '',
+                        ),
+                        array(
                             'type' => 'multiselect',
                             'name' => 'meal_planner_hide_group_by',
                             'label' => __('Hide Group By Options', 'wp-ultimate-recipe'),
@@ -1829,6 +1836,10 @@ $admin_menu = array(
                                         'value' => 'wpurp_admin_recipe_tags',
                                     ),
                                 ),
+                            ),
+                            'dependency' => array(
+                                'field' => 'meal_planner_cached_mode',
+                                'function' => 'vp_dep_boolean_inverse',
                             ),
                         ),
                         array(
@@ -1850,6 +1861,10 @@ $admin_menu = array(
                             ),
                             'default' => array(
                                 'a-z',
+                            ),
+                            'dependency' => array(
+                                'field' => 'meal_planner_cached_mode',
+                                'function' => 'vp_dep_boolean_inverse',
                             ),
                         ),
                     ),
@@ -2368,7 +2383,7 @@ $admin_menu = array(
                             ),
                             'validation' => 'required',
                             'dependency' => array(
-                                'field' => 'user_menus_dynamic_unit_system',
+                                'field' => 'meal_planner_dynamic_unit_system',
                                 'function' => 'vp_dep_boolean',
                             ),
                         ),
@@ -3225,6 +3240,19 @@ $admin_menu = array(
                                 'field' => 'assets_generate_minified',
                                 'function' => 'vp_dep_boolean',
                             ),
+                        ),
+                    ),
+                ),
+                array(
+                    'type' => 'section',
+                    'title' => __('Other', 'wp-ultimate-recipe'),
+                    'name' => 'advanced_section_other',
+                    'fields' => array(
+                        array(
+                            'type' => 'toggle',
+                            'name' => 'disable_wprm_nag',
+                            'label' => __('Disable WP Recipe Maker nag', 'wp-ultimate-recipe'),
+                            'default' => '0',
                         ),
                     ),
                 ),

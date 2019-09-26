@@ -8,6 +8,8 @@ class WPURP_Taxonomies {
     {
         add_action( 'init', array( $this, 'register' ), 2 );
         add_action( 'init', array( $this, 'register_ratings_taxonomy' ) );
+
+        add_filter( 'rest_prepare_taxonomy', array( $this, 'exclude_ingredients_from_gutenberg' ), 10, 2 );
     }
 
     /**
@@ -45,6 +47,9 @@ class WPURP_Taxonomies {
         $taxonomies = $this->get();
 
         foreach($taxonomies as $name => $options) {            
+            // Gutenberg compatibility.
+            $options['show_in_rest'] = true;
+
             register_taxonomy(
                 $name,
                 'recipe',
@@ -53,6 +58,16 @@ class WPURP_Taxonomies {
 
             register_taxonomy_for_object_type( $name, 'recipe' );
         }
+    }
+
+    /**
+     * Register a recipe taxonomy
+     */
+    public function exclude_ingredients_from_gutenberg( $response, $taxonomy ) {
+        if ( 'ingredient' === $taxonomy->name ) {
+            $response->data['visibility']['show_ui'] = false;
+        }
+        return $response;
     }
 
     /**
@@ -67,6 +82,7 @@ class WPURP_Taxonomies {
             $taxonomies = $this->add_taxonomy_to_array($taxonomies, 'ingredient',   __( 'Ingredients', 'wp-ultimate-recipe' ),  __( 'Ingredient', 'wp-ultimate-recipe' ));
             $taxonomies = $this->add_taxonomy_to_array($taxonomies, 'course',       __( 'Courses', 'wp-ultimate-recipe' ),      __( 'Course', 'wp-ultimate-recipe' ));
             $taxonomies = $this->add_taxonomy_to_array($taxonomies, 'cuisine',      __( 'Cuisines', 'wp-ultimate-recipe' ),     __( 'Cuisine', 'wp-ultimate-recipe' ));
+            $taxonomies = $this->add_taxonomy_to_array($taxonomies, 'wpurp_keyword', __( 'Keywords', 'wp-ultimate-recipe' ),     __( 'Keyword', 'wp-ultimate-recipe' ));
 
             $this->update( $taxonomies );
             update_option( 'wpurp_flush', '1' );

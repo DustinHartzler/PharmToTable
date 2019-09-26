@@ -3,8 +3,9 @@
 <head>
     <meta name="robots" content="noindex">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <?php wp_site_icon(); ?>
     <title><?php echo WPUltimateRecipe::option( 'print_template_title_text', get_bloginfo('name') ); ?></title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="<?php echo includes_url( '/js/jquery/jquery.js' ); ?>"></script>
     <script src="<?php echo WPUltimateRecipe::get()->coreUrl; ?>/vendor/fraction-js/index.js"></script>
 
     <link rel="stylesheet" type="text/css" href="<?php echo WPUltimateRecipe::get()->coreUrl; ?>/css/layout_base.css">
@@ -67,7 +68,9 @@
             }
 <?php } ?>
 
-            window.print();
+            setTimeout(function() {
+                window.print();
+            }, 500);
         });
     </script>
 </head>

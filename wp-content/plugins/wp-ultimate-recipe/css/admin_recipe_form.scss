@@ -125,4 +125,16 @@
     .recipe_instructions_thumbnail {
         max-height: 50px;
     }
+
+    .recipe-video-container {
+        .wpurp-recipe-video-preview {
+            float: right;
+            max-width: 100px;
+    
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+    }
 }

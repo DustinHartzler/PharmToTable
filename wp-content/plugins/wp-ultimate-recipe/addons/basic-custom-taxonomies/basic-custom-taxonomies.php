@@ -68,14 +68,14 @@ if( !WPUltimateRecipe::is_premium_active() )
 
         public function add_taxonomy() {
             if ( !wp_verify_nonce( $_POST['add_taxonomy_nonce'], 'add_taxonomy' ) ) {
-                die( 'Invalid nonce.' . var_export( $_POST, true ) );
+                die( 'Invalid nonce.' );
             }
 
-            $name = $_POST['wpurp_custom_taxonomy_name'];
-            $singular = $_POST['wpurp_custom_taxonomy_singular_name'];
-            $slug = str_replace(' ', '-', strtolower($_POST['wpurp_custom_taxonomy_slug']));
+            $name = sanitize_text_field( $_POST['wpurp_custom_taxonomy_name'] );
+            $singular = sanitize_text_field( $_POST['wpurp_custom_taxonomy_singular_name'] );
+            $slug = str_replace(' ', '-', strtolower( sanitize_title( $_POST['wpurp_custom_taxonomy_slug'] ) ) );
 
-            $edit_tag_name = $_POST['wpurp_edit'];
+            $edit_tag_name = sanitize_text_field( $_POST['wpurp_edit'] );
             $editing = false;
 
             if( strlen($edit_tag_name) > 0 ) {

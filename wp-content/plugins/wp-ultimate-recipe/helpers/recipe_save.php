@@ -4,7 +4,15 @@ class WPURP_Recipe_Save {
 
     public function __construct()
     {
+        add_filter( 'wp_insert_post_empty_content', array( $this, 'check_empty' ), 10, 2 );
         add_action( 'save_post', array( $this, 'save' ), 10, 2 );
+    }
+
+    public function check_empty( $empty, $post_data ) {
+        if ( 'recipe' === $post_data['post_type'] ) {
+            $empty = false;
+        }
+        return $empty;
     }
 
     /**
@@ -34,7 +42,10 @@ class WPURP_Recipe_Save {
             foreach ( $fields as $field )
             {
                 $old = get_post_meta( $recipe->ID(), $field, true );
-                $new = isset( $_POST[$field] ) ? $_POST[$field] : null;
+                $new = isset( $_POST[$field] ) ? $_POST[$field] : null; // Sanitized on next line.
+
+                // Sanitize recipe fields.
+                $new = is_array( $new ) ? array_map( 'wp_kses_post', $new ) : wp_kses_post( $new );
 
                 // Field specific adjustments
                 if( isset( $new ) && $field == 'recipe_ingredients' )
@@ -102,7 +113,7 @@ class WPURP_Recipe_Save {
                     update_post_meta( $recipe->ID(), $field, $new );
 
                     if( $field == 'recipe_ingredients' && WPUltimateRecipe::is_addon_active( 'nutritional-information' ) && WPUltimateRecipe::option( 'nutritional_information_notice', '1' ) == '1' && current_user_can( WPUltimateRecipe::option( 'nutritional_information_capability', 'manage_options' ) ) ) {
-                        $notice = '<strong>' . $_POST['recipe_title'] . ':</strong> <a href="'.admin_url( 'edit.php?post_type=recipe&page=wpurp_nutritional_information&limit_by_recipe=' . $recipe->ID() ).'">'. __( 'Update the Nutritional Information', 'wp-ultimate-recipe') .'</a>';
+                        $notice = '<strong>' . esc_html( $_POST['recipe_title'] ) . ':</strong> <a href="'.admin_url( 'edit.php?post_type=recipe&page=wpurp_nutritional_information&limit_by_recipe=' . $recipe->ID() ).'">'. __( 'Update the Nutritional Information', 'wp-ultimate-recipe') .'</a>';
                         WPUltimateRecipe::get()->helper( 'notices' )->add_admin_notice( $notice );
                     }
                 }
@@ -113,6 +124,9 @@ class WPURP_Recipe_Save {
             }
 
             $this->update_recipe_terms( $recipe->ID() );
+
+            // Reset video metadata.
+            update_post_meta( $recipe->ID(), 'recipe_video_metadata', '' );
         }
     }
 
@@ -208,11 +222,12 @@ class WPURP_Recipe_Save {
         // Treat " to " as a dash for ranges
         $amount = str_ireplace( ' to ', '-', $amount );
 
-        $amount = preg_replace( "/[^\d\.\/\,\s-–—]/", "", $amount ); // Only keep digits, comma, point, forward slash, space and dashes
-
         // Replace en and em dash with a normal dash
         $amount = str_replace( '–', '-', $amount );
         $amount = str_replace( '—', '-', $amount );
+
+        // Only keep digits, comma, point, forward slash, space and dashes
+        $amount = preg_replace( "/[^\d\.\/\,\s\-]/", "", $amount );
 
         if( WPUltimateRecipe::option( 'recipe_adjustable_servings_hyphen', '1' ) != '1' ) {
             $amount = str_replace( '-', ' ', $amount );

@@ -33,13 +33,13 @@ if ( $taxonomies ) {
         if( !in_array( $taxonomy->name, $this->ignoreTaxonomies ) ) {
 ?>
             <tr>
-                <td><strong><?php echo $taxonomy->name; ?></strong></td>
-                <td class="singular-name"><?php echo $taxonomy->labels->singular_name; ?></td>
-                <td class="name"><?php echo $taxonomy->labels->name; ?></td>
-                <td class="slug"><?php echo $taxonomy->rewrite['slug']; ?></td>
+                <td><strong><?php echo esc_html( $taxonomy->name ); ?></strong></td>
+                <td class="singular-name"><?php echo esc_html( $taxonomy->labels->singular_name ); ?></td>
+                <td class="name"><?php echo esc_html( $taxonomy->labels->name ); ?></td>
+                <td class="slug"><?php echo esc_html( $taxonomy->rewrite['slug'] ); ?></td>
                 <td>
                     <span class="wpurp_adding">
-                        <button type="button" class="button wpurp-edit-tag" data-tag="<?php echo $taxonomy->name; ?>"><?php _e( 'Edit', 'wp-ultimate-recipe' ); ?></button>
+                        <button type="button" class="button wpurp-edit-tag" data-tag="<?php echo esc_attr( $taxonomy->name ); ?>"><?php _e( 'Edit', 'wp-ultimate-recipe' ); ?></button>
                     </span>
                 </td>
             </tr>

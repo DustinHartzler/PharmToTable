@@ -16,8 +16,8 @@ class WPURP_Notices {
         }
 
         // WP Recipe Maker notice
-        if( !WPUltimateRecipe::is_premium_active() && current_user_can( 'manage_options' ) && ( get_current_screen()->id == 'recipe_page_wpurp_admin' || get_current_screen()->id == 'edit-recipe' ) ) {
-            echo '<div class="notice notice-info"><p>We released a brand new Recipe Plugin. <a href="http://bootstrapped.ventures/wp-recipe-maker/" target="_blank">Learn more about WP Recipe Maker on our website</a>!</p></div>';
+        if( WPUltimateRecipe::option( 'disable_wprm_nag', '0' ) !== '1' && current_user_can( 'manage_options' ) && ( get_current_screen()->id == 'recipe_page_wpurp_admin' || get_current_screen()->id == 'edit-recipe' ) ) {
+            echo '<div class="notice notice-info"><p>We highly recommend switching to our new WP Recipe Maker plugin. <a href="https://help.bootstrapped.ventures/article/61-what-about-wp-ultimate-recipe" target="_blank">Learn more about the differences</a>!</p></div>';
         }
 
         // New to WP Ultimate Recipe

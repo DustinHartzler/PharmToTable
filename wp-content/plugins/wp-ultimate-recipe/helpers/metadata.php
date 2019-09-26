@@ -179,15 +179,24 @@ class WPURP_Metadata {
 
         // Category & Cuisine
         $courses = wp_get_post_terms( $recipe->ID(), 'course', array( 'fields' => 'names' ) );
-        if( !is_wp_error( $courses ) && isset( $courses[0] ) ) {
-            $metadata['recipeCategory'] = $courses[0];
+        if( !is_wp_error( $courses ) && count( $courses ) ) {
+            $metadata['recipeCategory'] = $courses;
         }
 
         $cuisines = wp_get_post_terms( $recipe->ID(), 'cuisine', array( 'fields' => 'names' ) );
-        if( !is_wp_error( $cuisines ) && isset( $cuisines[0] ) ) {
-            $metadata['recipeCuisine'] = $cuisines[0];
+        if( !is_wp_error( $cuisines ) && count( $cuisines ) ) {
+            $metadata['recipeCuisine'] = $cuisines;
         }
 
+        $keywords = wp_get_post_terms( $recipe->ID(), 'wpurp_keyword', array( 'fields' => 'names' ) );
+        if( !is_wp_error( $keywords ) && count( $keywords ) ) {
+            $metadata['keywords'] = implode( ', ', $keywords );
+        }
+
+        // Recipe video.
+		if ( $recipe->video_metadata() ) {
+			$metadata['video'] = $recipe->video_metadata();
+        }
 
         // Allow external filtering of metadata
         return apply_filters( 'wpurp_recipe_metadata', $metadata, $recipe );

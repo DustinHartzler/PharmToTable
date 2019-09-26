@@ -184,6 +184,14 @@ html body .wpurp-container {
         display: none;
     }
 
+    .wpurp-recipe-print-button i.fa:before,
+    .wpurp-recipe-add-to-meal-plan i.fa:before,
+    .wpurp-recipe-add-to-shopping-list i.fa:before,
+    .wpurp-recipe-favorite i.fa:before,
+    .wpurp-recipe-stars i.fa:before {
+        font-family: 'FontAwesome';
+    }
+
     .wpurp-recipe-sharing .button.pinterest {
         margin-top: 32px;
     }

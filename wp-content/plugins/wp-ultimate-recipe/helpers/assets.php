@@ -69,6 +69,7 @@ class WPURP_Assets {
                     'ajaxurl' => WPUltimateRecipe::get()->helper('ajax')->url(),
                     'nonce' => wp_create_nonce( 'wpurp_print' ),
                     'custom_print_css' => WPUltimateRecipe::option( 'custom_code_print_css', '' ),
+                    'wpIncludesUrl' => includes_url(),
                     'coreUrl' => WPUltimateRecipe::get()->coreUrl,
                     'premiumUrl' => WPUltimateRecipe::is_premium_active() ? WPUltimateRecipePremium::get()->premiumUrl : false,
                     'title' => WPUltimateRecipe::option( 'print_template_title_text', get_bloginfo('name') ),

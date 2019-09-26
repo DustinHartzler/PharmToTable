@@ -121,3 +121,10 @@
 
 #recipe_meta_box .recipe_instructions_thumbnail {
   max-height: 50px; }
+
+#recipe_meta_box .recipe-video-container .wpurp-recipe-video-preview {
+  float: right;
+  max-width: 100px; }
+  #recipe_meta_box .recipe-video-container .wpurp-recipe-video-preview img {
+    max-width: 100%;
+    height: auto; }

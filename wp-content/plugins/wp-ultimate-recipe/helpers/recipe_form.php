@@ -422,3 +422,37 @@ if( $custom_fields_addon && ( !isset( $wpurp_user_submission ) || WPUltimateReci
 </div>
 <?php }
 } ?>
+
+<?php if( !isset( $wpurp_user_submission ) ) { ?>
+<div class="recipe-video-container">
+    <h4><?php _e( 'Recipe Video', 'wp-ultimate-recipe' ); ?></h4>
+    <table class="recipe-general-form">
+        <tr>
+            <td class="recipe-general-form-label"><?php _e( 'Recipe Video', 'wp-ultimate-recipe' ); ?></td>
+            <td class="recipe-general-form-field">
+                <button type="button" class="button wpurp-recipe-video-add <?php echo $recipe->video_id() ? 'hidden' : ''; ?>"><?php esc_html_e( 'Upload Video', 'wp-recipe-maker' ); ?></button>
+                <button type="button" class="button wpurp-recipe-video-remove <?php echo $recipe->video_id() ? '' : 'hidden'; ?>"><?php esc_html_e( 'Remove Video', 'wp-recipe-maker' ); ?></button>
+                <input type="hidden" id="recipe_video_id" name="recipe_video_id" value="<?php echo esc_attr( $recipe->video_id() ); ?>" />
+                <input type="hidden" id="recipe_video_thumb" name="recipe_video_thumb" value="<?php echo esc_attr( $recipe->video_thumb() ); ?>" />
+                <div class="wpurp-recipe-video-preview"><?php echo $recipe->video_thumb( true ); ?></div>
+                <p>or use any video embed code:</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="recipe-general-form-label"></td>
+            <td class="recipe-general-form-field">
+                <textarea name="recipe_video_embed" id="recipe_video_embed" rows="4"><?php echo esc_html( $recipe->video_embed() ); ?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="recipe-general-form-label"><?php _e( 'Video Shortcode', 'wp-ultimate-recipe' ); ?></td>
+            <td class="recipe-general-form-field">
+                <input type="text" value="[recipe-video]" style="color: black;" disabled />
+            </td>
+        </tr>
+    </table>
+    <p>
+        <em><?php _e( 'The video will not be displayed automatically. Add the [recipe-video] shortcode to the recipe content where you want the video to appear.', 'wp-ultimate-recipe' ); ?></em><br/>
+    </p>
+</div>
+<?php } ?>

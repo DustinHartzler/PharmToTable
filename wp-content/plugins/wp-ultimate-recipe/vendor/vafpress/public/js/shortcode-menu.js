@@ -90,17 +90,17 @@
 				}
 			});
 
-			if ($.fn.select2)
+			if ($.fn.select2vafpress)
 			{
-				// re-init select2
-				$(this).find('.vp-js-select2').select2("destroy");
-				// re-init select2 sortable
-				if ($.fn.select2Sortable) $(this).find('.vp-js-sorter').select2("destroy");
-				// re-init select2 fontawesome
-				$(this).find('.vp-js-fontawesome').select2("destroy");
+				// re-init select2vafpress
+				$(this).find('.vp-js-select2vafpress').select2vafpress("destroy");
+				// re-init select2vafpress sortable
+				if ($.fn.select2vafpressSortable) $(this).find('.vp-js-sorter').select2vafpress("destroy");
+				// re-init select2vafpress fontawesome
+				$(this).find('.vp-js-fontawesome').select2vafpress("destroy");
 
 				vp.init_fontawesome_chooser($(this).find('.vp-js-fontawesome'));
-				vp.init_select2($(this).find('.vp-js-select2'));
+				vp.init_select2vafpress($(this).find('.vp-js-select2vafpress'));
 				vp.init_sorter($(this).find('.vp-js-sorter'));
 			}
 			return $(this);

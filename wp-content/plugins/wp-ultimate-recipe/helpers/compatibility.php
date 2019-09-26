@@ -9,7 +9,7 @@ class WPURP_Compatibility {
         add_filter( 'et_builder_post_types', array( $this, 'divi_builder' ) );
         add_filter( 's2_post_types', array( $this, 'subscribe2' ) );
         add_filter( 'pmpro_search_filter_post_types', array( $this, 'paidmembershipspro' ) );
-        add_filter( 'wpurp_output_recipe',  array( $this, 'woocommerce_memberships' ) );
+        add_filter( 'wpurp_output_recipe',  array( $this, 'woocommerce_memberships' ), 10, 2 );
 
         add_action( 'term_management_tools_term_merged', array( $this, 'term_management_tool' ), 10, 2 );
         add_action( 'split_shared_term', array( $this, 'split_shared_term' ), 10, 4 );
@@ -81,11 +81,11 @@ class WPURP_Compatibility {
     }
 
     // WooCommerce Memberships
-    function woocommerce_memberships( $recipe ) {
-        if( function_exists( 'wc_memberships_is_post_content_restricted' ) && wc_memberships_is_post_content_restricted() ) {
-            $recipe = '[wcm_restrict]' . $recipe . '[/wcm_restrict]';
+    function woocommerce_memberships( $template, $recipe ) {
+        if( function_exists( 'wc_memberships_is_post_content_restricted' ) && ! current_user_can( 'wc_memberships_view_delayed_post_content', $recipe->ID() ) ) {
+            $template = '';
         }
-        return $recipe;
+        return $template;
     }
 }
 

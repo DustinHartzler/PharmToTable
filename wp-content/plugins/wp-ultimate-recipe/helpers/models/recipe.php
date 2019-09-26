@@ -21,6 +21,9 @@ class WPURP_Recipe {
         'recipe_ingredients',
         'recipe_instructions',
         'recipe_notes',
+        'recipe_video_id',
+        'recipe_video_embed',
+        'recipe_video_thumb',
     );
 
     public function __construct( $post )
@@ -436,6 +439,109 @@ class WPURP_Recipe {
             return $this->post->post_title;
         }
     }
+    
+    public function has_video()
+    {
+        return $this->video_id() || $this->video_embed() ? true : false;
+    }
+
+    public function video_id()
+    {
+        $video_id = $this->meta( 'recipe_video_id' );
+        return $video_id ? $video_id : '';
+    }
+
+    public function video_embed()
+    {
+        $video_embed = $this->meta( 'recipe_video_embed' );
+        return $video_embed ? $video_embed : '';
+    }
+
+    public function video_thumb( $show_image = false )
+    {
+        $video_thumb = $this->meta( 'recipe_video_thumb' );
+        
+        if ( $show_image ) {
+            return $video_thumb ? '<img src="' . $video_thumb . '">' : '';
+        } else {
+            return $video_thumb ? $video_thumb : '';
+        }
+    }
+
+    public function video_data() {
+		return wp_get_attachment_metadata( $this->video_id() );
+    }
+    
+    public function video_url() {
+		return wp_get_attachment_url( $this->video_id() );
+    }
+    
+    public function video_thumb_url( $size = 'thumbnail' ) {
+		$image_id = get_post_thumbnail_id( $this->video_id() );
+		$thumb = wp_get_attachment_image_src( $image_id, $size );
+        $image_url = $thumb && isset( $thumb[0] ) ? $thumb[0] : '';
+
+		return $image_url;
+	}
+
+    public function video()
+    {
+        if ( ! $this->has_video() ) {
+            return '';
+        }
+
+        if ( $this->video_id() ) {
+            $video_data = $this->video_data();
+            $output = '[video';
+            $output .= ' width="' . $video_data['width'] . '"';
+            $output .= ' height="' . $video_data['height'] . '"';
+
+            $format = isset( $video_data['fileformat'] ) && $video_data['fileformat'] ? $video_data['fileformat'] : 'mp4';
+            $output .= ' ' . $format . '="' . $this->video_url() . '"';
+
+            $thumb_size = array( $video_data['width'], $video_data['height'] );
+            $thumb_url = $this->video_thumb_url( $thumb_size );
+
+            if ( $thumb_url ) {
+                $output .= ' poster="' . $thumb_url . '"';
+            }
+            $output .= '][/video]';
+        } else {
+            $embed_code = $this->video_embed();
+
+			// Check if it's a regular URL.
+			$url = filter_var( $embed_code, FILTER_SANITIZE_URL );
+
+			if ( filter_var( $url, FILTER_VALIDATE_URL ) ) {
+				global $wp_embed;
+
+				if ( isset( $wp_embed ) ) {
+					$output = $wp_embed->run_shortcode( '[embed]' . $url . '[/embed]' );
+				}
+			} else {
+				$output = $embed_code;
+			}
+        }
+
+        return do_shortcode( $output );
+    }
+
+    public function video_metadata() {
+        $metadata = maybe_unserialize( $this->meta( 'recipe_video_metadata', '' ) );
+		$metadata_updated = intval( $this->meta( 'recipe_video_metadata_updated', '' ) );
+
+		if ( ! $metadata || ( time() - $metadata_updated > 60 * 60 * 24 * 7 ) ) {
+			$metadata = WPURP_Metadata_Video::get_video_metadata_for_recipe( $this );
+
+			// Cache for reuse. Automatically cleared when resaving a recipe.
+			if ( $metadata ) {
+				update_post_meta( $this->id(), 'recipe_video_metadata', $metadata );
+				update_post_meta( $this->id(), 'recipe_video_metadata_updated', time() );
+			}
+        }
+
+		return $metadata;
+	}
 
     // Custom fields
     public function custom_field( $field )

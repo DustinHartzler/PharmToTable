@@ -3,7 +3,7 @@ Contributors: BrechtVds
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QG7KZMGFU325Y
 Tags: recipe, recipes, ingredients, food, nutrition, nutritional, cooking, seo, schema.org, json-ld, meal plan, meal planner
 Requires at least: 3.5
-Tested up to: 4.9
+Tested up to: 5.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,8 @@ Everything a Food Blog needs. Beautiful SEO friendly recipes, print versions, vi
 
 == Description ==
 
-**Not looking for advanced features?** We recently released another recipe plugin that is a bit more lightweight and has a more intuitive workflow. If you're not looking for the advanced features of WP Ultimate Recipe Premium we recommend you to have a look at [WP Recipe Maker](https://wordpress.org/plugins/wp-recipe-maker/)!
+> <strong>Important!</strong><br>
+> We released a new recipe plugin called [WP Recipe Maker](https://wordpress.org/plugins/wp-recipe-maker/) that we HIGHLY recommend you to look into instead. Our old plugin is still supported but for new features we'll be focussing on WP Recipe Maker [for these reasons](https://help.bootstrapped.ventures/article/61-what-about-wp-ultimate-recipe).
 
 [WP Ultimate Recipe](http://www.wpultimaterecipe.com/) is a user friendly plugin for adding recipes to any of your posts and pages. Want to see it all in action? Take a look at our [demo website](http://demo.wpultimaterecipe.com) and [video lessons](http://www.wpultimaterecipe.com/category/video-lessons/).
 
@@ -21,13 +22,15 @@ Everything a Food Blog needs. Beautiful SEO friendly recipes, print versions, vi
 An overview of the WP Ultimate Recipe features:
 
 *   Use shortcodes or the "Insert Recipe" button to add **multiple recipes to any of your posts and pages**.
+*   Compatible with both the **Gutenberg** and Classic Editor.
 *   Ingredients, course types, cuisines and ratings are all **taxonomies** related to your recipe. This means that you can display these in a nice tag cloud widget.
 *   Add **photos** to any step of the recipe.
+*   Insert or embed a **recipe video** that's included in the metadata
 *   Easily change the **recipe colors** from the settings
 *   Just click the printer icon to **print an image-less version** of the recipe.
 *   This plugin is **fully responsive**. That means that your recipes will look good on any device.
 *   Uses schema.org/Recipe JSON-LD metadata optimised for **Google Recipe search**.
-*   Enable both JSON-LD and inline metadata for **Pinterest Rich Pins** compatibility.
+*   Enable **Pinterest Rich Pins** for your recipes.
 *   Compatible with **Google AMP** Pages (Accelerated Mobile Pages)
 *   Easily **translatable**, already available in English, Dutch, Swedish and many others
 *   Let visitors **adjust the ingredient quantities** for more or less servings
@@ -103,737 +106,62 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 
 == Changelog ==
 
-= 3.9.0 =
-* Feature: Searchable recipe tags and categories
-* Improvement: WooCommerce Memberships compatibility
-* Fix: PHP 7.2 deprecated function
-* Fix: 404 error when using comment pagination
-
-= 3.8.0 =
-* Feature: Adjustable servings in instructions with a shortcode
-* Feature: Setting to opt out of Pinterest Rich Pins
-* Feature: Show taxonomies on recipes admin overview
-* Improvement: Plugin header for translations
-* Improvement: Hide recipe snippets in print version
-* Fix: Mailpoet compatibility problem
-
-= 3.7.0 =
-* Feature: AdThrive partner integration
-* Improvement: WordPress 4.8 compatibility
-* Fix: URL to Premium plugin on settings page
-
-= 3.6.0 =
-* Feature: Jump to Recipe shortcode
-* Feature: Print Recipe shortcode
-* Improvement: Classes for ingredient and instruction group containers
-* Improvement: Better metadata for recipe times
-* Fix: Prevent Select2 compatibility problems
-
-= 3.5.1 =
-* Fix: Problem with the recipe cache after a certain number of recipes
-
-= 3.5.0 =
-* Feature: Show most recent recipe with shortcode
-* Improvement: Better performance for displaying random recipe with shortcode
-* Improvement: WordPress 4.7.1 compatibility
-
-= 3.4.2 =
-* Feature: Upcoming giveaway surprise
-
-= 3.4.1 =
-* Fix: Prevent caching issues in some environments
-
-= 3.4 =
-* Improvement: Performance boost by not autoloading some options and templates
-* Improvement: Significantly reduced cache size
-* Improvement: Change default to use JSON-LD and Inline Metadata
-* Improvement: Prevent recipe template max-width issues in Firefox
-* Fix: Use AMP template when recipe is included with shortcode
-
-= 3.3 =
-* Feature: Revisions for recipes
-* Improvement: Support for unicode fraction characters
-* Improvement: Better default RSS Feed template
-* Improvement: Don't add JSON-LD metadata to RSS feed
-* Fix: Remove HTML and shortcodes from JSON-LD metadata
-* Fix: AJAX https issue with some hosts
-
-= 3.2.1 =
-* Feature: Mediavine partner integration
-* Fix: Paragraph issue in print template
-
-= 3.2 =
-* Feature: Use both JSON-LD and inline metadata at the same time
-* Improvement: WordPress 4.6 compatibility
-* Improvement: Immediately adjust print link on servings change
-* Improvement: Apply content filter on recipe print page
-* Improvement: Immediately adjust print link on servings change
-* Fix: Prevent PHP notice when grid plugin is not activated
-* Fix: Issue with resetting cache if it doesn't exist yet
-* Fix: Prevent template issue with themes using a custom wpautop
-* Fix: Prevent PHP 7 deprecation notices caused by Vafpress
-* Fix: unwanted span elements when using the plain text import highlighter
-* Fix: Issue with quotes in ingredient metadata
-* Fix: Compatibility with latest AMP plugin version
-* Fix: use ratingCount instead of reviewCount for JSON-LD metadata
-* Fix: Issues with HTML entities in the recipe description
-
-= 3.1.5 =
-* Feature: Ability to switch between JSON-LD and Inline metadata
-* Improvement: Use secure https for Google Fonts
-* Fix: Issue with decimal character in print template
-* Fix: Prevent PHP notice when server_port is not set
-
-= 3.1 =
-* Feature: Use JSON-LD for recipe metadata
-* Feature: Support for Google AMP Pages (Accelerated Mobile Pages)
-* Improvement: Noindex for recipe print page
-* Improvement: Better check for using prep and cook time metadata
-* Improvement: add min="1" attribute to servings changer
-* Improvement: Change decimal character in settings
-* Improvement: Plugin hooks for recipe index shortcode
-* Improvement: Divi Builder compatibility for recipes
-* Improvement: Add fix for Genesis query bug
-* Fix: Sanitize slug for custom taxonomies
-* Fix: Prevent metadata issue when using Jetpack Photon
-* Fix: Prevent conflicts with modals and select2
-
-= 3.0.2 =
-* Improvement: Show all recipes in cached list
-* Fix: Printing for those who removed the recipe slug
-
-= 3.0.1 =
-* Fix: Problem with older PHP versions
-
-= 3.0 =
-* Feature: New free recipe template
-* Feature: Change template colors in the free version
-* Feature: Import Recipe from Plain Text
-* Feature: New free Print Template with Image
-* Improvement: Better way of handling new print feature
-* Improvement: Use fractions in recipe servings
-* Improvement: Don’t load any assets in minimal mode
-* Improvement: Plugin hooks for assets to load
-* Improvement: WPML Compatibility
-* Improvement: Various performance improvements for users with a large number of recipes
-* Fix: Prevent the "Changes will be lost" message caused by the searchable recipes feature
-
-= 2.8.1 =
-* Fix: Include URL in Pinterest button
-
-= 2.8 =
-* Improvement: Ability to reset author star rating
-* Fix: Pinterest button problem
-
-= 2.7.1 =
-* Improvement: Setting to use the legacy print feature if you’re experiencing issues
-* Fix: No metadata for author rating, Google doesn’t like this anymore
-
-= 2.7 =
-* Feature: Clean print links for recipes
-* Improvement: Compatibility with WordPress REST API
-* Improvement: use better thumbnails for instruction images
-* Fix: Shortcode editor lightbox problem with some themes
-
-= 2.6.1 =
-* Fix: Problem with minified assets
-
-= 2.6 =
-* Feature: Ability to define an alternate image for the recipe instead of the default featured image
-* Improvement: WordPress 4.4 compatibility
-* Setting: Choose alt tag for recipe and instruction images
-* Setting: Ingredient quantities precision after changing servings
-* Fix: Shortcode lightbox problem with some themes
-
-= 2.5 =
-* Improvement: Retina version of Pin It button
-* Improvement: Support for Genesis Simple Sidebars
-* Setting: Ignore Recipe IDs for compatibility with content copy plugins
-* Setting: Disable autocomplete for ingredients
-* Setting: Use hyphens for ranges in quantities
-* Fix: Printed ingredient quantities when using decimals in your serving size
-* Fix: Make sure Chicory code is not loaded by default
-* Fix: Recipe image metadata
-* Fix: Embedded media at the end of a recipe post not working
-* Fix: Problem with wrong servings in print version after changing
-
-= 2.4 =
-* Feature: Yummly partner integration, enable the Yum button in the settings
-* Feature: Tooltip for Print button
-* Improvement: Better metadata for the Recipe Image
-* Improvement: Better way of handling the searchable content
-* Improvement: Output cook and prep time meta when using hours
-* Improvement: New Food Fanatic button
-* Fix: Excerpts on archive pages when there is no post content
-* Fix: Don’t output link color when “Output Inline CSS” is disabled
-* Fix: Shortcode Editor not working properly in some themes
-* Fix: Serve Pinterest button image statically to prevent HTTPS issues
-
-= 2.3.2 =
-* Fix: for the previous fix. Sorry for the inconvenience.
-
-= 2.3.2 =
-* Fix: for the previous fix
-
-= 2.3.1 =
-* Fix: Better way of handling the full text search
-
-= 2.3 =
-* Feature: Full text search for recipes
-* Feature: New partner integration with Chicory
-* Setting: What to use for the recipe image title tag
-* Fix: Password Protection now hides the recipe box as well
-* Fix: Yandex resultPhoto metadata
-* Fix: Usage of Ratings taxonomy
-
-= 2.2.3 =
-* Improvement: Plugin works in different directory names
-* Fix: Shortcode Editor button in text editor
-* Fix: Recipe Template compatibility with Twenty Fifteen theme
-
-= 2.2.2 =
-* Improvement: Setting to choose the source for the instruction images title tag
-
-= 2.2.1 =
-* Feature: Advanced ability to use plugin in minimal mode on certain pages
-* Improvement: Better thumbnails for instruction images
-* Improvement: Possibility to add Yandex resultPhoto meta field
-* Improvement: Memory use of recipe templates
-* Fix: Load Google Fonts over https when necessary
-
-= 2.2 =
-* Improvement: Better handling of fractions in ingredient quantities
-* Improvement: Compatibility with Term Management Tool
-* Fix: Better schema.org compliance for metadata
-
-= 2.1.8 =
-* Feature: BigOven integration
-* Feature: Food Fanatic integration
-* Feature: Support for YARPP
-* Fix: JS error when using the minified assets
-* Fix: PHP Warning on first time activation
-* Fix: White screen on first time activation
-* Fix: Template compatibility with new Twenty Fifteen theme
-
-= 2.1.7 =
-* Fix: Problem with template conditions
-
-= 2.1.6 =
-* Feature: Ability to chat with us from your Settings or FAQ page
-* Fix: Issue in minified JS file causing problems on some websites
-
-= 2.1.4 =
-* Fix: Problem with adjustable servings
-* Fix: Use of non-gzipped minified assets to avoid PHP problems
-
-= 2.1.3b =
-* Fix: Bug in minified JS file
-
-= 2.1.3 =
-* Feature: Minified JS and CSS assets for improved page load speed
-* Improvement: Better page load speed when using the Custom CSS setting
-* Improvement: New default recipe and print template optimised for RTL languages
-* Improvement: Ability to change sharing buttons language in the settings
-* Improvement: Setting to disable the Recipe Archive page
-* Fix: Issue when using decimal values as the serving size
-
-= 2.1.2 =
-* Feature: Compatibility with the Subscribe2 plugin
-* Feature: Compatibility with the Paid Memberships Pro plugin
-* Fix: Recipe Title will take over Post Title when intentionally left blank
-* Fix: Memory issue for shortcode editor when having a large amount of recipes
-* Fix: Improved CPU load should increase site speed
-
-= 2.1.1 =
-* Improvement: Serving size doesn't need to be a number anymore (but still recommended!)
-* Fix: Recipe images alt tag problem
-* Fix: Compatibility problem with some front-end templating tools
-
-= 2.1.0 =
-* Feature: New FAQ page with Getting Started information
-* Feature: WPML Configuration file for multilingual support
-* Setting: Output recipes in RSS Feed
-* Improvement: Use alt and title tags as defined by user for instruction and recipe images
-* Improvement: New icon for Shortcode Editor and settings
-* Fix: Issue with saving settings
-* Fix: Recipe Notes styling of hr tag and image alignment
-* Fix: Ability to use strong and italic text in instructions again
-* Fix: Apply shortcodes in print template
-* Fix: Problem with buttons in settings after changing websites
-
-= 2.0.10 =
-* Improvement: Show recipe rating in metadata
-* Fix: Title tag for recipe instruction images
-
-= 2.0.9 =
-* Fix: All dashes are now treated as ranges for calculations
-* Fix: Recipe box for multipage posts
-* Fix: Recipe_title metadata problem in some cases
-* Fix: Recipe excerpt on archive pages
-* Fix: Correct WPML language when using ajax calls
-* Fix: WPML adjacent posts fix
-* Fix: Instruction images lightbox link
-* Fix: Only hide thumbnails in the loop to not mess with widgets
-
-= 2.0.8 =
-* Fixed CSS and JS problem on settings page for some users
-* Fixed recipe metadata
-* New hook: wpurp_query_posts_loop_check
-* New hook: wpurp_recipe_content_loop_check
-
-= 2.0.7 =
-* Fixed 'Force CSS Style' setting for link colors
-* Include translations in external folder if present
-* New RSS feed template
-* Tested WordPress 4.0 compatibility
-* New hook: wpurp_check_for_shortcode
-
-= 2.0.6 =
-* Translation updates
-* Fix for recipe thumbnail resizing in some themes
-* Fixed metadata
-* Sharing buttons overflow fix
-* Updated VafPress to latest version
-* Improved Recipe Notes styling
-* RTL support on recipe print page
-* New hook: wpurp_query_posts
-
-= 2.0.5 =
-* CSS table fix
-
-= 2.0.4 =
-* Fixed settings page bug
-
-= 2.0.3 =
-* Fixed problems with print version
-* Added multiple plugin hooks
-* Keep fractions after changing serving size
-
-= 2.0.2 =
-* Fix for RTL languages
-
-= 2.0.1 =
-* Translation fix
-* Recipe Index fix for non-latin letters
-
-= 2.0 =
-* Language updates
-* Default template will be more consistent in different themes
-* Completely restructured code of the core plugin allows for easier modifications and faster development
-* Clarifications for the correct way of entering ingredients
-* Demo Recipe included to show the correct way of entering recipes
-* Added setting to add Recipe Shortcode Editor to other custom post types
-* Possibility to adjust the mobile breakpoint, based on recipe box width
-* Advanced setting to remove the recipe slug in URLs
-
-= 1.0.12 =
-* WordPress 3.9 compatibility (just increased the version number, everthing was already compatible)
-* Language updates
-* Plugin now supports custom fields and publicize shortlinks
-* Fix: Recipes respect the <!--more--> tag now
-
-= 1.0.11 =
-* Ability to add custom CSS from the recipe settings
-* Premium: Customize the print template (add your own logo!)
-* Premium: Import plain text recipes (beta version)
-* Premium: Ability to reset User Ratings
-* Premium: Ability to define minimum # votes before sharing the user rating with search engines
-
-= 1.0.10 =
-* A couple of bugfixes and added settings
-
-= 1.0.9 =
-* Free text field for the recipe times. Not limited to minutes anymore
-* Premium: Extended shortcode options for the Recipe Grid
-* Fix: Media queries
-* Fix: Premium unit conversion works better
-
-= 1.0.8 =
-* Recipes now support Jetpack Publicize feature
-* Added French translations
-* Premium: Advanced Unit Conversion settings, many improvements
-* Premium: Redesigned User Menus feature: dynamically change serving size per ingredient, group ingredients, change unit system, ...
-* Premium: Only show tags and categories that actually have recipes in the Recipe Grid
-
-= 1.0.7 =
-* Fix: Schema.org/Recipe format: added author and fixed whitespaces
-* Fix: Share buttons layout
-* Fix: Migration error
-* Fix: Recipe Notes newlines
-* Premium: Multiselect for recipe grid
-
-= 1.0.6 =
-* Fix: Recipe notes newlines work now
-* Fix: AutoSuggest ingredient should hide now
-* Fix: Recipes as posts integration fixes
-* Premium: Convert between Imperial and Metric units
-* Premium: List all recipes by author
-
-= 1.0.5 =
-* Recipes as posts fix
-
-= 1.0.4 =
-* Various bug fixes
-
-= 1.0.3 =
-* Bug fix related to recipes as posts
-
-= 1.0.2 =
-* Bug fix for those who disabled recipe sharing
-
-= 1.0.1 =
-* Use your recipes just like normal posts
-* Contact support directly from the admin page
-* General Bug Fixes
-
-= 1.0.0 =
-* Structure your ingredients and instructions in groups
-* Make your images clickable (use it in combination with a lightbox plugin!)
-* Disable ingredient links
-* Shareable recipes (Facebook, Twitter, Google Plus & Pinterest)
-
-= 0.0.22 =
-* Use default WP categories and tags to organize your recipes
-* Added "Passive Time"
-
-= 0.0.21 =
-* New admin settings page
-* New shortcode generator when editing posts or pages
-* Various bug fixes
-
-= 0.0.20 =
-* Bug fixes
-* WordPress 3.8 compatibility
-
-= 0.0.19 =
-* Bug Fixes for Premium version
-
-= 0.0.18 =
-* CSS Fixes
-* Thumbnail fixes
-* Recipe display fixes
-
-= 0.0.17 =
-* Bugfixes
-* Translatable slugs
-* Fixed print button in Chrome
-
-= 0.0.16 =
-* Added recipe notes field
-* Fixed default terms
-* Random recipe shortcode: [ultimate-recipe id=random]
-
-= 0.0.15 =
-* Fixes display issue
-
-= 0.0.14 =
-* Getting everything ready for the premium version
-
-= 0.0.13 =
-* Fixed problems with localization, should work with Codestyling Localization now
-
-= 0.0.12 =
-* New instruction images uploader for anyone with WP 3.5 or higher (highly recommended)
-
-= 0.0.11 =
-* Fixed printing for IE
-
-= 0.0.10 =
-* Fixed print button for recipes that are loaded through ajax
-
-= 0.0.9 =
-* New setting allows you to show the full recipe in the archives instead of the excerpt
-
-= 0.0.8 =
-* Added ultimate-recipe-index shortcode for showing (wait for it...) a recipe index
-
-= 0.0.7 =
-* Had to change version because of technical SVN problem
-
-= 0.0.6 =
-* Adjustable recipe servings
-* Fixed bug with instruction photos
-
-= 0.0.5 =
-* Fixed css bug
-* Upcoming update will add new features
-
-= 0.0.4 =
-* CSS fixes for better compatibility with more themes
-
-= 0.0.3 =
-* Possible to enter fractions (or actually just anything) as amounts
-
-= 0.0.2 =
-* CSS fixes to ensure compatibility with more themes
-* Fixed image source that pointed to an external source
-
-= 0.0.1 =
-* Very first version of this plugin
+= 3.12.7 =
+Improvement: Setting to disable WP Recipe Maker nag
+Fix: Recipe field sanitization
+
+= 3.12.6 =
+* Fix: JavaScript error when using minified assets
+
+= 3.12.5 =
+* Improvement: Add delay before opening print dialog
+* Fix: Print var in URL on non-recipe pages
+* Fix: PHP 7.3 compatibility problem with servings changer
+
+= 3.12.4 =
+* Fix: Select2 compatibility problem with ACF
+* Fix: Yoast compatibility problem
+
+= 3.12.3 =
+* Feature: Recipe block for Gutenberg editor
+
+= 3.12.2 =
+* Fix: Recipe notes not saving when using visual editor in 5.0
+
+= 3.12.1 =
+* Fix: Taxonomies in Gutenberg
+
+= 3.12.0 =
+* Feature: Use Gutenberg editor for the recipe post type
+* Feature: Use embed code for the recipe video
+* Improvement: Include all courses and cuisines in the metadata
+* Improvement: Force JSON-LD for recipe metadata
+* Improvement: WordPress 5.0 Compatibility
+* Fix: WPML Compatibility for random and latest recipe shortcode
+* Fix: Unable to edit keywords on Custom Tags page
 
 == Upgrade notice ==
 
-= 3.9.0 =
-Update for bug fixes and recipe search improvements
+= 3.12.7 =
+Update to prevent potential sanitization issue
 
-= 3.8.0 =
-Update for a few new features
+= 3.12.6 =
+Update to prevent JS error in frontend
 
-= 3.7.0 =
-Update to ensure WordPress 4.8 compatibility
+= 3.12.5 =
+Make sure to update when using PHP 7.3
 
-= 3.6.0 =
-Update for 2 brand new shortcodes
+= 3.12.4 =
+Update to prevent compatibility problems with Yoast and ACF
 
-= 3.5.1 =
-Update to fix the recipe cache
+= 3.12.3 =
+Update recommended when using Gutenberg
 
-= 3.5.0 =
-Update to ensure WordPress 4.7.1 compatibility
+= 3.12.2 =
+Update recommended when using Gutenberg
 
-= 3.4.2 =
-Update to get notified of the upcoming giveaway
+= 3.12.1 =
+Update to ensure WordPress 5.0 and Gutenberg compatibility
 
-= 3.4.1 =
-Update to prevent caching issues
-
-= 3.4 =
-Some great perfomance improvements
-
-= 3.3 =
-Update highly recommended, some important metadata improvements
-
-= 3.2.1 =
-Update if you're experiencing issues with printing
-
-= 3.2 =
-Update to get a setting for Pinterest Rich Pins compatibility and many other improvements
-
-= 3.1.5 =
-Intermediate fix version, update recommended
-
-= 3.1 =
-New update introducing JSON-LD recipe metadata and other improvements
-
-= 3.0.2 =
-Update if you're experiencing issues with the print feature
-
-= 3.0.1 =
-Update required if you're using an older version than PHP 5.3
-
-= 3.0 =
-Update for lots of great improvements and new features
-
-= 2.8.1 =
-Another update for the Pinterest button
-
-= 2.8 =
-Update to fix the Pinterest button
-
-= 2.7.1 =
-Update to improve your metadata for Google
-
-= 2.7 =
-Update for a nice clean print feature
-
-= 2.6.1 =
-Update if you're using minified assets
-
-= 2.6 =
-Update for WordPress 4.4 compatibility and some new features
-
-= 2.5 =
-Update for the latest and greatest plugin
-
-= 2.4 =
-Some esssential improvements and bug fixes
-
-= 2.3.2 =
-Update required if you were using version 2.3.1 or 2.3.2
-
-= 2.3.2 =
-Update required if you were using version 2.3.1
-
-= 2.3.1 =
-Update to fix the Full Text Search feature
-
-= 2.3 =
-A few great new features
-
-= 2.2.3 =
-Update to fix the shortcode editor button in the text editor
-
-= 2.2.2 =
-Tiny upgrade for the free version
-
-= 2.2.1 =
-Update to improve memory usage of recipe templates
-
-= 2.2 =
-Update recommended
-
-= 2.1.8 =
-Update when experiencing JS issues
-
-= 2.1.7 =
-Update highly recommended
-
-= 2.1.6 =
-Be sure to update if you're experiencing JavaScript issues
-
-= 2.1.4 =
-Update recommended. A few bug fixes
-
-= 2.1.3b =
-Update required when using the minified assets
-
-= 2.1.3 =
-Update for improved page load speeds
-
-= 2.1.2 =
-Update highly recommended. Improvements to CPU and memory load of the plugin.
-
-= 2.1.1 =
-Update if you're experiencing problems with the current version. New feature for Premium: import Ziplist recipes.
-
-= 2.1.0 =
-A few fixes and improvements for the free version. Major update for WP Ultimate Recipe Premium.
-
-= 2.0.10 =
-Tiny update. Improves metadata with recipe rating
-
-= 2.0.9 =
-Fix release, no new features
-
-= 2.0.8 =
-Update to fix your recipe metadata
-
-= 2.0.7 =
-Another fine release
-
-= 2.0.6 =
-Update to get the latest and greatest plugin
-
-= 2.0.5 =
-Update not necessary if your recipes look fine
-
-= 2.0.4 =
-Update to fix the settings page
-
-= 2.0.3 =
-Update to fix the print version
-
-= 2.0.2 =
-Update for RTL websites
-
-= 2.0.1 =
-Update recommended if your website is not in English
-
-= 2.0 =
-Important: If you are using WP Ultimate Recipe Premium you should just download Premium version 2.0 and install that, the core plugin is NOT needed anymore.
-Everyone else can safely update!
-
-= 1.0.12 =
-A tiny upgrade
-
-= 1.0.11 =
-Another upgrade
-
-= 1.0.10 =
-Upgrade for some tiny improvements
-
-= 1.0.9 =
-Upgrading is fun
-
-= 1.0.8 =
-Upgrade for improvements
-
-= 1.0.7 =
-Upgrade for bug fixes and a new premium feature
-
-= 1.0.6 =
-Upgrade for bug fixes and new premium features
-
-= 1.0.5 =
-Upgrade if you use recipes as posts
-
-= 1.0.4 =
-Upgrade to get rid of some nasty bugs
-
-= 1.0.3 =
-Upgrade if you use recipes as posts
-
-= 1.0.2 =
-Upgrade if you disable recipe sharing
-
-= 1.0.1 =
-Upgrade if you want to use your recipes just like posts
-
-= 1.0.0 =
-Major release, update now!
-
-= 0.0.22 =
-Upgrade for some new settings
-
-= 0.0.21 =
-Upgrade for a new fancy admin page
-
-= 0.0.20 =
-Upgrade for WordPress 3.8 compatibility and some bugfixes
-
-= 0.0.19 =
-Upgrade necessary for premium users
-
-= 0.0.18 =
-Update for some bug fixes
-
-= 0.0.17 =
-Update for some bug fixes and extra translation options
-
-= 0.0.16 =
-Update for new recipe notes feature
-
-= 0.0.15 =
-Update if you have issues with displaying recipes
-
-= 0.0.14 =
-Update if you want to use the Premium version
-
-= 0.0.13 =
-Update to fix translation issues
-
-= 0.0.12 =
-Update to fix image uploading
-
-= 0.0.11 =
-Update to fix printing for IE
-
-= 0.0.10 =
-Update if you are using ajax to load your recipes
-
-= 0.0.9 =
-Update if you want to be able to show the full recipe instead of the excerpt
-
-= 0.0.8 =
-Update if you want to use the index feature
-
-= 0.0.7 =
-Update broken 0.0.6 version
-
-= 0.0.6 =
-Update to fix bug with instruction photos.
-
-= 0.0.5 =
-Update to fix css bug.
-
-= 0.0.4 =
-Update if you have styling problems with your theme.
-
-= 0.0.3 =
-Possible to enter fractions (or actually just anything) as amounts.
-
-= 0.0.2 =
-Previous version mistakenly pointed to an external image source.
-
-= 0.0.1 =
-First version, no upgrades needed.
+= 3.12.0 =
+Update to ensure WordPress 5.0 and Gutenberg compatibility

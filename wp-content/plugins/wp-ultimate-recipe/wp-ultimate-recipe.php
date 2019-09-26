@@ -3,14 +3,14 @@
 Plugin Name: WP Ultimate Recipe
 Plugin URI: http://www.wpultimaterecipe.com
 Description: Everything a Food Blog needs. Beautiful SEO friendly recipes, print versions, visitor interaction, ...
-Version: 3.9.0
+Version: 3.12.7
 Author: Bootstrapped Ventures
 Author URI: http://bootstrapped.ventures
 License: GPLv2
 Text Domain: wp-ultimate-recipe
 Domain Path: /lang
 */
-define( 'WPURP_VERSION', '3.9.0' );
+define( 'WPURP_VERSION', '3.12.7' );
 define( 'WPURP_POST_TYPE', 'recipe' );
 
 class WPUltimateRecipe {
@@ -92,6 +92,11 @@ class WPUltimateRecipe {
             $default = self::get()->helper( 'vafpress_menu' )->defaults( $name );
         }
 
+        // Force JSON-LD
+        if ( 'recipe_metadata_type' == $name ) {
+            return apply_filters( 'wpurp_recipe_metadata_type', 'json' );
+        }
+
         // Chicory specific check
         if( 'partners_integrations_chicory_enable' == $name && '0' == $option ) {
             $option = '';
@@ -155,18 +160,18 @@ class WPUltimateRecipe {
         $this->helper( 'ajax' );
         $this->helper( 'amp' );
         $this->helper( 'activate' );
-        //$this->helper( 'admin_tour' );
+        $this->helper( 'blocks' );
         $this->helper( 'cache' );
         $this->helper( 'compatibility' );
         $this->helper( 'css' );
         $this->helper( 'faq' );
-        $this->helper( 'giveaway' );
         $this->helper( 'metadata' );
         $this->helper( 'notices' );
         $this->helper( 'permalinks_flusher' );
         $this->helper( 'partners' );
         $this->helper( 'plugin_action_link' );
         $this->helper( 'print' );
+        $this->helper( 'privacy' );
         $this->helper( 'query_posts' );
         $this->helper( 'recipe_content' );
         $this->helper( 'recipe_demo' );
@@ -186,11 +191,13 @@ class WPUltimateRecipe {
         $this->helper( 'shortcodes/jump_shortcode' );
         $this->helper( 'shortcodes/print_shortcode' );
         $this->helper( 'shortcodes/recipe_shortcode' );
+        $this->helper( 'shortcodes/video_shortcode' );
 
         // Include required helpers but don't instantiate
         $this->include_helper( 'addons/addon' );
         $this->include_helper( 'addons/premium_addon' );
         $this->include_helper( 'models/recipe' );
+        $this->include_helper( 'metadata_video' );
 
         if( !WPUltimateRecipe::minimal_mode() ) {
             // Load core addons
@@ -305,7 +312,46 @@ class WPUltimateRecipe {
     }
 }
 
-// Premium version is responsible for instantiating if available
+// Premium version is responsible for instantiating and Freemius Integration if available
 if( !class_exists( 'WPUltimateRecipePremium' ) ) {
+    // Freemius Integration.
+    if ( ! function_exists( 'wpurp_fs' ) ) {
+        // Create a helper function for easy SDK access.
+        function wpurp_fs() {
+            global $wpurp_fs;
+
+            if ( ! isset( $wpurp_fs ) ) {
+                // Include Freemius SDK.
+                require_once dirname(__FILE__) . '/freemius/start.php';
+
+                $wpurp_fs = fs_dynamic_init( array(
+                    'id'                  => '3573',
+                    'slug'                => 'wp-ultimate-recipe',
+                    'type'                => 'plugin',
+                    'public_key'          => 'pk_e26dd45a00dd68423c1a9892dfb46',
+                    'is_premium'          => false,
+                    'premium_suffix'      => 'Premium',
+                    // If your plugin is a serviceware, set this option to false.
+                    'has_premium_version' => true,
+                    'has_addons'          => false,
+                    'has_paid_plans'      => true,
+                    'menu'                => array(
+                        'slug'           => 'edit.php?post_type=recipe',
+                        'contact'        => false,
+                        'support'        => false,
+                    ),
+                    'is_live'            => true,
+                ) );
+            }
+
+            return $wpurp_fs;
+        }
+
+        // Init Freemius.
+        wpurp_fs();
+        // Signal that SDK was initiated.
+        do_action( 'wpurp_fs_loaded' );
+    }
+
     WPUltimateRecipe::get();
 }

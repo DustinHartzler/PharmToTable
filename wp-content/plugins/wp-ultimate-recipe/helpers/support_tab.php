@@ -10,6 +10,6 @@ class WPURP_Support_Tab {
 
     public function add_support_tab()
     {
-        include(WPUltimateRecipe::get()->coreDir . '/static/support_tab.html');
+        include(WPUltimateRecipe::get()->coreDir . '/static/support_tab.php');
     }
 }

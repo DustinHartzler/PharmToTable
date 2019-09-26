@@ -719,4 +719,64 @@ jQuery(document).ready(function() {
         button.addClass('wpurp-hide');
     });
 
+    /**
+     * Recipe Video
+     */
+    jQuery('.wpurp-recipe-video-add').on('click', function(e) {
+        var container = jQuery(this).parents('.recipe-video-container');
+
+        var media_arguments = {
+            frame: 'video',
+            state: 'video-details'
+        };
+    
+        // Create a new media frame (don't reuse because we have multiple different inputs)
+        var frame = wp.media(media_arguments);
+
+        frame.on('update', function() {
+            var attachment = frame.state().media.attachment;
+    
+            if ( attachment ) {
+                container.find('.wpurp-recipe-video-preview').html('');
+
+                if ( '' !== attachment.attributes.thumb.src ) {
+                    container.find('.wpurp-recipe-video-preview').append('<img src="' + attachment.attributes.thumb.src + '" />');
+                }
+
+                container.find('#recipe_video_id').val(attachment.attributes.id);
+                container.find('#recipe_video_thumb').val(attachment.attributes.thumb.src);
+
+                container.find('.wpurp-recipe-video-add').addClass('hidden');
+                container.find('.wpurp-recipe-video-remove').removeClass('hidden');
+            }
+        });
+    
+        // Finally, open the modal on click
+        frame.open();
+    });
+
+    jQuery('.wpurp-recipe-video-remove').on('click', function(e) {
+        var container = jQuery(this).parents('.recipe-video-container');
+
+        container.find('.wpurp-recipe-video-preview').html('');
+        
+        container.find('#recipe_video_id').val('');
+        container.find('#recipe_video_thumb').val('');
+
+        container.find('.wpurp-recipe-video-add').removeClass('hidden');
+        container.find('.wpurp-recipe-video-remove').addClass('hidden');
+    });
+
 });
+
+// TODO WordPress 5.0 Gutenberg fix. Get rid once fixed in core.
+if (window.wp && wp.data && window.tinymce) {
+    wp.data.subscribe(function () {
+        // the post is currently being saved && we have tinymce editors
+        if (wp.data.select( 'core/editor' ) && wp.data.select( 'core/editor' ).isSavingPost() && window.tinymce.editors) {
+            for (var i = 0; i < tinymce.editors.length; i++) {
+                tinymce.editors[i].save();
+            }
+        }
+    });
+}

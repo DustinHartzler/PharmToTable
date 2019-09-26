@@ -1078,7 +1078,7 @@ vp.init_controls = function($parent)
 	// init date picker
 	vp.init_datepicker($parent.find('.vp-js-datepicker'));
 	vp.init_fontawesome_chooser($parent.find('.vp-js-fontawesome'));
-	vp.init_select2($parent.find('.vp-js-select2'));
+	vp.init_select2vafpress($parent.find('.vp-js-select2vafpress'));
 	vp.init_sorter($parent.find('.vp-js-sorter'));
 	vp.init_colorpicker($parent.find('.vp-js-colorpicker'));
 	vp.init_slider($parent.find('.vp-js-slider'));
@@ -1089,14 +1089,14 @@ vp.init_controls = function($parent)
 // Fontawesome Chooser
 vp.init_fontawesome_chooser = function($elements)
 {
-	if (jQuery.fn.select2)
+	if (jQuery.fn.select2vafpress)
 	{
 		if($elements.length <= 0)
 			return;
 		var format = function vp_fontawesome_chooser_format(icon){
 			return '<span class="fontawesome"><i class="fa ' + icon.id + '"></i>' + icon.text + '</span>';
 		};
-		$elements.select2({
+		$elements.select2vafpress({
 			formatResult: format,
 			formatSelection: format,
 			escapeMarkup: function(m) { return m; },
@@ -1106,21 +1106,21 @@ vp.init_fontawesome_chooser = function($elements)
 	}
 };
 
-// Select2
-vp.init_select2 = function($elements)
+// select2vafpress
+vp.init_select2vafpress = function($elements)
 {
-	if (jQuery.fn.select2)
+	if (jQuery.fn.select2vafpress)
 	{
 		if($elements.length <= 0)
 			return;
-		$elements.select2({allowClear: true, placeholder: vp_wp.ctrl_msg.select2_placeholder});
+		$elements.select2vafpress({allowClear: true, placeholder: vp_wp.ctrl_msg.select2vafpress_placeholder});
 	}
 };
 
 // Sorter
 vp.init_sorter = function($elements)
 {
-	if (jQuery.fn.select2Sortable)
+	if (jQuery.fn.select2vafpressSortable)
 	{
 		if($elements.length <= 0)
 			return;
@@ -1129,7 +1129,7 @@ vp.init_sorter = function($elements)
 			var $el     = jQuery(el),
 			    options = $el.getDatas();
 			options = vp.parseOpt(options.opt);
-			$el.select2(options).select2Sortable({bindOrder: 'sortableStop'});
+			$el.select2vafpress(options).select2vafpressSortable({bindOrder: 'sortableStop'});
 		});
 
 	}

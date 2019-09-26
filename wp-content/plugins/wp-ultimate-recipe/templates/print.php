@@ -3,10 +3,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title></title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../../../../../wp-includes/js/jquery/jquery.js"></script>
     <script>
         var wpurp = window.opener.wpurp_print;
 
+        // Load jQuery.
+        var jQueryScript = document.createElement('script');
+        jQueryScript.src = wpurp.wpIncludesUrl + 'js/jquery/jquery.js';
+
+        // Set title.
         document.title = wpurp.title;
 
         // Include CSS files

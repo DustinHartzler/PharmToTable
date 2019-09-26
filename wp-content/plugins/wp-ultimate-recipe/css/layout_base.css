@@ -111,6 +111,12 @@ html body .wpurp-container {
       text-decoration: underline; }
   html body .wpurp-container .wpurp-responsive-mobile, html body .wpurp-container .wpupg-show-on-hover {
     display: none; }
+  html body .wpurp-container .wpurp-recipe-print-button i.fa:before,
+  html body .wpurp-container .wpurp-recipe-add-to-meal-plan i.fa:before,
+  html body .wpurp-container .wpurp-recipe-add-to-shopping-list i.fa:before,
+  html body .wpurp-container .wpurp-recipe-favorite i.fa:before,
+  html body .wpurp-container .wpurp-recipe-stars i.fa:before {
+    font-family: 'FontAwesome'; }
   html body .wpurp-container .wpurp-recipe-sharing .button.pinterest {
     margin-top: 32px; }
   html body .wpurp-container .sharrre iframe {

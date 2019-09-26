@@ -39,8 +39,8 @@ return array(
 	 * Control Fields String
 	 */
 	'control' => array(
-		// select2 select box
-		'select2_placeholder' => __('Select option(s)', 'wp-ultimate-recipe'),
+		// select2vafpress select box
+		'select2vafpress_placeholder' => __('Select option(s)', 'wp-ultimate-recipe'),
 		// fontawesome chooser
 		'fac_placeholder'     => __('Select an Icon', 'wp-ultimate-recipe'),
 	),

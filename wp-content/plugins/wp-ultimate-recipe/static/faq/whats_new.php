@@ -7,31 +7,17 @@
 
     <div class="feature-section col two-col">
         <div class="col-1">
-            <h3>WP Ultimate Recipe 3.9</h3>
-            <strong>New</strong>
+            <h3>WP Ultimate Recipe 3.12.1</h3>
             <ul>
-                <li>Feature: Searchable recipe tags and categories</li>
-                <li>Improvement: WooCommerce Memberships compatibility for recipes</li>
-            </ul>
-            <strong>Update</strong>
-            <ul>
-                <li>Fix: PHP 7.2 deprecated function</li>
-                <li>Fix: 404 error when using comment pagination</li>
+                <li>Fix: Taxonomies in Gutenberg</li>
             </ul>
         </div>
         <div class="col-2 last-feature">
-            <h3>WP Ultimate Recipe Premium 3.9</h3>
-            <strong>New</strong>
+            <h3>WP Ultimate Recipe Premium 3.12.1</h3>
             <ul>
-                <li>Feature: Clone saved meal plans</li>
-                <li>Improvement: Include recipe tags and categories when cloning recipes</li>
-                <li>Improvement: Don't show "Custom Fields: " when required one is missing in User Submissions form</li>
-                <li>Improvement: Meal Plan swiping less sensitive</li>
-            </ul>
-            <strong>Update</strong>
-            <ul>
-                <li>Fix: Saved meal plan not showing adjusted servings in shopping list</li>
-                <li>Fix: Special characters in blog name when emailing shopping list</li>
+                <li>Fix: Only published recipes in Meal Planner dropdown when using cached mode</li>
+                <li>Fix: Meal Planner buttons not hiding on mobile</li>
+                <li>Fix: User Menus delete icon not clickable on some devices</li>
             </ul>
         </div>
     </div>
@@ -40,6 +26,68 @@
 
     <div>
         <h3>Previous Versions</h3>
+
+        <h4>WP Ultimate Recipe 3.12</h4>
+        <ul>
+            <li>Feature: Use Gutenberg editor for the recipe post type</li>
+            <li>Feature: Use embed code for the recipe video</li>
+            <li>Improvement: Include all courses and cuisines in the metadata</li>
+            <li>Improvement: Force JSON-LD for recipe metadata</li>
+            <li>Improvement: WordPress 5.0 Compatibility</li>
+            <li>Fix: WPML Compatibility for random and latest recipe shortcode</li>
+            <li>Fix: Unable to edit keywords on Custom Tags page</li>
+        </ul>
+
+        <h4>WP Ultimate Recipe Premium 3.12</h4>
+        <ul>
+            <li>Improvement: Recipe Grid performance</li>
+        </ul>
+
+        <h4>WP Ultimate Recipe 3.11</h4>
+        <ul>
+            <li>Feature: Upload recipe video to be used in metadata</li>
+            <li>Improvement: Prevent issues with FontAwesome icons using wrong font</li>
+            <li>Fix: Double saving problem caused by searchable shortcode</li>
+            <li>Fix: Recipe not getting saved if title and content are empty</li>
+        </ul>
+
+        <h4>WP Ultimate Recipe Premium 3.11</h4>
+        <ul>
+            <li>Fix: User ratings clickable with FontAwesome 5</li>
+        </ul>
+
+        <h4>WP Ultimate Recipe 3.10</h4>
+        <ul>
+            <li>Feature: Add recipe metadata to AMP pages</li>
+            <li>Improvement: Site icon on print page</li>
+        </ul>
+        <h4>WP Ultimate Recipe Premium 3.10</h4>
+        <ul>
+            <li>Feature: Cached mode to improve performance with Meal Planner dropdown</li>
+            <li>Feature: Display and style the nutrition label on AMP pages</li>
+            <li>Improvement: Move icon in shopping list</li>
+            <li>Improvement: Styling of meal planner buttons on mobile</li>
+            <li>Improvement: Add to Meal Planner button now works in Meal Plan template</li>
+            <li>Fix: Make sure Meal Planner is fully loaded before showing print dialog</li>
+            <li>Fix: PHP 7.2 deprecated warning for create_function</li>
+        </ul>
+
+        <h4>WP Ultimate Recipe 3.9</h4>
+        <ul>
+            <li>Feature: Searchable recipe tags and categories</li>
+            <li>Improvement: WooCommerce Memberships compatibility for recipes</li>
+            <li>Fix: PHP 7.2 deprecated function</li>
+            <li>Fix: 404 error when using comment pagination</li>
+        </ul>
+        <h4>WP Ultimate Recipe Premium 3.9</h4>
+        <ul>
+            <li>Feature: Clone saved meal plans</li>
+            <li>Improvement: Include recipe tags and categories when cloning recipes</li>
+            <li>Improvement: Don't show "Custom Fields: " when required one is missing in User Submissions form</li>
+            <li>Improvement: Meal Plan swiping less sensitive</li>
+            <li>Fix: Saved meal plan not showing adjusted servings in shopping list</li>
+            <li>Fix: Special characters in blog name when emailing shopping list</li>
+        </ul>
 
         <h4>WP Ultimate Recipe Premium 3.8</h4>
         <ul>

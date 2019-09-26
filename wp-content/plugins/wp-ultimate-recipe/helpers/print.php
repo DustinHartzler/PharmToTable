@@ -6,7 +6,7 @@ class WPURP_Print {
 
     public function __construct()
     {
-        define( 'EP_RECIPE', 524288 ); // 2^19
+        define( 'EP_WPURP_RECIPE', 524288 ); // 2^19
 
         add_action( 'init', array( $this, 'endpoint' ) );
         add_action( 'init', array( $this, 'print_page' ) );
@@ -19,7 +19,7 @@ class WPURP_Print {
             $this->keyword = $keyword;
         }
 
-        add_rewrite_endpoint( $this->keyword, EP_RECIPE );
+        add_rewrite_endpoint( $this->keyword, EP_WPURP_RECIPE );
     }
 
     public function redirect() {
@@ -27,9 +27,12 @@ class WPURP_Print {
 
         if( $print !== false ) {
             $post = get_post();
-            $recipe = new WPURP_Recipe( $post );
-            $this->print_recipe( $recipe, $print );
-            exit();
+
+            if ( 'recipe' === $post->post_type ) {
+                $recipe = new WPURP_Recipe( $post );
+                $this->print_recipe( $recipe, $print );
+                exit();
+            }
         }
     }
 
@@ -97,7 +100,7 @@ class WPURP_Print {
                     $styles .= '<link rel="stylesheet" type="text/css" href="' . WPUltimateRecipe::get()->coreUrl . '/css/layout_base.css">';
 
                     // Change servings of recipes.
-                    $scripts .= '<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>';
+                    $scripts .= '<script src="' . includes_url( '/js/jquery/jquery.js' ) . '"></script>';
                     $scripts .= '<script src="' . WPUltimateRecipe::get()->coreUrl . '/vendor/fraction-js/index.js"></script>';
                     $scripts .= '<script src="' . WPUltimateRecipe::get()->coreUrl . '/js/adjustable_servings.js"></script>';
                     $scripts .= '<script>var wpurp_servings = {';
@@ -144,8 +147,17 @@ class WPURP_Print {
             // Fix for IE.
             header( 'HTTP/1.1 200 OK' );
 
+            // Site icon.
+			ob_start();
+			wp_site_icon();
+			$site_icon = ob_get_contents();
+			ob_end_clean();
+
             $charset = get_bloginfo( 'charset' );
             $print_html = '<html><head><title>' . get_bloginfo('name') . '</title><meta http-equiv="Content-Type" content="text/html; charset=' . $charset . '" /><meta name="robots" content="noindex">' . $styles . $scripts . '</head><body class="wpurp-print">';
+            $print_html .= $site_icon;
+            $print_html .= $styles . $scripts;
+            $print_html .='</head><body class="wpurp-print">';
             $print_html .= __( 'Loading...', 'wp-ultimate-recipe' );
             $print_html .= '</body></html>';
             echo $print_html;

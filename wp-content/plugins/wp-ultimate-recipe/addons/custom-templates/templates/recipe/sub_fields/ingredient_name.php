@@ -45,8 +45,12 @@ class WPURP_Template_Recipe_Ingredient_Name extends WPURP_Template_Block {
                     $output .= '<a href="'.$custom_link.'" class="custom-ingredient-link" target="'.WPUltimateRecipe::option( 'recipe_ingredient_custom_links_target', '_blank' ).'"' . $nofollow . '>';
                     $closing_tag = '</a>';
                 } else if( $ingredient_links != 'custom' ) {
-                    $output .= '<a href="'.get_term_link( $taxonomy_slug, 'ingredient' ).'">';
-                    $closing_tag = '</a>';
+                    $link = get_term_link( $taxonomy_slug, 'ingredient' );
+
+                    if ( $link && ! is_wp_error( $link ) ) {
+                        $output .= '<a href="'.get_term_link( $taxonomy_slug, 'ingredient' ).'">';
+                        $closing_tag = '</a>';
+                    }
                 }
             }
         }

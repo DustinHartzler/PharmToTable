@@ -26,6 +26,7 @@ class WPURP_Recipe_Shortcode {
                 'post_type' => WPURP_POST_TYPE,
                 'posts_per_page' => 1,
                 'orderby' => 'rand',
+                'suppress_filters' => false, // WPML compatibility.
             ));
 
             $recipe_post = isset( $posts[0] ) ? $posts[0] : null;
@@ -33,6 +34,7 @@ class WPURP_Recipe_Shortcode {
             $posts = get_posts(array(
                 'post_type' => WPURP_POST_TYPE,
                 'posts_per_page' => 1,
+                'suppress_filters' => false, // WPML compatibility.
             ));
 
             $recipe_post = isset( $posts[0] ) ? $posts[0] : null;
