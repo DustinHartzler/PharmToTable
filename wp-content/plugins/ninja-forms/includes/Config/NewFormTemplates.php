@@ -63,9 +63,9 @@ $templates = array(
     ),
 
     'formtemplate-exportdata'        => array(
-	    'id'                            => 'formtemplate-exportdata',
-	    'title'                         => __( 'Export Data Request', 'ninja-forms' ),
-	    'template-desc'                 => __( 'Includes action to add users to WordPress\' personal data export tool, allowing admins to comply with the GDPR and other privacy regulations from the site\'s front end.', 'ninja-forms' ),
+        'id'                            => 'formtemplate-exportdata',
+        'title'                         => __( 'Export Data Request', 'ninja-forms' ),
+        'template-desc'                 => __( 'Includes action to add users to WordPress\' personal data export tool, allowing admins to comply with the GDPR and other privacy regulations from the site\'s front end.', 'ninja-forms' ),
     ),
 );
 
@@ -81,11 +81,11 @@ $ads = array(
         'type'                          => 'ad',
         'modal-title'                   => 'Get MailChimp for Ninja Forms',
         'modal-content'                 => '<div class="modal-template">
-                                                <img src="' . Ninja_Forms::$url . 'assets/img/add-ons/mailchimp-for-ninja-forms.png"/>
+                                                <img src="' . Ninja_Forms::$url . 'assets/img/add-ons/mail-chimp.png"/>
                                                 <p>In order to use this template, you need MailChimp for Ninja Forms.</p>
                                                 <p>The MailChimp extension allows you to quickly create newsletter signup forms for your MailChimp account using the power and flexibility that Ninja Forms provides.</p>
                                                 <div class="actions">
-                                                    <a target="_blank" href="https://ninjaforms.com/extensions/mail-chimp/?utm_medium=plugin&amp;utm_source=dashboard&amp;utm_campaign=New+Form+Templates&utm_content=MailChimp" title="MailChimp" class="primary nf-button">Learn More</a>
+                                                    <a target="_blank" href="https://ninjaforms.com/extensions/mail-chimp/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Mailchimp+Signup" title="MailChimp" class="primary nf-button">Learn More</a>
                                                 </div>
                                             </div>',
     ),
@@ -100,7 +100,7 @@ $ads = array(
                                                 <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/WdFmgAffA50" allowfullscreen="" name="fitvid0" frameborder="0"></iframe></div>
                                                 <p>In order to use this template, you need Stripe for Ninja Forms.</p>
                                                 <div class="actions">
-                                                    <a target="_blank" href="https://ninjaforms.com/extensions/stripe/?utm_medium=plugin&utm_source=dashboard&utm_campaign=New+Form+Templates&utm_content=Stripe" title="Stripe" class="primary nf-button">Learn More</a>
+                                                    <a target="_blank" href="https://ninjaforms.com/extensions/stripe/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Stripe+Payment" title="Stripe" class="primary nf-button">Learn More</a>
                                                 </div>
                                             </div>',
     ),
@@ -115,7 +115,8 @@ $ads = array(
                                                 <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/Tl91cuFsnvM" allowfullscreen="" name="fitvid0" frameborder="0"></iframe></div>
                                                 <p>In order to use this template, you need File Uploads for Ninja Forms.</p>
                                                 <div class="actions">
-                                                    <a target="_blank" href="https://ninjaforms.com/extensions/stripe/?utm_medium=plugin&utm_source=dashboard&utm_campaign=New+Form+Templates&utm_content=File+Uploads" title="File Uploads" class="primary nf-button">Learn More</a>
+                                                    <a target="_blank" href="https://ninjaforms.com/extensions/stripe/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=File+Upload
+                                                    " title="File Uploads" class="primary nf-button">Learn More</a>
                                                 </div>
                                             </div>',
     ),
@@ -131,7 +132,8 @@ $ads = array(
                                                 <p>In order to use this template, you need PayPal Express for Ninja Forms.</p>
                                                 <p>PayPal Express allows you to accept payments using Ninja Forms. It leverages the powerful processing engine that runs each Ninja Form to get a total, perform a checkout, and send your users to PayPal to complete their transaction.</p>
                                                 <div class="actions">
-                                                    <a target="_blank" href="https://ninjaforms.com/extensions/paypal-express/?utm_medium=plugin&utm_source=dashboard&utm_campaign=New+Form+Templates&utm_content=PayPal+Express" title="PayPal Express" class="primary nf-button">Learn More</a>
+                                                    <a target="_blank" href="https://ninjaforms.com/extensions/paypal-express/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Paypal+Payment
+                                                    " title="PayPal Express" class="primary nf-button">Learn More</a>
                                                 </div>
                                             </div>',
     ),
@@ -144,11 +146,11 @@ $ads = array(
         'modal-title'                   => 'Get Front-End Posting for Ninja Forms',
         'modal-content'                 => '<div class="modal-template">
                                                 <img src="' . Ninja_Forms::$url . 'assets/img/add-ons/front-end-posting.png"/>
-                                                <p>In order to use this template, you need User Management for Ninja Forms.</p>
+                                                <p>In order to use this template, you need Front-End Posting for Ninja Forms.</p>
                                                 <p>Create posts, pages, or any custom post type from the front-end.</p>
-                                                <p>The Ninja Forms Front-end Posting extension gives you the power of the WordPress post editor on any publicly viewable page you choose.</p>
+                                                <p>The Ninja Forms Front-End Posting extension gives you the power of the WordPress post editor on any publicly viewable page you choose.</p>
                                                 <div class="actions">
-                                                    <a target="_blank" href="https://ninjaforms.com/extensions/user-management/?utm_medium=plugin&utm_source=dashboard&utm_campaign=New+Form+Templates&utm_content=Frontend+Posting" title="Create Post" class="primary nf-button">Learn More</a>
+                                                    <a target="_blank" href="https://ninjaforms.com/extensions/front-end-posting/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Create+a+Post" title="Create Post" class="primary nf-button">Learn More</a>
                                                 </div>
                                             </div>',
     ),
@@ -164,7 +166,7 @@ $ads = array(
                                                 <p>In order to use this template, you need User Management for Ninja Forms.</p>
                                                 <p>User Management brings you the remarkable flexibility to register new WordPress users and manage existing ones through your Ninja Forms!</p>
                                                 <div class="actions">
-                                                    <a target="_blank" href="https://ninjaforms.com/extensions/user-management/?utm_medium=plugin&utm_source=dashboard&utm_campaign=New+Form+Templates&utm_content=User+Management" title="User Management" class="primary nf-button">Learn More</a>
+                                                    <a target="_blank" href="https://ninjaforms.com/extensions/user-management/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Register+a+User" title="User Management" class="primary nf-button">Learn More</a>
                                                 </div>
                                             </div>',
     ),
@@ -180,7 +182,7 @@ $ads = array(
                                                 <p>In order to use this template, you need User Management for Ninja Forms.</p>
                                                 <p>User Management brings you the remarkable flexibility to register new WordPress users and manage existing ones through your Ninja Forms!</p>
                                                 <div class="actions">
-                                                    <a target="_blank" href="https://ninjaforms.com/extensions/user-management/?utm_medium=plugin&utm_source=dashboard&utm_campaign=New+Form+Templates&utm_content=User+Management" title="User Management" class="primary nf-button">Learn More</a>
+                                                    <a target="_blank" href="https://ninjaforms.com/extensions/user-management/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Edit-User-Profile " title="User Management" class="primary nf-button">Learn More</a>
                                                 </div>
                                             </div>',
     ),

@@ -21,23 +21,41 @@ define( [], function() {
          * @return {void}
          */
         maybeOpenModal: function( e ) {
-        	// If this isn't an ad, then early return
-        	if ( 'ad' != this.model.get( 'type' ) ) {
-        		return true;
-        	}
-        	// Prevent page navigation.
-        	e.preventDefault();
+            e.preventDefault();
+            // If this is an ad, open the ad modal.
+            if ( 'ad' == this.model.get( 'type' ) ) {
+                // Open our jBox modal
+                var modal = new jBox( 'Modal', {
+                    width: 450,
+                    title: this.model.get( 'modal-title' ),
+                    content: this.model.get( 'modal-content' ),
+                    closeButton: 'box',
+                    blockScroll: true
+                } );
 
-        	// Open our jBox modal
-        	var modal = new jBox( 'Modal', {
-        		width: 450,
-        		title: this.model.get( 'modal-title' ),
-        		content: this.model.get( 'modal-content' ),
-                closeButton: 'box',
-                blockScroll: true
-        	} );
+                modal.open();
+            } else { // This is a template, so import it using the batch processor.
+                // Settings object for our batch processor
+                var settings = {
+                    // Batch processor slug. Must match what we have set in our PHP settings array.
+                    batch_type: 'import_form_template',
+                    loadingText: 'Importing...',
+                    extraData: { template: this.model.get( 'id' ) },
+                    onCompleteCallback: function( response ) {
+                        // Bail if we don't return a form ID.
+                        if ( 'undefined' == typeof response.form_id ) return false;
 
-        	modal.open();
+                        window.location.href = nfAdmin.builderURL + response.form_id;
+                    }
+                }
+
+                /**
+                 * Instantiate our batch processor.
+                 *
+                 * This will open the modal and present the user with content.
+                 */
+                new NinjaBatchProcessor( settings );                
+            }        	
         }
 
     } );

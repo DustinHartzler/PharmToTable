@@ -12,6 +12,7 @@ class NF_AJAX_Controllers_Form extends NF_Abstracts_Controller
 	    add_action( 'wp_ajax_nopriv_nf_ajax_get_new_nonce', array( $this, 'get_new_nonce' ) );
         add_action( 'wp_ajax_nf_save_form',   array( $this, 'save' )   );
         add_action( 'wp_ajax_nf_delete_form', array( $this, 'delete' ) );
+        add_action( 'wp_ajax_nf_remove_maintenance_mode', array( $this, 'remove_maintenance_mode' ) );
     }
 
     public function plugins_loaded()
@@ -137,6 +138,21 @@ class NF_AJAX_Controllers_Form extends NF_Abstracts_Controller
     public function delete()
     {
         check_ajax_referer( 'ninja_forms_builder_nonce', 'security' );
+
+        $this->_respond();
+    }
+
+    /**
+     * This function will take all form out of maintenance mode( in case some
+     * are still in maintenance mode after some required updates )
+     * 
+     * @since 3.4.0
+     */
+    public function remove_maintenance_mode() {
+
+        check_ajax_referer( 'ninja_forms_settings_nonce', 'security' );
+
+        WPN_Helper::set_forms_maintenance_mode();
 
         $this->_respond();
     }

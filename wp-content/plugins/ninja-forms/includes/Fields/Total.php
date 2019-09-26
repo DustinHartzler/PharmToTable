@@ -7,7 +7,7 @@ class NF_Fields_Total extends NF_Abstracts_Input
 {
     protected $_name = 'total';
 
-    protected $_section = 'pricing';
+    protected $_section = '';
 
     protected $_icon = 'money';
 

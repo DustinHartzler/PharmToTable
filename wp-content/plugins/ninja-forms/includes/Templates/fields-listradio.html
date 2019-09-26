@@ -17,7 +17,7 @@
 			<# } #>
         >
         <label for="nf-field-{{{ data.fieldID }}}-{{{ data.index }}}"
-               id="nf-label-class-field-{{{ data.fieldID }}}-{{{ data.index }}}" {{{ ( data.value == data.currentValue  || 1
+               id="nf-label-class-field-{{{ data.fieldID }}}-{{{ data.index }}}" class="{{{ ( data.value == data.currentValue  || 1
                        ==
                data.selected ) ? 'nf-checked-label' : '' }}}">{{{ data.label }}}</label>
     </li>

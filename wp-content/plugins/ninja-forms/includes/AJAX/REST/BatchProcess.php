@@ -22,27 +22,19 @@ class NF_AJAX_REST_BatchProcess extends NF_AJAX_REST_Controller
         if ( ! isset( $request_data[ 'security' ] ) || ! wp_verify_nonce( $request_data[ 'security' ], 'ninja_forms_batch_nonce' ) ) {
             // Kick the request out now.
             $data[ 'error' ] = __( 'Request forbidden.', 'ninja-forms' );
+            return $data;
         }
+        
         // If we have a batch type...
         if ( isset( $request_data[ 'batch_type' ]) ){
             $batch_type = $request_data[ 'batch_type' ];
-            // Route the request to the proper controller.
-            switch ( $batch_type ) {
-                case 'chunked_publish':
-	                $batch = new NF_Admin_Processes_ChunkPublish(
-	                	$request_data );
-                    break;
-                case 'data_cleanup':
-                    $batch = new NF_Admin_Processes_DataCleanup(
-                        $request_data );
-                    break;
-                case 'expired_submission_cleanup':
-                    $batch = new NF_Admin_Processes_ExpiredSubmissionCleanup(
-                        $request_data );
-                    break;
-                default:
-                    $data[ 'error' ] = __( 'Invalid request.', 'ninja-forms' );
-                    break;
+            $batch_processes = Ninja_Forms()->config( 'BatchProcesses' );
+
+            if ( isset ( $batch_processes[ $batch_type ][ 'class_name' ] ) ) {
+                $batch_class = $batch_processes[ $batch_type ][ 'class_name' ];
+                $batch = new $batch_class( $request_data );
+            } else {
+                $data[ 'error' ] = __( 'Invalid request.', 'ninja-forms' );
             }
         } // Otherwise... (We don't have a batch type.)
         else {

@@ -593,6 +593,7 @@ class NF_Subs_CPT {
 
 			foreach ($keywords as $word) {
 
+                $wpdb->escape_by_ref( $word );
 				$query .= " (mypm1.meta_value  LIKE '%{$word}%') OR ";
 			}
 

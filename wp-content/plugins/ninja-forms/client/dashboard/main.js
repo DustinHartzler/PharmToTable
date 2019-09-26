@@ -80,23 +80,32 @@ jQuery( document ).ready( function( $ ) {
 
 jQuery( 'a[href="admin.php?page=ninja-forms#new-form"]' ).on( 'click', function( event ){
     event.preventDefault();
-    window.location.hash = 'new-form';
-    nfRadio.channel( 'dashboard' ).request( 'show:widgets' );
-    nfRadio.channel( 'widget-forms' ).request( 'show:newFormsGrid' );
+    // We won't allow access to add forms if there are required updates
+    if( "1" !== nfAdmin.requiredUpdates ) {
+        window.location.hash = 'new-form';
+        nfRadio.channel( 'dashboard' ).request( 'show:widgets' );
+        nfRadio.channel( 'widget-forms' ).request( 'show:newFormsGrid' );
+    }
 } );
 
 jQuery( 'a[href="admin.php?page=ninja-forms#apps"]' ).on( 'click', function( event ){
     event.preventDefault();
-    window.location.hash = 'apps';
-    nfRadio.channel( 'dashboard' ).request( 'show:apps' );
+    // We won't allow access to the apps tab if there are required updates
+    if( "1" !== nfAdmin.requiredUpdates ) {
+        window.location.hash = 'apps';
+        nfRadio.channel( 'dashboard' ).request( 'show:apps' );
+    }
 
 } );
 
 jQuery( 'a[href="admin.php?page=ninja-forms"]' ).on( 'click', function( event ){
     event.preventDefault();
-    window.location.hash = 'forms';
-    nfRadio.channel( 'dashboard' ).request( 'show:widgets' );
-    nfRadio.channel( 'widget-forms' ).request( 'show:formsTable' );
+    // We won't allow access to the dashboard if there are required updates
+    if( "1" !== nfAdmin.requiredUpdates ) {
+        window.location.hash = 'forms';
+        nfRadio.channel( 'dashboard' ).request( 'show:widgets' );
+        nfRadio.channel( 'widget-forms' ).request( 'show:formsTable' );
+    }
 } );
 
 /**

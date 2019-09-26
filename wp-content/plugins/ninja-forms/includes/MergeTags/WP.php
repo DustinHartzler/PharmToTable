@@ -22,6 +22,7 @@ final class NF_MergeTags_WP extends NF_Abstracts_MergeTags
     public function replace( $subject )
     {
         // Recursively replace merge tags.
+
         if( is_array( $subject ) ){
             foreach( $subject as $i => $s ){
                 $subject[ $i ] = $this->replace( $s );
@@ -54,8 +55,10 @@ final class NF_MergeTags_WP extends NF_Abstracts_MergeTags
          * Replace Custom User Meta
          * {user_meta:foo} --> meta key is 'foo'
          */
+        $user_id = get_current_user_id();
         preg_match_all( "/{user_meta:(.*?)}/", $subject, $user_meta_matches );
-        if( ! empty( $user_meta_matches[0] ) && $user_id = get_current_user_id()  ) {
+        // if user is logged in and we have user_meta merge tags
+        if( ! empty( $user_meta_matches[0] ) && $user_id != 0  ) {
             /**
              * $matches[0][$i]  merge tag match     {user_meta:foo}
              * $matches[1][$i]  captured meta key   foo
@@ -65,6 +68,9 @@ final class NF_MergeTags_WP extends NF_Abstracts_MergeTags
                 $meta_value = get_user_meta( $user_id, $meta_key, /* $single */ true );
                 $subject = str_replace( $search, $meta_value, $subject );
             }
+        // if a user is not logged in, but there are user_meta merge tags
+        } elseif ( ! empty( $user_meta_matches[0] ) && $user_id == 0 ) {
+        	$subject = '';
         }
         return parent::replace( $subject );
     }

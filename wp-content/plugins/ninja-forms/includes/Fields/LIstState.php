@@ -32,6 +32,16 @@ class NF_Fields_ListState extends NF_Abstracts_List
     {
         $order = 0;
         $options = array();
+        // Option to have no state selected by default.
+        $options[] = array(
+            'label' => '- ' . __( 'Select State', 'ninja-forms' ) . ' -',
+            'value' => '',
+	        'calc' => '',
+	        'selected' => 0,
+	        'order' => $order,
+        );
+        $order++;
+
         foreach( Ninja_Forms()->config( 'StateList' ) as $label => $value ){
             $options[] = array(
                 'label'  => $label,

@@ -176,7 +176,7 @@ return apply_filters( 'ninja_forms_action_email_settings', array(
     'attach_csv' => array(
         'name' => 'attach_csv',
         'type' => 'toggle',
-        'group' => 'advanced',
+        'group' => 'primary',
         'label' => __( 'Attach CSV', 'ninja-forms' ),
     ),
 

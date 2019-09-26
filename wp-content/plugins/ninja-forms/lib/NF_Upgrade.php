@@ -6,8 +6,16 @@ function ninja_forms_ajax_migrate_database(){
     if ( ! isset( $_POST[ 'security' ] ) ) return;
     if ( ! wp_verify_nonce( $_POST[ 'security' ], 'ninja_forms_upgrade_nonce' ) ) return;
     $migrations = new NF_Database_Migrations();
-    $migrations->nuke( true, true );
+    
+    $sure = true;
+    $really_sure = true;
+    $nuke_multisite = false;
+    $migrations->nuke( $sure, $really_sure, $nuke_multisite );
     $migrations->migrate();
+    // Reset our required updates.
+    delete_option( 'ninja_forms_required_updates' );
+    // Prevent recent 2.9x conversions from running required updates within a week.
+    set_transient( 'ninja_forms_prevent_updates', 'true', WEEK_IN_SECONDS );
     echo json_encode( array( 'migrate' => 'true' ) );
     wp_die();
 }

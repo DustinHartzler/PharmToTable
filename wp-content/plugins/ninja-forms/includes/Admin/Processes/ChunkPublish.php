@@ -8,7 +8,7 @@ class NF_Admin_Processes_ChunkPublish extends NF_Abstracts_BatchProcess
 //	header( 'Content-Type: application/json' );
     private $data;
     private $form_id;
-    private $response = array(
+    protected $response = array(
     	'last_request' => 'failure',
         'batch_complete' => false,
     );

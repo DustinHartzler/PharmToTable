@@ -10,6 +10,11 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
     public $position = '35.1337';
 
+    public $ver = Ninja_Forms::VERSION;
+
+    // Stores whether or not this form has a password field.
+    private $legacy_password = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -20,6 +25,23 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         }
 
         add_action( 'admin_body_class', array( $this, 'body_class' ) );
+        add_action( 'admin_init', array( $this, 'nf_upgrade_redirect' ) );
+    }
+
+    /**
+     * If we have required updates, redirect to the main Ninja Forms page
+     */
+    public function nf_upgrade_redirect() {
+        global $pagenow;
+            
+        if( "1" == get_option( 'ninja_forms_needs_updates' ) &&
+            'admin.php' == $pagenow && 
+            'ninja-forms' == $_GET[ 'page' ] &&
+            isset( $_GET[ 'form_id' ] ) ) {
+                wp_safe_redirect( admin_url( 'admin.php?page=ninja-forms' ), 301 );
+                exit;
+            
+        }
     }
 
     public function body_class( $classes )
@@ -81,6 +103,45 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
             Ninja_Forms::template( 'admin-menu-new-form.html.php' );
 
+            Ninja_Forms::template( 'fields-label--builder.html' ); // Fork for the builder.
+
+            Ninja_Forms::template( 'fields-address.html' );
+            Ninja_Forms::template( 'fields-address2.html' );
+            Ninja_Forms::template( 'fields-button.html' );
+            Ninja_Forms::template( 'fields-checkbox.html' );
+            Ninja_Forms::template( 'fields-city.html' );
+            Ninja_Forms::template( 'fields-color.html' );
+            Ninja_Forms::template( 'fields-date.html' );
+            Ninja_Forms::template( 'fields-email.html' );
+            Ninja_Forms::template( 'fields-file.html' );
+            Ninja_Forms::template( 'fields-firstname.html' );
+            Ninja_Forms::template( 'fields-hidden.html' );
+            Ninja_Forms::template( 'fields-hr.html' );
+            Ninja_Forms::template( 'fields-html.html' );
+            Ninja_Forms::template( 'fields-input.html' );
+            Ninja_Forms::template( 'fields-lastname.html' );
+            Ninja_Forms::template( 'fields-listcheckbox.html' );
+            Ninja_Forms::template( 'fields-listradio.html' );
+            Ninja_Forms::template( 'fields-listselect--builder.html' ); // Fork that removes the `for` attribute, which hijacks click events.
+            Ninja_Forms::template( 'fields-number.html' );
+            Ninja_Forms::template( 'fields-password.html' );
+            Ninja_Forms::template( 'fields-recaptcha.html' );
+            Ninja_Forms::template( 'fields-starrating.html' );
+            Ninja_Forms::template( 'fields-submit.html' );
+            Ninja_Forms::template( 'fields-tel.html' );
+            Ninja_Forms::template( 'fields-terms.html' );
+            Ninja_Forms::template( 'fields-textarea.html' );
+            Ninja_Forms::template( 'fields-textbox.html' );
+            Ninja_Forms::template( 'fields-zip.html' );
+            
+            // Deprecated Fields
+            Ninja_Forms::template( 'fields-total.html' );
+            Ninja_Forms::template( 'fields-tax.html' );
+            Ninja_Forms::template( 'fields-product.html' );
+            Ninja_Forms::template( 'fields-shipping.html' );
+
+            
+
             $this->_enqueue_the_things( $form_id );
 
             delete_user_option( get_current_user_id(), 'nf_form_preview_' . $form_id );
@@ -125,36 +186,52 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             <script>
                 var nfDashItems = <?php echo( json_encode( array_values( $dash_items ) ) ); ?>;
                 var useServices = <?php echo ( $use_services ) ? 'true' : 'false'; ?>;
-                var serviceSuccess = '<?php echo ( isset( $_GET[ 'success' ] ) ) ? $_GET[ 'success' ] : ''; ?>';
+                var serviceSuccess = '<?php echo ( isset( $_GET[ 'success' ] ) ) ? htmlspecialchars( $_GET[ 'success' ] ) : ''; ?>';
             </script>
             <?php
+
+            $required_updates = get_option( 'ninja_forms_needs_updates', 0 );
 
             wp_enqueue_script( 'backbone-radio', Ninja_Forms::$url . 'assets/js/lib/backbone.radio.min.js', array( 'jquery', 'backbone' ) );
             wp_enqueue_script( 'backbone-marionette-3', Ninja_Forms::$url . 'assets/js/lib/backbone.marionette3.min.js', array( 'jquery', 'backbone' ) );
             wp_enqueue_script( 'nf-jbox', Ninja_Forms::$url . 'assets/js/lib/jBox.min.js', array( 'jquery' ) );
-            wp_enqueue_script( 'nf-ninjamodal', Ninja_Forms::$url . 'assets/js/lib/ninjaModal.js', array( 'jquery' ) );
+            wp_enqueue_script( 'nf-ninjamodal', Ninja_Forms::$url . 'assets/js/lib/ninjaModal.js', array( 'jquery' ), $this->ver );
+            wp_enqueue_script( 'nf-batch-processor', Ninja_Forms::$url . 'assets/js/lib/batch-processor.js', array( 'nf-ninjamodal' ), $this->ver );
             wp_enqueue_script( 'nf-moment', Ninja_Forms::$url . 'assets/js/lib/moment-with-locales.min.js', array( 'jquery', 'nf-dashboard' ) );
-            wp_enqueue_script( 'nf-dashboard', Ninja_Forms::$url . 'assets/js/min/dashboard.min.js', array( 'backbone-radio', 'backbone-marionette-3' ) );
+            wp_enqueue_script( 'nf-dashboard', Ninja_Forms::$url . 'assets/js/min/dashboard.min.js', array( 'backbone-radio', 'backbone-marionette-3' ), $this->ver );
+            wp_enqueue_script( 'nf-sendwp', Ninja_Forms::$url . 'assets/js/lib/sendwp.js', array(), $this->ver );
+            wp_enqueue_script( 'nf-feature-scripts', Ninja_Forms::$url . 'assets/js/lib/feature-scripts.js', array(), $this->ver );
 
             $current_user = wp_get_current_user();
             wp_localize_script( 'nf-dashboard', 'nfi18n', Ninja_Forms::config( 'i18nDashboard' ) );
-            wp_localize_script( 'nf-dashboard', 'nfPromotions', array_values( Ninja_Forms::config( 'DashboardPromotions' ) ) );
+
+            $promotions = get_option( 'nf_active_promotions' );
+            $promotions = json_decode( $promotions, true );
+
+            if( ! empty( $promotions ) ) {
+                wp_localize_script( 'nf-dashboard', 'nfPromotions', array_values( $promotions[ 'dashboard' ] ) );
+            }
+
             wp_localize_script( 'nf-dashboard', 'nfAdmin', array(
                 'ajaxNonce'         => wp_create_nonce( 'ninja_forms_dashboard_nonce' ),
                 'batchNonce'        => wp_create_nonce( 'ninja_forms_batch_nonce' ),
+                'updateNonce'       => wp_create_nonce( 'ninja_forms_required_update_nonce' ),
                 'formTelemetry'     => ( get_option( 'nf_form_tel_sent' ) ) ? 0 : 1,
                 'showOptin'         => ( get_option( 'ninja_forms_do_not_allow_tracking' ) ||
                                          get_option( 'ninja_forms_allow_tracking' ) ) ? 0 : 1,
+                'requiredUpdates'    => $required_updates,
                 'currentUserEmail'  => $current_user->user_email,
-                'doingCleanup'      => ( ! get_option( 'ninja_forms_data_is_clean' ) &&
-                                        isset( $_REQUEST[ 'action' ] ) &&
-                                        'cleanup' == $_REQUEST[ 'action' ] ) ? 1 : 0,
+                'builderURL'        => admin_url( 'admin.php?page=ninja-forms&form_id=' ),
             ) );
 
-            wp_enqueue_style( 'nf-builder', Ninja_Forms::$url . 'assets/css/builder.css' );
-            wp_enqueue_style( 'nf-dashboard', Ninja_Forms::$url . 'assets/css/dashboard.min.css' );
+            wp_enqueue_style( 'nf-builder', Ninja_Forms::$url . 'assets/css/builder.css', array(), $this->ver );
+            wp_enqueue_style( 'nf-dashboard', Ninja_Forms::$url . 'assets/css/dashboard.min.css', array(), $this->ver );
             wp_enqueue_style( 'nf-jbox', Ninja_Forms::$url . 'assets/css/jBox.css' );
             wp_enqueue_style( 'nf-font-awesome', Ninja_Forms::$url . 'assets/css/font-awesome.min.css' );
+
+            if( $required_updates ) {
+                wp_enqueue_style( 'nf-updates-styles', Ninja_Forms::$url . '/assets/css/required-updates.css' );
+            }
 
             Ninja_Forms::template( 'admin-menu-dashboard.html.php' );
         }
@@ -165,6 +242,11 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         add_submenu_page( 'ninja-forms', '', '', 'read', '', '' );
     }
 
+    /**
+     * TODO: Remove this function and its hook because we are handling template imports via the batch processor.
+     * @since  3.0
+     * @return void
+     */
     private function import_from_template()
     {
         $template = sanitize_title( $_GET['form_id'] );
@@ -198,7 +280,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
         wp_enqueue_media();
 
-        wp_enqueue_style( 'nf-builder', Ninja_Forms::$url . 'assets/css/builder.css' );
+        wp_enqueue_style( 'nf-builder', Ninja_Forms::$url . 'assets/css/builder.css', array(), $this->ver );
         wp_enqueue_style( 'nf-font-awesome', Ninja_Forms::$url . 'assets/css/font-awesome.min.css' );
         /**
          * CSS Libraries
@@ -221,7 +303,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         wp_enqueue_script( 'jquery-perfect-scrollbar', Ninja_Forms::$url . 'assets/js/lib/perfect-scrollbar.jquery.min.js', array( 'jquery' ) );
         wp_enqueue_script( 'jquery-hotkeys-new', Ninja_Forms::$url . 'assets/js/lib/jquery.hotkeys.min.js' );
         wp_enqueue_script( 'jBox', Ninja_Forms::$url . 'assets/js/lib/jBox.min.js' );
-        wp_enqueue_script( 'nf-ninjamodal', Ninja_Forms::$url . 'assets/js/lib/ninjaModal.js', array( 'jBox' ) );
+        wp_enqueue_script( 'nf-ninjamodal', Ninja_Forms::$url . 'assets/js/lib/ninjaModal.js', array( 'jBox' ), $this->ver );
         wp_enqueue_script( 'nf-jquery-caret', Ninja_Forms::$url . 'assets/js/lib/jquery.caret.min.js' );
         wp_enqueue_script( 'speakingurl', Ninja_Forms::$url . 'assets/js/lib/speakingurl.js' );
         wp_enqueue_script( 'jquery-slugify', Ninja_Forms::$url . 'assets/js/lib/slugify.min.js', array( 'jquery', 'speakingurl' ) );
@@ -239,10 +321,29 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         wp_enqueue_script( 'summernote', Ninja_Forms::$url . 'assets/js/lib/summernote.min.js', array( 'jquery', 'speakingurl' ) );
 
 
-        wp_enqueue_script( 'nf-builder', Ninja_Forms::$url . 'assets/js/min/builder.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable', 'jquery-effects-bounce', 'wp-color-picker' ) );
+        wp_enqueue_script( 'nf-builder', Ninja_Forms::$url . 'assets/js/min/builder.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable', 'jquery-effects-bounce', 'wp-color-picker' ), $this->ver );
         wp_localize_script( 'nf-builder', 'nfi18n', Ninja_Forms::config( 'i18nBuilder' ) );
 
         $home_url = parse_url( home_url() );
+
+        global $wp_rewrite;
+        if($wp_rewrite->permalink_structure) {
+            $public_link_structure = site_url() . '/ninja-forms/[FORM_ID]';
+        } else {
+            $public_link_structure = site_url('?nf_public_link=[FORM_ID]');
+        }
+
+        if(isset($_GET['nf_dev_mode']) && $_GET['nf_dev_mode']){
+            $dev_mode = absint($_GET['nf_dev_mode']);
+        } else {
+            // @NOTE Check the settings array to avoid a default value in place of zero.
+            $settings = Ninja_Forms()->get_settings();
+            if( ! isset($settings['builder_dev_mode'])){
+                $dev_mode = 1;
+            } else {
+                $dev_mode = $settings['builder_dev_mode'];
+            }
+        }
 
         wp_localize_script( 'nf-builder', 'nfAdmin', array(
             'ajaxNonce'         => wp_create_nonce( 'ninja_forms_builder_nonce' ),
@@ -255,7 +356,9 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             'currencySymbols'   => array_merge( array( '' => Ninja_Forms()->get_setting( 'currency_symbol' ) ), Ninja_Forms::config( 'CurrencySymbol' ) ),
             'dateFormat'        => Ninja_Forms()->get_setting( 'date_format' ),
             'formID'            => isset( $_GET[ 'form_id' ] ) ? absint( $_GET[ 'form_id' ] ) : 0,
-            'home_url_host'     => $home_url[ 'host' ]
+            'home_url_host'     => $home_url[ 'host' ],
+            'publicLinkStructure' => $public_link_structure,
+            'devMode'           => (bool) $dev_mode,
         ));
 
         do_action( 'nf_admin_enqueue_scripts' );
@@ -264,10 +367,15 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
     private function _localize_form_data( $form_id )
     {
         $form = Ninja_Forms()->form( $form_id )->get();
+        $form_cache = false;
 
         if( ! $form->get_tmp_id() ) {
 
-            if( $form_cache = WPN_Helper::get_nf_cache( $form_id ) ) {
+            if(WPN_Helper::use_cache()) {
+                $form_cache = WPN_Helper::get_nf_cache( $form_id );
+            } 
+
+            if( $form_cache ) {
                 $fields = $form_cache[ 'fields' ];
             } else {
                 $fields = ($form_id) ? Ninja_Forms()->form($form_id)->get_fields() : array();
@@ -288,9 +396,8 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 //            $cache_updated = false;
 
             foreach ($fields as $field) {
-
+                
                 $field_id = ( is_object( $field ) ) ? $field->get_id() : $field[ 'id' ];
-
                 /*
                  * Duplicate field check.
                  * TODO: Replace unique field key checks with a refactored model/factory.
@@ -322,6 +429,15 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
                 /* END Duplicate field check. */
 
                 $type = ( is_object( $field ) ) ? $field->get_setting( 'type' ) : $field[ 'settings' ][ 'type' ];
+
+                /*
+                 * As of version 3.3.16, we want password fields to only show up if the user is using an add-on that requires them.
+                 * But, because we don't want to break any forms that may already have a password field, we enable them if the current form already has them.
+                 * The $legacy_password class var holds whether or not this form has a pre-existing password or confirm password field.
+                 */
+                if ( 'password' == $type || 'passwordconfirm' == $type ) {
+                    $this->legacy_password = true;
+                }
 
                 if( ! isset( Ninja_Forms()->fields[ $type ] ) ){
                     $field = NF_Fields_Unknown::create( $field );
@@ -368,7 +484,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
         // Use form cache for form settings.
         // TODO: Defer to refactor of factory/model.
-        if( isset( $form_cache[ 'settings' ] ) ) {
+        if( $form_cache && isset( $form_cache[ 'settings' ] ) ) {
             $form_data['settings'] = $form_cache[ 'settings' ];
         } else {
             $form_data['settings'] = $form->get_settings();
@@ -416,6 +532,11 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         $setting_defaults = array();
 
         foreach( Ninja_Forms()->fields as $field ){
+            if ( 'password' == $field->get_type() || 'passwordconfirm' == $field->get_type() ) {
+                if( ! $this->legacy_password && ! apply_filters( 'ninja_forms_enable_password_fields', false ) ){
+                    continue;
+                }
+            }
 
             $name = $field->get_name();
             $settings = $field->get_settings();
@@ -447,6 +568,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         foreach( $saved_fields as $saved_field ){
 
             $settings = $saved_field->get_settings();
+            unset( $settings['cellcid'] );
 
             $id     = $saved_field->get_id();
             $type   = $settings[ 'type' ];
@@ -652,7 +774,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
         foreach( $settings as $setting ){
 
-            if( 'fieldset' == $setting[ 'type' ] ){
+            if( isset( $setting[ 'type' ] ) && 'fieldset' == $setting[ 'type' ] ){
 
                 $unique_settings = array_merge( $unique_settings, $this->_unique_settings( $setting[ 'settings' ] ) );
             } else {

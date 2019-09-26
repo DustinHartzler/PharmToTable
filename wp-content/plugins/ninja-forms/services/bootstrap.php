@@ -38,32 +38,6 @@ add_action( 'wp_ajax_nf_services', function(){
       </div>
       ',
     ],
-
-    'ninja-mail' => [
-      'name' => __( 'Ninja Mail - Transactional Email', 'ninja-mail' ),
-      'slug' => 'ninja-mail',
-      'installPath' => 'ninja-mail/ninja-mail.php',
-      'description' => 'Increase Email Deliverability with a dedicated email service by Ninja Forms for only $5/month/site.',
-      'enabled' => null,
-      'setupButtonText' => 'Signup',
-      'learnMoreTitle' => 'Improve Ninja Forms Email Reliability!',
-      'learnMore' => '
-      <div style="padding:20px;">
-        <h2>Frustrated that Ninja Forms email isn’t being received?</h2>
-        <p>Form submission notifications not hitting your inbox? Some of your visitors getting form feedback via email, others not? By default, your WordPress site sends emails through your web host, which can be unreliable. Your host has spent lots of time and money optimizing to serve your pages, not send your emails.</p>
-        <h3>Sign up for Ninja Mail today, and never deal with form email issues again!</h3>
-        <p>Ninja Mail is a transactional email service that removes your web host from the email equation.</p>
-        <ul style="list-style-type:initial;margin-left: 20px;">
-          <li>Sends email through dedicated email service, increasing email deliverability.</li>
-          <li>Keeps form submission emails out of spam by using a trusted email provider.</li>
-          <li>On a shared web host? Don’t worry about emails being rejected because of blocked IP addresses.</li>
-          <li><strong>Only $5/month. Free 14-day trial. Cancel anytime!</strong></li>
-        </ul>
-        <br />
-        <button style="display:block;width:100%;text-align:center;" class="nf-button primary" onclick="Backbone.Radio.channel( \'dashboard\' ).request( \'install:service\', \'ninja-mail\' );var spinner = document.createElement(\'span\'); spinner.classList.add(\'dashicons\', \'dashicons-update\', \'dashicons-update-spin\'); this.innerHTML = spinner.outerHTML; console.log( spinner )">SIGNUP FOR NINJA MAIL NOW!</button>
-      </div>
-      ',
-    ],
   ] );
   wp_die( json_encode( [ 'data' => array_values( $services ) ] ) );
 });
@@ -179,3 +153,34 @@ add_filter( 'http_request_args', function( $args, $url ){
   return $args;
 }, 10, 2 );
 */
+add_action( 'wp_ajax_nf_update_cache_mode', function() {
+  $use_cache = false;
+  $response = array();
+
+  check_ajax_referer( 'ninja_forms_dashboard_nonce', 'security' );
+
+  if( ! current_user_can('manage_options') ) {
+    $response[ 'errors' ] = array( "Current user doesn't have permission." );
+
+    echo json_encode( $response );
+    die();
+  }
+
+  
+
+  if(!isset( $_POST[ 'cache_mode' ] ) ) {
+    $response[ 'errors' ] = array( 'No cache mode value given' );
+
+    echo json_encode( $response );
+    die();
+  }
+
+  $use_cache = ( intval($_POST[ 'cache_mode' ]) === 1 ) ? true : false;
+
+  update_option( 'ninja_forms_cache_mode', $use_cache );
+
+  $response['message'] = 'Cache mode successfully saved';
+
+  echo json_encode($response);
+  die();
+});

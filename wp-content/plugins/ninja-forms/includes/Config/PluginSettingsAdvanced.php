@@ -43,6 +43,18 @@ return apply_filters( 'ninja_forms_plugin_settings_advanced', array(
     ),
 
     /*
+    |--------------------------------------------------------------------------
+    | "Dev Mode"
+    |--------------------------------------------------------------------------
+    */
+
+    'builder_dev_mode' => array(
+        'id'    => 'builder_dev_mode',
+        'type'  => 'checkbox',
+        'label' => __( 'Form Builder "Dev Mode"', 'ninja-forms' ),
+    ),
+
+    /*
      |--------------------------------------------------------------------------
      | Tracking Opt-in
      |--------------------------------------------------------------------------
@@ -97,12 +109,12 @@ return apply_filters( 'ninja_forms_plugin_settings_advanced', array(
     |--------------------------------------------------------------------------
     */
 
-    'rollback' => array(
-        'id'    => 'rollback',
+    'downgrade' => array(
+        'id'    => 'downgrade',
         'type'  => 'html',
-        'html' => '<a id="nfRollback" href="' . admin_url( 'admin.php?page=ninja-forms&nf-switcher=rollback' ) . '" class="button">' . __( 'Rollback', 'ninja-forms' ) . '</a>',
-        'label' => __( 'Rollback to v2.9.x', 'ninja-forms' ),
-        'desc'  => __( 'Rollback to the most recent 2.9.x release.', 'ninja-forms' ) . '<br /><div style="color: red">' . __( 'IMPORTANT: All 3.0 data will be removed.', 'ninja-forms' ) . '<br />' . __( 'Please export any forms or submissions you do not want to be lost during this process.', 'ninja-forms' ) . '</div>',
+        'html'  => '<div id="nfDowngrade" class="button">' . __( 'Downgrade', 'ninja-forms' ) . '</div>',
+        'label' => __( 'Downgrade to v2.9.x', 'ninja-forms' ),
+        'desc'  => __( 'Downgrade to the most recent 2.9.x release.', 'ninja-forms' ) . '<br /><div style="color: red">' . __( 'IMPORTANT: All 3.0 data will be removed.', 'ninja-forms' ) . '<br />' . __( 'Please export any forms or submissions you do not want to be lost during this process.', 'ninja-forms' ) . '</div>',
     ),
 
     'trash_expired_submissions' => array(
@@ -111,6 +123,15 @@ return apply_filters( 'ninja_forms_plugin_settings_advanced', array(
         'html' => '<div id="nfTrashExpiredSubmissions" class="button">' . __( 'Move To Trash', 'ninja-forms' ) . '</div>',
         'label' => __( 'Trash Expired Submissions', 'ninja-forms' ),
         'desc' => __( 'This setting maybe helpful if your WordPress installation is not moving expired submissions to the trash properly.', 'ninja-forms' ),
+    ),
+
+    // Add a button for removing all forms from maintenance
+    'remove_maintenance_mode' => array(
+        'id' => 'remove_maintenance_mode',
+        'type' => 'html',
+        'html' => '<div id="nfRemoveMaintenanceMode" class="button">' . __( 'Remove Maintenance Mode', 'ninja-forms' ) . '</div><span id="nf_maintenanceModeProgress" style="display:none;margin-left:15px;"></span>',
+        'label' => __( 'Remove Maintenance Mode', 'ninja-forms' ),
+        'desc' => __( 'Click this button if any of your forms are still in \'Maintenance Mode\' after performing any required updates.' , 'ninja-forms' ),
     ),
 
 ));

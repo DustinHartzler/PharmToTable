@@ -31,6 +31,42 @@ return apply_filters( 'ninja_forms_form_display_settings', array(
     ),
 
     /*
+    * ALLOW PUBLIC LINK
+    */
+
+    'allow_public_link' => array(
+        'name' => 'allow_public_link',
+        'type' => 'toggle',
+        'label' => __( 'Allow a public link?', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => '',
+        'value' => 0,
+        'help'  => __( 'If this box is checked, Ninja Forms will create a public link to access the form.', 'ninja-forms' ),
+    ),
+
+    'public_link' => array(
+        'name' => 'public_link',
+        'type' => 'copytext',
+        'label' => __( 'Link To Your Form', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => '',
+        'help'  => __( 'A public link to access the form.', 'ninja-forms' ),
+        'deps' => array(
+            'allow_public_link' => 1
+        ),
+    ),
+
+    'embed_form' => array(
+        'name' => 'embed_form',
+        'type' => 'copytext',
+        'label' => __( 'Embed Your Form', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => '',
+        'value' => '',
+        'help'  => __( 'The shortcode you can use to embed this form on a page or post.', 'ninja-forms' ),
+    ),
+
+    /*
     * CLEAR SUCCESSFULLY COMPLETED FORM
     */
 
@@ -150,7 +186,7 @@ return apply_filters( 'ninja_forms_form_display_settings', array(
         'width' => 'full',
         'group' => '',
         'value' => 1,
-        'help' => __( 'We\'ve noticed that don\'t have a submit button on your form. We can add one for your automatically.', 'ninja-forms' ),
+        'help' => __( 'We have noticed that you do not have a submit button on your form. We can add one for you automatically.', 'ninja-forms' ),
     ),
 
     /*

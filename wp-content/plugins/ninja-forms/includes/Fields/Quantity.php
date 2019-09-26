@@ -7,7 +7,7 @@ class NF_Fields_Quantity extends NF_Fields_Number
 {
     protected $_name = 'quantity';
 
-    protected $_section = 'pricing';
+    protected $_section = '';
 
     protected $_icon = 'hashtag';
 

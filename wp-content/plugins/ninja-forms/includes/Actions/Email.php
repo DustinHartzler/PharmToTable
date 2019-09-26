@@ -207,7 +207,7 @@ final class NF_Actions_Email extends NF_Abstracts_Action
     {
         $attachments = array();
 
-        if( 1 == $settings[ 'attach_csv' ] ){
+        if( isset( $settings[ 'attach_csv' ] ) && 1 == $settings[ 'attach_csv' ] ){
             $attachments[] = $this->_create_csv( $data[ 'fields' ] );
         }
 
@@ -303,12 +303,15 @@ final class NF_Actions_Email extends NF_Abstracts_Action
             $label = ( '' != $field[ 'admin_label' ] ) ? $field[ 'admin_label' ] : $field[ 'label' ];
 
             $value = WPN_Helper::stripslashes( $field[ 'value' ] );
-            if ( empty( $value ) ) {
+            if ( empty( $value ) && ! isset( $value ) ) {
                 $value = '';
             }
             if ( is_array( $value ) ) {
                 $value = implode( ',', $value );
             }
+
+            // add filter to add single quote if first character in value is '='
+            $value = apply_filters( 'ninja_forms_subs_export_field_value_' . $field[ 'type' ], $value, $field );
 
             $csv_array[ 0 ][] = $label;
             $csv_array[ 1 ][] = $value;

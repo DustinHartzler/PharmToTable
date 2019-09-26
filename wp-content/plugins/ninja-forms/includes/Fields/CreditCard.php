@@ -9,7 +9,7 @@ class NF_Fields_CreditCard extends NF_Abstracts_Field
 
     protected $_type = 'creditcard';
 
-    protected $_section = 'pricing';
+    protected $_section = 'misc';
 
     protected $_icon = 'credit-card';
 

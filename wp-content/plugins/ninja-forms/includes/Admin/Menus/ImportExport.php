@@ -7,7 +7,7 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
     public $menu_slug = 'nf-import-export';
 
     public function __construct()
-    {
+    {   
         add_action( 'init', array( $this, 'import_form_listener' ), 0 );
         add_action( 'init', array( $this, 'export_form_listener' ), 0 );
 
@@ -17,6 +17,24 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
         add_filter( 'ninja_forms_before_import_fields', array( $this, 'import_fields_backwards_compatibility' ) );
 
         parent::__construct();
+        
+        add_action( 'admin_init', array( $this, 'nf_upgrade_redirect' ) );
+    }
+
+    /**
+     * If we have required updates, redirect to the main Ninja Forms page
+     */
+    public function nf_upgrade_redirect() {
+        global $pagenow;
+        
+        if( "1" == get_option( 'ninja_forms_needs_updates' ) ) {
+            remove_submenu_page( $this->parent_slug, $this->menu_slug );
+            if( 'admin.php' == $pagenow && 'nf-import-export' == $_GET[ 'page' ] ) {
+            
+                wp_safe_redirect( admin_url( 'admin.php?page=ninja-forms' ), 301 );
+                exit;
+            }
+        }
     }
 
     public function get_page_title()
@@ -30,6 +48,9 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
         $capability = apply_filters( 'ninja_forms_admin_import_form_capabilities',   $capability      );
         if( ! current_user_can( $capability ) ) return;
 
+        if( ! isset( $_REQUEST['nf_import_security'] )
+        || ! wp_verify_nonce( $_REQUEST[ 'nf_import_security' ], 'ninja_forms_import_form_nonce' ) )  return;
+
         if( ! isset( $_FILES[ 'nf_import_form' ] ) || ! $_FILES[ 'nf_import_form' ] ) return;
 
         $this->upload_error_check( $_FILES[ 'nf_import_form' ] );
@@ -38,7 +59,8 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
 
         // Check to see if the user turned off UTF-8 encoding
         $decode_utf8 = TRUE;
-        if( $_REQUEST[ 'nf_import_form_turn_off_encoding' ] ) {
+        if( isset( $_REQUEST[ 'nf_import_form_turn_off_encoding' ] ) &&
+        $_REQUEST[ 'nf_import_form_turn_off_encoding' ] ) {
         	$decode_utf8 = FALSE;
         }
 
@@ -138,6 +160,25 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
 		    Ninja_Forms::$url . 'assets/js/admin-import-export.js', array( 'jquery' ), FALSE, TRUE );
 
 	    wp_enqueue_script( 'ninja_forms_admin_import_export' );
+
+        wp_localize_script( 'ninja_forms_admin_import_export', 'nfAdmin', array(
+            'ajax_url'                              => admin_url( 'admin-ajax.php' ),
+            'batchNonce'                            => wp_create_nonce( 'ninja_forms_batch_nonce' ),
+            'i18n'                                  => array(
+                'trashExpiredSubsMessage'           => __( 'Are you sure you want to trash all expired submissions?', 'ninja-forms' ),
+                'trashExpiredSubsButtonPrimary'     => __( 'Trash', 'ninja-forms' ),
+                'trashExpiredSubsButtonSecondary'   => __( 'Cancel', 'ninja-forms' ),
+            ),
+            'builderURL'                            => admin_url( 'admin.php?page=ninja-forms&form_id=' ),
+        ));
+
+        wp_enqueue_script( 'jBox', Ninja_Forms::$url . 'assets/js/lib/jBox.min.js', array( 'jquery' ) );
+        wp_enqueue_style( 'jBox', Ninja_Forms::$url . 'assets/css/jBox.css' );
+        wp_enqueue_script( 'nf-ninja-modal', Ninja_Forms::$url . 'assets/js/lib/ninjaModal.js', array( 'jquery' ) );
+        wp_enqueue_script( 'nf-batch-processor', Ninja_Forms::$url . 'assets/js/lib/batch-processor.js', array( 'jquery' ) );
+        wp_enqueue_style( 'nf-font-awesome', Ninja_Forms::$url . 'assets/css/font-awesome.min.css' );
+
+
 
         Ninja_Forms::template( 'admin-menu-import-export.html.php', compact( 'tabs', 'active_tab' ) );
     }

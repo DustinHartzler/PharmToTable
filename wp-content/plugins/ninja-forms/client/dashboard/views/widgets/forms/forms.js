@@ -25,8 +25,8 @@ define( [
         },
 
         initialize: function(){
-            nfRadio.channel( 'widget-forms' ).reply( 'show:newFormsGrid', this.showNewFormGrid, this );
-            nfRadio.channel( 'widget-forms' ).reply( 'show:formsTable', this.showFormsTable, this );
+            // nfRadio.channel( 'widget-forms' ).reply( 'show:newFormsGrid', this.showNewFormGrid, this );
+            // nfRadio.channel( 'widget-forms' ).reply( 'show:formsTable', this.showFormsTable, this );
         },
         
         onRender: function() {
@@ -57,7 +57,6 @@ define( [
         },
 
         showFormsTable: function(){
-            console.log( this );
             window.location.hash = 'forms';
             this.showChildView( 'content', new FormsTableView() );
             nfRadio.channel( 'widget-forms' ).trigger( 'change:content' );

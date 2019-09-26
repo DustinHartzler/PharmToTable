@@ -160,17 +160,30 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
             $error_log[] = __( 'None Logged', 'ninja-forms' );
         }
 
+        $dev_mode = Ninja_Forms()->get_setting('builder_dev_mode' );
+
+        $sql_version_variable = $wpdb->get_row("show variables like 'version'");
+        if($sql_version_variable && property_exists($sql_version_variable, 'Value')){
+            $sql_version_variable_value = $sql_version_variable->Value;
+        } else {
+            $sql_version_variable_value = 'unknown';
+        }
+
         //Output array
         $environment = array(
             __( 'Home URL','ninja-forms' ) => home_url(),
             __( 'Site URL','ninja-forms' ) => site_url(),
             __( 'Ninja Forms Version','ninja-forms' ) => esc_html( Ninja_Forms::VERSION ),
+            __( 'Ninja Forms DB Version', 'ninja-forms' ) => get_option( 'ninja_forms_db_version' ),
+            __( 'Ninja Forms Gatekeeper', 'ninja-forms' ) => WPN_Helper::get_zuul(),
+            __( 'Ninja Forms "Dev Mode"', 'ninja-forms' ) => ( $dev_mode ) ? __('Enabled') : __('Disabled'),
             __( 'WP Version','ninja-forms' ) => $wp_version . ' - ' . $wp_compatible,
             __( 'WP Multisite Enabled','ninja-forms' ) => $multisite,
             __( 'Web Server Info','ninja-forms' ) => esc_html( $_SERVER['SERVER_SOFTWARE'] ),
             __( 'PHP Version','ninja-forms' ) => esc_html( phpversion() ),
             //TODO: Possibly Refactor with Ninja forms global $_db?
             __( 'MySQL Version','ninja-forms' ) => $wpdb->db_version(),
+            __( 'SQL Version Variable','ninja-forms' ) => $sql_version_variable_value,
             __( 'PHP Locale','ninja-forms' ) =>  $data,
             //TODO: Possibly move the ninja_forms_letters_to_numbers function over.
             __( 'WP Memory Limit','ninja-forms' ) => WP_MEMORY_LIMIT,

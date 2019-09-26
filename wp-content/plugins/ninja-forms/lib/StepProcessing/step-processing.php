@@ -79,7 +79,9 @@ class NF_Step_Processing
         if ( isset ( $_REQUEST['args'] ) ) {
             $this->args = $_REQUEST['args'];
             if ( isset ( $this->args['redirect'] ) ) {
-                $this->redirect = $this->args['redirect'];
+                if( wp_validate_redirect( $this->args['redirect'] ) ){
+                    $this->redirect = wp_sanitize_redirect( $this->args['redirect'] );
+                }
             }
         } else {
             $this->args = array();

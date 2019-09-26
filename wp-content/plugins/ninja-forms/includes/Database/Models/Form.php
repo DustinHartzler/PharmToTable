@@ -13,8 +13,14 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
 
     protected $_columns = array(
         'title',
-        'key',
-        'created_at'
+        'created_at',
+        'form_title',
+        'default_label_pos',
+        'show_title',
+        'clear_complete',
+        'hide_complete',
+        'logged_in',
+        'seq_num'
     );
 
     protected $_fields;
@@ -119,10 +125,21 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         , $form_id ) );
 
         if( $last_seq_num ) {
-            $wpdb->update( $wpdb->prefix . 'nf3_form_meta', array( 'value' => $last_seq_num + 1 ), array( 'key' => '_seq_num', 'parent_id' => $form_id ) );
+            $wpdb->update( $wpdb->prefix . 'nf3_form_meta', array( 'value' => $last_seq_num + 1,
+                'meta_value' => $last_seq_num + 1, 'meta_key' => '_seq_num' )
+	            , array( 'key' => '_seq_num', 'parent_id'
+            => $form_id ) );
+            $wpdb->update( $wpdb->prefix . 'nf3_forms', array( 'seq_num' => $last_seq_num + 1 ), array( 'id' => $form_id ) );
         } else {
             $last_seq_num = 1;
-            $wpdb->insert( $wpdb->prefix . 'nf3_form_meta', array( 'key' => '_seq_num', 'value' => $last_seq_num + 1, 'parent_id' => $form_id ) );
+            $wpdb->insert( $wpdb->prefix . 'nf3_form_meta',
+	            array( 'key' => '_seq_num',
+	                   'value' => $last_seq_num + 1,
+	                   'parent_id' => $form_id,
+		                'meta_key' => '_seq_num',
+		                'meta_value' => $last_seq_num + 1
+	            ) );
+	        $wpdb->update( $wpdb->prefix . 'nf3_forms', array( 'seq_num' => $last_seq_num + 1 ), array( 'id' => $form_id ) );
         }
 
         return $last_seq_num;
@@ -162,6 +179,14 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
                 unset( $settings[ 'id' ] );
                 $settings[ 'created_at' ] = current_time( 'mysql' );
                 $field = Ninja_Forms()->form($form_id)->field()->get();
+                /**
+                 * If this is the default contact form,
+                 * ensure that we properly save the fields
+                 * to avoid the loss of settings when the cache is disabled.
+                 */
+                if ( 1 == $form_id ) {
+                    $field->update_settings( $settings );
+                }
                 $field->save();
             }
 
@@ -209,9 +234,42 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         Ninja_Forms()->template( 'admin-notice-form-import.html.php', array( 'form_id'=> self::$imported_form_id ) );
     }
 
+    /**
+     * This static method is called to duplicate a form using the form ID.
+     *
+     * To duplicate a form we:
+     *
+     *  Check to see if we've ran stage one of the db update process.
+     *  Use SQL to insert a copy of our form and form meta.
+     *  Grab all fields for a specific form.
+     *  Loop over those fields and insert fields and field meta.
+     *  Run ->update_settings() and ->save() on the form model.
+     *  Call our WPN_Helper method to build a form cache.
+     * 
+     * @since  3.0
+     * @update 3.4.0
+     * @param  int  $form_id ID of the form being duplicated.
+     * @return $new_form_id  ID of our form duplicate.
+     */
     public static function duplicate( $form_id )
     {
         global $wpdb;
+
+
+        /**
+         * Check to see if we've got new field columns.
+         *
+         * We do this here instead of the get_sql_queries() method so that we don't hit the db multiple times.
+         */
+        $sql = "SHOW COLUMNS FROM {$wpdb->prefix}nf3_fields LIKE 'field_key'";
+        $results = $wpdb->get_results( $sql );
+        
+        // If we don't have the field_key column, we need to remove our new columns.
+        if ( empty ( $results ) ) {
+            $db_stage_one_complete = false;
+        } else {
+            $db_stage_one_complete = true;
+        }
 
         // Duplicate the Form Object.
         $wpdb->query( $wpdb->prepare(
@@ -224,6 +282,16 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         ) );
         $new_form_id = $wpdb->insert_id;
 
+        $blacklist = array(
+            '_seq_num',
+            'embed_form',
+            'public_link',
+            'public_link_key',
+            'allow_public_link',
+        );
+        $blacklist = apply_filters( 'ninja_forms_excluded_duplicate_form_settings', $blacklist );
+        $blacklist = "'" . implode( "','", $blacklist ) . "'";
+
         // Duplicate the Form Meta.
         $wpdb->query( $wpdb->prepare(
            "
@@ -231,7 +299,7 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
                 SELECT %d, `key`, `value`
                 FROM   {$wpdb->prefix}nf3_form_meta
                 WHERE  parent_id = %d
-                AND `key` != '_seq_num';
+                AND `key` NOT IN({$blacklist});
            ", $new_form_id, $form_id
         ));
 
@@ -244,22 +312,28 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
             ", $form_id
         ));
 
+        // Get our field and field_meta table column names and values.
+        $fields_sql = self::get_sql_queries( 'field_table_columns', $db_stage_one_complete );
+        $field_meta_sql = self::get_sql_queries( 'field_meta_table_columns', $db_stage_one_complete );
+
         foreach( $old_fields as $old_field ){
+
             // Duplicate the Field Object.
             $wpdb->query( $wpdb->prepare(
                "
-               INSERT INTO {$wpdb->prefix}nf3_fields ( `label`, `key`, `type`, `parent_id` )
-               SELECT `label`, `key`, `type`, %d
+               INSERT INTO {$wpdb->prefix}nf3_fields ( {$fields_sql[ 'insert' ]} )
+               SELECT {$fields_sql[ 'select' ]}
                FROM {$wpdb->prefix}nf3_fields
                WHERE id = %d
                ", $new_form_id, $old_field->id
             ));
             $new_field_id = $wpdb->insert_id;
+
             // Duplicate the Field Meta.
             $wpdb->query( $wpdb->prepare(
                 "
-                INSERT INTO {$wpdb->prefix}nf3_field_meta ( `parent_id`, `key`, `value` )
-                SELECT %d, `key`, `value`
+                INSERT INTO {$wpdb->prefix}nf3_field_meta ( {$field_meta_sql[ 'insert' ]} )
+                SELECT {$field_meta_sql[ 'select' ]}
                 FROM   {$wpdb->prefix}nf3_field_meta
                 WHERE  parent_id = %d;
                 ", $new_field_id, $old_field->id
@@ -277,12 +351,16 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
             ", $form_id
         ));
 
+        // Get our action and action_meta table columns and values.
+        $actions_sql = self::get_sql_queries( 'action_table_columns', $db_stage_one_complete );
+        $actions_meta_sql = self::get_sql_queries( 'action_meta_table_columns', $db_stage_one_complete );
+
         foreach( $old_actions as $old_action ){
             // Duplicate the Action Object.
             $wpdb->query( $wpdb->prepare(
                 "
-               INSERT INTO {$wpdb->prefix}nf3_actions ( `title`, `key`, `type`, `active`, `parent_id` )
-               SELECT `title`, `key`, `type`, `active`, %d
+               INSERT INTO {$wpdb->prefix}nf3_actions ( {$actions_sql[ 'insert' ]} )
+               SELECT {$actions_sql[ 'select' ]}
                FROM {$wpdb->prefix}nf3_actions
                WHERE id = %d
                ", $new_form_id, $old_action->id
@@ -291,15 +369,157 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
             // Duplicate the Action Meta.
             $wpdb->query( $wpdb->prepare(
                 "
-                INSERT INTO {$wpdb->prefix}nf3_action_meta ( `parent_id`, `key`, `value` )
-                SELECT %d, `key`, `value`
+                INSERT INTO {$wpdb->prefix}nf3_action_meta ( {$actions_meta_sql[ 'insert' ]} )
+                SELECT {$actions_meta_sql[ 'select' ]}
                 FROM   {$wpdb->prefix}nf3_action_meta
                 WHERE  parent_id = %d;
                 ", $new_action_id, $old_action->id
             ));
         }
 
+        /*
+         * In order for our new form and form_meta fields to populate on
+         * duplicate we need to update_settings and save
+         */
+        $new_form = Ninja_Forms()->form( $new_form_id )->get();
+        $new_form->update_settings( $new_form->get_settings() );
+        $new_form->save();
+
+        /*
+         * Build a cache for this new form.
+         */
+        WPN_Helper::build_nf_cache( $new_form_id );
+
         return $new_form_id;
+    }
+
+    /**
+     * When duplicating a form, we need to build specific SQL queries.
+     *
+     * This is a fairly repetative task, so we've extrapolated the code to its own function.
+     * 
+     * @since  3.4.0
+     * @param  string  $table_name Name of the table we want to update.
+     * @return array   Associative array like: ['insert' => "`column1`, "`column2`", etc", 'select' => "`column1`, etc."]
+     */
+    private function get_sql_queries( $table_name, $db_stage_one_complete = true )
+    {
+        /**
+         * These arrays contain the columns in our database.
+         *
+         * Later, if the user hasn't ran stage one of our db update process, we'll remove the items that aren't supported. 
+         */
+        $db_columns = array(
+            'field_table_columns' => array(
+                'label',
+                'key',
+                'type',
+                'parent_id',
+                'field_label',
+                'field_key',
+                'order',
+                'required',
+                'default_value',
+                'label_pos',
+                'personally_identifiable',
+            ),
+
+            'field_meta_table_columns' => array(
+                'parent_id',
+                'key',
+                'value',
+                'meta_key',
+                'meta_value',
+            ),
+
+            'action_table_columns' => array(
+                'title',
+                'key',
+                'type',
+                'active',
+                'parent_id',
+                'label',
+            ),
+
+            'action_meta_table_columns' => array(
+                'parent_id',
+                'key',
+                'value',
+                'meta_key',
+                'meta_value',
+            ),
+        );
+
+        // If we haven't been passed a table name or the table name is invalid, return false.
+        if ( empty( $table_name ) || ! isset( $db_columns[ $table_name ] ) ) {return false;}
+       
+        // If we have not completed stage one of our db update, then we unset new db columns.
+        if ( ! $db_stage_one_complete ) {
+
+            $db_columns[ 'field_table_columns' ] = array_diff( 
+                $db_columns[ 'field_table_columns' ], 
+                array( 
+                    'field_label',
+                    'field_key',
+                    'order',
+                    'required',
+                    'default_value',
+                    'label_pos',
+                    'personally_identifiable' 
+                    )
+                );
+            
+            $db_columns[ 'field_meta_table_columns' ] = array_diff(
+                $db_columns[ 'field_meta_table_columns'],
+                array(
+                    'meta_key',
+                    'meta_value'
+                )
+            );
+            
+            $db_columns[ 'action_table_columns' ] = array_diff(
+                $db_columns[ 'action_table_columns' ],
+                array(
+                    'label'
+                )
+            );
+
+            $db_columns[ 'action_meta_table_columns' ] = array_diff(
+                $db_columns[ 'action_meta_table_columns' ],
+                array(
+                    'meta_key',
+                    'meta_value'
+                )
+                );
+        }
+
+        /**
+         * $sql_insert is a var that tracks which table columns we want to insert.
+         */
+        $sql_insert = "";
+        /**
+         * $sql_select is a var that tracks the values for each field table column.
+         */
+        $sql_select = "";
+
+        /**
+         * Loop over our table column names and add them to our $sql_insert var.
+         */
+        foreach( $db_columns[ $table_name ] as $column_name ) {
+            $sql_insert .= "`{$column_name}`,";
+
+            if ( 'parent_id' == $column_name ) {
+                $sql_select .= "%d,";
+            } else {
+                $sql_select .= "`{$column_name}`,";
+            }
+        }
+
+        // Remove any trailing commas.
+        $sql_insert = rtrim( $sql_insert, ',' );
+        $sql_select = rtrim( $sql_select, ',' );
+
+        return array( 'insert' => $sql_insert, 'select' => $sql_select );
     }
 
     public static function export( $form_id, $return = FALSE )
@@ -322,13 +542,19 @@ final class NF_Database_Models_Form extends NF_Abstracts_Model
         $fields = Ninja_Forms()->form( $form_id )->get_fields();
 
         foreach( $fields as $field ){
-            $export['fields'][] = $field->get_settings();
+            // If the field is set.
+            if ( ! is_null( $field ) && ! empty( $field ) ) {
+                $export['fields'][] = $field->get_settings();
+            }
         }
 
         $actions = Ninja_Forms()->form( $form_id )->get_actions();
 
         foreach( $actions as $action ){
-            $export[ 'actions' ][] = $action->get_settings();
+            // If the action is set.
+            if ( ! is_null( $action ) && ! empty( $action ) ) {
+                $export[ 'actions' ][] = $action->get_settings();
+            }
         }
 
         if( $return ){

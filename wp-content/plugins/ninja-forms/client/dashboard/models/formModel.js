@@ -20,6 +20,8 @@ define( [], function() {
 
 		initialize: function() {
 
+            console.log(this);
+
             this.set( 'id', Number( this.get( 'id' ) ) );
             
             if( this.get( 'id' ) ) {

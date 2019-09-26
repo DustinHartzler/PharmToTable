@@ -9,7 +9,7 @@ return apply_filters( 'ninja_forms_action_email_settings', array(
 		'name' => 'submitter_email',
 		'type' => 'email-select',
 		'options' => array(),
-		'group' => 'primary',
+		'group' => 'advanced',
 		'label' => __( 'Designated Submitter\'s Email Address', 'ninja-forms' ),
 		'value' => '',
 		'help' => __( 'The email address used in this field will be allowed to '
@@ -24,7 +24,7 @@ return apply_filters( 'ninja_forms_action_email_settings', array(
             array( 'label' => __( 'Save All', 'ninja-forms' ), 'value' => 'save_all' ),
             array( 'label' => __( 'Save None', 'ninja-forms' ), 'value' => 'save_none' )
         ),
-        'group' => 'primary',
+        'group' => 'advanced',
         'label' => __( 'Fields', 'ninja-forms' ),
         'value' => 'save_all',
     ),
@@ -40,7 +40,7 @@ return apply_filters( 'ninja_forms_action_email_settings', array(
 	    'label'     => __( 'Except', 'ninja-forms' ) . ' <a href="#" class="nf-add-new">' .
 	                   __( 'Add New', 'ninja-forms' ) . '</a>',
 	    'width'     => 'full',
-	    'group'     => 'primary',
+	    'group'     => 'advanced',
 	    'tmpl_row'  => 'nf-tmpl-save-field-repeater-row',
 	    'value'     => array(),
 	    'columns'   => array(

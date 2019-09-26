@@ -10,7 +10,7 @@
    },
    {
       "title":"MailChimp",
-      "image":"assets/img/add-ons/mailchimp-for-ninja-forms.png",
+      "image":"assets/img/add-ons/mail-chimp.png",
       "content":"Quickly create newsletter signup forms for your MailChimp account.",
       "link":"https://ninjaforms.com/extensions/mail-chimp/?utm_medium=plugin&utm_source=plugin-addons-page&utm_campaign=Ninja+Forms+Addons+Page&utm_content=MailChimp",
       "plugin":"ninja-forms-mail-chimp/ninja-forms-mail-chimp.php",

@@ -50,7 +50,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
             if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ', ', $field[ 'value' ] );
 
-            $return .= '<tr><td>' . apply_filters('ninja_forms_merge_label', $field[ 'label' ]) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
+            $return .= '<tr><td>' . apply_filters('ninja_forms_merge_label', $field[ 'label' ], $field, $this->form_id) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
         }
         $return .= '</table>';
         return $return;
@@ -90,7 +90,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
             if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ', ', $field[ 'value' ] );
 
             // Check to see if the type is a list field and if it is...
-            $return .= '<tr><td valign="top">' . apply_filters('ninja_forms_merge_label', $field[ 'label' ]) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
+            $return .= '<tr><td valign="top">' . apply_filters('ninja_forms_merge_label', $field[ 'label' ], $field, $this->form_id) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
         }
         $return .= '</table>';
         return $return;
@@ -137,7 +137,7 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
 
             if( is_array( $field[ 'value' ] ) ) $field[ 'value' ] = implode( ', ', $field[ 'value' ] );
 
-            $return .= '<tr><td valign="top">' . apply_filters('ninja_forms_merge_label', $field[ 'label' ]) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
+            $return .= '<tr><td valign="top">' . apply_filters('ninja_forms_merge_label', $field[ 'label' ], $field, $this->form_id) .':</td><td>' . $field[ 'value' ] . '</td></tr>';
         }
         $return .= '</table>';
         return $return;
@@ -246,6 +246,9 @@ final class NF_MergeTags_Fields extends NF_Abstracts_MergeTags
         // Build our array to store our labels.
         $labels = array();
         // Loop over our options...
+        $field[ 'options' ] = apply_filters( 'ninja_forms_render_options', $field[ 'options' ], $field );
+        $field[ 'options' ] = apply_filters( 'ninja_forms_render_options_' . $field['type'], $field[ 'options' ], $field );
+	    $field[ 'options' ] = apply_filters( 'ninja_forms_localize_list_labels', $field[ 'options' ], $field, $this->form_id );
         foreach( $field[ 'options' ] as $options ) {
             // ...checks to see if our list has multiple values.
             if( is_array( $field[ 'value' ] ) ) {

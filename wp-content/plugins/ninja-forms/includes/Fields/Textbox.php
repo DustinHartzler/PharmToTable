@@ -32,5 +32,23 @@ class NF_Fields_Textbox extends NF_Abstracts_Input
         parent::__construct();
 
         $this->_nicename = __( 'Single Line Text', 'ninja-forms' );
+
+        add_filter( 'ninja_forms_subs_export_field_value_' . $this->_name, array( $this, 'filter_csv_value' ), 10, 2 );
+    }
+
+    public function filter_csv_value( $field_value, $field ) {
+
+        /*
+         * sanitize this in case someone tries to inject data that runs in
+         * Excel and similar apps
+         * */
+        if( 0 < strlen( $field_value ) ) {
+            $first_char = substr( $field_value, 0, 1 );
+            if( in_array( $first_char, array( '=', '@', '+', '-' ) ) ) {
+                return "'" . $field_value;
+            }
+        }
+
+        return $field_value;
     }
 }

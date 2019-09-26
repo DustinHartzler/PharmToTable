@@ -5,67 +5,8 @@
  */
 class NF_Admin_Processes_ExpiredSubmissionCleanup extends NF_Abstracts_BatchProcess
 {
-
+    protected $_slug = 'expired_submission_cleanup';
     protected $expired_subs = array();
-
-    private $response = array(
-        'batch_complete' => false
-    );
-
-    /**
-     * Constructor
-     */
-    public function __construct( $data = array() )
-    {
-        //Bail if we aren't in the admin.
-        if ( ! is_admin() )
-            return false;
-
-        // Run process.
-        $this->process();
-    }
-
-
-    /**
-     * Function to loop over the batch.
-     */
-    public function process()
-    {
-        if ( ! get_option( 'nf_doing_expired_submission_cleanup' ) ) {
-            // Run the startup process.
-            $this->startup();
-        } // Otherwise... (We've already run startup.)
-        else {
-            // Get our remaining submissions from record.
-            $data = get_option( 'nf_expired_submissions' );
-            $this->expired_subs = $data;
-        }
-
-        // For the first 250 in the array.
-        for( $i = 0; $i < 250; $i++ ){
-            // if we've already finished bail..
-            if( empty( $this->expired_subs ) ) break;
-
-            // Pop off a sub and delete it.
-            $sub = array_pop( $this->expired_subs );
-            wp_trash_post( $sub );
-        }
-
-        // If our subs array isn't empty...
-        if( ! empty( $this->expired_subs ) ) {
-            // ..see how many steps we have left, update our option, and send the remaining step to the JS.
-            $this->response[ 'step_remaining' ] = $this->get_steps();
-            update_option( 'nf_expired_submissions', $this->expired_subs );
-            echo wp_json_encode( $this->response );
-            wp_die();
-        }
-
-        // Run our cleanup process.
-        $this->cleanup();
-        echo wp_json_encode( $this->response );
-        wp_die();
-    }
-
 
     /**
      * Function to run any setup steps necessary to begin processing.
@@ -89,32 +30,67 @@ class NF_Admin_Processes_ExpiredSubmissionCleanup extends NF_Abstracts_BatchProc
             // Use the helper method to build an array of expired subs.
             $this->expired_subs = array_merge( $this->expired_subs, $expired_subs );
         }
-
-        // Determine how many steps this will take.
-        $this->response[ 'step_total' ] = $this->get_steps();
-
-
-        add_option( 'nf_doing_expired_submission_cleanup', 'true' );
     }
 
+    /**
+     * Function to run any setup steps necessary to begin processing for steps after the first.
+     *
+     * @since 3.4.0
+     * @return  void 
+     */
+    public function restart()
+    {
+        // Get our remaining submissions from record.
+        $this->expired_subs = get_option( 'nf_expired_submissions', array() );
+    }
+
+    /**
+     * Function to loop over the batch.
+     *
+     * @since 3.4.0
+     * @return  void 
+     */
+    public function process()
+    {
+
+        // For the first 250 in the array.
+        for( $i = 0; $i < 250; $i++ ){
+            // if we've already finished bail..
+            if( empty( $this->expired_subs ) ) break;
+
+            // Pop off a sub and delete it.
+            $sub = array_pop( $this->expired_subs );
+            wp_trash_post( $sub );
+        }
+
+        // If our subs array isn't empty...
+        if( ! empty( $this->expired_subs ) ) {
+            // Update nf_expired_submissions so that we can use it in our next step.
+            update_option( 'nf_expired_submissions', $this->expired_subs );
+            // End processing and move to the next step.
+            $this->next_step();
+        }
+
+        // If we get here, then we're ready to end batch processing.
+        $this->batch_complete();
+    }
 
     /**
      * Function to cleanup any lingering temporary elements of a batch process after completion.
+     *
+     * @since 3.4.0
+     * @return  void 
      */
     public function cleanup()
     {
-        // Delete our options.
-        delete_option('nf_doing_expired_submission_cleanup' );
         delete_option( 'nf_expired_submissions' );
-
-        // Tell our JS that we're done.
-        $this->response[ 'batch_complete' ] = true;
     }
 
-    /*
+    /**
      * Get Steps
      * Determines the amount of steps needed for the step processors.
      *
+     * @since 3.4.0
      * @return int of the number of steps.
      */
     public function get_steps()

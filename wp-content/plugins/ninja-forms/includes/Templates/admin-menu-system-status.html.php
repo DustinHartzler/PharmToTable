@@ -3,10 +3,10 @@
     <h1><?php _e( 'Get Help', 'ninja-forms' ); ?></h1>
 <h2><?php _e( 'Before requesting help from our support team please review:', 'ninja-forms' ); ?></h2>
 <ol>
-  <li><a href='https://ninjaforms.com/three/?utm_source=plugin&utm_medium=get-help&utm_campaign=documentation'><?php _e( 'Ninja Forms THREE documentation', 'ninja-forms' ); ?></a></li>
-  <li><a href='https://ninjaforms.com/docs/basic-troubleshooting/?utm_source=plugin&utm_medium=get-help&utm_campaign=documentation'><?php _e( 'Ninja Forms Email troubleshooting', 'ninja-forms' ); ?></a></li>
-  <li><a href='https://ninjaforms.com/docs/troubleshooting-email-problems/?utm_source=plugin&utm_medium=get-help&utm_campaign=documentation'><?php _e( 'What to try before contacting support', 'ninja-forms' ); ?></a></li>
-  <li><a href='https://ninjaforms.com/scope-of-support/?utm_source=plugin&utm_medium=get-help&utm_campaign=documentation'><?php _e( 'Our Scope of Support', 'ninja-forms' ); ?></a></li>
+  <li><a href='https://ninjaforms.com/documentation/?utm_source=Ninja+Forms+Plugin&utm_medium=Get+Help&utm_campaign=Plugin+Support+Links&utm_content=Documentation'><?php _e( 'Ninja Forms Documentation', 'ninja-forms' ); ?></a></li>
+  <li><a href='https://ninjaforms.com/docs/troubleshooting-email-problems/?utm_source=Ninja+Forms+Plugin&utm_medium=Get+Help&utm_campaign=Plugin+Support+Links&utm_content=Email+Troubleshooting'><?php _e( 'Ninja Forms Email troubleshooting', 'ninja-forms' ); ?></a></li>
+  <!-- <li><a href='https://ninjaforms.com/docs/basic-troubleshooting/?utm_source=plugin&utm_medium=get-help&utm_campaign=documentation'><?php _e( 'What to try before contacting support', 'ninja-forms' ); ?></a></li> -->
+  <li><a href='https://ninjaforms.com/scope-of-support/?utm_source=Ninja+Forms+Plugin&utm_medium=Get+Help&utm_campaign=Plugin+Support+Links&utm_content=Scope+of+Support'><?php _e( 'Our Scope of Support', 'ninja-forms' ); ?></a></li>
 </ol>
 
 
@@ -20,7 +20,7 @@
             </ol>
             <h4><?php _e( 'This information is vital for addressing your issue in a timely manner. <em>For your security, do not post this information in public places, such as the WordPress.org support forums.</em>', 'ninja-forms' ); ?> </h4>
             <a href="#" id="copy-system-status" class="button-primary"><?php _e( 'Copy System Report', 'ninja-forms' ); ?></a>
-            <a href="https://ninjaforms.com/contact/?utm_source=plugin&utm_medium=get-help&utm_campaign=support-ticket" class="button-secondary"><?php _e( 'Submit a Support Request', 'ninja-forms' ); ?></a>
+            <a href="https://ninjaforms.com/contact/?utm_source=Ninja+Forms+Plugin&utm_medium=Get+Help&utm_campaign=Plugin+Support+Links&utm_content=Submit+a+Support+Request" class="button-secondary"><?php _e( 'Submit a Support Request', 'ninja-forms' ); ?></a>
     	</div>
     	<div id="debug-report">
             <textarea readonly="readonly"></textarea>

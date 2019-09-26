@@ -7,7 +7,7 @@ class NF_Fields_Shipping extends NF_Abstracts_Input
 {
     protected $_name = 'shipping';
 
-    protected $_section = 'pricing';
+    protected $_section = '';
 
     protected $_icon = 'truck';
 

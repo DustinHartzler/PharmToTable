@@ -13,7 +13,8 @@ final class NF_Database_Models_Object extends NF_Abstracts_Model
 
     protected $_columns = array(
         'type',
-        'created_at'
+        'created_at',
+        'object_title'
     );
 
     public function __construct( $db, $id, $parent_id = '', $parent_type = '' )
@@ -21,6 +22,25 @@ final class NF_Database_Models_Object extends NF_Abstracts_Model
         parent::__construct( $db, $id, $parent_id );
 
         $this->_parent_type = $parent_type;
+
+        /**
+         * Remove new DB columns from our $_columns list if the user hasn't completed required upgrades stage 1.
+         */
+        $sql = "SHOW COLUMNS FROM {$db->prefix}nf3_objects LIKE 'object_title'";
+        $results = $db->get_results( $sql );
+        /**
+         * If we don't have the object_title column, we need to remove our new columns.
+         *
+         * Also, set our db stage 1 tracker to false.
+         */
+        if ( empty ( $results ) ) {
+            foreach( $this->_columns as $i => $col ) {
+                if( 'object_title' === $col ) {
+                    unset( $this->_columns[ $i ] );
+                }
+            }
+            $this->db_stage_1_complete = false;
+        }
     }
 
     public function save()

@@ -32,5 +32,4 @@ final class NF_Admin_Menus_Dashboard extends NF_Abstracts_Submenu
     {
         // This section intentionally left blank.
     }
-
 } // End Class NF_Admin_Settings
