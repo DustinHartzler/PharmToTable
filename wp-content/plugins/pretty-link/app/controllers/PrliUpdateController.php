@@ -47,11 +47,13 @@ class PrliUpdateController {
 
   public function set_edge_updates($updates) {
     update_option('plp_edge_updates', $updates);
+    wp_cache_delete('alloptions', 'options');
     $this->edge_updates = $updates;
   }
 
   public function set_mothership_license($license) {
     update_option('plp_mothership_license', $license);
+    wp_cache_delete('alloptions', 'options');
     $this->mothership_license = $license;
   }
 
@@ -69,7 +71,7 @@ class PrliUpdateController {
 
   public function process_form() {
     if(!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'],'activation_form')) {
-      wp_die(_e('Why you creepin\'?', 'pretty-link'));
+      wp_die(__('Why you creepin\'?', 'pretty-link'));
     }
 
     if(!isset($_POST[$this->mothership_license_str])) {
@@ -86,6 +88,7 @@ class PrliUpdateController {
       $args = compact('domain');
       $act = $this->send_mothership_request("/license_keys/activate/{$this->mothership_license}", $args, 'post');
       update_option('prli_activated', true); // if we get here we're activated
+      wp_cache_delete('alloptions', 'options');
       $this->manually_queue_update();
       $message = $act['message'];
 
@@ -126,7 +129,11 @@ class PrliUpdateController {
   public function check_license_activation() {
     $aov = get_option('prli_activation_override');
 
-    if(!empty($aov)) { return update_option('prli_activated', true); }
+    if(!empty($aov)) {
+      update_option('prli_activated', true);
+      wp_cache_delete('alloptions', 'options');
+      return true;
+    }
 
     $domain = urlencode(PrliUtils::site_domain());
 
@@ -138,6 +145,7 @@ class PrliUpdateController {
 
       if(!empty($act) && is_array($act) && isset($act['status'])) {
         update_option('prli_activated', ($act['status']=='enabled'));
+        wp_cache_delete('alloptions', 'options');
       }
     }
     catch(Exception $e) {
@@ -153,6 +161,7 @@ class PrliUpdateController {
       $errors = array();
       $this->mothership_license = stripslashes(PRETTYLINK_LICENSE_KEY);
       update_option($this->mothership_license_str, PRETTYLINK_LICENSE_KEY);
+      wp_cache_delete('alloptions', 'options');
       $domain = urlencode(PrliUtils::site_domain());
 
       try {
@@ -165,6 +174,7 @@ class PrliUpdateController {
 
         $act = $this->send_mothership_request("/license_keys/activate/".PRETTYLINK_LICENSE_KEY, $args, 'post');
         update_option('prli_activated', true); // if we get here we're activated
+        wp_cache_delete('alloptions', 'options');
 
         $this->manually_queue_update();
 
@@ -172,12 +182,11 @@ class PrliUpdateController {
         $this->set_edge_updates(false);
 
         $message = $act['message'];
-        $callback = create_function( '', '$message = "'.$message.'"; ' .
-                                     'require(PRLI_VIEWS_PATH."/admin/errors.php");' );
+        $callback = function() use ($message) { require(PRLI_VIEWS_PATH."/admin/errors.php"); };
       }
       catch(Exception $e) {
-        $callback = create_function( '', '$error = "'.$e->getMessage().'"; ' .
-                                     'require(PRLI_VIEWS_PATH."/admin/update/activation_warning.php");' );
+        $error = $e->getMessage();
+        $callback = function() use ($error) { require(PRLI_VIEWS_PATH."/admin/update/activation_warning.php"); };
       }
 
       add_action( 'admin_notices', $callback );
@@ -198,12 +207,15 @@ class PrliUpdateController {
 
       // Don't need to check the mothership for this one ... we just deactivated
       update_option('prli_activated', false);
+      wp_cache_delete('alloptions', 'options');
 
       $message = $act['message'];
     }
     catch(Exception $e) {
       update_option('prli_activated', false);
+      wp_cache_delete('alloptions', 'options');
       update_option($this->mothership_license_str, '');
+      wp_cache_delete('alloptions', 'options');
       $errors[] = $e->getMessage();
     }
 
@@ -303,7 +315,7 @@ class PrliUpdateController {
 
   public function queue_button() {
     ?>
-    <a href="<?php echo admin_url('admin.php?page=pretty-link-options&action=queue&_wpnonce=' . wp_create_nonce('PrliUpdateController::manually_queue_update')); ?>" class="button"><?php _e('Check for Update', 'pretty-link')?></a>
+    <a href="<?php echo esc_url(admin_url('admin.php?page=pretty-link-options&action=queue&_wpnonce=' . wp_create_nonce('PrliUpdateController::manually_queue_update'))); ?>" class="button"><?php esc_html_e('Check for Update', 'pretty-link')?></a>
     <?php
   }
 
@@ -392,7 +404,7 @@ class PrliUpdateController {
   }
 
   public function enqueue_scripts($hook) {
-    if($hook == 'pretty-links_page_pretty-link-updates') {
+    if(preg_match('/_page_pretty-link-updates$/', $hook)) {
       wp_register_style('prli-settings-table', PRLI_CSS_URL.'/settings_table.css', array(), PRLI_VERSION);
       wp_enqueue_style('prli-activate-css', PRLI_CSS_URL.'/admin-activate.css', array('prli-settings-table'), PRLI_VERSION);
 

@@ -1,29 +1,30 @@
 <?php if(!defined('ABSPATH')) { die('You are not allowed to call this page directly.'); }
 
 class PrliPopupController extends PrliBaseController {
-  public $popup_css, $popup_js, $popups;
-
+  public $popups;
   public function __construct() {
-    $cdn_base = 'https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/';
-    $this->popup_css = "{$cdn_base}/magnific-popup.min.css";
-    $this->popup_js  = "{$cdn_base}/jquery.magnific-popup.min.js";
-
     // This is an array of the currently defined popups ...
     // used to validate that the popup specified actually exists
     $this->popups = array(
       'rating' => array(
-        'after_usage' => true,
+        'after_usage' => array(
+          'links' => 1,
+          'clicks' => 5
+        ),
         'user_popup' => true,
-        'lite_only_popup' => true,
-        'delay' => MONTH_IN_SECONDS,
-        'delay_after_last_popup' => WEEK_IN_SECONDS,
+        'lite_only_popup' => false,
+        'delay' => WEEK_IN_SECONDS,
+        'delay_after_last_popup' => DAY_IN_SECONDS,
       ),
       'upgrade' => array(
-        'after_usage' => true,
+        'after_usage' => array(
+          'links' => 3,
+          'clicks' => 5
+        ),
         'user_popup' => true,
         'lite_only_popup' => true,
-        'delay' => MONTH_IN_SECONDS,
-        'delay_after_last_popup' => WEEK_IN_SECONDS,
+        'delay' => 2*WEEK_IN_SECONDS,
+        'delay_after_last_popup' => DAY_IN_SECONDS,
       ),
     );
   }
@@ -41,8 +42,8 @@ class PrliPopupController extends PrliBaseController {
   }
 
   public function enqueue_admin_scripts($hook) {
-    if(strstr($hook, 'pretty-link') !== false) {
-      wp_register_style('prli-magnific-popup', $this->popup_css);
+    if($this->on_pretty_link_page()) {
+      wp_register_style('prli-magnific-popup', PRLI_VENDOR_LIB_URL . '/magnific-popup/magnific-popup.min.css', array(), '1.1.0');
       wp_enqueue_style(
         'prli-admin-popup',
         PRLI_CSS_URL.'/admin_popup.css',
@@ -50,7 +51,7 @@ class PrliPopupController extends PrliBaseController {
         PRLI_VERSION
       );
 
-      wp_register_script('prli-magnific-popup', $this->popup_js, array('jquery'));
+      wp_register_script('prli-magnific-popup', PRLI_VENDOR_LIB_URL . '/magnific-popup/jquery.magnific-popup.min.js', array('jquery'), '1.1.0', true);
       wp_enqueue_script(
         'prli-admin-popup',
         PRLI_JS_URL.'/admin_popup.js',
@@ -66,12 +67,15 @@ class PrliPopupController extends PrliBaseController {
   }
 
   private function on_pretty_link_page() {
-    $screen = get_current_screen();
-    return (isset($screen->parent_base) && $screen->parent_base=='pretty-link');
+    global $current_screen;
+    return (isset($current_screen->id) && strpos($current_screen->id,'pretty-link') !== false);
   }
 
   public function display_popups() {
     if(!$this->on_pretty_link_page()) { return; }
+
+    // Bail on update/welcome page
+    if (isset($_GET['page']) && ($_GET['page'] == 'pretty-link-welcome' || $_GET['page'] == 'pretty-link-update')) { return;}
 
     // If this isn't a Pretty Link authorized user then bail
     if(!PrliUtils::is_authorized()) { return; }
@@ -125,6 +129,7 @@ class PrliPopupController extends PrliBaseController {
     }
     else {
       update_option($this->popup_stop_key($popup), 1);
+      wp_cache_delete('alloptions', 'options');
     }
   }
 
@@ -139,7 +144,7 @@ class PrliPopupController extends PrliBaseController {
   }
 
   private function is_popup_delayed($popup) {
-    if(!$this->is_valid_popup($popup)) { $return; }
+    if(!$this->is_valid_popup($popup)) { return; }
 
     if($this->popups[$popup]['user_popup']) {
       // check if it's been delayed or stopped
@@ -151,7 +156,7 @@ class PrliPopupController extends PrliBaseController {
   }
 
   private function is_popup_stopped($popup) {
-    if(!$this->is_valid_popup($popup)) { $return; }
+    if(!$this->is_valid_popup($popup)) { return; }
 
     if($this->popups[$popup]['user_popup']) {
       $user_id = PrliUtils::get_current_user_id();
@@ -163,7 +168,8 @@ class PrliPopupController extends PrliBaseController {
 
   private function set_popup_last_viewed_timestamp($popup) {
     $timestamp = time();
-    return update_option('prli-popup-last-viewed', compact('popup','timestamp'));
+    update_option('prli-popup-last-viewed', compact('popup','timestamp'));
+    wp_cache_delete('alloptions', 'options');
   }
 
   private function get_popup_last_viewed_timestamp() {
@@ -188,19 +194,12 @@ class PrliPopupController extends PrliBaseController {
       return false;
     }
 
-    if($this->popups[$popup]['after_usage']) {
+    if(false !== $this->popups[$popup]['after_usage']) {
+      $usage = $this->popups[$popup]['after_usage'];
       $click_count = PrliClick::get_count();
-      $first_click_date = PrliClick::get_first_date();
       $link_count = PrliLink::get_count();
-      $first_link_date = PrliClick::get_first_date();
 
-      // Make sure user has been using Pretty Link for at least a month
-      $month_ago = time() - MONTH_IN_SECONDS;
-
-      if( $click_count < 10 ||
-          ($first_click_date!==false && strtotime($first_click_date) > $month_ago) ||
-          $link_count < 3 ||
-          strtotime($first_link_date) > $month_ago ) {
+      if( $click_count < $usage['clicks'] || $link_count < $usage['links'] ) {
         return false;
       }
     }

@@ -4,13 +4,13 @@
   <div class="error notice is-dismissible below-h2">
     <ul>
       <?php foreach($errors as $error): ?>
-        <li><strong><?php _e('ERROR', 'pretty-link'); ?></strong>: <?php print $error; ?></li>
+        <li><strong><?php esc_html_e('ERROR', 'pretty-link'); ?></strong>: <?php echo esc_html($error); ?></li>
       <?php endforeach; ?>
     </ul>
   </div>
 <?php endif; ?>
 <?php if( isset($message) and !empty($message) ): ?>
   <div class="updated notice notice-success is-dismissible">
-    <p><?php echo $message; ?></p>
+    <p><?php echo esc_html($message); ?></p>
   </div>
 <?php endif; ?>

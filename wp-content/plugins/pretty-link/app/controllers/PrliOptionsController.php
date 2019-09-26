@@ -76,7 +76,7 @@ class PrliOptionsController extends PrliBaseController {
     }
 
     if( !empty($params[ $whitelist_ips ]) && !preg_match( "#^[ \t]*((\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)|([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*))([ \t]*,[ \t]*((\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)\.(\d{1,3}|\*)|([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*):([0-9a-fA-F]{1,4}|\*)))*$#", $params[ $whitelist_ips ] ) ) {
-      $errors[] = __('Whitlist IP Addresses must be a comma separated list of IPv4 or IPv6 addresses or ranges.', 'pretty-link');
+      $errors[] = __('Whitelist IP Addresses must be a comma separated list of IPv4 or IPv6 addresses or ranges.', 'pretty-link');
     }
 
     return apply_filters( 'prli-validate-options', $errors, $params );
@@ -88,15 +88,15 @@ class PrliOptionsController extends PrliBaseController {
     extract( $this->opt_fields );
 
     // Read their posted value
-    $prli_options->prli_exclude_ips = stripslashes($params[ $prli_exclude_ips ]);
-    $prli_options->whitelist_ips = stripslashes($params[ $whitelist_ips ]);
+    $prli_options->prli_exclude_ips = isset($params[ $prli_exclude_ips ]) && is_string($params[ $prli_exclude_ips ]) ? sanitize_text_field(stripslashes($params[ $prli_exclude_ips ])) : '';
+    $prli_options->whitelist_ips = isset($params[ $whitelist_ips ]) && is_string($params[ $whitelist_ips ]) ? sanitize_text_field(stripslashes($params[ $whitelist_ips ])) : '';
     $prli_options->filter_robots = (int)isset($params[ $filter_robots ]);
-    $prli_options->extended_tracking = stripslashes($params[ $extended_tracking ]);
+    $prli_options->extended_tracking = isset($params[ $extended_tracking ]) && is_string($params[ $extended_tracking ]) ? sanitize_key(stripslashes($params[ $extended_tracking ])) : 'normal';
     $prli_options->link_track_me = (int)isset($params[ $link_track_me ]);
     $prli_options->link_prefix = (int)isset($params[ $link_prefix ]);
     $prli_options->auto_trim_clicks = (int)isset($params[ $auto_trim_clicks ]);
     $prli_options->link_nofollow = (int)isset($params[ $link_nofollow ]);
-    $prli_options->link_redirect_type = $params[ $link_redirect_type ];
+    $prli_options->link_redirect_type = isset($params[ $link_redirect_type ]) && is_string($params[ $link_redirect_type ]) ? sanitize_key(stripslashes($params[ $link_redirect_type ])) : '307';
 
     do_action('prli-update-options', $params);
   }

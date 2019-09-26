@@ -6,7 +6,7 @@ function prliHasWhiteSpace(s) {
 var PrliPopUpHandler = {
   init : function() {
     //Used in our insert function for link text
-    prli_selected_text = parent.tinymce.activeEditor.selection.getContent({format: 'text'});
+    prliTinymceL10n.prli_selected_text = parent.tinymce.activeEditor.selection.getContent({format: 'text'});
   },
   insert_new : function() {
     jQuery('#errors').html('');
@@ -23,13 +23,13 @@ var PrliPopUpHandler = {
 
     //Change vars to actual defaults if default was chosen
     if(redirect == 'default') {
-      redirect = default_redirect;
+      redirect = prliTinymceL10n.default_redirect;
     }
     if(nofollow == 'default') {
-      nofollow = default_nofollow;
+      nofollow = prliTinymceL10n.default_nofollow;
     }
     if(tracking == 'default') {
-      tracking = default_tracking;
+      tracking = prliTinymceL10n.default_tracking;
     }
 
     //Some validations
@@ -58,12 +58,12 @@ var PrliPopUpHandler = {
       jQuery("#insert").hide();
       jQuery("#insert_loading").fadeIn();
 
-      jQuery.post(ajaxurl, data, function(response) {
+      jQuery.post(prliTinymceL10n.ajaxurl, data, function(response) {
         var trimmed_data = response.replace(/^\s+|\s+$/g, ''); //Trim whitespace
 
         if(trimmed_data == 'true') {
           var output = '';
-          var pretty_link = home_url + slug;
+          var pretty_link = prliTinymceL10n.home_url + slug;
 
           //Set the link text to the link itself
           if(link_text.length === 0) {
@@ -144,19 +144,19 @@ var PrliPopUpHandler = {
     //Add a small delay so that prli_selected_text will be avaiable
     setTimeout(function() {
       //Nothing selected
-      if(prli_selected_text.length === 0) {
+      if(prliTinymceL10n.prli_selected_text.length === 0) {
         $("#prli_insert_link_link_text").val("Click Here");
         $("#existing_link_link_text").val("Click Here");
       }
       //If selected text is a link, make it the target URL
-      else if(prli_selected_text.match(/https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/)) {
-        $("#prli_insert_link_target").val(prli_selected_text);
+      else if(prliTinymceL10n.prli_selected_text.match(/https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/)) {
+        $("#prli_insert_link_target").val(prliTinymceL10n.prli_selected_text);
         $("#prli_insert_link_link_text").val("Click Here");
         $("#existing_link_link_text").val("Click Here");
       //Show selected text
       } else {
-        $("#prli_insert_link_link_text").val(prli_selected_text);
-        $("#existing_link_link_text").val(prli_selected_text);
+        $("#prli_insert_link_link_text").val(prliTinymceL10n.prli_selected_text);
+        $("#existing_link_link_text").val(prliTinymceL10n.prli_selected_text);
       }
     }, 200); //200ms
 
@@ -177,7 +177,7 @@ var PrliPopUpHandler = {
       $("#prlitinymce-bad-slug").hide();
       $("#prlitinymce-thinking").show();
 
-      $.post(ajaxurl, data, function(response) {
+      $.post(prliTinymceL10n.ajaxurl, data, function(response) {
         var trimmed_data = response.replace(/^\s+|\s+$/g, ''); //Trim whitespace
 
         if(trimmed_data == 'true') {
@@ -222,12 +222,12 @@ var PrliPopUpHandler = {
 
     //Load the autocomplete stuff
     $('#prli_search_box').autocomplete({
-      source: ajaxurl + "?action=prli_search_for_links",
+      source: prliTinymceL10n.ajaxurl + "?action=prli_search_for_links",
       minLength: 2,
       select: function(event, ui) {
         $("#existing_link_target").html(ui.item.target);
         $("#existing_link_nofollow").val(ui.item.nofollow);
-        $("#existing_link_slug").html(home_url + ui.item.slug);
+        $("#existing_link_slug").html(prliTinymceL10n.home_url + ui.item.slug);
       }
     });
   });

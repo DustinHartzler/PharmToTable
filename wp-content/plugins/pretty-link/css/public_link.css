@@ -4,28 +4,48 @@ body {
   margin-top: 25px;
 }
 
-h4 {
+.icon-clipboardjs {
+  cursor: pointer;
+}
+
+.prli-public-logo {
+  width: 400px;
+  height: 64px;
+  margin: auto;
+  display: block;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.prli-public-label, .prli-public-target, .prli-public-social {
   font-size: 18px;
   color: #aaaaaa;
 }
 
-h2 {
+.prli-public-label, .prli-public-target {
+  margin-bottom: 25px;
+}
+
+.prli-public-name, .prli-public-pretty-link {
   font-size: 24px;
   font-weight: bold;
 }
 
-h2 a {
+.prli-public-pretty-link {
+  margin-bottom: 25px;
+}
+
+.prli-public-name, .prli-public-pretty-link a {
   text-decoration: none;
   color: #1f487e;
 }
 
-h2 a:hover {
+.prli-public-name, .prli-public-pretty-link a:hover {
   text-decoration: none;
   color: blue;
 }
 
-.clippy {
-  width: 132px !important;
-  padding-left: 84px;
+.prli-public-back {
+  margin-top: 25px;
 }
 

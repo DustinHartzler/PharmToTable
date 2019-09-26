@@ -70,6 +70,7 @@ class PrliOptions
       if($var = get_option( $prettybar_show_title )) {
         $this->prettybar_show_title = $var;
         delete_option( $prettybar_show_title );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_show_title = '1';
@@ -79,6 +80,7 @@ class PrliOptions
       if($var = get_option( $prettybar_show_description )) {
         $this->prettybar_show_description = $var;
         delete_option( $prettybar_show_description );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_show_description = '1';
@@ -88,6 +90,7 @@ class PrliOptions
       if($var = get_option( $prettybar_show_share_links )) {
         $this->prettybar_show_share_links = $var;
         delete_option( $prettybar_show_share_links );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_show_share_links = '1';
@@ -97,6 +100,7 @@ class PrliOptions
       if($var = get_option( $prettybar_show_target_url_link )) {
         $this->prettybar_show_target_url_link = $var;
         delete_option( $prettybar_show_target_url_link );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_show_target_url_link = '1';
@@ -106,6 +110,7 @@ class PrliOptions
       if($var = get_option( $link_track_me )) {
         $this->link_track_me = $var;
         delete_option( $link_track_me );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->link_track_me = '1';
@@ -123,6 +128,7 @@ class PrliOptions
       if($var = get_option( $link_nofollow )) {
         $this->link_nofollow = $var;
         delete_option( $link_nofollow );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->link_nofollow = '1';
@@ -132,30 +138,46 @@ class PrliOptions
       if($var = get_option( $link_track_as_pixel )) {
         $this->link_redirect_type = 'pixel';
         delete_option( $link_show_prettybar );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_ultra_cloak );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_track_as_pixel );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_redirect_type );
+        wp_cache_delete('alloptions', 'options');
       }
       if($var = get_option( $link_show_prettybar )) {
         $this->link_redirect_type = 'prettybar';
         delete_option( $link_show_prettybar );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_ultra_cloak );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_track_as_pixel );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_redirect_type );
+        wp_cache_delete('alloptions', 'options');
       }
       if($var = get_option( $link_ultra_cloak )) {
         $this->link_redirect_type = 'cloak';
         delete_option( $link_show_prettybar );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_ultra_cloak );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_track_as_pixel );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_redirect_type );
+        wp_cache_delete('alloptions', 'options');
       }
       if($var = get_option( $link_redirect_type )) {
         $this->link_redirect_type = $var;
         delete_option( $link_show_prettybar );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_ultra_cloak );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_track_as_pixel );
+        wp_cache_delete('alloptions', 'options');
         delete_option( $link_redirect_type );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->link_redirect_type = '307';
@@ -165,6 +187,7 @@ class PrliOptions
       if($var = get_option( $prli_exclude_ips )) {
         $this->prli_exclude_ips = $var;
         delete_option( $prli_exclude_ips );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prli_exclude_ips = '';
@@ -174,6 +197,7 @@ class PrliOptions
       if($var = get_option( $prettybar_image_url )) {
         $this->prettybar_image_url = $var;
         delete_option( $prettybar_image_url );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_image_url = PRLI_IMAGES_URL . '/pretty-link-48x48.png';
@@ -183,6 +207,7 @@ class PrliOptions
       if($var = get_option( $prettybar_background_image_url )) {
         $this->prettybar_background_image_url = $var;
         delete_option( $prettybar_background_image_url );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_background_image_url = PRLI_IMAGES_URL . '/bar_background.png';
@@ -192,11 +217,15 @@ class PrliOptions
       if($var = get_option( $prettybar_color )) {
         $this->prettybar_color = $var;
         delete_option( $prettybar_color );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_color = '';
     }
-    else if(!preg_match('/^#/',$this->prettybar_color)) {
+    else if($this->prettybar_color == '#') {
+      $this->prettybar_color = '';
+    }
+    else if($this->prettybar_color && !preg_match('/^#/',$this->prettybar_color)) {
       $this->prettybar_color = '#' . $this->prettybar_color;
     }
 
@@ -204,11 +233,15 @@ class PrliOptions
       if($var = get_option( $prettybar_text_color )) {
         $this->prettybar_text_color = $var;
         delete_option( $prettybar_text_color );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_text_color = '000000';
     }
-    else if(!preg_match('/^#/',$this->prettybar_text_color)) {
+    else if($this->prettybar_text_color == '#') {
+      $this->prettybar_text_color = '';
+    }
+    else if($this->prettybar_text_color && !preg_match('/^#/',$this->prettybar_text_color)) {
       $this->prettybar_text_color = '#' . $this->prettybar_text_color;
     }
 
@@ -216,11 +249,15 @@ class PrliOptions
       if($var = get_option( $prettybar_link_color )) {
         $this->prettybar_link_color = $var;
         delete_option( $prettybar_link_color );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_link_color = '0000ee';
     }
-    else if(!preg_match('/^#/',$this->prettybar_link_color)) {
+    else if($this->prettybar_link_color == '#') {
+      $this->prettybar_link_color = '';
+    }
+    else if($this->prettybar_link_color && !preg_match('/^#/',$this->prettybar_link_color)) {
       $this->prettybar_link_color = '#' . $this->prettybar_link_color;
     }
 
@@ -228,11 +265,15 @@ class PrliOptions
       if($var = get_option( $prettybar_hover_color )) {
         $this->prettybar_hover_color = $var;
         delete_option( $prettybar_hover_color );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_hover_color = 'ababab';
     }
-    else if(!preg_match('/^#/',$this->prettybar_hover_color)) {
+    else if($this->prettybar_hover_color == '#') {
+      $this->prettybar_hover_color = '';
+    }
+    else if($this->prettybar_hover_color && !preg_match('/^#/',$this->prettybar_hover_color)) {
       $this->prettybar_hover_color = '#' . $this->prettybar_hover_color;
     }
 
@@ -240,11 +281,15 @@ class PrliOptions
       if($var = get_option( $prettybar_visited_color )) {
         $this->prettybar_visited_color = $var;
         delete_option( $prettybar_visited_color );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_visited_color = '551a8b';
     }
-    else if(!preg_match('/^#/',$this->prettybar_visited_color)) {
+    else if($this->prettybar_visited_color == '#') {
+      $this->prettybar_visited_color = '';
+    }
+    else if($this->prettybar_visited_color && !preg_match('/^#/',$this->prettybar_visited_color)) {
       $this->prettybar_visited_color = '#' . $this->prettybar_visited_color;
     }
 
@@ -252,6 +297,7 @@ class PrliOptions
       if($var = get_option( $prettybar_title_limit )) {
         $this->prettybar_title_limit = $var;
         delete_option( $prettybar_title_limit );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_title_limit = '25';
@@ -261,6 +307,7 @@ class PrliOptions
       if($var = get_option( $prettybar_desc_limit )) {
         $this->prettybar_desc_limit = $var;
         delete_option( $prettybar_desc_limit );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_desc_limit = '30';
@@ -270,6 +317,7 @@ class PrliOptions
       if($var = get_option( $prettybar_link_limit )) {
         $this->prettybar_link_limit = $var;
         delete_option( $prettybar_link_limit );
+        wp_cache_delete('alloptions', 'options');
       }
       else
         $this->prettybar_link_limit = '30';
@@ -295,6 +343,7 @@ class PrliOptions
   public function store() {
     $storage_array = (array)$this;
     update_option( 'prli_options', $storage_array );
+    wp_cache_delete('alloptions', 'options');
   }
 
   public static function get_options() {

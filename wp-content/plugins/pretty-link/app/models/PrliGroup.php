@@ -26,26 +26,21 @@ class PrliGroup
   {
     global $wpdb;
 
-    $query = 'UPDATE ' . $this->table_name .
-                ' SET name=\'' . $values['name'] . '\', ' .
-                    ' description=\'' . $values['description'] . '\' ' .
-                ' WHERE id='.$id;
+    $query = "UPDATE {$this->table_name} SET name = %s, description = %s WHERE id = %d";
+    $query = $wpdb->prepare($query, $values['name'], $values['description'], $id);
     $query_results = $wpdb->query($query);
     return $query_results;
   }
 
   public function destroy( $id )
   {
-    //require_once(PRLI_MODELS_PATH.'/models.inc.php');
     global $wpdb, $prli_link;
 
     // Disconnect the links from this group
-    $query = 'UPDATE ' . $prli_link->table_name .
-                ' SET group_id = NULL ' .
-                ' WHERE group_id='.$id;
-    $query_results = $wpdb->query($query);
+    $query = $wpdb->prepare("UPDATE {$prli_link->table_name} SET group_id = NULL WHERE group_id = %d", $id);
+    $wpdb->query($query);
 
-    $destroy = 'DELETE FROM ' . $this->table_name .  ' WHERE id=' . $id;
+    $destroy = $wpdb->prepare("DELETE FROM {$this->table_name} WHERE id = %d", $id);
     return $wpdb->query($destroy);
   }
 
@@ -98,13 +93,13 @@ class PrliGroup
   public function get_params_array()
   {
     $values = array(
-       'action'     => (isset($_GET['action'])?$_GET['action']:(isset($_POST['action'])?$_POST['action']:'list')),
-       'id'         => (isset($_GET['id'])?$_GET['id']:(isset($_POST['id'])?$_POST['id']:'')),
-       'paged'      => (isset($_GET['paged'])?$_GET['paged']:(isset($_POST['paged'])?$_POST['paged']:1)),
-       'group'      => (isset($_GET['group'])?$_GET['group']:(isset($_POST['group'])?$_POST['group']:'')),
-       'search'     => (isset($_GET['search'])?$_GET['search']:(isset($_POST['search'])?$_POST['search']:'')),
-       'sort'       => (isset($_GET['sort'])?$_GET['sort']:(isset($_POST['sort'])?$_POST['sort']:'')),
-       'sdir'       => (isset($_GET['sdir'])?$_GET['sdir']:(isset($_POST['sdir'])?$_POST['sdir']:''))
+       'action'     => sanitize_key(stripslashes(isset($_GET['action'])?$_GET['action']:(isset($_POST['action'])?$_POST['action']:'list'))),
+       'id'         => (isset($_GET['id'])?(int)$_GET['id']:(isset($_POST['id'])?(int)$_POST['id']:'')),
+       'paged'      => (isset($_GET['paged'])?(int)$_GET['paged']:(isset($_POST['paged'])?(int)$_POST['paged']:1)),
+       'group'      => (isset($_GET['group'])?(int)$_GET['group']:(isset($_POST['group'])?(int)$_POST['group']:'')),
+       'search'     => sanitize_text_field(stripslashes(isset($_GET['search'])?$_GET['search']:(isset($_POST['search'])?$_POST['search']:''))),
+       'sort'       => sanitize_key(stripslashes(isset($_GET['sort'])?$_GET['sort']:(isset($_POST['sort'])?$_POST['sort']:''))),
+       'sdir'       => sanitize_key(stripslashes(isset($_GET['sdir'])?$_GET['sdir']:(isset($_POST['sdir'])?$_POST['sdir']:'')))
     );
 
     return $values;
@@ -116,7 +111,7 @@ class PrliGroup
 
     $errors = array();
     if( empty($values['name']) )
-      $errors[] = "Group must have a name.";
+      $errors[] = __('Group must have a name.', 'pretty-link');
 
     return $errors;
   }

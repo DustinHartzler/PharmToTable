@@ -92,7 +92,7 @@ a i.pl-icon:hover {
   color: #aeaeae;
 }
 
-.prli-hidden {
+.prli-hidden, .prli_hidden {
   display: none;
 }
 
@@ -113,7 +113,6 @@ img.prli_loader {
 }
 
 .prli_admin_branding {
-  /* background: url(../images/pl-logo-horiz-RGB.png) no-repeat; */
   float: right !important;
   padding-right: 25px !important;
   height:32px !important;
@@ -122,6 +121,7 @@ img.prli_loader {
   background-size: 200px 32px !important;
 }
 
+/*
 .tablenav .tablenav-pages a.disabled ,
 .tablenav .tablenav-pages a.disabled:hover {
   cursor:default;
@@ -129,6 +129,7 @@ img.prli_loader {
   border-color:#ccc;
   color:#fff;
 }
+*/
 
 .prli-red {
   color: red !important;
@@ -138,3 +139,192 @@ img.prli_loader {
   color: green !important;
 }
 
+#wpcontent #pl-admin-header {
+  margin-left: -20px;
+  padding: 15px;
+  padding-left: 22px;
+  background-image: url("../images/pretty-links-plugin-header.jpg");
+  background-repeat: repeat;
+  background-size: 1200px 75px;
+  min-height: 36px;
+  /* border-bottom: 2px solid #00cee6; */
+}
+#wpcontent #pl-admin-header img.pl-logo {
+  height: 36px;
+}
+
+.mfp-bg.mfp-prli {
+  z-index: 100002;
+}
+.mfp-wrap.mfp-prli {
+  z-index: 100003;
+}
+.mfp-wrap.mfp-prli .mfp-preloader {
+  z-index: 100004;
+}
+.mfp-wrap.mfp-prli .mfp-content {
+  z-index: 100005;
+}
+.prli-bullet-list {
+  list-style: disc;
+  margin-left: 2em;
+}
+.prli-welcome,
+.prli-update {
+  position: relative;
+  max-width: 1200px;
+  margin: 25px 40px 0 20px;
+  font-size: 15px;
+}
+.prli-update {
+  max-width: 890px;
+}
+.prli-welcome h1,
+.prli-update h1 {
+  margin: .2em 0 0 0;
+  padding: 0;
+  color: #32373c;
+  line-height: 1.2;
+  font-size: 2.8em;
+  font-weight: 400;
+}
+.prli-welcome h1 {
+  margin-right: 280px;
+}
+.prli-update h1 {
+  margin-bottom: 0.6em;
+}
+.prli-welcome p,
+.prli-update p {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.prli-welcome .prli-welcome-about {
+  font-size: 19px;
+  line-height: 1.6;
+  margin: 1em 0 1em 0;
+}
+.prli-welcome-badge {
+  /*
+   * position: absolute;
+   * top: 0;
+   * right: 0;
+   */
+  width: 230px;
+  padding: 15px 15px 15px 0;
+  float: left;
+}
+.prli-welcome img,
+.prli-update img {
+  max-width: 100%;
+}
+.prli-welcome hr {
+  border: 0;
+  height: 0;
+  margin: 5em 0 0;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+/*
+.prli-center-section {
+  max-width: 890px;
+  margin: 40px auto 0 auto;
+}
+*/
+p.prli-welcome-step {
+  display: block;
+  height: 160px;
+  font-weight: 900;
+  font-size: 18px;
+  margin-left: 25px;
+}
+p.prli-welcome-step img {
+  width: 160px !important;
+  height: 160px !important;
+  padding: 5px !important;
+  margin-right: 15px !important;
+  float: left;
+  border: 1px solid #444444;
+}
+.prli-row {
+  display: -ms-grid;
+  display: grid;
+}
+.prli-row.prli-2-columns {
+  -ms-grid-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+}
+.prli-row.prli-2-columns.prli-is-wider-left {
+  -ms-grid-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr;
+}
+.prli-row.prli-2-columns.prli-is-wider-right {
+  -ms-grid-columns: 1fr 2fr;
+  grid-template-columns: 1fr 2fr;
+}
+.prli-column {
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.prli-column :first-child {
+  margin-top: 0;
+}
+.prli-column.prli-align-vertically {
+  align-self: center;
+}
+.prli-welcome .prli-column img {
+  padding: 20px;
+}
+.prli-welcome h2,
+.prli-update h2 {
+  margin: 0 0 .6em;
+  font-size: 1.6em;
+  line-height: 1.5;
+}
+.prli-welcome h3 {
+  margin: 1.25em 0 .6em;
+  font-size: 1.4em;
+  line-height: 1.5;
+}
+.prli-welcome ol li img {
+  display: block;
+  margin: 30px 0;
+}
+.prli-welcome ol li:last-child img {
+  margin-bottom: 0;
+}
+.prli-button-section {
+  text-align: center;
+}
+.prli-welcome .prli-button-section a {
+  padding: 15px 40px;
+  height: auto;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.prli-update .prli-image-popup {
+  display: block;
+}
+@media screen and (max-width: 782px) {
+  .prli-welcome,
+  .prli-update {
+    margin-right: 30px;
+  }
+  .prli-welcome-badge {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.5em;
+  }
+  .prli-welcome h1,
+  .prli-welcome .prli-welcome-about {
+    margin-right: 0;
+  }
+}
+
+.prli-position-relative {
+  position: relative;
+}
+
+.prli-edit-link-clipboard {
+  font-size: 18px;
+  cursor: pointer;
+}

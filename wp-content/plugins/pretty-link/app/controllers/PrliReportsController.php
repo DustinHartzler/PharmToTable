@@ -31,7 +31,7 @@ class PrliReportsController extends PrliBaseController {
 
     $link_id = $params['l'];
     $type = $params['type'];
-    $group = $params['group'];
+    $group = '';
     $show_chart = (!isset($_GET['ip']) and !isset($_GET['vuid']));
 
     return array(

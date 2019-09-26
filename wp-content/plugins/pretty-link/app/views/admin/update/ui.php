@@ -1,6 +1,6 @@
 <?php if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');} ?>
 <div class="wrap">
-  <?php echo PrliAppHelper::page_title(__('Activate Pretty Links Pro', 'pretty-link')); ?>
+  <?php PrliAppHelper::page_title(__('Activate Pretty Links Pro', 'pretty-link')); ?>
   <?php require(PRLI_VIEWS_PATH.'/admin/errors.php'); ?>
 
   <div class="prli_spacer"></div>
@@ -13,8 +13,8 @@
     <tr>
       <td class="prli-settings-table-nav">
         <ul class="prli-sidebar-nav">
-          <li><a data-id="license"><?php _e('License', 'pretty-link'); ?></a></li>
-          <!-- <li><a data-id="addons"><?php _e('Add-Ons', 'pretty-link'); ?></a></li> -->
+          <li><a data-id="license"><?php esc_html_e('License', 'pretty-link'); ?></a></li>
+          <!-- <li><a data-id="addons"><?php esc_html_e('Add-Ons', 'pretty-link'); ?></a></li> -->
           <?php do_action('prli_updates_nav_items'); ?>
         </ul>
       </td>

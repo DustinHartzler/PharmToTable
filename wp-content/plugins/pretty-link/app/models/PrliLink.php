@@ -3,6 +3,8 @@ if(!defined('ABSPATH')) { die('You are not allowed to call this page directly.')
 
 class PrliLink {
   public $table_name;
+  public static $cpt = 'pretty-link';
+  public static $nonce_str = 'pretty-link-nonce';
 
   public function __construct() {
     global $wpdb;
@@ -11,62 +13,50 @@ class PrliLink {
 
   public static function get_count() {
     global $wpdb, $prli_link;
-    $q = "SELECT COUNT(*) FROM {$prli_link->table_name}";
+    $q = "SELECT COUNT(*) FROM {$prli_link->table_name} WHERE link_status='enabled'";
     return $wpdb->get_var($q);
   }
 
   public static function get_first_date() {
     global $wpdb, $prli_link;
-    $q = "SELECT min(created_at) FROM {$prli_link->table_name}";
+    $q = "SELECT min(created_at) FROM {$prli_link->table_name} WHERE link_status='enabled'";
     return $wpdb->get_var($q);
   }
 
     public function create( $values ) {
       global $wpdb, $prli_link_meta;
 
-      $now = date('Y-m-d H:i:s');
+      $now = current_time('mysql');
 
-      if($values['redirect_type'] == 'pixel') {
-        $values['name'] = (!empty($values['name'])?$values['name']:$values['slug']);
+      $values = $this->sanitize($values);
+      $values['created_at'] = $values['updated_at'] = $now;
+
+      if($values['link_cpt_id'] == 0) { ## Autocreate CPT
+
+        $post_id = $this->create_cpt_for_link($values['name'], $now, $now);
+
+        if($post_id == 0 || is_wp_error($post_id)) {
+          error_log("Unable to create CPT Post for Link");
+        }
+
+        $values['link_cpt_id'] = $post_id;
       }
-      else {
-        $values['name'] = (!empty($values['name'])?$values['name']:PrliUtils::get_page_title($values['url'],$values['slug']));
+
+      if(empty($values['name'])) {
+        if($values['redirect_type'] == 'pixel') {
+          $values['name'] = $values['slug'];
+        }
+        else {
+          $values['name'] = PrliUtils::get_page_title($values['url'],$values['slug']);
+        }
+
+        // Update the post_title field directly so we don't activate the action
+        // that ultimately calls this function lest we get into an infinite loop
+        $q = $wpdb->prepare("UPDATE {$wpdb->posts} SET post_title=%s WHERE ID=%d", $values['name'], $values['link_cpt_id']);
+        $wpdb->query($q);
       }
 
-      // We no longer handle this: 'param_struct,'.
-      $query_str = "
-        INSERT INTO {$this->table_name} (
-          url,
-          slug,
-          name,
-          param_forwarding,
-          redirect_type,
-          description,
-          track_me,
-          nofollow,
-          group_id,
-          created_at,
-          updated_at
-        )
-        VALUES (%s,%s,%s,%s,%s,%s,%d,%d,%d,%s,%s)
-      ";
-
-      $query = $wpdb->prepare(
-        $query_str,
-        $values['url'],
-        $values['slug'],
-        $values['name'],
-        (isset($values['param_forwarding']) && !empty($values['param_forwarding']))?1:0,
-        // We no longer handle this: $values['param_struct'],
-        $values['redirect_type'],
-        $values['description'],
-        (isset($values['track_me']) && !empty($values['track_me']))?1:0,
-        (isset($values['nofollow']) && !empty($values['nofollow']))?1:0,
-        (isset($values['group_id'])?(int)$values['group_id']:'NULL'),
-        $now, $now
-      );
-
-      $query_results = $wpdb->query($query);
+      $query_results = $wpdb->insert($this->table_name, $values);
 
       $link_id = ($query_results ? $wpdb->insert_id : false);
 
@@ -75,129 +65,99 @@ class PrliLink {
         $prli_link_meta->update_link_meta($link_id, 'delay', 0);
       }
 
+      $this->update_cpt_title($values['link_cpt_id'], $values['name']);
+      $this->update_cpt_status($values['link_cpt_id']);
+      $this->update_cpt_post_date($values['link_cpt_id'], $now);
+
       do_action('prli-create-link', $link_id, $values);
 
       return $link_id;
     }
 
     public function update( $id, $values ) {
-      global $wpdb;
+      global $wpdb, $prli_link;
 
-      $now = date('Y-m-d H:i:s');
+      $now = current_time('mysql');
 
-      if($values['redirect_type'] == 'pixel') {
-        $values['name'] = (!empty($values['name'])?$values['name']:$values['slug']);
-      }
-      else {
-        $values['name'] = (!empty($values['name'])?$values['name']:PrliUtils::get_page_title($values['url'],$values['slug']));
-      }
+      $values = $this->sanitize($values);
+      $values['updated_at'] = $now;
 
-      // 'param_struct=%s, ' .
-      $query_str = "
-        UPDATE {$this->table_name}
-           SET url=%s,
-               slug=%s,
-               name=%s,
-               param_forwarding=%s,
-               redirect_type=%s,
-               description=%s,
-               track_me=%d,
-               nofollow=%d,
-               group_id=%d,
-               updated_at=%s
-         WHERE id=%d
-      ";
+      $title = isset($values['name'])?trim($values['name']):'';
 
-      // isset($values['param_struct'])?$values['param_struct']:'',
-      $query = $wpdb->prepare(
-        $query_str,
-        isset($values['url'])?$values['url']:'',
-        isset($values['slug'])?$values['slug']:'',
-        isset($values['name'])?$values['name']:'',
-        (isset($values['param_forwarding']) && !empty($values['param_forwarding']))?1:0,
-        isset($values['redirect_type'])?$values['redirect_type']:'',
-        isset($values['description'])?$values['description']:'',
-        (isset($values['track_me']) && !empty($values['track_me']))?1:0,
-        (isset($values['nofollow']) && !empty($values['nofollow']))?1:0,
-        (isset($values['group_id'])?(int)$values['group_id']:'NULL'),
-        $now, $id
-      );
-
-      $query_results = $wpdb->query($query);
-
-      return $query_results;
-    }
-
-    public function bulk_update($ids, $values) {
-      if(!empty($ids) && is_array($values) && !empty($values)) {
-        global $wpdb;
-
-        $now    = date('Y-m-d H:i:s');
-        $sets   = array();
-        $query  = $wpdb->prepare("UPDATE {$this->table_name} SET updated_at=%s ", $now);
-
-        $link_columns = array(
-                          'name',
-                          'description',
-                          'url',
-                          'slug',
-                          'nofollow',
-                          'track_me',
-                          'param_forwarding',
-                          'param_struct',
-                          'redirect_type',
-                          'group_id'
-                        );
-
-        foreach($values as $lnkkey => $lnkval) {
-          // make sure this is an option contained in the links table
-          if(in_array($lnkkey, $link_columns)) {
-            // check to see if this is a checkbox
-            if(in_array(strtolower($lnkval), array('on','off'))) {
-              $sets[] = $wpdb->prepare("{$lnkkey}=%d", (strtolower($lnkval)=='on'));
-            }
-            else {
-              $sets[] = $wpdb->prepare("{$lnkkey}=%s", $lnkval);
-            }
-          }
-        }
-
-        if(!empty($sets)) {
-          $query .= ', ';
-          $query .= implode(',', $sets);
-        }
-
-        if(preg_match('/,/',$ids)) {
-          $query .= " WHERE id IN ({$ids})";
+      if(empty($title)) {
+        error_log("REDIRECT TYPE: " . $values['redirect_type']);
+        if($values['redirect_type'] == 'pixel') {
+          $title = $values['slug'];
         }
         else {
-          $query .= $wpdb->prepare(" WHERE id=%d", $ids);
+          $title = PrliUtils::get_page_title($values['url'],$values['slug']);
         }
-
-        $query_results = $wpdb->query($query);
-
-        return $query_results;
       }
 
-      return false;
+      $query_results = $wpdb->update($this->table_name, $values, array('id' => $id));
+
+      $link = $this->getOne($id);
+      $this->update_cpt_title($link->link_cpt_id, $title);
+      $this->update_cpt_status($link->link_cpt_id);
+      $this->update_cpt_post_modified($link->link_cpt_id, $now);
+
+      return $id;
+    }
+
+    public function disable_link($id) {
+      return $this->update_link_status( $id, 'disabled' );
+    }
+
+    public function enable_link($id) {
+      return $this->update_link_status( $id, 'enabled' );
+    }
+
+    public function update_link_status( $id, $link_status='enabled' ) {
+      global $wpdb;
+
+      $q = $wpdb->prepare("
+          UPDATE {$this->table_name}
+             SET link_status=%s
+           WHERE id=%d
+        ",
+        $link_status,
+        $id
+      );
+
+      return $wpdb->query($q);
     }
 
     public function update_group($id, $value, $group_id) {
       global $wpdb;
 
-      $query = 'UPDATE ' . $this->table_name .
-                  ' SET group_id=' . (isset($value)?$group_id:'NULL') .
-                  ' WHERE id='.$id;
+      if (isset($value)) {
+        $query = $wpdb->prepare(
+          "UPDATE {$this->table_name} SET group_id = %d WHERE id = %d",
+          $group_id,
+          $id
+        );
+      } else {
+        $query = $wpdb->prepare(
+          "UPDATE {$this->table_name} SET group_id = NULL WHERE id = %d",
+          $id
+        );
+      }
+
       $query_results = $wpdb->query($query);
 
       return $query_results;
     }
 
-    public function destroy($id) {
-      //require_once(PRLI_MODELS_PATH.'/models.inc.php');
+    public function destroy($id, $delete_mode='delete_cpt') {
       global $wpdb, $prli_click, $prli_link_meta;
 
       do_action('prli_delete_link', $id);
+
+      $link = $this->getOne($id);
+      if($delete_mode=='delete_cpt' && $link->link_cpt_id > 0) {
+        wp_delete_post($link->link_cpt_id, true);
+      }
+
       $metas = $wpdb->prepare("DELETE FROM {$prli_link_meta->table_name} WHERE link_id=%d",$id);
       $reset = $wpdb->prepare("DELETE FROM {$prli_click->table_name} WHERE link_id=%d",$id);
       $destroy = $wpdb->prepare("DELETE FROM {$this->table_name} WHERE id=%d",$id);
@@ -209,7 +169,6 @@ class PrliLink {
     }
 
     public function reset($id) {
-      //require_once(PRLI_MODELS_PATH.'/models.inc.php');
       global $wpdb, $prli_click, $prli_link_meta;
 
       $prli_link_meta->delete_link_meta($id, 'static-clicks');
@@ -220,46 +179,74 @@ class PrliLink {
       return $wpdb->query($reset);
     }
 
-    public function getOneFromSlug( $slug, $return_type = OBJECT, $include_stats = false ) {
-      global $wpdb, $prli_click, $prli_options, $prli_link_meta;
+    public function getOneFromSlug( $slug, $return_type = OBJECT, $include_stats = false, $exclude_disabled=true ) {
+      return $this->get_one_by( 'slug', $slug, $return_type, $include_stats, $exclude_disabled );
+    }
 
-      static $cached;
+    public function getOne( $id, $return_type = OBJECT, $include_stats = false, $exclude_disabled=true ) {
+      return $this->get_one_by( 'id', $id, $return_type, $include_stats, $exclude_disabled );
+    }
 
-      if(!isset($cached)) { $cached = array(); }
+    public function get_one_by( $field='id', $val, $return_type = OBJECT, $include_stats = false, $exclude_disabled=true ) {
+      global $wpdb, $prli_click, $prli_options, $prli_link_meta, $prli_blogurl;
 
-      if(!$include_stats && isset($cached[$slug])) {
-        return $cached[$slug];
-      }
-      elseif($include_stats && isset($cached[$slug]['stats'])) {
-        return $cached[$slug]['stats'];
-      }
+      $struct = PrliUtils::get_permalink_pre_slug_uri();
 
       if($include_stats) {
-        $query = 'SELECT li.*, ';
+        $query = "SELECT li.*, CONCAT(\"{$prli_blogurl}\",\"{$struct}\",li.slug) AS pretty_url, ";
+
+        $op = $prli_click->get_exclude_where_clause( ' AND' );
 
         if($prli_options->extended_tracking != 'count') {
-          $query .= '(SELECT COUNT(*) FROM ' . $prli_click->table_name . ' cl ' .
-                        'WHERE cl.link_id = li.id' . $prli_click->get_exclude_where_clause( ' AND' ) . ') as clicks, ' .
-                    '(SELECT COUNT(*) FROM ' . $prli_click->table_name . ' cl ' .
-                        'WHERE cl.link_id = li.id ' .
-                        'AND cl.first_click <> 0' . $prli_click->get_exclude_where_clause( ' AND' ) . ') as uniques ';
+          $query .= "
+            (
+              SELECT COUNT(*)
+                FROM {$prli_click->table_name} AS cl
+               WHERE cl.link_id = li.id
+               {$op}
+            ) as clicks,
+            (
+              SELECT COUNT(*) FROM {$prli_click->table_name} AS cl
+               WHERE cl.link_id = li.id
+                 AND cl.first_click <> 0
+                {$op}
+            ) as uniques
+          ";
         }
         else {
-          $query .= '(SELECT lm.meta_value FROM ' . $prli_link_meta->table_name . ' lm ' .
-                        'WHERE lm.meta_key="static-clicks" AND lm.link_id=li.id LIMIT 1) as clicks, ' .
-                    '(SELECT lm.meta_value FROM ' . $prli_link_meta->table_name . ' lm ' .
-                        'WHERE lm.meta_key="static-uniques" AND lm.link_id=li.id LIMIT 1) as uniques ';
+          $query .= "
+            (
+              SELECT lm.meta_value
+                FROM {$prli_link_meta->table_name} AS lm
+               WHERE lm.meta_key=\"static-clicks\"
+                 AND lm.link_id=li.id LIMIT 1
+            ) as clicks,
+            (
+              SELECT lm.meta_value FROM {$prli_link_meta->table_name} AS lm
+               WHERE lm.meta_key=\"static-uniques\"
+                 AND lm.link_id=li.id
+               LIMIT 1
+            ) as uniques
+          ";
         }
-
-        $query .= "FROM {$this->table_name} li " .
-                  'WHERE slug=%s';
       }
       else {
-        $query = "SELECT * FROM {$this->table_name} WHERE slug=%s";
+        $query = "SELECT li.*, CONCAT(\"{$prli_blogurl}\",\"{$struct}\",li.slug) AS pretty_url";
       }
 
-      $query  = $wpdb->prepare($query, $slug);
-      $link   = $wpdb->get_row($query, $return_type);
+      $query .= "
+        FROM {$this->table_name} AS li
+        WHERE {$field}=%s
+      ";
+
+      if($exclude_disabled) {
+        $query .= "
+            AND link_status='enabled'
+        ";
+      }
+
+      $query = $wpdb->prepare($query, $val);
+      $link  = $wpdb->get_row($query, $return_type);
 
       //get_row returns a null if not found - we don't want nulls
       if(!$link) { $link = false; }
@@ -269,74 +256,12 @@ class PrliLink {
         $link->uniques = $prli_link_meta->get_link_meta($link->id,'static-uniques',true);
       }
 
-      //Cache this to prevent multiple queries
-      if(!$include_stats) {
-        $cached[$slug] = $link;
-      }
-      else {
-        $cached[$slug]['stats'] = $link;
-      }
-
       return $link;
     }
 
-    public function getOne( $id, $return_type = OBJECT, $include_stats = false ) {
-      global $wpdb, $prli_click, $prli_link_meta, $prli_options;
-
-      if(!isset($id) or empty($id)) { return false; }
-
-      static $cached;
-
-      if(!isset($cached)) { $cached = array(); }
-
-      if(!$include_stats && isset($cached[$id])) {
-        return $cached[$id];
-      }
-
-      if($include_stats) {
-        $query = 'SELECT li.*, ';
-
-        if($prli_options->extended_tracking != 'count') {
-          $query .= '(SELECT COUNT(*) FROM ' . $prli_click->table_name . ' cl ' .
-                        'WHERE cl.link_id = li.id' . $prli_click->get_exclude_where_clause( ' AND' ) . ') as clicks, ' .
-                    '(SELECT COUNT(*) FROM ' . $prli_click->table_name . ' cl ' .
-                        'WHERE cl.link_id = li.id ' .
-                        'AND cl.first_click <> 0' . $prli_click->get_exclude_where_clause( ' AND' ) . ') as uniques ';
-        }
-        else {
-          $query .= '(SELECT lm.meta_value FROM ' . $prli_link_meta->table_name . ' lm ' .
-                        'WHERE lm.meta_key="static-clicks" AND lm.link_id=li.id LIMIT 1) as clicks, ' .
-                    '(SELECT lm.meta_value FROM ' . $prli_link_meta->table_name . ' lm ' .
-                        'WHERE lm.meta_key="static-uniques" AND lm.link_id=li.id LIMIT 1) as uniques ';
-        }
-
-        $query .= 'FROM ' . $this->table_name . ' li ' .
-                  'WHERE id=%d';
-      }
-      else {
-        $query = "SELECT * FROM {$this->table_name} WHERE id=%d";
-      }
-
-      $query  = $wpdb->prepare($query, $id);
-      $link   = $wpdb->get_row($query, $return_type);
-
-      if($include_stats and $link and $prli_options->extended_tracking == 'count') {
-        $link->clicks  = $prli_link_meta->get_link_meta($link->id,'static-clicks',true);
-        $link->uniques = $prli_link_meta->get_link_meta($link->id,'static-uniques',true);
-      }
-
-      //Cache this to prevent multiple queries
-      if(!$include_stats) {
-        $cached[$id] = $link;
-      }
-
-      return $link;
-    }
-
-    public function find_first_target_url($target_url)
-    {
+    public function find_first_target_url($target_url) {
       global $wpdb;
-      $query_str = "SELECT id FROM {$this->table_name} WHERE url=%s LIMIT 1";
+      $query_str = "SELECT id FROM {$this->table_name} WHERE link_status='enabled' AND url=%s LIMIT 1";
       $query = $wpdb->prepare($query_str,$target_url);
       return $wpdb->get_var($query);
     }
@@ -344,7 +269,7 @@ class PrliLink {
     public function get_or_create_pretty_link_for_target_url( $target_url, $group=0 )
     {
       global $wpdb;
-      $query_str = "SELECT * FROM {$this->table_name} WHERE url=%s LIMIT 1";
+      $query_str = "SELECT * FROM {$this->table_name} WHERE link_status='enabled' AND url=%s LIMIT 1";
       $query = $wpdb->prepare($query_str,$target_url);
       $pretty_link = $wpdb->get_row($query);
 
@@ -380,9 +305,9 @@ class PrliLink {
         if(preg_match($match_str, $uri, $match_val))
         {
           // Match longest slug -- this is the most common
-          $params = (isset($match_val[3])?$match_val[3]:'');
+          $pretty_link_params = (isset($match_val[3])?$match_val[3]:'');
           if( $pretty_link_found = $this->is_pretty_link_slug( $match_val[2] ) )
-            return compact('pretty_link_found','pretty_link_params');
+            return compact('pretty_link_found');
 
           // Trim down the matched link
           $matched_link = preg_replace('#/[^/]*?$#','',$match_val[2],1);
@@ -396,9 +321,9 @@ class PrliLink {
           {
             $new_match_str ="#^{$subdir_str}({$struct})({$matched_link})(.*?)?$#";
 
-            $params = (isset($match_val[3])?$match_val:'');
+            $pretty_link_params = (isset($match_val[3])?$match_val:'');
             if( $pretty_link_found = $this->is_pretty_link_slug( $match_val[2] ) )
-              return compact('pretty_link_found','pretty_link_params');
+              return compact('pretty_link_found');
 
             // Trim down the matched link and try again
             $matched_link = preg_replace('#/[^/]*$#','',$match_val[2],1);
@@ -409,14 +334,13 @@ class PrliLink {
       return false;
     }
 
-    public function is_pretty_link_slug($slug)
-    {
-      return apply_filters('prli-check-if-slug', $this->getOneFromSlug( urldecode($slug) ), urldecode($slug));
+    public function is_pretty_link_slug($slug) {
+      return apply_filters('prli-check-if-slug', $this->getOneFromSlug( rawurldecode($slug) ), rawurldecode($slug));
     }
 
     public function get_link_min( $id, $return_type = OBJECT ) {
       global $wpdb, $prli_link_meta;
-      $query_str = "SELECT * FROM {$this->table_name} WHERE id=%d";
+      $query_str = "SELECT * FROM {$this->table_name} WHERE link_status='enabled' AND id=%d";
       $query = $wpdb->prepare($query_str, $id);
       $res = $wpdb->get_row($query, $return_type);
 
@@ -429,84 +353,62 @@ class PrliLink {
       return $res;
     }
 
-    public function getAll($where = '', $order_by = '', $return_type = OBJECT, $include_stats = false)
-    {
-      global $wpdb, $prli_click, $prli_group, $prli_link_meta, $prli_options, $prli_utils;
+    public function getAll($where = '', $order_by = '', $return_type = OBJECT, $include_stats = false) {
+      global $wpdb, $prli_click, $prli_group, $prli_link_meta, $prli_options, $prli_utils, $prli_blogurl;
 
-      if($include_stats)
-      {
-        $query = 'SELECT li.*, ';
-        if($prli_options->extended_tracking != 'count')
-        {
-          $query .= '(SELECT COUNT(*) FROM ' . $prli_click->table_name . ' cl ' .
-                        'WHERE cl.link_id = li.id' . $prli_click->get_exclude_where_clause( ' AND' ) . ') as clicks, ' .
-                    '(SELECT COUNT(*) FROM ' . $prli_click->table_name . ' cl ' .
-                        'WHERE cl.link_id = li.id ' .
-                        'AND cl.first_click <> 0' . $prli_click->get_exclude_where_clause( ' AND' ) . ') as uniques, ';
+      $struct = PrliUtils::get_permalink_pre_slug_regex();
+
+      $op = $prli_click->get_exclude_where_clause( ' AND' );
+
+      if($include_stats) {
+        $query = "SELECT li.*, CONCAT(\"{$prli_blogurl}\",\"{$struct}\",li.slug) AS pretty_url, ";
+        if($prli_options->extended_tracking != 'count') {
+          $query .= "
+            (
+              SELECT COUNT(*)
+                FROM {$prli_click->table_name} AS cl
+               WHERE cl.link_id = li.id
+                {$op}
+            ) as clicks,
+            (
+              SELECT COUNT(*)
+                FROM {$prli_click->table_name} AS cl
+               WHERE cl.link_id = li.id
+                 AND cl.first_click <> 0
+               {$op}
+            ) as uniques
+          ";
         }
         else
         {
-          $query .= '(SELECT lm.meta_value FROM ' . $prli_link_meta->table_name . ' lm ' .
-                        'WHERE lm.meta_key="static-clicks" AND lm.link_id=li.id LIMIT 1) as clicks, ' .
-                    '(SELECT lm.meta_value FROM ' . $prli_link_meta->table_name . ' lm ' .
-                        'WHERE lm.meta_key="static-uniques" AND lm.link_id=li.id LIMIT 1) as uniques, ';
+          $query .= "
+            (
+              SELECT lm.meta_value
+                FROM {$prli_link_meta->table_name} AS lm
+               WHERE lm.meta_key=\"static-clicks\"
+                 AND lm.link_id=li.id
+               LIMIT 1
+            ) as clicks,
+            (
+              SELECT lm.meta_value
+                FROM {$prli_link_meta->table_name} AS lm
+               WHERE lm.meta_key=\"static-uniques\"
+                 AND lm.link_id=li.id
+               LIMIT 1
+            ) as uniques
+          ";
         }
-        $query .= 'gr.name as group_name ' .
-                 'FROM '. $this->table_name . ' li ' .
-                 'LEFT OUTER JOIN ' . $prli_group->table_name . ' gr ON li.group_id=gr.id' .
-                 $prli_utils->prepend_and_or_where(' WHERE', $where) . $order_by;
       }
-      else
-      {
-        $query = "SELECT li.*, gr.name as group_name FROM {$this->table_name} li " .
-                 'LEFT OUTER JOIN ' . $prli_group->table_name . ' gr ON li.group_id=gr.id' .
-                 $prli_utils->prepend_and_or_where(' WHERE', $where) . $order_by;
+      else {
+        $query = "SELECT li.*,CONCAT(\"{$prli_blogurl}\",\"{$struct}\",li.slug) AS pretty_url ";
       }
+
+      $query .= "FROM {$this->table_name} AS li
+       WHERE li.link_status='enabled'
+             " . $prli_utils->prepend_and_or_where(' AND', $where) .
+             $order_by;
 
       return $wpdb->get_results($query, $return_type);
-    }
-
-    // Pagination Methods
-    public function getRecordCount($where="")
-    {
-      global $wpdb, $prli_utils;
-      $query = 'SELECT COUNT(*) FROM ' . $this->table_name . ' li' . $prli_utils->prepend_and_or_where(' WHERE', $where);
-      return $wpdb->get_var($query);
-    }
-
-    public function getPageCount($p_size, $where="")
-    {
-      return ceil((int)$this->getRecordCount($where) / (int)$p_size);
-    }
-
-    public function getPage($current_p,$p_size, $where = "", $order_by = '', $return_type = OBJECT)
-    {
-      global $wpdb, $prli_click, $prli_utils, $prli_group, $prli_link_meta, $prli_options;
-      $end_index = $current_p * $p_size;
-      $start_index = $end_index - $p_size;
-      $query = 'SELECT li.*, ';
-      if($prli_options->extended_tracking != 'count')
-      {
-        $query .= '(SELECT COUNT(*) FROM ' . $prli_click->table_name . ' cl ' .
-                      'WHERE cl.link_id = li.id' . $prli_click->get_exclude_where_clause( ' AND' ) . ') as clicks, ' .
-                  '(SELECT COUNT(*) FROM ' . $prli_click->table_name . ' cl ' .
-                      'WHERE cl.link_id = li.id ' .
-                      'AND cl.first_click <> 0' . $prli_click->get_exclude_where_clause( ' AND' ) . ') as uniques, ';
-      }
-      else
-      {
-        $query .= '(SELECT lm.meta_value FROM ' . $prli_link_meta->table_name . ' lm ' .
-                      'WHERE lm.meta_key="static-clicks" AND lm.link_id=li.id LIMIT 1) as clicks, ' .
-                  '(SELECT lm.meta_value FROM ' . $prli_link_meta->table_name . ' lm ' .
-                      'WHERE lm.meta_key="static-uniques" AND lm.link_id=li.id LIMIT 1) as uniques, ';
-      }
-      $query .= 'gr.name as group_name ' .
-               'FROM ' . $this->table_name . ' li ' .
-               'LEFT OUTER JOIN ' . $prli_group->table_name . ' gr ON li.group_id=gr.id' .
-               $prli_utils->prepend_and_or_where(' WHERE', $where) . $order_by . ' ' .
-               'LIMIT ' . $start_index . ',' . $p_size . ';';
-      $results = $wpdb->get_results($query, $return_type);
-      return $results;
     }
 
     public function generateValidSlug($num_chars = 4) {
@@ -524,43 +426,73 @@ class PrliLink {
 
       $slug = $slug_prefix . PrliUtils::gen_random_string($num_chars);
 
+      // Intentionally not checking to see if link is enabled or disabled
       $query = "SELECT slug FROM {$this->table_name}";
       $slugs = $wpdb->get_col($query,0);
 
       // It is highly unlikely that we'll ever see 2 identical random slugs
       // but just in case, here's some code to prevent collisions
-      while(in_array($slug, $slugs) or !PrliUtils::slugIsAvailable($slug))
+      while(in_array($slug, $slugs) || is_wp_error(PrliUtils::is_slug_available($slug))) {
         $slug = $slug_prefix . PrliUtils::gen_random_string($num_chars);
+      }
 
       return apply_filters('prli-auto-generated-slug', $slug, $slugs, $num_chars);
     }
 
-    public function get_pretty_link_url($slug)
-    {
+    public function get_pretty_link_url($slug, $esc_url=false) {
       global $prli_blogurl;
 
       $link = $this->getOneFromSlug($slug);
+      $pretty_link_url = $prli_blogurl . PrliUtils::get_permalink_pre_slug_uri() . $link->slug;
+      if($esc_url) {
+        $pretty_link_url = esc_url($pretty_link_url);
+      }
+      else {
+        $pretty_link_url = $pretty_link_url;
+      }
 
       if( ( !isset($link->param_forwarding) || empty($link->param_forwarding) || $link->param_forwarding=='off' ) &&
           ( isset($link->redirect_type) && $link->redirect_type == 'pixel' ) ) {
-        return '&lt;img src="'.$prli_blogurl.PrliUtils::get_permalink_pre_slug_uri().$link->slug.'" width="1" height="1" style="display: none" &gt;';
+        return '&lt;img src="'.$pretty_link_url.'" width="1" height="1" style="display: none" /&gt;';
       }
       else {
-        return $prli_blogurl . PrliUtils::get_permalink_pre_slug_uri() . $link->slug;
+        return $pretty_link_url;
       }
     }
 
-    public function validate( $values )
+    /**
+     * Sanitize the given link options and return them
+     *
+     * @param  array $values
+     * @return array
+     */
+    public function sanitize($values)
+    {
+      $sanitized = array(
+        'redirect_type' => isset($values['redirect_type']) && is_string($values['redirect_type']) ? sanitize_key($values['redirect_type']) : '307',
+        'url' => isset($values['url']) && is_string($values['url']) ? esc_url_raw(trim($values['url'])) : '',
+        'slug' => isset($values['slug']) && is_string($values['slug']) ? sanitize_text_field($values['slug']) : '',
+        'name' => isset($values['name']) && is_string($values['name']) ? sanitize_text_field($values['name']) : '',
+        'description' => isset($values['description']) && is_string($values['description']) ? sanitize_textarea_field($values['description']) : '',
+        'group_id' => isset($values['group_id']) && is_numeric($values['group_id']) ? (int) $values['group_id'] : null,
+        'nofollow' => isset($values['nofollow']) ? 1 : 0,
+        'param_forwarding' => isset($values['param_forwarding']) ? 1 : 0,
+        'track_me' => isset($values['track_me']) ? 1 : 0,
+        'link_cpt_id' => isset($values['link_cpt_id']) && is_numeric($values['link_cpt_id']) ? (int) $values['link_cpt_id'] : 0
+      );
+
+      return $sanitized;
+    }
+
+    public function validate( $values , $id = null )
     {
       global $wpdb, $prli_utils, $prli_blogurl;
+
+      $values = $this->sanitize($values);
 
       $errors = array();
       if( empty($values['url']) && $values['redirect_type'] != 'pixel' ) {
         $errors[] = __("Target URL can't be blank", 'pretty-link');
-      }
-
-      if( $values['slug'] == null || $values['slug'] == '' ) {
-        $errors[] = __("Pretty Link can't be blank", 'pretty-link');
       }
 
       if( $values['url'] == $prli_blogurl.PrliUtils::get_permalink_pre_slug_uri().$values['slug'] ) {
@@ -579,9 +511,9 @@ class PrliLink {
         $errors[] = __("Pretty Link slugs must not end with a slash (\"/\")", 'pretty-link');
       }
 
-      $id = isset($values['id'])?$values['id']:null;
-      if( !$prli_utils->slugIsAvailable($values['slug'],$id) ) {
-        $errors[] = __("This Pretty Link Slug is already taken. Check to make sure it isn't being used by another pretty link, post, page, category or tag slug. If none of these are true then check to see that this slug isn't the name of a file in the root folder of your wordpress install.", 'pretty-link');
+      $slug_is_available = PrliUtils::is_slug_available($values['slug'],$id);
+      if(is_wp_error($slug_is_available)) {
+        $errors[] = $slug_is_available->get_error_message();
       }
 
       return $errors;
@@ -599,7 +531,12 @@ class PrliLink {
 
       if(empty($urls)) { return false; }
 
-      $decoded_urls = array_map( create_function( '$url', 'return html_entity_decode(urldecode($url));' ), $urls );
+      $decoded_urls = array_map(
+        function($url) {
+          return html_entity_decode(rawurldecode($url));
+        },
+        $urls
+      );
 
       // Filter out urls that are already Pretty Links
       $where = "IN (" . implode( ',', array_map( array($this, 'get_link_slug'), $decoded_urls ) ) . ")";
@@ -607,7 +544,8 @@ class PrliLink {
       $query = "
         SELECT CONCAT(%s, li.slug) AS pretty_url
           FROM {$this->table_name} AS li
-         WHERE li.slug {$where}
+         WHERE li.link_status='enabled'
+           AND li.slug {$where}
       ";
       $query = $wpdb->prepare($query, $prli_blogurl.PrliUtils::get_permalink_pre_slug_uri());
       $plinks = $wpdb->get_col($query);
@@ -616,13 +554,18 @@ class PrliLink {
 
       if(empty($decoded_urls)) { return false; }
 
-      $where = "IN (" . implode( ',', array_map( create_function( '$url', 'return "\"{$url}\"";' ), $decoded_urls ) ) . ")";
+      $where = "IN (" . implode( ',', array_map(
+        function($url) {
+          return "\"{$url}\"";
+        },
+        $decoded_urls ) ) . ")";
 
       $query = "
         SELECT li.url AS target_url,
                CONCAT(%s, li.slug) AS pretty_url
           FROM {$this->table_name} AS li
-         WHERE li.url {$where}
+         WHERE li.link_status='enabled'
+           AND li.url {$where}
       ";
       $query = $wpdb->prepare($query, $prli_blogurl.PrliUtils::get_permalink_pre_slug_uri());
 
@@ -656,5 +599,165 @@ class PrliLink {
       $site_url = site_url();
       return "javascript:location.href='{$site_url}/index.php?action=prli_bookmarklet&k={$prli_options->bookmarklet_auth}&target_url='+escape(location.href);";
     }
+
+  public function get_link_from_cpt($cpt_id) {
+    global $wpdb;
+
+    $q = $wpdb->prepare("
+        SELECT id
+          FROM {$this->table_name}
+         WHERE link_cpt_id=%d
+      ",
+      $cpt_id
+    );
+
+    $link_id = $wpdb->get_var($q);
+
+    if(empty($link_id)) {
+      $link_id = 0;
+    }
+
+    return $link_id;
+  }
+
+  public function update_link_cpt($link_id, $cpt_id) {
+    global $wpdb;
+
+    $q = $wpdb->prepare("
+        UPDATE {$this->table_name}
+           SET link_cpt_id=%d
+         WHERE id=%d
+      ",
+      $cpt_id, $link_id
+    );
+
+    return $wpdb->get_var($q);
+  }
+
+  /** We do this directly in the database because wp_insert_post is very slow */
+  public function create_cpt_for_link($title, $created_at, $updated_at) {
+    global $wpdb;
+
+    if (empty($created_at)) {
+      $created_at = current_time('mysql');
+    }
+
+    if (empty($updated_at)) {
+      $updated_at = current_time('mysql');
+    }
+
+    $inserted = $wpdb->insert(
+      $wpdb->posts,
+      array(
+        'post_title' => stripslashes($title),
+        'post_type' => PrliLink::$cpt,
+        'post_status' => 'publish',
+        'post_date' => $created_at,
+        'post_date_gmt' => get_gmt_from_date($created_at),
+        'post_modified' => $updated_at,
+        'post_modified_gmt' => get_gmt_from_date($updated_at),
+        'comment_status' => 'closed',
+        'ping_status' => 'closed'
+      ),
+      array('%s','%s','%s','%s','%s','%s','%s')
+    );
+
+    return $inserted ? $wpdb->insert_id : false;
+  }
+
+  public function update_cpt_title($cpt_id, $title) {
+    global $wpdb;
+
+    $q = $wpdb->prepare("
+        UPDATE {$wpdb->posts}
+           SET `post_title` = %s
+         WHERE `ID` = %d
+           AND `post_type` = %s
+      ",
+      stripslashes($title),
+      $cpt_id,
+      PrliLink::$cpt
+    );
+
+    return $wpdb->query($q);
+  }
+
+  public function update_cpt_status($cpt_id, $status='publish') {
+    global $wpdb;
+
+    $q = $wpdb->prepare("
+        UPDATE {$wpdb->posts}
+           SET `post_status` = %s
+         WHERE `ID` = %d
+           AND `post_type` = %s
+      ",
+      $status,
+      $cpt_id,
+      PrliLink::$cpt
+    );
+
+    return $wpdb->query($q);
+  }
+
+  public function update_cpt_post_date($cpt_id, $now=false) {
+    global $wpdb;
+
+    if(empty($now)) {
+      $now = current_time('mysql');
+    }
+
+    $wpdb->update(
+      $wpdb->posts,
+      array(
+        'post_date' => $now,
+        'post_date_gmt' => get_gmt_from_date($now)
+      ),
+      array(
+        'ID' => $cpt_id,
+        'post_type' => PrliLink::$cpt
+      ),
+      array('%s', '%s'),
+      array('%d', '%s')
+    );
+  }
+
+  public function update_cpt_post_modified($cpt_id, $now=false) {
+    global $wpdb;
+
+    if(empty($now)) {
+      $now = current_time('mysql');
+    }
+
+    $wpdb->update(
+      $wpdb->posts,
+      array(
+        'post_modified' => $now,
+        'post_modified_gmt' => get_gmt_from_date($now)
+      ),
+      array(
+        'ID' => $cpt_id,
+        'post_type' => PrliLink::$cpt
+      ),
+      array('%s', '%s'),
+      array('%d', '%s')
+    );
+  }
+
+  /** For legacy handling of groups filter */
+  public function get_all_legacy_groups() {
+    global $wpdb;
+
+    $prli_db = new PrliDb();
+
+    $groups_table = "{$wpdb->prefix}prli_groups";
+    $groups = array();
+
+    if($prli_db->table_exists($groups_table)) {
+      $q = "SELECT * FROM {$groups_table} ORDER BY `name`";
+      $groups = $wpdb->get_results($q);
+    }
+
+    return $groups;
+  }
 }
 

@@ -30,7 +30,7 @@ class PrliLocalApiController extends PrliBaseController {
    *
    * @param string $description Optional, description for the Pretty Link.
    *
-   * @param integer $group_id Optional, the group that this link will be placed in.
+   * @param integer $group_id DEPRECATED Optional, the group that this link will be placed in.
    *                          If this value isn't set then the link will not be
    *                          placed in a group.
    *
@@ -59,7 +59,7 @@ class PrliLocalApiController extends PrliBaseController {
                                     $slug = '',
                                     $name = '',
                                     $description = '',
-                                    $group_id = 0,
+                                    $group_id = 0, // deprecated
                                     $track_me = '',
                                     $nofollow = '',
                                     $redirect_type = '',
@@ -75,7 +75,6 @@ class PrliLocalApiController extends PrliBaseController {
     $values['slug']             = (($slug == '')?$prli_link->generateValidSlug():$slug);
     $values['name']             = $name;
     $values['description']      = $description;
-    $values['group_id']         = $group_id;
     $values['redirect_type']    = (($redirect_type == '')?$prli_options->link_redirect_type:$redirect_type);
     $values['nofollow']         = (($nofollow === '')?$prli_options->link_nofollow:$nofollow);
     $values['track_me']         = (($track_me === '')?$prli_options->link_track_me:$track_me);
@@ -111,7 +110,7 @@ class PrliLocalApiController extends PrliBaseController {
                                       $slug = '',
                                       $name = -1,
                                       $description = -1,
-                                      $group_id = '',
+                                      $group_id = '', // deprecated
                                       $track_me = '',
                                       $nofollow = '',
                                       $redirect_type = '',
@@ -136,46 +135,46 @@ class PrliLocalApiController extends PrliBaseController {
     $values['slug']             = (($slug == '')?$record->slug:$slug);
     $values['name']             = (($name == -1)?$record->name:$name);
     $values['description']      = (($description == -1)?$record->description:$description);
-    $values['group_id']         = (($group_id === '')?$record->group_id:$group_id);
     $values['redirect_type']    = (($redirect_type == '')?$record->redirect_type:$redirect_type);
     $values['nofollow']         = (($nofollow === '')?$record->nofollow:$nofollow);
     $values['track_me']         = (($track_me === '')?(int)$record->track_me:$track_me);
-    $values['param_forwarding'] = !empty($param_forwarding);
-    $values['param_struct']     = (($param_struct == -1)?$record->param_struct:$param_struct);
+    $values['param_forwarding'] = (($param_forwarding === '')?(int)$record->param_forwarding:$param_forwarding);
+    $values['param_struct']     = ''; // deprecated
+    $values['link_cpt_id']      = $record->link_cpt_id;
 
     // make array look like $_POST
     if(empty($values['nofollow']) or !$values['nofollow'])
       unset($values['nofollow']);
     if(empty($values['track_me']) or !$values['track_me'])
       unset($values['track_me']);
+    if(empty($values['param_forwarding']) or !$values['param_forwarding'])
+      unset($values['param_forwarding']);
 
-    $prli_error_messages = $prli_link->validate( $values );
+    $prli_error_messages = $prli_link->validate( $values, $id );
 
-    if( count($prli_error_messages) == 0 )
-    {
-      if( $prli_link->update( $id, $values ) )
+    if( count($prli_error_messages) == 0 ) {
+      if( $prli_link->update( $id, $values ) ) {
         return true;
-      else
-      {
+      }
+      else {
         $prli_error_messages[] = __("An error prevented your Pretty Link from being created", 'pretty-link');
         return false;
       }
     }
-    else
+    else {
       return false;
+    }
   }
 
   /**
-   * Get all the pretty link groups in an array suitable for creating a select box.
+   * DEPRECATED: Get all the pretty link groups in an array suitable for creating a select box.
    *
    * @return bool (false if failure) | array A numerical array of associative arrays
    *                                         containing all the data about the pretty
    *                                         link groups.
    */
   public function get_all_groups() {
-    global $prli_group;
-    $groups = $prli_group->getAll('',' ORDER BY gr.name', ARRAY_A);
-    return $groups;
+    return array();
   }
 
   /**
@@ -223,8 +222,11 @@ class PrliLocalApiController extends PrliBaseController {
   public function get_pretty_link_url($id) {
     global $prli_link,$prli_blogurl;
 
-    if($pretty_link = $prli_link->getOne($id))
-      return "{$prli_blogurl}".PrliUtils::get_permalink_pre_slug_uri()."{$pretty_link->slug}";
+    $pretty_link = $prli_link->getOne($id);
+
+    if($pretty_link) {
+      return $prli_blogurl.PrliUtils::get_permalink_pre_slug_uri().$pretty_link->slug;
+    }
 
     return false;
   }
@@ -245,7 +247,7 @@ function prli_create_pretty_link( $target_url,
                                   $slug = '',
                                   $name = '',
                                   $description = '',
-                                  $group_id = 0,
+                                  $group_id = 0, // deprecated
                                   $track_me = '',
                                   $nofollow = '',
                                   $redirect_type = '',
@@ -256,7 +258,7 @@ function prli_create_pretty_link( $target_url,
                                     $slug,
                                     $name,
                                     $description,
-                                    $group_id,
+                                    $group_id, // deprecated
                                     $track_me,
                                     $nofollow,
                                     $redirect_type,
@@ -269,7 +271,7 @@ function prli_update_pretty_link( $id,
                                   $slug = '',
                                   $name = -1,
                                   $description = -1,
-                                  $group_id = '',
+                                  $group_id = '', // deprecated
                                   $track_me = '',
                                   $nofollow = '',
                                   $redirect_type = '',
@@ -281,7 +283,7 @@ function prli_update_pretty_link( $id,
                                     $slug,
                                     $name,
                                     $description,
-                                    $group_id,
+                                    $group_id, // deprecated
                                     $track_me,
                                     $nofollow,
                                     $redirect_type,
@@ -289,9 +291,9 @@ function prli_update_pretty_link( $id,
                                     $param_struct );
 }
 
+/** DEPRECATED **/
 function prli_get_all_groups() {
-  $ctrl = new PrliLocalApiController();
-  return $ctrl->get_all_groups();
+  return array();
 }
 
 function prli_get_all_links() {

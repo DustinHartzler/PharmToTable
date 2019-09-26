@@ -58,6 +58,46 @@ class PrliPostsController extends PrliBaseController {
       }
     }
 
+    wp_register_style('prli-ui-smoothness', PRLI_VENDOR_LIB_URL.'/jquery-ui/jquery-ui.min.css', array(), '1.11.4');
+    wp_register_style('prli-tinymce-popup-form', PRLI_CSS_URL . '/tinymce_form_popup.css', array('prli-ui-smoothness'), PRLI_VERSION);
+
+    $css = sprintf('.ui-autocomplete-loading {
+      background: white url(%s) right center no-repeat;
+    }
+    .ui-autocomplete {
+      max-height: 200px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      width: 510px !important;
+    }', esc_url(admin_url('images/wpspin_light.gif')));
+
+    wp_add_inline_style('prli-tinymce-popup-form', $css);
+
+    wp_register_script(
+      'prli-tinymce-popup-form',
+      PRLI_JS_URL . '/tinymce_form_popup.js',
+      array(
+        'jquery',
+        'jquery-ui-core',
+        'jquery-ui-widget',
+        'jquery-ui-position',
+        'jquery-ui-menu',
+        'jquery-ui-autocomplete',
+        'jquery-ui-accordion'
+      ),
+      PRLI_VERSION,
+      true
+    );
+
+    wp_localize_script('prli-tinymce-popup-form', 'prliTinymceL10n', array(
+      'prli_selected_text' => '',
+      'home_url' => $home_url,
+      'default_redirect' => $default_redirect,
+      'default_nofollow' => $default_nofollow,
+      'default_tracking' => $default_tracking,
+      'ajaxurl' => admin_url('admin-ajax.php')
+    ));
+
     require(PRLI_VIEWS_PATH.'/shared/tinymce_form_popup.php');
     die();
   }
@@ -69,10 +109,10 @@ class PrliPostsController extends PrliBaseController {
       die();
     }
 
-    $slug = trim(stripslashes($_POST['slug']));
+    $slug = sanitize_text_field(stripslashes($_POST['slug']));
 
     //Can't end in a slash
-    if(substr($slug, -1) == '/' || $slug[0] == '/' || preg_match('/\s/', $slug) || !PrliUtils::slugIsAvailable($slug)) {
+    if(substr($slug, -1) == '/' || $slug[0] == '/' || preg_match('/\s/', $slug) || is_wp_error(PrliUtils::is_slug_available($slug))) {
       echo "false";
       die();
     }
@@ -97,14 +137,14 @@ class PrliPostsController extends PrliBaseController {
 
     //Using the local API Yo
     $id = prli_create_pretty_link(
-            stripslashes($_POST['target']),
-            stripslashes($_POST['slug']),
+            esc_url_raw(trim(stripslashes($_POST['target']))),
+            sanitize_text_field(stripslashes($_POST['slug'])),
             '', //Name
             '', //Desc
             0, //Group ID
             (int)($_POST['tracking'] == 'enabled'),
             (int)($_POST['nofollow'] == 'enabled'),
-            $_POST['redirect']
+            sanitize_key(stripslashes($_POST['redirect']))
           );
 
     if((int)$id > 0) {
@@ -123,8 +163,8 @@ class PrliPostsController extends PrliBaseController {
     if(!isset($_GET['term']) || empty($_GET['term'])) { die(''); }
 
     $return = array();
-    $term = '%' . urldecode(stripslashes($_GET['term'])) . '%';
-    $q = "SELECT * FROM {$prli_link->table_name} WHERE slug LIKE %s OR name LIKE %s OR url LIKE %s LIMIT 20";
+    $term = '%' . $wpdb->esc_like(sanitize_text_field(stripslashes($_GET['term']))) . '%';
+    $q = "SELECT * FROM {$prli_link->table_name} WHERE link_status='enabled' AND (slug LIKE %s OR name LIKE %s OR url LIKE %s) LIMIT 20";
     $q = $wpdb->prepare($q, $term, $term, $term);
     $results = $wpdb->get_results($q, ARRAY_A);
 
@@ -140,13 +180,16 @@ class PrliPostsController extends PrliBaseController {
           $alt_name = (strlen($result['name']) > 55)?substr($result['name'], 0, 55).'...':$result['name'];
         }
 
+        $pretty_link = prli_get_pretty_link_url($result['id']);
+
         $return[] = array(
-                      'value'     => (empty($result['name']))?$result['slug']:$alt_name,
-                      'slug'      => $result['slug'],
-                      'target'    => $result['url'],
-                      'title'     => $result['name'], //Not used currently, but we may want this at some point
-                      'nofollow'  => (int)$result['nofollow']
-                    );
+          'pretty_url' => (empty($pretty_link) ? home_url() : $pretty_link),
+          'value'      => (empty($result['name']))?$result['slug']:$alt_name,
+          'slug'       => $result['slug'],
+          'target'     => $result['url'],
+          'title'      => $result['name'], //Not used currently, but we may want this at some point
+          'nofollow'   => (int)$result['nofollow']
+        );
       }
 
       die(json_encode($return));

@@ -231,12 +231,9 @@ class PrliClick {
   }
 
   public function setupClickLineGraph($start_timestamp, $end_timestamp, $link_id = "all", $type = "all", $group = '', $title_only = false) {
-    global $wpdb, $prli_utils, $prli_link, $prli_group;
+    global $wpdb, $prli_utils, $prli_link;
 
-    if(!empty($group)) {
-      $link_slug = sprintf(__("group: '%s'", 'pretty-link'),$wpdb->get_var($wpdb->prepare("SELECT name FROM {$prli_group->table_name} WHERE id = %d", $group)));
-    }
-    else if($link_id == 'all') {
+    if($link_id == 'all') {
       $link_slug = __('all links', 'pretty-link');
     }
     else {
@@ -268,17 +265,17 @@ class PrliClick {
   // Set defaults and grab get or post of each possible param
   public function get_params_array() {
     $values = array(
-       'paged'  => (isset($_GET['paged'])?$_GET['paged']:(isset($_POST['paged'])?$_POST['paged']:1)),
+       'paged'  => (isset($_GET['paged'])?(int)$_GET['paged']:(isset($_POST['paged'])?(int)$_POST['paged']:1)),
        'l'      => (isset($_GET['l'])?(int)$_GET['l']:(isset($_POST['l'])?(int)$_POST['l']:'all')),
-       'group'  => (isset($_GET['group'])?$_GET['group']:(isset($_POST['group'])?$_POST['group']:'')),
-       'ip'     => (isset($_GET['ip'])?$_GET['ip']:(isset($_POST['ip'])?$_POST['ip']:'')),
-       'vuid'   => (isset($_GET['vuid'])?$_GET['vuid']:(isset($_POST['vuid'])?$_POST['vuid']:'')),
-       'sdate'  => (isset($_GET['sdate'])?$_GET['sdate']:(isset($_POST['sdate'])?$_POST['sdate']:'')),
-       'edate'  => (isset($_GET['edate'])?$_GET['edate']:(isset($_POST['edate'])?$_POST['edate']:'')),
-       'type'   => (isset($_GET['type'])?$_GET['type']:(isset($_POST['type'])?$_POST['type']:'all')),
-       'search' => (isset($_GET['search'])?$_GET['search']:(isset($_POST['search'])?$_POST['search']:'')),
-       'sort'   => (isset($_GET['sort'])?$_GET['sort']:(isset($_POST['sort'])?$_POST['sort']:'')),
-       'sdir'   => (isset($_GET['sdir'])?$_GET['sdir']:(isset($_POST['sdir'])?$_POST['sdir']:''))
+       'group'  => (isset($_GET['group'])?(int)$_GET['group']:(isset($_POST['group'])?(int)$_POST['group']:'')),
+       'ip'     => sanitize_text_field(stripslashes(isset($_GET['ip'])?$_GET['ip']:(isset($_POST['ip'])?$_POST['ip']:''))),
+       'vuid'   => sanitize_key(stripslashes(isset($_GET['vuid'])?$_GET['vuid']:(isset($_POST['vuid'])?$_POST['vuid']:''))),
+       'sdate'  => sanitize_text_field(stripslashes(isset($_GET['sdate'])?$_GET['sdate']:(isset($_POST['sdate'])?$_POST['sdate']:''))),
+       'edate'  => sanitize_text_field(stripslashes(isset($_GET['edate'])?$_GET['edate']:(isset($_POST['edate'])?$_POST['edate']:''))),
+       'type'   => sanitize_text_field(stripslashes(isset($_GET['type'])?$_GET['type']:(isset($_POST['type'])?$_POST['type']:'all'))),
+       'search' => sanitize_text_field(stripslashes(isset($_GET['search'])?$_GET['search']:(isset($_POST['search'])?$_POST['search']:''))),
+       'sort'   => sanitize_key(stripslashes(isset($_GET['sort'])?$_GET['sort']:(isset($_POST['sort'])?$_POST['sort']:''))),
+       'sdir'   => sanitize_key(stripslashes(isset($_GET['sdir'])?$_GET['sdir']:(isset($_POST['sdir'])?$_POST['sdir']:'')))
     );
 
     return $values;

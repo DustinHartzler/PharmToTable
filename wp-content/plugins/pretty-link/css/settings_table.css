@@ -61,6 +61,10 @@ table.prli-settings-table input[type=number] {
   width: 50px !important;
 }
 
+table.prli-settings-table .form-table th {
+  width: 225px;
+}
+
 table.prli-settings-table td.prli-settings-table-pages {
   width: 100%;
   background-color: white;
@@ -85,6 +89,43 @@ table.prli-settings-table td.prli-settings-table-pages .prli-page .prli-page-tit
   margin-bottom: 15px;
 }
 
+table.prli-settings-table tr.prli-pro-only th,
+table.prli-settings-table label.prli-pro-only {
+  position: relative;
+  padding-right: 40px;
+}
+
+table.prli-settings-table tr.prli-pro-only input[type=checkbox]:disabled {
+  opacity: 1;
+}
+
+table.prli-settings-table .prli-pro-only-indicator {
+  position: absolute;
+  right: 10px;
+  top: 20px;
+}
+
+table.prli-settings-table .prli-pro-only-indicator a {
+  color: #fff;
+  background: #0074a2;
+  font-size: 10px;
+  line-height: 1.3;
+  text-transform: uppercase;
+  padding: 2px 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+table.prli-settings-table .prli-pro-only-indicator a:hover {
+  background: #3390b5;
+}
+
+table.prli-settings-table label.prli-pro-only .prli-pro-only-indicator {
+  top: 0;
+}
+
 .prli-sub-box {
   background-color: #f1f1f1;
   padding: 15px;
@@ -100,7 +141,7 @@ table.prli-settings-table td.prli-settings-table-pages .prli-page input.prli-aut
 }
 
 label.prli-label {
-  font-weight: bold;
+  font-weight: 600;
   font-size: 14px;
   color: #222;
 }
@@ -183,6 +224,9 @@ table.prli-settings-table tr.prli-mobile-nav {
     display: block;
     line-height: 50px;
     padding: 0 15px;
+  }
+  table.prli-settings-table .prli-pro-only-indicator {
+    top: 10px;
   }
 }
 

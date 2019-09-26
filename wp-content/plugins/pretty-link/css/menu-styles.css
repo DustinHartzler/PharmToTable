@@ -5,11 +5,11 @@
   content: "\e844";
 }
 
-#toplevel_page_pretty-link div.wp-menu-image img {
+.menu-icon-pretty-link div.wp-menu-image img {
   display: none;
 }
 
-#toplevel_page_pretty-link div.wp-menu-image:before {
+.menu-icon-pretty-link div.wp-menu-image:before {
   /* content: "\e843"; */
   content: "\e844";
   font-family: "pretty-link";

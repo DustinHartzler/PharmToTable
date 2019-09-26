@@ -1,10 +1,10 @@
 === Shortlinks by Pretty Links - Best WordPress Link Tracking Plugin ===
-Contributors: supercleanse
+Contributors: supercleanse, cartpauj
 Donate link: https://prettylinks.com
 Tags: links, link, url, urls, affiliate, affiliates, pretty, marketing, redirect, redirection, forward, plugin, twitter, tweet, rewrite, shorturl, hoplink, hop, shortlink, short, shorten, shortening, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
-Requires at least: 4.7
-Tested up to: 4.9
-Stable tag: 2.1.6
+Requires at least: 5.1
+Tested up to: 5.2.2
+Stable tag: 3.0.9
 
 Shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!
 
@@ -14,7 +14,7 @@ Shrink, beautify, track, manage and share any URL on or off of your WordPress we
 
 [Upgrade to Pretty Links Pro](https://prettylinks.com/why-upgrade/ "Upgrade to Pretty Links Pro")
 
-*Pretty Links Pro* is a **significant upgrade** that adds many tools and redirection types that will allow you to create pretty links automatically, cloak links, replace keywords thoughout your blog with pretty links and much more.  You can learn more about *Pretty Links Pro* here:
+*Pretty Links Pro* is a **significant upgrade** that adds many tools and redirection types that will allow you to create pretty links automatically, cloak links, replace keywords thoughout your blog with pretty links, categorize & tag your pretty links and much more.  You can learn more about *Pretty Links Pro* here:
 
 [Learn More](https://prettylinks.com/about "Learn More") | [Pricing](https://prettylinks.com/pricing/plans/ "Pricing")
 
@@ -51,7 +51,6 @@ http://blairwilliams.com/w7a
 * Enables you to send your pretty links via Email directly from your WordPress admin
 * Select Temporary (302 or 307) or Permanent (301) redirection for your pretty links
 * Cookie based system for tracking visitor activity across clicks
-* Organize Links into Groups
 * Create nofollow/noindex links
 * Turn tracking on / off on each link
 * Pretty Links Bookmarklet
@@ -65,6 +64,87 @@ http://blairwilliams.com/w7a
 3. Make sure you have changed your permalink Common Settings in Settings -> Permalinks away from "Default" to something else. I prefer using custom and then "/%year%/%month%/%postname%/" for the simplest possible URL slugs with the best performance.
 
 == Changelog ==
+= 3.0.9 =
+* Change shortcut key to CTRL + P instead of CTRL + K
+* Support for Nofollow and Tracking Quick Edit and Bulk Edit on the links list page
+* Fix keyword replacement regex
+
+= 3.0.8 =
+* PRO: Fix replacements checkbox getting unchecked when using page builders
+
+= 3.0.7 =
+* Fix broken Add New link page - theme conflicts
+
+= 3.0.6 =
+* Disable "enter" key on the Target URL field
+* Add copy to clipboard to the add/edit link page
+* Fix the incorrect message being display when updating a link
+* Redirect to the links list page after creating or updating a link
+* Add the ability to sort by Clicks to the links list table
+
+= 3.0.5 =
+* Fix description conflict with the WP Product Review plugin
+* Avoid menu position conflicts
+* Add Target column to links list table
+* Disable auto-saving on links
+* Fix links having Draft status on creation
+* Fix not being able to Create/Edit links until saving options
+* Fix Prettybar color issue when saving plugin options
+
+= 3.0.4 =
+* Fix clicks pagination
+
+= 3.0.3 =
+* Fix Avada Fusion Builder conflict
+* Fix redirect caching on update/welcome page
+* Fix conflict with WP Product Review plugin
+
+= 3.0.2 =
+* Minor fixes
+
+= 3.0.1 =
+* Fix issues when accessing the plugin as a non-administrator
+* Simplify the checks in is_slug_available
+* Add slug and url as searchable fields in the links list
+* Fix for high CPU issues and huge log sizes
+* Fix layout issue on the update page
+* Fix category migration not running
+* Fix errors when dates are null
+* Call wp_cache_delete after update/delete_option
+* Only redirect if delete succeeds, redirect status code 307
+* Fix failed category/cpt migrations
+
+= 3.0.0 =
+* Re-designed Admin UI especially the Admin Links UI including links listing, adding new links and editing links 
+* Added an Insert Pretty Link button for Gutenberg Paragraph Blocks
+* Security fixes and hardening
+* Fixed Slug is not Available Error
+* Removed Pretty Links Groups (lite users will still be able to access legacy groups on the links listing page but pro users & lite users who upgrade to pro will have their groups migrated to become link categories)
+* PRO ONLY: Added Pretty Link Categories
+* PRO ONLY: Added Pretty Link Tags
+* PRO ONLY: Fixed some issues with Pretty Link Imports and Exports
+* Many other small fixes and enhancements
+
+= 2.1.10 =
+* More security hardening
+
+= 2.1.9 =
+* Fixed some security issues
+
+= 2.1.8 =
+* Fixed broken charts in dashboard widget
+* Fixed duplicate social buttons
+* Fixed warning of "invalid argument supplied to foreach"
+
+= 2.1.7 =
+* Changed clipboard library
+* Fixed an issue with non-countable strings for PHP 7.2
+* Fixed issue with large indexes utf8mb4 innodb
+* Fixed issue with ampersands in Keywords
+* Fixed issue with keywords being replaced
+* Fixed issue with '+' sign not allowed in slugs
+* Fixed self-closing tags for keyword replacement
+* Fixed Arabic (UTF-8) characters
 
 = 2.1.6 =
 * Fixed a conflict with Mulit-site variable name

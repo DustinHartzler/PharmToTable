@@ -3,11 +3,11 @@
 Plugin Name: Pretty Links
 Plugin URI: https://prettylinks.com/pl/plugin-uri
 Description: Shrink, track and share any URL on the Internet from your WordPress website!
-Version: 2.1.6
+Version: 3.0.9
 Author: Blair Williams
 Author URI: http://blairwilliams.com
 Text Domain: pretty-link
-Copyright: 2004-2017, Caseproof, LLC
+Copyright: 2004-2019, Caseproof, LLC
 
 GNU General Public License, Free Software Foundation <http://creativecommons.org/licenses/GPL/2.0/>
 This program is free software; you can redistribute it and/or modify
@@ -151,7 +151,7 @@ global $prli_options;
 $prli_options = PrliOptions::get_options();
 
 // i18n
-add_action('init', 'prli_load_textdomain');
+add_action('plugins_loaded', 'prli_load_textdomain');
 function prli_load_textdomain() {
   $plugin_dir = basename(dirname(__FILE__));
   load_plugin_textdomain('pretty-link', false, $plugin_dir.'/i18n/');
@@ -167,8 +167,8 @@ $prli_utils     = new PrliUtils();
 
 global $prli_db_version, $plp_db_version;
 
-$prli_db_version = 18; // this is the version of the database we're moving to
-$plp_db_version = 7; // this is the version of the database we're moving to
+$prli_db_version = 22; // this is the version of the database we're moving to
+$plp_db_version = 10; // this is the version of the database we're moving to
 
 global $prli_app_controller;
 

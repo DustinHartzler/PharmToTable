@@ -1,19 +1,19 @@
 <?php if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');} ?>
 
-<div class="prli-page-title"><?php _e('Pretty Link Add-ons', 'pretty-link'); ?></div>
+<div class="prli-page-title"><?php esc_html_e('Pretty Link Add-ons', 'pretty-link'); ?></div>
 
 <?php $addons = PrliUpdateController::addons(true); ?>
 
 <?php if(empty($addons)): ?>
-  <h3><?php _e('There were no Add-ons found for your license or lack thereof...', 'pretty-link'); ?></h3>
+  <h3><?php esc_html_e('There were no Add-ons found for your license or lack thereof...', 'pretty-link'); ?></h3>
 <?php else: ?>
   <table class="widefat">
 
     <thead>
       <tr>
-        <th><?php _e('Add-on', 'pretty-link'); ?></th>
-        <th><?php _e('Description', 'pretty-link'); ?></th>
-        <th><?php _e('Install', 'pretty-link'); ?></th>
+        <th><?php esc_html_e('Add-on', 'pretty-link'); ?></th>
+        <th><?php esc_html_e('Description', 'pretty-link'); ?></th>
+        <th><?php esc_html_e('Install', 'pretty-link'); ?></th>
       </tr>
     </thead>
 
@@ -36,22 +36,22 @@
             <strong>
             <?php
 
-              echo isset($info->extra_info->list_title) ? $info->extra_info->list_title : $info->product_name;
+              echo esc_html(isset($info->extra_info->list_title) ? $info->extra_info->list_title : $info->product_name);
 
               if($update_available) {
-                echo ' ' . __('(Update Available)', 'pretty-link');
+                echo ' ' . esc_html__('(Update Available)', 'pretty-link');
               }
             ?>
             </strong>
           </td>
-          <td><?php echo $info->extra_info->description; ?></td>
+          <td><?php echo esc_html($info->extra_info->description); ?></td>
           <td>
             <?php if($installed && $active): ?>
-              <a class="button" href="" style="pointer-events: none;" disabled><?php _e('Installed & Active', 'pretty-link'); ?></a>
+              <a class="button" href="" style="pointer-events: none;" disabled><?php esc_html_e('Installed & Active', 'pretty-link'); ?></a>
             <?php elseif($installed && !$active): ?>
-              <a class="button" href="" style="pointer-events: none;" disabled><?php _e('Installed & Inactive', 'pretty-link'); ?></a>
+              <a class="button" href="" style="pointer-events: none;" disabled><?php esc_html_e('Installed & Inactive', 'pretty-link'); ?></a>
             <?php else: ?>
-              <a class="button button-primary" href="<?php echo PrliAddonsHelper::install_url($slug); ?>"><?php _e('Install', 'pretty-link'); ?></a>
+              <a class="button button-primary" href="<?php echo esc_url(PrliAddonsHelper::install_url($slug)); ?>"><?php esc_html_e('Install', 'pretty-link'); ?></a>
             <?php endif; ?>
           </td>
         </tr>

@@ -39,17 +39,18 @@ class PrliClicksController extends PrliBaseController {
       if(($now - $last_run) > 86400) {
         $prli_click->clear_clicks_by_age_in_days(90);
         update_option('prli_auto_trim_clicks_last_run', time());
+        wp_cache_delete('alloptions', 'options');
       }
     }
   }
 
   public function admin_page() {
-    global $wpdb, $prli_options, $prli_click, $prli_group, $prli_link, $prli_utils, $page_size;
+    global $wpdb, $prli_options, $prli_click, $prli_link, $prli_utils, $page_size;
 
     $page_params = '';
 
     $params = $prli_click->get_params_array();
-    $page_size = (isset($_REQUEST['size']) && is_numeric($_REQUEST['size']) && !empty($_REQUEST['size']))?$_REQUEST['size']:10;
+    $page_size = (isset($_REQUEST['size']) && is_numeric($_REQUEST['size']) && !empty($_REQUEST['size']))?(int)$_REQUEST['size']:10;
     $current_page = $params['paged'];
 
     $start_timestamp = $prli_utils->get_start_date($params);
@@ -95,12 +96,6 @@ class PrliClicksController extends PrliBaseController {
       $where_clause .= $wpdb->prepare(" AND cl.vuid=%s",$params['vuid']);
       $page_params .= "&vuid={$params['vuid']}";
     }
-    else if(!empty($params['group'])) {
-      $group = $prli_group->getOne($params['group']);
-      $link_name = __('Group: ', 'pretty-link') . esc_html($group->name);
-      $where_clause .= $wpdb->prepare(" AND cl.link_id IN (SELECT id FROM {$prli_link->table_name} WHERE group_id=%d)",$params['group']);
-      $page_params .= "&group={$params['group']}";
-    }
     else {
       $link_name = __('All Links', 'pretty-link');
       $where_clause .= "";
@@ -133,25 +128,26 @@ class PrliClicksController extends PrliBaseController {
   }
 
   public function click_report() {
-    global $wpdb, $prli_click, $prli_group, $prli_link;
+    global $wpdb, $prli_click, $prli_link;
 
     if(isset($_GET['l'])) {
-      $where_clause = $wpdb->prepare(" link_id=%d",$_GET['l']);
-      $link_name = $wpdb->get_var($wpdb->prepare("SELECT name FROM {$wpdb->prefix}prli_links WHERE id=%d",$_GET['l']));
-      $link_slug = $wpdb->get_var($wpdb->prepare("SELECT slug FROM {$wpdb->prefix}prli_links WHERE id=%d",$_GET['l']));
+      $l = (int) $_GET['l'];
+      $where_clause = $wpdb->prepare(" link_id=%d",$l );
+      $link_name = $wpdb->get_var($wpdb->prepare("SELECT name FROM {$wpdb->prefix}prli_links WHERE id=%d",$l));
+      $link_slug = $wpdb->get_var($wpdb->prepare("SELECT slug FROM {$wpdb->prefix}prli_links WHERE id=%d",$l));
     }
     else if(isset($_GET['ip'])) {
-      $link_name = "ip_addr_{$_GET['ip']}";
-      $where_clause = $wpdb->prepare(" cl.ip=%s",$_GET['ip']);
+      $ip = stripslashes($_GET['ip']);
+      if (filter_var($ip, FILTER_VALIDATE_IP)) {
+        $ip = PrliClicksHelper::esc_spreadsheet_cell($ip);
+        $link_name = "ip_addr_{$ip}";
+        $where_clause = $wpdb->prepare(" cl.ip=%s", $ip);
+      }
     }
     else if(isset($_GET['vuid'])) {
-      $link_name = "visitor_{$_GET['vuid']}";
-      $where_clause = $wpdb->prepare(" cl.vuid=%s",$_GET['vuid']);
-    }
-    else if(isset($_GET['group'])) {
-      $group = $prli_group->getOne($_GET['group']);
-      $link_name = "group_{$group->name}";
-      $where_clause .= $wpdb->prepare(" cl.link_id IN (SELECT id FROM {$prli_link->table_name} WHERE group_id=%d)", $_GET['group']);
+      $vuid = sanitize_key(stripslashes($_GET['vuid']));
+      $link_name = "visitor_{$vuid}";
+      $where_clause = $wpdb->prepare(" cl.vuid=%s",$vuid);
     }
     else {
       $link_name = "all_links";
@@ -163,7 +159,7 @@ class PrliClicksController extends PrliBaseController {
 
     $record_count = $prli_click->getRecordCount($where_clause);
     $page_count   = (int)ceil($record_count / $this->max_rows_per_file);
-    $prli_page = esc_html($_GET['prli_page']);
+    $prli_page = isset($_GET['prli_page']) ? (int) $_GET['prli_page'] : 1;
     $hmin = 0;
 
     if($prli_page) {
@@ -189,26 +185,26 @@ class PrliClicksController extends PrliBaseController {
     $param_string = $where_clause = '';
 
     if(isset($_GET['l'])) {
-      $where_clause = $wpdb->prepare(' link_id=%d', $_GET['l']);
-      $link_name = $wpdb->get_var($wpdb->prepare("SELECT name FROM {$wpdb->prefix}prli_links WHERE id=%d", $_GET['l']));
-      $link_slug = $wpdb->get_var($wpdb->prepare("SELECT slug FROM {$wpdb->prefix}prli_links WHERE id=%d", $_GET['l']));
-      $param_string .= "l={$_GET['l']}";
+      $l = (int) $_GET['l'];
+      $where_clause = $wpdb->prepare(' link_id=%d', $l);
+      $link_name = $wpdb->get_var($wpdb->prepare("SELECT name FROM {$wpdb->prefix}prli_links WHERE id=%d", $l));
+      $link_slug = $wpdb->get_var($wpdb->prepare("SELECT slug FROM {$wpdb->prefix}prli_links WHERE id=%d", $l));
+      $param_string .= "l={$l}";
     }
     else if(isset($_GET['ip'])) {
-      $link_name = "ip_addr_{$_GET['ip']}";
-      $where_clause = $wpdb->prepare(' cl.ip=%s', $_GET['ip']);
-      $param_string .= "ip={$_GET['ip']}";
+      $ip = stripslashes($_GET['ip']);
+      if (filter_var($ip, FILTER_VALIDATE_IP)) {
+        $ip = PrliClicksHelper::esc_spreadsheet_cell($_GET['ip']);
+        $link_name = "ip_addr_{$ip}";
+        $where_clause = $wpdb->prepare(' cl.ip=%s', $ip);
+        $param_string .= "ip={$ip}";
+      }
     }
     else if(isset($_GET['vuid'])) {
-      $link_name = "visitor_{$_GET['vuid']}";
-      $where_clause = $wpdb->prepare(' cl.vuid=%s', $_GET['vuid']);
-      $param_string .= "vuid={$_GET['vuid']}";
-    }
-    else if(isset($_GET['group'])) {
-      $group = $prli_group->getOne($_GET['group']);
-      $link_name = "group_{$group->name}";
-      $where_clause .= $wpdb->prepare(" cl.link_id IN (SELECT id FROM {$prli_link->table_name} WHERE group_id=%d)", $_GET['group']);
-      $param_string .= "group={$_GET['group']}";
+      $vuid = sanitize_key(stripslashes($_GET['vuid']));
+      $link_name = "visitor_{$vuid}";
+      $where_clause = $wpdb->prepare(' cl.vuid=%s', $vuid);
+      $param_string .= "vuid={$vuid}";
     }
     else {
       $link_name = 'all_links';

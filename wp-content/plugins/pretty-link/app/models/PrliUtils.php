@@ -83,93 +83,25 @@ class PrliUtils {
     }
   }
 
-  public static function get_url_from_slug( $slug ) {
-    global $prli_blogurl;
-    return $prli_blogurl . self::get_permalink_pre_slug_uri() . $slug;
-  }
-
   public static function debug_log($message) {
     if(defined('WP_DEBUG') && WP_DEBUG) {
       error_log(sprintf(__('*** Pretty Links Debug: %s', 'pretty-link'), $message));
     }
   }
 
-  public static function slugIsAvailable( $slug, $id = '' ) {
-    global $wp_rewrite, $prli_link;
-    $url = self::get_url_from_slug($slug);
+  public static function is_slug_available( $slug, $id = '' ) {
+    global $prli_link;
 
     if(empty($slug)) {
-      self::debug_log('SlugIsAvailable: $slug was empty');
-      return false;
-    }
-
-    // Check Filepaths
-    $filepath = ABSPATH . $slug;
-    if( file_exists($filepath) ) {
-      self::debug_log('SlugIsAvailable: There\'s already a file at: ' . $filepath);
-      return false;
+      $error = __('The Slug can\'t be empty', 'pretty-link');
+      return new WP_Error('slug_empty', $error);
     }
 
     // Check other Pretty Links
-    if( empty($id) ) {
-      $this_link = $prli_link->getOneFromSlug( $slug );
-      if( $this_link != false ) {
-        self::debug_log('SlugIsAvailable: There\'s already pretty link for slug: ' . $slug);
-        return false;
-      }
-    }
-    else {
-      $this_link = $prli_link->getOne( $id );
-      $slug_link = $prli_link->getOneFromSlug( $slug );
-
-      // check to see if the link is just being updated with the same slug
-      if( !empty($this_link) && !empty($slug_link) && $this_link->id === $slug_link->id ) {
-        return true;
-      }
-    }
-
-    // Check Rewrite Rules
-    $rules = $wp_rewrite->wp_rewrite_rules();
-    //self::debug_log('SlugIsAvailable: Rewrite Rules: ' . self::object_to_string($rules));
-    //unset($rules['([^/]+)(/[0-9]+)?/?$']); //Pretty sure this may nullify all the work below, but it's causing too many false positives somehow
-
-    foreach( $rules as $pattern => $query ) {
-      // just looking for the beginning of the pattern
-      if(isset($pattern[0]) && $pattern[0] != '^') { $pattern = '^' . $pattern; }
-
-      if( preg_match( "!{$pattern}!", $slug, $matches ) ) {
-        // Got a match.
-        // Trim the query of everything up to the '?'. (copied from url_to_postid)
-        $query = preg_replace("!^.+\?!", '', $query);
-
-        // Substitute the substring matches into the query. (copied from url_to_postid)
-        $query = addslashes(WP_MatchesMapRegex::apply($query, $matches));
-
-        // Filter out non-public query vars (copied from url_to_postid)
-        global $wp;
-        parse_str( $query, $query_vars );
-        $query = array();
-
-        foreach ( (array) $query_vars as $key => $value ) {
-          if ( in_array( $key, $wp->public_query_vars ) ) {
-            $query[$key] = $value;
-            if ( isset( $post_type_query_vars[$key] ) ) {
-              $query['post_type'] = $post_type_query_vars[$key];
-              $query['name'] = $value;
-            }
-          }
-        }
-
-        // Do this query bro
-        $wpq = new WP_Query( $query );
-
-        // If we have a resolved post (applicable for tag, category & author pages too) then it's taken
-        if( isset($wpq->post) && isset($wpq->posts) && !empty($wpq->posts) ) {
-          self::debug_log('SlugIsAvailable: The path resolved to a post in wp rewrite rules for pattern: /'.$pattern.'/ query: '.self::object_to_string($query));
-          self::debug_log(self::object_to_string($wpq->post));
-          return false;
-        }
-      }
+    $slug_link = $prli_link->getOneFromSlug( $slug );
+    if(!empty($slug_link) && ($id != $slug_link->id)) {
+      $error = sprintf(__('This Pretty Link Slug is already taken. There\'s already another pretty link with this slug: %s', 'pretty-link'), $slug);
+      return new WP_Error('slug_not_available', $error);
     }
 
     return true;
@@ -251,7 +183,16 @@ class PrliUtils {
   public function track_link($slug,$values) {
     global $wpdb, $prli_click, $prli_options, $prli_link, $plp_update;
 
-    $query = "SELECT * FROM ".$prli_link->table_name." WHERE slug='$slug' LIMIT 1";
+    $query = $wpdb->prepare("
+        SELECT *
+          FROM {$prli_link->table_name}
+         WHERE slug=%s
+           AND link_status='enabled'
+         LIMIT 1
+      ",
+      $slug
+    );
+
     $pretty_link = $wpdb->get_row($query);
     $pretty_link_target = apply_filters( 'prli_target_url', array( 'url' => $pretty_link->url, 'link_id' => $pretty_link->id, 'redirect_type' => $pretty_link->redirect_type ) );
     $prli_edition = ucwords(preg_replace('/-/', ' ', PRLI_EDITION));
@@ -267,9 +208,9 @@ class PrliUtils {
     if(isset($track_me) and !empty($track_me) and $track_me) {
       $first_click = 0;
       $click_ip =         $this->get_current_client_ip();
-      $click_referer =    isset($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:'';
-      $click_uri =        isset($_SERVER['REQUEST_URI'])?$_SERVER['REQUEST_URI']:'';
-      $click_user_agent = isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:'';
+      $click_referer =    isset($_SERVER['HTTP_REFERER'])?sanitize_text_field( $_SERVER['HTTP_REFERER'] ):'';
+      $click_uri =        isset($_SERVER['REQUEST_URI'])?sanitize_text_field( $_SERVER['REQUEST_URI'] ):'';
+      $click_user_agent = isset($_SERVER['HTTP_USER_AGENT'])?sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ):'';
 
       //Set Cookie if it doesn't exist
       $cookie_name = 'prli_click_' . $pretty_link->id;
@@ -405,22 +346,22 @@ class PrliUtils {
   }
 
   public function get_current_client_ip() {
-    $ipaddress = (isset($_SERVER['REMOTE_ADDR']))?$_SERVER['REMOTE_ADDR']:'';
+    $ipaddress = (isset($_SERVER['REMOTE_ADDR']))?sanitize_text_field( $_SERVER['REMOTE_ADDR'] ):'';
 
     if(isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP'] != '127.0.0.1') {
-      $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+      $ipaddress = sanitize_text_field( $_SERVER['HTTP_CLIENT_IP'] );
     }
     elseif(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '127.0.0.1') {
-      $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+      $ipaddress = sanitize_text_field( $_SERVER['HTTP_X_FORWARDED_FOR'] );
     }
     elseif(isset($_SERVER['HTTP_X_FORWARDED']) && $_SERVER['HTTP_X_FORWARDED'] != '127.0.0.1') {
-      $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+      $ipaddress = sanitize_text_field( $_SERVER['HTTP_X_FORWARDED'] );
     }
     elseif(isset($_SERVER['HTTP_FORWARDED_FOR']) && $_SERVER['HTTP_FORWARDED_FOR'] != '127.0.0.1') {
-      $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+      $ipaddress = sanitize_text_field( $_SERVER['HTTP_FORWARDED_FOR'] );
     }
     elseif(isset($_SERVER['HTTP_FORWARDED']) && $_SERVER['HTTP_FORWARDED'] != '127.0.0.1') {
-      $ipaddress = $_SERVER['HTTP_FORWARDED'];
+      $ipaddress = sanitize_text_field( $_SERVER['HTTP_FORWARDED'] );
     }
 
     $ips = explode(',', $ipaddress);
@@ -535,166 +476,16 @@ class PrliUtils {
     $this->delete_dir($plp_path);
 
     delete_option( 'prlipro_activated' );
+    wp_cache_delete('alloptions', 'options');
     delete_option( 'prlipro_username' );
+    wp_cache_delete('alloptions', 'options');
     delete_option( 'prlipro_password' );
+    wp_cache_delete('alloptions', 'options');
     delete_option( 'prlipro-credentials' );
+    wp_cache_delete('alloptions', 'options');
 
     // Yah- I just leave the pro database tables & data hanging
     // around in case you want to re-install it at some point
-  }
-
-  public function should_install_pro_db() {
-    global $plp_db_version;
-    $old_pro_db_version = get_option('prlipro_db_version');
-
-    if($plp_db_version != $old_pro_db_version) { return true; }
-
-    return false;
-  }
-
-  public function install_pro_db() {
-    global $wpdb, $plp_db_version;
-
-    $upgrade_path = ABSPATH . 'wp-admin/includes/upgrade.php';
-    require_once($upgrade_path);
-
-    // Pretty Links Pro Tables
-    $keywords_table         = "{$wpdb->prefix}prli_keywords";
-    $post_keywords_table    = "{$wpdb->prefix}prli_post_keywords";
-    $post_urls_table        = "{$wpdb->prefix}prli_post_urls";
-    $reports_table          = "{$wpdb->prefix}prli_reports";
-    $report_links_table     = "{$wpdb->prefix}prli_report_links";
-    $link_rotations_table   = "{$wpdb->prefix}prli_link_rotations";
-    $clicks_rotations_table = "{$wpdb->prefix}prli_clicks_rotations";
-
-    // This was introduced in WordPress 3.5
-    // $char_col = $wpdb->get_charset_collate(); //This doesn't work for most non english setups
-    $char_col = "";
-    $collation = $wpdb->get_row("SHOW FULL COLUMNS FROM {$wpdb->posts} WHERE field = 'post_content'");
-
-    if(isset($collation->Collation)) {
-      $charset = explode('_', $collation->Collation);
-
-      if(is_array($charset) && count($charset) > 1) {
-        $charset = $charset[0]; //Get the charset from the collation
-        $char_col = "DEFAULT CHARACTER SET {$charset} COLLATE {$collation->Collation}";
-      }
-    }
-
-    //Fine we'll try it your way this time
-    if(empty($char_col)) { $char_col = $wpdb->get_charset_collate(); }
-
-    /* Create/Upgrade Keywords Table */
-    $sql = "
-      CREATE TABLE {$keywords_table} (
-        id int(11) NOT NULL auto_increment,
-        text varchar(255) NOT NULL,
-        link_id int(11) NOT NULL,
-        created_at datetime NOT NULL,
-        PRIMARY KEY  (id),
-        KEY link_id (link_id),
-        KEY text (text)
-      ) {$char_col};
-    ";
-
-    dbDelta($sql);
-
-    /* Create/Upgrade Keywords Table */
-    $sql = "
-      CREATE TABLE {$post_keywords_table} (
-        id int(11) NOT NULL auto_increment,
-        keyword_id int(11) NOT NULL,
-        post_id int(11) NOT NULL,
-        PRIMARY KEY  (id),
-        KEY keyword_id (keyword_id),
-        KEY post_id (post_id),
-        UNIQUE KEY post_keyword_index (keyword_id,post_id)
-      ) {$char_col};
-    ";
-
-    dbDelta($sql);
-
-    /* Create/Upgrade URLs Table */
-    $sql = "
-      CREATE TABLE {$post_urls_table} (
-        id int(11) NOT NULL auto_increment,
-        url_id int(11) NOT NULL,
-        post_id int(11) NOT NULL,
-        PRIMARY KEY  (id),
-        KEY url_id (url_id),
-        KEY post_id (post_id),
-        UNIQUE KEY post_url_index (url_id,post_id)
-      ) {$char_col};
-    ";
-
-    dbDelta($sql);
-
-    /* Create/Upgrade Reports Table */
-    $sql = "
-      CREATE TABLE {$reports_table} (
-        id int(11) NOT NULL auto_increment,
-        name varchar(255) NOT NULL,
-        goal_link_id int(11) default NULL,
-        created_at datetime NOT NULL,
-        PRIMARY KEY  (id),
-        KEY goal_link_id (goal_link_id),
-        KEY name (name)
-      ) {$char_col};
-    ";
-
-    dbDelta($sql);
-
-    /* Create/Upgrade Reports Table */
-    $sql = "
-      CREATE TABLE {$report_links_table} (
-        id int(11) NOT NULL auto_increment,
-        report_id int(11) NOT NULL,
-        link_id int(11) NOT NULL,
-        created_at datetime NOT NULL,
-        PRIMARY KEY  (id),
-        KEY report_id (report_id),
-        KEY link_id (link_id)
-      ) {$char_col};
-    ";
-
-    dbDelta($sql);
-
-    /* Create/Upgrade Link Rotations Table */
-    $sql = "
-      CREATE TABLE {$link_rotations_table} (
-        id int(11) NOT NULL auto_increment,
-        url varchar(255) default NULL,
-        weight int(11) default 0,
-        r_index int(11) default 0,
-        link_id int(11) NOT NULL,
-        created_at datetime NOT NULL,
-        PRIMARY KEY  (id),
-        KEY link_id (link_id),
-        KEY url (url),
-        KEY weight (weight),
-        KEY r_index (r_index)
-      ) {$char_col};
-    ";
-
-    dbDelta($sql);
-
-    /* Create/Upgrade Clicks / Rotations Table */
-    $sql = "
-      CREATE TABLE {$clicks_rotations_table} (
-        id int(11) NOT NULL auto_increment,
-        click_id int(11) NOT NULL,
-        link_id int(11) NOT NULL,
-        url text NOT NULL,
-        PRIMARY KEY  (id),
-        KEY click_id (click_id),
-        KEY link_id (link_id)
-      ) {$char_col};
-    ";
-
-    dbDelta($sql);
-
-    /***** SAVE DB VERSION *****/
-    update_option('prlipro_db_version', $plp_db_version);
   }
 
   // be careful with this one -- I use it to forceably reinstall pretty link pro
@@ -790,8 +581,7 @@ class PrliUtils {
 
       if(!empty($char_col))
       {
-        $prli_table_names = array( "{$wpdb->prefix}prli_groups",
-                                   "{$wpdb->prefix}prli_clicks",
+        $prli_table_names = array( "{$wpdb->prefix}prli_clicks",
                                    "{$wpdb->prefix}prli_links",
                                    "{$wpdb->prefix}prli_link_metas",
                                    "{$wpdb->prefix}prli_tweets",
@@ -800,6 +590,11 @@ class PrliUtils {
                                    "{$wpdb->prefix}prli_report_links",
                                    "{$wpdb->prefix}prli_link_rotations",
                                    "{$wpdb->prefix}prli_clicks_rotations" );
+
+        $prli_db = new PrliDb();
+        if ($prli_db->table_exists("{$wpdb->prefix}prli_groups")) {
+          $prli_table_names[] = "{$wpdb->prefix}prli_groups";
+        }
 
         foreach($prli_table_names as $prli_table_name)
         {
@@ -820,6 +615,7 @@ class PrliUtils {
         $creds = array('username' => $plp_username,
                        'password' => $plp_password);
         update_option('prlipro-credentials', $creds);
+        wp_cache_delete('alloptions', 'options');
       }
     }
 
@@ -866,6 +662,45 @@ class PrliUtils {
       $query = $wpdb->prepare($query,'prli-url-aliases');
       $results = $wpdb->query($query);
     }
+
+    if($db_version && $db_version < 22) {
+      // Get 1000 links at a time
+      $q = "
+        SELECT *
+          FROM {$prli_link->table_name}
+         WHERE link_cpt_id IS NULL
+            OR link_cpt_id <= 0
+         ORDER BY created_at DESC
+         LIMIT 1000
+      ";
+
+      $count_q = "
+        SELECT COUNT(*)
+          FROM {$prli_link->table_name}
+         WHERE link_cpt_id IS NULL
+            OR link_cpt_id <= 0
+      ";
+
+      while(0 < ($count = $wpdb->get_var($count_q))) {
+
+        $links = $wpdb->get_results($q);
+
+        // Loop through Links in Link Table
+        foreach($links as $link) {
+          // If there's already a CPT associated then continue
+          if($link->link_cpt_id > 0) {
+            continue;
+          }
+
+          $cpt_id = $prli_link->create_cpt_for_link($link->name, $link->created_at, $link->updated_at);
+
+          if($cpt_id) {
+            // update the link db record with the Link CPT ID
+            $prli_link->update_link_cpt($link->id, $cpt_id);
+          }
+        }
+      }
+    }
   }
 
   public function this_is_a_robot($browser_ua,$browsecap,$header='')
@@ -879,7 +714,7 @@ class PrliUtils {
   public function is_robot($click,$browsecap,$header='')
   {
     global $prli_utils, $prli_click, $prli_options;
-    $ua_string = trim(urldecode($click->browser));
+    $ua_string = trim(rawurldecode($click->browser));
     $btype = trim($click->btype);
 
     // Yah, if the whole user agent string is missing -- wtf?
@@ -1003,6 +838,7 @@ class PrliUtils {
     return $string;
   }
 
+  /** Attempt to get a page title from the target url */
   public static function get_page_title($url, $slug='') {
     $title = '';
     $wp_http = new WP_Http;
@@ -1016,7 +852,7 @@ class PrliUtils {
 
     // Look for <title>(.*?)</title> in the text
     if($data and preg_match('#<title>[\s\n\r]*?(.*?)[\s\n\r]*?</title>#im', $data, $matches)) {
-      $title = trim($matches[1]);
+      $title = html_entity_decode(trim($matches[1]));
     }
 
     //Attempt to covert cyrillic and other weird shiz to UTF-8 - if it fails we'll just return the slug next
@@ -1039,13 +875,16 @@ class PrliUtils {
 
   public static function is_url($str) {
     //For now we're not going to validate this - there's too many possible protocols/schemes to validate now
-    return true;
 
     // This uses the @diegoperini URL matching regex adapted for PHP from https://gist.github.com/dperini/729294
-    // return preg_match('_^(?::/?/?)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]-*)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$_iuS', $str);
+    //return apply_filters('prli_is_valid_url', preg_match('%^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\x{00a1}-\x{ffff}][a-z0-9\x{00a1}-\x{ffff}_-]{0,62})?[a-z0-9\x{00a1}-\x{ffff}]\.)+(?:[a-z\x{00a1}-\x{ffff}]{2,})\.?))(?::\d{2,5})?(?:[/?#]\S*)?$%iuS', $str));
 
     //Let's see how PHP's built in validator does instead?
     //return apply_filters('prli_is_valid_url', (filter_var($str, FILTER_VALIDATE_URL) !== FALSE), $str);
+    //
+
+    // Let's just make sure there's a mailto: or // somewhere here
+    return apply_filters('prli_is_valid_url', preg_match('%(^mailto:|//)%', $str));
   }
 
   public static function is_email($str) {
@@ -1056,15 +895,15 @@ class PrliUtils {
     return preg_match('/\(?\d{3}\)?[- ]\d{3}-\d{4}/', $str);
   }
 
-  public static function get_plp_permalink($link) {
-    global $prli_blogurl;
-
+  public static function get_pretty_link_url($slug, $path_only=false) {
     $struct = PrliUtils::get_permalink_pre_slug_uri();
 
-    if(isset($link->slug))
-      return "{$prli_blogurl}{$struct}{$link->slug}";
-    else
-      return false;
+    if(isset($slug)) {
+      $path = "{$struct}{$slug}";
+      return ($path_only ? $path : home_url($path));
+    }
+
+    return false;
   }
 
   public static function browser_image($browser) {
@@ -1153,19 +992,23 @@ class PrliUtils {
     return self::current_user_can('subscriber');
   }
 
-  // Checks to see that the user is authorized to use Pretty Link based on the minimum role
-  public static function is_authorized() {
+  public static function get_minimum_role() {
     global $plp_options;
 
     $prli_update = new PrliUpdateController();
 
     $role = 'manage_options';
 
-    if($prli_update->is_installed_and_activated() && isset($plp_options) && isset($plp_options->min_role)) {
+    if($prli_update->is_installed() && isset($plp_options) && isset($plp_options->min_role)) {
       $role = $plp_options->min_role;
     }
 
-    return self::current_user_can($role);
+    return $role;
+  }
+
+  // Checks to see that the user is authorized to use Pretty Link based on the minimum role
+  public static function is_authorized() {
+    return self::current_user_can(self::get_minimum_role());
   }
 
   public static function full_request_url() {
@@ -1226,9 +1069,13 @@ class PrliUtils {
 
     // Set the default message
     if(empty($message)) {
-      $message = sprintf( __( 'Get started by %1$sadding a URL%2$s that you want to turn into a pretty link.<br/>' .
-                              'Come back to see how many times it was clicked.' , 'pretty-link' ),
-                          '<a href="' . admin_url( 'admin.php?page=add-new-pretty-link' ) . '">', '</a>' );
+      $message = sprintf(
+        // translators: %1$s: open link tag, %2$s: close link tag, %3$s: br tag
+        esc_html__( 'Get started by %1$sadding a URL%2$s that you want to turn into a pretty link.%3$sCome back to see how many times it was clicked.' , 'pretty-link' ),
+        '<a href="' . esc_url(admin_url( 'admin.php?page=add-new-pretty-link' )) . '">',
+        '</a>',
+        '<br>'
+      );
     }
 
     //Pro users don't want to be spammed
@@ -1383,6 +1230,46 @@ class PrliUtils {
 
   public static function db_now($format='Y-m-d H:i:s') {
     return self::ts_to_mysql_date(time(),$format);
+  }
+
+  public static function is_post_request() {
+    if(isset($_SERVER['REQUEST_METHOD'])) {
+      return (strtolower($_SERVER['REQUEST_METHOD']) == 'post');
+    }
+    else {
+      return (isset($_POST) && !empty($_POST));
+    }
+  }
+
+  public static function is_get_request() {
+    if(isset($_SERVER['REQUEST_METHOD'])) {
+      return (strtolower($_SERVER['REQUEST_METHOD']) == 'get');
+    }
+    else {
+      return (!isset($_GET) || empty($_GET));
+    }
+  }
+
+  /**
+   * Sanitize the HTML in the given string
+   *
+   * @param   string  $value
+   * @return  string
+   */
+  public static function sanitize_html($value) {
+    return current_user_can('unfiltered_html') ? $value : wp_kses_post($value);
+  }
+
+  /**
+   * Ensure the given number $x is between $min and $max inclusive
+   *
+   * @param   mixed  $x
+   * @param   mixed  $min
+   * @param   mixed  $max
+   * @return  mixed
+   */
+  public static function clamp($x, $min, $max) {
+    return min(max($x, $min), $max);
   }
 }
 

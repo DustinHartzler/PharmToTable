@@ -8,7 +8,8 @@ jQuery(document).ready(function($) {
         type: 'inline'
       },
       closeOnBgClick: false,
-      closeBtnInside: false
+      closeBtnInside: false,
+      mainClass: 'mfp-prli'
     });
   });
 
@@ -68,6 +69,29 @@ jQuery(document).ready(function($) {
         window.location.href = $(_this).data('href');
       }
     });
+  });
+
+  $('.prli-leave-feedback').on('click', function () {
+    var _this = this;
+
+    prli_delay_popup('rating', function() {
+      $(_this).trigger('prli-popup-delayed',['rating']);
+      $.magnificPopup.close();
+    });
+  });
+
+  $('.prli-rating-enjoy-yes-popup').on('click', function (e) {
+    e.preventDefault();
+
+    $('#prli-rating-stage-one').hide();
+    $('#prli-rating-stage-two-yes').show();
+  });
+
+  $('.prli-rating-enjoy-no-popup').on('click', function (e) {
+    e.preventDefault();
+
+    $('#prli-rating-stage-one').hide();
+    $('#prli-rating-stage-two-no').show();
   });
 });
 

@@ -16,7 +16,7 @@ class PrliClicksHelper {
 
     // Insert search string
     if(!empty($search_str)) {
-      $search_params = explode(' ', esc_html($search_str));
+      $search_params = explode(' ', $search_str);
 
       $first_pass = true;
       foreach($search_params as $search_param) {
@@ -103,6 +103,17 @@ class PrliClicksHelper {
 
     return compact( 'count_where_clause', 'sort_str', 'sdir_str', 'search_str',
                     'where_clause', 'order_by', 'sort_params', 'page_params' );
+  }
+
+  /**
+   * Remove nefarious characters from a cell value
+   *
+   * @param  string $value Cell value
+   *
+   * @return string
+   */
+  public static function esc_spreadsheet_cell( $value ) {
+    return preg_replace( '/^[-=+@]*/', '', $value );
   }
 }
 

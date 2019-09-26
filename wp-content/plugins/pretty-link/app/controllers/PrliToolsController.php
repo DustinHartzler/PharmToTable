@@ -45,13 +45,18 @@ class PrliToolsController extends PrliBaseController {
   public static function bookmark($target_url) {
     global $prli_options, $prli_blogurl, $prli_link, $plp_update;
 
-    $redirect_type = esc_html((isset($_GET['rt']) and $_GET['rt'] != '-1')?$_GET['rt']:'');
-    $track = esc_html((isset($_GET['trk']) and $_GET['trk'] != '-1')?$_GET['trk']:'');
-    $group = esc_html((isset($_GET['grp']) and $_GET['grp'] != '-1')?$_GET['grp']:'');
+    $redirect_type = isset($_GET['rt']) && is_string($_GET['rt']) && $_GET['rt'] != '-1' ? sanitize_key(stripslashes($_GET['rt'])) : '';
+    $track = isset($_GET['trk']) && is_numeric($_GET['trk']) && $_GET['trk'] != '-1' ? (int) $_GET['trk'] : '';
+    $category = isset($_GET['ct']) && is_numeric($_GET['ct']) && $_GET['ct'] != '-1' ? (int) $_GET['ct'] : '';
 
-    $result = prli_create_pretty_link( esc_url_raw($target_url, array('http','https')), '', '', '', $group, $track, '', $redirect_type );
+    $result = prli_create_pretty_link( esc_url_raw($target_url, array('http','https')), '', '', '', 0, $track, '', $redirect_type );
 
     $plink = $prli_link->getOne($result);
+
+    if ($plp_update->is_installed() && $category) {
+      wp_set_object_terms($plink->link_cpt_id, $category, PlpLinkCategoriesController::$ctax);
+    }
+
     $target_url = $plink->url;
     $target_url_title = $plink->name;
     $pretty_link = $prli_blogurl . PrliUtils::get_permalink_pre_slug_uri() . $plink->slug;
