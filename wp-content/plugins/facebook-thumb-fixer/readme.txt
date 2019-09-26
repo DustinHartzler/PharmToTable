@@ -1,11 +1,17 @@
-=== Thumb Fixer for Facebook ===
+=== Thumb Fixer for Social Media ===
 Contributors: mikeyott
 Tags: facebook, thumb, fixer, default, thumbnail, thumbnails, thumbs, og:image, og:description, og:title, open, graph, open graph
 Requires at least: 4.0
-Tested up to: 4.9.4
+Tested up to: 5.2.3
 Stable tag: trunk
 
-Control how your thumbnails are viewed when a post is shared on Facebook, Twitter Google+ (and other social media platforms that use Open Graph protcol).
+Control how your thumbnails are viewed when a post is shared on social media platfoms.
+
+== IMPORTANT: End Of Life Notice ==
+
+Please be advised that this plugin will soon no longer be maintained. It is recommended you switch to the free (and better) <a href="https://wordpress.org/plugins/open-graphite/">Open Graphite</a> plugin instead. I've spent over 12 months building and testing Open Graphite, and I know you'll find it far more useful. If you prefer to try something else, no worries, and I sincerely thank you for using this plugin all the same.
+
+If you have any questions about this, I'll personally respond to any messages sent <a href="https://rocketapps.com.au/contact/">here</a>. Have fun!
 
 == Description ==
 
@@ -25,7 +31,7 @@ Deactivate the plugin, delete if desired.
 
 == Official Web Site (and support) ==
 
-<a href="https://wordpress.org/support/plugin/facebook-thumb-fixer">Facebook Thumb Fixer Support</a> at the official Wordpress repository.
+<a href="https://wordpress.org/support/plugin/facebook-thumb-fixer">Thumb Fixer for Social Media Support</a> at the official Wordpress repository.
 
 == How to set a fall-back image ==
 
@@ -56,6 +62,21 @@ Note: If no selection is made for the home page then the Object Type will defaul
 Divi theme is not houring the WordPress strip_shortcodes() function, and so if you have a shortcode early on in a post you may see unexpected results when sharing on social media.
 
 == Changelog ==
+
+= 1.7.9 =
+
+Renamed plugin and changed media to comply with Facebook legal notice.
+Made admin warning dismissible.
+
+= 1.7.8 =
+
+End of life notice.
+
+= 1.7.7 =
+
+Open Graph image ALT attribute (og:image:alt)
+Open Graph image width and height attributes (og:image:width and og:image:height)
+Added Twitter card support
 
 = 1.7.6 =
 

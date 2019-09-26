@@ -11,7 +11,7 @@ if ( has_post_thumbnail() ) { ?>
 
 	<hr class="ftf-rule" />
 	
-	<?php _e( 'If in doubt, try forcing Facebook to fetch your page with their debugging tool.', 'facebook-thumb-fixer' ); ?>
+	<p><?php _e( 'If in doubt, try forcing Facebook to fetch your page with their debugging tool.', 'facebook-thumb-fixer' ); ?></p>
 	<p><a href="https://developers.facebook.com/tools/debug/sharing/?q=<?php echo get_the_permalink(); ?>" target="_blank" class="debugger-button"><?php _e( 'Debug', 'facebook-thumb-fixer' ); ?></a></p>
 	
 	<?php if ($image_width < 600 || $image_height < 315) { ?>

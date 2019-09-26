@@ -1,13 +1,13 @@
 <?php
 /*
-Plugin Name: Thumbnail Fixer for Facebook.
-Plugin URI: https://wordpress.org/support/plugin/facebook-thumb-fixer
-Description: Control how your thumbnails are viewed when a post is shared on Facebook.
-Author: Michael Ott
-Version: 1.7.6
-Author URI: http://michaelott.id.au
-Text Domain: facebook-thumb-fixer
-Domain Path: /languages/
+Plugin Name: 	Thumbnail Fixer for Social Media.
+Plugin URI: 	https://wordpress.org/support/plugin/facebook-thumb-fixer
+Description: 	Control how your thumbnails are viewed when a post is shared on social media.
+Author: 		Michael Ott
+Version: 		1.7.9
+Author URI: 	https://rocketapps.com.au/
+Text Domain: 	facebook-thumb-fixer
+Domain Path: 	/languages/
 */
 
 // Look for translation file.
@@ -57,6 +57,28 @@ function ftf_admin_notice(){
         delete_transient( 'ftf-admin-notice' );
     }
 }
+
+function deprecation_notice() {
+    ?>
+    <div class="notice error ftf-notice notice-success is-dismissible">
+		<?php $open_graphite_url = 'https://wordpress.org/plugins/open-graphite/'; ?>
+        <p><?php printf( __('<strong>Important:</strong> The <strong>Thumb Fixer for Social Media</strong> plugin is no longer maintained. It is recommended you switch to the free (and better) <a href="%s">Open Graphite</a> plugin instead.', 'facebook-thumb-fixer' ), $open_graphite_url); ?></p>
+    </div>
+	<script>
+		$('.ftf-notice').click(function(){
+			document.cookie="ftfwarned=yes; expires=Wed, 1 Jan 2020 12:00:00 UTC; path=/";
+			var delay = 0; 
+		});
+		<?php 
+			$warned = $_COOKIE['ftfwarned'];
+			if($warned == 'yes' && is_user_logged_in()) { ?>
+				$('.ftf-notice').remove();
+			<?php }
+		?>
+	</script>
+    <?php
+}
+add_action( 'admin_notices', 'deprecation_notice' );
 
 // Add image path field into the general settings page
 $setting_default_fb_thumb = new general_setting_default_fb_thumb();
@@ -350,14 +372,12 @@ $ftf_otmeta = new ftf_otmeta;
 add_action( 'admin_menu', 'ftfixer_menu' );
 function ftfixer_menu() {
 	$icon_path = plugins_url('images/', __FILE__ ) . 'facebook-admin.png';
-	add_menu_page( __( 'FB Thumb Fixer' ), __( 'FB Thumb Fixer' ), 'manage_options', 'facebook-thumb-fixer', 'myfbft_plugin_options' ,$icon_path);
+	add_menu_page( __( 'Thumb Fixer' ), __( 'Thumb Fixer' ), 'manage_options', 'facebook-thumb-fixer', 'myfbft_plugin_options' ,$icon_path);
 }
 function myfbft_plugin_options() {
 	if ( !current_user_can( 'read' ) )  { // This help page is accessible to anyone
 		wp_die( __( 'You do not have sufficient permissions to access this page.', 'facebook-thumb-fixer' ) );
 } ?>
-
-<a href="https://taskrocket.info/?source=ftf" target="_blank" class="task-rocket">Try</a></p>
 
 <div class="wrap ftf-wrap">
     <h2>Facebook Thumb Fixer</h2>
@@ -367,7 +387,7 @@ function myfbft_plugin_options() {
 	list($width, $height) = @getimagesize($fbt_value); ?>
 
 	<?php $settings_URL = get_admin_url() . 'options-general.php#dfb'; ?>
-	<p class="ftf-good"><?php echo sprintf( __( 'Well done! You have a default Facebook thumbnail set. You can change it any time <a href="%1$s">here</a>.', 'facebook-thumb-fixer' ), $settings_URL); ?></p>
+	<p class="ftf-good">&#10004; <?php echo sprintf( __( 'Well done! You have a default Facebook thumbnail set. You can change it any time <a href="%1$s">here</a>.', 'facebook-thumb-fixer' ), $settings_URL); ?></p>
     
 	<h2><?php _e( 'Homepage Preview', 'facebook-thumb-fixer' ); ?></h2>
 	<p><?php _e( 'This is an approximate preview of your homepage when shared on Facebook:', 'facebook-thumb-fixer' ); ?></p>
@@ -448,6 +468,8 @@ function myfbft_plugin_options() {
 	<p><?php echo sprintf( __( 'Reach for support at the <a href="%1$s" target="_blank">Wordpress plug-in repo</a>.', 'facebook-thumb-fixer' ), $support_URL) ?></p>
 
 </div>
+
+<?php require_once('my-tools.php'); ?>
 
 <?php }
 add_action('wp_head', 'fbfixhead');

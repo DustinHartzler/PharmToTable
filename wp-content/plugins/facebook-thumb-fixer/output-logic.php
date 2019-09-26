@@ -1,6 +1,7 @@
 <?php
 global $post;
-$featuredimg 			= wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), "Full");
+$featured_image         = wp_get_attachment_image_src( get_post_thumbnail_id($post->ID), 'Full');
+$post_thumbnail_id      = get_post_thumbnail_id( $post_id );
 $ftf_description		= get_the_excerpt($post);
 $ot 					= get_post_meta($post->ID, 'ftf_open_type', true);
 $title 					= get_the_title($post->ID);
@@ -10,6 +11,20 @@ $home_description 		= get_bloginfo('description');
 $homepage_object_type	= get_option( 'homepage_object_type');
 $post_page_object_type  = get_post_meta($post->ID, 'ftf_open_type', true);
 $dog                    = get_post_meta($post->ID, "disable_open_graph", TRUE);
+$home_thumb_path        = get_option('default_fb_thumb');
+$home_thumb_id          = attachment_url_to_postid($home_thumb_path);
+
+
+
+if(is_home()) {
+    $alt                = get_post_meta($home_thumb_id, '_wp_attachment_image_alt', true);
+    $image_width        = wp_get_attachment_image_src($home_thumb_id, 'Full');
+    $image_height       = wp_get_attachment_image_src($home_thumb_id, 'Full');
+} else {
+    $alt                = get_post_meta($post_thumbnail_id, '_wp_attachment_image_alt', true);
+    $image_width        = wp_get_attachment_image_src($post_thumbnail_id, 'Full');
+    $image_height       = wp_get_attachment_image_src($post_thumbnail_id, 'Full');
+}
 
 if($post_page_description) {
     $post_page_description = $post_page_description;
@@ -49,11 +64,21 @@ if ( !is_home() ) {
             <meta property="og:title" content="' . str_replace('"', '', $title) . '" />
             <meta property="og:description" content="' . strip_shortcodes(str_replace('"', '', $post_page_description)) . '" />
             <meta property="og:site_name" content="' . str_replace('"', '', $blog_name) . '" />
-            <meta property="og:image" content="' . $featuredimg[0] . '" />
+            <meta property="og:image" content="' . $featured_image[0] . '" />
+            <meta property="og:image:alt" content="' . $alt . '" />
+            <meta property="og:image:width" content="' . $image_width[1] . '" />
+            <meta property="og:image:height" content="' . $image_height[2] . '" />
 
             <meta itemscope itemtype="'. $post_page_object_type . '" />
             <meta itemprop="description" content="' . strip_shortcodes(str_replace('"', '', $post_page_description)) . '" />
-            <meta itemprop="image" content="' . $featuredimg[0] . '" />
+            <meta itemprop="image" content="' . $featured_image[0] . '" />
+
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:url" content="' . get_permalink() . '" />
+            <meta name="twitter:title" content="' . str_replace('"', '', $title) . '" />
+            <meta name="twitter:description" content="' . strip_shortcodes(str_replace('"', '', $post_page_description)) . '" />
+            <meta name="twitter:image" content="' . $featured_image[0] . '" />
+
             ';
         } else { //...otherwise, if there is no post image.
             $ftf_head = '
@@ -64,10 +89,19 @@ if ( !is_home() ) {
             <meta property="og:description" content="' . strip_shortcodes(str_replace('"', '', $post_page_description)) . '" />
             <meta property="og:site_name" content="' . str_replace('"', '', $blog_name) . '" />
             <meta property="og:image" content="' . get_option('default_fb_thumb') . '" />
+            <meta property="og:image:alt" content="' . $alt . '" />
+            <meta property="og:image:width" content="' . $image_width[1] . '" />
+            <meta property="og:image:height" content="' . $image_height[2] . '" />
 
             <meta itemscope itemtype="'. $post_page_object_type . '" />
             <meta itemprop="description" content="' . strip_shortcodes(str_replace('"', '', $post_page_description)) . '" />
             <meta itemprop="image" content="' . get_option('default_fb_thumb') . '" />
+
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:url" content="' . get_permalink() . '" />
+            <meta name="twitter:title" content="' . str_replace('"', '', $title) . '" />
+            <meta name="twitter:description" content="' . strip_shortcodes(str_replace('"', '', $post_page_description)) . '" />
+            <meta name="twitter:image" content="' . $featured_image[0] . '" />
             ';
         }
 
@@ -83,9 +117,18 @@ if ( !is_home() ) {
     <meta property="og:description" content="' . strip_shortcodes(str_replace('"', '', $home_description)) . '" />
     <meta property="og:site_name" content="' . str_replace('"', '', $blog_name) . '" />
     <meta property="og:image" content="' . get_option('default_fb_thumb') . '" />
+    <meta property="og:image:alt" content="' . $alt . '" />
+    <meta property="og:image:width" content="' . $image_width[1] . '" />
+    <meta property="og:image:height" content="' . $image_height[2] . '" />
 
     <meta itemscope itemtype="'. $homepage_object_type . '" />
     <meta itemprop="description" content="' . strip_shortcodes(str_replace('"', '', $home_description)) . '" />
     <meta itemprop="image" content="' . get_option('default_fb_thumb') . '" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="' . get_option('home') . '" />
+    <meta name="twitter:title" content="' . str_replace('"', '', $blog_name) . '" />
+    <meta name="twitter:description" content="' . strip_shortcodes(str_replace('"', '', $home_description)) . '" />
+    <meta name="twitter:image" content="' . get_option('default_fb_thumb') . '" />
     ';
 }
