@@ -126,7 +126,7 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 	public function column_timestamp( $log ) {
 		return esc_html(
 			mysql2date(
-				get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+				'Y-m-d H:i:s',
 				$log['timestamp']
 			)
 		);
@@ -375,11 +375,11 @@ class WC_Admin_Log_Table_List extends WP_List_Table {
 			$where_values[]     = '%' . $wpdb->esc_like( wc_clean( wp_unslash( $_REQUEST['s'] ) ) ) . '%';
 		}
 
-		if ( ! empty( $where_conditions ) ) {
-			return $wpdb->prepare( 'WHERE 1 = 1 AND ' . implode( ' AND ', $where_conditions ), $where_values );
-		} else {
+		if ( empty( $where_conditions ) ) {
 			return '';
 		}
+
+		return $wpdb->prepare( 'WHERE 1 = 1 AND ' . implode( ' AND ', $where_conditions ), $where_values );
 	}
 
 	/**

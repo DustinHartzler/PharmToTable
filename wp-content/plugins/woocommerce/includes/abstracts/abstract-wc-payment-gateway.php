@@ -441,6 +441,13 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 			array( 'jquery' ),
 			WC()->version
 		);
+
+		wp_localize_script(
+			'woocommerce-tokenization-form', 'wc_tokenization_form_params', array(
+				'is_registration_required' => WC()->checkout()->is_registration_required(),
+				'is_logged_in'             => is_user_logged_in(),
+			)
+		);
 	}
 
 	/**
@@ -509,7 +516,7 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 	 * @since 2.6.0
 	 */
 	public function save_payment_method_checkbox() {
-		printf(
+		$html = sprintf(
 			'<p class="form-row woocommerce-SavedPaymentMethods-saveNew">
 				<input id="wc-%1$s-new-payment-method" name="wc-%1$s-new-payment-method" type="checkbox" value="true" style="width:auto;" />
 				<label for="wc-%1$s-new-payment-method" style="display:inline;">%2$s</label>
@@ -517,6 +524,8 @@ abstract class WC_Payment_Gateway extends WC_Settings_API {
 			esc_attr( $this->id ),
 			esc_html__( 'Save to account', 'woocommerce' )
 		);
+		
+		echo apply_filters( 'woocommerce_payment_gateway_save_new_payment_method_option_html', $html, $this );
 	}
 
 	/**
