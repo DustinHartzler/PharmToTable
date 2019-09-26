@@ -1,0 +1,3 @@
+<a class="fb og-preview" id="facebook"><img src="<?php echo plugins_url('../images/facebook.svg', __FILE__ );?>" /><?php _e( 'Facebook', 'open-graphite' ); ?><?php echo $utp_notice; ?></a>
+<a class="tw og-preview" id="twitter"><img src="<?php echo plugins_url('../images/twitter.svg', __FILE__ );?>" /><?php _e( 'Twitter', 'open-graphite' ); ?><?php echo $utp_notice; ?></a>
+<a class="li og-preview" id="linkedin"><img src="<?php echo plugins_url('../images/linkedin.svg', __FILE__ );?>" /><?php _e( 'Linkedin', 'open-graphite' ); ?><?php echo $utp_notice; ?></a>
