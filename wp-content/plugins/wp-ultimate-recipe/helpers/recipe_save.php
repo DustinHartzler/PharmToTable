@@ -45,7 +45,9 @@ class WPURP_Recipe_Save {
                 $new = isset( $_POST[$field] ) ? $_POST[$field] : null; // Sanitized on next line.
 
                 // Sanitize recipe fields.
-                $new = is_array( $new ) ? array_map( 'wp_kses_post', $new ) : wp_kses_post( $new );
+                $new = is_array( $new ) ? array_map( function( $n ) {
+                    return is_array( $n ) ? array_map( 'wp_kses_post', $n ) : wp_kses_post( $n );
+                }, $new ) : wp_kses_post( $new );
 
                 // Field specific adjustments
                 if( isset( $new ) && $field == 'recipe_ingredients' )

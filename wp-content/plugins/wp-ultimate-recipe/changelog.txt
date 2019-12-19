@@ -1,6 +1,9 @@
+= 3.12.8 =
+* Fix: Saving ingredients and instructions in WordPress 5.3.1
+
 = 3.12.7 =
-Improvement: Setting to disable WP Recipe Maker nag
-Fix: Recipe field sanitization
+* Improvement: Setting to disable WP Recipe Maker nag
+* Fix: Recipe field sanitization
 
 = 3.12.6 =
 * Fix: JavaScript error when using minified assets
