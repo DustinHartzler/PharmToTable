@@ -59,6 +59,15 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 
 == Changelog ==
 
+= 1.0.9 =
+
+Fixed issue where Woocommerce shop page was using product open graph data.
+Removed Woocommerce post types from enabled post types list.
+
+= 1.0.8 =
+
+Added locale to open graph meta.
+
 = 1.0.7 =
 
 Added missing text domain function.

@@ -3,7 +3,7 @@
 Plugin Name: 	Open Graphite
 Plugin URI: 	https://wordpress.org/plugins/open-graphite/
 Description: 	Control how your content is viewed when shared on social media.
-Version: 		1.0.7
+Version: 		1.0.9
 Author: 		Rocket Apps
 Author URI: 	https://rocketapps.com.au
 Text Domain: 	open-graphite
@@ -449,6 +449,7 @@ function openghead() {
 
 		$open_graphite_head = '
 <!--/ Open Graphite Start /-->
+<meta property="og:locale" content="' . get_locale() . '" />
 <meta property="og:type" content="' . $ot . '" />
 <meta property="og:url" content="' . $home_url . '" />
 <meta property="og:title" content="' . esc_html($default_title) . '" />
@@ -475,8 +476,21 @@ function openghead() {
 	/* Other pages, posts and custom post types */
 	} else {
 
-		if (isset($ogoptions['post_types']) && in_array(get_post_type(), $ogoptions['post_types'])) {
-			$id  						= get_the_ID();
+		if (isset($ogoptions['post_types']) && in_array(get_post_type(), $ogoptions['post_types']) || class_exists( 'WooCommerce' )) {
+			
+			if(class_exists( 'WooCommerce' )) {
+				if(is_shop()) { 
+					$id					= get_option( 'woocommerce_shop_page_id' );
+					$open_graphite_url	= get_permalink( wc_get_page_id( 'shop' ) );
+				} else {
+					$id					= get_the_ID();
+					$open_graphite_url	= get_permalink();
+				}
+			} else {
+				$id					= get_the_ID();
+				$open_graphite_url	= get_permalink();
+			}
+
 			$open_graphite_title		= get_post_meta($id, '_open_graph_title', true);
 
 			if ( ! empty( $ogoptions['open_graphite_open_type_post_default'] ) ) {
@@ -491,7 +505,6 @@ function openghead() {
 				$open_graphite_description = get_post_meta($id, '_open_graph_description', true);
 			}
 		
-			$open_graphite_url 			= get_permalink();
 			$openg_objects 				= isset( $ogoptions['objects'] ) ? $ogoptions['objects'] : array();
 			$open_graphite_image		= get_post_meta($id, '_custom_image', true);
 			
@@ -519,6 +532,7 @@ function openghead() {
 			
 			$open_graphite_head = '
 <!--/ Open Graphite /-->
+<meta property="og:locale" content="' . get_locale() . '" />
 <meta property="og:type" content="' . $ot . '" />
 <meta property="og:url" content="' . $open_graphite_url . '" />
 <meta property="og:title" content="' . esc_html($open_graphite_title) . '" />
