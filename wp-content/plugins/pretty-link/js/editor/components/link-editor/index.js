@@ -163,12 +163,14 @@ class InlineLinkUI extends Component {
     this.submitLink = this.submitLink.bind( this );
     this.onKeyDown = this.onKeyDown.bind( this );
     this.onChangeInputValue = this.onChangeInputValue.bind( this );
+    this.setNoFollow = this.setNoFollow.bind( this );
     this.setLinkTarget = this.setLinkTarget.bind( this );
     this.onClickOutside = this.onClickOutside.bind( this );
     this.resetState = this.resetState.bind( this );
     this.autocompleteRef = createRef();
 
     this.state = {
+      noFollow: false,
       opensInNewWindow: false,
       inputValue: '',
       newLinkUrl: '',
@@ -224,6 +226,24 @@ class InlineLinkUI extends Component {
     }
   }
 
+  setNoFollow( noFollow ) {
+    const { activeAttributes: { url = '' }, value, onChange } = this.props;
+
+    this.setState( { noFollow } );
+
+    // Apply now if URL is not being edited.
+    if ( ! isShowingInput( this.props, this.state ) ) {
+      const selectedText = getTextContent( slice( value ) );
+
+      onChange( applyFormat( value, createLinkFormat( {
+        url,
+        opensInNewWindow,
+        text: selectedText,
+        noFollow
+      } ) ) );
+    }
+  }
+
   editLink( event ) {
     this.setState( { editLink: true } );
     event.preventDefault();
@@ -231,13 +251,14 @@ class InlineLinkUI extends Component {
 
   submitLink( event ) {
     const { isActive, value, onChange, speak } = this.props;
-    const { inputValue, opensInNewWindow } = this.state;
+    const { inputValue, opensInNewWindow, noFollow } = this.state;
     const url = prependHTTP( inputValue );
     const selectedText = getTextContent( slice( value ) );
     const format = createLinkFormat( {
       url,
       opensInNewWindow,
       text: selectedText,
+      noFollow
     } );
 
     event.preventDefault();
@@ -285,7 +306,7 @@ class InlineLinkUI extends Component {
       return null;
     }
 
-    const { inputValue, opensInNewWindow, newLinkUrl, newLinkSlug, creatingLink, createdLink, createdLinkError } = this.state;
+    const { inputValue, noFollow, opensInNewWindow, newLinkUrl, newLinkSlug, creatingLink, createdLink, createdLinkError } = this.state;
     const showInput = isShowingInput( this.props, this.state );
 
     return (
@@ -304,6 +325,11 @@ class InlineLinkUI extends Component {
                 label={ __( 'Open in New Tab' ) }
                 checked={ opensInNewWindow }
                 onChange={ this.setLinkTarget }
+              />
+              <ToggleControl
+                label={ __( 'Nofollow' ) }
+                checked={ noFollow }
+                onChange={ this.setNoFollow }
               />
             </div>
             <div className="pretty-link-inserter-form-container">

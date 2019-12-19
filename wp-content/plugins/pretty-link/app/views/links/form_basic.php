@@ -11,7 +11,7 @@
             ); ?>
     </th>
     <td>
-      <select id="redirect_type" name="redirect_type" style="padding: 0px; margin: 0px;">
+      <select id="redirect_type" name="redirect_type">
         <option value="307"<?php echo $values['redirect_type']['307']; ?>><?php esc_html_e("307 (Temporary)", 'pretty-link') ?>&nbsp;</option>
         <option value="302"<?php echo $values['redirect_type']['302']; ?>><?php esc_html_e("302 (Temporary)", 'pretty-link') ?>&nbsp;</option>
         <option value="301"<?php echo $values['redirect_type']['301']; ?>><?php esc_html_e("301 (Permanent)", 'pretty-link') ?>&nbsp;</option>

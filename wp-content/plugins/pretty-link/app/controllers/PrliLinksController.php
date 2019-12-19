@@ -951,7 +951,7 @@ class PrliLinksController extends PrliBaseController {
       }
       elseif($_GET['orderby']=='clicks') {
         $orderby = "
-          clicks {$order}
+          CAST(clicks AS unsigned) {$order}
         ";
       }
     }

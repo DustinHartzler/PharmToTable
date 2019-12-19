@@ -89,7 +89,7 @@ export function isValidHref( href ) {
  *
  * @return {Object} The final format object.
  */
-export function createLinkFormat( { url, opensInNewWindow, text } ) {
+export function createLinkFormat( { url, opensInNewWindow, text, noFollow } ) {
   const format = {
     type: 'core/link',
     attributes: {
@@ -97,13 +97,24 @@ export function createLinkFormat( { url, opensInNewWindow, text } ) {
     },
   };
 
+  format.attributes.rel = '';
+
+  if ( noFollow ) {
+    format.attributes.rel += 'nofollow ';
+  }
+
   if ( opensInNewWindow ) {
     // translators: accessibility label for external links, where the argument is the link text
     const label = sprintf( __( '%s (opens in a new tab)' ), text );
 
     format.attributes.target = '_blank';
-    format.attributes.rel = 'noreferrer noopener';
+    format.attributes.rel += 'noreferrer noopener';
+
     format.attributes[ 'aria-label' ] = label;
+  }
+
+  if ( '' === format.attributes.rel ) {
+    delete format.attributes.rel;
   }
 
   return format;
