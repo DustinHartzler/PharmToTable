@@ -14,6 +14,5 @@ var drawPrliChart = function() {
   hitsChart.draw(hitsChartData, {height: '300', title: PrliReport.titles});
 };
 
-google.load("visualization", "1", {packages:["corechart"]});
-google.setOnLoadCallback(drawPrliChart);
-
+google.charts.load('current', { packages: ['corechart'] });
+google.charts.setOnLoadCallback(drawPrliChart);

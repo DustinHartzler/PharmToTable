@@ -51,6 +51,14 @@
           </select>
         </div>
         <div class="prlitinymce-options-row">
+          <label><?php esc_html_e('Sponsored', 'pretty-link'); ?>:</label>
+          <select name="prli_insert_link_sponsored" id="prli_insert_link_sponsored">
+            <option value="default"><?php esc_html_e('Default', 'pretty-link'); ?></option>
+            <option value="enabled"><?php esc_html_e('Enabled', 'pretty-link'); ?></option>
+            <option value="disabled"><?php esc_html_e('Disabled', 'pretty-link'); ?></option>
+          </select>
+        </div>
+        <div class="prlitinymce-options-row">
           <label><?php esc_html_e('Tracking', 'pretty-link'); ?>:</label>
           <select name="prli_insert_link_tracking" id="prli_insert_link_tracking">
             <option value="default"><?php esc_html_e('Default', 'pretty-link'); ?></option>
@@ -88,6 +96,7 @@
         </div>
         <div class="prlitinymce-options-row" id="existing_link_insert">
           <input type="hidden" name="existing_link_nofollow" id="existing_link_nofollow" value="0" />
+          <input type="hidden" name="existing_link_sponsored" id="existing_link_sponsored" value="0" />
           <a href="javascript:PrliPopUpHandler.insert_existing()" class="prli_button"><?php esc_html_e('Insert Existing Pretty Link', 'pretty-link'); ?></a>
         </div>
       </div>

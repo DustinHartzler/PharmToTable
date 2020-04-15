@@ -107,11 +107,23 @@
                     <label for="<?php echo esc_attr($link_nofollow); ?>"><?php esc_html_e('Enable No Follow', 'pretty-link'); ?></label>
                     <?php PrliAppHelper::info_tooltip('prli-options-add-nofollow',
                                                       esc_html__('Add No Follow', 'pretty-link'),
-                                                      esc_html__('Add the \'nofollow\' attribute by default to new links.', 'pretty-link'));
+                                                      esc_html__('Add the \'nofollow\' attribute by default to new links. This will add nofollow and noindex in the HTTP Response headers when enabled.', 'pretty-link'));
                     ?>
                   </th>
                   <td>
                     <input type="checkbox" name="<?php echo esc_attr($link_nofollow); ?>" <?php checked($prli_options->link_nofollow != 0); ?>/>
+                  </td>
+                </tr>
+                <tr valign="top">
+                  <th scope="row">
+                    <label for="<?php echo esc_attr($link_sponsored); ?>"><?php esc_html_e('Enable Sponsored', 'pretty-link'); ?></label>
+                    <?php PrliAppHelper::info_tooltip('prli-options-add-sponsored',
+                                                      esc_html__('Add Sponsored', 'pretty-link'),
+                                                      esc_html__('Add the \'sponsored\' attribute by default to new links. This will add sponsored in the HTTP Response headers when enabled.', 'pretty-link'));
+                    ?>
+                  </th>
+                  <td>
+                    <input type="checkbox" name="<?php echo esc_attr($link_sponsored); ?>" <?php checked($prli_options->link_sponsored != 0); ?>/>
                   </td>
                 </tr>
                 <tr valign="top">
@@ -166,7 +178,7 @@
                     <th scope="row">
                       <label><?php esc_html_e('Enable Google Analytics', 'pretty-link') ?></label>
                       <?php PrliAppHelper::info_tooltip('prli-options-use-ga', esc_html__('Enable Google Analytics', 'pretty-link'),
-                        esc_html__("Requires Google Analyticator, Google Analytics by MonsterInsights (formerly Yoast), or the Google Analytics Plugin to be installed and configured on your site.", 'pretty-link'));
+                        esc_html__('Requires the Google Analyticator plugin be installed. If you rely on MonsterInsights plugin for Google Analytics, leave this setting disabled as it has no affect.', 'pretty-link'));
                       ?>
                       <?php echo PrliAppHelper::pro_only_feature_indicator('option-google-analytics'); ?>
                     </th>
@@ -376,6 +388,28 @@
                             sprintf(
                               // translators: %1$s: open code tag, %2$s: close code tag, %3$s: open strong tag, %4$s close strong tag
                               esc_html__('This adds the html %1$sNOFOLLOW%2$s attribute to all keyword replacement links. %3$sNote:%4$s This does not apply to url replacements--only keyword replacements.', 'pretty-link'),
+                              '<code>',
+                              '</code>',
+                              '<strong>',
+                              '</strong>'
+                            ));
+                          ?>
+                          <?php echo PrliAppHelper::pro_only_feature_indicator('option-replacement-no-follows'); ?>
+                        </label>
+                      </th>
+                      <td>
+                        <input type="checkbox" disabled />
+                      </td>
+                    </tr>
+                    <tr valign="top" class="prli-pro-only">
+                      <th scope="row">
+                        <label>
+                          <?php esc_html_e('Add Sponsored', 'pretty-link'); ?>
+                          <?php PrliAppHelper::info_tooltip('prli-keyword-links-sponsored',
+                            esc_html__('Add \'sponsored\' attribute to all Keyword Pretty Links', 'pretty-link'),
+                            sprintf(
+                              // translators: %1$s: open code tag, %2$s: close code tag, %3$s: open strong tag, %4$s close strong tag
+                              esc_html__('This adds the html %1$sSPONSORED%2$s attribute to all keyword replacement links. %3$sNote:%4$s This does not apply to url replacements--only keyword replacements.', 'pretty-link'),
                               '<code>',
                               '</code>',
                               '<strong>',

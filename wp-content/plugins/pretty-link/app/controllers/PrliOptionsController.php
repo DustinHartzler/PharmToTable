@@ -14,6 +14,7 @@ class PrliOptionsController extends PrliBaseController {
       'link_prefix' => 'prli_link_prefix',
       'auto_trim_clicks' => 'prli_auto_trim_clicks',
       'link_nofollow' => 'prli_link_nofollow',
+      'link_sponsored' => 'prli_link_sponsored',
       'link_redirect_type' => 'prli_link_redirect_type',
       'hidden_field_name' => 'prli_update_options'
     );
@@ -96,6 +97,7 @@ class PrliOptionsController extends PrliBaseController {
     $prli_options->link_prefix = (int)isset($params[ $link_prefix ]);
     $prli_options->auto_trim_clicks = (int)isset($params[ $auto_trim_clicks ]);
     $prli_options->link_nofollow = (int)isset($params[ $link_nofollow ]);
+    $prli_options->link_sponsored = (int)isset($params[ $link_sponsored ]);
     $prli_options->link_redirect_type = isset($params[ $link_redirect_type ]) && is_string($params[ $link_redirect_type ]) ? sanitize_key(stripslashes($params[ $link_redirect_type ])) : '307';
 
     do_action('prli-update-options', $params);

@@ -17,6 +17,7 @@ var PrliPopUpHandler = {
     var link_text   = jQuery('#prli_insert_link_link_text').val();
     var redirect    = jQuery('#prli_insert_link_redirect').val();
     var nofollow    = jQuery('#prli_insert_link_nofollow').val();
+    var sponsored   = jQuery('#prli_insert_link_sponsored').val();
     var tracking    = jQuery('#prli_insert_link_tracking').val();
     var new_tab     = jQuery('#prli_insert_link_new_tab').is(':checked');
     var good_slug   = jQuery('#prli_is_valid_slug').val();
@@ -27,6 +28,9 @@ var PrliPopUpHandler = {
     }
     if(nofollow == 'default') {
       nofollow = prliTinymceL10n.default_nofollow;
+    }
+    if(sponsored == 'default') {
+      sponsored = prliTinymceL10n.default_sponsored;
     }
     if(tracking == 'default') {
       tracking = prliTinymceL10n.default_tracking;
@@ -52,6 +56,7 @@ var PrliPopUpHandler = {
         slug: slug,
         redirect: redirect,
         nofollow: nofollow,
+        sponsored: sponsored,
         tracking: tracking
       };
 
@@ -63,6 +68,7 @@ var PrliPopUpHandler = {
 
         if(trimmed_data == 'true') {
           var output = '';
+          var rel = '';
           var pretty_link = prliTinymceL10n.home_url + slug;
 
           //Set the link text to the link itself
@@ -78,7 +84,15 @@ var PrliPopUpHandler = {
           }
 
           if(nofollow == 'enabled') {
-            output += 'rel="nofollow" ';
+            rel += 'nofollow ';
+          }
+
+          if(sponsored == 'enabled') {
+            rel += 'sponsored ';
+          }
+
+          if(rel != '') {
+            output += ' rel="' + rel + '" ';
           }
 
           output += '>' + link_text + '</a>';
@@ -101,10 +115,12 @@ var PrliPopUpHandler = {
     jQuery('#errors').html('');
 
     var output      = '';
+    var rel         = '';
     var pretty_link = jQuery("#existing_link_slug").html();
     var link_text   = jQuery("#existing_link_link_text").val();
     var new_tab     = jQuery("#existing_link_new_tab").is(":checked");
     var nofollow    = jQuery("#existing_link_nofollow").val();
+    var sponsored   = jQuery("#existing_link_sponsored").val();
 
     if(pretty_link.match(/https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/)) {
       //Set the link text to the link itself
@@ -120,7 +136,15 @@ var PrliPopUpHandler = {
       }
 
       if(nofollow == 1) {
-        output += 'rel="nofollow" ';
+        rel += 'nofollow ';
+      }
+
+      if(sponsored == 1) {
+        rel += 'sponsored ';
+      }
+
+      if(rel != '') {
+        output += 'rel="' + rel + '" ';
       }
 
       output += '>' + link_text + '</a>';
@@ -227,6 +251,7 @@ var PrliPopUpHandler = {
       select: function(event, ui) {
         $("#existing_link_target").html(ui.item.target);
         $("#existing_link_nofollow").val(ui.item.nofollow);
+        $("#existing_link_sponsored").val(ui.item.sponsored);
         $("#existing_link_slug").html(prliTinymceL10n.home_url + ui.item.slug);
       }
     });

@@ -52,6 +52,10 @@ class PrliLinksHelper {
       <i title="<?php esc_attr_e('Nofollow Enabled', 'pretty-link'); ?>" class="pl-icon-cancel-circled pl-list-icon"></i><?php
     endif;
 
+    if( $link->sponsored ): ?>
+      <i title="<?php esc_attr_e('Sponsored Enabled', 'pretty-link'); ?>" class="pl-icon-ok-circle pl-list-icon"></i><?php
+    endif;
+
     if(!empty($link->param_forwarding) && $link->param_forwarding != 'off'): ?>
       <i title="<?php esc_attr_e('Parameter Forwarding Enabled', 'pretty-link'); ?>" class="pl-icon-forward pl-list-icon"></i><?php
     endif;

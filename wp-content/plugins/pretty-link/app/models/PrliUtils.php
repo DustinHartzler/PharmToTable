@@ -311,8 +311,16 @@ class PrliUtils {
       $param_string = apply_filters('prli_redirect_params', $param_string);
     }
 
-    if(isset($pretty_link->nofollow) and $pretty_link->nofollow) {
-      header("X-Robots-Tag: noindex, nofollow", true);
+    $robots_tags = array();
+    if(isset($pretty_link->nofollow) && $pretty_link->nofollow) {
+      $robots_tags[] = 'noindex';
+      $robots_tags[] = 'nofollow';
+    }
+    if(isset($pretty_link->sponsored) && $pretty_link->sponsored) {
+      $robots_tags[] = 'sponsored';
+    }
+    if(!empty($robots_tags)) {
+      header("X-Robots-Tag: " . implode(', ', $robots_tags), true);
     }
 
     //This action replaces custom variable parameters

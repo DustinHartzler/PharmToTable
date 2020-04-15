@@ -7,11 +7,24 @@
       <?php PrliAppHelper::info_tooltip(
               'prli-link-options-nofollow',
               esc_html__('Nofollow Link', 'pretty-link'),
-              esc_html__('Add a nofollow and noindex to this link\'s http redirect header', 'pretty-link')
+              esc_html__('Add a nofollow and noindex to this link\'s http redirect header. (Recommended)', 'pretty-link')
             ); ?>
     </th>
     <td>
       <input type="checkbox" name="nofollow" <?php checked($values['nofollow']); ?>/>
+    </td>
+  </tr>
+  <tr>
+    <th scope="row">
+      <?php esc_html_e('Sponsored', 'pretty-link'); ?>
+      <?php PrliAppHelper::info_tooltip(
+              'prli-link-options-sponsored',
+              esc_html__('Sponsored Link', 'pretty-link'),
+              esc_html__('Add a sponsored attribute to this link\'s http redirect header. Recommended if this is an affiliate link.', 'pretty-link')
+            ); ?>
+    </th>
+    <td>
+      <input type="checkbox" name="sponsored" <?php checked($values['sponsored']); ?>/>
     </td>
   </tr>
   <tr id="prli_time_delay" style="display: none">
@@ -58,17 +71,17 @@
       <?php esc_html_e('Google Analytics', 'pretty-link'); ?>
       <?php PrliAppHelper::info_tooltip(
               'prli-link-ga',
-              esc_html__('Google Analytics Tracking', 'pretty-link'),
-              esc_html__('Requires the Google Analyticator, Google Analytics by MonsterInsights (formerly Yoast) or Google Analytics Plugin installed and configured for this to work.', 'pretty-link')
+              esc_html__('Google Analytics', 'pretty-link'),
+              esc_html__('Requires the Google Analyticator plugin be installed and configured. This setting has no impact on the MonsterInsights integration with Pretty Links.', 'pretty-link')
             ); ?>
     </th>
     <td>
       <?php
       global $plp_update;
       if($plp_update->is_installed()):
-        if($ga_info = PlpUtils::ga_installed()):
+        if(($ga_info = PlpUtils::ga_installed())):
           ?>
-          <input type="checkbox" name="google_tracking" <?php echo esc_html($values['google_tracking']); ?> />
+          <input type="checkbox" name="google_tracking" <?php checked($values['google_tracking']); ?> />
           <p class="description">
             <?php
               printf(

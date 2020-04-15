@@ -62,6 +62,7 @@ class PrliLocalApiController extends PrliBaseController {
                                     $group_id = 0, // deprecated
                                     $track_me = '',
                                     $nofollow = '',
+                                    $sponsored = '',
                                     $redirect_type = '',
                                     $param_forwarding = '',
                                     $param_struct = '' ) {
@@ -72,23 +73,25 @@ class PrliLocalApiController extends PrliBaseController {
 
     $values = array();
     $values['url']              = $target_url;
-    $values['slug']             = (($slug == '')?$prli_link->generateValidSlug():$slug);
+    $values['slug']             = (($slug == '') ? $prli_link->generateValidSlug() : $slug);
     $values['name']             = $name;
     $values['description']      = $description;
-    $values['redirect_type']    = (($redirect_type == '')?$prli_options->link_redirect_type:$redirect_type);
-    $values['nofollow']         = (($nofollow === '')?$prli_options->link_nofollow:$nofollow);
-    $values['track_me']         = (($track_me === '')?$prli_options->link_track_me:$track_me);
-    $values['param_forwarding'] = !empty($param_forwarding);
+    $values['redirect_type']    = (($redirect_type == '') ? $prli_options->link_redirect_type : $redirect_type);
+    $values['nofollow']         = (($nofollow === '') ? $prli_options->link_nofollow : $nofollow);
+    $values['sponsored']        = (($sponsored === '') ? $prli_options->link_sponsored : $sponsored);
+    $values['track_me']         = (($track_me === '') ? $prli_options->link_track_me : $track_me);
+    $values['param_forwarding'] = (($param_forwarding === '') ? 0 : $param_forwarding);
     $values['param_struct']     = $param_struct;
 
-    // make array look like $_POST
-    if(empty($values['nofollow']) or !$values['nofollow']) {
+    // prevent some values from being stored
+    if(empty($values['nofollow']) || !$values['nofollow'])
       unset($values['nofollow']);
-    }
-
-    if(empty($values['track_me']) or !$values['track_me']) {
+    if(empty($values['sponsored']) || !$values['sponsored'])
+      unset($values['sponsored']);
+    if(empty($values['track_me']) || !$values['track_me'])
       unset($values['track_me']);
-    }
+    if(empty($values['param_forwarding']) || !$values['param_forwarding'])
+      unset($values['param_forwarding']);
 
     $prli_error_messages = $prli_link->validate( $values );
 
@@ -113,6 +116,7 @@ class PrliLocalApiController extends PrliBaseController {
                                       $group_id = '', // deprecated
                                       $track_me = '',
                                       $nofollow = '',
+                                      $sponsored = '',
                                       $redirect_type = '',
                                       $param_forwarding = '',
                                       $param_struct = -1 ) {
@@ -131,23 +135,26 @@ class PrliLocalApiController extends PrliBaseController {
 
     $values = array();
     $values['id']               = $id;
-    $values['url']              = (($target_url == '')?$record->url:$target_url);
-    $values['slug']             = (($slug == '')?$record->slug:$slug);
-    $values['name']             = (($name == -1)?$record->name:$name);
-    $values['description']      = (($description == -1)?$record->description:$description);
-    $values['redirect_type']    = (($redirect_type == '')?$record->redirect_type:$redirect_type);
-    $values['nofollow']         = (($nofollow === '')?$record->nofollow:$nofollow);
-    $values['track_me']         = (($track_me === '')?(int)$record->track_me:$track_me);
-    $values['param_forwarding'] = (($param_forwarding === '')?(int)$record->param_forwarding:$param_forwarding);
+    $values['url']              = (($target_url == '') ? $record->url : $target_url);
+    $values['slug']             = (($slug == '') ? $record->slug : $slug);
+    $values['name']             = (($name == -1) ? $record->name : $name);
+    $values['description']      = (($description == -1) ? $record->description : $description);
+    $values['redirect_type']    = (($redirect_type == '') ? $record->redirect_type : $redirect_type);
+    $values['nofollow']         = (($nofollow === '') ? $record->nofollow : $nofollow);
+    $values['sponsored']        = (($sponsored === '') ? $record->sponsored : $sponsored);
+    $values['track_me']         = (($track_me === '') ? (int)$record->track_me : $track_me);
+    $values['param_forwarding'] = (($param_forwarding === '') ? (int)$record->param_forwarding : $param_forwarding);
     $values['param_struct']     = ''; // deprecated
     $values['link_cpt_id']      = $record->link_cpt_id;
 
-    // make array look like $_POST
-    if(empty($values['nofollow']) or !$values['nofollow'])
+    // prevent some values from being stored
+    if(empty($values['nofollow']) || !$values['nofollow'])
       unset($values['nofollow']);
-    if(empty($values['track_me']) or !$values['track_me'])
+    if(empty($values['sponsored']) || !$values['sponsored'])
+      unset($values['sponsored']);
+    if(empty($values['track_me']) || !$values['track_me'])
       unset($values['track_me']);
-    if(empty($values['param_forwarding']) or !$values['param_forwarding'])
+    if(empty($values['param_forwarding']) || !$values['param_forwarding'])
       unset($values['param_forwarding']);
 
     $prli_error_messages = $prli_link->validate( $values, $id );
@@ -250,6 +257,7 @@ function prli_create_pretty_link( $target_url,
                                   $group_id = 0, // deprecated
                                   $track_me = '',
                                   $nofollow = '',
+                                  $sponsored = '',
                                   $redirect_type = '',
                                   $param_forwarding = '',
                                   $param_struct = '' ) {
@@ -261,6 +269,7 @@ function prli_create_pretty_link( $target_url,
                                     $group_id, // deprecated
                                     $track_me,
                                     $nofollow,
+                                    $sponsored,
                                     $redirect_type,
                                     $param_forwarding,
                                     $param_struct );
@@ -274,6 +283,7 @@ function prli_update_pretty_link( $id,
                                   $group_id = '', // deprecated
                                   $track_me = '',
                                   $nofollow = '',
+                                  $sponsored = '',
                                   $redirect_type = '',
                                   $param_forwarding = '',
                                   $param_struct = -1 ) {
@@ -286,6 +296,7 @@ function prli_update_pretty_link( $id,
                                     $group_id, // deprecated
                                     $track_me,
                                     $nofollow,
+                                    $sponsored,
                                     $redirect_type,
                                     $param_forwarding,
                                     $param_struct );

@@ -144,7 +144,8 @@ const createNewPrettyLink = (target, slug) => {
         slug: slug,
         redirect: '',
         nofollow: 1,
-        tracking: 1
+        tracking: 1,
+        sponsored: 0
       },
       (data, textStatus, xhr) => {
         'true' === data ? resolve(data) : reject(data);
@@ -164,6 +165,7 @@ class InlineLinkUI extends Component {
     this.onKeyDown = this.onKeyDown.bind( this );
     this.onChangeInputValue = this.onChangeInputValue.bind( this );
     this.setNoFollow = this.setNoFollow.bind( this );
+    this.setIsSponsored = this.setIsSponsored.bind( this );
     this.setLinkTarget = this.setLinkTarget.bind( this );
     this.onClickOutside = this.onClickOutside.bind( this );
     this.resetState = this.resetState.bind( this );
@@ -172,6 +174,7 @@ class InlineLinkUI extends Component {
     this.state = {
       noFollow: false,
       opensInNewWindow: false,
+      isSponsored: false,
       inputValue: '',
       newLinkUrl: '',
       newLinkSlug: '',
@@ -182,7 +185,7 @@ class InlineLinkUI extends Component {
   }
 
   static getDerivedStateFromProps( props, state ) {
-    const { activeAttributes: { url, target } } = props;
+    const { activeAttributes: { url, target, isSponsored } } = props;
     const opensInNewWindow = target === '_blank';
 
     if ( ! isShowingInput( props, state ) ) {
@@ -239,7 +242,27 @@ class InlineLinkUI extends Component {
         url,
         opensInNewWindow,
         text: selectedText,
-        noFollow
+        noFollow,
+        isSponsored
+      } ) ) );
+    }
+  }
+
+  setIsSponsored( isSponsored ) {
+    const { activeAttributes: { url = '' }, value, onChange } = this.props;
+
+    this.setState( { isSponsored } );
+
+    // Apply now if URL is not being edited.
+    if ( ! isShowingInput( this.props, this.state ) ) {
+      const selectedText = getTextContent( slice( value ) );
+
+      onChange( applyFormat( value, createLinkFormat( {
+        url,
+        opensInNewWindow,
+        text: selectedText,
+        noFollow,
+        isSponsored
       } ) ) );
     }
   }
@@ -251,14 +274,15 @@ class InlineLinkUI extends Component {
 
   submitLink( event ) {
     const { isActive, value, onChange, speak } = this.props;
-    const { inputValue, opensInNewWindow, noFollow } = this.state;
+    const { inputValue, opensInNewWindow, noFollow, isSponsored } = this.state;
     const url = prependHTTP( inputValue );
     const selectedText = getTextContent( slice( value ) );
     const format = createLinkFormat( {
       url,
       opensInNewWindow,
       text: selectedText,
-      noFollow
+      noFollow,
+      isSponsored
     } );
 
     event.preventDefault();
@@ -306,7 +330,7 @@ class InlineLinkUI extends Component {
       return null;
     }
 
-    const { inputValue, noFollow, opensInNewWindow, newLinkUrl, newLinkSlug, creatingLink, createdLink, createdLinkError } = this.state;
+    const { inputValue, noFollow, opensInNewWindow, isSponsored, newLinkUrl, newLinkSlug, creatingLink, createdLink, createdLinkError } = this.state;
     const showInput = isShowingInput( this.props, this.state );
 
     return (
@@ -330,6 +354,11 @@ class InlineLinkUI extends Component {
                 label={ __( 'Nofollow' ) }
                 checked={ noFollow }
                 onChange={ this.setNoFollow }
+              />
+              <ToggleControl
+                label={ __( 'Sponsored Link' ) }
+                checked={ isSponsored }
+                onChange={ this.setIsSponsored }
               />
             </div>
             <div className="pretty-link-inserter-form-container">

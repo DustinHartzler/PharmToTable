@@ -49,7 +49,7 @@ class PrliToolsController extends PrliBaseController {
     $track = isset($_GET['trk']) && is_numeric($_GET['trk']) && $_GET['trk'] != '-1' ? (int) $_GET['trk'] : '';
     $category = isset($_GET['ct']) && is_numeric($_GET['ct']) && $_GET['ct'] != '-1' ? (int) $_GET['ct'] : '';
 
-    $result = prli_create_pretty_link( esc_url_raw($target_url, array('http','https')), '', '', '', 0, $track, '', $redirect_type );
+    $result = prli_create_pretty_link( esc_url_raw($target_url, array('http','https')), '', '', '', 0, $track, '', '', $redirect_type );
 
     $plink = $prli_link->getOne($result);
 

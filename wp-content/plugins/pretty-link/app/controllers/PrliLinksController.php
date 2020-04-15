@@ -158,6 +158,7 @@ class PrliLinksController extends PrliBaseController {
 
     $values['track_me'] = ((isset($_REQUEST['track_me']) and $_REQUEST['track_me'] == 'on') or (!isset($_REQUEST['track_me']) and $prli_options->link_track_me == '1'));
     $values['nofollow'] = ((isset($_REQUEST['nofollow']) and $_REQUEST['nofollow'] == 'on') or (!isset($_REQUEST['nofollow']) and $prli_options->link_nofollow == '1'));
+    $values['sponsored'] = ((isset($_REQUEST['sponsored']) and $_REQUEST['sponsored'] == 'on') or (!isset($_REQUEST['sponsored']) and $prli_options->link_sponsored == '1'));
 
     $values['redirect_type'] = array();
     $values['redirect_type']['307'] = (((isset($_REQUEST['redirect_type']) and $_REQUEST['redirect_type'] == '307') or (!isset($_REQUEST['redirect_type']) and $prli_options->link_redirect_type == '307'))?' selected="selected"':'');
@@ -202,6 +203,7 @@ class PrliLinksController extends PrliBaseController {
     $values['description'] = ((isset($_REQUEST['description']) and $record == null)?sanitize_textarea_field(stripslashes($_REQUEST['description'])):stripslashes($record->description));
     $values['track_me'] = ((isset($_REQUEST['track_me']) or $record->track_me) and ((isset($_REQUEST['track_me']) and $_REQUEST['track_me'] == 'on') or $record->track_me == 1));
     $values['nofollow'] = ((isset($_REQUEST['nofollow']) and $_REQUEST['nofollow'] == 'on') or (isset($record->nofollow) && $record->nofollow == 1));
+    $values['sponsored'] = ((isset($_REQUEST['sponsored']) and $_REQUEST['sponsored'] == 'on') or (isset($record->sponsored) && $record->sponsored == 1));
 
     $values['groups'] = array();
 
@@ -585,6 +587,13 @@ class PrliLinksController extends PrliBaseController {
               <option value="off"><?php echo esc_html(__('Disabled', 'pretty-link')); ?></option>
             </select>
             <br/>
+            <span class="title"><?php echo esc_html(__('Sponsored', 'pretty-link')); ?></span>
+            <select name="prli_quick_edit_sponsored">
+              <option value="no-change"> - <?php echo esc_html(__('No Change', 'pretty-link')); ?> - </option>
+              <option value="on"><?php echo esc_html(__('Enabled', 'pretty-link')); ?></option>
+              <option value="off"><?php echo esc_html(__('Disabled', 'pretty-link')); ?></option>
+            </select>
+            <br/>
             <span class="title"><?php echo esc_html(__('Tracking', 'pretty-link')); ?></span>
             <select name="prli_quick_edit_tracking">
               <option value="no-change"> - <?php echo esc_html(__('No Change', 'pretty-link')); ?> - </option>
@@ -614,6 +623,7 @@ class PrliLinksController extends PrliBaseController {
 
       $tracking = ($_POST['prli_quick_edit_tracking'] == 'no-change') ? '' : ( ($_POST['prli_quick_edit_tracking'] == 'on') ? true : false );
       $nofollow = ($_POST['prli_quick_edit_nofollow'] == 'no-change') ? '' : ( ($_POST['prli_quick_edit_nofollow'] == 'on') ? true : false );
+      $sponsored = ($_POST['prli_quick_edit_sponsored'] == 'no-change') ? '' : ( ($_POST['prli_quick_edit_sponsored'] == 'on') ? true : false );
 
       prli_update_pretty_link(
         $link->id,
@@ -624,6 +634,7 @@ class PrliLinksController extends PrliBaseController {
         null,// group_id deprecated
         $tracking,
         $nofollow,
+        $sponsored,
         $link->redirect_type,
         $link->param_forwarding,
         '' // param_struct deprecated
@@ -644,8 +655,9 @@ class PrliLinksController extends PrliBaseController {
 
         $tracking = ($_POST['tracking'] == 'no-change') ? '' : ( ($_POST['tracking'] == 'on') ? true : false );
         $nofollow = ($_POST['nofollow'] == 'no-change') ? '' : ( ($_POST['nofollow'] == 'on') ? true : false );
+        $sponsored = ($_POST['sponsored'] == 'no-change') ? '' : ( ($_POST['sponsored'] == 'on') ? true : false );
 
-        if($tracking === '' && $nofollow === '') { return; } // Nothing to change
+        if($tracking === '' && $nofollow === '' && $sponsored === '') { return; } // Nothing to change
 
         $id = $prli_link->get_link_from_cpt($post_id);
         $link = $prli_link->getOne($id);
@@ -659,6 +671,7 @@ class PrliLinksController extends PrliBaseController {
           null,// group_id deprecated
           $tracking,
           $nofollow,
+          $sponsored,
           $link->redirect_type,
           $link->param_forwarding,
           '' // param_struct deprecated
@@ -775,6 +788,10 @@ class PrliLinksController extends PrliBaseController {
 
     if ($prli_options->link_nofollow) {
       $_POST['nofollow'] = 'on';
+    }
+
+    if ($prli_options->link_sponsored) {
+      $_POST['sponsored'] = 'on';
     }
 
     $link_id = $prli_link->create($_POST);

@@ -89,7 +89,7 @@ export function isValidHref( href ) {
  *
  * @return {Object} The final format object.
  */
-export function createLinkFormat( { url, opensInNewWindow, text, noFollow } ) {
+export function createLinkFormat( { url, opensInNewWindow, text, noFollow, isSponsored } ) {
   const format = {
     type: 'core/link',
     attributes: {
@@ -100,7 +100,11 @@ export function createLinkFormat( { url, opensInNewWindow, text, noFollow } ) {
   format.attributes.rel = '';
 
   if ( noFollow ) {
-    format.attributes.rel += 'nofollow ';
+    format.attributes.rel += 'nofollow noindex ';
+  }
+
+  if ( isSponsored ) {
+    format.attributes.rel += 'sponsored ';
   }
 
   if ( opensInNewWindow ) {

@@ -481,6 +481,7 @@ class PrliLink {
       'description' => isset($values['description']) && is_string($values['description']) ? sanitize_textarea_field($values['description']) : '',
       'group_id' => isset($values['group_id']) && is_numeric($values['group_id']) ? (int) $values['group_id'] : null,
       'nofollow' => isset($values['nofollow']) ? 1 : 0,
+      'sponsored' => isset($values['sponsored']) ? 1 : 0,
       'param_forwarding' => isset($values['param_forwarding']) ? 1 : 0,
       'track_me' => isset($values['track_me']) ? 1 : 0,
       'link_cpt_id' => isset($values['link_cpt_id']) && is_numeric($values['link_cpt_id']) ? (int) $values['link_cpt_id'] : 0

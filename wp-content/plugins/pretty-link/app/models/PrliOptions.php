@@ -28,6 +28,7 @@ class PrliOptions
   public $auto_trim_clicks;
   public $link_track_me;
   public $link_nofollow;
+  public $link_sponsored;
 
   public $bookmarklet_auth;
 
@@ -64,6 +65,7 @@ class PrliOptions
     $auto_trim_clicks = 'prli_auto_trim_clicks';
     $link_track_as_pixel = 'prli_link_track_as_pixel';
     $link_nofollow = 'prli_link_nofollow';
+    $link_sponsored = 'prli_link_sponsored';
     $link_redirect_type = 'prli_link_redirect_type';
 
     if(!isset($this->prettybar_show_title)) {
@@ -122,6 +124,10 @@ class PrliOptions
 
     if(!isset($this->auto_trim_clicks)) {
       $this->auto_trim_clicks = 0;
+    }
+
+    if(!isset($this->link_sponsored)) {
+      $this->link_sponsored = 0;
     }
 
     if(!isset($this->link_nofollow)) {

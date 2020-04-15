@@ -59,28 +59,6 @@ jQuery(document).ready(function($) {
     $('label.inline-edit-status').parent().hide();
   }
 
-/*
-  NOT NEEDED SINCE SWITCHING TO "- No Change -" SELECT FIELD
-  Leaving here in case we need sample code of how to do this in the future though
-
-  // QUICK EDIT JS
-  $('body').on('click', 'button.editinline', function(e) {
-    var tr = $(this).closest("tr");
-    var trid = tr.attr('id');
-    var parts = trid.toString().split('-');
-    var post_id = parts[1];
-    var nofollow = $(this).data('nofollow');
-    var tracking = $(this).data('tracking');
-
-    if(nofollow == 'on') {
-      $('#edit-' + post_id + ' .prli_quick_edit_nofollow:first').prop("checked", true);
-    }
-    if(tracking == 'on') {
-      $('#edit-' + post_id + ' .prli_quick_edit_tracking:first').prop("checked", true);
-    }
-  });
- */
-
   // BULK EDIT JS
   $(document).on('click', '#bulk_edit', function() {
     // Display spinner as ajax can take a while if there's a lot of posts to edit
@@ -93,6 +71,7 @@ jQuery(document).ready(function($) {
     });
 
     var nofollow = bulk_row.find('select[name="prli_quick_edit_nofollow"]').val();
+    var sponsored = bulk_row.find('select[name="prli_quick_edit_sponsored"]').val();
     var tracking = bulk_row.find('select[name="prli_quick_edit_tracking"]').val();
 
     $.ajax({
@@ -103,6 +82,7 @@ jQuery(document).ready(function($) {
         action: 'prli_links_list_save_bulk_edit',
         post_ids: post_ids,
         nofollow: nofollow,
+        sponsored: sponsored,
         tracking: tracking
       }
     });

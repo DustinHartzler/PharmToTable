@@ -79,6 +79,11 @@ class PrliXmlRpcController extends PrliBaseController {
    *                               value (from the pretty link option page) will
    *                               be used
    *
+   * @param boolean $link_sponsored Optional, If true the sponsored attribute will
+   *                               be set for the link, if not set the default
+   *                               value (from the pretty link option page) will
+   *                               be used
+   *
    * @param string $link_redirect_type Optional, valid values include '307', '302', or '301',
    *                                   if not set the default value (from the pretty
    *                                   link option page) will be used
@@ -118,9 +123,10 @@ class PrliXmlRpcController extends PrliBaseController {
     $group_id         = (isset($args[6])?$args[6]:'');
     $track_me         = (isset($args[7])?$args[7]:'');
     $nofollow         = (isset($args[8])?$args[8]:'');
-    $redirect_type    = (isset($args[9])?$args[9]:'');
-    $param_forwarding = (isset($args[10]) && !empty($args[10]) && $args[10] != 'off');
-    $param_struct     = (isset($args[11])?$args[11]:'');
+    $sponsored        = (isset($args[9])?$args[9]:'');
+    $redirect_type    = (isset($args[10])?$args[10]:'');
+    $param_forwarding = (isset($args[11]) && !empty($args[11]) && $args[11] != 'off');
+    $param_struct     = (isset($args[12])?$args[12]:'');
 
     if( $link = prli_create_pretty_link( $target_url,
                                          $slug,
@@ -129,6 +135,7 @@ class PrliXmlRpcController extends PrliBaseController {
                                          $group_id,
                                          $track_me,
                                          $nofollow,
+                                         $sponsored,
                                          $redirect_type,
                                          $param_forwarding,
                                          $param_struct ) )
@@ -165,9 +172,10 @@ class PrliXmlRpcController extends PrliBaseController {
     $group_id         = (isset($args[7])?$args[7]:'');
     $track_me         = (isset($args[8])?$args[8]:'');
     $nofollow         = (isset($args[9])?$args[9]:'');
-    $redirect_type    = (isset($args[10])?$args[10]:'');
-    $param_forwarding = (isset($args[11])?$args[11]:'');
-    $param_struct     = (isset($args[12])?$args[12]:'');
+    $sponsored        = (isset($args[10])?$args[10]:'');
+    $redirect_type    = (isset($args[11])?$args[11]:'');
+    $param_forwarding = (isset($args[12])?$args[12]:'');
+    $param_struct     = (isset($args[13])?$args[13]:'');
 
     if( $link = prli_update_pretty_link( $id,
                                          $target_url,
@@ -177,6 +185,7 @@ class PrliXmlRpcController extends PrliBaseController {
                                          $group_id,
                                          $track_me,
                                          $nofollow,
+                                         $sponsored,
                                          $redirect_type,
                                          $param_forwarding,
                                          $param_struct ) )

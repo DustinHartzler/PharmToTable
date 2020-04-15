@@ -3,8 +3,8 @@ Contributors: supercleanse, cartpauj
 Donate link: https://prettylinks.com
 Tags: links, link, url, urls, affiliate, affiliates, pretty, marketing, redirect, redirection, forward, plugin, twitter, tweet, rewrite, shorturl, hoplink, hop, shortlink, short, shorten, shortening, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
 Requires at least: 5.1
-Tested up to: 5.2.2
-Stable tag: 3.0.10
+Tested up to: 5.4
+Stable tag: 3.1.0
 
 Shrink, beautify, track, manage and share any URL on or off of your WordPress website. Create links that look how you want using your own domain name!
 
@@ -64,6 +64,13 @@ http://blairwilliams.com/w7a
 3. Make sure you have changed your permalink Common Settings in Settings -> Permalinks away from "Default" to something else. I prefer using custom and then "/%year%/%month%/%postname%/" for the simplest possible URL slugs with the best performance.
 
 == Changelog ==
+= 3.1.0 =
+* Add support for sponsored rel tag
+* Add sponsored toggle support in gutenberg and tinymce editors
+* Fix report graphs not loading for some
+* PRO: Fix bug with keywords replacements
+* PRO: Cleaned up GA support
+
 = 3.0.10 =
 * Add support for nofollow in Gutenberg popup
 * Fix post_author being set to 0 on CPT

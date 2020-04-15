@@ -47,6 +47,7 @@ class PrliPostsController extends PrliBaseController {
     $random_slug      = $prli_link->generateValidSlug();
     $default_redirect = $prli_options->link_redirect_type;
     $default_nofollow = ($prli_options->link_nofollow)?'enabled':'disabled';
+    $default_sponsored= ($prli_options->link_sponsored)?'enabled':'disabled';
     $default_tracking = ($prli_options->link_track_me)?'enabled':'disabled';
 
     //Get alternate Base URL
@@ -94,6 +95,7 @@ class PrliPostsController extends PrliBaseController {
       'home_url' => $home_url,
       'default_redirect' => $default_redirect,
       'default_nofollow' => $default_nofollow,
+      'default_sponsored' => $default_sponsored,
       'default_tracking' => $default_tracking,
       'ajaxurl' => admin_url('admin-ajax.php')
     ));
@@ -123,7 +125,7 @@ class PrliPostsController extends PrliBaseController {
 
   //AJAX
   public function create_pretty_link() {
-    $valid_vars = array('target', 'slug', 'redirect', 'nofollow', 'tracking');
+    $valid_vars = array('target', 'slug', 'redirect', 'nofollow', 'sponsored', 'tracking');
 
     if(!PrliUtils::is_authorized()) {
       echo "invalid_user";
@@ -141,9 +143,10 @@ class PrliPostsController extends PrliBaseController {
             sanitize_text_field(stripslashes($_POST['slug'])),
             '', //Name
             '', //Desc
-            0, //Group ID
+            0, //Group ID (Deprecated)
             (int)($_POST['tracking'] == 'enabled'),
             (int)($_POST['nofollow'] == 'enabled'),
+            (int)($_POST['sponsored'] == 'sponsored'),
             sanitize_key(stripslashes($_POST['redirect']))
           );
 
@@ -188,7 +191,8 @@ class PrliPostsController extends PrliBaseController {
           'slug'       => $result['slug'],
           'target'     => $result['url'],
           'title'      => $result['name'], //Not used currently, but we may want this at some point
-          'nofollow'   => (int)$result['nofollow']
+          'nofollow'   => (int)$result['nofollow'],
+          'sponsored'   => (int)$result['sponsored']
         );
       }
 

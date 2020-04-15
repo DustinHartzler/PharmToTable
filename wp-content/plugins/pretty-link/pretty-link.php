@@ -3,7 +3,7 @@
 Plugin Name: Pretty Links
 Plugin URI: https://prettylinks.com/pl/plugin-uri
 Description: Shrink, track and share any URL on the Internet from your WordPress website!
-Version: 3.0.10
+Version: 3.1.0
 Author: Blair Williams
 Author URI: http://blairwilliams.com
 Text Domain: pretty-link
@@ -167,7 +167,7 @@ $prli_utils     = new PrliUtils();
 
 global $prli_db_version, $plp_db_version;
 
-$prli_db_version = 22; // this is the version of the database we're moving to
+$prli_db_version = 23; // this is the version of the database we're moving to
 $plp_db_version = 10; // this is the version of the database we're moving to
 
 global $prli_app_controller;
