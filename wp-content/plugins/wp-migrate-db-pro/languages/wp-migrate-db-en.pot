@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wp-migrate-db-pro\n"
 "Report-Msgid-Bugs-To: nom@deliciousbrains.com\n"
-"POT-Creation-Date: 2019-05-15 10:11-0400\n"
+"POT-Creation-Date: 2020-03-17 10:13-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -435,7 +435,8 @@ msgstr ""
 msgid "Could not delete the MySQL export file."
 msgstr ""
 
-#: src/wp-migrate-db-pro/class/Common/Replace.php:360
+#: src/wp-migrate-db-pro/class/Common/Replace.php:419
+#: src/wp-migrate-db-pro/class/Common/Replace.php:408
 #, php-format
 msgid ""
 "WP Migrate DB - Failed to instantiate object for replacement. If the "
@@ -444,7 +445,8 @@ msgid ""
 "Class Name: %s"
 msgstr ""
 
-#: src/wp-migrate-db-pro/class/Common/Replace.php:415
+#: src/wp-migrate-db-pro/class/Common/Replace.php:474
+#: src/wp-migrate-db-pro/class/Common/Replace.php:463
 msgid ""
 "Failed attempting to do the recursive unserialize replace. Please contact "
 "support."
@@ -650,6 +652,7 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Pro/License.php:245
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:146
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:384
+#: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:389
 msgid "Check my license again"
 msgstr ""
 
@@ -753,6 +756,7 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Common/UI/TemplateBase.php:83
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:139
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:346
+#: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:351
 msgctxt "Plugin configuration and preferences"
 msgid "Settings"
 msgstr ""
@@ -955,168 +959,6 @@ msgid ""
 "folder to enable Compatibility Mode. "
 msgstr ""
 
-#: src/wp-migrate-db-pro/template/wpmdb/exclude-post-revisions.php:4
-msgid "Exclude post revisions"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:4
-#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:10
-#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:17
-#: src/wp-migrate-db-pro/template/wpmdb/import-radio-button.php:4
-#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:4
-#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:13
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:4
-msgid "Upgrade to Pro"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:4
-msgid "to push and pull media files"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:10
-msgid "Theme Files"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:10
-msgid "to push and pull theme files"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:17
-msgid "Plugin Files"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:17
-msgid "to push and pull plugin files"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/import-radio-button.php:4
-#: src/wp-migrate-db-pro/template/pro/import-radio-button.php:4
-msgctxt "Import data from a SQL file"
-msgid "Import"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/import-radio-button.php:4
-msgid "to import SQL files"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:3
-msgid "Seen the PRO version yet?"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:5
-msgid ""
-"One-click in your WordPress dashboard to push your database up to staging/"
-"production or pull it down to&nbsp;dev"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:6
-msgid "Sync the Media Libraries of two&nbsp;sites"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:7
-msgid "Run migrations from the command&nbsp;line"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:15
-msgid ""
-"Even though I've been using it for a long time the push/pull functionality "
-"in @dliciousbrains WP&nbsp;Migrate&nbsp;DB&nbsp;Pro continues to impress me."
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:24
-msgid "More About The Pro Version"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:4
-#: src/wp-migrate-db-pro/template/pro/pull-push-radio-buttons.php:4
-msgctxt "Import data from remote database"
-msgid "Pull"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:4
-msgid "to pull remote data into this site"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:13
-#: src/wp-migrate-db-pro/template/pro/pull-push-radio-buttons.php:13
-msgctxt "Export data to remote database"
-msgid "Push"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:13
-msgid "to push data from this site to a remote site"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:5
-msgid ""
-"Push and pull your database from one WordPress install to another "
-"in&nbsp;1&#8209;click."
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:9
-msgid "Get 20% Off!"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:14
-#, php-format
-msgid ""
-"Submit your name and email and we'll send you a coupon for 20% off your "
-"upgrade to the pro version."
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:18
-msgid "Your Email"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:22
-msgid "First Name"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:26
-msgid "Last Name"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:33
-msgid "Send me the coupon"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:37
-msgid ""
-"We promise we will not use your email for anything else and you can "
-"unsubscribe with 1-click anytime."
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:2
-msgctxt "Get help from the community"
-msgid "Support"
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:4
-msgid "As this is a free plugin, we do not provide support."
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:6
-#, php-format
-msgid ""
-"You may ask the WordPress community for help by posting to the <a href=\"%s"
-"\">WordPress.org support forum</a>. Response time can range from a few days "
-"to a few weeks and will likely be from a non-developer."
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:8
-#, php-format
-msgid ""
-"If you want a <strong>timely response via email from a developer</strong> "
-"who works on this plugin, <a href=\"%s\">upgrade to WP Migrate DB Pro</a> "
-"and send us an email."
-msgstr ""
-
-#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:10
-#, php-format
-msgid ""
-"If you've found a bug, please <a href=\"%s\">submit an issue at Github</a>."
-msgstr ""
-
 #: src/wp-migrate-db-pro/template/pro/backup.php:5
 msgid "Backup the local database before replacing it"
 msgstr ""
@@ -1243,6 +1085,12 @@ msgstr ""
 msgid "Run a find & replace on the import"
 msgstr ""
 
+#: src/wp-migrate-db-pro/template/pro/import-radio-button.php:4
+#: src/wp-migrate-db-pro/template/wpmdb/import-radio-button.php:4
+msgctxt "Import data from a SQL file"
+msgid "Import"
+msgstr ""
+
 #: src/wp-migrate-db-pro/template/pro/licence-info.php:2
 msgid "Email Support"
 msgstr ""
@@ -1354,7 +1202,19 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/template/pro/pull-push-radio-buttons.php:4
+#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:4
+msgctxt "Import data from remote database"
+msgid "Pull"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/pro/pull-push-radio-buttons.php:4
 msgid "Replace this site's db with remote db"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/pro/pull-push-radio-buttons.php:13
+#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:13
+msgctxt "Export data to remote database"
+msgid "Push"
 msgstr ""
 
 #: src/wp-migrate-db-pro/template/pro/pull-push-radio-buttons.php:13
@@ -1498,6 +1358,150 @@ msgstr ""
 #: src/wp-migrate-db-pro/template/pro/videos.php:2
 msgctxt "Tutorial videos"
 msgid "Videos"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:4
+#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:10
+#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:17
+#: src/wp-migrate-db-pro/template/wpmdb/import-radio-button.php:4
+#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:4
+#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:13
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:4
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:4
+msgid "to push and pull media files"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:10
+msgid "Theme Files"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:10
+msgid "to push and pull theme files"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:17
+msgid "Plugin Files"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/addon-upgrades.php:17
+msgid "to push and pull plugin files"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/exclude-post-revisions.php:4
+msgid "Exclude post revisions"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/import-radio-button.php:4
+msgid "to import SQL files"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:3
+msgid "Seen the PRO version yet?"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:5
+msgid ""
+"One-click in your WordPress dashboard to push your database up to staging/"
+"production or pull it down to&nbsp;dev"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:6
+msgid "Sync the Media Libraries of two&nbsp;sites"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:7
+msgid "Run migrations from the command&nbsp;line"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:15
+msgid ""
+"Even though I've been using it for a long time the push/pull functionality "
+"in @dliciousbrains WP&nbsp;Migrate&nbsp;DB&nbsp;Pro continues to impress me."
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/progress-upgrade.php:24
+msgid "More About The Pro Version"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:4
+msgid "to pull remote data into this site"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/pull-push-radio-buttons.php:13
+msgid "to push data from this site to a remote site"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:5
+msgid ""
+"Push and pull your database from one WordPress install to another "
+"in&nbsp;1&#8209;click."
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:9
+msgid "Get 20% Off!"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:14
+#, php-format
+msgid ""
+"Submit your name and email and we'll send you a coupon for 20% off your "
+"upgrade to the pro version."
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:18
+msgid "Your Email"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:22
+msgid "First Name"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:26
+msgid "Last Name"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:33
+msgid "Send me the coupon"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/sidebar.php:37
+msgid ""
+"We promise we will not use your email for anything else and you can "
+"unsubscribe with 1-click anytime."
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:2
+msgctxt "Get help from the community"
+msgid "Support"
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:4
+msgid "As this is a free plugin, we do not provide support."
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:6
+#, php-format
+msgid ""
+"You may ask the WordPress community for help by posting to the <a href=\"%s"
+"\">WordPress.org support forum</a>. Response time can range from a few days "
+"to a few weeks and will likely be from a non-developer."
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:8
+#, php-format
+msgid ""
+"If you want a <strong>timely response via email from a developer</strong> "
+"who works on this plugin, <a href=\"%s\">upgrade to WP Migrate DB Pro</a> "
+"and send us an email."
+msgstr ""
+
+#: src/wp-migrate-db-pro/template/wpmdb/wordpress-org-support.php:10
+#, php-format
+msgid ""
+"If you've found a bug, please <a href=\"%s\">submit an issue at Github</a>."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Cli/Cli.php:161
@@ -1785,6 +1789,7 @@ msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Plugin/Assets.php:61
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:384
+#: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:389
 msgid "A problem occurred when trying to check the license, please try again."
 msgstr ""
 
@@ -2423,6 +2428,7 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Common/Plugin/Menu.php:89
 #: src/wp-migrate-db-pro/class/Common/Plugin/PluginManagerBase.php:327
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:412
+#: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:417
 msgid "Migrate DB Pro"
 msgstr ""
 
@@ -2789,6 +2795,11 @@ msgid ""
 "(#139)"
 msgstr ""
 
+#: src/wp-migrate-db-pro/class/Pro/Queue/Cron.php:86
+#, php-format
+msgid "Every %d Minutes"
+msgstr ""
+
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:129
 #, php-format
 msgid "There is a new version of %s available."
@@ -2816,11 +2827,6 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:208
 #: src/wp-migrate-db-pro/class/Pro/Plugin/ProPluginManager.php:219
 msgid "Could not retrieve version details. Please try again."
-msgstr ""
-
-#: src/wp-migrate-db-pro/class/Pro/Queue/Cron.php:86
-#, php-format
-msgid "Every %d Minutes"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Receiver.php:103
@@ -2916,6 +2922,11 @@ msgid ""
 "CLI Addon 1.1."
 msgstr ""
 
+#: src/wp-migrate-db-pro/class/Pro/Transfers/Files/TransferManager.php:122
+#, php-format
+msgid "Payload transfer failed with code %s: %s"
+msgstr ""
+
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Payload.php:65
 #, php-format
 msgid "File does not exist - %s"
@@ -2953,11 +2964,6 @@ msgstr ""
 msgid "Could not create directory: %s"
 msgstr ""
 
-#: src/wp-migrate-db-pro/class/Pro/Transfers/Files/TransferManager.php:122
-#, php-format
-msgid "Payload transfer failed with code %s: %s"
-msgstr ""
-
 #: src/wp-migrate-db-pro/class/Pro/Transfers/Files/Util.php:241
 #, php-format
 msgid "The following files failed to transfer: <br> %s"
@@ -2973,4 +2979,28 @@ msgstr ""
 msgid ""
 "Unable to create the transfer manifest file. Verify the web server can write "
 "to this folder: %s"
+msgstr ""
+
+#: src/wp-migrate-db-pro/php-checker.php:26
+#, php-format
+msgid ""
+"%s requires PHP version %s or higher and cannot be activated. You are "
+"currently running version %s. <a href=\"%s\">Learn&nbsp;More&nbsp;»</a>"
+msgstr ""
+
+#: src/wp-migrate-db-pro/php-checker.php:33
+#: src/wp-migrate-db-pro/php-checker.php:67
+msgid "WP Migrate DB"
+msgstr ""
+
+#: src/wp-migrate-db-pro/php-checker.php:37
+#: src/wp-migrate-db-pro/php-checker.php:67
+msgid "WP Migrate DB Pro"
+msgstr ""
+
+#: src/wp-migrate-db-pro/php-checker.php:68
+#, php-format
+msgid ""
+"requires PHP version %s or higher to run and has been deactivated. You are "
+"currently running version %s. <a href=\"%s\">Learn More »</a>"
 msgstr ""
