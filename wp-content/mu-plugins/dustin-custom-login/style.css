@@ -1,0 +1,91 @@
+body.login {
+	background: #fbfbfb;
+}
+
+#login {
+	padding-top: 25px;
+	width: 400px;
+}
+
+.login h1 a {
+	background-image: url('PharmtoTable.png');
+	background-size: 400px 182px;
+	height: 227px;
+	width: 400px;
+	padding-left: -400px;
+}
+
+.login form {
+	margin-left: auto;
+	margin-right: auto;
+	padding: 30px;
+	border: 1px solid rgba(0, 0, 0, .2);
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	background: rgba(90, 85, 75, 0.5);
+	-moz-box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	-webkit-box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	box-shadow: 0 0 13px 3px rgba(0, 0, 0, .5);
+	overflow: hidden;
+}
+
+.login label {
+	color: #fff;
+	line-height: 26px;
+}
+
+.wp-core-ui .button-primary,
+.wp-core-ui .button-primary:hover {
+	-webkit-box-shadow: rgba(120, 200, 230, 0.498039) 0 1px 0 inset;
+	background-color: #8DC63F;
+	background-image: -webkit-linear-gradient(top, #8DC63F, #8DC63F);
+	border-color: #fff #fff #fff;
+	box-shadow: rgba(120, 200, 230, 0.498039) 0 1px 0 inset;
+	color: #FFFFFF;
+	text-decoration: initial;
+	text-shadow: rgba(0, 0, 0, 0.0980392) 0 1px 0;
+	height: 30px;
+	line-height: 28px;
+	padding: 0 12px 2px;
+	width: 79px;
+}
+
+.wp-core-ui .button-primary:hover {
+	background-color: #555;
+	background-image: -webkit-linear-gradient(top, #555555, #555555);
+}
+
+.login form input {
+	width: 220px;
+	height: 48px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	display: block;
+}
+
+.login form input:focus {
+	background-color: rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 5px 1px rgba(255, 255, 255, .5);
+	-moz-box-shadow: 0 0 5px 1px rgba(255, 255, 255, .5);
+	-webkit-box-shadow: 0 0 5px 1px rgba(255, 255, 255, .5);
+	overflow: hidden;
+	color: #ffffff;
+}
+
+input#rememberme {
+	height: 18px;
+	width: 18px;
+	display: block;
+	float: left;
+	margin: 0 10px 0 0;
+}
+
+p#nav,
+p#backtoblog {
+	display: none;
+}
