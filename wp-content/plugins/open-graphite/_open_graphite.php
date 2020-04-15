@@ -3,7 +3,7 @@
 Plugin Name: 	Open Graphite
 Plugin URI: 	https://wordpress.org/plugins/open-graphite/
 Description: 	Control how your content is viewed when shared on social media.
-Version: 		1.0.9
+Version: 		1.3
 Author: 		Rocket Apps
 Author URI: 	https://rocketapps.com.au
 Text Domain: 	open-graphite
@@ -202,7 +202,7 @@ class open_graphite_otmeta {
             <div class="og-div og-div-03">
                 <p>
 					<strong><?php _e( 'Description', 'open-graphite' ); ?></strong>
-					<span><?php _e( 'Text from this post that will be shown when shared on social network.', 'open-graphite' ); ?></span>
+					<span><?php _e( 'The text that will be shown when this post is shared on social networks.', 'open-graphite' ); ?></span>
 				</p>
 					
 				<?php if($open_graphite_description_default) { ?>
@@ -318,7 +318,28 @@ function save_data($post_id) {
 
 		if ( !wp_verify_nonce( $_POST['_open_graphite_open_type__nounce'], plugin_basename( __FILE__ ) ) )
 		return;
+
 		require_once('inc/update-post-meta.php');
+
+		/* Facebook API scrape */
+		$ogoptions 			= get_option( 'openg_settings' ); 
+		$fb_app_id			= isset($ogoptions['open_graphite_home_fb_app_id']) ? $ogoptions['open_graphite_home_fb_app_id'] : '';
+		$fb_access_token	= isset($ogoptions['open_graphite_home_access_token']) ? $ogoptions['open_graphite_home_access_token'] : '';
+
+		
+		if($fb_access_token && $fb_app_id) {
+			$url = 'https://graph.facebook.com/v6.0/?id=' . urlencode(get_permalink($post_id)) . '&access_token=' . $fb_access_token . '&scrape=true&method=post';
+			$json = file_get_contents($url, false, stream_context_create(
+				array (
+					'http' => array(
+						'method'    => 'POST',
+						'header'    => 'Content-type: application/x-www-form-urlencoded',
+						'content'   =>  $url
+					)
+				)
+			));
+			$obj = json_decode($json, true); 
+		}
 
 		/* Check permissions */
 		if ( 'page' == $_POST['post_type'] ){
@@ -405,7 +426,7 @@ if($output_priority == 'low_priority') {
 /* Disable Jetpack open graph */
 $disable_jetpack_og = isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disable_jetpack_og'] : '';
 if($disable_jetpack_og) {
-	remove_action('wp_head','jetpack_og_tags');
+	add_filter( 'jetpack_enable_open_graph', '__return_false' );
 }
 
 /* Open Graph Ouput into <head> */

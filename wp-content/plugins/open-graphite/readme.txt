@@ -2,7 +2,7 @@
 Contributors: mikeyott
 Tags: open graph, opengraph, social, facebook, twitter, thumbnail, thumbnails, og:image, og:description, og:title
 Requires at least: 4.7
-Tested up to: 5.2.3
+Tested up to: 5.4
 Stable tag: trunk
 
 Control how your content is viewed when shared on social media.
@@ -49,15 +49,33 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 
 <a href="https://rocketapps.com.au/open-graphite-pro/">Open Graphite Pro</a> has additional features, such as:
 
-* The ability to use with additional custom post types
-* Previews for Facebook, Twitter and Linkedin
+* The ability to use with any custom post type
+* Mobile and desktop previews for Facebook, Twitter and Linkedin
 * Specify automatic defaults for titles, descriptions, featured images and object types
 * Open Graph content indicators
 * Limit the number of characters for titles and descriptions (prevent your titles and descriptions getting truncated)
 * Additional open graph options
-* Significant discounts on selected Rocket Apps products
 
 == Changelog ==
+
+= 1.3 =
+
+New option to integrate with Facebook API to force immediate Open Graph data updates when creating or editing.
+
+= 1.2 =
+
+Added Linkedin Post Inspector, iFramely and Open Graph Check debugging links.
+Fixed broken Facebook and Twitter dubugging link URLs.
+Removed colour from admin icon.
+Language file tweaks.
+
+= 1.1 =
+
+Minor UI and language consistency tweaks.
+
+= 1.0.10 =
+
+Fixed issue where Jetpack conflict option was not being honoured.
 
 = 1.0.9 =
 

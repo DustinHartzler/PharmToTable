@@ -162,7 +162,7 @@
   
   .og-wrap {
       margin: 0 0 0 250px;
-      width: calc(100% - 480px);
+      width: calc(100% - 240px);
   
       @include breakpoint(small) {
           margin: 10px 0 0 0;
@@ -392,6 +392,20 @@
           sup {
               color: $orange;
           }
+
+          .beta {
+            display: inline-block;
+            //font-weight: normal;
+            padding: 2px 5px;
+            text-transform: uppercase;
+            color: #fff;
+            font-size: 10px;
+            background: #607d8b;
+            border-radius: 2px;
+            font-style: normal;
+            font-weight: normal;
+            margin: 0 0 0 3px;
+        }
       }
   
       .no-margin {
@@ -469,11 +483,23 @@
       text-transform: uppercase;
       color: #fff;
       font-size: 10px;
-      background: $pink;
+      background: $green;
       border-radius: 2px;
       font-style: normal;
       font-weight: normal;
       margin: 0 0 0 3px;
+      color: #fff;
+	text-decoration: none !important;
+	
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+
+      &:hover {
+          background: $pink;
+          color: #fff;
+      }
   }
   
   .chars {
@@ -615,13 +641,17 @@
   
       .using-default {
           padding: 5px;
-          border: dashed 1px rgba($blue, .2);
           background: rgba($blue, .05);
-          margin: 8px 0 0 0 !important;
+		  margin: 8px 0 0 0 !important;
+		  border-top-left-radius: 20px;
+			border-top-right-radius: 20px;
+			border-bottom-left-radius: 20px;
+			border-bottom-right-radius: 20px;
   
           .dashicons {
               position: relative;
-              top: 1px;
+			  top: 0;
+			  color: $blue;
           }
   
           strong {
@@ -791,7 +821,7 @@
   
       display: inline-block;
       text-decoration: none !important;
-      margin: 0 13px 0 0;
+      margin: 0 0 0 0;
       position: relative;
       padding: 0 0 0 20px;
   
@@ -826,6 +856,7 @@
           }
       }
       
+      
       .the-preview {
           display: block;
           z-index: 99990;
@@ -859,7 +890,13 @@
       
   }
   
-  
+  #previews {
+    .og-pro {
+		margin: 0 20px 0 5px;
+		position: relative;
+		top: -1px;
+    }
+  }
   
   .column-open_graphite_health {
   

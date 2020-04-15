@@ -1,10 +1,12 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly 
 
 $the_ogvar = open_graphite_vars();
+$ogoptions 		= get_option( 'openg_settings' ); 
 
 $buy_link 	= 'https://rocketapps.com.au/';
 $login_link = 'https://rocketapps.com.au/?login=yes';
-$utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
+$utp_notice = '<a href="https://rocketapps.com.au/open-graphite-pro/" target="_blank" rel="noopener" class="og-pro">' . _('Pro') . '</a>';
+$disable_jetpack_og = isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disable_jetpack_og'] : '';
 ?>
 
 <!--/ Start Wrap /-->
@@ -19,7 +21,7 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 		</div>
 	<?php } ?>
 
-	<p><?php _e( 'Customise the default open graph settings for the homepage, posts, pages and custom post types.', 'open-graphite' ); ?></p>
+	<p><?php _e( 'Customise the default open graph settings for the homepage, posts and pages.', 'open-graphite' ); ?></p>
 
 
 	<?php if(function_exists('ftfixer_menu')) { ?>
@@ -41,7 +43,7 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 	<?php } 
 	} ?>
 
-	<?php if ( class_exists( 'Jetpack' )) { 
+	<?php if ( class_exists( 'Jetpack' ) && !$disable_jetpack_og) { 
 		$jetpack_link = '#troubleshooting'; ?>
 		<div class="warning">
 			<p><span class="dashicons dashicons-warning"></span><?php printf(__( 'You currently have Jetpack activated, which already takes care of some social sharing duties. If you prefer to keep using Open Graphite, you will need to go to the <a href="%1$s">troubleshooting</a> section and enable the <code>Avoid Jetpack open graph meta tag conflict</code> checkbox.', 'open-graphite' ), $jetpack_link); ?></p>
@@ -59,7 +61,7 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 		<div class="og-nav">
 			<ul>
 				<li><a href="#homepage"><?php _e( 'Homepage', 'open-graphite' ); ?></a></li>
-				<li><a href="#facebook"><?php _e( 'Facebook App ID', 'open-graphite' ); ?></a></li>
+				<li><a href="#facebook"><?php _e( 'Facebook', 'open-graphite' ); ?></a></li>
 				<li><a href="#twitter"><?php _e( 'Twitter', 'open-graphite' ); ?></a></li>
 				<li><a href="#post-types"><?php _e( 'Enabled Post Types', 'open-graphite' ); ?></a></li>
 				<li><a href="#defaults"><?php _e( 'Defaults', 'open-graphite' ); ?></a></li>
@@ -92,6 +94,7 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 				</p>
 
 				<h3 class="no-top-margin"><?php _e( 'Image', 'open-graphite' ); ?><sup>*</sup></h3>
+				<p><?php printf( esc_html__( 'It is recommended the image be %1$s or %2$s at very least.', 'open-graphite' ), $the_ogvar['full_dimensions'] , $the_ogvar['min_dimensions']); ?> <a href="https://developers.facebook.com/docs/sharing/webmasters/images/" target="_blank" rel="noopener"><?php _e( 'Learn more', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></p>
 				
 				<?php if($default_image) { ?>
 					
@@ -111,7 +114,7 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 						</a>
 					</div>
 
-					<p><?php if($width >= $the_ogvar['min_image_width'] && $height >= $the_ogvar['min_image_height'] ) { ?><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php } ?><?php printf(__( 'The image dimensions are %1$s x %2$s. Facebook prefers at least %3$s (recommended) or %4$s (minimum).', 'open-graphite' ), $width, $height, $the_ogvar['full_dimensions'], $the_ogvar['min_dimensions']); ?></p>
+					<p><?php if($width >= $the_ogvar['min_image_width'] && $height >= $the_ogvar['min_image_height'] ) { ?><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php } ?><?php printf(__( 'The dimensions of the selected image are %1$s x %2$s.', 'open-graphite' ), $width, $height, $the_ogvar['full_dimensions'], $the_ogvar['min_dimensions']); ?></p>
 
 				<?php } ?>
 				
@@ -254,19 +257,36 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 			</div>
 				
 			<div class="og-settings" id="facebook">
-				<?php $fb_app_ID = $ogoptions['open_graphite_home_fb_app_id']; ?>
+				<?php 
+					$fb_access_token 	= $ogoptions['open_graphite_home_access_token']; 
+					$fb_app_ID 			= $ogoptions['open_graphite_home_fb_app_id']; 
+				?>
 
 				<p class="title">
-					<strong><?php _e( 'Facebook App ID', 'open-graphite' ); ?></strong>
-					<span><?php _e( 'If you do not know what this is, you probably do not need it.', 'open-graphite' ); ?></span>
+					<strong><?php _e( 'Facebook', 'open-graphite' ); ?></strong>
+					<span><?php _e( 'Specify an App ID or an Access Token (recommended).', 'open-graphite' ); ?></span>
 				</p>
 
-				<input type="text" name="openg_settings[open_graphite_home_fb_app_id]" id="openg_settings[open_graphite_home_fb_app_id]" value="<?php if($fb_app_ID) { echo esc_html($fb_app_ID); } ?>" class="quarter" /><br />
+				<h3 class="first"><?php _e( 'Facebook App ID', 'open-graphite' ); ?></h3>
+				<p><?php _e( 'If you do not know what this is, you probably do not need it.', 'open-graphite' ); ?></p>
+				<input type="text" name="openg_settings[open_graphite_home_fb_app_id]" id="openg_settings[open_graphite_home_fb_app_id]" value="<?php if($fb_app_ID) { echo esc_html($fb_app_ID); } ?>" class="app-id-field quarter" /><br />
 				<?php if (!$fb_app_ID) { ?>
-					<a href="https://developers.facebook.com/apps/" target="_blank" rel="noopener"><?php _e( 'Find your Facebook app ID', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
+					<a href="https://developers.facebook.com/apps/" target="_blank" rel="noopener"><?php _e( 'Find your Facebook App ID', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
 				<?php } else { ?>
-					<a href="https://developers.facebook.com/apps/<?php echo $fb_app_ID; ?>/dashboard/" target="_blank" rel="noopener"><?php _e( 'Facebook app dashboard', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
+					<a href="https://developers.facebook.com/apps/<?php echo $fb_app_ID; ?>/dashboard/" target="_blank" rel="noopener"><?php _e( 'Facebook App Dashboard', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
 				<?php } ?>
+
+				<div class="access-token-container">
+					<h3><?php _e( 'Facebook Access Token', 'open-graphite' ); ?> <span class="beta"><?php _e( 'beta', 'open-graphite' ); ?></span></h3>
+					<p><?php _e( 'Automatically push the open graph data of your post to Facebook as soon as it is created or when it is updated.', 'open-graphite' ); ?> <a href="https://rocketapps.com.au/product/open-graphite-pro/#faq-010" target="_blank" rel="noopener"><?php _e( 'Learn more', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></p>
+					<input type="text" name="openg_settings[open_graphite_home_access_token]" id="openg_settings[open_graphite_home_access_token]" value="<?php if($fb_access_token) { echo esc_html($fb_access_token); } ?>" class="half" /><br />
+					<?php if (!$fb_access_token) { ?>
+						<a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noopener"><?php _e( 'Get your Facebook Access Token', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
+					<?php } else { ?>
+						<a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noopener"><?php _e( 'Graph API Explorer', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
+					<?php } ?>
+				</div>
+
 			</div>
 
 			<div class="og-settings" id="twitter">
@@ -382,41 +402,41 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 						<tr>
 							<th scope="row"><?php _e( 'Always use this object type:', 'open-graphite' ); ?></th>
 							<td>
-							<select>
+							<select disabled>
 								<option></option>
 
 								<optgroup label="<?php _e( 'Global', 'open-graphite' ); ?>">
-								<option><?php _e( 'article', 'open-graphite' ); ?></option>
-								<option><?php _e( 'book', 'open-graphite' ); ?></option>
-								<option><?php _e( 'books.author', 'open-graphite' ); ?></option>
-								<option><?php _e( 'books.book', 'open-graphite' ); ?></option>
-								<option><?php _e( 'books.genre', 'open-graphite' ); ?></option>
-								<option><?php _e( 'profile', 'open-graphite' ); ?></option>
-								<option><?php _e( 'website', 'open-graphite' ); ?></option>
-							</optgroup>
+									<option><?php _e( 'article', 'open-graphite' ); ?></option>
+									<option><?php _e( 'book', 'open-graphite' ); ?></option>
+									<option><?php _e( 'books.author', 'open-graphite' ); ?></option>
+									<option><?php _e( 'books.book', 'open-graphite' ); ?></option>
+									<option><?php _e( 'books.genre', 'open-graphite' ); ?></option>
+									<option><?php _e( 'profile', 'open-graphite' ); ?></option>
+									<option><?php _e( 'website', 'open-graphite' ); ?></option>
+								</optgroup>
 
-							<optgroup label="<?php _e( 'Music', 'open-graphite' ); ?>">
-								<option><?php _e( 'music.album', 'open-graphite' ); ?></option>
-								<option><?php _e( 'music.radio_station', 'open-graphite' ); ?></option>
-								<option><?php _e( 'music.song', 'open-graphite' ); ?></option>
-							</optgroup>
+								<optgroup label="<?php _e( 'Music', 'open-graphite' ); ?>">
+									<option><?php _e( 'music.album', 'open-graphite' ); ?></option>
+									<option><?php _e( 'music.radio_station', 'open-graphite' ); ?></option>
+									<option><?php _e( 'music.song', 'open-graphite' ); ?></option>
+								</optgroup>
 
-							<optgroup label="<?php _e( 'Video', 'open-graphite' ); ?>">
-								<option><?php _e( 'video.episode', 'open-graphite' ); ?></option>
-								<option><?php _e( 'video.movie', 'open-graphite' ); ?></option>
-								<option><?php _e( 'video.other', 'open-graphite' ); ?></option>
-								<option><?php _e( 'video.tv_show', 'open-graphite' ); ?></option>
-							</optgroup>
+								<optgroup label="<?php _e( 'Video', 'open-graphite' ); ?>">
+									<option><?php _e( 'video.episode', 'open-graphite' ); ?></option>
+									<option><?php _e( 'video.movie', 'open-graphite' ); ?></option>
+									<option><?php _e( 'video.other', 'open-graphite' ); ?></option>
+									<option><?php _e( 'video.tv_show', 'open-graphite' ); ?></option>
+								</optgroup>
 
-							<optgroup label="<?php _e( 'Other', 'open-graphite' ); ?>">
-								<option><?php _e( 'business.business', 'open-graphite' ); ?></option>
-								<option><?php _e( 'object', 'open-graphite' ); ?></option>
-								<option><?php _e( 'place', 'open-graphite' ); ?></option>
-								<option><?php _e( 'product', 'open-graphite' ); ?></option>
-								<option><?php _e( 'product.group', 'open-graphite' ); ?></option>
-								<option><?php _e( 'restaurant.menu', 'open-graphite' ); ?></option>
-								<option><?php _e( 'restaurant.menu_item', 'open-graphite' ); ?></option>
-							</optgroup>
+								<optgroup label="<?php _e( 'Other', 'open-graphite' ); ?>">
+									<option><?php _e( 'business.business', 'open-graphite' ); ?></option>
+									<option><?php _e( 'object', 'open-graphite' ); ?></option>
+									<option><?php _e( 'place', 'open-graphite' ); ?></option>
+									<option><?php _e( 'product', 'open-graphite' ); ?></option>
+									<option><?php _e( 'product.group', 'open-graphite' ); ?></option>
+									<option><?php _e( 'restaurant.menu', 'open-graphite' ); ?></option>
+									<option><?php _e( 'restaurant.menu_item', 'open-graphite' ); ?></option>
+								</optgroup>
 
 							</select> <?php echo $utp_notice; ?>
 							</td>
@@ -425,14 +445,14 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 						<tr>
 							<th scope="row"><?php _e( 'Title character limit:', 'open-graphite' ); ?></th>
 							<td>
-								<input type="number" min="1" max="300" /> <?php echo $utp_notice; ?>
+								<input type="number" min="1" max="300" disabled /> <?php echo $utp_notice; ?>
 							</td>
 						</tr>
 
 						<tr>
 							<th scope="row"><?php _e( 'Description character limit:', 'open-graphite' ); ?></th>
 							<td>
-								<input type="number" min="1" max="300" /> <?php echo $utp_notice; ?>
+								<input type="number" min="1" max="300" disabled /> <?php echo $utp_notice; ?>
 							</td>
 						</tr>
 
@@ -453,13 +473,15 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 			<div class="og-settings" id="debugging">
 				<p class="title">
 					<strong><?php _e( 'Debugging', 'open-graphite' ); ?></strong>
-					<span><?php _e( 'Test your page using official social network online tools.', 'open-graphite' ); ?></span>
+					<span><?php _e( 'Test your page using official and 3rd party online tools.', 'open-graphite' ); ?></span>
 				</p>
 
 				<p>
-					<a href="https://developers.facebook.com/tools/debug/sharing/?q=<?php echo home_url(); ?>" target="_blank" rel="noopener">
-					<?php _e( 'Facebook', 'open-graphite' ); ?></a> | 
-					<a href="https://cards-dev.twitter.com/validator" target="_blank" rel="noopener"><?php _e( 'Twitter', 'open-graphite' ); ?></a>
+					<a href="https://developers.facebook.com/tools/debug/sharing/?q=<?php echo home_url(); ?>" target="_blank" rel="noopener" class="og-button"><?php _e( 'Facebook', 'open-graphite' ); ?><img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></a> 
+					<a href="https://cards-dev.twitter.com/validator" target="_blank" rel="noopener" class="og-button"><?php _e( 'Twitter', 'open-graphite' ); ?><img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></a>
+					<a href="https://www.linkedin.com/post-inspector/inspect/<?php echo home_url(); ?>" target="_blank" rel="noopener" class="og-button"><?php _e( 'Linkedin Post Inspector', 'open-graphite' ); ?><img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></a>
+					<a href="http://debug.iframely.com/?uri=<?php echo home_url(); ?>" target="_blank" rel="noopener" class="og-button"><?php _e( 'iFramely', 'open-graphite' ); ?><img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></a>
+					<a href="https://opengraphcheck.com/result.php?url=<?php echo home_url(); ?>" target="_blank" rel="noopener" class="og-button"><?php _e( 'Open Graph Check', 'open-graphite' ); ?><img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></a>
 				</p>
 			</div>
 
@@ -474,13 +496,13 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 				<ul>
 					<li><input type="radio" name="openg_settings[output_priority]" value="low_priority" <?php if($output_priority == 'low_priority') { echo 'checked'; } ?> /><?php _e( 'Low', 'open-graphite' ); ?></li>
 					<li><input type="radio" name="openg_settings[output_priority]" value="high_priority" <?php if($output_priority == 'high_priority') { echo 'checked'; } ?> /><?php _e( 'High', 'open-graphite' ); ?></li>
-					<li><input type="radio" name="openg_settings[output_priority]" value="auto_priority" <?php if($output_priority == 'auto_priority') { echo 'checked'; } ?> /><?php _e( 'Auto', 'open-graphite' ); ?></li>
+					<li><input type="radio" name="openg_settings[output_priority]" value="auto_priority" <?php if($output_priority == 'auto_priority' || !$output_priority) { echo 'checked'; } ?> /><?php _e( 'Auto (default)', 'open-graphite' ); ?></li>
 				</ul>
 
 				<?php if ( class_exists( 'Jetpack' )) { ?>
 				<strong><?php _e( 'Jetpack', 'open-graphite' ); ?></strong>
 				<ul>
-					<li><input type="checkbox" name="openg_settings[disable_jetpack_og]" id="openg_settings[disable_jetpack_og]" value="disable_jetpack_og" <?php if ( ! empty( $ogoptions['disable_jetpack_og'] ) ) { ?>checked<?php } ?> /> <?php _e( 'Avoid Jetpack open graph meta tag conflict', 'open-graphite' ); ?></li>
+					<li><input type="checkbox" name="openg_settings[disable_jetpack_og]" id="openg_settings[disable_jetpack_og]" value="disable_jetpack_og" <?php if ( ! empty( $ogoptions['disable_jetpack_og'] ) ) { ?>checked<?php } ?> /> <?php _e( 'Avoid Jetpack open graph meta tag conflict.', 'open-graphite' ); ?></li>
 				</ul>
 				<?php } ?>
 			</div>
@@ -491,16 +513,16 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 					<strong><?php _e( 'Upgrade to Pro', 'open-graphite' ); ?></strong>
 					<span><?php _e( 'Get the pro advantage for several additional benefits.', 'open-graphite' ); ?></span>
 				</p>
-
+					<?php $tick = '<span class="dashicons dashicons-yes og-dashicons-yes"></span> '; ?>
 				<ul>
-					<li><span class="dashicons dashicons-yes og-dashicons-yes"></span> <?php _e( 'Use on other post types (not just posts and pages)', 'open-graphite' ); ?></li>
-					<li><span class="dashicons dashicons-yes og-dashicons-yes"></span> <?php _e( 'Specify automatic defaults for titles, descriptions, featured images and object types', 'open-graphite' ); ?></li>
-					<li><span class="dashicons dashicons-yes og-dashicons-yes"></span> <?php _e( 'Facebook, Twitter and Linkedin previews for mobile and desktop', 'open-graphite' ); ?></li>
-					<li><span class="dashicons dashicons-yes og-dashicons-yes"></span> <?php _e( 'Open Graph content indicators', 'open-graphite' ); ?></li>
-					<li><span class="dashicons dashicons-yes og-dashicons-yes"></span> <?php _e( 'Limit the number of characters for titles and descriptions (prevent your titles and descriptions getting truncated)', 'open-graphite' ); ?></li>
-					<li><span class="dashicons dashicons-yes og-dashicons-yes"></span> <?php _e( 'Additional open graph options', 'open-graphite' ); ?></li>
-					<li><span class="dashicons dashicons-yes og-dashicons-yes"></span> <?php _e( '12 months of updates and priority support', 'open-graphite' ); ?></li>
-					<li><span class="dashicons dashicons-yes og-dashicons-yes"></span> <?php _e( 'Significant discounts on selected Rocket Apps products', 'open-graphite' ); ?></li>
+					<li><?php echo $tick; ?> <?php _e( 'Use on other post types (not just posts and pages)', 'open-graphite' ); ?></li>
+					<li><?php echo $tick; ?> <?php _e( 'Specify automatic defaults for titles, descriptions, featured images and object types', 'open-graphite' ); ?></li>
+					<li><?php echo $tick; ?> <?php _e( 'Facebook, Twitter and Linkedin previews for mobile and desktop', 'open-graphite' ); ?></li>
+					<li><?php echo $tick; ?> <?php _e( 'Open Graph content indicators', 'open-graphite' ); ?></li>
+					<li><?php echo $tick; ?> <?php _e( 'Limit the number of characters for titles and descriptions (prevent your titles and descriptions getting truncated)', 'open-graphite' ); ?></li>
+					<li><?php echo $tick; ?> <?php _e( 'Additional open graph options', 'open-graphite' ); ?></li>
+					<li><?php echo $tick; ?> <?php _e( '12 months of updates', 'open-graphite' ); ?></li>
+					<li><?php echo $tick; ?> <?php _e( 'Priority support', 'open-graphite' ); ?></li>
 				</ul>
 
 				<p>
@@ -529,6 +551,14 @@ $utp_notice = '<em class="og-pro">' . _('Pro') . '</em>';
 			}
 		});
 	}
+
+	jQuery('.app-id-field').keyup(function() {
+		if(jQuery(this).val() == '') {
+			jQuery('.access-token-container input').attr('disabled','disabled');
+		} else {
+			jQuery('.access-token-container input').removeAttr('disabled');
+		}
+	});
 	
 	/* Smooth scroll */
 	jQuery(document).on('click', 'a[href^="#"]', function(e) {
