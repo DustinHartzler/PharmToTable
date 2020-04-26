@@ -92,8 +92,18 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 
 		// Define setting fields.
 		$this->form_fields = array(
+			'enabled'         => array(
+				'title'       => __( 'Enable/Disable', 'woocommerce-payments' ),
+				'label'       => __( 'Enable WooCommerce Payments', 'woocommerce-payments' ),
+				'type'        => 'checkbox',
+				'description' => '',
+				'default'     => 'no',
+			),
 			'account_details' => array(
 				'type' => 'account_actions',
+			),
+			'account_status'  => array(
+				'type' => 'account_status',
 			),
 			'manual_capture'  => array(
 				'title'       => __( 'Manual Capture', 'woocommerce-payments' ),
@@ -110,13 +120,6 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 				'description' => __( 'Simulate transactions using test card numbers.', 'woocommerce-payments' ),
 				'default'     => 'no',
 				'desc_tip'    => true,
-			),
-			'enabled'         => array(
-				'title'       => __( 'Enable/Disable', 'woocommerce-payments' ),
-				'label'       => __( 'Enable WooCommerce Payments', 'woocommerce-payments' ),
-				'type'        => 'checkbox',
-				'description' => '',
-				'default'     => 'no',
 			),
 			'enable_logging'  => array(
 				'title'       => __( 'Debug Log', 'woocommerce-payments' ),
@@ -228,8 +231,14 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 				<?php if ( $this->is_in_test_mode() ) : ?>
 					<p class="testmode-info">
 					<?php
-						/* translators: link to Stripe testing page */
-						echo wp_kses_post( sprintf( __( '<strong>Test mode:</strong> use test card numbers listed <a href="%s" target="_blank">here</a>.', 'woocommerce-payments' ), 'https://docs.woocommerce.com/document/payments/testing/#test-cards' ) );
+						echo WC_Payments_Utils::esc_interpolated_html(
+							/* translators: link to Stripe testing page */
+							__( '<strong>Test mode:</strong> use test card numbers listed <a>here</a>.', 'woocommerce-payments' ),
+							[
+								'strong' => '<strong>',
+								'a'      => '<a href="https://docs.woocommerce.com/document/payments/testing/#test-cards" target="_blank">',
+							]
+						);
 					?>
 					</p>
 				<?php endif; ?>
@@ -286,8 +295,14 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 
 				if ( 'requires_capture' === $status ) {
 					$note = sprintf(
-						/* translators: %1: the authorized amount, %2: transaction ID of the payment */
-						__( 'A payment of %1$s was <strong>authorized</strong> using WooCommerce Payments (<code>%2$s</code>).', 'woocommerce-payments' ),
+						WC_Payments_Utils::esc_interpolated_html(
+							/* translators: %1: the authorized amount, %2: transaction ID of the payment */
+							__( 'A payment of %1$s was <strong>authorized</strong> using WooCommerce Payments (<code>%2$s</code>).', 'woocommerce-payments' ),
+							[
+								'strong' => '<strong>',
+								'code'   => '<code>',
+							]
+						),
 						wc_price( $amount ),
 						$transaction_id
 					);
@@ -295,8 +310,14 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 					$order->set_transaction_id( $transaction_id );
 				} else {
 					$note = sprintf(
-						/* translators: %1: the successfully charged amount, %2: transaction ID of the payment */
-						__( 'A payment of %1$s was <strong>successfully charged</strong> using WooCommerce Payments (<code>%2$s</code>).', 'woocommerce-payments' ),
+						WC_Payments_Utils::esc_interpolated_html(
+							/* translators: %1: the successfully charged amount, %2: transaction ID of the payment */
+							__( 'A payment of %1$s was <strong>successfully charged</strong> using WooCommerce Payments (<code>%2$s</code>).', 'woocommerce-payments' ),
+							[
+								'strong' => '<strong>',
+								'code'   => '<code>',
+							]
+						),
 						wc_price( $amount ),
 						$transaction_id
 					);
@@ -419,65 +440,64 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 	}
 
 	/**
+	 * Overrides the original method in woo's WC_Settings_API in order to conditionally render the enabled checkbox.
+	 *
+	 * @param string $key Field key.
+	 * @param array  $data Field data.
+	 *
+	 * @return string Checkbox markup or empty string.
+	 */
+	public function generate_checkbox_html( $key, $data ) {
+		if ( 'enabled' === $key && ! $this->account->is_stripe_connected( false ) ) {
+			return '';
+		}
+		return parent::generate_checkbox_html( $key, $data );
+	}
+
+	/**
+	 * Outputs the container for account status information.
+	 *
+	 * @return string Container markup or empty if the account is not connected.
+	 */
+	public function generate_account_status_html() {
+		if ( ! $this->account->is_stripe_connected( false ) ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<tr valign="top">
+			<th scope="row">
+				<?php echo esc_html( __( 'Account Status', 'woocommerce-payments' ) ); ?>
+			</th>
+			<td>
+				<div id="wcpay-account-status-container"></div>
+			</td>
+		</tr>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Generate markup for account actions
 	 */
 	public function generate_account_actions_html() {
 		try {
 			$stripe_connected = $this->account->try_is_stripe_connected();
 			if ( $stripe_connected ) {
-				$description = sprintf(
+				$description = WC_Payments_Utils::esc_interpolated_html(
 					/* translators: 1) dashboard login URL */
-					__( '<a href="%1$s">View and edit account details</a>', 'woocommerce-payments' ),
-					WC_Payments_Account::get_login_url()
+					__( '<a>View and edit account details</a>', 'woocommerce-payments' ),
+					[
+						'a' => '<a href="' . WC_Payments_Account::get_login_url() . '">',
+					]
 				);
 			} else {
-				$description  = '<p>';
-				$description .= __(
-					'Accept credit cards online using WooCommerce payments. Simply verify your business details to get started.',
-					'woocommerce-payments'
-				);
-				$description .= ' ';
-
-				/* translators: Link to WordPress.com TOS URL */
-				$terms_message = __(
-					'By clicking “Verify details,” you agree to the {A}Terms of Service{/A}.',
-					'woocommerce-payments'
-				);
-				$terms_message = str_replace( '{A}', '<a href="https://wordpress.com/tos">', $terms_message );
-				$terms_message = str_replace( '{/A}', '</a>', $terms_message );
-				$description  .= $terms_message;
-				$description  .= '</p>';
-
-				$description .= '<p>';
-				$description .= '<a href="' . WC_Payments_Account::get_connect_url() . '" class="button">';
-				$description .= __( ' Verify details', 'woocommerce-payments' );
-				$description .= '</a>';
-				$description .= '</p>';
-
-				$description = wp_kses(
-					$description,
-					array(
-						'a' => array(
-							'class' => array(),
-							'href'  => array(),
-						),
-						'p' => array(),
-					)
-				);
+				$description = WC_Payments_Account::get_connection_message_html();
 			}
-
-			// Allow the description text to be altered by filters.
-			$description = apply_filters(
-				'wc_payments_account_actions',
-				$description,
-				$stripe_connected,
-				WC_Payments_Account::get_login_url(),
-				WC_Payments_Account::get_connect_url()
-			);
-
 		} catch ( Exception $e ) {
 			// do not render the actions if the server is unreachable.
-			$description = __( 'Error determining the connection status.', 'woocommerce-payments' );
+			$description = esc_html__( 'Error determining the connection status.', 'woocommerce-payments' );
 		}
 
 		ob_start();
@@ -487,7 +507,7 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 				<?php echo esc_html( __( 'Account', 'woocommerce-payments' ) ); ?>
 			</th>
 			<td>
-				<?php echo wp_kses_post( $description ); ?>
+				<?php echo $description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</td>
 		</tr>
 		<?php
@@ -536,16 +556,22 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 
 		if ( 'succeeded' === $status ) {
 			$note = sprintf(
-				/* translators: %1: the successfully charged amount */
-				__( 'A payment of %1$s was <strong>successfully captured</strong> using WooCommerce Payments.', 'woocommerce-payments' ),
+				WC_Payments_Utils::esc_interpolated_html(
+					/* translators: %1: the successfully charged amount */
+					__( 'A payment of %1$s was <strong>successfully captured</strong> using WooCommerce Payments.', 'woocommerce-payments' ),
+					[ 'strong' => '<strong>' ]
+				),
 				wc_price( $amount )
 			);
 			$order->add_order_note( $note );
 			$order->payment_complete();
 		} else {
 			$note = sprintf(
-				/* translators: %1: the successfully charged amount */
-				__( 'A capture of %1$s <strong>failed</strong> to complete.', 'woocommerce-payments' ),
+				WC_Payments_Utils::esc_interpolated_html(
+					/* translators: %1: the successfully charged amount */
+					__( 'A capture of %1$s <strong>failed</strong> to complete.', 'woocommerce-payments' ),
+					[ 'strong' => '<strong>' ]
+				),
 				wc_price( $amount )
 			);
 			$order->add_order_note( $note );
@@ -565,14 +591,20 @@ class WC_Payment_Gateway_WCPay extends WC_Payment_Gateway_CC {
 		$order->save();
 
 		if ( 'canceled' === $status ) {
-			$order->update_status( 'cancelled', __( 'Payment authorization was successfully <strong>cancelled</strong>.', 'woocommerce-payments' ) );
-		} else {
-			$note = sprintf(
-				/* translators: %1: the successfully charged amount */
-				__( 'Canceling authorization <strong>failed</strong> to complete.', 'woocommerce-payments' ),
-				wc_price( $amount )
+			$order->update_status(
+				'cancelled',
+				WC_Payments_Utils::esc_interpolated_html(
+					__( 'Payment authorization was successfully <strong>cancelled</strong>.', 'woocommerce-payments' ),
+					[ 'strong' => '<strong>' ]
+				)
 			);
-			$order->add_order_note( $note );
+		} else {
+			$order->add_order_note(
+				WC_Payments_Utils::esc_interpolated_html(
+					__( 'Canceling authorization <strong>failed</strong> to complete.', 'woocommerce-payments' ),
+					[ 'strong' => '<strong>' ]
+				)
+			);
 		}
 	}
 }

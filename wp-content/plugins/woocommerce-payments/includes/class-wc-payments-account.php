@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use WCPay\Logger;
+
 /**
  * Class handling any account connection functionality
  */
@@ -111,6 +113,45 @@ class WC_Payments_Account {
 	}
 
 	/**
+	 * Gets the account status data for rendering on the settings page.
+	 *
+	 * @return array An array containing the status data.
+	 */
+	public function get_account_status_data() {
+		try {
+			$account = $this->get_cached_account_data();
+		} catch ( Exception $e ) {
+			return array(
+				'error' => true,
+			);
+		}
+
+		if ( is_array( $account ) && empty( $account ) ) {
+			// empty array means no account. This data should not be used when the account is not connected.
+			return array(
+				'error' => true,
+			);
+		}
+
+		if ( ! isset( $account['status'] )
+			|| ! isset( $account['payments_enabled'] )
+			|| ! isset( $account['deposits_status'] ) ) {
+			// return an error if any of the account data is missing.
+			return array(
+				'error' => true,
+			);
+		}
+
+		return array(
+			'status'          => $account['status'],
+			'paymentsEnabled' => $account['payments_enabled'],
+			'depositsStatus'  => $account['deposits_status'],
+			'currentDeadline' => isset( $account['current_deadline'] ) ? $account['current_deadline'] : false,
+			'accountLink'     => $this->get_login_url(),
+		);
+	}
+
+	/**
 	 * Checks if Stripe account is connected and displays admin notices if it is not.
 	 *
 	 * @return bool True if the account is connected properly.
@@ -119,66 +160,18 @@ class WC_Payments_Account {
 		try {
 			$account = $this->get_cached_account_data();
 		} catch ( Exception $e ) {
-			$message = sprintf(
-				/* translators: %1: error message */
-				__( 'Could not fetch data for your account: "%1$s"', 'woocommerce-payments' ),
-				$e->getMessage()
-			);
-
-			add_filter(
-				'admin_notices',
-				function () use ( $message ) {
-					WC_Payments::display_admin_error( $message );
-				}
-			);
-
+			// Return early. The exceptions have been logged in the http client.
 			return false;
 		}
 
 		if ( empty( $account ) ) {
 			if ( ! self::is_on_boarding_disabled() ) {
-				// Invite the user to connect.
-				$message  = '<p>';
-				$message .= __(
-					'Accept credit cards online using WooCommerce payments. Simply verify your business details to get started.',
-					'woocommerce-payments'
-				);
-				$message .= '</p>';
-				$message .= '<p>';
-
-				/* translators: Link to WordPress.com TOS URL */
-				$terms_message = __(
-					'By clicking “Verify details,” you agree to the {A}Terms of Service{/A}.',
-					'woocommerce-payments'
-				);
-				$terms_message = str_replace( '{A}', '<a href="https://wordpress.com/tos">', $terms_message );
-				$terms_message = str_replace( '{/A}', '</a>', $terms_message );
-				$message      .= $terms_message;
-				$message      .= '</p>';
-
-				$message .= '<p>';
-				$message .= '<a href="' . self::get_connect_url() . '" class="button">';
-				$message .= __( ' Verify details', 'woocommerce-payments' );
-				$message .= '</a>';
-				$message .= '</p>';
-
-				$message = wp_kses(
-					$message,
-					array(
-						'a' => array(
-							'class' => array(),
-							'href'  => array(),
-						),
-						'p' => array(),
-					)
-				);
+				$message = self::get_connection_message_html();
 			} else {
 				// On-boarding has been disabled on the server, so show a message to that effect.
-				$message = sprintf(
-					__(
-						'Thank you for installing and activating WooCommerce Payments! We\'ve temporarily paused new account creation. We\'ll notify you when we resume!',
-						'woocommerce-payments'
-					)
+				$message = esc_html__(
+					'Thank you for installing and activating WooCommerce Payments! We\'ve temporarily paused new account creation. We\'ll notify you when we resume!',
+					'woocommerce-payments'
 				);
 			}
 
@@ -194,15 +187,6 @@ class WC_Payments_Account {
 			return false;
 		}
 
-		if ( $account['has_pending_requirements'] ) {
-			$message = $this->get_verify_requirements_message( $account['current_deadline'] );
-			add_filter(
-				'admin_notices',
-				function () use ( $message ) {
-					WC_Payments::display_admin_error( $message );
-				}
-			);
-		}
 		return true;
 	}
 
@@ -249,6 +233,7 @@ class WC_Payments_Account {
 			try {
 				$this->init_oauth();
 			} catch ( Exception $e ) {
+				Logger::error( 'Init oauth flow failed. ' . $e );
 				$this->add_notice_to_settings_page(
 					__( 'There was a problem redirecting you to the account connection page. Please try again.', 'woocommerce-payments' ),
 					'notice-error'
@@ -269,12 +254,50 @@ class WC_Payments_Account {
 	}
 
 	/**
+	 * Returns html markup containing the connection message.
+	 *
+	 * @return string Connection message.
+	 */
+	public static function get_connection_message_html() {
+		ob_start();
+		?>
+		<p>
+			<?php
+			esc_html_e(
+				'Accept credit cards online using WooCommerce Payments. Simply verify your business details to get started.',
+				'woocommerce-payments'
+			);
+			?>
+		</p>
+		<p>
+			<?php
+			echo WC_Payments_Utils::esc_interpolated_html(
+				__( 'By clicking “Verify details,” you agree to the <a>Terms of Service</a>.', 'woocommerce-payments' ),
+				[ 'a' => '<a href="https://wordpress.com/tos">' ]
+			);
+			?>
+		</p>
+		<p>
+			<a href="<?php echo esc_attr( self::get_connect_url() ); ?>" class="button">
+				<?php esc_html_e( ' Verify details', 'woocommerce-payments' ); ?>
+			</a>
+		</p>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Get Stripe login url
 	 *
 	 * @return string Stripe account login url.
 	 */
 	public static function get_login_url() {
-		return wp_nonce_url( add_query_arg( [ 'wcpay-login' => '1' ] ), 'wcpay-login' );
+		return add_query_arg(
+			[
+				'wcpay-login' => '1',
+				'_wpnonce'    => wp_create_nonce( 'wcpay-login' ),
+			]
+		);
 	}
 
 	/**
@@ -327,7 +350,6 @@ class WC_Payments_Account {
 		);
 
 		if ( false === $oauth_data['url'] ) {
-			$account_id = sanitize_text_field( wp_unslash( $oauth_data['account_id'] ) );
 			WC_Payments::get_gateway()->update_option( 'enabled', 'yes' );
 			wp_safe_redirect(
 				add_query_arg(
@@ -442,34 +464,6 @@ class WC_Payments_Account {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Get Stripe pending requirements message with dashboard link, based on current deadline.
-	 *
-	 * If $current_deadline is null, it means that the requirements are already past due.
-	 *
-	 * TODO: Payouts is a Stripe dashboard terminology and it's being used here to avoid confusion.
-	 * Once we have our custom dashboard running, Payouts should be renamed to Deposits.
-	 *
-	 * @param int|null $current_deadline Timestamp for when the requirements are due.
-	 */
-	private function get_verify_requirements_message( $current_deadline = null ) {
-		if ( ! empty( $current_deadline ) ) {
-			return sprintf(
-				/* translators: 1) formatted requirements current deadline 2) dashboard login URL */
-				__( 'We require additional details about your business. Please provide the required information by %1$s to avoid an interruption in your scheduled payouts. <a href="%2$s">Update now</a>', 'woocommerce-payments' ),
-				/* translators: date time format to display deadline in "...provide the required information by %1$s to avoid an..."*/
-				date_i18n( __( 'ga M j, Y', 'woocommerce-payments' ), $current_deadline ),
-				self::get_login_url()
-			);
-		}
-
-		return sprintf(
-			/* translators: 1) dashboard login URL */
-			__( 'Your payouts have been suspended. We require additional details about your business. Please provide the requested information so you may continue to receive your payouts. <a href="%1$s">Update now</a>', 'woocommerce-payments' ),
-			self::get_login_url()
-		);
 	}
 
 	/**

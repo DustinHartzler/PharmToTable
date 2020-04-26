@@ -102,15 +102,54 @@ jQuery( function( $ ) {
 		return billingDetails;
 	};
 
+	// Show error notice at top of checkout form.
+	var showError = function( errorMessage ) {
+		var messageWrapper = '<ul class="woocommerce-error" role="alert">' + errorMessage + '</ul>';
+		var $container = $( '.woocommerce-notices-wrapper, form.checkout' ).first();
+
+		if ( ! $container.length ) {
+			return;
+		}
+
+		// Adapted from WooCommerce core @ ea9aa8c, assets/js/frontend/checkout.js#L514-L529
+		$( '.woocommerce-NoticeGroup-checkout, .woocommerce-error, .woocommerce-message' ).remove();
+		$container.prepend( '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout">' + messageWrapper + '</div>' );
+		$container.find( '.input-text, select, input:checkbox' ).trigger( 'validate' ).blur();
+
+		var scrollElement = $( '.woocommerce-NoticeGroup-checkout' );
+		if ( ! scrollElement.length ) {
+			scrollElement = $container;
+		}
+
+		$.scroll_to_notices( scrollElement );
+		$( document.body ).trigger( 'checkout_error' );
+	};
+
 	// Create payment method on submission.
 	var paymentMethodGenerated;
-	$( 'form.checkout' ).on( 'checkout_place_order_woocommerce_payments', function() {
+
+	/**
+	 * Generates a payment method, saves its ID in a hidden input, and re-submits the form.
+	 *
+	 * @param {object} $form The jQuery object for the form.
+	 * @return {boolean} A flag for the event handler.
+	 */
+	var handleOnPaymentFormSubmit = function( $form ) {
 		// We'll resubmit the form after populating our payment method, so if this is the second time this event
 		// is firing we should let the form submission happen.
 		if ( paymentMethodGenerated ) {
 			paymentMethodGenerated = null;
 			return;
 		}
+
+		// Block UI to indicate processing and avoid duplicate submission.
+		$form.addClass( 'processing' ).block( {
+			message: null,
+			overlayCSS: {
+				background: '#fff',
+				opacity: 0.6,
+			},
+		} );
 
 		var paymentMethodArgs = {
 			type: 'card',
@@ -142,10 +181,26 @@ jQuery( function( $ ) {
 				paymentMethodInput.value = id;
 
 				// Re-submit the form.
-				$( '.woocommerce-checkout' ).submit();
+				$form.removeClass( 'processing' ).submit();
+			} )
+			.catch( function( error ) {
+				$form.removeClass( 'processing' ).unblock();
+				showError( error.message );
 			} );
 
 		// Prevent form submission so that we can fire it once a payment method has been generated.
 		return false;
+	};
+
+	// Handle the checkout form when WooCommerce Payments is chosen.
+	$( 'form.checkout' ).on( 'checkout_place_order_woocommerce_payments', function() {
+		return handleOnPaymentFormSubmit( $( this ) );
+	} );
+
+	// Handle the Pay for Order form if WooCommerce Payments is chosen.
+	$( '#order_review' ).on( 'submit', function() {
+		if ( $( '#payment_method_woocommerce_payments' ).is( ':checked' ) ) {
+			return handleOnPaymentFormSubmit( $( '#order_review' ) );
+		}
 	} );
 } );
