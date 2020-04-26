@@ -8,7 +8,7 @@ add_filter( 'next_comments_link_attributes', 'thrive_get_next_comments_link_attr
 global $is_thrive_theme;
 $is_thrive_theme = true;
 /*
- * Include the init file that handles the main configurations and the backend 
+ * Include the init file that handles the main configurations and the backend
  * methods
  */
 include( get_template_directory() . '/inc/configs/init.php' );
@@ -948,7 +948,7 @@ if ( ! function_exists( 'thrive_comments' ) ) :
 endif; //thrive_comments
 
 /*
- * Add custom items to the menu from the admin part. 
+ * Add custom items to the menu from the admin part.
  */
 add_filter( 'wp_setup_nav_menu_item', 'thrive_custom_admin_nav_item' );
 
@@ -1313,3 +1313,14 @@ add_filter( 'tve_dash_enqueue_frontend', '__return_true' );
 
 		wp_register_script( '404-script', get_stylesheet_directory_uri() . '/js/404/html5shiv.js', array('jquery'), false, true );
 		wp_enqueue_script( '404-script' );
+
+
+/**
+ * DH edit - remove quantity fields
+ */
+
+		add_filter( 'woocommerce_is_sold_individually', 'wc_remove_all_quantity_fields', 10, 2 );
+function wc_remove_all_quantity_fields( $return, $product )
+{
+    return( true );
+}
