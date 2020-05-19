@@ -25,6 +25,8 @@ function ninja_forms_ajax_migrate_database(){
 add_action( 'wp_ajax_ninja_forms_ajax_import_form', 'ninja_forms_ajax_import_form' );
 function ninja_forms_ajax_import_form(){
     if( ! current_user_can( apply_filters( 'ninja_forms_admin_upgrade_import_form_capabilities', 'manage_options' ) ) ) return;
+    if ( ! isset( $_POST[ 'security' ] ) ) return;
+    if ( ! wp_verify_nonce( $_POST[ 'security' ], 'ninja_forms_upgrade_nonce' ) ) return;
 
     $import = stripslashes( $_POST[ 'import' ] );
 
@@ -48,6 +50,8 @@ function ninja_forms_ajax_import_form(){
 add_action( 'wp_ajax_ninja_forms_ajax_import_fields', 'ninja_forms_ajax_import_fields' );
 function ninja_forms_ajax_import_fields(){
     if( ! current_user_can( apply_filters( 'ninja_forms_admin_upgrade_import_fields_capabilities', 'manage_options' ) ) ) return;
+    if ( ! isset( $_POST[ 'security' ] ) ) return;
+    if ( ! wp_verify_nonce( $_POST[ 'security' ], 'ninja_forms_upgrade_nonce' ) ) return;
     $fields = stripslashes( WPN_Helper::esc_html($_POST[ 'fields' ]) ); // TODO: How to sanitize serialized string?
     $fields = maybe_unserialize( $fields );
 

@@ -1,9 +1,9 @@
 === Ninja Forms Contact Form - The Drag and Drop Form Builder for WordPress ===
 Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, krmoorhouse, jmcelhaney, wpnzach, ericwindhamsd
 Tags: forms, contact form, email form, form builder, custom form, pdf form, registration form, payment form, login form, contact me, signature form, upload form, file upload form, conditional form, feedback form, appointment form, quote form, survey form, contact button, signup form, form plugin, contact form plugin, subscription form, email subscription form, newsletter form, donation form, booking form, quote request form, multi page form, conditional logic form, subscription form, application form, employment verification form, star rating form, rating form, event form, mailchimp form, campaign monitor form, constant contact form, mailpoet form, aweber form, cleverreach form, emma form, convertkit form, active campaign form, salesforce form, zoho form, capsule form, insightly form, pipelinedeals form, onepagecrm form
-Requires at least: 5.1
-Tested up to: 5.3
-Stable tag: 3.4.24.1
+Requires at least: 5.2
+Tested up to: 5.4
+Stable tag: 3.4.24.2
 License: GPLv2 or later
 
 The 100% beginner friendly WordPress form builder. Drag & drop form fields to build beautiful, professional contact forms in minutes.
@@ -303,28 +303,19 @@ This section describes how to install the plugin and get it working.
 
 == Upgrade Notice ==
 
-= 3.4.24.1 (5 March 2020) =
+= 3.4.24.2 (28 April 2020) =
 
 *Security:*
 
-* Patched an HTML injection vulnerability in our merge tag system. Many thanks to Tom Standley at ContainCo for practicing responsible disclosure.
-
-*Bugs:*
-
-* User permission filters should now work as expected.
-* Select image fields should now work properly when dev mode is disabled.
-* Resolved an error that was causing php warnings on some API calls.
-* Email settings should now properly read email addresses surrounded by <> characters.
-* Resolved an error that was causing deprecated function warnings in php error logs.
-* Forms with calculations should now display properly on sites using a "formal" language setting.
-* Export should now properly appear as an option in the bulk actions on the submissions page.
-* Resolved an error that was preventing the add-on manager from installing plugins.
-
-*Changes:*
-
-* Add-on updates will now enforce php requirements if the current version on the installation is below the minimum for the add-on.
+* Fixed Cross-Site Request Forgery(CSRF) to stored Cross-Site Scripting(XSS) [reported responsibly](https://ninjaforms.com/security) by Ramuel Gall (Wordfence Threat Intelligence Team).
 
 == Changelog ==
+
+= 3.4.24.2 (28 April 2020) =
+
+*Security:*
+
+* Fixed Cross-Site Request Forgery(CSRF) to stored Cross-Site Scripting(XSS) [reported responsibly](https://ninjaforms.com/security) by Ramuel Gall (Wordfence Threat Intelligence Team).
 
 = 3.4.24.1 (5 March 2020) =
 
