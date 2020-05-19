@@ -1,5 +1,12 @@
 *** WooCommerce All Products For Subscriptions ***
 
+2020.05.11 - version 3.1.11
+* Fix - Cart notice when adding a product with plans on subscription to the cart after adding a product without plans while cart plans exist. Phew.
+
+2020.04.28 - version 3.1.10
+* Fix - Recurring coupons cannot be applied to subscriptions that contain items purchased using a cart subscription plan.
+* Fix - Recurring cart not restored correctly when paying for a manually created initial subscription order created via a manually created subscription.
+
 2020.04.17 - version 3.1.9
 * Fix - Impossible to re-subscribe to items purchased by choosing a cart-level subscription plan.
 * Tweak - Ensure that the 'swselect' script is registered before checking its version.

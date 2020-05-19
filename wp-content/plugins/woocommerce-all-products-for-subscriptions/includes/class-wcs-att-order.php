@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Order hooks for saving/restoring the subscription state of a product to/from order item data.
  *
  * @class    WCS_ATT_Order
- * @version  3.1.9
+ * @version  3.1.10
  */
 class WCS_ATT_Order {
 
@@ -103,8 +103,12 @@ class WCS_ATT_Order {
 			 * Restore scheme when working with subscriptions.
 			 */
 
+			// Paying for an initial subscription order created via a manually created subscription?
+			if ( is_object( $args[ 'order' ] ) && isset( $args[ 'cart_item' ][ 'subscription_initial_payment' ] ) ) {
+				$subscriptions                = wcs_get_subscriptions_for_order( $args[ 'order' ]->get_id(), array( 'order_type' => 'parent' ) );
+				$args[ 'match_subscription' ] = current( $subscriptions );
 			// Setting up a subscription renewal in the cart?
-			if ( is_object( $args[ 'order' ] ) && 'shop_subscription' === $args[ 'order' ]->get_type() ) {
+			} elseif ( is_object( $args[ 'order' ] ) && 'shop_subscription' === $args[ 'order' ]->get_type() ) {
 				$args[ 'match_subscription' ] = $args[ 'order' ];
 			// Creating a product instance from an order item in a subscription?
 			} else if ( ( $subscription_id = $order_item->get_order_id() ) && wcs_is_subscription( $subscription_id ) ) {
@@ -199,9 +203,29 @@ class WCS_ATT_Order {
 	 * @return WC_Product
 	 */
 	public static function restore_product_from_order_item( $product, $order_item ) {
+
+		$scheme_key = null;
+		$scheme_set = null;
+
 		if ( $product && null !== ( $scheme_key = self::get_subscription_scheme( $order_item, array( 'product' => $product ) ) ) ) {
-			WCS_ATT_Product_Schemes::set_subscription_scheme( $product, $scheme_key );
+			$scheme_set = WCS_ATT_Product_Schemes::set_subscription_scheme( $product, $scheme_key );
 		}
+
+		// Scheme originally existed but not applied successfuly? It could mean that product schemes may have changed, or that this product was purchased with a cart plan.
+		if ( false === $scheme_set && $scheme_key ) {
+			// Applying a coupon?
+			if ( doing_action( 'wp_ajax_woocommerce_add_coupon_discount' ) ) {
+
+				// Validate our theory and apply cart level schemes.
+				$subscription_schemes = WCS_ATT_Product_Schemes::get_subscription_schemes( $product );
+
+				if ( empty( $subscription_schemes ) && ( $cart_subscription_schemes = WCS_ATT_Cart::get_cart_subscription_schemes( $product ) ) ) {
+					WCS_ATT_Product_Schemes::set_subscription_schemes( $product, $cart_subscription_schemes );
+					WCS_ATT_Product_Schemes::set_subscription_scheme( $product, $scheme_key );
+				}
+			}
+		}
+
 		return $product;
 	}
 

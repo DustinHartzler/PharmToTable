@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Cart support.
  *
  * @class    WCS_ATT_Cart
- * @version  3.1.5
+ * @version  3.1.11
  */
 class WCS_ATT_Cart {
 
@@ -115,7 +115,7 @@ class WCS_ATT_Cart {
 	 *
 	 * @since  2.0.0
 	 *
-	 * @param  string         $context  Function call context. Values: 'cart' or 'display'.
+	 * @param  string|WC_Product  $context  Function call context.
 	 * @return array|boolean
 	 */
 	public static function get_cart_subscription_schemes( $context = 'cart' ) {
@@ -137,27 +137,41 @@ class WCS_ATT_Cart {
 			}
 		}
 
-		foreach ( WC()->cart->cart_contents as $cart_item ) {
+		if ( $context instanceof WC_Product ) {
 
 			// Unsupported product type?
-			if ( ! self::is_supported_product_type( $cart_item ) ) {
+			if ( ! self::is_supported_product_type( $context ) ) {
 				return false;
 			}
 
-			// Has subscription schemes defined at product level?
-			if ( $product_level_schemes = WCS_ATT_Product_Schemes::get_subscription_schemes( $cart_item[ 'data' ], 'product' ) ) {
-				return false;
-			}
+		} elseif ( 'raw' === $context ) {
 
-			// Is a legacy subscription product?
-			if ( WCS_ATT_Product::is_subscription_product_type( $cart_item[ 'data' ] ) ) {
-				return false;
-			}
+			return $cart_level_schemes;
 
-			// When getting cart subscription schemes for display, do not return anything when renewing/resubscribing.
-			if ( in_array( $context, array( 'display', 'cart-display' ) ) ) {
-				if ( isset( $cart_item[ 'subscription_renewal' ] ) || isset( $cart_item[ 'subscription_initial_payment' ] ) || isset( $cart_item[ 'subscription_resubscribe' ] ) ) {
+		} elseif ( in_array( $context, array( 'cart', 'display', 'cart-display' ) ) ) {
+
+			foreach ( WC()->cart->cart_contents as $cart_item ) {
+
+				// Unsupported product type?
+				if ( ! self::is_supported_product_type( $cart_item ) ) {
 					return false;
+				}
+
+				// Has subscription schemes defined at product level?
+				if ( $product_level_schemes = WCS_ATT_Product_Schemes::get_subscription_schemes( $cart_item[ 'data' ], 'product' ) ) {
+					return false;
+				}
+
+				// Is a legacy subscription product?
+				if ( WCS_ATT_Product::is_subscription_product_type( $cart_item[ 'data' ] ) ) {
+					return false;
+				}
+
+				// When getting cart subscription schemes for display, do not return anything when renewing/resubscribing.
+				if ( in_array( $context, array( 'display', 'cart-display' ) ) ) {
+					if ( isset( $cart_item[ 'subscription_renewal' ] ) || isset( $cart_item[ 'subscription_initial_payment' ] ) || isset( $cart_item[ 'subscription_resubscribe' ] ) ) {
+						return false;
+					}
 				}
 			}
 		}
@@ -341,14 +355,29 @@ class WCS_ATT_Cart {
 
 					// Check if there is an `add_product_to_subscription` action and copy live schemes.
 					if ( isset( $cart_item[ 'add_product_to_subscription_schemes' ] ) ) {
+
 						// Set schemes to the product object.
 						WCS_ATT_Product_Schemes::set_subscription_schemes( $cart_item[ 'data' ], $cart_item[ 'add_product_to_subscription_schemes' ] );
+
 					} elseif ( ! empty( $cart_level_schemes ) ) {
+
 						// If subscription schemes are available at cart-level, set them on the product object.
 						WCS_ATT_Product_Schemes::set_subscription_schemes( $cart_item[ 'data' ], $cart_level_schemes );
+
+						$cart->cart_contents[ $cart_item_key ][ 'wcsatt_data' ][ 'is_cart_subscription_scheme' ] = true;
 					}
 
 					if ( ! WCS_ATT_Product_Schemes::has_subscription_schemes( $cart_item[ 'data' ] ) ) {
+
+						// Item previously had a cart plan active but no cart plans are available for this cart?
+						if ( empty( $cart_level_schemes ) && ! empty( $cart_item[ 'wcsatt_data' ][ 'is_cart_subscription_scheme' ] ) && isset( $cart_item[ 'wcsatt_data' ][ 'active_subscription_scheme' ] ) && $cart_item[ 'wcsatt_data' ][ 'active_subscription_scheme' ] !== null ) {
+
+							// Are there any cart plans at all?
+							if ( false === $cart_item[ 'wcsatt_data' ][ 'active_subscription_scheme' ] || ( ( $cart_level_schemes_raw = self::get_cart_subscription_schemes( 'raw' ) ) && isset( $cart_level_schemes_raw[ $cart_item[ 'wcsatt_data' ][ 'active_subscription_scheme' ] ] ) ) ) {
+								$cart->cart_contents[ $cart_item_key ][ 'wcsatt_data' ][ 'active_subscription_scheme' ] = null;
+							}
+						}
+
 						continue;
 					}
 

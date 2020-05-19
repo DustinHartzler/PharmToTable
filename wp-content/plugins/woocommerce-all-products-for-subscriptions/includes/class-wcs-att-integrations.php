@@ -82,7 +82,7 @@ class WCS_ATT_Integrations {
 
 				$extension      = __( 'Product Bundles', 'woocommerce-all-products-for-subscriptions' );
 				$extension_full = __( 'WooCommerce Product Bundles', 'woocommerce-all-products-for-subscriptions' );
-				$extension_url  = 'https://woocommerce.com/products/product-bundles/?aff=46147&cid=7316145&pid=apfs';
+				$extension_url  = 'https://woocommerce.com/products/product-bundles/';
 				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for WooCommerce Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
 
 				WCS_ATT_Admin_Notices::add_dismissible_notice( $notice, array( 'dismiss_class' => 'pb_lt_' . $required_version, 'type' => 'native' ) );
@@ -96,7 +96,7 @@ class WCS_ATT_Integrations {
 
 				$extension      = __( 'Composite Products', 'woocommerce-all-products-for-subscriptions' );
 				$extension_full = __( 'WooCommerce Composite Products', 'woocommerce-all-products-for-subscriptions' );
-				$extension_url  = 'https://woocommerce.com/products/composite-products/?aff=46147&cid=7316145&pid=apfs';
+				$extension_url  = 'https://woocommerce.com/products/composite-products/';
 				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for WooCommerce Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
 
 				WCS_ATT_Admin_Notices::add_dismissible_notice( $notice, array( 'dismiss_class' => 'cp_lt_' . $required_version, 'type' => 'native' ) );
@@ -112,7 +112,7 @@ class WCS_ATT_Integrations {
 
 				$extension      = __( 'Product Add-Ons', 'woocommerce-all-products-for-subscriptions' );
 				$extension_full = __( 'WooCommerce Product Add-Ons', 'woocommerce-all-products-for-subscriptions' );
-				$extension_url  = 'https://woocommerce.com/products/product-add-ons/?aff=46147&cid=7316145&pid=apfs';
+				$extension_url  = 'https://woocommerce.com/products/product-add-ons/';
 				$notice         = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>All Products for WooCommerce Subscriptions</strong>. Please update <a href="%2$s" target="_blank">%3$s</a> to version <strong>%4$s</strong> or higher.', 'woocommerce-all-products-for-subscriptions' ), $extension, $extension_url, $extension_full, $required_version );
 
 				WCS_ATT_Admin_Notices::add_dismissible_notice( $notice, array( 'dismiss_class' => 'addons_lt_' . $required_version, 'type' => 'native' ) );
