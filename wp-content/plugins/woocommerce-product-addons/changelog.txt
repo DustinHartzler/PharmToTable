@@ -1,5 +1,12 @@
 *** Product Addons Changelog ***
 
+2020-05-12 - version 3.0.33
+* Fix - All Products for WooCommerce Subscriptions: Reset subscription details in add-ons total when reverting to the one-time purchase option.
+* Tweak - Improve error handling on filesize limits.
+
+2020-04-30 - version 3.0.32
+* Tweak - WC 4.1 compatibility.
+
 2020-04-17 - version 3.0.31
 * Fix - Fix issue on cart file add-on.
 
