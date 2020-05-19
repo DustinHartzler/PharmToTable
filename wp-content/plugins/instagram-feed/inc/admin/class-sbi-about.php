@@ -471,17 +471,17 @@ class SB_Instagram_About {
 
 				<ul class="list-plain">
 					<li>
-						<a href="https://smashballoon.com/display-multiple-instagram-feeds/?utm_source=WordPress&utm_medium=sbi-about-page&utm_campaign=gettingstarted#multiple-feeds" target="_blank" rel="noopener noreferrer">
+						<a href="https://smashballoon.com/display-multiple-instagram-feeds/?utm_campaign=instagram-free&utm_source=gettingstarted&utm_medium=multiplefeeds" target="_blank" rel="noopener noreferrer">
 							<?php esc_html_e( 'How to Display Multiple Feeds', 'instagram-feed' ); ?>
 						</a>
 					</li>
 					<li>
-						<a href="https://smashballoon.com/get-access-token-from-another-account/?utm_source=WordPress&utm_medium=sbi-about-page&utm_campaign=gettingstarted#differentaccount" target="_blank" rel="noopener noreferrer">
+						<a href="https://smashballoon.com/get-access-token-from-another-account/?utm_campaign=instagram-free&utm_source=gettingstarted&utm_medium=differentaccounts" target="_blank" rel="noopener noreferrer">
 							<?php esc_html_e( 'Connect a Different Account', 'instagram-feed' ); ?>
 						</a>
 					</li>
 					<li>
-						<a href="https://smashballoon.com/differences-between-an-instagram-personal-and-business-account/?utm_source=WordPress&utm_medium=sbi-about-page&utm_campaign=gettingstarted#display-form" target="_blank" rel="noopener noreferrer">
+						<a href="https://smashballoon.com/differences-between-an-instagram-personal-and-business-account/?utm_campaign=instagram-free&utm_source=gettingstarted&utm_medium=personalvbusiness" target="_blank" rel="noopener noreferrer">
 							<?php esc_html_e( 'Personal Vs Business Accounts', 'instagram-feed' ); ?>
 						</a>
 					</li>
@@ -592,9 +592,9 @@ class SB_Instagram_About {
 					<h3 class="call-to-action">
 						<?php
 						if ( 'lite' === $license ) {
-							echo '<a href="https://smashballoon.com/instagram-feed/pricing?utm_source=plugin-free&utm_campaign=sbi" target="_blank" rel="noopener noreferrer">';
+							echo '<a href="https://smashballoon.com/instagram-feed/pricing?utm_campaign=instagram-free&utm_source=gettingstarted&utm_medium=profeaturescompare" target="_blank" rel="noopener noreferrer">';
 						} else {
-							echo '<a href="https://smashballoon.com/instagram-feed/pricing?utm_source=WordPress&utm_medium=sbi-about-page&utm_campaign=gettingstarted" target="_blank" rel="noopener noreferrer">';
+							echo '<a href="https://smashballoon.com/instagram-feed/pricing?utm_campaign=instagram-pro&utm_source=gettingstarted&utm_medium=profeaturescompare" target="_blank" rel="noopener noreferrer">';
 						}
 						esc_html_e( 'Get Instagram Feed Pro Today and Unlock all the Powerful Features', 'instagram-feed' );
 						?>
@@ -634,7 +634,7 @@ class SB_Instagram_About {
 					<?php esc_html_e( 'View detailed steps with related images on our website. We have a comprehensive guide to getting up and running with Instagram Feed.', 'instagram-feed' ); ?>
                 </p>
 
-                <a href="https://smashballoon.com/instagram-feed/free/?utm_source=WordPress&utm_medium=sbi-about-page&utm_campaign=gettingstarted" target="_blank" rel="noopener noreferrer" class="sbi-admin-about-section-post-link">
+                <a href="https://smashballoon.com/instagram-feed/free/?utm_campaign=instagram-free&utm_source=gettingstarted&utm_medium=readsetup" target="_blank" rel="noopener noreferrer" class="sbi-admin-about-section-post-link">
 					<?php esc_html_e( 'Read Documentation', 'instagram-feed' ); ?><i class="fa fa-external-link" aria-hidden="true"></i>
                 </a>
             </div>
@@ -653,7 +653,7 @@ class SB_Instagram_About {
 					<?php esc_html_e( 'Are you having trouble displaying your feed due to an error connecting an account or an Instagram API error? We have several articles to help you troubleshoot issues and help you solve them.', 'instagram-feed' ); ?>
 				</p>
 
-				<a href="https://smashballoon.com/instagram-feed/docs/errors/?utm_source=WordPress&utm_medium=sbi-about-page&utm_campaign=gettingstarted" target="_blank" rel="noopener noreferrer" class="sbi-admin-about-section-post-link">
+				<a href="https://smashballoon.com/instagram-feed/docs/errors/?utm_campaign=instagram-free&utm_source=gettingstarted&utm_medium=readerrordoc" target="_blank" rel="noopener noreferrer" class="sbi-admin-about-section-post-link">
 					<?php esc_html_e( 'Read Documentation', 'instagram-feed' ); ?><i class="fa fa-external-link" aria-hidden="true"></i>
 				</a>
 			</div>
@@ -771,9 +771,9 @@ class SB_Instagram_About {
 				<h3 class="call-to-action centered">
 					<?php
 					if ( 'lite' === $license ) {
-						echo '<a href="https://smashballoon.com/instagram-feed/pricing?utm_source=WordPress&utm_medium=sbi-about-page&utm_campaign=gettingstarted" target="_blank" rel="noopener noreferrer">';
+						echo '<a href="https://smashballoon.com/instagram-feed/pricing?utm_campaign=instagram-free&utm_source=gettingstarted&utm_medium=profeaturescompare" target="_blank" rel="noopener noreferrer">';
 					} else {
-						echo '<a href="https://smashballoon.com/instagram-feed/pricing?utm_source=WordPress&utm_medium=sbi-about-page&utm_campaign=gettingstarted" target="_blank" rel="noopener noreferrer">';
+						echo '<a href="https://smashballoon.com/instagram-feed/pricing?utm_campaign=instagram-pro&utm_source=gettingstarted&utm_medium=profeaturescompare" target="_blank" rel="noopener noreferrer">';
 					}
 					printf( /* translators: %s - next license level. */
 						esc_html__( 'Get Instagram Feed Pro Today and Unlock all the Powerful Features', 'instagram-feed' ),
@@ -825,7 +825,7 @@ class SB_Instagram_About {
 					'icon' => $images_url . 'plugin-fb.png',
 					'name' => esc_html__( 'Custom Facebook Feed Pro', 'instagram-feed' ),
 					'desc' => esc_html__( 'Custom Facebook Feed makes displaying your Facebook posts easy. Keep your site visitors informed and increase engagement with your Facebook page by displaying a feed on your website.', 'instagram-feed' ),
-					'url'  => 'https://smashballoon.com/custom-facebook-feed/?utm_source=WordPress&utm_campaign=facebookliteplugin',
+					'url'  => 'https://smashballoon.com/custom-facebook-feed/?utm_campaign=instagram-free&utm_source=cross&utm_medium=cffinstaller',
 					'act'  => 'go-to-url',
 				),
 			),
@@ -840,7 +840,7 @@ class SB_Instagram_About {
 					'icon' => $images_url . 'plugin-tw.jpg',
 					'name' => esc_html__( 'Custom Twitter Feeds Pro', 'instagram-feed' ),
 					'desc' => esc_html__( 'Custom Twitter Feeds is a highly customizable way to display tweets from your Twitter account. Promote your latest content and update your site content automatically.', 'instagram-feed' ),
-					'url'  => 'https://smashballoon.com/custom-twitter-feeds/?utm_source=plugin-free&utm_campaign=ctf',
+					'url'  => 'https://smashballoon.com/custom-twitter-feeds/?utm_campaign=instagram-free&utm_source=cross&utm_medium=ctfinstaller',
 					'act'  => 'go-to-url',
 				),
 			),
@@ -855,7 +855,7 @@ class SB_Instagram_About {
 					'icon' => $images_url . 'plugin-yt.png',
 					'name' => esc_html__( 'Feeds for YouTube Pro', 'instagram-feed' ),
 					'desc' => esc_html__( 'Feeds for YouTube is a simple yet powerful way to display videos from YouTube on your website. Increase engagement with your channel while keeping visitors on your website.', 'instagram-feed' ),
-					'url'  => 'https://smashballoon.com/youtube-feed/?utm_source=plugin-free&utm_campaign=sby',
+					'url'  => 'https://smashballoon.com/youtube-feed/?utm_campaign=instagram-free&utm_source=cross&utm_medium=sbyinstaller',
 					'act'  => 'go-to-url',
 				),
 			),
@@ -870,7 +870,7 @@ class SB_Instagram_About {
                     'icon' => $images_url . 'plugin-wpforms.png',
                     'name' => esc_html__( 'WPForms', 'instagram-feed' ),
                     'desc' => esc_html__( 'The most beginner friendly drag & drop WordPress forms plugin allowing you to create beautiful contact forms, subscription forms, payment forms, and more in minutes, not hours!', 'instagram-feed' ),
-                    'url'  => 'https://wpforms.com/lite-upgrade/?utm_source=WordPress&utm_campaign=liteplugin&utm_medium=sbi-about-page',
+                    'url'  => 'https://wpforms.com/lite-upgrade/?utm_source=WordPress&utm_campaign=liteplugin&utm_medium=about-page',
                     'act'  => 'go-to-url',
                 ),
             ),
@@ -885,7 +885,7 @@ class SB_Instagram_About {
 					'icon' => $images_url . 'plugin-mi.png',
 					'name' => esc_html__( 'MonsterInsights Pro', 'instagram-feed' ),
 					'desc' => esc_html__( 'MonsterInsights makes it “effortless” to properly connect your WordPress site with Google Analytics, so you can start making data-driven decisions to grow your business.', 'instagram-feed' ),
-					'url'  => 'https://www.monsterinsights.com/?utm_source=proplugin&utm_medium=sbi-about-page&utm_campaign=pluginurl&utm_content=7%2E0%2E0',
+					'url'  => 'https://www.monsterinsights.com/?utm_source=proplugin&utm_medium=about-page&utm_campaign=pluginurl&utm_content=7%2E0%2E0',
 					'act'  => 'go-to-url',
 				),
 			),

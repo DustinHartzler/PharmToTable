@@ -733,7 +733,14 @@ function sbi_rand_sort( $a, $b ) {
 function sbi_get_resized_uploads_url() {
 	$upload = wp_upload_dir();
 
-	return trailingslashit( $upload['baseurl'] ) . trailingslashit( SBI_UPLOADS_NAME );
+	$base_url = $upload['baseurl'];
+	$home_url = home_url();
+
+	if ( strpos( $home_url, 'https:' ) !== false ) {
+	    str_replace( 'http:', 'https:', $base_url );
+    }
+
+	return trailingslashit( $base_url ) . trailingslashit( SBI_UPLOADS_NAME );
 }
 
 /**
@@ -1278,3 +1285,15 @@ function sbi_maybe_send_feed_issue_email() {
 	sbi_send_report_email();
 }
 add_action( 'sb_instagram_feed_issue_email', 'sbi_maybe_send_feed_issue_email' );
+
+function sbi_update_option( $option_name, $option_value, $autoload = true ) {
+	return update_option( $option_name, $option_value, $autoload = true );
+}
+
+function sbi_get_option( $option_name, $default ) {
+	return get_option( $option_name, $default );
+}
+
+function sbi_is_pro_version() {
+	return defined( 'SBI_STORE_URL' );
+}

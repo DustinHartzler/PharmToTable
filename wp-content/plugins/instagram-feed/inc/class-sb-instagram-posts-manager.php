@@ -329,6 +329,9 @@ class SB_Instagram_Posts_Manager
 			unset( $this->errors[ $type ] );
 
 			update_option( 'sb_instagram_errors', $this->errors, false );
+		} else {
+			delete_option( 'sb_instagram_error_page' );
+			delete_option( 'sb_instagram_errors' );
 		}
 	}
 
@@ -506,6 +509,8 @@ class SB_Instagram_Posts_Manager
 	}
 
 	public function are_critical_errors() {
+
+		$critical_error_numbers = array( 100, 400, 24, 18 );
 		$errors = $this->get_errors();
 
 		$are_errors = false;
@@ -514,7 +519,11 @@ class SB_Instagram_Posts_Manager
 			if ( strpos( $error_key, 'connection' ) !== false ) {
 				$are_errors = true;
 			} elseif ( strpos( $error_key, 'api' ) !== false ) {
-				$are_errors = true;
+
+				if ( in_array( (int)$errors['api'][2], $critical_error_numbers, true ) ) {
+					$are_errors = true;
+
+				}
 			} elseif ( strpos( $error_key, 'at_' ) !== false ) {
 				$are_errors = true;
 			}

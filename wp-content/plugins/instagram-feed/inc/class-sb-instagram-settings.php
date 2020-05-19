@@ -570,7 +570,7 @@ class SB_Instagram_Settings {
 			if ( $is_after_deprecation_deadline ) {
 				$error = '<p><b>' . sprintf( __( 'Error: The account for %s needs to be reconnected.', 'instagram-feed' ), '<em>'.$user_string.'</em>' ) . '</b><br>' . __( 'Due to recent Instagram platform changes this Instagram account needs to be reconnected in order to continue updating.', 'instagram-feed' ) . '<a href="'.get_admin_url().'?page=sb-instagram-feed" class="sb_frontend_btn"><i class="fa fa-cog" aria-hidden="true"></i> ' . __( 'Reconnect on plugin Settings page', 'instagram-feed' ) . '</a>';
 			} else {
-				$error = '<p><b>' . sprintf( __( 'Warning: The account for %s needs to be reconnected.', 'instagram-feed' ), '<em>'.$user_string.'</em>' ) . '</b><br>' . __( 'Due to Instagram platform changes on March 31, 2020, this Instagram account needs to be reconnected to allow the feed to continue updating.', 'instagram-feed' ) . '<a href="'.get_admin_url().'?page=sb-instagram-feed" class="sb_frontend_btn"><i class="fa fa-cog" aria-hidden="true"></i> ' . __( 'Reconnect on plugin Settings page', 'instagram-feed' ) . '</a>';
+				$error = '<p><b>' . sprintf( __( 'Warning: The account for %s needs to be reconnected.', 'instagram-feed' ), '<em>'.$user_string.'</em>' ) . '</b><br>' . __( 'Due to Instagram platform changes on June 1, 2020, this Instagram account needs to be reconnected to allow the feed to continue updating.', 'instagram-feed' ) . '<a href="'.get_admin_url().'?page=sb-instagram-feed" class="sb_frontend_btn"><i class="fa fa-cog" aria-hidden="true"></i> ' . __( 'Reconnect on plugin Settings page', 'instagram-feed' ) . '</a>';
 			}
 
 			$sb_instagram_posts_manager->add_frontend_error( 'deprecation_warning', $error );
@@ -600,5 +600,153 @@ class SB_Instagram_Settings {
 
 			return $cache_time * $cache_time_unit;
 		}
+	}
+
+	public static function default_settings() {
+		$defaults = array(
+			'sb_instagram_at'                   => '',
+			'sb_instagram_type'                 => 'user',
+			'sb_instagram_order'                => 'top',
+			'sb_instagram_user_id'              => '',
+			'sb_instagram_tagged_ids' => '',
+			'sb_instagram_hashtag'              => '',
+			'sb_instagram_type_self_likes'      => '',
+			'sb_instagram_location'             => '',
+			'sb_instagram_coordinates'          => '',
+			'sb_instagram_preserve_settings'    => '',
+			'sb_instagram_ajax_theme'           => false,
+			'enqueue_js_in_head'                => false,
+			'disable_js_image_loading'          => false,
+			'sb_instagram_disable_resize'       => false,
+			'sb_instagram_favor_local'          => false,
+			'sb_instagram_cache_time'           => '1',
+			'sb_instagram_cache_time_unit'      => 'hours',
+			'sbi_caching_type'                  => 'page',
+			'sbi_cache_cron_interval'           => '12hours',
+			'sbi_cache_cron_time'               => '1',
+			'sbi_cache_cron_am_pm'              => 'am',
+
+			'sb_instagram_width'                => '100',
+			'sb_instagram_width_unit'           => '%',
+			'sb_instagram_feed_width_resp'      => false,
+			'sb_instagram_height'               => '',
+			'sb_instagram_num'                  => '20',
+			'sb_instagram_nummobile'            => '',
+			'sb_instagram_height_unit'          => '',
+			'sb_instagram_cols'                 => '4',
+			'sb_instagram_colsmobile'           => 'auto',
+			'sb_instagram_image_padding'        => '5',
+			'sb_instagram_image_padding_unit'   => 'px',
+
+			//Layout Type
+			'sb_instagram_layout_type'          => 'grid',
+			'sb_instagram_highlight_type'       => 'pattern',
+			'sb_instagram_highlight_offset'     => 0,
+			'sb_instagram_highlight_factor'     => 6,
+			'sb_instagram_highlight_ids'        => '',
+			'sb_instagram_highlight_hashtag'    => '',
+
+			//Hover style
+			'sb_hover_background'               => '',
+			'sb_hover_text'                     => '',
+			'sbi_hover_inc_username'            => true,
+			'sbi_hover_inc_icon'                => true,
+			'sbi_hover_inc_date'                => true,
+			'sbi_hover_inc_instagram'           => true,
+			'sbi_hover_inc_location'            => false,
+			'sbi_hover_inc_caption'             => false,
+			'sbi_hover_inc_likes'               => false,
+			// 'sb_instagram_hover_text_size'      => '',
+
+			'sb_instagram_sort'                 => 'none',
+			'sb_instagram_disable_lightbox'     => false,
+			'sb_instagram_captionlinks'         => false,
+			'sb_instagram_background'           => '',
+			'sb_instagram_show_btn'             => true,
+			'sb_instagram_btn_background'       => '',
+			'sb_instagram_btn_text_color'       => '',
+			'sb_instagram_btn_text'             => __( 'Load More', 'instagram-feed' ),
+			'sb_instagram_image_res'            => 'auto',
+			'sb_instagram_media_type'           => 'all',
+			'sb_instagram_moderation_mode'      => 'manual',
+			'sb_instagram_hide_photos'          => '',
+			'sb_instagram_block_users'          => '',
+			'sb_instagram_ex_apply_to'          => 'all',
+			'sb_instagram_inc_apply_to'         => 'all',
+			'sb_instagram_show_users'           => '',
+			'sb_instagram_exclude_words'        => '',
+			'sb_instagram_include_words'        => '',
+
+			//Text
+			'sb_instagram_show_caption'         => true,
+			'sb_instagram_caption_length'       => '50',
+			'sb_instagram_caption_color'        => '',
+			'sb_instagram_caption_size'         => '13',
+
+			//lightbox comments
+			'sb_instagram_lightbox_comments'    => true,
+			'sb_instagram_num_comments'         => '20',
+
+			//Meta
+			'sb_instagram_show_meta'            => true,
+			'sb_instagram_meta_color'           => '',
+			'sb_instagram_meta_size'            => '13',
+			//Header
+			'sb_instagram_show_header'          => true,
+			'sb_instagram_header_color'         => '',
+			'sb_instagram_header_style'         => 'standard',
+			'sb_instagram_show_followers'       => true,
+			'sb_instagram_show_bio'             => true,
+			'sb_instagram_custom_bio' => '',
+			'sb_instagram_custom_avatar' => '',
+			'sb_instagram_header_primary_color'  => '517fa4',
+			'sb_instagram_header_secondary_color'  => 'eeeeee',
+			'sb_instagram_header_size'  => 'small',
+			'sb_instagram_outside_scrollable' => false,
+			'sb_instagram_stories' => true,
+			'sb_instagram_stories_time' => 5000,
+
+			//Follow button
+			'sb_instagram_show_follow_btn'      => true,
+			'sb_instagram_folow_btn_background' => '',
+			'sb_instagram_follow_btn_text_color' => '',
+			'sb_instagram_follow_btn_text'      => __( 'Follow on Instagram', 'instagram-feed' ),
+
+			//Autoscroll
+			'sb_instagram_autoscroll' => false,
+			'sb_instagram_autoscrolldistance' => 200,
+
+			//Misc
+			'sb_instagram_custom_css'           => '',
+			'sb_instagram_custom_js'            => '',
+			'sb_instagram_requests_max'         => '5',
+			'sb_instagram_minnum' => '0',
+			'sb_instagram_cron'                 => 'unset',
+			'sb_instagram_disable_font'         => false,
+			'sb_instagram_backup' => true,
+			'sb_ajax_initial' => false,
+			'enqueue_css_in_shortcode' => false,
+			'sb_instagram_disable_mob_swipe' => false,
+			'sbi_font_method' => 'svg',
+			'sbi_br_adjust' => true,
+			'sb_instagram_media_vine' => false,
+			'custom_template' => false,
+			'disable_admin_notice' => false,
+			'enable_email_report' => 'on',
+			'email_notification' => 'monday',
+			'email_notification_addresses' => get_option( 'admin_email' ),
+
+			//Carousel
+			'sb_instagram_carousel'             => false,
+			'sb_instagram_carousel_rows'        => 1,
+			'sb_instagram_carousel_loop'        => 'rewind',
+			'sb_instagram_carousel_arrows'      => false,
+			'sb_instagram_carousel_pag'         => true,
+			'sb_instagram_carousel_autoplay'    => false,
+			'sb_instagram_carousel_interval'    => '5000'
+
+		);
+
+		return $defaults;
 	}
 }

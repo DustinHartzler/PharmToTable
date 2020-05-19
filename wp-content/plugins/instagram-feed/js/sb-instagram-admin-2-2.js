@@ -5,11 +5,11 @@ jQuery(document).ready(function($) {
         event.preventDefault();
 
         var today = new Date(),
-            march = new Date('March 31, 2020 00:00:00'),
+            march = new Date('June 1, 2020 00:00:00'),
             oldApiURL = $(this).attr('data-old-api'),
             oldApiLink = '';
         if (today.getTime() < march.getTime()) {
-            oldApiLink = 'To connect using the legacy API, <a href="'+oldApiURL+'">click here</a> (expires on March 31, 2020).';
+            oldApiLink = 'To connect using the legacy API, <a href="'+oldApiURL+'">click here</a> (expires on June 1, 2020).';
         }
 
         var personalBasicApiURL = $('#sbi_config .sbi_admin_btn').attr('data-personal-basic-api'),
@@ -757,6 +757,39 @@ jQuery(document).ready(function($) {
             }
         }); // ajax call
     }); // clear_comment_cache click
+
+    $('.sb-opt-in').click(function(event) {
+        event.preventDefault();
+
+        var $btn = jQuery(this);
+        $btn.prop( 'disabled', true ).addClass( 'loading' ).html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+        sbiSubmitOptIn(true);
+    }); // clear_comment_cache click
+
+    $('.sb-no-usage-opt-out').click(function(event) {
+        event.preventDefault();
+
+        var $btn = jQuery(this);
+        $btn.prop( 'disabled', true ).addClass( 'loading' ).html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+
+        sbiSubmitOptIn(false);
+    }); // clear_comment_cache click
+
+    function sbiSubmitOptIn(choice) {
+        $.ajax({
+            url : sbiA.ajax_url,
+            type : 'post',
+            data : {
+                action : 'sbi_usage_opt_in_or_out',
+                opted_in: choice,
+                sbi_nonce : sbiA.sbi_nonce,
+            },
+            success : function(data) {
+                $('.sb-no-usage-opt-out').closest('.sbi-admin-notice').fadeOut();
+            }
+        }); // ajax call
+    }
 	
 	//Tooltips
     jQuery('#sbi_admin').on('click', '.sbi_tooltip_link, .sbi_type_tooltip_link', function(){

@@ -117,9 +117,9 @@ class SB_Instagram_Education {
 			//utm_source=plugin-pro&utm_campaign=
 			$dyk_message['more'] = add_query_arg(
 				array(
-					'utm_source'   => 'plugin-'.$this->plugin_version,
-					'utm_campaign' => 'sbi-issue-email',
-					'utm_content'  => $dyk_message['item'],
+					'utm_source'   => 'issueemail',
+					'utm_campaign' => 'instagram-'.$this->plugin_version,
+					'utm_medium'  => $dyk_message['item'],
 				),
 				$dyk_message['more']
 			);
