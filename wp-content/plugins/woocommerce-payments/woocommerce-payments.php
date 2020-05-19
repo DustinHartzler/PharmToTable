@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name: WooCommerce Payments (Beta)
+ * Plugin Name: WooCommerce Payments
  * Plugin URI: https://github.com/Automattic/woocommerce-payments
- * Description: Accept payments via credit card. Manage transactions within WordPress. Beta.
+ * Description: Accept payments via credit card. Manage transactions within WordPress.
  * Author: Automattic
  * Author URI: https://woocommerce.com/
  * Text Domain: woocommerce-payments
  * Domain Path: /languages
- * WC requires at least: 3.9
- * WC tested up to: 4.0
+ * WC requires at least: 4.0
+ * WC tested up to: 4.1
  * Requires WP: 5.3
- * Version: 0.9.1
+ * Version: 1.0.0
  *
  * @package WooCommerce\Payments
  *
@@ -30,7 +30,7 @@ define( 'WCPAY_MIN_WC_ADMIN_VERSION', '0.23.2' );
  * so WooCommerce classes are guaranteed to exist at this point (if WooCommerce is enabled).
  */
 function wcpay_init() {
-	include_once dirname( __FILE__ ) . '/includes/class-wc-payments.php';
+	require_once WCPAY_ABSPATH . '/includes/class-wc-payments.php';
 	WC_Payments::init();
 }
 
