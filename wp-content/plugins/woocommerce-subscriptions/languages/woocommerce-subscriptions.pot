@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WooCommerce Subscriptions plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Subscriptions 3.0.3\n"
+"Project-Id-Version: WooCommerce Subscriptions 3.0.4\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/contact-us\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-04-01T05:03:28+00:00\n"
+"POT-Creation-Date: 2020-04-28T02:14:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.3.0\n"
 "X-Domain: woocommerce-subscriptions\n"
@@ -664,7 +664,6 @@ msgstr ""
 #: templates/emails/cancelled-subscription.php:21
 #: templates/emails/expired-subscription.php:21
 #: templates/emails/on-hold-subscription.php:21
-#: templates/emails/subscription-info.php:18
 #: templates/myaccount/my-subscriptions.php:21
 #: templates/myaccount/related-subscriptions.php:21
 #: woocommerce-subscriptions.php:258
@@ -2739,7 +2738,7 @@ msgstr ""
 
 #: includes/class-wc-subscriptions-switcher.php:444
 #: includes/class-wc-subscriptions-switcher.php:539
-#: includes/class-wc-subscriptions-switcher.php:2564
+#: includes/class-wc-subscriptions-switcher.php:2560
 msgid "Upgrade or Downgrade"
 msgstr ""
 
@@ -2810,26 +2809,26 @@ msgctxt "product subtotal string"
 msgid "%1$s %2$s(%3$s)%4$s"
 msgstr ""
 
-#: includes/class-wc-subscriptions-switcher.php:1966
+#: includes/class-wc-subscriptions-switcher.php:1971
 msgid "The original subscription item being switched cannot be found."
 msgstr ""
 
-#: includes/class-wc-subscriptions-switcher.php:1968
+#: includes/class-wc-subscriptions-switcher.php:1973
 msgid "The item on the switch order cannot be found."
 msgstr ""
 
 #. translators: 1$: old item, 2$: new item when switching
-#: includes/class-wc-subscriptions-switcher.php:1990
+#: includes/class-wc-subscriptions-switcher.php:1984
 msgctxt "used in order notes"
 msgid "Customer switched from: %1$s to %2$s."
 msgstr ""
 
-#: includes/class-wc-subscriptions-switcher.php:1992
+#: includes/class-wc-subscriptions-switcher.php:1986
 msgctxt "used in order notes"
 msgid "Customer added %s."
 msgstr ""
 
-#: includes/class-wc-subscriptions-switcher.php:2705
+#: includes/class-wc-subscriptions-switcher.php:2701
 #: wcs-functions.php:236
 msgctxt "Subscription status"
 msgid "Switched"
@@ -5577,11 +5576,9 @@ msgstr ""
 msgid "End of Prepaid Term: %s"
 msgstr ""
 
-#. translators: placeholder is either view or edit url for the subscription
 #: templates/emails/plain/cancelled-subscription.php:44
 #: templates/emails/plain/expired-subscription.php:44
 #: templates/emails/plain/on-hold-subscription.php:40
-#: templates/emails/plain/subscription-info.php:21
 msgctxt "in plain emails for subscription information"
 msgid "View Subscription: %s"
 msgstr ""
@@ -5625,61 +5622,77 @@ msgstr ""
 msgid "Date Suspended: %s"
 msgstr ""
 
-#: templates/emails/plain/subscription-info.php:16
-#: templates/emails/subscription-info.php:14
+#: templates/emails/plain/subscription-info.php:20
+#: templates/emails/subscription-info.php:21
 msgid "Subscription information"
 msgstr ""
 
 #. translators: placeholder is subscription's number
-#: templates/emails/plain/subscription-info.php:19
+#: templates/emails/plain/subscription-info.php:25
 msgctxt "in plain emails for subscription information"
 msgid "Subscription: %s"
 msgstr ""
 
-#. translators: placeholder is localised start date
-#: templates/emails/plain/subscription-info.php:23
+#. translators: placeholder is either view or edit url for the subscription
+#: templates/emails/plain/subscription-info.php:27
 msgctxt "in plain emails for subscription information"
-msgid "Start Date: %s"
+msgid "View subscription: %s"
 msgstr ""
 
-#: templates/emails/plain/subscription-info.php:25
+#. translators: placeholder is localised start date
+#: templates/emails/plain/subscription-info.php:29
+msgctxt "in plain emails for subscription information"
+msgid "Start date: %s"
+msgstr ""
+
+#: templates/emails/plain/subscription-info.php:31
 msgctxt "Used as end date for an indefinite subscription"
 msgid "When Cancelled"
 msgstr ""
 
 #. translators: placeholder is localised end date, or "when cancelled"
-#: templates/emails/plain/subscription-info.php:27
+#: templates/emails/plain/subscription-info.php:33
 msgctxt "in plain emails for subscription information"
-msgid "End Date: %s"
+msgid "End date: %s"
 msgstr ""
 
 #. translators: placeholder is the formatted order total for the subscription
-#: templates/emails/plain/subscription-info.php:29
+#: templates/emails/plain/subscription-info.php:35
 msgctxt "in plain emails for subscription information"
-msgid "Price: %s"
+msgid "Recurring price: %s"
 msgstr ""
 
-#: templates/emails/subscription-info.php:19
+#: templates/emails/plain/subscription-info.php:38
+#: templates/emails/subscription-info.php:42
+msgid "Next payment: %s"
+msgstr ""
+
+#: templates/emails/subscription-info.php:25
+msgctxt "subscription ID table heading"
+msgid "ID"
+msgstr ""
+
+#: templates/emails/subscription-info.php:26
 msgctxt "table heading"
 msgid "Start date"
 msgstr ""
 
-#: templates/emails/subscription-info.php:20
+#: templates/emails/subscription-info.php:27
 msgctxt "table heading"
 msgid "End date"
 msgstr ""
 
-#: templates/emails/subscription-info.php:21
+#: templates/emails/subscription-info.php:28
 msgctxt "table heading"
-msgid "Price"
+msgid "Recurring total"
 msgstr ""
 
-#: templates/emails/subscription-info.php:27
+#: templates/emails/subscription-info.php:35
 msgctxt "subscription number in email table. (eg: #106)"
 msgid "#%s"
 msgstr ""
 
-#: templates/emails/subscription-info.php:29
+#: templates/emails/subscription-info.php:37
 msgctxt "Used as end date for an indefinite subscription"
 msgid "When cancelled"
 msgstr ""

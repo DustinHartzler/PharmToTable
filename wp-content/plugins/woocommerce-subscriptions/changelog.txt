@@ -1,5 +1,12 @@
 *** WooCommerce Subscriptions Changelog ***
 
+2020-04-28 - version 3.0.4
+* Fix: Save changes to payment method meta on the edit subscription screen. PR#3666
+* Fix: Grant Shop Managers edit capabilities over subscriber users. PR#3669
+* Fix: Remove original item from switched subscription during a multiple line item, different billing schedule switch. PR#3659
+* Fix: Use strict conditionals when comparing results of as_next_scheduled_action. Fixes rescheduling of actions which were ran manually. PR#3661
+* Tweak: To comply with Visa's changes to rules governing free trial subscriptions, add additional subscription details to email templates. PR#3664
+
 2020-04-01 - version 3.0.3
 * Fix: Only set the payment method if it has changed via admin edit. PR#3646
 * Fix: Performance issue in WCS_Payment_Tokens::get_subscriptions_from_token. PR#3649
