@@ -2,12 +2,12 @@
 /*
 Plugin Name: Pretty Links
 Plugin URI: https://prettylinks.com/pl/plugin-uri
-Description: Shrink, track and share any URL on the Internet from your WordPress website!
-Version: 3.1.0
-Author: Blair Williams
-Author URI: http://blairwilliams.com
+Description: Shrink, track and share any URL using your website and brand!
+Version: 3.1.1
+Author: Pretty Links
+Author URI: http://prettylinks.com
 Text Domain: pretty-link
-Copyright: 2004-2019, Caseproof, LLC
+Copyright: 2004-2020, Caseproof, LLC
 
 GNU General Public License, Free Software Foundation <http://creativecommons.org/licenses/GPL/2.0/>
 This program is free software; you can redistribute it and/or modify
@@ -136,12 +136,31 @@ $page_size = 10;
 
 global $prli_blogurl, $prli_siteurl, $prli_blogname, $prli_blogdescription;
 
-$prli_bid = null;
-if(function_exists('is_multisite') && is_multisite() && function_exists('get_current_blog_id')) {
-  $prli_bid = get_current_blog_id();
+function prli_get_home_url() {
+  $prli_bid = null;
+
+  if(function_exists('is_multisite') && is_multisite() && function_exists('get_current_blog_id')) {
+    $prli_bid = get_current_blog_id();
+  }
+
+  // Fix WPML adding the language code at the start of the URL
+  if(defined('ICL_SITEPRESS_VERSION')) {
+    if(empty($prli_bid) || !function_exists('is_multisite') || !is_multisite()) {
+      $url = get_option('home');
+    }
+    else {
+      switch_to_blog($prli_bid);
+      $url = get_option('home');
+      restore_current_blog();
+    }
+
+    return $url;
+  }
+
+  return get_home_url($prli_bid);
 }
 
-$prli_blogurl = get_home_url($prli_bid);
+$prli_blogurl = prli_get_home_url();
 $prli_siteurl = get_option('siteurl');
 $prli_blogname = get_option('blogname');
 $prli_blogdescription = get_option('blogdescription');

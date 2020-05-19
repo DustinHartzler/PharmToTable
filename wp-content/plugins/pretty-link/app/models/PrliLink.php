@@ -313,28 +313,8 @@ class PrliLink {
 
       if(preg_match($match_str, $uri, $match_val)) {
         // Match longest slug -- this is the most common
-        $pretty_link_params = (isset($match_val[3])?$match_val[3]:'');
         if( $pretty_link_found = $this->is_pretty_link_slug( $match_val[2] ) )
           return compact('pretty_link_found');
-
-        // Trim down the matched link
-        $matched_link = preg_replace('#/[^/]*?$#','',$match_val[2],1);
-
-        // cycle through the links (maximum depth 25 folders so we don't get out
-        // of control -- that should be enough eh?) and trim the link down each time
-        for( $i=0; ($i < 25) and
-                   $matched_link and
-                   !empty($matched_link) and
-                   $matched_link != $match_val[2]; $i++ ) {
-          $new_match_str ="#^{$subdir_str}({$struct})({$matched_link})(.*?)?$#";
-
-          $pretty_link_params = (isset($match_val[3])?$match_val:'');
-          if( $pretty_link_found = $this->is_pretty_link_slug( $match_val[2] ) )
-            return compact('pretty_link_found');
-
-          // Trim down the matched link and try again
-          $matched_link = preg_replace('#/[^/]*$#','',$match_val[2],1);
-        }
       }
     }
 
