@@ -1,5 +1,12 @@
 *** WooCommerce Subscriptions Changelog ***
 
+2020-06-16 - version 3.0.5
+* Fix: Ensure the mixed checkout setting correctly prevents mixed carts after customer login. PR#3696
+* Fix: Translate the automatic subscription recurring note in emails. PR#3684
+* Fix: Account for limited coupon use across recurring carts. Fixes an issue which leads to limited coupons applying beyond the limit. PR#3552
+* Fix: Copy the item usage limit to coupons applied to manual renewal carts. PR#3686
+* Dev: Add a filter to control access to the early renewal modal. PR#3675
+
 2020-04-28 - version 3.0.4
 * Fix: Save changes to payment method meta on the edit subscription screen. PR#3666
 * Fix: Grant Shop Managers edit capabilities over subscriber users. PR#3669
