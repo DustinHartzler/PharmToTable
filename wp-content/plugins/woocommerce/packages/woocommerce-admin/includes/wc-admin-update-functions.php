@@ -77,3 +77,33 @@ function wc_admin_update_0251_remove_unsnooze_action() {
 function wc_admin_update_0251_db_version() {
 	Installer::update_db_version( '0.25.1' );
 }
+
+/**
+ * Remove Facebook Extension note.
+ */
+function wc_admin_update_110_remove_facebook_note() {
+	WC_Admin_Notes::delete_notes_with_name( 'wc-admin-facebook-extension' );
+}
+
+/**
+ * Update DB Version.
+ */
+function wc_admin_update_110_db_version() {
+	Installer::update_db_version( '1.1.0' );
+}
+
+/**
+ * Remove Dismiss action from tracking opt-in admin note.
+ */
+function wc_admin_update_130_remove_dismiss_action_from_tracking_opt_in_note() {
+	global $wpdb;
+
+	$wpdb->query( "DELETE actions FROM {$wpdb->prefix}wc_admin_note_actions actions INNER JOIN {$wpdb->prefix}wc_admin_notes notes USING (note_id) WHERE actions.name = 'tracking-dismiss' AND notes.name = 'wc-admin-usage-tracking-opt-in'" );
+}
+
+/**
+ * Update DB Version.
+ */
+function wc_admin_update_130_db_version() {
+	Installer::update_db_version( '1.3.0' );
+}

@@ -8,6 +8,8 @@
 
 namespace Automattic\WooCommerce\Admin\Features;
 
+use Automattic\WooCommerce\Admin\Loader;
+
 /**
  * Contains backend logic for the dashboard feature.
  */
@@ -43,6 +45,7 @@ class AnalyticsDashboard {
 		add_action( 'admin_menu', array( $this, 'register_page' ) );
 		// priority is 20 to run after https://github.com/woocommerce/woocommerce/blob/a55ae325306fc2179149ba9b97e66f32f84fdd9c/includes/admin/class-wc-admin-menus.php#L165.
 		add_action( 'admin_head', array( $this, 'update_link_structure' ), 20 );
+		add_filter( 'woocommerce_admin_preload_options', array( $this, 'preload_options' ) );
 	}
 
 	/**
@@ -71,18 +74,34 @@ class AnalyticsDashboard {
 				'dashboard_chart_type',
 				'dashboard_chart_interval',
 				'dashboard_leaderboard_rows',
+				'homepage_stats',
 			)
 		);
+	}
+
+	/**
+	 * Preload options to prime state of the application.
+	 *
+	 * @param array $options Array of options to preload.
+	 * @return array
+	 */
+	public function preload_options( $options ) {
+		$options[] = 'woocommerce_homescreen_enabled';
+
+		return $options;
 	}
 
 	/**
 	 * Registers dashboard page.
 	 */
 	public function register_page() {
+		$id       = Loader::is_feature_enabled( 'homescreen' ) ? 'woocommerce-home' : 'woocommerce-dashboard';
+		$title    = Loader::is_feature_enabled( 'homescreen' ) ? __( 'Home', 'woocommerce' ) : __( 'Dashboard', 'woocommerce' );
+
 		wc_admin_register_page(
 			array(
-				'id'     => 'woocommerce-dashboard',
-				'title'  => __( 'Dashboard', 'woocommerce' ),
+				'id'     => $id,
+				'title'  => $title,
 				'parent' => 'woocommerce',
 				'path'   => self::MENU_SLUG,
 			)

@@ -10,7 +10,6 @@ namespace Automattic\WooCommerce\Admin\Features;
 
 use \Automattic\WooCommerce\Admin\Loader;
 use Automattic\WooCommerce\Admin\API\Reports\Taxes\Stats\DataStore;
-use \Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes_Onboarding;
 
 /**
  * Contains the logic for completing onboarding tasks.
@@ -45,7 +44,6 @@ class OnboardingTasks {
 	 */
 	public function __construct() {
 		// This hook needs to run when options are updated via REST.
-		add_action( 'add_option_woocommerce_task_list_complete', array( $this, 'add_completion_note' ), 10, 2 );
 		add_action( 'add_option_woocommerce_task_list_complete', array( $this, 'track_completion' ), 10, 2 );
 		add_action( 'add_option_woocommerce_task_list_tracked_completed_tasks', array( $this, 'track_task_completion' ), 10, 2 );
 		add_action( 'update_option_woocommerce_task_list_tracked_completed_tasks', array( $this, 'track_task_completion' ), 10, 2 );
@@ -90,6 +88,14 @@ class OnboardingTasks {
 			return $settings;
 		}
 
+		$wc_pay_is_connected = false;
+		if ( class_exists( '\WC_Payments' ) ) {
+			$wc_payments_gateway = \WC_Payments::get_gateway();
+			$wc_pay_is_connected = method_exists( $wc_payments_gateway, 'is_connected' )
+				? $wc_payments_gateway->is_connected()
+				: false;
+		}
+
 		// @todo We may want to consider caching some of these and use to check against
 		// task completion along with cache busting for active tasks.
 		$settings['onboarding']['automatedTaxSupportedCountries'] = self::get_automated_tax_supported_countries();
@@ -109,6 +115,7 @@ class OnboardingTasks {
 		$settings['onboarding']['stylesheet']                     = get_option( 'stylesheet' );
 		$settings['onboarding']['taxJarActivated']                = class_exists( 'WC_Taxjar' );
 		$settings['onboarding']['themeMods']                      = get_theme_mods();
+		$settings['onboarding']['wcPayIsConnected']               = $wc_pay_is_connected;
 
 		return $settings;
 	}
@@ -202,7 +209,7 @@ class OnboardingTasks {
 			return;
 		}
 
-		wp_enqueue_script( 'onboarding-product-notice', Loader::get_url( 'wp-admin-scripts/onboarding-product-notice.js' ), array( 'wc-navigation', 'wp-i18n', 'wp-data' ), WC_ADMIN_VERSION_NUMBER, true );
+		wp_enqueue_script( 'onboarding-product-notice', Loader::get_url( 'wp-admin-scripts/onboarding-product-notice', 'js' ), array( 'wc-navigation', 'wp-i18n', 'wp-data' ), WC_ADMIN_VERSION_NUMBER, true );
 	}
 
 	/**
@@ -213,7 +220,7 @@ class OnboardingTasks {
 	public static function add_onboarding_homepage_notice_admin_script( $hook ) {
 		global $post;
 		if ( 'post.php' === $hook && 'page' === $post->post_type && isset( $_GET[ self::ACTIVE_TASK_TRANSIENT ] ) && 'homepage' === $_GET[ self::ACTIVE_TASK_TRANSIENT ] ) { // phpcs:ignore csrf ok.
-			wp_enqueue_script( 'onboarding-homepage-notice', Loader::get_url( 'wp-admin-scripts/onboarding-homepage-notice.js' ), array( 'wc-navigation', 'wp-i18n', 'wp-data' ), WC_ADMIN_VERSION_NUMBER, true );
+			wp_enqueue_script( 'onboarding-homepage-notice', Loader::get_url( 'wp-admin-scripts/onboarding-homepage-notice', 'js' ), array( 'wc-navigation', 'wp-i18n', 'wp-data' ), WC_ADMIN_VERSION_NUMBER, true );
 		}
 	}
 
@@ -230,7 +237,7 @@ class OnboardingTasks {
 			'tax' === self::get_active_task() &&
 			! self::is_active_task_complete()
 		) {
-			wp_enqueue_script( 'onboarding-tax-notice', Loader::get_url( 'wp-admin-scripts/onboarding-tax-notice.js' ), array( 'wc-navigation', 'wp-i18n', 'wp-data' ), WC_ADMIN_VERSION_NUMBER, true );
+			wp_enqueue_script( 'onboarding-tax-notice', Loader::get_url( 'wp-admin-scripts/onboarding-tax-notice', 'js' ), array( 'wc-navigation', 'wp-i18n', 'wp-data' ), WC_ADMIN_VERSION_NUMBER, true );
 		}
 	}
 
@@ -243,7 +250,7 @@ class OnboardingTasks {
 		$step = isset( $_GET['step'] ) ? $_GET['step'] : ''; // phpcs:ignore csrf ok, sanitization ok.
 		if ( 'product_page_product_importer' === $hook && 'done' === $step && 'product-import' === self::get_active_task() ) {
 			delete_transient( self::ACTIVE_TASK_TRANSIENT );
-			wp_enqueue_script( 'onboarding-product-import-notice', Loader::get_url( 'wp-admin-scripts/onboarding-product-import-notice.js' ), array( 'wc-navigation', 'wp-i18n', 'wp-data' ), WC_ADMIN_VERSION_NUMBER, true );
+			wp_enqueue_script( 'onboarding-product-import-notice', Loader::get_url( 'wp-admin-scripts/onboarding-product-import-notice', 'js' ), array( 'wc-navigation', 'wp-i18n', 'wp-data' ), WC_ADMIN_VERSION_NUMBER, true );
 		}
 	}
 
@@ -260,18 +267,6 @@ class OnboardingTasks {
 		);
 
 		return $tax_supported_countries;
-	}
-
-	/**
-	 * Add the task list completion note after completing all tasks.
-	 *
-	 * @param mixed $old_value Old value.
-	 * @param mixed $new_value New value.
-	 */
-	public static function add_completion_note( $old_value, $new_value ) {
-		if ( $new_value ) {
-			WC_Admin_Notes_Onboarding::add_task_list_complete_note();
-		}
 	}
 
 	/**

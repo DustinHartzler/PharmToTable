@@ -24,6 +24,7 @@ class WC_Admin_Notes {
 	 */
 	public static function init() {
 		add_action( 'admin_init', array( __CLASS__, 'schedule_unsnooze_notes' ) );
+		add_action( 'update_option_woocommerce_show_marketplace_suggestions', array( __CLASS__, 'possibly_delete_marketing_notes' ), 10, 2 );
 	}
 
 	/**
@@ -46,13 +47,15 @@ class WC_Admin_Notes {
 			$notes[ $note_id ]['locale']        = $note->get_locale( $context );
 			$notes[ $note_id ]['title']         = $note->get_title( $context );
 			$notes[ $note_id ]['content']       = $note->get_content( $context );
-			$notes[ $note_id ]['icon']          = $note->get_icon( $context );
 			$notes[ $note_id ]['content_data']  = $note->get_content_data( $context );
 			$notes[ $note_id ]['status']        = $note->get_status( $context );
 			$notes[ $note_id ]['source']        = $note->get_source( $context );
 			$notes[ $note_id ]['date_created']  = $note->get_date_created( $context );
 			$notes[ $note_id ]['date_reminder'] = $note->get_date_reminder( $context );
 			$notes[ $note_id ]['actions']       = $note->get_actions( $context );
+			$notes[ $note_id ]['layout']        = $note->get_layout( $context );
+			$notes[ $note_id ]['image']         = $note->get_image( $context );
+			$notes[ $note_id ]['is_deleted']    = $note->get_is_deleted( $context );
 		}
 		return $notes;
 	}
@@ -89,15 +92,91 @@ class WC_Admin_Notes {
 	/**
 	 * Deletes admin notes with a given name.
 	 *
-	 * @param string $name Name to search for.
+	 * @param string|array $names Name(s) to search for.
 	 */
-	public static function delete_notes_with_name( $name ) {
-		$data_store = \WC_Data_Store::load( 'admin-note' );
-		$note_ids   = $data_store->get_notes_with_name( $name );
-		foreach ( (array) $note_ids as $note_id ) {
-			$note = new WC_Admin_Note( $note_id );
-			$note->delete();
+	public static function delete_notes_with_name( $names ) {
+		if ( is_string( $names ) ) {
+			$names = array( $names );
+		} elseif ( ! is_array( $names ) ) {
+			return;
 		}
+
+		$data_store = \WC_Data_Store::load( 'admin-note' );
+
+		foreach ( $names as $name ) {
+			$note_ids = $data_store->get_notes_with_name( $name );
+			foreach ( (array) $note_ids as $note_id ) {
+				$note = new WC_Admin_Note( $note_id );
+				$note->delete();
+			}
+		}
+	}
+
+	/**
+	 * Update a note.
+	 *
+	 * @param WC_Admin_Note $note The note that will be updated.
+	 * @param array         $requested_updates a list of requested updates.
+	 */
+	public static function update_note( $note, $requested_updates ) {
+		$note_changed = false;
+		if ( isset( $requested_updates['status'] ) ) {
+			$note->set_status( $requested_updates['status'] );
+			$note_changed = true;
+		}
+
+		if ( isset( $requested_updates['date_reminder'] ) ) {
+			$note->set_date_reminder( $requested_updates['date_reminder'] );
+			$note_changed = true;
+		}
+
+		if ( isset( $requested_updates['is_deleted'] ) ) {
+			$note->set_is_deleted( $requested_updates['is_deleted'] );
+			$note_changed = true;
+		}
+
+		if ( $note_changed ) {
+			$note->save();
+		}
+	}
+
+	/**
+	 * Soft delete of a note.
+	 *
+	 * @param WC_Admin_Note $note The note that will be deleted.
+	 */
+	public static function delete_note( $note ) {
+		$note->set_is_deleted( 1 );
+		$note->save();
+	}
+
+	/**
+	 * Soft delete of all the admin notes. Returns the deleted items.
+	 *
+	 * @return array Array of notes.
+	 */
+	public static function delete_all_notes() {
+		$data_store = \WC_Data_Store::load( 'admin-note' );
+		// Here we filter for the same params we are using to show the note list in client side.
+		$raw_notes = $data_store->get_notes(
+			array(
+				'order'      => 'desc',
+				'orderby'    => 'date_created',
+				'per_page'   => 25,
+				'page'       => 1,
+				'type'       => array( 'info', 'marketing', 'warning' ),
+				'status'     => array( 'unactioned' ),
+				'is_deleted' => 0,
+			)
+		);
+
+		$notes = array();
+		foreach ( (array) $raw_notes as $raw_note ) {
+			$note = new WC_Admin_Note( $raw_note );
+			self::delete_note( $note );
+			array_push( $notes, $note );
+		}
+		return $notes;
 	}
 
 	/**
@@ -138,5 +217,29 @@ class WC_Admin_Notes {
 	 */
 	public static function clear_queued_actions() {
 		wp_clear_scheduled_hook( self::UNSNOOZE_HOOK );
+	}
+
+	/**
+	 * Delete marketing notes if marketing has been opted out.
+	 *
+	 * @param string $old_value Old value.
+	 * @param string $value New value.
+	 */
+	public static function possibly_delete_marketing_notes( $old_value, $value ) {
+		if ( 'no' !== $value ) {
+			return;
+		}
+
+		$data_store = \WC_Data_Store::load( 'admin-note' );
+		$notes      = $data_store->get_notes(
+			array(
+				'type' => array( WC_Admin_Note::E_WC_ADMIN_NOTE_MARKETING ),
+			)
+		);
+
+		foreach ( $notes as $note ) {
+			$note = new WC_Admin_Note( $note->note_id );
+			$note->delete();
+		}
 	}
 }
