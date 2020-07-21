@@ -68,7 +68,6 @@ $disable_jetpack_og = isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 				<li><a href="#previews"><?php _e( 'Previews', 'open-graphite' ); ?></a></li>
 				<li><a href="#debugging"><?php _e( 'Debugging', 'open-graphite' ); ?></a></li>
 				<li><a href="#troubleshooting"><?php _e( 'Troubleshooting', 'open-graphite' ); ?></a></li>
-				<li><a href="#pro"><?php _e( 'Upgrade to Pro', 'open-graphite' ); ?></a></li>
 			</ul>
 			<input name="submit" class="button button-primary" value="Save Settings" type="submit" />
 			<?php wp_nonce_field( 'save-og-settings','og-stuff' ) ?>
@@ -278,7 +277,7 @@ $disable_jetpack_og = isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 				<div class="access-token-container">
 					<h3><?php _e( 'Facebook Access Token', 'open-graphite' ); ?> <span class="beta"><?php _e( 'beta', 'open-graphite' ); ?></span></h3>
-					<p><?php _e( 'Automatically push the open graph data of your post to Facebook as soon as it is created or when it is updated.', 'open-graphite' ); ?> <a href="https://rocketapps.com.au/product/open-graphite-pro/#faq-010" target="_blank" rel="noopener"><?php _e( 'Learn more', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></p>
+					<p><?php _e( 'Automatically push the open graph data of your post to Facebook as soon as it is created or when it is updated.', 'open-graphite' ); ?> <a href="https://rocketapps.com.au/product/open-graphite-pro/#faq-08" target="_blank" rel="noopener"><?php _e( 'Learn more', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></p>
 					<input type="text" name="openg_settings[open_graphite_home_access_token]" id="openg_settings[open_graphite_home_access_token]" value="<?php if($fb_access_token) { echo esc_html($fb_access_token); } ?>" class="half" /><br />
 					<?php if (!$fb_access_token) { ?>
 						<a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noopener"><?php _e( 'Get your Facebook Access Token', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
@@ -507,30 +506,6 @@ $disable_jetpack_og = isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 				<?php } ?>
 			</div>
 			
-
-			<div class="og-settings" id="pro">
-				<p class="title">
-					<strong><?php _e( 'Upgrade to Pro', 'open-graphite' ); ?></strong>
-					<span><?php _e( 'Get the pro advantage for several additional benefits.', 'open-graphite' ); ?></span>
-				</p>
-					<?php $tick = '<span class="dashicons dashicons-yes og-dashicons-yes"></span> '; ?>
-				<ul>
-					<li><?php echo $tick; ?> <?php _e( 'Use on other post types (not just posts and pages)', 'open-graphite' ); ?></li>
-					<li><?php echo $tick; ?> <?php _e( 'Specify automatic defaults for titles, descriptions, featured images and object types', 'open-graphite' ); ?></li>
-					<li><?php echo $tick; ?> <?php _e( 'Facebook, Twitter and Linkedin previews for mobile and desktop', 'open-graphite' ); ?></li>
-					<li><?php echo $tick; ?> <?php _e( 'Open Graph content indicators', 'open-graphite' ); ?></li>
-					<li><?php echo $tick; ?> <?php _e( 'Limit the number of characters for titles and descriptions (prevent your titles and descriptions getting truncated)', 'open-graphite' ); ?></li>
-					<li><?php echo $tick; ?> <?php _e( 'Additional open graph options', 'open-graphite' ); ?></li>
-					<li><?php echo $tick; ?> <?php _e( '12 months of updates', 'open-graphite' ); ?></li>
-					<li><?php echo $tick; ?> <?php _e( 'Priority support', 'open-graphite' ); ?></li>
-				</ul>
-
-				<p>
-					<a href="https://rocketapps.com.au/product/open-graphite-pro/" target="_blank" rel="noopener" class="button upgrade-cta"><?php _e( 'Upgrade to Pro Now', 'open-graphite' ); ?></a> 
-					<a href="https://rocketapps.com.au/open-graphite-pro/" target="_blank" rel="noopener" class="button upgrade-cta"><?php _e( 'Learn More', 'open-graphite' ); ?></a>
-				</p>
-			</div>
-				
 		</div>
 	</form>
 
@@ -575,3 +550,53 @@ $disable_jetpack_og = isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 </div>
 <!--/ End Wrap /-->
+
+<!--/ Start Promo /-->
+<div class="promo">
+	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+	<p><strong>"The best plugin of its kind"</strong></p>
+
+	<img src="<?php echo plugins_url('../images/matt.jpg', __FILE__ );?>" class="matt" />
+
+	<p class="person">
+		<strong>Matthew Woods</strong>
+		<span>Tour Administrator &amp; Web Developer<br /><a href="https://www.perthobservatory.com.au/" target="_blank" rel="noopener">Perth Observatory</a></span>
+	</p>
+
+	<div class="upgrade">
+		<p><strong>Upgrade to Pro</strong></p>
+		<ul>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span>Use on any post type</li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span>Specify automatic defaults</li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span>Facebook, Twitter &amp; Linkedin previews for mobile &amp; desktop</li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span>Open Graph content indicators</li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span>Limit the number of characters for titles &amp; descriptions</li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span>Additional open graph options</li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span>12 months of updates</li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span>Priority support</li>
+		</ul>
+
+		<p>
+			<a href="https://rocketapps.com.au/product/open-graphite-pro/?origin=open-graphite" target="_blank" rel="noopener" class="button upgrade-cta"><?php _e( 'Upgrade to Pro Now', 'open-graphite' ); ?></a> 
+		</p>
+	</div>
+
+</div>
+<?php if(!wp_is_mobile()) { ?>
+<script>
+	jQuery(window).scroll(function(){
+        if(jQuery(window).scrollTop() > 52){
+            jQuery('.promo').addClass('mover');
+        }
+        if(jQuery(window).scrollTop() < 52){
+            jQuery('.promo').removeClass('mover')
+        }
+        
+    });
+</script>
+<?php } ?>
+<!--/ Start Promo /-->

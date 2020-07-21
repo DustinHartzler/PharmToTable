@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Project-Id-Version: Open Graphite\n"
-"POT-Creation-Date: 2020-04-11 07:42+0800\n"
-"PO-Revision-Date: 2020-04-11 07:43+0800\n"
+"POT-Creation-Date: 2020-05-23 08:14+0800\n"
+"PO-Revision-Date: 2020-05-23 08:15+0800\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr "Settings"
 msgid "Open Graphite"
 msgstr "Open Graphite"
 
-#: _open_graphite.php:127 inc/settings-ui.php:162
+#: _open_graphite.php:127 inc/settings-ui.php:161
 msgid "Title"
 msgstr "Title"
 
@@ -52,111 +52,111 @@ msgstr ""
 "You have set the open graph title to always use the <strong>post title</"
 "strong>."
 
-#: _open_graphite.php:146 inc/settings-ui.php:214
+#: _open_graphite.php:146 inc/settings-ui.php:213
 msgid "Object Type"
 msgstr "Object Type"
 
-#: _open_graphite.php:147 inc/settings-ui.php:256
+#: _open_graphite.php:147 inc/settings-ui.php:255
 msgid "Learn about object types"
 msgstr "Learn about object types"
 
-#: _open_graphite.php:155 inc/settings-ui.php:222 inc/settings-ui.php:408
+#: _open_graphite.php:155 inc/settings-ui.php:221 inc/settings-ui.php:407
 msgid "Global"
 msgstr "Global"
 
-#: _open_graphite.php:156 inc/settings-ui.php:223 inc/settings-ui.php:409
+#: _open_graphite.php:156 inc/settings-ui.php:222 inc/settings-ui.php:408
 msgid "article"
 msgstr "article"
 
-#: _open_graphite.php:157 inc/settings-ui.php:224 inc/settings-ui.php:410
+#: _open_graphite.php:157 inc/settings-ui.php:223 inc/settings-ui.php:409
 msgid "book"
 msgstr "book"
 
-#: _open_graphite.php:158 inc/settings-ui.php:225 inc/settings-ui.php:411
+#: _open_graphite.php:158 inc/settings-ui.php:224 inc/settings-ui.php:410
 msgid "books.author"
 msgstr "books.author"
 
-#: _open_graphite.php:159 inc/settings-ui.php:226 inc/settings-ui.php:412
+#: _open_graphite.php:159 inc/settings-ui.php:225 inc/settings-ui.php:411
 msgid "books.book"
 msgstr "books.book"
 
-#: _open_graphite.php:160 inc/settings-ui.php:227 inc/settings-ui.php:413
+#: _open_graphite.php:160 inc/settings-ui.php:226 inc/settings-ui.php:412
 msgid "books.genre"
 msgstr "books.genre"
 
-#: _open_graphite.php:161 inc/settings-ui.php:228 inc/settings-ui.php:414
+#: _open_graphite.php:161 inc/settings-ui.php:227 inc/settings-ui.php:413
 msgid "profile"
 msgstr "profile"
 
-#: _open_graphite.php:162 inc/settings-ui.php:229 inc/settings-ui.php:415
+#: _open_graphite.php:162 inc/settings-ui.php:228 inc/settings-ui.php:414
 msgid "website"
 msgstr "website"
 
-#: _open_graphite.php:165 inc/settings-ui.php:232 inc/settings-ui.php:418
+#: _open_graphite.php:165 inc/settings-ui.php:231 inc/settings-ui.php:417
 msgid "Music"
 msgstr "Music"
 
-#: _open_graphite.php:166 inc/settings-ui.php:233 inc/settings-ui.php:419
+#: _open_graphite.php:166 inc/settings-ui.php:232 inc/settings-ui.php:418
 msgid "music.album"
 msgstr "music.album"
 
-#: _open_graphite.php:167 inc/settings-ui.php:234 inc/settings-ui.php:420
+#: _open_graphite.php:167 inc/settings-ui.php:233 inc/settings-ui.php:419
 msgid "music.radio_station"
 msgstr "music.radio_station"
 
-#: _open_graphite.php:168 inc/settings-ui.php:235 inc/settings-ui.php:421
+#: _open_graphite.php:168 inc/settings-ui.php:234 inc/settings-ui.php:420
 msgid "music.song"
 msgstr "music.song"
 
-#: _open_graphite.php:171 inc/settings-ui.php:238 inc/settings-ui.php:424
+#: _open_graphite.php:171 inc/settings-ui.php:237 inc/settings-ui.php:423
 msgid "Video"
 msgstr "Video"
 
-#: _open_graphite.php:172 inc/settings-ui.php:239 inc/settings-ui.php:425
+#: _open_graphite.php:172 inc/settings-ui.php:238 inc/settings-ui.php:424
 msgid "video.episode"
 msgstr "video.episode"
 
-#: _open_graphite.php:173 inc/settings-ui.php:240 inc/settings-ui.php:426
+#: _open_graphite.php:173 inc/settings-ui.php:239 inc/settings-ui.php:425
 msgid "video.movie"
 msgstr "video.movie"
 
-#: _open_graphite.php:174 inc/settings-ui.php:241 inc/settings-ui.php:427
+#: _open_graphite.php:174 inc/settings-ui.php:240 inc/settings-ui.php:426
 msgid "video.other"
 msgstr "video.other"
 
-#: _open_graphite.php:175 inc/settings-ui.php:242 inc/settings-ui.php:428
+#: _open_graphite.php:175 inc/settings-ui.php:241 inc/settings-ui.php:427
 msgid "video.tv_show"
 msgstr "video.tv_show"
 
-#: _open_graphite.php:178 inc/settings-ui.php:245 inc/settings-ui.php:431
+#: _open_graphite.php:178 inc/settings-ui.php:244 inc/settings-ui.php:430
 msgid "Other"
 msgstr "Other"
 
-#: _open_graphite.php:179 inc/settings-ui.php:246 inc/settings-ui.php:432
+#: _open_graphite.php:179 inc/settings-ui.php:245 inc/settings-ui.php:431
 msgid "business.business"
 msgstr "business.business"
 
-#: _open_graphite.php:180 inc/settings-ui.php:247 inc/settings-ui.php:433
+#: _open_graphite.php:180 inc/settings-ui.php:246 inc/settings-ui.php:432
 msgid "object"
 msgstr "object"
 
-#: _open_graphite.php:181 inc/settings-ui.php:248 inc/settings-ui.php:434
+#: _open_graphite.php:181 inc/settings-ui.php:247 inc/settings-ui.php:433
 msgid "place"
 msgstr "place"
 
-#: _open_graphite.php:182 inc/settings-ui.php:249 inc/settings-ui.php:435
+#: _open_graphite.php:182 inc/settings-ui.php:248 inc/settings-ui.php:434
 msgid "product"
 msgstr "product"
 
-#: _open_graphite.php:183 inc/settings-ui.php:250 inc/settings-ui.php:436
+#: _open_graphite.php:183 inc/settings-ui.php:249 inc/settings-ui.php:435
 msgid "product.group"
 msgstr "product.group"
 
-#: _open_graphite.php:184 inc/settings-ui.php:251 inc/settings-ui.php:437
+#: _open_graphite.php:184 inc/settings-ui.php:250 inc/settings-ui.php:436
 msgid "restaurant.menu"
 msgstr "restaurant.menu"
 
-#: _open_graphite.php:185 inc/settings-ui.php:252 inc/settings-ui.php:438
+#: _open_graphite.php:185 inc/settings-ui.php:251 inc/settings-ui.php:437
 msgid "restaurant.menu_item"
 msgstr "restaurant.menu_item"
 
@@ -167,7 +167,7 @@ msgid ""
 msgstr ""
 "You have set the open graph object type to always be <strong>%1$s</strong>."
 
-#: _open_graphite.php:204 inc/settings-ui.php:192
+#: _open_graphite.php:204 inc/settings-ui.php:191
 msgid "Description"
 msgstr "Description"
 
@@ -189,7 +189,7 @@ msgstr ""
 msgid "Copy from excerpt"
 msgstr "Copy from excerpt"
 
-#: _open_graphite.php:237 inc/settings-ui.php:96
+#: _open_graphite.php:237 inc/settings-ui.php:95
 msgid "Image"
 msgstr "Image"
 
@@ -207,21 +207,21 @@ msgstr ""
 "You have set the open graph image to always use the <strong>featured image</"
 "strong>."
 
-#: _open_graphite.php:272 inc/settings-ui.php:69 inc/settings-ui.php:475
+#: _open_graphite.php:272 inc/settings-ui.php:69 inc/settings-ui.php:474
 msgid "Debugging"
 msgstr "Debugging"
 
-#: _open_graphite.php:273 inc/settings-ui.php:468
+#: _open_graphite.php:273 inc/settings-ui.php:467
 msgid "See how these social networks view your homepage."
 msgstr "See how these social networks view your homepage."
 
 #: _open_graphite.php:275 inc/preview-links.php:1 inc/settings-ui.php:64
-#: inc/settings-ui.php:266 inc/settings-ui.php:480
+#: inc/settings-ui.php:265 inc/settings-ui.php:479
 msgid "Facebook"
 msgstr "Facebook"
 
 #: _open_graphite.php:275 inc/preview-links.php:2 inc/settings-ui.php:65
-#: inc/settings-ui.php:299 inc/settings-ui.php:481
+#: inc/settings-ui.php:298 inc/settings-ui.php:480
 msgid "Twitter"
 msgstr "Twitter"
 
@@ -269,59 +269,41 @@ msgstr "Rate this plugin"
 msgid "Support"
 msgstr "Support"
 
-#: inc/help.php:20
+#: inc/help.php:21
 msgid "Open Graphite Help"
 msgstr "Open Graphite Help"
 
-#: inc/help.php:24
-msgid "What does this plug-in do?"
-msgstr "What does this plug-in do?"
-
-#: inc/help.php:26
-msgid ""
-"This plug-in will place the appropriate Open Graph meta tags and attributes "
-"into the head of your web pages, so that when someone links to one of your "
-"pages (or homepage) on social media the correct image and other information "
-"will show."
-msgstr ""
-"This plug-in will place the appropriate Open Graph meta tags and attributes "
-"into the head of your web pages, so that when someone links to one of your "
-"pages (or homepage) on social media the correct image and other information "
-"will show."
-
-#: inc/help.php:29
+#: inc/help.php:25
 msgid ""
 "Can I customise how each page or post is previewed when shared on social "
 "media?"
 msgstr ""
 "Can I customise how each page or post is previewed when shared on social "
 "media?"
+
+#: inc/help.php:27
+msgid ""
+"Yes. You can either set the option to automatically use the existing title, "
+"text (or excerpt) and image, or specify them manually on each page or post "
+"in the Open Graphite metabox."
+msgstr ""
+"Yes. You can either set the option to automatically use the existing title, "
+"text (or excerpt) and image, or specify them manually on each page or post "
+"in the Open Graphite metabox."
 
 #: inc/help.php:31
-msgid ""
-"Yes. You can either set the option to automatically use the existing title, "
-"text (or excerpt) and image, or specify them manually on each page or post "
-"in the Open Graphite metabox."
-msgstr ""
-"Yes. You can either set the option to automatically use the existing title, "
-"text (or excerpt) and image, or specify them manually on each page or post "
-"in the Open Graphite metabox."
-
-#: inc/help.php:35
 msgid "There appears to be duplicate sets of open graph tags."
 msgstr "There appears to be duplicate sets of open graph tags."
 
-#: inc/help.php:37
+#: inc/help.php:33
 msgid ""
-"Any other plug-in that inserts the open graph properties into the code of "
-"your website (Yoast is one that comes to mind) may cause Open Graphite to "
-"not work properly."
+"Any other plug-in that inserts open graph tags into your website (Yoast is "
+"one that comes to mind) may conflict with Open Graphite to not work properly."
 msgstr ""
-"Any other plug-in that inserts the open graph properties into the code of "
-"your website (Yoast is one that comes to mind) may cause Open Graphite to "
-"not work properly."
+"Any other plug-in that inserts open graph tags into your website (Yoast is "
+"one that comes to mind) may conflict with Open Graphite to not work properly."
 
-#: inc/help.php:38
+#: inc/help.php:34
 msgid ""
 "To test if you have a conflict, simply view the source code of your home "
 "page in your browser and search for any instances of <code>og:</code> "
@@ -339,11 +321,11 @@ msgstr ""
 "else (if at all). The only solution to resolve a conflict is to disable one "
 "of the plug-ins."
 
-#: inc/help.php:42 inc/help.php:49
+#: inc/help.php:38 inc/help.php:45
 msgid "How do I prevent Jetpack from conflicting with Open Graphite?"
 msgstr "How do I prevent Jetpack from conflicting with Open Graphite?"
 
-#: inc/help.php:44
+#: inc/help.php:40
 #, php-format
 msgid ""
 "To avoid a situation where you have sets of open graph tags generated by "
@@ -359,45 +341,54 @@ msgstr ""
 "target=\"_blank\">disable the Yoast Twitter setting</a>. Finally, you will "
 "need to make sure the organisation name and logo are empty <a href=\"%3$s\" "
 "target=\"_blank\">here</a>."
+
+#: inc/help.php:47
+msgid ""
+"To avoid a situation where you have multiple sets of open graph tags "
+"generated by both Jetpack and Open Graphite, you will need to disable "
+"Jetpack open graph meta tags by going to <code>Open Graphite</code> -> "
+"<code>Troubleshooting</code> and enabling the <code>Avoid Jetpack open graph "
+"tag conflict</code> checkbox."
+msgstr ""
+"To avoid a situation where you have multiple sets of open graph tags "
+"generated by both Jetpack and Open Graphite, you will need to disable "
+"Jetpack open graph meta tags by going to <code>Open Graphite</code> -> "
+"<code>Troubleshooting</code> and enabling the <code>Avoid Jetpack open graph "
+"tag conflict</code> checkbox."
 
 #: inc/help.php:51
 msgid ""
-"To avoid a situation where you have multiple sets of open graph tags "
-"generated by both Jetpack and Open Graphite, you will need to disable "
-"Jetpack open graph meta tags by going to <code>Open Graphite</code> -> "
-"<code>Troubleshooting</code> and enabling the <code>Avoid Jetpack open graph "
-"tag conflict</code> checkbox."
+"Facebook isn't showing the correct information when I share my page or post."
 msgstr ""
-"To avoid a situation where you have multiple sets of open graph tags "
-"generated by both Jetpack and Open Graphite, you will need to disable "
-"Jetpack open graph meta tags by going to <code>Open Graphite</code> -> "
-"<code>Troubleshooting</code> and enabling the <code>Avoid Jetpack open graph "
-"tag conflict</code> checkbox."
+"Facebook isn't showing the correct information when I share my page or post."
+
+#: inc/help.php:53
+msgid ""
+"Facebook (and possibly other social networks) will cache the open graph "
+"properties of a post that has previously been shared for up to 24 hours "
+"(maybe longer). During this time, any changes you make to your open graph "
+"properties will not be picked up by Facebook immediately. But there are a "
+"couple of solutions."
+msgstr ""
+"Facebook (and possibly other social networks) will cache the open graph "
+"properties of a post that has previously been shared for up to 24 hours "
+"(maybe longer). During this time, any changes you make to your open graph "
+"properties will not be picked up by Facebook immediately. But there are a "
+"couple of solutions."
 
 #: inc/help.php:55
-msgid ""
-"Facebook isn't showing the correct information when I share my page or post."
-msgstr ""
-"Facebook isn't showing the correct information when I share my page or post."
-
-#: inc/help.php:57
-msgid ""
-"Facebook (and possibly other social networks) will cache the open graph "
-"properties of a post that has previously been shared for up to 24 hours "
-"(maybe longer). During this time, any changes you make to your open graph "
-"properties will not be picked up by Facebook immediately. But there is an "
-"easy fix."
-msgstr ""
-"Facebook (and possibly other social networks) will cache the open graph "
-"properties of a post that has previously been shared for up to 24 hours "
-"(maybe longer). During this time, any changes you make to your open graph "
-"properties will not be picked up by Facebook immediately. But there is an "
-"easy fix."
-
-#: inc/help.php:58
 #, php-format
 msgid ""
-"Using the official <a href=\"%1$s\" target=\"_blank\" rel=\"noopener"
+"1) Get a <a href=\"%1$s\" target=\"_blank\" rel=\"noopener\">Facebook Access "
+"Token</a>, or..."
+msgstr ""
+"1) Get a <a href=\"%1$s\" target=\"_blank\" rel=\"noopener\">Facebook Access "
+"Token</a>, or..."
+
+#: inc/help.php:57
+#, php-format
+msgid ""
+"2) Use the official <a href=\"%1$s\" target=\"_blank\" rel=\"noopener"
 "\">Facebook Debugger</a>, paste in the URL of your page or post and hit the "
 "<strong>Debug</strong> button. When it has finished, hit the <strong>Scrape "
 "Again</strong> button. This will force Facebook to fetch the latest open "
@@ -405,7 +396,7 @@ msgid ""
 "\"%2$s\" target=\"_blank\" rel=\"noopener\">Card Validator</a> for this "
 "purpose as well."
 msgstr ""
-"Using the official <a href=\"%1$s\" target=\"_blank\" rel=\"noopener"
+"2) Use the official <a href=\"%1$s\" target=\"_blank\" rel=\"noopener"
 "\">Facebook Debugger</a>, paste in the URL of your page or post and hit the "
 "<strong>Debug</strong> button. When it has finished, hit the <strong>Scrape "
 "Again</strong> button. This will force Facebook to fetch the latest open "
@@ -413,7 +404,7 @@ msgstr ""
 "\"%2$s\" target=\"_blank\" rel=\"noopener\">Card Validator</a> for this "
 "purpose as well."
 
-#: inc/help.php:60
+#: inc/help.php:59
 msgid ""
 "Facebook might complain about the lack of an App ID when you pass your URL "
 "through their debugger, but this will not prevent anything from working "
@@ -423,26 +414,30 @@ msgstr ""
 "through their debugger, but this will not prevent anything from working "
 "correctly."
 
-#: inc/help.php:63
+#: inc/help.php:62
 msgid "Do I need a Facebook App ID?"
 msgstr "Do I need a Facebook App ID?"
 
-#: inc/help.php:65
+#: inc/help.php:64
 #, php-format
 msgid ""
 "You probably do not need a Facebook App ID. That said, there may be "
 "instances where having one is helpful. <a href=\"%1$s\" target=\"_blank\" "
-"rel=\"noopener\">Decide for yourself</a>."
+"rel=\"noopener\">Decide for yourself</a>. But if you plan on using the "
+"Facebook Access Token feature (highly recommended) then you will absolutely "
+"need a Facebook App ID."
 msgstr ""
 "You probably do not need a Facebook App ID. That said, there may be "
 "instances where having one is helpful. <a href=\"%1$s\" target=\"_blank\" "
-"rel=\"noopener\">Decide for yourself</a>."
+"rel=\"noopener\">Decide for yourself</a>. But if you plan on using the "
+"Facebook Access Token feature (highly recommended) then you will absolutely "
+"need a Facebook App ID."
 
-#: inc/help.php:68
+#: inc/help.php:67
 msgid "Where can I find my Facebook App ID?"
 msgstr "Where can I find my Facebook App ID?"
 
-#: inc/help.php:70
+#: inc/help.php:69
 #, php-format
 msgid ""
 "If you have a Facebook App, you can get the App ID from <a href=\"%1$s\" "
@@ -451,11 +446,11 @@ msgstr ""
 "If you have a Facebook App, you can get the App ID from <a href=\"%1$s\" "
 "target=\"_blank\">your developer dashboard.</a>"
 
-#: inc/help.php:73
+#: inc/help.php:72
 msgid "Will my current settings be inherited if I upgrade to pro?"
 msgstr "Will my current settings be inherited if I upgrade to pro?"
 
-#: inc/help.php:75
+#: inc/help.php:74
 #, php-format
 msgid ""
 "Yes. If you <a href=\"%1$s\" target=\"_blank\" rel=\"noopener\">upgrade to "
@@ -464,11 +459,11 @@ msgstr ""
 "Yes. If you <a href=\"%1$s\" target=\"_blank\" rel=\"noopener\">upgrade to "
 "Pro</a> all your current configurations will remain."
 
-#: inc/help.php:78
+#: inc/help.php:77
 msgid "Where can I get support for this plugin?"
 msgstr "Where can I get support for this plugin?"
 
-#: inc/help.php:80
+#: inc/help.php:79
 #, php-format
 msgid ""
 "Pro users can get priority support at <a href=\"%1$s\" target=\"_blank"
@@ -481,7 +476,7 @@ msgstr ""
 "a support message at the <a href=\"%2$s\" target=\"_blank\">Wordpress plug-"
 "in repo</a>."
 
-#: inc/post-image.php:29 inc/post-image.php:36 inc/settings-ui.php:111
+#: inc/post-image.php:29 inc/post-image.php:36 inc/settings-ui.php:110
 msgid "Edit image"
 msgstr "Edit image"
 
@@ -493,7 +488,7 @@ msgstr "Leave empty if you prefer to use the featured image."
 msgid "Remove"
 msgstr "Remove"
 
-#: inc/post-image.php:61 inc/settings-ui.php:106
+#: inc/post-image.php:61 inc/settings-ui.php:105
 #, php-format
 msgid ""
 "The image dimensions are too small at %1$s x %2$s. It is recommended the "
@@ -567,31 +562,27 @@ msgstr ""
 "need to go to the <a href=\"%1$s\">troubleshooting</a> section and enable "
 "the <code>Avoid Jetpack open graph meta tag conflict</code> checkbox."
 
-#: inc/settings-ui.php:63 inc/settings-ui.php:92
+#: inc/settings-ui.php:63 inc/settings-ui.php:91
 msgid "Homepage"
 msgstr "Homepage"
 
-#: inc/settings-ui.php:66 inc/settings-ui.php:318
+#: inc/settings-ui.php:66 inc/settings-ui.php:317
 msgid "Enabled Post Types"
 msgstr "Enabled Post Types"
 
-#: inc/settings-ui.php:67 inc/settings-ui.php:380
+#: inc/settings-ui.php:67 inc/settings-ui.php:379
 msgid "Defaults"
 msgstr "Defaults"
 
-#: inc/settings-ui.php:68 inc/settings-ui.php:467
+#: inc/settings-ui.php:68 inc/settings-ui.php:466
 msgid "Previews"
 msgstr "Previews"
 
-#: inc/settings-ui.php:70 inc/settings-ui.php:491
+#: inc/settings-ui.php:70 inc/settings-ui.php:490
 msgid "Troubleshooting"
 msgstr "Troubleshooting"
 
-#: inc/settings-ui.php:71 inc/settings-ui.php:513
-msgid "Upgrade to Pro"
-msgstr "Upgrade to Pro"
-
-#: inc/settings-ui.php:93
+#: inc/settings-ui.php:92
 msgid ""
 "The image and content that will be shown when your homepage is shared on "
 "social media."
@@ -599,25 +590,25 @@ msgstr ""
 "The image and content that will be shown when your homepage is shared on "
 "social media."
 
-#: inc/settings-ui.php:97
+#: inc/settings-ui.php:96
 #, php-format
 msgid "It is recommended the image be %1$s or %2$s at very least."
 msgstr "It is recommended the image be %1$s or %2$s at very least."
 
-#: inc/settings-ui.php:97 inc/settings-ui.php:281
+#: inc/settings-ui.php:96 inc/settings-ui.php:280
 msgid "Learn more"
 msgstr "Learn more"
 
-#: inc/settings-ui.php:117
+#: inc/settings-ui.php:116
 #, php-format
 msgid "The dimensions of the selected image are %1$s x %2$s."
 msgstr "The dimensions of the selected image are %1$s x %2$s."
 
-#: inc/settings-ui.php:123
+#: inc/settings-ui.php:122
 msgid "Browse"
 msgstr "Browse"
 
-#: inc/settings-ui.php:163
+#: inc/settings-ui.php:162
 #, php-format
 msgid ""
 "The website title that will be shown when your homepage is shared on social "
@@ -626,11 +617,11 @@ msgstr ""
 "The website title that will be shown when your homepage is shared on social "
 "media. %1$s characters max."
 
-#: inc/settings-ui.php:168
+#: inc/settings-ui.php:167
 msgid "Use the website title"
 msgstr "Use the website title"
 
-#: inc/settings-ui.php:193
+#: inc/settings-ui.php:192
 #, php-format
 msgid ""
 "A description of your website that will be shown when your homepage is "
@@ -639,47 +630,47 @@ msgstr ""
 "A description of your website that will be shown when your homepage is "
 "shared on social media. %1$s characters max."
 
-#: inc/settings-ui.php:199
+#: inc/settings-ui.php:198
 msgid "Use the website tagline"
 msgstr "Use the website tagline"
 
-#: inc/settings-ui.php:215
+#: inc/settings-ui.php:214
 msgid "The object type that best suits your homepage."
 msgstr "The object type that best suits your homepage."
 
-#: inc/settings-ui.php:256
+#: inc/settings-ui.php:255
 msgid "In most cases this is usually set to <strong>website</strong>."
 msgstr "In most cases this is usually set to <strong>website</strong>."
 
-#: inc/settings-ui.php:267
+#: inc/settings-ui.php:266
 msgid "Specify an App ID or an Access Token (recommended)."
 msgstr "Specify an App ID or an Access Token (recommended)."
 
-#: inc/settings-ui.php:270
+#: inc/settings-ui.php:269
 msgid "Facebook App ID"
 msgstr "Facebook App ID"
 
-#: inc/settings-ui.php:271
+#: inc/settings-ui.php:270
 msgid "If you do not know what this is, you probably do not need it."
 msgstr "If you do not know what this is, you probably do not need it."
 
-#: inc/settings-ui.php:274
+#: inc/settings-ui.php:273
 msgid "Find your Facebook App ID"
 msgstr "Find your Facebook App ID"
 
-#: inc/settings-ui.php:276
+#: inc/settings-ui.php:275
 msgid "Facebook App Dashboard"
 msgstr "Facebook App Dashboard"
 
-#: inc/settings-ui.php:280
+#: inc/settings-ui.php:279
 msgid "Facebook Access Token"
 msgstr "Facebook Access Token"
 
-#: inc/settings-ui.php:280
+#: inc/settings-ui.php:279
 msgid "beta"
 msgstr "beta"
 
-#: inc/settings-ui.php:281
+#: inc/settings-ui.php:280
 msgid ""
 "Automatically push the open graph data of your post to Facebook as soon as "
 "it is created or when it is updated."
@@ -687,41 +678,41 @@ msgstr ""
 "Automatically push the open graph data of your post to Facebook as soon as "
 "it is created or when it is updated."
 
-#: inc/settings-ui.php:284
+#: inc/settings-ui.php:283
 msgid "Get your Facebook Access Token"
 msgstr "Get your Facebook Access Token"
 
-#: inc/settings-ui.php:286
+#: inc/settings-ui.php:285
 msgid "Graph API Explorer"
 msgstr "Graph API Explorer"
 
-#: inc/settings-ui.php:300
+#: inc/settings-ui.php:299
 msgid "Your Twitter username and the default card type."
 msgstr "Your Twitter username and the default card type."
 
-#: inc/settings-ui.php:303
+#: inc/settings-ui.php:302
 msgid "Username"
 msgstr "Username"
 
-#: inc/settings-ui.php:304
+#: inc/settings-ui.php:303
 msgid ""
 "If you have a Twitter account for this website, enter the @username here."
 msgstr ""
 "If you have a Twitter account for this website, enter the @username here."
 
-#: inc/settings-ui.php:307
+#: inc/settings-ui.php:306
 msgid "Card type"
 msgstr "Card type"
 
-#: inc/settings-ui.php:309
+#: inc/settings-ui.php:308
 msgid "Summary"
 msgstr "Summary"
 
-#: inc/settings-ui.php:310
+#: inc/settings-ui.php:309
 msgid "Summary with large image (recommended)"
 msgstr "Summary with large image (recommended)"
 
-#: inc/settings-ui.php:319
+#: inc/settings-ui.php:318
 msgid ""
 "The post types to show the Open Graphite metabox. Note: There is no need to "
 "enable for post types that are not public."
@@ -729,129 +720,81 @@ msgstr ""
 "The post types to show the Open Graphite metabox. Note: There is no need to "
 "enable for post types that are not public."
 
-#: inc/settings-ui.php:381
+#: inc/settings-ui.php:380
 msgid "Force these defaults on all post types and pages."
 msgstr "Force these defaults on all post types and pages."
 
-#: inc/settings-ui.php:386
+#: inc/settings-ui.php:385
 msgid "Always use the title"
 msgstr "Always use the title"
 
-#: inc/settings-ui.php:390
+#: inc/settings-ui.php:389
 msgid "Always use the excerpt for the description (posts only)"
 msgstr "Always use the excerpt for the description (posts only)"
 
-#: inc/settings-ui.php:394
+#: inc/settings-ui.php:393
 msgid "Always use the featured image"
 msgstr "Always use the featured image"
 
-#: inc/settings-ui.php:403
+#: inc/settings-ui.php:402
 msgid "Always use this object type:"
 msgstr "Always use this object type:"
 
-#: inc/settings-ui.php:446
+#: inc/settings-ui.php:445
 msgid "Title character limit:"
 msgstr "Title character limit:"
 
-#: inc/settings-ui.php:453
+#: inc/settings-ui.php:452
 msgid "Description character limit:"
 msgstr "Description character limit:"
 
-#: inc/settings-ui.php:476
+#: inc/settings-ui.php:475
 msgid "Test your page using official and 3rd party online tools."
 msgstr "Test your page using official and 3rd party online tools."
 
-#: inc/settings-ui.php:482
+#: inc/settings-ui.php:481
 msgid "Linkedin Post Inspector"
 msgstr "Linkedin Post Inspector"
 
-#: inc/settings-ui.php:483
+#: inc/settings-ui.php:482
 msgid "iFramely"
 msgstr "iFramely"
 
-#: inc/settings-ui.php:484
+#: inc/settings-ui.php:483
 msgid "Open Graph Check"
 msgstr "Open Graph Check"
 
-#: inc/settings-ui.php:492
+#: inc/settings-ui.php:491
 msgid "May solve compatibility issues with certain themes and plugins."
 msgstr "May solve compatibility issues with certain themes and plugins."
 
-#: inc/settings-ui.php:495
+#: inc/settings-ui.php:494
 msgid "Theme output priority"
 msgstr "Theme output priority"
 
-#: inc/settings-ui.php:497
+#: inc/settings-ui.php:496
 msgid "Low"
 msgstr "Low"
 
-#: inc/settings-ui.php:498
+#: inc/settings-ui.php:497
 msgid "High"
 msgstr "High"
 
-#: inc/settings-ui.php:499
+#: inc/settings-ui.php:498
 msgid "Auto (default)"
 msgstr "Auto (default)"
 
-#: inc/settings-ui.php:503
+#: inc/settings-ui.php:502
 msgid "Jetpack"
 msgstr "Jetpack"
 
-#: inc/settings-ui.php:505
+#: inc/settings-ui.php:504
 msgid "Avoid Jetpack open graph meta tag conflict."
 msgstr "Avoid Jetpack open graph meta tag conflict."
 
-#: inc/settings-ui.php:514
-msgid "Get the pro advantage for several additional benefits."
-msgstr "Get the pro advantage for several additional benefits."
-
-#: inc/settings-ui.php:518
-msgid "Use on other post types (not just posts and pages)"
-msgstr "Use on other post types (not just posts and pages)"
-
-#: inc/settings-ui.php:519
-msgid ""
-"Specify automatic defaults for titles, descriptions, featured images and "
-"object types"
-msgstr ""
-"Specify automatic defaults for titles, descriptions, featured images and "
-"object types"
-
-#: inc/settings-ui.php:520
-msgid "Facebook, Twitter and Linkedin previews for mobile and desktop"
-msgstr "Facebook, Twitter and Linkedin previews for mobile and desktop"
-
-#: inc/settings-ui.php:521
-msgid "Open Graph content indicators"
-msgstr "Open Graph content indicators"
-
-#: inc/settings-ui.php:522
-msgid ""
-"Limit the number of characters for titles and descriptions (prevent your "
-"titles and descriptions getting truncated)"
-msgstr ""
-"Limit the number of characters for titles and descriptions (prevent your "
-"titles and descriptions getting truncated)"
-
-#: inc/settings-ui.php:523
-msgid "Additional open graph options"
-msgstr "Additional open graph options"
-
-#: inc/settings-ui.php:524
-msgid "12 months of updates"
-msgstr "12 months of updates"
-
-#: inc/settings-ui.php:525
-msgid "Priority support"
-msgstr "Priority support"
-
-#: inc/settings-ui.php:529
+#: inc/settings-ui.php:584
 msgid "Upgrade to Pro Now"
 msgstr "Upgrade to Pro Now"
-
-#: inc/settings-ui.php:530
-msgid "Learn More"
-msgstr "Learn More"
 
 #. Plugin URI of the plugin/theme
 msgid "https://wordpress.org/plugins/open-graphite/"

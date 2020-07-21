@@ -3,7 +3,7 @@ Contributors: mikeyott
 Tags: open graph, opengraph, social, facebook, twitter, thumbnail, thumbnails, og:image, og:description, og:title
 Requires at least: 4.7
 Tested up to: 5.4
-Stable tag: trunk
+Stable tag: 1.3.1
 
 Control how your content is viewed when shared on social media.
 
@@ -45,9 +45,9 @@ For posts and pages...
 
 == Premium Support ==
 
-While the free version of Open Graphite is supported in the <a href="https://wordpress.org/support/plugin/open-graphite">WordPress support page</a>, one-on-one priority support is given to <a href="https://rocketapps.com.au/open-graphite-pro/">Open Graphite Pro</a> license holders.
+While the free version of Open Graphite is supported in the <a href="https://wordpress.org/support/plugin/open-graphite">WordPress support page</a>, one-on-one priority support is given to <a href="https://rocketapps.com.au/open-graphite-pro/?origin=open-graphite">Open Graphite Pro</a> license holders.
 
-<a href="https://rocketapps.com.au/open-graphite-pro/">Open Graphite Pro</a> has additional features, such as:
+<a href="https://rocketapps.com.au/open-graphite-pro/?origin=open-graphite">Open Graphite Pro</a> has additional features, such as:
 
 * The ability to use with any custom post type
 * Mobile and desktop previews for Facebook, Twitter and Linkedin
@@ -55,8 +55,15 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 * Open Graph content indicators
 * Limit the number of characters for titles and descriptions (prevent your titles and descriptions getting truncated)
 * Additional open graph options
+* 12 months of updates
+* Priority support
 
 == Changelog ==
+
+= 1.3.1 =
+
+Updated help topics with most relevant information and correct external links.
+Minor admin UI tweak.
 
 = 1.3 =
 

@@ -101,7 +101,13 @@
           top: 40px;
           position: fixed;
           top: 52px;
-          left: 182px;
+		  left: 182px;
+		  
+		  @include breakpoint(small) {
+			top: auto;
+			left: auto;
+			position: relative;
+		}
       }
   
       ul, li {
@@ -162,7 +168,7 @@
   
   .og-wrap {
       margin: 0 0 0 250px;
-      width: calc(100% - 240px);
+      width: calc(100% - 535px);
   
       @include breakpoint(small) {
           margin: 10px 0 0 0;
@@ -174,6 +180,109 @@
       em {
           font-style: normal;
       }
+  }
+
+  .promo {
+      position: fixed;
+      top: 141px;
+      right: 25px;
+      background: #fff;
+      padding: 25px 25px 0 25px;
+      width: 270px;
+	  text-align: center;
+	  transition: all .25s ease-in-out;
+
+	  @include breakpoint(small) {
+		  position: relative;
+		  top: auto;
+		  right: auto;
+		  width: calc(100% - 10px);
+	  }
+	  
+	  &.mover {
+		  top: 52px;
+
+		  @include breakpoint(small) {
+			  top: auto;
+		  }
+	  }
+
+      p {
+          font-size: 1.3em;
+          margin: 20px 0;
+      }
+
+      .person {
+          font-size: 1.2em;
+
+          span {
+			display: block;
+			font-size: .85em;
+        }
+      }
+
+      .star {
+          width: 20px;
+          height: 20px;
+      }
+
+      .matt {
+          display: block;
+          width: 80px;
+          height: 80px;
+          border-radius: 100%;
+          margin: 0 auto;
+      }
+
+      .upgrade {
+          background: rgba(#000, .9);
+          display: block;
+          width: calc(100% + 50px);
+          margin: 0 0 0 -25px;
+          padding: 25px;
+
+          p {
+              margin: 0;
+              color: #fff;
+			  font-size: 2em;
+          }
+
+          ul {
+              text-align: left;
+
+              li {
+                  padding: 0 0 0 25px;
+                  position: relative;
+				  color: rgba(#fff, .8);
+				  
+				  @include breakpoint(small) {
+					  font-size: 1.1em;
+				  }
+
+                  .dashicons-yes {
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      margin: 0;
+                      color: $green;
+                  }
+              }
+          }
+
+          .button {
+              border: solid 1px #fff;
+              background: none;
+              color: #fff;
+              font-weight: bold;
+              padding: 5px 20px;
+			  text-align: center;
+			//   border-top-left-radius: 30px;
+			//   border-top-right-radius: 30px;
+			//   border-bottom-left-radius: 30px;
+			//   border-bottom-right-radius: 30px;
+          }
+      }
+      
   }
   
   .image-error {
@@ -202,7 +311,11 @@
       margin: 0 10px 10px 0;
       position: relative;
       width: 100%;
-      font-size: 1.05em;
+	  font-size: 1.05em;
+	  
+	  @include breakpoint(small) {
+		  margin: 0 0 10px 0;
+	  }
   
       .browse-for-image {
           display: block;

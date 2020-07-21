@@ -3,10 +3,10 @@
 Plugin Name: 	Open Graphite
 Plugin URI: 	https://wordpress.org/plugins/open-graphite/
 Description: 	Control how your content is viewed when shared on social media.
-Version: 		1.3
+Version: 		1.3.1
 Author: 		Rocket Apps
 Author URI: 	https://rocketapps.com.au
-Text Domain: 	open-graphite
+Stable tag:     1.3
 License:        GPL2
 Domain Path: 	/languages/
 */
@@ -396,7 +396,7 @@ function openg_settings_page() {
 
 /* Sanitize and validate */
 function open_graphite_options_validate( $input ) {
-    global $select_options, $radio_options;
+    global $args, $select_options, $radio_options;
     if ( !isset( $input['openg_settings'] ) )
         $input['openg_settings'] = null;
     	$input['openg_settings'] = ( $input['openg_settings'] == 1 ? 1 : 0 );
