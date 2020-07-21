@@ -228,7 +228,7 @@ if ( $options['navigation_type'] == "float" || $options['navigation_type'] == "s
 		</header>
 	</div>
 	<?php tha_header_after(); ?>
-
+	
 	<?php
 	if ( ( is_archive() || is_search() ) && _thrive_check_focus_area_for_pages( "archive", "top" ) ) {
 		thrive_render_top_focus_area( "top", "archive" );
