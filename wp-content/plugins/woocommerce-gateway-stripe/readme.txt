@@ -4,7 +4,7 @@ Tags: credit card, stripe, apple pay, payment request, google pay, sepa, sofort,
 Requires at least: 4.4
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 4.3.3
+Stable tag: 4.5.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Attributions: thorsten-stripe
@@ -56,17 +56,16 @@ Stripe also supports the [WooCommerce Subscriptions extension](https://woocommer
 
 = Apple Pay Support =
 
-WooCommerce Stripe now includes [Apple Pay](https://stripe.com/apple-pay) support, which means customers can pay using payment details associated with their Apple ID. Checkout is now just an authorization (Touch ID or Face ID) away on both mobile and desktop. Only supports simple and variable products for now. More support to come.
+WooCommerce Stripe includes [Apple Pay](https://stripe.com/apple-pay) support, which means customers can pay using payment details associated with their Apple ID. Checkout is now just an authorization (Touch ID or Face ID) away on both mobile and desktop. Only supports simple, variable, and Subscription products for now. More support to come.
 
 = Web Payments API Support =
 
-WooCommerce Stripe now includes [Web Payments API](https://www.w3.org/TR/payment-request/) support, which means customers can pay using payment details associated to their mobile devices, in browsers supporting the Web Payments API (Chrome for Android, amongst others). Checkout is now just a few taps away on mobile. Only supports simple and variable products for now. More support to come.
+WooCommerce Stripe includes [Web Payments API](https://www.w3.org/TR/payment-request/) support, which means customers can pay using payment details associated to their mobile devices, in browsers supporting the Web Payments API (Chrome for Android, amongst others). Checkout is now just a few taps away on mobile. Only supports simple, variable, and Subscription products for now. More support to come.
 
 == Installation ==
-
-Please note, v4 of this gateway requires WooCommerce 2.6 and above.
-
 You can download an [older version of this gateway for older versions of WooCommerce from here](https://wordpress.org/plugins/woocommerce-gateway-stripe/developers/).
+
+Please note, v4 of this gateway requires WooCommerce 3.0 and above.
 
 = Automatic installation =
 
@@ -94,7 +93,7 @@ Yes! In Live Mode, an SSL certificate must be installed on your site to use Stri
 
 = Does this support both production mode and sandbox mode for testing? =
 
-Yes, it does - production and sandbox mode is driven by the API keys you use.
+Yes, it does - production and Test (sandbox) mode is driven by the API keys you use with a checkbox in the admin settings to toggle between both.
 
 = Where can I find documentation? =
 
@@ -106,12 +105,37 @@ If you get stuck, you can ask for help in the Plugin Forum.
 
 == Screenshots ==
 
-1. The settings panel used to configure the gateway.
-2. Normal checkout with Stripe.
-3. Option to save a card to your account.
-4. Checking out with a saved card.
+1. The Stripe payment gateway settings screen used to configure the main Stripe gateway.
+2. Offer a range of payment methods such as local and alternative payment methods.
+3. Pay with a saved payment method, a new card, and allow customers to save the payment card for future transactions.
+4. Apple Pay and other Payment Request buttons can be used on the Product Page and Checkout for express checkout.
 
 == Changelog ==
+
+= 4.5.0 2020-06-24 =
+* Tweak - Improve branded Google Pay button user agent detection.
+* Add   - New filter to manage the display of payment request buttons in cart.
+* Fix   - Display Apple Pay button with text if branded type is text and logo.
+* Fix   - Prevent branded payment request button duplication when checkout is re-calculated.
+* Fix   - Payment request buttons on a single product page now correctly show the product name instead of a subtotal.
+* Fix   - Quotes in variadic product attributes no longer cause payment request buttons to show only the cheapest variation.
+
+= 4.4.0 2020-05-21 =
+* Tweak - Remove support for WooCommerce versions lower than 3.0.
+* Tweak - Update plugin assets.
+* Tweak - Improve performance on order pay screen.
+* Tweak - Compress payment methods SVGs.
+* Add   - Support for custom payment request button.
+* Fix   - Prevent users from entering secret key in the public key field and stop it from showing if they did.
+* Fix   - Revert caching layer removal to speed up My Account subscriptions tab.
+* Fix   - Bug where source ID was not set resulting in an uncaught exception.
+* Fix   - Collecting level 3 data triggers a warning.
+* Fix   - Custom button class typo.
+* Fix   - Payment Request incorrect shipping option passed.
+* Fix   - Payment Requests, like Apple Pay, not initially showing correct quantity if used on Product Page.
+* Fix   - State abbreviation breaks Payment Request button.
+* Fix   - Stripe Payment Request button using incorrect Google Pay brand asset by adding a special branded button.
+* Fix   - Move docs and support links in the plugins list page.
 
 = 4.3.3 2020-04-08 =
 * Fix - Fix Payment Request issue when product attribute has quotes

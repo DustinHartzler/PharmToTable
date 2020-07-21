@@ -57,6 +57,24 @@ jQuery( function( $ ) {
 				}
 			} ).change();
 
+			// Toggle Custom Payment Request configs.
+			$( '#woocommerce_stripe_payment_request_button_type' ).change( function() {
+				if ( 'custom' === $( this ).val() ) {
+					$( '#woocommerce_stripe_payment_request_button_label' ).closest( 'tr' ).show();
+				} else {
+					$( '#woocommerce_stripe_payment_request_button_label' ).closest( 'tr' ).hide();
+				}
+			} ).change()
+
+			// Toggle Branded Payment Request configs.
+			$( '#woocommerce_stripe_payment_request_button_type' ).change( function() {
+				if ( 'branded' === $( this ).val() ) {
+					$( '#woocommerce_stripe_payment_request_button_branded_type' ).closest( 'tr' ).show();
+				} else {
+					$( '#woocommerce_stripe_payment_request_button_branded_type' ).closest( 'tr' ).hide();
+				}
+			} ).change()
+
 			// Make the 3DS notice dismissable.
 			$( '.wc-stripe-3ds-missing' ).each( function() {
 				var $setting = $( this );
