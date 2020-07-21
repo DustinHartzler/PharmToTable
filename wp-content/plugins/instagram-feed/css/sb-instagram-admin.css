@@ -943,6 +943,7 @@
 	margin: 10px 0 10px 0;
 }
 #sbi_config_info{
+	box-sizing: border-box;
 	position: fixed;
 	z-index: 999;
 	width: 100%;
@@ -958,6 +959,7 @@
 	top: 160px;
 	left: 50%;
 	width: 450px;
+	max-width: 70%;
 
 	margin: 0 0 0 -230px;
 	padding: 20px;
@@ -972,6 +974,7 @@
 }
 @media all and (max-width: 480px){
 	#sbi_config_info .sbi_config_modal{
+		top: 40px;
 		max-width: 100%;
 		margin: 0 0 0 -50%;
 		box-sizing: border-box;
@@ -1230,7 +1233,7 @@
 #sbi_admin .sbi_feed_type .sbi_lock{
 	height: 18px;
 	padding: 4px 10px 4px 13px;
-    top: 16px;
+	top: 32px;
     left: 98px;
     color: #999;
 }
@@ -1257,8 +1260,8 @@
 	z-index:99;
 	display: none;
 	position: absolute;
-	bottom: 22px;
-    left: -8px;
+	bottom: 12px;
+	left: -8px;
     
     background: #333;
     color: #eee;

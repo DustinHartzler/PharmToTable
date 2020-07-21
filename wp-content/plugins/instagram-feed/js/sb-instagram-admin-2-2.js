@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-
+    jQuery('#sbi_no_js_warning').remove();
     /* NEW API CODE */
     $('.sbi_admin_btn, .sbi_reconnect').click(function(event) {
         event.preventDefault();
@@ -225,6 +225,7 @@ jQuery(document).ready(function($) {
     }
 
     function sbiAfterUpdateToken(savedToken,saveID){
+        $('.sbi_no_accounts').remove();
         if (saveID) {
             sbSaveID(savedToken.user_id);
             $('.sbi_user_feed_ids_wrap').prepend(
@@ -438,7 +439,8 @@ jQuery(document).ready(function($) {
     });
 
     function sbiInitClickRemove(el) {
-        el.click(function() {
+        el.click(function(event) {
+            event.preventDefault();
             if (!$(this).closest('.sbi_connected_accounts_wrap').hasClass('sbi-waiting')) {
                 $(this).closest('.sbi_connected_accounts_wrap').addClass('sbi-waiting');
                 var accessToken = $(this).closest('.sbi_connected_account').attr('data-accesstoken'),

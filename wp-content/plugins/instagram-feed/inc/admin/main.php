@@ -598,7 +598,7 @@ function sb_instagram_settings_page() {
 								<?php endforeach; ?>
 
                             </div> <!-- end scrollable -->
-                            <p style="font-size: 11px; line-height: 1.5; margin-bottom: 0;"><b><i style="color: #666;">*<?php echo sprintf( __( 'Changing the password, updating privacy settings, or removing page admins for the related Facebook page may require %smanually reauthorizing our app%s to reconnect an account.', 'instagram-feed' ), '<a href="https://smashballoon.com/reauthorizing-our-instagram-facebook-app/" target="_blank" rel="noopener noreferrer">', '</a>' ); ?></i></p>
+                            <p style="font-size: 11px; line-height: 1.5; margin-bottom: 0;"><i style="color: #666;">*<?php echo sprintf( __( 'Changing the password, updating privacy settings, or removing page admins for the related Facebook page may require %smanually reauthorizing our app%s to reconnect an account.', 'instagram-feed' ), '<a href="https://smashballoon.com/reauthorizing-our-instagram-facebook-app/" target="_blank" rel="noopener noreferrer">', '</a>' ); ?></i></p>
 
                             <a href="JavaScript:void(0);" id="sbi-connect-business-accounts" class="button button-primary" disabled="disabled" style="margin-top: 20px;">Connect Accounts</a>
 
@@ -629,7 +629,7 @@ function sb_instagram_settings_page() {
 			$matches_existing_personal = sbi_matches_existing_personal( $new_account_details );
 			$button_text = $matches_existing_personal ? __( 'Update This Account', 'instagram-feed' ) : __( 'Connect This Account', 'instagram-feed' );
 
-			$account_json = wp_json_encode( $new_account_details );
+			$account_json = sbi_json_encode( $new_account_details );
 
 			$already_connected_as_business_account = (isset( $connected_accounts[ $user_id ] ) && $connected_accounts[ $user_id ]['type'] === 'business');
 
@@ -705,11 +705,7 @@ function sb_instagram_settings_page() {
                 <div id="sbi_config">
                     <a data-personal-basic-api="https://api.instagram.com/oauth/authorize?app_id=423965861585747&redirect_uri=https://api.smashballoon.com/instagram-basic-display-redirect.php&response_type=code&scope=user_profile,user_media&state=<?php echo admin_url('admin.php?page=sb-instagram-feed'); ?>"
                        data-new-api="https://www.facebook.com/dialog/oauth?client_id=254638078422287&redirect_uri=https://api.smashballoon.com/instagram-graph-api-redirect.php&scope=manage_pages,instagram_basic,instagram_manage_insights,instagram_manage_comments&state=<?php echo admin_url('admin.php?page=sb-instagram-feed'); ?>"
-                       data-old-api="https://instagram.com/oauth/authorize/?client_id=3a81a9fa2a064751b8c31385b91cc25c&scope=basic&redirect_uri=https://smashballoon.com/instagram-feed/instagram-token-plugin/?return_uri=<?php echo admin_url('admin.php?page=sb-instagram-feed'); ?>&response_type=token&state=<?php echo admin_url('admin.php?page-sb-instagram-feed'); ?>&hl=en"
-                       href="https://instagram.com/oauth/authorize/?client_id=3a81a9fa2a064751b8c31385b91cc25c&scope=basic&redirect_uri=https://smashballoon.com/instagram-feed/instagram-token-plugin/?return_uri=<?php echo admin_url('admin.php?page=sb-instagram-feed'); ?>&response_type=token&state=<?php echo admin_url('admin.php?page-sb-instagram-feed'); ?>&hl=en" class="sbi_admin_btn"><i class="fa fa-user-plus" aria-hidden="true" style="font-size: 20px;"></i>&nbsp; <?php _e('Connect an Instagram Account', 'instagram-feed' ); ?></a>
-
-                    <!--<a href="https://instagram.com/oauth/authorize/?client_id=3a81a9fa2a064751b8c31385b91cc25c&scope=basic&redirect_uri=https://smashballoon.com/instagram-feed/instagram-token-plugin/?return_uri=<?php echo admin_url('admin.php?page=sb-instagram-feed'); ?>&response_type=token&state=<?php echo admin_url('admin.php?page-sb-instagram-feed'); ?>" class="sbi_admin_btn"><i class="fa fa-user-plus" aria-hidden="true" style="font-size: 20px;"></i>&nbsp; <?php _e('Connect an Instagram Account', 'instagram-feed' ); ?></a>
-                    -->
+                       href="https://api.instagram.com/oauth/authorize?app_id=423965861585747&redirect_uri=https://api.smashballoon.com/instagram-basic-display-redirect.php&response_type=code&scope=user_profile,user_media&state=<?php echo admin_url('admin.php?page=sb-instagram-feed'); ?>" class="sbi_admin_btn"><i class="fa fa-user-plus" aria-hidden="true" style="font-size: 20px;"></i>&nbsp; <?php _e('Connect an Instagram Account', 'instagram-feed' ); ?></a>
                     <a href="https://smashballoon.com/instagram-feed/token/" target="_blank" style="position: relative; top: 14px; left: 15px;"><?php _e('Button not working?', 'instagram-feed'); ?></a>
                 </div>
 
@@ -779,7 +775,7 @@ function sb_instagram_settings_page() {
                                 <div class="sbi_ca_info">
 
                                     <div class="sbi_ca_delete">
-                                        <a href="JavaScript:void(0);" class="sbi_delete_account"><i class="fa fa-times"></i><span class="sbi_remove_text"><?php _e( 'Remove', 'instagram-feed' ); ?></span></a>
+                                        <a href="<?php echo add_query_arg( 'disconnect', $account['user_id'], get_admin_url( null, 'admin.php?page=sb-instagram-feed' ) ); ?>" class="sbi_delete_account"><i class="fa fa-times"></i><span class="sbi_remove_text"><?php _e( 'Remove', 'instagram-feed' ); ?></span></a>
                                     </div>
 
                                     <div class="sbi_ca_username">
@@ -836,6 +832,7 @@ function sb_instagram_settings_page() {
                                 <label><?php _e('Please enter the User ID for this Profile:', 'instagram-feed');?></label>
                                 <input name="sb_manual_account_id" id="sb_manual_account_id" type="text" value="" style="margin-top: 4px; padding: 5px 9px; margin-left: 0px;" size="40" minlength="5" maxlength="100" placeholder="Eg: 15641403491391489" />
                             </div>
+                            <p id="sbi_no_js_warning" class="sbi_notice"><?php echo sprintf( __('It looks like JavaScript is not working on this page. Some features may not work fully. Visit %sthis page%s for help resolving this issue.', 'instagram-feed'), '<a href="https://smashballoon.com/i-cant-connect-or-manage-accounts-on-the-instagram-feed-settings-page/" target="_blank" rel="noopener">', '</a>' ); ?></p>
                             <p class="sbi_submit" style="display: inline-block;"><input type="submit" name="sbi_submit" id="sbi_manual_submit" class="button button-primary" value="<?php _e('Connect This Account', 'instagram-feed' );?>"></p>
                         </div>
                     </td>
@@ -906,6 +903,26 @@ function sb_instagram_settings_page() {
 
                                 <p class="sbi_tooltip"><?php _e( 'Display posts that your account has been tagged in.', 'instagram-feed' ); ?></p>
                             </div>
+                        </div>
+
+                        <div class="sbi_pro sbi_row sbi_mixed_directions">
+                            <div class="sbi_col sbi_one">
+                                <input type="radio" name="sb_instagram_type" disabled />
+                                <label class="sbi_radio_label" for="sb_instagram_type_mixed">Mixed:</label>
+                            </div>
+                            <div class="sbi_col sbi_two">
+                                <input readonly type="text" size="25" style="height: 32px; top: -2px; position: relative; box-shadow: none;" disabled />
+                                &nbsp;<a class="sbi_tooltip_link sbi_pro" href="JavaScript:void(0);"><?php _e( 'What is this?', 'instagram-feed' ); ?></a>
+
+                                <div class="sbi_tooltip sbi_type_tooltip">
+                                    <p>
+			                            <?php echo sprintf( __('To display multiple feed types in a single feed, use %s in your shortcode and then add the user name or hashtag for each feed into the shortcode, like so: %s. This will combine a user feed and a hashtag feed into the same feed.', 'instagram-feed'), 'type="mixed"', '<code>[instagram-feed type="mixed" user="smashballoon" hashtag="#awesomeplugins"]</code>' ); ?>
+                                    </p>
+                                    <p style="padding-top: 8px;"><b>Note:</b> To display a hashtag feed, it is required that you first connect an Instagram Business Profile using the <b>"Connect an Instagram Account"</b> button above. &nbsp;<a href="https://smashballoon.com/instagram-business-profiles/" target="_blank">Why is this required?</a>
+                                    </p>
+                                </div>
+                            </div>
+
                         </div>
 
 						<div class="sbi_row sbi_pro">

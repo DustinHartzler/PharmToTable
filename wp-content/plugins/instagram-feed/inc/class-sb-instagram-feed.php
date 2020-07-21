@@ -843,10 +843,10 @@ class SB_Instagram_Feed
 				'pagination' => $this->next_pages
 			);
 
-			set_transient( $this->regular_feed_transient_name, wp_json_encode( $to_cache ), $cache_time );
+			set_transient( $this->regular_feed_transient_name, sbi_json_encode( $to_cache ), $cache_time );
 
 			if ( $save_backup ) {
-				update_option( $this->backup_feed_transient_name, wp_json_encode( $to_cache ), false );
+				update_option( $this->backup_feed_transient_name, sbi_json_encode( $to_cache ), false );
 			}
 		} else {
 			$this->add_report( 'no data not caching' );
@@ -877,10 +877,10 @@ class SB_Instagram_Feed
 			$to_cache['last_requested'] = isset( $to_cache['last_requested'] ) ? $to_cache['last_requested'] : time();
 			$to_cache['last_retrieve'] = isset( $to_cache['last_retrieve'] ) ? $to_cache['last_retrieve'] : $this->last_retrieve;
 
-			set_transient( $this->regular_feed_transient_name, wp_json_encode( $to_cache ), $cache_time );
+			set_transient( $this->regular_feed_transient_name, sbi_json_encode( $to_cache ), $cache_time );
 
 			if ( $save_backup ) {
-				update_option( $this->backup_feed_transient_name, wp_json_encode( $to_cache ), false );
+				update_option( $this->backup_feed_transient_name, sbi_json_encode( $to_cache ), false );
 			}
 		} else {
 			$this->add_report( 'no data not caching' );
@@ -898,10 +898,10 @@ class SB_Instagram_Feed
 	 */
 	public function cache_header_data( $cache_time, $save_backup = true ) {
 		if ( $this->header_data ) {
-			set_transient( $this->header_transient_name, wp_json_encode( $this->header_data ), $cache_time );
+			set_transient( $this->header_transient_name, sbi_json_encode( $this->header_data ), $cache_time );
 
 			if ( $save_backup ) {
-				update_option( $this->backup_header_transient_name, wp_json_encode( $this->header_data ), false );
+				update_option( $this->backup_header_transient_name, sbi_json_encode( $this->header_data ), false );
 			}
 		}
 	}
@@ -999,7 +999,7 @@ class SB_Instagram_Feed
 		$use_pagination = $this->should_use_pagination( $settings, 0 );
 
 		$feed_id = $this->regular_feed_transient_name;
-		$shortcode_atts = ! empty( $atts ) ? wp_json_encode( $atts ) : '{}';
+		$shortcode_atts = ! empty( $atts ) ? sbi_json_encode( $atts ) : '{}';
 
 		$settings['header_outside'] = false;
 		$settings['header_inside'] = false;
@@ -1147,7 +1147,7 @@ class SB_Instagram_Feed
 			'resized_url' => $resized_url
 		);
 
-		$encoded_options = wp_json_encode( $js_options );
+		$encoded_options = sbi_json_encode( $js_options );
 
 		$js_option_html = '<script type="text/javascript">var sb_instagram_js_options = ' . $encoded_options . ';</script>';
 		$js_option_html .= "<script type='text/javascript' src='" . trailingslashit( SBI_PLUGIN_URL ) . 'js/sb-instagram.min.js?ver=' . SBIVER . "'></script>";

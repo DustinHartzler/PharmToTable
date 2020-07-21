@@ -603,7 +603,7 @@ if(!sbi_js_exists) {
                 $item.find('img').on('error', function () {
                     if (!$(this).hasClass('sbi_img_error')) {
                         $(this).addClass('sbi_img_error');
-                        var sourceFromAPI = ($(this).attr('src').indexOf('media?size=') > -1 || $(this).attr('src').indexOf('cdninstagram') > -1 || $(this).attr('src').indexOf('fbcdn') > -1)
+                        var sourceFromAPI = ($(this).attr('src').indexOf('media/?size=') > -1 || $(this).attr('src').indexOf('cdninstagram') > -1 || $(this).attr('src').indexOf('fbcdn') > -1)
 
                         if (!sourceFromAPI) {
 

@@ -3,7 +3,7 @@ Contributors: smashballoon, craig-at-smash-balloon
 Tags: Instagram, Instagram feed, Instagram photos, Instagram widget, Instagram gallery
 Requires at least: 3.4
 Tested up to: 5.4
-Stable tag: 2.4.2
+Stable tag: 2.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -325,6 +325,20 @@ We understand that sometimes you need help, have issues or just have questions. 
 * Plus more customization options added all the time!
 
 == Changelog ==
+= 2.4.5 =
+* Fix: Accounts can be connected without the use of JavaScript.
+* Fix: Default URL for connecting an account changed to prevent "Invalid Scope" connection issue.
+
+= 2.4.4 =
+* Fix: Workaround added for PHP warning related to an undefined media_url index.
+* Fix: Connecting a business account on a mobile device when more than 2 pages where returned was not possible.
+* Fix: After connecting an account, the warning that there were no connected accounts would still be visible.
+* Fix: URL for retrieving image files from Instagram using a redirect method was changed to prevent an extra, unnecessary redirect.
+
+= 2.4.3 =
+* Fix: The opt-in notice to help improve the plugin was not dismissing as expected for some sites due to the admin JavaScript file being cached by the browser.
+* Fix: Disabled the “About Us” page plugin installation if using a version of WordPress earlier than 4.6.
+
 = 2.4.2 =
 * New: To help us improve the plugin we've added the ability to opt-in to usage tracking so that we can understand what features and settings are being used, and which features matter to you the most. This is disabled by default and will only be enabled if you explictly choose to opt in. If opted in, the plugin will send a report in the background once per week with your plugin settings and basic information about your website environment. No personal or sensitive data is collected (such as email addresses, Instagram account information, license keys, etc). To enable or disable usage tracking at a later date use the setting at: Instagram Feed > Customize > Advanced > Misc > Enable Usage Tracking. See [here](https://smashballoon.com/instagram-feed/usage-tracking/) for more information.
 * Tweak: Added additional checks to make sure the HTTP protocol matches when using resized image URLs from the uploads folder.

@@ -181,7 +181,7 @@ function sbi_add_resized_image_data( $instagram_feed, $feed_id ) {
 		SB_Instagram_Feed::update_last_requested( $instagram_feed->get_image_ids_post_set() );
 	}
 	?>
-    <span class="sbi_resized_image_data" data-feed-id="<?php echo esc_attr( $feed_id ); ?>" data-resized="<?php echo esc_attr( wp_json_encode( SB_Instagram_Feed::get_resized_images_source_set( $instagram_feed->get_image_ids_post_set(), 0, $feed_id ) ) ); ?>">
+    <span class="sbi_resized_image_data" data-feed-id="<?php echo esc_attr( $feed_id ); ?>" data-resized="<?php echo esc_attr( sbi_json_encode( SB_Instagram_Feed::get_resized_images_source_set( $instagram_feed->get_image_ids_post_set(), 0, $feed_id ) ) ); ?>">
 	</span>
 	<?php
 }
@@ -325,7 +325,7 @@ function sbi_get_next_post_set() {
         'resizedImages' => SB_Instagram_Feed::get_resized_images_source_set( $instagram_feed->get_image_ids_post_set(), 0, $feed_id )
 	);
 
-	echo wp_json_encode( $return );
+	echo sbi_json_encode( $return );
 
 	global $sb_instagram_posts_manager;
 
@@ -783,7 +783,7 @@ function sbi_sanitize_emoji( $string ) {
 	$encoded = array(
 		'jsonencoded' => $string
 	);
-	return wp_json_encode( $encoded );
+	return sbi_json_encode( $encoded );
 }
 
 /**
@@ -818,6 +818,14 @@ function sbi_is_after_deprecation_deadline() {
 	$current_time = sbi_get_current_timestamp();
 
 	return $current_time > strtotime( 'June 29, 2020' );
+}
+
+function sbi_json_encode( $thing ) {
+    if ( function_exists( 'wp_json_encode' ) ) {
+        return wp_json_encode( $thing );
+    } else {
+        return json_encode( $thing );
+    }
 }
 
 /**

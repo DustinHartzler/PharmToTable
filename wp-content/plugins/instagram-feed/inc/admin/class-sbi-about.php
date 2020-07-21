@@ -307,7 +307,9 @@ class SB_Instagram_About {
 	 */
 	protected function output_about_addons() {
 
-		if ( ! current_user_can( 'manage_instagram_feed_options' ) || 	version_compare( PHP_VERSION,  '5.3.0' ) <= 0 ) {
+		if ( ! current_user_can( 'manage_instagram_feed_options' ) || 	version_compare( PHP_VERSION,  '5.3.0' ) <= 0
+		    || version_compare( PHP_VERSION,  '5.3.0' ) <= 0
+		    || version_compare( get_bloginfo('version'), '4.6' , '<' ) ){
 			return;
 		}
 
