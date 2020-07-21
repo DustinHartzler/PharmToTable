@@ -22,6 +22,7 @@ final class NF_FU_Admin_Menus_Uploads extends NF_Abstracts_Submenu {
 		}
 
 		if ( ! defined( 'DOING_AJAX' ) ) {
+			add_action( 'admin_init', array( $this, 'maybe_redirect_to_remove_referrer' ) );
 			add_action( 'admin_init', array( 'NF_FU_Admin_UploadsTable', 'process_bulk_action' ) );
 			add_action( 'admin_init', array( 'NF_FU_Admin_UploadsTable', 'delete_upload' ) );
 			add_action( 'admin_notices', array( 'NF_FU_Admin_UploadsTable', 'action_notices' ) );
@@ -86,6 +87,20 @@ final class NF_FU_Admin_Menus_Uploads extends NF_Abstracts_Submenu {
 		$tab_keys = array_keys( $tabs );
 
 		return ( isset( $_GET['tab'] ) ) ? $_GET['tab'] : reset( $tab_keys );
+	}
+
+	public function maybe_redirect_to_remove_referrer() {
+		if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'ninja-forms-uploads' ) {
+			return;
+		}
+
+		if ( ! empty( $_GET['_wp_http_referer'] ) ) {
+			wp_redirect( remove_query_arg( array(
+				'_wp_http_referer',
+				'_wpnonce',
+			), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+			exit;
+		}
 	}
 
 	/**

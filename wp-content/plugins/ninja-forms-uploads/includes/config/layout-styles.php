@@ -35,4 +35,22 @@ return apply_filters( 'ninja_forms_uploads_styles_field_type_section', array(
 			NF_FU_File_Uploads::TYPE,
 		),
 	),
+
+	'file-cancel' => array(
+		'name'     => 'file-cancel',
+		'label'    => __( 'File Upload Cancel Button', 'ninja-forms-uploads' ),
+		'selector' => '.file_upload-wrap .nf-field-element .nf-fu-button-cancel',
+		'only'     => array(
+			NF_FU_File_Uploads::TYPE,
+		),
+	),
+
+	'file-cancel-hover' => array(
+		'name'     => 'file-cancel-hover',
+		'label'    => __( 'File Upload Cancel Button Hover', 'ninja-forms-uploads' ),
+		'selector' => '.file_upload-wrap .nf-field-element .nf-fu-button-cancel:hover',
+		'only'     => array(
+			NF_FU_File_Uploads::TYPE,
+		),
+	),
 ) );

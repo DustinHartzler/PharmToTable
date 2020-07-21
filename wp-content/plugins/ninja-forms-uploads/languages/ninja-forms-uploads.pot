@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ninja-forms-uploads\n"
 "Report-Msgid-Bugs-To: help@ninjaforms.com\n"
-"POT-Creation-Date: 2020-03-23 14:46+0000\n"
-"PO-Revision-Date: 2020-03-23 14:46+GMT\n"
+"POT-Creation-Date: 2020-06-25 12:49+0100\n"
+"PO-Revision-Date: 2020-06-25 12:49+GMT+0100\n"
 "Last-Translator: Ninja Forms <help@ninjaforms.com>\n"
 "Language-Team: English <LL@li.org>\n"
 "Language: \n"
@@ -97,7 +97,7 @@ msgid "Would Yield"
 msgstr ""
 
 #: deprecated/includes/admin/pages/ninja-forms-uploads/tabs/browse-uploads/browse-uploads.php:6
-#: includes/admin/menus/uploads.php:70
+#: includes/admin/menus/uploads.php:71
 msgid "Browse Uploads"
 msgstr ""
 
@@ -259,11 +259,12 @@ msgstr ""
 
 #: deprecated/includes/admin/pages/ninja-forms-uploads/tabs/external-settings/external-settings.php:36
 #: includes/external/loader.php:219
+#: includes/templates/admin-menu-uploads-external.php:19
 msgid "External Settings"
 msgstr ""
 
 #: deprecated/includes/admin/pages/ninja-forms-uploads/tabs/upload-settings/upload-settings.php:39
-#: includes/admin/menus/uploads.php:71
+#: includes/admin/menus/uploads.php:72
 #: includes/templates/admin-menu-uploads-settings.php:16
 msgid "Upload Settings"
 msgstr ""
@@ -416,7 +417,7 @@ msgid "Disconnected from %s"
 msgstr ""
 
 #: deprecated/includes/external/external.php:65
-#: includes/external/loader.php:272
+#: includes/external/loader.php:275
 #, php-format
 msgid "%s Settings"
 msgstr ""
@@ -535,7 +536,7 @@ msgstr ""
 msgid "File Uploads"
 msgstr ""
 
-#: includes/admin/menus/uploads.php:97
+#: includes/admin/menus/uploads.php:112
 msgid "Save"
 msgstr ""
 
@@ -614,37 +615,37 @@ msgstr ""
 msgid "File extension of %s not allowed"
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:566
+#: includes/ajax/controllers/uploads.php:571
 msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini"
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:569
+#: includes/ajax/controllers/uploads.php:574
 msgid ""
 "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in "
 "the HTML form"
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:572
+#: includes/ajax/controllers/uploads.php:577
 msgid "The uploaded file was only partially uploaded"
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:575
+#: includes/ajax/controllers/uploads.php:580
 msgid "No file was uploaded"
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:578
+#: includes/ajax/controllers/uploads.php:583
 msgid "Missing a temporary folder"
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:581
+#: includes/ajax/controllers/uploads.php:586
 msgid "Failed to write file to disk"
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:584
+#: includes/ajax/controllers/uploads.php:589
 msgid "File upload stopped by extension"
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:588
+#: includes/ajax/controllers/uploads.php:593
 msgid "Unknown upload error"
 msgstr ""
 
@@ -710,6 +711,18 @@ msgstr ""
 msgid "Change the button text for selecting files."
 msgstr ""
 
+#: includes/config/field-settings.php:84 includes/fields/upload.php:320
+msgid "Cancel"
+msgstr ""
+
+#: includes/config/field-settings.php:85
+msgid "Cancel File Upload Button Text"
+msgstr ""
+
+#: includes/config/field-settings.php:88
+msgid "Change the button text for cancelling uploads."
+msgstr ""
+
 #: includes/config/layout-styles.php:5
 msgid "Progress Bar"
 msgstr ""
@@ -724,6 +737,24 @@ msgstr ""
 
 #: includes/config/layout-styles.php:32
 msgid "File Delete Link"
+msgstr ""
+
+#: includes/config/layout-styles.php:41
+msgid "File Upload Cancel Button"
+msgstr ""
+
+#: includes/config/layout-styles.php:50
+msgid "File Upload Cancel Button Hover"
+msgstr ""
+
+#: includes/config/settings-external.php:9
+msgid "Use Public URL"
+msgstr ""
+
+#: includes/config/settings-external.php:10
+msgid ""
+"URLs to files uploaded to external services are by default only accessible "
+"to logged in users of the site. Enable this to make them publicly viewable."
 msgstr ""
 
 #: includes/config/settings-upload.php:9
@@ -798,7 +829,7 @@ msgstr ""
 msgid "Field"
 msgstr ""
 
-#: includes/external/loader.php:257
+#: includes/external/loader.php:260
 #, php-format
 msgid "%s requires %s"
 msgstr ""
@@ -864,23 +895,23 @@ msgstr ""
 msgid "File Extension"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:242
+#: includes/integrations/ninjaforms/mergetags.php:251
 msgid "Date in yyyy-mm-dd format"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:248
+#: includes/integrations/ninjaforms/mergetags.php:257
 msgid "Year in yyyy format"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:254
+#: includes/integrations/ninjaforms/mergetags.php:263
 msgid "Month in mm format"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:260
+#: includes/integrations/ninjaforms/mergetags.php:269
 msgid "Day in dd format"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:266
+#: includes/integrations/ninjaforms/mergetags.php:275
 msgid "Random 5 character string"
 msgstr ""
 
@@ -902,7 +933,7 @@ msgstr ""
 msgid "Single file upload fields only"
 msgstr ""
 
-#: includes/templates/admin-menu-uploads-browse.php:3
+#: includes/templates/admin-menu-uploads-browse.php:11
 msgid "Search Uploads"
 msgstr ""
 
@@ -911,7 +942,7 @@ msgstr ""
 msgid "Fix it."
 msgstr ""
 
-#: includes/templates/admin-menu-uploads-external.php:21
+#: includes/templates/admin-menu-uploads-external.php:31
 #, php-format
 msgid "PHP %s or greater required for external uploads."
 msgstr ""

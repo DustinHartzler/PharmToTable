@@ -78,4 +78,13 @@ return apply_filters( 'ninja_forms_uploads_field_settings', array(
 		'width' => 'full',
 		'help'  => __( 'Change the button text for selecting files.', 'ninja-forms-uploads' ),
 	),
+	'cancel_upload_text' => array(
+		'name'  => 'cancel_upload_text',
+		'type'  => 'textbox',
+		'value' => __( 'Cancel', 'ninja-forms-uploads' ),
+		'label' => __( 'Cancel File Upload Button Text', 'ninja-forms-uploads' ),
+		'group' => 'display',
+		'width' => 'full',
+		'help'  => __( 'Change the button text for cancelling uploads.', 'ninja-forms-uploads' ),
+	),
 ) );

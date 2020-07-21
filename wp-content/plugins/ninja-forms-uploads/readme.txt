@@ -4,7 +4,7 @@ Donate link: http://ninjaforms.com
 Tags: form, forms
 Requires at least: 5.0
 Tested up to: 5.4
-Stable tag: 3.3.2
+Stable tag: 3.3.5
 
 License: GPLv2 or later
 
@@ -26,6 +26,45 @@ This section describes how to install the plugin and get it working.
 For help and video tutorials, please visit our website: [NinjaForms.com](http://ninjaforms.com)
 
 == Changelog ==
+
+= 3.3.5 (25 June 2020) =
+
+*New:*
+
+* Setting to make the URLs to files upload to external service providers accessible to non-logged in users
+
+*Changes:*
+
+* Updated jQuery File Upload library to v10.30.1.
+
+*Bugs:*
+
+* Fix Google Drive file preview URL not working
+* Fix cancel button doesn't show to allow clearing upload errors
+* Fix files with non UTF8 characters not reloaded when using the Save Progress addon
+
+= 3.3.4 (10 June 2020) =
+
+*Bugs:*
+
+* Fix mergetags variations not rendering the correct value
+* Fix external file url redirecting to site admin home if the service is no longer connected
+
+= 3.3.3 (26 May 2020) =
+
+*New:*
+
+* Button to cancel a file upload, or clear an error after a failed upload
+
+*Bugs:*
+
+* File upload links being stripped from emails and success messages
+* Fatal error when uploading multiple files to Google Drive and renaming the file names
+* Required field validation error shows when the 'Select Files' button clicked
+* Missing file upload when submitting a form that had previously been saved with the Save Progress addon
+* Multiple file upload URLs appearing as one large broken link in emails
+* PHP notices about mergetag values when saving a form
+* Browse uploads table losing form filter when paginating or sorting
 
 = 3.3.2 (23 March 2020) =
 

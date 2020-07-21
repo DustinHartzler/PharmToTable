@@ -12,6 +12,16 @@
 
 	<?php if ( NF_FU_External_Loader::is_compatible() ) { ?>
 		<?php do_action( 'ninja_forms_uploads_external_template' ); ?>
+
+		<?php
+		$args = array(
+			'group'       => 'general',
+			'group_label' => __( 'External Settings', 'ninja-forms-uploads' ),
+			'settings'    => NF_File_Uploads()->config( 'settings-external' ),
+		);
+
+		NF_File_Uploads()->template( 'admin-menu-meta-box', $args ); ?>
+
 		<input type="hidden" name="update_ninja_forms_settings_nonce" value="<?php echo wp_create_nonce( "ninja_forms_settings_nonce" ); ?>">
 		<input type="hidden" name="update_ninja_forms_settings">
 		<input type="submit" class="button button-primary" value="<?php echo $save_button_text; ?>">

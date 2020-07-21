@@ -31,6 +31,11 @@
 	margin-bottom: 10px;
 }
 
+.nf-fu-button-cancel {
+	float: right;
+	display: none;
+}
+
 .nf-fu-fileinput-button input {
 	position: absolute;
 	top: 0;

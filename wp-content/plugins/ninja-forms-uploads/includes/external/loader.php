@@ -50,7 +50,7 @@ class NF_FU_External_Loader {
 		add_filter( 'ninja_forms_uploads_file_location', array( $this, 'get_service_display_name' ) );
 		add_action( 'ninja_forms_loaded', array( $this, 'init' ) );
 
-		add_action( 'admin_init', array( $this, 'handle_external_url' ) );
+		add_action( 'admin_init', array( $this, 'handle_external_url_admin' ) );
 		add_action( 'template_redirect', array( $this, 'handle_external_url_public' ) );
 	}
 
@@ -229,6 +229,9 @@ class NF_FU_External_Loader {
 	 * @return array
 	 */
 	public function add_settings_to_whitelist( $whitelist ) {
+		$external_config = NF_File_Uploads()->config( 'settings-external' );
+		$whitelist = array_merge( $whitelist, $external_config );
+
 		$services = $this->get_services();
 		foreach ( $services as $service ) {
 			if ( ! ( $instance = $this->get( $service, $services ) ) ) {
@@ -278,6 +281,23 @@ class NF_FU_External_Loader {
 	}
 
 	/**
+	 * Use a public URL for external file upload URLs
+	 *
+	 * @return bool
+	 */
+	protected function use_public_url() {
+    	if ( defined( 'NINJA_FORMS_UPLOADS_USE_PUBLIC_URL' ) && NINJA_FORMS_UPLOADS_USE_PUBLIC_URL ) {
+			return true;
+		}
+
+		if ( (bool) NF_File_Uploads()->controllers->settings->get_setting( 'external_public_url' ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Get the external URL for the file upload
 	 *
 	 * @param string $file_url
@@ -296,7 +316,7 @@ class NF_FU_External_Loader {
 		}
 
 		$url_path = '?nf-upload=' . $data['upload_id'];
-		if ( defined( 'NINJA_FORMS_UPLOADS_USE_PUBLIC_URL' ) && NINJA_FORMS_UPLOADS_USE_PUBLIC_URL ) {
+		if ( $this->use_public_url() ) {
 			$file_url = home_url( $url_path );
 		} else {
 			$file_url = admin_url( $url_path );
@@ -306,30 +326,55 @@ class NF_FU_External_Loader {
 	}
 
 	/**
-	 * Listen for external service file URLs and redirect to the service URL with a public URL
+	 *  Listen for external service file URLs and redirect to the service URL
+	 *
 	 */
-	public function handle_external_url_public() {
-		if ( ! defined( 'NINJA_FORMS_UPLOADS_USE_PUBLIC_URL' ) || ! NINJA_FORMS_UPLOADS_USE_PUBLIC_URL ) {
+	public function handle_external_url_admin() {
+		$upload_id = $this->is_external_file_id();
+		if ( ! $upload_id ) {
 			return;
 		}
 
-		$this->handle_external_url();
+		$this->get_upload_external_url( $upload_id ) ;
 	}
 
 	/**
-	 * Listen for external service file URLs and redirect to the service URL
+	 * Listen for external service file URLs and redirect to the service URL with a public URL
 	 */
-	public function handle_external_url() {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	public function handle_external_url_public() {
+		$upload_id = $this->is_external_file_id();
+		if ( ! $upload_id ) {
 			return;
+		}
+
+		if ( ! $this->use_public_url() ) {
+			return;
+		}
+
+		$this->get_upload_external_url( $upload_id ) ;
+	}
+
+	/**
+	 * @return bool|int
+	 */
+	protected function is_external_file_id() {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return false;
 		}
 
 		$upload_id = filter_input( INPUT_GET, 'nf-upload', FILTER_VALIDATE_INT );
 
 		if ( ! isset( $upload_id ) ) {
-			return;
+			return false;
 		}
 
+		return $upload_id;
+	}
+
+	/**
+	 * @param int $upload_id
+	 */
+	public function get_upload_external_url( $upload_id ) {
 		$upload  = NF_File_Uploads()->controllers->uploads->get( $upload_id );
 		$service = filter_input( INPUT_GET, 'service' );
 		if ( empty( $service ) ) {
@@ -343,7 +388,9 @@ class NF_FU_External_Loader {
 		}
 
 		if ( ! ( $instance = $this->get( $service ) ) ) {
-			return;
+			// Service no longer configured
+			wp_redirect( $upload->file_url );
+			die();
 		}
 
 		$path     = ( isset( $upload->external_path ) ) ? $upload->external_path : '';

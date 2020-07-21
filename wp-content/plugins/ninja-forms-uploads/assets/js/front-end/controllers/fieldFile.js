@@ -33,6 +33,7 @@
 
 	var uploadController = Marionette.Object.extend( {
 
+		jqXHR: [],
 		$progress_bars: [],
 
 		initialize: function() {
@@ -109,12 +110,26 @@
 
 		maybeSubmitFieldData: function( data ) {
 			if ( data.paramName === 'files-' + data.formData.field_id || data.paramName === 'files-' + data.formData.field_id + '[]' ) {
-				data.submit();
+				this.jqXHR[ data.formData.field_id ] = data.submit();
 			}
 		},
 
 		showError: function( error, view ) {
 			nfRadio.channel( 'fields' ).request( 'add:error', view.model.id, 'upload-file-error', error );
+		},
+
+		resetError: function( view, fieldID  ) {
+			nfRadio.channel( 'fields' ).request( 'remove:error', fieldID, 'upload-file-error' );
+			this.$progress_bars[ fieldID ].css( 'width', 0 );
+			$( view.el ).find( '.nf-fu-button-cancel' ).hide();
+			var formID = view.model.get( 'formID' );
+			nfRadio.channel( 'form-' + formID ).trigger( 'enable:submit', view.model );
+		},
+
+		cancelUpload: function( e ) {
+			var fieldID = e.data.view.model.id;
+			e.data.controller.jqXHR[ fieldID ].abort();
+			e.data.controller.resetError( e.data.view, fieldID );
 		},
 
 		isNonceValid: function( view ) {
@@ -150,6 +165,13 @@
 			var self = this;
 			var files = view.model.get( 'files' );
 
+			$( view.el ).find( 'button.nf-fu-button-cancel' ).on( 'click', { view: view, controller: self }, self.cancelUpload );
+
+			$( view.el ).find( 'button.nf-fu-fileinput-button' ).on( 'click', function() {
+				// Don't show required validation error on click of the file upload button
+				view.model.set( 'firstTouch', false );
+			} );
+
 			/*
 			 * Make sure that our files array isn't undefined.
 			 * If it is, set it to an empty array.
@@ -169,7 +191,8 @@
 			var formData = {
 				form_id: formID,
 				field_id: fieldID,
-				nonce: nonce
+				nonce: nonce,
+				abort: false
 			};
 
 			$file.fileupload( {
@@ -184,6 +207,8 @@
 				maxFileSize: view.model.get( 'max_file_size' ),
 				minFileSize: view.model.get( 'min_file_size' ),
 				add: function (e, data) {
+					$( view.el ).find( '.nf-fu-button-cancel' ).show();
+					formData.abort = false;
 					data.formData = formData;
 					if ( self.isNonceValid( view ) ) {
 						self.maybeSubmitFieldData( data );
@@ -257,6 +282,8 @@
 						}
 					}
 
+					$( view.el ).find( '.nf-fu-button-cancel' ).hide();
+
 					var count = 0;
 					$.each( data.result.data.files, function( index, file ) {
 						count++;
@@ -300,10 +327,19 @@
 					$.each( data.result.errors, function( index, error ) {
 						self.showError( error, view );
 					} );
+
+					self.jqXHR[ formData.field_id ].abort();
+					self.$progress_bars[  formData.field_id ].css( 'width', 0 );
+					formData.abort = true;
+					return;
 				}
 
 				var key = data.result.data.files[ 0 ][ 'new_tmp_key' ];
-				formData[key]= data.result.data.files[ 0 ][ 'tmp_name' ];
+				formData[ key ] = data.result.data.files[ 0 ][ 'tmp_name' ];
+			} ).on( "fileuploadchunksend", function( e, data ) {
+				if ( formData.abort === true ) {
+					return false;
+				}
 			} )
 				.prop( 'disabled', !$.support.fileInput )
 				.parent().addClass( $.support.fileInput ? undefined : 'disabled' );
@@ -334,6 +370,11 @@
 		 * @returns {boolean}
 		 */
 		validateRequired: function( el, model ) {
+			if ( !model.get( 'firstTouch' ) ) {
+				model.set( 'firstTouch', true );
+				return true;
+			}
+
 			var files = model.get( 'files' );
 			if ( typeof files === 'undefined' || !files.length ) {
 				model.set( 'value', '' );
@@ -349,8 +390,7 @@
 
 	$( document ).ready( function() {
 		$( 'body' ).on( 'click', 'button.nf-fu-fileinput-button', function( e ) {
-			// e.preventDefault();
-			$( this ).next( 'input.nf-element' ).click();
+			$( this ).parent().find( 'input.nf-element' ).click();
 		} );
 
 		$( document ).bind( 'drop dragover', function( e ) {

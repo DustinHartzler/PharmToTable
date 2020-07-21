@@ -544,9 +544,14 @@ class NF_FU_AJAX_Controllers_Uploads extends NF_Abstracts_Controller {
 	 * @return string
 	 */
 	protected function get_temp_filename( $filename ) {
-		$temp_filename = 'nftmp-';
-		$temp_filename .= NF_FU_Helper::random_string( 5 ) . '-';
-		$temp_filename .= strtolower( sanitize_file_name( $filename ) );
+		$temp_filename  = 'nftmp-';
+		$temp_filename  .= NF_FU_Helper::random_string( 5 ) . '-';
+		$extension      = pathinfo( $filename, PATHINFO_EXTENSION );
+		$clean_filename = rtrim( $filename, '.' . $extension );
+		$clean_filename = strtolower( $clean_filename );
+		$clean_filename = sanitize_file_name( $clean_filename );
+		$clean_filename = preg_replace( '/[^a-zA-Z0-9]/', '', $clean_filename );
+		$temp_filename  .= $clean_filename . '.' . $extension;
 
 		return $temp_filename;
 	}

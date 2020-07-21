@@ -115,7 +115,7 @@ class NF_FU_External_Action extends NF_Abstracts_Action {
 						continue;
 					}
 
-					$file['data'] = $instance->process_upload( $file['data'], $remove_from_server, $upload_timestamp );
+					$file['data'] = $instance->process_upload( $file['data'], $remove_from_server, $upload_timestamp, $field, $form_id );
 
 					$field['files'][ $files_key ] = $file;
 				}

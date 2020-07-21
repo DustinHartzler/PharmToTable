@@ -288,9 +288,9 @@ class NF_FU_Admin_UploadsTable extends WP_List_Table {
 	 */
 	public static function process_bulk_action() {
 		// If the delete bulk action is triggered
-		if ( ( isset( $_POST['action'] ) && 'bulk-delete-upload' === $_POST['action'] ) || ( isset( $_POST['action2'] ) && 'bulk-delete-upload' === $_POST['action2'] ) ) {
+		if ( ( isset( $_GET['action'] ) && 'bulk-delete-upload' === $_GET['action'] ) || ( isset( $_GET['action2'] ) && 'bulk-delete-upload' === $_GET['action2'] ) ) {
 
-			$delete_ids = esc_sql( $_POST['bulk-delete-upload'] );
+			$delete_ids = esc_sql( $_GET['bulk-delete-upload'] );
 
 			$count = 0;
 			// loop over the array of record IDs and delete them
@@ -307,7 +307,7 @@ class NF_FU_Admin_UploadsTable extends WP_List_Table {
 				$args = array( 'deleted' => $count );
 			}
 
-			$redirect = NF_File_Uploads()->page->get_url( '', $args, false );
+			$redirect = add_query_arg( $args, wp_get_referer() );
 			wp_redirect( $redirect );
 			exit;
 		}
@@ -345,7 +345,7 @@ class NF_FU_Admin_UploadsTable extends WP_List_Table {
 			$args['delete-error'] = 1;
 		}
 
-		$redirect = NF_File_Uploads()->page->get_url( '', $args, false );
+		$redirect = add_query_arg( $args, wp_get_referer() );
 		wp_redirect( $redirect );
 		exit;
 	}

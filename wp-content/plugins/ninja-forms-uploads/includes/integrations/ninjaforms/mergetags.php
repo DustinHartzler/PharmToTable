@@ -13,6 +13,7 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 		add_action( 'ninja_forms_uploads_external_action_post_process', array( $this, 'update_mergetags_for_external' ), 10, 3 );
 
 		add_filter( 'ninja_forms_merge_tags_other', array( $this, 'add_merge_tag_other' ) );
+		add_filter( 'ninja_forms_get_html_safe_fields', array( $this, 'add_html_safe_fields' ) );
 	}
 
 	/**
@@ -29,6 +30,10 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 
 		foreach ( $form_data['fields'] as $field ) {
 			if ( ! isset( $field['files'] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $field['files'][0]['data'] ) || ! isset( $field['files'][0]['data']['upload_id'] ) ) {
 				continue;
 			}
 
@@ -55,6 +60,10 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 		}
 
 		if ( ! isset( $field['files'] ) || empty( $field['files'] ) ) {
+			return '';
+		}
+
+		if ( ! isset( $field['files'][0]['data'] ) || ! isset( $field['files'][0]['data']['upload_id'] ) ) {
 			return '';
 		}
 
@@ -108,7 +117,7 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 			}
 
 			$value = isset( $values[ $value_type ] ) ? $values[ $value_type ] : $values['plain'];
-			$all_merge_tags['fields']->add( 'field_' . $field['key'] . $tag, $field['key'], "{field:{$field['key']}{$suffix}}", $value );
+			$all_merge_tags['fields']->add( 'field_' . $field['key'] . $tag, $field['key'], "{field:{$field['key']}{$suffix}}", $value, false, false );
 		}
 
 		// Save merge tags
@@ -167,10 +176,10 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 		}
 
 		if ( isset( $values['plain'] ) ) {
-			$values['plain'] = implode( ',', $values['plain'] );
+			$values['plain'] = implode( ', ', $values['plain'] );
 		}
 		if ( isset( $values['url'] ) ) {
-			$values['url'] = implode( ',', $values['url'] );
+			$values['url'] = implode( ', ', $values['url'] );
 		}
 		if ( isset( $values['filename'] ) ) {
 			$values['filename'] = implode( ',', $values['filename'] );
@@ -180,7 +189,7 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 		}
 
 		if ( isset( $values['attachment_url'] ) ) {
-			$values['attachment_url'] = implode( ',', $values['attachment_url'] );
+			$values['attachment_url'] = implode( ', ', $values['attachment_url'] );
 		}
 
 		if ( isset( $values['attachment_embed'] ) ) {
@@ -288,5 +297,18 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 
 	public function replace_merge_tag_random() {
 		return NF_FU_Helper::random_string( 5 );
+	}
+
+	/**
+	 * Add the field type to the core whitelist so html isn't stripped from mergetags.
+	 *
+	 * @param array $fields
+	 *
+	 * @return array
+	 */
+	public function add_html_safe_fields( $fields ) {
+		$fields[] = NF_FU_File_Uploads::TYPE;
+
+		return $fields;
 	}
 }

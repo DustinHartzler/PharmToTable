@@ -247,10 +247,12 @@ abstract class NF_FU_External_Abstracts_Service {
 	 * @param array $data
 	 * @param bool  $remove_from_server
 	 * @param null  $upload_timestamp
+	 * @param array $field
+	 * @param null|int  $form_id
 	 *
 	 * @return array
 	 */
-	public function process_upload( $data, $remove_from_server = false, $upload_timestamp = null ) {
+	public function process_upload( $data, $remove_from_server = false, $upload_timestamp = null, $field = array(), $form_id = null ) {
 		$this->load_settings();
 
 		$this->upload_file       = $data['file_path'];
@@ -258,7 +260,7 @@ abstract class NF_FU_External_Abstracts_Service {
 		$this->external_path     = $this->get_external_path( $custom_path );
 		$this->external_filename = $this->get_filename_external( $upload_timestamp );
 
-		if ( $this->should_background_upload( $data['file_path'] ) ) {
+		if ( $this->should_background_upload( false, $data['file_path'], $field, $form_id  ) ) {
 			$this->init_background_upload( $data );
 
 			if ( $remove_from_server ) {
@@ -324,12 +326,15 @@ abstract class NF_FU_External_Abstracts_Service {
 	/**
 	 * Check if the file should be uploaded in a single process or multipart upload to the service.
 	 *
+	 * @param bool       $should_bg_upload
 	 * @param string $file
+	 * @param array  $field
+	 * @param int    $form_id
 	 *
 	 * @return bool
 	 */
-	protected function should_background_upload( $file ) {
-		$pre = apply_filters( 'ninja_forms_uploads_should_background_upload', false, $file, $this->slug );
+	protected function should_background_upload( $should_bg_upload, $file, $field, $form_id ) {
+		$pre = apply_filters( 'ninja_forms_uploads_should_background_upload', $should_bg_upload, $file, $this->slug, $field, $form_id );
 
 		if ( false !== $pre ) {
 			return $pre;

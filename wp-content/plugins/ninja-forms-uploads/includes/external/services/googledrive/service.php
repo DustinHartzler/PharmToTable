@@ -344,9 +344,27 @@ class NF_FU_External_Services_Googledrive_Service extends NF_FU_External_Abstrac
 		$response = $this->drive()->files->get( $data['file_id'], array( 'fields' => 'id, webContentLink' ) );
 
 		if ( $response && isset( $response->webContentLink ) ) {
-			return str_replace( '&export=download', '', $response->webContentLink );
+			return str_replace( array( '/uc?', '&export=download' ), array( '/open?', '' ), $response->webContentLink );
 		}
 
 		return admin_url();
+	}
+
+	/**
+	 * @param bool   $should_bg_upload
+	 * @param string $file
+	 * @param array  $field
+	 * @param int    $form_id
+	 *
+	 * @return bool
+	 */
+	protected function should_background_upload( $should_bg_upload, $file, $field, $form_id ) {
+		// Check if we are renaming
+		$renaming = ! empty( $field['upload_rename'] ) || NF_File_Uploads()->controllers->settings->custom_upload_dir();
+		if ( $renaming ) {
+			$should_bg_upload = true;
+		}
+
+		return parent::should_background_upload( $should_bg_upload, $file, $field, $form_id );
 	}
 }

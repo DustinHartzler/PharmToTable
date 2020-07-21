@@ -317,6 +317,7 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 		$settings['uploadNonceExpiry'] = $nonce_data['nonce_expiry'];
 
 		$settings['select_files_text'] = ! empty ( $settings['select_files_text'] ) ? $settings['select_files_text'] : apply_filters( 'ninja_forms_upload_select_files_text', __( 'Select Files', 'ninja-forms-uploads' ) );
+		$settings['cancel_upload_text'] = ! empty ( $settings['cancel_upload_text'] ) ? $settings['cancel_upload_text'] : apply_filters( 'ninja_forms_upload_cancel_upload_text', __( 'Cancel', 'ninja-forms-uploads' ) );
 		if ( ! empty( $settings['upload_types'] ) ) {
 			$types = array_map( 'trim', explode( ',', $settings['upload_types'] ) );
 
