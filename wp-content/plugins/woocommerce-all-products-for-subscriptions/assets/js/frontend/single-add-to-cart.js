@@ -111,9 +111,14 @@
 			action_link_clicked: function( e ) {
 
 				var model         = this.model,
+					is_one_time   = 'one-time' === this.get_prompt_val(),
 					state_changed = false;
 
 				if ( ! model.get_active_scheme_key() ) {
+
+					if ( is_one_time ) {
+						return false;
+					}
 
 					// Is a subscription plan selected?
 					var chosen_scheme_input = this.$el_option_inputs.filter( ':checked' );
@@ -129,6 +134,10 @@
 					state_changed = this.maybe_toggle_options();
 
 				} else {
+
+					if ( ! is_one_time ) {
+						return false;
+					}
 
 					model.set_active_scheme( false );
 
@@ -204,6 +213,24 @@
 
 			get_prompt_type: function() {
 				return this.$el_prompt.data( 'prompt_type' );
+			},
+
+			get_prompt_val: function() {
+
+				var is_one_time = false;
+
+				if ( this.has_prompt( 'radio' ) || this.has_prompt( 'checkbox' ) ) {
+
+					if ( this.has_prompt( 'checkbox' ) && false === this.$el_prompt.find( '.wcsatt-options-prompt-action-input' ).is( ':checked' ) ) {
+						is_one_time = true;
+					} else if ( this.has_prompt( 'radio' ) && this.$el_prompt.find( '.wcsatt-options-prompt-action-input[value="no"]' ).is( ':checked' ) ) {
+						is_one_time = true;
+					}
+
+					return is_one_time ? 'one-time' : 'subscribe';
+				}
+
+				return null;
 			},
 
 			find_schemes: function() {
@@ -373,6 +400,24 @@
 								this.$el_prompt.find( '.wcsatt-options-prompt-action-input[value="no"]' ).prop( 'checked', true );
 							}
 						}
+					}
+
+					/*
+					 * Fix Chrome back button bug: See https://github.com/somewherewarm/woocommerce-all-products-for-subscriptions/issues/179
+					 */
+					if ( this.has_dropdown() ) {
+
+						var view = this;
+
+						setTimeout( function() {
+
+							if ( view.has_prompt( 'checkbox' ) ) {
+								view.$el_prompt.find( '.wcsatt-options-prompt-action-input' ).change();
+							} else {
+								view.$el_prompt.find( '.wcsatt-options-prompt-action-input' ).filter( ':checked' ).change();
+							}
+
+						}, 10 );
 					}
 
 				} else if ( ! this.variation_selected() ) {
@@ -690,9 +735,7 @@
 			}
 
 			// Ensure the one-time option is submitted correctly when the prompt is visible.
-			if ( this.schemes_view.has_prompt( 'radio' ) || this.schemes_view.has_prompt( 'checkbox' ) ) {
-				$product_form.on( 'submit', { view: this.schemes_view }, this.form_submitted );
-			}
+			$product_form.on( 'submit', { view: this.schemes_view }, this.form_submitted );
 
 			// PAO integration.
 			this.pao = new PAO_Integration( this );
@@ -704,16 +747,9 @@
 
 		this.form_submitted = function( e ) {
 
-			var is_one_time = false,
-				view        = e.data.view;
+			var view = e.data.view;
 
-			if ( view.has_prompt( 'checkbox' ) && false === view.$el_prompt.find( '.wcsatt-options-prompt-action-input' ).is( ':checked' ) ) {
-				is_one_time = true;
-			} else if ( view.has_prompt( 'radio' ) && view.$el_prompt.find( '.wcsatt-options-prompt-action-input[value="no"]' ).is( ':checked' ) ) {
-				is_one_time = true;
-			}
-
-			if ( is_one_time ) {
+			if ( 'one-time' === view.get_prompt_val() ) {
 				view.$el_option_inputs.filter( '[value="0"]' ).prop( 'checked', true );
 			}
 		};
@@ -1347,6 +1383,6 @@
 		$( this ).find( '.product form.cart' ).each( function() {
 			maybe_initialize_form( $( this ) );
 		} );
-	}
+	};
 
 } ) ( jQuery );

@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Product_Prices class
  *
- * @author   SomewhereWarm <info@somewherewarm.gr>
+ * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    2.0.0
  */
@@ -37,7 +37,7 @@ class WCS_ATT_Product_Prices {
 	 */
 	private static function add_hooks() {
 
-		WCS_ATT_Product_Price_Filters::add();
+		add_action( 'plugins_loaded', array( 'WCS_ATT_Product_Price_Filters', 'add' ), 99 );
 	}
 
 	/*
@@ -356,7 +356,7 @@ class WCS_ATT_Product_Prices {
 
 							$discount_html     = '</small> <span class="wcsatt-sub-discount">' . sprintf( _x( '%s&#37;', 'subscribe and save discount', 'woocommerce-all-products-for-subscriptions' ), round( $base_scheme->get_discount(), self::get_formatted_discount_precision() ) ) . '</span><small>';
 							$suffix_price_html = sprintf( __( 'subscribe and save %1$s%2$s', 'woocommerce-all-products-for-subscriptions' ), $has_variable_discount ? __( 'up to', 'woocommerce-all-products-for-subscriptions' ) : '', $discount_html );
-							$suffix            = '<small class="wcsatt-sub-options">' . sprintf( __( ' <span class="wcsatt-dash">&mdash;</span> or %s', 'woocommerce-all-products-for-subscriptions' ), $suffix_price_html ) . '</small>';
+							$suffix            = '<small class="wcsatt-sub-options">' . sprintf( _x( ' <span class="wcsatt-dash">&mdash;</span> or %s', 'subscribe and save suffix format', 'woocommerce-all-products-for-subscriptions' ), $suffix_price_html ) . '</small>';
 						}
 
 					} else {
@@ -576,11 +576,16 @@ class WCS_ATT_Product_Prices {
 	 */
 	public static function get_formatted_discount( $product, $scheme ) {
 
-		$discount           = $scheme->has_price_filter() ? $scheme->get_discount() : '';
 		$formatted_discount = '';
 
-		if ( $discount ) {
+		if ( ! $scheme->has_price_filter() ) {
+			return $formatted_discount;
+		}
+
+		if ( $discount = $scheme->get_discount() ) {
+
 			$formatted_discount = sprintf( _x( '%s%%', 'dropdown option discount', 'woocommerce-all-products-for-subscriptions' ), round( $discount, self::get_formatted_discount_precision() ) );
+
 		} else {
 
 			$price         = self::get_price( $product, $scheme->get_key() );

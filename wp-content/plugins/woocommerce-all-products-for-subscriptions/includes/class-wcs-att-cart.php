@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Cart class
  *
- * @author   SomewhereWarm <info@somewherewarm.gr>
+ * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    1.0.0
  */
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Cart support.
  *
  * @class    WCS_ATT_Cart
- * @version  3.1.11
+ * @version  3.1.14
  */
 class WCS_ATT_Cart {
 
@@ -49,6 +49,9 @@ class WCS_ATT_Cart {
 
 		// Check successful application of subscription schemes.
 		add_action( 'woocommerce_check_cart_items', array( __CLASS__, 'check_applied_subscription_schemes' ), 10 );
+
+		// Restore selected plan when clicking cart item titles.
+		add_filter( 'woocommerce_cart_item_permalink', array( __CLASS__, 'cart_item_permalink' ), 100, 2 );
 	}
 
 	/*
@@ -238,13 +241,26 @@ class WCS_ATT_Cart {
 
 		$product = $cart_item[ 'data' ];
 
-		if ( 'excl' === get_option( 'woocommerce_tax_display_cart' ) ) {
+		if ( ! WCS_ATT_Display_Cart::display_prices_including_tax() ) {
 			$product_price = wc_get_price_excluding_tax( $product, array( 'price' => WCS_ATT_Product_Prices::get_price( $product, $scheme_key ) ) );
 		} else {
 			$product_price = wc_get_price_including_tax( $product, array( 'price' => WCS_ATT_Product_Prices::get_price( $product, $scheme_key ) ) );
 		}
 
 		return apply_filters( 'wcsatt_cart_product_price', wc_price( $product_price ), $cart_item );
+	}
+
+	/**
+	 * Reset stored cart subscription scheme when the cart is empty.
+	 *
+	 * @since  2.1.0
+	 *
+	 * @return void
+	 */
+	public static function maybe_reset_cart_subscription_scheme() {
+		if ( ! WC()->cart->get_cart_contents_count() ) {
+			self::set_cart_subscription_scheme( false );
+		}
 	}
 
 	/*
@@ -615,16 +631,24 @@ class WCS_ATT_Cart {
 	}
 
 	/**
-	 * Reset stored cart subscription scheme when the cart is empty.
+	 * Restore selected plan when clicking cart item titles.
 	 *
-	 * @since  2.1.0
+	 * @since  3.1.14
 	 *
-	 * @return void
+	 * @param  string  $html
+	 * @param  array   $cart_item
+	 * @return string
 	 */
-	public static function maybe_reset_cart_subscription_scheme() {
-		if ( ! WC()->cart->get_cart_contents_count() ) {
-			self::set_cart_subscription_scheme( false );
+	public static function cart_item_permalink( $html, $cart_item ) {
+
+		// Add query string parameter only if the product is visible.
+		if ( $html ) {
+			$scheme_key = self::get_subscription_scheme( $cart_item );
+			$key        = 'convert_to_sub_' . $cart_item[ 'product_id' ];
+			$html       = add_query_arg( array( $key => WCS_ATT_Product_Schemes::stringify_subscription_scheme_key( $scheme_key ) ), $html );
 		}
+
+		return $html;
 	}
 
 	/*

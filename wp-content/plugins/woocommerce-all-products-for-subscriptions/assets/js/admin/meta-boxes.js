@@ -25,7 +25,7 @@ jQuery( function($) {
 	function days_in_month( month ) {
 		// Intentionally choose a non-leap year because we want february to have only 28 days.
 		return new Date( Date.UTC( 2001, month, 0 ) ).getUTCDate();
-	};
+	}
 
 	$.fn.wcsatt_init_help_tips = function() {
 
@@ -65,8 +65,8 @@ jQuery( function($) {
 			}
 
 			$dayOfMonthInput.attr( {
-				step: "1",
-				min: "1",
+				step: '1',
+				min: '1',
 				max: days_max
 			} );
 

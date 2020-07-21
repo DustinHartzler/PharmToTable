@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Product_Export class
  *
- * @author   SomewhereWarm <info@somewherewarm.gr>
+ * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  All Products for WooCommerce Subscriptions
  * @since    2.2.5
  */

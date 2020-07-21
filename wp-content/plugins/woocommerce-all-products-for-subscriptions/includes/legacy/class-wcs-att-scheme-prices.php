@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Scheme_Prices class
  *
- * @author   SomewhereWarm <info@somewherewarm.gr>
+ * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    1.1.0
  */

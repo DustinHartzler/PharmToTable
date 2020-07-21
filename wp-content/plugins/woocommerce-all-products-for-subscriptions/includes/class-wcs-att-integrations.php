@@ -2,7 +2,7 @@
 /**
  * WCS_ATT_Integrations class
  *
- * @author   SomewhereWarm <info@somewherewarm.gr>
+ * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    1.0.0
  */
@@ -350,4 +350,4 @@ class WCS_ATT_Integrations {
 	}
 }
 
-WCS_ATT_Integrations::init();
+add_action( 'plugins_loaded', array( 'WCS_ATT_Integrations', 'init' ), 99 );

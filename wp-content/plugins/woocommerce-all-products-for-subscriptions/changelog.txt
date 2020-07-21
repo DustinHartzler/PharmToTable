@@ -1,5 +1,22 @@
 *** WooCommerce All Products For Subscriptions ***
 
+2020.07.14 - version 3.1.15
+* Fix - Incorrect next payment date matching of synchronized Subscription plans in some time zones.
+* Fix - Restore compatibility with Name Your Price 3+.
+* Tweak - Minimize meta function calls in Composite Product pages.
+* Tweak - Consider if customer is tax exempt when formatting cart item display prices.
+
+2020.06.24 - version 3.1.14
+* Feature - Restore chosen subscription plan when clicking cart item title.
+
+2020.06.04 - version 3.1.13
+* Fix - Added context to resolve a duplicate string issue.
+* Fix - Incorrect initial form state when clicking the back button in Chrome 80+.
+* Fix - Discount % incorrectly shown in subscription plans dropdown when the viewed product has a Sale price.
+
+2020.05.12 - version 3.1.12
+* Fix - 'One-time purchase' option not honored when adding a Variable product to the cart after having chosen a subscription plan.
+
 2020.05.11 - version 3.1.11
 * Fix - Cart notice when adding a product with plans on subscription to the cart after adding a product without plans while cart plans exist. Phew.
 
