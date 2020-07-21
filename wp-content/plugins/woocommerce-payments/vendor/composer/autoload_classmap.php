@@ -6,4 +6,20 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Automattic\\Jetpack\\Config' => $vendorDir . '/automattic/jetpack-config/src/class-config.php',
+    'Automattic\\Jetpack\\Connection\\Client' => $vendorDir . '/automattic/jetpack-connection/src/class-client.php',
+    'Automattic\\Jetpack\\Connection\\Manager' => $vendorDir . '/automattic/jetpack-connection/src/class-manager.php',
+    'Automattic\\Jetpack\\Connection\\Manager_Interface' => $vendorDir . '/automattic/jetpack-connection/src/interface-manager.php',
+    'Automattic\\Jetpack\\Connection\\Plugin' => $vendorDir . '/automattic/jetpack-connection/src/class-plugin.php',
+    'Automattic\\Jetpack\\Connection\\Plugin_Storage' => $vendorDir . '/automattic/jetpack-connection/src/class-plugin-storage.php',
+    'Automattic\\Jetpack\\Connection\\REST_Connector' => $vendorDir . '/automattic/jetpack-connection/src/class-rest-connector.php',
+    'Automattic\\Jetpack\\Connection\\Utils' => $vendorDir . '/automattic/jetpack-connection/src/class-utils.php',
+    'Automattic\\Jetpack\\Connection\\XMLRPC_Connector' => $vendorDir . '/automattic/jetpack-connection/src/class-xmlrpc-connector.php',
+    'Automattic\\Jetpack\\Constants' => $vendorDir . '/automattic/jetpack-constants/src/class-constants.php',
+    'Automattic\\Jetpack\\Roles' => $vendorDir . '/automattic/jetpack-roles/src/class-roles.php',
+    'Jetpack_IXR_Client' => $vendorDir . '/automattic/jetpack-connection/legacy/class-jetpack-ixr-client.php',
+    'Jetpack_IXR_ClientMulticall' => $vendorDir . '/automattic/jetpack-connection/legacy/class-jetpack-ixr-clientmulticall.php',
+    'Jetpack_Options' => $vendorDir . '/automattic/jetpack-options/legacy/class-jetpack-options.php',
+    'Jetpack_Signature' => $vendorDir . '/automattic/jetpack-connection/legacy/class-jetpack-signature.php',
+    'Jetpack_XMLRPC_Server' => $vendorDir . '/automattic/jetpack-connection/legacy/class-jetpack-xmlrpc-server.php',
 );

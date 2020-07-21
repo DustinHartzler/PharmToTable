@@ -119,6 +119,10 @@
   padding: 12px;
   background-color: #f5e1b3; }
 
+.wcpay-connect-error-notice.components-notice {
+  margin: 24px 0;
+  padding: 12px; }
+
 .wcpay-payment-details .woocommerce-card__header {
   border-bottom: 1px solid #dcdcde; }
 
@@ -834,7 +838,8 @@
   .woocommerce-list--horizontal .woocommerce-list__item {
     padding: 0.75rem 1rem;
     border-left: 0;
-    border-bottom: 1px solid #dcdcde; }
+    border-bottom: 1px solid #dcdcde;
+    border-top: 0; }
     @media (min-width: 801px) {
       .woocommerce-card__body .woocommerce-list--horizontal .woocommerce-list__item,
       .woocommerce-list--horizontal .woocommerce-list__item {
