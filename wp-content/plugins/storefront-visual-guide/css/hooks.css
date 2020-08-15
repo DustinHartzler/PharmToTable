@@ -1,0 +1,160 @@
+/* CONTENT BOXES */
+.storefront-visual-hook-box, .woocommerce-visual-hook-box {
+  background-color: #10a1b711;
+  border: #10a1b7 2px dashed;
+  display: block;
+  padding: 12px 8px;
+  margin: 10px;
+  text-align: center;
+}
+
+.woocommerce-visual-hook-box {
+  border-color: #96588a;
+  background-color: #96588a11
+}
+
+.storefront-visual-hook-box h3, .woocommerce-visual-hook-box h3 {
+  display: inline;
+  color: #10a1b7;
+  font-size: 16px;
+  font-weight: 700;
+  word-wrap: break-word;
+  letter-spacing: 0.8px;
+  margin: 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+.woocommerce-visual-hook-box h3 {
+  color: #96588a;
+}
+
+#visual-hook-box.active h3 {
+  font-size: 20px;
+}
+
+pre.svg-hooked-functions {
+  display: none;
+  max-width: 960px;
+  margin: 16px auto;
+  padding: 16px;
+  color: #000;
+  background-color: #fff;
+  border: #bbb solid 1px;
+}
+
+.svg-hooked-function {
+  font-size: 17px;
+  line-height: 2;
+  letter-spacing: 0.5px;
+}
+
+.svg-hooked-function:hover {
+  background-color: #10a1b777;
+}
+
+.svg-hooked-function span {
+  margin: 0 6px 0 12px;
+}
+
+.svg-hooked-functions.active .svg-hooked-function {
+  font-size: 14px;
+  line-height: 2.45;
+}
+
+.svg-hooked-functions.active .svg-hooked-function span {
+  margin: 0;
+}
+
+/* BUTTONS */
+span.svg-inline-button {
+  display: inline-block;
+  cursor: pointer;
+  color: #444;
+  padding: 2px 13px;
+  background-color: #fff;
+  border-radius: 5px;
+  -webkit-box-shadow: #00000088 0 4px 10px -4px;
+  box-shadow: #00000088 0 4px 10px -4px;
+  -webkit-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+  margin: 6px;
+}
+
+span.svg-inline-button:hover {
+  color: #333;
+  background-color: #eee;
+  -webkit-box-shadow: #00000044 0 1px 4px -2px;
+  box-shadow: #00000044 0 1px 4px -2px;
+  -webkit-transform: translateY(1px);
+  transform: translateY(1px);
+}
+
+span.svg-inline-button.svg-bottom-toggle {
+  margin-top: 16px;
+  padding: 8px 20px;
+}
+
+span.svg-inline-button.svg-bottom-toggle:hover {
+  -webkit-transform: translateY(1px);
+  transform: translateY(1px);
+}
+
+span.svg-inline-button.svg-bottom-toggle.active {
+  background-color: #888;
+}
+
+span.svg-inline-button.svg-bottom-toggle.active:hover {
+  background-color: #444;
+}
+
+.storefront-visual-hook-box span.svg-bottom-toggle, .storefront-visual-hook-box span.svg-inline-button {
+  color: #fff;
+  background-color: #10a1b7bb;
+}
+
+.woocommerce-visual-hook-box span.svg-bottom-toggle, .woocommerce-visual-hook-box span.svg-inline-button {
+  color: #fff;
+  background-color: #96588abb;
+}
+
+.storefront-visual-hook-box .svg-bottom-toggle:hover, .storefront-visual-hook-box span.svg-inline-button:hover {
+  background-color: #10a1b7;
+}
+
+.woocommerce-visual-hook-box .svg-bottom-toggle:hover, .woocommerce-visual-hook-box span.svg-inline-button:hover {
+  background-color: #96588a;
+}
+
+span.svg-inline-button span {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#svg-show-hooked-functions.svg-inline-button span.open {
+  display: block;
+  transform: rotate(45deg);
+}
+
+/* SPECIAL LAYOUT */
+.woocommerce-visual-hook-box[data-svg-hook-box="woocommerce_after_single_product_summary"]::before, .woocommerce-visual-hook-box[data-svg-hook-box="xxx"]::before, .woocommerce-visual-hook-box[data-svg-hook-box="xxx"]::after {
+  content: '';
+  display: table;
+}
+
+.woocommerce-visual-hook-box[data-svg-hook-box="woocommerce_after_add_to_cart_quantity"], .woocommerce-visual-hook-box[data-svg-hook-box="woocommerce_after_single_product_summary"], .woocommerce-visual-hook-box[data-svg-hook-box="woocommerce_checkout_before_order_review"], .woocommerce-visual-hook-box[data-svg-hook-box="woocommerce_checkout_after_customer_details"] {
+  display: table;
+  width: calc(100% - 20px);
+  clear: both;
+}
+
+@media only screen and (min-width: 768px) {
+  .storefront-visual-hook-box[data-svg-hook-box="storefront_sidebar"] {
+    width: calc(21.7391304348% - 20px);
+  }
+}
+
+/* WOOCOMMERCE CHECKOUT */
+.woocommerce-checkout #customer_details, .woocommerce-checkout #order_review, .woocommerce-checkout #order_review_heading {
+  width: 100% !important;
+}

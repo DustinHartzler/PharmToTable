@@ -1,0 +1,131 @@
+/* CONTENT BOXES */
+.storefront-visual-filter-box, .woocommerce-visual-filter-box {
+  background-color: #10a1b720;
+  border: #10a1b7 4px double;
+  display: block;
+  padding: 12px 8px;
+  margin: 10px;
+  text-align: center;
+}
+
+.storefront-visual-filter-box h3, .woocommerce-visual-filter-box h3 {
+  display: inline;
+  color: #10a1b7;
+  font-weight: 700;
+  word-wrap: break-word;
+  letter-spacing: 0.8px;
+  margin: 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* TABLE STYLES */
+.visual-filter-table-wrap {
+  display: none;
+  max-width: 960px;
+  margin: 16px auto 0;
+}
+
+.visual-filter-table-wrap td, .visual-filter-table-wrap th {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 20px;
+  line-height: 1.7;
+}
+
+.visual-filter-table-wrap table tr:nth-child(odd) td {
+  background-color: #eee;
+}
+
+.visual-filter-table-wrap table tr:nth-child(even) td {
+  background-color: #fff;
+}
+
+.visual-filter-table-wrap table tr:hover td {
+  background-color: #10a1b722;
+}
+
+.visual-filter-table-wrap th {
+  font-size: 20px;
+  background-color: #10a1b7;
+  color: white;
+}
+
+/* OTHER STYLES */
+button.menu-toggle, button.menu-toggle:hover, .site-info {
+  color: #10a1b7;
+  font-size: 20px;
+  background-color: #10a1b722;
+  border: #10a1b7 4px double;
+}
+
+.site-info {
+  background-color: transparent;
+  padding: 20px;
+  width: fit-content;
+}
+
+/* BUTTONS */
+span.svg-inline-button {
+  display: inline-block;
+  cursor: pointer;
+  padding: 2px 13px;
+  border-radius: 5px;
+  -webkit-box-shadow: #00000088 0 4px 10px -4px;
+  box-shadow: #00000088 0 4px 10px -4px;
+  -webkit-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+  margin: 6px;
+}
+
+span.svg-inline-button:hover {
+  -webkit-box-shadow: #00000044 0 1px 4px -2px;
+  box-shadow: #00000044 0 1px 4px -2px;
+  -webkit-transform: translateY(1px);
+  transform: translateY(1px);
+}
+
+span.svg-inline-button.svg-bottom-toggle {
+  margin-top: 16px;
+  padding: 8px 20px;
+}
+
+span.svg-inline-button.svg-bottom-toggle:hover {
+  -webkit-transform: translateY(1px);
+  transform: translateY(1px);
+}
+
+span.svg-inline-button.svg-bottom-toggle.active {
+  background-color: #888;
+}
+
+span.svg-inline-button.svg-bottom-toggle.active:hover {
+  background-color: #444;
+}
+
+.storefront-visual-filter-box span.svg-bottom-toggle, .storefront-visual-filter-box span.svg-inline-button {
+  color: #fff;
+  background-color: #10a1b7bb;
+}
+
+.woocommerce-visual-filter-box span.svg-bottom-toggle, .woocommerce-visual-filter-box span.svg-inline-button {
+  color: #fff;
+  background-color: #96588abb;
+}
+
+.storefront-visual-filter-box .svg-bottom-toggle:hover, .storefront-visual-filter-box span.svg-inline-button:hover {
+  background-color: #10a1b7;
+}
+
+.woocommerce-visual-filter-box .svg-bottom-toggle:hover, .woocommerce-visual-filter-box span.svg-inline-button:hover {
+  background-color: #96588a;
+}
+
+span.svg-inline-button span {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#svg-show-filters.svg-inline-button span.open {
+  display: block;
+  transform: rotate(45deg);
+}
