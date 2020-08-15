@@ -24,7 +24,6 @@
     <div class="doctor-area bg-gray default-padding bottom-less">
         <div class="container">
             <div class="row">
-            Healthcare Professionals are licensed by state. Please click on the state below to find a team member in your state. If we do not have a licensed pharmacist in your state, you can check out our expanded network <a href="https://PharmToTable.Azova.com">here</a>.
                 <div class="post-tags">
                     Filter by State:
                     <ul class="post-categories">
@@ -89,6 +88,7 @@
                                     </ul>
                                 </div>
                             </div>
+
                             <div class="info">
                                 <h4><?php the_title();?></h4>
                                 <h5><?php echo get_post_meta($post->ID, 'provider_credentials', true); ?></h5>
@@ -97,7 +97,7 @@
 
 
                                 <div class="appoinment-btn">
-                                    <a href="<?php echo get_post_meta($post->ID, 'provider_azova', true); ?>" target="_blank">Make appointment</a>
+                                    <a href="<?php echo get_post_meta($post->ID, 'provider_azova', true); ?>" target="_blank">Make appoinment</a>
                                 </div>
                             </div>
                         </div>

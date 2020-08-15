@@ -1,9 +1,20 @@
 <?php
-add_action('get_header', 'my_filter_head');
+/**
+*  Add WooCommerce Support for Theme
+*/
+function mytheme_add_woocommerce_support() {
+	add_theme_support( 'woocommerce' );
+}
+add_action( 'after_setup_theme', 'mytheme_add_woocommerce_support' );
 
-  function my_filter_head() {
-    remove_action('wp_head', '_admin_bar_bump_cb');
-  }
+
+/**
+*  Bumps template down for admins logged in
+*/
+function my_filter_head() {
+  remove_action('wp_head', '_admin_bar_bump_cb');
+}
+add_action('get_header', 'my_filter_head');
 
   //Menus
 add_theme_support( 'menus' );
@@ -72,13 +83,23 @@ function display_member_taxonomy_terms($post_id){
 if ( function_exists('register_sidebar') ) {
   register_sidebar(array(
     'name' => 'Sidebar',
+    'id'            => 'sidebar',
     'before_widget' => '<div class="sidebar-item"><div class = "title">',
     'after_widget' => '</div></div>',
     'before_title' => '<h4>',
     'after_title' => '</h4>',
   ));
   register_sidebar(array(
+    'name' => 'Pages',
+    'id'            => 'pages',
+    'before_widget' => '<div class="widget link">',
+    'after_widget' => '</div>',
+    'before_title' => '<div class="title"><h4>',
+    'after_title' => '</h4></div>',
+  ));
+  register_sidebar(array(
     'name' => 'Footer 1',
+    'id'            => 'footer-1',
     'before_widget' => '<div class="col-md-4 item"><div class="f-item">',
     'after_widget' => '</div></div>',
     'before_title' => '<h4>',
@@ -86,6 +107,7 @@ if ( function_exists('register_sidebar') ) {
   ));
   register_sidebar(array(
     'name' => 'Footer 2',
+    'id'            => 'footer-2',
     'before_widget' => '<div class="col-md-4 item"><div class="f-item">',
     'after_widget' => '</div></div>',
     'before_title' => '<h4>',
@@ -93,6 +115,7 @@ if ( function_exists('register_sidebar') ) {
   ));
   register_sidebar(array(
     'name' => 'Footer 3',
+    'id'            => 'footer-3',
     'before_widget' => '<div class="col-md-4 item"><div class="f-item">',
     'after_widget' => '</div></div>',
     'before_title' => '<h4>',
@@ -153,4 +176,3 @@ if ( !function_exists( 'wpex_pagination' ) ) {
 
 add_filter('next_posts_link_attributes', 'posts_link_attributes');
 add_filter('previous_posts_link_attributes', 'posts_link_attributes');
-

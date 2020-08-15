@@ -87,7 +87,7 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
                         <i class="fa fa-bars"></i>
                     </button>
-                    <a class="navbar-brand" href="https://pharm.test">
+                    <a class="navbar-brand" href="<?php bloginfo('url'); ?>">
                         <img src="<?php bloginfo('template_url'); ?>/assets/img/pharmtotable-logo.png" class="logo" alt="Logo">
                     </a>
                 </div>

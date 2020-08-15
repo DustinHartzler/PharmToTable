@@ -5,69 +5,25 @@
 
 get_header(); ?>
 
-    <!-- Start Banner
-    ============================================= -->
-    <div class="banner-area heading-exchange text-dark">
-        <div id="bootcarousel" class="carousel inc-top-heading slide carousel-fade animate_text" data-ride="carousel">
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner carousel-zoom">
-                <div class="item active">
-                    <div class="slider-thumb bg-cover" style="background-image: url(assets/img/2440x1578.png);"></div>
-                    <div class="box-table">
-                        <div class="box-cell">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="content">
-                                            <h1 data-animation="animated fadeInUp">Best <span>Care</span></h1>
-                                            <h2 data-animation="animated fadeInDown">Your health is our priority</h2>
-                                            <p data-animation="animated slideInUp">
-                                                The ourselves suffering the sincerity. Inhabit her manners adapted age certain.<br> Debating offended at branched striking be subjects.
-                                            </p>
-                                            <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#">View Details</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="slider-thumb bg-cover" style="background-image: url(assets/img/2440x1578.png);"></div>
-                    <div class="box-table">
-                        <div class="box-cell">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="content">
-                                            <h1 data-animation="animated fadeInUp">Best <span>Technology</span></h1>
-                                            <h2 data-animation="animated fadeInDown">Affordable solution by better technology</h2>
-                                            <p data-animation="animated slideInUp">
-                                                The ourselves suffering the sincerity. Inhabit her manners adapted age certain.<br> Debating offended at branched striking be subjects.
-                                            </p>
-                                            <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#">View Details</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="slider-thumb bg-cover" style="background-image: url(assets/img/2440x1578.png);"></div>
-                    <div class="box-table">
-                        <div class="box-cell">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="content">
-                                            <h1 data-animation="animated fadeInUp"><span>Best</span> specialist</h1>
-                                            <h2 data-animation="animated fadeInDown">The country's best heart specialist</h2>
-                                            <p data-animation="animated slideInUp">
-                                                The ourselves suffering the sincerity. Inhabit her manners adapted age certain.<br> Debating offended at branched striking be subjects.
-                                            </p>
-                                            <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#">View Details</a>
-                                        </div>
+<!-- Start Banner
+============================================= -->
+<div class="banner-area">
+    <div id="bootcarousel" class="carousel text-center inc-top-heading slide carousel-fade animate_text" data-ride="carousel">
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner text-light carousel-zoom">
+            <div class="item active">
+                <div class="slider-thumb bg-cover" style="background-image: url(<?php bloginfo('template_url'); ?>/assets/img/family-1.jpg);"></div>
+                <div class="box-table shadow dark">
+                    <div class="box-cell">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <div class="content">
+                                        <h1 data-animation="animated slideInRight">Start Feeling your <span>BEST</span>.</h1>
+                                        <p data-animation="animated slideInUp">
+                                            Get personalized, convenient health care that addresses the underlying causes of chronic disease.
+                                        </p>
+                                        <a data-animation="animated slideInUp" class="btn btn-light border btn-md" href="#">View Details</a>
                                     </div>
                                 </div>
                             </div>
@@ -75,20 +31,11 @@ get_header(); ?>
                     </div>
                 </div>
             </div>
-            <!-- End Wrapper for slides -->
-
-            <!-- Left and right controls -->
-            <a class="left carousel-control" href="#bootcarousel" data-slide="prev">
-                <i class="fa fa-angle-left"></i>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control" href="#bootcarousel" data-slide="next">
-                <i class="fa fa-angle-right"></i>
-                <span class="sr-only">Next</span>
-            </a>
         </div>
+        <!-- End Wrapper for slides -->
     </div>
-    <!-- End Banner -->
+</div>
+<!-- End Banner -->
 
     <!-- Start About
     ============================================= -->
@@ -97,10 +44,10 @@ get_header(); ?>
             <div class="row">
                 <div class="about-items">
                     <div class="col-md-6 info">
-                        <h4>Has been working since 2000</h4>
-                        <h2>A Great Place to Work. A Great Place to Receive Care. Leading Medicine.</h2>
+                        <h4>Address Root Causes</h4>
+                        <h2>Get personalized health care that addresses the underlying causes of chronic disease.</h2>
                         <p>
-                            However venture pursuit he am mr cordial. Forming musical am hearing studied be luckily. Ourselves for determine attending how led gentleman sincerity. Valley afford uneasy joy she thrown though bed set. In me forming general prudent on country carried. Behaved an or suppose justice. Seemed whence how son rather easily and change missed.
+                        Being well is not just the absence of disease, being well is thriving. Are you tired and struggling to get rid of daily symptoms?  Has our current health-care system left you with lots of questions, still not feeling well, and lack of answers? We believe that we can help you transform your life by addressing the root cause of your symptoms. Find out the #1 root cause of chronic disease by watching our video below.
                         </p>
                         <div class="bottom">
                             <div class="video">
@@ -121,17 +68,17 @@ get_header(); ?>
                         <ul class="nav nav-pills">
                             <li class="active">
                                 <a data-toggle="tab" href="#tab1" aria-expanded="true">
-                                    <i class="fas fa-notes-medical"></i> Consultation
+                                    Orientation Class
                                 </a>
                             </li>
                             <li>
                                 <a data-toggle="tab" href="#tab2" aria-expanded="false">
-                                    <i class="fas fa-map-marker-alt"></i> Location
+                                    First Appointment
                                 </a>
                             </li>
                             <li>
                                 <a data-toggle="tab" href="#tab3" aria-expanded="false">
-                                    <i class="fas fa-clock"></i> Opening Hour
+                                    The Journey
                                 </a>
                             </li>
                         </ul>
@@ -143,12 +90,8 @@ get_header(); ?>
                                 <div class="info title">
                                     <h3>Consulted by experienced doctors</h3>
                                     <p>
-                                        Calling nothing end fertile for venture way boy. Esteem spirit temper too say adieus who direct esteem. It esteems luckily mr or picture placing drawing no. Apartments frequently or motionless on reasonable projecting expression. Way mrs end gave tall walk fact bed.
-                                    </p>
-                                    <p>
-                                        Placing assured be if removed it besides on. Far shed each high read are men over day. Afraid we praise lively he suffer family estate is. Ample order up in of in ready. Timed blind had now those ought set often which. Or snug dull he show more true wish. No at many deny away miss evil. On in so indeed spirit an mother. Amounted old strictly but marianne admitted. People former is remove remain we praise
-                                    </p>
-                                    <a class="btn btn-theme border btn-md" href="#">Make Appoinment</a>
+                                    Looking to learn more about how our team can meet your health goals? Sign up for our Introduction to Functional Medicine Orientation. Secure your spot in our next class. </p>
+                                    <a class="btn btn-theme border btn-md" href="#">Sign up for the Class</a>
                                 </div>
                             </div>
                             <!-- End Single Item -->
@@ -156,11 +99,10 @@ get_header(); ?>
                             <!-- Single Item -->
                             <div id="tab2" class="tab-pane fade">
                                 <div class="info title">
-                                    <h3>Our location</h3>
+                                    <h3>Your First Appointment</h3>
                                     <p>
-                                        Calling nothing end fertile for venture way boy. Esteem spirit temper too say adieus who direct esteem. It esteems luckily mr or picture placing drawing no. Apartments frequently or motionless on reasonable projecting expression. Way mrs end gave tall walk fact bed.
+                                    Ready to start your Functional Medicine journey? We want to help you feel better as soon as possible. To do that, we need to understand your whole health story. Book your appointment and get started on your health history forms right away! Forms must be completed at least  hours before your appointment. Book your appointment now.
                                     </p>
-                                    <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d14767.262289338461!2d70.79414485000001!3d22.284975!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1424308883981"></iframe>
                                 </div>
                             </div>
                             <!-- End Single Item -->
@@ -168,21 +110,10 @@ get_header(); ?>
                             <!-- Single Item -->
                             <div id="tab3" class="tab-pane fade">
                                 <div class="info title">
-                                    <h3>Schedule of working hours</h3>
+                                    <h3>Your Journey</h3>
                                     <p>
-                                        Calling nothing end fertile for venture way boy. Esteem spirit temper too say adieus who direct esteem. It esteems luckily mr or picture placing drawing no. Apartments frequently or motionless on reasonable projecting expression. Way mrs end gave tall walk fact bed.
+                                        Get ready for the best health care experience you've had. Our providers will listen to your needs and customize your journey. We may recommend personalized nutrition plans, supplements, lab testing and biometric testing, as appropriate. Everyone’s journey is unique. We look forward to building a relationship with you so we can see your health continue to improve.
                                     </p>
-                                    <ul>
-                                        <li> <span> Mon - Tues :  </span>
-                                          <div class="pull-right"> 6.00 am - 10.00 pm </div>
-                                        </li>
-                                        <li> <span> Wednes - Thurs :</span>
-                                          <div class="pull-right"> 8.00 am - 6.00 pm </div>
-                                        </li>
-                                        <li> <span> Sun : </span>
-                                          <div class="pull-right closed"> Closed </div>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                             <!-- End Single Item -->
@@ -204,9 +135,6 @@ get_header(); ?>
                 <div class="col-md-8 col-md-offset-2">
                     <div class="site-heading text-center">
                         <h2>Centres of <span>Excellence</span></h2>
-                        <p>
-                            While mirth large of on front. Ye he greater related adapted proceed entered an. Through it examine express promise no. Past add size game cold girl off how old
-                        </p>
                     </div>
                 </div>
             </div>
@@ -217,13 +145,13 @@ get_header(); ?>
                         <div class="item">
                             <div class="info">
                                 <h4>
-                                    <a href="#">Body Surgery</a>
+                                    <a href="#">Wellness</a>
                                 </h4>
                                 <div class="overlay">
-                                    <i class="flaticon-medical"></i>
+                                    <i class="flaticon-yoga-pose"></i>
                                 </div>
-                                <p>
-                                    Attachment astonished to on appearance imprudence so collecting in excellence. Tiled way blind lived whose new. The for fully had she there leave merit enjoy forth.
+                                <p class="services">
+                                You may have a few well managed chronic conditions, but are looking for recommendations on how to improve health and stay healthy for the long-haul. Receive personalized recommendations to enhance your health span and optimize your nutrient status.
                                 </p>
                                 <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
                             </div>
@@ -233,13 +161,13 @@ get_header(); ?>
                         <div class="item">
                             <div class="info">
                                 <h4>
-                                    <a href="#">Dental Care</a>
+                                    <a href="#">Medication Optimization</a>
                                 </h4>
                                 <div class="overlay">
-                                    <i class="flaticon-anesthesia"></i>
+                                    <i class="flaticon-drug"></i>
                                 </div>
-                                <p>
-                                    Attachment astonished to on appearance imprudence so collecting in excellence. Tiled way blind lived whose new. The for fully had she there leave merit enjoy forth.
+                                <p class="services">
+                                Too many medications? Our PharmToTable pharmacists are specially trained to make sure your medication regimen is as safe, effective and affordable as possible, using a root-cause approach. We work with your health care team and make recommendations to optimize your medications and help you simplify your life!
                                 </p>
                                 <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
                             </div>
@@ -249,13 +177,13 @@ get_header(); ?>
                         <div class="item">
                             <div class="info">
                                 <h4>
-                                    <a href="#">Eye Care</a>
+                                    <a href="#">Functional Medicine</a>
                                 </h4>
                                 <div class="overlay">
-                                    <i class="flaticon-anatomy"></i>
+                                    <i class="flaticon-tree-and-roots"></i>
                                 </div>
-                                <p>
-                                    Attachment astonished to on appearance imprudence so collecting in excellence. Tiled way blind lived whose new. The for fully had she there leave merit enjoy forth.
+                                <p class="services">
+                                A deep dive into your story to address the root-cause of your symptoms.  This starts by mapping your personal timeline, and health history, then your provider will make recommendations for testing, lifestyle modifications, and possibly nutrient supplementation to put you on your journey to health.
                                 </p>
                                 <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
                             </div>
@@ -265,13 +193,13 @@ get_header(); ?>
                         <div class="item">
                             <div class="info">
                                 <h4>
-                                    <a href="#">Blood Cancer</a>
+                                    <a href="#">Nutrition</a>
                                 </h4>
                                 <div class="overlay">
-                                    <i class="flaticon-lung-cancer"></i>
+                                    <i class="flaticon-apple"></i>
                                 </div>
-                                <p>
-                                    Attachment astonished to on appearance imprudence so collecting in excellence. Tiled way blind lived whose new. The for fully had she there leave merit enjoy forth.
+                                <p class="services">
+                                Low-carb? Paleo? Low FODMAP? There are way too many dietary recommendations out there - Which one is right for you? Let PharmToTable nutrition therapy providers lead the way! Whether it’s a specific diet or more general advice, each provider can give you recommendations and help with meal plans that are right for YOU!
                                 </p>
                                 <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
                             </div>
@@ -281,13 +209,13 @@ get_header(); ?>
                         <div class="item">
                             <div class="info">
                                 <h4>
-                                    <a href="#">Neurology Sargery</a>
+                                    <a href="#">Health Coaching</a>
                                 </h4>
                                 <div class="overlay">
-                                    <i class="flaticon-thinking"></i>
+                                    <i class="flaticon-clipboard"></i>
                                 </div>
                                 <p>
-                                    Attachment astonished to on appearance imprudence so collecting in excellence. Tiled way blind lived whose new. The for fully had she there leave merit enjoy forth.
+                                Whether you’re interested in weight loss, better nutrition or better overall health and energy, lasting changes are possible with a PharmToTable Health Coach. A health coach will work with you one-on-one to help you define your goals, pinpoint obstacles and make powerful, lasting changes in your life. Coaching is one of the best ways to help make healthy changes stick!
                                 </p>
                                 <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
                             </div>
@@ -305,45 +233,34 @@ get_header(); ?>
     <div class="chose-us-area item-half">
         <div class="container-full">
             <div class="row">
-                <div class="col-md-6 thumb bg-cover" style="background-image: url(assets/img/2440x1578.png);"></div>
+                <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php bloginfo('template_url'); ?>/assets/img/consult.jpg);"></div>
                 <div class="col-md-6 info">
                     <div class="heading">
-                        <h2>Why Chose us</h2>
-                        <p>
-                            Offering confined entrance no. Nay rapturous him see something residence. Highly talked do so vulgar. Her use behaved spirits and natural attempt say feeling. Exquisite mr incommode immediate he something ourselves it of. Law conduct yet chiefly beloved examine village proceed
-                        </p>
+                        <h2>Why Choose us</h2>
                     </div>
                     <ul>
                         <li>
                             <div class="info">
-                                <h4>Qualified facilities</h4>
-                                <p>
-                                    Consider may dwelling old him her surprise finished families graceful. Gave led past poor met fine was new.
-                                </p>
+                                <h4>Technology</h4>
+                                <p>Our cutting edge digital health technology platform allows us to connect with your whole care team</p>
                             </div>
                         </li>
                         <li>
                             <div class="info">
-                                <h4>Top Level Doctors</h4>
-                                <p>
-                                    Consider may dwelling old him her surprise finished families graceful. Gave led past poor met fine was new.
-                                </p>
+                                <h4>Team Based Care</h4>
+                                <p>We combine strengths from various providers, pharmacists, physicians, nutritionists, health-coaches, to meet your needs.</p>
                             </div>
                         </li>
                         <li>
                             <div class="info">
-                                <h4>Dedicated patient care</h4>
-                                <p>
-                                    Consider may dwelling old him her surprise finished families graceful. Gave led past poor met fine was new.
-                                </p>
+                                <h4>Convenient</h4>
+                                <p>See your provider from your computer or smartphone . Providers have flexible availability.</p>
                             </div>
                         </li>
                         <li>
                             <div class="info">
-                                <h4>24/7 Emergency</h4>
-                                <p>
-                                    Consider may dwelling old him her surprise finished families graceful. Gave led past poor met fine was new.
-                                </p>
+                                <h4>Pharmacists</h4>
+                                <p>Pharmacists are chemistry experts, we can help you reduce your medication burden, and simplify your life.</p>                              </p>
                             </div>
                         </li>
                     </ul>
@@ -353,239 +270,6 @@ get_header(); ?>
     </div>
     <!-- End Why Chose Us -->
 
-    <!-- Start Doctors Tips
-    ============================================= -->
-    <div class="doctor-tips-area default-padding bg-gray">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="site-heading text-center">
-                        <h2>Health <span>Tips</span></h2>
-                        <p>
-                            While mirth large of on front. Ye he greater related adapted proceed entered an. Through it examine express promise no. Past add size game cold girl off how old
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="health-tips-items tips-carousel owl-carousel owl-theme">
-                    <!-- Single Item -->
-                    <div class="single-item">
-                        <div class="col-md-5">
-                            <div class="thumb">
-                                <img src="assets/img/800x800.png" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="info">
-                                <div class="doctor">
-                                    <h4>Dr. Jessica Ronal</h4>
-                                    <h5>MPH, Medicine, Surgery</h5>
-                                </div>
-                                <h3>How to live a healthy lifestyle?</h3>
-                                <p>
-                                    Frequently partiality possession resolution at or appearance unaffected he me. Engaged its was evident pleased husband. Ye goodness felicity do disposal dwelling no. First am plate jokes to began of cause an scale. Subjects he prospect elegance followed no overcame possible it on.
-                                </p>
-                                <h4>Follow the instructions</h4>
-                                <ul>
-                                    <li>Dont just worry about the things you cannot help.</li>
-                                    <li>Eat Healthy, work better, do gardening.</li>
-                                    <li>Some relationships can kill you. Avoid them at the most.</li>
-                                    <li>Focus on the good things that you like</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="single-item">
-                        <div class="col-md-5">
-                            <div class="thumb">
-                                <img src="assets/img/800x800.png" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="info">
-                                <div class="doctor">
-                                    <h4>Dr. Jessica Ronal</h4>
-                                    <h5>MPH, Medicine, Surgery</h5>
-                                </div>
-                                <h3>How to live a healthy lifestyle?</h3>
-                                <p>
-                                    Frequently partiality possession resolution at or appearance unaffected he me. Engaged its was evident pleased husband. Ye goodness felicity do disposal dwelling no. First am plate jokes to began of cause an scale. Subjects he prospect elegance followed no overcame possible it on.
-                                </p>
-                                <h4>Follow the instructions</h4>
-                                <ul>
-                                    <li>Dont just worry about the things you cannot help.</li>
-                                    <li>Eat Healthy, work better, do gardening.</li>
-                                    <li>Some relationships can kill you. Avoid them at the most.</li>
-                                    <li>Focus on the good things that you like</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="single-item">
-                        <div class="col-md-5">
-                            <div class="thumb">
-                                <img src="assets/img/800x800.png" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="info">
-                                <div class="doctor">
-                                    <h4>Dr. Jessica Ronal</h4>
-                                    <h5>MPH, Medicine, Surgery</h5>
-                                </div>
-                                <h3>How to live a healthy lifestyle?</h3>
-                                <p>
-                                    Frequently partiality possession resolution at or appearance unaffected he me. Engaged its was evident pleased husband. Ye goodness felicity do disposal dwelling no. First am plate jokes to began of cause an scale. Subjects he prospect elegance followed no overcame possible it on.
-                                </p>
-                                <h4>Follow the instructions</h4>
-                                <ul>
-                                    <li>Dont just worry about the things you cannot help.</li>
-                                    <li>Eat Healthy, work better, do gardening.</li>
-                                    <li>Some relationships can kill you. Avoid them at the most.</li>
-                                    <li>Focus on the good things that you like</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Doctors Tips -->
-
-    <!-- Start Doctors
-    ============================================= -->
-    <div class="doctor-area default-padding bottom-less">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="site-heading text-center">
-                        <h2>Meet Our <span>Specialists</span></h2>
-                        <p>
-                            While mirth large of on front. Ye he greater related adapted proceed entered an. Through it examine express promise no. Past add size game cold girl off how old
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="doctor-items text-center">
-                    <!-- Single Item -->
-                    <div class="col-md-4 equal-height">
-                        <div class="item">
-                            <div class="thumb">
-                                <img src="assets/img/800x600.png" alt="Thumb">
-                                <div class="overlay">
-                                    <a href="#"><i class="fas fa-plus"></i></a>
-                                </div>
-                                <div class="social">
-                                    <ul>
-                                        <li class="facebook">
-                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="#"><i class="fab fa-twitter"></i></a>
-                                        </li>
-                                        <li class="instagram">
-                                            <a href="#"><i class="fab fa-instagram"></i></a>
-                                        </li>
-                                        <li class="linkedin">
-                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="info">
-                                <h4>Jessica Jones</h4>
-                                <h5>Cardiologist</h5>
-                                <div class="appoinment-btn">
-                                    <a href="#">Make appoinment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="col-md-4 equal-height">
-                        <div class="item">
-                            <div class="thumb">
-                                <img src="assets/img/800x600.png" alt="Thumb">
-                                <div class="overlay">
-                                    <a href="#"><i class="fas fa-plus"></i></a>
-                                </div>
-                                <div class="social">
-                                    <ul>
-                                        <li class="facebook">
-                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="#"><i class="fab fa-twitter"></i></a>
-                                        </li>
-                                        <li class="instagram">
-                                            <a href="#"><i class="fab fa-instagram"></i></a>
-                                        </li>
-                                        <li class="linkedin">
-                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="info">
-                                <h4>Ahel Natasha</h4>
-                                <h5>Dental surgeon</h5>
-                                <div class="appoinment-btn">
-                                    <a href="#">Make appoinment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="col-md-4 equal-height">
-                        <div class="item">
-                            <div class="thumb">
-                                <img src="assets/img/800x600.png" alt="Thumb">
-                                <div class="overlay">
-                                    <a href="#"><i class="fas fa-plus"></i></a>
-                                </div>
-                                <div class="social">
-                                    <ul>
-                                        <li class="facebook">
-                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="#"><i class="fab fa-twitter"></i></a>
-                                        </li>
-                                        <li class="instagram">
-                                            <a href="#"><i class="fab fa-instagram"></i></a>
-                                        </li>
-                                        <li class="linkedin">
-                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="info">
-                                <h4>Gabriela Beckett</h4>
-                                <h5>Cosmetic Surgeon</h5>
-                                <div class="appoinment-btn">
-                                    <a href="#">Make appoinment</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Doctors -->
-
     <!-- Start Testimonials
     ============================================= -->
     <div class="testimonials-area carousel-shadow bg-gray default-padding">
@@ -594,9 +278,6 @@ get_header(); ?>
                 <div class="col-md-8 col-md-offset-2">
                     <div class="site-heading text-center">
                         <h2>Patient <span>Testimonials</span></h2>
-                        <p>
-                            While mirth large of on front. Ye he greater related adapted proceed entered an. Through it examine express promise no. Past add size game cold girl off how old
-                        </p>
                     </div>
                 </div>
             </div>
@@ -607,16 +288,17 @@ get_header(); ?>
                         <div class="item">
                             <div class="content">
                                 <p>
-                                    Departure so attention pronounce satisfied daughters am. But shy tedious pressed studied opinion entered windows off. Advantage dependent suspicion convinced provision him yet. Mr immediate remaining conveying allowance do or.
-                                </p>
+                                <em>My experience with my functional medicine pharmacist, Melody Hartzler, was phenomenal!</em><br><br>
+                                I came to her after seeing numerous doctors and nutritionists with stomach pain, bloating, and constipation.  No one had an answer for me in the past, so my nutritionist suggested Dr. Hartzler. <br><br>
+                                We did a telehealth meeting and she quickly decided we needed more tests.  Once the test results arrived, she was able to determine a course of action using mostly herbal medicines.  A month into the meds and my stomach pain is nearly gone as is my constipation.  It has been  amazing! The plan hasn't stopped there and we continue to meet and communicate on the best course of action going forward.  I highly recommend Dr. Hartzler for your needs - she listens and goes above and beyond!
+                              </p>
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img src="assets/img/800x800.png" alt="Thumb">
+                                    <img src="<?php bloginfo('template_url'); ?>/assets/img/testimonial-standard.png" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
-                                    <h4>Angle Natasha</h4>
-                                    <h5>patient of <span>surgery</span></h5>
+                                    <h4>Sara L.</h4>
                                 </div>
                             </div>
                         </div>
@@ -625,34 +307,16 @@ get_header(); ?>
                         <div class="item">
                             <div class="content">
                                 <p>
-                                    Departure so attention pronounce satisfied daughters am. But shy tedious pressed studied opinion entered windows off. Advantage dependent suspicion convinced provision him yet. Mr immediate remaining conveying allowance do or.
-                                </p>
+                                By working directly with Dr. Hartzler, my medication has not only changed, but the dosage has been reduced, while adding natural vitamin supplements that help support my body’s specific needs.  Her ability to weave both functional and conventional medicine into a treatment plan has been shall we say, more than wonderful!!  Her knowledge about how to integrate these two different types of treatments have been instrumental in not only lowering my A1C, but weight loss and more overall energy.<br><br>
+                                <em><strong>She is no longer just treating the symptoms of my disease, but the underlying causes.  </strong></em><br><br>
+                                This unique insight has been the difference between the previous negative side effects and the improved health I enjoy. Without the help and guidance of Dr. Melody Hartzler, my quality of life would have continued to degrade over time, today I have a much better prognosis for the rest of my life.</p>
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img src="assets/img/800x800.png" alt="Thumb">
+                                    <img src="<?php bloginfo('template_url'); ?>/assets/img/testimonial-standard.png" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
-                                    <h4>John Abraham</h4>
-                                    <h5>Dental <span>patients</span></h5>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single Item -->
-                        <!-- Single Item -->
-                        <div class="item">
-                            <div class="content">
-                                <p>
-                                    Departure so attention pronounce satisfied daughters am. But shy tedious pressed studied opinion entered windows off. Advantage dependent suspicion convinced provision him yet. Mr immediate remaining conveying allowance do or.
-                                </p>
-                            </div>
-                            <div class="provider">
-                                <div class="thumb">
-                                    <img src="assets/img/800x800.png" alt="Thumb">
-                                </div>
-                                <div class="info">
-                                    <h4>Kriti Sairi</h4>
-                                    <h5>patient of <span>surgery</span></h5>
+                                    <h4>Kevin</h4>
                                 </div>
                             </div>
                         </div>
@@ -663,136 +327,4 @@ get_header(); ?>
         </div>
     </div>
     <!-- End Testimonials -->
-
-    <!-- Start Blog
-    ============================================= -->
-    <div class="blog-area default-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="site-heading text-center">
-                        <h2>Recent <span>Blog</span></h2>
-                        <p>
-                            While mirth large of on front. Ye he greater related adapted proceed entered an. Through it examine express promise no. Past add size game cold girl off how old
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="blog-items">
-                    <!-- Single Item -->
-                    <div class="col-md-4 single-item">
-                        <div class="item">
-                            <div class="thumb">
-                                <a href="#">
-                                    <img src="assets/img/800x600.png" alt="Thumb">
-                                    <div class="post-type">
-                                        <i class="fas fa-images"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="info">
-                                <div class="meta">
-                                    <ul>
-                                        <li><a href="#">Admin</a></li>
-                                        <li>15 June, 2019</li>
-                                    </ul>
-                                </div>
-                                <h4>
-                                    <a href="#">increasing in especially inquietude companions acceptance</a>
-                                </h4>
-                                <p>
-                                    General enquire picture letters garrets on offices of no on. Say one hearing between excited evening all inhabit thought you.
-                                </p>
-                                <a class="btn btn-theme circle border btn-sm" href="#">Read More <i class="fas fa-angle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="col-md-4 single-item">
-                        <div class="item">
-                            <div class="thumb">
-                                <a href="#">
-                                    <img src="assets/img/800x600.png" alt="Thumb">
-                                    <div class="post-type">
-                                        <i class="fas fa-video"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="info">
-                                <div class="meta">
-                                    <ul>
-                                        <li><a href="#">Admin</a></li>
-                                        <li>17 Auguest, 2019</li>
-                                    </ul>
-                                </div>
-                                <h4>
-                                    <a href="#">Middleton as pretended listening he smallness perceived.</a>
-                                </h4>
-                                <p>
-                                    General enquire picture letters garrets on offices of no on. Say one hearing between excited evening all inhabit thought you.
-                                </p>
-                                <a class="btn btn-theme circle border btn-sm" href="#">Read More <i class="fas fa-angle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="col-md-4 single-item">
-                        <div class="item">
-                            <div class="thumb">
-                                <a href="#">
-                                    <img src="assets/img/800x600.png" alt="Thumb">
-                                    <div class="post-type">
-                                        <i class="fas fa-image"></i>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="info">
-                                <div class="meta">
-                                    <ul>
-                                        <li><a href="#">Admin</a></li>
-                                        <li>25 September, 2019</li>
-                                    </ul>
-                                </div>
-                                <h4>
-                                    <a href="#">Offended packages pleasant remainder recommend engrossed</a>
-                                </h4>
-                                <p>
-                                    General enquire picture letters garrets on offices of no on. Say one hearing between excited evening all inhabit thought you.
-                                </p>
-                                <a class="btn btn-theme circle border btn-sm" href="#">Read More <i class="fas fa-angle-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Blog -->
-
-    <!-- Start Newsletter
-    ============================================= -->
-    <div class="newsletter-area default-padding shadow dark bg-fixed text-center text-light" style="background-image: url(assets/img/2440x1578.png);">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4>Subscribe For Get Update</h4>
-                    <h2>Let’s Find An Office Near You.</h2>
-                    <form action="#">
-                        <div class="input-group stylish-input-group">
-                            <input type="email" name="email" class="form-control" placeholder="Enter your e-mail here">
-                            <button type="submit">
-                                <i class="fa fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Newsletter -->
-
 <?php get_footer(); ?>

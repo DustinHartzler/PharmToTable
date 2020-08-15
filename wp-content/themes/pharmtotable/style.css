@@ -3,8 +3,8 @@ Theme Name: PharmToTable
 Theme URI: https://pharmtotable.life
 Author: Dustin Hartzler
 Author URI: https://YourWebsiteEngineer.com
-Description: Based on Themeforest - MediHub
-Version: 1.0
+Description: Based on Themeforest - MediHub 1
+Version: 1.5
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -2412,7 +2412,7 @@ body,
 
 .tabs-items .nav-pills li a {
   display: inline-block;
-  padding: 15px 20px;
+  padding: 15px 19px;
   border: 1px solid #e7e7e7;
   margin-right: 5px;
   position: relative;
@@ -2624,7 +2624,9 @@ body,
   border-radius: inherit;
 }
 
-.appoinment form button {
+.appoinment form button,
+.field-wrap input[type="button"],
+.appoinment-btn {
   background: transparent;
   padding: 10px 35px;
   margin-top: 15px;
@@ -2643,7 +2645,9 @@ body,
   background: transparent;
 }
 
-.appoinment form button:hover {
+.appoinment form button:hover,
+.field-wrap input[type="button"]:hover,
+.appoinment-btn:hover {
   background: #98D544;
   color: #ffffff;
   border: 2px solid transparent;
@@ -3426,7 +3430,6 @@ body,
 }
 
 .doctor-items .info .appoinment-btn {
-  position: relative;
   z-index: 1;
 }
 
@@ -4771,7 +4774,14 @@ body,
   text-transform: uppercase;
 }
 
-.blog-area.single .post-tags a {
+.blog-area.single .post-tags li,
+.post-tags li {
+  display: inline;
+}
+
+.blog-area.single .post-tags a,
+.blog-area.single .post-tags li a,
+.post-tags li a {
   border: 1px solid #e7e7e7;
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
@@ -5607,6 +5617,47 @@ footer .footer-bottom .social li a:hover {
 }
 
 .sidebar-item .screen-reader-text,
-.input-group .screen-reader-text {
+.input-group .screen-reader-text,
+.f-item .screen-reader-text {
   display: none;
+}
+
+/*Footer Button Email Optin*/
+.newsletter-area form button {
+  position: relative !important;
+  right: 0;
+  z-index: 9;
+  min-height: 60px;
+  border: 5px solid #ffffff;
+  width: 250px !important;
+  background: #98D544;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+  color: #ffffff;
+  padding: 0 20px;
+}
+
+.nice-select {
+  border-radius: 30px;
+  z-index: 99;
+}
+
+p.services {
+  height: 250px;
+}
+
+
+
+.signature {
+  font-family: 'Yellowtail', cursive;
+  font-size: 30px
+}
+
+
+/* Contact Form Styling */
+.field-wrap>div input,
+.field-wrap textarea {
+  padding-left: 10px;
+  border: 2px solid #dedede;
 }

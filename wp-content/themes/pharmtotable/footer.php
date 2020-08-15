@@ -1,3 +1,26 @@
+<!-- Start Newsletter
+============================================= -->
+<div class="newsletter-area default-padding shadow dark bg-fixed text-center text-light" style="background-image: url(assets/img/2440x1578.png);">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Subscribe For Updates</h4>
+                <h2>Let’s Find A Pharmacist Near You.</h2>
+                <form action="#">
+                    <div class="input-group stylish-input-group">
+                        <button type="submit">
+                        <a href="https://app.monstercampaigns.com/c/g9aoffuqh8sc1kutmuzw/" target="_blank">
+                        Sign Up for Email Updates <i class="fa fa-paper-plane"></i>
+                        </a>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Newsletter -->
+
    <!-- Start Footer
     ============================================= -->
     <footer>
@@ -6,15 +29,15 @@
 
                 <div class="f-items default-padding">
                     <!-- Single Item -->
-                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("Footer 1") ) : ?>
+                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("footer-1") ) : ?>
                     <?php endif;?>
                     <!-- End Single Item -->
                     <!-- Single Item -->
-                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("Footer 2") ) : ?>
+                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("footer-2") ) : ?>
                     <?php endif;?>
                     <!-- End Single Item -->
                     <!-- Single Item -->
-                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("Footer 3") ) : ?>
+                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("footer-3") ) : ?>
                     <?php endif;?>
                     <!-- End Single Item -->
                 </div>
@@ -66,5 +89,8 @@
     <script src="<?php bloginfo('template_url'); ?>/assets/js/bootsnav.js"></script>
     <script src="<?php bloginfo('template_url'); ?>/assets/js/main.js"></script>
 <?php wp_footer(); ?>
+<!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
+<script type="text/javascript" src="https://a.omappapi.com/app/js/api.min.js" data-account="44742" data-user="39038" async></script>
+<!-- / https://optinmonster.com -->
 </body>
 </html>

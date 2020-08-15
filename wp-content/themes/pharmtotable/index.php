@@ -70,26 +70,4 @@
     </div>
     <!-- End Blog -->
 
-    <!-- Start Newsletter
-    ============================================= -->
-    <div class="newsletter-area default-padding shadow dark bg-fixed text-center text-light" style="background-image: url(assets/img/2440x1578.png);">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h4>Subscribe For Get Update</h4>
-                    <h2>Let’s Find An Office Near You.</h2>
-                    <form action="#">
-                        <div class="input-group stylish-input-group">
-                            <input type="email" name="email" class="form-control" placeholder="Enter your e-mail here">
-                            <button type="submit">
-                                <i class="fa fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Newsletter -->
-
 <?php get_footer(); ?>
