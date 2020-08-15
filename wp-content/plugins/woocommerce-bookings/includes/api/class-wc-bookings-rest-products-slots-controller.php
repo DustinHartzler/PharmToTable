@@ -37,6 +37,7 @@ class WC_Bookings_REST_Products_Slots_Controller extends WC_REST_Controller {
 				array(
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => '__return_true',
 				),
 			)
 		);

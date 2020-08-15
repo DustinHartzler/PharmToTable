@@ -1,5 +1,8 @@
 *** WooCommerce Bookings Changelog ***
 
+2020-08-13 - version 1.15.24
+* Fix   - WordPress 5.5 REST API compatibility changes.
+
 2020-07-14 - version 1.15.23
 * Fix - Adjust for timezone when requesting available slots from the API.
 
