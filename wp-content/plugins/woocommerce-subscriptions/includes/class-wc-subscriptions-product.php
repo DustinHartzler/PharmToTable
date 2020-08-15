@@ -4,11 +4,11 @@
  *
  * An API for accessing details of a subscription product.
  *
- * @package		WooCommerce Subscriptions
- * @subpackage	WC_Subscriptions_Product
- * @category	Class
- * @author		Brent Shepherd
- * @since		1.0
+ * @package    WooCommerce Subscriptions
+ * @subpackage WC_Subscriptions_Product
+ * @category   Class
+ * @author     Brent Shepherd
+ * @since      1.0
  */
 class WC_Subscriptions_Product {
 
@@ -85,21 +85,6 @@ class WC_Subscriptions_Product {
 	public static function get_sign_up_fee_filter( $price, $product ) {
 
 		return self::get_sign_up_fee( $product );
-	}
-
-	/**
-	 * Override the WooCommerce "Add to cart" text with "Sign up now".
-	 *
-	 * @since 1.0
-	 */
-	public static function add_to_cart_text( $button_text, $product_type = '' ) {
-		global $product;
-
-		if ( self::is_subscription( $product ) || in_array( $product_type, array( 'subscription', 'subscription-variation' ) ) ) {
-			$button_text = get_option( WC_Subscriptions_Admin::$option_prefix . '_add_to_cart_button_text', __( 'Sign up now', 'woocommerce-subscriptions' ) );
-		}
-
-		return $button_text;
 	}
 
 	/**
@@ -198,7 +183,15 @@ class WC_Subscriptions_Product {
 	public static function get_gravity_form_prices( $price, $product ) {
 
 		if ( self::is_subscription( $product ) ) {
-			$price = self::get_price_string( $product, array( 'price' => $price, 'subscription_length' => false, 'sign_up_fee' => false, 'trial_length' => false ) );
+			$price = self::get_price_string(
+				$product,
+				array(
+					'price'               => $price,
+					'subscription_length' => false,
+					'sign_up_fee'         => false,
+					'trial_length'        => false,
+				)
+			);
 		}
 
 		return $price;
@@ -211,10 +204,10 @@ class WC_Subscriptions_Product {
 	 *
 	 * @param WC_Product|int $product A WC_Product object or ID of a WC_Product.
 	 * @param array $inclusions An associative array of flags to indicate how to calculate the price and what to include, values:
-	 *			'tax_calculation'     => false to ignore tax, 'include_tax' or 'exclude_tax' To indicate that tax should be added or excluded respectively
-	 *			'subscription_length' => true to include subscription's length (default) or false to exclude it
-	 *			'sign_up_fee'         => true to include subscription's sign up fee (default) or false to exclude it
-	 *			'price'               => string a price to short-circuit the price calculations and use in a string for the product
+	 *    'tax_calculation'     => false to ignore tax, 'include_tax' or 'exclude_tax' To indicate that tax should be added or excluded respectively
+	 *    'subscription_length' => true to include subscription's length (default) or false to exclude it
+	 *    'sign_up_fee'         => true to include subscription's sign up fee (default) or false to exclude it
+	 *    'price'               => string a price to short-circuit the price calculations and use in a string for the product
 	 * @since 1.0
 	 */
 	public static function get_price_string( $product, $include = array() ) {
@@ -226,7 +219,9 @@ class WC_Subscriptions_Product {
 			return;
 		}
 
-		$include = wp_parse_args( $include, array(
+		$include = wp_parse_args(
+			$include,
+			array(
 				'tax_calculation'     => get_option( 'woocommerce_tax_display_shop' ),
 				'subscription_price'  => true,
 				'subscription_period' => true,
@@ -414,7 +409,7 @@ class WC_Subscriptions_Product {
 
 		// Ensure that $sale_price is non-empty because other plugins can use woocommerce_product_is_on_sale filter to
 		// forcefully set a product's is_on_sale flag (like Dynamic Pricing )
-		if ( $product->is_on_sale() && '' !== $sale_price &&  $subscription_price > $sale_price ) {
+		if ( $product->is_on_sale() && '' !== $sale_price && $subscription_price > $sale_price ) {
 			$active_price = $sale_price;
 		}
 
@@ -923,7 +918,7 @@ class WC_Subscriptions_Product {
 			$value    = wc_clean( $data['value'] );
 
 			foreach ( $variation_ids as $variation_id ) {
-				 $subscription_price = get_post_meta( $variation_id, '_subscription_price', true );
+				$subscription_price = get_post_meta( $variation_id, '_subscription_price', true );
 
 				if ( '%' === substr( $value, -1 ) ) {
 					$percent = wc_format_decimal( substr( $value, 0, -1 ) );
@@ -1177,9 +1172,36 @@ class WC_Subscriptions_Product {
 		return $parent_product_ids;
 	}
 
+	/**
+	 * Gets the add to cart text for subscription products.
+	 *
+	 * @since 3.0.7
+	 * @return string The add to cart text.
+	 */
+	public static function get_add_to_cart_text() {
+		return get_option( WC_Subscriptions_Admin::$option_prefix . '_add_to_cart_button_text', __( 'Sign up now', 'woocommerce-subscriptions' ) );
+	}
+
 	/************************
 	 * Deprecated Functions *
 	 ************************/
+
+	/**
+	 * Override the WooCommerce "Add to cart" text with "Sign up now".
+	 *
+	 * @since 1.0
+	 * @deprecated 3.0.7
+	 */
+	public static function add_to_cart_text( $button_text, $product_type = '' ) {
+		_deprecated_function( __METHOD__, '3.0.7', 'WC_Subscriptions_Product::get_add_to_cart_text' );
+		global $product;
+
+		if ( self::is_subscription( $product ) || in_array( $product_type, array( 'subscription', 'subscription-variation' ) ) ) {
+			$button_text = get_option( WC_Subscriptions_Admin::$option_prefix . '_add_to_cart_button_text', __( 'Sign up now', 'woocommerce-subscriptions' ) );
+		}
+
+		return $button_text;
+	}
 
 	/**
 	 * If a product is being marked as not purchasable because it is limited and the customer has a subscription,
@@ -1247,7 +1269,13 @@ class WC_Subscriptions_Product {
 	 */
 	public static function get_sign_up_fee_including_tax( $product, $qty = 1 ) {
 		wcs_deprecated_function( __METHOD__, '2.2.0', 'wcs_get_price_including_tax( $product, array( "qty" => $qty, "price" => WC_Subscriptions_Product::get_sign_up_fee( $product ) ) )' );
-		return wcs_get_price_including_tax( $product, array( 'qty' => $qty, 'price' => WC_Subscriptions_Product::get_sign_up_fee( $product ) ) );
+		return wcs_get_price_including_tax(
+			$product,
+			array(
+				'qty'   => $qty,
+				'price' => WC_Subscriptions_Product::get_sign_up_fee( $product ),
+			)
+		);
 	}
 
 	/**
@@ -1258,6 +1286,12 @@ class WC_Subscriptions_Product {
 	 */
 	public static function get_sign_up_fee_excluding_tax( $product, $qty = 1 ) {
 		wcs_deprecated_function( __METHOD__, '2.2.0', 'wcs_get_price_excluding_tax( $product, array( "qty" => $qty, "price" => WC_Subscriptions_Product::get_sign_up_fee( $product ) ) )' );
-		return wcs_get_price_excluding_tax( $product, array( 'qty' => $qty, 'price' => WC_Subscriptions_Product::get_sign_up_fee( $product ) ) );
+		return wcs_get_price_excluding_tax(
+			$product,
+			array(
+				'qty'   => $qty,
+				'price' => WC_Subscriptions_Product::get_sign_up_fee( $product ),
+			)
+		);
 	}
 }
