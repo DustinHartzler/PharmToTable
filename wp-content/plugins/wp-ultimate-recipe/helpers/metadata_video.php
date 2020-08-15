@@ -78,11 +78,17 @@ class WPURP_Metadata_Video {
 	private static function check_for_mediavine_embed( $embed_code ) {
 		$metadata = false;
 
-		preg_match( '/.mediavine.com\/videos\/(.*?)\.js/im', $embed_code, $match );
+		// New embed code.
+		preg_match( '/mv-video-id-(.*?)(\"|\s)/im', $embed_code, $match );
+
+		// Look for old embed code if new one not found.
+		if ( ! $match ) {
+			preg_match( '/.mediavine.com\/videos\/(.*?)\.js/im', $embed_code, $match );			
+		}
+
 		if ( $match && isset( $match[1] ) ) {
-			$metadata = array(
-				'@id' => 'https://video.mediavine.com/videos/' . $match[1],
-			);
+			$mv_video_id = $match[1];
+			$metadata = self::check_for_oembed( 'https://embed.mediavine.com/videos/' . $mv_video_id );
 		}
 
 		return $metadata;
@@ -110,33 +116,35 @@ class WPURP_Metadata_Video {
 	private static function check_for_meta_html( $embed_code ) {
 		$metadata = false;
 
-		$dom = new DOMDocument;
-		$dom->loadHTML( $embed_code );
-		$meta_tags = $dom->getElementsByTagName( 'meta' );
+		if ( $embed_code ) {
+			$dom = new DOMDocument;
+			$dom->loadHTML( $embed_code );
+			$meta_tags = $dom->getElementsByTagName( 'meta' );
 
-		if ( 0 < $meta_tags->length ) {
-			$metadata = array();
+			if ( 0 < $meta_tags->length ) {
+				$metadata = array();
 
-			foreach ( $meta_tags as $meta_tag ) {
-				if ( in_array( $meta_tag->getAttribute( 'itemprop' ),
-						array(
-							'uploadDate',
-							'name',
-							'description',
-							'duration',
-							'expires',
-							'interactionCount',
-							'thumbnailUrl',
-							'contentUrl',
-							'embedUrl',
-						)
-					) ) {
-					$metadata[ $meta_tag->getAttribute( 'itemprop' ) ] = $meta_tag->getAttribute( 'content' );
+				foreach ( $meta_tags as $meta_tag ) {
+					if ( in_array( $meta_tag->getAttribute( 'itemprop' ),
+							array(
+								'uploadDate',
+								'name',
+								'description',
+								'duration',
+								'expires',
+								'interactionCount',
+								'thumbnailUrl',
+								'contentUrl',
+								'embedUrl',
+							)
+						) ) {
+						$metadata[ $meta_tag->getAttribute( 'itemprop' ) ] = $meta_tag->getAttribute( 'content' );
+					}
 				}
-			}
 
-			if ( ! $metadata ) {
-				$metadata = false;
+				if ( ! $metadata ) {
+					$metadata = false;
+				}
 			}
 		}
 

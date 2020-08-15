@@ -3,7 +3,7 @@ Contributors: BrechtVds
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QG7KZMGFU325Y
 Tags: recipe, recipes, ingredients, food, nutrition, nutritional, cooking, seo, schema.org, json-ld, meal plan, meal planner
 Requires at least: 3.5
-Tested up to: 5.3
+Tested up to: 5.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -106,6 +106,11 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 
 == Changelog ==
 
+= 3.12.9 =
+* Improvement: New Mediavine video embed code compatibility
+* Fix: Prevent video embed code PHP notices
+* Fix: WordPress 5.5 compatibility
+
 = 3.12.8 =
 * Fix: Saving ingredients and instructions in WordPress 5.3.1
 
@@ -144,6 +149,8 @@ Yes! We pride ourselves on offering awesome support and almost always answer sup
 * Fix: Unable to edit keywords on Custom Tags page
 
 == Upgrade notice ==
+= 3.12.9 =
+Update for WordPress 5.5 compatibility
 
 = 3.12.8 =
 Update to ensure WordPress 5.3.1 compatibility

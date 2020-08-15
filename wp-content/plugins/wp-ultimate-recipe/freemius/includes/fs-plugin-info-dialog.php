@@ -1180,7 +1180,7 @@
 
                                             $(document).ready(function () {
                                                 var $plan = $('.plugin-information-pricing .fs-plan[data-plan-id=<?php echo $plan->id ?>]');
-                                                $plan.find('input[type=radio]').live('click', function () {
+                                                $plan.on('click', 'input[type=radio]', function () {
                                                     _updateCtaUrl(
                                                         $plan.attr('data-plan-id'),
                                                         $(this).val(),

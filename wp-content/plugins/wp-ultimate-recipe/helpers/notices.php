@@ -5,6 +5,7 @@ class WPURP_Notices {
     public function __construct()
     {
         add_action( 'admin_init',       array( $this, 'wpurp_hide_notice' ) );
+        add_action( 'current_screen',   array( $this, 'wpurp_upgrade_wprm_nag' ) );
         add_action( 'admin_notices',    array( $this, 'wpurp_admin_notices' ) );
     }
 
@@ -38,6 +39,14 @@ class WPURP_Notices {
             }
 
             delete_option('wpurp_deferred_admin_notices');
+        }
+    }
+
+    public function wpurp_upgrade_wprm_nag() {
+        $screen = get_current_screen();
+        
+        if ( 'recipe_page_wp-ultimate-recipe-pricing' === $screen->id ) {
+            echo '<script>if ( confirm("WARNING: we have a new recipe plugin called WP Recipe Maker that we HIGHLY recommend you to use instead. Learn more about WPRM by clicking on OK. If you\'re absolutely sure you want WP Ultimate Recipe, press Cancel.") ) { window.open( "https://bootstrapped.ventures/wp-recipe-maker/", "_blank" ); };</script>';
         }
     }
 
