@@ -2,9 +2,9 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce All Products For Subscriptions 3.1.15\n"
+"Project-Id-Version: WooCommerce All Products For Subscriptions 3.1.16\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
-"POT-Creation-Date: 2020-07-14 09:57:11+00:00\n"
+"POT-Creation-Date: 2020-08-05 06:11:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -278,27 +278,27 @@ msgstr ""
 msgid "%1$s version %2$s (out of date)"
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:593
+#: includes/class-wcs-att-cart.php:596
 msgid "Please choose a new subscription plan."
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:599
+#: includes/class-wcs-att-cart.php:602
 msgid ""
 "The &quot;%1$s&quot; subscription that you signed up for is no longer "
 "available. %2$s"
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:606 includes/class-wcs-att-cart.php:627
+#: includes/class-wcs-att-cart.php:609 includes/class-wcs-att-cart.php:630
 msgid ""
 "The &quot;%s&quot; subscription that you signed up for has changed. Please "
 "remove the product from your cart and try again."
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:614
+#: includes/class-wcs-att-cart.php:617
 msgid "Please choose a plan to proceed."
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:620
+#: includes/class-wcs-att-cart.php:623
 msgid "&quot;%1$s&quot; is only available with a subscription plan. %2$s"
 msgstr ""
 

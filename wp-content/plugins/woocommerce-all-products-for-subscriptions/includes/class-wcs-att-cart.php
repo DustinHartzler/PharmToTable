@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Cart support.
  *
  * @class    WCS_ATT_Cart
- * @version  3.1.14
+ * @version  3.1.16
  */
 class WCS_ATT_Cart {
 
@@ -177,6 +177,9 @@ class WCS_ATT_Cart {
 					}
 				}
 			}
+
+			// Last chance to turn off or otherwise modify cart level plans.
+			$cart_level_schemes = apply_filters( 'wcsatt_cart_subscription_schemes', $cart_level_schemes, $context );
 		}
 
 		return $cart_level_schemes;
