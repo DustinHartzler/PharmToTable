@@ -37,7 +37,7 @@ class RedisHandler extends \NF_FU_VENDOR\Monolog\Handler\AbstractProcessingHandl
      */
     public function __construct($redis, $key, $level = \NF_FU_VENDOR\Monolog\Logger::DEBUG, $bubble = \true, $capSize = \false)
     {
-        if (!($redis instanceof \NF_FU_VENDOR\Predis\Client || $redis instanceof \NF_FU_VENDOR\Redis)) {
+        if (!($redis instanceof \NF_FU_VENDOR\Predis\Client || $redis instanceof \Redis)) {
             throw new \InvalidArgumentException('Predis\\Client or Redis instance required');
         }
         $this->redisClient = $redis;
@@ -65,8 +65,8 @@ class RedisHandler extends \NF_FU_VENDOR\Monolog\Handler\AbstractProcessingHandl
      */
     protected function writeCapped(array $record)
     {
-        if ($this->redisClient instanceof \NF_FU_VENDOR\Redis) {
-            $mode = \defined('\\Redis::MULTI') ? \NF_FU_VENDOR\Redis::MULTI : 1;
+        if ($this->redisClient instanceof \Redis) {
+            $mode = \defined('\\Redis::MULTI') ? \Redis::MULTI : 1;
             $this->redisClient->multi($mode)->rpush($this->redisKey, $record["formatted"])->ltrim($this->redisKey, -$this->capSize, -1)->exec();
         } else {
             $redisKey = $this->redisKey;

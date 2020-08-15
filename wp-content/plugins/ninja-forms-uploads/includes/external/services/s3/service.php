@@ -126,7 +126,7 @@ class NF_FU_External_Services_S3_Service extends NF_FU_External_Abstracts_Servic
 		if ( ( ! isset( $data['amazon_s3_bucket_region'][ $bucket ] ) || empty( $data['amazon_s3_bucket_region'][ $bucket ] ) ) ) {
 			// Retrieve the bucket region if we don't have it
 			// Or the bucket has changed since we last retrieved it
-			$s3     = $this->get_s3client( $settings['amazon_s3_access_key'], $settings['amazon_s3_secret_key'] );
+			$s3     = $this->get_s3client( $settings['amazon_s3_access_key'], $settings['amazon_s3_secret_key'], apply_filters( 'ninja_forms_uploads_default_region', 'us-west-2' ) );
 			$region = $this->get_bucket_region( $s3, $bucket );
 			if ( false === $region ) {
 				return $this->settings;
@@ -249,7 +249,7 @@ class NF_FU_External_Services_S3_Service extends NF_FU_External_Abstracts_Servic
 			'Bucket'     => $bucket,
 			'Key'        => $key,
 			'SourceFile' => $file,
-			'ACL'        => apply_filters( 'ninja_forms_uploads_s3_acl', self::ACL_PUBLIC_READ ),
+			'ACL'        => apply_filters( 'ninja_forms_uploads_s3_acl', self::ACL_PRIVATE ),
 		);
 
 		$args = apply_filters( 'ninja_forms_uploads_s3_args', $args );

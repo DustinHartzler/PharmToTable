@@ -3,8 +3,8 @@ Contributors: kstover, jameslaws
 Donate link: http://ninjaforms.com
 Tags: form, forms
 Requires at least: 5.0
-Tested up to: 5.4
-Stable tag: 3.3.5
+Tested up to: 5.5
+Stable tag: 3.3.7
 
 License: GPLv2 or later
 
@@ -26,6 +26,25 @@ This section describes how to install the plugin and get it working.
 For help and video tutorials, please visit our website: [NinjaForms.com](http://ninjaforms.com)
 
 == Changelog ==
+
+= 3.3.7 (10 Aug 2020) =
+
+*Bugs:*
+
+* Fix background upload jobs duplicating files when multiple file upload fields on a form
+
+= 3.3.6 (4 Aug 2020) =
+
+*Changes:*
+
+* Tested on WordPress 5.5
+* Default Amazon S3 ACL set to private
+* Filter 'ninja_forms_uploads_default_region' added for the default region for S3 clients
+
+*Bugs:*
+
+* Fix uploading of any size file in the background to external services
+* Fix background uploading not working if memory_limit defined in Gigabytes
 
 = 3.3.5 (25 June 2020) =
 

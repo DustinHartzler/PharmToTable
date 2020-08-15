@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ninja-forms-uploads\n"
 "Report-Msgid-Bugs-To: help@ninjaforms.com\n"
-"POT-Creation-Date: 2020-06-25 12:49+0100\n"
-"PO-Revision-Date: 2020-06-25 12:49+GMT+0100\n"
+"POT-Creation-Date: 2020-08-10 11:53+0100\n"
+"PO-Revision-Date: 2020-08-10 11:53+GMT+0100\n"
 "Last-Translator: Ninja Forms <help@ninjaforms.com>\n"
 "Language-Team: English <LL@li.org>\n"
 "Language: \n"
@@ -815,7 +815,7 @@ msgid ""
 "File does not meet minimum file size. File must be %nMB or greater in size."
 msgstr ""
 
-#: includes/external/abstracts/backgroundupload.php:72
+#: includes/external/abstracts/backgroundupload.php:79
 #, php-format
 msgid "Ninja Forms File Upload: %s Upload. File does not exist %s"
 msgstr ""

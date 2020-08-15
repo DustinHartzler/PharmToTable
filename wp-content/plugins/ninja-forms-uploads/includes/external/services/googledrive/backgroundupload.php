@@ -17,20 +17,12 @@ class NF_FU_External_Services_Googledrive_Backgroundupload extends NF_FU_Externa
 	protected $max_chunk_size = 5242880;
 
 	/**
-	 * @return bool|NF_FU_External_Services_Googledrive_Service
-	 */
-	protected function get_service() {
-		return NF_File_Uploads()->externals->get( $this->service );
-	}
-
-	/**
-	 * @param array $data
+	 * @param NF_FU_External_Services_Googledrive_Service $service
+	 * @param array                                       $data
 	 *
 	 * @return array|bool
 	 */
-	public function upload_file( $data ) {
-		$service = $this->get_service();
-
+	public function chunked_upload_file( $service, $data ) {
 		$file = $service->create_drive_file( $this->external_filename, $this->external_path );
 
 		$client = $service->get_client();

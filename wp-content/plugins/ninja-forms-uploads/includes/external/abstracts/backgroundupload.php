@@ -46,6 +46,13 @@ abstract class NF_FU_External_Abstracts_Backgroundupload extends \NF_FU_VENDOR\W
 	}
 
 	/**
+	 * @return bool|NF_FU_External_Abstracts_Service
+	 */
+	protected function get_service() {
+		return NF_File_Uploads()->externals->get( $this->service );
+	}
+
+	/**
 	 * @param array $item
 	 */
 	protected function set_props( $item ) {
@@ -85,12 +92,12 @@ abstract class NF_FU_External_Abstracts_Backgroundupload extends \NF_FU_VENDOR\W
 	}
 
 	/**
-	 * @param int    $upload_id
-	 * @param string $message
+	 * @param int|null $upload_id
+	 * @param string   $message
 	 *
 	 * @return bool
 	 */
-	protected function task_error( $upload_id = null, $message ) {
+	protected function task_error( $upload_id = null, $message = '' ) {
 		error_log( $message );
 
 		// This file cannot be uploaded to the service
@@ -138,6 +145,8 @@ abstract class NF_FU_External_Abstracts_Backgroundupload extends \NF_FU_VENDOR\W
 			$data['removed_from_server'] = true;
 		}
 
+		unset( $data['chunked'] );
+
 		NF_File_Uploads()->model->update( $data['upload_id'], $data );
 		
 		return true;
@@ -170,5 +179,32 @@ abstract class NF_FU_External_Abstracts_Backgroundupload extends \NF_FU_VENDOR\W
 		return $result;
 	}
 
-	abstract protected function upload_file( $data );
+	abstract protected function chunked_upload_file( $service, $data );
+
+	/**
+	 * Upload the file either in a single request or multipart chunked upload.
+	 *
+	 * @param array $data
+	 *
+	 * @return array|bool
+	 */
+	protected function upload_file( $data ) {
+		$service = $this->get_service();
+
+		if ( isset( $data['chunked'] ) && $data['chunked'] ) {
+			return $this->chunked_upload_file( $service, $data );
+		}
+
+		$service->set_upload_file( $data['file_path'] );
+		$service->set_external_path( $data['external_path'] );
+		$service->set_external_filename( $data['external_filename'] );
+
+		$data = $service->upload_file( $data );
+
+		if ( false === $data ) {
+			return $data;
+		}
+
+		return $this->complete_upload( $data );
+	}
 }

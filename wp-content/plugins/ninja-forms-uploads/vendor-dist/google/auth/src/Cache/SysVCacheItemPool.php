@@ -170,10 +170,10 @@ class SysVCacheItemPool implements \NF_FU_VENDOR\Psr\Cache\CacheItemPoolInterfac
      */
     private function saveCurrentItems()
     {
-        $shmid = shm_attach($this->sysvKey, $this->options['memsize'], $this->options['perm']);
+        $shmid = \shm_attach($this->sysvKey, $this->options['memsize'], $this->options['perm']);
         if ($shmid !== \false) {
-            $ret = shm_put_var($shmid, $this->options['variableKey'], $this->items);
-            shm_detach($shmid);
+            $ret = \shm_put_var($shmid, $this->options['variableKey'], $this->items);
+            \shm_detach($shmid);
             return $ret;
         }
         return \false;
@@ -185,15 +185,15 @@ class SysVCacheItemPool implements \NF_FU_VENDOR\Psr\Cache\CacheItemPoolInterfac
      */
     private function loadItems()
     {
-        $shmid = shm_attach($this->sysvKey, $this->options['memsize'], $this->options['perm']);
+        $shmid = \shm_attach($this->sysvKey, $this->options['memsize'], $this->options['perm']);
         if ($shmid !== \false) {
-            $data = @shm_get_var($shmid, $this->options['variableKey']);
+            $data = @\shm_get_var($shmid, $this->options['variableKey']);
             if (!empty($data)) {
                 $this->items = $data;
             } else {
                 $this->items = [];
             }
-            shm_detach($shmid);
+            \shm_detach($shmid);
             $this->hasLoadedItems = \true;
             return \true;
         }

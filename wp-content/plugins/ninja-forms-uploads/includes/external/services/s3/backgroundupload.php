@@ -22,18 +22,12 @@ class NF_FU_External_Services_S3_Backgroundupload extends NF_FU_External_Abstrac
 	protected $bucket;
 
 	/**
-	 * @return bool|NF_FU_External_Services_S3_Service
-	 */
-	protected function get_service( ) {
-		return NF_File_Uploads()->externals->get( $this->service );
-	}
-
-	/**
-	 * @param array $data
+	 * @param NF_FU_External_Services_S3_Service $service
+	 * @param array                              $data
 	 *
 	 * @return array|bool
 	 */
-	public function upload_file( $data ) {
+	public function chunked_upload_file( $service, $data ) {
 		$service = $this->get_service();
 		$region = $service->get_region();
 		$bucket = $this->bucket;
@@ -130,7 +124,7 @@ class NF_FU_External_Services_S3_Backgroundupload extends NF_FU_External_Abstrac
 			'Bucket'      => $bucket,
 			'Key'         => $this->external_path . $this->external_filename,
 			'ContentType' => $mimeType,
-			'ACL'         => apply_filters( 'ninja_forms_uploads_s3_acl', NF_FU_External_Services_S3_Service::ACL_PUBLIC_READ ),
+			'ACL'         => apply_filters( 'ninja_forms_uploads_s3_acl', NF_FU_External_Services_S3_Service::ACL_PRIVATE ),
 		] );
 
 		return $result['UploadId'];

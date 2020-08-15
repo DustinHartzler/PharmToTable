@@ -206,7 +206,7 @@ class NF_FU_External_Services_Googledrive_Service extends NF_FU_External_Abstrac
 	 *
 	 * @return array|bool
 	 */
-	protected function upload_file( $data ) {
+	public function upload_file( $data ) {
 		$fileMetadata = $this->create_drive_file( $this->external_filename, $this->external_path  );
 
 		$content = file_get_contents( $this->upload_file );

@@ -15,20 +15,12 @@ class NF_FU_External_Services_Dropbox_Backgroundupload extends NF_FU_External_Ab
 	protected $max_chunk_size = 5242880;
 
 	/**
-	 * @return bool|NF_FU_External_Services_Dropbox_Service
-	 */
-	protected function get_service() {
-		return NF_File_Uploads()->externals->get( $this->service );
-	}
-
-	/**
-	 * @param array $data
+	 * @param NF_FU_External_Services_Dropbox_Service $service
+	 * @param array                                   $data
 	 *
 	 * @return array|bool
 	 */
-	public function upload_file( $data ) {
-		$service = $this->get_service();
-
+	public function chunked_upload_file( $service, $data ) {
 		$file = fopen( $this->upload_file, 'r' );
 
 		if ( isset( $data['file_pointer'] ) ) {

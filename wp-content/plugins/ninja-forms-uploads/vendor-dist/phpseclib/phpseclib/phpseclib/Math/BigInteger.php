@@ -312,11 +312,11 @@ class BigInteger
                 switch (\true) {
                     case \is_resource($x) && \get_resource_type($x) == 'GMP integer':
                     // PHP 5.6 switched GMP from using resources to objects
-                    case $x instanceof \NF_FU_VENDOR\GMP:
+                    case $x instanceof \GMP:
                         $this->value = $x;
                         return;
                 }
-                $this->value = gmp_init(0);
+                $this->value = \gmp_init(0);
                 break;
             case self::MODE_BCMATH:
                 $this->value = '0';
@@ -338,9 +338,9 @@ class BigInteger
             case 256:
                 switch (MATH_BIGINTEGER_MODE) {
                     case self::MODE_GMP:
-                        $this->value = \function_exists('NF_FU_VENDOR\\gmp_import') ? gmp_import($x) : gmp_init('0x' . \bin2hex($x));
+                        $this->value = \function_exists('gmp_import') ? \gmp_import($x) : \gmp_init('0x' . \bin2hex($x));
                         if ($this->is_negative) {
-                            $this->value = gmp_neg($this->value);
+                            $this->value = \gmp_neg($this->value);
                         }
                         break;
                     case self::MODE_BCMATH:
@@ -385,7 +385,7 @@ class BigInteger
                 switch (MATH_BIGINTEGER_MODE) {
                     case self::MODE_GMP:
                         $temp = $this->is_negative ? '-0x' . $x : '0x' . $x;
-                        $this->value = gmp_init($temp);
+                        $this->value = \gmp_init($temp);
                         $this->is_negative = \false;
                         break;
                     case self::MODE_BCMATH:
@@ -415,7 +415,7 @@ class BigInteger
                 }
                 switch (MATH_BIGINTEGER_MODE) {
                     case self::MODE_GMP:
-                        $this->value = gmp_init($x);
+                        $this->value = \gmp_init($x);
                         break;
                     case self::MODE_BCMATH:
                         // explicitly casting $x to a string is necessary, here, since doing $x[0] on -1 yields different
@@ -505,13 +505,13 @@ class BigInteger
         }
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
-                if (gmp_cmp($this->value, gmp_init(0)) == 0) {
+                if (\gmp_cmp($this->value, \gmp_init(0)) == 0) {
                     return $this->precision > 0 ? \str_repeat(\chr(0), $this->precision + 1 >> 3) : '';
                 }
-                if (\function_exists('NF_FU_VENDOR\\gmp_export')) {
-                    $temp = gmp_export($this->value);
+                if (\function_exists('gmp_export')) {
+                    $temp = \gmp_export($this->value);
                 } else {
-                    $temp = gmp_strval(gmp_abs($this->value), 16);
+                    $temp = \gmp_strval(\gmp_abs($this->value), 16);
                     $temp = \strlen($temp) & 1 ? '0' . $temp : $temp;
                     $temp = \pack('H*', $temp);
                 }
@@ -624,7 +624,7 @@ class BigInteger
     {
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
-                return gmp_strval($this->value);
+                return \gmp_strval($this->value);
             case self::MODE_BCMATH:
                 if ($this->value === '0') {
                     return '0';
@@ -792,7 +792,7 @@ class BigInteger
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
                 $temp = new static();
-                $temp->value = gmp_add($this->value, $y->value);
+                $temp->value = \gmp_add($this->value, $y->value);
                 return $this->_normalize($temp);
             case self::MODE_BCMATH:
                 $temp = new static();
@@ -894,7 +894,7 @@ class BigInteger
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
                 $temp = new static();
-                $temp->value = gmp_sub($this->value, $y->value);
+                $temp->value = \gmp_sub($this->value, $y->value);
                 return $this->_normalize($temp);
             case self::MODE_BCMATH:
                 $temp = new static();
@@ -995,7 +995,7 @@ class BigInteger
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
                 $temp = new static();
-                $temp->value = gmp_mul($this->value, $x->value);
+                $temp->value = \gmp_mul($this->value, $x->value);
                 return $this->_normalize($temp);
             case self::MODE_BCMATH:
                 $temp = new static();
@@ -1229,9 +1229,9 @@ class BigInteger
             case self::MODE_GMP:
                 $quotient = new static();
                 $remainder = new static();
-                list($quotient->value, $remainder->value) = gmp_div_qr($this->value, $y->value);
-                if (gmp_sign($remainder->value) < 0) {
-                    $remainder->value = gmp_add($remainder->value, gmp_abs($y->value));
+                list($quotient->value, $remainder->value) = \gmp_div_qr($this->value, $y->value);
+                if (\gmp_sign($remainder->value) < 0) {
+                    $remainder->value = \gmp_add($remainder->value, \gmp_abs($y->value));
                 }
                 return array($this->_normalize($quotient), $this->_normalize($remainder));
             case self::MODE_BCMATH:
@@ -1423,7 +1423,7 @@ class BigInteger
         }
         if (MATH_BIGINTEGER_MODE == self::MODE_GMP) {
             $temp = new static();
-            $temp->value = gmp_powm($this->value, $e->value, $n->value);
+            $temp->value = \gmp_powm($this->value, $e->value, $n->value);
             return $this->_normalize($temp);
         }
         if ($this->compare(new static()) < 0 || $this->compare($n) > 0) {
@@ -2082,7 +2082,7 @@ class BigInteger
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
                 $temp = new static();
-                $temp->value = gmp_invert($this->value, $n->value);
+                $temp->value = \gmp_invert($this->value, $n->value);
                 return $temp->value === \false ? \false : $this->_normalize($temp);
         }
         static $zero, $one;
@@ -2136,7 +2136,7 @@ class BigInteger
     {
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
-                \extract(gmp_gcdext($this->value, $n->value));
+                \extract(\gmp_gcdext($this->value, $n->value));
                 return array('gcd' => $this->_normalize(new static($g)), 'x' => $this->_normalize(new static($s)), 'y' => $this->_normalize(new static($t)));
             case self::MODE_BCMATH:
                 // it might be faster to use the binary xGCD algorithim here, as well, but (1) that algorithim works
@@ -2247,7 +2247,7 @@ class BigInteger
         $temp = new static();
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
-                $temp->value = gmp_abs($this->value);
+                $temp->value = \gmp_abs($this->value);
                 break;
             case self::MODE_BCMATH:
                 $temp->value = \bccomp($this->value, '0', 0) < 0 ? \substr($this->value, 1) : $this->value;
@@ -2279,7 +2279,7 @@ class BigInteger
     {
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
-                $r = gmp_cmp($this->value, $y->value);
+                $r = \gmp_cmp($this->value, $y->value);
                 if ($r < -1) {
                     $r = -1;
                 }
@@ -2336,7 +2336,7 @@ class BigInteger
     {
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
-                return gmp_cmp($this->value, $x->value) == 0;
+                return \gmp_cmp($this->value, $x->value) == 0;
             default:
                 return $this->value === $x->value && $this->is_negative == $x->is_negative;
         }
@@ -2374,7 +2374,7 @@ class BigInteger
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
                 $temp = new static();
-                $temp->value = gmp_and($this->value, $x->value);
+                $temp->value = \gmp_and($this->value, $x->value);
                 return $this->_normalize($temp);
             case self::MODE_BCMATH:
                 $left = $this->toBytes();
@@ -2405,7 +2405,7 @@ class BigInteger
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
                 $temp = new static();
-                $temp->value = gmp_or($this->value, $x->value);
+                $temp->value = \gmp_or($this->value, $x->value);
                 return $this->_normalize($temp);
             case self::MODE_BCMATH:
                 $left = $this->toBytes();
@@ -2437,7 +2437,7 @@ class BigInteger
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
                 $temp = new static();
-                $temp->value = gmp_xor(gmp_abs($this->value), gmp_abs($x->value));
+                $temp->value = \gmp_xor(\gmp_abs($this->value), \gmp_abs($x->value));
                 return $this->_normalize($temp);
             case self::MODE_BCMATH:
                 $left = $this->toBytes();
@@ -2508,9 +2508,9 @@ class BigInteger
             case self::MODE_GMP:
                 static $two;
                 if (!isset($two)) {
-                    $two = gmp_init('2');
+                    $two = \gmp_init('2');
                 }
-                $temp->value = gmp_div_q($this->value, gmp_pow($two, $shift));
+                $temp->value = \gmp_div_q($this->value, \gmp_pow($two, $shift));
                 break;
             case self::MODE_BCMATH:
                 $temp->value = \bcdiv($this->value, \bcpow('2', $shift, 0), 0);
@@ -2540,9 +2540,9 @@ class BigInteger
             case self::MODE_GMP:
                 static $two;
                 if (!isset($two)) {
-                    $two = gmp_init('2');
+                    $two = \gmp_init('2');
                 }
-                $temp->value = gmp_mul($this->value, gmp_pow($two, $shift));
+                $temp->value = \gmp_mul($this->value, \gmp_pow($two, $shift));
                 break;
             case self::MODE_BCMATH:
                 $temp->value = \bcmul($this->value, \bcpow('2', $shift, 0), 0);
@@ -2752,7 +2752,7 @@ class BigInteger
         // gmp_nextprime() requires PHP 5 >= 5.2.0 per <http://php.net/gmp-nextprime>.
         if (MATH_BIGINTEGER_MODE == self::MODE_GMP && \extension_loaded('gmp')) {
             $p = new static();
-            $p->value = gmp_nextprime($x->value);
+            $p->value = \gmp_nextprime($x->value);
             if ($p->compare($max) <= 0) {
                 return $p;
             }
@@ -2806,7 +2806,7 @@ class BigInteger
     {
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
-                gmp_setbit($this->value, 0);
+                \gmp_setbit($this->value, 0);
                 break;
             case self::MODE_BCMATH:
                 if ($this->value[\strlen($this->value) - 1] % 2 == 0) {
@@ -2888,7 +2888,7 @@ class BigInteger
         // ie. isEven() or !isOdd()
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
-                return gmp_prob_prime($this->value, $t) != 0;
+                return \gmp_prob_prime($this->value, $t) != 0;
             case self::MODE_BCMATH:
                 if ($this->value === '2') {
                     return \true;
@@ -3053,13 +3053,13 @@ class BigInteger
         switch (MATH_BIGINTEGER_MODE) {
             case self::MODE_GMP:
                 if ($this->bitmask !== \false) {
-                    $flip = gmp_cmp($result->value, gmp_init(0)) < 0;
+                    $flip = \gmp_cmp($result->value, \gmp_init(0)) < 0;
                     if ($flip) {
-                        $result->value = gmp_neg($result->value);
+                        $result->value = \gmp_neg($result->value);
                     }
-                    $result->value = gmp_and($result->value, $result->bitmask->value);
+                    $result->value = \gmp_and($result->value, $result->bitmask->value);
                     if ($flip) {
-                        $result->value = gmp_neg($result->value);
+                        $result->value = \gmp_neg($result->value);
                     }
                 }
                 return $result;

@@ -126,6 +126,27 @@ abstract class NF_FU_External_Abstracts_Service {
 	}
 
 	/**
+	 * @param string $upload_file
+	 */
+	public function set_upload_file( $upload_file ) {
+		$this->upload_file = $upload_file;
+	}
+
+	/**
+	 * @param string $external_path
+	 */
+	public function set_external_path( $external_path ) {
+		$this->external_path = $external_path;
+	}
+
+	/**
+	 * @param string $external_filename
+	 */
+	public function set_external_filename( $external_filename ) {
+		$this->external_filename = $external_filename;
+	}
+
+	/**
 	 * Get settings
 	 *
 	 * @return array
@@ -261,7 +282,9 @@ abstract class NF_FU_External_Abstracts_Service {
 		$this->external_filename = $this->get_filename_external( $upload_timestamp );
 
 		if ( $this->should_background_upload( false, $data['file_path'], $field, $form_id  ) ) {
-			$this->init_background_upload( $data );
+			$chunked = $this->is_file_larger_than_max_chunk( $data['file_path'] );
+
+			$this->init_background_upload( $data, $chunked );
 
 			if ( $remove_from_server ) {
 				$data['defer_remove_from_server'] = $remove_from_server;
@@ -340,7 +363,18 @@ abstract class NF_FU_External_Abstracts_Service {
 			return $pre;
 		}
 
-		$file_size = NF_FU_Helper::get_file_size( $file );
+		return $this->is_file_larger_than_max_chunk( $file );
+	}
+
+	/**
+	 * Is the file larger than allowed in a single upload by the service.
+	 *
+	 * @param string $file_path
+	 *
+	 * @return bool
+	 */
+	protected function is_file_larger_than_max_chunk( $file_path ) {
+		$file_size = NF_FU_Helper::get_file_size( $file_path );
 
 		if ( $file_size < apply_filters( 'ninja_forms_uploads_max_chunk_size_' . $this->slug, $this->max_single_upload_file_size ) ) {
 			return false;
@@ -355,25 +389,31 @@ abstract class NF_FU_External_Abstracts_Service {
 	 * @return array
 	 */
 	protected function prepare_data_for_background_upload() {
-		$item = array(
+		return array(
 			'upload_file'       => $this->upload_file,
 			'external_path'     => $this->external_path,
 			'external_filename' => $this->external_filename,
 		);
-
-		return $item;
 	}
 
 	/**
 	 * Pass the file data to a background process to upload to the service.
-	 * 
+	 *
 	 * @param array $data
+	 * @param bool  $chunked Should we upload in chunks
 	 */
-	protected function init_background_upload( $data ) {
-		$item         = $this->prepare_data_for_background_upload();
+	protected function init_background_upload( $data, $chunked = true ) {
+		$item = $this->prepare_data_for_background_upload();
+
+		$data['chunked'] = $chunked;
+		if ( ! $chunked ) {
+			$data['external_path']     = $this->external_path;
+			$data['external_filename'] = $this->external_filename;
+		}
+
 		$item['data'] = $data;
 
-		$this->upload_process->push_to_queue( $item )->save()->dispatch();
+		$this->upload_process->push_to_queue( $item )->save()->data( array() )->dispatch();
 	}
 
 	/**
@@ -383,7 +423,7 @@ abstract class NF_FU_External_Abstracts_Service {
 	 *
 	 * @return array|bool
 	 */
-	protected abstract function upload_file( $data );
+	public abstract function upload_file( $data );
 
 	/**
 	 * Get the service URL to the file

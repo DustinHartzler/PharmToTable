@@ -17,5 +17,9 @@ Author URI: https://deliciousbrains.com/
 GitHub Plugin URI: https://github.com/A5hleyRich/wp-background-processing
 GitHub Branch: master
 */
-require_once \NF_FU_VENDOR\plugin_dir_path(__FILE__) . 'classes/wp-async-request.php';
-require_once \NF_FU_VENDOR\plugin_dir_path(__FILE__) . 'classes/wp-background-process.php';
+if (!\class_exists('NF_FU_VENDOR\\WP_Async_Request')) {
+    require_once \NF_FU_VENDOR\plugin_dir_path(__FILE__) . 'classes/wp-async-request.php';
+}
+if (!\class_exists('NF_FU_VENDOR\\WP_Background_Process')) {
+    require_once \NF_FU_VENDOR\plugin_dir_path(__FILE__) . 'classes/wp-background-process.php';
+}
