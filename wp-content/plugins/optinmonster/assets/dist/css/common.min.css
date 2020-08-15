@@ -1,0 +1,153 @@
+.optinmonster_page_optin-monster-about * {
+  font-family: 'proxima-nova'; }
+
+.optinmonster_page_optin-monster-about .dashicons {
+  font-family: 'dashicons'; }
+
+.optinmonster_page_optin-monster-about p, .optinmonster_page_optin-monster-about ul {
+  color: #60656f; }
+
+.optinmonster_page_optin-monster-about h1, .optinmonster_page_optin-monster-about h2, .optinmonster_page_optin-monster-about h3, .optinmonster_page_optin-monster-about h4, .optinmonster_page_optin-monster-about h5 {
+  color: #41495b; }
+
+.optinmonster_page_optin-monster-about h1 {
+  font-weight: 400; }
+
+.optinmonster_page_optin-monster-about p, .optinmonster_page_optin-monster-about li {
+  font-size: 15px;
+  margin: 10px 0;
+  font-weight: 400; }
+
+.optinmonster_page_optin-monster-about #wpbody-content > .notice {
+  margin: 28px 30px 30px; }
+
+.optinmonster_page_optin-monster-about .omapi-box {
+  border: 0;
+  border-radius: 5px; }
+
+.omapi-plugin-recommendations {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin: 30px; }
+  .omapi-plugin-recommendations .omapi-plugin-recommendation {
+    width: 49%;
+    background-color: #fff;
+    border-radius: 5px;
+    margin: 0 0 40px 0; }
+    .omapi-plugin-recommendations .omapi-plugin-recommendation__name {
+      font-size: 22px; }
+    .omapi-plugin-recommendations .omapi-plugin-recommendation__details {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-orient: horizontal;
+      -webkit-box-direction: normal;
+          -ms-flex-direction: row;
+              flex-direction: row;
+      padding: 30px 30px 15px;
+      border-bottom: 2px solid #eee; }
+      .omapi-plugin-recommendations .omapi-plugin-recommendation__details h5 {
+        font-weight: 600;
+        margin: 0 0 20px 0; }
+    .omapi-plugin-recommendations .omapi-plugin-recommendation__text-wrapper {
+      margin-left: 30px; }
+    .omapi-plugin-recommendations .omapi-plugin-recommendation__status {
+      font-size: 15px; }
+    .omapi-plugin-recommendations .omapi-plugin-recommendation__description {
+      color: #41495B;
+      line-height: 1.75; }
+    .omapi-plugin-recommendations .omapi-plugin-recommendation__actions {
+      padding: 30px;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+      -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+              justify-content: space-between; }
+    .omapi-plugin-recommendations .omapi-plugin-recommendation img {
+      padding: 10px;
+      border: 1px solid #eee;
+      background-color: #eee;
+      float: left;
+      max-width: 75px; }
+
+.omapi-box {
+  margin: 30px 30px;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #DDDDDD;
+  line-height: 2; }
+  .omapi-box--flex {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap; }
+  .omapi-box__half {
+    width: 50%;
+    min-width: 400px; }
+  .omapi-box__image {
+    width: 100%; }
+    .omapi-box__image img {
+      display: block;
+      width: 400px;
+      margin: 0 auto;
+      border-radius: 5px; }
+  .omapi-box__image-subtitle {
+    margin-top: 10px;
+    line-height: 1.3;
+    color: #41495B;
+    text-align: center; }
+
+/* Static Banner */
+.omapi-screen .omapi-static-banner {
+  background: #0d82df;
+  height: 50px;
+  line-height: 1;
+  margin-left: -20px; }
+
+.omapi-static-banner .logo-wrapper {
+  padding: 12px 0;
+  line-height: 1;
+  display: inline-block; }
+
+.omapi-static-banner .omapi-svg-logo {
+  height: 24px;
+  width: 159px; }
+
+.logo-wrapper span.omapi-logo-version {
+  color: #fff;
+  vertical-align: middle;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  display: inline-block; }
+
+.omapi-screen .static-menu {
+  float: right; }
+
+.omapi-screen .static-menu ul {
+  margin: 0; }
+
+.omapi-screen .static-menu ul li {
+  display: inline-block;
+  padding: 18px 0;
+  margin: 0;
+  font-size: 14px; }
+
+.omapi-screen .static-menu ul li:last-of-type {
+  padding-right: 0; }
+
+.omapi-screen .static-menu ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: .04em;
+  padding: 5px 10px; }
