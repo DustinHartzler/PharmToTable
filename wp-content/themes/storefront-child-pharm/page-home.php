@@ -18,7 +18,7 @@
     <title>PharmToTable - </title>
 
     <!-- ========== Favicon Icon ========== -->
-    <link rel="shortcut icon" href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/favicon-small.png" type="image/x-icon">
 
     <!-- ========== Start Stylesheet ========== -->
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -156,7 +156,7 @@
                             </div>
                             <div class="content">
                                 <h4>The top 3 drivers for chronic disease</h4>
-                                <p>Sign up to our list and we'll send you the video.</p>
+                                <p>Sign up to our list and we'll send you the videos.</p>
                             </div>
                         </div>
                     </div>
@@ -188,7 +188,7 @@
                                     <h3>Consulted by experienced doctors</h3>
                                     <p>
                                     Looking to learn more about how our team can meet your health goals? Sign up for our Introduction to Functional Medicine Orientation. Secure your spot in our next class. </p>
-                                    <a class="btn btn-theme border btn-md" href="https://pharm.test/product/introduction-to-functional-medicine-orientation/">Sign up for the Class</a>
+                                    <a class="btn btn-theme border btn-md" href="/product/introduction-to-functional-medicine-orientation/">Sign up for the Class</a>
                                 </div>
                             </div>
                             <!-- End Single Item -->
@@ -197,9 +197,8 @@
                             <div id="tab2" class="tab-pane fade">
                                 <div class="info title">
                                     <h3>Your First Appointment</h3>
-                                    <p>
-                                    Ready to start your Functional Medicine journey? We want to help you feel better as soon as possible. To do that, we need to understand your whole health story. Book your appointment and get started on your health history forms right away! Forms must be completed at least  hours before your appointment. Book your appointment now.
-                                    </p>
+                                    <p>Ready to start your Functional Medicine journey? We want to help you feel better as soon as possible. To do that, we need to understand your whole health story. Book your appointment and get started on your health history forms right away! Forms must be completed at least  hours before your appointment. Book your appointment now.</p>
+                                    <a class="btn btn-theme border btn-md" href="/provider/">Book an Appointment Today</a>
                                 </div>
                             </div>
                             <!-- End Single Item -->

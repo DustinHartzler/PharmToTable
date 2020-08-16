@@ -171,7 +171,7 @@
     <div class="doctor-area bg-gray default-padding bottom-less">
         <div class="container">
             <div class="row">
-            Healthcare Professionals are licensed by state. Please click on the state below to find a team member in your state. If we do not have a licensed pharmacist in your state, you can check out our expanded network <a href="https://PharmToTable.Azova.com">here</a>.
+            <h4>Healthcare Professionals are licensed by state. Please click on the state below to find a team member in your state. If we do not have a licensed pharmacist in your state, you can check out our expanded network <a href="https://PharmToTable.Azova.com">here</a>.</h4>
                 <div class="post-tags">
                     Filter by State:
                     <ul class="post-categories">
@@ -237,9 +237,9 @@
                                 </div>
                             </div>
                             <div class="info">
-                            <a href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>">
-                                <h4><?php the_title();?></h4>
-                                <h5><?php echo get_post_meta($post->ID, 'provider_credentials', true); ?></h5>
+                                <a href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>">
+                                    <h4><?php the_title();?></h4>
+                                    <h5><?php echo get_post_meta($post->ID, 'provider_credentials', true); ?></h5>
                                 </a>
                                 <h6>Licensed in: </h6>
                                 <?php display_member_taxonomy_terms($post->ID); ?>
