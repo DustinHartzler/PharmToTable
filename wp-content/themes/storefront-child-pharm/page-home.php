@@ -249,7 +249,7 @@
                                 <p class="services">
                                 You may have a few well managed chronic conditions, but are looking for recommendations on how to improve health and stay healthy for the long-haul. Receive personalized recommendations to enhance your health span and optimize your nutrient status.
                                 </p>
-                                <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
+
                             </div>
                         </div>
                         <!-- End Single Item -->
@@ -265,7 +265,7 @@
                                 <p class="services">
                                 Too many medications? Our PharmToTable pharmacists are specially trained to make sure your medication regimen is as safe, effective and affordable as possible, using a root-cause approach. We work with your health care team and make recommendations to optimize your medications and help you simplify your life!
                                 </p>
-                                <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
+
                             </div>
                         </div>
                         <!-- End Single Item -->
@@ -281,7 +281,7 @@
                                 <p class="services">
                                 A deep dive into your story to address the root-cause of your symptoms.  This starts by mapping your personal timeline, and health history, then your provider will make recommendations for testing, lifestyle modifications, and possibly nutrient supplementation to put you on your journey to health.
                                 </p>
-                                <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
+
                             </div>
                         </div>
                         <!-- End Single Item -->
@@ -297,7 +297,7 @@
                                 <p class="services">
                                 Low-carb? Paleo? Low FODMAP? There are way too many dietary recommendations out there - Which one is right for you? Let PharmToTable nutrition therapy providers lead the way! Whether it’s a specific diet or more general advice, each provider can give you recommendations and help with meal plans that are right for YOU!
                                 </p>
-                                <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
+
                             </div>
                         </div>
                         <!-- End Single Item -->
@@ -313,7 +313,7 @@
                                 <p>
                                 Whether you’re interested in weight loss, better nutrition or better overall health and energy, lasting changes are possible with a PharmToTable Health Coach. A health coach will work with you one-on-one to help you define your goals, pinpoint obstacles and make powerful, lasting changes in your life. Coaching is one of the best ways to help make healthy changes stick!
                                 </p>
-                                <a class="btn btn-theme border circle btn-md" href="#">Read More</a>
+
                             </div>
                         </div>
                         <!-- End Single Item -->

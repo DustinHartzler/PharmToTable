@@ -171,17 +171,17 @@
                 <div class="col-md-8">
                     <div class="info">
                         <h2><?php the_title();?></h2>
-                        <h4><?php echo get_post_meta($post->ID, 'provider_credentials', true); ?></h4>
+                        <h4><?php echo get_post_meta($post->ID, 'provider_credentials', true); ?>
                         <?php   // Get terms for post
  $terms = get_the_terms( $post->ID , 'state_category' );
  // Loop over each item since it's an array
  if ( $terms != null ){
  foreach( $terms as $term ) {
  // Print the name method from $term which is an OBJECT
- print $term->slug ;
+ //print $term->slug ; echo ', ';
  // Get rid of the other data stored in the object, since it's not needed
  unset($term);
-} } ?>
+} } ?> </h4>
                         <?php the_content(); ?>
                         <a class="btn btn-theme border btn-md" href="<?php echo get_post_meta($post->ID, 'provider_azova', true); ?>" target="_blank">Make Appointment</a>
                          <!-- Tab Nav -->

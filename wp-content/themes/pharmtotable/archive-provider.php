@@ -24,7 +24,7 @@
     <div class="doctor-area bg-gray default-padding bottom-less">
         <div class="container">
             <div class="row">
-            Healthcare Professionals are licensed by state. Please click on the state below to find a team member in your state. If we do not have a licensed pharmacist in your state, you can check out our expanded network <a href="https://PharmToTable.Azova.com">here</a>.
+            <h4>Healthcare Professionals are licensed by state. Please click on the state below to find a team member in your state. If we do not have a licensed pharmacist in your state, you can check out our expanded network <a href="https://PharmToTable.Azova.com">here</a>.</h4>
                 <div class="post-tags">
                     Filter by State:
                     <ul class="post-categories">
