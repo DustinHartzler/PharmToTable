@@ -77,8 +77,7 @@
                 <!-- Start Atribute Navigation -->
                 <div class="attr-nav">
                     <ul>
-                        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
-                        <li class="quote-btn"><a href="#">Make Appoinment</a></li>
+                        <li class="quote-btn"><a href="#">Make Appointment</a></li>
                     </ul>
                 </div>
                 <!-- End Atribute Navigation -->

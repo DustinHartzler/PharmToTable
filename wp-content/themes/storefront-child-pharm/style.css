@@ -43,7 +43,7 @@ Images License: GNU General Public License v2 or later
 
 
 ul {
-    margin: 0 0 0.5em 1.0em;
+    margin: 0 0 0.5em 0em;
     list-style: none;
 }
 
@@ -79,4 +79,8 @@ footer form {
 button.menu-toggle,
 button.menu-toggle:hover {
     background-color: #ffffff;
+}
+
+.breadcrumb-area {
+    padding: 100px 0;
 }

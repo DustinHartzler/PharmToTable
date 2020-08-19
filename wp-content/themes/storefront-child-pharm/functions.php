@@ -245,7 +245,18 @@ function custom_remove_footer_credit () {
     add_action( 'storefront_after_footer', 'custom_storefront_credit', 20 );
 }
 
+//Don't Load WooCommerce CSS
 add_filter('storefront_customizer_css', '__return_false');
+
+//No related posts for providers
+function winwar_no_related_posts( $options ) {
+    if ( !is_singular( 'post' ) ) {
+        $options['enabled'] = false;
+    }
+    return $options;
+}
+add_filter( 'jetpack_relatedposts_filter_options', 'winwar_no_related_posts' );
+
 
 function custom_storefront_credit() {
     ?>
