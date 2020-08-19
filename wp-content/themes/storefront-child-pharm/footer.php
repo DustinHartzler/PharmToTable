@@ -33,13 +33,14 @@
                 <h4>Subscribe For Updates</h4>
                 <h2>Let’s Find A Pharmacist Near You.</h2>
                 <form action="#">
+                <a href="https://app.monstercampaigns.com/c/g9aoffuqh8sc1kutmuzw/" target="_blank">
                     <div class="input-group stylish-input-group">
                         <button type="submit">
-                        <a href="https://app.monstercampaigns.com/c/g9aoffuqh8sc1kutmuzw/" target="_blank">
                         Sign Up for Email Updates <i class="fa fa-paper-plane"></i>
-                        </a>
+
                         </button>
                     </div>
+                    </a>
                 </form>
                 <?php } ?>
             </div>
