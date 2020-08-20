@@ -47,23 +47,7 @@ ul {
     list-style: none;
 }
 
-@media (min-width: 768px) {
-    .col-full {
-        max-width: 77.499em;
-    }
 
-    .right-sidebar .content-area {
-        width: 64%;
-        margin-right: 2.5%
-    }
-
-    .container {
-        width: 1170px;
-        padding-right: 15px;
-        padding-left: 15px;
-        margin: 0 auto;
-    }
-}
 
 footer form {
     width: 75% !important;
@@ -82,5 +66,5 @@ button.menu-toggle:hover {
 }
 
 .breadcrumb-area {
-    padding: 100px 0;
+    padding: 100px 0 !important;
 }

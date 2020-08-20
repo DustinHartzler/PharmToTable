@@ -257,6 +257,24 @@ function winwar_no_related_posts( $options ) {
 }
 add_filter( 'jetpack_relatedposts_filter_options', 'winwar_no_related_posts' );
 
+// WooCommerce pages full-width
+add_action( 'wp', 'woa_remove_sidebar_shop_page' );
+function woa_remove_sidebar_shop_page() {
+
+if ( is_shop() || is_tax( 'product_cat' ) || get_post_type() == 'product' ) {
+
+remove_action( 'storefront_sidebar', 'storefront_get_sidebar', 10 );
+add_filter( 'body_class', 'woa_remove_sidebar_class_body', 10 );
+}
+}
+
+function woa_remove_sidebar_class_body( $wp_classes ) {
+
+$wp_classes[] = 'page-template-template-fullwidth-php';
+return $wp_classes;
+}
+
+
 
 function custom_storefront_credit() {
     ?>
