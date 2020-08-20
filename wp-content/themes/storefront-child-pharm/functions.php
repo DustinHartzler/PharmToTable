@@ -274,6 +274,10 @@ $wp_classes[] = 'page-template-template-fullwidth-php';
 return $wp_classes;
 }
 
+//Remove Storefront Styling
+add_filter( 'storefront_customizer_enabled', '__return_false' );
+add_filter( 'storefront_customizer_css', '__return_false' );
+add_filter( 'storefront_customizer_woocommerce_css', '__return_false' );
 
 
 function custom_storefront_credit() {
