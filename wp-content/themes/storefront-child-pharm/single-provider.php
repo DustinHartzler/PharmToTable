@@ -224,9 +224,6 @@
                             <div id="tab3" class="tab-pane fade">
                                 <div class="info title">
                                     <h3>Schedule of working hours</h3>
-                                    <p>
-                                        Calling nothing end fertile for venture way boy. Esteem spirit temper too say adieus who direct esteem. It esteems luckily mr or picture placing drawing no. Apartments frequently or motionless on reasonable projecting expression. Way mrs end gave tall walk fact bed.
-                                    </p>
                                     <ul>
                                         <?php if( !empty ( $day1 ) ){ ?>
                                             <li> <span> <?php echo get_post_meta($post->ID, 'provider_day1', true); ?>:  </span>
