@@ -4,7 +4,7 @@ Tags: woocommerce, payment, payment request, credit card, automattic
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 7.0
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,14 @@ You can read our Terms of Service [here](https://en.wordpress.com/tos).
 4. Manage Disputes
 
 == Changelog ==
+
+= 1.3.0 - 2020-08-17 =
+* Add - Support for saved cards.
+* Add - Search bar for transactions.
+* Fix - Redirect to WC core onboarding instead of WC Payments onboarding when appropriate.
+* Fix - Creating an account during checkout with 3DS cards.
+* Fix - Missing payment statuses for certain disputes.
+* Fix - Missing translators comments.
 
 = 1.2.0 - 2020-07-20 =
 * Add - 3DS support when using the pay for order page
