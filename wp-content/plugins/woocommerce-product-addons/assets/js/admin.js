@@ -172,10 +172,10 @@ jQuery( function( $ ) {
 					$( this ).removeClass( 'wc-pao-error' );
 					$( '.wc-pao-error-message' ).remove();
 				} )
-				.on( 'change', 'select.wc-pao-addon-type-select', function() {
+				.on( 'change', 'select.wc-pao-addon-type-select', function( event ) {
 					var selectedValue = $( this ).val(),
 						parent        = $( this ).parents( '.wc-pao-addon' ),
-						selectedName  = $( this ).context.selectedOptions[0].innerHTML,
+						selectedName  = event.target.selectedOptions[0].innerHTML,
 						restrictionName;
 
 					// Update selected type label.

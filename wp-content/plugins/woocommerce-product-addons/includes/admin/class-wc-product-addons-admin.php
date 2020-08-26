@@ -470,7 +470,7 @@ class WC_Product_Addons_Admin {
 		}
 
 		if ( ! empty( $_POST['import_product_addon'] ) ) {
-			$import_addons = maybe_unserialize( maybe_unserialize( stripslashes( trim( $_POST['import_product_addon'] ) ) ) );
+			$import_addons = maybe_unserialize( strip_tags( stripslashes( trim( $_POST['import_product_addon'] ) ) ) );
 
 			if ( is_array( $import_addons ) && sizeof( $import_addons ) > 0 ) {
 				$valid = true;

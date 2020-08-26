@@ -49,7 +49,7 @@ jQuery( document ).ready( function($) {
 
 		if ( typeof( variation.display_price ) !== 'undefined' ) {
 			$totals.data( 'price', variation.display_price );
-		} else if ( $( variation.price_html ).find('.amount:last').size() ) {
+		} else if ( $( variation.price_html ).find('.amount:last').length ) {
 			product_price = $( variation.price_html ).find('.amount:last').text();
 			product_price = product_price.replace( woocommerce_addons_params.currency_format_symbol, '' );
 			product_price = product_price.replace( woocommerce_addons_params.currency_format_thousand_sep, '' );
