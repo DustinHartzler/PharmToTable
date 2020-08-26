@@ -199,9 +199,10 @@ class OMAPI_Refresh {
 	 * @return WP_Error|bool True if successful.
 	 */
 	public function sync( $campaign_id, $is_legacy ) {
-		$path = "for-wp/{$campaign_id}";
+		$time = time();
+		$path = "for-wp/{$campaign_id}?t={$time}";
 		if ( $is_legacy ) {
-			$path .= '?legacy=true';
+			$path .= '&legacy=true';
 		}
 
 		$this->api = OMAPI_Api::build( 'v1', $path, 'GET' );

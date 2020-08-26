@@ -188,7 +188,7 @@ class OMAPI_Actions {
 	 */
 	public function cookies() {
 
-		$optins = $this->base->get_optins();
+		$optins = $this->base->get_optins( array( 'post_status' => 'any' ) );
 		if ( ! empty( $optins ) ) {
 			foreach ( (array) $optins as $optin ) {
 				if ( $optin ) {

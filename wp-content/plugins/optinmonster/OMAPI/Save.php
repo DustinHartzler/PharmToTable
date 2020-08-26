@@ -396,7 +396,7 @@ class OMAPI_Save {
 		}
 
 		// Loop through all of the local optins so we can try to match and update.
-		$local_optins = $this->base->get_optins();
+		$local_optins = $this->base->get_optins( array( 'post_status' => 'any' ) );
 		if ( ! empty( $local_optins ) ) {
 			$this->sync_optins( $local_optins, $optins, $enabled );
 		} else {
@@ -453,7 +453,12 @@ class OMAPI_Save {
 		// If we still have optins, they are new and we need to add them.
 		if ( ! empty( $remote_optins ) ) {
 			foreach ( (array) $remote_optins as $slug => $optin ) {
-				$this->new_optin( $slug, $optin, $enabled );
+				$local = $this->base->get_optin_by_slug( $slug );
+				if ( $local ) {
+					$this->update_optin( $local, $optin );
+				} else {
+					$this->new_optin( $slug, $optin, $enabled );
+				}
 			}
 		}
 	}

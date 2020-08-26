@@ -5,11 +5,11 @@
  * Description: OptinMonster is the best WordPress popup plugin that helps you grow your email list and sales with email popups, exit intent popups, floating bars and more!
  * Author:      OptinMonster Team
  * Author URI:  https://optinmonster.com
- * Version:     1.9.11
+ * Version:     1.9.14
  * Text Domain: optin-monster-api
  * Domain Path: languages
  * WC requires at least: 3.2.0
- * WC tested up to:      4.2.2
+ * WC tested up to:      4.4.1
  *
  * OptinMonster is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +62,7 @@ class OMAPI {
 	 *
 	 * @var string
 	 */
-	public $version = '1.9.11';
+	public $version = '1.9.14';
 
 	/**
 	 * The name of the plugin.
@@ -242,6 +242,9 @@ class OMAPI {
 
 		// Hide the unrelated admin notices.
 		add_action( 'admin_print_scripts', array( $this, 'hide_unrelated_admin_notices' ) );
+
+		// PHP version check.
+		add_action( 'admin_init', array( $this, 'check_php_version' ) );
 
 		// Filter the WooCommerce category/tag REST API responses.
 		add_filter( 'woocommerce_rest_prepare_product_cat', 'OMAPI_WooCommerce::add_category_base_to_api_response' );
@@ -887,6 +890,58 @@ class OMAPI {
 				}
 			}
 		}
+	}
+
+	public function check_php_version() {
+
+		// Display for PHP below 5.6
+		if ( version_compare( PHP_VERSION, '5.5', '>=' ) ) {
+			return;
+		}
+
+		// Display for admins only.
+		if ( ! is_super_admin() ) {
+			return;
+		}
+
+		// Display on Dashboard page only.
+		if ( isset( $GLOBALS['pagenow'] ) && 'index.php' !== $GLOBALS['pagenow'] ) {
+			return;
+		}
+
+		// Do not double up on WPForms notice.
+		if ( function_exists( 'wpforms_check_php_version' ) ) {
+			return;
+		}
+
+		// Display the notice, finally.
+		echo '<div id="message" class="notice notice-error">' .
+		'<p>' .
+		sprintf(
+			wp_kses(
+				/* translators: %1$s - OptinMonster API plugin name; %2$s - optinmonster.com URL to a related doc. */
+				__( 'Your site is running an outdated version of PHP that is no longer supported and may cause issues with the %1$s plugin. <a href="%2$s" target="_blank" rel="noopener noreferrer">Read more</a> for additional information.', 'optin-monster-api' ),
+				array(
+					'a' => array(
+						'href'   => array(),
+						'target' => array(),
+						'rel'    => array(),
+					),
+				)
+			),
+			'<strong>OptinMonster API</strong>',
+			'https://optinmonster.com/docs/supported-php-version/'
+		) .
+		'<br><br><em>' .
+		wp_kses(
+			__( '<strong>Please Note:</strong> Support for PHP 5.5 will be discontinued in 2020. After this, if no further action is taken, OptinMonster functionality will be disabled.', 'optin-monster-api' ),
+			array(
+				'strong' => array(),
+				'em'     => array(),
+			)
+		) .
+		'</em></p>' .
+		'</div>';
 	}
 
 	/**

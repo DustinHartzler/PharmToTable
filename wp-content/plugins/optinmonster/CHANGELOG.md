@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to the OptinMonster plugin will be documented in this file.
 
+### 1.9.14
+* Fixed a bug that occasionally prevented changes in campaigns via the OptinMonster App to not properly sync to the plugin, due to cached responses.
+
+### 1.9.13
+* Fixed a bug that caused campaigns to be incorrectly referenced in the admin dashboard.
+
+### 1.9.12
+* Fixed a bug where the `Access-Control-Allow-Headers` was being improperly reset for REST requests.
+
 ### 1.9.11
 * Fixed a bug that caused too many redirects in the admin when clicking on certain plugin settings links.
 * Removed a plugin action link that was not used.

@@ -57,7 +57,7 @@ class OMAPI_Support {
 	 */
 	public function get_campaign_data( $format = 'raw' ) {
 
-		$campaigns = $this->base->get_optins();
+		$campaigns = $this->base->get_optins( array( 'post_status' => 'any' ) );
 		$data      = array();
 
 		if ( empty( $campaigns ) ) {

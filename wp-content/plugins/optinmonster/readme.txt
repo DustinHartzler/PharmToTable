@@ -2,9 +2,9 @@
 Contributors: optinmonster, griffinjt, smub
 Tags: marketing, popups, popup builder, newsletter, conversion, optin forms, forms, subscribers, exit intent popup, email marketing, crm, popup maker, popup plugin, cart abandonment, spin a wheel popup, conversion optimization, a/b testing, email opt-in, retargeting, ecommerce, cro, lightbox, promotion, shipping bar, announcement bar, advertising, mailing list, popup slide-in
 Requires at least: 4.7.0
-Tested up to: 5.4.2
+Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 1.9.11
+Stable tag: 1.9.14
 License: GNU General Public License v2.0 or later
 
 Create popups, opt-in forms, & floating bars to get more email newsletter subscribers, leads, and increase sales conversion - #1 marketing popup plugin.
@@ -471,6 +471,15 @@ Syed Balkhi
 
 **Most Recent Changes:**
 
+= 1.9.14 =
+* Fixed a bug that occasionally prevented changes in campaigns via the OptinMonster App to not properly sync to the plugin, due to cached responses.
+
+= 1.9.13 =
+* Fixed a bug that caused campaigns to be incorrectly referenced in the admin dashboard.
+
+= 1.9.12 =
+* Fixed a bug where the `Access-Control-Allow-Headers` was being improperly reset for REST requests.
+
 = 1.9.11 =
 * Fixed a bug that caused too many redirects in the admin when clicking on certain plugin settings links.
 * Removed a plugin action link that was not used.
@@ -513,9 +522,5 @@ Syed Balkhi
 * Fix bug where phone numbers wouldn't save when using MailPoet.
 * Remove old jQuery dependencies.
 * Update internal notices to be more friendly with other plugins.
-
-= 1.9.7 =
-* Update the OptinMonster API JS URL.
-* Update trustpulse menu title.
 
 **[View entire changelog](https://plugins.svn.wordpress.org/optinmonster/trunk/CHANGELOG.md)**

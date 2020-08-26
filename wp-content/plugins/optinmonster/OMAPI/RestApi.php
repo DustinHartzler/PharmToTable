@@ -3,6 +3,9 @@
  * Rest API Class, where we register/execute any REST API Routes
  *
  * @since 1.8.0
+ *
+ * @package OMAPI
+ * @author  Justin Sternberg
  */
 
 // Exit if accessed directly.
@@ -35,6 +38,20 @@ class OMAPI_RestApi {
 	 */
 	protected $namespace = 'omapp/v1';
 
+	/**
+	 * Whether Access-Control-Allow-Headers header was set/updated by us.
+	 *
+	 *  @since 1.9.12
+	 *
+	 * @var bool
+	 */
+	protected $allow_header_set = false;
+
+	/**
+	 * Build our object.
+	 *
+	 * @since 1.8.0
+	 */
 	public function __construct() {
 		$this->base = OMAPI::get_instance();
 		$this->register_rest_routes();
@@ -49,9 +66,13 @@ class OMAPI_RestApi {
 	 */
 	public function register_rest_routes() {
 
-		add_filter( 'rest_pre_serve_request', array( $this, 'allow_headers' ) );
+		// Filter only available in WP 5.5.
+		add_filter( 'rest_allowed_cors_headers', array( $this, 'set_allow_headers' ), 999 );
 
-		// Fetch some quick info about this WP installation
+		// Fall-through to check if we still need to set header (WP < 5.5)
+		add_filter( 'rest_send_nocache_headers', array( $this, 'fallback_set_allow_headers' ), 999 );
+
+		// Fetch some quick info about this WP installation.
 		register_rest_route(
 			$this->namespace,
 			'info',
@@ -97,7 +118,7 @@ class OMAPI_RestApi {
 			)
 		);
 
-		// Route for updating the campaign data
+		// Route for updating the campaign data.
 		// TODO: Keeping for future settings revamp.
 		register_rest_route(
 			$this->namespace,
@@ -121,7 +142,7 @@ class OMAPI_RestApi {
 			)
 		);
 
-		// Route for fetching the campaign data
+		// Route for fetching the campaign data.
 		// TODO: Keeping for future settings revamp.
 		register_rest_route(
 			$this->namespace,
@@ -134,8 +155,54 @@ class OMAPI_RestApi {
 		);
 	}
 
-	public function allow_headers() {
-		header( 'Access-Control-Allow-Headers: X-OptinMonster-ApiKey, content-type' );
+	/**
+	 * Filters the list of request headers that are allowed for CORS requests,
+	 * and ensures our API key is allowed.
+	 *
+	 * @since 1.9.12
+	 *
+	 * @param string[] $allow_headers The list of headers to allow.
+	 *
+	 * @return string[]
+	 */
+	public function set_allow_headers( $allow_headers ) {
+		$allow_headers[] = 'X-OptinMonster-ApiKey';
+		$this->allow_header_set = true;
+
+		// remove fall-through.
+		remove_filter( 'rest_send_nocache_headers', array( $this, 'fallback_set_allow_headers' ), 999 );
+
+		return $allow_headers;
+	}
+
+	/**
+	 * Fallback to make sure we set the allow headers.
+	 *
+	 * @since  1.9.12
+	 *
+	 * @param bool $rest_send_nocache_headers Whether to send no-cache headers.
+	 *                                        We ignore this, because we're simply using this
+	 *                                        as an action hook.
+	 *
+	 * @return bool Unchanged result.
+	 */
+	function fallback_set_allow_headers( $rest_send_nocache_headers ) {
+		if ( ! $this->allow_header_set && ! headers_sent() ) {
+			foreach ( headers_list() as $header ) {
+				if ( 0 === strpos( $header, 'Access-Control-Allow-Headers: ' ) ) {
+
+					list( $key, $value ) = explode( 'Access-Control-Allow-Headers: ', $header );
+					if ( false === strpos( $value, 'X-OptinMonster-ApiKey' ) ) {
+						header( 'Access-Control-Allow-Headers: ' . $value . ', X-OptinMonster-ApiKey' );
+					}
+
+					$this->allow_header_set = true;
+					break;
+				}
+			}
+		}
+
+		return $rest_send_nocache_headers;
 	}
 
 	/**
@@ -143,7 +210,7 @@ class OMAPI_RestApi {
 	 *
 	 * @since 1.9.10
 	 *
-	 * @param WP_REST_Request The REST Request
+	 * @param  WP_REST_Request $request The REST Request.
 	 * @return WP_REST_Response The API Response
 	 */
 	public function refresh_campaigns( $request ) {
@@ -161,7 +228,7 @@ class OMAPI_RestApi {
 	 *
 	 * @since  1.9.10
 	 *
-	 * @param  WP_REST_Request The REST Request
+	 * @param  WP_REST_Request $request The REST Request.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -175,7 +242,7 @@ class OMAPI_RestApi {
 	 *
 	 * @since  1.9.10
 	 *
-	 * @param  WP_REST_Request The REST Request
+	 * @param  WP_REST_Request $request The REST Request.
 	 *
 	 * @return WP_REST_Response
 	 */
@@ -195,7 +262,7 @@ class OMAPI_RestApi {
 	 *
 	 * @since 1.9.10
 	 *
-	 * @param WP_REST_Request The REST Request
+	 * @param WP_REST_Request $request The REST Request.
 	 * @return WP_REST_Response The API Response
 	 */
 	public function sync_campaign( $request ) {
@@ -204,7 +271,7 @@ class OMAPI_RestApi {
 		if ( empty( $campaign_id ) ) {
 			return new WP_REST_Response(
 				array( 'message' => esc_html__( 'No campaign ID given.', 'optin-monster-api' ) ),
-				401
+				400
 			);
 		}
 
@@ -221,7 +288,7 @@ class OMAPI_RestApi {
 	 *
 	 * @since 1.9.10
 	 *
-	 * @param WP_REST_Request The REST Request
+	 * @param WP_REST_Request $request The REST Request.
 	 * @return WP_REST_Response The API Response
 	 */
 	public function get_campaign_data( $request ) {
@@ -230,7 +297,7 @@ class OMAPI_RestApi {
 		if ( empty( $campaign_id ) ) {
 			return new WP_REST_Response(
 				array( 'message' => esc_html__( 'No campaign ID given.', 'optin-monster-api' ) ),
-				401
+				400
 			);
 		}
 
@@ -238,13 +305,14 @@ class OMAPI_RestApi {
 		if ( empty( $campaign->ID ) ) {
 			return new WP_REST_Response(
 				array(
+					/* translators: %s: the campaign post id. */
 					'message' => sprintf( esc_html__( 'Could not find campaign by given ID: %s.', 'optin-monster-api' ), $campaign_id ),
 				),
-				401
+				404
 			);
 		}
 
-		// Get Campaigns Data
+		// Get Campaigns Data.
 		$data = $this->base->collect_campaign_data( $campaign );
 		$data = apply_filters( 'optin_monster_api_setting_ui_data_for_campaign', $data, $campaign );
 
@@ -256,20 +324,20 @@ class OMAPI_RestApi {
 	 *
 	 * @since 1.9.10
 	 *
-	 * @param WP_REST_Request The REST Request
+	 * @param WP_REST_Request $request The REST Request.
 	 *
 	 * @return WP_REST_Response The API Response
 	 */
 	public function update_campaign_data( $request ) {
 		$campaign_id = $request->get_param( 'id' );
 
-		// If no campaign_id, return error
+		// If no campaign_id, return error.
 
 		$campaign = $this->base->get_optin_by_slug( $campaign_id );
 
-		// If no campaign, return 404
+		// If no campaign, return 404.
 
-		// Get the Request Params
+		// Get the Request Params.
 		$fields = json_decode( $request->get_body(), true );
 
 		if ( ! empty( $fields['taxonomies'] ) ) {
@@ -288,8 +356,8 @@ class OMAPI_RestApi {
 				: array();
 		}
 
-		// Escape Parameters as needed
-		// Update Post Meta
+		// Escape Parameters as needed.
+		// Update Post Meta.
 		foreach ( $fields as $key => $value ) {
 			$value = $this->sanitize( $value );
 
@@ -310,7 +378,7 @@ class OMAPI_RestApi {
 	 *
 	 * @since 1.9.10
 	 *
-	 * @param WP_REST_Request The REST Request
+	 * @param WP_REST_Request $request The REST Request.
 	 * @return WP_REST_Response The API Response
 	 */
 	public function get_campaigns_data( $request ) {
@@ -320,7 +388,7 @@ class OMAPI_RestApi {
 			$this->base->refresh->refresh();
 		}
 
-		// Get Campaigns Data
+		// Get Campaigns Data.
 		$campaigns     = $this->base->get_optins();
 		$campaigns     = ! empty( $campaigns ) ? $campaigns : array();
 		$campaign_data = array();
@@ -332,7 +400,7 @@ class OMAPI_RestApi {
 		$woo = $this->base->is_woocommerce_active();
 		$mp  = $this->base->is_mailpoet_active();
 
-		// Get Taxonomies Data
+		// Get Taxonomies Data.
 		$taxonomies                 = get_taxonomies( array( 'public' => true ), 'objects' );
 		$taxonomies                 = apply_filters( 'optin_monster_api_setting_ui_taxonomies', $taxonomies );
 		$taxonomy_map               = array();
@@ -365,7 +433,7 @@ class OMAPI_RestApi {
 			);
 		}
 
-		// Get "Config" data
+		// Get "Config" data.
 		$config = array(
 			'hasMailPoet'    => $mp,
 			'hasWooCommerce' => $woo,
@@ -373,7 +441,7 @@ class OMAPI_RestApi {
 		);
 
 		// Posts query.
-		$post_types = implode( '","', get_post_types( array( 'public' => true ) ) );
+		$post_types = sanitize_text_field( implode( '","', get_post_types( array( 'public' => true ) ) ) );
 		$posts      = $wpdb->get_results( "SELECT ID AS `value`, post_title AS `name` FROM {$wpdb->prefix}posts WHERE post_type IN (\"{$post_types}\") AND post_status IN('publish', 'future') ORDER BY post_title ASC", ARRAY_A );
 
 		$response_data = apply_filters(
@@ -395,9 +463,9 @@ class OMAPI_RestApi {
 	 *
 	 * @since  1.9.10
 	 *
-	 * @param  mixed $value
+	 * @param  mixed $value The value to sanitize.
 	 *
-	 * @return mixed
+	 * @return mixed The sanitized value.
 	 */
 	public function sanitize( $value ) {
 		if ( empty( $value ) ) {
@@ -418,14 +486,14 @@ class OMAPI_RestApi {
 	 *
 	 * @since  1.9.10
 	 *
-	 * @param  WP_REST_Request The REST Request
+	 * @param  WP_REST_Request $request The REST Request.
 	 *
 	 * @return bool
 	 */
 	public function has_valid_api_key( $request ) {
 		$header = $request->get_header( 'X-OptinMonster-ApiKey' );
 
-		// Use this API Key to validate
+		// Use this API Key to validate.
 		if ( ! $this->validate_api_key( $header ) ) {
 			return new WP_Error(
 				'omapp_rest_forbidden',
@@ -444,7 +512,7 @@ class OMAPI_RestApi {
 	 *
 	 * @since  1.9.10
 	 *
-	 * @param  WP_REST_Request The REST Request
+	 * @param  WP_REST_Request $request The REST Request.
 	 *
 	 * @return bool
 	 */
@@ -459,7 +527,7 @@ class OMAPI_RestApi {
 	 *
 	 * @since 1.8.0
 	 *
-	 * @param string $api_key
+	 * @param string $api_key The OM api key.
 	 *
 	 * @return bool True if the Key can be validated
 	 */
