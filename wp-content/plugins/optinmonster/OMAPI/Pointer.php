@@ -32,6 +32,26 @@ class OMAPI_Pointer {
 	 * Class Constructor
 	 */
 	public function __construct() {
+		// If we are not in admin or admin ajax, return.
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		// If user is in admin ajax or doing cron, return.
+		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
+			return;
+		}
+
+		// If user is not logged in, return.
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		// If user cannot manage_options, return.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		$this->set();
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_pointer' ) );

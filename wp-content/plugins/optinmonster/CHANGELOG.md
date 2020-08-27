@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to the OptinMonster plugin will be documented in this file.
 
+### 1.9.15
+* Fixed a bug that caused issues for non-admin users when the plugin was not yet connected to an OptinMonster account.
+
 ### 1.9.14
 * Fixed a bug that occasionally prevented changes in campaigns via the OptinMonster App to not properly sync to the plugin, due to cached responses.
 

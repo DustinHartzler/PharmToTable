@@ -4,7 +4,7 @@ Tags: marketing, popups, popup builder, newsletter, conversion, optin forms, for
 Requires at least: 4.7.0
 Tested up to: 5.5
 Requires PHP: 5.3
-Stable tag: 1.9.14
+Stable tag: 1.9.15
 License: GNU General Public License v2.0 or later
 
 Create popups, opt-in forms, & floating bars to get more email newsletter subscribers, leads, and increase sales conversion - #1 marketing popup plugin.
@@ -471,6 +471,9 @@ Syed Balkhi
 
 **Most Recent Changes:**
 
+= 1.9.15 =
+* Fixed a bug that caused issues for non-admin users when the plugin was not yet connected to an OptinMonster account.
+
 = 1.9.14 =
 * Fixed a bug that occasionally prevented changes in campaigns via the OptinMonster App to not properly sync to the plugin, due to cached responses.
 
@@ -514,13 +517,5 @@ Syed Balkhi
 * Fix issue where if multiple post tags were selected, popups and other campaigns would only appear on the first tag selected.
 * Fix campaign shortcode suggestion in admin being incorrect.
 * Full security audit to patch any potential issues.
-
-= 1.9.8 =
-* Fix compatibility with AMP.
-* Update compatibility with popular caching plugins.
-* Update to make all strings translatable.
-* Fix bug where phone numbers wouldn't save when using MailPoet.
-* Remove old jQuery dependencies.
-* Update internal notices to be more friendly with other plugins.
 
 **[View entire changelog](https://plugins.svn.wordpress.org/optinmonster/trunk/CHANGELOG.md)**
