@@ -1,0 +1,202 @@
+# Copyright (C) 2019 weDevs LLC
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce Conversion Tracking Pro 1.0.3\n"
+"Report-Msgid-Bugs-To: https://wedevs.com/contact/\n"
+"POT-Creation-Date: 2019-08-28 08:02:09+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+
+#: includes/class-admin.php:65
+msgid "Facebook Product Catalog"
+msgstr ""
+
+#: includes/class-admin.php:86 includes/views/admin/settings.php:8
+msgid "Settings"
+msgstr ""
+
+#: includes/class-ajax.php:44 includes/class-ajax.php:71
+msgid "Settings has been saved successfully!"
+msgstr ""
+
+#: includes/integrations/class-integration-bing-adds.php:17
+msgid "Bing Ads"
+msgstr ""
+
+#: includes/integrations/class-integration-bing-adds.php:35
+msgid "UET Tag ID"
+msgstr ""
+
+#: includes/integrations/class-integration-bing-adds.php:41
+#: includes/integrations/class-integration-perfect-audience.php:46
+msgid "Events"
+msgstr ""
+
+#: includes/integrations/class-integration-bing-adds.php:44
+msgid "Purchase"
+msgstr ""
+
+#: includes/integrations/class-integration-facebook-pro.php:39
+msgid "View Product"
+msgstr ""
+
+#: includes/integrations/class-integration-facebook-pro.php:40
+msgid "View Product Category"
+msgstr ""
+
+#: includes/integrations/class-integration-facebook-pro.php:41
+msgid "Search Product"
+msgstr ""
+
+#: includes/integrations/class-integration-facebook-pro.php:42
+msgid "Add To Wishlist"
+msgstr ""
+
+#: includes/integrations/class-integration-google-pro.php:33
+msgid "Complete Registration"
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:17
+msgid "Perfect Audience"
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:39
+msgid "Advertiser ID"
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:41
+msgid "Find the Advertiser ID <a href=\"%s\" target=\"_blank\">here</a>."
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:48
+msgid ""
+"Set up Perfect Audience event <a href=\"%s\" target=\"_blank\">learn "
+"more</a>."
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:50
+msgid "View Product <em>(Event: <code>ViewContent</code>)</em>"
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:51
+msgid "Add to Cart <em>(Event: <code>AddToCart</code>)</em>"
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:52
+msgid "Initiate Checkout <em>(Event: <code>InitiateCheckout</code>)</em>"
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:53
+msgid "Purchase <em>(Event: <code>Purchase</code>)</em>"
+msgstr ""
+
+#: includes/integrations/class-integration-perfect-audience.php:54
+msgid "Complete Registration <em>(Event: <code>Registration</code>)</em>"
+msgstr ""
+
+#: includes/integrations/class-integration-twitter-pro.php:34
+msgid "Add To Cart"
+msgstr ""
+
+#: includes/integrations/class-integration-twitter-pro.php:41
+msgid "Registration"
+msgstr ""
+
+#: includes/views/admin/settings.php:11
+msgid "Integration Access"
+msgstr ""
+
+#: includes/views/admin/settings.php:15
+msgid ""
+"Allow your team to access the Conversion Tracking integration settings by "
+"role."
+msgstr ""
+
+#: includes/views/admin/settings.php:40
+#: includes/views/facebook/product-catalog.php:67
+msgid "Save Changes"
+msgstr ""
+
+#: includes/views/facebook/multiple-pixel.php:78
+msgid "Add New"
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:9
+msgid "Facebook Catalog"
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:19
+msgid ""
+"Facebook Product Catalog or simply Catalog is the uploaded list of the "
+"products usually promoted by Facebook Dynamic Ads or Collection Ad Format. "
+"The list of products of the catalog normally includes information such as "
+"Product ID, Description, Name, URL, Image URL and other attributes that are "
+"required to create the Ads for those uploaded products."
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:21
+msgid "Setup Instructions"
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:23
+msgid "products catalog"
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:33
+msgid ""
+"<a href=\"%s\" target=\"_blank\">Learn more</a> on setting up product "
+"catalog."
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:43
+msgid "Exclude Products"
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:45
+msgid "By Product Types:"
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:59
+msgid "By Product Categories:"
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:79
+msgid "Product Data Feed URL"
+msgstr ""
+
+#: includes/views/facebook/product-catalog.php:84
+msgid "Copy to clipboard"
+msgstr ""
+
+#: woocommerce-conversion-tracking-pro.php:195
+msgid ""
+"<b>Woocommerce Conversion Tracking Pro</b> requires <a "
+"href=\"https://wordpress.org/plugins/woocommerce-conversion-tracking/\" "
+"target=\"_blank\">Woocommerce Conversion Tracking</a>"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WooCommerce Conversion Tracking Pro"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wedevs.com/products/plugins/woocommerce-conversion-tracking/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Premium version of WooCommerce Conversion Tracking Plugin"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "weDevs LLC"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://wedevs.com/"
+msgstr ""
