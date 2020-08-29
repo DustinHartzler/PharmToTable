@@ -68,3 +68,13 @@ button.menu-toggle:hover {
 .breadcrumb-area {
     padding: 100px 0 !important;
 }
+
+p {
+    font-size: 18px !important;
+}
+
+li {
+    list-style-type: disc !important;
+    margin-left: 25px !important;
+    font-size: 18px !important;
+}
