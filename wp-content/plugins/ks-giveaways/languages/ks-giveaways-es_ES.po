@@ -1,0 +1,392 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-20 11:43-0700\n"
+"PO-Revision-Date: 2018-03-20 11:44-0700\n"
+"Last-Translator: \n"
+"Language-Team: Spanish (Spain)\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Loco-Source-Locale: es_ES\n"
+"X-Generator: Poedit 2.0.6\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Loco-Parser: loco_parse_mo\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: admin/class-ks-giveaways-admin.php:1509
+#, php-format
+msgid "Giveaway updated. <a href=\"%s\">View giveaway</a>"
+msgstr "Sorteo actualizado. <a href=\"%s\">Ver sorteo</a>"
+
+#: admin/class-ks-giveaways-admin.php:1510
+msgid "Custom field updated."
+msgstr "Campo personalizado actualizado."
+
+#: admin/class-ks-giveaways-admin.php:1511
+msgid "Custom field deleted."
+msgstr "Campo personalizado eliminado."
+
+#: admin/class-ks-giveaways-admin.php:1512
+msgid "Giveaway updated."
+msgstr "Sorteo actualizado."
+
+#: admin/class-ks-giveaways-admin.php:1514
+#, php-format
+msgid "Giveaway restored to revision from %s"
+msgstr "Sorteo restaurado a la versión de %s"
+
+#: admin/class-ks-giveaways-admin.php:1515
+#, php-format
+msgid "Giveaway published. <a href=\"%s\">View giveaway</a>"
+msgstr "Sorteo publicado. <a href=\"%s\">Ver sorteo</a>"
+
+#: admin/class-ks-giveaways-admin.php:1516
+msgid "Giveaway saved."
+msgstr "Sorteo guardado."
+
+#: admin/class-ks-giveaways-admin.php:1517
+#, php-format
+msgid ""
+"Giveaway submitted. <a target=\"_blank\" href=\"%s\">Preview giveaway</a>"
+msgstr ""
+"Sorteo enviado. <a target=\"_blank\" href=\"%s\">Previsualizar sorteo</a>"
+
+#: admin/class-ks-giveaways-admin.php:1518
+#, php-format
+msgid ""
+"Giveaway scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Preview giveaway</a>"
+msgstr ""
+"Sorteo programado para: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Previsualizar sorteo</a>"
+
+#: admin/class-ks-giveaways-admin.php:1520
+msgid "M j, Y @ G:i"
+msgstr "Mes día, año @ hora"
+
+#: admin/class-ks-giveaways-admin.php:1521
+#, php-format
+msgid ""
+"Giveaway draft updated. <a target=\"_blank\" href=\"%s\">Preview giveaway</a>"
+msgstr ""
+"Borrador de sorteo actualizado.  <a target=\"_blank\" href=\"%s"
+"\">Previsualizar sorteo</a>"
+
+#: admin/class-ks-giveaways-admin.php:1575
+msgid "Cannot publish giveaway until all fields are completed."
+msgstr ""
+"No se puede publicar el sorteo hasta que todos los campos estén completos."
+
+#: admin/class-ks-giveaways-admin.php:1576
+msgid "Cannot publish giveaway because provided image link URLs are not valid."
+msgstr ""
+"No se puede publicar el sorteo porque las URLs de las imágenes no son "
+"válidas."
+
+#: admin/class-ks-giveaways-admin.php:1879
+msgid "Step 1 &mdash; Giveaway Information"
+msgstr "Paso 1 - Información del sorteo"
+
+#: admin/class-ks-giveaways-admin.php:1880
+msgid "Step 2 &mdash; Extra Entry Actions"
+msgstr "Paso 2 &mdash; Información del premio"
+
+#: admin/class-ks-giveaways-admin.php:1881
+msgid "Step 3 &mdash; Prize Information"
+msgstr "Paso 2 &mdash; Información del premio"
+
+#: admin/class-ks-giveaways-admin.php:1882
+msgid "Step 4 &mdash; Qualifying Question"
+msgstr "Paso 3 &mdash; Pregunta"
+
+#: admin/class-ks-giveaways-admin.php:1883
+msgid "Step 5 &mdash; Design"
+msgstr "Paso 4 &mdash; Diseño"
+
+#: admin/class-ks-giveaways-admin.php:1884
+#, fuzzy
+#| msgid "Step 4 &mdash; Qualifying Question"
+msgid "Step 7 &mdash; Sharing Options"
+msgstr "Paso 3 &mdash; Pregunta"
+
+#: admin/class-ks-giveaways-admin.php:1887
+msgid "Embed Code"
+msgstr "Insertar código"
+
+#: admin/class-ks-giveaways-admin.php:1909
+msgid "Step 6 &mdash; Services"
+msgstr "Paso 5 &mdash; Servicios"
+
+#: admin/class-ks-giveaways-admin.php:2051
+msgid "Manage Giveaway"
+msgstr "Gestionar sorteo"
+
+#: admin/class-ks-giveaways-admin.php:2052
+msgid "View Contestants"
+msgstr "Ver participantes"
+
+#: admin/class-ks-giveaways-admin.php:2053
+msgid "Duplicate"
+msgstr "Duplicar"
+
+#: admin/includes/class-ks-contestants-list-table.php:173
+msgid "No contestants found."
+msgstr "No se han encontrado participantes."
+
+#: admin/includes/class-ks-winners-list-table.php:176
+msgid "No winners found."
+msgstr "No se han encontrado ganadores."
+
+#: admin/views/contestants.php:7
+msgid "Search"
+msgstr "Buscar"
+
+#: admin/views/contestants.php:10
+msgid "Download CSV"
+msgstr "Descargar CSV"
+
+#: admin/views/contestants.php:13
+msgid "Resend Confirmations"
+msgstr "Reenviar la confirmación"
+
+#: admin/views/contestants.php:14
+#, fuzzy
+#| msgid "confirmed"
+msgid "Remove Unconfirmed"
+msgstr "confirmado"
+
+#: admin/views/settings.php:2
+msgid "KingSumo Giveaways"
+msgstr "Sorteo by KingSumo"
+
+#: includes/class-helper.php:97 includes/class-helper.php:128
+msgid "Powered by"
+msgstr "Creado por"
+
+#: public/class-ks-giveaways.php:907
+msgid "CSRF form token verification failed."
+msgstr "Verificación del formulario token CSRF fallida."
+
+#: public/class-ks-giveaways.php:910
+msgid "Google reCaptcha verification failed."
+msgstr "Verificación Google reCaptcha ha fallado."
+
+#: public/class-ks-giveaways.php:913
+msgid "Sorry, there was an error with your entry."
+msgstr "Lo siento, hubo un error con tu entrada."
+
+#: public/class-ks-giveaways.php:916
+#, fuzzy
+#| msgid "Incorrect answer, try again!"
+msgid "Incorrect answer signature specified."
+msgstr "Respuesta incorrecta, ¡prueba otra vez!"
+
+#: public/class-ks-giveaways.php:919
+#, fuzzy
+#| msgid "An email address is required"
+msgid "No email address specified."
+msgstr "Una dirección de correo electrónico es requerida"
+
+#: public/class-ks-giveaways.php:922
+msgid "No first name specified."
+msgstr "No especificaste tu nombre."
+
+#: public/class-ks-giveaways.php:944
+msgid "Unspecified error saving entry."
+msgstr "Error no especificado al guardar."
+
+#: public/class-ks-giveaways.php:948
+msgid "The giveaway is not currently running."
+msgstr "El sorteo no está activo ahora mismo."
+
+#: public/includes/template_functions.php:308
+msgid "Select your answer."
+msgstr "Elige tu respuesta."
+
+#: templates/responsive3/ended.php:4 templates/responsive3/rules.php:9
+msgid "Giveaway Ended"
+msgstr "Sorteo finalizado"
+
+#: templates/responsive3/ended.php:20
+msgid "Anonymous"
+msgstr "Anónimo"
+
+#: templates/responsive3/ended.php:22
+msgid "Verifying Winner"
+msgstr "Verificando ganador"
+
+#: templates/responsive3/ended.php:24
+msgid "Pending"
+msgstr "Pendiente"
+
+#: templates/responsive3/entry-actions.php:2
+msgid "Get even more entries!"
+msgstr "Obtener incluso más entradas!"
+
+#: templates/responsive3/entry-form.php:11
+msgid "Answer correctly to qualify"
+msgstr "Contesta bien para participar"
+
+#: templates/responsive3/entry-form.php:17
+msgid "Incorrect answer, try again!"
+msgstr "Respuesta incorrecta, ¡prueba otra vez!"
+
+#: templates/responsive3/entry-form.php:30
+msgid "Enter your details"
+msgstr "Introduce tus datos"
+
+#: templates/responsive3/entry-form.php:32
+msgid "Enter your email address"
+msgstr "Dirección de correo electrónico"
+
+#: templates/responsive3/entry-form.php:45
+msgid "First Name"
+msgstr "Nombre"
+
+#: templates/responsive3/entry-form.php:49
+msgid "Please enter your first name"
+msgstr "Escribe tu nombre"
+
+#: templates/responsive3/entry-form.php:53
+msgid "Email"
+msgstr "Email"
+
+#: templates/responsive3/entry-form.php:57
+msgid "An email address is required"
+msgstr "Una dirección de correo electrónico es requerida"
+
+#: templates/responsive3/entry-form.php:62
+msgid "Did you mean"
+msgstr "¿Querías decir"
+
+#: templates/responsive3/entry-form.php:79
+msgid "Please Wait"
+msgstr "Espera por favor"
+
+#: templates/responsive3/entry-form.php:79
+msgid "Enter"
+msgstr "Participa"
+
+#: templates/responsive3/index.php:102
+#, php-format
+msgid "%s Value"
+msgstr "%s valor"
+
+#: templates/responsive3/index.php:105
+#, php-format
+msgid "%s Winner%s"
+msgstr "%sGanador%s"
+
+#: templates/responsive3/not-started.php:10
+msgid "Slow down! Giveaway hasn't started yet. Come back later."
+msgstr "El sorteo todavía no ha empezado. Vuelve más tarde."
+
+#: templates/responsive3/rules.php:5
+msgid "Giveaway Starts"
+msgstr "El sorteo comienza"
+
+#: templates/responsive3/rules.php:11
+msgid "Giveaway Ends"
+msgstr "El sorteo termina"
+
+#: templates/responsive3/rules.php:19
+msgid "Prizes Awarded"
+msgstr "Premios otorgados"
+
+#: templates/responsive3/rules.php:25
+msgid "Enter sweepstakes and receive exclusive offers from"
+msgstr "Entra en nuestros sorteos y recibe ofertas exclusivas de"
+
+#: templates/responsive3/rules.php:25
+msgid "Unsubscribe anytime"
+msgstr "Puedes darte de baja en cualquier momento"
+
+#: templates/responsive3/rules.php:27
+msgid "is not affiliated with the giveaway"
+msgstr "no está relacionado con el sorteo"
+
+#: templates/responsive3/rules.php:29
+#, fuzzy
+#| msgid "Read official rules"
+msgid "Hide official rules"
+msgstr "Lee las normas oficiales"
+
+#: templates/responsive3/rules.php:29
+msgid "Read official rules"
+msgstr "Lee las normas oficiales"
+
+#: templates/responsive3/rules.php:38
+msgid "Powered by KingSumo Giveaways for WordPress"
+msgstr "Creado por KingSumo Giveaway"
+
+#: templates/responsive3/running.php:13
+msgid "You have"
+msgstr "Tienes"
+
+#: templates/responsive3/running.php:16
+msgid "confirmed"
+msgstr "confirmado"
+
+#: templates/responsive3/running.php:17
+msgid "entries"
+msgstr "entradas"
+
+#: templates/responsive3/running.php:17
+msgid "entry"
+msgstr "entrada"
+
+#: templates/responsive3/running.php:22
+msgid ""
+"Your number of contest entries will display once you have confirmed your "
+"email address. Please check your inbox to confirm now."
+msgstr ""
+"El número de entradas que tienes para el concurso se mostrará una vez que "
+"hayas confirmado tu dirección de correo electrónico. Por favor, revisa tu "
+"bandeja de entrada para confirmar."
+
+#: templates/responsive3/running.php:32
+#, php-format
+msgid "Get <strong>%d more entries</strong> for every friend you refer"
+msgstr "Consigue <strong>%d más entradas</strong> por cada amigo/a que se una"
+
+#: templates/responsive3/running.php:34
+#, php-format
+msgid "Get <strong>%d more entry</strong> for every friend you refer"
+msgstr "Consigue <strong>%d otra entrada</strong> por cada amigo/a que se una"
+
+#: templates/responsive3/running.php:44
+msgid "Share it on Facebook"
+msgstr "Compartir en Facebook"
+
+#: templates/responsive3/running.php:46 templates/responsive3/running.php:65
+msgid "Share"
+msgstr "Compartir"
+
+#: templates/responsive3/running.php:53
+msgid "Tweet it on Twitter"
+msgstr "Tuitear en Twitter"
+
+#: templates/responsive3/running.php:55
+msgid "Tweet"
+msgstr "Tuitear"
+
+#: templates/responsive3/running.php:63
+msgid "Share it on LinkedIn"
+msgstr "Compartir en Linkedin"
+
+#: templates/responsive3/running.php:72
+msgid "Share it on Pinterest"
+msgstr "Compartir en Pinterest"
+
+#: templates/responsive3/running.php:74
+msgid "Pin it"
+msgstr ""
+
+#: templates/responsive3/running.php:81
+msgid "Share Lucky URL"
+msgstr "Comparte la URL de la fortuna"

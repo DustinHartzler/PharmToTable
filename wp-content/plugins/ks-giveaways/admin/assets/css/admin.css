@@ -1,0 +1,73 @@
+#ks_contest_images img, #ks_contest_prize img {
+  max-width: 100%;
+  max-height: 60px;
+  display: block;
+  margin-bottom: 10px; }
+
+.preview-giveaway {
+  background: url(../images/preview.png) no-repeat;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 5px;
+  vertical-align: middle; }
+
+.wp-list-table.winners .column-position {
+  width: 20px; }
+.wp-list-table.winners .column-avatar {
+  width: 60px; }
+.wp-list-table.winners td.column-avatar img {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer; }
+.wp-list-table.winners td.column-position {
+  font-size: 75%; }
+.wp-list-table.winners td.column-name a {
+  outline: none; }
+.wp-list-table.winners td.column-name form {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box !important; }
+  .wp-list-table.winners td.column-name form input {
+    box-sizing: border-box !important;
+    margin: 0;
+    padding: 3px 0px;
+    height: auto !important;
+    width: auto !important; }
+.wp-list-table.winners .column-actions {
+  text-align: right;
+  width: 200px; }
+.wp-list-table.winners .column-status {
+  width: 100px; }
+
+.wp-list-table.contestants .column-num_entries {
+  width: 100px;}
+
+.wp-list-table.contestants .column-actions {
+  text-align: right;
+  width: 150px; }
+
+.post-type-ks_giveaway .wp-list-table.posts .column-time_remaining {
+  text-align: right;
+  width: 120px; }
+.post-type-ks_giveaway .wp-list-table.posts .column-shortcode {
+  width: 135px;
+  text-align: center; }
+.post-type-ks_giveaway .wp-list-table.posts .column-num_contestants {
+  width: 82px;
+  text-align: center; }
+.post-type-ks_giveaway .wp-list-table.posts .column-num_entries {
+  width: 80px;
+  text-align: center; }
+.post-type-ks_giveaway .wp-list-table.posts .column-status {
+  width: 80px; }
+
+.time-text {
+  width: 80px; }
+
+.date-text {
+  width: 150px; }
+
+/*# sourceMappingURL=test.css.map */

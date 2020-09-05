@@ -1,0 +1,383 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-12 14:22-0700\n"
+"PO-Revision-Date: 2018-03-26 12:20-0700\n"
+"Last-Translator: \n"
+"Language-Team: Danish (Denmark)\n"
+"Language: da_DK\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Loco-Source-Locale: es_ES\n"
+"X-Generator: Poedit 2.0.6\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Loco-Parser: loco_parse_po\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: admin/class-ks-giveaways-admin.php:1509
+#, php-format
+msgid "Giveaway updated. <a href=\"%s\">View giveaway</a>"
+msgstr "Konkurrencen er opdateret. <a href=“%s”Se den her</a>"
+
+#: admin/class-ks-giveaways-admin.php:1510
+msgid "Custom field updated."
+msgstr "Feltet er opdateret."
+
+#: admin/class-ks-giveaways-admin.php:1511
+msgid "Custom field deleted."
+msgstr "Feltet er slettet."
+
+#: admin/class-ks-giveaways-admin.php:1512
+msgid "Giveaway updated."
+msgstr "Konkurrencen er opdateret."
+
+#: admin/class-ks-giveaways-admin.php:1514
+#, php-format
+msgid "Giveaway restored to revision from %s"
+msgstr "Giveawayen er genskabt til en tidligere version fra %s"
+
+#: admin/class-ks-giveaways-admin.php:1515
+#, php-format
+msgid "Giveaway published. <a href=\"%s\">View giveaway</a>"
+msgstr "Giveawayen er offentliggjort. <a href=“%s”>Se den her</a>"
+
+#: admin/class-ks-giveaways-admin.php:1516
+msgid "Giveaway saved."
+msgstr "Giveawayen er gemt."
+
+#: admin/class-ks-giveaways-admin.php:1517
+#, php-format
+msgid ""
+"Giveaway submitted. <a target=\"_blank\" href=\"%s\">Preview giveaway</a>"
+msgstr ""
+"Konkurrencen offentliggjort. <a target=“_blank” href=“%s”>Se den her</a>"
+
+#: admin/class-ks-giveaways-admin.php:1518
+#, php-format
+msgid ""
+"Giveaway scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Preview giveaway</a>"
+msgstr ""
+"Giveawayen er planlagt til: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Preview giveaway</a>"
+
+#: admin/class-ks-giveaways-admin.php:1520
+msgid "M j, Y @ G:i"
+msgstr "M j, Y @ G:i"
+
+#: admin/class-ks-giveaways-admin.php:1521
+#, php-format
+msgid ""
+"Giveaway draft updated. <a target=\"_blank\" href=\"%s\">Preview giveaway</a>"
+msgstr ""
+"Giveaway kladden er opdateret. <a target=“_blank” href=“%s”>Se den her</a>"
+
+#: admin/class-ks-giveaways-admin.php:1575
+msgid "Cannot publish giveaway until all fields are completed."
+msgstr "Giveawayen kan ikke publiceres før alle felter er udfyldt."
+
+#: admin/class-ks-giveaways-admin.php:1576
+msgid "Cannot publish giveaway because provided image link URLs are not valid."
+msgstr ""
+"Giveawayen kan ikke publiceres da den indtastede billede link URL ikke er "
+"rigtig."
+
+#: admin/class-ks-giveaways-admin.php:1879
+msgid "Step 1 &mdash; Giveaway Information"
+msgstr "Step 1 &mdash; Konkurrence information"
+
+#: admin/class-ks-giveaways-admin.php:1880
+msgid "Step 2 &mdash; Extra Entry Actions"
+msgstr "Step 2 &mdash; Optjen ekstra lodder"
+
+#: admin/class-ks-giveaways-admin.php:1881
+msgid "Step 3 &mdash; Prize Information"
+msgstr "Step 3 &mdash; Præmie information"
+
+#: admin/class-ks-giveaways-admin.php:1882
+msgid "Step 4 &mdash; Qualifying Question"
+msgstr "Step 4 &mdash; Svar på spørgsmålet"
+
+#: admin/class-ks-giveaways-admin.php:1883
+msgid "Step 5 &mdash; Design"
+msgstr "Step 5 &mdash; Design"
+
+#: admin/class-ks-giveaways-admin.php:1884
+msgid "Step 7 &mdash; Sharing Options"
+msgstr "Step 7 &mdash; Muligheder for deling"
+
+#: admin/class-ks-giveaways-admin.php:1887
+msgid "Embed Code"
+msgstr "Indlejre Kode"
+
+#: admin/class-ks-giveaways-admin.php:1909
+msgid "Step 6 &mdash; Services"
+msgstr "Step 6 &mdash; Servicer"
+
+#: admin/class-ks-giveaways-admin.php:2051
+msgid "Manage Giveaway"
+msgstr "Styr konkurrencen"
+
+#: admin/class-ks-giveaways-admin.php:2052
+msgid "View Contestants"
+msgstr "Se deltagere"
+
+#: admin/class-ks-giveaways-admin.php:2053
+msgid "Duplicate"
+msgstr "Dupliker"
+
+#: admin/includes/class-ks-contestants-list-table.php:173
+msgid "No contestants found."
+msgstr "Ingen deltagere fundet."
+
+#: admin/includes/class-ks-winners-list-table.php:176
+msgid "No winners found."
+msgstr "Ingen vindere fundet."
+
+#: admin/views/contestants.php:7
+msgid "Search"
+msgstr "Søg"
+
+#: admin/views/contestants.php:10
+msgid "Download CSV"
+msgstr "Download CSV"
+
+#: admin/views/contestants.php:13
+msgid "Resend Confirmations"
+msgstr "Gensend bekræftelser"
+
+#: admin/views/contestants.php:14
+msgid "Remove Unconfirmed"
+msgstr "Fjern ubekræftede"
+
+#: admin/views/settings.php:2
+msgid "KingSumo Giveaways"
+msgstr "KingSumo Konkurrencer"
+
+#: includes/class-helper.php:97 includes/class-helper.php:128
+msgid "Powered by"
+msgstr "Skabt med"
+
+#: public/class-ks-giveaways.php:907
+msgid "CSRF form token verification failed."
+msgstr "CSRF token verifikation mislykkedes."
+
+#: public/class-ks-giveaways.php:910
+msgid "Google reCaptcha verification failed."
+msgstr "Googles reCaptcha verifikation mislykkedes."
+
+#: public/class-ks-giveaways.php:913
+msgid "Sorry, there was an error with your entry."
+msgstr "Beklager, der opstod en fejl med din deltagelse."
+
+#: public/class-ks-giveaways.php:916
+msgid "Incorrect answer signature specified."
+msgstr "Det var desværre forkert, prøv igen."
+
+#: public/class-ks-giveaways.php:919
+msgid "No email address specified."
+msgstr "Emailen er ikke komplet."
+
+#: public/class-ks-giveaways.php:922
+msgid "No first name specified."
+msgstr "Du mangler at indtaste dit fornavn."
+
+#: public/class-ks-giveaways.php:944
+msgid "Unspecified error saving entry."
+msgstr "Ukendt fejl."
+
+#: public/class-ks-giveaways.php:948
+msgid "The giveaway is not currently running."
+msgstr "Konkurrencen er ikke igang."
+
+#: public/includes/template_functions.php:308
+msgid "Select your answer."
+msgstr "Vælg dit svar."
+
+#: templates/responsive3/ended.php:4 templates/responsive3/rules.php:9
+msgid "Giveaway Ended"
+msgstr "Konkurrencen er slut"
+
+#: templates/responsive3/ended.php:20
+msgid "Anonymous"
+msgstr "Anonym"
+
+#: templates/responsive3/ended.php:22
+msgid "Verifying Winner"
+msgstr "Vinderen er ved at blive fundet"
+
+#: templates/responsive3/ended.php:24
+msgid "Pending"
+msgstr "Venter"
+
+#: templates/responsive3/entry-actions.php:2
+msgid "Get even more entries!"
+msgstr "Optjen let endnu flere chancer for at vinde!"
+
+#: templates/responsive3/entry-form.php:11
+msgid "Answer correctly to qualify"
+msgstr "Svar rigtigt for at deltage"
+
+#: templates/responsive3/entry-form.php:17
+msgid "Incorrect answer, try again!"
+msgstr "Det var desværre forkert, prøv igen!"
+
+#: templates/responsive3/entry-form.php:30
+msgid "Enter your details"
+msgstr "Indtast dine oplysninger"
+
+#: templates/responsive3/entry-form.php:32
+msgid "Enter your email address"
+msgstr "Indtast din email"
+
+#: templates/responsive3/entry-form.php:45
+msgid "First Name"
+msgstr "Fornavn"
+
+#: templates/responsive3/entry-form.php:49
+msgid "Please enter your first name"
+msgstr "Indtast dit fornavn"
+
+#: templates/responsive3/entry-form.php:53
+msgid "Email"
+msgstr "Email"
+
+#: templates/responsive3/entry-form.php:57
+msgid "An email address is required"
+msgstr "Emailen er ikke komplet"
+
+#: templates/responsive3/entry-form.php:62
+msgid "Did you mean"
+msgstr "Mente du"
+
+#: templates/responsive3/entry-form.php:79
+msgid "Please Wait"
+msgstr "Vent venligst"
+
+#: templates/responsive3/entry-form.php:79
+msgid "Enter"
+msgstr "Deltag & Vind"
+
+#: templates/responsive3/index.php:102
+#, php-format
+msgid "%s Value"
+msgstr "%s"
+
+#: templates/responsive3/index.php:105
+#, php-format
+msgid "%s Winner%s"
+msgstr "%s Vinder%s"
+
+#: templates/responsive3/not-started.php:10
+msgid "Slow down! Giveaway hasn't started yet. Come back later."
+msgstr "VENT! Konkurrencen er ikke startet endnu. Kom tilbage senere."
+
+#: templates/responsive3/rules.php:5
+msgid "Giveaway Starts"
+msgstr "Konkurrencen starter"
+
+#: templates/responsive3/rules.php:11
+msgid "Giveaway Ends"
+msgstr "Konkurrencen slutter"
+
+#: templates/responsive3/rules.php:19
+msgid "Prizes Awarded"
+msgstr "Vinderen trækkes"
+
+#: templates/responsive3/rules.php:25
+msgid "Enter sweepstakes and receive exclusive offers from"
+msgstr "Deltag i konkurrencen og modtag eksklusive tilbud fra"
+
+#: templates/responsive3/rules.php:25
+msgid "Unsubscribe anytime"
+msgstr "Du kan til enhver tid afmelde dig"
+
+#: templates/responsive3/rules.php:27
+msgid "is not affiliated with the giveaway"
+msgstr "står bag denne konkurrence."
+
+#: templates/responsive3/rules.php:29
+msgid "Hide official rules"
+msgstr "Skjul betingelserne"
+
+#: templates/responsive3/rules.php:29
+msgid "Read official rules"
+msgstr "Læs betingelserne"
+
+#: templates/responsive3/rules.php:38
+msgid "Powered by KingSumo Giveaways for WordPress"
+msgstr "Skabt med KingSumo"
+
+#: templates/responsive3/running.php:13
+msgid "You have"
+msgstr "Du har nu optjent"
+
+#: templates/responsive3/running.php:16
+msgid "confirmed"
+msgstr "Bekræftet"
+
+#: templates/responsive3/running.php:17
+msgid "entries"
+msgstr "Lodder"
+
+#: templates/responsive3/running.php:17
+msgid "entry"
+msgstr "lod"
+
+#: templates/responsive3/running.php:22
+msgid ""
+"Your number of contest entries will display once you have confirmed your "
+"email address. Please check your inbox to confirm now."
+msgstr ""
+"Du kan se dit antal lodder så snart du har bekræftet din email adresse. Tjek "
+"din indbakke nu."
+
+#: templates/responsive3/running.php:32
+#, php-format
+msgid "Get <strong>%d more entries</strong> for every friend you refer"
+msgstr ""
+"Få <strong>%d yderligere lodder</strong> for hver ven der deltager igennem "
+"dit link"
+
+#: templates/responsive3/running.php:34
+#, php-format
+msgid "Get <strong>%d more entry</strong> for every friend you refer"
+msgstr ""
+"Få <strong>%d yderligere lod</strong> for hver ven der deltager igennem dit "
+"link"
+
+#: templates/responsive3/running.php:44
+msgid "Share it on Facebook"
+msgstr "Del konkurrencen på Facebook"
+
+#: templates/responsive3/running.php:46 templates/responsive3/running.php:65
+msgid "Share"
+msgstr "Del"
+
+#: templates/responsive3/running.php:53
+msgid "Tweet it on Twitter"
+msgstr "Del konkurrencen på Twitter"
+
+#: templates/responsive3/running.php:55
+msgid "Tweet"
+msgstr "Tweet"
+
+#: templates/responsive3/running.php:63
+msgid "Share it on LinkedIn"
+msgstr "Del konkurrencen på LinkedIn"
+
+#: templates/responsive3/running.php:72
+msgid "Share it on Pinterest"
+msgstr "Del konkurrencen på Pinterest"
+
+#: templates/responsive3/running.php:74
+msgid "Pin it"
+msgstr "Pin it"
+
+#: templates/responsive3/running.php:81
+msgid "Share Lucky URL"
+msgstr "Her er din unikke URL"
