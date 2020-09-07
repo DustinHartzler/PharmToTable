@@ -89,3 +89,7 @@ p {
 .main-navigation ul.nav-menu>li>a {
     font-size: 14px !important;
 }
+
+.woocommerce-table__product-purchase-note.product-purchase-note {
+    background-color: #efefef;
+}
