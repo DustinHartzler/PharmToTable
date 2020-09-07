@@ -93,3 +93,8 @@ p {
 .woocommerce-table__product-purchase-note.product-purchase-note {
     background-color: #efefef;
 }
+
+.services-details-area li {
+    list-style: disc;
+    font-size: 18px;
+}
