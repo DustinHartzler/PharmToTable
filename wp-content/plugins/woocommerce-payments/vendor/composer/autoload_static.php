@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita2447e0d68af485c4e75e9838c0a2df4
+class ComposerStaticInitbad42693a2a67eb4387853dae504a1bd
 {
     public static $files = array (
         'bce4ecd6aabb2a2948e06d0e2c4ea9a6' => __DIR__ . '/..' . '/automattic/jetpack-connection/legacy/load-ixr.php',
@@ -27,6 +27,8 @@ class ComposerStaticInita2447e0d68af485c4e75e9838c0a2df4
     public static $classMap = array (
         'Automattic\\Jetpack\\Config' => __DIR__ . '/..' . '/automattic/jetpack-config/src/class-config.php',
         'Automattic\\Jetpack\\Connection\\Client' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/class-client.php',
+        'Automattic\\Jetpack\\Connection\\Error_Handler' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/class-error-handler.php',
+        'Automattic\\Jetpack\\Connection\\Error_Handlers\\Invalid_Blog_Token' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/error-handlers/class-invalid-blog-token.php',
         'Automattic\\Jetpack\\Connection\\Manager' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/class-manager.php',
         'Automattic\\Jetpack\\Connection\\Manager_Interface' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/interface-manager.php',
         'Automattic\\Jetpack\\Connection\\Plugin' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/class-plugin.php',
@@ -36,6 +38,7 @@ class ComposerStaticInita2447e0d68af485c4e75e9838c0a2df4
         'Automattic\\Jetpack\\Connection\\XMLRPC_Connector' => __DIR__ . '/..' . '/automattic/jetpack-connection/src/class-xmlrpc-connector.php',
         'Automattic\\Jetpack\\Constants' => __DIR__ . '/..' . '/automattic/jetpack-constants/src/class-constants.php',
         'Automattic\\Jetpack\\Roles' => __DIR__ . '/..' . '/automattic/jetpack-roles/src/class-roles.php',
+        'Automattic\\Jetpack\\Status' => __DIR__ . '/..' . '/automattic/jetpack-status/src/class-status.php',
         'Jetpack_IXR_Client' => __DIR__ . '/..' . '/automattic/jetpack-connection/legacy/class-jetpack-ixr-client.php',
         'Jetpack_IXR_ClientMulticall' => __DIR__ . '/..' . '/automattic/jetpack-connection/legacy/class-jetpack-ixr-clientmulticall.php',
         'Jetpack_Options' => __DIR__ . '/..' . '/automattic/jetpack-options/legacy/class-jetpack-options.php',
@@ -46,9 +49,9 @@ class ComposerStaticInita2447e0d68af485c4e75e9838c0a2df4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita2447e0d68af485c4e75e9838c0a2df4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita2447e0d68af485c4e75e9838c0a2df4::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita2447e0d68af485c4e75e9838c0a2df4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbad42693a2a67eb4387853dae504a1bd::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbad42693a2a67eb4387853dae504a1bd::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitbad42693a2a67eb4387853dae504a1bd::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Automattic\\Jetpack\\Config' => $vendorDir . '/automattic/jetpack-config/src/class-config.php',
     'Automattic\\Jetpack\\Connection\\Client' => $vendorDir . '/automattic/jetpack-connection/src/class-client.php',
+    'Automattic\\Jetpack\\Connection\\Error_Handler' => $vendorDir . '/automattic/jetpack-connection/src/class-error-handler.php',
+    'Automattic\\Jetpack\\Connection\\Error_Handlers\\Invalid_Blog_Token' => $vendorDir . '/automattic/jetpack-connection/src/error-handlers/class-invalid-blog-token.php',
     'Automattic\\Jetpack\\Connection\\Manager' => $vendorDir . '/automattic/jetpack-connection/src/class-manager.php',
     'Automattic\\Jetpack\\Connection\\Manager_Interface' => $vendorDir . '/automattic/jetpack-connection/src/interface-manager.php',
     'Automattic\\Jetpack\\Connection\\Plugin' => $vendorDir . '/automattic/jetpack-connection/src/class-plugin.php',
@@ -17,6 +19,7 @@ return array(
     'Automattic\\Jetpack\\Connection\\XMLRPC_Connector' => $vendorDir . '/automattic/jetpack-connection/src/class-xmlrpc-connector.php',
     'Automattic\\Jetpack\\Constants' => $vendorDir . '/automattic/jetpack-constants/src/class-constants.php',
     'Automattic\\Jetpack\\Roles' => $vendorDir . '/automattic/jetpack-roles/src/class-roles.php',
+    'Automattic\\Jetpack\\Status' => $vendorDir . '/automattic/jetpack-status/src/class-status.php',
     'Jetpack_IXR_Client' => $vendorDir . '/automattic/jetpack-connection/legacy/class-jetpack-ixr-client.php',
     'Jetpack_IXR_ClientMulticall' => $vendorDir . '/automattic/jetpack-connection/legacy/class-jetpack-ixr-clientmulticall.php',
     'Jetpack_Options' => $vendorDir . '/automattic/jetpack-options/legacy/class-jetpack-options.php',
