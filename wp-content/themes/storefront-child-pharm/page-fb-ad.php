@@ -285,17 +285,17 @@
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#accordion" href="#ac4">
-                                            Where do I start?
+                                            How can I sign up?
                                         </a>
                                     </h4>
                                 </div>
                                 <div id="ac4" class="panel-collapse collapse">
                                     <div class="panel-body">
                                         <p>
-                                            Removing welcomed civility or hastened is. Justice elderly but perhaps expense six her are another passage. Full her ten open fond walk not down.For request general express unknown are.
+                                            We offer a variety of times and days of the week for our orientation.
                                         </p>
                                         <p>
-                                             He in just mr door body held john down he. So journey greatly or garrets. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but.
+                                        <a href="https://pharmtotable.life/intro-to-functional-medicine-orientation/" style="color: green; text-decoration: underline;">Click here to schedule your time!</a>
                                         </p>
                                     </div>
                                 </div>

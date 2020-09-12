@@ -29,7 +29,19 @@
                         </a>
                         </button>
                         </form>
-                <?php } else {?>
+                <?php }
+                elseif (is_page_template ( 'page-fb-ad.php')) { ?>
+                    <h2>Ready to Start Your Journey?</h2>
+                    <form action="#">
+                    <button type="submit">
+                        <a href="https://pharmtotable.life/intro-to-functional-medicine-orientation/" >
+                        Book Now!
+                        </a>
+                        </button>
+                        </form>
+
+
+                <?php }else {?>
                 <h4>Subscribe For Updates</h4>
                 <h2>Let’s Find A Pharmacist Near You.</h2>
                 <form action="#">
