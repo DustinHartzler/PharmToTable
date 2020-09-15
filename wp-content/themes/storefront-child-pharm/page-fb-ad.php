@@ -219,18 +219,13 @@
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#accordion" href="#ac1">
-                                            Do I need a business plan?
+                                            How long is the class?
                                         </a>
                                     </h4>
                                 </div>
                                 <div id="ac1" class="panel-collapse collapse in">
                                     <div class="panel-body">
-                                        <p>
-                                            Removing welcomed civility or hastened is. Justice elderly but perhaps expense six her are another passage. Full her ten open fond walk not down.For request general express unknown are.
-                                        </p>
-                                        <p>
-                                             He in just mr door body held john down he. So journey greatly or garrets. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but.
-                                        </p>
+                                        <p>The class is one hour long.</p>
                                     </div>
                                 </div>
                             </div>
@@ -241,18 +236,13 @@
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#accordion" href="#ac2">
-                                            How long should a business plan be?
+                                            Will we have time to ask questions at the end?
                                         </a>
                                     </h4>
                                 </div>
                                 <div id="ac2" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <p>
-                                            Removing welcomed civility or hastened is. Justice elderly but perhaps expense six her are another passage. Full her ten open fond walk not down.For request general express unknown are.
-                                        </p>
-                                        <p>
-                                             He in just mr door body held john down he. So journey greatly or garrets. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but.
-                                        </p>
+                                        <p>Yes! The last 10-15 minutes will be for you to get your questions answered.</p>
                                     </div>
                                 </div>
                             </div>
@@ -263,18 +253,13 @@
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#accordion" href="#ac3">
-                                            What goes into a business plan?
+                                            Will I be meeting with the pharmacist from my state?
                                         </a>
                                     </h4>
                                 </div>
                                 <div id="ac3" class="panel-collapse collapse">
                                     <div class="panel-body">
-                                        <p>
-                                            Removing welcomed civility or hastened is. Justice elderly but perhaps expense six her are another passage. Full her ten open fond walk not down.For request general express unknown are.
-                                        </p>
-                                        <p>
-                                             He in just mr door body held john down he. So journey greatly or garrets. Draw door kept do so come on open mean. Estimating stimulated how reasonably precaution diminution she simplicity sir but.
-                                        </p>
+                                        <p>Our class is led by one of the pharmacists on our team. The pharmacist may not be licensed in the state where you reside. After the course, our team will connect you with the pharmacists in your state. You will be able to sign up for a free 15 min consultation to meet them and make sure it’s a good fit. </p>
                                     </div>
                                 </div>
                             </div>
