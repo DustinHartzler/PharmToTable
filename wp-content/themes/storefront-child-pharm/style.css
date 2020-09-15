@@ -98,3 +98,7 @@ p {
     list-style: disc;
     font-size: 18px;
 }
+
+.smaller-padding {
+    padding-top: 0 !important;
+}
