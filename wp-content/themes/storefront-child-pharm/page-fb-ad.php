@@ -297,7 +297,7 @@
 
 <!-- Start Why Chose Us
 ============================================= -->
-<div class="chose-us-area item-half">
+<div class="chose-us-area item-half smaller-padding">
     <div class="container-full">
         <div class="row">
             <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/consult.jpg);"></div>
