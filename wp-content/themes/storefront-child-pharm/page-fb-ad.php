@@ -274,7 +274,7 @@
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="ac4" class="panel-collapse collapse">
+                                <div id="ac4" class="panel-collapse collapse in">
                                     <div class="panel-body">
                                         <p>
                                             We offer a variety of times and days of the week for our orientation.
