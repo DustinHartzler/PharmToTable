@@ -161,7 +161,7 @@
 
     <!-- Start Why Chose Us
     ============================================= -->
-    <div class="chose-us-area default-padding item-half">
+    <div class="chose-us-area smaller-padding item-half">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 info">
