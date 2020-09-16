@@ -91,7 +91,7 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
                         <i class="fa fa-bars"></i>
                     </button>
-                    <a class="navbar-brand" href="<?php bloginfo('url'); ?>">
+                    <a class="navbar-brand">
                         <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/pharmtotable-logo.png" class="logo" alt="Logo">
                     </a>
                 </div>
@@ -144,103 +144,64 @@
 </div>
 <!-- End Page Block -->
 
-<!-- Start Why Chose Us
-============================================= -->
-<div class="chose-us-area item-half default-padding">
-    <div class="container-full">
-        <div class="row">
-            <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/consult.jpg);"></div>
-            <div class="col-md-6 info">
-                <div class="heading">
-                    <h2>Why Choose us</h2>
-                </div>
-                <ul>
-                    <li>
-                        <div class="info">
-                            <h4>Technology</h4>
-                            <p>Our cutting edge digital health technology platform allows us to connect with your whole care team</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="info">
-                            <h4>Team Based Care</h4>
-                            <p>We combine strengths from various providers, pharmacists, physicians, nutritionists, health-coaches, to meet your needs.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="info">
-                            <h4>Convenient</h4>
-                            <p>See your provider from your computer or smartphone . Providers have flexible availability.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="info">
-                            <h4>Pharmacists</h4>
-                            <p>Pharmacists are chemistry experts, we can help you reduce your medication burden, and simplify your life.</p>                              </p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Why Chose Us -->
+<?php
+/**
+ * The template for displaying the footer.
+ *
+ * Contains the closing of the #content div and all content after
+ *
+ * @package storefront
+ */
 
-<!-- Start Testimonials
+?>
+
+		</div><!-- .col-full -->
+	</div><!-- #content -->
+
+    <?php do_action( 'storefront_before_footer' ); ?>
+
+    <!-- Start Newsletter
 ============================================= -->
-<div class="testimonials-area carousel-shadow bg-gray default-padding">
+<div class="newsletter-area default-padding shadow dark bg-fixed text-center text-light" style="background-image: url(assets/img/2440x1578.png);">
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="site-heading text-center">
-                    <h2>Patient <span>Testimonials</span></h2>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="testimonial-items testimonial-carousel owl-carousel owl-theme">
-                    <!-- Single Item -->
-                    <div class="item">
-                        <div class="content">
-                            <p>
-                            <em>My experience with my functional medicine pharmacist, Melody Hartzler, was phenomenal!</em><br><br>
-                            I came to her after seeing numerous doctors and nutritionists with stomach pain, bloating, and constipation.  No one had an answer for me in the past, so my nutritionist suggested Dr. Hartzler. <br><br>
-                            We did a telehealth meeting and she quickly decided we needed more tests.  Once the test results arrived, she was able to determine a course of action using mostly herbal medicines.  A month into the meds and my stomach pain is nearly gone as is my constipation.  It has been  amazing! The plan hasn't stopped there and we continue to meet and communicate on the best course of action going forward.  I highly recommend Dr. Hartzler for your needs - she listens and goes above and beyond!
-                            </p>
-                        </div>
-                        <div class="provider">
-                            <div class="thumb">
-                                <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
-                            </div>
-                            <div class="info">
-                                <h4>Sara L.</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="item">
-                        <div class="content">
-                            <p>
-                            By working directly with Dr. Hartzler, my medication has not only changed, but the dosage has been reduced, while adding natural vitamin supplements that help support my body’s specific needs.  Her ability to weave both functional and conventional medicine into a treatment plan has been shall we say, more than wonderful!!  Her knowledge about how to integrate these two different types of treatments have been instrumental in not only lowering my A1C, but weight loss and more overall energy.<br><br>
-                            <em><strong>She is no longer just treating the symptoms of my disease, but the underlying causes.  </strong></em><br><br>
-                            This unique insight has been the difference between the previous negative side effects and the improved health I enjoy. Without the help and guidance of Dr. Melody Hartzler, my quality of life would have continued to degrade over time, today I have a much better prognosis for the rest of my life.</p>
-                        </div>
-                        <div class="provider">
-                            <div class="thumb">
-                                <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
-                            </div>
-                            <div class="info">
-                                <h4>Kevin</h4>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
-<!-- End Testimonials -->
-<?php get_footer(); ?>
+<!-- End Newsletter -->
+
+<footer>
+    <div class="container">
+            <div class="row">
+            </div>
+        </div>
+
+	<?php do_action( 'storefront_after_footer' ); ?>
+
+</div><!-- #page -->
+
+    <!-- jQuery Frameworks
+    ============================================= -->
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery-1.12.4.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/bootstrap.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/equal-height.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.appear.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.easing.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/modernizr.custom.13711.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/owl.carousel.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/wow.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/isotope.pkgd.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/count-to.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/YTPlayer.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/jquery.nice-select.min.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/bootsnav.js"></script>
+    <script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/main.js"></script>
+<?php wp_footer(); ?>
+<!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
+<script type="text/javascript" src="https://a.omappapi.com/app/js/api.min.js" data-account="44742" data-user="39038" async></script>
+<!-- / https://optinmonster.com -->
+</body>
+</html>
