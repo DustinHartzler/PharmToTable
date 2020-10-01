@@ -1,0 +1,6 @@
+<div class="control-grid<#=this.get_extra_class()#>">
+	<div class="label"><#= this.get_config('label') #></div>
+	<div class="input">
+		<input type="text" class="tve-input-control input change" data-fn-input="onInput" placeholder="<#= this.get_config('placeholder', '') #>" data-fn="changed" <#= this.get_config('extra_attrs', '') #>/>
+	</div>
+</div>

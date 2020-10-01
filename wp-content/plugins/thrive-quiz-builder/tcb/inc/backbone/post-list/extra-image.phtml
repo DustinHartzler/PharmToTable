@@ -1,0 +1,30 @@
+<?php $sizes = TCB_Post_List_Featured_Image::filter_available_sizes(); ?>
+<div class="control-grid wrap">
+	<div class="tve-background-image-type full-width">
+		<label class="tcb-radio">
+			<input type="radio" name="bg-img-type" class="change bg-img-type" value="static" data-fn="imageType" checked>
+			<span><?php echo __( 'Static', 'thrive-cb' ); ?></span>
+		</label>
+		<label class="tcb-radio">
+			<input type="radio" name="bg-img-type" class="change bg-img-type" value="dynamic" data-fn="imageType">
+			<span><?php echo __( 'Dynamic', 'thrive-cb' ); ?></span>
+		</label>
+	</div>
+	<div class="bg-static-image full-width mt-5">
+		<div class="image-picker-wrapper"></div>
+	</div>
+	<div class="bg-dynamic-image full-width mt-5">
+		<select class="dynamic-image-select change" data-fn="dynamicImage">
+			<option value="" selected disabled><?php echo __( 'None', 'thrive-cb' ); ?></option>
+			<option value="featured"><?php echo __( 'Featured Image', 'thrive-cb' ); ?></option>
+			<option value="author"><?php echo __( 'Author Image', 'thrive-cb' ); ?></option>
+		</select>
+	</div>
+	<div class="bg-dynamic-image mt-20 size-select full-width">
+		<select class="dynamic-image-size-select change" data-fn="dynamicImageSize">
+			<?php foreach ( $sizes as $key => $size ): ?>
+				<option value="<?php echo $key ?>"><?php echo $size ?></option>
+			<?php endforeach; ?>
+		</select>
+	</div>
+</div>

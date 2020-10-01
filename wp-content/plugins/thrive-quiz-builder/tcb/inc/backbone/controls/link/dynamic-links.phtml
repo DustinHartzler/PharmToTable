@@ -1,0 +1,18 @@
+<select class="fr-dynamic-link-select" id="fr-dynamic-link-list">
+	<# _.each(links, function(group, group_name) { #>
+	<# if(group_name){ #>
+	<optgroup label="<#= group_name #>">
+		<# _.each(group, function(link) { #>
+		<option value="<#= link.url #>" data-shortcode-id="<#= link.id #>" data-compat-id="<#= link.inserted_id #>"><#= link.name #></option>
+		<# }); #>
+	</optgroup>
+
+	<# }else{ #>
+	<# _.each(group, function(link) { #>
+			<# if ( link.show ) { #>
+				<option value="<#= link.url #>" data-shortcode-id="<#= link.id #>"><#= link.label || link.name #></option>
+			<# } #>
+	<# }); #>
+	<# } #>
+	<# }); #>
+</select>

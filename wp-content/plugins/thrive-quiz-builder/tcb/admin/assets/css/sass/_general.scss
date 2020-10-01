@@ -1,0 +1,156 @@
+/* SVG Icons */
+.tcb-admin-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1em;
+  vertical-align: middle;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.tcb-header {
+  background: #468a30;
+  margin-left: -20px;
+  padding: 14px 20px;
+  #tcb-nav {
+    background: #468a30;
+    a {
+      float: left;
+      margin-bottom: -20px;
+      img {
+        width: 250px;
+        margin-top: 10px;
+      }
+    }
+  }
+  .tvd-right {
+    color: #fff;
+    li {
+      margin: 0;
+      a {
+        color: #fff !important;
+        font-size: 14px;
+        &:first-child {
+          height: 65px;
+        }
+        &#tvd-share-modal {
+          position: relative;
+          top: 22px;
+        }
+      }
+      &:last-child {
+        height: 65px;
+      }
+    }
+  }
+}
+
+.tcb-admin-red {
+  color: red;
+}
+
+#tcb-admin-breadcrumbs-wrapper {
+  background: #f8f8f8;
+  padding: 0 35px;
+  margin-left: -20px;
+  .clearfix {
+    clear: both;
+    margin-top: 0;
+  }
+}
+
+body.tcb-hide-wp-editor #postdivrich {
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+@media not screen and (-moz-windows-theme) {
+  :-moz-ui-valid, .tve-tabs-content {
+    overflow: hidden;
+  }
+}
+
+#tve-page-loader {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 300000002;
+  background-color: rgba(0, 0, 0, .7);
+  align-items: center;
+  justify-content: center;
+  display: none;
+
+  svg {
+    width: 0;
+    height: 0;
+  }
+
+  &.tve-open {
+    display: flex;
+  }
+
+  .loader-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-left: 40px;
+    width: 200px;
+    position: relative;
+
+    -ms-filter: url(#tcb-loading-dots);
+    filter: url(#tcb-loading-dots);
+
+    > div {
+      background: #64ae50;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      transform: translateX(0);
+      animation: sideways 2.5s infinite ease;
+    }
+
+    > div:nth-child(1) {
+      animation-delay: .25s;
+    }
+
+    > div:nth-child(2) {
+      animation-delay: .5s;
+    }
+
+    > div:nth-child(3) {
+      animation-delay: .75s;
+    }
+
+    > div:nth-child(4) {
+      animation-delay: 1s;
+    }
+
+    > div:nth-child(5) {
+      animation-delay: 1.25s
+    }
+  }
+
+  @keyframes circle {
+    50% {
+      width: 25px;
+      height: 25px;
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes sideways {
+    33% {
+      transform: translateX(50px);
+    }
+    66% {
+      transform: translateX(-50px);
+    }
+  }
+}

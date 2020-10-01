@@ -1,0 +1,6 @@
+<div class="tcb-hf-elem" data-id="<#= item.get('id') #>" data-type="symbol" data-cloud="<# if ( ! item.get('from_cloud') ) { #>0<# } else { #>1<# } #>">
+	<h3>
+		<#= ( item.get('title') )? item.get('title').rendered : item.get('post_title') #>
+	</h3>
+	<div style="background-image: url('<#= item.get('thumb').url #>');"></div>
+</div>

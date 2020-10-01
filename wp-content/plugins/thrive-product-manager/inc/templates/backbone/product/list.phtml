@@ -1,0 +1,73 @@
+<h1><?php echo __( 'Which products would you like to install and license on this site?', Thrive_Product_Manager::T ) ?></h1>
+
+<h2 class="products-h2"><?php echo __( 'Plugins', Thrive_Product_Manager::T ) ?></h2>
+
+<div class="tpm-items-controls">
+	<a href="<?php echo thrive_product_manager()->get_clear_cache_url() ?>"><?php echo __( 'Refresh list', Thrive_Product_Manager::T ) ?></a>
+
+	<label for="tpm-plugins-deselect-all">
+		<?php echo __( 'Deselect all', Thrive_Product_Manager::T ) ?>
+		<input type="checkbox" id="tpm-plugins-deselect-all" data-fn="deselect_all" data-args="plugins">
+		<span class="checkmark"></span>
+	</label>
+
+	<label for="tpm-plugins-select-all">
+		<?php echo __( 'Select all', Thrive_Product_Manager::T ) ?>
+		<input type="checkbox" id="tpm-plugins-select-all" data-fn="select_all" data-args="plugins">
+		<span class="checkmark"></span>
+	</label>
+</div>
+
+<div id="tpm-plugins-list"></div>
+
+<div id="tpm-skins-wrapper">
+	<h2 class="products-h2"><?php echo __( 'Thrive Theme Builder Themes', Thrive_Product_Manager::T ) ?></h2>
+
+	<div class="tpm-items-controls">
+		<a href="<?php echo thrive_product_manager()->get_clear_cache_url() ?>"><?php echo __( 'Refresh list', Thrive_Product_Manager::T ) ?></a>
+
+		<label for="tpm-skins-deselect-all">
+			<?php echo __( 'Deselect all', Thrive_Product_Manager::T ) ?>
+			<input type="checkbox" id="tpm-skins-deselect-all" data-fn="deselect_all" data-args="skins">
+			<span class="checkmark"></span>
+		</label>
+
+		<label for="tpm-skins-select-all">
+			<?php echo __( 'Select all', Thrive_Product_Manager::T ) ?>
+			<input type="checkbox" id="tpm-skins-select-all" data-fn="select_all" data-args="skins">
+			<span class="checkmark"></span>
+		</label>
+	</div>
+
+	<div id="tpm-skins-list"></div>
+</div>
+
+
+<h2 class="tpm-toggle products-h2" data-toggle="#tpm-legacy">
+	<span><?php echo __( 'Legacy Themes', Thrive_Product_Manager::T ) ?></span>
+	<span class="toggle-icon">+</span>
+</h2>
+<div class="tpm-hidden" id="tpm-legacy">
+	<div id="tpm-legacy-notice">
+		<h3><?php echo __( 'Legacy Themes Deprecated', Thrive_Product_Manager::T ); ?></h3>
+		<p><?php echo __( 'Please note that our legacy themes have been replaced by the Theme Builder and new Thrive Themes. While our legacy themes are still functional, we are no longer actively developing them. We will still provide support where we can.', Thrive_Product_Manager::T ) ?></p>
+	</div>
+
+	<div class="tpm-items-controls">
+		<a href="<?php echo thrive_product_manager()->get_clear_cache_url() ?>"><?php echo __( 'Refresh list', Thrive_Product_Manager::T ) ?></a>
+
+		<label for="tpm-themes-deselect-all">
+			<?php echo __( 'Deselect all', Thrive_Product_Manager::T ) ?>
+			<input type="checkbox" id="tpm-themes-deselect-all" data-fn="deselect_all" data-args="themes">
+			<span class="checkmark"></span>
+		</label>
+
+		<label for="tpm-themes-select-all">
+			<?php echo __( 'Select all', Thrive_Product_Manager::T ) ?>
+			<input type="checkbox" id="tpm-themes-select-all" data-fn="select_all" data-args="themes">
+			<span class="checkmark"></span>
+		</label>
+	</div>
+
+	<div id="tpm-themes-list"></div>
+</div>

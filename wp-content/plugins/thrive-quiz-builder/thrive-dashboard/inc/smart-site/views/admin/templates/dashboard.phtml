@@ -1,0 +1,24 @@
+<?php
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden
+}
+?>
+
+<?php include TVE_DASH_PATH . '/css/font/dashboard-icons.svg' ?>
+<div id="tvd-tss-wrap-all">
+	<div id="tvd-tss-header"></div>
+	<div class="tvd-tss-breadcrumbs-wrapper" id="tvd-tss-breadcrumbs-wrapper"></div>
+	<div id="tvd-tss-wrapper">
+		<div class="tvd-tss-menu"></div>
+		<div class="tvd-tss-content"></div>
+		<a href="<?php echo admin_url( 'admin.php?page=tve_dash_section' ); ?>" class="tvd-waves-effect tvd-waves-light tvd-btn-small tvd-btn-gray tvd-tss-back">
+			<?php echo __( "Back To Dashboard", TVE_DASH_TRANSLATE_DOMAIN ); ?>
+		</a>
+	</div>
+</div>

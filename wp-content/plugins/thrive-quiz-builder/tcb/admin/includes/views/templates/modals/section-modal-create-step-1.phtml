@@ -1,0 +1,41 @@
+<div class="tcb-hf-header">
+	<h2><?php echo __( 'Choose a ', 'thrive-cb' ) ?>
+		<#= section_name #>
+	</h2>
+	<div class="sub-header">
+		<ul class="tcb-hf-tabs-links">
+			<li data-tab="create-hf"><?php echo __( 'Create New ', 'thrive-cb' ); ?>
+				<#= section_name #>
+			</li>
+		</ul>
+		<div class="cont-right">
+			<input type="text" class='search-sections' name="search-sections" id="search-sections" placeholder="<?php echo __( 'Search ', 'thrive-cb' ); ?><#= section_name + 's' #>&nbsp;&hellip;">
+		</div>
+	</div>
+</div>
+
+<div class="tcb-hf-container create-hf">
+	<div class="tcb-hf-header-sep">
+		<h5><?php echo __( 'Start with one of our templates' ); ?></h5>
+		<span class="tcb-hf-icon" data-direction="top"></span>
+	</div>
+	<div class="our-templates"></div>
+	<div class="tcb-hf-header-sep">
+		<h5><?php echo __( 'Or use a saved ', 'thrive-cb' ); ?>
+			<#= section_name #><?php echo __( ' as a Template' ) ?></h5>
+		<span class="tcb-hf-icon" data-direction="top"></span>
+	</div>
+	<div class="saved-templates">
+		<div class="tcb-hf-elem click">
+			<h3><?php echo __( 'Our Template', 'thrive-cb' ) ?></h3>
+			<div style="background-image: url('');"></div>
+		</div>
+	</div>
+</div>
+
+<div class="tcb-hf-footer">
+	<button type="button" class="tcb-modal-close"><?php echo __( 'Cancel', 'thrive-cb' ) ?></button>
+	<button type="button" disabled="true" class="tcb-hf-right"><span class="user-action"><?php echo __( 'Choose ', 'thrive-cb' ) ?></span>
+		<#= section_name #>
+	</button>
+</div>

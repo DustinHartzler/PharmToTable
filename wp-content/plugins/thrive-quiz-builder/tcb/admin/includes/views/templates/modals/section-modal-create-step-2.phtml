@@ -1,0 +1,15 @@
+<div class="tcb-hf-header step-two">
+	<h2><?php echo __( 'Create a new ', 'thrive-cb' ) ?><#= type #></h2>
+</div>
+
+<div class="error-container"></div>
+
+<div class="tcb-hf-container step-two">
+	<div><?php echo __( 'Give a name to your ', 'thrive-cb' ) ?><#= type #>:<input type="text" class="item-title" id="dashboard-create-section" placeholder="Your New <#= type.charAt(0).toUpperCase() + type.slice(1) #>'s Name"></div>
+	<div class="item-create"></div>
+</div>
+
+<div class="tcb-hf-footer">
+	<button type="button" class="tcb-hf-back"><?php echo __( 'Back', 'thrive-cb' ) ?></button>
+	<a href="#" target="_blank" class="tcb-hf-right"><?php echo __( 'Add New ', 'thrive-cb' ) ?><#= type #></a>
+</div>

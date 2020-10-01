@@ -1,0 +1,31 @@
+<?php
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden
+}
+?>
+<ul>
+    <li class="<#= page == 'global_fields' ? 'active' : '' #>">
+        <a href="#global_fields">
+            <?php echo dashboard_icon( 'global-fields' ) ?>
+            <span>
+                <?php _e( 'Global Fields', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+            </span>
+        </a>
+    </li>
+<!--    <span class="tvd-tss-hl"></span>-->
+    <li class="<#= page == 'smart_complete' ? 'active' : '' #>">
+<!--        <a href="#smart_complete">-->
+<!--            --><?php //echo dashboard_icon( 'smart-complete' ) ?>
+<!--            <span>-->
+<!--                --><?php //_e( 'Smart Complete', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+<!--            </span>-->
+<!--        </a>-->
+    </li>
+<!--    <span class="tvd-tss-hl"></span>-->
+</ul>

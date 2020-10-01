@@ -1,0 +1,14 @@
+<div class="control-grid switch">
+	<div class="fill">
+		<span class="switch-label"><#= TVE.icon(this.model.config.icon ? this.model.config.icon : '' ) #> <#= this.model.config.label #></span>
+		<# if ( this.model.config.info ) { #>
+		<span class="click tve-switch-info" data-fn="openTooltip"><?php tcb_icon( 'info-circle-solid' ); ?></span>
+		<# } #>
+	</div>
+	<div class="tcb-switch tcb-text-right">
+		<label>
+			<input class="tve-checkbox change" data-fn="check" <#= this.model.config.name? 'data-name="' + this.model.config.name + '"':'' #> type="checkbox"<#=this.model.config.checked ? ' checked' : '' #>>
+			<span class="tcb-lever"></span>
+		</label>
+	</div>
+</div>

@@ -1,0 +1,19 @@
+<div class="tcb-tooltip">
+	<span class="tcb-tooltip-icon mr-15"><?php tcb_icon( '<#= icon #>' ); ?></span>
+	<div class="tcb-tooltip-text">
+		<p class="text-green tcb-text-uppercase mb-5">
+			<#= title #>
+		</p>
+		<p class="tcb-tooltip-info mb-10">
+			<#= info #>
+		</p>
+		<div class="tcb-tooltip-buttons">
+			<a href="#" class="tcb-button-dismiss click" data-fn="dismiss">
+				<?php echo esc_html__( "Don't show this again", 'thrive-cb' ); ?>
+			</a>
+			<a href="<#= learnMoreLink #>" target="_blank" class="tcb-button-more">
+				<?php echo __( 'Learn More', 'thrive-cb' ); ?>
+			</a>
+		</div>
+	</div>
+</div>

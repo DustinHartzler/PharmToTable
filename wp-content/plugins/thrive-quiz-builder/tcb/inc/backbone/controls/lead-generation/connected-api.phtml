@@ -1,0 +1,16 @@
+<div class="mt-10">
+	<div class="api-image" data-api="<#= this.model.get('key')#>" style="background-image: url('<#= this.model.logo() #>');"></div>
+		<span class="api-name"><#= TVE.ucFirst(this.model.get('name')) #></span>
+	<div class="api-actions">
+		<a type="button" class="button-link mr-10 click" data-fn="editApi" data-api="<#= this.model.get('key') #>">
+			<span>
+				<?php tcb_icon( 'pen-regular' ); ?>
+			</span>
+		</a>
+		<a type="button" class="button-link click" data-fn="disconnectApi" data-api="<#= this.model.get('key') #>">
+			<span>
+				<?php tcb_icon( 'ban-solid' ); ?>
+			</span>
+		</a>
+	</div>
+</div>
