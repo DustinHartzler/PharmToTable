@@ -280,7 +280,7 @@
                                             We offer a variety of times and days of the week for our orientation.
                                         </p>
                                         <p>
-                                        <a href="https://pharmtotable.life/intro-to-functional-medicine-orientation/" style="color: green; text-decoration: underline;">Click here to schedule your time!</a>
+                                        <a href="https://pharmtotable.life/product/introduction-to-functional-medicine-orientation/" style="color: green; text-decoration: underline;">Click here to schedule your time!</a>
                                         </p>
                                     </div>
                                 </div>
