@@ -88,7 +88,7 @@ get_header(); ?>
                             <!-- Single Item -->
                             <div id="tab1" class="tab-pane fade active in">
                                 <div class="info title">
-                                    <h3>Consulted by experienced doctors</h3>
+                                    <h3>First Step to Thriving</h3>
                                     <p>
                                     Looking to learn more about how our team can meet your health goals? Sign up for our Introduction to Functional Medicine Orientation. Secure your spot in our next class. </p>
                                     <a class="btn btn-theme border btn-md" href="#">Sign up for the Class</a>
