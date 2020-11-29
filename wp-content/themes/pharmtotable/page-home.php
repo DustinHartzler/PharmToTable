@@ -68,7 +68,7 @@ get_header(); ?>
                         <ul class="nav nav-pills">
                             <li class="active">
                                 <a data-toggle="tab" href="#tab1" aria-expanded="true">
-                                    Orientation Class
+                                    Discovery Class
                                 </a>
                             </li>
                             <li>
@@ -90,7 +90,7 @@ get_header(); ?>
                                 <div class="info title">
                                     <h3>First Step to Thriving</h3>
                                     <p>
-                                    Looking to learn more about how our team can meet your health goals? Sign up for our Introduction to Functional Medicine Orientation. Secure your spot in our next class. </p>
+                                    Looking to learn more about how our team can meet your health goals? Sign up for our Introduction to Functional Medicine Discovery session. Secure your spot in our next class. </p>
                                     <a class="btn btn-theme border btn-md" href="#">Sign up for the Class</a>
                                 </div>
                             </div>
