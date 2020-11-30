@@ -23,7 +23,7 @@ get_header(); ?>
                                         <p data-animation="animated slideInUp">
                                             Get personalized, convenient health care that addresses the underlying causes of chronic disease.
                                         </p>
-                                        <a data-animation="animated slideInUp" class="btn btn-light border btn-md" href="#">View Details</a>
+                                        <a data-animation="animated slideInUp" class="btn btn-light border btn-md" href="#">Join a Discovery Call</a>
                                     </div>
                                 </div>
                             </div>
