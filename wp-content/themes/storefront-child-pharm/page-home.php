@@ -122,7 +122,7 @@
                                         <p data-animation="animated slideInUp">
                                             Get personalized, convenient health care that addresses the underlying causes of chronic disease.
                                         </p>
-                                        <a data-animation="animated slideInUp" class="btn btn-light border btn-md" href="https://pharmtotable.life/product/introduction-to-functional-medicine-orientation/">Join an Orientation Class</a>
+                                        <a data-animation="animated slideInUp" class="btn btn-light border btn-md" href="https://pharmtotable.life/product/introduction-to-functional-medicine-orientation/">Join an Discovery Call</a>
                                     </div>
                                 </div>
                             </div>
@@ -165,7 +165,7 @@
                         <ul class="nav nav-pills">
                             <li class="active">
                                 <a data-toggle="tab" href="#tab1" aria-expanded="true">
-                                    Orientation Class
+                                    Discovery Class
                                 </a>
                             </li>
                             <li>
@@ -187,7 +187,7 @@
                                 <div class="info title">
                                     <h3>Consulted by experienced doctors</h3>
                                     <p>
-                                    Looking to learn more about how our team can meet your health goals? Sign up for our Introduction to Functional Medicine Orientation. Secure your spot in our next class. </p>
+                                    Looking to learn more about how our team can meet your health goals? Sign up for our Functional Medicine Orientation Discovery Class. Secure your spot in our next class. </p>
                                     <a class="btn btn-theme border btn-md" href="/product/introduction-to-functional-medicine-orientation/">Sign up for the Class</a>
                                 </div>
                             </div>
