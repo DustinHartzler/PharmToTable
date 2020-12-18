@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.5.0
  */
 class OMAPI_Rules_Exception extends Exception {
-	protected $bool = null;
+	protected $bool       = null;
 	protected $exceptions = array();
 	public function __construct( $message = null, $code = 0, Exception $previous = null ) {
 		if ( is_bool( $message ) ) {
@@ -324,15 +324,8 @@ class OMAPI_Rules {
 			$should_output = $e instanceof OMAPI_Rules_True;
 		}
 
-		$rules_debug = ! empty( $_GET['omwpdebug'] );
-
-		if ( $rules_debug ) {
-			$option      = OMAPI::get_instance()->get_option();
-			$rules_debug = ! empty( $option['api']['omwpdebug'] ) || is_user_logged_in() && apply_filters( 'optin_monster_api_menu_cap', 'manage_options', '' );
-		}
-
 		// If query var is set and user can manage OM, output debug data.
-		if ( apply_filters( 'optin_monster_api_should_output_rules_debug', $rules_debug ) ) {
+		if ( $this->can_output_debug() ) {
 			$this->output_debug();
 		}
 
@@ -771,6 +764,46 @@ class OMAPI_Rules {
 	}
 
 	/**
+	 * Check if rules debug can be output.
+	 *
+	 * @since  2.0.0
+	 *
+	 * @return bool
+	 */
+	public function can_output_debug() {
+		$rules_debug = ! empty( $_GET['omwpdebug'] ) ? $_GET['omwpdebug'] : '';
+
+		if ( $rules_debug ) {
+			$omapi         = OMAPI::get_instance();
+			$disable       = 'off' === $rules_debug;
+			$decoded       = base64_decode( base64_decode( $rules_debug ) );
+			$debug_enabled = $omapi->get_option( 'api', 'omwpdebug' );
+			$creds         = $omapi->get_api_credentials();
+			if (
+				! empty( $creds['apikey'] )
+				&& ( $decoded === $creds['apikey'] || $disable )
+			) {
+
+				$option = $omapi->get_option();
+
+				if ( $disable ) {
+					unset( $option['api']['omwpdebug'] );
+					$debug_enabled = false;
+				} else {
+					$option['api']['omwpdebug'] = true;
+					$debug_enabled = true;
+				}
+				update_option( 'optin_monster_api', $option );
+			}
+
+			$rules_debug = $debug_enabled || is_user_logged_in() && $omapi->can_access( 'rules_debug' );
+		}
+
+		// If query var is set and user can manage OM, output debug data.
+		return apply_filters( 'optin_monster_api_should_output_rules_debug', ! empty( $rules_debug ) );
+	}
+
+	/**
 	 * Outputs some debug data for the current campaign object.
 	 *
 	 * @since  1.6.2
@@ -781,6 +814,7 @@ class OMAPI_Rules {
 		$show = $this->caught instanceof OMAPI_Rules_True;
 
 		echo '<xmp class="_om-post-id">$post_id: ' . print_r( $this->post_id, true ) . '</xmp>';
+		echo '<xmp class="_om-post-id">$debug_enabled: ' . print_r( OMAPI::get_instance()->get_option( 'api', 'omwpdebug' ), true ) . '</xmp>';
 		echo '<xmp class="_om-campaign-status" style="color: ' . ( $show ? 'green' : 'red' ) . ';">' . $this->optin->post_name . ":\n" . print_r( $this->caught->getMessage(), true );
 		$reasons = $this->caught->get_exceptions();
 		if ( ! empty( $reasons ) ) {
@@ -792,7 +826,6 @@ class OMAPI_Rules {
 			echo ":\n\t- " . implode( "\n\t- ", $messages );
 		}
 		echo '</xmp>';
-
 
 		if ( ! empty( $this->advanced_settings ) ) {
 			echo '<xmp class="_om-advanced-settings">$advanced_settings: ' . print_r( $this->advanced_settings, true ) . '</xmp>';

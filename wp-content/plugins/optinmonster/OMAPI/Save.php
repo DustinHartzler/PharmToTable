@@ -39,13 +39,13 @@ class OMAPI_Save {
 	public $file = __FILE__;
 
 	/**
-	 * Holds any save errors.
+	 * Holds save error.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @var array
+	 * @var mixed
 	 */
-	public $errors = array();
+	public $error = null;
 
 	/**
 	 * Holds the base class object.
@@ -73,300 +73,8 @@ class OMAPI_Save {
 	 * @since 1.0.0
 	 */
 	public function set() {
-
 		self::$instance = $this;
 		$this->base     = OMAPI::get_instance();
-		$this->view     = isset( $_GET['optin_monster_api_view'] ) ? stripslashes( $_GET['optin_monster_api_view'] ) : $this->base->get_view();
-
-	}
-
-	/**
-	 * Maybe save options if the action has been requested.
-	 *
-	 * @since 1.0.0
-	 */
-	public function maybe_save() {
-
-		// If we are missing our save action, return early.
-		if ( empty( $_POST['omapi_save'] ) ) {
-			return;
-		}
-
-		// If the subkey is empty, return early.
-		if ( empty( $_POST['omapi'][ $this->view ] ) ) {
-			return;
-		}
-
-		// Run a current user check on saving.
-		if ( ! current_user_can( apply_filters( 'optin_monster_api_save_cap', 'manage_options' ) ) ) {
-			return;
-		}
-
-		// Verify the nonce field.
-		check_admin_referer( 'omapi_nonce_' . $this->view, 'omapi_nonce_' . $this->view );
-
-		// Save the settings.
-		$this->save();
-
-		// Provide action to save settings.
-		do_action( 'optin_monster_api_save_settings', $this->view );
-
-	}
-
-	/**
-	 * Save the plugin options.
-	 *
-	 * @since 1.0.0
-	 */
-	public function save() {
-
-		// Prepare variables.
-		$data = stripslashes_deep( $_POST['omapi'][ $this->view ] );
-
-		// Save the data.
-		switch ( $this->view ) {
-			case 'api':
-				// Create a new API instance to verify API credentials.
-				$option     = $this->base->get_option();
-				$apikey     = isset( $data['apikey'] ) ? $data['apikey'] : false;
-				$user       = isset( $data['user'] ) ? $data['user'] : false;
-				$key        = isset( $data['key'] ) ? $data['key'] : false;
-				$old_user   = isset( $option['api']['user'] ) ? $option['api']['user'] : false;
-				$old_key    = isset( $option['api']['key'] ) ? $option['api']['key'] : false;
-				$old_apikey = isset( $option['api']['apikey'] ) ? $option['api']['apikey'] : false;
-				if ( isset( $data['omwpdebug'] ) ) {
-					$option['api']['omwpdebug'] = true;
-				} else {
-					unset( $option['api']['omwpdebug'] );
-				}
-
-				// Check for new single apikey and break early with only that data check
-				if ( $apikey ) {
-
-					$creds = array( 'apikey' => $apikey );
-
-					// Verify this new API Key works but posting to the Legacy route
-					$result = OMAPI_Api::build( 'v1', 'verify/', 'POST', $creds )->request();
-
-					if ( is_wp_error( $result ) ) {
-						$this->errors['error'] = $result->get_error_message();
-						break;
-					}
-
-					// Store the optin data.
-					$this->store_optins( $result );
-
-					$option['api']['apikey'] = $apikey;
-
-					// Go ahead and remove the old user and key so we get the 'new' user stuff
-					$option['api']['user'] = '';
-					$option['api']['key']  = '';
-
-					// Remove any error messages.
-					$option['is_invalid']  = false;
-					$option['is_expired']  = false;
-					$option['is_disabled'] = false;
-					$option['connected']   = time();
-
-					// Remove any pre-saved site/user/account data, so we re-fetch it elsewhere
-					unset( $option['userId'] );
-					unset( $option['accountId'] );
-					unset( $option['siteId'] );
-					unset( $option['siteIds'] );
-					unset( $option['customApiUrl'] );
-
-					// Fetch the userId and accountId now.
-					$result = OMAPI_Api::build( 'v2', 'me', 'GET', $creds )->request();
-					if ( is_wp_error( $result ) ) {
-						$this->errors['error'] = $result->get_error_message();
-						break;
-					}
-
-					if ( isset( $result->id, $result->accountId ) ) {
-						$option['userId']    = $result->id;
-						$option['accountId'] = $result->accountId;
-					}
-
-					// Fetch the SiteIds for this site now.
-					$result = $this->base->sites->fetch( $apikey );
-					if ( is_wp_error( $result ) ) {
-						$this->errors['error'] = $result->get_error_message();
-						break;
-					}
-
-					$option = array_merge( $option, $result );
-
-					// Fetch the campaigns for this site now.
-					$this->base->refresh->refresh( $apikey );
-
-					// Save the option.
-					$this->update_optin_monster_api_option( $option, $data );
-
-					$this->base->menu->redirect_to_dashboard( 'optins' );
-				}
-
-				// Catch apikey not set errors
-				else {
-
-					// Did we used to have one and user is trying to remove it?
-					if ( $old_apikey ) {
-						$option['api']['apikey'] = '';
-
-						// Save the option.
-						update_option( 'optin_monster_api', $option );
-
-						// Explicitly end here so we don't accidentally try grabbing the next round of checks on $user and $key
-						$this->base->menu->redirect_to_dashboard();
-					}
-				}
-
-				// If one or both items are missing, fail.
-				if ( ! $user || ! $key ) {
-
-					// If it had been stored and it is now empty, reset the keys altogether.
-					if ( ! $user && $old_user || ! $key && $old_key ) {
-						$option['api']['user'] = '';
-						$option['api']['key']  = '';
-
-						// Save the option.
-						$this->update_optin_monster_api_option( $option, $data );
-					} else {
-						$this->errors['error'] = esc_html__( 'You must provide a valid API Key to authenticate with OptinMonster.', 'optin-monster-api' );
-					}
-				} else {
-					$api = new OMAPI_Api(
-						'verify/',
-						array(
-							'user' => $user,
-							'key'  => $key,
-						)
-					);
-					$ret = $api->request();
-					if ( is_wp_error( $ret ) ) {
-						$this->errors['error'] = $ret->get_error_message();
-					} else {
-						// This user and key are good to go!
-						$option['api']['user'] = $user;
-						$option['api']['key']  = $key;
-
-						// Remove any error messages.
-						$option['is_invalid']  = false;
-						$option['is_expired']  = false;
-						$option['is_disabled'] = false;
-						$option['connected']   = time();
-
-						// Store the optin data.
-						$this->store_optins( $ret );
-
-						// Save the option.
-						$this->update_optin_monster_api_option( $option, $data );
-					}
-				}
-				break;
-
-			case 'optins':
-				// Prepare variables.
-				$data['categories'] = isset( $_POST['post_category'] ) ? stripslashes_deep( $_POST['post_category'] ) : array();
-				$data['taxonomies'] = isset( $_POST['tax_input'] ) ? stripslashes_deep( $_POST['tax_input'] ) : array();
-				$optin_id           = absint( $_GET['optin_monster_api_id'] );
-				$fields             = array();
-				$fields['enabled']  = isset( $data['enabled'] ) ? 1 : 0;
-
-				$fields['automatic']  = isset( $data['automatic'] ) ? 1 : 0;
-				$fields['users']      = isset( $data['users'] ) ? esc_attr( $data['users'] ) : 'all';
-				$fields['never']      = isset( $data['never'] ) ? explode( ',', $data['never'] ) : array();
-				$fields['only']       = isset( $data['only'] ) ? explode( ',', $data['only'] ) : array();
-				$fields['categories'] = isset( $data['categories'] ) ? $data['categories'] : array();
-				$fields['taxonomies'] = isset( $data['taxonomies'] ) ? $data['taxonomies'] : array();
-				$fields['show']       = isset( $data['show'] ) ? $data['show'] : array();
-
-				// WooCommerce Fields.
-				$fields['show_on_woocommerce']               = isset( $data['show_on_woocommerce'] ) ? 1 : 0;
-				$fields['is_wc_shop']                        = isset( $data['is_wc_shop'] ) ? 1 : 0;
-				$fields['is_wc_product']                     = isset( $data['is_wc_product'] ) ? 1 : 0;
-				$fields['is_wc_cart']                        = isset( $data['is_wc_cart'] ) ? 1 : 0;
-				$fields['is_wc_checkout']                    = isset( $data['is_wc_checkout'] ) ? 1 : 0;
-				$fields['is_wc_account']                     = isset( $data['is_wc_account'] ) ? 1 : 0;
-				$fields['is_wc_endpoint']                    = isset( $data['is_wc_endpoint'] ) ? 1 : 0;
-				$fields['is_wc_endpoint_order_pay']          = isset( $data['is_wc_endpoint_order_pay'] ) ? 1 : 0;
-				$fields['is_wc_endpoint_order_received']     = isset( $data['is_wc_endpoint_order_received'] ) ? 1 : 0;
-				$fields['is_wc_endpoint_view_order']         = isset( $data['is_wc_endpoint_view_order'] ) ? 1 : 0;
-				$fields['is_wc_endpoint_edit_account']       = isset( $data['is_wc_endpoint_edit_account'] ) ? 1 : 0;
-				$fields['is_wc_endpoint_edit_address']       = isset( $data['is_wc_endpoint_edit_address'] ) ? 1 : 0;
-				$fields['is_wc_endpoint_lost_password']      = isset( $data['is_wc_endpoint_lost_password'] ) ? 1 : 0;
-				$fields['is_wc_endpoint_customer_logout']    = isset( $data['is_wc_endpoint_customer_logout'] ) ? 1 : 0;
-				$fields['is_wc_endpoint_add_payment_method'] = isset( $data['is_wc_endpoint_add_payment_method'] ) ? 1 : 0;
-
-				// Save the data from the regular taxonomies fields into the WC specific tax field.
-				$fields['is_wc_product_category'] = isset( $data['taxonomies']['product_cat'] ) ? $data['taxonomies']['product_cat'] : array();
-				$fields['is_wc_product_tag']      = isset( $data['taxonomies']['product_tag'] ) ? $data['taxonomies']['product_tag'] : array();
-
-				// Convert old test mode data and remove.
-				$test_mode = get_post_meta( $optin_id, '_omapi_test', true );
-				if ( isset( $test_mode ) && $test_mode ) {
-					$fields['users'] = 'in';
-					delete_post_meta( $optin_id, '_omapi_test' );
-				}
-
-				if ( $this->base->is_mailpoet_active() ) {
-					$fields['mailpoet']             = isset( $data['mailpoet'] ) ? 1 : 0;
-					$fields['mailpoet_list']        = isset( $data['mailpoet_list'] ) ? esc_attr( $data['mailpoet_list'] ) : 'none';
-					$fields['mailpoet_phone_field'] = isset( $data['mailpoet_use_phone'], $data['mailpoet_phone_field'] ) ? esc_attr( $data['mailpoet_phone_field'] ) : '';
-				}
-
-				// Allow fields to be filtered.
-				$fields = apply_filters( 'optin_monster_save_fields', $fields, $optin_id );
-
-				// Loop through each field and save the data.
-				foreach ( $fields as $key => $val ) {
-					update_post_meta( $optin_id, '_omapi_' . $key, $val );
-				}
-				break;
-
-			case 'settings':
-				$option                        = $this->base->get_option();
-				$option['settings']['cookies'] = isset( $data['cookies'] ) ? 1 : 0;
-
-				// Save the option.
-				$this->update_optin_monster_api_option( $option, $data );
-				break;
-
-			case 'woocommerce':
-				if ( ! empty( $data['autogenerate'] ) ) {
-					// Auto-generate a key pair.
-					$auto_generated_keys = $this->woocommerce_autogenerate();
-					if ( empty( $auto_generated_keys ) ) {
-						$this->errors['error'] = esc_html__( 'WooCommerce REST API keys could not be auto-generated on your behalf. Please try again.', 'optin-monster-api' );
-						break;
-					}
-
-					// Merge data array, with auto-generated keys array.
-					$data = array_merge( $data, $auto_generated_keys );
-				}
-
-				if ( empty( $data['disconnect'] ) ) {
-					$this->woocommerce_connect( $data );
-				} else {
-					$this->woocommerce_disconnect( $data );
-				}
-				break;
-			default:
-				break;
-		}
-
-		// If selected, clear out all local cookies.
-		if ( $this->base->get_option( 'settings', 'cookies' ) ) {
-			$this->base->actions->cookies();
-		}
-
-		// Add message to show error or success messages.
-		if ( ! empty( $this->errors ) ) {
-			add_action( 'all_admin_notices', array( $this, 'errors' ) );
-		} else {
-			// Add a success message.
-			add_action( 'all_admin_notices', array( $this, 'message' ) );
-		}
-
 	}
 
 	/**
@@ -611,7 +319,7 @@ class OMAPI_Save {
 
 			$shortcodes = is_array( $shortcodes )
 				? implode( '|||', array_map( 'htmlentities', $shortcodes ) )
-				: (array) htmlentities( $shortcodes );
+				: (array) htmlentities( $shortcodes, ENT_COMPAT, 'UTF-8' );
 
 			update_post_meta( $post_id, '_omapi_shortcode_output', $shortcodes );
 			update_post_meta( $post_id, '_omapi_shortcode', true );
@@ -624,31 +332,14 @@ class OMAPI_Save {
 	/**
 	 * Updated the `optin_monster_api` option in the database.
 	 *
-	 * @since 1.7.0
-	 *
-	 * @param array  $option The full `optin_monster_api` option array.
-	 * @param array  $data   The parameters passed in via POST request.
-	 * @param string $view   The current settings menu view.
-	 *
-	 * @return void
-	 */
-	public function update_optin_monster_api_option( $option, $data, $view = '' ) {
-		$this->update_option( $option, $view, $data );
-	}
-
-	/**
-	 * Updated the `optin_monster_api` option in the database.
-	 *
 	 * @since 1.9.8
 	 *
 	 * @param array  $option The full `optin_monster_api` option array.
-	 * @param string $view   Optional. The current settings menu view.
 	 * @param array  $data   Optional. The parameters passed in via POST request.
 	 *
 	 * @return mixed The results of update_option.
 	 */
-	public function update_option( $option, $view = '', $data = array() ) {
-		$view = $view ? $view : $this->view;
+	public function update_option( $option, $data = array() ) {
 
 		// Allow storing the timestamp of when the API is connected for "first time".
 		// We are not changing it if the user disconnects and reconnects.
@@ -664,9 +355,8 @@ class OMAPI_Save {
 		 *
 		 * @param array  $option The full `optin_monster_api` option array.
 		 * @param array  $data   The parameters passed in via POST request.
-		 * @param string $view   The current settings menu view.
 		 */
-		$option = apply_filters( 'optin_monster_api_save', $option, $data, $view );
+		$option = apply_filters( 'optin_monster_api_save', $option, $data );
 
 		// Save the option.
 		return update_option( 'optin_monster_api', $option );
@@ -679,10 +369,10 @@ class OMAPI_Save {
 	 *
 	 * @return array
 	 */
-	public function woocommerce_autogenerate() {
+	public function woocommerce_autogenerate( $wp_error = true ) {
 		$cookies = array();
 		foreach ( $_COOKIE as $name => $val ) {
-			$cookies[] = "$name=" . urlencode( is_array( $val ) ? serialize( $val ) : $val );
+			$cookies[] = "$name=" . rawurlencode( is_array( $val ) ? serialize( $val ) : $val );
 		}
 		$cookies = implode( '; ', $cookies );
 
@@ -701,8 +391,12 @@ class OMAPI_Save {
 			),
 		);
 		$response     = wp_remote_post( admin_url( 'admin-ajax.php' ), $request_args );
-		$code         = wp_remote_retrieve_response_code( $response );
-		$body         = json_decode( wp_remote_retrieve_body( $response ) );
+		if ( $wp_error && is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		$body = json_decode( wp_remote_retrieve_body( $response ) );
 
 		if (
 			200 === intval( $code )
@@ -726,11 +420,11 @@ class OMAPI_Save {
 	 *
 	 * @return void
 	 */
-	protected function woocommerce_connect( $data ) {
+	public function woocommerce_connect( $data ) {
 		$keys = $this->base->woocommerce->validate_keys( $data );
 
 		if ( isset( $keys['error'] ) ) {
-			$this->errors['error'] = $keys['error'];
+			$this->error = $keys['error'];
 		} else {
 
 			// Get the version of the REST API we should use. The
@@ -755,7 +449,7 @@ class OMAPI_Save {
 
 			// Output an error or register a successful connection.
 			if ( is_wp_error( $response ) ) {
-				$this->errors['error'] = isset( $response->message )
+				$this->error = isset( $response->message )
 					? $response->message
 					: esc_html__( 'WooCommerce could not be connected to OptinMonster. The OptinMonster API returned with the following response: ', 'optin-monster-api' ) . $response->get_error_message();
 			} else {
@@ -777,7 +471,7 @@ class OMAPI_Save {
 				);
 
 				// Save the option.
-				$this->update_optin_monster_api_option( $option, $data );
+				$this->update_option( $option, $data );
 			}
 		}
 	}
@@ -791,12 +485,12 @@ class OMAPI_Save {
 	 *
 	 * @return void
 	 */
-	protected function woocommerce_disconnect( $data ) {
+	public function woocommerce_disconnect( $data ) {
 		$response = $this->base->woocommerce->disconnect();
 
 		// Output an error or register a successful disconnection.
 		if ( is_wp_error( $response ) ) {
-			$this->errors['error'] = isset( $response->message )
+			$this->error = isset( $response->message )
 				? $response->message
 				: esc_html__( 'WooCommerce could not be disconnected from OptinMonster. The OptinMonster API returned with the following response: ', 'optin-monster-api' ) . $response->get_error_message();
 		} else {
@@ -805,36 +499,7 @@ class OMAPI_Save {
 			unset( $option['woocommerce'] );
 
 			// Save the option.
-			$this->update_optin_monster_api_option( $option, $data );
+			$this->update_option( $option, $data );
 		}
 	}
-
-	/**
-	 * Output any error messages.
-	 *
-	 * @since 1.0.0
-	 */
-	public function errors() {
-
-		foreach ( $this->errors as $id => $message ) :
-			?>
-		<div class="<?php echo sanitize_html_class( $id, 'error' ); ?>"><p><?php echo $message; ?></p></div>
-			<?php
-		endforeach;
-
-	}
-
-	/**
-	 * Output a save message.
-	 *
-	 * @since 1.0.0
-	 */
-	public function message() {
-
-		?>
-		<div class="updated"><p><?php esc_html_e( 'Your settings have been saved successfully.', 'optin-monster-api' ); ?></p></div>
-		<?php
-
-	}
-
 }

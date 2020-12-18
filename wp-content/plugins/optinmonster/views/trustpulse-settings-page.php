@@ -2,17 +2,11 @@
 	<h1 class="tp-heading">Boost Your Sales and Conversions with Social Proof Notifications</h1>
 	<div class="tp-admin-box">
 		<p>TrustPulse helps you leverage the true power of social proof to instantly increase trust, conversions and sales by up to 15%</p>
-		<div class="notice notice-error" style="display:none;" id="om-plugin-alerts"></div>
-		<form class="install-plugin-form">
-			<?php wp_nonce_field( 'install_plugin', 'nonce' ); ?>
-			<input type="hidden" name="plugin" value="trustpulse-api/trustpulse.php">
-			<input type="hidden" name="url" value="https://downloads.wordpress.org/plugin/trustpulse-api.zip">
-
+		<div class="notice notice-error" style="display:none;margin-bottom: 15px;" id="om-plugin-alerts"></div>
+		<form class="install-plugin-form" action="<?php echo esc_url( $data['plugin_search_url'] ); ?>" method="post">
 			<?php if ( $data['has_plugin'] ) : ?>
-				<input type="hidden" name="action" value="activate">
 				<button type="submit" id="activateButton" class="button button-primary button-activate">Activate the TrustPulse Plugin</button>
 			<?php else : ?>
-				<input type="hidden" name="action" value="install">
 				<button type="submit" id="installButton" class="button button-primary button-install">Install & Activate the TrustPulse Plugin</button>
 			<?php endif; ?>
 		</form>

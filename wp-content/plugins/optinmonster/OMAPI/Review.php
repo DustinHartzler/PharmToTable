@@ -53,13 +53,33 @@ class OMAPI_Review {
 	 * @since 1.1.4.5
 	 */
 	public function __construct() {
+		// If we are not in admin or admin ajax, return.
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		// If user is not logged in, return.
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		// If user cannot manage_options, return.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		// Set our object.
 		$this->set();
 
+		add_action( 'wp_ajax_omapi_dismiss_review', array( $this, 'dismiss_review' ) );
+
+		// If user is in admin ajax or doing cron, return.
+		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
+			return;
+		}
+
 		// Review Notices
 		add_action( 'admin_notices', array( $this, 'review' ) );
-		add_action( 'wp_ajax_omapi_dismiss_review', array( $this, 'dismiss_review' ) );
 	}
 
 	/**
@@ -78,12 +98,6 @@ class OMAPI_Review {
 	 * @since 1.1.6.1
 	 */
 	public function review() {
-
-		// Don't show review request notice on welcome page.
-		if ( ! empty( $_GET['page'] ) && 'optin-monster-api-welcome' === $_GET['page'] ) {
-			return;
-		}
-
 		$review = get_option( 'omapi_review' );
 
 		// If already dismissed...

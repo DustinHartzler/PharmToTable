@@ -119,39 +119,55 @@ class OMAPI_Blocks {
 
 		// For translation of strings.
 		$i18n                = array(
-			'title'             => esc_html__( 'OptinMonster Campaign', 'optin-monster-api' ),
-			'description'       => esc_html__( 'Select &amp; display one of your OptinMonster inline Campaigns.', 'optin-monster-api' ),
-			'campaign_select'   => esc_html__( 'Select a Campaign', 'optin-monster-api' ),
-			'campaign_settings' => esc_html__( 'OptinMonster Settings', 'optin-monster-api' ),
-			'campaign_selected' => esc_html__( 'Campaign', 'optin-monster-api' ),
-			'followrules_label' => esc_html__( 'Use Output Settings' ),
-			'followrules_help'  => esc_html__( 'Ensure this campaign follows any conditions you\'ve selected in its %s', 'optin-monster-api' ),
-			'output_settings'   => esc_html__( 'Output Settings', 'optin-monster-api' ),
-			'no_campaigns'      => esc_html__( 'No inline campaigns available!', 'optin-monster-api' ),
-			'no_campaigns_help' => esc_html__( 'Create an inline campaign in order to display them in your WordPress posts/pages. Alternatively, use a Monster Link to trigger another campaign type.', 'optin-monster-api' ),
-			'found_error'       => esc_html__( 'An error was encountered', 'optin-monster-api' ),
+			'title'                           => esc_html__( 'OptinMonster', 'optin-monster-api' ),
+			'description'                     => esc_html__( 'Select and display one of your OptinMonster inline campaigns.', 'optin-monster-api' ),
+			'campaign_select'                 => esc_html__( 'Select a Campaign', 'optin-monster-api' ),
+			'campaign_settings'               => esc_html__( 'OptinMonster Settings', 'optin-monster-api' ),
+			'campaign_selected'               => esc_html__( 'Campaign', 'optin-monster-api' ),
+			'followrules_label'               => esc_html__( 'Use Output Settings' ),
+			'followrules_help'                => esc_html__( 'Ensure this campaign follows any conditions you\'ve selected in its %s.', 'optin-monster-api' ),
+			'output_settings'                 => esc_html__( 'Output Settings', 'optin-monster-api' ),
+			'no_sites'                        => esc_html__( 'Please create a free account or connect an existing account to use an OptinMonster block.', 'optin-monster-api' ),
+			'no_sites_button_create_account'  => esc_html__( 'Create a Free Account', 'optin-monster-api' ),
+			'no_sites_button_connect_account' => esc_html__( 'Connect an Existing Account', 'optin-monster-api' ),
+			'no_campaigns'                    => esc_html__( 'You don’t have any campaigns yet!', 'optin-monster-api' ),
+			'no_campaigns_help'               => esc_html__( 'Create an inline campaign to display in your posts and pages.', 'optin-monster-api' ),
+			'no_campaigns_button'             => esc_html__( 'Create Your First Campaign', 'optin-monster-api' ),
+			'no_campaigns_button_help'        => esc_html__( 'Learn how to create your first campaign', 'optin-monster-api' ),
+			'found_error'                     => esc_html__( 'An error was encountered', 'optin-monster-api' ),
 		);
-		$i18n['description'] = html_entity_decode( $i18n['description'] );
+		$i18n['description'] = html_entity_decode( $i18n['description'], ENT_COMPAT, 'UTF-8' );
 
 		$campaigns = $this->base->get_optins();
+		$site_ids = $this->base->get_site_ids();
 		wp_localize_script(
 			$script_id,
 			'OMAPI',
 			array(
-				'logoUrl'   => $this->base->url . 'assets/css/images/logo-om.png',
-				'i18n'      => $i18n,
-				'campaigns' => ! empty( $campaigns ) ? $campaigns : array(),
-				'post'      => get_post(),
-				'omEnv'     => defined( 'OPTINMONSTER_ENV' ) ? OPTINMONSTER_ENV : '',
-				'apiUrl'    => esc_url_raw( $this->base->get_api_url() ),
-				'omUserId'  => $this->base->get_option( 'userId' ),
-				'editUrl'   => $this->base->menu->get_settings_link(
-					'optins',
+				'logoUrl'      => $this->base->url . 'assets/images/archie-icon.svg',
+				'i18n'         => $i18n,
+				'campaigns'    => ! empty( $campaigns ) ? $campaigns : array(),
+				'site_ids'     => ! empty( $site_ids ) ? $site_ids : array(),
+				'post'         => get_post(),
+				'omEnv'        => defined( 'OPTINMONSTER_ENV' ) ? OPTINMONSTER_ENV : '',
+				'templatesUri' => add_query_arg(
 					array(
-						'optin_monster_api_action' => 'edit',
-						'optin_monster_api_id'     => '%d',
-					)
+						'page' => 'optin-monster-templates'
+					), admin_url( '/admin.php' )
 				),
+				'settingsUri' => add_query_arg(
+					array(
+						'page' => 'optin-monster-settings'
+					), admin_url( '/admin.php' )
+				),
+				'wizardUri' => add_query_arg(
+					array(
+						'page' => 'optin-monster-onboarding-wizard'
+					), admin_url( '/admin.php' )
+				),
+				'apiUrl'       => esc_url_raw( $this->base->get_api_url() ),
+				'omUserId'     => $this->base->get_option( 'userId' ),
+				'editUrl'      => $this->base->menu->edit_output_settings( '%s' ),
 			)
 		);
 	}

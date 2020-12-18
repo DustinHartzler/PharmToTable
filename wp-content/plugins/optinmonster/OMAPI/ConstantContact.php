@@ -109,7 +109,7 @@ class OMAPI_ConstantContact {
 			$parent_slug, // parent slug
 			esc_html__( 'OptinMonster with Constant Contact', 'optin-monster-api' ), // page title,
 			esc_html__( 'OptinMonster + Constant Contact', 'optin-monster-api' ),
-			apply_filters( 'optin_monster_api_menu_cap', 'manage_options', $slug ), // cap
+			$this->base->access_capability( $slug ), // cap
 			$slug, // slug
 			array( $this, 'display_page' ) // callback
 		);
@@ -157,7 +157,7 @@ class OMAPI_ConstantContact {
 			return;
 		}
 
-		$connect    = $this->base->menu->get_settings_link();
+		$connect    = $this->base->menu->get_onboarding_link();
 		$learn_more = $this->base->menu->admin_page_url( array( 'page' => 'optin-monster-constant-contact' ) );
 
 		// Output the notice message.
@@ -179,7 +179,7 @@ class OMAPI_ConstantContact {
 				</a>
 				<?php if ( ! $is_om_page ) { ?>
 					<a href="<?php echo esc_url( $connect ); ?>" class="button-secondary">
-						<?php esc_html_e( 'Connect your existing account', 'optin-monster-api' ); ?>
+						<?php esc_html_e( 'Get Started', 'optin-monster-api' ); ?>
 					</a>
 				<?php } ?>
 				<?php
@@ -242,9 +242,21 @@ class OMAPI_ConstantContact {
 	 * @since 1.6.0
 	 */
 	public function assets() {
+		add_filter( 'admin_body_class', array( $this, 'add_body_classes' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->base->menu, 'styles' ) );
 		add_filter( 'admin_footer_text', array( $this, 'footer' ) );
 		add_action( 'in_admin_header', array( $this->base->menu, 'output_plugin_screen_banner' ) );
+	}
+
+	/**
+	 * Add body classes.
+	 *
+	 * @since 2.0.0
+	 */
+	public function add_body_classes( $classes ) {
+		$classes .= ' omapi-constant-contact ';
+
+		return $classes;
 	}
 
 	/**
@@ -265,8 +277,6 @@ class OMAPI_ConstantContact {
 
 	/**
 	 * Outputs the Review Page.
-	 *
-	 * TODO: Update the copy for OM
 	 *
 	 * @since 1.6.0
 	 */

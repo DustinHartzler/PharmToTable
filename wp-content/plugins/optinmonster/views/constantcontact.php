@@ -1,6 +1,11 @@
 <style type="text/css">
-	.admin_page_optin-monster-constant-contact #wpbody {
+	.omapi-constant-contact #wpcontent {
+		padding: 0;
+	}
+	.omapi-constant-contact #wpbody {
 		background: #fff;
+		padding-left: 40px;
+		padding-right: 40px;
 	}
 
 	.notice {

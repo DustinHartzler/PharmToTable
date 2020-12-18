@@ -39,7 +39,19 @@ class OMAPI_Sites {
 	 *
 	 * @return array|null $sites An array of sites if the request is successful
 	 */
-	public function fetch( $api_key = null ) {
+	public function fetch( $api_key = null, $get_cached = false ) {
+		$cache_key = 'om_sites' . md5( $api_key );
+
+		if ( $get_cached ) {
+			$results = get_transient( $cache_key );
+			if ( ! empty( $results ) ) {
+				return $results;
+			}
+		}
+
+		// Delete any cached sites.
+		delete_transient( $cache_key );
+
 		$creds = ! empty( $api_key ) ? array( 'apikey' => $api_key ) : array();
 		$body  = OMAPI_Api::build( 'v2', 'sites/origin', 'GET', $creds )->request();
 
@@ -54,21 +66,24 @@ class OMAPI_Sites {
 		);
 
 		$domain = $this->get_domain();
+		$tld    = $this->get_tld( $domain );
+
 		if ( ! empty( $body->data ) ) {
 			$checkCnames = true;
 			foreach ( $body->data as $site ) {
-				$results['siteIds'][] = (string) $site->siteId;
-
 				if ( empty( $site->domain ) ) {
 					continue;
 				}
 
 				$matches        = $domain === (string) $site->domain;
-				$wildcardDomain = '*.' === substr( $site->domain, 0, 2 );
+				$wildcardDomain = '*.' === substr( $site->domain, 0, 2 ) && $tld === $this->get_tld( $site->domain );
 
+				// Doesn't match, and not a wildcard? Bail.
 				if ( ! $matches && ! $wildcardDomain ) {
 					continue;
 				}
+
+				$results['siteIds'][] = (string) $site->siteId;
 
 				// If we don't have a siteId yet, set it to this one.
 				// If we DO already have a siteId and this one is NOT a wildcard,
@@ -111,6 +126,10 @@ class OMAPI_Sites {
 			if ( ! empty( $site->siteId ) ) {
 				$results['siteId'] = (string) $site->siteId;
 			}
+		}
+
+		if ( ! is_wp_error( $results ) && ! empty( $results['siteIds'] ) ) {
+			set_transient( $cache_key, $results, 5 * MINUTE_IN_SECONDS );
 		}
 
 		return $results;
@@ -163,6 +182,23 @@ class OMAPI_Sites {
 	}
 
 	/**
+	 * Get the top-level-domain for the given domain.
+	 *
+	 * @since  2.0.1
+	 *
+	 * @param  string  $domain Domain to get tld for.
+	 *
+	 * @return string          The tld.
+	 */
+	public function get_tld( $domain ) {
+		$parts = explode( '.', $domain );
+		$count = count( $parts );
+		$tld   = array_slice( $parts, max( 0, $count - 2 ) );
+
+		return implode( '.', $tld );
+	}
+
+	/**
 	 * Updates the error text when we try to auto-create this WP site, but it fails.
 	 *
 	 * @since  1.9.10
@@ -172,7 +208,8 @@ class OMAPI_Sites {
 	 * @return WP_Error
 	 */
 	public function handle_error( $error ) {
-		if ( 402 === (int) $error->get_error_data() && ! empty( OMAPI_Api::instance()->response_body->siteAmount ) ) {
+		$instance = OMAPI_Api::instance();
+		if ( 402 === (int) $error->get_error_data() && ! empty( $instance->response_body->siteAmount ) ) {
 
 			$message = sprintf(
 				__( 'We tried to register your WordPress site with OptinMonster, but You have reached the maximum number of registered sites for your current OptinMonster plan.<br>Additional sites can be added to your account by <a href="%1$s" target="_blank" rel="noopener">upgrading</a> or <a href="%2$s" target="_blank" rel="noopener">purchasing additional site licenses</a>.', 'optin-monster-api' ),

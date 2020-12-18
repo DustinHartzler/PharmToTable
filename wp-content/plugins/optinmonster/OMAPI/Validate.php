@@ -71,11 +71,8 @@ class OMAPI_Validate {
 	 * @since 1.0.0
 	 */
 	public function set() {
-
 		self::$instance = $this;
 		$this->base     = OMAPI::get_instance();
-		$this->view     = isset( $_GET['optin_monster_api_view'] ) ? stripslashes( $_GET['optin_monster_api_view'] ) : $this->base->get_view();
-
 	}
 
 	/**
@@ -94,7 +91,7 @@ class OMAPI_Validate {
 		}
 
 		// Check if the transient has expired.
-		if ( false !== ( $transient = get_transient( '_omapi_validate' ) ) ) {
+		if ( false !== get_transient( '_omapi_validate' ) ) {
 			return;
 		}
 
@@ -102,7 +99,7 @@ class OMAPI_Validate {
 		$this->validate();
 
 		// Provide action to refresh optins.
-		do_action( 'optin_monster_api_validate_api', $this->view );
+		do_action( 'optin_monster_api_validate_api' );
 
 	}
 
@@ -181,8 +178,8 @@ class OMAPI_Validate {
 
 		$option = $this->base->get_option();
 		if ( isset( $option['is_invalid'] ) && $option['is_invalid'] ) {
-			if ( 'optin-monster-api-settings' !== $page && 'optin-monster-api-welcome' !== $page ) {
-				if ( ! $this->base->menu->has_trial_link() ) {
+			if ( 'optin-monster-dashboard' !== $page ) {
+				if ( ! OMAPI_Partners::has_partner_url() ) {
 					echo '<div class="notice notice-error"><p>' . esc_html__( 'There was an error verifying your OptinMonster API credentials. They are either missing or they are no longer valid.', 'optin-monster-api' ) . '</p>';
 					echo '<p><a href="' . esc_url_raw( $this->base->menu->get_settings_link() ) . '" class="button button-primary button-large omapi-new-optin" title="' . esc_html__( 'View API Settings', 'optin-monster-api' ) . '">' . esc_html__( 'View API Settings', 'optin-monster-api' ) . '</a></p></div>';
 				}
@@ -196,8 +193,17 @@ class OMAPI_Validate {
 		} else {
 			if ( $this->should_user_see_connect_nag() ) {
 
-				echo '<div id="omapi-please-connect-notice" class="notice notice-success is-dismissible"><h3 style="padding:2px;font-weight:normal;margin:.5em 0 0;">' . esc_html__( 'Get More Email Subscribers with OptinMonster', 'optin-monster-api' ) . '</h3><p>' . esc_html__( 'Please connect to or create an OptinMonster account to start using OptinMonster. This will enable you to start turning website visitors into subscribers & customers.', 'optin-monster-api' ) . '</p>';
-				echo '<p><a href="' . esc_url_raw( $this->base->menu->get_dashboard_link() ) . '" class="button button-primary button-large omapi-new-optin" title="' . esc_html__( 'Connect OptinMonster', 'optin-monster-api' ) . '">' . esc_html__( 'Connect OptinMonster' ) . '</a></p></div>';
+				echo '
+				<div id="omapi-please-connect-notice" class="notice notice-success is-dismissible">
+					<h3 style="padding:2px;font-weight:normal;margin:.5em 0 0;">' . esc_html__( 'Get More Email Subscribers with OptinMonster', 'optin-monster-api' ) . '</h3>
+					<p>' . esc_html__( 'Please connect to or create an OptinMonster account to start using OptinMonster. This will enable you to start turning website visitors into subscribers & customers.', 'optin-monster-api' ) . '
+					</p>
+					<p>
+						<a href="' . esc_url_raw( $this->base->menu->get_onboarding_link() ) . '" class="button button-primary button-large omapi-new-optin" title="' . esc_html__( 'Get Started', 'optin-monster-api' ) . '">' . esc_html__( 'Get Started' ) . '</a>
+						<a style="margin-left:8px" href="'. esc_url( $this->base->menu->get_onboarding_link() ) . '" title="' . esc_attr__( 'Learn More', 'optin-monster-api' ) . '">' . esc_html__( 'Learn More &rarr;', 'optin-monster-api' ) . '</a>
+					</p>
+				</div>
+				';
 			}
 		}
 

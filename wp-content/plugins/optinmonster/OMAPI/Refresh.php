@@ -90,32 +90,8 @@ class OMAPI_Refresh {
 	 * @since 1.0.0
 	 */
 	public function set() {
-
 		self::$instance = $this;
 		$this->base     = OMAPI::get_instance();
-		$this->view     = isset( $_GET['optin_monster_api_view'] ) ? stripslashes( $_GET['optin_monster_api_view'] ) : $this->base->get_view();
-	}
-
-	/**
-	 * Maybe refresh optins if the action has been requested.
-	 *
-	 * @since 1.0.0
-	 */
-	public function maybe_refresh() {
-
-		// If we are missing our save action, return early.
-		if ( empty( $_POST['omapi_refresh'] ) ) {
-			return;
-		}
-
-		// Verify the nonce field.
-		check_admin_referer( 'omapi_nonce_' . $this->view, 'omapi_nonce_' . $this->view );
-
-		// Refresh the optins.
-		$this->refresh();
-
-		// Provide action to refresh optins.
-		do_action( 'optin_monster_api_refresh_optins', $this->view );
 	}
 
 	/**
@@ -174,15 +150,7 @@ class OMAPI_Refresh {
 				$option = array_merge( $option, $result );
 			}
 
-			$this->base->save->update_option( $option, $this->view );
-		}
-
-		add_action( 'all_admin_notices', array( $this, 'error' ) );
-
-		if ( ! $this->error ) {
-
-			// Set success message.
-			add_action( 'all_admin_notices', array( $this, 'message' ) );
+			$this->base->save->update_option( $option );
 		}
 
 		return $this->error ? $this->error : true;
@@ -198,7 +166,7 @@ class OMAPI_Refresh {
 	 *
 	 * @return WP_Error|bool True if successful.
 	 */
-	public function sync( $campaign_id, $is_legacy ) {
+	public function sync( $campaign_id, $is_legacy = false ) {
 		$time = time();
 		$path = "for-wp/{$campaign_id}?t={$time}";
 		if ( $is_legacy ) {
@@ -227,31 +195,6 @@ class OMAPI_Refresh {
 		}
 
 		return $this->error ? $this->error : true;
-	}
-
-	/**
-	 * Output an error message.
-	 *
-	 * @since 1.0.0
-	 */
-	public function error() {
-		if ( is_wp_error( $this->error ) ) {
-			?>
-			<div class="updated error"><p><?php echo $this->error->get_error_message(); ?></p></div>
-			<?php
-		}
-	}
-
-	/**
-	 * Output a refresh message.
-	 *
-	 * @since 1.0.0
-	 */
-	public function message() {
-
-		?>
-		<div class="updated"><p><?php esc_html_e( 'Your campaigns have been refreshed successfully.', 'optin-monster-api' ); ?></p></div>
-		<?php
 	}
 
 	/**

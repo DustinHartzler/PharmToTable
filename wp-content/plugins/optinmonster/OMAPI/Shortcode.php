@@ -166,16 +166,11 @@ class OMAPI_Shortcode {
 	 */
 	public function shortcode_v1( $atts ) {
 
-		// Checking if AMP is enabled.
-		if ( OMAPI_Utils::is_amp_enabled() ) {
-			return;
-		}
-
 		// Run the v2 implementation.
 		$atts['slug'] = $atts['id'];
 		unset( $atts['id'] );
-		return $this->shortcode( $atts );
 
+		return $this->shortcode( $atts );
 	}
 
 }

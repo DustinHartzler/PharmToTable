@@ -67,10 +67,8 @@ class OMAPI_Type {
 	 * @since 1.0.0
 	 */
 	public function set() {
-
 		self::$instance = $this;
 		$this->base     = OMAPI::get_instance();
-		$this->view     = isset( $_GET['optin_monster_api_view'] ) ? stripslashes( $_GET['optin_monster_api_view'] ) : $this->base->get_view();
 	}
 
 	/**

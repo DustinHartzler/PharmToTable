@@ -1,6 +1,46 @@
 # Changelog
 All notable changes to the OptinMonster plugin will be documented in this file.
 
+### 2.0.3
+* Updates the "get started" interface to be more intuitive for existing users.
+* Remove incorrect concept of "pending" for split tests.
+
+### 2.0.2
+* Include the JS source map files in the release to prevent unnecessary 404s in the dashboard.
+* Use `POST` request to save campaign output settings, since some servers don't like `PUT` requests.
+* Updated dependencies.
+* Better cache-busting for js files via file-name changes with new builds.
+* Fixed typos.
+* Move constants-setting to separate method, add a hook for just-in-time constants-setting.
+* Update our Amp checks to run at the correct hook, to prevent php notices in debug logs.
+* Better UI when connecting/disconnecting, showing loaders/success alerts, even while page is refreshing.
+* Improved alert notifications when actions fail in the Campaigns dashboard.
+* If campaign-status setting fails, output errors, and reset status to previous setting.
+* UI fixes/improvements.
+* Ensure campaign-creation errors are displayed on the Templates page.
+* Update description around site cookie settings.
+
+### 2.0.1
+* Bug fixes and adjustments for compatibility with older versions of PHP.
+* Bug fixes related to wildcard domains and subdomains.
+
+### 2.0.0
+* NEW: Overhaul of the plugin to make managing your popup campaigns easier than ever!
+* Added the ability to see all your popup campaigns in your dashboard (draft, pending and published)
+* Added a new dashboard to see stats and details about your popup optins
+* Added the ability to see all popup templates and create new popup campaigns from within the plugin
+* Added a new menu link to see all your popup subscribers
+* Added the ability to create popup split tests from within the plugin
+* Improved the popup output settings for each individual popup campaign
+* Many other performance improvements, product enhancements and bug fixes to the plugin
+
+### 1.9.17
+* Fixed a bug where taxonomy settings may not properly display.
+* Fixed an error that could occur when non-admins logged in.
+
+### 1.9.16
+* Fixed a bug where category settings may not properly display.
+
 ### 1.9.15
 * Fixed a bug that caused issues for non-admin users when the plugin was not yet connected to an OptinMonster account.
 

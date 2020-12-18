@@ -2,9 +2,9 @@
 Contributors: optinmonster, griffinjt, smub
 Tags: marketing, popups, popup builder, newsletter, conversion, optin forms, forms, subscribers, exit intent popup, email marketing, crm, popup maker, popup plugin, cart abandonment, spin a wheel popup, conversion optimization, a/b testing, email opt-in, retargeting, ecommerce, cro, lightbox, promotion, shipping bar, announcement bar, advertising, mailing list, popup slide-in
 Requires at least: 4.7.0
-Tested up to: 5.5
+Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 1.9.15
+Stable tag: 2.0.3
 License: GNU General Public License v2.0 or later
 
 Create popups, opt-in forms, & floating bars to get more email newsletter subscribers, leads, and increase sales conversion - #1 marketing popup plugin.
@@ -26,7 +26,7 @@ OptinMonster popups and newsletter opt-in forms are 100% mobile responsive, so y
 We understand the importance of speed when it comes SEO, marketing, and conversion optimization. This is why we made sure that OptinMonster popups and marketing tools are optimized for both web and server performance.
 
 > <strong>OptinMonster App</strong><br />
-> OptinMonster popups and marketing tools are part of the standalone OptinMonster app. You will need to create an OptinMonster account to access our popup builder, opt-in form builder, newsletter subscribers, and other powerful conversion tools. <a href="https://optinmonster.com/wp/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend" title="OptinMonster">Click here to purchase OptinMonster Pro now!</a>
+> OptinMonster is a SaaS service. OptinMonster popups and marketing tools are part of the standalone OptinMonster app. You will need to create an OptinMonster account to access our popup builder, opt-in form builder, newsletter subscribers, and other powerful conversion tools. <a href="https://optinmonster.com/wp/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend" title="OptinMonster">Click here to purchase OptinMonster Pro now!</a>
 
 We took the pain out of creating highly personalized popup forms and made it easy. Here's why smart business owners, designers, and developers love OptinMonster marketing toolkit, and you will too!
 
@@ -471,51 +471,48 @@ Syed Balkhi
 
 **Most Recent Changes:**
 
-= 1.9.15 =
-* Fixed a bug that caused issues for non-admin users when the plugin was not yet connected to an OptinMonster account.
+= 2.0.3 =
+* Updates the "get started" interface to be more intuitive for existing users.
+* Remove incorrect concept of "pending" for split tests.
 
-= 1.9.14 =
-* Fixed a bug that occasionally prevented changes in campaigns via the OptinMonster App to not properly sync to the plugin, due to cached responses.
+= 2.0.2 =
+* Include the JS source map files in the release to prevent unnecessary 404s in the dashboard.
+* Use `POST` request to save campaign output settings, since some servers don't like `PUT` requests.
+* Updated dependencies.
+* Better cache-busting for js files via file-name changes with new builds.
+* Fixed typos.
+* Move constants-setting to separate method, add a hook for just-in-time constants-setting.
+* Update our Amp checks to run at the correct hook, to prevent php notices in debug logs.
+* Better UI when connecting/disconnecting, showing loaders/success alerts, even while page is refreshing.
+* Improved alert notifications when actions fail in the Campaigns dashboard.
+* If campaign-status setting fails, output errors, and reset status to previous setting.
+* UI fixes/improvements.
+* Ensure campaign-creation errors are displayed on the Templates page.
+* Update description around site cookie settings.
 
-= 1.9.13 =
-* Fixed a bug that caused campaigns to be incorrectly referenced in the admin dashboard.
+= 2.0.1 =
+* Bug fixes and adjustments for compatibility with older versions of PHP.
+* Bug fixes related to wildcard domains and subdomains.
 
-= 1.9.12 =
-* Fixed a bug where the `Access-Control-Allow-Headers` was being improperly reset for REST requests.
+= 2.0.0 =
+* NEW: Overhaul of the plugin to make managing your popup campaigns easier than ever!
+* Added the ability to see all your popup campaigns in your dashboard (draft, pending and published)
+* Added a new dashboard to see stats and details about your popup optins
+* Added the ability to see all popup templates and create new popup campaigns from within the plugin
+* Added a new menu link to see all your popup subscribers
+* Added the ability to create popup split tests from within the plugin
+* Improved the popup output settings for each individual popup campaign
+* Many other performance improvements, product enhancements and bug fixes to the plugin
 
-= 1.9.11 =
-* Fixed a bug that caused too many redirects in the admin when clicking on certain plugin settings links.
-* Removed a plugin action link that was not used.
+= 1.9.18 =
+* Fixed a bug where review notice wouldn't get dismissed.
+* Update the readme to be explicit about OptinMonster being a service.
 
-= 1.9.10 =
-* New Gutenberg block for embedding inline campaigns.
-* Improved syncing of data between the OptinMonster app and the WordPress plugin to help with shortcode parsing, and adding/removing campaigns when going live or pausing. Will also retain previously saved Output Settings when un-pausing a campaign and refreshing.
-* Improvements to a11y across the plugin's admin pages.
-* Updated Constant Contact branding
-* Updates to improve performance on the plugin's admin pages.
-* Minified assets to improve performance on the plugin's admin pages.
-* Increase timeout time for the WooCommerce auto-generate keys request to accomodate for some servers.
-* Clean up admin notices when on the OptinMonster plugin's admin pages.
-* New About Us page.
-* Added filter for auto-enabling new campaigns (true by default).
-* Added filter for changing the API enqueue location from the default footer.
-* Added plugin settings menu links to plugin action links in the Plugins table.
-* Improvements to the Welcome page to allow connecting account directly.
-* Improvements to the account-connection process.
-* Improvements to the Campaigns page.
-* Improvements to the Campaigns' Output Settings pages.
-* Fix bug with mailpoet phone number possibly being set to 0.
-* Fix bug to allow campaigns to show on categories, even when the category is registered to a non-"post" post-type.
-* Fixed potential issues with storing our embed code for multisite installations.
-* Fixed bug where cookie-delete button was not deleting all OptinMonster cookies for given user.
-* Improved WooCommerce connect screen by showing the auto-generate option by default.
-* Removed duplicate WooCommerce categories/tags from the Output Settings.
-* Various other bug fixes, and performance updates.
-* Improved debug output.
+= 1.9.17 =
+* Fixed a bug where taxonomy settings may not properly display.
+* Fixed an error that could occur when non-admins logged in.
 
-= 1.9.9 =
-* Fix issue where if multiple post tags were selected, popups and other campaigns would only appear on the first tag selected.
-* Fix campaign shortcode suggestion in admin being incorrect.
-* Full security audit to patch any potential issues.
+= 1.9.16 =
+* Fixed a bug where category settings may not properly display.
 
 **[View entire changelog](https://plugins.svn.wordpress.org/optinmonster/trunk/CHANGELOG.md)**

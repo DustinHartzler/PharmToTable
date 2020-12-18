@@ -134,36 +134,36 @@
 #adminmenu .toplevel-page-trustpulse-settings div.wp-menu-image {
   height: 30px; }
 
-.optinmonster_page_optin-monster-trustpulse #wpwrap {
+.omapi-trustpulse #wpwrap {
   background: #f7faff; }
 
-.optinmonster_page_optin-monster-trustpulse #wpcontent {
+.omapi-trustpulse #wpcontent {
   padding: 0; }
 
-.optinmonster_page_optin-monster-trustpulse #wpbody {
+.omapi-trustpulse #wpbody {
   font-family: "Averta", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   color: #364150; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .button {
+  .omapi-trustpulse #wpbody .button {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .text-center {
+  .omapi-trustpulse #wpbody .text-center {
     text-align: center; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .notice {
+  .omapi-trustpulse #wpbody .notice {
     margin-top: 20px; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .update-nag {
+  .omapi-trustpulse #wpbody .update-nag {
     display: none; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody p {
+  .omapi-trustpulse #wpbody p {
     font-size: 16px; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody a:not(.button-primary) {
+  .omapi-trustpulse #wpbody a:not(.button-primary) {
     color: #364150;
     -webkit-text-decoration-color: #0db1eb;
             text-decoration-color: #0db1eb;
     font-weight: 500; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody a:not(.button-primary):hover {
+    .omapi-trustpulse #wpbody a:not(.button-primary):hover {
       color: #0db1eb; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .trustpulse-wrap {
+  .omapi-trustpulse #wpbody .trustpulse-wrap {
     max-width: 720px;
     margin: 0 auto; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-admin-box {
+  .omapi-trustpulse #wpbody .tp-admin-box {
     position: relative;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -174,29 +174,29 @@
     border-radius: 10px;
     border: 1px solid #e5ecf6;
     text-align: center; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-admin-box p {
+    .omapi-trustpulse #wpbody .tp-admin-box p {
       margin-bottom: 30px; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-admin-box--video {
+    .omapi-trustpulse #wpbody .tp-admin-box--video {
       margin-top: 40px;
       height: 360px; }
-      .optinmonster_page_optin-monster-trustpulse #wpbody .tp-admin-box--video .tp-video-button {
+      .omapi-trustpulse #wpbody .tp-admin-box--video .tp-video-button {
         cursor: pointer;
         position: absolute;
         left: calc(50% - 125px);
         top: calc(50% - 40px);
         width: 250px;
         z-index: 1; }
-      .optinmonster_page_optin-monster-trustpulse #wpbody .tp-admin-box--video .tp-video-background {
+      .omapi-trustpulse #wpbody .tp-admin-box--video .tp-video-background {
         position: absolute;
         left: 0;
         bottom: 0;
         width: 100%;
         opacity: .3; }
-      .optinmonster_page_optin-monster-trustpulse #wpbody .tp-admin-box--video p {
+      .omapi-trustpulse #wpbody .tp-admin-box--video p {
         margin-top: 0; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-or-line {
+  .omapi-trustpulse #wpbody .tp-or-line {
     margin: 5px auto; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-admin-box-group {
+  .omapi-trustpulse #wpbody .tp-admin-box-group {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -205,23 +205,23 @@
             justify-content: space-between;
     width: 840px;
     margin: 20px auto; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-admin-box-group .tp-admin-box {
+    .omapi-trustpulse #wpbody .tp-admin-box-group .tp-admin-box {
       width: 32%; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-heading, .optinmonster_page_optin-monster-trustpulse #wpbody .tp-subheading {
+  .omapi-trustpulse #wpbody .tp-heading, .omapi-trustpulse #wpbody .tp-subheading {
     line-height: 1.5em;
     text-align: center; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-heading {
+  .omapi-trustpulse #wpbody .tp-heading {
     font-size: 28px;
     font-weight: bold;
     letter-spacing: -1px;
     margin-top: 50px; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-subheading {
+  .omapi-trustpulse #wpbody .tp-subheading {
     margin-top: -15px;
     margin-bottom: 70px; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-features {
+  .omapi-trustpulse #wpbody .tp-features {
     max-width: 840px;
     margin: 0 auto; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-features .tp-feature {
+    .omapi-trustpulse #wpbody .tp-features .tp-feature {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -231,18 +231,18 @@
           -ms-flex-pack: justify;
               justify-content: space-between;
       margin-bottom: 20px; }
-      .optinmonster_page_optin-monster-trustpulse #wpbody .tp-features .tp-feature.tp-feature--text-left {
+      .omapi-trustpulse #wpbody .tp-features .tp-feature.tp-feature--text-left {
         -webkit-box-orient: horizontal;
         -webkit-box-direction: reverse;
             -ms-flex-direction: row-reverse;
                 flex-direction: row-reverse; }
-      .optinmonster_page_optin-monster-trustpulse #wpbody .tp-features .tp-feature__image {
+      .omapi-trustpulse #wpbody .tp-features .tp-feature__image {
         width: 325px; }
         @media screen and (max-width: 400px) {
-          .optinmonster_page_optin-monster-trustpulse #wpbody .tp-features .tp-feature__image {
+          .omapi-trustpulse #wpbody .tp-features .tp-feature__image {
             width: 100%;
             margin-bottom: 20px; } }
-      .optinmonster_page_optin-monster-trustpulse #wpbody .tp-features .tp-feature__text {
+      .omapi-trustpulse #wpbody .tp-features .tp-feature__text {
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -255,13 +255,13 @@
                 justify-content: center;
         width: 350px; }
         @media screen and (max-width: 400px) {
-          .optinmonster_page_optin-monster-trustpulse #wpbody .tp-features .tp-feature__text {
+          .omapi-trustpulse #wpbody .tp-features .tp-feature__text {
             width: 100%; } }
-        .optinmonster_page_optin-monster-trustpulse #wpbody .tp-features .tp-feature__text h3 {
+        .omapi-trustpulse #wpbody .tp-features .tp-feature__text h3 {
           font-size: 22px;
           font-weight: bold;
           margin-bottom: 0; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-content-row {
+  .omapi-trustpulse #wpbody .tp-content-row {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -270,7 +270,7 @@
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-content-row__item {
+    .omapi-trustpulse #wpbody .tp-content-row__item {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
@@ -278,7 +278,7 @@
           -ms-flex-align: center;
               align-items: center;
       margin: 0 5px; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-button {
+  .omapi-trustpulse #wpbody .tp-button {
     cursor: pointer;
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
@@ -300,15 +300,15 @@
     white-space: nowrap;
     min-width: 100px;
     text-decoration: none; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-button:hover {
+    .omapi-trustpulse #wpbody .tp-button:hover {
       background-color: #19d191;
       color: #ffffff; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-button--full {
+    .omapi-trustpulse #wpbody .tp-button--full {
       width: 100%; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-button--large {
+  .omapi-trustpulse #wpbody .tp-button--large {
     padding: 15px 60px;
     font-size: 22px; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-button--blue {
+  .omapi-trustpulse #wpbody .tp-button--blue {
     cursor: pointer;
     background: #fff;
     border: 1px solid #e5ecf6;
@@ -316,14 +316,14 @@
     padding: 10px 25px;
     color: #364150;
     font-weight: 700; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-button--blue:hover {
+    .omapi-trustpulse #wpbody .tp-button--blue:hover {
       background-color: #205fbd;
       border-color: #205fbd; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-button--white {
+  .omapi-trustpulse #wpbody .tp-button--white {
     color: #364150;
     background-color: #ffffff;
     border: 1px solid #e5ecf6; }
-    .optinmonster_page_optin-monster-trustpulse #wpbody .tp-button--white:hover {
+    .omapi-trustpulse #wpbody .tp-button--white:hover {
       background-color: #205fbd; }
-  .optinmonster_page_optin-monster-trustpulse #wpbody .tp-alert {
+  .omapi-trustpulse #wpbody .tp-alert {
     color: #ee7979; }

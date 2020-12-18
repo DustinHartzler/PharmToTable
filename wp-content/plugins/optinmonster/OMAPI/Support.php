@@ -88,6 +88,7 @@ class OMAPI_Support {
 
 			if ( OMAPI_Utils::is_inline_type( $design_type ) ) {
 				$data[ $slug ]['Automatic Output Status'] = get_post_meta( $campaign->ID, '_omapi_automatic', true ) ? 'Enabled' : 'Disabled';
+				$data[ $slug ]['Automatic Output Location'] = get_post_meta( $campaign->ID, '_omapi_auto_location', true );
 			}
 
 			if ( 'raw' === $format ) {
@@ -136,7 +137,7 @@ class OMAPI_Support {
 		$active_plugins = get_option( 'active_plugins', array() );
 		$plugins        = 'raw' === $format ? array() : "\n";
 		foreach ( get_plugins() as $plugin_path => $plugin ) {
-			if ( ! in_array( $plugin_path, $active_plugins ) ) {
+			if ( ! in_array( $plugin_path, $active_plugins, true ) ) {
 				continue;
 			}
 

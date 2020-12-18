@@ -105,7 +105,7 @@ class OMAPI_MailPoet {
 
 		// Loop through the list data and add to array.
 		foreach ( (array) $custom_fields as $custom_field ) {
-			if ( in_array( $custom_field['id'], $default_fields ) ) {
+			if ( in_array( $custom_field['id'], $default_fields, true ) ) {
 				continue;
 			}
 

@@ -99,11 +99,6 @@ class OMAPI_Output {
 	 */
 	public function __construct() {
 
-		// Checking if AMP is enabled.
-		if ( OMAPI_Utils::is_amp_enabled() ) {
-			return;
-		}
-
 		// Set our object.
 		$this->set();
 
@@ -114,15 +109,9 @@ class OMAPI_Output {
 			return;
 		}
 
-		// Load actions and filters.
-		add_action( 'wp_enqueue_scripts', array( $this, 'api_script' ) );
-		add_action( 'wp_footer', array( $this, 'localize' ), 9999 );
-		add_action( 'wp_footer', array( $this, 'display_rules_data' ), 9999 );
-		add_action( 'wp_footer', array( $this, 'maybe_parse_shortcodes' ), 11 );
-
-		// Maybe load OptinMonster.
-		$this->maybe_load_optinmonster();
-
+		// Add the hook to allow OptinMonster to process.
+		add_action( 'pre_get_posts', array( $this, 'load_optinmonster_inline' ), 9999 );
+		add_action( 'wp', array( $this, 'maybe_load_optinmonster' ), 9999 );
 	}
 
 	/**
@@ -140,6 +129,32 @@ class OMAPI_Output {
 		// Keep these around for back-compat.
 		$this->fields = $rules->fields;
 
+	}
+
+	/**
+	 * Conditionally loads the OptinMonster optin based on the query filter detection.
+	 *
+	 * @since 1.0.0
+	 */
+	public function maybe_load_optinmonster() {
+
+		// Checking if AMP is enabled.
+		if ( OMAPI_Utils::is_amp_enabled() ) {
+			return;
+		}
+
+		// Load actions and filters.
+		add_action( 'wp_enqueue_scripts', array( $this, 'api_script' ) );
+		add_action( 'wp_footer', array( $this, 'localize' ), 9999 );
+		add_action( 'wp_footer', array( $this, 'display_rules_data' ), 9999 );
+		add_action( 'wp_footer', array( $this, 'maybe_parse_shortcodes' ), 11 );
+
+		// Add the hook to allow OptinMonster to process.
+		add_action( 'wp_footer', array( $this, 'load_optinmonster' ) );
+
+		if ( ! empty( $_GET['om-live-preview'] ) || ! empty( $_GET['om-verify-site'] ) ) {
+			add_action( 'wp_footer', array( $this, 'load_global_optinmonster' ) );
+		}
 	}
 
 	/**
@@ -225,23 +240,6 @@ class OMAPI_Output {
 	}
 
 	/**
-	 * Conditionally loads the OptinMonster optin based on the query filter detection.
-	 *
-	 * @since 1.0.0
-	 */
-	public function maybe_load_optinmonster() {
-
-		// Add the hook to allow OptinMonster to process.
-		add_action( 'pre_get_posts', array( $this, 'load_optinmonster_inline' ), 9999 );
-		add_action( 'wp_footer', array( $this, 'load_optinmonster' ) );
-
-		if ( ! empty( $_GET['om-live-preview'] ) || ! empty( $_GET['om-verify-site'] ) ) {
-			add_action( 'wp_footer', array( $this, 'load_global_optinmonster' ) );
-		}
-
-	}
-
-	/**
 	 * Loads an inline optin form (sidebar and after post) by checking against the current query.
 	 *
 	 * @since 1.0.0
@@ -272,6 +270,11 @@ class OMAPI_Output {
 	public function load_optinmonster_inline_content( $content ) {
 
 		global $post;
+
+		// Checking if AMP is enabled.
+		if ( OMAPI_Utils::is_amp_enabled() ) {
+			return $content;
+		}
 
 		// If the global $post is not set or the post status is not published, return early.
 		if ( empty( $post ) || isset( $post->ID ) && 'publish' !== get_post_status( $post->ID ) ) {
@@ -306,7 +309,30 @@ class OMAPI_Output {
 				$this->set_slug( $optin );
 
 				// Prepare the optin campaign.
-				$content .= $this->prepare_campaign( $optin );
+				$prepared = $this->prepare_campaign( $optin );
+				$position = get_post_meta( $optin->ID, '_omapi_auto_location', true );
+				$inserter = new OMAPI_Inserter( $content, $prepared );
+
+				switch ( $position ) {
+					case 'paragraphs':
+						$paragraphs = get_post_meta( $optin->ID, '_omapi_auto_location_paragraphs', true );
+						$content = $inserter->after_paragraph( absint( $paragraphs ) );
+						break;
+
+					case 'words':
+						$words = get_post_meta( $optin->ID, '_omapi_auto_location_words', true );
+						$content = $inserter->after_words( absint( $words ) );
+						break;
+
+					case 'above_post':
+						$content = $inserter->prepend();
+						break;
+
+					case 'below_post':
+					default:
+						$content = $inserter->append();
+						break;
+				}
 			}
 		}
 
@@ -446,8 +472,8 @@ class OMAPI_Output {
 				}
 
 				echo '<div style="position:absolute;overflow:hidden;clip:rect(0 0 0 0);height:1px;width:1px;margin:-1px;padding:0;border:0">';
-					echo '<div class="omapi-shortcode-helper">' . html_entity_decode( $shortcode, ENT_COMPAT ) . '</div>';
-					echo '<div class="omapi-shortcode-parsed omapi-encoded">' . htmlentities( do_shortcode( html_entity_decode( $shortcode, ENT_COMPAT ) ) ) . '</div>';
+					echo '<div class="omapi-shortcode-helper">' . html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) . '</div>';
+					echo '<div class="omapi-shortcode-parsed omapi-encoded">' . htmlentities( do_shortcode( html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) ), ENT_COMPAT, 'UTF-8' ) . '</div>';
 				echo '</div>';
 			}
 		}
@@ -484,9 +510,14 @@ class OMAPI_Output {
 		// Set flag to true.
 		$this->localized = true;
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
+		$slugs = function_exists( 'wp_json_encode' )
+			? wp_json_encode( $this->slugs )
+			: json_encode( $this->slugs );
+
 		// Output JS variable.
 		?>
-		<script type="text/javascript">var omapi_localized = { ajax: '<?php echo esc_url_raw( add_query_arg( 'optin-monster-ajax-route', true, admin_url( 'admin-ajax.php' ) ) ); ?>', nonce: '<?php echo wp_create_nonce( 'omapi' ); ?>', slugs: <?php echo json_encode( $this->slugs ); ?> };</script>
+		<script type="text/javascript">var omapi_localized = { ajax: '<?php echo esc_url_raw( add_query_arg( 'optin-monster-ajax-route', true, admin_url( 'admin-ajax.php' ) ) ); ?>', nonce: '<?php echo wp_create_nonce( 'omapi' ); ?>', slugs: <?php echo $slugs; ?> };</script>
 		<?php
 	}
 
@@ -590,13 +621,16 @@ class OMAPI_Output {
 			'object_type' => $object_type,
 			'term_ids'    => $tax_terms,
 		);
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 		$output = function_exists( 'wp_json_encode' )
 			? wp_json_encode( $output )
 			: json_encode( $output );
 
 		// Output JS variable.
+		// phpcs:ignore XSS
 		?>
-		<script type="text/javascript">var omapi_data = <?php echo $output; // XSS: okay. ?>;</script>
+		<script type="text/javascript">var omapi_data = <?php echo $output; ?>;</script>
 		<?php
 	}
 
@@ -611,7 +645,7 @@ class OMAPI_Output {
 	 */
 	public function prepare_campaign( $optin ) {
 		return isset( $optin->post_content ) && ! empty( $optin->post_content )
-			? trim( html_entity_decode( stripslashes( $optin->post_content ), ENT_QUOTES ), '\'' )
+			? trim( html_entity_decode( stripslashes( $optin->post_content ), ENT_QUOTES, 'UTF-8' ), '\'' )
 			: '';
 	}
 
@@ -649,7 +683,7 @@ class OMAPI_Output {
 	public static function current_id() {
 		$post_id = get_queried_object_id();
 		if ( ! $post_id ) {
-			if ( 'page' == get_option( 'show_on_front' ) ) {
+			if ( 'page' === get_option( 'show_on_front' ) ) {
 				$post_id = get_option( 'page_for_posts' );
 			}
 		}

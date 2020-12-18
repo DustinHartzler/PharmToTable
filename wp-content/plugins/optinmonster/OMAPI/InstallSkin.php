@@ -42,7 +42,7 @@ class OMAPI_InstallSkin extends WP_Upgrader_Skin {
 	 *
 	 * @param string $string The feedback string.
 	 */
-	public function feedback( $string, $args = null ) {}
+	public function feedback( $string, ...$args ) {}
 
 	/**
 	 * Empty out JavaScript output that calls function to decrement the update counts.

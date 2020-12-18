@@ -67,14 +67,15 @@ class OMAPI_Utils {
 	}
 
 	/**
-	 * Determines if AMP is enabled on the site or not.
+	 * Determines if AMP is enabled on the current request.
 	 *
 	 * @since 1.9.8
 	 *
 	 * @return bool True if AMP is enabled, false otherwise.
 	 */
 	public static function is_amp_enabled() {
-		return function_exists( 'is_amp_endpoint' ) && is_amp_endpoint();
+		return ( function_exists( 'amp_is_request' ) && amp_is_request() )
+			|| ( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() );
 	}
 
 	/**

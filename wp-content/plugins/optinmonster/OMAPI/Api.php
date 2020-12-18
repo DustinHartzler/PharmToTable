@@ -160,13 +160,16 @@ class OMAPI_Api {
 		if ( empty( $creds ) ) {
 			$creds = OMAPI::get_instance()->get_api_credentials();
 
-			// Check if we have the new API and if so only use it
-			$creds = ! empty( $creds['apikey'] )
-				? array( 'apikey' => $creds['apikey'] )
-				: array(
-					'user' => $creds['user'],
-					'key'  => $creds['key'],
-				);
+			if ( ! empty( $creds ) ) {
+
+				// Check if we have the new API and if so only use it
+				$creds = ! empty( $creds['apikey'] )
+					? array( 'apikey' => $creds['apikey'] )
+					: array(
+						'user' => ! empty( $creds['user'] ) ? $creds['user'] : '',
+						'key'  => ! empty( $creds['key'] ) ? $creds['key'] : '',
+					);
+			}
 		}
 
 		return new self( $route, $creds, $method, $version );
@@ -211,7 +214,7 @@ class OMAPI_Api {
 		$body = array_filter( $body );
 
 		// If a plugin API request, add the data.
-		if ( 'info' == $this->route || 'update' == $this->route ) {
+		if ( 'info' === $this->route || 'update' === $this->route ) {
 			$body['omapi-plugin'] = $this->plugin;
 		}
 
@@ -236,6 +239,7 @@ class OMAPI_Api {
 			'Origin'        => site_url(),
 			'OMAPI-Referer' => site_url(),
 			'OMAPI-Sender'  => 'WordPress',
+			'OMAPI-Site'    => esc_attr( get_option( 'blogname' ) ),
 		);
 
 		if ( $this->apikey ) {
@@ -261,6 +265,14 @@ class OMAPI_Api {
 		// Get the response code and response body.
 		$this->response_code = wp_remote_retrieve_response_code( $this->response );
 		$this->response_body = json_decode( wp_remote_retrieve_body( $this->response ) );
+
+		// If we used the legacy api-creds, we'll get back a new api key.
+		if (
+			empty( $this->apikey )
+			&& ! empty( $this->response['headers']['x-optinmonster-apikey'] )
+		) {
+			$this->apikey = sanitize_text_field( $this->response['headers']['x-optinmonster-apikey'] );
+		}
 
 		// Get the correct success response code to check against.
 		$response_code = 'DELETE' === $this->method ? 204 : 200;
@@ -324,7 +336,6 @@ class OMAPI_Api {
 	 *
 	 * @since 1.9.0
 	 *
-	 * @param array $data
 	 * return void
 	 */
 	public function clear_additional_data() {
@@ -343,4 +354,67 @@ class OMAPI_Api {
 	public static function instance() {
 		return self::$instance;
 	}
+
+	/**
+	 * Fetch from the OM /me route, and store data to our options.
+	 *
+	 * @since  2.0.0
+	 *
+	 * @param  array   $option Existing options array.
+	 * @param  array   $creds  Existing credentials array.
+	 *
+	 * @return array           Updated options array.
+	 */
+	public static function fetch_me( $option = array(), $creds = array() ) {
+		$api    = self::build( 'v2', 'me', 'GET', $creds );
+		$result = $api->request();
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		$update = empty( $option );
+		if ( $update ) {
+			$option = OMAPI::get_instance()->get_option();
+		}
+
+		// Make sure to set the new api key, if we have it.
+		if ( empty( $option['api']['apikey'] ) && ! empty( $api->apikey ) ) {
+			$option['api'] = array( 'apikey' => $api->apikey );
+
+			if ( $api->user && $api->key ) {
+
+				// Notifiy user of credentials replacement.
+				OMAPI::get_instance()->notifications->add_event( array(
+					'type'    => 'success',
+					'title'   => 'Your API Access Credentials have been updated',
+					'content' => 'We have automatically replaced your deprecated user/key OptinMonster connection credentials with a new API key.',
+					'btns'    => array(
+						'main' => array(
+							'text' => 'Manage API Keys',
+							'url'  => esc_url_raw( OPTINMONSTER_APP_URL . '/account/api/' ),
+						),
+					),
+				) );
+			}
+		}
+
+		if ( isset( $result->id ) ) {
+			$option['userId'] = $result->id;
+		}
+
+		$to_store = array( 'accountId', 'currentLevel', 'plan' );
+		foreach ( $to_store as $key ) {
+			if ( isset( $result->{$key} ) ) {
+				$option[ $key ] = $result->{$key};
+			}
+		}
+
+		if ( $update ) {
+			OMAPI::get_instance()->save->update_option( $option, $creds );
+		}
+
+		return $option;
+	}
+
 }
