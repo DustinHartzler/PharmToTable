@@ -1,13 +1,5 @@
 <?php
-/**
- * Product categories block.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\BlockTypes;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * ProductCategories class.
@@ -65,7 +57,7 @@ class ProductCategories extends AbstractDynamicBlock {
 		$uid        = uniqid( 'product-categories-' );
 		$categories = $this->get_categories( $attributes );
 
-		if ( ! $categories ) {
+		if ( empty( $categories ) ) {
 			return '';
 		}
 
@@ -137,7 +129,7 @@ class ProductCategories extends AbstractDynamicBlock {
 			]
 		);
 
-		if ( ! $categories ) {
+		if ( ! is_array( $categories ) || empty( $categories ) ) {
 			return [];
 		}
 

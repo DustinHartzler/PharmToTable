@@ -1,19 +1,12 @@
 <?php
-/**
- * Cart item route.
- *
- * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Routes;
-
-defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Blocks\StoreApi\Utilities\CartController;
 
 /**
  * CartItemsByKey class.
+ *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  */
 class CartItemsByKey extends AbstractRoute {
 	/**
@@ -72,7 +65,7 @@ class CartItemsByKey extends AbstractRoute {
 		$controller = new CartController();
 		$cart_item  = $controller->get_cart_item( $request['key'] );
 
-		if ( ! $cart_item ) {
+		if ( empty( $cart_item ) ) {
 			throw new RouteException( 'woocommerce_rest_cart_invalid_key', __( 'Cart item does not exist.', 'woo-gutenberg-products-block' ), 404 );
 		}
 
@@ -112,7 +105,7 @@ class CartItemsByKey extends AbstractRoute {
 		$cart       = $controller->get_cart_instance();
 		$cart_item  = $controller->get_cart_item( $request['key'] );
 
-		if ( ! $cart_item ) {
+		if ( empty( $cart_item ) ) {
 			throw new RouteException( 'woocommerce_rest_cart_invalid_key', __( 'Cart item does not exist.', 'woo-gutenberg-products-block' ), 404 );
 		}
 

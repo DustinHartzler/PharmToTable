@@ -1,18 +1,12 @@
 <?php
-/**
- * Abstract Cart route.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Routes;
-
-defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Blocks\StoreApi\Utilities\CartController;
 
 /**
- * Cart class.
+ * Abstract Cart Route
+ *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  */
 abstract class AbstractCartRoute extends AbstractRoute {
 	/**
@@ -48,6 +42,21 @@ abstract class AbstractCartRoute extends AbstractRoute {
 			wc()->cart->calculate_shipping();
 			wc()->cart->calculate_totals();
 		}
+	}
+
+	/**
+	 * If there is a draft order, releases stock.
+	 *
+	 * @return void
+	 */
+	protected function maybe_release_stock() {
+		$draft_order = wc()->session->get( 'store_api_draft_order', 0 );
+
+		if ( ! $draft_order ) {
+			return;
+		}
+
+		wc_release_stock_for_order( $draft_order );
 	}
 
 	/**

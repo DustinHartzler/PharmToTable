@@ -1,17 +1,10 @@
 <?php
-/**
- * Error Schema.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * ErrorSchema class.
  *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  * @since 2.5.0
  */
 class ErrorSchema extends AbstractSchema {
@@ -21,6 +14,13 @@ class ErrorSchema extends AbstractSchema {
 	 * @var string
 	 */
 	protected $title = 'error';
+
+	/**
+	 * The schema item identifier.
+	 *
+	 * @var string
+	 */
+	const IDENTIFIER = 'error';
 
 	/**
 	 * Product schema properties.

@@ -1,18 +1,13 @@
 <?php
-/**
- * Initializes blocks in WordPress.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks;
-
-defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Blocks\Package;
 
 /**
  * Library class.
+ * Initializes blocks in WordPress.
+ *
+ * @internal
  */
 class Library {
 
@@ -71,12 +66,12 @@ class Library {
 			$blocks[] = 'AttributeFilter';
 			$blocks[] = 'ActiveFilters';
 
-			if ( Package::is_feature_plugin_build() ) {
+			if ( Package::feature()->is_feature_plugin_build() ) {
 				$blocks[] = 'Checkout';
 				$blocks[] = 'Cart';
 			}
 		}
-		if ( Package::is_experimental_build() ) {
+		if ( Package::feature()->is_experimental_build() ) {
 			$blocks[] = 'SingleProduct';
 		}
 		foreach ( $blocks as $class ) {

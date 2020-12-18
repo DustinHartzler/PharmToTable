@@ -1,13 +1,4 @@
 <?php
-/**
- * Temporary integration of the stripe payment method for the new cart and
- * checkout blocks. Once the api is demonstrated to be stable, this integration
- * will be moved to the Stripe extension
- *
- * @package WooCommerce/Blocks
- * @since 2.6.0
- */
-
 namespace Automattic\WooCommerce\Blocks\Payments\Integrations;
 
 use Exception;
@@ -19,6 +10,10 @@ use Automattic\WooCommerce\Blocks\Payments\PaymentResult;
 
 /**
  * Stripe payment method integration
+ *
+ * Temporary integration of the stripe payment method for the new cart and
+ * checkout blocks. Once the api is demonstrated to be stable, this integration
+ * will be moved to the Stripe extension
  *
  * @since 2.6.0
  */
@@ -251,7 +246,7 @@ final class Stripe extends AbstractPaymentMethodType {
 			// phpcs:ignore WordPress.Security.NonceVerification
 			$post_data = $_POST;
 			$_POST     = $context->payment_data;
-			WC_Stripe_Payment_Request::add_order_meta( $context->order->id, $context->payment_data );
+			$this->add_order_meta( $context->order, $data['payment_request_type'] );
 			$_POST = $post_data;
 		}
 
@@ -263,7 +258,7 @@ final class Stripe extends AbstractPaymentMethodType {
 				'wc_gateway_stripe_process_payment_error',
 				function( $error ) use ( &$result ) {
 					$payment_details                 = $result->payment_details;
-					$payment_details['errorMessage'] = $error->getLocalizedMessage();
+					$payment_details['errorMessage'] = wp_strip_all_tags( $error->getLocalizedMessage() );
 					$result->set_payment_details( $payment_details );
 				}
 			);
@@ -298,6 +293,24 @@ final class Stripe extends AbstractPaymentMethodType {
 			);
 			$result->set_payment_details( $payment_details );
 			$result->set_status( 'success' );
+		}
+	}
+
+	/**
+	 * Handles adding information about the payment request type used to the order meta.
+	 *
+	 * @param \WC_Order $order The order being processed.
+	 * @param string    $payment_request_type The payment request type used for payment.
+	 */
+	private function add_order_meta( \WC_Order $order, string $payment_request_type ) {
+		if ( 'apple_pay' === $payment_request_type ) {
+			$order->set_payment_method_title( 'Apple Pay (Stripe)' );
+			$order->save();
+		}
+
+		if ( 'payment_request_api' === $payment_request_type ) {
+			$order->set_payment_method_title( 'Chrome Payment Request (Stripe)' );
+			$order->save();
 		}
 	}
 }

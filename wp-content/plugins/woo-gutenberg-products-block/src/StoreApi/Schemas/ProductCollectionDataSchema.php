@@ -1,17 +1,10 @@
 <?php
-/**
- * Product Collection Data Schema.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * ProductCollectionDataSchema class.
  *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  * @since 2.5.0
  */
 class ProductCollectionDataSchema extends AbstractSchema {
@@ -21,6 +14,13 @@ class ProductCollectionDataSchema extends AbstractSchema {
 	 * @var string
 	 */
 	protected $title = 'product-collection-data';
+
+	/**
+	 * The schema item identifier.
+	 *
+	 * @var string
+	 */
+	const IDENTIFIER = 'product-collection-data';
 
 	/**
 	 * Product collection data schema properties.
@@ -109,8 +109,7 @@ class ProductCollectionDataSchema extends AbstractSchema {
 	 */
 	public function get_item_response( $data ) {
 		return [
-			'price_range'      => ! is_null( $data['min_price'] ) && ! is_null( $data['max_price'] ) ? (object) array_merge(
-				$this->get_store_currency_response(),
+			'price_range'      => ! is_null( $data['min_price'] ) && ! is_null( $data['max_price'] ) ? (object) $this->prepare_currency_response(
 				[
 					'min_price' => $this->prepare_money_response( $data['min_price'], wc_get_price_decimals() ),
 					'max_price' => $this->prepare_money_response( $data['max_price'], wc_get_price_decimals() ),

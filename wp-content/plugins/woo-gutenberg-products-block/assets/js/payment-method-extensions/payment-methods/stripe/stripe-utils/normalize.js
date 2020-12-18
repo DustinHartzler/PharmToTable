@@ -5,7 +5,7 @@
  * @typedef {import('./type-defs').StripePaymentResponse} StripePaymentResponse
  * @typedef {import('@woocommerce/type-defs/registered-payment-method-props').PreparedCartTotalItem} CartTotalItem
  * @typedef {import('@woocommerce/type-defs/cart').CartShippingOption} CartShippingOption
- * @typedef {import('@woocommerce/type-defs/cart').CartShippingAddress} CartShippingAddress
+ * @typedef {import('@woocommerce/type-defs/shipping').ShippingAddress} CartShippingAddress
  * @typedef {import('@woocommerce/type-defs/billing').BillingData} CartBillingAddress
  */
 
@@ -20,13 +20,17 @@
  * @return {StripePaymentItem[]} An array of PaymentItems
  */
 const normalizeLineItems = ( cartTotalItems, pending = false ) => {
-	return cartTotalItems.map( ( cartTotalItem ) => {
-		return {
-			amount: cartTotalItem.value,
-			label: cartTotalItem.label,
-			pending,
-		};
-	} );
+	return cartTotalItems
+		.map( ( cartTotalItem ) => {
+			return cartTotalItem.value
+				? {
+						amount: cartTotalItem.value,
+						label: cartTotalItem.label,
+						pending,
+				  }
+				: false;
+		} )
+		.filter( Boolean );
 };
 
 /**
@@ -114,18 +118,8 @@ const getBillingData = ( paymentResponse ) => {
 	const payerEmail = paymentResponse.payerEmail || '';
 	const payerPhone = paymentResponse.payerPhone || '';
 	return {
-		first_name: name
-			? name
-					.split( ' ' )
-					.slice( 0, 1 )
-					.join( ' ' )
-			: '',
-		last_name: name
-			? name
-					.split( ' ' )
-					.slice( 1 )
-					.join( ' ' )
-			: '',
+		first_name: name ? name.split( ' ' ).slice( 0, 1 ).join( ' ' ) : '',
+		last_name: name ? name.split( ' ' ).slice( 1 ).join( ' ' ) : '',
 		email: ( source && source.owner.email ) || payerEmail,
 		phone:
 			( source && source.owner.phone ) ||

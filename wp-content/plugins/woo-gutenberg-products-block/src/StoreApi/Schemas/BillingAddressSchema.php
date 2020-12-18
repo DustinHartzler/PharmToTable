@@ -1,20 +1,15 @@
 <?php
-/**
- * Billing Address Schema.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
 
-defined( 'ABSPATH' ) || exit;
-
 use Automattic\WooCommerce\Blocks\RestApi\Routes;
+
 
 /**
  * BillingAddressSchema class.
  *
  * Provides a generic billing address schema for composition in other schemas.
+ *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  */
 class BillingAddressSchema extends AbstractSchema {
 	/**
@@ -23,6 +18,13 @@ class BillingAddressSchema extends AbstractSchema {
 	 * @var string
 	 */
 	protected $title = 'billing_address';
+
+	/**
+	 * The schema item identifier.
+	 *
+	 * @var string
+	 */
+	const IDENTIFIER = 'billing-address';
 
 	/**
 	 * Term properties.
@@ -79,7 +81,6 @@ class BillingAddressSchema extends AbstractSchema {
 			'email'      => [
 				'description' => __( 'Email', 'woo-gutenberg-products-block' ),
 				'type'        => 'string',
-				'format'      => 'email',
 				'context'     => [ 'view', 'edit' ],
 			],
 			'phone'      => [

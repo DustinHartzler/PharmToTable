@@ -16,7 +16,9 @@ const {
 	SET_NO_ERROR,
 	INCREMENT_CALCULATING,
 	DECREMENT_CALCULATING,
+	SET_CUSTOMER_ID,
 	SET_ORDER_ID,
+	SET_SHOULD_CREATE_ACCOUNT,
 	SET_ORDER_NOTES,
 } = TYPES;
 
@@ -61,9 +63,17 @@ export const actions = {
 	decrementCalculating: () => ( {
 		type: DECREMENT_CALCULATING,
 	} ),
+	setCustomerId: ( customerId ) => ( {
+		type: SET_CUSTOMER_ID,
+		customerId,
+	} ),
 	setOrderId: ( orderId ) => ( {
 		type: SET_ORDER_ID,
 		orderId,
+	} ),
+	setShouldCreateAccount: ( shouldCreateAccount ) => ( {
+		type: SET_SHOULD_CREATE_ACCOUNT,
+		shouldCreateAccount,
 	} ),
 	setOrderNotes: ( orderNotes ) => ( {
 		type: SET_ORDER_NOTES,

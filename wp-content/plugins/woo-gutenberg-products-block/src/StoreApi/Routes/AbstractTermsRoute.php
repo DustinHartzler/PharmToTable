@@ -1,20 +1,13 @@
 <?php
-/**
- * Abstract Terms route.
- *
- * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Routes;
-
-defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Blocks\StoreApi\Utilities\Pagination;
 use WP_Term_Query;
 
 /**
  * AbstractTermsRoute class.
+ *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  */
 abstract class AbstractTermsRoute extends AbstractRoute {
 	/**
@@ -111,7 +104,7 @@ abstract class AbstractTermsRoute extends AbstractRoute {
 	 */
 	protected function get_terms_response( $taxonomy, $request ) {
 		$page          = (int) $request['page'];
-		$per_page      = $request['per_page'] ? $request['per_page'] : 0;
+		$per_page      = $request['per_page'] ? (int) $request['per_page'] : 0;
 		$prepared_args = array(
 			'taxonomy'   => $taxonomy,
 			'exclude'    => $request['exclude'],

@@ -1,16 +1,13 @@
 <?php
-/**
- * Product Category Schema.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
 
-defined( 'ABSPATH' ) || exit;
+use Automattic\WooCommerce\Blocks\Domain\Services\ExtendRestApi;
+
 
 /**
  * ProductCategorySchema class.
+ *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  */
 class ProductCategorySchema extends TermSchema {
 	/**
@@ -19,6 +16,13 @@ class ProductCategorySchema extends TermSchema {
 	 * @var string
 	 */
 	protected $title = 'product-category';
+
+	/**
+	 * The schema item identifier.
+	 *
+	 * @var string
+	 */
+	const IDENTIFIER = 'product-category';
 
 	/**
 	 * Image attachment schema instance.
@@ -30,10 +34,12 @@ class ProductCategorySchema extends TermSchema {
 	/**
 	 * Constructor.
 	 *
+	 * @param ExtendRestApi         $extend Rest Extending instance.
 	 * @param ImageAttachmentSchema $image_attachment_schema Image attachment schema instance.
 	 */
-	public function __construct( ImageAttachmentSchema $image_attachment_schema ) {
+	public function __construct( ExtendRestApi $extend, ImageAttachmentSchema $image_attachment_schema ) {
 		$this->image_attachment_schema = $image_attachment_schema;
+		parent::__construct( $extend );
 	}
 
 	/**

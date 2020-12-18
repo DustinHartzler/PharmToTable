@@ -1,16 +1,10 @@
 <?php
-/**
- * Order Coupon Schema.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * OrderCouponSchema class.
+ *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  */
 class OrderCouponSchema extends AbstractSchema {
 	/**
@@ -19,6 +13,13 @@ class OrderCouponSchema extends AbstractSchema {
 	 * @var string
 	 */
 	protected $title = 'order_coupon';
+
+	/**
+	 * The schema item identifier.
+	 *
+	 * @var string
+	 */
+	const IDENTIFIER = 'order-coupon';
 
 	/**
 	 * Cart schema properties.
@@ -68,8 +69,7 @@ class OrderCouponSchema extends AbstractSchema {
 	public function get_item_response( \WC_Order_Item_Coupon $coupon ) {
 		return [
 			'code'   => $coupon->get_code(),
-			'totals' => (object) array_merge(
-				$this->get_store_currency_response(),
+			'totals' => (object) $this->prepare_currency_response(
 				[
 					'total_discount'     => $this->prepare_money_response( $coupon->get_discount(), wc_get_price_decimals() ),
 					'total_discount_tax' => $this->prepare_money_response( $coupon->get_discount_tax(), wc_get_price_decimals(), PHP_ROUND_HALF_DOWN ),

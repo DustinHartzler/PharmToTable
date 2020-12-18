@@ -1,16 +1,13 @@
 <?php
-/**
- * Product Review Schema.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
 
-defined( 'ABSPATH' ) || exit;
+use Automattic\WooCommerce\Blocks\Domain\Services\ExtendRestApi;
+
 
 /**
  * ProductReviewSchema class.
+ *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  */
 class ProductReviewSchema extends AbstractSchema {
 	/**
@@ -19,6 +16,13 @@ class ProductReviewSchema extends AbstractSchema {
 	 * @var string
 	 */
 	protected $title = 'product_review';
+
+	/**
+	 * The schema item identifier.
+	 *
+	 * @var string
+	 */
+	const IDENTIFIER = 'product-review';
 
 	/**
 	 * Image attachment schema instance.
@@ -30,10 +34,12 @@ class ProductReviewSchema extends AbstractSchema {
 	/**
 	 * Constructor.
 	 *
+	 * @param ExtendRestApi         $extend Rest Extending instance.
 	 * @param ImageAttachmentSchema $image_attachment_schema Image attachment schema instance.
 	 */
-	public function __construct( ImageAttachmentSchema $image_attachment_schema ) {
+	public function __construct( ExtendRestApi $extend, ImageAttachmentSchema $image_attachment_schema ) {
 		$this->image_attachment_schema = $image_attachment_schema;
+		parent::__construct( $extend );
 	}
 
 	/**
@@ -51,7 +57,8 @@ class ProductReviewSchema extends AbstractSchema {
 			],
 			'date_created'           => [
 				'description' => __( "The date the review was created, in the site's timezone.", 'woo-gutenberg-products-block' ),
-				'type'        => 'date-time',
+				'type'        => 'string',
+				'format'      => 'date-time',
 				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 			],
@@ -63,7 +70,8 @@ class ProductReviewSchema extends AbstractSchema {
 			],
 			'date_created_gmt'       => [
 				'description' => __( 'The date the review was created, as GMT.', 'woo-gutenberg-products-block' ),
-				'type'        => 'date-time',
+				'type'        => 'string',
+				'format'      => 'date-time',
 				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 			],

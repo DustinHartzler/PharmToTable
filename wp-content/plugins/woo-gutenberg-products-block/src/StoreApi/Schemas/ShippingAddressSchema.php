@@ -1,13 +1,5 @@
 <?php
-/**
- * Shipping Address Schema.
- *
- * @package WooCommerce/Blocks
- */
-
 namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
-
-defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Blocks\RestApi\Routes;
 
@@ -16,6 +8,7 @@ use Automattic\WooCommerce\Blocks\RestApi\Routes;
  *
  * Provides a generic shipping address schema for composition in other schemas.
  *
+ * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  * @since 2.5.0
  */
 class ShippingAddressSchema extends AbstractSchema {
@@ -25,6 +18,13 @@ class ShippingAddressSchema extends AbstractSchema {
 	 * @var string
 	 */
 	protected $title = 'shipping_address';
+
+	/**
+	 * The schema item identifier.
+	 *
+	 * @var string
+	 */
+	const IDENTIFIER = 'shipping-address';
 
 	/**
 	 * Term properties.
