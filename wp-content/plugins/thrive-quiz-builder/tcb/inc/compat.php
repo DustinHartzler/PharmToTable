@@ -713,6 +713,19 @@ add_action( 'wp_head', function () {
 }, PHP_INT_MAX );
 
 /**
+ * Compatibility with Oliver POS - A WooCommerce Point of Sale (POS)
+ *
+ * We don't need their styles inside the editor
+ * Added in admin_enqueue_scripts because there is the place where they register their styles
+ */
+add_action( 'admin_enqueue_scripts', function () {
+	if ( is_editor_page_raw() ) {
+		wp_deregister_style( 'oliver-pos-feedback-css' );
+		wp_dequeue_style( 'oliver-pos-feedback-css' );
+	}
+}, PHP_INT_MAX );
+
+/**
  * Fixes a compatibility issue with optimole that causes src attribute replacement to not function correctly on landing pages
  */
 add_action( 'tcb_landing_page_template_redirect', function () {
@@ -737,4 +750,22 @@ add_filter( 'rank_math/researches/toc_plugins', function ( $toc_plugins ) {
  */
 add_filter( 'tve_thrive_shortcodes', static function ( $content ) {
 	return str_replace( ' tve-custom-menu-switch-icon-tablet tve-custom-menu-switch-icon-mobile', '', $content );
-});
+} );
+
+/**
+ * Do not generate sitemap for symbols
+ */
+add_filter( 'tve_dash_yoast_sitemap_exclude_post_types', static function ( $post_types ) {
+	$post_types[] = TCB_Symbols_Post_Type::SYMBOL_POST_TYPE;
+
+	return $post_types;
+} );
+
+/**
+ * Do not generate sitemap for symbols taxonomy
+ */
+add_filter( 'tve_dash_yoast_sitemap_exclude_taxonomies', static function ( $taxonomies ) {
+	$taxonomies[] = TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY;
+
+	return $taxonomies;
+} );

@@ -209,9 +209,14 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * disconnect (remove) this API connection
 	 */
 	public function disconnect() {
-		$this->beforeDisconnect();
-		$this->setCredentials( array() );
-		Thrive_Dash_List_Manager::save( $this );
+
+		$disconnect = apply_filters( 'tve_dash_disconnect_' . $this->getKey(), true );
+
+		if ( true === $disconnect ) {
+			$this->beforeDisconnect();
+			$this->setCredentials( array() );
+			Thrive_Dash_List_Manager::save( $this );
+		}
 
 		return $this;
 	}
@@ -385,6 +390,9 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 			'type'            => $this->getType(),
 			'logoUrl'         => $this->getLogoUrl(),
 			'success_message' => $this->customSuccessMessage(),
+			'can_test'        => $this->canTest(),
+			'can_delete'      => $this->canDelete(),
+			'can_edit'        => $this->canEdit(),
 		);
 
 		$properties['notification'] = TVE_Dash_InboxManager::instance()->get_by_slug( $this->getKey() );
@@ -851,6 +859,110 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 		$data[ $_key ] = trim( $data[ $_key ] );
 
 		return $data;
+	}
+
+	/**
+	 * Whether or not this connection can be edited
+	 *
+	 * @return bool
+	 */
+	public function canEdit() {
+		return true;
+	}
+
+	/**
+	 * Whether or not this connection can be deleted
+	 *
+	 * @return bool
+	 */
+	public function canDelete() {
+		return true;
+	}
+
+	/**
+	 * Whether or not this connection can be tested to validate that the stored credentials are correct
+	 *
+	 * @return bool
+	 */
+	public function canTest() {
+		return true;
+	}
+
+	/**
+	 * Get localization data needed for setting up this connection within a form
+	 *
+	 * @return array
+	 */
+	public function getDataForSetup() {
+		return array();
+	}
+
+	/**
+	 * get relevant data from webhook trigger
+	 *
+	 * @param $request WP_REST_Request
+	 *
+	 * @return array
+	 */
+	public function getWebhookdata( $request ) {
+		return array();
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $tags
+	 * @param array $extra
+	 *
+	 * @return int
+	 */
+	public function updateTags( $email, $tags = '', $extra = array() ) {
+
+		$args            = $this->getArgsForTagsUpdate( $email, $tags, $extra );
+		$list_identifier = ! empty( $args['list_identifier'] ) ? $args['list_identifier'] : null;
+
+		unset( $args['list_identifier'] );
+
+		return $this->addSubscriber( $list_identifier, $args );
+	}
+
+	/**
+	 * Prepare necessary arguments for adding a tag
+	 *
+	 * @return array
+	 */
+	public function getArgsForTagsUpdate() {
+
+		$args       = func_get_args();
+		$tags_key   = $this->getTagsKey();
+		$tags_data  = ! empty( $args[1] ) ? $args[1] : '';
+		$extra_data = ! empty( $args[2] ) && is_array( $args[2] ) ? $args[2] : array();
+
+		$return = array(
+			'email'   => ! empty( $args[0] ) ? $args[0] : '',
+			$tags_key => $tags_data,
+		);
+
+		foreach ( $extra_data as $key => $value ) {
+			$return[ $key ] = $value;
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Add a custom field for a subscriber
+	 * This method should be overwritten in avery instance that deals with custom fields
+	 * Subscriber ID should be returned
+	 *
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return int
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		return 0;
 	}
 }
 

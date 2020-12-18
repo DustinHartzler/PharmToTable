@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Andrei
- * Date: 29-Jul-15
- * Time: 10:58
- */
 class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -30,6 +24,54 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 	public function hasTags() {
 
 		return true;
+	}
+
+	public function pushTags( $tags, $data = array() ) {
+
+		if ( ! $this->hasTags() && ( ! is_array( $tags ) || ! is_string( $tags ) ) ) {
+			return $data;
+		}
+
+		$_key = $this->getTagsKey();
+
+		if ( ! isset( $data[ $_key ] ) ) {
+			$data[ $_key ] = array();
+		}
+
+		if ( isset( $data['klicktipp_tag'] ) ) {
+			$data[ $_key ][] = $data['klicktipp_tag'];
+		}
+
+		$existing_tags = $this->getTags();
+		/** @var Thrive_Dash_Api_KlickTipp $api */
+		$api = $this->getApi();
+
+		try {
+			$api->login();
+		} catch ( Thrive_Dash_Api_KlickTipp_Exception $e ) {
+			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', TVE_DASH_TRANSLATE_DOMAIN ), $e->getMessage() ) );
+		}
+
+		foreach ( $tags as $key => $tag ) {
+
+			$tag = trim( $tag );
+
+			if ( empty( $tags ) ) {
+				continue;
+			}
+
+			if ( ! in_array( $tag, $existing_tags ) ) {
+				try {
+					$data[ $_key ][] = (int) $api->createTag( $tag );
+				} catch ( Thrive_Dash_Api_KlickTipp_Exception $e ) {
+					$this->error = $e->getMessage();
+				}
+			} else {
+				$data[ $_key ][] = array_search( $tag, $existing_tags );
+			}
+		}
+
+		return $data;
 	}
 
 	/**
@@ -188,11 +230,9 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 			);
 
 			// Tag user by email, array tags
-			if ( ! empty( $arguments['klicktipp_tag'] ) ) {
+			if ( ! empty( $arguments['klicktipp_tags'] ) ) {
 
-				$tag_ids = $api->tagsIdList( $arguments['klicktipp_tag'] );
-
-				$api->tagByEmail( $arguments['email'], $tag_ids );
+				$api->tagByEmail( $arguments['email'], $arguments['klicktipp_tags'] );
 			}
 
 			/**

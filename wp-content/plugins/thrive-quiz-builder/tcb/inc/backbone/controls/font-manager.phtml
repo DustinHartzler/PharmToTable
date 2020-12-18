@@ -9,7 +9,7 @@
 		<option value="inherit"></option>
 	</select>
 </label>
-<div class="mt-10 tcb-hidden info-text orange">
+<div class="mt-10 info-text orange" style="display: none;">
 	<span><?php echo sprintf( __( 'You have disabled Google Fonts on your website. Click <a style="display: inline;" target="_blank" href="%s">here</a> to enable Google Fonts.', 'thrive-cb' ), add_query_arg( 'page', 'tve_dash_general_settings_section', admin_url( 'admin.php' ) ) ); ?></span>
 </div>
 
@@ -67,7 +67,6 @@
 	<label class="block full-width pt-5">
 		<?php echo __( 'Font', 'thrive-cb' ); ?>
 		<select class="font-select change" data-fn="fontChange" data-font="<#= section #>">
-			<option selected><?php echo __( '', '' ); ?></option>
 			<# _.each(this.fonts[section].fonts, function(v,k) { #>
 			<option value="<#= k #>">
 				<#= v.family #>

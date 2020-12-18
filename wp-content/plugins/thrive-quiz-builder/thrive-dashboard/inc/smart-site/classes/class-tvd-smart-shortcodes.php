@@ -80,10 +80,12 @@ final class TVD_Smart_Shortcodes {
 	public function tvd_tss_smart_url( $args ) {
 		$data = '';
 		if ( ! empty( $args['id'] ) ) {
-			$field      = $this->db->get_fields( array(), $args['id'] );
-			$field_data = maybe_unserialize( $field['data'] );
-			if ( ! empty( $field_data ) ) {
-				$data = $field_data['url'];
+			$field = $this->db->get_fields( array(), $args['id'] );
+			if ( ! empty( $field['data'] ) ) {
+				$field_data = maybe_unserialize( $field['data'] );
+				if ( ! empty( $field_data ) ) {
+					$data = $field_data['url'];
+				}
 			}
 		}
 

@@ -53,6 +53,7 @@ class TQB_Post_types {
 				'edit_others_posts'    => TVE_DASH_EDIT_CPT_CAPABILITY,
 				'edit_published_posts' => TVE_DASH_EDIT_CPT_CAPABILITY,
 			),
+			'show_in_rest'        => true,
 		) );
 
 		register_post_type( self::SPLASH_PAGE_POST_TYPE, array(
@@ -63,9 +64,9 @@ class TQB_Post_types {
 			'labels'             => array(
 				'name' => 'Thrive Quiz Builder - Splash Page',
 			),
-			'_edit_link'          => 'post.php?post=%d',
-			'map_meta_cap'        => true,
-			'capabilities'        => array(
+			'_edit_link'         => 'post.php?post=%d',
+			'map_meta_cap'       => true,
+			'capabilities'       => array(
 				'edit_others_posts'    => TVE_DASH_EDIT_CPT_CAPABILITY,
 				'edit_published_posts' => TVE_DASH_EDIT_CPT_CAPABILITY,
 			),
@@ -79,9 +80,9 @@ class TQB_Post_types {
 			'labels'             => array(
 				'name' => 'Thrive Quiz Builder - Q&A Page',
 			),
-			'_edit_link'          => 'post.php?post=%d',
-			'map_meta_cap'        => true,
-			'capabilities'        => array(
+			'_edit_link'         => 'post.php?post=%d',
+			'map_meta_cap'       => true,
+			'capabilities'       => array(
 				'edit_others_posts'    => TVE_DASH_EDIT_CPT_CAPABILITY,
 				'edit_published_posts' => TVE_DASH_EDIT_CPT_CAPABILITY,
 			),
@@ -95,9 +96,9 @@ class TQB_Post_types {
 			'labels'             => array(
 				'name' => 'Thrive Quiz Builder - OPTIN Page',
 			),
-			'_edit_link'          => 'post.php?post=%d',
-			'map_meta_cap'        => true,
-			'capabilities'        => array(
+			'_edit_link'         => 'post.php?post=%d',
+			'map_meta_cap'       => true,
+			'capabilities'       => array(
 				'edit_others_posts'    => TVE_DASH_EDIT_CPT_CAPABILITY,
 				'edit_published_posts' => TVE_DASH_EDIT_CPT_CAPABILITY,
 			),
@@ -111,9 +112,9 @@ class TQB_Post_types {
 			'labels'             => array(
 				'name' => 'Thrive Quiz Builder - Results Page',
 			),
-			'_edit_link'          => 'post.php?post=%d',
-			'map_meta_cap'        => true,
-			'capabilities'        => array(
+			'_edit_link'         => 'post.php?post=%d',
+			'map_meta_cap'       => true,
+			'capabilities'       => array(
 				'edit_others_posts'    => TVE_DASH_EDIT_CPT_CAPABILITY,
 				'edit_published_posts' => TVE_DASH_EDIT_CPT_CAPABILITY,
 			),

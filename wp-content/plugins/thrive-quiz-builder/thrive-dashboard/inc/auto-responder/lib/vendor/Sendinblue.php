@@ -43,13 +43,17 @@ class Thrive_Dash_Api_Sendinblue {
 			'sslverify' => false,
 		) );
 
-		$result = json_decode( $result['body'], true );
-
-		if ( $result === null ) {
-			throw new Thrive_Dash_Api_SendinBlue_Exception( 'We were unable to decode the JSON response from the Sendinblue API: ' . $result['message'] );
+		if ( is_wp_error( $result ) ) {
+			throw new Thrive_Dash_Api_SendinBlue_Exception( 'We were unable to decode the JSON response from the Sendinblue API: ' . $result->get_error_message() );
 		}
 
-		if ( $result['code'] != 'success' ) {
+		try {
+			$result = json_decode( wp_remote_retrieve_body( $result ), true );
+		} catch ( Exception $e ) {
+			$result = [];
+		}
+
+		if ( isset( $result['code'] ) && $result['code'] !== 'success' ) {
 			throw new Thrive_Dash_Api_SendinBlue_Exception( $result['message'] );
 		}
 

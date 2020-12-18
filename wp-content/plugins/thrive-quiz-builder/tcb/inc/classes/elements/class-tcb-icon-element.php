@@ -56,14 +56,15 @@ class TCB_Icon_Element extends TCB_Element_Abstract {
 						'css_prefix' => tcb_selection_root() . ' ',
 						'css_suffix' => ' > :first-child',
 						'config'     => array(
-							'label' => __( 'Color', 'thrive-cb' ),
+							'label'   => __( 'Color', 'thrive-cb' ),
+							'options' => array( 'noBeforeInit' => false ),
 						),
 					),
 					'Slider'      => array(
 						'config' => array(
 							'default' => '30',
-							'min'     => '8',
-							'max'     => '1024',
+							'min'     => '12',
+							'max'     => '200',
 							'label'   => __( 'Size', 'thrive-cb' ),
 							'um'      => array( 'px' ),
 							'css'     => 'fontSize',

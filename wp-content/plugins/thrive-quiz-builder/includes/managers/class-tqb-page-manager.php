@@ -306,11 +306,13 @@ class TQB_Page_Manager {
 
 			$variation['content'] = str_replace( Thrive_Quiz_Builder::QUIZ_RESULT_SHORTCODE, $result, $variation['content'] );
 
-			$variation['content'] = $this->insert_result_shortcodes( $variation, $points );
+			$variation['content'] = self::insert_result_shortcodes( $variation, $points );
 		} else {
 			$content              = ! empty( $variation['content'] ) ? $variation['content'] : '';
 			$variation['content'] = str_replace( Thrive_Quiz_Builder::QUIZ_RESULT_SHORTCODE, '', $content );
 		}
+
+		$variation['quiz_user_result'] = ! empty( $result ) ? $result : '';
 
 		return $variation;
 	}
@@ -323,7 +325,7 @@ class TQB_Page_Manager {
 	 *
 	 * @return mixed
 	 */
-	public function insert_result_shortcodes( $variation, $points ) {
+	public static function insert_result_shortcodes( $variation, $points ) {
 
 		$q_type = get_post_meta( $variation['quiz_id'], TQB_Post_meta::META_NAME_FOR_QUIZ_TYPE, true );
 		$type   = ! empty( $q_type['type'] ) ? $q_type['type'] : '';
@@ -333,7 +335,7 @@ class TQB_Page_Manager {
 			'quiz_type' => $type,
 		);
 
-		foreach ( $this->get_result_shortcodes( $data ) as $key => $shortcode ) {
+		foreach ( self::get_result_shortcodes( $data ) as $key => $shortcode ) {
 
 			$new_sh_regex = '/\[tqb_quiz_result result_type=\'(' . $key . ')\' inline=\'.*\'/';
 			$old_sh_regex = '/' . $shortcode['initial'] . '/';
@@ -360,7 +362,7 @@ class TQB_Page_Manager {
 	 *
 	 * @return array
 	 */
-	public function get_result_shortcodes( $data ) {
+	public static function get_result_shortcodes( $data ) {
 
 		if ( ! empty( $data['points']['explicit'] ) ) {
 			$category = str_replace( "'", Thrive_Quiz_Builder::COMMA_PLACEHOLDER, $data['points']['explicit'] );
@@ -395,7 +397,7 @@ class TQB_Page_Manager {
 	 * @param     $social_share_badge_url
 	 * @param     $social_share_badge_searched_url
 	 */
-	public function update_social_share_links( $quiz_id = 0, $social_share_badge_url, $social_share_badge_searched_url ) {
+	public function update_social_share_links( $quiz_id, $social_share_badge_url, $social_share_badge_searched_url ) {
 		global $tqbdb;
 		$variations = $tqbdb->get_page_variations( array( 'post_id' => $this->page->ID ) );
 

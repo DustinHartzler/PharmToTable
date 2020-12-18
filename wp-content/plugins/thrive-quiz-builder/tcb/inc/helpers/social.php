@@ -464,7 +464,7 @@ function tve_social_fetch_count_t_share( $url ) {
  * @return int
  */
 function tve_social_fetch_count_pin_share( $url ) {
-	$response = wp_remote_get( 'http://api.pinterest.com/v1/urls/count.json?callback=_&url=' . rawurlencode( $url ), array(
+	$response = wp_remote_get( 'https://api.pinterest.com/v1/urls/count.json?callback=_&url=' . rawurlencode( $url ), array(
 		'sslverify' => false,
 	) );
 
@@ -499,21 +499,9 @@ function tve_social_fetch_count_in_share( $url ) {
  * @return int
  */
 function tve_social_fetch_count_xing_share( $url ) {
-	$response = wp_remote_get( 'https://www.xing-share.com/app/share?op=get_share_button;counter=top;url=' . rawurlencode( $url ), array(
-		'sslverify' => false,
-	) );
+	$response = _tve_social_helper_get_json( 'https://www.xing-share.com/spi/shares/statistics?url=' . rawurlencode( $url ), 'wp_remote_post' );
 
-	if ( $response instanceof WP_Error ) {
-		return 0;
-	}
-
-	$html = wp_remote_retrieve_body( $response );
-
-	if ( ! preg_match_all( '#xing-count(.+?)(\d+)(.*?)</span>#', $html, $matches, PREG_SET_ORDER ) ) {
-		return 0;
-	}
-
-	return (int) $matches[0][2];
+	return isset( $response['share_counter'] ) ? $response['share_counter'] : 0;
 }
 
 /**
@@ -589,7 +577,8 @@ function tve_social_ajax_count( $return = false, $post_data = null ) {
 				$count = call_user_func( 'tve_social_fetch_count_' . $network, $url );
 			}
 
-			$total                                    += $count;
+			$total += $count;
+
 			$response['counts'][ $index ][ $network ] = array(
 				'value'     => $count,
 				'formatted' => tve_social_count_format( $count ),

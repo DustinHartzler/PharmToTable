@@ -5,7 +5,7 @@ class Thrive_Dash_Api_Mandrill {
 
 	public $apikey;
 	public $ch;
-	public $root = 'https://mandrillapp.com/api/1.0';
+	public $root  = 'https://mandrillapp.com/api/1.0';
 	public $debug = false;
 
 	public static $error_map = array(
@@ -37,7 +37,7 @@ class Thrive_Dash_Api_Mandrill {
 		"Invalid_CustomDNS"          => "Mandrill_Invalid_CustomDNS",
 		"Invalid_CustomDNSPending"   => "Mandrill_Invalid_CustomDNSPending",
 		"Metadata_FieldLimit"        => "Mandrill_Metadata_FieldLimit",
-		"Unknown_MetadataField"      => "Mandrill_Unknown_MetadataField"
+		"Unknown_MetadataField"      => "Mandrill_Unknown_MetadataField",
 	);
 
 	public function __construct( $apikey = null ) {
@@ -93,13 +93,13 @@ class Thrive_Dash_Api_Mandrill {
 			throw new Thrive_Dash_Api_Mandrill_Exceptions( 'We were unable to decode the JSON response from the Mandrill API: ' . $result->errors['http_failure'][0] );
 		}
 
-		if ( $result === null ) {
+		if ( isset( $result['code'] ) && $result['code'] !== 'success' ) {
 			throw new Thrive_Dash_Api_Mandrill_Exceptions( 'We were unable to decode the JSON response from the Mandrill API: ' . $result['body'] );
 		}
 
 		if ( $result['response']['code'] != 200 ) {
 			$error = json_decode( $result['body'] );
-			throw $this->castError( $error->message );
+			$this->castError( $error->message );
 		}
 
 		return $result;

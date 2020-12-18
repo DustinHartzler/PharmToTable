@@ -13,9 +13,9 @@
 		<span>
 			<strong>
 				<# if(item.get('message').get('subject').length >= 20){ #>
-					<#= item.get('message').get('subject').substring(0, 17) #>...
+					<#- item.get('message').get('subject').substring(0, 17) #>...
 				<# }else{ #>
-					<#= item.get('message').get('subject') #>
+					<#- item.get('message').get('subject') #>
 				<# } #>
 			</strong>
 		</span>

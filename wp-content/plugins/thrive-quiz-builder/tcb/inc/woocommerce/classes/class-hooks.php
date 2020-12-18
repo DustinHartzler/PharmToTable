@@ -38,6 +38,8 @@ class Hooks {
 		add_filter( 'wp_list_categories', array( __CLASS__, 'wp_list_categories' ), 10, 2 );
 
 		add_filter( 'tve_frontend_options_data', array( __CLASS__, 'tve_frontend_data' ) );
+
+		add_filter( 'tcb_alter_cloud_template_meta', array( __CLASS__, 'tcb_alter_cloud_template_meta' ), 10, 3 );
 	}
 
 	/**
@@ -114,8 +116,29 @@ class Hooks {
 	 * @return mixed
 	 */
 	public static function tve_frontend_data( $data ) {
-		$data['woo_shop_route'] = get_rest_url( get_current_blog_id(), 'tcb/v1' . '/woo' );
+		$data['woo_rest_routes'] = array(
+			'shop'               => get_rest_url( get_current_blog_id(), 'tcb/v1/woo/render_shop' ),
+			'product_categories' => get_rest_url( get_current_blog_id(), 'tcb/v1/woo/render_product_categories' ),
+		);
 
 		return $data;
+	}
+
+	/**
+	 * Modifies the template content for headers/footers
+	 *
+	 * @param array   $template_data
+	 * @param array   $meta
+	 * @param boolean $do_shortcode
+	 *
+	 * @return array
+	 */
+	public static function tcb_alter_cloud_template_meta( $template_data = array(), $meta, $do_shortcode ) {
+		if ( $do_shortcode && in_array( $template_data['type'], array( 'header', 'footer' ) ) && ! empty( $template_data['content'] ) ) {
+			/* the main reason for calling this is to render woo widgets such as Product Search which rely on __CONFIG__s */
+			$template_data['content'] = tve_thrive_shortcodes( $template_data['content'], is_editor_page_raw( true ) );
+		}
+
+		return $template_data;
 	}
 }

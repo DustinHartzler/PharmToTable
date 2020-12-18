@@ -34,6 +34,7 @@ require_once TVE_DASH_PATH . '/inc/notification-manager/class-td-nm.php';
 require_once TVE_DASH_PATH . '/inc/db-manager/class-td-db-migration.php';
 require_once TVE_DASH_PATH . '/inc/db-manager/class-td-db-manager.php';
 require_once TVE_DASH_PATH . '/inc/script-manager/class-tvd-sm.php';
+require_once TVE_DASH_PATH . '/inc/login-editor/classes/class-main.php';
 require_once TVE_DASH_PATH . '/inc/auth-check/class-tvd-auth-check.php';
 require_once TVE_DASH_PATH . '/inc/smart-site/classes/class-tvd-smart-shortcodes.php';
 require_once TVE_DASH_PATH . '/inc/smart-site/classes/class-tvd-global-shortcodes.php';
@@ -44,6 +45,7 @@ require_once TVE_DASH_PATH . '/inc/smart-site/classes/class-tvd-rest-controller.
 require_once TVE_DASH_PATH . '/inc/smart-site/classes/endpoints/class-tvd-groups-controller.php';
 require_once TVE_DASH_PATH . '/inc/smart-site/classes/endpoints/class-tvd-fields-controller.php';
 require_once TVE_DASH_PATH . '/inc/access-manager/class-tvd-am.php';
+require_once TVE_DASH_PATH . '/inc/marketing/class-tvd-marketing-utils.php';
 
 /**
  * AUTO-LOADERS
@@ -81,6 +83,8 @@ if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || apply_filters( 'tve_leads_incl
  */
 add_action( 'init', 'tve_dash_init_action' );
 add_action( 'init', 'tve_dash_load_text_domain' );
+/* priority -1 so we can be compatible with WP Cerber */
+add_action( 'init', array( 'TVD\Login_Editor\Main', 'init' ), - 1 );
 if ( defined( 'WPSEO_FILE' ) ) {
 	/* Yoast SEO plugin installed -> use a hook provided by the plugin for configuring meta "robots" */
 	add_filter( 'wpseo_robots_array', function ( $robots ) {
@@ -110,3 +114,15 @@ if ( is_admin() ) {
 
 	add_action( 'current_screen', 'tve_dash_current_screen' );
 }
+
+/**
+ * Hook when a user submits a wordpress login form & the login has been successful
+ *
+ * Adds a user meta with last login timestamp
+ */
+add_action( 'wp_login', 'tve_dash_on_user_login', 10, 2 );
+
+/**
+ * Hook when a user submits a wordpress login form & the login has been failed
+ */
+add_action( 'wp_login_failed', 'tve_dash_on_user_login_failed', 10, 2 );

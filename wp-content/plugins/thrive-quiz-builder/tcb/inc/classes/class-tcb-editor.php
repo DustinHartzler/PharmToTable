@@ -254,7 +254,7 @@ class TCB_Editor {
 		wp_enqueue_script( 'tcb-velocity', TVE_DASH_URL . '/js/dist/velocity.min.js' );
 		wp_enqueue_script( 'tcb-leanmodal', TVE_DASH_URL . '/js/dist/leanmodal.min.js' );
 
-		wp_enqueue_script( 'tcb-scrollbar', tve_editor_url() . '/editor/js/libs/jquery.scrollbar.min.js' );
+		wp_enqueue_script( 'tcb-scrollbar', TVE_DASH_URL . '/js/util/jquery.scrollbar.min.js' );
 
 		wp_enqueue_script( 'tcb-moment', tve_editor_url() . '/editor/js/libs/moment.min.js' );
 
@@ -422,12 +422,21 @@ class TCB_Editor {
 			$post_constants = array( 'e' => 1 );
 		}
 
+		/* build api connections localization */
+		$api_connections      = array();
+		$api_connections_data = array();
+		foreach ( Thrive_Dash_List_Manager::getAvailableAPIs( true, array( 'email', 'social', 'storage' ) ) as $key => $connection_instance ) {
+			$api_connections[ $key ]      = $connection_instance->getTitle();
+			$api_connections_data[ $key ] = $connection_instance->getDataForSetup();
+		}
+
 		$data = array(
 			'global_css_prefix'            => tcb_selection_root(),
 			'frame_uri'                    => tcb_get_editor_url( $this->post->ID, false ),
 			'plugin_url'                   => tve_editor_url() . '/',
 			'nonce'                        => wp_create_nonce( TCB_Editor_Ajax::NONCE_KEY ),
 			'rest_nonce'                   => wp_create_nonce( 'wp_rest' ),
+			'dash_nonce'                   => wp_create_nonce( 'tve-dash' ),
 			'ajax_url'                     => $admin_base_url . 'admin-ajax.php',
 			'post'                         => $this->post,
 			'post_format'                  => get_post_format(),
@@ -443,11 +452,8 @@ class TCB_Editor {
 			'pinned_category'              => $this->elements->pinned_category,
 			'social_fb_app_id'             => tve_get_social_fb_app_id(),
 			'disable_google_fonts'         => tve_dash_is_google_fonts_blocked(),
-			'api_connections'              => Thrive_Dash_List_Manager::getAvailableAPIs( true, array(
-				'email',
-				'social',
-				'storage',
-			), true ),
+			'api_connections'              => $api_connections,
+			'api_connections_data'         => $api_connections_data,
 			'storage_apis'                 => array_map( static function ( $connection ) {
 				/**
 				 * Search for a square version of the logo. if not found, use the default one
@@ -544,6 +550,7 @@ class TCB_Editor {
 			'froalaMode'                   => get_user_meta( $current_user->ID, 'froalaMode', true ),
 			'default_styles'               => tve_get_default_styles( false ),
 			'post_login_actions'           => TCB_Login_Element_Handler::get_post_login_actions(),
+			'post_register_actions'        => TCB_Login_Element_Handler::get_post_register_actions(),
 			'is_woo_active'                => \Tcb\Integrations\WooCommerce\Main::active() ? 1 : 0,
 			'lg_email_shortcodes'          => $this->get_lg_email_shortcodes(),
 			'dismissed_tooltips'           => (array) get_user_meta( wp_get_current_user()->ID, 'tcb_dismissed_tooltips', true ),
@@ -667,7 +674,14 @@ class TCB_Editor {
 	 * @return bool
 	 */
 	public function has_post_breadcrumb_option() {
-		return apply_filters( 'tcb_add_post_breadcrumb_option', get_the_ID() );
+		$post_type = get_post_type( get_the_ID() );
+
+		return ! in_array( $post_type, apply_filters( 'tcb_post_visibility_options_availability', array(
+			'attachment',
+			'content_template',
+			'tcb_lightbox',
+			TCB_Symbols_Post_Type::SYMBOL_POST_TYPE,
+		) ) );
 	}
 
 	/**
@@ -820,6 +834,55 @@ class TCB_Editor {
 		$landing_page = tcb_landing_page( $this->post->ID );
 
 		return apply_filters( 'tcb_has_central_style_panel', $landing_page->has_template_data, $landing_page );
+	}
+
+	/**
+	 * @param string $icon
+	 * @param string $display show | hide | unavailable
+	 *
+	 * @return string
+	 */
+	public function get_sidebar_icon_availability( $icon = '', $display = 'hide' ) {
+		$post_type = get_post_type( $this->post );
+		switch ( $icon ) {
+			case 'central-style':
+				if ( $this->has_central_style_panel() ) {
+					$display = 'show';
+				} /* Only in TAr, the icon can be 'unavailable' */
+				else if ( $post_type === 'post' || $post_type === 'page' ) {
+					$display = 'unavailable';
+				} else {
+					$display = 'hide';
+				}
+				break;
+			case 'cloud-templates':
+				if ( $this->has_templates_tab() ) {
+					$display = 'show';
+				} /* Only in TAr, the icon can be 'unavailable' */
+				else if ( $post_type === 'post' || $post_type === 'page' ) {
+					$display = 'unavailable';
+				} else {
+					$display = 'hide';
+				}
+
+				break;
+			/* The '$display=show' case is treated in TOP*/
+			case 'ab-test':
+				/* Icon can be unavailable only on pages that normally allow the Optimize icon*/
+				if ( $this->is_cpt_allowed( $post_type ) ) {
+					$display = 'unavailable';
+					break;
+				}
+				$display = 'hide';
+				break;
+		}
+
+		return apply_filters( 'tcb_sidebar_icon_availability', $display, $icon, $this );
+	}
+
+
+	public function is_cpt_allowed( $post_type ) {
+		return ! empty( $post_type ) && apply_filters( 'tve_allowed_post_type', true, $post_type );
 	}
 
 	/**

@@ -20,14 +20,19 @@ class TD_REST_Controller extends WP_REST_Controller {
 	 * @var string
 	 */
 	protected $rest_base;
+	protected $namespace = 'td/v1';
+	protected $webhook_base = '/webhook/trigger';
 
-	public function __construct() {
-		$this->namespace = 'td/v1';
-	}
+	public function __construct() {}
 
 	public function get_namespace() {
 
 		return $this->namespace;
+	}
+
+	public function get_webhoook_base() {
+
+		return $this->webhook_base;
 	}
 
 	/**
@@ -43,6 +48,27 @@ class TD_REST_Controller extends WP_REST_Controller {
 				'permission_callback' => array( $this, 'permission_callback' ),
 			)
 		);
+
+		register_rest_route( $this->namespace, $this->webhook_base.'/(?P<api>\S+)/(?P<id>\d+)/(?P<code>\S+)', array(
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'webhook_trigger' ),
+				'permission_callback' => '__return_true',
+			),
+		) );
+	}
+
+	/**
+	 * callback function
+	 * @param WP_REST_Response
+	 */
+	public static function webhook_trigger( $request ) {
+		$id           = $request->get_param( 'id' );
+		$api          = $request->get_param( 'api' );
+		$code          = $request->get_param( 'code' );
+		$api_instance = Thrive_Dash_List_Manager::connectionInstance( $api );
+
+		return apply_filters( 'tve_dash_webhook_trigger', $id, $code, $api_instance->getWebhookdata( $request ) );
 	}
 
 	/**

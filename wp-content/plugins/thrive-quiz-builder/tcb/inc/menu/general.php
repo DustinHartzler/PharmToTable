@@ -266,13 +266,17 @@
 	<div class="dropdown-content">
 
 		<div class="control-grid no-space">
-			<div class="label tve-control no-space" data-key="preview" data-initializer="preview_style_control"></div>
+			<span class="tcb-style-icon">
+				<?php tcb_icon( 'paint-brush-regular' ); ?>
+			</span>
 
-			<div class="shared-styles-actions ml-5" data-state="0">
-				<div class="tve-control ml-5" data-key="global_style" data-initializer="global_style_control"></div>
+			<div class="label tve-control no-space" data-key="preview" data-truncate="false" data-initializer="preview_style_control"></div>
+
+			<div class="shared-styles-actions shared-styles-icon" data-state="0">
+				<div class="tve-control" data-key="global_style" data-initializer="global_style_control"></div>
 			</div>
 
-			<div class="shared-styles-actions ml-5" data-state="1">
+			<div class="shared-styles-actions" data-state="1">
 				<a href="javascript:void(0)" class="click" data-fn="edit_style" data-side="top" data-tooltip="<?php echo __( 'Edit Global Style', 'thrive-cb' ); ?>">
 					<?php tcb_icon( 'edit' ); ?>
 				</a>
@@ -294,6 +298,10 @@
 				</span>
 			</div>
 
+			<span class="tcb-style-icon trigger">
+				<?php tcb_icon( 'arrow-down' ); ?>
+			</span>
+
 			<ul class="shared-styles-drop-content tcb-hide">
 				<li class="click" data-fn="rename">
 					<a href="javascript:void(0)"><?php echo __( 'Rename', 'thrive-cb' ) ?></a>
@@ -303,11 +311,11 @@
 				</li>
 			</ul>
 		</div>
-		<div class="control-grid pt-5 no-space shared-styles-actions" data-state="1">
-			<span class="global-edit-warning">
-					<?php echo __( 'This element has a Global Style applied: some of its properties are not editable at the instance level (e.g. Typography, Background, Borders etc). You can modify these by clicking on the pencil icon above.', 'thrive-cb' ); ?>
-			</span>
-		</div>
+	</div>
 
+	<div class="control-grid pt-5 no-space shared-styles-actions" data-state="1">
+		<span class="global-edit-warning">
+			<?php echo __( 'This element has a Global Style applied: some of its properties are not editable at the instance level (e.g. Typography, Background, Borders etc). You can modify these by clicking on the pencil icon above.', 'thrive-cb' ); ?>
+		</span>
 	</div>
 </div>

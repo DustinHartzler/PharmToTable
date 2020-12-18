@@ -22,7 +22,7 @@ class TCB_Login_Form_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Login Form', 'thrive-cb' );
+		return esc_html__( 'Login Form', 'thrive-cb' );
 	}
 
 	/**
@@ -66,6 +66,24 @@ class TCB_Login_Form_Element extends TCB_Element_Abstract {
 							'sortable'      => false,
 							'settings_icon' => 'edit',
 						),
+					),
+					'AddRemoveLabels'  => array(
+						'config'     => array(
+							'name'    => '',
+							'label'   => __( 'Show labels', 'thrive-cb' ),
+							'default' => true,
+						),
+						'extends'    => 'Switch',
+					),
+					'RememberMe'       => array(
+						'config'     => array(
+							'name'    => '',
+							'label'   => __( 'Remember me', 'thrive-cb' ),
+							'default' => true,
+						),
+						'css_suffix' => ' .tcb-remember-me-item',
+						'css_prefix' => '',
+						'extends'    => 'Switch',
 					),
 				),
 			),

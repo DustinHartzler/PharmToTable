@@ -10,96 +10,171 @@
 		},
 
 		init: function () {
-			var $gutenberg = $( '#editor' ),
-				$architectNotificationContent = $( '#thrive-gutenberg-switch' ).html(),
-				$architectDisplay = $( '<div>' ).append( $architectNotificationContent ),
-				$architectLauncher = $architectDisplay.find( '#thrive_preview_button' );
+			var self = this;
+			this.$gutenberg = $( '#editor' );
+			this.$architectNotificationContent = $( '#thrive-gutenberg-switch' ).html();
+			this.$architectDisplay = $( '<div id="tar-display">' ).append( this.$architectNotificationContent );
+			this.$architectLauncher = this.$architectDisplay.find( '#thrive_preview_button' );
+			this.isPostBox = this.$architectNotificationContent.indexOf( 'postbox' ) !== - 1;
 
-			setTimeout( function () {
-				if ( $architectNotificationContent.indexOf( 'postbox' ) !== - 1 ) {
-					$gutenberg.find( '.editor-post-title' ).append( $architectDisplay );
-					$gutenberg.find( '.editor-block-list__layout,.block-editor-block-list__layout' ).hide();
-					$gutenberg.find( '.editor-post-title__block' ).css( 'margin-bottom', '0' );
-					$gutenberg.find( '.editor-writing-flow__click-redirect,.block-editor-writing-flow__click-redirect' ).hide();
-					$gutenberg.find( '.edit-post-header-toolbar' ).css( 'visibility', 'hidden' );
-				} else {
-					$gutenberg.find( '.edit-post-header-toolbar' ).append( $architectLauncher );
-					$architectLauncher.on( 'click', function () {
-						$gutenberg.find( '.editor-block-list__layout' ).hide();
-					} );
-					$gutenberg.find( '.edit-post-header-toolbar' ).css( 'visibility', 'visible' );
+			$( window ).on( 'storage.tcb', function ( e ) {
+				var current_post = wp.data.select( "core/editor" ).getCurrentPost(),
+					post;
+
+				try {
+					post = JSON.parse( e.originalEvent.newValue );
+				} catch ( e ) {
+
 				}
 
-				$( '#tcb2-show-wp-editor' ).on( 'click', function () {
-					var $editlink = $gutenberg.find( '.tcb-enable-editor' ),
-						$postbox = $editlink.closest( '.postbox' );
+				if ( post && post.ID && e.originalEvent.key === 'tve_post_options_change' && post.ID === Number( current_post.id ) ) {
+					window.location.reload();
+				}
+			} );
 
-					$.ajax( {
-						type: 'post',
-						url: ajaxurl,
-						dataType: 'json',
-						data: {
-							_nonce: TCB_Post_Edit_Data.admin_nonce,
-							post_id: this.getAttribute( 'data-id' ),
-							action: 'tcb_admin_ajax_controller',
-							route: 'disable_tcb'
-						}
-					} ).done( function ( response ) {
+			wp.data.subscribe( function () {
+				var coreEditor = wp.data.select( 'core/editor' );
+				if ( coreEditor ) {
+					var isSavingPost = coreEditor.isSavingPost(),
+						isAutosavingPost = coreEditor.isAutosavingPost();
+
+					if ( isSavingPost && ! isAutosavingPost ) {
+						var data = JSON.stringify( coreEditor.getCurrentPost() );
+
+						window.localStorage.setItem( 'tve_post_options_change', data );
+					}
+				}
+
+				/**
+				 * On data subscribe check if our elements exists
+				 */
+				setTimeout( function () {
+					self.render();
+				}, 1 );
+			} );
+		},
+		render: function () {
+			var self = this,
+				shouldBindEvents = false;
+			if ( this.isPostBox ) {
+				if ( ! $( '#tar-display' ).length ) {
+					this.$gutenberg.find( '.editor-post-title' ).append( this.$architectDisplay );
+
+					this.$gutenberg.find( '.editor-block-list__layout,.block-editor-block-list__layout' ).hide();
+					this.$gutenberg.find( '.editor-post-title__block' ).css( 'margin-bottom', '0' );
+					this.$gutenberg.find( '.editor-writing-flow__click-redirect,.block-editor-writing-flow__click-redirect' ).hide();
+					this.$gutenberg.find( '.edit-post-header-toolbar' ).css( 'visibility', 'hidden' );
+					shouldBindEvents = true;
+				}
+			} else {
+				if ( ! $( '#thrive_preview_button' ).length ) {
+					this.$gutenberg.find( '.edit-post-header-toolbar' ).append( this.$architectLauncher );
+					this.$architectLauncher.on( 'click', function () {
+						self.$gutenberg.find( '.editor-block-list__layout' ).hide();
 					} );
+					this.$gutenberg.find( '.edit-post-header-toolbar' ).css( 'visibility', 'visible' );
+					shouldBindEvents = true;
+				}
+			}
 
-					$postbox.next( '.tcb-flags' ).find( 'input' ).prop( 'disabled', false );
-					$postbox.remove();
-					$gutenberg.find( '.editor-block-list__layout' ).show();
-					$gutenberg.find( '.edit-post-header-toolbar' ).append( $architectLauncher );
-					$gutenberg.find( '.edit-post-header-toolbar' ).css( 'visibility', 'visible' );
-				} );
+			if ( shouldBindEvents ) {
+				this.bindEvents();
+			}
+		},
 
-				$architectLauncher.on( 'click', function () {
-					$.ajax( {
-						type: 'post',
-						url: ajaxurl,
-						dataType: 'json',
-						data: {
-							_nonce: TCB_Post_Edit_Data.admin_nonce,
-							post_id: this.getAttribute( 'data-id' ),
-							action: 'tcb_admin_ajax_controller',
-							route: 'change_post_status_gutenberg'
-						}
-					} )
-				} );
+		bindEvents: function () {
+			var self = this;
+			$( '#tcb2-show-wp-editor' ).on( 'click', function () {
+				var $editlink = self.$gutenberg.find( '.tcb-enable-editor' ),
+					$postbox = $editlink.closest( '.postbox' );
 
-				$( window ).on( 'storage.tcb', function ( e ) {
-					var current_post = wp.data.select( "core/editor" ).getCurrentPost(),
-						post;
-
-					try {
-						post = JSON.parse( e.originalEvent.newValue );
-					} catch ( e ) {
-
+				$.ajax( {
+					type: 'post',
+					url: ajaxurl,
+					dataType: 'json',
+					data: {
+						_nonce: TCB_Post_Edit_Data.admin_nonce,
+						post_id: this.getAttribute( 'data-id' ),
+						action: 'tcb_admin_ajax_controller',
+						route: 'disable_tcb'
 					}
-
-					if ( post && post.ID && e.originalEvent.key === 'tve_post_options_change' && post.ID === Number( current_post.id ) ) {
-						window.location.reload();
-					}
+				} ).done( function ( response ) {
 				} );
 
-				wp.data.subscribe( function () {
-					var coreEditor = wp.data.select( 'core/editor' );
-					if ( coreEditor ) {
-						var isSavingPost = coreEditor.isSavingPost(),
-							isAutosavingPost = coreEditor.isAutosavingPost();
+				$postbox.next( '.tcb-flags' ).find( 'input' ).prop( 'disabled', false );
+				$postbox.remove();
+				self.$gutenberg.find( '.editor-block-list__layout,.block-editor-block-list__layout' ).show();
+				self.isPostBox = false;
+				self.render();
 
-						if ( isSavingPost && ! isAutosavingPost ) {
-							var data = JSON.stringify( coreEditor.getCurrentPost() );
+				self.fixBlocksPreview();
+			} );
 
-							window.localStorage.setItem( 'tve_post_options_change', data );
-						}
+			this.$architectLauncher.on( 'click', function () {
+				$.ajax( {
+					type: 'post',
+					url: ajaxurl,
+					dataType: 'json',
+					data: {
+						_nonce: TCB_Post_Edit_Data.admin_nonce,
+						post_id: this.getAttribute( 'data-id' ),
+						action: 'tcb_admin_ajax_controller',
+						route: 'change_post_status_gutenberg'
 					}
 				} )
+			} );
+		},
+		/**
+		 * Fix block height once returning to gutenberg editor
+		 */
+		fixBlocksPreview: function () {
+			var blocks = document.querySelectorAll( '[data-type*="thrive"] iframe' ),
+				tveOuterHeight = function ( el ) {
+					if ( ! el ) {
+						return 0;
+					}
+					var height = el.offsetHeight,
+						style = getComputedStyle( el );
 
-			}, 200 );
+					height += parseInt( style.marginTop ) + parseInt( style.marginBottom );
+					return height;
+				};
+
+			Array.prototype.forEach.call( blocks, function ( iframe ) {
+				var iframeDocument = iframe.contentDocument;
+
+				iframe.style.setProperty(
+					'height',
+					''
+				);
+				iframe.parentNode.style.setProperty(
+					'height',
+					''
+				);
+				/**
+				 * Fix countdown resizing
+				 */
+				Array.prototype.forEach.call( iframeDocument.body.querySelectorAll( '.tve-countdown' ), function ( countdown ) {
+					countdown.style.setProperty(
+						'--tve-countdown-size',
+						''
+					);
+				} );
 
 
+				var height = tveOuterHeight(
+					iframeDocument.body
+				);
+
+				iframe.style.setProperty(
+					'height',
+					height + 'px'
+				);
+				iframe.parentNode.style.setProperty(
+					'height',
+					height + 'px'
+				);
+			} );
 		}
 	};
 

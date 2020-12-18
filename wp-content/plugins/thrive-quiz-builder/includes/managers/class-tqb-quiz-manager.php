@@ -413,10 +413,27 @@ class TQB_Quiz_Manager {
 			return array( 'error' => $errors );
 		}
 
-		if ( empty( $user_unique ) ) {
-			$user_unique = uniqid( 'tqb-user-', true );
-		} else {
-			$user_id = TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id );
+		/**
+		 * The TQB User should be created only for frontend, so not editor page
+		 */
+		if ( empty( $_REQUEST['tar_editor_page'] ) ) {
+			if ( empty( $user_unique ) ) {
+				$user_unique = uniqid( 'tqb-user-', true );
+
+				//TA-3621 for now this action is removed
+//				/**
+//				 * Fired when a user starts a quiz
+//				 *
+//				 * @param array Quiz Details
+//				 * @param array User Details
+//				 *
+//				 * @api
+//				 */
+//				do_action( 'thrive_quizbuilder_quiz_started', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique ), tvd_get_current_user_details() );
+
+			} else {
+				$user_id = TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id );
+			}
 		}
 
 		$shortcode_content['page']        = null;
@@ -506,18 +523,30 @@ class TQB_Quiz_Manager {
 							$shortcode_content['page']['fonts']   = array_merge( $shortcode_content['page']['fonts'], array_values( $tie_image->get_settings()->get_data( 'fonts' ) ) );
 							$shortcode_content['page']['fonts'][] = '//fonts.googleapis.com/css?family=Roboto'; //default font for BE
 
-							$items = array( Thrive_Quiz_Builder::QUIZ_RESULT_SHORTCODE, Thrive_Quiz_Builder::QUIZ_RESULT_DEFAULT_SHORTCODE );
-							$html  = $tie_image->get_html_canvas_content();
+							$html = TQB_Page_Manager::insert_result_shortcodes(
+								array(
+									'content' => $tie_image->get_html_canvas_content(),
+									'quiz_id' => $quiz_id,
+								),
+								$points
+							);
 
-							foreach ( $items as $item ) {
-								if ( preg_match( $item, $html ) ) {
-									$shortcode_content['page']['html_canvas'] = str_replace( $item, $result, $html );
-									$html                                     = $shortcode_content['page']['html_canvas'];
-								}
-							}
+							$shortcode_content['page']['html_canvas'] = do_shortcode( $html );
+							$shortcode_content['page']['html_canvas'] = str_replace( Thrive_Quiz_Builder::QUIZ_RESULT_SHORTCODE, $result, $shortcode_content['page']['html_canvas'] ); //old implementation
 						}
 					}
 				}
+
+				/**
+				 * Fired when a quiz is completed by the user
+				 *
+				 * @param array Quiz Details
+				 * @param array User Details
+				 *
+				 * @api
+				 */
+				do_action( 'thrive_quizbuilder_quiz_completed', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique, $points['explicit'] ), tvd_get_current_user_details() );
+
 				break;
 		}
 		if ( ! empty( $validation['error'] ) ) {
@@ -567,6 +596,26 @@ class TQB_Quiz_Manager {
 		if ( false === empty( $answer_text ) ) {
 			$user_answer['answer_text'] = $answer_text;
 		}
+
+		$question_manager = new TGE_Question_Manager( $user['quiz_id'] );
+		$question         = $question_manager->get_quiz_questions( array( 'id' => $answer['question_id'] ), true );
+
+		/**
+		 * Fired when an answer is submitted by the user
+		 *
+		 * @param array Quiz Details
+		 * @param array Question Details
+		 * @param array User Details
+		 *
+		 * @api
+		 */
+		do_action( 'thrive_quizbuilder_answer_submitted', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique ), array(
+			'quiz_id'            => $answer['quiz_id'],
+			'question_id'        => $answer['question_id'],
+			'question_answer'    => empty( $answer_text ) ? $answer['text'] : $answer_text,
+			'question_answer_id' => $answer['id'],
+			'question_type'      => TGE_Question_Manager::get_question_type_name( (int) $question['q_type'] ),
+		), tvd_get_current_user_details() );
 
 		$tqbdb->save_user_answer( $user_answer );
 
@@ -751,6 +800,11 @@ class TQB_Quiz_Manager {
 
 		setcookie( 'tqb-conversion-' . $variation['page_id'] . '-' . str_replace( '.', '_', $post['tqb-variation-user_unique'] ), 1, time() + ( 30 * 24 * 3600 ), '/' );
 		$_COOKIE[ 'tqb-conversion-' . $variation['page_id'] . '-' . str_replace( '.', '_', $post['tqb-variation-user_unique'] ) ] = true;
+
+		/**
+		 * Trigger action on quiz conversion
+		 */
+		do_action( 'tqb_optin_conversion', $data );
 	}
 
 	/**
@@ -862,6 +916,40 @@ class TQB_Quiz_Manager {
 				do_action( 'tqb_quiz_completed', $quiz, $user );
 			}
 		}
+	}
+
+	/**
+	 * Get the quiz details
+	 *
+	 * @param        $quiz_id
+	 * @param        $user_unique
+	 * @param string $result
+	 *
+	 * @return array
+	 */
+	public static function get_quiz_details( $quiz_id, $user_unique, $result = '' ) {
+		$answers = array();
+
+		if ( ! empty( $user_unique ) ) {
+			/**
+			 * Avoid cases where system creates a new user if this function without $user_unique
+			 */
+			$answers = TQB_Quiz_Manager::get_user_answers_with_questions(
+				array(
+					'quiz_id' => $quiz_id,
+					'user_id' => TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id ),
+				)
+			);
+		}
+
+		return array(
+			'quiz_id'   => $quiz_id,
+			'quiz_name' => get_the_title( $quiz_id ),
+			'result'    => $result,
+			'answers'   => $answers,
+			'user_id'   => get_current_user_id(),
+			'form_data' => array(),
+		);
 	}
 
 	/**

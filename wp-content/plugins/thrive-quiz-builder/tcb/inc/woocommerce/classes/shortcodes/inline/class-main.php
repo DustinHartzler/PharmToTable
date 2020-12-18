@@ -23,9 +23,9 @@ class Main {
 	const LINK_SHORTCODE = 'thrive_woo_link_shortcode';
 
 	/* price shortcode attributes */
-	const PRICE_ON_SALE_EFFECT          = 'on_sale_effect';
+	const PRICE_ON_SALE_EFFECT = 'on_sale_effect';
 	const PRICE_INCLUDE_CURRENCY_SYMBOL = 'include_currency_symbol';
-	const PRICE_SHOW_DECIMALS           = 'show_decimals';
+	const PRICE_SHOW_DECIMALS = 'show_decimals';
 
 	const PATH = 'classes/shortcodes/inline/';
 
@@ -75,7 +75,8 @@ class Main {
 
 		if ( array_key_exists( $shortcode_id, Helpers::available_shortcodes() ) ) {
 			/* always fetch the product based on the ID, otherwise the post list custom loop can mess this up */
-			$product = wc_get_product( get_the_ID() );
+			$product_id = get_the_ID();
+			$product    = wc_get_product( $product_id );
 
 			switch ( $shortcode_id ) {
 				case '_sale_price':
@@ -89,6 +90,12 @@ class Main {
 					break;
 				case 'product_description':
 					$content = $product->get_short_description();
+					break;
+				case 'product_category':
+					$content = get_the_term_list( $product_id, 'product_cat', null, ', ', null );
+					break;
+				case 'product_tags':
+					$content = get_the_term_list( $product_id, 'product_tag', null, ', ', null );
 					break;
 
 				default:
@@ -113,14 +120,20 @@ class Main {
 		), $attr );
 
 		switch ( $attr['id'] ) {
-			case 'add_to_cart':
-				$link = wc_get_cart_url() . '?add-to-cart=' . get_the_ID();
-				break;
 			case 'cart_url':
 				$link = wc_get_cart_url();
 				break;
 			case 'shop_url':
 				$link = Woo_Main::get_shop_url();
+				break;
+			case 'checkout_url':
+				$link = Woo_Main::get_checkout_url();
+				break;
+			case 'my_account_url':
+				$link = wc_get_page_permalink( 'myaccount' );
+				break;
+			case 'add_to_cart':
+				$link = wc_get_cart_url() . '?add-to-cart=' . get_the_ID();
 				break;
 			default:
 				$link = '#';

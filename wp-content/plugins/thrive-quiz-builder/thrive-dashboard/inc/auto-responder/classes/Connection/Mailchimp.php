@@ -344,10 +344,10 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 							continue;
 						}
 
-						$mapped_form_field_id         = $mapped_form_data[ $cf_form_name ][ $this->_key ];
-						$field_label                  = $api_custom_fields[ $list_identifier ][ $mapped_form_field_id ];
+						$mapped_form_field_id = $mapped_form_data[ $cf_form_name ][ $this->_key ];
+						$field_label          = $api_custom_fields[ $list_identifier ][ $mapped_form_field_id ];
 
-						$cf_form_name          = str_replace( '[]', '', $cf_form_name );
+						$cf_form_name = str_replace( '[]', '', $cf_form_name );
 						if ( ! empty( $args[ $cf_form_name ] ) ) {
 							$args[ $cf_form_name ] = $this->processField( $args[ $cf_form_name ] );
 						}
@@ -702,7 +702,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 		$tag = $this->getApi()->request( 'lists/' . $list_id . '/segments', array(
 			'name'           => $tag_name,
-			'static_segment' => array()
+			'static_segment' => array(),
 		), 'POST' );
 
 		return $tag;
@@ -934,5 +934,39 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			'type'  => ! empty( $field->type ) ? $field->type : '',
 			'label' => ! empty( $field->name ) ? $field->name : '',
 		);
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return false|int
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_Mailchimp $api */
+			$api     = $this->getApi();
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+			$args    = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+			$member = $this->get_contact( $list_id, $email );
+			$data   = array(
+				'merge_fields' => $custom_fields,
+			);
+
+			$api->request( 'lists/' . $list_id . '/members/' . md5( $email ), $data, 'PUT' );
+
+			return $member->id;
+
+		} catch ( Exception $e ) {
+			return false;
+		}
 	}
 }

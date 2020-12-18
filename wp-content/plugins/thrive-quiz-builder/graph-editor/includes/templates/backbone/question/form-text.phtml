@@ -13,7 +13,7 @@
 		<div class="tvd-no-margin tge-question-description-holder">
 			<div class="clearfix tge-question-description-field">
 				<div class="tvd-input-field">
-					<input type="text" data-bind="description" id="tge-question-description" value="<#= item.get('description')#>">
+					<input type="text" data-bind="description" id="tge-question-description" value="<#= _.escape(item.get('description'))#>">
 					<label for="tge-question-description"><?php echo __( 'Add Description', Thrive_Graph_Editor::T ) ?></label>
 				</div>
 			</div>

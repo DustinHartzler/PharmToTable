@@ -80,6 +80,8 @@ class TCB_Custom_Fields_Shortcode {
 		'_tho',                 //Thrive Headline Optimiser metadata
 		'is_control',           //Thrive Optimize metadata
 		'sections',
+		'page_content_',        //some meta that might come from the clodu
+		'theme_skin',
 		/**  Protected Metadata for other plugins**/
 
 		'total_sales',          //WooCommerce metadata
@@ -193,11 +195,13 @@ class TCB_Custom_Fields_Shortcode {
 	 * @return array
 	 */
 	public function custom_fields_localization( $data = array() ) {
-		$external_fields = $this->get_all_external_fields();
-
 		if ( $this->has_external_fields_colors() ) {
+			$external_fields                 = $this->get_all_external_fields();
 			$data['colors']['custom_fields'] = $this->prepare_custom_fields_colors( get_the_ID(), $external_fields['color'] );
+			$data['has_acf_colors']          = 1;
 		}
+
+		$data['acf_is_active'] = tvd_has_external_fields_plugins() ? 1 : 0;
 
 		return $data;
 	}
@@ -225,6 +229,7 @@ class TCB_Custom_Fields_Shortcode {
 				'color'       => $field_value['value'],
 				'id'          => sanitize_title( $field_id ) . $id_suffix,
 				'name'        => sanitize_title( $field_value['label'] ),
+				'label'       => $field_value['label'],
 			);
 		}
 
@@ -272,7 +277,15 @@ class TCB_Custom_Fields_Shortcode {
 
 		if ( ! empty( $external_fields['color'] ) && is_array( $external_fields['color'] ) ) {
 			foreach ( $external_fields['color'] as $field_id => $field_value ) {
+				/* fallback for the dynamic color */
+				$fallback = 'hsl(var(--tcb-main-master-h,0), var(--tcb-main-master-s,0%),var(--tcb-main-master-l,4%))';
+
+				if ( empty( $field_value['value'] ) ) {
+					$field_value['value'] = $fallback;
+				}
+
 				$variables .= TVE_DYNAMIC_COLOR_VAR_CSS_PREFIX . sanitize_title( $field_id ) . $suffix . ':' . $field_value['value'] . ';';
+				$variables .= TVE_DYNAMIC_COLOR_VAR_CSS_PREFIX . sanitize_title( $field_id ) . $suffix . '-default' . ':' . $fallback . ';';
 			}
 		}
 
@@ -285,26 +298,13 @@ class TCB_Custom_Fields_Shortcode {
 	 * @return bool
 	 */
 	public function has_external_fields_colors() {
-		if ( ! $this->has_external_fields_plugins() ) {
+		if ( ! tvd_has_external_fields_plugins() ) {
 			return false;
 		}
 
 		$external_fields = $this->get_all_external_fields();
 
 		return ! empty( $external_fields['color'] );
-	}
-
-	/**
-	 * Check if there exists external fields plugins activated
-	 *
-	 * @return bool
-	 */
-	public function has_external_fields_plugins() {
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-		}
-
-		return is_plugin_active( 'advanced-custom-fields/acf.php' ) || is_plugin_active( 'advanced-custom-fields-pro/acf.php' );
 	}
 
 	/**
@@ -331,7 +331,7 @@ class TCB_Custom_Fields_Shortcode {
 	 *
 	 * @return string
 	 */
-	public function render_dynamic_field( $args = array(), $content, $tag ) {
+	public function render_dynamic_field( $args, $content, $tag ) {
 
 		if ( TCB_Post_List::is_outside_post_list_render() && isset( $args['post_list'] ) ) {
 
@@ -396,6 +396,7 @@ class TCB_Custom_Fields_Shortcode {
 				'data-id'  => $thumbnail_id,
 				'data-d-f' => 'featured',
 				'loading'  => 'lazy',
+				'data-css' => $args['data-css'],
 			) );
 		}
 		$args['data-classes'] = ! empty( $args['data-classes'] ) ? $args['data-classes'] : 'tve_image';
@@ -588,9 +589,7 @@ class TCB_Custom_Fields_Shortcode {
 		return $template;
 	}
 
-	public function render_custom_fields_image( $args = array(), $param ) {
-
-		$html = '';
+	public function render_custom_fields_image( $args, $param ) {
 
 		$params = empty( $args['in_postlist'] ) ? $this->get_custom_fields_shortcode_params( $args['data-id'], 'image' ) : $param;
 
@@ -1246,7 +1245,7 @@ class TCB_Custom_Fields_Shortcode {
 		}
 
 		$this->external_fields = array();
-		if ( $this->has_external_fields_plugins() ) {
+		if ( tvd_has_external_fields_plugins() ) {
 			$this->external_fields = array_merge_recursive( $this->get_acf_fields( false, $this->field_types ), $this->external_fields );
 		}
 
@@ -1264,7 +1263,7 @@ class TCB_Custom_Fields_Shortcode {
 
 		$fields = array();
 
-		if ( $this->has_external_fields_plugins() ) {
+		if ( tvd_has_external_fields_plugins() ) {
 			$fields = $this->get_acf_fields( $post_id, $this->postlist_field_types );
 		}
 

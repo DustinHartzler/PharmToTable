@@ -707,4 +707,20 @@ class TCB_Utils {
 
 		return $result;
 	}
+
+	/**
+	 * Shortcut function that will output json encoded data or return it as it is based on the second parameter.
+	 *
+	 * @param mixed $data
+	 * @param bool  $output if true, it will use WordPress's wp_send_json to output data
+	 *
+	 * @return mixed
+	 */
+	public static function maybe_send_json( $data, $output = true ) {
+		if ( $output ) {
+			wp_send_json( $data );
+		} else {
+			return $data;
+		}
+	}
 }

@@ -370,6 +370,7 @@ if ( isset( $_GET['font_action'] ) && $_GET['font_action'] == 'update' ) {
 			}
 			var font_manager_link = '<?php echo $admin_font_manager_link; ?>',
 				postData = {
+					_wpnonce: TVE_Dash_Const.nonce,
 					<?php if ( isset( $font_id ) ) {
 					echo 'font_id:' . $font_id . ',';
 				} ?>

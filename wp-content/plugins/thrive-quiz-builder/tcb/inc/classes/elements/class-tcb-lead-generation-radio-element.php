@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Lead_Generation_Radio_Element extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'Lead Generation Radio', 'thrive-cb' );
+		return __( 'Radio Field', 'thrive-cb' );
 	}
 
 	public function identifier() {

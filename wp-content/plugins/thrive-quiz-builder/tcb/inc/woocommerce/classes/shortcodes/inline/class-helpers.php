@@ -107,6 +107,16 @@ class Helpers {
 				'controls' => array(),
 				'type'     => '',
 			),
+			'product_category'    => array(
+				'name'     => __( 'Product category', 'thrive-cb' ),
+				'controls' => array(),
+				'type'     => '',
+			),
+			'product_tags'        => array(
+				'name'     => __( 'Product tags', 'thrive-cb' ),
+				'controls' => array(),
+				'type'     => '',
+			),
 			'_sale_price'         => array(
 				'name'     => __( 'Product sale price', 'thrive-cb' ),
 				'controls' => static::get_control_config( array(
@@ -212,13 +222,6 @@ class Helpers {
 				'links'     => array(
 					array(
 						array(
-							'name'  => __( 'Add To Cart', 'thrive-cb' ),
-							'label' => __( 'Add To Cart', 'thrive-cb' ),
-							'url'   => '',
-							'show'  => true,
-							'id'    => 'add_to_cart',
-						),
-						array(
 							'name'  => __( 'Cart Page', 'thrive-cb' ),
 							'label' => __( 'Cart Page', 'thrive-cb' ),
 							'url'   => '',
@@ -231,6 +234,27 @@ class Helpers {
 							'url'   => '',
 							'show'  => true,
 							'id'    => 'shop_url',
+						),
+						array(
+							'name'  => __( 'Checkout Page', 'thrive-cb' ),
+							'label' => __( 'Checkout Page', 'thrive-cb' ),
+							'url'   => '',
+							'show'  => true,
+							'id'    => 'checkout_url',
+						),
+						array(
+							'name'  => __( 'My Account', 'thrive-cb' ),
+							'label' => __( 'My Account', 'thrive-cb' ),
+							'url'   => '',
+							'show'  => true,
+							'id'    => 'my_account_url',
+						),
+						array(
+							'name'  => __( 'Add To Cart', 'thrive-cb' ),
+							'label' => __( 'Add To Cart', 'thrive-cb' ),
+							'url'   => '',
+							'show'  => true,
+							'id'    => 'add_to_cart',
 						),
 					),
 				),

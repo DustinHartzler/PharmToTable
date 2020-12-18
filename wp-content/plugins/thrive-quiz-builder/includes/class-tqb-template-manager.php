@@ -148,6 +148,11 @@ class TQB_Template_Manager extends TQB_Request_Handler {
 			}
 		} else {
 			unset( $variation_templates['template_4'] );
+
+			if ( Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE === $variation_type ) {
+				unset( $variation_templates['template_3'] );
+			}
+
 			foreach ( $variation_templates as $slug => $tpl ) {
 				$excluded_quiz_styles = ! empty( $tpl['quiz_styles_excluded'] ) && is_array( $tpl['quiz_styles_excluded'] ) ? $tpl['quiz_styles_excluded'] : array();
 				if ( in_array( $quiz_style, $tpl['quiz_styles'] ) && ! in_array( $quiz_style, $excluded_quiz_styles ) ) {

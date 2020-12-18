@@ -109,6 +109,17 @@ class TVE_Dash_AjaxController {
 	}
 
 	/**
+	 * Reset post/template/design css
+	 */
+	public function resetPostStyleAction() {
+		$post_id = $this->param( 'post_id' );
+
+		$default_design = apply_filters( 'tvd_default_post_style', '', $post_id );
+
+		return update_post_meta( $post_id, 'tve_custom_css', $default_design );
+	}
+
+	/**
 	 * save global settings for the plugin
 	 */
 	public function generalSettingsAction() {
@@ -117,6 +128,7 @@ class TVE_Dash_AjaxController {
 			'tve_comments_facebook_admins',
 			'tve_comments_disqus_shortname',
 			'tve_google_fonts_disable_api_call',
+			'tvd_enable_login_design',
 		);
 		$field   = $this->param( 'field' );
 		$value   = map_deep( $this->param( 'value' ), 'sanitize_text_field' );
@@ -147,7 +159,7 @@ class TVE_Dash_AjaxController {
 		}
 
 		if ( $result['valid'] ) {
-			tve_dash_update_option( $field, $value );
+			update_option( $field, $value );
 		}
 
 		return $result;
@@ -187,6 +199,12 @@ class TVE_Dash_AjaxController {
 			'referer'     => ! empty( $referer ) ? $referer : get_site_url(),
 		);
 
+		/* store the generated token in the database instead of reading it from POST in the saveToken action */
+		update_option( 'tve_dash_generated_token', array(
+			'token'   => $token,
+			'referer' => $data['referer'],
+		) );
+
 		/**
 		 * Grab a temporary key for signing TTW /token's endpoint request
 		 */
@@ -224,9 +242,18 @@ class TVE_Dash_AjaxController {
 	 * @return array|mixed|object
 	 */
 	public function saveTokenAction() {
-		$data = $this->param( 'token_data' );
-		unset( $data['has_token'] );
-		$data['saved'] = true;
+		$generated_token = get_option( 'tve_dash_generated_token' );
+		if ( empty( $generated_token['token'] ) || empty( $generated_token['referer'] ) ) {
+			return array(
+				'error' => __( 'Invalid request', TVE_DASH_TRANSLATE_DOMAIN ),
+				'next'  => false,
+			);
+		}
+		$data = $generated_token +
+		        array(
+			        'valid_until' => $this->param( 'valid_until' ),
+			        'saved'       => true,
+		        );
 
 		$response = tve_dash_api_remote_post(
 			$this->_token_endpoint,
@@ -341,7 +368,7 @@ class TVE_Dash_AjaxController {
 				wp_delete_user( $user->ID );
 			}
 
-			return delete_option( 'thrive_token_support' ) ? array( 'success' => isset( $ttw_data->success ) ? $ttw_data->success : __( 'Token has been deleted', TVE_DASH_TRANSLATE_DOMAIN ) ) : array( 'error' => __( 'Token is not deleted', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return delete_option( 'thrive_token_support' ) && delete_option( 'tve_dash_generated_token' ) ? array( 'success' => isset( $ttw_data->success ) ? $ttw_data->success : __( 'Token has been deleted', TVE_DASH_TRANSLATE_DOMAIN ) ) : array( 'error' => __( 'Token is not deleted', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
 		return array( 'error' => __( 'There is no token to delete', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -386,13 +413,13 @@ class TVE_Dash_AjaxController {
 	}
 
 	public function saveAffiliateIdAction() {
-		$aff_id = $this->param( 'affiliate_id' );
+		$aff_id = sanitize_text_field( $this->param( 'affiliate_id' ) );
 
-		return tve_dash_update_option( 'thrive_affiliate_id', $aff_id );
+		return update_option( 'thrive_affiliate_id', $aff_id );
 	}
 
 	public function getAffiliateIdAction() {
-		return tve_dash_get_option( 'thrive_affiliate_id' );
+		return get_option( 'thrive_affiliate_id' );
 	}
 
 	public function getErrorLogsAction() {

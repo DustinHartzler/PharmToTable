@@ -681,7 +681,7 @@ class TQB_Database {
 	 *
 	 * @return false|int
 	 */
-	public function archive_losing_variations( $test_model = array(), $winner_id ) {
+	public function archive_losing_variations( $test_model, $winner_id ) {
 		$test_items = $this->get_test_items( array( 'test_id' => $test_model['id'] ) );
 		foreach ( $test_items as $test_item ) {
 			if ( $test_item['variation_id'] != $winner_id ) {

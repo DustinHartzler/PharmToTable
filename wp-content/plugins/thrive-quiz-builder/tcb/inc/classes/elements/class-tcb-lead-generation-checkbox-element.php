@@ -12,11 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Lead_Generation_Checkbox_Element extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'Lead Generation Checkbox', 'thrive-cb' );
+		return __( 'Form Checkbox', 'thrive-cb' );
 	}
 
 	public function identifier() {
-		return '.tve_lg_checkbox.tve-new-checkbox:not(.tcb-lg-consent)';
+		return '.tve_lg_checkbox.tve-new-checkbox:not(.tcb-lg-consent):not(.tcb-remember-me)';
 	}
 
 	public function hide() {

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Andrei
- * Date: 15/9/2015
- * Time: 10:09 AM
- */
 class Thrive_Dash_List_Connection_ConvertKit extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -314,5 +308,36 @@ class Thrive_Dash_List_Connection_ConvertKit extends Thrive_Dash_List_Connection
 		}
 
 		return $mapped_data;
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields ex array( 'cf_name' => 'some nice cf value' )
+	 * @param array $extra
+	 *
+	 * @return false|int|mixed
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		if ( empty( $extra['list_identifier'] ) ) {
+			return false;
+		}
+
+		try {
+			/** @var $api Thrive_Dash_Api_ConvertKit */
+			$api  = $this->getApi();
+			$args = array(
+				'fields' => (object) $custom_fields,
+				'email'  => $email,
+				'name'   => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$subscriber = $api->subscribeForm( $extra['list_identifier'], $args );
+
+			return $subscriber['subscription']['id'];
+
+		} catch ( Exception $e ) {
+			return false;
+		}
 	}
 }

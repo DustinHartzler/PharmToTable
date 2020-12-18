@@ -23,6 +23,7 @@ class TD_NM_Action_Wordpress_Notification extends TD_NM_Action_Abstract {
 			}
 		}
 
+		$message    = sanitize_textarea_field( $message );
 		$meta_value = array( 'url' => $prepared_data['test_url'], 'message' => $message );
 		update_post_meta( $this->settings['notification_id'], 'td_nm_wordpress_notification', $meta_value );
 	}
@@ -69,7 +70,7 @@ class TD_NM_Action_Wordpress_Notification extends TD_NM_Action_Abstract {
 	public function prepare_quiz_completion_data( $data ) {
 
 		return array(
-			'test_url' => admin_url( 'admin.php?page=tqb_admin_dashboard' ) . '#dashboard/quiz/' . $data[0]->ID
+			'test_url' => admin_url( 'admin.php?page=tqb_admin_dashboard' ) . '#dashboard/quiz/' . $data[0]->ID,
 		);
 	}
 

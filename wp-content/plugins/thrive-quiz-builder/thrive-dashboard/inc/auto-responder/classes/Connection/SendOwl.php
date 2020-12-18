@@ -94,7 +94,8 @@ class Thrive_Dash_List_Connection_SendOwl extends Thrive_Dash_List_Connection_Ab
 	 *
 	 * @return bool|string true for success or string error message for failure
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {}
+	public function addSubscriber( $list_identifier, $arguments ) {
+	}
 
 	/**
 	 * instantiate the API code required for this connection

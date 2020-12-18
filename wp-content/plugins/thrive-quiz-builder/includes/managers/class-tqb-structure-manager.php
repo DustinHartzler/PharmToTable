@@ -253,7 +253,7 @@ class TQB_Structure_Manager {
 			$variation[ Thrive_Quiz_Builder::FIELD_CONTENT ] .= sprintf( '<style type="text/css" class="tve_custom_style">%s</style>', stripslashes( $css ) );
 		}
 
-		if ( function_exists( 'tve_get_shared_styles' ) && ! is_editor_page_raw( true )) {
+		if ( function_exists( 'tve_get_shared_styles' ) && ! is_editor_page_raw( true ) ) {
 			/**
 			 * TODO: remove the if clause after some time.
 			 */
@@ -274,7 +274,7 @@ class TQB_Structure_Manager {
 		/*Include config fonts*/
 		if ( ! empty( $config[ $variation_type ][ $key ] ) ) {
 			$config = $config[ $variation_type ][ $key ];
-			if ( ! empty( $config['fonts'] ) ) {
+			if ( ! empty( $config['fonts'] ) && ! tve_dash_is_google_fonts_blocked() ) {
 				foreach ( $config['fonts'] as $font ) {
 					$data['fonts'][] = $font;
 				}
@@ -300,9 +300,10 @@ class TQB_Structure_Manager {
 		if ( function_exists( 'tve_restore_script_tags' ) ) {
 			$data['html'] = tve_restore_script_tags( $data['html'] );
 		}
-		$data['page_id']      = $structure[ $page_type ];
-		$data['variation_id'] = $variation['id'];
-		$data['quiz_id']      = $variation['quiz_id'];
+		$data['page_id']          = $structure[ $page_type ];
+		$data['variation_id']     = $variation['id'];
+		$data['quiz_id']          = $variation['quiz_id'];
+		$data['quiz_user_result'] = $variation['quiz_user_result'];
 
 		return $data;
 	}

@@ -1,9 +1,10 @@
 <?php
 /**
  * FileName  symbol-body-open.php.
- * @project: thrive-visual-editor
+ *
+ * @project  : thrive-visual-editor
  * @developer: Dragos Petcu
- * @company: BitStone
+ * @company  : BitStone
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
+<?php $is_gutenberg_preview = isset( $_GET['tve_block_preview'] ); ?>
 <!doctype html>
 <html <?php language_attributes(); ?> style="overflow: unset;">
 <head>
@@ -27,4 +29,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 </head>
 
 <body <?php body_class(); ?> style="overflow: unset;">
+<?php if ( $is_gutenberg_preview ) { ?>
+	<style type="text/css">#wpadminbar, .symbol-extra-info {
+            display: none !important;
+        }
+
+        html {
+            margin: 0 !important;
+        }
+	</style>
+
+	<script>
+		document.addEventListener( "DOMContentLoaded", () => {
+			if ( window.TVE_Dash ) {
+				TVE_Dash.forceImageLoad( document );
+			}
+		} );
+	</script>
+<?php } ?>
 <div class="sym-new-container">

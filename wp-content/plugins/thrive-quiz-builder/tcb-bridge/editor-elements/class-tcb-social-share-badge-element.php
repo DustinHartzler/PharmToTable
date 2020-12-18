@@ -77,12 +77,18 @@ class TCB_Social_Share_Badge_Element extends TCB_Social_Element {
 
 
 		unset( $components['social'] );
-		$components['tqb_social_share_badge']['config']['preview']['config']['settingsIcon'] = false;
 		$components['tqb_social_share_badge']['disabled_controls']                           = array(
 			'total_share',
 			'counts',
 			'has_custom_url',
 			'custom_url',
+		);
+		$components['tqb_social_share_badge']['config']['stylePicker']['config']['items'] = array(
+			'tve_style_1' => 'Style 1',
+			'tve_style_2' => 'Style 1',
+			'tve_style_3' => 'Style 3',
+			'tve_style_4' => 'Style 4',
+			'tve_style_5' => 'Style 5',
 		);
 		$components['layout']['config']['Alignment']['to']                                   = ' .tve_social_items';
 

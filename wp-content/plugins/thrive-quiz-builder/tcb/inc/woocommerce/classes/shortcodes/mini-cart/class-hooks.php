@@ -17,9 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package TCB\Integrations\WooCommerce\Shortcodes\MiniCart
  */
 class Hooks {
-	/**
-	 * Only a hook so far, but more will come
-	 */
 	public static function add() {
 		add_filter( 'tcb_content_allowed_shortcodes', array( __CLASS__, 'content_allowed_shortcodes_filter' ) );
 

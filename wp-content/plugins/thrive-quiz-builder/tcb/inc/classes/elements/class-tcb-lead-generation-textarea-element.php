@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Lead_Generation_Textarea_Element extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'Lead Generation Textarea', 'thrive-cb' );
+		return __( 'Form Textarea', 'thrive-cb' );
 	}
 
 	public function identifier() {
@@ -24,14 +24,19 @@ class TCB_Lead_Generation_Textarea_Element extends TCB_Element_Abstract {
 	}
 
 	public function own_components() {
-		$prefix_config                = tcb_selection_root();
+		$prefix_config = tcb_selection_root();
 
 		$controls_default_config      = array(
 			'css_suffix' => array( ' input', ' textarea' ),
 			'css_prefix' => $prefix_config . ' ',
 		);
 		$controls_default_config_text = array(
-			'css_suffix' => array( ' input', ' textarea', ' ::placeholder' ),
+			'css_suffix' => array(
+				' input',
+				' textarea',
+				' input::placeholder',
+				' textarea::placeholder',
+			),
 			'css_prefix' => $prefix_config . ' ',
 		);
 
@@ -124,8 +129,8 @@ class TCB_Lead_Generation_Textarea_Element extends TCB_Element_Abstract {
 				'config'            => array(
 					'MarginAndPadding' => array(
 						'margin_suffix'  => '',
-						'padding_suffix' => array(' input', ' textarea'),
-						'css_prefix' => $prefix_config . ' ',
+						'padding_suffix' => array( ' input', ' textarea' ),
+						'css_prefix'     => $prefix_config . ' ',
 					),
 				),
 			),

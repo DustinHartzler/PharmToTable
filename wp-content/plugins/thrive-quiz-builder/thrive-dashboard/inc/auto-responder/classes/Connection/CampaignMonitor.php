@@ -335,9 +335,9 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 
 		foreach ( $mapped_custom_fields as $key => $custom_field ) {
 
-			$field_key         = strpos( $custom_field['type'], 'mapping_' ) !== false ? $custom_field['type'] . '_' . $key : $key;
+			$field_key = strpos( $custom_field['type'], 'mapping_' ) !== false ? $custom_field['type'] . '_' . $key : $key;
 
-			$field_key          = str_replace( '[]', '', $field_key );
+			$field_key = str_replace( '[]', '', $field_key );
 			if ( ! empty( $args[ $field_key ] ) ) {
 				$args[ $field_key ] = $this->processField( $args[ $field_key ] );
 			}
@@ -402,5 +402,39 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 		}
 
 		return $mapped_data;
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return int
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_CampaignMonitor $aweber */
+			$api = $this->getApi();
+
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+
+			/** @var Thrive_Dash_Api_CampaignMonitor_List $list */
+			$list = $api->get_list( $list_id );
+
+			$args = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+			$args['CustomFields'] = $custom_fields;
+
+			$list->add_subscriber( $args );
+
+		} catch ( Exception $e ) {
+			return false;
+		}
 	}
 }

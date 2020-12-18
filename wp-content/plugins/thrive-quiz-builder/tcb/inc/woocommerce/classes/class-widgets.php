@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package TCB\Integrations\WooCommerce
  */
 class Widgets {
-	/* */
+
 	public static function init() {
 		static::add_actions();
 		static::add_filters();
@@ -25,6 +25,8 @@ class Widgets {
 
 	public static function add_actions() {
 		add_action( 'tcb_ajax_before_widget_render', array( __CLASS__, 'tcb_ajax_before_widget_render' ) );
+
+		add_action( 'tcb_before_widget_render', array( __CLASS__, 'tcb_before_widget_render' ) );
 	}
 
 	public static function add_filters() {
@@ -140,6 +142,7 @@ class Widgets {
 
 	/**
 	 * Set the query as being the shop when trying to render widgets
+	 * This action has a dynamic name - @see \TCB_Editor_Ajax::handle()
 	 */
 	public static function tcb_ajax_before_widget_render() {
 		if ( isset( $_GET['widget'] ) && strpos( $_GET['widget'], 'woocommerce', true ) !== false && ! empty( $_GET['query'] ) ) {
@@ -174,5 +177,32 @@ class Widgets {
 		}
 
 		return $sidebars_widgets;
+	}
+
+	/**
+	 * Flush the widget cache before rendering certain widgets
+	 * For instance, when two different Product Widgets are added, if we don't flush the cache after rendering the first widget, then the second widget copies the content of the first one
+	 *
+	 * @param \WC_Widget $widget
+	 *
+	 * @see \WC_Widget::cache_widget()
+	 */
+	public static function tcb_before_widget_render( $widget ) {
+		if ( in_array( $widget->option_name, static::get_cached_widget_keys() ) ) {
+			$widget->flush_widget_cache();
+		}
+	}
+
+	/**
+	 * The content of these widgets is being cached, and we want to prevent this because it can duplicate different widgets
+	 *
+	 * @return string[]
+	 */
+	public static function get_cached_widget_keys() {
+		return array(
+			'widget_woocommerce_products',
+			'widget_woocommerce_top_rated_products',
+			'widget_woocommerce_recent_reviews',
+		);
 	}
 }

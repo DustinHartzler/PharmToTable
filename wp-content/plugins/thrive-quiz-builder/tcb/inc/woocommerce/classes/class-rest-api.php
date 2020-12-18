@@ -21,34 +21,53 @@ class Rest_Api {
 	public static $route = '/woo';
 
 	public static function register_routes() {
-		register_rest_route( self::$namespace, self::$route, array(
+		register_rest_route( self::$namespace, self::$route . '/render_shop', array(
 			array(
 				'methods'             => \WP_REST_Server::EDITABLE,
-				'callback'            => array( __CLASS__, 'render' ),
+				'callback'            => array( __CLASS__, 'render_shop' ),
+				'permission_callback' => array( __CLASS__, 'route_permission' ),
+			),
+		) );
+
+		register_rest_route( self::$namespace, self::$route . '/render_product_categories', array(
+			array(
+				'methods'             => \WP_REST_Server::EDITABLE,
+				'callback'            => array( __CLASS__, 'render_product_categories' ),
 				'permission_callback' => array( __CLASS__, 'route_permission' ),
 			),
 		) );
 	}
 
 	/**
-	 * Render the WooCommerce shop
+	 * Render the WooCommerce shop element
 	 *
 	 * @param \WP_REST_Request $request Full data about the request.
 	 *
 	 * @return \WP_REST_Response
 	 */
-	public static function render( $request ) {
+	public static function render_shop( $request ) {
+		$args = $request->get_param( 'args' );
 
-		$content = '';
-		$fn      = $request->get_param( 'fn' );
+		Main::init_frontend_woo_functionality();
 
-		if ( $fn === 'woocommerce_content' ) {
-			$args = $request->get_param( 'args' );
+		$content = Shortcodes\Shop\Main::render( $args );
 
-			Main::init_frontend_woo_functionality();
+		return new \WP_REST_Response( array( 'content' => $content ), 200 );
+	}
 
-			$content = Shortcodes\Shop\Main::render( $args );
-		}
+	/**
+	 * Render the WooCommerce product categories element
+	 *
+	 * @param \WP_REST_Request $request Full data about the request.
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public static function render_product_categories( $request ) {
+		$args = $request->get_param( 'args' );
+
+		Main::init_frontend_woo_functionality();
+
+		$content = Shortcodes\Product_Categories\Main::render( $args );
 
 		return new \WP_REST_Response( array( 'content' => $content ), 200 );
 	}

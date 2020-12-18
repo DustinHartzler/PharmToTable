@@ -339,7 +339,9 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		$top_cls = (array) $this->get_config( 'top_cls', array() );
 		if ( 0 === $depth && ! empty( $top_cls ) ) {
 			$unlinked_key = ! empty( $item->_tcb_pos_selector ) ? $item->_tcb_pos_selector : '.menu-item-' . $item->ID;
-			if ( ! empty( $top_cls[ $unlinked_key ] ) ) {
+			$is_unlinked  = ! empty( $this->get_config( "unlinked/$unlinked_key", array() ) );
+
+			if ( isset( $top_cls[ $unlinked_key ] ) && $is_unlinked ) {
 				$classes [] = $top_cls[ $unlinked_key ];
 			} elseif ( ! empty( $top_cls['main'] ) ) {
 				$classes [] = $top_cls['main'];

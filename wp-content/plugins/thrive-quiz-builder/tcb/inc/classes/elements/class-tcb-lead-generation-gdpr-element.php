@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Lead_Generation_GDPR_Element extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'Lead Generation GDPR Checkbox', 'thrive-cb' );
+		return __( 'Checkbox', 'thrive-cb' );
 	}
 
 	public function identifier() {
@@ -156,7 +156,7 @@ class TCB_Lead_Generation_GDPR_Element extends TCB_Element_Abstract {
 			),
 			'borders'              => array(
 				'config' => array(
-					'to'            => '.tve_lg_checkbox_wrapper',
+					'to' => '.tve_lg_checkbox_wrapper',
 				),
 			),
 			'animation'            => array(
@@ -164,7 +164,7 @@ class TCB_Lead_Generation_GDPR_Element extends TCB_Element_Abstract {
 			),
 			'background'           => array(
 				'config' => array(
-					'to'            => '.tve_lg_checkbox_wrapper',
+					'to' => '.tve_lg_checkbox_wrapper',
 				),
 			),
 			'shadow'               => array(

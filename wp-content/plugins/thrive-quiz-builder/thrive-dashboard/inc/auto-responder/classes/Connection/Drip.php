@@ -454,4 +454,41 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 
 		return $fields;
 	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return false|int|mixed
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_Drip $api */
+			$api     = $this->getApi();
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+			$args    = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+			$user = array(
+				'account_id'    => $this->param( 'client_id' ),
+				'campaign_id'   => $list_id,
+				'email'         => $email,
+				'ip_address'    => $_SERVER['REMOTE_ADDR'],
+				'custom_fields' => (object) $custom_fields,
+			);
+
+			$lead = $api->create_or_update_subscriber( $user );
+
+			return $lead['subscribers'][0]['id'];
+
+		} catch ( Exception $e ) {
+			return false;
+		}
+	}
 }

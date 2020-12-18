@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</button>
 		</div>
 		<div class="tve-control" data-view="CustomBranding"></div>
+		<div class="tve-control" data-view="CssVarChanger"></div>
 		<div class="tve-control gl-st-button-toggle-1 hide-states tcb-hidden" data-view="SocialFollowPalettes"></div>
 		<div class="tve-control" data-key="type" data-view="ButtonGroup"></div>
 		<div class="tve-control" data-key="style" data-initializer="style_control"></div>
@@ -27,6 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<hr>
 		<div class="tve-control" data-key="size" data-view="Slider"></div>
 		<div class="tve-control pt-5 gl-st-button-toggle-2" data-key="Align" data-view="ButtonGroup"></div>
+		<div class="tve-control" data-view="CommonButtonWidth"></div>
 		<hr>
 		<div class="control-grid">
 			<span class="input-label"><?php echo __( 'Social Networks', 'thrive-cb' ) ?></span>

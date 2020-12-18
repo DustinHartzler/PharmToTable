@@ -110,23 +110,23 @@
 	</div>
 	<# } ) #>
 	<# } else {#>
+	<div class="tve-field-pair">
+		<div class="control-grid wrap">
+			<div class="tvd-input-field">
+				<div class="field-description mb-0"><?php echo __( 'Custom Field', 'thrive-cb' ) ?></div>
+				<input type="text" class="index-custom-field drip-custom-field" name="field" placeholder="thrive_custom_field"/>
+			</div>
 
-	<div class="control-grid">
-		<div class="tvd-input-field">
-			<div class="field-description"><?php echo __( 'Custom Field', 'thrive-cb' ) ?></div>
-			<input type="text" class="index-custom-field drip-custom-field" name="field" placeholder="thrive_custom_field"/>
-		</div>
-
-		<div class="tvd-input-field">
-			<div class="field-description"><?php echo __( 'Value', 'thrive-cb' ) ?></div>
-			<input type="text" placeholder="<?php echo __( 'Value', 'thrive-cb' ) ?>"
-				   class="drip-custom-field-value tve-api-extra" name="field[thrive_custom_field]"/>
-		</div>
-		<div class="tve-remove-action" style="display:none">
-			<span class="tcb-right red tve-remove-added-field click"> <?php tcb_icon( 'trash-light' ) ?></span>
+			<div class="tvd-input-field">
+				<div class="field-description mb-0"><?php echo __( 'Value', 'thrive-cb' ) ?></div>
+				<input type="text" placeholder="<?php echo __( 'Value', 'thrive-cb' ) ?>"
+					   class="drip-custom-field-value tve-api-extra" name="field[thrive_custom_field]"/>
+			</div>
+			<div class="tve-remove-action" style="display:none">
+				<span class="tcb-right red tve-remove-added-field click"> <?php tcb_icon( 'trash-light' ) ?></span>
+			</div>
 		</div>
 	</div>
-
 	<# } #>
 </div>
 <div>

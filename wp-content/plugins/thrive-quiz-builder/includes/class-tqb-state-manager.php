@@ -251,7 +251,7 @@ class TQB_State_Manager extends TQB_Request_Handler {
 	 *
 	 * @return int|null
 	 */
-	private function update_child_variation_for_update( $child_id = 0, $add_min, $add_max, $with_to_add ) {
+	private function update_child_variation_for_update( $child_id, $add_min, $add_max, $with_to_add ) {
 		$child_variation = TQB_Variation_Manager::get_variation( $child_id );
 		if ( ! is_numeric( $add_max ) ) {
 			$new_min = $child_variation['tcb_fields']['min'];
@@ -296,7 +296,7 @@ class TQB_State_Manager extends TQB_Request_Handler {
 	 * @param     $max
 	 * @param     $with_to_add
 	 */
-	private function update_child_variation_absolute_values( $child_id = 0, $min, $max, $with_to_add ) {
+	private function update_child_variation_absolute_values( $child_id, $min, $max, $with_to_add ) {
 		$child_variation = TQB_Variation_Manager::get_variation( $child_id );
 
 		if ( empty( $min ) ) {

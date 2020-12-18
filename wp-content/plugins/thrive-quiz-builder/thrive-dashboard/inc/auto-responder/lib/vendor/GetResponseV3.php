@@ -73,7 +73,7 @@ class Thrive_Dash_Api_GetResponseV3 {
 	 * @return mixed
 	 */
 	public function getCampaigns() {
-		return $this->call( 'campaigns' );
+		return $this->call( 'campaigns', 'GET', array( 'perPage' => 1000 ) );
 	}
 
 	/**

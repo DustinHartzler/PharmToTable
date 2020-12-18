@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: Andrei
- * Date: 29-Jul-15
- * Time: 10:58
- */
 class Thrive_Dash_Api_KlickTipp {
 	private $sessionId;
 	private $sessionName;
@@ -36,7 +30,7 @@ class Thrive_Dash_Api_KlickTipp {
 
 		$tags_id_list = array();
 
-		if ( ( strpos( $list, ',' ) !== false ) ) {
+		if ( ! empty( $list ) ) {
 
 			$tags_arr      = explode( ',', $list );
 			$existing_tags = $this->getTags();
@@ -109,9 +103,9 @@ class Thrive_Dash_Api_KlickTipp {
 	/**
 	 * Get all subscription processes (lists) of the logged in user. Requires to be logged in.
 	 *
+	 * @return array A associative array <list id> => <list name>
 	 * @throws Thrive_Dash_Api_KlickTipp_Exception
 	 *
-	 * @return array A associative array <list id> => <list name>
 	 */
 	public function getLists() {
 		try {
@@ -138,9 +132,9 @@ class Thrive_Dash_Api_KlickTipp {
 	 * @param mixed $tagid  (optional) The id of the manual tag the subscriber will be tagged with.
 	 * @param mixed $fields (optional) Additional fields of the subscriber.
 	 *
+	 * @return mixed An object representing the Klicktipp subscriber object.
 	 * @throws Thrive_Dash_Api_KlickTipp_Exception Exception
 	 *
-	 * @return mixed An object representing the Klicktipp subscriber object.
 	 */
 	public function subscribe( $email, $listid = 0, $tagid = 0, $fields = array() ) {
 		if ( empty( $email ) ) {
@@ -176,9 +170,9 @@ class Thrive_Dash_Api_KlickTipp {
 	 * @param mixed $username The login name of the user to login.
 	 * @param mixed $password The password of the user.
 	 *
+	 * @return TRUE on success
 	 * @throws Thrive_Dash_Api_KlickTipp_Exception Exception
 	 *
-	 * @return TRUE on success
 	 */
 	public function login() {
 		if ( empty( $this->user ) || empty( $this->password ) ) {
@@ -206,9 +200,9 @@ class Thrive_Dash_Api_KlickTipp {
 	/**
 	 * Logs out the user currently logged in.
 	 *
+	 * @return TRUE on success
 	 * @throws Thrive_Dash_Api_KlickTipp_Exception Exception
 	 *
-	 * @return TRUE on success
 	 */
 	public function logout() {
 		$response = $this->_http_request( '/account/logout', 'POST' );

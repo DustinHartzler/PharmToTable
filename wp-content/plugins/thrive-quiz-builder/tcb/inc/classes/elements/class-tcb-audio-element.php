@@ -78,8 +78,11 @@ class TCB_Audio_Element extends TCB_Element_Abstract {
 			'animation'  => array( 'hidden' => true ),
 			'layout'     => array(
 				'config'            => array(
-					'Width' => array(
+					'Width'  => array(
 						'important' => true,
+					),
+					'Height' => array(
+						'css_suffix' => ' iframe',
 					),
 				),
 				'disabled_controls' => array( 'Overflow' ),

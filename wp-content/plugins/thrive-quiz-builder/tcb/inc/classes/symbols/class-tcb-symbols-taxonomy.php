@@ -42,7 +42,7 @@ class TCB_Symbols_Taxonomy {
 	}
 
 	public function insert_default_terms() {
-		$terms = array( 'Headers', 'Footers' );
+		$terms = array( 'Headers', 'Footers', 'Gutenberg block' );
 
 		foreach ( $terms as $term ) {
 			$exists = term_exists( $term, self::SYMBOLS_TAXONOMY );

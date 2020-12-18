@@ -392,7 +392,7 @@ class TCB_Post_Grid {
 			$title_style = 'style="' . $title_font_size . $title_line_height . '"';
 		}
 
-		return '<span class="tve-post-grid-title" ' . $title_style . '><a href="' . get_permalink( $post ) . '">' . get_the_title( $post->ID ) . '</a></span>';
+		return '<span class="tve-post-grid-title" ' . $title_style . '><a href="' . get_permalink( $post ) . '" aria-label="' . get_the_title( $post->ID ) . '" >' . get_the_title( $post->ID ) . '</a></span>';
 	}
 
 	/**
@@ -404,7 +404,7 @@ class TCB_Post_Grid {
 	 * @return string
 	 */
 	private function _display_post_read_more( $post ) {
-		return '<div class="tve_pg_more"><a href="' . get_permalink( $post ) . '"  aria-label="'. $this->_config['read-more-text'] .'">' . $this->_config['read-more-text'] . '</a>&nbsp;<span class="thrv-icon thrv-icon-uniE602"></span></div>';
+		return '<div class="tve_pg_more"><a href="' . get_permalink( $post ) . '"  aria-label="' . $this->_config['read-more-text'] . '">' . $this->_config['read-more-text'] . '</a>&nbsp;<span class="thrv-icon thrv-icon-uniE602"></span></div>';
 	}
 
 	private function _get_summary_text( $text ) {

@@ -323,6 +323,7 @@ class TCB_Post_List {
 				'tcb_post_featured_image'   => TCB_Post_List_Shortcodes::post_thumbnail( array(
 					'type-url' => 'post_url',
 					'size'     => 'full',
+					'title'    => 'post_title',
 				) ),
 				'featured_image_sizes_data' => TCB_Post_List_Featured_Image::get_sizes( $id ),
 				'tcb_post_author_picture'   => TCB_Post_List_Shortcodes::author_picture(),
@@ -422,7 +423,7 @@ class TCB_Post_List {
 			foreach ( $GLOBALS[ TCB_POST_LIST_LOCALIZE ] as $post_list ) {
 
 				echo TCB_Utils::wrap_content(
-					$post_list['content'],
+					str_replace( array( '[', ']' ), array( '{({', '})}' ), $post_list['content'] ),
 					'script',
 					'',
 					'tcb-post-list-template',
@@ -879,7 +880,7 @@ class TCB_Post_List {
 	}
 
 	/**
-	 *Init the Query
+	 * Init the Query
 	 *
 	 * @param $attr_query
 	 */
@@ -1078,5 +1079,6 @@ class TCB_Post_List {
 	public static $ignored_attr = array(
 		'article-tcb-events',
 		'article-class',
+		'article-permalink',
 	);
 }

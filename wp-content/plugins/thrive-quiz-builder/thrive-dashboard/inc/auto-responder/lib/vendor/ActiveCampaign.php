@@ -94,6 +94,7 @@ class Thrive_Dash_Api_ActiveCampaign {
 		$organizationName = ! empty( $args['organizationName'] ) ? $args['organizationName'] : '';
 		$tags             = ! empty( $args['tags'] ) ? $args['tags'] : array();
 		$ip               = ! empty( $args['ip'] ) ? $args['ip'] : null;
+		$custom_fields    = ! empty( $args['custom_fields'] ) ? $args['custom_fields'] : array();
 
 		$body = array(
 			'email'                               => $email,
@@ -127,6 +128,11 @@ class Thrive_Dash_Api_ActiveCampaign {
 
 		if ( ! empty( $ip ) ) {
 			$body['ip4'] = $ip;
+		}
+
+		// Add custom fields to params
+		if ( ! empty( $custom_fields ) && is_array( $custom_fields ) ) {
+			$body = array_merge( $body, $custom_fields );
 		}
 
 		return $this->call( 'contact_sync', array(), $body, 'POST' );
@@ -233,8 +239,8 @@ class Thrive_Dash_Api_ActiveCampaign {
 	 * by default, api_key, api_action and api_output are sent via query string
 	 *
 	 * @param        $apiAction
-	 * @param array $queryStringParams
-	 * @param array $bodyParams
+	 * @param array  $queryStringParams
+	 * @param array  $bodyParams
 	 * @param string $method
 	 *
 	 * @return array

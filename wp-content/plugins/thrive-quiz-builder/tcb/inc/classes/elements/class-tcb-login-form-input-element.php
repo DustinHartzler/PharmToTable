@@ -8,7 +8,7 @@ class TCB_Login_Form_Input_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Login Form Input', 'thrive-cb' );
+		return __( 'Form Input', 'thrive-cb' );
 	}
 
 	/**
@@ -30,27 +30,28 @@ class TCB_Login_Form_Input_Element extends TCB_Element_Abstract {
 	}
 
 	public function own_components() {
-		$prefix_config                = tcb_selection_root();
 		$controls_default_config_text = array(
 			'css_suffix' => array(
 				' input',
 				' input::placeholder',
+				' textarea',
+				' textarea::placeholder',
 			),
 		);
 
 		$controls_default_config = array(
 			'css_suffix' => array(
 				' input',
+				' textarea',
 			),
 		);
 
 		return array(
 			'login_form_input' => array(
 				'config' => array(
-					'icon_side' => array(
-						'rem_ic_css_suf' => $controls_default_config['css_suffix'], //Remove Icon Css Suffix
+					'icon_side'   => array(
+						'rem_ic_css_suf' => ' input', //Remove Icon Css Suffix
 						'css_suffix'     => ' .thrv_icon',
-						'css_prefix'     => $prefix_config . ' ',
 						'config'         => array(
 							'name'    => __( 'Icon Side', 'thrive-cb' ),
 							'buttons' => array(
@@ -98,8 +99,8 @@ class TCB_Login_Form_Input_Element extends TCB_Element_Abstract {
 			),
 			'borders'          => array(
 				'config' => array(
-					'Borders' => array_merge( array( 'css_prefix' => $prefix_config . ' ' ), $controls_default_config ),
-					'Corners' => array_merge( array( 'css_prefix' => $prefix_config . ' ' ), $controls_default_config ),
+					'Borders' => $controls_default_config,
+					'Corners' => $controls_default_config,
 				),
 			),
 			'animation'        => array(
@@ -121,5 +122,9 @@ class TCB_Login_Form_Input_Element extends TCB_Element_Abstract {
 				'hidden' => true,
 			),
 		);
+	}
+
+	public function has_hover_state() {
+		return true;
 	}
 }

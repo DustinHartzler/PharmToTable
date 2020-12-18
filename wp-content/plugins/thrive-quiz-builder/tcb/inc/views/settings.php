@@ -2,6 +2,7 @@
 /*
  * settings drawer (right small sidebar)
  */
+$has_zip_archive = class_exists( 'ZipArchive', false );
 ?>
 <div id="settings" class="tcb-relative">
 	<div class="state-default state">
@@ -20,11 +21,11 @@
 			<span class="sep"></span>
 			<?php if ( tcb_editor()->is_landing_page() ) : ?>
 				<a href="#" class="click s-setting" data-fn="save_template_lp"><span class="s-name"><?php echo __( 'Save Landing Page', 'thrive-cb' ); ?></span></a>
-				<a href="#" class="click s-setting" data-fn="export_lp"><span class="s-name"><?php echo __( 'Export Landing Page', 'thrive-cb' ); ?></span></a>
+				<a href="#" class="<?php echo $has_zip_archive ? 'click' : 'disabled-children'; ?> s-setting" data-fn="export_lp" data-position="top" data-tooltip="<?php esc_attr_e( $has_zip_archive ? '' : __( 'The PHP ZipArchive extension must be enabled in order to use this functionality. Please contact your hosting provider.', 'thrive-cb' ) ); ?>"><span class="s-name"><?php echo __( 'Export Landing Page', 'thrive-cb' ); ?></span></a>
 				<span class="sep"></span>
 			<?php endif; ?>
 			<?php if ( tcb_editor()->can_use_landing_pages() ) : ?>
-				<a href="#" class="click s-setting" data-fn="import_lp"><span class="s-name"><?php echo __( 'Import Landing Page', 'thrive-cb' ); ?></span></a>
+				<a href="#" class="<?php echo $has_zip_archive ? 'click' : 'disabled-children'; ?> s-setting" data-fn="import_lp" data-position="top" data-tooltip="<?php esc_attr_e( $has_zip_archive ? '' : __( 'The PHP ZipArchive extension must be enabled in order to use this functionality. Please contact your hosting provider.', 'thrive-cb' ) ); ?>"><span class="s-name"><?php echo __( 'Import Landing Page', 'thrive-cb' ); ?></span></a>
 			<?php endif; ?>
 			<?php if ( tcb_editor()->has_save_template_button() ) : ?>
 				<a href="#" class="click s-setting" data-fn="save_template"><span class="s-name"><?php echo __( 'Save as Template', 'thrive-cb' ); ?></span></a>

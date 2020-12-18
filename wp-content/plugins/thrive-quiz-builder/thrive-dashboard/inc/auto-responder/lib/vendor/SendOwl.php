@@ -174,7 +174,7 @@ class Thrive_Dash_Api_SendOwl {
 	 *
 	 * @return string
 	 */
-	private function prepareRequestParams( $search_by = null, $endpoint, $actions = array(), $params = array() ) {
+	private function prepareRequestParams( $search_by, $endpoint, $actions = array(), $params = array() ) {
 		$return = $endpoint;
 
 		if ( $search_by ) {

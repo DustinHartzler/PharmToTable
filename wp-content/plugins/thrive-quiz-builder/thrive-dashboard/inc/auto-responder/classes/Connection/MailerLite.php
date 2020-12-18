@@ -262,7 +262,7 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 			$chunks               = explode( ' ', $field[0]['name'] );
 			$chunks               = array_map( 'strtolower', $chunks );
 			$field_key            = implode( '_', $chunks );
-			$name         = strpos( $id['type'], 'mapping_' ) !== false ? $id['type'] . '_' . $key : $key;
+			$name                 = strpos( $id['type'], 'mapping_' ) !== false ? $id['type'] . '_' . $key : $key;
 			$cf_form_name         = str_replace( '[]', '', $name );
 			$result[ $field_key ] = $this->processField( $args[ $cf_form_name ] );
 		}
@@ -313,5 +313,45 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 		}
 
 		return $mapped_data;
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return false|int
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_MailerLite $api */
+			$api = $this->getApi();
+
+			/** @var Thrive_Dash_Api_MailerLite_Groups $groupsApi */
+			$groupsApi = $api->groups();
+
+			/** @var Thrive_Dash_Api_MailerLite_Subscribers $subscribersApi */
+			$subscribersApi = $api->groups();
+
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+			$args    = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+			$args['fields'] = $custom_fields;
+
+			$groupsApi->addSubscriber( $list_id, $args );
+
+			$subscriber = $subscribersApi->search( $email );
+
+			return $subscriber->id;
+
+		} catch ( Exception $e ) {
+			return false;
+		}
 	}
 }

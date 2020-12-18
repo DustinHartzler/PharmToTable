@@ -1,11 +1,14 @@
 <?php
-
 /**
- * Created by PhpStorm.
- * User: sala
- * Date: 04.12.2015
- * Time: 14:44
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-visual-editor
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class TCB_Thrive_Image_Zoom extends TCB_Event_Action_Abstract {
 
 	protected $key = 'thrive_zoom';

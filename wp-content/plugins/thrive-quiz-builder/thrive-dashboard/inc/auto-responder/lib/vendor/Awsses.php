@@ -109,7 +109,13 @@ class Thrive_Dash_Api_Awsses {
 			$this->setAuth( $accessKey, $secretKey );
 		}
 		$this->__host           = $host;
+		$this->_short_host           = $this->getShortServer( $host );
 		$this->__trigger_errors = $trigger_errors;
+	}
+
+	public function getShortServer( $host ) {
+		$tag = str_replace('.amazonaws.com','', str_replace('email.', '', $host));
+		return $tag;
 	}
 
 	/**
@@ -133,7 +139,7 @@ class Thrive_Dash_Api_Awsses {
 	 * @return array An array containing two items: a list of verified email addresses, and the request id.
 	 */
 	public function listVerifiedEmailAddresses() {
-		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'GET' );
+		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'GET', $this->_short_host );
 		$rest->setParameter( 'Action', 'ListVerifiedEmailAddresses' );
 
 		$rest = $rest->getResponse();
@@ -174,7 +180,7 @@ class Thrive_Dash_Api_Awsses {
 	 * @return array The request id for this request.
 	 */
 	public function verifyEmailAddress( $email ) {
-		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'POST' );
+		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'POST', $this->_short_host );
 		$rest->setParameter( 'Action', 'VerifyEmailAddress' );
 		$rest->setParameter( 'EmailAddress', $email );
 
@@ -201,7 +207,7 @@ class Thrive_Dash_Api_Awsses {
 	 * @return array The request id for this request.
 	 */
 	public function deleteVerifiedEmailAddress( $email ) {
-		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'DELETE' );
+		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'DELETE', $this->_short_host );
 		$rest->setParameter( 'Action', 'DeleteVerifiedEmailAddress' );
 		$rest->setParameter( 'EmailAddress', $email );
 
@@ -227,7 +233,7 @@ class Thrive_Dash_Api_Awsses {
 	 * @return array An array containing information on this account's activity limits.
 	 */
 	public function getSendQuota() {
-		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'GET' );
+		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'GET', $this->_short_host );
 		$rest->setParameter( 'Action', 'GetSendQuota' );
 
 		$rest = $rest->getResponse();
@@ -260,7 +266,7 @@ class Thrive_Dash_Api_Awsses {
 	 * @return array An array of activity statistics.  Each array item covers a 15-minute period.
 	 */
 	public function getSendStatistics() {
-		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'GET' );
+		$rest = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'GET', $this->_short_host );
 		$rest->setParameter( 'Action', 'GetSendStatistics' );
 
 		$rest = $rest->getResponse();
@@ -315,7 +321,7 @@ class Thrive_Dash_Api_Awsses {
 			return false;
 		}
 
-		$rest   = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'POST' );
+		$rest   = new Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest( $this, 'POST', $this->_short_host );
 		$action = ! empty( $sesMessage->attachments ) || $use_raw_request ? 'SendRawEmail' : 'SendEmail';
 		$rest->setParameter( 'Action', $action );
 

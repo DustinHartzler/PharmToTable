@@ -93,7 +93,8 @@ class TCB_Toc_Title_Element extends TCB_ContentBox_Element {
 				'IconColor'     => array(
 					'css_suffix' => ' .tve-toc-title-icon',
 					'config'     => array(
-						'label' => __( 'Icon color', 'thrive-cb' ),
+						'label'   => __( 'Icon color', 'thrive-cb' ),
+						'options' => array( 'noBeforeInit' => false ),
 					),
 					'important'  => true,
 					'extends'    => 'ColorPicker',

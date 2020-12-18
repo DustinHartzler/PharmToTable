@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 
+use \TCB\inc\helpers\FormSettings;
 use \TCB\inc\helpers\FileUploadConfig;
 
 if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
@@ -19,7 +20,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 	 * Class TCB_Editor_Ajax
 	 */
 	class TCB_Editor_Ajax {
-		const ACTION    = 'tcb_editor_ajax';
+		const ACTION = 'tcb_editor_ajax';
 		const NONCE_KEY = 'tve-le-verify-sender-track129';
 
 		/**
@@ -202,10 +203,15 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 				'post_status' => array( 'publish', 'inherit' ), //Inherit for the attachment post type
 				's'           => $s,
 				'numberposts' => 20,
+				'fields'      => 'ids', //we are taking ids because it resembles more with the results returned from wp search
 			);
 
+			$query     = new WP_Query();
+			$found_ids = $query->query( $args );
+
 			$posts = array();
-			foreach ( get_posts( $args ) as $item ) {
+			foreach ( $found_ids as $id ) {
+				$item  = get_post( $id );
 				$title = $item->post_title;
 				if ( ! empty( $s ) ) {
 					$quoted           = preg_quote( $s, '#' );
@@ -788,14 +794,15 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 			$option_name  = $this->param( 'option_name' );
 			$option_value = $this->param( 'option_value' );
 
-			$allowed = array(
+			$allowed = apply_filters( 'tcb_allowed_ajax_options', array(
 				'tve_display_save_notification',
 				'tve_social_fb_app_id',
 				'tve_comments_disqus_shortname',
 				'tve_comments_facebook_admins',
 				'tcb_pinned_elements',
 				'tve_fa_kit',
-			);
+			) );
+
 			if ( ! in_array( $option_name, $allowed ) ) {
 				$this->error( 'Invalid', 403 );
 			}
@@ -1232,6 +1239,18 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		}
 
 		/**
+		 * Lazy load for the acf dynamic colors
+		 */
+		public function action_dynamic_colors_lazy_load() {
+			$data    = array();
+			$post_id = (int) $this->param( 'post_id', 0 );
+
+			$data = apply_filters( 'tcb_lazy_load_dynamic_colors', $data, $post_id, $this );
+
+			$this->json( $data );
+		}
+
+		/**
 		 * CRUD Operations on Global Styles
 		 */
 		public function action_global_styles() {
@@ -1357,7 +1376,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		public function action_post_grid_categories() {
 			$search_term = isset( $_POST['term'] ) ? $_POST['term'] : '';
 
-			require_once plugin_dir_path( __FILE__ ) . '/class-tcb-element-abstract.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-tcb-element-abstract.php';
 			require_once plugin_dir_path( __FILE__ ) . 'elements/class-tcb-postgrid-element.php';
 
 			$response = TCB_Postgrid_Element::get_categories( $search_term );
@@ -1371,7 +1390,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		public function action_post_grid_tags() {
 			$search_term = isset( $_POST['term'] ) ? $_POST['term'] : '';
 
-			require_once plugin_dir_path( __FILE__ ) . '/class-tcb-element-abstract.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-tcb-element-abstract.php';
 			require_once plugin_dir_path( __FILE__ ) . 'elements/class-tcb-postgrid-element.php';
 
 			$response = TCB_Postgrid_Element::get_tags( $search_term );
@@ -1385,7 +1404,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		public function action_post_grid_custom_taxonomies() {
 			$search_term = isset( $_POST['term'] ) ? $_POST['term'] : '';
 
-			require_once plugin_dir_path( __FILE__ ) . '/class-tcb-element-abstract.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-tcb-element-abstract.php';
 			require_once plugin_dir_path( __FILE__ ) . 'elements/class-tcb-postgrid-element.php';
 
 			$response = TCB_Postgrid_Element::get_custom_taxonomies( $search_term );
@@ -1399,7 +1418,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		public function action_post_grid_users() {
 			$search_term = isset( $_POST['term'] ) ? $_POST['term'] : '';
 
-			require_once plugin_dir_path( __FILE__ ) . '/class-tcb-element-abstract.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-tcb-element-abstract.php';
 			require_once plugin_dir_path( __FILE__ ) . 'elements/class-tcb-postgrid-element.php';
 
 			$response = TCB_Postgrid_Element::get_authors( $search_term );
@@ -1413,7 +1432,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		public function action_post_grid_individual_post_pages() {
 			$search_term = isset( $_POST['term'] ) ? $_POST['term'] : '';
 
-			require_once plugin_dir_path( __FILE__ ) . '/class-tcb-element-abstract.php';
+			require_once plugin_dir_path( __FILE__ ) . 'class-tcb-element-abstract.php';
 			require_once plugin_dir_path( __FILE__ ) . 'elements/class-tcb-postgrid-element.php';
 
 			$response = TCB_Postgrid_Element::get_posts_list( $search_term );
@@ -1458,15 +1477,20 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		 * @return array
 		 */
 		public function action_cloud_content_templates() {
-			if ( ! ( $type = $this->param( 'type' ) ) ) {
+
+			$type = $this->param( 'type' );
+
+			if ( empty( $type ) ) {
 				$this->error( __( 'Invalid element type', 'thrive-cb' ), 500 );
 			}
 
-			/*Allows changing the template type*/
+			/* Allows changing the template type */
 			$type     = apply_filters( 'tcb_cloud_templates_replace_featured_type', $type );
 			$no_cache = (bool) $this->param( 'nocache', false );
+
 			/** @var TCB_Cloud_Template_Element_Abstract $element */
-			if ( ! ( $element = tcb_elements()->element_factory( $type ) ) || ! is_a( $element, 'TCB_Cloud_Template_Element_Abstract' ) ) {
+			$element = tcb_elements()->element_factory( $type );
+			if ( $element === null || ! ( $element instanceof TCB_Cloud_Template_Element_Abstract ) ) {
 				$this->error( __( 'Invalid element type', 'thrive-cb' ) . " ({$type})", 500 );
 			}
 
@@ -2178,12 +2202,39 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		}
 
 		/**
+		 * Process TAr content before saving it.
+		 * This is always called via ajax before saving a piece of content in TAr / TTB / any other plugin containing TAr
+		 * It's main purpose is to save any needed data to the database and return inserted ids so those can be updated in HTML
+		 *
+		 * @return array
+		 */
+		public function action_content_pre_save() {
+			/**
+			 * Filters the ajax response triggered before saving the actual post/page content
+			 *
+			 * @param array $response
+			 */
+			return apply_filters( 'tcb.content_pre_save', array( 'success' => true ), $_POST );
+		}
+
+		/**
+		 * Deletes a previously saved file upload configuration
+		 *
+		 * @return array
+		 */
+		public function action_form_settings_delete() {
+			FormSettings::get_one( $this->param( 'settings_id', 0 ) )->delete();
+
+			return array( 'success' => true );
+		}
+
+		/**
 		 * force cloud templates
 		 *
 		 * @return array
 		 */
-		public function action_get_nocached_cloud_data() {
-			$type = $this->param( 'type', 'lps' );
+		public function action_nocached_cloud_data() {
+			$type = $this->param( 'type', '' );
 
 			$tpls = array();
 
@@ -2193,12 +2244,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 				$tpls = tcb_elements()->element_factory( 'contentblock' )->get_blocks();
 			}
 
-			global $wpdb;
-			$wpdb->query(
-				"UPDATE $wpdb->options SET `option_value`='1' WHERE 
-						`option_name` LIKE '%transient_timeout_tcb%' OR 
-						`option_name` LIKE '%transient_timeout_tar%'"
-			);
+			tve_delete_cloud_saved_data();
 
 			if ( ! empty( $wpdb->last_error ) ) {
 				$this->error( $wpdb->last_error );

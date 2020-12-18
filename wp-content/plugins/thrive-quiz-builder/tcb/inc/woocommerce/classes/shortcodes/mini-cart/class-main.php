@@ -61,11 +61,12 @@ class Main {
 
 		/* ensure default values */
 		$attr = array_merge( array(
-			'data-type'      => 'icon',
-			'data-align'     => 'left',
-			'data-trigger'   => 'click',
-			'data-direction' => 'under',
-			'data-text'      => 'Cart',
+			'data-type'          => 'icon',
+			'data-align'         => 'left',
+			'data-trigger'       => 'click',
+			'data-direction'     => 'under',
+			'data-text'          => 'Cart',
+			'data-icon-position' => 'left',
 		), $attr );
 
 		$id = empty( $attr['data-id'] ) ? '' : $attr['data-id'];

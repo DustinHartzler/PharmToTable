@@ -125,7 +125,7 @@ class TQB_Test_Manager {
 	/**
 	 *  Parse test items data
 	 */
-	public function parse_test_items_data( $test_items = null, $test ) {
+	public function parse_test_items_data( $test_items, $test ) {
 		if ( ! empty( $test_items ) && ! empty( $test ) ) {
 			global $tqbdb;
 			$result['test_items']    = array();

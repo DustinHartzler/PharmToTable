@@ -29,5 +29,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control hide-states" data-view="cart-text"></div>
 		<div class="tve-control hide-states" data-view="trigger"></div>
 		<div class="tve-control hide-states" data-view="direction"></div>
+		<div class="tve-control hide-states" data-view="icon-position"></div>
 	</div>
 </div>

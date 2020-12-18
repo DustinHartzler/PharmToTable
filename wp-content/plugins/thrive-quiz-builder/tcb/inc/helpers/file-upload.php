@@ -16,15 +16,24 @@ namespace TCB\inc\helpers;
  * @property string $folder            identification for the destination folder
  * @property string $required          Whether or not the field is required
  */
-class FileUploadConfig {
+class FileUploadConfig extends FormSettings {
 
 	const EMAIL_FILENAME_TEMPLATE = '___T_USR_EMAIL___';
 
-	public $ID;
-
-	public $post_title;
-
 	const POST_TYPE = '_tcb_file_upload';
+
+	/**
+	 * Default configuration for file uploads
+	 *
+	 * @var array
+	 */
+	public static $defaults = array(
+		'max_files'         => 1,
+		'max_size'          => 1, // in MB
+		'file_types'        => array( 'documents' ),
+		'custom_file_types' => array(),
+		'name'              => '{match}', // by default, match the filename with the one uploaded by the visitor
+	);
 
 	/**
 	 * Get a list of each file group, it's title, icon and associated extensions
@@ -98,25 +107,6 @@ class FileUploadConfig {
 	}
 
 	/**
-	 * Default configuration for file uploads
-	 *
-	 * @var array
-	 */
-	public static $defaults = array(
-		'max_files'         => 1,
-		'max_size'          => 1, // in MB
-		'file_types'        => array( 'documents' ),
-		'custom_file_types' => array(),
-		'name'              => '{match}', // by default, match the filename with the one uploaded by the visitor
-	);
-
-	protected $config = array();
-
-	public function __construct( $config ) {
-		$this->set_config( $config );
-	}
-
-	/**
 	 * Setter for config
 	 *
 	 * @param array $config
@@ -124,35 +114,11 @@ class FileUploadConfig {
 	 * @return $this
 	 */
 	public function set_config( $config ) {
-		$this->config = wp_parse_args( $config, static::$defaults );
+		parent::set_config( $config );
 		/* normalize required value to integer */
 		$this->config['required'] = ! empty( $this->config['required'] ) ? 1 : 0;
 
 		return $this;
-	}
-
-	/**
-	 * Get the configuration
-	 *
-	 * @param bool $json get it as JSON
-	 *
-	 * @return array|false|string
-	 */
-	public function get_config( $json = true ) {
-		return $json ? json_encode( $this->config ) : $this->config;
-	}
-
-	/**
-	 * Magic config getter
-	 *
-	 * @param string $name
-	 *
-	 * @return mixed
-	 */
-	public function __get( $name ) {
-		$default = isset( static::$defaults[ $name ] ) ? static::$defaults[ $name ] : null;
-
-		return isset( $this->config[ $name ] ) ? $this->config[ $name ] : $default;
 	}
 
 	/**
@@ -171,74 +137,6 @@ class FileUploadConfig {
 		);
 
 		return $json ? json_encode( $config ) : $config;
-	}
-
-	/**
-	 * Loads a file config from an ID, or directly with a configuration array
-	 *
-	 * @param string|int|null|array $id if array, it will act as a config. If empty, return a new instance with default settings
-	 *
-	 * @return static
-	 */
-	public static function get_one( $id = null ) {
-		if ( is_array( $id ) ) {
-			$config = $id;
-		} else {
-			$id   = (int) $id;
-			$post = get_post( $id );
-			if ( $post && $post->post_type === static::POST_TYPE ) {
-				$config = json_decode( $post->post_content, true );
-			}
-		}
-
-		if ( empty( $config ) ) {
-			$id     = null;
-			$config = array();
-		}
-
-		$instance     = new static( $config );
-		$instance->ID = $id;
-
-		return $instance;
-	}
-
-	/**
-	 * Save a File config to db
-	 *
-	 * @param string $post_title name to give to the post that's being saved
-	 *
-	 * @return static|\WP_Error
-	 */
-	public function save( $post_title ) {
-		$content = json_encode( $this->config );
-
-		if ( $this->ID ) {
-			$post_id = wp_update_post( array(
-				'ID'           => $this->ID,
-				'post_title'   => $post_title,
-				'post_content' => $content,
-			) );
-		} else {
-			$post_id = wp_insert_post( array(
-				'post_type'    => static::POST_TYPE,
-				'post_title'   => $post_title,
-				'post_content' => $content,
-			) );
-		}
-		$this->ID = $post_id;
-
-		return is_wp_error( $post_id ) ? $post_id : $this;
-	}
-
-	/**
-	 * Delete the current instance
-	 */
-	public function delete() {
-		if ( $this->ID ) {
-			wp_delete_post( $this->ID );
-		}
-
-		return $this;
 	}
 
 	/**

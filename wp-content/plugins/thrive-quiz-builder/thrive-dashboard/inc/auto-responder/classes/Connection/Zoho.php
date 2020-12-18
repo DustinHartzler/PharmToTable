@@ -310,4 +310,35 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 
 		return $mapped_data;
 	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return int
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_Zoho $api */
+			$api     = $this->getApi();
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+			$args    = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+			$args = array(
+				'listkey'     => $list_id,
+				'contactinfo' => json_encode( array_merge($args, $custom_fields) ),
+			);
+
+			$api->addSubscriber( $args );
+		} catch ( Exception $e ) {
+			return false;
+		}
+	}
 }

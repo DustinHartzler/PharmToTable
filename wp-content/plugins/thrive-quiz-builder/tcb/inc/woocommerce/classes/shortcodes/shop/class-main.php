@@ -109,6 +109,15 @@ class Main {
 		$products = new \WC_Shortcode_Products( $attr );
 		$content  = $products->get_content();
 
+		if ( ! $in_editor ) {
+			foreach ( static::$shop_content_hooks as $key => $hook ) {
+				if ( ! empty( $attr[ 'hide-' . $key ] ) ) {
+					/* add the actions back */
+					add_action( $hook['tag'], $hook['callback'], $hook['priority'] );
+				}
+			}
+		}
+
 		static::after_render( $attr );
 
 		$id = empty( $attr['id'] ) ? '' : $attr['id'];

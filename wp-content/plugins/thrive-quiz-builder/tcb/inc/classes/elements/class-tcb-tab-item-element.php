@@ -105,7 +105,8 @@ class TCB_Tab_Item_Element extends TCB_Element_Abstract {
 					),
 					'ColorPicker'      => array(
 						'config'     => array(
-							'label' => __( 'Icon Color', 'thrive-cb' ),
+							'label'   => __( 'Icon Color', 'thrive-cb' ),
+							'options' => array( 'noBeforeInit' => false ),
 						),
 						'css_suffix' => ' .tve-tab-icon',
 					),

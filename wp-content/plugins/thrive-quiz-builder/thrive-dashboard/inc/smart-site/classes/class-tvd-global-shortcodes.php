@@ -23,6 +23,7 @@ class TVD_Global_Shortcodes {
 			'thrv_dynamic_data_content'   => 'content_shortcode',
 			'thrv_dynamic_data_user'      => 'user_data_shortcode',
 			'thrv_dynamic_data_source'    => 'source_shortcode',
+			'thrv_dynamic_data_user_acf'  => 'acf_user_field',
 		);
 
 	public function __construct() {
@@ -69,7 +70,10 @@ class TVD_Global_Shortcodes {
 					}
 					/* put the brackets back in the title attribute if they were replaced before */
 					if ( ! empty( $link_attr['title'] ) && strpos( $link_attr['title'], '((' ) !== false ) {
-						$link_attr['title'] = str_replace( array( '((', '))' ), array( '[', ']' ), $link_attr['title'] );
+						$link_attr['title'] = str_replace( array( '((', '))' ), array(
+							'[',
+							']',
+						), $link_attr['title'] );
 					}
 					$attributes = [];
 					foreach ( $link_attr as $attr_name => $value ) {
@@ -282,6 +286,18 @@ class TVD_Global_Shortcodes {
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
+			'website'      => array(
+				'name'      => __( 'Wordpress User Website', TVE_DASH_TRANSLATE_DOMAIN ),
+				'shortcode' => 'thrv_dynamic_data_user',
+				'fn'        => 'user_data_shortcode',
+				'group'     => 'User data',
+			),
+			'user_bio'     => array(
+				'name'      => __( 'Wordpress User Bio', TVE_DASH_TRANSLATE_DOMAIN ),
+				'shortcode' => 'thrv_dynamic_data_user',
+				'fn'        => 'user_data_shortcode',
+				'group'     => 'User data',
+			),
 			'ip'           => array(
 				'name'      => __( 'IP', TVE_DASH_TRANSLATE_DOMAIN ),
 				'shortcode' => 'thrv_dynamic_data_user',
@@ -302,6 +318,22 @@ class TVD_Global_Shortcodes {
 				'group'     => 'Source',
 			),
 		);
+
+		if ( tvd_has_external_fields_plugins() ) {
+			// if is acf plugin active, run through all of them and update the custom fields for the user
+
+			foreach ( tvd_get_acf_user_external_fields() as $field ) {
+
+				$shortcodes_with_default[ $field['name'] ] = array(
+					'name'      => $field['label'],
+					'shortcode' => 'thrv_dynamic_data_user_acf',
+					'fn'        => 'acf_user_field',
+					'group'     => 'User data',
+				);
+			}
+
+		}
+
 
 		foreach ( $shortcodes_with_default as $key => $data ) {
 			$shortcode = array(
@@ -492,17 +524,40 @@ class TVD_Global_Shortcodes {
 		if ( isset( $args['id'] ) ) {
 			if ( $args['id'] === 'browser' ) {
 				$value = '<span class="tve-browser-data"></span >'; /* Replace this with JS because PHP get_browser doesnt work  all the time */
-			} else {
-				if ( isset( $user_data[ $args['id'] ] ) ) {
-					$value = $user_data[ $args['id'] ];
-					if ( isset( $args['link'] ) && $args['link'] === '1' ) {
-						$value = sprintf( '<a href="%s" target="_blank">%s</a>', $user_data['edit_url'], $value );
-					}
+			}
+			if ( isset( $user_data[ $args['id'] ] ) ) {
+				$value = $user_data[ $args['id'] ];
+
+				if ( $args['id'] === 'website' ) {
+					/* create link with user website */
+					$value = sprintf( '<a href="%s" target="_blank">%s</a>', $value, $value );
+				} elseif ( isset( $args['link'] ) && $args['link'] === '1' ) {
+					$value = sprintf( '<a href="%s" target="_blank">%s</a>', $user_data['edit_url'], $value );
 				}
 			}
 		}
 		if ( empty( $value ) && isset( $args['default'] ) ) {
 			$value = $args['default'];
+		}
+
+		return $value;
+	}
+
+
+	/**
+	 * Shortcode render for user data from acf
+	 *
+	 * @param $args
+	 *
+	 * @return mixed|string
+	 */
+	public static function acf_user_field( $args ) {
+		$value = '';
+		if ( tvd_has_external_fields_plugins() ) {
+			$value = get_field( $args['id'], 'user_' . get_current_user_id() );
+			if ( empty( $value ) && isset( $args['default'] ) ) {
+				$value = $args['default'];
+			}
 		}
 
 		return $value;
@@ -613,6 +668,6 @@ class TVD_Global_Shortcodes {
 			$value = $args['default'];
 		}
 
-		return esc_html( $value );
+		return esc_html( stripslashes( $value ) );
 	}
 }

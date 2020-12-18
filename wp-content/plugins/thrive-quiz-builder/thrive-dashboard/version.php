@@ -26,4 +26,4 @@ if ( ! function_exists( 'tve_dash_load' ) ) {
 	}
 }
 
-return '2.3.2.2';
+return '2.3.6';

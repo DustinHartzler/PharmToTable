@@ -238,6 +238,13 @@ class Thrive_Dash_List_Manager {
 			$details['email'] = array( 'connected' => true );
 		}
 
+		/**
+		 * Make sure the WP API Connection is always available
+		 */
+		if ( empty( $details['wordpress'] ) ) {
+			$details['wordpress'] = array( 'connected' => true );
+		}
+
 		if ( empty( $key ) ) {
 			return $details;
 		}
@@ -364,7 +371,7 @@ class Thrive_Dash_List_Manager {
 		foreach ( $APIs as $key => $instance ) {
 
 			/** @var $instance Thrive_Dash_List_Connection_Abstract */
-			if ( ! is_subclass_of( $instance, 'Thrive_Dash_List_Connection_Abstract' ) ) {
+			if ( ! $instance instanceof Thrive_Dash_List_Connection_Abstract ) {
 				continue;
 			}
 

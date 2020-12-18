@@ -650,5 +650,44 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 
 		return $custom_fields;
 	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return false
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_Infusionsoft $api */
+			$api     = $this->getApi();
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+			$args    = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			add_action(
+				'tvd_after_infusionsoft_contact_added',
+				static function ( $instance, $contact, $list_identifier, $arguments ) use ( $api, $custom_fields ) {
+
+					$api->contact(
+						'update',
+						$contact['Id'],
+						$custom_fields
+					);
+				},
+				10,
+				4
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+		} catch ( Exception $e ) {
+			return false;
+		}
+	}
 }
 

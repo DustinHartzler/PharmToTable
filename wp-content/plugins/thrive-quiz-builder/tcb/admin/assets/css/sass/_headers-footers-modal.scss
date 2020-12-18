@@ -225,15 +225,6 @@
       display: table;
       clear: both;
     }
-    &:not(.step-two) {
-      .our-templates {
-        .tcb-hf-elem {
-          div {
-            background-size: cover;
-          }
-        }
-      }
-    }
     &.step-two {
       .item-create {
         .tcb-hf-elem {

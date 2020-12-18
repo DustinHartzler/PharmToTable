@@ -242,6 +242,13 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		// Add or update subscriber
 		try {
 
+			/**
+			 * Try to add/update contact on a single api call so linkted automation will be properly triggered
+			 */
+			if ( ! empty( $arguments['tve_mapping'] ) ) {
+				$prepared_args['custom_fields'] = $this->buildMappedCustomFields( $arguments );
+			}
+
 			if ( isset( $contact['result_code'] ) && ( empty( $contact['result_code'] ) || false === $update ) ) {
 				$api->addSubscriber( $list_identifier, $prepared_args );
 			} else {
@@ -256,12 +263,34 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 			$return = $e->getMessage();
 		}
 
-		// Update custom fields
-		// Make another call to update custom mapped fields in order not to break the subscription call,
-		// if custom data doesn't pass API custom fields validation
-		if ( true === $return && ! empty( $arguments['tve_mapping'] ) ) {
-			unset( $prepared_args['tags'] );
-			$this->updateCustomFields( $list_identifier, $arguments, $prepared_args );
+		/**
+		 * Add/update action failed so we try again by doing two separate requests
+		 * one for add/update contact and another one for updating custom fields
+		 */
+		if ( true !== $return ) {
+			try {
+
+				if ( isset( $contact['result_code'] ) && ( empty( $contact['result_code'] ) || false === $update ) ) {
+					$api->addSubscriber( $list_identifier, $prepared_args );
+				} else {
+					$prepared_args['contact'] = $contact;
+					$api->updateSubscriber( $list_identifier, $prepared_args );
+				}
+
+				$return = true;
+			} catch ( Thrive_Dash_Api_ActiveCampaign_Exception $e ) {
+				$return = $e->getMessage();
+			} catch ( Exception $e ) {
+				$return = $e->getMessage();
+			}
+
+			// Update custom fields
+			// Make another call to update custom mapped fields in order not to break the subscription call,
+			// if custom data doesn't pass API custom fields validation
+			if ( true === $return && ! empty( $arguments['tve_mapping'] ) ) {
+				unset( $prepared_args['tags'] );
+				$this->updateCustomFields( $list_identifier, $arguments, $prepared_args );
+			}
 		}
 
 		return $return;
@@ -271,8 +300,8 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 	 * Update custom fields
 	 *
 	 * @param string|int $list_identifier
-	 * @param array $arguments form data
-	 * @param array $prepared_args prepared array for subscription
+	 * @param array      $arguments     form data
+	 * @param array      $prepared_args prepared array for subscription
 	 *
 	 * @return bool|string
 	 */
@@ -475,5 +504,50 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		}
 
 		return $mapped_data;
+	}
+
+	/**
+	 * get relevant data from webhook trigger
+	 *
+	 * @param $request WP_REST_Request
+	 *
+	 * @return array
+	 */
+	public function getWebhookdata( $request ) {
+		$contact = $request->get_param( 'contact' );
+
+		return array( 'email' => empty( $contact['email'] ) ? '' : $contact['email'] );
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return false|int|mixed
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_ActiveCampaign $api */
+			$api     = $this->getApi();
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+			$args    = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+			$args['contact']       = $api->call( 'contact_view_email', array( 'email' => $email ) );
+			$args['custom_fields'] = $custom_fields;
+
+			$api->updateSubscriber( $list_id, $args );
+
+			return $args['contact']['id'];
+
+		} catch ( Exception $e ) {
+			return false;
+		}
 	}
 }

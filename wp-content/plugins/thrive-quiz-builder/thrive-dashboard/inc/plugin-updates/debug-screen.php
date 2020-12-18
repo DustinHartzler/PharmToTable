@@ -10,6 +10,7 @@
 					url: ajaxurl,
 					type: 'post',
 					data: {
+						_wpnonce: TVE_Dash_Const.nonce,
 						action: 'tve_debug_reset_transient'
 					}
 				} ).always( function ( response ) {

@@ -53,6 +53,7 @@ class Main {
 
 			Widgets::init();
 			Shortcodes\Shop\Main::init();
+			Shortcodes\Product_Categories\Main::init();
 			Shortcodes\Inline\Main::init();
 
 			if ( current_theme_supports( 'tve-wc-mini-cart' ) ) {
@@ -77,7 +78,9 @@ class Main {
 
 		require_once $integration_path . 'classes/shortcodes/inline/class-main.php';
 		require_once $integration_path . 'classes/shortcodes/shop/class-main.php';
+		require_once $integration_path . 'classes/shortcodes/product-categories/class-main.php';
 		require_once $integration_path . 'classes/shortcodes/mini-cart/class-main.php';
+
 		require_once $integration_path . 'classes/class-widgets.php';
 	}
 

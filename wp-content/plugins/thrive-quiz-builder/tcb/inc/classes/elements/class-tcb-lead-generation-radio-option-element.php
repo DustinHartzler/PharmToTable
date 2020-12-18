@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Lead_Generation_Radio_Option_Element extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'Lead Generation Radio Option', 'thrive-cb' );
+		return __( 'Radio Option', 'thrive-cb' );
 	}
 
 	public function identifier() {

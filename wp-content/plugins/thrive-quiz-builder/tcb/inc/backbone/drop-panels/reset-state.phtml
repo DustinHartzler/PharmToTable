@@ -28,9 +28,9 @@
 				<span class="reset-title center-text"> <?php echo __( 'Are you sure?', 'thrive-cb' ) ?> </span>
 				<span class="reset-text center-text">
 					<?php echo __( 'This will reset the ', 'thrive-cb' ) ?>
-						<span class="reset-state-bold" > <#= TVE.state_manager.get_state() #> </span>
+						<span class="reset-state-bold"> <#= TVE.state_manager.getStateLabel() #> </span>
 						<?php echo __( 'state display to match the ', 'thrive-cb' ) ?>
-						<span class="reset-state-bold"> <#= this.states[this.$( '.reset-select' ).attr( 'value' )] #> </span>
+						<span class="reset-state-bold"> <#= this.states[this.$( '.reset-select' ).val()] #> </span>
 						<?php echo __( 'state and cannot be undone', 'thrive-cb' ) ?>
 				</span>
 			</div>

@@ -444,8 +444,10 @@ function tqb_render_shortcode( $arguments = array() ) {
 					foreach ( $data['page']['css'] as $css ) {
 						$html .= '<link rel="stylesheet" type="text/css" href="' . $css . '">';
 					}
-					foreach ( $data['page']['fonts'] as $font ) {
-						$html .= '<link rel="stylesheet" type="text/css" media="all" href="' . $font . '">';
+					if ( ! tve_dash_is_google_fonts_blocked() ) {
+						foreach ( $data['page']['fonts'] as $font ) {
+							$html .= '<link rel="stylesheet" type="text/css" media="all" href="' . $font . '">';
+						}
 					}
 				} elseif ( $data['question'] ) {
 					$question_manager = new TGE_Question_Manager( $arguments['quiz_id'] );

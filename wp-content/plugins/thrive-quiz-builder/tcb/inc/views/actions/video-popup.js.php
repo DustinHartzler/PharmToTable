@@ -13,7 +13,8 @@ if ( config.s === 'wistia' ) {
 	_v.popover.show();
 	return false;
 }
-var $target = ThriveGlobal.$j( '#tcb-video-popup-' + config.p.id ),
+/* SUPP-10584 - Some ids include = and we need to escape it to not break the html */
+var $target = ThriveGlobal.$j( '#tcb-video-popup-' + config.p.id.toString().replace( /=/g, '\\\=' ) ),
 	$overlay = ThriveGlobal.$j( '#tcb-video-popup-overlay' ),
 	$body = ThriveGlobal.$j( 'body,html' ),
 	$document = ThriveGlobal.$j( document ),

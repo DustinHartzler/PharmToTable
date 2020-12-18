@@ -122,7 +122,8 @@ class TCB_Toggle_Title_Element extends TCB_Element_Abstract {
 					'IconColor'        => array(
 						'css_suffix' => ' .tve_toggle',
 						'config'     => array(
-							'label' => __( 'Icon color', 'thrive-cb' ),
+							'label'   => __( 'Icon color', 'thrive-cb' ),
+							'options' => array( 'noBeforeInit' => false ),
 						),
 						'important'  => true,
 						'extends'    => 'ColorPicker',

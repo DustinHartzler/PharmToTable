@@ -49,6 +49,8 @@ class TQB_Shortcodes {
 			return $score;
 		}
 
+		$score = str_replace( '%', '', $score );
+
 		switch ( $attributes['result_type'] ) {
 
 			case 'one_decimal':

@@ -43,7 +43,7 @@ class TD_NM_Admin_Ajax_Controller {
 	protected function error( $message, $status = '404 Not Found' ) {
 		status_header( 400 );
 		wp_send_json( array(
-			'error' => $message
+			'error' => $message,
 		) );
 	}
 
@@ -107,6 +107,7 @@ class TD_NM_Admin_Ajax_Controller {
 
 	public function action_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
+		$model  = tve_sanitize_data_recursive( $model, 'sanitize_textarea_field' );
 		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
 
 		switch ( $method ) {

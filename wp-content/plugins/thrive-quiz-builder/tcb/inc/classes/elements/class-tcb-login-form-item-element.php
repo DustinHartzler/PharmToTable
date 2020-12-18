@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Login_Form_Item_Element extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'Login Form Item', 'thrive-cb' );
+		return __( 'Form Item', 'thrive-cb' );
 	}
 
 	public function identifier() {

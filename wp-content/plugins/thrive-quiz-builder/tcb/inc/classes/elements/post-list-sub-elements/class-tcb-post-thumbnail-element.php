@@ -98,6 +98,24 @@ class TCB_Post_Thumbnail_Element extends TCB_Post_List_Sub_Element_Abstract {
 						),
 						'extends' => 'ButtonGroup',
 					),
+					'type_title'   => array(
+						'config'  => array(
+							'name'       => __( 'Featured Image Title', 'thrive-cb' ),
+							'full-width' => true,
+							'buttons'    => array(
+								array(
+									'value'   => 'post_title',
+									'text'    => __( 'Post title', 'thrive-cb' ),
+									'default' => true,
+								),
+								array(
+									'value' => 'gallery_title',
+									'text'  => __( 'Media Gallery Title', 'thrive-cb' ),
+								),
+							),
+						),
+						'extends' => 'ButtonGroup',
+					),
 					'type_display' => array(
 						'config'  => array(
 							'name'       => __( 'If the post has no featured image, display:', 'thrive-cb' ),
@@ -118,9 +136,9 @@ class TCB_Post_Thumbnail_Element extends TCB_Post_List_Sub_Element_Abstract {
 					),
 					'size'         => array(
 						'config'  => array(
-							'default'     => 'thumbnail',
-							'name'        => __( 'Image Size', 'thrive-cb' ),
-							'options'     => self::get_size_options(),
+							'default' => 'thumbnail',
+							'name'    => __( 'Image Size', 'thrive-cb' ),
+							'options' => self::get_size_options(),
 						),
 						'extends' => 'Select',
 					),

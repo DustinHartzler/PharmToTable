@@ -12,6 +12,10 @@
 function tcb_admin_get_localization() {
 	/** @var TCB_Symbols_Taxonomy $tcb_symbol_taxonomy */
 	global $tcb_symbol_taxonomy;
+	$terms = get_terms( array( 'slug' => array( 'headers', 'footers' ) ) );
+	$terms = array_map( function ( $term ) {
+		return $term->term_id;
+	}, $terms );
 
 	return array(
 		'admin_nonce'        => wp_create_nonce( TCB_Admin_Ajax::NONCE ),
@@ -20,14 +24,17 @@ function tcb_admin_get_localization() {
 		'architect_logo'     => tcb_admin()->admin_url( 'assets/images/admin-logo.png' ),
 		'symbols_logo'       => tcb_admin()->admin_url( 'assets/images/admin-logo.png' ),
 		'rest_routes'        => array(
-			'symbols'       => tcb_admin()->tcm_get_route_url( 'symbols' ),
-			'symbols_terms' => rest_url( sprintf( '%s/%s', 'wp/v2', TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY ) ),
+			'symbols'            => tcb_admin()->tcm_get_route_url( 'symbols' ),
+			'symbols_terms'      => rest_url( sprintf( '%s/%s', 'wp/v2', TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY ) ),
+			'symbols_short_path' => TCB_Admin::TCB_REST_NAMESPACE . '/symbols',
 		),
 		'nonce'              => wp_create_nonce( 'wp_rest' ),
 		'symbols_tax'        => TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY,
 		'symbols_tax_terms'  => $tcb_symbol_taxonomy->get_symbols_tax_terms(),
 		'sections_tax_terms' => $tcb_symbol_taxonomy->get_symbols_tax_terms( true ),
 		'default_terms'      => $tcb_symbol_taxonomy->get_default_terms(),
+		'symbols_number'     => count( tcb_elements()->element_factory( 'symbol' )->get_all( array( 'category__not_in' => $terms ) ) ),
+		'symbols_dash'       => admin_url( 'admin.php?page=tcb_admin_dashboard&tab_selected=symbol#templatessymbols' ),
 	);
 }
 
@@ -64,7 +71,7 @@ function tcb_admin_get_category_templates( $templates = array() ) {
 /**
  * Filter content templates by their name
  *
- * @param array $templates
+ * @param array  $templates
  * @param string $search
  *
  * @return array
@@ -85,7 +92,7 @@ function tcb_filter_templates( $templates, $search ) {
  * Displays an icon using svg format
  *
  * @param string $icon
- * @param bool $return whether to return the icon as a string or to output it directly
+ * @param bool   $return whether to return the icon as a string or to output it directly
  *
  * @return string|void
  */

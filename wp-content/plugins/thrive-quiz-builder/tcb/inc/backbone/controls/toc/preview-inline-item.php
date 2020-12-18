@@ -22,9 +22,11 @@
 		<?php tcb_icon( 'check' ); ?>
 	</a>
 	<#}#>
+	<#if(item.get('canToggleVisible')){#>
 	<a href="javascript:void(0)" data-side="right" data-tooltip="<?php esc_attr_e( 'Toggle Visibility', 'thrive-cb' ); ?>" class="action-remove mr-5 click <#= item.get('visible') ? 'tve-item-visible' :''#> <#= item.get('hiddenByParent') ? 'grey' :''#>" data-fn="toggleVisibility"
 	   data-index="<#=item.index#>" data-child-index="<#= item.child_index #>">
 		<#= TVE.icon( item.get('visible') ? 'eye-light' : 'eye-light-slash' ) #>
 	</a>
+	<#}#>
 </div>
 <#}#>

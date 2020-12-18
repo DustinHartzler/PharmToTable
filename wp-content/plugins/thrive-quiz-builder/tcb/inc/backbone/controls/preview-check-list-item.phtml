@@ -1,7 +1,7 @@
 <#if(typeof no_item !== 'undefined' && no_item){#>
 <div class="list-no-items tcb-text-center"><?php echo __( 'None', 'thrive-cb' ) ?></div>
 <#} else {#>
-<div class="preview-list-item preview-check-item tcb-relative<#= (settings_icon = view.get_config( 'settings_icon', false )) ? '' : ' click'#> <#= ! item.get('checked') ? 'preview-check-item-disabled' : ''#>"
+<div class="preview-list-item preview-check-item tcb-relative <#= ! item.get('checked') ? 'preview-check-item-disabled' : ''#>"
 	 data-fn="item_click" data-key="<#=item.get('key')#>" data-index="<#=item.index#>" data-label="<#=item.get('label')#>"  <#= item.get('fieldType') ? ' data-type="' + item.get('fieldType') + '"' : ''#>>
 <a href="javascript:void(0)" class="item-icon <#= item.get('icon_click') ? ' click' : ''#>" data-fn="iconClick" data-index="<#=item.index#>">
 	<#=item.get('icon')#>

@@ -37,9 +37,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="col-xs-8">
 				<span class="input-label"><?php echo __( 'Social Networks', Thrive_Quiz_Builder::T ) ?></span>
 			</div>
-			<div class="col-xs-4 tcb-text-right">
-				<button class="blue tve-button click" data-fn="open_selector_panel"><?php echo __( 'Change', Thrive_Quiz_Builder::T ) ?></button>
-			</div>
 		</div>
 		<div class="tve-control" data-key="selector" data-initializer="selector_control"></div>
 		<div class="tve-control" data-key="preview" data-view="PreviewList"></div>

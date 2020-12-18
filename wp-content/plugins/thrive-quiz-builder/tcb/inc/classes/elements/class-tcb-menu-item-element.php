@@ -93,7 +93,8 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					'ColorPicker' => array(
 						'css_suffix' => ' > a .m-icon',
 						'config'     => array(
-							'label' => __( 'Icon Color', 'thrive-cb' ),
+							'label'   => __( 'Icon Color', 'thrive-cb' ),
+							'options' => array( 'noBeforeInit' => false ),
 						),
 					),
 					'Slider'      => array(

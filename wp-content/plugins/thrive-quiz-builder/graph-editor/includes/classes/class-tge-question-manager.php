@@ -431,6 +431,25 @@ class TGE_Question_Manager {
 	}
 
 	/**
+	 * Returns the question type name from a type ID
+	 *
+	 * @param $type_id
+	 *
+	 * @return false|string
+	 */
+	public static function get_question_type_name( $type_id ) {
+		$types = TGE_Question_Manager::get_question_types();
+
+		foreach ( $types as $type ) {
+			if ( $type_id === $type['id'] ) {
+				return $type['name'];
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Save question
 	 *
 	 * @param array $question

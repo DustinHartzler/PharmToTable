@@ -3,7 +3,7 @@
 /*
 Plugin Name: Thrive Quiz Builder
 Plugin URI: https://thrivethemes.com
-Version: 2.3.2.2
+Version: 2.3.6
 Author: <a href="https://thrivethemes.com">Thrive Themes</a>
 Description: The plugin is built to deliver the following benefits to users: engage visitors with fun and interesting quizzes, lower bounce rate, generate more leads and gain visitor insights to find out about their interests.
 Text Domain: thrive-quiz-builder
@@ -24,7 +24,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		/**
 		 * Plugin version
 		 */
-		const V = '2.3.2.2';
+		const V = '2.3.6';
 
 		/**
 		 * Quiz Builder Database Version
@@ -272,6 +272,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		private function init_hooks() {
 			add_action( 'plugins_loaded', array( $this, 'load_dashboard_module' ) );
 			add_action( 'init', array( $this, 'init' ) );
+			add_action( 'init', 'TQB_Blocks::init' );
 			add_action( 'thrive_dashboard_loaded', array( $this, 'dash_loaded' ) );
 
 			/**
@@ -336,6 +337,10 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			add_filter( 'rocket_exclude_js', array( $this, 'rocket_exclude_js' ) );
 
 			add_filter( 'tve_dash_email_data', array( $this, 'tve_dash_email_data' ), 10, 2 );
+
+			if ( wp_doing_ajax() ) {
+				add_filter( 'tcb_form_api_tags', array( $this, 'process_api_result_tags' ) );
+			}
 		}
 
 
@@ -492,9 +497,22 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		 */
 		public function tqb_frontend_ajax_load() {
 
-			$quiz_ids = $_REQUEST['quiz_ids'];
-			$data     = array();
+			$quiz_ids     = $_REQUEST['quiz_ids'];
+			$restart_quiz = ! empty( $_POST['restart_quiz'] ) && (int) $_POST['restart_quiz'] === 1;
+			$data         = array();
 			foreach ( $quiz_ids as $key => $id ) {
+				if ( $restart_quiz ) {
+					/**
+					 * Fired when user restarts a quiz from front-end
+					 *
+					 * @param array Quiz Details
+					 * @param array User Details
+					 *
+					 * @api
+					 */
+					do_action( 'thrive_quizbuilder_quiz_restarted', TQB_Quiz_Manager::get_quiz_details( $id, null ), tvd_get_current_user_details() );
+				}
+
 				$question_manager = new TGE_Question_Manager( $id );
 				$questions        = $question_manager->get_quiz_questions( array( 'with_answers' => true ) );
 
@@ -644,6 +662,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			require_once( 'includes/managers/class-tqb-reporting-manager.php' );
 			require_once( 'includes/class-tqb-badge.php' );
 			require_once( 'includes/class-tqb-progress-settings.php' );
+			require_once( 'blocks/quiz-block.php' );
 
 			if ( $this->is_request( 'admin' ) ) {
 				require_once( 'includes/admin/class-tqb-admin.php' );
@@ -1674,6 +1693,10 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		 */
 		public function tve_dash_email_data( $data, $args ) {
 
+			if ( empty( $args['tqb-variation-page_id'] ) || empty( $args['tqb-variation-user_unique'] ) ) {
+				return $data;
+			}
+
 			$user_unique = $args['tqb-variation-user_unique'];
 			$page_id     = $args['tqb-variation-page_id'];
 			$page        = get_post( $page_id );
@@ -1810,6 +1833,19 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 					}
 				);
 			}
+		}
+
+		/**
+		 * Search through $tags and replace the %result% tag with the actual submitted quiz result
+		 *
+		 * @param string $tags
+		 *
+		 * @return string
+		 */
+		public function process_api_result_tags( $tags ) {
+			$user_result = isset( $_POST['tqb-quiz-user-result'], $_POST['tqb-variation-page_id'] ) ? sanitize_text_field( $_POST['tqb-quiz-user-result'] ) : '';
+
+			return str_replace( self::QUIZ_RESULT_SHORTCODE, $user_result, $tags );
 		}
 	}
 

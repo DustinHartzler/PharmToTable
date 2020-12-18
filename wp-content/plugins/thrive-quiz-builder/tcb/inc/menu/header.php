@@ -26,7 +26,7 @@
 			<div class="tve-control mt-5" data-view="StretchContent"></div>
 
 			<div class="pb-10 tcb-text-center">
-				<?php echo __( 'This is a header. You can edit it as a global element( it updates simultaneously in all places you used it) or change it with another saved header', 'thrive-tcb' ); ?>
+				<?php echo __( 'This is a header. You can edit it as a global element( it updates simultaneously in all places you used it) or change it with another saved header', 'thrive-cb' ); ?>
 			</div>
 			<hr>
 			<div class="row pb-10 header-actions">

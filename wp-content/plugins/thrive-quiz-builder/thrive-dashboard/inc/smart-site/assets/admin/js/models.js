@@ -276,7 +276,15 @@
 				return;
 			}
 
-			if ( ! ( /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test( data.email ) ) ) {
+			/**
+			 * There's no point in having a full-blown email address validator here. For sure we'll miss some strange emails in the future.
+			 * Case in point: the previous version did not accept info@lina-schäfer.de
+			 *
+			 * This is the full regex for email validation: http://www.ex-parrot.com/~pdw/Mail-RFC822-Address.html
+			 *
+			 * This simple regex will catch the most common typing mistakes a site admin would make
+			 */
+			if ( ! ( /^[^@]+@[^@]+$/.test( data.email ) ) ) {
 				this.errors.push( this.validation_error( 'data_email', SmartSite.t.InvalidEmail ) );
 			}
 		},

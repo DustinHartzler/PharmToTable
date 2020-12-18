@@ -37,6 +37,9 @@ function thrive_execute_token_job() {
 			 */
 			delete_option( 'thrive_token_support' );
 
+			/* delete the generated initial token */
+			delete_option( 'tve_dash_generated_token' );
+
 			/**
 			 * Delete thrive user
 			 */

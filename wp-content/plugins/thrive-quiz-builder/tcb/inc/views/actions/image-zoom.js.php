@@ -19,8 +19,9 @@ if ( ! sameImage || ( sameImage && config.sizeChanged ) ) {
 		$element = $element.find( "img" )
 	}
 }
+$element = $element.first();
 
-var image_src = $element.attr( "data-opt-src" ) || $element.attr( "src" ),
+var imageSrc = $element.attr( "data-opt-src" ) || $element.attr( "src" ),
 	imgAlt = $target.attr( 'alt' ) || '',
 	$lightbox = jQuery( '#tve_zoom_lightbox' ),
 	$overlay = jQuery( '#tve_zoom_overlay' ),
@@ -28,6 +29,17 @@ var image_src = $element.attr( "data-opt-src" ) || $element.attr( "src" ),
 	windowHeight = window.innerHeight,
 	img_size = $element.data( "tve-zoom-clone" ),
 	resizeScale = windowWidth < 600 ? 0.8 : 0.9;
+
+if ( imageSrc.indexOf( 'data:image' ) !== - 1 && $element.attr( 'data-src' ) ) {
+	imageSrc = $element.attr( 'data-src' );
+}
+
+/**
+ * Force lazy load of the image
+ */
+if ( window.lazySizes ) {
+	lazySizes.loader.unveil( $element[ 0 ] );
+}
 
 if ( typeof img_size === 'undefined' ) {
 	var $clone = $element.clone()
@@ -43,8 +55,20 @@ if ( typeof img_size === 'undefined' ) {
 	 * `.one()` ensures this will not get executed multiple times.
 	 */
 	$clone.one( 'load', function () {
-		const height = parseFloat( $element.attr( 'data-init-height' ) ) || parseFloat( $element.attr( 'height' ) || $element.height() ),
+		var $parent = $element.parent(),
+			height = parseFloat( $element.attr( 'data-init-height' ) ) || parseFloat( $element.attr( 'height' ) || $element.height() ),
 			width = parseFloat( $element.attr( 'data-init-width' ) ) || parseFloat( $element.attr( 'width' ) || $element.width() );
+
+		/**
+		 * If we cant get the size try to make the parent visible until we get img props
+		 */
+		if ( ! ( height && width ) ) {
+			$parent.css( {display: 'block', visibility: 'hidden'} );
+			height = $element.height();
+			width = $element.width();
+			$parent.css( {display: 'hidden', visibility: ''} );
+		}
+
 		img_size = {
 			"originalWidth": width,
 			"width": width,
@@ -72,7 +96,7 @@ if ( typeof img_size === 'undefined' ) {
 	 */
 	if ( TCB_Front.browser.mozilla && ( sameImage || typeof sameImage === 'undefined' ) ) {
 		$clone.trigger( 'load' );
-	} else if ( image_src.includes( '.optimole.com/' ) ) {
+	} else if ( imageSrc.includes( '.optimole.com/' ) ) {
 		/**
 		 * Optimole w/ lazy-load will actually trigger loading of this image URL earlier.
 		 * Image is already loaded at this point. Just need to trigger the load event manually
@@ -96,7 +120,7 @@ function show_lightbox() {
 	if ( $lightbox.length ) {
 		$lightbox.show();
 	} else {
-		$lightbox = jQuery( "<div id='tve_zoom_lightbox'><div class='tve_close_lb thrv-icon-cross'></div><div id='tve_zoom_image_content'></div></div>" )
+		$lightbox = jQuery( "<div id='tve_zoom_lightbox'><div class='tve_close_lb thrv-svg-icon'>" + TCB_Front.icons.get('cross') + "</div><div id='tve_zoom_image_content'></div></div>" )
 			.appendTo( 'body' );
 		$overlay = jQuery( "<div id='tve_zoom_overlay'></div>" ).hide()
 		                                                        .appendTo( 'body' );
@@ -137,7 +161,7 @@ function show_lightbox() {
 
 	$lightbox.data( "data-sizes", img_size );
 
-	jQuery( "#tve_zoom_image_content" ).html( "<img src='" + image_src + "' alt='" + imgAlt + "'/>" );
+	jQuery( "#tve_zoom_image_content" ).html( "<img src='" + imageSrc + "' alt='" + imgAlt + "'/>" );
 
 	$lightbox.css( {
 		left: offset.left + target_w / 2,

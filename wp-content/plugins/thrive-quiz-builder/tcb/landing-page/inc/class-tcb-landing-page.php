@@ -586,7 +586,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 		 * @param array  $fonts
 		 * @param bool   $ignore_css
 		 */
-		public function update_template_style( $identifier = '', $for_element = '', $name = '', $css, $fonts = array(), $ignore_css = false ) {
+		public function update_template_style( $identifier, $for_element, $name, $css, $fonts = array(), $ignore_css = false ) {
 
 			$post_meta_name = 'thrv_lp_template_' . $for_element;
 

@@ -146,21 +146,9 @@ function tve_dash_fetch_share_count_google( $url ) {
  * @return int
  */
 function tve_dash_fetch_share_count_xing( $url ) {
-	$response = wp_remote_get( 'https://www.xing-share.com/app/share?op=get_share_button;counter=top;url=' . rawurlencode( $url ), array(
-		'sslverify' => false,
-	) );
+	$response = _tve_dash_util_helper_get_json( 'https://www.xing-share.com/spi/shares/statistics?url=' . rawurlencode( $url ), 'wp_remote_post' );
 
-	if ( $response instanceof WP_Error ) {
-		return 0;
-	}
-
-	$html = wp_remote_retrieve_body( $response );
-
-	if ( ! preg_match_all( '#xing-count(.+?)(\d+)(.*?)</span>#', $html, $matches, PREG_SET_ORDER ) ) {
-		return 0;
-	}
-
-	return (int) $matches[0][2];
+	return isset( $response['share_counter'] ) ? $response['share_counter'] : 0;
 }
 
 /**
@@ -268,8 +256,8 @@ function tve_dash_get_menu_products_order() {
  * Enqueue a script during an ajax call - this will make sure the script will be loaded in the page when the ajax call returns content
  *
  * @param string|array $handle
- * @param string|null  $url      if empty, it will try to get it from the WP_Scripts object
- * @param string       $extra_js extra javascript to be outputted before the script
+ * @param string|null $url if empty, it will try to get it from the WP_Scripts object
+ * @param string $extra_js extra javascript to be outputted before the script
  *
  * @return bool
  */
@@ -301,8 +289,8 @@ function tve_dash_ajax_enqueue_script( $handle, $url = null, $extra_js = null ) 
  * Enqueue a CSS external stylesheet during an ajax call
  *
  * @param string|array $handle
- * @param string|null  $url      if empty, it will try to get it from the WP_Scripts object
- * @param string       $extra_js extra javascript to be outputted before the script
+ * @param string|null $url if empty, it will try to get it from the WP_Scripts object
+ * @param string $extra_js extra javascript to be outputted before the script
  *
  * @return bool
  */
@@ -406,7 +394,7 @@ function tve_get_debug_data() {
  * Formats the message differently in WP_CLI
  *
  * @param string $error_type error message type. if none is identified, it will be outputted as the error message
- * @param mixed  $_          any number of additional parameters to be used depending on $error_type
+ * @param mixed $_ any number of additional parameters to be used depending on $error_type
  */
 function tve_dash_show_activation_error( $error_type, $_ = null ) {
 
@@ -457,7 +445,23 @@ function tve_dash_get_thrive_parent_node() {
 		'href'  => '',
 		'meta'  => array(
 			'class' => 'thrive-admin-bar',
-			'html'  => '<style>#wpadminbar .thrive-admin-bar:hover .thrive-adminbar-icon{background-position:bottom left;}</style>',
+			'html'  => '<style>#wpadminbar .thrive-admin-bar:hover .thrive-adminbar-icon{background-position:bottom left;} #wpadminbar{z-index: 9999999 !important;}</style>',
 		),
+	);
+}
+
+/**
+ * Return list of webhook data processing integrations
+ *
+ * @return array
+ */
+function tve_dash_get_webhook_trigger_integrated_apis() {
+	return array(
+		'activecampaign' => array(
+			'key'      => 'activecampaign',
+			'label'    => 'ActiveCampaign',
+			'image'     => TVE_DASH_URL .'/inc/auto-responder/views/images/activecampaign.png',
+			'selected' => false,
+		)
 	);
 }

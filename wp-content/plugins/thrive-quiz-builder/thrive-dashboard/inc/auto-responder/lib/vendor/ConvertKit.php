@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Andrei
- * Date: 15/9/2015
- * Time: 10:14 AM
- */
 
 require_once dirname( __FILE__ ) . "/ConvertKit/Exception.php";
 
@@ -193,7 +187,7 @@ class Thrive_Dash_Api_ConvertKit {
 
 				try {
 					// Create tag and assign it to contact/subscriber
-					$this->createAndAssignTag( $list_id, $tag_name, $email_address );
+					$this->createAndAssignTag( $list_id, trim( $tag_name ), $email_address );
 				} catch ( Thrive_Dash_Api_ConvertKit_Exception $e ) {
 				}
 			}
@@ -227,7 +221,7 @@ class Thrive_Dash_Api_ConvertKit {
 		$haystack = (array) $this->_existing_tags;
 
 		foreach ( $haystack as $key => $value ) {
-			if ( ! empty( $value['name'] ) && $needle === $value['name'] ) {
+			if ( ! empty( $value['name'] ) && strcasecmp( trim( $needle ), $value['name'] ) === 0 ) {
 				return $value;
 			}
 		}

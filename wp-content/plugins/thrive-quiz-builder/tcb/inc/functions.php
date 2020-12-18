@@ -114,17 +114,21 @@ function tcb_get_editor_close_url( $post_id = false ) {
  *
  * If no post id is set then will use native WP functions to get the editing URL for the piece of content that's currently being edited
  *
- * @param bool $post_id
+ * @param int  $post_id
  * @param bool $main_frame whether or not to get the main frame Editor URL or the child frame one
  *
  * @return string
  */
-function tcb_get_editor_url( $post_id = false, $main_frame = true ) {
+function tcb_get_editor_url( $post_id = 0, $main_frame = true ) {
 	/**
 	 * we need to make sure that if the admin is https, then the editor link is also https, otherwise any ajax requests through wp ajax api will not work
 	 */
 	$admin_ssl = strpos( admin_url(), 'https' ) === 0;
-	$post_id   = ( $post_id ) ? $post_id : get_the_ID();
+
+	if ( empty( $post_id ) ) {
+		$post_id = get_the_ID();
+	}
+
 	/*
      * We need the post to complete the full arguments for the preview_post_link filter
      */
@@ -294,11 +298,11 @@ function thrive_page_row_buttons( $actions, $page_object ) {
 
 	?>
 	<style type="text/css">
-        .thrive-adminbar-icon {
-            background: url('<?php echo tve_editor_css(); ?>/images/admin-bar-logo.png') no-repeat 0 0;
-            background-size: contain;
-            padding-left: 25px;
-        }
+		.thrive-adminbar-icon {
+			background: url('<?php echo tve_editor_css(); ?>/images/admin-bar-logo.png') no-repeat 0 0;
+			background-size: contain;
+			padding-left: 25px;
+		}
 	</style>
 	<?php
 
@@ -844,11 +848,12 @@ function tve_editor_content( $content, $use_case = null ) {
 				$tve_saved_content = do_shortcode( $tve_saved_content );
 			}
 		}
+
+		/**
+		 * Replace again {tcb_} shortcodes in case they are used in shortcodes
+		 */
+		$tve_saved_content = tve_do_custom_content_shortcodes( $tve_saved_content );
 	}
-	/**
-	 * Replace again {tcb_} shortcodes in case they are used in shortcodes
-	 */
-	$tve_saved_content = tve_do_custom_content_shortcodes( $tve_saved_content );
 
 	$style_family_class = tve_get_style_family_class( $post_id );
 
@@ -2993,6 +2998,11 @@ function tve_enqueue_fonts( $font_array ) {
 				$href = tve_custom_font_get_link( $font );
 			}
 		}
+
+		if ( strrpos( $href, 'fonts.googleapis.com' ) !== false && tve_dash_is_google_fonts_blocked() ) {
+			continue;
+		}
+
 		$font_key            = 'tcf_' . md5( $href );
 		$return[ $font_key ] = $href;
 		wp_enqueue_style( $font_key, $href );
@@ -3044,7 +3054,12 @@ function tve_render_widget_menu( $attributes ) {
 
 	$items = wp_get_nav_menu_items( $menu_id );
 	if ( empty( $items ) ) {
-		return '<div class="thrive-shortcode-html" style="text-align: center">' . __( 'No menu items have been found.', 'thrive-cb' ) . '</div>';
+		$placeholder = '';
+		if ( $menu_id ) {
+			$placeholder = '<div class="thrive-shortcode-html" style="text-align: center">' . __( 'No menu items have been found.', 'thrive-cb' ) . '</div>';
+		}
+
+		return $placeholder;
 	}
 	$attributes['top_level_count'] = count( array_filter( $items, function ( $item ) {
 		return empty( $item->menu_item_parent );
@@ -3662,14 +3677,6 @@ function tve_load_dash_version() {
 	}
 }
 
-/**
- * handles all api-related AJAX calls made when editing a Lead Generation element
- */
-function tve_api_editor_actions() {
-	$controller = new Thrive_Dash_List_Editor_Controller();
-	$controller->run();
-}
-
 function tve_custom_form_submit() {
 
 	$post = $_POST;
@@ -3684,11 +3691,45 @@ function tve_custom_form_submit() {
 
 /**
  * AJAX call on a Lead Generation form that's connected to an api
+ *
+ * @param bool $output whether to output the result directly or return it
+ *
+ * @return mixed
  */
-function tve_api_form_submit() {
-	$data = tve_sanitize_data_recursive( $_POST );
+function tve_api_form_submit( $output = true ) {
 
-	if ( isset( $data['_use_captcha'] ) && $data['_use_captcha'] == '1' ) {
+	if ( ! is_bool( $output ) ) {
+		/**
+		 * tve_api_form_submit is also called from ajax via wp_ajax_tve_api_form_submit or wp_ajax_nopriv_tve_api_form_submit actions
+		 *
+		 * When this is the case, the $output parameter is an empty string
+		 */
+		$output = true;
+	}
+
+	/* make sure these are not sent via request */
+	unset( $_POST['$$trusted'], $_REQUEST['$$trusted'], $_GET['$$trusted'] );
+	$data = tve_sanitize_data_recursive( $_POST, 'sanitize_textarea_field' );
+
+	if ( empty( $data['tcb_token'] ) ) {
+		/* this field is always needed. If not sent, the current request does not come from a web browser */
+		wp_die( '' );
+	}
+
+	if ( ! empty( $data['_tcb_id'] ) ) { // form settings id
+		$settings = \TCB\inc\helpers\FormSettings::get_one( $data['_tcb_id'] );
+		if ( ! $settings->ID ) {
+			return TCB_Utils::maybe_send_json( array(
+				'error' => __( 'Something went wrong! Please contact site owner', 'thrive-cb' ),
+			), $output );
+		}
+		/**
+		 * populate data with settings from database
+		 */
+		$settings->populate_request( $data );
+	}
+
+	if ( ! empty( $data['_use_captcha'] ) ) {
 		$captcha_url = 'https://www.google.com/recaptcha/api/siteverify';
 		$captcha_api = Thrive_Dash_List_Manager::credentials( 'recaptcha' );
 
@@ -3700,23 +3741,27 @@ function tve_api_form_submit() {
 
 		$request  = tve_dash_api_remote_post( $captcha_url, array( 'body' => $_capthca_params ) );
 		$response = json_decode( wp_remote_retrieve_body( $request ) );
-		if ( empty( $response ) || $response->success === false ) {
-			wp_send_json( array(
-				'error' => __( 'Please prove you are not a robot!!!', 'thrive-cb' ),
-			) );
+
+		if ( empty( $response ) || $response->success === false || ( ! empty( $captcha_api['connection'] ) && $captcha_api['connection']['version'] === 'v3' && $response->score <= $captcha_api['connection']['threshold'] ) ) {
+			return TCB_Utils::maybe_send_json( array(
+				'field' => 'captcha',
+				'error' => __( 'We are detecting suspicious activity from your device. Please try in another browser or contact the website administrator.', 'thrive-cb' ),
+			), $output );
 		}
 	}
 
 	if ( empty( $data['email'] ) ) {
-		wp_send_json( array(
+		return TCB_Utils::maybe_send_json( array(
+			'field' => 'email',
 			'error' => __( 'The email address is required', 'thrive-cb' ),
-		) );
+		), $output );
 	}
 
 	if ( ! is_email( $data['email'] ) ) {
-		wp_send_json( array(
+		return TCB_Utils::maybe_send_json( array(
+			'field' => 'email',
 			'error' => __( 'The email address is invalid', 'thrive-cb' ),
-		) );
+		), $output );
 	}
 
 	/**
@@ -3724,11 +3769,12 @@ function tve_api_form_submit() {
 	 * Also checks nonces and discards the request if those are not valid
 	 */
 	if ( ! empty( $data['tcb_file_id'] ) ) {
-		$result = FileUploadConfig::get_one( $data['tcb_file_id'] )->validate_form_submit( $data );
-		if ( $result !== true ) {
-			wp_send_json( array(
-				'error' => __( $result, 'thrive-cb' ),
-			) );
+		$file_valid = FileUploadConfig::get_one( $data['tcb_file_id'] )->validate_form_submit( $data );
+		if ( $file_valid !== true ) {
+			return TCB_Utils::maybe_send_json( array(
+				'field' => 'file',
+				'error' => __( $file_valid, 'thrive-cb' ),
+			), $output );
 		}
 	}
 
@@ -3762,9 +3808,10 @@ function tve_api_form_submit() {
 	 * Validate user consent
 	 */
 	if ( ! empty( $consent_config['required'] ) && empty( $data['user_consent'] ) ) {
-		wp_send_json( array(
+		return TCB_Utils::maybe_send_json( array(
+			'field' => 'consent',
 			'error' => __( 'User consent is required', 'thrive-cb' ),
-		) );
+		), $output );
 	}
 
 
@@ -3779,10 +3826,16 @@ function tve_api_form_submit() {
 	 */
 	do_action( 'tcb_api_form_submit', $post );
 
-	if ( empty( $data['__tcb_lg_fc'] ) || ! ( $connections = Thrive_Dash_List_Manager::decodeConnectionString( $data['__tcb_lg_fc'] ) ) ) {
-		wp_send_json( array(
+	if ( isset( $settings ) ) {
+		$connections = $settings->apis;
+	} elseif ( ! empty( $data['__tcb_lg_fc'] ) ) {
+		$connections = Thrive_Dash_List_Manager::decodeConnectionString( $data['__tcb_lg_fc'] ); // previous version
+	}
+
+	if ( empty( $connections ) ) {
+		return TCB_Utils::maybe_send_json( array(
 			'error' => __( 'No connection for this form', 'thrive-cb' ),
-		) );
+		), $output );
 	}
 
 	//these are not needed anymore
@@ -3804,6 +3857,17 @@ function tve_api_form_submit() {
 	}
 
 	$available = Thrive_Dash_List_Manager::getAvailableAPIs( true );
+
+	/**
+	 * Filter the api connections before sending form data
+	 *
+	 * @param array $connections APIs that will receive subscription data
+	 * @param array $available   all available API connections (list of all API connections setup from Thrive Dashboard)
+	 * @param array $data        POST data to send to the api connection instance
+	 *
+	 * @return array
+	 */
+	$connections = apply_filters( 'tcb_api_subscribe_connections', $connections, $available, $data );
 
 	foreach ( $available as $key => $connection ) {
 
@@ -3836,9 +3900,8 @@ function tve_api_form_submit() {
 	 * $result will contain boolean 'true' or string error messages for each connected api
 	 * these error messages will literally have no meaning for the user - we'll just store them in a db table and show them in admin somewhere
 	 */
-	wp_send_json( $result );
+	return TCB_Utils::maybe_send_json( $result, $output );
 }
-
 
 /**
  * make an api call to a subscribe a user
@@ -3870,18 +3933,41 @@ function tve_api_add_subscriber( $connection, $list_identifier, $data, $log_erro
 	/** @var Thrive_Dash_List_Connection_Abstract $connection */
 	$result = $connection->addSubscriber( $list_identifier, $data );
 
-	if ( ! $log_error || true === $result || ( $key == 'klicktipp' && filter_var( $result, FILTER_VALIDATE_URL ) !== false ) ) {
+	if ( ! $log_error || true === $result || ( $key === 'klicktipp' && filter_var( $result, FILTER_VALIDATE_URL ) !== false ) ) {
+		/**
+		 * Fires when a new Lead is Created from a Thrive Leads Form
+		 *
+		 * @param array Lead Data
+		 * @param null|array User Data
+		 *
+		 * @api
+		 */
+		do_action( 'thrive_core_lead_signup', tve_get_lead_gen_form_data( $data ), tvd_get_current_user_details() );
+
 		return $result;
 	}
 
 	global $wpdb;
 
 	/**
+	 * Support also array error messages
+	 */
+	$db_error = $result;
+	if ( is_array( $db_error ) ) {
+		if ( ! empty( $db_error['error'] ) ) {
+			$db_error = $db_error['error'];
+		} elseif ( ! empty( $db_error['message'] ) ) {
+			$db_error = $db_error['message'];
+		} else {
+			$db_error = json_encode( $db_error ); //default to json-encode, as this is an unknown error format
+		}
+	}
+	/**
 	 * at this point, we need to log the error in a DB table, so that the user can see all these error later on and (maybe) re-subscribe the user
 	 */
 	$log_data = array(
 		'date'          => date( 'Y-m-d H:i:s' ),
-		'error_message' => tve_sanitize_data_recursive( $result, 'sanitize_text_field' ),
+		'error_message' => tve_sanitize_data_recursive( $db_error, 'sanitize_text_field' ),
 		'api_data'      => serialize( tve_sanitize_data_recursive( $data, 'sanitize_text_field' ) ),
 		'connection'    => $connection->getKey(),
 		'list_id'       => maybe_serialize( tve_sanitize_data_recursive( $list_identifier, 'sanitize_text_field' ) ),
@@ -3890,6 +3976,47 @@ function tve_api_add_subscriber( $connection, $list_identifier, $data, $log_erro
 	$wpdb->insert( $wpdb->prefix . 'tcb_api_error_log', $log_data );
 
 	return $result;
+}
+
+/**
+ * Retrieves the Lead Generation form data
+ *
+ * @param array $data
+ *
+ * @return array[]
+ */
+function tve_get_lead_gen_form_data( $data = array() ) {
+
+	$lead_data = array(
+		'form_data' => array(),
+	);
+
+	/**
+	 * Allow other plugins that inject data into Lead Generation forms to add data here
+	 *
+	 * @parm $data array
+	 */
+	$data = apply_filters( 'tcb_parse_lead_gen_form_data', $data );
+
+	$banned_lead_gen_keys = array( '_submit_option', '_sendParams', '_api_custom_fields', 'tve_mapping', 'tve_labels', 'consent_config', '__tcb_lg_msg', 'external_plugin_fields' );
+
+	foreach ( $data as $key => $value ) {
+
+		if ( in_array( $key, $banned_lead_gen_keys, true ) ) {
+			continue;
+		}
+
+		$lead_data['form_data'][ $key ] = $value;
+	}
+
+	/**
+	 * External plugin fields comes from the tcb_parse_lead_gen_form_data and it is used to parse external fields that are from other thrive plugins to the hook
+	 */
+	if ( ! empty( $data['external_plugin_fields'] ) ) {
+		$lead_data = array_merge( $lead_data, $data['external_plugin_fields'] );
+	}
+
+	return $lead_data;
 }
 
 /**
@@ -4267,7 +4394,7 @@ if ( ! function_exists( 'tve_frontend_enqueue_scripts' ) ) {
 		wp_enqueue_script( 'plupload' );
 		tve_enqueue_script( 'tve_frontend', tve_editor_js() . '/frontend' . $js_suffix, array( 'jquery', 'jquery-masonry', 'plupload' ), false, true );
 
-		if ( apply_filters( 'tcb_overwrite_scripts_enqueue', false ) || ( ! is_editor_page() && is_singular() ) ) {
+		if ( apply_filters( 'tcb_overwrite_event_scripts_enqueue', false ) || ( ! is_editor_page() && is_singular() ) ) {
 			$events = tve_get_post_meta( get_the_ID(), 'tve_page_events' );
 			if ( ! empty( $events ) && is_array( $events ) ) {
 				tve_page_events( $events );
@@ -4283,12 +4410,18 @@ if ( ! function_exists( 'tve_frontend_enqueue_scripts' ) ) {
 			'social_fb_app_id' => tve_get_social_fb_app_id(),
 			'dash_url'         => TVE_DASH_URL,
 			'translations'     => array(
-				'Copy'           => __( 'Copy', 'thrive-cb' ),
-				'empty_username' => __( 'ERROR: The username field is empty.', 'thrive-cb' ),
-				'empty_password' => __( 'ERROR: The password field is empty.', 'thrive-cb' ),
-				'empty_login'    => __( 'ERROR: Enter a username or email address.', 'thrive-cb' ),
-				'min_chars'      => __( 'At least %s characters are needed', 'thrive-cb' ),
-				'no_headings'    => __( 'No headings found', 'thrive-cb' ),
+				'Copy'             => __( 'Copy', 'thrive-cb' ),
+				'empty_username'   => __( 'ERROR: The username field is empty.', 'thrive-cb' ),
+				'empty_password'   => __( 'ERROR: The password field is empty.', 'thrive-cb' ),
+				'empty_login'      => __( 'ERROR: Enter a username or email address.', 'thrive-cb' ),
+				'min_chars'        => __( 'At least %s characters are needed', 'thrive-cb' ),
+				'no_headings'      => __( 'No headings found', 'thrive-cb' ),
+				'registration_err' => array(
+					'required_field'   => __( '<strong>Error</strong>: This field is required', 'thrive-cb' ), // generic error message
+					'required_email'   => __( '<strong>Error</strong>: Please type your email address.' ), //default WP message
+					'invalid_email'    => __( '<strong>Error</strong>: The email address isn&#8217;t correct.' ), //default WP message
+					'passwordmismatch' => __( '<strong>Error</strong>: Password mismatch', 'thrive-cb' ),
+				),
 			),
 			'routes'           => array(
 				'posts' => get_rest_url( get_current_blog_id(), 'tcb/v1' . '/posts' ),
@@ -4373,6 +4506,14 @@ function thrive_widget_render( $data ) {
 	foreach ( $wp_widget_factory->widgets as $widget ) {
 		if ( $widget->option_name === $data['type'] ) {
 			ob_start();
+
+			/**
+			 * Action done so we can add custom logic just before rendering a widget
+			 *
+			 * @param WP_Widget $widget
+			 */
+			do_action( 'tcb_before_widget_render', $widget );
+
 			$widget->widget( tve_get_sidebar_default_args( $widget ), $data );
 			$content = ob_get_contents();
 			ob_get_clean();
@@ -4853,6 +4994,70 @@ function tcb_print_frontend_styles() {
 
 	/* Default Styles node */
 	echo sprintf( '<style type="text/css" id="thrive-default-styles">%s</style>', tcb_default_style_provider()->get_processed_styles( null, 'string', false ) );
+}
+
+/**
+ * export a Landing Page as a Zip file
+ */
+function tve_ajax_landing_page_export() {
+	$response = array(
+		'success' => true,
+	);
+
+	if ( empty( $_POST['template_name'] ) || empty( $_POST['post_id'] ) || ! is_numeric( $_POST['post_id'] ) || ! tve_post_is_landing_page( $_POST['post_id'] ) ) {
+		$response['success'] = false;
+		$response['message'] = __( 'Invalid request', 'thrive-cb' );
+		wp_send_json( $response );
+	}
+
+	$transfer = new TCB_Landing_Page_Transfer();
+
+	$thumb_attachment_id = empty( $_POST['thumb_id'] ) ? 0 : (int) $_POST['thumb_id'];
+
+	try {
+
+		$data                = $transfer->export( (int) $_POST['post_id'], $_POST['template_name'], $thumb_attachment_id );
+		$response['url']     = $data['url'];
+		$response['message'] = __( 'Landing Page exported successfully!', 'thrive-cb' );
+
+	} catch ( Exception $e ) {
+		$response['success'] = false;
+		$response['message'] = $e->getMessage();
+	}
+
+	wp_send_json( $response );
+}
+
+/**
+ * import a landing page from an attachment ID received in POST
+ * the attachment should be a .zip file created with the "Export Landing Page" functionality
+ */
+function tve_ajax_landing_page_import() {
+	$response = array(
+		'success' => true,
+		'message' => '',
+	);
+
+	$is_post_type_allowed = apply_filters( 'tve_allowed_post_type', true, get_post_type( $_POST['page_id'] ) );
+	if ( empty( $_POST['attachment_id'] ) || ! is_numeric( $_POST['attachment_id'] ) || empty( $_POST['page_id'] ) || ! is_numeric( $_POST['page_id'] ) || ! $is_post_type_allowed ) {
+		$response['success'] = false;
+		$response['message'] = __( 'Invalid attachment id', 'thrive-cb' );
+		wp_send_json( $response );
+	}
+
+	$transfer = new TCB_Landing_Page_Transfer();
+	try {
+		$file                = get_attached_file( (int) $_POST['attachment_id'], true );
+		$landing_page_id     = $transfer->import( $file, (int) $_POST['page_id'] );
+		$response['url']     = tcb_get_editor_url( $landing_page_id );
+		$response['message'] = __( 'Landing Page imported successfully!', 'thrive-cb' );
+
+	} catch ( Exception $e ) {
+		$response['success'] = false;
+		$response['message'] = $e->getMessage();
+	}
+
+	wp_send_json( $response );
 }
 
 /**

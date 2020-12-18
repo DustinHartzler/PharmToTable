@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: thrive-quiz-builder 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-28 14:51+0300\n"
+"POT-Creation-Date: 2020-12-16 14:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: includes/admin/class-tqb-admin.php:70 includes/admin/class-tqb-admin.php:71
 #: includes/class-tqb-privacy.php:57 includes/class-tqb-privacy.php:73
 #: tcb-bridge/editor-elements/class-tcb-dynamic-content-element.php:89
-#: tcb-bridge/editor-elements/class-tcb-social-share-badge-element.php:99
+#: tcb-bridge/editor-elements/class-tcb-social-share-badge-element.php:105
 msgid "Thrive Quiz Builder"
 msgstr ""
 
@@ -229,7 +229,7 @@ msgstr ""
 
 #: includes/admin/i18n.php:10
 #: includes/admin/views/templates/modals/new-quiz.phtml:35
-#: tcb-bridge/tqb-class-hooks.php:354
+#: tcb-bridge/tqb-class-hooks.php:379
 msgid "Quiz name"
 msgstr ""
 
@@ -628,7 +628,7 @@ msgstr ""
 msgid "The quiz could not be duplicated"
 msgstr ""
 
-#: includes/admin/i18n.php:94 includes/managers/class-tqb-quiz-manager.php:1142
+#: includes/admin/i18n.php:94 includes/managers/class-tqb-quiz-manager.php:1230
 #: includes/admin/views/templates/modals/copy-quiz-shortcode.phtml:17
 #: includes/admin/views/templates/quiz/edit.phtml:19
 msgid "Copy"
@@ -841,11 +841,11 @@ msgstr ""
 msgid "COMPLETED"
 msgstr ""
 
-#: includes/class-tqb-template-manager.php:322
+#: includes/class-tqb-template-manager.php:327
 msgid "Template saved."
 msgstr ""
 
-#: includes/class-tqb-template-manager.php:389
+#: includes/class-tqb-template-manager.php:394
 msgid "No saved templates found"
 msgstr ""
 
@@ -869,7 +869,7 @@ msgstr ""
 msgid "The shortcode is broken"
 msgstr ""
 
-#: includes/managers/class-tqb-quiz-manager.php:524
+#: includes/managers/class-tqb-quiz-manager.php:553
 msgid "There is an error in the quiz structure"
 msgstr ""
 
@@ -905,64 +905,64 @@ msgstr ""
 msgid "Control"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:347
+#: includes/managers/class-tqb-structure-manager.php:348
 msgid ""
 "Your Splash Page is empty! Make sure you have at least one variation for it."
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:367
+#: includes/managers/class-tqb-structure-manager.php:368
 msgid "Your Opt-in Page is empty! Make sure you have at least one variation."
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:400
+#: includes/managers/class-tqb-structure-manager.php:401
 msgid "Your Results Page has not been set!"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:447
+#: includes/managers/class-tqb-structure-manager.php:448
 msgid "Something when wrong!"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:451
+#: includes/managers/class-tqb-structure-manager.php:452
 msgid "splash editor"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:454
+#: includes/managers/class-tqb-structure-manager.php:455
 msgid "This Quiz doesn't have a Splash Page"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:458
+#: includes/managers/class-tqb-structure-manager.php:459
 msgid "optin gate editor"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:460
+#: includes/managers/class-tqb-structure-manager.php:461
 msgid "This Quiz doesn't have an Optin Gate"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:464
+#: includes/managers/class-tqb-structure-manager.php:465
 msgid "questions editor"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:466
+#: includes/managers/class-tqb-structure-manager.php:467
 msgid "This Quiz doesn't have a Start Question"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:470
+#: includes/managers/class-tqb-structure-manager.php:471
 msgid "redirect manager"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:472
+#: includes/managers/class-tqb-structure-manager.php:473
 msgid "This Quiz doesn't have a Redirect"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:476
+#: includes/managers/class-tqb-structure-manager.php:477
 msgid "results page editor"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:478
+#: includes/managers/class-tqb-structure-manager.php:479
 msgid "This Quiz doesn't have a Results Page"
 msgstr ""
 
-#: includes/tqb-data-functions.php:474
+#: includes/tqb-data-functions.php:476
 msgid "The quiz is no longer available!"
 msgstr ""
 
@@ -1673,7 +1673,6 @@ msgstr ""
 
 #: includes/admin/views/templates/quiz/style/card.phtml:14
 #: includes/admin/views/templates/tests/test-total.phtml:27
-#: tcb-bridge/editor-layouts/menus/social-share-badge.php:41
 msgid "Change"
 msgstr ""
 
@@ -2063,7 +2062,7 @@ msgid "E-mail address"
 msgstr ""
 
 #: includes/admin/views/templates/reporting/users-list.phtml:43
-#: tcb-bridge/tqb-class-hooks.php:362
+#: tcb-bridge/tqb-class-hooks.php:387
 msgid "Quiz result"
 msgstr ""
 
@@ -2771,19 +2770,19 @@ msgid ""
 "that have its code in the content."
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:324
+#: tcb-bridge/tqb-class-hooks.php:349
 msgid "Result of quiz"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:358
+#: tcb-bridge/tqb-class-hooks.php:383
 msgid "List all the questions and answers"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:398
+#: tcb-bridge/tqb-class-hooks.php:423
 msgid "Someone completed the quiz: [quiz_name]"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:399
+#: tcb-bridge/tqb-class-hooks.php:424
 msgid ""
 "Someone completed the quiz called [quiz_name] on this page: [page_url] \n"
 "\n"
@@ -2797,11 +2796,11 @@ msgid ""
 "[quiz_result]"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:400
+#: tcb-bridge/tqb-class-hooks.php:425
 msgid "Thank you for completing the quiz"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:401
+#: tcb-bridge/tqb-class-hooks.php:426
 msgid ""
 "Thank you for taking the time to complete the quiz. \n"
 "\n"
@@ -2813,52 +2812,52 @@ msgid ""
 "[quiz_result]"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:460
+#: tcb-bridge/tqb-class-hooks.php:485
 msgid "Please choose a template"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:461
+#: tcb-bridge/tqb-class-hooks.php:486
 msgid "Please enter a template name, it will be easier to reload it after."
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:462
+#: tcb-bridge/tqb-class-hooks.php:487
 msgid "Fetching saved templates..."
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:463
+#: tcb-bridge/tqb-class-hooks.php:488
 msgid "The minimum value cannot be changed!"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:464
+#: tcb-bridge/tqb-class-hooks.php:489
 msgid "The maximum value cannot be changed!"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:465
+#: tcb-bridge/tqb-class-hooks.php:490
 msgid "The minimum value cannot be less than "
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:466
+#: tcb-bridge/tqb-class-hooks.php:491
 msgid "The maximum value cannot be greater than "
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:1159
+#: tcb-bridge/tqb-class-hooks.php:1184
 msgid "Invalid Parameters"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:1173
+#: tcb-bridge/tqb-class-hooks.php:1198
 msgid ""
 "Could not find the variation you are editing... Is it possible that someone "
 "deleted it from the admin panel?"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:1368
+#: tcb-bridge/tqb-class-hooks.php:1393
 msgid "Variation cannot be empty"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:1591
+#: tcb-bridge/tqb-class-hooks.php:1616
 msgid "Send quiz result as tag"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:1592
+#: tcb-bridge/tqb-class-hooks.php:1617
 msgid "Scroll settings saved for the quiz"
 msgstr ""

@@ -49,6 +49,8 @@ class TCB_Symbols_Post_Type {
 		add_filter( 'tcb_custom_post_layouts', array( $this, 'symbol_layout' ), 10, 3 );
 
 		add_filter( 'tcb_post_types', array( $this, 'edit_symbol_post_type' ), 10, 3 );
+
+		add_filter( 'thrive_theme_allow_body_class', array( $this, 'theme_body_class' ), 99, 1 );
 	}
 
 	/**
@@ -139,6 +141,23 @@ class TCB_Symbols_Post_Type {
 		}
 
 		return $layouts;
+	}
+
+	/**
+	 * Prevent adding ttb classes while editing symbols
+	 *
+	 * @param $allow_theme_classes
+	 *
+	 * @return false
+	 */
+	public function theme_body_class( $allow_theme_classes ) {
+		$post_type = get_post_type();
+
+		if ( self::SYMBOL_POST_TYPE === $post_type ) {
+			$allow_theme_classes = false;
+		}
+
+		return $allow_theme_classes;
 	}
 }
 

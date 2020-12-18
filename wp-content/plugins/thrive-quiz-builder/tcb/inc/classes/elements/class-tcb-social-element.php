@@ -65,27 +65,59 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array(
+		$components = array(
 			'social'     => array(
 				'config' => array(
-					'style'          => array(
+					'CustomBranding'      => array(
+						'config'  => array(
+							'name'    => '',
+							'label'   => __( 'Custom branding', 'thrive-cb' ),
+							'default' => true,
+						),
+						'extends' => 'Switch',
+					),
+					'CssVarChanger'       => array(
+						'config'  => array(
+							'label' => __( 'Colors', 'thrive-cb' ),
+						),
+						'extends' => 'CssVariablesChanger',
+					),
+					'SocialSharePalettes' => array(
+						'config'    => array(),
+						'extends'   => 'Palettes',
+						'important' => true,
+					),
+					'style'               => array(
 						'config' => array(
 							'label' => __( 'Style', 'thrive-cb' ),
 						),
 					),
-					'stylePicker'    => array(
+					'stylePicker'         => array(
 						'config' => array(
 							'label' => __( 'Change style', 'thrive-cb' ),
 							'items' => array(
-								'tve_style_1' => 'Style 1',
-								'tve_style_2' => 'Style 2',
-								'tve_style_3' => 'Style 3',
-								'tve_style_4' => 'Style 4',
-								'tve_style_5' => 'Style 5',
+								'tve_style_6' => 'Style 1',
+								'tve_style_7' => 'Style 2',
+								'tve_style_8' => 'Style 3',
+								'tve_style_9' => 'Style 4',
+								'tve_style_10' => 'Style 5',
+								'tve_style_11' => 'Style 6',
+								'tve_style_12' => 'Style 7',
+								'tve_style_13' => 'Style 8',
+								'tve_style_14' => 'Style 9',
+								'tve_style_15' => 'Style 10',
+								'tve_style_16' => 'Style 11',
+								'tve_style_17' => 'Style 12',
+								'tve_style_18' => 'Style 13',
+								'tve_style_1' => 'Style 14',
+								'tve_style_2' => 'Style 15',
+								'tve_style_3' => 'Style 16',
+								'tve_style_4' => 'Style 17',
+								'tve_style_5' => 'Style 18',
 							),
 						),
 					),
-					'type'           => array(
+					'type'                => array(
 						'config' => array(
 							'full-width' => true,
 							'name'       => __( 'Type', 'thrive-cb' ),
@@ -96,7 +128,7 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 							),
 						),
 					),
-					'orientation'    => array(
+					'orientation'         => array(
 						'config' => array(
 							'name'    => __( 'Orientation', 'thrive-cb' ),
 							'buttons' => array(
@@ -105,38 +137,75 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 							),
 						),
 					),
-					'size'           => array(
+					'size'                => array(
 						'config' => array(
 							'default' => '25',
 							'min'     => '1',
 							'max'     => '60',
-							'label'   => __( 'Size', 'thrive-cb' ),
+							'label'   => __( 'Size and Align', 'thrive-cb' ),
 							'um'      => array( 'px' ),
 						),
 					),
-					'preview'        => array(
+					'Align'               => array(
 						'config' => array(
-							'sortable' => true,
+							'buttons' => array(
+								array(
+									'icon'    => 'a_left',
+									'value'   => 'left',
+									'tooltip' => __( 'Align Left', 'thrive-cb' ),
+								),
+								array(
+									'icon'    => 'a_center',
+									'value'   => 'center',
+									'default' => true,
+									'tooltip' => __( 'Align Center', 'thrive-cb' ),
+								),
+								array(
+									'icon'    => 'a_right',
+									'value'   => 'right',
+									'tooltip' => __( 'Align Right', 'thrive-cb' ),
+								),
+								array(
+									'text'    => 'FULL',
+									'value'   => 'full',
+									'tooltip' => __( 'Full Width', 'thrive-cb' ),
+								),
+							),
 						),
 					),
-					'has_custom_url' => array(
+					'CommonButtonWidth'   => array(
+						'config'  => array(
+							'name'    => '',
+							'label'   => __( 'Common Button Width', 'thrive-cb' ),
+							'default' => true,
+						),
+						'extends' => 'Switch',
+					),
+					'preview'             => array(
 						'config' => array(
-							'label' => __( 'Custom Share URL' ),
+							'sortable'      => true,
+							'settings_icon' => 'pen-regular',
+							'tpl'           => 'controls/preview-check-list-item',
 						),
 					),
-					'custom_url'     => array(
+					'has_custom_url'      => array(
+						'config' => array(
+							'label' => __( 'Custom share URL' ),
+						),
+					),
+					'custom_url'          => array(
 						'config' => array(
 							'placeholder' => __( 'http://', 'thrive-cb' ),
 						),
 					),
-					'counts'         => array(
+					'counts'              => array(
 						'config' => array(
 							'min'     => 0,
 							'max'     => 2000,
 							'default' => 0,
 						),
 					),
-					'total_share'    => array(
+					'total_share'         => array(
 						'config' => array(
 							'label' => __( 'Show share count', 'thrive-cb' ),
 						),
@@ -159,6 +228,8 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 				),
 			),
 		);
+
+		return array_merge( $components, $this->group_component() );
 	}
 
 	/**
@@ -168,5 +239,29 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 	 */
 	public function category() {
 		return $this->get_thrive_advanced_label();
+	}
+
+	/**
+	 * Group Edit Properties
+	 *
+	 * @return array|bool
+	 */
+	public function has_group_editing() {
+		return array(
+			'select_values' => array(
+				array(
+					'value'    => 'social_options',
+					'selector' => '.tve_s_item',
+					'name'     => __( 'Grouped Social Labels', 'thrive-cb' ),
+					'singular' => __( '-- Option Label %s', 'thrive-cb' ),
+				),
+				array(
+					'value'    => 'social_buttons',
+					'selector' => '.tve_share_item .tve_s_icon',
+					'name'     => __( 'Grouped Social Icons', 'thrive-cb' ),
+					'singular' => __( '-- Option Icon %s', 'thrive-cb' ),
+				),
+			),
+		);
 	}
 }

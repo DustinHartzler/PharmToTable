@@ -123,8 +123,8 @@ function tve_get_cloud_template_data( $tag, $args = array() ) {
 		 * template is downloaded but the version on the cloud has changed
 		 */
 		if ( $force_fetch || ! ( $data = $api->get_content_template( $id, $do_shortcode ) ) || ( $current_version !== false && $current_version > $data['v'] ) ) {
-			$api->download( $id, $args );
-			$data = $api->get_content_template( $id, $do_shortcode );
+			$template_id = $api->download( $id, $args, $do_shortcode );
+			$data        = $api->get_content_template( $template_id, $do_shortcode );
 		}
 	} catch ( Exception $e ) {
 		$data = new WP_Error( 'tcb_download_err', $e->getMessage() );
@@ -328,4 +328,25 @@ function tve_is_cloud_template( $lp_template ) {
 	 * @param bool $is_cloud_template whether or not the current page has a cloud template applied
 	 */
 	return apply_filters( 'tcb_is_cloud_template', array_key_exists( $lp_template, $templates ) );
+}
+
+/**
+ * Delete stored cloud templates & clear transients too
+ */
+function tve_delete_cloud_saved_data() {
+
+	tvd_reset_transient();
+
+	$query    = new WP_Query( array(
+			'post_type'      => array(
+				TCB_CT_POST_TYPE,
+			),
+			'posts_per_page' => '-1',
+			'fields'         => 'ids',
+		)
+	);
+	$post_ids = $query->posts;
+	foreach ( $post_ids as $id ) {
+		wp_delete_post( $id, true );
+	}
 }

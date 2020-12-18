@@ -82,7 +82,7 @@
 		jQuery( '#thrive-update-posts' ).click( function () {
 			var loading = jQuery( this ).find( 'i' );
 			loading.show();
-			jQuery.post( 'admin-ajax.php?action=tve_dash_font_manager_update_posts_fonts', function ( response ) {
+			jQuery.post( 'admin-ajax.php?action=tve_dash_font_manager_update_posts_fonts' + '&_wpnonce=' + TVE_Dash_Const.nonce, function ( response ) {
 				loading.hide();
 			} );
 		} );
@@ -95,7 +95,8 @@
 		jQuery( 'a.delete-font' ).click( function () {
 			var font_id = jQuery( this ).siblings( '.font-id' ).val();
 			var postData = {
-				font_id: font_id
+				font_id: font_id,
+				_wpnonce: TVE_Dash_Const.nonce,
 			};
 			jQuery.post( 'admin-ajax.php?action=tve_dash_font_manager_delete', postData, function ( response ) {
 				location.reload();
@@ -105,7 +106,8 @@
 			var font_id = jQuery( this ).siblings( '.font-id' ).val();
 			var postData = {
 				font_action: 'duplicate',
-				font_id: font_id
+				font_id: font_id,
+				_wpnonce: TVE_Dash_Const.nonce,
 			};
 			jQuery.post( 'admin-ajax.php?action=tve_dash_font_manager_duplicate', postData, function ( response ) {
 				location.reload();

@@ -56,7 +56,7 @@ class TCB_Social_Follow_Element extends TCB_Social_Element {
 
 		$components['social_follow'] = $components['social'];
 
-		$components['social_follow']['disabled_controls'] = array( 'type', 'has_custom_url', 'custom_url', 'counts', 'total_share' );
+		$components['social_follow']['disabled_controls'] = array( 'type', 'has_custom_url', 'custom_url', 'counts', 'total_share', 'CssVarChanger', 'CommonButtonWidth' );
 
 		$styles = array();
 

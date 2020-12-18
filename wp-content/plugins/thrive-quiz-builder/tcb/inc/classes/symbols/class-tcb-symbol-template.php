@@ -96,7 +96,7 @@ class TCB_Symbol_Template {
 	 * @return mixed|string
 	 */
 	public static function content( $symbol_id ) {
-		$content = get_post_meta( intval( $symbol_id ), 'tve_updated_post', true );
+		$content = get_post_meta( (int) $symbol_id, 'tve_updated_post', true );
 
 		return apply_filters( 'tcb_symbol_content', $content );
 	}
@@ -109,15 +109,25 @@ class TCB_Symbol_Template {
 	 * @return string
 	 */
 	public static function tcb_symbol_get_css( $config ) {
-		$symbol_id  = ( ! empty( $config ) && isset( $config['id'] ) ) ? $config['id'] : 0;
-		$symbol_css = trim( get_post_meta( $symbol_id, 'tve_custom_css', true ) );
+		$symbol_id = ( ! empty( $config ) && isset( $config['id'] ) ) ? $config['id'] : 0;
+
+		return "<style class='tve-symbol-custom-style'>" . static::css( $symbol_id ) . '</style>';
+	}
+
+	/**
+	 * Get the css for a symbol
+	 *
+	 * @param int $id
+	 *
+	 * @return mixed|string
+	 */
+	public static function css( $id ) {
+		$css = trim( get_post_meta( (int) $id, 'tve_custom_css', true ) );
 
 		/* If we want to change the symbol css just before is being inserted in the page */
-		$symbol_css = apply_filters( 'tcb_symbol_css_before', $symbol_css, $symbol_id );
+		$css = apply_filters( 'tcb_symbol_css_before', $css, $id );
 
-		$css = "<style class='tve-symbol-custom-style'>" . tve_prepare_global_variables_for_front( $symbol_css ) . '</style>';
-
-		return $css;
+		return tve_prepare_global_variables_for_front( $css );
 	}
 
 	/**
@@ -187,9 +197,15 @@ class TCB_Symbol_Template {
 
 		$type = TCB_Symbols_Taxonomy::get_symbol_type( get_the_ID() );
 
+		$is_hf = $type === 'headers' || $type === 'footers';
+
+		if ( $is_hf ) {
+			$type = substr( $type, 0, - 1 );
+		}
+
 		return array(
-			'css_class' => ( $type === 'headers' || $type === 'footers' ) ? 'thrv_' . substr( $type, 0, - 1 ) : '',
-			'type'      => substr( $type, 0, - 1 ),
+			'css_class' => $is_hf ? 'thrv_' . $type : '',
+			'type'      => $type,
 		);
 	}
 

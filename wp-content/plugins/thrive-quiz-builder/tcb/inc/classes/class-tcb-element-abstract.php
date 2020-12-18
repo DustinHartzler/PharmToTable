@@ -332,6 +332,7 @@ abstract class TCB_Element_Abstract {
 						'config' => array(
 							'icon'      => true,
 							'important' => true,
+							'options'   => array( 'noBeforeInit' => false ),
 						),
 					),
 					'PreviewFilterList' => array(

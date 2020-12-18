@@ -109,7 +109,7 @@ class TCB_Elements {
 			'tweet',
 			'reveal',
 			'countdown',
-			'countdownevergreen',
+			'countdownevergreen_template',
 			'credit',
 			'html',
 			'menu',
@@ -456,7 +456,14 @@ class TCB_Elements {
 			$elements[ $key ] = $element->config();
 		}
 
-		return $elements;
+		/**
+		 * Allows filtering configuration for all elements
+		 *
+		 * @param array $elements configuration data
+		 *
+		 * @return array
+		 */
+		return apply_filters( 'tcb_elements_localize', $elements );
 	}
 
 	/**

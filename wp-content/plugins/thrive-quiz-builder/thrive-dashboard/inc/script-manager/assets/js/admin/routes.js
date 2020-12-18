@@ -4,6 +4,11 @@
 		interpolate: /<#=([\s\S]+?)#>/g,
 		escape: /<#-([\s\S]+?)#>/g
 	};
+	/*
+	 * This is needed to emulate HTTP methods other than GET/POST
+	 * Not all hosts allow PUT/DELETE/PATCH etc.
+	 */
+	Backbone.emulateHTTP = true;
 
 	var ScriptManager = ScriptManager || {};
 

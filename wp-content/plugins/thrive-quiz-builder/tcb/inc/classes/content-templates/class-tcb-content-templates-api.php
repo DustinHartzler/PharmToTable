@@ -155,7 +155,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			'tve_globals' => isset( $meta['tve_globals'] ) ? $meta['tve_globals'] : array(),
 		);
 
-		return apply_filters( 'tcb_alter_cloud_template_meta', $data, $meta );
+		return apply_filters( 'tcb_alter_cloud_template_meta', $data, $meta, $do_shortcode );
 	}
 
 	/**
@@ -163,12 +163,13 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 	 *
 	 * @param string|int $id
 	 * @param array      $args
+	 * @param bool       $do_shortcode
 	 *
 	 * @return array|WP_Error|null
 	 * @throws Exception
 	 *
 	 */
-	public function download( $id, $args = array() ) {
+	public function download( $id, $args = array(), $do_shortcode = true ) {
 		/**
 		 * This needs to always be a string
 		 */
@@ -215,6 +216,10 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 
 		$this->_validateReceivedHeader( $control );
 
+		if ( $id === 'default' && ! empty( $this->response['headers']['X-Thrive-Template-Id'] ) ) {
+			$id = $this->response['headers']['X-Thrive-Template-Id'];
+		}
+
 		/**
 		 * at this point, $body holds the contents of the zip file
 		 */
@@ -252,7 +257,9 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			'custom_css'  => $template_data['custom_css'],
 			'config'      => isset( $template_data['config'] ) ? $template_data['config'] : array(),
 			'tve_globals' => isset( $template_data['tve_globals'] ) ? $template_data['tve_globals'] : array(),
-		), $template_data ) );
+		), $template_data, $do_shortcode ) );
+
+		return $id;
 	}
 
 	/**

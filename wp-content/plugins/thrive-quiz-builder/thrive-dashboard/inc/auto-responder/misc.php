@@ -229,8 +229,10 @@ spl_autoload_register( 'tve_dash_api_classes_loader' );
  * If the subscription is made with success the log is deleted from db
  */
 function tve_dash_api_form_retry() {
+	check_ajax_referer( 'tve-dash' );
+
 	if ( ! current_user_can( TVE_DASH_CAPABILITY ) ) {
-		wp_die('');
+		wp_die( '' );
 	}
 	$connection_name = ! empty( $_POST['connection_name'] ) ? $_POST['connection_name'] : null;
 	$list_id         = ! empty( $_POST['list_id'] ) ? $_POST['list_id'] : null;
@@ -326,8 +328,11 @@ function tve_dash_api_form_retry() {
  * AJAX call handler to delete API's logs
  */
 function tve_dash_api_delete_log() {
+
+	check_ajax_referer( 'tve-dash' );
+
 	if ( ! current_user_can( TVE_DASH_CAPABILITY ) ) {
-		wp_die('');
+		wp_die( '' );
 	}
 	$log_id = ! empty( $_POST['log_id'] ) ? intval( $_POST['log_id'] ) : null;
 

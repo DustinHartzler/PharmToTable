@@ -19,7 +19,7 @@ class Thrive_Dash_Api_Mailgun_RestClient {
 	 *
 	 * @var string
 	 */
-	public $prefix = 'https://api.mailgun.net/v3';
+	public $prefix = 'https://api.mailgun.net/v3/';
 
 	/**
 	 * @param string $apiKey

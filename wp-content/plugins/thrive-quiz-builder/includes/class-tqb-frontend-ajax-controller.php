@@ -235,8 +235,10 @@ class TQB_Frontend_Ajax_Controller {
 				foreach ( $data['page']['css'] as $css ) {
 					$part .= '<link rel="stylesheet" type="text/css" href="' . $css . '">';
 				}
-				foreach ( $data['page']['fonts'] as $font ) {
-					$part .= '<link rel="stylesheet" type="text/css" media="all" href="' . $font . '">';
+				if ( ! tve_dash_is_google_fonts_blocked() ) {
+					foreach ( $data['page']['fonts'] as $font ) {
+						$part .= '<link rel="stylesheet" type="text/css" media="all" href="' . $font . '">';
+					}
 				}
 
 				$data['html'] = $part;

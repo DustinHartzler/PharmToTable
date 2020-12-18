@@ -268,7 +268,32 @@ class TCB_Hooks {
 		 * Modify the main localization parameters from TAr
 		 */
 		add_filter( 'tcb_main_frame_localize', array( __CLASS__, 'tcb_localize' ) );
+
+		/**
+		 * Add custom post types to post visibility options blacklist
+		 */
+		add_filter( 'tcb_post_visibility_options_availability', array( __CLASS__, 'tve_tqb_post_visibility_options' ) );
 	}
+
+	/**
+	 * Post visibility options blacklist
+	 *
+	 * @param $post_types
+	 *
+	 * @return array
+	 */
+	public static function tve_tqb_post_visibility_options( $post_types ) {
+		$post_types = array_merge( $post_types, array(
+			Thrive_Quiz_Builder::SHORTCODE_NAME,
+			Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE,
+			Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_QNA,
+			Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_OPTIN,
+			Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_RESULTS,
+		) );
+
+		return $post_types;
+	}
+
 
 	public static function dequeue_mm() {
 		wp_dequeue_script( 'mm-common-core.js' );

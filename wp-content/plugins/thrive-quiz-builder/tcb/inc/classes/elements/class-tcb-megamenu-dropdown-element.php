@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-require_once plugin_dir_path( __FILE__ ) . '/class-tcb-menu-dropdown-element.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-tcb-menu-dropdown-element.php';
 
 /**
  * Class TCB_Menu_Child_Element

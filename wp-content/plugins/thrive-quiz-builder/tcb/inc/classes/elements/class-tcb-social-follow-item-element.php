@@ -23,7 +23,7 @@ class TCB_Social_Follow_Item_Element extends TCB_Icon_Element {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.tve_s_item';
+		return '.tcb-social-follow .tve_s_item:not(.tve_share_item)';
 	}
 
 	/**
@@ -69,7 +69,8 @@ class TCB_Social_Follow_Item_Element extends TCB_Icon_Element {
 					'css_prefix' => tcb_selection_root() . ' ',
 					'css_suffix' => array( ' svg.tcb-icon', ' .tve_s_icon .tve_sc_icon' ),
 					'config'     => array(
-						'label' => __( 'Color', 'thrive-cb' ),
+						'label'   => __( 'Color', 'thrive-cb' ),
+						'options' => array( 'noBeforeInit' => false ),
 					),
 				),
 				'Slider'       => array(

@@ -190,7 +190,8 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 			'NAME'      => $first_name,
 			'FIRSTNAME' => $first_name,
 			'SURNAME'   => $last_name,
-			'VORNAME'   => $last_name,
+			'VORNAME'   => $first_name,
+			'NACHNAME'  => $last_name,
 			'LASTNAME'  => $last_name,
 		);
 
@@ -248,9 +249,9 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	}
 
 	/**
-	 * @param array $params which may contain `list_id`
-	 * @param bool $force make a call to API and invalidate cache
-	 * @param bool $get_all where to get lists with their custom fields
+	 * @param array $params  which may contain `list_id`
+	 * @param bool  $force   make a call to API and invalidate cache
+	 * @param bool  $get_all where to get lists with their custom fields
 	 *
 	 * @return array
 	 */
@@ -387,5 +388,36 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 		}
 
 		return $mapped_data;
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return int
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_Sendinblue $api */
+			$api     = $this->getApi();
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+			$args    = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+			$args['attributes'] = $custom_fields;
+
+			$subscriber = $api->create_update_user( $args );
+
+			return $subscriber['data']['id'];
+
+		} catch ( Exception $e ) {
+			return false;
+		}
 	}
 }

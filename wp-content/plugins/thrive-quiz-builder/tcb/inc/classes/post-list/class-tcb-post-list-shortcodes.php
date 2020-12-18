@@ -585,17 +585,27 @@ class TCB_Post_List_Shortcodes {
 		/* add the post url only when the post url option is selected */
 		$url_attr = $attr['type-url'] === 'post_url' ?
 			array(
-				'href'  => get_permalink(),
-				'title' => get_the_title(),
+				'href' => get_permalink(),
 			) : array();
 
 		$attr['post_id'] = get_the_ID();
+		$image_id        = get_post_thumbnail_id( $attr['post_id'] );
+
+		if ( ! empty( $attr['title'] ) && $attr['title'] === 'gallery_title' ) {
+			$title_attr = array(
+				'title' => get_the_title( $image_id ),
+			);
+		} else {
+			$title_attr = array(
+				'title' => get_the_title(),
+			);
+		}
 
 		return static::before_wrap( array(
 			'content' => $image,
 			'tag'     => 'a',
 			'class'   => TCB_POST_THUMBNAIL_IDENTIFIER . ' ' . TCB_SHORTCODE_CLASS,
-			'attr'    => $url_attr,
+			'attr'    => array_merge( $url_attr, $title_attr ),
 		), $attr );
 	}
 
@@ -756,7 +766,7 @@ class TCB_Post_List_Shortcodes {
 	 *
 	 * @return string
 	 */
-	public static function the_post_thumbnail_url( $data = array(), $content, $tag ) {
+	public static function the_post_thumbnail_url( $data, $content, $tag ) {
 		/*
 		 * We only want to render this shortcode when we're rendering the post list
 		 * reason: this can be a shortcode inside a HTML tag ( in an img src ), and it renders in do_shortcodes_in_html_tags which is called before the actual shortcode thing

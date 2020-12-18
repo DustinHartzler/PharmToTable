@@ -1,43 +1,55 @@
 <?php /* small 32px sidebar */ ?>
 <div id="sidebar-right">
 	<div class="links">
-		<a class="sidebar-item click" data-fn="blur" href="javascript:void(0)">
-			<img alt="Thrive Architect" width="18" src="<?php echo apply_filters( 'architect.branding', tve_editor_css( 'images/admin-bar-logo.png' ), 'logo_src' ); ?>"/>
-		</a>
-		<?php if ( tcb_editor()->can_add_elements() ) : ?>
-			<a href="javascript:void(0)" class="sidebar-item green add-element" data-position="left" data-tooltip="<?php echo __( 'Add Element', 'thrive-cb' ); ?>"
-			   data-toggle="elements">
-				<?php tcb_icon( 'plus-square-light' ); ?>
-				<?php tcb_icon( 'plus-square-regular', false, 'sidebar', 'active' ); ?>
+		<div class="upper">
+			<a class="sidebar-item click" data-fn="blur" href="javascript:void(0)">
+				<img alt="Thrive Architect" width="18" src="<?php echo apply_filters( 'architect.branding', tve_editor_css( 'images/admin-bar-logo.png' ), 'logo_src' ); ?>"/>
 			</a>
-		<?php endif; ?>
-		<?php
-		/* this is not connected yet
-		<a href="javascript:void(0)" class="sidebar-item">
-			<?php tcb_icon( 'book-heart-light' ); ?>
-			<?php tcb_icon( 'book-heart-regular', false, 'sidebar', 'active' ); ?>
-		</a> */
-		?>
-		<?php if ( tcb_editor()->has_central_style_panel() ) : ?>
-			<a href="javascript:void(0)" data-position="left" class="sidebar-item" data-toggle="central_style_panel"
-			   data-tooltip="<?php echo __( 'Central Style Panel', 'thrive-cb' ); ?>">
+			<?php if ( tcb_editor()->can_add_elements() ) : ?>
+				<a href="javascript:void(0)" class="sidebar-item green add-element" data-position="left" data-tooltip="<?php echo __( 'Add Element', 'thrive-cb' ); ?>"
+				   data-toggle="elements">
+					<?php tcb_icon( 'plus-square-light' ); ?>
+					<?php tcb_icon( 'plus-square-regular', false, 'sidebar', 'active' ); ?>
+				</a>
+			<?php endif; ?>
+			<?php
+			/* this is not connected yet
+			<a href="javascript:void(0)" class="sidebar-item">
+				<?php tcb_icon( 'book-heart-light' ); ?>
+				<?php tcb_icon( 'book-heart-regular', false, 'sidebar', 'active' ); ?>
+			</a> */
+			?>
+			<a href="javascript:void(0)" class="mouseenter mouseleave sidebar-item tcb-sidebar-icon-<?php echo tcb_editor()->get_sidebar_icon_availability( 'central-style' ) ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-toggle="central_style_panel" data-tooltip="<?php echo __( 'Central Style Panel', 'thrive-cb' ); ?>" data-position="left" data-tooltip-type="central-style-panel">
 				<?php tcb_icon( 'central-style-panel' ); ?>
 				<?php tcb_icon( 'central-style-panel', false, 'sidebar', 'active' ); ?>
 			</a>
-		<?php endif; ?>
-		<?php if ( tcb_editor()->has_templates_tab() ) : ?>
-			<a href="javascript:void(0)" data-position="left" class="sidebar-item click"
+			<a href="javascript:void(0)" data-position="left" class="mouseenter mouseleave sidebar-item click tcb-sidebar-icon-<?php echo tcb_editor()->get_sidebar_icon_availability( 'cloud-templates' ) ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-tooltip-type="cloud-templates"
 			   data-fn="open_templates_picker" data-tooltip="<?php echo tcb_editor()->get_templates_tab_title(); ?>">
 				<?php tcb_icon( 'cloud-download-light' ); ?>
 			</a>
-		<?php endif; ?>
-		<?php if ( tcb_editor()->has_settings_tab() ) : ?>
-			<a href="javascript:void(0)" class="sidebar-item" data-toggle="settings" data-position="left" data-tooltip="<?php echo __( 'Settings', 'thrive-cb' ); ?>">
-				<?php tcb_icon( 'cog-light' ); ?>
-				<?php tcb_icon( 'cog-regular', false, 'sidebar', 'active' ); ?>
+
+			<?php if ( tcb_editor()->has_settings_tab() ) : ?>
+				<a href="javascript:void(0)" class="sidebar-item" data-toggle="settings" data-position="left" data-tooltip="<?php echo __( 'Settings', 'thrive-cb' ); ?>">
+					<?php tcb_icon( 'cog-light' ); ?>
+					<?php tcb_icon( 'cog-regular', false, 'sidebar', 'active' ); ?>
+				</a>
+			<?php endif; ?>
+			<?php if ( ! function_exists( 'thrive_ab' ) ) : ?>
+				<a id="thrive-ab-create-test" data-position="left"
+				   class="mouseenter mouseleave sidebar-item tcb-sidebar-icon-<?php echo tcb_editor()->get_sidebar_icon_availability( 'ab-test' ) ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-tooltip-type="ab-test">
+					<?php tcb_icon( 'test' ); ?>
+				</a>
+			<?php endif ?>
+			<?php do_action( 'tcb_sidebar_extra_links' ); ?>
+		</div>
+
+		<!--	Help Corner	-->
+		<div class="bottom">
+			<a href="javascript:void(0)" data-position="left" class="sidebar-item click"
+			   data-fn="openHelpCorner" data-tooltip="Help Corner">
+				<?php tcb_icon( 'question-light' ) ?>
 			</a>
-		<?php endif; ?>
-		<?php do_action( 'tcb_sidebar_extra_links' ); ?>
+		</div>
 	</div>
 
 	<div class="drawer" data-drawer="elements">

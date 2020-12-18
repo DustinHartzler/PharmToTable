@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control hide-states" data-view="FormPalettes"></div>
 		<div class="tve-control pt-5" data-key="connectionType" data-view="ButtonGroup"></div>
 		<div class="connection-controls" data-connection="api">
-			<div class="tve-lg-connection">
+			<div class="tve-lg-connection mt-10">
 				<span><?php echo __( 'Send leads to', 'thrive-cb' ); ?></span>
 				<button class="tcb-right tve-button blue click tve-add-lg-connection" data-fn="addConnection">
 					<?php echo __( 'Add Connection', 'thrive-cb' ); ?>
@@ -119,11 +119,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<a class="tcb-hidden info-link toggle-control mb-5" target="_blank" href="<?php echo admin_url( 'admin.php?page=tve_dash_api_connect' ); ?>">
 							<span class="info-text"><?php echo __( 'Requires integration with Google ReCaptcha', 'thrive-cb' ); ?></span>
 						</a>
-						<div id="tcb-lg-captcha-controls" class="tcb-hidden">
-							<div class="tve-control" data-view="CaptchaTheme"></div>
-							<div class="tve-control" data-view="CaptchaType"></div>
-							<div class="tve-control" data-view="CaptchaSize"></div>
-						</div>
 					</div>
 					<div class="no-api tcb-text-center mt-5">
 						<button class="tve-button blue long click" data-fn="manage_error_messages">

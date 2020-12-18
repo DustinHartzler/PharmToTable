@@ -111,11 +111,15 @@ require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbols-post-typ
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbol-template.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbols-dashboard.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbols-taxonomy.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbols-block.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-menu-walker.php';
 require_once TVE_TCB_ROOT_PATH . 'landing-page/inc/class-tcb-landing-page.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-lightbox.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-login-element-handler.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/helpers/form.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/file-upload.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-show-when.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-scripts.php';
 
 /* init the Event Manager */
 require_once TVE_TCB_ROOT_PATH . 'event-manager/init.php';
@@ -133,6 +137,13 @@ add_action( 'wp_ajax_tve_social_count', 'tve_social_ajax_count' );
 add_action( 'wp_ajax_nopriv_tve_social_count', 'tve_social_ajax_count' );
 add_action( 'wp_ajax_tve_cf_submit', 'tve_submit_contact_form' );
 add_action( 'wp_ajax_nopriv_tve_cf_submit', 'tve_submit_contact_form' );
+add_action( 'admin_action_tve_new_post', 'tve_new_post' );
+
+/**
+ * Landing page import/export
+ */
+add_action( 'wp_ajax_tve_lp_export', 'tve_ajax_landing_page_export' );
+add_action( 'wp_ajax_tve_lp_import', 'tve_ajax_landing_page_import' );
 
 add_action( 'wp_ajax_tve_cloud_templates', 'tve_ajax_landing_page_cloud' );
 
@@ -152,8 +163,6 @@ add_filter( 'tve_dash_main_ajax_tcb_social', 'tve_social_dash_ajax_share_counts'
  * Autoresponder APIs AJAX calls
  */
 if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || apply_filters( 'tve_leads_include_auto_responder', false ) ) {
-	add_action( 'wp_ajax_tve_api_editor_actions', 'tve_api_editor_actions' );
-
 	/**
 	 * submit Lead Generation form element via AJAX
 	 */
@@ -384,7 +393,7 @@ add_action( 'wp_head', function () {
 function tcb_custom_css( $css ) {
 
 	if ( tve_dash_is_google_fonts_blocked() ) {
-		$css = preg_replace( '/@import url\(\"(http:|https:)?\/\/fonts\.(googleapis|gstatic)\.com([^)]*)\);/', '', $css );
+		$css = preg_replace( '/@import url\((\\\)?\"(http:|https:)?\/\/fonts\.(googleapis|gstatic)\.com([^)]*)\);/', '', $css );
 	}
 
 	return str_replace( '#tve_editor', tcb_selection_root(), $css );
@@ -513,3 +522,4 @@ add_action( 'after_switch_theme', 'tve_reset_cloud_templates' );
 function tve_reset_cloud_templates() {
 	delete_transient( tve_get_cloud_templates_transient_name() );
 }
+

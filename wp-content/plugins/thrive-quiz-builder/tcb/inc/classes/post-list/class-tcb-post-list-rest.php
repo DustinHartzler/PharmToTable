@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Post_List_REST {
 
 	public static $namespace = 'tcb/v1';
-	public static $route = '/posts';
+	public static $route     = '/posts';
 
 	public function __construct() {
 		$this->register_routes();
@@ -35,8 +35,8 @@ class TCB_Post_List_REST {
 				/* This should be READABLE, but a lot of data is sent through this request, and it is appended in the request URL string.
 				 * Because of the really long URL string, there were 414 errors for some users because the server can block requests like these.
 				 * As a solution, we changed this to CREATABLE ( POST ) so the data is added inside the request */
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => array( $this, 'get_html' ),
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'get_html' ),
 				'permission_callback' => '__return_true',
 			),
 		) );
@@ -281,6 +281,7 @@ class TCB_Post_List_REST {
 	public function get_html( $request ) {
 		/* if we send a template parameter, we're going to print the post list after that one */
 		$content = $request->get_param( 'content' );
+		$content = str_replace( array( '{({', '})}' ), array( '[', ']' ), $content );
 		$args    = $request->get_param( 'args' );
 
 		$args = array_merge(

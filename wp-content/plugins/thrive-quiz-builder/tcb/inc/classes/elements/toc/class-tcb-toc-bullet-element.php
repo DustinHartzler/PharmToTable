@@ -25,7 +25,7 @@ class TCB_Toc_Bullet_Element extends TCB_Icon_Element {
 	}
 
 	public function own_components() {
-		$components     = parent::own_components();
+		$components = parent::own_components();
 
 		unset( $components['icon'] );
 
@@ -35,7 +35,8 @@ class TCB_Toc_Bullet_Element extends TCB_Icon_Element {
 					'css_prefix' => tcb_selection_root() . ' ',
 					'css_suffix' => ' > :first-child',
 					'config'     => array(
-						'label' => __( 'Color', 'thrive-cb' ),
+						'label'   => __( 'Color', 'thrive-cb' ),
+						'options' => array( 'noBeforeInit' => false ),
 					),
 				),
 				'Slider'      => array(
@@ -53,6 +54,7 @@ class TCB_Toc_Bullet_Element extends TCB_Icon_Element {
 		$components['scroll']     = array( 'hidden' => true );
 		$components['responsive'] = array( 'hidden' => true );
 		$components['animation']  = array( 'hidden' => true );
+
 		return $components;
 	}
 }

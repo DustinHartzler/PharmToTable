@@ -261,7 +261,11 @@ class TD_DB_Manager {
 		 *
 		 * @since 2.0.49
 		 */
-		do_action( 'thrive_prepare_migrations' );
+		try {
+			do_action( 'thrive_prepare_migrations' );
+		} catch ( Exception $exception ) {
+			/* do nothing for now. better safe than sorry. each plugin should catch errors */
+		}
 
 		foreach ( self::$_instances as $instance ) {
 			$instance->check();

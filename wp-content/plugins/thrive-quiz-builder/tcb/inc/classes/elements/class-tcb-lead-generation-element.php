@@ -39,7 +39,7 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 			'icon'       => $this->icon(),
 			'class'      => 'tcb-ct-placeholder',
 			'title'      => $title,
-			'extra_attr' => 'data-ct="' . $this->tag() . '-0" data-tcb-elem-type="'.$this->tag().'" data-tcb-lg-type="' . $this->tag() . '" data-specific-modal="lead-generation"',
+			'extra_attr' => 'data-ct="' . $this->tag() . '-0" data-tcb-elem-type="' . $this->tag() . '" data-tcb-lg-type="' . $this->tag() . '" data-specific-modal="lead-generation"',
 		), true );
 	}
 
@@ -67,28 +67,29 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
-	public function get_captcha_site_key() {
+	public function get_captcha_credentials() {
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'recaptcha' );
 
-		return ! empty( $credentials['site_key'] ) ? $credentials['site_key'] : '';
+		return ! empty( $credentials['site_key'] ) ? $credentials : array();
 	}
 
 	/**
 	 * @return array
 	 */
 	public function own_components() {
+		$credentials     = $this->get_captcha_credentials();
 		$lead_generation = array(
-			'lead_generation' => array(
+			'lead_generation'  => array(
 				'config' => array(
-					'ModalPicker'        => array(
+					'ModalPicker'         => array(
 						'config' => array(
 							'label' => __( 'Template', 'thrive-cb' ),
 						),
 					),
-					'FormPalettes'       => array(
+					'FormPalettes'        => array(
 						'config'  => array(),
 						'extends' => 'Palettes',
 					),
@@ -126,61 +127,16 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 					'Captcha'             => array(
 						'config'  => array(
-							'name'     => '',
-							'label'    => __( 'Captcha spam prevention', 'thrive-cb' ),
-							'default'  => false,
-							'site_key' => $this->get_captcha_site_key(),
+							'name'                 => '',
+							'label'                => __( 'Captcha spam prevention', 'thrive-cb' ),
+							'default'              => false,
+							'site_key'             => ! empty( $credentials ) ? $credentials['site_key'] : '',
+							'version'              => ! empty( $credentials ) && ! empty( $credentials['connection'] ) ? $credentials['connection']['version'] : '',
+							'use_browsing_history' => ! empty( $credentials ) && ! empty( $credentials['connection'] ) && ! empty( $credentials['connection']['browsing_history'] ) ? 1 : '',
 						),
 						'extends' => 'Switch',
 					),
-					'CaptchaTheme'        => array(
-						'config'  => array(
-							'name'    => __( 'Theme', 'thrive-cb' ),
-							'options' => array(
-								array(
-									'value' => 'light',
-									'name'  => __( 'Light', 'thrive-cb' ),
-								),
-								array(
-									'value' => 'dark',
-									'name'  => __( 'Dark', 'thrive-cb' ),
-								),
-							),
-						),
-						'extends' => 'Select',
-					),
-					'CaptchaType'         => array(
-						'config'  => array(
-							'name'    => __( 'Type', 'thrive-cb' ),
-							'options' => array(
-								array(
-									'value' => 'image',
-									'name'  => __( 'Image', 'thrive-cb' ),
-								),
-								array(
-									'value' => 'audio',
-									'name'  => __( 'Audio', 'thrive-cb' ),
-								),
-							),
-						),
-						'extends' => 'Select',
-					),
-					'CaptchaSize'         => array(
-						'config'  => array(
-							'name'    => __( 'Size', 'thrive-cb' ),
-							'options' => array(
-								array(
-									'value' => 'normal',
-									'name'  => __( 'Normal', 'thrive-cb' ),
-								),
-								array(
-									'value' => 'compact',
-									'name'  => __( 'Compact', 'thrive-cb' ),
-								),
-							),
-						),
-						'extends' => 'Select',
-					),
+
 					'consent'             => array(
 						'config' => array(
 							'labels' => array(
@@ -191,10 +147,10 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 				),
 			),
-			'typography'      => array(
+			'typography'       => array(
 				'hidden' => true,
 			),
-			'layout'          => array(
+			'layout'           => array(
 				'disabled_controls' => array(
 					'.tve-advanced-controls',
 				),
@@ -204,15 +160,27 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 				),
 			),
-			'borders'         => array(
+			'borders'          => array(
 				'disabled_controls' => array(),
+				'config' => array(
+					'Corners'    => array(
+						'overflow' => false,
+					),
+				),
 			),
-			'animation'       => array(
+			'animation'        => array(
 				'hidden' => true,
 			),
-			'shadow'          => array(
+			'shadow'           => array(
 				'config' => array(
 					'disabled_controls' => array( 'text' ),
+				),
+			),
+			'styles-templates' => array(
+				'config' => array(
+					'ID' => array(
+						'hidden' => true,
+					),
 				),
 			),
 		);
@@ -258,13 +226,13 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 				array(
 					'value'    => 'all_checkbox_elements',
 					'selector' => '.tve_lg_checkbox:not(.tcb-lg-consent)',
-					'name'     => __( 'Grouped Lead Generation Checkbox', 'thrive-cb' ),
+					'name'     => __( 'Grouped Form Checkbox', 'thrive-cb' ),
 					'singular' => __( '-- Checkbox %s', 'thrive-cb' ),
 				),
 				array(
 					'value'    => 'all_dropdown_elements',
 					'selector' => '.tve_lg_dropdown',
-					'name'     => __( 'Grouped Lead Generation Dropdown', 'thrive-cb' ),
+					'name'     => __( 'Grouped Dropdown', 'thrive-cb' ),
 					'singular' => __( '-- Dropdown %s', 'thrive-cb' ),
 				),
 				array(

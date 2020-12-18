@@ -45,14 +45,14 @@ class Element extends \TCB_Element_Abstract {
 		$components = array(
 			'mini-cart'        => array(
 				'config' => array(
-					'color'     => array(
+					'color'         => array(
 						'config'  => array(
 							'default' => '000',
 							'label'   => __( 'Color', 'thrive-cb' ),
 						),
 						'extends' => 'ColorPicker',
 					),
-					'align'     => array(
+					'align'         => array(
 						'config'  => array(
 							'name'    => __( 'Alignment', 'thrive-cb' ),
 							'buttons' => array(
@@ -76,7 +76,7 @@ class Element extends \TCB_Element_Abstract {
 						),
 						'extends' => 'ButtonGroup',
 					),
-					'size'      => array(
+					'size'          => array(
 						'config'  => array(
 							'min'   => '10',
 							'max'   => '100',
@@ -85,7 +85,7 @@ class Element extends \TCB_Element_Abstract {
 						),
 						'extends' => 'Slider',
 					),
-					'cart-type' => array(
+					'cart-type'     => array(
 						'config'  => array(
 							'buttons' => array(
 								array(
@@ -105,7 +105,7 @@ class Element extends \TCB_Element_Abstract {
 						),
 						'extends' => 'ButtonGroup',
 					),
-					'cart-text' => array(
+					'cart-text'     => array(
 						'config'  => array(
 							'label'       => __( 'Text', 'thrive-cb' ),
 							'extra_attrs' => '',
@@ -114,7 +114,27 @@ class Element extends \TCB_Element_Abstract {
 						),
 						'extends' => 'LabelInput',
 					),
-					'trigger'   => array(
+					'icon-position' => array(
+						'config'  => array(
+							'name'   => __( 'Icon Position', 'thrive-cb' ),
+							'buttons' => array(
+								array(
+									'icon'    => '',
+									'text'    => 'Left',
+									'value'   => 'left',
+									'default' => true,
+								),
+								array(
+									'icon'  => '',
+									'text'  => 'Right',
+									'value' => 'right',
+								),
+							),
+							'default' => 'left',
+						),
+						'extends' => 'ButtonGroup',
+					),
+					'trigger'       => array(
 						'config'  => array(
 							'name'    => __( 'Show items on', 'thrive-cb' ),
 							'options' => array(
@@ -131,7 +151,7 @@ class Element extends \TCB_Element_Abstract {
 						),
 						'extends' => 'Select',
 					),
-					'direction' => array(
+					'direction'     => array(
 						'config'  => array(
 							'name'    => __( 'Position', 'thrive-cb' ),
 							'options' => array(

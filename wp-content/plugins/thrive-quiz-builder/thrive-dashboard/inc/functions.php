@@ -27,7 +27,7 @@ function tve_dash_section() {
 function tve_dash_license_manager_section() {
 	$products = tve_dash_get_products( false );
 
-	$returnUrl = ! empty( $_REQUEST['return'] ) ? $_REQUEST['return'] : '';
+	$returnUrl = esc_url( empty( $_REQUEST['return'] ) ? '' : $_REQUEST['return'] );
 
 	/**
 	 * Filter products to only active once
@@ -59,7 +59,7 @@ function tve_dash_get_general_settings() {
 			'data-error'   => 'The App ID provided is invalid',
 			'label'        => 'Facebook App ID',
 			'description'  => __( 'Facebook ID that will be used in our apps.', TVE_DASH_TRANSLATE_DOMAIN ),
-			'value'        => tve_dash_get_option( 'tve_social_fb_app_id', '' ),
+			'value'        => get_option( 'tve_social_fb_app_id', '' ),
 			'type'         => 'text',
 			'multiple'     => false,
 		),
@@ -71,7 +71,7 @@ function tve_dash_get_general_settings() {
 			'data-error'   => 'This field can not be empty',
 			'label'        => 'Facebook Admins',
 			'description'  => __( 'Admins that will moderate the comments', TVE_DASH_TRANSLATE_DOMAIN ),
-			'value'        => tve_dash_get_option( 'tve_comments_facebook_admins', '' ),
+			'value'        => get_option( 'tve_comments_facebook_admins', '' ),
 			'type'         => 'text',
 			'multiple'     => true,
 		),
@@ -83,14 +83,14 @@ function tve_dash_get_general_settings() {
 			'data-error'   => 'This field can not be empty',
 			'label'        => 'Disqus forum name',
 			'description'  => __( 'Your forum name is part of the address that you login to "http://xxxxxxxx.disqus.com" - the xxxxxxx is your shortname.  For example, with this URL: https://hairfreelife.disqus.com/ the shortname is "hairfreelife', TVE_DASH_TRANSLATE_DOMAIN ),
-			'value'        => tve_dash_get_option( 'tve_comments_disqus_shortname', '' ),
+			'value'        => get_option( 'tve_comments_disqus_shortname', '' ),
 			'type'         => 'text',
 			'multiple'     => false,
 		),
 		array(
 			'name'     => 'tve_google_fonts_disable_api_call',
 			'id'       => 'tve_google_fonts_disable_api_call',
-			'value'    => tve_dash_get_option( 'tve_google_fonts_disable_api_call', '' ),
+			'value'    => get_option( 'tve_google_fonts_disable_api_call', '' ),
 			'type'     => 'checkbox',
 			'multiple' => false,
 		),
@@ -98,32 +98,6 @@ function tve_dash_get_general_settings() {
 	$settings = apply_filters( 'tve_dash_general_settings_filter', $settings );
 
 	return $settings;
-}
-
-/**
- * wrapper over the wp get_option function
- *
- * @param      $name
- * @param bool $default
- *
- * @return mixed|void
- */
-function tve_dash_get_option( $name, $default = false ) {
-	$value = get_option( $name, $default );
-
-	return $value;
-}
-
-/**
- * wrapper over the wp update_option() function
- *
- * @param string $name
- * @param mixed  $value
- *
- * @return bool
- */
-function tve_dash_update_option( $name, $value ) {
-	return update_option( $name, $value );
 }
 
 /**
@@ -154,9 +128,9 @@ function tve_dash_ui_toolkit() {
  *
  * @param        $handle
  * @param string $src
- * @param array  $deps
- * @param bool   $ver
- * @param bool   $in_footer
+ * @param array $deps
+ * @param bool $ver
+ * @param bool $in_footer
  */
 function tve_dash_enqueue_script( $handle, $src = '', $deps = array(), $ver = false, $in_footer = false ) {
 	if ( $ver === false ) {
@@ -182,7 +156,7 @@ function tve_dash_access_manager_main_page() {
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool  $ver
+ * @param bool $ver
  * @param       $media
  */
 function tve_dash_enqueue_style( $handle, $src, $deps = array(), $ver = false, $media = 'all' ) {
@@ -623,28 +597,30 @@ function tve_dash_get_affiliate_links() {
 	$menus = apply_filters( 'tve_dash_admin_product_menu', array() );
 
 	$available_products = array(
-		'tva'                        => array(
+		'tva' => array(
 			'label'   => __( 'Display "Powered by Thrive Apprentice"' ),
 			'checked' => false,
 			'tag'     => 'tva',
 		),
-		'tcm'                        => array(
+		'tcm' => array(
 			'label'   => __( 'Display "Powered by Thrive Comments"' ),
 			'checked' => false,
 			'tag'     => 'tcm',
 		),
-		'thrive_theme_admin_options' => array(
-			'label'   => __( 'Display "Powered by Thrive Themes"' ),
-			'checked' => false,
-			'tag'     => 'thrive_theme_admin_options',
-		),
-		'tqb'                        => array(
+		'tqb' => array(
 			'label'   => __( 'Display "Powered by Thrive Quiz Builder"' ),
 			'checked' => false,
 			'tag'     => 'tqb',
 		),
 	);
-	$allowed_products   = array();
+	if ( function_exists( 'thrive_get_theme_options' ) ) {
+		$available_products['thrive_theme_admin_options'] = array(
+			'label'   => __( 'Display "Powered by Thrive Themes"' ),
+			'checked' => false,
+			'tag'     => 'thrive_theme_admin_options',
+		);
+	}
+	$allowed_products = array();
 
 	foreach ( $available_products as $key => $product ) {
 		if ( array_key_exists( $key, $menus ) ) {
@@ -709,7 +685,7 @@ function tve_dash_get_product_option( $product_tag ) {
  * @return mixed
  */
 function tve_dash_update_product_option( $product_tag, $option ) {
-	$option = (int) $option === 1 ? true : false;
+	$option = (int) $option === 1;
 
 	switch ( $product_tag ) {
 		case 'tqb':
@@ -724,7 +700,7 @@ function tve_dash_update_product_option( $product_tag, $option ) {
 			break;
 
 		case 'tva':
-			$tva_settings = tve_dash_get_option( 'tva_template_general_settings', '' );
+			$tva_settings = get_option( 'tva_template_general_settings', '' );
 
 			$tva_settings['apprentice_label'] = $option;
 			update_option( 'tva_template_general_settings', $tva_settings );
@@ -732,10 +708,11 @@ function tve_dash_update_product_option( $product_tag, $option ) {
 			break;
 
 		case 'thrive_theme_admin_options':
-			$theme_options = thrive_get_theme_options();
-
-			$theme_options['footer_copyright_links'] = $option;
-			update_option( 'thrive_theme_options', $theme_options );
+			if ( function_exists( 'thrive_get_theme_options' ) ) {
+				$theme_options                           = thrive_get_theme_options();
+				$theme_options['footer_copyright_links'] = $option;
+				update_option( 'thrive_theme_options', $theme_options );
+			}
 
 			break;
 	}
@@ -747,10 +724,10 @@ function tve_dash_update_product_option( $product_tag, $option ) {
  * Displays an icon using svg format
  *
  * @param string $icon
- * @param bool   $return      whether to return the icon as a string or to output it directly
- * @param string $namespace   (where this icon is used - for 'editor' it will add another prefix to it)
+ * @param bool $return whether to return the icon as a string or to output it directly
+ * @param string $namespace (where this icon is used - for 'editor' it will add another prefix to it)
  * @param string $extra_class classes to be added to the svg
- * @param array  $svg_attr    array with extra attributes to add to the <svg> tag
+ * @param array $svg_attr array with extra attributes to add to the <svg> tag
  *
  * @return mixed
  */
@@ -817,23 +794,94 @@ function tve_dash_get_ip() {
 function tve_current_user_data() {
 	$current_user = wp_get_current_user();
 	$user_data    = array();
+
 	if ( ! empty( $current_user->data ) && ! empty( $current_user->data->ID ) ) {
 		$user_meta = get_user_meta( $current_user->data->ID );
 		$user_data = array(
 			'user_email'   => $current_user->data->user_email,
 			'username'     => $current_user->data->user_login,
-			'nickname'     => join( isset( $user_meta['nickname'] ) ? $user_meta['nickname'] : array() ),
-			'first_name'   => join( isset( $user_meta['first_name'] ) ? $user_meta['first_name'] : array() ),
-			'last_name'    => join( isset( $user_meta['last_name'] ) ? $user_meta['last_name'] : array() ),
-			'role'         => join( $current_user->roles ),
+			'nickname'     => implode( '', isset( $user_meta['nickname'] ) ? $user_meta['nickname'] : array() ),
+			'first_name'   => implode( '', isset( $user_meta['first_name'] ) ? $user_meta['first_name'] : array() ),
+			'last_name'    => implode( '', isset( $user_meta['last_name'] ) ? $user_meta['last_name'] : array() ),
+			'role'         => implode( '', $current_user->roles ),
 			'display_name' => $current_user->data->display_name,
+			'website'      => $current_user->data->user_url,
+			'user_bio'     => implode( '', isset( $user_meta['description'] ) ? $user_meta['description'] : array() ),
 			'ip'           => tve_dash_get_ip(),
+			'registered'   => $current_user->data->user_registered,
 			'id'           => $current_user->data->ID,
 			'edit_url'     => get_edit_profile_url( $current_user->ID ),
 		);
 	}
 
 	return $user_data;
+}
+
+/**
+ * Returns the current user details
+ *
+ * Used in hooks that are sent to 3rd party developers
+ *
+ * @return array|null
+ */
+function tvd_get_current_user_details() {
+	$user_id = get_current_user_id();
+
+	if ( ! empty( $user_id ) ) {
+		$current_user_data = tve_current_user_data();
+		$user_meta         = get_user_meta( $current_user_data['id'] );
+
+		$comments_number = get_comments( array(
+			'type'    => '',
+			'user_id' => '1',
+			'count'   => true,
+		) );
+
+		$user_details = array(
+			'user_id'          => $current_user_data['id'],
+			'last_logged_in'   => ( isset( $user_meta['tve_last_login'] ) && is_array( $user_meta['tve_last_login'] ) ) ? date( 'Y-m-d H:i:s', (int) $user_meta['tve_last_login'][0] ) : '',
+			'last_updated'     => ( isset( $user_meta['last_updated'] ) && is_array( $user_meta['last_updated'] ) ) ? date( 'Y-m-d H:i:s', (int) $user_meta['last_updated'][0] ) : '',
+			'registered'       => $current_user_data['registered'],
+			'username'         => $current_user_data['username'],
+			'membership_level' => $current_user_data['role'],
+			'email'            => $current_user_data['user_email'],
+			'ip_address'       => $current_user_data['ip'],
+			'user_agent'       => ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( $_SERVER['HTTP_USER_AGENT'] ) : '',
+			'comments'         => $comments_number,
+		);
+
+		return apply_filters( 'thrive_dashboard_extra_user_data', $user_details );
+	}
+
+	return null;
+}
+
+/**
+ * Computes the user login form data needed for the login hook
+ *
+ * @param string $status Is a flag that is being sent to the `thrive_core_user_login` hook
+ *
+ * @return array
+ */
+function tvd_get_login_form_data( $status ) {
+
+	if ( empty( $_SERVER['HTTP_REFERER'] ) ) {
+		return array();
+	}
+
+	$tmp        = explode( '?', filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_URL ) );
+	$login_page = reset( $tmp );
+
+	if ( ! in_array( $status, array( 'success', 'fail' ) ) ) {
+		return array();
+	}
+
+	return array(
+		'login_page'     => $login_page,
+		'login_redirect' => ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '',
+		'login_time'     => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
+		'result'         => $status,
+	);
 }
 
 /**
@@ -869,7 +917,7 @@ function tve_dash_is_debug_on() {
  * by using custom class methods or wp standard sanitize functions,
  * sent in $callback param
  *
- * @param mixed        $data     { accepts array|object|string }
+ * @param mixed $data { accepts array|object|string }
  * @param string|array $callback { callback function: (string) 'function_name' / (array) [class_name, method_name] }
  *
  * @return mixed
@@ -887,7 +935,7 @@ function tve_filter_intrusive_forms( $product, $forms ) {
 	/**
 	 * Enable all the products to hook here and filter the forms that will be showed to the users
 	 *
-	 * @param array  $forms   - an array of items that will show up
+	 * @param array $forms - an array of items that will show up
 	 * @param string $product - the product from which the items originated
 	 */
 	return apply_filters( 'tve_intrusive_forms', $forms, $product );
@@ -953,4 +1001,59 @@ function tvd_reset_transient() {
 						`option_name` LIKE '%transient_timeout_tar%' OR 
 						`option_name` LIKE '%transient_timeout_ttb%'"
 	);
+}
+
+/**
+ * Check if there exists external fields plugins activated
+ *
+ * @return bool
+ */
+function tvd_has_external_fields_plugins() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	}
+
+	return is_plugin_active( 'advanced-custom-fields/acf.php' ) || is_plugin_active( 'advanced-custom-fields-pro/acf.php' );
+}
+
+/**
+ * Retrieving user custom fields depending on role filter
+ *
+ * @param string|bool $user_role
+ *
+ * @return array
+ */
+function tvd_get_acf_user_external_fields( $user_role = false ) {
+	$fields = array();
+	if ( tvd_has_external_fields_plugins() ) {
+		if ( ! $user_role ) {
+			$user_role = 'all';
+		}
+		$args   = array( 'user_role' => $user_role );
+		$groups = acf_get_field_groups( $args );
+
+		foreach ( $groups as $group ) {
+			$group_fields = array_filter( acf_get_fields( $group ), function ( $field ) {
+				return in_array( $field['type'], array( 'text', 'textarea', 'url' ) );
+			} );
+
+			$fields = array_merge( $fields, $group_fields );
+		}
+	}
+
+	return $fields;
+}
+
+/**
+ * Get webhook route url
+ *
+ * @param string|bool $user_role
+ *
+ * @return array
+ */
+function tvd_get_webhook_route_url( $endpoint ) {
+	$rest_controller = new TD_REST_Controller();
+	$url             = get_rest_url() . $rest_controller->get_namespace() . $rest_controller->get_webhoook_base() . '/' . $endpoint;
+
+	return $url;
 }

@@ -1182,7 +1182,7 @@ abstract class Thrive_Dash_Api_Facebook_Base {
 			}
 
 			if ( ! empty( $retained_params ) ) {
-				$query = '?' . implode( $retained_params, '&' );
+				$query = '?' . implode( '&', $retained_params );
 			}
 		}
 

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Lead_Generation_Checkbox_Option_Element extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'Lead Generation Checkbox Option', 'thrive-cb' );
+		return __( 'Form Checkbox Option', 'thrive-cb' );
 	}
 
 	public function identifier() {

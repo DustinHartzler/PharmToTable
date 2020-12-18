@@ -10,7 +10,7 @@
 </div>
 
 <div class="tth-query-container q-filter" data-view="custom">
-	<span class="tth-subtitle">
+	<span class="tth-subtitle tth-items-to-display">
 		<?php echo esc_html__( 'Content to display', 'thrive-cb' ); ?>
 	</span>
 	<div class="query-post-type-select tth-dropdown-container"></div>
@@ -90,11 +90,13 @@
 		<?php echo esc_html__( 'Order', 'thrive-cb' ); ?>
 	</span>
 	<div class="query-options-row">
-		<div><?php echo esc_html__( 'Arrange the results by: ', 'thrive-cb' ); ?></div>
-		<div class="tth-dropdown-container orderby-arg"></div>
-		<input type="hidden" data-arg="orderby" class="query-arg">
-
-		<div><?php echo esc_html__( 'and sort', 'thrive-cb' ); ?></div>
+		<div class="arrange-results">
+			<div><?php echo esc_html__( 'Arrange the results by: ', 'thrive-cb' ); ?></div>
+			<div class="tth-dropdown-container orderby-arg"></div>
+			<input type="hidden" data-arg="orderby" class="query-arg">
+			<span><?php echo esc_html__( 'and', 'thrive-cb' ); ?></span>
+		</div>
+		<span class="arrange-sort"><?php echo esc_html__( 'sort', 'thrive-cb' ); ?></span>
 		<div class="tth-dropdown-container order-arg"></div>
 		<input type="hidden" data-arg="order" class="query-arg">
 
@@ -116,7 +118,7 @@
 			<input type="text" class="query-arg" data-arg="no_posts_text">
 		</label>
 
-		<label>
+		<label class="exclude-items">
 			<?php if ( apply_filters( 'tcb_post_list.show_exclude', true ) ) : ?>
 				<span class="tcb-switch tcb-exclude-post-lever">
 					<label>

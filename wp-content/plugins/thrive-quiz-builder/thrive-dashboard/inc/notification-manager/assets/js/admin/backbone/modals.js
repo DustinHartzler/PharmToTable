@@ -196,7 +196,7 @@ TD_NM.views = TD_NM.views || {};
 				 * validate the step and save the setting into model
 				 */
 				if ( this.currentStep === 0 ) {
-					if ( ! this.trigger_settings_view.are_valid() ) {
+					if ( ! this.trigger_settings_view || ! this.trigger_settings_view.are_valid() ) {
 						TVE_Dash.err( TD_NM.t.next_step_no_option_selected );
 
 						return false;

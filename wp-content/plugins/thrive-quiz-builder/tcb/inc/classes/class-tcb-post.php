@@ -124,8 +124,7 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 		/**
 		 * Generates the text version of a TCB-saved post
 		 *
-		 * @param string|int $post_id
-		 * @param string     $tcb_content
+		 * @param string $tcb_content
 		 *
 		 * @return TCB_Post
 		 */
@@ -147,7 +146,17 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 			$tcb_content = preg_replace( '/<script(.*?)>(.*?)<\/script>/is', '', $tcb_content );
 			$tcb_content = preg_replace( '/<style(.*?)>(.*?)<\/style>/is', '', $tcb_content );
 
+			/**
+			 * replace html comment tags so we preserve gutenberg block on strip tags
+			 */
+			$tcb_content = preg_replace( '/<!--/is', '{!--', $tcb_content );
+			$tcb_content = preg_replace( '/-->/is', '--}', $tcb_content );
+
 			$tcb_content = strip_tags( $tcb_content, '<h1><h2><h3><h4><h5><h6><p><ul><ol><li><span><a><img><strong><b><u><em><sup><sub><blockquote><address><table><tbody><thead><tr><th><td>' );
+
+			$tcb_content = preg_replace( '/{!--/is', '<!--', $tcb_content );
+			$tcb_content = preg_replace( '/--}/is', '-->', $tcb_content );
+
 			$tcb_content = str_replace( array( "\n", "\r", "\t" ), '', $tcb_content );
 			/* re-add the <!--more--> tag to the text, if it was present before */
 			$tcb_content = str_replace( 'TCB_WP_MORE_TAG', '<!--more-->', $tcb_content );

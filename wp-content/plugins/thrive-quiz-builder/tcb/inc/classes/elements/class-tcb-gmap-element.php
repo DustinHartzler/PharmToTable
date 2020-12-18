@@ -67,20 +67,49 @@ class TCB_Gmap_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'CustomFields',
 					),
-					'address' => array(
+					'address'        => array(
 						'config'  => array(
 							'label'       => __( 'Address', 'thrive-cb' ),
 							'placeholder' => __( 'Insert Address', 'thrive-cb' ),
 						),
 						'extends' => 'LabelInput',
 					),
-					'zoom'    => array(
+					'zoom'           => array(
 						'config'  => array(
 							'default' => '10',
 							'min'     => '1',
 							'max'     => '20',
 							'label'   => __( 'Zoom', 'thrive-cb' ),
 							'um'      => '',
+						),
+						'extends' => 'Slider',
+					),
+					'fullWidth'      => array(
+						'config'  => array(
+							'name'  => '',
+							'label' => __( 'Stretch to fit screen width', 'thrive-cb' ),
+						),
+						'extends' => 'Switch',
+					),
+					'width'          => array(
+						'config'  => array(
+							'default' => '0',
+							'min'     => '0',
+							'max'     => '2000',
+							'label'   => __( 'Width', 'thrive-cb' ),
+							'um'      => array( 'px', '%', 'vh', 'vw' ),
+							'css'     => 'width',
+						),
+						'extends' => 'Slider',
+					),
+					'height'         => array(
+						'config'  => array(
+							'default' => '0',
+							'min'     => '0',
+							'max'     => '2000',
+							'label'   => __( 'Height', 'thrive-cb' ),
+							'um'      => array( 'px', 'vh' ),
+							'css'     => 'height',
 						),
 						'extends' => 'Slider',
 					),
@@ -102,11 +131,7 @@ class TCB_Gmap_Element extends TCB_Element_Abstract {
 			),
 			'layout'     => array(
 				'disabled_controls' => array(
-					'padding',
-					'Width',
-					'Height',
 					'.tve-advanced-controls',
-					'Alignment',
 				),
 			),
 		);

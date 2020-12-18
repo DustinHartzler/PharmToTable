@@ -20,5 +20,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="ExternalFields"></div>
 		<div class="tve-control custom-fields-state" data-view="address" data-state="static"></div>
 		<div class="tve-control" data-view="zoom"></div>
+		<div class="tve-control" data-view="fullWidth"></div>
+		<div class="tve-control" data-view="width"></div>
+		<div class="tve-control" data-view="height"></div>
 	</div>
 </div>

@@ -1,13 +1,12 @@
 <script type="text/javascript">
 	( function ( $ ) {
-		var _DELTA = 200, //for slide top animation {transform: translateY(-200px)}
-			$window = $( window ),
+		var $window = $( window ),
 			trigger_elements = function ( elements ) {
 				elements.each( function () {
 					var $elem = $( this ),
 						lb_content = $elem.parents( '.tve_p_lb_content' ),
 						ajax_content = $elem.parents( '.ajax-content' ),
-						inViewport = TCB_Front.isInViewport( $elem, _DELTA ) || isOutsideBody( $elem ) || isAtTheBottomOfThePage( $elem );
+						inViewport = TCB_Front.isInViewport( $elem ) || isOutsideBody( $elem ) || isAtTheBottomOfThePage( $elem );
 
 					if ( lb_content.length ) {
 						lb_content.on( 'tve.lightbox-open', function () {
@@ -35,7 +34,7 @@
 				elements.each( function () {
 					var $elem = $( this );
 
-					if ( ! ( TCB_Front.isInViewport( $elem, _DELTA ) || isOutsideBody( $elem ) ) ) {
+					if ( ! ( TCB_Front.isInViewport( $elem ) || isOutsideBody( $elem ) ) ) {
 						$elem.trigger( 'tve-viewport-leave' ).removeClass( 'tve-viewport-triggered' );
 					}
 				} );

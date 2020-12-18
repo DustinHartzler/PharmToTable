@@ -51,7 +51,7 @@ class TCB_Lead_Generation_Input_Element extends TCB_Element_Abstract {
 						'extends' => 'Switch',
 					),
 					'icon_side'   => array(
-						'rem_ic_css_suf' => $controls_default_config['css_suffix'], //Remove Icon Css Suffix
+						'rem_ic_css_suf' => ' input', //Remove Icon Css Suffix
 						'css_suffix'     => ' .thrv_icon',
 						'config'         => array(
 							'name'    => __( 'Icon Side', 'thrive-cb' ),

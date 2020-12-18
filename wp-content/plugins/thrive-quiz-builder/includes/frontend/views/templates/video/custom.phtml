@@ -5,7 +5,7 @@
 		<video height="313" width="551"
 		<#= 1 === options.autoplay.value ? ' autoplay="true"' : '' #>
 		<#= 1 === options.hide_controls.value ? '' : ' controls="true"' #>
-		<#= 1 === options.loop.value ? ' oop="true"' : '' #>
+		<#= 1 === options.loop.value ? ' loop="true"' : '' #>
 		allowtransparency="true"
 		frameborder="0">
 		<source src="<#= item.get( 'url' ) #>" type="<#= mime #>">

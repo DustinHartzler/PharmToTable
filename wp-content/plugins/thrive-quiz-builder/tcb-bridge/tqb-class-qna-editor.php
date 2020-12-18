@@ -12,8 +12,25 @@ class TQB_QNA_Editor {
 		add_filter( 'tve_frontend_options_data', array( __CLASS__, 'filter_tve_frontend_options' ) );
 		add_action( 'tcb_ajax_save_post', array( __CLASS__, 'save' ), 10, 2 );
 		add_action( 'preview_post_link', array( __CLASS__, 'preview_post_link' ), 10, 2 );
+		add_filter( 'tcb_skip_license_check', array( __CLASS__, 'skip_tcb_licence_check' ) );
 
 		self::register_components();
+	}
+
+	/**
+	 * Check if the current post is editable
+	 *
+	 * @param bool $skip
+	 *
+	 * @return bool
+	 */
+	public static function skip_tcb_licence_check( $skip ) {
+
+		if ( $skip ) {
+			return true;
+		}
+
+		return self::is_editable( get_post_type() );
 	}
 
 	/**

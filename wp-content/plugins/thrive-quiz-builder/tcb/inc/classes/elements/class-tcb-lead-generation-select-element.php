@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Lead_Generation_Select_Element extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'Lead Generation Select', 'thrive-cb' );
+		return __( 'Dropdown Field', 'thrive-cb' );
 	}
 
 	public function identifier() {
@@ -134,6 +134,36 @@ class TCB_Lead_Generation_Select_Element extends TCB_Element_Abstract {
 								),
 								'style-5' => array(
 									'label' => __( 'Style 5', 'thrive-cb' ),
+								),
+								'style-6' => array(
+									'label' => __( 'Style 6', 'thrive-cb' ),
+								),
+								'style-7' => array(
+									'label' => __( 'Style 7', 'thrive-cb' ),
+								),
+								'style-8' => array(
+									'label' => __( 'Style 8', 'thrive-cb' ),
+								),
+								'style-9' => array(
+									'label' => __( 'Style 9', 'thrive-cb' ),
+								),
+								'style-10' => array(
+									'label' => __( 'Style 10', 'thrive-cb' ),
+								),
+								'style-11' => array(
+									'label' => __( 'Style 11', 'thrive-cb' ),
+								),
+								'style-12' => array(
+									'label' => __( 'Style 12', 'thrive-cb' ),
+								),
+								'style-13' => array(
+									'label' => __( 'Style 13', 'thrive-cb' ),
+								),
+								'style-14' => array(
+									'label' => __( 'Style 14', 'thrive-cb' ),
+								),
+								'style-15' => array(
+									'label' => __( 'Style 15', 'thrive-cb' ),
 								),
 							),
 							'default' => 'default',

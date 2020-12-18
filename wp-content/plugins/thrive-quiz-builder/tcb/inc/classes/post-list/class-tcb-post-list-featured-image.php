@@ -118,12 +118,19 @@ class TCB_Post_List_Featured_Image {
 	 * @return array
 	 */
 	public static function filter_available_sizes() {
-		return apply_filters( 'image_size_names_choose', array(
+		$sizes = apply_filters( 'image_size_names_choose', array(
 			'thumbnail' => __( 'Thumbnail', 'thrive-cb' ),
 			'medium'    => __( 'Medium', 'thrive-cb' ),
 			'large'     => __( 'Large', 'thrive-cb' ),
 			'full'      => __( 'Full Size', 'thrive-cb' ),
 		) );
+
+		/* MailPoet 3 adds an extra image size, but we're not using it in our products so we must remove it */
+		if ( ! empty( $sizes['mailpoet_newsletter_max'] ) ) {
+			unset ( $sizes['mailpoet_newsletter_max'] );
+		}
+
+		return $sizes;
 	}
 
 	/**

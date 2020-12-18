@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class TCB_Countdown_Element
  */
-class TCB_Countdown_Element extends TCB_Element_Abstract {
+class TCB_Countdown_Element extends TCB_Cloud_Template_Element_Abstract {
 
 	/**
 	 * Name of the element
@@ -50,7 +50,29 @@ class TCB_Countdown_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.thrv-countdown_timer_plain, .tve_cd_timer_plain:not(.tve_countdown_timer_evergreen)';
+		return '.tve-countdown';
+	}
+
+	public function is_placeholder() {
+		return false;
+	}
+
+	/**
+	 * HTML layout of the element for when it's dragged in the canvas
+	 *
+	 * @return string
+	 */
+	public function html_placeholder( $title = null ) {
+		if ( empty( $title ) ) {
+			$title = $this->name();
+		}
+
+		return tcb_template( 'elements/element-placeholder', array(
+			'icon'       => $this->icon(),
+			'class'      => 'tcb-ct-placeholder',
+			'title'      => $title,
+			'extra_attr' => 'data-ct="countdown-0" data-tcb-elem-type="countdown" data-specific-modal="countdown"',
+		), true );
 	}
 
 	/**
@@ -62,60 +84,33 @@ class TCB_Countdown_Element extends TCB_Element_Abstract {
 		$components = array(
 			'countdown'  => array(
 				'config' => array(
-					'CompleteText' => array(
-						'config'  => array(
-							'label' => __( 'Text to show on complete', 'thrive-cb' ),
-						),
-						'extends' => 'Textarea',
+					'CountdownPalette' => array(
+						'config'  => array(),
+						'extends' => 'PalettesV2',
 					),
-					'style'        => array(
-						'config' => array(
-							'label'   => __( 'Style', 'thrive-cb' ),
-							'items'   => array(
-								'tve_countdown_1' => array(
-									'label'   => __( 'Simple', 'thrive-cb' ),
-									'preview' => 'countdown_s1',
-								),
-								'tve_countdown_2' => array(
-									'label'   => __( 'Rounded', 'thrive-cb' ),
-									'preview' => 'countdown_s2',
-								),
-								'tve_countdown_3' => array(
-									'label'   => __( 'Squared', 'thrive-cb' ),
-									'preview' => 'countdown_s3',
-								),
-							),
-							'default' => 'tve_countdown_1',
-						),
-					),
-					'EndDate'      => array(
+					'EndDate'          => array(
 						'config'  => array(
-							'label' => __( 'End Date', 'thrive-cb' ),
+							'label' => __( 'End date', 'thrive-cb' ),
 						),
 						'extends' => 'DatePicker',
 					),
-					'ExternalFields'       => array(
+					'ExternalFields'   => array(
 						'config'  => array(
-							'key'           => 'countdown',
+							'key'               => 'countdown',
 							'shortcode_element' => '.thrv_countdown_timer',
 						),
 						'extends' => 'CustomFields',
 					),
-					'Color'        => array(
-						'css_suffix' => ' .t-caption',
-						'config'     => array(
-							'default'             => 'f00',
-							'label'               => __( 'Color', 'thrive-cb' ),
-							'important'           => true,
-							'style_default_color' => array(
-								'.tve_countdown_2 .t-digits [class*="part-"]' => array( 'color' => '' ),
-								'.tve_countdown_2 .tve_t_part'                => array( 'border-color' => '' ),
-								'.tve_countdown_3 .t-digits'                  => array( 'background' => '' ),
-							),
+					'Day'              => array(
+						'config'  => array(
+							'inline'    => true,
+							'name'      => __( 'Days', 'thrive-cb' ),
+							'default'   => 10,
+							'maxlength' => 3,
 						),
-						'extends'    => 'ColorPicker',
+						'extends' => 'Input',
 					),
-					'Hour'         => array(
+					'Hour'             => array(
 						'config'  => array(
 							'inline'    => true,
 							'name'      => __( 'H', 'thrive-cb' ),
@@ -126,7 +121,7 @@ class TCB_Countdown_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Input',
 					),
-					'Minute'       => array(
+					'Minute'           => array(
 						'config'  => array(
 							'inline'    => true,
 							'name'      => __( 'M', 'thrive-cb' ),
@@ -136,6 +131,68 @@ class TCB_Countdown_Element extends TCB_Element_Abstract {
 							'maxlength' => 2,
 						),
 						'extends' => 'Input',
+					),
+					'ShowSep'          => array(
+						'config'  => array(
+							'name'    => '',
+							'label'   => __( 'Enable tile separators', 'thrive-cb' ),
+							'default' => false,
+						),
+						'extends' => 'Switch',
+					),
+					'ShowElement'      => array(
+						'config'  => array(
+							'name'    => '',
+							'label'   => __( 'Display expired countdown', 'thrive-cb' ),
+							'default' => false,
+						),
+						'extends' => 'Switch',
+					),
+					'Second'           => array(
+						'config'  => array(
+							'inline'    => true,
+							'name'      => __( 'Seconds', 'thrive-cb' ),
+							'default'   => 10,
+							'maxlength' => 2,
+						),
+						'extends' => 'Input',
+					),
+					'ExpDay'           => array(
+						'config'  => array(
+							'inline'    => true,
+							'name'      => __( 'Days', 'thrive-cb' ),
+							'default'   => 10,
+							'maxlength' => 3,
+						),
+						'extends' => 'Input',
+					),
+					'ExpHour'          => array(
+						'config'  => array(
+							'inline'    => true,
+							'name'      => __( 'Hours', 'thrive-cb' ),
+							'default'   => 10,
+							'maxlength' => 2,
+						),
+						'extends' => 'Input',
+					),
+					'StartAgain'       => array(
+						'config'  => array(
+							'name'    => '',
+							'label'   => __( 'Starts again after', 'thrive-cb' ),
+							'default' => false,
+						),
+						'extends' => 'Switch',
+					),
+					'Size'             => array(
+						'config'  => array(
+							'default' => '100',
+							'min'     => '30',
+							'max'     => '350',
+							'label'   => __( 'Tile Size', 'thrive-cb' ),
+							'um'      => array( 'px' ),
+							'css'     => 'max-width',
+						),
+						'extends' => 'Slider',
 					),
 				),
 			),
@@ -150,11 +207,51 @@ class TCB_Countdown_Element extends TCB_Element_Abstract {
 			'layout'     => array(
 				'disabled_controls' => array(
 					'Overflow',
+					'Display',
+					'Width',
+					'Height',
+					'Float',
 				),
 			),
 		);
 
-		return apply_filters( 'tcb_countdown_controls', $components );
+		return array_merge(
+			apply_filters( 'tcb_countdown_controls', $components ),
+			$this->group_component()
+		);
+	}
+
+
+	public function has_group_editing() {
+		return array(
+			'select_values' => array(
+				array(
+					'value'    => 'all_labels',
+					'selector' => ' .tve-countdown-label',
+					'name'     => __( 'Grouped countdown labels', 'thrive-cb' ),
+					'singular' => __( '-- Countdown label item %s', 'thrive-cb' ),
+				),
+				array(
+					'value'    => 'all_tiles',
+					'selector' => ' .tve-countdown-tile',
+					'name'     => __( 'Grouped countdown tiles', 'thrive-cb' ),
+					'singular' => __( '-- Countdown tile item %s', 'thrive-cb' ),
+				),
+				array(
+					'value'    => 'all_digits',
+					'selector' => ' .tve-countdown-digit',
+					'name'     => __( 'Grouped countdown digits', 'thrive-cb' ),
+					'singular' => __( '-- Countdown digit item %s', 'thrive-cb' ),
+				),
+				array(
+					'value'     => 'all_separators',
+					'selector'  => ' .tve-countdown-separator',
+					'name'      => __( 'Grouped countdown separators', 'thrive-cb' ),
+					'singular'  => __( '-- Countdown separator item %s', 'thrive-cb' ),
+					'no_unlock' => true,
+				),
+			),
+		);
 	}
 
 	/**

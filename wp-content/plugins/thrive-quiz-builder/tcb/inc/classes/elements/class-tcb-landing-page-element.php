@@ -87,7 +87,7 @@ class TCB_Landing_page_Element extends TCB_Post_Element {
 
 	protected function general_components() {
 		$lp = array(
-			'landing_page' => array(
+			'landing_page'     => array(
 				'config' => array(
 					'ContentMaxWidth'  => array(
 						'to'      => '#tve_editor',
@@ -123,8 +123,8 @@ class TCB_Landing_page_Element extends TCB_Post_Element {
 					),
 				),
 			),
-			'lpfonts'      => array( 'order' => 90 ),
-			'background'   => array(
+			'lpfonts'          => array( 'order' => 90 ),
+			'background'       => array(
 				'order'             => 110,
 				'config'            => array(
 					'ColorPicker'       => array(
@@ -149,7 +149,8 @@ class TCB_Landing_page_Element extends TCB_Post_Element {
 					'video',
 				),
 			),
-			'lp-advanced'  => array(),
+			'lp-advanced'      => array(),
+			'scripts_settings' => array( 'order' => 752 ),
 		);
 
 		$lp_config = array_merge( $this->post_components + $lp, $this->group_component() );

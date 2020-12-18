@@ -166,20 +166,15 @@ class Thrive_Dash_Api_MailRelayV1 {
 			}
 		}
 
-		if ( empty( $subscriber ) ) {//checks if subscriber already exists
-			//add new
-			$extra    = array(
+		$args = array_merge(
+			array(
 				'group_ids' => array( $list_id ),
 				'status'    => 'active',
-			);
-			$args     = array_merge( $extra, $args );
-			$response = $this->_request( '/subscribers', 'post', $args );
-		} else {
-			//update the existing one
-			$response = $this->_request( '/subscribers/' . $subscriber[0]['id'], 'patch', array_merge( $subscriber[0], $args ) );
-		}
+			),
+			$args
+		);
 
-		return $response;
+		return $this->_request( '/subscribers/sync', 'post', $args );
 	}
 
 	/**

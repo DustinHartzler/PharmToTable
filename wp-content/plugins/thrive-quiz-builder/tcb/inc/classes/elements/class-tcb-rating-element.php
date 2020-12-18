@@ -103,17 +103,20 @@ class TCB_Rating_Element extends TCB_Element_Abstract {
 					),
 					'background'  => array(
 						'config' => array(
-							'label' => __( 'Background', 'thrive-cb' ),
+							'label'   => __( 'Background', 'thrive-cb' ),
+							'options' => array( 'noBeforeInit' => false ),
 						),
 					),
 					'fill'        => array(
 						'config' => array(
-							'label' => __( 'Fill', 'thrive-cb' ),
+							'label'   => __( 'Fill', 'thrive-cb' ),
+							'options' => array( 'noBeforeInit' => false ),
 						),
 					),
 					'outline'     => array(
 						'config' => array(
-							'label' => __( 'Outline', 'thrive-cb' ),
+							'label'   => __( 'Outline', 'thrive-cb' ),
+							'options' => array( 'noBeforeInit' => false ),
 						),
 					),
 				),

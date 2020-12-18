@@ -270,6 +270,11 @@ class TGE_Database {
 			return $this->wpdb->update( tge_table_name( 'questions' ), $model, array( 'id' => $model['id'] ) );
 		}
 
+		/**
+		 * Some mysql servers will fail if no value is send for AUTOINCREMENT key
+		 */
+		unset( $model['id'] );
+
 		return $this->wpdb->insert( tge_table_name( 'questions' ), $model ) !== false ? $this->wpdb->insert_id : false;
 	}
 
@@ -315,7 +320,7 @@ class TGE_Database {
 		if (
 			empty( $model['display_settings']['source_audio_labels'] )
 			|| empty( $model['display_settings']['audio_source'] )
-			|| ! array_key_exists( $model['display_settings']['audio_source'], $model['display_settings']['source_audio_labels'] )
+			|| ! array_key_exists( $model['display_settings']['audio_source'], (array) $model['display_settings']['source_audio_labels'] )
 		) {
 			return false;
 		}

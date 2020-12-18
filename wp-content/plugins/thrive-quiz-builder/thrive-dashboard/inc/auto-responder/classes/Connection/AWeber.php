@@ -299,9 +299,9 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	}
 
 	/**
-	 * @param array $params which may contain `list_id`
-	 * @param bool $force make a call to API and invalidate cache
-	 * @param bool $get_all where to get lists with their custom fields
+	 * @param array $params  which may contain `list_id`
+	 * @param bool  $force   make a call to API and invalidate cache
+	 * @param bool  $get_all where to get lists with their custom fields
 	 *
 	 * @return array
 	 */
@@ -505,10 +505,10 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 
 						$args[ $cf_form_name ] = $this->processField( $args[ $cf_form_name ] );
 
-						$mapped_form_field_id          = $mapped_form_data[ $cf_form_name ][ $this->_key ];
-						$field_label                   = $api_custom_fields[ $list_identifier ][ $mapped_form_field_id ];
+						$mapped_form_field_id = $mapped_form_data[ $cf_form_name ][ $this->_key ];
+						$field_label          = $api_custom_fields[ $list_identifier ][ $mapped_form_field_id ];
 
-						$cf_form_name          = str_replace( '[]', '', $cf_form_name );
+						$cf_form_name = str_replace( '[]', '', $cf_form_name );
 						if ( ! empty( $args[ $cf_form_name ] ) ) {
 							$args[ $cf_form_name ] = $this->processField( $args[ $cf_form_name ] );
 						}
@@ -540,5 +540,45 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 		}
 
 		return $parsed;
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return false|int
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			/** @var Thrive_Dash_Api_AWeber $aweber */
+			$api     = $this->getApi();
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+			$args    = array(
+				'email' => $email,
+				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+			);
+
+			$this->addSubscriber( $list_id, $args );
+
+			$account  = $aweber->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
+			$list_url = "/accounts/{$account->id}/lists/{$list_id}";
+			$list     = $account->loadFromUrl( $list_url );
+
+			$existing_subscribers = $list->subscribers->find( array( 'email' => $email ) );
+
+			if ( $existing_subscribers && $existing_subscribers->count() === 1 ) {
+				$subscriber                = $existing_subscribers->current();
+				$subscriber->custom_fields = $custom_fields;
+
+				$subscriber->save();
+
+				return $subscriber->id;
+			}
+
+		} catch ( Exception $e ) {
+			return false;
+		}
 	}
 }
