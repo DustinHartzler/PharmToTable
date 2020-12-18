@@ -135,7 +135,7 @@ class WC_Product_Variable extends WC_Product {
 	 * Note: Variable prices do not show suffixes like other product types. This
 	 * is due to some things like tax classes being set at variation level which
 	 * could differ from the parent price. The only way to show accurate prices
-	 * would be to load the variation and get IT's price, which adds extra
+	 * would be to load the variation and get it's price, which adds extra
 	 * overhead and still has edge cases where the values would be inaccurate.
 	 *
 	 * Additionally, ranges of prices no longer show 'striked out' sale prices
@@ -413,7 +413,7 @@ class WC_Product_Variable extends WC_Product {
 	 * Sets an array of children for the product.
 	 *
 	 * @since 3.0.0
-	 * @param array $children Childre products.
+	 * @param array $children Children products.
 	 */
 	public function set_children( $children ) {
 		$this->children = array_filter( wp_parse_id_list( (array) $children ) );
@@ -464,7 +464,7 @@ class WC_Product_Variable extends WC_Product {
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
 		 *
 		 * @param WC_Data          $this The object being saved.
-		 * @param WC_Data_Store_WP $data_store THe data store persisting the data.
+		 * @param WC_Data_Store_WP $data_store The data store persisting the data.
 		 */
 		do_action( 'woocommerce_before_' . $this->object_type . '_object_save', $this, $this->data_store );
 
@@ -485,7 +485,7 @@ class WC_Product_Variable extends WC_Product {
 		 * Trigger action after saving to the DB.
 		 *
 		 * @param WC_Data          $this The object being saved.
-		 * @param WC_Data_Store_WP $data_store THe data store persisting the data.
+		 * @param WC_Data_Store_WP $data_store The data store persisting the data.
 		 */
 		do_action( 'woocommerce_after_' . $this->object_type . '_object_save', $this, $this->data_store );
 
@@ -590,97 +590,9 @@ class WC_Product_Variable extends WC_Product {
 	 * @return boolean
 	 */
 	public function has_options() {
-		return true;
+		return apply_filters( 'woocommerce_product_has_options', true, $this );
 	}
 
-	/**
-	 * Returns whether or not the product is visible in the catalog (doesn't trigger filters).
-	 *
-	 * @return bool
-	 */
-	protected function is_visible_core() {
-		if ( ! $this->parent_is_visible_core() ) {
-			return false;
-		}
-
-		$query_filters = $this->get_layered_nav_chosen_attributes();
-		if ( empty( $query_filters ) ) {
-			return true;
-		}
-
-		/**
-		 * If there are attribute filters in the request, a variable product will be visible
-		 * if at least one of the available variations matches the filters.
-		 */
-
-		$attributes_with_terms = array();
-		array_walk(
-			$query_filters,
-			function( $value, $key ) use ( &$attributes_with_terms ) {
-				$attributes_with_terms[ $key ] = $value['terms'];
-			}
-		);
-
-		$variations = $this->get_available_variations( 'objects' );
-		foreach ( $variations as $variation ) {
-			if ( $this->variation_matches_filters( $variation, $attributes_with_terms ) ) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Checks if a given variation matches the active attribute filters.
-	 *
-	 * @param WC_Product_Variation $variation The variation to check.
-	 * @param array                $query_filters The active filters as an array of attribute_name => [term1, term2...].
-	 *
-	 * @return bool True if the variation matches the active attribute filters.
-	 */
-	private function variation_matches_filters( WC_Product_Variation $variation, array $query_filters ) {
-		// Get the variation attributes as an array of attribute_name => attribute_value.
-		// The array_filter will filter out attributes having a value of '', these correspond
-		// to "Any..." variations that don't participate in filtering.
-		$variation_attributes = array_filter( $variation->get_variation_attributes( false ) );
-
-		$variation_attribute_names_in_filters = array_intersect( array_keys( $query_filters ), array_keys( $variation_attributes ) );
-		if ( empty( $variation_attribute_names_in_filters ) ) {
-			// The variation doesn't have any attribute that participates in filtering so we consider it a match.
-			return true;
-		}
-
-		foreach ( $variation_attribute_names_in_filters as $attribute_name ) {
-			if ( ! in_array( $variation_attributes[ $attribute_name ], $query_filters[ $attribute_name ], true ) ) {
-				// Multiple filters interact with AND logic, so as soon as one of them
-				// doesn't match then the variation doesn't match.
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * What does is_visible_core in the parent class say?
-	 * This method exists to ease unit testing.
-	 *
-	 * @return bool
-	 */
-	protected function parent_is_visible_core() {
-		return parent::is_visible_core();
-	}
-
-	/**
-	 * Get an array of attributes and terms selected with the layered nav widget.
-	 * This method exists to ease unit testing.
-	 *
-	 * @return array
-	 */
-	protected function get_layered_nav_chosen_attributes() {
-		return WC()->query::get_layered_nav_chosen_attributes();
-	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -750,9 +662,9 @@ class WC_Product_Variable extends WC_Product {
 	}
 
 	/**
-	 * Sort an associativate array of $variation_id => $price pairs in order of min and max prices.
+	 * Sort an associative array of $variation_id => $price pairs in order of min and max prices.
 	 *
-	 * @param array $prices Associativate array of $variation_id => $price pairs.
+	 * @param array $prices associative array of $variation_id => $price pairs.
 	 * @return array
 	 */
 	protected function sort_variation_prices( $prices ) {
