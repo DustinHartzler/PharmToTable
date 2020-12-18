@@ -35,8 +35,6 @@
     /></noscript>
 <!-- End Facebook Pixel Code -->
 
-    <!-- ========== Favicon Icon ========== -->
-    <link rel="shortcut icon" href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/favicon.png" type="image/x-icon">
 
     <!-- ========== Start Stylesheet ========== -->
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" />

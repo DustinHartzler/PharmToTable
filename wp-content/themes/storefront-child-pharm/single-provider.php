@@ -6,13 +6,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="MediHub - Medical & Health Template">
+    <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
 
     <!-- ========== Page Title ========== -->
-    <title>PharmToTable - <?php the_title();?></title>
-
-    <!-- ========== Favicon Icon ========== -->
-    <link rel="shortcut icon" href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/favicon.png" type="image/x-icon">
+    <title>PharmToTable | <?php wp_title(''); ?></title>
 
     <!-- ========== Start Stylesheet ========== -->
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" />

@@ -9,10 +9,7 @@
     <meta name="description" content="MediHub - Medical & Health Template">
 
     <!-- ========== Page Title ========== -->
-    <title>PharmToTable - </title>
-
-    <!-- ========== Favicon Icon ========== -->
-    <link rel="shortcut icon" href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/favicon.png" type="image/x-icon">
+    <title>PharmToTable | <?php wp_title(''); ?></title>
 
     <!-- ========== Start Stylesheet ========== -->
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" />
