@@ -265,7 +265,7 @@ class WC_Subscription extends WC_Order {
 			$needs_payment = true;
 
 		// Now make sure the parent order doesn't need payment
-		} elseif ( ( $parent_order = $this->get_parent() ) && ( $parent_order->needs_payment() || $parent_order->has_status( 'on-hold' ) ) ) {
+		} elseif ( ( $parent_order = $this->get_parent() ) && ( $parent_order->needs_payment() || $parent_order->has_status( array( 'on-hold', 'cancelled' ) ) ) ) {
 
 			$needs_payment = true;
 
@@ -1468,12 +1468,12 @@ class WC_Subscription extends WC_Order {
 				$from_timestamp = $start_time;
 			}
 
-			$next_payment_timestamp = wcs_add_time( $this->get_billing_interval(), $this->get_billing_period(), $from_timestamp );
+			$next_payment_timestamp = wcs_add_time( $this->get_billing_interval(), $this->get_billing_period(), $from_timestamp, 'offset_site_time' );
 
 			// Make sure the next payment is more than 2 hours in the future, this ensures changes to the site's timezone because of daylight savings will never cause a 2nd renewal payment to be processed on the same day
 			$i = 1;
 			while ( $next_payment_timestamp < ( current_time( 'timestamp', true ) + 2 * HOUR_IN_SECONDS ) && $i < 3000 ) {
-				$next_payment_timestamp = wcs_add_time( $this->get_billing_interval(), $this->get_billing_period(), $next_payment_timestamp );
+				$next_payment_timestamp = wcs_add_time( $this->get_billing_interval(), $this->get_billing_period(), $next_payment_timestamp, 'offset_site_time' );
 				$i += 1;
 			}
 		}

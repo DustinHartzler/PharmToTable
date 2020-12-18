@@ -1,4 +1,4 @@
-jQuery(document).ready(function($){
+jQuery( function( $ ) {
 
 	$.extend({
 		getParameterByName: function(name) {
@@ -525,15 +525,6 @@ jQuery(document).ready(function($){
 
 		if ( true === $( '.contains_subscription', $( '#' + order ) ).data( 'contains_subscription' ) ) {
 			return confirm( WCSubscriptions.trashWarning );
-		}
-	});
-
-	$(window).load(function(){
-		if($('[name="contains_subscription"]').length > 0 && $('[name="contains_subscription"]').val()=='true'){
-			// Show the Recurring Order Totals meta box in WC 2.2
-			$('#woocommerce-order-totals').show();
-		} else {
-			$('#woocommerce-order-totals').hide();
 		}
 	});
 

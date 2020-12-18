@@ -271,37 +271,16 @@ class WCS_Cart_Renewal {
 			);
 
 			// Load all product info including variation data
-			if ( WC_Subscriptions::is_woocommerce_pre( '3.0' ) ) {
+			$product_id   = $line_item->get_product_id();
+			$quantity     = $line_item->get_quantity();
+			$variation_id = $line_item->get_variation_id();
+			$item_name    = $line_item->get_name();
 
-				$product_id   = (int) $line_item['product_id'];
-				$quantity     = (int) $line_item['qty'];
-				$variation_id = (int) $line_item['variation_id'];
-				$item_name    = $line_item['name'];
-
-				foreach ( $line_item['item_meta'] as $meta_name => $meta_value ) {
-					if ( taxonomy_is_product_attribute( $meta_name ) ) {
-						$variations[ $meta_name ] = $meta_value[0];
-					} elseif ( meta_is_product_attribute( $meta_name, $meta_value[0], $product_id ) ) {
-						$variations[ $meta_name ] = $meta_value[0];
-					} elseif ( ! in_array( $meta_name, $reserved_item_meta_keys ) ) {
-						$custom_line_item_meta[ $meta_name ] = $meta_value[0];
-					}
-				}
-			} else {
-
-				$product_id   = $line_item->get_product_id();
-				$quantity     = $line_item->get_quantity();
-				$variation_id = $line_item->get_variation_id();
-				$item_name    = $line_item->get_name();
-
-				foreach ( $line_item->get_meta_data() as $meta ) {
-					if ( taxonomy_is_product_attribute( $meta->key ) ) {
-						$variations[ $meta->key ] = $meta->value;
-					} elseif ( meta_is_product_attribute( $meta->key, $meta->value, $product_id ) ) {
-						$variations[ $meta->key ] = $meta->value;
-					} elseif ( ! in_array( $meta->key, $reserved_item_meta_keys ) ) {
-						$custom_line_item_meta[ $meta->key ] = $meta->value;
-					}
+			foreach ( $line_item->get_meta_data() as $meta ) {
+				if ( taxonomy_is_product_attribute( $meta->key ) || meta_is_product_attribute( $meta->key, $meta->value, $product_id ) ) {
+					$variations[ "attribute_{$meta->key}" ] = $meta->value;
+				} elseif ( ! in_array( $meta->key, $reserved_item_meta_keys, true ) ) {
+					$custom_line_item_meta[ $meta->key ] = $meta->value;
 				}
 			}
 
@@ -408,7 +387,7 @@ class WCS_Cart_Renewal {
 	 */
 	public function get_cart_item_from_session( $cart_item_session_data, $cart_item, $key ) {
 
-		if ( isset( $cart_item[ $this->cart_item_key ]['subscription_id'] ) ) {
+		if ( $this->should_honor_subscription_prices( $cart_item ) ) {
 			$cart_item_session_data[ $this->cart_item_key ] = $cart_item[ $this->cart_item_key ];
 
 			$_product = $cart_item_session_data['data'];
@@ -423,7 +402,11 @@ class WCS_Cart_Renewal {
 				$price = $item_to_renew['line_subtotal'];
 
 				if ( $_product->is_taxable() && $subscription->get_prices_include_tax() ) {
-					$price += array_sum( $item_to_renew['taxes']['subtotal'] ); // Use the taxes array items here as they contain taxes to a more accurate number of decimals.
+					if ( isset( $item_to_renew['_subtracted_base_location_tax'] ) ) {
+						$price += array_sum( $item_to_renew['_subtracted_base_location_tax'] );
+					} else {
+						$price += array_sum( $item_to_renew['taxes']['subtotal'] ); // Use the taxes array items here as they contain taxes to a more accurate number of decimals.
+					}
 				}
 
 				$_product->set_price( $price / $item_to_renew['qty'] );
@@ -1025,6 +1008,7 @@ class WCS_Cart_Renewal {
 		if ( $this->cart_contains() ) {
 			// Update the cart stored in the session with the new data
 			WC()->session->cart = WC()->cart->get_cart_for_session();
+			WC()->cart->persistent_cart_update();
 		}
 	}
 
@@ -1417,6 +1401,19 @@ class WCS_Cart_Renewal {
 		if ( isset( $changes['created_via'], $current_data['created_via'] ) && 'subscription' === $current_data['created_via'] && 'checkout' === $changes['created_via'] && wcs_order_contains_renewal( $order ) ) {
 			$order->set_created_via( 'subscription' );
 		}
+	}
+
+
+	/**
+	 * Deteremines if the cart should honor the granfathered subscription/order line item total.
+	 *
+	 * @since 3.0.10
+	 *
+	 * @param array $cart_item The cart item to check.
+	 * @return bool Whether the cart should honor the order's prices.
+	 */
+	public function should_honor_subscription_prices( $cart_item ) {
+		return isset( $cart_item[ $this->cart_item_key ]['subscription_id'] );
 	}
 
 	/**

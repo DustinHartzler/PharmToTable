@@ -1,5 +1,47 @@
 *** WooCommerce Subscriptions Changelog ***
 
+2020-11-25 - version 3.0.11
+* Tweak: Improve the missing customer error message displayed for third-party built checkouts when registration is disabled on checkout. PR#3893
+* Fix: Remove the possibility of a negative calculation of prepaid days on subscription downgrades. PR#3881
+* Fix: Fix issues preventing stores using the $0 Initial Checkout feature from being able to checkout. PR#3887
+* Fix: Remove potential fatal error when processing end-of-prepaid term scheduled actions caused by the subscription not existing. PR#3875
+* Fix: Trigger payment complete actions after renewing early via modal. PR#3888
+* Fix: Performance improvements to limited products running slow queries on the shop page. PR#3895
+* Fix: [PHP 8.0] Only pass array values to call_user_func_array calls. PR#3884
+* Fix: [PHP 8.0] Replaces certain uses of method_exists() with is_callable(). PR#3892
+
+2020-11-10 - version 3.0.10
+* Fix: Store shipping line item instance ID separately and copy it to renewal line item meta. PR#3712
+* Fix: Account for the base store tax rates subtracted from line items when paying for renewals manually. PR#3745
+* Fix: Update the persistent cart while paying for renewal orders via the checkout. Fixes division by zero errors while manually renewing. PR#3824
+* Fix: Clear report cache data before regenerating new preset date results preventing infinitely growing report caches. PR#3800
+* Fix: Remove subscription period string transient caching to fix issues after translating. PR#3770
+* Fix: WC 4.7 compatibility. Use filter to change endpoint titles in My Account. PR#3857
+* Fix: When generating product price strings fallback to a default period string if no period is set. PR#3848
+* Fix: Remove uses of jQuery( document ).ready() which was deprecated. PR#3846
+* New: Add option to enable admin to lock in increased parent order line item prices. PR#3816
+* Tweak: Allow admin to set a next payment date in 2 minutes via the edit subscription screen on staging sites. PR#3778
+
+2020-09-29 - version 3.0.9
+* Fix: Offset subscription next payment date calculations based on site time. All dates still remain in UTC, but calculations on the 1st and last day of the month will now take into account the site timezone. PR#3708
+* Fix: Only attempt to display the customer notice when updating the default token from the My Account page. PR#3799
+* Fix: Prefix variation attributes with `attribute_` when setting up renewal carts. PR#3809
+* Dev: Add a new hook to the change_users_subscription() function - this hook is triggered before the status change. PR#3787
+
+2020-09-24 - version 3.0.8
+* Tweak: Remove the '$X now' from price string when synced product sign up date is today. PR#3797
+* Fix: Treat a subscription with a cancelled parent order as "needing payment". This ensures cancelling the subscription will go right to cancelled, rather than pending-cancellation. PR#3784
+* Fix: Remove code responsible for hiding/showing the WC order totals meta box. This fixes the deprecated jQuery.fn.load() warnings. PR#3786
+* Fix: Fix updating status and end dates via the REST API. PR#3796
+* Dev: Add an action hook to edit subscription admin payment meta inputs. Enables third-parties to display custom fields for each gateway. PR#3798
+* Dev: Opt-in tracking data for Subscriptions Reports PR#3738
+        Data sent to WooCommerce:
+        Subscriptions report views
+        Subscriptions report filter usage - clicks and report range
+        Number of subscriptions, orders, products
+        Plugin version
+        To disable this tracking, opt-out of WooCommerce tracking, see https://woocommerce.com/usage-tracking/
+
 2020-08-11 - version 3.0.7
 * Fix: Prevent possible errors caused by inaccessible get_current_screen() function. PR#3678
 * Fix: Decouple single_add_to_cart_text() from add_to_cart_text() and remove double and incorrect filtering. PR#3705
