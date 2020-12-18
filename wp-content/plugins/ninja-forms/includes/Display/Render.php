@@ -96,18 +96,16 @@ final class NF_Display_Render
             return;
         }
 
-        if( $form->get_setting( 'sub_limit_number' ) ){
-            $subs = Ninja_Forms()->form( $form_id )->get_subs();
-
-            // TODO: Optimize Query
+        if( $form->get_setting( 'sub_limit_number' ) && ! empty($form->get_setting( 'sub_limit_number' )) ){
             global $wpdb;
-            $count = 0;
-            $subs = $wpdb->get_results( "SELECT post_id FROM " . $wpdb->postmeta . " WHERE `meta_key` = '_form_id' AND `meta_value` = $form_id" );
-            foreach( $subs as $sub ){
-                if( 'publish' == get_post_status( $sub->post_id ) ) $count++;
-            }
+            $result = $wpdb->get_row( "SELECT COUNT(DISTINCT(p.ID)) AS count FROM `$wpdb->posts` AS p
+            LEFT JOIN `$wpdb->postmeta` AS m
+            ON p.ID = m.post_id
+            WHERE m.meta_key = '_form_id'
+            AND m.meta_value = $form_id
+            AND p.post_status = 'publish'");
 
-            if( $count >= $form->get_setting( 'sub_limit_number' ) ) {
+            if( intval( $result->count ) >= $form->get_setting( 'sub_limit_number' ) ) {
                 echo do_shortcode( apply_filters( 'nf_sub_limit_reached_msg', $form->get_setting( 'sub_limit_msg' ), $form_id ));
                 return;
             }
@@ -578,7 +576,7 @@ final class NF_Display_Render
         }
 
         if( $is_preview || in_array( $form_id, self::$form_uses_datepicker ) ) {
-            wp_enqueue_style( 'pikaday-responsive', $css_dir . 'pikaday-package.css', $ver );
+            wp_enqueue_style( 'nf-flatpickr', $css_dir . 'flatpickr.css', $ver );
             wp_enqueue_script('nf-front-end--datepicker', $js_dir . 'front-end--datepicker.min.js', array( 'jquery', 'nf-front-end' ), $ver );
         }
 

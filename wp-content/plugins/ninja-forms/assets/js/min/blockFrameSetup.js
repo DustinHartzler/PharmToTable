@@ -1,5 +1,8 @@
-// moved to separate file so we could enqueue it and make sure jquery was loaded
-
+/**
+ * This file is used by form block iFrame
+ *
+ * It was created with original block, it is still used by refactored block.
+ */
 (function() {
     jQuery(document).on( 'nfFormReady', function(){
         var frameEl = window.frameElement;

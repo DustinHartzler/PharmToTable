@@ -6,7 +6,7 @@ final class NF_Admin_Menus_MockData extends NF_Abstracts_Submenu
 
     public $page_title = 'Mock Data';
 
-    public $priority = 9002;
+    public $position = 9002;
 
     public function __construct()
     {

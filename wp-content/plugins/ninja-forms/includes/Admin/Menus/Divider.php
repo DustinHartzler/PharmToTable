@@ -10,7 +10,7 @@ final class NF_Admin_Menus_Divider extends NF_Abstracts_Submenu
 
     public $menu_slug = '#';
 
-    public $priority = 9001;
+    public $position = 9001;
 
     public function __construct()
     {

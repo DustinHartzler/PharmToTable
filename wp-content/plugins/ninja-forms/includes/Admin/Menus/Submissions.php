@@ -26,6 +26,11 @@ final class NF_Admin_Menus_Submissions extends NF_Abstracts_Submenu
     public $function = NULL;
 
     /**
+     * @var int
+     */
+    public $position = 3;
+
+    /**
      * Constructor
      */
     public function __construct()

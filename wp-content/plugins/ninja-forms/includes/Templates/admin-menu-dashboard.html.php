@@ -114,10 +114,11 @@
 <script id="tmpl-nf-apps" type="text/template">
 
     <div class="widget widget-plan-notice">
-        <p class="widget-title">What else comes with Ninja Forms?</p>
-        <a class="nf-button primary feature-list-link" href="https://ninjaforms.com/features/?utm_source=Ninja+Forms+Plugin&utm_medium=Apps+and+Integrations&utm_campaign=Dashboard+Features+Link" target="_blank" rel="noopener">We're glad you asked! Checkout our full list of features! <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
-        <div><em>All plans include a 14 day money back guarantee.</em></div>
-        <div>Requires a current active license and subject to our <a href="https://ninjaforms.com/terms-conditions/?utm_medium=plugin&utm_source=plugin-dashboard&utm_campaign=Ninja+Forms+Memberships&utm_content=Terms+Conditions" target="_blank" rel="noopener">Terms &amp; Conditions</a>.</div>
+        <p class="widget-title">Having a tough time choosing just a few?<br />Bundle and save big with a membership!</p>
+        <p>
+        Our membership plans have been designed to bring commonly needed features into one affordable package. Whether you're building forms for yourself, your clients, or your company, there's a plan that will fit your needs... and your budget.
+        </p>
+        <a class="nf-button primary feature-list-link" href="https://ninjaforms.com/pricing/?utm_source=Ninja+Forms+Plugin&utm_medium=Apps+and+Integrations&utm_campaign=Dashboard+Features+Link" target="_blank" rel="noopener">View Memberships&nbsp;<i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
     </div>
 
     <?php Ninja_Forms()->menus[ 'add-ons']->display(); ?>
@@ -231,6 +232,20 @@
 </script>
 <script id="tmpl-nf-widget-forms-table-loading" type="text/template">
     <td colspan="4"><?php esc_html_e( 'Loading Forms', 'ninja-forms' ); ?></td>
+</script>
+
+<!-- Widget: Forms - New Forms Template grid -->
+<script id="tmpl-nf-widget-templates-grid" type="text/template">
+<header class="section-head screen-reader-text">
+<?php esc_html_e( 'Available Templates', 'ninja-forms' ); ?>
+</header>
+<div class="installed"></div>
+<?php if( ! apply_filters( 'ninja_forms_disable_marketing', false ) ) { ?>
+  <header class="section-head">
+  <?php esc_html_e( 'Additional Templates', 'ninja-forms' ); ?>
+  </header>
+  <div class="available"></div>
+<?php } ?>
 </script>
 
 <!-- Widget: Forms - New Forms Templates -->

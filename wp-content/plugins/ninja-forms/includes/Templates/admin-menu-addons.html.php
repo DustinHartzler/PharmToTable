@@ -15,50 +15,63 @@
     if ( !$u_id ) $u_id = apply_filters( 'ninja_forms_affiliate_id', false );
     ?>
 
-    <?php foreach ($items as $item): ?>
+    <?php foreach( $groups as $slug => $group): ?>
 
-    <?php
-        $link = $item[ 'link' ];
-        if ( $u_id ) {
-            $last_slash = strripos( $link, '/' );
-            $link = substr( $link, 0, $last_slash );
-            $link =  urlencode( $link );
-            $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
-        }
-    ?>
+        <h3 id="<?php echo $slug; ?>"><?php echo $group[ 'title' ]; ?></h2>
 
-    <div class="nf-extend nf-box">
+        <div class="apps-container">
 
-        <div class="nf-box-inside">
 
-            <img src="<?php echo NF_PLUGIN_URL . $item['image']; ?>" />
+        <?php foreach ($group['items'] as $item): ?>
 
-            <h2><?php echo $item['title']; ?></h2>
+        <?php
+            $link = $item[ 'link' ];
+            if ( $u_id ) {
+                $last_slash = strripos( $link, '/' );
+                $link = substr( $link, 0, $last_slash );
+                $link =  urlencode( $link );
+                $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+            }
+        ?>
 
-            <div class="nf-extend-content">
+        <div class="nf-extend nf-box">
 
-                <p><?php echo $item['content']; ?></p>
+            <div class="nf-box-inside">
 
-                <div class="nf-extend-buttons">
+                <img src="<?php echo NF_PLUGIN_URL . $item['image']; ?>" />
 
-                    <?php if( ! empty( $item['docs'] ) ): ?>
+                <h2><?php echo $item['title']; ?></h2>
 
-                    <a target="_blank" href="<?php echo $item['docs']; ?>" class="nf-button secondary nf-doc-button"><?php esc_html_e( 'Docs', 'ninja-forms' ); ?></a>
-                    <?php else: ?>
+                <div class="nf-extend-content">
 
-                    <p><a><?php esc_html_e( 'Documentation coming soon.', 'ninja-forms' ); ?></a></p>
+                    <p><?php echo $item['content']; ?></p>
 
-                    <?php endif; ?>
+                    <div class="nf-extend-buttons">
 
-                    <?php if( ! empty( $item['plugin'] ) && file_exists( WP_PLUGIN_DIR.'/'.$item['plugin'] ) ): ?>
+                        <?php if( ! empty( $item['docs'] ) ): ?>
 
-                        <?php if( is_plugin_active( $item['plugin'] ) ): ?>
+                        <a target="_blank" href="<?php echo $item['docs']; ?>" class="nf-button secondary nf-doc-button"><?php esc_html_e( 'Docs', 'ninja-forms' ); ?></a>
+                        <?php else: ?>
 
-                        <span class="secondary nf-button"><?php esc_html_e( 'Active', 'ninja-forms' ); ?></span>
+                        <p><a><?php esc_html_e( 'Documentation coming soon.', 'ninja-forms' ); ?></a></p>
 
-                        <?php elseif( is_plugin_inactive( $item['plugin'] ) ): ?>
+                        <?php endif; ?>
 
-                        <span class="secondary nf-button"><?php esc_html_e( 'Installed', 'ninja-forms' ); ?></span>
+                        <?php if( ! empty( $item['plugin'] ) && file_exists( WP_PLUGIN_DIR.'/'.$item['plugin'] ) ): ?>
+
+                            <?php if( is_plugin_active( $item['plugin'] ) ): ?>
+
+                            <span class="secondary nf-button"><?php esc_html_e( 'Active', 'ninja-forms' ); ?></span>
+
+                            <?php elseif( is_plugin_inactive( $item['plugin'] ) ): ?>
+
+                            <span class="secondary nf-button"><?php esc_html_e( 'Installed', 'ninja-forms' ); ?></span>
+
+                            <?php else: ?>
+
+                            <a target="_blank" href="<?php echo $link; ?>" title="<?php echo $item['title']; ?>" class="primary nf-button"><?php esc_html_e( 'Learn More', 'ninja-forms' ); ?></a>
+
+                            <?php endif; ?>
 
                         <?php else: ?>
 
@@ -66,11 +79,7 @@
 
                         <?php endif; ?>
 
-                    <?php else: ?>
-
-                    <a target="_blank" href="<?php echo $link; ?>" title="<?php echo $item['title']; ?>" class="primary nf-button"><?php esc_html_e( 'Learn More', 'ninja-forms' ); ?></a>
-
-                    <?php endif; ?>
+                    </div>
 
                 </div>
 
@@ -78,8 +87,8 @@
 
         </div>
 
-    </div>
-
+        <?php endforeach; ?>
+        </div><!-- ./apps-container -->
     <?php endforeach; ?>
 
 </div>

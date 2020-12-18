@@ -47,6 +47,19 @@ abstract class NF_Abstracts_Submenu
      */
     public $function = 'display';
 
+    /**
+     * (Optional) The position in the menu order this item should appear.
+     * 
+     * @var int
+     */
+    public $position = NULL;
+
+    /**
+     * Used to specify the order in which the submenu is registered on the admin_menu hook.
+     * This is not the submenu position passed to add_submenu_page
+     * 
+     * @var int
+     */
     public $priority = 10;
 
     /**
@@ -72,7 +85,8 @@ abstract class NF_Abstracts_Submenu
             $this->get_menu_title(),
             apply_filters( 'ninja_forms_submenu_' . $this->get_menu_slug() . '_capability', $this->get_capability() ),
             $this->get_menu_slug(),
-            $function
+            $function,
+            $this->position 
         );
     }
 

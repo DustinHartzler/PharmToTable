@@ -80,5 +80,12 @@ return apply_filters( 'ninja_forms_i18n_builder', array(
 		. ' a specific subset of characters ( a-z, 0-9, -, _, @, space ). You'
 		. ' can use the option label in your success message(s) or email action(s) by adding'
 		. ' the :label attribute to your list field merge tags. For example:'
-		. ' {field:key:label}', 'ninja-forms' ),
+        . ' {field:key:label}', 'ninja-forms' ),
+        
+    'paymentsActionNicename' => esc_html__( 'Accept Payments & Donations', 'ninja-forms' ),
+    'marketingActionNicename' => esc_html__( 'Connect to Your Email Marketing or CRM Account', 'ninja-forms' ),
+    'managementActionNicename' => esc_html__( 'Manage Your Users Better', 'ninja-forms' ),
+    'workflowActionNicename' => esc_html__( 'Document & Workflow Management', 'ninja-forms' ),
+    'notificationsActionNicename' => esc_html__( 'Send SMS Form Notifications', 'ninja-forms' ),
+    'miscActionNicename' => esc_html__( 'Integrate with 1000+ More Services', 'ninja-forms' ),
 ));

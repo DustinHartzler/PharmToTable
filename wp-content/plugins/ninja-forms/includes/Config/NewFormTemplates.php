@@ -83,7 +83,7 @@ $ads = array(
         'modal-content'                 => '<div class="modal-template">
                                                 <img src="' . Ninja_Forms::$url . 'assets/img/add-ons/mail-chimp.png"/>
                                                 <p>In order to use this template, you need MailChimp for Ninja Forms.</p>
-                                                <p>The MailChimp extension allows you to quickly create newsletter signup forms for your MailChimp account using the power and flexibility that Ninja Forms provides.</p>
+                                                <p>Bring new life to your lists with upgraded Mailchimp signup forms for WordPress! Easy to build and customize with no code required.</p>
                                                 <div class="actions">
                                                     <a target="_blank" href="https://ninjaforms.com/extensions/mail-chimp/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Mailchimp+Signup" title="MailChimp" class="primary nf-button">Learn More</a>
                                                 </div>
@@ -97,8 +97,9 @@ $ads = array(
         'type'                          => 'ad',
         'modal-title'                   => 'Get Stripe for Ninja Forms',
         'modal-content'                 => '<div class="modal-template">
-                                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/WdFmgAffA50" allowfullscreen="" name="fitvid0" frameborder="0"></iframe></div>
+                                                <img src="' . Ninja_Forms::$url . 'assets/img/add-ons/stripe.png"/>
                                                 <p>In order to use this template, you need Stripe for Ninja Forms.</p>
+                                                <p>Did you know you can accept credit card payments or donations from any form? Single payments, subscriptions, and more!</p>
                                                 <div class="actions">
                                                     <a target="_blank" href="https://ninjaforms.com/extensions/stripe/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Stripe+Payment" title="Stripe" class="primary nf-button">Learn More</a>
                                                 </div>
@@ -112,8 +113,10 @@ $ads = array(
         'type'                          => 'ad',
         'modal-title'                   => 'Get File Uploads for Ninja Forms',
         'modal-content'                 => '<div class="modal-template">
-                                                <div class="video-wrapper"><iframe src="https://www.youtube.com/embed/Tl91cuFsnvM" allowfullscreen="" name="fitvid0" frameborder="0"></iframe></div>
+                                                <img src="' . Ninja_Forms::$url . 'assets/img/add-ons/file-uploads.png"/>
                                                 <p>In order to use this template, you need File Uploads for Ninja Forms.</p>
+                                                <p>
+                                                Let users upload any file to your website with File Uploads! Restrict by file type and size. Upload to server, media library, or your favorite cloud service.</p>
                                                 <div class="actions">
                                                     <a target="_blank" href="https://ninjaforms.com/extensions/stripe/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=File+Upload
                                                     " title="File Uploads" class="primary nf-button">Learn More</a>
@@ -130,7 +133,7 @@ $ads = array(
         'modal-content'                 => '<div class="modal-template">
                                                 <img src="' . Ninja_Forms::$url . 'assets/img/add-ons/paypal-express.png"/>
                                                 <p>In order to use this template, you need PayPal Express for Ninja Forms.</p>
-                                                <p>PayPal Express allows you to accept payments using Ninja Forms. It leverages the powerful processing engine that runs each Ninja Form to get a total, perform a checkout, and send your users to PayPal to complete their transaction.</p>
+                                                <p>Did you know you can accept PayPal payments or donations from any form? Connect any form completely and securely to your PayPal Express account!</p>
                                                 <div class="actions">
                                                     <a target="_blank" href="https://ninjaforms.com/extensions/paypal-express/?utm_source=Ninja+Forms+Plugin&utm_medium=Add+New&utm_campaign=Dashboard+New+Form+Template&utm_content=Paypal+Payment
                                                     " title="PayPal Express" class="primary nf-button">Learn More</a>

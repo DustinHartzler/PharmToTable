@@ -18,9 +18,12 @@
                 <li><?php esc_html_e( 'Click "Submit a Support Request" to be directed to our site.', 'ninja-forms' ); ?> </li>
                 <li><?php esc_html_e( 'Include this information in your support request by pasting in the "System Status" portion of the form. (right click, choose "Paste" or use Ctrl+V)', 'ninja-forms' ); ?> </li>
             </ol>
-            <h4><?php esc_html_e( 'This information is vital for addressing your issue in a timely manner. <em>For your security, do not post this information in public places, such as the WordPress.org support forums.</em>', 'ninja-forms' ); ?> </h4>
+            <p><?php esc_html_e( 'This information is vital for addressing your issue in a timely manner.', 'ninja-forms' ); ?></p>
             <a href="#" id="copy-system-status" class="button-primary"><?php esc_html_e( 'Copy System Report', 'ninja-forms' ); ?></a>
             <a href="https://ninjaforms.com/contact/?utm_source=Ninja+Forms+Plugin&utm_medium=Get+Help&utm_campaign=Plugin+Support+Links&utm_content=Submit+a+Support+Request" class="button-secondary"><?php esc_html_e( 'Submit a Support Request', 'ninja-forms' ); ?></a>
+            <p>
+                <em><?php esc_html_e( 'For your security, do not post this information in public places, such as the WordPress.org support forums.', 'ninja-forms' ); ?></em>
+            </p>
     	</div>
     	<div id="debug-report">
             <textarea readonly="readonly"></textarea>

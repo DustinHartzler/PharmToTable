@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit;
 
-return apply_filters( 'ninja_forms_action_email_settings', array(
+return apply_filters( 'ninja_forms_action_save_settings', array(
 
     /*
      * To

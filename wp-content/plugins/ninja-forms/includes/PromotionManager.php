@@ -13,7 +13,6 @@ class NF_PromotionManager
     {
         $this->set_promotions();
         $this->maybe_remove_personal();
-        $this->maybe_remove_ninja_shop();
         $this->maybe_remove_sendwp();
         $this->sort_active_promotions_by_locations();
     }
@@ -93,13 +92,6 @@ class NF_PromotionManager
         }
     }
 
-    private function maybe_remove_ninja_shop()
-    {
-        if( ( ! $this->are_product_fields_in_use() && ! $this->are_calculations_in_use() ) || $this->is_ninja_shop_active() ) {
-            $this->remove_promotion( 'ninja-shop' );
-        }
-    }
-
     private function maybe_remove_personal() 
     {
         if( $this->is_personal_active() ) {
@@ -138,44 +130,6 @@ class NF_PromotionManager
             $sorted_locations[ $promotion[ 'location' ] ][] = $promotion;
         }
         $this->promotions = $sorted_locations;
-    }
-
-    /**
-     * Checks the DB to see if product fields are being used. 
-     */
-    private function are_product_fields_in_use()
-    {
-        global $wpdb;
-
-        $query = "SELECT id FROM `" . $wpdb->prefix . "nf3_fields` WHERE type = 'product'"; 
-        $fields = $wpdb->get_results( $query, 'ARRAY_A' ); 
-        
-        if( ! empty( $fields ) ) {
-            return true; 
-        }
-        return false; 
-    }
-
-    private function are_calculations_in_use()
-    {
-        global $wpdb;
-
-        // TODO: change the key to meta_key once DB changes have been fully implemented. 
-        $query = "SELECT count( id ) as total FROM `" . $wpdb->prefix . "nf3_form_meta` WHERE  `key` = 'calculations' AND value <> 'a:0:{}'"; 
-        $calcs = $wpdb->get_row( $query, 'ARRAY_A' ); 
-
-        if( $calcs[ 'total' ] > 0 ) {
-            return true; 
-        }
-        return false;
-    }
-
-    private function is_ninja_shop_active()
-    {
-        if( class_exists( 'IT_Exchange', FALSE ) ) {
-            return true;
-        } 
-        return false;
     }
 
     private function is_sendwp_active()

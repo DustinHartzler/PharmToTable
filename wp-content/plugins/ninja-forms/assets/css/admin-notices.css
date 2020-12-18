@@ -1,5 +1,6 @@
 .nf-admin-notice {
-    background: #fff;
+    color: white;
+    background: #ED494D;
     border-color: #ED494D;
     border-top: 4px;
     display: block;
@@ -7,35 +8,50 @@
     padding: 10px 40px 10px 145px;
     position: relative;
 }
+.nf-notice-container {
+    margin-left: 20px;
+}
 .nf-admin-notice a {
-    color: #ED494D;
+    color: white;
+    background-color: #3b454d;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 .nf-notice-logo {
     clear: both;
     content: "";
     display: block;
-    background-image: url("../img/nf-logo-vert.png");
-    background-size: 125px 83px;
+    background-image: url("../img/ninja-forms-app-header-logo@2x.png");
+    background-size: 160px 60px;
     background-repeat: no-repeat;
-    background-position: 0 45%;
-    width: 125px;
+    background-position: 0 100%;
+    width: 160px;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 5px;
 }
 .nf-admin-notice > .dashicons {
-    color: #424242;
+    color: white;
+    background-color: transparent;
     position: absolute;
     right: 20px;
     top: 40%;
 }
 .nf-notice-title {
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.nf-notice-links {
+    margin: 0;
+}
+.nf-notice-links li {
+    display: inline-block;
 }
 .nf-notice-body {
     font-weight: normal;
-    margin: 5px 0;
+    margin: 5px 0 10px;
 }
 .nf-notice-body:after {
     clear: both;

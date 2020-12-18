@@ -6,6 +6,11 @@ final class NF_Admin_Menus_ImportExport extends NF_Abstracts_Submenu
 
     public $menu_slug = 'nf-import-export';
 
+    /**
+     * @var int
+     */
+    public $position = 4;
+
     public function __construct()
     {   
         add_action( 'init', array( $this, 'import_form_listener' ), 0 );

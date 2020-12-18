@@ -32,6 +32,12 @@ class NF_Fields_Email extends NF_Abstracts_UserInfo
 
     }
 
+    public function validate( $field, $data ) {
+        if ( ! empty( $field['value'] ) && ! filter_var( $field['value'], FILTER_VALIDATE_EMAIL ) ) {
+            return esc_html__('Please enter a valid email address.', 'ninja-forms');
+        }
+    }
+
     public function filter_default_value( $default_value, $field_class, $settings )
     {
         if( ! isset( $settings[ 'default_type' ] ) ||

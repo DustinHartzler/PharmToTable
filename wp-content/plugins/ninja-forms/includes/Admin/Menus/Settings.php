@@ -6,7 +6,7 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
 
     public $menu_slug = 'nf-settings';
 
-    public $priority = 11;
+    public $position = 5;
 
     protected $_prefix = 'ninja_forms';
 

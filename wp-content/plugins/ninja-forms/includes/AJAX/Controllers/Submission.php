@@ -309,8 +309,14 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
         |--------------------------------------------------------------------------
         */
         if ( isset( $this->_data[ 'settings' ][ 'sub_limit_number' ] ) && ! empty( $this->_data[ 'settings' ][ 'sub_limit_number' ] ) ) {
-            $subs = Ninja_Forms()->form( $this->_form_id )->get_subs();
-            if ( count( $subs ) >= intval( $this->_data[ 'settings' ][ 'sub_limit_number' ] ) ) {
+            global $wpdb;
+            $result = $wpdb->get_row( "SELECT COUNT(DISTINCT(p.ID)) AS count FROM `$wpdb->posts` AS p
+            LEFT JOIN `$wpdb->postmeta` AS m
+            ON p.ID = m.post_id
+            WHERE m.meta_key = '_form_id'
+            AND m.meta_value = $form_id
+            AND p.post_status = 'publish'");
+            if ( intval( $result->count ) >= intval( $this->_data[ 'settings' ][ 'sub_limit_number' ] ) ) {
                 $this->_errors[ 'form' ][] = $this->_data[ 'settings' ][ 'sub_limit_msg' ];
                 $this->_respond();
             }

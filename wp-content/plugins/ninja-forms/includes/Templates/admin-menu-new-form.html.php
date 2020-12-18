@@ -12,16 +12,51 @@
         $nf_settings = get_option( 'ninja_forms_settings' );
         $disable_admin_notices = ( isset ( $nf_settings[ 'disable_admin_notices' ] ) ) ? $nf_settings[ 'disable_admin_notices' ] : false;
 
-        if( ! function_exists( 'NF_Layouts' ) && ! $disable_admin_notices ) {
-            $u_id = get_option( 'nf_aff', false );
-            if ( !$u_id ) $u_id = apply_filters( 'ninja_forms_affiliate_id', false );
-            $link = 'https://ninjaforms.com/extensions/layout-styles/?utm_source=Ninja+Forms+Plugin&utm_medium=Form+Builder&utm_campaign=Builder+Layout+Styles+Comment+Bubble';
-            if ( $u_id ) {
-                $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+        $u_id = get_option( 'nf_aff', false );
+        if ( !$u_id ) $u_id = apply_filters( 'ninja_forms_affiliate_id', false );
+
+        if( ! $disable_admin_notices && ! apply_filters( 'ninja_forms_disable_marketing', false ) ){
+            if( ! function_exists( 'NF_Layouts' ) ) {
+                $link = 'https://ninjaforms.com/extensions/layout-styles/?utm_source=Ninja+Forms+Plugin&utm_medium=Form+Builder&utm_campaign=Builder+Layout+Styles+Comment+Bubble';
+                if ( $u_id ) {
+                    $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+                }
+            ?>
+                <a href="<?php echo $link; ?>" target="_blank" class="nf-cta-bubble"><?php printf( esc_html__( "Drag & drop rows and columns, custom backgrounds, borders, & more without writing a single line of code.", 'ninja-forms' ) ); ?></a>
+            <?php
+            } elseif( ! class_exists( 'NF_ConditionalLogic', false ) ) {
+                $link = 'https://ninjaforms.com/extensions/conditional-logic/?utm_source=Ninja+Forms+Plugin&utm_medium=Form+Builder&utm_campaign=Builder+Conditional+Logic+Comment+Bubble';
+                if ( $u_id ) {
+                    $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+                }
+            ?>
+                <a href="<?php echo $link; ?>" target="_blank" class="nf-cta-bubble"><?php printf( esc_html__( "Show & hide fields and pages, selectively send email, & much more! Build professional forms easily.", 'ninja-forms' ) ); ?></a>
+            <?php
+            } elseif( ! class_exists( 'NF_MultiPart', false ) ) {
+                $link = 'https://ninjaforms.com/extensions/multi-part-forms/?utm_source=Ninja+Forms+Plugin&utm_medium=Form+Builder&utm_campaign=Builder+Multi+Part+Forms+Comment+Bubble';
+                if ( $u_id ) {
+                    $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+                }
+            ?>
+                <a href="<?php echo $link; ?>" target="_blank" class="nf-cta-bubble"><?php printf( esc_html__( "Create multiple page forms with drag-and-drop. You don't need to code to build complex forms!", 'ninja-forms' ) ); ?></a>
+            <?php
+            } elseif( ! function_exists( 'NF_File_Uploads' ) ) {
+                $link = 'https://ninjaforms.com/extensions/file-uploads/?utm_source=Ninja+Forms+Plugin&utm_medium=Form+Builder&utm_campaign=Builder+File+Uploads+Comment+Bubble';
+                if ( $u_id ) {
+                    $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+                }
+            ?>
+                <a href="<?php echo $link; ?>" target="_blank" class="nf-cta-bubble"><?php printf( esc_html__( "Let users upload files to your site! Restrict file type and size. Upload to server, media library, or cloud service.", 'ninja-forms' ) ); ?></a>
+            <?php
+            } elseif( ! class_exists( 'NF_Stripe_Checkout', false ) ) {
+                $link = 'https://ninjaforms.com/extensions/stripe/?utm_source=Ninja+Forms+Plugin&utm_medium=Form+Builder&utm_campaign=Builder+Stripe+Comment+Bubble';
+                if ( $u_id ) {
+                    $link = 'http://www.shareasale.com/r.cfm?u=' . $u_id . '&b=812237&m=63061&afftrack=&urllink=' . $link;
+                }
+            ?>
+                <a href="<?php echo $link; ?>" target="_blank" class="nf-cta-bubble"><?php printf( esc_html__( "Accept credit card payments or donations from any form. Single payments, subscriptions, and more!", 'ninja-forms' ) ); ?></a>
+            <?php
             }
-        ?>
-            <a href="<?php echo $link; ?>" target="_blank" class="nf-cta-bubble"><?php printf( esc_html__( "Create multi-column form layouts with Layout & Styles...%slearn more now!%s", 'ninja-forms' ), '<span>', '</span>' ); ?></a>
-        <?php
         }
         ?>
 
@@ -269,7 +304,15 @@
 
 <script id="tmpl-nf-drawer-content-add-action" type="text/template">
     <span id="nf-drawer-primary"></span>
-    <span id="nf-drawer-secondary"></span>
+
+    <div class="nf-actions-items-available">
+        <span id="nf-drawer-secondary-payments"></span>
+        <span id="nf-drawer-secondary-marketing"></span>
+        <span id="nf-drawer-secondary-management"></span>
+        <span id="nf-drawer-secondary-workflow"></span>
+        <span id="nf-drawer-secondary-notifications"></span>
+        <span id="nf-drawer-secondary-misc"></span>
+    </div>
 </script>
 
 <script id="tmpl-nf-drawer-content-view-changes-item" type="text/template">
@@ -377,7 +420,11 @@
 
 <script id="tmpl-nf-drawer-action-type-section" type="text/template">
     <section class="nf-settings nf-action-items {{{ data.renderClasses() }}}">
-        <h3>{{{ data.renderNicename() }}}</h3>
+        <h3>
+        <# if( data.hasContents() ) { #>
+            {{{ data.renderNicename() }}}
+        <# } #>
+        </h3>
         <span class="action-types"></span>
     </section>
 </script>

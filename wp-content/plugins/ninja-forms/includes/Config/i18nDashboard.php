@@ -79,6 +79,7 @@ return apply_filters( 'ninja_forms_i18n_dashboard', array(
     'cleanupSecondary'                      => esc_html__( 'Cancel', 'ninja-forms' ),
     'cleanupPrimary'                        => sprintf( esc_html__( 'Clean up my data', 'ninja-forms' ) ),
     'cleanupLoading'                        => esc_html__( 'Processing...', 'ninja-forms' ),
+    'noResult'                              => esc_html__( 'No Results Found.', 'ninja-forms' ),
 
     /**
      * Services Tab

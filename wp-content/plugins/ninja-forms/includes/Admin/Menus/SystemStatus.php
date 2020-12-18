@@ -6,7 +6,7 @@ final class NF_Admin_Menus_SystemStatus extends NF_Abstracts_Submenu
 
     public $menu_slug = 'nf-system-status';
 
-    public $priority = 12;
+    public $position = 6;
 
     public function __construct()
     {

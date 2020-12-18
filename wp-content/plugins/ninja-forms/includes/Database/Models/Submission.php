@@ -112,7 +112,7 @@ final class NF_Database_Models_Submission
         $this->_field_values[ $field ] = get_post_meta($this->_id, $field, TRUE);
         $this->_field_values[ $field_ref ] = get_post_meta($this->_id, $field, TRUE);
 
-        return $this->_field_values[ $field ];
+        return WPN_Helper::htmlspecialchars( $this->_field_values[ $field ] );
     }
 
     /**

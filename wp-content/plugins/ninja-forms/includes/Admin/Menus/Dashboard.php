@@ -8,7 +8,7 @@ final class NF_Admin_Menus_Dashboard extends NF_Abstracts_Submenu
 
     public $menu_slug = 'ninja-forms';
 
-    public $priority = 1;
+    public $position = 1;
 
     public function __construct()
     {

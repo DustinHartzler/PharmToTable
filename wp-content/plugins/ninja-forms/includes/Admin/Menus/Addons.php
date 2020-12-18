@@ -6,7 +6,7 @@ final class NF_Admin_Menus_Addons extends NF_Abstracts_Submenu
 
     public $menu_slug = 'ninja-forms#apps';
 
-    public $priority = 13;
+    public $position = 7;
 
     public function __construct()
     {
@@ -81,7 +81,51 @@ final class NF_Admin_Menus_Addons extends NF_Abstracts_Submenu
             }
         }
 
-        Ninja_Forms::template( 'admin-menu-addons.html.php', compact( 'items', 'notices' ) );
+        $groups = [
+            'popular' => [
+                'title' => __( 'You Can Build Smart, Beautiful WordPress Forms!', 'ninja-forms' ),
+                'items' => self::filterItemsByCategroy( $items, 'form-function-design' ),
+            ],
+            'documents' => [
+                'title' => __( 'Better Document Sharing will Take Your Business Further', 'ninja-forms' ),
+                'items' => self::filterItemsByCategroy( $items, 'file-management' ),
+            ],
+            'payments' => [
+                'title' => __( 'Accept Payments & Donations Without Breaking the Bank', 'ninja-forms' ),
+                'items' => self::filterItemsByCategroy( $items, 'payment-gateways' ),
+            ],
+            'marketing' => [
+                'title' => __( 'Want to Attract More Subscribers to Your Mailing Lists?', 'ninja-forms' ),
+                'items' => self::filterItemsByCategroy( $items, 'email-marketing' ),
+            ],
+            'website' => [
+                'title' => __( 'Let Your Users Do More, and Do More for Your Users', 'ninja-forms' ),
+                'items' => self::filterItemsByCategroy( $items, 'user-management' ),
+            ],
+            'crm' => [
+                'title' => __( 'Generate More Leads Than You Ever Thought Possible', 'ninja-forms' ),
+                'items' => self::filterItemsByCategroy( $items, 'crm-integrations' ),
+            ],
+            'notifications' => [
+                'title' => __( 'Never Miss an Important Submission or Lead Again!', 'ninja-forms' ),
+                'items' => self::filterItemsByCategroy( $items, 'notification-workflow' ),
+            ],
+            'misc' => [
+                'title' => __( 'Don’t See Your Favorite Service Above? We Can Likely Still Help.', 'ninja-forms' ),
+                'items' => self::filterItemsByCategroy( $items, 'custom-integrations' ),
+            ],
+        ];
+        
+
+        Ninja_Forms::template( 'admin-menu-addons.html.php', compact( 'items', 'notices', 'groups' ) );
+    }
+
+    public static function filterItemsByCategroy( $items, $category ) {
+        return array_filter( $items, function( $item ) use ($category) {
+            return array_filter( $item['categories'], function( $itemCategory ) use ($category){
+                return $category === $itemCategory['slug'];
+            });
+        });
     }
 
 } // End Class NF_Admin_Addons

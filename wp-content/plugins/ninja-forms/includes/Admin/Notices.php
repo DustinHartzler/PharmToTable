@@ -127,15 +127,17 @@ class NF_Admin_Notices
                     // Admin notice display output
                     echo '<div class="update-nag nf-admin-notice">';
                     echo '<div class="nf-notice-logo"></div>';
-                    echo ' <p class="nf-notice-title">';
+                    echo '<div class="nf-notice-container">';
+                    echo '<div class="nf-notice-title">';
                     echo esc_html( $admin_display_title );
-                    echo ' </p>';
+                    echo '</div>';
                     echo ' <p class="nf-notice-body">';
                     echo $admin_display_msg;
                     echo ' </p>';
-                    echo '<ul class="nf-notice-body nf-red">
+                    echo '<ul class="nf-notice-links">
                           ' . $admin_display_link . '
                         </ul>';
+                    echo '</div>';
                     if ( $admin_can_dismiss ) {
                         echo '<a href="' . wp_nonce_url( esc_attr( $query_str ) ) . '" class="dashicons dashicons-dismiss"></a>';
                     }
