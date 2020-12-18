@@ -3,8 +3,8 @@ Contributors: cadudecastroalves, blastmkt, freemius
 Donate link: https://blastmkt.com/wp-link-bio-wordpress-plugin/?utm_source=wordpress.org&utm_medium=link&utm_campaign=wordpress-plugin-repository&utm_content=donate
 Tags: instagram, twitter, linktree, link bio, landing page
 Requires at least: 4.6
-Tested up to: 5.2.2
-Requires PHP: 5.6
+Tested up to: 5.5.3
+Requires PHP: 7.0
 Stable tag: trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -63,7 +63,7 @@ _You can add only one link to your Instagram bio._
 
 ## Integrations
 
-* WooCommerce (Pro only)
+* WooCommerce (PRO only)
 * Facebook Pixel
 * Google Analytics
 * Google Tag Manager
@@ -115,7 +115,8 @@ Of course! We'd love to get your ideas! Please, [submit your idea](https://wordp
 
 == Changelog ==
 
-= 1.3.1 =
+= 1.4.0 =
 
-* Bug fixes
-    * Fixed conflict with other plugins
+* Updated Freemius SDK to version 2.4.1
+* Increased recommended PHP version to 7.0 or greater
+* Dropped support for PHP 5.6 and other older versions
