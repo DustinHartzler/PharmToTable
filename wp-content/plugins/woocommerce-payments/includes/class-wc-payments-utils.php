@@ -13,6 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WC Payments Utils class
  */
 class WC_Payments_Utils {
+
+	/**
+	 * Max depth used when processing arrays, for example in redact_array.
+	 */
+	const MAX_ARRAY_DEPTH = 10;
+
 	/**
 	 * Mirrors JS's createInterpolateElement functionality.
 	 * Returns a string where angle brackets expressions are replaced with unescaped html while the rest is escaped.
@@ -143,51 +149,62 @@ class WC_Payments_Utils {
 	}
 
 	/**
-	 * Returns a charge_id for an "Order #" search term.
+	 * Returns the charge_id for an "Order #" search term
+	 * or all charge_ids for a "Subscription #" search term.
 	 *
 	 * @param string $term Search term.
 	 *
-	 * @return string The charge_id for the order, or empty if no order is found.
+	 * @return array The charge_id(s) for the order or subscription.
 	 */
-	public static function get_charge_id_from_search_term( $term ) {
-		$order_term = 'Order #';
+	public static function get_charge_ids_from_search_term( $term ) {
+		$order_term = __( 'Order #', 'woocommerce-payments' );
 		if ( substr( $term, 0, strlen( $order_term ) ) === $order_term ) {
 			$term_parts = explode( '#', $term, 2 );
 			$order_id   = isset( $term_parts[1] ) ? $term_parts[1] : '';
-		}
-		if ( ! isset( $order_id ) || empty( $order_id ) ) {
-			return '';
-		}
-
-		$order = wc_get_order( $order_id );
-
-		if ( ! $order ) {
-			return '';
+			$order      = wc_get_order( $order_id );
+			if ( $order ) {
+				return [ $order->get_meta( '_charge_id' ) ];
+			}
 		}
 
-		return $order->get_meta( '_charge_id' );
+		$subscription_term = __( 'Subscription #', 'woocommerce-payments' );
+		if ( function_exists( 'wcs_get_subscription' ) && substr( $term, 0, strlen( $subscription_term ) ) === $subscription_term ) {
+			$term_parts      = explode( '#', $term, 2 );
+			$subscription_id = isset( $term_parts[1] ) ? $term_parts[1] : '';
+			$subscription    = wcs_get_subscription( $subscription_id );
+			if ( $subscription ) {
+				return array_map(
+					function ( $order ) {
+						return $order->get_meta( '_charge_id' );
+					},
+					$subscription->get_related_orders( 'all' )
+				);
+			}
+		}
+
+		return [];
 	}
 
 	/**
-	 * Swaps "Order #" search terms with available charge_ids.
+	 * Swaps "Order #" and "Subscription #" search terms with available charge_ids.
 	 *
-	 * @param string $search Search query.
+	 * @param array $search Raw search query terms.
 	 *
-	 * @return string Processed search string.
+	 * @return array Processed search strings.
 	 */
 	public static function map_search_orders_to_charge_ids( $search ) {
-		// Map Order # terms to the actual charge id to be used in the server.
-		$terms = array_map(
-			function ( $term ) {
-				$charge_id = self::get_charge_id_from_search_term( $term );
-				if ( ! empty( $charge_id ) ) {
-					return $charge_id;
-				} else {
-					return $term;
+		// Map Order # and Subscription # terms to the actual charge IDs to be used in the server.
+		$terms = [];
+		foreach ( $search as $term ) {
+			$charge_ids = self::get_charge_ids_from_search_term( $term );
+			if ( ! empty( $charge_ids ) ) {
+				foreach ( $charge_ids as $charge_id ) {
+					$terms[] = $charge_id;
 				}
-			},
-			$search
-		);
+			} else {
+				$terms[] = $term;
+			}
+		}
 		return $terms;
 	}
 
@@ -219,5 +236,42 @@ class WC_Payments_Utils {
 
 		$billing_details['address'] = array_filter( $billing_details['address'], $remove_empty_entries );
 		return array_filter( $billing_details, $remove_empty_entries );
+	}
+
+	/**
+	 * Redacts the provided array, removing the sensitive information, and limits its depth to LOG_MAX_RECURSION.
+	 *
+	 * @param array   $array The array to redact.
+	 * @param array   $keys_to_redact The keys whose values need to be redacted.
+	 * @param integer $level The current recursion level.
+	 *
+	 * @return array The redacted array.
+	 */
+	public static function redact_array( $array, $keys_to_redact, $level = 0 ) {
+		if ( is_object( $array ) ) {
+			// TODO: if we ever want to log objects, they could implement a method returning an array or a string.
+			return get_class( $array ) . '()';
+		}
+
+		if ( ! is_array( $array ) ) {
+			return $array;
+		}
+
+		if ( $level >= self::MAX_ARRAY_DEPTH ) {
+			return '(recursion limit reached)';
+		}
+
+		$result = [];
+
+		foreach ( $array as $key => $value ) {
+			if ( in_array( $key, $keys_to_redact, true ) ) {
+				$result[ $key ] = '(redacted)';
+				continue;
+			}
+
+			$result[ $key ] = self::redact_array( $value, $keys_to_redact, $level + 1 );
+		}
+
+		return $result;
 	}
 }

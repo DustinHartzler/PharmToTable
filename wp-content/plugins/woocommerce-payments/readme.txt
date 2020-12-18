@@ -2,9 +2,9 @@
 Contributors: woocommerce, automattic
 Tags: woocommerce, payment, payment request, credit card, automattic
 Requires at least: 5.3
-Tested up to: 5.4
+Tested up to: 5.6
 Requires PHP: 7.0
-Stable tag: 1.4.1
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,8 @@ Our global support team is available to answer questions you may have about WooC
 
 To try WooCommerce Payments on your store, simply [install it](https://wordpress.org/plugins/woocommerce-payments/#installation) and follow the prompts.
 
+WooCommerce Payments has experimental support for the Checkout block from [WooCommerce Blocks](https://wordpress.org/plugins/woo-gutenberg-products-block/). Please check the [FAQ section](#faq) for more information.
+
 == Installation ==
 
 Install and activate the WooCommerce and WooCommerce Payments plugins, if you haven't already done so, then go to "Payments" in the WordPress admin menu and follow the instructions there.
@@ -81,6 +83,15 @@ WooCommerce Payments is proudly powered by [Stripe](https://stripe.com/). When y
 
 You can read our Terms of Service [here](https://en.wordpress.com/tos).
 
+= How does the Checkout block work? =
+
+You need the [WooCommerce Blocks](https://wordpress.org/plugins/woo-gutenberg-products-block/) plugin to be installed and active to use the Checkout block. Once you add the block to a page, WooCommerce Payments will automatically appear as an option.
+
+Please note that our support for the checkout block is still experimental and the following features of the gateway will probably not work:
+
+* Using saved cards and saving cards.
+* Integration with WooCommerce Subscriptions.
+
 == Screenshots ==
 
 1. View Transactions
@@ -89,6 +100,54 @@ You can read our Terms of Service [here](https://en.wordpress.com/tos).
 4. Manage Disputes
 
 == Changelog ==
+
+= 1.8.0 - 2020-12-16 =
+* Add - Include information about failing payment into order notes.
+* Fix - Fix crash when a user has 10 or more saved credit cards.
+* Fix - Fix crash if there's a problem connecting to the server.
+* Fix - Store Stripe customer for test and live mode.
+* Fix - Display Payments menu in the sidebar if there's a problem connecting to the server.
+* Add - Display fee structure in transaction timelines.
+* Add - Use site username for recording ToS acceptance.
+* Update - Display transaction tables with full width.
+* Add - Action hooks before and after webhook delivery.
+
+= 1.7.1 - 2020-12-03 =
+* Fix - Pass ISO strings instead of Moment objects to dateI18n.
+
+= 1.7.0 - 2020-11-17 =
+* Fix - Fix ordering of payment detail timeline events.
+* Fix - Payment form hides when saved card is selected.
+* Fix - Render dispute evidence file upload errors.
+* Fix - Increase timeout for calls to the API server.
+* Fix - Correctly display the fee and net amounts for a charge with an inquiry.
+* Fix - Catch unhandled exceptions when cancelling a payment authorization.
+* Add - Security.md with security and vulnerability reporting guidelines.
+* Add - Introduced "Set up refund policy" notification in WooCommerce inbox.
+* Fix - Fix error when retrying to save a card in the Add Payment Method screen after failing SCA authentication.
+* Add - Allow signing up for a subscription with free trial with a credit card that requires SCA authentication.
+* Add - Remote note service.
+* Add - Show details about the current fees in the Settings screen.
+
+= 1.6.0 - 2020-10-15 =
+* Fix - Trimming the whitespace when updating the bank statement descriptor.
+* Add - Initial support for the checkout block.
+* Add - Support wp_get_environment_type() and enable dev-mode when environment is 'development' or 'staging'.
+* Update - Introduced payments-specific exceptions instead of generic one.
+* Update - Transaction timeline: enabled timestamps rendering for all entries.
+
+= 1.5.0 - 2020-09-24 =
+* Fix - Save payment method checkbox for Subscriptions customer-initiated payment method updates.
+* Fix - Support checkout on Internet Explorer 11.
+* Fix - Webhook processing with no Jetpack plugin installed.
+* Fix - Do not block the checkout card field from loading when customer meta is invalid or related to an old account.
+* Fix - Saving account statement descriptor with an ampersand character.
+* Fix - Do not attempt to render the payment timeline if the intention ID is missing.
+* Add - Display payment method details on account subscriptions pages.
+* Add - Redact sensitive data before logging.
+* Add - Support for WooCommerce Subscriptions admin-initiated payment method changes.
+* Add - Link to Subscription admin pages from Transactions views.
+* Add - Support for Subscriptions in transaction search.
 
 = 1.4.1 - 2020-09-07 =
 * Fix - Only redirect to the onboarding screen if the plugin has been individually activated using the plugins page.
