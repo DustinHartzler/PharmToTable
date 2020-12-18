@@ -1,57 +1,66 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
 /**
- * @class Data_Type
- * @since 2.4.6
+ * Class Data_Type.
+ *
+ * @since   2.4.6
+ * @package AutomateWoo
  */
 abstract class Data_Type {
 
-	/** @var string */
+	/**
+	 * The ID (or slug) of the data type.
+	 *
+	 * @var string
+	 */
 	public $id;
 
-
 	/**
+	 * Get the data type ID.
+	 *
 	 * @return string
 	 */
-	function get_id() {
+	public function get_id() {
 		return $this->id;
 	}
 
-
 	/**
+	 * Set the data type ID.
+	 *
 	 * @param string $id
 	 */
-	function set_id( $id ) {
+	public function set_id( $id ) {
 		$this->id = $id;
 	}
 
-
 	/**
-	 * @param $item
+	 * Check that a data item is valid for it's type.
+	 *
+	 * @param mixed $item
+	 *
 	 * @return bool
 	 */
-	abstract function validate( $item );
-
+	abstract public function validate( $item );
 
 	/**
-	 * Only validated $items should be passed to this method
+	 * Only validated $items should be passed to this method.
 	 *
-	 * @param $item
+	 * @param mixed $item
 	 * @return mixed
 	 */
-	abstract function compress( $item );
-
+	abstract public function compress( $item );
 
 	/**
-	 * @param $compressed_item
-	 * @param $compressed_data_layer
+	 * Decompress a data item.
+	 * Usually involves getting the full object from an ID.
+	 *
+	 * @param mixed $compressed_item
+	 * @param array $compressed_data_layer
 	 * @return mixed
 	 */
-	abstract function decompress( $compressed_item, $compressed_data_layer );
-
+	abstract public function decompress( $compressed_item, $compressed_data_layer );
 
 	/**
 	 * Get singular name for data type.

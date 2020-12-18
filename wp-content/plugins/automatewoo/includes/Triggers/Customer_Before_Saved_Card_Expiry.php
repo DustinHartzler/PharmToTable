@@ -3,22 +3,27 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Exceptions\InvalidArgument;
+use AutomateWoo\Triggers\AbstractBatchedDailyTrigger;
+use RuntimeException;
+use WC_Payment_Tokens;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
  * @class Trigger_Customer_Before_Saved_Card_Expiry
  * @since 3.7
  */
-class Trigger_Customer_Before_Saved_Card_Expiry extends Trigger_Background_Processed_Abstract {
+class Trigger_Customer_Before_Saved_Card_Expiry extends AbstractBatchedDailyTrigger {
 
 	public $supplied_data_items = [ 'customer', 'card' ];
 
 
 	function load_admin_details() {
-		$this->title = __( 'Customer Before Saved Card Expiry', 'automatewoo' );
+		$this->title       = __( 'Customer Before Saved Card Expiry', 'automatewoo' );
 		$this->description = __( "This trigger runs a set number of days before a customer's saved card expires. Cards expire on the last calendar day of their expiry month.", 'automatewoo' );
 		$this->description .= ' ' . $this->get_description_text_workflow_not_immediate();
-		$this->group = __( 'Customers', 'automatewoo' );
+		$this->group       = __( 'Customers', 'automatewoo' );
 	}
 
 
@@ -28,7 +33,7 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends Trigger_Background_Proce
 			->set_title( __( 'Days before expiry', 'automatewoo' ) )
 			->set_required();
 
-		$this->add_field($days_before);
+		$this->add_field( $days_before );
 		$this->add_field( $this->get_field_time_of_day() );
 	}
 
@@ -42,7 +47,7 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends Trigger_Background_Proce
 	 *
 	 * @return array
 	 */
-	function get_cards_by_expiry( $workflow, $limit, $offset ) {
+	protected function get_cards_by_expiry( $workflow, $limit, $offset ) {
 		global $wpdb;
 
 		$days_before = absint( $workflow->get_trigger_option( 'days_before_expiry' ) );
@@ -53,10 +58,10 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends Trigger_Background_Proce
 
 		$date = new DateTime();
 		Time_Helper::convert_from_gmt( $date ); // get cards based on the sites timezone
-		$date->modify("+$days_before days");
+		$date->modify( "+$days_before days" );
 
-		$day_to_run = (int) $date->format('j');
-		$days_in_month = (int) $date->format('t');
+		$day_to_run    = (int) $date->format( 'j' );
+		$days_in_month = (int) $date->format( 't' );
 
 		if ( $days_in_month !== $day_to_run ) {
 			return [];
@@ -83,55 +88,60 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends Trigger_Background_Proce
 		return array_keys( $wpdb->get_results( $sql, OBJECT_K ) );
 	}
 
-
 	/**
-	 * @param Workflow $workflow
-	 * @param int      $limit
-	 * @param int      $offset
+	 * Get a batch of items to process for given workflow.
 	 *
-	 * @return array
+	 * @param Workflow $workflow
+	 * @param int      $offset The batch query offset.
+	 * @param int      $limit  The max items for the query.
+	 *
+	 * @return array[] Array of items in array format. Items will be stored in the database so they should be IDs not objects.
 	 */
-	function get_background_tasks( $workflow, $limit, $offset = 0 ) {
-		$tasks = [];
+	public function get_batch_for_workflow( Workflow $workflow, int $offset, int $limit ): array {
+		$items = [];
 
 		foreach ( $this->get_cards_by_expiry( $workflow, $limit, $offset ) as $token_id ) {
-			$tasks[] = [
-				'workflow_id' => $workflow->get_id(),
-				'workflow_data' => [
-					'token_id' => $token_id
-				]
+			$items[] = [
+				'token' => $token_id,
 			];
 		}
 
-		return $tasks;
+		return $items;
 	}
 
+	/**
+	 * Process a single item for a workflow to process.
+	 *
+	 * @param Workflow $workflow
+	 * @param array    $item
+	 *
+	 * @throws InvalidArgument If token is not set.
+	 * @throws RuntimeException If token is not found.
+	 */
+	public function process_item_for_workflow( Workflow $workflow, array $item ) {
+		if ( ! isset( $item['token'] ) ) {
+			throw InvalidArgument::missing_required( 'token' );
+		}
+
+		$token = WC_Payment_Tokens::get( $item['token'] );
+		if ( ! $token ) {
+			throw new RuntimeException( 'Token was not found.' );
+		}
+
+		$workflow->maybe_run(
+			[
+				'customer' => Customer_Factory::get_by_user_id( $token->get_user_id() ),
+				'card'     => $token
+			]
+		);
+	}
 
 	/**
 	 * @param Workflow $workflow
-	 * @param array $data
-	 */
-	function handle_background_task( $workflow, $data ) {
-		$token = isset( $data['token_id'] ) ? \WC_Payment_Tokens::get( absint( $data['token_id'] ) ) : false;
-
-		if ( ! $token ) {
-			return;
-		}
-
-		$customer = Customer_Factory::get_by_user_id( $token->get_user_id() );
-
-		$workflow->maybe_run([
-			'customer' => $customer,
-			'card' => $token
-		]);
-	}
-
-
-	/**
-	 * @param $workflow Workflow
+	 *
 	 * @return bool
 	 */
-	function validate_workflow( $workflow ) {
+	public function validate_workflow( $workflow ) {
 		// workflow should only run once for each card
 		if ( $workflow->has_run_for_data_item( 'card' ) ) {
 			return false;
@@ -139,7 +149,5 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends Trigger_Background_Proce
 
 		return true;
 	}
-
-
 
 }

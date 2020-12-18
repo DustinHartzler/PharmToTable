@@ -3,6 +3,7 @@
 
 namespace AutomateWoo\Rules;
 
+use AutomateWoo\Data_Types;
 use AutomateWoo\RuleQuickFilters\Clauses\ClauseInterface;
 use AutomateWoo\RuleQuickFilters\Clauses\NoOpClause;
 use AutomateWoo\Rules\Interfaces\NonPrimaryDataTypeQuickFilterable;
@@ -21,7 +22,7 @@ class Customer_Country extends Preloaded_Select_Rule_Abstract implements NonPrim
 	use DataTypeConditions;
 
 
-	public $data_item = 'customer';
+	public $data_item = Data_Types::CUSTOMER;
 
 
 	function init() {

@@ -207,16 +207,10 @@ abstract class Mailer_Abstract {
 		add_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
 
 		if ( $sent === false ) {
-
-			global $phpmailer;
-
-			// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-			if ( $phpmailer && is_array( $phpmailer->ErrorInfo ) && ! empty( $phpmailer->ErrorInfo ) ) {
-
-				$error = current( $phpmailer->ErrorInfo );
-				return new \WP_Error( 4, sprintf( __( 'PHP Mailer - %s', 'automatewoo' ), is_object( $error ) ? $error->message : $error ) );
+			$phpmailer_error = $this->get_phpmailer_last_error();
+			if ( $phpmailer_error ) {
+				return new \WP_Error( 4, sprintf( __( 'PHP Mailer - %s', 'automatewoo' ), $phpmailer_error ) );
 			}
-			// phpcs:enable
 
 			return new \WP_Error( 5, __( 'The wp_mail() function returned false.', 'automatewoo' ) );
 		}
@@ -295,6 +289,22 @@ abstract class Mailer_Abstract {
 		Logger::error( 'wp-mail', $error->get_error_message() );
 	}
 
+	/**
+	 * Gets the most recent PHPMailer error message.
+	 *
+	 * @since 5.0.3
+	 *
+	 * @return string
+	 */
+	protected function get_phpmailer_last_error() {
+		global $phpmailer;
+
+		if ( $phpmailer ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			return $phpmailer->ErrorInfo;
+		}
+		return '';
+	}
 
 	/**
 	 * Get email html.

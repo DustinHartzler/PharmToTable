@@ -3,6 +3,7 @@
 
 namespace AutomateWoo\Rules;
 
+use AutomateWoo\Data_Types;
 use AutomateWoo\RuleQuickFilters\Clauses\ClauseInterface;
 use AutomateWoo\RuleQuickFilters\Clauses\NoOpClause;
 use AutomateWoo\Rules\Interfaces\NonPrimaryDataTypeQuickFilterable;
@@ -20,7 +21,7 @@ class Customer_Postcode extends Abstract_String implements NonPrimaryDataTypeQui
 	use StringQuickFilter;
 	use DataTypeConditions;
 
-	public $data_item = 'customer';
+	public $data_item = Data_Types::CUSTOMER;
 
 
 	function init() {

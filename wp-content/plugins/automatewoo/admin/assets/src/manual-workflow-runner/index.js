@@ -4,6 +4,7 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import { Stepper } from '@woocommerce/components';
+import { recordEvent } from '@woocommerce/tracks';
 
 /**
  * Internal dependencies
@@ -14,7 +15,8 @@ import QueueStep from './queue-step';
 import { getWorkflowQuickFilterData } from './api-utils';
 import { getWorkflow, handleFetchError } from '../base/utils';
 import { getTotalPossibleResults } from './utils';
-import recordTracksEvent from '../base/usage-tracking';
+import './index.scss';
+import { TRACKS_PREFIX } from '../settings';
 
 const ManualWorkflowRunner = ( { query } ) => {
 	const [ workflow, setWorkflow ] = useState( {} );
@@ -31,8 +33,9 @@ const ManualWorkflowRunner = ( { query } ) => {
 	 */
 	const onSelectStepComplete = async () => {
 		setStepperIsPending( true );
-		recordTracksEvent( 'manual_workflow_runner_select_workflow', {
-			conversion_tracking_enabled: workflow.is_conversion_tracking_enabled,
+		recordEvent( TRACKS_PREFIX + 'manual_workflow_runner_select_workflow', {
+			conversion_tracking_enabled:
+				workflow.is_conversion_tracking_enabled,
 			tracking_enabled: workflow.is_tracking_enabled,
 			title: workflow.title,
 			type: workflow.type,
@@ -71,12 +74,15 @@ const ManualWorkflowRunner = ( { query } ) => {
 
 			const workflowId =
 				typeof query.workflowId !== 'undefined'
-					? parseInt( query.workflowId )
+					? parseInt( query.workflowId, 10 )
 					: 0;
 
-			if ( 0 !== workflowId ) {
+			if ( workflowId !== 0 ) {
 				try {
 					const newWorkflow = await getWorkflow( workflowId );
+					if ( ! newWorkflow.title ) {
+						newWorkflow.title = __( '(no title)', 'automatewoo' );
+					}
 					setWorkflow( newWorkflow );
 				} catch ( error ) {
 					handleFetchError(
@@ -96,7 +102,7 @@ const ManualWorkflowRunner = ( { query } ) => {
 	}, [ query.workflowId ] );
 
 	const onFindStepComplete = ( newFoundItems ) => {
-		recordTracksEvent( 'manual_run_workflow_button_clicked', {
+		recordEvent( TRACKS_PREFIX + 'manual_run_workflow_button_clicked', {
 			items_count: Object.keys( newFoundItems ).length,
 		} );
 		setCurrentStep( 'queue' );
@@ -104,12 +110,18 @@ const ManualWorkflowRunner = ( { query } ) => {
 	};
 
 	const onFindStepCancel = () => {
-		recordTracksEvent( 'manual_find_matching_cancel_button_clicked', {} );
+		recordEvent(
+			TRACKS_PREFIX + 'manual_find_matching_cancel_button_clicked',
+			{}
+		);
 		setCurrentStep( 'select' );
 	};
 
 	const onQueueStepCancel = () => {
-		recordTracksEvent( 'manual_queue_items_cancel_button_clicked', {} );
+		recordEvent(
+			TRACKS_PREFIX + 'manual_queue_items_cancel_button_clicked',
+			{}
+		);
 		setCurrentStep( 'select' );
 		setFoundItems( {} );
 	};

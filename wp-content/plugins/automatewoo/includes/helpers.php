@@ -319,13 +319,19 @@ function aw_array_extract( &$array, $key ) {
 
 
 /**
- * @param $array
- * @param $key
+ * Move an array item by key to the end of the array.
+ *
+ * @param array $array
+ * @param string $key
+ *
  * @return array
  */
 function aw_array_move_to_end( $array, $key ) {
-	$val = aw_array_extract( $array, $key );
-	$array[$key] = $val;
+	if ( array_key_exists( $key, $array ) ) {
+		$val           = aw_array_extract( $array, $key );
+		$array[ $key ] = $val;
+	}
+
 	return $array;
 }
 

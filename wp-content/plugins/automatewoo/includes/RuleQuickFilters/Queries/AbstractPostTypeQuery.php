@@ -3,7 +3,6 @@
 namespace AutomateWoo\RuleQuickFilters\Queries;
 
 use AutomateWoo\DateTime;
-use AutomateWoo\Exception;
 use AutomateWoo\RuleQuickFilters\Clauses\ClauseInterface;
 use AutomateWoo\RuleQuickFilters\Clauses\DateTimeClause;
 use AutomateWoo\RuleQuickFilters\Clauses\SetClause;
@@ -164,19 +163,48 @@ abstract class AbstractPostTypeQuery extends AbstractQuery {
 			return;
 		}
 
-		// Alter typical database LIKE syntax for WP_Query
-		if ( in_array( $operator, [ 'LIKE', 'NOT LIKE' ], true ) ) {
-			$value = ltrim( $value, '%' );
-			// Leave trailing % if it's escaped
-			$value = preg_replace( '/([^\\\])%$/', '$1', $value );
-			$value = stripcslashes( $value );
+		switch ( $operator ) {
+			case 'CONTAINS':
+				$operator = 'LIKE';
+				break;
+			case 'NOT_CONTAINS':
+				$operator = 'NOT LIKE';
+				break;
+			case 'STARTS_WITH':
+				$operator = 'REGEXP';
+				$value    = '^' . preg_quote( $value, '\'' );
+				break;
+			case 'ENDS_WITH':
+				$operator = 'REGEXP';
+				$value    = preg_quote( $value, '\'' ) . '$';
+				break;
+			case 'REGEX':
+				$operator = 'REGEXP';
+				$value    = preg_replace( '#^/(.+)/[gi]*$#', '$1', $value );
+				break;
+			default:
+				break;
 		}
 
-		$args['meta_query'][] = [
+		$generated_meta_query = [
 			'key'     => $meta_key,
 			'compare' => $operator,
 			'value'   => $value,
 		];
+
+		// For is blank, add NOT EXISTS meta clause in case the meta field doesn't exist at all
+		if ( $operator === '=' && $value === '' ) {
+			$args['meta_query'][] = [
+				'relation' => 'OR',
+				$generated_meta_query,
+				[
+					'key'     => $meta_key,
+					'compare' => 'NOT EXISTS',
+				],
+			];
+		} else {
+			$args['meta_query'][] = $generated_meta_query;
+		}
 	}
 
 	/**
@@ -347,35 +375,70 @@ abstract class AbstractPostTypeQuery extends AbstractQuery {
 		}
 
 		switch ( $operator ) {
-			case 'LIKE':
-			case 'NOT LIKE':
+			case 'CONTAINS':
+				$operator = 'LIKE';
+				$value    = '%' . $wpdb->esc_like( $value ) . '%';
+				break;
+			case 'NOT_CONTAINS':
+				$operator = 'NOT LIKE';
+				$value    = '%' . $wpdb->esc_like( $value ) . '%';
+				break;
+			case 'STARTS_WITH':
+				$operator = 'REGEXP';
+				$value    = '^' . preg_quote( $value, '\'' );
+				break;
+			case 'ENDS_WITH':
+				$operator = 'REGEXP';
+				$value    = preg_quote( $value, '\'' ) . '$';
+				break;
+			case 'REGEX':
+				$operator = 'REGEXP';
+				$value    = preg_replace( '#^/(.+)/[gi]*$#', '$1', $value );
+				break;
 			case '=':
 			case '!=':
-				// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$this->wp_query_custom_where_clauses[] = $wpdb->prepare(
-					" AND ({$wpdb->posts}.{$column} {$operator} %s) ",
-					$value
-				);
-				// phpcs:enable
 				break;
 			default:
 				throw new UnexpectedValueException();
 		}
+
+		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$this->wp_query_custom_where_clauses[] = $wpdb->prepare(
+			" AND ({$wpdb->posts}.{$column} {$operator} %s) ",
+			$value
+		);
+		// phpcs:enable
 	}
 
 	/**
-	 * Add numeric post meta query arg.
+	 * Add integer post meta query arg.
 	 *
 	 * @param array           $query_args
 	 * @param string          $meta_key
 	 * @param ClauseInterface $clause
 	 */
-	protected function add_numeric_post_meta_query_arg( &$query_args, $meta_key, $clause ) {
+	protected function add_integer_post_meta_query_arg( &$query_args, $meta_key, $clause ) {
 		$query_args['meta_query'][] = [
 			'key'     => $meta_key,
 			'compare' => $clause->get_operator(),
 			'value'   => $clause->get_value(),
 			'type'    => 'NUMERIC',
+		];
+	}
+
+	/**
+	 * Add decimal post meta query arg.
+	 *
+	 * @param array           $query_args
+	 * @param string          $meta_key
+	 * @param ClauseInterface $clause
+	 */
+	protected function add_decimal_post_meta_query_arg( &$query_args, $meta_key, $clause ) {
+		$query_args['meta_query'][] = [
+			'key'     => $meta_key,
+			'compare' => $clause->get_operator(),
+			'value'   => $clause->get_value(),
+			'type'    => 'DECIMAL(24,8)',
 		];
 	}
 

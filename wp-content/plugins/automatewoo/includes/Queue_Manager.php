@@ -9,14 +9,6 @@ namespace AutomateWoo;
 class Queue_Manager {
 
 	/**
-	 * @return int
-	 */
-	static function get_batch_size() {
-		return (int) apply_filters( 'automatewoo_queue_batch_size', 50 );
-	}
-
-
-	/**
 	 * @param $code
 	 * @return string
 	 */
@@ -34,36 +26,6 @@ class Queue_Manager {
 
 		return __( 'Cause of queued event failure is unknown.', 'automatewoo' );
 	}
-
-
-	/**
-	 * Check for queued workflow runs
-	 */
-	static function check_for_queued_events() {
-
-		/** @var Background_Processes\Queue $process */
-		$process = Background_Processes::get('queue');
-
-		// don't start a new process until the previous is finished
-		if ( $process->has_queued_items() ) {
-			$process->maybe_schedule_health_check();
-			return;
-		}
-
-		$query = ( new Queue_Query() )
-			->set_limit( self::get_batch_size() )
-			->set_ordering( 'date', 'ASC' )
-			->where_date_due( new DateTime(), '<' )
-			->where_failed( false )
-			->set_return( 'ids' );
-
-		if ( ! $events = $query->get_results() ) {
-			return;
-		}
-
-		$process->data( $events )->start();
-	}
-
 
 	/**
 	 * Returns the meta key that a data item is mapped to in queue meta.

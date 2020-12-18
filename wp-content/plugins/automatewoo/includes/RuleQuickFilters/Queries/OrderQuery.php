@@ -3,6 +3,8 @@
 namespace AutomateWoo\RuleQuickFilters\Queries;
 
 use AutomateWoo\RuleQuickFilters\Clauses\ClauseInterface;
+use AutomateWoo\RuleQuickFilters\Clauses\NumericClause;
+use AutomateWoo\Rules\Order_Meta;
 use UnexpectedValueException;
 use WC_Order;
 
@@ -56,6 +58,17 @@ class OrderQuery extends AbstractPostTypeQuery {
 	protected function map_clause_to_wp_query_arg( $clause, &$query_args ) {
 		$property = $clause->get_property();
 
+		// Address custom fields (flagged using the $property_prefix)
+		if ( strpos( $property, Order_Meta::$property_prefix ) === 0 ) {
+			$property = str_replace( Order_Meta::$property_prefix, '', $property );
+			if ( $clause instanceof NumericClause ) {
+				$this->add_decimal_post_meta_query_arg( $query_args, $property, $clause );
+			} else {
+				$this->add_basic_post_meta_query_arg( $query_args, $property, $clause );
+			}
+			return;
+		}
+
 		switch ( $property ) {
 			case 'billing_country':
 			case 'billing_email':
@@ -68,8 +81,10 @@ class OrderQuery extends AbstractPostTypeQuery {
 				$this->add_basic_post_meta_query_arg( $query_args, "_{$property}", $clause );
 				break;
 			case 'order_total':
+				$this->add_decimal_post_meta_query_arg( $query_args, "_{$property}", $clause );
+				break;
 			case 'customer_user':
-				$this->add_numeric_post_meta_query_arg( $query_args, "_{$property}", $clause );
+				$this->add_integer_post_meta_query_arg( $query_args, "_{$property}", $clause );
 				break;
 			case 'date_paid':
 				$this->add_datetime_post_meta_query_arg( $query_args, "_{$property}", $clause, true );

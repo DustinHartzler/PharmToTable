@@ -14,6 +14,7 @@ import HighVolumeWarning from './high-volume-warning';
 import ItemFinder from './item-finder';
 import { useFindItemsReducer } from './data';
 import NoResults from './no-results';
+import './index.scss';
 
 const FindItemsStep = ( {
 	workflow,

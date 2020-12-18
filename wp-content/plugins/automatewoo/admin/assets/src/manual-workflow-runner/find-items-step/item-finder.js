@@ -4,11 +4,12 @@
 import { useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
+import { Button } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
-import { Button, ProgressBar } from '../../base/components';
+import { ProgressBar } from '../../base/components';
 import { getWorkflowMatchingItems } from '../api-utils';
 import { getCurrentProgressGroupNumber } from './data';
 import {
@@ -40,7 +41,7 @@ const ItemFinder = ( {
 
 		const fetchItemsBatch = async () => {
 			const groupNumber = getCurrentProgressGroupNumber( state.progress );
-			if ( null === groupNumber ) {
+			if ( groupNumber === null ) {
 				return;
 			}
 			const progressGroup = state.progress[ groupNumber ];
@@ -104,7 +105,7 @@ const ItemFinder = ( {
 			<ProgressBar progress={ state.progressPercent } />
 			<ItemsTable items={ state.items } />
 			<div className="automatewoo-workflow-runner-buttons">
-				<Button isLarge isDefault onClick={ onCancel }>
+				<Button isSecondary onClick={ onCancel }>
 					{ __( 'Cancel', 'automatewoo' ) }
 				</Button>
 				<NextButton

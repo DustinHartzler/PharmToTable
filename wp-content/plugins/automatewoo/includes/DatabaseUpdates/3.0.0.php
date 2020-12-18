@@ -10,7 +10,7 @@ namespace AutomateWoo\DatabaseUpdates;
 use AutomateWoo\Replace_Helper;
 use AutomateWoo\Variables_Processor;
 use AutomateWoo\Workflow;
-use AutomateWoo\Workflow_Factory;
+use AutomateWoo\Workflows\Factory;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -55,7 +55,7 @@ class Database_Update_3_0_0 extends AbstractDatabaseUpdate {
 		$batch = array_splice( $items, 0, 5 );
 
 		foreach ( $batch as $item ) {
-			$workflow = Workflow_Factory::get( $item );
+			$workflow = Factory::get( $item );
 			$this->convert_workflow_from_user_to_customer_data_type( $workflow );
 			$this->convert_legacy_abandoned_cart_workflow( $workflow );
 			$this->items_processed++;

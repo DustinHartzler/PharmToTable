@@ -3,21 +3,24 @@
     "description": "",
     "type": "wordpress-plugin",
     "require-dev": {
-        "phpunit/phpunit": "^5",
+        "phpunit/phpunit": "^6.5 || ^7",
         "wp-cli/i18n-command": "^2.2",
         "wp-coding-standards/wpcs": "^2.2",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5"
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7"
     },
-    "config": {
-        "platform": {
-            "php": "7.0"
-        }
+    "require": {
+        "php": ">=7.0"
     },
     "autoload": {
         "classmap": ["includes/", "admin/"],
         "psr-4": {
             "AutomateWoo\\": ["includes/"],
             "AutomateWoo\\Admin\\": ["admin/"]
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AutomateWoo\\Tests\\": "tests/unit-tests/"
         }
     }
 }

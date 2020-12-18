@@ -5,9 +5,10 @@ namespace AutomateWoo\Admin\Controllers;
 
 use AutomateWoo\Admin;
 use AutomateWoo\Clean;
+use AutomateWoo\Logger;
 use AutomateWoo\Queue_Manager;
 use AutomateWoo\Report_Queue;
-use AutomateWoo\Jobs\DeleteFailedQueuedWorkflows;
+use AutomateWoo\Jobs\JobException;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -46,15 +47,17 @@ class Queue extends Base {
 		$table->nonce_action = $this->get_nonce_action();
 
 		$sidebar_content = '<p>' . sprintf(
-			__( 'Workflows that are not set to run immediately will be added to this queue. The queue processes %s items every 5 minutes so actual run times may vary. <%s>Read more&hellip;<%s>', 'automatewoo' ),
-			Queue_Manager::get_batch_size(),
-			'a href="' . Admin::get_docs_link('queue', 'queue-list' ) . '" target="_blank"',
-			'/a'
-		) . '</p>';
+				__( 'Workflows that are not set to run immediately will be added to this queue. The queue is checked every two minutes so actual run times will vary slightly. <%s>Read more&hellip;<%s>', 'automatewoo' ),
+				'a href="' . Admin::get_docs_link( 'queue', 'queue-list' ) . '" target="_blank"',
+				'/a'
+			) . '</p>';
 
-		$deletion_job = new DeleteFailedQueuedWorkflows();
-
-		$sidebar_content .= '<p>' . sprintf( __( 'Failed queue items will be deleted after %d days', 'automatewoo' ), $deletion_job->get_deletion_period() ) . '</p>';
+		try {
+			$deletion_job = AW()->job_service()->get_job( 'delete_failed_queued_workflows' );
+			$sidebar_content .= '<p>' . sprintf( __( 'Failed queue items will be deleted after %d days', 'automatewoo' ), $deletion_job->get_deletion_period() ) . '</p>';
+		} catch ( JobException $e ) {
+			Logger::error( 'jobs', $e->getMessage() );
+		}
 
 		$this->output_view( 'page-table-with-sidebar', [
 			'table' => $table,

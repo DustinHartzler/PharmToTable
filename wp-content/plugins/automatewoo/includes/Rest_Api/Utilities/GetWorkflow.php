@@ -3,7 +3,7 @@
 namespace AutomateWoo\Rest_Api\Utilities;
 
 use AutomateWoo\Workflow;
-use AutomateWoo\Workflow_Factory;
+use AutomateWoo\Workflows\Factory;
 
 
 /**
@@ -23,7 +23,7 @@ trait GetWorkflow {
 	 * @throws RestException When the workflow does not exist.
 	 */
 	protected function get_workflow( $id ) {
-		$workflow = Workflow_Factory::get( $id );
+		$workflow = Factory::get( $id );
 		if ( $workflow === false ) {
 			throw new RestException(
 				'rest_invalid_workflow_id',

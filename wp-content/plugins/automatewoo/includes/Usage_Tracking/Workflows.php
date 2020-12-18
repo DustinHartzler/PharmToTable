@@ -3,7 +3,7 @@
 namespace AutomateWoo\Usage_Tracking;
 
 use AutomateWoo\Workflow;
-use AutomateWoo\Workflow_Factory;
+use AutomateWoo\Workflows\Factory;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -40,7 +40,7 @@ class Workflows implements Event_Tracker_Interface {
 	 * @param int $workflow_id The workflow ID.
 	 */
 	public function created( $workflow_id ) {
-		$workflow = Workflow_Factory::get( $workflow_id );
+		$workflow = Factory::get( $workflow_id );
 		if ( ! $workflow instanceof Workflow ) {
 			return;
 		}

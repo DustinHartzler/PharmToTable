@@ -118,7 +118,7 @@ abstract class Registry {
 			} else {
 				// If include is not a file path, assume it's a class name
 				if ( class_exists( $include ) ) {
-					$object = new $include();
+					$object = new $include( ...static::get_item_constructor_args( $name ) );
 				}
 			}
 		}
@@ -148,6 +148,17 @@ abstract class Registry {
 	 */
 	public static function is_item_valid( $item ) {
 		return is_object( $item );
+	}
+
+	/**
+	 * Get the constructor args for an item.
+	 *
+	 * @param string $name
+	 *
+	 * @return array
+	 */
+	protected static function get_item_constructor_args( string $name ): array {
+		return [];
 	}
 
 	/**

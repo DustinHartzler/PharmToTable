@@ -45,9 +45,8 @@ class Action_Subscription_Add_Product extends Action_Subscription_Edit_Product_A
 	 */
 	public function load_admin_details() {
 		parent::load_admin_details();
-		$this->title        = __( 'Add Product', 'automatewoo' );
-		$this->description  = __( 'Add a product as a new line item on a subscription. The item will be added using the price set on the product. This action can be used for bulk editing subscriptions, or to change the products provided to a subscriber at different stages of their subscription\'s lifecycle.', 'automatewoo' );
-		$this->description .= ' ' . $this->get_recalculate_coupons_compatibility_text();
+		$this->title       = __( 'Add Product', 'automatewoo' );
+		$this->description = __( 'Add a product as a new line item on a subscription. The item will be added using the price set on the product. This action can be used for bulk editing subscriptions, or to change the products provided to a subscriber at different stages of their subscription\'s lifecycle.', 'automatewoo' );
 	}
 
 

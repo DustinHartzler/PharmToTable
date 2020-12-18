@@ -5,6 +5,7 @@ namespace AutomateWoo;
 
 use AutomateWoo\Admin\JSON_Search;
 use AutomateWoo\Exceptions\InvalidPreviewData;
+use AutomateWoo\Workflows\Factory;
 
 /**
  * @class Admin_Ajax
@@ -463,7 +464,7 @@ class Admin_Ajax {
 			die;
 		}
 
-		$workflow = Workflow_Factory::get( aw_get_post_var( 'workflow_id' ) );
+		$workflow = Factory::get( aw_get_post_var( 'workflow_id' ) );
 		$trigger_name = Clean::string( aw_get_post_var( 'trigger_name' ) );
 		$action_fields = $workflow->sanitize_action_fields( aw_get_post_var( 'action_fields' ) );
 
@@ -614,7 +615,7 @@ class Admin_Ajax {
 		if ( ! current_user_can( 'manage_woocommerce' ) )
 			die;
 
-		$workflow = Workflow_Factory::get( aw_request( 'workflow_id' ) );
+		$workflow = Factory::get( aw_request( 'workflow_id' ) );
 		$new_state = Clean::string( aw_request( 'new_state' ) );
 
 		if ( ! $workflow || ! $new_state )

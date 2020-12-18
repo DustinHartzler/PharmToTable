@@ -37,9 +37,6 @@ class Hooks {
 		// tools
 		add_action( 'automatewoo/tools/background_process', [ 'AutomateWoo\Tools', 'handle_background_process' ], 10, 2 );
 
-		// queue
-		add_action( 'automatewoo_five_minute_worker', [ 'AutomateWoo\Queue_Manager', 'check_for_queued_events' ] );
-
 		add_action( 'get_header', [ 'AutomateWoo\Language', 'make_language_persistent' ] );
 
 		// object caching

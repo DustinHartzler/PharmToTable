@@ -1,65 +1,71 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
- * @class Settings_Tab_Twilio
+ * Settings_Tab_Twilio class.
  */
 class Settings_Tab_Twilio extends Admin_Settings_Tab_Abstract {
 
-	function __construct() {
-		$this->id = 'twilio';
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		$this->id   = 'twilio';
 		$this->name = __( 'Twilio', 'automatewoo' );
 	}
 
 	/**
+	 * Get tab settings.
+	 *
 	 * @return array
 	 */
-	function get_settings() {
+	public function get_settings() {
 		return [
 			[
 				'type' => 'title',
-				'id' => 'automatewoo_twilio_integration'
+				'id'   => 'automatewoo_twilio_integration',
 			],
 			[
-				'title' => __( 'Enable', 'automatewoo' ),
-				'id' => 'automatewoo_twilio_integration_enabled',
-				'desc' => __( 'Enable Twilio Integration', 'automatewoo' ),
-				'default' => 'no',
+				'title'    => __( 'Enable', 'automatewoo' ),
+				'id'       => 'automatewoo_twilio_integration_enabled',
+				'desc'     => __( 'Enable Twilio Integration', 'automatewoo' ),
+				'default'  => 'no',
 				'autoload' => true,
-				'type' => 'checkbox',
+				'type'     => 'checkbox',
 			],
 			[
-				'title' => __( 'From', 'automatewoo' ),
+				'title'    => __( 'From', 'automatewoo' ),
 				'desc_tip' => __( 'Must be a Twilio phone number (in E.164 format) or alphanumeric sender ID.', 'automatewoo' ),
-				'id' => 'automatewoo_twilio_from',
-				'type' => 'text',
+				'id'       => 'automatewoo_twilio_from',
+				'type'     => 'text',
 				'autoload' => false,
 			],
 			[
-				'title' => __( 'Account SID', 'automatewoo' ),
-				'id' => 'automatewoo_twilio_auth_id',
-				'type' => 'text',
+				'title'    => __( 'Account SID', 'automatewoo' ),
+				'id'       => 'automatewoo_twilio_auth_id',
+				'type'     => 'text',
 				'autoload' => false,
 			],
 			[
-				'title' => __( 'Auth Token', 'automatewoo' ),
-				'id' => 'automatewoo_twilio_auth_token',
-				'type' => 'password',
+				'title'    => __( 'Auth Token', 'automatewoo' ),
+				'id'       => 'automatewoo_twilio_auth_token',
+				'type'     => 'password',
 				'autoload' => false,
 			],
 			[
 				'type' => 'sectionend',
-				'id' => 'automatewoo_twilio_integration'
-			]
+				'id'   => 'automatewoo_twilio_integration',
+			],
 		];
 	}
 
-
-	function output() {
+	/**
+	 * Output settings tab.
+	 */
+	public function output() {
 		$this->output_settings_form();
 		Admin::get_view( 'sms-test-twilio' );
 		wp_enqueue_script( 'automatewoo-sms-test' );

@@ -13,6 +13,8 @@ use WC_Subscription;
  */
 class Workflow {
 
+	const POST_TYPE = 'aw_workflow';
+
 	/** @var int */
 	public $id;
 
@@ -66,7 +68,7 @@ class Workflow {
 			$post = get_post($post);
 		}
 
-		if ( ! $post || $post->post_type !== 'aw_workflow' ) {
+		if ( ! $post || $post->post_type !== self::POST_TYPE ) {
 			return;
 		}
 
@@ -80,8 +82,18 @@ class Workflow {
 	/**
 	 * @return int
 	 */
-	function get_id() {
+	public function get_id() {
 		return $this->id ? Clean::id( $this->id ) : 0;
+	}
+
+	/**
+	 * Set workflow ID.
+	 *
+	 * @since 5.1.0
+	 * @param int $id
+	 */
+	public function set_id( int $id ) {
+		$this->id = $id;
 	}
 
 
@@ -383,6 +395,14 @@ class Workflow {
 		// some rules need the full workflow object
 		$rule_object->set_workflow( $this );
 
+		// Check the expected rule value is valid.
+		try {
+			$rule_object->validate_value( $rule_value );
+		} catch ( \Exception $e ) {
+			// Always return false if the rule value is invalid
+			return false;
+		}
+
 		return $rule_object->validate( $data_item, $rule_compare, $rule_value );
 	}
 
@@ -471,8 +491,9 @@ class Workflow {
 
 		switch( $this->get_timing_type() ) {
 			case 'delayed':
-				$date = new DateTime();
-				$date->setTimestamp( time() + $this->get_timing_delay() );
+				$date              = new DateTime();
+				$current_timestamp = time();
+				$date->setTimestamp( $current_timestamp + $this->get_timing_delay( $current_timestamp ) );
 				break;
 			case 'scheduled':
 				$date = $this->calculate_scheduled_datetime();
@@ -532,7 +553,7 @@ class Workflow {
 			Language::set_original();
 		}
 
-		remove_filter( 'woocommerce_get_tax_location', [ $this, 'filter_tax_location' ]  );
+		remove_filter( 'woocommerce_get_tax_location', [ $this, 'filter_tax_location' ], 50 );
 
 		$this->is_setup = false;
 	}
@@ -641,13 +662,19 @@ class Workflow {
 		return $when;
 	}
 
-
 	/**
 	 * Return the delay period in seconds
+	 *
 	 * @since 2.9
+	 * @param integer|null $current_timestamp the current timestamp, used for calculating 'month' delays.
 	 * @return integer
 	 */
-	function get_timing_delay() {
+	public function get_timing_delay( $current_timestamp = null ) {
+
+		// Default to execution time.
+		if ( is_null( $current_timestamp ) ) {
+			$current_timestamp = time();
+		}
 
 		$timing_type = $this->get_timing_type();
 
@@ -656,20 +683,31 @@ class Workflow {
 		}
 
 		$number = $this->get_timing_delay_number();
-		$unit = $this->get_timing_delay_unit();
+		$unit   = $this->get_timing_delay_unit();
 
 		$units = [
-			'm' => MINUTE_IN_SECONDS,
-			'h' => HOUR_IN_SECONDS,
-			'd' => DAY_IN_SECONDS,
-			'w' => WEEK_IN_SECONDS
+			'm'     => MINUTE_IN_SECONDS,
+			'h'     => HOUR_IN_SECONDS,
+			'd'     => DAY_IN_SECONDS,
+			'w'     => WEEK_IN_SECONDS,
+			'month' => MONTH_IN_SECONDS,
 		];
 
-		if ( ! $number || ! isset( $units[$unit] ) ) {
+		if ( ! $number || ! isset( $units[ $unit ] ) ) {
 			return 0;
+		} elseif ( 'month' === $unit ) {
+			try {
+				$delay_date = new DateTime();
+				$delay_date->setTimestamp( $current_timestamp );
+				$delay_date->add_natural_months( $number );
+				return $delay_date->getTimeStamp() - $current_timestamp;
+			} catch ( \Exception $exception ) {
+				// Invalid $number of months.
+				return 0;
+			}
 		}
 
-		return $number * $units[$unit];
+		return $number * $units[ $unit ];
 	}
 
 
@@ -711,7 +749,7 @@ class Workflow {
 
 		// get minimum datetime before scheduling can happen, if no delay is set then this will be now
 		$min_wait_datetime = new DateTime;
-		$min_wait_datetime->setTimestamp( $current_timestamp + $this->get_timing_delay() );
+		$min_wait_datetime->setTimestamp( $current_timestamp + $this->get_timing_delay( $current_timestamp ) );
 		$min_wait_time_seconds_from_day_start = Time_Helper::calculate_seconds_from_day_start( $min_wait_datetime );
 
 		// check to see if the scheduled time of day is later than the min wait time
@@ -930,6 +968,8 @@ class Workflow {
 	 * Values will be sanitized as per the fields set on the action object. Data is
 	 * only sanitized before write, not before read.
 	 *
+	 * todo: Update data structure to use separate name and options keys
+	 *
 	 * @since 4.4.0
 	 *
 	 * @param array $raw_actions_data
@@ -1052,9 +1092,14 @@ class Workflow {
 			return [];
 		}
 
-		return array_map( function( $rule_group ) {
-			return array_map( [ $this, 'sanitize_rule_option' ], $rule_group );
-		}, $options );
+		// Remove array key names from rules, as they are not needed.
+		$cleaned = [];
+		foreach ( $options as $rule_group ) {
+			$rule_group = array_map( [ $this, 'sanitize_rule_option' ], $rule_group );
+			$cleaned[]  = array_values( $rule_group );
+		}
+
+		return $cleaned;
 	}
 
 

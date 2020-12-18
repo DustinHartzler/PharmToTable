@@ -3,6 +3,8 @@
 
 namespace AutomateWoo\Rules;
 
+use AutomateWoo\Data_Types;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -10,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Cart_Items extends Product_Select_Rule_Abstract {
 
-	public $data_item = 'cart';
+	public $data_item = Data_Types::CART;
 
 
 	function init() {

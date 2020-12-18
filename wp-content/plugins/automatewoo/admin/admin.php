@@ -17,16 +17,14 @@ class Admin {
 		$self = __CLASS__; /** @var $self Admin (for IDE) */
 
 		Admin_Ajax::init();
-		Admin_Notices::init();
+		AdminNotices::init();
 		( new WCAdminConnectPages )->init();
 
 		add_action( 'current_screen', [ $self, 'includes' ] );
 		add_action( 'admin_enqueue_scripts', [ $self, 'register_scripts' ] );
 		add_action( 'admin_enqueue_scripts', [ $self, 'register_styles' ] );
 		add_action( 'admin_enqueue_scripts', [ $self, 'enqueue_scripts_and_styles' ], 20 );
-		if ( defined( 'WC_ADMIN_PLUGIN_FILE' ) ) {
-			add_action( 'admin_enqueue_scripts', [ $self, 'load_react_ui_scripts' ] );
-		}
+		add_action( 'admin_enqueue_scripts', [ $self, 'load_react_ui_scripts' ] );
 		add_action( 'admin_menu', [ $self, 'admin_menu' ] );
 		add_action( 'admin_footer', [ $self, 'replace_top_level_menu' ] );
 		add_action( 'admin_head', [ $self, 'menu_highlight' ] );
@@ -216,7 +214,7 @@ class Admin {
 			}
 		}
 
-		if ( defined( 'WC_ADMIN_PLUGIN_FILE' ) ) {
+		if ( WC()->is_wc_admin_active() ) {
 			wc_admin_register_page(
 				[
 					'id'     => 'automatewoo-manual-workflow-runner',
@@ -253,15 +251,12 @@ class Admin {
 			$suffix = '.min';
 		}
 
-		$vendor_url = AW()->admin_assets_url( '/js/vendor' );
-
-		wp_register_script( 'automatewoo-clipboard', $vendor_url."/clipboard$suffix.js", [], AW()->version );
 		wp_register_script( 'js-cookie', WC()->plugin_url()."/assets/js/js-cookie/js.cookie{$suffix}.js", [], '2.1.4', true );
 
 		wp_register_script( 'automatewoo', $url."/automatewoo$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'jquery-tiptip', 'backbone', 'underscore' ], AW()->version );
 		wp_register_script( 'automatewoo-validate', $url."/validate$suffix.js", [ 'automatewoo' ], AW()->version );
 		wp_register_script( 'automatewoo-workflows', $url."/workflows$suffix.js", [ 'automatewoo', 'automatewoo-validate', 'automatewoo-modal', 'wp-util' ], AW()->version );
-		wp_register_script( 'automatewoo-variables', $url."/variables$suffix.js", [ 'automatewoo-modal', 'automatewoo-clipboard' ], AW()->version );
+		wp_register_script( 'automatewoo-variables', $url."/variables$suffix.js", [ 'automatewoo-modal', 'clipboard' ], AW()->version );
 		wp_register_script( 'automatewoo-tools', $url."/tools$suffix.js", [ 'automatewoo' ], AW()->version );
 		wp_register_script( 'automatewoo-sms-test', $url."/sms-test$suffix.js", [ 'automatewoo' ], AW()->version );
 		wp_register_script( 'automatewoo-modal', $url."/modal$suffix.js", [ 'automatewoo' ], AW()->version );
@@ -305,10 +300,10 @@ class Admin {
 
 
 	static function register_styles() {
-		wp_register_style( 
+		wp_register_style(
 			'automatewoo-main',
 			AW()->admin_assets_url( '/css/aw-main.css' ),
-			defined( 'WC_ADMIN_PLUGIN_FILE' ) ? [ 'wc-admin-app' ] : [],
+			[],
 			AW()->version
 		);
 		wp_register_style( 'automatewoo-preview', AW()->admin_assets_url( '/css/preview.css' ), [], AW()->version );
@@ -320,11 +315,26 @@ class Admin {
 	 */
 	static function enqueue_scripts_and_styles() {
 		$screen_id = self::get_current_screen_id();
+		$is_aw_screen = self::is_automatewoo_screen();
+
+		// Load WC Admin styles for AW pages before our own styles
+		if ( defined( 'WC_ADMIN_APP' ) && $is_aw_screen ) {
+			wp_enqueue_style( WC_ADMIN_APP );
+		}
 
 		wp_enqueue_script( 'automatewoo' );
 		wp_enqueue_style( 'automatewoo-main' );
 
-		if ( self::is_automatewoo_screen() ) {
+		if ( self::should_react_ui_be_loaded() ) {
+			wp_enqueue_style(
+				'automatewoo-webpack',
+				AW()->admin_assets_url( '/build/index.css' ),
+				[ 'wc-admin-app' ],
+				AW()->version
+			);
+		}
+
+		if ( $is_aw_screen ) {
 			wp_enqueue_script( 'woocommerce_admin' );
 			wp_enqueue_script( 'wc-enhanced-select' );
 			wp_enqueue_script( 'jquery-tiptip' );
@@ -344,11 +354,28 @@ class Admin {
 	}
 
 	/**
+	 * Should the react UI load?
+	 *
+	 * If the current page is an AW php page or a WC Admin JS-powered page, then yes.
+	 *
+	 * @since 5.1.2
+	 *
+	 * @return bool
+	 */
+	protected static function should_react_ui_be_loaded() {
+		return WC()->is_wc_admin_active() && ( self::is_automatewoo_screen() || wc_admin_is_registered_page() );
+	}
+
+	/**
 	 * Load react powered admin JS.
 	 *
 	 * @since 5.0.0
 	 */
 	public static function load_react_ui_scripts() {
+		if ( ! self::should_react_ui_be_loaded() ) {
+			return;
+		}
+
 		$asset_file_path = AW()->admin_path() . "/assets/build/index.asset.php";
 
 		if ( ! file_exists( $asset_file_path ) ) {
@@ -358,10 +385,9 @@ class Admin {
 		$asset_file   = (array) include $asset_file_path;
 		$dependencies = isset( $asset_file['dependencies'] ) ? $asset_file['dependencies'] : [];
 		// Depend on main admin script for plugin settings
-		$dependencies[] = 'automatewoo';
-		$dependencies[] = 'wc-settings';
-		$version        = isset( $asset_file['version'] ) ? $asset_file['version'] : false;
-		$handle         = 'automatewoo-react-ui';
+		$dependencies = array_merge( $dependencies, [ 'jquery', 'automatewoo', 'wc-settings' ] );
+		$version      = isset( $asset_file['version'] ) ? $asset_file['version'] : false;
+		$handle       = 'automatewoo-react-ui';
 
 		wp_enqueue_script(
 			$handle,
@@ -467,6 +493,9 @@ class Admin {
 
 			case 'workflows':
 				return admin_url( 'edit.php?post_type=aw_workflow' );
+
+			case 'workflow-presets':
+				return admin_url( 'edit.php?post_type=aw_workflow#presets' );
 
 			case 'settings':
 				return admin_url( 'admin.php?page=automatewoo-settings' );

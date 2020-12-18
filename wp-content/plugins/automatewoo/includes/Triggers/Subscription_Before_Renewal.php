@@ -3,13 +3,20 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Exceptions\InvalidArgument;
+use AutomateWoo\Traits\IntegerValidator;
+use AutomateWoo\Triggers\AbstractBatchedDailyTrigger;
+use WP_Query;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * @class Trigger_Subscription_Before_Renewal
  * @since 2.6.2
  */
-class Trigger_Subscription_Before_Renewal extends Trigger_Background_Processed_Abstract {
+class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
+
+	use IntegerValidator;
 
 	/**
 	 * Sets supplied data for the trigger.
@@ -39,96 +46,111 @@ class Trigger_Subscription_Before_Renewal extends Trigger_Background_Processed_A
 		$this->add_field( Subscription_Workflow_Helper::get_products_field() );
 	}
 
-
 	/**
-	 * @param Workflow $workflow
-	 * @param int      $limit
-	 * @param int      $offset
+	 * Get a batch of items to process for given workflow.
 	 *
-	 * @return array
+	 * @param Workflow $workflow
+	 * @param int      $offset The batch query offset.
+	 * @param int      $limit  The max items for the query.
+	 *
+	 * @return array[] Array of items in array format. Items will be stored in the database so they should be IDs not objects.
+	 *
+	 * @throws InvalidArgument If workflow 'days before' option is not valid.
 	 */
-	function get_background_tasks( $workflow, $limit, $offset = 0 ) {
-		$tasks = [];
-		$days_before_renewal = absint( $workflow->get_trigger_option( 'days_before_renewal' ) );
+	public function get_batch_for_workflow( Workflow $workflow, int $offset, int $limit ): array {
+		$items = [];
 
-		// days before must be set
-		if ( ! $days_before_renewal ) {
-			return [];
-		}
-
-		$date = new DateTime();
-		$date->convert_to_site_time();
-		$date->modify( "+$days_before_renewal days" );
-
-		foreach ( $this->get_subscriptions_by_next_payment_day( $date, $limit, $offset ) as $subscription_id ) {
-			$tasks[] = [
-				'workflow_id' => $workflow->get_id(),
-				'workflow_data' => [
-					'subscription_id' => $subscription_id
-				]
+		foreach ( $this->get_subscriptions_for_workflow( $workflow, $offset, $limit ) as $subscription_id ) {
+			$items[] = [
+				'subscription' => $subscription_id
 			];
 		}
 
-		return $tasks;
+		return $items;
 	}
 
-
 	/**
+	 * Process a single item for a workflow to process.
+	 *
 	 * @param Workflow $workflow
-	 * @param array $data
+	 * @param array    $item
 	 */
-	function handle_background_task( $workflow, $data ) {
-		$subscription = isset( $data['subscription_id'] ) ? wcs_get_subscription( Clean::id( $data['subscription_id'] ) ) : false;
-
+	public function process_item_for_workflow( Workflow $workflow, array $item ) {
+		$subscription = isset( $item['subscription'] ) ? wcs_get_subscription( Clean::id( $item['subscription'] ) ) : false;
 		if ( ! $subscription ) {
 			return;
 		}
 
-		$workflow->maybe_run([
-			'subscription' => $subscription,
-			'customer' => Customer_Factory::get_by_user_id( $subscription->get_user_id() )
-		]);
+		$workflow->maybe_run(
+			[
+				'subscription' => $subscription,
+				'customer'     => Customer_Factory::get_by_user_id( $subscription->get_user_id() ),
+			]
+		);
 	}
 
+	/**
+	 * Get subscriptions that match the workflow's date params.
+	 *
+	 * @param Workflow $workflow
+	 * @param int      $offset
+	 * @param int      $limit
+	 *
+	 * @return int[] Array of subscription IDs.
+	 *
+	 * @throws InvalidArgument If workflow 'days before' option is not valid.
+	 */
+	protected function get_subscriptions_for_workflow( Workflow $workflow, int $offset, int $limit ) {
+		$days_before_renewal = (int) $workflow->get_trigger_option( 'days_before_renewal' );
+		$this->validate_positive_integer( $days_before_renewal );
+
+		$date = ( new DateTime() )->add( new \DateInterval( "P{$days_before_renewal}D" ) );
+
+		return $this->query_subscriptions_for_day( $date, '_schedule_next_payment', [ 'wc-active' ], $offset, $limit );
+	}
 
 	/**
-	 * Return an array of subscription ids that renew on a specific date
+	 * Query subscriptions for a specific day.
 	 *
-	 * @param DateTime $date Must be in site time!
-	 * @param int      $limit
+	 * @param DateTime $date          The target date in UTC timezone.
+	 * @param string   $date_meta_key The subscription date meta key to query.
+	 * @param array    $statuses      The subscription statues to query.
 	 * @param int      $offset
+	 * @param int      $limit
 	 *
-	 * @return array
+	 * @return int[] Array of subscription IDs.
 	 */
-	function get_subscriptions_by_next_payment_day( $date, $limit, $offset ) {
+	protected function query_subscriptions_for_day( DateTime $date, string $date_meta_key, array $statuses, int $offset, int $limit ) {
+		$date->convert_to_site_time();
 		$day_start = clone $date;
-		$day_end = clone $date;
+		$day_end   = clone $date;
 		$day_start->set_time_to_day_start();
 		$day_end->set_time_to_day_end();
-
 		$day_start->convert_to_utc_time();
 		$day_end->convert_to_utc_time();
 
-		$query = new \WP_Query([
-			'post_type' => 'shop_subscription',
-			'post_status' => 'wc-active',
-			'fields' => 'ids',
-			'posts_per_page' => $limit,
-			'offset' => $offset,
-			'no_found_rows' => true,
-			'meta_query' => [
-				[
-					'key' => '_schedule_next_payment',
-					'compare' => '>=',
-					'value' => $day_start->to_mysql_string(),
-				],
-				[
-					'key' => '_schedule_next_payment',
-					'compare' => '<=',
-					'value' => $day_end->to_mysql_string(),
+		$query = new WP_Query(
+			[
+				'post_type'      => 'shop_subscription',
+				'post_status'    => $statuses,
+				'fields'         => 'ids',
+				'posts_per_page' => $limit,
+				'offset'         => $offset,
+				'no_found_rows'  => true,
+				'meta_query'     => [
+					[
+						'key'     => $date_meta_key,
+						'compare' => '>=',
+						'value'   => $day_start->to_mysql_string(),
+					],
+					[
+						'key'     => $date_meta_key,
+						'compare' => '<=',
+						'value'   => $day_end->to_mysql_string(),
+					]
 				]
 			]
-		]);
+		);
 
 		return $query->posts;
 	}

@@ -1,23 +1,22 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * @var Admin\Controllers\Base $controller
- * @var bool|\WP_Error $dev_check
+ * @var bool|\WP_Error         $dev_check
  */
 ?>
 
 <div class="wrap woocommerce automatewoo-page automatewoo-page--licenses">
 
-    <h1><?php echo esc_attr( $controller->get_heading() ) ?></h1>
+	<h1><?php echo esc_attr( $controller->get_heading() ); ?></h1>
 
 	<?php $controller->output_messages(); ?>
 
-    <div class="automatewoo-content">
+	<div class="automatewoo-content">
 
 		<?php
 		if ( Licenses::has_marketplace_subscription( 'automatewoo' ) ) {
@@ -27,50 +26,54 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		}
 		?>
 
-		<p><?php wp_kses_post( printf(
-				  __( 'In order to receive plugin updates for AutomateWoo extensions you must enter a license key. If you do not have a license key please see <a href="%s" target="_blank">details & pricing</a>.', 'automatewoo' ),
-				  Admin::get_marketplace_product_link()
-			  ) ); ?></p>
+		<p>
+			<?php
+			printf(
+				esc_html__( 'In order to receive plugin updates for AutomateWoo extensions you must enter a license key. If you do not have a license key please see <a href="%s" target="_blank">details & pricing</a>.', 'automatewoo' ),
+				wp_kses_post( Admin::get_marketplace_product_link() )
+			);
+			?>
+		</p>
 
+		<?php if ( is_wp_error( $dev_check ) ) : ?>
 
-		 <?php if ( is_wp_error( $dev_check ) ): ?>
+			<?php Admin::notice( 'error', $dev_check->get_error_message() ); ?>
 
-             <?php Admin::notice( 'error', $dev_check->get_error_message() )?>
+		<?php elseif ( $dev_check ) : ?>
 
-		 <?php elseif ( $dev_check ): ?>
+			<div class="automatewoo-info-box">
+				<span class="dashicons dashicons-info"></span> <strong><?php esc_html_e( 'Development Install Detected', 'automatewoo' ); ?></strong> -
+				<?php
+				printf(
+					esc_html__( 'Activating this domain will not count against the activation limit of your license. For more info please see <a href="%s" target="_blank">our documentation</a>.', 'automatewoo' ),
+					wp_kses_post( Admin::get_docs_link( 'licenses', 'development-detected-notice' ) )
+				);
+				?>
+			</div>
 
-           <div class="automatewoo-info-box">
-               <span class="dashicons dashicons-info"></span> <strong><?php _e( 'Development Install Detected', 'automatewoo' ) ?></strong> -
-				  <?php printf(
-					  __( 'Activating this domain will not count against the activation limit of your license. For more info please see <a href="%s" target="_blank">our documentation</a>.', 'automatewoo' ),
-					  Admin::get_docs_link('licenses', 'development-detected-notice' )
-				  ); ?>
-           </div>
+		<?php endif; ?>
 
-		 <?php endif; ?>
+		<form method="post" enctype="multipart/form-data">
 
+			<input type="hidden" name="action" value="activate">
 
-        <form method="post" enctype="multipart/form-data">
+				<?php
 
-            <input type="hidden" name="action" value="activate">
+				$list_table               = new Admin_Licenses_Table();
+				$list_table->nonce_action = $controller->get_nonce_action();
+				$list_table->prepare_items();
+				$list_table->display();
+				wp_nonce_field( $controller->get_nonce_action() );
 
-			  <?php
+				if ( Licenses::has_unactivated_products() ) {
+					submit_button( esc_html__( 'Activate Licenses', 'automatewoo' ), 'button-primary' );
+				}
 
-			  $list_table = new Admin_Licenses_Table();
-			  $list_table->nonce_action = $controller->get_nonce_action();
-			  $list_table->prepare_items();
-			  $list_table->display();
-			  wp_nonce_field( $controller->get_nonce_action() );
+				?>
 
-			  if ( Licenses::has_unactivated_products() ) {
-				  submit_button( __( 'Activate Licenses', 'automatewoo' ), 'button-primary' );
-			  }
+		</form>
 
-			  ?>
-
-        </form>
-
-    </div>
+	</div>
 
 </div>
 

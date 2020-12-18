@@ -111,7 +111,11 @@ global $post;
 				   value="<?php esc_attr_e( 'Save', 'automatewoo' ); ?>" />
 
 			<?php if ( $workflow ) : ?>
-				<a id="automatewoo-workflow-run-btn" class="button button-primary button-large"><?php esc_html_e( 'Run', 'automatewoo' ); ?></a>
+				<a
+						id="automatewoo-workflow-run-btn"
+						class="button button-primary button-large <?php echo 'manual' === $workflow->get_type() ? '' : 'hidden'; ?>">
+					<?php esc_html_e( 'Run', 'automatewoo' ); ?>
+				</a>
 				<input name="automatewoo_redirect_to_runner" type="hidden" value="0">
 			<?php endif; ?>
 		</div>

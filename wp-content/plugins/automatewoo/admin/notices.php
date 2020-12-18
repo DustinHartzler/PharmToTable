@@ -8,7 +8,7 @@ namespace AutomateWoo;
  * @since   4.7.0
  * @package AutomateWoo
  */
-class Admin_Notices {
+class AdminNotices {
 
 	/**
 	 * Store of admin notices.
@@ -25,7 +25,7 @@ class Admin_Notices {
 	private static $has_changes = false;
 
 	/**
-	 * Define whether Admin_Notices::init() has run.
+	 * Define whether AdminNotices::init() has run.
 	 *
 	 * @var bool
 	 */
@@ -127,13 +127,6 @@ class Admin_Notices {
 			self::remove_notice( $notice );
 		}
 		die;
-	}
-
-	/**
-	 * Output pretty AutomateWoo welcome notice.
-	 */
-	private static function output_welcome_notice() {
-		Admin::get_view( 'welcome-notice' );
 	}
 
 	/**

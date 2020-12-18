@@ -14,7 +14,8 @@ defined( 'ABSPATH' ) || exit;
  */
 
 if ( $workflow ) {
-	$editing = isset( $_COOKIE[ 'aw_editing_action_' . $workflow->get_id() . '_' . $action_number ] );
+	$editing = isset( $_COOKIE[ 'aw_editing_action_' . $workflow->get_id() . '_' . $action_number ] )
+			|| 'preset' === aw_get_url_var( 'workflow-origin' );
 } else {
 	$editing = false;
 }

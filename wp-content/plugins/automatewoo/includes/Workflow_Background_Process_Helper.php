@@ -3,11 +3,17 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Jobs\BatchedWorkflows;
+use AutomateWoo\Triggers\BatchedWorkflowInterface;
+use AutomateWoo\Workflows\Factory;
+
 defined( 'ABSPATH' ) || exit;
 
 
 /**
  * Class to manage triggers that are initiated in the background.
+ *
+ * TODO Most of the functionality in this class can be removed once the Trigger_Background_Processed_Abstract is removed.
  *
  * @class Workflow_Background_Process_Helper
  * @since 3.8
@@ -18,11 +24,18 @@ class Workflow_Background_Process_Helper {
 	/**
 	 * Trigger must extend Trigger_Background_Processed_Abstract
 	 *
+	 * NOTE: A site could update to version 5.1 (ActionScheduler conversion) while a legacy background process is
+	 * running. Currently backwards compatibility is maintained for the legacy process. However, it's also possible that
+	 * a currently running process uses a trigger that has been switched to use the new jobs system and now implements
+	 * BatchedWorkflowInterface. In this case the job will restart because the $offset argument is ignored by the new
+	 * system. This is actually works well because it lowers the chance that items will be missed on the day of updating
+	 * to 5.1 and all our background process triggers already have a protection to avoid duplicates.
+	 *
 	 * @param int $workflow_id
 	 * @param int $offset The DB query offset for the trigger.
 	 */
 	static function init_process( $workflow_id, $offset = 0 ) {
-		$workflow = Workflow_Factory::get( $workflow_id );
+		$workflow = Factory::get( $workflow_id );
 		$offset = absint( $offset );
 
 		if ( ! $workflow || ! $workflow->is_active() ) {
@@ -30,6 +43,11 @@ class Workflow_Background_Process_Helper {
 		}
 
 		$trigger = $workflow->get_trigger();
+
+		if ( $trigger instanceof BatchedWorkflowInterface ) {
+			self::start_batched_workflow_job( $workflow );
+			return;
+		}
 
 		if ( ! $trigger instanceof Trigger_Background_Processed_Abstract ) {
 			return;
@@ -54,6 +72,30 @@ class Workflow_Background_Process_Helper {
 
 		if ( $tasks ) {
 			add_action( 'shutdown', [ __CLASS__, 'start_workflow_background_process' ] );
+		}
+	}
+
+
+	/**
+	 * Start a batched workflow job.
+	 *
+	 * @since 5.1.0
+	 * @param Workflow $workflow
+	 */
+	protected static function start_batched_workflow_job( $workflow ) {
+		try {
+			/** @var BatchedWorkflows $job */
+			$job = AW()->job_service()->get_job( 'batched_workflows' );
+			$job->start( [ 'workflow' => $workflow->get_id() ] );
+		} catch ( \Exception $e ) {
+			Logger::error(
+				'jobs',
+				sprintf(
+					'Exception thrown when attempting to start the batched workflow (#%d): %s',
+					$workflow->get_id(),
+					$e->getMessage()
+				)
+			);
 		}
 	}
 

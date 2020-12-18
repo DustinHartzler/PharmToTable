@@ -1,57 +1,59 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
- * @class Settings_Tab_Mailchimp
+ * Settings_Tab_Mailchimp class.
  */
 class Settings_Tab_Mailchimp extends Admin_Settings_Tab_Abstract {
 
-	function __construct() {
-		$this->id = 'mailchimp';
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		$this->id   = 'mailchimp';
 		$this->name = __( 'MailChimp', 'automatewoo' );
 	}
 
 	/**
+	 * Get tab settings.
+	 *
 	 * @return array
 	 */
-	function get_settings() {
+	public function get_settings() {
 		return [
 			[
-				'type' 	=> 'title',
-				'id' 	=> 'automatewoo_mailchimp_integration',
-				'desc' => __( 'Enabling the MailChimp integration does not automatically sync your data but makes three actions available when creating workflows. These actions can be used to automate how you add and remove members from your MailChimp lists and update your custom fields.', 'automatewoo' )
+				'type' => 'title',
+				'id'   => 'automatewoo_mailchimp_integration',
+				'desc' => __( 'Enabling the MailChimp integration does not automatically sync your data but makes three actions available when creating workflows. These actions can be used to automate how you add and remove members from your MailChimp lists and update your custom fields.', 'automatewoo' ),
 			],
-
 			[
-				'title' => __( 'Enable integration', 'automatewoo' ),
-				'id' => 'automatewoo_mailchimp_integration_enabled',
-				'default' => 'no',
+				'title'    => __( 'Enable integration', 'automatewoo' ),
+				'id'       => 'automatewoo_mailchimp_integration_enabled',
+				'default'  => 'no',
 				'autoload' => true,
-				'type' => 'checkbox',
+				'type'     => 'checkbox',
 			],
-
 			[
-				'title' => __( 'API Key', 'automatewoo' ),
-				'id' => 'automatewoo_mailchimp_api_key',
-				'tooltip' => __( 'You can get your API key when logged in to MailChimp under Account > Extras > API Keys.', 'automatewoo' ),
-				'type' => 'password',
+				'title'    => __( 'API Key', 'automatewoo' ),
+				'id'       => 'automatewoo_mailchimp_api_key',
+				'tooltip'  => __( 'You can get your API key when logged in to MailChimp under Account > Extras > API Keys.', 'automatewoo' ),
+				'type'     => 'password',
 				'autoload' => false,
 			],
-
 			[
-				'type' 	=> 'sectionend',
-				'id' 	=> 'automatewoo_mailchimp_integration'
-			]
-
+				'type' => 'sectionend',
+				'id'   => 'automatewoo_mailchimp_integration',
+			],
 		];
 	}
 
-
-	function save() {
+	/**
+	 * Save settings.
+	 */
+	public function save() {
 
 		$is_valid = self::validate_key();
 
@@ -67,18 +69,20 @@ class Settings_Tab_Mailchimp extends Admin_Settings_Tab_Abstract {
 
 	}
 
-
-	function validate_key() {
+	/**
+	 * Validate the Mailchimp API key.
+	 */
+	public function validate_key() {
 		$api_key = aw_get_post_var( 'automatewoo_mailchimp_api_key' );
 
-		$err_msg = __( 'The MailChimp API Key you entered is not valid.' , 'automatewoo' );
+		$err_msg = __( 'The MailChimp API Key you entered is not valid.', 'automatewoo' );
 
 		// return true if empty so users can wipe out their key.
-		if ( $api_key == '' ) {
+		if ( $api_key === '' ) {
 			return true;
 		}
 
-		if ( false == $api_key ) {
+		if ( false === $api_key ) {
 			parent::add_error( $err_msg );
 
 			return false;
@@ -90,7 +94,7 @@ class Settings_Tab_Mailchimp extends Admin_Settings_Tab_Abstract {
 			return false;
 		}
 
-		$mailchimp_test = new Integration_Mailchimp( $api_key );
+		$mailchimp_test = new Integration_Mailchimp( aw_clean( $api_key ) );
 
 		$response = $mailchimp_test->request( 'GET', '/' );
 

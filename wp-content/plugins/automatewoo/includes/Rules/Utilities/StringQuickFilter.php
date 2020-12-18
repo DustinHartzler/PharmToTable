@@ -35,24 +35,17 @@ trait StringQuickFilter {
 		// WP defaults to a case-insensitive database collation so we're OK
 		switch ( $compare_type ) {
 			case 'contains':
-				$operator = 'LIKE';
-				$value    = '%' . $wpdb->esc_like( $value ) . '%';
-				break;
-			case 'starts_with':
-				$operator = 'LIKE';
-				$value    = $wpdb->esc_like( $value ) . '%';
-				break;
-			case 'ends_with':
-				$operator = 'LIKE';
-				$value    = '%' . $wpdb->esc_like( $value );
-				break;
 			case 'not_contains':
-				$operator = 'NOT LIKE';
-				$value    = '%' . $wpdb->esc_like( $value ) . '%';
+			case 'starts_with':
+			case 'ends_with':
+			case 'regex':
+				$operator = strtoupper( $compare_type );
 				break;
+			case 'blank':
 			case 'is':
 				$operator = '=';
 				break;
+			case 'not_blank':
 			case 'is_not':
 				$operator = '!=';
 				break;

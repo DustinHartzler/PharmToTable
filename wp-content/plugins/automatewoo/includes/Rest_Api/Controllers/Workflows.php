@@ -85,11 +85,11 @@ class Workflows extends AbstractController {
 		$query->set_status( $request->get_param( 'status' ) ?: 'any' );
 		$query->set_trigger( $request->get_param( 'trigger' ) );
 
-		if ( $this->request_has_param( $request, 'type' ) ) {
+		if ( $request->has_param( 'type' ) ) {
 			$query->set_type( $request->get_param( 'type' ) );
 		}
 
-		if ( $this->request_has_param( $request, 'search' ) ) {
+		if ( $request->has_param( 'search' ) ) {
 			$query->set_search( $request->get_param( 'search' ) );
 		}
 

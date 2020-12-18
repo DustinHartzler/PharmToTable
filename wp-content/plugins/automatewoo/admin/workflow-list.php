@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -49,7 +51,7 @@ class Admin_Workflow_List {
 	 * @param $post_id
 	 */
 	function column_data( $column, $post_id ) {
-		$workflow = Workflow_Factory::get( $post_id );
+		$workflow = Factory::get( $post_id );
 
 		if ( ! $workflow )
 			return;
@@ -258,6 +260,9 @@ class Admin_Workflow_List {
 				break;
 			case 'w':
 				$unit_text = _n( '%s week', '%s weeks', $number, 'automatewoo' );
+				break;
+			case 'month':
+				$unit_text = _n( '%s month', '%s months', $number, 'automatewoo' );
 				break;
 			default:
 				return '';

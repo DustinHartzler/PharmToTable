@@ -12,6 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Background processor for the Wishlist Item On Sale trigger
+ *
+ * @deprecated in 5.1.0 and replaced with an ActionScheduler job.
+ *             This is only maintained to help smooth the transition by processing any remaining tasks
+ *             at the time of updating to AW 5.1.0.
+ *
+ * TODO remove this in 5.2
  */
 class Wishlist_Item_On_Sale extends Base {
 

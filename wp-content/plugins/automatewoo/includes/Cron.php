@@ -9,6 +9,16 @@ namespace AutomateWoo;
  */
 class Cron {
 
+	const TWO_MINUTE_WORKER = 'automatewoo_two_minute_worker';
+	const FIVE_MINUTE_WORKER = 'automatewoo_five_minute_worker';
+	const FIFTEEN_MINUTE_WORKER = 'automatewoo_fifteen_minute_worker';
+	const THIRTY_MINUTE_WORKER = 'automatewoo_thirty_minute_worker';
+	const HOURLY_WORKER = 'automatewoo_hourly_worker';
+	const FOUR_HOUR_WORKER = 'automatewoo_four_hourly_worker';
+	const DAILY_WORKER = 'automatewoo_daily_worker';
+	const TWO_DAY_WORKER = 'automatewoo_two_days_worker';
+	const WEEKLY_WORKER = 'automatewoo_weekly_worker';
+
 	/** @var array : worker => schedule */
 	static $workers = [
 		'events' => 'automatewoo_one_minute',
@@ -37,8 +47,8 @@ class Cron {
 
 		add_action( 'admin_init', [ __CLASS__, 'add_events' ] );
 
-		add_action( 'automatewoo_five_minute_worker', [ __CLASS__, 'check_for_gmt_offset_change' ] );
-		add_action( 'automatewoo_thirty_minute_worker', [ __CLASS__, 'check_midnight_cron' ], 1 );
+		add_action( self::FIVE_MINUTE_WORKER, [ __CLASS__, 'check_for_gmt_offset_change' ] );
+		add_action( self::THIRTY_MINUTE_WORKER, [ __CLASS__, 'check_midnight_cron' ], 1 );
 		add_action( 'automatewoo_midnight', [ __CLASS__, 'update_midnight_cron_last_run' ], 1 );
 
 		// set up midnight cron job, but doesn't repair it (which is important)

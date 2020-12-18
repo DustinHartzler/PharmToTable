@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -160,10 +162,13 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 * @param $data_item
 	 */
 	private function store_data_item( $data_type_id, $data_item ) {
-
 		$data_type = Data_Types::get( $data_type_id );
 
-		if ( ! $data_type || ! $data_type->validate( $data_item ) ) {
+		if (
+			! $data_type ||
+			! $data_type->validate( $data_item ) ||
+			Data_Types::is_non_stored_data_type( $data_type_id )
+		) {
 			return;
 		}
 
@@ -241,8 +246,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 * @return string|false
 	 */
 	private function get_compressed_data_item( $data_type_id, $supplied_data_items ) {
-
-		if ( in_array( $data_type_id, Data_Types::get_non_stored_data_types() ) ) {
+		if ( Data_Types::is_non_stored_data_type( $data_type_id ) ) {
 			return false; // storage not required
 		}
 
@@ -261,7 +265,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 * @return Workflow|false
 	 */
 	function get_workflow() {
-		return Workflow_Factory::get( $this->get_workflow_id() );
+		return Factory::get( $this->get_workflow_id() );
 	}
 
 

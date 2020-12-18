@@ -2,8 +2,14 @@
 
 namespace AutomateWoo\Jobs;
 
-use AutomateWoo\Jobs\Traits\Batching;
+use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
+use AutomateWoo\Cron;
+use AutomateWoo\Exceptions\InvalidArgument;
 use AutomateWoo\Jobs\Traits\ItemDeletionDate;
+use AutomateWoo\Jobs\Traits\ValidateItemAsIntegerId;
+use AutomateWoo\OptionsStore;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Job that deletes expired coupons after a specified amount of time.
@@ -11,9 +17,26 @@ use AutomateWoo\Jobs\Traits\ItemDeletionDate;
  * @since   5.0.0
  * @package AutomateWoo\Jobs
  */
-class DeleteExpiredCoupons implements JobInterface {
+class DeleteExpiredCoupons extends AbstractBatchedJob implements StartOnHookInterface {
 
-	use Batching, ItemDeletionDate;
+	use ItemDeletionDate, ValidateItemAsIntegerId;
+
+	/**
+	 * @var OptionsStore $options_store
+	 */
+	protected $options_store;
+
+	/**
+	 * AbstractBatchedJob constructor.
+	 *
+	 * @param ActionSchedulerInterface $action_scheduler
+	 * @param BatchedJobMonitor        $monitor
+	 * @param OptionsStore             $options_store
+	 */
+	public function __construct( ActionSchedulerInterface $action_scheduler, BatchedJobMonitor $monitor, OptionsStore $options_store ) {
+		$this->options_store = $options_store;
+		parent::__construct( $action_scheduler, $monitor );
+	}
 
 	/**
 	 * Get the name of the job.
@@ -25,10 +48,12 @@ class DeleteExpiredCoupons implements JobInterface {
 	}
 
 	/**
-	 * Init the job.
+	 * Get the name of an action to attach the job's start method to.
+	 *
+	 * @return string
 	 */
-	public function init() {
-		$this->init_batch_schedule( 'automatewoo_four_hourly_worker' );
+	public function get_start_hook() {
+		return Cron::FOUR_HOUR_WORKER;
 	}
 
 	/**
@@ -41,11 +66,29 @@ class DeleteExpiredCoupons implements JobInterface {
 	}
 
 	/**
+	 * Can the job start.
+	 *
+	 * @return bool Returns true if the job can start.
+	 *
+	 * @throws InvalidArgument If option value is invalid.
+	 */
+	protected function can_start(): bool {
+		if ( ! $this->options_store->get_clean_expired_coupons_enabled() ) {
+			return false;
+		}
+
+		return parent::can_start();
+	}
+
+	/**
 	 * Get a new batch of items.
 	 *
-	 * @return array
+	 * @param int   $batch_number The batch number increments for each new batch in the job cycle.
+	 * @param array $args         The args for this instance of the job.
+	 *
+	 * @return int[]
 	 */
-	protected function get_batch() {
+	protected function get_batch( int $batch_number, array $args ) {
 		$deletion_date = $this->get_deletion_date();
 		if ( ! $deletion_date ) {
 			return [];
@@ -73,15 +116,17 @@ class DeleteExpiredCoupons implements JobInterface {
 		];
 
 		$query = new \WP_Query( $query_args );
+
 		return $query->posts;
 	}
 
 	/**
 	 * Handle a single item.
 	 *
-	 * @param int $coupon_id
+	 * @param int   $coupon_id
+	 * @param array $args The args for this instance of the job.
 	 */
-	protected function handle_item( $coupon_id ) {
+	protected function process_item( $coupon_id, array $args ) {
 		wp_delete_post( $coupon_id, true );
 	}
 }

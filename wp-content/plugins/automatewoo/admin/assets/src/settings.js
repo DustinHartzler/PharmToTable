@@ -23,3 +23,4 @@ export const MANUAL_WORKFLOWS_HIGH_VOLUME_THRESHOLD = getSetting(
 	automatewoo.manualRunner
 );
 export const ADMIN_URL = getWcSetting( 'adminUrl', '' );
+export const TRACKS_PREFIX = 'aw_';

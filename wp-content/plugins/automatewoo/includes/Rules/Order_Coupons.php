@@ -60,8 +60,7 @@ class Order_Coupons extends Searchable_Select_Rule_Abstract {
 	 * @return bool
 	 */
 	public function validate( $order, $compare, $expected_coupons ) {
-		$coupons = is_callable( [ $order, 'get_coupon_codes' ] ) ? $order->get_coupon_codes() : $order->get_used_coupons();
-		return $this->validate_select_case_insensitive( $coupons, $compare, $expected_coupons );
+		return $this->validate_select_case_insensitive( $order->get_coupon_codes(), $compare, $expected_coupons );
 	}
 
 }

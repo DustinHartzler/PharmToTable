@@ -2,10 +2,11 @@
 
 namespace AutomateWoo\Jobs;
 
-use AutomateWoo\Jobs\Traits\Batching;
+use AutomateWoo\Cron;
 use AutomateWoo\Jobs\Traits\ItemDeletionDate;
+use AutomateWoo\Jobs\Traits\ValidateItemAsIntegerId;
 use AutomateWoo\Queue_Query;
-use AutomateWoo\Queued_Event;
+use AutomateWoo\Queued_Event_Factory;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,16 +16,9 @@ defined( 'ABSPATH' ) || exit;
  * @since   5.0.0
  * @package AutomateWoo\Jobs
  */
-class DeleteFailedQueuedWorkflows implements JobInterface {
+class DeleteFailedQueuedWorkflows extends AbstractBatchedJob implements StartOnHookInterface {
 
-	use Batching, ItemDeletionDate;
-
-	/**
-	 * Inits the job.
-	 */
-	public function init() {
-		$this->init_batch_schedule( 'automatewoo_four_hourly_worker' );
-	}
+	use ItemDeletionDate, ValidateItemAsIntegerId;
 
 	/**
 	 * Get the name of the job.
@@ -33,6 +27,15 @@ class DeleteFailedQueuedWorkflows implements JobInterface {
 	 */
 	public function get_name() {
 		return 'delete_failed_queued_workflows';
+	}
+
+	/**
+	 * Get the name of an action to attach the job's start method to.
+	 *
+	 * @return string
+	 */
+	public function get_start_hook() {
+		return Cron::FOUR_HOUR_WORKER;
 	}
 
 	/**
@@ -47,9 +50,12 @@ class DeleteFailedQueuedWorkflows implements JobInterface {
 	/**
 	 * Get a batch of items to be deleted.
 	 *
-	 * @return Queued_Event[]
+	 * @param int   $batch_number The batch number increments for each new batch in the job cycle.
+	 * @param array $args         The args for this instance of the job.
+	 *
+	 * @return int[]
 	 */
-	protected function get_batch() {
+	protected function get_batch( int $batch_number, array $args ) {
 		$deletion_date = $this->get_deletion_date();
 		if ( ! $deletion_date ) {
 			return [];
@@ -60,16 +66,25 @@ class DeleteFailedQueuedWorkflows implements JobInterface {
 			->set_ordering( 'date', 'ASC' )
 			->where_date_due( $deletion_date, '<' )
 			->where_failed( true )
-			->get_results();
+			->get_results_as_ids();
 	}
 
 	/**
-	 * Handle a single item.
+	 * Process a single item.
 	 *
-	 * @param Queued_Event $item
+	 * @param int   $item
+	 * @param array $args The args for this instance of the job.
+	 *
+	 * @throws BatchException If item can't be found.
 	 */
-	protected function handle_item( $item ) {
-		$item->delete();
+	protected function process_item( $item, array $args ) {
+		$queued_workflow = Queued_Event_Factory::get( $item );
+
+		if ( ! $queued_workflow ) {
+			throw BatchException::item_not_found();
+		}
+
+		$queued_workflow->delete();
 	}
 
 }

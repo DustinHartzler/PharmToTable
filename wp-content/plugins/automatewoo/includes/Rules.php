@@ -103,6 +103,7 @@ class Rules extends Registry {
 			'order_run_count'                 => Rules\OrderRunCount::class,
 			'guest_run_count'                 => Rules\GuestRunCount::class,
 
+			'shop_current_datetime' => Rules\ShopCurrentDateTime::class,
 		];
 
 		if ( Integrations::is_subscriptions_active() ) {

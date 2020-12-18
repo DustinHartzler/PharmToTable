@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 /**
  * Workflow management class
  *
@@ -118,7 +120,7 @@ class Workflows {
 	 * @param int $workflow_id
 	 */
 	static function maybe_schedule_custom_time_of_day_event( $workflow_id ) {
-		$workflow = Workflow_Factory::get( $workflow_id );
+		$workflow = Factory::get( $workflow_id );
 
 		if ( ! $workflow || ! $workflow->is_active() ) {
 			return;
@@ -161,7 +163,7 @@ class Workflows {
 			return;
 		}
 
-		Events::schedule_event( $datetime, $hook, [ $workflow->get_id() ] );
+		AW()->action_scheduler()->schedule_single( $datetime->getTimestamp(), $hook, [ $workflow->get_id() ] );
 	}
 
 

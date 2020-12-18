@@ -1,10 +1,10 @@
 <?php
-// phpcs:ignoreFile
-/**
- * @var $workflow AutomateWoo\Workflow
- */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @var AutomateWoo\Workflow $workflow
+ */
 
 ?>
 
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	</div>
 
 	<div class="automatewoo-metabox-footer">
-		<button type="button" class="js-add-rule-group button button-primary button-large"><?php esc_attr_e('+ Add Rule Group', 'automatewoo') ?></button>
+		<button type="button" class="js-add-rule-group button button-primary button-large"><?php esc_attr_e( '+ Add Rule Group', 'automatewoo' ); ?></button>
 	</div>
 
 </script>
@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 <script type="text/template" id="tmpl-aw-rule-groups-empty">
-	<p class="aw-rules-empty-message"><?php printf( esc_attr__( 'Rules can be used to add conditional logic to workflows. Click the %s+ Add Rule Group%s button to create a rule.', 'automatewoo'), '<strong>', '</strong>' )  ?></p>
+	<p class="aw-rules-empty-message"><?php printf( esc_attr__( 'Rules can be used to add conditional logic to workflows. Click the %1$s+ Add Rule Group%2$s button to create a rule.', 'automatewoo' ), '<strong>', '</strong>' ); ?></p>
 </script>
 
 
@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				<div class="aw-rule-select-container automatewoo-rule__field-container">
 					<select name="{{ data.fieldNameBase }}[name]" class="js-rule-select automatewoo-field" required>
 
-						<option value=""><?php esc_attr_e('[Select Rule]', 'automatewoo') ?></option>
+						<option value=""><?php esc_attr_e( '[Select Rule]', 'automatewoo' ); ?></option>
 						<# _.each( data.groupedRules, function( rules, group_name ) { #>
 							<optgroup label="{{ group_name }}">
 								<# _.each( rules, function( rule ) { #>
@@ -109,8 +109,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 						<# } else if ( data.rule.object.type === 'meta' )  { #>
 
-							<input name="{{ data.fieldNameBase }}[value][]" class="automatewoo-field js-rule-value-field" type="text" placeholder="<?php _e('key', 'automatewoo') ?>">
-							<input name="{{ data.fieldNameBase }}[value][]" class="automatewoo-field js-rule-value-field" type="text" placeholder="<?php _e('value', 'automatewoo') ?>">
+							<input name="{{ data.fieldNameBase }}[value][]" class="automatewoo-field js-rule-value-field" type="text" placeholder="<?php esc_attr_e( 'key', 'automatewoo' ); ?>">
+							<input name="{{ data.fieldNameBase }}[value][]" class="automatewoo-field js-rule-value-field" type="text" placeholder="<?php esc_attr_e( 'value', 'automatewoo' ); ?>">
 
 						<# } else if ( data.rule.object.type === 'bool' )  { #>
 
@@ -137,8 +137,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 							<# if ( data.rule.object.has_days_of_the_week === true ) { #>
 									<div class="aw-hidden" data-aw-compare="days_of_the_week">
 										<select name="{{ data.fieldNameBase }}[value][dow][]" multiple required class="automatewoo-field js-rule-value-field js-rule-value-dow wc-enhanced-select">
-											<?php for ( $day = 1; $day <= 7; $day++ ): ?>
-												<option value="<?php echo $day; ?>"><?php echo esc_attr( AutomateWoo\Format::weekday( $day ) ); ?></option>
+											<?php for ( $day = 1; $day <= 7; $day++ ) : ?>
+												<option value="<?php echo esc_attr( $day ); ?>"><?php echo esc_attr( AutomateWoo\Format::weekday( $day ) ); ?></option>
 											<?php endfor; ?>
 										</select>
 									</div>
@@ -173,7 +173,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			</div>
 
 			<div class="automatewoo-rule__buttons">
-				<button type="button" class="js-add-rule automatewoo-rule__add button"><?php _e('and', 'automatewoo') ?></button>
+				<button type="button" class="js-add-rule automatewoo-rule__add button"><?php esc_html_e( 'and', 'automatewoo' ); ?></button>
 				<button type="button" class="js-remove-rule automatewoo-rule__remove"></button>
 			</div>
 
@@ -182,7 +182,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<# } else { #>
 
 		<div class="automatewoo-missing-rule">
-			<?php echo wp_kses_post( sprintf( __( 'This rule %1$s is no longer available and will be removed by saving this workflow.', 'automatewoo' ), '({{ data.rule.name }})' ) ); ?>
+			<?php echo wp_kses_post( sprintf( esc_html__( 'This rule %1$s is no longer available and will be removed by saving this workflow.', 'automatewoo' ), '({{ data.rule.name }})' ) ); ?>
 		</div>
 
 	<# } #>
@@ -194,5 +194,5 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 <script type="text/template" id="tmpl-aw-rule-group">
 	<div class="rules"></div>
-	<div class="aw-rule-group__or"><span><?php esc_attr_e( 'or', 'automatewoo')  ?></span></div>
+	<div class="aw-rule-group__or"><span><?php esc_attr_e( 'or', 'automatewoo' ); ?></span></div>
 </script>

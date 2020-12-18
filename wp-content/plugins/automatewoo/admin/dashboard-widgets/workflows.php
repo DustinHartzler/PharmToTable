@@ -2,6 +2,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -37,7 +39,7 @@ class Dashboard_Widget_Workflows extends Dashboard_Widget {
 
 		$counts = array_count_values( $counts );
 		arsort( $counts, SORT_NUMERIC );
-		$workflow = Workflow_Factory::get( key( $counts ) );
+		$workflow = Factory::get( key( $counts ) );
 
 		if ( $workflow ) {
 			$featured[] = [
@@ -60,7 +62,7 @@ class Dashboard_Widget_Workflows extends Dashboard_Widget {
 			}
 
 			arsort( $totals, SORT_NUMERIC );
-			$workflow = Workflow_Factory::get( key( $totals ) );
+			$workflow = Factory::get( key( $totals ) );
 
 			if ( $workflow ) {
 				$featured[] = [

@@ -1,38 +1,44 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
- * @var Tool_Abstract $tool
+ * @var Tool_Abstract                      $tool
  * @var Admin\Controllers\Tools_Controller $controller
- * @var $content
  */
 ?>
 
 <div class="wrap woocommerce automatewoo-page automatewoo-page--tools">
 
-	<?php Admin::get_view( 'tool-header', ['tool' => $tool, 'controller' => $controller ] ); ?>
+	<?php
+	Admin::get_view(
+		'tool-header',
+		[
+			'tool'       => $tool,
+			'controller' => $controller,
+		]
+	);
+	?>
 
 	<div id="poststuff">
 
-		<form id="automatewoo_process_tool_form" method="post" action="<?php echo $controller->get_route_url( 'validate', $tool ) ?>">
+		<form id="automatewoo_process_tool_form" method="post" action="<?php echo esc_url( $controller->get_route_url( 'validate', $tool ) ); ?>">
 
 			<div class="automatewoo-metabox postbox">
 
 				<table class="automatewoo-table">
 
-					<?php foreach ( $tool->get_form_fields() as $field ): ?>
+					<?php foreach ( $tool->get_form_fields() as $field ) : ?>
 
 						<tr class="automatewoo-table__row">
 
 							<td class="automatewoo-table__col automatewoo-table__col--label">
 								<?php Admin::help_tip( $field->get_description() ); ?>
 
-								<label><?php echo $field->get_title(); ?>
-									<?php if ( $field->get_required() ): ?>
+								<label><?php echo wp_kses_post( $field->get_title() ); ?>
+									<?php if ( $field->get_required() ) : ?>
 										<span class="required">*</span>
 									<?php endif; ?>
 								</label>
@@ -40,8 +46,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 							<td class="automatewoo-table__col automatewoo-table__col--field">
 								<?php
-
-								$value = isset( $_POST['args'][ $field->get_name() ] ) ? $_POST['args'][ $field->get_name() ] : false;
+								// phpcs:disable WordPress.Security.NonceVerification.Missing
+								$value = isset( $_POST['args'][ $field->get_name() ] )
+									?
+									sanitize_textarea_field( wp_unslash( $_POST['args'][ $field->get_name() ] ) )
+									:
+									false;
+								// phpcs:enable
 								$field->render( $value );
 
 								?>
@@ -53,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 				</table>
 
 				<div class="automatewoo-metabox-footer">
-					<button type="submit" class="button button-primary button-large"><?php _e('Next', 'automatewoo') ?></button>
+					<button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Next', 'automatewoo' ); ?></button>
 				</div>
 			</div>
 

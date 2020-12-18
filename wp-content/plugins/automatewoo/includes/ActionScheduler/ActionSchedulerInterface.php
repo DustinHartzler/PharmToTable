@@ -1,0 +1,84 @@
+<?php
+
+namespace AutomateWoo\ActionScheduler;
+
+/**
+ * Interface ActionSchedulerInterface
+ *
+ * Acts as a wrapper for ActionScheduler's public functions.
+ *
+ * @since 5.1.0
+ */
+interface ActionSchedulerInterface {
+
+	const STATUS_COMPLETE = 'complete';
+	const STATUS_PENDING  = 'pending';
+	const STATUS_RUNNING  = 'in-progress';
+	const STATUS_FAILED   = 'failed';
+	const STATUS_CANCELED = 'canceled';
+
+	/**
+	 * Schedule an action to run once at some time in the future
+	 *
+	 * @param int    $timestamp When the job will run.
+	 * @param string $hook      The hook to trigger.
+	 * @param array  $args      Arguments to pass when the hook triggers.
+	 * @param string $group     The group to assign this job to.
+	 *
+	 * @return string The action ID.
+	 */
+	public function schedule_single( $timestamp, $hook, $args = [], $group = 'automatewoo' );
+
+	/**
+	 * Enqueue an action to run one time, as soon as possible
+	 *
+	 * @param string $hook  The hook to trigger.
+	 * @param array  $args  Arguments to pass when the hook triggers.
+	 * @param string $group The group to assign this job to. Defaults to 'automatewoo'.
+	 *
+	 * @return int The action ID.
+	 */
+	public function enqueue_async_action( $hook, $args = [], $group = 'automatewoo' );
+
+	/**
+	 * Check if there is an existing action in the queue with a given hook, args and group combination.
+	 *
+	 * An action in the queue could be pending, in-progress or async. If the is pending for a time in
+	 * future, its scheduled date will be returned as a timestamp. If it is currently being run, or an
+	 * async action sitting in the queue waiting to be processed, in which case boolean true will be
+	 * returned. Or there may be no async, in-progress or pending action for this hook, in which case,
+	 * boolean false will be the return value.
+	 *
+	 * @param string $hook
+	 * @param array  $args
+	 * @param string $group The group to check for jobs. Defaults to 'automatewoo'.
+	 *
+	 * @return int|bool The timestamp for the next occurrence of a pending scheduled action, true for an async or in-progress action or false if there is no matching action.
+	 */
+	public function next_scheduled_action( $hook, $args = null, $group = 'automatewoo' );
+
+	/**
+	 * Search for scheduled actions.
+	 *
+	 * @param array  $args          See as_get_scheduled_actions() for possible arguments.
+	 * @param string $return_format OBJECT, ARRAY_A, or ids.
+	 * @param string $group         The group to search for jobs. Defaults to 'automatewoo'.
+	 *
+	 * @return array
+	 */
+	public function search( $args = [], $return_format = OBJECT, $group = 'automatewoo' );
+
+	/**
+	 * Cancel the next scheduled instance of an action with a matching hook (and optionally matching args and group).
+	 *
+	 * Any recurring actions with a matching hook should also be cancelled, not just the next scheduled action.
+	 *
+	 * @param string $hook  The hook that the job will trigger.
+	 * @param array  $args  Args that would have been passed to the job.
+	 * @param string $group The group the job is assigned to. Defaults to 'automatewoo'.
+	 *
+	 * @return string|null The scheduled action ID if a scheduled action was found, or null if no matching action found.
+	 */
+	public function cancel( string $hook, $args = [], $group = 'automatewoo' );
+
+}

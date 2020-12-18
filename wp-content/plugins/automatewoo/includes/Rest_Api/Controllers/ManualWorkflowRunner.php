@@ -217,6 +217,13 @@ class ManualWorkflowRunner extends AbstractController {
 			$trigger = $workflow->get_trigger();
 
 			foreach ( $items as $item_id ) {
+				// Set data layer and validate workflow for item
+				$data_layer = $trigger->get_data_layer( $item_id );
+				$workflow->setup( $data_layer );
+				if ( ! $workflow->validate_workflow() ) {
+					continue;
+				}
+
 				// Queue item to run now
 				$queue = new Queued_Event();
 				$queue->set_workflow_id( $workflow->get_id() );
@@ -232,7 +239,6 @@ class ManualWorkflowRunner extends AbstractController {
 				$queue->save();
 
 				// If no data layer is set an error will be shown in the queue when the workflow tries to run
-				$data_layer = $trigger->get_data_layer( $item_id );
 				if ( $data_layer ) {
 					$queue->store_data_layer( $data_layer );
 				}

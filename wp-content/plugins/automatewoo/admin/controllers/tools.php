@@ -28,7 +28,7 @@ class Tools_Controller extends Base {
 					$this->output_view_form( $tool_id );
 				}
 				else {
-					// skip to confirm view if now fields
+					// Jump to confirm view if no fields are present.
 					$this->output_view_confirm( $tool_id );
 				}
 				break;

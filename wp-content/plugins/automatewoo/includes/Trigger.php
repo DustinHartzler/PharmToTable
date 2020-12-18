@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 /**
  * @class Trigger
  */
@@ -237,7 +239,7 @@ abstract class Trigger {
 		$workflows = [];
 
 		foreach ( $this->get_workflow_ids() as $workflow_id ) {
-			if ( $workflow = Workflow_Factory::get( $workflow_id ) ) {
+			if ( $workflow = Factory::get( $workflow_id ) ) {
 				$workflows[] = $workflow;
 			}
 		}

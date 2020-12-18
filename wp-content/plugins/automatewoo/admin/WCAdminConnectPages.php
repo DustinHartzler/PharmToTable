@@ -26,7 +26,7 @@ class WCAdminConnectPages {
 	 * Initialize the class and add hook callbacks.
 	 */
 	public function init() {
-		if ( ! defined( 'WC_ADMIN_PLUGIN_FILE' ) ) {
+		if ( ! WC()->is_wc_admin_active() ) {
 			return;
 		}
 

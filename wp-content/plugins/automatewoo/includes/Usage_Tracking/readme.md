@@ -85,6 +85,12 @@ All event names are prefixed by `wcadmin_aw_`.
 * `manual_find_matching_cancel_button_clicked` &ndash; triggered when the workflow runner find matching items cancel button is clicked
 * `manual_queue_items_cancel_button_clicked` &ndash; triggered when the workflow runner queue items cancel button is clicked
 * `manual_run_workflow_complete` &ndash; triggered when the workflow runner completes queuing workflow items
+* `notice_viewed` &ndash; triggered when an admin notice is displayed (includes `notice_identifier` property to distinguish which notice)
+* `notice_link_clicked` &ndash; triggered when a link in an admin notice is clicked (includes `notice_identifier` and `link_type` properties)
+* `notice_dismissed` &ndash; triggered when an admin notice is dismissed by the user (includes `notice_identifier` property)
+* `workflow_tab_view` &ndash; triggered when each "AutomateWoo > Workflows" tab is viewed by the user 
+* `preset_list_button_clicked` &ndash; fires when a button in the workflow presets list is clicked
+
 
 ## Available hooks
 

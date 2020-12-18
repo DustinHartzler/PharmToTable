@@ -1,29 +1,45 @@
 <?php
-// phpcs:ignoreFile
+
+/**
+ * @var string $notice_identifier REQUIRED
+ * @var string $title
+ * @var string $class
+ * @var string $description
+ * @var array  $links array of arrays containing attributes href, class, text and data_link_type
+ */
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
-$utm_source = 'welcome-notice';
+defined( 'ABSPATH' ) || exit;
 
 ?>
 
-<div class="notice automatewoo-welcome-notice is-dismissible" data-automatewoo-dismissible-notice="welcome">
-	<h3 class="automatewoo-welcome-notice__heading"><?php _e( 'Welcome to AutomateWoo!', 'automatewoo' ) ?></h3>
+<div class="notice automatewoo-welcome-notice is-dismissible <?php echo isset( $class ) ? esc_attr( $class ) : ''; ?>"
+	 data-automatewoo-dismissible-notice="<?php echo esc_attr( $notice_identifier ); ?>">
+	<h3 class="automatewoo-welcome-notice__heading">
+		<?php if ( ! empty( $title ) ) : ?>
+			<?php echo wp_kses_post( $title ); ?>
+		<?php else : ?>
+			<?php esc_html_e( 'Welcome to AutomateWoo', 'automatewoo' ); ?>
+		<?php endif; ?>
+	</h3>
 	<div class="automatewoo-welcome-notice__text">
-		<p><?php printf(
-			__( "We're super excited you have decided to grow your store with AutomateWoo! If you haven't already, you should check out our <%s>Getting Started Guide<%s>, and for tutorials and tips, be sure to visit our <%s>blog<%s> and <%s>documentation<%s>. If you have any questions, don't hesitate to <%s>contact us<%s> for help.", 'automatewoo' ),
-			'a href="'.Admin::get_docs_link('getting-started', $utm_source ).'" target="_blank"',
-			'/a',
-			'a href="'. Admin::get_website_link('blog', $utm_source ) .'" target="_blank"',
-			'/a',
-			'a href="'. Admin::get_docs_link('', $utm_source ) .'" target="_blank"',
-			'/a',
-			'a href="'. Admin::get_website_link('get-help', $utm_source ) .'" target="_blank"',
-			'/a'
-		) ?>
-		</p>
+		<?php if ( ! empty( $description ) ) : ?>
+			<p>
+				<?php echo wp_kses_post( $description ); ?>
+			</p>
+		<?php endif; ?>
+		<?php if ( ! empty( $links ) ) : ?>
+			<p class="automatewoo-welcome-notice__links">
+				<?php foreach ( $links as $link ) : ?>
+					<a target="<?php echo isset( $link['target'] ) ? esc_attr( $link['target'] ) : '_blank'; ?>" href="<?php echo esc_url( $link['href'] ); ?>" class="<?php echo esc_attr( $link['class'] ); ?>"
+					<?php echo isset( $link['data_link_type'] ) ? 'data-automatewoo-link-type="' . esc_attr( $link['data_link_type'] ) . '"' : ''; ?>
+					>
+						<?php echo esc_html( $link['text'] ); ?>
+					</a>
+				<?php endforeach; ?>
+			</p>
+		<?php endif; ?>
 	</div>
-    <div class="automatewoo-welcome-notice__robot"></div>
+	<div class="automatewoo-welcome-notice__image"></div>
 </div>

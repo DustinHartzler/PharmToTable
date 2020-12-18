@@ -4,6 +4,7 @@
 namespace AutomateWoo;
 
 use AutomateWoo\Exceptions\InvalidPreviewData;
+use AutomateWoo\Workflows\Factory;
 use WC_Order;
 
 /**
@@ -42,13 +43,15 @@ class Preview_Data {
 		 * Order and order item
 		 */
 		if ( in_array( 'order', $data_items ) || in_array( 'order_item', $data_items ) ) {
-			$order               = self::get_preview_order();
-			$data_layer['order'] = $order;
+			$order = self::get_preview_order();
+			$order_items = $order->get_items();
 
-			if ( $data_layer['order'] ) {
-				$data_layer['order_item'] = current( $data_layer['order']->get_items() );
-				$data_layer['order_item']['id'] = current( array_keys( $data_layer['order']->get_items() ) );
+			if ( empty( $order_items ) ) {
+				throw InvalidPreviewData::data_item_needed( 'order_item' );
 			}
+
+			$data_layer['order'] = $order;
+			$data_layer['order_item'] = current( $order_items );
 		}
 
 		/**
@@ -216,7 +219,7 @@ class Preview_Data {
 	 */
 	static function generate_preview_action( $workflow_id, $action_number, $mode = 'preview' ) {
 		$preview_data = wp_unslash( get_option( 'aw_wf_preview_data_' . $workflow_id ) );
-		$workflow = Workflow_Factory::get( $workflow_id );
+		$workflow = Factory::get( $workflow_id );
 		if ( ! $workflow || ! $action_number || ! is_array( $preview_data ) ) {
 			throw InvalidPreviewData::generic();
 		}

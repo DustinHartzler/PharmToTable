@@ -1,22 +1,24 @@
 <?php
-// phpcs:ignoreFile
+
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Can be loaded by ajax
  *
- * @var $workflow AutomateWoo\Workflow
- * @var $trigger AutomateWoo\Trigger
- * @var $fill_fields (optional)
+ * @var AutomateWoo\Workflow $workflow
+ * @var AutomateWoo\Trigger  $trigger
+ * @var bool                 $fill_fields (optional)
  */
-
-if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 // default to false
-if ( ! isset( $fill_fields ) )
+if ( ! isset( $fill_fields ) ) {
 	$fill_fields = false;
+}
 
-if ( ! $trigger )
+if ( ! $trigger ) {
 	return;
+}
 
 
 // if we're populating field values, get the trigger object from the workflow
@@ -28,35 +30,31 @@ if ( $fill_fields ) {
 
 $fields = $trigger->get_fields();
 
-
 ?>
 
-	<?php foreach( $fields as $field ):
+	<?php foreach ( $fields as $field ) : ?>
 
+		<?php
 		if ( $fill_fields ) {
 			$value = $workflow->get_trigger_option( $field->get_name() );
-		}
-		else {
+		} else {
 			$value = null;
 		}
-
 		?>
 
 		<tr class="automatewoo-table__row aw-trigger-option"
-		    data-name="name"
-		    data-type="<?php echo $field->get_type(); ?>"
-		    data-required="<?php echo (int) $field->get_required() ?> ">
+			data-name="name"
+			data-type="<?php echo esc_attr( $field->get_type() ); ?>"
+			data-required="<?php echo (int) $field->get_required(); ?> ">
 
 			<td class="automatewoo-table__col automatewoo-table__col--label">
 
-				<?php echo $field->get_title(); ?>
-				<?php if ( $field->get_required() ): ?>
+				<?php echo wp_kses_post( $field->get_title() ); ?>
+				<?php if ( $field->get_required() ) : ?>
 					<span class="required">*</span>
 				<?php endif; ?>
 
-				<?php if ( $field->get_description() ): ?>
-					<?php AutomateWoo\Admin::help_tip( $field->get_description() ); ?>
-				<?php endif; ?>
+				<?php AutomateWoo\Admin::help_tip( $field->get_description() ); ?>
 
 			</td>
 

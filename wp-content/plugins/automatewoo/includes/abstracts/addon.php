@@ -72,9 +72,7 @@ abstract class Addon {
 		$this->name = $plugin_data->name;
 		$this->version = $plugin_data->version;
 		$this->file = $plugin_data->file;
-		$this->min_php_version = $plugin_data->min_php_version;
 		$this->min_automatewoo_version = $plugin_data->min_automatewoo_version;
-		$this->min_woocommerce_version = $plugin_data->min_woocommerce_version;
 
 		$this->plugin_basename = plugin_basename( $plugin_data->file );
 		$this->plugin_path = dirname( $plugin_data->file );

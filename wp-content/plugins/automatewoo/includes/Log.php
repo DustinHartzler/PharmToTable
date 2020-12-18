@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -141,9 +143,11 @@ class Log extends Abstract_Model_With_Meta_Table {
 
 
 	/**
-	 * @param $url
+	 * Records that a trackable message from a workflow was clicked.
+	 *
+	 * @param string $url
 	 */
-	function record_click( $url ) {
+	public function record_click( $url ) {
 
 		if ( ! $tracking = $this->get_meta('tracking_data') ) {
 			$tracking = [];
@@ -164,13 +168,24 @@ class Log extends Abstract_Model_With_Meta_Table {
 		}
 
 		$this->update_meta( 'tracking_data', $tracking );
+
+		/**
+		 * Fires when a link in a trackable workflow message is clicked.
+		 *
+		 * @param Workflow $workflow The workflow that sent the message.
+		 * @param Log      $log      The record of the workflow running.
+		 * @param string   $url      The URL that was clicked
+		 */
+		do_action( 'automatewoo/workflow/record_click', $this->get_workflow(), $this, $url );
 	}
 
 
 	/**
-	 * Only records an open once i.e. unique opens
+	 * Records that a trackable message from a workflow was opened.
+	 *
+	 * Only records an open once i.e. unique opens.
 	 */
-	function record_open() {
+	public function record_open() {
 
 		if ( $this->has_open_recorded() ) {
 			return; // already opened
@@ -186,6 +201,14 @@ class Log extends Abstract_Model_With_Meta_Table {
 		];
 
 		$this->update_meta( 'tracking_data', $tracking );
+
+		/**
+		 * Fires for unique opens of a trackable workflow message.
+		 *
+		 * @param Workflow $workflow The workflow that sent the message.
+		 * @param Log      $log      The record of the workflow running.
+		 */
+		do_action( 'automatewoo/workflow/record_open', $this->get_workflow(), $this );
 	}
 
 
@@ -299,7 +322,7 @@ class Log extends Abstract_Model_With_Meta_Table {
 	 * @return Workflow
 	 */
 	function get_workflow() {
-		return Workflow_Factory::get( $this->get_workflow_id() );
+		return Factory::get( $this->get_workflow_id() );
 	}
 
 
@@ -370,8 +393,7 @@ class Log extends Abstract_Model_With_Meta_Table {
 	 * @return string|false
 	 */
 	private function get_compressed_data_item( $data_type_id, $supplied_data_items ) {
-
-		if ( in_array( $data_type_id, Data_Types::get_non_stored_data_types() ) ) {
+		if ( Data_Types::is_non_stored_data_type( $data_type_id ) ) {
 			return false; // storage not required
 		}
 
@@ -427,11 +449,15 @@ class Log extends Abstract_Model_With_Meta_Table {
 	 * @param $data_item
 	 */
 	private function store_data_item( $data_type_id, $data_item ) {
-
 		$data_type = Data_Types::get( $data_type_id );
 
-		if ( ! $data_type || ! $data_type->validate( $data_item ) )
+		if (
+			! $data_type ||
+			! $data_type->validate( $data_item ) ||
+			Data_Types::is_non_stored_data_type( $data_type_id )
+		) {
 			return;
+		}
 
 		// special logic for users who are actually guests
 		if ( $data_type_id === 'user' && $data_item->ID === 0 ) {

@@ -28,9 +28,11 @@ class Data_Layer {
 	 * @param array $data
 	 */
 	function __construct( $data = [] ) {
-
 		if ( is_array( $data ) ) {
 			$this->data = $data;
+
+			// Add shop data item
+			$this->data['shop'] = new ShopDataItem();
 		}
 
 		$this->init();

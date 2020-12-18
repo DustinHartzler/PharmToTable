@@ -11,10 +11,6 @@ jQuery(function($) {
             $(document.body).on( 'click', '.automatewoo-modal-overlay', this.close );
             $(document.body).on( 'click', '.js-open-automatewoo-modal', this.handle_link );
 
-            $(window).resize(function(){
-                AutomateWoo.Modal.position();
-            });
-
             $(document).keydown(function(e) {
                 if ( e.keyCode == 27 ) {
                     AutomateWoo.Modal.close();
@@ -111,4 +107,13 @@ jQuery(function($) {
 
     AutomateWoo.Modal.init();
 
+});
+
+var throttle = null;
+
+jQuery(window).resize(function(){
+    clearTimeout(throttle);
+    throttle = setTimeout(function(){
+        AutomateWoo.Modal.position();
+    }, 50);
 });

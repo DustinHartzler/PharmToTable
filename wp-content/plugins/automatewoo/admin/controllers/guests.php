@@ -71,8 +71,8 @@ class Guests extends Base {
 		$table->nonce_action = $this->get_nonce_action();
 
 		$sidebar_content = '<p>' .
-			__( 'Guest data can be stored here for two reasons. If a customer places an order but does not to create an account. '
-			. 'Or, if a you have enabled pre-submit capturing, the guest data could have been captured before an order was placed from a form on your website.', 'automatewoo' )
+			__( 'Guest data is stored here when a customer places an order but does not create an account. '
+			. 'Or, if you have enabled pre-submit capturing, guest data can also be captured from a form on your website before an order is placed.', 'automatewoo' )
 			. '</p>';
 
 		$this->output_view( 'page-table-with-sidebar', [

@@ -47,8 +47,6 @@ $breakpoint-xlarge: 1450px;
 @import 'dashboard';
 @import 'licenses';
 @import 'welcome-notice';
-@import 'manual-workflow-runner';
-
 
 
 .automatewoo-notice {
@@ -319,19 +317,4 @@ body.post-type-aw_workflow #wpbody-content h1:before {
 
 .aw-hidden {
 	display: none !important;
-}
-
-
-.automatewoo-button.components-button {
-	&.is-large {
-		height: 42px;
-		line-height: 40px;
-		padding-left: 26px;
-		padding-right: 26px;
-	}
-
-	&.is-secondary {
-		// Todo remove this once WC 4.3 is the min required version
-		color: $wp-theme-blue !important;
-	}
 }

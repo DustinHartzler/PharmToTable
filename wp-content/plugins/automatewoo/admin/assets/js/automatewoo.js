@@ -414,8 +414,6 @@ jQuery(function($) {
 				});
 			});
 		},
-		
-
 
 		init_date_pickers: function() {
 			$( '.automatewoo-date-picker' ).datepicker({

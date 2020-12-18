@@ -211,6 +211,41 @@
 
 	});
 
+	AW.TriggerPresetActivationModalView = Backbone.View.extend({
+
+		className: 'aw-view-trigger-preset-activation-modal',
+
+		template: wp.template('aw-trigger-preset-activation-modal'),
+
+		data: null,
+
+		initialize: function( data ) {
+			this.data = data;
+			let modalView = this;
+
+			this.$el.on('click', '.js-confirm', function(){
+				modalView.disableButtons();
+				// submit
+				$(AW.workflowView.el).data( 'aw-preset-workflow-confirmed', true ).submit();
+				AutomateWoo.Modal.close();
+			});
+
+			this.$el.on('click', '.js-close-automatewoo-modal', function(){
+				modalView.disableButtons();
+			});
+		},
+
+		disableButtons: function() {
+			this.$el.find('.automatewoo-modal__footer button').addClass('disabled');
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.data ));
+			return this;
+		}
+
+	});
+
 
 	AW.workflow = new AW.Workflow( data );
 
@@ -222,12 +257,6 @@
 
 
 })( jQuery, automatewooWorkflowLocalizeScript );
-
-
-
-
-// Remove sortable so it doesn't break wp-editors
-jQuery('.meta-box-sortables').removeClass('meta-box-sortables');
 
 
 jQuery(function($) {
@@ -932,7 +961,8 @@ jQuery(function($) {
 		function updateType( type, doReset ) {
 			if ( type === 'manual' ) {
 				$('#aw_trigger_box, #automatewoo-workflow-status-field-row').hide();
-				$('#automatewoo-workflow-run-btn, #aw_manual_workflow_box').show();
+				$('#aw_manual_workflow_box').show();
+				$('#automatewoo-workflow-run-btn').show().css('display','inline-block');
 			} else {
 				$('#automatewoo-workflow-run-btn, #aw_manual_workflow_box').hide();
 				$('#aw_trigger_box, #automatewoo-workflow-status-field-row').show();
@@ -959,6 +989,21 @@ jQuery(function($) {
 		return false;
 	});
 
+	$( 'form#post' ).submit(function(){
+		let $form             = $(this);
+		let isActive          = 'active' === $('select[name=workflow_status]', $form).val();
+		let isConfirmed       = $form.data('aw-preset-workflow-confirmed');
+		let isFirstPresetSave = /workflow-origin=preset/.test( window.location.href );
+
+		if ( isFirstPresetSave && ! isConfirmed ) {
+			let modalView = new AW.TriggerPresetActivationModalView( { isActive: isActive } );
+			AutomateWoo.Modal.open();
+			AutomateWoo.Modal.contents( modalView.render().el );
+			return false;
+		}
+
+		return true;
+	});
 
 	init_customer_win_back_trigger();
 	init_workflow_type();

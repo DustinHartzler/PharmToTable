@@ -1,20 +1,20 @@
 .automatewoo-welcome-notice {
-	padding: 35px 259px 31px 36px !important;
+	padding: 25px 305px 20px 36px !important;
 	border-left-width: 1px;
 	position: relative;
 
 	@media ( max-width: 800px ) {
-		padding: 30px !important;
+		padding: 20px !important;
 	}
 
-	&__robot {
+	&__image {
 		position: absolute;
-		width: 160px;
-		height: 135px;
-		bottom: 0;
+		width: 266px;
+		height: 138px;
+		top: 7px;
 		right: 40px;
-		background-image: url('../img/welcome-notice-robot.png');
-		background-size: 160px 135px;
+		background-image: url('../img/presets.svg');
+		background-size: 266px 138px;
 		background-repeat: no-repeat;
 
 		@media ( max-width: 800px ) {
@@ -24,9 +24,7 @@
 
 	&__heading {
 		color: $color-g2-dark-grey;
-		font-size: 20px;
-		font-weight: 600;
-		margin: 0 0 0.75rem;
+		margin: 0 0 0.25rem 2px;
 	}
 
 	&__text p {

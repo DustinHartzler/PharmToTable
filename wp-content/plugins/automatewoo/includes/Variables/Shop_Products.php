@@ -43,7 +43,8 @@ class Variable_Shop_Products extends Variable_Abstract_Product_Display {
 		] );
 
 		$this->add_parameter_select_field( 'sort', __( "Set the sorting of the products.", 'automatewoo'), [
-			''                => __( 'Date added - Descending', 'automatewoo' ),
+			''                => __( 'Default', 'automatewoo' ),
+			'date-desc'       => __( 'Date added - Descending', 'automatewoo' ),
 			'date-asc'        => __( 'Date added - Ascending', 'automatewoo' ),
 			'title-desc'      => __( 'Title - Descending', 'automatewoo' ),
 			'title-asc'       => __( 'Title - Ascending', 'automatewoo' ),
@@ -196,8 +197,8 @@ class Variable_Shop_Products extends Variable_Abstract_Product_Display {
 	 */
 	public function parse_sort_param( $sorting ) {
 		// set default values
-		$orderby = 'date';
-		$order = 'DESC';
+		$orderby = 'include';
+		$order = false;
 
 		$sorting = explode('-', $sorting );
 

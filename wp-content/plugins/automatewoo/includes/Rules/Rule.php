@@ -4,6 +4,7 @@
 namespace AutomateWoo\Rules;
 
 use AutomateWoo\Clean;
+use UnexpectedValueException;
 
 /**
  * @class Rule
@@ -56,14 +57,16 @@ abstract class Rule {
 
 
 	/**
-	 * Validates the rule based on options set by a workflow
-	 * The $data_item passed will already be validated
-	 * @param $data_item
-	 * @param $compare
-	 * @param $expected_value
+	 * Validates that a given workflow data item passed the rule validation
+	 * based on the supplied $compare_type and $value.
+	 *
+	 * @param mixed  $data_item    A valid workflow data item e.g. an instance of `\WC_Order` for an order based rule.
+	 * @param string $compare_type The user selected compare type for the rule.
+	 * @param mixed  $value        The user entered value for the rule. This value is validated by the validate_value() method beforehand.
+	 *
 	 * @return bool
 	 */
-	abstract function validate( $data_item, $compare, $expected_value );
+	abstract public function validate( $data_item, $compare_type, $value );
 
 
 	/**
@@ -211,6 +214,15 @@ abstract class Rule {
 	 */
 	function is_float_compare_type( $compare_type ) {
 		return array_key_exists( $compare_type, $this->get_float_compare_types() );
+	}
+
+
+	/**
+	 * @param $compare_type
+	 * @return bool
+	 */
+	function is_is_or_is_not_compare_type( $compare_type ) {
+		return array_key_exists( $compare_type, $this->get_is_or_not_compare_types() );
 	}
 
 
@@ -400,6 +412,17 @@ abstract class Rule {
 	protected function validate_string_regex( $string, $regex ) {
 		$regex = $this->remove_global_regex_modifier( trim( $regex ) );
 
+		// Add '/' delimiters if none are provided in the regex.
+		if ( ! preg_match( '#^/(.+)/[gi]*$#', $regex ) ) {
+
+			// Escape any unescaped delimiters in the regex first.
+			if ( preg_match( '#[^\\\\]/#', $regex ) ) {
+				$regex = str_replace( '/', '\\/', $regex );
+			}
+
+			$regex = '/' . $regex . '/';
+		}
+
 		return (bool) @preg_match( $regex, $string );
 	}
 
@@ -444,6 +467,19 @@ abstract class Rule {
 	 */
 	public function format_value( $value ) {
 		return $value;
+	}
+
+	/**
+	 * Validate the rule's user entered value.
+	 *
+	 * @since 5.1.0
+	 *
+	 * @param mixed $value
+	 *
+	 * @throws UnexpectedValueException When the value is not valid.
+	 */
+	public function validate_value( $value ) {
+		// Override this method in child classes.
 	}
 
 }

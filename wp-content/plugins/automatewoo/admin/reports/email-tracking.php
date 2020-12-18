@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -207,7 +209,7 @@ class Report_Email_Tracking extends \AW_Report_Abstract_Graph {
 
 		foreach ( $this->workflow_ids as $workflow_id ) {
 
-			$workflow = Workflow_Factory::get( $workflow_id );
+			$workflow = Factory::get( $workflow_id );
 
 			if ( $workflow ) {
 				$this->workflow_ids_titles[] = $workflow->title;

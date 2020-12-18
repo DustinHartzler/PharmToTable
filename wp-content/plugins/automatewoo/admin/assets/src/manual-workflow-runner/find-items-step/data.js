@@ -1,6 +1,13 @@
+/**
+ * External dependencies
+ */
+import { useReducer } from '@wordpress/element';
+
+/**
+ * Internal dependencies
+ */
 import { STEP_STATUSES as STATUSES } from '../utils';
 import { MANUAL_WORKFLOWS_BATCH_SIZE } from '../../settings';
-import { useReducer } from '@wordpress/element';
 
 const initialState = {
 	status: STATUSES.PENDING,
@@ -70,7 +77,7 @@ export const getCurrentProgressGroupNumber = ( progressData ) => {
 const incrementProgressData = ( progressData ) => {
 	const currentGroupNumber = getCurrentProgressGroupNumber( progressData );
 
-	if ( null === currentGroupNumber ) {
+	if ( currentGroupNumber === null ) {
 		return progressData;
 	}
 
@@ -105,7 +112,7 @@ const calculateProgressPercentage = ( progressData ) => {
 		complete += group.complete ? group.total : group.offset;
 	}
 
-	if ( 0 === complete || 0 === total ) {
+	if ( complete === 0 || total === 0 ) {
 		return 0;
 	}
 	const progress = Math.round( ( complete / total ) * 100 );

@@ -3,14 +3,14 @@
 namespace AutomateWoo;
 
 /**
- * @var $tool Tool_Abstract
+ * @var Tool_Abstract                      $tool
  * @var Admin\Controllers\Tools_Controller $controller
  */
 
 defined( 'ABSPATH' ) || exit;
 
 ?>
-<?php if ( ! defined( 'WC_ADMIN_PLUGIN_FILE' ) ) : ?>
+<?php if ( ! WC()->is_wc_admin_active() ) : ?>
 	<h1><a href="<?php echo esc_url( Admin::page_url( 'tools' ) ); ?>"><?php echo esc_html( $controller->get_heading() ); ?></a> &gt; <?php echo esc_html( $tool->title ); ?></h1>
 <?php else : ?>
 	<h1><?php echo esc_html( $tool->title ); ?></h1>

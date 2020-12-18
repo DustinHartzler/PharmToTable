@@ -3,6 +3,8 @@
 
 namespace AutomateWoo\Rules;
 
+use AutomateWoo\Data_Types;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -10,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Customer_Review_Count extends Abstract_Number {
 
-	public $data_item = 'customer';
+	public $data_item = Data_Types::CUSTOMER;
 
 	public $support_floats = false;
 

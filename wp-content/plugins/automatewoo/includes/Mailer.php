@@ -422,22 +422,8 @@ class Mailer extends Mailer_Abstract {
 	 * @return Emogrifier|false
 	 */
 	public function get_emogrifier( $html, $css ) {
-		if ( ! class_exists( 'DOMDocument' ) ) {
+		if ( ! class_exists( 'DOMDocument' ) || ! class_exists( Emogrifier::class ) ) {
 			return false;
-		}
-
-		// Emogrifier is loaded by Composer as of WC 4.0
-		if ( version_compare( WC()->version, '4.0', '>=' ) ) {
-			if ( class_exists( Emogrifier::class ) ) {
-				return new Emogrifier( $html, $css );
-			}
-
-			return false;
-		}
-
-		// WC added a namespace to Emogrifier in 3.6
-		if ( ! class_exists( Emogrifier::class ) ) {
-			require_once WC()->plugin_path() . '/includes/libraries/class-emogrifier.php';
 		}
 
 		return new Emogrifier( $html, $css );

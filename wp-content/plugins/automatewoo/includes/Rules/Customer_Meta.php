@@ -1,7 +1,8 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo\Rules;
+
+use AutomateWoo\Data_Types;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -10,21 +11,26 @@ defined( 'ABSPATH' ) || exit;
  */
 class Customer_Meta extends Abstract_Meta {
 
-	public $data_item = 'customer';
+	/** @var string */
+	public $data_item = Data_Types::CUSTOMER;
 
-
-	function init() {
+	/**
+	 * Init the rule
+	 */
+	public function init() {
 		$this->title = __( 'Customer - Custom Field', 'automatewoo' );
 	}
 
 
 	/**
-	 * @param $customer \AutomateWoo\Customer
-	 * @param $compare
-	 * @param $value_data
+	 * Validate the rule based on options set by a workflow
+	 *
+	 * @param \AutomateWoo\Customer $customer
+	 * @param string                $compare
+	 * @param array                 $value_data
 	 * @return bool
 	 */
-	function validate( $customer, $compare, $value_data ) {
+	public function validate( $customer, $compare, $value_data ) {
 
 		$value_data = $this->prepare_value_data( $value_data );
 

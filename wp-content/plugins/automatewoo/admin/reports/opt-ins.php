@@ -121,8 +121,7 @@ class Report_Optins extends Admin_List_Table {
 
 			$guest_query = new Guest_Query();
 			$guest_query->where( 'email', "%$search%", 'LIKE' );
-			$guest_query->set_return( 'ids' );
-			$guest_ids = $guest_query->get_results();
+			$guest_ids = $guest_query->get_results_as_ids();
 
 			if ( $guest_ids ) {
 				$search_wheres[] = [

@@ -152,6 +152,17 @@ final class Async_Events extends Registry {
 		return $item instanceof Abstract_Async_Event;
 	}
 
+	/**
+	 * Get the constructor args for an item.
+	 *
+	 * @param string $name
+	 *
+	 * @return array
+	 */
+	protected static function get_item_constructor_args( string $name ): array {
+		return [ AW()->action_scheduler() ];
+	}
+
 
 	// Useful to override these methods for code hinting
 	// phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found

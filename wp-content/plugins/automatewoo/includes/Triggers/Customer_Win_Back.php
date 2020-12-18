@@ -1,28 +1,37 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+use AutomateWoo\Exceptions\InvalidArgument;
+use AutomateWoo\Triggers\AbstractBatchedDailyTrigger;
+use RuntimeException;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * @class Trigger_Customer_Win_Back
  */
-class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
+class Trigger_Customer_Win_Back extends AbstractBatchedDailyTrigger {
 
+	/**
+	 * @var string[]
+	 */
 	public $supplied_data_items = [ 'customer', 'order' ];
 
-
-	function load_admin_details() {
-		$this->title = __( 'Customer Win Back', 'automatewoo' );
-		$this->description = __( "This trigger fires for customers based on the date of their last paid order. The 'order based' variables, rules and actions used by this trigger only refer to the customer's last paid order.", 'automatewoo' );
+	/**
+	 * Load admin details.
+	 */
+	public function load_admin_details() {
+		$this->title        = __( 'Customer Win Back', 'automatewoo' );
+		$this->description  = __( "This trigger fires for customers based on the date of their last paid order. The 'order based' variables, rules and actions used by this trigger only refer to the customer's last paid order.", 'automatewoo' );
 		$this->description .= ' ' . $this->get_description_text_workflow_not_immediate();
-		$this->group = __( 'Customers', 'automatewoo' );
+		$this->group        = __( 'Customers', 'automatewoo' );
 	}
 
-
-	function load_fields() {
-
+	/**
+	 * Load fields.
+	 */
+	public function load_fields() {
 		$period = ( new Fields\Positive_Number() )
 			->set_name( 'days_since_last_purchase' )
 			->set_title( __( 'Minimum days since purchase', 'automatewoo' ) )
@@ -45,59 +54,67 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 		$this->add_field( $repeat );
 	}
 
-
 	/**
-	 * @param Workflow $workflow
-	 * @param int      $limit
-	 * @param int      $offset
+	 * Get a batch of items to process for given workflow.
 	 *
-	 * @return array
+	 * @param Workflow $workflow
+	 * @param int      $offset The batch query offset.
+	 * @param int      $limit  The max items for the query.
+	 *
+	 * @return array[] Array of items in array format. Items will be stored in the database so they should be IDs not objects.
 	 */
-	function get_background_tasks( $workflow, $limit, $offset = 0 ) {
+	public function get_batch_for_workflow( Workflow $workflow, int $offset, int $limit ): array {
 		$tasks = [];
 
 		foreach ( $this->get_customers_matching_last_purchase_range( $workflow, $limit, $offset ) as $customer ) {
 			$tasks[] = [
-				'workflow_id' => $workflow->get_id(),
-				'workflow_data' => [
-					'customer_id' => $customer->get_id()
-				]
+				'customer' => $customer->get_id(),
 			];
 		}
 
 		return $tasks;
 	}
 
-
 	/**
+	 * Process a single item for a workflow to process.
+	 *
 	 * @param Workflow $workflow
-	 * @param array $data
+	 * @param array    $item
+	 *
+	 * @throws InvalidArgument If customer is not set.
+	 * @throws RuntimeException If there is an error.
 	 */
-	function handle_background_task( $workflow, $data ) {
-		$customer = isset( $data['customer_id'] ) ? Customer_Factory::get( absint( $data['customer_id'] ) ) : false;
+	public function process_item_for_workflow( Workflow $workflow, array $item ) {
+		if ( ! isset( $item['customer'] ) ) {
+			throw InvalidArgument::missing_required( 'customer' );
+		}
 
+		$customer = Customer_Factory::get( $item['customer'] );
 		if ( ! $customer ) {
-			return;
+			throw new RuntimeException( 'Customer was not found.' );
 		}
 
 		// make the customer's last order object available for this trigger
-		$orders = wc_get_orders([
-			'type' => 'shop_order',
-			'customer' => $customer->is_registered() ? $customer->get_user_id() : $customer->get_email(),
-			'status' => apply_filters( 'automatewoo/customer/last_order_date_statuses', wc_get_is_paid_statuses() ),
-			'limit' => 1
-		]);
+		$orders = wc_get_orders(
+			[
+				'type'     => 'shop_order',
+				'customer' => $customer->is_registered() ? $customer->get_user_id() : $customer->get_email(),
+				'status'   => apply_filters( 'automatewoo/customer/last_order_date_statuses', wc_get_is_paid_statuses() ),
+				'limit'    => 1,
+			]
+		);
 
 		if ( empty( $orders ) ) {
-			return; // don't run if customer has no orders
+			throw new RuntimeException( 'The customer has no paid orders. An order may have been edited or deleted since starting the job.' );
 		}
 
-		$workflow->maybe_run([
-			'customer' => $customer,
-			'order' => current( $orders )
-		]);
+		$workflow->maybe_run(
+			[
+				'customer' => $customer,
+				'order'    => current( $orders ),
+			]
+		);
 	}
-
 
 	/**
 	 * Fetch users by date using the last order meta field.
@@ -108,7 +125,7 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 	 *
 	 * @return Customer[]
 	 */
-	function get_customers_matching_last_purchase_range( $workflow, $limit, $offset ) {
+	protected function get_customers_matching_last_purchase_range( $workflow, $limit, $offset ) {
 		$min_date = $this->get_min_last_order_date( $workflow );
 		$max_date = $this->get_max_last_order_date( $workflow );
 
@@ -132,9 +149,10 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 
 	/**
 	 * @param Workflow $workflow
+	 *
 	 * @return DateTime|bool
 	 */
-	function get_min_last_order_date( $workflow ) {
+	protected function get_min_last_order_date( $workflow ) {
 		$days = $workflow->get_trigger_option( 'days_since_last_purchase' );
 
 		if ( ! $days ) {
@@ -150,9 +168,10 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 
 	/**
 	 * @param Workflow $workflow
+	 *
 	 * @return DateTime|bool
 	 */
-	function get_max_last_order_date( $workflow ) {
+	protected function get_max_last_order_date( $workflow ) {
 		$days = $workflow->get_trigger_option( 'days_since_last_purchase_max' );
 
 		if ( ! $days ) {
@@ -166,15 +185,15 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 		return $date;
 	}
 
-
 	/**
-	 * @param $workflow Workflow
+	 * @param Workflow $workflow
+	 *
 	 * @return bool
 	 */
-	function validate_workflow( $workflow ) {
-		$customer = $workflow->data_layer()->get_customer();
+	public function validate_workflow( $workflow ) {
+		$customer          = $workflow->data_layer()->get_customer();
 		$most_recent_order = $workflow->data_layer()->get_order();
-		$enable_repeats = $workflow->get_trigger_option( 'enable_repeats' );
+		$enable_repeats    = $workflow->get_trigger_option( 'enable_repeats' );
 
 		if ( ! $customer || ! $most_recent_order ) {
 			return false;
@@ -190,7 +209,7 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 		}
 
 		// for accuracy, we use the actual order date instead of Customer::get_date_last_purchased()
-		$last_purchase_date = aw_normalize_date( $most_recent_order->get_date_created() ); // convert to UTC
+		$last_purchase_date  = aw_normalize_date( $most_recent_order->get_date_created() ); // convert to UTC
 		$min_last_order_date = $this->get_min_last_order_date( $workflow );
 
 		if ( ! $min_last_order_date || ! $last_purchase_date ) {
@@ -209,7 +228,6 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 		// if repeats are enabled the wait period should start at the last time the workflow was run or queued
 		// if repeats are disabled the date range should start at the last order date
 		$wait_period = $enable_repeats ? $min_last_order_date : $last_purchase_date;
-
 
 		if ( $workflow->get_timing_type() !== 'immediately' ) {
 			// check workflow has not been added to the queue already
@@ -240,9 +258,10 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 
 	/**
 	 * @param Workflow $workflow
+	 *
 	 * @return bool
 	 */
-	function validate_before_queued_event( $workflow ) {
+	public function validate_before_queued_event( $workflow ) {
 		$customer = $workflow->data_layer()->get_customer();
 
 		if ( ! $customer ) {
@@ -250,7 +269,7 @@ class Trigger_Customer_Win_Back extends Trigger_Background_Processed_Abstract {
 		}
 
 		$min_last_order_date = $this->get_min_last_order_date( $workflow );
-		$last_purchase_date = $customer->get_date_last_purchased();
+		$last_purchase_date  = $customer->get_date_last_purchased();
 
 		if ( ! $min_last_order_date || ! $last_purchase_date ) {
 			return false;

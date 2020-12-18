@@ -206,9 +206,12 @@ abstract class Action_Subscription_Edit_Item_Abstract extends Action {
 	/**
 	 * Get the description to display on the price field for this action
 	 *
-	 * TODO remove when WooCommerce 3.8 support is dropped.
+	 * @deprecated in 5.1.0
+	 *
+	 * @return string
 	 */
 	protected function get_recalculate_coupons_compatibility_text() {
+		wc_deprecated_function( __METHOD__, '5.1.0' );
 		return __( 'The subscription\'s coupon discount amount will only be recalculated if you are using WooCommerce version 3.8 or higher.', 'automatewoo' );
 	}
 
@@ -216,6 +219,8 @@ abstract class Action_Subscription_Edit_Item_Abstract extends Action {
 	 * Recalculate a subscription's totals.
 	 *
 	 * Recalculates coupons if possible, method was protected until WC 3.8.
+	 *
+	 * @todo deprecate this
 	 *
 	 * @param \WC_Subscription $subscription
 	 *

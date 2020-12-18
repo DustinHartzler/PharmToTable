@@ -33,7 +33,7 @@ class Marketplace_License_Transition_Helper {
 		}
 
 		if ( Licenses::has_marketplace_subscription( 'automatewoo' ) ) {
-			Admin_Notices::add_notice( 'marketplace_license_prompt' );
+			AdminNotices::add_notice( 'marketplace_license_prompt' );
 			update_option( 'automatewoo_did_marketplace_license_prompt', true, false );
 		}
 	}

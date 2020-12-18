@@ -4,6 +4,7 @@
 namespace AutomateWoo;
 
 use AutomateWoo\Triggers\ManualInterface;
+use AutomateWoo\Workflows\Factory;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -41,7 +42,7 @@ class Admin_Workflow_Edit {
 		global $post;
 
 		if ( $post && $post->post_status !== 'auto-draft' ) {
-			$this->workflow = Workflow_Factory::get( $post->ID );
+			$this->workflow = Factory::get( $post->ID );
 		}
 	}
 
@@ -354,6 +355,9 @@ class Admin_Workflow_Edit {
 	 */
 	function workflow_js_templates() {
 		Admin::get_view( 'js-workflow-templates' );
+		if ( 'preset' === aw_get_url_var( 'workflow-origin' ) ) {
+			Admin::get_view( 'js-workflow-preset-alert' );
+		}
 	}
 
 
@@ -367,7 +371,7 @@ class Admin_Workflow_Edit {
 			return;
 		}
 
-		$workflow = Workflow_Factory::get( $post_id );
+		$workflow = Factory::get( $post_id );
 
 		$workflow->set_type( isset( $posted['type'] ) ? $posted['type'] : 'automatic' );
 

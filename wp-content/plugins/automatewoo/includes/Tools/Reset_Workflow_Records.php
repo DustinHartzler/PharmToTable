@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -46,7 +48,7 @@ class Tool_Reset_Workflow_Records extends Tool_Abstract {
 			return new \WP_Error(1, __( 'Please select a workflow to reset.','automatewoo') );
 		}
 
-		if ( ! $workflow = Workflow_Factory::get( $args['workflow'] ) )
+		if ( ! $workflow = Factory::get( $args['workflow'] ) )
 			return false;
 
 		return true;
@@ -63,7 +65,7 @@ class Tool_Reset_Workflow_Records extends Tool_Abstract {
 
 		$args = $this->sanitize_args( $args );
 
-		$workflow = Workflow_Factory::get( $args['workflow'] );
+		$workflow = Factory::get( $args['workflow'] );
 
 		echo '<p>' . sprintf(__('Are you sure you want to reset all records for the workflow <strong>%s</strong>? This can not be undone.', 'automatewoo'), $workflow->title ) . '</p>';
 	}
@@ -78,7 +80,7 @@ class Tool_Reset_Workflow_Records extends Tool_Abstract {
 
 		$args = $this->sanitize_args( $args );
 
-		$workflow = Workflow_Factory::get( $args['workflow'] );
+		$workflow = Factory::get( $args['workflow'] );
 
 		$queries = [ 'AutomateWoo\Log_Query', 'AutomateWoo\Queue_Query' ];
 

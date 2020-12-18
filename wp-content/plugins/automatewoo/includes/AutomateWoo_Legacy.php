@@ -65,7 +65,7 @@ abstract class AutomateWoo_Legacy {
 	 * @return AutomateWoo\Workflow|bool
 	 */
 	function get_workflow( $id ) {
-		return AutomateWoo\Workflow_Factory::get( $id );
+		return \AutomateWoo\Workflows\Factory::get( $id );
 	}
 
 

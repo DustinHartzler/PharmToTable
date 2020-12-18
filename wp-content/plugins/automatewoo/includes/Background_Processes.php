@@ -31,8 +31,6 @@ class Background_Processes extends Registry {
 	public static function load_includes() {
 		$includes = [
 			'events'                     => Background_Processes\Event_Runner::class,
-			'queue'                      => Background_Processes\Queue::class,
-			'abandoned_carts'            => Background_Processes\Abandoned_Carts::class,
 			'setup_registered_customers' => Background_Processes\Setup_Registered_Customers::class,
 			'setup_guest_customers'      => Background_Processes\Setup_Guest_Customers::class,
 			'wishlist_item_on_sale'      => Background_Processes\Wishlist_Item_On_Sale::class,

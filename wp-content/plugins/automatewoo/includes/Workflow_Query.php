@@ -108,10 +108,7 @@ class Workflow_Query {
 	 * @since 5.0.0
 	 */
 	public function set_type( $type ) {
-		$this->args['meta_query'][] = [
-			'key'   => 'type',
-			'value' => $type,
-		];
+		$this->add_meta_query( 'type', $type );
 	}
 
 	/**
@@ -145,6 +142,23 @@ class Workflow_Query {
 	 */
 	function set_return( $return ) {
 		$this->return = $return;
+	}
+
+	/**
+	 * Add a meta query.
+	 *
+	 * @since 5.1.0
+	 *
+	 * @param string $key     The meta key.
+	 * @param string $value   The meta value.
+	 * @param string $compare The meta compare.
+	 */
+	public function add_meta_query( $key, $value, $compare = '=' ) {
+		$this->args['meta_query'][] = [
+			'key' => $key,
+			'value' => $value,
+			'compare' => $compare,
+		];
 	}
 
 

@@ -1,11 +1,17 @@
 <?php
 
+use AutomateWoo\ActionScheduler\ActionScheduler;
+use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
 use AutomateWoo\Frontend_Endpoints\Login_Redirect;
+use AutomateWoo\Jobs\JobRegistry;
+use AutomateWoo\Jobs\JobService;
 use AutomateWoo\LegacyClassLoader;
 use AutomateWoo\Options;
+use AutomateWoo\OptionsStore;
 use AutomateWoo\Usage_Tracking\Initializer as UsageTrackingInitializer;
-use AutomateWoo\Jobs\DeleteExpiredCoupons;
-use AutomateWoo\Jobs\DeleteFailedQueuedWorkflows;
+use AutomateWoo\Workflows\Presets\PresetService;
+use AutomateWoo\Workflows\Presets\Storage\PHPFileStorage;
+use AutomateWoo\Workflows\Presets\Parser\PresetParser;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -60,6 +66,34 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 	private $options;
 
 	/**
+	 * ActionScheduler instance.
+	 *
+	 * @var ActionSchedulerInterface
+	 */
+	private $action_scheduler;
+
+	/**
+	 * PresetService class.
+	 *
+	 * @var PresetService
+	 */
+	private $preset_service;
+
+	/**
+	 * JobService class.
+	 *
+	 * @var JobService
+	 */
+	private $job_service;
+
+	/**
+	 * OptionsStore class.
+	 *
+	 * @var OptionsStore
+	 */
+	private $options_store;
+
+	/**
 	 * Instance of singleton.
 	 *
 	 * @var AutomateWoo
@@ -111,7 +145,16 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 			$this->admin = new AutomateWoo\Admin();
 			AutomateWoo\Admin::init();
 			AutomateWoo\Updater::init();
-			AutomateWoo\UpdateNoticeManager::init();
+			AutomateWoo\AdminNotices\WelcomeNoticeManager::init();
+			AutomateWoo\AdminNotices\UpdateNoticeManager::init();
+			AutomateWoo\AdminNotices\NewWorkflowHelperManager::init();
+			( new AutomateWoo\AdminNotices\WcAdminDisabled() )->init();
+
+			if ( WC()->is_wc_admin_active() ) {
+				AutomateWoo\ActivityPanelInbox\WelcomeNote::init();
+				AutomateWoo\ActivityPanelInbox\UpdateNote::init();
+			}
+
 			AutomateWoo\Installer::init();
 		}
 
@@ -137,17 +180,13 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 			new \AutomateWoo\Points_Rewards_Integration();
 		}
 
-		if ( $this->is_request( 'ajax' ) || $this->is_request( 'cron' ) ) {
+		if ( $this->is_request( 'ajax' ) || $this->is_request( 'cron' ) || ( defined( 'WP_CLI' ) && WP_CLI ) || is_admin() ) {
 			// Load all background processes
 			AutomateWoo\Background_Processes::get_all();
 			// Load async request
 			AutomateWoo\Events::get_event_runner_async_request();
 
-			// Init jobs
-			( new DeleteFailedQueuedWorkflows() )->init();
-			if ( AW()->options()->clean_expired_coupons ) {
-				( new DeleteExpiredCoupons() )->init();
-			}
+			$this->job_service()->init_jobs();
 		}
 
 		if ( $this->is_request( 'frontend' ) ) {
@@ -169,9 +208,7 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 			AutomateWoo\Hooks::init();
 		}
 
-		if ( version_compare( WC()->version, '3.4', '>=' ) ) {
-			new AutomateWoo\Privacy();
-		}
+		new AutomateWoo\Privacy();
 
 		do_action( 'automatewoo_loaded' );
 	}
@@ -311,6 +348,60 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 	public function is_installed() {
 		// The database version is only added after install is complete
 		return (bool) Options::database_version();
+	}
+
+	/**
+	 * Get ActionScheduler.
+	 *
+	 * @return ActionSchedulerInterface
+	 */
+	public function action_scheduler() {
+		if ( ! isset( $this->action_scheduler ) ) {
+			$this->action_scheduler = new ActionScheduler();
+		}
+		return $this->action_scheduler;
+	}
+
+	/**
+	 * Returns the PresetService
+	 *
+	 * @return PresetService
+	 */
+	public function preset_service() {
+		if ( ! isset( $this->preset_service ) ) {
+			$preset_storage       = new PHPFileStorage( $this->path( '/presets' ) );
+			$preset_parser        = new PresetParser();
+			$this->preset_service = new PresetService( $preset_storage, $preset_parser );
+		}
+
+		return $this->preset_service;
+	}
+
+	/**
+	 * Get job service class.
+	 *
+	 * @return JobService
+	 */
+	public function job_service() {
+		if ( ! isset( $this->job_service ) ) {
+			$job_registry      = new JobRegistry( $this->action_scheduler(), $this->options_store() );
+			$this->job_service = new JobService( $job_registry );
+		}
+
+		return $this->job_service;
+	}
+
+	/**
+	 * Get job service class.
+	 *
+	 * @return OptionsStore
+	 */
+	public function options_store() {
+		if ( ! isset( $this->options_store ) ) {
+			$this->options_store = new OptionsStore();
+		}
+
+		return $this->options_store;
 	}
 
 	/**

@@ -58,7 +58,7 @@ export const useQueueItemsReducer = ( itemsToQueue ) => {
 const calculateProgressPercentage = ( totalCount, remainingCount ) => {
 	const completedCount = totalCount - remainingCount;
 
-	if ( 0 === totalCount || 0 === completedCount ) {
+	if ( totalCount === 0 || completedCount === 0 ) {
 		return 0;
 	}
 

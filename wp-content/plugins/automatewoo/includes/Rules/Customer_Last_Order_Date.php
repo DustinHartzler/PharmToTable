@@ -2,6 +2,8 @@
 
 namespace AutomateWoo\Rules;
 
+use AutomateWoo\Data_Types;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -15,7 +17,7 @@ class Customer_Last_Order_Date extends Abstract_Date {
 	 *
 	 * @var string
 	 */
-	public $data_item = 'customer';
+	public $data_item = Data_Types::CUSTOMER;
 
 	/**
 	 * Customer_Last_Order_Date constructor.

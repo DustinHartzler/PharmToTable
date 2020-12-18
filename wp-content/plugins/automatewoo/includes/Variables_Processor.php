@@ -121,7 +121,7 @@ class Variables_Processor {
 
 		if ( method_exists( $variable, 'get_value' ) ) {
 
-			if ( in_array( $data_type, Data_Types::get_non_stored_data_types(), true ) ) {
+			if ( Data_Types::is_non_stored_data_type( $data_type ) ) {
 				$value = $variable->get_value( $parameters, $this->workflow );
 			} else {
 				$data_item = $this->workflow->get_data_item( $variable->get_data_type() );

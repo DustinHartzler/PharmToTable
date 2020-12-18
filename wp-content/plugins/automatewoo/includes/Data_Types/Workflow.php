@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -34,7 +36,7 @@ class Data_Type_Workflow extends Data_Type {
 	 * @return mixed
 	 */
 	function decompress( $compressed_item, $compressed_data_layer ) {
-		$workflow = Workflow_Factory::get( $compressed_item );
+		$workflow = Factory::get( $compressed_item );
 
 		if ( ! $workflow || $workflow->get_status() === 'trash' ) {
 			return false;

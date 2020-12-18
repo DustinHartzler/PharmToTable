@@ -10,6 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Cart extends Model {
 
+	const STATUS_ACTIVE    = 'active';
+	const STATUS_ABANDONED = 'abandoned';
+
 	/** @var string */
 	public $table_id = 'carts';
 

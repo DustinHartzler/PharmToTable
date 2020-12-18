@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { Dashicon } from '@wordpress/components';
+import { Dashicon, Button } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
  * Internal dependencies
  */
 import NextButton from '../next-button';
-import { Button } from '../../base/components';
 import { getWorkflowEditUrl } from '../../base/utils';
 import LargeTextAndIcon from '../large-text-and-icon';
 
@@ -47,7 +46,7 @@ const HighVolumeWarning = ( {
 				icon={ <Dashicon icon="warning" size="60" /> }
 			/>
 			<div className="automatewoo-workflow-runner-buttons">
-				<Button isDefault isLarge href={ workflowUrl }>
+				<Button isSecondary href={ workflowUrl }>
 					{ __( 'Edit workflow', 'automatewoo' ) }
 				</Button>
 				<NextButton onClick={ dismissWarning }>

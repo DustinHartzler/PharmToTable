@@ -3,16 +3,21 @@
  */
 import { __, sprintf } from '@wordpress/i18n';
 import { Card } from '@woocommerce/components';
-import { Dashicon } from '@wordpress/components';
+import { Dashicon, Button } from '@wordpress/components';
 import { useEffect } from '@wordpress/element';
 import { PropTypes } from 'prop-types';
 import { omit } from 'lodash';
+import { recordEvent } from '@woocommerce/tracks';
 
 /**
  * Internal dependencies
  */
-import { ProgressBar, Button } from '../../base/components';
-import { MANUAL_WORKFLOWS_BATCH_SIZE, ADMIN_URL } from '../../settings';
+import { ProgressBar } from '../../base/components';
+import {
+	MANUAL_WORKFLOWS_BATCH_SIZE,
+	ADMIN_URL,
+	TRACKS_PREFIX,
+} from '../../settings';
 import { addItemBatchToQueue } from '../api-utils';
 import NextButton from '../next-button';
 import {
@@ -21,7 +26,6 @@ import {
 } from '../utils';
 import { useQueueItemsReducer } from './data';
 import { handleFetchError } from '../../base/utils';
-import recordTracksEvent from '../../base/usage-tracking';
 import LargeTextAndIcon from '../large-text-and-icon';
 
 const QueueStep = ( {
@@ -75,24 +79,22 @@ const QueueStep = ( {
 		queueItemsDispatch,
 	] );
 
-	useEffect(
-		() => {
-			// Only record tracks event when complete.
-			if ( queueItemsState.status !== STATUSES.COMPLETE ) {
-				return;
-			}
+	useEffect( () => {
+		// Only record tracks event when complete.
+		if ( queueItemsState.status !== STATUSES.COMPLETE ) {
+			return;
+		}
 
-			recordTracksEvent( 'manual_run_workflow_complete', {
-				items_count: itemCount,
-				conversion_tracking_enabled: workflow.is_conversion_tracking_enabled,
-				tracking_enabled: workflow.is_tracking_enabled,
-				title: workflow.title,
-				type: workflow.type,
-				trigger_name: workflow.trigger.name,
-			} );
-		},
-		[ queueItemsState.status, itemCount ]
-	);
+		recordEvent( TRACKS_PREFIX + 'manual_run_workflow_complete', {
+			items_count: itemCount,
+			conversion_tracking_enabled:
+				workflow.is_conversion_tracking_enabled,
+			tracking_enabled: workflow.is_tracking_enabled,
+			title: workflow.title,
+			type: workflow.type,
+			trigger_name: workflow.trigger.name,
+		} );
+	}, [ queueItemsState.status, itemCount, workflow ] );
 
 	const getCardBody = () => {
 		if ( queueItemsState.status === STATUSES.COMPLETE ) {
@@ -117,7 +119,6 @@ const QueueStep = ( {
 					<div className="automatewoo-workflow-runner-buttons">
 						<NextButton
 							isPrimary
-							isLarge
 							href={ `${ ADMIN_URL }admin.php?page=automatewoo-queue&_workflow=${ workflow.id }` }
 						>
 							{ __( 'View in queue', 'automatewoo' ) }
@@ -147,7 +148,7 @@ const QueueStep = ( {
 				</p>
 				<ProgressBar progress={ queueItemsState.progress } />
 				<div className="automatewoo-workflow-runner-buttons">
-					<Button isLarge isDefault onClick={ onStepCancel }>
+					<Button isSecondary onClick={ onStepCancel }>
 						{ __( 'Cancel', 'automatewoo' ) }
 					</Button>
 				</div>

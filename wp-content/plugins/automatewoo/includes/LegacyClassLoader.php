@@ -48,6 +48,8 @@ class LegacyClassLoader {
 		\AutomateWoo\Database_Table_Queue::class         => \AutomateWoo\DatabaseTables\Queue::class,
 		\AutomateWoo\Database_Table_Queue_Meta::class    => \AutomateWoo\DatabaseTables\QueueMeta::class,
 		\AutomateWoo\Database_Update::class              => \AutomateWoo\DatabaseUpdates\AbstractDatabaseUpdate::class,
+		\AutomateWoo\Admin_Notices::class                => \AutomateWoo\AdminNotices::class,
+		\AutomateWoo\Workflow_Factory::class             => \AutomateWoo\Workflows\Factory::class,
 	];
 
 	/**

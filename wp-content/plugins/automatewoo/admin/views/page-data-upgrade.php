@@ -1,31 +1,28 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
-$plugin_slug = Clean::string( aw_request('plugin_slug') );
+$plugin_slug = Clean::string( aw_request( 'plugin_slug' ) );
 
-if ( $plugin_slug == AW()->plugin_slug ) {
+if ( $plugin_slug === AW()->plugin_slug ) {
 	// updating the primary plugin
-	$plugin_name = 'AutomateWoo';
-	$version = AW()->version;
+	$plugin_name      = 'AutomateWoo';
+	$version          = AW()->version;
 	$update_available = Installer::is_database_upgrade_required();
-}
-elseif ( $plugin_slug ) {
+} elseif ( $plugin_slug ) {
 	// updating an addon
 	$addon = Addons::get( $plugin_slug );
 
 	if ( ! $addon ) {
-		wp_die( __( 'Add-on could not be updated', 'automatewoo' ) );
+		wp_die( esc_html__( 'Add-on could not be updated', 'automatewoo' ) );
 	}
 
-	$plugin_name = $addon->name;
-	$version = $addon->version;
+	$plugin_name      = $addon->name;
+	$version          = $addon->version;
 	$update_available = $addon->is_database_upgrade_available();
-}
-else {
+} else {
 	wp_die( 'Missing parameter.' );
 }
 
@@ -34,25 +31,25 @@ else {
 ?>
 
 <div id="automatewoo-upgrade-wrap" class="wrap woocommerce automatewoo-page automatewoo-page--data-upgrade">
-	
-	<h2><?php printf( __( "%s - Database Update" ,'automatewoo' ), $plugin_name ); ?></h2>
-	
-	<?php if ( $update_available ): ?>
 
-		<p><?php _e('Reading update tasks...', 'automatewoo'); ?></p>
+	<h2><?php printf( esc_html__( '%s - Database Update', 'automatewoo' ), esc_html( $plugin_name ) ); ?></h2>
+
+	<?php if ( $update_available ) : ?>
+
+		<p><?php esc_html_e( 'Reading update tasks...', 'automatewoo' ); ?></p>
 
 		<p class="show-on-ajax">
-			<?php printf(__('Upgrading data to version %s.', 'automatewoo'), $version ); ?>
+			<?php printf( esc_html__( 'Upgrading data to version %s.', 'automatewoo' ), esc_html( $version ) ); ?>
 			<span style="display: none" data-automatewoo-update-items-to-process-text>
-				<?php printf( __('Approximately %s0%s items to process.', 'automatewoo' ), '<span data-automatewoo-update-items-to-process-count>', '</span>' ); ?>
+				<?php printf( esc_html__( 'Approximately %1$s0%2$s items to process.', 'automatewoo' ), '<span data-automatewoo-update-items-to-process-count>', '</span>' ); ?>
 			</span>
 			<span style="display: none" data-automatewoo-update-items-processed-text>
-				<?php printf(__('%s0%s items processed.', 'automatewoo'), '<span data-automatewoo-update-items-processed-count>', '</span>' ); ?>
+				<?php printf( esc_html__( '%1$s0%2$s items processed.', 'automatewoo' ), '<span data-automatewoo-update-items-processed-count>', '</span>' ); ?>
 			</span>
 			<i class="automatewoo-upgrade-loader"></i>
 		</p>
 
-		<p class="show-on-complete"><?php _e('Database update complete', 'automatewoo'); ?>.</p>
+		<p class="show-on-complete"><?php esc_html_e( 'Database update complete', 'automatewoo' ); ?>.</p>
 
 		<style type="text/css">
 
@@ -75,7 +72,6 @@ else {
 
 				items_to_process_count: 0,
 
-
 				init: function(){
 					// allow user to read message for 1 second
 					setTimeout(function(){
@@ -85,13 +81,11 @@ else {
 					}, 1000);
 				},
 
-
 				start: function(){
 					$('.show-on-ajax').show();
 					updater.maybe_reveal_items_to_process_text();
 					updater.dispatch();
 				},
-
 
 				dispatch: function() {
 
@@ -100,8 +94,8 @@ else {
 						url: ajaxurl,
 						data: {
 							action: 'aw_database_update',
-							nonce: '<?php echo wp_create_nonce('automatewoo_database_upgrade'); ?>',
-							plugin_slug: '<?php echo $plugin_slug ?>'
+							nonce: '<?php echo esc_js( wp_create_nonce( 'automatewoo_database_upgrade' ) ); ?>',
+							plugin_slug: '<?php echo esc_js( $plugin_slug ); ?>'
 						},
 						success: function (response) {
 
@@ -127,7 +121,6 @@ else {
 
 				},
 
-
 				update_count: function( count ) {
 					updater.items_processed_count += count;
 
@@ -138,8 +131,6 @@ else {
 					$('[data-automatewoo-update-items-processed-count]').text( updater.items_processed_count );
 				},
 
-
-
 				/**
 				 * Does ajax request to get number of items that need processing.
 				 */
@@ -147,7 +138,7 @@ else {
 					$.post( ajaxurl,
 						{
 							action: 'aw_database_update_items_to_process_count',
-							plugin_slug: '<?php echo $plugin_slug ?>'
+							plugin_slug: '<?php echo esc_js( $plugin_slug ); ?>'
 						},
 						function( response ) {
 							if ( response.success ) {
@@ -158,7 +149,6 @@ else {
 					);
 				},
 
-
 				maybe_reveal_items_to_process_text: function() {
 					if ( updater.items_to_process_count === 0 ) {
 						return;
@@ -167,12 +157,10 @@ else {
 					$('[data-automatewoo-update-items-to-process-count]').text( updater.items_to_process_count );
 				},
 
-
 				complete: function() {
 					$('.show-on-complete').show();
 					$('.automatewoo-upgrade-loader').hide();
 				},
-
 
 				error: function( response ) {
 					if ( response.data ) {
@@ -180,8 +168,6 @@ else {
 					}
 					$('.automatewoo-upgrade-loader').hide();
 				}
-
-
 			};
 
 			updater.init();
@@ -189,9 +175,9 @@ else {
 		})(jQuery);
 		</script>
 
-	<?php else: ?>
+	<?php else : ?>
 
-		<p><?php _e('No updates available', 'automatewoo'); ?>.</p>
+		<p><?php esc_html_e( 'No updates available', 'automatewoo' ); ?>.</p>
 
 	<?php endif; ?>
 

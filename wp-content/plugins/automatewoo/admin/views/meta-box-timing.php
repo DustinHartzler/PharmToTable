@@ -80,10 +80,11 @@ $run_delay_unit
 	->set_name( 'run_delay_unit' )
 	->set_options(
 		[
-			'h' => __( 'Hours', 'automatewoo' ),
-			'm' => __( 'Minutes', 'automatewoo' ),
-			'd' => __( 'Days', 'automatewoo' ),
-			'w' => __( 'Weeks', 'automatewoo' ),
+			'h'     => __( 'Hours', 'automatewoo' ),
+			'm'     => __( 'Minutes', 'automatewoo' ),
+			'd'     => __( 'Days', 'automatewoo' ),
+			'w'     => __( 'Weeks', 'automatewoo' ),
+			'month' => __( 'Months', 'automatewoo' ),
 		]
 	);
 

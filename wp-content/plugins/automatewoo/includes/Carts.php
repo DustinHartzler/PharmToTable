@@ -26,7 +26,6 @@ class Carts {
 	static function init() {
 		$self = __CLASS__; /** @var $self Carts (for IDE) */
 
-		add_action( 'automatewoo_two_minute_worker', [ $self, 'check_for_abandoned_carts' ] );
 		add_action( 'automatewoo_two_days_worker', [ $self, 'clean_stored_carts' ] );
 
 		add_action( 'woocommerce_cart_emptied', [ $self, 'cart_emptied' ] );
@@ -49,7 +48,6 @@ class Carts {
 		add_action( 'woocommerce_removed_coupon', [ $self, 'mark_as_changed' ] );
 		add_action( 'woocommerce_cart_item_removed', [ $self, 'mark_as_changed' ] );
 		add_action( 'woocommerce_cart_item_restored', [ $self, 'mark_as_changed' ] );
-		add_action( 'woocommerce_before_cart_item_quantity_zero', [ $self, 'mark_as_changed' ] );
 		add_action( 'woocommerce_after_cart_item_quantity_update', [ $self, 'mark_as_changed' ] );
 
 		add_action( 'woocommerce_after_calculate_totals', [ $self, 'trigger_update_on_cart_and_checkout_pages' ] );
@@ -104,40 +102,6 @@ class Carts {
 			'abandoned' => __( 'Abandoned', 'automatewoo' )
 		]);
 	}
-
-
-	/**
-	 * Check if any active carts have been abandoned, runs every 2 minutes
-	 */
-	static function check_for_abandoned_carts() {
-
-		/** @var Background_Processes\Abandoned_Carts $process */
-		$process = Background_Processes::get( 'abandoned_carts' );
-
-		// don't start a new process until the previous is finished
-		if ( $process->has_queued_items() ) {
-			$process->maybe_schedule_health_check();
-			return;
-		}
-
-		$cart_abandoned_timeout = absint( AW()->options()->abandoned_cart_timeout ); // mins
-
-		$timeout_date = new DateTime();
-		$timeout_date->modify("-$cart_abandoned_timeout minutes" );
-
-		$query = new Cart_Query();
-		$query->where_status( 'active' );
-		$query->where_date_modified( $timeout_date, '<' );
-		$query->set_limit( 100 );
-		$query->set_return( 'ids' );
-
-		if ( ! $carts = $query->get_results() ) {
-			return;
-		}
-
-		$process->data( $carts )->start();
-	}
-
 
 	/**
 	 * Logic to determine whether we should save the cart on certain hooks

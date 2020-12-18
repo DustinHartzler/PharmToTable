@@ -56,14 +56,13 @@ class Events {
 			->set_limit( self::get_batch_size() )
 			->set_ordering( 'date_scheduled', 'ASC' )
 			->where( 'date_scheduled', new DateTime(), '<' )
-			->where( 'status', 'pending' )
-			->set_return( 'ids' );
+			->where( 'status', 'pending' );
 
-		if ( ! $events = $query->get_results() ) {
-			return;
+		$events = $query->get_results_as_ids();
+
+		if ( $events ) {
+			$process->data( $events )->start();
 		}
-
-		$process->data( $events )->start();
 	}
 
 

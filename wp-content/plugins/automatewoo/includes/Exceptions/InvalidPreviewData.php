@@ -38,7 +38,18 @@ class InvalidPreviewData extends InvalidArgumentException implements UserFacingE
 	 * @return static
 	 */
 	public static function order_not_found() {
-		return new static( __( 'No valid preview order was found.', 'automatewoo' ) );
+		return self::data_item_needed( 'order' );
+	}
+
+	/**
+	 * Get an exception for when a preview data item was not found.
+	 *
+	 * @param string $data_type The type of data that is needed.
+	 *
+	 * @return static
+	 */
+	public static function data_item_needed( string $data_type ) {
+		return new static( sprintf( __( 'A valid "%s" must exist to generate the preview.', 'automatewoo' ), $data_type ) );
 	}
 
 }

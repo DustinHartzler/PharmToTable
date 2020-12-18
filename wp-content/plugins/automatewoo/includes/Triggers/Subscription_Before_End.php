@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Exceptions\InvalidArgument;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -32,78 +34,30 @@ class Trigger_Subscription_Before_End extends Trigger_Subscription_Before_Renewa
 		$this->add_field( Subscription_Workflow_Helper::get_products_field() );
 	}
 
-
 	/**
+	 * Get subscriptions that match the workflow's date params.
+	 *
 	 * @param Workflow $workflow
-	 * @param int      $limit
 	 * @param int      $offset
-	 *
-	 * @return array
-	 */
-	function get_background_tasks( $workflow, $limit, $offset = 0 ) {
-		$tasks = [];
-		$days_before = absint( $workflow->get_trigger_option( 'days_before' ) );
-
-		// days before field must be set
-		if ( ! $days_before ) {
-			return [];
-		}
-
-		$date = new DateTime();
-		$date->convert_to_site_time();
-		$date->modify( "+$days_before days" );
-
-		foreach ( $this->get_subscriptions_by_end_day( $date, $limit, $offset ) as $subscription_id ) {
-			$tasks[] = [
-				'workflow_id' => $workflow->get_id(),
-				'workflow_data' => [
-					'subscription_id' => $subscription_id
-				]
-			];
-		}
-
-		return $tasks;
-	}
-
-
-	/**
-	 * @param DateTime $date Must be in site time!
 	 * @param int      $limit
-	 * @param int      $offset
 	 *
-	 * @return array
+	 * @return int[] Array of subscription IDs.
+	 *
+	 * @throws InvalidArgument If workflow 'days before' option is not valid.
 	 */
-	function get_subscriptions_by_end_day( $date, $limit, $offset ) {
-		$day_start = clone $date;
-		$day_end = clone $date;
-		$day_start->set_time_to_day_start();
-		$day_end->set_time_to_day_end();
+	protected function get_subscriptions_for_workflow( Workflow $workflow, int $offset, int $limit ) {
+		$days_before_end = (int) $workflow->get_trigger_option( 'days_before' );
+		$this->validate_positive_integer( $days_before_end );
 
-		$day_start->convert_to_utc_time();
-		$day_end->convert_to_utc_time();
+		$date = ( new DateTime() )->add( new \DateInterval( "P{$days_before_end}D" ) );
 
-		$query = new \WP_Query([
-			'post_type' => 'shop_subscription',
-			'post_status' => [ 'wc-active', 'wc-pending-cancel' ],
-			'fields' => 'ids',
-			'posts_per_page' => $limit,
-			'offset' => $offset,
-			'no_found_rows' => true,
-			'meta_query' => [
-				[
-					'key' => '_schedule_end',
-					'compare' => '>=',
-					'value' => $day_start->to_mysql_string(),
-				],
-				[
-					'key' => '_schedule_end',
-					'compare' => '<=',
-					'value' => $day_end->to_mysql_string(),
-				]
-			]
-		]);
-
-		return $query->posts;
+		return $this->query_subscriptions_for_day(
+			$date,
+			'_schedule_end',
+			[ 'wc-active', 'wc-pending-cancel' ],
+			$offset,
+			$limit
+		);
 	}
 
 	/**

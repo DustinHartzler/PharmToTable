@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: AutomateWoo\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
-"POT-Creation-Date: 2020-07-27 7:56:0+00:00\n"
-"PO-Revision-Date: 2020-07-29 11:08+0930\n"
+"POT-Creation-Date: 2020-10-14 9:39:2+00:00\n"
+"PO-Revision-Date: 2020-10-14 14:32+0200\n"
 "Last-Translator: \n"
 "Language-Team: Christoph Rado, christophrado.de\n"
 "Language: de_DE@formal\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: automatewoo.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -23,12 +23,12 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: includes/libraries\n"
 
 #. Plugin Name of the plugin
-#: admin/admin.php:129 admin/admin.php:571 admin/controllers/licenses.php:74
+#: admin/admin.php:129 admin/admin.php:588 admin/controllers/licenses.php:74
 #: admin/coupons-list.php:30 admin/licenses-table.php:47
 #: admin/WCAdminConnectPages.php:60 automatewoo.php:36
 #: includes/Actions/Change_Workflow_Status.php:18
-#: includes/Actions/Clear_Queued_Events.php:17 includes/Installer.php:247
-#: includes/Privacy.php:18 admin/assets/build/index.js:579
+#: includes/Actions/Clear_Queued_Events.php:17 includes/Installer.php:246
+#: includes/Privacy.php:18 admin/assets/build/index.js:11
 msgid "AutomateWoo"
 msgstr "AutomateWoo"
 
@@ -55,24 +55,24 @@ msgstr "Dashboard"
 
 #: admin/admin.php:137 admin/reports-tabs/runs-by-date.php:14
 #: admin/WCAdminConnectPages.php:73 includes/Actions/Clear_Queued_Events.php:26
-#: includes/Post_Types.php:22
+#: includes/Post_Types.php:25
 #: includes/Triggers/Workflow_Times_Run_Reaches.php:18
-#: admin/assets/build/index.js:579
+#: admin/assets/build/index.js:11
 msgid "Workflows"
 msgstr "Workflows"
 
-#: admin/admin.php:142 admin/reports/email-tracking.php:334
+#: admin/admin.php:142 admin/reports/email-tracking.php:336
 #: admin/reports/logs.php:19 admin/WCAdminConnectPages.php:100
 msgid "Logs"
 msgstr "Logs"
 
 #: admin/admin.php:147 admin/WCAdminConnectPages.php:101
-#: admin/assets/build/index.js:1652
+#: admin/assets/build/index.js:10
 msgid "Queue"
 msgstr "Warteschlange"
 
 #: admin/admin.php:153 admin/reports/carts.php:21
-#: admin/settings-tabs/carts.php:16 admin/WCAdminConnectPages.php:102
+#: admin/settings-tabs/carts.php:17 admin/WCAdminConnectPages.php:102
 #: includes/Privacy_Policy_Guide.php:34
 #: includes/Triggers/Abstract_Abandoned_Cart.php:21
 msgid "Carts"
@@ -102,7 +102,7 @@ msgid "Tools"
 msgstr "Werkzeuge"
 
 #: admin/admin.php:179 admin/WCAdminConnectPages.php:149
-#: includes/Installer.php:270
+#: includes/Installer.php:269
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -110,7 +110,7 @@ msgstr "Einstellungen"
 msgid "Events"
 msgstr "Ereignisse"
 
-#: admin/admin.php:189 admin/views/action.php:29
+#: admin/admin.php:189 admin/views/action.php:30
 msgid "Preview"
 msgstr "Vorschau"
 
@@ -128,11 +128,11 @@ msgstr "AutomateWoo Daten-Aktualisierung"
 msgid "Manual Workflow Runner"
 msgstr "Manueller Workflow-Durchläufe"
 
-#: admin/admin.php:279
+#: admin/admin.php:276
 msgid "This field does not support variables."
 msgstr "Dieses Feld unterstützt keine Variablen."
 
-#: admin/admin.php:280
+#: admin/admin.php:277
 msgid ""
 "Variable '%s' is not available with the selected trigger. Please only use "
 "variables listed in the the variables box."
@@ -140,7 +140,7 @@ msgstr ""
 "Variable „%s“ ist mit dem gewählten Auslöser nicht verfügbar. Bitte nutzen "
 "Sie nur Variablen, die in der Variablen-Box gelistet sind."
 
-#: admin/admin.php:281
+#: admin/admin.php:278
 msgid ""
 "Variable '%s' is not a valid. Please only use variables listed in the the "
 "variables box."
@@ -148,11 +148,11 @@ msgstr ""
 "Variable „%s“ ist nicht gültig. Bitte nutzen Sie nur Variablen, die in der "
 "Variablen-Box gelistet sind."
 
-#: admin/admin.php:593
+#: admin/admin.php:610
 msgid "Your AutomateWoo license has expired."
 msgstr "Ihre AutomateWoo-Lizenz ist abgelaufen."
 
-#: admin/admin.php:595
+#: admin/admin.php:612
 msgid ""
 "<a href=\"%s\" target=\"_blank\">Renew your license</a> to receive updates "
 "and support."
@@ -160,54 +160,54 @@ msgstr ""
 "<a href=\"%s\" target=\"_blank\">Erneuern Sie Ihre Lizenz</a>, um Updates "
 "und Support zu erhalten."
 
-#: admin/admin.php:606
+#: admin/admin.php:623
 msgid "AutomateWoo - You have unactivated products."
 msgstr "AutomateWoo - Sie haben nicht aktivierte Produkte."
 
-#: admin/admin.php:608
+#: admin/admin.php:625
 msgid "AutomateWoo is not activated."
 msgstr "AutomateWoo ist nicht aktiviert."
 
-#: admin/admin.php:612
+#: admin/admin.php:629
 msgid ""
 "Please <a href=\"%s\">enter your license key</a> to receive plugin updates."
 msgstr ""
 "Bitte <a href=\"%s\">erneuern Sie Ihre Lizenz</a>, um Plugin-"
 "Aktualisierungen zu erhalten."
 
-#: admin/ajax.php:354
+#: admin/ajax.php:355
 msgid "Error: "
 msgstr "Fehler: "
 
-#: admin/ajax.php:360
+#: admin/ajax.php:361
 msgid "Success! %s email%s sent."
 msgstr "Erfolg! %s E-Mail%s gesendet."
 
-#: admin/ajax.php:388
+#: admin/ajax.php:389
 msgid "Message sent."
 msgstr "Nachricht gesendet."
 
-#: admin/ajax.php:405
+#: admin/ajax.php:406
 msgid "Permission error."
 msgstr "Berechtigungs-Fehler."
 
-#: admin/ajax.php:426 admin/views/page-data-upgrade.php:21
+#: admin/ajax.php:427 admin/views/page-data-upgrade.php:19
 msgid "Add-on could not be updated"
 msgstr "Erweiterung konnte nicht aktualisiert werden"
 
-#: admin/ajax.php:561
+#: admin/ajax.php:562
 msgid "No log found."
 msgstr "Kein Log gefunden."
 
-#: admin/ajax.php:575
+#: admin/ajax.php:576
 msgid "No queued event found."
 msgstr "Kein geplantes Ereignis gefunden."
 
-#: admin/ajax.php:593
+#: admin/ajax.php:594
 msgid "Variable not found."
 msgstr "Variable nicht gefunden."
 
-#: admin/ajax.php:607
+#: admin/ajax.php:608
 msgid "No cart found."
 msgstr "Kein Warenkorb gefunden."
 
@@ -228,7 +228,7 @@ msgstr ""
 
 #: admin/controllers/carts.php:88 admin/controllers/guests.php:112
 #: admin/controllers/logs.php:110 admin/controllers/opt-ins.php:97
-#: admin/controllers/queue.php:117 admin/reports-tabs/conversions-list.php:57
+#: admin/controllers/queue.php:120 admin/reports-tabs/conversions-list.php:57
 msgid "Bulk edit completed."
 msgstr "Massenbearbeitung abgeschlossen."
 
@@ -258,15 +258,14 @@ msgstr "Fehlende Gast-Daten."
 
 #: admin/controllers/guests.php:74
 msgid ""
-"Guest data can be stored here for two reasons. If a customer places an order "
-"but does not to create an account. Or, if a you have enabled pre-submit "
-"capturing, the guest data could have been captured before an order was "
-"placed from a form on your website."
+"Guest data is stored here when a customer places an order but does not "
+"create an account. Or, if you have enabled pre-submit capturing, guest data "
+"can also be captured from a form on your website before an order is placed."
 msgstr ""
-"Gast-Daten können hier aus zwei Gründen gespeichert werden. Wenn ein Kunde "
-"eine Bestellung aufgibt, aber kein Kundenkonto besitzt. Oder, falls E-Mail-"
-"Erfassung aktiv ist, können die Daten vor Platzierung einer Bestellung über "
-"ein anderes Formular erfasst worden sein."
+"Gast-Daten wird gespeichert, wenn ein Kunde eine Bestellung aufgibt, aber "
+"kein Kundenkonto besitzt. Falls E-Mail-Erfassung aktiv ist, können die Daten "
+"vor Platzierung einer Bestellung auch über ein anderes Formular erfasst "
+"werden."
 
 #: admin/controllers/guests.php:95
 msgid "Please select some guests to bulk edit."
@@ -355,29 +354,30 @@ msgid "Please select some items to bulk edit."
 msgstr ""
 "Bitte wählen Sie mehrere Elemente, um eine Massenbearbeitung zu starten."
 
-#: admin/controllers/queue.php:49
+#: admin/controllers/queue.php:50
 msgid ""
 "Workflows that are not set to run immediately will be added to this queue. "
-"The queue processes %s items every 5 minutes so actual run times may vary. <"
-"%s>Read more&hellip;<%s>"
+"The queue is checked every two minutes so actual run times will vary "
+"slightly. <%s>Read more&hellip;<%s>"
 msgstr ""
 "Workflows, die nicht sofort ausgeführt werden, werden zur Warteschlange "
-"hinzugefügt. Die Warteschlange arbeitet alle 5 Minuten %s Einträge ab. <"
-"%s>Mehr erfahren&hellip;<%s>"
+"hinzugefügt. Die Warteschlange wird alle zwei Minuten Einträge geprüft, "
+"Ausführungszeitpunkte können daher leicht variieren. <%s>Mehr "
+"erfahren&hellip;<%s>"
 
 #: admin/controllers/queue.php:57
 msgid "Failed queue items will be deleted after %d days"
 msgstr "Fehlgeschlagene Warteschlangen-Elemente werden nach %d Tagen gelöscht"
 
-#: admin/controllers/queue.php:80
+#: admin/controllers/queue.php:83
 msgid "Queued event run successfully."
 msgstr "Geplantes Ereignis erfolgreich durchgeführt."
 
-#: admin/controllers/queue.php:84
+#: admin/controllers/queue.php:87
 msgid "Queued event failed to run."
 msgstr "Geplantes Ereignis konnte nicht durchgeführt werden."
 
-#: admin/controllers/queue.php:99 admin/reports-tabs/conversions-list.php:43
+#: admin/controllers/queue.php:102 admin/reports-tabs/conversions-list.php:43
 msgid "Please select some queued events to bulk edit."
 msgstr ""
 "Bitte wählen Sie mehrere geplante Ereignisse, um eine Massenbearbeitung zu "
@@ -493,15 +493,15 @@ msgstr "Anstehende geplante Ereignisse"
 msgid "There are no events currently queued&hellip;"
 msgstr "Es sind aktuell keine Ereignisse geplant&hellip;"
 
-#: admin/dashboard-widgets/workflows.php:45
+#: admin/dashboard-widgets/workflows.php:47
 msgid "most run workflow"
 msgstr "Workflow mit den meisten Durchläufen"
 
-#: admin/dashboard-widgets/workflows.php:68
+#: admin/dashboard-widgets/workflows.php:70
 msgid "highest converting workflow"
 msgstr "Workflow mit der höchsten Conversion"
 
-#: admin/data-layer-formatter.php:33 admin/reports/conversions-list.php:137
+#: admin/data-layer-formatter.php:33 admin/reports/conversions-list.php:139
 #: includes/Actions/Order_Add_Note.php:19
 #: includes/Actions/Order_Change_Status.php:19
 #: includes/Actions/Order_Resend_Email.php:19
@@ -513,7 +513,7 @@ msgid "Order"
 msgstr "Bestellung"
 
 #: admin/data-layer-formatter.php:40 admin/reports/carts.php:33
-#: admin/reports/conversions-list.php:138 admin/reports/logs.php:110
+#: admin/reports/conversions-list.php:140 admin/reports/logs.php:110
 #: admin/reports/opt-ins.php:59 admin/reports/queue.php:135
 #: includes/Actions/Customer_Add_Tags.php:18
 #: includes/Actions/Customer_Change_Role.php:18
@@ -525,7 +525,7 @@ msgid "Customer"
 msgstr "Kunde"
 
 #: admin/data-layer-formatter.php:49 admin/reports/guests.php:22
-#: admin/reports/guests.php:41 includes/Rules/Customer_Role.php:34
+#: admin/reports/guests.php:41 includes/Rules/Customer_Role.php:36
 msgid "Guest"
 msgstr "Gast"
 
@@ -541,7 +541,7 @@ msgid "Review"
 msgstr "Überprüfen"
 
 #: admin/data-layer-formatter.php:76 admin/licenses-table.php:70
-#: admin/views/modal-cart-info.php:29
+#: admin/views/modal-cart-info.php:28
 #: includes/Actions/Update_Product_Meta.php:18 includes/Fields/Product.php:40
 #: includes/Privacy_Exporters.php:354 templates/email/cart-table.php:33
 msgid "Product"
@@ -600,7 +600,7 @@ msgid "Place license key here"
 msgstr "Lizenz-Schlüssel hier eingeben"
 
 #: admin/licenses-table.php:122 admin/views/meta-box-save.php:59
-#: includes/Actions/Change_Workflow_Status.php:27 includes/Carts.php:103
+#: includes/Actions/Change_Workflow_Status.php:27 includes/Carts.php:101
 msgid "Active"
 msgstr "Aktiv"
 
@@ -617,7 +617,7 @@ msgid "Search"
 msgstr "Suche"
 
 #: admin/list-table.php:80 includes/Customer.php:352
-#: includes/Data_Layer.php:403 includes/Guest.php:196
+#: includes/Data_Layer.php:405 includes/Guest.php:196
 msgctxt "full name"
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
@@ -634,7 +634,7 @@ msgstr "Einen Workflow suchen&hellip;"
 msgid "Search for a customer&hellip;"
 msgstr "Einen Kunden suchen&hellip;"
 
-#: admin/notices.php:178
+#: admin/notices.php:171
 msgid ""
 "AutomateWoo %1$s will require WordPress version %2$s or newer and "
 "WooCommerce version %3$s or newer."
@@ -642,15 +642,15 @@ msgstr ""
 "AutomateWoo %1$s benötigt WordPress Version %2$s oder neuer und WooCommerce "
 "Version %3$s oder neuer."
 
-#: admin/notices.php:185
+#: admin/notices.php:178
 msgid "AutomateWoo %1$s will require WordPress version %2$s or newer."
 msgstr "AutomateWoo %1$s benötigt WordPress Version %2$s oder neuer."
 
-#: admin/notices.php:191
+#: admin/notices.php:184
 msgid "AutomateWoo %1$s will require WooCommerce version %2$s or newer."
 msgstr "AutomateWoo %1$s benötigt WooCommerce Version %2$s oder neuer."
 
-#: admin/notices.php:202
+#: admin/notices.php:195
 msgid "Update required soon:"
 msgstr "Aktualisierung bald benötigt:"
 
@@ -658,7 +658,7 @@ msgstr "Aktualisierung bald benötigt:"
 msgid "Conversions List"
 msgstr "Conversion-Liste"
 
-#: admin/reports-tabs/conversions.php:14 admin/reports/conversions-list.php:20
+#: admin/reports-tabs/conversions.php:14 admin/reports/conversions-list.php:22
 msgid "Conversions"
 msgstr "Conversions"
 
@@ -683,7 +683,7 @@ msgid "Last 7 Days"
 msgstr "Letzte 7 Tage"
 
 #: admin/reports/abstract-graph.php:54 admin/reports/opt-ins.php:60
-#: admin/views/meta-box-timing.php:172 includes/Fields/Date.php:16
+#: admin/views/meta-box-timing.php:173 includes/Fields/Date.php:16
 msgid "Date"
 msgstr "Datum"
 
@@ -700,7 +700,7 @@ msgid "Show"
 msgstr "Anzeigen"
 
 #: admin/reports/carts.php:32 admin/reports/events.php:74
-#: admin/settings-tabs/status.php:15
+#: admin/settings-tabs/status.php:17
 #: includes/Actions/Change_Workflow_Status.php:25
 msgid "Status"
 msgstr "Status"
@@ -709,12 +709,12 @@ msgstr "Status"
 msgid "Last active"
 msgstr "Zuletzt aktiv"
 
-#: admin/reports/carts.php:35 includes/Data_Type.php:75
+#: admin/reports/carts.php:35 includes/Data_Type.php:84
 #: includes/Privacy_Exporters.php:145
 msgid "Items"
 msgstr "Artikel"
 
-#: admin/reports/carts.php:36 admin/views/modal-cart-info.php:110
+#: admin/reports/carts.php:36 admin/views/modal-cart-info.php:111
 #: templates/email/cart-table.php:114
 msgid "Total"
 msgstr "Summe"
@@ -734,44 +734,44 @@ msgstr "Status zu Verlassen ändern"
 
 #: admin/reports/carts.php:170 admin/reports/guests.php:171
 #: admin/reports/guests.php:182 admin/reports/logs.php:168
-#: admin/reports/queue.php:195 admin/views/action.php:31
+#: admin/reports/queue.php:195 admin/views/action.php:32
 #: includes/Actions/Campaign_Monitor_Remove_Subscriber.php:28
 msgid "Delete"
 msgstr "Löschen"
 
-#: admin/reports/conversions-list.php:19
+#: admin/reports/conversions-list.php:21
 msgid "Conversion"
 msgstr "Conversion"
 
-#: admin/reports/conversions-list.php:27
+#: admin/reports/conversions-list.php:29
 msgid "No conversions found."
 msgstr "Keine Conversions gefunden."
 
-#: admin/reports/conversions-list.php:36
+#: admin/reports/conversions-list.php:38
 msgid "Unmark As Conversion"
 msgstr "Markierung als Conversion aufheben"
 
-#: admin/reports/conversions-list.php:139 admin/reports/logs.php:109
-#: admin/reports/queue.php:134 admin/views/modal-log-info.php:28
-#: admin/views/modal-queued-event-info.php:29 includes/Fields/Workflow.php:26
-#: includes/Post_Types.php:23 admin/assets/build/index.js:2110
+#: admin/reports/conversions-list.php:141 admin/reports/logs.php:109
+#: admin/reports/queue.php:134 admin/views/modal-log-info.php:27
+#: admin/views/modal-queued-event-info.php:28 includes/Fields/Workflow.php:26
+#: includes/Post_Types.php:26 admin/assets/build/index.js:2
 msgid "Workflow"
 msgstr "Workflow"
 
-#: admin/reports/conversions-list.php:140 admin/reports/logs.php:18
+#: admin/reports/conversions-list.php:142 admin/reports/logs.php:18
 #: admin/reports/logs.php:108
 msgid "Log"
 msgstr "Log"
 
-#: admin/reports/conversions-list.php:141
+#: admin/reports/conversions-list.php:143
 msgid "First Interacted"
 msgstr "Erste Interaktion"
 
-#: admin/reports/conversions-list.php:142
+#: admin/reports/conversions-list.php:144
 msgid "Order Placed"
 msgstr "Bestellung aufgegeben"
 
-#: admin/reports/conversions-list.php:143
+#: admin/reports/conversions-list.php:145
 msgid "Order Total"
 msgstr "Bestellung Gesamtsumme"
 
@@ -783,12 +783,12 @@ msgstr "%s Conversion-Wert Bestellungen"
 msgid "%s converted orders"
 msgstr "%s konvertierte Bestellungen"
 
-#: admin/reports/conversions.php:134 admin/reports/email-tracking.php:187
+#: admin/reports/conversions.php:134 admin/reports/email-tracking.php:189
 #: admin/reports/runs-by-date.php:89
 msgid "Showing reports for:"
 msgstr "Zeige Berichte für:"
 
-#: admin/reports/conversions.php:168 admin/reports/email-tracking.php:221
+#: admin/reports/conversions.php:168 admin/reports/email-tracking.php:223
 #: admin/reports/runs-by-date.php:123
 msgid "Reset"
 msgstr "Zurücksetzen"
@@ -801,31 +801,31 @@ msgstr "Conversion-Nummer"
 msgid "Conversion Value"
 msgstr "Conversion-Wert"
 
-#: admin/reports/email-tracking.php:141
+#: admin/reports/email-tracking.php:143
 msgid "%s trackable messages sent"
 msgstr "%s nachverfolgbare E-Mails gesendet"
 
-#: admin/reports/email-tracking.php:147
+#: admin/reports/email-tracking.php:149
 msgid "%s unique opens"
 msgstr "%s eindeutige Öffnungen"
 
-#: admin/reports/email-tracking.php:149
+#: admin/reports/email-tracking.php:151
 msgid "This value represents unique opens."
 msgstr "Dieser Wert repräsentiert eindeutige Öffnungen."
 
-#: admin/reports/email-tracking.php:154
+#: admin/reports/email-tracking.php:156
 msgid "%s unique clicks"
 msgstr "%s eindeutige Klicks"
 
-#: admin/reports/email-tracking.php:160
+#: admin/reports/email-tracking.php:162
 msgid "%s clicks"
 msgstr "%s Klicks"
 
-#: admin/reports/email-tracking.php:166
+#: admin/reports/email-tracking.php:168
 msgid "%s unsubscribes"
 msgstr "%s Abmeldungen"
 
-#: admin/reports/email-tracking.php:168
+#: admin/reports/email-tracking.php:170
 msgid ""
 "Unsubscribes are recorded against each workflow so users can unsubscribe to "
 "individual workflows."
@@ -833,19 +833,19 @@ msgstr ""
 "Abmeldungen werden für jeden Workflow einzeln gewertet, so dass sich "
 "Benutzer von individuellen Workflows abmelden können."
 
-#: admin/reports/email-tracking.php:325
+#: admin/reports/email-tracking.php:327
 msgid "Unsubscribes"
 msgstr "Abmeldungen"
 
-#: admin/reports/email-tracking.php:343
+#: admin/reports/email-tracking.php:345
 msgid "Unique Clicks"
 msgstr "Eindeutige Klicks"
 
-#: admin/reports/email-tracking.php:352
+#: admin/reports/email-tracking.php:354
 msgid "Clicks"
 msgstr "Klicks"
 
-#: admin/reports/email-tracking.php:361
+#: admin/reports/email-tracking.php:363
 msgid "Opens"
 msgstr "Öffnungen"
 
@@ -884,12 +884,12 @@ msgstr "E-Mail"
 msgid "Last Active"
 msgstr "Zuletzt aktiv"
 
-#: admin/reports/guests.php:44 admin/views/modal-queued-event-info.php:31
+#: admin/reports/guests.php:44 admin/views/modal-queued-event-info.php:30
 #: admin/views/page-guest-details.php:64
 msgid "Created"
 msgstr "Erstellt"
 
-#: admin/reports/guests.php:45 admin/workflow-edit.php:252
+#: admin/reports/guests.php:45 admin/workflow-edit.php:253
 msgid "Actions"
 msgstr "Aktionen"
 
@@ -910,7 +910,7 @@ msgstr ""
 "Der Versand einer E-Mail wurde blockiert. Siehe Log-Notizen für mehr "
 "Informationen."
 
-#: admin/reports/logs.php:111 admin/views/modal-log-info.php:29
+#: admin/reports/logs.php:111 admin/views/modal-log-info.php:28
 #: includes/Fields/Time.php:30
 msgid "Time"
 msgstr "Zeit"
@@ -919,7 +919,7 @@ msgstr "Zeit"
 msgid "Opt-in"
 msgstr "Opt-In"
 
-#: admin/reports/opt-ins.php:20 admin/settings-tabs/general.php:32
+#: admin/reports/opt-ins.php:20 admin/settings-tabs/general.php:39
 msgid "Opt-out"
 msgstr "Opt-Out"
 
@@ -935,7 +935,7 @@ msgstr "Auf Opt-In setzen"
 msgid "Set as opted-in"
 msgstr "Auf Opt-Out setzen"
 
-#: admin/reports/queue.php:54 admin/views/modal-queued-event-info.php:26
+#: admin/reports/queue.php:54 admin/views/modal-queued-event-info.php:25
 #: includes/Privacy_Exporters.php:292
 msgid "Failed"
 msgstr "Fehlgeschlagen"
@@ -976,45 +976,45 @@ msgstr "Wählen Sie eine Seite&hellip;"
 msgid "Your settings have been saved."
 msgstr "Ihre Einstellungen wurden gesichert."
 
-#: admin/settings-tabs/active-campaign.php:15
+#: admin/settings-tabs/active-campaign.php:17
 #: includes/Actions/Active_Campaign_Abstract.php:18
 msgid "ActiveCampaign"
 msgstr "ActiveCampaign"
 
-#: admin/settings-tabs/active-campaign.php:29 admin/settings-tabs/twilio.php:28
+#: admin/settings-tabs/active-campaign.php:32 admin/settings-tabs/twilio.php:32
 msgid "Enable"
 msgstr "Aktivieren"
 
-#: admin/settings-tabs/active-campaign.php:31
+#: admin/settings-tabs/active-campaign.php:34
 msgid "Enable ActiveCampaign Integration"
 msgstr "Aktiviere ActiveCampaign-Integration"
 
-#: admin/settings-tabs/active-campaign.php:37
+#: admin/settings-tabs/active-campaign.php:40
 msgid "API URL"
 msgstr "API-URL"
 
-#: admin/settings-tabs/active-campaign.php:43
-#: admin/settings-tabs/mailchimp.php:38
+#: admin/settings-tabs/active-campaign.php:46
+#: admin/settings-tabs/mailchimp.php:40
 msgid "API Key"
 msgstr "API-Schlüssel"
 
-#: admin/settings-tabs/bitly.php:16 admin/settings-tabs/bitly.php:23
+#: admin/settings-tabs/bitly.php:17 admin/settings-tabs/bitly.php:28
 msgid "Bitly"
 msgstr "Bitly"
 
-#: admin/settings-tabs/bitly.php:25
+#: admin/settings-tabs/bitly.php:30
 msgid ""
 "Integrating with Bitly allows you to shorten links in your SMS messages. "
-"Create a free account at <%s>bitly.com<%s>."
+"Create a free account at <%1$s>bitly.com<%2$s>."
 msgstr ""
 "Die Integration von Bitly erlaubt es Ihnen, Kurz-Links in Ihren SMS zu "
-"verwenden. Registrieren Sie sich dazu auf <%s>bitly.com<%s>."
+"verwenden. Registrieren Sie sich dazu auf <%1$s>bitly.com<%2$s>."
 
-#: admin/settings-tabs/bitly.php:33
+#: admin/settings-tabs/bitly.php:40
 msgid "Generic Access Token"
 msgstr "Generic Access Token"
 
-#: admin/settings-tabs/bitly.php:34
+#: admin/settings-tabs/bitly.php:41
 msgid ""
 "Find your Generic Access Token in your Bitly account area under Your Account "
 "> Edit Profile."
@@ -1022,16 +1022,16 @@ msgstr ""
 "Rufe Sie Ihren Generic Access Token in Ihrem Bitly-Konto unter Dein Konto > "
 "Profil bearbeiten auf."
 
-#: admin/settings-tabs/bitly.php:39
+#: admin/settings-tabs/bitly.php:49
 msgid "Shorten all SMS links"
 msgstr "Alle SMS-Links kürzen"
 
-#: admin/settings-tabs/campaign-monitor.php:15
+#: admin/settings-tabs/campaign-monitor.php:17
 #: includes/Actions/Campaign_Monitor_Abstract.php:14
 msgid "Campaign Monitor"
 msgstr "Campaign Monitor"
 
-#: admin/settings-tabs/campaign-monitor.php:23
+#: admin/settings-tabs/campaign-monitor.php:27
 msgid ""
 "To find your API key or client ID, sign in to your Campaign Monitor account "
 "and click your profile image at the top right, then select Account settings, "
@@ -1041,7 +1041,7 @@ msgstr ""
 "Campaign Monitor Konto an, klicken Sie auf Ihr Profilbild rechts oben, "
 "wählen SIe dann Account Settings und dann API Keys."
 
-#: admin/settings-tabs/campaign-monitor.php:29
+#: admin/settings-tabs/campaign-monitor.php:33
 msgid ""
 "Enabling the Campaign Monitor integration makes actions available for use "
 "when creating workflows. These actions can be used to automate adding and "
@@ -1051,29 +1051,29 @@ msgstr ""
 "Erstellen von Workflows verfügbar. Diese Aktionen können genutzt werden, um "
 "automatisch Mitglieder zu Listen hinzuzufügen oder zu entfernen."
 
-#: admin/settings-tabs/campaign-monitor.php:32
-#: admin/settings-tabs/mailchimp.php:30
+#: admin/settings-tabs/campaign-monitor.php:36
+#: admin/settings-tabs/mailchimp.php:33
 msgid "Enable integration"
 msgstr "Integration aktivieren"
 
-#: admin/settings-tabs/campaign-monitor.php:38
+#: admin/settings-tabs/campaign-monitor.php:42
 #: includes/Actions/Add_To_Mad_Mimi_List.php:39
 msgid "API key"
 msgstr "API-Schlüssel"
 
-#: admin/settings-tabs/campaign-monitor.php:45
+#: admin/settings-tabs/campaign-monitor.php:49
 msgid "Client ID"
 msgstr "Client ID"
 
-#: admin/settings-tabs/carts.php:26
+#: admin/settings-tabs/carts.php:31
 msgid "Enable cart tracking"
 msgstr "Aktiviere Warenkorb-Tracking"
 
-#: admin/settings-tabs/carts.php:32
+#: admin/settings-tabs/carts.php:40
 msgid "Abandoned cart timeout"
 msgstr "Timeout für verlassenen Warenkorb"
 
-#: admin/settings-tabs/carts.php:33
+#: admin/settings-tabs/carts.php:41
 msgid ""
 "Set the number of minutes from when a cart is last active to when it is "
 "considered abandoned. The default is 15 minutes and the minimum is 5 minutes."
@@ -1082,13 +1082,13 @@ msgstr ""
 "bis er als verlassen gewertet wird. Standard-Wert ist 15 Minuten und das "
 "Minimum ist 5 Minuten."
 
-#: admin/settings-tabs/carts.php:43
+#: admin/settings-tabs/carts.php:52
 msgid "Include failed, cancelled and pending orders as abandoned carts"
 msgstr ""
 "Behandele fehlgeschlagene, abgebrochene und Bestellungen in Wartestellung "
 "als verlassene Warenkörbe"
 
-#: admin/settings-tabs/carts.php:44
+#: admin/settings-tabs/carts.php:53
 msgid ""
 "When disabled, carts that are converted to pending, cancelled or failed "
 "orders will not be included in abandoned cart workflows."
@@ -1097,11 +1097,11 @@ msgstr ""
 "fehlgeschlagenen Bestellungen führten nicht in Workflows zu verlassenen "
 "Warenkörben inkludiert."
 
-#: admin/settings-tabs/carts.php:50
+#: admin/settings-tabs/carts.php:62
 msgid "Clear inactive carts after"
 msgstr "Lösche inaktive Warenkörbe nach"
 
-#: admin/settings-tabs/carts.php:51
+#: admin/settings-tabs/carts.php:63
 msgid ""
 "Set the days after which an inactive cart will be deleted. Default value is "
 "60."
@@ -1109,15 +1109,15 @@ msgstr ""
 "Legen Sie die Anzahl Tage fest, nach denen inaktive Warenkörbe gelöscht "
 "werden sollen. Standard-Wert ist 60."
 
-#: admin/settings-tabs/general.php:15
+#: admin/settings-tabs/general.php:17
 msgid "General"
 msgstr "Allgemein"
 
-#: admin/settings-tabs/general.php:23
+#: admin/settings-tabs/general.php:28
 msgid "Marketing opt-in"
 msgstr "Marketing Opt-In"
 
-#: admin/settings-tabs/general.php:24
+#: admin/settings-tabs/general.php:29
 msgid ""
 "AutomateWoo can either be in opt-in mode or opt-out mode. Opt-in means "
 "customers must opt-in before email and SMS can be sent to them. Opt-out "
@@ -1130,35 +1130,35 @@ msgstr ""
 "werden, außer der Kunde meldet sich ab. Alle transaktionsbezogenen Workflows "
 "sind von dieser Unterscheidung ausgeschlossen."
 
-#: admin/settings-tabs/general.php:29
+#: admin/settings-tabs/general.php:36
 msgid "Customer opt-in mode"
 msgstr "Kunden-Opt-In-Modus"
 
-#: admin/settings-tabs/general.php:31
+#: admin/settings-tabs/general.php:38
 msgid "Opt-in (recommended)"
 msgstr "Opt-In (empfohlen)"
 
-#: admin/settings-tabs/general.php:41
+#: admin/settings-tabs/general.php:51
 msgid "Opt-in checkbox locations"
 msgstr "Opt-In Checkbox-Platzierung"
 
-#: admin/settings-tabs/general.php:42
+#: admin/settings-tabs/general.php:52
 msgid "Show on checkout page."
 msgstr "Auf der Kasse-Seite anzeigen."
 
-#: admin/settings-tabs/general.php:51
+#: admin/settings-tabs/general.php:64
 msgid "Show on account sign up page."
 msgstr "Auf der Konto-erstellen-Seite anzeigen."
 
-#: admin/settings-tabs/general.php:59
+#: admin/settings-tabs/general.php:75
 msgid "Opt-in checkbox text"
 msgstr "Opt-In Checkbox-Text"
 
-#: admin/settings-tabs/general.php:72
+#: admin/settings-tabs/general.php:88
 msgid "Session tracking"
 msgstr "Sitzungs-Tracking"
 
-#: admin/settings-tabs/general.php:73
+#: admin/settings-tabs/general.php:89
 msgid ""
 "Session tracking uses cookies to remember users when they are not signed in. "
 "This means carts can be tracked when the user is signed out. This is also "
@@ -1173,19 +1173,15 @@ msgstr ""
 "Funktion der Website gelten, kann in manchen Regionen eine Benutzer-"
 "Einwilligung nötig sein."
 
-#: admin/settings-tabs/general.php:79
+#: admin/settings-tabs/general.php:96
 msgid "Enable session tracking"
 msgstr "Sitzungs-Tracking aktivieren"
 
-#: admin/settings-tabs/general.php:80
-msgid " "
-msgstr " "
-
-#: admin/settings-tabs/general.php:89
+#: admin/settings-tabs/general.php:108
 msgid "Require cookie consent"
 msgstr "Cookie-Einwilligung notwendig"
 
-#: admin/settings-tabs/general.php:90
+#: admin/settings-tabs/general.php:109
 msgid ""
 "Disable session tracking until consent is given. Requires a cookie consent "
 "plugin."
@@ -1193,7 +1189,7 @@ msgstr ""
 "Deaktiviere Sitzungs-Tracking bis eine Einwilligung erteilt wird. Benötigt "
 "ein Cookie-Einwilligungs-Plugin."
 
-#: admin/settings-tabs/general.php:91
+#: admin/settings-tabs/general.php:110
 msgid ""
 "AutomateWoo does not add a notice asking for cookie consent. Please use a "
 "cookie consent plugin or custom code for this."
@@ -1201,11 +1197,11 @@ msgstr ""
 "AutomateWoo stellt keinen eigenen Hinweis zur Cookie-Einwilligung bereit. "
 "Bitte nutzen Sie hierfür ein Cookie-Einwilligungs-Plugin oder eigenen Code."
 
-#: admin/settings-tabs/general.php:102
+#: admin/settings-tabs/general.php:124
 msgid "Consent cookie name"
 msgstr "Name des Einwilligungs-Cookies"
 
-#: admin/settings-tabs/general.php:103
+#: admin/settings-tabs/general.php:125
 msgid ""
 "Insert the name of the cookie added by your cookie consent solution when a "
 "user gives consent. Please note that this is case sensitive. If you are "
@@ -1216,11 +1212,11 @@ msgstr ""
 "Wenn Sie unsicher sind, was das ist, kontaktieren Sie bitte Ihren "
 "Administrator."
 
-#: admin/settings-tabs/general.php:113
+#: admin/settings-tabs/general.php:138
 msgid "Enable pre-submit data capture"
 msgstr "Aktiviere vorzeitiges Erfassen von Daten"
 
-#: admin/settings-tabs/general.php:114
+#: admin/settings-tabs/general.php:139
 msgid ""
 "Capture guest customer data before forms are submitted e.g. during checkout. "
 "We recommend leaving this disabled to comply with GDPR."
@@ -1229,17 +1225,17 @@ msgstr ""
 "Kaufvorgang. Wir empfehlen, dies für Konformität mit der DSGVO deaktiviert "
 "zu lassen."
 
-#: admin/settings-tabs/general.php:126
+#: admin/settings-tabs/general.php:154
 msgid "Where should pre-submit data capture be enabled?"
 msgstr "Wo soll das vorzeitige Erfassen von Gast-Kundendaten genutzt werden?"
 
-#: admin/settings-tabs/general.php:127
+#: admin/settings-tabs/general.php:155
 msgid "Determines which pages have javascript code inserted for email capture."
 msgstr ""
 "Bestimmt, auf welchen Seiten JavaScript-Code ausgegeben wird, um E-Mail-"
 "Adressen zu erfassen."
 
-#: admin/settings-tabs/general.php:128
+#: admin/settings-tabs/general.php:155
 msgid ""
 "If set to All Pages you can add the CSS class 'automatewoo-capture-guest-"
 "email' to enable email capture on custom form fields."
@@ -1248,34 +1244,34 @@ msgstr ""
 "capture-guest-email“ für benutzerdefinierte Formular-Felder nutzen, um Gast-"
 "E-Mail-Adressen zu erfassen."
 
-#: admin/settings-tabs/general.php:130
+#: admin/settings-tabs/general.php:157
 msgid "Checkout Only"
 msgstr "Nur Kasse"
 
-#: admin/settings-tabs/general.php:131
+#: admin/settings-tabs/general.php:158
 msgid "All Pages"
 msgstr "Alle Seiten"
 
-#: admin/settings-tabs/general.php:142 admin/settings-tabs/general.php:147
+#: admin/settings-tabs/general.php:170 admin/settings-tabs/general.php:177
 msgid "Communication preferences page"
 msgstr "Seite für Kommunikations-Einstellungen"
 
-#: admin/settings-tabs/general.php:143
+#: admin/settings-tabs/general.php:171
 msgid ""
 "The communication preferences page is where customers can opt-in or opt-out "
-"of workflows. It must contain the shortcode %s. To set up a signup page use "
-"the shortcode %s and specify the page in the setting below."
+"of workflows. It must contain the shortcode %1$s. To set up a signup page "
+"use the shortcode %2$s and specify the page in the setting below."
 msgstr ""
 "Auf der Seite für Kommunikations-Einstellungen können Kunden Opt-In oder Opt-"
-"Out für Workflows festlegen. Sie muss den Shortcode %s enthalten. Um eine "
-"Anmelde-Seite zu erstellen, nutzen Sie den Shortcode %s und legen Sie die "
+"Out für Workflows festlegen. Sie muss den Shortcode %1$s enthalten. Um eine "
+"Anmelde-Seite zu erstellen, nutzen Sie den Shortcode %2$s und legen Sie die "
 "Seite unten fest."
 
-#: admin/settings-tabs/general.php:154
+#: admin/settings-tabs/general.php:187
 msgid "Communication signup page (optional)"
 msgstr "Kommunikations-Anmelde-Seite (optional)"
 
-#: admin/settings-tabs/general.php:155
+#: admin/settings-tabs/general.php:188
 msgid ""
 "The signup page is similar to the preferences page but allows customers to "
 "enter their email address."
@@ -1283,19 +1279,19 @@ msgstr ""
 "Die Anmelde-Seite ist ähnlich der Einstellungs-Seite, erlaubt es aber Kunden "
 "ihre E-Mail-Adresse anzugeben."
 
-#: admin/settings-tabs/general.php:162
+#: admin/settings-tabs/general.php:198
 msgid "Enable account tab"
 msgstr "Aktiviere Konto-Tab"
 
-#: admin/settings-tabs/general.php:163
+#: admin/settings-tabs/general.php:199
 msgid "Show Communication tab in My Account area"
 msgstr "Füge den Kommunikations-Tab unter „Mein Konto“ hinzu"
 
-#: admin/settings-tabs/general.php:168
+#: admin/settings-tabs/general.php:206
 msgid "Legal text"
 msgstr "Gesetzliche Texte"
 
-#: admin/settings-tabs/general.php:171
+#: admin/settings-tabs/general.php:209
 msgid ""
 "This text is shown above the form submit button. Use the following "
 "shortcodes to add dynamic content: %s"
@@ -1303,15 +1299,15 @@ msgstr ""
 "Dieser Text wird über dem Formular-Absenden-Button angezeigt. Nutzen Sie die "
 "folgenden Shortcodes für dynamische Inhalte: %s"
 
-#: admin/settings-tabs/general.php:183
+#: admin/settings-tabs/general.php:221
 msgid "Email sender options"
 msgstr "E-Mail-Absender-Optionen"
 
-#: admin/settings-tabs/general.php:186
+#: admin/settings-tabs/general.php:226
 msgid "From name"
 msgstr "Absender-Name"
 
-#: admin/settings-tabs/general.php:187
+#: admin/settings-tabs/general.php:227
 msgid ""
 "How the sender name appears in outgoing AutomateWoo emails. If blank the "
 "WooCommerce sender name will be used."
@@ -1319,11 +1315,11 @@ msgstr ""
 "Der angezeigte Absender-Name von ausgehenden AutomateWoo-E-Mails. Wenn leer "
 "wird der WooCommerce-Absender-Name genutzt."
 
-#: admin/settings-tabs/general.php:194
+#: admin/settings-tabs/general.php:236
 msgid "From email"
 msgstr "Absender-E-Mail-Adresse"
 
-#: admin/settings-tabs/general.php:195
+#: admin/settings-tabs/general.php:237
 msgid ""
 "How the sender email appears in outgoing AutomateWoo emails. If blank the "
 "WooCommerce sender email will be used."
@@ -1331,15 +1327,15 @@ msgstr ""
 "Die angezeigte Absender-E-Mail-Adresse von ausgehenden AutomateWoo-E-Mails. "
 "Wenn leer wird die WooCommerce-Absender-Adresse genutzt."
 
-#: admin/settings-tabs/general.php:203
+#: admin/settings-tabs/general.php:245
 msgid "Misc"
 msgstr "Div."
 
-#: admin/settings-tabs/general.php:206
+#: admin/settings-tabs/general.php:250
 msgid "Conversion tracking window"
 msgstr "Conversion-Tracking-Zeitraum"
 
-#: admin/settings-tabs/general.php:207
+#: admin/settings-tabs/general.php:251
 msgid ""
 "Sets the number of days after a workflow runs that a new order can be "
 "considered a conversion. Default value is 14."
@@ -1347,44 +1343,44 @@ msgstr ""
 "Definiert die Anzahl an Tagen nach einem Workflow, in denen eine Bestellung "
 "als Conversion gezählt wird. Standard-Wert ist 14."
 
-#: admin/settings-tabs/general.php:212
+#: admin/settings-tabs/general.php:259
 msgid "Automatically delete expired coupons"
 msgstr "Abgelaufene Gutscheine automatisch löschen"
 
-#: admin/settings-tabs/general.php:213
+#: admin/settings-tabs/general.php:260
 msgid ""
 "Coupons generated by AutomateWoo will be deleted 14 days after they expire."
 msgstr ""
 "Durch AutomateWoo generierte Gutscheine werden 14 Tage nach Ablauf gelöscht."
 
-#: admin/settings-tabs/general.php:219
+#: admin/settings-tabs/general.php:267
 msgid "License keys"
 msgstr "Lizenz-Schlüssel"
 
-#: admin/settings-tabs/general.php:222
+#: admin/settings-tabs/general.php:272
 msgid "License key origin"
 msgstr "Herkunft des Lizenz-Schlüssels"
 
-#: admin/settings-tabs/general.php:223
+#: admin/settings-tabs/general.php:273
 msgid ""
 "Choose the domain that matches where your AutomateWoo license key is from."
 msgstr ""
 "Wählen Sie die Domain, über die Sie Ihre AutomateWoo Lizenz erworben haben."
 
-#: admin/settings-tabs/general.php:226
+#: admin/settings-tabs/general.php:276
 msgid "WooCommerce.com"
 msgstr "WooCommerce.com"
 
-#: admin/settings-tabs/general.php:227
+#: admin/settings-tabs/general.php:277
 msgid "AutomateWoo.com (legacy)"
 msgstr "AutomateWoo.com (veraltet)"
 
-#: admin/settings-tabs/mailchimp.php:15
+#: admin/settings-tabs/mailchimp.php:17
 #: includes/Actions/Mailchimp_Abstract.php:20
 msgid "MailChimp"
 msgstr "MailChimp"
 
-#: admin/settings-tabs/mailchimp.php:26
+#: admin/settings-tabs/mailchimp.php:30
 msgid ""
 "Enabling the MailChimp integration does not automatically sync your data but "
 "makes three actions available when creating workflows. These actions can be "
@@ -1397,7 +1393,7 @@ msgstr ""
 "Listen hinzuzufügen, zu entfernen oder benutzerdefinierte Felder zu "
 "aktualisieren."
 
-#: admin/settings-tabs/mailchimp.php:40
+#: admin/settings-tabs/mailchimp.php:42
 msgid ""
 "You can get your API key when logged in to MailChimp under Account > Extras "
 "> API Keys."
@@ -1405,15 +1401,15 @@ msgstr ""
 "Sie erhalten den API-Schlüssel in Ihrem MailChimp-Account unter Account -> "
 "Extras -> API Keys."
 
-#: admin/settings-tabs/mailchimp.php:74
+#: admin/settings-tabs/mailchimp.php:78
 msgid "The MailChimp API Key you entered is not valid."
 msgstr "Der eingegebene MailChimp API-Schlüssel ist ungültig."
 
-#: admin/settings-tabs/status.php:35
+#: admin/settings-tabs/status.php:40
 msgid "Enable Background Checks"
 msgstr "Aktiviere Überprüfungen im Hintergrund"
 
-#: admin/settings-tabs/status.php:37
+#: admin/settings-tabs/status.php:42
 msgid ""
 "Allow occasional background checks for major system issues. If an issue is "
 "detected an admin notice will appear."
@@ -1422,30 +1418,30 @@ msgstr ""
 "Probleme. Wenn ein Fehler erkannt wird, wird dir eine Benachrichtigung "
 "angezeigt."
 
-#: admin/settings-tabs/twilio.php:15
+#: admin/settings-tabs/twilio.php:17
 msgid "Twilio"
 msgstr "Twilio"
 
-#: admin/settings-tabs/twilio.php:30
+#: admin/settings-tabs/twilio.php:34
 msgid "Enable Twilio Integration"
 msgstr "Aktiviere Twilio-Integration"
 
-#: admin/settings-tabs/twilio.php:36 admin/views/email-preview-ui.php:30
+#: admin/settings-tabs/twilio.php:40 admin/views/email-preview-ui.php:30
 msgid "From"
 msgstr "Von"
 
-#: admin/settings-tabs/twilio.php:37
+#: admin/settings-tabs/twilio.php:41
 msgid ""
 "Must be a Twilio phone number (in E.164 format) or alphanumeric sender ID."
 msgstr ""
 "Muss eine Twilio-Telefonnummer (in E.164-Format) oder alphanumerische "
 "Absender-ID sein."
 
-#: admin/settings-tabs/twilio.php:43
+#: admin/settings-tabs/twilio.php:47
 msgid "Account SID"
 msgstr "Account-SID"
 
-#: admin/settings-tabs/twilio.php:49
+#: admin/settings-tabs/twilio.php:53
 msgid "Auth Token"
 msgstr "Auth-Token"
 
@@ -1453,15 +1449,15 @@ msgstr "Auth-Token"
 msgid "There are no users with that tag."
 msgstr "Es gibt keine Benutzer mit diesem Schlagwort."
 
-#: admin/views/action.php:30 includes/Post_Types.php:27
+#: admin/views/action.php:31 includes/Post_Types.php:30
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: admin/views/action.php:34
+#: admin/views/action.php:35
 msgid "New Action"
 msgstr "Neue Aktion"
 
-#: admin/views/action.php:42
+#: admin/views/action.php:43
 msgid "Action"
 msgstr "Aktion"
 
@@ -1497,9 +1493,64 @@ msgstr "Betreff"
 msgid "Comma separate emails..."
 msgstr "Komma-getrennte E-Mail-Adressen..."
 
-#: admin/views/email-preview-ui.php:45 admin/views/sms-test-twilio.php:56
+#: admin/views/email-preview-ui.php:45 admin/views/sms-test-twilio.php:55
 msgid "Send"
 msgstr "Senden"
+
+#: admin/views/js-workflow-preset-alert.php:17
+msgid "Confirm activate workflow?"
+msgstr "Aktivieren des Workflows bestätigen?"
+
+#: admin/views/js-workflow-preset-alert.php:19
+msgid "Confirm save disabled workflow?"
+msgstr "Speichern des inaktiven Workflows bestätigen?"
+
+#: admin/views/js-workflow-preset-alert.php:28
+msgid ""
+"Before you <strong>activate</strong> this workflow,  did you remember to:"
+msgstr ""
+"Bevor Sie diesen Workflow <strong>aktivieren</strong>, haben Sie daran "
+"gedacht:"
+
+#: admin/views/js-workflow-preset-alert.php:30
+msgid ""
+"Before you save this <strong>disabled</strong> workflow, did you remember to:"
+msgstr ""
+"Bevor Sie diesen inaktiven Workflow <strong>speichern</strong>, haben Sie "
+"daran gedacht:"
+
+#: admin/views/js-workflow-preset-alert.php:34
+msgid "Confirm the values for all trigger, rule, and action options?"
+msgstr "Die Werte aller Auslöser, Regeln und Aktionsoptionen zu prüfen?"
+
+#: admin/views/js-workflow-preset-alert.php:35
+msgid "Review the text of any emails that will be sent to customers?"
+msgstr "Die Texte aller E-Mails zu prüfen, die an Kunden gesendet werden?"
+
+#: admin/views/js-workflow-preset-alert.php:36
+msgid "Substitute placeholder coupons and/or discount values in an emails?"
+msgstr "Platzhalter-Gutscheine und/oder Rabattwerte in E-Mails zu ersetzen?"
+
+#: admin/views/js-workflow-preset-alert.php:39
+msgid ""
+"If so, click 'Confirm'. If not, click 'Cancel' to review the workflow again."
+msgstr ""
+"Wenn ja, klicken Sie „Bestätigen“. Wenn nicht, klicken Sie „Abbrechen“, um "
+"den Workflow zu prüfen."
+
+#. translators: %1$s: type of item e.g. 'orders', %2$s: the workflow title
+#. translators: %(itemCount)d: number of matching items, %(dataType)s: type of item, %(workflow)s: workflow title
+#: admin/views/js-workflow-preset-alert.php:45
+#: admin/views/js-workflow-templates.php:30 admin/assets/build/index.js:7
+#: admin/assets/build/index.js:10
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: admin/views/js-workflow-preset-alert.php:46
+#: admin/views/js-workflow-templates.php:31
+#: admin/views/page-tools-form-confirm.php:43
+msgid "Confirm"
+msgstr "Bestätigen"
 
 #: admin/views/js-workflow-templates.php:14
 msgid "Confirm change trigger?"
@@ -1522,16 +1573,6 @@ msgstr "Inkompatible Regeln: "
 #: admin/views/js-workflow-templates.php:24
 msgid "Incompatible Actions: "
 msgstr "Inkompatible Aktionen: "
-
-#: admin/views/js-workflow-templates.php:30 admin/assets/build/index.js:1255
-#: admin/assets/build/index.js:2020
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: admin/views/js-workflow-templates.php:31
-#: admin/views/page-tools-form-confirm.php:36
-msgid "Confirm"
-msgstr "Bestätigen"
 
 #: admin/views/meta-box-actions.php:14
 msgid "+ Add Action"
@@ -1609,7 +1650,7 @@ msgid "The order that workflows will run."
 msgstr "Die Reihenfolge, in der Workflows starten."
 
 #: admin/views/meta-box-save.php:17 admin/views/meta-box-save.php:106
-#: admin/views/meta-box-save.php:111 admin/workflow-edit.php:222
+#: admin/views/meta-box-save.php:111 admin/workflow-edit.php:223
 msgid "Save"
 msgstr "Speichern"
 
@@ -1622,7 +1663,7 @@ msgid "Status:"
 msgstr "Status:"
 
 #: admin/views/meta-box-save.php:60
-#: includes/Actions/Change_Workflow_Status.php:28 includes/Post_Types.php:62
+#: includes/Actions/Change_Workflow_Status.php:28 includes/Post_Types.php:65
 msgid "Disabled"
 msgstr "Deaktiviert"
 
@@ -1638,7 +1679,7 @@ msgstr "Dauerhaft löschen"
 msgid "Move to Trash"
 msgstr "In den Papierkorb"
 
-#: admin/views/meta-box-save.php:114 admin/workflow-list.php:87
+#: admin/views/meta-box-save.php:117 admin/workflow-list.php:89
 msgid "Run"
 msgstr "Starten"
 
@@ -1658,7 +1699,7 @@ msgstr "Geplant"
 msgid "Fixed"
 msgstr "Festgelegt"
 
-#: admin/views/meta-box-timing.php:24 admin/workflow-list.php:199
+#: admin/views/meta-box-timing.php:24 admin/workflow-list.php:201
 msgid "Schedule with a variable"
 msgstr "Geplant mit Variable"
 
@@ -1686,44 +1727,48 @@ msgstr "Tage"
 msgid "Weeks"
 msgstr "Wochen"
 
-#: admin/views/meta-box-timing.php:107 admin/workflow-edit.php:257
-#: admin/workflow-list.php:38
+#: admin/views/meta-box-timing.php:87
+msgid "Months"
+msgstr "Monate"
+
+#: admin/views/meta-box-timing.php:108 admin/workflow-edit.php:258
+#: admin/workflow-list.php:40
 msgid "Timing"
 msgstr "Timing"
 
-#: admin/views/meta-box-timing.php:118
+#: admin/views/meta-box-timing.php:119
 msgid "Variable"
 msgstr "Variable"
 
-#: admin/views/meta-box-timing.php:126
+#: admin/views/meta-box-timing.php:127
 msgid "Scheduled time"
 msgstr "Geplante Zeit"
 
-#: admin/views/meta-box-timing.php:127
+#: admin/views/meta-box-timing.php:128
 msgid "(24hr)"
 msgstr "(24 Std.)"
 
-#: admin/views/meta-box-timing.php:137
+#: admin/views/meta-box-timing.php:138
 msgid "Scheduled days"
 msgstr "Geplante Tage"
 
-#: admin/views/meta-box-timing.php:138 admin/views/meta-box-timing.php:154
+#: admin/views/meta-box-timing.php:139 admin/views/meta-box-timing.php:155
 msgid "(optional)"
 msgstr "(optional)"
 
-#: admin/views/meta-box-timing.php:149
+#: admin/views/meta-box-timing.php:150
 msgid "Length of the delay"
 msgstr "Länge der Verzögerung"
 
-#: admin/views/meta-box-timing.php:153
+#: admin/views/meta-box-timing.php:154
 msgid "Minimum wait"
 msgstr "Minimale Wartezeit"
 
-#: admin/views/meta-box-timing.php:173 includes/Fields/Time.php:86
+#: admin/views/meta-box-timing.php:174 includes/Fields/Time.php:86
 msgid "(24 hour time)"
 msgstr "(24-Stunden-Format)"
 
-#: admin/views/meta-box-trigger.php:31 admin/workflow-edit.php:227
+#: admin/views/meta-box-trigger.php:31 admin/workflow-edit.php:228
 msgid "Trigger"
 msgstr "Auslöser"
 
@@ -1732,7 +1777,7 @@ msgstr "Auslöser"
 msgid "[Select]"
 msgstr "[Wählen]"
 
-#: admin/views/meta-box-variables.php:15 admin/workflow-edit.php:267
+#: admin/views/meta-box-variables.php:15 admin/workflow-edit.php:268
 msgid "Variables"
 msgstr "Variablen"
 
@@ -1747,26 +1792,26 @@ msgstr ""
 "benutzt werden, um dynamischen Inhalt hinzuzufügen. Die verfügbaren "
 "Variablen hängen vom ausgewählten Auslöser für diesen Workflow ab."
 
-#: admin/views/modal-cart-info.php:18
+#: admin/views/modal-cart-info.php:17
 msgid "Cart #%s"
 msgstr "Warenkorb #%s"
 
-#: admin/views/modal-cart-info.php:30
+#: admin/views/modal-cart-info.php:29
 #: includes/Actions/Subscription_Edit_Item_Abstract.php:129
 #: templates/email/cart-table.php:34
 msgid "Quantity"
 msgstr "Menge"
 
-#: admin/views/modal-cart-info.php:31 includes/Fields/Price.php:23
+#: admin/views/modal-cart-info.php:30 includes/Fields/Price.php:23
 #: includes/Variables/Abstract_Price.php:24 templates/email/cart-table.php:35
 msgid "Price"
 msgstr "Preis"
 
-#: admin/views/modal-cart-info.php:65 templates/email/cart-table.php:69
+#: admin/views/modal-cart-info.php:66 templates/email/cart-table.php:69
 msgid "Subtotal"
 msgstr "Zwischensumme"
 
-#: admin/views/modal-cart-info.php:67 templates/email/cart-table.php:71
+#: admin/views/modal-cart-info.php:68 templates/email/cart-table.php:71
 msgid "(incl. tax)"
 msgstr "(inkl. MwSt.)"
 
@@ -1778,11 +1823,11 @@ msgstr "Gutschein: %s"
 msgid "Shipping"
 msgstr "Versand"
 
-#: admin/views/modal-cart-info.php:103 templates/email/cart-table.php:107
+#: admin/views/modal-cart-info.php:104 templates/email/cart-table.php:107
 msgid "Tax"
 msgstr "Steuer"
 
-#: admin/views/modal-cart-info.php:112 templates/email/cart-table.php:116
+#: admin/views/modal-cart-info.php:113 templates/email/cart-table.php:116
 msgid "(includes %s tax)"
 msgstr "(inklusive %s MwSt.)"
 
@@ -1794,84 +1839,84 @@ msgstr "Warenkorb-Token"
 msgid "Cart created"
 msgstr "Warenkorb erstellt"
 
-#: admin/views/modal-log-info.php:21
+#: admin/views/modal-log-info.php:20
 msgid "Log #%s"
 msgstr "Log #%s"
 
-#: admin/views/modal-log-info.php:35 includes/Privacy_Exporters.php:221
+#: admin/views/modal-log-info.php:34 includes/Privacy_Exporters.php:221
 msgid "Tracking enabled"
 msgstr "Tracking aktiviert"
 
-#: admin/views/modal-log-info.php:36 includes/Privacy_Exporters.php:222
+#: admin/views/modal-log-info.php:35 includes/Privacy_Exporters.php:222
 msgid "Conversion tracking enabled"
 msgstr "Conversion-Tracking aktiviert"
 
-#: admin/views/modal-log-info.php:39
+#: admin/views/modal-log-info.php:38
 msgid "Opened"
 msgstr "Geöffnet"
 
-#: admin/views/modal-log-info.php:39 admin/views/modal-log-info.php:40
+#: admin/views/modal-log-info.php:38 admin/views/modal-log-info.php:39
 #: includes/Format.php:282 includes/Rules/Abstract_Bool.php:21
 msgid "No"
 msgstr "Nein"
 
-#: admin/views/modal-log-info.php:40
+#: admin/views/modal-log-info.php:39
 msgid "Clicked"
 msgstr "Geklickt"
 
-#: admin/views/modal-log-info.php:50
+#: admin/views/modal-log-info.php:49
 msgid "Log notes:"
 msgstr "Log-Notizen:"
 
-#: admin/views/modal-log-info.php:60
+#: admin/views/modal-log-info.php:59
 msgid "Log data has been anonymized."
 msgstr "Log-Daten wurden anonymisiert."
 
-#: admin/views/modal-log-info.php:63
+#: admin/views/modal-log-info.php:70
 msgid "Re-run workflow (skips validation)"
 msgstr "Workflow erneut durchlaufen (überspringt Validierung)"
 
-#: admin/views/modal-queued-event-info.php:18
+#: admin/views/modal-queued-event-info.php:17
 msgid "Queued event #%s"
 msgstr "Geplantes Ereignis #%s"
 
-#: admin/views/modal-queued-event-info.php:30
+#: admin/views/modal-queued-event-info.php:29
 msgid "Due to run"
 msgstr "Durchlauf fällig"
 
-#: admin/views/modal-variable-info.php:51
+#: admin/views/modal-variable-info.php:54
 msgid "Displayed when there is no value found."
 msgstr "Wird angezeigt, wenn kein Wert gefunden wird."
 
-#: admin/views/modal-variable-info.php:63
+#: admin/views/modal-variable-info.php:66
 msgid "Copy to clipboard"
 msgstr "In die Zwischenablage kopieren"
 
-#: admin/views/page-data-upgrade.php:38
+#: admin/views/page-data-upgrade.php:35
 msgid "%s - Database Update"
 msgstr "%s - Datenbank-Update"
 
-#: admin/views/page-data-upgrade.php:42
+#: admin/views/page-data-upgrade.php:39
 msgid "Reading update tasks..."
 msgstr "Lese Update-Aufgaben..."
 
-#: admin/views/page-data-upgrade.php:45
+#: admin/views/page-data-upgrade.php:42
 msgid "Upgrading data to version %s."
 msgstr "Aktualisiere Daten auf Version %s."
 
+#: admin/views/page-data-upgrade.php:44
+msgid "Approximately %1$s0%2$s items to process."
+msgstr "Ungefähr %1$s0%2$s Objekte zu verarbeiten."
+
 #: admin/views/page-data-upgrade.php:47
-msgid "Approximately %s0%s items to process."
-msgstr "Ungefähr %s0%s Objekte zu verarbeiten."
+msgid "%1$s0%2$s items processed."
+msgstr "%1$s0%2$s Objekte verarbeitet."
 
-#: admin/views/page-data-upgrade.php:50
-msgid "%s0%s items processed."
-msgstr "%s0%s Objekte verarbeitet."
-
-#: admin/views/page-data-upgrade.php:55
+#: admin/views/page-data-upgrade.php:52
 msgid "Database update complete"
 msgstr "Datenbank-Update fertiggestellt"
 
-#: admin/views/page-data-upgrade.php:194
+#: admin/views/page-data-upgrade.php:180
 msgid "No updates available"
 msgstr "Keine Updates verfügbar"
 
@@ -1902,7 +1947,7 @@ msgstr "Bestell-Zähler"
 msgid "Total spent"
 msgstr "Gesamtbestellwert"
 
-#: admin/views/page-licenses.php:31
+#: admin/views/page-licenses.php:32
 msgid ""
 "In order to receive plugin updates for AutomateWoo extensions you must enter "
 "a license key. If you do not have a license key please see <a href=\"%s\" "
@@ -1913,11 +1958,11 @@ msgstr ""
 "sehen Sie sich bitte unsere <a href=\"%s\" target=\"_blank\">Details & "
 "Preise</a> an."
 
-#: admin/views/page-licenses.php:43
+#: admin/views/page-licenses.php:45
 msgid "Development Install Detected"
 msgstr "Entwicklungs-Umgebung erkannt"
 
-#: admin/views/page-licenses.php:45
+#: admin/views/page-licenses.php:48
 msgid ""
 "Activating this domain will not count against the activation limit of your "
 "license. For more info please see <a href=\"%s\" target=\"_blank\">our "
@@ -1927,15 +1972,15 @@ msgstr ""
 "Lizenz angerechnet. Für weitere Informationen, sehen Sie bitte in <a "
 "href=„%s“ target=„_blank“>unsere Dokumentation</a>."
 
-#: admin/views/page-licenses.php:66
+#: admin/views/page-licenses.php:69
 msgid "Activate Licenses"
 msgstr "Aktiviere Lizenzen"
 
-#: admin/views/page-reports.php:14
+#: admin/views/page-reports.php:17
 msgid "%s Report"
 msgstr "%s Bericht"
 
-#: admin/views/page-tools-form.php:56 admin/assets/build/index.js:1747
+#: admin/views/page-tools-form.php:67 admin/assets/build/index.js:2
 msgid "Next"
 msgstr "Nächste"
 
@@ -1945,12 +1990,12 @@ msgstr "+ Regel-Gruppe hinzufügen"
 
 #: admin/views/rules.php:31
 msgid ""
-"Rules can be used to add conditional logic to workflows. Click the %s+ Add "
-"Rule Group%s button to create a rule."
+"Rules can be used to add conditional logic to workflows. Click the %1$s+ Add "
+"Rule Group%2$s button to create a rule."
 msgstr ""
 "Regeln können verwendet werden, um bedingte Logik zu Workflows hinzuzufügen. "
-"Klicken Sie auf den %s+ Regel-Gruppe hinzufügen%s-Button, um eine Regel zu "
-"erstellen."
+"Klicken Sie auf den %1$s+ Regel-Gruppe hinzufügen%2$s-Button, um eine Regel "
+"zu erstellen."
 
 #: admin/views/rules.php:47
 msgid "[Select Rule]"
@@ -1980,183 +2025,160 @@ msgstr ""
 msgid "or"
 msgstr "oder"
 
-#: admin/views/settings-form.php:20
+#: admin/views/settings-form.php:19
 #: templates/communication-preferences/communication-form.php:36
 #: templates/communication-preferences/signup-form.php:34
 msgid "Save changes"
 msgstr "Änderungen sichern"
 
-#: admin/views/sms-test-twilio.php:13
+#: admin/views/sms-test-twilio.php:12
 msgid "Send Test SMS"
 msgstr "Sende Test-SMS"
 
-#: admin/views/sms-test-twilio.php:21 admin/views/sms-test-twilio.php:27
+#: admin/views/sms-test-twilio.php:20 admin/views/sms-test-twilio.php:26
 msgid "Recipient"
 msgstr "Empfänger"
 
-#: admin/views/sms-test-twilio.php:36 admin/views/sms-test-twilio.php:42
+#: admin/views/sms-test-twilio.php:35 admin/views/sms-test-twilio.php:41
 msgid "Message"
 msgstr "Nachricht"
 
-#: admin/views/sms-test-twilio.php:55
+#: admin/views/sms-test-twilio.php:54
 msgid "Sending..."
 msgstr "Sende..."
 
-#. translators: placeholder is AutomateWoo version string ('5.0')
-#: admin/views/update-notice.php:16
-msgid "Welcome to AutomateWoo %s!"
-msgstr "Willkommen bei AutomateWoo %s!"
+#: admin/views/welcome-notice.php:23
+msgid "Welcome to AutomateWoo"
+msgstr "Willkommen bei AutomateWoo"
 
-#: admin/views/update-notice.php:19
-msgid "Thank you for updating to the latest version of AutomateWoo."
-msgstr ""
-"Vielen Dank, dass Sie auf die neueste Version von AutomateWoo aktualisiert "
-"haben."
-
-#: admin/views/update-notice.php:26
-msgid "Discover what's new"
-msgstr "Sehen Sie sich an, was neu ist"
-
-#: admin/views/welcome-notice.php:13
-msgid "Welcome to AutomateWoo!"
-msgstr "Willkommen bei AutomateWoo!"
-
-#: admin/views/welcome-notice.php:16
-msgid ""
-"We're super excited you have decided to grow your store with AutomateWoo! If "
-"you haven't already, you should check out our <%s>Getting Started Guide<%s>, "
-"and for tutorials and tips, be sure to visit our <%s>blog<%s> and <"
-"%s>documentation<%s>. If you have any questions, don't hesitate to <"
-"%s>contact us<%s> for help."
-msgstr ""
-"Wir freuen uns sehr, dass Sie mit AutomateWoo neues Wachstum generieren "
-"wollen! Wenn nicht schon geschehen, sehen Sie sich unseren <%s>Einführungs-"
-"Leitfaden<%s> an, und für Anleitungen und Tipps, schauen Sie auf unserem <"
-"%s>Blog<%s> und in der <%s>Dokumentation<%s> vorbei. Wenn Sie Fragen haben, "
-"scheuen Sie sich nicht, uns <%s>zu kontaktieren<%s>."
-
-#: admin/WCAdminConnectPages.php:84 includes/Post_Types.php:26
+#: admin/WCAdminConnectPages.php:84 includes/Post_Types.php:29
 msgid "Add New Workflow"
 msgstr "Neuen Workflow hinzufügen"
 
-#: admin/WCAdminConnectPages.php:94 includes/Post_Types.php:28
+#: admin/WCAdminConnectPages.php:94 includes/Post_Types.php:31
 msgid "Edit Workflow"
 msgstr "Workflow bearbeiten"
 
-#: admin/workflow-edit.php:233
+#: admin/workflow-edit.php:234
 msgid "Manual workflow options"
 msgstr "Manuelle Workflow-Optionen"
 
-#: admin/workflow-edit.php:247
+#: admin/workflow-edit.php:248
 msgid "Rules <small>(optional)</small>"
 msgstr "Regeln <small>(optional)</small>"
 
-#: admin/workflow-edit.php:262
+#: admin/workflow-edit.php:263
 msgid "Options"
 msgstr "Optionen"
 
-#: admin/workflow-list.php:39
+#: admin/workflow-list.php:41
 msgid "Run Count"
 msgstr "Durchlauf-Zähler"
 
-#: admin/workflow-list.php:40
+#: admin/workflow-list.php:42
 msgid "Queue Count"
 msgstr "Warteschlangen-Zähler"
 
-#: admin/workflow-list.php:95
+#: admin/workflow-list.php:97
 msgid "Toggle Status"
 msgstr "Status ändern"
 
-#: admin/workflow-list.php:112
+#: admin/workflow-list.php:114
 msgid "Active <span class=\"count\">(%s)</span>"
 msgid_plural "Active <span class=\"count\">(%s)</span>"
 msgstr[0] "Aktiv <span class=\"count\">(%s)</span>"
 msgstr[1] "Aktiv <span class=\"count\">(%s)</span>"
 
-#: admin/workflow-list.php:155
+#: admin/workflow-list.php:157
 msgctxt "timing option"
 msgid "midnight"
 msgstr "Mitternacht"
 
-#: admin/workflow-list.php:158
+#: admin/workflow-list.php:160
 msgctxt "timing option"
 msgid "Daily at %s"
 msgstr "Täglich um %s"
 
-#: admin/workflow-list.php:162
+#: admin/workflow-list.php:164
 msgctxt "timing option"
 msgid "Custom"
 msgstr "Eigene"
 
-#: admin/workflow-list.php:170
+#: admin/workflow-list.php:172
 msgctxt "timing option"
 msgid "Immediate"
 msgstr "Sofort"
 
-#: admin/workflow-list.php:173
+#: admin/workflow-list.php:175
 msgctxt "timing option"
 msgid "Wait for <b>%s</b>"
 msgstr "Warte für <b>%s</b>"
 
-#: admin/workflow-list.php:180
+#: admin/workflow-list.php:182
 msgctxt "timing option"
 msgid "Schedule for <b>%s</b>"
 msgstr "Plane für <b>%s</b>"
 
-#: admin/workflow-list.php:183
+#: admin/workflow-list.php:185
 msgctxt "timing option"
 msgid " on  <b>%s</b>"
 msgstr " am  <b>%s</b>"
 
-#: admin/workflow-list.php:187
+#: admin/workflow-list.php:189
 msgctxt "timing option"
 msgid " after waiting <b>%s</b>"
 msgstr " nach Warten für <b>%s</b>"
 
-#: admin/workflow-list.php:195
+#: admin/workflow-list.php:197
 msgctxt "timing option"
 msgid "Fixed at %s"
 msgstr "Festgelegt auf %s"
 
-#: admin/workflow-list.php:217
+#: admin/workflow-list.php:219
 msgid "Weekdays"
 msgstr "Wochentage"
 
-#: admin/workflow-list.php:220
+#: admin/workflow-list.php:222
 msgid "Weekends"
 msgstr "Wochenenden"
 
-#: admin/workflow-list.php:228
+#: admin/workflow-list.php:230
 msgctxt "day"
 msgid " or "
 msgstr " oder "
 
-#: admin/workflow-list.php:251
+#: admin/workflow-list.php:253
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s Stunde"
 msgstr[1] "%s Stunden"
 
-#: admin/workflow-list.php:254
+#: admin/workflow-list.php:256
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s Minute"
 msgstr[1] "%s Minuten"
 
-#: admin/workflow-list.php:257
+#: admin/workflow-list.php:259
 msgid "%s day"
 msgid_plural "%s days"
 msgstr[0] "%s Tag"
 msgstr[1] "%s Tage"
 
-#: admin/workflow-list.php:260
+#: admin/workflow-list.php:262
 msgid "%s week"
 msgid_plural "%s weeks"
 msgstr[0] "%s Woche"
 msgstr[1] "%s Wochen"
 
-#: admin/workflow-list.php:322 includes/Triggers/AbstractManual.php:21
-#: includes/Workflows.php:46
+#: admin/workflow-list.php:265
+msgid "%s month"
+msgid_plural "%s months"
+msgstr[0] "%s Monat"
+msgstr[1] "%s Monate"
+
+#: admin/workflow-list.php:327 includes/Triggers/AbstractManual.php:21
+#: includes/Workflows.php:48
 msgid "Manual"
 msgstr "Manuell"
 
@@ -2177,8 +2199,8 @@ msgid "%1$s The plugin requires WordPress version %2$s or newer."
 msgstr "%1$s Das Plugin benötigt WordPress Version %2$s oder neuer."
 
 #: includes/Action.php:133 includes/Action.php:147
-#: includes/Actions/Change_Post_Status.php:19 includes/Rules/Rule.php:386
-#: includes/Trigger.php:299
+#: includes/Actions/Change_Post_Status.php:19 includes/Rules/Rule.php:398
+#: includes/Trigger.php:301
 msgid "Other"
 msgstr "Andere"
 
@@ -3039,7 +3061,7 @@ msgstr ""
 "Abonnements in Masse zu bearbeiten, oder um Produkte eines Abonnements über "
 "die Laufzeit zu verändern."
 
-#: includes/Actions/Subscription_Add_Product.php:93
+#: includes/Actions/Subscription_Add_Product.php:92
 msgid ""
 "%1$s workflow run: added %2$s to subscription. (Product ID: %3$d; Workflow "
 "ID: %4$d)"
@@ -3081,7 +3103,7 @@ msgstr ""
 "Verwenden Sie kein Währungssymbol. Die Summe wird aus diesem Wert * "
 "Artikelmenge berechnet."
 
-#: includes/Actions/Subscription_Edit_Item_Abstract.php:212
+#: includes/Actions/Subscription_Edit_Item_Abstract.php:215
 msgid ""
 "The subscription's coupon discount amount will only be recalculated if you "
 "are using WooCommerce version 3.8 or higher."
@@ -3161,7 +3183,7 @@ msgstr ""
 "eines variablen Produkts führt zum Entfernen aller Variationen des Produkts. "
 "Wählen Sie eine Variation, um nur eine spezifische Variation zu entfernen."
 
-#: includes/Actions/Subscription_Remove_Product.php:74
+#: includes/Actions/Subscription_Remove_Product.php:73
 msgid ""
 "%1$s workflow run: removed all line items for %2$s. (Product ID: %3$d; "
 "Workflow ID: %4$d)"
@@ -3183,11 +3205,89 @@ msgstr ""
 "Diese Aktion kann ein benutzerdefiniertes Feld eines Abonnements hinzufügen "
 "oder ändern."
 
-#: includes/Cart.php:235
+#: includes/ActivityPanelInbox/UpdateNote.php:76
+msgid "Check out these new AutomateWoo presets"
+msgstr "Sehen Sie sich diese neuen AutomateWoo-Vorlagen an"
+
+#: includes/ActivityPanelInbox/UpdateNote.php:78
+msgid ""
+"Reach out to your customers and automate your work easily with these new "
+"preset workflows."
+msgstr ""
+"Erreichen Sie Ihre Kunden und automatisieren Sie Ihre Arbeit mit diesen "
+"neuen Workflow-Vorlagen."
+
+#: includes/ActivityPanelInbox/UpdateNote.php:85
+#: includes/AdminNotices/UpdateNoticeManager.php:67
+#: includes/AdminNotices/WelcomeNoticeManager.php:41
+#: admin/assets/build/index.js:11
+msgid "Browse presets"
+msgstr "Vorlagen durchsuchen"
+
+#: includes/ActivityPanelInbox/WelcomeNote.php:37
+msgid "AutomateWoo is ready"
+msgstr "AutomateWoo ist bereit"
+
+#: includes/ActivityPanelInbox/WelcomeNote.php:39
+msgid ""
+"Create your first automated workflow easily with our presets, or build your "
+"own from scratch."
+msgstr ""
+"Erstellen Sie Ihren ersten automatisierten Workflow mit unseren Vorlagen, "
+"oder erstellen Sie Ihren eigenen."
+
+#: includes/ActivityPanelInbox/WelcomeNote.php:46
+#: admin/assets/build/index.js:10
+msgid "Create workflow"
+msgstr "Workflow erstellen"
+
+#: includes/AdminNotices/NewWorkflowHelperManager.php:50
+msgid ""
+"Need help? Try out one of our <%1$s>preset workflows<%2$s> or check out the <"
+"%3$s>help center<%4$s>."
+msgstr ""
+"Benötigen Sie Hilfe? Versuchen Sie eine unserer <%1$s>Workflow-Vorlagen<"
+"%2$s> oder sehen Sie sich das <%3$s>Hilfe-Center<%4$s> an."
+
+#: includes/AdminNotices/UpdateNoticeManager.php:56
+msgid "Check out these new preset workflows"
+msgstr "Sehen Sie sich diese neuen Workflow-Vorlagen an"
+
+#: includes/AdminNotices/UpdateNoticeManager.php:58
+msgid ""
+"Reach out to your customers and automate your work easily with these "
+"presets. Learn more about <%1$s>preset workflows<%2$s>."
+msgstr ""
+"Erreichen Sie Ihre Kunden und automatisieren Sie Ihre Arbeit mit diesen "
+"neuen Workflow-Vorlagen. Erfahren Sie mehr über <%1$s>Workflow-Vorlagen<"
+"%2$s>."
+
+#: includes/AdminNotices/UpdateNoticeManager.php:74
+msgid "What else is new in 5.1"
+msgstr "Was noch neu ist in 5.1"
+
+#: includes/AdminNotices/WelcomeNoticeManager.php:37
+msgid "Welcome to AutomateWoo!"
+msgstr "Willkommen bei AutomateWoo!"
+
+#: includes/AdminNotices/WelcomeNoticeManager.php:38
+msgid ""
+"Create your first workflow easily with our presets, or build your own from "
+"scratch."
+msgstr ""
+"Erstellen Sie Ihren ersten Workflow mit unseren Vorlagen, oder erstellen Sie "
+"Ihren eigenen."
+
+#: includes/AdminNotices/WelcomeNoticeManager.php:47
+#: admin/assets/build/index.js:10
+msgid "Learn more"
+msgstr "Mehr erfahren"
+
+#: includes/Cart.php:238
 msgid "Free!"
 msgstr "Gratis!"
 
-#: includes/Carts.php:104
+#: includes/Carts.php:102
 msgid "Abandoned"
 msgstr "Verlassen"
 
@@ -3204,35 +3304,35 @@ msgstr "Kommunikation"
 msgid "Generated by AutomateWoo"
 msgstr "Generiert von AutomateWoo"
 
-#: includes/Cron.php:158
+#: includes/Cron.php:168
 msgid "One minute"
 msgstr "Eine Minute"
 
-#: includes/Cron.php:163
+#: includes/Cron.php:173
 msgid "Two minutes"
 msgstr "Zwei Minuten"
 
-#: includes/Cron.php:168
+#: includes/Cron.php:178
 msgid "Five minutes"
 msgstr "Fünf Minuten"
 
-#: includes/Cron.php:173
+#: includes/Cron.php:183
 msgid "Fifteen minutes"
 msgstr "15 Minuten"
 
-#: includes/Cron.php:178
+#: includes/Cron.php:188
 msgid "Thirty minutes"
 msgstr "30 Minuten"
 
-#: includes/Cron.php:183
+#: includes/Cron.php:193
 msgid "Two days"
 msgstr "Zwei Tage"
 
-#: includes/Cron.php:188
+#: includes/Cron.php:198
 msgid "Four hours"
 msgstr "Vier Stunden"
 
-#: includes/Cron.php:193
+#: includes/Cron.php:203
 msgid "Once weekly"
 msgstr "Wöchentlich"
 
@@ -3249,18 +3349,18 @@ msgstr ""
 msgid "Failed to load the '%s' database table."
 msgstr "Laden der ‚%s‘ Datenbank-Tabelle fehlgeschlagen."
 
-#: includes/Data_Type.php:64
+#: includes/Data_Type.php:73
 msgid "Item"
 msgstr "Artikel"
 
 #: includes/Data_Types/Customer.php:91
-#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:21
+#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:26
 #: includes/Triggers/Customer_New_Account.php:26
 #: includes/Triggers/Customer_Opted_In.php:25
 #: includes/Triggers/Customer_Opted_Out.php:25
 #: includes/Triggers/Customer_Order_Count_Reaches.php:27
 #: includes/Triggers/Customer_Total_Spend_Reaches.php:29
-#: includes/Triggers/Customer_Win_Back.php:20
+#: includes/Triggers/Customer_Win_Back.php:28
 msgid "Customers"
 msgstr "Kunde"
 
@@ -3284,9 +3384,10 @@ msgstr "Für diese Aktion gibt es keine Vorschau."
 msgid "There was an error generating the preview."
 msgstr "Es gab einen Fehler beim Erstellen der Vorschau."
 
-#: includes/Exceptions/InvalidPreviewData.php:41
-msgid "No valid preview order was found."
-msgstr "Es wurde keine gültige Bestellung für die Vorschau gefunden."
+#: includes/Exceptions/InvalidPreviewData.php:52
+msgid "A valid \"%s\" must exist to generate the preview."
+msgstr ""
+"Ein gültiger „%s“ muss existieren, damit die Vorschau erstellt werden kann."
 
 #: includes/Factories.php:58
 msgid "Factory class must be registered."
@@ -3383,7 +3484,7 @@ msgstr "(Produkt nicht gefunden)"
 msgid "Search&hellip;"
 msgstr "Suchen&hellip;"
 
-#: includes/Fields/Select.php:34 admin/assets/build/index.js:1639
+#: includes/Fields/Select.php:34 admin/assets/build/index.js:10
 msgid "Select"
 msgstr "Wählen"
 
@@ -3513,22 +3614,37 @@ msgstr ""
 "Erfolgreich gespeichert! Sie werden keine Marketing-Kommunikation von uns "
 "erhalten."
 
-#: includes/Installer.php:270
+#: includes/Installer.php:269
 msgid "View AutomateWoo Settings"
 msgstr "AutomateWoo-Einstellungen aufrufen"
 
-#: includes/Installer.php:295
+#: includes/Installer.php:294
 msgctxt "Page slug"
 msgid "communication-preferences"
 msgstr "kommunikations-einstellungen"
 
-#: includes/Installer.php:296
+#: includes/Installer.php:295
 msgctxt "Page title"
 msgid "Communication preferences"
 msgstr "Kommunikations-Einstellungen"
 
+#: includes/Jobs/BatchException.php:23
+msgid "Item not found."
+msgstr "Objekt nicht gefunden."
+
+#: includes/Jobs/BatchException.php:36
+msgid ""
+"The \"%s\" job was stopped because it's failure rate is above the allowed "
+"threshold."
+msgstr ""
+"Der Job „%s“ wurde gestoppt, weil sein Fehlerlimit überschritten wurde."
+
+#: includes/Jobs/RunQueuedWorkflows.php:100
+msgid "Queued workflow is already marked as failed."
+msgstr "Geplanter Workflow ist bereits als fehlgeschlagen markiert."
+
 #. translators: %1$s is the deprecated class, and %2$s is the new class to replace it
-#: includes/LegacyClassLoader.php:110
+#: includes/LegacyClassLoader.php:112
 msgid ""
 "The class %1$s has been deprecated and replaced with %2$s. It will be "
 "removed in a future version of AutomateWoo."
@@ -3549,7 +3665,7 @@ msgid "Could not connect to remote server to check domain status."
 msgstr ""
 "Konnte nicht mit Remote-Server verbinden, um den Domain-Status zu überprüfen."
 
-#: includes/Log.php:520
+#: includes/Log.php:546
 msgid "This log was created from manual workflow re-run."
 msgstr ""
 "Dieser Log wurde durch manuelles erneutes Durchlaufen des Workflows erzeugt."
@@ -3570,11 +3686,11 @@ msgstr "Die E-Mail-Adresse scheint anonymisiert zu sein."
 msgid "Email address is blacklisted."
 msgstr "Die E-Mail-Adresse ist blacklisted."
 
-#: includes/Mailer_Abstract.php:217
+#: includes/Mailer_Abstract.php:212
 msgid "PHP Mailer - %s"
 msgstr "PHP-Mailer - %s"
 
-#: includes/Mailer_Abstract.php:221
+#: includes/Mailer_Abstract.php:215
 msgid "The wp_mail() function returned false."
 msgstr "Die wp_mail()-Funktion hat false zurückgegeben."
 
@@ -3631,40 +3747,119 @@ msgstr "%s modifiziert von AutomateWoo"
 msgid " (Workflow ID: <a href=\"%1$s\">%2$s</a>)"
 msgstr " (Workflow-ID: <a href=\"%1$s\">%2$s</a>)"
 
-#: includes/Post_Types.php:24
+#: includes/Post_Types.php:27
 msgctxt "Admin menu name"
 msgid "Workflows"
 msgstr "Workflows"
 
-#: includes/Post_Types.php:25
+#: includes/Post_Types.php:28
 msgid "Add Workflow"
 msgstr "Workflow hinzufügen"
 
-#: includes/Post_Types.php:29
+#: includes/Post_Types.php:32
 msgid "New Workflow"
 msgstr "Neuer Workflow"
 
-#: includes/Post_Types.php:30 includes/Post_Types.php:31
+#: includes/Post_Types.php:33 includes/Post_Types.php:34
 msgid "View Workflow"
 msgstr "Workflow ansehen"
 
-#: includes/Post_Types.php:32
+#: includes/Post_Types.php:35
 msgid "Search Workflows"
 msgstr "Workflows durchsuchen"
 
-#: includes/Post_Types.php:33
+#: includes/Post_Types.php:36
 msgid "No Workflows found"
 msgstr "Keine Workflows gefunden"
 
-#: includes/Post_Types.php:34
+#: includes/Post_Types.php:37
 msgid "No Workflows found in trash"
 msgstr "Keine Workflows im Papierkorb gefunden"
 
-#: includes/Post_Types.php:67
+#: includes/Post_Types.php:70
 msgid "Disabled <span class=\"count\">(%s)</span>"
 msgid_plural "Disabled <span class=\"count\">(%s)</span>"
 msgstr[0] "Deaktiviert <span class=\"count\">(%s)</span>"
 msgstr[1] "Deaktiviert <span class=\"count\">(%s)</span>"
+
+#. translators: placeholder is previous workflow title
+#: includes/Post_Types.php:85 includes/Post_Types.php:88
+#: includes/Post_Types.php:91
+msgid "Workflow updated."
+msgstr "Workflow aktualisiert."
+
+#: includes/Post_Types.php:86
+msgid "Custom field updated."
+msgstr "Benutzerdefiniertes Feld aktualisiert."
+
+#: includes/Post_Types.php:87
+msgid "Custom field deleted."
+msgstr "Benutzerdefiniertes Feld gelöscht."
+
+#. translators: placeholder is previous workflow title
+#: includes/Post_Types.php:90
+msgctxt "used in workflow updated messages"
+msgid "Workflow restored to revision from %s"
+msgstr "Workflow zurückgesetzt auf Revision von %s"
+
+#: includes/Post_Types.php:92
+msgid "Workflow saved."
+msgstr "Workflow gespeichert."
+
+#: includes/Post_Types.php:93
+msgid "Workflow submitted."
+msgstr "Workflow abgesendet."
+
+#. translators: php date string, see http://php.net/date
+#: includes/Post_Types.php:95
+msgid "Workflow scheduled for: %1$s."
+msgstr "Workflow geplant für: %1$s."
+
+#. translators: php date string, see http://php.net/date
+#: includes/Post_Types.php:95
+msgctxt "used in \"Workflow scheduled for <date>\""
+msgid "M j, Y @ G:i"
+msgstr "d.m.Y @ G:i"
+
+#. translators: php date string, see http://php.net/date
+#: includes/Post_Types.php:96
+msgid "Workflow draft updated."
+msgstr "Workflow-Entwurf aktualisiert."
+
+#. translators: %s: workflow count
+#: includes/Post_Types.php:112
+msgid "%s workflow updated."
+msgid_plural "%s workflows updated."
+msgstr[0] "%s Workflow aktualisiert."
+msgstr[1] "%s Workflows aktualisiert."
+
+#. translators: %s: workflow count
+#: includes/Post_Types.php:114
+msgid "%s workflow not updated, somebody is editing it."
+msgid_plural "%s workflows not updated, somebody is editing them."
+msgstr[0] "%s Workflow nicht aktualisiert, jemand bearbeitet ihn."
+msgstr[1] "%s Workflows nicht aktualisiert, jemand bearbeitet sie."
+
+#. translators: %s: workflow count
+#: includes/Post_Types.php:116
+msgid "%s workflow permanently deleted."
+msgid_plural "%s workflows permanently deleted."
+msgstr[0] "%s Workflow endgültig gelöscht."
+msgstr[1] "%s Workflows endgültig gelöscht."
+
+#. translators: %s: workflow count
+#: includes/Post_Types.php:118
+msgid "%s workflow moved to the Trash."
+msgid_plural "%s workflows moved to the Trash."
+msgstr[0] "%s Workflow in den Papierkorb bewegt."
+msgstr[1] "%s Workflows in den Papierkorb bewegt."
+
+#. translators: %s: workflow count
+#: includes/Post_Types.php:120
+msgid "%s workflow restored from the Trash."
+msgid_plural "%s workflows restored from the Trash."
+msgstr[0] "%s Workflow aus dem Papierkorb wiederhergestellt."
+msgstr[1] "%s Workflows aus dem Papierkorb wiederhergestellt."
 
 #: includes/Privacy.php:21 includes/Privacy.php:32
 msgid "Workflow Logs"
@@ -4104,11 +4299,11 @@ msgstr ""
 msgid "Suggested text:"
 msgstr "Vorgeschlagener Text:"
 
-#: includes/Queue_Manager.php:26
+#: includes/Queue_Manager.php:18
 msgid "The workflow was deleted or deactivated."
 msgstr "Der Workflow wurde gelöscht oder deaktiviert."
 
-#: includes/Queue_Manager.php:27
+#: includes/Queue_Manager.php:19
 msgid ""
 "Some of the required data was not found. For example, the order could have "
 "been deleted."
@@ -4116,22 +4311,22 @@ msgstr ""
 "Benötigte Daten wurden nicht gefunden, z.B. kann es sein, dass die "
 "Bestellung gelöscht wurde."
 
-#: includes/Queue_Manager.php:28
+#: includes/Queue_Manager.php:20
 msgid "A fatal error occurred while running the queued event."
 msgstr ""
 "Ein fataler Fehler ist beim Durchlauf des geplanten Ereignisses aufgetreten."
 
-#: includes/Queue_Manager.php:35
+#: includes/Queue_Manager.php:27
 msgid "Cause of queued event failure is unknown."
 msgstr "Grund für Fehlschlagen des geplanten Ereignisses unbekannt."
 
-#: includes/Rest_Api.php:75
+#: includes/Rest_Api.php:77
 msgid ""
 "AutomateWoo API endpoints are still under development and subject to change."
 msgstr ""
 "AutomateWoo API-Endpunkte sind noch in Entwicklung und können sich ändern."
 
-#: includes/Rest_Api/Controllers/AbstractController.php:85
+#: includes/Rest_Api/Controllers/AbstractController.php:32
 msgid "Unknown error."
 msgstr "Unbekannter Fehler."
 
@@ -4160,9 +4355,39 @@ msgid "A batch of items to add to the workflow queue."
 msgstr ""
 "Ein Stapel Elemente, die zur Workflow-Warteschlange hinzugefügt werden."
 
-#: includes/Rest_Api/Controllers/ManualWorkflowRunner.php:260
+#: includes/Rest_Api/Controllers/ManualWorkflowRunner.php:266
 msgid "Workflow must be a manual workflow."
 msgstr "Workflow muss ein manueller Workflow sein."
+
+#: includes/Rest_Api/Controllers/WorkflowPresets.php:56
+msgid "The name of the preset."
+msgstr "Der Name der Vorlage."
+
+#: includes/Rest_Api/Controllers/WorkflowPresets.php:93
+msgid "Unable to load preset workflows. Please check the logs for more info."
+msgstr ""
+"Workflow-Vorlagen konnten nicht geladen werden. Bitte prüfen Sie die Logs "
+"für weitere Informationen."
+
+#: includes/Rest_Api/Controllers/WorkflowPresets.php:170
+msgid "Unique name for the preset."
+msgstr "Eindeutiger Name der Vorlage."
+
+#: includes/Rest_Api/Controllers/WorkflowPresets.php:176
+msgid "A string defining the type of the preset workflow."
+msgstr "Ein Text, der den Typ der Workflow-Vorlage festlegt."
+
+#: includes/Rest_Api/Controllers/WorkflowPresets.php:182
+msgid "A short title indicating the purpose of this preset workflow."
+msgstr "Ein kurzer Titel, der diese Workflow-Vorlage beschreibt."
+
+#: includes/Rest_Api/Controllers/WorkflowPresets.php:188
+msgid "A short description about this preset."
+msgstr "Eine kurze Beschreibung dieser Vorlage."
+
+#: includes/Rest_Api/Controllers/WorkflowPresets.php:194
+msgid "Link to the documentation page for the preset."
+msgstr "Link zur Dokumentationsseite für diese Vorlage."
 
 #: includes/Rest_Api/Controllers/Workflows.php:59
 msgid "Unique identifier for the workflow."
@@ -4287,43 +4512,43 @@ msgstr "Ist gesetzt"
 msgid "Search..."
 msgstr "Suche..."
 
-#: includes/Rules/CartItemCount.php:21
+#: includes/Rules/CartItemCount.php:22
 msgid "Cart - Item Count"
 msgstr "Warenkorb - Anzahl der Artikel"
 
-#: includes/Rules/CartTotal.php:22
+#: includes/Rules/CartTotal.php:23
 msgid "Cart - Total"
 msgstr "Warenkorb - Summe"
 
-#: includes/Rules/Cart_Coupons.php:27
+#: includes/Rules/Cart_Coupons.php:29
 msgid "Cart - Coupons"
 msgstr "Warenkorb - Gutscheine"
 
-#: includes/Rules/Cart_Created_Date.php:34
+#: includes/Rules/Cart_Created_Date.php:36
 msgid "Cart - Created Date"
 msgstr "Warenkorb - Erstelldatum"
 
-#: includes/Rules/Cart_Items.php:17
+#: includes/Rules/Cart_Items.php:19
 msgid "Cart - Items"
 msgstr "Warenkorb - Artikel"
 
-#: includes/Rules/Cart_Item_Categories.php:23
+#: includes/Rules/Cart_Item_Categories.php:24
 msgid "Cart - Item Categories"
 msgstr "Warenkorb - Kategorien der Artikel"
 
-#: includes/Rules/Cart_Item_Tags.php:23
+#: includes/Rules/Cart_Item_Tags.php:24
 msgid "Cart - Item Tags"
 msgstr "Warenkorb - Schlagworte der Artikel"
 
-#: includes/Rules/Customer_2nd_Last_Order_Date.php:35
+#: includes/Rules/Customer_2nd_Last_Order_Date.php:37
 msgid "Customer - 2nd Last Paid Order Date"
 msgstr "Kunde - Datum der zweit-letzten bezahlten Bestellung"
 
-#: includes/Rules/Customer_Account_Created_Date.php:34
+#: includes/Rules/Customer_Account_Created_Date.php:36
 msgid "Customer - Account Created Date"
 msgstr "Kunde - Erstelldatum Kundenkonto"
 
-#: includes/Rules/Customer_Active_Membership_Plans.php:23
+#: includes/Rules/Customer_Active_Membership_Plans.php:24
 msgid "Customer - Active Memberships Plans"
 msgstr "Kunde - Aktive Membership-Pläne"
 
@@ -4331,100 +4556,100 @@ msgstr "Kunde - Aktive Membership-Pläne"
 msgid "Customer - City"
 msgstr "Kunde - Stadt"
 
-#: includes/Rules/Customer_Company.php:17
+#: includes/Rules/Customer_Company.php:19
 msgid "Customer - Company"
 msgstr "Kunde - Firma"
 
-#: includes/Rules/Customer_Country.php:30
+#: includes/Rules/Customer_Country.php:31
 msgid "Customer - Country"
 msgstr "Kunde - Land"
 
-#: includes/Rules/Customer_Email.php:27
+#: includes/Rules/Customer_Email.php:28
 msgid "Customer - Email"
 msgstr "Kunde - E-Mail-Adresse"
 
-#: includes/Rules/Customer_First_Order_Date.php:34
+#: includes/Rules/Customer_First_Order_Date.php:36
 msgid "Customer - First Paid Order Date"
 msgstr "Kunde - Datum der ersten bezahlten Bestellung"
 
-#: includes/Rules/Customer_Has_Active_Subscription.php:17
+#: includes/Rules/Customer_Has_Active_Subscription.php:19
 msgid "Customer - Has Active Subscription"
 msgstr "Kunde - Hat aktives Abonnement"
 
-#: includes/Rules/Customer_Is_Guest.php:17
+#: includes/Rules/Customer_Is_Guest.php:19
 msgid "Customer - Is Guest"
 msgstr "Kunde - Ist Gast"
 
-#: includes/Rules/Customer_Is_Mailchimp_Subscriber.php:19
+#: includes/Rules/Customer_Is_Mailchimp_Subscriber.php:20
 msgid "Customer - Is Subscribed To MailChimp List"
 msgstr "Kunde - Ist zu MailChimp-Liste angemeldet"
 
-#: includes/Rules/Customer_Is_Mailchimp_Subscriber.php:20
+#: includes/Rules/Customer_Is_Mailchimp_Subscriber.php:21
 msgid "Select a list&hellip;"
 msgstr "Wählen Sie eine Liste&hellip;"
 
-#: includes/Rules/Customer_Last_Order_Date.php:33
+#: includes/Rules/Customer_Last_Order_Date.php:35
 msgid "Customer - Last Paid Order Date"
 msgstr "Kunde - Datum der letzten bezahlten Bestellung"
 
-#: includes/Rules/Customer_Last_Review_Date.php:34
+#: includes/Rules/Customer_Last_Review_Date.php:36
 msgid "Customer - Last Review Date"
 msgstr "Kunde - Datum der letzten Bewertung"
 
-#: includes/Rules/Customer_Meta.php:17
+#: includes/Rules/Customer_Meta.php:21
 msgid "Customer - Custom Field"
 msgstr "Kunde - Benutzerdefiniertes Feld"
 
-#: includes/Rules/Customer_Order_Count.php:19
+#: includes/Rules/Customer_Order_Count.php:21
 msgid "Customer - Order Count"
 msgstr "Kunde - Anzahl Bestellungen"
 
-#: includes/Rules/Customer_Order_Statuses.php:21
+#: includes/Rules/Customer_Order_Statuses.php:23
 msgid "Customer - Current Order Statuses"
 msgstr ""
 "Status der Bestellungen des KundenKunde - Status aktueller Bestellungen"
 
-#: includes/Rules/Customer_Phone.php:27
+#: includes/Rules/Customer_Phone.php:28
 msgid "Customer - Phone"
 msgstr "Telefon des KundenKunde - Telefon"
 
-#: includes/Rules/Customer_Postcode.php:27
+#: includes/Rules/Customer_Postcode.php:28
 msgid "Customer - Postcode"
 msgstr "Kunde - PLZ"
 
-#: includes/Rules/Customer_Purchased_Categories.php:23
+#: includes/Rules/Customer_Purchased_Categories.php:24
 msgid "Customer - Purchased Categories - All Time"
 msgstr "Kunde - Kategorien gekaufter Produkte - Gesamte Zeit"
 
-#: includes/Rules/Customer_Purchased_Products.php:25
+#: includes/Rules/Customer_Purchased_Products.php:27
 msgid "Customer - Purchased Products - All Time"
 msgstr "Kunde - Gekaufte Produkte - Gesamte Zeit"
 
-#: includes/Rules/Customer_Review_Count.php:19
+#: includes/Rules/Customer_Review_Count.php:21
 msgid "Customer - Review Count"
 msgstr "Kunde - Anzahl Bewertungen"
 
-#: includes/Rules/Customer_Role.php:19
+#: includes/Rules/Customer_Role.php:21
 msgid "Customer - User Role"
 msgstr "Kunde - Nutzerrolle"
 
-#: includes/Rules/Customer_Run_Count.php:19
+#: includes/Rules/Customer_Run_Count.php:21
 msgid "Workflow - Run Count For Customer"
 msgstr "Workflow - Durchlauf-Zähler für Kunde"
 
-#: includes/Rules/Customer_State.php:29
+#: includes/Rules/Customer_State.php:30
 msgid "Customer - State"
 msgstr "Kunde - Staat"
 
-#: includes/Rules/Customer_State_Text_Match.php:17
+#: includes/Rules/Customer_State_Text_Match.php:19
 msgid "Customer - State - Text Match"
 msgstr "Kunde - Staat - Namens-Übereinstimmung"
 
-#: includes/Rules/Customer_Tags.php:23
+#: includes/Rules/Customer_Tags.php:24
 msgid "Customer - User Tags"
 msgstr "Kunde - Benutzer-Schlagwörter"
 
-#: includes/Rules/Customer_Total_Spent.php:19
+#: includes/Rules/Customer_Total_Spent.php:21
 msgid "Customer - Total Spent"
 msgstr "Kunde - Gesamter Bestellwert"
 
@@ -4456,7 +4681,7 @@ msgstr "Bestellung - Ist POS"
 msgid "POS"
 msgstr "POS"
 
-#: includes/Rules/OrderRunCount.php:21
+#: includes/Rules/OrderRunCount.php:22
 msgid "Workflow - Run Count For Order"
 msgstr "Workflow - Anzahl Durchläufe für Bestellung"
 
@@ -4536,11 +4761,11 @@ msgstr "Bestellung - Artikelnamen - Namens-Übereinstimmung"
 msgid "Order - Item Categories"
 msgstr "Bestellung - Kategorien der Artikel"
 
-#: includes/Rules/Order_Item_Count.php:19
+#: includes/Rules/Order_Item_Count.php:21
 msgid "Order - Item Count"
 msgstr "Bestellung - Anzahl Artikel"
 
-#: includes/Rules/Order_Item_Meta.php:17
+#: includes/Rules/Order_Item_Meta.php:19
 msgid "Order Line Item - Custom Field"
 msgstr "Bestellposition - Benutzerdefiniertes Feld"
 
@@ -4572,7 +4797,7 @@ msgstr "Bestellposition - Gesamtsumme"
 msgid "Order - Line Count"
 msgstr "Bestellung - Anzahl Bestellpositionen"
 
-#: includes/Rules/Order_Meta.php:17
+#: includes/Rules/Order_Meta.php:30
 msgid "Order - Custom Field"
 msgstr "Bestellung - Benutzerdefiniertes Feld"
 
@@ -4620,99 +4845,103 @@ msgstr "Suche Produkte..."
 msgid "Review - Rating"
 msgstr "Bewertung - Wert"
 
-#: includes/Rules/Rule.php:103 includes/Rules/Rule.php:116
+#: includes/Rules/Rule.php:106 includes/Rules/Rule.php:119
 msgid "is"
 msgstr "ist"
 
-#: includes/Rules/Rule.php:104 includes/Rules/Rule.php:117
+#: includes/Rules/Rule.php:107 includes/Rules/Rule.php:120
 msgid "is not"
 msgstr "ist nicht"
 
-#: includes/Rules/Rule.php:114
+#: includes/Rules/Rule.php:117
 msgid "contains"
 msgstr "enthält"
 
-#: includes/Rules/Rule.php:115
+#: includes/Rules/Rule.php:118
 msgid "does not contain"
 msgstr "enthält nicht"
 
-#: includes/Rules/Rule.php:118
+#: includes/Rules/Rule.php:121
 msgid "starts with"
 msgstr "beginnt mit"
 
-#: includes/Rules/Rule.php:119
+#: includes/Rules/Rule.php:122
 msgid "ends with"
 msgstr "endet mit"
 
-#: includes/Rules/Rule.php:120
+#: includes/Rules/Rule.php:123
 msgid "is blank"
 msgstr "ist leer"
 
-#: includes/Rules/Rule.php:121
+#: includes/Rules/Rule.php:124
 msgid "is not blank"
 msgstr "ist nicht leer"
 
-#: includes/Rules/Rule.php:122
+#: includes/Rules/Rule.php:125
 msgid "matches regex"
 msgstr "entspricht regex"
 
-#: includes/Rules/Rule.php:132
+#: includes/Rules/Rule.php:135
 msgid "any contains"
 msgstr "eines enthält"
 
-#: includes/Rules/Rule.php:133
+#: includes/Rules/Rule.php:136
 msgid "any matches exactly"
 msgstr "eines erfüllt genau"
 
-#: includes/Rules/Rule.php:134
+#: includes/Rules/Rule.php:137
 msgid "any starts with"
 msgstr "eines beginnt mit"
 
-#: includes/Rules/Rule.php:135
+#: includes/Rules/Rule.php:138
 msgid "any ends with"
 msgstr "eines endet mit"
 
-#: includes/Rules/Rule.php:145
+#: includes/Rules/Rule.php:148
 msgid "is greater than"
 msgstr "ist größer als"
 
-#: includes/Rules/Rule.php:146
+#: includes/Rules/Rule.php:149
 msgid "is less than"
 msgstr "ist kleiner als"
 
-#: includes/Rules/Rule.php:156
+#: includes/Rules/Rule.php:159
 msgid "is a multiple of"
 msgstr "ist ein Vielfaches von"
 
-#: includes/Rules/Rule.php:157
+#: includes/Rules/Rule.php:160
 msgid "is not a multiple of"
 msgstr "ist nicht ein Vielfaches von"
 
-#: includes/Rules/Rule.php:170
+#: includes/Rules/Rule.php:173
 msgid "matches any"
 msgstr "erfüllt eine"
 
-#: includes/Rules/Rule.php:171
+#: includes/Rules/Rule.php:174
 msgid "matches all"
 msgstr "erfüllt alle"
 
-#: includes/Rules/Rule.php:172
+#: includes/Rules/Rule.php:175
 msgid "matches none"
 msgstr "erfüllt keine"
 
-#: includes/Rules/Rule.php:185
+#: includes/Rules/Rule.php:188
 msgid "includes"
 msgstr "beinhaltet"
 
-#: includes/Rules/Rule.php:186
+#: includes/Rules/Rule.php:189
 msgid "does not include"
 msgstr "beinhaltet nicht"
+
+#: includes/Rules/ShopCurrentDateTime.php:43
+msgid "Shop - Current Date/Time"
+msgstr "Shop - Aktuelles Datum/Zeit"
 
 #: includes/Rules/SubscriptionPaymentCount.php:21
 msgid "Subscription - Payment Count"
 msgstr "Abonnement - Anzahl Zahlungen"
 
-#: includes/Rules/Subscription_Can_Renew_Early.php:27
+#: includes/Rules/Subscription_Can_Renew_Early.php:29
 msgid "Subscription - Can Renew Early"
 msgstr "Abonnement - Kann vorzeitig verlängert werden"
 
@@ -4752,7 +4981,7 @@ msgstr "Abonnement - Kategorien der Artikel"
 msgid "Subscription - Last Payment Date"
 msgstr "Abonnement - Datum der letzten Zahlung"
 
-#: includes/Rules/Subscription_Meta.php:17
+#: includes/Rules/Subscription_Meta.php:19
 msgid "Subscription - Custom Field"
 msgstr "Abonnement - Benutzerdefiniertes Feld"
 
@@ -4963,11 +5192,11 @@ msgstr ""
 msgid "+ %d more items..."
 msgstr "+ %d weitere Einträge..."
 
-#: includes/Tools/Reset_Workflow_Records.php:19
+#: includes/Tools/Reset_Workflow_Records.php:21
 msgid "Reset Workflow Records"
 msgstr "Workflow-Aufzeichnungen zurücksetzen"
 
-#: includes/Tools/Reset_Workflow_Records.php:20
+#: includes/Tools/Reset_Workflow_Records.php:22
 msgid ""
 "Deletes all logs, queued events and conversions for a workflow. The workflow "
 "itself will not be deleted."
@@ -4975,11 +5204,11 @@ msgstr ""
 "Lösche alle Logs, geplante Ereignisse und Abmeldungen für einen Workflow. "
 "Der Workflow selbst wird nicht gelöscht."
 
-#: includes/Tools/Reset_Workflow_Records.php:46
+#: includes/Tools/Reset_Workflow_Records.php:48
 msgid "Please select a workflow to reset."
 msgstr "Bitte wählen Sie einen zurückzusetzenden Workflow."
 
-#: includes/Tools/Reset_Workflow_Records.php:68
+#: includes/Tools/Reset_Workflow_Records.php:70
 msgid ""
 "Are you sure you want to reset all records for the workflow <strong>%s</"
 "strong>? This can not be undone."
@@ -4987,12 +5216,12 @@ msgstr ""
 "Sind Sie sicher, dass Sie alle Aufzeichnungen für den Workflow <strong>%s</"
 "strong> zurücksetzen wollen? Dies kann nicht rückgängig gemacht werden."
 
-#: includes/Trigger.php:414 includes/Trigger.php:444
+#: includes/Trigger.php:416 includes/Trigger.php:446
 #: includes/Triggers/Subscription_Status_Changed.php:57
 msgid "Recheck status before run"
 msgstr "Prüfe Status vor Durchlauf erneut"
 
-#: includes/Trigger.php:417
+#: includes/Trigger.php:419
 msgid ""
 "This is useful for Workflows that are not run immediately as it ensures the "
 "status of the order hasn't changed since initial trigger."
@@ -5001,11 +5230,11 @@ msgstr ""
 "sicherstellt, dass der Bestellstatus sich seit ursprünglichem Auslösen nicht "
 "geändert hat."
 
-#: includes/Trigger.php:431
+#: includes/Trigger.php:433
 msgid "Customer pause period (days)"
 msgstr "Pausen-Zeitraum für Benutzer (Tage)"
 
-#: includes/Trigger.php:432
+#: includes/Trigger.php:434
 msgid ""
 "Can be used to ensure that this trigger will only send once in a set period "
 "to a user or guest."
@@ -5013,7 +5242,7 @@ msgstr ""
 "Kann genutzt werden, um sicherzustellen, dass dieser Auslöser nur ein mal "
 "pro Benutzer oder Gast in einem gewissen Zeitraum ausgelöst wird."
 
-#: includes/Trigger.php:446
+#: includes/Trigger.php:448
 msgid ""
 "This is useful for workflows that are not run immediately as it ensures the "
 "status of the %s hasn't changed since initial trigger."
@@ -5022,7 +5251,7 @@ msgstr ""
 "sicherstellt, dass sich der Status des %s seit dem ursprünglichen Auslösen "
 "nicht geändert hat."
 
-#: includes/Trigger.php:585
+#: includes/Trigger.php:587
 msgid "THIS TRIGGER IS DEPRECATED AND SHOULD NOT BE USED."
 msgstr "DIESER AUSLÖSER IST VERALTET UND SOLLTE NICHT VERWENDET WERDEN."
 
@@ -5081,43 +5310,11 @@ msgstr ""
 "Wählen Sie, für welche Mitgliedschafts-Pläne ausgelöst werden soll. Leer "
 "lassen für alle Pläne."
 
-#: includes/Triggers/Background_Processed_Abstract.php:56
-msgid "Time of day"
-msgstr "Uhrzeit"
-
-#: includes/Triggers/Background_Processed_Abstract.php:57
-msgid ""
-"Set the time in your site's timezone that the workflow will be triggered. If "
-"no time is set the workflow will run at midnight. If you set a time that has "
-"already passed for today the workflow will not run until tomorrow. The "
-"workflow will never be run twice in the same day. It's not possible to set a "
-"time after 23:00 which gives the background processor at least 1 hour to run "
-"any tasks."
-msgstr ""
-"Stellen Sie die Uhrzeit in Ihrer Zeitzone ein, zu der der Workflow gestartet "
-"werden soll. Wenn keine Uhrzeit festgelegt ist, startet der Workflow um "
-"Mitternacht. Wenn Sie eine Zeit einstellen, die heute schon war, wird der "
-"Workflow erst morgen starten. Der Workflow wird nie zwei Mal am selben Tag "
-"laufen. Es ist nicht möglich, eine Zeit nach 23:00 zu wählen, damit der "
-"Hintergrundprozessor mindestens 1 Stunde für die Abarbeitung der "
-"Warteschlange hat."
-
-#: includes/Triggers/Background_Processed_Abstract.php:74
-msgid ""
-"This workflow will not run immediately after it is saved. It will run daily "
-"in the background at the time set in the <strong>Time of day</strong> field. "
-"If no time is set it will run at midnight."
-msgstr ""
-"Der Workflow wird nicht sofort nach dem Speichern durchlaufen. Er wird "
-"täglich zum unter <strong>Uhrzeit</strong> festgelegten Zeitpunkt "
-"durchlaufen. Wenn keine Uhrzeit festgelegt ist, wird er um Mitternacht "
-"durchlaufen."
-
-#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:18
+#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:23
 msgid "Customer Before Saved Card Expiry"
 msgstr "Gespeicherte Kreditkarte des Kunden läuft ab"
 
-#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:19
+#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:24
 msgid ""
 "This trigger runs a set number of days before a customer's saved card "
 "expires. Cards expire on the last calendar day of their expiry month."
@@ -5126,7 +5323,7 @@ msgstr ""
 "Kunden vor dem Ablauf steht. Kreditkarten laufen am letzten Tag des "
 "Ablaufmonats ab."
 
-#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:28
+#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:33
 msgid "Days before expiry"
 msgstr "Tage vor Ablauf"
 
@@ -5183,11 +5380,11 @@ msgstr "Gesamtbestellwert"
 msgid "Do not add a currency symbol."
 msgstr "Kein Währungssymbol hinzufügen."
 
-#: includes/Triggers/Customer_Win_Back.php:17
+#: includes/Triggers/Customer_Win_Back.php:25
 msgid "Customer Win Back"
 msgstr "Kunden-Rückgewinnung"
 
-#: includes/Triggers/Customer_Win_Back.php:18
+#: includes/Triggers/Customer_Win_Back.php:26
 msgid ""
 "This trigger fires for customers based on the date of their last paid order. "
 "The 'order based' variables, rules and actions used by this trigger only "
@@ -5197,22 +5394,22 @@ msgstr ""
 "Bestellung eines Kunden gestartet. Die Bestell-basierten Variablen, Regeln "
 "und Aktionen beziehen sich auf die letzte bezahlte Bestellung des Kunden."
 
-#: includes/Triggers/Customer_Win_Back.php:28
+#: includes/Triggers/Customer_Win_Back.php:37
 msgid "Minimum days since purchase"
 msgstr "Mindestanzahl Tage seit Kauf"
 
-#: includes/Triggers/Customer_Win_Back.php:29
+#: includes/Triggers/Customer_Win_Back.php:38
 msgid ""
 "Defines the minimum number of days to wait after a customer's last purchase."
 msgstr ""
 "Legt fest, wie viele Tage mindestens nach der letzten Bestellung eines "
 "Kunden gewartet wird."
 
-#: includes/Triggers/Customer_Win_Back.php:34
+#: includes/Triggers/Customer_Win_Back.php:43
 msgid "Maximum days since purchase"
 msgstr "Maximale Anzahl Tage seit Kauf"
 
-#: includes/Triggers/Customer_Win_Back.php:35
+#: includes/Triggers/Customer_Win_Back.php:44
 msgid ""
 "Defines the maximum number of days after the customer's last purchase that "
 "this trigger will fire. The default value will be 3 greater than the value "
@@ -5222,11 +5419,11 @@ msgstr ""
 "Auslöser maximal aktiv ist. Der Standardwert ist um 3 größer als der Wert "
 "von „Mindestanzahl Tage seit Kauf“."
 
-#: includes/Triggers/Customer_Win_Back.php:39
+#: includes/Triggers/Customer_Win_Back.php:48
 msgid "Enable repeats"
 msgstr "Aktiviere Wiederholungen"
 
-#: includes/Triggers/Customer_Win_Back.php:40
+#: includes/Triggers/Customer_Win_Back.php:49
 msgid ""
 "If checked this trigger will repeatedly fire after the minimum last purchase "
 "date passes and the customer has not made a purchase. E.g. if the minimum is "
@@ -5241,6 +5438,38 @@ msgstr ""
 "erneut ausgelöst, bis das Maximum erreicht ist oder der Kunde einen neuen "
 "Kauf tätigt. Wenn nicht gewählt, wird der Auslöser nicht wiederholt, bis der "
 "Kunde einen neuen Kauf tätigt."
+
+#: includes/Triggers/CustomTimeOfDay.php:31
+msgid "Time of day"
+msgstr "Uhrzeit"
+
+#: includes/Triggers/CustomTimeOfDay.php:32
+msgid ""
+"Set the time in your site's timezone that the workflow will be triggered. If "
+"no time is set the workflow will run at midnight. If you set a time that has "
+"already passed for today the workflow will not run until tomorrow. The "
+"workflow will never be run twice in the same day. It's not possible to set a "
+"time after 23:00 which gives the background processor at least 1 hour to run "
+"any tasks."
+msgstr ""
+"Stellen Sie die Uhrzeit in Ihrer Zeitzone ein, zu der der Workflow gestartet "
+"werden soll. Wenn keine Uhrzeit festgelegt ist, startet der Workflow um "
+"Mitternacht. Wenn Sie eine Zeit einstellen, die heute schon war, wird der "
+"Workflow erst morgen starten. Der Workflow wird nie zwei Mal am selben Tag "
+"laufen. Es ist nicht möglich, eine Zeit nach 23:00 zu wählen, damit der "
+"Hintergrundprozessor mindestens 1 Stunde für die Abarbeitung der "
+"Warteschlange hat."
+
+#: includes/Triggers/CustomTimeOfDay.php:47
+msgid ""
+"This workflow will not run immediately after it is saved. It will run daily "
+"in the background at the time set in the <strong>Time of day</strong> field. "
+"If no time is set it will run at midnight."
+msgstr ""
+"Der Workflow wird nicht sofort nach dem Speichern durchlaufen. Er wird "
+"täglich zum unter <strong>Uhrzeit</strong> festgelegten Zeitpunkt "
+"durchlaufen. Wenn keine Uhrzeit festgelegt ist, wird er um Mitternacht "
+"durchlaufen."
 
 #: includes/Triggers/Guest_Created.php:18
 msgid "New Guest Captured"
@@ -5480,11 +5709,11 @@ msgstr ""
 msgid "Manual - Subscriptions"
 msgstr "Manuell - Abonnements"
 
-#: includes/Triggers/Subscription_Before_End.php:15
+#: includes/Triggers/Subscription_Before_End.php:17
 msgid "Subscription Before End"
 msgstr "Abonnement vor Ablauf"
 
-#: includes/Triggers/Subscription_Before_End.php:16
+#: includes/Triggers/Subscription_Before_End.php:18
 msgid ""
 "This trigger runs once per day for any subscriptions that are due to expire/"
 "end on the workflow's target date. For example, if set to run 7 days before "
@@ -5496,15 +5725,15 @@ msgstr ""
 "7 Tage vor Ablauf auszulösen, werden alle Abonnements angesprochen, die in "
 "genau 7 Tagen enden."
 
-#: includes/Triggers/Subscription_Before_End.php:27
+#: includes/Triggers/Subscription_Before_End.php:29
 msgid "Days before end"
 msgstr "Tage vor Ablauf"
 
-#: includes/Triggers/Subscription_Before_Renewal.php:23
+#: includes/Triggers/Subscription_Before_Renewal.php:30
 msgid "Subscription Before Renewal"
 msgstr "Abonnement vor Verlängerung"
 
-#: includes/Triggers/Subscription_Before_Renewal.php:24
+#: includes/Triggers/Subscription_Before_Renewal.php:31
 msgid ""
 "This trigger runs once per day for any subscriptions that are due for "
 "renewal on the workflow's target date. For example, if set to run 7 days "
@@ -5516,7 +5745,7 @@ msgstr ""
 "ist, 7 Tage vor Verlängerung auszulösen, werden alle Abonnements "
 "angesprochen, die in genau 7 Tagen verlängert werden."
 
-#: includes/Triggers/Subscription_Before_Renewal.php:34
+#: includes/Triggers/Subscription_Before_Renewal.php:41
 msgid "Days before renewal"
 msgstr "Tage vor Verlängerung"
 
@@ -5691,16 +5920,16 @@ msgid "Customer Adds Product (%s)"
 msgstr "Kunde fügt Produkt hinzu (%s)"
 
 #: includes/Triggers/Wishlist_Item_Added.php:19
-#: includes/Triggers/Wishlist_Item_Goes_On_Sale.php:20
-#: includes/Triggers/Wishlist_Reminder.php:19
+#: includes/Triggers/Wishlist_Item_Goes_On_Sale.php:22
+#: includes/Triggers/Wishlist_Reminder.php:25
 msgid "Wishlists"
 msgstr "Wunschlisten"
 
-#: includes/Triggers/Wishlist_Item_Goes_On_Sale.php:19
+#: includes/Triggers/Wishlist_Item_Goes_On_Sale.php:21
 msgid "Wishlist Item On Sale (%s)"
 msgstr "Wunschlisten-Artikel im Angebot (%s)"
 
-#: includes/Triggers/Wishlist_Item_Goes_On_Sale.php:21
+#: includes/Triggers/Wishlist_Item_Goes_On_Sale.php:23
 msgid ""
 "This trigger doesn't fire instantly when a product goes on sale. Instead, it "
 "performs a check for new on-sale products every 30 minutes. Please note this "
@@ -5712,11 +5941,11 @@ msgstr ""
 "gibt. Bitte beachten Sie, dass dies nicht für Gäste funktioniert, weil ihre "
 "Wunschlisten-Daten nur in ihrer Sitzung existieren."
 
-#: includes/Triggers/Wishlist_Reminder.php:18
+#: includes/Triggers/Wishlist_Reminder.php:24
 msgid "Wishlist Reminder (%s)"
 msgstr "Wunschliste-Erinnerung (%s)"
 
-#: includes/Triggers/Wishlist_Reminder.php:20
+#: includes/Triggers/Wishlist_Reminder.php:26
 msgid ""
 "Setting the 'Reminder Interval' field to 30 means this trigger will fire "
 "every 30 days for any users that have items in their wishlist. Please note "
@@ -5728,20 +5957,20 @@ msgstr ""
 "Sie, dass dies nicht für Gäste funktioniert, da ihre Wunschlisten-Daten nur "
 "in ihrer lokalen Browser-Sitzung existieren."
 
-#: includes/Triggers/Wishlist_Reminder.php:32
+#: includes/Triggers/Wishlist_Reminder.php:38
 msgid "Reminder interval (days)"
 msgstr "Erinnerungs-Interval (Tage)"
 
-#: includes/Triggers/Wishlist_Reminder.php:33
+#: includes/Triggers/Wishlist_Reminder.php:39
 msgid "E.g. Reminder any customers with items in a Wishlist every 30 days."
 msgstr ""
 "Erinnere z.B. alle 30 Tage alle Kunden mit Artikeln auf der Wunschliste."
 
-#: includes/Triggers/Wishlist_Reminder.php:38
+#: includes/Triggers/Wishlist_Reminder.php:44
 msgid "Once per customer"
 msgstr "Einmal pro Kunde"
 
-#: includes/Triggers/Wishlist_Reminder.php:39
+#: includes/Triggers/Wishlist_Reminder.php:45
 msgid ""
 "If checked the trigger will fire only once for each customer for each "
 "wishlist they create. Most customers only use the one wishlist so use with "
@@ -5759,14 +5988,6 @@ msgstr "Durchlauf-Zähler erreicht"
 #: includes/Triggers/Workflow_Times_Run_Reaches.php:30
 msgid "Times run"
 msgstr "Anzahl Durchläufe"
-
-#: includes/UpdateNoticeManager.php:52
-msgid ""
-"This release contains one of our most requested features - Manual Workflows, "
-"along with several other new features and improvements!"
-msgstr ""
-"Diese Version beinhaltet eine der meistgewünschten Funktionen - Manuelle "
-"Workflows, sowie viele weitere neue Funktionen und Verbesserungen!"
 
 #: includes/Updater.php:251
 msgid ""
@@ -6692,34 +6913,38 @@ msgid "Set the sorting of the products."
 msgstr "Legen Sie die Sortierung der Produkte fest."
 
 #: includes/Variables/Shop_Products.php:46
+msgid "Default"
+msgstr "Standard"
+
+#: includes/Variables/Shop_Products.php:47
 msgid "Date added - Descending"
 msgstr "Hinzugefügt - absteigend"
 
-#: includes/Variables/Shop_Products.php:47
+#: includes/Variables/Shop_Products.php:48
 msgid "Date added - Ascending"
 msgstr "Hinzugefügt - aufsteigend"
 
-#: includes/Variables/Shop_Products.php:48
+#: includes/Variables/Shop_Products.php:49
 msgid "Title - Descending"
 msgstr "Titel - absteigend"
 
-#: includes/Variables/Shop_Products.php:49
+#: includes/Variables/Shop_Products.php:50
 msgid "Title - Ascending"
 msgstr "Titel - aufsteigend"
 
-#: includes/Variables/Shop_Products.php:50
+#: includes/Variables/Shop_Products.php:51
 msgid "Popularity - Descending"
 msgstr "Beliebtheit - absteigend"
 
-#: includes/Variables/Shop_Products.php:51
+#: includes/Variables/Shop_Products.php:52
 msgid "Popularity - Ascending"
 msgstr "Beliebtheit - aufsteigend"
 
-#: includes/Variables/Shop_Products.php:52
+#: includes/Variables/Shop_Products.php:53
 msgid "Random"
 msgstr "Zufällig"
 
-#: includes/Variables/Shop_Products.php:58
+#: includes/Variables/Shop_Products.php:59
 msgid "Display your shop's products by various criteria."
 msgstr "Zeige Produkte nach verschiedenen Kriterien."
 
@@ -6847,9 +7072,38 @@ msgstr "Zeigt die Anzahl Artikel auf der Wunschliste."
 msgid "Displays a link to the wishlist."
 msgstr "Zeigt einen Link zur Wunschliste."
 
-#: includes/Workflows.php:45
+#: includes/Workflows.php:47
 msgid "Automatic"
 msgstr "Automatisch"
+
+#. translators: %s: The preset ID.
+#: includes/Workflows/Presets/PresetService.php:65
+msgid "The preset with ID \"%s\" does not exist."
+msgstr "Die Vorlage mit der ID „%s“ existiert nicht."
+
+#: includes/Workflows/Presets/PresetService.php:83
+msgid ""
+"There were problems parsing the preset. Please check the logs for more info."
+msgstr ""
+"Beim Verarbeiten der Vorlage sind Probleme aufgetaucht. Bitte prüfen Sie die "
+"Logs für weitere Informationen."
+
+#: includes/Workflows/Presets/PresetService.php:86
+#: includes/Workflows/Presets/PresetService.php:89
+msgid ""
+"There were problems creating a workflow from the preset. Please check the "
+"logs for more info."
+msgstr ""
+"Beim Erstellen des Workflows aus der Vorlage sind Probleme aufgetaucht. "
+"Bitte prüfen Sie die Logs für weitere Informationen."
+
+#: includes/Workflows/Presets/PresetService.php:107
+msgid ""
+"There were problems retrieving the preset. Please check the logs for more "
+"info."
+msgstr ""
+"Beim Abrufen der Vorlage sind Probleme aufgetaucht. Bitte prüfen Sie die "
+"Logs für weitere Informationen."
 
 #: includes/Workflow_Email.php:325
 msgid "Workflow was not defined for email."
@@ -6903,106 +7157,516 @@ msgid "Leave a review"
 msgstr "Hinterlassen Sie eine Bewertung"
 
 #. translators: %s: the progress percentage
-#: admin/assets/build/index.js:186
+#: admin/assets/build/index.js:2
 msgid "Progress: %s"
 msgstr "Fortschritt: %s"
 
-#: admin/assets/build/index.js:302
+#. translators: %s: the progress percentage
+#: admin/assets/build/index.js:2
 msgid "There was an error when searching for workflows."
 msgstr "Es gab einen Fehler beim Suchen nach Workflows."
 
-#: admin/assets/build/index.js:579
-msgid "Manual Runner"
-msgstr "Manuelle Durchläufe"
+#: admin/assets/build/index.js:2
+msgid "Search by workflow title…"
+msgstr "Nach Workflow-Titel suchen…"
 
-#: admin/assets/build/index.js:580
-msgid "AutomateWoo Manual Workflow Runner"
-msgstr "AutomateWoo Manuelle Workflow-Durchläufe"
+#: admin/assets/build/index.js:2
+msgid "Find matching items"
+msgstr "Übereinstimmende Elemente finden"
 
-#: admin/assets/build/index.js:957
+#: admin/assets/build/index.js:2
+msgid "1. Select a manual workflow"
+msgstr "1. Manuellen Workflow wählen"
+
+#. translators: %(count)d: number of items, %(dataType)s: type of item e.g. 'orders'
+#: admin/assets/build/index.js:3
+msgid ""
+"This workflow could potentially match %(count)d %(dataType)s which will take "
+"some time to process. Try adding more rules to the workflow so there are "
+"fewer matches."
+msgstr ""
+"Dieser Workflow könnte potenziell auf %(count)d %(dataType)s zutreffen, was "
+"einige Zeit dauern könnte. Versuchen Sie weitere Regeln zum Workflow "
+"hinzuzufügen, so dass es weniger Übereinstimmungen gibt."
+
+#. translators: %(count)d: number of items, %(dataType)s: type of item e.g. 'orders'
+#: admin/assets/build/index.js:3
 msgid "Warning!"
 msgstr "Warnung!"
 
-#: admin/assets/build/index.js:968 admin/assets/build/index.js:1383
+#. translators: %s: The type of data e.g. 'orders'
+#: admin/assets/build/index.js:3 admin/assets/build/index.js:5
 msgid "Edit workflow"
 msgstr "Workflow bearbeiten"
 
-#: admin/assets/build/index.js:970
+#: admin/assets/build/index.js:3
 msgid "Continue anyway"
 msgstr "Trotzdem fortfahren"
 
-#. translators: %s: type of item e.g. 'orders'
-#: admin/assets/build/index.js:1082
-msgid "2. Find matching %s"
-msgstr "2. Übereinstimmende %s finden"
-
-#. translators: %(itemCount)d: number of items, %(dataType)s: type of item e.g. 'orders'
-#: admin/assets/build/index.js:1232
-msgid "Run workflow for %(itemCount)d %(dataType)s"
-msgstr "Workflow durchlaufen für %(itemCount)d %(dataType)s"
+#: admin/assets/build/index.js:3
+msgid "If you leave this page the process will stop."
+msgstr "Wenn Sie diese Seite verlassen, wird der Prozess gestoppt."
 
 #. translators: %d: the number of items
-#: admin/assets/build/index.js:1308
+#: admin/assets/build/index.js:4
 msgid "Total: %d"
 msgstr "Summe: %d"
 
 #. translators: %s: The type of data e.g. 'orders'
-#: admin/assets/build/index.js:1377
+#: admin/assets/build/index.js:5
 msgid "There are no matching %s for the selected manual workflow."
 msgstr ""
 "Es gibt keine übereinstimmenden %s für den gewählten manuellen Workflow."
 
-#: admin/assets/build/index.js:1521
-msgid "Error loading the workflow data."
-msgstr "Fehler beim Laden der Workflow-Daten."
+#. translators: %(itemCount)d: number of items, %(dataType)s: type of item e.g. 'orders'
+#: admin/assets/build/index.js:6
+msgid "Run workflow for %(itemCount)d %(dataType)s"
+msgstr "Workflow durchlaufen für %(itemCount)d %(dataType)s"
 
-#: admin/assets/build/index.js:1569
-msgid "The workflow couldn't be loaded from the URL."
-msgstr "Der Workflow konnte nicht unter der URL abgerufen werden."
+#. translators: %1$s: type of item e.g. 'orders', %2$s: the workflow title
+#: admin/assets/build/index.js:7
+msgid ""
+"Searching for %1$s that match the rules used in the \"%2$s\" workflow. If "
+"you leave this page the process will stop."
+msgstr ""
+"Suche nach %1$s, die den Regeln des Workflows „%2$s“ entsprechen. Wenn Sie "
+"diese Seite verlassen, wird der Prozess gestoppt."
 
-#: admin/assets/build/index.js:1616
-msgid "orders"
-msgstr "bestellungen"
+#. translators: %s: type of item e.g. 'orders'
+#: admin/assets/build/index.js:8
+msgid "2. Find matching %s"
+msgstr "2. Übereinstimmende %s finden"
 
-#: admin/assets/build/index.js:1617
-msgid "subscriptions"
-msgstr "abonnements"
-
-#: admin/assets/build/index.js:1619
-msgid "items"
-msgstr "artikel"
-
-#: admin/assets/build/index.js:1648
-msgid "Find"
-msgstr "Finden"
+#. translators: %s: type of item e.g. 'orders'
+#: admin/assets/build/index.js:8
+msgid "3. Add to workflow queue"
+msgstr "3. Zur Workflow-Warteschlange hinzufügen"
 
 #. translators: %(itemCount)d: number of matching items, %(dataType)s: type of item
-#: admin/assets/build/index.js:1988
+#: admin/assets/build/index.js:9
 msgid "Woo! %(itemCount)d %(dataType)s were successfully added to the queue."
 msgstr ""
 "Woo! %(itemCount)d %(dataType)s wurden erfolgreich zur Warteschlange "
 "hinzugefügt."
 
-#: admin/assets/build/index.js:2004
+#. translators: %(itemCount)d: number of matching items, %(dataType)s: type of item
+#: admin/assets/build/index.js:9
 msgid "View in queue"
 msgstr "In Warteschlange ansehen"
 
-#: admin/assets/build/index.js:2024
-msgid "3. Add to workflow queue"
-msgstr "3. Zur Workflow-Warteschlange hinzufügen"
+#. translators: %(itemCount)d: number of matching items, %(dataType)s: type of item, %(workflow)s: workflow title
+#: admin/assets/build/index.js:10
+msgid ""
+"Adding %(itemCount)d matching %(dataType)s to the queue for the "
+"\"%(workflow)s\" workflow. If you leave this page the process will stop."
+msgstr ""
+"Füge %(itemCount)d übereinstimmende %(dataType)s zur Warteschlange für "
+"Workflow „%(workflow)s“ hinzu. Wenn Sie diese Seite verlassen, wird der "
+"Prozess gestoppt."
 
-#: admin/assets/build/index.js:2111
-msgid "Search by workflow title…"
-msgstr "Nach Workflow-Titel suchen…"
+#: admin/assets/build/index.js:10
+msgid "Error loading the workflow data."
+msgstr "Fehler beim Laden der Workflow-Daten."
 
-#: admin/assets/build/index.js:2124
-msgid "Find matching items"
-msgstr "Übereinstimmende Elemente finden"
+#: admin/assets/build/index.js:10
+msgid "(no title)"
+msgstr "(ohne Titel)"
 
-#: admin/assets/build/index.js:2126
-msgid "1. Select a manual workflow"
-msgstr "1. Manuellen Workflow wählen"
+#: admin/assets/build/index.js:10
+msgid "The workflow couldn't be loaded from the URL."
+msgstr "Der Workflow konnte nicht unter der URL abgerufen werden."
 
-#: admin/assets/build/index.js:2176
-msgid "If you leave this page the process will stop."
-msgstr "Wenn Sie diese Seite verlassen, wird der Prozess gestoppt."
+#: admin/assets/build/index.js:10
+msgid "orders"
+msgstr "bestellungen"
+
+#: admin/assets/build/index.js:10
+msgid "subscriptions"
+msgstr "abonnements"
+
+#: admin/assets/build/index.js:10
+msgid "items"
+msgstr "artikel"
+
+#: admin/assets/build/index.js:10
+msgid "Find"
+msgstr "Finden"
+
+#: admin/assets/build/index.js:10
+msgid "There was an error loading presets. Please try again."
+msgstr ""
+"Es gab einen Fehler beim Laden der Vorlagen. Bitte versuchen Sie es erneut."
+
+#: admin/assets/build/index.js:10
+msgid "Reload"
+msgstr "Neu laden"
+
+#. translators: %s: The error message.
+#: admin/assets/build/index.js:11
+msgid "Error: %s"
+msgstr "Fehler: %s"
+
+#. translators: %s: The error message.
+#: admin/assets/build/index.js:11
+msgid "My workflows"
+msgstr "Meine Workflows"
+
+#: admin/assets/build/index.js:11
+msgid "Manual Runner"
+msgstr "Manuelle Durchläufe"
+
+#: admin/assets/build/index.js:11
+msgid "AutomateWoo Manual Workflow Runner"
+msgstr "AutomateWoo Manuelle Workflow-Durchläufe"
+
+#~ msgid ""
+#~ "Reach out to your customers and automate your work easily with these "
+#~ "presets."
+#~ msgstr ""
+#~ "Erreichen Sie Ihre Kunden und automatisieren Sie Ihre Arbeit mit diesen "
+#~ "neuen Vorlagen."
+
+#~ msgid " "
+#~ msgstr " "
+
+#~ msgid "Welcome to AutomateWoo %s!"
+#~ msgstr "Willkommen bei AutomateWoo %s!"
+
+#~ msgid "Thank you for updating to the latest version of AutomateWoo."
+#~ msgstr ""
+#~ "Vielen Dank, dass Sie auf die neueste Version von AutomateWoo "
+#~ "aktualisiert haben."
+
+#~ msgid "Discover what's new"
+#~ msgstr "Sehen Sie sich an, was neu ist"
+
+#~ msgid ""
+#~ "We're super excited you have decided to grow your store with AutomateWoo! "
+#~ "If you haven't already, you should check out our <%s>Getting Started "
+#~ "Guide<%s>, and for tutorials and tips, be sure to visit our <%s>blog<%s> "
+#~ "and <%s>documentation<%s>. If you have any questions, don't hesitate to <"
+#~ "%s>contact us<%s> for help."
+#~ msgstr ""
+#~ "Wir freuen uns sehr, dass Sie mit AutomateWoo neues Wachstum generieren "
+#~ "wollen! Wenn nicht schon geschehen, sehen Sie sich unseren <"
+#~ "%s>Einführungs-Leitfaden<%s> an, und für Anleitungen und Tipps, schauen "
+#~ "Sie auf unserem <%s>Blog<%s> und in der <%s>Dokumentation<%s> vorbei. "
+#~ "Wenn Sie Fragen haben, scheuen Sie sich nicht, uns <%s>zu kontaktieren<"
+#~ "%s>."
+
+#~ msgid "No valid preview order was found."
+#~ msgstr "Es wurde keine gültige Bestellung für die Vorschau gefunden."
+
+#~ msgid ""
+#~ "This release contains one of our most requested features - Manual "
+#~ "Workflows, along with several other new features and improvements!"
+#~ msgstr ""
+#~ "Diese Version beinhaltet eine der meistgewünschten Funktionen - Manuelle "
+#~ "Workflows, sowie viele weitere neue Funktionen und Verbesserungen!"
+
+#~ msgid "unsubscribes"
+#~ msgstr "Abmeldungen"
+
+#~ msgid "WooCommerce 3.4 is required for the shortcodes below to work."
+#~ msgstr "WooCommerce 3.4 wird für die untenstehenden Shortcodes benötigt."
+
+#~ msgid "DEPRECATED"
+#~ msgstr "VERALTET"
+
+#~ msgid "Campaign Monitor Add Customer to List [DEPRECATED]"
+#~ msgstr "Campaign Monitor: Füge Kunde zu Liste hinzu [VERALTET]"
+
+#~ msgid ""
+#~ "Instead please enable the Campaign Monitor integration in settings and "
+#~ "then use the new <b>Campaign Monitor - Add Subscriber To List</b> action."
+#~ msgstr ""
+#~ "Aktivere stattdessen die Campaign Monitor Integration in den "
+#~ "Einstellungen und nutze dann die neue Aktion <b>Campaign Monitor - "
+#~ "Abonnent zu Liste hinzufügen</b>."
+
+#~ msgid ""
+#~ "You can get your API key from the Account Settings page when logged into "
+#~ "your Campaign Monitor account."
+#~ msgstr ""
+#~ "Sie erhalten Ihren API-Schlüssel in den Account-Einstellungen von "
+#~ "Campaign Monitor."
+
+#~ msgid "List ID"
+#~ msgstr "Listen-ID"
+
+#~ msgid ""
+#~ "You find the List ID of a list by heading into any list in your account "
+#~ "and clicking the 'change name/type' link below your list name."
+#~ msgstr ""
+#~ "Sie finden die ID einer Liste, indem Sie in Ihrem Account „Name/Typ "
+#~ "ändern“ unter dem Listennamen aufrufst."
+
+#~ msgid ""
+#~ "Manually trigger a workflow for existing orders that match a date range. "
+#~ "For example, if you create a workflow using the <b>Order Completed</b> "
+#~ "trigger and want to have that workflow run for existing completed orders."
+#~ msgstr ""
+#~ "Lösen Sie einen Workflow manuell für alle Bestellungen in einem gewissen "
+#~ "Zeitraum aus. Zum Beispiel können Sie hiermit mit dem <b>Bestellung "
+#~ "fertiggestellt</b>-Auslöser Bestellungen ansprechen, die schon "
+#~ "fertiggestellt wurden."
+
+#~ msgid "Order Created Date - Range From"
+#~ msgstr "Bestellung erstellt - Zeitspanne von"
+
+#~ msgid "Order Created Date - Range To"
+#~ msgstr "Bestellung erstellt - Zeitspanne bis"
+
+#~ msgid "The selected workflow is not currently active."
+#~ msgstr "Der gewählte Workflow ist zurzeit nicht aktiv."
+
+#~ msgid "No orders were found matching the date range or required status."
+#~ msgstr ""
+#~ "Für die Zeitspanne oder den gewünschten Status wurden keine Bestellungen "
+#~ "gefunden."
+
+#~ msgctxt "1: order ID, 2: customer name"
+#~ msgid "%1$s for %2$s"
+#~ msgstr "%1$s für %2$s"
+
+#~ msgid "+%d more orders..."
+#~ msgstr "+%d weitere Bestellungen..."
+
+#~ msgid ""
+#~ "Manually trigger a workflow for existing subscriptions based on the date "
+#~ "they were created."
+#~ msgstr ""
+#~ "Lösen Sie einen Workflow manuell für alle Abonnements mit einem gewissen "
+#~ "Erstellungsdatum aus."
+
+#~ msgid "Subscription Start Date - Range From"
+#~ msgstr "Abonnement-Startdatum - Zeitspanne von"
+
+#~ msgid "Subscription Start Date - Range To"
+#~ msgstr "Abonnement-Startdatum - Zeitspanne bis"
+
+#~ msgid "No subscriptions match that date range."
+#~ msgstr "Kein Abonnement fällt in diese Zeitspanne."
+
+#~ msgctxt "1: subscription ID, 2: customer name"
+#~ msgid "%1$s for %2$s"
+#~ msgstr "%1$s für %2$s"
+
+#~ msgid "+%d more subscriptions..."
+#~ msgstr "+%d weitere Abonnements..."
+
+#~ msgid "Order Includes Product From Category [DEPRECATED]"
+#~ msgstr "Bestellung enthält Produkte aus Kategorie [VERALTET]"
+
+#~ msgid ""
+#~ "Instead please use one of the order status triggers in combination with "
+#~ "the Order Item Categories rule."
+#~ msgstr ""
+#~ "Bitte nutzen Sie stattdessen einen Bestellstatus-Auslöser in Kombination "
+#~ "mit einer Artikel-Kategorie-Regel."
+
+#~ msgid ""
+#~ "Only trigger when the a product is purchased from a certain category."
+#~ msgstr ""
+#~ "Nur auslösen, wenn das gekaufte Produkt aus einer bestimmten Kategorie "
+#~ "ist."
+
+#~ msgid "Order Includes Product From Tag [DEPRECATED]"
+#~ msgstr "Bestellung enthält Produkt mit Schlagwort [VERALTET]"
+
+#~ msgid ""
+#~ "Instead please use one of the order status triggers in combination with "
+#~ "the Order Item Tags rule."
+#~ msgstr ""
+#~ "Bitte nutzen Sie stattdessen einen Bestellstatus-Auslöser in Kombination "
+#~ "mit einer Artikel-Schlagwörter-Regel."
+
+#~ msgid "Only trigger when the a product is purchased from a certain tag."
+#~ msgstr ""
+#~ "Nur auslösen, wenn das gekaufte Produkt ein bestimmtes Schlagwort enthält."
+
+#~ msgid "Order Includes a Specific Product [DEPRECATED]"
+#~ msgstr "Bestellung enthält ein bestimmtes Produkt [VERALTET]"
+
+#~ msgid ""
+#~ "Instead please use one of the order status triggers in combination with "
+#~ "the Order Items rule."
+#~ msgstr ""
+#~ "Bitte nutzen Sie stattdessen einen Bestellstatus-Auslöser in Kombination "
+#~ "mit einer Artikel-Kategorie-Regel."
+
+#~ msgid "Only trigger when a certain product is purchased."
+#~ msgstr "Nur auslösen, wenn ein bestimmtes Produkt gekauft wird."
+
+#~ msgid "Created: <b>%s</b>"
+#~ msgstr "Erstellt: <b>%s</b>"
+
+#~ msgid ""
+#~ "This trigger checks for subscriptions that are due to expire/end once "
+#~ "every 24 hours."
+#~ msgstr ""
+#~ "Dieser Auslöser prüft alle 24 Stunden, ob Abonnements enden/ablaufen."
+
+#~ msgid ""
+#~ "This trigger checks for upcoming subscription renewals once every 24 "
+#~ "hours."
+#~ msgstr ""
+#~ "Dieser Auslöser prüft alle 24 Stunden, ob Abonnement-Verlängerungen "
+#~ "anstehen."
+
+#~ msgid "Please enter your <a href=\"%s\">license here</a>."
+#~ msgstr "Bitte geben Sie Ihre <a href=\"%s\">Lizenz hier ein</a>."
+
+#~ msgid "Object must be saved before adding meta."
+#~ msgstr "Objekt muss vor dem Hinzufügen von Meta-Daten gesichert werden."
+
+#~ msgid "Search for a product&hellip;"
+#~ msgstr "Suche nach Produkt&hellip;"
+
+#~ msgid ""
+#~ "Displays the date shipped url as set with the <a href='%s' "
+#~ "target='_blank'>WooThemes Shipment Tracking</a> plugin."
+#~ msgstr ""
+#~ "Zeigt die Versanddatum-URL, wie es im <a href='%s' "
+#~ "target='_blank'>WooThemes Shipment Tracking</a> Plugin festgelegt ist."
+
+#~ msgid ""
+#~ "If the customer has an account, the user meta table is used. If the "
+#~ "customer is a guest, the guest meta table is used."
+#~ msgstr ""
+#~ "Wenn der Kunde ein Konto besitzt, wird die Benutzer-Meta-Tabelle genutzt. "
+#~ "Wenn der Kunde ein Gast ist, wird die Gast-Meta-Tabelle genutzt."
+
+#~ msgid "Order Line Item"
+#~ msgstr "Bestellposition"
+
+#~ msgid ""
+#~ "Select which subscription products to trigger this workflow for. Leave "
+#~ "blank to apply this trigger to all subscription products."
+#~ msgstr ""
+#~ "Wählen Sie, für welche Abonnement-Produkte ausgelöst werden soll. Leer "
+#~ "lassen für alle Abonnement-Produkte."
+
+#~ msgid ""
+#~ "This can be used for workflows that are not run immediately as it will "
+#~ "check that the related subscription is still active just before running."
+#~ msgstr ""
+#~ "Dies kann für Workflows genutzt werden, die nicht sofort laufen, da es "
+#~ "direkt vor dem Durchlaufen prüft, ob das zugehörige Abonnement noch aktiv "
+#~ "ist."
+
+#~ msgid "Maximum days since last purchase (optional)"
+#~ msgstr "Höchstzahl Tage seit letzter Bestellung (optional)"
+
+#~ msgid ""
+#~ "Optional parameter to modify the display of the datetime. Default is "
+#~ "MySQL format (Y-m-d H:i:s)"
+#~ msgstr ""
+#~ "Optionaler Parameter, um das Datumsformat zu ändern. Standard ist MySQL-"
+#~ "Format (Y-m-d H:i:s)"
+
+#~ msgid "Displays the formatted total spent for the customer."
+#~ msgstr "Zeigt die formatierte Gesamtsumme der Bestellung für den Kunden."
+
+#~ msgid "Displays the formatted total of the order."
+#~ msgstr "Zeigt die formatierte Gesamtsumme der Bestellung."
+
+#~ msgid "Error: Email preview data could not be found."
+#~ msgstr "Fehler: E-Mail-Vorschau-Daten konnten nicht gefunden werden."
+
+#~ msgid "License Expires"
+#~ msgstr "Lizenz läuft ab"
+
+#~ msgid "More about custom functions here."
+#~ msgstr "Mehr über eigene Funktionen hier."
+
+#~ msgid "Add Tags To Customer"
+#~ msgstr "Schlagworte zu Kunde hinzufügen"
+
+#~ msgid "Remove Tags From Customer"
+#~ msgstr "Schlagworte von Kunde entfernen"
+
+#~ msgid "Add / Update Customer Meta"
+#~ msgstr "Kunden-Meta hinzufügen/ändern"
+
+#~ msgid "Meta key"
+#~ msgstr "Meta-Schlüssel"
+
+#~ msgid "Meta value"
+#~ msgstr "Meta-Wert"
+
+#~ msgid "Change Order Status"
+#~ msgstr "Bestellstatus ändern"
+
+#~ msgid "Add / Update Order Meta"
+#~ msgstr "Bestell-Meta hinzufügen/ändern"
+
+#~ msgid ""
+#~ "This action allows you to send a HTML or plain text email. If you wish to "
+#~ "send a HTML email choose the WooCommerce Default as your template. This "
+#~ "means the email will match the style of your WooCommerce transactional "
+#~ "emails."
+#~ msgstr ""
+#~ "Diese Aktion erlaubt es, eine HTML- oder Text-E-Mail zu senden. Wenn Sie "
+#~ "eine HTML-E-Mail senden möchten, wählen Sie WooCommerce Default als "
+#~ "Template aus. Dies bedeutet, dass die E-Mail so aussieht wie die "
+#~ "WooCommerce-E-Mails."
+
+#~ msgid "Change Subscription Status"
+#~ msgstr "Abonnement-Status ändern"
+
+#~ msgid "Add / Update Subscription Meta"
+#~ msgstr "Abonnement-Meta hinzufügen / ändern"
+
+#~ msgid "Add / Update Product Meta"
+#~ msgstr "Produkt-Meta hinzufügen/ändern"
+
+#~ msgid "Customer Meta"
+#~ msgstr "Kunden-Meta"
+
+#~ msgid "Is POS Order?"
+#~ msgstr "Ist POS-Bestellung?"
+
+#~ msgid "Order Meta"
+#~ msgstr "Bestellung: Meta"
+
+#~ msgid "Subscription Meta"
+#~ msgstr "Abonnement-Meta"
+
+#~ msgid ""
+#~ "Are you sure you want to manually trigger the <strong>%s</strong> "
+#~ "workflow for <strong>%s</strong> orders? This can not be undone."
+#~ msgstr ""
+#~ "Sind Sie sicher, dass Sie den Workflow <strong>%s</strong> für <strong>"
+#~ "%s</strong> Bestellungen manuell starten wollen? Dies kann nicht "
+#~ "rückgängig gemacht werden."
+
+#~ msgid ""
+#~ "<strong>Please note:</strong> This list only indicates the orders that "
+#~ "match your selected date period. These orders have yet to be validated "
+#~ "against the selected workflow."
+#~ msgstr ""
+#~ "<strong>Bitte beachten Sie:</strong> Diese Liste zeigt nur die "
+#~ "Bestellungen, die in die gewählte Zeitspanne fallen. Diese Bestellungen "
+#~ "wurden noch nicht mit dem gewählten Workflow abgeglichen."
+
+#~ msgid ""
+#~ "Are you sure you want to manually trigger the <strong>%s</strong> "
+#~ "workflow for <strong>%s</strong> subscriptions? This can not be undone."
+#~ msgstr ""
+#~ "Sind Sie sicher, dass du den Workflow <strong>%s</strong> für <strong>%s</"
+#~ "strong> Abonnements starten möchten? Dies kann nicht rückgängig gemacht "
+#~ "werden."
+
+#~ msgid ""
+#~ "<strong>Please note:</strong> This list only indicates the subscriptions "
+#~ "that match your selected date period. These subscriptions have yet to be "
+#~ "validated against the selected workflow."
+#~ msgstr ""
+#~ "<strong>Bitte beachten Sie:</strong> Diese Liste zeigt nur die "
+#~ "Abonnements, die in die gewählte Zeitspanne fallen. Diese Abonnements "
+#~ "wurden noch nicht mit dem gewählten Workflow abgeglichen."
+
+#~ msgid "This trigger does not fire until the review has been approved."
+#~ msgstr ""
+#~ "Dieser Auslöser startet nicht, bevor die Bewertung freigegeben wurde."

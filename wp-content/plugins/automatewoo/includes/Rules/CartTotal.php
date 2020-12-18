@@ -4,6 +4,7 @@
 namespace AutomateWoo\Rules;
 
 use AutomateWoo\Cart;
+use AutomateWoo\Data_Types;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -12,8 +13,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class CartTotal extends Abstract_Number {
 
-	/** @var array  */
-	public $data_item = 'cart';
+	/** @var string  */
+	public $data_item = Data_Types::CART;
 
 	public $support_floats = true;
 

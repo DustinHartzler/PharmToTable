@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Workflows\Factory;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
@@ -69,7 +71,7 @@ class Report_Conversions_List extends Admin_List_Table {
 	 * @return string
 	 */
 	function column_workflow( $order ) {
-		if ( $workflow = Workflow_Factory::get( $order->get_meta( '_aw_conversion' ) ) ) {
+		if ( $workflow = Factory::get( $order->get_meta( '_aw_conversion' ) ) ) {
 			return $this->format_workflow_title( $workflow );
 		}
 

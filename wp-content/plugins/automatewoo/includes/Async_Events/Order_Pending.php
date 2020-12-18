@@ -38,7 +38,7 @@ class Order_Pending extends Abstract_Async_Event {
 	 */
 	public function schedule_pending_check( $order_id ) {
 		$delay = apply_filters( 'automatewoo_order_pending_check_delay', 5 ) * 60;
-		Events::schedule_event( time() + $delay, 'automatewoo_check_for_pending_order', [ (int) $order_id ] );
+		$this->action_scheduler->schedule_single( gmdate( 'U' ) + $delay, 'automatewoo_check_for_pending_order', [ (int) $order_id ] );
 	}
 
 	/**
@@ -49,7 +49,7 @@ class Order_Pending extends Abstract_Async_Event {
 	 */
 	public function maybe_clear_scheduled_check( $order_id, $old_status ) {
 		if ( $old_status === 'pending' ) {
-			Events::clear_scheduled_hook( 'automatewoo_check_for_pending_order', [ (int) $order_id ] );
+			$this->action_scheduler->cancel( 'automatewoo_check_for_pending_order', [ (int) $order_id ] );
 		}
 	}
 

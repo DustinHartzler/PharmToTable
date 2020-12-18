@@ -1,4 +1,53 @@
 == AutomateWoo Changelog ==
+2020-11-17 - version 5.1.3
+* Fix - Ensure AW admin works if WooCommerce Admin is disabled via the woocommerce_admin_disabled filter
+* New - Add warning notice that some features will not work if WooCommerce Admin is disabled
+
+2020-11-10 - version 5.1.2
+* Fix - Issues where AW caused the WordPress footer to be hidden on all admin pages
+* Fix - Misleading title of workflow preset
+* Fix - Add "automatewoo/workflow/created" action when creating a workflow from a preset
+* Fix - Issue where incorrect taxes could be applied to an order in some cases when the Membership Created trigger was used
+* New - Notice regarding planned changes to minimum requirements: WooCommerce >= 4.5
+
+2020-10-20 - version 5.1.1
+* Fix - Issue where abandoned carts job could incorrectly throw an exception in some cases
+
+2020-10-15 - version 5.1.0
+* Announcement - https://woocommerce.com/posts/automatewoo-5-1/
+
+* New Minimum Requirements - WordPress 5.3 and WooCommerce 4.3
+* Database Upgrade Required - Use `date-desc` sorting for existing `shop.products` variables
+
+* New - Preset workflows. Choose from a preset workflow to quickly and easily create your own workflows
+* New - Add rule: "Shop - Current Date/Time"
+* New - Add "Default" sorting for the "shop.products" variable
+* New - Add “Month” unit for scheduled and delayed workflows
+* New - Implement the "matches regex", "is blank" and "is not blank" conditions for some manual workflows
+* Tweak - Begin using ActionScheduler to run certain processes
+* Tweak - Make the "Order - Customer Field" and "Subscription - Custom Field" rules quick filterable and ready for use with manual workflows
+* Tweak - Removed "automatewoo-clipboard" script and use the newly added clipboard-js script in WordPress core
+* Tweak - Adjustments to opt-in tracking data for AutomateWoo sent to WooCommerce:
+        * Workflow tab viewed event added
+        * Preset workflow list button clicked event added
+    To disable this tracking, opt out of WooCommerce tracking, see https://woocommerce.com/usage-tracking/
+* Fix - Subscription early renewal redirect URL is now correctly URL encoded
+* Fix - AutomateWoo > Dashboard - Console errors when resizing browser window
+* Dev - Deprecated the following: - AutomateWoo\Action_Subscription_Edit_Item_Abstract::get_recalculate_coupons_compatibility_text()
+* Dev - Added "Query_Abstract::get_results_as_ids()" and deprecated "Query_Abstract::set_return()"
+
+2020-09-07 - version 5.0.3
+* Fix - Issue where PHPMailer errors were not retrieved correctly
+* Fix - Remove deprecated usage of the "WC_Order_Item" class
+* Fix - Incorrect use of undefined WC_ADMIN_APP constant (from 5.0.2)
+
+2020-09-03 - version 5.0.2
+* Tweak - Removed usage of the deprecated "woocommerce_before_cart_item_quantity_zero" action
+* Fix - Manual workflows not working with variable timing
+* Fix - Numeric rules not matching decimal values
+
+2020-08-10 - version 5.0.1
+* New - Add support for WordPress 5.5 and WooCommerce 4.4
 
 2020-07-29 - version 5.0.0
 

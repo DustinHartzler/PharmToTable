@@ -3,11 +3,11 @@
  */
 import { __, sprintf } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
+import { Button } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
-import { Button } from '../../base/components';
 import { getWorkflowEditUrl } from '../../base/utils';
 
 const NoResults = ( { dataType, workflowId } ) => {
@@ -22,11 +22,7 @@ const NoResults = ( { dataType, workflowId } ) => {
 				dataType
 			) }
 			<div className="automatewoo-workflow-runner-buttons">
-				<Button
-					isDefault
-					isLarge
-					href={ getWorkflowEditUrl( workflowId ) }
-				>
+				<Button isSecondary href={ getWorkflowEditUrl( workflowId ) }>
 					{ __( 'Edit workflow', 'automatewoo' ) }
 				</Button>
 			</div>

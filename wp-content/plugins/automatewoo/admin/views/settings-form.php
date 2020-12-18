@@ -1,12 +1,11 @@
 <?php
-// phpcs:ignoreFile
 /**
- * @package		AutomateWoo/Admin/Views
+ * @package  AutomateWoo/Admin/Views
  *
- * @var $tab AutomateWoo\Admin_Settings_Tab_Abstract
+ * @var AutomateWoo\Admin_Settings_Tab_Abstract $tab
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 ?>
 

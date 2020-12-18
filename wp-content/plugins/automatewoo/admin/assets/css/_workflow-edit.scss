@@ -18,51 +18,19 @@ body.post-type-aw_workflow {
 			@include loader();
 		}
 	}
-
-
-	.postbox {
-
-		h3.hndle {
-			cursor: default !important;
-		}
-
-		.handlediv {
-			&:before {
-				right: 12px;
-				font: 400 20px/1 dashicons;
-				speak: none;
-				display: inline-block;
-				padding: 8px 10px;
-				top: 0;
-				position: relative;
-				-webkit-font-smoothing: antialiased;
-				-moz-osx-font-smoothing: grayscale;
-				text-decoration: none !important;
-
-				content: '\f142';
-			}
-		}
-
-		&.closed {
-			.handlediv {
-				&:before {
-					content: '\f140';
-				}
-			}
-		}
-	}
 }
 
 
-
+// Hide unwanted metabox headers
 #aw_save_box,
 #aw_timing_box,
 #aw_variables_box {
-	.handlediv, .hndle {
+	.handlediv,
+	.hndle,
+	.postbox-header { // .postbox-header was added in WP 5.5
 		display: none;
 	}
 }
-
 
 
 #post-body .automatewoo-metabox.postbox {
@@ -106,6 +74,23 @@ body.post-type-aw_workflow {
 			position: relative;
 			top: 2px;
 			left: -11px;
+		}
+	}
+}
+
+body.wc-wp-version-gte-55 {
+	.automatewoo-metabox.postbox {
+		h2.hndle {
+			small {
+				font-weight: normal;
+				padding-left: 6px;
+				flex-grow: 1;
+			}
+
+			.automatewoo-help-link {
+				top: 1px;
+				left: 0;
+			}
 		}
 	}
 }

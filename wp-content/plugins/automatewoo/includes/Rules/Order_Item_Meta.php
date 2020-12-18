@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo\Rules;
 
@@ -10,22 +9,27 @@ defined( 'ABSPATH' ) || exit;
  */
 class Order_Item_Meta extends Abstract_Meta {
 
+	/** @var string */
 	public $data_item = 'order_item';
 
-
-	function init() {
+	/**
+	 * Init the rule
+	 */
+	public function init() {
 		$this->title = __( 'Order Line Item - Custom Field', 'automatewoo' );
 	}
 
 
 	/**
+	 * Validate the rule based on options set by a workflow
+	 *
 	 * @param \WC_Order_Item_Product $order_item
-	 * @param $compare_type
-	 * @param $value_data
+	 * @param string                 $compare_type
+	 * @param array                  $value_data
 	 *
 	 * @return bool
 	 */
-	function validate( $order_item, $compare_type, $value_data ) {
+	public function validate( $order_item, $compare_type, $value_data ) {
 
 		$value_data = $this->prepare_value_data( $value_data );
 

@@ -2,6 +2,7 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Rest_Api\Controllers\WorkflowPresets as WorkflowPresetsController;
 use AutomateWoo\Rest_Api\Controllers\Workflows as WorkflowsController;
 use AutomateWoo\Rest_Api\Controllers\ManualWorkflowRunner as ManualWorkflowRunnerController;
 use AutomateWoo\Rest_Api\Utilities\Controller_Namespace;
@@ -45,6 +46,7 @@ final class Rest_Api {
 		$classes = [
 			WorkflowsController::class,
 			ManualWorkflowRunnerController::class,
+			WorkflowPresetsController::class,
 		];
 
 		$controllers = [];

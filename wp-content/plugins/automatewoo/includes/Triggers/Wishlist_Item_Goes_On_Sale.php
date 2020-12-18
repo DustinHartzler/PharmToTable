@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Jobs\WishlistItemOnSale;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -27,9 +29,9 @@ class Trigger_Wishlist_Item_Goes_On_Sale extends Trigger {
 
 	function register_hooks() {
 		$integration = Wishlists::get_integration();
-
-		if ( ! $integration )
+		if ( ! $integration ) {
 			return;
+		}
 
 		add_action( 'automatewoo/products/gone_on_sale', [ $this, 'handle_products_on_sale' ] );
 	}
@@ -38,31 +40,24 @@ class Trigger_Wishlist_Item_Goes_On_Sale extends Trigger {
 	/**
 	 * @param array $products
 	 */
-	function handle_products_on_sale( $products ) {
-		if ( ! $this->has_workflows() ) {
+	public function handle_products_on_sale( $products ) {
+		if ( ! $this->has_workflows() || empty( $products ) ) {
 			return;
 		}
-		$this->start_background_process( Wishlists::get_all_wishlist_ids(), $products );
-	}
 
-
-	/**
-	 * @param array $wishlists
-	 * @param array $products
-	 */
-	function start_background_process( $wishlists, $products ) {
-
-		/** @var Background_Processes\Wishlist_Item_On_Sale $process */
-		$process = Background_Processes::get('wishlist_item_on_sale');
-
-		foreach( $wishlists as $wishlist_id ) {
-			$process->push_to_queue([
-				'wishlist_id' => $wishlist_id,
-				'product_ids' => $products
-			]);
+		try {
+			/** @var WishlistItemOnSale $job */
+			$job = AW()->job_service()->get_job( 'wishlist_item_on_sale' );
+			$job->start( [ 'products' => $products ] );
+		} catch ( \Exception $e ) {
+			Logger::error(
+				'jobs',
+				sprintf(
+					'Exception thrown when attempting to start the wishlist item on sale job: %s',
+					$e->getMessage()
+				)
+			);
 		}
-
-		$process->start();
 	}
 
 

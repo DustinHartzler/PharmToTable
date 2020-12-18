@@ -4,6 +4,11 @@
 import { __, sprintf } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 
+/**
+ * Internal dependencies
+ */
+import './index.scss';
+
 const ProgressBar = ( { progress } ) => {
 	const progressString = `${ Math.min( progress, 100 ) }%`;
 

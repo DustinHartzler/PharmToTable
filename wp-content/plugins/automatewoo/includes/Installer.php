@@ -21,6 +21,7 @@ class Installer {
 		'3.6.0',
 		'4.0.0',
 		'5.0.0',
+		'5.1.0',
 	];
 
 	/** @var int  */
@@ -114,8 +115,6 @@ class Installer {
 	private static function first_install() {
 		// Default all new installs to use WC.com license system, existing installs continue to use AW.com
 		update_option( 'automatewoo_license_system', 'wc', true );
-
-		Admin_Notices::add_notice( 'welcome' );
 
 		do_action( 'automatewoo_first_installed' );
 	}
@@ -279,7 +278,7 @@ class Installer {
 		Events::schedule_async_event( 'automatewoo_updated_async' );
 
 		// Queue the requirements changes notice to show (if necessary).
-		Admin_Notices::add_notice( 'requirements_changes' );
+		AdminNotices::add_notice( 'requirements_changes' );
 	}
 
 
@@ -310,6 +309,7 @@ class Installer {
 
 		update_option( '_automatewoo_created_pages', $created_pages, false );
 	}
+
 
 
 }

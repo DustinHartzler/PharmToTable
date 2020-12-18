@@ -32,7 +32,9 @@ abstract class Query_Abstract {
 	/** @var array - top array level uses AND condition, for OR conditions nest */
 	public $where_meta = [];
 
-	/** @var string */
+	/**
+	 * @var string Possible values: 'objects', 'ids'
+	 */
 	protected $return = 'objects';
 
 	/** @var int */
@@ -163,6 +165,10 @@ abstract class Query_Abstract {
 
 
 	/**
+	 * @deprecated in 5.1.0 use self::get_results_as_ids() instead
+	 *
+	 * @todo add deprecated wc_deprecated_function() in future version
+	 *
 	 * @param string $return
 	 * 	'objects' (default) | 'ids'
 	 * @return $this
@@ -413,6 +419,19 @@ abstract class Query_Abstract {
 		}
 	}
 
+	/**
+	 * Get query results as item IDs.
+	 *
+	 * @since 5.1.0
+	 *
+	 * @return int[]
+	 */
+	public function get_results_as_ids() {
+		$this->return = 'ids';
+		$ids = array_map( 'intval', $this->get_results() );
+		$this->return = 'objects';
+		return $ids;
+	}
 
 	/**
 	 * @return int
@@ -447,7 +466,7 @@ abstract class Query_Abstract {
 		$calc_found_rows = $this->calc_found_rows;
 
 		$this->set_limit( 1 );
-		$this->set_return( 'ids' );
+		$this->return = 'ids';
 		$this->set_calc_found_rows( false );
 
 		$results = $this->get_results();

@@ -2,6 +2,8 @@
 
 namespace AutomateWoo\Async_Events;
 
+use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
+
 /**
  * Class Abstract_Async_Event
  *
@@ -25,9 +27,23 @@ abstract class Abstract_Async_Event {
 	protected $event_dependencies;
 
 	/**
+	 * @var ActionSchedulerInterface
+	 */
+	protected $action_scheduler;
+
+	/**
 	 * Init the event.
 	 */
 	abstract public function init();
+
+	/**
+	 * Abstract_Async_Event constructor.
+	 *
+	 * @param ActionSchedulerInterface $action_scheduler
+	 */
+	public function __construct( ActionSchedulerInterface $action_scheduler ) {
+		$this->action_scheduler = $action_scheduler;
+	}
 
 	/**
 	 * Get the event name.

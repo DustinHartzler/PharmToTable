@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo\Rules;
 
@@ -10,22 +9,27 @@ defined( 'ABSPATH' ) || exit;
  */
 class Subscription_Meta extends Abstract_Meta {
 
+	/** @var string */
 	public $data_item = 'subscription';
 
-
-	function init() {
+	/**
+	 * Init the rule
+	 */
+	public function init() {
 		$this->title = __( 'Subscription - Custom Field', 'automatewoo' );
 	}
 
 
 	/**
-	 * @param $subscription \WC_Subscription
-	 * @param $compare_type
-	 * @param $value_data
+	 * Validate the rule based on options set by a workflow
+	 *
+	 * @param \WC_Subscription $subscription
+	 * @param string           $compare_type
+	 * @param array            $value_data
 	 *
 	 * @return bool
 	 */
-	function validate( $subscription, $compare_type, $value_data ) {
+	public function validate( $subscription, $compare_type, $value_data ) {
 
 		$value_data = $this->prepare_value_data( $value_data );
 

@@ -49,7 +49,7 @@ class System_Checks {
 			return;
 		}
 
-		Events::schedule_event( time() + 120, 'automatewoo/system_check' );
+		AW()->action_scheduler()->schedule_single( gmdate( 'U' ) + 120, 'automatewoo/system_check' );
 
 		set_transient( 'automatewoo_background_system_check', true, DAY_IN_SECONDS * 4 );
 	}

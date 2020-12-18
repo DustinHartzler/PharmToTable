@@ -1,7 +1,8 @@
 /**
- * External Dependencies
+ * External dependencies
  */
 import apiFetch from '@wordpress/api-fetch';
+
 /**
  * Internal dependencies
  */

@@ -2,6 +2,8 @@
 
 namespace AutomateWoo\Rules;
 
+use AutomateWoo\Data_Types;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -16,7 +18,7 @@ class Customer_Purchased_Products extends Product_Select_Rule_Abstract {
 	 *
 	 * @var string
 	 */
-	public $data_item = 'customer';
+	public $data_item = Data_Types::CUSTOMER;
 
 	/**
 	 * Init the rule.

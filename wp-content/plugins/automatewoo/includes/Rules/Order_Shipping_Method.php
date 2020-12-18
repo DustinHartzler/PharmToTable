@@ -31,8 +31,7 @@ class Order_Shipping_Method extends Preloaded_Select_Rule_Abstract {
 		$choices = [];
 
 		foreach ( WC()->shipping()->get_shipping_methods() as $method_id => $method ) {
-			// get_method_title() added in WC 2.6
-			$choices[$method_id] = is_callable( [ $method, 'get_method_title' ] ) ? $method->get_method_title() : $method->get_title();
+			$choices[ $method_id ] = $method->get_method_title();
 		}
 
 		return $choices;

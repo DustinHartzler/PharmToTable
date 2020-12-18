@@ -35,7 +35,7 @@ class Login_Redirect {
 		if ( is_user_logged_in() ) {
 			Frontend_Endpoints::redirect_while_preserving_url_args( $redirect, [ 'redirect-url' ] );
 		} else {
-			$redirect = add_query_arg( [ 'aw-redirect-after-login' => $redirect ], wc_get_page_permalink( 'myaccount' ) );
+			$redirect = add_query_arg( [ 'aw-redirect-after-login' => rawurlencode( $redirect ) ], wc_get_page_permalink( 'myaccount' ) );
 			Frontend_Endpoints::redirect_while_preserving_url_args( $redirect, [ 'redirect-url' ] );
 		}
 	}
