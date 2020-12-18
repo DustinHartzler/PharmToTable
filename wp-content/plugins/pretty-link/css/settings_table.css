@@ -4,6 +4,7 @@ table.prli-settings-table {
   width: 98%;
   border-spacing: 0;
   border-collapse: collapse;
+  min-height: 90vh;
 }
 
 table.prli-settings-table td.prli-settings-table-nav {

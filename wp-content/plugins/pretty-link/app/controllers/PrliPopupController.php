@@ -6,7 +6,7 @@ class PrliPopupController extends PrliBaseController {
     // This is an array of the currently defined popups ...
     // used to validate that the popup specified actually exists
     $this->popups = array(
-      'rating' => array(
+      /*'rating' => array(
         'after_usage' => array(
           'links' => 1,
           'clicks' => 5
@@ -25,7 +25,7 @@ class PrliPopupController extends PrliBaseController {
         'lite_only_popup' => true,
         'delay' => 2*WEEK_IN_SECONDS,
         'delay_after_last_popup' => DAY_IN_SECONDS,
-      ),
+      ),*/
     );
   }
 
@@ -75,7 +75,7 @@ class PrliPopupController extends PrliBaseController {
     if(!$this->on_pretty_link_page()) { return; }
 
     // Bail on update/welcome page
-    if (isset($_GET['page']) && ($_GET['page'] == 'pretty-link-welcome' || $_GET['page'] == 'pretty-link-update')) { return;}
+    if (isset($_GET['page']) && ($_GET['page'] == 'pretty-link-welcome' || $_GET['page'] == 'pretty-link-updates')) { return;}
 
     // If this isn't a Pretty Link authorized user then bail
     if(!PrliUtils::is_authorized()) { return; }

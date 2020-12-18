@@ -47,16 +47,69 @@ class PrliAppController extends PrliBaseController {
 
     add_action('in_admin_header', array($this,'pl_admin_header'), 0);
 
+    add_action( 'wp_ajax_pl_dismiss_upgrade_header', array( $this, 'dismiss_upgrade_header' ) );
+
     // Admin footer text.
     add_filter( 'admin_footer_text', array( $this, 'admin_footer' ), 1, 2 );
   }
 
+  /**
+   * Dismisses the PL upgrade header bar.
+   *
+   * @return void
+   */
+  public function dismiss_upgrade_header() {
+
+    // Security check
+    if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'pl_dismiss_upgrade_header' ) ) {
+      die();
+    }
+
+    update_option( 'pl_dismiss_upgrade_header', true );
+  }
+
+
   public function pl_admin_header() {
-    global $current_screen;
+    global $current_screen, $plp_update;
 
     if($this->on_pretty_link_page()) {
+      $dismissed = get_option( 'pl_dismiss_upgrade_header', false );
+      if ( ! empty( $dismissed ) ) {
+        return;
+      }
       ?>
+      <?php if ( ! $plp_update->is_installed() ) : ?>
+        <div class="pl-upgrade-header" id="pl-upgrade-header">
+          <span id="close-pl-upgrade-header">X</span>
+          <?php _e( 'You\'re using Pretty Links Lite. To unlock more features, consider <a href="https://prettylinks.com/pl/main-menu/upgrade?plugin-upgrade-header">upgrading to Pro.</a>', 'pretty-link' ); ?>
+        </div>
+      <?php endif; ?>
       <div id="pl-admin-header"><img class="pl-logo" src="<?php echo PRLI_IMAGES_URL . '/pretty-links-logo-color-white.svg'; ?>" /></div>
+      <script>
+        jQuery(document).ready(function($) {
+          $('#close-pl-upgrade-header').click(function(event) {
+            var upgradeHeader = $('#pl-upgrade-header');
+            upgradeHeader.fadeOut();
+            $.ajax({
+              url: ajaxurl,
+              type: 'POST',
+              data: {
+                action: 'pl_dismiss_upgrade_header',
+                nonce: "<?php echo wp_create_nonce( 'pl_dismiss_upgrade_header' ); ?>"
+              },
+            })
+            .done(function() {
+              console.log("success");
+            })
+            .fail(function() {
+              console.log("error");
+            })
+            .always(function() {
+              console.log("complete");
+            });
+          });
+        });
+      </script>
       <?php
     }
   }
@@ -78,35 +131,35 @@ class PrliAppController extends PrliBaseController {
     if(!$plp_update->is_installed()) {
       add_submenu_page(
         "edit.php?post_type={$pl_link_cpt}",
-        esc_html__('Link Categories [Pro Only]', 'pretty-link'),
-        esc_html__('Categories [Pro]', 'pretty-link'),
+        esc_html__('Link Categories', 'pretty-link'),
+        esc_html__('Categories', 'pretty-link'),
         $role,
-        "https://prettylinks.com/pl/main-menu/upgrade?categories",
-        false
+        "pretty-link-upgrade-categories",
+        array( $plp_update, 'upgrade_categories' )
       );
       add_submenu_page(
         "edit.php?post_type={$pl_link_cpt}",
-        esc_html__('Link Tags [Pro Only]', 'pretty-link'),
-        esc_html__('Tags [Pro]', 'pretty-link'),
+        esc_html__('Link Tags', 'pretty-link'),
+        esc_html__('Tags', 'pretty-link'),
         $role,
-        "https://prettylinks.com/pl/main-menu/upgrade?tags",
-        false
+        "pretty-link-upgrade-tags",
+        array( $plp_update, 'upgrade_tags' )
       );
       add_submenu_page(
         "edit.php?post_type={$pl_link_cpt}",
-        esc_html__('Link Reports [Pro Only]', 'pretty-link'),
-        esc_html__('Reports [Pro]', 'pretty-link'),
+        esc_html__('Link Reports', 'pretty-link'),
+        esc_html__('Reports', 'pretty-link'),
         $role,
-        "https://prettylinks.com/pl/main-menu/upgrade?reports",
-        false
+        "pretty-link-upgrade-reports",
+        array( $plp_update, 'upgrade_reports' )
       );
       add_submenu_page(
         "edit.php?post_type={$pl_link_cpt}",
-        esc_html__('Import / Export [Pro Only]', 'pretty-link'),
-        esc_html__('Import / Export [Pro]', 'pretty-link'),
+        esc_html__('Import / Export', 'pretty-link'),
+        esc_html__('Import / Export', 'pretty-link'),
         $role,
-        "https://prettylinks.com/pl/main-menu/upgrade?import-export",
-        false
+        "pretty-link-upgrade-import-export",
+        array( $plp_update, 'upgrade_import_export' )
       );
     }
 
@@ -135,7 +188,6 @@ class PrliAppController extends PrliBaseController {
 
     $onboarding_ctrl = new PrliOnboardingController();
     add_submenu_page('options.php', __('Welcome', 'pretty-link'), null, $role, 'pretty-link-welcome', array($onboarding_ctrl, 'welcome_route'));
-    add_submenu_page('options.php', __("What's New", 'pretty-link'), null, $role, 'pretty-link-update', array($onboarding_ctrl, 'update_route'));
   }
 
   /**
@@ -221,6 +273,8 @@ class PrliAppController extends PrliBaseController {
     $include_array = array(
       $slug,
       "post-new.php?post_type={$pl_link_cpt}",
+      "edit.php?post_type={$pl_link_cpt}&page=pretty-link-upgrade-categories",
+      "edit.php?post_type={$pl_link_cpt}&page=pretty-link-upgrade-tags",
       "edit-tags.php?taxonomy={$categories_ctax}&amp;post_type={$pl_link_cpt}",
       'https://prettylinks.com/pl/main-menu/upgrade?categories',
       "edit-tags.php?taxonomy={$tags_ctax}&amp;post_type={$pl_link_cpt}",
@@ -235,7 +289,7 @@ class PrliAppController extends PrliBaseController {
       'pretty-link-updates'
     );
 
-    $i = (count($include_array) - 1);
+    $i = count($include_array);
 
     foreach($submenu[$slug] as $sub) {
       $include_order = array_search($sub[2], $include_array);

@@ -488,5 +488,29 @@ class PrliUpdateController {
     exit;
   }
 
+  public function upgrade_categories() {
+    $section_title = esc_html__( 'Link Categories', 'pretty-link' );
+    $upgrade_link = 'https://prettylinks.com/pl/main-menu/upgrade?categories';
+    include_once PRLI_VIEWS_PATH . "/admin/upgrade/categories.php";
+  }
+
+  public function upgrade_tags() {
+    $section_title = esc_html__( 'Link Tags', 'pretty-link' );
+    $upgrade_link = 'https://prettylinks.com/pl/main-menu/upgrade?tags';
+    include_once PRLI_VIEWS_PATH . "/admin/upgrade/tags.php";
+  }
+
+  public function upgrade_reports() {
+    $section_title = esc_html__( 'Link Reports', 'pretty-link' );
+    $upgrade_link = 'https://prettylinks.com/pl/main-menu/upgrade?reports';
+    include_once PRLI_VIEWS_PATH . "/admin/upgrade/reports.php";
+  }
+
+  public function upgrade_import_export() {
+    $section_title = esc_html__( 'Import / Export', 'pretty-link' );
+    $upgrade_link = 'https://prettylinks.com/pl/main-menu/upgrade?import-export';
+    include_once PRLI_VIEWS_PATH . "/admin/upgrade/import-export.php";
+  }
+
 } //End class
 

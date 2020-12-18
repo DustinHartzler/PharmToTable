@@ -3,8 +3,8 @@ Contributors: supercleanse, cartpauj
 Donate link: https://prettylinks.com
 Tags: links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, social media, rewrite, shorturl, shorten, shortening, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
 Requires at least: 5.1
-Tested up to: 5.5
-Stable tag: 3.1.1
+Tested up to: 5.6
+Stable tag: 3.2.1
 
 The best WordPress link management, branding, tracking & sharing plugin. Link shortener helps you easily make pretty & trackable shortlinks.
 
@@ -66,6 +66,11 @@ http://blairwilliams.com/w7a
 3. Make sure you have changed your permalink Common Settings in Settings -> Permalinks away from "Default" to something else. I prefer using custom and then "/%year%/%month%/%postname%/" for the simplest possible URL slugs with the best performance.
 
 == Changelog ==
+= 3.2.1 =
+* UI Tweaks
+* Pro: Fix auto-created links not using requested slug
+* Pro: Link rotation weights of 1% supported now
+
 = 3.1.1 =
 * Remove duplicate queries to help performance
 * Fix compatibility issue with WPML language prefix in URL's

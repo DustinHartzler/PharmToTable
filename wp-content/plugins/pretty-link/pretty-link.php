@@ -3,7 +3,7 @@
 Plugin Name: Pretty Links
 Plugin URI: https://prettylinks.com/pl/plugin-uri
 Description: Shrink, track and share any URL using your website and brand!
-Version: 3.1.1
+Version: 3.2.1
 Author: Pretty Links
 Author URI: http://prettylinks.com
 Text Domain: pretty-link

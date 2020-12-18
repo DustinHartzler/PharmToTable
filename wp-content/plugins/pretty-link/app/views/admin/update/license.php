@@ -36,7 +36,7 @@ $mothership_license_str = isset($_POST[$plp_update->mothership_license_str]) ? s
   <?php if(!$plp_update->is_installed()): ?>
     <div>&nbsp;</div>
 
-    <div class="prli-page-title"><?php esc_html_e('Upgrade to Pro', 'pretty-link'); ?></div>
+    <div class="prli-page-title" id="prli_upgrade"><?php esc_html_e('Upgrade to Pro', 'pretty-link'); ?></div>
 
     <div>
       <?php

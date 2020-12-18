@@ -121,7 +121,7 @@ class PrliLinksController extends PrliBaseController {
   }
 
   public function add_meta_boxes() {
-    global $post_id, $prli_link;
+    global $post_id, $prli_link, $plp_update;
 
     add_meta_box(
       'pretty-link-settings',
@@ -129,6 +129,15 @@ class PrliLinksController extends PrliBaseController {
       array($this, 'link_meta_box'), PrliLink::$cpt,
       'normal', 'high'
     );
+
+    if ( ! $plp_update->is_installed() ) {
+      add_meta_box(
+        'pretty-link-advanced-features',
+        esc_html__('Advanced Features', 'pretty-link'),
+        array($this, 'advanced_featured_meta_box'), PrliLink::$cpt,
+        'side', 'default'
+      );
+    }
 
     remove_meta_box('slugdiv', PrliLink::$cpt, 'normal');
   }
@@ -145,6 +154,21 @@ class PrliLinksController extends PrliBaseController {
       $values = $this->setup_edit_vars($link);
     }
     require PRLI_VIEWS_PATH . '/links/form.php';
+  }
+
+  public function advanced_featured_meta_box($post, $args) {
+    ?>
+    <ul class="upgrade-features">
+      <li><?php esc_html_e( 'Advanced Redirect Types', 'pretty-link' ); ?></li>
+      <li><?php esc_html_e( 'Auto Create Pretty Links', 'pretty-link' ); ?></li>
+      <li><?php esc_html_e( 'Auto-Link Keywords', 'pretty-link' ); ?></li>
+      <li><?php esc_html_e( 'Support & Updates', 'pretty-link' ); ?></li>
+      <li><?php esc_html_e( 'Link Categories', 'pretty-link' ); ?></li>
+      <li><?php esc_html_e( 'Link Tags', 'pretty-link' ); ?></li>
+      <li><?php esc_html_e( 'Plus Much More!', 'pretty-link' ); ?></li>
+    </ul>
+    <a href="https://prettylinks.com/pl/pro-feature-indicator/upgrade?advanced-features" class="pretty-link-cta-button"><?php esc_html_e( 'Tell Me More', 'pretty-link' ); ?></a>
+    <?php
   }
 
   public function setup_new_vars() {
@@ -449,22 +473,22 @@ class PrliLinksController extends PrliBaseController {
       $category_key = 'pro-pretty-link-category';
       $tag_key = 'pro-pretty-link-tag';
       $categories_label = $categories_label . ' ' .
-        PrliAppHelper::pro_only_feature_indicator(
-          'link-list-categories-column-header',
-          __('Pro', 'pretty-link'),
-          __('Upgrade to a Pretty Links premium plan to get Link Categories', 'pretty-link')
-        );
+        sprintf( '<span class="prli-pro-only-indicator" title="%1$s"><a href="%2$s">%3$s</a></span>',
+          __('Upgrade to a Pretty Links premium plan to get Link Categories', 'pretty-link'),
+          admin_url( 'edit.php?post_type=pretty-link&page=pretty-link-upgrade-categories' ),
+          __('Pro', 'pretty-link')
+      );
       $tags_label = $tags_label . ' ' .
-        PrliAppHelper::pro_only_feature_indicator(
-          'link-list-tags-column-header',
-          __('Pro', 'pretty-link'),
-          __('Upgrade to a Pretty Links premium plan to get Link Tags', 'pretty-link')
-        );
+        sprintf( '<span class="prli-pro-only-indicator" title="%1$s"><a href="%2$s">%3$s</a></span>',
+          __('Upgrade to a Pretty Links premium plan to get Link Tags', 'pretty-link'),
+          admin_url( 'edit.php?post_type=pretty-link&page=pretty-link-upgrade-tags' ),
+          __('Pro', 'pretty-link')
+      );
       $keywords_label = $keywords_label . ' ' .
-        PrliAppHelper::pro_only_feature_indicator(
-          'link-list-keywords-column-header',
-          __('Pro', 'pretty-link'),
-          __('Upgrade to a Pretty Links premium plan to get Keyword Replacements', 'pretty-link')
+        sprintf( '<span class="prli-pro-only-indicator" title="%1$s"><a href="%2$s">%3$s</a></span>',
+          __('Upgrade to a Pretty Links premium plan to get Keyword Replacements', 'pretty-link'),
+          admin_url( 'edit.php?post_type=pretty-link&page=pretty-link-updates#prli_upgrade' ),
+          __('Pro', 'pretty-link')
         );
     }
 
