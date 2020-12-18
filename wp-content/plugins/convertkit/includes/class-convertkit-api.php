@@ -99,6 +99,8 @@ class ConvertKit_API {
 	 * Update resources in local options table.
 	 *
 	 * @param string $api_key
+	 * @param string $api_secret
+	 * @return boolean
 	 */
 	public function update_resources( $api_key, $api_secret ) {
 
@@ -508,7 +510,6 @@ class ConvertKit_API {
 			array(
 				'timeout' => 10,
 				'Accept-Encoding' => 'gzip',
-				'sslverify' => false,
 			)
 		);
 
