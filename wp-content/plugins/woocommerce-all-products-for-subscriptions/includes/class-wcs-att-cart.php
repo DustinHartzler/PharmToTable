@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Cart support.
  *
  * @class    WCS_ATT_Cart
- * @version  3.1.16
+ * @version  3.1.20
  */
 class WCS_ATT_Cart {
 
@@ -140,16 +140,37 @@ class WCS_ATT_Cart {
 			}
 		}
 
+		if ( 'raw' === $context ) {
+			return $cart_level_schemes;
+		}
+
+		if ( ! self::supports_cart_subscription_schemes( $context ) ) {
+			return false;
+		}
+
+		if ( in_array( $context, array( 'cart', 'display', 'cart-display' ) ) ) {
+			// Last chance to turn off or otherwise modify cart level plans.
+			$cart_level_schemes = apply_filters( 'wcsatt_cart_subscription_schemes', $cart_level_schemes, $context );
+		}
+
+		return $cart_level_schemes;
+	}
+
+	/**
+	 * Whether cart-level subscription schemes are supported.
+	 *
+	 * @since  3.1.19
+	 *
+	 * @return boolean
+	 */
+	public static function supports_cart_subscription_schemes( $context ) {
+
 		if ( $context instanceof WC_Product ) {
 
 			// Unsupported product type?
 			if ( ! self::is_supported_product_type( $context ) ) {
 				return false;
 			}
-
-		} elseif ( 'raw' === $context ) {
-
-			return $cart_level_schemes;
 
 		} elseif ( in_array( $context, array( 'cart', 'display', 'cart-display' ) ) ) {
 
@@ -177,12 +198,9 @@ class WCS_ATT_Cart {
 					}
 				}
 			}
-
-			// Last chance to turn off or otherwise modify cart level plans.
-			$cart_level_schemes = apply_filters( 'wcsatt_cart_subscription_schemes', $cart_level_schemes, $context );
 		}
 
-		return $cart_level_schemes;
+		return true;
 	}
 
 	/**
@@ -529,15 +547,27 @@ class WCS_ATT_Cart {
 	 */
 	public static function update_cart_item_data( $updated ) {
 
+		$schemes_changed = false;
+
 		foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
 			if ( ! empty( $cart_item[ 'wcsatt_data' ] ) ) {
 
 				$posted_subscription_scheme_key = self::get_posted_subscription_scheme( $cart_item_key );
 
 				if ( null !== $posted_subscription_scheme_key ) {
-					WC()->cart->cart_contents[ $cart_item_key ][ 'wcsatt_data' ][ 'active_subscription_scheme' ] = $posted_subscription_scheme_key;
+
+					$existing_subscription_scheme_key = isset( $cart_item[ 'wcsatt_data' ][ 'active_subscription_scheme' ] ) ? $cart_item[ 'wcsatt_data' ][ 'active_subscription_scheme' ] : null;
+
+					if ( $posted_subscription_scheme_key !== $existing_subscription_scheme_key ) {
+						WC()->cart->cart_contents[ $cart_item_key ][ 'wcsatt_data' ][ 'active_subscription_scheme' ] = $posted_subscription_scheme_key;
+						$schemes_changed = true;
+					}
 				}
 			}
+		}
+
+		if ( $schemes_changed ) {
+			self::apply_subscription_schemes( WC()->cart );
 		}
 
 		return true;

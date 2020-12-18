@@ -25,7 +25,7 @@ class WCS_ATT_Admin {
   	 *
   	 * @var string
   	 */
-  	private static $bundled_selectsw_version = '1.1.3';
+  	private static $bundled_selectsw_version = '1.1.5';
 
 	/**
 	 * Initialize.
@@ -96,12 +96,12 @@ class WCS_ATT_Admin {
 	public static function includes() {
 
 		if ( WCS_ATT_Core_Compatibility::is_wc_version_gte( '3.1' ) ) {
-			require_once( 'export/class-wcs-att-product-export.php' );
-			require_once( 'import/class-wcs-att-product-import.php' );
+			require_once( WCS_ATT_ABSPATH . 'includes/admin/export/class-wcs-att-product-export.php' );
+			require_once( WCS_ATT_ABSPATH . 'includes/admin/import/class-wcs-att-product-import.php' );
 		}
 
-		require_once( 'class-wcs-att-admin-ajax.php' );
-		require_once( 'meta-boxes/class-wcs-att-meta-box-product-data.php' );
+		require_once( WCS_ATT_ABSPATH . 'includes/admin/class-wcs-att-admin-ajax.php' );
+		require_once( WCS_ATT_ABSPATH . 'includes/admin/meta-boxes/class-wcs-att-meta-box-product-data.php' );
 	}
 
 	/**
@@ -385,7 +385,7 @@ class WCS_ATT_Admin {
 		if ( in_array( $screen_id, array( 'edit-product', 'product' ) ) ) {
 			$add_scripts             = true;
 			$writepanel_dependencies = array( 'jquery', 'jquery-ui-datepicker', 'wc-admin-meta-boxes', 'wc-admin-product-meta-boxes' );
-		} elseif ( $screen_id === 'woocommerce_page_wc-settings' && isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] === 'subscriptions' ) {
+		} elseif ( $screen_id === WCS_ATT_Core_Compatibility::get_formatted_screen_id( 'woocommerce_page_wc-settings' ) && isset( $_GET[ 'tab' ] ) && $_GET[ 'tab' ] === 'subscriptions' ) {
 			$add_scripts             = true;
 			$writepanel_dependencies = array( 'jquery', 'jquery-ui-datepicker' );
 		}
@@ -402,7 +402,7 @@ class WCS_ATT_Admin {
 		wp_enqueue_style( 'wcsatt-admin-css' );
 
 		// WooCommerce admin pages.
-		if ( in_array( $screen_id, array( 'product', 'woocommerce_page_wc-settings' ) ) ) {
+		if ( in_array( $screen_id, array( 'product', WCS_ATT_Core_Compatibility::get_formatted_screen_id( 'woocommerce_page_wc-settings' ) ) ) ) {
 
 			wp_enqueue_script( 'wcsatt-writepanel' );
 
@@ -414,8 +414,8 @@ class WCS_ATT_Admin {
 				'i18n_inherit_option_variable'       => __( 'Inherit from chosen variation', 'woocommerce-all-products-for-subscriptions' ),
 				'i18n_override_option'               => __( 'Override product', 'woocommerce-all-products-for-subscriptions' ),
 				'i18n_override_option_variable'      => __( 'Override all variations', 'woocommerce-all-products-for-subscriptions' ),
-				'i18n_discount_description'          => __( 'Discount applied over the <strong>Regular Price</strong> of the product.', 'woocommerce-all-products-for-subscriptions' ),
-				'i18n_discount_description_variable' => __( 'Discount applied over the <strong>Regular Price</strong> of the chosen variation.', 'woocommerce-all-products-for-subscriptions' ),
+				'i18n_discount_description'          => __( 'Discount to apply to the product when this plan is selected.', 'woocommerce-all-products-for-subscriptions' ),
+				'i18n_discount_description_variable' => __( 'Discount to apply to the chosen variation when this plan is selected.', 'woocommerce-all-products-for-subscriptions' ),
 				'is_onboarding'                      => isset( $_GET[ 'wcsatt_onboarding' ] ) ? 'yes' : 'no',
 				'wc_ajax_url'                        => admin_url( 'admin-ajax.php' ),
 				'post_id'                            => is_object( $post ) ? $post->ID : '',
@@ -458,7 +458,7 @@ class WCS_ATT_Admin {
 			'overrides' => self::get_template_overrides()
 		);
 
-		include( 'views/html-admin-page-status-report.php' );
+		include( WCS_ATT_ABSPATH . 'includes/admin/views/html-admin-page-status-report.php' );
 	}
 
 	/**

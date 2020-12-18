@@ -2,9 +2,9 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce All Products For Subscriptions 3.1.17\n"
+"Project-Id-Version: WooCommerce All Products For Subscriptions 3.1.21\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
-"POT-Creation-Date: 2020-08-20 13:20:59+00:00\n"
+"POT-Creation-Date: 2020-12-17 13:44:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -139,13 +139,11 @@ msgid "Override all variations"
 msgstr ""
 
 #: includes/admin/class-wcs-att-admin.php:417
-msgid "Discount applied over the <strong>Regular Price</strong> of the product."
+msgid "Discount to apply to the product when this plan is selected."
 msgstr ""
 
 #: includes/admin/class-wcs-att-admin.php:418
-msgid ""
-"Discount applied over the <strong>Regular Price</strong> of the chosen "
-"variation."
+msgid "Discount to apply to the chosen variation when this plan is selected."
 msgstr ""
 
 #: includes/admin/meta-boxes/class-wcs-att-meta-box-product-data.php:69
@@ -278,28 +276,32 @@ msgstr ""
 msgid "%1$s version %2$s (out of date)"
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:596
+#: includes/class-wcs-att-cart.php:626
 msgid "Please choose a new subscription plan."
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:602
+#: includes/class-wcs-att-cart.php:632
 msgid ""
 "The &quot;%1$s&quot; subscription that you signed up for is no longer "
 "available. %2$s"
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:609 includes/class-wcs-att-cart.php:630
+#: includes/class-wcs-att-cart.php:639 includes/class-wcs-att-cart.php:660
 msgid ""
 "The &quot;%s&quot; subscription that you signed up for has changed. Please "
 "remove the product from your cart and try again."
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:617
+#: includes/class-wcs-att-cart.php:647
 msgid "Please choose a plan to proceed."
 msgstr ""
 
-#: includes/class-wcs-att-cart.php:623
+#: includes/class-wcs-att-cart.php:653
 msgid "&quot;%1$s&quot; is only available with a subscription plan. %2$s"
+msgstr ""
+
+#: includes/class-wcs-att-core-compatibility.php:209
+msgid "WooCommerce"
 msgstr ""
 
 #: includes/class-wcs-att-display.php:70
@@ -314,17 +316,17 @@ msgid ""
 "re-load the page and try again."
 msgstr ""
 
-#: includes/class-wcs-att-integrations.php:83
+#: includes/class-wcs-att-integrations.php:88
 msgid "Product Bundles"
 msgstr ""
 
-#: includes/class-wcs-att-integrations.php:84
+#: includes/class-wcs-att-integrations.php:89
 msgid "WooCommerce Product Bundles"
 msgstr ""
 
-#: includes/class-wcs-att-integrations.php:86
-#: includes/class-wcs-att-integrations.php:100
-#: includes/class-wcs-att-integrations.php:116
+#: includes/class-wcs-att-integrations.php:91
+#: includes/class-wcs-att-integrations.php:105
+#: includes/class-wcs-att-integrations.php:121
 msgid ""
 "The installed version of <strong>%1$s</strong> is not supported by "
 "<strong>All Products for WooCommerce Subscriptions</strong>. Please update "
@@ -332,19 +334,19 @@ msgid ""
 "<strong>%4$s</strong> or higher."
 msgstr ""
 
-#: includes/class-wcs-att-integrations.php:97
+#: includes/class-wcs-att-integrations.php:102
 msgid "Composite Products"
 msgstr ""
 
-#: includes/class-wcs-att-integrations.php:98
+#: includes/class-wcs-att-integrations.php:103
 msgid "WooCommerce Composite Products"
 msgstr ""
 
-#: includes/class-wcs-att-integrations.php:113
+#: includes/class-wcs-att-integrations.php:118
 msgid "Product Add-Ons"
 msgstr ""
 
-#: includes/class-wcs-att-integrations.php:114
+#: includes/class-wcs-att-integrations.php:119
 msgid "WooCommerce Product Add-Ons"
 msgstr ""
 
@@ -360,51 +362,51 @@ msgstr ""
 msgid "%s each year"
 msgstr ""
 
-#: includes/display/class-wcs-att-display-product.php:383
+#: includes/display/class-wcs-att-display-product.php:400
 msgid "Deliver:"
 msgstr ""
 
-#: includes/display/class-wcs-att-display-product.php:387
+#: includes/display/class-wcs-att-display-product.php:404
 msgid "Renew:"
 msgstr ""
 
-#: includes/display/class-wcs-att-display-product.php:390
+#: includes/display/class-wcs-att-display-product.php:407
 msgid "Choose a plan:"
 msgstr ""
 
-#: includes/display/class-wcs-att-display-product.php:418
+#: includes/display/class-wcs-att-display-product.php:435
 msgid "Choose a purchase plan:"
 msgstr ""
 
-#: includes/display/class-wcs-att-display-product.php:418
+#: includes/display/class-wcs-att-display-product.php:435
 msgid "Choose a subscription plan:"
 msgstr ""
 
-#: includes/display/class-wcs-att-display-product.php:478
-#: includes/display/class-wcs-att-display-product.php:637
+#: includes/display/class-wcs-att-display-product.php:495
+#: includes/display/class-wcs-att-display-product.php:654
 msgid "Sign up"
 msgstr ""
 
-#: includes/display/class-wcs-att-display-product.php:629
+#: includes/display/class-wcs-att-display-product.php:646
 msgid "Select options"
 msgstr ""
 
-#: includes/integrations/class-wcs-att-integration-pb-cp.php:1158
+#: includes/integrations/class-wcs-att-integration-pb-cp.php:1214
 msgid "Between Product Bundle Configurations"
 msgstr ""
 
-#: includes/integrations/class-wcs-att-integration-pb-cp.php:1172
+#: includes/integrations/class-wcs-att-integration-pb-cp.php:1228
 msgid "Between Composite Product Configurations"
 msgstr ""
 
-#: includes/modules/management/add/class-wcs-att-manage-add-cart.php:232
+#: includes/modules/management/add/class-wcs-att-manage-add-cart.php:278
 #: includes/modules/management/add/class-wcs-att-manage-add-product.php:286
 msgid ""
 "Subscription #%d cannot be edited. Please get in touch with us for "
 "assistance."
 msgstr ""
 
-#: includes/modules/management/add/class-wcs-att-manage-add-cart.php:241
+#: includes/modules/management/add/class-wcs-att-manage-add-cart.php:308
 msgid ""
 "Your cart cannot be added to subscription #%d. Please get in touch with us "
 "for assistance."
@@ -429,25 +431,25 @@ msgstr ""
 msgid "Action failed. Please get in touch with us for assistance."
 msgstr ""
 
-#: includes/modules/management/class-wcs-att-manage-add.php:446
+#: includes/modules/management/class-wcs-att-manage-add.php:447
 msgid "There was a problem adding \"%1$s\" to subscription %2$s."
 msgstr ""
 
-#: includes/modules/management/class-wcs-att-manage-add.php:483
+#: includes/modules/management/class-wcs-att-manage-add.php:484
 msgid "You have successfully added \"%1$s\" to subscription %2$s."
 msgstr ""
 
-#: includes/modules/management/class-wcs-att-manage-add.php:485
+#: includes/modules/management/class-wcs-att-manage-add.php:486
 msgid "You have successfully added the contents of your cart to subscription %s."
 msgstr ""
 
-#: includes/modules/management/class-wcs-att-manage-switch.php:402
+#: includes/modules/management/class-wcs-att-manage-switch.php:412
 msgid ""
 "Switching product options is not allowed. You may only switch to a "
 "different subscription plan."
 msgstr ""
 
-#: includes/modules/management/class-wcs-att-manage-switch.php:410
+#: includes/modules/management/class-wcs-att-manage-switch.php:420
 msgid "Switching to a different subscription plan is not allowed."
 msgstr ""
 
@@ -636,46 +638,46 @@ msgctxt "Subscribe call-to-action - checkbox"
 msgid "Choose a subscription plan"
 msgstr ""
 
-#: includes/display/class-wcs-att-display-product.php:356
-#: includes/integrations/class-wcs-att-integration-pb-cp.php:863
+#: includes/display/class-wcs-att-display-product.php:373
+#: includes/integrations/class-wcs-att-integration-pb-cp.php:869
 msgctxt "discounted dropdown option price"
 msgid "%1$s (%2$s off)"
 msgstr ""
 
-#: includes/integrations/class-wcs-att-integration-pb-cp.php:863
+#: includes/integrations/class-wcs-att-integration-pb-cp.php:869
 #: includes/product/class-wcs-att-product-prices.php:587
 #: includes/product/class-wcs-att-product-prices.php:595
 msgctxt "dropdown option discount"
 msgid "%s%%"
 msgstr ""
 
-#: includes/integrations/class-wcs-att-integration-pb-cp.php:865
+#: includes/integrations/class-wcs-att-integration-pb-cp.php:871
 msgctxt "dropdown option sale price"
 msgid "%1$s (was %2$s)"
 msgstr ""
 
-#: includes/integrations/class-wcs-att-integration-pb-cp.php:1074
+#: includes/integrations/class-wcs-att-integration-pb-cp.php:1130
 msgctxt "used in order note"
 msgid ""
 "\"%1$s\" (Product ID: #%2$d) removal triggered by \"%3$s\" via the My "
 "Account page."
 msgstr ""
 
-#: includes/integrations/class-wcs-att-integration-pb-cp.php:1129
+#: includes/integrations/class-wcs-att-integration-pb-cp.php:1185
 msgctxt "used in order note"
 msgid ""
 "\"%1$s\" (Product ID: #%2$d) removal un-done by \"%3$s\" via the My Account "
 "page."
 msgstr ""
 
-#: includes/modules/management/class-wcs-att-manage-add.php:377
+#: includes/modules/management/class-wcs-att-manage-add.php:378
 msgctxt "used in order note"
 msgid ""
 "Customer increased the quantity of \"%1$s\" (Product ID: #%2$d) from %3$s "
 "to %4$s."
 msgstr ""
 
-#: includes/modules/management/class-wcs-att-manage-add.php:456
+#: includes/modules/management/class-wcs-att-manage-add.php:457
 msgctxt "used in order note"
 msgid "Customer added \"%1$s\" (Product ID: #%2$d)."
 msgstr ""
