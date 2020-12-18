@@ -1,10 +1,10 @@
 === WooCommerce Stripe Payment Gateway ===
-Contributors: automattic, royho, akeda, mattyza, bor0, woothemes
+Contributors: woocommerce, automattic, royho, akeda, mattyza, bor0, woothemes
 Tags: credit card, stripe, apple pay, payment request, google pay, sepa, sofort, bancontact, alipay, giropay, ideal, p24, woocommerce, automattic
 Requires at least: 4.4
 Tested up to: 5.5
 Requires PHP: 5.6
-Stable tag: 4.5.2
+Stable tag: 4.6.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Attributions: thorsten-stripe
@@ -70,7 +70,7 @@ Stripe also supports the [WooCommerce Subscriptions extension](https://woocommer
 
 = Apple Pay Support =
 
-WooCommerce Stripe includes [Apple Pay](https://stripe.com/apple-pay) support, which means customers can pay using payment details associated with their Apple ID. Checkout is now just an authorization (Touch ID or Face ID) away on both mobile and desktop. Only supports simple, variable, and Subscription products for now. More support to come.
+WooCommerce Stripe includes [Apple Pay](https://woocommerce.com/apple-pay) support, which means customers can pay using payment details associated with their Apple ID. Checkout is now just an authorization (Touch ID or Face ID) away on both mobile and desktop. Only supports simple, variable, and Subscription products for now. More support to come.
 
 = Web Payments API Support =
 
@@ -126,8 +126,14 @@ If you get stuck, you can ask for help in the Plugin Forum.
 
 == Changelog ==
 
-= 4.5.2 - 2020-08-19 =
-* Fix - Allow extension to attempt to run in all countries, not just officially supported ones
+= 4.6.0 - 2020-12-15 =
+* Tweak - Update packages for Composer 2 compatibility.
+* Tweak - Use full jQuery function calls instead of soon-to-be-deprecated shorthands.
+* Tweak - Use JSON.parse() instead of jQuery.parseJSON().
+* Tweak - Remove holiday messaging from Apple Pay note after Dec 22.
+* Fix   - Compatibility with the Stripe for WooCommerce plugin.
+* Fix   - Guard against fatal errors caused by WC_Admin_Note.
+* Fix   - Display error message when payment made with payment request buttons fails.
 
-[See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-gateway-stripe/master/changelog.txt).
+See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-gateway-stripe/master/changelog.txt).
 
