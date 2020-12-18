@@ -1,6 +1,7 @@
 <?php
 
 use NF_FU_VENDOR\Google_Http_MediaFileUpload;
+use NF_FU_VENDOR\Google_Service_Exception;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,7 +44,14 @@ class NF_FU_External_Services_Googledrive_Backgroundupload extends NF_FU_Externa
 		$media->setFileSize( $data['drive_file_size'] );
 
 		if ( isset( $data['drive_media_resume_uri'] ) ) {
-			$media->resume( $data['drive_media_resume_uri'] );
+			try {
+				$media->resume( $data['drive_media_resume_uri'] );
+			} catch ( Google_Service_Exception $exception ) {
+				unset( $data['drive_media_resume_uri']  );
+				unset( $data['drive_file_pointer']  );
+
+				return $data;
+			}
 		}
 
 		$file = fopen( $this->upload_file, 'r' );

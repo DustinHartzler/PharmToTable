@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ninja-forms-uploads\n"
 "Report-Msgid-Bugs-To: help@ninjaforms.com\n"
-"POT-Creation-Date: 2020-08-10 11:53+0100\n"
-"PO-Revision-Date: 2020-08-10 11:53+GMT+0100\n"
+"POT-Creation-Date: 2020-10-28 13:31+0000\n"
+"PO-Revision-Date: 2020-10-28 13:31+GMT+0000\n"
 "Last-Translator: Ninja Forms <help@ninjaforms.com>\n"
 "Language-Team: English <LL@li.org>\n"
 "Language: \n"
@@ -188,7 +188,7 @@ msgstr ""
 
 #: deprecated/includes/admin/pages/ninja-forms-uploads/tabs/browse-uploads/browse-uploads.php:234
 #: deprecated/includes/fields/file-uploads.php:372
-#: includes/admin/uploadstable.php:213 includes/fields/upload.php:277
+#: includes/admin/uploadstable.php:213 includes/fields/upload.php:288
 msgid "View"
 msgstr ""
 
@@ -603,9 +603,9 @@ msgstr ""
 msgid "File size under minimum size. File must be %sMB or greater."
 msgstr ""
 
-#: includes/ajax/controllers/uploads.php:357 includes/fields/upload.php:102
-#: includes/fields/upload.php:108 includes/fields/upload.php:168
-#: includes/fields/upload.php:174
+#: includes/ajax/controllers/uploads.php:357 includes/fields/upload.php:113
+#: includes/fields/upload.php:119 includes/fields/upload.php:179
+#: includes/fields/upload.php:185
 msgid "File extension not allowed"
 msgstr ""
 
@@ -699,7 +699,7 @@ msgstr ""
 msgid "Minimum size of a file that can be uploaded."
 msgstr ""
 
-#: includes/config/field-settings.php:75 includes/fields/upload.php:319
+#: includes/config/field-settings.php:75 includes/fields/upload.php:330
 msgid "Select Files"
 msgstr ""
 
@@ -711,7 +711,7 @@ msgstr ""
 msgid "Change the button text for selecting files."
 msgstr ""
 
-#: includes/config/field-settings.php:84 includes/fields/upload.php:320
+#: includes/config/field-settings.php:84 includes/fields/upload.php:331
 msgid "Cancel"
 msgstr ""
 
@@ -829,6 +829,10 @@ msgstr ""
 msgid "Field"
 msgstr ""
 
+#: includes/external/action.php:78
+msgid "Background Upload"
+msgstr ""
+
 #: includes/external/loader.php:260
 #, php-format
 msgid "%s requires %s"
@@ -870,15 +874,15 @@ msgstr ""
 msgid "There was an error attempting to get the region of the bucket %s: %s"
 msgstr ""
 
-#: includes/fields/upload.php:88
+#: includes/fields/upload.php:99
 msgid "Temp file does not exist"
 msgstr ""
 
-#: includes/fields/upload.php:185
+#: includes/fields/upload.php:196
 msgid "File upload error"
 msgstr ""
 
-#: includes/fields/upload.php:269
+#: includes/fields/upload.php:280
 #: includes/integrations/ninjaforms/submissions.php:71
 msgid "File removed"
 msgstr ""
@@ -895,23 +899,23 @@ msgstr ""
 msgid "File Extension"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:251
+#: includes/integrations/ninjaforms/mergetags.php:301
 msgid "Date in yyyy-mm-dd format"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:257
+#: includes/integrations/ninjaforms/mergetags.php:307
 msgid "Year in yyyy format"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:263
+#: includes/integrations/ninjaforms/mergetags.php:313
 msgid "Month in mm format"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:269
+#: includes/integrations/ninjaforms/mergetags.php:319
 msgid "Day in dd format"
 msgstr ""
 
-#: includes/integrations/ninjaforms/mergetags.php:275
+#: includes/integrations/ninjaforms/mergetags.php:325
 msgid "Random 5 character string"
 msgstr ""
 

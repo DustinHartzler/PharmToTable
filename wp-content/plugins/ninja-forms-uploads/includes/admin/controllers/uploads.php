@@ -335,4 +335,20 @@ class NF_FU_Admin_Controllers_Uploads {
 			}
 		}
 	}
+
+	/**
+	 * Get all uploads for a specific field and submission
+	 *
+	 * @param int $field_id
+	 * @param int $submission_id
+	 *
+	 * @return array
+	 */
+	public function get_field_uploads_by_submission_id( $field_id, $submission_id ) {
+		global $wpdb;
+
+		$where = $wpdb->prepare( 'WHERE field_id = %1$d AND data like \'%%%"sub_id";i:%2$d%%%\'', $field_id, $submission_id );
+
+		return NF_File_Uploads()->model->fetch( $where );
+	}
 }

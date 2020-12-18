@@ -4,7 +4,7 @@ Donate link: http://ninjaforms.com
 Tags: form, forms
 Requires at least: 5.0
 Tested up to: 5.5
-Stable tag: 3.3.7
+Stable tag: 3.3.10
 
 License: GPLv2 or later
 
@@ -26,6 +26,32 @@ This section describes how to install the plugin and get it working.
 For help and video tutorials, please visit our website: [NinjaForms.com](http://ninjaforms.com)
 
 == Changelog ==
+
+= 3.3.10 (27 Oct 2020) =
+
+*New:*
+
+* Advanced setting in the External File Upload action to upload files in the background
+
+*Bugs:*
+
+* Fix fatal error 'Uncaught NF_FU_VENDOR\Google_Service_Exception' when Google Drive connection is changed when background uploading a large file
+* Fix images not appearing when using the embed mergetag in PDFs
+* Fix files with cyrillic characters in the filename being uploaded as unnamed-file
+
+= 3.3.9 (6 Oct 2020) =
+
+*Bugs:*
+
+* Fix uploads taking a long time when renaming file directories
+* Fix File Upload mergetags not available in PDFs created at form submission time
+* Fix cancel button not using label defined in field display settings
+
+= 3.3.8 (7 Sept 2020) =
+
+*New:*
+
+* Compatibility with the PDF Submissions addon
 
 = 3.3.7 (10 Aug 2020) =
 

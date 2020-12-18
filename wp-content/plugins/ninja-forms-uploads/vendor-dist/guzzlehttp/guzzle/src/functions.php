@@ -303,7 +303,7 @@ function json_encode($value, $options = 0, $depth = 512)
  */
 function _current_time()
 {
-    return \function_exists('NF_FU_VENDOR\\hrtime') ? hrtime(\true) / 1000000000.0 : \microtime(\true);
+    return \function_exists('hrtime') ? \hrtime(\true) / 1000000000.0 : \microtime(\true);
 }
 /**
  * @param int $options

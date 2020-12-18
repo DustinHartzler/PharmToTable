@@ -71,6 +71,14 @@ class NF_FU_External_Action extends NF_Abstracts_Action {
 			}
 		}
 
+		$settings['background_upload'] = array(
+			'name'  => 'background_upload',
+			'type'  => 'toggle',
+			'group' => 'advanced',
+			'label' => esc_html__( 'Background Upload', 'ninja-forms-uploads' ),
+			'width' => 'full',
+		);
+
 		$this->_settings = array_merge( $this->_settings, $settings );
 	}
 
@@ -98,6 +106,7 @@ class NF_FU_External_Action extends NF_Abstracts_Action {
 			}
 
 			$remove_from_server = isset( $field['save_to_server'] ) && "1" != $field['save_to_server'];
+			$background_upload  = isset( $action_settings['background_upload'] ) ? (bool) $action_settings['background_upload'] : false;
 
 			foreach ( $services as $service ) {
 				$field_key = 'field_list_' . $service . '-' . $field['key'];
@@ -115,7 +124,7 @@ class NF_FU_External_Action extends NF_Abstracts_Action {
 						continue;
 					}
 
-					$file['data'] = $instance->process_upload( $file['data'], $remove_from_server, $upload_timestamp, $field, $form_id );
+					$file['data'] = $instance->process_upload( $file['data'], $remove_from_server, $upload_timestamp, $field, $form_id, $background_upload );
 
 					$field['files'][ $files_key ] = $file;
 				}

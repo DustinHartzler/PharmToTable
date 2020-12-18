@@ -81,7 +81,13 @@ class NF_FU_Admin_Controllers_CustomPaths {
 		foreach( $fields as $field ) {
 			$find   = array();
 			$find[] = $this->identifier . 'field_' . $field['id'] . $this->identifier;
-			$find[] = $this->identifier . 'field_' . Ninja_Forms()->form()->get_field( $field['id'] )->get_setting( 'key' ) . $this->identifier;
+
+			$key = isset( $field['key'] ) ? $field['key'] : false;
+			if ( ! $key ) {
+				$key = Ninja_Forms()->form()->get_field( $field['id'] )->get_setting( 'key' );
+			}
+
+			$find[] = $this->identifier . 'field_' . $key . $this->identifier;
 
 			$user_value = $field['value'];
 			if ( is_array( $field['value'] ) ) {

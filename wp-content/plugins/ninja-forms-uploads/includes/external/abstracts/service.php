@@ -265,15 +265,16 @@ abstract class NF_FU_External_Abstracts_Service {
 	/**
 	 * Upload the attachment to the service
 	 *
-	 * @param array $data
-	 * @param bool  $remove_from_server
-	 * @param null  $upload_timestamp
-	 * @param array $field
-	 * @param null|int  $form_id
+	 * @param array    $data
+	 * @param bool     $remove_from_server
+	 * @param null     $upload_timestamp
+	 * @param array    $field
+	 * @param null|int $form_id
+	 * @param bool     $background_upload
 	 *
 	 * @return array
 	 */
-	public function process_upload( $data, $remove_from_server = false, $upload_timestamp = null, $field = array(), $form_id = null ) {
+	public function process_upload( $data, $remove_from_server = false, $upload_timestamp = null, $field = array(), $form_id = null, $background_upload = false ) {
 		$this->load_settings();
 
 		$this->upload_file       = $data['file_path'];
@@ -281,7 +282,7 @@ abstract class NF_FU_External_Abstracts_Service {
 		$this->external_path     = $this->get_external_path( $custom_path );
 		$this->external_filename = $this->get_filename_external( $upload_timestamp );
 
-		if ( $this->should_background_upload( false, $data['file_path'], $field, $form_id  ) ) {
+		if ( $this->should_background_upload( $background_upload, $data['file_path'], $field, $form_id  ) ) {
 			$chunked = $this->is_file_larger_than_max_chunk( $data['file_path'] );
 
 			$this->init_background_upload( $data, $chunked );

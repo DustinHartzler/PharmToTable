@@ -30,6 +30,11 @@ final class NF_FU_File_Uploads {
 	public $controllers;
 
 	/**
+	 * @var NF_FU_Integrations_NinjaForms_MergeTags
+	 */
+	public $mergetags;
+
+	/**
 	 * @var NF_FU_Database_Models_Upload
 	 */
 	public $model;
@@ -118,19 +123,21 @@ final class NF_FU_File_Uploads {
 		add_action( 'ninja_forms_loaded', array( $this, 'load_plugin' ) );
 		add_action( 'init', array( $this, 'load_translations' ) );
 		add_action( 'ninja_forms_rollback', array( $this, 'handle_rollback' ) );
+		add_filter( 'ninja_forms_telemetry_should_send', '__return_true' );
 
 		// External services
 		self::$instance->externals = new NF_FU_External_Loader();
 
 		// Integrations
+		self::$instance->mergetags = new NF_FU_Integrations_NinjaForms_MergeTags();
 		new NF_FU_Integrations_NinjaForms_Submissions();
 		new NF_FU_Integrations_NinjaForms_Attachments();
-		new NF_FU_Integrations_NinjaForms_MergeTags();
 		new NF_FU_Integrations_NinjaForms_Templates();
 		new NF_FU_Integrations_NinjaForms_Builder();
 		new NF_FU_Integrations_PostCreation_PostCreation();
 		new NF_FU_Integrations_SaveProgress_SaveProgress();
 		new NF_FU_Integrations_Zapier_Zapier();
+		new NF_FU_Integrations_PdfSubmissions_PdfSubmissions();
 		if ( class_exists( 'NF_Styles' ) ) {
 			new NF_FU_Integrations_LayoutStyles_LayoutStyles();
 		}

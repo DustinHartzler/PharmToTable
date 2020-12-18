@@ -59,6 +59,8 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 			return $value;
 		}
 
+		$field = apply_filters( 'ninja_forms_uploads_mergetag_value_field', $field );
+
 		if ( ! isset( $field['files'] ) || empty( $field['files'] ) ) {
 			return '';
 		}
@@ -83,6 +85,7 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 			'link'             => 'link',
 			'url'              => 'url',
 			'filename'         => 'filename',
+			'pdf_embed'        => 'pdf_embed',
 			'attachment_id'    => 'attachment_id',
 			'attachment_url'   => 'attachment_url',
 			'attachment_embed' => 'attachment_embed',
@@ -96,7 +99,7 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 	 * @param array $tags Array keyed on field suffix ('default' for normal field), and value as the type of value, eg.
 	 *                    html or plain
 	 */
-	protected function update_mergetags( $field, $tags = array() ) {
+	public function update_mergetags( $field, $tags = array() ) {
 		$all_merge_tags = Ninja_Forms()->merge_tags;
 
 		if ( ! isset( $all_merge_tags['fields'] ) ) {
@@ -140,6 +143,8 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 			$values['embed'][] = '';
 			$values['url'][]   = '';
 			$values['plain'][] = '';
+			$values['pdf_embed'][] = '';
+			$values['filename'][] = '';
 		}
 
 		foreach ( $field['files'] as $file ) {
@@ -156,6 +161,15 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 			$values['embed'][] = sprintf( '<img src="%s">', $file_url );
 			$values['url'][]   = $file_url;
 			$values['plain'][] = $file_url;
+
+			$pdf_file_path = $this->get_file_for_pdf( $upload );
+
+			if ( ! empty( $pdf_file_path ) ) {
+				$pdf_file_path = sprintf( '<img src="%s">',$pdf_file_path );
+			}
+
+			$values['pdf_embed'][] = $pdf_file_path;
+
 			$values['filename'][] = basename( $file_url );
 			if ( isset( $upload->attachment_id ) ) {
 				$attachment_url = wp_get_attachment_image_url( $upload->attachment_id, 'full' );
@@ -184,6 +198,11 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 		if ( isset( $values['filename'] ) ) {
 			$values['filename'] = implode( ',', $values['filename'] );
 		}
+
+		if ( isset( $values['pdf_embed'] ) ) {
+			$values['pdf_embed'] = implode( ',', $values['pdf_embed'] );
+		}
+
 		if ( isset( $values['attachment_id'] ) ) {
 			$values['attachment_id'] = implode( ',', $values['attachment_id'] );
 		}
@@ -197,6 +216,37 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 		}
 
 		return $values;
+	}
+
+	protected function get_file_for_pdf( $upload ) {
+		if ( file_exists( $upload->file_path ) ) {
+			return $upload->file_path;
+		}
+
+		if ( 'server' === $upload->upload_location ) {
+			return '';
+		}
+
+		if ( ! ( $instance = NF_File_Uploads()->externals->get( $upload->upload_location ) ) ) {
+			return '';
+		}
+
+		if ( ! $instance->is_connected() ) {
+			return '';
+		}
+
+		$path     = ( isset( $upload->external_path ) ) ? $upload->external_path : '';
+		$filename = ( isset( $upload->external_filename ) ) ? $upload->external_filename : $upload->file_name;
+		$file_url = $instance->get_url( $filename, $path, $upload->data );
+
+		$result = file_put_contents( $upload->file_path, file_get_contents( $file_url ) );
+		if ( $result ) {
+			wp_schedule_single_event( apply_filters( 'ninja_forms_uploads_temp_file_delete_time', time() + HOUR_IN_SECONDS ), 'nf_fu_delete_temporary_file', array( $upload->file_path ) );
+
+			return $upload->file_path;
+		}
+
+		return '';
 	}
 
 	/**
@@ -227,7 +277,7 @@ class NF_FU_Integrations_NinjaForms_MergeTags {
 	 *
 	 * @return mixed
 	 */
-	protected function normalize_field( $field, $form_id ) {
+	public function normalize_field( $field, $form_id ) {
 		$fieldModel = Ninja_Forms()->form( $form_id )->get_field( $field['id'] );
 		$settings   = $fieldModel->get_settings();
 		unset( $settings['files'] );

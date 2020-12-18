@@ -39,6 +39,16 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
         add_action( 'nf_admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 	}
 
+	protected function remove_directory_from_file( $file ) {
+		$file_dir = dirname( $file );
+		if ( $file_dir != '.' ) {
+			$file = str_replace( $file_dir, '', $file ); // Stop traversal exploits
+		}
+		$file = ltrim( $file, DIRECTORY_SEPARATOR );
+
+		return $file;
+	}
+
 	/**
 	 * Save the temp file
 	 *
@@ -82,7 +92,8 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 
 		// Loop through all files
 		foreach ( $field['files'] as $file_key => $file ) {
-			$tmp_file = basename( $file['tmp_name'] ); // Stop traversal exploits
+			$tmp_file = $this->remove_directory_from_file( $file['tmp_name'] );
+
 			$tmp_file = NF_File_Uploads()->controllers->uploads->get_path( $tmp_file, true );
 			if ( ! file_exists( $tmp_file ) ) {
 				$data['errors']['fields'][ $field['id'] ] = __( 'Temp file does not exist', 'ninja-forms-uploads' );
@@ -91,7 +102,7 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 			}
 
 			// Remove any path from the filename as a security measure
-			$original_filename = basename( $file['name'] );
+			$original_filename = $this->remove_directory_from_file( $file['name'] );
 
 			// Remove the extension from the file name
 			$file_parts = explode( '.', $original_filename );
@@ -142,7 +153,7 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 			wp_mkdir_p( $target_path );
 
 			// Sanitize the filename for encoding
-			$file_name   = sanitize_file_name( basename( $target_file ) );
+			$file_name   = sanitize_file_name( str_replace( $target_path, '', $target_file ) );
 			$target_file = $target_path . '/' . $file_name;
 
 			if ( file_exists( $target_file ) ) {
@@ -157,7 +168,7 @@ class NF_FU_Fields_Upload extends NF_Abstracts_Field {
 			}
 
 			// Get final filename
-			$file_name   = basename( $target_file );
+			$file_name = $this->remove_directory_from_file( $target_file );
 
 			// Check file extension isn't blacklisted for final file
 			$final_file_parts = explode( '.', $file_name );
