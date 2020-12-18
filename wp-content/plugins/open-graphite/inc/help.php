@@ -6,7 +6,6 @@ $fb_debugger                    = 'https://developers.facebook.com/tools/debug/'
 $fb_access_token                = 'https://rocketapps.com.au/product/open-graphite-pro/#faq-08';
 $twitter_card                   = 'https://cards-dev.twitter.com/validator/';
 $iframely                       = 'http://debug.iframely.com/';
-$og_check                       = 'https://opengraphcheck.com/';
 $reop_url                       = 'https://wordpress.org/support/plugin/open-graphite';
 $pro_support_url                = 'https://rocketapps.com.au/log-ticket/';   
 $buy_url                        = 'https://rocketapps.com.au/product/open-graphite-pro/?origin=open-graphite'; 

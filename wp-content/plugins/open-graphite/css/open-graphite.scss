@@ -31,16 +31,18 @@
   }
   
   
-  $blue:              #0073aa;
-  $light-blue:        #00bcd4;
-  $green:             #8bc34a;
-  $grey:              #607d8b;
-  $dark-grey:         #666;
-  $orange:            #f77224;
-  $yellow:            #ff9800;
-  $pink:              #9c27b0;
-  $red:               #f44336;
-  $trans:             transform  0.3s ease;
+    $blue:              #0073aa;
+    $light-blue:        #00bcd4;
+    $green:             #8bc34a;
+    $grey:              #607d8b;
+    $dark-grey:         #666;
+    $orange:            #f77224;
+    $yellow:            #ff9800;
+    $pink:              #9c27b0;
+    $red:               #f44336;
+    $roundness:         7px;
+    $trans:             transform  0.3s ease;
+    $shadow:            0 0 35px 0 rgba($dark-grey, 0.1);
   
   .toplevel_page_open-graphite-settings {
       
@@ -87,10 +89,13 @@
   }
   
   .og-nav {
-      width: 225px;
-      display: block;
-      float: left;
-      transition: $trans;
+    width: 225px;
+    display: block;
+    float: left;
+    transition: $trans;
+    box-shadow: $shadow;
+    border-top-left-radius: $roundness;
+    border-top-right-radius: $roundness;
   
       @include breakpoint(small) {
           width: 100%;
@@ -113,7 +118,21 @@
       ul, li {
           margin: 0;
           padding: 0;
-      }
+          position: relative;
+	  }
+	  
+	  li:first-child a {
+        border-top-left-radius: $roundness;
+        border-top-right-radius: $roundness;
+    }
+
+    img {
+        width: 17px;
+        height: auto;
+        position: absolute;
+        @include vertical-align;
+        right: 15px;
+    }
   
       a {
           text-decoration: none;
@@ -140,29 +159,36 @@
       }
   
       .button {
-          padding: 15px;
-          line-height: 1em;
-          height: auto;
-          border: none;
-          display: block;
-          width: 100%;
-          text-align: center;
-          color: #fff;
-          background: $blue;
-          text-decoration: none;
-          margin: 15px 0 0 0;
-          border-radius: 3px;
-          cursor: pointer;
-  
-          @include breakpoint(small) {
-              position: fixed;
-              bottom: 0;
-              left: 0;
-              width: calc(100% - 20px);
-              z-index: 999;
-              padding: 20px 0;
-          }
-      }
+        padding: 15px;
+        line-height: 1em;
+        height: auto;
+        border: none;
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        background: $blue;
+        text-decoration: none;      
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;  
+        border-bottom-left-radius: $roundness;
+        border-bottom-right-radius: $roundness;
+        cursor: pointer;
+        font-weight: bold;
+
+        &:hover {
+            background: $light-blue;
+        }
+
+        @include breakpoint(small) {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: calc(100% - 20px);
+            z-index: 999;
+            padding: 20px 0;
+        }
+    }
   }
 
   
@@ -190,7 +216,10 @@
       padding: 25px 25px 0 25px;
       width: 270px;
 	  text-align: center;
-	  transition: all .25s ease-in-out;
+      transition: all .25s ease-in-out;
+      border-top-left-radius: $roundness;
+        border-top-right-radius: $roundness;
+        
 
 	  @include breakpoint(small) {
 		  position: relative;
@@ -240,6 +269,8 @@
           width: calc(100% + 50px);
           margin: 0 0 0 -25px;
           padding: 25px;
+          border-bottom-left-radius: $roundness;
+		border-bottom-right-radius: $roundness;
 
           p {
               margin: 0;
@@ -270,16 +301,18 @@
           }
 
           .button {
-              border: solid 1px #fff;
+              border: solid 2px $orange;
               background: none;
               color: #fff;
               font-weight: bold;
               padding: 5px 20px;
-			  text-align: center;
-			//   border-top-left-radius: 30px;
-			//   border-top-right-radius: 30px;
-			//   border-bottom-left-radius: 30px;
-			//   border-bottom-right-radius: 30px;
+              text-align: center;
+              border-radius: 3px;
+              margin: 10px 0 0 0;
+			  border-top-left-radius: 30px;
+			  border-top-right-radius: 30px;
+			  border-bottom-left-radius: 30px;
+			  border-bottom-right-radius: 30px;
           }
       }
       
@@ -306,13 +339,18 @@
   }
   
   .og-settings {
-      padding: 25px;
-      background: #fff;
-      margin: 0 10px 10px 0;
-      position: relative;
-      width: 100%;
-	  font-size: 1.05em;
-	  
+		padding: 25px;
+		background: #fff;
+		margin: 0 10px 20px 0;
+		position: relative;
+		width: 100%;
+		font-size: 1.05em;
+		border-top-left-radius: $roundness;
+		border-top-right-radius: $roundness;
+		border-bottom-left-radius: $roundness;
+		border-bottom-right-radius: $roundness;
+		box-shadow: $shadow;
+		
 	  @include breakpoint(small) {
 		  margin: 0 0 10px 0;
 	  }
@@ -470,12 +508,25 @@
       }
       
       .title {
-          display: block;
-          margin: -25px 0 25px -25px;
-          padding: 20px 25px;
-          border-bottom: solid 1px #f1f1f1;
-          width: calc(100% + 50px);
-          font-size: 1.25em;
+        display: block;
+        margin: -25px 0 25px -25px;
+        padding: 20px 25px;
+        border-bottom: solid 1px rgba($light-blue, .15);
+        width: calc(100% + 50px);
+        font-size: 1.25em;
+        background: rgba($light-blue, .05);
+        border-top-left-radius: $roundness;
+        border-top-right-radius: $roundness;
+        position: relative;
+
+        img {
+            display: block;
+            position: absolute;
+            @include vertical-align;
+            right: 25px;
+            width: auto;
+            height: 30px;
+        }
 
         sup {
             color: $orange;

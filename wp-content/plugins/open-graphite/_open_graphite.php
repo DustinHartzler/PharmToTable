@@ -3,25 +3,24 @@
 Plugin Name: 	Open Graphite
 Plugin URI: 	https://wordpress.org/plugins/open-graphite/
 Description: 	Control how your content is viewed when shared on social media.
-Version: 		1.3.1
+Version: 		1.4.0
 Author: 		Rocket Apps
 Author URI: 	https://rocketapps.com.au
-Stable tag:     1.3
-License:        GPL2
+License:        GPLv2
 Domain Path: 	/languages/
 */
+
+/* Look for translation file. */
+function load_open_g_textdomain() {
+    load_plugin_textdomain( 'open-graphite', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'load_open_g_textdomain' );
 
 /* Add SETTINGS link from the plugins page */
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'open_graphite_link_from_plugin_page' );
 function open_graphite_link_from_plugin_page( $links ) {
 	return array_merge(array('settings' => '<a href="' . admin_url( '/admin.php?page=open-graphite-settings' ) . '">' . __( 'Settings', 'open-graphite' ) . '</a>'), $links);
 }
-
-/* Look for translation file. */
-function load_open_graphite_textdomain() {
-    load_plugin_textdomain( 'open-graphite', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-}
-add_action( 'plugins_loaded', 'load_open_graphite_textdomain' );
 
 /* Add custom CSS and Thickbox to admin. */
 function open_graphite_admin_styles() {

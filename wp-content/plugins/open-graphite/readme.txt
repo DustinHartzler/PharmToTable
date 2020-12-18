@@ -1,9 +1,9 @@
 === Open Graphite ===
-Contributors: mikeyott
-Tags: open graph, opengraph, social, facebook, twitter, thumbnail, thumbnails, og:image, og:description, og:title
-Requires at least: 4.7
-Tested up to: 5.4
-Stable tag: 1.3.1
+Contributors:       mikeyott
+Tags:               open graph, social, facebook, twitter, thumbnail
+Requires at least:  4.7
+Tested up to:       5.5
+Stable tag:         trunk
 
 Control how your content is viewed when shared on social media.
 
@@ -50,15 +50,37 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 <a href="https://rocketapps.com.au/open-graphite-pro/?origin=open-graphite">Open Graphite Pro</a> has additional features, such as:
 
 * The ability to use with any custom post type
+* Automatically force Facebook to immediately update your title, description or featured image when you make edits (no need to use the Facebook debugger)
 * Mobile and desktop previews for Facebook, Twitter and Linkedin
+* WooCommerce product support
+* Pinterest specific options
+* Enhanced Slack sharing
 * Specify automatic defaults for titles, descriptions, featured images and object types
 * Open Graph content indicators
 * Limit the number of characters for titles and descriptions (prevent your titles and descriptions getting truncated)
+* Open graph check tool
 * Additional open graph options
 * 12 months of updates
 * Priority support
 
 == Changelog ==
+
+= 1.4.0 =
+
+Admin UI tweaks.
+
+= 1.3.3 =
+
+Removed links to opengraphcheck.com (no longer exists).
+Fixed function name error that occurred when Open Graphite Pro is activated.
+Admin UI tweaks.
+
+= 1.3.2 =
+
+Fixed missing translation strings.
+Fixed PHP error.
+Replaced missing load_plugin_textdomain() function.
+Minor admin UI tweaks.
 
 = 1.3.1 =
 
