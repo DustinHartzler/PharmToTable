@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use \Automattic\WooCommerce\Admin\Features\Navigation\Menu;
+
 /**
  * Product_Addon_Admin class.
  */
@@ -39,6 +41,19 @@ class WC_Product_Addons_Admin {
 	 */
 	public function admin_menu() {
 		$page = add_submenu_page( 'edit.php?post_type=product', __( 'Add-ons', 'woocommerce-product-addons' ), __( 'Add-ons', 'woocommerce-product-addons' ), 'manage_woocommerce', 'addons', array( $this, 'global_addons_admin' ) );
+
+		if ( ! class_exists( '\Automattic\WooCommerce\Admin\Features\Navigation\Menu' ) ) {
+			return;
+		}
+
+		Menu::add_plugin_item(
+			array(
+				'id'         => 'woocommerce-product-addons',
+				'title'      => __( 'Product Add-ons', 'woocommerce-product-addons' ),
+				'url'        => 'edit.php?post_type=product&page=addons',
+				'capability' => 'manage_woocommerce',
+			)
+		);
 	}
 
 	/**
@@ -470,12 +485,12 @@ class WC_Product_Addons_Admin {
 		}
 
 		if ( ! empty( $_POST['import_product_addon'] ) ) {
-			$import_addons = maybe_unserialize( strip_tags( stripslashes( trim( $_POST['import_product_addon'] ) ) ) );
+			$import_addons = maybe_unserialize( maybe_unserialize( stripslashes( trim( $_POST['import_product_addon'] ) ) ) );
 
 			if ( is_array( $import_addons ) && sizeof( $import_addons ) > 0 ) {
 				$valid = true;
 
-				foreach ( $import_addons as $addon ) {
+				foreach ( $import_addons as $key => $addon ) {
 					if ( ! isset( $addon['name'] ) || ! $addon['name'] ) {
 						$valid = false;
 					}
@@ -491,6 +506,11 @@ class WC_Product_Addons_Admin {
 					if ( ! isset( $addon['required'] ) ) {
 						$valid = false;
 					}
+
+					// Sanitize the addon before importing.
+					if ( $valid ) {
+						$import_addons[ $key ] = apply_filters( 'woocommerce_product_addons_import_data', $this->sanitize_addon( $addon ), $addon, $key );
+					}
 				}
 
 				if ( $valid ) {
@@ -502,6 +522,48 @@ class WC_Product_Addons_Admin {
 		uasort( $product_addons, array( $this, 'addons_cmp' ) );
 
 		return $product_addons;
+	}
+
+	/**
+	 * Sanitize the addon.
+	 *
+	 * @since 3.0.36
+	 * @param array $addon Array containing the addon data.
+	 * @return array
+	 */
+	public function sanitize_addon( $addon ) {
+		$sanitized = array(
+			'name'               => sanitize_text_field( $addon['name'] ),
+			'title_format'       => sanitize_text_field( $addon['title_format'] ),
+			'description_enable' => ! empty( $addon['description_enable'] ) ? 1 : 0,
+			'description'        => wp_kses_post( $addon['description'] ),
+			'type'               => sanitize_text_field( $addon['type'] ),
+			'display'            => sanitize_text_field( $addon['display'] ),
+			'position'           => absint( $addon['position'] ),
+			'required'           => ! empty( $addon['required'] ) ? 1 : 0,
+			'restrictions'       => ! empty( $addon['restrictions'] ) ? 1 : 0,
+			'restrictions_type'  => sanitize_text_field( $addon['restrictions_type'] ),
+			'adjust_price'       => ! empty( $addon['adjust_price'] ) ? 1 : 0,
+			'price_type'         => sanitize_text_field( $addon['price_type'] ),
+			'price'              => wc_format_decimal( sanitize_text_field( $addon['price'] ) ),
+			'min'                => (float) sanitize_text_field( $addon['min'] ),
+			'max'                => (float) sanitize_text_field( $addon['max'] ),
+		);
+
+		if ( is_array( $addon['options'] ) ) {
+			$sanitized['options'] = array();
+
+			foreach ( $addon['options'] as $key => $option ) {
+				$sanitized['options'][ $key ] = array(
+					'label'      => sanitize_text_field( $option['label'] ),
+					'price'      => wc_format_decimal( sanitize_text_field( $option['price'] ) ),
+					'image'      => sanitize_text_field( $option['image'] ),
+					'price_type' => sanitize_text_field( $option['price_type'] ),
+				);
+			}
+		}
+
+		return $sanitized;
 	}
 
 	/**

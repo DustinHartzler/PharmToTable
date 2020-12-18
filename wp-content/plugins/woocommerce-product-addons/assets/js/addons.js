@@ -1,6 +1,7 @@
 /* eslint camelcase: [2, {properties: "never"}] */
 /* global woocommerce_addons_params, jQuery, accounting */
 jQuery( function( $ ) {
+
 	var wcPaoInitAddonTotals = {
 		isGroupedMixedProductType: function() {
 			var group  = $( '.product-type-grouped' ),
@@ -132,13 +133,12 @@ jQuery( function( $ ) {
 					var $variation_form = $( this ),
 						$totals         = $variation_form.find( '#product-addons-total' );
 
-					if ( typeof( variation.display_price ) !== 'undefined' ) {
+					if ( typeof variation.display_price !== 'undefined' ) {
 
 						$totals.data( 'price', variation.display_price );
 
-					} else if ( $( variation.price_html ).find( '.amount:last' ).length ) {
-
-						var product_price = $( variation.price_html ).find( '.amount:last' ).text();
+					} else if ( $( variation.price_html ).find( '.amount' ).last().length ) {
+						var product_price = $( variation.price_html ).find( '.amount' ).last().text();
 							product_price = product_price.replace( woocommerce_addons_params.currency_format_symbol, '' );
 							product_price = product_price.replace( woocommerce_addons_params.currency_format_thousand_sep, '' );
 							product_price = product_price.replace( woocommerce_addons_params.currency_format_decimal_sep, '.' );
@@ -200,7 +200,7 @@ jQuery( function( $ ) {
 							is_custom_price = true;
 							addon_cost = $addon.val();
 							addon_cost_raw = $addon.val();
-							price_type = 'flat_fee';
+							price_type = 'quantity_based';
 						} else if ( $addon.is( '.wc-pao-addon-input-multiplier' ) ) {
 							if ( isNaN( $addon.val() ) || '' === $addon.val() ) { // Number inputs return blank when invalid
 								$addon.val( '' );
@@ -362,7 +362,7 @@ jQuery( function( $ ) {
 						if ( 'undefined' !== typeof product_price && product_id ) {
 							// If it is a bookable product.
 							if ( $( '.wc-bookings-booking-form' ).length ) {
-								product_total_price = parseFloat( product_price );
+								product_total_price = ! isNaN( product_price ) ? parseFloat( product_price ) : 0;
 							} else {
 								product_total_price = parseFloat( product_price * qty );
 							}
@@ -428,7 +428,8 @@ jQuery( function( $ ) {
 							if ( $( '.wc-bookings-booking-form' ).length ) {
 								var html = '<div class="product-addon-totals"><ul><li><div class="wc-pao-col1"><strong>' + productName + '</strong></div><div class="wc-pao-col2"><strong><span class="amount">' + productPrice + '</span></strong></div></li>';
 							} else {
-								var html = '<div class="product-addon-totals"><ul><li><div class="wc-pao-col1"><strong>' + qty + woocommerce_addons_params.quantity_symbol + productName + '</strong></div><div class="wc-pao-col2"><strong><span class="amount">' + productPrice + '</span></strong></div></li>';
+								var quantityString = is_rtl() ? woocommerce_addons_params.quantity_symbol + qty : qty + woocommerce_addons_params.quantity_symbol;
+								var html = '<div class="product-addon-totals"><ul><li><div class="wc-pao-col1"><strong><span>' + quantityString + '</span> ' + productName + '</strong></div><div class="wc-pao-col2"><strong><span class="amount">' + productPrice + '</span></strong></div></li>';
 							}
 
 							if ( addons.length ) {
@@ -519,7 +520,7 @@ jQuery( function( $ ) {
 					}
 				} )
 
-				.on( 'click touchstart', '.wc-pao-addon-image-swatch', function( e ) {
+				.on( 'click touchend', '.wc-pao-addon-image-swatch', function( e ) {
 					e.preventDefault();
 
 					var selectedValue = $( this ).data( 'value' ),
@@ -527,7 +528,7 @@ jQuery( function( $ ) {
 						label = $.parseHTML( $( this ).data( 'price' ) );
 
 					// Clear selected swatch label.
-					parent.prev( 'label' ).find( '.wc-pao-addon-image-swatch-price' ).remove();
+					parent.prevAll( 'label' ).find( '.wc-pao-addon-image-swatch-price' ).remove();
 
 					// Clear all selected.
 					parent.find( '.wc-pao-addon-image-swatch' ).removeClass( 'selected' );
@@ -539,14 +540,14 @@ jQuery( function( $ ) {
 					parent.find( '.wc-pao-addon-image-swatch-select' ).val( selectedValue );
 
 					// Display selected swatch next to label.
-					parent.prev( 'label' ).append( $( label ) );
+					parent.prevAll( 'label' ).append( $( label ) );
 
 					$cart.trigger( 'woocommerce-product-addons-update' );
 				} );
 
 			$cart.find( ' .wc-pao-addon-custom-text, .wc-pao-addon-custom-textarea' ).each( function() {
 				if ( $( this ).attr( 'maxlength' ) > 0 ) {
-					$( this ).after( '<small class="wc-pao-addon-chars-remaining"><span>' + $( this ).attr( 'maxlength' ) + '</span> ' + woocommerce_addons_params.i18n_remaining + '</small>' );
+					$( this ).after( '<small class="wc-pao-addon-chars-remaining">' + woocommerce_addons_params.i18n_remaining + '</small>' );
 				}
 			} );
 
@@ -559,6 +560,10 @@ jQuery( function( $ ) {
 
 			$( '.wc-pao-addon-image-swatch' ).tipTip( { delay: 200 } );
 		},
+	};
+
+	var is_rtl = function() {
+		return 'rtl' === document.documentElement.dir;
 	};
 
 	// Quick view.
@@ -583,14 +588,6 @@ jQuery( function( $ ) {
 	// Checkbox required logic.
 	$( 'body' ).find( '.wc-pao-addon-checkbox-group-required' ).each( function() {
 		var checkboxesGroup = this;
-		$( this ).find( '.wc-pao-addon-checkbox' ).each( function () {
-			// Stop displaying field required notice - it is confusing for multiple checkboxes in addon group.
-			$( this ).bind( 'invalid', function ( e ) {
-				// Style the checkboxes to indicate missing value.
-				$( checkboxesGroup ).addClass( "wc-pao-addon-checkbox-required-error" );
-				e.preventDefault();
-			} );
-		})
 
 		/*
 		 * Require at least one checkbox in a required group to be checked.
@@ -600,18 +597,18 @@ jQuery( function( $ ) {
 		 * This requires HTML5 to work.
 		 */
 		$( this ).find( '.wc-pao-addon-checkbox' ).change( function () {
-			// If user is making actions always remove error class.
-			$( checkboxesGroup ).removeClass( "wc-pao-addon-checkbox-required-error" );
 			if ( $( checkboxesGroup ).find( "input:checked" ).length > 0 ) {
+				$( checkboxesGroup ).removeClass( "wc-pao-addon-checkbox-required-error" );
 				$( checkboxesGroup ).find( "input" ).each( function () {
 					$( this ).attr( "required", false );
-				} )
+				} );
 			} else {
+				$( checkboxesGroup ).addClass( "wc-pao-addon-checkbox-required-error" );
 				$( checkboxesGroup ).find( "input" ).each( function () {
 					$( this ).attr( "required", true );
-				} )
+				} );
 			}
-		})
+		} );
 	} );
 
 } );

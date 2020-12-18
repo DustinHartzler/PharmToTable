@@ -1,14 +1,25 @@
 *** Product Addons Changelog ***
 
-2020-08-18 - version 3.0.38
-* Fix   - Sanitize Add-Ons serialized imported data and escape output.
+2020-12-07 - version 3.3.0
+* Fix - Fix Checkbox add-on not showing required styles when all are unselected.
+* Fix - Fix addon start template in WooCommerce versions prior to 3.0.
+* Fix - Remove usage of jQuery :last selector.
 
-2020-08-17 - version 3.0.37
-* Fix   - Replace deprecated jQuery methods.
-* Tweak - WordPress 5.5 compatibility.
+2020-11-25 - version 3.2.0
+* Fix - Add plugin page to new WooCommerce Navigation.
+* Tweak - WC 4.7 compatibility.
+* Tweak - WP 5.6 compatibility.
 
-2020-07-07 - version 3.0.36
-* Fix - Escape output for selectWoo fields.
+2020-11-14 - version 3.1.1
+* Fix - Calculate the selected addons subtotal, even if the date for a bookable product hasn't been chosen yet.
+* Fix - Change field name upon selection when there is a description.
+
+2020-09-29 - version 3.1.0
+* Fix - Sanitize data when importing product addons.
+* Fix - Include quantity in calculation for customer defined price fields.
+* Tweak - Change quantity string for RTL languages.
+* Tweak - WC 4.5 compatibility.
+* Tweak - WP 5.5 compatibility.
 
 2020-06-23 - version 3.0.35
 * Fix - Update API.

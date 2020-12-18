@@ -147,7 +147,7 @@ $empty_name_message = __( 'All addon fields require a name.', 'woocommerce-produ
 		})
 		.on( 'click', '.add_new_addon', function() {
 
-			var loop = jQuery('.woocommerce_product_addons .woocommerce_product_addon').length;
+			var loop = jQuery('.woocommerce_product_addons .woocommerce_product_addon').size();
 			var total_add_ons = jQuery( '.woocommerce_product_addons .woocommerce_product_addon' ).length;
 
 			if ( total_add_ons >= 1 ) {

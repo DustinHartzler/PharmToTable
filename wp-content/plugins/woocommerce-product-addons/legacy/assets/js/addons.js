@@ -107,13 +107,12 @@ jQuery( document ).ready( function($) {
 			var $variation_form = $( this ),
 				$totals         = $variation_form.find( '#product-addons-total' );
 
-			if ( typeof( variation.display_price ) !== 'undefined' ) {
+			if ( typeof variation.display_price !== 'undefined' ) {
 
 				$totals.data( 'price', variation.display_price );
 
-			} else if ( $( variation.price_html ).find( '.amount:last' ).length ) {
-
-				product_price = $( variation.price_html ).find( '.amount:last' ).text();
+			} else if ( $( variation.price_html ).find( '.amount' ).last().length ) {
+				product_price = $( variation.price_html ).find( '.amount' ).last().text();
 				product_price = product_price.replace( woocommerce_addons_params.currency_format_symbol, '' );
 				product_price = product_price.replace( woocommerce_addons_params.currency_format_thousand_sep, '' );
 				product_price = product_price.replace( woocommerce_addons_params.currency_format_decimal_sep, '.' );
@@ -197,7 +196,7 @@ jQuery( document ).ready( function($) {
 			$totals.data( 'addons-price', total );
 			$totals.data( 'addons-raw-price', total_raw );
 
-			if ( $cart.find( 'input.qty' ).length ) {
+			if ( $cart.find( 'input.qty' ).size() ) {
 				var qty = 0;
 
 				$cart.find( 'input.qty' ).each( function() {
