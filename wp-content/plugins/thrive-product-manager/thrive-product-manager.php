@@ -4,13 +4,13 @@
  * Plugin Name: Thrive Product Manager
  * Plugin URI: http://thrivethemes.com
  * Description: Connect this site with Thrive Themes account to install and activate Thrive product.
- * Version: 1.2.3
+ * Version: 1.2.4
  * Author: Thrive Themes
  * Author URI: http://thrivethemes.com
  */
 class Thrive_Product_Manager {
 
-	const V = '1.2.3';
+	const V = '1.2.4';
 	const T = 'thrive_product_manager';
 
 	protected static $_instance;
@@ -139,7 +139,6 @@ class Thrive_Product_Manager {
 	public static function is_debug_mode() {
 
 		return ( defined( 'TPM_DEBUG' ) && TPM_DEBUG === true ) ||
-		       ( defined( 'TVE_DEBUG' ) && TVE_DEBUG === true ) ||
 		       ( ! empty( $_REQUEST['tpm_debug'] ) );
 	}
 
@@ -474,6 +473,7 @@ class Thrive_Product_Manager {
 		register_rest_route( 'thrive-product-manager/v1', '/deactivate/(?P<id>\d+)', array(
 			'methods'  => 'POST',
 			'callback' => array( TPM_License_Manager::get_instance(), 'license_deactivate' ),
+			'permission_callback' => '__return_true',
 		) );
 	}
 

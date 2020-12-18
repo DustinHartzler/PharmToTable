@@ -88,9 +88,12 @@ class TPM_Product_Theme extends TPM_Product {
 			'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url(),
 		);
 
-		$thrive_update_api_url = add_query_arg( array(
-			'p' => $this->_get_hash( $request['body'] ),
-		), 'http://service-api.thrivethemes.com/theme/update' );
+		$thrive_update_api_url = add_query_arg(
+			array(
+				'p' => $this->_get_hash( $request['body'] ),
+			),
+			'http://service-api.thrivethemes.com/theme/update'
+		);
 
 		$result = wp_remote_post( $thrive_update_api_url, $request );
 
@@ -114,18 +117,25 @@ class TPM_Product_Theme extends TPM_Product {
 
 		$url = $this->_get_download_url( $this->api_slug );
 
-		/** @var $wp_filesystem WP_Filesystem_Base */
 		global $wp_filesystem;
 		$connected = WP_Filesystem( $credentials );
 
-		if ( $connected === false ) {
+		if ( false === $connected ) {
 			return $wp_filesystem->errors;
 		}
 
 		require_once __DIR__ . '/class-tpm-theme-installer-skin.php';
 
-		$installer = new Theme_Upgrader( new TPM_Theme_Installer_Skin( $credentials ) );
+		$skin      = new TPM_Theme_Installer_Skin( $credentials );
+		$installer = new Theme_Upgrader( $skin );
 
-		return $installer->install( $url );
+		$installed = $installer->install( $url );
+
+		if ( null === $installed ) {
+			/** @var TPM_Theme_Installer_Skin $installer ->skin */
+			$installed = new WP_Error( '500', end( $installer->skin->messages ) );
+		}
+
+		return $installed;
 	}
 }
