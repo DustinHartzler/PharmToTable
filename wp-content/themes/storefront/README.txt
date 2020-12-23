@@ -1,9 +1,9 @@
 === Storefront ===
 Contributors: automattic, tiagonoronha, jameskoster
-Requires at least: 5.2.7
-Tested up to: 5.4.2
-Stable tag: 2.5.8
-Version: 2.5.8
+Requires at least: 5.3.4
+Tested up to: 5.6.0
+Stable tag: 2.9.0
+Version: 3.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: e-commerce, two-columns, left-sidebar, right-sidebar, custom-background, custom-colors, custom-header, custom-menu, featured-images, full-width-template, threaded-comments, accessibility-ready, rtl-language-support, footer-widgets, sticky-post, theme-options, editor-style
@@ -48,6 +48,45 @@ To the best of our knowledge, Google doesn’t track nor share end user data.
 Privacy Policy for the Google Fonts API: https://developers.google.com/fonts/faq#what_does_using_the_google_fonts_api_mean_for_the_privacy_of_my_users
 
 == Changelog ==
+
+= 3.0.0 - 2020-12-15 = 
+* Enhancement - Add missing link text on cart button in handheld footer bar [#1205](https://github.com/woocommerce/storefront/issues/1205)
+* Enhancement - Move Storefront admin notice content to the Storefront Appearance page.[#1544](https://github.com/woocommerce/storefront/pull/1544)
+* Fix - Implode parameters order compatibility for PHP8 [#1553](https://github.com/woocommerce/storefront/pull/1553)
+* Dev - Update various dependencies, including major updates:
+  - `@wordpress/env` to v2 [#1459](https://github.com/woocommerce/storefront/pull/1459)
+  - `autoprefixer` to v10.0.4 [#1548](https://github.com/woocommerce/storefront/pull/1548)
+  - `puppeteer` to v5 [#1410](https://github.com/woocommerce/storefront/pull/1410)
+  - `grunt-contrib-uglify` to v5 [#1426](https://github.com/woocommerce/storefront/pull/1426)
+  - `bourbon` to v7 [#1388](https://github.com/woocommerce/storefront/pull/1388)
+
+= 2.9.0 - 2020-11-10 =
+* Enhancement – Added styles to the Filter Products by Price block, so the accent color is used in the slider. [#1508](https://github.com/woocommerce/storefront/pull/1508)
+* Performance – Added CSS minification. [#1503](https://github.com/woocommerce/storefront/pull/1503)
+* Fix - Cover block text color attributes not being applied. [#1513](https://github.com/woocommerce/storefront/pull/1513)
+* Fix - Inconsistent font sizes of category and product titles in shop page. [#1501](https://github.com/woocommerce/storefront/pull/1501)
+* Dev - Update various dependencies, including major updates:
+  - `autoprefixer` v10 and `postcss` v8 [#1502](https://github.com/woocommerce/storefront/pull/1502)
+  - `grunt-contrib-jshint` v3 [#1507](https://github.com/woocommerce/storefront/pull/1507)
+  - `node-sass` v5 [#1523](https://github.com/woocommerce/storefront/pull/1523)
+
+= 2.8.0 - 2020-10-13 =
+- Dev: Reinstate PHPcs linting #1463
+- Dev: Add `wp-env` npm script alias #1489
+- Dev: Tweak npm config & scripts for release tooling changes #1462 
+- Dev: Various dependency updates 
+
+= 2.7.0 - 2020-09-02 =
+* Fix - Respect user-selected Color and Font size values for All Products' Product Title Block. [#1424](https://github.com/woocommerce/storefront/pull/1424)
+* Fix - Fix issue with draft products showing up in pagination [#1452](https://github.com/woocommerce/storefront/pull/1452)
+* Enhancement - Add icons to notices. [#1453](https://github.com/woocommerce/storefront/pull/1453)
+
+= 2.6.0 - 2020-08-18 =
+* Fix - Add defensive checks for WC Cart instance [#1440](https://github.com/woocommerce/storefront/pull/1440)
+* Fix - Fix focus outline in My Account page with Firefox [#1428](https://github.com/woocommerce/storefront/pull/1428)
+* Fix - Merge duplicate CSS Selectors [#1419](https://github.com/woocommerce/storefront/pull/1419) 👏[@ismail-elkorchi](https://github.com/woocommerce/storefront/issues?q=is%3Apr+author%3AIsmail-elkorchi)
+* Fix - incorrect starter content for Home page [#1422](https://github.com/woocommerce/storefront/pull/1422)
+* Enhancement - Add Cart and Checkout block styles [#1412](https://github.com/woocommerce/storefront/pull/1412)
 
 = 2.5.8 - 2020-06-19 =
 * Fix – Stylesheet storefront-woocommerce-style has storefront-style and storefront-icons as explicit dependencies, so child themes can define storefront-woocommerce-style as a dependency without the risk of breaking the stylesheets order. #1369
