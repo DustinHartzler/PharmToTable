@@ -43,7 +43,7 @@ Images License: GNU General Public License v2 or later
 
 
 ul {
-    margin: 0 0 0.5em 0em;
+    margin: 0 0 1em 2em;
     list-style: none;
 }
 
@@ -101,4 +101,9 @@ p {
 
 .smaller-padding {
     padding-top: 0 !important;
+}
+
+a {
+    text-decoration: underline;
+    font-family: Source Sans Pro, HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
 }
