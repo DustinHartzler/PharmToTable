@@ -193,11 +193,6 @@
                                     Personal Bio
                                 </a>
                             </li>
-                            <li>
-                                <a data-toggle="tab" href="#tab3" aria-expanded="true">
-                                    Working Hours
-                                </a>
-                            </li>
                         </ul>
                         <!-- End Tab Nav -->
                         <!-- Start Tab Content -->
@@ -214,50 +209,6 @@
                             <div id="tab2" class="tab-pane fade">
                                 <div class="info title">
                                     <?php echo get_post_meta($post->ID, 'provider_personal_bio', true); ?>
-                                </div>
-                            </div>
-                            <!-- End Single Item -->
-                            <!-- Single Item -->
-                            <div id="tab3" class="tab-pane fade">
-                                <div class="info title">
-                                    <h3>Schedule of working hours</h3>
-                                    <ul>
-                                        <?php if( !empty ( $day1 ) ){ ?>
-                                            <li> <span> <?php echo get_post_meta($post->ID, 'provider_day1', true); ?>:  </span>
-                                                <div class="pull-right"> <?php echo get_post_meta($post->ID, 'provider_hour1', true); ?></div>
-                                            </li>
-                                        <?php } ?>
-                                        <?php if( !empty ( $day2 ) ){ ?>
-                                            <li> <span> <?php echo get_post_meta($post->ID, 'provider_day2', true); ?>:  </span>
-                                                <div class="pull-right"> <?php echo get_post_meta($post->ID, 'provider_hour2', true); ?></div>
-                                            </li>
-                                        <?php } ?>
-                                        <?php if( !empty ( $day3 ) ){ ?>
-                                            <li> <span> <?php echo get_post_meta($post->ID, 'provider_day3', true); ?>:  </span>
-                                                <div class="pull-right"> <?php echo get_post_meta($post->ID, 'provider_hour3', true); ?></div>
-                                            </li>
-                                        <?php } ?>
-                                        <?php if( !empty ( $day4 ) ){ ?>
-                                            <li> <span> <?php echo get_post_meta($post->ID, 'provider_day4', true); ?>:  </span>
-                                                <div class="pull-right"> <?php echo get_post_meta($post->ID, 'provider_hour4', true); ?></div>
-                                            </li>
-                                        <?php } ?>
-                                        <?php if( !empty ( $day5 ) ){ ?>
-                                            <li> <span> <?php echo get_post_meta($post->ID, 'provider_day5', true); ?>:  </span>
-                                                <div class="pull-right"> <?php echo get_post_meta($post->ID, 'provider_hour5', true); ?></div>
-                                            </li>
-                                        <?php } ?>
-                                        <?php if( !empty ( $day6 ) ){ ?>
-                                            <li> <span> <?php echo get_post_meta($post->ID, 'provider_day6', true); ?>:  </span>
-                                                <div class="pull-right"> <?php echo get_post_meta($post->ID, 'provider_hour6', true); ?></div>
-                                            </li>
-                                        <?php } ?>
-                                        <?php if( !empty ( $day7 ) ){ ?>
-                                            <li> <span> <?php echo get_post_meta($post->ID, 'provider_day7', true); ?>:  </span>
-                                                <div class="pull-right"> <?php echo get_post_meta($post->ID, 'provider_hour7', true); ?></div>
-                                            </li>
-                                        <?php } ?>
-                                    </ul>
                                 </div>
                             </div>
                             <!-- End Single Item -->
