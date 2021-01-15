@@ -106,3 +106,11 @@ p {
 a {
     font-family: Source Sans Pro, HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
 }
+
+/* Adds down arrow next to drop down menu items */
+nav.navbar.bootsnav ul.nav>li.menu-item-has-children>a.dropdown-toggle::after {
+    content: "\f107";
+    font-family: "Font Awesome 5 Free";
+    margin-left: 5px;
+    margin-top: 2px;
+}

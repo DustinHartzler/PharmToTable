@@ -9,7 +9,7 @@
  * Note: DO NOT! alter or remove the code above this text and only add your custom PHP functions below this text.
  */
 
- /**
+/**
 *  Add WooCommerce Support for Theme
 */
 function mytheme_add_woocommerce_support() {
@@ -18,19 +18,19 @@ function mytheme_add_woocommerce_support() {
 add_action( 'after_setup_theme', 'mytheme_add_woocommerce_support' );
 
 
-
-add_action( 'pre_get_posts', 'dh_providers_random' );
-
+/**
+*  Display Providers Randomly on Providers page
+*/
 function dh_providers_random( $query ) {
-
 	if( $query->is_main_query() && !is_admin() && is_post_type_archive( 'provider' ) ) {
 		$query->set( 'orderby', 'rand' );
 	}
-
 }
+add_action( 'pre_get_posts', 'dh_providers_random' );
 
-// Display States
-
+/**
+*  Display States
+*/
 function display_member_taxonomy_terms($post_id){
     //get all terms assigned to this post
 	$member_terms = get_the_terms($post_id,'state_category');
@@ -51,8 +51,9 @@ function display_member_taxonomy_terms($post_id){
     }
 }
 
-
-// Widget Areas
+/**
+*  Widget Areas
+*/
 
 if ( function_exists('register_sidebar') ) {
     register_sidebar(array(
@@ -95,9 +96,6 @@ if ( function_exists('register_sidebar') ) {
       'before_title' => '<h4>',
       'after_title' => '</h4>',
     ));
-
-
-
   }
 
 
@@ -114,7 +112,9 @@ if ( function_exists('register_sidebar') ) {
     add_filter( 'dynamic_sidebar_params', 'wpse172754_add_widget_classes' );
 
 
-  // Numbered Pagination
+/**
+*  Numbered Pagination
+*/
   if ( !function_exists( 'wpex_pagination' ) ) {
 
       function wpex_pagination() {
@@ -191,7 +191,7 @@ register_nav_menu('account', 'My Account Navigation Menu');
 class My_Walker_Nav_Menu extends Walker_Nav_Menu {
     function start_lvl(&$output, $depth=0, $args = array ()) {
       $indent = str_repeat("\t", $depth);
-      $output .= "\n$indent<ul class=\"dropdown-menu multi-level\">\n";
+      $output .= "\n$indent<ul class=\"dropdown-menu\">\n";
     }
   }
 
@@ -211,6 +211,15 @@ class My_Walker_Nav_Menu extends Walker_Nav_Menu {
 
       return $sorted_menu_items;
   }
+
+
+/**
+*  Add Class to links in menu, so the dropdown arrow appears
+*/
+function add_menuclass($ulclass) {
+    return preg_replace('/<a /', '<a class="dropdown-toggle"', $ulclass);
+ }
+ add_filter('wp_nav_menu','add_menuclass');
 
 /**
 * Remove search from Header
