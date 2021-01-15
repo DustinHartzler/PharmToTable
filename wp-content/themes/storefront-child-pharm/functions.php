@@ -29,6 +29,11 @@ function dh_providers_random( $query ) {
 add_action( 'pre_get_posts', 'dh_providers_random' );
 
 /**
+*  Allow HTML in Author's Bios
+*/
+remove_filter('pre_user_description', 'wp_filter_kses');
+
+/**
 *  Display States
 */
 function display_member_taxonomy_terms($post_id){
