@@ -21,6 +21,11 @@
     <meta name="keywords" content="Bootstrap3, Event,  Conference, Meetup, Template, Responsive, HTML5"/>
     <meta name="author" content="themearth.com"/>
 
+    <!-- LogRocket -->
+    <script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>window.LogRocket && window.LogRocket.init('dgbkxm/your-website-engineer');</script>
+
+
 
 <!-- GOOGLE FONT -->
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Oswald:400,700%7cPoppins:300,400,400i,600,600i,700,800,900"/>
@@ -29,10 +34,53 @@
 <script src="https://kit.fontawesome.com/39bb5e0fe7.js" crossorigin="anonymous"></script>
 
 <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" />
+<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootsnav.css" rel="stylesheet" />
 <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/style.css" rel="stylesheet">
 <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/style2.css" rel="stylesheet">
 
+<!-- Header
+    ============================================= -->
+    <header id="home">
 
+        <!-- Start Navigation -->
+        <nav class="navbar navbar-default attr-border  bootsnav">
+
+            <div class="container">
+
+                <!-- Start Atribute Navigation -->
+                <div class="attr-nav">
+                    <ul>
+                        <li class="quote-btn"><a href="<?php bloginfo('url'); ?>/provider">Make Appointment</a></li>
+                    </ul>
+                </div>
+                <!-- End Atribute Navigation -->
+
+                <!-- Start Header Navigation -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <a class="navbar-brand" href="<?php bloginfo('url'); ?>">
+                        <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/pharmtotable-logo.png" class="logo" alt="Logo">
+                    </a>
+                </div>
+                <!-- End Header Navigation -->
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-menu">
+
+                <?php wp_nav_menu( array(
+                            'sort_column' => 'menu_order',
+                            'theme_location' => 'main',
+                            'container' => 'ul',
+                            'menu_class' => 'nav navbar-nav navbar-right',
+                            'items_wrap'      => '<ul class="%2$s">%3$s</ul>',
+                            'walker' => new My_Walker_Nav_Menu(),
+
+                            ) );
+                            ?>
+                </div><!-- /.navbar-collapse -->
+            </div>
 
 	<?php wp_head(); ?>
 </head>
@@ -40,6 +88,24 @@
 <body <?php body_class(); ?>>
 
 <?php wp_body_open(); ?>
+ <!-- Start Breadcrumb
+============================================= -->
+<div class="breadcrumb-area shadow dark bg-fixed text-light" style="background-image: url(assets/img/2440x1578.png);">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1><?php the_title(); ?></h1>
+            </div>
+            <div class="col-md-6 text-right">
+                <ul class="breadcrumb">
+                    <li><a href="<?php echo get_home_url(); ?>"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="active"><?php the_title(); ?></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumb -->
 
 <?php do_action( 'storefront_before_site' ); ?>
 
