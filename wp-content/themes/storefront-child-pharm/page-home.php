@@ -16,7 +16,7 @@
 
     <!-- LogRocket -->
     <script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script>
-    <script>window.LogRocket && window.LogRocket.init('dgbkxm/your-website-engineer');</script>
+    <script>window.LogRocket && window.LogRocket.init('dgbkxm/pharmtotable');</script>
 
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
