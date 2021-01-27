@@ -114,3 +114,15 @@ nav.navbar.bootsnav ul.nav>li.menu-item-has-children>a.dropdown-toggle::after {
     margin-left: 5px;
     margin-top: 2px;
 }
+
+
+/* Makes menu visible on mobile */
+.navbar-toggle {
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .attr-nav {
+        display: none;
+    }
+}
