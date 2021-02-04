@@ -282,7 +282,7 @@
                                 <p class="services">
                                 A deep dive into your story to address the root-cause of your symptoms.  This starts by mapping your personal timeline, and health history, then your provider will make recommendations for testing, lifestyle modifications, and possibly nutrient supplementation to put you on your journey to health.
                                 </p>
-
+                                <a class="btn btn-theme border circle btn-md" href="https://pharmtotable.life/services/functional-medicine/">Learn More</a>
                             </div>
                         </div>
                         <!-- End Single Item -->
