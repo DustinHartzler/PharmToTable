@@ -44,7 +44,7 @@ Images License: GNU General Public License v2 or later
 
 ul {
     margin: 0 0 1em 2em;
-    list-style: none;
+    /* list-style: none; */
 }
 
 
