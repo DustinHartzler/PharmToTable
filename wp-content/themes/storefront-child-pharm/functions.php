@@ -329,10 +329,13 @@ function custom_storefront_credit() {
 }
 
 
+// Remove Storefront Header from Full page template
+// 2223 => Toxic Report and 2231 => GI Report
+
 add_action( 'wp', 'storefront_remove_title_from_home_default_template' );
 
 function storefront_remove_title_from_home_default_template() {
-   if ( is_front_page() || is_page('5314') ) {
+   if ( is_front_page() || is_page('2223') || is_page('2231')) {
         remove_action( 'storefront_header', 'storefront_header_container', 0 );
         remove_action( 'storefront_header', 'storefront_skip_links', 5 );
         remove_action( 'storefront_header', 'storefront_social_icons', 10 );
@@ -347,5 +350,7 @@ function storefront_remove_title_from_home_default_template() {
         remove_action( 'storefront_before_content', 'storefront_page_header', 30 );
         remove_action( 'storefront_homepage', 'storefront_page_header', 10);
         remove_action( 'storefront_homepage', 'storefront_page_content', 20);
+        remove_action( 'storefront_before_content', 'storefront_header_widget_region', 10);
+remove_action( 'storefront_before_content', 'woocommerce_breadcrumb', 10);
    }
 }
