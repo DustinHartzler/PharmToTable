@@ -39,6 +39,35 @@ function pharm_custom_post() {
 		'has_archive'   => true,
 	);
 	register_post_type( 'provider', $args );
+
+    //Testimonials
+	$labels = array(
+		'name'               => _x( 'Testimonials', 'post type general name' ),
+		'singular_name'      => _x( 'Testimonial', 'post type singular name' ),
+		'add_new'            => _x( 'Add New', 'book' ),
+		'add_new_item'       => __( 'Add New Testimonial' ),
+		'edit_item'          => __( 'Edit Testimonials' ),
+		'new_item'           => __( 'New Testimonials' ),
+		'all_items'          => __( 'All Testimonials' ),
+		'view_item'          => __( 'View Testimonials' ),
+		'search_items'       => __( 'Search All Testimonials' ),
+		'not_found'          => __( 'Nothing found' ),
+		'not_found_in_trash' => __( 'Nothing found in the Trash' ),
+		'parent_item_colon'  => '',
+		'menu_name'          => 'Testimonials'
+	);
+	$args = array(
+		'labels'        => $labels,
+		'description'   => 'Holds all Testimonials',
+		'public'        => true,
+		'publicly_queryable' => true,
+		'menu_position' => 5,
+		'menu_icon'		=> 'dashicons-testimonial',
+		'show_in_rest'  => true,
+		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields' ),
+		'has_archive'   => true,
+	);
+	register_post_type( 'testimonials', $args );
 }
 
 add_action( 'init', 'pharm_custom_post' );
