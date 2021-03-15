@@ -381,44 +381,35 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="testimonial-items testimonial-carousel owl-carousel owl-theme">
+                    <?php
+                        $args = array(
+                            'post_type'     => 'testimonials',
+                            'post_status'   => 'publish',
+                            'posts_per_page' => 2,
+                            'orderby' => 'rand',
+                        );
+
+                        $loop = new WP_Query( $args );
+                        while ( $loop->have_posts() ) : $loop->the_post(); ?>
                         <!-- Single Item -->
                         <div class="item">
                             <div class="content">
                                 <p>
-                                <em>My experience with my functional medicine pharmacist, Melody Hartzler, was phenomenal!</em><br><br>
-                                I came to her after seeing numerous doctors and nutritionists with stomach pain, bloating, and constipation.  No one had an answer for me in the past, so my nutritionist suggested Dr. Hartzler. <br><br>
-                                We did a telehealth meeting and she quickly decided we needed more tests.  Once the test results arrived, she was able to determine a course of action using mostly herbal medicines.  A month into the meds and my stomach pain is nearly gone as is my constipation.  It has been  amazing! The plan hasn't stopped there and we continue to meet and communicate on the best course of action going forward.  I highly recommend Dr. Hartzler for your needs - she listens and goes above and beyond!
-                              </p>
+                                    <?php the_content();?>
+                                </p>
                             </div>
                             <div class="provider">
                                 <div class="thumb">
                                     <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
-                                    <h4>Sara L.</h4>
+                                    <h4><?php echo the_title();?></h4>
                                 </div>
                             </div>
                         </div>
                         <!-- End Single Item -->
-                        <!-- Single Item -->
-                        <div class="item">
-                            <div class="content">
-                                <p>
-                                By working directly with Dr. Hartzler, my medication has not only changed, but the dosage has been reduced, while adding natural vitamin supplements that help support my body’s specific needs.  Her ability to weave both functional and conventional medicine into a treatment plan has been shall we say, more than wonderful!!  Her knowledge about how to integrate these two different types of treatments have been instrumental in not only lowering my A1C, but weight loss and more overall energy.<br><br>
-                                <em><strong>She is no longer just treating the symptoms of my disease, but the underlying causes.  </strong></em><br><br>
-                                This unique insight has been the difference between the previous negative side effects and the improved health I enjoy. Without the help and guidance of Dr. Melody Hartzler, my quality of life would have continued to degrade over time, today I have a much better prognosis for the rest of my life.</p>
-                            </div>
-                            <div class="provider">
-                                <div class="thumb">
-                                    <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
-                                </div>
-                                <div class="info">
-                                    <h4>Kevin</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single Item -->
-                    </div>
+                        <?php endwhile;
+                        wp_reset_postdata();  ?>
                 </div>
             </div>
         </div>
