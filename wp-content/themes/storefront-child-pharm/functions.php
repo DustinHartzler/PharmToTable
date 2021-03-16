@@ -200,7 +200,7 @@ class My_Walker_Nav_Menu extends Walker_Nav_Menu {
     }
   }
 
-  add_filter( 'wp_nav_menu_objects', 'wpse_wp_nav_menu_objects', 10, 2 );
+  //add_filter( 'wp_nav_menu_objects', 'wpse_wp_nav_menu_objects', 10, 2 );
   function wpse_wp_nav_menu_objects( $sorted_menu_items, $args  ) {
       // Only modify the "main" menu.
       if ( ! isset( $args->menu->slug ) || 'main' !== $args->menu->slug ) {
@@ -222,9 +222,20 @@ class My_Walker_Nav_Menu extends Walker_Nav_Menu {
 *  Add Class to links in menu, so the dropdown arrow appears
 */
 function add_menuclass($ulclass) {
-    return preg_replace('/<a /', '<a class="dropdown-toggle"', $ulclass);
+    return preg_replace('/<a /', '<a class="dropdown-toggle" ', $ulclass, 1);
  }
- add_filter('wp_nav_menu','add_menuclass');
+ //add_filter('wp_nav_menu','add_menuclass');
+
+
+ function your_submenu_class($menu) {
+
+    $menu = preg_replace('/ class="dropdown"/','/ class="dropdown-menu" /',$menu);
+
+    return $menu;
+
+    }
+
+    //add_filter('wp_nav_menu','your_submenu_class');
 
 /**
 * Remove search from Header
