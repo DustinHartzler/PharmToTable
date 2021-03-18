@@ -246,7 +246,7 @@
 
 
                                 <div class="appoinment-btn">
-                                    <a href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>">Make appointment</a>
+                                    <a href="<?php echo get_post_meta($post->ID, 'provider_azova', true); ?>" target="_blank">Make appointment</a>
                                 </div>
                             </div>
                         </div>
