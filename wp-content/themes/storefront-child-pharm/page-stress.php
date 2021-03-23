@@ -137,7 +137,7 @@
                                             <h1 data-animation="animated fadeInUp" style="color:white">The Stress <span>Solution</span></h1>
                                             <h2 data-animation="animated fadeInDown" style="color:white">A Course to Help You Reduce Stress and Heal Hormones</h2>
                                             <p data-animation="animated slideInUp" style="color:white">May 15, 2021</p>
-                                            <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#">Sign Up Now</a>
+                                            <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now</a>
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@
                         </li>
                     </ul>
                     <br>
-                    <a class="btn btn-theme effect btn-md" href="#">Sign Up Now</a>
+                    <a class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now</a>
 
                 </div>
             </div>
@@ -210,11 +210,11 @@
                                 <div class="col-md-5">
                                     <div class="info title">
                                         <h3>What You Get When You Sign Up</h3>
-                                        <li class="info">A full day’s training live from functional medicine pharmacists</li>
-                                        <li class="info">PDFs copies of speaker’s slides</li>
-                                        <li class="info">Instant Downloadable Handouts</li>
-                                        <li class="info">Exclusive discounts on appointments and programs with functional medicine clinicians</li>
-                                        <li class="info">Access to the pharmacist’s favorite products</li>
+                                        <li class="info" style="font-size: 20px;">A full day’s training live from functional medicine pharmacists</li>
+                                        <li class="info" style="font-size: 20px;">PDFs copies of speaker’s slides</li>
+                                        <li class="info" style="font-size: 20px;">Instant Downloadable Handouts</li>
+                                        <li class="info" style="font-size: 20px;">Exclusive discounts on appointments and programs with functional medicine clinicians</li>
+                                        <li class="info" style="font-size: 20px;">Access to the pharmacist’s favorite products</li>
                                     </div>
                                 </div>
                                 <!-- End Department Info -->
@@ -223,7 +223,7 @@
                                 <div class="col-md-7 opening-hours">
                                     <div class="opening-info">
                                         <h4>Agenda of the Day</h4>
-                                        <ul>
+                                        <ul class="schedule" style="list-style-type: none">
                                             <li>10:00 - 10:30 am <div class="pull-right"> Introduction to Functional Medicine</div></li>
                                             <li>10:30 - 11:15 am <div class="pull-right"> How Stress Hormones Work </div></li>
                                             <li>11:15 - 11:30 am <div class="pull-right"> Relaxation and Movement Break </div></li>
@@ -618,153 +618,7 @@
     </div>
     <!-- End About -->
 
-    <!-- Start Footer
-    ============================================= -->
-    <footer class="bg-dark text-light">
-        <div class="container">
-            <div class="row">
-                <div class="f-items default-padding">
 
-                    <!-- Single Item -->
-                    <div class="col-md-3 col-sm-6 equal-height item">
-                        <div class="f-item">
-                            <h4>About</h4>
-                            <p>
-                                Excellence decisively nay man yet impression for contrasted remarkably. There spoke happy for you are out. Fertile how old address.
-                            </p>
-                            <div class="opening-info">
-                                <h5>Opening Hours</h5>
-                                <ul>
-                                    <li> <span> Mon - Tues :  </span>
-                                      <div class="pull-right"> 6.00 am - 10.00 pm </div>
-                                    </li>
-                                    <li> <span> Wednes - Thurs :</span>
-                                      <div class="pull-right"> 8.00 am - 6.00 pm </div>
-                                    </li>
-                                    <li> <span> Sun : </span>
-                                      <div class="pull-right closed"> Closed </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="col-md-3 col-sm-6 equal-height item">
-                        <div class="f-item link">
-                            <h4>Our Depeartment</h4>
-                            <ul>
-                                <li>
-                                    <a href="#"><i class="fas fa-arrow-right"></i> Medecine and Health</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fas fa-arrow-right"></i> Dental Care and Surgery</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fas fa-arrow-right"></i> Eye Treatment</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fas fa-arrow-right"></i> Children Chare</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fas fa-arrow-right"></i> Nuclear magnetic</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fas fa-arrow-right"></i> Traumatology</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fas fa-arrow-right"></i> X-ray</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="col-md-3 col-sm-6 equal-height item">
-                        <div class="f-item twitter-widget">
-                            <h4>Latest tweets</h4>
-                            <div class="twitter-item">
-                                <div class="twitter-content">
-                                    <p>
-                                        <a href="#">@Becare</a> Looking for an awesome CREATIVE WordPress Theme? Find it here: <a target="_blank" href="http://t.co/0WWEMQEQ48">http://t.co/0WWEMQEQ48</a>
-                                    </p>
-                                </div>
-                                <div class="twitter-context">
-                                    <i class="fab fa-twitter"></i><span class="twitter-date"> 01 day ago</span>
-                                </div>
-                            </div>
-                            <div class="twitter-item">
-                                <div class="twitter-content">
-                                    <p>
-                                        <a href="#">@Jisham</a> It is a long established fact that a reader will be distracted by the readable . Find it here: <a target="_blank" href="http://t.co/0WWEMQEQ48">http://t.co/0WWEMQEQ48</a>
-                                    </p>
-                                </div>
-                                <div class="twitter-context">
-                                    <i class="fab fa-twitter"></i><span class="twitter-date"> 02 days ago</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="col-md-3 col-sm-6 equal-height item">
-                        <div class="f-item contact">
-                            <h4>Contact</h4>
-                            <ul>
-                                <li>
-                                    <i class="fas fa-phone"></i>
-                                    <p>Phone <span>+123 456 7890</span></p>
-                                </li>
-                                <li>
-                                    <i class="fas fa-envelope"></i>
-                                    <p>Email <span><a href="mailto:support@validtheme.com">support@validtheme.com</a></span></p>
-                                </li>
-                                <li>
-                                    <i class="fas fa-map"></i>
-                                    <p>Office <span>123 6th St. Melbourne, FL 32904</span></p>
-                                </li>
-                            </ul>
-                            <h5>Subscribe Newsletter</h5>
-                            <form action="#">
-                                <div class="input-group stylish-input-group">
-                                    <input type="email" name="email" class="form-control" placeholder="Enter your e-mail here">
-                                    <button type="submit">
-                                        <i class="fa fa-paper-plane"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                </div>
-            </div>
-        </div>
-        <!-- Start Footer Bottom -->
-        <div class="footer-bottom bg-dark text-light">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p>&copy; Copyright 2019. All Rights Reserved by <a href="#">validthemes</a></p>
-                    </div>
-                    <div class="col-md-6 text-right link">
-                        <ul>
-                            <li>
-                                <a href="#">Terms of user</a>
-                            </li>
-                            <li>
-                                <a href="#">License</a>
-                            </li>
-                            <li>
-                                <a href="#">Support</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Footer Bottom -->
-    </footer>
-    <!-- End Footer -->
 
 <?php get_footer(); ?>
 
