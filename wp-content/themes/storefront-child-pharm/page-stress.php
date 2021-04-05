@@ -30,6 +30,7 @@
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootsnav.css" rel="stylesheet" />
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/style.css" rel="stylesheet">
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/style2.css" rel="stylesheet">
+    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/stress.css" rel="stylesheet">
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/responsive.css" rel="stylesheet" />
     <!-- ========== End Stylesheet ========== -->
 
@@ -57,7 +58,7 @@
     <header id="home">
 
         <!-- Start Navigation -->
-        <nav class="navbar navbar-default attr-border navbar-sticky bootsnav">
+        <nav class="navbar navbar-default attr-border bootsnav">
 
             <!-- Start Top Search -->
             <div class="container">
@@ -92,7 +93,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
                     <a class="navbar-brand" href="index.html">
-                        <img src="assets/img/logo.png" class="logo" alt="Logo">
+                        <h2 class="header">The <span>Stress</span> Solution</h2>
                     </a>
                 </div>
                 <!-- End Header Navigation -->
@@ -118,7 +119,7 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="content">
-                                            <h1 data-animation="animated fadeInUp" style="color:white">The Stress <span>Solution</span></h1>
+                                            <h1 data-animation="animated fadeInUp">The <span style="font-family: 'silver_south_scriptregular'; color: #71CABC">Stress</span> Solution</h1>
                                             <h2 data-animation="animated fadeInDown" style="color:white">A Course to Help You Reduce Stress and Heal Hormones</h2>
                                             <p data-animation="animated slideInUp" style="color:white">May 15, 2021</p>
                                             <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now</a>
@@ -138,7 +139,7 @@
 
     <!-- Start Why Chose Us
     ============================================= -->
-    <div class="chose-us-area item-half">
+    <div class="chose-us-area bg-gray item-half">
         <div class="container-full">
             <div class="row">
                 <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-stock.jpg)"></div>
@@ -180,8 +181,55 @@
 
     <!-- Start Departments
     ============================================= -->
-    <div id="departments" class="department-tabs default-padding">
+    <div id="departments" class="department-tabs default-padding chose-us-area">
         <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="site-heading text-center">
+                        <h2><span>Details</span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-md-12 info">
+                    <div class="heading">
+                        <h3>What You Get When You Sign Up:</h3>
+                    </div>
+                    <div class="col-md-6 info">
+                        <ul>
+                            <li>
+                                <div class="info">
+                                    <p>A full day’s training live from functional medicine pharmacists</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="info">
+                                    <p>PDFs copies of speaker’s slides</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="info">
+                                    <p>Instant downloadable handouts</p>
+                                </div>
+                            </li>
+                        </ul>
+                        </div>
+                        <div class="col-md-6 info">
+                        <ul>
+                        <li>
+                            <div class="info">
+                                <p>Exclusive discounts on appointments and programs with functional medicine clinicians</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="info">
+                                <p>Access to the pharmacist’s favorite products</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12 tab-contents">
                     <div class="row">
@@ -190,24 +238,9 @@
                             <!-- Single Item -->
                             <div id="tab1" class="tab-pane fade active in">
 
-                                <!-- Start Department Info -->
-                                <div class="col-md-3"></div>
-                                <div class="col-md-8">
-                                    <div class="info title">
-                                        <h3>What You Get When You Sign Up</h3>
-                                        <li class="info" style="font-size: 20px;">A full day’s training live from functional medicine pharmacists</li>
-                                        <li class="info" style="font-size: 20px;">PDFs copies of speaker’s slides</li>
-                                        <li class="info" style="font-size: 20px;">Instant downloadable handouts</li>
-                                        <li class="info" style="font-size: 20px;">Exclusive discounts on appointments and programs with functional medicine clinicians</li>
-                                        <li class="info" style="font-size: 20px;">Access to the pharmacist’s favorite products</li>
-                                    </div>
-                                </div>
-                                <div class="col-md-2"></div>
-                                <!-- End Department Info -->
-
                                 <!-- Start Conference Schedule -->
-                                <div class="col-md-1"></div>
-                                <div class="col-md-7 opening-hours">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8 opening-hours">
                                     <div class="opening-info">
                                         <h4>Agenda of the Day</h4>
                                         <ul class="schedule" style="list-style-type: none">
@@ -243,119 +276,6 @@
     </div>
     <!-- End Departments -->
 
-        <!-- Start Doctors Tips
-    ============================================= -->
-    <div id="tips" class="doctor-tips-area default-padding bg-gray">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="site-heading text-center">
-                        <h2>Meet our <span>Speakers</span></h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="health-tips-items tips-carousel owl-carousel owl-theme">
-                    <!-- Single Item -->
-                    <div class="single-item">
-                        <div class="col-md-5">
-                            <div class="thumb">
-                                <img src="https://functionalmedicinece.com/wp-content/uploads/2020/01/LindseyElmore.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="info">
-                                <div class="doctor">
-                                    <h4>Lindsey Elmore</h4>
-                                    <h5>PharmD, BCPS, CYP-250</h5>
-                                </div>
-                                <p>After a long battle with insomnia, Dr. Elmore started a lifelong study of natural medicine. She now combines a multidisciplinary approach including functional medicine, yoga, diet and exercise to help people heal themselves. </p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="single-item">
-                        <div class="col-md-5">
-                            <div class="thumb">
-                                <img src="https://functionalmedicinece.com/wp-content/uploads/2019/09/melody_hartzler-scaled.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="info">
-                                <div class="doctor">
-                                    <h4>Melody Hartzler</h4>
-                                    <h5>PharmD, BCACP, BC-ADM</h5>
-                                </div>
-                                <p>Dr. Hartzler found herself with daily abdominal pain, bloating, and hives 9 months after her first child. Her journey to functional medicine was found because traditional medicine didn’t have the answers. As she worked with several practitioners to heal her gut, she researched and learned how to and address root causes of chronic conditions, which she now incorporates into her clinical practice. She founded and leads the PharmToTable Team, a group of functional medicine pharmacists across the country. </p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="single-item">
-                        <div class="col-md-5">
-                            <div class="thumb">
-                                <img src="https://functionalmedicinece.com/wp-content/uploads/2021/01/vanessalesneski.png" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="info">
-                                <div class="doctor">
-                                    <h4>Vanessa Lesneski</h4>
-                                    <h5>PharmD, BCPS, CPh</h5>
-                                </div>
-                                <p>Dr. Lesneski's functional medicine journey started when she began having acid reflux symptoms. After several years of prescription medications, the reflux symptoms became so severe she was evaluated for a medical device that uses electrical stimulation to close the upper esophageal sphincter.  After an extensive and intrusive workup the research team said she did not have acid reflux.  She needed answers and conventional medicine had only ended in dead ends.  Her personal experience with functional medicine was so profound that now she teaches functional medicine to pharmacy students in addition to leading a pharmacy clinic within a functional medicine office. </p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item --><!-- Single Item -->
-                    <div class="single-item">
-                        <div class="col-md-5">
-                            <div class="thumb">
-                                <img src="https://functionalmedicinece.com/wp-content/uploads/2019/09/lara_zakaria_headshots_square-scaled.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="info">
-                                <div class="doctor">
-                                    <h4>Lara Zakaria</h4>
-                                    <h5>PharmD, MS CNS CDN IFMCP</h5>
-                                </div>
-                                <p>Struggling with frequent episodes of hypoglycemia and acne at 28 led Dr Zakaria down the path of nutrition and Functional Medicine. She made the connection about how working long, stressful shifts as a pharmacist, eating a diet that was failing to optimize blood sugar balance, and acid reflux were all contributing to her symptoms. That experience and applying the concepts to improve her own health is what drove Dr Zakaria to get her masters in nutrition, become a certified nutrition specialist and certified Functional Medicine practitioner.</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
-                    <div class="single-item">
-                        <div class="col-md-5">
-                            <div class="thumb">
-                                <img src="https://pharmtotable.life/wp-content/uploads/2020/06/sarahbachofner.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="info">
-                                <div class="doctor">
-                                    <h4>Sarah Bachofner</h4>
-                                    <h5>PharmD</h5>
-                                </div>
-                                <p>Dr. Bachofner discovered functional medicine after five years of loss with no conventional explanation as to why on the journey to giving birth to two incredible blessings. Since then, she learned that she was significantly deficient in several key nutrients. She discovered the root cause was likely in part due to a few genetic mutations and bacterial imbalance and inflammation of the gut. The stress of these five long years after the stress of pharmacy school was a huge contributor to it all. She has learned how to manage this stress and has made it her mission to help others struggling with health issues due to stress as a member of the PharmToTable Team.</p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Single Item -->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Doctors Tips -->
-
     <!-- Start Doctors
     ============================================= -->
     <div id="doctors" class="doctor-area bg-gray default-padding bottom-less">
@@ -374,22 +294,19 @@
                         <div class="item">
                             <div class="thumb">
                                 <img src="https://functionalmedicinece.com/wp-content/uploads/2020/01/LindseyElmore.jpg" alt="Thumb">
-                                <div class="overlay">
-                                    <a href="#"><i class="fas fa-plus"></i></a>
-                                </div>
                                 <div class="social">
                                     <ul>
                                         <li class="facebook">
-                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="#"><i class="fab fa-twitter"></i></a>
+                                            <a href="https://www.facebook.com/lindseyelmore/" target="_blank"><i class="fab fa-facebook-f"></i></a>
                                         </li>
                                         <li class="instagram">
-                                            <a href="#"><i class="fab fa-instagram"></i></a>
+                                            <a href="https://www.instagram.com/lindseyelmore/" target="_blank"><i class="fab fa-instagram"></i></a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="https://twitter.com/drlindseyelmore" target="_blank"><i class="fab fa-twitter"></i></a>
                                         </li>
                                         <li class="linkedin">
-                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                            <a href="https://www.linkedin.com/in/lindseyelmore/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -397,7 +314,7 @@
                             <div class="info">
                                 <h4>Lindsey Elmore</h4>
                                 <h5>PharmD, BCPS, CYP-250</h5>
-                                <div class="appoinment-btn">
+                                <div class="view-bio-btn">
                                     <a href="#">View Bio</a>
                                 </div>
                             </div>
@@ -409,22 +326,19 @@
                         <div class="item">
                             <div class="thumb">
                                 <img src="https://functionalmedicinece.com/wp-content/uploads/2019/09/melody_hartzler-scaled.jpg" alt="Thumb">
-                                <div class="overlay">
-                                    <a href="#"><i class="fas fa-plus"></i></a>
-                                </div>
                                 <div class="social">
                                     <ul>
                                         <li class="facebook">
-                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="#"><i class="fab fa-twitter"></i></a>
+                                            <a href="https://www.facebook.com/PharmtoTable.Life/" target="_blank"><i class="fab fa-facebook-f"></i></a>
                                         </li>
                                         <li class="instagram">
-                                            <a href="#"><i class="fab fa-instagram"></i></a>
+                                            <a href="https://www.instagram.com/pharmtotable.life/" target="_blank"><i class="fab fa-instagram"></i></a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="https://twitter.com/DrHartzler" target="_blank"><i class="fab fa-twitter"></i></a>
                                         </li>
                                         <li class="linkedin">
-                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                            <a href="https://www.linkedin.com/in/melody-hartzler-12667569/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -432,7 +346,7 @@
                             <div class="info">
                                 <h4>Melody Hartzler</h4>
                                 <h5>PharmD, BCACP, BC-ADM</h5>
-                                <div class="appoinment-btn">
+                                <div class="view-bio-btn">
                                     <a href="#">View Bio</a>
                                 </div>
                             </div>
@@ -444,22 +358,13 @@
                         <div class="item">
                             <div class="thumb">
                                 <img src="https://functionalmedicinece.com/wp-content/uploads/2021/01/vanessalesneski.png" alt="Thumb">
-                                <div class="overlay">
-                                    <a href="#"><i class="fas fa-plus"></i></a>
-                                </div>
                                 <div class="social">
                                     <ul>
                                         <li class="facebook">
-                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="#"><i class="fab fa-twitter"></i></a>
-                                        </li>
-                                        <li class="instagram">
-                                            <a href="#"><i class="fab fa-instagram"></i></a>
+                                            <a href="https://www.facebook.com/BrookUFRx" target="_blank"><i class="fab fa-facebook-f"></i></a>
                                         </li>
                                         <li class="linkedin">
-                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                            <a href="https://www.linkedin.com/in/vanessa-lesneski-pharmd-bcps-cph-12a83296/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -467,7 +372,7 @@
                             <div class="info">
                                 <h4>Vanessa Lesneski</h4>
                                 <h5>PharmD, BCPS, CPh</h5>
-                                <div class="appoinment-btn">
+                                <div class="view-bio-btn">
                                     <a href="#">View Bio</a>
                                 </div>
                             </div>
@@ -480,22 +385,19 @@
                         <div class="item">
                             <div class="thumb">
                                 <img src="https://functionalmedicinece.com/wp-content/uploads/2019/09/lara_zakaria_headshots_square-scaled.jpg" alt="Thumb">
-                                <div class="overlay">
-                                    <a href="#"><i class="fas fa-plus"></i></a>
-                                </div>
                                 <div class="social">
                                     <ul>
                                         <li class="facebook">
-                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="#"><i class="fab fa-twitter"></i></a>
+                                            <a href="https://www.facebook.com/foodiefarmacist/" target="_blank"><i class="fab fa-facebook-f"></i></a>
                                         </li>
                                         <li class="instagram">
-                                            <a href="#"><i class="fab fa-instagram"></i></a>
+                                            <a href="https://www.instagram.com/foodiefarmacist/" target="_blank"><i class="fab fa-instagram"></i></a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="https://twitter.com/FoodieFarmacist" target="_blank"><i class="fab fa-twitter"></i></a>
                                         </li>
                                         <li class="linkedin">
-                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                            <a href="https://www.linkedin.com/in/lara-zakaria/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -503,7 +405,7 @@
                             <div class="info">
                                 <h4>Lara Zakaria</h4>
                                 <h5>PharmD, MS CNS CDN IFMCP</h5>
-                                <div class="appoinment-btn">
+                                <div class="view-bio-btn">
                                     <a href="#">View Bio</a>
                                 </div>
                             </div>
@@ -515,22 +417,13 @@
                         <div class="item">
                             <div class="thumb">
                                 <img src="https://pharmtotable.life/wp-content/uploads/2020/06/sarahbachofner.jpg" alt="Thumb">
-                                <div class="overlay">
-                                    <a href="#"><i class="fas fa-plus"></i></a>
-                                </div>
                                 <div class="social">
                                     <ul>
                                         <li class="facebook">
-                                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="#"><i class="fab fa-twitter"></i></a>
+                                            <a href="http://www.facebook.com/drsarahbachofner" target="_blank"><i class="fab fa-facebook-f"></i></a>
                                         </li>
                                         <li class="instagram">
-                                            <a href="#"><i class="fab fa-instagram"></i></a>
-                                        </li>
-                                        <li class="linkedin">
-                                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                            <a href="https://www.instagram.com/drsarahbachofner/" target="_blank"><i class="fab fa-instagram"></i></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -538,7 +431,7 @@
                             <div class="info">
                                 <h4>Sarah Bachofner</h4>
                                 <h5>PharmD</h5>
-                                <div class="appoinment-btn">
+                                <div class="view-bio-btn">
                                     <a href="#">View Bio</a>
                                 </div>
                             </div>
@@ -553,7 +446,7 @@
     <!-- End Doctors -->
     <!-- Start Testimonials
     ============================================= -->
-    <div class="testimonials-area carousel-shadow bg-gray default-padding">
+    <div class="testimonials-area carousel-shadow default-padding">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -562,7 +455,7 @@
                     </div>
                 </div>
             </div>
-    <div class="row">
+            <div class="row">
                 <div class="col-md-12">
                     <div class="testimonial-items testimonial-carousel owl-carousel owl-theme">
                         <!-- Single Item -->
@@ -576,7 +469,7 @@
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
+                                    <img src="https://i.pravatar.cc/150?img=44" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
                                     <h4>Sara L.</h4>
@@ -594,7 +487,7 @@
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
+                                    <img src="https://i.pravatar.cc/150?img=59" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
                                     <h4>Kevin</h4>
@@ -609,8 +502,15 @@
         <!-- End Testimonials -->
         <!-- Start About
     ============================================= -->
-    <div id="about" class="about-area default-padding">
+    <div id="about" class="about-area bg-gray default-padding">
         <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="site-heading text-center">
+                        <h2 id="checkout"><span>Checkout</span></h2>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="about-items">
                     <div class="col-md-12">

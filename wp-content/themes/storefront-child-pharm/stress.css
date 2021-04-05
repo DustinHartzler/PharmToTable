@@ -1,0 +1,99 @@
+:root {
+    --primary: #71CABC;
+    --secondary: #003D42;
+    --error: #ce0606;
+    --salmon: #F58D75;
+    --white: #ffffff;
+}
+
+@font-face {
+    font-family: 'silver_south_scriptregular';
+    src: url('assets/fonts/silver_south_script-webfont.woff2') format('woff2'),
+        url('assets/fonts/silver_south_script-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+h1,
+h1 span,
+.chose-us-area .info li .info::after {
+    color: var(--primary);
+}
+
+h2 span {
+    font-family: 'silver_south_scriptregular';
+    font-size: 3em;
+}
+
+h2.header span {
+    font-size: 1em;
+    padding-top: 10px;
+    color: var(--primary);
+}
+
+p {}
+
+.btn-theme,
+nav.navbar .quote-btn a {
+    background-color: var(--salmon);
+    border: 2px solid var(--salmon);
+}
+
+.doctor-items .thumb .overlay i {
+    background: var(--primary);
+}
+
+.doctor-items .info h5,
+.site-heading h2 span,
+.testimonial-items .item::after {
+    color: var(--primary);
+}
+
+.site-heading h2::after,
+.department-tabs .tab-content .opening-info h4::after {
+    background: var(--primary) none repeat scroll 0 0;
+}
+
+.doctor-items .info {
+    border-top: 2px solid var(--primary);
+}
+
+.view-bio-btn {
+    border: 2px solid var(--primary);
+    background: transparent;
+    padding: 10px 35px;
+    margin-top: 15px;
+    font-family: 'Avenir', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    transition: all 0.35s ease-in-out;
+    -webkit-transition: all 0.35s ease-in-out;
+    -moz-transition: all 0.35s ease-in-out;
+    -ms-transition: all 0.35s ease-in-out;
+    -o-transition: all 0.35s ease-in-out;
+    color: #232323;
+    background: transparent;
+}
+
+.view-bio-btn:hover,
+.doctor-items .social li a:hover {
+    background: var(--primary);
+}
+
+.social ul {
+    margin: 0;
+}
+
+.testimonial-items .item::after {
+    top: -36px;
+}
+
+#checkout-products {
+    list-style: none;
+}
+
+.department-tabs .tab-content .opening-info li {
+    margin-bottom: 0;
+}
