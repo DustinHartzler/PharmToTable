@@ -13,6 +13,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
+    <meta property="og:title" content="The Stress Solution" />
+    <meta property="og:image" content="https://www.apple.com/v/iphone/home/t/images/home/og.png?201610171354" />
 
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
@@ -384,7 +386,7 @@
                     <div class="col-md-4 col-sm-6 equal-height">
                         <div class="item">
                             <div class="thumb">
-                                <img src="https://functionalmedicinece.com/wp-content/uploads/2019/09/lara_zakaria_headshots_square-scaled.jpg" alt="Thumb">
+                                <img src="https://functionalmedicinece.com/wp-content/uploads/2020/05/LZakaria.jpeg" alt="Thumb">
                                 <div class="social">
                                     <ul>
                                         <li class="facebook">
@@ -433,6 +435,11 @@
                                 <h5>PharmD</h5>
                                 <div class="view-bio-btn">
                                     <a href="#">View Bio</a>
+                                    <div class="modal-outer">
+                                        <div class="modal-inner">
+                                            <p>BIO</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -462,17 +469,16 @@
                         <div class="item">
                             <div class="content">
                                 <p>
-                                <em>My experience with my functional medicine pharmacist, Melody Hartzler, was phenomenal!</em><br><br>
-                                I came to her after seeing numerous doctors and nutritionists with stomach pain, bloating, and constipation.  No one had an answer for me in the past, so my nutritionist suggested Dr. Hartzler. <br><br>
-                                We did a telehealth meeting and she quickly decided we needed more tests.  Once the test results arrived, she was able to determine a course of action using mostly herbal medicines.  A month into the meds and my stomach pain is nearly gone as is my constipation.  It has been  amazing! The plan hasn't stopped there and we continue to meet and communicate on the best course of action going forward.  I highly recommend Dr. Hartzler for your needs - she listens and goes above and beyond!
-                              </p>
+                                    Dr. Zakaria is super knowledgeable about using a functional medicine approach to achieve optimal health and wellness. <br><br><em>She has a gift for making science easy to understand which is great when talking about stress and hormones.</em> <br><br>The Stress Solution is sure to help so many people and couldn’t have come at a more perfect time!
+                                </p>
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img src="https://i.pravatar.cc/150?img=44" alt="Testimonial-Image">
+                                    <img width="150" src="https://pharmtotable.life/wp-content/uploads/2020/06/meganmorrison.jpg" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
-                                    <h4>Sara L.</h4>
+                                    <h4>Dr. Megan Morrison</h4>
+                                    <h5>Functional Medicine Pharmacist</h5>
                                 </div>
                             </div>
                         </div>
@@ -481,16 +487,16 @@
                         <div class="item">
                             <div class="content">
                                 <p>
-                                By working directly with Dr. Hartzler, my medication has not only changed, but the dosage has been reduced, while adding natural vitamin supplements that help support my body’s specific needs.  Her ability to weave both functional and conventional medicine into a treatment plan has been shall we say, more than wonderful!!  Her knowledge about how to integrate these two different types of treatments have been instrumental in not only lowering my A1C, but weight loss and more overall energy.<br><br>
-                                <em><strong>She is no longer just treating the symptoms of my disease, but the underlying causes.  </strong></em><br><br>
-                                This unique insight has been the difference between the previous negative side effects and the improved health I enjoy. Without the help and guidance of Dr. Melody Hartzler, my quality of life would have continued to degrade over time, today I have a much better prognosis for the rest of my life.</p>
+                                    Stress plays such a <strong>HUGE</strong> role in health and <strong>I CANNOT WAIT</strong> to hear what these ladies have to say about it! <br><br><em>I am in awe of their knowledge and passion every time I hear them speak.</em><br><br> Combining their Functional Medicine knowledge with serious stress reduction techniques is sure to get anyone going in the right direction on their health journey.
+                                </p>
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img src="https://i.pravatar.cc/150?img=59" alt="Testimonial-Image">
+                                    <img src="https://pharmtotable.life/wp-content/uploads/2020/06/nicolegram.png" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
-                                    <h4>Kevin</h4>
+                                    <h4>Dr. Nicole Grams</h4>
+                                    <h5>Functional Medicine Pharmacist and Anxiety Coach</h5>
                                 </div>
                             </div>
                         </div>
