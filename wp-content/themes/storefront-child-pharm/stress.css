@@ -40,6 +40,14 @@ nav.navbar .quote-btn a {
     border: 2px solid var(--salmon);
 }
 
+.btn-theme:hover,
+nav.navbar .quote-btn a:hover,
+.btn-theme.effect:hover,
+.btn-theme.effect:focus {
+    background-color: #CC7562;
+    border-color: #CC7562;
+}
+
 .doctor-items .thumb .overlay i {
     background: var(--primary);
 }
@@ -96,4 +104,56 @@ nav.navbar .quote-btn a {
 
 .department-tabs .tab-content .opening-info li {
     margin-bottom: 0;
+}
+
+.modal-outer {
+    display: grid;
+    background: hsla(50, 100%, 50%, 0.7);
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    /* Hide this modal until we need it */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+}
+
+.modal-outer img {
+    width: 100%;
+}
+
+.modal-outer.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-inner {
+    max-width: 600px;
+    min-width: 400px;
+    padding: 2rem;
+    border-radius: 5px;
+    min-height: 200px;
+    background: white;
+    transform: translateY(-200%);
+    transition: transform .5s;
+}
+
+.modal-outer.open .modal-inner {
+    transform: translateY(0);
+}
+
+.woocommerce-info {
+    background-color: var(--primary) !important;
+}
+
+#opc-product-selection {
+    display: none;
+}
+
+.button.alt {
+    background-color: var(--salmon);
 }

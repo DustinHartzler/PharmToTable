@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
     <meta property="og:title" content="The Stress Solution" />
-    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-stock.jpg" />
+    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-free.jpg" />
 
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
@@ -114,7 +114,7 @@
             <!-- Wrapper for slides -->
             <div class="carousel-inner carousel-zoom">
                 <div class="item active">
-                    <div class="slider-thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-stock.jpg);"></div>
+                    <div class="slider-thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-free.jpg);"></div>
                     <div class="box-table">
                         <div class="box-cell">
                             <div class="container">
@@ -122,8 +122,8 @@
                                     <div class="col-md-8">
                                         <div class="content">
                                             <h1 data-animation="animated fadeInUp">The <span style="font-family: 'silver_south_scriptregular'; color: #71CABC">Stress</span> Solution</h1>
-                                            <h2 data-animation="animated fadeInDown" style="color:white">A Course to Help You Reduce Stress and Heal Hormones</h2>
-                                            <p data-animation="animated slideInUp" style="color:white">May 15, 2021</p>
+                                            <h2 data-animation="animated fadeInDown" style="color:black;">A Course to Help You Reduce Stress and Heal Hormones</h2>
+                                            <p data-animation="animated slideInUp" style="color:black">May 15, 2021</p>
                                             <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now</a>
                                         </div>
                                     </div>
@@ -144,7 +144,7 @@
     <div class="chose-us-area bg-gray item-half">
         <div class="container-full">
             <div class="row">
-                <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-stock.jpg)"></div>
+                <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stressed.jpeg)"></div>
                 <div class="col-md-6 info">
                     <div class="heading">
                         <h3>Finding solutions to chronic health and wellness challenges should not be hard.</h3>
@@ -174,6 +174,8 @@
                     </ul>
                     <br>
                     <a class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now</a>
+
+
 
                 </div>
             </div>
