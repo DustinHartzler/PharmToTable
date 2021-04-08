@@ -433,15 +433,24 @@
                                 </div>
                             </div>
                             <div class="info">
-                                <h4>Sarah Bachofner</h4>
+                                <h4>DRSarah Bachofner</h4>
                                 <h5>PharmD</h5>
+                                <div class="cards">
+                                    <div class="card" data-description="Dr. Bachofner’s focus areas are hormone imbalances, mood disorders, and chronic disease management, particularly diabetes. She has always believed in a holistic approach to healthcare and that preventing illness and promoting wellness are crucial to improving health. <br><br>
+
+She provides education and establishes a partnership with the common goal of recovery and wellness. She exudes a positive and joyful approach to patient care. She can’t wait to see the hope in your eyes when you realize you’re about to head down a journey of health toward living your best life!">
+
+                                    <h4>Sarah Bachofner</h4>
+                                    <h5>PharmD</h5>
+                                    <button>Learn more →</button>
+                                </div></div>
                                 <div class="view-bio-btn">
                                     <a href="#">View Bio</a>
-                                    <div class="modal-outer">
-                                        <div class="modal-inner">
-                                            <p>BIO</p>
-                                        </div>
-                                    </div>
+                                      <div class="modal-outer">
+    <div class="modal-inner">
+      <p>Fringilla quis iaculis sollicitudin etiam libero amet suscipit vel fames, iaculis sed lacinia fusce eu at risus purus justo morbi quisque leo etiam nibh massa semper dapibus donec, lacinia mauris aenean placerat integer ipsum etiam aenean proin, netus pharetra ultricies primis sem porttitor aliquam leo elit ligula ut habitasse id suspendisse gravida iaculis vitae tincidunt.</p>
+    </div>
+  </div>
                                 </div>
                             </div>
                         </div>
@@ -537,6 +546,6 @@
 
 
 <?php get_footer(); ?>
-
+<script src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/js/click-outside.js"></script>
 </body>
 </html>
