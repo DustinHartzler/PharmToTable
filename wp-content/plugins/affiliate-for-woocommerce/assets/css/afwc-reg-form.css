@@ -1,0 +1,40 @@
+/* phpcs:ignoreFile */
+.afwc_reg_form_wrapper {
+	max-width: 600px;
+}
+.afwc_reg_field_wrapper {
+	margin-bottom: 0.8em;
+}
+.afwc_reg_field_wrapper label {
+	margin-bottom: 0.2em;
+	display: block;
+}
+.afwc_reg_field_wrapper input:not([type='checkbox']), .afwc_reg_field_wrapper textarea {
+	width: 97%;
+}
+.afwc_reg_field_wrapper input[type='submit'] {
+	width: 30%;
+}
+.afwc_is_half {
+	width: 50%;
+	display: inline-block;
+}
+.afwc_reg_field_wrapper.afwc_is_half input {
+	width: 95%;
+}
+.afwc_reg_field_wrapper label.afwc_required:not([for='afwc_reg_terms']):after {
+   content:" *";
+}
+.afwc_reg_loader, .afwc_reg_message {
+	display: none;
+}
+.afwc_reg_loader {
+	padding-left: 0.5em;
+	vertical-align: middle;
+}
+.afwc_hide_form_field {
+	display: none;
+}
+.afwc-reg-form-msg {
+	font-size: 1.3em;
+}

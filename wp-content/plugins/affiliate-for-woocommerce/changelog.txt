@@ -1,0 +1,361 @@
+*** Affiliate For WooCommerce Changelog ***
+
+2020-12-23 - version 2.8.4
+* New: WooCommerce 4.8.0 compatible
+* New: Tested upto WordPress 5.6.0
+* Fix: Affiliate dashboard not loading if WooCommerce menu name is renamed/translated [Admin]
+* Fix: Affiliate search by name not working in commission plans [Admin]
+* Fix: Affiliate reports not showing if date is translated [User]
+* Update: Use COOKIEPATH instead of SITECOOKIEPATH to track affiliate
+* Update: Affiliate campaigns dashboard [User]
+* Update: POT file
+
+2020-12-16 - version 2.8.3
+* Update: In-app review mechanism
+* Fix: Minor fixes
+* Update: POT file
+
+2020-11-30 - version 2.8.2
+* Fix: Fatal error when placing a new order using affiliate referral link/coupon
+
+2020-11-25 - version 2.8.1
+* Fix: Option 'afwc_affiliate_user_ids_' not auto deleting
+* Fix: Variable product's name not showing correctly on Admin > Top Products and affiliate My Account > Reports > Products
+* Fix: Missing placeholder in commission plans search [Admin]
+* Fix: Commission plan search showing error 'The results could not be loaded' [Admin]
+* Fix: Commission plan not accepting decimal values for commission [Admin]
+* Fix: Changing date on affiliate dashboard resets affiliate pointer to first affiliate and instead of selected [Admin]
+* Fix: Missing argument in apply_filters
+* Update: Show notification on successful commission payouts, commission status update and commission plan sort & save [Admin]
+* Update: Text and CSS uniformity in 'Other Details' [Admin]
+* Update: Notification colors [Admin]
+* Update: Use same delete icon on campaigns and commission plans [Admin]
+* Update: Product name on affiliate My Account > Reports > Product [User]
+* Developer: Filter 'afwc_is_registration_open' to show/hide tab 'Register as an affiliate' for existing users in My Account
+
+2020-11-20 - version 2.8.0
+* New: WooCommerce 4.7.0 compatible
+* New: Export affiliate details [Admin]
+* Fix: Rejected referral incorrectly marked as Unpaid on order status change
+
+2020-11-05 - version 2.7.2
+* New: Provision to sort commissions plans [Admin]
+* Update: Note for plans validation while calculating affiliate commission [Admin]
+* Update: Description for Referral commission setting [Admin]
+* Update: POT file
+
+2020-10-23 - version 2.7.1
+* New: WooCommerce 4.6.1 compatible
+* New: Rule for product category based commission in commission plans
+* New: Rule for affiliate tags based commission in commission plans
+* Update: PayPal payout requirements in Affiliate > Settings [Admin]
+* Update: Welcome page
+* Update: POT file
+
+2020-10-13 - version 2.7.0
+* New: Calculate commission based on products in order
+* New: Additional settings in commission plans
+* Fix: Fatal error 'Call to undefined method get_default_additional_content()' on WooCommerce lower than 3.7.0
+* Fix: Search & Filter CSS on Affiliate Dashboard [Admin]
+* Update: POT file
+
+2020-09-28 - version 2.6.0
+* New: Product based commission plans
+* New: Set status to a commission plan [Admin]
+* Fix: Affiliate list and KPI not refreshing on changing date [Admin]
+* Update: Enqueue styles and scripts only on Affiliate Dashboard [Admin]
+* Update: Commission plans operator [Admin]
+* Update: Remove 'Affiliate specific commission' setting [Admin]
+* Update: POT file
+
+2020-09-24 - version 2.5.1
+* Fix: 'Approve' & 'Reject' affiliate actions not working under user profile in some cases [Admin]
+* Fix: Search tags not showing existing tags in search results under user profile [Admin]
+* Fix: Product name having special characters showing HTML in 'Top Products' [Admin]
+* Fix: Incorrect referral link in 'Other Details' when referral link is modified by affiliate [Admin]
+* Fix: Unable to edit registration form page if user is an affiliate and Gutenberg is enabled [Admin]
+* Fix: Registration form page preview redirecting to My account > Affiliate if admin is affiliate [Admin]
+* Fix: Incorrect start date when date filters are applied on Affiliate Dashboard [Admin]
+* Update: Highlight affiliate section under user profile [Admin]
+* Update: Email notification content to affiliate on a referral
+* Update: Redirect to My Account > Affiliate > Profile when auto-approve affiliate is on [User]
+* Update: Code and texts improvements
+* Update: POT file
+
+2020-09-17 - version 2.5.0
+* New: WooCommerce 4.5.2 compatible
+* New: Rule based commission plans [Affiliate-based commission rate]
+* Update: CSS on Affiliate Dashboard [Admin]
+* Update: Link color in footer
+* Update: POT file
+
+2020-09-05 - version 2.4.3
+* Fix: Filter 'afwc_account_show_customer_column' not working in load more referrals [User]
+* Fix: Missing referral status translation [User]
+* Update: POT file
+
+2020-08-28 - version 2.4.2
+* Fix: Existing users unable to join via registration form
+* Fix: Unable to delete tag from an affiliate [Admin]
+* Update: POT file
+
+2020-08-22 - version 2.4.1
+* New: WooCommerce 4.4.1 compatible
+* New: Send email notification to affiliate when commission is paid
+* Fix: Incorrect discount type for subscription coupon amount in My Account > Affiliate > Profile [User]
+* Fix: Incorrect rounding of commission amount and coupon discount
+* Update: POT file
+
+2020-08-14 - version 2.4.0
+* New: Send email notification to affiliate when their request to join is approved
+* New: Template for 'New affiliate registration' email
+* Update: Send 'New affiliate registration' email to Affiliate Manager
+* Update: Responsiveness for Payout History on My Account > Affiliate > Profile [User]
+* Update: Registration form message when an existing user tries to join
+* Update: My account link to My Account > Affiliate link when auto-approval is enabled
+* Update: Add title for 'Register as an affiliate' tab in My Account [User]
+* Update: Code cleanup and improvements
+* Update: POT file
+
+2020-08-07 - version 2.3.1
+* New: 'Payout History' in affiliate My account [User]
+* New: Allow existing users on site to join via registration form
+* Update: Minor improvements
+* Update: POT file
+
+2020-08-03 - version 2.3.0
+* New: Send email notification to affiliate on a referral
+* New: Simple search to search affiliate by name/username/email address [Admin]
+* New: Ready-made search filters to search affiliate in affiliates dashboard [Admin]
+* Fix: Referral coupon showing in 'Other Details' if coupons are disabled for referral [Admin]
+* Fix: Incorrect commission rate in 'Other Details' [Admin]
+* Update: Icon for affiliate identifier in My Account > Affiliate > Profile [User]
+* Update: POT file
+
+2020-07-24 - version 2.2.0
+* New: Allow linking/unlinking affiliate from an order add/edit page [Admin]
+* Fix: Database upgrades not running in some cases
+* Fix: 'Select tags for affiliate' not showing under user profile in some cases [Admin]
+* Fix: Deleted user's showing blank in affiliates dashboard [Admin]
+* Fix: Affiliates menu not highlighting when accessing tags [Admin]
+* Fix: 'Table not exists' error in some cases
+* Update: Link to manage tags from user profile [Admin]
+* Update: Show orders by descending date in affiliate My account [User]
+* Update: POT file
+
+2020-07-18 - version 2.1.0
+* New: Create and assign tags to affiliates [Admin]
+* New: 'Top Products' KPI for an affiliate [Admin]
+* New: 'Other Details' section for an affiliate with affiliate link, referral coupon, tags and commission rate [Admin]
+* Fix: Delay in showing orders in 'Orders' section on Affiliate Dashboard [Admin]
+* Fix: Missing orders on affiliate My account [User]
+* Fix: Missing 'No Campaign yet' translation [User]
+* Update: POT file
+
+2020-07-10 - version 2.0.1
+* New: WooCommerce 4.3.0 compatible
+* New: Support for referral capture on order statuses which are added by 3rd party plugins
+* Fix: Registration form link in settings not working on new installs
+* Fix: KPI's not matching between affiliate and admin dashboard
+* Fix: Option 'afwc_orders_details_affiliate_ids_' not auto deleting
+* Fix: Deleted user's showing blank in affiliates dashboard [Admin]
+* Update: Auto-reject referral when order status changes to failed/draft
+* Update: Removed 'Clicks' KPI and added 'Visitors' KPI to My Account [User]
+* Update: Disable 'autoload' for temporary options
+* Update: POT file
+
+2020-07-07 - version 2.0.0
+* New: Create and distribute campaigns/resources to affiliates
+* Fix: Database version not updating correctly in some cases
+* Update: Merge Phone Number & Skype field in registration form
+* Update: Affiliate settings [Admin]
+* Update: Registration form in Affiliate settings [Admin]
+* Update: Enable 'Affiliate specific commission', 'Coupons for referral' and 'Personalize affiliate identifier' by default (New users only) [Admin]
+* Update: Welcome page
+* Update: POT file
+
+2020-06-20 - version 1.10.1
+* Fix: PayPal payouts not working in some cases [Admin]
+* Fix: Payouts not updating currency in some cases [Admin]
+* Fix: Some KPI's not matching between affiliate and admin dashboard
+* Update: Use 'processing' order status to calculate KPI's
+* Update: Added classes to registration form
+
+2020-06-06 - version 1.10.0
+* New: WooCommerce 4.2.0 compatible
+* New: Affiliate tracking process
+* Fix: PHP notices on Subscription renewal
+* Update: 'Payment setting' & 'Contact store admin' not wrapped correctly on My account > Affiliate > Profile [User]
+* Update: Subscription setting text [Admin]
+* Update: POT file
+
+2020-05-29 - version 1.9.1
+* Fix: Unable to search affiliates in coupon in some cases [Admin]
+* Fix: Warnings on multisite installations when running database updates
+* Fix: Database version not updating correctly on multisite installations
+* Fix: Footer text not showing on Affiliate pages [Admin]
+* Update: Privacy message
+* Update: POT file
+
+2020-05-26 - version 1.9.0
+* New: Allow changing 'ref' in affiliate URL [Admin]
+* New: Allow changing affiliate identifier from My Account > Affiliate > Profile [User]
+* Fix: Auto-rejecting pending affiliates on updating a user [Admin]
+* Update: POT file
+
+2020-05-18 - version 1.8.1
+* Fix: Unable to search affiliates in coupon [Admin]
+* Update: Show affiliate search in coupon if 'Use coupons for referral' is enabled [Admin]
+
+2020-05-16 - version 1.8.0
+* New: Affiliate registration form
+* New: Allow PayPal payouts in store currency (if currency is supported by PayPal)
+* Fix: Order & commission currency incorrectly displayed in 'Orders' section in Affiliate Dashboard [Admin]
+* Fix: Payout currency incorrectly displayed in 'Payouts' section in Affiliate Dashboard [Admin]
+* Fix: Commission currency incorrectly displayed on Affiliate Dashboard on My Account [User]
+* Fix: Cannot search users [Admin]
+* Update: Log failed payout information
+* Update: Remove support for WooCommerce 3.5
+* Update: POT file
+
+2020-05-08 - version 1.7.1
+* Fix: Fatal error when WooCommerce Subscriptions is active
+
+2020-05-07 - version 1.7.0
+* New: WooCommerce 4.1.0 compatible
+* New: Show affiliate coupons under user profile [Admin]
+* New: Allow store admin to create coupons with affiliate restrictions [Admin]
+* New: Show coupon discount along with coupon code on My Account > Affiliate > Profile [User]
+* Update: Allow affiliate to request a referral coupon instead of auto generating from their account [User]
+* Update: Show 'ref' in Referral URL generator under My Account > Affiliate > Profile for clarity [User]
+* Update: Moved contact store admin section at the end on My Account > Affiliate > Profile [User]
+* Update: POT file
+
+2020-05-02 - version 1.6.2
+* New: Allow affiliate to contact store admin from My Account > Affiliate > Profile [User]
+* Fix: Notices & warnings one first activation
+* Update: Grant Shop Manager capabilities for Affiliate Dashboard [Admin]
+* Update: Affiliate Dashboard title [Admin]
+* Update: Remove 'View all affiliates' link from Affiliate settings [Admin]
+* Update: POT file
+
+2020-04-22 - version 1.6.1
+* Fix: CSS not getting applied for Affiliate Dashboard on My Account page 
+* Fix: Affiliate appearing more than once in Affiliate Dashboard [Admin]
+* Update: POT file
+
+2020-04-18 - version 1.6.0
+* New: Affiliate Dashboard [Admin]
+* New: View all affiliates on a store from the Affiliate Dashboard [Admin]
+* Fix: Performance optimization for affiliate detail queries
+* Update: POT file
+
+2020-04-01 - version 1.5.1
+* New: WooCommerce 4.0.1 compatible
+* Fix: Affiliate Dashboard not loading on multisite [Admin]
+* Update: POT file
+
+2020-03-13 - version 1.5.0
+* New: Allow products to exclude from affiliate commission
+* Fix: Affiliate URL not working in some cases
+
+2020-02-28 - version 1.4.1
+* New: Provision to 'Manage affiliate' from Affiliate Dashboard [Admin]
+* Fix: Affiliate URL giving 404 not found error in some cases
+* Update: Remove affiliate link from Affiliate Dashboard [Admin]
+* Update: KPI texts on Affiliate Dashboard [Admin]
+* Update: Admin Footer text for Affiliate pages
+* Update: POT file
+
+2020-02-21 - version 1.4.0
+* New: Set user-based commission rate
+* New: Link to view all affiliates from Affiliate Dashboard, Settings [Admin]
+* New: Click to copy on an affiliate link in Affiliate Dashboard [Admin]
+* Fix: Affiliate settings missing under edit user profile if the current user is editing their own profile [Admin]
+* Fix: Unable to delete the affiliate user settings [Admin]
+* Fix: 'PayPal email address' available if the user is not an affiliate [Admin]
+* Fix: 'Orders' tab not highlighted in Affiliate Dashboard [Admin]
+* Fix: Unpaid commissions incorrectly rounded in Affiliate Dashboard [Admin]
+* Update: Optimizations & speed improvements of Affiliate Dashboard [Admin]
+* Update: Description on Affiliate Dashboard [Admin]
+* Update: Doc link on Affiliate Dashboard [Admin]
+* Update: PayPal payout description on My Account > Affiliate > Profile [User]
+* Update: Welcome page
+* Update: Plugin action links
+* Update: POT file
+
+2020-02-06 - version 1.3.4
+* New: WooCommerce 3.9.1 compatible
+* New: Plugin action links
+* New: Admin Footer text for Affiliate pages
+* Fix: Coupon code incorrectly tracking 'Referral type' if capital letter is added in the coupon
+* Fix: Option 'afwc_woo_order_details_order_ids_' not auto deleting
+* Fix: Do not allow accessing Affiliate tab under My Account if user is not an affiliate [User]
+* Fix: jQuery 'ready' event is deprecated
+* Update: Show 'PayPal email address' only if PayPal is enabled
+* Update: Tab title for My Account > Affiliate > Reports & Profile [User]
+* Update: CSS on My Account > Affiliate [User]
+* Update: Title for affiliate settings under User > Edit user [Admin]
+* Update: Disable 'autoload' for few options
+* Update: Welcome page
+* Update: Code cleanup and improvements
+* Update: POT file
+
+2020-01-02 - version 1.3.3
+* Fix: Uncaught Error: Call to a member function get_id() on bool
+
+2019-12-21 - version 1.3.2
+* Fix: Uncaught Error: Call to a member function get_id() on bool
+* Update: Removed unnecessary admin settings
+* Update: POT file
+
+2019-12-07 - version 1.3.1
+* Fix: Field for 'PayPal email address' is not taking empty values [User]
+* Fix: Warning: in_array() expects parameter 2 to be array, boolean given
+* Update: Allow changing of referral coupon code by admin
+* Update: Exclude discount in calculating commission
+* Update: Default value for storewide commission
+* Update: Minor update in setting referral coupon
+* Update: POT file
+
+2019-11-22 - version 1.3.0
+* New: Use of coupon for tracking referrals (affiliate commission)
+* Update: New column 'Referral type' under 'Orders' tab in Affiliate Dashboard
+* Update: Hook to decide whether to show customer column or not under My Account > Affiliate [User]
+* Update: Removed use of deprecated hook 'woocommerce_settings_tabs_'
+* Update: Improved cases of some texts
+* Update: POT file
+
+2019-11-18 - version 1.2.1
+* Update: Setting to change endpoint for My Account > Affiliate page
+* Update: CSS for scrollbar
+* Fix: Exclude taxes & shipping in calculating commission
+* Fix: CSS for Date picker on My Account > Affiliate > Profile [User]
+* Fix: Icons not appearing on My Account > Affiliate > Profile [User]
+* Fix: Responsiveness for Date picker on My Account > Affiliate > Profile [User]
+* Fix: 'Profile' tab enpoint under My Account > Affiliate [User]
+* Update: Compatible with the latest WordPress Standard (v2.2.0)
+* Update: POT file
+
+2019-11-08 - version 1.2.0
+* New: Commission payment via PayPal
+* New: Field for user's PayPal Email address under My Account > Affiliate > Profile [User]
+* New: Field for user's PayPal Email address under Users > Edit user [Admin]
+* New: Tested with WooCommerce 3.8.0
+* Update: CSS
+* Update: POT file
+
+2019-10-17 - version 1.1.0
+* New: Date filter under My Account > Affiliate area
+* New: [WooCommerce Subscriptions](https://woocommerce.com/products/woocommerce-subscriptions/?aff=5475) compatibility
+* New: Setting to customize affiliate cookie length
+* New: [GDPR] Privacy Policy Content
+* New: [GDPR] Personal Data Export & Erase (WordPress 4.9.6+)
+* New: [GDPR] WooCommerce Bulk Remove personal data support
+* New: POT file
+* Fix: PHP Notices
+* Update: Show 'This month' as default option on Admin Affiliate Dashboard
+* Update: Renamed 'Affiliate For WooCommerce' Settings tab to 'Affiliate'
+
+2019-09-20 - version 1.0.0
+* New: First Release

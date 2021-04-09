@@ -1,0 +1,24 @@
+/* phpcs:ignoreFile */
+.afwc_affiliate_desc {
+	width: 25em;
+}
+.afwc_actions {
+	text-decoration: none;
+}
+.afwc-approve {
+	color: #025b02;
+	padding-right: 0.2em;
+}
+.afwc-disapprove {
+	color: #d90000;
+}
+.afwc-actions-wrap a {
+	color: inherit !important; 
+}
+.afwc-settings-wrap {
+	background: rgb(195 195 195 / 30%);
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	padding: 1em;
+}
+

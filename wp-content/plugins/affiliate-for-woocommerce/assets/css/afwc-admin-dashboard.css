@@ -1,0 +1,169 @@
+/* phpcs:ignoreFile */
+/* Loader CSS */
+.afwc-loader-container {
+	height: 100%;
+	width: 100%;
+	background-color: #fff;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9999999;
+	opacity: 0.4;
+}
+.afwc-loader {
+	display: inline-block;
+	width: 128px;
+	height: 82px;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+}
+.afwc-loader div {
+	animation: fw-loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	transform-origin: 32px 32px;
+}
+.afwc-loader div:after {
+	content: " ";
+	display: block;
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #7974b0;
+	margin: -3px 0 0 -3px;
+}
+.afwc-loader div:nth-child(1) {
+	animation-delay: -0.036s;
+}
+.afwc-loader div:nth-child(1):after {
+	top: 50px;
+	left: 50px;
+}
+.afwc-loader div:nth-child(2) {
+	animation-delay: -0.072s;
+}
+.afwc-loader div:nth-child(2):after {
+	top: 54px;
+	left: 45px;
+}
+.afwc-loader div:nth-child(3) {
+	animation-delay: -0.108s;
+}
+.afwc-loader div:nth-child(3):after {
+	top: 57px;
+	left: 39px;
+}
+.afwc-loader div:nth-child(4) {
+	animation-delay: -0.144s;
+}
+.afwc-loader div:nth-child(4):after {
+	top: 58px;
+	left: 32px;
+}
+.afwc-loader div:nth-child(5) {
+	animation-delay: -0.18s;
+}
+.afwc-loader div:nth-child(5):after {
+	top: 57px;
+	left: 25px;
+}
+.afwc-loader div:nth-child(6) {
+	animation-delay: -0.216s;
+}
+.afwc-loader div:nth-child(6):after {
+	top: 54px;
+	left: 19px;
+}
+.afwc-loader div:nth-child(7) {
+	animation-delay: -0.252s;
+}
+.afwc-loader div:nth-child(7):after {
+	top: 50px;
+	left: 14px;
+}
+.afwc-loader div:nth-child(8) {
+	animation-delay: -0.288s;
+}
+.afwc-loader div:nth-child(8):after {
+	top: 45px;
+	left: 10px;
+}
+@keyframes fw-loader {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+.afwc-loader-text{
+	top: 65%;
+	left: 47%;
+	position: fixed;
+}
+/* wp-editor css fixes:start */
+.afw-admin-dasboard .wp-media-buttons .insert-media {
+	padding-left: 5px;
+}
+.afw-admin-dasboard .wp-media-buttons .button {
+	margin-right: 5px;
+	margin-bottom: 4px;
+	padding-left: 7px;
+	padding-right: 7px;
+}
+.afw-admin-dasboard  .wp-core-ui .button,.afw-admin-dasboard .wp-core-ui .button-secondary {
+	color: #0071a1;
+	border-color: #0071a1;
+	background: #f3f5f6;
+	vertical-align: top;
+}
+.afw-admin-dasboard  .wp-editor-container textarea.wp-editor-area{
+	font-family: Consolas,Monaco,monospace;
+	font-size: 13px;
+	padding: 10px;
+	margin: 1px 0 0;
+	line-height: 150%;
+	border: 0;
+	outline: 0;
+	display: block;
+	resize: vertical;
+	box-sizing: border-box;
+}
+.afw-admin-dasboard .wp-editor-expand #wp-content-editor-container{
+	border-bottom: 0 none;
+	box-shadow: none;
+	margin-top: -1px;
+}
+.afw-admin-dasboard .quicktags-toolbar{
+	padding: 3px;
+	position: relative;
+	border-bottom: 1px solid #ddd;
+	background: #f5f5f5;
+	min-height: 30px;
+}
+.afw-admin-dasboard .wp-switch-editor{
+	float: left;
+	box-sizing: content-box;
+	position: relative;
+	top: 1px;
+	background: #ebebeb;
+	color: #666;
+	cursor: pointer;
+	font-size: 13px;
+	line-height: 1.46153846;
+	height: 20px;
+	margin: 5px 0 0 5px;
+	padding: 3px 8px 4px;
+	border: 1px solid #e5e5e5;
+}
+.afw-admin-dasboard .html-active .switch-html, .afw-admin-dasboard .tmce-active .switch-tmce{
+	background: #f5f5f5;
+	color: #555;
+	border-bottom-color: #f5f5f5;
+}
+.afw-admin-dasboard .wp-editor-container{
+	clear: both;
+	border: 1px solid #e5e5e5; 
+}
+/* wp-editor css fixes:end */
+
