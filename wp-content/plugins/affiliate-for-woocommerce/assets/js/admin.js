@@ -645,6 +645,13 @@ var AFWCFunctions = /*#__PURE__*/function () {
         'endDate': endDate.toISOString().slice(0, 10)
       };
     }
+  }, {
+    key: "getDateTime",
+    value: function getDateTime(dateStr) {
+      var currentTimestr = new Date().toTimeString();
+      var str = new Date(dateStr).toDateString();
+      return new Date(str + " " + currentTimestr).toUTCString();
+    }
   }]);
 
   return AFWCFunctions;
@@ -997,6 +1004,7 @@ function DashboardModel_createClass(Constructor, protoProps, staticProps) { if (
 
 
 
+
 var DashboardModel_DashboardModel = /*#__PURE__*/function () {
   function DashboardModel() {
     DashboardModel_classCallCheck(this, DashboardModel);
@@ -1008,8 +1016,11 @@ var DashboardModel_DashboardModel = /*#__PURE__*/function () {
       q: ''
     };
     Loader["a" /* default */].showLoader = false;
+    DashboardModel.data.currentPage = 1;
     DashboardModel.data.firstcall = true;
+    DashboardModel.data.loadMore = true;
     DashboardModel.data.currentAffiliateID = 0;
+    DashboardModel.data.action = '';
     DashboardModel.data.start_date = DashboardModel.data.start_date ? DashboardModel.data.start_date : new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().slice(0, 10);
     DashboardModel.data.end_date = DashboardModel.data.end_date ? DashboardModel.data.end_date : new Date().toISOString().slice(0, 10);
     DashboardModel.fetch();
@@ -1020,14 +1031,16 @@ var DashboardModel_DashboardModel = /*#__PURE__*/function () {
     value: function fetch() {
       Loader["a" /* default */].showLoader = true;
       Loader["a" /* default */].msg = 'Loading Affiliates';
+      DashboardModel.data.currentPage = 'load_more' != DashboardModel.data.action ? 1 : DashboardModel.data.currentPage;
       var data = new FormData(),
           requestData = {
         cmd: 'dashboard_data',
         security: afwcDashboardParams.security,
-        from_date: DashboardModel.data.start_date,
-        to_date: DashboardModel.data.end_date,
+        from_date: Functions["a" /* default */].getDateTime(DashboardModel.data.start_date),
+        to_date: Functions["a" /* default */].getDateTime(DashboardModel.data.end_date),
         filters: JSON.stringify(DashboardModel.data.filters),
-        q: DashboardModel.data.q
+        q: DashboardModel.data.q,
+        page: DashboardModel.data.currentPage
       };
 
       for (var key in requestData) {
@@ -1051,7 +1064,14 @@ var DashboardModel_DashboardModel = /*#__PURE__*/function () {
     key: "extractData",
     value: function extractData(data) {
       DashboardModel.data.kpi = data.kpi || {};
-      DashboardModel.data.affiliates = data.affiliateList || [];
+
+      if (DashboardModel.data.affiliates.length > 0 && 'load_more' == DashboardModel.data.action) {
+        DashboardModel.data.affiliates = DashboardModel.data.affiliates.concat(data.affiliateList);
+        DashboardModel.data.action = '';
+      } else {
+        DashboardModel.data.affiliates = data.affiliateList || [];
+      }
+
       Loader["a" /* default */].showLoader = false;
       var current;
 
@@ -1463,12 +1483,117 @@ var Feedback_AFWCFeedback = /*#__PURE__*/function () {
 }();
 
 
+// CONCATENATED MODULE: ./src/admin/AdminNotice.js
+function AdminNotice_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function AdminNotice_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function AdminNotice_createClass(Constructor, protoProps, staticProps) { if (protoProps) AdminNotice_defineProperties(Constructor.prototype, protoProps); if (staticProps) AdminNotice_defineProperties(Constructor, staticProps); return Constructor; }
+
+var AdminNotice = /*#__PURE__*/function () {
+  function AdminNotice() {
+    AdminNotice_classCallCheck(this, AdminNotice);
+
+    AdminNotice.showLoader = false;
+    AdminNotice.progress = 0;
+    this.interval = 0;
+    AdminNotice.isProcessRunning = afwcDashboardParams.is_process_running > 0 ? true : false;
+    AdminNotice.msg = AdminNotice.msg ? AdminNotice.msg : '[Important] Affiliate for WooCommerce requires a database migration. To start, please click ';
+
+    if (AdminNotice.isProcessRunning) {
+      AdminNotice.msg = "Migration process is running";
+      AdminNotice.startProgressTracking();
+    }
+  }
+
+  AdminNotice_createClass(AdminNotice, [{
+    key: "runMigration",
+    value: function runMigration(e) {
+      if (AdminNotice.isProcessRunning) {
+        e.preventDefault();
+        return;
+      }
+
+      AdminNotice.progress = 0;
+      AdminNotice.isProcessRunning = true;
+      AdminNotice.msg = "Migration process is running";
+      m.request({
+        method: 'POST',
+        url: ajaxurl,
+        params: {
+          action: 'afwc_run_migration'
+        },
+        withCredentials: false,
+        responseType: "json"
+      }).then(function (data) {
+        AdminNotice.startProgressTracking();
+      });
+    }
+  }, {
+    key: "view",
+    value: function view(vnode) {
+      var _this = this;
+
+      return m("div", {
+        id: "afwc-migration-notice",
+        "class": "m-5 w-auto flex justify-center text-center items-center bg-white py-4 border-l-4 border-blue-700\t"
+      }, m("span", {
+        "class": "text-sm font-medium text-gray-600 "
+      }, AdminNotice.msg || ''), m("a", {
+        "class": (AdminNotice.isProcessRunning ? "cursor-not-allowed text-indigo-500 hidden " : "") + " cursor-pointer px-2 text-sm font-medium leading-6 text-indigo-600 hover:text-indigo-800 ",
+        onclick: function onclick(e) {
+          _this.runMigration(e);
+        }
+      }, "Run Migration."), m("span", {
+        id: "afwc-progress",
+        "class": (!AdminNotice.isProcessRunning ? "invisible" : "") + " text-sm font-medium text-gray-600 pl-2"
+      }, " ", AdminNotice.progress || 0, "% Done"));
+    }
+  }], [{
+    key: "startProgressTracking",
+    value: function startProgressTracking() {
+      this.interval = setInterval(function () {
+        AdminNotice.checkProgress();
+      }, 10000);
+    }
+  }, {
+    key: "checkProgress",
+    value: function checkProgress() {
+      var _this2 = this;
+
+      m.request({
+        method: 'POST',
+        url: ajaxurl,
+        params: {
+          action: 'afwc_check_migration_process'
+        },
+        withCredentials: false,
+        responseType: "json"
+      }).then(function (data) {
+        AdminNotice.progress = data.afwc_order_migration_status || 0;
+
+        if (100 === AdminNotice.progress) {
+          AdminNotice.msg = "Migration done successfully.";
+          setTimeout(function () {
+            document.getElementById("afwc-migration-notice").classList.add('hidden');
+          }, 3000);
+          clearInterval(_this2.interval);
+        }
+      });
+    }
+  }]);
+
+  return AdminNotice;
+}();
+
+
 // CONCATENATED MODULE: ./src/admin/views/NavBar.js
 function NavBar_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function NavBar_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function NavBar_createClass(Constructor, protoProps, staticProps) { if (protoProps) NavBar_defineProperties(Constructor.prototype, protoProps); if (staticProps) NavBar_defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -1521,7 +1646,7 @@ var NavBar_AFWNavBar = /*#__PURE__*/function () {
     value: function view(vnode) {
       var _this = this;
 
-      return m("div", {
+      return m('[', null, m("div", {
         "class": "bg-gray-800"
       }, m("nav", {
         "class": "max-w-7xl mx-auto px-4 xl:px-8 py-2 lg:py-2"
@@ -1686,7 +1811,7 @@ var NavBar_AFWNavBar = /*#__PURE__*/function () {
         "stroke-linejoin": "round",
         "stroke-width": "2",
         d: "M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      }))))))), m(SearchBox_SearchBox, null), Loader["a" /* default */].showLoader ? m(Loader["a" /* default */], null) : null, m(Feedback_AFWCFeedback, null));
+      }))))))), m(SearchBox_SearchBox, null), Loader["a" /* default */].showLoader ? m(Loader["a" /* default */], null) : null, m(Feedback_AFWCFeedback, null)), afwcDashboardParams.show_admin_notice && afwcDashboardParams.is_action_scheduler_exists ? m(AdminNotice, null) : null);
     }
   }]);
 
@@ -1843,8 +1968,17 @@ var AffiliateList_List = /*#__PURE__*/function () {
   }
 
   AffiliateList_createClass(List, [{
+    key: "loadAffiliates",
+    value: function loadAffiliates() {
+      DashboardModel_DashboardModel.data.currentPage = parseInt(DashboardModel_DashboardModel.data.currentPage) + 1;
+      DashboardModel_DashboardModel.data.action = 'load_more';
+      DashboardModel_DashboardModel.fetch();
+    }
+  }, {
     key: "view",
     value: function view() {
+      var _this = this;
+
       return m("nav", {
         "class": "py-3 text-gray-500 max-h-screen overflow-auto"
       }, m("ul", null, DashboardModel_DashboardModel.data.affiliates.map(function (item, key) {
@@ -1873,7 +2007,16 @@ var AffiliateList_List = /*#__PURE__*/function () {
           d: "M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z",
           "clip-rule": "evenodd"
         }))))));
-      })));
+      })), DashboardModel_DashboardModel.data.loadMore && DashboardModel_DashboardModel.data.affiliates.length > 0 && DashboardModel_DashboardModel.data.affiliates.length % afwcDashboardParams.affiliate_list_limit == 0 ? m("div", {
+        "class": "my-3"
+      }, m("div", {
+        "class": "pb-2 text-center border-b border-gray-200 text-center"
+      }, m("a", {
+        "class": "py-2 px-4 text-sm font-medium text-indigo-400 uppercase cursor-pointer",
+        onclick: function onclick() {
+          _this.loadAffiliates();
+        }
+      }, "Load More"))) : '');
     }
   }]);
 
@@ -3074,8 +3217,7 @@ var Details_OrderDetails = /*#__PURE__*/function () {
       }, m("div", {
         "class": "pb-2 text-center border-b border-gray-200 text-center"
       }, m("a", {
-        href: "#",
-        "class": "py-2 px-4 text-sm font-medium text-indigo-400 uppercase",
+        "class": "py-2 px-4 text-sm font-medium text-indigo-400 uppercase cursor-pointer",
         onclick: function onclick() {
           _this.loadOrders();
         }

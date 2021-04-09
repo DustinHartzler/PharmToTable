@@ -3,7 +3,7 @@
  * Main class for Affiliate For WooCommerce Install
  *
  * @since       1.0.0
- * @version     1.0.5
+ * @version     1.0.6
  *
  * @package     affiliate-for-woocommerce/includes/
  */
@@ -42,8 +42,8 @@ if ( ! class_exists( 'AFWC_Install' ) ) {
 			$collate = '';
 
 			if ( $wpdb->has_cap( 'collation' ) ) {
-				if ( ! empty( $wpdb->charset ) ) {
-					$collate .= "DEFAULT CHARACTER SET $wpdb->charset";
+				if ( $wpdb->has_cap( 'collation' ) ) {
+					$collate = $wpdb->get_charset_collate();
 				}
 				if ( ! empty( $wpdb->collate ) ) {
 					$collate .= " COLLATE $wpdb->collate";
@@ -77,6 +77,7 @@ if ( ! class_exists( 'AFWC_Install' ) ) {
 								type varchar(10) NULL,
 								reference varchar(100) DEFAULT NULL,
 								campaign_id int(20) DEFAULT NULL,
+								order_status VARCHAR(20) DEFAULT NULL,
 								PRIMARY KEY  (referral_id),
 								KEY afwc_referrals_apd (affiliate_id, post_id, datetime),
 								KEY afwc_referrals_da (datetime, affiliate_id),

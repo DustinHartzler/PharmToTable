@@ -6,6 +6,8 @@
  * @version     1.2.5
  */
 
+use Pelago\Emogrifier;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -39,16 +41,24 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 		public $read_only_fields;
 
 		/**
+		 * Form fields
+		 *
+		 * @var $form_fields
+		 */
+		public $form_fields;
+
+		/**
 		 * Constructor
 		 */
 		private function __construct() {
-
 			add_shortcode( 'afwc_registration_form', array( $this, 'render_registration_form' ) );
 			add_action( 'wp_ajax_afwc_register_user', array( $this, 'request_handler' ) );
 			add_action( 'wp_ajax_nopriv_afwc_register_user', array( $this, 'request_handler' ) );
 
 			$this->hide_fields      = array( 'afwc_reg_first_name', 'afwc_reg_last_name', 'afwc_reg_password', 'afwc_reg_confirm_password' );
 			$this->read_only_fields = array( 'afwc_reg_email' );
+
+			add_filter( 'wp_ajax_afwc_modify_form_fields', array( $this, 'afwc_modify_form_fields' ) );
 		}
 
 		/**
@@ -122,68 +132,18 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 				echo '<div class="afwc-reg-form-msg">' . esc_html__( 'Your request is in moderation.', 'affiliate-for-woocommerce' ) . '</div>';
 			} else {
 
-				$form_fields = array();
-				$form_fields = array(
-					'afwc_reg_email'            => array(
-						'type'     => 'email',
-						'required' => 'required',
-						'label'    => __( 'Email', 'affiliate-for-woocommerce' ),
-						'value'    => ( ! empty( $afwc_user_values['afwc_reg_email'] ) ) ? $afwc_user_values['afwc_reg_email'] : '',
-					),
-					'afwc_reg_first_name'       => array(
-						'type'     => 'text',
-						'required' => '',
-						'label'    => __( 'First Name', 'affiliate-for-woocommerce' ),
-						'class'    => 'afwc_is_half',
-						'value'    => ( ! empty( $afwc_user_values['afwc_reg_first_name'] ) ) ? $afwc_user_values['afwc_reg_first_name'] : '',
-					),
-					'afwc_reg_last_name'        => array(
-						'type'     => 'text',
-						'required' => '',
-						'label'    => __( 'Last Name', 'affiliate-for-woocommerce' ),
-						'class'    => 'afwc_is_half',
-						'value'    => ( ! empty( $afwc_user_values['afwc_reg_last_name'] ) ) ? $afwc_user_values['afwc_reg_last_name'] : '',
-					),
-					'afwc_reg_contact'          => array(
-						'type'     => 'text',
-						'required' => '',
-						'label'    => __( 'Phone Number / Skype ID / Best method to talk to you', 'affiliate-for-woocommerce' ),
-					),
-					'afwc_reg_website'          => array(
-						'type'     => 'text',
-						'required' => '',
-						'label'    => __( 'Website', 'affiliate-for-woocommerce' ),
-					),
-					'afwc_reg_password'         => array(
-						'type'     => 'password',
-						'required' => 'required',
-						'label'    => __( 'Password', 'affiliate-for-woocommerce' ),
-						'class'    => 'afwc_is_half',
-						'value'    => ( ! empty( $afwc_user_values['afwc_reg_password'] ) ) ? $afwc_user_values['afwc_reg_password'] : '',
-					),
-					'afwc_reg_confirm_password' => array(
-						'type'     => 'password',
-						'required' => 'required',
-						'label'    => __( 'Confirm Password', 'affiliate-for-woocommerce' ),
-						'class'    => 'afwc_is_half',
-						'value'    => ( ! empty( $afwc_user_values['afwc_reg_confirm_password'] ) ) ? $afwc_user_values['afwc_reg_confirm_password'] : '',
-					),
-					'afwc_reg_desc'             => array(
-						'type'     => 'textarea',
-						'required' => 'required',
-						'label'    => __( 'Tell us more about yourself and why you\'d like to partner with us (please include your social media handles, experience promoting others, tell us about your audience etc)', 'affiliate-for-woocommerce' ),
-					),
-					'afwc_reg_terms'            => array(
-						'type'     => 'checkbox',
-						'required' => 'required',
-						'label'    => __( ' I accept all the terms of this program', 'affiliate-for-woocommerce' ),
-					),
-
-				);
+				// Registration form fields filter.
+				$this->form_fields = get_option( 'afwc_form_fields', true );
+				// fill up values.
+				foreach ( $this->form_fields as $key => $field ) {
+					if ( ! empty( $afwc_user_values[ $key ] ) ) {
+						$this->form_fields[ $key ]['value'] = $afwc_user_values[ $key ];
+					}
+				}
 
 				$afwc_reg_form_html = '<div class="afwc_reg_form_wrapper"><form action="#" id="afwc_registration_form">';
 				// render fields.
-				foreach ( $form_fields as $id => $field ) {
+				foreach ( $this->form_fields as $id => $field ) {
 					$afwc_reg_form_html .= $this->field_callback( $id, $field );
 				}
 
@@ -217,15 +177,17 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 			$field_html = '';
 			$required   = ! empty( $field['required'] ) ? $field['required'] : '';
 			$class      = ! empty( $field['class'] ) ? $field['class'] : '';
+			$show       = ! empty( $field['show'] ) ? $field['show'] : '';
 			$read_only  = '';
 			$value      = '';
 			$user       = wp_get_current_user();
 			if ( is_object( $user ) && ! empty( $user->ID ) ) {
 				$read_only = in_array( $id, $this->read_only_fields, true ) ? 'readonly' : '';
-				$class    .= ( in_array( $id, $this->hide_fields, true ) && ! is_preview() ) ? ' afwc_hide_form_field' : '';
+				$class    .= ( ( in_array( $id, $this->hide_fields, true ) && ! is_preview() ) || ( ! $show && empty( $required ) ) ) ? ' afwc_hide_form_field' : '';
 				$value     = ! empty( $field['value'] ) ? $field['value'] : '';
 			}
 
+			$class .= ( ! $show && empty( $required ) && ! strpos( $class, 'afwc_hide_form_field' ) ) ? ' afwc_hide_form_field' : '';
 			switch ( $field['type'] ) {
 				case 'text':
 				case 'email':
@@ -242,7 +204,7 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 					break;
 			}
 			if ( 'checkbox' === $field['type'] ) {
-				$field_html = '<div class="afwc_reg_field_wrapper ' . $id . ' ' . $class . '"><label for="' . $id . '" class="afwc_' . $field['required'] . '">' . $field_html . $field['label'] . '</label></div>';
+				$field_html = '<div class="afwc_reg_field_wrapper ' . $id . ' ' . $class . '"><label for="' . $id . '" class="afwc_' . $field['required'] . '">' . $field_html . wp_kses_post( $field['label'] ) . '</label></div>';
 			} else {
 				$field_html = '<div class="afwc_reg_field_wrapper ' . $id . ' ' . $class . '"><label for="' . $id . '" class="afwc_' . $field['required'] . '">' . $field['label'] . '</label>' . $field_html . '</div>';
 			}
@@ -392,6 +354,145 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 			exit;
 
 		}
+
+		/**
+		 * Function to modify form fields
+		 */
+		public function afwc_modify_form_fields() {
+			check_ajax_referer( 'afwc-modify-form-fields', 'security' );
+			// format ajax input and save in the DB.
+			$form_fields = get_option( 'afwc_form_fields', true );
+			$form_fields = array_map(
+				function ( $form_fields ) {
+					if ( empty( $form_fields['required'] ) ) {
+						$form_fields['show'] = false;
+					}
+					return $form_fields;
+				},
+				$form_fields
+			);
+			$params      = array_map(
+				function ( $request_param ) {
+					return wp_unslash( $request_param );
+				},
+				$_REQUEST
+			);
+			foreach ( $params as $key => $param ) {
+				if ( strpos( $key, '_label' ) ) {
+					$id = str_replace( '_label', '', $key );
+					if ( ! empty( $form_fields[ $id ] ) ) {
+						$form_fields[ $id ]['label'] = $param;
+					}
+				} elseif ( strpos( $key, '_show' ) ) {
+					$id = str_replace( '_show', '', $key );
+					if ( ! empty( $form_fields[ $id ] ) ) {
+						$form_fields[ $id ]['show'] = true;
+					}
+				}
+			}
+			update_option( 'afwc_form_fields', $form_fields, 'no' );
+		}
+
+		/**
+		 * Function to render for settings
+		 */
+		public static function reg_form_settings() {
+			$form_fields = get_option( 'afwc_form_fields', true );
+			// loader.
+			$loader_image = WC()->plugin_url() . '/assets/images/wpspin-2x.gif';
+			?>
+			<script type="text/javascript">
+				jQuery(document).on('submit', '#afwc-form-settings', function(e) {
+					e.preventDefault();
+					jQuery('.afwc-form-save-loader').show();
+					var form = jQuery(this);
+					jQuery(form).find('input[type="submit"]').attr('disabled', true);
+					var formData = {};
+					jQuery.each(form.serializeArray(), function() {
+						formData[this.name] = this.value;
+					});
+					formData['action'] = 'afwc_modify_form_fields';
+					formData['security'] = '<?php echo esc_js( wp_create_nonce( 'afwc-modify-form-fields' ) ); ?>'
+					jQuery.ajax({
+						type: 'POST',
+						url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
+						data: formData,
+						dataType: 'json',
+						success: function(response) {
+							jQuery('.afwc-form-save-loader').hide();
+							jQuery(form).find('input[type="submit"]').attr('disabled', false);
+							jQuery('.afwc-form-save-msg').text('<?php esc_attr_e( 'Settings saved sucessfully.', 'affiliate-for-woocommerce' ); ?>').css('color', '#008000').show();
+							setTimeout(function () {
+								jQuery('.afwc-form-save-msg').hide();
+							}, 5000);
+						},
+						error: function (){
+							jQuery('.afwc-form-save-loader').hide();
+							jQuery('.afwc-form-save-msg').text('<?php esc_attr_e( 'Something went wrong. Please try again after some time.', 'affiliate-for-woocommerce' ); ?>').css('color', '#d60f00').show();
+							setTimeout(function () {
+								jQuery('.afwc-form-save-msg').hide();
+							}, 5000);
+						}
+					});
+				});
+			</script>
+			<style type="text/css">
+				#afwc-form-settings table{
+					width: 60%;
+				}
+				#afwc-form-settings th{
+					text-align: left;
+				}
+				#afwc-form-settings .afwc_first_col{
+					width: 10%;
+				}
+				#afwc-form-settings .afwc_second_col input, #afwc-form-settings .afwc_second_col textarea{
+					width: 50%;
+				}
+				.afwc-form-save-loader, .afwc-form-save-msg{
+					display: none;
+				}
+				.afwc-form-save-msg{
+					padding: 0.5em;
+					font-size: 1.1em;
+					font-weight: bold;
+				}
+			</style>
+			<form id="afwc-form-settings">
+				<h3><?php esc_attr_e( 'Affiliate registration form settings', 'affiliate-for-woocommerce' ); ?></h3>
+				<table> 
+				<tr>
+					<th><label><?php esc_attr_e( 'Show', 'affiliate-for-woocommerce' ); ?></label></th>
+					<th><label><?php esc_attr_e( 'Label', 'affiliate-for-woocommerce' ); ?></label></th>
+				</tr>
+				<?php
+				foreach ( $form_fields as $id => $field ) {
+					$required = ( ! empty( $field['required'] ) && 'required' === $field['required'] ) ? 'disabled' : '';
+					$show     = ( ! empty( $field['show'] ) && $field['show'] ) ? 'checked' : '';
+					?>
+					<tr>
+						<td class="afwc_first_col"><input type="checkbox" name="<?php echo esc_attr( $id ) . '_show'; ?>" <?php echo esc_attr( $required ); ?> <?php echo esc_attr( $show ); ?>/></td>
+						<td class="afwc_second_col">
+						<?php if ( 'afwc_reg_terms' === $id ) { ?>
+						<textarea name="<?php echo esc_attr( $id ) . '_label'; ?>"><?php echo esc_attr( $field['label'] ); ?></textarea>
+							<?php
+						} else {
+							?>
+						<input type="text" name="<?php echo esc_attr( $id ) . '_label'; ?>" value="<?php echo esc_attr( $field['label'] ); ?>"/>
+						<?php } ?>
+						</td>
+					</tr>
+					<?php
+				}
+				?>
+				<tr><td><input type="submit" class="button-primary" value="<?php echo esc_attr__( 'Save', 'affiliate-for-woocommerce' ); ?>"/></td></tr>
+				</table>
+				<div class="afwc-form-save-loader"><img src="<?php echo esc_url( $loader_image ); ?>"></div>
+				<div class="afwc-form-save-msg"></div>
+			</form>
+			<?php
+		}
+
 
 	}
 

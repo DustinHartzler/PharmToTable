@@ -3,7 +3,7 @@
  * Main class for Affiliates My Account
  *
  * @package     affiliate-for-woocommerce/includes/frontend/
- * @version     1.3.9
+ * @version     1.4.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -428,7 +428,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 							var tzoffset = (new Date()).getTimezoneOffset() * 60000;
 							let format_from = new Date(jQuery.datepicker.parseDate("dd-M-yy", from).getTime() - tzoffset);
 							let format_to = new Date(jQuery.datepicker.parseDate("dd-M-yy", to).getTime() - tzoffset);
-							let search = the_afwc.find('#afwc_search').val();
+							let search    = the_afwc.find('#afwc_search').val();
 							the_afwc.css( 'opacity', 0.5 );
 							if ( ( from && to ) || search ) {
 								jQuery.ajax({
@@ -548,6 +548,9 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 					} elseif ( 'rejected' === $referral['status'] ) {
 						$referral_status = __( 'Rejected', 'affiliate-for-woocommerce' );
 						$status_color    = 'red';
+					} elseif ( 'draft' === $referral['status'] ) {
+						$referral_status = __( 'Draft', 'affiliate-for-woocommerce' );
+						$status_color    = 'gray';
 					}
 
 					$customer_name = ( strlen( $referral['display_name'] ) > 20 ) ? substr( $referral['display_name'], 0, 19 ) . '...' : $referral['display_name'];
@@ -917,6 +920,9 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 								} elseif ( 'rejected' === $referral['status'] ) {
 									$referral_status = __( 'Rejected', 'affiliate-for-woocommerce' );
 									$status_color    = 'red';
+								} elseif ( 'draft' === $referral['status'] ) {
+									$referral_status = __( 'Draft', 'affiliate-for-woocommerce' );
+									$status_color    = 'gray';
 								}
 
 								$customer_name = ( strlen( $referral['display_name'] ) > 20 ) ? substr( $referral['display_name'], 0, 19 ) . '...' : $referral['display_name'];
@@ -1123,28 +1129,38 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			$option_order_status = 'afwc_order_statuses_' . uniqid();
 			update_option( $option_order_status, implode( ',', $prefixed_statuses ), 'no' );
 
+			$temp_option_key     = 'afwc_order_status_' . uniqid();
+			$paid_order_statuses = get_afwc_paid_order_status();
+			update_option( $temp_option_key, implode( ',', $paid_order_statuses ), 'no' );
+
 			if ( ! empty( $from ) && ! empty( $to ) ) {
 				// Need to consider all order_statuses to get correct rejected_commission and hence not passing order_statuses.
 				$kpis_result = $wpdb->get_results( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(count(pm.post_id), 0) AS number_of_orders,
+														"SELECT IFNULL(count(DISTINCT pm.post_id), 0) AS number_of_orders,
 																	IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS paid_commission,
-																	IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS unpaid_commission,
+																	IFNULL(SUM(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN afwcr.amount END), 0) AS unpaid_commission,
 																	IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS rejected_commission,
 																	IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS paid_count,
-																	IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS unpaid_count,
+																	IFNULL(COUNT(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  )  THEN 1 END), 0) AS unpaid_count,
 																	IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS rejected_count
 																FROM {$wpdb->prefix}afwc_referrals AS afwcr
 																	JOIN {$wpdb->postmeta} AS pm
 																		ON (afwcr.post_id = pm.post_id
 																				AND pm.meta_key = %s
 																				AND afwcr.affiliate_id = %d)
-																WHERE (afwcr.datetime BETWEEN %s AND %s)",
+																WHERE afwcr.status != 'draft' AND (afwcr.datetime BETWEEN %s AND %s)",
 														'paid',
 														'unpaid',
+														$temp_option_key,
 														'rejected',
 														'paid',
 														'unpaid',
+														$temp_option_key,
 														'rejected',
 														'_order_total',
 														$affiliate_id,
@@ -1168,7 +1184,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 												   	AND FIND_IN_SET ( post_status, ( SELECT option_value
 																						FROM {$wpdb->prefix}options
 																						WHERE option_name = %s ) ) )
-													WHERE (afwcr.datetime BETWEEN %s AND %s)",
+													WHERE afwcr.status != 'draft' AND (afwcr.datetime BETWEEN %s AND %s)",
 										'_order_total',
 										$affiliate_id,
 										'shop_order',
@@ -1181,23 +1197,30 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			} else {
 				$kpis_result = $wpdb->get_results( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(count(pm.post_id), 0) AS number_of_orders,
+														"SELECT IFNULL(count(DISTINCT pm.post_id), 0) AS number_of_orders,
 																			IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS paid_commission,
-																			IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS unpaid_commission,
+																			IFNULL(SUM(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN afwcr.amount END), 0) AS unpaid_commission,
 																			IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS rejected_commission,
 																			IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS paid_count,
-																			IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS unpaid_count,
+																			IFNULL(COUNT(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN 1 END), 0) AS unpaid_count,
 																			IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS rejected_count
 																	FROM {$wpdb->prefix}afwc_referrals AS afwcr
 																		JOIN {$wpdb->postmeta} AS pm
 																			ON (afwcr.post_id = pm.post_id
 																					AND pm.meta_key = %s
-																					AND afwcr.affiliate_id = %d)",
+																					AND afwcr.affiliate_id = %d)
+																					WHERE afwcr.status != 'draft'",
 														'paid',
 														'unpaid',
+														$temp_option_key,
 														'rejected',
 														'paid',
 														'unpaid',
+														$temp_option_key,
 														'rejected',
 														'_order_total',
 														$affiliate_id
@@ -1218,7 +1241,8 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 													AND posts.post_type = %s 
 												   	AND FIND_IN_SET ( post_status, ( SELECT option_value
 																						FROM {$wpdb->prefix}options
-																						WHERE option_name = %s ) ) )",
+																						WHERE option_name = %s ) ) )
+										           WHERE afwcr.status != 'draft'",
 										'_order_total',
 										$affiliate_id,
 										'shop_order',
@@ -1228,6 +1252,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				);
 			}
 			delete_option( $option_order_status );
+			delete_option( $temp_option_key );
 
 			$kpis_result[0]['order_total'] = ( isset( $order_total[0]['order_total'] ) ) ? $order_total[0]['order_total'] : 0;
 
@@ -1336,18 +1361,15 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				$referrals_result = $wpdb->get_results( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT afwcr.datetime,
-																			   IFNULL( u.display_name, %s ) AS display_name,
 																			   afwcr.amount,
 																			   afwcr.currency_id,
-																			   afwcr.status
+																			   afwcr.status,
+																			   afwcr.post_id
 																		FROM {$wpdb->prefix}afwc_referrals AS afwcr
-																				LEFT JOIN {$wpdb->users} AS u
-																					ON (afwcr.user_id = u.ID)
 																		WHERE afwcr.affiliate_id = %d
 																			AND (afwcr.datetime BETWEEN %s AND %s)
 																		ORDER BY afwcr.datetime DESC
 																		LIMIT %d OFFSET %d",
-															esc_sql( __( 'Guest', 'affiliate-for-woocommerce' ) ),
 															$affiliate_id,
 															$from,
 															$to,
@@ -1356,6 +1378,32 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 														),
 					'ARRAY_A'
 				);
+				$order_ids        = array_map(
+					function( $referrals_result ) {
+						return $referrals_result['post_id'];
+					},
+					$referrals_result
+				);
+
+				$option_nm = 'afwc_order_ids_' . uniqid();
+				update_option( $option_nm, implode( ',', array_unique( $order_ids ) ), 'no' );
+
+				$referrals_details = $wpdb->get_results( // phpcs:ignore
+												$wpdb->prepare( // phpcs:ignore
+													"SELECT post_id AS order_id,
+																		GROUP_CONCAT(CASE WHEN meta_key IN ('_billing_first_name', '_billing_last_name') THEN meta_value END SEPARATOR ' ') AS display_name
+																FROM {$wpdb->postmeta} AS postmeta
+																WHERE meta_key IN ( '_billing_first_name', '_billing_last_name' )
+																	AND FIND_IN_SET ( post_id, ( SELECT option_value
+																								FROM {$wpdb->prefix}options
+																								WHERE option_name = %s ) )
+																						GROUP BY order_id",
+													$option_nm
+												),
+					'ARRAY_A'
+				);
+
+				delete_option( $option_nm );
 
 				$referrals_total_count = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
@@ -1370,27 +1418,52 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 															$to
 														)
 				);
+
 			} else {
 				$referrals_result = $wpdb->get_results( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT afwcr.datetime,
-																			   IFNULL( u.display_name, %s ) AS display_name,
 																			   afwcr.amount,
 																			   afwcr.currency_id,
-																			   afwcr.status
+																			   afwcr.status,
+																			   afwcr.post_id
 																		FROM {$wpdb->prefix}afwc_referrals AS afwcr
-																				LEFT JOIN {$wpdb->users} AS u
-																					ON (afwcr.user_id = u.ID)
 																		WHERE afwcr.affiliate_id = %d
 																		ORDER BY afwcr.datetime DESC
 																		LIMIT %d OFFSET %d",
-															esc_sql( __( 'Guest', 'affiliate-for-woocommerce' ) ),
 															$affiliate_id,
 															$limit,
 															$offset
 														),
 					'ARRAY_A'
 				);
+
+				$order_ids = array_map(
+					function( $referrals_result ) {
+						return $referrals_result['post_id'];
+					},
+					$referrals_result
+				);
+
+				$option_nm = 'afwc_order_ids_' . uniqid();
+				update_option( $option_nm, implode( ',', array_unique( $order_ids ) ), 'no' );
+
+				$referrals_details = $wpdb->get_results( // phpcs:ignore
+												$wpdb->prepare( // phpcs:ignore
+													"SELECT post_id AS order_id,
+																		GROUP_CONCAT(CASE WHEN meta_key IN ('_billing_first_name', '_billing_last_name') THEN meta_value END SEPARATOR ' ') AS display_name
+																FROM {$wpdb->postmeta} AS postmeta
+																WHERE meta_key IN ( '_billing_first_name', '_billing_last_name' )
+																	AND FIND_IN_SET ( post_id, ( SELECT option_value
+																								FROM {$wpdb->prefix}options
+																								WHERE option_name = %s ) )
+																						GROUP BY order_id",
+													$option_nm
+												),
+					'ARRAY_A'
+				);
+
+				delete_option( $option_nm );
 
 				$referrals_total_count = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
@@ -1402,6 +1475,14 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 															$affiliate_id
 														)
 				);
+			}
+
+			// format referral details.
+			foreach ( $referrals_details as $referral ) {
+				$referral_id_detail_map[ $referral['order_id'] ] = $referral['display_name'];
+			}
+			foreach ( $referrals_result as $key => $ref ) {
+				$referrals_result[ $key ]['display_name'] = ( ! empty( $referral_id_detail_map[ $ref['post_id'] ] ) ) ? $referral_id_detail_map[ $ref['post_id'] ] : __( 'Guest', 'affiliate-for-woocomerce' );
 			}
 
 			$referrals = array(
@@ -1527,7 +1608,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 						e.preventDefault();
 						jQuery('#afwc_id_change_wrap, #afwc_id_save_wrap').toggle();
 					});
-
 					jQuery('#afwc_resources_wrapper').on( 'click', '#afwc_save_identifier', function( e ) {
 						e.preventDefault();
 						var id = jQuery(this)[0].id;

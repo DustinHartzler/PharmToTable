@@ -3,7 +3,7 @@
  * Some common functions for Affiliate For WooCommerce
  *
  * @since       1.0.0
- * @version     1.0.9
+ * @version     1.1.0
  *
  * @package     affiliate-for-woocommerce/includes/
  */
@@ -415,3 +415,33 @@ function get_commission_plans( $status ) {
 	return $afwc_rules;
 
 }
+
+/**
+ * Get WC paid status
+ *
+ * @return array $wc_paid_statuses
+ */
+function get_afwc_paid_order_status() {
+	$wc_paid_statuses = array();
+	$wc_paid_statuses = wc_get_is_paid_statuses();
+	$wc_paid_statuses = apply_filters( 'afwc_paid_order_statuses', $wc_paid_statuses );
+	foreach ( $wc_paid_statuses as $key => $value ) {
+		$wc_paid_statuses[ $key ] = ( strpos( $value, 'wc-' ) === false ) ? 'wc-' . $value : $value;
+	}
+	return $wc_paid_statuses;
+}
+
+/**
+ * Get WC unpaid status
+ *
+ * @return array $wc_reject_statuses
+ */
+function get_afwc_reject_order_status() {
+	$wc_reject_statuses = array();
+	$wc_reject_statuses = apply_filters( 'afwc_rejected_order_statuses', array( 'refunded', 'cancelled', 'failed', 'draft' ) );
+	foreach ( $wc_reject_statuses as $key => $value ) {
+		$wc_reject_statuses[ $key ] = ( strpos( $value, 'wc-' ) === false ) ? 'wc-' . $value : $value;
+	}
+	return $wc_reject_statuses;
+}
+

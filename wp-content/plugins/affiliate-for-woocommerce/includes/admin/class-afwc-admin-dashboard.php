@@ -3,7 +3,7 @@
  * Main class for Affiliates Dashboard
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.5.3
+ * @version     1.6.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,10 +21,12 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
+			define( 'AFWC_AFFILIATES_LIMIT', 50 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_dashboard_scripts' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_dashboard_styles' ) );
 			add_action( 'wp_ajax_afwc_dashboard_controller', array( $this, 'request_handler' ) );
 			add_action( 'admin_print_scripts', array( $this, 'remove_admin_notices' ) );
+
 		}
 
 		/**
@@ -148,21 +150,33 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 			$can_ask_for_feedback = self::show_feedback();
 
-			$review_link = 'https://woocommerce.com/products/affiliate-for-woocommerce/#comments';
+			// migration notice.
+			$migration_of_order_status_done = get_option( 'afwc_migration_for_order_status_done', false );
+			$current_db_version             = get_option( '_afwc_current_db_version' );
+			$show_admin_notice              = false;
+			$is_process_running             = get_option( 'afwc_is_migration_process_running', false );
+			$show_admin_notice              = ( '1.2.7' >= $current_db_version && ! $migration_of_order_status_done ) ? true : false;
+
+			$is_action_scheduler_exists = ( function_exists( 'as_schedule_single_action' ) ) ? true : false;
+			$review_link                = 'https://woocommerce.com/products/affiliate-for-woocommerce/#comments';
 			wp_localize_script(
 				'afwc-admin-dashboard',
 				'afwcDashboardParams',
 				array(
-					'security'             => wp_create_nonce( AFWC_AJAX_SECURITY ),
-					'settingsLink'         => $settings_link,
-					'currencySymbol'       => AFWC_CURRENCY,
-					'isPayPalEnabled'      => $is_paypal_enabled,
-					'ajaxurl'              => admin_url( 'admin-ajax.php' ),
-					'home_url'             => home_url(),
-					'afwc_filters'         => $afwc_filters,
-					'plan_dashboard_data'  => $plan_dashboard_data,
-					'can_ask_for_feedback' => $can_ask_for_feedback,
-					'review_link'          => $review_link,
+					'security'                   => wp_create_nonce( AFWC_AJAX_SECURITY ),
+					'settingsLink'               => $settings_link,
+					'currencySymbol'             => AFWC_CURRENCY,
+					'isPayPalEnabled'            => $is_paypal_enabled,
+					'ajaxurl'                    => admin_url( 'admin-ajax.php' ),
+					'home_url'                   => home_url(),
+					'afwc_filters'               => $afwc_filters,
+					'plan_dashboard_data'        => $plan_dashboard_data,
+					'can_ask_for_feedback'       => $can_ask_for_feedback,
+					'review_link'                => $review_link,
+					'show_admin_notice'          => $show_admin_notice,
+					'is_process_running'         => $is_process_running,
+					'is_action_scheduler_exists' => $is_action_scheduler_exists,
+					'affiliate_list_limit'       => AFWC_AFFILIATES_LIMIT,
 				)
 			);
 
@@ -214,13 +228,8 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 			$func_nm = $params['cmd'];
 
-			// To fix the delay in admin dashboard issue.
-			$params['from_date'] = isset( $params['from_date'] ) ? $params['from_date'] . ' 00:00:00' : '';
-			$params['to_date']   = isset( $params['to_date'] ) ? $params['to_date'] . ' 23:59:59' : '';
-
-			$params['from'] = gmdate( 'Y-m-d', Affiliate_For_WooCommerce::get_offset_timestamp( strtotime( ( ! empty( $params['from_date'] ) ) ? $params['from_date'] : '' ) ) );
-			$params['to']   = gmdate( 'Y-m-d', Affiliate_For_WooCommerce::get_offset_timestamp( strtotime( ( ! empty( $params['to_date'] ) ) ? $params['to_date'] : '' ) ) );
-
+			$params['from']         = gmdate( 'Y-m-d', Affiliate_For_WooCommerce::get_offset_timestamp( strtotime( ( ! empty( $params['from_date'] ) ) ? $params['from_date'] : '' ) ) );
+			$params['to']           = gmdate( 'Y-m-d', Affiliate_For_WooCommerce::get_offset_timestamp( strtotime( ( ! empty( $params['to_date'] ) ) ? $params['to_date'] : '' ) ) );
 			$params['affiliate_id'] = isset( $params['affiliate_id'] ) ? $params['affiliate_id'] : ''; // phpcs:ignore
 			$params['page'] = isset( $params['page'] ) ? $params['page'] : 1; // phpcs:ignore
 
@@ -515,12 +524,21 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 				'unpaid_affiliates'    => afwc_format_price( $aggregated['unpaid_affiliates'], 0 ),
 				'customers_count'      => afwc_format_price( $customers_count, 0 ),
 				'visitors_count'       => afwc_format_price( $visitor_count, 0 ),
-				'all_customers_count'  => afwc_format_price( apply_filters( 'afwc_all_customer_ids', 0, $params['from'], $params['to'] ), 0 ),
+				'all_customers_count'  => afwc_format_price(
+					apply_filters(
+						'afwc_all_customer_ids',
+						0,
+						array(
+							'from_date' => $params['from'],
+							'to_date'   => $params['to'],
+						)
+					),
+					0
+				),
 			);
 
 			$afwc['percent_of_total_sales'] = afwc_format_price( ( ( $total_sales > 0 ) ? ( $net_sales * 100 ) / $total_sales : 0 ) );
-			$afwc['conversion_rate']        = afwc_format_price( ( ( $visitor_count > 0 ) ? $customers_count * 100 / $visitor_count : 0 ) );
-
+			$afwc['conversion_rate']        = afwc_format_price( ( ( $visitor_count > 0 ) ? $afwc['all_customers_count'] * 100 / $visitor_count : 0 ) );
 			return $afwc;
 		}
 
@@ -532,17 +550,24 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		public function affiliates_list( $params = array() ) {
 			global $wpdb;
 
-			$afwc_filters = ( ! empty( $params['filters'] ) ) ? json_decode( $params['filters'], true ) : array();
-
+			$afwc_filters            = ( ! empty( $params['filters'] ) ) ? json_decode( $params['filters'], true ) : array();
 			$affiliate_ids           = array();
 			$affiliates              = array();
-			$params['limit']         = 150;
 			$params['status']        = '';
 			$params['affiliate_ids'] = array();
+			$params['limit']         = AFWC_AFFILIATES_LIMIT;
+			$start_limit             = ( ! empty( $params['page'] ) ) ? ( intval( $params['page'] ) - 1 ) * $params['limit'] : 0;
 
 			$params['is_export'] = ! empty( $params['is_export'] ) ? $params['is_export'] : false;
 
-			$default_filters['affiliate_status'] = array( 'yes', 'pending', 'default' );
+			$limit = ( empty( $params['is_export'] ) ) ? ' LIMIT ' . $start_limit . ', ' . $params['limit'] : '';
+
+			$is_affiliate_status_filter = false;
+			if ( ! empty( $afwc_filters['affiliate_status'] ) ) {
+				$is_affiliate_status_filter = true;
+			}
+
+			$default_filters['affiliate_status'] = array( 'yes', 'pending' );
 			$default_filters['order_status']     = array();
 			$default_filters['tags']             = array();
 
@@ -555,330 +580,136 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			}
 			$afwc_filters = $default_filters;
 
-			$valid_affiliates               = array();
-			$params['affiliate_ids_option'] = 'afwc_affiliate_user_ids_' . uniqid();
-			$params['affiliate_count']      = count( $valid_affiliates );
+			// code for filters.
+			$wpdb1 = $wpdb;
 
-			foreach ( $afwc_filters as $filter => $filter_val ) {
-				$params[ $filter ] = $filter_val;
-				$func_nm           = 'get_affiliate_by_' . $filter;
-				if ( ! empty( $filter_val ) && is_callable( array( $this, $func_nm ) ) ) {
-					$valid_affiliates = $this->$func_nm( $params );
+			$referrals_join_cond     = " JOIN {$wpdb->prefix}afwc_referrals as ref
+										ON(ref.affiliate_id = u.ID) ";
+			$filters_join_cond       = ' LEFT ' . $referrals_join_cond;
+			$filters_where_cond      = ' 1=1 ';
+			$filters_umeta_join_cond = '';
+
+			// conditions when filtered by affiliate status.
+			$user_role_cond       = '';
+			$affiliate_user_roles = get_option( 'affiliate_users_roles', array() );
+			if ( ! empty( $affiliate_user_roles ) ) {
+				$cond = array();
+				foreach ( $affiliate_user_roles as $role ) {
+					$cond[] = $wpdb1->prepare( // phpcs:ignore
+						'um.meta_value LIKE %s',
+						'%' . $wpdb->esc_like( $role ) . '%'
+					);
+
 				}
+				$user_role_cond = implode( ' OR ', $cond );
+			}
 
-				$params['affiliate_count'] = count( $valid_affiliates );
-				$params['affiliate_ids']   = array_map(
-					function( $valid_affiliates ) {
-											return $valid_affiliates;
-					},
-					$valid_affiliates
+			$status_filters = implode( ',', $afwc_filters['affiliate_status'] );
+			if ( ! empty( $is_affiliate_status_filter ) ) {
+				$filters_where_cond     .= " AND (FIND_IN_SET (um.meta_value, '" . $status_filters . "')) ";
+				$filters_umeta_join_cond = " AND um.meta_key = 'afwc_is_affiliate' ";
+			} else {
+				$filters_where_cond     .= " AND (FIND_IN_SET (um.meta_value, '" . $status_filters . "') " . ( ( ! empty( $user_role_cond ) ) ? ' OR ' . $user_role_cond : '' ) . ") 
+										AND um.user_id NOT IN (SELECT user_id 
+																FROM {$wpdb->usermeta}
+																WHERE meta_key = 'afwc_is_affiliate'
+																	AND meta_value = 'no') ";
+				$filters_umeta_join_cond = " AND um.meta_key IN ('afwc_is_affiliate'" . ( ( ! empty( $user_role_cond ) ) ? ", '{$wpdb->prefix}capabilities'" : '' ) . ') ';
+			}
+
+			// Conditions when filtered by commission status.
+			if ( ! empty( $afwc_filters['order_status'] ) ) {
+				$filters_join_cond   = $referrals_join_cond;
+				$filters_where_cond .= " AND (FIND_IN_SET (ref.status, '" . implode( ',', $afwc_filters['order_status'] ) . "')) ";
+			}
+
+			// Conditions when filtered by full text searxh box.
+			if ( ! empty( $search_term ) ) {
+				$filters_where_cond .= $wpdb1->prepare( // phpcs:ignore
+													' AND ( u.user_nicename LIKE %s OR u.display_name LIKE %s OR u.user_email LIKE %s ) ',
+					'%' . $wpdb->esc_like( $search_term ) . '%',
+					'%' . $wpdb->esc_like( $search_term ) . '%',
+					'%' . $wpdb->esc_like( $search_term ) . '%'
 				);
-				update_option( $params['affiliate_ids_option'], implode( ',', $params['affiliate_ids'] ), 'no' );
-
 			}
 
-			// if valid affiliate null then return.
-			if ( empty( $valid_affiliates ) ) {
-				delete_option( $params['affiliate_ids_option'] );
-				return $affiliates;
+			if ( ! empty( $afwc_filters['tags'] ) ) {
+				$filters_join_cond  .= " JOIN {$wpdb->prefix}term_relationships as tr
+										ON(tr.object_id = u.ID) ";
+				$filters_where_cond .= " AND (FIND_IN_SET(tr.term_taxonomy_id, '" . implode( ',', $afwc_filters['tags'] ) . "')) ";
 			}
 
-			// fetch earned commision and customer_count.
-			$valid_affiliates_with_commision = $this->get_affiliate_from_referral( $valid_affiliates, $params );
+			$affiliates                   = array();
+			$paid_order_statuses          = get_afwc_paid_order_status();
+			$paid_order_statuses_imploded = ( ! empty( $paid_order_statuses ) ) ? implode( ',', $paid_order_statuses ) : '';
 
-			foreach ( $valid_affiliates as $affiliate_id ) {
-				// Check if user exists.
-				$user = get_user_by( 'ID', $affiliate_id );
-				if ( $user ) {
-					$affiliate_ids[]        = $affiliate_id;
-					$earned_commissions     = ( ! empty( $valid_affiliates_with_commision ) && ! empty( $valid_affiliates_with_commision[ $affiliate_id ] ) ) ? $valid_affiliates_with_commision[ $affiliate_id ]['earned_commissions'] : 0;
-					$unpaid_commissions     = ( ! empty( $valid_affiliates_with_commision ) && ! empty( $valid_affiliates_with_commision[ $affiliate_id ] ) ) ? $valid_affiliates_with_commision[ $affiliate_id ]['unpaid_commissions'] : 0;
-					$currency               = ( ! empty( $valid_affiliates_with_commision ) && ! empty( $valid_affiliates_with_commision[ $affiliate_id ] ) ) ? $valid_affiliates_with_commision[ $affiliate_id ]['currency'] : get_woocommerce_currency();
-					$customers_count        = ( ! empty( $valid_affiliates_with_commision ) && ! empty( $valid_affiliates_with_commision[ $affiliate_id ] ) ) ? $valid_affiliates_with_commision[ $affiliate_id ]['customers_count'] : 0;
-					$total_order            = ( ! empty( $valid_affiliates_with_commision ) && ! empty( $valid_affiliates_with_commision[ $affiliate_id ] ) ) ? $valid_affiliates_with_commision[ $affiliate_id ]['total_order'] : 0;
-					$is_affiliate           = get_user_meta( $affiliate_id, 'afwc_is_affiliate', true );
-					$afwc_user_paypal_email = get_user_meta( $affiliate_id, 'afwc_paypal_email', true );
-					$affiliates[]           = array(
-						'affiliate_id'       => $affiliate_id,
-						'earned_commissions' => afwc_format_price( $earned_commissions ),
-						'unpaid_commissions' => afwc_format_price( $unpaid_commissions ),
-						'currency'           => $currency,
-						'customers_count'    => $customers_count,
-						'total_order'        => $total_order,
-						'pending'            => ( 'pending' === $is_affiliate ) ? 1 : 0,
-						'paypal_email'       => ( ! empty( $afwc_user_paypal_email ) ) ? $afwc_user_paypal_email : '',
+			$results =  $wpdb1->get_results( // phpcs:ignore
+											$wpdb1->prepare( // phpcs:ignore
+												"SELECT DISTINCT u.ID AS affiliate_id,
+													u.display_name AS display_name,
+													u.user_email AS email,
+													(CASE WHEN um.meta_key = 'afwc_is_affiliate' THEN 1 ELSE 0 END) as priority,
+													IFNULL((CASE WHEN um.meta_key = 'afwc_is_affiliate' AND um.meta_value = 'pending' THEN 1 ELSE 0 END), 0) as is_pending,
+													IFNULL(SUM( CASE WHEN ref.status != 'draft' AND ref.datetime BETWEEN %s AND %s THEN ref.amount ELSE 0 END), 0) as earned_commissions,
+													IFNULL(SUM( CASE WHEN ref.status != 'draft' AND ref.datetime BETWEEN %s AND %s AND status = 'unpaid' AND FIND_IN_SET (ref.order_status, '" . $paid_order_statuses_imploded . "') THEN ref.amount ELSE 0 END), 0) as unpaid_commissions,
+													IFNULL((CASE WHEN ref.status != 'draft' THEN ref.currency_id ELSE '' END), '') as currency,
+													IFNULL(SUM( CASE WHEN ref.status != 'draft' AND ref.datetime BETWEEN %s AND %s THEN 1 ELSE 0 END), 0) as total_order,
+													IFNULL(IF( ref.status != 'draft' AND ref.affiliate_id IS NOT NULL, COUNT( DISTINCT IF( ref.user_id > 0, ref.user_id, CONCAT_WS( ':', ref.ip, ref.user_id ) ) ), 0), 0) as customers_count,
+													IFNULL(hits.total_visitors, 0) as total_visitors
+												FROM {$wpdb->prefix}users as u
+													JOIN {$wpdb->prefix}usermeta as um
+														ON(um.user_id = u.ID " . $filters_umeta_join_cond . ")
+													LEFT JOIN (SELECT IFNULL(COUNT( DISTINCT CONCAT_WS( ':', ip, user_id ) ), 0) as total_visitors,
+																	affiliate_id
+																FROM {$wpdb->prefix}afwc_hits
+																WHERE datetime BETWEEN %s AND %s
+																GROUP BY affiliate_id) as hits
+															ON(hits.affiliate_id = u.ID)
+															" . $filters_join_cond . '
+															WHERE ' . $filters_where_cond . '
+															GROUP BY affiliate_id
+															ORDER BY earned_commissions DESC, customers_count DESC, priority DESC, total_visitors DESC
+															' . $limit,
+												$params['from'] . ' 00:00:00',
+												$params['to'] . ' 23:59:59',
+												$params['from'] . ' 00:00:00',
+												$params['to'] . ' 23:59:59',
+												$params['from'] . ' 00:00:00',
+												$params['to'] . ' 23:59:59',
+												$params['from'] . ' 00:00:00',
+												$params['to'] . ' 23:59:59'
+											),
+				'ARRAY_A'
+			);
+
+			if ( count( $results ) > 0 ) {
+				foreach ( $results as $affiliate ) {
+					$id                = ( ( ! empty( $affiliate['affiliate_id'] ) ) ? $affiliate['affiliate_id'] : 0 );
+					$earned_commission = ( ! empty( $affiliate['earned_commissions'] ) ) ? $affiliate['earned_commissions'] : 0;
+					$unpaid_commission = ( ! empty( $affiliate['unpaid_commissions'] ) ) ? $affiliate['unpaid_commissions'] : 0;
+
+					if ( empty( $id ) ) {
+						continue;
+					}
+
+					$affiliate_ids[] = $id;
+					$affiliates[]    = array(
+						'affiliate_id'       => $id,
+						'name'               => ( ( ! empty( $affiliate['display_name'] ) ) ? $affiliate['display_name'] : '' ),
+						'email'              => ( ( ! empty( $affiliate['email'] ) ) ? $affiliate['email'] : '' ),
+						'earned_commissions' => ( ( empty( $params['is_export'] ) ) ? afwc_format_price( $earned_commission ) : $earned_commission ),
+						'unpaid_commissions' => ( ( empty( $params['is_export'] ) ) ? afwc_format_price( $unpaid_commission ) : $unpaid_commission ),
+						'currency'           => ( ( ! empty( $affiliate['currency'] ) ) ? $affiliate['currency'] : get_woocommerce_currency() ),
+						'customers_count'    => ( ( ! empty( $affiliate['customers_count'] ) ) ? $affiliate['customers_count'] : 0 ),
+						'total_order'        => ( ( ! empty( $affiliate['total_order'] ) ) ? $affiliate['total_order'] : 0 ),
+						'total_visitors'     => ( ( ! empty( $affiliate['total_visitors'] ) ) ? $affiliate['total_visitors'] : 0 ),
+						'pending'            => ( ( ! empty( $affiliate['is_pending'] ) ) ? intval( $affiliate['is_pending'] ) : 0 ),
+						'paypal_email'       => get_user_meta( $id, 'afwc_paypal_email', true ),
 					);
 				}
 			}
 
-			if ( '' !== $search_term ) {
-				$affiliate_names_results = $wpdb->get_results( // phpcs:ignore
-																$wpdb->prepare( // phpcs:ignore
-																	"SELECT ID AS affiliate_id,
-																						display_name AS display_name
-																				FROM {$wpdb->users}
-																				WHERE FIND_IN_SET ( ID, ( SELECT option_value
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s )  ) AND ( user_nicename LIKE %s OR display_name LIKE %s OR user_email LIKE %s )",
-																	$params['affiliate_ids_option'],
-																	'%' . $wpdb->esc_like( $search_term ) . '%',
-																	'%' . $wpdb->esc_like( $search_term ) . '%',
-																	'%' . $wpdb->esc_like( $search_term ) . '%'
-																),
-					'ARRAY_A'
-				);
-
-			} else {
-				$affiliate_names_results = $wpdb->get_results( // phpcs:ignore
-																$wpdb->prepare( // phpcs:ignore
-																	"SELECT ID AS affiliate_id,
-																						display_name AS display_name,
-																						user_email AS email
-																				FROM {$wpdb->users}
-																				WHERE FIND_IN_SET ( ID,  ( SELECT option_value
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s )  ) ",
-																	$params['affiliate_ids_option']
-																),
-					'ARRAY_A'
-				);
-			}
-
-			if ( count( $affiliate_names_results ) > 0 ) {
-				foreach ( $affiliate_names_results as $result ) {
-					$affiliate_names[ $result['affiliate_id'] ]['display_name'] = $result['display_name'];
-					$affiliate_names[ $result['affiliate_id'] ]['email']        = $result['email'];
-				}
-
-				foreach ( $affiliates as $key => $affiliate ) {
-					if ( ! empty( $affiliate_names[ $affiliate['affiliate_id'] ] ) ) {
-						$affiliates[ $key ]['name']  = $affiliate_names[ $affiliate['affiliate_id'] ]['display_name'];
-						$affiliates[ $key ]['email'] = $affiliate_names[ $affiliate['affiliate_id'] ]['email'];
-					} else {
-						unset( $affiliates[ $key ] );
-					}
-				}
-			}
-
-			delete_option( $params['affiliate_ids_option'] );
-			array_multisort( array_column( $affiliates, 'earned_commissions' ), SORT_DESC, $affiliates );
 			return $affiliates;
-
-		}
-
-		/**
-		 * Function for getting affiliate's by affiliates status
-		 *
-		 * @param array $params Params from the AJAX request.
-		 * @return array $valid_affiliates
-		 */
-		public function get_affiliate_by_affiliate_status( $params ) {
-
-			$valid_affiliates = $this->get_affiliate_from_users( $params );
-			$affiliate_status = $params['affiliate_status'];
-			if ( ! empty( $affiliate_status ) && ( in_array( 'yes', $affiliate_status, true ) || in_array( 'default', $affiliate_status, true ) ) ) {
-				$params['affiliate_ids'] = array_map(
-					function( $valid_affiliates ) {
-											return $valid_affiliates;
-					},
-					$valid_affiliates
-				);
-				update_option( $params['affiliate_ids_option'], implode( ',', $params['affiliate_ids'] ), 'no' );
-				$params['affiliate_count'] = count( $valid_affiliates );
-				$valid_affiliates          = array_merge( $valid_affiliates, $this->get_affiliate_by_user_roles( $params ) );
-			}
-			return $valid_affiliates;
-
-		}
-
-		/**
-		 * Function for getting affiliate's referral commision
-		 *
-		 * @param array $valid_affiliates valid affiliates.
-		 * @param array $params Params from the AJAX request.
-		 * @return array $valid_affiliates
-		 */
-		public function get_affiliate_from_referral( $valid_affiliates, $params ) {
-			global $wpdb;
-			$valid_affiliates_with_commision = array();
-			$results = $wpdb->get_results( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT affiliate_id,
-																			IFNULL(SUM( CASE WHEN datetime BETWEEN %s AND %s THEN amount ELSE 0 END), 0) as earned_commissions,
-																			IFNULL(SUM( CASE WHEN datetime BETWEEN %s AND %s AND status = 'unpaid' THEN amount ELSE 0 END), 0) as unpaid_commissions,
-																			currency_id as currency,
-																			IFNULL(SUM( CASE WHEN datetime BETWEEN %s AND %s THEN 1 ELSE 0 END), 0) as total_order,
-																			IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
-																	FROM {$wpdb->prefix}afwc_referrals WHERE FIND_IN_SET( affiliate_id, ( SELECT option_value
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )
-																	GROUP BY affiliate_id
-																	ORDER BY earned_commissions DESC, customers_count DESC",
-														$params['from'] . ' 00:00:00',
-														$params['to'] . ' 23:59:59',
-														$params['from'] . ' 00:00:00',
-														$params['to'] . ' 23:59:59',
-														$params['from'] . ' 00:00:00',
-														$params['to'] . ' 23:59:59',
-														$params['affiliate_ids_option']
-													),
-				'ARRAY_A'
-			);
-			foreach ( $results as $value ) {
-				$valid_affiliates_with_commision[ $value['affiliate_id'] ] = $value;
-			}
-
-			return $valid_affiliates_with_commision;
-		}
-
-		/**
-		 * Function for getting affiliate's from users
-		 *
-		 * @param array $params Params from the AJAX request.
-		 * @return array $valid_affiliates
-		 */
-		public function get_affiliate_from_users( $params ) {
-			global $wpdb;
-			$afwc_is_affiliate = implode( ',', $params['affiliate_status'] );
-			$is_export         = $params['is_export'];
-
-			// Code to fetch all users that have 'is_affiliate' checked.
-			if ( ! empty( $is_export ) ) {
-				// remove limit if export.
-				$valid_affiliates = $wpdb->get_col( // phpcs:ignore
-					$wpdb->prepare( // phpcs:ignore
-						"SELECT u.ID AS affiliate_id
-								FROM {$wpdb->users} as u
-									JOIN {$wpdb->usermeta} as um
-										ON(um.user_id = u.ID 
-										AND um.meta_key = 'afwc_is_affiliate' )
-								WHERE FIND_IN_SET (um.meta_value, %s )",
-						$afwc_is_affiliate
-					)
-				);
-			} else {
-				$valid_affiliates = $wpdb->get_col( // phpcs:ignore
-					$wpdb->prepare( // phpcs:ignore
-						"SELECT u.ID AS affiliate_id
-								FROM {$wpdb->users} as u
-									JOIN {$wpdb->usermeta} as um
-										ON(um.user_id = u.ID 
-										AND um.meta_key = 'afwc_is_affiliate' )
-								WHERE FIND_IN_SET (um.meta_value, %s ) 
-								LIMIT 0,%d",
-						$afwc_is_affiliate,
-						$params['limit']
-					)
-				);
-			}
-
-			return $valid_affiliates;
-		}
-
-		/**
-		 * Function for getting affiliate's from user roles
-		 *
-		 * @param array $params Params from the AJAX request.
-		 * @return array $valid_affiliates
-		 */
-		public function get_affiliate_by_user_roles( $params ) {
-			global $wpdb;
-
-			$affiliate_user_roles       = get_option( 'affiliate_users_roles', array() );
-			$affiliate_user_role_ids    = array();
-			$affiliate_counts           = $params['affiliate_count'];
-			$invalid_affiliate_ids      = array();
-			$params['affiliate_status'] = array( 'no' );
-			$invalid_affiliate          = $this->get_affiliate_from_users( $params );
-			$affiliate_ids_option       = $params['affiliate_ids_option'];
-			$is_export                  = $params['is_export'];
-
-			if ( ! empty( $invalid_affiliate ) ) {
-				$invalid_affiliate_ids = array_map(
-					function( $invalid_affiliate ) {
-												return $invalid_affiliate;
-					},
-					$invalid_affiliate
-				);
-				if ( ! empty( $invalid_affiliate_ids ) ) {
-					$params['affiliate_ids'] = array_merge( $params['affiliate_ids'], $invalid_affiliate_ids );
-				}
-
-				update_option( $affiliate_ids_option, implode( ',', $params['affiliate_ids'] ), 'no' );
-			}
-
-			if ( ! empty( $affiliate_user_roles ) ) {
-				if ( ( $affiliate_counts < $params['limit'] ) || ! empty( $is_export ) ) {
-					foreach ( $affiliate_user_roles as $key => $user_role ) {
-
-						$ids = $wpdb->get_col( // phpcs:ignore
-												$wpdb->prepare( // phpcs:ignore
-													"SELECT user_id as affiliate_id
-																FROM {$wpdb->usermeta}
-																WHERE meta_key = '{$wpdb->prefix}capabilities'
-																	AND meta_value LIKE %s
-																	AND NOT FIND_IN_SET ( user_id, ( SELECT option_value
-																											FROM {$wpdb->prefix}options
-																											WHERE option_name = %s ) )",
-													'%' . $wpdb->esc_like( $user_role ) . '%',
-													$affiliate_ids_option
-												)
-						);
-
-						$affiliate_user_role_ids = array_merge( $affiliate_user_role_ids, $ids );
-					}
-				}
-			}
-			return $affiliate_user_role_ids;
-		}
-
-		/**
-		 * Function for getting affiliate's from order status
-		 *
-		 * @param array $params Params from the AJAX request.
-		 * @return array $valid_affiliates
-		 */
-		public function get_affiliate_by_order_status( $params ) {
-			global $wpdb;
-			$order_status         = implode( ',', $params['order_status'] );
-			$affiliate_ids_option = $params['affiliate_ids_option'];
-			$valid_affiliates = $wpdb->get_col( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT affiliate_id as affiliate_id
-																	FROM {$wpdb->prefix}afwc_referrals WHERE FIND_IN_SET (status, %s ) AND FIND_IN_SET ( affiliate_id,( SELECT option_value
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ))
-																	GROUP BY affiliate_id",
-														$order_status,
-														$affiliate_ids_option
-													)
-			);
-			return $valid_affiliates;
-		}
-
-		/**
-		 * Function for getting affiliate's from user tags
-		 *
-		 * @param array $params Params from the AJAX request.
-		 * @return array $valid_affiliates
-		 */
-		public function get_affiliate_by_tags( $params ) {
-			global $wpdb;
-
-			$affiliate_tags       = implode( ',', $params['tags'] );
-			$affiliate_ids_option = $params['affiliate_ids_option'];
-			$valid_affiliates = $wpdb->get_col( // phpcs:ignore
-											$wpdb->prepare( // phpcs:ignore
-												"SELECT object_id AS affiliate_id
-														FROM {$wpdb->term_relationships} 
-														WHERE FIND_IN_SET (term_taxonomy_id, %s ) AND FIND_IN_SET ( object_id, ( SELECT option_value
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ))",
-												$affiliate_tags,
-												$affiliate_ids_option
-											)
-			);
-			return $valid_affiliates;
 		}
 
 		/**
@@ -893,41 +724,8 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			$params['is_export'] = true;
 			$affiliates_data     = $this->affiliates_list( $params );
 			$type                = ! empty( $params['type'] ) ? $params['type'] : 'standard';
-
-			$total_visitors_id_map = array();
-
-			$affiliate_ids = array_map(
-				function( $affiliate ) {
-						return absint( $affiliate['affiliate_id'] );
-				},
-				$affiliates_data
-			);
-
-			update_option( 'afwc_temp_user_ids', implode( ',', $affiliate_ids ) );
-
-			$result = $wpdb->get_results( // phpcs:ignore
-						$wpdb->prepare(
-							"SELECT IFNULL(COUNT( DISTINCT CONCAT_WS( ':', ip, user_id ) ), 0) as total_visitors, affiliate_id
-								FROM {$wpdb->prefix}afwc_hits
-									WHERE FIND_IN_SET ( affiliate_id,  ( SELECT option_value
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = 'afwc_temp_user_ids' )  )
-
-									AND datetime BETWEEN %s AND %s GROUP BY affiliate_id",
-							$params['from'],
-							$params['to']
-						),
-				'ARRAY_A'
-			);
-			foreach ( $result as $res ) {
-				$total_visitors_id_map[ $res['affiliate_id'] ] = $res['total_visitors'];
-			}
-
-			foreach ( $affiliates_data as $k => $affiliate ) {
-				$affiliates_data[ $k ]['total_visitors'] = ! empty( $total_visitors_id_map[ $affiliate['affiliate_id'] ] ) ? $total_visitors_id_map[ $affiliate['affiliate_id'] ] : 0;
-			}
-			$path     = wp_upload_dir();
-			$filename = sanitize_title( get_bloginfo( 'name' ) ) . '_' . $type . '_affiliates_' . gmdate( 'd-M-Y' ) . '.csv';
+			$path                = wp_upload_dir();
+			$filename            = sanitize_title( get_bloginfo( 'name' ) ) . '_' . $type . '_affiliates_' . gmdate( 'd-M-Y' ) . '.csv';
 			// open raw memory as file so no temp files needed, you might run out of memory though.
 			$f = fopen( $path['path'] . '/' . $filename , 'w+' );// phpcs:ignore
 			// loop over the input array.
@@ -1002,7 +800,6 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		public function affiliate_details( $params = array() ) {
 
 			global $wpdb;
-
 			$affiliate_id = isset( $params['affiliate_id'] ) ? $params['affiliate_id'] : ''; // phpcs:ignore
 			$is_affiliate = '';
 
@@ -1011,7 +808,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			}
 
 			if ( 'pending' === $is_affiliate ) {
-				$current_data      = new AFWC_Admin_Affiliates( $affiliate_id, $params['from'], $params['to'] );
+				$current_data      = new AFWC_Admin_Affiliates( $affiliate_id, $params['from_date'], $params['to_date'] );
 				$details           = $current_data->get_affiliates_details();
 				$affiliate_details = array(
 					'name'         => $details[ $affiliate_id ]['name'],

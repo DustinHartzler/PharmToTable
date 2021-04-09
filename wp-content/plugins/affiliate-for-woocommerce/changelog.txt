@@ -1,5 +1,52 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2021-03-25 - version 3.2.2
+* Fix: Affiliates list not loading affiliates having 'draft' referral status [Admin]
+* Fix: Incorrect unpaid commissions in case of custom paid order statuses [Admin]
+* Update: Changed the label in registration received an email
+* Fix: Added success/error message after form settings saved
+* Fix: Incorrect visitors count in some cases [Admin]
+* Fix: Missing affiliates data on dashboard due to timezone related issue in some cases [Admin]
+
+2021-03-17 - version 3.2.1
+* Fix: Search and filters are not working [Admin]
+* Fix: Affiliates list not loading in some cases
+
+2021-03-16 - version 3.2.0
+* New: WooCommerce 5.1.0 compatible
+* New: Tested up to WordPress 5.7.0
+* New: Load more for affiliate's list in the dashboard [Admin]
+* Fix: Export CSV failing when using 'comma' as thousand separator
+* Fix: Commission not calculated correctly for a product with multiple quantities in order
+* Update: Removed limit of 150 while searching and filtering affiliates [Admin]
+* Update: Remove additional validation from the registration form
+* Update: New Affiliate Registration email
+* Update: POT file
+
+2021-03-02 - version 3.1.0
+* New: WooCommerce 5.0.0 compatible
+* New: Tested upto WordPress 5.6.2
+* New: Show/hide affiliate registration form fields
+* Update: Provision to change affiliate registration form field's label
+* Update: POT file
+
+2021-02-11 - version 3.0.2
+* Fix: Commission not calculated correctly for a product with multiple quantities in order
+* Update: Delete referral entry if an order is permanently deleted
+* Update: POT file
+
+2021-01-28 - version 3.0.1
+* Fix: Migration process stuck
+* Fix: Referral tracked multiple times for the same order in some cases
+* Fix: Excluded products shown in 'Top Products' KPI
+* Update: Show customer name instead of 'Guest' in affiliate My Account > Reports > Referrals [User]
+
+2021-01-21 - version 3.0.0
+* New: WooCommerce 4.9.1 compatible
+* New: New referral status 'Draft'
+* Update: Calculate affiliate commission based on order status and referral status
+* Update: POT file
+
 2020-12-23 - version 2.8.4
 * New: WooCommerce 4.8.0 compatible
 * New: Tested upto WordPress 5.6.0

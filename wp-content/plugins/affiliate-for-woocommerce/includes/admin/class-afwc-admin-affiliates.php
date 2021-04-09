@@ -3,7 +3,7 @@
  * Main class for Affiliates Admin
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.2.8
+ * @version     1.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -389,7 +389,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 						);
 					}
 				} else {
-
 					$option_nm = 'afwc_hits_affiliate_ids_' . uniqid();
 					update_option( $option_nm, implode( ',', $this->affiliate_ids ), 'no' );
 
@@ -485,6 +484,10 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 
 			$aggregated = array();
 
+			$temp_option_key     = 'afwc_order_status_' . uniqid();
+			$paid_order_statuses = get_afwc_paid_order_status();
+			update_option( $temp_option_key, implode( ',', $paid_order_statuses ), 'no' );
+
 			if ( ! empty( $this->affiliate_ids ) ) {
 				if ( 1 === count( $this->affiliate_ids ) ) {
 
@@ -493,15 +496,22 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 															$wpdb->prepare( // phpcs:ignore
 																"SELECT IFNULL(SUM( amount ), 0) as earned_commissions,
 																					IFNULL(SUM( CASE WHEN status = 'paid' THEN amount END ), 0) as paid_commissions,
-																					IFNULL(SUM( CASE WHEN status = 'unpaid' THEN amount END ), 0) as unpaid_commissions,
-																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' THEN affiliate_id END) ), 0) as unpaid_affiliates,
+																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND  FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN amount END ), 0) as unpaid_commissions,
+																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN affiliate_id END) ), 0) as unpaid_affiliates,
 																					IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE affiliate_id = %d
-																				AND datetime BETWEEN %s AND %s",
+																				AND datetime BETWEEN %s AND %s AND status != %s",
+																$temp_option_key,
+																$temp_option_key,
 																current( $this->affiliate_ids ),
 																$this->from . ' 00:00:00',
-																$this->to . ' 23:59:59'
+																$this->to . ' 23:59:59',
+																'draft'
 															),
 							'ARRAY_A'
 						);
@@ -510,12 +520,19 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 															$wpdb->prepare( // phpcs:ignore
 																"SELECT IFNULL(SUM( amount ), 0) as earned_commissions,
 																					IFNULL(SUM( CASE WHEN status = 'paid' THEN amount END ), 0) as paid_commissions,
-																					IFNULL(SUM( CASE WHEN status = 'unpaid' THEN amount END ), 0) as unpaid_commissions,
-																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' THEN affiliate_id END) ), 0) as unpaid_affiliates,
+																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN amount END ), 0) as unpaid_commissions,
+																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN affiliate_id END) ), 0) as unpaid_affiliates,
 																					IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
 																			FROM {$wpdb->prefix}afwc_referrals
-																			WHERE affiliate_id = %d",
-																current( $this->affiliate_ids )
+																			WHERE affiliate_id = %d  AND status != %s",
+																$temp_option_key,
+																$temp_option_key,
+																current( $this->affiliate_ids ),
+																'draft'
 															),
 							'ARRAY_A'
 						); // phpcs:ignore
@@ -530,17 +547,24 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 															$wpdb->prepare( // phpcs:ignore
 																"SELECT IFNULL(SUM( amount ), 0) as earned_commissions,
 																					IFNULL(SUM( CASE WHEN status = 'paid' THEN amount END ), 0) as paid_commissions,
-																					IFNULL(SUM( CASE WHEN status = 'unpaid' THEN amount END ), 0) as unpaid_commissions,
-																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' THEN affiliate_id END) ), 0) as unpaid_affiliates,
+																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN amount END ), 0) as unpaid_commissions,
+																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid'AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN affiliate_id END) ), 0) as unpaid_affiliates,
 																					IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE FIND_IN_SET ( affiliate_id, ( SELECT option_value
 																											FROM {$wpdb->prefix}options
 																											WHERE option_name = %s ) )
-																				AND datetime BETWEEN %s AND %s",
+																				AND datetime BETWEEN %s AND %s  AND status != %s",
+																$temp_option_key,
+																$temp_option_key,
 																$option_nm,
 																$this->from . ' 00:00:00',
-																$this->to . ' 23:59:59'
+																$this->to . ' 23:59:59',
+																'draft'
 															),
 							'ARRAY_A'
 						);
@@ -549,14 +573,21 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 															$wpdb->prepare( // phpcs:ignore
 																"SELECT IFNULL(SUM( amount ), 0) as earned_commissions,
 																					IFNULL(SUM( CASE WHEN status = 'paid' THEN amount END ), 0) as paid_commissions,
-																					IFNULL(SUM( CASE WHEN status = 'unpaid' THEN amount END ), 0) as unpaid_commissions,
-																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' THEN affiliate_id END) ), 0) as unpaid_affiliates,
+																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN amount END ), 0) as unpaid_commissions,
+																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s )  ) THEN affiliate_id END) ), 0) as unpaid_affiliates,
 																					IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE FIND_IN_SET ( affiliate_id, ( SELECT option_value
 																											FROM {$wpdb->prefix}options
-																											WHERE option_name = %s ) )",
-																$option_nm
+																											WHERE option_name = %s ) )  AND status != %s",
+																$temp_option_key,
+																$temp_option_key,
+																$option_nm,
+																'draft'
 															),
 							'ARRAY_A'
 						);
@@ -599,6 +630,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					);
 				}
 			}
+			delete_option( $temp_option_key );
 			return ( ( $group_by_affiliate ) ? $aggregated : ( ! empty( $aggregated[0] ) ? $aggregated[0] : array() ) );
 
 		}
@@ -733,7 +765,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					);
 				}
 			}
-
 			return $affiliates_orders;
 		}
 
@@ -755,7 +786,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 											                                                            IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 											                                                            IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -781,7 +812,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					} else {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -810,7 +841,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -839,7 +870,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					} else {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -871,7 +902,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
 						$affiliates_order_details_results  = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -897,7 +928,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					} else {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -925,7 +956,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -953,7 +984,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					} else {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -983,7 +1014,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -1009,7 +1040,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				} else {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT referrals.post_id AS order_id, 
+																					"SELECT DISTINCT referrals.post_id AS order_id, 
 																										DATE_FORMAT( referrals.datetime, %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
@@ -1332,6 +1363,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 		public function get_affiliates_top_products() {
 			$args['affiliate_id'] = current( $this->affiliate_ids );
 			$args['limit']        = 5;
+			$args['from']         = $this->from;
+			$args['to']           = $this->to;
 			$products             = Affiliate_For_WooCommerce::get_products_data( $args );
 			if ( ! empty( $products['rows'] ) ) {
 				foreach ( $products['rows'] as $id => $product ) {

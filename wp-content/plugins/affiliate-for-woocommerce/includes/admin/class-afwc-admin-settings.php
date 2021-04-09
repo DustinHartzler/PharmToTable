@@ -96,12 +96,15 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 			$afwc_settings_pre_data['confirm_msg'] = __( 'Changing affiliate slug will stop tracking the existing URL with the current slug. Are you sure you want to continue?', 'affiliate-for-woocommerce' );
 			wp_localize_script( 'afwc-setting-js', 'afwc_settings_pre_data', $afwc_settings_pre_data );
 
-			$affiliate_registration_page_link = ! empty( get_permalink( get_page_by_path( 'afwc_registration_form' ) ) ) ? get_permalink( get_page_by_path( 'afwc_registration_form' ) ) : get_permalink( get_page_by_path( 'affiliates' ) );
-			$affiliate_form_desc              = '';
+			$affiliate_registration_page_link      = ! empty( get_permalink( get_page_by_path( 'afwc_registration_form' ) ) ) ? get_permalink( get_page_by_path( 'afwc_registration_form' ) ) : get_permalink( get_page_by_path( 'affiliates' ) );
+			$affiliate_registration_edit_form_link = admin_url( 'admin.php?page=affiliate-form-settings' );
+			$affiliate_form_desc                   = '';
 			if ( ! empty( $affiliate_registration_page_link ) ) {
 				/* translators: Link to the affiliate registration form page */
-				$affiliate_form_desc = sprintf( esc_html__( '%s. Or ', 'affiliate-for-woocommerce' ), '<strong><a target="_blank" href="' . esc_url( $affiliate_registration_page_link ) . '">' . esc_html__( 'Review and edit affiliate registration form', 'affiliate-for-woocommerce' ) . '</a></strong>' );
+				$affiliate_form_desc = sprintf( esc_html__( '%s | ', 'affiliate-for-woocommerce' ), '<strong><a target="_blank" href="' . esc_url( $affiliate_registration_page_link ) . '">' . esc_html__( 'Review and publish form', 'affiliate-for-woocommerce' ) . '</a></strong>' );
 			}
+			/* translators: Link to the affiliate registration form edit page */
+			$affiliate_form_desc .= sprintf( esc_html__( '%s | ', 'affiliate-for-woocommerce' ), '<strong><a target="_blank" href="' . esc_url( $affiliate_registration_edit_form_link ) . '">' . esc_html__( 'Edit form', 'affiliate-for-woocommerce' ) . '</a></strong>' );
 			/* translators: shortcode for affiliate registration form */
 			$affiliate_form_desc .= sprintf( esc_html__( 'use %s shortcode on any page.', 'affiliate-for-woocommerce' ), '<code>[afwc_registration_form]</code>' );
 

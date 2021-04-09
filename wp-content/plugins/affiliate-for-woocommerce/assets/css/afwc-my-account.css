@@ -189,6 +189,9 @@ thead, tbody tr {
 .fill_red {
 	background-color: #F41F1F;
 }
+.fill_gray {
+	background-color: #535353;
+}
 #afwc_kpi_gross_commission .afwc_kpis_price, #afwc_kpi_gross_commission .afwc_kpis_number  {
 	color: #09616D;
 }

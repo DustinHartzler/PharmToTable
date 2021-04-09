@@ -23,14 +23,18 @@ echo esc_html__( 'Please review and respond to this potential affiliate partner.
 echo esc_html__( 'Name: ', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $user_name ) . ' (' . esc_attr( $user_email ) . ')' . "\n\n";
 
 if ( ! empty( $user_contact ) ) {
-	echo esc_html__( 'Contact Information: ', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $user_contact ) . "\n\n";
+	/* translators: %s: user contact label */
+	printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_contact_label ) );
+	echo "\t" . esc_attr( $user_contact ) . "\n\n";
 }
 
 if ( ! empty( $user_url ) ) {
-	echo esc_html__( 'Website: ', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $user_url ) . "\n\n";
+	/* translators: %s: user website label */
+	printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_website_label ) );
+	echo "\t" . esc_attr( $user_url ) . "\n\n";
 }
 
-echo esc_html__( 'About user: ', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $user_desc ) . "\n\n";
+echo esc_html__( 'Additional Information: ', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $user_desc ) . "\n\n";
 
 echo esc_html__( 'Next Actions', 'affiliate-for-woocommerce' ) . "\n\n";
 /* translators: %s: user's profile url*/

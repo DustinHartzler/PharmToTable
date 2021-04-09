@@ -19,23 +19,6 @@ jQuery(function(){
 		validatePassword();
 	});
 
-	// URL validation
-	function validWebsiteUrl(){
-		var urlfield = jQuery("#afwc_reg_website");
-		var url = urlfield.val();
-		if ( url != '' ) {
-			var regx = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/g;
-			if ( !regx.test(url) ) {
-				urlfield[0].setCustomValidity( afwc_reg_pre_data.invalid_url );
-			} else {
-				urlfield[0].setCustomValidity("");
-			}
-		}
-	}
-	jQuery("#afwc_reg_website").on('keyup', function(){
-		validWebsiteUrl();
-	});
-
 	// Form submission
 	jQuery(document).on('submit', '#afwc_registration_form', function (e) {
 		e.preventDefault();

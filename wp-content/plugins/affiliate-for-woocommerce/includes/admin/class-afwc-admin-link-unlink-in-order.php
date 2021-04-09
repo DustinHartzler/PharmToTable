@@ -174,6 +174,9 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 				if ( empty( $referral_id ) ) {
 					$affiliate_api = AFWC_API::get_instance();
 					$affiliate_api->track_conversion( $order_id, $affiliate_id, '', array() );
+					$order      = wc_get_order( $order_id );
+					$new_status = $order->get_status();
+					$affiliate_api->update_referral_status( $order_id, '', $new_status );
 				}
 			}
 

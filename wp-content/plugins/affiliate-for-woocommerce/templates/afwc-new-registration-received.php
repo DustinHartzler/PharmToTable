@@ -24,14 +24,16 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p><strong><?php echo esc_html__( 'Name: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_attr( $user_name ) . ' (' . esc_attr( $user_email ) . ')'; ?></p>
 
 <?php if ( ! empty( $user_contact ) ) { ?>
-<p><strong><?php echo esc_html__( 'Contact Information: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_attr( $user_contact ); ?></p>
+	<?php /* translators: %s: contact information */ ?>
+<p><strong><?php printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_contact_label ) ); ?></strong><?php echo esc_attr( $user_contact ); ?></p>
 <?php } ?>
 
 <?php if ( ! empty( $user_url ) ) { ?>
-<p><strong><?php echo esc_html__( 'Website: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_url( $user_url ); ?></p>
+	<?php /* translators: %s: website URL */ ?>
+<p><strong><?php printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_website_label ) ); ?></strong><?php echo esc_url( $user_url ); ?></p>
 <?php } ?>
 
-<p><strong><?php echo esc_html__( 'About user: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_html( $user_desc ); ?></p>
+<p><strong><?php echo esc_html__( 'Additional Information: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_html( $user_desc ); ?></p>
 
 <p><strong><?php echo esc_html__( 'Next Actions', 'affiliate-for-woocommerce' ); ?></strong>
 <ul>

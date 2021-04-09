@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Affiliate For WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 08:07+0000\n"
+"POT-Creation-Date: 2021-03-25 06:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,11 +15,11 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.4; wp-5.5.3"
 
-#: includes/frontend/class-afwc-registration-form.php:179
+#: includes/class-affiliate-for-woocommerce.php:1113
 msgid " I accept all the terms of this program"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:48
+#: templates/afwc-new-registration-received.php:50
 msgid " is waiting!"
 msgstr ""
 
@@ -36,25 +36,39 @@ msgid "%1$s (#%2$s &ndash; %3$s)"
 msgstr ""
 
 #. Number of records updated in referrals table.
-#: includes/admin/class-afwc-admin-dashboard.php:276
+#: includes/admin/class-afwc-admin-dashboard.php:285
 #, php-format
 msgid "%d records updated."
 msgstr ""
 
+#. Link to the affiliate registration form page
+#. Link to the affiliate registration form edit page
+#: includes/admin/class-afwc-admin-settings.php:104
+#: includes/admin/class-afwc-admin-settings.php:107
+#, php-format
+msgid "%s | "
+msgstr ""
+
 #. Link to the affiliate tags
 #: includes/admin/class-afwc-admin-affiliate.php:206
-#: includes/admin/class-afwc-admin-settings.php:112
+#: includes/admin/class-afwc-admin-settings.php:115
 #, php-format
 msgid "%s."
 msgstr ""
 
-#. Link to the affiliate registration form page
-#: includes/admin/class-afwc-admin-settings.php:103
+#. %s: contact information
+#. %s: website URL
+#. %s: user contact label
+#. %s: user website label
+#: templates/afwc-new-registration-received.php:28
+#: templates/afwc-new-registration-received.php:33
+#: templates/plain/afwc-new-registration-received.php:27
+#: templates/plain/afwc-new-registration-received.php:33
 #, php-format
-msgid "%s. Or "
+msgid "%s: "
 msgstr ""
 
-#: templates/plain/afwc-new-registration-received.php:39
+#: templates/plain/afwc-new-registration-received.php:43
 #, php-format
 msgid "(%s)"
 msgstr ""
@@ -79,11 +93,6 @@ msgstr ""
 msgid "About affiliate"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:34
-#: templates/plain/afwc-new-registration-received.php:33
-msgid "About user: "
-msgstr ""
-
 #. Link to the Affiliate For WooCommerce Dashboard in admin
 #: includes/admin/about-affiliate-for-woocommerce.php:105
 #, php-format
@@ -94,19 +103,24 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:111
+#: includes/admin/class-afwc-admin-dashboard.php:113
 msgid "Active"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:135
+#: includes/class-affiliate-for-woocommerce.php:142
 msgid "Add New Affiliate Tag"
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:232
 #: includes/emails/class-afwc-commission-paid-email.php:228
-#: includes/emails/class-afwc-new-registration-received.php:218
+#: includes/emails/class-afwc-new-conversion-email.php:232
+#: includes/emails/class-afwc-new-registration-received.php:226
 #: includes/emails/class-afwc-welcome-affiliate-email.php:216
 msgid "Additional content"
+msgstr ""
+
+#: templates/afwc-new-registration-received.php:36
+#: templates/plain/afwc-new-registration-received.php:37
+msgid "Additional Information: "
 msgstr ""
 
 #: templates/afwc-commission-paid.php:39
@@ -114,9 +128,9 @@ msgstr ""
 msgid "Additional notes: "
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:171
-#: includes/frontend/class-afwc-my-account.php:1838
 #: includes/admin/class-afwc-admin-settings.php:47
+#: includes/frontend/class-afwc-my-account.php:171
+#: includes/frontend/class-afwc-my-account.php:1925
 msgid "Affiliate"
 msgstr ""
 
@@ -154,12 +168,16 @@ msgstr ""
 msgid "Affiliate for WooCommerce requires WooCommerce to be activated."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:119
+#: includes/admin/class-afwc-admin-settings.php:122
 msgid "Affiliate For WooCommerce Settings"
 msgstr ""
 
 #: includes/admin/class-afwc-admin-affiliate.php:111
 msgid "Affiliate For WooCommerce settings"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:263
+msgid "Affiliate Form Settings"
 msgstr ""
 
 #: includes/admin/class-afwc-privacy.php:162
@@ -170,7 +188,7 @@ msgstr ""
 msgid "Affiliate information"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:216
+#: includes/admin/class-afwc-admin-settings.php:219
 msgid "Affiliate manager email"
 msgstr ""
 
@@ -194,20 +212,24 @@ msgstr ""
 msgid "Affiliate receiver"
 msgstr ""
 
+#: includes/frontend/class-afwc-registration-form.php:462
+msgid "Affiliate registration form settings"
+msgstr ""
+
 #: includes/frontend/class-afwc-my-account.php:142
 msgid "Affiliate Resources"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:128
+#: includes/class-affiliate-for-woocommerce.php:135
 msgid "Affiliate Tag"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:127
-#: includes/class-affiliate-for-woocommerce.php:129
+#: includes/class-affiliate-for-woocommerce.php:134
+#: includes/class-affiliate-for-woocommerce.php:136
 msgid "Affiliate Tags"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:171
+#: includes/admin/class-afwc-admin-settings.php:174
 msgid "Affiliate tags"
 msgstr ""
 
@@ -215,50 +237,50 @@ msgstr ""
 msgid "Affiliate URL"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:140
+#: includes/admin/class-afwc-admin-settings.php:143
 msgid "Affiliate users roles"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:243
+#: includes/class-affiliate-for-woocommerce.php:252
 msgid "Affiliates"
 msgstr ""
 
 #. A small arrow
-#: includes/class-affiliate-for-woocommerce.php:243
+#: includes/class-affiliate-for-woocommerce.php:252
 msgid "Affiliates Dashboard"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:217
+#: includes/admin/class-afwc-admin-settings.php:220
 msgid ""
 "Affiliates will see a link to contact you in their dashboard - and the link "
 "will point to this email address. Leave this field blank to hide the contact "
 "link."
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:132
+#: includes/class-affiliate-for-woocommerce.php:139
 msgid "All Affiliate Tags"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:143
+#: includes/admin/class-afwc-admin-dashboard.php:145
 msgid "all matching products in the order"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:162
+#: includes/admin/class-afwc-admin-settings.php:165
 msgid ""
 "All products are eligible for affiliate commission by default. If you want "
 "to exclude some, list them here."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:187
+#: includes/admin/class-afwc-admin-settings.php:190
 msgid ""
 "Allow affiliates to use something other than {user_id} as referral "
 "identifier."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:596
-#: includes/frontend/class-afwc-my-account.php:947
-#: includes/frontend/class-afwc-my-account.php:959
-#: includes/frontend/class-afwc-my-account.php:1634
+#: includes/frontend/class-afwc-my-account.php:604
+#: includes/frontend/class-afwc-my-account.php:960
+#: includes/frontend/class-afwc-my-account.php:972
+#: includes/frontend/class-afwc-my-account.php:1721
 msgid "Amount"
 msgstr ""
 
@@ -276,20 +298,20 @@ msgstr ""
 msgid "any of"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:147
+#: includes/admin/class-afwc-admin-dashboard.php:149
 msgid "apply zero commission"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:131
+#: includes/admin/class-afwc-admin-settings.php:134
 msgid "Approval method"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:38
+#: templates/afwc-new-registration-received.php:40
 msgid "Approve / reject / manage this affiliate"
 msgstr ""
 
 #. %s: user's profile url
-#: templates/plain/afwc-new-registration-received.php:37
+#: templates/plain/afwc-new-registration-received.php:41
 #, php-format
 msgid "Approve / reject / manage this affiliate : %s"
 msgstr ""
@@ -306,13 +328,13 @@ msgstr ""
 msgid "Assigned to affiliate"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:132
+#: includes/admin/class-afwc-admin-settings.php:135
 msgid ""
 "Automatically approve all submissions via Affiliate Registration Form - no "
 "manual review needed."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:110
+#: includes/admin/class-afwc-admin-dashboard.php:112
 msgid "Awaiting Approval"
 msgstr ""
 
@@ -332,12 +354,12 @@ msgstr ""
 msgid "Best regards from your friends at,"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:44
+#: templates/afwc-new-registration-received.php:46
 msgid "BTW, you can "
 msgstr ""
 
 #. %s: dashboard url
-#: templates/plain/afwc-new-registration-received.php:42
+#: templates/plain/afwc-new-registration-received.php:46
 #, php-format
 msgid "BTW, you can review and manage all affiliates here: %s"
 msgstr ""
@@ -346,11 +368,11 @@ msgstr ""
 msgid "Campaign deleted successfully"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:648
+#: includes/frontend/class-afwc-my-account.php:656
 msgid "Campaigns"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1597
+#: includes/frontend/class-afwc-my-account.php:1684
 msgid "Change affiliate identifier: "
 msgstr ""
 
@@ -371,26 +393,26 @@ msgstr ""
 msgid "Check %s."
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:242
 #: includes/emails/class-afwc-commission-paid-email.php:238
-#: includes/emails/class-afwc-new-registration-received.php:228
+#: includes/emails/class-afwc-new-conversion-email.php:242
+#: includes/emails/class-afwc-new-registration-received.php:236
 #: includes/emails/class-afwc-welcome-affiliate-email.php:226
 msgid "Choose which format of email to send."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1589
+#: includes/frontend/class-afwc-my-account.php:1676
 msgid "Click to change"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1608
-#: includes/frontend/class-afwc-my-account.php:1642
-#: includes/frontend/class-afwc-my-account.php:1681
+#: includes/frontend/class-afwc-my-account.php:1695
+#: includes/frontend/class-afwc-my-account.php:1729
+#: includes/frontend/class-afwc-my-account.php:1768
 msgid "Click to copy"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:558
-#: includes/frontend/class-afwc-my-account.php:894
-#: includes/frontend/class-afwc-my-account.php:922
+#: includes/frontend/class-afwc-my-account.php:566
+#: includes/frontend/class-afwc-my-account.php:904
+#: includes/frontend/class-afwc-my-account.php:935
 msgid "Commission"
 msgstr ""
 
@@ -411,7 +433,7 @@ msgstr ""
 msgid "Commission: "
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:167
+#: includes/class-affiliate-for-woocommerce.php:1100
 msgid "Confirm Password"
 msgstr ""
 
@@ -423,31 +445,26 @@ msgid ""
 msgstr ""
 
 #. Link to the my account page
-#: includes/frontend/class-afwc-registration-form.php:377
+#: includes/frontend/class-afwc-registration-form.php:339
 #, php-format
 msgid ""
 "Congratulations, you are successfully registered as our affiliate. %s to "
 "find more details about affiliate program."
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:27
-#: templates/plain/afwc-new-registration-received.php:26
-msgid "Contact Information: "
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1709
+#: includes/frontend/class-afwc-my-account.php:1796
 msgid "Contact store admin"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:145
+#: includes/admin/class-afwc-admin-dashboard.php:147
 msgid "continue matching commission plans"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:839
+#: includes/frontend/class-afwc-my-account.php:849
 msgid "Conversion"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:204
+#: includes/admin/class-afwc-admin-settings.php:207
 msgid "Cookie duration (in days)"
 msgstr ""
 
@@ -462,11 +479,11 @@ msgid ""
 "activated. %s"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1631
+#: includes/frontend/class-afwc-my-account.php:1718
 msgid "Coupon code"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:195
+#: includes/admin/class-afwc-admin-settings.php:198
 msgid "Coupons for referral"
 msgstr ""
 
@@ -475,9 +492,9 @@ msgid "Currency"
 msgstr ""
 
 #: templates/afwc-new-conversion.php:36
-#: includes/frontend/class-afwc-my-account.php:556
-#: includes/frontend/class-afwc-my-account.php:892
-#: includes/frontend/class-afwc-my-account.php:920
+#: includes/frontend/class-afwc-my-account.php:564
+#: includes/frontend/class-afwc-my-account.php:902
+#: includes/frontend/class-afwc-my-account.php:933
 msgid "Customer"
 msgstr ""
 
@@ -489,12 +506,12 @@ msgstr ""
 msgid "dashboard"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:554
-#: includes/frontend/class-afwc-my-account.php:595
-#: includes/frontend/class-afwc-my-account.php:890
-#: includes/frontend/class-afwc-my-account.php:918
-#: includes/frontend/class-afwc-my-account.php:946
-#: includes/frontend/class-afwc-my-account.php:958
+#: includes/frontend/class-afwc-my-account.php:562
+#: includes/frontend/class-afwc-my-account.php:603
+#: includes/frontend/class-afwc-my-account.php:900
+#: includes/frontend/class-afwc-my-account.php:931
+#: includes/frontend/class-afwc-my-account.php:959
+#: includes/frontend/class-afwc-my-account.php:971
 msgid "Date"
 msgstr ""
 
@@ -506,7 +523,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:136
+#: includes/admin/class-afwc-admin-settings.php:139
 msgid ""
 "Disabling this will require you to review and approve affiliates yourself. "
 "They won't become affiliates until you approve."
@@ -516,12 +533,12 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:48
+#: templates/afwc-new-registration-received.php:50
 msgid "Do respond promptly. "
 msgstr ""
 
 #. %s: affiliate user's name
-#: templates/plain/afwc-new-registration-received.php:46
+#: templates/plain/afwc-new-registration-received.php:50
 #, php-format
 msgid "Do respond promptly. %s is waiting!"
 msgstr ""
@@ -530,47 +547,56 @@ msgstr ""
 msgid "Docs"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:252
+#: includes/class-affiliate-for-woocommerce.php:261
 msgid "Docs & Support"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:133
+#: includes/frontend/class-afwc-my-account.php:552
+#: includes/frontend/class-afwc-my-account.php:924
+msgid "Draft"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:140
 msgid "Edit Affiliate Tag"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:130
+#: includes/admin/class-afwc-admin-settings.php:107
+msgid "Edit form"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1061
 msgid "Email"
 msgstr ""
 
 #. %s: Affiliate's first name
-#: templates/afwc-new-registration-received.php:40
+#: templates/afwc-new-registration-received.php:42
 #, php-format
 msgid "Email %s and discuss details"
 msgstr ""
 
 #. %s: user's email
-#: templates/plain/afwc-new-registration-received.php:39
+#: templates/plain/afwc-new-registration-received.php:43
 #, php-format
 msgid "Email %s and discuss details "
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:224
 #: includes/emails/class-afwc-commission-paid-email.php:220
-#: includes/emails/class-afwc-new-registration-received.php:210
+#: includes/emails/class-afwc-new-conversion-email.php:224
+#: includes/emails/class-afwc-new-registration-received.php:218
 #: includes/emails/class-afwc-welcome-affiliate-email.php:208
 msgid "Email Heading"
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:240
 #: includes/emails/class-afwc-commission-paid-email.php:236
-#: includes/emails/class-afwc-new-registration-received.php:226
+#: includes/emails/class-afwc-new-conversion-email.php:240
+#: includes/emails/class-afwc-new-registration-received.php:234
 #: includes/emails/class-afwc-welcome-affiliate-email.php:224
 msgid "Email type"
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:213
 #: includes/emails/class-afwc-commission-paid-email.php:209
-#: includes/emails/class-afwc-new-registration-received.php:199
+#: includes/emails/class-afwc-new-conversion-email.php:213
+#: includes/emails/class-afwc-new-registration-received.php:207
 #: includes/emails/class-afwc-welcome-affiliate-email.php:197
 msgid "Enable this email notification"
 msgstr ""
@@ -581,9 +607,9 @@ msgid ""
 "also"
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:211
 #: includes/emails/class-afwc-commission-paid-email.php:207
-#: includes/emails/class-afwc-new-registration-received.php:197
+#: includes/emails/class-afwc-new-conversion-email.php:211
+#: includes/emails/class-afwc-new-registration-received.php:205
 #: includes/emails/class-afwc-welcome-affiliate-email.php:195
 msgid "Enable/Disable"
 msgstr ""
@@ -592,11 +618,11 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1839
+#: includes/frontend/class-afwc-my-account.php:1926
 msgid "Endpoint for the My Account &rarr; Affiliate page"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:220
+#: includes/admin/class-afwc-admin-settings.php:223
 msgid "Enter email address"
 msgstr ""
 
@@ -604,11 +630,11 @@ msgstr ""
 msgid "Enter PayPal email address for payouts of this affiliate..."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1676
+#: includes/frontend/class-afwc-my-account.php:1763
 msgid "Enter target path here..."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:161
+#: includes/admin/class-afwc-admin-settings.php:164
 msgid "Excluded products"
 msgstr ""
 
@@ -638,12 +664,12 @@ msgstr ""
 msgid "FAQ"
 msgstr ""
 
+#: includes/admin/class-afwc-admin-dashboard.php:925
 #: includes/admin/class-afwc-commission-dashboard.php:510
-#: includes/admin/class-afwc-admin-dashboard.php:1128
 msgid "Feedback option updated"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:136
+#: includes/class-affiliate-for-woocommerce.php:1067
 msgid "First Name"
 msgstr ""
 
@@ -653,7 +679,7 @@ msgid ""
 "browser."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:730
+#: includes/frontend/class-afwc-my-account.php:740
 msgid "From"
 msgstr ""
 
@@ -665,18 +691,16 @@ msgstr ""
 msgid "Glad to have you onboard. We hope the plugin adds to your success 🏆"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:191
+#: includes/admin/class-afwc-admin-settings.php:194
 msgid ""
 "Good idea to keep this on. This allows \"friendly\" looking links - because "
 "people can use their brand name instead of {user_id}."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:764
+#: includes/frontend/class-afwc-my-account.php:774
 msgid "Gross Commission"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1343
-#: includes/frontend/class-afwc-my-account.php:1380
 #: includes/emails/class-afwc-new-conversion-email.php:135
 #: includes/emails/class-afwc-new-conversion-email.php:178
 msgid "Guest"
@@ -688,7 +712,7 @@ msgstr ""
 msgid "Have a feature request? Submit your request from our %s."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1707
+#: includes/frontend/class-afwc-my-account.php:1794
 msgid "Have any queries?"
 msgstr ""
 
@@ -720,7 +744,8 @@ msgstr ""
 
 #. %s: Affiliate's first name
 #. %s: admin's first name
-#: templates/afwc-commission-paid.php:20 templates/afwc-new-conversion.php:22
+#: templates/afwc-commission-paid.php:20
+#: templates/afwc-new-conversion.php:22
 #: templates/afwc-new-registration-received.php:20
 #: templates/afwc-welcome-affiliate-email.php:20
 #: templates/plain/afwc-commission-paid.php:19
@@ -764,7 +789,7 @@ msgstr ""
 msgid "https://woocommerce.com/products/affiliate-for-woocommerce/"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1809
+#: includes/frontend/class-afwc-my-account.php:1896
 msgid "Identifier saved successfully."
 msgstr ""
 
@@ -824,21 +849,25 @@ msgstr ""
 msgid "Join our affiliate program"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:121
+#: includes/frontend/class-afwc-registration-form.php:466
+msgid "Label"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:123
 msgid "Last Month"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:143
+#: includes/class-affiliate-for-woocommerce.php:1074
 msgid "Last Name"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:182
+#: includes/admin/class-afwc-admin-settings.php:185
 msgid "Leaving this blank will use default value ref"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:876
-#: includes/frontend/class-afwc-my-account.php:936
-#: includes/frontend/class-afwc-my-account.php:974
+#: includes/frontend/class-afwc-my-account.php:886
+#: includes/frontend/class-afwc-my-account.php:949
+#: includes/frontend/class-afwc-my-account.php:987
 msgid "Load more"
 msgstr ""
 
@@ -854,7 +883,7 @@ msgstr ""
 msgid "Login to your affiliate dashboard regularly."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:112
+#: includes/admin/class-afwc-admin-settings.php:115
 msgid "Manage affiliate tags"
 msgstr ""
 
@@ -862,9 +891,9 @@ msgstr ""
 msgid "Manage tags"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:597
-#: includes/frontend/class-afwc-my-account.php:948
-#: includes/frontend/class-afwc-my-account.php:960
+#: includes/frontend/class-afwc-my-account.php:605
+#: includes/frontend/class-afwc-my-account.php:961
+#: includes/frontend/class-afwc-my-account.php:973
 msgid "Method"
 msgstr ""
 
@@ -872,14 +901,14 @@ msgstr ""
 msgid "Migrate Now"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1733
-#: includes/frontend/class-afwc-my-account.php:1764
+#: includes/frontend/class-afwc-my-account.php:1820
+#: includes/frontend/class-afwc-my-account.php:1851
 msgid "Missing data"
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:235
 #: includes/emails/class-afwc-commission-paid-email.php:231
-#: includes/emails/class-afwc-new-registration-received.php:221
+#: includes/emails/class-afwc-new-conversion-email.php:235
+#: includes/emails/class-afwc-new-registration-received.php:229
 #: includes/emails/class-afwc-welcome-affiliate-email.php:219
 msgid "N/A"
 msgstr ""
@@ -889,20 +918,20 @@ msgstr ""
 msgid "Name: "
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:794
+#: includes/frontend/class-afwc-my-account.php:804
 msgid "Net Commission"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:136
+#: includes/class-affiliate-for-woocommerce.php:143
 msgid "New Affiliate Tag Name"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:36
-#: templates/plain/afwc-new-registration-received.php:35
+#: templates/afwc-new-registration-received.php:38
+#: templates/plain/afwc-new-registration-received.php:39
 msgid "Next Actions"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:137
+#: includes/class-affiliate-for-woocommerce.php:144
 msgid "No Affiliate Tags found"
 msgstr ""
 
@@ -928,15 +957,15 @@ msgstr ""
 msgid "No more data to load"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:966
+#: includes/frontend/class-afwc-my-account.php:979
 msgid "No payouts to show"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:868
+#: includes/frontend/class-afwc-my-account.php:878
 msgid "No products to show"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:928
+#: includes/frontend/class-afwc-my-account.php:941
 msgid "No referrals to show"
 msgstr ""
 
@@ -954,17 +983,17 @@ msgid ""
 "Affiliates and Affiliate for WooCommerce can't work simultaneously."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:598
-#: includes/frontend/class-afwc-my-account.php:949
-#: includes/frontend/class-afwc-my-account.php:961
+#: includes/frontend/class-afwc-my-account.php:606
+#: includes/frontend/class-afwc-my-account.php:962
+#: includes/frontend/class-afwc-my-account.php:974
 msgid "Notes"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1776
+#: includes/frontend/class-afwc-my-account.php:1863
 msgid "Numberic values are not allowed."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:144
+#: includes/admin/class-afwc-admin-dashboard.php:146
 msgid "only the first matching product"
 msgstr ""
 
@@ -988,14 +1017,14 @@ msgstr ""
 msgid "Our products"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1673
+#: includes/frontend/class-afwc-my-account.php:1760
 msgid "Page URL"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:538
-#: includes/frontend/class-afwc-my-account.php:743
-#: includes/frontend/class-afwc-my-account.php:905
-#: includes/admin/class-afwc-admin-dashboard.php:115
+#: includes/admin/class-afwc-admin-dashboard.php:117
+#: includes/frontend/class-afwc-my-account.php:543
+#: includes/frontend/class-afwc-my-account.php:753
+#: includes/frontend/class-afwc-my-account.php:915
 msgid "Paid"
 msgstr ""
 
@@ -1011,39 +1040,39 @@ msgstr ""
 msgid "Partnership and communication are important to us."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:160
+#: includes/class-affiliate-for-woocommerce.php:1093
 msgid "Password"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:86
+#: includes/frontend/class-afwc-registration-form.php:96
 msgid "Password does not match"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1689
+#: includes/frontend/class-afwc-my-account.php:1776
 msgid "Payment setting"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:384
+#: includes/admin/class-afwc-admin-dashboard.php:393
 msgid "Payout entry failed"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:942
+#: includes/frontend/class-afwc-my-account.php:955
 msgid "Payout History"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:559
-#: includes/frontend/class-afwc-my-account.php:895
-#: includes/frontend/class-afwc-my-account.php:923
 #: includes/admin/class-afwc-privacy.php:179
+#: includes/frontend/class-afwc-my-account.php:567
+#: includes/frontend/class-afwc-my-account.php:905
+#: includes/frontend/class-afwc-my-account.php:936
 msgid "Payout status"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:247
+#: includes/admin/class-afwc-admin-settings.php:250
 msgid "Payout via PayPal"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1692
 #: includes/admin/class-afwc-admin-affiliate.php:196
+#: includes/frontend/class-afwc-my-account.php:1779
 msgid "PayPal email address"
 msgstr ""
 
@@ -1052,12 +1081,12 @@ msgstr ""
 msgid "PayPal email: "
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:323
+#: includes/admin/class-afwc-admin-dashboard.php:332
 msgid "PayPal payout failed"
 msgstr ""
 
 #. PayPal response message
-#: includes/admin/class-afwc-admin-dashboard.php:318
+#: includes/admin/class-afwc-admin-dashboard.php:327
 #, php-format
 msgid "PayPal payout failed. Response: %s."
 msgstr ""
@@ -1072,15 +1101,15 @@ msgstr ""
 msgid "Personal note before signing off"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:186
+#: includes/admin/class-afwc-admin-settings.php:189
 msgid "Personalize affiliate identifier"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:150
+#: includes/class-affiliate-for-woocommerce.php:1081
 msgid "Phone Number / Skype ID / Best method to talk to you"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:87
+#: includes/frontend/class-afwc-registration-form.php:97
 msgid "Please add a valid URL"
 msgstr ""
 
@@ -1089,51 +1118,51 @@ msgstr ""
 msgid "Please review and respond to this potential affiliate partner."
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:131
+#: includes/class-affiliate-for-woocommerce.php:138
 msgid "Popular Affiliate Tags"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:500
-#: includes/frontend/class-afwc-my-account.php:849
-#: includes/frontend/class-afwc-my-account.php:861
+#: includes/frontend/class-afwc-my-account.php:505
+#: includes/frontend/class-afwc-my-account.php:859
+#: includes/frontend/class-afwc-my-account.php:871
 msgid "Product"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:845
+#: includes/frontend/class-afwc-my-account.php:855
 msgid "Products"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:647
+#: includes/frontend/class-afwc-my-account.php:655
 msgid "Profile"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:502
-#: includes/frontend/class-afwc-my-account.php:851
-#: includes/frontend/class-afwc-my-account.php:863
+#: includes/frontend/class-afwc-my-account.php:507
+#: includes/frontend/class-afwc-my-account.php:861
+#: includes/frontend/class-afwc-my-account.php:873
 msgid "Qty"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:269
+#: includes/admin/class-afwc-admin-dashboard.php:278
 msgid "Query failed."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:150
+#: includes/admin/class-afwc-admin-settings.php:153
 msgid "Referral commission (in %)"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1672
+#: includes/frontend/class-afwc-my-account.php:1759
 msgid "Referral URL generator"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1680
+#: includes/frontend/class-afwc-my-account.php:1767
 msgid "Referral URL: "
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:886
+#: includes/frontend/class-afwc-my-account.php:896
 msgid "Referrals"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:779
+#: includes/frontend/class-afwc-my-account.php:789
 msgid "Refunds"
 msgstr ""
 
@@ -1145,7 +1174,7 @@ msgstr ""
 msgid "Register as an affiliate"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:124
+#: includes/admin/class-afwc-admin-settings.php:127
 msgid "Registration form"
 msgstr ""
 
@@ -1160,10 +1189,10 @@ msgstr ""
 msgid "Reject affiliate"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:544
-#: includes/frontend/class-afwc-my-account.php:911
-#: includes/admin/class-afwc-admin-dashboard.php:112
-#: includes/admin/class-afwc-admin-dashboard.php:116
+#: includes/admin/class-afwc-admin-dashboard.php:114
+#: includes/admin/class-afwc-admin-dashboard.php:118
+#: includes/frontend/class-afwc-my-account.php:549
+#: includes/frontend/class-afwc-my-account.php:921
 msgid "Rejected"
 msgstr ""
 
@@ -1171,16 +1200,16 @@ msgstr ""
 msgid "Removed Order Personal Data"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:646
+#: includes/frontend/class-afwc-my-account.php:654
 msgid "Reports"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1618
+#: includes/frontend/class-afwc-my-account.php:1705
 msgid "Request store admin for a coupon"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:243
-#: includes/admin/class-afwc-admin-dashboard.php:296
+#: includes/admin/class-afwc-admin-dashboard.php:252
+#: includes/admin/class-afwc-admin-dashboard.php:305
 msgid "Required params missing"
 msgstr ""
 
@@ -1188,12 +1217,12 @@ msgstr ""
 msgid "Review"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:103
-msgid "Review and edit affiliate registration form"
+#: templates/afwc-new-registration-received.php:46
+msgid "review and manage all affiliates here."
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:44
-msgid "review and manage all affiliates here."
+#: includes/admin/class-afwc-admin-settings.php:104
+msgid "Review and publish form"
 msgstr ""
 
 #. Link to the Affiliate For WooCommerce Settings
@@ -1202,19 +1231,20 @@ msgstr ""
 msgid "Review and update your Affiliate For WooCommerce %s"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:501
-#: includes/frontend/class-afwc-my-account.php:809
-#: includes/frontend/class-afwc-my-account.php:850
-#: includes/frontend/class-afwc-my-account.php:862
+#: includes/frontend/class-afwc-my-account.php:506
+#: includes/frontend/class-afwc-my-account.php:819
+#: includes/frontend/class-afwc-my-account.php:860
+#: includes/frontend/class-afwc-my-account.php:872
 msgid "Sales"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1599
-#: includes/frontend/class-afwc-my-account.php:1697
+#: includes/frontend/class-afwc-my-account.php:1686
+#: includes/frontend/class-afwc-my-account.php:1784
+#: includes/frontend/class-afwc-registration-form.php:488
 msgid "Save"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:130
+#: includes/class-affiliate-for-woocommerce.php:137
 msgid "Search Affiliate Tag"
 msgstr ""
 
@@ -1254,8 +1284,20 @@ msgstr ""
 msgid "Settings &rarr;"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:114
-#: includes/frontend/class-afwc-registration-form.php:300
+#: includes/frontend/class-afwc-registration-form.php:424
+msgid "Settings saved sucessfully."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:465
+msgid "Show"
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:431
+msgid "Something went wrong. Please try again after some time."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:124
+#: includes/frontend/class-afwc-registration-form.php:262
 msgid "store admin"
 msgstr ""
 
@@ -1263,14 +1305,14 @@ msgstr ""
 msgid "StoreApps"
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:217
 #: includes/emails/class-afwc-commission-paid-email.php:213
-#: includes/emails/class-afwc-new-registration-received.php:203
+#: includes/emails/class-afwc-new-conversion-email.php:217
+#: includes/emails/class-afwc-new-registration-received.php:211
 #: includes/emails/class-afwc-welcome-affiliate-email.php:201
 msgid "Subject"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:199
+#: includes/frontend/class-afwc-registration-form.php:159
 msgid "Submit"
 msgstr ""
 
@@ -1283,16 +1325,16 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:174
+#: includes/class-affiliate-for-woocommerce.php:1107
 msgid ""
 "Tell us more about yourself and why you'd like to partner with us (please "
 "include your social media handles, experience promoting others, tell us "
 "about your audience etc)"
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:233
 #: includes/emails/class-afwc-commission-paid-email.php:229
-#: includes/emails/class-afwc-new-registration-received.php:219
+#: includes/emails/class-afwc-new-conversion-email.php:233
+#: includes/emails/class-afwc-new-registration-received.php:227
 #: includes/emails/class-afwc-welcome-affiliate-email.php:217
 msgid "Text to appear below the main email content."
 msgstr ""
@@ -1308,8 +1350,8 @@ msgid ""
 "very soon!"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:59
-#: templates/plain/afwc-new-registration-received.php:58
+#: templates/afwc-new-registration-received.php:61
+#: templates/plain/afwc-new-registration-received.php:62
 msgid "Thanks"
 msgstr ""
 
@@ -1333,10 +1375,10 @@ msgid ""
 "our our superstar partners! Look forward to working closely with you."
 msgstr ""
 
+#: includes/emails/class-afwc-commission-paid-email.php:87
 #: includes/emails/class-afwc-new-conversion-email.php:131
 #: includes/emails/class-afwc-new-conversion-email.php:174
-#: includes/emails/class-afwc-commission-paid-email.php:87
-#: includes/emails/class-afwc-new-registration-received.php:80
+#: includes/emails/class-afwc-new-registration-received.php:83
 #: includes/emails/class-afwc-welcome-affiliate-email.php:86
 msgid "there"
 msgstr ""
@@ -1365,20 +1407,20 @@ msgid ""
 "processed from affiliate dashboard."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:120
+#: includes/admin/class-afwc-admin-dashboard.php:122
 msgid "This Month"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1798
+#: includes/frontend/class-afwc-my-account.php:1885
 msgid ""
 "This URL identifier already exists. Please choose a diiferent identifier"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:122
+#: includes/admin/class-afwc-admin-dashboard.php:124
 msgid "This Year"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:730
+#: includes/frontend/class-afwc-my-account.php:740
 msgid "To"
 msgstr ""
 
@@ -1398,11 +1440,11 @@ msgstr ""
 msgid "To get started:"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:735
+#: includes/frontend/class-afwc-my-account.php:745
 msgid "Total Commissions"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:178
+#: includes/admin/class-afwc-admin-settings.php:181
 msgid "Tracking param name"
 msgstr ""
 
@@ -1410,46 +1452,46 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:541
-#: includes/frontend/class-afwc-my-account.php:745
-#: includes/frontend/class-afwc-my-account.php:908
-#: includes/admin/class-afwc-admin-dashboard.php:114
+#: includes/admin/class-afwc-admin-dashboard.php:116
+#: includes/frontend/class-afwc-my-account.php:546
+#: includes/frontend/class-afwc-my-account.php:755
+#: includes/frontend/class-afwc-my-account.php:918
 msgid "Unpaid"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:134
+#: includes/class-affiliate-for-woocommerce.php:141
 msgid "Update Affiliate Tag"
 msgstr ""
 
 #. shortcode for affiliate registration form
-#: includes/admin/class-afwc-admin-settings.php:106
+#: includes/admin/class-afwc-admin-settings.php:109
 #, php-format
 msgid "use %s shortcode on any page."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:205
+#: includes/admin/class-afwc-admin-settings.php:208
 msgid ""
 "Use 0 for \"session only\" referrals. Use 36500 for 100 year / lifetime "
 "referrals. If someone makes a purchase within these many days of their first "
 "referred visit, affiliate will be credited for the sale."
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:196
+#: includes/admin/class-afwc-admin-settings.php:199
 msgid "Use coupons for referral - along with affiliated links"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:146
+#: includes/admin/class-afwc-admin-dashboard.php:148
 msgid "use default commission"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:200
+#: includes/admin/class-afwc-admin-settings.php:203
 msgid ""
 "Use the <code>Assign to affiliate</code> option while creating a coupon to "
 "link the coupon with an affiliate. Whenever that coupon is used, specified "
 "affiliate will be credited for the sale."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:85
+#: includes/frontend/class-afwc-registration-form.php:95
 msgid "User registration successfull"
 msgstr ""
 
@@ -1457,19 +1499,19 @@ msgstr ""
 msgid "User's affiliate information"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:141
+#: includes/admin/class-afwc-admin-settings.php:144
 msgid "Users with these roles automatically become affiliates."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:380
+#: includes/frontend/class-afwc-registration-form.php:342
 msgid "Visit here"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:824
+#: includes/frontend/class-afwc-my-account.php:834
 msgid "Visitors"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1616
+#: includes/frontend/class-afwc-my-account.php:1703
 msgid "Want an exclusive coupon to promote?"
 msgstr ""
 
@@ -1487,11 +1529,11 @@ msgstr ""
 msgid "We found data from the \"Affiliates\". Do you want to migrate it?"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:293
+#: includes/frontend/class-afwc-registration-form.php:255
 msgid "We have already received your request and will get in touch soon."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:383
+#: includes/frontend/class-afwc-registration-form.php:345
 msgid ""
 "We have received your request to join our affiliate program. We will review "
 "it and will get in touch with you soon!"
@@ -1529,13 +1571,8 @@ msgid ""
 "you'll need to get started:"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:155
+#: includes/class-affiliate-for-woocommerce.php:1087
 msgid "Website"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:31
-#: templates/plain/afwc-new-registration-received.php:30
-msgid "Website: "
 msgstr ""
 
 #: includes/admin/class-afwc-privacy.php:44
@@ -1554,15 +1591,15 @@ msgstr ""
 msgid "Yes, Migrate existing data."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:308
+#: includes/frontend/class-afwc-registration-form.php:270
 msgid "You are already registered with us as an affiliate."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:274
+#: includes/frontend/class-afwc-registration-form.php:236
 msgid "You are are successfully registered."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1603
+#: includes/frontend/class-afwc-my-account.php:1690
 msgid "You can change above identifier to anything like your name, brand name."
 msgstr ""
 
@@ -1572,8 +1609,8 @@ msgstr ""
 msgid "You can fully manage your account there: %s"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:45
-#: templates/plain/afwc-new-registration-received.php:43
+#: templates/afwc-new-registration-received.php:47
+#: templates/plain/afwc-new-registration-received.php:47
 msgid "You can process all pending requests from there."
 msgstr ""
 
@@ -1595,7 +1632,7 @@ msgid ""
 "record of your referrals and payouts there."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1694
+#: includes/frontend/class-afwc-my-account.php:1781
 msgid ""
 "You will receive your affiliate commission on the above PayPal email address."
 msgstr ""
@@ -1626,7 +1663,7 @@ msgstr ""
 msgid "Your affiliate ID: "
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1585
+#: includes/frontend/class-afwc-my-account.php:1672
 msgid "Your affiliate identifier is: "
 msgstr ""
 
@@ -1639,30 +1676,30 @@ msgid "Your personal affiliated link: "
 msgstr ""
 
 #. Link for mailto affiliate manager
-#: includes/frontend/class-afwc-registration-form.php:113
-#: includes/frontend/class-afwc-registration-form.php:299
+#: includes/frontend/class-afwc-registration-form.php:123
+#: includes/frontend/class-afwc-registration-form.php:261
 #, php-format
 msgid ""
 "Your previous request to join our affiliate program has been declined. "
 "Please contact the %s for more details."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:117
-#: includes/frontend/class-afwc-registration-form.php:303
+#: includes/frontend/class-afwc-registration-form.php:127
+#: includes/frontend/class-afwc-registration-form.php:265
 msgid ""
 "Your previous request to join our affiliate program has been declined. "
 "Please contact the store admin for more details."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1626
+#: includes/frontend/class-afwc-my-account.php:1713
 msgid "Your referral coupon details: "
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1607
+#: includes/frontend/class-afwc-my-account.php:1694
 msgid "Your referral URL is: "
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:122
+#: includes/frontend/class-afwc-registration-form.php:132
 msgid "Your request is in moderation."
 msgstr ""
 

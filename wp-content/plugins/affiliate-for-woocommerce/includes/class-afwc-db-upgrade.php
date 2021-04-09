@@ -3,7 +3,7 @@
  * Class for ugrading Ddatabase of Affiliate For WooCommerce
  *
  * @since       1.2.1
- * @version     1.2.2
+ * @version     1.2.3
  *
  * @package     affiliate-for-woocommerce/includes/
  */
@@ -64,7 +64,7 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 		 */
 		public function initialize_db_upgrade() {
 			$current_db_version = get_option( '_afwc_current_db_version' );
-			if ( version_compare( $current_db_version, '1.2.6', '<' ) || empty( $current_db_version ) ) {
+			if ( version_compare( $current_db_version, '1.2.7', '<' ) || empty( $current_db_version ) ) {
 				update_option( 'afwc_db_upgrade_running', true, 'no' );
 				$this->do_db_upgrade();
 			}
@@ -112,6 +112,10 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 
 				if ( '1.2.5' === get_option( '_afwc_current_db_version' ) ) {
 					$this->upgrade_to_1_2_6();
+				}
+
+				if ( '1.2.6' === get_option( '_afwc_current_db_version' ) ) {
+					$this->upgrade_to_1_2_7();
 				}
 
 				update_option( 'afwc_db_upgrade_running', false, 'no' );
@@ -538,6 +542,26 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 			update_option( '_afwc_current_db_version', '1.2.6', 'no' );
 		}
 
+
+		/**
+		 * Function to upgrade the database to version 1.2.7
+		 */
+		public function upgrade_to_1_2_7() {
+			global $wpdb;
+			// alter tables.
+			$cols_from_referrals = $wpdb->get_col( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_referrals" ); // phpcs:ignore
+			if ( ! in_array( 'order_status', $cols_from_referrals, true ) ) {
+				$wpdb->query( "ALTER table {$wpdb->prefix}afwc_referrals ADD order_status VARCHAR(20) DEFAULT NULL" );// phpcs:ignore
+			} else {
+				// check if order status col is already there and order status is not null then do not run migration.
+				$order_with_null_status = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}afwc_referrals WHERE order_status IS NULL" );// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+				if ( 0 === absint( $order_with_null_status ) ) {
+					update_option( 'afwc_migration_for_order_status_done', true, 'no' );
+				}
+			}
+			update_option( '_afwc_current_db_version', '1.2.7', 'no' );
+
+		}
 
 	}
 }

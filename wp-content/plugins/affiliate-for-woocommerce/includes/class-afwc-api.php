@@ -3,7 +3,7 @@
  * Main class for Affiliate For WooCommerce Referral
  *
  * @since       1.10.0
- * @version     1.3.3
+ * @version     1.4.0
  *
  * @package     affiliate-for-woocommerce/includes/
  */
@@ -159,7 +159,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 						); // phpcs:ignore
 					if ( false !== $referral_added ) { // phpcs:ignore
 						update_post_meta( $conversion_data['oid'], 'is_commission_recorded', 'yes' );
-						$referral_id = $wpdb->get_var( 'SELECT LAST_INSERT_ID()' ); // phpcs:ignore
 
 						// Send new conversion email to affiliate if enabled.
 						$mailer = WC()->mailer();
@@ -211,6 +210,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @return integer $amount  The amount after calculation.
 		 */
 		public function calculate_commission( $order_id, $affiliate_id ) {
+			global $wpdb;
 
 			$set_commission         = array();
 			$remaining_items        = array();
@@ -226,15 +226,33 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 
 			if ( 'yes' === $is_commission_recorded ) {
 				return false;
+			} else {
+				// check if commission already recorded in table but not updated in postmeta.
+				$order_count = $wpdb->get_var( // phpcs:ignore
+					$wpdb->prepare( // phpcs:ignore
+						"SELECT COUNT(post_id)
+									FROM {$wpdb->prefix}afwc_referrals
+									WHERE post_id = %d AND affiliate_id = %d",
+						$order_id,
+						$affiliate_id
+					)
+				);
+				if ( $order_count > 0 ) {
+					return false;
+				}
 			}
 
 			$items                = $order->get_items();
 			$item_total_map       = array();
 			$category_prod_id_map = array();
+			$item_quantity_map    = array();
 			foreach ( $items as $item ) {
 				$product_id                    = ( ! empty( $item->get_variation_id() ) ) ? $item->get_variation_id() : $item->get_product_id();
 				$item_total_map[ $product_id ] = $item['line_total'];
-				$prod_categories               = wc_get_product_cat_ids( $item->get_product_id() );
+				if ( ! empty( $item['quantity'] ) && $item['quantity'] > 1 ) {
+					$item_quantity_map[ $product_id ] = $item['quantity'];
+				}
+				$prod_categories = wc_get_product_cat_ids( $item->get_product_id() );
 				foreach ( $prod_categories as $cat ) {
 					$category_prod_id_map[ $cat ][] = $product_id;
 				}
@@ -280,6 +298,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			} else {
 				$ordered_plans = $afwc_plans;
 			}
+
 			if ( ! empty( $ordered_plans ) ) {
 				foreach ( $ordered_plans as $plan ) {
 					$plan_context         = new AFWC_Rule_Context( $context );
@@ -300,6 +319,9 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 										$amount = ( $item_total_map[ $id ] * $plan['amount'] ) / 100;
 									} elseif ( 'Flat' === $plan['type'] ) {
 										$amount = $plan['amount'];
+										if ( ! empty( $item_quantity_map[ $id ] ) ) {
+											$amount = $amount * $item_quantity_map[ $id ];
+										}
 									}
 								}
 								$set_commission[ $id ] = ! empty( $amount ) ? $amount : 0;
@@ -329,11 +351,13 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 					}
 				}
 			}
+
 			$amount = array_sum( $set_commission );
 
 			// Fallback to storewide commission if rule based commission is not calculated.
 			if ( empty( $amount ) ) {
 				$total_for_commission = $order->get_subtotal() - $order->get_total_discount();
+
 				// remove excluded item price from total.
 				if ( ! empty( $set_commission ) ) {
 					foreach ( $set_commission as $id => $val ) {
@@ -390,7 +414,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 				$amount       = $this->calculate_commission( $order_id, $affiliate_id );
 				$currency_id  = get_post_meta( $order_id, '_order_currency', true );
 
-				$status      = AFWC_REFERRAL_STATUS_UNPAID;
+				$status      = AFWC_REFERRAL_STATUS_DRAFT;
 				$description = '';
 				$data        = '';
 				$type        = '';
@@ -465,20 +489,28 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 
 			global $wpdb;
 
-			$wc_paid_statuses = wc_get_is_paid_statuses();
-			$reject_statuses  = array( 'refunded', 'cancelled', 'failed', 'draft' );
+			$order_status_updates = false;
+			$wc_paid_statuses     = get_afwc_paid_order_status();
+			$reject_statuses      = get_afwc_reject_order_status();
+
+			$new_status = ( strpos( $new_status, 'wc-' ) === false ) ? 'wc-' . $new_status : $new_status;
 
 			$order  = wc_get_order( $order_id );
 			$status = ( $order->get_total() > 0 ) ? AFWC_REFERRAL_STATUS_UNPAID : AFWC_REFERRAL_STATUS_PAID;
 
 			// update referral if not paid or rejected.
 			if ( in_array( $new_status, $wc_paid_statuses, true ) ) {
-				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET status = %s WHERE post_id = %d AND status NOT IN (%s, %s)", $status, $order_id, AFWC_REFERRAL_STATUS_PAID, AFWC_REFERRAL_STATUS_REJECTED ) ); // phpcs:ignore
+				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET status = %s, order_status = %s WHERE post_id = %d AND status NOT IN (%s, %s)", $status, $new_status, $order_id, AFWC_REFERRAL_STATUS_PAID, AFWC_REFERRAL_STATUS_REJECTED ) ); // phpcs:ignore
+				$order_status_updates = true;
+			} elseif ( in_array( $new_status, $reject_statuses, true ) ) {
+				// reject referral if not paid.
+				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET status = %s, order_status = %s WHERE post_id = %d AND status NOT IN (%s)", AFWC_REFERRAL_STATUS_REJECTED, $new_status, $order_id, AFWC_REFERRAL_STATUS_PAID ) ); // phpcs:ignore
+				$order_status_updates = true;
 			}
 
-			// reject referral if not paid.
-			if ( in_array( $new_status, $reject_statuses, true ) ) {
-				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET status = %s WHERE post_id = %d AND status NOT IN (%s)", AFWC_REFERRAL_STATUS_REJECTED, $order_id, AFWC_REFERRAL_STATUS_PAID ) ); // phpcs:ignore
+			if ( ! $order_status_updates ) {
+				// set new order status in referral table.
+				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET order_status = %s WHERE post_id = %d", $new_status, $order_id ) ); // phpcs:ignore
 			}
 
 		}

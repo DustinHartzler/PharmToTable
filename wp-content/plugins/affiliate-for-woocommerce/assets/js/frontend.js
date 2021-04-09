@@ -576,6 +576,13 @@ var AFWCFunctions = /*#__PURE__*/function () {
         'endDate': endDate.toISOString().slice(0, 10)
       };
     }
+  }, {
+    key: "getDateTime",
+    value: function getDateTime(dateStr) {
+      var currentTimestr = new Date().toTimeString();
+      var str = new Date(dateStr).toDateString();
+      return new Date(str + " " + currentTimestr).toUTCString();
+    }
   }]);
 
   return AFWCFunctions;

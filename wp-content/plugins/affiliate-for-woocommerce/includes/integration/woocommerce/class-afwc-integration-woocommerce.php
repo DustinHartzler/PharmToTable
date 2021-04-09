@@ -184,14 +184,15 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 		/**
 		 * Get all customer ids
 		 *
-		 * @param  string $from The from datetime.
-		 * @param  string $to The to datetime.
+		 * @param  array $all_customer_ids customer ids.
+		 * @param  array $args extra arguments.
 		 * @return array $all_customer_ids
 		 */
-		public function woocommerce_all_customer_ids( $from = '', $to = '' ) {
+		public function woocommerce_all_customer_ids( $all_customer_ids, $args ) {
 
 			global $wpdb;
-
+			$from                = ( ! empty( $args['from_date'] ) ) ? $args['from_date'] : '';
+			$to                  = ( ! empty( $args['to_date'] ) ) ? $args['to_date'] : '';
 			$prefixed_statuses   = afwc_get_prefixed_order_statuses();
 			$option_order_status = 'afwc_order_stat_' . uniqid();
 			update_option( $option_order_status, implode( ',', $prefixed_statuses ), 'no' );
@@ -238,7 +239,6 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 			}
 
 			delete_option( $option_order_status );
-
 			return intval( $all_customer_ids );
 		}
 

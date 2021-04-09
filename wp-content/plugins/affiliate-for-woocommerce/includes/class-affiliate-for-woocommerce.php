@@ -3,7 +3,7 @@
  * Main class for Affiliate For WooCommerce
  *
  * @since       1.0.0
- * @version     1.4.2
+ * @version     1.4.3
  *
  * @package     affiliate-for-woocommerce/includes/
  */
@@ -50,6 +50,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			$this->constants();
 			add_action( 'init', array( $this, 'afwc_register_user_tags_taxonomy' ) );
 			$this->includes();
+			// save affiliate form initial fields.
+			$this->save_afwc_reg_form_settings();
 
 			if ( is_admin() ) {
 				add_action( 'admin_menu', array( $this, 'add_afwc_admin_menu' ), 20 );
@@ -61,6 +63,10 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 			add_action( 'valid-paypal-standard-ipn-request', array( $this, 'handle_ipn_request' ) );
 
+			// Update update referral entry when order is trashed/untrashed/deleted.
+			add_action( 'trashed_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
+			add_action( 'untrashed_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
+			add_action( 'delete_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
 		}
 
 		/**
@@ -108,6 +114,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			define( 'AFWC_AJAX_SECURITY', 'affiliate_for_woocommerce_ajax_call' );
 
 			define( 'AFWC_REFERRAL_STATUS_PENDING', 'pending' );
+			define( 'AFWC_REFERRAL_STATUS_DRAFT', 'draft' );
 			define( 'AFWC_REFERRAL_STATUS_PAID', 'paid' );
 			define( 'AFWC_REFERRAL_STATUS_UNPAID', 'unpaid' );
 			define( 'AFWC_REFERRAL_STATUS_REJECTED', 'rejected' );
@@ -190,6 +197,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				include_once 'admin/class-afwc-admin-link-unlink-in-order.php';
 			}
 
+			include_once 'class-afwc-db-background-process.php';
+
 			if ( afwc_is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' ) ) {
 				include_once 'integration/woocommerce/compat/class-wcs-afwc-compatibility.php';
 			}
@@ -251,6 +260,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			if ( 'affiliate-for-woocommerce-documentation' === $get_page ) {
 				add_submenu_page( 'woocommerce', sprintf( __( 'Docs & Support', 'affiliate-for-woocommerce' ), '&rsaquo;' ), __( 'Docs & Support', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce-documentation', 'AFWC_Admin_Docs::afwc_docs' );
 			}
+			add_submenu_page( 'woocommerce', sprintf( __( 'Affiliate Form Settings', 'affiliate-for-woocommerce' ), '&rsaquo;' ), __( 'Affiliate Form Settings', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-form-settings', 'AFWC_Registration_Form::reg_form_settings' );
+
 		}
 
 		/**
@@ -258,6 +269,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 */
 		public function add_afwc_remove_submenu() {
 			remove_submenu_page( 'woocommerce', 'affiliate-for-woocommerce-documentation' );
+			remove_submenu_page( 'woocommerce', 'affiliate-form-settings' );
 		}
 
 		/**
@@ -595,9 +607,11 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				)
 			);
 
-			$limit  *= $num_row;
-			$offset *= $num_row;
+			$limit                 *= $num_row;
+			$offset                *= $num_row;
+			$afwc_excluded_products = get_option( 'afwc_storewide_excluded_products' );
 
+			// TODO:: Need to check query for limits and get top products properly.
 			if ( ! empty( $from ) && ! empty( $to ) ) {
 
 				$products_result = $wpdb->get_results( // phpcs:ignore
@@ -678,7 +692,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 													),
 					'ARRAY_A'
 				);
-
 				$products_total_count = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
 															"SELECT COUNT(*)
@@ -708,9 +721,14 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 					}
 					$rows[ $result['order_item_id'] ][ $result['meta_key'] ] = $result['meta_value']; // phpcs:ignore
 				}
+
 				if ( ! empty( $rows ) ) {
 					$_rows = array();
 					foreach ( $rows as $item_id => $item ) {
+						// exclude product if exclude in settings.
+						if ( in_array( $item['_product_id'], $afwc_excluded_products, true ) || in_array( $item['_variation_id'], $afwc_excluded_products, true ) ) {
+							continue;
+						}
 						$index = $item['_product_id'] . '_' . $item['_variation_id'];
 						if ( empty( $_rows[ $index ] ) || ! is_array( $_rows[ $index ] ) ) {
 							$_rows[ $index ] = array();
@@ -735,7 +753,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 					}
 					$sorted_rows = wp_list_sort( $_rows, 'sales', 'DESC', true );
 				}
-
 				$products = array(
 					'rows'        => $sorted_rows,
 					'total_count' => $products_total_count,
@@ -996,6 +1013,111 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				return $affiliates_payout_history;
 			}
 		}
+
+
+		/**
+		 * Function to update referral entry when order is trashed/untrashed/deleted.
+		 *
+		 * @param int $trashed_order_id Order ID being trashed/untrashed/deleted.
+		 */
+		public function afwc_update_referral_on_trash_delete_untrash( $trashed_order_id ) {
+			global $wpdb;
+
+			if ( empty( $trashed_order_id ) ) {
+				return;
+			}
+			$order = wc_get_order( $trashed_order_id );
+			if ( ! $order instanceof WC_Order ) {
+				return;
+			}
+
+			$current_action = current_action();
+			if ( 'delete_post' === $current_action ) {
+				$affected_row = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}afwc_referrals WHERE post_id = %d", $trashed_order_id ));// phpcs:ignore
+				if ( 1 === $affected_row ) {
+					delete_post_meta( $trashed_order_id, 'is_commission_recorded' );
+				}
+			} elseif ( 'untrashed_post' === $current_action || 'trashed_post' === $current_action ) {
+				$afwc_status = ( 'trashed_post' === $current_action ) ? 'deleted' : $order->get_status();
+				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET order_status = %s WHERE post_id = %d", $afwc_status, $trashed_order_id ) ); // phpcs:ignore
+				if ( 'untrashed_post' === $current_action ) {
+					update_post_meta( $trashed_order_id, 'is_commission_recorded', 'yes' );
+				}
+			}
+
+		}
+
+
+		/**
+		 * Get registration for settings
+		 */
+		public function save_afwc_reg_form_settings() {
+			$form_fields = array();
+			$form_fields = array(
+				'afwc_reg_email'            => array(
+					'type'     => 'email',
+					'required' => 'required',
+					'show'     => true,
+					'label'    => __( 'Email', 'affiliate-for-woocommerce' ),
+				),
+				'afwc_reg_first_name'       => array(
+					'type'     => 'text',
+					'required' => '',
+					'show'     => true,
+					'label'    => __( 'First Name', 'affiliate-for-woocommerce' ),
+					'class'    => 'afwc_is_half',
+				),
+				'afwc_reg_last_name'        => array(
+					'type'     => 'text',
+					'required' => '',
+					'show'     => true,
+					'label'    => __( 'Last Name', 'affiliate-for-woocommerce' ),
+					'class'    => 'afwc_is_half',
+				),
+				'afwc_reg_contact'          => array(
+					'type'     => 'text',
+					'required' => '',
+					'show'     => true,
+					'label'    => __( 'Phone Number / Skype ID / Best method to talk to you', 'affiliate-for-woocommerce' ),
+				),
+				'afwc_reg_website'          => array(
+					'type'     => 'text',
+					'required' => '',
+					'show'     => true,
+					'label'    => __( 'Website', 'affiliate-for-woocommerce' ),
+				),
+				'afwc_reg_password'         => array(
+					'type'     => 'password',
+					'required' => 'required',
+					'show'     => true,
+					'label'    => __( 'Password', 'affiliate-for-woocommerce' ),
+					'class'    => 'afwc_is_half',
+				),
+				'afwc_reg_confirm_password' => array(
+					'type'     => 'password',
+					'required' => 'required',
+					'show'     => true,
+					'label'    => __( 'Confirm Password', 'affiliate-for-woocommerce' ),
+					'class'    => 'afwc_is_half',
+				),
+				'afwc_reg_desc'             => array(
+					'type'     => 'textarea',
+					'required' => 'required',
+					'show'     => true,
+					'label'    => __( 'Tell us more about yourself and why you\'d like to partner with us (please include your social media handles, experience promoting others, tell us about your audience etc)', 'affiliate-for-woocommerce' ),
+				),
+				'afwc_reg_terms'            => array(
+					'type'     => 'checkbox',
+					'required' => 'required',
+					'show'     => true,
+					'label'    => __( ' I accept all the terms of this program', 'affiliate-for-woocommerce' ),
+				),
+
+			);
+			$form_fields = apply_filters( 'afwc_registration_form_fields', $form_fields );
+			add_option( 'afwc_form_fields', $form_fields );
+		}
+
 
 
 

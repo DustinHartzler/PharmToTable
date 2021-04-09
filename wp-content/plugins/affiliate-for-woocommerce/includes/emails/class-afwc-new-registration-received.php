@@ -73,8 +73,11 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 				return;
 			}
 
-			$this->email_args = '';
-			$this->email_args = wp_parse_args( $args, $this->email_args );
+			$this->email_args     = '';
+			$this->email_args     = wp_parse_args( $args, $this->email_args );
+			$form_fields_settings = get_option( 'afwc_form_fields', true );
+			$user_contact_label   = ! empty( $form_fields_settings['afwc_reg_contact']['label'] ) ? $form_fields_settings['afwc_reg_contact']['label'] : 'Contact Information';
+			$user_website_label   = ! empty( $form_fields_settings['afwc_reg_website']['label'] ) ? $form_fields_settings['afwc_reg_website']['label'] : 'Website';
 
 			$admin      = get_user_by( 'email', $this->recipient );
 			$admin_name = ! empty( $admin->user_login ) ? $admin->user_login : __( 'there', 'affiliate-for-woocommerce' );
@@ -82,14 +85,15 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 			$manage_url = admin_url( 'user-edit.php?user_id=' . $this->email_args['user_id'] . '#afwc-settings' );
 			$user_name  = ! empty( $this->email_args['userdata']['first_name'] ) ? $this->email_args['userdata']['first_name'] . ' ' . $this->email_args['userdata']['last_name'] : $this->email_args['userdata']['user_login'];
 
-			$this->email_args['admin_name']    = $admin_name;
-			$this->email_args['dashboard_url'] = admin_url( 'admin.php?page=affiliate-for-woocommerce' );
-			$this->email_args['manage_url']    = $manage_url;
-			$this->email_args['user_name']     = $user_name;
-			$this->email_args['user_email']    = $user_email;
-			$this->email_args['user_contact']  = ! empty( $this->email_args['user_contact'] ) ? $this->email_args['user_contact'] : '';
-			$this->email_args['user_url']      = ! empty( $this->email_args['userdata']['user_url'] ) ? $this->email_args['userdata']['user_url'] : '';
-
+			$this->email_args['admin_name']         = $admin_name;
+			$this->email_args['dashboard_url']      = admin_url( 'admin.php?page=affiliate-for-woocommerce' );
+			$this->email_args['manage_url']         = $manage_url;
+			$this->email_args['user_name']          = $user_name;
+			$this->email_args['user_email']         = $user_email;
+			$this->email_args['user_contact']       = ! empty( $this->email_args['user_contact'] ) ? $this->email_args['user_contact'] : '';
+			$this->email_args['user_url']           = ! empty( $this->email_args['userdata']['user_url'] ) ? $this->email_args['userdata']['user_url'] : '';
+			$this->email_args['user_contact_label'] = $user_contact_label;
+			$this->email_args['user_website_label'] = $user_website_label;
 			// Set the locale to the store locale for customer emails to make sure emails are in the store language.
 			$this->setup_locale();
 
@@ -143,8 +147,10 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 					'dashboard_url'      => $this->email_args['dashboard_url'],
 					'manage_url'         => $this->email_args['manage_url'],
 					'user_contact'       => $this->email_args['user_contact'],
+					'user_contact_label' => $this->email_args['user_contact_label'],
 					'user_desc'          => $this->email_args['user_desc'],
 					'user_url'           => $this->email_args['user_url'],
+					'user_website_label' => $this->email_args['user_website_label'],
 					'additional_content' => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 				),
 				$template_path,
@@ -177,8 +183,10 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 					'dashboard_url'      => $this->email_args['dashboard_url'],
 					'manage_url'         => $this->email_args['manage_url'],
 					'user_contact'       => $this->email_args['user_contact'],
+					'user_contact_label' => $this->email_args['user_contact_label'],
 					'user_desc'          => $this->email_args['user_desc'],
 					'user_url'           => $this->email_args['user_url'],
+					'user_website_label' => $this->email_args['user_website_label'],
 					'additional_content' => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 				),
 				$template_path,
