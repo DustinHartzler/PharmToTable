@@ -67,7 +67,8 @@ nav.navbar .quote-btn a:hover,
     border-top: 2px solid var(--primary);
 }
 
-.view-bio-btn {
+.view-bio-btn,
+button {
     border: 2px solid var(--primary);
     background: transparent;
     padding: 10px 35px;
@@ -86,6 +87,7 @@ nav.navbar .quote-btn a:hover,
 }
 
 .view-bio-btn:hover,
+button:hover,
 .doctor-items .social li a:hover {
     background: var(--primary);
 }
@@ -109,7 +111,7 @@ nav.navbar .quote-btn a:hover,
 .modal-outer {
     display: grid;
     /*background: hsla(50, 100%, 50%, 0.7);*/
-    background: hsla(30, 100%, 50%, 0.7);
+    background: hsla(0, 0%, 50%, 0.7);
     position: fixed;
     height: 100vh;
     width: 100vw;
@@ -175,11 +177,16 @@ footer .footer-bottom p a {
 }
 
 .doctor-items .thumb,
-.doctor-items .info a,
-.site-heading h2,
-.site-heading h2 span {
+.doctor-items .info a {
     position: relative;
     z-index: 0;
+}
+
+.about-area,
+.testimonials-area,
+.doctors-area {
+    position: relative;
+    z-index: -1;
 }
 
 .owl-carousel {
@@ -190,4 +197,10 @@ footer .footer-bottom p a {
 .chose-us-area .info .heading {
     position: relative;
     z-index: 0;
+}
+
+@media only screen and (max-width: 600px) {
+    h2 {
+        font-size: 1em;
+    }
 }

@@ -316,11 +316,16 @@
                                 </div>
                             </div>
                             <div class="info">
+                            <div class="cards">
+                                    <div class="card" data-description="Dr. Lindsey Elmore is a speaker, author, and world-renowned wellness expert. She translates complicated science into understandable stories, and travels the world educating audiences about natural wellness.<br><br>
+                                    Dr. Elmore obtained an undergraduate degree in chemistry from the University of Alabama, Birmingham and a doctorate in pharmacy from the University of California San Francisco. She completed her first-year post-doctoral residency in pharmacy practice at Princeton Baptist Medical Center in Birmingham, AL and her second-year specialty residency in ambulatory care at New Hanover Regional Medical Center in Wilmington, NC. She is a Board-Certified Pharmacotherapy Specialist and licensed to practice in three states.  She is a Certified 250-hour vinyasa, yin, and Aroma Yoga® Instructor, an Aroma Freedom practitioner, and the creator of the Clean Slate Cleanse.<br><br>
+                                    Dr. Elmore has spoken to audiences on five continents and more than 30 countries. Her educational materials have been translated into more than 25 languages. She is the author of <em>Essentials: 75 Answers to Common Questions about Essential Oils and Supplements</em>, and the <em>Clean Slate Cleanse Cookbook</em> and <em>Workbook </em>series. She is published in a wide variety of pharmacy and medical journals, and has been quoted in Bustle, Elite Daily, Reader’s Digest, Yahoo News, Parade, MSN, Brit + Co, Business Insider and more. She has been featured on news segments on NBC, ABC, CBS, Fox, CW, and the Daily Buzz.<br><br>
+                                    Dr. Elmore reaches millions on social media. Her Facebook content reaches more than 85 countries, and more than 15 million minutes of education have been watched on Facebook alone.<br><br>
+                                    From all of her travels and diverse learnings, she created The Club, a hub for health, wellness, and business education. She has more than 200 videos on essential oils and supplements inside The Club, teaches exclusive live events online regularly, and constantly creates content requested by her audience. Join Dr. Elmore on her journey: <a href='https://www.facebook.com/lindseyelmore/'>@lindseyelmore</a> on Facebook and Instagram and online at <a href='http://www.lindseyelmore.com'>lindseyelmore.com</a>. You can also follow along with her gluten-free, vegan foodstagram <a href='https://www.insagram.com/cleanslatecleanse/'>@cleanslatecleanse</a> on Instagram and <a href='https://www.facebook.com/thecleanslatecleanse/'>@thecleanslatecleanse</a> on Facebook.</p>">
                                 <h4>Lindsey Elmore</h4>
                                 <h5>PharmD, BCPS, CYP-250</h5>
-                                <div class="view-bio-btn">
-                                    <a href="#">View Bio</a>
-                                </div>
+                                <button>View Bio →</button>
+                                </div></div>
                             </div>
                         </div>
                     </div>
@@ -348,11 +353,15 @@
                                 </div>
                             </div>
                             <div class="info">
+                            <div class="cards">
+                                    <div class="card" data-description="Dr. Melody L. Hartzler, PharmD, BCACP, BC-ADM is a family medicine clinical pharmacist and Associate professor of pharmacy practice. Dr. Hartzler is a graduate from Ohio Northern Raabe College of Pharmacy (2009).<br><br>
+                                    She completed her PGY-1 Pharmacy Practice Residency with an emphasis in Ambulatory Care at the Chalmers P. Wylie VA Ambulatory Care Center in Columbus, OH (2010). Following residency, she joined faculty at Cedarville University School of Pharmacy and developed a collaborative practice in a family medicine residency program.<br><br>
+                                    She now serves part-time for Cedarville University School of Pharmacy and part-time as a clinical pharmacist at Western Medicine Providers. Her primary practice interests are diabetes, pulmonology, and integrative/functional medicine. Her passion is recognizing the role of the gut in relationship to chronic disease.<br><br>
+                                    Dr. Hartzler has developed an integrative medicine service in her clinical practice in family medicine and also has a blog focused on incorporating this approach into chronic disease statement management. She provides treatment of chronic disease through consult agreements with an integrative approach.<br><br>She also uses her blog <a href='https://pharmtotable.life/'>PharmToTable.Life</a> as a platform to educate patients and health care providers about this practice. She has developed functional medicine services at her current practice and is currently developing telehealth services to meet the growing need.'</p>">
                                 <h4>Melody Hartzler</h4>
                                 <h5>PharmD, BCACP, BC-ADM</h5>
-                                <div class="view-bio-btn">
-                                    <a href="#">View Bio</a>
-                                </div>
+                                <button>View Bio →</button>
+                                </div></div>
                             </div>
                         </div>
                     </div>
@@ -374,11 +383,14 @@
                                 </div>
                             </div>
                             <div class="info">
+                                <div class="cards">
+                                    <div class="card" data-description="Vanessa Lesneski is an Assistant Professor in Pharmacy Practice at the Lake Erie College of Osteopathic Medicine School of Pharmacy Distance Education pathway. Her areas of expertise include pharmacogenetics, nutrition, and pharmacotherapy. She is the course coordinator for “Functional Pharmacy,” an online elective for second and third year pharmacy students across all three pathways at LECOM, Florida, Erie, and DE.  <br><br>
+                                    The elective introduces functional medicine and other complementary and/or alternative therapies.  The instructors include Dr. Lesneski and volunteers who practice in the area of functional medicine or CAM.  The objective of the class is to introduce alternative treatment modalities and encourage the student to objectively and critically “think outside the box.” Vanessa also runs a practice site at Forum Health for pharmacy students to obtain hands on training. ">
                                 <h4>Vanessa Lesneski</h4>
                                 <h5>PharmD, BCPS, CPh</h5>
-                                <div class="view-bio-btn">
-                                    <a href="#">View Bio</a>
-                                </div>
+                                <button>View Bio →</button>
+
+                                        </div></div>
                             </div>
                         </div>
                     </div>
@@ -407,11 +419,16 @@
                                 </div>
                             </div>
                             <div class="info">
+                                <div class="cards">
+                                    <div class="card" data-description="Lara Zakaria is a Pharmacist and Clinical Nutritionist specializing in Functional Medicine. Combining her background in pharmacy and training in Functional Nutrition, Lara designs personalized protocols that incorporate whole food, herbs, nutrigenomics/pharmacogenomics, medication history, and lifestyle modification to optimize patient health outcomes.<br><br>
+                                    Lara’s passion for nutrition and Functional Medicine began when she realized her pharmacy practice was full of patients frustrated with their growing list medications and declining health.<br><br>
+                                    After 15 years in community pharmacy, Lara was craving a more holistic approach to patient care. She decided to pursue her passion for nutrition and personalized medicine - first by earning a Master of Science in Clinical Nutrition from the University of Bridgeport, and then pursuing Institute for Functional Medicine (IFM) training and certification.<br><br>
+                                    Lara is founder of Foodie Farmacist, LLC , a consulting company focused on delivering patient-centered Functional Medicine care to manage chronic conditions including metabolic and autoimmune disease. Her focus is split between direct patient practice and professional development programs for Functional Medicine professionals.">
                                 <h4>Lara Zakaria</h4>
                                 <h5>PharmD, MS CNS CDN IFMCP</h5>
-                                <div class="view-bio-btn">
-                                    <a href="#">View Bio</a>
-                                </div>
+                                <button>View Bio →</button>
+
+                                </div></div>
                             </div>
                         </div>
                     </div>
@@ -433,25 +450,20 @@
                                 </div>
                             </div>
                             <div class="info">
-                                <h4>DRSarah Bachofner</h4>
-                                <h5>PharmD</h5>
                                 <div class="cards">
                                     <div class="card" data-description="Dr. Bachofner’s focus areas are hormone imbalances, mood disorders, and chronic disease management, particularly diabetes. She has always believed in a holistic approach to healthcare and that preventing illness and promoting wellness are crucial to improving health. <br><br>
 
-She provides education and establishes a partnership with the common goal of recovery and wellness. She exudes a positive and joyful approach to patient care. She can’t wait to see the hope in your eyes when you realize you’re about to head down a journey of health toward living your best life!">
+                                    She provides education and establishes a partnership with the common goal of recovery and wellness. She exudes a positive and joyful approach to patient care. She can’t wait to see the hope in your eyes when you realize you’re about to head down a journey of health toward living your best life!">
 
-                                    <h4>Sarah Bachofner</h4>
-                                    <h5>PharmD</h5>
-                                    <button>Learn more →</button>
-                                </div></div>
-                                <div class="view-bio-btn">
-                                    <a href="#">View Bio</a>
-                                      <div class="modal-outer">
-    <div class="modal-inner">
-      <p>Fringilla quis iaculis sollicitudin etiam libero amet suscipit vel fames, iaculis sed lacinia fusce eu at risus purus justo morbi quisque leo etiam nibh massa semper dapibus donec, lacinia mauris aenean placerat integer ipsum etiam aenean proin, netus pharetra ultricies primis sem porttitor aliquam leo elit ligula ut habitasse id suspendisse gravida iaculis vitae tincidunt.</p>
-    </div>
-  </div>
+                                        <h4>Sarah Bachofner</h4>
+                                        <h5>PharmD</h5>
+                                        <button>View Bio →</button>
+                                <div class="modal-outer">
+                                            <div class="modal-inner"></div>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -517,6 +529,7 @@ She provides education and establishes a partnership with the common goal of rec
             </div>
         </div>
         <!-- End Testimonials -->
+    </div></div>
         <!-- Start About
     ============================================= -->
     <div id="about" class="about-area bg-gray default-padding">
