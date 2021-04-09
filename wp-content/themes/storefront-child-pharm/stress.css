@@ -15,6 +15,10 @@
 
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 h1,
 h1 span,
 .chose-us-area .info li .info::after {

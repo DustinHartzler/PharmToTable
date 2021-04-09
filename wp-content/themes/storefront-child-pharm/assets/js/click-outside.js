@@ -46,3 +46,7 @@ window.addEventListener('keydown', (event) => {
 
 
 // Try to stop scrolling when modal is open:
+
+document.getElementById('#checkout').scrollIntoView({
+    behavior: 'smooth'
+  });
