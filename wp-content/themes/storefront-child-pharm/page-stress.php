@@ -84,7 +84,7 @@
                  <!-- Start Atribute Navigation -->
                  <div class="attr-nav">
                     <ul>
-                        <li class="quote-btn"><a href="#contact">Buy Now</a></li>
+                        <li class="quote-btn"><a href="#checkout">Buy Now</a></li>
                     </ul>
                 </div>
                 <!-- End Atribute Navigation -->
