@@ -158,9 +158,9 @@ class TVD_Smart_DB {
 					'identifier' => 'disc',
 				),
 				array(
-					'name'       => 'Terms and Conditions',
+					'name'       => 'Terms and conditions',
 					'type'       => static::$types['link'],
-					'data'       => array( 'text' => 'Terms and Conditions', 'url' => '' ),
+					'data'       => array( 'text' => 'Terms and conditions', 'url' => '' ),
 					'identifier' => 'toc',
 				),
 				array(
@@ -172,7 +172,7 @@ class TVD_Smart_DB {
 			),
 			'Social'  => array(
 				array(
-					'name'       => 'Facebook Page',
+					'name'       => 'Facebook page',
 					'icon'       => 'facebook-brands-new',
 					'type'       => static::$types['link'],
 					'identifier' => 'fb',
@@ -364,6 +364,10 @@ class TVD_Smart_DB {
 					foreach ( $fields as $index => $field ) {
 						$field['group_name'] = $group['name'];
 
+						if ( ! empty( $fields[ $index ]['name'] ) ) {
+							$fields[ $index ]['name'] = $this->ensure_lowercase_label( $fields[ $index ]['name'] );
+						}
+
 						$fields[ $index ]['formated_data'] = empty( $field['data'] ) ? '' : static::format_field_data( maybe_unserialize( $field['data'] ), $field );
 						$fields[ $index ]['data']          = empty( $field['data'] ) ? '' : maybe_unserialize( $field['data'] );
 
@@ -407,6 +411,23 @@ class TVD_Smart_DB {
 		}
 
 		return $config;
+	}
+
+	/**
+	 * Make sure some specific default labels ( that are stored in the DB ) are lowercase
+	 *
+	 * @param string $label
+	 *
+	 * @return string
+	 */
+	private function ensure_lowercase_label( $label ) {
+		if ( $label === 'Terms and Conditions' ) {
+			$label = 'Terms and conditions';
+		} else if ( $label === 'Facebook Page' ) {
+			$label = 'Facebook page';
+		}
+
+		return $label;
 	}
 
 	/**
@@ -660,19 +681,19 @@ class TVD_Smart_DB {
 	 * in theory this should never be modified again, it's used only for backwards compatibility when upgrading the DB from 1.0.0 to 1.0.1
 	 */
 	public $type_id_map = array(
-			1  => 'name',
-			2  => 'addr',
-			3  => 'phone',
-			4  => 'alt_phone',
-			5  => 'mail',
-			6  => 'priv',
-			7  => 'disc',
-			8  => 'toc',
-			9  => 'contact',
-			10 => 'fb',
-			11 => 'yt',
-			12 => 'in',
-			13 => 'pin',
-			14 => 'ig',
-		);
+		1  => 'name',
+		2  => 'addr',
+		3  => 'phone',
+		4  => 'alt_phone',
+		5  => 'mail',
+		6  => 'priv',
+		7  => 'disc',
+		8  => 'toc',
+		9  => 'contact',
+		10 => 'fb',
+		11 => 'yt',
+		12 => 'in',
+		13 => 'pin',
+		14 => 'ig',
+	);
 }

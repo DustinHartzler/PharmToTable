@@ -1,0 +1,132 @@
+// Mixin' It Up
+@mixin td-button($button-color) {
+  line-height: 40px;
+  border-radius: 4px;
+  border: 1px solid $button-color;
+  background-color: transparent;
+  color: $button-color;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0 30px;
+  transition: all .15s;
+  outline: none;
+  &:hover {
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+    color: #fff;
+    background-color: $button-color;
+  }
+}
+
+@mixin main-header {
+  font-size: 27px;
+  font-weight: 300;
+  font-style: normal;
+  color: $heading-color;
+  margin: 0 0 25px;
+}
+
+@mixin main-button {
+  line-height: 40px;
+  display: inline-block;
+  border-radius: 4px;
+  padding: 0 36px;
+  font-size: 13px;
+  text-decoration: none;
+  transition: all .15s;
+  cursor: pointer;
+  border: solid 0 #4bb35e;
+
+  background-color: #4bb35e;
+  color: #fff;
+
+  &:active, &:focus {
+    outline: none;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: #58cb6d;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.2);
+  }
+  &:active, .active {
+    background-color: #ffffff;
+  }
+  &:disabled, &.disabled {
+    background-color: #cdd3d8;
+    border-color: #b0b9c1;
+    cursor: default;
+  }
+}
+
+@mixin back-button {
+  background-color: #1da5e5;
+  &:hover {
+    background-color: #29c1ec;
+  }
+}
+
+@mixin clear-float {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin check {
+  &:after {
+    content: "";
+    position: absolute;
+    opacity: 0;
+    transition: all .3s;
+
+    left: 4px;
+    top: 1px;
+    width: 3px;
+    height: 7px;
+    border: solid white;
+    border-width: 0 1px 1px 0;
+    transform: rotate(45deg);
+  }
+}
+
+@mixin checkbox {
+  // label {
+  display: inline-block;
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+  user-select: none;
+  input {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    // checkbox checked
+    &:checked ~ .checkmark {
+      background-color: #4bb35e;
+      border-color: #4bb35e;
+    }
+
+    // checkmark when checked */
+    &:checked ~ .checkmark:after {
+      opacity: 1;
+    }
+  }
+  // span.checkmark
+  .checkmark {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    border-radius: 2px;
+    border: solid 1px #b0b9c1;
+    transition: all .15s;
+
+    // checkmark hidden by default
+    @include check;
+  }
+}

@@ -274,7 +274,7 @@ class Main {
 	 */
 	public static $sub_elements = array(
 		'product-button'                  => '.product a.button',
-		'product-image'                   => '.product .attachment-woocommerce_thumbnail',
+		'product-image'                   => '.product .woocommerce-loop-product__link > img',
 		'product-onsale'                  => '.product .onsale',
 		'product-price'                   => '.product .price',
 		'product-rating'                  => '.product .star-rating',

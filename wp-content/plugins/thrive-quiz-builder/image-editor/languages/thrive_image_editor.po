@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: thrive-image-editor 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-16 14:19+0200\n"
+"POT-Creation-Date: 2021-03-29 15:05+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,65 +50,65 @@ msgstr ""
 msgid "Badge saved"
 msgstr ""
 
-#: includes/classes/class-tie-ajax.php:82
+#: includes/classes/class-tie-ajax.php:96
 msgid "All changes saved!"
 msgstr ""
 
-#: includes/classes/class-tie-ajax.php:87
+#: includes/classes/class-tie-ajax.php:101
 msgid "Changes could not be saved!"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:162
+#: includes/classes/class-tie-editor.php:163
 #: includes/templates/control-panel.php:117
 msgid "Copy"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:163
+#: includes/classes/class-tie-editor.php:164
 msgid "Saving..."
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:164
+#: includes/classes/class-tie-editor.php:165
 #: includes/templates/control-panel.php:140
 msgid "Your changes are auto-saved"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:165
+#: includes/classes/class-tie-editor.php:166
 msgid "Replace Image"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:166
+#: includes/classes/class-tie-editor.php:167
 msgid "Select Background Image"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:168
+#: includes/classes/class-tie-editor.php:169
 msgid "Choose background image"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:170
+#: includes/classes/class-tie-editor.php:171
 msgid "Please choose an image."
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:171
+#: includes/classes/class-tie-editor.php:172
 msgid "No image to remove, you have to to choose one before."
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:172
+#: includes/classes/class-tie-editor.php:173
 msgid "Enter your text here..."
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:173
+#: includes/classes/class-tie-editor.php:174
 msgid "Changes saved"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:174
+#: includes/classes/class-tie-editor.php:175
 msgid "Invalid width, accepted value is between 100 and 1200"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:175
+#: includes/classes/class-tie-editor.php:176
 msgid "Invalid height, accepted value is between 100 and 1200"
 msgstr ""
 
-#: includes/classes/class-tie-editor.php:176
+#: includes/classes/class-tie-editor.php:177
 msgid "Please select a template"
 msgstr ""
 

@@ -116,7 +116,7 @@ class Element extends \TCB_Element_Abstract {
 					),
 					'icon-position' => array(
 						'config'  => array(
-							'name'   => __( 'Icon Position', 'thrive-cb' ),
+							'name'    => __( 'Icon Position', 'thrive-cb' ),
 							'buttons' => array(
 								array(
 									'icon'    => '',
@@ -175,7 +175,7 @@ class Element extends \TCB_Element_Abstract {
 				),
 			),
 			'styles-templates' => array( 'hidden' => true ),
-			'layout'           => array( 'disabled_controls' => array( 'Alignment', 'Display' ) ),
+			'layout'           => array( 'disabled_controls' => array( 'Alignment', 'Display', 'Overflow', 'ScrollStyle' ) ),
 			'animation'        => array( 'disabled_controls' => array( '.anim-popup', '.anim-link' ) ),
 		);
 

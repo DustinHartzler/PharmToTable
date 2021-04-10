@@ -225,7 +225,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 		$field = (array) $field;
 
 		return array(
-			'id'    => isset( $field['FIELD_ID'] ) ? $field['FIELD_ID'] : '',
+			'id'    => isset( $field['FIELD_ID'] ) ? (string) $field['FIELD_ID'] : '',
 			'name'  => ! empty( $field['FIELD_DISPLAY_NAME'] ) ? $field['FIELD_DISPLAY_NAME'] : '',
 			'type'  => 'custom',
 			'label' => ! empty( $field['FIELD_DISPLAY_NAME'] ) ? $field['FIELD_DISPLAY_NAME'] : '',
@@ -324,21 +324,63 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 			/** @var Thrive_Dash_Api_Zoho $api */
 			$api     = $this->getApi();
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
-			$args    = array(
-				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
-			);
 
-			$this->addSubscriber( $list_id, $args );
+			list( $first_name, $last_name ) = $this->_getNameParts( ! empty( $extra['name'] ) ? $extra['name'] : '' );
+
+			$cf = array(
+				'Contact Email' => $email,
+				'First Name'    => $first_name,
+				'Last Name'     => $last_name,
+			);
 
 			$args = array(
 				'listkey'     => $list_id,
-				'contactinfo' => json_encode( array_merge($args, $custom_fields) ),
+				'contactinfo' => json_encode( array_merge( $cf, $this->_prepareCustomFieldsForApi( $custom_fields ) ) ),
 			);
 
 			$api->addSubscriber( $args );
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * Get available custom fields for this api connection
+	 *
+	 * @param null $list_id
+	 *
+	 * @return array
+	 */
+	public function getAvailableCustomFields( $list_id = null ) {
+
+		return $this->get_api_custom_fields( null, true );
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null  $list_identifier
+	 *
+	 * @return array
+	 */
+	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+		$api_fields      = $this->get_api_custom_fields( null, true );
+
+		foreach ( $api_fields as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( (string) $field['id'] === (string) $key ) {
+					$prepared_fields[ $field['name'] ] = $custom_field;
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }

@@ -37,7 +37,7 @@ class TCB_Lead_Generation_Contact_Form_Element extends TCB_Lead_Generation_Eleme
 			'icon'       => $this->icon(),
 			'class'      => 'tcb-ct-placeholder',
 			'title'      => $title,
-			'extra_attr' => 'data-ct="' . $this->tag() . '-0" data-tcb-elem-type="'.$this->tag().'" data-tcb-lg-type="contact_form" data-specific-modal="lead-generation"',
+			'extra_attr' => 'data-ct="' . $this->tag() . '-0" data-tcb-elem-type="' . $this->tag() . '" data-tcb-lg-type="contact_form" data-specific-modal="lead-generation"',
 		), true );
 	}
 

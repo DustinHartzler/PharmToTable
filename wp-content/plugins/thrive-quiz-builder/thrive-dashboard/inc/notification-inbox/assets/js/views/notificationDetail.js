@@ -29,9 +29,9 @@
 					'notification_id': self.model.get( 'id' ),
 					'_nonce': TD_Inbox.admin_nonce,
 				}
-			} ).success( function ( response ) {
+			} ).done( function ( response ) {
+				response = JSON.parse( response );
 
-				var response = JSON.parse( response );
 				if ( typeof response.total_unread !== 'undefined' ) {
 					TD_Inbox.total_unread = response.total_unread;
 

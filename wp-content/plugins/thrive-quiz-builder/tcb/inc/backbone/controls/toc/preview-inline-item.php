@@ -3,7 +3,7 @@
 	<div class="info-text orange tcb-text-center pt-5 pb-5 m-0">
 		<p class="mb-0 mt-5">
 			<strong>
-				<?php echo esc_html__( 'No headings found', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'No items found', 'thrive-cb' ); ?>
 			</strong>
 		</p></div>
 </div>

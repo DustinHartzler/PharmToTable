@@ -59,9 +59,9 @@ class TCB_Audio_Element extends TCB_Element_Abstract {
 		return array(
 			'audio'      => array(
 				'config' => array(
-					'ExternalFields'     => array(
+					'ExternalFields' => array(
 						'config'  => array(
-							'key' => 'audio',
+							'key'               => 'audio',
 							'shortcode_element' => 'audio.tcb-audio',
 						),
 						'extends' => 'CustomFields',
@@ -85,7 +85,7 @@ class TCB_Audio_Element extends TCB_Element_Abstract {
 						'css_suffix' => ' iframe',
 					),
 				),
-				'disabled_controls' => array( 'Overflow' ),
+				'disabled_controls' => array( 'Overflow', 'ScrollStyle' ),
 			),
 		);
 	}
@@ -96,6 +96,21 @@ class TCB_Audio_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'audio_element',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425842-how-to-use-the-audio-element',
+			),
+		);
 	}
 }

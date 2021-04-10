@@ -188,6 +188,9 @@ class TCB_Login_Element extends TCB_Cloud_Template_Element_Abstract {
 			'scroll'           => array(
 				'hidden' => false,
 			),
+			'layout'           => array(
+				'disabled_controls' => array(),
+			),
 		);
 
 		return array_merge( $login, $this->group_component() );
@@ -200,5 +203,20 @@ class TCB_Login_Element extends TCB_Cloud_Template_Element_Abstract {
 	 */
 	public function has_group_editing() {
 		return TCB_Login_Element_Handler::get_group_editing_options();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'login_registration',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425883-how-to-use-the-login-registration-form-element',
+			),
+		);
 	}
 }

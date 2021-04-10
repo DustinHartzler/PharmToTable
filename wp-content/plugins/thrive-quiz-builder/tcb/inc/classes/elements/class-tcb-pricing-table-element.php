@@ -32,7 +32,7 @@ class TCB_Pricing_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**
@@ -105,10 +105,26 @@ class TCB_Pricing_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 			'layout'        => array(
 				'disabled_controls' => array(
 					'Overflow',
+					'ScrollStyle',
 				),
 			),
 		);
 
 		return $pricing_table;
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'pricing_table',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425836-how-to-use-the-pricing-table-element',
+			),
+		);
 	}
 }

@@ -33,6 +33,7 @@ class TCB_Post_List_Shortcodes {
 		'tcb_post_author_role'        => 'author_role',
 		'tcb_featured_image_url'      => 'the_post_thumbnail_url',
 		'tcb_author_image_url'        => 'author_image_url',
+		'tcb_user_image_url'          => 'user_image_url',
 		'tcb_the_id'                  => 'the_id',
 		'tcb_post_list_dynamic_style' => 'tcb_post_list_dynamic_style',
 		'tcb_pagination'              => 'pagination',
@@ -366,7 +367,7 @@ class TCB_Post_List_Shortcodes {
 			return '';
 		}
 		//Safety net when we are outside postlist and a cf wants to be rendered in relation to page
-		if ( TCB_Post_List::is_outside_post_list_render() ) {
+		if ( TCB_Post_List::is_outside_post_list_render() && $attr['data-field-type'] !== 'background' ) {
 			$shortcode_data = array_map(
 				function ( $k, $v ) {
 					return $k . "=" . htmlspecialchars( $v ) . "";
@@ -378,7 +379,7 @@ class TCB_Post_List_Shortcodes {
 		}
 
 		$attr['in_postlist'] = 1;
-		$type                = 'tcb_post_custom_fields_' . $attr['data-field-type'];
+		$type                = 'tcb_post_custom_fields_' . ( $attr['data-field-type'] === 'background' ? 'image' : $attr['data-field-type'] );
 
 		$post_id = get_the_ID();
 
@@ -767,13 +768,6 @@ class TCB_Post_List_Shortcodes {
 	 * @return string
 	 */
 	public static function the_post_thumbnail_url( $data, $content, $tag ) {
-		/*
-		 * We only want to render this shortcode when we're rendering the post list
-		 * reason: this can be a shortcode inside a HTML tag ( in an img src ), and it renders in do_shortcodes_in_html_tags which is called before the actual shortcode thing
-		 */
-		if ( TCB_Post_List::is_outside_post_list_render() ) {
-			return '[' . $tag . ']';
-		}
 
 		$size = empty( $data['size'] ) ? 'full' : $data['size'];
 
@@ -804,15 +798,23 @@ class TCB_Post_List_Shortcodes {
 	 * @return string
 	 */
 	public static function author_image_url( $attr = array(), $content = '', $tag = 'tcb_author_image_url' ) {
-		/*
-		 * We only want to render this shortcode when we're rendering the post list
-		 * reason: this can be a shortcode inside a HTML tag ( in an img src ), and it renders in do_shortcodes_in_html_tags which is called before the actual shortcode thing
-		 */
-		if ( TCB_Post_List::is_outside_post_list_render() ) {
-			return '[' . $tag . ']';
-		}
 
 		return TCB_Post_List_Author_Image::author_avatar();
+	}
+
+	/**
+	 * User image url
+	 * We are calling this from the theme also
+	 *
+	 * @param array  $attr
+	 * @param string $content
+	 * @param string $tag
+	 *
+	 * @return string
+	 */
+	public static function user_image_url( $attr = array(), $content = '', $tag = 'tcb_user_image_url' ) {
+
+		return tcb_dynamic_user_image_instance( get_current_user_id() )->user_avatar();
 	}
 
 	/**

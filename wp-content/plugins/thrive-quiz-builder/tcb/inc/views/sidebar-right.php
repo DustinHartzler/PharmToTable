@@ -19,17 +19,17 @@
 				<?php tcb_icon( 'book-heart-regular', false, 'sidebar', 'active' ); ?>
 			</a> */
 			?>
-			<a href="javascript:void(0)" class="mouseenter mouseleave sidebar-item tcb-sidebar-icon-<?php echo tcb_editor()->get_sidebar_icon_availability( 'central-style' ) ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-toggle="central_style_panel" data-tooltip="<?php echo __( 'Central Style Panel', 'thrive-cb' ); ?>" data-position="left" data-tooltip-type="central-style-panel">
+			<a href="javascript:void(0)" class="mouseenter mouseleave style-panel sidebar-item tcb-sidebar-icon-<?php echo tcb_editor()->get_sidebar_icon_availability( 'central-style' ) ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-toggle="central_style_panel" data-tooltip="<?php echo __( 'Central Style Panel', 'thrive-cb' ); ?>" data-position="left" data-tooltip-type="central-style-panel">
 				<?php tcb_icon( 'central-style-panel' ); ?>
 				<?php tcb_icon( 'central-style-panel', false, 'sidebar', 'active' ); ?>
 			</a>
-			<a href="javascript:void(0)" data-position="left" class="mouseenter mouseleave sidebar-item click tcb-sidebar-icon-<?php echo tcb_editor()->get_sidebar_icon_availability( 'cloud-templates' ) ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-tooltip-type="cloud-templates"
+			<a href="javascript:void(0)" data-position="left" class="mouseenter open-templates mouseleave sidebar-item click tcb-sidebar-icon-<?php echo tcb_editor()->get_sidebar_icon_availability( 'cloud-templates' ) ?>" data-fn-mouseenter="toggleTooltip" data-fn-mouseleave="toggleTooltip" data-tooltip-type="cloud-templates"
 			   data-fn="open_templates_picker" data-tooltip="<?php echo tcb_editor()->get_templates_tab_title(); ?>">
 				<?php tcb_icon( 'cloud-download-light' ); ?>
 			</a>
 
 			<?php if ( tcb_editor()->has_settings_tab() ) : ?>
-				<a href="javascript:void(0)" class="sidebar-item" data-toggle="settings" data-position="left" data-tooltip="<?php echo __( 'Settings', 'thrive-cb' ); ?>">
+				<a href="javascript:void(0)" class="sidebar-item open-settings" data-toggle="settings" data-position="left" data-tooltip="<?php echo __( 'Settings', 'thrive-cb' ); ?>">
 					<?php tcb_icon( 'cog-light' ); ?>
 					<?php tcb_icon( 'cog-regular', false, 'sidebar', 'active' ); ?>
 				</a>

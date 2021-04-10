@@ -87,10 +87,11 @@ class TCB_Custom_Fields_Shortcode {
 		'total_sales',          //WooCommerce metadata
 		'rank_math_',           //Rank Math SEO metadata
 		'pb_original_content',  //PageBuilder meta content breaks editor localization
+		'export_id', //symbols post meta
 	);
 
 	private $video_regex = array(
-		'/https?:\/\/(.+)\.(cdn\.(vooplayer|spotlightr)\.com)\/publish\/(.+)/'                                                                  => 'vooplayer',
+		'/https?:\/\/(.+)\.(cdn\.(vooplayer|spotlightr)\.com)\/(publish|watch)\/(.+)/'                                                          => 'vooplayer',
 		'/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/'                => 'youtube',
 		'/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|list\/|playlist\?list=|playlist\?.+&list=))((\w|-){18})(?:\S+)?$/' => 'youtube',
 		'/(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|)(\d+)(?:|\/\?)/'                             => 'vimeo',
@@ -367,9 +368,35 @@ class TCB_Custom_Fields_Shortcode {
 		$args['data-classes'] = ! empty( $args['data-classes'] ) ? $args['data-classes'] : 'tve_image';
 		$args['data-css']     = ! empty( $args['data-css'] ) ? $args['data-css'] : '';
 
-		return get_avatar( $post_author, 256, '', $args['alt'], array(
+		/**
+		 * Allow vendors to filter author dynamic field
+		 * - e.g.: TA course author
+		 */
+		return get_avatar( apply_filters( 'tcb_dynamic_field_author', $post_author ), 256, '', $args['alt'], array(
 			'class'      => $args['data-classes'],
 			'extra_attr' => 'loading="lazy" data-d-f="author" title="' . $args['title'] . '" width="500" height="500" data-css="' . $args['data-css'] . '"',
+		) );
+	}
+
+	/**
+	 * Renders the dynamic filed user
+	 *
+	 * @return string
+	 */
+	private function render_dynamic_field_user( $args = array() ) {
+		$user = get_current_user_id();
+		if ( ! $user ) {
+			return '';
+		}
+
+		$args['alt']          = ! empty( $args['alt'] ) ? $args['alt'] : '';
+		$args['title']        = ! empty( $args['title'] ) ? $args['title'] : '';
+		$args['data-classes'] = ! empty( $args['data-classes'] ) ? $args['data-classes'] : 'tve_image';
+		$args['data-css']     = ! empty( $args['data-css'] ) ? $args['data-css'] : '';
+
+		return get_avatar( get_current_user_id(), 256, '', $args['alt'], array(
+			'class'      => $args['data-classes'],
+			'extra_attr' => 'loading="lazy" data-d-f="user" title="' . $args['title'] . '" width="500" height="500" data-css="' . $args['data-css'] . '"',
 		) );
 	}
 
@@ -400,6 +427,12 @@ class TCB_Custom_Fields_Shortcode {
 			) );
 		}
 		$args['data-classes'] = ! empty( $args['data-classes'] ) ? $args['data-classes'] : 'tve_image';
+
+		/**
+		 * Allow vendors to filter featured image dynamic field
+		 * - e.g.: TA course cover image for course overview post
+		 */
+		$featured_image_url = apply_filters( 'tcb_dynamic_field_featured', $featured_image_url );
 
 		return '<img loading="lazy" class="' . $args['data-classes'] . '" alt="' . $args['alt'] . '" data-id="' . 0 . '" data-d-f="featured" width="500" height="500" title="' . $args['title'] . '" src="' . $featured_image_url . '" data-css="' . $args['data-css'] . '">';
 	}
@@ -521,7 +554,11 @@ class TCB_Custom_Fields_Shortcode {
 				$params['embeded_url'] = 'https://fast.wistia.net/embed/iframe/' . $params['video_id'] . $args['data-query'];
 				break;
 			case 'vooplayer':
-				$params['video_id'] = empty( $params['video_id'] ) ? '' : $params['video_id'][3];
+				/**
+				 * 3 was never working it should have been 4 in order to  match the video id
+				 * changed to 5 since the links can be watch|publish  so the regex match is changed
+				 */
+				$params['video_id'] = empty( $params['video_id'] ) ? '' : $params['video_id'][5];
 				break;
 		}
 
@@ -582,7 +619,7 @@ class TCB_Custom_Fields_Shortcode {
 				break;
 			case 'vooplayer':
 				$params   = $this->get_video_params( $args, $params );
-				$template = '<iframe allow="autoplay" data-code="' . $params['video_id'] . '" data-provider="' . $args['data-type'] . '" class="video-player-container vooplayer tcb-responsive-video" data-playerId="' . $params['video_id'] . '" url-params="" allowtransparency="true"  name="vooplayerframe" frameborder="0" allowfullscreen="true" scrolling="no" data-src="' . $params['value'] . '" src="" style="max-width: 100%; position:relative; opacity: 1; min-width: 100%; height:100% !important; width: auto; top: auto;" data-c-f-id="' . $args['data-id'] . '"' . $params['extra'] . '"></iframe>';
+				$template = '<iframe allow="autoplay" data-code="' . $params['video_id'] . '" data-provider="' . $args['data-type'] . '" class="video-player-container vooplayer tcb-responsive-video" data-playerId="' . $params['video_id'] . '" url-params="" allowtransparency="true"  name="vooplayerframe" frameborder="0" allowfullscreen="true" scrolling="no" style="max-width: 100%; position:relative; opacity: 1; min-width: 100%; height:100% !important; width: auto; top: auto;" data-c-f-id="' . $args['data-id'] . '"' . $params['extra'] . '"></iframe>';
 				break;
 		}
 
@@ -645,6 +682,40 @@ class TCB_Custom_Fields_Shortcode {
 		}
 
 		return $html;
+	}
+
+	public function render_custom_fields_background( $args, $param ) {
+
+		if ( empty( $args['data-placeholder'] ) ) {
+			$args['data-placeholder'] = '0';
+		}
+
+		if ( empty( $args['in_postlist'] ) ) {
+			$params          = $this->get_custom_fields_shortcode_params( $args['data-id'], 'image' );
+			$dynamic_acf_key = 'dynamic_acf_page';
+		} else {
+			$params          = $param;
+			$dynamic_acf_key = 'dynamic_acf_postlist';
+		}
+
+		//if we have no cf image for a certain post
+		if ( empty( $params ) ) {
+			//if a placeholder is not set
+			if ( $args['data-placeholder'] === '0' ) {
+				if ( ! is_editor_page_raw( true ) ) {
+					return '';
+				}
+				$params['url'] = tve_editor_url( 'editor/css/images/featured_image.png' );
+			} else {
+				$params['url'] = urldecode( $args['data-placeholder'] );
+			}
+		}
+
+		return add_query_arg( array(
+			$dynamic_acf_key => 1,
+			'id'             => $args['data-id'],
+			'fallback'       => urldecode( $args['data-placeholder'] ),
+		), empty( $params['url'] )? '' : $params['url'] );
 	}
 
 	public function render_custom_fields_countdown( $args = array(), $param = null ) {
@@ -728,7 +799,10 @@ class TCB_Custom_Fields_Shortcode {
 					break;
 			}
 			$return[] = array( 'prop' => $args['data-attribute'], 'value' => $params['value'] );
+		} else {
+			return htmlspecialchars( $params['value'], ENT_QUOTES );
 		}
+
 
 		return htmlspecialchars( wp_json_encode( $return ), ENT_QUOTES );
 	}
@@ -1040,7 +1114,7 @@ class TCB_Custom_Fields_Shortcode {
 			}
 		}
 
-		return $data;
+		return TVD_Global_Shortcodes::maybe_link_wrap( $data, $args );
 	}
 
 	/**

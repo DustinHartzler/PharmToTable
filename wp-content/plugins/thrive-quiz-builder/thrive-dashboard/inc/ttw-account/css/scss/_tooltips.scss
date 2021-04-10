@@ -1,0 +1,92 @@
+// Simple and clean tooltip
+.dash-tooltip {
+  &[data-tooltip] {
+    cursor: help;
+    position: relative;
+
+    &:hover:before, &:hover:after {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &[data-tooltip]:before, &[data-tooltip]:after {
+    opacity: 0;
+    position: absolute;
+    transition: all .15s;
+    transition-delay: .2s;
+    visibility: hidden;
+    z-index: 100;
+    // top: -6px;
+  }
+
+  &[data-tooltip]:before {
+    border-color: rgba(75, 179, 94, .95) transparent transparent transparent;
+    // transform: translateX(-50%);
+    border-style: solid;
+    border-width: 6px 6px 0 6px;
+    content: "";
+  }
+
+  &[data-tooltip]:after {
+    background: rgba(75, 179, 94, .95);
+    // transform: translateX(-50%) translateY(-100%);
+    border-radius: 2px;
+    color: #fff;
+    content: attr(data-tooltip);
+    font-size: 11px;
+    font-weight: normal;
+
+    line-height: 16px;
+    min-width: 80px;
+    padding: 5px 10px;
+    pointer-events: none;
+    text-align: center;
+    max-width: 300px;
+    width: max-content;
+  }
+
+  &[data-tooltip-position='bottom']:before, &[data-tooltip-position='bottom']:after {
+    left: 50%;
+    margin-top: 8px;
+    top: 100%;
+  }
+
+  &[data-tooltip-position='bottom']:before {
+    transform: translateX(-50%) translateY(-100%) rotate(-180deg);
+  }
+
+  &[data-tooltip-position='bottom']:after {
+    transform: translateX(-50%) translateY(0%);
+  }
+
+  &[data-tooltip-position='top']:before, &[data-tooltip-position='top']:after {
+    left: 50%;
+    bottom: calc(100% + 9px);
+    // bottom: 100%;
+  }
+
+  &[data-tooltip-position='top']:before {
+    transform: translateX(-50%) translateY(-100%) rotate(0deg);
+    top: -3px;
+  }
+
+  &[data-tooltip-position='top']:after {
+    transform: translateX(-50%) translateY(0%);
+  }
+
+  &[data-tooltip-position='right']:before, &[data-tooltip-position='right']:after {
+    left: 100%;
+    margin-left: 8px;
+    top: 50%;
+  }
+
+  &[data-tooltip-position='right']:before {
+    transform: translateX(-100%) translateY(-50%) rotate(90deg);
+  }
+
+  &[data-tooltip-position='right']:after {
+    margin-left: 5px;
+    transform: translateX(0%) translateY(-50%);
+  }
+}

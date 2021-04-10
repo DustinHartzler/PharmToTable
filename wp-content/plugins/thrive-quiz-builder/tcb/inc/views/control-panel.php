@@ -19,7 +19,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php do_action( 'tcb_cpanel_top_content' ); ?>
 	</div>
 	<div class="tve-active-element no-states" data-default="<?php echo __( 'No Element Selected', 'thrive-cb' ); ?>">
-		<div class="element-name"><?php echo __( 'No Element Selected', 'thrive-cb' ); ?></div>
+		<div class="element-name-info-wrapper">
+			<div class="element-name"><?php echo __( 'No Element Selected', 'thrive-cb' ); ?></div>
+			<span class="element-info click"></span>
+		</div>
 		<div class="element-states"></div>
 	</div>
 

@@ -411,6 +411,13 @@ class TQB_Structure_Manager {
 			}
 		}
 
+		$quiz_type = TQB_Post_meta::get_quiz_type_meta( $this->quiz_id, true );
+
+		if ( empty( $quiz_type ) ) {
+			$result['error']['type'] = $this->get_error( 'no_quiz_type' );
+			$result['valid']         = false;
+		}
+
 		return $result;
 	}
 
@@ -477,6 +484,13 @@ class TQB_Structure_Manager {
 				$results_editor_t      = __( 'results page editor', $domain );
 				$results_editor_target = TQB_Product::has_access() ? '<a href="' . $results_editor_url . '" target="_blank">' . $results_editor_t . '</a>' : $results_editor_t;
 				$error_message         = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Results Page", $domain ), sprintf( 'Please create a design for your results page in the %s.', $results_editor_target ) );
+				break;
+			case 'no_quiz_type':
+				$splash_editor_t      = __( 'quiz type', $domain );
+				$splash_editor_url    = $tqb_dashboard_url . '#dashboard/quiz/' . $this->quiz_id;
+				$splash_editor_target = TQB_Product::has_access() ? '<a href="' . $splash_editor_url . '" target="_blank">' . $splash_editor_t . '</a>' : $splash_editor_t;
+				$error_message        = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a type set.", $domain ), sprintf( 'Please choose %s.', $splash_editor_target ) );
+
 				break;
 		}
 

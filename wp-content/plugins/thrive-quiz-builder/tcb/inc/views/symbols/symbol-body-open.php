@@ -1,15 +1,14 @@
 <?php
 /**
- * FileName  symbol-body-open.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @developer: Dragos Petcu
- * @company  : BitStone
+ * @package thrive-visual-editor
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
+
 ?>
 
 <?php $is_gutenberg_preview = isset( $_GET['tve_block_preview'] ); ?>
@@ -31,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <body <?php body_class(); ?> style="overflow: unset;">
 <?php if ( $is_gutenberg_preview ) { ?>
 	<style type="text/css">#wpadminbar, .symbol-extra-info {
-            display: none !important;
+			display: none !important;
         }
 
         html {

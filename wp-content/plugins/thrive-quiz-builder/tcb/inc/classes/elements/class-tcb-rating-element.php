@@ -68,31 +68,31 @@ class TCB_Rating_Element extends TCB_Element_Abstract {
 		return array(
 			'rating'           => array(
 				'config' => array(
-					'ratingValue' => array(
+					'ratingValue'    => array(
 						'config' => array(
 							'default_value' => 2.5,
 							'default_max'   => 5,
 							'max_size'      => 10,
 						),
 					),
-					'ExternalFields'       => array(
+					'ExternalFields' => array(
 						'config'  => array(
-							'key'           => 'number',
+							'key'               => 'number',
 							'shortcode_element' => '.thrv-rating',
 						),
 						'extends' => 'CustomFields',
 					),
-					'style'       => array(
+					'style'          => array(
 						'config' => array(
 							'label' => __( 'Style', 'thrive-cb' ),
 						),
 					),
-					'stylePicker' => array(
+					'stylePicker'    => array(
 						'config' => array(
 							'label' => __( 'Change style', 'thrive-cb' ),
 						),
 					),
-					'size'        => array(
+					'size'           => array(
 						'config' => array(
 							'default' => '25',
 							'min'     => '10',
@@ -101,19 +101,19 @@ class TCB_Rating_Element extends TCB_Element_Abstract {
 							'um'      => array( 'px' ),
 						),
 					),
-					'background'  => array(
+					'background'     => array(
 						'config' => array(
 							'label'   => __( 'Background', 'thrive-cb' ),
 							'options' => array( 'noBeforeInit' => false ),
 						),
 					),
-					'fill'        => array(
+					'fill'           => array(
 						'config' => array(
 							'label'   => __( 'Fill', 'thrive-cb' ),
 							'options' => array( 'noBeforeInit' => false ),
 						),
 					),
-					'outline'     => array(
+					'outline'        => array(
 						'config' => array(
 							'label'   => __( 'Outline', 'thrive-cb' ),
 							'options' => array( 'noBeforeInit' => false ),
@@ -136,6 +136,7 @@ class TCB_Rating_Element extends TCB_Element_Abstract {
 					'Width',
 					'Height',
 					'Overflow',
+					'ScrollStyle',
 				),
 			),
 			'shadow'           => array(
@@ -159,6 +160,21 @@ class TCB_Rating_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'star_rating',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425791-how-to-use-the-divider-and-star-rating-elements',
+			),
+		);
 	}
 }

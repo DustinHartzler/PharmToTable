@@ -16,6 +16,8 @@ define( 'TVE_CLOUD_TEMPLATES_FOLDER', 'tcb_content_templates' );
 define( 'TCB_MIN_WP_VERSION', '4.8' );
 define( 'TVE_GLOBAL_COLOR_VAR_CSS_PREFIX', '--tcb-color-' );
 define( 'TVE_LP_COLOR_VAR_CSS_PREFIX', '--tcb-tpl-color-' );
+define( 'TVE_DYNAMIC_VAR_CSS_PREFIX', '--tcb-dynamic-' );
+define( 'TVE_DYNAMIC_BACKGROUND_URL_VAR_CSS_PREFIX', '--tcb-dynamic-background-url-' );
 define( 'TVE_DYNAMIC_COLOR_VAR_CSS_PREFIX', '--tcb-dynamic-color-' );
 define( 'TVE_LOCAL_COLOR_VAR_CSS_PREFIX', '--tcb-local-color-' );
 define( 'TVE_GLOBAL_GRADIENT_VAR_CSS_PREFIX', '--tcb-gradient-' );
@@ -91,6 +93,7 @@ require_once TVE_TCB_ROOT_PATH . 'inc/functions.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-editor-ajax.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-editor.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-elements.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-color-manager.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-font-manager.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-icon-manager.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-post.php';
@@ -100,6 +103,7 @@ require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list.php'
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list-content.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list-author-image.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list-featured-image.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list-user-image.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list-shortcodes.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/pagination/class-tcb-pagination.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/pagination/class-tcb-pagination-load-more.php';
@@ -116,6 +120,7 @@ require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-menu-walker.php';
 require_once TVE_TCB_ROOT_PATH . 'landing-page/inc/class-tcb-landing-page.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-lightbox.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-login-element-handler.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-user-profile-handler.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/form.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/file-upload.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-show-when.php';
@@ -285,49 +290,6 @@ add_filter( 'tvd_auth_check_data', 'tcb_auth_check_data' );
 
 add_action( 'thrive_prepare_migrations', 'tcb_prepare_db_migrations' );
 
-/**
- * Add Thrive Architect to Gutenberg dropdown
- */
-
-add_action( 'admin_print_scripts-edit.php', 'gutenberg_tcb_menu' );
-
-function gutenberg_tcb_menu() {
-	if ( is_plugin_active( 'gutenberg/gutenberg.php' ) && is_plugin_active( 'thrive-visual-editor/thrive-visual-editor.php' ) && tve_tcb__license_activated() ) {
-		tve_enqueue_script( 'thrive-gutenberg-switch', tve_editor_url() . '/editor/js/admin/gutenberg-menu.js', array( 'jquery' ) );
-	}
-}
-
-/**
- * Enable Thrive Architect as editor instead of any other
- */
-
-add_filter( 'replace_editor', 'architect_init', 9, 2 );
-/**
- * @param $return
- * @param $post
- *
- * @return mixed
- */
-function architect_init( $return, $post ) {
-	global $post_type;
-	if ( isset( $_REQUEST['architect'] ) ) {
-
-		if ( true === $return && current_filter() === 'replace_editor' ) {
-			return $return;
-		}
-
-		add_filter( 'screen_options_show_screen', '__return_false' );
-
-		$post->post_title  = urldecode( $_REQUEST['title'] );
-		$post->post_status = 'draft';
-		wp_update_post( $post );
-
-		$editor_link = tcb_get_editor_url( $post->ID );
-		if ( wp_redirect( $editor_link ) ) {
-			exit;
-		}
-	}
-}
 
 if ( ! function_exists( 'tve_editor_url' ) ) {
 	/**
@@ -392,7 +354,7 @@ add_action( 'wp_head', function () {
  */
 function tcb_custom_css( $css ) {
 
-	if ( tve_dash_is_google_fonts_blocked() ) {
+	if ( function_exists( 'tve_dash_is_google_fonts_blocked' ) && tve_dash_is_google_fonts_blocked() ) {
 		$css = preg_replace( '/@import url\((\\\)?\"(http:|https:)?\/\/fonts\.(googleapis|gstatic)\.com([^)]*)\);/', '', $css );
 	}
 
@@ -523,3 +485,11 @@ function tve_reset_cloud_templates() {
 	delete_transient( tve_get_cloud_templates_transient_name() );
 }
 
+add_action( 'wp_footer', function () {
+	/**
+	 * In case the login element has refresh page and success message enabled then after refresh this show the success message
+	 */
+	echo "<script type='text/javascript'>";
+	include( 'editor/js/inline/toast-message.js' );
+	echo "</script>";
+} );

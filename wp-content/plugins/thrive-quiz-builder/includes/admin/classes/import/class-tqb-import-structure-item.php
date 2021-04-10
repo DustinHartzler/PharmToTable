@@ -6,6 +6,10 @@
  */
 class TQB_Import_Structure_Item {
 
+	const GLOBAL_COLORS_PREFIX = '--tcb-color-';
+
+	const GLOBAL_GRADIENT_PREFIX = '--tcb-gradient-';
+
 	/**
 	 * @var int
 	 */
@@ -20,6 +24,14 @@ class TQB_Import_Structure_Item {
 	 * @var string where import file exists
 	 */
 	private $_import_path;
+
+	/**
+	 * @var string holds TAR global colors
+	 */
+	private $_global_colours = array(
+		'global_colours'   => array(),
+		'global_gradients' => array(),
+	);
 
 	/**
 	 * Map for quiz results/categories
@@ -57,6 +69,20 @@ class TQB_Import_Structure_Item {
 	public function set_import_path( $path ) {
 
 		$this->_import_path = $path;
+	}
+
+	/**
+	 * Set global colors data
+	 *
+	 * @param array $data
+	 */
+	public function set_global_colours( $data ) {
+
+		foreach ( $this->_global_colours as $key => $arr ) {
+			if ( isset( $data->$key ) ) {
+				$this->_global_colours[ $key ] = (array) $data->$key;
+			}
+		}
 	}
 
 	/**
@@ -129,6 +155,8 @@ class TQB_Import_Structure_Item {
 
 			$this->_process_content( $item['tcb_fields']['inline_css'] );
 			$this->_process_content( $item['content'], $old_quiz_id );
+			$this->_update_global_colors( $item['tcb_fields']['inline_css'], self::GLOBAL_COLORS_PREFIX, 'global_colours' );
+			$this->_update_global_colors( $item['tcb_fields']['inline_css'], self::GLOBAL_GRADIENT_PREFIX, 'global_gradients' );
 
 			$new_variation_id   = $tqbdb->save_variation( $item );
 			$mapping[ $old_id ] = $new_variation_id;
@@ -254,5 +282,56 @@ class TQB_Import_Structure_Item {
 
 		$content = str_replace( $old_quiz_id . '.png', $this->quiz_id . '.png', $content );
 		$content = str_replace( TQB_Export_Step_Structure::URL_PLACEHOLDER, site_url(), $content );
+	}
+
+	/**
+	 * Add new global colors in db
+	 * Replace old color id with the new one in css
+	 *
+	 * @param string $css
+	 * @param string $prefix
+	 * @param string $key
+	 */
+	private function _update_global_colors( &$css, $prefix, $key ) {
+
+		if ( ! isset( $this->_global_colours[ $key ] ) ) {
+			return;
+		}
+
+		preg_match_all( '/' . $prefix . '[0-9]+/', $css, $matches );
+
+		$matches       = array_map(
+			function ( $item ) use ( $prefix ) {
+				return str_replace( $prefix, '', $item );
+			},
+			$matches
+		);
+		$color_ids     = array_unique( $matches[0] );
+		$option_name   = apply_filters( 'tcb_' . $key . '_option_name', 'thrv_' . $key );
+		$global_colors = get_option( $option_name, array() );
+		$data          = $this->_global_colours[ $key ];
+
+		foreach ( $color_ids as $id ) {
+			$color = array_filter(
+				$data,
+				function ( $item ) use ( $id ) {
+					return (int) $item->id === (int) $id;
+				}
+			);
+
+			$color = array_values( $color );
+			$color = isset( $color[0] ) ? (array) $color[0] : array();
+
+			if ( ! empty( $color ) ) {
+				$color_id    = count( $global_colors );
+				$color['id'] = $color_id;
+
+				$css = str_replace( $prefix . $id, $prefix . $color_id, $css );
+
+				$global_colors[] = $color;
+			}
+		}
+
+		update_option( $option_name, $global_colors );
 	}
 }

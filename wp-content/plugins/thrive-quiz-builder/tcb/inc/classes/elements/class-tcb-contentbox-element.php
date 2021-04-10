@@ -62,7 +62,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 		$content_box = array(
 			'contentbox' => array(
 				'config' => array(
-					'ContentPalettes'      => array(
+					'ContentPalettes'  => array(
 						'config'  => array(),
 						'extends' => 'Palettes',
 					),
@@ -118,6 +118,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 									'value' => 'flex-end',
 								),
 							),
+							'info'    => true,
 						),
 						'extends' => 'ButtonGroup',
 					),
@@ -160,7 +161,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 				),
 			),
 			'layout'     => array(
-				'config' => array(
+				'config'            => array(
 					'Position' => array(
 						'important'          => true,
 						'disabled_positions' => array( 'auto' ),
@@ -170,6 +171,7 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 						'important' => true,
 					),
 				),
+				'disabled_controls' => array(),
 			),
 			'background' => array(
 				'config' => array(
@@ -219,5 +221,20 @@ class TCB_ContentBox_Element extends TCB_Element_Abstract {
 	 */
 	public function category() {
 		return self::get_thrive_basic_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'contentbox',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425774-how-to-use-the-content-box-element',
+			),
+		);
 	}
 }

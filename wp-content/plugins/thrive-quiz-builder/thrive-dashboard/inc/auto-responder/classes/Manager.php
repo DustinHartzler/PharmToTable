@@ -36,6 +36,7 @@ class Thrive_Dash_List_Manager {
 			'convertkit'           => 'Thrive_Dash_List_Connection_ConvertKit',
 			'drip'                 => 'Thrive_Dash_List_Connection_Drip',
 			'facebook'             => 'Thrive_Dash_List_Connection_Facebook',
+			'fluentcrm'            => 'Thrive_Dash_List_Connection_FluentCRM',
 			'get-response'         => 'Thrive_Dash_List_Connection_GetResponse',
 			'google'               => 'Thrive_Dash_List_Connection_Google',
 			'gotowebinar'          => 'Thrive_Dash_List_Connection_GoToWebinar',

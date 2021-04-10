@@ -18,10 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Rest_Api {
 	public static $namespace = 'tcb/v1';
-	public static $route = '/woo';
+	public static $route     = '/woo';
 
 	public static function register_routes() {
-		register_rest_route( self::$namespace, self::$route . '/render_shop', array(
+		register_rest_route( static::$namespace, static::$route . '/render_shop', array(
 			array(
 				'methods'             => \WP_REST_Server::EDITABLE,
 				'callback'            => array( __CLASS__, 'render_shop' ),
@@ -29,7 +29,7 @@ class Rest_Api {
 			),
 		) );
 
-		register_rest_route( self::$namespace, self::$route . '/render_product_categories', array(
+		register_rest_route( static::$namespace, static::$route . '/render_product_categories', array(
 			array(
 				'methods'             => \WP_REST_Server::EDITABLE,
 				'callback'            => array( __CLASS__, 'render_product_categories' ),

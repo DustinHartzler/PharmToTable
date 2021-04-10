@@ -5,11 +5,17 @@
 			<span class="locked-star">
 			<?php tcb_icon( 'star' ) ?>
 		</span>
-			<div class="template-locked-text">
+			<div class="template-locked-text
+			<#= (item.thumb_size.h * 281)/item.thumb_size.w < 150 ? 'button-only': '' #>
+			<#=	(item.thumb_size.h * 281)/item.thumb_size.w < 63 ? 'small': '' #>">
 				<p><?php echo __( 'Available in the full version of Thrive Architect', 'thrive-cb' ); ?></p>
 				<a href="https://thrivethemes.com/architect/upgrade/?utm_campaign=tarc-upgrade&utm_medium=tarc-lite&utm_source=ttb-ui&utm_content=tarc-element&utm_term=ttb-customer" title="Thrive Architect" target="_blank"><?php echo __( 'Upgrade', 'thrive-cb' ); ?></a>
 			</div>
 			<# } #>
+			<div class="cb-template-name">
+				<#=item.name #>
+				<?php tcb_icon( 'check-light' ) ?>
+			</div>
 			<div class="cb-template-thumbnail lazy-loading">
 				<img class="tve-lazy-img" src='<?php echo tve_editor_css(); ?>/images/loading-spinner.gif' data-src="<#= item.thumb #>" data-ratio="<#= parseFloat(parseInt(item.thumb_size ? item.thumb_size.h : 150) / parseInt(item.thumb_size ? item.thumb_size.w : 150)).toFixed(3) #>"/>
 			</div>

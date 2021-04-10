@@ -138,7 +138,7 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 
 		/** @var Thrive_Dash_Api_MailerLite $api */
 		$api = $this->getApi();
-
+		$args['fields'] = array();
 		$args['email'] = $arguments['email'];
 
 		if ( ! empty( $first_name ) ) {
@@ -332,26 +332,71 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 			$groupsApi = $api->groups();
 
 			/** @var Thrive_Dash_Api_MailerLite_Subscribers $subscribersApi */
-			$subscribersApi = $api->groups();
+			$subscribersApi = $api->subscribers();
 
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
-				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
+				'email'  => $email,
+				'name'   => ! empty( $extra['name'] ) ? $extra['name'] : '',
+				'fields' => array(),
 			);
 
 			$this->addSubscriber( $list_id, $args );
 
-			$args['fields'] = $custom_fields;
+			$args['fields'] = $this->_prepareCustomFieldsForApi( $custom_fields );
 
 			$groupsApi->addSubscriber( $list_id, $args );
 
 			$subscriber = $subscribersApi->search( $email );
 
-			return $subscriber->id;
+			return ! empty( $subscriber[0] ) ? $subscriber[0]->id : 0;
 
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * Get available custom fields for this api connection
+	 *
+	 * @param null $list_id
+	 *
+	 * @return array
+	 */
+	public function getAvailableCustomFields( $list_id = null ) {
+
+		return $this->get_api_custom_fields( null, true );
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null  $list_identifier
+	 *
+	 * @return array
+	 */
+	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+		$api_fields      = $this->get_api_custom_fields( array( 'list_id' => $list_identifier ), true );
+
+		foreach ( $api_fields as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( (int) $field['id'] === (int) $key ) {
+					$chunks = explode( ' ', $field['name'] );
+					$chunks = array_map( 'strtolower', $chunks );
+					$cf_key = implode( '_', $chunks );
+
+					$prepared_fields[ $cf_key ] = $custom_field;
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }

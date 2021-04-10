@@ -201,12 +201,13 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 		if ( ! empty( $data['send_confirmation'] ) ) {
 			try {
 				$messsage = array(
-					'from'      => $from_email,
-					'to'        => array( $data['sender_email'] ),
-					'subject'   => $data['confirmation_subject'],
-					'text'      => '',
-					'html'      => empty ( $data['confirmation_html'] ) ? '' : $data['confirmation_html'],
-					'multipart' => true,
+					'from'       => $from_email,
+					'to'         => array( $data['sender_email'] ),
+					'subject'    => $data['confirmation_subject'],
+					'text'       => '',
+					'html'       => empty ( $data['confirmation_html'] ) ? '' : $data['confirmation_html'],
+					'h:Reply-To' => $from_email,
+					'multipart'  => true,
 				);
 
 				$mailgun->sendMessage( "$domain", $messsage );
@@ -299,7 +300,10 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	 * @return mixed
 	 */
 	protected function _apiInstance() {
-		return new Thrive_Dash_Api_Mailgun( $this->param( 'key' ) );
+		$zone     = $this->param( 'zone' );
+		$endpoint = $zone && $zone === 'europe' ? 'api.eu.mailgun.net' : 'api.mailgun.net';
+
+		return new Thrive_Dash_Api_Mailgun( $this->param( 'key' ), $endpoint );
 	}
 
 	/**

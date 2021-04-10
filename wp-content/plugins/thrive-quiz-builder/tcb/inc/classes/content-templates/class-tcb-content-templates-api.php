@@ -321,10 +321,13 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 
 		$config = json_decode( $wp_filesystem->get_contents( $folder . 'data.json' ), true );
 
+		$type = empty( $config['type'] ) ? '' : $config['type'] . '/';
+
 		$uri = trailingslashit( str_replace( array(
 				'http://',
 				'https://',
-			), '//', $upload['baseurl'] ) ) . TVE_CLOUD_TEMPLATES_FOLDER . '/' . $config['type'] . '/images/';
+			), '//', $upload['baseurl'] ) ) . TVE_CLOUD_TEMPLATES_FOLDER . '/' . $type . 'images/';
+
 		$this->replace_images( $config['head_css'], $config['image_map'], $uri );
 		$this->replace_images( $config['content'], $config['image_map'], $uri );
 

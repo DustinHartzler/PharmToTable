@@ -201,7 +201,7 @@ class TCB_Admin_Ajax {
 						}
 					}
 
-					update_option( 'tve_user_templates', $templates );
+					update_option( 'tve_user_templates', $templates, 'no' );
 				}
 
 				return array( 'text' => __( 'The category was deleted!', 'thrive-cb' ) );
@@ -296,7 +296,7 @@ class TCB_Admin_Ajax {
 					unset( $templates[ $model['id'] ]['id_category'] );
 				}
 
-				update_option( 'tve_user_templates', $templates );
+				update_option( 'tve_user_templates', $templates, 'no' );
 
 				return array( 'text' => __( 'The template saved!', 'thrive-cb' ) );
 				break;
@@ -321,7 +321,7 @@ class TCB_Admin_Ajax {
 
 				// Delete Template
 				unset( $templates[ $id ] );
-				update_option( 'tve_user_templates', array_values( array_reverse( $templates ) ) );
+				update_option( 'tve_user_templates', array_values( array_reverse( $templates ) ), 'no' );
 
 
 				return array( 'text' => __( 'The template was deleted!', 'thrive-cb' ) );

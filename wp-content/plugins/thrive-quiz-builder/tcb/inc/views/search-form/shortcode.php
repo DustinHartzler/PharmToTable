@@ -1,4 +1,4 @@
-<div id="<?php echo $data['wrapper-id']; ?>" class="thrv_wrapper thrv-search-form <?php echo $data['wrapper-class']; ?>" data-css="<?php echo $data['data-css-form']; ?>" data-tcb-events="<?php echo esc_html( $data['wrapper-events'] ); ?>" data-ct-name="<?php echo $data['data-ct-name']; ?>" data-ct="<?php echo $data['data-ct']; ?>">
+<div id="<?php echo $data['wrapper-id']; ?>" <?php echo isset( $data['data-list'] ) ? 'data-list="' . $data['data-list'] . '"' : ''; ?> class="thrv_wrapper thrv-search-form <?php echo $data['wrapper-class']; ?>" data-css="<?php echo $data['data-css-form']; ?>" data-tcb-events="<?php echo esc_html( $data['wrapper-events'] ); ?>" data-ct-name="<?php echo $data['data-ct-name']; ?>" data-ct="<?php echo $data['data-ct']; ?>">
 	<form role="search" method="get" action="<?php echo home_url(); ?>">
 		<div class="thrv-sf-submit" data-button-layout="<?php echo $data['button-layout']; ?>" data-css="<?php echo $data['data-css-submit']; ?>">
 			<button type="submit">

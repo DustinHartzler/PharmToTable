@@ -339,7 +339,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 							'type'  => 'to',
 						),
 					),
-					'headers'        => array( 'Reply-To' => '' ),
+					'headers'        => array( 'Reply-To' => $from_email ),
 					'merge'          => true,
 					'merge_language' => 'mailchimp',
 				);

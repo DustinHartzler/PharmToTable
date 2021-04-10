@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="mb-5 hide-tablet hide-mobile sf-button-layout-ctrl"><?php echo __( 'Button Layout', 'thrive-cb' ); ?></div>
 		<div class="tve-control hide-tablet hide-mobile sf-button-layout-ctrl" data-view="ButtonLayout"></div>
 		<hr class="hide-tablet hide-mobile sf-button-layout-ctrl">
-		<div class="control-grid">
+		<div class="control-grid add-post-type-control">
 			<div class="label"><?php echo __( 'Search the following content', 'thrive-cb' ); ?></div>
 			<div class="full">
 				<button class="tcb-right tve-button blue click" data-fn="addPostType">

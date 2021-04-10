@@ -1,12 +1,17 @@
 <?php
 /**
- * FileName  class-tcb-symbols-dashboard.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @developer: Dragos Petcu
- * @company  : BitStone
+ * @package thrive-visual-editor
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
+ * Class TCB_Symbols_Dashboard
+ */
 class TCB_Symbols_Dashboard {
 
 	/**

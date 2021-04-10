@@ -533,12 +533,15 @@ class TQB_Quiz_Manager {
 
 							$shortcode_content['page']['html_canvas'] = do_shortcode( $html );
 							$shortcode_content['page']['html_canvas'] = str_replace( Thrive_Quiz_Builder::QUIZ_RESULT_SHORTCODE, $result, $shortcode_content['page']['html_canvas'] ); //old implementation
+							$shortcode_content['page']['html_canvas'] = $shortcode_content['page']['html_canvas'] . get_post_meta( $quiz_id, 'tqb_quiz_badge_css', true );
 						}
 					}
 				}
 
 				/**
-				 * Fired when a quiz is completed by the user
+				 * The hook is triggered when a quiz result is loaded. The hook can be fired multiple times, if the user completes the same quiz multiple times.
+				 * </br>
+				 * Example use case:-  Send an email based on the quiz result.  Start the quiz result to a CRM / Autoresponder.  Start an evergreen campaign based on the quiz result.
 				 *
 				 * @param array Quiz Details
 				 * @param array User Details
@@ -601,7 +604,9 @@ class TQB_Quiz_Manager {
 		$question         = $question_manager->get_quiz_questions( array( 'id' => $answer['question_id'] ), true );
 
 		/**
-		 * Fired when an answer is submitted by the user
+		 * The hook is triggered when a user submits the answer to a question of the quiz. It can be fired multiple times, if the user completes the same quiz multiple times.
+		 * </br>
+		 * Example use case:- Send the answer selected to your analytics platform
 		 *
 		 * @param array Quiz Details
 		 * @param array Question Details

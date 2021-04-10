@@ -294,12 +294,6 @@ class TCB_Login_Element_Handler {
 				'icon'         => 'change',
 				'preview_icon' => 'change',
 			),
-			array(
-				'key'          => 'showMessage',
-				'label'        => __( 'Show success notification', 'thrive_cb' ),
-				'icon'         => 'notif',
-				'preview_icon' => 'notif',
-			),
 		);
 
 		/**
@@ -434,10 +428,10 @@ class TCB_Login_Element_Handler {
 
 	public static function get_default_settings() {
 		return array(
-			'submit_action'                        => 'showMessage',
+			'submit_action'                        => 'refresh',
 			'redirect_url'                         => '',
 			'success_message'                      => 'Success',
-			'post_register_action'                 => 'showMessage',
+			'post_register_action'                 => 'refresh',
 			'post_register_action.success_message' => 'Success',
 			'post_register_action.redirect_url'    => '',
 		);

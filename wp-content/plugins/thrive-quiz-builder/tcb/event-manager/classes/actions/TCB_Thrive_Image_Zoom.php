@@ -19,7 +19,7 @@ class TCB_Thrive_Image_Zoom extends TCB_Event_Action_Abstract {
 	 * @return string
 	 */
 	public function getName() {
-		return __( 'Open Image', 'thrive-cb' );
+		return __( 'Open image', 'thrive-cb' );
 	}
 
 	/**
@@ -78,7 +78,7 @@ class TCB_Thrive_Image_Zoom extends TCB_Event_Action_Abstract {
 	}
 
 	public function get_options() {
-		return array( 'labels' => __( 'Open Image', 'thrive-cb' ) );
+		return array( 'labels' => __( 'Open image', 'thrive-cb' ) );
 	}
 
 	public function render_editor_settings() {

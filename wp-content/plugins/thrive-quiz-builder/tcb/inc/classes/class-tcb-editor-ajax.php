@@ -302,7 +302,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		 */
 		public function action_save_user_template() {
 			$key                = $this->param( 'id' );
-			$existing_templates = get_option( 'tve_user_templates' );
+			$existing_templates = get_option( 'tve_user_templates', array() );
 			$template_name      = str_replace( '\\', '', $this->param( 'template_name' ) );
 			$new_template       = array(
 				'name'        => $template_name,
@@ -357,6 +357,10 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 
 			}
 
+			if ( empty( $existing_templates ) || ! is_array( $existing_templates ) ) {
+				$existing_templates = array();
+			}
+
 			$new_template = apply_filters( 'tcb_hook_save_user_template', $new_template );
 			if ( is_numeric( $key ) ) {
 				$existing_templates [ $key ] = $new_template;
@@ -364,7 +368,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 				$existing_templates [] = $new_template;
 			}
 
-			update_option( 'tve_user_templates', $existing_templates );
+			update_option( 'tve_user_templates', $existing_templates, 'no' );
 
 			return array(
 				'text'              => is_numeric( $key ) ? __( 'Template updated!', 'thrive-cb' ) : __( 'Template saved!', 'thrive-cb' ),
@@ -1045,8 +1049,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 				1,
 			) ) ? $this->param( 'custom_name' ) : 0;
 
-			$max_name_characters       = 50;
-			$global_colors_option_name = apply_filters( 'tcb_global_colors_option_name', 'thrv_global_colours' );
+			$max_name_characters = 50;
 
 			if ( empty( $name ) || empty( $color ) || ! is_string( $color ) || ! is_string( $name ) ) {
 				/**
@@ -1066,7 +1069,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 				$this->error( 'Invalid color name! It must contain a maximum of ' . $max_name_characters . ' characters' );
 			}
 
-			$global_colors = get_option( $global_colors_option_name, array() );
+			$global_colors = tcb_color_manager()->get_list();;
 			if ( ! is_array( $global_colors ) ) {
 				/**
 				 * Security check: if the option is not empty and somehow the stored value is not an array, make it an array.
@@ -1133,7 +1136,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 				}
 			}
 
-			update_option( $global_colors_option_name, $global_colors );
+			tcb_color_manager()->update_list( $global_colors );
 
 			/**
 			 * Added possibility for external functionality to hook into here
@@ -1344,13 +1347,13 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 					$global_styles[ $identifier ]['name'] = $name;
 				}
 
-				if ( is_numeric( $active ) && 0 === intval( $active ) ) {
-					unset( $global_styles[ $identifier ] );
-				}
-
 				$smart_config = $this->param( 'smart_config', '' );
 				if ( ! empty( $smart_config ) ) {
 					$global_styles[ $identifier ]['smart_config'] = json_decode( stripslashes( $smart_config ), true );;
+				}
+
+				if ( is_numeric( $active ) && (int) $active === 0 ) {
+					unset( $global_styles[ $identifier ] );
 				}
 			}
 
@@ -1667,6 +1670,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 				'tve_globals'      => $this->param( 'tve_globals' ),
 				'from_existing_id' => $this->param( 'from_existing_id' ),
 				'element_type'     => $this->param( 'element_type' ),
+				'thumb'            => $this->param( 'thumb' ),
 			);
 
 			if ( ! ( $id = $this->param( 'id' ) ) ) {
@@ -2157,7 +2161,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 
 			$existing_templates[ $id ]['name'] = $new_name;
 
-			update_option( 'tve_user_templates', $existing_templates );
+			update_option( 'tve_user_templates', $existing_templates, 'no' );
 
 			return array(
 				'success' => true,
@@ -2262,7 +2266,7 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 		 * @return array
 		 */
 		public function action_dismiss_tooltip() {
-			$response = [];
+			$response = array();
 
 			$user = wp_get_current_user();
 			/* double check, just to be sure */
@@ -2274,6 +2278,26 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 			}
 
 			return $response;
+		}
+
+		/**
+		 * Get the intercom article from a specific url
+		 *
+		 * @return mixed
+		 */
+		public function action_get_intercom_article() {
+			$key = $this->param( 'url_key' );
+
+			$article_url = tve_get_intercom_article_url( $key );
+
+			return empty( $article_url ) ? '' : tve_dash_api_remote_get( $article_url, array(
+				'headers' => array(
+					'Authorization' => 'Bearer dG9rOjcyYjBkZGU5X2FiZTJfNGJiM19iNTY4X2Q2NzVmNDNiOGZjMToxOjA=',
+					'Accept'        => 'application/json',
+					'Content-Type'  => 'application/json',
+				),
+			) );
+
 		}
 	}
 }

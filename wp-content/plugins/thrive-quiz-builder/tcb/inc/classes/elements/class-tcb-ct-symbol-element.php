@@ -174,9 +174,24 @@ class TCB_Ct_Symbol_Element extends TCB_Symbol_Element_Abstract {
 		$templates = $this->get();
 		array_splice( $templates, $key, 1 );
 
-		update_option( 'tve_user_templates', $templates );
+		update_option( 'tve_user_templates', $templates, 'no' );
 
 		return $this->get_list( $templates );
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'templates_symbols',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425777-how-to-use-the-templates-and-symbols-element-formerly-content-template',
+			),
+		);
 	}
 }
 

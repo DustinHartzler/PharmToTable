@@ -9,17 +9,12 @@ class Thrive_Dash_Api_Mailgun_RestClient {
 	 */
 	private $apiKey;
 
+	private $apiEndpoint;
+
 	/**
 	 * @var string
 	 */
 	protected $url;
-
-	/**
-	 * Required prefix for requests
-	 *
-	 * @var string
-	 */
-	public $prefix = 'https://api.mailgun.net/v3/';
 
 	/**
 	 * @param string $apiKey
@@ -28,8 +23,9 @@ class Thrive_Dash_Api_Mailgun_RestClient {
 	 * @param bool   $ssl
 	 */
 	public function __construct( $apiKey, $apiEndpoint, $apiVersion, $ssl ) {
-		$this->apiKey = $apiKey;
-		$this->url    = $this->generateEndpoint( $apiEndpoint, $apiVersion, $ssl );
+		$this->apiKey      = $apiKey;
+		$this->apiEndpoint = $apiEndpoint;
+		$this->url         = $this->generateEndpoint( $apiEndpoint, $apiVersion, $ssl );
 	}
 
 	/**
@@ -46,7 +42,7 @@ class Thrive_Dash_Api_Mailgun_RestClient {
 	 */
 	public function post( $endpointUrl, $postData = array(), $files = array() ) {
 
-		$endpointUrl = strpos( $endpointUrl, 'https://api.mailgun.net/' ) !== false ? $endpointUrl : $this->prefix . $endpointUrl;
+		$endpointUrl = strpos( $endpointUrl, $this->apiEndpoint ) !== false ? $endpointUrl : $this->url.$endpointUrl;
 
 		$response = tve_dash_api_remote_post( $endpointUrl, array(
 			'body'      => $postData,

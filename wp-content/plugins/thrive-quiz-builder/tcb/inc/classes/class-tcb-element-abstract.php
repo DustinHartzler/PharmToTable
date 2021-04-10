@@ -323,7 +323,10 @@ abstract class TCB_Element_Abstract {
 				),
 			),
 			'layout'     => array(
-				'order' => 100,
+				'order'             => 100,
+				'disabled_controls' => array(
+					'ScrollStyle',
+				),
 			),
 			'background' => array(
 				'order'             => 110,
@@ -407,6 +410,7 @@ abstract class TCB_Element_Abstract {
 			'expanded_state_apply_inline' => $this->expanded_state_apply_inline(),
 			'has_group'                   => $this->has_group_editing(),
 			'category'                    => $this->category(),
+			'info'                        => $this->info(),
 		);
 		if ( ( $inherit_from = $this->inherit_components_from() ) ) {
 			$config['inherit_from'] = $inherit_from;
@@ -728,6 +732,10 @@ abstract class TCB_Element_Abstract {
 	 */
 	public function promoted() {
 		return false;
+	}
+
+	public function info() {
+		return '';
 	}
 
 	/**

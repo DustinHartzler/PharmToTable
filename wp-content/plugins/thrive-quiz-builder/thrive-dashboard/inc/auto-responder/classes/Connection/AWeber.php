@@ -191,9 +191,11 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 			# create a subscriber
 			$params = array(
 				'email'      => $arguments['email'],
-				'name'       => $arguments['name'],
 				'ip_address' => tve_dash_get_ip(),
 			);
+			if ( ! empty( $arguments['name'] ) ) {
+				$params['name'] = $arguments['name'];
+			}
 
 			if ( isset( $arguments['url'] ) ) {
 				$params['custom_fields']['Web Form URL'] = $arguments['url'];
@@ -216,9 +218,11 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 			}
 
 			if ( ( $existing_subscribers = $list->subscribers->find( array( 'email' => $params['email'] ) ) ) && $existing_subscribers->count() === 1 ) {
-				$subscriber              = $existing_subscribers->current();
-				$subscriber->name        = $params['name'];
-				$subscriber->ad_tracking = $params['name'];
+				$subscriber = $existing_subscribers->current();
+				if ( ! empty( $arguments['name'] ) ) {
+					$subscriber->name        = $params['name'];
+					$subscriber->ad_tracking = $params['name'];
+				}
 				if ( ! empty( $params['custom_fields'] ) ) {
 					$subscriber->custom_fields = $params['custom_fields'];
 				}
@@ -245,7 +249,8 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 			// Update custom fields
 			// Make another call to update custom mapped fields in order not to break the subscription call,
 			// if custom data doesn't pass API custom fields validation
-			if ( ! empty( $arguments['tve_mapping'] ) ) {
+			$mapping = unserialize( base64_decode( $arguments['tve_mapping'] ));
+			if ( ! empty( $mapping ) ) {
 				$this->updateCustomFields( $list_identifier, $arguments, $params );
 			}
 
@@ -299,9 +304,9 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	}
 
 	/**
-	 * @param array $params  which may contain `list_id`
-	 * @param bool  $force   make a call to API and invalidate cache
-	 * @param bool  $get_all where to get lists with their custom fields
+	 * @param array $params which may contain `list_id`
+	 * @param bool $force make a call to API and invalidate cache
+	 * @param bool $get_all where to get lists with their custom fields
 	 *
 	 * @return array
 	 */
@@ -552,25 +557,30 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
 
 		try {
-			/** @var Thrive_Dash_Api_AWeber $aweber */
+			/** @var Thrive_Dash_Api_AWeber $api */
 			$api     = $this->getApi();
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
 			);
+
+			if ( ! empty( $extra['name'] ) ) {
+				$args['name'] = $extra['name'];
+			}
 
 			$this->addSubscriber( $list_id, $args );
 
-			$account  = $aweber->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
+			$account  = $api->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
 			$list_url = "/accounts/{$account->id}/lists/{$list_id}";
 			$list     = $account->loadFromUrl( $list_url );
 
 			$existing_subscribers = $list->subscribers->find( array( 'email' => $email ) );
 
 			if ( $existing_subscribers && $existing_subscribers->count() === 1 ) {
-				$subscriber                = $existing_subscribers->current();
-				$subscriber->custom_fields = $custom_fields;
+				$subscriber      = $existing_subscribers->current();
+				$prepared_fields = $this->_prepareCustomFieldsForApi( $custom_fields, $list_id );
+
+				$subscriber->custom_fields = array_merge( $subscriber->data['custom_fields'], $prepared_fields );
 
 				$subscriber->save();
 
@@ -580,5 +590,44 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null $list_identifier
+	 *
+	 * @return array
+	 */
+	protected function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		if ( empty( $list_identifier ) ) { // list identifier required here
+			return array();
+		}
+
+		$api_fields = $this->get_api_custom_fields( array( 'list_id' => $list_identifier ), true );
+
+		if ( empty( $api_fields[ $list_identifier ] ) ) {
+			return array();
+		}
+
+		$prepared_fields = array();
+
+		foreach ( $api_fields[ $list_identifier ] as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( (int) $field['id'] === (int) $key ) {
+					$prepared_fields[ $field['name'] ] = $custom_field;
+
+					unset( $custom_fields[ $key ] ); // avoid unnecessary loops
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }

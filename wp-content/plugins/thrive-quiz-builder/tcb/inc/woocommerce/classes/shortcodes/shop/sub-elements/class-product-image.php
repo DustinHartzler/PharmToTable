@@ -64,6 +64,9 @@ class Product_Image extends \TCB_Element_Abstract {
 
 		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
 
+		$components['borders']['config']['Borders']['important'] = true;
+		$components['borders']['config']['Corners']['important'] = true;
+
 		return $components;
 	}
 }

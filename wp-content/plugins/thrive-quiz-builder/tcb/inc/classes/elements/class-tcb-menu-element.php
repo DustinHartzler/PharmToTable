@@ -99,11 +99,6 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 						),
 						'extends' => 'Select',
 					),
-					'ModalPicker'        => array(
-						'config' => array(
-							'label' => __( 'Template', 'thrive-cb' ),
-						),
-					),
 					'OrderList'          => array(
 						'config' => array(
 							'sortable'   => true,
@@ -121,6 +116,82 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 								'style_1' => 'Underline',
 								'style_2' => 'Double line',
 								'style_3' => 'Brackets',
+							),
+						),
+						'extends' => 'Select',
+					),
+					'ContentAlign'       => array(
+						'to'      => '.menu-item',
+						'config'  => array(
+							'name'    => __( 'Content Alignment', 'thrive-cb' ),
+							'buttons' => array(
+								array(
+									'icon'    => 'format-align-left',
+									'text'    => '',
+									'value'   => 'left',
+									'default' => true,
+								),
+								array(
+									'icon'  => 'format-align-center',
+									'text'  => '',
+									'value' => 'center',
+								),
+								array(
+									'icon'  => 'format-align-right',
+									'text'  => '',
+									'value' => 'right',
+								),
+							),
+						),
+						'extends' => 'ButtonGroup',
+					),
+					'Align'              => array(
+						'config'     => array(
+							'buttons' => array(
+								array(
+									'icon'    => 'a_left',
+									'value'   => 'left',
+									'tooltip' => __( 'Align Left', 'thrive-cb' ),
+								),
+								array(
+									'icon'    => 'a_center',
+									'value'   => 'center',
+									'default' => true,
+									'tooltip' => __( 'Align Center', 'thrive-cb' ),
+								),
+								array(
+									'icon'    => 'a_right',
+									'value'   => 'right',
+									'tooltip' => __( 'Align Right', 'thrive-cb' ),
+								),
+								array(
+									'text'    => 'FULL',
+									'value'   => 'full',
+									'tooltip' => __( 'Full Width', 'thrive-cb' ),
+								),
+							),
+						),
+						'css_suffix' => '.tve-vertical-menu',
+					),
+					'MenuWidth'          => array(
+						'config'     => array(
+							'default' => '0',
+							'min'     => '10',
+							'max'     => '1080',
+							'label'   => __( 'Menu width', 'thrive-cb' ),
+							'um'      => array( 'px', '%' ),
+							'css'     => 'max-width',
+						),
+						'css_suffix' => '.tve-vertical-menu',
+						'extends'    => 'Slider',
+					),
+					'DropdownDirection'  => array(
+						'config'  => array(
+							'name'    => __( 'Expand Style', 'thrive-cb' ),
+							'options' => array(
+								'vm-toggle' => __( 'Toggle', 'thrive-cb' ),
+								'vmd-right' => __( 'Drop right', 'thrive-cb' ),
+								'vmd-left'  => __( 'Drop left', 'thrive-cb' ),
 							),
 						),
 						'extends' => 'Select',
@@ -148,11 +219,27 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 					'MenuDisplay'        => array(
 						'config'  => array(
 							'name'    => '',
-							'left'    => __( 'Horizontal', 'thrive-cb' ),
-							'right'   => __( 'Hamburger', 'thrive-cb' ),
+							'label'   => __( 'Toggle hamburger', 'thrive-cb' ),
 							'default' => true,
 						),
-						'extends' => 'SwitchToggle',
+						'extends' => 'Switch',
+					),
+					'MenuDirection'      => array(
+						'config'  => array(
+							'buttons' => array(
+								array(
+									'value'   => 'horizontal',
+									'text'    => __( 'Horizontal', 'thrive-cb' ),
+									'default' => true,
+								),
+								array(
+									'value' => 'vertical',
+									'text'  => __( 'Vertical', 'thrive-cb' ),
+								),
+							),
+							'name'    => __( 'Type', 'thrive-cb' ),
+						),
+						'extends' => 'ButtonGroup',
 					),
 					'MenuSpacing'        => array(
 						'config'  => array(
@@ -321,8 +408,9 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 					'Alignment'        => array(
 						'override_buttons' => array(
 							array( 'icon' => 'a_left', 'value' => 'left', 'data' => array( 'tooltip' => 'Align Left' ) ),
-							array( 'icon' => 'a_center', 'value' => 'none', 'default' => true, 'data' => array( 'tooltip' => 'Align Center' ) ),
+							array( 'icon' => 'a_center', 'value' => 'center', 'default' => true, 'data' => array( 'tooltip' => 'Align Center' ) ),
 							array( 'icon' => 'a_right', 'value' => 'right', 'data' => array( 'tooltip' => 'Align Right' ) ),
+							array( 'text' => 'FULL', 'value' => 'full', 'tooltip' => __( 'Full Width', 'thrive-cb' ), ),
 						),
 					),
 				),
@@ -338,7 +426,7 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**
@@ -380,6 +468,11 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 
 	public function get_icon_styles() {
 		return array(
+			'none'    => array(
+				'label' => 'None',
+				'up'    => '',
+				'box'   => '',
+			),
 			'style_1' => array(
 				'label' => 'Angle',
 				'up'    => '<path d="M151.5 347.8L3.5 201c-4.7-4.7-4.7-12.3 0-17l19.8-19.8c4.7-4.7 12.3-4.7 17 0L160 282.7l119.7-118.5c4.7-4.7 12.3-4.7 17 0l19.8 19.8c4.7 4.7 4.7 12.3 0 17l-148 146.8c-4.7 4.7-12.3 4.7-17 0z"/>',
@@ -466,5 +559,20 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 	 */
 	public function get_template_tag() {
 		return 'menu_v2';
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'menu',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425832-how-to-use-the-custom-menu-element',
+			),
+		);
 	}
 }

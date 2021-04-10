@@ -205,9 +205,16 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 	public function addSubscriber( $list_identifier, $arguments ) {
 
 		/** @var Thrive_Dash_Api_ActiveCampaign $api */
-		$api = $this->getApi();
+		$api        = $this->getApi();
+		$name_array = array();
+		if ( ! empty( $arguments['name'] ) ) {
+			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			$name_array = array(
+				'firstname' => $first_name,
+				'lastName'  => $last_name
+			);
+		}
 
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
 
 		// Get contact
 		try {
@@ -230,15 +237,13 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		// Prepared args for passing to subscribe/update methods
 		$prepared_args = array(
 			'email'            => ! empty( $arguments['email'] ) ? sanitize_email( $arguments['email'] ) : '',
-			'firstname'        => $first_name,
-			'lastName'         => $last_name,
 			'phone'            => empty( $arguments['phone'] ) ? '' : sanitize_text_field( $arguments['phone'] ),
 			'form_id'          => empty( $arguments['activecampaign_form'] ) ? 0 : sanitize_text_field( $arguments['activecampaign_form'] ),
 			'organizationName' => '',
 			'tags'             => ! empty( $arguments['activecampaign_tags'] ) ? trim( $arguments['activecampaign_tags'], ',' ) : '',
 			'ip'               => null,
 		);
-
+		$prepared_args = array_merge( $prepared_args, $name_array );
 		// Add or update subscriber
 		try {
 
@@ -300,8 +305,8 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 	 * Update custom fields
 	 *
 	 * @param string|int $list_identifier
-	 * @param array      $arguments     form data
-	 * @param array      $prepared_args prepared array for subscription
+	 * @param array $arguments form data
+	 * @param array $prepared_args prepared array for subscription
 	 *
 	 * @return bool|string
 	 */
@@ -534,13 +539,16 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
 			);
+
+			if ( ! empty( $extra['name'] ) ) {
+				$args['name'] = $extra['name'];
+			}
 
 			$this->addSubscriber( $list_id, $args );
 
 			$args['contact']       = $api->call( 'contact_view_email', array( 'email' => $email ) );
-			$args['custom_fields'] = $custom_fields;
+			$args['custom_fields'] = $this->_prepareCustomFieldsForApi( $custom_fields );
 
 			$api->updateSubscriber( $list_id, $args );
 
@@ -549,5 +557,24 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null $list_identifier
+	 *
+	 * @return array
+	 */
+	protected function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+
+		foreach ( $custom_fields as $key => $custom_field ) {
+			$prepared_fields["field[{$key}], 0"] = sanitize_text_field( $custom_field );
+		}
+
+		return $prepared_fields;
 	}
 }

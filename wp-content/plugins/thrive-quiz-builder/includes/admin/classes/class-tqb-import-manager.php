@@ -346,6 +346,7 @@ class TQB_Import_Manager {
 			$structure_item = new TQB_Import_Structure_Item( $this->_quiz_id );
 			$structure_item->set_import_path( $this->_get_imports_path() );
 			$structure_item->set_results_map( $this->_results_map );
+			$structure_item->set_global_colours( json_decode( $this->_get_file_content( 'global_colours.json' ) ) );
 
 			/**
 			 * Import structure post/page
@@ -411,6 +412,14 @@ class TQB_Import_Manager {
 
 			if ( ! empty( $attachment['url'] ) ) {
 				$badge_url = $attachment['url'];
+
+				/**
+				 * Force the new img url to be used for share badge
+				 * Replacing just site url is not enough because the image might be uploaded in a different folder structure and the url would be wrong
+				 */
+				$css = '<style> #tie-html-canvas > div:first-of-type {background-image: url("' . $badge_url . '")!important;} </style>';
+
+				update_post_meta( $this->_quiz_id, 'tqb_quiz_badge_css', $css );
 			}
 		}
 

@@ -20,7 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php echo __( 'Edit Form Elements', 'thrive-cb' ); ?>
 			</button>
 		</div>
-		<div class="tve-control" data-view="ModalPicker"></div>
 		<div class="tve-control hide-states" data-view="FormPalettes"></div>
 		<div class="tve-control pt-5" data-key="connectionType" data-view="ButtonGroup"></div>
 		<div class="connection-controls" data-connection="api">
@@ -33,7 +32,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="no-api tve-control api-connections-list" data-view="ApiConnections"></div>
 			<hr class="mt-10">
 			<div class="control-grid">
-				<div class="label"><?php echo __( 'Form fields', 'thrive-cb' ); ?></div>
+				<div class="label">
+					<?php echo __( 'Form fields', 'thrive-cb' ); ?>
+					<span class="click" data-type="help" data-url="lg_custom_fields" data-link="https://help.thrivethemes.com/en/articles/4425882-how-to-add-a-custom-field-to-the-lead-generation-element" data-fn="openInstructionsLightbox"><?php tcb_icon( 'help-instructions' ); ?></span>
+				</div>
 				<div class="full">
 					<a class="tcb-right click tve-lg-add-field" data-fn="addLGField">
 						<i class="mr-5">

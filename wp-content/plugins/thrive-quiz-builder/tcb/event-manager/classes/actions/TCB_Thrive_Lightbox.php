@@ -38,7 +38,7 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 		 * @return string
 		 */
 		public function getName() {
-			return 'Open Thrive Lightbox';
+			return 'Open Thrive lightbox';
 		}
 
 		/**
@@ -161,8 +161,6 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 				tve_output_extra_custom_fonts_css( $lightbox_id );
 			}
 
-			$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
-
 			if ( tve_get_post_meta( $lightbox_id, 'tve_has_masonry' ) ) {
 				wp_script_is( 'jquery-masonry' ) || wp_enqueue_script( 'jquery-masonry', array( 'jquery' ) );
 			}
@@ -184,7 +182,7 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 
 		public function get_options() {
 			return array(
-				'labels' => __( 'Open Lightbox', 'thrive-cb' ),
+				'labels' => __( 'Open lightbox', 'thrive-cb' ),
 				'data'   => self::lightbox_data(),
 			);
 		}
@@ -244,12 +242,12 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 		 */
 		public static function animations() {
 			return array(
-				'instant'      => __( 'Instant (No animation)', 'thrive-cb' ),
+				'instant'      => __( 'Instant (no animation)', 'thrive-cb' ),
 				'zoom_in'      => __( 'Zoom', 'thrive-cb' ),
-				'zoom_out'     => __( 'Zoom Out', 'thrive-cb' ),
+				'zoom_out'     => __( 'Zoom out', 'thrive-cb' ),
 				'rotate'       => __( 'Rotational', 'thrive-cb' ),
-				'slide_top'    => __( 'Slide in from Top', 'thrive-cb' ),
-				'slide_bottom' => __( 'Slide in from Bottom', 'thrive-cb' ),
+				'slide_top'    => __( 'Slide in from top', 'thrive-cb' ),
+				'slide_bottom' => __( 'Slide in from bottom', 'thrive-cb' ),
 				'lateral'      => __( 'Lateral', 'thrive-cb' ),
 			);
 		}

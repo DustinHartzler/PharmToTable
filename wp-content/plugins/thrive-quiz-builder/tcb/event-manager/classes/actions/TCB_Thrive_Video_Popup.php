@@ -32,7 +32,7 @@ class TCB_Thrive_Video_Popup extends TCB_Event_Action_Abstract {
 	 * @return string
 	 */
 	public function getName() {
-		return __( 'Open Video', 'thrive-cb' );
+		return __( 'Open video', 'thrive-cb' );
 	}
 
 	/**
@@ -108,7 +108,7 @@ class TCB_Thrive_Video_Popup extends TCB_Event_Action_Abstract {
 	}
 
 	public function get_options() {
-		return array( 'labels' => __( 'Open Video', 'thrive-cb' ) );
+		return array( 'labels' => __( 'Open video', 'thrive-cb' ) );
 	}
 
 	public function render_editor_settings() {
@@ -296,7 +296,7 @@ class TCB_Video_Wistia extends TCB_Video_Base {
 	public function get_html() {
 
 		return sprintf(
-			'<div class="wistia_embed wistia_async_%s popover=true %s">Wistia popup</div>',
+			'<div class="wistia_embed wistia_async_%s popover=true %s"></div>',
 			$this->get_id(),
 			$this->get_params()
 		);

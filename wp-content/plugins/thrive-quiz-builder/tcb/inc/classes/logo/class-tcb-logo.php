@@ -129,7 +129,7 @@ class TCB_Logo {
 
 		/* embed the img in a link instead of wrapping it in a div (if an url exists) */
 		if ( empty( $attr['href'] ) ) {
-			if ( empty( $logo_url ) ) {
+			if ( empty( $logo_url ) || ! empty( $attr['data-remove-href'] ) ) {
 				unset( $attr['href'] );
 			} else {
 				$attr['href'] = $logo_url;

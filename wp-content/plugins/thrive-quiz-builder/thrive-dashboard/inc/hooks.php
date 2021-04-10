@@ -24,7 +24,7 @@ function tve_dash_init_action() {
 	/**
 	 * Run any database migrations
 	 */
-	if ( is_admin() ) {
+	if ( defined( 'TVE_TESTS_RUNNING' ) || is_admin() ) {
 		TD_DB_Manager::collect_migration_managers();
 	}
 }
@@ -91,7 +91,7 @@ function tve_dash_admin_menu() {
 			/**
 			 * in order to not include the page in the menu -> use null as the first parameter
 			 */
-			'parent_slug' => defined( 'TVE_DEBUG' ) && TVE_DEBUG ? 'tve_dash_section' : null,
+			'parent_slug' => tve_dash_is_debug_on() ? 'tve_dash_section' : null,
 			'page_title'  => __( 'Thrive UI toolkit', TVE_DASH_TRANSLATE_DOMAIN ),
 			'menu_title'  => __( 'Thrive UI toolkit', TVE_DASH_TRANSLATE_DOMAIN ),
 			'capability'  => 'manage_options',
@@ -173,6 +173,13 @@ function tve_dash_admin_enqueue_scripts( $hook ) {
 	if ( tve_dash_needs_enqueue( $hook ) ) {
 		tve_dash_enqueue();
 	}
+
+	/**
+	 * Enqueue roboto from gutenberg blocks
+	 */
+	if ( ! tve_dash_is_google_fonts_blocked() && ( 'post.php' == $hook || 'post-new.php' == $hook ) ) {
+		tve_dash_enqueue_style( 'tve-block-font', '//fonts.googleapis.com/css?family=Roboto:400,500,700' );
+	}
 }
 
 /**
@@ -194,7 +201,7 @@ function tve_dash_admin_dequeue_conflicting( $hook ) {
  * enqueue the dashboard CSS and javascript files
  */
 function tve_dash_enqueue() {
-	$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
+	$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 
 	tve_dash_enqueue_script( 'tve-dash-main-js', TVE_DASH_URL . '/js/dist/tve-dash' . $js_suffix, array(
 		'jquery',
@@ -205,14 +212,14 @@ function tve_dash_enqueue() {
 	wp_enqueue_script( 'tve-dash-api-wistia-popover', '//fast.wistia.com/assets/external/popover-v1.js', array(), '', true );
 
 	$options = array(
-		'nonce'         => wp_create_nonce( 'tve-dash' ),
-		'dash_url'      => TVE_DASH_URL,
-		'actions'       => array(
+		'nonce'              => wp_create_nonce( 'tve-dash' ),
+		'dash_url'           => TVE_DASH_URL,
+		'actions'            => array(
 			'backend_ajax'        => 'tve_dash_backend_ajax',
 			'ajax_delete_api_log' => 'tve_dash_api_delete_log',
 			'ajax_retry_api_log'  => 'tve_dash_api_form_retry',
 		),
-		'routes'        => array(
+		'routes'             => array(
 			'settings'          => 'generalSettings',
 			'license'           => 'license',
 			'active_states'     => 'activeState',
@@ -225,7 +232,7 @@ function tve_dash_enqueue() {
 			'delete_token'      => 'deleteToken',
 			'change_capability' => 'changeCapability',
 		),
-		'translations'  => array(
+		'translations'       => array(
 			'UnknownError'      => __( "Unknown error", TVE_DASH_TRANSLATE_DOMAIN ),
 			'Deleting'          => __( 'Deleting...', TVE_DASH_TRANSLATE_DOMAIN ),
 			'Testing'           => __( 'Testing...', TVE_DASH_TRANSLATE_DOMAIN ),
@@ -238,16 +245,17 @@ function tve_dash_enqueue() {
 			'RequestError'      => 'Request error, please contact Thrive developers !',
 			'Copy'              => 'Copy',
 		),
-		'products'      => array(
+		'products'           => array(
 			TVE_Dash_Product_LicenseManager::ALL_TAG => 'All products',
 			TVE_Dash_Product_LicenseManager::TCB_TAG => 'Thrive Architect',
 			TVE_Dash_Product_LicenseManager::TL_TAG  => 'Thrive Leads',
 			TVE_Dash_Product_LicenseManager::TCW_TAG => 'Thrive Clever Widgets',
 		),
-		'license_types' => array(
+		'license_types'      => array(
 			'individual' => __( 'Individual product', TVE_DASH_TRANSLATE_DOMAIN ),
 			'full'       => __( 'Full membership', TVE_DASH_TRANSLATE_DOMAIN ),
 		),
+		'is_polylang_active' => is_plugin_active( 'polylang/polylang.php' ),
 	);
 
 
@@ -359,6 +367,15 @@ function tve_dash_backbone_templates() {
  */
 function tve_dash_is_google_fonts_blocked() {
 	return (bool) get_option( 'tve_google_fonts_disable_api_call', '' );
+}
+
+/**
+ * Returns the disable state of the google fonts
+ *
+ * @return bool
+ */
+function tve_dash_allow_video_src() {
+	return (bool) get_option( 'tve_allow_video_src', '' );
 }
 
 /**
@@ -775,11 +792,13 @@ function tve_dash_on_user_login_failed( $username, $error = null ) {
  */
 function tve_trigger_core_user_login_action( $user_login, $user_form_data, $user ) {
 	/**
-	 * Fires when a user logs in on the platform
+	 * This hook is fired when a user logs into the platform.The hook can be fired multiple times per user.
+	 * </br>
+	 * Example use case:- Show the users specific content depending on the login URL
 	 *
 	 * @param string Username
-	 * @param array User Form Data
-	 * @param WP_User|null WP_User object of the logged-in user.
+	 * @param array User Form Data [href = #formdata]
+	 * @param WP_User|null WP_User [href = #user]
 	 *
 	 * @api
 	 */

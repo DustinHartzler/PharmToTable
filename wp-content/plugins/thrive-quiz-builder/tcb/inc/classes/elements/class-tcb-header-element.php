@@ -1,10 +1,13 @@
 <?php
 /**
- * FileName  class-tcb-footer-element.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @company  : BitStone
+ * @package thrive-visual-editor
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 /**
  * Class TCB_Footer_Element
@@ -109,7 +112,7 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 							'default' => '1080',
 							'min'     => '1',
 							'max'     => '1980',
-							'label'   => __( 'Content Width', 'thrive-cb' ),
+							'label'   => __( 'Content width', 'thrive-cb' ),
 							'um'      => array( 'px' ),
 							'css'     => 'max-width',
 						),
@@ -127,11 +130,11 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 					),
 					'HeaderPosition'     => array(
 						'config'  => array(
-							'name'       => 'Header Position',
+							'name'       => 'Header position',
 							'full-width' => true,
 							'buttons'    => array(
-								array( 'value' => 'push', 'text' => __( 'Push Content' ), 'default' => true ),
-								array( 'value' => 'over', 'text' => __( 'Over Content' ) ),
+								array( 'value' => 'push', 'text' => __( 'Push content' ), 'default' => true ),
+								array( 'value' => 'over', 'text' => __( 'Over content' ) ),
 							),
 						),
 						'extends' => 'ButtonGroup',
@@ -141,7 +144,7 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 							'default' => '80',
 							'min'     => '1',
 							'max'     => '1000',
-							'label'   => __( 'Content Minimum Height', 'thrive-cb' ),
+							'label'   => __( 'Content minimum height', 'thrive-cb' ),
 							'um'      => array( 'px', 'vh' ),
 							'css'     => 'min-height',
 						),
@@ -159,7 +162,7 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 					),
 					'VerticalPosition'   => array(
 						'config'  => array(
-							'name'    => __( 'Vertical Position', 'thrive-cb' ),
+							'name'    => __( 'Vertical position', 'thrive-cb' ),
 							'buttons' => array(
 								array(
 									'icon'    => 'top',
@@ -178,6 +181,16 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 						),
 						'to'      => $content_selector,
 						'extends' => 'ButtonGroup',
+					),
+					'StateSelect'        => array(
+						'config'  => array(
+							'name'    => __( 'Header state', 'thrive-cb' ),
+							'options' => array(
+								'tve-default-state' => __( 'On load', 'thrive-cb' ),
+								'tve-scroll-state'  => __( 'On scroll', 'thrive-cb' ),
+							),
+						),
+						'extends' => 'Select',
 					),
 				),
 			),

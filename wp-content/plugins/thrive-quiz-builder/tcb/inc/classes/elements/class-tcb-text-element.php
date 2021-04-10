@@ -201,6 +201,7 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 				),
 				'disabled_controls' => array(
 					'Overflow',
+					'ScrollStyle',
 				),
 			),
 			'borders'    => array(
@@ -241,5 +242,20 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 	 */
 	public function category() {
 		return self::get_thrive_basic_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'text',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425764-how-to-use-the-text-element',
+			),
+		);
 	}
 }

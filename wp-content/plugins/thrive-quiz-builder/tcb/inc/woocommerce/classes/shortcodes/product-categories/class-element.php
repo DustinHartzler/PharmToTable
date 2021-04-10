@@ -241,6 +241,9 @@ class Element extends \TCB_Element_Abstract {
 					),
 				),
 			),
+			'layout'             => array(
+				'disabled_controls' => array(),
+			),
 		);
 
 		return $components;

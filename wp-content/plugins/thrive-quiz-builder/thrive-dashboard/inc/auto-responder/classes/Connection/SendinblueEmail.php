@@ -217,6 +217,7 @@ class Thrive_Dash_List_Connection_SendinblueEmail extends Thrive_Dash_List_Conne
 					'subject' => $data['confirmation_subject'],
 					'html'    => empty ( $data['confirmation_html'] ) ? '' : $data['confirmation_html'],
 					'text'    => '',
+					'replyto' => array( $from_email, '' ),
 				);
 				$sendinblue->send_email( $options );
 			} catch ( Exception $e ) {

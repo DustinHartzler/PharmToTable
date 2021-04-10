@@ -82,5 +82,18 @@ module.exports = {
 		}
 
 		return forceImportant;
+	},
+	/**
+	 * Give proper name for Login Page element in the Templates modal
+	 * @param name
+	 * @param type
+	 * @return {string}
+	 */
+	'tcb.cloud_templates.element_name': ( name, type ) => {
+		if ( type === 'tvd_login_screen' ) {
+			name = 'Login Screen'
+		}
+
+		return name;
 	}
 }

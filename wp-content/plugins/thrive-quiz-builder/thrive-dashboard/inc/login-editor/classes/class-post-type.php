@@ -186,7 +186,7 @@ class Post_Type {
 			static::NAME,
 			array(
 				'public'              => isset( $_GET[ TVE_EDITOR_FLAG ] ),
-				'publicly_queryable'  => true,
+				'publicly_queryable'  => is_user_logged_in(),
 				'query_var'           => false,
 				'exclude_from_search' => true,
 				'rewrite'             => false,

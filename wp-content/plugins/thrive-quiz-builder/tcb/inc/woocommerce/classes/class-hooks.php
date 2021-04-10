@@ -133,7 +133,11 @@ class Hooks {
 	 *
 	 * @return array
 	 */
-	public static function tcb_alter_cloud_template_meta( $template_data = array(), $meta, $do_shortcode ) {
+	public static function tcb_alter_cloud_template_meta( $template_data, $meta, $do_shortcode ) {
+		if ( ! is_array( $template_data ) ) {
+			$template_data = array();
+		}
+
 		if ( $do_shortcode && in_array( $template_data['type'], array( 'header', 'footer' ) ) && ! empty( $template_data['content'] ) ) {
 			/* the main reason for calling this is to render woo widgets such as Product Search which rely on __CONFIG__s */
 			$template_data['content'] = tve_thrive_shortcodes( $template_data['content'], is_editor_page_raw( true ) );

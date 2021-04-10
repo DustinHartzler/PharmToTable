@@ -273,6 +273,15 @@ class TCB_Hooks {
 		 * Add custom post types to post visibility options blacklist
 		 */
 		add_filter( 'tcb_post_visibility_options_availability', array( __CLASS__, 'tve_tqb_post_visibility_options' ) );
+
+		/**
+		 * Add info article url for Quiz element
+		 */
+		add_filter( 'thrive_kb_articles', static function ( $articles ) {
+			$articles['quiz'] = 'https://api.intercom.io/articles/4426055';
+
+			return $articles;
+		} );
 	}
 
 	/**

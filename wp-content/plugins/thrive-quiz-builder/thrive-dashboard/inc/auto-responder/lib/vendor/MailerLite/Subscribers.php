@@ -15,7 +15,7 @@ class Thrive_Dash_Api_MailerLite_Subscribers extends Thrive_Dash_Api_MailerLite_
 	public function getGroups( $subscriberId, $params = array() ) {
 		$this->endpoint .= $subscriberId . '/groups';
 
-		$response = $this->restClient->get( $endpoint, $params );
+		$response = $this->restClient->get( $this->endpoint, $params );
 
 		return $response['body'];
 	}
@@ -36,7 +36,7 @@ class Thrive_Dash_Api_MailerLite_Subscribers extends Thrive_Dash_Api_MailerLite_
 			$this->endpoint .= '/' . $type;
 		}
 
-		$response = $this->restClient->get( $endpoint, $params );
+		$response = $this->restClient->get( $this->endpoint, $params );
 
 		return $response['body'];
 	}
@@ -51,9 +51,7 @@ class Thrive_Dash_Api_MailerLite_Subscribers extends Thrive_Dash_Api_MailerLite_
 	public function search( $query ) {
 		$this->endpoint .= '/search';
 
-		$response = $this->restClient->get( $this->endpoint, array( 'query' => $query ) );
-
-		return $response['body'];
+		return $this->restClient->get( $this->endpoint, array( 'query' => $query ) );
 	}
 
 }

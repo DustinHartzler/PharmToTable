@@ -45,7 +45,8 @@ require_once TVE_DASH_PATH . '/inc/smart-site/classes/class-tvd-rest-controller.
 require_once TVE_DASH_PATH . '/inc/smart-site/classes/endpoints/class-tvd-groups-controller.php';
 require_once TVE_DASH_PATH . '/inc/smart-site/classes/endpoints/class-tvd-fields-controller.php';
 require_once TVE_DASH_PATH . '/inc/access-manager/class-tvd-am.php';
-require_once TVE_DASH_PATH . '/inc/marketing/class-tvd-marketing-utils.php';
+require_once TVE_DASH_PATH . '/inc/marketing/functions.php';
+require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-update-manager.php';
 
 /**
  * AUTO-LOADERS

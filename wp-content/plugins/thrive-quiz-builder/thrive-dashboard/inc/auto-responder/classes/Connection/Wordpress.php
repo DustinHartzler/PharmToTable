@@ -205,9 +205,7 @@ class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_
 			require_once( ABSPATH . '/wp-admin/includes/user.php' );
 		}
 		$user_roles = get_editable_roles();
-		if ( ! isset( $user_roles['subscriber'] ) ) {
-			return array();
-		}
+
 		unset( $user_roles['administrator'], $user_roles['editor'] );
 
 		return $user_roles;

@@ -64,15 +64,15 @@ class TCB_Countdown_Old_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		$components = array(
-			'countdown_old'  => array(
+			'countdown_old' => array(
 				'config' => array(
-					'CompleteText' => array(
+					'CompleteText'   => array(
 						'config'  => array(
 							'label' => __( 'Text to show on complete', 'thrive-cb' ),
 						),
 						'extends' => 'Textarea',
 					),
-					'style'        => array(
+					'style'          => array(
 						'config' => array(
 							'label'   => __( 'Style', 'thrive-cb' ),
 							'items'   => array(
@@ -92,20 +92,20 @@ class TCB_Countdown_Old_Element extends TCB_Element_Abstract {
 							'default' => 'tve_countdown_1',
 						),
 					),
-					'EndDate'      => array(
+					'EndDate'        => array(
 						'config'  => array(
 							'label' => __( 'End Date', 'thrive-cb' ),
 						),
 						'extends' => 'DatePicker',
 					),
-					'ExternalFields'       => array(
+					'ExternalFields' => array(
 						'config'  => array(
-							'key'           => 'countdown',
+							'key'               => 'countdown',
 							'shortcode_element' => '.thrv_countdown_timer',
 						),
 						'extends' => 'CustomFields',
 					),
-					'Color'        => array(
+					'Color'          => array(
 						'css_suffix' => ' .t-caption',
 						'config'     => array(
 							'default'             => 'f00',
@@ -120,7 +120,7 @@ class TCB_Countdown_Old_Element extends TCB_Element_Abstract {
 						),
 						'extends'    => 'ColorPicker',
 					),
-					'Hour'         => array(
+					'Hour'           => array(
 						'config'  => array(
 							'inline'    => true,
 							'name'      => __( 'H', 'thrive-cb' ),
@@ -131,7 +131,7 @@ class TCB_Countdown_Old_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Input',
 					),
-					'Minute'       => array(
+					'Minute'         => array(
 						'config'  => array(
 							'inline'    => true,
 							'name'      => __( 'M', 'thrive-cb' ),
@@ -144,17 +144,18 @@ class TCB_Countdown_Old_Element extends TCB_Element_Abstract {
 					),
 				),
 			),
-			'typography' => array(
+			'typography'    => array(
 				'hidden' => true,
 			),
-			'shadow'     => array(
+			'shadow'        => array(
 				'config' => array(
 					'disabled_controls' => array( 'text' ),
 				),
 			),
-			'layout'     => array(
+			'layout'        => array(
 				'disabled_controls' => array(
 					'Overflow',
+					'ScrollStyle',
 				),
 			),
 		);
@@ -168,6 +169,6 @@ class TCB_Countdown_Old_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 }

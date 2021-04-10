@@ -43,6 +43,11 @@ class TCB_Post_List_Content {
 	public static function get_content( $attr ) {
 		global $tcb_read_more_link;
 		global $post;
+
+		/**
+		 * Do a wp-query post-data setup for the current post;
+		 * If this is a post list and the loop finishes, we call setup_postdata again after the loop ( @see TCB_Post_List::render() ) in order to restore things to normal
+		 */
 		setup_postdata( $post );
 
 		/* if the post content is not inside the post list, it means this is called from TTB -> return the regular full content without changing anything */

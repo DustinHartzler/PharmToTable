@@ -1,11 +1,13 @@
 <?php
 /**
- * FileName  default.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @developer: Dragos Petcu
- * @company  : BitStone
+ * @package thrive-visual-editor
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 ?>
 <?php $symbol_id = get_the_ID(); ?>
 <?php $symbol_title = get_the_title(); ?>
@@ -17,7 +19,8 @@
 $shortcode_class = '';
 if ( $symbol_vars['css_class'] === 'thrv_header' ) {
 	$symbol_vars['css_class'] .= ' tve-default-state';
-	$shortcode_class          = 'tve-default-state';
+
+	$shortcode_class = 'tve-default-state';
 }
 ?>
 

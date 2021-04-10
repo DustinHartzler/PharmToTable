@@ -181,19 +181,21 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 			$arguments = (array) $arguments;
 		}
 
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+		$merge_tags = array();
+		if ( ! empty( $arguments['name'] ) ) {
+			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			$merge_tags = array(
+				'NAME'      => $first_name,
+				'FIRSTNAME' => $first_name,
+				'SURNAME'   => $last_name,
+				'VORNAME'   => $first_name,
+				'NACHNAME'  => $last_name,
+				'LASTNAME'  => $last_name,
+			);
+		}
 
 		/** @var Thrive_Dash_Api_Sendinblue $api */
 		$api = $this->getApi();
-
-		$merge_tags = array(
-			'NAME'      => $first_name,
-			'FIRSTNAME' => $first_name,
-			'SURNAME'   => $last_name,
-			'VORNAME'   => $first_name,
-			'NACHNAME'  => $last_name,
-			'LASTNAME'  => $last_name,
-		);
 
 		if ( ! empty( $arguments['phone'] ) ) {
 			// SendinBlue does not accept phone numbers starting with 0 or other special chars
@@ -405,19 +407,62 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
 			);
+
+			if ( ! empty( $extra['name'] ) ) {
+				$args['name'] = $extra['name'];
+			}
 
 			$this->addSubscriber( $list_id, $args );
 
-			$args['attributes'] = $custom_fields;
+			$args['attributes'] = $this->_prepareCustomFieldsForApi( $custom_fields );
 
 			$subscriber = $api->create_update_user( $args );
 
-			return $subscriber['data']['id'];
+			return ! empty( $subscriber['data']['id'] ) ? $subscriber['data']['id'] : 0;
 
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * Get available custom fields for this api connection
+	 *
+	 * @param null $list_id
+	 *
+	 * @return array
+	 */
+	public function getAvailableCustomFields( $list_id = null ) {
+
+		return $this->get_api_custom_fields( null, true );
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null  $list_identifier
+	 *
+	 * @return array
+	 */
+	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+		$api_fields      = $this->get_api_custom_fields( null, true );
+
+		foreach ( $api_fields as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( $field['id'] === $key ) {
+					$prepared_fields[ $key ] = $custom_field;
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }

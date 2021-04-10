@@ -117,7 +117,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 			'styles-templates' => array( 'hidden' => true ),
 			'typography'       => array( 'hidden' => true ),
 			'layout'           => array(
-				'disabled_controls' => array( 'MaxWidth', 'Float', 'hr', 'Position', 'PositionFrom', 'Display', 'Overflow' ),
+				'disabled_controls' => array( 'MaxWidth', 'Float', 'hr', 'Position', 'PositionFrom', 'Display', 'Overflow', 'ScrollStyle' ),
 			),
 			'post_list'        => array(
 				'order'  => 1,
@@ -125,7 +125,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 					'Type'            => array(
 						'config'  => array(
 							'default' => 'grid',
-							'name'    => __( 'Display Type', 'thrive-cb' ),
+							'name'    => __( 'Display type', 'thrive-cb' ),
 							'buttons' => array(
 								array(
 									'icon'    => '',
@@ -152,7 +152,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 							'default' => '3',
 							'min'     => '1',
 							'max'     => '10',
-							'label'   => __( 'Columns Number', 'thrive-cb' ),
+							'label'   => __( 'Columns', 'thrive-cb' ),
 							'um'      => array( '' ),
 						),
 						'extends' => 'Slider',
@@ -161,7 +161,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 						'config'  => array(
 							'min'   => '0',
 							'max'   => '240',
-							'label' => __( 'Vertical Space', 'thrive-cb' ),
+							'label' => __( 'Vertical space', 'thrive-cb' ),
 							'um'    => array( 'px' ),
 						),
 						'extends' => 'Slider',
@@ -170,7 +170,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 						'config'  => array(
 							'min'   => '0',
 							'max'   => '240',
-							'label' => __( 'Horizontal Space', 'thrive-cb' ),
+							'label' => __( 'Horizontal space', 'thrive-cb' ),
 							'um'    => array( 'px' ),
 						),
 						'extends' => 'Slider',
@@ -180,7 +180,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 						'config'  => array(
 							'default' => TCB_Pagination::NONE,
 							/* if this is the control from the post list, change the name a bit */
-							'name'    => __( 'Pagination Type', 'thrive-cb' ),
+							'name'    => __( 'Pagination type', 'thrive-cb' ),
 							'options' => $pagination_types,
 						),
 						'extends' => 'Select',
@@ -211,7 +211,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 					'WordsTrim'       => array(
 						'config'  => array(
-							'name'      => __( 'Word Count', 'thrive-cb' ),
+							'name'      => __( 'Word count', 'thrive-cb' ),
 							'default'   => 12,
 							'maxlength' => 2,
 							'min'       => 1,
@@ -220,7 +220,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 					'ReadMoreText'    => array(
 						'config'  => array(
-							'label'       => __( 'Read More Text', 'thrive-cb' ),
+							'label'       => __( 'Read more text', 'thrive-cb' ),
 							'default'     => '',
 							'placeholder' => __( 'e.g. Continue reading', 'thrive-cb' ),
 						),
@@ -236,14 +236,14 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 					'Featured'        => array(
 						'config'  => array(
 							'name'  => '',
-							'label' => __( 'Show Featured Content' ),
+							'label' => __( 'Show featured content' ),
 							'info'  => true,
 						),
 						'extends' => 'Switch',
 					),
 					'NumberOfItems'   => array(
 						'config'  => array(
-							'name'      => __( 'Number of Items', 'thrive-cb' ),
+							'name'      => __( 'Number of items', 'thrive-cb' ),
 							'default'   => get_option( 'posts_per_page' ),
 							'maxlength' => 4,
 							'min'       => 1,
@@ -263,6 +263,21 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'post_list',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425844-how-to-use-the-post-list-element-in-thrive-architect',
+			),
+		);
 	}
 }

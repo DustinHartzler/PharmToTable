@@ -50,21 +50,36 @@ class TQB_Export_Step_Structure extends TQB_Export_Step_Abstract {
 		$this->_export_structure_item( $this->structure['splash'] );
 		$this->_export_structure_item( $this->structure['optin'] );
 		$this->_export_structure_item( $this->structure['results'] );
+		$this->_export_colors();
 
 		return true;
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private function _export_colors() {
+
+		$data = array(
+			'global_colours'   => get_option( apply_filters( 'tcb_global_colors_option_name', 'thrv_global_colours' ), array() ),
+			'global_gradients' => get_option( apply_filters( 'tcb_global_gradients_option_name', 'thrv_global_gradients' ) ),
+		);
+
+		$this->write_data_to_file( $data, 'global_colours.json' );
 	}
 
 	/**
 	 * Export Result page Dynamic Content
 	 *
 	 * @param array $variation
+	 * @param int   $page_id
 	 *
 	 * @throws Exception
 	 */
-	private function _export_dynamic_content( &$variation ) {
+	private function _export_dynamic_content( &$variation, $page_id = 0 ) {
 		$variation['dynamic_content'] = array();
 
-		$variation_manager = new TQB_Variation_Manager( $this->quiz->ID, $this->structure['results'] );
+		$variation_manager = new TQB_Variation_Manager( $this->quiz->ID, $page_id );
 		$intervals         = $variation_manager->get_page_variations( array( 'parent_id' => $variation['id'] ) );
 
 		foreach ( (array) $intervals as $interval ) {
@@ -111,8 +126,8 @@ class TQB_Export_Step_Structure extends TQB_Export_Step_Abstract {
 			$variation['content']                  = $this->_export_content_files( $variation['content'] );
 			$variation['tcb_fields']['inline_css'] = $this->_export_content_files( $variation['tcb_fields']['inline_css'] );
 
-			if ( $this->structure['results'] === $id ) {
-				$this->_export_dynamic_content( $variation );
+			if ( in_array( $id, array( $this->structure['optin'], $this->structure['results'] ) ) ) {
+				$this->_export_dynamic_content( $variation, $id );
 			}
 		}
 		unset( $variation );
@@ -142,7 +157,19 @@ class TQB_Export_Step_Structure extends TQB_Export_Step_Abstract {
 			$attachment = tqb_get_attachment_by_filename( $filename );
 
 			if ( ! $attachment ) {
-				continue;
+
+				/**
+				 * Images might be added with a scaled url for a given size, case in which the name does not match the one from db
+				 * Give it one more try, now we're removing the thumbnails details, such as 150x54
+				 */
+				$chunks     = explode( '.', $filename );
+				$filename   = preg_replace( '/(-([^-]*[0-9a-zA-Z\._-]+.(png|PNG|gif|GIF|jp[e]?g|JP[E]?G)))+$/', '', $filename );
+				$attachment = tqb_get_attachment_by_filename( $filename );
+				$filename   = $filename . '.' . end( $chunks );
+
+				if ( ! $attachment ) {
+					continue;
+				}
 			}
 
 			$item           = new stdClass();

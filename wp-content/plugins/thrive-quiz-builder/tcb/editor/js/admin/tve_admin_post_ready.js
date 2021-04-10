@@ -93,7 +93,7 @@
 				}
 			} ).done( function ( response ) {
 				location.href = _link.getAttribute( 'data-edit' );
-			} ).error( function ( jqXHR ) {
+			} ).fail( function ( jqXHR ) {
 				alert( 'ERROR: ' + jqXHR.responseText );
 			} );
 		} )

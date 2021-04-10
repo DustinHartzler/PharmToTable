@@ -57,7 +57,7 @@ class TCB_Post_List_Author_Image {
 			if ( empty( $matches[1] ) ) {
 				$avatar_url = get_avatar_url( $post->post_author, array( 'size' => 256 ) );
 			} else {
-				$avatar_url = $matches[1];
+				$avatar_url = html_entity_decode( $matches[1] );
 			}
 
 			/* if we're in the editor, append a dynamic flag at the end so we can recognize that the URL is dynamic */

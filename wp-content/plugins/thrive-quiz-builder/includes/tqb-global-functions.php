@@ -244,7 +244,7 @@ function tqb_generate_dates_interval( $start_date, $end_date, $interval = 'day' 
 	}
 
 	$dates = array();
-	for ( $i = 0; strtotime( $start_date . ' + ' . $i . 'day' ) <= strtotime( $end_date ); $i ++ ) {
+	for ( $i = 1; strtotime( $start_date . ' + ' . $i . 'day' ) <= strtotime( $end_date ); $i ++ ) {
 		$timestamp = strtotime( $start_date . ' + ' . $i . 'day' );
 		$date      = date( $date_format, $timestamp + $timezone_diff );
 

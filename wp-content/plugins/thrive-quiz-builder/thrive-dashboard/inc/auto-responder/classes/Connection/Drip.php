@@ -119,8 +119,9 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 	 * @return mixed
 	 */
 	public function addSubscriber( $list_identifier, $arguments ) {
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
-
+		if ( ! empty( $arguments['name'] ) ) {
+			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+		}
 		$phone = ! empty( $arguments['phone'] ) ? $arguments['phone'] : '';
 
 		$arguments['drip_optin'] = ! isset( $arguments['drip_optin'] ) ? 's' : $arguments['drip_optin'];
@@ -470,9 +471,10 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
 			);
-
+			if ( ! empty( $extra['name'] ) ) {
+				$args['name'] = $extra['name'];
+			}
 			$this->addSubscriber( $list_id, $args );
 
 			$user = array(
@@ -480,7 +482,7 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 				'campaign_id'   => $list_id,
 				'email'         => $email,
 				'ip_address'    => $_SERVER['REMOTE_ADDR'],
-				'custom_fields' => (object) $custom_fields,
+				'custom_fields' => (object) $this->_prepareCustomFieldsForApi( $custom_fields ),
 			);
 
 			$lead = $api->create_or_update_subscriber( $user );
@@ -490,5 +492,50 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * get relevant data from webhook trigger
+	 *
+	 * @param $request WP_REST_Request
+	 *
+	 * @return array
+	 */
+	public function getWebhookdata( $request ) {
+
+		$contact = $request->get_param( 'subscriber' );
+
+		return array( 'email' => empty( $contact['email'] ) ? '' : $contact['email'] );
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null  $list_identifier
+	 *
+	 * @return array
+	 */
+	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+		$api_fields      = $this->get_api_custom_fields( null, true );
+
+		foreach ( $api_fields as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( $field['id'] === $key ) {
+
+					$prepared_fields[ $key ] = $custom_field;
+
+					unset( $custom_fields[ $key ] ); // avoid unnecessary loops
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }

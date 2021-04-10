@@ -1,0 +1,17 @@
+// Some general stuff
+#wpwrap {
+  background-color: #fff;
+}
+
+#wpfooter {
+  display: none;
+}
+
+#wpbody-content {
+  .notice-success,
+  .notice,
+  .update-nag,
+  > .error {
+    display: none;
+  }
+}

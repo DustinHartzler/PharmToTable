@@ -182,8 +182,14 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		}
 
 		if ( isset( $arguments['mailchimp_groupin'] ) && '0' !== (string) $arguments['mailchimp_groupin'] && ! empty( $arguments['mailchimp_group'] ) ) {
-			$grouping              = array();
-			$group_ids             = explode( ',', $arguments['mailchimp_group'] );
+			$grouping = array();
+
+			if ( is_array( $arguments['mailchimp_group'] ) ) {
+				$group_ids = $arguments['mailchimp_group'];
+			} else {
+				$group_ids = explode( ',', $arguments['mailchimp_group'] );
+			}
+
 			$params['list_id']     = $list_identifier;
 			$params['grouping_id'] = $arguments['mailchimp_groupin'];
 
@@ -222,7 +228,9 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			return $merge_fields;
 		}
 
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+		if ( ! empty( $arguments['name'] ) ) {
+			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+		}
 
 		// First name
 		if ( ! empty( $first_name ) ) {
@@ -566,6 +574,8 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 		if ( is_array( $tags ) ) {
 			foreach ( $tags as $tag_name ) {
+
+				$tag_name = trim( $tag_name );
 
 				if ( isset( $list_tags[ $tag_name ] ) ) {
 					// Assign existing tag to contact/subscriber
@@ -951,14 +961,17 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
 			);
 
+			if ( ! empty( $extra['name'] ) ) {
+				$args['name'] = $extra['name'];
+			}
 			$this->addSubscriber( $list_id, $args );
 
 			$member = $this->get_contact( $list_id, $email );
 			$data   = array(
-				'merge_fields' => $custom_fields,
+				'merge_fields'  => (object) $this->_prepareCustomFieldsForApi( $custom_fields, $list_id ),
+				'email_address' => $email,
 			);
 
 			$api->request( 'lists/' . $list_id . '/members/' . md5( $email ), $data, 'PUT' );
@@ -968,5 +981,39 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null $list_identifier
+	 *
+	 * @return array
+	 */
+	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+		$api_fields      = $this->get_api_custom_fields( array( 'list_id' => $list_identifier ), true );
+
+		if ( empty( $api_fields[ $list_identifier ] ) ) {
+			return $prepared_fields;
+		}
+
+		foreach ( $api_fields[ $list_identifier ] as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( (int) $field['id'] === (int) $key ) {
+					$prepared_fields[ $field['name'] ] = $custom_field;
+
+					unset( $custom_fields[ $key ] ); // avoid unnecessary loops
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }

@@ -32,7 +32,7 @@ class TCB_Search_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**
@@ -142,6 +142,27 @@ class TCB_Search_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 			),
 			'animation'   => array(
 				'hidden' => true,
+			),
+			'layout'      => array(
+				'disabled_controls' => array(
+					'padding-left',
+					'padding-right',
+				),
+			),
+		);
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'search_element',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425871-how-to-use-the-search-element',
 			),
 		);
 	}

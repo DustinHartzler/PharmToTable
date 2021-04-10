@@ -147,6 +147,7 @@ class TIE_Editor {
 		tie_enqueue_script( 'tie-html2canvas', tie()->url( 'assets/js/html2canvas/html2canvas.js' ), array( 'tie-editor-script' ), false, true );
 
 		$data = array(
+			'nonce'          => wp_create_nonce( 'tie_editor_ajax_nonce' ),
 			'ajaxurl'        => admin_url( 'admin-ajax.php' ),
 			'quiz_dash_url'  => admin_url( 'admin.php?page=tqb_admin_dashboard#dashboard/quiz/' . $this->_post->post_parent ),
 			'assets_url'     => tie()->url( 'assets' ),

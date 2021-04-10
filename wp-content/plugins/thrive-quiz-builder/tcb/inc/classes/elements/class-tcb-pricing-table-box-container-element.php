@@ -71,7 +71,7 @@ class TCB_Pricing_Table_Box_Container_Element extends TCB_Element_Abstract {
 			'pricing_table_box_container' => array(
 				'config' => array(),
 			),
-			'layout'                      => array( 'disabled_controls' => array( 'Height', 'Width', 'Alignment', 'Overflow', 'Display', '.tve-advanced-controls', ) ),
+			'layout'                      => array( 'disabled_controls' => array( 'Height', 'Width', 'Alignment', 'Overflow', 'ScrollStyle', 'Display', '.tve-advanced-controls', ) ),
 		);
 
 		return array_merge( $pricing_table_box_container, $this->group_component() );

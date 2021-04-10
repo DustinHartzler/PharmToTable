@@ -3,7 +3,7 @@
 /*
 Plugin Name: Thrive Quiz Builder
 Plugin URI: https://thrivethemes.com
-Version: 2.3.6
+Version: 2.4.0.2
 Author: <a href="https://thrivethemes.com">Thrive Themes</a>
 Description: The plugin is built to deliver the following benefits to users: engage visitors with fun and interesting quizzes, lower bounce rate, generate more leads and gain visitor insights to find out about their interests.
 Text Domain: thrive-quiz-builder
@@ -24,7 +24,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		/**
 		 * Plugin version
 		 */
-		const V = '2.3.6';
+		const V = '2.4.0.2';
 
 		/**
 		 * Quiz Builder Database Version
@@ -341,6 +341,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			if ( wp_doing_ajax() ) {
 				add_filter( 'tcb_form_api_tags', array( $this, 'process_api_result_tags' ) );
 			}
+
+			add_action( 'wp_head', 'tve_load_custom_css', 100, 0 );
 		}
 
 
@@ -503,7 +505,9 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			foreach ( $quiz_ids as $key => $id ) {
 				if ( $restart_quiz ) {
 					/**
-					 * Fired when user restarts a quiz from front-end
+					 * The hook is triggered when a user restarts the same quiz. It can be fired multiple times, if the user chooses to restart the quiz multiple times
+					 * </br></br>
+					 * Example use case:- Record the number of times a student took the quiz in order to achieve a score.
 					 *
 					 * @param array Quiz Details
 					 * @param array User Details
@@ -1410,7 +1414,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				return 'https://thrivethemes.com/affiliates/ref.php?id=' . $affiliate_id . '_' . self::PLUGIN_IDEV_ID;
 			}
 
-			return self::PLUGIN_IDEV_ID;
+			return 'https://thrivethemes.com/suite';
 		}
 
 		/**

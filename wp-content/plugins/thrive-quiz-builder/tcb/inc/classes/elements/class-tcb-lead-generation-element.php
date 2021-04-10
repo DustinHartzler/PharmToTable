@@ -137,7 +137,7 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 						'extends' => 'Switch',
 					),
 
-					'consent'             => array(
+					'consent' => array(
 						'config' => array(
 							'labels' => array(
 								'wordpress' => __( 'Create Wordpress account', 'thrive-cb' ),
@@ -162,8 +162,8 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 			),
 			'borders'          => array(
 				'disabled_controls' => array(),
-				'config' => array(
-					'Corners'    => array(
+				'config'            => array(
+					'Corners' => array(
 						'overflow' => false,
 					),
 				),
@@ -194,7 +194,22 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'lead_generation',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425779-how-to-use-the-lead-generation-element',
+			),
+		);
 	}
 
 	/**

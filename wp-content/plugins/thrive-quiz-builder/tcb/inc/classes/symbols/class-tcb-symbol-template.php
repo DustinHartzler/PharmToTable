@@ -1,12 +1,17 @@
 <?php
 /**
- * FileName  class-tcb-symbol-template.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @developer: Dragos Petcu
- * @company  : BitStone
+ * @package thrive-visual-editor
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
+ * Class TCB_Symbol_Template
+ */
 class TCB_Symbol_Template {
 
 	/**
@@ -46,7 +51,10 @@ class TCB_Symbol_Template {
 
 		if ( $do_shortcodes ) {
 			$content = shortcode_unautop( $content );
-			$content = do_shortcode( $content );
+
+			$GLOBALS['symbol_id'] = $symbol_id;
+			$content              = do_shortcode( $content );
+			unset( $GLOBALS['symbol_id'] );
 
 			//apply thrive shortcodes
 			$keep_config = isset( $config['tve_shortcode_config'] ) ? $config['tve_shortcode_config'] : true;
@@ -61,10 +69,14 @@ class TCB_Symbol_Template {
 		if ( ! is_editor_page() && ! wp_doing_ajax() ) {
 			$content = tve_restore_script_tags( $content );
 
+			$post = get_post( get_the_ID() );
 			/**
 			 * Adds the global style node if it's not in the editor page
+			 * Also only load if the parent is TAR enabled already
 			 */
-			$content = tve_get_shared_styles( $content ) . $content;
+			if ( ! empty( $post ) && $post->post_type !== TCB_Symbols_Post_Type::SYMBOL_POST_TYPE && ! get_post_meta( $post->ID, 'tcb_editor_enabled', true ) ) {
+				$content = tve_get_shared_styles( $content ) . $content;
+			}
 		}
 
 		$content = apply_filters( 'tcb_symbol_template', $content );
@@ -162,9 +174,17 @@ class TCB_Symbol_Template {
 			$post = get_post( $symbol_id );
 
 			if ( $post instanceof WP_Post && $post->post_status === 'publish' ) {
-				$content         = self::render_content( $config, $wrap );
-				$css             = self::tcb_symbol_get_css( $config );
-				$type            = substr( TCB_Symbols_Taxonomy::get_symbol_type( $symbol_id ), 0, - 1 );
+				$content = self::render_content( $config, $wrap );
+				$css     = self::tcb_symbol_get_css( $config );
+				$type    = substr( TCB_Symbols_Taxonomy::get_symbol_type( $symbol_id ), 0, - 1 );
+
+				/**
+				 * forcing this type allows to know better whether or not is a gutenberg block
+				 */
+				if ( strpos( $type, 'gutenberg' ) !== false ) {
+					$type = 'gutenberg_block';
+				}
+
 				$shortcode_class = in_array( $type, self::$symbol_with_states, true ) ? 'tve-default-state' : '';
 				$name            = is_editor_page_raw() ? ' data-name="' . esc_attr( $post->post_title ) . '"' : '';
 

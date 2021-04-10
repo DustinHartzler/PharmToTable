@@ -75,6 +75,7 @@ class TCB_Post_Content_Element extends TCB_Post_List_Sub_Element_Abstract {
 		}
 
 		$components['typography']['config']['css_suffix'] = $elements;
+		$components['layout']['disabled_controls'] = [];
 
 		$components['post_content'] = array(
 			'order'  => 1,

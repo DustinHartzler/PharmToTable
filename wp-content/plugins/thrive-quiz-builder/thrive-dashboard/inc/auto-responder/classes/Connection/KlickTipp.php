@@ -204,8 +204,9 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 		 */
 		$arguments['tagid'] = isset( $arguments['klicktipp_tag'] ) ? $arguments['klicktipp_tag'] : 0;
 
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
-
+		if ( ! empty( $arguments['name'] ) ) {
+			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+		}
 		$fields = array();
 
 		if ( ! empty( $first_name ) ) {

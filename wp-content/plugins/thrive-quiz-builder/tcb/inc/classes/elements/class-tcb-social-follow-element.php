@@ -126,7 +126,7 @@ class TCB_Social_Follow_Element extends TCB_Social_Element {
 			'disabled_controls' => array( '[data-value="parallax"]' ),
 		);
 
-		$components['layout']['disabled_controls'] = array( 'Width', 'Height', 'Display', 'Overflow' );
+		$components['layout']['disabled_controls'] = array( 'Width', 'Height', 'Display', 'Overflow', 'ScrollStyle' );
 
 		unset( $components['social'] );
 
@@ -147,6 +147,21 @@ class TCB_Social_Follow_Element extends TCB_Social_Element {
 					'name'     => __( 'Grouped Social Buttons', 'thrive-cb' ),
 					'singular' => __( '-- Option Label %s', 'thrive-cb' ),
 				),
+			),
+		);
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'social_follow',
+				'link' => 'https://help.thrivethemes.com/en/articles/4472330-how-to-use-the-social-follow-element',
 			),
 		);
 	}

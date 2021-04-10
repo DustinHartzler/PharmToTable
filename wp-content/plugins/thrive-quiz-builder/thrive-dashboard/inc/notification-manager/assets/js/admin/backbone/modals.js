@@ -662,9 +662,9 @@ TD_NM.views = TD_NM.views || {};
 						service: key
 					},
 					dataType: 'json'
-				} ).success( function ( response ) {
+				} ).done( function ( response ) {
 					TVE_Dash.success( response.success );
-				} ).error( function ( response ) {
+				} ).fail( function ( response ) {
 					TVE_Dash.err( response.responseJSON.error );
 				} ).always( function () {
 					TVE_Dash.hideLoader();

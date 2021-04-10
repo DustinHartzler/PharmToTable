@@ -175,6 +175,8 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 			/** @var Thrive_Dash_Api_CampaignMonitor_List $list */
 			$list = $cm->get_list( $list_identifier );
 
+			$subscriber['CustomFields'] = empty( $arguments['CustomFields'] )? array(): $arguments['CustomFields'];
+
 			if ( ! empty( $arguments['phone'] ) ) {
 				$custom_fields   = $list->get_custom_fields();
 				$_list_has_phone = false;
@@ -197,16 +199,10 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 
 					$list->create_custom_field( $custom_field );
 				}
-				$subscriber['CustomFields'] = array(
-					array(
-						'Key'   => 'Phone',
-						'Value' => strval( $arguments['phone'] ),
-					),
-				);
-			}
-
-			if ( empty( $subscriber['CustomFields'] ) ) {
-				$subscriber['CustomFields'] = array();
+				array_push ($subscriber['CustomFields'], array(
+					'Key'   => 'Phone',
+					'Value' => strval( $arguments['phone'] ),
+				));
 			}
 
 			$_custom_fields = $this->_generate_custom_fields( array_merge( $arguments, array( 'list_id' => $list_identifier ) ) );
@@ -419,22 +415,73 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 
-			/** @var Thrive_Dash_Api_CampaignMonitor_List $list */
-			$list = $api->get_list( $list_id );
-
 			$args = array(
 				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
 			);
+			if ( ! empty( $extra['name'] ) ) {
+				$args['name'] = $extra['name'];
+			}
+			$args['CustomFields'] = $this->_prepareCustomFieldsForApi( $custom_fields, $list_id );
 
 			$this->addSubscriber( $list_id, $args );
 
-			$args['CustomFields'] = $custom_fields;
-
-			$list->add_subscriber( $args );
-
 		} catch ( Exception $e ) {
-			return false;
+			return $e->getMessage();
 		}
+	}
+
+	/**
+	 * Get available custom fields for this api connection
+	 *
+	 * @param null $list_id
+	 *
+	 * @return array
+	 */
+	public function getAvailableCustomFields( $list_id = null ) {
+
+		return $this->get_api_custom_fields( null, true );
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null  $list_identifier
+	 *
+	 * @return array
+	 */
+	protected function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		if ( empty( $list_identifier ) ) { // list identifier required here
+			return array();
+		}
+
+		$api_fields = $this->get_api_custom_fields( null, true );
+
+		if ( empty( $api_fields[ $list_identifier ] ) ) {
+			return array();
+		}
+
+		$prepared_fields = array();
+
+		foreach ( $api_fields[ $list_identifier ] as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( $field['id'] === $key ) {
+
+					$prepared_fields[] = array(
+						'Key'   => $key,
+						'Value' => $custom_field,
+					);
+
+					unset( $custom_fields[ $key ] ); // avoid unnecessary loops
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }

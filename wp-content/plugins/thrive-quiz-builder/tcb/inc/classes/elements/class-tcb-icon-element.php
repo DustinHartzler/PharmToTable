@@ -70,6 +70,17 @@ class TCB_Icon_Element extends TCB_Element_Abstract {
 							'css'     => 'fontSize',
 						),
 					),
+					'RotateIcon'  => array(
+						'config'  => array(
+							'step'    => '1',
+							'label'   => __( 'Rotate Icon', 'thrive-cb' ),
+							'default' => '0',
+							'min'     => '-180',
+							'max'     => '180',
+							'um'      => array( ' Deg' ),
+						),
+						'extends' => 'Slider',
+					),
 					'link'        => array(
 						'config' => array(
 							'label' => __( 'Icon link', 'thrive-cb' ),
@@ -115,6 +126,7 @@ class TCB_Icon_Element extends TCB_Element_Abstract {
 					'Height',
 					'Display',
 					'Overflow',
+					'ScrollStyle',
 				),
 			),
 			'scroll'     => array(
@@ -137,6 +149,21 @@ class TCB_Icon_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'icon',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425785-how-to-use-the-icon-element',
+			),
+		);
 	}
 }

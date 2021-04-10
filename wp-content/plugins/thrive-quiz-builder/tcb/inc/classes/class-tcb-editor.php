@@ -243,7 +243,7 @@ class TCB_Editor {
 		/**
 		 * The constant should be defined somewhere in wp-config.php file
 		 */
-		$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
+		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 
 		$this->enqueue_media();
 		// WP colour picker
@@ -257,6 +257,11 @@ class TCB_Editor {
 		wp_enqueue_script( 'tcb-scrollbar', TVE_DASH_URL . '/js/util/jquery.scrollbar.min.js' );
 
 		wp_enqueue_script( 'tcb-moment', tve_editor_url() . '/editor/js/libs/moment.min.js' );
+
+		$locale = tve_get_locale();
+		if ( file_exists( TVE_TCB_ROOT_PATH . '/editor/js/libs/moment-locale/' . $locale . '.js' ) ) {
+			wp_enqueue_script( 'tcb-moment-locale', tve_editor_url() . '/editor/js/libs/moment-locale/' . $locale . '.js' );
+		}
 
 		if ( function_exists( 'wp_enqueue_code_editor' ) ) {
 			/**
@@ -347,6 +352,23 @@ class TCB_Editor {
 		 */
 		wp_dequeue_script( 'inbound-analytics' );
 		wp_deregister_script( 'inbound-analytics' );
+
+		/* indeed membership-pro loading styles in editor sidebar */
+		wp_dequeue_style( 'indeed_sweetalert_css' );
+		wp_deregister_style( 'indeed_sweetalert_css' );
+		wp_dequeue_style( 'ihc_bootstrap-slider' );
+		wp_deregister_style( 'ihc_bootstrap-slider' );
+		wp_dequeue_style( 'ihc_admin_style' );
+		wp_deregister_style( 'ihc_admin_style' );
+		wp_dequeue_style( 'ihc_public_style' );
+		wp_deregister_style( 'ihc_public_style' );
+
+
+		/**
+		 * Dequeue custom font js from main frame
+		 */
+		wp_dequeue_script( 'bsf-custom-fonts-js' );
+		wp_deregister_script( 'bsf-custom-fonts-js' );
 	}
 
 	/**
@@ -431,30 +453,31 @@ class TCB_Editor {
 		}
 
 		$data = array(
-			'global_css_prefix'            => tcb_selection_root(),
-			'frame_uri'                    => tcb_get_editor_url( $this->post->ID, false ),
-			'plugin_url'                   => tve_editor_url() . '/',
-			'nonce'                        => wp_create_nonce( TCB_Editor_Ajax::NONCE_KEY ),
-			'rest_nonce'                   => wp_create_nonce( 'wp_rest' ),
-			'dash_nonce'                   => wp_create_nonce( 'tve-dash' ),
-			'ajax_url'                     => $admin_base_url . 'admin-ajax.php',
-			'post'                         => $this->post,
-			'post_format'                  => get_post_format(),
-			'elements'                     => $this->elements->localize(),
-			'tpl_categ'                    => $this->elements->user_templates_category(),
-			'theme_css_disabled'           => get_post_meta( $this->post->ID, 'tve_disable_theme_dependency', true ),
-			'options'                      => $this->elements->component_options(),
-			'fonts'                        => $fm->all_fonts(),
-			'landing_page'                 => $is_landing_page,
-			'tve_global_scripts'           => $this->post_global_scripts( $post ),
-			'templates_path'               => TVE_LANDING_PAGE_TEMPLATE,
-			'dash_url'                     => TVE_DASH_URL,
-			'pinned_category'              => $this->elements->pinned_category,
-			'social_fb_app_id'             => tve_get_social_fb_app_id(),
-			'disable_google_fonts'         => tve_dash_is_google_fonts_blocked(),
-			'api_connections'              => $api_connections,
-			'api_connections_data'         => $api_connections_data,
-			'storage_apis'                 => array_map( static function ( $connection ) {
+			'global_css_prefix'             => tcb_selection_root(),
+			'frame_uri'                     => tcb_get_editor_url( $this->post->ID, false ),
+			'plugin_url'                    => tve_editor_url() . '/',
+			'nonce'                         => wp_create_nonce( TCB_Editor_Ajax::NONCE_KEY ),
+			'rest_nonce'                    => TCB_Utils::create_nonce(),
+			'dash_nonce'                    => wp_create_nonce( 'tve-dash' ),
+			'ajax_url'                      => $admin_base_url . 'admin-ajax.php',
+			'post'                          => $this->post,
+			'post_format'                   => get_post_format(),
+			'elements'                      => $this->elements->localize(),
+			'tpl_categ'                     => $this->elements->user_templates_category(),
+			'theme_css_disabled'            => get_post_meta( $this->post->ID, 'tve_disable_theme_dependency', true ),
+			'options'                       => $this->elements->component_options(),
+			'fonts'                         => $fm->all_fonts(),
+			'landing_page'                  => $is_landing_page,
+			'tve_global_scripts'            => $this->post_global_scripts( $post ),
+			'templates_path'                => TVE_LANDING_PAGE_TEMPLATE,
+			'dash_url'                      => TVE_DASH_URL,
+			'pinned_category'               => $this->elements->pinned_category,
+			'social_fb_app_id'              => tve_get_social_fb_app_id(),
+			'disable_google_fonts'          => tve_dash_is_google_fonts_blocked(),
+			'allow_video_src'               => tve_dash_allow_video_src(),
+			'api_connections'               => $api_connections,
+			'api_connections_data'          => $api_connections_data,
+			'storage_apis'                  => array_map( static function ( $connection ) {
 				/**
 				 * Search for a square version of the logo. if not found, use the default one
 				 */
@@ -470,11 +493,11 @@ class TCB_Editor {
 					'logo'      => file_exists( $base_path . 'square/' . $png ) ? ( $base_url . 'square/' . $png ) : ( $base_url . $png ),
 				);
 			}, Thrive_Dash_List_Manager::getAvailableAPIsByType( true, array( 'storage' ) ) ),
-			'connected_apis_custom_fields' => is_callable( 'Thrive_Dash_List_Manager::getAvailableCustomFields' ) ? Thrive_Dash_List_Manager::getAvailableCustomFields() : array(),
-			'apis_custom_fields_mapper'    => is_callable( 'Thrive_Dash_List_Manager::getCustomFieldsMapper' ) ? Thrive_Dash_List_Manager::getCustomFieldsMapper() : array(),
-			'colors'                       => array(
+			'connected_apis_custom_fields'  => is_callable( 'Thrive_Dash_List_Manager::getAvailableCustomFields' ) ? Thrive_Dash_List_Manager::getAvailableCustomFields() : array(),
+			'apis_custom_fields_mapper'     => is_callable( 'Thrive_Dash_List_Manager::getCustomFieldsMapper' ) ? Thrive_Dash_List_Manager::getCustomFieldsMapper() : array(),
+			'colors'                        => array(
 				'favorites'      => tve_convert_favorite_colors(),
-				'globals'        => array_reverse( get_option( apply_filters( 'tcb_global_colors_option_name', 'thrv_global_colours' ), array() ) ),
+				'globals'        => array_reverse( tcb_color_manager()->get_list() ),
 				'global_prefix'  => TVE_GLOBAL_COLOR_VAR_CSS_PREFIX,
 				'local_prefix'   => TVE_LOCAL_COLOR_VAR_CSS_PREFIX,
 				'lp_set_prefix'  => TVE_LP_COLOR_VAR_CSS_PREFIX,
@@ -485,15 +508,17 @@ class TCB_Editor {
 					'l' => TVE_MAIN_COLOR_L,
 				),
 			),
-			'gradients'                    => array(
+			'gradients'                     => array(
 				'favorites'     => get_option( 'thrv_custom_gradients', array() ),
 				'globals'       => array_reverse( get_option( apply_filters( 'tcb_global_gradients_option_name', 'thrv_global_gradients' ), array() ) ),
 				'global_prefix' => TVE_GLOBAL_GRADIENT_VAR_CSS_PREFIX,
 				'local_prefix'  => TVE_LOCAL_GRADIENT_VAR_CSS_PREFIX,
 				'lp_set_prefix' => TVE_LP_GRADIENT_VAR_CSS_PREFIX,
 			),
-			'global_cls_prefix'            => TVE_GLOBAL_STYLE_CLS_PREFIX,
-			'global_styles'                => array(
+			'global_cls_prefix'             => TVE_GLOBAL_STYLE_CLS_PREFIX,
+			'dynamic_prefix'                => TVE_DYNAMIC_VAR_CSS_PREFIX,
+			'dynamic_background_url_prefix' => TVE_DYNAMIC_BACKGROUND_URL_VAR_CSS_PREFIX,
+			'global_styles'                 => array(
 				'prefix'            => TVE_GLOBAL_STYLE_CLS_PREFIX,
 				'button'            => tve_get_global_styles( 'button', $global_style_options['button'] ),
 				'prefix_button'     => TVE_GLOBAL_STYLE_BUTTON_CLS_PREFIX,
@@ -507,30 +532,30 @@ class TCB_Editor {
 				'prefix_text'       => TVE_GLOBAL_STYLE_TEXT_CLS_PREFIX,
 				'has_c_s_p'         => $this->has_central_style_panel(),
 			),
-			'user_settings'                => $tcb_user_settings,
+			'user_settings'                 => $tcb_user_settings,
 			/**
 			 * Filter tcb_js_translate allows adding javascript translations to the editor page ( main editor panel ).
 			 */
-			'i18n'                         => apply_filters( 'tcb_js_translate', require TVE_TCB_ROOT_PATH . 'inc/i18n.php' ),
+			'i18n'                          => apply_filters( 'tcb_js_translate', require TVE_TCB_ROOT_PATH . 'inc/i18n.php' ),
 			/**
 			 * Page events
 			 */
-			'page_events'                  => $post->meta( 'tve_page_events', null, true, array() ),
+			'page_events'                   => $post->meta( 'tve_page_events', null, true, array() ),
 			/**
 			 * Globals for the current post / page
 			 */
-			'tve_globals'                  => $globals,
-			'tve_post_constants'           => $post_constants,
-			'icon_pack_css'                => $this->icon_pack_css(),
-			'editor_selector'              => apply_filters( 'editor_selector', $post->is_lightbox() || $is_landing_page ? 'body' : '' ),
-			'current_user'                 => array(
+			'tve_globals'                   => $globals,
+			'tve_post_constants'            => $post_constants,
+			'icon_pack_css'                 => $this->icon_pack_css(),
+			'editor_selector'               => apply_filters( 'editor_selector', $post->is_lightbox() || $is_landing_page ? 'body' : '' ),
+			'current_user'                  => array(
 				'email' => $current_user->user_email,
 				'name'  => $current_user->first_name . ' ' . $current_user->last_name,
 			),
-			'site_title'                   => get_bloginfo( 'name' ),
-			'debug_mode'                   => defined( 'TVE_DEBUG' ) && TVE_DEBUG,
-			'has_templates'                => $this->can_use_landing_pages(),
-			'custom_menu'                  => array(
+			'site_title'                    => get_bloginfo( 'name' ),
+			'debug_mode'                    => tve_dash_is_debug_on(),
+			'has_templates'                 => $this->can_use_landing_pages(),
+			'custom_menu'                   => array(
 				'use_positional_selectors' => tcb_custom_menu_positional_selectors(),
 				/** required to solve backwards compatibility issues */
 				'typography_old_prefix'    => tcb_selection_root() . ' ',
@@ -538,7 +563,7 @@ class TCB_Editor {
 				'mega_desc_tpl'            => TCB_Menu_Walker::$mega_description_template,
 				'mega_image_tpl'           => TCB_Menu_Walker::$mega_image_template,
 			),
-			'lead_generation'              => array(
+			'lead_generation'               => array(
 				/**
 				 * Allows turning the default file upload validation on or off (default = true)
 				 *
@@ -547,13 +572,13 @@ class TCB_Editor {
 				 */
 				'file_upload_validation' => apply_filters( 'tcb_file_upload_validation', true ),
 			),
-			'froalaMode'                   => get_user_meta( $current_user->ID, 'froalaMode', true ),
-			'default_styles'               => tve_get_default_styles( false ),
-			'post_login_actions'           => TCB_Login_Element_Handler::get_post_login_actions(),
-			'post_register_actions'        => TCB_Login_Element_Handler::get_post_register_actions(),
-			'is_woo_active'                => \Tcb\Integrations\WooCommerce\Main::active() ? 1 : 0,
-			'lg_email_shortcodes'          => $this->get_lg_email_shortcodes(),
-			'dismissed_tooltips'           => (array) get_user_meta( wp_get_current_user()->ID, 'tcb_dismissed_tooltips', true ),
+			'froalaMode'                    => get_user_meta( $current_user->ID, 'froalaMode', true ),
+			'default_styles'                => tve_get_default_styles( false ),
+			'post_login_actions'            => TCB_Login_Element_Handler::get_post_login_actions(),
+			'post_register_actions'         => TCB_Login_Element_Handler::get_post_register_actions(),
+			'is_woo_active'                 => \Tcb\Integrations\WooCommerce\Main::active() ? 1 : 0,
+			'lg_email_shortcodes'           => $this->get_lg_email_shortcodes(),
+			'dismissed_tooltips'            => (array) get_user_meta( wp_get_current_user()->ID, 'tcb_dismissed_tooltips', true ),
 		);
 
 		/** Do not localize anything that's not necessary */
@@ -718,8 +743,11 @@ class TCB_Editor {
 		/**
 		 * This is called in the footer. There are some plugins that query posts in the footer,
 		 * changing the global query. This makes sure the global query is reset to its initial state
+		 * - apply filters for this in case there is no need of a reset on wp_query
 		 */
-		wp_reset_query();
+		if ( apply_filters( 'tcb_reset_query_for_inner_frame', true ) ) {
+			wp_reset_query();
+		}
 
 		if ( ! $this->is_inner_frame() ) {
 			return;

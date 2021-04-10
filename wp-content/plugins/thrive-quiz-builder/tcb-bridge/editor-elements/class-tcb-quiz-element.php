@@ -181,4 +181,19 @@ class TCB_Quiz_Element extends TCB_Element_Abstract {
 	public function category() {
 		return $this->get_thrive_integrations_label();
 	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'quiz',
+				'link' => 'https://help.thrivethemes.com/en/articles/4426055-how-to-add-a-finished-quiz-to-your-website',
+			),
+		);
+	}
 }

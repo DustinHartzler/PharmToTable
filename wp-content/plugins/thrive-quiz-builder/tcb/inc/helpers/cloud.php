@@ -89,6 +89,8 @@ function tve_get_cloud_template_data( $tag, $args = array() ) {
 		'nocache' => false,
 	) );
 
+	$args = apply_filters( 'tcb_filter_cloud_template_data_args', $args, $tag );
+
 	$force_fetch = ( defined( 'TCB_TEMPLATE_DEBUG' ) && TCB_TEMPLATE_DEBUG ) || $args['nocache'];
 
 	require_once tve_editor_path( 'inc/classes/content-templates/class-tcb-content-templates-api.php' );

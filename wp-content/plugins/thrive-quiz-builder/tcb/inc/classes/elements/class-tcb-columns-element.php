@@ -103,6 +103,7 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 									'value' => 'flex-end',
 								),
 							),
+							'info'    => true,
 						),
 						'to'      => ' > .tcb-flex-row',
 						'extends' => 'ButtonGroup',
@@ -118,13 +119,13 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 					),
 					'ColumnWidth'      => array(
 						'config'  => array(
-							'default' => '250',
-							'min'     => '40',
-							'max'     => '700',
-							'label'   => __( 'Column breakpoint', 'thrive-cb' ),
-							'info'    => true,
-							'info_hover'    => true,
-							'um'      => array( 'PX' ),
+							'default'    => '250',
+							'min'        => '40',
+							'max'        => '700',
+							'label'      => __( 'Column breakpoint', 'thrive-cb' ),
+							'info'       => true,
+							'info_hover' => true,
+							'um'         => array( 'PX' ),
 						),
 						'to'      => ' > .tcb-flex-row',
 						'extends' => 'Slider',
@@ -153,7 +154,7 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 				),
 			),
 			'layout'     => array(
-				'config' => array(
+				'config'            => array(
 					'MarginAndPadding' => array(
 						'margin_to'  => '',
 						'padding_to' => ' > .tcb-flex-row',
@@ -163,6 +164,7 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 						'css_suffix' => ' > .tcb-flex-col > .tcb-col',
 					),
 				),
+				'disabled_controls' => array(),
 			),
 			'typography' => array(
 				'disabled_controls' => array(),
@@ -184,5 +186,20 @@ class TCB_Columns_Element extends TCB_Element_Abstract {
 	 */
 	public function category() {
 		return self::get_thrive_basic_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'columns',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425769-how-to-use-the-columns-element',
+			),
+		);
 	}
 }

@@ -15,6 +15,13 @@
 			       value="<?php echo $this->param( 'key' ) ?>">
 			<label for="tvd-mg-api-key"><?php echo __( "API key", TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
 		</div>
+        <div class="tvd-input-field">
+            <select id="tvd-mailgun-zone" type="text" name="connection[zone]">
+                <option value="worldwide"><?php echo __( 'Worldwide', TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
+                <option value="europe"><?php echo __( 'Europe', TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
+            </select>
+            <label for="tvd-mailgun-zone"><?php echo __( 'Email Zone', TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
+        </div>
 		<?php $this->display_video_link(); ?>
 	</form>
 </div>
@@ -36,4 +43,3 @@
 		</div>
 	</div>
 </div>
-

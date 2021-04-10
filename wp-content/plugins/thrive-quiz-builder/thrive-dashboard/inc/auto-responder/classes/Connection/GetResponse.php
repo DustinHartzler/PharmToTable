@@ -159,7 +159,7 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 	 * add a contact to a list
 	 *
 	 * @param string $list_identifier
-	 * @param array  $arguments
+	 * @param array $arguments
 	 *
 	 * @return mixed
 	 */
@@ -168,6 +168,7 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 		/** @var Thrive_Dash_Api_GetResponseV3 $api */
 		$api         = $this->getApi();
 		$credentials = $this->getCredentials();
+
 		$return      = true;
 		$version     = empty( $credentials['version'] ) ? 2 : (int) $credentials['version'];
 
@@ -177,12 +178,12 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 					$arguments['name'] = ' ';
 				}
 				/** @var Thrive_Dash_Api_GetResponse $api */
-				$api->addContact( $list_identifier, $arguments['name'], $arguments['email'], 'standard', (int) $arguments['get-response_cycleday'] );
+				$api->addContact( $list_identifier, $arguments['name'], $arguments['email'], 'standard', (int) empty($arguments['get-response_cycleday'])? 0 : $arguments['get-response_cycleday'] );
 			} else {
 
 				$params = array(
 					'email'      => $arguments['email'],
-					'dayOfCycle' => $arguments['get-response_cycleday'],
+					'dayOfCycle' => empty($arguments['get-response_cycleday'])? 0 : $arguments['get-response_cycleday'],
 					'campaign'   => array(
 						'campaignId' => $list_identifier,
 					),
@@ -192,12 +193,14 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 				if ( ! empty( $arguments['name'] ) ) {
 					$params['name'] = $arguments['name'];
 				}
-
+				// forward already inserted custom fields
+				if ( ! empty( $arguments['CustomFields'] ) ) {
+					$params['customFieldValues'] = $arguments['CustomFields'];
+				}
 				// Set / Create & set Phone as custom field
 				if ( ! empty( $arguments['phone'] ) ) {
 					$params = array_merge( $params, $this->setCustomPhone( $arguments, $params ) );
 				}
-
 				// Build custom fields data
 				$existing_custom_fields = ! empty( $params['customFieldValues'] ) ? $params['customFieldValues'] : array();
 				$mapped_custom_fields   = $this->buildMappedCustomFields( $arguments, $existing_custom_fields );
@@ -212,7 +215,7 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 					 */
 					$api->addContact( $params );
 				} catch ( Exception $e ) {
-
+					return $e->getMessage();
 				}
 
 				/**
@@ -286,15 +289,15 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 						$cf_form_name  = str_replace( '[]', '', $cf_form_name );
 						if ( ! empty( $args[ $cf_form_name ] ) ) {
 							$args[ $cf_form_name ] = $this->processField( $args[ $cf_form_name ] );
+							array_push(
+								$mapped_data,
+								array(
+									'customFieldId' => $mapped_api_id,
+									'value'         => array( sanitize_text_field( $args[ $cf_form_name ] ) ),
+								)
+							);
 						}
 
-						array_push(
-							$mapped_data,
-							array(
-								'customFieldId' => $mapped_api_id,
-								'value'         => array( sanitize_text_field( $args[ $cf_form_name ] ) ),
-							)
-						);
 					}
 				}
 			}
@@ -462,6 +465,78 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 		$fields = array_merge( parent::get_custom_fields(), $this->_mapped_custom_fields );
 
 		return $fields;
+	}
+
+	/**
+	 * Get available custom fields for this api connection
+	 *
+	 * @param null $list_id
+	 *
+	 * @return array
+	 */
+	public function getAvailableCustomFields( $list_id = null ) {
+
+		return $this->get_api_custom_fields( null, true );
+	}
+
+	/**
+	 * @param       $email
+	 * @param array $custom_fields
+	 * @param array $extra
+	 *
+	 * @return int
+	 */
+	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+
+		try {
+			$api = $this->getApi();
+
+			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
+
+			$args = array(
+				'email' => $email,
+			);
+			if ( ! empty( $extra['name'] ) ) {
+				$args['name'] = $extra['name'];
+			}
+			$args['CustomFields'] = $this->_prepareCustomFieldsForApi( $custom_fields, $list_id );
+
+			$this->addSubscriber( $list_id, $args );
+
+		} catch ( Exception $e ) {
+			return $e->getMessage();
+		}
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null $list_identifier
+	 *
+	 * @return array
+	 */
+	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+		$api_fields      = $this->get_api_custom_fields( null, true );
+		if ( empty( $custom_fields ) ) {
+			return $prepared_fields;
+		}
+
+		foreach ( $api_fields as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if (  $field['id'] == $key ) {
+
+					array_push($prepared_fields,array(
+							'customFieldId' =>  $field['id'],
+							'value'         => array( $custom_field ),
+						));
+				}
+			}
+		}
+
+		return $prepared_fields;
 	}
 }
 

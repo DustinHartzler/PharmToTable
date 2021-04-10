@@ -102,7 +102,7 @@ class TCB_Column_Element extends TCB_Element_Abstract {
 					'ColumnWidth'      => array(
 						'config'  => array(
 							'default'     => '100',
-							'min'         => '50',
+							'min'         => '30',
 							'max'         => '1500',
 							'label'       => __( 'Width', 'thrive-cb' ),
 							'um'          => array( 'px', '%', ),

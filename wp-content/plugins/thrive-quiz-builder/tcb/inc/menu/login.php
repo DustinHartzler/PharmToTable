@@ -50,6 +50,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</div>
 				<div class="login-post-submit login-submit-options"></div>
+				<div class="tve-control success-message-switch" data-view="Switch" data-info="true" data-key="loginShowSuccess" data-iconside="top"
+					 data-label="<?php esc_attr_e( 'Show success message', 'thrive-cb' ); ?>"
+					 data-icontooltip="<?php echo __( 'Your success message will be displayed after your nominated page is loaded', 'thrive-cb' ); ?>"></div>
+				<div class="tve-control message-preview" data-view="LabelInputIcon" data-key="loginSuccessMessage" data-placeholder="Success" data-label="false"
+					 data-icontooltip="<?php echo __( 'Preview success message', 'thrive-cb' ); ?>" data-iconside="top"></div>
 			</div>
 		</div>
 		<div class="tve-advanced-controls extend-grey hide-states skip-api no-service controls-register mt-5">
@@ -72,6 +77,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</div>
 				<div class="register-post-submit login-submit-options"></div>
+				<div class="tve-control success-message-switch" data-view="Switch" data-info="true" data-key="registerShowSuccess" data-iconside="top"
+					 data-label="<?php esc_attr_e( 'Show success message', 'thrive-cb' ); ?>"
+					 data-icontooltip="<?php echo __( 'Your success message will be displayed after your nominated page is loaded', 'thrive-cb' ); ?>"></div>
+				<div class="tve-control message-preview" data-view="LabelInputIcon" data-key="registerSuccessMessage" data-placeholder="Success" data-label="false"
+					 data-icontooltip="<?php echo __( 'Preview success message', 'thrive-cb' ); ?>" data-iconside="top"></div>
 				<div class="tve-control form-values" data-view="Switch" data-key="sendFormValues" style="margin: 0 -2px" data-label="<?php esc_attr_e( 'Send form values to thank you page', 'thrive-cb' ); ?>"></div>
 				<a class="click blue-text center-text view-params form-values" data-fn="showSentParams"><?php echo __( 'View variable details', 'thrive-cb' ); ?></a>
 			</div>

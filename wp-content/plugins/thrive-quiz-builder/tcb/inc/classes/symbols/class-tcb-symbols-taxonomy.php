@@ -1,11 +1,14 @@
 <?php
+
 /**
- * FileName  class-tcb-symbols-taxonomy.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @developer: Dragos Petcu
- * @company  : BitStone
+ * @package thrive-visual-editor
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 class TCB_Symbols_Taxonomy {
 
@@ -32,7 +35,7 @@ class TCB_Symbols_Taxonomy {
 			'show_in_nav_menus' => false,
 			'show_admin_column' => true,
 			'query_var'         => true,
-			'rewrite'           => array( 'slug' => 'symbol' ),
+			'rewrite'           => array( 'slug' => 'tcb_symbol' ),
 			'show_in_rest'      => true,
 		) );
 
@@ -132,7 +135,7 @@ class TCB_Symbols_Taxonomy {
 		$data['symbols_tax_terms']  = $this->get_symbols_tax_terms();
 		$data['sections_tax_terms'] = $this->get_symbols_tax_terms( true );
 		$data['symbols_rest_terms'] = rest_url( sprintf( '%s/%s', 'wp/v2', self::SYMBOLS_TAXONOMY ) );
-		$data['symbols_rest_nonce'] = wp_create_nonce( 'wp_rest' );
+		$data['symbols_rest_nonce'] = TCB_Utils::create_nonce();
 		$data['symbol_type']        = static::get_symbol_type( get_the_ID() );
 
 		return $data;

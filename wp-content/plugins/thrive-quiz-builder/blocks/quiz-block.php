@@ -46,9 +46,6 @@ class TQB_Blocks {
 				)
 			);
 			tqb_enqueue_style( 'tqb-block-style', tqb()->plugin_url( '/blocks/css/styles.css' ) );
-			if ( ! wp_style_is( 'tve-block-font', 'enqueued' ) && ! tve_dash_is_google_fonts_blocked()  ) {
-				tqb_enqueue_style( 'tve-block-font', '//fonts.googleapis.com/css?family=Roboto:400,500,700' );
-			}
 		}
 	}
 

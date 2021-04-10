@@ -60,7 +60,7 @@ $is_write_wrong    = 'right_wrong' === $quiz_type;
 		<?php wp_head(); ?>
 	</head>
 <body <?php body_class(); ?>>
-<div id="tve_editor" class="tqb-shortcode-new-content tqb-template-style-<?php echo $quiz_style; ?>">
+<div id="tve_editor" class="no-touch tqb-shortcode-new-content tqb-template-style-<?php echo $quiz_style; ?>">
 	<?php if ( $has_qna_templates ): ?>
 		<?php echo $content; ?>
 	<?php else: ?>

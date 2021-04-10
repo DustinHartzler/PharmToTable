@@ -288,5 +288,28 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 
 		return $this->_hook_prefix . $hook_name . $this->_hook_suffix;
 	}
+
+	/**
+	 * get relevant data from webhook trigger
+	 *
+	 * @param $request WP_REST_Request
+	 *
+	 * @return array
+	 */
+	public function getWebhookdata( $request ) {
+
+		$contact = $request->get_param( 'email' );
+
+		return array( 'email' => empty( $contact ) ? '' : $contact );
+	}
+
+	/**
+	 * Return the connection email merge tag
+	 *
+	 * @return String
+	 */
+	public static function getEmailMergeTag() {
+		return '';
+	}
 }
 

@@ -127,6 +127,7 @@ class TCB_Section_Element extends TCB_Element_Abstract {
 									'value' => 'flex-end',
 								),
 							),
+							'info'    => true,
 						),
 						'extends' => 'ButtonGroup',
 					),
@@ -209,5 +210,20 @@ class TCB_Section_Element extends TCB_Element_Abstract {
 	 */
 	public function has_hover_state() {
 		return true;
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'background_section',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425770-how-to-use-the-background-section-element',
+			),
+		);
 	}
 }

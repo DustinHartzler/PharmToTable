@@ -67,6 +67,7 @@
 	<label class="block full-width pt-5">
 		<?php echo __( 'Font', 'thrive-cb' ); ?>
 		<select class="font-select change" data-fn="fontChange" data-font="<#= section #>">
+			<# if ( section.includes('custom') ) { #><option selected><?php echo ''; ?></option><# } #>
 			<# _.each(this.fonts[section].fonts, function(v,k) { #>
 			<option value="<#= k #>">
 				<#= v.family #>

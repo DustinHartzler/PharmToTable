@@ -128,17 +128,21 @@ class Thrive_Dash_List_Connection_Sendlane extends Thrive_Dash_List_Connection_A
 	 * @return mixed|string
 	 */
 	public function addSubscriber( $list_identifier, $arguments ) {
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
-
+		$name_array = array();
+		if ( ! empty( $arguments['name'] ) ) {
+			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			$name_array = array(
+				'first_name' => $first_name,
+				'last_name'  => $last_name,
+			);
+		}
 		/** @var Thrive_Dash_Api_Sendlane $api */
 		$api  = $this->getApi();
 		$args = array(
-			'list_id'    => $list_identifier,
-			'email'      => $arguments['email'],
-			'first_name' => $first_name,
-			'last_name'  => $last_name,
+			'list_id' => $list_identifier,
+			'email'   => $arguments['email'],
 		);
-
+		$args = array_merge( $args, $name_array );
 		if ( isset( $arguments['sendlane_tags'] ) ) {
 			$args['tag_names'] = trim( $arguments['sendlane_tags'] );
 		}

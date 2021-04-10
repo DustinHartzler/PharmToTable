@@ -48,7 +48,7 @@ class TCB_Toggle_Old_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		return array(
-			'toggle_old'     => array(
+			'toggle_old' => array(
 				'config' => array(
 					'HoverColor'      => array(
 						'css_suffix' => ' > .tve_faq:hover',
@@ -110,7 +110,7 @@ class TCB_Toggle_Old_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	public function hide() {

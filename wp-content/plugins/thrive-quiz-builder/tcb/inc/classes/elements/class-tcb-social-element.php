@@ -78,7 +78,8 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 					),
 					'CssVarChanger'       => array(
 						'config'  => array(
-							'label' => __( 'Colors', 'thrive-cb' ),
+							'label'    => __( 'Colors', 'thrive-cb' ),
+							'variable' => '--tcb-social-share-master-color',
 						),
 						'extends' => 'CssVariablesChanger',
 					),
@@ -96,10 +97,10 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 						'config' => array(
 							'label' => __( 'Change style', 'thrive-cb' ),
 							'items' => array(
-								'tve_style_6' => 'Style 1',
-								'tve_style_7' => 'Style 2',
-								'tve_style_8' => 'Style 3',
-								'tve_style_9' => 'Style 4',
+								'tve_style_6'  => 'Style 1',
+								'tve_style_7'  => 'Style 2',
+								'tve_style_8'  => 'Style 3',
+								'tve_style_9'  => 'Style 4',
 								'tve_style_10' => 'Style 5',
 								'tve_style_11' => 'Style 6',
 								'tve_style_12' => 'Style 7',
@@ -109,11 +110,11 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 								'tve_style_16' => 'Style 11',
 								'tve_style_17' => 'Style 12',
 								'tve_style_18' => 'Style 13',
-								'tve_style_1' => 'Style 14',
-								'tve_style_2' => 'Style 15',
-								'tve_style_3' => 'Style 16',
-								'tve_style_4' => 'Style 17',
-								'tve_style_5' => 'Style 18',
+								'tve_style_1'  => 'Style 14',
+								'tve_style_2'  => 'Style 15',
+								'tve_style_3'  => 'Style 16',
+								'tve_style_4'  => 'Style 17',
+								'tve_style_5'  => 'Style 18',
 							),
 						),
 					),
@@ -225,6 +226,7 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 					'Width',
 					'Height',
 					'Overflow',
+					'ScrollStyle',
 				),
 			),
 		);
@@ -238,7 +240,7 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**
@@ -261,6 +263,21 @@ class TCB_Social_Element extends TCB_Element_Abstract {
 					'name'     => __( 'Grouped Social Icons', 'thrive-cb' ),
 					'singular' => __( '-- Option Icon %s', 'thrive-cb' ),
 				),
+			),
+		);
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'social_share',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425796-how-to-use-the-social-share-element',
 			),
 		);
 	}

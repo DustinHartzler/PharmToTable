@@ -54,8 +54,9 @@ var notificationModel = require( './../models/notification' );
 					'action': 'thrv_bulkread',
 					'_nonce': TD_Inbox.admin_nonce,
 				}
-			} ).success( function ( response ) {
-				var response = JSON.parse( response );
+			} ).done( function ( response ) {
+				response = JSON.parse( response );
+
 				if ( typeof response.total_unread !== 'undefined' ) {
 					TD_Inbox.total_unread = response.total_unread;
 					self.collection.trigger( 'bulk_update' );
@@ -167,7 +168,7 @@ var notificationModel = require( './../models/notification' );
 					'action': action,
 					'_nonce': TD_Inbox.admin_nonce
 				}, data )
-			} ).success( function ( response ) {
+			} ).done( function ( response ) {
 				TD_Inbox.offset = parseInt( TD_Inbox.limit ) + parseInt( TD_Inbox.offset );
 
 				_.each( response, function ( item ) {

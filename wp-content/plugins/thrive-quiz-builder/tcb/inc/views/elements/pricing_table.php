@@ -17,7 +17,7 @@ $instance_1 = rand( 0, 10000000 );
 $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><path d="M29.333 10.267c0 0.4-0.133 0.8-0.533 1.2l-14.8 14.8c-0.267 0.267-0.667 0.4-1.067 0.4s-0.933-0.133-1.2-0.533l-2.4-2.267-6.267-6.267c-0.267-0.267-0.4-0.667-0.4-1.2s0.133-0.8 0.533-1.2l2.4-2.4c0.267-0.133 0.667-0.4 1.067-0.4s0.8 0.133 1.2 0.533l5.067 5.067 11.2-11.333c0.267-0.267 0.667-0.533 1.2-0.533 0.4 0 0.8 0.133 1.2 0.533l2.4 2.4c0.267 0.267 0.4 0.667 0.4 1.2z"></path></svg>';
 
 ?>
-<div class="thrv_wrapper thrv-pricing-table" data-ct="pricing_table-24177">
+<div class="thrv_wrapper thrv-pricing-table" data-ct="pricing_table-24177" data-ct-name="Default Pricing Table">
 	<div class="thrv_wrapper thrv-button-group tcb-no-clone tcb-no-delete tve_no_drag tcb-no-save tcb-permanently-hidden">
 		<div class="thrv_wrapper thrv-button-group-item tcb-active-state tcb-no-clone tcb-no-delete tve_no_drag tcb-no-title tcb-no-save" data-default="true" data-instance="<?php echo $instance_1; ?>">
 			<a href="#" class="tcb-button-link">

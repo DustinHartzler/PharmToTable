@@ -153,10 +153,10 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 		);
 		/* Send confirmation email */
 		if ( $email_sent && $arguments['send_confirmation'] ) {
-
-			$headers = 'Content-Type: text/html; charset=UTF-8 ' . "\r\n"
-			           . 'From: ' . $arguments['from_name'] . ' <' . $arguments['from_email'] . ' > ' . "\r\n"
-			           . 'Reply-To: ' . $arguments['reply_to'] . "\r\n";
+			$arguments['reply_to'] = $arguments['from_email'];
+			$headers               = 'Content-Type: text/html; charset=UTF-8 ' . "\r\n"
+			                         . 'From: ' . $arguments['from_name'] . ' <' . $arguments['from_email'] . ' > ' . "\r\n"
+			                         . 'Reply-To: ' . $arguments['reply_to'] . "\r\n";
 
 			$email_sent = wp_mail(
 				$arguments['sender_email'],
@@ -438,5 +438,14 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 		$message = apply_filters( 'thrive_api_email_message', $message, $args );
 
 		return nl2br( $message );
+	}
+
+	/**
+	 * Return the connection email merge tag
+	 *
+	 * @return String
+	 */
+	public static function getEmailMergeTag() {
+		return '[user_email]';
 	}
 }

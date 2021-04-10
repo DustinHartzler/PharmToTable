@@ -59,7 +59,7 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 
 	/**
 	 * @param array|string $tags
-	 * @param array        $data
+	 * @param array $data
 	 *
 	 * @return array
 	 */
@@ -200,17 +200,26 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 	public function addSubscriber( $list_identifier, $arguments ) {
 		try {
 			/** @var Thrive_Dash_Api_Infusionsoft $api */
-			$api = $this->getApi();
+			$api        = $this->getApi();
+			$name_array = array();
+			if ( ! empty( $arguments['name'] ) ) {
+				list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+				$name_array = array(
+					'FirstName' => $first_name,
+					'LastName'  => $last_name,
+				);
+			}
 
-			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
-
-			$data = array(
-				'FirstName' => $first_name,
-				'LastName'  => $last_name,
-				'Email'     => $arguments['email'],
-				'Phone1'    => $arguments['phone'],
+			$phone_array = array();
+			if ( ! empty( $arguments['name'] ) ) {
+				$phone_array = array(
+					'Phone1' => $arguments['phone'],
+				);
+			}
+			$data       = array(
+				'Email' => $arguments['email'],
 			);
-
+			$data       = array_merge( $data, $name_array, $phone_array );
 			$contact_id = $api->contact( 'addWithDupCheck', $data, 'Email' );
 
 			if ( $contact_id ) {
@@ -226,8 +235,11 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 
 				$creation_notes .= "\nIP Address: " . $ip_address;
 				$creation_notes .= "\ninf_field_Email: " . $arguments['email'];
-				$creation_notes .= "\ninf_field_LastName: " . $last_name;
-				$creation_notes .= "\ninf_field_FirstName: " . $first_name;
+
+				if ( ! empty( $first_name ) ) {
+					$creation_notes .= "\ninf_field_LastName: " . $last_name;
+					$creation_notes .= "\ninf_field_FirstName: " . $first_name;
+				}
 
 				$add_note = array(
 					'ContactId'         => $contact_id,
@@ -432,9 +444,9 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 	}
 
 	/**
-	 * @param array $params  which may contain `list_id`
-	 * @param bool  $force   make a call to API and invalidate cache
-	 * @param bool  $get_all where to get lists with their custom fields
+	 * @param array $params which may contain `list_id`
+	 * @param bool $force make a call to API and invalidate cache
+	 * @param bool $get_all where to get lists with their custom fields
 	 *
 	 * @return array|mixed
 	 */
@@ -490,7 +502,7 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 	/**
 	 * Get API custom text fields and append them to $custom_fields array
 	 *
-	 * @param int   $field_id
+	 * @param int $field_id
 	 * @param array $custom_fields
 	 *
 	 * @return array
@@ -514,6 +526,7 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 				$page,
 				array(
 					'DataType' => (int) $field_id,
+					'GroupId' =>  '~<>~0',  //I suspect the group ID set to 0 is their way of soft deleting custom fields
 				),
 				array(
 					'GroupId',
@@ -570,7 +583,7 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 	/**
 	 * Call the API in order to update subscriber's custom fields
 	 *
-	 * @param int   $contact_id
+	 * @param int $contact_id
 	 * @param array $arguments
 	 *
 	 * @return bool
@@ -586,13 +599,16 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 		try {
 			$custom_fields = $this->buildMappedCustomFields( $arguments );
 
-			$api = $this->getApi();
-			$api->contact(
-				'update',
-				$contact_id,
-				$custom_fields
-			);
-			$saved = true;
+			if ( ! empty( $custom_fields ) ) {
+				$api = $this->getApi();
+				$api->contact(
+					'update',
+					$contact_id,
+					$custom_fields
+				);
+				$saved = true;
+			}
+
 		} catch ( Thrive_Dash_Api_Infusionsoft_InfusionsoftException $e ) {
 			$this->api_log_error( $contact_id, array( 'infusion_custom_fields' => $custom_fields ), $e->getMessage() );
 		}
@@ -603,7 +619,7 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 	/**
 	 * Creates and prepare the mapping data from the update call
 	 *
-	 * @param array $args          form arguments
+	 * @param array $args form arguments
 	 * @param array $custom_fields array of custom fields where to append/update
 	 *
 	 * @return array
@@ -666,8 +682,16 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
-				'name'  => ! empty( $extra['name'] ) ? $extra['name'] : '',
 			);
+
+			if ( ! empty( $extra['name'] ) ) {
+				$args['name'] = $extra['name'];
+			}
+
+			unset( $extra['name'], $extra['list_identifier'] );
+
+			$args          = array_merge( $extra, $args );
+			$custom_fields = $this->_prepareCustomFieldsForApi( $custom_fields );
 
 			add_action(
 				'tvd_after_infusionsoft_contact_added',
@@ -688,6 +712,52 @@ class Thrive_Dash_List_Connection_Infusionsoft extends Thrive_Dash_List_Connecti
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+
+	/**
+	 * get relevant data from webhook trigger
+	 *
+	 * @param $request WP_REST_Request
+	 *
+	 * @return array
+	 */
+	public function getWebhookdata( $request ) {
+
+		$contact = $request->get_param( 'email' );
+
+		return array( 'email' => empty( $contact ) ? '' : $contact );
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null $list_identifier
+	 *
+	 * @return array
+	 */
+	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+		$api_fields      = $this->get_api_custom_fields( null, true );
+
+		foreach ( $api_fields as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( $field['id'] === $key ) {
+
+					$prepared_fields[ '_' . $key ] = $custom_field;
+
+					unset( $custom_fields[ $key ] ); // avoid unnecessary loops
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }
 

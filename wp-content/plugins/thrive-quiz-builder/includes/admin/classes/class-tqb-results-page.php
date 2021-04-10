@@ -193,6 +193,8 @@ class TQB_Results_Page extends TQB_Structure_Page {
 			$link['link'] = 'http://' . $link['link'];
 		}
 
+		$link['link'] = wp_sanitize_redirect( $link['link'] );
+
 		unset( $link['post_title'] );
 		unset( $link['result_name'] );
 

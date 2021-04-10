@@ -319,6 +319,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 				'CC'      => '',
 				'From'    => $data['from_name'] . '< ' . $data['from_email'] . ' >',
 				'To'      => array( $data['sender_email'] ),
+				'ReplyTo' => $data['from_email'],
 			);
 			try {
 				$clients        = $cm->get_clients();

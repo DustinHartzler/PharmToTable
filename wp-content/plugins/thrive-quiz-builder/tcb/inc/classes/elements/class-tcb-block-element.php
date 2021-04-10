@@ -73,4 +73,19 @@ class TCB_Block_Element extends TCB_Section_Element {
 
 		return array_merge( $components, $this->group_component() );
 	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'block',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425843-how-to-use-the-block-element',
+			),
+		);
+	}
 }

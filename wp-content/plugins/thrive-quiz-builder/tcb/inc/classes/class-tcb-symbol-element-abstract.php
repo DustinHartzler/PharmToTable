@@ -3,7 +3,6 @@
  * FileName  class-tcb-symbol-element-abstract.php.
  *
  * @project  : thrive-visual-editor
- * @company  : BitStone
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -194,30 +193,32 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 */
 	public function prepare_symbol( $symbol ) {
 
-		$content = TCB_Symbol_Template::render_content( array( 'id' => $symbol->ID ) );
-		$globals = get_post_meta( $symbol->ID, 'tve_globals', true );
-		if ( empty( $globals ) ) {
-			$globals = array();
-		}
+		$symbol_data = array();
 
-		$symbol_data = array(
-			'id'          => $symbol->ID,
-			'content'     => $content,
-			'post_title'  => $symbol->post_title,
-			'config'      => $this->_get_symbol_config( $symbol ),
-			'css'         => $this->get_symbol_css( $symbol->ID ),
-			'thumb'       => TCB_Utils::get_thumb_data( $symbol->ID, TCB_Symbols_Post_Type::SYMBOL_THUMBS_FOLDER, static::get_default_thumb_placeholder() ),
-			'tve_globals' => $globals,
-		);
+		if ( $symbol instanceof WP_Post && $symbol->post_status === 'publish' ) {
+			$content = TCB_Symbol_Template::render_content( array( 'id' => $symbol->ID ) );
+			$globals = get_post_meta( $symbol->ID, 'tve_globals', true );
+			if ( empty( $globals ) ) {
+				$globals = array();
+			}
+
+			$symbol_data = array(
+				'id'          => $symbol->ID,
+				'content'     => $content,
+				'post_title'  => $symbol->post_title,
+				'config'      => $this->_get_symbol_config( $symbol ),
+				'css'         => $this->get_symbol_css( $symbol->ID ),
+				'thumb'       => TCB_Utils::get_thumb_data( $symbol->ID, TCB_Symbols_Post_Type::SYMBOL_THUMBS_FOLDER, static::get_default_thumb_placeholder() ),
+				'tve_globals' => $globals,
+			);
+		}
 
 		/**
 		 * Change symbol data before showing it in the list
 		 *
 		 * @param array $symbol_data
 		 */
-		$symbol_data = apply_filters( 'tcb_symbol_data_before_return', $symbol_data );
-
-		return $symbol_data;
+		return apply_filters( 'tcb_symbol_data_before_return', $symbol_data );
 	}
 
 	/**
@@ -358,18 +359,17 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		 */
 		$symbol_data['css'] = str_replace( '|TEMPLATE_ID|', $post_id, $symbol_data['css'] );
 
-		/**
-		 * If created from an existing symbol, replace the old ID with the new ID
-		 */
+		$upload_dir = wp_upload_dir();
+
+		/** If created from an existing symbol, replace the old ID with the new ID */
 		if ( ! empty( $symbol_data['from_existing_id'] ) ) {
 			$symbol_data['css'] = str_replace( 'symbol_' . $symbol_data['from_existing_id'], 'symbol_' . $post_id, $symbol_data['css'] );
 			/**
 			 * Copy the thumbnail from the original symbol to the new one.
 			 */
-			$upload_dir = wp_upload_dir();
 			if ( empty( $upload_dir['error'] ) ) {
 				$thumb_data = TCB_Utils::get_thumbnail_data_from_id( $symbol_data['from_existing_id'] );
-				$thumb_path = trailingslashit( $upload_dir['basedir'] ) . 'symbols/' . $symbol_data['from_existing_id'] . '.png';
+				$thumb_path = trailingslashit( $upload_dir['basedir'] ) . TCB_Symbols_Post_Type::SYMBOL_THUMBS_FOLDER . '/' . $symbol_data['from_existing_id'] . '.png';
 				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				if ( $thumb_data && @is_readable( $thumb_path ) ) {
 					// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
@@ -378,6 +378,24 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 						$thumb_data['url'] = str_replace( $symbol_data['from_existing_id'], $post_id, $thumb_data['url'] );
 						TCB_Utils::save_thumbnail_data( $post_id, $thumb_data );
 					}
+				}
+			}
+		} elseif ( ! empty( $symbol_data['thumb'] ) ) {
+			/* We also need to copy the thumbnail if the symbol was created base on a cloud template */
+			$thumb_data = $symbol_data['thumb'];
+			if ( ! empty( $thumb_data['url'] ) ) {
+				$thumb_path = $thumb_data['url'];
+
+				if ( strpos( $thumb_path, 'http' ) === false ) {
+					$thumb_path = 'http:' . $thumb_path;
+				}
+
+				$destination = TCB_Symbols_Post_Type::SYMBOL_THUMBS_FOLDER . '/' . $post_id . '.png';
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				$copied = @copy( $thumb_path, trailingslashit( $upload_dir['basedir'] ) . $destination );
+				if ( $copied ) {
+					$thumb_data['url'] = trailingslashit( $upload_dir['baseurl'] ) . $destination;
+					TCB_Utils::save_thumbnail_data( $post_id, $thumb_data );
 				}
 			}
 		}

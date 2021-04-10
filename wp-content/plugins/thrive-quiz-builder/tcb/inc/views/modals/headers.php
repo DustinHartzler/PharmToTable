@@ -1,9 +1,8 @@
 <?php
 /**
- * FileName  headers.php.
- * @project: thrive-visual-editor
- * @developer: Dragos Petcu
- * @company: BitStone
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-visual-editor
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,4 +11,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<h2 class="tcb-modal-title"><?php echo __( 'Choose Header', 'thrive-cb' ) ?></h2>
+<h2 class="tcb-modal-title"><?php echo __( 'Choose Header', 'thrive-cb' ); ?></h2>

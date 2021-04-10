@@ -13,7 +13,7 @@ if ( ! function_exists( 'tve_dash_load' ) ) {
 	}
 
 	/**
-	 * Load test 
+	 * Load test
 	 */
 	function tve_dash_load() {
 		uksort( $GLOBALS['tve_dash_versions'], 'tve_dash_version_compare' );
@@ -26,4 +26,4 @@ if ( ! function_exists( 'tve_dash_load' ) ) {
 	}
 }
 
-return '2.3.6';
+return '2.4.0.2';

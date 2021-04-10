@@ -62,21 +62,22 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 				'config' => array(
 					'StyleChange'    => array(
 						'config' => array(
-							'label' => __( 'Image Style', 'thrive-cb' ),
+							'label' => __( 'Image style', 'thrive-cb' ),
 						),
 					),
 					'ImagePicker'    => array(
 						'config' => array(
-							'label' => __( 'Replace Image', 'thrive-cb' ),
+							'label' => __( 'Replace image', 'thrive-cb' ),
 						),
 					),
 					'ExternalFields' => array(
 						'config'  => array(
 							'main_dropdown'     => array(
-								''         => __( 'Select A Source', 'thrive-cb' ),
-								'featured' => __( 'Featured Image', 'thrive-cb' ),
-								'author'   => __( 'Author Image', 'thrive-cb' ),
-								'custom'   => __( 'Custom Fields', 'thrive-cb' ),
+								''         => __( 'Select a source', 'thrive-cb' ),
+								'featured' => __( 'Featured image', 'thrive-cb' ),
+								'author'   => __( 'Author image', 'thrive-cb' ),
+								'user'     => __( 'User image', 'thrive-cb' ),
+								'custom'   => __( 'Custom fields', 'thrive-cb' ),
 							),
 							'key'               => 'image',
 							'shortcode_element' => 'img.tve_image',
@@ -110,15 +111,15 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 						'config' => array(
 							'label'   => __( 'Choose image style', 'thrive-cb' ),
 							'items'   => array(
-								'no_style'                  => __( 'No Style', 'thrive-cb' ),
-								'img_style_dark_frame'      => __( 'Dark Frame', 'thrive-cb' ),
+								'no_style'                  => __( 'No style', 'thrive-cb' ),
+								'img_style_dark_frame'      => __( 'Dark frame', 'thrive-cb' ),
 								'img_style_framed'          => __( 'Framed', 'thrive-cb' ),
-								'img_style_lifted_style1'   => __( 'Lifted Style 1', 'thrive-cb' ),
-								'img_style_lifted_style2'   => __( 'Lifted Style 2', 'thrive-cb' ),
+								'img_style_lifted_style1'   => __( 'Lifted style 1', 'thrive-cb' ),
+								'img_style_lifted_style2'   => __( 'Lifted style 2', 'thrive-cb' ),
 								'img_style_polaroid'        => __( 'Polaroid', 'thrive-cb' ),
-								'img_style_rounded_corners' => __( 'Rounded Corners', 'thrive-cb' ),
+								'img_style_rounded_corners' => __( 'Rounded corners', 'thrive-cb' ),
 								'img_style_circle'          => __( 'Circle', 'thrive-cb' ),
-								'img_style_caption_overlay' => __( 'Caption Overlay', 'thrive-cb' ),
+								'img_style_caption_overlay' => __( 'Caption overlay', 'thrive-cb' ),
 							),
 							'default' => 'no_style',
 						),
@@ -131,7 +132,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 					),
 					'ImageAltText'   => array(
 						'config'  => array(
-							'label' => __( 'Alt Text', 'thrive-cb' ),
+							'label' => __( 'Alt text', 'thrive-cb' ),
 						),
 						'extends' => 'LabelInput',
 					),
@@ -250,7 +251,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'default' => '0',
 							'min'     => '0',
 							'max'     => '359',
-							'label'   => __( 'Hue Rotate', 'thrive-cb' ),
+							'label'   => __( 'Hue rotate', 'thrive-cb' ),
 							'um'      => array( 'deg' ),
 							'css'     => 'filter',
 						),
@@ -260,7 +261,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 						'strategy' => 'element',
 						'config'   => array(
 							'name'    => '',
-							'label'   => __( 'Image Overlay', 'thrive-cb' ),
+							'label'   => __( 'Image overlay', 'thrive-cb' ),
 							'default' => true,
 						),
 						'extends'  => 'Switch',
@@ -268,7 +269,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 					'ImageOverlay'       => array(
 						'config'     => array(
 							'default' => '000',
-							'label'   => __( 'Overlay Color', 'thrive-cb' ),
+							'label'   => __( 'Overlay color', 'thrive-cb' ),
 						),
 						'css_suffix' => ' .tve-image-overlay',
 						'extends'    => 'ColorPicker',
@@ -288,6 +289,7 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 					'Width',
 					'Height',
 					'Overflow',
+					'ScrollStyle',
 				),
 			),
 			'shadow'        => array(
@@ -314,6 +316,21 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return self::get_thrive_basic_label();
+		return static::get_thrive_basic_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'image_element',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425765-how-to-use-the-image-element',
+			),
+		);
 	}
 }

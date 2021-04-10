@@ -88,11 +88,21 @@ function tve_dash_get_general_settings() {
 			'multiple'     => false,
 		),
 		array(
-			'name'     => 'tve_google_fonts_disable_api_call',
-			'id'       => 'tve_google_fonts_disable_api_call',
-			'value'    => get_option( 'tve_google_fonts_disable_api_call', '' ),
-			'type'     => 'checkbox',
-			'multiple' => false,
+			'name'        => 'tve_google_fonts_disable_api_call',
+			'id'          => 'tve_google_fonts_disable_api_call',
+			'value'       => get_option( 'tve_google_fonts_disable_api_call', '' ),
+			'type'        => 'checkbox',
+			'description' => __( 'Disable all Google Fonts loaded by Thrive on your website.', TVE_DASH_TRANSLATE_DOMAIN ),
+			'multiple'    => false,
+		),
+		array(
+			'name'        => 'tve_allow_video_src',
+			'id'          => 'tve_allow_video_src',
+			'value'       => tve_dash_allow_video_src(),
+			'type'        => 'checkbox',
+			'description' => __( 'Load videos for compatibility with lazy-loading and GDPR compliance plugins.', TVE_DASH_TRANSLATE_DOMAIN ),
+			'multiple'    => false,
+			'link'        => '//help.thrivethemes.com/en/articles/4777320-how-to-load-videos-in-order-for-them-to-be-compatible-with-lazy-loading-and-gdpr-compliance-plugins',
 		),
 	);
 	$settings = apply_filters( 'tve_dash_general_settings_filter', $settings );
@@ -128,15 +138,15 @@ function tve_dash_ui_toolkit() {
  *
  * @param        $handle
  * @param string $src
- * @param array $deps
- * @param bool $ver
- * @param bool $in_footer
+ * @param array  $deps
+ * @param bool   $ver
+ * @param bool   $in_footer
  */
 function tve_dash_enqueue_script( $handle, $src = '', $deps = array(), $ver = false, $in_footer = false ) {
 	if ( $ver === false ) {
 		$ver = TVE_DASH_VERSION;
 	}
-	if ( defined( 'TVE_DEBUG' ) && TVE_DEBUG ) {
+	if ( tve_dash_is_debug_on() ) {
 		$src = preg_replace( '/\.min.js$/', '.js', $src );
 	}
 	wp_enqueue_script( $handle, $src, $deps, $ver, $in_footer );
@@ -156,7 +166,7 @@ function tve_dash_access_manager_main_page() {
  * @param       $handle
  * @param       $src
  * @param array $deps
- * @param bool $ver
+ * @param bool  $ver
  * @param       $media
  */
 function tve_dash_enqueue_style( $handle, $src, $deps = array(), $ver = false, $media = 'all' ) {
@@ -465,8 +475,8 @@ function tve_dash_get_error_log_entries( $order_by = 'date', $order = 'DESC', $p
 		$unserialized_data                   = unserialize( $entry->api_data );
 		$models[ $key ]->fields_html         = tve_dash_build_column_api_data( $unserialized_data );
 		$models[ $key ]->api_data            = json_encode( $unserialized_data );
-		$models[ $key ]->connection_explicit = $available_apis[ $entry->connection ]->getTitle();
-		$models[ $key ]->connection_type     = $available_apis[ $entry->connection ]->getType();
+		$models[ $key ]->connection_explicit = empty($available_apis[ $entry->connection ])? $entry->connection : $available_apis[ $entry->connection ]->getTitle();
+		$models[ $key ]->connection_type     = empty($available_apis[ $entry->connection ])? $entry->connection : $available_apis[ $entry->connection ]->getType();
 	}
 
 	$data['models'] = $models;
@@ -724,10 +734,10 @@ function tve_dash_update_product_option( $product_tag, $option ) {
  * Displays an icon using svg format
  *
  * @param string $icon
- * @param bool $return whether to return the icon as a string or to output it directly
- * @param string $namespace (where this icon is used - for 'editor' it will add another prefix to it)
+ * @param bool   $return      whether to return the icon as a string or to output it directly
+ * @param string $namespace   (where this icon is used - for 'editor' it will add another prefix to it)
  * @param string $extra_class classes to be added to the svg
- * @param array $svg_attr array with extra attributes to add to the <svg> tag
+ * @param array  $svg_attr    array with extra attributes to add to the <svg> tag
  *
  * @return mixed
  */
@@ -908,7 +918,6 @@ function tve_dash_is_bas64_encoded( $data ) {
  * @return bool
  */
 function tve_dash_is_debug_on() {
-
 	return defined( 'TVE_DEBUG' ) && TVE_DEBUG;
 }
 
@@ -917,7 +926,7 @@ function tve_dash_is_debug_on() {
  * by using custom class methods or wp standard sanitize functions,
  * sent in $callback param
  *
- * @param mixed $data { accepts array|object|string }
+ * @param mixed        $data     { accepts array|object|string }
  * @param string|array $callback { callback function: (string) 'function_name' / (array) [class_name, method_name] }
  *
  * @return mixed
@@ -935,7 +944,7 @@ function tve_filter_intrusive_forms( $product, $forms ) {
 	/**
 	 * Enable all the products to hook here and filter the forms that will be showed to the users
 	 *
-	 * @param array $forms - an array of items that will show up
+	 * @param array  $forms   - an array of items that will show up
 	 * @param string $product - the product from which the items originated
 	 */
 	return apply_filters( 'tve_intrusive_forms', $forms, $product );
@@ -1053,7 +1062,6 @@ function tvd_get_acf_user_external_fields( $user_role = false ) {
  */
 function tvd_get_webhook_route_url( $endpoint ) {
 	$rest_controller = new TD_REST_Controller();
-	$url             = get_rest_url() . $rest_controller->get_namespace() . $rest_controller->get_webhoook_base() . '/' . $endpoint;
 
-	return $url;
+	return get_rest_url() . $rest_controller->get_namespace() . $rest_controller->get_webhook_base() . '/' . $endpoint;
 }

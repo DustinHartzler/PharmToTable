@@ -66,6 +66,7 @@ class TCB_Widget_Element extends TCB_Element_Abstract {
 
 	/**
 	 * Set alternate for widget so we can better find him with search
+	 *
 	 * @return mixed|string|string[]|null
 	 */
 	public function alternate() {
@@ -141,6 +142,9 @@ class TCB_Widget_Element extends TCB_Element_Abstract {
 			'animation'        => array(
 				'disabled_controls' =>
 					array( '.btn-inline.anim-link', '.btn-inline.anim-popup' ),
+			),
+			'layout'           => array(
+				'disabled_controls' => array(),
 			),
 		);
 	}

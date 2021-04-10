@@ -129,6 +129,7 @@ class TVE_Dash_AjaxController {
 			'tve_comments_disqus_shortname',
 			'tve_google_fonts_disable_api_call',
 			'tvd_enable_login_design',
+			'tve_allow_video_src'
 		);
 		$field   = $this->param( 'field' );
 		$value   = map_deep( $this->param( 'value' ), 'sanitize_text_field' );

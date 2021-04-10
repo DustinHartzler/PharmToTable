@@ -1,9 +1,8 @@
 <?php
 /**
- * FileName  symbols.php.
- * @project: thrive-visual-editor
- * @developer: Dragos Petcu
- * @company: BitStone
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-visual-editor
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

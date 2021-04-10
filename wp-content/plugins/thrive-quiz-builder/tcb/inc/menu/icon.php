@@ -23,6 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control no-space gl-st-icon-toggle-1" data-view="ColorPicker"></div>
 		<div class="hide-states pt-10">
 			<div class="tve-control gl-st-icon-toggle-1" data-view="Slider"></div>
+			<div class="tve-control" data-view="RotateIcon"></div>
 			<div class="tve-control" data-key="ToggleURL" data-extends="Switch" data-label="<?php echo __( 'Add link to icon', 'thrive-cb' ); ?>"></div>
 			<div class="tve-control link-control" data-key="link" data-initializer="elementLink"></div>
 		</div>

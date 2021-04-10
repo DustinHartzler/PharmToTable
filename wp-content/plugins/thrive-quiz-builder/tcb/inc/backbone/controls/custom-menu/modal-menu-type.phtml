@@ -29,19 +29,19 @@
 			<span><?php echo __( 'Use a WordPress Menu', 'thrive-cb' ); ?></span>
 		</a>
 	</div>
-	<div class="flex-mid pt-30 wp" style="display: none">
-		<select class="change choose-menu" data-fn="selectOption" data-attr="menu_id">
-			<option disabled selected><?php echo __( 'Choose a WordPress Menu', 'thrive-cb' ); ?></option>
-			<#_.each(this.menus, function(item){#>
-			<option value="<#=item.value#>"
-			<#=item.value==this.model.get('menu_id') ? ' selected' : ''#>><#=item.name#></option>
-			<#}, this)#>
-		</select>
-	</div>
 	<div class="flex-mid space-between tcb-modal-footer">
 		<button type="button" class="tve-button medium grey click" data-fn="step1">
 			<?php echo __( 'Back', 'thrive-cb' ); ?>
 		</button>
+		<div class="wp" style="display: none">
+			<select class="change choose-menu" data-fn="selectOption" data-attr="menu_id">
+				<option disabled selected><?php echo __( 'Choose a WordPress Menu', 'thrive-cb' ); ?></option>
+				<#_.each(this.menus, function(item){#>
+				<option value="<#=item.value#>"
+				<#=item.value==this.model.get('menu_id') ? ' selected' : ''#>><#=item.name#></option>
+				<#}, this)#>
+			</select>
+		</div>
 		<button type="button" class="tve-button medium green click goto-3" data-fn="done" style="display: none">
 			<?php echo __( 'Select Template', 'thrive-cb' ); ?>
 		</button>

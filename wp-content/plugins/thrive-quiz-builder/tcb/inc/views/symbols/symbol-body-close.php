@@ -1,9 +1,8 @@
 <?php
 /**
- * FileName  symbol-body-close.php.
- * @project: thrive-visual-editor
- * @developer: Dragos Petcu
- * @company: BitStone
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-visual-editor
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -11,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 </div>
-<?php do_action( 'get_footer' ) ?>
-<?php wp_footer() ?>
+<?php do_action( 'get_footer' ); ?>
+<?php wp_footer(); ?>
 </body>
 </html>
 

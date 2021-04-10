@@ -506,7 +506,7 @@ final class TD_Inbox {
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'backbone' );
 
-		$js_prefix = defined( 'TVE_DEBUG' ) && TVE_DEBUG === true ? '.js' : '.min.js';
+		$js_prefix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 
 		tve_dash_enqueue_script( 'td-ni-admin', $this->url( 'assets/dist/admin' . $js_prefix ), array(
 			'tve-dash-main-js',

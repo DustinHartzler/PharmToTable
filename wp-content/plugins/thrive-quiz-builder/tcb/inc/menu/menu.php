@@ -25,9 +25,10 @@ if ( is_ssl() ) {
 		</div>
 		<div class="dropdown-content">
 			<div class="tve-menu-display-control">
+				<div class="tve-control hide-tablet hide-mobile" data-view="MenuDirection"></div>
 				<div class="tve-control" data-view="MenuDisplay"></div>
 			</div>
-			<hr>
+			<hr class="mt-10">
 			<div class="tve-control" data-view="MenuSource"></div>
 			<div class="control-grid hide-tablet hide-mobile only-wp">
 				<span class="blue-text">
@@ -37,8 +38,6 @@ if ( is_ssl() ) {
 					</a>
 				</span>
 			</div>
-			<hr>
-			<div class="tve-control tve-choose-menu-template" data-view="ModalPicker"></div>
 			<div class="tve-control hide-states" data-view="MenuPalettes"></div>
 			<hr>
 			<div class="tve-control btn-group-light no-space" data-view="MenuSpacing"></div>
@@ -47,8 +46,14 @@ if ( is_ssl() ) {
 				<div class="tve-control" data-view="VerticalSpacing"></div>
 				<div class="tve-control pb-10" data-view="BetweenSpacing"></div>
 			</div>
-			<div class="tve-control if-not-hamburger" data-view="LogoSplit"></div>
+			<div class="tve-control if-horizontal" data-view="LogoSplit"></div>
 			<hr>
+			<div class="tve-control if-vertical" data-view="ContentAlign"></div>
+			<div class="mb-10 if-vertical"><?php echo __( 'Menu alignment', 'thrive-cb' ); ?></div>
+			<div class="tve-control if-vertical pt-5 gl-st-button-toggle-2" data-key="Align" data-view="ButtonGroup"></div>
+			<div class="tve-control if-vertical gl-st-button-toggle-2" data-view="MenuWidth"></div>
+			<div class="mb-10"><?php echo __( 'Sub menu options', 'thrive-cb' ); ?></div>
+			<div class="tve-control if-vertical hide-tablet hide-mobile" data-view="DropdownDirection"></div>
 			<div class="tve-control" data-key="DropdownIcon" data-initializer="dropdownIcon"></div>
 			<div class="tve-control if-not-hamburger" data-view="DropdownAnimation"></div>
 			<div class="tve-control hide-tablet hide-mobile if-not-hamburger" data-view="DisableActiveLinks"></div>
@@ -70,7 +75,7 @@ if ( is_ssl() ) {
 						</span>
 					</div>
 					<div class="dropdown-content pl-0 pr-0 tcb-relative pt-25">
-						<button class="tve-button blue click tcb-absolute" style="right: 2px;top: -3px;" data-fn="addMenuItem">
+						<button class="tve-button blue click tcb-absolute" style="right: 1px; top: 0; padding: 5px 8px;" data-fn="addMenuItem">
 							<?php echo __( 'Add new', 'thrive-cb' ); ?>
 						</button>
 						<div class="clear"></div>

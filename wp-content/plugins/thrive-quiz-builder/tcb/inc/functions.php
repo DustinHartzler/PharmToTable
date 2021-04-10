@@ -142,7 +142,7 @@ function tcb_get_editor_url( $post_id = 0, $main_frame = true ) {
 	} else {
 		$params[ TVE_FRAME_FLAG ] = wp_create_nonce( TVE_FRAME_FLAG );
 		$editor_link              = set_url_scheme( get_permalink( $post_id ) );
-		$editor_link              = apply_filters( 'tcb_frame_request_uri', $editor_link );
+		$editor_link              = apply_filters( 'tcb_frame_request_uri', $editor_link, $post_id );
 	}
 
 	$editor_link = add_query_arg( apply_filters( 'tcb_editor_edit_link_query_args', $params, $post_id ), $editor_link );
@@ -265,6 +265,12 @@ function tve_remove_conflicting_scripts() {
 		wp_deregister_script( 'twentynineteen-touch-navigation' );
 		wp_dequeue_script( 'twentynineteen-touch-navigation' );
 
+		/* Payment Forms for Paystack is retarded, forcing own version of jquery which is as old as time */
+		wp_deregister_script( 'blockUI' );
+		wp_dequeue_script( 'blockUI' );
+		wp_deregister_script( 'jQuery_UI' );
+		wp_dequeue_script( 'jQuery_UI' );
+
 		/* TAR-5246 - floating preview in editor is not working because of the mm scripts */
 		wp_dequeue_script( 'mm-common-core.js' );
 		wp_deregister_script( 'mm-common-core.js' );
@@ -298,11 +304,11 @@ function thrive_page_row_buttons( $actions, $page_object ) {
 
 	?>
 	<style type="text/css">
-		.thrive-adminbar-icon {
-			background: url('<?php echo tve_editor_css(); ?>/images/admin-bar-logo.png') no-repeat 0 0;
-			background-size: contain;
-			padding-left: 25px;
-		}
+        .thrive-adminbar-icon {
+            background: url('<?php echo tve_editor_css(); ?>/images/admin-bar-logo.png') no-repeat 0 0;
+            background-size: contain;
+            padding-left: 25px;
+        }
 	</style>
 	<?php
 
@@ -388,13 +394,17 @@ function tve_get_global_styles( $for_element = '', $option_name = '', $for_post 
  * Outputs Thrive Global Variables
  */
 function tve_load_global_variables() {
-	$global_colors    = get_option( apply_filters( 'tcb_global_colors_option_name', 'thrv_global_colours' ), array() );
+	$global_colors    = tcb_color_manager()->get_list();
 	$global_gradients = get_option( apply_filters( 'tcb_global_gradients_option_name', 'thrv_global_gradients' ), array() );
 
 	echo '<style type="text/css" id="tve_global_variables">';
 	echo ':root{';
 	foreach ( $global_colors as $color ) {
-		echo TVE_GLOBAL_COLOR_VAR_CSS_PREFIX . $color['id'] . ':' . $color['color'] . ';';
+		$color_name = TVE_GLOBAL_COLOR_VAR_CSS_PREFIX . $color['id'];
+		echo $color_name . ':' . $color['color'] . ';';
+		/* convert variables to hsl & print them */
+		$hsl_data = tve_rgb2hsl( $color['color'] );
+		echo tve_print_color_hsl( $color_name, $hsl_data );
 	}
 	foreach ( $global_gradients as $gradient ) {
 		echo TVE_GLOBAL_GRADIENT_VAR_CSS_PREFIX . $gradient['id'] . ':' . $gradient['gradient'] . ';';
@@ -430,7 +440,10 @@ function tve_prepare_global_variables_for_front( $css_string = '', $bypass_edito
 		return tcb_custom_css( $css_string );
 	}
 
-	$global_colors    = get_option( apply_filters( 'tcb_global_colors_option_name', 'thrv_global_colours' ), array() );
+	$global_colors = tcb_color_manager()->get_list();
+	/**
+	 * TODO: implement also a tcb_gradient_manager that handles the gradient logic
+	 */
 	$global_gradients = get_option( apply_filters( 'tcb_global_gradients_option_name', 'thrv_global_gradients' ), array() );
 
 
@@ -495,6 +508,162 @@ function tve_prepare_master_variable( $master_variable = array() ) {
 	return implode( ';', $master_config ) . ';';
 }
 
+/**
+ * Print hsl parts of a color
+ *
+ * @param $color_name
+ * @param $hsl_data
+ *
+ * @return string
+ */
+function tve_print_color_hsl( $color_name, $hsl_data ) {
+	$hsl_vars = array(
+		$color_name . '-h:' . $hsl_data['h'],
+		$color_name . '-s:' . ( (float) $hsl_data['s'] * 100 ) . '%',
+		$color_name . '-l:' . ( (float) $hsl_data['l'] * 100 ) . '%',
+		$color_name . '-a:' . $hsl_data['a'],
+	);
+
+	return implode( ';', $hsl_vars ) . ';';
+}
+
+/**
+ * Convert a rgb color to its hsl data
+ *
+ * @param string $rgbString
+ * @param string $return_type
+ *
+ * @return array|string
+ */
+function tve_rgb2hsl( $rgbString = '', $return_type = 'code' ) {
+
+	preg_match( '#\((.*?)\)#', $rgbString, $match );
+	$rgb_array = explode( ',', $match[1] );
+
+	$r = trim( $rgb_array[0] );
+	$g = trim( $rgb_array[1] );
+	$b = trim( $rgb_array[2] );
+	$a = empty( $rgb_array[3] ) ? 1 : trim( $rgb_array[3] );
+
+	$r   /= 255;
+	$g   /= 255;
+	$b   /= 255;
+	$max = max( $r, $g, $b );
+	$min = min( $r, $g, $b );
+	$l   = ( $max + $min ) / 2;
+	if ( $max == $min ) {
+		$h = $s = 0;
+	} else {
+		$d = $max - $min;
+		$s = $l > 0.5 ? $d / ( 2 - $max - $min ) : $d / ( $max + $min );
+		switch ( $max ) {
+			case $r:
+				$h = ( $g - $b ) / $d + ( $g < $b ? 6 : 0 );
+				break;
+			case $g:
+				$h = ( $b - $r ) / $d + 2;
+				break;
+			case $b:
+				$h = ( $r - $g ) / $d + 4;
+				break;
+		}
+		$h /= 6;
+	}
+	$h = floor( $h * 360 );
+	$s = floor( $s * 100 );
+	$l = floor( $l * 100 );
+
+
+	$code = array(
+		'h' => $h,
+		's' => round( $s / 100, 2 ),
+		'l' => round( $l / 100, 2 ),
+		'a' => (float) $a,
+	);
+
+	if ( $return_type === 'code' ) {
+		return $code;
+	}
+
+	return tve_prepare_hsla_code( $code );
+}
+
+/**
+ * Used inside TAR and Theme Builder
+ * Returns the HSLA color string made from HSLA code
+ *
+ * @param array $code
+ *
+ * @return string
+ */
+function tve_prepare_hsla_code( $code = array() ) {
+	$hue        = $code['h'];
+	$saturation = $code['s'];
+	$lightness  = $code['l'];
+	$alpha      = $code['a'];
+
+	return "hsla($hue, $saturation, $lightness, $alpha)";
+}
+
+
+/**
+ * @param numeric $h
+ * @param numeric $s
+ * @param numeric $l
+ * @param numeric $a
+ * @param string  $return_type
+ *
+ * @return array|string
+ */
+function tve_hsl2rgb( $h, $s, $l, $a = 1, $return_type = 'code' ) {
+	$c = ( 1 - abs( 2 * $l - 1 ) ) * $s;
+	$x = $c * ( 1 - abs( fmod( ( $h / 60 ), 2 ) - 1 ) );
+	$m = $l - ( $c / 2 );
+
+	if ( $h < 60 ) {
+		$r = $c;
+		$g = $x;
+		$b = 0;
+	} else if ( $h < 120 ) {
+		$r = $x;
+		$g = $c;
+		$b = 0;
+	} else if ( $h < 180 ) {
+		$r = 0;
+		$g = $c;
+		$b = $x;
+	} else if ( $h < 240 ) {
+		$r = 0;
+		$g = $x;
+		$b = $c;
+	} else if ( $h < 300 ) {
+		$r = $x;
+		$g = 0;
+		$b = $c;
+	} else {
+		$r = $c;
+		$g = 0;
+		$b = $x;
+	}
+
+	$r = ( $r + $m ) * 255;
+	$g = ( $g + $m ) * 255;
+	$b = ( $b + $m ) * 255;
+
+
+	$code = array(
+		'r' => floor( $r ),
+		'g' => floor( $g ),
+		'b' => floor( $b ),
+		'a' => $a,
+	);
+
+	if ( $return_type === 'code' ) {
+		return $code;
+	}
+
+	return 'rgba(' . $code['r'] . ',' . $code['g'] . ',' . $code['b'] . ',' . $code['a'] . ')';
+}
 
 /**
  * it's a hook on the wp_head WP action
@@ -635,7 +804,14 @@ function thrive_editor_admin_bar( $nodes ) {
 		wp_reset_query();
 	}
 	$post_id = get_the_ID();
-	if ( is_admin_bar_showing() && ( is_single() || is_page() ) && tve_is_post_type_editable( get_post_type() ) && TCB_Product::has_external_access( $post_id ) ) {
+
+	/**
+	 * Beside other restrictions the edit button in admin bar should be displayed
+	 * not only on single posts or pages
+	 */
+	$should_display = apply_filters( 'tcb_display_button_in_admin_bar', is_single() || is_page() );
+
+	if ( $should_display && is_admin_bar_showing() && tve_is_post_type_editable( get_post_type() ) && TCB_Product::has_external_access( $post_id ) ) {
 
 		if ( ! isset( $_GET[ TVE_EDITOR_FLAG ] ) ) {
 			$editor_link = tcb_get_editor_url( $post_id );
@@ -767,7 +943,8 @@ function tve_editor_content( $content, $use_case = null ) {
 					if ( is_feed() ) {
 						$more_link = ' [&#8230;]';
 					} else {
-						$more_link = apply_filters( 'the_content_more_link', ' <a href="' . get_permalink() . '#more-' . $post->ID . '" class="more-link">' . __( 'Continue Reading', 'thrive-cb' ) . '</a>', __( 'Continue Reading', 'thrive-cb' ) );
+						$more_link = ' <a href="' . get_permalink() . '#more-' . $post->ID . '" class="more-link">' . __( 'Continue Reading', 'thrive-cb' ) . '</a>';
+						$more_link = apply_filters( 'the_content_more_link', $more_link, __( 'Continue Reading', 'thrive-cb' ) );
 					}
 
 					$tve_saved_content = $content_before_more . $more_link;
@@ -828,7 +1005,10 @@ function tve_editor_content( $content, $use_case = null ) {
 				list( $tve_saved_content ) = explode( $m[0], $tve_saved_content, 2 );
 
 				$tve_saved_content = preg_replace( '#<p>$#s', '', $tve_saved_content );
-				$more_link         = apply_filters( 'the_content_more_link', ' <a href="' . get_permalink() . '#more-' . $post->ID . '" class="more-link">' . __( 'Continue Reading', 'thrive-cb' ) . '</a>', __( 'Continue Reading', 'thrive-cb' ) );
+
+				$more_link = ' <a href="' . get_permalink() . '#more-' . $post->ID . '" class="more-link">' . __( 'Continue Reading', 'thrive-cb' ) . '</a>';
+				$more_link = apply_filters( 'the_content_more_link', $more_link, __( 'Continue Reading', 'thrive-cb' ) );
+
 				$tve_saved_content = force_balance_tags( $tve_saved_content . $more_link );
 			}
 		}
@@ -945,6 +1125,11 @@ function tcb_remove_deprecated_strings( $content ) {
 		' rel="noopener nofollow noreferrer"',
 		' rel="noreferrer nofollow noopener"',
 	), ' rel="nofollow"', $content );
+
+	$content = str_replace(
+		'spotlightr.com/publish/',
+		'spotlightr.com/watch/',
+		$content );
 
 	/**
 	 * Action filter - remove deprecated texts
@@ -1287,7 +1472,7 @@ function tcb_custom_editable_content() {
 
 		/* base CSS file for all Page Templates */
 		if ( ! tve_check_if_thrive_theme() ) {
-			tve_enqueue_style( 'tve_landing_page_base_css', TVE_LANDING_PAGE_TEMPLATE . '/css/base.css', 99 );
+			tve_enqueue_style( 'tve_landing_page_base_css', tve_editor_url( 'landing-page/templates/css/base.css' ), 99 );
 		}
 
 		$tcb_landing_page->enqueue_css();
@@ -1590,7 +1775,7 @@ function tve_run_plugin_upgrade( $old_version, $new_version ) {
 
 		if ( isset( $found ) ) {
 			usort( $new_templates, 'tve_tpl_sort' );
-			update_option( 'tve_user_templates', $new_templates );
+			update_option( 'tve_user_templates', $new_templates, 'no' );
 			delete_option( 'tve_user_templates_styles' );
 		}
 	}
@@ -1614,7 +1799,7 @@ function tve_run_plugin_upgrade( $old_version, $new_version ) {
 		}
 
 		if ( isset( $do_update ) ) {
-			update_option( 'tve_user_templates', $user_templates );
+			update_option( 'tve_user_templates', $user_templates, 'no' );
 		}
 	}
 }
@@ -1710,7 +1895,7 @@ function tve_enqueue_editor_scripts() {
 		/**
 		 * the constant should be defined somewhere in wp-config.php file
 		 */
-		$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
+		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 
 		/**
 		 * this is to handle the following case: an user who has the TL plugin (or others) installed, TCB installed and enabled, but TCB license is expired
@@ -1832,13 +2017,20 @@ function tve_enqueue_editor_scripts() {
 						'posts' => get_rest_url( get_current_blog_id(), 'tcb/v1' . '/posts' ),
 					),
 					'dynamic_image_placeholders'    => array(
-						'featured' => TCB_Post_List_Featured_Image::get_default_url(),
-						'author'   => TCB_Post_List_Author_Image::get_default_url(),
+						'featured'        => TCB_Post_List_Featured_Image::get_default_url(),
+						'author'          => TCB_Post_List_Author_Image::get_default_url(),
+						'user'            => tcb_dynamic_user_image_instance( get_current_user_id() )->get_placeholder_url(),
+						//a fully transparent 840 x 840px png
+						'transparent_bkg' => tve_editor_url( 'editor/css/images/hidden_placeholder.png' ),
 					),
 					'post_list_pagination'          => TCB_Utils::get_pagination_localized_data(),
 					'post_image'                    => array(
 						'featured' => TCB_Post_List_Featured_Image::get_default_url( get_the_ID() ),
 						'author'   => TCB_Post_List_Author_Image::get_default_url( get_the_ID() ),
+						'user'     => tcb_dynamic_user_image_instance( get_current_user_id() )->get_default_url(),
+					),
+					'user_image'                    => array(
+						'name' => tcb_dynamic_user_image_instance( get_current_user_id() )->get_user_name(),
 					),
 					'featured_image'                => array(
 						'default_sizes'  => array_keys( TCB_Post_List_Featured_Image::filter_available_sizes() ),
@@ -1865,6 +2057,7 @@ function tve_enqueue_editor_scripts() {
 					'tve_fa_kit'                    => get_option( 'tve_fa_kit', '' ),
 					'tve_icon_api'                  => TVE_ICON_API,
 					'author_social_links'           => $author_social_url,
+					'site_locale'                   => tve_get_locale(),
 				);
 
 				$tve_path_params = apply_filters( 'tcb_editor_javascript_params', $tve_path_params, $post_id, $post_type );
@@ -2167,7 +2360,7 @@ function tve_load_custom_css( $post_id = null ) {
 
 		$custom_css = trim( tve_get_post_meta( $post_id, 'tve_custom_css', true ) . tve_get_post_meta( $post_id, 'tve_user_custom_css', true ) );
 		if ( $custom_css ) {
-			$custom_css = tve_prepare_global_variables_for_front( $custom_css );
+			$custom_css = do_shortcode( tve_prepare_global_variables_for_front( $custom_css ) );
 			echo sprintf(
 				'<style type="text/css" class="tve_custom_style">%s</style>',
 				tcb_custom_css( $custom_css )
@@ -2204,7 +2397,7 @@ function tve_load_custom_css( $post_id = null ) {
 		}
 
 		if ( ! empty( $inline_styles ) ) {
-			$inline_styles = tve_prepare_global_variables_for_front( $inline_styles );
+			$inline_styles = do_shortcode( tve_prepare_global_variables_for_front( $inline_styles ) );
 			?>
 			<style type="text/css" class="tve_custom_style"><?php echo tcb_custom_css( $inline_styles ); ?></style>
 			<?php
@@ -2785,7 +2978,12 @@ function tve_custom_font_get_link( $font ) {
 		return Tve_Dash_Font_Import_Manager::getCssFile();
 	}
 
-	return '//fonts.googleapis.com/css?family=' . str_replace( ' ', '+', $font->font_name ) . ( $font->font_style ? ':' . $font->font_style : '' ) . ( $font->font_bold ? ',' . $font->font_bold : '' ) . ( $font->font_italic ? $font->font_italic : '' ) . ( $font->font_character_set ? '&subset=' . $font->font_character_set : '' );
+	return '//fonts.googleapis.com/css?family=' . str_replace( ' ', '+',
+			$font->font_name ) .
+	       ( $font->font_style ? ':' . $font->font_style : '' ) .
+	       ( $font->font_bold ? ',' . $font->font_bold : '' ) .
+	       ( $font->font_italic ? $font->font_italic : '' ) .
+	       ( $font->font_character_set ? '&subset=' . $font->font_character_set : '' );
 }
 
 /**
@@ -3094,9 +3292,19 @@ function tve_render_widget_menu( $attributes ) {
 	$attributes['logo'] = empty( $attributes['logo'] ) ? array() : (array) $attributes['logo'];
 
 	/** @var TCB_Menu_Element $menu_element */
-	$menu_element         = tcb_elements()->element_factory( 'menu' );
-	$hamburger_trigger    = $menu_element->get_hamburger_trigger_html( $attributes );
-	$logo_hamburger_split = ! empty( $attributes['logo'] ) ? TCB_Logo::render_logo( $attributes['logo'] ) : '';
+	$menu_element      = tcb_elements()->element_factory( 'menu' );
+	$hamburger_trigger = $menu_element->get_hamburger_trigger_html( $attributes );
+
+
+	if ( empty( $attributes['logo'] ) ) {
+		$logo_hamburger_split = '';
+	} else {
+		/*  ensure the right class for menu logo split */
+		$attributes['logo']['class'] = empty( $attributes['logo']['class'] ) ? $attributes['uuid'] : preg_replace( '/m-(\w+)/', $attributes['uuid'], $attributes['logo']['class'] );
+
+		/* render logo */
+		$logo_hamburger_split = TCB_Logo::render_logo( $attributes['logo'] );
+	}
 
 	/* make sure the renderer uses TAr menu walker */
 	add_filter( 'wp_nav_menu_args', 'tve_menu_walker' );
@@ -3114,7 +3322,14 @@ function tve_render_widget_menu( $attributes ) {
 	remove_filter( 'wp_nav_menu_args', 'tve_menu_walker' );
 
 	/* clear out the global variable */
-	unset( $GLOBALS['tve_menu_link_custom_color'], $GLOBALS['tve_menu_top_link_custom_color'], $GLOBALS['tve_menu_font_class'], $GLOBALS['tve_menu_top_link_custom_font_family'], $GLOBALS['tve_menu_group_edit'], $GLOBALS['tcb_wp_menu'] );
+	unset(
+		$GLOBALS['tve_menu_top_link_custom_font_family'],
+		$GLOBALS['tve_menu_top_link_custom_color'],
+		$GLOBALS['tve_menu_link_custom_color'],
+		$GLOBALS['tve_menu_font_class'],
+		$GLOBALS['tve_menu_group_edit'],
+		$GLOBALS['tcb_wp_menu']
+	);
 	remove_filter( 'nav_menu_link_attributes', 'tve_menu_custom_color' );
 	remove_filter( 'nav_menu_link_attributes', 'tve_menu_custom_font_family' );
 	remove_filter( 'wp_nav_menu_objects', 'tve_menu_filter_objects' );
@@ -3935,10 +4150,12 @@ function tve_api_add_subscriber( $connection, $list_identifier, $data, $log_erro
 
 	if ( ! $log_error || true === $result || ( $key === 'klicktipp' && filter_var( $result, FILTER_VALIDATE_URL ) !== false ) ) {
 		/**
-		 * Fires when a new Lead is Created from a Thrive Leads Form
+		 * This hook is fired when a user signs up, using a lead generation form.  The hook can be fired multiple times for the same form and user.
+		 * </br>
+		 * Example use case:- Send lead data to a third party integration
 		 *
 		 * @param array Lead Data
-		 * @param null|array User Data
+		 * @param null|array User Details
 		 *
 		 * @api
 		 */
@@ -4352,11 +4569,12 @@ if ( ! function_exists( 'tve_frontend_enqueue_scripts' ) ) {
 	 */
 	function tve_frontend_enqueue_scripts() {
 		$post_id   = get_the_ID();
-		$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
+		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 
 		if ( ! apply_filters( 'tcb_overwrite_scripts_enqueue', false ) && ! is_editor_page_raw() ) {
 			/**
 			 * enqueue scripts and styles only for posts / pages that actually have tcb content
+			 * also enqueue if the post content contains our gutenberg blocks
 			 */
 			global $wp_query;
 			if ( empty( $wp_query->posts ) ) {
@@ -4364,7 +4582,7 @@ if ( ! function_exists( 'tve_frontend_enqueue_scripts' ) ) {
 			}
 			$enqueue_tcb_resources = false;
 			foreach ( $wp_query->posts as $_post ) {
-				if ( tve_get_post_meta( $_post->ID, 'tve_updated_post' ) ) {
+				if ( tve_get_post_meta( $_post->ID, 'tve_updated_post' ) || strpos( $_post->post_content, 'wp:thrive' ) !== false ) {
 					$enqueue_tcb_resources = true;
 					break;
 				}
@@ -4426,7 +4644,8 @@ if ( ! function_exists( 'tve_frontend_enqueue_scripts' ) ) {
 			'routes'           => array(
 				'posts' => get_rest_url( get_current_blog_id(), 'tcb/v1' . '/posts' ),
 			),
-
+			'nonce'            => TCB_Utils::create_nonce(),
+			'allow_video_src'  => tve_dash_allow_video_src(),
 		);
 
 		tve_enqueue_social_scripts();
@@ -4641,7 +4860,7 @@ function tcb_dashboard_loaded() {
  * @param array $templates
  */
 function tve_save_downloaded_templates( $templates ) {
-	update_option( 'thrive_tcb_download_lp', $templates );
+	update_option( 'thrive_tcb_download_lp', $templates, 'no' );
 }
 
 /**
@@ -4798,6 +5017,26 @@ function tar_is_post_type_allowed( $is_allowed, $post_type ) {
 
 add_filter( 'wp_kses_allowed_html', 'tcb_allow_unfiltered_html', 20, 2 );
 
+
+add_filter( 'the_content', 'tve_remove_autop', - 100 );
+/**
+ * Prevent doing autop on certain post types
+ *
+ * @param $content
+ *
+ * @return mixed
+ */
+function tve_remove_autop( $content ) {
+
+	$post_types = apply_filters( 'tve_remove_autop_post_types', array( 'tcb_lightbox' ) );
+
+	if ( in_array( get_post_type(), $post_types ) ) {
+		remove_filter( 'the_content', 'wpautop' );
+	}
+
+	return $content;
+}
+
 /**
  * WordPress puts a filter and limits what html can be used on any content that is added by a non-superadmin in a multisite system.
  * SVGs will get stripped out by this filter, and certain tags ( such as <main> ) are not allowed
@@ -4812,7 +5051,7 @@ add_filter( 'wp_kses_allowed_html', 'tcb_allow_unfiltered_html', 20, 2 );
  * @return mixed
  */
 function tcb_allow_unfiltered_html( $tags, $context = null ) {
-	if ( isset( $context ) && 'post' === $context && current_user_can( 'edit_posts' ) ) {
+	if ( isset( $context ) && 'post' === $context && function_exists( 'wp_get_current_user' ) && current_user_can( 'edit_posts' ) ) {
 		$tags['svg'] = array(
 			'aria-hidden'         => true,
 			'aria-labelledby'     => true,
@@ -5077,13 +5316,13 @@ function tcb_get_dynamic_link( $field_name, $section ) {
 	 *
 	 * @return array
 	 */
-	$dynamicLinks = apply_filters( 'tcb_dynamiclink_data', array() );
+	$dynamic_links = apply_filters( 'tcb_dynamiclink_data', array() );
 
-	if ( ! isset( $dynamicLinks[ $section ]['links'][0] ) ) {
+	if ( ! isset( $dynamic_links[ $section ]['links'][0] ) ) {
 		return false;
 	}
 
-	$links = $dynamicLinks[ $section ]['links'][0];
+	$links = $dynamic_links[ $section ]['links'][0];
 
 	foreach ( $links as $link ) {
 		if ( $field_name === $link['name'] ) {
@@ -5100,16 +5339,20 @@ function tcb_get_dynamic_link( $field_name, $section ) {
  * @return array
  */
 function tve_convert_favorite_colors() {
-	$favouriteColorsArray = get_option( 'thrv_custom_colours', array() );
-	array_walk( $favouriteColorsArray, function ( &$color ) {
+	$favourite_colors_array = get_option( 'thrv_custom_colours', array() );
+	array_walk( $favourite_colors_array, function ( &$color ) {
 		if ( ! is_array( $color ) ) {
-			$color = array( 'rgb' => $color, 'name' => 'Favourite color', 'default' => 1 );
+			$color = array(
+				'name'    => 'Favourite color',
+				'rgb'     => $color,
+				'default' => 1,
+			);
 		}
 
 		return $color;
 	} );
 
-	return $favouriteColorsArray;
+	return $favourite_colors_array;
 }
 
 /**
@@ -5121,4 +5364,118 @@ function tve_author_social_url() {
 	global $post;
 
 	return empty( $post ) ? array() : (array) get_the_author_meta( 'thrive_social_urls', $post->post_author );
+}
+
+/**
+ * Return an intercom article we use in the editor
+ *
+ * @param string $key
+ *
+ * @return string
+ */
+function tve_get_intercom_article_url( $key = '' ) {
+	$articles = array(
+		'menu'                => 'https://api.intercom.io/articles/4425832',
+		'responsive'          => 'https://api.intercom.io/articles/4425813',
+		'image_element'       => 'https://api.intercom.io/articles/4425765',
+		'lead_generation'     => 'https://api.intercom.io/articles/4425779',
+		'lg_custom_fields'    => 'https://api.intercom.io/articles/4425882',
+		'block'               => 'https://api.intercom.io/articles/4425843',
+		'login_registration'  => 'https://api.intercom.io/articles/4425883',
+		'text'                => 'https://api.intercom.io/articles/4425764',
+		'button'              => 'https://api.intercom.io/articles/4425768',
+		'columns'             => 'https://api.intercom.io/articles/4425769',
+		'background_section'  => 'https://api.intercom.io/articles/4425770',
+		'contentbox'          => 'https://api.intercom.io/articles/4425774',
+		'templates_symbols'   => 'https://api.intercom.io/articles/4425777',
+		'logo'                => 'https://api.intercom.io/articles/4425848',
+		'click_to_tweet'      => 'https://api.intercom.io/articles/4425790',
+		'content_reveal'      => 'https://api.intercom.io/articles/4425778',
+		'countdown'           => 'https://api.intercom.io/articles/4425793',
+		'countdown_evergreen' => 'https://api.intercom.io/articles/4425793',
+		'credit_card'         => 'https://api.intercom.io/articles/4425794',
+		'custom_html'         => 'https://api.intercom.io/articles/4425799',
+		'disqus_comments'     => 'https://api.intercom.io/articles/4425808',
+		'divider'             => 'https://api.intercom.io/articles/4425791',
+		'facebook_comments'   => 'https://api.intercom.io/articles/4425808',
+		'fill_counter'        => 'https://api.intercom.io/articles/4425789',
+		'google_map'          => 'https://api.intercom.io/articles/4425799',
+		'icon'                => 'https://api.intercom.io/articles/4425785',
+		'progress_bar'        => 'https://api.intercom.io/articles/4790886',
+		'social_share'        => 'https://api.intercom.io/articles/4425796',
+		'social_follow'       => 'https://api.intercom.io/articles/4472330',
+		'star_rating'         => 'https://api.intercom.io/articles/4425791',
+		'styled_list'         => 'https://api.intercom.io/articles/4425800',
+		'table'               => 'https://api.intercom.io/articles/4425798',
+		'table_of_contents'   => 'https://api.intercom.io/articles/4425803',
+		'tabs'                => 'https://api.intercom.io/articles/4425806',
+		'testimonial'         => 'https://api.intercom.io/articles/4425805',
+		'toggle'              => 'https://api.intercom.io/articles/4425878',
+		'video_element'       => 'https://api.intercom.io/articles/4425782',
+		'wordpress_content'   => 'https://api.intercom.io/articles/4425781',
+		'audio_element'       => 'https://api.intercom.io/articles/4425842',
+		'call_to_action'      => 'https://api.intercom.io/articles/4425745',
+		'guarantee_box'       => 'https://api.intercom.io/articles/4425744',
+		'contact_form'        => 'https://api.intercom.io/articles/4430139',
+		'numbered_list'       => 'https://api.intercom.io/articles/4425821',
+		'post_list'           => 'https://api.intercom.io/articles/4425844',
+		'pricing_table'       => 'https://api.intercom.io/articles/4425836',
+		'search_element'      => 'https://api.intercom.io/articles/4425871',
+		'styled_box'          => 'https://api.intercom.io/articles/4425825',
+	);
+
+	$articles = apply_filters( 'thrive_kb_articles', $articles );
+
+	return empty( $articles[ $key ] ) ? '' : $articles[ $key ];
+}
+
+/**
+ * Get site locale
+ * also handle cases like ro_ro
+ *
+ * @return mixed|string|string[]|null
+ */
+function tve_get_locale() {
+	$locale = strtolower( get_locale() );
+	$locale = preg_replace( '/_/', '-', $locale );
+	$split  = explode( '-', $locale );
+
+	if ( ! empty( $split[0] ) && ! empty( $split[1] ) && $split[0] === $split[1] ) {
+		$locale = $split[0];
+	}
+
+	return $locale;
+}
+
+/**
+ * Score a password
+ *
+ * @param $passwd
+ *
+ * @return float|int
+ */
+function tve_score_password( $passwd ) {
+	$passwd = trim( $passwd );
+	if ( strlen( $passwd ) < 5 || preg_match( '/(?:passwd|mypass|password|wordpress)/i', $passwd ) ) {
+		return 0;
+	}
+
+	$score = 5 * count( array_unique( str_split( $passwd ) ) );
+
+	/* numbers */
+	if ( $num = preg_match_all( "/\d/", $passwd, $matches ) ) {
+		$score += ( (int) $num * 2 );
+	}
+	if ( preg_match( "/[a-z]/", $passwd ) ) {
+		$score += 10;
+	}
+	if ( preg_match( "/[A-Z]/", $passwd ) ) {
+		$score += 10;
+	}
+	/* special chars*/
+	if ( $num = preg_match_all( "/[^a-zA-Z0-9]/", $passwd, $matches ) ) {
+		$score += ( 10 * (int) $num );
+	}
+
+	return $score;
 }

@@ -83,7 +83,7 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 					'icon_side'      => array(
 						'config' => array(
-							'name'    => __( 'Icon Side', 'thrive-cb' ),
+							'name'    => __( 'Icon side', 'thrive-cb' ),
 							'buttons' => array(
 								array( 'value' => 'left', 'text' => __( 'Left', 'thrive-cb' ), 'default' => true ),
 								array( 'value' => 'right', 'text' => __( 'Right', 'thrive-cb' ) ),
@@ -93,7 +93,7 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 					'ButtonIcon'     => array(
 						'config'  => array(
 							'name'    => '',
-							'label'   => __( 'Add Icon', 'thrive-cb' ),
+							'label'   => __( 'Add icon', 'thrive-cb' ),
 							'default' => false,
 						),
 						'extends' => 'Switch',
@@ -121,7 +121,7 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 					'ButtonSize'     => array(
 						'css_prefix' => tcb_selection_root() . ' ',
 						'config'     => array(
-							'name'       => __( 'Size and Alignment', 'thrive-cb' ),
+							'name'       => __( 'Size and alignment', 'thrive-cb' ),
 							'full-width' => true,
 							'buttons'    => array(
 								array(
@@ -283,6 +283,7 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 					'Display',
 					'Alignment',
 					'Overflow',
+					'ScrollStyle',
 				),
 			),
 			'scroll'     => array(
@@ -316,5 +317,20 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 	 */
 	public function get_default_templates() {
 		return tve_get_cloud_content_templates( $this->get_template_tag() );
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'button',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425768-how-to-use-the-button-element',
+			),
+		);
 	}
 }

@@ -269,6 +269,9 @@
 			              } );
 
 			function cloneStyle() {
+				if ( original instanceof HTMLIFrameElement ) {
+					return;
+				}
 				copyStyle( window.getComputedStyle( original ), clone.style );
 
 				function copyFont( source, target ) {
@@ -558,6 +561,24 @@
 			}
 
 			return new Promise( function ( resolve ) {
+
+				var placeholder;
+				if ( domtoimage.impl.options.imagePlaceholder ) {
+					var split = domtoimage.impl.options.imagePlaceholder.split( /,/ );
+					if ( split && split[ 1 ] ) {
+						placeholder = split[ 1 ];
+					}
+				}
+
+				/**
+				 * dont fetch spotlight previews
+				 */
+				if ( url.includes( 'spotlightr' ) ) {
+					resolve( placeholder );
+					return;
+				}
+
+
 				var request = new XMLHttpRequest();
 
 				request.onreadystatechange = done;
@@ -574,14 +595,6 @@
 				request.open( 'GET', url, true );
 
 				request.send();
-
-				var placeholder;
-				if ( domtoimage.impl.options.imagePlaceholder ) {
-					var split = domtoimage.impl.options.imagePlaceholder.split( /,/ );
-					if ( split && split[ 1 ] ) {
-						placeholder = split[ 1 ];
-					}
-				}
 
 				function done() {
 					if ( request.readyState !== 4 ) {

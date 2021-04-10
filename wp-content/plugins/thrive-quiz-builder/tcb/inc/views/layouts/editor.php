@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 ?><!DOCTYPE html>
-<html class="no-js" style="height: 100%;overflow-y:hidden">
+<html class="no-js" style="height: 100%;overflow:hidden">
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width">
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		var ajaxurl = '<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>';
 	</script>
 </head>
-<body class="tcb-editor-main preview-desktop" style="padding: 0;margin: 0;height: 100%;overflow-y:hidden;">
+<body class="tcb-editor-main preview-desktop" style="padding: 0;margin: 0;height: 100%;overflow:hidden;">
 <div class="tcb-wrap-all" id="tve-main-frame">
 	<div id="tve-page-loader" class="tve-open">
 		<?php tcb_template( 'loading-spinner.php' ); ?>

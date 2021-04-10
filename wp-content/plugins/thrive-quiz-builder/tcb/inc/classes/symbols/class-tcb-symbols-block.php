@@ -52,11 +52,6 @@ class TCB_Symbols_Block {
 				'block_preview' => tve_editor_url() . '/admin/assets/images/block-preview.png',
 			)
 		);
-
-		if ( ! tve_dash_is_google_fonts_blocked() ) {
-			tve_enqueue_style( 'tve-block-font', '//fonts.googleapis.com/css?family=Roboto:400,500,700' );
-		}
-
 	}
 
 	static public function render_block( $attributes ) {

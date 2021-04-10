@@ -9,6 +9,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class TCB_Post_Read_More_Element extends TCB_Button_Element {
 	/**
+	 * TCB_Post_Read_More_Element constructor.
+	 *
+	 * @param string $tag
+	 */
+	public function __construct( $tag = '' ) {
+		parent::__construct( $tag );
+
+		add_filter( 'tcb_element_' . $this->tag() . '_config', array( $this, 'add_config' ) );
+	}
+
+	/**
+	 * @param array $config
+	 *
+	 * @return array mixed
+	 */
+	public function add_config( $config ) {
+		$config['is_sub_element'] = true;
+
+		return $config;
+	}
+
+	/**
 	 * Name of the element
 	 *
 	 * @return string
@@ -50,7 +72,7 @@ class TCB_Post_Read_More_Element extends TCB_Button_Element {
 	 * @return string
 	 */
 	protected function html() {
-		return  tcb_template( 'elements/read-more.php', $this, true );;
+		return tcb_template( 'elements/read-more.php', $this, true );;
 	}
 
 	/**

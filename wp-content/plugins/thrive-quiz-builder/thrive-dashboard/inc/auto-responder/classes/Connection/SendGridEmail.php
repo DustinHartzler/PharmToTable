@@ -225,6 +225,7 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 					->addTo( array( $data['sender_email'] ) )
 					->setFrom( $from_email )
 					->setFromName( empty( $data['from_name'] ) ? '' : $data['from_name'] )
+					->setReplyTo( $from_email )
 					->setSubject( $data['confirmation_subject'] )
 					->setText( '' )
 					->setHtml( empty ( $data['confirmation_html'] ) ? '' : $data['confirmation_html'] );

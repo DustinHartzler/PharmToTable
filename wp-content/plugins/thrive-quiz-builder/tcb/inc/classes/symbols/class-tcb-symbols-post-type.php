@@ -1,11 +1,17 @@
 <?php
 
 /**
- * FileName  class-tcb-symbols-post-types.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @developer: Dragos Petcu
- * @company  : BitStone
+ * @package thrive-visual-editor
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
+ * Class TCB_Symbols_Post_Type
  */
 class TCB_Symbols_Post_Type {
 

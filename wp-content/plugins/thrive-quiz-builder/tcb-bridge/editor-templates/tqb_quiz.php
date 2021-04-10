@@ -15,7 +15,7 @@ if ( empty( $post_id ) || empty( $quiz_id ) ) {
 }
 
 $image_url   = $_GET['image_url'];
-$description = $_GET['description'];
+$description = rawurlencode( $_GET['description'] );
 
 $site_url        = site_url( '?post_type=' . Thrive_Quiz_Builder::SHORTCODE_NAME . '&p=' . $quiz_id . '&tqb_redirect_post_id=' . $post_id . '&image_url=' . $image_url . '&description=' . $description );
 $facebook_app_id = get_option( 'tve_social_fb_app_id', '' );

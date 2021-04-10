@@ -1,10 +1,14 @@
 <?php
 /**
- * FileName  header.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project: thrive-visual-editor
- * @company: BitStone
+ * @package thrive-visual-editor
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 ?>
 <div id="tve-header-component" class="tve-component" data-view="HFSection" data-type="header">
 	<div class="section-select">
@@ -32,13 +36,13 @@
 			<div class="row pb-10 header-actions">
 				<div class="col-xs-6">
 					<button class="tve-button blue long click" data-fn="editSection">
-						<?php echo __( 'Edit Header', 'thrive-cb' ) ?>
+						<?php echo __( 'Edit Header', 'thrive-cb' ); ?>
 					</button>
 				</div>
 
 				<div class="col-xs-6">
 					<button class="tve-button grey long click" data-fn="placeholder_action">
-						<?php echo __( 'Change Header', 'thrive-cb' ) ?>
+						<?php echo __( 'Change Header', 'thrive-cb' ); ?>
 					</button>
 				</div>
 			</div>
@@ -57,6 +61,7 @@
 			<div class="tve-control" data-view="FullHeight"></div>
 			<hr>
 			<div class="tve-control" data-view="VerticalPosition"></div>
+			<div class="tve-control" data-view="StateSelect"></div>
 		</div>
 	</div>
 

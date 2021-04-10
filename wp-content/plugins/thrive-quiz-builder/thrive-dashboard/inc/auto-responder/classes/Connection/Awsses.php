@@ -208,6 +208,7 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 				$message = new Thrive_Dash_Api_Awsses_SimpleEmailServiceMessage();
 				$message->addTo( $data['sender_email'] );
 				$message->setFrom( $from_email );
+				$message->addReplyTo( $from_email );
 				$message->setSubject( $data['confirmation_subject'] );
 				$message->setMessageFromString( empty ( $data['confirmation_text'] ) ? '' : $data['confirmation_text'], empty ( $data['confirmation_html'] ) ? '' : $data['confirmation_html'] );
 

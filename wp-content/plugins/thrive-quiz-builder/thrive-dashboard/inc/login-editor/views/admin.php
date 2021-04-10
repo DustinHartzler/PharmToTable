@@ -22,6 +22,9 @@
 		</p>
 		<p>
 			<?php echo __( 'Activating this feature will mean taking over the default WordPress design.', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+			<a class="learn-more-link" href="http://help.thrivethemes.com/en/articles/4519097-how-to-use-the-wordpress-login-screen-branding-feature">
+				<?php echo __( 'Learn more', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+			</a>
 		</p>
 		<div class="tvd-wrap space-between">
 			<div class="tvd-switch">

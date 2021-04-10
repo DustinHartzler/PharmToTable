@@ -97,9 +97,25 @@ class TCB_Logo_Element extends TCB_Image_Element {
 			),
 			'disabled_controls' => array(
 				'Overflow',
+				'ScrollStyle',
 			),
 		);
 
 		return $components;
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'logo',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425848-how-to-use-the-logo-element',
+			),
+		);
 	}
 }

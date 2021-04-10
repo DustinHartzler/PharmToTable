@@ -123,6 +123,9 @@ class TCB_Styledlist_Element extends TCB_Element_Abstract {
 					'TextTransform' => $default_config,
 				),
 			),
+			'layout'     => array(
+				'disabled_controls' => array(),
+			),
 		);
 
 		return array_merge( $styledlist, $this->group_component() );
@@ -134,7 +137,7 @@ class TCB_Styledlist_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**
@@ -163,6 +166,21 @@ class TCB_Styledlist_Element extends TCB_Element_Abstract {
 					'name'     => __( 'Grouped Texts', 'thrive-cb' ),
 					'singular' => __( '-- Text %s', 'thrive-cb' ),
 				),
+			),
+		);
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'styled_list',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425800-how-to-use-the-styled-list-element',
 			),
 		);
 	}

@@ -21,21 +21,21 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 	class TVE_PluginUpdateChecker_1_3_2 {
 		protected $secret_key = '@#$()%*%$^&*(#@$%@#$%93827456MASDFJIK3245';
 
-		public $metadataUrl        = ''; //The URL of the plugin's metadata file.
+		public $metadataUrl = ''; //The URL of the plugin's metadata file.
 		public $pluginAbsolutePath = ''; //Full path of the main plugin file.
-		public $pluginFile         = '';  //Plugin filename relative to the plugins directory. Many WP APIs use this to identify plugins.
-		public $slug               = '';        //Plugin slug.
-		public $checkPeriod        = 12; //How often to check for updates (in hours).
-		public $optionName         = '';  //Where to store the update info.
+		public $pluginFile = '';  //Plugin filename relative to the plugins directory. Many WP APIs use this to identify plugins.
+		public $slug = '';        //Plugin slug.
+		public $checkPeriod = 12; //How often to check for updates (in hours).
+		public $optionName = '';  //Where to store the update info.
 
 		public $debugMode = false; //Set to TRUE to enable error reporting. Errors are raised using trigger_error()
 		//and should be logged to the standard PHP error log.
 
-		private $cronHook               = null;
-		private $debugBarPlugin         = null;
+		private $cronHook = null;
+		private $debugBarPlugin = null;
 		private $cachedInstalledVersion = null;
-		private $php_version            = 0;
-		private $required_php_version   = '5.3.0';
+		private $php_version = 0;
+		private $required_php_version = '5.3.0';
 
 		protected $api_slug = '';
 
@@ -199,11 +199,11 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		/**
 		 * Retrieve plugin info from the configured API endpoint.
 		 *
-		 * @uses wp_remote_get()
-		 *
 		 * @param array $queryArgs Additional query arguments to append to the request. Optional.
 		 *
 		 * @return TVE_PluginInfo
+		 * @uses wp_remote_get()
+		 *
 		 */
 		public function requestInfo( $queryArgs = array() ) {
 			//Query args to append to the URL. Plugins can add their own by using a filter callback (see addQueryArgFilter()).
@@ -264,9 +264,9 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		/**
 		 * Retrieve the latest update (if any) from the configured API endpoint.
 		 *
+		 * @return TVE_PluginUpdate An instance of PluginUpdate, or NULL when no updates are available.
 		 * @uses PluginUpdateChecker::requestInfo()
 		 *
-		 * @return TVE_PluginUpdate An instance of PluginUpdate, or NULL when no updates are available.
 		 */
 		public function requestUpdate() {
 			//For the sake of simplicity, this function just calls requestInfo()
@@ -442,13 +442,13 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		 * Intercept plugins_api() calls that request information about our plugin and
 		 * use the configured API endpoint to satisfy them.
 		 *
-		 * @see plugins_api()
-		 *
 		 * @param mixed        $result
 		 * @param string       $action
 		 * @param array|object $args
 		 *
 		 * @return mixed
+		 * @see plugins_api()
+		 *
 		 */
 		public function injectInfo( $result, $action = null, $args = null ) {
 			$relevant = ( $action == 'plugin_information' ) && isset( $args->slug ) && ( $args->slug == $this->slug );
@@ -525,6 +525,20 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 						$update->upgrade_notice = self::get_wp_version_error_message();
 					}
 
+					$plugin_data = get_plugin_data( $this->pluginAbsolutePath );
+
+					/**
+					 * @todo Remove this check after a while
+					 */
+					if ( class_exists( 'TD_TTW_Messages_Manager', false ) ) {
+
+						if ( true !== TD_TTW_Update_Manager::can_see_updates() ) {
+							return null;
+						}
+
+						$update->upgrade_notice .= TD_TTW_Messages_Manager::get_update_message( $state, $plugin_data );
+					}
+
 					if ( ! empty( $update->upgrade_notice ) ) {
 						remove_action( 'in_plugin_update_message-' . $this->pluginFile, array( $this, 'upgrade_notice' ), 10 );
 						add_action( 'in_plugin_update_message-' . $this->pluginFile, array( $this, 'upgrade_notice' ), 10, 2 );
@@ -539,6 +553,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 
 		/**
 		 * Message to be displayed when the user has an older version of wordpress
+		 *
 		 * @return string
 		 */
 		public static function get_wp_version_error_message() {
@@ -593,9 +608,9 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		/**
 		 * Check for updates when the user clicks the "Check for updates" link.
 		 *
+		 * @return void
 		 * @see self::addCheckForUpdatesLink()
 		 *
-		 * @return void
 		 */
 		public function handleManualCheck() {
 			$shouldCheck
@@ -661,11 +676,11 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		 * The callback function should take one argument - an associative array of query arguments.
 		 * It should return a modified array of query arguments.
 		 *
-		 * @uses add_filter() This method is a convenience wrapper for add_filter().
-		 *
 		 * @param callable $callback
 		 *
 		 * @return void
+		 * @uses add_filter() This method is a convenience wrapper for add_filter().
+		 *
 		 */
 		public function addQueryArgFilter( $callback ) {
 			add_filter( 'puc_request_info_query_args-' . $this->slug, $callback );
@@ -678,11 +693,11 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		 * and return a modified array or arguments. See the WP documentation on wp_remote_get()
 		 * for details on what arguments are available and how they work.
 		 *
-		 * @uses add_filter() This method is a convenience wrapper for add_filter().
-		 *
 		 * @param callable $callback
 		 *
 		 * @return void
+		 * @uses add_filter() This method is a convenience wrapper for add_filter().
+		 *
 		 */
 		public function addHttpRequestArgFilter( $callback ) {
 			add_filter( 'puc_request_info_options-' . $this->slug, $callback );
@@ -698,11 +713,11 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		 *
 		 * The callback function should return a new or modified instance of PluginInfo or NULL.
 		 *
-		 * @uses add_filter() This method is a convenience wrapper for add_filter().
-		 *
 		 * @param callable $callback
 		 *
 		 * @return void
+		 * @uses add_filter() This method is a convenience wrapper for add_filter().
+		 *
 		 */
 		public function addResultFilter( $callback ) {
 			add_filter( 'puc_request_info_result-' . $this->slug, $callback, 10, 2 );
@@ -880,16 +895,16 @@ if ( ! class_exists( 'TVE_PluginUpdate_1_3', false ) ) {
 	 * @access    public
 	 */
 	class TVE_PluginUpdate_1_3 {
-		public         $id = 0;
-		public         $slug;
-		public         $version;
-		public         $homepage;
-		public         $download_url;
-		public         $upgrade_notice;
-		public         $tested;
-		public         $icons;
+		public $id = 0;
+		public $slug;
+		public $version;
+		public $homepage;
+		public $download_url;
+		public $upgrade_notice;
+		public $tested;
+		public $icons;
 		private static $fields
-		                   = array(
+			= array(
 				'id',
 				'slug',
 				'version',
@@ -1021,12 +1036,10 @@ if ( ! class_exists( 'TVE_PucFactory', false ) ) {
 	 */
 	class TVE_PucFactory {
 		protected static $classVersions = array();
-		protected static $sorted        = false;
+		protected static $sorted = false;
 
 		/**
 		 * Create a new instance of PluginUpdateChecker.
-		 *
-		 * @see PluginUpdateChecker::__construct()
 		 *
 		 * @param        $metadataUrl
 		 * @param        $pluginFile
@@ -1035,6 +1048,8 @@ if ( ! class_exists( 'TVE_PucFactory', false ) ) {
 		 * @param string $optionName
 		 *
 		 * @return TVE_PluginUpdateChecker
+		 * @see PluginUpdateChecker::__construct()
+		 *
 		 */
 		public static function buildUpdateChecker( $metadataUrl, $pluginFile, $slug = '', $checkPeriod = 12, $optionName = '' ) {
 			$class = self::getLatestClassVersion( 'PluginUpdateChecker' );

@@ -458,10 +458,63 @@ function tve_dash_get_thrive_parent_node() {
 function tve_dash_get_webhook_trigger_integrated_apis() {
 	return array(
 		'activecampaign' => array(
-			'key'      => 'activecampaign',
-			'label'    => 'ActiveCampaign',
-			'image'     => TVE_DASH_URL .'/inc/auto-responder/views/images/activecampaign.png',
-			'selected' => false,
+			'key'        => 'activecampaign',
+			'label'      => 'ActiveCampaign',
+			'image'      => TVE_DASH_URL . '/inc/auto-responder/views/images/activecampaign.png',
+			'selected'   => false,
+			'kb_article' => 'https://help.thrivethemes.com/en/articles/4625431-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-activecampaign',
+		),
+		'drip'           => array(
+			'key'        => 'drip',
+			'label'      => 'Drip',
+			'image'      => TVE_DASH_URL . '/inc/auto-responder/views/images/drip.png',
+			'selected'   => false,
+			'kb_article' => 'http://help.thrivethemes.com/en/articles/4741857-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-drip',
+		),
+		'fluentcrm'      => array(
+			'key'                => 'fluentcrm',
+			'label'              => 'FluentCRM',
+			'image'              => TVE_DASH_URL . '/inc/auto-responder/views/images/fluentcrm.png',
+			'custom_integration' => true,
+			'data'               => Thrive_Dash_List_Manager::connectionInstance( 'fluentcrm' )->get_tags(),
+			'selected'           => false,
+			'kb_article'         => 'http://help.thrivethemes.com/en/articles/5024011-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-fluentcrm',
+		),
+		'infusionsoft'   => array(
+			'key'        => 'infusionsoft',
+			'label'      => 'InfusionSoft',
+			'image'      => TVE_DASH_URL . '/inc/auto-responder/views/images/infusionsoft.png',
+			'selected'   => false,
+			'kb_article' => 'http://help.thrivethemes.com/en/articles/4741865-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-infusionsoft',
+		),
+		'zapier'         => array(
+			'key'        => 'zapier',
+			'label'      => 'Zapier',
+			'image'      => TVE_DASH_URL . '/inc/auto-responder/views/images/zapier.png',
+			'selected'   => false,
+			'kb_article' => 'http://help.thrivethemes.com/en/articles/4741869-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-zapier',
+		),
+		'general'        => array(
+			'key'        => 'general',
+			'label'      => 'Generic webhook',
+			'image'      => TVE_DASH_URL . '/inc/auto-responder/views/images/email.png',
+			'selected'   => false,
+			'kb_article' => 'http://help.thrivethemes.com/en/articles/4741872-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-generic-webhook',
 		)
 	);
 }
+
+
+/**
+ * get relevant data from webhook trigger
+ *
+ * @param $request WP_REST_Request
+ *
+ * @return array
+ */
+function tve_dash_get_general_webhook_data( $request ) {
+	$contact = $request->get_param( 'email' );
+
+	return array( 'email' => empty( $contact ) ? '' : $contact );
+}
+

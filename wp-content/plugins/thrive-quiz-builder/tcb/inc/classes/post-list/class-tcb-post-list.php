@@ -171,6 +171,12 @@ class TCB_Post_List {
 
 		$post = $current_post;
 
+		/**
+		 * This is first called in the Post Content shortcode ( @see TCB_Post_List_Content::get_content() ) inside the post list loop.
+		 * It must be called again at this point in order to restore the post data to what it was before the custom loop
+		 */
+		setup_postdata( $post );
+
 		if ( is_editor_page_raw( true ) ) {
 			$shared_styles = '';
 		} else {
@@ -223,7 +229,8 @@ class TCB_Post_List {
 	 * @return string
 	 */
 	public function class_attr( $attr = array() ) {
-		$classes = array( TCB_POST_LIST_CLASS );
+		/* tve-content-list identifies lists with dynamic content */
+		$classes = array( TCB_POST_LIST_CLASS, 'tve-content-list' );
 
 		if ( $this->in_editor_render ) {
 			$classes[] = 'tcb-compact-element';
@@ -278,8 +285,10 @@ class TCB_Post_List {
 
 		//Replace the permalink shortcode and add the cover div only on preview
 		if ( ! TCB_Utils::in_editor_render() && ! empty( $this->attr['article-permalink'] ) ) {
-			$content = str_replace( '[tcb-article-permalink]', get_permalink( $post_id ), $content );
-			$content = substr_replace( $content, '<div class="tve-article-cover"></div></article>', - 10 );
+			$permalink = get_permalink( $post_id );
+			$content   = str_replace( '[tcb-article-permalink]', $permalink, $content );
+			/* add an anchor so the post has link options on right click */
+			$content = substr_replace( $content, '<div class="tve-article-cover"><a href="' . $permalink . '"></a></div></article>', - 10 );
 		}
 
 		return $content;
@@ -410,6 +419,7 @@ class TCB_Post_List {
 	public function article_class( $post_class = array() ) {
 		$post_class[] = TCB_POST_WRAPPER_CLASS;
 		$post_class[] = THRIVE_WRAPPER_CLASS;
+		$post_class[] = 'thrive-animated-item';
 
 		return $post_class;
 	}
@@ -1069,6 +1079,7 @@ class TCB_Post_List {
 		'permalink',
 		'featured-list',
 		'template-id',
+		'styled-scrollbar',
 	);
 
 	/**

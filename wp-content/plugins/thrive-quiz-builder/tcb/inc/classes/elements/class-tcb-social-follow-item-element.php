@@ -99,7 +99,7 @@ class TCB_Social_Follow_Item_Element extends TCB_Icon_Element {
 			'ColorPicker' => array( 'css_prefix' => tcb_selection_root() . ' .thrv_social_follow .tve_social_items ' ),
 			'PreviewList' => array( 'css_prefix' => tcb_selection_root() . ' .thrv_social_follow .tve_social_items ' ),
 		);
-		$components['layout']['disabled_controls'] = array( 'Width', 'Height', 'Display', 'Overflow', 'Alignment' );
+		$components['layout']['disabled_controls'] = array( 'Width', 'Height', 'Display', 'Overflow', 'ScrollStyle', 'Alignment' );
 
 		unset( $components['icon'] );
 

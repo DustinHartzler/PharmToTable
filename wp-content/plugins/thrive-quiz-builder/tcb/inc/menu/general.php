@@ -37,7 +37,7 @@
 		<div class="tve-control bg-icons" data-view="PreviewList"></div>
 		<div class="v-sep"></div>
 		<div class="tve-control" data-view="ColorPicker" data-show-gradient="0"></div>
-		<div class="tve-control video-bg white" data-label="<?php echo __( 'Video Background', 'thrive-cb' ); ?>" data-key="video" data-initializer="video"></div>
+		<div class="tve-control video-bg white" data-label="<?php echo __( 'Video background', 'thrive-cb' ); ?>" data-key="video" data-initializer="video"></div>
 	</div>
 </div>
 
@@ -207,7 +207,11 @@
 		<i></i>
 	</div>
 	<div class="dropdown-content">
-		<div class="tve-control" data-view="ModalPicker" data-label="<?php echo __( 'Template', 'thrive-cb' ); ?>"></div>
+		<span class="template-name">
+			<?php tcb_icon( 'template-picker' ); ?>
+			<div class="tve-control" data-view="ModalPicker"></div>
+		</span>
+		<?php tcb_icon( 'external-link-square-light' ); ?>
 	</div>
 </div>
 
@@ -264,7 +268,6 @@
 		<i></i>
 	</div>
 	<div class="dropdown-content">
-
 		<div class="control-grid no-space">
 			<span class="tcb-style-icon">
 				<?php tcb_icon( 'paint-brush-regular' ); ?>

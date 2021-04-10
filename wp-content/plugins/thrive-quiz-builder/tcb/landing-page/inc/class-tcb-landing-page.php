@@ -395,7 +395,12 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 
 
 				foreach ( $tpl_colors as $color ) {
-					echo TVE_LP_COLOR_VAR_CSS_PREFIX . $color['id'] . ':' . $color['color'] . ';';
+					$color_name = TVE_LP_COLOR_VAR_CSS_PREFIX . $color['id'];
+					echo $color_name . ':' . $color['color'] . ';';
+
+					/* convert variables to hsl & print them */
+					$hsl_data = tve_rgb2hsl( $color['color'] );
+					echo tve_print_color_hsl( $color_name, $hsl_data );
 				}
 				foreach ( $tpl_gradients as $gradient ) {
 					echo TVE_LP_GRADIENT_VAR_CSS_PREFIX . $gradient['id'] . ':' . $gradient['gradient'] . ';';

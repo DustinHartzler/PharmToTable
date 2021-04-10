@@ -63,11 +63,11 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 		$toggle = array(
 			'toggle'     => array(
 				'config' => array(
-					'TogglePalettes'       => array(
+					'TogglePalettes' => array(
 						'config'  => array(),
 						'extends' => 'Palettes',
 					),
-					'ColumnNumber' => array(
+					'ColumnNumber'   => array(
 						'config'  => array(
 							'default' => '1',
 							'min'     => '1',
@@ -79,7 +79,7 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 						),
 						'extends' => 'Slider',
 					),
-					'ToggleWidth'  => array(
+					'ToggleWidth'    => array(
 						'config'  => array(
 							'default' => '1024',
 							'min'     => '100',
@@ -185,6 +185,9 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 			),
 			'typography' => array( 'hidden' => true ),
 			'animation'  => array( 'hidden' => true ),
+			'layout'     => array(
+				'disabled_controls' => array(),
+			),
 		);
 
 		return array_merge( $toggle, $this->group_component() );
@@ -197,7 +200,7 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**
@@ -228,6 +231,21 @@ class TCB_Toggle_Element extends TCB_Cloud_Template_Element_Abstract {
 					'name'     => __( 'Grouped Toggle Content', 'thrive-cb' ),
 					'singular' => __( '-- Toggle Content %s', 'thrive-cb' ),
 				),
+			),
+		);
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'toggle',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425878-how-to-use-the-toggle-element',
 			),
 		);
 	}

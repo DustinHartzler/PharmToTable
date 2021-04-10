@@ -204,14 +204,14 @@ class TCB_Utils {
 			 *
 			 * @param string[] Array of default time formats.
 			 */
-			$formats = array_unique( apply_filters( 'time_formats', array( __( 'g:i a' ), 'g:i A', 'H:i' ) ) );
+			$formats = array_unique( apply_filters( 'time_formats', array( __( 'g:i a', 'thrive-cb' ), 'g:i A', 'H:i' ) ) );
 		} else {
 			/**
 			 * Filters the default date formats.
 			 *
 			 * @param string[] Array of default date formats.
 			 */
-			$formats = array_unique( apply_filters( 'date_formats', array( __( 'F j, Y' ), 'Y-m-d', 'm/d/Y', 'd/m/Y' ) ) );
+			$formats = array_unique( apply_filters( 'date_formats', array( __( 'F j, Y', 'thrive-cb' ), 'Y-m-d', 'm/d/Y', 'd/m/Y' ) ) );
 		}
 
 		$custom_option_name = __( 'Custom', 'thrive-cb' );
@@ -706,6 +706,15 @@ class TCB_Utils {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Create a rest nonce for our ajax requests
+	 *
+	 * @return mixed|void
+	 */
+	public static function create_nonce() {
+		return wp_create_nonce( 'wp_rest' );
 	}
 
 	/**

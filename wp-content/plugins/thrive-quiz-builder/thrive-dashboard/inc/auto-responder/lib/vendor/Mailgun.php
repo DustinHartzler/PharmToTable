@@ -35,7 +35,7 @@ class Thrive_Dash_Api_Mailgun {
 	 * @param string $apiVersion
 	 * @param bool $ssl
 	 */
-	public function __construct( $apiKey = null, $apiEndpoint = "api.mailgun.net", $apiVersion = "v3", $ssl = true ) {
+	public function __construct( $apiKey = null, $apiEndpoint = 'api.mailgun.net', $apiVersion = 'v3', $ssl = true ) {
 		$this->apiKey     = $apiKey;
 		$this->restClient = new Thrive_Dash_Api_Mailgun_RestClient( $apiKey, $apiEndpoint, $apiVersion, $ssl );
 	}

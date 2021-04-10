@@ -122,7 +122,7 @@ class TCB_Post_List_Featured_Image {
 			'thumbnail' => __( 'Thumbnail', 'thrive-cb' ),
 			'medium'    => __( 'Medium', 'thrive-cb' ),
 			'large'     => __( 'Large', 'thrive-cb' ),
-			'full'      => __( 'Full Size', 'thrive-cb' ),
+			'full'      => __( 'Full size', 'thrive-cb' ),
 		) );
 
 		/* MailPoet 3 adds an extra image size, but we're not using it in our products so we must remove it */

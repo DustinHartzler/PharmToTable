@@ -9,6 +9,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class TCB_Post_Author_Picture_Element extends TCB_Image_Element {
 	/**
+	 * TCB_Post_Author_Picture_Element constructor.
+	 *
+	 * @param string $tag
+	 */
+	public function __construct( $tag = '' ) {
+		parent::__construct( $tag );
+
+		add_filter( 'tcb_element_' . $this->tag() . '_config', array( $this, 'add_config' ) );
+	}
+
+	/**
+	 * @param array $config
+	 *
+	 * @return array mixed
+	 */
+	public function add_config( $config ) {
+		$config['is_sub_element'] = true;
+
+		return $config;
+	}
+
+	/**
 	 * Name of the element
 	 *
 	 * @return string

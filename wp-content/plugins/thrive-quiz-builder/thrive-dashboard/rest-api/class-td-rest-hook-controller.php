@@ -102,8 +102,6 @@ class TD_REST_Hook_Controller extends TD_REST_Controller {
 	 */
 	public function subscribe( $request ) {
 
-		$error = new WP_Error( 'td_invalid_hook_url', __( 'Invalid Hook URL', TVE_DASH_TRANSLATE_DOMAIN ) );
-
 		// Param from Lead Generation auth
 		$hook_url = $request->get_param( 'hook_url' );
 
@@ -112,17 +110,17 @@ class TD_REST_Hook_Controller extends TD_REST_Controller {
 			$hook_url = $request->get_param( 'hookUrl' );
 		}
 
-		$hook_url = strpos( $hook_url, 'http://' ) !== - 1 ? $hook_url : $error;
+		if ( filter_var( $hook_url, FILTER_VALIDATE_URL ) ) {
+			update_option( $this->_get_option_name(), $hook_url );
 
-		if ( true === is_wp_error( $hook_url ) ) {
-			return $hook_url;
+			$result = array(
+				'id' => $this->_get_option_name(),
+			);
+		} else {
+			$result = new WP_Error( 'td_invalid_hook_url', __( 'Invalid Hook URL', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		update_option( $this->_get_option_name(), $hook_url );
-
-		return array(
-			'id' => $this->_get_option_name(),
-		);
+		return $result;
 	}
 
 	/**

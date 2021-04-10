@@ -1795,7 +1795,7 @@ class TQB_Database {
 				foreach ( $quiz['data'] as $t => $count ) {
 
 					if ( $filters['interval'] == 'day' ) {
-						$t = date( 'd M, Y', strtotime( $t ) + $timezone_diff );
+						$t = date( 'd M, Y', strtotime( $t ) );
 					}
 					if ( $date == $t ) {
 						$count_array[ $k ] = $count;

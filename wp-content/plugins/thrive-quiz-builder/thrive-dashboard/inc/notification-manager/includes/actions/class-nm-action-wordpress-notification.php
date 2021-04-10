@@ -15,6 +15,7 @@ class TD_NM_Action_Wordpress_Notification extends TD_NM_Action_Abstract {
 
 		preg_match_all( '/\\[link\\].*?\\[\/link\\]/is', $this->settings['message']['content'], $matches );
 		$message = $this->settings['message']['content'];
+		$message = sanitize_textarea_field( $message );
 
 		if ( ! empty( $matches ) && isset( $matches[0] ) ) {
 			foreach ( $matches[0] as $expression ) {
@@ -23,7 +24,6 @@ class TD_NM_Action_Wordpress_Notification extends TD_NM_Action_Abstract {
 			}
 		}
 
-		$message    = sanitize_textarea_field( $message );
 		$meta_value = array( 'url' => $prepared_data['test_url'], 'message' => $message );
 		update_post_meta( $this->settings['notification_id'], 'td_nm_wordpress_notification', $meta_value );
 	}

@@ -164,13 +164,18 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'sparkpost' );
 		if ( isset( $credentials ) ) {
-			$domain = $credentials['domain'];
+			$from_email = $credentials['domain'];
 		}
 
 		$recipients = $this->_prepareRecipients( $data );
 
 		if ( ! empty( $data['from_name'] ) ) {
-			$domain = $data['from_name'] . ' < ' . $domain . ' >';
+			$domain = [
+				'name'  => $data['from_name'],
+				'email' => $from_email,
+			];
+		} else {
+			$domain = $from_email;
 		}
 
 		try {
@@ -205,6 +210,7 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 							),
 						),
 					),
+					'replyTo'    => $from_email,
 				);
 
 				$sparkpost->transmission->send( $confirmation );

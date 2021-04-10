@@ -1,21 +1,25 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Ovidiu
- * Date: 5/25/2018
- * Time: 1:32 PM
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-visual-editor
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 /**
  * Class TCB_Contact_Form
  */
 class TCB_Contact_Form {
 
-	private $posted_data = array();
+	private $posted_data       = array();
 	private $empty_posted_data = true;
+	private $invalid_fields    = array();
+	private $types             = array();
+
 	private $config_parsing_error;
-	private $invalid_fields = array();
-	private $types = array();
 	private $blog_name;
 
 	/**

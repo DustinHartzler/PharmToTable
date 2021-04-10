@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</svg>
 		<div class="tve_fill_text_in">
 			<div class="tve_fill_text_value">
-				<div class="thrv-inline-text tve_fill_text tve_editable"><div class="tve-fill-text-dynamic" contenteditable="false">75%</div></div>
+				<div class="thrv-inline-text tve_fill_text tve_editable"><div class="tve-fill-text-dynamic" contenteditable="true">75%</div></div>
 			</div>
 			<div class="thrv-inline-text tve_editable tve_data_element_label">Fill Counter</div>
 		</div>

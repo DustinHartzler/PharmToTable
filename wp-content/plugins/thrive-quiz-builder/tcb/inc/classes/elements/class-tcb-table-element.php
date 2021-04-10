@@ -266,6 +266,9 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 				),
 			),
 			'background'   => array( 'hidden' => true ),
+			'layout'       => array(
+				'disabled_controls' => array(),
+			),
 		);
 
 		return array_merge( $table_components, $this->group_component() );
@@ -277,7 +280,7 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**
@@ -300,6 +303,21 @@ class TCB_Table_Element extends TCB_Cloud_Template_Element_Abstract {
 					'name'     => __( 'Grouped Body Texts', 'thrive-cb' ),
 					'singular' => __( '-- Body Item %s', 'thrive-cb' ),
 				),
+			),
+		);
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'table',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425798-how-to-use-the-table-element',
 			),
 		);
 	}

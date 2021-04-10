@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="thumbnail-preview" data-default="<?php echo TVE_LANDING_PAGE_TEMPLATE . '/thumbnails/blank.png'; ?>" style="height:140px;width:166px;background-size: cover;background-repeat: no-repeat;"></div>
 		</div>
 		<div class="col-xs-8">
-			<button type="button" class="tve-button green choose-image mr-10"><?php echo __( 'Choose Image', 'thrive-cb' ) ?></button>
+			<button type="button" class="tve-button green choose-image mr-10"><?php echo __( 'Choose image', 'thrive-cb' ) ?></button>
 			<button type="button" class="tve-button red remove-image"><?php echo __( 'Remove Image', 'thrive-cb' ) ?></button>
 		</div>
 	</div>

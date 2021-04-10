@@ -327,17 +327,63 @@ class Thrive_Dash_List_Connection_ConvertKit extends Thrive_Dash_List_Connection
 			/** @var $api Thrive_Dash_Api_ConvertKit */
 			$api  = $this->getApi();
 			$args = array(
-				'fields' => (object) $custom_fields,
+				'fields' => (object) $this->_prepareCustomFieldsForApi( $custom_fields ),
 				'email'  => $email,
 				'name'   => ! empty( $extra['name'] ) ? $extra['name'] : '',
 			);
 
 			$subscriber = $api->subscribeForm( $extra['list_identifier'], $args );
 
-			return $subscriber['subscription']['id'];
+			return $subscriber['subscriber']['id'];
 
 		} catch ( Exception $e ) {
 			return false;
 		}
+	}
+
+	/**
+	 * Get available custom fields for this api connection
+	 *
+	 * @param null $list_id
+	 *
+	 * @return array
+	 */
+	public function getAvailableCustomFields( $list_id = null ) {
+
+		return $this->_getCustomFields( true );
+	}
+
+	/**
+	 * Prepare custom fields for api call
+	 *
+	 * @param array $custom_fields
+	 * @param null  $list_identifier
+	 *
+	 * @return array
+	 */
+	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		$prepared_fields = array();
+		$cf_prefix       = 'ck_field_';
+		$api_fields      = $this->get_api_custom_fields( null, true );
+
+		foreach ( $api_fields as $field ) {
+			foreach ( $custom_fields as $key => $custom_field ) {
+				if ( (int) $field['id'] === (int) $key ) {
+					$str_to_replace = $cf_prefix . $field['id'] . '_';
+					$cf_key         = str_replace( $str_to_replace, '', $field['name'] );
+
+					$prepared_fields[ $cf_key ] = $custom_field;
+
+					unset( $custom_fields[ $key ] ); // avoid unnecessary loops
+				}
+			}
+
+			if ( empty( $custom_fields ) ) {
+				break;
+			}
+		}
+
+		return $prepared_fields;
 	}
 }

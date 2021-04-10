@@ -1,5 +1,5 @@
 <# var um_list = this.get_config( 'um' ); #>
-<div class="control-grid slider wrap">
+<div class="control-grid slider wrap <#=this.model.config.class #>">
 	<div class="label full-width">
 		<span class="slider-label"><#= this.model.config.label || this.model.config.name || this.el.dataset.name#></span>
 		<# if ( this.model.config.info ) { #>

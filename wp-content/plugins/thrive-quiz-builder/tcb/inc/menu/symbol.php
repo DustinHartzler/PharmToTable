@@ -1,11 +1,14 @@
 <?php
 /**
- * FileName  symbol.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @developer: Dragos Petcu
- * @company  : BitStone
+ * @package thrive-visual-editor
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 ?>
 <div id="tve-symbol-component" class="tve-component" data-view="Symbol">
 	<div class="dropdown-header" data-prop="docked">
@@ -19,10 +22,10 @@
 		<hr>
 		<div class="control-grid">
 			<button class="tve-button orange click" data-fn="edit_symbol">
-				<?php echo __( 'Edit as Symbol ', 'thrive-cb' ) ?>
+				<?php echo __( 'Edit as Symbol ', 'thrive-cb' ); ?>
 			</button>
 			<button class="tve-button grey long click fixed-100" data-fn="unlink_symbol">
-				<?php echo __( 'Unlink', 'thrive-cb' ) ?>
+				<?php echo __( 'Unlink', 'thrive-cb' ); ?>
 			</button>
 		</div>
 	</div>

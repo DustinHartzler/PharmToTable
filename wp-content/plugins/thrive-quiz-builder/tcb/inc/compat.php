@@ -735,6 +735,17 @@ add_action( 'tcb_landing_page_template_redirect', function () {
 } );
 
 /**
+ * Fixes compatibility with optimole that causes the Symbols not to render in the Globals dashboard
+ */
+add_filter( 'optml_should_replace_page', function ( $value ) {
+	if ( TCB_Utils::is_rest() && ! empty( $_REQUEST['optimole_skip_processing'] ) ) {
+		$value = true;
+	}
+
+	return $value;
+} );
+
+/**
  * Filter to add plugins to the TOC list.
  *
  * @param array TOC plugins.

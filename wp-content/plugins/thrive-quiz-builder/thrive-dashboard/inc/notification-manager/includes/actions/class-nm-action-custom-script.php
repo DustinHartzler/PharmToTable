@@ -35,6 +35,19 @@ class TD_NM_Action_Custom_Script extends TD_NM_Action_Abstract {
 		$data['source_form_id']   = $tl_form['key'];
 		$data['user_email']       = $tl_data['email'];
 		$data['user_custom_data'] = $tl_data['custom_fields'];
+		$labels                   = array();
+
+		if ( ! empty( $tl_data['tve_labels'] ) ) {
+			$base64_decoded = base64_decode( $tl_data['tve_labels'] );
+			$labels         = unserialize( $base64_decoded );
+		}
+
+		if ( is_array( $labels ) && ! empty( $labels ) ) {
+			foreach ( $labels as $input_name => $label ) {
+				$label                              = sanitize_text_field( $label );
+				$data['user_custom_data'][ $label ] = ! empty( $tl_data['custom_fields'][ $input_name ] ) ? $tl_data['custom_fields'][ $input_name ] : null;
+			}
+		}
 
 		return $data;
 	}

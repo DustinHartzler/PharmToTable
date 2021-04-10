@@ -16,13 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<i></i>
 	</div>
 	<div class="dropdown-content">
-		<div class="center-xs col-xs-12 mb-10 edit-mode-hidden">
+		<div class="center-xs col-xs-12 mb-10 product-cat-edit-mode-hidden">
 			<button class="tve-button orange click" data-fn="editProductCategories">
 				<?php echo __( 'Edit Design', 'thrive-cb' ); ?>
 			</button>
 		</div>
 		<div class="hide-tablet hide-mobile">
-			<div class="edit-mode-hidden">
+			<div class="product-cat-edit-mode-hidden">
 				<hr>
 				<div class="tve-control" data-view="Limit"></div>
 				<div class="tve-control" data-view="Columns"></div>
@@ -38,14 +38,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<div class="tve-control" data-view="title-visibility"></div>
 			<div class="tve-control" data-view="product-number-visibility"></div>
-			<div class="tve-control edit-mode-hidden" data-view="empty-category"></div>
+			<div class="tve-control product-cat-edit-mode-hidden" data-view="empty-category"></div>
 
 			<hr>
 
 			<div class="tve-control" data-view="Alignment"></div>
 			<div class="tve-control" data-view="ImageSize"></div>
 
-			<div class="tve-advanced-controls edit-mode-hidden">
+			<div class="tve-advanced-controls product-cat-edit-mode-hidden">
 				<div class="dropdown-header" data-prop="advanced">
 				<span class="mb-5">
 					<?php echo __( 'Filter categories', 'thrive-cb' ); ?>

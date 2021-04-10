@@ -20,17 +20,18 @@ class TD_REST_Controller extends WP_REST_Controller {
 	 * @var string
 	 */
 	protected $rest_base;
-	protected $namespace = 'td/v1';
+	protected $namespace    = 'td/v1';
 	protected $webhook_base = '/webhook/trigger';
 
-	public function __construct() {}
+	public function __construct() {
+	}
 
 	public function get_namespace() {
 
 		return $this->namespace;
 	}
 
-	public function get_webhoook_base() {
+	public function get_webhook_base() {
 
 		return $this->webhook_base;
 	}
@@ -49,7 +50,7 @@ class TD_REST_Controller extends WP_REST_Controller {
 			)
 		);
 
-		register_rest_route( $this->namespace, $this->webhook_base.'/(?P<api>\S+)/(?P<id>\d+)/(?P<code>\S+)', array(
+		register_rest_route( $this->namespace, $this->webhook_base . '/(?P<api>\S+)/(?P<id>\d+)/(?P<code>\S+)', array(
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'webhook_trigger' ),
@@ -60,15 +61,39 @@ class TD_REST_Controller extends WP_REST_Controller {
 
 	/**
 	 * callback function
+	 *
 	 * @param WP_REST_Response
 	 */
 	public static function webhook_trigger( $request ) {
-		$id           = $request->get_param( 'id' );
-		$api          = $request->get_param( 'api' );
-		$code          = $request->get_param( 'code' );
-		$api_instance = Thrive_Dash_List_Manager::connectionInstance( $api );
+		$id   = $request->get_param( 'id' );
+		$api  = $request->get_param( 'api' );
+		$code = $request->get_param( 'code' );
 
-		return apply_filters( 'tve_dash_webhook_trigger', $id, $code, $api_instance->getWebhookdata( $request ) );
+		$data = array();
+		if ( $api === 'general' ) {
+			$data = tve_dash_get_general_webhook_data( $request );
+		} else {
+			$api_instance = Thrive_Dash_List_Manager::connectionInstance( $api );
+			if ( $api_instance ) {
+				$data = $api_instance->getWebhookdata( $request );
+			}
+		}
+
+		if ( empty( $data['email'] ) ) {
+			global $wpdb;
+
+			$log_data = array(
+				'date'          => date( 'Y-m-d H:i:s' ),
+				'error_message' => "No email inside webhook payload",
+				'api_data'      => serialize( tve_sanitize_data_recursive( $request ) ),
+				'connection'    => $api,
+				'list_id'       => 'asset',
+			);
+
+			$wpdb->insert( $wpdb->prefix . 'tcb_api_error_log', $log_data );
+		}
+
+		return apply_filters( 'tve_dash_webhook_trigger', $id, $code, $data );
 	}
 
 	/**
@@ -92,7 +117,9 @@ class TD_REST_Controller extends WP_REST_Controller {
 	 */
 	public function permission_callback( $request ) {
 
-		return $this->validate_api_key( $request->get_param( 'api_key' ) );
+		$api_key = $request->get_param( 'api_key' );
+
+		return ! empty( $api_key ) && $this->validate_api_key( $api_key );
 	}
 
 	/**
@@ -102,20 +129,21 @@ class TD_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return bool|WP_Error
 	 */
-	protected function validate_api_key( $api_key ) {
+	protected function validate_api_key( $api_key = '' ) {
 
-		$generated_api_key = get_option( 'td_api_key', '' );
+		$generated_api_key = get_option( 'td_api_key', null );
 
-		$result = new WP_Error(
-			'wrong_api_key_provided',
-			__( 'Provided API Key is wrong', TVE_DASH_TRANSLATE_DOMAIN ),
-			array(
-				'api_key' => $api_key,
-			)
-		);
-
-		if ( $generated_api_key === $api_key ) {
+		/* make sure we don't send an empty api_key */
+		if ( ! empty( $api_key ) && $generated_api_key === $api_key ) {
 			$result = true;
+		} else {
+			$result = new WP_Error(
+				'wrong_api_key_provided',
+				__( 'Provided API Key is wrong', TVE_DASH_TRANSLATE_DOMAIN ),
+				array(
+					'api_key' => $api_key,
+				)
+			);
 		}
 
 		return $result;

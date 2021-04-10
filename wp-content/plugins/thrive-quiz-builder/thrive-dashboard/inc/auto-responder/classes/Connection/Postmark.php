@@ -178,6 +178,11 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 				'html_content' => $data['confirmation_html'],
 				'subject'      => $data['confirmation_subject'],
 			);
+			$credentials  = Thrive_Dash_List_Manager::credentials( 'postmark' );
+			if ( is_array( $credentials ) && ! empty( $credentials['email'] ) ) {
+				$confirmation['reply_to'] = $credentials['email'];
+			}
+
 			$this->sendCustomEmail( $confirmation );
 		}
 	}

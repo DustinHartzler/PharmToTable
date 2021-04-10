@@ -16,7 +16,7 @@ $items = array(
 	array(
 		'title'       => __( 'Knowledge Base', 'thrive-cb' ),
 		'picture'     => tve_editor_url( 'editor/css/images/help-corner/knowledge-base.svg' ),
-		'picture-alt' => 'Knowledge Base Item Picture',
+		'picture-alt' => __( 'Knowledge Base Item Picture', 'thrive-cb' ),
 		'text'        => array(
 			__( 'Search our extensive knowledge base for “how-to” articles and instructions.', 'thrive-cb' ),
 		),
@@ -26,16 +26,16 @@ $items = array(
 	array(
 		'title'       => __( 'Thrive University', 'thrive-cb' ),
 		'picture'     => tve_editor_url( 'editor/css/images/help-corner/thrive-university.svg' ),
-		'picture-alt' => 'Thrive University Item Picture',
+		'picture-alt' => __( 'Thrive University Item Picture', 'thrive-cb' ),
 		'text'        => array(
-			__( 'Take one of our free online courses on website building and online marketing.', 'thrive-cb' ),
+			__( 'Take one of our online courses on website building and online marketing.', 'thrive-cb' ),
 		),
 		'class'       => 'thrive-university',
 	),
 	array(
 		'title'       => __( 'Get Support', 'thrive-cb' ),
 		'picture'     => tve_editor_url( 'editor/css/images/help-corner/support.svg' ),
-		'picture-alt' => 'Support Item Picture',
+		'picture-alt' => __( 'Support Item Picture', 'thrive-cb' ),
 		'text'        => array(
 			__( 'Contact our friendly support team who will help you with any issues or questions.', 'thrive-cb' ),
 		),

@@ -59,17 +59,31 @@ class TIE_Ajax {
 
 		wp_send_json_success( array(
 			'message' => __( 'Badge saved', Thrive_Image_Editor::T ),
-			'url'     => $url
+			'url'     => $url,
 		) );
 
 	}
 
 	public static function tie_save_image_content() {
 
+		$nonce = ! empty( $_POST['nonce'] ) ? $_POST['nonce'] : null;
+		if ( false === wp_verify_nonce( $nonce, 'tie_editor_ajax_nonce' ) ) {
+			exit;
+		}
+
 		$image = new TIE_Image( $_REQUEST['post_id'] );
 
 		if ( isset( $_REQUEST['html_canvas'] ) ) {
 			$image->save_html_canvas( $_REQUEST['html_canvas'] );
+
+			$img_post = get_post( $_REQUEST['post_id'] );
+
+			/**
+			 * Not needed anymore as now we have the correct share badge url
+			 */
+			if ( $img_post instanceof WP_Post ) {
+				delete_post_meta( $img_post->post_parent, 'tqb_quiz_badge_css' );
+			}
 		}
 
 		if ( isset( $_REQUEST['content'] ) && $image->save_content( $_REQUEST['content'] ) ) {

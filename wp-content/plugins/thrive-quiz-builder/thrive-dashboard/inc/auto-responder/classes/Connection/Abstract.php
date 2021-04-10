@@ -927,22 +927,21 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 	/**
 	 * Prepare necessary arguments for adding a tag
-	 *
+	 * @param       $email
+	 * @param array|string $tags
+	 * @param array $extra
 	 * @return array
 	 */
-	public function getArgsForTagsUpdate() {
+	public function getArgsForTagsUpdate( $email, $tags = '', $extra = array() ) {
 
-		$args       = func_get_args();
 		$tags_key   = $this->getTagsKey();
-		$tags_data  = ! empty( $args[1] ) ? $args[1] : '';
-		$extra_data = ! empty( $args[2] ) && is_array( $args[2] ) ? $args[2] : array();
 
 		$return = array(
-			'email'   => ! empty( $args[0] ) ? $args[0] : '',
-			$tags_key => $tags_data,
+			'email'   => $email,
+			$tags_key => $tags,
 		);
 
-		foreach ( $extra_data as $key => $value ) {
+		foreach ( $extra as $key => $value ) {
 			$return[ $key ] = $value;
 		}
 
@@ -963,6 +962,33 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
 
 		return 0;
+	}
+
+	/**
+	 *
+	 * Each api expects custom fields data in a specific format
+	 * This method should be overwritten in every instance that deals with custom fields and prepare them as needed
+	 *
+	 * @param array $custom_fields
+	 * @param null  $list_identifier
+	 *
+	 * @return array
+	 */
+	protected function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+
+		return array();
+	}
+
+	/**
+	 * Get available custom fields for this api connection
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	public function getAvailableCustomFields( $data = array() ) {
+
+		return method_exists( $this, 'getAllCustomFields' ) ? $this->getAllCustomFields( true ) : array();
 	}
 }
 

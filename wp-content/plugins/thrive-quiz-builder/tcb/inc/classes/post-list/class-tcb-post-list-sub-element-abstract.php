@@ -26,9 +26,19 @@ abstract class TCB_Post_List_Sub_Element_Abstract extends TCB_Element_Abstract {
 	}
 
 	public function add_config( $config ) {
-		$config['shortcode'] = $this->shortcode();
+		$config['shortcode']      = $this->shortcode();
+		$config['is_sub_element'] = $this->is_sub_element();
 
 		return $config;
+	}
+
+	/**
+	 * Mark this as a sub-element
+	 *
+	 * @return bool
+	 */
+	public function is_sub_element() {
+		return true;
 	}
 
 	/**

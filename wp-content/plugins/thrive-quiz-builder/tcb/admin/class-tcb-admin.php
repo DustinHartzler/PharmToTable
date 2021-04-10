@@ -127,7 +127,7 @@ class TCB_Admin {
 			return;
 		}
 
-		$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
+		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 
 		/**
 		 * Enqueue dash scripts
@@ -205,7 +205,7 @@ class TCB_Admin {
 	 * Enqueue and localize scripts on the admin post edit page.
 	 */
 	public function enqueue_post_editor() {
-		$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
+		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 
 		wp_enqueue_style( 'wp-pointer' );
 		wp_enqueue_script( 'wp-pointer' );
@@ -323,9 +323,8 @@ class TCB_Admin {
 			'tcb_enabled'         => ! $show_migrate_button && $this->tcb_enabled( $post_id ),
 		) );
 		echo '</script>';
-		$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
+		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
 		tve_enqueue_script( 'thrive-gutenberg-switch', tve_editor_url() . '/editor/js/dist/gutenberg' . $js_suffix, array( 'jquery' ) );
-
 	}
 
 	/**

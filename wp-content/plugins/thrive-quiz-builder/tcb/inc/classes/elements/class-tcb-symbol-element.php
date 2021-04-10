@@ -1,11 +1,10 @@
 <?php
 /**
- * FileName  class-tcb-symbol-element.php.
+ * Thrive Themes - https://thrivethemes.com
  *
- * @project  : thrive-visual-editor
- * @developer: Dragos Petcu
- * @company  : BitStone
+ * @package thrive-visual-editor
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -105,6 +104,21 @@ class TCB_Symbol_Element extends TCB_Symbol_Element_Abstract {
 			),
 			'responsive' => array(
 				'order' => 140,
+			),
+		);
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'templates_symbols',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425777-how-to-use-the-templates-and-symbols-element-formerly-content-template',
 			),
 		);
 	}

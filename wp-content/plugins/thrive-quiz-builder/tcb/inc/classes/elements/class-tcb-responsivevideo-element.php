@@ -141,7 +141,7 @@ class TCB_Responsivevideo_Element extends TCB_Element_Abstract {
 						'important' => true,
 					),
 				),
-				'disabled_controls' => array( 'Overflow' ),
+				'disabled_controls' => array( 'Overflow', 'ScrollStyle' ),
 			),
 		);
 	}
@@ -152,6 +152,21 @@ class TCB_Responsivevideo_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
+	}
+
+	/**
+	 * Element info
+	 *
+	 * @return string|string[][]
+	 */
+	public function info() {
+		return array(
+			'instructions' => array(
+				'type' => 'help',
+				'url'  => 'video_element',
+				'link' => 'https://help.thrivethemes.com/en/articles/4425782-how-to-use-the-video-element',
+			),
+		);
 	}
 }

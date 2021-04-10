@@ -21,7 +21,7 @@ class TCB_Lead_Generation_Select_Dropdown_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Lead Generation Option Container', 'thrive-cb' );
+		return __( 'Option Container', 'thrive-cb' );
 	}
 
 	/**
