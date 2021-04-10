@@ -233,3 +233,15 @@ select.aw-field.wc-enhanced-select {
 	}
 }
 
+.automatewoo-field-group--email-address-with-name {
+	@include clearfix;
+
+	.automatewoo-field-group__fields {
+		display: flex;
+		justify-content: space-between;
+
+		.automatewoo-field {
+			width: 49%;
+		}
+	}
+}

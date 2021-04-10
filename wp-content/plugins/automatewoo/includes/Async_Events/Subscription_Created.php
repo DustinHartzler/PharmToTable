@@ -2,8 +2,6 @@
 
 namespace AutomateWoo\Async_Events;
 
-use AutomateWoo\Events;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -13,6 +11,8 @@ defined( 'ABSPATH' ) || exit;
  * @package AutomateWoo
  */
 class Subscription_Created extends Abstract_Async_Event {
+
+	use UniqueEventsForRequestHelper;
 
 	/**
 	 * Init the event.
@@ -31,12 +31,16 @@ class Subscription_Created extends Abstract_Async_Event {
 	 */
 	public function handle_subscription_created( $subscription ) {
 		$subscription = wcs_get_subscription( $subscription );
-
 		if ( ! $subscription ) {
 			return;
 		}
 
-		Events::schedule_async_event( 'automatewoo/async/subscription_created', [ $subscription->get_id() ], true );
+		if ( $this->check_item_is_unique_for_event( $subscription->get_id() ) ) {
+			return;
+		}
+		$this->record_event_added_for_item( $subscription->get_id() );
+
+		$this->create_async_event( [ $subscription->get_id() ] );
 	}
 
 }

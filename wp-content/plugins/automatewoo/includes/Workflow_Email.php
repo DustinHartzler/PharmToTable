@@ -58,10 +58,17 @@ class Workflow_Email {
 
 
 	/**
-	 * @param Workflow $workflow
+	 * @param Workflow $workflow  The workflow that is sending the email.
+	 * @param string   $recipient The email address of the recipient. Must be a single email.
+	 * @param string   $subject   The email subject.
+	 * @param string   $content   The main email content. Depending on the $type property this can be raw HTML (html-raw),
+	 *                            plain text (plain-text) or content to be wrapped in a template (html-template).
 	 */
-	function __construct( $workflow ) {
+	public function __construct( Workflow $workflow, string $recipient, string $subject, string $content ) {
 		$this->workflow = $workflow;
+		$this->set_recipient( $recipient );
+		$this->set_subject( $subject );
+		$this->set_content( $content );
 
 		if ( $workflow->is_tracking_enabled() ) {
 			$this->set_tracking_enabled( true );
@@ -74,9 +81,13 @@ class Workflow_Email {
 	 * @since 4.4.0
 	 *
 	 * @param string $type (html-template, html-raw, plain-text)
+	 *
+	 * @return $this
 	 */
 	public function set_type( $type ) {
 		$this->type = $type;
+
+		return $this;
 	}
 
 	/**
@@ -106,17 +117,25 @@ class Workflow_Email {
 
 	/**
 	 * @param string $recipient
+	 *
+	 * @return $this
 	 */
 	function set_recipient( $recipient ) {
 		$this->recipient = $recipient;
+
+		return $this;
 	}
 
 
 	/**
 	 * @param string $subject
+	 *
+	 * @return $this
 	 */
 	function set_subject( $subject ) {
 		$this->subject = $subject;
+
+		return $this;
 	}
 
 
@@ -126,49 +145,73 @@ class Workflow_Email {
 	 * This can be raw HTML, plain text or content to be wrapped in a template, depending on the $type.
 	 *
 	 * @param string $content
+	 *
+	 * @return $this
 	 */
 	function set_content( $content ) {
 		$this->content = $content;
+
+		return $this;
 	}
 
 
 	/**
 	 * @param string $heading
+	 *
+	 * @return $this
 	 */
 	function set_heading( $heading ) {
 		$this->heading = $heading;
+
+		return $this;
 	}
 
 
 	/**
 	 * @param string $preheader
+	 *
+	 * @return $this
 	 */
 	function set_preheader( $preheader ) {
 		$this->preheader = $preheader;
+
+		return $this;
 	}
 
 
 	/**
 	 * @param string $template
+	 *
+	 * @return $this
 	 */
 	function set_template( $template ) {
 		$this->template = $template;
+
+		return $this;
 	}
 
 
 	/**
 	 * @param bool $enabled
+	 *
+	 * @return $this
 	 */
 	function set_tracking_enabled( $enabled ) {
 		$this->tracking_enabled = $enabled;
+
+		return $this;
 	}
 
 
 	/**
 	 * @param bool $include
+	 *
+	 * @return $this
 	 */
 	function set_include_automatewoo_styles( $include ) {
 		$this->include_automatewoo_styles = $include;
+
+		return $this;
 	}
 
 	/**
@@ -177,9 +220,13 @@ class Workflow_Email {
 	 * @since 4.9.0
 	 *
 	 * @param string $reply_to e.g. 'John Smith <email@example.org>'.
+	 *
+	 * @return $this
 	 */
 	public function set_reply_to( $reply_to ) {
 		$this->reply_to = $reply_to;
+
+		return $this;
 	}
 
 

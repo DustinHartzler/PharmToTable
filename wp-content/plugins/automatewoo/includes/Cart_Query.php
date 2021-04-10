@@ -75,6 +75,22 @@ class Cart_Query extends Query_Abstract {
 
 
 	/**
+	 * Filter results by user or guest ID.
+	 *
+	 * @since 5.2.0
+	 * @param Customer $customer
+	 * @return $this
+	 */
+	public function where_customer( Customer $customer ) {
+		if ( $customer->is_registered() ) {
+			return $this->where( 'user_id', $customer->get_user_id() );
+		}
+
+		return $this->where( 'guest_id', $customer->get_guest_id() );
+	}
+
+
+	/**
 	 * @return Cart[]
 	 */
 	function get_results() {

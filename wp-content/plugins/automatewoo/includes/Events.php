@@ -6,6 +6,8 @@ namespace AutomateWoo;
 /**
  * @class Events
  * @since 3.4.0
+ *
+ * @deprecated in 5.2.0 use AW()->action_scheduler() instead.
  */
 class Events {
 
@@ -75,6 +77,8 @@ class Events {
 	 * If AUTOMATEWOO_ENABLE_INSTANT_EVENT_DISPATCHING is true a HTTP request will be dispatched
 	 * at shutdown that will instantly run the event.
 	 *
+	 * @deprecated in 5.2.0 use AW()->action_scheduler()->enqueue_async_event() instead.
+	 *
 	 * @since 4.3.0 $unique_for_request arg added
 	 *
 	 * @param string $hook
@@ -84,6 +88,8 @@ class Events {
 	 * @return Event|bool
 	 */
 	static function schedule_async_event( $hook, $args = [], $unique_for_request = false ) {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'AW()->action_scheduler()->enqueue_async_event()' );
+
 		$args_hash = Events::get_event_args_hash( $args );
 
 		if ( $unique_for_request && ! Events::is_event_unique_for_current_request( $hook, $args_hash ) ) {
@@ -128,6 +134,8 @@ class Events {
 	/**
 	 * Schedules an event.
 	 *
+	 * @deprecated in 5.2.0 use AW()->action_scheduler()->schedule_single() instead.
+	 *
 	 * @param DateTime|string|int $date Accepts timestamps
 	 * @param string              $hook
 	 * @param array               $args
@@ -135,6 +143,8 @@ class Events {
 	 * @return Event|false
 	 */
 	static function schedule_event( $date, $hook, $args = [] ) {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'AW()->action_scheduler()->schedule_single()' );
+
 		$date = aw_normalize_date( $date );
 
 		if ( ! $date ) {

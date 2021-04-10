@@ -56,6 +56,8 @@ class Guest_Factory extends Factory {
 	 */
 	static function get_by_key( $key ) {
 
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		if ( ! $key ) return false;
 
 		$guest = new Guest();
@@ -91,18 +93,12 @@ class Guest_Factory extends Factory {
 
 	/**
 	 * @param string $email
-	 * @param string|bool $tracking_key
 	 * @return Guest
 	 */
-	static function create( $email, $tracking_key = false ) {
-
-		if ( ! $tracking_key ) {
-			$tracking_key = aw_generate_key( 32 );
-		}
+	static function create( $email ) {
 
 		$guest = new Guest();
 		$guest->set_email( Clean::email( $email) );
-		$guest->set_key( $tracking_key );
 		$guest->set_date_created( new DateTime() );
 		$guest->save();
 

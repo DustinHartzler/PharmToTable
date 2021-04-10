@@ -19,7 +19,7 @@ jQuery(function($) {
 
 		init: function(){
 
-			AutomateWoo.SMS_Tester.$button.click(function(){
+			AutomateWoo.SMS_Tester.$button.on( 'click', function(){
 				AutomateWoo.SMS_Tester.send_test();
 			});
 
@@ -31,7 +31,7 @@ jQuery(function($) {
 			var text_initial = AutomateWoo.SMS_Tester.$button.val(),
 				text_loading = AutomateWoo.SMS_Tester.$button.data('loading-text');
 
-			AutomateWoo.SMS_Tester.$button.val( text_loading ).addClass('disabled').blur();
+			AutomateWoo.SMS_Tester.$button.val( text_loading ).addClass('disabled').trigger( 'blur' );
 
 			AutomateWoo.notices.clear_all();
 

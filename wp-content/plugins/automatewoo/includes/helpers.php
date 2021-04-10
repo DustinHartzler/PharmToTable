@@ -61,6 +61,8 @@ function aw_request( $param ) {
  * @return string|array
  */
 function aw_clean( $var ) {
+	wc_deprecated_function( __FUNCTION__, '5.2.0' );
+
 	if ( is_array( $var ) ) {
 		return array_map( 'aw_clean', $var );
 	}
@@ -76,6 +78,8 @@ function aw_clean( $var ) {
  * @return string
  */
 function aw_clean_email( $email ) {
+	wc_deprecated_function( __FUNCTION__, '5.2.0', 'Clean::email()' );
+
 	return strtolower( sanitize_email( $email ) );
 }
 
@@ -95,7 +99,7 @@ function aw_validate_data_item( $type, $item ) {
 	$valid = false;
 
 	// Validate with the data type classes
-	if ( $data_type = AutomateWoo\Data_Types::get( $type ) ) {
+	if ( $data_type = \AutomateWoo\DataTypes\DataTypes::get( $type ) ) {
 		$valid = $data_type->validate( $item );
 	}
 
@@ -145,6 +149,8 @@ function aw_get_template( $template_name, $imported_variables = [], $template_pa
  * @return string
  */
 function aw_display_date( $timestamp, $max_diff = false, $convert_from_gmt = true ) {
+	wc_deprecated_function( __FUNCTION__, '5.2.0', 'AutomateWoo\Format::date' );
+
 	return AutomateWoo\Format::date( $timestamp, $max_diff, $convert_from_gmt );
 }
 
@@ -157,6 +163,8 @@ function aw_display_date( $timestamp, $max_diff = false, $convert_from_gmt = tru
  * @return string|false
  */
 function aw_display_time( $timestamp, $max_diff = false, $convert_from_gmt = true ) {
+	wc_deprecated_function( __FUNCTION__, '5.2.0', 'AutomateWoo\Format::datetime' );
+
 	return AutomateWoo\Format::datetime( $timestamp, $max_diff, $convert_from_gmt );
 }
 
@@ -360,6 +368,8 @@ function aw_str_replace_first_match( $subject, $find, $replace = '' ) {
  * @return string
  */
 function aw_str_replace_start( $subject, $find, $replace = '' ) {
+	wc_deprecated_function( __FUNCTION__, '5.2.0', 'aw_str_replace_first_match' );
+
 	return aw_str_replace_first_match( $subject, $find, $replace = '' );
 }
 
@@ -733,3 +743,38 @@ function aw_esc_json( $json, $html = false ) {
 	);
 }
 
+/**
+ * Trigger a deprecated class error.
+ *
+ * This function should be called in the class file before the class is declared.
+ *
+ * @since 5.2.0
+ *
+ * @param string $class_name  The name of the deprecated class.
+ * @param string $version     The version the class was deprecated.
+ * @param string $replacement The replacement class name.
+ */
+function aw_deprecated_class( string $class_name, string $version, $replacement = null ) {
+	if ( ! WP_DEBUG ) {
+		return;
+	}
+
+	if ( $replacement ) {
+		$message = sprintf(
+			/* translators: 1: Deprecated class name, 2: Version number, 3: Replacement class name. */
+			__( '%1$s is deprecated since version %2$s! Use %3$s instead.', 'automatewoo' ),
+			$class_name,
+			$version,
+			$replacement
+		);
+	} else {
+		$message = sprintf(
+			/* translators: 1: Deprecated class name, 2: Version number. */
+			__( '%1$s is deprecated since version %2$s with no alternative available.', 'automatewoo' ),
+			$class_name,
+			$version
+		);
+	}
+
+	trigger_error( esc_html( $message ), E_USER_DEPRECATED );
+}

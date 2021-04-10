@@ -292,6 +292,8 @@ class Format {
 	 * @return float
 	 */
 	static function round( $number, $places = null ) {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'Format::decimal' );
+
 		return (float) Format::decimal( $number, $places );
 	}
 

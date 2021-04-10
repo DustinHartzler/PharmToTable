@@ -5,7 +5,6 @@ namespace AutomateWoo\Admin;
 use AutomateWoo\Admin;
 use AutomateWoo\Clean;
 use AutomateWoo\Options;
-use AutomateWoo\Tools;
 
 /**
  * Class to enable the WooCommerce Admin (bar, breadcrumbs, notifications, etc.).
@@ -21,6 +20,21 @@ class WCAdminConnectPages {
 	 * @var string
 	 */
 	const BREADCRUMB_ROOT = 'automatewoo-dashboard';
+
+	/**
+	 * Display the page in WooCommerce Admin nav menu, and show WooCommerce Admin bar, breadcrumbs, etc. on the page
+	 */
+	const PAGE_DISPLAY_FULL = 'full';
+
+	/**
+	 * Hide the page in WC admin nav menu but still show WooCommerce Admin bar, breadcrumbs, etc. on the page
+	 */
+	const PAGE_DISPLAY_HIDDEN = 'hidden';
+
+	/**
+	 * Hide the page in WC admin nav menu and do not display WooCommerce Admin bar, breadcrumbs, etc. on the page
+	 */
+	const PAGE_DISPLAY_STANDALONE = 'standalone';
 
 	/**
 	 * Initialize the class and add hook callbacks.
@@ -190,7 +204,7 @@ class WCAdminConnectPages {
 
 			$tool_id = Clean::string( aw_request( 'tool_id' ) );
 			if ( $tool_id ) {
-				$tool = Tools::get_tool( $tool_id );
+				$tool = AW()->tools_service()->get_tool( $tool_id );
 				if ( $tool ) {
 					$page_info['title'] = [
 						$page_info['title'],

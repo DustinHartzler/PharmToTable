@@ -2,9 +2,6 @@
 
 namespace AutomateWoo\Async_Events;
 
-use AutomateWoo\Events;
-use AutomateWoo\Clean;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -29,8 +26,8 @@ class User_Registered extends Abstract_Async_Event {
 	 *
 	 * @param int $user_id
 	 */
-	public function handle_user_registered( $user_id ) {
-		Events::schedule_async_event( 'automatewoo/async/user_registered', [ Clean::id( $user_id ) ] );
+	public function handle_user_registered( int $user_id ) {
+		$this->create_async_event( [ $user_id ] );
 	}
 
 }

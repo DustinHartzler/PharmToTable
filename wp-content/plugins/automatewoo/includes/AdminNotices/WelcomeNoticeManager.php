@@ -42,12 +42,14 @@ class WelcomeNoticeManager {
 				'href'           => Admin::page_url( 'workflow-presets' ),
 				'class'          => 'button-primary',
 				'data_link_type' => 'presets',
+				'target'         => '_self',
 			],
 			[
 				'text'           => __( 'Learn more', 'automatewoo' ),
 				'href'           => Admin::get_docs_link( 'getting-started', 'welcome-notice' ),
 				'class'          => 'button-secondary',
 				'data_link_type' => 'getting_started',
+				'target'         => '_blank',
 			],
 		];
 

@@ -29,7 +29,6 @@ class Controllers extends Registry {
 			'guests' => $path . 'guests.php',
 			'queue' => $path . 'queue.php',
 			'logs' => $path . 'logs.php',
-			'licenses' => $path . 'licenses.php',
 			'dashboard' => $path . 'dashboard.php',
 			'carts' => $path . 'carts.php',
 			'reports' => $path . 'reports.php',

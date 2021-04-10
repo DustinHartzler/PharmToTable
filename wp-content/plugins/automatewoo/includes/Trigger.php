@@ -131,7 +131,7 @@ abstract class Trigger {
 
 
 	/**
-	 * @param Workflow $workflow
+	 * @param \AutomateWoo\Workflow $workflow
 	 * @return bool
 	 */
 	function validate_workflow( $workflow ) {
@@ -464,6 +464,8 @@ abstract class Trigger {
 	 */
 	protected function validate_order_status_field( $trigger, $order ) {
 
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		$status = Clean::string( $trigger->get_option('order_status') );
 
 		if ( ! $status ) return true;
@@ -621,6 +623,8 @@ abstract class Trigger {
 	 * @return string
 	 */
 	protected function get_hook_order_paid() {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return 'automatewoo/order/paid_async';
 	}
 

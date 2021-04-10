@@ -4,6 +4,8 @@ namespace AutomateWoo;
 
 defined( 'ABSPATH' ) || exit;
 
+aw_deprecated_class( Variable_Abstract_Shipment_Tracking::class, '5.2.0', Shipment_Tracking_Integration::class );
+
 /**
  * Variable_Abstract_Shipment_Tracking class.
  *

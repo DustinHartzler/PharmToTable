@@ -2,8 +2,6 @@
 
 namespace AutomateWoo\Async_Events;
 
-use AutomateWoo\Events;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -12,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 4.8.0
  * @package AutomateWoo
  */
-class Subscription_Renewal_Payment_Failed extends Abstract_Async_Event {
+class Subscription_Renewal_Payment_Failed extends Subscription_Renewal_Payment_Complete {
 
 	/**
 	 * Init the event.
@@ -22,19 +20,14 @@ class Subscription_Renewal_Payment_Failed extends Abstract_Async_Event {
 	}
 
 	/**
-	 * Schedule async event.
+	 * Get the async event hook name.
 	 *
-	 * @param \WC_Subscription $subscription
-	 * @param \WC_Order        $order
+	 * @since 5.2.0
+	 *
+	 * @return string
 	 */
-	public function schedule_event( $subscription, $order ) {
-		Events::schedule_async_event(
-			'automatewoo/subscription/renewal_payment_failed_async',
-			[
-				$subscription->get_id(),
-				$order->get_id(),
-			]
-		);
+	public function get_hook_name(): string {
+		return 'automatewoo/subscription/renewal_payment_failed_async';
 	}
 
 }

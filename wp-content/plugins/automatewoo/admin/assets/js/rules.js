@@ -664,13 +664,12 @@
     });
 
 
-    $(document).ready(function(){
+    $(function(){
 
         AW.rules = new AW.Rules({
             allRules: data.allRules,
             rawRuleOptions: data.ruleOptions
         });
-
 
         AW.rulesView = new AW.RulesView({
             model: AW.rules

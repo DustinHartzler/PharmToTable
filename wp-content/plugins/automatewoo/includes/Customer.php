@@ -94,6 +94,8 @@ class Customer extends Abstract_Model_With_Meta_Table {
 	 * @return string
 	 */
 	function get_tracking_key() {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'get_key' );
+
 		return Clean::string( $this->get_linked_prop( 'tracking_key' ) );
 	}
 
@@ -962,7 +964,7 @@ class Customer extends Abstract_Model_With_Meta_Table {
 		];
 
 		if ( $this->is_registered() ) {
-			$query_args['customer'] = [ $this->get_id(), $this->get_email() ];
+			$query_args['customer'] = [ $this->get_user_id(), $this->get_email() ];
 		} else {
 			$query_args['customer'] = $this->get_email();
 		}

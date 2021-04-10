@@ -30,6 +30,23 @@ interface ActionSchedulerInterface {
 	public function schedule_single( $timestamp, $hook, $args = [], $group = 'automatewoo' );
 
 	/**
+	 * Schedule an action to run now i.e. in the next available batch.
+	 *
+	 * This differs from async actions by having a scheduled time rather than being set for '0000-00-00 00:00:00'.
+	 * We could use an async action instead but they can't be viewed easily in the admin area
+	 * because the table is sorted by schedule date.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param string $hook  The hook to trigger.
+	 * @param array  $args  Arguments to pass when the hook triggers.
+	 * @param string $group The group to assign this job to.
+	 *
+	 * @return string The action ID.
+	 */
+	public function schedule_immediate( string $hook, $args = [], $group = 'automatewoo' );
+
+	/**
 	 * Enqueue an action to run one time, as soon as possible
 	 *
 	 * @param string $hook  The hook to trigger.

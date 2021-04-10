@@ -5,7 +5,6 @@ namespace AutomateWoo\Admin\Controllers;
 
 use AutomateWoo\Clean;
 use AutomateWoo\Tool_Abstract;
-use AutomateWoo\Tools;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -18,7 +17,7 @@ class Tools_Controller extends Base {
 	function handle() {
 
 		$tool_id = Clean::string( aw_request( 'tool_id' ) );
-		$tool = Tools::get_tool( $tool_id );
+		$tool = AW()->tools_service()->get_tool( $tool_id );
 
 
 		switch ( $this->get_current_action() ) {
@@ -58,7 +57,7 @@ class Tools_Controller extends Base {
 
 	private function output_view_listing() {
 		$this->output_view( 'page-tools-list', [
-			'tools' => Tools::get_tools()
+			'tools' => AW()->tools_service()->get_tools()
 		]);
 	}
 
@@ -67,7 +66,7 @@ class Tools_Controller extends Base {
 	 * @param $tool_id
 	 */
 	private function output_view_form( $tool_id ) {
-		$tool = Tools::get_tool( $tool_id );
+		$tool = AW()->tools_service()->get_tool( $tool_id );
 
 		$this->output_view( 'page-tools-form', [
 			'tool' => $tool
@@ -79,7 +78,7 @@ class Tools_Controller extends Base {
 	 * @param $tool_id
 	 */
 	private function output_view_confirm( $tool_id ) {
-		$tool = Tools::get_tool( $tool_id );
+		$tool = AW()->tools_service()->get_tool( $tool_id );
 		$args = $tool->sanitize_args( aw_request( 'args' ) );
 
 		$this->output_view( 'page-tools-form-confirm', [
@@ -96,7 +95,7 @@ class Tools_Controller extends Base {
 	 * @return bool
 	 */
 	private function validate_process( $tool_id ) {
-		$tool = Tools::get_tool( $tool_id );
+		$tool = AW()->tools_service()->get_tool( $tool_id );
 		$args = $tool->sanitize_args( aw_request( 'args' ) );
 
 		if ( ! $tool ) {
@@ -136,7 +135,7 @@ class Tools_Controller extends Base {
 			wp_die( __( 'Process could not be validated.', 'automatewoo' ) );
 		}
 
-		$tool = Tools::get_tool( $tool_id );
+		$tool = AW()->tools_service()->get_tool( $tool_id );
 		$args = aw_request( 'args' );
 
 		$processed = $tool->process( $args );

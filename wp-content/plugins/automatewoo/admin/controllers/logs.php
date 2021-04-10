@@ -96,7 +96,7 @@ class Logs extends Base {
 
 		foreach ( $ids as $id ) {
 
-			if ( ! $log = AW()->get_log( $id ) ) {
+			if ( ! $log = Log_Factory::get( $id ) ) {
 				continue;
 			}
 

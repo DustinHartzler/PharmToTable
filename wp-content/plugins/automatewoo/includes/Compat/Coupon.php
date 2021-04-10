@@ -5,6 +5,8 @@ namespace AutomateWoo\Compat;
 
 use AutomateWoo\DateTime;
 
+aw_deprecated_class( Coupon::class, '5.2.0' );
+
 /**
  * @class Coupon
  * @since 2.9

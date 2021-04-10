@@ -94,24 +94,15 @@ class Trigger_Customer_Win_Back extends AbstractBatchedDailyTrigger {
 			throw new RuntimeException( 'Customer was not found.' );
 		}
 
-		// make the customer's last order object available for this trigger
-		$orders = wc_get_orders(
-			[
-				'type'     => 'shop_order',
-				'customer' => $customer->is_registered() ? $customer->get_user_id() : $customer->get_email(),
-				'status'   => apply_filters( 'automatewoo/customer/last_order_date_statuses', wc_get_is_paid_statuses() ),
-				'limit'    => 1,
-			]
-		);
-
-		if ( empty( $orders ) ) {
+		$last_paid_order = $customer->get_nth_last_paid_order( 1 );
+		if ( ! $last_paid_order ) {
 			throw new RuntimeException( 'The customer has no paid orders. An order may have been edited or deleted since starting the job.' );
 		}
 
 		$workflow->maybe_run(
 			[
 				'customer' => $customer,
-				'order'    => current( $orders ),
+				'order'    => $last_paid_order,
 			]
 		);
 	}

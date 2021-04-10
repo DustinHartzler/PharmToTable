@@ -11,6 +11,7 @@ use AutomateWoo\Replace_Helper;
 use AutomateWoo\Variables_Processor;
 use AutomateWoo\Workflow;
 use AutomateWoo\Workflows\Factory;
+use AutomateWoo\Workflows\VariableParsing\ParsedVariable;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -104,11 +105,8 @@ class Database_Update_5_1_0 extends AbstractDatabaseUpdate {
 				$replacer = new Replace_Helper(
 					$field_value,
 					function ( $value ) {
-						$value = Variables_Processor::sanitize( $value );
-
 						$variable = Variables_Processor::parse_variable( $value );
-
-						if ( ! $variable ) {
+						if ( ! $variable instanceof ParsedVariable ) {
 							return false;
 						}
 

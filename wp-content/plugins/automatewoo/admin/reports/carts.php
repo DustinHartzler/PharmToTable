@@ -23,6 +23,14 @@ class Report_Carts extends Admin_List_Table {
 		]);
 	}
 
+	/**
+	 * Display filters.
+	 *
+	 * @since 5.2.0
+	 */
+	public function filters() {
+		$this->output_customer_filter();
+	}
 
 	function get_columns() {
 
@@ -151,6 +159,16 @@ class Report_Carts extends Admin_List_Table {
 		$query->set_limit( $per_page );
 		$query->set_page( $current_page );
 		$query->set_ordering( $this->get_param_orderby(), $this->get_param_order() );
+
+		// Filter items based on customer.
+		$customer_id = absint( aw_request( 'filter_customer' ) );
+		if ( $customer_id ) {
+			$customer = Customer_Factory::get( $customer_id );
+			if ( $customer instanceof Customer ) {
+				$query->where_customer( $customer );
+			}
+		}
+
 		$res = $query->get_results();
 
 		$this->items = $res;

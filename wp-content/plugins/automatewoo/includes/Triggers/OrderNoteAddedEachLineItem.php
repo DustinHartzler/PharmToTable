@@ -28,7 +28,6 @@ class OrderNoteAddedEachLineItem extends Trigger_Order_Note_Added {
 	 * Load trigger admin props.
 	 */
 	public function load_admin_details() {
-		parent::load_admin_details();
 		$this->title       = __( 'Order Note Added - Each Line Item', 'automatewoo' );
 		$this->description = __(
 			'Fires when a note is added to an order for each line item in the order. This can include both private notes and notes to the customer. These notes appear on the right of the order edit screen.',
@@ -42,7 +41,7 @@ class OrderNoteAddedEachLineItem extends Trigger_Order_Note_Added {
 	 * @param Order_Note $order_note
 	 * @param WC_Order   $order
 	 */
-	protected function handle_order_note_added( $order_note, $order ) {
+	protected function handle_order_note_added( Order_Note $order_note, WC_Order $order ) {
 		$customer = Customer_Factory::get_by_order( $order );
 
 		foreach ( $order->get_items() as $order_item_id => $order_item ) {

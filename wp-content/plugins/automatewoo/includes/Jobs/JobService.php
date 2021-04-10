@@ -41,7 +41,7 @@ class JobService {
 			$job->init();
 
 			if ( $job instanceof StartOnHookInterface ) {
-				add_action( $job->get_start_hook(), [ $job, 'start' ] );
+				add_action( $job->get_start_hook(), [ $job, 'start' ], 10, 0 );
 			}
 		}
 	}

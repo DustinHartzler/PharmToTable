@@ -7,7 +7,7 @@ jQuery(function($) {
 
         set_iframe_height();
 
-        $(window).resize(function(){
+        $(window).on( 'resize', function(){
             set_iframe_height();
         });
 
@@ -20,19 +20,19 @@ jQuery(function($) {
 
 
 
-    $('form.aw-preview__send-test-form').submit(function(e){
+    $('form.aw-preview__send-test-form').on( 'submit', function(e){
         e.preventDefault();
 
         var $form = $(this);
 
         $form.addClass('aw-loading');
-        $form.find('button').blur();
+        $form.find('button').trigger( 'blur' );
 
         var data = {
             action: 'aw_send_test_email',
             type: $form.find('[name="type"]').val(),
             to_emails: $form.find('[name="to_emails"]').val(),
-            args: $.parseJSON( $form.find('[name="args"]').val() )
+            args: JSON.parse( $form.find('[name="args"]').val() )
         };
 
         $.post( ajaxurl, data, function( response ){

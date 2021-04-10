@@ -3,9 +3,13 @@
 
 namespace AutomateWoo;
 
+aw_deprecated_class( Subscription_Helper::class, '5.2.0' );
+
 /**
  * @class Subscription_Helper
  * @since 2.8.2
+ *
+ * @deprecated this class is no longer required due to changes in AutomateWoo\Data_Layer
  */
 class Subscription_Helper {
 
@@ -16,6 +20,8 @@ class Subscription_Helper {
 	 * @return \WP_User|bool
 	 */
 	static function prepare_user_data( $subscription ) {
+
+		wc_deprecated_function( __METHOD__, '5.2.0' );
 
 		if ( ! $subscription || ! Integrations::is_subscriptions_active() ) {
 			return false;

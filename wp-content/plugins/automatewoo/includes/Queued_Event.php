@@ -3,6 +3,7 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\DataTypes\DataTypes;
 use AutomateWoo\Workflows\Factory;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -162,12 +163,12 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 * @param $data_item
 	 */
 	private function store_data_item( $data_type_id, $data_item ) {
-		$data_type = Data_Types::get( $data_type_id );
+		$data_type = DataTypes::get( $data_type_id );
 
 		if (
 			! $data_type ||
 			! $data_type->validate( $data_item ) ||
-			Data_Types::is_non_stored_data_type( $data_type_id )
+			DataTypes::is_non_stored_data_type( $data_type_id )
 		) {
 			return;
 		}
@@ -193,7 +194,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 
 			if ( $compressed_data_layer ) {
 				foreach ( $compressed_data_layer as $data_type_id => $compressed_item ) {
-					if ( $data_type = Data_Types::get( $data_type_id ) ) {
+					if ( $data_type = DataTypes::get( $data_type_id ) ) {
 						$uncompressed_data_layer[$data_type_id] = $data_type->decompress( $compressed_item, $compressed_data_layer );
 					}
 				}
@@ -246,7 +247,7 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 * @return string|false
 	 */
 	private function get_compressed_data_item( $data_type_id, $supplied_data_items ) {
-		if ( Data_Types::is_non_stored_data_type( $data_type_id ) ) {
+		if ( DataTypes::is_non_stored_data_type( $data_type_id ) ) {
 			return false; // storage not required
 		}
 
@@ -410,6 +411,8 @@ class Queued_Event extends Abstract_Model_With_Meta_Table {
 	 * @param $date DateTime
 	 */
 	function set_date( $date ) {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'set_date_due' );
+
 		$this->set_date_due( $date );
 	}
 

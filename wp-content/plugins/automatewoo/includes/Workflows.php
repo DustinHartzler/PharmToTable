@@ -157,7 +157,7 @@ class Workflows {
 
 		$passed_for_today = $datetime->getTimestamp() < time();
 
-		Events::clear_scheduled_hook( $hook, [ $workflow->get_id() ] );
+		AW()->action_scheduler()->cancel( $hook, [ $workflow->get_id() ] );
 
 		if ( $passed_for_today && $clear_if_time_has_passed_for_today ) {
 			return;

@@ -3,6 +3,9 @@
 
 namespace AutomateWoo;
 
+use Automattic\WooCommerce\Admin\Loader as WCAdminLoader;
+use Automattic\WooCommerce\Admin\Features\Navigation\Screen;
+
 /**
  * @class Post_Types
  */
@@ -19,6 +22,8 @@ class Post_Types {
 
 
 	static function register_post_types() {
+		$is_wc_admin_nav = class_exists( WCAdminLoader::class ) & WCAdminLoader::is_feature_enabled( 'navigation' );
+
 		register_post_type( 'aw_workflow',
 			apply_filters( 'automatewoo_register_post_type_aw_workflow', [
 					'labels'              => [
@@ -42,7 +47,8 @@ class Post_Types {
 					'map_meta_cap'        => true,
 					'publicly_queryable'  => false,
 					'exclude_from_search' => true,
-					'show_in_menu'        => false,
+					// Only enable show_in_menu when it's required for WC Admin nav to work
+					'show_in_menu'        => $is_wc_admin_nav,
 					'hierarchical'        => false,
 					'show_in_nav_menus'   => false,
 					'rewrite'             => false,
@@ -52,6 +58,10 @@ class Post_Types {
 				]
 			)
 		);
+
+		if ( class_exists( Screen::class ) ) {
+			Screen::register_post_type( 'aw_workflow' );
+		}
 
 		do_action('automatewoo_after_register_post_types');
 	}

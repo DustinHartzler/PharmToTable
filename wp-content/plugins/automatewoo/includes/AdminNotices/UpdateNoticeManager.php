@@ -21,7 +21,7 @@ class UpdateNoticeManager {
 	 *
 	 * @see output_admin_notice method to update the version number displayed in the notice
 	 */
-	protected static $version = '5.1';
+	protected static $version = '5.2';
 
 	/**
 	 * Attach callbacks.
@@ -52,29 +52,22 @@ class UpdateNoticeManager {
 	 * Outputs the update notice including details about the update.
 	 */
 	public static function output_admin_notice() {
-
-		$title       = __( 'Check out these new preset workflows', 'automatewoo' );
+		$title       = __( 'Thanks for updating to AutomateWoo 5.2!', 'automatewoo' );
 		$description = sprintf(
 			__(
-				'Reach out to your customers and automate your work easily with these presets. Learn more about <%1$s>preset workflows<%2$s>.',
+				'In this release we have introduced some minor new features, added support for PHP 8 and finished converting all background processing to the <%1$s>Action Scheduler<%2$s> library which is used in WooCommerce core.',
 				'automatewoo'
 			),
-			'a href="' . Admin::get_docs_link( 'preset-workflows/', 'update-notice' ) . '"',
+			'a href="https://actionscheduler.org/" target="_blank"',
 			'/a'
 		);
 		$links       = [
 			[
-				'text'           => __( 'Browse presets', 'automatewoo' ),
-				'href'           => Admin::page_url( 'workflow-presets' ),
+				'text'           => __( 'View changelog', 'automatewoo' ),
+				'href'           => 'https://dzv365zjfbd8v.cloudfront.net/changelogs/automatewoo/changelog.txt',
 				'class'          => 'button-primary',
-				'data_link_type' => 'presets',
-				'target'         => '_self',
-			],
-			[
-				'text'           => __( 'What else is new in 5.1', 'automatewoo' ),
-				'href'           => 'https://woocommerce.com/posts/automatewoo-5-1/',
-				'class'          => 'button-secondary',
-				'data_link_type' => 'getting_started',
+				'data_link_type' => 'changelog',
+				'target'         => '_blank',
 			],
 		];
 

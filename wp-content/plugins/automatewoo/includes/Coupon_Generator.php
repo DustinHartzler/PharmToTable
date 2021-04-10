@@ -228,6 +228,17 @@ class Coupon_Generator {
 			$coupon->update_meta_data( '_wc_points_modifier', $template_coupon->get_meta( '_wc_points_modifier' ) );
 		}
 
+		/**
+		 * Action fires before saving a coupon that is generated from a template coupon.
+		 *
+		 * @since 5.2.0
+		 *
+		 * @param \WC_Coupon                    $coupon          The newly generated coupon object.
+		 * @param \WC_Coupon                    $template_coupon The template coupon object.
+		 * @param \AutomateWoo\Coupon_Generator $this            The coupon generator object.
+		 */
+		do_action( 'automatewoo/coupon_generator/generate_from_template_coupon', $coupon, $template_coupon, $this );
+
 		$coupon->save();
 
 		return $coupon;

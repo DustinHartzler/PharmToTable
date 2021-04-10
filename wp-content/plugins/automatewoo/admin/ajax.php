@@ -6,6 +6,7 @@ namespace AutomateWoo;
 use AutomateWoo\Admin\JSON_Search;
 use AutomateWoo\Exceptions\InvalidPreviewData;
 use AutomateWoo\Workflows\Factory;
+use WP_Error;
 
 /**
  * @class Admin_Ajax
@@ -34,9 +35,7 @@ class Admin_Ajax {
 			'database_update_items_to_process_count',
 			'save_preview_data',
 			'send_test_email',
-			'dismiss_expiry_notice',
 			'dismiss_system_error_notice',
-			'dismiss_license_nag_notice',
 			'get_rule_select_choices',
 			'toggle_workflow_status',
 			'modal_log_info',
@@ -295,7 +294,7 @@ class Admin_Ajax {
 
 				$action->workflow->setup();
 
-				echo $action->preview();
+				echo $action->get_preview();
 
 				$action->workflow->cleanup();
 
@@ -338,9 +337,13 @@ class Admin_Ajax {
 				}
 
 				$action->workflow->setup();
+				$current_user = get_current_user_id();
+				// Temporarily remove the current user since no current user is typically exists when running a workflow
+				wp_set_current_user( 0 );
 
-				$result = $action->send_test( $to );
+				$result = $action->run_test( [ 'recipients' => $to ] );
 
+				wp_set_current_user( $current_user );
 				$action->workflow->cleanup();
 
 				break;
@@ -350,10 +353,13 @@ class Admin_Ajax {
 				$result = false;
 		}
 
-		if ( $result instanceof \WP_Error ) {
-			wp_send_json_error([
-				'message' => __( 'Error: ', 'automatewoo' ) . $result->get_error_message(),
-			]);
+		if ( $result instanceof WP_Error ) {
+			wp_send_json_error(
+				[
+					/* translators: %s: Error message */
+					'message' => sprintf( __( 'Error: %s', 'automatewoo' ), $result->get_error_message() ),
+				]
+			);
 		}
 
 		wp_send_json_success([
@@ -484,20 +490,6 @@ class Admin_Ajax {
 
 
 	/**
-	 * Dismisses expiry notice for 6 months.
-	 */
-	static function dismiss_expiry_notice() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			die;
-		}
-
-		set_transient( 'aw_dismiss_licence_expiry_notice', '1', 6 * MONTH_IN_SECONDS );
-
-		wp_send_json_success();
-	}
-
-
-	/**
 	 *
 	 */
 	static function dismiss_system_error_notice() {
@@ -509,21 +501,6 @@ class Admin_Ajax {
 
 		wp_send_json_success();
 	}
-
-
-	/**
-	 * Dismisses license nag notice for 6 months.
-	 */
-	static function dismiss_license_nag_notice() {
-		if ( ! current_user_can( 'manage_woocommerce' ) ) {
-			die;
-		}
-
-		set_transient( 'automatewoo_dismiss_license_nag_notice', '1', 6 * MONTH_IN_SECONDS );
-
-		wp_send_json_success();
-	}
-
 
 
 	static function get_rule_select_choices() {
@@ -554,7 +531,7 @@ class Admin_Ajax {
 		if ( ! current_user_can( 'manage_woocommerce' ) )
 			die;
 
-		if ( $log = AW()->get_log( absint( aw_request('log_id') ) ) ) {
+		if ( $log = Log_Factory::get( absint( aw_request('log_id') ) ) ) {
 			Admin::get_view( 'modal-log-info', [ 'log' => $log ] );
 			die;
 		}
@@ -568,7 +545,7 @@ class Admin_Ajax {
 		if ( ! current_user_can( 'manage_woocommerce' ) )
 			die;
 
-		if ( $event = AW()->get_queued_event( absint( aw_request('queued_event_id') ) ) ) {
+		if ( $event = Queued_Event_Factory::get( absint( aw_request('queued_event_id') ) ) ) {
 			Admin::get_view( 'modal-queued-event-info', [ 'event' => $event ] );
 			die;
 		}
@@ -600,7 +577,7 @@ class Admin_Ajax {
 		if ( ! current_user_can( 'manage_woocommerce' ) )
 			die;
 
-		if ( $cart = AW()->get_cart( absint( aw_request('cart_id') ) ) ) {
+		if ( $cart = Cart_Factory::get( absint( aw_request('cart_id') ) ) ) {
 			Admin::get_view( 'modal-cart-info', [ 'cart' => $cart ] );
 			die;
 		}

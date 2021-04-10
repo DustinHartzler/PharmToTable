@@ -92,25 +92,6 @@ class AW_Report_Abstract_Graph extends WC_Admin_Report {
 				</div>
 			</form>
 		</div>
-
-
-		<script type="text/javascript">
-			jQuery('.section_title').click(function(){
-				var next_section = jQuery(this).next('.section');
-
-				if ( jQuery(next_section).is(':visible') )
-					return false;
-
-				jQuery('.section:visible').slideUp();
-				jQuery('.section_title').removeClass('open');
-				jQuery(this).addClass('open').next('.section').slideDown();
-
-				return false;
-			});
-			jQuery('.section').slideUp( 100, function() {
-				jQuery('.section_title:first').click();
-			});
-		</script>
 		<?php
 	}
 

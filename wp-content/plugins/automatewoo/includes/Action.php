@@ -2,6 +2,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Actions\ActionInterface;
+use AutomateWoo\Actions\PreviewableInterface;
 use AutomateWoo\Fields\Field;
 
 /**
@@ -9,7 +11,7 @@ use AutomateWoo\Fields\Field;
  *
  * All workflow actions extend this class.
  */
-abstract class Action {
+abstract class Action implements ActionInterface {
 
 	/**
 	 * The action's unique name/slug.
@@ -77,28 +79,18 @@ abstract class Action {
 	protected $has_loaded_admin_details = false;
 
 	/**
-	 * Called when an action should be run.
-	 *
-	 * @throws \Exception When an error occurs.
-	 */
-	abstract public function run();
-
-	/**
-	 * Action constructor.
-	 */
-	public function __construct() {
-		$this->init();
-	}
-
-	/**
 	 * This method no longer has an explicit purpose and is deprecated.
 	 *
 	 * @deprecated
 	 */
-	public function init() {}
+	public function init() {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+	}
 
 	/**
 	 * Method to load the action's fields.
+	 *
+	 * TODO make protected method
 	 */
 	public function load_fields() {}
 
@@ -265,17 +257,37 @@ abstract class Action {
 	public function get_option( $field_name, $process_variables = false, $allow_html = false ) {
 		$value = $this->get_option_raw( $field_name );
 
-		// Process the option value only if it's a string
-		// The value will almost always be a string but it could be a bool if the field is checkbox
-		if ( $value && is_string( $value ) ) {
-			if ( $process_variables ) {
-				$value = $this->workflow->variable_processor()->process_field( $value, $allow_html );
-			} elseif ( ! $allow_html ) {
-				$value = html_entity_decode( wp_strip_all_tags( $value ) );
+		if ( is_string( $value ) ) {
+			$value = $this->process_option_string_value( $value, $process_variables, $allow_html );
+		} elseif ( is_array( $value ) ) {
+			foreach ( $value as &$array_value ) {
+				if ( is_string( $array_value ) ) {
+					$array_value = $this->process_option_string_value( $array_value, $process_variables, $allow_html );
+				}
 			}
 		}
 
 		return apply_filters( 'automatewoo_action_option', $value, $field_name, $process_variables, $this );
+	}
+
+	/**
+	 * Process an option string value converting any variables.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param string $value
+	 * @param bool   $process_variables
+	 * @param bool   $allow_html
+	 *
+	 * @return string
+	 */
+	protected function process_option_string_value( string $value, bool $process_variables, bool $allow_html ) {
+		if ( $process_variables ) {
+			return $this->workflow->variable_processor()->process_field( $value, $allow_html );
+		} elseif ( ! $allow_html ) {
+			return html_entity_decode( wp_strip_all_tags( $value ) );
+		}
+		return $value;
 	}
 
 	/**
@@ -301,6 +313,8 @@ abstract class Action {
 	/**
 	 * Used to dynamically load option values for an action field.
 	 *
+	 * TODO move to HasDynamicFieldOptions interface
+	 *
 	 * @param string       $field_name
 	 * @param string|false $reference_field_value
 	 *
@@ -313,12 +327,17 @@ abstract class Action {
 	/**
 	 * Check requirements for the action.
 	 *
+	 * TODO move to HasRequirements interface
+	 * TODO Ideally change behaviour to "get_requirements" rather than actually performing check
+	 *
 	 * Runs before an action is loaded in the admin area.
 	 */
 	public function check_requirements() {}
 
 	/**
 	 * Display a warning in the admin area.
+	 *
+	 * TODO move into admin/UI related code
 	 *
 	 * @param string $message
 	 */
@@ -345,14 +364,29 @@ abstract class Action {
 	/**
 	 * Does this action have a preview ability?
 	 *
-	 * To enable preview for an action simply add a preview() method.
-	 *
-	 * @since 4.4.0
+	 * @deprecated in 5.2.0 Use Previewable interface instead
+	 * @see PreviewableInterface
 	 *
 	 * @return bool
 	 */
 	public function can_be_previewed() {
-		return method_exists( $this, 'preview' );
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+		return $this instanceof PreviewableInterface;
+	}
+
+	/**
+	 * Returns preview content.
+	 *
+	 * @deprecated in 5.2.0 Use Previewable interface instead
+	 * @see PreviewableInterface
+	 *
+	 * @return string|\WP_Error
+	 */
+	public function preview() {
+		wc_deprecated_function( __METHOD__, '5.2.0', PreviewableInterface::class );
+		if ( $this instanceof PreviewableInterface ) {
+			return $this->get_preview();
+		}
 	}
 
 }

@@ -3,7 +3,7 @@
 
 namespace AutomateWoo\Rules;
 
-use AutomateWoo\Data_Types;
+use AutomateWoo\DataTypes\DataTypes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Customer_Company extends Abstract_String {
 
-	public $data_item = Data_Types::CUSTOMER;
+	public $data_item = DataTypes::CUSTOMER;
 
 
 	function init() {

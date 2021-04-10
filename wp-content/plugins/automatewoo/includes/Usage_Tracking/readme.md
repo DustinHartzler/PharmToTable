@@ -16,7 +16,6 @@ Similar to WooCommerce, we track non-sensitive data about how a store is set up 
   * Whether presubmit capture is enabled
   * Whether the abandoned cart feature is enabled
   * Whether the communication account tab is enabled
-  * The license system in use (legacy automatewoo.com vs. woocommerce.com)
   * Whether any of these integrations are in use: Mailchimp, Campaign Monitor, Active Campaign, Twilio, Bitly
 * The names of actions that are in use
 * The name of triggers that are in use
@@ -51,7 +50,6 @@ $data['extensions']['automatewoo'] = [
 		'checkout_optin_enabled'                   => (bool) "enabled",
 		'account_optin_enabled'                    => (bool) "enabled",
 		'communication_account_tab_enabled'        => (bool) "enabled",
-		'license_system'                           => (string) "system",
 		'mailchimp_integration_enabled'            => (bool) "enabled",
 		'campaign_monitor_integration_enabled'     => (bool) "enabled",
 		'active_campaign_integration_enabled'      => (bool) "enabled",
@@ -90,6 +88,9 @@ All event names are prefixed by `wcadmin_aw_`.
 * `notice_dismissed` &ndash; triggered when an admin notice is dismissed by the user (includes `notice_identifier` property)
 * `workflow_tab_view` &ndash; triggered when each "AutomateWoo > Workflows" tab is viewed by the user 
 * `preset_list_button_clicked` &ndash; fires when a button in the workflow presets list is clicked
+* `preset_activation_alert_rendered` &ndash; triggered when a message to confirm preset activation is rendered (includes `is_active` property)
+* `preset_activation_alert_closed` &ndash; triggered when a preset activation alert is closed 
+		(includes properties `is_active`, and `action: 'confirm' | 'cancel' | 'dismiss'` )
 
 
 ## Available hooks

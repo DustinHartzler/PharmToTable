@@ -49,7 +49,7 @@ class CustomerMeta extends Database_Table {
 			meta_id bigint(20) NOT NULL AUTO_INCREMENT,
 			customer_id bigint(20) NULL,
 			meta_key varchar(255) NULL,
-			meta_value longtext NOT NULL default '',
+			meta_value longtext NULL,
 			PRIMARY KEY  (meta_id),
 			KEY customer_id (customer_id),
 			KEY meta_key (meta_key({$this->max_index_length}))

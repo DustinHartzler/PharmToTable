@@ -3,6 +3,7 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Actions\PreviewableInterface;
 use AutomateWoo\Triggers\ManualInterface;
 use AutomateWoo\Workflows\Factory;
 
@@ -128,7 +129,7 @@ class Admin_Workflow_Edit {
 
 		foreach ( Actions::get_all() as $action ) {
 			$actions_data[$action->get_name()] = [
-				'can_be_previewed' => $action->can_be_previewed(),
+				'can_be_previewed' => $action instanceof PreviewableInterface,
 				'required_data_items' => $action->required_data_items,
 				'group' => sanitize_key( $action->get_group() )
 			];

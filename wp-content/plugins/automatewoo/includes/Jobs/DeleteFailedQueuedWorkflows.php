@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since   5.0.0
  * @package AutomateWoo\Jobs
  */
-class DeleteFailedQueuedWorkflows extends AbstractBatchedJob implements StartOnHookInterface {
+class DeleteFailedQueuedWorkflows extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
 
 	use ItemDeletionDate, ValidateItemAsIntegerId;
 
@@ -75,13 +75,13 @@ class DeleteFailedQueuedWorkflows extends AbstractBatchedJob implements StartOnH
 	 * @param int   $item
 	 * @param array $args The args for this instance of the job.
 	 *
-	 * @throws BatchException If item can't be found.
+	 * @throws JobException If item can't be found.
 	 */
 	protected function process_item( $item, array $args ) {
 		$queued_workflow = Queued_Event_Factory::get( $item );
 
 		if ( ! $queued_workflow ) {
-			throw BatchException::item_not_found();
+			throw JobException::item_not_found();
 		}
 
 		$queued_workflow->delete();

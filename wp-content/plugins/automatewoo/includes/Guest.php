@@ -63,6 +63,8 @@ class Guest extends Abstract_Model_With_Meta_Table {
 	 * @param string $key
 	 */
 	function set_key( $key ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		$this->set_prop( 'tracking_key', Clean::string( $key ) );
 	}
 
@@ -73,6 +75,8 @@ class Guest extends Abstract_Model_With_Meta_Table {
 	 * @return string
 	 */
 	function get_key() {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return Clean::string( $this->get_prop( 'tracking_key' ) );
 	}
 

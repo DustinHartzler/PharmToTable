@@ -34,9 +34,6 @@ class Hooks {
 		// conversions
 		add_action( 'automatewoo/async/order_created', [ 'AutomateWoo\Conversions', 'check_order_for_conversion' ], 20 );
 
-		// tools
-		add_action( 'automatewoo/tools/background_process', [ 'AutomateWoo\Tools', 'handle_background_process' ], 10, 2 );
-
 		add_action( 'get_header', [ 'AutomateWoo\Language', 'make_language_persistent' ] );
 
 		// object caching
@@ -46,11 +43,6 @@ class Hooks {
 		add_action( 'automatewoo/object/create', [ 'AutomateWoo\Factories', 'update_object_cache' ] );
 		add_action( 'automatewoo/object/update', [ 'AutomateWoo\Factories', 'clean_object_cache' ] );
 		add_action( 'automatewoo/object/delete', [ 'AutomateWoo\Factories', 'clean_object_cache' ] );
-
-		if ( Licenses::is_legacy() ) {
-			add_action( 'admin_init', [ 'AutomateWoo\Licenses', 'maybe_check_status' ] );
-			add_action( 'automatewoo_license_reset_status_check_timer', [ 'AutomateWoo\Licenses', 'reset_status_check_timer' ] );
-		}
 
 		// system check
 		add_action( 'admin_init', [ 'AutomateWoo\System_Checks', 'maybe_schedule_check' ], 20 );
@@ -167,7 +159,6 @@ class Hooks {
 		}
 
 		wp_register_script( 'automatewoo-presubmit', AW()->url( "/assets/js/automatewoo-presubmit$suffix.js" ), [ 'jquery' ], AW()->version, true );
-//		wp_register_script( 'automatewoo-communication-page', AW()->url( "/assets/js/automatewoo-communication-page$suffix.js" ), [ 'jquery' ], AW()->version, true );
 
 		wp_register_style( 'automatewoo-main', AW()->url( '/assets/css/automatewoo-main.css' ), [], AW()->version );
 		wp_register_style( 'automatewoo-communication-page', AW()->url( '/assets/css/automatewoo-communication-page.css' ), [ 'automatewoo-main' ], AW()->version );

@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Carts\CartRestorer;
+
 /**
  * Carts management class
  * @class Carts
@@ -327,43 +329,21 @@ class Carts {
 	 *
 	 * @param Cart|bool $cart
 	 *
-	 * @return bool
+	 * @return bool True if the cart was restored, false on failure.
 	 */
 	static function restore_cart( $cart ) {
-		if ( ! $cart || ! $cart->has_items() ) {
-			return false;
+		$was_restored = false;
+
+		if ( $cart ) {
+			self::$is_doing_restore = true;
+
+			$cart_restorer = new CartRestorer( $cart, WC()->cart, WC()->session );
+			$was_restored  = $cart_restorer->restore();
+
+			self::$is_doing_restore = false;
 		}
 
-		self::$is_doing_restore = true;
-
-		$notices_backup = wc_get_notices();
-
-		// merge restored items with existing
-		$existing_items = WC()->cart->get_cart_for_session();
-
-		foreach ( $cart->get_items() as $item ) {
-			if ( isset( $existing_items[ $item->get_key() ] ) ) {
-				continue; // item already exists in cart
-			}
-
-			WC()->cart->add_to_cart( $item->get_product_id(), $item->get_quantity(), $item->get_variation_id(), $item->get_variation_data(), $item->get_data() );
-		}
-
-		// restore coupons
-		foreach ( $cart->get_coupons() as $coupon_code => $coupon_data ) {
-			if ( ! WC()->cart->has_discount( $coupon_code ) ) {
-				WC()->cart->add_discount( $coupon_code );
-			}
-		}
-
-		// clear notices for when a added coupons or products is added to cart
-		WC()->session->set( 'wc_notices', $notices_backup );
-
-		self::$is_doing_restore = false;
-
-		do_action( 'automatewoo/cart/restored', $cart );
-
-		return true;
+		return $was_restored;
 	}
 
 
@@ -410,7 +390,7 @@ class Carts {
 	 */
 	public static function store_cart_id_in_order_meta( $order ) {
 		if ( WC()->session ) {
-			$order->add_meta_data( 'automatewoo_cart_id', WC()->session->get( 'automatewoo_cart_id' ) );
+			$order->update_meta_data( 'automatewoo_cart_id', WC()->session->get( 'automatewoo_cart_id' ) );
 		}
 	}
 

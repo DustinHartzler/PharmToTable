@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @since   5.0.0
  * @package AutomateWoo\Jobs
  */
-class DeleteExpiredCoupons extends AbstractBatchedJob implements StartOnHookInterface {
+class DeleteExpiredCoupons extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
 
 	use ItemDeletionDate, ValidateItemAsIntegerId;
 
@@ -29,11 +29,11 @@ class DeleteExpiredCoupons extends AbstractBatchedJob implements StartOnHookInte
 	/**
 	 * AbstractBatchedJob constructor.
 	 *
-	 * @param ActionSchedulerInterface $action_scheduler
-	 * @param BatchedJobMonitor        $monitor
-	 * @param OptionsStore             $options_store
+	 * @param ActionSchedulerInterface  $action_scheduler
+	 * @param ActionSchedulerJobMonitor $monitor
+	 * @param OptionsStore              $options_store
 	 */
-	public function __construct( ActionSchedulerInterface $action_scheduler, BatchedJobMonitor $monitor, OptionsStore $options_store ) {
+	public function __construct( ActionSchedulerInterface $action_scheduler, ActionSchedulerJobMonitor $monitor, OptionsStore $options_store ) {
 		$this->options_store = $options_store;
 		parent::__construct( $action_scheduler, $monitor );
 	}

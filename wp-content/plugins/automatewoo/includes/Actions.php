@@ -48,14 +48,23 @@ class Actions extends Registry {
 		}
 
 		if ( Integrations::is_subscriptions_active() ) {
-			$includes[ 'change_subscription_status' ] = 'AutomateWoo\Action_Subscription_Change_Status';
-			$includes[ 'subscription_update_meta' ] = 'AutomateWoo\Action_Subscription_Update_Meta';
-			$includes[ 'subscription_send_invoice' ] = 'AutomateWoo\Action_Subscription_Send_Invoice';
-			$includes[ 'subscription_add_product' ] = 'AutomateWoo\Action_Subscription_Add_Product';
-			$includes[ 'subscription_remove_product' ] = 'AutomateWoo\Action_Subscription_Remove_Product';
-			$includes[ 'subscription_add_note' ] = 'AutomateWoo\Action_Subscription_Add_Note';
-			$includes[ 'subscription_add_coupon' ] = 'AutomateWoo\Action_Subscription_Add_Coupon';
-			$includes[ 'subscription_remove_coupon' ] = 'AutomateWoo\Action_Subscription_Remove_Coupon';
+			$includes['change_subscription_status']            = Action_Subscription_Change_Status::class;
+			$includes['subscription_update_meta']              = Action_Subscription_Update_Meta::class;
+			$includes['subscription_send_invoice']             = Action_Subscription_Send_Invoice::class;
+			$includes['subscription_update_schedule']          = Actions\Subscriptions\UpdateSchedule::class;
+			$includes['subscription_add_product']              = Action_Subscription_Add_Product::class;
+			$includes['subscription_update_product']           = Actions\Subscriptions\UpdateProduct::class;
+			$includes['subscription_remove_product']           = Action_Subscription_Remove_Product::class;
+			$includes['subscription_add_note']                 = Action_Subscription_Add_Note::class;
+			$includes['subscription_add_coupon']               = Action_Subscription_Add_Coupon::class;
+			$includes['subscription_remove_coupon']            = Action_Subscription_Remove_Coupon::class;
+			$includes['subscription_add_shipping']             = Actions\Subscriptions\AddShipping::class;
+			$includes['subscription_update_shipping']          = Actions\Subscriptions\UpdateShipping::class;
+			$includes['subscription_remove_shipping']          = Actions\Subscriptions\RemoveShipping::class;
+			$includes['subscription_update_currency']          = Actions\Subscriptions\UpdateCurrency::class;
+			$includes['subscription_update_next_payment_date'] = Actions\Subscriptions\UpdateNextPaymentDate::class;
+			$includes['subscription_recalculate_taxes']        = Actions\Subscriptions\RecalculateTaxes::class;
+			$includes['subscription_regenerate_downloads']     = Actions\Subscriptions\RegenerateDownloadPermissions::class;
 		}
 
 		if ( Integrations::is_memberships_enabled() ) {

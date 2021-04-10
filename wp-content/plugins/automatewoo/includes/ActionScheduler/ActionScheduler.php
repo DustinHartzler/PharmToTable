@@ -5,13 +5,27 @@ namespace AutomateWoo\ActionScheduler;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class ActionScheduler
+ * ActionScheduler service class.
  *
  * Acts as a wrapper for ActionScheduler's public functions.
  *
  * @since 5.1.0
  */
 class ActionScheduler implements ActionSchedulerInterface {
+
+	/**
+	 * @var AsyncActionRunner
+	 */
+	protected $async_runner;
+
+	/**
+	 * ActionScheduler constructor.
+	 *
+	 * @param AsyncActionRunner $async_runner
+	 */
+	public function __construct( AsyncActionRunner $async_runner ) {
+		$this->async_runner = $async_runner;
+	}
 
 	/**
 	 * Schedule an action to run once at some time in the future
@@ -28,6 +42,25 @@ class ActionScheduler implements ActionSchedulerInterface {
 	}
 
 	/**
+	 * Schedule an action to run now i.e. in the next available batch.
+	 *
+	 * This differs from async actions by having a scheduled time rather than being set for '0000-00-00 00:00:00'.
+	 * We could use an async action instead but they can't be viewed easily in the admin area
+	 * because the table is sorted by schedule date.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @param string $hook  The hook to trigger.
+	 * @param array  $args  Arguments to pass when the hook triggers.
+	 * @param string $group The group to assign this job to.
+	 *
+	 * @return string The action ID.
+	 */
+	public function schedule_immediate( string $hook, $args = [], $group = 'automatewoo' ) {
+		return as_schedule_single_action( gmdate( 'U' ) - 1, $hook, $args, $group );
+	}
+
+	/**
 	 * Enqueue an action to run one time, as soon as possible
 	 *
 	 * @param string $hook  The hook to trigger.
@@ -37,7 +70,8 @@ class ActionScheduler implements ActionSchedulerInterface {
 	 * @return int The action ID.
 	 */
 	public function enqueue_async_action( $hook, $args = [], $group = 'automatewoo' ) {
-		return as_enqueue_async_action( $hook, $args, $group );
+		$this->async_runner->attach_shutdown_hook();
+		return $this->schedule_immediate( $hook, $args, $group );
 	}
 
 	/**

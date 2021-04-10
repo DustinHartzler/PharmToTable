@@ -3,11 +3,15 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Registry\ItemConstructorArgsTrait;
+
 /**
  * @class Registry
  * @since 3.2.4
  */
 abstract class Registry {
+
+	use ItemConstructorArgsTrait;
 
 	/** @var array - must be declared in child class */
 	protected static $includes;
@@ -148,17 +152,6 @@ abstract class Registry {
 	 */
 	public static function is_item_valid( $item ) {
 		return is_object( $item );
-	}
-
-	/**
-	 * Get the constructor args for an item.
-	 *
-	 * @param string $name
-	 *
-	 * @return array
-	 */
-	protected static function get_item_constructor_args( string $name ): array {
-		return [];
 	}
 
 	/**

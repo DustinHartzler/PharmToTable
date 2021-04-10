@@ -3,6 +3,11 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\DataTypes\DataTypes;
+use AutomateWoo\Workflows\VariableParsing\ExcludedParsedVariable;
+use AutomateWoo\Workflows\VariableParsing\ParsedVariable;
+use AutomateWoo\Workflows\VariableParsing\VariableParser;
+
 /**
  * Process variables into values. Is used on workflows and action options.
  *
@@ -49,15 +54,14 @@ class Variables_Processor {
 	 * @return string
 	 */
 	function _callback_process_field( $string ) {
-		$string = $this->sanitize( $string );
-
-		if ( self::is_excluded( $string ) ) {
-			return "{{ $string }}";
-		}
-
 		$variable = self::parse_variable( $string );
 
-		if ( ! $variable ) {
+		if ( $variable instanceof ExcludedParsedVariable ) {
+			// Return excluded variable without processing
+			return "{{ $variable->variable_string }}";
+		}
+
+		if ( ! $variable instanceof ParsedVariable ) {
 			return '';
 		}
 
@@ -82,15 +86,21 @@ class Variables_Processor {
 
 
 	/**
-	 * @param $string
-	 * @return Workflow_Variable_Parser|bool
+	 * Sanitize and parse a variable string into a usable object.
+	 *
+	 * @param string $string
+	 *
+	 * @return ParsedVariable|ExcludedParsedVariable|null
 	 */
-	static function parse_variable( $string ) {
-		$variable = new Workflow_Variable_Parser();
-		if ( $variable->parse( $string ) ) {
-			return $variable;
+	public static function parse_variable( $string ) {
+		$parser = new VariableParser();
+		try {
+			$parsed_variable = $parser->parse( $string );
+		} catch ( \Exception $e ) {
+			return null;
 		}
-		return false;
+
+		return $parsed_variable;
 	}
 
 
@@ -119,9 +129,9 @@ class Variables_Processor {
 
 		$value = '';
 
-		if ( method_exists( $variable, 'get_value' ) ) {
+		if ( $variable && method_exists( $variable, 'get_value' ) ) {
 
-			if ( Data_Types::is_non_stored_data_type( $data_type ) ) {
+			if ( DataTypes::is_non_stored_data_type( $data_type ) ) {
 				$value = $variable->get_value( $parameters, $this->workflow );
 			} else {
 				$data_item = $this->workflow->get_data_item( $variable->get_data_type() );
@@ -134,44 +144,6 @@ class Variables_Processor {
 
 		return (string) apply_filters( 'automatewoo/variables/get_variable_value', (string) $value, $this, $variable );
 	}
-
-
-	/**
-	 * Based on sanitize_title()
-	 *
-	 * @param $string
-	 * @return mixed|string
-	 */
-	static function sanitize( $string ) {
-
-		// remove style and script tags
-		$string = wp_strip_all_tags( $string, true );
-		$string = remove_accents( $string );
-
-		// remove unicode white spaces
-		$string = preg_replace( "#\x{00a0}#siu", ' ', $string );
-
-		$string = trim($string);
-
-		return $string;
-	}
-
-
-	/**
-	 * Certain variables can be excluded from processing.
-	 * Currently only {{ unsubscribe_url }}
-	 *
-	 * @param string $variable
-	 * @return bool
-	 */
-	static function is_excluded( $variable ) {
-		$excluded = apply_filters('automatewoo/variables_processor/excluded', [
-			'unsubscribe_url'
-		]);
-
-		return in_array( $variable, $excluded );
-	}
-
 
 	/**
 	 * Handle legacy variable compatibility.

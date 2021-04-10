@@ -4,19 +4,25 @@ namespace AutomateWoo;
 
 defined( 'ABSPATH' ) || exit;
 
-/***
+use AutomateWoo\DataTypes\DataTypes;
+use AutomateWoo\Triggers\Utilities\SubscriptionGroup;
+use WC_Order;
+
+/**
  * Trigger_Subscription_Note_Added class.
  *
  * @since 4.5
  */
 class Trigger_Subscription_Note_Added extends Trigger_Order_Note_Added {
 
+	use SubscriptionGroup;
+
 	/**
 	 * Declares data items available in trigger.
 	 *
 	 * @var array
 	 */
-	public $supplied_data_items = [ 'subscription', 'order_note', 'customer' ];
+	public $supplied_data_items = [ DataTypes::SUBSCRIPTION, DataTypes::ORDER_NOTE, DataTypes::CUSTOMER ];
 
 	/**
 	 * Load trigger admin props.
@@ -24,33 +30,28 @@ class Trigger_Subscription_Note_Added extends Trigger_Order_Note_Added {
 	public function load_admin_details() {
 		$this->title       = __( 'Subscription Note Added', 'automatewoo' );
 		$this->description = __( 'Fires when a note is added to a subscription. This includes private notes and notes to the customer. These notes appear on the right of the subscription edit screen.', 'automatewoo' );
-		$this->group       = Subscription_Workflow_Helper::get_group_name();
 	}
 
+	/**
+	 * Get order types to target in the order note trigger.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return array
+	 */
+	protected function get_target_order_types(): array {
+		return [ 'shop_subscription' ];
+	}
 
 	/**
-	 * Catch comment creation hook.
+	 * Handle when an order note is added.
 	 *
-	 * @param int         $comment_id
-	 * @param \WP_Comment $comment
+	 * @since 5.2.0
+	 *
+	 * @param Order_Note $order_note
+	 * @param WC_Order   $subscription
 	 */
-	public function catch_comment_create( $comment_id, $comment ) {
-
-		if ( $comment->comment_type !== 'order_note' || get_post_type( $comment->comment_post_ID ) !== 'shop_subscription' ) {
-			return;
-		}
-
-		$subscription = wcs_get_subscription( $comment->comment_post_ID );
-
-		if ( ! $subscription ) {
-			return;
-		}
-
-		$order_note = new Order_Note( $comment->comment_ID, $comment->comment_content, $subscription->get_id() );
-
-		// must manually set prop because meta field is added after the comment is inserted
-		$order_note->is_customer_note = $this->_is_customer_note;
-
+	protected function handle_order_note_added( Order_Note $order_note, WC_Order $subscription ) {
 		$this->maybe_run(
 			[
 				'customer'     => Customer_Factory::get_by_user_id( $subscription->get_user_id() ),

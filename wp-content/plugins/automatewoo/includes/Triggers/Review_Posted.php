@@ -36,7 +36,7 @@ class Trigger_Review_Posted extends Trigger {
 	/**
 	 * @param int $review_id
 	 */
-	function catch_hooks( $review_id ) {
+	function catch_hooks( int $review_id ) {
 		$review = new Review( Clean::id( $review_id ) );
 
 		if ( ! $review->exists ) {
@@ -56,6 +56,13 @@ class Trigger_Review_Posted extends Trigger {
 	 * @return bool
 	 */
 	function validate_workflow( $workflow ) {
+		$review = $workflow->data_layer()->get_review();
+
+		// Bail if review is not approved (e.g. spam or trash).
+		if ( ! $review || ! $review->is_approved() ) {
+			return false;
+		}
+
 		// Run each workflow once for each review, the comment could be approved more than once
 		if ( $workflow->has_run_for_data_item( 'review' ) ) {
 			return false;

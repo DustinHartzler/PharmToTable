@@ -66,6 +66,8 @@ abstract class Factory {
 	 * @return Model|bool
 	 */
 	static function load( $object ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $object;
 	}
 

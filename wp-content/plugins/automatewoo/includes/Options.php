@@ -76,7 +76,6 @@ class Options extends Options_API {
 			'conversion_window' => 14,
 			'enable_background_system_check' => true,
 			'bitly_shorten_sms_links' => 'no',
-			'license_system' => 'aw',
 		];
 	}
 
@@ -244,17 +243,6 @@ class Options extends Options_API {
 	 */
 	static function mailchimp_api_key() {
 		return trim( Clean::string( Options::get( 'mailchimp_api_key' ) ) );
-	}
-
-	/**
-	 * Get license_system option.
-	 *
-	 * @since 4.7.0
-	 *
-	 * @return string
-	 */
-	public static function license_system() {
-		return Clean::string( Options::get( 'license_system' ) );
 	}
 
 }

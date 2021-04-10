@@ -316,7 +316,7 @@ class Report_Email_Tracking extends \AW_Report_Abstract_Graph {
 		<script type="text/javascript">
 			var main_chart;
 
-			jQuery(function(){
+			jQuery(function($){
 
 				var order_data = JSON.parse( decodeURIComponent( '<?php echo rawurlencode( $chart_data ); ?>' ) );
 
@@ -429,19 +429,20 @@ class Report_Email_Tracking extends \AW_Report_Abstract_Graph {
 				}
 			);
 
-			jQuery('.chart-placeholder').resize();
+			jQuery( '.chart-placeholder' ).trigger( 'resize' );
 			}
 
 			drawGraph();
 
-			jQuery('.highlight_series').hover(
-				function() {
-					drawGraph( jQuery(this).data('series') );
-				},
-				function() {
+			$( document.body )
+				.on( 'mouseenter', '.highlight_series', function() {
+					drawGraph( $(this).data('series') );
+				} )
+				.on( 'mouseleave', '.highlight_series', function() {
 					drawGraph();
-				}
-			);
+				} )
+			;
+
 			});
 		</script>
 	<?php

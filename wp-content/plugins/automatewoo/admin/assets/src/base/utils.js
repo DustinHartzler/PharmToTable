@@ -3,6 +3,7 @@
  */
 import { dispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
+import warning from '@wordpress/warning';
 
 /**
  * Internal dependencies
@@ -20,6 +21,7 @@ export function handleFetchError( noticeText ) {
 	const { createNotice } = dispatch( 'core/notices' );
 
 	createNotice( 'error', noticeText );
+	warning( error );
 }
 
 /**

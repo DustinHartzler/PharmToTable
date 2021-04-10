@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.1.0
  */
-class WishlistItemOnSale extends AbstractBatchedJob {
+class WishlistItemOnSale extends AbstractBatchedActionSchedulerJob {
 
 	use ValidateItemAsIntegerId, ArrayValidator;
 
@@ -63,7 +63,7 @@ class WishlistItemOnSale extends AbstractBatchedJob {
 	protected function process_item( $item, array $args ) {
 		$wishlist = Wishlists::get_wishlist( $item );
 		if ( ! $wishlist ) {
-			throw BatchException::item_not_found();
+			throw JobException::item_not_found();
 		}
 
 		$sale_product_ids = Clean::ids( $args['products'] );

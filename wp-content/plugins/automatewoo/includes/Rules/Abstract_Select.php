@@ -5,6 +5,8 @@ namespace AutomateWoo\Rules;
 
 defined( 'ABSPATH' ) || exit;
 
+aw_deprecated_class( Abstract_Select::class, '5.2.0', Preloaded_Select_Rule_Abstract::class );
+
 /**
  * @deprecated in favour of Preloaded_Select_Rule_Abstract
  */

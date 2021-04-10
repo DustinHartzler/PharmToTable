@@ -378,6 +378,8 @@ class Phone_Numbers {
 	 * @return array
 	 */
 	static function parse_list( $list ) {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'Clean::comma_delimited_string' );
+
 		if ( ! is_array( $list ) ) {
 			$list = explode(',', $list );
 		}

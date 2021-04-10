@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.1.0
  */
-class AbandonedCarts extends AbstractBatchedJob implements StartOnHookInterface {
+class AbandonedCarts extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
 
 	use ValidateItemAsIntegerId;
 
@@ -31,11 +31,11 @@ class AbandonedCarts extends AbstractBatchedJob implements StartOnHookInterface 
 	/**
 	 * AbstractBatchedJob constructor.
 	 *
-	 * @param ActionSchedulerInterface $action_scheduler
-	 * @param BatchedJobMonitor        $monitor
-	 * @param OptionsStore             $options_store
+	 * @param ActionSchedulerInterface  $action_scheduler
+	 * @param ActionSchedulerJobMonitor $monitor
+	 * @param OptionsStore              $options_store
 	 */
-	public function __construct( ActionSchedulerInterface $action_scheduler, BatchedJobMonitor $monitor, OptionsStore $options_store ) {
+	public function __construct( ActionSchedulerInterface $action_scheduler, ActionSchedulerJobMonitor $monitor, OptionsStore $options_store ) {
 		$this->options_store = $options_store;
 		parent::__construct( $action_scheduler, $monitor );
 	}
@@ -119,13 +119,13 @@ class AbandonedCarts extends AbstractBatchedJob implements StartOnHookInterface 
 	 * @param int   $cart_id
 	 * @param array $args The args for this instance of the job. Args are already validated.
 	 *
-	 * @throws BatchException If item can't be found.
+	 * @throws JobException If item can't be found.
 	 */
 	protected function process_item( $cart_id, array $args ) {
 		$cart = Cart_Factory::get( $cart_id );
 
 		if ( ! $cart ) {
-			throw BatchException::item_not_found();
+			throw JobException::item_not_found();
 		}
 
 		$cart->update_status( 'abandoned' );

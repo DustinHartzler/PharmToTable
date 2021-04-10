@@ -2,6 +2,9 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Exceptions\Exception;
+use WP_Error;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -50,51 +53,42 @@ class Action_Send_Email_Plain_Text extends Action_Send_Email_Abstract {
 	 *
 	 * @return string|\WP_Error
 	 */
-	public function preview() {
+	public function get_preview() {
 		$content = $this->get_option( 'email_content', true );
-		$subject = $this->get_option( 'subject', true );
 
 		// no user should be logged in
 		$current_user = wp_get_current_user();
 		wp_set_current_user( 0 );
 
-		$email = $this->get_workflow_email_object();
-		$email->set_recipient( $current_user->get( 'user_email' ) );
-		$email->set_subject( $subject );
-		$email->set_content( $content );
-
-		$email_body = $email->get_email_body();
+		$email_body = $this->get_workflow_email_object( $current_user->get( 'user_email' ), $content )
+			->get_email_body();
 
 		// convert new lines to HTML breaks for preview only
 		return nl2br( $email_body, false );
 	}
 
 	/**
-	 * Send test email.
+	 * Run the action as a test.
 	 *
-	 * @param array $send_to
+	 * @param array $args Optionally add args for the test.
 	 *
-	 * @return \WP_Error|true
+	 * @return true|WP_Error
 	 */
-	public function send_test( $send_to = [] ) {
-		$content = $this->get_option( 'email_content', true );
-		$subject = $this->get_option( 'subject', true );
+	public function run_test( array $args = [] ) {
+		try {
+			$this->validate_test_args( $args );
 
-		// no user should be logged in
-		wp_set_current_user( 0 );
+			$content = $this->get_option( 'email_content', true );
 
-		foreach ( $send_to as $recipient ) {
+			foreach ( $args['recipients'] as $recipient ) {
+				$sent = $this->get_workflow_email_object( $recipient, $content )->send();
 
-			$email = $this->get_workflow_email_object();
-			$email->set_recipient( $recipient );
-			$email->set_subject( $subject );
-			$email->set_content( $content );
-
-			$sent = $email->send();
-
-			if ( is_wp_error( $sent ) ) {
-				return $sent;
+				if ( is_wp_error( $sent ) ) {
+					return $sent;
+				}
 			}
+		} catch ( Exception $e ) {
+			return new WP_Error( 'exception', $e->getMessage() );
 		}
 
 		return true;
@@ -105,12 +99,11 @@ class Action_Send_Email_Plain_Text extends Action_Send_Email_Abstract {
 	 */
 	public function run() {
 		$content    = $this->get_option( 'email_content', true );
-		$subject    = $this->get_option( 'subject', true );
 		$recipients = $this->get_option( 'to', true );
 		$recipients = Emails::parse_recipients_string( $recipients );
 
 		foreach ( $recipients as $recipient_email => $recipient_args ) {
-			$sent = $this->send_email( $recipient_email, $content, $subject, $recipient_args );
+			$sent = $this->send_email( $recipient_email, $content, $recipient_args );
 			$this->add_send_email_result_to_workflow_log( $sent );
 		}
 	}
@@ -120,16 +113,12 @@ class Action_Send_Email_Plain_Text extends Action_Send_Email_Abstract {
 	 *
 	 * @param string $recipient_email
 	 * @param string $content
-	 * @param string $subject
 	 * @param array  $recipient_args
 	 *
 	 * @return bool|\WP_Error
 	 */
-	public function send_email( $recipient_email, $content, $subject, $recipient_args = [] ) {
-		$email = $this->get_workflow_email_object();
-		$email->set_recipient( $recipient_email );
-		$email->set_subject( $subject );
-		$email->set_content( $content );
+	protected function send_email( $recipient_email, $content, $recipient_args = [] ) {
+		$email = $this->get_workflow_email_object( $recipient_email, $content );
 
 		if ( ! empty( $recipient_args['notracking'] ) ) {
 			$email->set_tracking_enabled( false );

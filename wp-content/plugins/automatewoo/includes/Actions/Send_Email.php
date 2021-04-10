@@ -3,6 +3,9 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Exceptions\Exception;
+use WP_Error;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -66,53 +69,51 @@ class Action_Send_Email extends Action_Send_Email_Abstract {
 	 * Generates the HTML content for the email
 	 * @return string|\WP_Error
 	 */
-	function preview() {
+	public function get_preview() {
 		$current_user = wp_get_current_user();
 
 		// no user should be logged in
 		wp_set_current_user( 0 );
 
-		$email = $this->get_workflow_email_object();
-		$email->set_recipient( $current_user->get('user_email') );
-		$email->set_subject( $this->get_option( 'subject', true ) );
-		$email->set_heading( $this->get_option('email_heading', true ) );
-		$email->set_preheader( trim( $this->get_option( 'preheader', true ) ) );
-		$email->set_template( $this->get_option( 'template' ) );
-		$email->set_content( $this->get_option('email_content', true, true ) );
-
-		return $email->get_email_body();
+		return $this->get_workflow_email_object(
+			$current_user->get('user_email'),
+			$this->get_option( 'email_content', true, true )
+		)
+			->set_heading( $this->get_option( 'email_heading', true ) )
+			->set_preheader( trim( $this->get_option( 'preheader', true ) ) )
+			->set_template( $this->get_option( 'template' ) )
+			->get_email_body();
 	}
 
-
 	/**
-	 * Generates the HTML content for the email
-	 * @param array $send_to
-	 * @return string|\WP_Error|true
+	 * Run the action as a test.
+	 *
+	 * @param array $args Optionally add args for the test.
+	 *
+	 * @return true|WP_Error
 	 */
-	function send_test( $send_to = [] ) {
-		$email_heading = $this->get_option( 'email_heading', true );
-		$email_content = $this->get_option( 'email_content', true, true );
-		$subject       = $this->get_option( 'subject', true );
-		$preheader     = trim( $this->get_option( 'preheader', true ) );
-		$template      = $this->get_option( 'template' );
+	public function run_test( array $args = [] ) {
+		try {
+			$this->validate_test_args( $args );
 
-		wp_set_current_user( 0 ); // no user should be logged in
+			$heading   = $this->get_option( 'email_heading', true );
+			$content   = $this->get_option( 'email_content', true, true );
+			$preheader = trim( $this->get_option( 'preheader', true ) );
+			$template  = $this->get_option( 'template' );
 
-		foreach ( $send_to as $recipient ) {
+			foreach ( $args['recipients'] as $recipient ) {
+				$sent = $this->get_workflow_email_object( $recipient, $content )
+					->set_heading( $heading )
+					->set_preheader( $preheader )
+					->set_template( $template )
+					->send();
 
-			$email = $this->get_workflow_email_object();
-			$email->set_recipient( $recipient );
-			$email->set_subject( $subject );
-			$email->set_heading( $email_heading );
-			$email->set_preheader( $preheader );
-			$email->set_template( $template );
-			$email->set_content( $email_content );
-
-			$sent = $email->send();
-
-			if ( is_wp_error( $sent ) ) {
-				return $sent;
+				if ( is_wp_error( $sent ) ) {
+					return $sent;
+				}
 			}
+		} catch ( Exception $e ) {
+			return new WP_Error( 'exception', $e->getMessage() );
 		}
 
 		return true;
@@ -120,24 +121,19 @@ class Action_Send_Email extends Action_Send_Email_Abstract {
 
 
 	function run() {
-		$recipients    = $this->get_option( 'to', true );
-		$email_heading = $this->get_option( 'email_heading', true );
-		$email_content = $this->get_option( 'email_content', true, true );
-		$subject       = $this->get_option( 'subject', true );
-		$preheader     = $this->get_option( 'preheader', true );
-		$template      = $this->get_option( 'template' );
+		$recipients = $this->get_option( 'to', true );
+		$heading    = $this->get_option( 'email_heading', true );
+		$content    = $this->get_option( 'email_content', true, true );
+		$preheader  = $this->get_option( 'preheader', true );
+		$template   = $this->get_option( 'template' );
 
 		$recipients = Emails::parse_recipients_string( $recipients );
 
 		foreach ( $recipients as $recipient_email => $recipient_args ) {
-
-			$email = $this->get_workflow_email_object();
-			$email->set_recipient( $recipient_email );
-			$email->set_subject( $subject );
-			$email->set_heading( $email_heading );
-			$email->set_preheader( $preheader );
-			$email->set_template( $template );
-			$email->set_content( $email_content );
+			$email = $this->get_workflow_email_object( $recipient_email, $content )
+				->set_heading( $heading )
+				->set_preheader( $preheader )
+				->set_template( $template );
 
 			if ( $recipient_args['notracking'] ) {
 				$email->set_tracking_enabled( false );

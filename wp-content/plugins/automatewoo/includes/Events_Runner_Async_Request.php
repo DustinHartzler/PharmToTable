@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Class Events_Runner_Async_Request.
  * HTTP request to run a set of async events.
  *
+ * @deprecated in 5.2.0 use AW()->action_scheduler() instead.
+ *
  * @since 3.8
  */
 class Events_Runner_Async_Request extends Async_Request_Abstract {

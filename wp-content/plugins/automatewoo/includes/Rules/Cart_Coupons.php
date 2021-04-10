@@ -2,7 +2,7 @@
 
 namespace AutomateWoo\Rules;
 
-use AutomateWoo\Data_Types;
+use AutomateWoo\DataTypes\DataTypes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ class Cart_Coupons extends Order_Coupons {
 	 *
 	 * @var string
 	 */
-	public $data_item = Data_Types::CART;
+	public $data_item = DataTypes::CART;
 
 	/**
 	 * Init.

@@ -98,7 +98,7 @@ class Guests extends Base {
 
 		foreach ( $ids as $id ) {
 
-			if ( ! $guest = AW()->get_guest( $id ) ) {
+			if ( ! $guest = Guest_Factory::get( $id ) ) {
 				continue;
 			}
 

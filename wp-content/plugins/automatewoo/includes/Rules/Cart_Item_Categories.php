@@ -3,7 +3,7 @@
 
 namespace AutomateWoo\Rules;
 
-use AutomateWoo\Data_Types;
+use AutomateWoo\DataTypes\DataTypes;
 use AutomateWoo\Fields_Helper;
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Cart_Item_Categories extends Preloaded_Select_Rule_Abstract {
 
-	public $data_item = Data_Types::CART;
+	public $data_item = DataTypes::CART;
 
 	public $is_multi = true;
 

@@ -24,6 +24,9 @@ class Review {
 	/** @var \WP_Comment */
 	private $comment;
 
+	/** @var string */
+	private $comment_status;
+
 	/** @var bool */
 	public $exists = false;
 
@@ -31,7 +34,7 @@ class Review {
 	/**
 	 * @param \WP_Comment|int $comment
 	 */
-	function __construct( $comment ) {
+	public function __construct( $comment ) {
 		if ( is_numeric( $comment ) ) {
 			$comment = get_comment( $comment );
 		}
@@ -46,13 +49,14 @@ class Review {
 		$this->user_id = (int) $comment->user_id;
 		$this->product_id = (int) $comment->comment_post_ID;
 		$this->email = Clean::email( $comment->comment_author_email );
+		$this->comment_status = wp_get_comment_status( $comment );
 	}
 
 
 	/**
 	 * @return int
 	 */
-	function get_id() {
+	public function get_id() {
 		return $this->comment_id;
 	}
 
@@ -60,7 +64,7 @@ class Review {
 	/**
 	 * @return int
 	 */
-	function get_product_id() {
+	public function get_product_id() {
 		return $this->product_id;
 	}
 
@@ -68,7 +72,7 @@ class Review {
 	/**
 	 * @return int
 	 */
-	function get_user_id() {
+	public function get_user_id() {
 		return $this->user_id;
 	}
 
@@ -76,7 +80,7 @@ class Review {
 	/**
 	 * @return int
 	 */
-	function get_email() {
+	public function get_email() {
 		return $this->email;
 	}
 
@@ -84,7 +88,7 @@ class Review {
 	/**
 	 * @return string
 	 */
-	function get_content() {
+	public function get_content() {
 		return Clean::textarea( $this->comment->comment_content );
 	}
 
@@ -107,5 +111,18 @@ class Review {
 		return Customer_Factory::get_by_review( $this );
 	}
 
+	/**
+	 * @return string
+	 */
+	public function get_comment_status() {
+		return $this->comment_status;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function is_approved() {
+		return $this->comment_status === 'approved';
+	}
 
 }

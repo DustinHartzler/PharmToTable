@@ -8,7 +8,6 @@ use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
  * Class Abstract_Async_Event
  *
  * @since 4.8.0
- * @package AutomateWoo
  */
 abstract class Abstract_Async_Event {
 
@@ -75,10 +74,37 @@ abstract class Abstract_Async_Event {
 	/**
 	 * Set the events this event is dependant on.
 	 *
+	 * @deprecated in 5.2.0 because it's preferable for events to define their own dependencies.
+	 *
 	 * @param array|string $event_dependencies
 	 */
 	public function set_event_dependencies( $event_dependencies ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
 		$this->event_dependencies = $event_dependencies;
+	}
+
+	/**
+	 * Get the async event hook name.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_name(): string {
+		return "automatewoo/async/{$this->get_event_name()}";
+	}
+
+	/**
+	 * Create async event.
+	 *
+	 * Uses $this->get_hook_name() for the hook name.
+	 *
+	 * @param array $event_args The args for the event.
+	 *
+	 * @since 5.2.0
+	 */
+	protected function create_async_event( array $event_args ) {
+		$this->action_scheduler->enqueue_async_action( $this->get_hook_name(), $event_args );
 	}
 
 }

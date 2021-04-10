@@ -2,6 +2,9 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Fields\Select;
+use AutomateWoo\Fields\Text;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -22,39 +25,11 @@ class Variable_Abstract_Datetime extends Variable {
 	 * Load admin details.
 	 */
 	public function load_admin_details() {
-		$this->_desc_format_tip = sprintf(
-			__( 'To set a custom date or time format please refer to the %1$sWordPress documentation%2$s.', 'automatewoo' ),
-			'<a href="https://codex.wordpress.org/Formatting_Date_and_Time" target="_blank">',
-			'</a>'
-		);
+		$this->_desc_format_tip = $this->get_description_custom_date_formatting_tip();
 
-		$date_format_options = $this->get_date_format_options();
-
-		foreach ( $date_format_options as $format_name => &$format_value ) {
-			$format_value = $this->get_date_format_option_displayed_value( $format_name, $format_value );
-		}
-
-		$this->add_parameter_select_field(
-			'format',
-			__( 'Choose the format that the date will be displayed in. The default is MySQL datetime format.', 'automatewoo' ),
-			$date_format_options,
-			true
-		);
-
-		$this->add_parameter_text_field(
-			'custom-format',
-			__( "Set a format according to the documentation link in the variable's description.", 'automatewoo' ),
-			true,
-			'',
-			[ 'show' => 'format=custom' ]
-		);
-
-		$this->add_parameter_text_field(
-			'modify',
-			__( 'Optional parameter to modify the value of the datetime. Uses the PHP strtotime() function.', 'automatewoo' ),
-			false,
-			__( 'e.g. +2 months, -1 day, +6 hours', 'automatewoo' )
-		);
+		$this->add_parameter_field( $this->get_format_parameter_field() );
+		$this->add_parameter_field( $this->get_custom_format_parameter_field() );
+		$this->add_parameter_field( $this->get_modify_parameter_field() );
 	}
 
 	/**
@@ -135,11 +110,11 @@ class Variable_Abstract_Datetime extends Variable {
 	 * @param array                        $parameters [modify, format]
 	 * @param bool                         $is_gmt
 	 *
-	 * @return string|false
+	 * @return string
 	 */
-	public function format_datetime( $input, $parameters, $is_gmt = false ) {
+	public function format_datetime( $input, $parameters, $is_gmt = false ): string {
 		if ( ! $input ) {
-			return false;
+			return '';
 		}
 
 		// \WC_DateTime objects will be converted to GMT by aw_normalize_date()
@@ -150,7 +125,7 @@ class Variable_Abstract_Datetime extends Variable {
 		$date = aw_normalize_date( $input );
 
 		if ( ! $date ) {
-			return false;
+			return '';
 		}
 
 		if ( $is_gmt ) {
@@ -173,5 +148,71 @@ class Variable_Abstract_Datetime extends Variable {
 		}
 
 		return $date->format_i18n( $format );
+	}
+
+	/**
+	 * Get date format parameter field.
+	 *
+	 * @since 5.4.0
+	 *
+	 * @return Select
+	 */
+	protected function get_format_parameter_field(): Select {
+		$options = $this->get_date_format_options();
+
+		foreach ( $options as $format_name => &$format_value ) {
+			$format_value = $this->get_date_format_option_displayed_value( $format_name, $format_value );
+		}
+
+		return ( new Select( false ) )
+			->set_name( 'format' )
+			->set_description( __( 'Choose the format that the date will be displayed in. The default is MySQL datetime format.', 'automatewoo' ) )
+			->set_required( true )
+			->set_options( $options );
+	}
+
+	/**
+	 * Get custom date format parameter field.
+	 *
+	 * @since 5.4.0
+	 *
+	 * @return Text
+	 */
+	protected function get_custom_format_parameter_field(): Text {
+		$field = ( new Text() )
+			->set_name( 'custom-format' )
+			->set_description( __( "Set a format according to the documentation link in the variable's description.", 'automatewoo' ) )
+			->set_required( true );
+
+		$field->meta = [ 'show' => 'format=custom' ];
+
+		return $field;
+	}
+
+	/**
+	 * Get date modify parameter field.
+	 *
+	 * @since 5.4.0
+	 *
+	 * @return Text
+	 */
+	protected function get_modify_parameter_field(): Text {
+		return ( new Text() )
+			->set_name( 'modify' )
+			->set_description( __( 'Optional parameter to modify the value of the datetime. Uses the PHP strtotime() function.', 'automatewoo' ) )
+			->set_placeholder( __( 'e.g. +2 months, -1 day, +6 hours', 'automatewoo' ) );
+	}
+
+	/**
+	 * @since 5.4.0
+	 *
+	 * @return string
+	 */
+	protected function get_description_custom_date_formatting_tip(): string {
+		return sprintf(
+			__( 'To set a custom date or time format please refer to the %1$sWordPress documentation%2$s.', 'automatewoo' ),
+			'<a href="https://wordpress.org/support/article/formatting-date-and-time/" target="_blank">',
+			'</a>'
+		);
 	}
 }

@@ -7,6 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * @class Report_Events
+ *
+ * @deprecated in 5.2.0 use AW()->action_scheduler() instead.
  */
 class Report_Events extends Admin_List_Table {
 

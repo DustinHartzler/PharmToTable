@@ -3,6 +3,7 @@
 
 namespace AutomateWoo\Admin\Controllers;
 
+use AutomateWoo\Cart_Factory;
 use AutomateWoo\Clean;
 use AutomateWoo\Report_Carts;
 
@@ -68,7 +69,7 @@ class Carts extends Base {
 
 		foreach ( $ids as $id ) {
 
-			if ( ! $cart = AW()->get_cart( $id ) ) {
+			if ( ! $cart = Cart_Factory::get( $id ) ) {
 				continue;
 			}
 

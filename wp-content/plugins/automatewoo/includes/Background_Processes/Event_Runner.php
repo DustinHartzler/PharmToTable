@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Background processor for events
+ *
+ * @deprecated in 5.2.0 use AW()->action_scheduler() instead.
  */
 class Event_Runner extends Base {
 

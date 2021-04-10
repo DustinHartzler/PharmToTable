@@ -3,7 +3,7 @@
 
 namespace AutomateWoo\Rules;
 
-use AutomateWoo\Data_Types;
+use AutomateWoo\DataTypes\DataTypes;
 use AutomateWoo\Integrations;
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Customer_Is_Mailchimp_Subscriber extends Abstract_Select_Single {
 
-	public $data_item = Data_Types::CUSTOMER;
+	public $data_item = DataTypes::CUSTOMER;
 
 
 	function init() {

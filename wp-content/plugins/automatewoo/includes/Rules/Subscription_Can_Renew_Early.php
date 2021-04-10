@@ -2,7 +2,7 @@
 
 namespace AutomateWoo\Rules;
 
-use AutomateWoo\Data_Types;
+use AutomateWoo\DataTypes\DataTypes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,7 +20,7 @@ class Subscription_Can_Renew_Early extends Abstract_Bool {
 	 *
 	 * @var string $data_item
 	 */
-	public $data_item = Data_Types::SUBSCRIPTION;
+	public $data_item = DataTypes::SUBSCRIPTION;
 
 	/**
 	 * Init.

@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\DataTypes\DataTypes;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -52,7 +54,7 @@ class Logs {
 	static function get_data_layer_storage_value( $data_type_id, $data_item ) {
 		$value = false;
 
-		if ( $data_type = Data_Types::get( $data_type_id ) ) {
+		if ( $data_type = DataTypes::get( $data_type_id ) ) {
 			$value = $data_type->compress( $data_item );
 		}
 

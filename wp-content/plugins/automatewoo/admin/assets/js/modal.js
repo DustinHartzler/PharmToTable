@@ -11,8 +11,8 @@ jQuery(function($) {
             $(document.body).on( 'click', '.automatewoo-modal-overlay', this.close );
             $(document.body).on( 'click', '.js-open-automatewoo-modal', this.handle_link );
 
-            $(document).keydown(function(e) {
-                if ( e.keyCode == 27 ) {
+            $(document).on( 'keydown', function(e) {
+                if ( e.keyCode === 27 ) {
                     AutomateWoo.Modal.close();
                 }
             });
@@ -71,10 +71,17 @@ jQuery(function($) {
             this.position();
         },
 
-
+        /**
+         * Closes modal, by changin classes on `document.body` and removing modal content and overlay elements.
+         * @fires awmodal-close on the `document.body`.
+         */
         close: function() {
             $(document.body).removeClass('automatewoo-modal-open automatewoo-modal-loading');
             $('.automatewoo-modal, .automatewoo-modal-overlay').remove();
+
+            // Fallback to Event in the browser does not support CustomEvent, like IE.
+            const eventCtor = typeof CustomEvent === 'undefined' ? Event : CustomEvent;
+            document.body.dispatchEvent( new eventCtor( 'awmodal-close' ) );
         },
 
 
@@ -111,7 +118,7 @@ jQuery(function($) {
 
 var throttle = null;
 
-jQuery(window).resize(function(){
+jQuery(window).on( 'resize', function(){
     clearTimeout(throttle);
     throttle = setTimeout(function(){
         AutomateWoo.Modal.position();

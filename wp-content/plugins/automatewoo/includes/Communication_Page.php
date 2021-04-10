@@ -41,7 +41,6 @@ class Communication_Page {
 		$data = [];
 
 		wp_enqueue_style( 'automatewoo-communication-page' );
-//		wp_enqueue_script( 'automatewoo-communication-page' );
 
 		$data['intent'] = isset( $_GET['intent'] ) ? Clean::string( $_GET['intent'] ) : false;
 
@@ -57,7 +56,6 @@ class Communication_Page {
 
 	static function output_signup_form() {
 		wp_enqueue_style( 'automatewoo-communication-page' );
-		wp_enqueue_script( 'automatewoo-communication-page' );
 		ob_start();
 		aw_get_template('communication-preferences/signup-form.php' );
 		return ob_get_clean();

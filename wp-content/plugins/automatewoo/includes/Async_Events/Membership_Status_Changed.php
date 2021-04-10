@@ -2,8 +2,6 @@
 
 namespace AutomateWoo\Async_Events;
 
-use AutomateWoo\Events;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -22,6 +20,17 @@ class Membership_Status_Changed extends Abstract_Async_Event {
 	}
 
 	/**
+	 * Get the async event hook name.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_name(): string {
+		return 'automatewoo/membership_status_changed_async';
+	}
+
+	/**
 	 * Schedule event.
 	 *
 	 * @param \WC_Memberships_User_Membership $membership The membership
@@ -29,8 +38,7 @@ class Membership_Status_Changed extends Abstract_Async_Event {
 	 * @param string                          $new_status New status, without the wcm- prefix
 	 */
 	public function schedule_event( $membership, $old_status, $new_status ) {
-		Events::schedule_async_event(
-			'automatewoo/membership_status_changed_async',
+		$this->create_async_event(
 			[
 				$membership->get_id(),
 				$old_status,

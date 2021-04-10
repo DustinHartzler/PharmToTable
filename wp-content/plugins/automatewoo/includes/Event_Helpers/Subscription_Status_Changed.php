@@ -3,9 +3,6 @@
 
 namespace AutomateWoo\Event_Helpers;
 
-use AutomateWoo\Compat;
-use AutomateWoo\Events;
-
 /**
  * @class Subscription_Status_Changed
  */

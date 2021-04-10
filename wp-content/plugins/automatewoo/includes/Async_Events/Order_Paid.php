@@ -3,6 +3,7 @@
 namespace AutomateWoo\Async_Events;
 
 use AutomateWoo\Clean;
+use AutomateWoo\Orders\StatusTransition;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -28,6 +29,17 @@ class Order_Paid extends Abstract_Async_Event {
 	}
 
 	/**
+	 * Get the async event hook name.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_name(): string {
+		return 'automatewoo/order/paid_async';
+	}
+
+	/**
 	 * Determines whether the status change means the order is now paid.
 	 *
 	 * If the order is paid an action is triggered. This action can only run once for each order.
@@ -37,11 +49,8 @@ class Order_Paid extends Abstract_Async_Event {
 	 * @param string $new_status
 	 */
 	public function handle_async_order_status_changed( $order_id, $old_status, $new_status ) {
-		if ( in_array( $old_status, wc_get_is_paid_statuses(), true ) ) {
-			return;
-		}
-
-		if ( ! in_array( $new_status, wc_get_is_paid_statuses(), true ) ) {
+		$transition = new StatusTransition( $old_status, $new_status );
+		if ( ! $transition->is_becoming_paid() ) {
 			return;
 		}
 
@@ -54,7 +63,7 @@ class Order_Paid extends Abstract_Async_Event {
 		$order->update_meta_data( '_aw_is_paid', true );
 		$order->save();
 
-		do_action( 'automatewoo/order/paid_async', $order->get_id() );
+		do_action( $this->get_hook_name(), $order->get_id() );
 
 		// This hook is also asynchronous, avoid using due to possible confusion
 		do_action( 'automatewoo/order/paid', $order );

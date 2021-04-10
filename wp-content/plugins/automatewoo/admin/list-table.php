@@ -67,6 +67,8 @@ abstract class Admin_List_Table extends \WP_List_Table {
 	 * @return string
 	 */
 	function format_email( $email ) {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'Format::email' );
+
 		return Format::email( $email );
 	}
 

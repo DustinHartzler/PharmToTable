@@ -2,7 +2,7 @@
 
 namespace AutomateWoo;
 
-use AutomateWoo\Data_Types\Shop;
+use AutomateWoo\DataTypes\Shop;
 use Exception;
 
 /**

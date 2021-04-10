@@ -6,6 +6,9 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Registry class for background processes
+ *
+ * @deprecated in 5.2.0 use ActionScheduler jobs instead.
+ * @see Jobs\AbstractActionSchedulerJob;
  */
 class Background_Processes extends Registry {
 
@@ -30,12 +33,10 @@ class Background_Processes extends Registry {
 	 */
 	public static function load_includes() {
 		$includes = [
-			'events'                     => Background_Processes\Event_Runner::class,
-			'setup_registered_customers' => Background_Processes\Setup_Registered_Customers::class,
-			'setup_guest_customers'      => Background_Processes\Setup_Guest_Customers::class,
-			'wishlist_item_on_sale'      => Background_Processes\Wishlist_Item_On_Sale::class,
-			'workflows'                  => Background_Processes\Workflows::class,
-			'tools'                      => Background_Processes\Tools::class,
+			'events'                => Background_Processes\Event_Runner::class,
+			'wishlist_item_on_sale' => Background_Processes\Wishlist_Item_On_Sale::class,
+			'workflows'             => Background_Processes\Workflows::class,
+			'tools'                 => Background_Processes\Tools::class,
 		];
 
 		return apply_filters( 'automatewoo/background_processes/includes', $includes );

@@ -2,6 +2,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Actions\Subscriptions\AbstractEditItem;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -12,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class Action_Subscription_Edit_Coupon_Abstract
  * @since 4.4
  */
-abstract class Action_Subscription_Edit_Coupon_Abstract extends Action_Subscription_Edit_Item_Abstract {
+abstract class Action_Subscription_Edit_Coupon_Abstract extends AbstractEditItem {
 
 
 	/**

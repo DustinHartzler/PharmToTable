@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.1.0
  */
-class BatchedWorkflows extends AbstractBatchedJob {
+class BatchedWorkflows extends AbstractBatchedActionSchedulerJob {
 
 	use IntegerValidator, ArrayValidator;
 
@@ -41,11 +41,11 @@ class BatchedWorkflows extends AbstractBatchedJob {
 	/**
 	 * AbstractBatchedJob constructor.
 	 *
-	 * @param ActionSchedulerInterface $action_scheduler
-	 * @param BatchedJobMonitor        $monitor
-	 * @param callable                 $get_workflow
+	 * @param ActionSchedulerInterface  $action_scheduler
+	 * @param ActionSchedulerJobMonitor $monitor
+	 * @param callable                  $get_workflow
 	 */
-	public function __construct( ActionSchedulerInterface $action_scheduler, BatchedJobMonitor $monitor, callable $get_workflow ) {
+	public function __construct( ActionSchedulerInterface $action_scheduler, ActionSchedulerJobMonitor $monitor, callable $get_workflow ) {
 		$this->get_workflow_callable = $get_workflow;
 		parent::__construct( $action_scheduler, $monitor );
 	}

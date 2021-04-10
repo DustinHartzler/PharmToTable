@@ -167,6 +167,8 @@ class Remote_Request {
 	 * @return bool
 	 */
 	function is_failed() {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'is_http_error' );
+
 		return $this->is_http_error();
 	}
 
@@ -176,6 +178,8 @@ class Remote_Request {
 	 * @return bool
 	 */
 	function get_error_message() {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'get_http_error_message' );
+
 		return $this->get_http_error_message();
 	}
 

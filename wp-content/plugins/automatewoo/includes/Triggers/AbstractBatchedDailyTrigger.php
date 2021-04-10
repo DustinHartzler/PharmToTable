@@ -3,6 +3,7 @@
 namespace AutomateWoo\Triggers;
 
 use AutomateWoo\Trigger;
+use AutomateWoo\Triggers\Utilities\CustomTimeOfDay;
 
 defined( 'ABSPATH' ) || exit;
 

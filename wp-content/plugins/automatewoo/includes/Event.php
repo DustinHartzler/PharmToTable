@@ -8,6 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * @class Event
  * @since 3.4.0
+ *
+ * @deprecated in 5.2.0 use AW()->action_scheduler() instead.
  */
 class Event extends Model {
 

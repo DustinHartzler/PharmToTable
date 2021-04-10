@@ -16,6 +16,8 @@ class Order_Item {
 	 * @return int
 	 */
 	static function get_id( $item ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $item->get_id();
 	}
 
@@ -26,6 +28,8 @@ class Order_Item {
 	 * @return int
 	 */
 	static function get_product_id( $item ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $item->get_product_id();
 	}
 
@@ -36,6 +40,8 @@ class Order_Item {
 	 * @return int
 	 */
 	static function get_variation_id( $item ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $item->get_variation_id();
 	}
 
@@ -47,6 +53,8 @@ class Order_Item {
 	 * @return \WC_Product
 	 */
 	static function get_product( $item, $order ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $item->get_product();
 	}
 
@@ -57,6 +65,8 @@ class Order_Item {
 	 * @return int
 	 */
 	static function get_quantity( $item ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $item->get_quantity();
 	}
 
@@ -67,6 +77,8 @@ class Order_Item {
 	 * @return string
 	 */
 	static function get_name( $item ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $item->get_name();
 	}
 
@@ -78,6 +90,8 @@ class Order_Item {
 	 * @return false|string
 	 */
 	static function get_attribute( $item, $attribute ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $item->get_meta( $attribute );
 	}
 
@@ -89,6 +103,8 @@ class Order_Item {
 	 * @return false|string
 	 */
 	static function get_meta( $item, $key ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		return $item->get_meta( $key );
 	}
 

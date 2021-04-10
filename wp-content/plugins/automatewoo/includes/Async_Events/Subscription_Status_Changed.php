@@ -2,8 +2,6 @@
 
 namespace AutomateWoo\Async_Events;
 
-use AutomateWoo\Events;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -22,15 +20,25 @@ class Subscription_Status_Changed extends Abstract_Async_Event {
 	}
 
 	/**
+	 * Get the async event hook name.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_name(): string {
+		return 'automatewoo/subscription/status_changed_async';
+	}
+
+	/**
 	 * Schedule async event.
 	 *
 	 * @param int    $subscription_id
 	 * @param string $new_status
 	 * @param string $old_status
 	 */
-	public static function schedule_event( $subscription_id, $new_status, $old_status ) {
-		Events::schedule_async_event(
-			'automatewoo/subscription/status_changed_async',
+	public function schedule_event( $subscription_id, $new_status, $old_status ) {
+		$this->create_async_event(
 			[
 				$subscription_id,
 				$new_status,

@@ -1,4 +1,58 @@
 == AutomateWoo Changelog ==
+
+2021-04-09 - version 5.4.1
+* Fix - "Subscription - Update product" action product price field always resulted in a price of zero
+
+2021-03-25 - version 5.4.0
+* Updated Minimum Requirements - WooCommerce 4.8
+* New - Moved all features from the "AutomateWoo Subscriptions Add-on" into "AutomateWoo core"
+* New - Added "Booking Created" trigger
+* New - Added booking workflow variables: `booking.persons`, `booking.start_date`, `booking.end_date`, `booking.start_time`, `booking.end_time`
+* New - Added workflow variable: `shop.shop_url`
+* Tweak - Improve and clarify wording of the workflow timing description column
+* Fix - Duplicate cart items could appear if logging in after restoring an abandoned cart
+* Fix - Certain necessary characters couldn't be used workflow variable parameters
+* Fix - Removed deprecated jQuery uses
+* Fix - Minor error notices when previewing emails on a fresh install for some triggers
+
+2021-02-18 - version 5.3.0
+* New - Integration with WooCommerce Bookings! Requires WooCommerce Bookings v1.15.35
+* New - `Booking Status Changed` trigger
+* New - Bookings variables: `booking.id`, `booking.status`, `booking.cost`, `booking.resource`
+* New - Improved support for new WooCommerce admin dashboard navigation
+* Fix - Error when viewing or sending abandoned carts with bookable products (WooCommerce Bookings)
+* Fix - Prevent storing multiple `automatewoo_cart_id` values in order meta
+* Fix - `New Review Posted` no longer triggers for spam product reviews
+* Fix - When sending SMS, default to full URL if bitly API request fails (e.g. rate limit, misconfiguration)
+* Fix - Correct typos in missing/undefined variable error message
+* Tweak - WooCommerce 5.0 compatibility
+* Tweak - Removed legacy AutomateWoo.com license system
+
+2021-01-06 - version 5.2.1
+* Fix - Remove invalid 5.2 announcement link from changelog
+
+2021-01-06 - version 5.2.0
+* Updated Minimum Requirements - WooCommerce 4.5
+* New - Add support for PHP 8
+* New - Add "Reply to" field to email actions
+* New - Add "cart.id" variable
+* New - Moved all event handling to use ActionScheduler
+* New - Convert tools background processor to use ActionScheduler
+* New - Add a customer filter to the carts page
+* Fix - Issue where the customer win back trigger would stall due to stale customer last purchase data
+* Fix - Add welcome notice for add-ons
+* Fix - Move the the Membership Created trigger to run async to improve stability
+* Tweak - Display warnings when using deprecated functions and classes
+* Deprecated - AutomateWoo\Events
+* Deprecated - AutomateWoo\Report_Events
+* Deprecated - AutomateWoo\Background_Processes\Event_Runner
+* Deprecated - AutomateWoo\Event
+* Deprecated - AutomateWoo\Event_Factory
+* Deprecated - AutomateWoo\Events_Runner_Async_Request
+* Deprecated - AutomateWoo\Event_Query
+* Deprecated - AutomateWoo\Action::can_be_previewed()
+* Deprecated - AutomateWoo\Action::preview()
+
 2020-11-17 - version 5.1.3
 * Fix - Ensure AW admin works if WooCommerce Admin is disabled via the woocommerce_admin_disabled filter
 * New - Add warning notice that some features will not work if WooCommerce Admin is disabled

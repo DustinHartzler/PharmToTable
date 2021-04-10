@@ -5,6 +5,8 @@ namespace AutomateWoo;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+aw_deprecated_class( Trigger_Abstract_Subscriptions::class, '5.2.0', Subscription_Workflow_Helper::class );
+
 /**
  * @deprecated Use the Subscription_Workflow_Helper class instead.
  *

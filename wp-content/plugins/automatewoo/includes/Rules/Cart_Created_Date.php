@@ -2,7 +2,7 @@
 
 namespace AutomateWoo\Rules;
 
-use AutomateWoo\Data_Types;
+use AutomateWoo\DataTypes\DataTypes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,7 +18,7 @@ class Cart_Created_Date extends Abstract_Date {
 	 *
 	 * @var string
 	 */
-	public $data_item = Data_Types::CART;
+	public $data_item = DataTypes::CART;
 
 	/**
 	 * Cart_Created_Date constructor.

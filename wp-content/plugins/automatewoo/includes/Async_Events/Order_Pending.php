@@ -3,7 +3,6 @@
 namespace AutomateWoo\Async_Events;
 
 use AutomateWoo\Clean;
-use AutomateWoo\Events;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,8 +26,19 @@ class Order_Pending extends Abstract_Async_Event {
 	 */
 	public function init() {
 		add_action( 'automatewoo/async/order_created', [ $this, 'schedule_pending_check' ] );
-		add_action( 'automatewoo_check_for_pending_order', [ $this, 'do_pending_check' ] );
+		add_action( $this->get_hook_name(), [ $this, 'do_pending_check' ] );
 		add_action( 'woocommerce_order_status_changed', [ $this, 'maybe_clear_scheduled_check' ], 10, 2 );
+	}
+
+	/**
+	 * Get the async event hook name.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_name(): string {
+		return 'automatewoo_check_for_pending_order';
 	}
 
 	/**
@@ -38,7 +48,7 @@ class Order_Pending extends Abstract_Async_Event {
 	 */
 	public function schedule_pending_check( $order_id ) {
 		$delay = apply_filters( 'automatewoo_order_pending_check_delay', 5 ) * 60;
-		$this->action_scheduler->schedule_single( gmdate( 'U' ) + $delay, 'automatewoo_check_for_pending_order', [ (int) $order_id ] );
+		$this->action_scheduler->schedule_single( gmdate( 'U' ) + $delay, $this->get_hook_name(), [ (int) $order_id ] );
 	}
 
 	/**

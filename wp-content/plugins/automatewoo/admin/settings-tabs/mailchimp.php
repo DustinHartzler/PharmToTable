@@ -94,7 +94,7 @@ class Settings_Tab_Mailchimp extends Admin_Settings_Tab_Abstract {
 			return false;
 		}
 
-		$mailchimp_test = new Integration_Mailchimp( aw_clean( $api_key ) );
+		$mailchimp_test = new Integration_Mailchimp( Clean::string( $api_key ) );
 
 		$response = $mailchimp_test->request( 'GET', '/' );
 

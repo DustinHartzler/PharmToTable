@@ -2,7 +2,6 @@
 
 namespace AutomateWoo\Async_Events;
 
-use AutomateWoo\Events;
 use AutomateWoo\Review;
 
 defined( 'ABSPATH' ) || exit;
@@ -23,12 +22,23 @@ class Review_Approved extends Abstract_Async_Event {
 	}
 
 	/**
+	 * Get the async event hook name.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_name(): string {
+		return 'automatewoo/review/posted_async';
+	}
+
+	/**
 	 * Schedule async event.
 	 *
 	 * @param Review $review
 	 */
 	public function schedule_event( $review ) {
-		Events::schedule_async_event( 'automatewoo/review/posted_async', [ $review->get_id() ] );
+		$this->create_async_event( [ $review->get_id() ] );
 	}
 
 }

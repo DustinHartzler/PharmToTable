@@ -22,6 +22,7 @@ class Installer {
 		'4.0.0',
 		'5.0.0',
 		'5.1.0',
+		'5.3.0',
 	];
 
 	/** @var int  */
@@ -64,11 +65,6 @@ class Installer {
 
 		foreach( Addons::get_all() as $addon ) {
 			$addon->check_version();
-		}
-
-		if ( did_action( 'automatewoo_updated' ) || did_action( 'automatewoo_addon_updated' ) ) {
-			// do API check-in after an update
-			Licenses::schedule_reset_status_check_timer();
 		}
 	}
 
@@ -113,9 +109,6 @@ class Installer {
 	 * @since 4.7.0
 	 */
 	private static function first_install() {
-		// Default all new installs to use WC.com license system, existing installs continue to use AW.com
-		update_option( 'automatewoo_license_system', 'wc', true );
-
 		do_action( 'automatewoo_first_installed' );
 	}
 
@@ -170,7 +163,6 @@ class Installer {
 
 		if ( $complete ) {
 			self::do_plugin_updated_actions();
-			Licenses::schedule_reset_status_check_timer();
 		}
 
 		return $complete;
@@ -275,7 +267,7 @@ class Installer {
 
 	static function do_plugin_updated_actions() {
 		do_action( 'automatewoo_updated' );
-		Events::schedule_async_event( 'automatewoo_updated_async' );
+		AW()->action_scheduler()->enqueue_async_action( 'automatewoo_updated_async' );
 
 		// Queue the requirements changes notice to show (if necessary).
 		AdminNotices::add_notice( 'requirements_changes' );

@@ -344,6 +344,8 @@ abstract class Abstract_Model_With_Meta_Table extends Model {
 	 * @param mixed  $value
 	 */
 	public function add_meta( $key, $value ) {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'update_meta' );
+
 		$this->update_meta( $key, $value );
 	}
 

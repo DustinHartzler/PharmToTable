@@ -5,8 +5,9 @@ namespace AutomateWoo\ActivityPanelInbox;
 use AutomateWoo\Admin;
 use Automattic\WooCommerce\Admin\Notes\DataStore;
 use Automattic\WooCommerce\Admin\Notes\NoteTraits;
-use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
-use Automattic\WooCommerce\Admin\Notes\WC_Admin_Notes;
+use Automattic\WooCommerce\Admin\Notes\Note;
+use Automattic\WooCommerce\Admin\Notes\Notes;
+use WC_Data_Store;
 
 /**
  * Add the Update note when updating from < $version to >= $version and remove
@@ -43,11 +44,7 @@ class UpdateNote {
 	 * @throws \Exception If the data store fails to load.
 	 */
 	public static function maybe_add_activity_panel_inbox_note( $old_version, $new_version ) {
-		if ( ! class_exists( WC_Admin_Notes::class ) ) {
-			return;
-		}
-
-		if ( ! class_exists( 'WC_Data_Store' ) ) {
+		if ( ! class_exists( Notes::class ) || ! class_exists( WC_Data_Store::class ) ) {
 			return;
 		}
 
@@ -69,8 +66,8 @@ class UpdateNote {
 	 * Get the note.
 	 */
 	public static function get_note() {
-		$note = new WC_Admin_Note();
-		$note->set_type( WC_Admin_Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
+		$note = new Note();
+		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'automatewoo' );
 		$note->set_title( __( 'Check out these new AutomateWoo presets', 'automatewoo' ) );
@@ -99,11 +96,11 @@ class UpdateNote {
 	 */
 	public static function possibly_delete_older_update_notes() {
 		/** @var DataStore $data_store */
-		$data_store = \WC_Data_Store::load( 'admin-note' );
+		$data_store = WC_Data_Store::load( 'admin-note' );
 		$note_ids   = $data_store->get_notes_with_name( self::NOTE_NAME );
 
 		foreach ( (array) $note_ids as $note_id ) {
-			$note = WC_Admin_Notes::get_note( $note_id );
+			$note = Notes::get_note( $note_id );
 			if ( ! $note ) {
 				continue;
 			}

@@ -5,6 +5,8 @@ namespace AutomateWoo;
 
 use AutomateWoo\Admin\AssetData;
 use AutomateWoo\Admin\WCAdminConnectPages;
+use Automattic\WooCommerce\Admin\Features\Navigation\Menu;
+use Automattic\WooCommerce\Admin\Features\Navigation\Screen;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
 use Automattic\WooCommerce\Blocks\Package as BlocksPackage;
 
@@ -28,10 +30,6 @@ class Admin {
 		add_action( 'admin_menu', [ $self, 'admin_menu' ] );
 		add_action( 'admin_footer', [ $self, 'replace_top_level_menu' ] );
 		add_action( 'admin_head', [ $self, 'menu_highlight' ] );
-
-		if ( Licenses::is_legacy() ) {
-			add_action( 'admin_notices', [ $self, 'license_notices' ] );
-		}
 
 		add_filter( 'woocommerce_screen_ids', [ $self, 'filter_woocommerce_screen_ids' ] );
 		add_filter( 'woocommerce_display_admin_footer_text', [ $self, 'filter_woocommerce_display_footer_text' ] );
@@ -119,95 +117,161 @@ class Admin {
 	}
 
 
-	static function admin_menu() {
-
+	public static function admin_menu() {
 		$sub_menu = [];
 		$position = '55.6324'; // fix for rare position clash bug
+		$workflows_group = 'automatewoo-workflows-group';
 
 		add_menu_page( __( 'AutomateWoo', 'automatewoo' ), __( 'AutomateWoo', 'automatewoo' ), 'manage_woocommerce', 'automatewoo', [ 'AutomateWoo\Admin', 'load_controller' ], 'none', $position );
 
+		if ( class_exists( Menu::class ) ) {
+			Menu::add_plugin_category(
+				array(
+					'id'         => 'automatewoo',
+					'title'      => __( 'AutomateWoo', 'automatewoo' ),
+					'capability' => 'manage_woocommerce',
+					'url'        => 'automatewoo',
+				)
+			);
+			Menu::add_plugin_category(
+				[
+					'id'         => $workflows_group,
+					'title'      => __( 'Workflows', 'automatewoo' ),
+					'capability' => 'manage_woocommerce',
+					'url'        => $workflows_group,
+					'parent'     => 'automatewoo',
+					'order'      => 1,
+				]
+			);
+		}
+
 		$sub_menu['dashboard'] = [
 			'title' => __( 'Dashboard', 'automatewoo' ),
-			'function' => [ __CLASS__, 'load_controller' ]
+			'function' => [ __CLASS__, 'load_controller' ],
+			'order' => 0,
 		];
 
+		// Workflows menu group
 		$sub_menu['workflows'] = [
-			'title' => __( 'Workflows', 'automatewoo' ),
-			'slug' => 'edit.php?post_type=aw_workflow'
+			'title'   => __( 'Workflows', 'automatewoo' ),
+			'slug'    => 'edit.php?post_type=aw_workflow',
+			// Hide in new nav and use `\Automattic\WooCommerce\Admin\Features\Navigation\Menu::get_post_type_items` instead
+			'display' => WCAdminConnectPages::PAGE_DISPLAY_HIDDEN,
 		];
+
+		if ( class_exists( Screen::class ) ) {
+			$menu_post_type_items = Menu::get_post_type_items(
+				'aw_workflow',
+				[
+					'title'  => __( 'Workflows', 'automatewoo' ),
+					'parent' => $workflows_group,
+					'order'  => 0,
+				]
+			);
+
+			if ( isset( $menu_post_type_items['all'] ) ) {
+				Menu::add_plugin_item( $menu_post_type_items['all'] );
+			}
+			if ( isset( $menu_post_type_items['new'] ) ) {
+				$menu_post_type_items['new']['title'] = __( 'Add workflow', 'automatewoo' );
+				$menu_post_type_items['new']['order'] = 1;
+				Menu::add_plugin_item( $menu_post_type_items['new'] );
+			}
+		}
 
 		$sub_menu['logs'] = [
 			'title' => __( 'Logs', 'automatewoo' ),
-			'function' => [ __CLASS__, 'load_controller' ]
+			'function' => [ __CLASS__, 'load_controller' ],
+			'parent' => $workflows_group,
+			'order' => 2,
 		];
-
 		$sub_menu['queue'] = [
 			'title' => __( 'Queue', 'automatewoo' ),
-			'function' => [ __CLASS__, 'load_controller' ]
+			'function' => [ __CLASS__, 'load_controller' ],
+			'parent' => $workflows_group,
+			'order' => 3,
 		];
 
 		if ( Options::abandoned_cart_enabled() ) {
 			$sub_menu['carts'] = [
 				'title' => __( 'Carts', 'automatewoo' ),
-				'function' => [ __CLASS__, 'load_controller' ]
+				'function' => [ __CLASS__, 'load_controller' ],
+				'order' => 2,
 			];
 
 			$sub_menu['guests'] = [
 				'title' => __( 'Guests', 'automatewoo' ),
-				'function' => [ __CLASS__, 'load_controller' ]
+				'function' => [ __CLASS__, 'load_controller' ],
+				'order' => 3,
 			];
 		}
 
 		$sub_menu['opt-ins'] = [
 			'title' => Options::optin_enabled() ? __( 'Opt-ins', 'automatewoo' ) : __( 'Opt-outs', 'automatewoo' ),
-			'function' => [ __CLASS__, 'load_controller' ]
+			'function' => [ __CLASS__, 'load_controller' ],
+			'order' => 4,
 		];
 
 		$sub_menu['reports'] = [
 			'title' => __( 'Reports', 'automatewoo' ),
-			'function' => [ __CLASS__, 'load_controller' ]
+			'function' => [ __CLASS__, 'load_controller' ],
+			'order' => 5,
 		];
 
 		$sub_menu['tools'] = [
 			'title' => __( 'Tools', 'automatewoo' ),
-			'function' => [ __CLASS__, 'load_controller' ]
+			'function' => [ __CLASS__, 'load_controller' ],
+			'order' => 6,
 		];
 
 		$sub_menu['settings'] = [
 			'title' => __( 'Settings', 'automatewoo' ),
-			'function' => [ __CLASS__, 'load_controller' ]
+			'function' => [ __CLASS__, 'load_controller' ],
+			'order' => 7,
 		];
 
 		$sub_menu['events'] = [
 		   'title' => __( 'Events', 'automatewoo' ),
-		   'function' => [ __CLASS__, 'load_controller' ]
+		   'function' => [ __CLASS__, 'load_controller' ],
+		   'display'  => WCAdminConnectPages::PAGE_DISPLAY_HIDDEN,
 		];
 
 		$sub_menu['preview'] = [
 			'title' => __( 'Preview', 'automatewoo' ),
-			'function' => [ __CLASS__, 'load_controller' ]
+			'function' => [ __CLASS__, 'load_controller' ],
+			'display'  => WCAdminConnectPages::PAGE_DISPLAY_STANDALONE,
 		];
 
-		if ( Licenses::is_legacy() ) {
-			$sub_menu['licenses'] = [
-				'title' => _n( 'License', 'Licenses', Addons::has_addons() ? 2 : 1, 'automatewoo' ),
-				'function' => [ __CLASS__, 'load_controller' ]
-			];
-		}
-
 		$sub_menu['data-upgrade'] = [
-			'title' => __( 'AutomateWoo Data Update', 'automatewoo' ),
-			'function' => [ __CLASS__, 'page_data_upgrade' ]
+			'title'    => __( 'AutomateWoo Data Update', 'automatewoo' ),
+			'function' => [ __CLASS__, 'page_data_upgrade' ],
+			'display'  => WCAdminConnectPages::PAGE_DISPLAY_HIDDEN,
 		];
 
 		foreach ( $sub_menu as $key => $item ) {
-
 			if ( empty( $item['function'] ) ) $item['function'] = '';
 			if ( empty( $item['capability'] ) ) $item['capability'] = 'manage_woocommerce';
 			if ( empty( $item['slug'] ) ) $item['slug'] = 'automatewoo-'.$key;
 			if ( empty( $item['page_title'] ) ) $item['page_title'] = $item['title'];
 
 			add_submenu_page( 'automatewoo', $item['page_title'], $item['title'], $item['capability'], $item['slug'], $item['function'] );
+
+			if ( class_exists( Menu::class ) ) {
+				if ( ! isset( $item['display'] ) || WCAdminConnectPages::PAGE_DISPLAY_FULL === $item['display'] ) {
+					Menu::add_plugin_item(
+						array(
+							'id'         => 'automatewoo-' . $key,
+							'parent'     => isset( $item['parent'] ) ? $item['parent'] : 'automatewoo',
+							'title'      => $item['title'],
+							'capability' => $item['capability'],
+							'url'        => $item['slug'],
+							'order'      => isset( $item['order'] ) ? $item['order']: 99,
+						)
+					);
+				} elseif ( WCAdminConnectPages::PAGE_DISPLAY_HIDDEN === $item['display'] ) {
+					Screen::add_screen( $item['slug'] );
+				}
+			}
 
 			if ( $key === 'workflows' ) {
 				do_action( 'automatewoo/admin/submenu_pages', 'automatewoo' );
@@ -255,7 +319,8 @@ class Admin {
 
 		wp_register_script( 'automatewoo', $url."/automatewoo$suffix.js", [ 'jquery', 'jquery-ui-datepicker', 'jquery-tiptip', 'backbone', 'underscore' ], AW()->version );
 		wp_register_script( 'automatewoo-validate', $url."/validate$suffix.js", [ 'automatewoo' ], AW()->version );
-		wp_register_script( 'automatewoo-workflows', $url."/workflows$suffix.js", [ 'automatewoo', 'automatewoo-validate', 'automatewoo-modal', 'wp-util' ], AW()->version );
+		wp_register_script( 'automatewoo-tracks', $url."/tracks$suffix.js", [ 'automatewoo' ], AW()->version );
+		wp_register_script( 'automatewoo-workflows', $url."/workflows$suffix.js", [ 'automatewoo', 'automatewoo-validate', 'automatewoo-modal', 'automatewoo-tracks', 'wp-util' ], AW()->version );
 		wp_register_script( 'automatewoo-variables', $url."/variables$suffix.js", [ 'automatewoo-modal', 'clipboard' ], AW()->version );
 		wp_register_script( 'automatewoo-tools', $url."/tools$suffix.js", [ 'automatewoo' ], AW()->version );
 		wp_register_script( 'automatewoo-sms-test', $url."/sms-test$suffix.js", [ 'automatewoo' ], AW()->version );
@@ -273,7 +338,7 @@ class Admin {
 		wp_localize_script( 'automatewoo-validate', 'automatewooValidateLocalizedErrorMessages', [
 			'noVariablesSupport' => __( 'This field does not support variables.', 'automatewoo' ),
 			'invalidDataType' => __( "Variable '%s' is not available with the selected trigger. Please only use variables listed in the the variables box.", 'automatewoo' ),
-			'invalidVariable' => __( "Variable '%s' is not a valid. Please only use variables listed in the the variables box.", 'automatewoo' )
+			'invalidVariable' => __( "Variable '%s' is not valid. Please only use variables listed in the variables box.", 'automatewoo' )
 		] );
 
 		$settings = [
@@ -413,7 +478,6 @@ class Admin {
 		$ids[] = "$prefix-queue";
 		$ids[] = "$prefix-guests";
 		$ids[] = "$prefix-opt-ins";
-		$ids[] = "$prefix-licenses";
 		$ids[] = "$prefix-events";
 		$ids[] = "$prefix-preview";
 		$ids[] = 'aw_workflow';
@@ -502,9 +566,6 @@ class Admin {
 
 			case 'settings-bitly':
 				return admin_url( 'admin.php?page=automatewoo-settings&tab=bitly' );
-
-			case 'licenses':
-				return admin_url( 'admin.php?page=automatewoo-licenses' );
 
 			case 'logs':
 				return admin_url( 'admin.php?page=automatewoo-logs' );
@@ -611,41 +672,6 @@ class Admin {
 		}
 	}
 
-	static function license_notices() {
-
-		if ( ! current_user_can( 'manage_woocommerce' ) || self::is_page( 'licenses' ) ) {
-			return;
-		}
-
-		if ( Licenses::has_expired_products() && ! get_transient( 'aw_dismiss_licence_expiry_notice' ) ) {
-
-			$strong = __( 'Your AutomateWoo license has expired.', 'automatewoo' );
-			$more = sprintf(
-				__( '<a href="%s" target="_blank">Renew your license</a> to receive updates and support.', 'automatewoo' ),
-				Licenses::get_renewal_url( 'expired-license-notice' ),
-				self::page_url( 'licenses' )
-			);
-
-			self::notice( 'warning is-dismissible', $strong, $more, 'aw-notice-licence-renew' );
-		}
-
-		if ( Licenses::has_unactivated_products() && ! get_transient( 'automatewoo_dismiss_license_nag_notice' ) ) {
-
-			if ( Addons::has_addons() ) {
-				$strong = __( 'AutomateWoo - You have unactivated products.', 'automatewoo' );
-			} else {
-				$strong = __( 'AutomateWoo is not activated.', 'automatewoo' );
-			}
-
-			$more = sprintf(
-				__( 'Please <a href="%s">enter your license key</a> to receive plugin updates.', 'automatewoo' ),
-				self::page_url( 'licenses' )
-			);
-
-			self::notice( 'warning is-dismissible', $strong, $more, 'automatewoo-notice--license-nag' );
-		}
-	}
-
 	/**
 	 * @param $page
 	 * @return bool
@@ -658,19 +684,12 @@ class Admin {
 		switch ( $page ) {
 			case 'dashboard':
 				return $current_page == 'automatewoo-dashboard';
-				break;
 			case 'settings':
 				return $current_page == 'automatewoo-settings';
-				break;
 			case 'reports':
 				return $current_page == 'automatewoo-reports';
-				break;
-			case 'licenses':
-				return $current_page == 'automatewoo-licenses';
-				break;
 			case 'status':
 				return $current_page == 'automatewoo-settings' && $current_tab == 'status';
-				break;
 		}
 
 		return false;

@@ -108,12 +108,11 @@ const ItemFinder = ( {
 				<Button isSecondary onClick={ onCancel }>
 					{ __( 'Cancel', 'automatewoo' ) }
 				</Button>
-				<NextButton
-					disabled={ state.status !== STATUSES.COMPLETE }
-					onClick={ () => onComplete( state.items ) }
-				>
-					{ nextButtonText }
-				</NextButton>
+				{ state.status === STATUSES.COMPLETE && (
+					<NextButton onClick={ () => onComplete( state.items ) }>
+						{ nextButtonText }
+					</NextButton>
+				) }
 			</div>
 		</>
 	);

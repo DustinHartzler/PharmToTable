@@ -2,16 +2,21 @@
 
 use AutomateWoo\ActionScheduler\ActionScheduler;
 use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
+use AutomateWoo\Addons;
+use AutomateWoo\ActionScheduler\AsyncActionRunner;
+use AutomateWoo\Proxies\Bookings as BookingsProxy;
 use AutomateWoo\Frontend_Endpoints\Login_Redirect;
 use AutomateWoo\Jobs\JobRegistry;
 use AutomateWoo\Jobs\JobService;
 use AutomateWoo\LegacyClassLoader;
 use AutomateWoo\Options;
 use AutomateWoo\OptionsStore;
+use AutomateWoo\Tools\ToolsService;
 use AutomateWoo\Usage_Tracking\Initializer as UsageTrackingInitializer;
 use AutomateWoo\Workflows\Presets\PresetService;
 use AutomateWoo\Workflows\Presets\Storage\PHPFileStorage;
 use AutomateWoo\Workflows\Presets\Parser\PresetParser;
+use ActionScheduler as ActionSchedulerCore;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -94,6 +99,13 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 	private $options_store;
 
 	/**
+	 * Tools registry class.
+	 *
+	 * @var ToolsService
+	 */
+	private $tools_service;
+
+	/**
 	 * Instance of singleton.
 	 *
 	 * @var AutomateWoo
@@ -115,7 +127,6 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 	 * Init
 	 */
 	public function init() {
-
 		( new LegacyClassLoader() )->register();
 
 		$this->includes();
@@ -129,6 +140,8 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 			( new AutomateWoo\Rest_Api() )->init();
 			AutomateWoo\Session_Tracker::init();
 			AutomateWoo\Customers::init();
+			( new AutomateWoo\Orders\Observers\CustomerLastPurchasedDateUpdater( AW()->action_scheduler() ) )->register();
+			( new AutomateWoo\Orders\Observers\GuestMostRecentOrderUpdater() )->register();
 		}
 
 		// legacy access to session tracker class
@@ -144,15 +157,19 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		if ( is_admin() ) {
 			$this->admin = new AutomateWoo\Admin();
 			AutomateWoo\Admin::init();
-			AutomateWoo\Updater::init();
 			AutomateWoo\AdminNotices\WelcomeNoticeManager::init();
 			AutomateWoo\AdminNotices\UpdateNoticeManager::init();
 			AutomateWoo\AdminNotices\NewWorkflowHelperManager::init();
 			( new AutomateWoo\AdminNotices\WcAdminDisabled() )->init();
 
+			foreach ( Addons::get_all() as $addon ) {
+				( new AutomateWoo\AdminNotices\AddonWelcome( $addon ) )->init();
+			}
+
 			if ( WC()->is_wc_admin_active() ) {
 				AutomateWoo\ActivityPanelInbox\WelcomeNote::init();
 				AutomateWoo\ActivityPanelInbox\UpdateNote::init();
+				( new AutomateWoo\ActivityPanelInbox\SubscriptionsAddonDeactivatedNote() )->init();
 			}
 
 			AutomateWoo\Installer::init();
@@ -202,13 +219,13 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 
 		AutomateWoo\Communication_Account_Tab::init();
 		AutomateWoo\Workflows::init();
-		AutomateWoo\Marketplace_License_Transition_Helper::init();
 
 		if ( $this->is_installed() ) {
 			AutomateWoo\Hooks::init();
 		}
 
 		new AutomateWoo\Privacy();
+		( new \AutomateWoo\LegacyAddonHandler() )->init();
 
 		do_action( 'automatewoo_loaded' );
 	}
@@ -357,7 +374,11 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 	 */
 	public function action_scheduler() {
 		if ( ! isset( $this->action_scheduler ) ) {
-			$this->action_scheduler = new ActionScheduler();
+			$async_runner           = new AsyncActionRunner(
+				new ActionScheduler_AsyncRequest_QueueRunner( ActionSchedulerCore::store() ),
+				ActionSchedulerCore::lock()
+			);
+			$this->action_scheduler = new ActionScheduler( $async_runner );
 		}
 		return $this->action_scheduler;
 	}
@@ -384,7 +405,11 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 	 */
 	public function job_service() {
 		if ( ! isset( $this->job_service ) ) {
-			$job_registry      = new JobRegistry( $this->action_scheduler(), $this->options_store() );
+			$job_registry      = new JobRegistry(
+				$this->action_scheduler(),
+				$this->options_store(),
+				$this->tools_service()
+			);
 			$this->job_service = new JobService( $job_registry );
 		}
 
@@ -402,6 +427,28 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		}
 
 		return $this->options_store;
+	}
+
+	/**
+	 * Get tools registry class.
+	 *
+	 * @return ToolsService
+	 */
+	public function tools_service() {
+		if ( ! isset( $this->tools_service ) ) {
+			$this->tools_service = new ToolsService( $this->options_store() );
+		}
+
+		return $this->tools_service;
+	}
+
+	/**
+	 * Get bookings proxy class.
+	 *
+	 * @return BookingsProxy
+	 */
+	public function bookings_proxy(): BookingsProxy {
+		return new BookingsProxy();
 	}
 
 	/**
@@ -428,6 +475,8 @@ final class AutomateWoo extends AutomateWoo_Legacy {
  * @return AutomateWoo
  */
 function AutomateWoo() {
+	wc_deprecated_function( __FUNCTION__, '5.2.0', 'AW' );
+
 	return AW();
 }
 

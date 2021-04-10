@@ -6,6 +6,7 @@ use AutomateWoo\ActionScheduler\ActionSchedulerInterface;
 use AutomateWoo\Exceptions\InvalidArgument;
 use AutomateWoo\Exceptions\InvalidClass;
 use AutomateWoo\OptionsStore;
+use AutomateWoo\Tools\ToolsService;
 use AutomateWoo\Traits\ArrayValidator;
 use AutomateWoo\Workflows\Factory as WorkflowsFactory;
 
@@ -38,14 +39,21 @@ class JobRegistry implements JobRegistryInterface {
 	protected $options_store;
 
 	/**
+	 * @var ToolsService
+	 */
+	protected $tools_service;
+
+	/**
 	 * BatchedJobInitializer constructor.
 	 *
 	 * @param ActionSchedulerInterface $action_scheduler
 	 * @param OptionsStore             $options_store
+	 * @param ToolsService             $tools_service
 	 */
-	public function __construct( ActionSchedulerInterface $action_scheduler, OptionsStore $options_store ) {
+	public function __construct( ActionSchedulerInterface $action_scheduler, OptionsStore $options_store, ToolsService $tools_service ) {
 		$this->action_scheduler = $action_scheduler;
 		$this->options_store    = $options_store;
+		$this->tools_service    = $tools_service;
 	}
 
 	/**
@@ -93,11 +101,13 @@ class JobRegistry implements JobRegistryInterface {
 			return;
 		}
 		$this->jobs          = [];
-		$batched_job_monitor = new BatchedJobMonitor( $this->action_scheduler );
+		$batched_job_monitor = new ActionSchedulerJobMonitor( $this->action_scheduler );
 
 		$jobs = [
 			new DeleteFailedQueuedWorkflows( $this->action_scheduler, $batched_job_monitor ),
 			new RunQueuedWorkflows( $this->action_scheduler, $batched_job_monitor ),
+			new SetupRegisteredCustomers( $this->action_scheduler, $batched_job_monitor ),
+			new SetupGuestCustomers( $this->action_scheduler, $batched_job_monitor ),
 			new BatchedWorkflows(
 				$this->action_scheduler,
 				$batched_job_monitor,
@@ -108,6 +118,7 @@ class JobRegistry implements JobRegistryInterface {
 			new DeleteExpiredCoupons( $this->action_scheduler, $batched_job_monitor, $this->options_store ),
 			new AbandonedCarts( $this->action_scheduler, $batched_job_monitor, $this->options_store ),
 			new WishlistItemOnSale( $this->action_scheduler, $batched_job_monitor ),
+			new ToolTaskRunner( $this->action_scheduler, $batched_job_monitor, $this->tools_service ),
 		];
 
 		/**

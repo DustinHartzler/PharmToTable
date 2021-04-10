@@ -113,4 +113,16 @@ abstract class AbstractDatabaseUpdate {
 		return 0;
 	}
 
+	/**
+	 * Log an error while processing the update.
+	 *
+	 * @param string $message
+	 */
+	protected function log_processing_error( string $message ) {
+		Logger::error(
+			'updates',
+			sprintf( 'AutomateWoo - Update: %s, Message: %s', $this->version, $message )
+		);
+	}
+
 }

@@ -6,6 +6,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Event_Query.
+ *
+ * @deprecated in 5.2.0 use AW()->action_scheduler() instead.
  */
 class Event_Query extends Query_Abstract {
 

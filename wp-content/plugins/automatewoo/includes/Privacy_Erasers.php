@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\DataTypes\DataTypes;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -65,7 +67,7 @@ class Privacy_Erasers {
 	 * @param string $email
 	 */
 	public static function anonymize_personal_log_data( $log, $email ) {
-		$log_storage_keys_to_erase = array_keys( Data_Types::get_all() ); // all possible data types
+		$log_storage_keys_to_erase = array_keys( DataTypes::get_all() ); // all possible data types
 
 		aw_array_remove_value( $log_storage_keys_to_erase, 'guest' );
 		aw_array_remove_value( $log_storage_keys_to_erase, 'workflow' );

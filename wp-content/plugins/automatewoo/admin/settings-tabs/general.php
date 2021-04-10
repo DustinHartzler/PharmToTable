@@ -263,23 +263,6 @@ class Settings_Tab_General extends Admin_Settings_Tab_Abstract {
 		);
 
 		$this->section_end( 'misc' );
-
-		$this->section_start( 'license', __( 'License keys', 'automatewoo' ) );
-
-		$this->add_setting(
-			'license_system',
-			[
-				'title'    => __( 'License key origin', 'automatewoo' ),
-				'desc_tip' => __( 'Choose the domain that matches where your AutomateWoo license key is from.', 'automatewoo' ),
-				'type'     => 'select',
-				'options'  => [
-					'wc' => __( 'WooCommerce.com', 'automatewoo' ),
-					'aw' => __( 'AutomateWoo.com (legacy)', 'automatewoo' ),
-				],
-			]
-		);
-
-		$this->section_end( 'license' );
 	}
 }
 

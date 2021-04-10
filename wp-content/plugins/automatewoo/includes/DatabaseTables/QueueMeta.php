@@ -44,7 +44,7 @@ class QueueMeta extends Database_Table {
 			meta_id bigint(20) NOT NULL AUTO_INCREMENT,
 			event_id bigint(20) NULL,
 			meta_key varchar(255) NULL,
-			meta_value longtext NOT NULL default '',
+			meta_value longtext NULL,
 			PRIMARY KEY  (meta_id),
 			KEY event_id (event_id),
 			KEY meta_key (meta_key({$this->max_index_length}))

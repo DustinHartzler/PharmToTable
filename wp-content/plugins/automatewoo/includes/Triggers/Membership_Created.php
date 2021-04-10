@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Async_Events\MembershipCreated as MembershipCreatedEvent;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -10,6 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 2.9
  */
 class Trigger_Membership_Created extends Trigger_Abstract_Memberships {
+
+	/**
+	 * Async events required by the trigger.
+	 *
+	 * @since 5.2.0
+	 * @var array|string
+	 */
+	protected $required_async_events = MembershipCreatedEvent::NAME;
 
 	public $_membership_created_via_admin;
 
@@ -27,12 +37,14 @@ class Trigger_Membership_Created extends Trigger_Abstract_Memberships {
 
 
 	function register_hooks() {
-
 		if ( is_admin() ) {
 			add_action( 'transition_post_status', [ $this, 'transition_post_status' ], 50, 3 );
 		}
 
-		add_action( 'wc_memberships_user_membership_created', [ $this, 'membership_created' ], 100, 2 );
+		$async_event = Async_Events::get( MembershipCreatedEvent::NAME );
+		if ( $async_event ) {
+			add_action( $async_event->get_hook_name(), [ $this, 'handle_membership_created_async' ] );
+		}
 	}
 
 
@@ -57,28 +69,36 @@ class Trigger_Membership_Created extends Trigger_Abstract_Memberships {
 	function membership_created_via_admin( $plan, $args ) {
 		// check the created membership is a match
 		if ( $this->_membership_created_via_admin == $args['user_membership_id'] ) {
-			$this->membership_created( $plan, $args );
+			$this->maybe_run_for_membership( (int) $args['user_membership_id'] );
 		}
 	}
-
+	
+	/**
+	 * Handle async membership created event.
+	 *
+	 * @param int|string $membership_id
+	 */
+	public function handle_membership_created_async( $membership_id ) {
+		$this->maybe_run_for_membership( (int) $membership_id );
+	}
 
 	/**
-	 * @param \WC_Memberships_Membership_Plan $plan
-	 * @param array $args [
-	 *     @type int $user_id
-	 *     @type int $user_membership_id
-	 *     @type bool $is_update
-	 * ]
+	 * Maybe run trigger for a given membership.
+	 *
+	 * @param int $membership_id
 	 */
-	function membership_created( $plan, $args ) {
-
-		$membership_id = $args['user_membership_id'];
+	protected function maybe_run_for_membership( int $membership_id ) {
 		$membership = wc_memberships_get_user_membership( $membership_id );
+		if ( ! $membership ) {
+			return;
+		}
 
-		$this->maybe_run([
-			'membership' => $membership,
-			'customer' => Customer_Factory::get_by_user_id( $membership->get_user_id() )
-		]);
+		$this->maybe_run(
+			[
+				'membership' => $membership,
+				'customer'   => Customer_Factory::get_by_user_id( $membership->get_user_id() )
+			]
+		);
 	}
 
 

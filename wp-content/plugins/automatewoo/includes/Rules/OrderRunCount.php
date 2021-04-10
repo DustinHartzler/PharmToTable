@@ -3,7 +3,7 @@
 
 namespace AutomateWoo\Rules;
 
-use AutomateWoo\Data_Types;
+use AutomateWoo\DataTypes\DataTypes;
 use WC_Order;
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class OrderRunCount extends Abstract_Number {
 
-	public $data_item = Data_Types::ORDER;
+	public $data_item = DataTypes::ORDER;
 
 	public $support_floats = false;
 

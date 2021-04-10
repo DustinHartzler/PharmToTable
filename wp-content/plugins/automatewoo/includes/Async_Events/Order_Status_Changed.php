@@ -2,15 +2,12 @@
 
 namespace AutomateWoo\Async_Events;
 
-use AutomateWoo\Events;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Order_Status_Changed
  *
  * @since 4.8.0
- * @package AutomateWoo
  */
 class Order_Status_Changed extends Abstract_Async_Event {
 
@@ -22,6 +19,17 @@ class Order_Status_Changed extends Abstract_Async_Event {
 	}
 
 	/**
+	 * Get the async event hook name.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_name(): string {
+		return 'automatewoo/order/status_changed_async';
+	}
+
+	/**
 	 * Schedule event.
 	 *
 	 * @param int    $order_id
@@ -29,8 +37,7 @@ class Order_Status_Changed extends Abstract_Async_Event {
 	 * @param string $new_status
 	 */
 	public function schedule_event( $order_id, $old_status, $new_status ) {
-		Events::schedule_async_event(
-			'automatewoo/order/status_changed_async',
+		$this->create_async_event(
 			[
 				$order_id,
 				$old_status,

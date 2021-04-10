@@ -54,13 +54,8 @@ class Action_Send_SMS_Twilio extends Action {
 	 * @throws \Exception
 	 */
 	function run() {
-		// We don't convert any recipient variables here, it's done later
 		$recipients = Clean::comma_delimited_string( $this->get_option( 'sms_recipient' ) );
 		$message = $this->get_option( 'sms_body', true );
-
-		if ( empty( $recipients ) ) {
-			throw new \Exception( __( 'No valid recipients', 'automatewoo') );
-		}
 
 		if ( empty( $message ) ) {
 			throw new \Exception( __( 'Empty message body', 'automatewoo') );
@@ -68,8 +63,17 @@ class Action_Send_SMS_Twilio extends Action {
 
 		$message = $this->process_urls_in_sms( $message );
 
-		foreach ( $recipients as $recipient ) {
-			$this->send_sms( $recipient, $message );
+		$valid_recipients_count = 0;
+		foreach ( $recipients as $recipient_string ) {
+			$recipient = $this->workflow->variable_processor()->process_field( $recipient_string );
+			// Do not send SMS for a variable that resolved to an empty number.
+			if( $recipient ) {
+				$this->send_sms( $recipient, $recipient_string, $message );
+				$valid_recipients_count++;
+			}
+		}
+		if ( $valid_recipients_count == 0 ) {
+			throw new \Exception( __( 'No valid recipients', 'automatewoo') );
 		}
 	}
 
@@ -79,20 +83,18 @@ class Action_Send_SMS_Twilio extends Action {
 	 *
 	 * @since 4.3.2
 	 *
-	 * @param string $recipient_field The phone number of the SMS recipient.
+	 * @param string $recipient_phone The phone number of the SMS recipient.
+	 * @param string $recipient_string Unprocessed recipient string.
 	 * @param string $message         The body of the SMS
 	 */
-	public function send_sms( $recipient_field, $message ) {
+	public function send_sms( $recipient_phone, $recipient_string, $message ) {
 		$twilio = Integrations::get_twilio();
 
-		if ( ! $twilio || ! $recipient_field ) {
+		if ( ! $twilio ) {
 			return;
 		}
 
-		$is_sms_to_customer = $this->is_recipient_the_primary_customer( $recipient_field );
-
-		// process any variables in the recipient field
-		$recipient_phone = $this->workflow->variable_processor()->process_field( $recipient_field );
+		$is_sms_to_customer = $this->is_recipient_the_primary_customer( $recipient_string );
 
 		// check if this SMS is going to the workflow's primary customer
 		if ( $is_sms_to_customer ) {
@@ -190,7 +192,13 @@ class Action_Send_SMS_Twilio extends Action {
 			$bitly = Integrations::get_bitly();
 
 			if ( $bitly ) {
-				$url = $bitly->shorten_url( $url );
+				$short_url = $bitly->shorten_url( $url );
+
+				// Default to full url if bitly fails for any reason (e.g. exceeded rate limit).
+				// https://github.com/woocommerce/automatewoo/issues/895
+				if ( $short_url ) {
+					$url = $short_url;
+				}
 			}
 		}
 

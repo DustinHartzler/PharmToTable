@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use WC_Product;
+
 /**
  * @class Cart_Item
  * @since 3.2.6
@@ -15,30 +17,63 @@ class Cart_Item {
 	/** @var array */
 	protected $data;
 
+	/** @var WC_Product */
+	protected $product;
 
 	/**
 	 * @param string $key
 	 * @param array $data
 	 */
-	function __construct( $key, $data ) {
-		$this->key = $key;
-		$this->data = is_array( $data ) ? $data : [];
+	public function __construct( string $key, array $data ) {
+		$this->key  = $key;
+		$this->data = $data;
+
+		$this->prepare_cart_item_data();
+	}
+
+	/**
+	 * Prepare cart item object and data.
+	 *
+	 * Duplicates some of the WC Cart Item functionality that is coupled to the session logic in WooCommerce core to
+	 * maximise compatibility with other extensions.
+	 *
+	 * @since 5.3.0
+	 *
+	 * @see   \WC_Cart_Session::get_cart_from_session
+	 */
+	protected function prepare_cart_item_data() {
+		// Load the associated product
+		$product = wc_get_product( $this->get_variation_id() ? $this->get_variation_id() : $this->get_product_id() );
+
+		if ( empty( $product ) || ! $product->exists() || 0 >= $this->data['quantity'] ) {
+			// TODO exception should be thrown here due to error when finding product
+		}
+
+		// Mimic how WC core adds the full product object to the cart_item data
+		$this->data['data'] = $product;
+
+		// Cache the product object since we'll need it later
+		$this->product = $product;
 	}
 
 
 	/**
-	 * @return \WC_Product
+	 * Get the product object for the cart item.
+	 *
+	 * @return WC_Product
 	 */
-	function get_product() {
-		return wc_get_product( $this->get_variation_id() ? $this->get_variation_id() : $this->get_product_id() );
+	public function get_product() {
+		return $this->product;
 	}
 
 
 	/**
 	 * @return string
 	 */
-	function get_name() {
-		if ( $product = $this->get_product() ) {
+	public function get_name(): string {
+		$product = $this->get_product();
+
+		if ( $product ) {
 			return apply_filters( 'woocommerce_cart_item_name', $product->get_name(), $this->data, $this->key );
 		}
 		return '';
@@ -82,6 +117,9 @@ class Cart_Item {
 	 */
 	function set_product_id( $id ) {
 		$this->data['product_id'] = Clean::id( $id );
+
+		// Hack alert: Since we allow externally redefining the product_id we need to re-prepare the item data.
+		$this->prepare_cart_item_data();
 	}
 
 
@@ -98,6 +136,9 @@ class Cart_Item {
 	 */
 	function set_variation_id( $id ) {
 		$this->data['variation_id'] = Clean::id( $id );
+
+		// Hack alert: Since we allow externally redefining the variation_id we need to re-prepare the item data.
+		$this->prepare_cart_item_data();
 	}
 
 

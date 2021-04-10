@@ -101,7 +101,7 @@
             $.plot( $chart, sets, options );
 
 
-            $chart.bind( 'plothover', function( event, pos, item ) {
+            $chart.on( 'plothover', function( event, pos, item ) {
 
                 var $wrap = $chart.parents( '.automatewoo-dashboard-chart:first' );
                 var $tooltip = $chart.siblings( '.automatewoo-dashboard-chart__tooltip:first' );

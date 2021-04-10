@@ -85,6 +85,8 @@ class Database_Tables extends Registry {
 	 * @return Database_Table
 	 */
 	static function get_table( $table_id ) {
+		wc_deprecated_function( __METHOD__, '3.8.0', 'get' );
+
 		return self::get( $table_id );
 	}
 

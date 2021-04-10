@@ -180,10 +180,11 @@ abstract class Addon {
 
 
 	/**
-	 * Runs when the license for the add-on is activated
+	 * Runs when the add-on plugin is activated.
 	 */
 	function activate() {
 		flush_rewrite_rules();
+		AdminNotices::add_notice( 'addon_welcome_' . $this->id );
 	}
 
 

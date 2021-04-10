@@ -3,6 +3,9 @@
 namespace AutomateWoo;
 
 use AutomateWoo\Async_Events\Abstract_Async_Event;
+use AutomateWoo\Async_Events\BookingCreated;
+use AutomateWoo\Async_Events\BookingStatusChanged;
+use AutomateWoo\Async_Events\MembershipCreated;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -52,6 +55,12 @@ final class Async_Events extends Registry {
 
 		if ( Integrations::is_memberships_enabled() ) {
 			$includes['membership_status_changed'] = 'AutomateWoo\Async_Events\Membership_Status_Changed';
+			$includes[ MembershipCreated::NAME ]   = MembershipCreated::class;
+		}
+
+		if ( Integrations::is_bookings_active() ) {
+			$includes[ BookingCreated::NAME ]       = BookingCreated::class;
+			$includes[ BookingStatusChanged::NAME ] = BookingStatusChanged::class;
 		}
 
 		if ( Integrations::is_mc4wp() ) {
@@ -160,7 +169,12 @@ final class Async_Events extends Registry {
 	 * @return array
 	 */
 	protected static function get_item_constructor_args( string $name ): array {
-		return [ AW()->action_scheduler() ];
+		switch ( $name ) {
+			case BookingCreated::NAME:
+				return [ AW()->action_scheduler(), AW()->bookings_proxy() ];
+			default:
+				return [ AW()->action_scheduler() ];
+		}
 	}
 
 

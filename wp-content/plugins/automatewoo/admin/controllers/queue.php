@@ -7,6 +7,7 @@ use AutomateWoo\Admin;
 use AutomateWoo\Clean;
 use AutomateWoo\Logger;
 use AutomateWoo\Queue_Manager;
+use AutomateWoo\Queued_Event_Factory;
 use AutomateWoo\Report_Queue;
 use AutomateWoo\Jobs\JobException;
 
@@ -73,7 +74,7 @@ class Queue extends Base {
 
 		$this->verify_nonce_action();
 
-		$queued_event = AW()->get_queued_event( absint( aw_request( 'queued_event_id' ) ) );
+		$queued_event = Queued_Event_Factory::get( absint( aw_request( 'queued_event_id' ) ) );
 
 		if ( ! $queued_event ) {
 			return;
@@ -105,7 +106,7 @@ class Queue extends Base {
 
 		foreach ( $ids as $id ) {
 
-			$queued_event = AW()->get_queued_event( $id );
+			$queued_event = Queued_Event_Factory::get( $id );
 
 			if ( ! $queued_event )
 				continue;

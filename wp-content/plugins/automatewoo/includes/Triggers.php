@@ -80,6 +80,11 @@ class Triggers extends Registry {
 			$includes[ 'subscription_manual' ] = Triggers\SubscriptionManual::class;
 		}
 
+		if ( Integrations::is_bookings_active() ) {
+			$includes['booking_created']        = Triggers\BookingCreated::class;
+			$includes['booking_status_changed'] = Triggers\BookingStatusChanged::class;
+		}
+
 		if ( Integrations::is_memberships_enabled() ) {
 			$includes[ 'membership_created' ] = 'AutomateWoo\Trigger_Membership_Created';
 			$includes[ 'membership_status_changed' ] = 'AutomateWoo\Trigger_Membership_Status_Changed';
@@ -99,9 +104,7 @@ class Triggers extends Registry {
 		}
 
 		$includes[ 'workflow_times_run_reaches' ] = 'AutomateWoo\Trigger_Workflow_Times_Run_Reaches';
-
 		$includes[ 'guest_created' ] = 'AutomateWoo\Trigger_Guest_Created';
-
 		$includes[ 'order_manual' ] = Triggers\OrderManual::class;
 
 		return apply_filters( 'automatewoo/triggers', $includes );
@@ -200,6 +203,23 @@ class Triggers extends Registry {
 			}
 		}
 		return $return;
+	}
+
+	/**
+	 * Get the constructor args for an item.
+	 *
+	 * @param string $name
+	 *
+	 * @return array
+	 */
+	protected static function get_item_constructor_args( string $name ): array {
+		switch ( $name ) {
+			case 'booking_created':
+			case 'booking_status_changed':
+				return [ AW()->bookings_proxy() ];
+		}
+
+		return [];
 	}
 
 	/**

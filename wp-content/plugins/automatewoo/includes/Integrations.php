@@ -8,6 +8,13 @@ namespace AutomateWoo;
  */
 class Integrations {
 
+	const REQUIRED_SUBSCRIPTIONS_VERSION = '2.5';
+	const REQUIRED_BOOKINGS_VERSION = '1.15.35';
+	const REQUIRED_MEMBERSHIPS_VERSION = '1.7';
+	const REQUIRED_POINTS_AND_REWARDS_VERSION = '1.6.15';
+	const REQUIRED_DEPOSITS_VERSION = '1.4';
+	const REQUIRED_FREE_GIFT_COUPONS_VERSION = '2.0.0';
+
 	/** @var Integration_Mailchimp */
 	private static $mailchimp;
 
@@ -33,13 +40,13 @@ class Integrations {
 	 *
 	 * @return bool
 	 */
-	static function is_subscriptions_active( $min_version = '2.5' ) {
+	static function is_subscriptions_active( $min_version = self::REQUIRED_SUBSCRIPTIONS_VERSION ) {
 		if ( ! class_exists( '\WC_Subscriptions' ) ) {
 			return false;
 		}
 		return version_compare( \WC_Subscriptions::$version, $min_version, '>=' );
 	}
-	
+
 
 	/**
 	 * @return bool
@@ -63,7 +70,7 @@ class Integrations {
 	 */
 	static function is_memberships_enabled() {
 		if ( ! function_exists( 'wc_memberships' ) ) return false;
-		if ( version_compare( wc_memberships()->get_version(), '1.7', '<' ) ) return false;
+		if ( version_compare( wc_memberships()->get_version(), self::REQUIRED_MEMBERSHIPS_VERSION, '<' ) ) return false;
 		return true;
 	}
 
@@ -162,7 +169,7 @@ class Integrations {
 	 *
 	 * @return bool
 	 */
-	static function is_points_rewards_active( $min_version = '1.6.15' ) {
+	static function is_points_rewards_active( $min_version = self::REQUIRED_POINTS_AND_REWARDS_VERSION ) {
 		if ( ! class_exists( '\WC_Points_Rewards' ) ) {
 			return false;
 		}
@@ -178,7 +185,7 @@ class Integrations {
 	 *
 	 * @return bool
 	 */
-	public static function is_deposits_active( $min_version = '1.4' ) {
+	public static function is_deposits_active( $min_version = self::REQUIRED_DEPOSITS_VERSION ) {
 		if ( ! defined( 'WC_DEPOSITS_VERSION' ) ) {
 			return false;
 		}
@@ -194,12 +201,27 @@ class Integrations {
 	 *
 	 * @return bool
 	 */
-	static function is_free_gift_coupons_active( $min_version = '2.0.0' ) {
+	static function is_free_gift_coupons_active( $min_version = self::REQUIRED_FREE_GIFT_COUPONS_VERSION ) {
 		if ( ! class_exists( '\WC_Free_Gift_Coupons' ) ) {
 			return false;
 		}
 		return version_compare( \WC_Free_Gift_Coupons::$version, $min_version, '>=' );
 	}
+
+
+	/**
+	 * Is WooCommerce Bookings active?
+	 *
+	 * @since 5.3.0
+	 *
+	 * @param string $min_version
+	 *
+	 * @return bool
+	 */
+	public static function is_bookings_active( string $min_version = self::REQUIRED_BOOKINGS_VERSION ): bool {
+		return defined( 'WC_BOOKINGS_VERSION' ) && version_compare( WC_BOOKINGS_VERSION, $min_version, '>=' );
+	}
+
 
 	/**
 	 * @deprecated in favour of Integrations::is_subscriptions_active()
@@ -207,6 +229,8 @@ class Integrations {
 	 * @return bool
 	 */
 	static function subscriptions_enabled() {
+		wc_deprecated_function( __METHOD__, '5.2.0', 'is_subscriptions_active' );
+
 		return self::is_subscriptions_active();
 	}
 

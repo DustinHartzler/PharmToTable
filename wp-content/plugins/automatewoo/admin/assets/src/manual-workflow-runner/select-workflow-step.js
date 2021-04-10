@@ -4,6 +4,7 @@
 import { __ } from '@wordpress/i18n';
 import { PropTypes } from 'prop-types';
 import { Card, Spinner } from '@woocommerce/components';
+import warning from '@wordpress/warning';
 import { isEmpty } from 'lodash';
 
 /**
@@ -33,6 +34,7 @@ const SelectWorkflowStep = ( {
 	 */
 	const goToNextStep = () => {
 		if ( workflow.length === 0 ) {
+			warning( 'A workflow must be selected' );
 			return;
 		}
 		onStepComplete();

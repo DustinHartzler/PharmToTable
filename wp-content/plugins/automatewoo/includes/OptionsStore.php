@@ -71,4 +71,15 @@ class OptionsStore extends AbstractOptionsStore {
 		return $value;
 	}
 
+	/**
+	 * Is opt-in mode enabled or is site using opt-out mode.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return bool
+	 */
+	public function get_optin_enabled() {
+		return $this->get_option( 'optin_mode' ) === 'optin';
+	}
+
 }

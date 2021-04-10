@@ -321,15 +321,16 @@ class Cart extends Model {
 
 
 	/**
+	 * Get cart items.
+	 *
 	 * @return Cart_Item[]
 	 */
-	function get_items() {
-		$items = $this->get_prop( 'items' );
+	public function get_items() {
+		$raw_item_data = $this->get_prop( 'items' );
+		$items     = [];
 
-		if ( is_array( $items ) ) {
-			foreach( $items as $item_key => $item_data ) {
-				$items[ $item_key ] = new Cart_Item( $item_key, $item_data );
-			}
+		if ( is_array( $raw_item_data ) ) {
+			$items = $this->convert_cart_item_data_to_cart_item_objects( $raw_item_data );
 
 			if ( Language::is_multilingual() ) {
 				if ( ! isset( $this->translated_items_cache ) ) {
@@ -339,11 +340,32 @@ class Cart extends Model {
 				$items = $this->translated_items_cache;
 			}
 		}
-		else {
-			$items = [];
-		}
 
 		return apply_filters( 'automatewoo/cart/get_items', $items );
+	}
+
+	/**
+	 * Convert raw cart item data into cart item objects.
+	 *
+	 * @since 5.3.0
+	 *
+	 * @param array $raw_items
+	 *
+	 * @return Cart_Item[]
+	 */
+	protected function convert_cart_item_data_to_cart_item_objects( array $raw_items ): array {
+		$parsed_items = [];
+
+		foreach( $raw_items as $item_key => $item_data ) {
+			if ( ! is_string( $item_key ) || ! is_array( $item_data ) ) {
+				// Stored cart data is invalid.
+				continue;
+			}
+
+			$parsed_items[ $item_key ] = new Cart_Item( $item_key, $item_data );
+		}
+
+		return $parsed_items;
 	}
 
 
@@ -411,7 +433,7 @@ class Cart extends Model {
 		if ( ! $this->get_guest_id() ) {
 			return false;
 		}
-		return AW()->get_guest( $this->get_guest_id() );
+		return Guest_Factory::get( $this->get_guest_id() );
 	}
 
 
@@ -538,6 +560,8 @@ class Cart extends Model {
 	 * @return Cart_Item[]
 	 */
 	public function get_language_adjusted_items( $items ) {
+		wc_deprecated_function( __METHOD__, '4.6.0', 'translate_items' );
+
 		return $this->translate_items( $items, $this->get_language() );
 	}
 

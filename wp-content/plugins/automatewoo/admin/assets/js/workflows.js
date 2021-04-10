@@ -1,9 +1,7 @@
 /**
  * AutomateWoo Workflows Admin
  */
-
 (function( $, data ) {
-
 	AW.Workflow = Backbone.Model.extend({
 
 		getAction: function( action_name ) {
@@ -122,7 +120,7 @@
 			var reference_field_name = $field.attr( 'data-automatewoo-dynamic-select-reference' );
 			var $reference_field = $action.find( '.automatewoo-field[data-name="' + reference_field_name + '"]' );
 
-			$reference_field.change(function() {
+			$reference_field.on( 'change', function() {
 				AW.workflowView.updateDynamicActionSelect( $field, $reference_field, $action )
 			});
 		},
@@ -225,12 +223,18 @@
 
 			this.$el.on('click', '.js-confirm', function(){
 				modalView.disableButtons();
-				// submit
-				$(AW.workflowView.el).data( 'aw-preset-workflow-confirmed', true ).submit();
+
+				// Close with applicable tracking action set up.
+				data.action = 'confirm';
 				AutomateWoo.Modal.close();
+
+				// submit
+				$(AW.workflowView.el).data( 'aw-preset-workflow-confirmed', true ).trigger( 'submit' );
 			});
 
 			this.$el.on('click', '.js-close-automatewoo-modal', function(){
+				data.action = 'cancel';
+
 				modalView.disableButtons();
 			});
 		},
@@ -242,6 +246,31 @@
 		render: function() {
 			this.$el.html( this.template( this.data ));
 			return this;
+		},
+
+		/**
+		 * Opens `AutomateWoo.Modal`, fills it with rendered message.
+		 * Record Tracking events `preset_activation_alert_rendered` when executed, 
+		 * and 'preset_activation_alert_closed' with applicable `action` and `is_active` once eventually closed. 
+		 */
+		open: function() {
+			// Once the modal is open, the default close action for built-in Modal close features is 'dismiss'.
+			this.data.action = 'dismiss';
+
+			AutomateWoo.Modal.open();
+			AutomateWoo.Modal.contents( this.render().el );
+
+			AW.tracks.recordEvent( 'preset_activation_alert_rendered', { is_active: this.data.isActive } );
+
+			// If the modal is dismissed by AutomateWoo.Modal features.
+			document.body.addEventListener(
+				'awmodal-close',
+				() => AW.tracks.recordEvent( 'preset_activation_alert_closed', {
+					is_active: this.data.isActive,
+					action: this.data.action
+				} ),
+				{ once: true }
+			);
 		}
 
 	});
@@ -289,11 +318,11 @@ jQuery(function($) {
 		 *
 		 */
 		init_triggers_box: function() {
-			AutomateWoo.Workflows.$trigger_select.change(function(){
+			AutomateWoo.Workflows.$trigger_select.on( 'change', function(){
 				AutomateWoo.Workflows.fill_trigger_fields( $(this).val() );
 			});
 
-			AutomateWoo.Workflows.$manual_trigger_select.change(function(){
+			AutomateWoo.Workflows.$manual_trigger_select.on( 'change', function(){
 				AutomateWoo.Workflows.fill_manual_workflow_trigger_fields( $(this).val() );
 			});
 		},
@@ -310,7 +339,7 @@ jQuery(function($) {
 			});
 
 
-			$('.js-aw-add-action').click(function (e) {
+			$('.js-aw-add-action').on( 'click', function (e) {
 				e.preventDefault();
 				AutomateWoo.Workflows.add_new_action();
 			});
@@ -368,7 +397,7 @@ jQuery(function($) {
 
 			AutomateWoo.Workflows.maybe_hide_tracking_options();
 
-			$checkbox_click_tracking.click(function(){
+			$checkbox_click_tracking.on( 'click', function(){
 				AutomateWoo.Workflows.maybe_hide_tracking_options();
 			});
 
@@ -526,7 +555,7 @@ jQuery(function($) {
 
 				$checkbox.on( 'change', function() {
 					this.checked ? $parentRow.hide() : $parentRow.show();
-				} ).change();
+				} ).trigger( 'change' );
 			} );
 		},
 
@@ -633,14 +662,10 @@ jQuery(function($) {
 
 			$('.js-action-select').each(function(){
 				$(this).find('option').each(function(){
-
-					if ( AutomateWoo.Workflows.is_action_compatible_with_current_trigger( $(this).val() ) ) {
-						$(this).removeAttr('disabled');
-					}
-					else {
-						$(this).attr('disabled', true);
-					}
-
+					$(this).prop(
+						'disabled',
+						! AutomateWoo.Workflows.is_action_compatible_with_current_trigger( $(this).val() )
+					);
 				});
 
 			});
@@ -762,7 +787,7 @@ jQuery(function($) {
 			var action_number = $action.data('action-number');
 			var name_selector;
 			var trigger = AW.workflow.get('trigger');
-			var action_fields = {};
+			var fields = {};
 
 			if ( AutomateWoo.isEmailPreviewOpen() ) {
 				AutomateWoo.Workflows.$actions_box.addClass('aw-loading');
@@ -777,19 +802,32 @@ jQuery(function($) {
 			// get fields to preview
 			$action.find('[name*="' + name_selector + '"]').each(function( i, el ){
 
-				var name, val;
+				var field_name, element_name, val, is_grouped;
+
+				element_name = $(el).attr('name')
+				is_grouped = /\[]$/.test( element_name );
+
+				if ( is_grouped ) {
+					element_name = element_name.replace( '[]', '' );
+				}
 
 				// get the name
-				name = $(el).attr('name').replace(name_selector, '').replace('[', '').replace(']', '');
+				field_name = element_name.replace(name_selector, '').replace('[', '').replace(']', '');
 
 				if ( $(el).attr('type') === 'checkbox' ) {
                     val = el.checked ? '1' : '';
-				}
-				else {
+				} else {
 					val = $(el).val();
-
 				}
-				action_fields[name] = val;
+
+				if ( is_grouped ) {
+					if ( ! fields.hasOwnProperty( field_name ) ) {
+						fields[ field_name ] = [];
+					}
+					fields[field_name].push( val );
+				} else {
+					fields[field_name] = val;
+				}
 			});
 
 			AutomateWoo.openLoadingEmailPreview(); // open the preview window before saving so that the popup is not blocked
@@ -801,7 +839,7 @@ jQuery(function($) {
 					action: 'aw_save_preview_data',
 					workflow_id: AW.workflow.get('id'),
 					trigger_name: trigger ? trigger.name : '',
-					action_fields: action_fields,
+					action_fields: fields,
 				},
 				success: function(response) {
 					AutomateWoo.open_email_preview( 'workflow_action', {
@@ -947,7 +985,7 @@ jQuery(function($) {
 
 			$max_field.attr('min', min_val + 1 );
 			$max_field.attr('placeholder', placeholder );
-		}).change();
+		}).trigger( 'change' );
 	}
 
 	$(document.body).on('automatewoo_trigger_changed', function(){
@@ -976,29 +1014,29 @@ jQuery(function($) {
 			}
 		}
 
-		$typeSelectField.change( function() {
+		$typeSelectField.on( 'change', function() {
 			updateType( $typeSelectField.val(), true );
 		} );
 
 		updateType( $typeSelectField.val(), false )
 	}
 
-	$('#automatewoo-workflow-run-btn').click(function(){
+	$('#automatewoo-workflow-run-btn').on( 'click', function(){
 		$('input[name="automatewoo_redirect_to_runner"]').val(1);
-		$('#publish').click();
+		$('#publish').trigger( 'click' );
 		return false;
 	});
 
-	$( 'form#post' ).submit(function(){
+	$( 'form#post' ).on( 'submit', function(){
 		let $form             = $(this);
 		let isActive          = 'active' === $('select[name=workflow_status]', $form).val();
 		let isConfirmed       = $form.data('aw-preset-workflow-confirmed');
 		let isFirstPresetSave = /workflow-origin=preset/.test( window.location.href );
 
 		if ( isFirstPresetSave && ! isConfirmed ) {
-			let modalView = new AW.TriggerPresetActivationModalView( { isActive: isActive } );
-			AutomateWoo.Modal.open();
-			AutomateWoo.Modal.contents( modalView.render().el );
+			const activationModalView = new AW.TriggerPresetActivationModalView( { isActive } );
+			activationModalView.open();
+
 			return false;
 		}
 

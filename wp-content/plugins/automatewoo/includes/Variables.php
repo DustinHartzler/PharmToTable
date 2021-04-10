@@ -3,11 +3,15 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Registry\ItemConstructorArgsTrait;
+
 /**
  * @class Variables
  * @since 2.4.6
  */
 class Variables {
+
+	use ItemConstructorArgsTrait;
 
 	/** @var array */
 	private static $loaded_variables = [];
@@ -100,6 +104,17 @@ class Variables {
 			'author_ip'   => Variable_Comment_Author_IP::class,
 			'content'     => Variable_Comment_Content::class,
 		],
+		'booking'           => [
+			'id'         => Variables\BookingId::class,
+			'cost'       => Variables\BookingCost::class,
+			'resource'   => Variables\BookingResource::class,
+			'status'     => Variables\BookingStatus::class,
+			'persons'    => Variables\BookingPersons::class,
+			'start_date' => Variables\BookingStartDate::class,
+			'start_time' => Variables\BookingStartTime::class,
+			'end_date'   => Variables\BookingEndDate::class,
+			'end_time'   => Variables\BookingEndTime::class,
+		],
 		'product'           => [
 			'id'                => Variable_Product_ID::class,
 			'title'             => Variable_Product_Title::class,
@@ -126,6 +141,7 @@ class Variables {
 			'itemscount' => Variable_Wishlist_Itemscount::class,
 		],
 		'cart'              => [
+			'id'         => Variables\CartId::class,
 			'link'       => Variable_Cart_Link::class,
 			'items'      => Variable_Cart_Items::class,
 			'item_count' => Variable_Cart_Item_Count::class,
@@ -177,6 +193,7 @@ class Variables {
 			'admin_email'      => Variable_Shop_Admin_Email::class,
 			'current_datetime' => Variable_Shop_Current_Datetime::class,
 			'products'         => Variable_Shop_Products::class,
+			'shop_url'         => Variables\Shop\ShopUrl::class,
 		],
 	];
 
@@ -272,7 +289,7 @@ class Variables {
 			if ( ! $classname_or_file ) {
 				return false;
 			}
-			$class = new $classname_or_file;
+			$class = new $classname_or_file( ...static::get_item_constructor_args( $variable_name ) );
 		}
 
 		$class->setup( $variable_name );

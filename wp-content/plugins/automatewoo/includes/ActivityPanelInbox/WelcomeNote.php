@@ -4,7 +4,7 @@ namespace AutomateWoo\ActivityPanelInbox;
 
 use AutomateWoo\Admin;
 use Automattic\WooCommerce\Admin\Notes\NoteTraits;
-use Automattic\WooCommerce\Admin\Notes\WC_Admin_Note;
+use Automattic\WooCommerce\Admin\Notes\Note;
 
 /**
  * Add the Welcome note on first install and remove it if the plugin is deactivated.
@@ -30,8 +30,8 @@ class WelcomeNote {
 	 * Get the note.
 	 */
 	public static function get_note() {
-		$note = new WC_Admin_Note();
-		$note->set_type( WC_Admin_Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
+		$note = new Note();
+		$note->set_type( Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
 		$note->set_name( self::NOTE_NAME );
 		$note->set_source( 'automatewoo' );
 		$note->set_title( __( 'AutomateWoo is ready', 'automatewoo' ) );

@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.1.0
  */
-class RunQueuedWorkflows extends AbstractBatchedJob implements StartOnHookInterface {
+class RunQueuedWorkflows extends AbstractBatchedActionSchedulerJob implements StartOnHookInterface {
 
 	use ValidateItemAsIntegerId;
 
@@ -86,18 +86,18 @@ class RunQueuedWorkflows extends AbstractBatchedJob implements StartOnHookInterf
 	 * @param int   $item A single item from the get_batch() method. Expects a validated item.
 	 * @param array $args The args for this instance of the job.
 	 *
-	 * @throws BatchException When the item can't be processed.
+	 * @throws JobException When the item can't be processed.
 	 */
 	protected function process_item( $item, array $args ) {
 		$queued_workflow = Queued_Event_Factory::get( $item );
 
 		if ( ! $queued_workflow ) {
-			throw BatchException::item_not_found();
+			throw JobException::item_not_found();
 		}
 
 		// Double-check if the event is not marked as failed
 		if ( $queued_workflow->is_failed() ) {
-			throw new BatchException( __( 'Queued workflow is already marked as failed.', 'automatewoo' ) );
+			throw new JobException( __( 'Queued workflow is already marked as failed.', 'automatewoo' ) );
 		}
 
 		$queued_workflow->run();

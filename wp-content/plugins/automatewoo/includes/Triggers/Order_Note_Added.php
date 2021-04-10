@@ -1,8 +1,10 @@
 <?php
-// phpcs:ignoreFile PSR2.Classes.PropertyDeclaration.Underscore
 
 namespace AutomateWoo;
 
+use AutomateWoo\DataTypes\DataTypes;
+use AutomateWoo\Triggers\Utilities\HandleOrderNoteAdded;
+use AutomateWoo\Triggers\Utilities\OrderGroup;
 use WC_Order;
 
 defined( 'ABSPATH' ) || exit;
@@ -14,19 +16,14 @@ defined( 'ABSPATH' ) || exit;
  */
 class Trigger_Order_Note_Added extends Trigger {
 
+	use HandleOrderNoteAdded, OrderGroup;
+
 	/**
 	 * Declares data items available in trigger.
 	 *
 	 * @var array
 	 */
-	public $supplied_data_items = [ 'order', 'order_note', 'customer' ];
-
-	/**
-	 * Prop used to cache the is_customer_note value between hooks (wc hack).
-	 *
-	 * @var bool
-	 */
-	public $_is_customer_note = false;
+	public $supplied_data_items = [ DataTypes::ORDER, DataTypes::ORDER_NOTE, DataTypes::CUSTOMER ];
 
 	/**
 	 * Load trigger admin props.
@@ -34,7 +31,6 @@ class Trigger_Order_Note_Added extends Trigger {
 	public function load_admin_details() {
 		$this->title       = __( 'Order Note Added', 'automatewoo' );
 		$this->description = __( 'Fires when any note is added to an order, can include both private notes and notes to the customer. These notes appear on the right of the order edit screen.', 'automatewoo' );
-		$this->group       = __( 'Orders', 'automatewoo' );
 	}
 
 	/**
@@ -54,50 +50,14 @@ class Trigger_Order_Note_Added extends Trigger {
 	}
 
 	/**
-	 * Register trigger hooks.
-	 */
-	public function register_hooks() {
-		add_filter( 'woocommerce_new_order_note_data', [ $this, 'catch_order_note_filter' ], 20, 2 );
-		add_action( 'wp_insert_comment', [ $this, 'catch_comment_create' ], 20, 2 );
-	}
-
-	/**
-	 * Hooks in before 'wp_insert_comment' so we can access the 'is_customer_note' prop.
+	 * Get order types to target in the order note trigger.
 	 *
-	 * @param array $data
-	 * @param array $args
+	 * @since 5.2.0
 	 *
 	 * @return array
 	 */
-	public function catch_order_note_filter( $data, $args ) {
-		$this->_is_customer_note = $args['is_customer_note'];
-		return $data;
-	}
-
-
-	/**
-	 * Catch comment creation hook.
-	 *
-	 * @param int         $comment_id
-	 * @param \WP_Comment $comment
-	 */
-	public function catch_comment_create( $comment_id, $comment ) {
-		if ( $comment->comment_type !== 'order_note' || get_post_type( $comment->comment_post_ID ) !== 'shop_order' ) {
-			return;
-		}
-
-		$order = wc_get_order( $comment->comment_post_ID );
-
-		if ( ! $order ) {
-			return;
-		}
-
-		$order_note = new Order_Note( $comment->comment_ID, $comment->comment_content, $order->get_id() );
-
-		// must manually set prop because meta field is added after the comment is inserted
-		$order_note->is_customer_note = $this->_is_customer_note;
-
-		$this->handle_order_note_added( $order_note, $order );
+	protected function get_target_order_types(): array {
+		return [ 'shop_order' ];
 	}
 
 	/**
@@ -108,7 +68,7 @@ class Trigger_Order_Note_Added extends Trigger {
 	 * @param Order_Note $order_note
 	 * @param WC_Order   $order
 	 */
-	protected function handle_order_note_added( $order_note, $order ) {
+	protected function handle_order_note_added( Order_Note $order_note, WC_Order $order ) {
 		$this->maybe_run(
 			[
 				'customer'   => Customer_Factory::get_by_order( $order ),

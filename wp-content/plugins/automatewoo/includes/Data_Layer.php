@@ -167,6 +167,14 @@ class Data_Layer {
 
 
 	/**
+	 * @return \WC_Booking|false
+	 */
+	function get_booking() {
+		return $this->get_item( 'booking' );
+	}
+
+
+	/**
 	 * @return array|\WC_Order_Item_Product|false
 	 */
 	function get_order_item() {

@@ -3,6 +3,8 @@
 
 namespace AutomateWoo\Compat;
 
+aw_deprecated_class( Order_Notes::class, '5.2.0' );
+
 /**
  * Provide order note methods that are compatible with changes introduced in WC 3.2.
  *

@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.1.0
  */
-interface StartOnHookInterface extends BatchedJobInterface {
+interface StartOnHookInterface extends JobInterface {
 
 	/**
 	 * Get the name of an action hook to attach the job's start method to.

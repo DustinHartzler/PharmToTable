@@ -84,22 +84,6 @@ class Before_After_Day extends Field {
 
 			</div>
 		</div>
-
-		<script type="text/javascript">
-			(function($) {
-				$('.automatewoo-before-after-day-field-group__field--type').change(function(){
-					var $type = $(this);
-					var $days = $type.siblings( '.automatewoo-before-after-day-field-group__field--days' );
-
-					if ( $type.val() === 'on_the_day' ) {
-						$days.hide();
-					} else {
-						$days.show();
-					}
-				}).change();
-			})(jQuery);
-		</script>
-		
 		<?php
 	}
 

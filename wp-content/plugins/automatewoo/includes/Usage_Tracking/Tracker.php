@@ -93,7 +93,6 @@ class Tracker {
 			'checkout_optin_enabled'                   => $options::checkout_optin_enabled(),
 			'account_optin_enabled'                    => $options::account_optin_enabled(),
 			'communication_account_tab_enabled'        => $options::communication_account_tab_enabled(),
-			'license_system'                           => $options::license_system(),
 			'mailchimp_integration_enabled'            => $options::mailchimp_enabled(),
 			'campaign_monitor_integration_enabled'     => $options->campaign_monitor_enabled,
 			'active_campaign_integration_enabled'      => $options->active_campaign_integration_enabled,

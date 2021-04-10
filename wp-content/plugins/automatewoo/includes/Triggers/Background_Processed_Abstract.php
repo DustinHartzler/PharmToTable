@@ -2,9 +2,12 @@
 
 namespace AutomateWoo;
 
-use AutomateWoo\Triggers\CustomTimeOfDay;
+use AutomateWoo\Triggers\AbstractBatchedDailyTrigger;
+use AutomateWoo\Triggers\Utilities\CustomTimeOfDay;
 
 defined( 'ABSPATH' ) || exit;
+
+aw_deprecated_class( Trigger_Background_Processed_Abstract::class, '5.1.0', AbstractBatchedDailyTrigger::class );
 
 /**
  * Class Trigger_Background_Process_Abstract

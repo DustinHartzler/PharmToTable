@@ -1705,6 +1705,8 @@ class Workflow {
 	 * @deprecated
 	 */
 	function add_data_item( $name, $item ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		$this->set_data_item( $name, $item );
 	}
 
@@ -1714,6 +1716,8 @@ class Workflow {
 	 * @param $note
 	 */
 	function add_action_log_note( $action, $note ) {
+		wc_deprecated_function( __METHOD__, '5.2.0' );
+
 		$this->log_action_note( $action, $note );
 	}
 

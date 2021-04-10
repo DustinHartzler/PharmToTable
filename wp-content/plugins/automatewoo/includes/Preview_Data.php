@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Actions\PreviewableInterface;
+use AutomateWoo\Actions\TestableInterface;
 use AutomateWoo\Exceptions\InvalidPreviewData;
 use AutomateWoo\Workflows\Factory;
 use WC_Order;
@@ -23,26 +25,26 @@ class Preview_Data {
 	private static $preview_workflow;
 
 	/**
-	 * @param array $data_items list of specific data items to get for preview
+	 * @param array $required_items list of specific data items to get for preview
 	 *
 	 * @return array
 	 * @throws InvalidPreviewData When there's an error getting the preview data.
 	 */
-	static function get_preview_data_layer( $data_items = [] ) {
+	static function get_preview_data_layer( $required_items = [] ) {
 		$data_layer = [];
 
-		if ( in_array( 'user', $data_items ) ) {
+		if ( in_array( 'user', $required_items ) ) {
 			$data_layer['user'] = wp_get_current_user();
 		}
 
-		if ( in_array( 'customer', $data_items ) ) {
+		if ( in_array( 'customer', $required_items ) ) {
 			$data_layer['customer'] = Customer_Factory::get_by_user_id( get_current_user_id() );
 		}
 
 		/**
 		 * Order and order item
 		 */
-		if ( in_array( 'order', $data_items ) || in_array( 'order_item', $data_items ) ) {
+		if ( in_array( 'order', $required_items ) || in_array( 'order_item', $required_items ) ) {
 			$order = self::get_preview_order();
 			$order_items = $order->get_items();
 
@@ -57,40 +59,34 @@ class Preview_Data {
 		/**
 		 * Product
 		 */
-		if ( in_array( 'product', $data_items ) ) {
-			$product_query = new \WP_Query([
-				'post_type' => 'product',
-				'posts_per_page' => 4,
-				//'orderby' => 'rand',
-				'fields' => 'ids'
-			]);
-			$data_layer['product'] = wc_get_product( $product_query->posts[0] );
+		if ( in_array( 'product', $required_items ) ) {
+			$product_ids = self::get_preview_product_ids();
+			$data_layer['product'] = wc_get_product( $product_ids[0] );
 		}
 
 		/**
 		 * Category
 		 */
-		if ( in_array( 'category', $data_items ) ) {
-			$cats = get_terms( [
-				'taxonomy' => 'product_cat',
-				'order' => 'count',
-				'number' => 1
-			] );
+		if ( in_array( 'category', $required_items ) ) {
+			$categories = get_terms(
+				[
+					'taxonomy' => 'product_cat',
+					'order'    => 'count',
+					'number'   => 1
+				]
+			);
 
-			$data_layer['category'] = current( $cats );
+			if ( empty( $categories ) ) {
+				throw InvalidPreviewData::data_item_needed( 'category' );
+			}
+
+			$data_layer['category'] = current( $categories );
 		}
 
 		/**
 		 * Cart
 		 */
-		if ( in_array( 'cart', $data_items ) ) {
-
-			$product_query = new \WP_Query([
-				'post_type' => 'product',
-				'posts_per_page' => 4,
-				'fields' => 'ids'
-			]);
-
+		if ( in_array( 'cart', $required_items ) ) {
 			$cart = new Cart();
 			$cart->set_id( 1 );
 			$cart->set_total( 100 );
@@ -100,7 +96,7 @@ class Preview_Data {
 
 			$items = [];
 
-			foreach ( $product_query->posts as $product_id ) {
+			foreach ( self::get_preview_product_ids() as $product_id ) {
 				$product = wc_get_product( $product_id );
 
 				// Reject products that can't be purchased
@@ -120,7 +116,7 @@ class Preview_Data {
 					}
 				}
 
-				$items[] = [
+				$items[ uniqid() ] = [
 					'product_id' => $product_id,
 					'variation_id' => $variation_id,
 					'variation' => $variation,
@@ -147,10 +143,9 @@ class Preview_Data {
 		/**
 		 * Wishlist
 		 */
-		if ( in_array( 'wishlist', $data_items ) ) {
-			$wishlist = new Wishlist();
-
-			$wishlist->items = $product_query->posts;
+		if ( in_array( 'wishlist', $required_items ) ) {
+			$wishlist        = new Wishlist();
+			$wishlist->items = self::get_preview_product_ids();
 
 			$data_layer['wishlist'] = $wishlist;
 		}
@@ -158,7 +153,7 @@ class Preview_Data {
 		/**
 		 * Guest
 		 */
-		if ( in_array( 'guest', $data_items ) ) {
+		if ( in_array( 'guest', $required_items ) ) {
 			$guest = new Guest();
 			$guest->set_email( 'guest@example.com' );
 			$data_layer['guest'] = $guest;
@@ -167,31 +162,57 @@ class Preview_Data {
 		/**
 		 * Subscription
 		 */
-		if ( Integrations::is_subscriptions_active() && in_array( 'subscription', $data_items ) ) {
-			$subscriptions = wcs_get_subscriptions([
-				'subscriptions_per_page' => 1
-			]);
+		if ( Integrations::is_subscriptions_active() && in_array( 'subscription', $required_items ) ) {
+			$subscriptions = wcs_get_subscriptions(
+				[
+					'subscriptions_per_page' => 1
+				]
+			);
 
-			$data_layer['subscription'] = current($subscriptions);
+			if ( empty( $subscriptions ) ) {
+				throw InvalidPreviewData::data_item_needed( 'subscription' );
+			}
+
+			$data_layer['subscription'] = current( $subscriptions );
 		}
 
 		/**
 		 * Membership
 		 */
-		if ( Integrations::is_memberships_enabled() && in_array( 'membership', $data_items ) ) {
-			$memberships = get_posts( [
-				'post_type' => 'wc_user_membership',
-				'post_status' => 'any',
-				'posts_per_page' => 1,
-			]);
+		if ( Integrations::is_memberships_enabled() && in_array( 'membership', $required_items ) ) {
+			$memberships = get_posts(
+				[
+					'post_type'      => 'wc_user_membership',
+					'post_status'    => 'any',
+					'posts_per_page' => 1,
+				]
+			);
 
-			$data_layer['membership'] = wc_memberships_get_user_membership( current($memberships) );
+			if ( empty( $memberships ) ) {
+				throw InvalidPreviewData::data_item_needed( 'membership' );
+			}
+
+			$data_layer['membership'] = wc_memberships_get_user_membership( current( $memberships ) );
+		}
+
+		/**
+		 * Bookings
+		 */
+		if ( Integrations::is_bookings_active() && in_array( 'booking', $required_items ) ) {
+			try {
+				$booking               = AW()->bookings_proxy()->get_most_recent_booking();
+				$data_layer['booking'] = $booking;
+				$data_layer['product'] = $booking->get_product();
+			} catch ( \Exception $e ) {
+				// rethrow as user-facing InvalidPreviewData exception
+				throw InvalidPreviewData::data_item_needed( 'booking' );
+			}
 		}
 
 		/**
 		 * Card
 		 */
-		if ( in_array( 'card', $data_items ) ) {
+		if ( in_array( 'card', $required_items ) ) {
 			$token = new \WC_Payment_Token_CC();
 			$token->set_user_id( 0 );
 			$token->set_card_type('visa');
@@ -202,18 +223,20 @@ class Preview_Data {
 			$data_layer['card'] = $token;
 		}
 
-		return apply_filters( 'automatewoo/preview_data_layer', $data_layer, $data_items );
+		return apply_filters( 'automatewoo/preview_data_layer', $data_layer, $required_items );
 	}
 
 
 	/**
-	 * Generate an previewable action object filled with preview data.
+	 * Generate a previewable or testable action object filled with preview data.
 	 *
 	 * @param int    $workflow_id
 	 * @param int    $action_number
 	 * @param string $mode test|preview
 	 *
-	 * @return Action
+	 * @return Action|PreviewableInterface|TestableInterface
+	 *
+	 * TODO Remove Action return type when code-hinting isn't required for public Action props
 	 *
 	 * @throws InvalidPreviewData When there's an error with the preview data.
 	 */
@@ -236,7 +259,7 @@ class Preview_Data {
 			throw InvalidPreviewData::generic();
 		}
 
-		if ( ! $action || ! $action->can_be_previewed() ) {
+		if ( ! $action instanceof PreviewableInterface && ! $action instanceof TestableInterface ) {
 			throw InvalidPreviewData::invalid_action();
 		}
 
@@ -343,6 +366,34 @@ class Preview_Data {
 	public static function remove_customer_language_filter( $action ) {
 		self::$preview_workflow = null;
 		remove_filter( 'automatewoo/customer/get_language', [ __CLASS__, 'filter_customer_language' ], 10 );
+	}
+
+	/**
+	 * Get preview products.
+	 *
+	 * @return array
+	 *
+	 * @throws InvalidPreviewData When no products found.
+	 */
+	protected static function get_preview_product_ids(): array {
+		// Cache for request since this may be called multiple times
+		static $products = null;
+		if ( null === $products ) {
+			$product_query = new \WP_Query(
+				[
+					'post_type'      => 'product',
+					'posts_per_page' => 4,
+					'fields'         => 'ids'
+				]
+			);
+
+			$products = $product_query->posts;
+			if ( empty( $products ) ) {
+				throw InvalidPreviewData::data_item_needed( 'product' );
+			}
+		}
+
+		return $products;
 	}
 
 }

@@ -95,7 +95,7 @@ class Tool_Optout_Importer extends Tool_Background_Processed_Abstract {
 			];
 		}
 
-		return Tools::init_background_process( $tasks );
+		return $this->start_background_job( $tasks );
 	}
 
 

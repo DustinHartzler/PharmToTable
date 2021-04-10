@@ -167,13 +167,12 @@ abstract class Query_Abstract {
 	/**
 	 * @deprecated in 5.1.0 use self::get_results_as_ids() instead
 	 *
-	 * @todo add deprecated wc_deprecated_function() in future version
-	 *
 	 * @param string $return
 	 * 	'objects' (default) | 'ids'
 	 * @return $this
 	 */
 	function set_return( $return ) {
+		wc_deprecated_function( __METHOD__, '5.1.0', '\AutomateWoo\Query_Abstract::get_results_as_ids' );
 		$this->return = Clean::string( $return );
 		return $this;
 	}

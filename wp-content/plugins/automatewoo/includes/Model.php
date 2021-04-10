@@ -275,8 +275,8 @@ abstract class Model {
 	 * $value can be an instance of WC_DateTime the timezone will be ignored.
 	 * If $value is a string it must be MYSQL formatted.
 	 *
-	 * @param string                                 $column
-	 * @param \WC_DateTime|DateTime|\DateTime|string $value
+	 * @param string                                      $column
+	 * @param \WC_DateTime|DateTime|\DateTime|string|null $value
 	 */
 	protected function set_date_column( $column, $value ) {
 		if ( is_a( $value, 'DateTime' ) ) {
@@ -285,9 +285,10 @@ abstract class Model {
 			$utc_date = new DateTime();
 			$utc_date->setTimestamp( $value->getTimestamp() );
 			$this->set_prop( $column, $utc_date->to_mysql_string() );
-		}
-		elseif ( $value ) {
+		} elseif ( $value ) {
 			$this->set_prop( $column, Clean::string( $value ) );
+		} elseif ( null === $value ) {
+			$this->set_prop( $column, null );
 		}
 	}
 }

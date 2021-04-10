@@ -51,7 +51,7 @@ class User_Registration {
 		add_user_meta( $user_id, '_aw_user_registered', true );
 
 		// User is fully registered, only fires once per user
-		do_action( 'automatewoo/user_registered', $user_id );
+		do_action( 'automatewoo/user_registered', (int) $user_id );
 	}
 
 }

@@ -112,9 +112,13 @@ class Workflow_Background_Process_Helper {
 			return;
 		}
 
-		Events::schedule_async_event( 'automatewoo/custom_time_of_day_workflow', [
-			$workflow_id, $new_offset
-		], true );
+		AW()->action_scheduler()->schedule_single(
+			gmdate( 'U' ),
+			'automatewoo/custom_time_of_day_workflow',
+			[
+				$workflow_id, $new_offset
+			]
+		);
 	}
 
 

@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+jQuery(function($) {
 
     if ( typeof automatewoo_presubmit_params === 'undefined' ) {
         return false;

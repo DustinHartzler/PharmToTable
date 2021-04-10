@@ -2,7 +2,8 @@
 
 namespace AutomateWoo\Async_Events;
 
-use AutomateWoo\Events;
+use WC_Order;
+use WC_Subscription;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,19 +23,24 @@ class Subscription_Renewal_Payment_Complete extends Abstract_Async_Event {
 	}
 
 	/**
+	 * Get the async event hook name.
+	 *
+	 * @since 5.2.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_name(): string {
+		return 'automatewoo/subscription/renewal_payment_complete_async';
+	}
+
+	/**
 	 * Schedule event.
 	 *
-	 * @param \WC_Subscription $subscription
-	 * @param \WC_Order        $order
+	 * @param WC_Subscription $subscription
+	 * @param WC_Order        $order
 	 */
 	public function schedule_event( $subscription, $order ) {
-		Events::schedule_async_event(
-			'automatewoo/subscription/renewal_payment_complete_async',
-			[
-				$subscription->get_id(),
-				$order->get_id(),
-			]
-		);
+		$this->create_async_event( [ $subscription->get_id(), $order->get_id() ] );
 	}
 
 }

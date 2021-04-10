@@ -2,7 +2,7 @@
 
 namespace AutomateWoo\Rest_Api\Controllers;
 
-use AutomateWoo\Data_Types;
+use AutomateWoo\DataTypes\DataTypes;
 use AutomateWoo\DateTime;
 use AutomateWoo\Permissions;
 use AutomateWoo\Queued_Event;
@@ -173,7 +173,7 @@ class ManualWorkflowRunner extends AbstractController {
 			$offset     = $request->get_param( 'offset' );
 			$batch_size = $request->get_param( 'batch_size' );
 
-			$data_type               = Data_Types::get( $trigger->get_primary_data_type() );
+			$data_type               = DataTypes::get( $trigger->get_primary_data_type() );
 			$data_type_singular_name = $data_type->get_singular_name();
 			$quick_filter_query      = QueryLoader::load( $workflow->get_rule_data(), $data_type->get_id() );
 			$results                 = [];
