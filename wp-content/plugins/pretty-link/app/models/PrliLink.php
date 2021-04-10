@@ -200,7 +200,7 @@ class PrliLink {
     return $this->get_one_by( 'id', $id, $return_type, $include_stats, $exclude_disabled );
   }
 
-  public function get_one_by( $field='id', $val, $return_type = OBJECT, $include_stats = false, $exclude_disabled=true ) {
+  public function get_one_by( $field, $val, $return_type = OBJECT, $include_stats = false, $exclude_disabled=true ) {
     global $wpdb, $prli_click, $prli_options, $prli_link_meta, $prli_blogurl;
 
     $struct = PrliUtils::get_permalink_pre_slug_uri();

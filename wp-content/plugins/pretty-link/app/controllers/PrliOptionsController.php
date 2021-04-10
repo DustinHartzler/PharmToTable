@@ -68,7 +68,7 @@ class PrliOptionsController extends PrliBaseController {
     return $update_message;
   }
 
-  private function validate($errors=array(), $params) {
+  private function validate($errors, $params) {
     extract( $this->opt_fields );
 
     // Validate This

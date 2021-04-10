@@ -128,7 +128,7 @@ class PrliLinksHelper {
              style="width: 65%;"
              onclick='this.select();'
              onfocus='this.select();'
-             value="<?php echo esc_attr($pretty_link_url); ?>" />
+             value="/<?php echo esc_attr( $link->slug ); ?>" />
         <span class="list-clipboard prli-clipboard">
           <i class="pl-icon-clipboard pl-list-icon icon-clipboardjs"
              data-clipboard-text="<?php echo esc_url($pretty_link_url); ?>"></i>

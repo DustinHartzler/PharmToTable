@@ -72,7 +72,7 @@ jQuery(document).ready(function($) {
     } else {
       $flyoutMenu.removeClass( 'out' );
     }
-  }, 50 );
+  } );
 
   // $( window ).trigger( 'scroll' );
 });
