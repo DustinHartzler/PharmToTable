@@ -29,6 +29,7 @@ describe( 'useStoreCart', () => {
 	const previewCartData = {
 		cartCoupons: previewCart.coupons,
 		cartItems: previewCart.items,
+		cartFees: previewCart.fees,
 		cartItemsCount: previewCart.items_count,
 		cartItemsWeight: previewCart.items_weight,
 		cartNeedsPayment: previewCart.needs_payment,
@@ -62,6 +63,7 @@ describe( 'useStoreCart', () => {
 			country: '',
 		},
 		shippingRates: previewCart.shipping_rates,
+		extensions: {},
 		shippingRatesLoading: false,
 		cartHasCalculatedShipping: true,
 	};
@@ -73,6 +75,7 @@ describe( 'useStoreCart', () => {
 	const mockCartData = {
 		coupons: [],
 		items: mockCartItems,
+		fees: [],
 		itemsCount: 1,
 		itemsWeight: 10,
 		needsPayment: true,
@@ -81,6 +84,8 @@ describe( 'useStoreCart', () => {
 		shippingAddress: mockShippingAddress,
 		shippingRates: [],
 		hasCalculatedShipping: true,
+		extensions: {},
+		errors: [],
 	};
 	const mockCartTotals = {
 		currency_code: 'USD',
@@ -98,12 +103,15 @@ describe( 'useStoreCart', () => {
 		cartTotals: mockCartTotals,
 		cartIsLoading: mockCartIsLoading,
 		cartErrors: mockCartErrors,
+		cartFees: [],
 		billingAddress: {},
 		shippingAddress: mockShippingAddress,
 		shippingRates: [],
+		extensions: {},
 		shippingRatesLoading: false,
 		cartHasCalculatedShipping: true,
 		receiveCart: undefined,
+		paymentRequirements: [],
 	};
 
 	const getWrappedComponents = ( Component ) => (

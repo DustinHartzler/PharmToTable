@@ -36,11 +36,11 @@ const StripeComponent = ( props ) => {
 const StripeLabel = ( props ) => {
 	const { PaymentMethodLabel } = props.components;
 
-	return (
-		<PaymentMethodLabel
-			text={ __( 'Credit / Debit Card', 'woo-gutenberg-products-block' ) }
-		/>
-	);
+	const labelText = getStripeServerData().title
+		? getStripeServerData().title
+		: __( 'Credit / Debit Card', 'woo-gutenberg-products-block' );
+
+	return <PaymentMethodLabel text={ labelText } />;
 };
 
 const cardIcons = getStripeCreditCardIcons();
@@ -56,7 +56,9 @@ const stripeCcPaymentMethod = {
 		'woo-gutenberg-products-block'
 	),
 	supports: {
-		savePaymentInfo: getStripeServerData().allowSavedCards,
+		showSavedCards: getStripeServerData().showSavedCards,
+		showSaveOption: getStripeServerData().showSaveOption,
+		features: getStripeServerData()?.supports ?? [],
 	},
 };
 

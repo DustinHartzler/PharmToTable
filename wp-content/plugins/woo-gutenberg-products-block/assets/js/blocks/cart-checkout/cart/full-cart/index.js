@@ -5,20 +5,23 @@
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import {
-	SubtotalsItem,
-	TotalsFeesItem,
-	TotalsCouponCodeInput,
-	TotalsDiscountItem,
+	TotalsCoupon,
+	TotalsDiscount,
 	TotalsFooterItem,
-	TotalsShippingItem,
-	TotalsTaxesItem,
+	TotalsShipping,
 } from '@woocommerce/base-components/cart-checkout';
+import {
+	Subtotal,
+	TotalsFees,
+	TotalsTaxes,
+	ExperimentalOrderMeta,
+} from '@woocommerce/blocks-checkout';
+
+import { getCurrencyFromPriceResponse } from '@woocommerce/price-format';
 import {
 	COUPONS_ENABLED,
 	DISPLAY_CART_PRICES_INCLUDING_TAX,
 } from '@woocommerce/block-settings';
-import { getCurrencyFromPriceResponse } from '@woocommerce/base-utils';
-import { CartExpressPayment } from '@woocommerce/base-components/payment-methods';
 import {
 	useStoreCartCoupons,
 	useStoreCart,
@@ -42,6 +45,7 @@ import { CartProvider } from '@woocommerce/base-context';
 import CheckoutButton from '../checkout-button';
 import CartLineItemsTitle from './cart-line-items-title';
 import CartLineItemsTable from './cart-line-items-table';
+import { CartExpressPayment } from '../../payment-methods';
 
 import './style.scss';
 
@@ -64,6 +68,7 @@ const Cart = ( { attributes } ) => {
 
 	const {
 		cartItems,
+		cartFees,
 		cartTotals,
 		cartIsLoading,
 		cartItemsCount,
@@ -100,68 +105,74 @@ const Cart = ( { attributes } ) => {
 	} );
 
 	return (
-		<SidebarLayout className={ cartClassName }>
-			<Main className="wc-block-cart__main">
-				<CartLineItemsTitle itemCount={ cartItemsCount } />
-				<CartLineItemsTable
-					lineItems={ cartItems }
-					isLoading={ cartIsLoading }
-				/>
-			</Main>
-			<Sidebar className="wc-block-cart__sidebar">
-				<Title headingLevel="2" className="wc-block-cart__totals-title">
-					{ __( 'Cart totals', 'woo-gutenberg-products-block' ) }
-				</Title>
-				<SubtotalsItem
-					currency={ totalsCurrency }
-					values={ cartTotals }
-				/>
-				<TotalsFeesItem
-					currency={ totalsCurrency }
-					values={ cartTotals }
-				/>
-				<TotalsDiscountItem
-					cartCoupons={ appliedCoupons }
-					currency={ totalsCurrency }
-					isRemovingCoupon={ isRemovingCoupon }
-					removeCoupon={ removeCoupon }
-					values={ cartTotals }
-				/>
-				{ cartNeedsShipping && (
-					<TotalsShippingItem
-						showCalculator={ isShippingCalculatorEnabled }
-						showRateSelector={ true }
-						values={ cartTotals }
-						currency={ totalsCurrency }
+		<>
+			<CartLineItemsTitle itemCount={ cartItemsCount } />
+			<SidebarLayout className={ cartClassName }>
+				<Main className="wc-block-cart__main">
+					<CartLineItemsTable
+						lineItems={ cartItems }
+						isLoading={ cartIsLoading }
 					/>
-				) }
-				{ ! DISPLAY_CART_PRICES_INCLUDING_TAX && (
-					<TotalsTaxesItem
+				</Main>
+				<Sidebar className="wc-block-cart__sidebar">
+					<Title
+						headingLevel="2"
+						className="wc-block-cart__totals-title"
+					>
+						{ __( 'Cart totals', 'woo-gutenberg-products-block' ) }
+					</Title>
+					<Subtotal
 						currency={ totalsCurrency }
 						values={ cartTotals }
 					/>
-				) }
-				{ COUPONS_ENABLED && (
-					<TotalsCouponCodeInput
-						onSubmit={ applyCoupon }
-						isLoading={ isApplyingCoupon }
+					<TotalsFees
+						currency={ totalsCurrency }
+						cartFees={ cartFees }
 					/>
-				) }
-				<TotalsFooterItem
-					currency={ totalsCurrency }
-					values={ cartTotals }
-				/>
-				<div className="wc-block-cart__payment-options">
-					{ cartNeedsPayment && <CartExpressPayment /> }
-					<CheckoutButton
-						link={ getSetting(
-							'page-' + attributes?.checkoutPageId,
-							false
-						) }
+					<TotalsDiscount
+						cartCoupons={ appliedCoupons }
+						currency={ totalsCurrency }
+						isRemovingCoupon={ isRemovingCoupon }
+						removeCoupon={ removeCoupon }
+						values={ cartTotals }
 					/>
-				</div>
-			</Sidebar>
-		</SidebarLayout>
+					{ cartNeedsShipping && (
+						<TotalsShipping
+							showCalculator={ isShippingCalculatorEnabled }
+							showRateSelector={ true }
+							values={ cartTotals }
+							currency={ totalsCurrency }
+						/>
+					) }
+					{ ! DISPLAY_CART_PRICES_INCLUDING_TAX && (
+						<TotalsTaxes
+							currency={ totalsCurrency }
+							values={ cartTotals }
+						/>
+					) }
+					{ COUPONS_ENABLED && (
+						<TotalsCoupon
+							onSubmit={ applyCoupon }
+							isLoading={ isApplyingCoupon }
+						/>
+					) }
+					<TotalsFooterItem
+						currency={ totalsCurrency }
+						values={ cartTotals }
+					/>
+					<ExperimentalOrderMeta.Slot />
+					<div className="wc-block-cart__payment-options">
+						{ cartNeedsPayment && <CartExpressPayment /> }
+						<CheckoutButton
+							link={ getSetting(
+								'page-' + attributes?.checkoutPageId,
+								false
+							) }
+						/>
+					</div>
+				</Sidebar>
+			</SidebarLayout>
+		</>
 	);
 };
 
