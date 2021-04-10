@@ -37,7 +37,6 @@ class Code_Snippets_List_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 		global $status, $page;
-		$screen = get_current_screen();
 		$this->is_network = is_network_admin();
 
 		/* Determine the status */
@@ -60,11 +59,7 @@ class Code_Snippets_List_Table extends WP_List_Table {
 			'option'  => 'snippets_per_page',
 		) );
 
-		/* Set the table columns hidden in Screen Options by default */
-		if ( false === get_user_option( "manage{$screen->id}columnshidden" ) ) {
-			$user = wp_get_current_user();
-			update_user_option( $user->ID, "manage{$screen->id}columnshidden", array( 'id' ) );
-		}
+		add_filter( 'default_hidden_columns', array( $this, 'default_hidden_columns' ) );
 
 		/* Strip the result query arg from the URL */
 		$_SERVER['REQUEST_URI'] = remove_query_arg( 'result' );
@@ -82,6 +77,26 @@ class Code_Snippets_List_Table extends WP_List_Table {
 			'plural'   => 'snippets',
 			'singular' => 'snippet',
 		) );
+	}
+
+	/**
+	 * Ensure certain columns are hidden by default for this screen.
+	 *
+	 * @param array $hidden
+	 *
+	 * @return array
+	 */
+	public function default_hidden_columns( $hidden ) {
+		$hidden[] = 'id';
+		return $hidden;
+	}
+
+	/**
+	 * Set the 'name' column as the primary column.
+	 * @return string
+	 */
+	protected function get_default_primary_column_name() {
+		return 'name';
 	}
 
 	/**
@@ -850,9 +865,6 @@ class Code_Snippets_List_Table extends WP_List_Table {
 
 		wp_reset_vars( array( 'orderby', 'order', 's' ) );
 
-		$screen = get_current_screen();
-		$user = get_current_user_id();
-
 		/* First, lets process the submitted actions */
 		$this->process_requested_actions();
 
@@ -935,18 +947,15 @@ class Code_Snippets_List_Table extends WP_List_Table {
 		/* Get the current data */
 		$data = $snippets[ $status ];
 
-		/* Decide how many records per page to show by
-		   getting the user's setting in the Screen Options panel */
-		$sort_by = $screen->get_option( 'per_page', 'option' );
-		$per_page = get_user_meta( $user, $sort_by, true );
+		/* Decide how many records per page to show by getting the user's setting in the Screen Options panel */
+		$sort_by = $this->screen->get_option( 'per_page', 'option' );
+		$per_page = get_user_meta( get_current_user_id(), $sort_by, true );
 
 		if ( empty( $per_page ) || $per_page < 1 ) {
-			$per_page = $screen->get_option( 'per_page', 'default' );
+			$per_page = $this->screen->get_option( 'per_page', 'default' );
 		}
 
 		$per_page = (int) $per_page;
-
-		$this->_column_headers = $this->get_column_info();
 
 		usort( $data, array( $this, 'usort_reorder_callback' ) );
 
