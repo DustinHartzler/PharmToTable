@@ -558,7 +558,7 @@ class WC_Subscriptions_Switcher {
 			$subscription = wcs_get_subscription( $subscription );
 		}
 
-		$product = wc_get_product( $item['product_id'] );
+		$product               = wc_get_product( $item['product_id'] );
 		$parent_products       = WC_Subscriptions_Product::get_visible_grouped_parent_product_ids( $product );
 		$additional_query_args = array();
 
@@ -569,7 +569,13 @@ class WC_Subscriptions_Switcher {
 			$switch_url = get_permalink( $product->get_id() );
 
 			if ( ! empty( $_GET ) && is_product() ) {
-				$product_variations    = $product->get_variation_attributes();
+				$product_variations = array();
+
+				// Attributes in GET args are prefixed with attribute_ so to make sure we compare them correctly, apply the same prefix.
+				foreach ( $product->get_variation_attributes() as $attribute => $value ) {
+					$product_variations[ wcs_maybe_prefix_key( strtolower( $attribute ), 'attribute_' ) ] = $value;
+				}
+
 				$additional_query_args = array_intersect_key( $_GET, $product_variations );
 			}
 		}
@@ -840,7 +846,7 @@ class WC_Subscriptions_Switcher {
 
 				if ( wcs_is_subscription( $order ) ) {
 					if ( ! empty( $switch_details['item_id'] ) ) {
-						$order_item->add_meta_data( '_switched_subscription_item_id', $switch_details['item_id'] );
+						$order_item->update_meta_data( '_switched_subscription_item_id', $switch_details['item_id'] );
 					}
 				} else {
 					$sign_up_fee_prorated = WC()->cart->cart_contents[ $cart_item_key ]['data']->get_meta( '_subscription_sign_up_fee_prorated', true );
@@ -1735,8 +1741,6 @@ class WC_Subscriptions_Switcher {
 	 * @since 2.1
 	 */
 	public static function process_subscription_switches( $order_id, $order_old_status, $order_new_status ) {
-		global $wpdb;
-
 		$order            = wc_get_order( $order_id );
 		$switch_processed = wcs_get_objects_property( $order, 'completed_subscription_switch' );
 
@@ -1749,16 +1753,17 @@ class WC_Subscriptions_Switcher {
 		if ( $order_completed ) {
 			try {
 				// Start transaction if available
-				$wpdb->query( 'START TRANSACTION' );
+				$transaction = new WCS_SQL_Transaction();
+				$transaction->start();
 
 				self::complete_subscription_switches( $order );
 
 				wcs_set_objects_property( $order, 'completed_subscription_switch', 'true' );
 
-				$wpdb->query( 'COMMIT' );
+				$transaction->commit();
 
 			} catch ( Exception $e ) {
-				$wpdb->query( 'ROLLBACK' );
+				$transaction->rollback();
 				throw $e;
 			}
 
@@ -2221,13 +2226,14 @@ class WC_Subscriptions_Switcher {
 	 * @param WC_Subscription $subscription         The Subscription.
 	 * @param WC_Order_Item   $subscription_item    The current line item on the subscription to map back through the related orders.
 	 * @param string          $include_sign_up_fees Optional. Whether to include the sign-up fees paid. Can be 'include_sign_up_fees' or 'exclude_sign_up_fees'. Default 'include_sign_up_fees'.
+	 * @param WC_Order[]      $orders_to_include    Optional. The orders to include in the total.
 	 *
 	 * @return float The total amount paid for an existing subscription line item.
 	 */
-	public static function calculate_total_paid_since_last_order( $subscription, $subscription_item, $include_sign_up_fees = 'include_sign_up_fees' ) {
+	public static function calculate_total_paid_since_last_order( $subscription, $subscription_item, $include_sign_up_fees = 'include_sign_up_fees', $orders_to_include = array() ) {
 		$found_item      = false;
 		$item_total_paid = 0;
-		$orders          = $subscription->get_related_orders( 'all', array( 'parent', 'renewal', 'switch' ) );
+		$orders          = empty( $orders_to_include ) ? $subscription->get_related_orders( 'all', array( 'parent', 'renewal', 'switch' ) ) : $orders_to_include;
 
 		// We need the orders sorted by the date they were paid, with the newest first.
 		wcs_sort_objects( $orders, 'date_paid', 'descending' );
