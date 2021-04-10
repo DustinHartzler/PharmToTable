@@ -190,6 +190,7 @@ if(!sbi_js_exists) {
                             num : $self.attr('data-num'),
                             imgRes : $self.attr('data-res'),
                             feedID : $self.attr('data-feedid'),
+                            postID : typeof $self.attr( 'data-postid' ) !== 'undefind' ? $self.attr( 'data-postid' ) : 'unknown',
                             shortCodeAtts : $self.attr('data-shortcode-atts'),
                             resizingEnabled : (flags.indexOf('resizeDisable') === -1),
                             imageLoadEnabled : (flags.indexOf('imageLoadDisable') === -1),
@@ -199,6 +200,7 @@ if(!sbi_js_exists) {
                             gdpr : (flags.indexOf('gdpr') > -1),
                             overrideBlockCDN : (flags.indexOf('overrideBlockCDN') > -1),
                             consentGiven : false,
+                            locator : (flags.indexOf('locator') > -1),
                             autoMinRes : 1,
                             general : general
                         };
@@ -218,10 +220,15 @@ if(!sbi_js_exists) {
                 // enable header hover action
                 $('.sb_instagram_header').each(function () {
                     var $thisHeader = $(this);
-                    $thisHeader.find('.sbi_header_link').hover(function () {
-                        $thisHeader.find('.sbi_header_img_hover').addClass('sbi_fade_in');
-                    }, function () {
-                        $thisHeader.find('.sbi_header_img_hover').removeClass('sbi_fade_in');
+                    $thisHeader.find('.sbi_header_link').on('mouseenter mouseleave', function(e) {
+                        switch(e.type) {
+                            case 'mouseenter':
+                                $thisHeader.find('.sbi_header_img_hover').addClass('sbi_fade_in');
+                                break;
+                            case 'mouseleave':
+                                $thisHeader.find('.sbi_header_img_hover').removeClass('sbi_fade_in');
+                                break;
+                        }
                     });
                 });
 
@@ -254,6 +261,7 @@ if(!sbi_js_exists) {
             this.resizedImages = {};
             this.needsResizing = [];
             this.outOfPages = false;
+            this.page = 1;
             this.isInitialized = false;
         }
 
@@ -280,7 +288,7 @@ if(!sbi_js_exists) {
                         sbi_timer = setTimeout(sbi_callback, sbi_ms);
                     };
                 })();
-                jQuery(window).resize(function () {
+                jQuery(window).on('resize',function () {
                     sbi_delay(function () {
                         feed.afterResize();
                     }, 500);
@@ -289,8 +297,6 @@ if(!sbi_js_exists) {
                 $(this.el).find('.sbi_item').each(function() {
                     feed.lazyLoadCheck($(this));
                 });
-
-
             },
             initLayout: function() {
 
@@ -348,11 +354,15 @@ if(!sbi_js_exists) {
                     var $self = jQuery(this);
 
                     //Photo links
-                    //If lightbox is disabled
-                    $self.find('.sbi_photo').hover(function () {
-                        jQuery(this).fadeTo(200, 0.85);
-                    }, function () {
-                        jQuery(this).stop().fadeTo(500, 1);
+                    $self.find('.sbi_photo').on('mouseenter mouseleave', function(e) {
+                        switch(e.type) {
+                            case 'mouseenter':
+                                jQuery(this).fadeTo(200, 0.85);
+                                break;
+                            case 'mouseleave':
+                                jQuery(this).stop().fadeTo(500, 1);
+                                break;
+                        }
                     });
                 }); //End .sbi_item each
 
@@ -436,6 +446,8 @@ if(!sbi_js_exists) {
                         offset: itemOffset,
                         feed_id: feed.settings.feedID,
                         atts: feed.settings.shortCodeAtts,
+                        location: feed.locationGuess(),
+                        post_id: feed.settings.postID,
                         cache_all: cacheAll
                     };
                     var onSuccess = function(data) {
@@ -457,6 +469,18 @@ if(!sbi_js_exists) {
                         }
                     };
                     sbiAjax(submitData,onSuccess);
+                } else if (feed.settings.locator) {
+                    var submitData = {
+                        action: 'sbi_do_locator',
+                        feed_id: feed.settings.feedID,
+                        atts: feed.settings.shortCodeAtts,
+                        location: feed.locationGuess(),
+                        post_id: feed.settings.postID
+                    };
+                    var onSuccess = function(data) {
+
+                    };
+                    sbiAjax(submitData,onSuccess);
                 }
             },
             loadMoreButtonInit: function () {
@@ -472,12 +496,17 @@ if(!sbi_js_exists) {
             getNewPostSet: function () {
                 var $self = $(this.el),
                     feed = this;
+                feed.page ++;
+
                 var itemOffset = $self.find('.sbi_item').length,
                     submitData = {
                         action: 'sbi_load_more_clicked',
                         offset: itemOffset,
+                        page: feed.page,
                         feed_id: feed.settings.feedID,
                         atts: feed.settings.shortCodeAtts,
+                        location: feed.locationGuess(),
+                        post_id: feed.settings.postID,
                         current_resolution: feed.imageResolution
                     };
                 var onSuccess = function (data) {
@@ -677,7 +706,7 @@ if(!sbi_js_exists) {
                         $(this).addClass('sbi_img_error');
                         var sourceFromAPI = ($(this).attr('src').indexOf('media/?size=') > -1 || $(this).attr('src').indexOf('cdninstagram') > -1 || $(this).attr('src').indexOf('fbcdn') > -1)
 
-                        if (!sourceFromAPI) {
+                        if (!sourceFromAPI && feed.settings.consentGiven) {
 
                             if ($(this).closest('.sbi_photo').attr('data-img-src-set') !== 'undefined') {
                                 var srcSet = JSON.parse($(this).closest('.sbi_photo').attr('data-img-src-set').replace(/\\\//g, '/'));
@@ -946,6 +975,8 @@ if(!sbi_js_exists) {
                     this.settings.consentGiven = sbiCmplzGetCookie('complianz_consent_status') === 'allow';
                 } else if (typeof window.Cookiebot !== "undefined") { // Cookiebot by Cybot A/S
                     this.settings.consentGiven = Cookiebot.consented;
+                } else if (typeof window.BorlabsCookie !== 'undefined') { // Borlabs Cookie by Borlabs
+                    this.settings.consentGiven = window.BorlabsCookie.checkCookieConsent('instagram');
                 }
 
                 var evt = jQuery.Event('sbicheckconsent');
@@ -963,7 +994,23 @@ if(!sbi_js_exists) {
                         feed.afterResize();
                     },500);
                 }
-            }
+            },
+            locationGuess: function() {
+                var $feed = $(this.el),
+                    location = 'content';
+
+                if ($feed.closest('footer').length) {
+                    location = 'footer';
+                } else if ($feed.closest('.header').length
+                    || $feed.closest('header').length) {
+                    location = 'header';
+                } else if ($feed.closest('.sidebar').length
+                    || $feed.closest('aside').length) {
+                    location = 'sidebar';
+                }
+
+                return location;
+            },
         };
 
         window.sbi_init = function() {
@@ -1019,7 +1066,7 @@ if(!sbi_js_exists) {
         sbi_init();
 
         // Cookie Notice by dFactory
-        $('#cookie-notice a').click(function() {
+        $('#cookie-notice a').on('click',function() {
             setTimeout(function() {
                 $.each(window.sbi.feeds,function(index){
                     window.sbi.feeds[ index ].afterConsentToggled();
@@ -1028,7 +1075,7 @@ if(!sbi_js_exists) {
         });
 
         // GDPR Cookie Consent by WebToffee
-        $('#cookie-law-info-bar a').click(function() {
+        $('#cookie-law-info-bar a').on('click',function() {
             setTimeout(function() {
                 $.each(window.sbi.feeds,function(index){
                     window.sbi.feeds[ index ].afterConsentToggled();
@@ -1037,7 +1084,7 @@ if(!sbi_js_exists) {
         });
 
         // GDPR Cookie Consent by WebToffee
-        $('.cli-user-preference-checkbox').click(function(){
+        $('.cli-user-preference-checkbox').on('click',function(){
             setTimeout(function() {
                 $.each(window.sbi.feeds,function(index){
                     window.sbi.feeds[ index ].settings.consentGiven = false;
@@ -1064,6 +1111,14 @@ if(!sbi_js_exists) {
 
         // Complianz by Really Simple Plugins
         $(document).on('cmplzRevoke', function (event) {
+            $.each(window.sbi.feeds,function(index){
+                window.sbi.feeds[ index ].settings.consentGiven = false;
+                window.sbi.feeds[ index ].afterConsentToggled();
+            });
+        });
+
+        // Borlabs Cookie by Borlabs
+        $(document).on('borlabs-cookie-consent-saved', function (event) {
             $.each(window.sbi.feeds,function(index){
                 window.sbi.feeds[ index ].settings.consentGiven = false;
                 window.sbi.feeds[ index ].afterConsentToggled();

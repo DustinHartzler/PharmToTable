@@ -173,7 +173,12 @@ class SB_Instagram_Post
 			$this->db_id = $wpdb->insert_id;
 			$this->insert_sbi_instagram_feeds_posts( $transient_name );
 		} else {
-			// log error
+			global $sb_instagram_posts_manager;
+
+			$error = $wpdb->last_error;
+			$query = $wpdb->last_query;
+
+			$sb_instagram_posts_manager->add_error( 'storage', __( 'Error inserting post.', 'instagram-feed' ) . ' ' . $error . '<br><code>' . $query . '</code>' );
 		}
 
 		return true;
@@ -236,6 +241,8 @@ class SB_Instagram_Post
 
 					// not uncommon for the image editor to not work using it this way
 					if ( ! is_wp_error( $image_editor ) ) {
+						$image_editor->set_quality(80);
+
 						$sizes = $image_editor->get_size();
 
 						$image_editor->resize( $image_size, null );
@@ -246,25 +253,26 @@ class SB_Instagram_Post
 
 						if ( ! $saved_image ) {
 							global $sb_instagram_posts_manager;
+							$details =  __( 'Error saving edited image.', 'instagram-feed' ) . ' ' . $full_file_name;
+							$sb_instagram_posts_manager->add_error( 'image_editor', $details );
 
-							$sb_instagram_posts_manager->add_error( 'image_editor_save', array(
-								__( 'Error saving edited image.', 'instagram-feed' ),
-								$full_file_name
-							) );
 						} else {
 							$one_successful_image_resize = true;
 						}
 					} else {
-						global $sb_instagram_posts_manager;
 
 						$message = __( 'Error editing image.', 'instagram-feed' );
 						if ( isset( $image_editor ) && isset( $image_editor->errors ) ) {
 							foreach ( $image_editor->errors as $key => $item ) {
-								$message .= ' ' . $key . '- ' . $item[0] . ' |';
+								$message .= ' ' . $key . ' - ' . $item[0] . ' |';
+							}
+							if ( isset( $image_editor ) && isset( $image_editor->error_data ) ) {
+								$message .= ' ' . sbi_json_encode( $image_editor->error_data ) . ' |';
 							}
 						}
 
-						$sb_instagram_posts_manager->add_error( 'image_editor', array( $file_name, $message ) );
+						global $sb_instagram_posts_manager;
+						$sb_instagram_posts_manager->add_error( 'image_editor', $message );
 					}
 
 				}
@@ -342,7 +350,7 @@ class SB_Instagram_Post
 	 *
 	 * @since 2.0/4.0
 	 */
-	public function update_db_data( $update_last_requested = true, $transient_name = false, $image_sizes, $upload_dir, $upload_url, $timestamp_for_update = false ) {
+	public function update_db_data( $update_last_requested = true, $transient_name = false, $image_sizes = array(), $upload_dir = '', $upload_url ='', $timestamp_for_update = false ) {
 
 		if ( empty( $this->db_id ) ) {
 			return false;
@@ -396,7 +404,7 @@ class SB_Instagram_Post
 				$error = $wpdb->last_error;
 				$query = $wpdb->last_query;
 
-				$sb_instagram_posts_manager->add_error( 'database_update_post', array( __( 'Error updating post.', 'instagram-feed' ), $error . '<br><code>' . $query . '</code>' ) );
+				$sb_instagram_posts_manager->add_error( 'storage', __( 'Error updating post.', 'instagram-feed' ) . ' ' . $error . '<br><code>' . $query . '</code>' );
 			}
 		}
 
@@ -419,7 +427,15 @@ class SB_Instagram_Post
 		$feed_id = $feed_id_array[0];
 		$results = $wpdb->get_results( $wpdb->prepare( "SELECT feed_id FROM $table_name WHERE instagram_id = %s AND feed_id = %s LIMIT 1", $this->instagram_post_id, $feed_id ), ARRAY_A );
 
-		return isset( $results[0]['feed_id'] );
+		if ( isset( $results[0]['feed_id'] ) ) {
+			return true;
+		}
+		if ( isset( $this->instagram_api_data['term'] ) ) {
+			$results = $wpdb->get_results( $wpdb->prepare( "SELECT hashtag FROM $table_name WHERE instagram_id = %s AND hashtag = %s LIMIT 1", $this->instagram_post_id, strtolower( str_replace( '#', '', $this->instagram_api_data['term'] ) ) ), ARRAY_A );
+			return isset( $results[0]['hashtag'] );
+		}
+
+		return false;
 	}
 
 	/**
@@ -442,16 +458,24 @@ class SB_Instagram_Post
 			$entry_data = array(
 				$this->db_id,
 				"'" . esc_sql( $this->instagram_api_data['id'] ) . "'",
-				"'" . esc_sql( $feed_id ) . "'"
+				"'" . esc_sql( $feed_id ) . "'",
 			);
-			$entry_string = implode( ',',$entry_data );
 
-			$error = $wpdb->query( "INSERT INTO $table_name
+			if ( ! empty( $this->instagram_api_data['term'] ) ) {
+				$entry_data[] = "'" . esc_sql( strtolower( str_replace( '#', '', $this->instagram_api_data['term'] ) ) ) . "'";
+				$entry_string = implode( ',',$entry_data );
+
+				$error = $wpdb->query( "INSERT INTO $table_name
+      	(id,instagram_id,feed_id,hashtag) VALUES ($entry_string);" );
+			} else {
+				$entry_string = implode( ',',$entry_data );
+				$error = $wpdb->query( "INSERT INTO $table_name
       	(id,instagram_id,feed_id) VALUES ($entry_string);" );
+			}
 		} else {
 			global $sb_instagram_posts_manager;
 
-			$sb_instagram_posts_manager->add_error( 'database_insert_post', array( __( 'Error inserting post.', 'instagram-feed' ), __( 'No database ID.', 'instagram-feed' ) ) );
+			$sb_instagram_posts_manager->add_error( 'storage', __( 'Error inserting post.', 'instagram-feed' ) . ' ' . __( 'No database ID.', 'instagram-feed' ) );
 			return false;
 		}
 
@@ -462,8 +486,7 @@ class SB_Instagram_Post
 			global $sb_instagram_posts_manager;
 			$error = $wpdb->last_error;
 			$query = $wpdb->last_query;
-
-			$sb_instagram_posts_manager->add_error( 'database_insert_post', array( __( 'Error inserting post.', 'instagram-feed' ), $error . '<br><code>' . $query . '</code>' ) );
+			$sb_instagram_posts_manager->add_error( 'storage', __( 'Error inserting post.', 'instagram-feed' ) . ' ' . $error . '<br><code>' . $query . '</code>' );
 		}
 	}
 

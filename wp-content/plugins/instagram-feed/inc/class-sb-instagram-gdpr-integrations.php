@@ -105,7 +105,7 @@ class SB_Instagram_GDPR_Integrations {
 	public static function gdpr_tests_successful( $retest = false ) {
 		$sbi_statuses_option = get_option( 'sbi_statuses', array() );
 
-		if ( ! isset( $sbi_statuses_option['gdpr'] ) || $retest ) {
+		if ( ! isset( $sbi_statuses_option['gdpr']['image_editor'] ) || $retest ) {
 			$test_image = trailingslashit( SBI_PLUGIN_URL ) . 'img/placeholder.png';
 
 			$image_editor = wp_get_image_editor( $test_image );
@@ -169,7 +169,7 @@ class SB_Instagram_GDPR_Integrations {
 		}
 
 		if ( isset( $_GET['tab'] ) && $_GET['tab'] !== 'support' ) {
-			$errors[] = '<a href="?page=sb-instagram-feed&amp;tab=customize-advanced&amp;retest=1" class="button button-secondary">' . __( 'Retest', 'instagram-feed' ) . '</a>';
+			$errors[] = '<a href="?page=sb-instagram-feed&amp;tab=customize&amp;retest=1" class="button button-secondary">' . __( 'Retest', 'instagram-feed' ) . '</a>';
 		}
 
 		return implode( '<br>', $errors );

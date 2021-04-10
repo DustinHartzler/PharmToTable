@@ -135,17 +135,11 @@ class SB_Instagram_Cron_Updater
 			$post_data = $instagram_feed->get_post_data();
 			$post_data = array_slice( $post_data, 0, $settings['num'] );
 
-			if ( $settings['favor_local'] ) {
-				$image_sizes = array(
-					'personal' => array( 'full' => 640, 'low' => 320 ),
-					'business' => array( 'full' => 640, 'low' => 320 )
-				);
-			} else {
-				$image_sizes = array(
-					'personal' => array( 'low' => 320 ),
-					'business' => array( 'full' => 640, 'low' => 320 )
-				);
-			}
+			$image_sizes = array(
+				'personal' => array( 'full' => 640, 'low' => 320, 'thumb' => 150 ),
+				'business' => array( 'full' => 640, 'low' => 320, 'thumb' => 150 )
+			);
+
 			$post_set = new SB_Instagram_Post_Set( $post_data, $transient_name, NULL, $image_sizes );
 
 			$post_set->maybe_save_update_and_resize_images_for_posts();
