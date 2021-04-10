@@ -3,7 +3,7 @@
 	<?php $connection = TPM_Connection::get_instance() ?>
 	<?php if ( $connection->is_connected() ) : ?>
 		<a class="tpm-disconnect-account" href="<?php echo $connection->get_disconnect_url() ?>">
-			<?php echo __( 'Disconnect TTW Account', Thrive_Product_Manager::T ) ?>
+			<?php echo __( 'Disconnect Thrivethemes.com account', Thrive_Product_Manager::T ) ?>
 			<span><?php echo $connection->get_email() ?></span>
 		</a>
 	<?php endif; ?>

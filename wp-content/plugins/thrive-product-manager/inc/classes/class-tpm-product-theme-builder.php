@@ -38,7 +38,15 @@ class TPM_Product_Theme_Builder extends TPM_Product_Theme {
 		if ( ! is_wp_error( $result ) ) {
 			$info = @unserialize( wp_remote_retrieve_body( $result ) );
 
-			return ! empty( $info['package'] ) ? $info['package'] : new WP_Error( '404', 'Bad request' );
+			if ( Thrive_Product_Manager::is_debug_mode() ) {
+				$package = defined( 'TTB_TEST_ARCHIVE' ) ? TTB_TEST_ARCHIVE : '';
+			}
+
+			if ( empty( $package ) ) {
+				$package = ! empty( $info['package'] ) ? $info['package'] : new WP_Error( '404', 'Bad request' );
+			}
+
+			return $package;
 		}
 
 		return new WP_Error( '400', $result->get_error_message() );
@@ -51,6 +59,10 @@ class TPM_Product_Theme_Builder extends TPM_Product_Theme {
 	 */
 	public function activate() {
 
+		if ( ! $this->previously_installed ) {
+			return true;
+		}
+
 		$activated = $this->is_activated();
 
 		if ( ! $activated && $this->is_installed() ) {
@@ -62,6 +74,25 @@ class TPM_Product_Theme_Builder extends TPM_Product_Theme {
 		}
 
 		return $activated;
+	}
+
+	/**
+	 * Install Theme Builder
+	 *
+	 * @param array $credentials
+	 *
+	 * @return array|bool|WP_Error|WP_Term
+	 */
+	public function install( $credentials ) {
+		$installed = parent::install( $credentials );
+
+		/* If the theme builder install went ok, we will install also the default skin */
+		if ( $installed && ! $this->previously_installed && ! is_wp_error( $installed ) ) {
+			$skin      = TPM_Product_List::get_instance()->get_product_instance( TPM_Product_Skin::DEFAULT_TAG );
+			$installed = $skin->install( $credentials );
+		}
+
+		return $installed;
 	}
 
 	/**
@@ -84,5 +115,49 @@ class TPM_Product_Theme_Builder extends TPM_Product_Theme {
 		$theme = wp_get_theme( 'thrive-theme' );
 
 		return ! is_wp_error( $theme->errors() );
+	}
+
+	/**
+	 * Change the response after installing / activating theme builder
+	 *
+	 * @param array $data
+	 *
+	 * @return array|mixed
+	 */
+	public function before_response( $data ) {
+		return $this->get_response_status( empty( $this->previously_installed ) ? 'installed' : 'ready' );
+	}
+
+	public function get_status() {
+
+		if ( ! empty( $this->status ) ) {
+			return $this->status;
+		}
+
+		if ( ! $this->is_purchased() ) {
+			$this->status = self::AVAILABLE;
+
+			return $this->status;
+		}
+
+		if ( ! $this->is_installed() ) {
+			$this->status = self::TO_INSTALL;
+
+			return $this->status;
+		}
+
+		if ( ! $this->is_activated() ) {
+			return $this->status = self::TO_ACTIVATE;
+		}
+
+		if ( ! $this->is_licensed() ) {
+			$this->status = self::TO_LICENSE;
+
+			return $this->status;
+		}
+
+		$this->status = self::READY;
+
+		return $this->status;
 	}
 }

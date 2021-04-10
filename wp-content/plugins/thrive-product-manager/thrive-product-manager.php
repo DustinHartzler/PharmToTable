@@ -4,13 +4,13 @@
  * Plugin Name: Thrive Product Manager
  * Plugin URI: http://thrivethemes.com
  * Description: Connect this site with Thrive Themes account to install and activate Thrive product.
- * Version: 1.2.4
+ * Version: 1.2.5
  * Author: Thrive Themes
  * Author URI: http://thrivethemes.com
  */
 class Thrive_Product_Manager {
 
-	const V = '1.2.4';
+	const V = '1.2.5';
 	const T = 'thrive_product_manager';
 
 	protected static $_instance;
@@ -53,6 +53,8 @@ class Thrive_Product_Manager {
 
 		//ajax
 		add_action( 'wp_ajax_tpm_install_and_activate_product', array( $this, 'try_install_and_activate_product' ) );
+		add_action( 'wp_ajax_tpm_activate_products', array( $this, 'try_activate_products' ) );
+		add_action( 'wp_ajax_tpm_activate_product', array( $this, 'try_activate_product' ) );
 
 		//rest api
 		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
@@ -400,7 +402,6 @@ class Thrive_Product_Manager {
 		}
 
 		//ACTIVATE PRODUCT
-
 		$activated = $product->activate();
 
 		if ( is_wp_error( $activated ) ) {
@@ -413,9 +414,94 @@ class Thrive_Product_Manager {
 
 		$data['status']  = 'ready';
 		$data['message'] = sprintf( '%s is now ready to use', $product->get_name() );
+
+		/* The product can change the response before this is returned */
+		$data = $product->before_response( $data );
+
 		wp_send_json_success( $data );
 
 		die;
+	}
+
+	/**
+	 * Activate products endpoint
+	 */
+	public function try_activate_products() {
+		$data = array();
+
+		if ( empty( $_REQUEST['tags'] ) ) {
+			wp_send_json_error( $data );
+		}
+
+		$productList = TPM_Product_List::get_instance();
+		$products    = array();
+
+		foreach ( $_REQUEST['tags'] as $tag ) {
+			$product = $productList->get_product_instance( $tag );
+			if ( $product->get_tag() === 'ttb' ) {
+				$product->set_previously_installed( true );
+			}
+			$product->activate();
+			if ( $product->is_licensed() ) {
+				$data[ $product->get_tag() ] = true;
+				continue;
+			}
+			$product->search_license();
+			$products[] = $product;
+		}
+
+		$licensedProducts = TPM_License_Manager::get_instance()->activate_licenses( $products );
+		if ( ! empty( $licensedProducts ) ) {
+			$data = array_merge( $data, $licensedProducts );
+		}
+
+		TPM_Product_List::get_instance()->clear_cache();
+		TPM_License_Manager::get_instance()->clear_cache();
+
+		if ( empty( $data ) ) {
+			wp_send_json_error( $_REQUEST['tags'] );
+		}
+
+		wp_send_json_success( $data );
+	}
+
+	/**
+	 * Activate a single product endpoint
+	 */
+	public function try_activate_product() {
+		$activationOk = false;
+
+		if ( empty( $_REQUEST['tag'] ) ) {
+			wp_send_json_error( array() );
+		}
+
+		$productList = TPM_Product_List::get_instance();
+		$product     = $productList->get_product_instance( $_REQUEST['tag'] );
+		$product->activate();
+
+		if ( $product->is_licensed() ) {
+			$activationOk = true;
+		} else {
+			$product->search_license();
+			$licensedProducts = TPM_License_Manager::get_instance()->activate_licenses( array( $product ) );
+
+			if ( ! empty( $licensedProducts ) ) {
+				$activationOk = true;
+			}
+		}
+
+		$productList->clear_cache();
+		TPM_License_Manager::get_instance()->clear_cache();
+
+		if ( $activationOk ) {
+			wp_send_json_success( array(
+				'status'  => 'ready',
+				'tag'     => $product->get_tag(),
+				'message' => sprintf( '%s is now ready to use', $product->get_name() ),
+			) );
+		} else {
+			wp_send_json_error( $_REQUEST['tag'] );
+		}
 	}
 
 	public function try_activate_manually() {
@@ -471,8 +557,8 @@ class Thrive_Product_Manager {
 	public function rest_api_init() {
 
 		register_rest_route( 'thrive-product-manager/v1', '/deactivate/(?P<id>\d+)', array(
-			'methods'  => 'POST',
-			'callback' => array( TPM_License_Manager::get_instance(), 'license_deactivate' ),
+			'methods'             => 'POST',
+			'callback'            => array( TPM_License_Manager::get_instance(), 'license_deactivate' ),
 			'permission_callback' => '__return_true',
 		) );
 	}

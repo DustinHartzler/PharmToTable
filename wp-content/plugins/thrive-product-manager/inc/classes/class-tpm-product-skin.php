@@ -8,6 +8,11 @@
 class TPM_Product_Skin extends TPM_Product_Theme {
 
 	/**
+	 * The default skin which will be installed together with the theme
+	 */
+	const DEFAULT_TAG = 'q1qj01';
+
+	/**
 	 * @var WP_Term
 	 */
 	protected $ttb_skin;
@@ -40,6 +45,9 @@ class TPM_Product_Skin extends TPM_Product_Theme {
 	 */
 	public function install( $credentials ) {
 
+		/* Before installing the skin we need to make sure the theme code is available */
+		$this->include_thrive_theme();
+
 		$response = $this->_install_ttb_skin( $this->api_slug );
 
 		if ( true === $response instanceof WP_Term ) {
@@ -47,6 +55,46 @@ class TPM_Product_Skin extends TPM_Product_Theme {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Include TTB & TAR code in order to be able to do the skin install without the theme being active
+	 * Hope this behaves well in the wild :)
+	 */
+	public function include_thrive_theme() {
+
+		global $thrive_theme;
+
+		if ( false === empty( $thrive_theme ) ) {
+			return;
+		}
+
+		error_reporting( E_ALL );
+		ini_set( 'display_errors', 1 );
+
+		/**
+		 * We are changing this constant because in the theme we are using get_template_directory() - which is based on the active theme
+		 * And in this case the theme is not active
+		 */
+		defined( 'THEME_PATH' ) || define( 'THEME_PATH', get_theme_root() . '/thrive-theme' );
+		defined( 'TVE_TCB_ROOT_PATH ' ) || define( 'TVE_TCB_ROOT_PATH ', get_theme_root() . '/thrive-theme/architect/' );
+
+		if ( ! defined( 'TVE_TCB_CORE_INCLUDED' ) ) {
+			include_once THEME_PATH . '/architect/plugin-core.php';
+		}
+
+		if ( false === defined( 'TVE_DASH_VERSION' ) ) {
+
+			define( 'TVE_DASH_PATH', THEME_PATH . '/thrive-dashboard' );
+
+			require_once TVE_DASH_PATH . '/thrive-dashboard.php';
+		}
+
+		require_once THEME_PATH . '/inc/constants.php';
+		require_once THEME_PATH . '/inc/classes/class-thrive-theme.php';
+
+		$thrive_theme = new Thrive_Theme();
+		$thrive_theme->init();
 	}
 
 
@@ -78,13 +126,23 @@ class TPM_Product_Skin extends TPM_Product_Theme {
 	}
 
 	/**
-	 * Checks if the skin is installed/downloaded
-	 * and can be activated(set as active)
+	 * The skin is installed if the theme is installed
 	 *
 	 * @return bool
 	 */
 	public function is_installed() {
 
+		$theme = wp_get_theme( 'thrive-theme' );
+
+		return ! is_wp_error( $theme->errors() );
+	}
+
+	/**
+	 * Check if the skin exists
+	 *
+	 * @return bool
+	 */
+	public function exists() {
 		$installed = false;
 		$skins     = $this->_get_all_downloaded_skins();
 
@@ -210,5 +268,16 @@ class TPM_Product_Skin extends TPM_Product_Theme {
 		$this->status = self::READY;
 
 		return $this->status;
+	}
+
+	/**
+	 * When installing the skin, change the response data
+	 *
+	 * @param array $data
+	 *
+	 * @return array|mixed
+	 */
+	public function before_response( $data ) {
+		return $this->get_response_status( 'installed' );
 	}
 }

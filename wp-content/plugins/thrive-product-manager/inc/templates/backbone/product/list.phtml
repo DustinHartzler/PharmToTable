@@ -21,22 +21,10 @@
 <div id="tpm-plugins-list"></div>
 
 <div id="tpm-skins-wrapper">
-	<h2 class="products-h2"><?php echo __( 'Thrive Theme Builder Themes', Thrive_Product_Manager::T ) ?></h2>
+	<h2 class="products-h2"><?php echo __( 'Thrive Theme Builder', Thrive_Product_Manager::T ) ?></h2>
 
 	<div class="tpm-items-controls">
 		<a href="<?php echo thrive_product_manager()->get_clear_cache_url() ?>"><?php echo __( 'Refresh list', Thrive_Product_Manager::T ) ?></a>
-
-		<label for="tpm-skins-deselect-all">
-			<?php echo __( 'Deselect all', Thrive_Product_Manager::T ) ?>
-			<input type="checkbox" id="tpm-skins-deselect-all" data-fn="deselect_all" data-args="skins">
-			<span class="checkmark"></span>
-		</label>
-
-		<label for="tpm-skins-select-all">
-			<?php echo __( 'Select all', Thrive_Product_Manager::T ) ?>
-			<input type="checkbox" id="tpm-skins-select-all" data-fn="select_all" data-args="skins">
-			<span class="checkmark"></span>
-		</label>
 	</div>
 
 	<div id="tpm-skins-list"></div>

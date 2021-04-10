@@ -11,6 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class TPM_Product_Theme extends TPM_Product {
 
+	/**
+	 * Keep a flag to check if the theme was installed before
+	 *
+	 * @var bool
+	 */
+	protected $previously_installed = false;
+
 	public function get_status() {
 
 		if ( ! empty( $this->status ) ) {
@@ -108,8 +115,9 @@ class TPM_Product_Theme extends TPM_Product {
 	}
 
 	public function install( $credentials ) {
-
 		if ( $this->is_installed() ) {
+			$this->previously_installed = true;
+
 			return true;
 		}
 
@@ -138,4 +146,12 @@ class TPM_Product_Theme extends TPM_Product {
 
 		return $installed;
 	}
+
+	/**
+	 * @param $previously_installed
+	 */
+	public function set_previously_installed( $previously_installed ) {
+		$this->previously_installed = $previously_installed;
+	}
+
 }

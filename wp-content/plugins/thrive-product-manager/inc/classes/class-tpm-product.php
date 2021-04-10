@@ -177,4 +177,41 @@ class TPM_Product {
 
 		return md5( $key . serialize( $data ) . $key );
 	}
+
+	/**
+	 * Change the response before sending it
+	 *
+	 * @param array $data
+	 *
+	 * @return mixed
+	 */
+	public function before_response( $data ) {
+		return $data;
+	}
+
+	/**
+	 * Get a comprehensive response message based on a status
+	 *
+	 * @param string $status
+	 *
+	 * @return array
+	 */
+	public function get_response_status( $status ) {
+		switch ( $status ) {
+			case self::READY:
+				$data['status']  = self::READY;
+				$data['message'] = sprintf( '%s is now ready to use', $this->get_name() );
+				break;
+			case self::INSTALLED:
+				$data['status']  = self::INSTALLED;
+				$data['message'] = sprintf( '%s is now installed successfully', $this->get_name() );
+				break;
+			default:
+				$data = array();
+				break;
+		}
+
+		return $data;
+	}
+
 }

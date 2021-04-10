@@ -74,8 +74,8 @@ final class TPM_Cron {
 	public function cron_interval( $schedules ) {
 
 		$schedules[ self::CRON_INTERVAL_NAME ] = array(
-			'interval' => Thrive_Product_Manager::is_debug_mode() ? 60 : 'daily',
-			'display'  => esc_html__( 'TPM Token Refresh Interval' ),
+			'interval' => DAY_IN_SECONDS,
+			'display'  => esc_html__( 'Once Daily' ),
 		);
 
 		return $schedules;
@@ -110,10 +110,6 @@ final class TPM_Cron {
 		 */
 		$at  = strtotime( $date );
 		$set = false;
-
-		if ( Thrive_Product_Manager::is_debug_mode() ) {
-			$at = time() + 300;
-		}
 
 		if ( $at < time() ) {
 			return false;

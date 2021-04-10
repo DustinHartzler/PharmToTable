@@ -532,26 +532,34 @@ body .tpm-modal {
     transition: all .15s;
     float: left;
     margin: 0 0 25px 25px; }
-    #tpm-plugins-list .tpm-product-elem.ttb-skin,
+    #tpm-plugins-list .tpm-product-elem.ttb-skin, #tpm-plugins-list .tpm-product-elem#ttb,
     #tpm-skins-list .tpm-product-elem.ttb-skin,
-    #tpm-themes-list .tpm-product-elem.ttb-skin {
+    #tpm-skins-list .tpm-product-elem#ttb,
+    #tpm-themes-list .tpm-product-elem.ttb-skin,
+    #tpm-themes-list .tpm-product-elem#ttb {
       padding: 0;
       width: 164px; }
-      #tpm-plugins-list .tpm-product-elem.ttb-skin.not-purchased .bottom-bar,
+      #tpm-plugins-list .tpm-product-elem.ttb-skin.not-purchased .bottom-bar, #tpm-plugins-list .tpm-product-elem#ttb.not-purchased .bottom-bar,
       #tpm-skins-list .tpm-product-elem.ttb-skin.not-purchased .bottom-bar,
-      #tpm-themes-list .tpm-product-elem.ttb-skin.not-purchased .bottom-bar {
+      #tpm-skins-list .tpm-product-elem#ttb.not-purchased .bottom-bar,
+      #tpm-themes-list .tpm-product-elem.ttb-skin.not-purchased .bottom-bar,
+      #tpm-themes-list .tpm-product-elem#ttb.not-purchased .bottom-bar {
         padding: 0;
         text-align: center; }
-      #tpm-plugins-list .tpm-product-elem.ttb-skin .tpm-img-container,
+      #tpm-plugins-list .tpm-product-elem.ttb-skin .tpm-img-container, #tpm-plugins-list .tpm-product-elem#ttb .tpm-img-container,
       #tpm-skins-list .tpm-product-elem.ttb-skin .tpm-img-container,
-      #tpm-themes-list .tpm-product-elem.ttb-skin .tpm-img-container {
+      #tpm-skins-list .tpm-product-elem#ttb .tpm-img-container,
+      #tpm-themes-list .tpm-product-elem.ttb-skin .tpm-img-container,
+      #tpm-themes-list .tpm-product-elem#ttb .tpm-img-container {
         height: 150px;
         background-size: cover;
         margin: 6px 6px 0;
         border: none; }
-      #tpm-plugins-list .tpm-product-elem.ttb-skin .ttb-skin-title,
+      #tpm-plugins-list .tpm-product-elem.ttb-skin .ttb-skin-title, #tpm-plugins-list .tpm-product-elem#ttb .ttb-skin-title,
       #tpm-skins-list .tpm-product-elem.ttb-skin .ttb-skin-title,
-      #tpm-themes-list .tpm-product-elem.ttb-skin .ttb-skin-title {
+      #tpm-skins-list .tpm-product-elem#ttb .ttb-skin-title,
+      #tpm-themes-list .tpm-product-elem.ttb-skin .ttb-skin-title,
+      #tpm-themes-list .tpm-product-elem#ttb .ttb-skin-title {
         line-height: 14px;
         font-size: 12px;
         font-weight: 500;
@@ -560,9 +568,11 @@ body .tpm-modal {
         border-bottom: 1px solid #edf0f3;
         margin: 0 6px;
         padding: 7px 14px; }
-      #tpm-plugins-list .tpm-product-elem.ttb-skin .bottom-bar,
+      #tpm-plugins-list .tpm-product-elem.ttb-skin .bottom-bar, #tpm-plugins-list .tpm-product-elem#ttb .bottom-bar,
       #tpm-skins-list .tpm-product-elem.ttb-skin .bottom-bar,
-      #tpm-themes-list .tpm-product-elem.ttb-skin .bottom-bar {
+      #tpm-skins-list .tpm-product-elem#ttb .bottom-bar,
+      #tpm-themes-list .tpm-product-elem.ttb-skin .bottom-bar,
+      #tpm-themes-list .tpm-product-elem#ttb .bottom-bar {
         padding: 0 20px; }
     #tpm-plugins-list .tpm-product-elem .info,
     #tpm-skins-list .tpm-product-elem .info,
@@ -812,9 +822,9 @@ body #tpm-bottom-bar {
       background: url(images/gray-button-spinner.gif) left 15px center/30px no-repeat;
       padding-left: 48px;
       color: #cdd3d8; }
-    body #tpm-bottom-bar button#tpm-back {
+    body #tpm-bottom-bar button.blue-button {
       background-color: #1da5e5; }
-      body #tpm-bottom-bar button#tpm-back:hover {
+      body #tpm-bottom-bar button.blue-button:hover {
         background-color: #29c1ec; }
 
 body.folded #tpm-bottom-bar {

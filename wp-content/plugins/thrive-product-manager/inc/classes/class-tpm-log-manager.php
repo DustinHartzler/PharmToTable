@@ -70,7 +70,7 @@ class TPM_Log_Manager {
 
 		$bytes = 0;
 
-		if ( Thrive_Product_Manager::is_debug_mode() ) {
+		if ( Thrive_Product_Manager::is_debug_mode() && wp_is_writable( $this->_get_file() ) ) {
 
 			$bytes = file_put_contents( $this->_get_file(), "\n" . "[" . date( 'Y-m-d h:i:s' ) . "] " . $this->_message, FILE_APPEND );
 		}
