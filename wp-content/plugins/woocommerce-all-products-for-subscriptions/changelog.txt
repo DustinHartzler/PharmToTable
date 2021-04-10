@@ -1,5 +1,25 @@
 *** WooCommerce All Products For Subscriptions ***
 
+2021.03.18 - version 3.1.26
+* Fix - Fixed 'woocommerce_is_nyp' deprecated filter warning.
+* Fix - Bundle/Composite Subscription plans prices are still not calculated correctly when 'wcsatt_discount_from_regular' is active.
+
+2021.03.10 - version 3.1.25
+* Dev - Introduced 'wcsatt_single_product_one_time_option_has_price' and 'wcsatt_single_product_one_time_cta_has_price' filter to make it easier to display prices in one-time plan options.
+* Fix - Fixed an issue that prevented the WooCommerce Importer from importing Subscription plans.
+* Fix - Adding a product with a synchronized plan to an existing matching subscription results in a $0 line item total.
+* Fix - Bundle/Composite Subscription plans prices are not calculated correctly when 'wcsatt_discount_from_regular' is active.
+
+2021.01.29 - version 3.1.24
+* Fix - Prevent 'Incorrect subscription scheme applied to cart item' notice when ordering again products without subscription plans.
+* Fix - WooCommerce Importer fails when the '_wcsatt_schemes' meta is missing from the CSV file.
+
+2021.01.15 - version 3.1.23
+* Fix - PHP warning due to use of deprecated function 'WC_Admin_Note::set_note'.
+
+2021.01.13 - version 3.1.22
+* Fix - Synchronized plan prices are not correctly replaced in Product Bundle plan options when charging the full amount at sign-up.
+
 2020.12.17 - version 3.1.21
 * Fix - Toggle one-time shipping option when changing the 'Virtual' checkbox state.
 * Fix - Prevent plan options from appearing during switch operations when switching from a plan with a fixed length.

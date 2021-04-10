@@ -86,7 +86,7 @@ class WCS_ATT_Meta_Box_Product_Data {
 
 		$subscription_schemes = $product_object->get_meta( '_wcsatt_schemes', true );
 
-		?><div id="wcsatt_data" class="panel woocommerce_options_panel wc-metaboxes-wrapper <?php echo empty( $subscription_schemes ) ? 'planless onboarding' : ''; ?>">
+		?><div id="wcsatt_data" class="panel woocommerce_options_panel wc-metaboxes-wrapper <?php echo empty( $subscription_schemes ) ? 'planless onboarding' : ''; ?>" style="display:none;">
 			<div class="options_group general_scheme_options"><?php
 
 				// Subscription Status.
@@ -183,24 +183,16 @@ class WCS_ATT_Meta_Box_Product_Data {
 						$i++;
 					}
 
-				} else {
-
-					?>
-					<div class="apfs_boarding__schemes">
-						<div class="apfs_boarding__schemes__message">
-							<h3><?php _e( 'Subscription Plans', 'woocommerce-all-products-for-subscriptions' ); ?></h3>
-							<p><?php _e( 'Want to make this product available on subscription?', 'woocommerce-all-products-for-subscriptions' ); ?>
-							<br/><?php _e( 'Add some subscription plans to get started!', 'woocommerce-all-products-for-subscriptions' ); ?>
-							</p>
-						</div>
-					</div>
-					<?php
 				}
 
-				?><div class="apfs_no_schemes__message">
-					<p><?php _e( 'No subscription plans found. Add one now?', 'woocommerce-all-products-for-subscriptions' ); ?></p>
+				?><div class="apfs_boarding__schemes">
+					<div class="apfs_boarding__schemes__message">
+						<h3><?php _e( 'Subscription Plans', 'woocommerce-all-products-for-subscriptions' ); ?></h3>
+						<p><?php _e( 'Want to make this product available on subscription?', 'woocommerce-all-products-for-subscriptions' ); ?>
+						<br/><?php _e( 'Add some subscription plans to get started!', 'woocommerce-all-products-for-subscriptions' ); ?>
+						</p>
+					</div>
 				</div>
-
 			</div>
 			<p class="subscription_schemes_add_wrapper">
 				<button type="button" class="button add_subscription_scheme"><?php _e( 'Add Plan', 'woocommerce-all-products-for-subscriptions' ); ?></button>

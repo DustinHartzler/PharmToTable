@@ -865,7 +865,18 @@
 		// Scans for SATT schemes attached on the Bundle.
 		this.initialize_schemes = function() {
 
-			bundle.satt_schemes = [];
+			bundle.satt_schemes         = [];
+			bundle.satt_scheme_one_time = false;
+
+			// Store data for the one-time option.
+			var $scheme_option_one_time = satt.schemes_view.$el_option_items.filter( '.one-time-option' );
+
+			if ( $scheme_option_one_time.length ) {
+				bundle.satt_scheme_one_time = {
+					$el:  $scheme_option_one_time,
+					data: $scheme_option_one_time.find( 'input' ).data( 'custom_data' )
+				}
+			}
 
 			// Store scheme data for options that override the default prices.
 			var $scheme_options = satt.schemes_view.$el_option_items.filter( '.subscription-option' );
@@ -901,7 +912,7 @@
 		};
 
 		this.has_single_forced_susbcription = function() {
-			return bundle.satt_schemes.length === 1 && satt.schemes_view.$el_option_items.filter( '.one-time-option' ).length === 0;
+			return bundle.satt_schemes.length === 1 && false === bundle.satt_scheme_one_time;
 		};
 
 		// Hide subscription options?
@@ -926,11 +937,32 @@
 			var bundle_price_html       = bundle.get_price_html(),
 				bundle_price_inner_html = $( bundle_price_html ).html();
 
+			if ( false !== bundle.satt_scheme_one_time ) {
+
+				var $one_time_price       = bundle.satt_scheme_one_time.$el.find( '.price.one-time-price' ),
+					one_time_scheme_price = bundle.satt_scheme_one_time.data.option_details_html.replace( /%p/g, bundle_price_inner_html );
+
+				if ( $one_time_price.length ) {
+					$one_time_price.html( one_time_scheme_price ).find( 'span.total' ).remove();
+				}
+
+				if ( satt.schemes_view.has_prompt( 'radio' ) || satt.schemes_view.has_prompt( 'checkbox' ) ) {
+
+					var $one_time_input = satt.schemes_view.$el_prompt.find( '.wcsatt-options-prompt-action-input[value="no"]' ),
+						$one_time       = $one_time_input.closest( '.wcsatt-options-prompt-label' ).find( '.wcsatt-options-prompt-action' );
+
+					// If the one-time prompt doesn't contain anything to update, move on.
+					if ( $one_time.find( '.price' ).length > 0 ) {
+						$one_time.html( bundle.satt_scheme_one_time.data.prompt_details_html.replace( /%p/g, bundle_price_inner_html ) ).find( 'span.total' ).remove();
+					}
+				}
+			}
+
 			// If only a single option is present, then bundle prices are already overridden on the server side.
 			// In this case, simply grab the subscription details from the option and append them to the bundle price string.
 			if ( self.has_single_forced_susbcription() ) {
 
-				bundle.$bundle_price.find( '.price' ).html( bundle.satt_schemes[0].data.option_details_html.replace( '%p', bundle_price_inner_html ) );
+				bundle.$bundle_price.find( '.price' ).html( bundle.satt_schemes[0].data.option_details_html.replace( /%p/g, bundle_price_inner_html ) );
 
 			/*
 			 * If multiple options are present, then:
@@ -967,7 +999,11 @@
 
 								} );
 
-								scheme_price_data.base_price = scheme_price_data.base_price * ( 1 - scheme.data.subscription_scheme.discount / 100 );
+								if ( scheme.data.discount_from_regular ) {
+									scheme_price_data.base_price = scheme_price_data.base_regular_price * ( 1 - scheme.data.subscription_scheme.discount / 100 );
+								} else {
+									scheme_price_data.base_price = scheme_price_data.base_price * ( 1 - scheme.data.subscription_scheme.discount / 100 );
+								}
 
 								var addons_raw_price = bundle.get_addons_raw_price();
 
@@ -988,7 +1024,7 @@
 						}
 
 						var $option_price       = scheme.$el.find( '.subscription-price' ),
-							option_scheme_price = scheme.data.option_details_html.replace( '%p', scheme_price_inner_html );
+							option_scheme_price = scheme.data.option_details_html.replace( /%p/g, scheme_price_inner_html );
 
 						// Update prompt.
 						if ( scheme.data.subscription_scheme.is_base && ( satt.schemes_view.has_prompt( 'radio' ) || satt.schemes_view.has_prompt( 'checkbox' ) ) ) {
@@ -998,7 +1034,7 @@
 
 							// If the prompt doesn't contain anything to update, move on.
 							if ( $prompt.find( '.subscription-price' ).length > 0 ) {
-								$prompt.html( scheme.data.prompt_details_html.replace( '%p', scheme_price_inner_html ) ).find( 'span.total' ).remove();
+								$prompt.html( scheme.data.prompt_details_html.replace( /%p/g, scheme_price_inner_html ) ).find( 'span.total' ).remove();
 							}
 						}
 
@@ -1066,7 +1102,18 @@
 		// Scans for SATT schemes attached on the Composite.
 		this.initialize_schemes = function() {
 
-			composite.satt_schemes = [];
+			composite.satt_schemes         = [];
+			composite.satt_scheme_one_time = false;
+
+			// Store data for the one-time option.
+			var $scheme_option_one_time = satt.schemes_view.$el_option_items.filter( '.one-time-option' );
+
+			if ( $scheme_option_one_time.length ) {
+				composite.satt_scheme_one_time = {
+					$el:  $scheme_option_one_time,
+					data: $scheme_option_one_time.find( 'input' ).data( 'custom_data' )
+				}
+			}
 
 			// Store scheme data for options that override the default prices.
 			var $scheme_options = satt.schemes_view.$el_option_items.filter( '.subscription-option' );
@@ -1113,7 +1160,7 @@
 		};
 
 		this.has_single_forced_susbcription = function() {
-			return composite.satt_schemes.length === 1 && satt.schemes_view.$el_option_items.filter( '.one-time-option' ).length === 0;
+			return composite.satt_schemes.length === 1 && false === composite.satt_scheme_one_time;
 		};
 
 		// Hide subscription options?
@@ -1134,7 +1181,7 @@
 
 			var $price         = $( price ),
 				price_inner    = $price.html(),
-				scheme_details = composite.satt_schemes[0].data.option_details_html.replace( '%p', price_inner );
+				scheme_details = composite.satt_schemes[0].data.option_details_html.replace( /%p/g, price_inner );
 
 			price = '<p class="price">' + scheme_details + '</p>';
 
@@ -1151,6 +1198,27 @@
 			var composite_price_html       = composite.composite_price_view.get_price_html(),
 				composite_totals           = composite.data_model.calculate_totals(),
 				composite_price_inner_html = $( composite_price_html ).html();
+
+			if ( false !== composite.satt_scheme_one_time ) {
+
+				var $one_time_price       = composite.satt_scheme_one_time.$el.find( '.price.one-time-price' ),
+					one_time_scheme_price = composite.satt_scheme_one_time.data.option_details_html.replace( /%p/g, composite_price_inner_html );
+
+				if ( $one_time_price.length ) {
+					$one_time_price.html( one_time_scheme_price ).find( 'span.total' ).remove();
+				}
+
+				if ( satt.schemes_view.has_prompt( 'radio' ) || satt.schemes_view.has_prompt( 'checkbox' ) ) {
+
+					var $one_time_input = satt.schemes_view.$el_prompt.find( '.wcsatt-options-prompt-action-input[value="no"]' ),
+						$one_time       = $one_time_input.closest( '.wcsatt-options-prompt-label' ).find( '.wcsatt-options-prompt-action' );
+
+					// If the one-time prompt doesn't contain anything to update, move on.
+					if ( $one_time.find( '.price' ).length > 0 ) {
+						$one_time.html( composite.satt_scheme_one_time.data.prompt_details_html.replace( /%p/g, composite_price_inner_html ) ).find( 'span.total' ).remove();
+					}
+				}
+			}
 
 			$.each( composite.satt_schemes, function( index, scheme ) {
 
@@ -1183,7 +1251,11 @@
 
 							} );
 
-							scheme_price_data.base_price = scheme_price_data.base_price * ( 1 - scheme.data.subscription_scheme.discount / 100 );
+							if ( scheme.data.discount_from_regular ) {
+								scheme_price_data.base_price = scheme_price_data.base_regular_price * ( 1 - scheme.data.subscription_scheme.discount / 100 );
+							} else {
+								scheme_price_data.base_price = scheme_price_data.base_price * ( 1 - scheme.data.subscription_scheme.discount / 100 );
+							}
 
 							var addons_raw_price = composite.composite_price_view.get_addons_raw_price();
 
@@ -1208,7 +1280,7 @@
 					}
 
 					var $option_price       = scheme.$el.find( '.subscription-price' ),
-						option_scheme_price = scheme.data.option_details_html.replace( '%p', scheme_price_inner_html );
+						option_scheme_price = scheme.data.option_details_html.replace( /%p/g, scheme_price_inner_html );
 
 					// Update prompt.
 					if ( scheme.data.subscription_scheme.is_base && ( satt.schemes_view.has_prompt( 'radio' ) || satt.schemes_view.has_prompt( 'checkbox' ) ) ) {
@@ -1218,7 +1290,7 @@
 
 						// If the prompt doesn't contain anything to update, move on.
 						if ( $prompt.find( '.subscription-price' ).length > 0 ) {
-							$prompt.html( scheme.data.prompt_details_html.replace( '%p', scheme_price_inner_html ) ).find( 'span.total' ).remove();
+							$prompt.html( scheme.data.prompt_details_html.replace( /%p/g, scheme_price_inner_html ) ).find( 'span.total' ).remove();
 						}
 					}
 
