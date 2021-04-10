@@ -66,11 +66,11 @@ jQuery(document).ready(function() {
 
             // Reset if selecting same star again
             if(recipe_rating.val() == star.data("star")) {
-                star.siblings().andSelf().html(star_empty);
+                star.siblings().addBack().html(star_empty);
 
                 recipe_rating.val(0);
             } else {
-                star.prevAll().andSelf().html(star_full);
+                star.prevAll().addBack().html(star_full);
                 star.nextAll().html(star_empty);
 
                 recipe_rating.val(star.data("star"));

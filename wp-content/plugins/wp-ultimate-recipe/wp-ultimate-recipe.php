@@ -2,15 +2,15 @@
 /*
 Plugin Name: WP Ultimate Recipe
 Plugin URI: http://www.wpultimaterecipe.com
-Description: Everything a Food Blog needs. Beautiful SEO friendly recipes, print versions, visitor interaction, ...
-Version: 3.12.9
+Description: Legacy recipe plugin. Replaced by WP Recipe Maker.
+Version: 3.13.0
 Author: Bootstrapped Ventures
 Author URI: https://bootstrapped.ventures
 License: GPLv2
 Text Domain: wp-ultimate-recipe
 Domain Path: /lang
 */
-define( 'WPURP_VERSION', '3.12.9' );
+define( 'WPURP_VERSION', '3.13.0' );
 define( 'WPURP_POST_TYPE', 'recipe' );
 
 class WPUltimateRecipe {
@@ -185,6 +185,7 @@ class WPUltimateRecipe {
         $this->helper( 'thumbnails' );
         $this->helper( 'vafpress_menu' );
         $this->helper( 'vafpress_shortcode' );
+        $this->helper( 'warning' );
 
         $this->helper( 'shortcodes/adjustable_shortcode' );
         $this->helper( 'shortcodes/index_shortcode' );
@@ -312,46 +313,7 @@ class WPUltimateRecipe {
     }
 }
 
-// Premium version is responsible for instantiating and Freemius Integration if available
+// Premium version is responsible for instantiating if available
 if( !class_exists( 'WPUltimateRecipePremium' ) ) {
-    // Freemius Integration.
-    if ( ! function_exists( 'wpurp_fs' ) ) {
-        // Create a helper function for easy SDK access.
-        function wpurp_fs() {
-            global $wpurp_fs;
-
-            if ( ! isset( $wpurp_fs ) ) {
-                // Include Freemius SDK.
-                require_once dirname(__FILE__) . '/freemius/start.php';
-
-                $wpurp_fs = fs_dynamic_init( array(
-                    'id'                  => '3573',
-                    'slug'                => 'wp-ultimate-recipe',
-                    'type'                => 'plugin',
-                    'public_key'          => 'pk_e26dd45a00dd68423c1a9892dfb46',
-                    'is_premium'          => false,
-                    'premium_suffix'      => 'Premium',
-                    // If your plugin is a serviceware, set this option to false.
-                    'has_premium_version' => true,
-                    'has_addons'          => false,
-                    'has_paid_plans'      => true,
-                    'menu'                => array(
-                        'slug'           => 'edit.php?post_type=recipe',
-                        'contact'        => false,
-                        'support'        => false,
-                    ),
-                    'is_live'            => true,
-                ) );
-            }
-
-            return $wpurp_fs;
-        }
-
-        // Init Freemius.
-        wpurp_fs();
-        // Signal that SDK was initiated.
-        do_action( 'wpurp_fs_loaded' );
-    }
-
     WPUltimateRecipe::get();
 }
