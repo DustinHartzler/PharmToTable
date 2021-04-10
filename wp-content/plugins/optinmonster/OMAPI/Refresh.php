@@ -252,10 +252,20 @@ class OMAPI_Refresh {
 	 * @return OMAPI_Refresh
 	 */
 	protected function handle_error( $error ) {
+		switch ( $error->get_error_code() ) {
+			// If no optins available, make sure they get deleted.
+			case 'optins':
+			case 'no-campaigns-error':
+				$this->base->save->store_optins( array() );
+				break;
 
-		// If no optins available, make sure they get deleted.
-		if ( in_array( $error->get_error_code(), array( 'optins', 'no-campaigns-error' ), true ) ) {
-			$this->base->save->store_optins( array() );
+			case 'referrer-error':
+				$api    = OMAPI_Api::instance();
+				$result = $this->base->sites->check_existing_site( $api->get_creds() );
+				if ( is_wp_error( $result ) ) {
+					$error = $result;
+				}
+				break;
 		}
 
 		// Set an error message.

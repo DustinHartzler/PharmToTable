@@ -224,16 +224,20 @@ class OMAPI_TrustPulse {
 		wp_enqueue_style( 'om-tp-admin-css', $this->base->url . 'assets/dist/css/trustpulse.min.css', false, $this->base->asset_version() );
 		wp_enqueue_script( 'om-tp-admin-js', $this->base->url . 'assets/dist/js/trustpulse.min.js', false, $this->base->asset_version() );
 
-		wp_localize_script( 'om-tp-admin-js', 'omapiTp', array(
-			'restUrl'       => rest_url(),
-			'action'        => $this->installed ? 'activate' : 'install',
-			'installNonce'  => wp_create_nonce( 'install_plugin' ),
-			'activateNonce' => wp_create_nonce( 'activate_plugin' ),
-			'restNonce'     => wp_create_nonce( 'wp_rest' ),
-			'pluginUrl'     => isset( $this->plugin_data['url'] )
-				? $this->plugin_data['url']
-				: 'https://downloads.wordpress.org/plugin/trustpulse-api.zip',
-		) );
+		OMAPI_Utils::add_inline_script(
+			'om-tp-admin-js',
+			'omapiTp',
+			array(
+				'restUrl'       => rest_url(),
+				'action'        => $this->installed ? 'activate' : 'install',
+				'installNonce'  => wp_create_nonce( 'install_plugin' ),
+				'activateNonce' => wp_create_nonce( 'activate_plugin' ),
+				'restNonce'     => wp_create_nonce( 'wp_rest' ),
+				'pluginUrl'     => isset( $this->plugin_data['url'] )
+					? $this->plugin_data['url']
+					: 'https://downloads.wordpress.org/plugin/trustpulse-api.zip',
+			)
+		);
 		add_action( 'in_admin_header', array( $this, 'render_banner' ) );
 	}
 

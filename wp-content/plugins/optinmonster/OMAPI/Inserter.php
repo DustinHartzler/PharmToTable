@@ -54,11 +54,11 @@ class OMAPI_Inserter {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string  $content   The original content.
-	 * @param string  $to_insert The content to insert into the original content.
+	 * @param string $content   The original content.
+	 * @param string $to_insert The content to insert into the original content.
 	 */
 	public function __construct( $content, $to_insert ) {
-		$this->content = $content;
+		$this->content   = $content;
 		$this->to_insert = $to_insert;
 	}
 
@@ -112,7 +112,7 @@ class OMAPI_Inserter {
 
 		foreach ( $paragraphs as $index => $paragraph ) {
 
-			// Only add closing tag to non-empty paragraphs
+			// Only add closing tag to non-empty paragraphs.
 			if ( trim( $paragraph ) ) {
 
 				// Adding closing markup now, rather than at implode, means insertion
@@ -121,7 +121,7 @@ class OMAPI_Inserter {
 			}
 
 			// + 1 allows for considering the first paragraph as #1, not #0.
-			if ( $paragraph_number === ( $index + 1 ) ) {
+			if ( ( $index + 1 ) === $paragraph_number ) {
 
 				// We found our paragraph, so append after it.
 				$paragraphs[ $index ] .= $this->to_insert;
@@ -150,12 +150,13 @@ class OMAPI_Inserter {
 		// The following splitting into words code is copied from the wp_trim_words function.
 
 		$rawtext = wp_strip_all_tags( $this->content );
+
 		/*
 		 * translators: If your word count is based on single characters (e.g. East Asian characters),
 		 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
 		 * Do not translate into your own language.
 		 */
-		if ( strpos( _x( 'words', 'Word count type. Do not translate!' ), 'characters' ) === 0 && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
+		if ( strpos( _x( 'words', 'Word count type. Do not translate!', 'optin-monster-api' ), 'characters' ) === 0 && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
 			$rawtext = trim( preg_replace( "/[\n\r\t ]+/", ' ', $rawtext ), ' ' );
 			preg_match_all( '/./u', $rawtext, $words_array );
 			$words_array = array_slice( $words_array[0], 0, $word_number + 1 );
@@ -181,7 +182,7 @@ class OMAPI_Inserter {
 		$rest = array_pop( $words_array );
 
 		foreach ( $words_array as $word ) {
-			if ( false !== strpos( $word, $after_word ) ) {
+			if ( ! empty( $after_word ) && false !== strpos( $word, $after_word ) ) {
 				$number_occurrences++;
 			}
 		}
@@ -191,7 +192,7 @@ class OMAPI_Inserter {
 		// We need to loop through the number of occurrences...
 		while ( $number_occurrences-- ) {
 
-			// Then find the word in the content to replace,
+			// Then find the word in the content to replace...
 			$pos = strpos( $to_replace, $after_word ) + strlen( $after_word );
 
 			// And split that content where the word was found...
@@ -216,7 +217,7 @@ class OMAPI_Inserter {
 	 *
 	 * @since  2.0.0
 	 *
-	 * @param  string  $content Content to replace/find.
+	 * @param  string $content Content to replace/find.
 	 *
 	 * @return string           Updated content.
 	 */
@@ -241,7 +242,7 @@ class OMAPI_Inserter {
 			}
 
 			// Ok... we found a tag that we should scoot behind.
-			$split = substr( $content, $closing_pos + strlen( $closing_tag ) );
+			$split   = substr( $content, $closing_pos + strlen( $closing_tag ) );
 			$content = substr( $split, strpos( $split, '>' ) + 1 );
 		}
 

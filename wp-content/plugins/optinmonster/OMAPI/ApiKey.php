@@ -32,8 +32,8 @@ class OMAPI_ApiKey {
 	public static function init_connection( $apikey ) {
 		$base = OMAPI::get_instance();
 
-		$creds  = compact( 'apikey' );
-		$option = $base->get_option();
+		$creds                   = compact( 'apikey' );
+		$option                  = $base->get_option();
 		$option['api']['apikey'] = $apikey;
 
 		// Let's store the api-key first.
@@ -51,7 +51,7 @@ class OMAPI_ApiKey {
 		$option['auto_updates']   = 'all';
 		$option['usage_tracking'] = true;
 
-		// Remove any pre-saved site/user/account data, so we re-fetch it elsewhere
+		// Remove any pre-saved site/user/account data, so we re-fetch it elsewhere.
 		unset( $option['siteId'] );
 		unset( $option['siteIds'] );
 		unset( $option['customApiUrl'] );
@@ -76,7 +76,7 @@ class OMAPI_ApiKey {
 		// Save the option one more time, with all the new good stuff..
 		$base->save->update_option( $option, $creds );
 
-		return true;
+		return $option;
 	}
 
 	/**
@@ -92,7 +92,7 @@ class OMAPI_ApiKey {
 		$option['connected']     = 0;
 		$option['api']['apikey'] = '';
 
-		// Remove any pre-saved site/user/account data, so we re-fetch it elsewhere
+		// Remove any pre-saved site/user/account data, so we re-fetch it elsewhere.
 		unset( $option['userId'] );
 		unset( $option['accountId'] );
 		unset( $option['currentLevel'] );
@@ -116,10 +116,10 @@ class OMAPI_ApiKey {
 	 *
 	 * @return bool True if the Key can be validated
 	 */
-	public static function verify( $apikey ) {
+	public static function verify( $apikey ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 		$creds = compact( 'apikey' );
 
-		// Verify this new API Key works by posting to the Legacy route
+		// Verify this new API Key works by posting to the Legacy route.
 		return OMAPI_Api::build( 'v1', 'verify/', 'POST', $creds )->request();
 	}
 
@@ -152,7 +152,7 @@ class OMAPI_ApiKey {
 		}
 
 		foreach ( $site_ids as $site_id ) {
-			if ( in_array( $site_id, $api_key_sites['siteIds'] ) ) {
+			if ( in_array( $site_id, $api_key_sites['siteIds'] ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 				return true;
 			}
 		}

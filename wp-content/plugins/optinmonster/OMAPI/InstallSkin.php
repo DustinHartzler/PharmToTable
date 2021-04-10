@@ -1,4 +1,17 @@
 <?php
+/**
+ * Install Skin  class.
+ *
+ * @since 1.9.10
+ *
+ * @package OMAPI
+ * @author  Justin Sternberg
+ */
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * WordPress class extended for on-the-fly addon installations.

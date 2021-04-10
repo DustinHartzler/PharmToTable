@@ -97,4 +97,55 @@ class OMAPI_Utils {
 		return array_unique( $val );
 	}
 
+	/**
+	 * A back-compatible parse_url helper.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param  string $url URL to parse.
+	 *
+	 * @return array       The URL parts.
+	 */
+	public static function parse_url( $url ) {
+		// NOTE: Error suppression is used as prior to PHP 5.3.3, an
+		// E_WARNING would be generated when URL parsing failed.
+		return function_exists( 'wp_parse_url' )
+			? wp_parse_url( $url )
+			: parse_url( $url ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
+	}
+
+	/**
+	 * Build Inline Data
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param string $object_name Name for the JavaScript object. Passed directly, so it should be qualified JS variable.
+	 * @param string $data        String containing the javascript to be added.
+	 *
+	 * @return string The formatted script string.
+	 */
+	public static function build_inline_data( $object_name, $data ) {
+		return sprintf( 'var %s = %s;', $object_name, json_encode( $data ) );
+	}
+
+	/**
+	 * Add Inline Script
+	 *
+	 * @since 2.3.0
+	 *
+	 * @see WP_Scripts::add_inline_script()
+	 *
+	 * @param string $handle      Name of the script to add the inline script to.
+	 * @param string $object_name Name for the JavaScript object. Passed directly, so it should be qualified JS variable.
+	 * @param string $data        String containing the javascript to be added.
+	 * @param string $position    Optional. Whether to add the inline script before the handle
+	 *                            or after. Default 'after'.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public static function add_inline_script( $handle, $object_name, $data, $position = 'before' ) {
+		$payload = self::build_inline_data( $object_name, $data );
+
+		wp_add_inline_script( $handle, $payload, $position );
+	}
 }

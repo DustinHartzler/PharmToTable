@@ -1,6 +1,20 @@
 <?php
 /**
- * Menu class.
+ * Pages class.
+ *
+ * @since 1.9.10
+ *
+ * @package OMAPI
+ * @author  Erik Jonasson
+ */
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Pages class.
  *
  * @since 1.9.10
  *
@@ -110,11 +124,10 @@ class OMAPI_Pages {
 				'callback' => array( $this, 'render_app_loading_page' ),
 			);
 
-			$this->pages['optin-monster-monsterleads'] = $subscribers_hook = array(
+			$this->pages['optin-monster-monsterleads'] = array(
 				'name'     => __( 'Subscribers', 'optin-monster-api' ),
 				'app'      => true,
-				'redirect' => $this->base->app_url( 'leads/' ),
-				'callback' => '__return_null',
+				'callback' => array( $this, 'render_app_loading_page' ),
 			);
 
 			$this->pages['optin-monster-trustpulse'] = array(
@@ -123,6 +136,18 @@ class OMAPI_Pages {
 
 			$this->pages['optin-monster-settings'] = array(
 				'name'     => __( 'Settings', 'optin-monster-api' ),
+				'app'      => true,
+				'callback' => array( $this, 'render_app_loading_page' ),
+			);
+
+			$this->pages['optin-monster-personalization'] = array(
+				'name'     => __( 'Personalization', 'optin-monster-api' ),
+				'app'      => true,
+				'callback' => array( $this, 'render_app_loading_page' ),
+			);
+
+			$this->pages['optin-monster-university'] = array(
+				'name'     => __( 'University', 'optin-monster-api' ),
 				'app'      => true,
 				'callback' => array( $this, 'render_app_loading_page' ),
 			);
@@ -159,10 +184,12 @@ class OMAPI_Pages {
 	/**
 	 * Whether given page slug is one of our registered JS app pages.
 	 *
+	 * @param string $page_slug Page slug.
+	 *
 	 * @return boolean
 	 */
 	public function is_registered_app_page( $page_slug ) {
-		$pages = wp_list_pluck( $this->get_registered_app_pages(), 'slug' );
+		$pages   = wp_list_pluck( $this->get_registered_app_pages(), 'slug' );
 		$pages[] = 'optin-monster-api-settings';
 		$pages[] = 'optin-monster-dashboard';
 
@@ -249,7 +276,7 @@ class OMAPI_Pages {
 
 		if ( $this->is_registered_app_page( $plugin_page ) ) {
 			$classes[] = 'omapi-app';
-			$classes[] = 'omapi-app-'. str_replace( 'optin-monster-', '', $plugin_page );
+			$classes[] = 'omapi-app-' . str_replace( 'optin-monster-', '', $plugin_page );
 		}
 
 		$classes = implode( ' ', $classes );
@@ -299,7 +326,7 @@ class OMAPI_Pages {
 			);
 
 			$pages = array(
-				'optin-monster-dashboard' => __( 'Dashboard', 'optin-monster-api' )
+				'optin-monster-dashboard' => __( 'Dashboard', 'optin-monster-api' ),
 			);
 			foreach ( $this->get_registered_pages() as $page ) {
 				$pages[ $page['slug'] ] = ! empty( $page['title'] ) ? $page['title'] : $page['name'];
@@ -307,8 +334,8 @@ class OMAPI_Pages {
 
 			$creds = $this->base->get_api_credentials();
 
-			$admin_parts = parse_url( admin_url( 'admin.php' ) );
-			$url_parts   = parse_url( $this->base->url );
+			$admin_parts = OMAPI_Utils::parse_url( admin_url( 'admin.php' ) );
+			$url_parts   = OMAPI_Utils::parse_url( $this->base->url );
 
 			$current_user = wp_get_current_user();
 
@@ -320,7 +347,7 @@ class OMAPI_Pages {
 					'siteId'          => $this->base->get_site_id(),
 					'siteIds'         => $this->base->get_site_ids(),
 					'wpUrl'           => trailingslashit( site_url() ),
-					'adminUrl'        => $this->base->menu->admin_page_url(),
+					'adminUrl'        => OMAPI_Urls::admin(),
 					'restUrl'         => rest_url(),
 					'adminPath'       => $admin_parts['path'],
 					'apijsUrl'        => OPTINMONSTER_APIJS_URL,
@@ -350,7 +377,7 @@ class OMAPI_Pages {
 
 			$loader->localize( $js_args );
 
-			wp_enqueue_script( $this->base->plugin_slug . '-api-script', $this->base->get_api_url(), $loader->handles['js'], null, true );
+			wp_enqueue_script( $this->base->plugin_slug . '-api-script', OPTINMONSTER_APIJS_URL, $loader->handles['js'], null, true );
 			add_filter( 'script_loader_tag', array( $this, 'filter_api_script' ), 10, 2 );
 
 			return $loader;

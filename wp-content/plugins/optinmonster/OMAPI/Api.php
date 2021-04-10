@@ -149,10 +149,10 @@ class OMAPI_Api {
 	 *
 	 * @since 1.8.0
 	 *
-	 * @param string $version  The Api Version (v1 or v2)
-	 * @param string $endpoint The Api Endpoint
-	 * @param string $method   The Request method
-	 * @param array  $creds    Array of API credentials.
+	 * @param string $version The Api Version (v1 or v2).
+	 * @param string $route   The Api Endpoint/route.
+	 * @param string $method  The Request method.
+	 * @param array  $creds   Array of API credentials.
 	 *
 	 * @return self
 	 */
@@ -162,7 +162,7 @@ class OMAPI_Api {
 
 			if ( ! empty( $creds ) ) {
 
-				// Check if we have the new API and if so only use it
+				// Check if we have the new API and if so only use it.
 				$creds = ! empty( $creds['apikey'] )
 					? array( 'apikey' => $creds['apikey'] )
 					: array(
@@ -183,7 +183,7 @@ class OMAPI_Api {
 	 * @param string $route   The API route to target.
 	 * @param array  $creds    Array of API credentials.
 	 * @param string $method  The API method.
-	 * @param string $version The version number of our API
+	 * @param string $version The version number of our API.
 	 */
 	public function __construct( $route, $creds, $method = 'POST', $version = 'v1' ) {
 		// Set class properties.
@@ -202,6 +202,8 @@ class OMAPI_Api {
 	 * Processes the API request.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param array $args Request args.
 	 *
 	 * @return mixed $value The response to the API call.
 	 */
@@ -225,8 +227,8 @@ class OMAPI_Api {
 
 		$body = wp_parse_args( $args, $body );
 		$url  = in_array( $this->method, array( 'GET', 'DELETE' ), true )
-			? add_query_arg( array_map( 'urlencode', $body ), $this->getUrl() )
-			: $this->getUrl();
+			? add_query_arg( array_map( 'urlencode', $body ), $this->get_url() )
+			: $this->get_url();
 
 		$url = esc_url_raw( $url );
 
@@ -275,10 +277,10 @@ class OMAPI_Api {
 		}
 
 		// Get the correct success response code to check against.
-		$response_code = 'DELETE' === $this->method ? 204 : 200;
+		$success_code = 'DELETE' === $this->method ? 204 : 200;
 
 		// If not a 200 status header, send back error.
-		if ( $response_code != $this->response_code ) {
+		if ( (int) $success_code !== (int) $this->response_code ) {
 			$type  = ! empty( $this->response_body->type ) ? $this->response_body->type : 'api-error';
 			$error = ! empty( $this->response_body->message ) ? stripslashes( $this->response_body->message ) : '';
 			if ( empty( $error ) ) {
@@ -288,6 +290,7 @@ class OMAPI_Api {
 				$error = ! empty( $this->response_body->error ) ? stripslashes( $this->response_body->error ) : 'unknown';
 			}
 
+			/* translators: %1$s - API response code, %2$s - returned error from API. */
 			return new WP_Error( $type, sprintf( __( 'The API returned a <strong>%1$s</strong> response with this message: <strong>%2$s</strong>', 'optin-monster-api' ), $this->response_code, $error ), $this->response_code );
 		}
 
@@ -302,7 +305,7 @@ class OMAPI_Api {
 	 *
 	 * @return string The API url.
 	 */
-	public function getUrl() {
+	public function get_url() {
 		return $this->base . '/' . $this->version . '/' . $this->route;
 	}
 
@@ -324,8 +327,9 @@ class OMAPI_Api {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data
-	 * return void
+	 * @param array $data The data to set.
+	 *
+	 * @return void
 	 */
 	public function set_additional_data( array $data ) {
 		$this->additional_data = array_merge( $this->additional_data, $data );
@@ -345,6 +349,22 @@ class OMAPI_Api {
 	}
 
 	/**
+	 * Get the request credentials for this API object.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return array Array containing API credentials.
+	 */
+	public function get_creds() {
+		return ! empty( $this->apikey )
+			? array( 'apikey' => $this->apikey )
+			: array(
+				'user' => $this->user,
+				'key'  => $this->key,
+			);
+	}
+
+	/**
 	 * Returns the last instantiated instance of this class.
 	 *
 	 * @since 1.9.10
@@ -360,8 +380,8 @@ class OMAPI_Api {
 	 *
 	 * @since  2.0.0
 	 *
-	 * @param  array   $option Existing options array.
-	 * @param  array   $creds  Existing credentials array.
+	 * @param  array $option Existing options array.
+	 * @param  array $creds  Existing credentials array.
 	 *
 	 * @return array           Updated options array.
 	 */
@@ -385,17 +405,19 @@ class OMAPI_Api {
 			if ( $api->user && $api->key ) {
 
 				// Notifiy user of credentials replacement.
-				OMAPI::get_instance()->notifications->add_event( array(
-					'type'    => 'success',
-					'title'   => 'Your API Access Credentials have been updated',
-					'content' => 'We have automatically replaced your deprecated user/key OptinMonster connection credentials with a new API key.',
-					'btns'    => array(
-						'main' => array(
-							'text' => 'Manage API Keys',
-							'url'  => esc_url_raw( OPTINMONSTER_APP_URL . '/account/api/' ),
+				OMAPI::get_instance()->notifications->add_event(
+					array(
+						'type'    => 'success',
+						'title'   => 'Your API Access Credentials have been updated',
+						'content' => 'We have automatically replaced your deprecated user/key OptinMonster connection credentials with a new API key.',
+						'btns'    => array(
+							'main' => array(
+								'text' => 'Manage API Keys',
+								'url'  => esc_url_raw( OPTINMONSTER_APP_URL . '/account/api/' ),
+							),
 						),
-					),
-				) );
+					)
+				);
 			}
 		}
 

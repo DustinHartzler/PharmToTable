@@ -5,7 +5,7 @@
  * Description: OptinMonster is the best WordPress popup plugin that helps you grow your email list and sales with email popups, exit intent popups, floating bars and more!
  * Author:      OptinMonster Team
  * Author URI:  https://optinmonster.com
- * Version:     2.0.3
+ * Version:     2.3.1
  * Text Domain: optin-monster-api
  * Domain Path: languages
  * WC requires at least: 3.2.0
@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Autoload the class files.
 spl_autoload_register( 'OMAPI::autoload' );
 
-// Store base file location
+// Store base file location.
 define( 'OMAPI_FILE', __FILE__ );
 
 /**
@@ -62,7 +62,7 @@ class OMAPI {
 	 *
 	 * @var string
 	 */
-	public $version = '2.0.3';
+	public $version = '2.3.1';
 
 	/**
 	 * The name of the plugin.
@@ -132,6 +132,20 @@ class OMAPI {
 	 * @var OMAPI_WooCommerce
 	 */
 	public $woocommerce;
+
+	/**
+	 * OMAPI_Elementor object.
+	 *
+	 * @var OMAPI_Elementor
+	 */
+	public $elementor;
+
+	/**
+	 * OMAPI_ClassicEditor object.
+	 *
+	 * @var OMAPI_ClassicEditor
+	 */
+	public $classicEditor;
 
 	/**
 	 * OMAPI_MailPoet object.
@@ -230,7 +244,7 @@ class OMAPI {
 		// Load the plugin widgets.
 		add_action( 'widgets_init', array( $this, 'widgets' ) );
 
-		// Define Constants
+		// Define Constants.
 		add_action( 'init', array( $this, 'define_constants' ) );
 
 		// Load the plugin.
@@ -312,6 +326,10 @@ class OMAPI {
 		if ( ! defined( 'OPTINMONSTER_APIJS_URL' ) ) {
 			define( 'OPTINMONSTER_APIJS_URL', OPTINMONSTER_CDN_URL . '/app/js/api.min.js' );
 		}
+
+		if ( ! defined( 'OPTINMONSTER_SHAREABLE_LINK' ) ) {
+			define( 'OPTINMONSTER_SHAREABLE_LINK', 'https://app.monstercampaigns.com' );
+		}
 	}
 
 	/**
@@ -391,6 +409,7 @@ class OMAPI {
 		$this->output      = new OMAPI_Output();
 		$this->shortcode   = new OMAPI_Shortcode();
 		$this->woocommerce = new OMAPI_WooCommerce();
+		$this->elementor   = new OMAPI_Elementor();
 		$this->mailpoet    = new OMAPI_MailPoet();
 
 		// Fire a hook to say that the global classes are loaded.
@@ -435,6 +454,7 @@ class OMAPI {
 		$this->review        = new OMAPI_Review();
 		$this->sites         = new OMAPI_Sites();
 		$this->notifications = new OMAPI_Notifications();
+		$this->classicEditor = new OMAPI_ClassicEditor();
 
 		if ( OMAPI_Partners::has_partner_url() ) {
 			$this->cc = new OMAPI_ConstantContact();
@@ -540,10 +560,27 @@ class OMAPI {
 
 		foreach ( $optins as $optin ) {
 			$optin->campaign_type = get_post_meta( $optin->ID, '_omapi_type', true );
+			$optin->enabled       = ! ! get_post_meta( $optin->ID, '_omapi_enabled', true );
 		}
 
 		// Return the optin data.
 		return $optins;
+	}
+
+	/**
+	 * Returns all local campaigns. Cached.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return array|bool Array of optin data or false if none found.
+	 */
+	public function get_campaigns() {
+		static $campaigns = null;
+		if ( null === $campaigns ) {
+			$campaigns = $this->get_optins();
+		}
+
+		return $campaigns;
 	}
 
 	/**
@@ -593,7 +630,7 @@ class OMAPI {
 		$user   = false;
 		$apikey = false;
 
-		// Attempt to grab the new API Key
+		// Attempt to grab the new API Key.
 		if ( empty( $option['api']['apikey'] ) ) {
 			if ( defined( 'OPTINMONSTER_REST_API_LICENSE_KEY' ) ) {
 				$apikey = OPTINMONSTER_REST_API_LICENSE_KEY;
@@ -619,9 +656,9 @@ class OMAPI {
 			$user = $option['api']['user'];
 		}
 
-		// Check if we have any of the authentication data
+		// Check if we have any of the authentication data.
 		if ( ! $apikey ) {
-			// Do we at least have Legacy API Key and User
+			// Do we at least have Legacy API Key and User.
 			if ( ! $key || ! $user ) {
 				return false;
 			}
@@ -647,8 +684,7 @@ class OMAPI {
 	 * @return string The API url to use for embedding on the page.
 	 */
 	public function get_api_url() {
-		$customApiUrl = $this->get_option( 'customApiUrl' );
-		return ! empty( $customApiUrl ) ? $customApiUrl : OPTINMONSTER_APIJS_URL;
+		return OMAPI_Urls::om_api();
 	}
 
 	/**
@@ -729,6 +765,37 @@ class OMAPI {
 	}
 
 	/**
+	 * Get view file output content.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param  string $file The view file.
+	 * @param  mixed  $data Arbitrary data to be made available to the view file.
+	 *
+	 * @return string The view html content.
+	 */
+	public function get_view_contents( $file, $data = array() ) {
+		ob_start();
+		$this->output_view( $file, $data );
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get and include a view file with css and minify the output.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param  string $file The view file.
+	 * @param  mixed  $data Arbitrary data to be made available to the view file.
+	 *
+	 * @return void
+	 */
+	public function get_min_css_view_contents( $file, $data = array() ) {
+		$contents = $this->get_view_contents( $file, $data );
+		return str_replace( array( "\n", "\r", "\t" ), '', $contents );
+	}
+
+	/**
 	 * Get and include a view file with css and minify the output.
 	 *
 	 * @since  1.9.0
@@ -739,9 +806,7 @@ class OMAPI {
 	 * @return void
 	 */
 	public function output_min_css( $file, $data = array() ) {
-		ob_start();
-		$this->output_view( $file, $data );
-		echo str_replace( array( "\n", "\r", "\t" ), '', ob_get_clean() );
+		echo $this->get_min_css_view_contents( $file, $data );
 	}
 
 	/**
@@ -888,7 +953,7 @@ class OMAPI {
 
 	public function check_php_version() {
 
-		// Display for PHP below 5.6
+		// Display for PHP below 5.6.
 		if ( version_compare( PHP_VERSION, '5.5', '>=' ) ) {
 			return;
 		}
@@ -1031,34 +1096,13 @@ class OMAPI {
 	 *
 	 * @since  2.0.0
 	 *
-	 * @param  string  $path The path on the app.
-	 * @param  string  $return_url Url to return. Will default to wp_get_referer().
+	 * @param  string $path The path on the app.
+	 * @param  string $return_url Url to return. Will default to wp_get_referer().
 	 *
 	 * @return string        The app url.
 	 */
 	public function app_url( $path, $return_url = '' ) {
-		$app_url = OPTINMONSTER_APP_URL . '/';
-		$final_destination = $app_url . $path;
-
-		if ( empty( $return_url ) ) {
-
-			$return_url = wp_get_referer();
-			if ( empty( $return_url ) ) {
-				$return_url = $this->menu->get_dashboard_link();
-			}
-		}
-		$return_url = rawurlencode( $return_url );
-
-		$final_destination = add_query_arg( 'return', $return_url, $final_destination );
-
-		$url = add_query_arg( 'redirect_to', rawurlencode( $final_destination ), $app_url );
-
-		$account_id = $this->get_option( 'userId' );
-		if ( ! empty( $account_id ) ) {
-			$url = add_query_arg( 'accountId', $account_id, $url );
-		}
-
-		return $url;
+		return OMAPI_Urls::om_app( $path, $return_url );
 	}
 
 	/**

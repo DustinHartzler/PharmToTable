@@ -78,7 +78,7 @@ class OMAPI_RestApi {
 		// Filter only available in WP 5.5.
 		add_filter( 'rest_allowed_cors_headers', array( $this, 'set_allow_headers' ), 999 );
 
-		// Fall-through to check if we still need to set header (WP < 5.5)
+		// Fall-through to check if we still need to set header (WP < 5.5).
 		add_filter( 'rest_send_nocache_headers', array( $this, 'fallback_set_allow_headers' ), 999 );
 
 		// Fetch some quick info about this WP installation.
@@ -346,16 +346,17 @@ class OMAPI_RestApi {
 	 *
 	 * @since 1.9.10
 	 *
-	 * @param  WP_REST_Request $request The REST Request.
 	 * @return WP_REST_Response The API Response
 	 */
-	public function refresh_campaigns( $request ) {
-		$this->base->refresh->refresh();
+	public function refresh_campaigns() {
+		$result = $this->base->refresh->refresh();
 
-		return new WP_REST_Response(
-			array( 'message' => esc_html__( 'OK', 'optin-monster-api' ) ),
-			200
-		);
+		return is_wp_error( $result )
+			? $result
+			: new WP_REST_Response(
+				array( 'message' => esc_html__( 'OK', 'optin-monster-api' ) ),
+				200
+			);
 	}
 
 	/**
@@ -366,11 +367,9 @@ class OMAPI_RestApi {
 	 *
 	 * @since  1.9.10
 	 *
-	 * @param  WP_REST_Request $request The REST Request.
-	 *
 	 * @return WP_REST_Response
 	 */
-	public function output_info( $request ) {
+	public function output_info() {
 		return new WP_REST_Response( $this->base->refresh->get_info_args(), 200 );
 	}
 
@@ -554,7 +553,10 @@ class OMAPI_RestApi {
 			: array();
 
 		if ( $request->get_param( 'refresh' ) ) {
-			$this->base->refresh->refresh();
+			$result = $this->base->refresh->refresh();
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
 		}
 
 		$campaign_data = array();
@@ -1078,10 +1080,7 @@ class OMAPI_RestApi {
 				throw $e->setWpError( $result );
 			}
 
-			return new WP_REST_Response(
-				array( 'message' => esc_html__( 'OK', 'optin-monster-api' ) ),
-				200
-			);
+			return new WP_REST_Response( $result, 200 );
 
 		} catch ( Exception $e ) {
 			return $this->exception_to_response( $e );
@@ -1240,15 +1239,15 @@ class OMAPI_RestApi {
 				),
 			);
 
-			$options     = $this->base->get_option();
-			$hasSettings = false;
+			$options      = $this->base->get_option();
+			$has_settings = false;
 
 			foreach ( $settings as $setting => $value ) {
 				if ( empty( $allowed_settings[ $setting ] ) ) {
 					continue;
 				}
 
-				$hasSettings = true;
+				$has_settings = true;
 
 				if ( isset( $options[ $setting ] ) && $value === $options[ $setting ] ) {
 					continue;
@@ -1268,7 +1267,7 @@ class OMAPI_RestApi {
 				}
 			}
 
-			if ( ! $hasSettings ) {
+			if ( ! $has_settings ) {
 				throw new Exception( esc_html__( 'Invalid Settings!', 'optin-monster-api' ), 400 );
 			}
 
@@ -1342,7 +1341,8 @@ class OMAPI_RestApi {
 	 */
 	public function logged_in_or_has_api_key( $request ) {
 		if (
-			false !== strpos( $_SERVER['HTTP_REFERER'], 'https://wp.app.optinmonster.test' )
+			! empty( $_SERVER['HTTP_REFERER'] )
+			&& false !== strpos( $_SERVER['HTTP_REFERER'], 'https://wp.app.optinmonster.test' )
 			&& 'OPTIONS' === $_SERVER['REQUEST_METHOD']
 		) {
 			return true;
@@ -1416,7 +1416,7 @@ class OMAPI_RestApi {
 	 * @return boolean
 	 */
 	public function is_dev_server_request() {
-		return false !== strpos( $_SERVER['HTTP_REFERER'], 'https://wp.app.optinmonster.test' );
+		return ! empty( $_SERVER['HTTP_REFERER'] ) && false !== strpos( $_SERVER['HTTP_REFERER'], 'https://wp.app.optinmonster.test' );
 	}
 
 	/**
@@ -1438,7 +1438,7 @@ class OMAPI_RestApi {
 			return true;
 		}
 
-		// To to this action, user has to be logged in,
+		// To to this action, user has to be logged in.
 		if ( ! is_user_logged_in() && ! $dev_server_request ) {
 			return false;
 		}

@@ -157,8 +157,8 @@ class OMAPI_ConstantContact {
 			return;
 		}
 
-		$connect    = $this->base->menu->get_onboarding_link();
-		$learn_more = $this->base->menu->admin_page_url( array( 'page' => 'optin-monster-constant-contact' ) );
+		$connect    = OMAPI_Urls::onboarding();
+		$learn_more = OMAPI_Urls::admin( array( 'page' => 'optin-monster-constant-contact' ) );
 
 		// Output the notice message.
 		?>

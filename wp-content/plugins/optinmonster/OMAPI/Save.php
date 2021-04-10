@@ -138,9 +138,9 @@ class OMAPI_Save {
 	 *
 	 * @since 1.3.5
 	 *
-	 * @param array $local_optins Array of local optin objects to sync.
-	 * @param array $optins       Array of optin objects to store.
-	 * @param bool  $enabled      Whether newly-added campaigns are auto-enabled. Default is true.
+	 * @param array $local_optins  Array of local optin objects to sync.
+	 * @param array $remote_optins Array of optin objects to store.
+	 * @param bool  $enabled       Whether newly-added campaigns are auto-enabled. Default is true.
 	 */
 	public function sync_optins( $local_optins, $remote_optins, $enabled = true ) {
 		foreach ( $local_optins as $local ) {
@@ -187,14 +187,20 @@ class OMAPI_Save {
 			$status = 'draft';
 		}
 
-		$this->optin_to_db(
-			array(
-				'ID'           => $local->ID, // Existing ID
-				'post_title'   => $optin->title,
-				'post_content' => $optin->output,
-				'post_status'  => $status,
-			)
-		);
+		if (
+			$optin->title !== $local->post_title
+			|| $optin->output !== $local->post_content
+			|| $status !== $local->post_status
+		) {
+			$this->optin_to_db(
+				array(
+					'ID'           => $local->ID, // Existing ID.
+					'post_title'   => $optin->title,
+					'post_content' => $optin->output,
+					'post_status'  => $status,
+				)
+			);
+		}
 
 		$this->update_optin_meta( $local->ID, $optin );
 	}
@@ -205,7 +211,7 @@ class OMAPI_Save {
 	 * @since  1.3.5
 	 *
 	 * @param  string $slug    The campaign slug.
-	 * @param  object $optin.  The optin object.
+	 * @param  object $optin   The optin object.
 	 * @param  bool   $enabled Whether the new campaigns are auto-enabled. Default is true.
 	 *
 	 * @return void
@@ -316,12 +322,7 @@ class OMAPI_Save {
 	 */
 	protected function update_shortcodes_meta( $post_id, $shortcodes = null ) {
 		if ( ! empty( $shortcodes ) ) {
-
-			$shortcodes = is_array( $shortcodes )
-				? implode( '|||', array_map( 'htmlentities', $shortcodes ) )
-				: (array) htmlentities( $shortcodes, ENT_COMPAT, 'UTF-8' );
-
-			update_post_meta( $post_id, '_omapi_shortcode_output', $shortcodes );
+			update_post_meta( $post_id, '_omapi_shortcode_output', self::get_shortcodes_string( $shortcodes ) );
 			update_post_meta( $post_id, '_omapi_shortcode', true );
 		} else {
 			delete_post_meta( $post_id, '_omapi_shortcode_output' );
@@ -334,8 +335,8 @@ class OMAPI_Save {
 	 *
 	 * @since 1.9.8
 	 *
-	 * @param array  $option The full `optin_monster_api` option array.
-	 * @param array  $data   Optional. The parameters passed in via POST request.
+	 * @param array $option The full `optin_monster_api` option array.
+	 * @param array $data   Optional. The parameters passed in via POST request.
 	 *
 	 * @return mixed The results of update_option.
 	 */
@@ -369,15 +370,16 @@ class OMAPI_Save {
 	 *
 	 * @return array
 	 */
-	public function woocommerce_autogenerate( $wp_error = true ) {
+	public function woocommerce_autogenerate() {
 		$cookies = array();
 		foreach ( $_COOKIE as $name => $val ) {
+			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 			$cookies[] = "$name=" . rawurlencode( is_array( $val ) ? serialize( $val ) : $val );
 		}
 		$cookies = implode( '; ', $cookies );
 
 		$request_args = array(
-			'sslverify' => apply_filters( 'https_local_ssl_verify', true ),
+			'sslverify' => apply_filters( 'https_local_ssl_verify', true ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 			'body'      => array(
 				'action'      => 'woocommerce_update_api_key',
 				'description' => esc_html__( 'OptinMonster API Read-Access (Auto-Generated)', 'optin-monster-api' ),
@@ -391,7 +393,7 @@ class OMAPI_Save {
 			),
 		);
 		$response     = wp_remote_post( admin_url( 'admin-ajax.php' ), $request_args );
-		if ( $wp_error && is_wp_error( $response ) ) {
+		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
 
@@ -455,11 +457,7 @@ class OMAPI_Save {
 			} else {
 
 				// Get the shop hostname.
-				// NOTE: Error suppression is used as prior to PHP 5.3.3, an
-				// E_WARNING would be generated when URL parsing failed.
-				$site = function_exists( 'wp_parse_url' )
-					? wp_parse_url( $url )
-					: @parse_url( $url );
+				$site = OMAPI_Utils::parse_url( $url );
 				$host = isset( $site['host'] ) ? $site['host'] : '';
 
 				// Set up the connected WooCommerce options.
@@ -502,4 +500,20 @@ class OMAPI_Save {
 			$this->update_option( $option, $data );
 		}
 	}
+
+	/**
+	 * Parse shortcodes into a string.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param  mixed $shortcodes Convert shorcodes array to a concatenated string.
+	 *
+	 * @return string
+	 */
+	public static function get_shortcodes_string( $shortcodes ) {
+		return is_array( $shortcodes )
+			? '|||' . implode( '|||', array_map( 'htmlentities', $shortcodes ) )
+			: '|||' . htmlentities( $shortcodes, ENT_COMPAT, 'UTF-8' );
+	}
+
 }

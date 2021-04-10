@@ -93,17 +93,17 @@ class OMAPI_Menu {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param bool $isTesting
+	 * @param bool $is_testing Whether we are doing integration testing.
 	 */
-	public function __construct( $isTesting = false ) {
-		if ( ! $isTesting ) {
+	public function __construct( $is_testing = false ) {
+		if ( ! $is_testing ) {
 			// Set our object.
 			$this->set();
 
 			// Load actions and filters.
 			add_action( 'admin_menu', array( $this, 'menu' ) );
 			add_action( 'admin_menu', array( $this, 'after_menu_registration' ), 999 );
-			// Load helper body classes
+			// Load helper body classes.
 			add_filter( 'admin_body_class', array( $this, 'admin_body_classes' ) );
 
 			add_filter( 'plugin_action_links_' . plugin_basename( OMAPI_FILE ), array( $this, 'output_plugin_links' ) );
@@ -144,11 +144,11 @@ class OMAPI_Menu {
 
 		// Just add a placeholder secondary page.
 		$this->hooks[] = add_submenu_page(
-			self::SLUG, // parent slug
-			__( 'Dashboard', 'optin-monster-api' ), // page title,
-			__( 'Dashboard', 'optin-monster-api' ),
-			$this->base->access_capability( self::SLUG ), // cap
-			self::SLUG, // slug
+			self::SLUG, // parent slug.
+			__( 'Dashboard', 'optin-monster-api' ), // page title.
+			__( 'Dashboard', 'optin-monster-api' ), // menu title.
+			$this->base->access_capability( self::SLUG ),
+			self::SLUG,
 			array( $this->pages, 'render_app_loading_page' )
 		);
 
@@ -177,11 +177,11 @@ class OMAPI_Menu {
 	 * @return string Archie SVG.
 	 */
 	public function icon_svg( $fill = '#a0a5aa', $return_encoded = true ) {
-		$icon = file_get_contents( plugin_dir_path( OMAPI_FILE ) . '/assets/images/archie-icon.svg' );
+		$icon = file_get_contents( plugin_dir_path( OMAPI_FILE ) . '/assets/css/images/icons/archie-icon.svg' );
 		$icon = str_replace( 'fill="currentColor"', 'fill="' . $fill . '"', $icon );
 
 		if ( $return_encoded ) {
-			$icon = 'data:image/svg+xml;base64,' . base64_encode( $icon );
+			$icon = 'data:image/svg+xml;base64,' . base64_encode( $icon ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 		}
 
 		return $icon;
@@ -202,14 +202,14 @@ class OMAPI_Menu {
 			$after  = array();
 			$at_end = array( 'optin-monster-about' );
 			foreach ( $submenu[ self::SLUG ] as $key => $menu ) {
-				if ( isset( $menu[2] ) && in_array( $menu[2], $at_end ) ) {
+				if ( isset( $menu[2] ) && in_array( $menu[2], $at_end ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 					$after[] = $menu;
 					unset( $submenu[ self::SLUG ][ $key ] );
 				}
 			}
-			$submenu[ self::SLUG ] = array_values( $submenu[ self::SLUG ] );
+			$submenu[ self::SLUG ] = array_values( $submenu[ self::SLUG ] ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			foreach ( $after as $menu ) {
-				$submenu[ self::SLUG ][] = $menu;
+				$submenu[ self::SLUG ][] = $menu; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			}
 		}
 
@@ -234,11 +234,11 @@ class OMAPI_Menu {
 
 		$new_links = $this->base->get_api_credentials()
 			? array(
-				sprintf( '<a href="%s">%s</a>', $this->get_link( 'campaigns' ), __( 'Campaigns', 'optin-monster-api' ) ),
-				sprintf( '<a href="%s">%s</a>', $this->get_link( 'settings' ), __( 'Settings', 'optin-monster-api' ) ),
+				sprintf( '<a href="%s">%s</a>', OMAPI_Urls::campaigns(), __( 'Campaigns', 'optin-monster-api' ) ),
+				sprintf( '<a href="%s">%s</a>', OMAPI_Urls::settings(), __( 'Settings', 'optin-monster-api' ) ),
 			)
 			: array(
-				sprintf( '<a href="%s">%s</a>', $this->get_onboarding_link(), __( 'Get Started', 'optin-monster-api' ) ),
+				sprintf( '<a href="%s">%s</a>', OMAPI_Urls::onboarding(), __( 'Get Started', 'optin-monster-api' ) ),
 			);
 
 		$links = array_merge( $new_links, $links );
@@ -251,7 +251,7 @@ class OMAPI_Menu {
 	 *
 	 * @since  1.3.4
 	 *
-	 * @param  array $classes
+	 * @param  array $classes Body classes.
 	 *
 	 * @return array
 	 */
@@ -290,7 +290,7 @@ class OMAPI_Menu {
 				return true;
 			}
 		} else {
-			$page = isset( $_GET['page'] ) ? $_GET['page'] : '';
+			$page = isset( $_GET['page'] ) ? $_GET['page'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
 		return false !== strpos( $page, 'optin-monster' );
@@ -350,7 +350,9 @@ class OMAPI_Menu {
 	}
 
 	/**
-	 * Deque specific scripts that cause conflicts on settings page
+	 * Deque specific scripts that cause conflicts on settings page. E.g.
+	 * - optimizely
+	 * - bigcommerce
 	 *
 	 * @since 1.1.5.9
 	 */
@@ -359,7 +361,18 @@ class OMAPI_Menu {
 
 			// Dequeue scripts that might cause our settings not to work properly.
 			wp_dequeue_script( 'optimizely_config' );
+
+			add_action( 'admin_print_footer_scripts', array( $this, 'dequeue_bigcommerce_admin_script' ), 100 );
 		}
+	}
+
+	/**
+	 * Deque bigcommerce admin script, as it contains conflict with our app.
+	 *
+	 * @since 2.3.0
+	 */
+	public function dequeue_bigcommerce_admin_script() {
+		wp_dequeue_script( 'bigcommerce-admin-scripts' );
 	}
 
 	/**
@@ -371,8 +384,9 @@ class OMAPI_Menu {
 	 * @return string $text Amended admin footer text.
 	 */
 	public function footer( $text ) {
-		$url  = 'https://wordpress.org/support/plugin/optinmonster/reviews?filter=5#new-post';
-		$text = sprintf( __( 'Please rate <strong>OptinMonster</strong> <a href="%1$s" target="_blank" rel="noopener">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%2$s" target="_blank" rel="noopener noreferrer">WordPress.org</a> to help us spread the word. Thank you from the OptinMonster team!', 'optin-monster-api' ), $url, $url );
+		$url = 'https://wordpress.org/support/plugin/optinmonster/reviews?filter=5#new-post';
+		/* translators: %1$s - OptinMonster plugin support url */
+		$text = sprintf( __( 'Please rate <strong>OptinMonster</strong> <a href="%1$s" target="_blank" rel="noopener">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%1$s" target="_blank" rel="noopener noreferrer">WordPress.org</a> to help us spread the word. Thank you from the OptinMonster team!', 'optin-monster-api' ), $url );
 
 		return $text;
 	}
@@ -386,8 +400,8 @@ class OMAPI_Menu {
 		$path   = 'vue/dist';
 		$dir    = trailingslashit( dirname( $this->base->file ) ) . $path;
 		$loader = new OMAPI_AssetLoader( $dir );
-		$logo    = '#';
-		$help    = '#';
+		$logo   = '#';
+		$help   = '#';
 
 		$list = $loader->getAssetsList( $dir );
 		foreach ( $list as $item ) {
@@ -418,113 +432,16 @@ class OMAPI_Menu {
 	}
 
 	/**
-	 * Get the settings url.
-	 *
-	 * @param  array  $args Array of query args.
-	 *
-	 * @return string
-	 */
-	public function get_settings_link() {
-		return $this->get_link( 'settings' );
-	}
-
-	/**
-	 * Get a link to an OM admin page.
-	 *
-	 * @since  2.0.0
-	 *
-	 * @param  string  $page Page shortened slug.
-	 *
-	 * @return string
-	 */
-	public function get_link( $page ) {
-		return $this->admin_page_url( array(
-			'page' => 'optin-monster-' . $page,
-		) );
-	}
-
-	/**
-	 * Get the OM wizard url.
-	 *
-	 * @since  2.0.0
-	 *
-	 * @return string
-	 */
-	public function get_wizard_link() {
-		return $this->get_link( 'onboarding-wizard' );
-	}
-
-	/**
-	 * Get the campaign output settings edit url.
-	 *
-	 * @since  2.0.0
-	 *
-	 * @param  string  $campaign_slug The campaign slug to edit.
-	 *
-	 * @return string
-	 */
-	public function edit_output_settings( $campaign_slug ) {
-		return $this->admin_page_url( array(
-			'page' => 'optin-monster-campaigns',
-			'campaignId' => $campaign_slug,
-		) );
-	}
-
-	/**
-	 * Get the OM onboarding dashboard url.
-	 *
-	 * @since  2.0.0
-	 *
-	 * @return string
-	 */
-	public function get_onboarding_link() {
-		return $this->admin_page_url( array(
-			'page' => self::SLUG,
-			'info' => true,
-		) );
-	}
-
-	/**
-	 * Get the contextual OM dashboard url.
-	 *
-	 * @since  1.9.10
-	 *
-	 * @param  array  $args Array of query args.
-	 *
-	 * @return string
-	 */
-	public function get_dashboard_link( $args = array() ) {
-		$defaults = array( 'page' => self::SLUG );
-
-		return $this->admin_page_url( wp_parse_args( $args, $defaults ) );
-	}
-
-	/**
-	 * Get an admin page url.
+	 * Redirects to main OM page.
 	 *
 	 * @since  1.9.10
 	 *
 	 * @param  array $args Array of query args.
 	 *
-	 * @return string
-	 */
-	public function admin_page_url( $args = array() ) {
-		$url = add_query_arg( $args, admin_url( 'admin.php' ) );
-
-		return esc_url_raw( $url );
-	}
-
-	/**
-	 * Redirects to main OM page.
-	 *
-	 * @since  1.9.10
-	 *
-	 * @param  array  $args Array of query args.
-	 *
 	 * @return void
 	 */
 	public function redirect_to_dashboard( $args = array() ) {
-		$url = $this->get_dashboard_link( $args );
+		$url = OMAPI_Urls::dashboard( $args );
 		wp_safe_redirect( esc_url_raw( $url ) );
 		exit;
 	}
@@ -539,9 +456,6 @@ class OMAPI_Menu {
 	public function notifications_count() {
 		$count = apply_filters( 'optin_monster_api_notifications_count', 0, $this );
 		$count = absint( $count );
-		if ( ! $this->base->get_api_credentials() ) {
-			$count++;
-		}
 		$html  = '';
 
 		if ( $count ) {

@@ -29,6 +29,11 @@ class OMAPI_Plugins {
 	 */
 	protected $base;
 
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.8.0
+	 */
 	public function __construct() {
 		$this->base = OMAPI::get_instance();
 	}
@@ -62,6 +67,7 @@ class OMAPI_Plugins {
 				'class' => 'google-analytics-for-wordpressgoogleanalyticsphp',
 				'check' => array( 'function' => 'MonsterInsights' ),
 				'name'  => 'MonsterInsights',
+				/* translators: %s - MonsterInsights Plugin name.*/
 				'desc'  => sprintf( __( '%s makes it effortless to properly connect your WordPress site with Google Analytics, so you can start making data-driven decisions to grow your business.', 'optin-monster-api' ), 'MonsterInsights' ),
 				'url'   => 'https://downloads.wordpress.org/plugin/google-analytics-for-wordpress.zip',
 				'pro'   => array(
@@ -111,6 +117,7 @@ class OMAPI_Plugins {
 					),
 				),
 				'name'  => 'AIOSEO',
+				/* translators: %s - AIOSEO Plugin name.*/
 				'desc'  => sprintf( __( 'Easily set up proper SEO foundations for your site in less than 10 minutes with %s. It’s the most powerful and user-friendly WordPress SEO plugin, used by over 2 MILLION sites.', 'optin-monster-api' ), 'All-in-One SEO' ),
 				'url'   => 'https://downloads.wordpress.org/plugin/all-in-one-seo-pack.zip',
 				'pro'   => array(
@@ -268,7 +275,7 @@ class OMAPI_Plugins {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $plugin_url The Plugin URL
+	 * @param string $plugin_url The Plugin URL.
 	 * @return array On success.
 	 * @throws Exception On error.
 	 */
@@ -316,19 +323,23 @@ class OMAPI_Plugins {
 		$plugin_basename = $installer->plugin_info();
 
 		// Activate the plugin silently.
-		if ( ! is_wp_error( activate_plugin( $plugin_basename ) ) ) {
+		try {
+			$this->activate_plugin( $plugin_basename );
+
 			return array(
 				'message'      => esc_html__( 'Plugin installed & activated.', 'optin-monster-api' ),
 				'is_activated' => true,
 				'basename'     => $plugin_basename,
 			);
-		}
 
-		return array(
-			'message'      => esc_html__( 'Plugin installed.', 'optin-monster-api' ),
-			'is_activated' => false,
-			'basename'     => $plugin_basename,
-		);
+		} catch ( \Exception $e ) {
+
+			return array(
+				'message'      => esc_html__( 'Plugin installed.', 'optin-monster-api' ),
+				'is_activated' => false,
+				'basename'     => $plugin_basename,
+			);
+		}
 	}
 
 	/**
@@ -359,7 +370,8 @@ class OMAPI_Plugins {
 		}
 
 		return array(
-			'message' => esc_html__( 'Plugin activated.', 'optin-monster-api' ),
+			'message'  => esc_html__( 'Plugin activated.', 'optin-monster-api' ),
+			'basename' => $plugin_id,
 		);
 	}
 

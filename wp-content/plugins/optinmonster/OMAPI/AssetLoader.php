@@ -1,5 +1,19 @@
 <?php
 /**
+ * Asset Loader class.
+ *
+ * @since 2.0.0
+ *
+ * @package OMAPI
+ * @author  Justin Sternberg
+ */
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
  * A special asset loader built specifically to enqueue
  * JS and CSS built by create-react-app
  *
@@ -55,8 +69,9 @@ class OMAPI_AssetLoader {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array $options
+	 * @param array $options Enqueue options.
 	 * @return void
+	 * @throws Exception If webpack assets not found.
 	 */
 	public function enqueue( array $options = array() ) {
 
@@ -77,7 +92,7 @@ class OMAPI_AssetLoader {
 			$isJs  = preg_match( '/\.js$/', $assetPath );
 			$isCss = ! $isJs && preg_match( '/\.css$/', $assetPath );
 
-			// Ignore source maps and images
+			// Ignore source maps and images.
 			if ( ! $isCss && ! $isJs ) {
 				continue;
 			}
@@ -116,9 +131,10 @@ class OMAPI_AssetLoader {
 	 */
 	public function localize( $args ) {
 		foreach ( $this->handles['js'] as $handle ) {
-			wp_localize_script( $handle, 'omWpApi', $args );
+			OMAPI_Utils::add_inline_script( $handle, 'omWpApi', $args );
+
 			if ( isset( $args['omStaticDataKey'] ) ) {
-				wp_localize_script( $handle, 'omStaticDataKey', $args['omStaticDataKey'] );
+				OMAPI_Utils::add_inline_script( $handle, 'omStaticDataKey', $args['omStaticDataKey'] );
 			}
 			// We only need to output once.
 			break;
@@ -132,7 +148,7 @@ class OMAPI_AssetLoader {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $assetPath
+	 * @param string $assetPath The asset path.
 	 * @return null|Array
 	 */
 	protected function loadAssetFile( $assetPath ) {
@@ -173,7 +189,7 @@ class OMAPI_AssetLoader {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  string  $directory The directory to append to the manifest file.
+	 * @param  string $directory The directory to append to the manifest file.
 	 * @return array              The assets themselves or an array of parsed assets.
 	 */
 	public function getAssetsList( $directory ) {

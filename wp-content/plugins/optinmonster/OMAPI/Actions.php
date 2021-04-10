@@ -72,48 +72,6 @@ class OMAPI_Actions {
 	}
 
 	/**
-	 * Clears the local cookies.
-	 *
-	 * @since 1.0.0
-	 */
-	public function cookies() {
-
-		$optins = $this->base->get_optins( array( 'post_status' => 'any' ) );
-		if ( ! empty( $optins ) ) {
-			foreach ( (array) $optins as $optin ) {
-				if ( $optin ) {
-					// Array of ids so all splits are included
-					$ids = get_post_meta( $optin->ID, '_omapi_ids', true );
-					foreach ( (array) $ids as $id ) {
-						setcookie( 'om-' . $id, '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-						setcookie( 'om-success-' . $id, '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-						setcookie( 'omSuccess-' . $id, '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-						setcookie( 'om-second-' . $id, '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-						setcookie( 'omSlideClosed-' . $id, '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-						setcookie( 'omSeen-' . $id, '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-						setcookie( 'om-' . $id . '-closed', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-					}
-				}
-			}
-		}
-
-		// Clear out global cookie.
-		setcookie( 'om-global-cookie', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-		setcookie( 'omGlobalSuccessCookie', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-		// Clear out interaction cookie.
-		setcookie( 'om-interaction-cookie', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-		setcookie( 'omGlobalInteractionCookie', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-		// Clear out generic success cookie.
-		setcookie( 'om-success-cookie', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-		setcookie( 'omSuccessCookie', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-		setcookie( 'omSessionStart', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-		setcookie( 'omSessionPageviews', '', -1, COOKIEPATH, COOKIE_DOMAIN, false );
-
-		return true;
-
-	}
-
-	/**
 	 * When the plugin is first installed
 	 * Or Migrated from a pre-1.8.0 version
 	 * We need to fetch some additional data
@@ -132,7 +90,7 @@ class OMAPI_Actions {
 			return;
 		}
 
-		// Fetch the userId and accountId, if we don't have them
+		// Fetch the userId and accountId, if we don't have them.
 		if (
 			empty( $option['userId'] )
 			|| empty( $option['accountId'] )
@@ -148,7 +106,7 @@ class OMAPI_Actions {
 			}
 		}
 
-		// Fetch the SiteIds for this site, if we don't have them
+		// Fetch the SiteIds for this site, if we don't have them.
 		if ( empty( $option['siteIds'] ) || empty( $option['siteId'] ) || $this->site_ids_are_numeric( $option['siteIds'] ) ) {
 
 			$result = $this->base->sites->fetch();
@@ -158,7 +116,7 @@ class OMAPI_Actions {
 			}
 		}
 
-		// Only update the option if we've changed something
+		// Only update the option if we've changed something.
 		if ( $changed ) {
 			update_option( 'optin_monster_api', $option );
 		}
@@ -170,10 +128,10 @@ class OMAPI_Actions {
 	 * In one version of the Plugin, we fetched the numeric SiteIds,
 	 * But we actually needed the alphanumeric SiteIds.
 	 *
-	 * So we use this check to determine if we need to re-fetch Site Ids
+	 * So we use this check to determine if we need to re-fetch Site Ids.
 	 *
-	 * @param array $siteIds
-	 * @return bool True if the ids are numeric
+	 * @param array $site_ids Site ids to convert.
+	 * @return bool True if the ids are numeric.
 	 */
 	protected function site_ids_are_numeric( $site_ids ) {
 		foreach ( $site_ids as $id ) {

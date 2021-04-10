@@ -1,112 +1,124 @@
 @charset "UTF-8";
 .optinmonster-gutenberg-campaign-selector-wrap {
-  text-align: center !important;
   -webkit-box-align: center !important;
       -ms-flex-align: center !important;
           align-items: center !important; }
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-label {
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    color: #23282D;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    font-size: 14px;
-    margin-bottom: -1em;
-    /** Undo WordPress default **/
-    padding-bottom: 10px; }
-    .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-label img {
-      height: 19px;
-      margin-right: 7px;
-      width: 22.79px; }
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns p,
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_sites p {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    line-height: 1.5;
-    margin: 0 0 10px; }
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-help,
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_sites-help {
-    color: #4A4A4A; }
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-header {
-    color: #23282D;
-    font-size: 14px;
-    font-weight: bold; }
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button a {
-    background: #087CE1;
-    border: 0;
-    -webkit-box-shadow: none;
-            box-shadow: none;
-    color: white;
-    font-weight: bold;
-    height: auto;
-    line-height: 1;
-    outline: none;
-    padding: 10px;
-    text-decoration: none; }
-    .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button a:after {
-      content: "→";
-      margin-left: 5px; }
-    .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button a:focus, .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button a:active, .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button a:hover {
-      background: #0661b0 !important;
-      border: 0 !important;
-      -webkit-box-shadow: none !important;
-              box-shadow: none !important;
-      color: white;
-      outline: none !important; }
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button-help a {
-    border: 0;
-    -webkit-box-shadow: none;
-            box-shadow: none;
-    color: #087CE1;
-    font-size: 12px;
-    height: auto;
-    line-height: 1;
-    outline: none;
-    padding: 0;
-    text-decoration: none; }
-    .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button-help a:focus, .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button-help a:active, .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_campaigns-button-help a:hover {
-      border: 0;
-      -webkit-box-shadow: none;
-              box-shadow: none;
-      color: #087CE1 !important;
-      outline: none;
-      text-decoration: underline; }
-  .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_sites-button {
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center; }
-    .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_sites-button a {
-      background: transparent !important;
-      border: 1px solid #CCCCCC;
-      -webkit-box-shadow: none;
-              box-shadow: none;
-      color: #555555 !important;
-      height: auto;
-      line-height: 1;
-      margin: 0 10px;
-      outline: none;
-      padding: 10px;
-      text-decoration: none; }
-      .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_sites-button a:focus, .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_sites-button a:active, .optinmonster-gutenberg-campaign-selector-wrap .optinmonster-gutenberg-campaign-selector-no_sites-button a:hover {
-        background: transparent !important;
-        border: 1px solid #CCCCCC;
-        -webkit-box-shadow: none !important;
-                box-shadow: none !important;
-        color: #555555 !important;
-        outline: none !important; }
-  .optinmonster-gutenberg-campaign-selector-wrap .components-base-control {
-    width: 100% !important; }
-    .optinmonster-gutenberg-campaign-selector-wrap .components-base-control select {
+  .optinmonster-gutenberg-campaign-selector-wrap .components-placeholder__fieldset-wrapper {
+    text-align: center;
+    width: 100%; }
+  .optinmonster-gutenberg-campaign-selector-wrap .components-placeholder__fieldset-desc {
+    margin-bottom: 20px; }
+  .optinmonster-gutenberg-campaign-selector-wrap .components-placeholder__fieldset-fields {
+    width: 60%;
+    margin: auto;
+    margin-bottom: 16px; }
+    .optinmonster-gutenberg-campaign-selector-wrap .components-placeholder__fieldset-fields .components-button {
       display: block;
-      max-width: 90%;
-      margin: 0 auto; }
+      margin-right: 0;
+      line-height: 12px; }
+
+.optinmonster-gutenberg-campaign-selector-label {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #23282D;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 14px;
+  margin-bottom: -1em;
+  /** Undo WordPress default **/
+  padding-bottom: 10px; }
+  .optinmonster-gutenberg-campaign-selector-label img {
+    margin-right: 7px;
+    width: 22.79px; }
+
+.optinmonster-gutenberg-campaign-selector-no_sites-button {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-bottom: 0 !important; }
+  .optinmonster-gutenberg-campaign-selector-no_sites-button a {
+    margin: 0 10px; }
+
+.optinmonster-gutenberg-campaign-selector-no_campaigns {
+  text-align: center; }
+  .optinmonster-gutenberg-campaign-selector-no_campaigns-header {
+    font-weight: bold;
+    margin-bottom: 5px !important; }
+  .optinmonster-gutenberg-campaign-selector-no_campaigns-button {
+    margin-bottom: 5px !important; }
+    .optinmonster-gutenberg-campaign-selector-no_campaigns-button a {
+      font-weight: bold; }
+      .optinmonster-gutenberg-campaign-selector-no_campaigns-button a:after {
+        content: "→";
+        margin-left: 5px; }
+    .optinmonster-gutenberg-campaign-selector-no_campaigns-button-help {
+      margin-bottom: -12px !important; }
+      .optinmonster-gutenberg-campaign-selector-no_campaigns-button-help .is-tertiary {
+        -webkit-box-shadow: none !important;
+                box-shadow: none !important; }
+
+.om-campaigns-disabled [data-type="optinmonster/campaign-selector"] {
+  overflow: visible; }
+  .om-campaigns-disabled [data-type="optinmonster/campaign-selector"]:before {
+    content: 'OptinMonster campaigns have been disabled for this page';
+    position: absolute;
+    width: 100%;
+    height: calc(100% + 20px);
+    margin: -20px 0 0;
+    -webkit-box-shadow: 0 0 1px 6px #cc1818;
+            box-shadow: 0 0 1px 6px #cc1818;
+    color: #cc1818;
+    padding: 0 0 0 4px;
+    font-size: .8em; }
+
+.om-campaigns-disabled .om-format-popover .components-popover__content:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: calc(100% + 23px);
+  margin: -18px 0 0 -18px;
+  -webkit-box-shadow: 0 0 1px 6px #cc1818;
+          box-shadow: 0 0 1px 6px #cc1818;
+  padding: 0 0 0 4px; }
+
+.om-campaigns-disabled .om-format-popover .components-popover__content:after {
+  content: 'OptinMonster campaigns have been disabled for this page';
+  width: 100%;
+  height: 20px;
+  background: white;
+  z-index: 1;
+  display: block;
+  position: absolute;
+  bottom: -22px;
+  left: -1px;
+  color: #cc1818;
+  padding: 0 0 31px 17px; }
+
+.components-popover .optinmonster-gutenberg-campaign-selector-no_sites, .components-popover .optinmonster-gutenberg-campaign-selector-no_campaigns {
+  padding: 46px 46px 38px;
+  text-align: center; }
+  .components-popover .optinmonster-gutenberg-campaign-selector-no_sites-help, .components-popover .optinmonster-gutenberg-campaign-selector-no_campaigns-help {
+    margin-bottom: 1.5em; }
+
+.optinmonster-format-campaign-selector-no-campaigns {
+  display: block;
+  text-decoration: none; }
+  .optinmonster-format-campaign-selector-no-campaigns:after {
+    content: "→";
+    margin-left: 5px; }
+
+.om-format-popover .components-popover__content {
+  padding: 17px;
+  min-width: 362px;
+  overflow: visible; }
 
 .om-archie-loader circle {
   -webkit-animation: 2s linear infinite circle-animation;

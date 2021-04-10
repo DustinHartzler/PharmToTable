@@ -87,7 +87,7 @@ class OMAPI_Support {
 			);
 
 			if ( OMAPI_Utils::is_inline_type( $design_type ) ) {
-				$data[ $slug ]['Automatic Output Status'] = get_post_meta( $campaign->ID, '_omapi_automatic', true ) ? 'Enabled' : 'Disabled';
+				$data[ $slug ]['Automatic Output Status']   = get_post_meta( $campaign->ID, '_omapi_automatic', true ) ? 'Enabled' : 'Disabled';
 				$data[ $slug ]['Automatic Output Location'] = get_post_meta( $campaign->ID, '_omapi_auto_location', true );
 			}
 
@@ -112,7 +112,8 @@ class OMAPI_Support {
 		}
 
 		$theme_data = wp_get_theme();
-		$theme      = 'raw' === $format
+		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$theme = 'raw' === $format
 			? array(
 				'Name'             => $theme_data->Name,
 				'Author'           => $theme_data->Author,
@@ -170,6 +171,7 @@ class OMAPI_Support {
 		if ( 'raw' !== $format ) {
 			$array['Multisite'] = $array['Multisite'] ? 'Multisite Enabled' : 'Not Multisite';
 		}
+		// phpcs:enable
 
 		return $array;
 	}

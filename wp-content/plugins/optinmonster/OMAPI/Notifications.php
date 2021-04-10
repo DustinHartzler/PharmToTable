@@ -104,6 +104,7 @@ class OMAPI_Notifications {
 	public function hooks() {
 		add_action( 'optin_monster_api_admin_notifications_update', array( $this, 'update' ) );
 		add_filter( 'optin_monster_api_notifications_count', array( $this, 'get_count' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
 	}
 
 	/**
@@ -354,7 +355,7 @@ class OMAPI_Notifications {
 		$option = $this->get_option();
 
 		// Update notifications using async task.
-		if ( empty( $option['updated'] ) || time() > ( $option['updated'] + DAY_IN_SECONDS ) ) {
+		if ( empty( $option['updated'] ) || time() > ( $option['updated'] + ( 12 * HOUR_IN_SECONDS ) ) ) {
 			if ( $can_update ) {
 				$this->update();
 				$option = $this->get_option();
@@ -364,9 +365,29 @@ class OMAPI_Notifications {
 		$events = ! empty( $option['events'] ) ? $this->verify_active( $option['events'] ) : array();
 		$feed   = ! empty( $option['feed'] ) ? $this->verify_active( $option['feed'] ) : array();
 
-		$notifications = array_merge( $events, $feed );
+		$notifications = array_merge( $feed, $events );
 
-		set_transient( 'om_notification_count', count( $notifications ), DAY_IN_SECONDS );
+		set_transient( 'om_notification_count', count( $notifications ), ( 12 * HOUR_IN_SECONDS ) );
+
+		if ( ! $this->base->get_api_credentials() ) {
+			$notifications = array_merge(
+				$notifications,
+				array(
+					array(
+						'type'       => 'action',
+						'title'      => esc_html__( 'You haven\'t finished setting up your site.', 'optin-monster-api' ),
+						'content'    => esc_html__( 'You\'re losing subscribers, leads and sales! Click on the button below to get started with OptinMonster.', 'optin-monster-api' ),
+						'btns'       => array(
+							'main' => array(
+								'text' => esc_html__( 'Connect Your Site', 'optin-monster-api' ),
+								'url'  => '?page=optin-monster-onboarding-wizard',
+							),
+						),
+						'canDismiss' => false,
+					),
+				)
+			);
+		}
 
 		return $notifications;
 	}
@@ -384,8 +405,13 @@ class OMAPI_Notifications {
 			$this->get();
 			$count = get_transient( 'om_notification_count' );
 		}
+		$count = absint( $count );
 
-		return absint( $count );
+		if ( ! $this->base->get_api_credentials() ) {
+			$count++;
+		}
+
+		return $count;
 	}
 
 	/**
@@ -410,7 +436,7 @@ class OMAPI_Notifications {
 		}
 
 		if ( empty( $notification['id'] ) ) {
-			$notification['id'] = uniqid('event-');
+			$notification['id'] = uniqid( 'event-' );
 		}
 
 		$notification['id'] = (string) $notification['id'];
@@ -638,7 +664,7 @@ class OMAPI_Notifications {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array   $notification Notification array.
+	 * @param array $notification Notification array.
 	 */
 	protected function set_created_timestamp( array $notification ) {
 		// Set created timestamp if it's not already set.
@@ -654,4 +680,28 @@ class OMAPI_Notifications {
 		return $notification;
 	}
 
+	/**
+	 * Register and enqueue admin specific JS.
+	 *
+	 * @since 2.1.1
+	 */
+	public function scripts() {
+		$handle = $this->base->plugin_slug . '-global';
+		wp_enqueue_script(
+			$handle,
+			$this->base->url . 'assets/dist/js/global.min.js',
+			array( 'jquery' ),
+			$this->base->asset_version(),
+			true
+		);
+
+		OMAPI_Utils::add_inline_script(
+			$handle,
+			'OMAPI_Global',
+			array(
+				'url'   => esc_url_raw( rest_url( 'omapp/v1/notifications' ) ),
+				'nonce' => wp_create_nonce( 'wp_rest' ),
+			)
+		);
+	}
 }

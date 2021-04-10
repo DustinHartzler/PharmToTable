@@ -65,6 +65,14 @@ class OMAPI_WooCommerce {
 
 		// Set our object.
 		$this->set();
+
+		add_action( 'admin_enqueue_scripts', array( $this, 'handle_enqueuing_assets' ) );
+
+		// Register WooCommerce Education Meta Boxes.
+		add_action( 'add_meta_boxes', array( $this, 'register_metaboxes' ) );
+
+		// Add custom OptinMonster note.
+		add_action( 'admin_init', array( $this, 'maybe_store_note' ) );
 	}
 
 	/**
@@ -75,6 +83,87 @@ class OMAPI_WooCommerce {
 	public function set() {
 		self::$instance = $this;
 		$this->base     = OMAPI::get_instance();
+	}
+
+	/**
+	 * Enqueue Metabox Assets
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function handle_enqueuing_assets() {
+		if ( ! function_exists( 'get_current_screen' ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+		if ( empty( $screen->id ) ) {
+			return;
+		}
+
+		switch ( $screen->id ) {
+			case 'shop_coupon':
+			case 'product':
+				return $this->enqueue_metabox_assets();
+			case 'woocommerce_page_wc-admin':
+				return $this->enqueue_marketing_education_assets();
+		}
+	}
+
+	/**
+	 * Enqueue Metabox Assets
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_metabox_assets() {
+		wp_enqueue_style(
+			$this->base->plugin_slug . '-metabox',
+			$this->base->url . 'assets/dist/css/metabox.min.css',
+			array(),
+			$this->base->asset_version()
+		);
+
+		wp_enqueue_script(
+			$this->base->plugin_slug . '-metabox-js',
+			$this->base->url . 'assets/dist/js/metabox.min.js',
+			array(),
+			$this->base->asset_version(),
+			true
+		);
+	}
+
+	/**
+	 * Enqueue marketing box script.
+	 * Adds an OM product education box on the WooCommerce Marketing page.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_marketing_education_assets() {
+		wp_enqueue_script(
+			$this->base->plugin_slug . '-wc-marketing-box-js',
+			$this->base->url . 'assets/dist/js/wc-marketing.min.js',
+			array(),
+			$this->base->asset_version(),
+			true
+		);
+
+		add_action( 'admin_footer', array( $this, 'output_marketing_card_template' ) );
+	}
+
+	/**
+	 * Handles outputting the marketing card html to the page.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function output_marketing_card_template() {
+		$this->base->output_view( 'woocommerce-marketing-card.php' );
 	}
 
 	/**
@@ -294,11 +383,7 @@ class OMAPI_WooCommerce {
 	 */
 	public static function is_connected() {
 		// Get current site details.
-		// NOTE: Error suppression is used as prior to PHP 5.3.3, an
-		// E_WARNING would be generated when URL parsing failed.
-		$site = function_exists( 'wp_parse_url' )
-			? wp_parse_url( site_url() )
-			: parse_url( site_url() );
+		$site = OMAPI_Utils::parse_url( site_url() );
 		$host = isset( $site['host'] ) ? $site['host'] : '';
 
 		// Get any options we have stored.
@@ -394,5 +479,139 @@ class OMAPI_WooCommerce {
 	 */
 	public static function is_minimum_version() {
 		return self::version_compare( self::MINIMUM_VERSION );
+	}
+
+	/**
+	 * Add a OM product education metabox on the WooCommerce coupon and product pages.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function register_metaboxes() {
+		add_meta_box(
+			'woocommerce_promote_coupon_metabox',
+			__( 'Promote this coupon', 'optin-monster-api' ),
+			array( $this, 'output_coupon_metabox' ),
+			'shop_coupon'
+		);
+		add_meta_box(
+			'woocommerce_popup_metabox',
+			__( 'Product Popups', 'optin-monster-api' ),
+			array( $this, 'output_product_metabox' ),
+			'product'
+		);
+	}
+
+	/**
+	 * Output the markup for the coupon metabox.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function output_coupon_metabox() {
+		$args = $this->metabox_args();
+		if ( ! $args['has_sites'] ) {
+			$args['not_connected_message'] = esc_html__( 'Please create a Free Account or Connect an Existing Account to promote coupons.', 'optin-monster-api' );
+		}
+		$this->base->output_view( 'coupon-metabox.php', $args );
+	}
+
+	/**
+	 * Output the markup for the product metabox.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function output_product_metabox() {
+		$args = $this->metabox_args();
+		if ( ! $args['has_sites'] ) {
+			$args['not_connected_message'] = esc_html__( 'Please create a Free Account or Connect an Existing Account to use Product Popups.', 'optin-monster-api' );
+		}
+		$this->base->output_view( 'product-metabox.php', $args );
+	}
+
+	/**
+	 * Get the site-connected args for the metaboxes.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return array  Array of site-connected args.
+	 */
+	protected function metabox_args() {
+		$args = array(
+			'has_sites' => $this->base->get_site_id(),
+		);
+
+		if ( ! $args['has_sites'] ) {
+			$args['not_connected_title'] = esc_html__( 'You Have Not Connected with OptinMonster', 'optin-monster-api' );
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Adds a note to the WooCommerce inbox.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return int
+	 */
+	public function maybe_store_note() {
+
+		// Check for Admin Note support.
+		if ( ! class_exists( 'Automattic\WooCommerce\Admin\Notes\Notes' ) || ! class_exists( 'Automattic\WooCommerce\Admin\Notes\Note' ) ) {
+			return;
+		}
+
+		// Make sure the WooCommerce Data Store is available.
+		if ( ! class_exists( 'WC_Data_Store' ) ) {
+			return;
+		}
+
+		$note_name = 'om-wc-grow-revenue';
+
+		try {
+
+			// Load the Admin Notes from the WooCommerce Data Store.
+			$data_store = WC_Data_Store::load( 'admin-note' );
+
+			$note_ids = $data_store->get_notes_with_name( $note_name );
+
+		} catch ( Exception $e ) {
+			return;
+		}
+
+		// This ensures we don't create a duplicate note.
+		if ( ! empty( $note_ids ) ) {
+			return;
+		}
+
+		// If we're here, we can create a new note.
+		$note = new Automattic\WooCommerce\Admin\Notes\Note();
+		$note->set_title( __( 'Grow your store revenue with OptinMonster', 'optin-monster-api' ) );
+		$note->set_content( __( 'Create high-converting OptinMonster campaigns to promote product sales, reduce cart abandonment and incentivize purchases with time-sensitive coupon offers.', 'optin-monster-api' ) );
+		$note->set_type( Automattic\WooCommerce\Admin\Notes\Note::E_WC_ADMIN_NOTE_INFORMATIONAL );
+		$note->set_layout( 'plain' );
+		$note->set_source( 'optinmonster' );
+		$note->set_name( $note_name );
+		$note->add_action(
+			'om-note-primary',
+			__( 'Create a campaign', 'optin-monster-api' ),
+			'admin.php?page=optin-monster-templates',
+			'unactioned',
+			true
+		);
+		$note->add_action(
+			'om-note-seconday',
+			__( 'Learn more', 'optin-monster-api' ),
+			'admin.php?page=optin-monster-about&selectedTab=getting-started',
+			'unactioned',
+			false
+		);
+
+		$note->save();
 	}
 }

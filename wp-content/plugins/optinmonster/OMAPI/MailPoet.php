@@ -41,18 +41,18 @@ class OMAPI_MailPoet {
 	public static function get_lists() {
 
 		// Prepare variables.
-		$mailpoet  = null;
-		$lists     = array();
-		$ret       = array();
-		$listIdKey = 'id';
+		$mailpoet    = null;
+		$lists       = array();
+		$ret         = array();
+		$list_id_key = 'id';
 
 		// Get lists. Check for MailPoet 3 first. Default to legacy.
 		if ( class_exists( '\\MailPoet\\Config\\Initializer' ) ) {
 			$lists = \MailPoet\API\API::MP( 'v1' )->getLists();
 		} else {
-			$mailpoet  = WYSIJA::get( 'list', 'model' );
-			$lists     = $mailpoet->get( array( 'name', 'list_id' ), array( 'is_enabled' => 1 ) );
-			$listIdKey = 'list_id';
+			$mailpoet    = WYSIJA::get( 'list', 'model' );
+			$lists       = $mailpoet->get( array( 'name', 'list_id' ), array( 'is_enabled' => 1 ) );
+			$list_id_key = 'list_id';
 		}
 
 		// Add default option.
@@ -65,7 +65,7 @@ class OMAPI_MailPoet {
 		foreach ( (array) $lists as $list ) {
 			$ret[] = array(
 				'name'  => $list['name'],
-				'value' => $list[ $listIdKey ],
+				'value' => $list[ $list_id_key ],
 			);
 		}
 
@@ -161,7 +161,7 @@ class OMAPI_MailPoet {
 		// Save the email address.
 		$user['email'] = $email;
 
-		// Save the phone number
+		// Save the phone number.
 		if ( ! empty( $phone_field ) && ! empty( $data['phone'] ) ) {
 			$user[ $phone_field ] = stripslashes( $data['phone'] );
 		}
@@ -202,8 +202,8 @@ class OMAPI_MailPoet {
 				return wp_send_json_error( $e->getMessage(), 400 );
 			}
 		} else {
-			$userHelper = WYSIJA::get( 'user', 'helper' );
-			$userHelper->addSubscriber( $data );
+			$user_helper = WYSIJA::get( 'user', 'helper' );
+			$user_helper->addSubscriber( $data );
 		}
 
 		// Send back a response.

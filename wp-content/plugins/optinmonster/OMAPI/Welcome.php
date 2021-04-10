@@ -124,7 +124,7 @@ class OMAPI_Welcome {
 			<p><img src="<?php echo plugins_url( '/assets/images/logo-om.png', OMAPI_FILE ); ?>" alt="<?php esc_attr_e( 'OptinMonster', 'optin-monster-api' ); ?>" width="300px" height="45px"></p>
 			<h3 style="font-weight:normal;font-size:1.3em;"><?php esc_html_e( 'Please Connect OptinMonster', 'optin-monster-api' ); ?></h3>
 			<p><?php _e( 'Instantly grow your email list, get more leads and increase sales with the <strong>#1 most powerful conversion optimization toolkit in the world.</strong>', 'optin-monster-api' ); ?></p>
-			<p><a href="<?php echo esc_url( $this->base->menu->get_onboarding_link() ); ?>" class="button button-primary" title="<?php esc_attr_e( 'Get Started', 'optin-monster-api' ); ?>"><?php esc_html_e( 'Get Started', 'optin-monster-api' ); ?></a><a style="margin-left:8px" href="<?php echo esc_url( $this->base->menu->get_onboarding_link() ); ?>" title="<?php esc_attr_e( 'Learn More', 'optin-monster-api' ); ?>"><?php esc_html_e( 'Learn More &rarr;', 'optin-monster-api' ); ?></a></p>
+			<p><a href="<?php echo esc_url( OMAPI_Urls::onboarding() ); ?>" class="button button-primary" title="<?php esc_attr_e( 'Get Started', 'optin-monster-api' ); ?>"><?php esc_html_e( 'Get Started', 'optin-monster-api' ); ?></a><a style="margin-left:8px" href="<?php echo esc_url( OMAPI_Urls::onboarding() ); ?>" title="<?php esc_attr_e( 'Learn More', 'optin-monster-api' ); ?>"><?php esc_html_e( 'Learn More &rarr;', 'optin-monster-api' ); ?></a></p>
 		</div>
 		<?php
 	}

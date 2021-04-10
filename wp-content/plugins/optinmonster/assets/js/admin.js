@@ -11,29 +11,28 @@ jQuery(document).ready(function ($) {
 	 *
 	 * @since  2.0.0
 	 *
-	 * @return {void}
+	 * @returns {void}
 	 */
 	function omapiHandleAppRouterLinks() {
 		const links = document.querySelectorAll('a[href*="?page=optin-monster-"]');
-		links.forEach( a => {
-			a.addEventListener( 'click', evt => {
-				if ( window.omWpApi && window.omWpApi.main ) {
+		links.forEach((a) => {
+			a.addEventListener('click', (evt) => {
+				if (window.omWpApi && window.omWpApi.main) {
 					const router = window.omWpApi.main.app.$router;
-					const url = evt.target.search || evt.target.closest('a').search
-					const route = router.getRouteForQuery( url );
+					const url = evt.target.search || evt.target.closest('a').search;
+					const route = router.getRouteForQuery(url);
 
-					if ( route ) {
-
-						if ( window.omWpApi.elRemove ) {
-							$( window.omWpApi.elRemove ).remove();
+					if (route) {
+						if (window.omWpApi.elRemove) {
+							$(window.omWpApi.elRemove).remove();
 						}
 
 						evt.preventDefault();
-						router.push({ name: route.name })
+						router.push({ name: route.name });
 					}
 				}
-			})
-		})
+			});
+		});
 	}
 
 	omapiHandleAppRouterLinks();

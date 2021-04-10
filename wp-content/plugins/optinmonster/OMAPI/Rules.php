@@ -432,6 +432,12 @@ class OMAPI_Rules {
 	 */
 	public function default_checks() {
 
+		// Check for global disable.
+		if ( get_post_meta( $this->post_id, 'om_disable_all_campaigns', true ) ) {
+			$this->global_override = false;
+			throw new OMAPI_Rules_False( "all campaigns disabled for this post ($this->post_id)" );
+		}
+
 		// Exclude posts/pages from optin display
 
 		// Set flag for possibly not loading globally.
@@ -487,6 +493,18 @@ class OMAPI_Rules {
 		// Check if we should show on a selected post type.
 		if ( $this->item_in_field( get_post_type(), 'show' ) && ! OMAPI_Utils::is_front_or_search() ) {
 			throw new OMAPI_Rules_True( 'include on post type but not front/search' );
+		}
+
+		// Check if we should show on a selected singular post type.
+		if ( $this->field_not_empty_array( 'show' ) ) {
+			foreach ( $this->get_field_value( 'show' ) as $show_value ) {
+				if ( 0 ===  strpos( $show_value, 'singular___' ) ) {
+					$post_type = str_replace( 'singular___', '', $show_value );
+					if ( is_singular( $post_type ) ) {
+						throw new OMAPI_Rules_True( 'include on singular post type: ' . $post_type );
+					}
+				}
+			}
 		}
 	}
 
@@ -813,6 +831,7 @@ class OMAPI_Rules {
 	protected function output_debug() {
 		$show = $this->caught instanceof OMAPI_Rules_True;
 
+		echo '<xmp class="_om-campaign-sep">' . str_repeat( '-', 10 ) . $this->optin->post_name . str_repeat( '-', 10 ) . '</xmp>';;
 		echo '<xmp class="_om-post-id">$post_id: ' . print_r( $this->post_id, true ) . '</xmp>';
 		echo '<xmp class="_om-post-id">$debug_enabled: ' . print_r( OMAPI::get_instance()->get_option( 'api', 'omwpdebug' ), true ) . '</xmp>';
 		echo '<xmp class="_om-campaign-status" style="color: ' . ( $show ? 'green' : 'red' ) . ';">' . $this->optin->post_name . ":\n" . print_r( $this->caught->getMessage(), true );

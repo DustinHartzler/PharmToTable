@@ -93,6 +93,33 @@ class OMAPI_Output {
 	public $shortcodes = array();
 
 	/**
+	 * Whether we are in a live campaign preview.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @var boolean
+	 */
+	protected static $live_preview = false;
+
+	/**
+	 * Whether we are in a live campaign rules preview.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @var boolean
+	 */
+	protected static $live_rules_preview = false;
+
+	/**
+	 * Whether we are in a site verification request.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @var boolean
+	 */
+	protected static $site_verification = false;
+
+	/**
 	 * Primary class constructor.
 	 *
 	 * @since 1.0.0
@@ -129,6 +156,17 @@ class OMAPI_Output {
 		// Keep these around for back-compat.
 		$this->fields = $rules->fields;
 
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		self::$live_preview       = ! empty( $_GET['om-live-preview'] )
+			? $_GET['om-live-preview']
+			: false;
+		self::$live_rules_preview = ! empty( $_GET['om-live-rules-preview'] )
+			? $_GET['om-live-rules-preview']
+			: false;
+		self::$site_verification  = ! empty( $_GET['om-verify-site'] )
+			? $_GET['om-verify-site']
+			: false;
+		// phpcs:enable
 	}
 
 	/**
@@ -152,7 +190,12 @@ class OMAPI_Output {
 		// Add the hook to allow OptinMonster to process.
 		add_action( 'wp_footer', array( $this, 'load_optinmonster' ) );
 
-		if ( ! empty( $_GET['om-live-preview'] ) || ! empty( $_GET['om-verify-site'] ) ) {
+		if ( self::$live_preview || self::$live_rules_preview ) {
+			add_filter( 'optin_monster_api_final_output', array( $this, 'load_previews' ), 10, 2 );
+			add_filter( 'optin_monster_api_empty_output', array( $this, 'load_previews' ), 10, 2 );
+		}
+
+		if ( self::$live_preview || self::$site_verification ) {
 			add_action( 'wp_footer', array( $this, 'load_global_optinmonster' ) );
 		}
 	}
@@ -164,10 +207,16 @@ class OMAPI_Output {
 	 */
 	public function api_script() {
 
-		// A hook to change the API location. Using this hook, we can force to load in header; default location is footer
+		// A hook to change the API location. Using this hook, we can force to load in header; default location is footer.
 		$in_footer = apply_filters( 'optin_monster_api_loading_location', true );
 
-		wp_enqueue_script( $this->base->plugin_slug . '-api-script', $this->base->get_api_url(), array(), null, $in_footer );
+		wp_enqueue_script(
+			$this->base->plugin_slug . '-api-script',
+			OMAPI_Urls::om_api(),
+			array(),
+			$this->base->asset_version(),
+			$in_footer
+		);
 
 		if ( version_compare( get_bloginfo( 'version' ), '4.1.0', '>=' ) ) {
 			add_filter( 'script_loader_tag', array( $this, 'filter_api_script' ), 10, 2 );
@@ -211,31 +260,12 @@ class OMAPI_Output {
 	 */
 	public function filter_api_url( $url ) {
 		// If the handle is not ours, do nothing.
-		if ( false === strpos( $url, str_replace( 'https://', '', $this->base->get_api_url() ) ) ) {
+		if ( false === strpos( $url, str_replace( 'https://', '', OMAPI_Urls::om_api() ) ) ) {
 			return $url;
 		}
 
 		// Adjust the URL to add our custom script ID.
 		return "$url' async='async' id='omapi-script";
-
-	}
-
-	/**
-	 * Set the default query arg filter for OptinMonster.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param bool $bool Whether or not to alter the query arg filter.
-	 * @return bool      True or false based on query arg detection.
-	 */
-	public function query_filter( $bool ) {
-
-		// If "omhide" is set, the query filter exists.
-		if ( isset( $_GET['omhide'] ) && $_GET['omhide'] ) {
-			return true;
-		}
-
-		return $bool;
 
 	}
 
@@ -260,15 +290,14 @@ class OMAPI_Output {
 	}
 
 	/**
-	 * Filters the content to output an optin form.
+	 * Filters the content to output a campaign form.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $content  The current HTML string of main content.
-	 * @return string $content Amended content with possibly an optin.
+	 * @return string $content Amended content with possibly a campaign.
 	 */
 	public function load_optinmonster_inline_content( $content ) {
-
 		global $post;
 
 		// Checking if AMP is enabled.
@@ -278,19 +307,13 @@ class OMAPI_Output {
 
 		// If the global $post is not set or the post status is not published, return early.
 		if ( empty( $post ) || isset( $post->ID ) && 'publish' !== get_post_status( $post->ID ) ) {
-			   return $content;
+			return $content;
 		}
 
 		// Don't do anything for excerpts.
 		// This prevents the optin accidentally being output when get_the_excerpt() or wp_trim_excerpt() is
 		// called by a theme or plugin, and there is no excerpt, meaning they call the_content and break us.
-		global $wp_current_filter;
-
-		if ( in_array( 'get_the_excerpt', (array) $wp_current_filter ) ) {
-			return $content;
-		}
-
-		if ( in_array( 'wp_trim_excerpt', (array) $wp_current_filter ) ) {
+		if ( in_array( current_filter(), array( 'get_the_excerpt', 'wp_trim_excerpt' ), true ) ) {
 			return $content;
 		}
 
@@ -316,11 +339,11 @@ class OMAPI_Output {
 				switch ( $position ) {
 					case 'paragraphs':
 						$paragraphs = get_post_meta( $optin->ID, '_omapi_auto_location_paragraphs', true );
-						$content = $inserter->after_paragraph( absint( $paragraphs ) );
+						$content    = $inserter->after_paragraph( absint( $paragraphs ) );
 						break;
 
 					case 'words':
-						$words = get_post_meta( $optin->ID, '_omapi_auto_location_words', true );
+						$words   = get_post_meta( $optin->ID, '_omapi_auto_location_words', true );
 						$content = $inserter->after_words( absint( $words ) );
 						break;
 
@@ -342,58 +365,104 @@ class OMAPI_Output {
 	}
 
 	/**
-	 * Possibly loads an optin on a page.
+	 * Possibly loads a campaign on a page.
 	 *
 	 * @since 1.0.0
 	 */
 	public function load_optinmonster() {
-
-		// Prepare variables.
-		$post_id = self::current_id();
-		$optins  = $this->base->get_optins();
-		$init    = array();
-
-		// If no optins are found, return early.
-		if ( empty( $optins ) ) {
-			return;
+		$post_id   = self::current_id();
+		$prevented = is_singular() && $post_id && get_post_meta( $post_id, 'om_disable_all_campaigns', true );
+		if ( $prevented ) {
+			add_action( 'wp_footer', array( $this, 'prevent_all_campaigns' ), 11 );
 		}
 
-		// Loop through each optin and optionally output it on the site.
-		foreach ( $optins as $optin ) {
-			$rules = new OMAPI_Rules( $optin, $post_id );
+		$optins    = $prevented ? array() : $this->base->get_optins();
+		$campaigns = array();
 
-			if ( $rules->should_output() ) {
-				$this->set_slug( $optin );
+		if ( empty( $optins ) ) {
 
-				// Prepare the optin campaign.
-				$init[ $optin->post_name ] = $this->prepare_campaign( $optin );
-				continue;
+			// If no optins are found, send through filter to potentially add preview data.
+			$campaigns = apply_filters( 'optin_monster_api_empty_output', $campaigns, $post_id );
+
+		} else {
+			// Loop through each optin and optionally output it on the site.
+			foreach ( $optins as $campaign ) {
+				$rules = new OMAPI_Rules( $campaign, $post_id );
+
+				if ( $rules->should_output() ) {
+					$this->set_slug( $campaign );
+
+					// Prepare the optin campaign.
+					$campaigns[ $campaign->post_name ] = $this->prepare_campaign( $campaign );
+					continue;
+				}
+
+				$fields = $rules->field_values;
+
+				// Allow devs to filter the final output for more granular control over optin targeting.
+				// Devs should return the value for the slug key as false if the conditions are not met.
+				$campaigns = apply_filters( 'optinmonster_output', $campaigns ); // Deprecated.
+				$campaigns = apply_filters( 'optin_monster_output', $campaigns, $campaign, $fields, $post_id ); // Deprecated.
+				$campaigns = apply_filters( 'optin_monster_api_output', $campaigns, $campaign, $fields, $post_id );
 			}
 
-			$fields = $rules->field_values;
-
-			// Allow devs to filter the final output for more granular control over optin targeting.
-			// Devs should return the value for the slug key as false if the conditions are not met.
-			$init = apply_filters( 'optinmonster_output', $init ); // Deprecated.
-			$init = apply_filters( 'optin_monster_output', $init, $optin, $fields, $post_id ); // Deprecated.
-			$init = apply_filters( 'optin_monster_api_output', $init, $optin, $fields, $post_id );
+			// Run a final filter for all items.
+			$campaigns = apply_filters( 'optin_monster_api_final_output', $campaigns, $post_id );
 		}
 
-		// Run a final filter for all items.
-		$init = apply_filters( 'optin_monster_api_final_output', $init, $post_id );
-
 		// If the init code is empty, do nothing.
-		if ( empty( $init ) ) {
+		if ( empty( $campaigns ) ) {
 			return;
 		}
 
 		// Load the optins.
-		foreach ( (array) $init as $optin ) {
-			if ( $optin ) {
-				echo $optin;
+		foreach ( (array) $campaigns as $campaign ) {
+			if ( $campaign ) {
+				echo $campaign; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
 
+		$is_preview = apply_filters(
+			'optin_monster_should_set_campaigns_as_preview',
+			is_preview() || is_customize_preview()
+		);
+
+		if ( $is_preview ) {
+			remove_action( 'wp_footer', array( $this, 'prevent_all_campaigns' ), 11 );
+			add_action( 'wp_footer', array( $this, 'set_campaigns_as_preview' ), 99 );
+		}
+	}
+
+	/**
+	 * Possibly loads a campaign preview on a page.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param  array $campaigns Array of campaign objects to output.
+	 * @param  int   $post_id   The current post id.
+	 *
+	 * @return array            Array of campaign objects to output.
+	 */
+	public function load_previews( $campaigns, $post_id ) {
+		if ( self::$live_preview || self::$live_rules_preview ) {
+			$campaign_id = sanitize_text_field( self::$live_preview ? self::$live_preview : self::$live_rules_preview );
+
+			$embed = $this->om_script_tag(
+				array(
+					'id'         => 'omapi-script-preview-' . $campaign_id,
+					'campaignId' => $campaign_id,
+					'userId'     => $this->base->get_option( 'userId' ),
+				)
+			);
+
+			$embed = apply_filters( 'optin_monster_api_preview_output', $embed, $campaign_id, $post_id );
+
+			$this->set_preview_slug( $campaign_id );
+
+			$campaigns[ $campaign_id ] = $embed;
+		}
+
+		return $campaigns;
 	}
 
 	/**
@@ -411,7 +480,7 @@ class OMAPI_Output {
 
 		$option['id'] = 'omapi-script-global';
 
-		echo $this->om_script_tag( $option );
+		echo $this->om_script_tag( $option ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
@@ -427,16 +496,46 @@ class OMAPI_Output {
 		// Set the slug.
 		$this->slugs[ $slug ] = array(
 			'slug'     => $slug,
-			'mailpoet' => (bool) get_post_meta( $optin->ID, '_omapi_mailpoet', true ),
+			'mailpoet' => ! empty( $optin->ID ) && (bool) get_post_meta( $optin->ID, '_omapi_mailpoet', true ),
 		);
 
 		// Maybe set shortcode.
-		if ( get_post_meta( $optin->ID, '_omapi_shortcode', true ) ) {
+		if ( ! empty( $optin->ID ) && get_post_meta( $optin->ID, '_omapi_shortcode', true ) ) {
 			$this->shortcodes[] = get_post_meta( $optin->ID, '_omapi_shortcode_output', true );
 		}
 
-		if ( get_post_meta( $optin->ID, '_omapi_mailpoet', true ) ) {
+		if ( ! empty( $this->slugs[ $slug ]['mailpoet'] ) ) {
 			$this->wp_mailpoet();
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Sets the preview slug for possibly parsing shortcodes.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param object $slug The campaign Id slug.
+	 */
+	public function set_preview_slug( $slug ) {
+		$optin = $this->base->get_optin_by_slug( $slug );
+		if ( empty( $optin ) ) {
+			$optin = (object) array(
+				'post_name' => $slug,
+				'ID'        => 0,
+			);
+		}
+
+		$this->set_slug( $optin );
+
+		// Request the shortcodes from the campaign preview object.
+		$user_id = $this->base->get_option( 'userId' );
+		$route   = "embed/{$user_id}/{$slug}/preview/shortcodes";
+		$body    = OMAPI_Api::build( 'v2', $route, 'GET' )->request();
+
+		if ( ! empty( $body->{$slug} ) ) {
+			$this->shortcodes[] = OMAPI_Save::get_shortcodes_string( $body->{$slug} );
 		}
 
 		return $this;
@@ -472,8 +571,8 @@ class OMAPI_Output {
 				}
 
 				echo '<div style="position:absolute;overflow:hidden;clip:rect(0 0 0 0);height:1px;width:1px;margin:-1px;padding:0;border:0">';
-					echo '<div class="omapi-shortcode-helper">' . html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) . '</div>';
-					echo '<div class="omapi-shortcode-parsed omapi-encoded">' . htmlentities( do_shortcode( html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) ), ENT_COMPAT, 'UTF-8' ) . '</div>';
+					echo '<div class="omapi-shortcode-helper">' . html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<div class="omapi-shortcode-parsed omapi-encoded">' . htmlentities( do_shortcode( html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) ), ENT_COMPAT, 'UTF-8' ) . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo '</div>';
 			}
 		}
@@ -483,11 +582,47 @@ class OMAPI_Output {
 		<script type="text/javascript">
 		<?php
 		foreach ( $this->slugs as $slug => $data ) {
-			echo 'var ' . $slug . '_shortcode = true;'; }
+			echo 'var ' . $slug . '_shortcode = true;'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
 		?>
 		</script>
 		<?php
 
+	}
+
+	/**
+	 * Sets all OM campaigns to preview mode, which disables their form fields.
+	 *
+	 * @since 2.2.0
+	 */
+	public function set_campaigns_as_preview() {
+		?>
+		<script type="text/javascript">
+			// Disable OM analytics.
+			window._omdisabletracking = true;
+			document.addEventListener('om.Optin.init', function(evt) {
+
+				// Disables form submission.
+				evt.detail.Optin.preview = true;
+			} );
+		</script>
+		<?php
+	}
+
+	/**
+	 * Prevents any OM campaigns from loading if we're on a singular post
+	 * with the `om_disable_all_campaigns` meta set.
+	 *
+	 * @since 2.3.0
+	 */
+	public function prevent_all_campaigns() {
+		?>
+		<script type="text/javascript">
+			document.addEventListener('om.Shutdown.init', function(evt) {
+				evt.detail.Shutdown.preventAll = true;
+			});
+		</script>
+		<?php
 	}
 
 	/**
@@ -510,14 +645,13 @@ class OMAPI_Output {
 		// Set flag to true.
 		$this->localized = true;
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 		$slugs = function_exists( 'wp_json_encode' )
 			? wp_json_encode( $this->slugs )
-			: json_encode( $this->slugs );
+			: json_encode( $this->slugs ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 
 		// Output JS variable.
 		?>
-		<script type="text/javascript">var omapi_localized = { ajax: '<?php echo esc_url_raw( add_query_arg( 'optin-monster-ajax-route', true, admin_url( 'admin-ajax.php' ) ) ); ?>', nonce: '<?php echo wp_create_nonce( 'omapi' ); ?>', slugs: <?php echo $slugs; ?> };</script>
+		<script type="text/javascript">var omapi_localized = { ajax: '<?php echo esc_url_raw( add_query_arg( 'optin-monster-ajax-route', true, admin_url( 'admin-ajax.php' ) ) ); ?>', nonce: '<?php echo wp_create_nonce( 'omapi' ); ?>', slugs: <?php echo $slugs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> };</script>
 		<?php
 	}
 
@@ -622,15 +756,14 @@ class OMAPI_Output {
 			'term_ids'    => $tax_terms,
 		);
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 		$output = function_exists( 'wp_json_encode' )
 			? wp_json_encode( $output )
-			: json_encode( $output );
+			: json_encode( $output ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 
 		// Output JS variable.
 		// phpcs:ignore XSS
 		?>
-		<script type="text/javascript">var omapi_data = <?php echo $output; ?>;</script>
+		<script type="text/javascript">var omapi_data = <?php echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>;</script>
 		<?php
 	}
 
@@ -655,7 +788,7 @@ class OMAPI_Output {
 	 * @since  1.5.0
 	 *
 	 * @param  bool        $should_output Whether it should output.
-	 * @param  OMAPI_Rules $rules   OMAPI_Rules object
+	 * @param  OMAPI_Rules $rules   OMAPI_Rules object.
 	 *
 	 * @return array
 	 */
@@ -681,6 +814,11 @@ class OMAPI_Output {
 	 * @return int
 	 */
 	public static function current_id() {
+		$object = get_queried_object();
+		if ( is_object( $object ) && ! $object instanceof WP_Post ) {
+			return 0;
+		}
+
 		$post_id = get_queried_object_id();
 		if ( ! $post_id ) {
 			if ( 'page' === get_option( 'show_on_front' ) ) {
@@ -763,15 +901,19 @@ class OMAPI_Output {
 	 */
 	public function om_script_tag( $args = array() ) {
 
-		$src = esc_url_raw( $this->base->get_api_url() );
+		$src = esc_url_raw( OMAPI_Urls::om_api() );
 
 		$script_id = ! empty( $args['id'] )
 			? sprintf( 's.id="%s";', esc_attr( $args['id'] ) )
 			: '';
 
-		$account_id = ! empty( $args['accountId'] )
+		$campaign_or_account_id = ! empty( $args['accountId'] )
 			? sprintf( 's.dataset.account="%s";', esc_attr( $args['accountId'] ) )
 			: '';
+
+		if ( empty( $campaign_or_account_id ) && ! empty( $args['campaignId'] ) ) {
+			$campaign_or_account_id = sprintf( 's.dataset.campaign="%s";', esc_attr( $args['campaignId'] ) );
+		}
 
 		$user_id = ! empty( $args['userId'] )
 			? sprintf( 's.dataset.user="%s";', esc_attr( $args['userId'] ) )
@@ -799,7 +941,7 @@ class OMAPI_Output {
 			$tag,
 			$src,
 			$script_id,
-			$account_id,
+			$campaign_or_account_id,
 			$user_id,
 			$env
 		);

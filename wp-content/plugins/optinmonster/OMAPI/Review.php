@@ -131,7 +131,7 @@ class OMAPI_Review {
 		// We have a candidate! Output a review message.
 
 		wp_enqueue_script( $this->base->plugin_slug . '-notice', plugins_url( 'assets/js/notice.js', OMAPI_FILE ), array( 'jquery' ), $this->base->version, true );
-		wp_localize_script(
+		OMAPI_Utils::add_inline_script(
 			$this->base->plugin_slug . '-notice',
 			'omNotice',
 			array(

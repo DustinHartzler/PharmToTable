@@ -1,11 +1,74 @@
 # Changelog
 All notable changes to the OptinMonster plugin will be documented in this file.
 
-### 2.0.3
+### 2.3.1 - 2021-04-02
+* Fixed issues when multiple tinymce instances existed on a page (specifically, the double OptinMonster link button).
+* Fix console/blocking errors JS errors because specific data was missing on the page related to the OptinMonster Monster Link buttons.
+* Fix height of link search results when other fields added.
+* Fix errors that can occur with WooCommerce data-store failures.
+
+### 2.3.0 - 2021-04-01
+* Introduce the Personalization page, for documenting available rules/triggers.
+* Introduce functionality for Classic Editor (and classic editor instances) for inserting inline campaign shortcodes, or adding Monster Links to text.
+* Improvements to the Gutenberg Block.
+* New setting for globally disabling campaigns for a given post/page/etc (Gutenberg sidebar setting, and a fallback settings metabox for the Classic Editor). Also adds error boundaries around all campaigns in the Gutenberg editor if this option is selected (since they will not work on the frontend).
+* New Gutenberg text formatting option for adding Monster Links to text.
+* Improved UX for select elements where campaigns were displayed by adding the campaign slug to the label.
+* Better error handling and output when certain API requests fail.
+* Better error handling and UX when user's site domain has changed (e.g. from a temp domain to the permanent one).
+* Introduced caching for various requests to improve plugin page performance.
+* Added helpful title attribute tooltips for the various options in the Output Settings (displaying the term slug and the associated taxonomy slug, etc).
+* Improved various other tooltips on the Output Settings to be more helpful
+* Improved UX for select elements where taxonomy terms were displayed by adding the term slug to the label.
+* Add singular post-type options "Show on Post Types and Archives" output settings.
+* Improved messaging in various errors.
+* Fixed bug where exiting and then re-entering output settings, the advanced settings would disappear.
+* Fixed conflict when BigCommerce plugin installed, triggered by their admin scripts.
+* Fixed php warning, "strpos(): Empty needle in optin-monster-wp-api/OMAPI/Inserter.php..."
+* Fixed bug where the "Product Archive Page (shop)" output setting option was only visible for inline campaigns.
+* Fixed bug where output settings would conflict if a post and category had the same ID.
+* Fixed `WP_Scripts::localize` deprecation warning by switching to `wp_add_inline_script()` where applicable.
+
+### 2.2.0 - 2021-02-18
+* Added Elementor Block and other integration.
+* Added WooCommerce Integrations.
+* Added features to onboarding flow.
+* Fixed issue with search "X" button.
+* Fixed issue with selecting posts in the campaign output settings.
+* Additional fixes to the University page responsive styling.
+* Fixed issue with campaign shortcode storage
+* Improved live preview/rule preview for campaigns with shortcodes.
+* Fix to put campaigns in preview mode when in the WordPress customizer preview or post preview.
+* Fix PHP notices for using `$_SERVER['HTTP_REFERER']` when it doesn't exist.
+* Fix some performance issues by only performing `wp_update_post` if the synced campaign contains changes.
+* Fix help link in Gutenberg Block's sidebar settings.
+* Fix help link in Gutenberg Block when no campaigns have yet been created.
+* Added additional filter for filtering campaigns to embed on the frontend.
+
+### 2.1.1 - 2021-01-20
+* Notifications improvements.
+* Better handling to prevent Gutenberg block from using same inline slug multiple times (which does not work).
+* Fix output settings link in Gutenberg sidebar not working.
+* Fixes University responsive styling.
+* Code cleanup
+
+### 2.1.0 - 2021-01-14
+* Introduce Subscribers page to manage Monster Leads for your WordPress site, with helpful analytics data, graphs, management, and export capabilities.
+* Introduce the OptinMonster University page.
+* Various help-text improvements, and fixed typos.
+* Bug fixes, and error output for campaign-status changes.
+* Better alert output.
+* Better notification output, improving visibility/functionality.
+* Improved communication around connection process.
+* Include javascript source map files in build to prevent console notices.
+* Improved account-upgrade workflow.
+* Improved request performance on campaigns page.
+
+### 2.0.3 - 2020-12-07
 * Updates the "get started" interface to be more intuitive for existing users.
 * Remove incorrect concept of "pending" for split tests.
 
-### 2.0.2
+### 2.0.2 - 2020-11-24
 * Include the JS source map files in the release to prevent unnecessary 404s in the dashboard.
 * Use `POST` request to save campaign output settings, since some servers don't like `PUT` requests.
 * Updated dependencies.
@@ -20,11 +83,11 @@ All notable changes to the OptinMonster plugin will be documented in this file.
 * Ensure campaign-creation errors are displayed on the Templates page.
 * Update description around site cookie settings.
 
-### 2.0.1
+### 2.0.1 - 2020-11-16
 * Bug fixes and adjustments for compatibility with older versions of PHP.
 * Bug fixes related to wildcard domains and subdomains.
 
-### 2.0.0
+### 2.0.0 - 2020-11-16
 * NEW: Overhaul of the plugin to make managing your popup campaigns easier than ever!
 * Added the ability to see all your popup campaigns in your dashboard (draft, pending and published)
 * Added a new dashboard to see stats and details about your popup optins
