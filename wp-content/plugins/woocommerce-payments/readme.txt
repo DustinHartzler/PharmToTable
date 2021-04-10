@@ -2,9 +2,9 @@
 Contributors: woocommerce, automattic
 Tags: woocommerce, payment, payment request, credit card, automattic
 Requires at least: 5.3
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 7.0
-Stable tag: 1.8.0
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,7 +57,7 @@ Install and activate the WooCommerce and WooCommerce Payments plugins, if you ha
 
 = What countries and currencies are supported? =
 
-If you are an individual or business based in the United States, you can sign-up with WooCommerce Payments. After completing sign up, you can accept payments from customers anywhere in the world in USD.
+If you are an individual or business based in the United States, you can sign-up with WooCommerce Payments. After completing sign up, you can accept payments from customers anywhere in the world.
 
 We are actively planning to expand into additional countries based on your interest. Let us know where you would like to [see WooCommerce Payments launch next](https://woocommerce.com/payments/#request-invite).
 
@@ -100,6 +100,59 @@ Please note that our support for the checkout block is still experimental and th
 4. Manage Disputes
 
 == Changelog ==
+
+= 2.2.0 - 2021-03-31 =
+* Fix - Paying with a saved card for a subscription with a free trial will now correctly save the chosen payment method to the order for future renewals.
+* Add - Payment Request Button support for US merchants (Apple Pay, Google Pay, Microsoft Pay, and the browser standard Payment Request API).
+* Update - Not passing level3 data for non-US merchants.
+* Add - REST endpoint for fetching account data.
+* Add - Deposits list pagination and sorting.
+* Fix - Deposit overview now displays placeholder information instead of continuing to load when an error happens.
+
+= 2.1.1 - 2021-03-23 =
+* Fix - Fatal error when a subscription is processed with action scheduler hook.
+
+= 2.1.0 - 2021-03-16 =
+* Update - Show last 4 digit credit card number in order note when payment method is updated on failed renewal subscription order.
+* Update - Define constant for the group to be used for scheduled actions.
+* Update - Enable multiple customer currencies support in live mode.
+* Add - Rate limit failed account connection checks.
+* Add - Support displaying non-USD base fees on settings page.
+
+= 2.0.0 - 2021-02-22 =
+* Update - Render customer details in transactions list as text instead of link if order missing.
+* Update - Render transaction summary on details page for multi-currency transactions.
+* Update - Improvements to fraud prevention.
+* Fix - Added better notices for end users if there are connection errors when making payments.
+* Fix - If account is set to manual payouts display 'Temporarily suspended' under Payments > Settings.
+* Add - Add file dropzones to dispute evidence upload fields
+* Add - Currency conversion indicator to Transactions list.
+* Add - Transaction timeline details for multi-currency transactions.
+* Update - Link order note with transaction details page.
+* Fix - Updating payment method using saved payment for WC Subscriptions orders.
+
+= 1.9.2 - 2021-02-05 =
+* Fix - Checkout and cart blocks aren't usable in editor when WooCommerce Payments is enabled.
+* Fix - Missing global config error in Checkout block integration, and incompatibility with latest block API.
+
+= 1.9.1 - 2021-02-03 =
+* Fix - Incompatibility with WC Subscriptions.
+* Fix - Missing order causing broken transactions list.
+
+= 1.9.0 - 2021-02-02 =
+* Add - Improved fraud prevention.
+* Add - New setting to manage whether to enable saving cards during checkout. (Defaults to being enabled).
+* Fix - Fixed issue where an empty alert would appear when trying to refund an authorization charge.
+* Update - Link customer name on transaction detail page to filtered transaction list page.
+* Update - Test mode notice width is now consistent across all pages.
+* Fix - Fix error which could occur when a 100% off coupon was applied during checkout.
+* Add - New notification to urge setting SSL for checkout pages if store doesn't use HTTPS
+* Fix - Fixed connection timeout configuration.
+* Fix - Specify error code when refund fails in admin to prevent blank alert.
+* Fix - Add fees as line items sent to Stripe to prevent Level 3 errors.
+* Fix - Currency format in non-USD order note when capturing, refunding, and processing subscription renewal.
+* Update - Link customer name from transaction list page to WooCommerce's Customers page filtered by the customer's name.
+* Fix - Use proper currency information when rendering deposits overview and details.
 
 = 1.8.0 - 2020-12-16 =
 * Add - Include information about failing payment into order notes.

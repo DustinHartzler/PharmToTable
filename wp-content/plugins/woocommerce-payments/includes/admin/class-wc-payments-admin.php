@@ -76,6 +76,13 @@ class WC_Payments_Admin {
 		);
 
 		if ( $should_render_full_menu ) {
+
+			/**
+			 * Please note that if any other page is registered first and it's
+			 * path is different from the $top_level_link it will make
+			 * wc_admin_register_page to duplicate "Payments" menu item as a
+			 * first item in the sub-menu.
+			 */
 			wc_admin_register_page(
 				[
 					'id'       => 'wc-payments-deposits',
@@ -114,6 +121,26 @@ class WC_Payments_Admin {
 					],
 				]
 			);
+
+			if ( self::is_account_overview_page_enabled() ) {
+				/**
+				 * Once page is fully implemented it should become the main
+				 * entry page and implement a proper adjustment of
+				 * $top_level_link if needed to avoid menu item duplication.
+				 */
+				wc_admin_register_page(
+					[
+						'id'       => 'wc-payments-overview',
+						'title'    => __( 'Overview', 'woocommerce-payments' ),
+						'parent'   => 'wc-payments',
+						'path'     => '/payments/overview/',
+						'nav_args' => [
+							'parent' => 'wc-payments',
+							'order'  => 5,
+						],
+					]
+				);
+			}
 
 			wc_admin_connect_page(
 				[
@@ -214,6 +241,8 @@ class WC_Payments_Admin {
 				'errorMessage'          => $error_message,
 				'featureFlags'          => $this->get_frontend_feature_flags(),
 				'isSubscriptionsActive' => class_exists( 'WC_Payment_Gateway_WCPay_Subscriptions_Compat' ),
+				'zeroDecimalCurrencies' => WC_Payments_Utils::zero_decimal_currencies(),
+				'fraudServices'         => $this->account->get_fraud_services_config(),
 			]
 		);
 
@@ -222,14 +251,6 @@ class WC_Payments_Admin {
 			plugins_url( 'dist/index.css', WCPAY_PLUGIN_FILE ),
 			[ 'wc-components' ],
 			WC_Payments::get_file_version( 'dist/index.css' )
-		);
-
-		wp_register_script(
-			'stripe',
-			'https://js.stripe.com/v3/',
-			[],
-			'3.0',
-			true
 		);
 
 		$tos_script_src_url    = plugins_url( 'dist/tos.js', WCPAY_PLUGIN_FILE );
@@ -251,17 +272,13 @@ class WC_Payments_Admin {
 			WC_Payments::get_file_version( 'dist/tos.css' )
 		);
 
-		$settings_script_src_url      = plugins_url( 'dist/settings.js', WCPAY_PLUGIN_FILE );
-		$settings_script_asset_path   = WCPAY_ABSPATH . 'dist/settings.asset.php';
-		$settings_script_asset        = file_exists( $settings_script_asset_path ) ? require_once $settings_script_asset_path : [ 'dependencies' => [] ];
-		$settings_script_dependencies = array_merge(
-			$settings_script_asset['dependencies'],
-			[ 'stripe' ]
-		);
+		$settings_script_src_url    = plugins_url( 'dist/settings.js', WCPAY_PLUGIN_FILE );
+		$settings_script_asset_path = WCPAY_ABSPATH . 'dist/settings.asset.php';
+		$settings_script_asset      = file_exists( $settings_script_asset_path ) ? require_once $settings_script_asset_path : [ 'dependencies' => [] ];
 		wp_register_script(
 			'WCPAY_ADMIN_SETTINGS',
 			$settings_script_src_url,
-			$settings_script_dependencies,
+			$settings_script_asset['dependencies'],
 			WC_Payments::get_file_version( 'dist/settings.js' ),
 			true
 		);
@@ -270,9 +287,20 @@ class WC_Payments_Admin {
 			'WCPAY_ADMIN_SETTINGS',
 			'wcpayAdminSettings',
 			[
-				'accountStatus' => $this->account->get_account_status_data(),
-				'accountFees'   => $this->account->get_fees(),
+				'accountStatus'           => $this->account->get_account_status_data(),
+				'accountFees'             => $this->account->get_fees(),
+				'fraudServices'           => $this->account->get_fraud_services_config(),
+				// TODO: Remove this line ahead of releasing Apple Pay for all merchants.
+				'paymentRequestAvailable' => WC_Payments::should_payment_request_be_available(),
 			]
+		);
+
+		// wcpaySettings.zeroDecimalCurrencies must be included as part of the WCPAY_ADMIN_SETTINGS as
+		// it's used in the settings page by the AccountFees component.
+		wp_localize_script(
+			'WCPAY_ADMIN_SETTINGS',
+			'wcpaySettings',
+			[ 'zeroDecimalCurrencies' => WC_Payments_Utils::zero_decimal_currencies() ]
 		);
 
 		wp_register_style(
@@ -354,6 +382,7 @@ class WC_Payments_Admin {
 		return [
 			'paymentTimeline' => self::version_compare( WC_ADMIN_VERSION_NUMBER, '1.4.0', '>=' ),
 			'customSearch'    => self::version_compare( WC_ADMIN_VERSION_NUMBER, '1.3.0', '>=' ),
+			'accountOverview' => self::is_account_overview_page_enabled(),
 		];
 	}
 
@@ -399,5 +428,14 @@ class WC_Payments_Admin {
 		}
 
 		return ! $agreement['is_current_version'];
+	}
+
+	/**
+	 * Checks whether Account Overview page is enabled
+	 *
+	 * @return bool
+	 */
+	private static function is_account_overview_page_enabled() {
+		return get_option( '_wcpay_feature_account_overview' );
 	}
 }

@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Automattic\WooCommerce\Admin\Notes\DataStore;
 use WCPay\Exceptions\API_Exception;
 use WCPay\Logger;
-use \Automattic\WooCommerce\Admin\Features\Onboarding;
 
 /**
  * Class handling any account connection functionality
@@ -20,6 +19,7 @@ use \Automattic\WooCommerce\Admin\Features\Onboarding;
 class WC_Payments_Account {
 
 	const ACCOUNT_TRANSIENT              = 'wcpay_account_data';
+	const ACCOUNT_RETRIEVAL_ERROR        = 'ERROR';
 	const ON_BOARDING_DISABLED_TRANSIENT = 'wcpay_on_boarding_disabled';
 	const ERROR_MESSAGE_TRANSIENT        = 'wcpay_error_message';
 
@@ -185,6 +185,25 @@ class WC_Payments_Account {
 	public function get_is_live() {
 		$account = $this->get_cached_account_data();
 		return ! empty( $account ) && isset( $account['is_live'] ) ? $account['is_live'] : null;
+	}
+
+	/**
+	 * Gets the various anti-fraud services that must be included on every WCPay-related page.
+	 *
+	 * @return array Assoc array. Each key is the slug of a fraud service that must be incorporated to every page, the value is service-specific config for it.
+	 */
+	public function get_fraud_services_config() {
+		$account = $this->get_cached_account_data();
+		if ( empty( $account ) || ! isset( $account['fraud_services'] ) ) {
+			// This was the default before adding new anti-fraud providers, preserve backwards-compatibility.
+			return [ 'stripe' => [] ];
+		}
+		$services_config          = $account['fraud_services'];
+		$filtered_services_config = [];
+		foreach ( $services_config as $service_id => $config ) {
+			$filtered_services_config[ $service_id ] = apply_filters( 'wcpay_prepare_fraud_config', $config, $service_id );
+		}
+		return $filtered_services_config;
 	}
 
 	/**
@@ -524,6 +543,12 @@ class WC_Payments_Account {
 			return $account;
 		}
 
+		// If the transient contains the error value and has not expired, return false early and do not attempt another
+		// API call.
+		if ( self::ACCOUNT_RETRIEVAL_ERROR === $account ) {
+			return false;
+		}
+
 		try {
 			// Since we're about to call the server again, clear out the on-boarding disabled flag. We can let the code
 			// below re-create it if the server tells us on-boarding is still disabled.
@@ -542,7 +567,9 @@ class WC_Payments_Account {
 				set_transient( self::ON_BOARDING_DISABLED_TRANSIENT, true, 2 * HOUR_IN_SECONDS );
 			} else {
 				// Failed to retrieve account data. Exception is logged in http client.
-				// Return immediately to signal account retrieval error.
+				// Rate limit the account retrieval failures - set a transient for a short time.
+				set_transient( self::ACCOUNT_TRANSIENT, self::ACCOUNT_RETRIEVAL_ERROR, 2 * MINUTE_IN_SECONDS );
+				// Return false to signal account retrieval error.
 				return false;
 			}
 		}
@@ -574,7 +601,7 @@ class WC_Payments_Account {
 	/**
 	 * Checks if the cached account can be used in the current plugin state.
 	 *
-	 * @param bool|array $account cached account data.
+	 * @param bool|string|array $account cached account data.
 	 *
 	 * @return bool True if the cached account is valid.
 	 */
@@ -584,8 +611,13 @@ class WC_Payments_Account {
 			return false;
 		}
 
+		// the rate limiting mechanism has detected an error - not a valid account.
+		if ( self::ACCOUNT_RETRIEVAL_ERROR === $account ) {
+			return false;
+		}
+
 		// empty array - special value to indicate that there's no account connected.
-		if ( empty( $account ) ) {
+		if ( is_array( $account ) && empty( $account ) ) {
 			return true;
 		}
 
@@ -723,5 +755,15 @@ class WC_Payments_Account {
 		}
 
 		return $wcpay_note_names;
+	}
+
+	/**
+	 * Gets the account country.
+	 *
+	 * @return string Country.
+	 */
+	public function get_account_country() {
+		$account = $this->get_cached_account_data();
+		return $account['country'] ?? 'US';
 	}
 }

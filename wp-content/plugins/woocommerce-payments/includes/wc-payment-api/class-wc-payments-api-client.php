@@ -25,7 +25,9 @@ class WC_Payments_API_Client {
 	const API_TIMEOUT_SECONDS = 70;
 
 	const ACCOUNTS_API        = 'accounts';
+	const APPLE_PAY_API       = 'apple_pay';
 	const CHARGES_API         = 'charges';
+	const CONN_TOKENS_API     = 'terminal/connection_tokens';
 	const CUSTOMERS_API       = 'customers';
 	const INTENTIONS_API      = 'intentions';
 	const REFUNDS_API         = 'refunds';
@@ -37,6 +39,7 @@ class WC_Payments_API_Client {
 	const TIMELINE_API        = 'timeline';
 	const PAYMENT_METHODS_API = 'payment_methods';
 	const SETUP_INTENTS_API   = 'setup_intents';
+	const TRACKING_API        = 'tracking';
 
 	/**
 	 * Common keys in API requests/responses that we might want to redact.
@@ -97,6 +100,15 @@ class WC_Payments_API_Client {
 	 */
 	public function is_server_connected() {
 		return $this->http_client->is_connected();
+	}
+
+	/**
+	 * Gets the current WP.com blog ID, if the Jetpack connection has been set up.
+	 *
+	 * @return integer|NULL Current WPCOM blog ID, or NULL if not connected yet.
+	 */
+	public function get_blog_id() {
+		return $this->is_server_connected() ? $this->http_client->get_blog_id() : null;
 	}
 
 	/**
@@ -288,16 +300,20 @@ class WC_Payments_API_Client {
 	/**
 	 * List deposits
 	 *
-	 * @param int $page      The requested page.
-	 * @param int $page_size The size of the requested page.
+	 * @param int    $page       The requested page.
+	 * @param int    $page_size  The size of the requested page.
+	 * @param string $sort       The column to be used for sorting.
+	 * @param string $direction  The sorting direction.
 	 *
 	 * @return array
 	 * @throws API_Exception - Exception thrown on request failure.
 	 */
-	public function list_deposits( $page = 0, $page_size = 25 ) {
+	public function list_deposits( $page = 0, $page_size = 25, $sort = 'date', $direction = 'desc' ) {
 		$query = [
-			'page'     => $page,
-			'pagesize' => $page_size,
+			'page'      => $page,
+			'pagesize'  => $page_size,
+			'sort'      => $sort,
+			'direction' => $direction,
 		];
 
 		return $this->request( $query, self::DEPOSITS_API, self::GET );
@@ -594,6 +610,18 @@ class WC_Payments_API_Client {
 	}
 
 	/**
+	 * Create a connection token.
+	 *
+	 * @param string $request request object received.
+	 *
+	 * @return array
+	 * @throws API_Exception - If request throws.
+	 */
+	public function create_token( $request ) {
+		return $this->request( [], self::CONN_TOKENS_API, self::POST );
+	}
+
+	/**
 	 * Get timeline of events for an intention
 	 *
 	 * @param string $intention_id The payment intention ID.
@@ -648,7 +676,7 @@ class WC_Payments_API_Client {
 	 *
 	 * @throws API_Exception Exception thrown on request failure.
 	 */
-	public function get_oauth_data( $return_url, $business_data = [], $site_data, array $actioned_notes = [] ) {
+	public function get_oauth_data( $return_url, array $business_data = [], array $site_data = [], array $actioned_notes = [] ) {
 		$request_args = apply_filters(
 			'wc_payments_get_oauth_data_args',
 			[
@@ -684,21 +712,15 @@ class WC_Payments_API_Client {
 	/**
 	 * Create a customer.
 	 *
-	 * @param string|null $name        Customer's full name.
-	 * @param string|null $email       Customer's email address.
-	 * @param string|null $description Description of customer.
+	 * @param array $customer_data Customer data.
 	 *
 	 * @return string The created customer's ID
 	 *
 	 * @throws API_Exception Error creating customer.
 	 */
-	public function create_customer( $name = null, $email = null, $description = null ) {
+	public function create_customer( array $customer_data ): string {
 		$customer_array = $this->request(
-			[
-				'name'        => $name,
-				'email'       => $email,
-				'description' => $description,
-			],
+			$customer_data,
 			self::CUSTOMERS_API,
 			self::POST
 		);
@@ -827,6 +849,90 @@ class WC_Payments_API_Client {
 	}
 
 	/**
+	 * Track a order creation/update event.
+	 *
+	 * @param array $order_data  The order data, as an array.
+	 * @param bool  $update      Is this an update event? (Defaults to false, which is a creation event).
+	 *
+	 * @return array An array, containing a `success` flag.
+	 *
+	 * @throws API_Exception If an error occurs.
+	 */
+	public function track_order( $order_data, $update = false ) {
+		return $this->request(
+			[
+				'order_data' => $order_data,
+				'update'     => $update,
+			],
+			self::TRACKING_API . '/order',
+			self::POST
+		);
+	}
+
+	/**
+	 * Link the current customer with the browsing session, for tracking purposes.
+	 *
+	 * @param string $session_id  Session ID, specific to this site.
+	 * @param string $customer_id Stripe customer ID.
+	 *
+	 * @return array An array, containing a `success` flag.
+	 *
+	 * @throws API_Exception If an error occurs.
+	 */
+	public function link_session_to_customer( $session_id, $customer_id ) {
+		return $this->request(
+			[
+				'session'  => $session_id,
+				'customer' => $customer_id,
+			],
+			self::TRACKING_API . '/link-session',
+			self::POST
+		);
+	}
+
+	/**
+	 * Sends the contents of the "forterToken" cookie to the server.
+	 *
+	 * @param string $token Contents of the "forterToken" cookie, used to identify the current browsing session.
+	 *
+	 * @return array An array, containing a `success` flag.
+	 *
+	 * @throws API_Exception If an error occurs.
+	 */
+	public function send_forter_token( $token ) {
+		return $this->request(
+			[
+				'token'      => $token,
+				//phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+				'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
+				'ip'         => WC_Geolocation::get_ip_address(),
+			],
+			self::TRACKING_API . '/forter-token',
+			self::POST
+		);
+	}
+
+	/**
+	 * Registers a new domain with Apple Pay.
+	 *
+	 * @param string $domain_name Domain name which to register for Apple Pay.
+	 *
+	 * @return array An array containing an id in case it has succeeded, or an error message in case it has failed.
+	 *
+	 * @throws API_Exception If an error occurs.
+	 */
+	public function register_domain_with_apple( $domain_name ) {
+		return $this->request(
+			[
+				'test_mode'   => false, // Force live mode - Domain registration doesn't work in test mode.
+				'domain_name' => $domain_name,
+			],
+			self::APPLE_PAY_API . '/domains',
+			self::POST
+		);
+	}
+
+	/**
 	 * Send the request to the WooCommerce Payment API
 	 *
 	 * @param array  $params           - Request parameters to send as either JSON or GET string. Defaults to test_mode=1 if either in dev or test mode, 0 otherwise.
@@ -884,10 +990,11 @@ class WC_Payments_API_Client {
 
 		$response = $this->http_client->remote_request(
 			[
-				'url'     => $url,
-				'method'  => $method,
-				'headers' => apply_filters( 'wcpay_api_request_headers', $headers ),
-				'timeout' => self::API_TIMEOUT_SECONDS,
+				'url'             => $url,
+				'method'          => $method,
+				'headers'         => apply_filters( 'wcpay_api_request_headers', $headers ),
+				'timeout'         => self::API_TIMEOUT_SECONDS,
+				'connect_timeout' => self::API_TIMEOUT_SECONDS,
 			],
 			$body,
 			$is_site_specific
@@ -1017,8 +1124,19 @@ class WC_Payments_API_Client {
 		$object['order'] = null;
 		if ( $order ) {
 			$object['order'] = [
-				'number' => $order->get_order_number(),
-				'url'    => $order->get_edit_order_url(),
+				'number'       => $order->get_order_number(),
+				'url'          => $order->get_edit_order_url(),
+				'customer_url' => admin_url(
+					add_query_arg(
+						[
+							'page'      => 'wc-admin',
+							'path'      => '/customers',
+							'filter'    => 'single_customer',
+							'customers' => $order->get_customer_id(),
+						],
+						'admin.php'
+					)
+				),
 			];
 
 			if ( function_exists( 'wcs_get_subscriptions_for_order' ) ) {
@@ -1081,6 +1199,7 @@ class WC_Payments_API_Client {
 		$intent = new WC_Payments_API_Intention(
 			$intention_array['id'],
 			$intention_array['amount'],
+			$intention_array['currency'],
 			$created,
 			$intention_array['status'],
 			$charge ? $charge['id'] : null,

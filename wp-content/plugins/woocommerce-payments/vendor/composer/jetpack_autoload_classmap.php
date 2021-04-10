@@ -15,19 +15,23 @@ return array(
 		'path'    => $vendorDir . '/myclabs/php-enum/src/PHPUnit/Comparator.php'
 	),
 	'Automattic\\Jetpack\\Autoloader\\AutoloadGenerator' => array(
-		'version' => '2.6.0.0',
+		'version' => '2.8.0.0',
 		'path'    => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadGenerator.php'
 	),
 	'Automattic\\Jetpack\\Autoloader\\AutoloadProcessor' => array(
-		'version' => '2.6.0.0',
+		'version' => '2.8.0.0',
 		'path'    => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadProcessor.php'
 	),
+	'Automattic\\Jetpack\\Autoloader\\AutoloadFileWriter' => array(
+		'version' => '2.8.0.0',
+		'path'    => $vendorDir . '/automattic/jetpack-autoloader/src/AutoloadFileWriter.php'
+	),
 	'Automattic\\Jetpack\\Autoloader\\CustomAutoloaderPlugin' => array(
-		'version' => '2.6.0.0',
+		'version' => '2.8.0.0',
 		'path'    => $vendorDir . '/automattic/jetpack-autoloader/src/CustomAutoloaderPlugin.php'
 	),
 	'Automattic\\Jetpack\\Autoloader\\ManifestGenerator' => array(
-		'version' => '2.6.0.0',
+		'version' => '2.8.0.0',
 		'path'    => $vendorDir . '/automattic/jetpack-autoloader/src/ManifestGenerator.php'
 	),
 	'Jetpack_XMLRPC_Server' => array(
@@ -91,7 +95,7 @@ return array(
 		'path'    => $vendorDir . '/automattic/jetpack-connection/src/class-xmlrpc-async-call.php'
 	),
 	'Automattic\\Jetpack\\Config' => array(
-		'version' => '1.4.1.0',
+		'version' => '1.4.3.0',
 		'path'    => $vendorDir . '/automattic/jetpack-config/src/class-config.php'
 	),
 	'Automattic\\Jetpack\\Heartbeat' => array(

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitfa60abe65a5ed8949106f329db9a74dd
+class ComposerStaticInit7c4615b1c485471281b2b4c2a62f578e
 {
     public static $files = array (
         'bce4ecd6aabb2a2948e06d0e2c4ea9a6' => __DIR__ . '/..' . '/automattic/jetpack-connection/legacy/load-ixr.php',
@@ -34,6 +34,7 @@ class ComposerStaticInitfa60abe65a5ed8949106f329db9a74dd
 
     public static $classMap = array (
         'Automattic\\Jetpack\\A8c_Mc_Stats' => __DIR__ . '/..' . '/automattic/jetpack-a8c-mc-stats/src/class-a8c-mc-stats.php',
+        'Automattic\\Jetpack\\Autoloader\\AutoloadFileWriter' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/AutoloadFileWriter.php',
         'Automattic\\Jetpack\\Autoloader\\AutoloadGenerator' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/AutoloadGenerator.php',
         'Automattic\\Jetpack\\Autoloader\\AutoloadProcessor' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/AutoloadProcessor.php',
         'Automattic\\Jetpack\\Autoloader\\CustomAutoloaderPlugin' => __DIR__ . '/..' . '/automattic/jetpack-autoloader/src/CustomAutoloaderPlugin.php',
@@ -56,7 +57,6 @@ class ComposerStaticInitfa60abe65a5ed8949106f329db9a74dd
         'Automattic\\Jetpack\\Status' => __DIR__ . '/..' . '/automattic/jetpack-status/src/class-status.php',
         'Automattic\\Jetpack\\Terms_Of_Service' => __DIR__ . '/..' . '/automattic/jetpack-terms-of-service/src/class-terms-of-service.php',
         'Automattic\\Jetpack\\Tracking' => __DIR__ . '/..' . '/automattic/jetpack-tracking/src/class-tracking.php',
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Jetpack_IXR_Client' => __DIR__ . '/..' . '/automattic/jetpack-connection/legacy/class-jetpack-ixr-client.php',
         'Jetpack_IXR_ClientMulticall' => __DIR__ . '/..' . '/automattic/jetpack-connection/legacy/class-jetpack-ixr-clientmulticall.php',
         'Jetpack_Options' => __DIR__ . '/..' . '/automattic/jetpack-options/legacy/class-jetpack-options.php',
@@ -71,9 +71,9 @@ class ComposerStaticInitfa60abe65a5ed8949106f329db9a74dd
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitfa60abe65a5ed8949106f329db9a74dd::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitfa60abe65a5ed8949106f329db9a74dd::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitfa60abe65a5ed8949106f329db9a74dd::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7c4615b1c485471281b2b4c2a62f578e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7c4615b1c485471281b2b4c2a62f578e::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7c4615b1c485471281b2b4c2a62f578e::$classMap;
 
         }, null, ClassLoader::class);
     }
