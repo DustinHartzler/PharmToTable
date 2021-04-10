@@ -2,9 +2,9 @@
 Contributors: woocommerce, automattic, royho, akeda, mattyza, bor0, woothemes
 Tags: credit card, stripe, apple pay, payment request, google pay, sepa, sofort, bancontact, alipay, giropay, ideal, p24, woocommerce, automattic
 Requires at least: 4.4
-Tested up to: 5.5
+Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 4.6.0
+Stable tag: 5.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Attributions: thorsten-stripe
@@ -126,14 +126,10 @@ If you get stuck, you can ask for help in the Plugin Forum.
 
 == Changelog ==
 
-= 4.6.0 - 2020-12-15 =
-* Tweak - Update packages for Composer 2 compatibility.
-* Tweak - Use full jQuery function calls instead of soon-to-be-deprecated shorthands.
-* Tweak - Use JSON.parse() instead of jQuery.parseJSON().
-* Tweak - Remove holiday messaging from Apple Pay note after Dec 22.
-* Fix   - Compatibility with the Stripe for WooCommerce plugin.
-* Fix   - Guard against fatal errors caused by WC_Admin_Note.
-* Fix   - Display error message when payment made with payment request buttons fails.
+= 5.1.0 - 2021-04-07 =
 
-See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-gateway-stripe/master/changelog.txt).
+* Fix - Don't attempt to submit level 3 data for non-US merchants.
+* Fix - Hide Payment Request Buttons when guest checkout is disabled.
+* Fix - Match Payment Request states with WooCommerce states.
 
+[See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce-gateway-stripe/trunk/changelog.txt).

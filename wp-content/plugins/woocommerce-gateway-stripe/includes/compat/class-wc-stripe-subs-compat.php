@@ -16,20 +16,21 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 		parent::__construct();
 
 		if ( class_exists( 'WC_Subscriptions_Order' ) ) {
-			add_action( 'woocommerce_scheduled_subscription_payment_' . $this->id, array( $this, 'scheduled_subscription_payment' ), 10, 2 );
-			add_action( 'wcs_resubscribe_order_created', array( $this, 'delete_resubscribe_meta' ), 10 );
-			add_action( 'wcs_renewal_order_created', array( $this, 'delete_renewal_meta' ), 10 );
-			add_action( 'woocommerce_subscription_failing_payment_method_updated_stripe', array( $this, 'update_failing_payment_method' ), 10, 2 );
-			add_action( 'wc_stripe_cards_payment_fields', array( $this, 'display_update_subs_payment_checkout' ) );
-			add_action( 'wc_stripe_add_payment_method_' . $this->id . '_success', array( $this, 'handle_add_payment_method_success' ), 10, 2 );
+			add_action( 'woocommerce_scheduled_subscription_payment_' . $this->id, [ $this, 'scheduled_subscription_payment' ], 10, 2 );
+			add_action( 'wcs_resubscribe_order_created', [ $this, 'delete_resubscribe_meta' ], 10 );
+			add_action( 'wcs_renewal_order_created', [ $this, 'delete_renewal_meta' ], 10 );
+			add_action( 'woocommerce_subscription_failing_payment_method_updated_stripe', [ $this, 'update_failing_payment_method' ], 10, 2 );
+			add_action( 'wc_stripe_cards_payment_fields', [ $this, 'display_update_subs_payment_checkout' ] );
+			add_action( 'wc_stripe_add_payment_method_' . $this->id . '_success', [ $this, 'handle_add_payment_method_success' ], 10, 2 );
+			add_action( 'woocommerce_subscriptions_change_payment_before_submit', [ $this, 'differentiate_change_payment_method_form' ] );
 
 			// display the credit card used for a subscription in the "My Subscriptions" table
-			add_filter( 'woocommerce_my_subscriptions_payment_method', array( $this, 'maybe_render_subscription_payment_method' ), 10, 2 );
+			add_filter( 'woocommerce_my_subscriptions_payment_method', [ $this, 'maybe_render_subscription_payment_method' ], 10, 2 );
 
 			// allow store managers to manually set Stripe as the payment method on a subscription
-			add_filter( 'woocommerce_subscription_payment_meta', array( $this, 'add_subscription_payment_meta' ), 10, 2 );
-			add_filter( 'woocommerce_subscription_validate_payment_meta', array( $this, 'validate_subscription_payment_meta' ), 10, 2 );
-			add_filter( 'wc_stripe_display_save_payment_method_checkbox', array( $this, 'maybe_hide_save_checkbox' ) );
+			add_filter( 'woocommerce_subscription_payment_meta', [ $this, 'add_subscription_payment_meta' ], 10, 2 );
+			add_filter( 'woocommerce_subscription_validate_payment_meta', [ $this, 'validate_subscription_payment_meta' ], 10, 2 );
+			add_filter( 'wc_stripe_display_save_payment_method_checkbox', [ $this, 'maybe_hide_save_checkbox' ] );
 
 			/*
 			 * WC subscriptions hooks into the "template_redirect" hook with priority 100.
@@ -37,8 +38,8 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 			 * See: https://github.com/woocommerce/woocommerce-subscriptions/blob/99a75687e109b64cbc07af6e5518458a6305f366/includes/class-wcs-cart-renewal.php#L165
 			 * If we are in the "You just need to authorize SCA" flow, we don't want that redirection to happen.
 			 */
-			add_action( 'template_redirect', array( $this, 'remove_order_pay_var' ), 99 );
-			add_action( 'template_redirect', array( $this, 'restore_order_pay_var' ), 101 );
+			add_action( 'template_redirect', [ $this, 'remove_order_pay_var' ], 99 );
+			add_action( 'template_redirect', [ $this, 'restore_order_pay_var' ], 101 );
 		}
 	}
 
@@ -59,7 +60,8 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 
 	/**
 	 * Is $order_id a subscription?
-	 * @param  int  $order_id
+	 *
+	 * @param  int $order_id
 	 * @return boolean
 	 */
 	public function has_subscription( $order_id ) {
@@ -83,7 +85,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	 * @since 4.1.11
 	 */
 	public function display_update_subs_payment_checkout() {
-		$subs_statuses = apply_filters( 'wc_stripe_update_subs_payment_method_card_statuses', array( 'active' ) );
+		$subs_statuses = apply_filters( 'wc_stripe_update_subs_payment_method_card_statuses', [ 'active' ] );
 		if (
 			apply_filters( 'wc_stripe_display_update_subs_payment_method_card_checkbox', true ) &&
 			wcs_user_has_subscription( get_current_user_id(), '', $subs_statuses ) &&
@@ -93,11 +95,11 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 			$id    = sprintf( 'wc-%1$s-update-subs-payment-method-card', $this->id );
 			woocommerce_form_field(
 				$id,
-				array(
+				[
 					'type'    => 'checkbox',
 					'label'   => $label,
 					'default' => apply_filters( 'wc_stripe_save_to_subs_checked', false ),
-				)
+				]
 			);
 		}
 	}
@@ -112,20 +114,36 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	public function handle_add_payment_method_success( $source_id, $source_object ) {
 		if ( isset( $_POST[ 'wc-' . $this->id . '-update-subs-payment-method-card' ] ) ) {
 			$all_subs        = wcs_get_users_subscriptions();
-			$subs_statuses   = apply_filters( 'wc_stripe_update_subs_payment_method_card_statuses', array( 'active' ) );
+			$subs_statuses   = apply_filters( 'wc_stripe_update_subs_payment_method_card_statuses', [ 'active' ] );
 			$stripe_customer = new WC_Stripe_Customer( get_current_user_id() );
 
 			if ( ! empty( $all_subs ) ) {
 				foreach ( $all_subs as $sub ) {
 					if ( $sub->has_status( $subs_statuses ) ) {
-						update_post_meta( $sub->get_id(), '_stripe_source_id', $source_id );
-						update_post_meta( $sub->get_id(), '_stripe_customer_id', $stripe_customer->get_id() );
-						update_post_meta( $sub->get_id(), '_payment_method', $this->id );
-						update_post_meta( $sub->get_id(), '_payment_method_title', $this->method_title );
+						WC_Subscriptions_Change_Payment_Gateway::update_payment_method(
+							$sub,
+							$this->id,
+							[
+								'post_meta' => [
+									'_stripe_source_id'   => [ 'value' => $source_id ],
+									'_stripe_customer_id' => [ 'value' => $stripe_customer->get_id() ],
+								],
+							]
+						);
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Render a dummy element in the "Change payment method" form (that does not appear in the "Pay for order" form)
+	 * which can be checked to determine proper SCA handling to apply for each form.
+	 *
+	 * @since 4.6.1
+	 */
+	public function differentiate_change_payment_method_form() {
+		echo '<input type="hidden" id="wc-stripe-change-payment-method" />';
 	}
 
 	/**
@@ -146,10 +164,10 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 
 			do_action( 'wc_stripe_change_subs_payment_method_success', $prepared_source->source, $prepared_source );
 
-			return array(
+			return [
 				'result'   => 'success',
 				'redirect' => $this->get_return_url( $subscription ),
-			);
+			];
 		} catch ( WC_Stripe_Exception $e ) {
 			wc_add_notice( $e->getLocalizedMessage(), 'error' );
 			WC_Stripe_Logger::log( 'Error: ' . $e->getMessage() );
@@ -158,6 +176,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 
 	/**
 	 * Process the payment based on type.
+	 *
 	 * @param  int $order_id
 	 * @return array
 	 */
@@ -212,9 +231,9 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	 * @since 3.0
 	 * @since 4.0.4 Add third parameter flag to retry.
 	 * @since 4.1.0 Add fourth parameter to log previous errors.
-	 * @param float $amount
-	 * @param mixed $renewal_order
-	 * @param bool $retry Should we retry the process?
+	 * @param float  $amount
+	 * @param mixed  $renewal_order
+	 * @param bool   $retry Should we retry the process?
 	 * @param object $previous_error
 	 */
 	public function process_subscription_payment( $amount, $renewal_order, $retry = true, $previous_error = false ) {
@@ -236,28 +255,30 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 			if ( isset( $_REQUEST['process_early_renewal'] ) ) { // wpcs: csrf ok.
 				$response = parent::process_payment( $order_id, true, false, $previous_error, true );
 
-				if( 'success' === $response['result'] && isset( $response['payment_intent_secret'] ) ) {
+				if ( 'success' === $response['result'] && isset( $response['payment_intent_secret'] ) ) {
 					$verification_url = add_query_arg(
-						array(
+						[
 							'order'         => $order_id,
 							'nonce'         => wp_create_nonce( 'wc_stripe_confirm_pi' ),
-							'redirect_to'   => remove_query_arg( array( 'process_early_renewal', 'subscription_id', 'wcs_nonce' ) ),
+							'redirect_to'   => remove_query_arg( [ 'process_early_renewal', 'subscription_id', 'wcs_nonce' ] ),
 							'early_renewal' => true,
-						),
+						],
 						WC_AJAX::get_endpoint( 'wc_stripe_verify_intent' )
 					);
 
-					echo wp_json_encode( array(
-						'stripe_sca_required' => true,
-						'intent_secret'       => $response['payment_intent_secret'],
-						'redirect_url'        => $verification_url,
-					) );
+					echo wp_json_encode(
+						[
+							'stripe_sca_required' => true,
+							'intent_secret'       => $response['payment_intent_secret'],
+							'redirect_url'        => $verification_url,
+						]
+					);
 
 					exit;
 				}
 
 				// Hijack all other redirects in order to do the redirection in JavaScript.
-				add_action( 'wp_redirect', array( $this, 'redirect_after_early_renewal' ), 100 );
+				add_action( 'wp_redirect', [ $this, 'redirect_after_early_renewal' ], 100 );
 
 				return;
 			}
@@ -280,11 +301,12 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 
 			WC_Stripe_Logger::log( "Info: Begin processing subscription payment for order {$order_id} for the amount of {$amount}" );
 
-			/* If we're doing a retry and source is chargeable, we need to pass
+			/*
+			 If we're doing a retry and source is chargeable, we need to pass
 			 * a different idempotency key and retry for success.
 			 */
 			if ( is_object( $source_object ) && empty( $source_object->error ) && $this->need_update_idempotency_key( $source_object, $previous_error ) ) {
-				add_filter( 'wc_stripe_idempotency_key', array( $this, 'change_idempotency_key' ), 10, 2 );
+				add_filter( 'wc_stripe_idempotency_key', [ $this, 'change_idempotency_key' ], 10, 2 );
 			}
 
 			if ( ( $this->is_no_such_source_error( $previous_error ) || $this->is_no_linked_source_error( $previous_error ) ) && apply_filters( 'wc_stripe_use_default_customer_source', true ) ) {
@@ -341,13 +363,14 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 				$error_message = __( 'This transaction requires authentication.', 'woocommerce-gateway-stripe' );
 				$renewal_order->add_order_note( $error_message );
 
-				$charge = end( $response->error->payment_intent->charges->data );
-				$id = $charge->id;
+				$charge   = end( $response->error->payment_intent->charges->data );
+				$id       = $charge->id;
 				$order_id = $renewal_order->get_id();
 
 				$renewal_order->set_transaction_id( $id );
+				/* translators: %s is the charge Id */
 				$renewal_order->update_status( 'failed', sprintf( __( 'Stripe charge awaiting authentication by user: %s.', 'woocommerce-gateway-stripe' ), $id ) );
-				if ( is_callable( array( $renewal_order, 'save' ) ) ) {
+				if ( is_callable( [ $renewal_order, 'save' ] ) ) {
 					$renewal_order->save();
 				}
 			} else {
@@ -385,7 +408,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 		} elseif ( function_exists( 'wcs_order_contains_renewal' ) && wcs_order_contains_renewal( $order_id ) ) {
 			$subscriptions = wcs_get_subscriptions_for_renewal_order( $order_id );
 		} else {
-			$subscriptions = array();
+			$subscriptions = [];
 		}
 
 		foreach ( $subscriptions as $subscription ) {
@@ -397,6 +420,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 
 	/**
 	 * Don't transfer Stripe customer/token meta to resubscribe orders.
+	 *
 	 * @param int $resubscribe_order The order created for the customer to resubscribe to the old expired/cancelled subscription
 	 */
 	public function delete_resubscribe_meta( $resubscribe_order ) {
@@ -411,6 +435,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 
 	/**
 	 * Don't transfer Stripe fee/ID meta to renewal orders.
+	 *
 	 * @param int $resubscribe_order The order created for the customer to resubscribe to the old expired/cancelled subscription
 	 */
 	public function delete_renewal_meta( $renewal_order ) {
@@ -427,9 +452,8 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	 * Update the customer_id for a subscription after using Stripe to complete a payment to make up for
 	 * an automatic renewal payment which previously failed.
 	 *
-	 * @access public
 	 * @param WC_Subscription $subscription The subscription for which the failing payment method relates.
-	 * @param WC_Order $renewal_order The order which recorded the successful payment (to make up for the failed automatic payment).
+	 * @param WC_Order        $renewal_order The order which recorded the successful payment (to make up for the failed automatic payment).
 	 * @return void
 	 */
 	public function update_failing_payment_method( $subscription, $renewal_order ) {
@@ -442,7 +466,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	 * manually set up automatic recurring payments for a customer via the Edit Subscriptions screen in 2.0+.
 	 *
 	 * @since 2.5
-	 * @param array $payment_meta associative array of meta data required for automatic payments
+	 * @param array           $payment_meta associative array of meta data required for automatic payments
 	 * @param WC_Subscription $subscription An instance of a subscription object
 	 * @return array
 	 */
@@ -459,18 +483,18 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 			delete_post_meta( $subscription_id, '_stripe_card_id', $source_id );
 		}
 
-		$payment_meta[ $this->id ] = array(
-			'post_meta' => array(
-				'_stripe_customer_id' => array(
+		$payment_meta[ $this->id ] = [
+			'post_meta' => [
+				'_stripe_customer_id' => [
 					'value' => get_post_meta( $subscription_id, '_stripe_customer_id', true ),
 					'label' => 'Stripe Customer ID',
-				),
-				'_stripe_source_id'   => array(
+				],
+				'_stripe_source_id'   => [
 					'value' => $source_id,
 					'label' => 'Stripe Source ID',
-				),
-			),
-		);
+				],
+			],
+		];
 
 		return $payment_meta;
 	}
@@ -482,7 +506,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	 * @since 2.5
 	 * @since 4.0.4 Stripe sourd id field no longer needs to be required.
 	 * @param string $payment_method_id The ID of the payment method to validate
-	 * @param array $payment_meta associative array of meta data required for automatic payments
+	 * @param array  $payment_meta associative array of meta data required for automatic payments
 	 * @return array
 	 */
 	public function validate_subscription_payment_meta( $payment_method_id, $payment_meta ) {
@@ -514,7 +538,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	 * Render the payment method used for a subscription in the "My Subscriptions" table
 	 *
 	 * @since 1.7.5
-	 * @param string $payment_method_to_display the default payment method text to display
+	 * @param string          $payment_method_to_display the default payment method text to display
 	 * @param WC_Subscription $subscription the subscription details
 	 * @return string the subscription payment method
 	 */
@@ -604,7 +628,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	public function remove_order_pay_var() {
 		global $wp;
 		if ( isset( $_GET['wc-stripe-confirmation'] ) ) {
-			$this->order_pay_var = $wp->query_vars['order-pay'];
+			$this->order_pay_var         = $wp->query_vars['order-pay'];
 			$wp->query_vars['order-pay'] = null;
 		}
 	}
@@ -650,6 +674,7 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 		// Fail the payment attempt (order would be currently pending because of retry rules).
 		$charge    = end( $existing_intent->charges->data );
 		$charge_id = $charge->id;
+		/* translators: %s is the stripe charge Id */
 		$renewal_order->update_status( 'failed', sprintf( __( 'Stripe charge awaiting authentication by user: %s.', 'woocommerce-gateway-stripe' ), $charge_id ) );
 
 		return true;
@@ -663,10 +688,10 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 	 */
 	public function redirect_after_early_renewal( $url ) {
 		echo wp_json_encode(
-			array(
+			[
 				'stripe_sca_required' => false,
 				'redirect_url'        => $url,
-			)
+			]
 		);
 
 		exit;
@@ -698,7 +723,8 @@ class WC_Stripe_Subs_Compat extends WC_Gateway_Stripe {
 			$order->delete( true );
 			wc_add_notice( __( 'Payment authorization for the renewal order was unsuccessful, please try again.', 'woocommerce-gateway-stripe' ), 'error' );
 			$renewal_url = wcs_get_early_renewal_url( wcs_get_subscription( $order->get_meta( '_subscription_renewal' ) ) );
-			wp_redirect( $renewal_url ); exit;
+			wp_redirect( $renewal_url );
+			exit;
 		}
 	}
 }
