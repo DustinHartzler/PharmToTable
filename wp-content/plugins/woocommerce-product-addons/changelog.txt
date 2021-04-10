@@ -1,5 +1,32 @@
 *** Product Addons Changelog ***
 
+2021-04-06 - version 3.7.0
+* Fix - Honor taxes in Customer Defined Price add-ons when store shows prices including tax.
+
+2021-03-30 - version 3.6.0
+* Fix - Prevent negative input on price addons when min restrictions are enabled.
+* Fix - Removed support for versions of WC 3.0 and below.
+* Fix - Reordering Product Add-Ons with email address should not remove @ characters.
+* Fix - Use h2 instead of h3 element for addon headings.
+* Fix - Wrap addons in a `wc-pao-addons-container` div.
+* Tweak - WC 5.1 compatibility.
+* Tweak - WP 5.7 compatibility.
+
+2021-03-09 - version 3.5.0
+* Fix - Add Better guards for WC Navigation not being enabled.
+
+2021-03-03 - version 3.4.1
+* Fix - Fix products with add-ons not accepting coupons set to exclude sale items.
+
+2021-02-22 - version 3.4.0
+* Fix - Improve display of products with add-ons in Cart and Checkout blocks.
+* Fix - Prevent products with required addons being added to the cart without options selected.
+* Fix - Update node-sass to 4.14.1.
+
+2021-01-27 - version 3.3.1
+* Fix - Scroll to required multiple choice add-ons of rabio button type when trying to add to cart a product without choosing the add-on.
+* Fix - Product total price will update instantly when writing a number in a quantity add-on.
+
 2020-12-07 - version 3.3.0
 * Fix - Fix Checkbox add-on not showing required styles when all are unselected.
 * Fix - Fix addon start template in WooCommerce versions prior to 3.0.
