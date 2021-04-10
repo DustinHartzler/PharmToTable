@@ -3,6 +3,7 @@ namespace Automattic\WooCommerce\Blocks\StoreApi\Utilities;
 
 use Automattic\WooCommerce\Blocks\StoreApi\Routes\RouteException;
 use Automattic\WooCommerce\Blocks\StoreApi\Utilities\NoticeHandler;
+use Automattic\WooCommerce\Checkout\Helpers\ReserveStock;
 
 /**
  * Woo Cart Controller class.
@@ -110,7 +111,7 @@ class CartController {
 	public function set_cart_item_quantity( $item_id, $quantity = 1 ) {
 		$cart_item = $this->get_cart_item( $item_id );
 
-		if ( ! $cart_item ) {
+		if ( empty( $cart_item ) ) {
 			throw new RouteException( 'woocommerce_rest_cart_invalid_key', __( 'Cart item does not exist.', 'woocommerce' ), 404 );
 		}
 
@@ -472,21 +473,50 @@ class CartController {
 
 		$packages = $cart->get_shipping_packages();
 
-		// Add package ID to array.
-		foreach ( $packages as $key => $package ) {
-			if ( ! isset( $packages[ $key ]['package_id'] ) ) {
-				$packages[ $key ]['package_id'] = $key;
-			}
+		// Add extra package data to array.
+		if ( count( $packages ) ) {
+			$packages = array_map(
+				function( $key, $package, $index ) {
+					$package['package_id']   = isset( $package['package_id'] ) ? $package['package_id'] : $key;
+					$package['package_name'] = isset( $package['package_name'] ) ? $package['package_name'] : $this->get_package_name( $package, $index );
+					return $package;
+				},
+				array_keys( $packages ),
+				$packages,
+				range( 1, count( $packages ) )
+			);
 		}
 
 		return $calculate_rates ? wc()->shipping()->calculate_shipping( $packages ) : $packages;
 	}
 
 	/**
+	 * Creates a name for a package.
+	 *
+	 * @param array $package Shipping package from WooCommerce.
+	 * @param int   $index Package number.
+	 * @return string
+	 */
+	protected function get_package_name( $package, $index ) {
+		return apply_filters(
+			'woocommerce_shipping_package_name',
+			$index > 1 ?
+				sprintf(
+					/* translators: %d: shipping package number */
+					_x( 'Shipping %d', 'shipping packages', 'woocommerce' ),
+					$index
+				) :
+				_x( 'Shipping', 'shipping packages', 'woocommerce' ),
+			$package['package_id'],
+			$package
+		);
+	}
+
+	/**
 	 * Selects a shipping rate.
 	 *
-	 * @param int    $package_id ID of the package to choose a rate for.
-	 * @param string $rate_id ID of the rate being chosen.
+	 * @param int|string $package_id ID of the package to choose a rate for.
+	 * @param string     $rate_id ID of the rate being chosen.
 	 */
 	public function select_shipping_rate( $package_id, $rate_id ) {
 		$cart                        = $this->get_cart_instance();
@@ -630,14 +660,9 @@ class CartController {
 	 * @return int
 	 */
 	protected function get_remaining_stock_for_product( $product ) {
-		if ( \class_exists( '\Automattic\WooCommerce\Checkout\Helpers\ReserveStock' ) ) {
-			$reserve_stock_controller = new \Automattic\WooCommerce\Checkout\Helpers\ReserveStock();
-		} else {
-			$reserve_stock_controller = new \Automattic\WooCommerce\Blocks\StoreApi\Utilities\ReserveStock();
-		}
-
-		$draft_order  = wc()->session->get( 'store_api_draft_order', 0 );
-		$qty_reserved = $reserve_stock_controller->get_reserved_stock( $product, $draft_order );
+		$reserve_stock = new ReserveStock();
+		$draft_order   = wc()->session->get( 'store_api_draft_order', 0 );
+		$qty_reserved  = $reserve_stock->get_reserved_stock( $product, $draft_order );
 
 		return $product->get_stock_quantity() - $qty_reserved;
 	}

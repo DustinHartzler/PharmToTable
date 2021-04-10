@@ -5,19 +5,23 @@
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 import {
-	SubtotalsItem,
-	TotalsFeesItem,
-	TotalsCouponCodeInput,
-	TotalsDiscountItem,
+	TotalsCoupon,
+	TotalsDiscount,
 	TotalsFooterItem,
-	TotalsShippingItem,
-	TotalsTaxesItem,
+	TotalsShipping,
 } from '@woocommerce/base-components/cart-checkout';
+import {
+	Subtotal,
+	TotalsFees,
+	TotalsTaxes,
+	ExperimentalOrderMeta,
+} from '@woocommerce/blocks-checkout';
+
+import { getCurrencyFromPriceResponse } from '@woocommerce/price-format';
 import {
 	COUPONS_ENABLED,
 	DISPLAY_CART_PRICES_INCLUDING_TAX,
 } from '@woocommerce/block-settings';
-import { getCurrencyFromPriceResponse } from '@woocommerce/base-utils';
 import { CartExpressPayment } from '@woocommerce/base-components/payment-methods';
 import {
 	useStoreCartCoupons,
@@ -34,6 +38,7 @@ import Title from '@woocommerce/base-components/title';
 import { getSetting } from '@woocommerce/settings';
 import { useEffect } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
+import { CartProvider } from '@woocommerce/base-context';
 
 /**
  * Internal dependencies
@@ -44,6 +49,14 @@ import CartLineItemsTable from './cart-line-items-table';
 
 import './style.scss';
 
+const Block = ( props ) => {
+	return (
+		<CartProvider>
+			<Cart { ...props } />
+		</CartProvider>
+	);
+};
+
 /**
  * Component that renders the Cart block when user has something in cart aka "full".
  *
@@ -51,14 +64,11 @@ import './style.scss';
  * @param {Object} props.attributes Incoming attributes for block.
  */
 const Cart = ( { attributes } ) => {
-	const {
-		isShippingCalculatorEnabled,
-		isShippingCostHidden,
-		hasDarkControls,
-	} = attributes;
+	const { isShippingCalculatorEnabled, hasDarkControls } = attributes;
 
 	const {
 		cartItems,
+		cartFees,
 		cartTotals,
 		cartIsLoading,
 		cartItemsCount,
@@ -107,15 +117,9 @@ const Cart = ( { attributes } ) => {
 				<Title headingLevel="2" className="wc-block-cart__totals-title">
 					{ __( 'Cart totals', 'woocommerce' ) }
 				</Title>
-				<SubtotalsItem
-					currency={ totalsCurrency }
-					values={ cartTotals }
-				/>
-				<TotalsFeesItem
-					currency={ totalsCurrency }
-					values={ cartTotals }
-				/>
-				<TotalsDiscountItem
+				<Subtotal currency={ totalsCurrency } values={ cartTotals } />
+				<TotalsFees currency={ totalsCurrency } cartFees={ cartFees } />
+				<TotalsDiscount
 					cartCoupons={ appliedCoupons }
 					currency={ totalsCurrency }
 					isRemovingCoupon={ isRemovingCoupon }
@@ -123,21 +127,21 @@ const Cart = ( { attributes } ) => {
 					values={ cartTotals }
 				/>
 				{ cartNeedsShipping && (
-					<TotalsShippingItem
+					<TotalsShipping
 						showCalculator={ isShippingCalculatorEnabled }
-						showRatesWithoutAddress={ ! isShippingCostHidden }
+						showRateSelector={ true }
 						values={ cartTotals }
 						currency={ totalsCurrency }
 					/>
 				) }
 				{ ! DISPLAY_CART_PRICES_INCLUDING_TAX && (
-					<TotalsTaxesItem
+					<TotalsTaxes
 						currency={ totalsCurrency }
 						values={ cartTotals }
 					/>
 				) }
 				{ COUPONS_ENABLED && (
-					<TotalsCouponCodeInput
+					<TotalsCoupon
 						onSubmit={ applyCoupon }
 						isLoading={ isApplyingCoupon }
 					/>
@@ -146,6 +150,7 @@ const Cart = ( { attributes } ) => {
 					currency={ totalsCurrency }
 					values={ cartTotals }
 				/>
+				<ExperimentalOrderMeta.Slot />
 				<div className="wc-block-cart__payment-options">
 					{ cartNeedsPayment && <CartExpressPayment /> }
 					<CheckoutButton
@@ -164,4 +169,4 @@ Cart.propTypes = {
 	attributes: PropTypes.object.isRequired,
 };
 
-export default Cart;
+export default Block;

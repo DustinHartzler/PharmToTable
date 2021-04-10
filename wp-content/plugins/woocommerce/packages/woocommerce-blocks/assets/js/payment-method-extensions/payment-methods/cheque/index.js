@@ -44,9 +44,11 @@ const offlineChequePaymentMethod = {
 	label: <Label />,
 	content: <Content />,
 	edit: <Content />,
-	icons: null,
 	canMakePayment: () => true,
 	ariaLabel: label,
+	supports: {
+		features: settings?.supports ?? [],
+	},
 };
 
-registerPaymentMethod( ( Config ) => new Config( offlineChequePaymentMethod ) );
+registerPaymentMethod( offlineChequePaymentMethod );

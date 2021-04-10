@@ -40,12 +40,14 @@ const paypalPaymentMethod = {
 	),
 	content: <Content />,
 	edit: <Content />,
-	icons: null,
 	canMakePayment: () => true,
 	ariaLabel: decodeEntities(
 		settings.title ||
 			__( 'Payment via PayPal', 'woocommerce' )
 	),
+	supports: {
+		features: settings.supports ?? [],
+	},
 };
 
-registerPaymentMethod( ( Config ) => new Config( paypalPaymentMethod ) );
+registerPaymentMethod( paypalPaymentMethod );
