@@ -186,7 +186,10 @@ footer .footer-bottom p a {
     z-index: 0;
 }
 
-.about-area,
+.about-area {
+    z-index: 0;
+}
+
 .testimonials-area,
 .doctors-area {
     position: relative;
@@ -204,7 +207,14 @@ footer .footer-bottom p a {
 }
 
 @media only screen and (max-width: 600px) {
-    h2 {
-        font-size: 1em;
+
+    h2,
+    h2 span {
+        font-size: 1.5em;
+    }
+
+    .modal-inner {
+        max-height: calc(100% - 60px);
+        overflow: scroll;
     }
 }
