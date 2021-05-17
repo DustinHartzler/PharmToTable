@@ -97,7 +97,7 @@
                 <h1><?php if (is_shop()) {
                     $title = 'Shop';
                     echo $title;
-                }else { $title = the_title(); }
+                }else { $title = get_the_title(); }
                 ?></h1>
             </div>
             <div class="col-md-6 text-right">
