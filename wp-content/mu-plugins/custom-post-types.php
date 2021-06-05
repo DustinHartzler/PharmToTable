@@ -126,40 +126,32 @@ function provider_assets($post){
 	$youtube   		= get_post_meta($post->ID, 'provider_youtube', true);
 	$credentials 	= get_post_meta($post->ID, 'provider_credentials', true);
 	$azova			= get_post_meta($post->ID, 'provider_azova', true);
+    $azova_package  = get_post_meta($post->ID, 'provider_azova_package', true);
 	$focus_area		= get_post_meta($post->ID, 'provider_focus_area', true);
 	$pro_bio		= get_post_meta($post->ID, 'provider_pro_bio', true);
 	$personal_bio	= get_post_meta($post->ID, 'provider_personal_bio', true);
-	$day1			= get_post_meta($post->ID, 'provider_day1', true);
-	$hour1			= get_post_meta($post->ID, 'provider_hour1', true);
-	$day2			= get_post_meta($post->ID, 'provider_day2', true);
-	$hour2			= get_post_meta($post->ID, 'provider_hour2', true);
-	$day3			= get_post_meta($post->ID, 'provider_day3', true);
-	$hour3			= get_post_meta($post->ID, 'provider_hour3', true);
-	$day4			= get_post_meta($post->ID, 'provider_day4', true);
-	$hour4			= get_post_meta($post->ID, 'provider_hour4', true);
-	$day5			= get_post_meta($post->ID, 'provider_day5', true);
-	$hour5			= get_post_meta($post->ID, 'provider_hour5', true);
-	$day6			= get_post_meta($post->ID, 'provider_day6', true);
-	$hour6			= get_post_meta($post->ID, 'provider_hour6', true);
-	$day7			= get_post_meta($post->ID, 'provider_day7', true);
-	$hour7			= get_post_meta($post->ID, 'provider_hour7', true);
-
-
 	?>
 	<p>
 	<table>
 		<tr>
-			<td width="25%">
+			<td width="20%">
 				<label for="provider_credentials">Credentials: </label>
 				<input type="text" class="widefat" name="provider_credentials" id="provider_credentials"
 				value="<?php echo esc_attr($credentials); ?>"?>
 			</td>
-			<td width="25%">
+            <td width="20%">
 				<label for="provider_azova">Azova Schedule Link: </label>
 				<input type="text" class="widefat" name="provider_azova" id="provider_azova"
 				value="<?php echo esc_attr($azova); ?>"?>
 			</td>
+            <td width="20%">
+				<label for="provider_azova_package">Azova Package Link: </label>
+				<input type="text" class="widefat" name="provider_azova_package" id="provider_azova_package"
+				value="<?php echo esc_attr($azova_package); ?>"?>
+			</td>
 		</tr>
+        </table>
+        <table>
 			<tr>
 			<td width="50%">
 				<label for="provider_pro_bio">Professional Bio: </label>
@@ -172,7 +164,7 @@ function provider_assets($post){
 				id="provider_personal_bio" ><?php echo esc_attr($personal_bio); ?></textarea>
 			</td>
 		</tr>
-		</table>
+	</table>
 		<h3>Social Media</h3>
 		<table>
 		<tr>
@@ -210,95 +202,6 @@ function provider_assets($post){
 			</td>
 		</tr>
 	</table>
-	<h3>Working Hours</h3>
-		<table>
-		<tr>
-			<td width="20%">
-				<label for="provider_day1">Day: </label>
-				<input type="text" class="widefat" name="provider_day1" id="provider_day1"
-				value="<?php echo esc_attr($day1); ?>"?>
-			</td>
-			<td width="20%">
-				<label for="provider_hour1">Hours: </label>
-				<input type="text" class="widefat" name="provider_hour1" id="provider_hour1"
-				value="<?php echo esc_attr($hour1); ?>"?>
-			</td>
-		</tr>
-		<tr>
-			<td width="20%">
-				<label for="provider_day2">Day: </label>
-				<input type="text" class="widefat" name="provider_day2" id="provider_day2"
-				value="<?php echo esc_attr($day2); ?>"?>
-			</td>
-			<td width="20%">
-				<label for="provider_hour2">Hours: </label>
-				<input type="text" class="widefat" name="provider_hour2" id="provider_hour2"
-				value="<?php echo esc_attr($hour2); ?>"?>
-			</td>
-			</td>
-		</tr>
-		<tr>
-			<td width="20%">
-				<label for="provider_day3">Day: </label>
-				<input type="text" class="widefat" name="provider_day3" id="provider_day3"
-				value="<?php echo esc_attr($day3); ?>"?>
-			</td>
-			<td width="20%">
-				<label for="provider_hour3">Hours: </label>
-				<input type="text" class="widefat" name="provider_hour3" id="provider_hour3"
-				value="<?php echo esc_attr($hour3); ?>"?>
-			</td>
-		</tr>
-		<tr>
-			<td width="20%">
-				<label for="provider_day4">Day: </label>
-				<input type="text" class="widefat" name="provider_day4" id="provider_day4"
-				value="<?php echo esc_attr($day4); ?>"?>
-			</td>
-			<td width="20%">
-				<label for="provider_hour4">Hours: </label>
-				<input type="text" class="widefat" name="provider_hour4" id="provider_hour4"
-				value="<?php echo esc_attr($hour4); ?>"?>
-			</td>
-			</td>
-		</tr>
-		<tr>
-			<td width="20%">
-				<label for="provider_day5">Day: </label>
-				<input type="text" class="widefat" name="provider_day5" id="provider_day5"
-				value="<?php echo esc_attr($day5); ?>"?>
-			</td>
-			<td width="20%">
-				<label for="provider_hour5">Hours: </label>
-				<input type="text" class="widefat" name="provider_hour5" id="provider_hour5"
-				value="<?php echo esc_attr($hour5); ?>"?>
-			</td>
-		</tr>
-		<tr>
-			<td width="20%">
-				<label for="provider_day6">Day: </label>
-				<input type="text" class="widefat" name="provider_day6" id="provider_day6"
-				value="<?php echo esc_attr($day6); ?>"?>
-			</td>
-			<td width="20%">
-				<label for="provider_hour6">Hours: </label>
-				<input type="text" class="widefat" name="provider_hour6" id="provider_hour6"
-				value="<?php echo esc_attr($hour6); ?>"?>
-			</td>
-		</tr>
-		<tr>
-			<td width="20%">
-				<label for="provider_day7">Day: </label>
-				<input type="text" class="widefat" name="provider_day7" id="provider_day7"
-				value="<?php echo esc_attr($day7); ?>"?>
-			</td>
-			<td width="20%">
-				<label for="provider_hour7">Hours: </label>
-				<input type="text" class="widefat" name="provider_hour7" id="provider_hour7"
-				value="<?php echo esc_attr($hour7); ?>"?>
-			</td>
-		</tr>
-	</table>
 	</p>
 	<?php
 }
@@ -326,6 +229,9 @@ function provider_assets($post){
 		}
 		if (isset($_POST['provider_azova'])){
 			update_post_meta($id, 'provider_azova', $_POST['provider_azova']);
+		}
+        if (isset($_POST['provider_azova_package'])){
+			update_post_meta($id, 'provider_azova_package', $_POST['provider_azova_package']);
 		}
 		if (isset($_POST['provider_pro_bio'])){
 			update_post_meta($id, 'provider_pro_bio', $_POST['provider_pro_bio']);
