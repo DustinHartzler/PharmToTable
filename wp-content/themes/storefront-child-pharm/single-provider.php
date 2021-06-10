@@ -15,6 +15,35 @@
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
 
+<!-- Facebook Pixel Code -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '3168022206626913');
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=432268807399441&ev=PageView&noscript=1"
+    /></noscript>
+<!-- End Facebook Pixel Code -->
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-98971040-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-98971040-1');
+</script>
+<!-- End Google Analytics -->
+
     <!-- ========== Start Stylesheet ========== -->
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/font-awesome.min.css" rel="stylesheet" />
@@ -136,15 +165,6 @@
                                 $linkedin   = get_post_meta( $post->ID, 'provider_linkedin', true );
                                 $pinterest  = get_post_meta( $post->ID, 'provider_pinterest', true );
                                 $youtube    = get_post_meta( $post->ID, 'provider_youtube', true );
-                                $day1		= get_post_meta($post->ID, 'provider_day1', true);
-                                $day2		= get_post_meta($post->ID, 'provider_day2', true);
-                                $day3		= get_post_meta($post->ID, 'provider_day3', true);
-                                $day4		= get_post_meta($post->ID, 'provider_day4', true);
-                                $day5		= get_post_meta($post->ID, 'provider_day5', true);
-                                $day6		= get_post_meta($post->ID, 'provider_day6', true);
-                                $day7		= get_post_meta($post->ID, 'provider_day7', true);
-
-
                                 ?>
                             <ul>
                                 <?php if( !empty ( $facebook ) ){ ?>
@@ -185,6 +205,8 @@
 } } ?> </h4>
                         <?php the_content(); ?>
                         <a class="btn btn-theme border btn-md" href="<?php echo get_post_meta($post->ID, 'provider_azova', true); ?>" target="_blank">Make Appointment</a>
+                        <a class="btn btn-theme border btn-md" href="<?php echo get_post_meta($post->ID, 'provider_azova_package', true); ?>" target="_blank">Book a Package</a>
+
                          <!-- Tab Nav -->
                         <ul class="nav nav-pills">
                             <li class="active">
