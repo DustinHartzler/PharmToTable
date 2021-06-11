@@ -21,7 +21,7 @@
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
 
-        <!-- Facebook Pixel Code -->
+<!-- Facebook Pixel Code -->
     <script>
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -48,7 +48,6 @@
 
   gtag('config', 'UA-98971040-1');
 </script>
-
 <!-- End Google Analytics -->
 
     <!-- ========== Start Stylesheet ========== -->
@@ -106,7 +105,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
                     <a class="navbar-brand">
-                        <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/pharmtotable-logo.png" class="logo" alt="Logo">
+                        <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/logo-pharmtotable.png" class="logo" alt="Logo">
                     </a>
                 </div>
                 <!-- End Header Navigation -->

@@ -23,6 +23,23 @@ Images License: GNU General Public License v2 or later
  * Add your own custom css below this text.
  */
 
+:root {
+    --primary: #71CABC;
+    --secondary: #003D42;
+    --error: #ce0606;
+    --salmon: #F58D75;
+    --white: #ffffff;
+}
+
+@font-face {
+    font-family: 'silver_south_scriptregular';
+    src: url('assets/fonts/silver_south_script-webfont.woff2') format('woff2'),
+        url('assets/fonts/silver_south_script-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 .alignright {
     float: right;
     padding-left: 10px;
@@ -124,4 +141,30 @@ nav.navbar.bootsnav ul.nav>li.menu-item-has-children>a.dropdown-toggle::after {
     .attr-nav {
         display: none;
     }
+}
+
+
+/* New Branding */
+
+.btn-theme,
+nav.navbar .quote-btn a {
+    background-color: var(--salmon);
+    border: 2px solid var(--salmon);
+}
+
+.btn-theme:hover,
+nav.navbar .quote-btn a:hover,
+.btn-theme.effect:hover,
+.btn-theme.effect:focus {
+    background-color: #CC7562;
+    border-color: #CC7562;
+}
+
+h2 span {
+    font-family: 'silver_south_scriptregular';
+    font-size: 2em;
+}
+
+.banner-area .content span {
+    color: var(--primary);
 }

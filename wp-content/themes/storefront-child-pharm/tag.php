@@ -75,7 +75,7 @@
                 <div class="attr-nav">
                     <ul>
                         <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
-                        <li class="quote-btn"><a href="#">Make Appoinment</a></li>
+                        <li class="quote-btn"><a href="#">Make Appointment</a></li>
                     </ul>
                 </div>
                 <!-- End Atribute Navigation -->
@@ -86,7 +86,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
                     <a class="navbar-brand" href="<?php bloginfo('url'); ?>">
-                        <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/pharmtotable-logo.png" class="logo" alt="Logo">
+                        <img src="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/logo-pharmtotable.png" class="logo" alt="Logo">
                     </a>
                 </div>
                 <!-- End Header Navigation -->
