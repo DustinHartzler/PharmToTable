@@ -107,7 +107,7 @@
                 <!-- Start Atribute Navigation -->
                 <div class="attr-nav">
                     <ul>
-                        <li class="quote-btn"><a href="#">Make Appointment</a></li>
+                        <li class="quote-btn"><a href="<?php bloginfo('url'); ?>/provider">Make Appointment</a></li>
                     </ul>
                 </div>
                 <!-- End Atribute Navigation -->

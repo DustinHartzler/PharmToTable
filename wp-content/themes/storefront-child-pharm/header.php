@@ -30,6 +30,19 @@
 <!-- GOOGLE FONT -->
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Oswald:400,700%7cPoppins:300,400,400i,600,600i,700,800,900"/>
 
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-98971040-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-98971040-1');
+</script>
+
+<!-- End Google Analytics -->
+
 <!-- FONT AWESOME -->
 <script src="https://kit.fontawesome.com/39bb5e0fe7.js" crossorigin="anonymous"></script>
 
