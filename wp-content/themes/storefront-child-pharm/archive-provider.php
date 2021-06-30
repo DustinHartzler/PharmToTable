@@ -231,6 +231,7 @@
                             $linkedin   = get_post_meta( $post->ID, 'provider_linkedin', true );
                             $pinterest  = get_post_meta( $post->ID, 'provider_pinterest', true );
                             $youtube    = get_post_meta( $post->ID, 'provider_youtube', true );
+                            $package    = get_post_meta( $post->ID, 'provider_azova_package', true );
 
                                 ?>
                     <div class="col-md-4 col-sm-6 equal-height">
@@ -277,9 +278,11 @@
                                 <div class="appoinment-btn">
                                     <a href="<?php echo get_post_meta($post->ID, 'provider_azova', true); ?>" target="_blank">Make appointment</a>
                                 </div>
+                                <?php if( !empty ( $package ) ){ ?>
                                 <div class="appoinment-btn">
                                     <a href="<?php echo get_post_meta($post->ID, 'provider_azova_package', true); ?>" target="_blank">Book a Package</a>
                                 </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>

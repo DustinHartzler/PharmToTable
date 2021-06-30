@@ -165,6 +165,7 @@
                                 $linkedin   = get_post_meta( $post->ID, 'provider_linkedin', true );
                                 $pinterest  = get_post_meta( $post->ID, 'provider_pinterest', true );
                                 $youtube    = get_post_meta( $post->ID, 'provider_youtube', true );
+                                $package    = get_post_meta( $post->ID, 'provider_azova_package', true );
                                 ?>
                             <ul>
                                 <?php if( !empty ( $facebook ) ){ ?>
@@ -205,7 +206,9 @@
 } } ?> </h4>
                         <?php the_content(); ?>
                         <a class="btn btn-theme border btn-md" href="<?php echo get_post_meta($post->ID, 'provider_azova', true); ?>" target="_blank">Make Appointment</a>
-                        <a class="btn btn-theme border btn-md" href="<?php echo get_post_meta($post->ID, 'provider_azova_package', true); ?>" target="_blank">Book a Package</a>
+                        <?php if( !empty ( $package ) ){ ?>
+                            <a class="btn btn-theme border btn-md" href="<?php echo get_post_meta($post->ID, 'provider_azova_package', true); ?>" target="_blank">Book a Package</a>
+                        <?php } ?>
 
                          <!-- Tab Nav -->
                         <ul class="nav nav-pills">
