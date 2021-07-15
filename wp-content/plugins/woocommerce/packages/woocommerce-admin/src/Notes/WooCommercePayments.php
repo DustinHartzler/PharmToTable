@@ -49,7 +49,7 @@ class WooCommercePayments {
 			return;
 		}
 
-		$data_store = \WC_Data_Store::load( 'admin-note' );
+		$data_store = Notes::load_data_store();
 
 		// We already have this note? Then mark the note as actioned.
 		$note_ids = $data_store->get_notes_with_name( self::NOTE_NAME );
@@ -148,6 +148,8 @@ class WooCommercePayments {
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
+
+		wc_admin_record_tracks_event( 'woocommerce_payments_install', array( 'context' => 'inbox' ) );
 
 		$activate_request = array( 'plugins' => self::PLUGIN_SLUG );
 		$result           = $installer->activate_plugins( $activate_request );

@@ -6,11 +6,13 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import Button from '@woocommerce/base-components/button';
 import { ValidatedTextInput } from '@woocommerce/base-components/text-input';
 import Label from '@woocommerce/base-components/label';
-import { ValidationInputError } from '@woocommerce/base-components/validation';
 import LoadingMask from '@woocommerce/base-components/loading-mask';
 import PropTypes from 'prop-types';
 import { withInstanceId } from '@woocommerce/base-hocs/with-instance-id';
-import { useValidationContext } from '@woocommerce/base-context';
+import {
+	ValidationInputError,
+	useValidationContext,
+} from '@woocommerce/base-context';
 import { Panel } from '@woocommerce/blocks-checkout';
 
 /**
@@ -49,17 +51,16 @@ const TotalsCoupon = ( {
 			title={
 				<Label
 					label={ __(
-						'Coupon Code?',
+						'Coupon code',
 						'woocommerce'
 					) }
 					screenReaderLabel={ __(
-						'Introduce Coupon Code',
+						'Apply a coupon code',
 						'woocommerce'
 					) }
 					htmlFor={ textInputId }
 				/>
 			}
-			titleTag="h2"
 		>
 			<LoadingMask
 				screenReaderLabel={ __(

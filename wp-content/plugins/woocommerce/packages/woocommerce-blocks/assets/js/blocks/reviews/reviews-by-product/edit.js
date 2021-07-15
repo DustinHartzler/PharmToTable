@@ -47,18 +47,17 @@ const ReviewsByProductEditor = ( {
 			<SearchListItem
 				{ ...args }
 				countLabel={ sprintf(
-					// Translators: %d is the review count.
+					/* translators: %d is the review count. */
 					_n(
-						'%d Review',
-						'%d Reviews',
+						'%d review',
+						'%d reviews',
 						item.review_count,
 						'woocommerce'
 					),
 					item.review_count
 				) }
-				showCount
 				aria-label={ sprintf(
-					// Translators: %1$s is the item name, and %2$d is the number of reviews for the item.
+					/* translators: %1$s is the item name, and %2$d is the number of reviews for the item. */
 					_n(
 						'%1$s, has %2$d review',
 						'%1$s, has %2$d reviews',
@@ -86,6 +85,7 @@ const ReviewsByProductEditor = ( {
 							setAttributes( { productId: id } );
 						} }
 						renderItem={ renderProductControlItem }
+						isCompact={ true }
 					/>
 				</PanelBody>
 				<PanelBody

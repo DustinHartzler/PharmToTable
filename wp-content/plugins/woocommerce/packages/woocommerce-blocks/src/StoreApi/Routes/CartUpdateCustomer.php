@@ -1,7 +1,6 @@
 <?php
 namespace Automattic\WooCommerce\Blocks\StoreApi\Routes;
 
-use Automattic\WooCommerce\Blocks\StoreApi\Utilities\CartController;
 use Automattic\WooCommerce\Blocks\StoreApi\Schemas\CartSchema;
 use Automattic\WooCommerce\Blocks\StoreApi\Schemas\BillingAddressSchema;
 use Automattic\WooCommerce\Blocks\StoreApi\Schemas\ShippingAddressSchema;
@@ -14,33 +13,6 @@ use Automattic\WooCommerce\Blocks\StoreApi\Schemas\ShippingAddressSchema;
  * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
  */
 class CartUpdateCustomer extends AbstractCartRoute {
-	/**
-	 * Billing address schema instance.
-	 *
-	 * @var BillingAddressSchema
-	 */
-	protected $billing_address_schema;
-
-	/**
-	 * Shipping address schema instance.
-	 *
-	 * @var ShippingAddressSchema
-	 */
-	protected $shipping_address_schema;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param CartSchema            $schema Schema class for this route.
-	 * @param ShippingAddressSchema $shipping_address_schema Billing address schema class for this route.
-	 * @param BillingAddressSchema  $billing_address_schema Billing address schema class for this route.
-	 */
-	public function __construct( CartSchema $schema, ShippingAddressSchema $shipping_address_schema, BillingAddressSchema $billing_address_schema ) {
-		$this->schema                  = $schema;
-		$this->shipping_address_schema = $shipping_address_schema;
-		$this->billing_address_schema  = $billing_address_schema;
-	}
-
 	/**
 	 * Get the namespace for this route.
 	 *
@@ -75,21 +47,22 @@ class CartUpdateCustomer extends AbstractCartRoute {
 						'description'       => __( 'Billing address.', 'woocommerce' ),
 						'type'              => 'object',
 						'context'           => [ 'view', 'edit' ],
-						'properties'        => $this->billing_address_schema->get_properties(),
-						'sanitize_callback' => [ $this->billing_address_schema, 'sanitize_callback' ],
-						'validate_callback' => [ $this->billing_address_schema, 'validate_callback' ],
+						'properties'        => $this->schema->billing_address_schema->get_properties(),
+						'sanitize_callback' => [ $this->schema->billing_address_schema, 'sanitize_callback' ],
+						'validate_callback' => [ $this->schema->billing_address_schema, 'validate_callback' ],
 					],
 					'shipping_address' => [
 						'description'       => __( 'Shipping address.', 'woocommerce' ),
 						'type'              => 'object',
 						'context'           => [ 'view', 'edit' ],
-						'properties'        => $this->shipping_address_schema->get_properties(),
-						'sanitize_callback' => [ $this->shipping_address_schema, 'sanitize_callback' ],
-						'validate_callback' => [ $this->shipping_address_schema, 'validate_callback' ],
+						'properties'        => $this->schema->shipping_address_schema->get_properties(),
+						'sanitize_callback' => [ $this->schema->shipping_address_schema, 'sanitize_callback' ],
+						'validate_callback' => [ $this->schema->shipping_address_schema, 'validate_callback' ],
 					],
 				],
 			],
-			'schema' => [ $this->schema, 'get_public_item_schema' ],
+			'schema'      => [ $this->schema, 'get_public_item_schema' ],
+			'allow_batch' => [ 'v1' => true ],
 		];
 	}
 
@@ -101,10 +74,9 @@ class CartUpdateCustomer extends AbstractCartRoute {
 	 * @return \WP_REST_Response
 	 */
 	protected function get_route_post_response( \WP_REST_Request $request ) {
-		$controller = new CartController();
-		$cart       = $controller->get_cart_instance();
-		$billing    = isset( $request['billing_address'] ) ? $request['billing_address'] : [];
-		$shipping   = isset( $request['shipping_address'] ) ? $request['shipping_address'] : [];
+		$cart     = $this->cart_controller->get_cart_instance();
+		$billing  = isset( $request['billing_address'] ) ? $request['billing_address'] : [];
+		$shipping = isset( $request['shipping_address'] ) ? $request['shipping_address'] : [];
 
 		// If the cart does not need shipping, shipping address is forced to match billing address unless defined.
 		if ( ! $cart->needs_shipping() && ! isset( $request['shipping_address'] ) ) {
@@ -147,9 +119,50 @@ class CartUpdateCustomer extends AbstractCartRoute {
 		);
 		wc()->customer->save();
 
-		$cart->calculate_shipping();
-		$cart->calculate_totals();
+		$this->calculate_totals();
+		$this->maybe_update_order();
 
 		return rest_ensure_response( $this->schema->get_item_response( $cart ) );
+	}
+
+	/**
+	 * If there is a draft order, update customer data there also.
+	 *
+	 * @return void
+	 */
+	protected function maybe_update_order() {
+		$draft_order_id = wc()->session->get( 'store_api_draft_order', 0 );
+		$draft_order    = $draft_order_id ? wc_get_order( $draft_order_id ) : false;
+
+		if ( ! $draft_order ) {
+			return;
+		}
+
+		$draft_order->set_props(
+			[
+				'billing_first_name'  => wc()->customer->get_billing_first_name(),
+				'billing_last_name'   => wc()->customer->get_billing_last_name(),
+				'billing_company'     => wc()->customer->get_billing_company(),
+				'billing_address_1'   => wc()->customer->get_billing_address_1(),
+				'billing_address_2'   => wc()->customer->get_billing_address_2(),
+				'billing_city'        => wc()->customer->get_billing_city(),
+				'billing_state'       => wc()->customer->get_billing_state(),
+				'billing_postcode'    => wc()->customer->get_billing_postcode(),
+				'billing_country'     => wc()->customer->get_billing_country(),
+				'billing_email'       => wc()->customer->get_billing_email(),
+				'billing_phone'       => wc()->customer->get_billing_phone(),
+				'shipping_first_name' => wc()->customer->get_shipping_first_name(),
+				'shipping_last_name'  => wc()->customer->get_shipping_last_name(),
+				'shipping_company'    => wc()->customer->get_shipping_company(),
+				'shipping_address_1'  => wc()->customer->get_shipping_address_1(),
+				'shipping_address_2'  => wc()->customer->get_shipping_address_2(),
+				'shipping_city'       => wc()->customer->get_shipping_city(),
+				'shipping_state'      => wc()->customer->get_shipping_state(),
+				'shipping_postcode'   => wc()->customer->get_shipping_postcode(),
+				'shipping_country'    => wc()->customer->get_shipping_country(),
+			]
+		);
+
+		$draft_order->save();
 	}
 }

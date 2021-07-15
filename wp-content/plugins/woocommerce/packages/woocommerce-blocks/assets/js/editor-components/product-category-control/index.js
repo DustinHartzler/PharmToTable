@@ -2,12 +2,12 @@
  * External dependencies
  */
 import { __, _n, sprintf } from '@wordpress/i18n';
-import { find } from 'lodash';
 import PropTypes from 'prop-types';
 import { SearchListControl, SearchListItem } from '@woocommerce/components';
 import { SelectControl } from '@wordpress/components';
 import { withCategories } from '@woocommerce/block-hocs';
 import ErrorMessage from '@woocommerce/editor-components/error-placeholder/error-message.js';
+import classNames from 'classnames';
 
 /**
  * Internal dependencies
@@ -22,18 +22,12 @@ const ProductCategoryControl = ( {
 	onOperatorChange,
 	operator,
 	selected,
+	isCompact,
 	isSingle,
 	showReviewCount,
 } ) => {
 	const renderItem = ( args ) => {
 		const { item, search, depth = 0 } = args;
-		const classes = [ 'woocommerce-product-categories__item' ];
-		if ( search.length ) {
-			classes.push( 'is-searching' );
-		}
-		if ( depth === 0 && item.parent !== 0 ) {
-			classes.push( 'is-skip-level' );
-		}
 
 		const accessibleName = ! item.breadcrumbs.length
 			? item.name
@@ -41,7 +35,7 @@ const ProductCategoryControl = ( {
 
 		const listItemAriaLabel = showReviewCount
 			? sprintf(
-					// Translators: %1$s is the item name, %2$d is the count of reviews for the item.
+					/* translators: %1$s is the item name, %2$d is the count of reviews for the item. */
 					_n(
 						'%1$s, has %2$d review',
 						'%1$s, has %2$d reviews',
@@ -52,7 +46,7 @@ const ProductCategoryControl = ( {
 					item.review_count
 			  )
 			: sprintf(
-					// Translators: %1$s is the item name, %2$d is the count of products for the item.
+					/* translators: %1$s is the item name, %2$d is the count of products for the item. */
 					_n(
 						'%1$s, has %2$d product',
 						'%1$s, has %2$d products',
@@ -65,20 +59,20 @@ const ProductCategoryControl = ( {
 
 		const listItemCountLabel = showReviewCount
 			? sprintf(
-					// Translators: %d is the count of reviews.
+					/* translators: %d is the count of reviews. */
 					_n(
-						'%d Review',
-						'%d Reviews',
+						'%d review',
+						'%d reviews',
 						item.review_count,
 						'woocommerce'
 					),
 					item.review_count
 			  )
 			: sprintf(
-					// Translators: %d is the count of products.
+					/* translators: %d is the count of products. */
 					_n(
-						'%d Product',
-						'%d Products',
+						'%d product',
+						'%d products',
 						item.count,
 						'woocommerce'
 					),
@@ -86,9 +80,15 @@ const ProductCategoryControl = ( {
 			  );
 		return (
 			<SearchListItem
-				className={ classes.join( ' ' ) }
+				className={ classNames(
+					'woocommerce-product-categories__item',
+					'has-count',
+					{
+						'is-searching': search.length > 0,
+						'is-skip-level': depth === 0 && item.parent !== 0,
+					}
+				) }
 				{ ...args }
-				showCount
 				countLabel={ listItemCountLabel }
 				aria-label={ listItemAriaLabel }
 			/>
@@ -111,7 +111,7 @@ const ProductCategoryControl = ( {
 		),
 		selected: ( n ) =>
 			sprintf(
-				// Translators: %d is the count of selected categories.
+				/* translators: %d is the count of selected categories. */
 				_n(
 					'%d category selected',
 					'%d categories selected',
@@ -137,11 +137,14 @@ const ProductCategoryControl = ( {
 				list={ categories }
 				isLoading={ isLoading }
 				selected={ selected
-					.map( ( id ) => find( categories, { id } ) )
+					.map( ( id ) =>
+						categories.find( ( category ) => category.id === id )
+					)
 					.filter( Boolean ) }
 				onChange={ onChange }
 				renderItem={ renderItem }
 				messages={ messages }
+				isCompact={ isCompact }
 				isHierarchical
 				isSingle={ isSingle }
 			/>
@@ -203,6 +206,7 @@ ProductCategoryControl.propTypes = {
 	 * The list of currently selected category IDs.
 	 */
 	selected: PropTypes.array.isRequired,
+	isCompact: PropTypes.bool,
 	/**
 	 * Allow only a single selection. Defaults to false.
 	 */
@@ -211,6 +215,7 @@ ProductCategoryControl.propTypes = {
 
 ProductCategoryControl.defaultProps = {
 	operator: 'any',
+	isCompact: false,
 	isSingle: false,
 };
 

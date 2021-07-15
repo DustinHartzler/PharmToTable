@@ -12,6 +12,8 @@ namespace Automattic\WooCommerce\Admin\Composer;
 defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Admin\Notes\DeactivatePlugin;
+use Automattic\WooCommerce\Admin\Notes\Notes;
+use Automattic\WooCommerce\Admin\Notes\NotesUnavailableException;
 use Automattic\WooCommerce\Admin\FeaturePlugin;
 
 /**
@@ -24,7 +26,7 @@ class Package {
 	 *
 	 * @var string
 	 */
-	const VERSION = '2.0.2';
+	const VERSION = '2.4.1';
 
 	/**
 	 * Package active.
@@ -118,6 +120,10 @@ class Package {
 	 * Add deactivation hook for versions of the plugin that don't have the deactivation note.
 	 */
 	public static function on_deactivation() {
+		if ( ! self::is_notes_initialized() ) {
+			return;
+		}
+
 		$update_version = new DeactivatePlugin();
 		$update_version::delete_note();
 	}
@@ -127,6 +133,11 @@ class Package {
 	 * and adds/removes DeactivatePlugin note as necessary.
 	 */
 	public static function check_outdated_wca_plugin() {
+
+		if ( ! self::is_notes_initialized() ) {
+			return;
+		}
+
 		$update_version = new DeactivatePlugin();
 
 		if ( version_compare( WC_ADMIN_VERSION_NUMBER, self::VERSION, '<' ) ) {
@@ -136,5 +147,17 @@ class Package {
 		} else {
 			$update_version::delete_note();
 		}
+	}
+
+	/**
+	 * Checks if notes have been initialized.
+	 */
+	private static function is_notes_initialized() {
+		try {
+			Notes::load_data_store();
+		} catch ( NotesUnavailableException $e ) {
+			return false;
+		}
+		return true;
 	}
 }
