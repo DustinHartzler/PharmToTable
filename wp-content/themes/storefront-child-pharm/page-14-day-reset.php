@@ -124,7 +124,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
                     <a class="navbar-brand" href="index.html">
-                        <h2 class="header">14-Day <span>Reset</span> Class</h2>
+                        <h2 class="header">14-Day <span>Reset</span></h2>
                     </a>
                 </div>
                 <!-- End Header Navigation -->
@@ -150,7 +150,7 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="content">
-                                            <h1 data-animation="animated fadeInUp">14-Day <span style="font-family: 'silver_south_scriptregular'; color: #71CABC">Reset</span> Class</h1>
+                                            <h1 data-animation="animated fadeInUp">14-Day <span style="font-family: 'silver_south_scriptregular'; color: #71CABC">Reset</span></h1>
                                             <h2 data-animation="animated fadeInDown" style="color:black;">Feel Better in Just 14 Days.</h2>
                                             <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#checkout">Join Now!</a>
                                         </div>
@@ -197,7 +197,7 @@
                     </ul>
                     <br>
                         <p style="padding: 20px 0">This science-based, step-by-step program will help rid your body of toxins. In just 14 days, you can start looking and feeling better while strengthening your immune system and accelerating your path to optimal health. </p>
-                    <a class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now</a>
+                    <a class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now <del>$129</del></a>
 
 
 
@@ -285,9 +285,9 @@
 $args = array(
     'post_type' => 'provider',
     'post_status' => 'publish',
-    'posts_per_page' => 6,
+    'posts_per_page' => 4,
+    'post__in' => array(1438,1405,1403,1441),
     'orderby' => 'rand',
-    'order' => 'ASC',
 );
 
 $loop = new WP_Query( $args );
@@ -302,10 +302,10 @@ while ( $loop->have_posts() ) : $loop->the_post();
     $package    = get_post_meta( $post->ID, 'provider_azova_package', true );
 ?>
                     <!-- Single Item -->
-                    <div class="col-md-4 col-sm-6 equal-height">
+                    <div class="col-md-6 col-sm-6 equal-height">
                         <div class="item">
                             <div class="thumb">
-                                <?php the_post_thumbnail( array( 360, 360 ) ); ?>
+                                <?php the_post_thumbnail( array( 600, 600 ) ); ?>
                                 <div class="overlay">
                                     <a href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>"><i class="fas fa-plus"></i></a>
                                 </div>
