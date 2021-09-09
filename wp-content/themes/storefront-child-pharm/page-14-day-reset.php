@@ -13,8 +13,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
-    <meta property="og:title" content="The Stress Solution" />
-    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-free.jpg" />
+    <meta property="og:title" content="14-Day Reset" />
+    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/14-day-reset/reset-healthy-eating.jpeg" />
 
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
@@ -197,7 +197,7 @@
                     </ul>
                     <br>
                         <p style="padding: 20px 0">This science-based, step-by-step program will help rid your body of toxins. In just 14 days, you can start looking and feeling better while strengthening your immune system and accelerating your path to optimal health. </p>
-                    <a class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now <del>$129</del></a>
+                    <a class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now</a>
 
 
 
@@ -250,7 +250,7 @@
                                 <!-- Start Conference Schedule -->
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8 opening-hours">
-                                    <div class="opening-info">
+                                    <div class="opening-info" style="margin:30px;">
                                         <h4>Important Dates</h4>
                                         <ul class="schedule" style="list-style-type: none">
                                             <li>Sept 22 - 8pm EST <div class="pull-right"> Kick-off Class & Detox Your Body</div></li>
@@ -258,7 +258,6 @@
                                             <li>Oct 3 - 9pm EST <div class="pull-right"> Detox Your Life </div></li>
                                             <li>Oct 7 - 9pm EST <div class="pull-right"> Debrief and Next Steps </div></li>
                                             <li>*All sessions are recorded <div class="pull-right"> </div></li>
-
                                         </ul>
                                     </div>
                                 </div>

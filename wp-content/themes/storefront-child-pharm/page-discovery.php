@@ -13,8 +13,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
-    <meta property="og:title" content="The Stress Solution" />
-    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-free.jpg" />
+    <meta property="og:title" content="Functional Medicine Discovery Class" />
+    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/discovery-class/discovery-class.jpeg" />
 
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
@@ -143,7 +143,7 @@
             <!-- Wrapper for slides -->
             <div class="carousel-inner carousel-zoom">
                 <div class="item active">
-                    <div class="slider-thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-free.jpg);"></div>
+                    <div class="slider-thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/discovery-class/discovery-class.jpeg);"></div>
                     <div class="box-table">
                         <div class="box-cell">
                             <div class="container">
@@ -172,7 +172,7 @@
     <div class="chose-us-area bg-gray item-half">
         <div class="container-full">
             <div class="row">
-                <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stressed.jpeg)"></div>
+                <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/discovery-class/discover.jpeg)"></div>
                 <div class="col-md-6 info">
                     <div class="heading">
                         <h3>Discover What Makes Our Program Different.</h3>
@@ -386,44 +386,30 @@ wp_reset_postdata();
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <div class="testimonial-items testimonial-carousel owl-carousel owl-theme">
+                <div class="col-md-8">
+                    <div class="testimonial-items">
                         <!-- Single Item -->
                         <div class="item">
                             <div class="content">
                                 <p>
-                                    Dr. Zakaria is super knowledgeable about using a functional medicine approach to achieve optimal health and wellness. <br><br><em>She has a gift for making science easy to understand which is great when talking about stress and hormones.</em> <br><br>The Stress Solution is sure to help so many people and couldn’t have come at a more perfect time!
+                                <em>I felt extremely discouraged after 15+ years of seeking answers and getting no help from doctors.</em><br><br> In this course, I learned that Pharm to Table can provide me the resources I need to actually heal. This is not sick care, but actual healthcare, unlike the mainstream medicine that has failed me. I have read so much on natural health and gut health over the last decade, but still don't have all the pieces to the puzzle of my unique problems.
+
+                                <br><br>The Discovery Class gave me hope after being told by yet another doctor that there is no diagnosis to explain my pain. I believe I have found a group of providers who will get to the root of my ongoing illness and help me live the active, full life, I desperately want to live. If you aren't satisfied with masking symptoms with medications, take the discovery class. It will give you hope for healing and freedom from illness.
+
                                 </p>
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img width="150" src="https://pharmtotable.life/wp-content/uploads/2020/06/meganmorrison.jpg" alt="Testimonial-Image">
+                                    <img width="150" src="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
-                                    <h4>Dr. Megan Morrison</h4>
-                                    <h5>Functional Medicine Pharmacist</h5>
+                                    <h4>Felisha D.</h4>
+                                    <h5>Indiana</h5>
                                 </div>
                             </div>
                         </div>
                         <!-- End Single Item -->
-                        <!-- Single Item -->
-                        <div class="item">
-                            <div class="content">
-                                <p>
-                                    Stress plays such a <strong>HUGE</strong> role in health and <strong>I CANNOT WAIT</strong> to hear what these ladies have to say about it! <br><br><em>I am in awe of their knowledge and passion every time I hear them speak.</em><br><br> Combining their Functional Medicine knowledge with serious stress reduction techniques is sure to get anyone going in the right direction on their health journey.
-                                </p>
-                            </div>
-                            <div class="provider">
-                                <div class="thumb">
-                                    <img src="https://pharmtotable.life/wp-content/uploads/2020/06/nicolegram.png" alt="Testimonial-Image">
-                                </div>
-                                <div class="info">
-                                    <h4>Dr. Nicole Grams</h4>
-                                    <h5>Functional Medicine Pharmacist and Anxiety Coach</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Single Item -->
+
                     </div>
                 </div>
             </div>
