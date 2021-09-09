@@ -143,7 +143,7 @@
             <!-- Wrapper for slides -->
             <div class="carousel-inner carousel-zoom">
                 <div class="item active">
-                    <div class="slider-thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stress-free.jpg);"></div>
+                    <div class="slider-thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/14-day-reset/reset-healthy-eating.jpeg);"></div>
                     <div class="box-table">
                         <div class="box-cell">
                             <div class="container">
@@ -172,7 +172,7 @@
     <div class="chose-us-area bg-gray item-half">
         <div class="container-full">
             <div class="row">
-                <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/stressed.jpeg)"></div>
+                <div class="col-md-6 thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/14-day-reset/14-day-reset.jpeg)"></div>
                 <div class="col-md-6 info">
                     <div class="heading">
                         <h3>If you have any of the following symptoms, the 14-Day Reset can help:</h3>
@@ -221,7 +221,7 @@
             <div class="row">
                 <div class="col-md-12 info">
                     <div class="heading">
-                        <h3>The 14 Day Reset will help you jump start your progress and make lasting changes to your health by helping you rid your body of::</h3>
+                        <h3>The 14 Day Reset will help you jump start your progress and make lasting changes to your health by helping you rid your body of:</h3>
                     </div>
                     <div class="col-md-6 info">
                         <ul>
@@ -239,6 +239,39 @@
                         <h3>The PharmToTable Team of Functional Medicine Pharmacists is here to help guide you every step of the way.</h3>
                     </div>
 
+                    <div class="row">
+                <div class="col-md-12 tab-contents">
+                    <div class="row">
+                        <!-- Start Tab Content -->
+                        <div class="tab-content tab-content-info">
+                            <!-- Single Item -->
+                            <div id="tab1" class="tab-pane fade active in">
+
+                                <!-- Start Conference Schedule -->
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8 opening-hours">
+                                    <div class="opening-info">
+                                        <h4>Important Dates</h4>
+                                        <ul class="schedule" style="list-style-type: none">
+                                            <li>Sept 22 - 8pm EST <div class="pull-right"> Kick-off Class & Detox Your Body</div></li>
+                                            <li>Sept 28 - 8pm EST <div class="pull-right"> Detox Your Mind </div></li>
+                                            <li>Oct 3 - 9pm EST <div class="pull-right"> Detox Your Life </div></li>
+                                            <li>Oct 7 - 9pm EST <div class="pull-right"> Debrief and Next Steps </div></li>
+                                            <li>*All sessions are recorded <div class="pull-right"> </div></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-2"></div>
+                                <!-- End Conference Schedule -->
+
+                            </div>
+                            <!-- End Single Item -->
+                        </div>
+                        <!-- End Tab Content -->
+                </div>
+                </div>
+                </div>
                 <div class="col-md-12 info">
                     <div class="heading">
                         <h2>What You Get When You Sign Up:</h2>
@@ -379,16 +412,16 @@ wp_reset_postdata();
                         <div class="item">
                             <div class="content">
                                 <p>
-                                    Dr. Zakaria is super knowledgeable about using a functional medicine approach to achieve optimal health and wellness. <br><br><em>She has a gift for making science easy to understand which is great when talking about stress and hormones.</em> <br><br>The Stress Solution is sure to help so many people and couldn’t have come at a more perfect time!
+                                I joined the program to reset myself after splurging for the holidays.<br><br> Probably the most challenging part about the program was meal prepping and cooking. But that is part of living a healthier lifestyle. I definitely noticed a difference almost right away. I became more regular, had energy and just felt better overall. I had very little bloating, if any, which is common for me. <br><br><em>I loved having a meal plan provided and the support of the team to share successes and failures with during the program.</em><br><br> I also really liked the emphasis on all the ways we need to detox in our lives. I’m actually looking forward to doing this program again!
                                 </p>
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img width="150" src="https://pharmtotable.life/wp-content/uploads/2020/06/meganmorrison.jpg" alt="Testimonial-Image">
+                                    <img width="150" src="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
-                                    <h4>Dr. Megan Morrison</h4>
-                                    <h5>Functional Medicine Pharmacist</h5>
+                                    <h4>Sandahl S.</h4>
+                                    <h5>Ohio</h5>
                                 </div>
                             </div>
                         </div>
@@ -397,16 +430,17 @@ wp_reset_postdata();
                         <div class="item">
                             <div class="content">
                                 <p>
-                                    Stress plays such a <strong>HUGE</strong> role in health and <strong>I CANNOT WAIT</strong> to hear what these ladies have to say about it! <br><br><em>I am in awe of their knowledge and passion every time I hear them speak.</em><br><br> Combining their Functional Medicine knowledge with serious stress reduction techniques is sure to get anyone going in the right direction on their health journey.
+                                This program was exactly what I needed after a long spring of letting a lot of my healthy habits slip.<br><br><strong> Focusing on my health for 14 days was the perfect amount of time to not feel as though it was an overwhelming commitment but instead to jump start healthy habits again. </strong><br><br>During the reset I was able to recommit to my workout routine, actively focus on quality sleep, nutrition, and learn a lot about components of a healthy lifestyle I was overlooking, as well as the risks of everyday products I was using on my skin-yikes! I also jumped on the bandwagon of meditating daily which helped me feel relaxed throughout the day. <br><br>I'm definitely looking forward to any future detoxes!
+
                                 </p>
                             </div>
                             <div class="provider">
                                 <div class="thumb">
-                                    <img src="https://pharmtotable.life/wp-content/uploads/2020/06/nicolegram.png" alt="Testimonial-Image">
+                                    <img src="https://pharmtotable.life/wp-content/themes/storefront-child-pharm/assets/img/testimonial-standard.png" alt="Testimonial-Image">
                                 </div>
                                 <div class="info">
-                                    <h4>Dr. Nicole Grams</h4>
-                                    <h5>Functional Medicine Pharmacist and Anxiety Coach</h5>
+                                    <h4>Cindy G.</h4>
+                                    <h5>Colorado</h5>
                                 </div>
                             </div>
                         </div>
