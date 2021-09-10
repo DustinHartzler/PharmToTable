@@ -13,6 +13,10 @@
 	</div><!-- #content -->
 
     <?php do_action( 'storefront_before_footer' ); ?>
+    <?php if (is_page_template( 'page-14-day-reset.php' ) || is_page_template('page-discovery.php')) {
+
+
+    }else {?>
     <!-- Start Newsletter
 ============================================= -->
 <div class="newsletter-area default-padding shadow dark bg-fixed text-center text-light" style="background-image: url(assets/img/2440x1578.png);">
@@ -67,7 +71,7 @@
                 </div>
             </div>
         </div>
-
+        <?php }?>
 	<?php do_action( 'storefront_after_footer' ); ?>
 
 </div><!-- #page -->

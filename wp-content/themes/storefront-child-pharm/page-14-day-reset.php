@@ -258,6 +258,7 @@
                                             <li>Oct 3 - 9pm EST <div class="pull-right"> Detox Your Life </div></li>
                                             <li>Oct 7 - 9pm EST <div class="pull-right"> Debrief and Next Steps </div></li>
                                             <li>*All sessions are recorded <div class="pull-right"> </div></li>
+                                            <p>Your 14 day program can start on your time after the kick-off, most of our team will be starting Saturday the 25th/Sunday the 26th!</p>
                                         </ul>
                                     </div>
                                 </div>
@@ -268,6 +269,7 @@
                             <!-- End Single Item -->
                         </div>
                         <!-- End Tab Content -->
+
                 </div>
                 </div>
                 </div>
