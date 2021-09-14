@@ -280,14 +280,14 @@
                     <div class="col-md-6 info">
                         <ul>
                             <li><div class="info"><p>3 group coaching calls with a functional medicine pharmacist</p></div></li>
+                            <li><div class="info"><p>Discounts on supplements to enhance your detox. Discount off the supplements required for the program (approx discounted cost $145, retail price $191)</p></div></li>
                             <li><div class="info"><p>Recipe book and shopping list</p></div></li>
-                            <li><div class="info"><p>Journal to track progress</p></div></li>
                         </ul>
-                        </div>
-                        <div class="col-md-6 info">
+                    </div>
+                    <div class="col-md-6 info">
                         <ul>
                             <li><div class="info"><p>All the support and accountability you need in a private Facebook group</p></div></li>
-                            <li><div class="info"><p>Discounts on supplements to enhance your detox</p></div></li>
+                            <li><div class="info"><p>Journal to track progress</p></div></li>
                             <li><div class="info"><p>BONUS! You’ll also get to join a Functional Medicine Discovery Class for free (a $25 value!)</p></div></li>
 
                     </ul>
