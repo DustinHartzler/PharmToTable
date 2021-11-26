@@ -296,7 +296,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                             <li>Session 11<div class="pull-right"> How to set SMART Goals </div></li>
                                             <li>Session 12<div class="pull-right"> Breaking the Cycle of Disease </div></li>
                                             <li>Session 13<div class="pull-right"> Final Q&A </div></li>
-                                            <li></li>
                                         </ul>
                                     </div>
                                 </div>
