@@ -164,7 +164,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <div class="content">
                                             <h1 data-animation="animated fadeInUp">The <span style="font-family: 'silver_south_scriptregular'; color: #71CABC">Stress</span> Solution</h1>
                                             <h2 data-animation="animated fadeInDown" style="color:black;">A Course to Help You Reduce Stress and Heal Hormones</h2>
-                                            <p data-animation="animated slideInUp" style="color:black">May 15, 2021</p>
                                             <a data-animation="animated slideInUp" class="btn btn-theme effect btn-md" href="#checkout">Sign Up Now</a>
                                         </div>
                                     </div>
@@ -245,7 +244,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <ul>
                             <li>
                                 <div class="info">
-                                    <p>A full day’s training live from functional medicine pharmacists</p>
+                                    <p>Replays from a full day’s training from functional medicine pharmacists</p>
                                 </div>
                             </li>
                             <li>
@@ -253,18 +252,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                     <p>PDFs copies of speaker’s slides</p>
                                 </div>
                             </li>
-                            <li>
-                                <div class="info">
-                                    <p>Instant downloadable handouts</p>
-                                </div>
-                            </li>
                         </ul>
                         </div>
                         <div class="col-md-6 info">
                         <ul>
                         <li>
-                            <div class="info">
-                                <p>Exclusive discounts on appointments and programs with functional medicine clinicians</p>
+							<div class="info">
+                                <p>Instant downloadable handouts</p>
                             </div>
                         </li>
                         <li>
@@ -287,22 +281,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                 <div class="col-md-2"></div>
                                 <div class="col-md-8 opening-hours">
                                     <div class="opening-info">
-                                        <h4>Agenda of the Day</h4>
+                                        <h4>Agenda of the Program</h4>
                                         <ul class="schedule" style="list-style-type: none">
-                                            <li>10:00 - 10:30 am <div class="pull-right"> Introduction to Functional Medicine</div></li>
-                                            <li>10:30 - 11:15 am <div class="pull-right"> How Stress Hormones Work </div></li>
-                                            <li>11:15 - 11:30 am <div class="pull-right"> Relaxation and Movement Break </div></li>
-                                            <li>11:30 - 12:00 pm <div class="pull-right"> How the Thyroid Works </div></li>
-                                            <li>12:05 - 12:50 pm <div class="pull-right"> How Female Hormones Impact Disease </div></li>
-                                            <li>12:50 - 1:15 pm <div class="pull-right"> Panel Discussion </div></li>
-                                            <li>1:20 - 2:00 pm <div class="pull-right"> Keeping a Healthy Gut </div></li>
-                                            <li>2:00 - 3:00 pm <div class="pull-right"> Lunch </div></li>
-                                            <li>3:00 - 3:30 pm <div class="pull-right"> How to Eat </div></li>
-                                            <li>3:30 - 4:00 pm <div class="pull-right"> How to Breathe and Move </div></li>
-                                            <li>4:00 - 4:30 pm <div class="pull-right"> Personal Healing Stories </div></li>
-                                            <li>4:30 - 4:45 pm <div class="pull-right"> How to set SMART Goals </div></li>
-                                            <li>5:15 - 5:45 pm <div class="pull-right"> Breaking the Cycle of Disease </div></li>
-                                            <li>5:45 - 6:00 pm <div class="pull-right"> Final Q&A </div></li>
+                                            <li>Session 1<div class="pull-right"> Introduction to Functional Medicine</div></li>
+                                            <li>Session 2<div class="pull-right"> How Stress Hormones Work </div></li>
+                                            <li>Session 3<div class="pull-right"> Relaxation and Movement Break </div></li>
+                                            <li>Session 4<div class="pull-right"> How the Thyroid Works </div></li>
+                                            <li>Session 5<div class="pull-right"> How Female Hormones Impact Disease </div></li>
+                                            <li>Session 6<div class="pull-right"> Panel Discussion </div></li>
+                                            <li>Session 7<div class="pull-right"> Keeping a Healthy Gut </div></li>
+                                            <li>Session 8<div class="pull-right"> What to Eat </div></li>
+                                            <li>Session 9<div class="pull-right"> How to Breathe and Move </div></li>
+                                            <li>Session 10<div class="pull-right"> Personal Healing Stories </div></li>
+                                            <li>Session 11<div class="pull-right"> How to set SMART Goals </div></li>
+                                            <li>Session 12<div class="pull-right"> Breaking the Cycle of Disease </div></li>
+                                            <li>Session 13<div class="pull-right"> Final Q&A </div></li>
                                             <li></li>
                                         </ul>
                                     </div>
@@ -558,8 +551,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <!-- End Testimonials -->
     </div></div>
-        <!-- Start About
-    ============================================= -->
+
+<!-- Start About
+============================================= -->
     <div id="about" class="about-area bg-gray default-padding">
         <div class="container">
             <div class="row">
@@ -582,7 +576,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </div>
     </div>
-    <!-- End About -->
+<!-- End About -->
 
 
 
