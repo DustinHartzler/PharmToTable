@@ -94,7 +94,7 @@ class SetupGuestCustomers extends AbstractBatchedActionSchedulerJob implements S
 	protected function get_batch( int $batch_number, array $args ) {
 
 		if ( get_option( $this->complete_option ) ) {
-			return false;
+			return [];
 		}
 
 		// guest orders
@@ -106,6 +106,10 @@ class SetupGuestCustomers extends AbstractBatchedActionSchedulerJob implements S
 				'status'      => wc_get_is_paid_statuses(),
 				'customer_id' => 0,
 				'return'      => 'ids',
+
+				// order by ascending ID since new orders could be created while the job is running which would throw the offset off
+				'orderby'     => 'ID',
+				'order'       => 'ASC',
 			]
 		);
 	}

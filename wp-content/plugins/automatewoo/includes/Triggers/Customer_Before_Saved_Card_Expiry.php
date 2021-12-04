@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
@@ -11,23 +10,38 @@ use WC_Payment_Tokens;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @class Trigger_Customer_Before_Saved_Card_Expiry
- * @since 3.7
+ * Trigger_Customer_Before_Saved_Card_Expiry class.
+ *
+ * @since 3.7.0
  */
 class Trigger_Customer_Before_Saved_Card_Expiry extends AbstractBatchedDailyTrigger {
 
+	/**
+	 * @var string[]
+	 */
 	public $supplied_data_items = [ 'customer', 'card' ];
 
-
-	function load_admin_details() {
+	/**
+	 * Load admin details.
+	 */
+	public function load_admin_details() {
 		$this->title       = __( 'Customer Before Saved Card Expiry', 'automatewoo' );
-		$this->description = __( "This trigger runs a set number of days before a customer's saved card expires. Cards expire on the last calendar day of their expiry month.", 'automatewoo' );
+		$this->description = sprintf(
+			/* translators: %1$s docs URL */
+			__(
+				'This trigger runs a set number of days before a customer\'s saved card expires. Cards expire on the last calendar day of their expiry month. <a href="%1$s" target="_blank">Some payment gateways are not supported.</a>',
+				'automatewoo'
+			),
+			Admin::get_docs_link( 'triggers/saved-card-expiry-notifications/' )
+		);
 		$this->description .= ' ' . $this->get_description_text_workflow_not_immediate();
-		$this->group       = __( 'Customers', 'automatewoo' );
+		$this->group        = __( 'Customers', 'automatewoo' );
 	}
 
-
-	function load_fields() {
+	/**
+	 * Load fields.
+	 */
+	public function load_fields() {
 		$days_before = ( new Fields\Positive_Number() )
 			->set_name( 'days_before_expiry' )
 			->set_title( __( 'Days before expiry', 'automatewoo' ) )
@@ -67,25 +81,29 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends AbstractBatchedDailyTrig
 			return [];
 		}
 
-		$sql = "SELECT token_id FROM {$wpdb->prefix}woocommerce_payment_tokens as tokens
-			LEFT JOIN {$wpdb->payment_tokenmeta} AS m1 ON tokens.token_id = m1.payment_token_id
-			LEFT JOIN {$wpdb->payment_tokenmeta} AS m2 ON tokens.token_id = m2.payment_token_id
-			WHERE type = 'CC'
-			AND m1.meta_key = 'expiry_year'
-			AND m1.meta_value = %s
-			AND m2.meta_key = 'expiry_month'
-			AND m2.meta_value = %s
-			LIMIT %d OFFSET %d 
-		";
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT token_id FROM {$wpdb->prefix}woocommerce_payment_tokens as tokens
+				LEFT JOIN {$wpdb->payment_tokenmeta} AS m1 ON tokens.token_id = m1.payment_token_id
+				LEFT JOIN {$wpdb->payment_tokenmeta} AS m2 ON tokens.token_id = m2.payment_token_id
+				WHERE type = 'CC'
+				AND m1.meta_key = 'expiry_year'
+				AND m1.meta_value = %s
+				AND m2.meta_key = 'expiry_month'
+				AND m2.meta_value = %s
+				LIMIT %d OFFSET %d
+				",
+				[
+					$date->format( 'Y' ),
+					$date->format( 'm' ),
+					$limit,
+					$offset,
+				]
+			),
+			OBJECT_K
+		);
 
-		$sql = $wpdb->prepare( $sql, [
-			$date->format( 'Y' ),
-			$date->format( 'm' ),
-			$limit,
-			$offset,
-		] );
-
-		return array_keys( $wpdb->get_results( $sql, OBJECT_K ) );
+		return array_keys( $results );
 	}
 
 	/**
@@ -131,7 +149,7 @@ class Trigger_Customer_Before_Saved_Card_Expiry extends AbstractBatchedDailyTrig
 		$workflow->maybe_run(
 			[
 				'customer' => Customer_Factory::get_by_user_id( $token->get_user_id() ),
-				'card'     => $token
+				'card'     => $token,
 			]
 		);
 	}

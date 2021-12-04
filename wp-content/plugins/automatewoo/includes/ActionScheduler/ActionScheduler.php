@@ -19,12 +19,21 @@ class ActionScheduler implements ActionSchedulerInterface {
 	protected $async_runner;
 
 	/**
+	 * List of async actions to enqueue on shutdown.
+	 *
+	 * @var array[]
+	 */
+	protected $shutdown_async_actions = [];
+
+	/**
 	 * ActionScheduler constructor.
 	 *
 	 * @param AsyncActionRunner $async_runner
 	 */
 	public function __construct( AsyncActionRunner $async_runner ) {
 		$this->async_runner = $async_runner;
+
+		add_action( 'shutdown', [ $this, 'enqueue_shutdown_actions' ], 5 );
 	}
 
 	/**
@@ -75,6 +84,23 @@ class ActionScheduler implements ActionSchedulerInterface {
 	}
 
 	/**
+	 * Enqueue an action to run one time, as soon as possible, BUT the action is not created until 'shutdown' or
+	 * when this request is finished.
+	 *
+	 * This is useful to avoid cases where Action Scheduler is already running in the background and runs an action
+	 * before the current request is finished.
+	 *
+	 * @since 5.5.5
+	 *
+	 * @param string $hook  The hook to trigger.
+	 * @param array  $args  Arguments to pass when the hook triggers.
+	 * @param string $group The group to assign this job to. Defaults to 'automatewoo'.
+	 */
+	public function enqueue_async_action_on_shutdown( $hook, $args = [], $group = 'automatewoo' ) {
+		$this->shutdown_async_actions[] = [ $hook, $args, $group ];
+	}
+
+	/**
 	 * Check if there is an existing action in the queue with a given hook, args and group combination.
 	 *
 	 * An action in the queue could be pending, in-progress or async. If the is pending for a time in
@@ -121,6 +147,17 @@ class ActionScheduler implements ActionSchedulerInterface {
 	 */
 	public function cancel( string $hook, $args = [], $group = 'automatewoo' ) {
 		return as_unschedule_action( $hook, $args, $group );
+	}
+
+	/**
+	 * Enqueue shutdown actions if there are any.
+	 *
+	 * @since 5.5.5
+	 */
+	public function enqueue_shutdown_actions() {
+		foreach ( $this->shutdown_async_actions as $action ) {
+			$this->enqueue_async_action( ...$action );
+		}
 	}
 
 }

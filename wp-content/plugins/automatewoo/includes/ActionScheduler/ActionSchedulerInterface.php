@@ -58,6 +58,21 @@ interface ActionSchedulerInterface {
 	public function enqueue_async_action( $hook, $args = [], $group = 'automatewoo' );
 
 	/**
+	 * Enqueue an action to run one time, as soon as possible, BUT the action is not created until 'shutdown' or
+	 * when this request is finished.
+	 *
+	 * This is useful to avoid cases where Action Scheduler is already running in the background and runs an action
+	 * before the current request is finished.
+	 *
+	 * @since 5.5.5
+	 *
+	 * @param string $hook  The hook to trigger.
+	 * @param array  $args  Arguments to pass when the hook triggers.
+	 * @param string $group The group to assign this job to. Defaults to 'automatewoo'.
+	 */
+	public function enqueue_async_action_on_shutdown( $hook, $args = [], $group = 'automatewoo' );
+
+	/**
 	 * Check if there is an existing action in the queue with a given hook, args and group combination.
 	 *
 	 * An action in the queue could be pending, in-progress or async. If the is pending for a time in

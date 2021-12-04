@@ -33,17 +33,13 @@ class Action_Subscription_Remove_Coupon extends Action_Subscription_Edit_Coupon_
 	 *
 	 * @param \WC_Coupon       $coupon Coupon to removed from the subscription.
 	 * @param \WC_Subscription $subscription Instance of subscription to remove the coupon from.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $coupon, $subscription ) {
+		$subscription->remove_coupon( $coupon->get_code() );
 
-		foreach ( $subscription->get_items( 'coupon' ) as $item ) {
-			if ( $item->get_code() === $coupon->get_code() ) {
-				$subscription->remove_item( $item->get_id() );
-			}
-		}
-
-		// updates totals and saves subscription
-		$subscription->calculate_totals();
+		return true;
 	}
 
 

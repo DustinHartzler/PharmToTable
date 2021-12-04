@@ -42,6 +42,7 @@ class Session_Tracker {
 		add_action( 'set_logged_in_cookie', [ $self, 'update_session_on_user_login' ], 10, 4 );
 
 		add_action( 'comment_post', [ $self, 'capture_from_comment' ], 10, 2 );
+		add_action( 'woocommerce_before_order_object_save', [ $self, 'capture_from_store_api' ], 10, 1 );
 		add_action( 'automatewoo_capture_guest_email', [ $self, 'set_session_by_captured_email' ] ); // for third-party
 		add_action( 'woocommerce_checkout_order_processed', [ $self, 'maybe_track_guest_customer_after_order_placed' ], 20 );
 	}
@@ -457,6 +458,37 @@ class Session_Tracker {
 
 		if ( $comment && ! $comment->user_id ) {
 			self::set_session_by_captured_email( $comment->comment_author_email );
+		}
+	}
+
+	/**
+	 * Store guest info when they submit email from Store API.
+	 *
+	 * The guest email, first name and last name are captured.
+	 *
+	 * @see \Automattic\WooCommerce\Blocks\StoreApi\Routes\CartUpdateCustomer
+	 *
+	 * @param \WC_Order $order
+	 */
+	public static function capture_from_store_api( $order ) {
+		if ( ! Options::presubmit_capture_enabled() || is_user_logged_in() ) {
+			return;
+		}
+
+		if ( $order->get_status() !== 'checkout-draft' || ! $order->is_created_via( 'store-api' ) || ! $order->get_billing_email() || $order->get_customer_id() ) {
+			return;
+		}
+
+		$customer = self::set_session_by_captured_email( $order->get_billing_email() );
+
+		if ( $customer ) {
+
+			// Capture the guest's name
+			$guest = $customer->get_guest();
+			if ( $guest ) {
+				$guest->update_meta( 'billing_first_name', $order->get_billing_first_name() );
+				$guest->update_meta( 'billing_last_name', $order->get_billing_last_name() );
+			}
 		}
 	}
 

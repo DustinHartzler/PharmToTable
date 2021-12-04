@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit203a3eff0505d31693a1b22867933463
+class ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d
 {
     public static $prefixLengthsPsr4 = array (
         'A' => 
@@ -542,8 +542,8 @@ class ComposerStaticInit203a3eff0505d31693a1b22867933463
         'AutomateWoo\\Rules\\Order_Paid_Date' => __DIR__ . '/../..' . '/includes/Rules/Order_Paid_Date.php',
         'AutomateWoo\\Rules\\Order_Shipping_Method' => __DIR__ . '/../..' . '/includes/Rules/Order_Shipping_Method.php',
         'AutomateWoo\\Rules\\Order_Status' => __DIR__ . '/../..' . '/includes/Rules/Order_Status.php',
+        'AutomateWoo\\Rules\\Order_Subscription_Failed_Automatic_Payment_Retry_Count' => __DIR__ . '/../..' . '/includes/Rules/Order_Subscription_Failed_Automatic_Payment_Retry_Count.php',
         'AutomateWoo\\Rules\\Order_Subscription_Order_Type' => __DIR__ . '/../..' . '/includes/Rules/Order_Subscription_Order_Type.php',
-        'AutomateWoo\\Rules\\Order_Subscription_Payment_Retry_Count' => __DIR__ . '/../..' . '/includes/Rules/Order_Subscription_Payment_Retry_Count.php',
         'AutomateWoo\\Rules\\Points_Rewards_Customer_Points' => __DIR__ . '/../..' . '/includes/Rules/Points_Rewards_Customer_Points.php',
         'AutomateWoo\\Rules\\Preloaded_Select_Rule_Abstract' => __DIR__ . '/../..' . '/includes/Rules/Preloaded_Select_Rule_Abstract.php',
         'AutomateWoo\\Rules\\Product' => __DIR__ . '/../..' . '/includes/Rules/Product.php',
@@ -883,9 +883,9 @@ class ComposerStaticInit203a3eff0505d31693a1b22867933463
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit203a3eff0505d31693a1b22867933463::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit203a3eff0505d31693a1b22867933463::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit203a3eff0505d31693a1b22867933463::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d::$classMap;
 
         }, null, ClassLoader::class);
     }

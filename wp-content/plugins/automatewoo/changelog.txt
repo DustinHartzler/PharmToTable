@@ -1,5 +1,36 @@
 == AutomateWoo Changelog ==
 
+2021-11-25 - version 5.5.6
+* Add - Filter for custom workflow timing options.
+
+2021-10-27 - version 5.5.5
+* Fix - Prevent Order Created action from running too early
+
+2021-10-12 - version 5.5.4
+* Fix - Escape html in email preheader.
+
+2021-09-21 - version 5.5.3
+* Fix - Prevent adding unnecessary notes to subscription when running edit actions
+* Tweak - Use `Features::is_enabled` instead of deprecated `Loader::is_feature_enabled`
+
+2021-08-24 - version 5.5.2
+* Fix - Manual workflow runner not loading
+
+2021-08-23 - version 5.5.1
+* Fix - Error when using the 'Trigger Order Action' action when WooCommerce Payments is installed
+* Fix - Sanitize user tag value when filtering users
+* Fix - Issue where some guest orders could be skipped during setup
+
+2021-08-04 - version 5.5.0
+* New - Enable abandoned cart features for new block-based checkout
+* Fix - Issue where original prices in emails could have strikethroughs on new WooCommerce versions
+* Fix - The user profile language setting can now be used to set the plugin's language in WP Admin
+* Fix - Check workflow is still active and has conversion tracking enabled before marking an order as a conversion
+* Fix - Make "Order - Subscription Payment Retry Count" rule count only failed automatic subscription payment retries
+
+2021-06-04 - version 5.4.2
+* Fix - "Subscription - Remove Coupon" action did not remove the discount applied
+
 2021-04-09 - version 5.4.1
 * Fix - "Subscription - Update product" action product price field always resulted in a price of zero
 

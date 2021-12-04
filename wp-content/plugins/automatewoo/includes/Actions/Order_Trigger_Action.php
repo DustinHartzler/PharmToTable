@@ -3,6 +3,8 @@
 
 namespace AutomateWoo;
 
+use WC_Order;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -27,11 +29,41 @@ class Action_Order_Trigger_Action extends Action {
 		$action->set_name( 'order_action' );
 		$action->set_title( __( 'Order action', 'automatewoo' ) );
 		$action->set_required();
-		$action->set_options( apply_filters( 'woocommerce_order_actions', [
-			'regenerate_download_permissions' => __( 'Generate download permissions', 'automatewoo' )
-		]));
+		$action->set_options( $this->get_order_actions() );
 
 		$this->add_field($action);
+	}
+
+	/**
+	 * Gets a list of WooCommerce order actions via the 'woocommerce_order_actions' filter.
+	 *
+	 * Because some 3rd party code (e.g. WC Subscriptions, WC Payments) expect a global $theorder object when this
+	 * filter runs we set dummy order object avoid errors.
+	 *
+	 * @see \WC_Meta_Box_Order_Actions::output
+	 *
+	 * @since 5.5.1
+	 *
+	 * @return array
+	 */
+	protected function get_order_actions() {
+		global $theorder;
+
+		if ( ! is_object( $theorder ) ) {
+			$theorder = new WC_Order();
+		}
+
+		$actions = (array) apply_filters(
+			'woocommerce_order_actions',
+			[
+				'regenerate_download_permissions' => __( 'Generate download permissions', 'automatewoo' )
+			]
+		);
+
+		// Clear the dummy order
+		$theorder = null;
+
+		return $actions;
 	}
 
 

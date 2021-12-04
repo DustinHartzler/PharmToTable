@@ -1,24 +1,23 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => 'dev-hotfix/5.4.1',
-    'version' => 'dev-hotfix/5.4.1',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-release/5.5.6',
+        'version' => 'dev-release/5.5.6',
+        'type' => 'wordpress-plugin',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => '4c2b7e0ef602f180424727837778a0e15d4ab498',
+        'name' => 'woocommerce/automatewoo',
+        'dev' => false,
     ),
-    'reference' => '7238fa976a1021b8991c3289838cceb08f1d1812',
-    'name' => 'woocommerce/automatewoo',
-  ),
-  'versions' => 
-  array (
-    'woocommerce/automatewoo' => 
-    array (
-      'pretty_version' => 'dev-hotfix/5.4.1',
-      'version' => 'dev-hotfix/5.4.1',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '7238fa976a1021b8991c3289838cceb08f1d1812',
+    'versions' => array(
+        'woocommerce/automatewoo' => array(
+            'pretty_version' => 'dev-release/5.5.6',
+            'version' => 'dev-release/5.5.6',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => '4c2b7e0ef602f180424727837778a0e15d4ab498',
+            'dev_requirement' => false,
+        ),
     ),
-  ),
 );

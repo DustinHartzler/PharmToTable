@@ -113,7 +113,7 @@ class Rules extends Registry {
 			$includes['order_subscription_order_type']    = 'AutomateWoo\Rules\Order_Subscription_Order_Type';
 
 			if ( class_exists( 'WCS_Retry_Manager' ) && \WCS_Retry_Manager::is_retry_enabled() ) {
-				$includes['order_subscription_payment_retry_count'] = 'AutomateWoo\Rules\Order_Subscription_Payment_Retry_Count';
+				$includes['order_subscription_payment_retry_count'] = 'AutomateWoo\Rules\Order_Subscription_Failed_Automatic_Payment_Retry_Count';
 			}
 
 			$includes['subscription_status']             = 'AutomateWoo\Rules\Subscription_Status';

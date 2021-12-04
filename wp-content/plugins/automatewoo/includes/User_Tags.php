@@ -326,9 +326,9 @@ class User_Tags {
 		global $wpdb, $pagenow;
 
 		if ( is_admin() && $pagenow == 'users.php' && ! empty( $_GET['user_tag'] ) ) {
-			$tag_slug = $_GET['user_tag'];
+			$tag_slug = sanitize_text_field( $_GET['user_tag'] );
 			$query->query_from .= " INNER JOIN {$wpdb->term_relationships} ON {$wpdb->users}.ID = {$wpdb->term_relationships}.object_id INNER JOIN {$wpdb->term_taxonomy} ON {$wpdb->term_relationships}.term_taxonomy_id = {$wpdb->term_taxonomy}.term_taxonomy_id INNER JOIN {$wpdb->terms} ON {$wpdb->terms}.term_id = {$wpdb->term_taxonomy}.term_id";
-			$query->query_where .= " AND {$wpdb->terms}.slug = '{$tag_slug}'";
+			$query->query_where .= $wpdb->prepare( " AND {$wpdb->terms}.slug = %s", $tag_slug );
 		}
 	}
 

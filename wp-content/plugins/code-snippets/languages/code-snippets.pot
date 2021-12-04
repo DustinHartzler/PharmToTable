@@ -34,6 +34,10 @@ msgstr ""
 msgid "https://codesnippets.pro"
 msgstr ""
 
+#: code-snippets.php:44
+msgid "Another version of Code Snippets appears to be installed. Deactivating this version."
+msgstr ""
+
 #: php/class-admin.php:68, php/class-admin.php:129, php/admin-menus/class-manage-menu.php:23, php/admin-menus/class-manage-menu.php:52, php/admin-menus/class-manage-menu.php:91, php/views/manage.php:21
 msgid "Snippets"
 msgstr ""
@@ -457,35 +461,35 @@ msgstr ""
 msgid "Order snippets by last modification date by default in the snippets table."
 msgstr ""
 
-#: php/class-validator.php:176
+#: php/class-validator.php:189
 msgid "Parse error: syntax error, unexpected end of snippet."
 msgstr ""
 
 #. translators: %s: PHP function name
-#: php/class-validator.php:189
+#: php/class-validator.php:202
 msgid "Cannot redeclare function %s."
 msgstr ""
 
 #. translators: %s: PHP class name
-#: php/class-validator.php:193
+#: php/class-validator.php:206
 msgid "Cannot redeclare class %s."
 msgstr ""
 
 #. translators: %s: PHP interface name
-#: php/class-validator.php:197
+#: php/class-validator.php:210
 msgid "Cannot redeclare interface %s."
 msgstr ""
 
 #. translators: %s: PHP identifier name
-#: php/class-validator.php:201
+#: php/class-validator.php:214
 msgid "Cannot redeclare %s."
 msgstr ""
 
-#: php/class-validator.php:239
+#: php/class-validator.php:252
 msgid "Parse error: syntax error, unexpected end of snippet"
 msgstr ""
 
-#: php/admin-menus/class-admin-menu.php:124
+#: php/admin-menus/class-admin-menu.php:127
 msgid "You are not authorized to access this page."
 msgstr ""
 

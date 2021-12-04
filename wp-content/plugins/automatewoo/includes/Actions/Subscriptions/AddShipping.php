@@ -55,6 +55,8 @@ class AddShipping extends AbstractEditShipping {
 	 *
 	 * @param array            $shipping_data Shipping line item data. Same data as the return value of @see $this->get_object_for_edit().
 	 * @param \WC_Subscription $subscription Instance of subscription to add the shipping to.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $shipping_data, $subscription ) {
 
@@ -74,6 +76,8 @@ class AddShipping extends AbstractEditShipping {
 		$subscription->add_item( $item );
 		$subscription->save();
 		$subscription->calculate_totals();
+
+		return true;
 	}
 
 

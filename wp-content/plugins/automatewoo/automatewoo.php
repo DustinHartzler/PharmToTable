@@ -3,7 +3,7 @@
  * Plugin Name: AutomateWoo
  * Plugin URI: https://automatewoo.com
  * Description: Powerful marketing automation for your WooCommerce store.
- * Version: 5.4.1
+ * Version: 5.5.6
  * Author: WooCommerce
  * Author URI: https://woocommerce.com
  * License: GPLv3
@@ -11,8 +11,8 @@
  * Text Domain: automatewoo
  * Domain Path: /languages
  *
- * WC requires at least: 4.8
- * WC tested up to: 5.1
+ * WC requires at least: 5.0
+ * WC tested up to: 5.7
  * Woo: 4652610:f6f1f8a56a16a3715b30b21fb557e78f
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,14 +33,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'AUTOMATEWOO_NAME', __( 'AutomateWoo', 'automatewoo' ) );
 define( 'AUTOMATEWOO_SLUG', 'automatewoo' );
-define( 'AUTOMATEWOO_VERSION', '5.4.1' ); // WRCS: DEFINED_VERSION.
+define( 'AUTOMATEWOO_VERSION', '5.5.6' ); // WRCS: DEFINED_VERSION.
 define( 'AUTOMATEWOO_FILE', __FILE__ );
 define( 'AUTOMATEWOO_PATH', dirname( __FILE__ ) );
 define( 'AUTOMATEWOO_MIN_PHP_VER', '7.0.0' );
 define( 'AUTOMATEWOO_MIN_WP_VER', '5.4' );
-define( 'AUTOMATEWOO_MIN_WC_VER', '4.8.0' );
+define( 'AUTOMATEWOO_MIN_WC_VER', '5.0.0' );
 
 /**
  * AutomateWoo loader.
@@ -97,7 +96,7 @@ class AutomateWoo_Loader {
 	public static function check() {
 		$passed = true;
 
-		$inactive_text = '<strong>' . sprintf( __( '%s is inactive.', 'automatewoo' ), AUTOMATEWOO_NAME ) . '</strong>';
+		$inactive_text = '<strong>' . sprintf( __( '%s is inactive.', 'automatewoo' ), __( 'AutomateWoo', 'automatewoo' ) ) . '</strong>';
 
 		if ( version_compare( phpversion(), AUTOMATEWOO_MIN_PHP_VER, '<' ) ) {
 			self::$errors[] = sprintf( __( '%1$s The plugin requires PHP version %2$s or newer.', 'automatewoo' ), $inactive_text, AUTOMATEWOO_MIN_PHP_VER );

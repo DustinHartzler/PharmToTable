@@ -84,8 +84,8 @@ class Order_Helper {
 		if ( ! $order = wc_get_order( $order_id ) )
 			return;
 
-		$customer = Customer_Factory::get_by_order( $order );
-
+		// Set $create param to false to prevent creating a new customer at this point
+		$customer = Customer_Factory::get_by_order( $order, false );
 		if ( $customer ) {
 			$customer->delete_meta( 'order_count' );
 			$customer->delete_meta( 'total_spent' );

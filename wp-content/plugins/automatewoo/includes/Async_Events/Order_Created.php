@@ -24,11 +24,7 @@ class Order_Created extends Abstract_Async_Event {
 	 */
 	public function init() {
 		add_action( 'woocommerce_new_order', [ $this, 'enqueue_maybe_order_created_async_event' ], 100 );
-
-		if ( is_admin() ) {
-			add_action( 'transition_post_status', [ $this, 'handle_transition_post_status' ], 50, 3 );
-		}
-
+		add_action( 'transition_post_status', [ $this, 'handle_transition_post_status' ], 50, 3 );
 		add_action( self::MAYBE_ORDER_CREATED_HOOK, [ $this, 'maybe_do_order_created_action' ] );
 	}
 
@@ -63,13 +59,20 @@ class Order_Created extends Abstract_Async_Event {
 			return;
 		}
 
+		// Creating a draft order triggers woocommerce_new_order, but we don't want it to trigger this workflow.
+		if ( in_array( get_post_status( $order_id ), aw_get_draft_post_statuses(), true ) ) {
+			return;
+		}
 		// Due to the variety of order created hooks, protect against adding multiple events for the same order_id
 		if ( $this->check_item_is_unique_for_event( $order_id ) ) {
 			return;
 		}
 
 		$this->record_event_added_for_item( $order_id );
-		$this->action_scheduler->enqueue_async_action( self::MAYBE_ORDER_CREATED_HOOK, [ $order_id ] );
+
+		// Enqueue the async action on shutdown to ensure the event doesn't happen before the order is fully created
+		// (the 'transition_post_status' action happens quite early)
+		$this->action_scheduler->enqueue_async_action_on_shutdown( self::MAYBE_ORDER_CREATED_HOOK, [ $order_id ] );
 	}
 
 	/**

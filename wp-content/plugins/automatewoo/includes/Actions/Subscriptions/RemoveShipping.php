@@ -56,8 +56,11 @@ class RemoveShipping extends AddShipping {
 	 *
 	 * @param array            $shipping_data Shipping line item data. Same data as the return value of @see $this->get_object_for_edit().
 	 * @param \WC_Subscription $subscription Instance of subscription to add the shipping to.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $shipping_data, $subscription ) {
+		$edited = false;
 
 		foreach ( $subscription->get_shipping_methods() as $line_item ) {
 			// Same approach used in Abstract_WC_Order::has_shipping_method() to check for method
@@ -65,12 +68,17 @@ class RemoveShipping extends AddShipping {
 				0 === strpos( $line_item->get_method_id(), $shipping_data['shipping_method_id'] )
 				|| $this->all_shipping_method_option_key === $shipping_data['shipping_method_id']
 			) {
+				$edited = true;
 				$subscription->remove_item( $line_item->get_id() );
 			}
 		}
 
-		$subscription->save();
-		$subscription->calculate_totals();
+		if ( $edited ) {
+			$subscription->save();
+			$subscription->calculate_totals();
+		}
+
+		return $edited;
 	}
 
 

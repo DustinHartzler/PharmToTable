@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: AutomateWoo 5.4.1\n"
+"Project-Id-Version: AutomateWoo 5.5.6\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-04-09 0:42:37+00:00\n"
+"POT-Creation-Date: 2021-11-25 7:50:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: automatewoo\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: admin/admin.php:661
 #: admin/coupons-list.php:30
 #: admin/WCAdminConnectPages.php:74
-#: automatewoo.php:36
+#: automatewoo.php:99
 #: includes/Actions/Change_Workflow_Status.php:18
 #: includes/Actions/Clear_Queued_Events.php:17
 #: includes/Installer.php:238
@@ -430,7 +430,7 @@ msgstr ""
 #: includes/Actions/Order_Add_Note.php:19
 #: includes/Actions/Order_Change_Status.php:19
 #: includes/Actions/Order_Resend_Email.php:19
-#: includes/Actions/Order_Trigger_Action.php:19
+#: includes/Actions/Order_Trigger_Action.php:21
 #: includes/Actions/Order_Update_Customer_Shipping_Note.php:18
 #: includes/Actions/Order_Update_Meta.php:18
 #: includes/DataTypes/Order.php:63
@@ -484,7 +484,7 @@ msgid "Product"
 msgstr ""
 
 #: admin/data-layer-formatter.php:85
-#: includes/Actions/Subscriptions/AbstractEditItem.php:71
+#: includes/Actions/Subscriptions/AbstractEditItem.php:73
 #: includes/Actions/Subscriptions/RecalculateTaxes.php:34
 #: includes/Actions/Subscriptions/RegenerateDownloadPermissions.php:32
 #: includes/Actions/Subscription_Add_Note.php:29
@@ -573,7 +573,7 @@ msgstr ""
 
 #: admin/reports/abstract-graph.php:54
 #: admin/reports/opt-ins.php:60
-#: admin/views/meta-box-timing.php:173
+#: admin/views/meta-box-timing.php:176
 #: includes/Fields/Date.php:16
 msgid "Date"
 msgstr ""
@@ -1409,92 +1409,92 @@ msgstr ""
 msgid "Run"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:20
+#: admin/views/meta-box-timing.php:22
 msgid "Run immediately"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:21
+#: admin/views/meta-box-timing.php:23
 msgid "Delayed"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:22
+#: admin/views/meta-box-timing.php:24
 msgid "Scheduled"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:23
+#: admin/views/meta-box-timing.php:25
 msgid "Fixed"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:24
+#: admin/views/meta-box-timing.php:26
 msgid "Schedule with a variable"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:37
+#: admin/views/meta-box-timing.php:40
 msgid "e.g. {{ subscription.next_payment_date | modify: '-1 day' }}"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:65
+#: admin/views/meta-box-timing.php:68
 msgid "[Any day]"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:83
+#: admin/views/meta-box-timing.php:86
 #: includes/Rules/Abstract_Date.php:171
 msgid "Hours"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:84
+#: admin/views/meta-box-timing.php:87
 msgid "Minutes"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:85
+#: admin/views/meta-box-timing.php:88
 #: includes/Rules/Abstract_Date.php:172
 msgid "Days"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:86
+#: admin/views/meta-box-timing.php:89
 msgid "Weeks"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:87
+#: admin/views/meta-box-timing.php:90
 msgid "Months"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:108
+#: admin/views/meta-box-timing.php:111
 #: admin/workflow-edit.php:259
 #: admin/workflow-list.php:41
 msgid "Timing"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:119
+#: admin/views/meta-box-timing.php:122
 msgid "Variable"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:127
+#: admin/views/meta-box-timing.php:130
 msgid "Scheduled time"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:128
+#: admin/views/meta-box-timing.php:131
 msgid "(24hr)"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:138
+#: admin/views/meta-box-timing.php:141
 msgid "Scheduled days"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:139
-#: admin/views/meta-box-timing.php:155
+#: admin/views/meta-box-timing.php:142
+#: admin/views/meta-box-timing.php:158
 msgid "(optional)"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:150
+#: admin/views/meta-box-timing.php:153
 msgid "Length of the delay"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:154
+#: admin/views/meta-box-timing.php:157
 msgid "Minimum wait"
 msgstr ""
 
-#: admin/views/meta-box-timing.php:174
+#: admin/views/meta-box-timing.php:177
 #: includes/Fields/Time.php:86
 msgid "(24 hour time)"
 msgstr ""
@@ -1525,7 +1525,7 @@ msgid "Cart #%s"
 msgstr ""
 
 #: admin/views/modal-cart-info.php:29
-#: includes/Actions/Subscriptions/AbstractEditItem.php:131
+#: includes/Actions/Subscriptions/AbstractEditItem.php:134
 #: templates/email/cart-table.php:34
 msgid "Quantity"
 msgstr ""
@@ -1806,19 +1806,19 @@ msgstr[1] ""
 msgid "Manual"
 msgstr ""
 
-#: automatewoo.php:100
+#: automatewoo.php:99
 msgid "%s is inactive."
 msgstr ""
 
-#: automatewoo.php:103
+#: automatewoo.php:102
 msgid "%1$s The plugin requires PHP version %2$s or newer."
 msgstr ""
 
-#: automatewoo.php:106
+#: automatewoo.php:105
 msgid "%1$s The plugin requires WooCommerce version %2$s or newer."
 msgstr ""
 
-#: automatewoo.php:109
+#: automatewoo.php:108
 msgid "%1$s The plugin requires WordPress version %2$s or newer."
 msgstr ""
 
@@ -2273,19 +2273,19 @@ msgstr ""
 msgid "%s email notification sent by AutomateWoo workflow #%d"
 msgstr ""
 
-#: includes/Actions/Order_Trigger_Action.php:18
+#: includes/Actions/Order_Trigger_Action.php:20
 msgid "Trigger Order Action"
 msgstr ""
 
-#: includes/Actions/Order_Trigger_Action.php:20
+#: includes/Actions/Order_Trigger_Action.php:22
 msgid "Not to be confused with AutomateWoo actions this action can trigger a WooCommerce order action. They can normally be found in the in the top right of of the order edit view."
 msgstr ""
 
-#: includes/Actions/Order_Trigger_Action.php:28
+#: includes/Actions/Order_Trigger_Action.php:30
 msgid "Order action"
 msgstr ""
 
-#: includes/Actions/Order_Trigger_Action.php:31
+#: includes/Actions/Order_Trigger_Action.php:59
 msgid "Generate download permissions"
 msgstr ""
 
@@ -2480,27 +2480,27 @@ msgstr ""
 msgid "SMS successfully sent."
 msgstr ""
 
-#: includes/Actions/Subscriptions/AbstractEditItem.php:159
+#: includes/Actions/Subscriptions/AbstractEditItem.php:162
 msgid "Custom Item Name"
 msgstr ""
 
-#: includes/Actions/Subscriptions/AbstractEditItem.php:167
+#: includes/Actions/Subscriptions/AbstractEditItem.php:170
 msgid "The name to set on the line item."
 msgstr ""
 
-#: includes/Actions/Subscriptions/AbstractEditItem.php:187
+#: includes/Actions/Subscriptions/AbstractEditItem.php:190
 msgid "E.g. 10.00"
 msgstr ""
 
-#: includes/Actions/Subscriptions/AbstractEditItem.php:197
+#: includes/Actions/Subscriptions/AbstractEditItem.php:200
 msgid "Custom Item Cost %s"
 msgstr ""
 
-#: includes/Actions/Subscriptions/AbstractEditItem.php:205
+#: includes/Actions/Subscriptions/AbstractEditItem.php:208
 msgid "Optionally set a custom amount, excluding tax, to use for the line item's cost. Do not include a currency symbol. Total line item cost will be this amount * line item's quantity."
 msgstr ""
 
-#: includes/Actions/Subscriptions/AbstractEditItem.php:217
+#: includes/Actions/Subscriptions/AbstractEditItem.php:220
 msgid "The subscription's coupon discount amount will only be recalculated if you are using WooCommerce version 3.8 or higher."
 msgstr ""
 
@@ -2536,7 +2536,7 @@ msgstr ""
 msgid "Add shipping as a new line item on a subscription. This action can be used to change the shipping and other line items charged to a subscriber at different stages of their subscription's lifecycle."
 msgstr ""
 
-#: includes/Actions/Subscriptions/AddShipping.php:89
+#: includes/Actions/Subscriptions/AddShipping.php:93
 msgid "%1$s workflow run: added %2$s to subscription. (Shipping Method ID: %3$d; Workflow ID: %4$d)"
 msgstr ""
 
@@ -2564,7 +2564,7 @@ msgstr ""
 msgid "Remove a shipping line item or items from a subscription, if any line items match the chosen shipping method. This is useful for bulk editing subscriptions, or to change the shipping charged to a subscriber at different stages of their subscription's lifecycle. Please note: all line items for the chosen shipping method will be removed."
 msgstr ""
 
-#: includes/Actions/Subscriptions/RemoveShipping.php:86
+#: includes/Actions/Subscriptions/RemoveShipping.php:94
 msgid "%1$s workflow run: removed shipping method from subscription. (Shipping Method ID: %2$s; Workflow ID: %3$d)"
 msgstr ""
 
@@ -2576,11 +2576,11 @@ msgstr ""
 msgid "Change a subscription's currency. This can be used in the case of major international events, like Brexit. Existing orders will not be updated. Only new orders will have the new currency. No values on the subscription will be updated, use actions to update line items, like products or shipping, to modify those."
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateCurrency.php:69
+#: includes/Actions/Subscriptions/UpdateCurrency.php:73
 msgid "%1$s workflow run: updated subscription currency to %2$s. (Workflow ID: %3$d)"
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateCurrency.php:89
+#: includes/Actions/Subscriptions/UpdateCurrency.php:93
 msgid "New Currency"
 msgstr ""
 
@@ -2592,16 +2592,16 @@ msgstr ""
 msgid "Change a subscription's next payment date."
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateNextPaymentDate.php:59
+#: includes/Actions/Subscriptions/UpdateNextPaymentDate.php:63
 msgid "New Payment Date"
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateNextPaymentDate.php:64
+#: includes/Actions/Subscriptions/UpdateNextPaymentDate.php:68
 msgid "New Payment Time"
 msgstr ""
 
 #. translators: %1$s: workflow name, %2$s: new next payment date, %3$s: workflow ID
-#: includes/Actions/Subscriptions/UpdateNextPaymentDate.php:78
+#: includes/Actions/Subscriptions/UpdateNextPaymentDate.php:82
 msgid "%1$s workflow run: updated next payment date to %2$s.  (Workflow ID: %3$d)"
 msgstr ""
 
@@ -2613,15 +2613,15 @@ msgstr ""
 msgid "Update an existing product line item on a subscription. Only the data set on the action will be updated. This action can be used for bulk editing subscriptions, like changing price or product name"
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateProduct.php:120
+#: includes/Actions/Subscriptions/UpdateProduct.php:130
 msgid "Optionally set a new quantity for the product. Defaults to the current quantity set on the subscription."
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateProduct.php:128
+#: includes/Actions/Subscriptions/UpdateProduct.php:138
 msgid "Optionally set a custom price to use for the line item's cost. Do not include a currency symbol. Total line item cost will be this amount * quantity. Price should be entered the same as it would be on the Edit Product screen - taxes inclusive or exclusive. Defaults to no-change - the current price set on the product line item will remain."
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateProduct.php:141
+#: includes/Actions/Subscriptions/UpdateProduct.php:151
 msgid "%1$s workflow run: updated %2$s on subscription. (Product ID: %3$d; Workflow ID: %4$d)"
 msgstr ""
 
@@ -2633,31 +2633,31 @@ msgstr ""
 msgid "Update a subscriptions billing period or interval. When combined with an action to modify line items, this can be used to ship products on a different schedule to those which they are billed. After the schedule is updated, the next payment date will also be recalculated using the new schedule."
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateSchedule.php:101
+#: includes/Actions/Subscriptions/UpdateSchedule.php:104
 msgid "%1$s workflow run: updated subscription schedule to renew %2$s %3$s. (Workflow ID: %4$d)"
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateSchedule.php:117
+#: includes/Actions/Subscriptions/UpdateSchedule.php:120
 msgid "Billing Interval"
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateSchedule.php:118
+#: includes/Actions/Subscriptions/UpdateSchedule.php:121
 msgid "No change"
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateSchedule.php:119
+#: includes/Actions/Subscriptions/UpdateSchedule.php:122
 msgid "The frequency to process renewals. For example, if an interval of 3 is input with a chosen Billing Period of \"month\", then the billing schedule will be set to renew quarterly - every 3 months."
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateSchedule.php:132
+#: includes/Actions/Subscriptions/UpdateSchedule.php:135
 msgid "Billing Period"
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateSchedule.php:144
+#: includes/Actions/Subscriptions/UpdateSchedule.php:147
 msgid "Recalculate Dates"
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateSchedule.php:145
+#: includes/Actions/Subscriptions/UpdateSchedule.php:148
 msgid "Optionally recalculate the next payment and trial end dates based on the new billing schedule."
 msgstr ""
 
@@ -2669,7 +2669,7 @@ msgstr ""
 msgid "Update a shipping line item or items from a subscription, if any line items match the chosen shipping method. This is useful for bulk editing subscriptions, or to change the shipping charged to a subscriber at different stages of their subscription's lifecycle. Please note: all line items for the chosen shipping method will be updated."
 msgstr ""
 
-#: includes/Actions/Subscriptions/UpdateShipping.php:80
+#: includes/Actions/Subscriptions/UpdateShipping.php:84
 msgid "%1$s workflow run: updated shipping on subscription. (Shipping Method ID: %2$d; Workflow ID: %3$d)"
 msgstr ""
 
@@ -2681,7 +2681,7 @@ msgstr ""
 msgid "Add a coupon to discount future payments for a subscription. The coupon will be added using the discount amount set on the coupon. This action can be used for bulk editing subscriptions, or to change the coupons provided to a subscriber at different stages of their subscription's lifecycle. The same coupon code will only be added once to a subscription. Only recurring coupon types can be added."
 msgstr ""
 
-#: includes/Actions/Subscription_Add_Coupon.php:54
+#: includes/Actions/Subscription_Add_Coupon.php:58
 msgid "%1$s workflow run: added coupon %2$s to subscription. (Workflow ID: %3$d)"
 msgstr ""
 
@@ -2693,7 +2693,7 @@ msgstr ""
 msgid "Add a product as a new line item on a subscription. The item will be added using the price set on the product. This action can be used for bulk editing subscriptions, or to change the products provided to a subscriber at different stages of their subscription's lifecycle."
 msgstr ""
 
-#: includes/Actions/Subscription_Add_Product.php:92
+#: includes/Actions/Subscription_Add_Product.php:96
 msgid "%1$s workflow run: added %2$s to subscription. (Product ID: %3$d; Workflow ID: %4$d)"
 msgstr ""
 
@@ -2729,7 +2729,7 @@ msgstr ""
 msgid "Remove a coupon line item or items from a subscription, if any line items match the chosen coupon code. This is useful for bulk editing subscriptions, or to change the coupons provided to a subscriber at different stages of their subscription's lifecycle. Please note: all line items that match the chosen coupon code will be removed."
 msgstr ""
 
-#: includes/Actions/Subscription_Remove_Coupon.php:57
+#: includes/Actions/Subscription_Remove_Coupon.php:53
 msgid "%1$s workflow run: removed coupon %2$s. (Workflow ID: %3$d)"
 msgstr ""
 
@@ -2741,7 +2741,7 @@ msgstr ""
 msgid "Remove a product line item or items from a subscription, if any line items match the chosen product. This is useful for bulk editing subscriptions, or to change the products provided to a subscriber at different stages of their subscription's lifecycle. Please note: all line items that match the chosen product will be removed. Choosing a variable product will also remove any variations of that product. Choose a variation to remove only specific variations."
 msgstr ""
 
-#: includes/Actions/Subscription_Remove_Product.php:73
+#: includes/Actions/Subscription_Remove_Product.php:81
 msgid "%1$s workflow run: removed all line items for %2$s. (Product ID: %3$d; Workflow ID: %4$d)"
 msgstr ""
 
@@ -2920,7 +2920,7 @@ msgid "Item"
 msgstr ""
 
 #: includes/DataTypes/Customer.php:94
-#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:26
+#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:38
 #: includes/Triggers/Customer_New_Account.php:26
 #: includes/Triggers/Customer_Opted_In.php:25
 #: includes/Triggers/Customer_Opted_Out.php:25
@@ -4237,12 +4237,12 @@ msgstr ""
 msgid "Order - Status"
 msgstr ""
 
-#: includes/Rules/Order_Subscription_Order_Type.php:30
-msgid "Order - Subscription Order Type"
+#: includes/Rules/Order_Subscription_Failed_Automatic_Payment_Retry_Count.php:19
+msgid "Order - Subscription Failed Automatic Payment Retry Count"
 msgstr ""
 
-#: includes/Rules/Order_Subscription_Payment_Retry_Count.php:19
-msgid "Order - Subscription Payment Retry Count"
+#: includes/Rules/Order_Subscription_Order_Type.php:30
+msgid "Order - Subscription Order Type"
 msgstr ""
 
 #: includes/Rules/Points_Rewards_Customer_Points.php:34
@@ -4694,15 +4694,16 @@ msgstr ""
 msgid "Select which booking status values will trigger this workflow. Leave blank to allow all."
 msgstr ""
 
-#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:23
+#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:28
 msgid "Customer Before Saved Card Expiry"
 msgstr ""
 
-#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:24
-msgid "This trigger runs a set number of days before a customer's saved card expires. Cards expire on the last calendar day of their expiry month."
+#. translators: %1$s docs URL
+#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:31
+msgid "This trigger runs a set number of days before a customer's saved card expires. Cards expire on the last calendar day of their expiry month. <a href=\"%1$s\" target=\"_blank\">Some payment gateways are not supported.</a>"
 msgstr ""
 
-#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:33
+#: includes/Triggers/Customer_Before_Saved_Card_Expiry.php:47
 msgid "Days before expiry"
 msgstr ""
 

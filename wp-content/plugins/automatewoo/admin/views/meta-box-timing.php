@@ -16,13 +16,16 @@ $when_to_run
 	->set_name_base( $option_base )
 	->set_name( 'when_to_run' )
 	->set_options(
-		[
-			'immediately' => __( 'Run immediately', 'automatewoo' ),
-			'delayed'     => __( 'Delayed', 'automatewoo' ),
-			'scheduled'   => __( 'Scheduled', 'automatewoo' ),
-			'fixed'       => __( 'Fixed', 'automatewoo' ),
-			'datetime'    => __( 'Schedule with a variable', 'automatewoo' ),
-		]
+		apply_filters(
+			'automatewoo/workflow/timing_options',
+			[
+				'immediately' => __( 'Run immediately', 'automatewoo' ),
+				'delayed'     => __( 'Delayed', 'automatewoo' ),
+				'scheduled'   => __( 'Scheduled', 'automatewoo' ),
+				'fixed'       => __( 'Fixed', 'automatewoo' ),
+				'datetime'    => __( 'Schedule with a variable', 'automatewoo' ),
+			]
+		)
 	)
 	->add_data_attr( 'automatewoo-bind', 'timing' );
 

@@ -29,6 +29,8 @@ class UpdateShipping extends AddShipping {
 	 *
 	 * @param array            $shipping_data Shipping line item data. Same data as the return value of @see $this->get_object_for_edit().
 	 * @param \WC_Subscription $subscription Instance of subscription to add the shipping to.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $shipping_data, $subscription ) {
 
@@ -44,7 +46,7 @@ class UpdateShipping extends AddShipping {
 
 		// No item for that shipping method on this subscription
 		if ( empty( $shipping_line_item ) ) {
-			return;
+			return false;
 		}
 
 		$update_args = [];
@@ -65,6 +67,8 @@ class UpdateShipping extends AddShipping {
 		// Now we need to refresh the subscription to make sure it has the up-to-date line item then recalculate its totals so taxes etc. are updated
 		$subscription = wcs_get_subscription( $subscription->get_id() );
 		$subscription->calculate_totals();
+
+		return true;
 	}
 
 

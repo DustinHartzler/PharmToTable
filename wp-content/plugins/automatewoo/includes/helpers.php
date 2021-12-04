@@ -721,7 +721,7 @@ function aw_string_to_wc_datetime( $time_string ) {
  * @return array
  */
 function aw_get_draft_post_statuses() {
-	return [ 'auto-draft', 'new', 'wc-auto-draft' ];
+	return [ 'auto-draft', 'new', 'wc-auto-draft', 'wc-checkout-draft' ];
 }
 
 /**

@@ -3,7 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import { PropTypes } from 'prop-types';
-import { Card, Spinner } from '@woocommerce/components';
+import { Card, CardBody, Spinner } from '@wordpress/components';
 import warning from '@wordpress/warning';
 import { isEmpty } from 'lodash';
 
@@ -66,13 +66,15 @@ const SelectWorkflowStep = ( {
 
 	return (
 		<Card title={ __( '1. Select a manual workflow', 'automatewoo' ) }>
-			{ isPreFillingWorkflow ? (
-				<div className="automatewoo-manual-workflow-runner-spinner-container">
-					<Spinner />
-				</div>
-			) : (
-				content
-			) }
+			<CardBody>
+				{ isPreFillingWorkflow ? (
+					<div className="automatewoo-manual-workflow-runner-spinner-container">
+						<Spinner />
+					</div>
+				) : (
+					content
+				) }
+			</CardBody>
 		</Card>
 	);
 };

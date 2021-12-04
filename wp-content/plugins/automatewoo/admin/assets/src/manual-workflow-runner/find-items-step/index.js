@@ -3,7 +3,7 @@
  */
 import { __, sprintf } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
-import { Card } from '@woocommerce/components';
+import { Card, CardBody } from '@wordpress/components';
 import PropTypes from 'prop-types';
 
 /**
@@ -82,7 +82,7 @@ const FindItemsStep = ( {
 				primaryDataTypePluralName
 			) }
 		>
-			{ cardBody }
+			<CardBody>{ cardBody }</CardBody>
 		</Card>
 	);
 };

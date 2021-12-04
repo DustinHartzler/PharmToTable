@@ -51,6 +51,8 @@ abstract class AbstractEditItem extends Action {
 	 * @param \WC_Subscription $subscription Instance of the subscription being edited by this action.
 	 *
 	 * @throws \Exception When there is an error.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	abstract protected function edit_subscription( $object, $subscription );
 
@@ -78,7 +80,6 @@ abstract class AbstractEditItem extends Action {
 	 * @throws \Exception When there is an error.
 	 */
 	public function run() {
-
 		$object       = $this->get_object_for_edit();
 		$subscription = $this->get_subscription_to_edit();
 
@@ -86,8 +87,10 @@ abstract class AbstractEditItem extends Action {
 			return;
 		}
 
-		$this->edit_subscription( $object, $subscription );
-		$this->add_note( $object, $subscription );
+		$edited = $this->edit_subscription( $object, $subscription );
+		if ( $edited ) {
+			$this->add_note( $object, $subscription );
+		}
 	}
 
 

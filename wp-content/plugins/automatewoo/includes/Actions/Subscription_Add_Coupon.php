@@ -32,6 +32,8 @@ class Action_Subscription_Add_Coupon extends Action_Subscription_Edit_Coupon_Abs
 	 * @param \WC_Subscription $subscription Instance of subscription to add the coupon to.
 	 *
 	 * @throws \Exception When there is an error.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $coupon, $subscription ) {
 		$response = $subscription->apply_coupon( $coupon );
@@ -39,6 +41,8 @@ class Action_Subscription_Add_Coupon extends Action_Subscription_Edit_Coupon_Abs
 		if ( is_wp_error( $response ) ) {
 			throw new \Exception( $response->get_error_message() );
 		}
+
+		return true;
 	}
 
 

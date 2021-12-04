@@ -192,7 +192,6 @@ class Mailer extends Mailer_Abstract {
 		$html = $this->process_email_variables( $html );
 		$html = $this->fix_links_with_double_http( $html );
 		$html = $this->replace_urls_in_content( $html );
-		$html= $this->replace_unsupported_html_tags( $html );
 		$html = wptexturize( $html );
 
 		$html = $this->style_inline( $html );
@@ -218,24 +217,6 @@ class Mailer extends Mailer_Abstract {
 		$content = str_replace( '"http://https://', '"https://', $content );
 		$content = str_replace( '"https://http://', '"http://', $content );
 		return $content;
-	}
-
-
-	/**
-	 * Replace any HTML tags that aren't supported in email clients.
-	 *
-	 * @since 4.3.0
-	 *
-	 * @param string $html
-	 * @return string
-	 */
-	function replace_unsupported_html_tags( $html ) {
-		// replace <del> and <ins> tags for outlook
-		$html = str_replace( '<del>', '<span style="text-decoration: line-through;">', $html );
-		$html = str_replace( '<ins>', '<span style="text-decoration: underline;">', $html );
-		$html = str_replace( [ '</del>', '</ins>' ], '</span>', $html );
-
-		return $html;
 	}
 
 
@@ -379,7 +360,7 @@ class Mailer extends Mailer_Abstract {
 	 */
 	function inject_preheader( $html ) {
 		return preg_replace_callback( "/<body[^>]*>/", function( $matches ) {
-			$preheader = '<div class="automatewoo-email-preheader" style="display: none !important; font-size: 1px;">' . $this->preheader . '</div>';
+			$preheader = '<div class="automatewoo-email-preheader" style="display: none !important; font-size: 1px;">' . esc_html( $this->preheader ) . '</div>';
 			return $matches[0] . $preheader;
 		}, $html, 1 );
 	}

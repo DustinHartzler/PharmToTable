@@ -3,7 +3,7 @@
 
 namespace AutomateWoo;
 
-use Automattic\WooCommerce\Admin\Loader as WCAdminLoader;
+use Automattic\WooCommerce\Admin\Features\Features as WCAdminFeatures;
 use Automattic\WooCommerce\Admin\Features\Navigation\Screen;
 
 /**
@@ -22,7 +22,7 @@ class Post_Types {
 
 
 	static function register_post_types() {
-		$is_wc_admin_nav = class_exists( WCAdminLoader::class ) & WCAdminLoader::is_feature_enabled( 'navigation' );
+		$is_wc_admin_nav = class_exists( WCAdminFeatures::class ) & WCAdminFeatures::is_enabled( 'navigation' );
 
 		register_post_type( 'aw_workflow',
 			apply_filters( 'automatewoo_register_post_type_aw_workflow', [

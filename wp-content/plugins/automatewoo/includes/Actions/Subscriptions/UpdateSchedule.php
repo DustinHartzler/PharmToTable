@@ -57,6 +57,8 @@ class UpdateSchedule extends AbstractEditItem {
 	 * @param \WC_Subscription $subscription Instance of the subscription being edited by this action.
 	 *
 	 * @throws \Exception When there is an error.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $billing_schedule, $subscription ) {
 
@@ -87,6 +89,7 @@ class UpdateSchedule extends AbstractEditItem {
 		}
 
 		$subscription->save();
+		return true;
 	}
 
 

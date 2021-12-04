@@ -55,6 +55,8 @@ class Action_Subscription_Add_Product extends Action_Subscription_Edit_Product_A
 	 *
 	 * @param \WC_Product      $product Product to add to the subscription.
 	 * @param \WC_Subscription $subscription Instance of subscription to add the product to.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $product, $subscription ) {
 
@@ -77,6 +79,8 @@ class Action_Subscription_Add_Product extends Action_Subscription_Edit_Product_A
 
 		$subscription->add_product( $product, $this->get_option( 'quantity' ), $add_product_args );
 		$this->recalculate_subscription_totals( $subscription );
+
+		return true;
 	}
 
 

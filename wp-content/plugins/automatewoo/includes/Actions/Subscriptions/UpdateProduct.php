@@ -61,26 +61,40 @@ class UpdateProduct extends \AutomateWoo\Action_Subscription_Edit_Product_Abstra
 	 *
 	 * @param \WC_Product      $product Product to update to the subscription.
 	 * @param \WC_Subscription $subscription Instance of subscription to update the product to.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $product, $subscription ) {
-
-		$item = null;
+		$updated_items_count = 0;
 
 		foreach ( $subscription->get_items() as $subscription_item ) {
 			// Since $product can not be a variable product there's no need to check a product variation's parent ID
 			$item_product_id = $subscription_item->get_variation_id() ? $subscription_item->get_variation_id() : $subscription_item->get_product_id();
 
 			if ( $product->get_id() === $item_product_id ) {
-				$item = $subscription_item;
-				break;
+				$this->apply_changes_to_order_line_item( $product, $subscription_item );
+				$updated_items_count++;
 			}
 		}
 
-		// No item for that product on this subscription
-		if ( empty( $item ) ) {
-			return;
+		if ( ! $updated_items_count ) {
+			return false;
 		}
 
+		// Now we need to refresh the subscription to make sure it has the up-to-date line item then recalculate its totals so taxes etc. are updated
+		$subscription = wcs_get_subscription( $subscription->get_id() );
+		$this->recalculate_subscription_totals( $subscription );
+
+		return true;
+	}
+
+	/**
+	 * Apply action changes to a specific subscription line item.
+	 *
+	 * @param \WC_Product            $product The line item product.
+	 * @param \WC_Order_Item_Product $item    Subscription line item.
+	 */
+	protected function apply_changes_to_order_line_item( \WC_Product $product, \WC_Order_Item_Product $item ) {
 		$update_product_args = array();
 
 		if ( $this->get_option( 'line_item_name' ) ) {
@@ -106,10 +120,6 @@ class UpdateProduct extends \AutomateWoo\Action_Subscription_Edit_Product_Abstra
 			$item->set_props( $update_product_args );
 			$item->save();
 		}
-
-		// Now we need to refresh the subscription to make sure it has the up-to-date line item then recalculate its totals so taxes etc. are updated
-		$subscription = wcs_get_subscription( $subscription->get_id() );
-		$this->recalculate_subscription_totals( $subscription );
 	}
 
 

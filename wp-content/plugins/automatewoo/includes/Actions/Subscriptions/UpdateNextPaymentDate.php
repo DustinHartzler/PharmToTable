@@ -44,9 +44,13 @@ class UpdateNextPaymentDate extends AbstractEditItem {
 	 * @param \WC_Subscription $subscription          Instance of the subscription being edited by this action.
 	 *
 	 * @throws \Exception When there is an error.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	public function edit_subscription( $new_next_payment_date, $subscription ) {
 		$subscription->update_dates( array( 'next_payment' => $new_next_payment_date ) );
+
+		return true;
 	}
 
 	/**

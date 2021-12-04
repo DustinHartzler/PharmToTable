@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<phpunit
+        bootstrap="tests/bootstrap.php"
+        backupGlobals="false"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+>
+    <testsuites>
+        <testsuite name="thrive-dashboard-suite">
+            <directory prefix="test-" suffix=".php" phpVersion="*">./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <directory suffix=".php">classes</directory>
+            <directory suffix=".php">inc/access-manager</directory>
+        </whitelist>
+    </filter>
+    <php>
+        <const name="TVE_TESTS_RUNNING" value="1"/>
+    </php>
+</phpunit>

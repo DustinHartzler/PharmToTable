@@ -45,8 +45,11 @@ class Action_Subscription_Remove_Product extends Action_Subscription_Edit_Produc
 	 *
 	 * @param \WC_Product      $product Product to removed from the subscription.
 	 * @param \WC_Subscription $subscription Instance of subscription to remove the product from.
+	 *
+	 * @return bool True if the subscription was edited, false if no change was made.
 	 */
 	protected function edit_subscription( $product, $subscription ) {
+		$edited = false;
 
 		foreach ( $subscription->get_items() as $item ) {
 			// This will be the variation_id if the product is a variation.
@@ -54,12 +57,17 @@ class Action_Subscription_Remove_Product extends Action_Subscription_Edit_Produc
 			$item_product_id   = $item->get_product_id();
 			$item_variation_id = $item->get_variation_id();
 			if ( $product_id === $item_product_id || $product_id === $item_variation_id ) {
+				$edited = true;
 				$subscription->remove_item( $item->get_id() );
 			}
 		}
 
 		// updates totals and saves subscription
-		$this->recalculate_subscription_totals( $subscription );
+		if ( $edited ) {
+			$this->recalculate_subscription_totals( $subscription );
+		}
+
+		return $edited;
 	}
 
 

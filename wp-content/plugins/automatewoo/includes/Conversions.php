@@ -105,6 +105,14 @@ class Conversions {
 			$is_valid = false;
 		}
 
+		// Confirm that the workflow is still active and has conversion tracking enabled
+		if ( $is_valid ) {
+			$workflow = $log->get_workflow();
+			if ( ! $workflow || ! $workflow->is_active() || ! $workflow->is_conversion_tracking_enabled() ) {
+				$is_valid = false;
+			}
+		}
+
 		return (bool) apply_filters( 'automatewoo/conversions/is_valid_conversion', $is_valid, $order, $log->get_workflow_id(), $log );
 	}
 
