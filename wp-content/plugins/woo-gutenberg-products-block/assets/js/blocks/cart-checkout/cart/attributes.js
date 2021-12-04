@@ -1,29 +1,33 @@
 /**
  * External dependencies
  */
-import {
-	IS_SHIPPING_CALCULATOR_ENABLED,
-	HAS_DARK_EDITOR_STYLE_SUPPORT,
-} from '@woocommerce/block-settings';
+import { getSetting } from '@woocommerce/settings';
 
-const blockAttributes = {
+export const blockName = 'woocommerce/cart';
+export const blockAttributes = {
 	isPreview: {
 		type: 'boolean',
 		default: false,
 		save: false,
 	},
+	hasDarkControls: {
+		type: 'boolean',
+		default: getSetting( 'hasDarkEditorStyleSupport', false ),
+	},
+	// Deprecated - here for v1 migration support
 	isShippingCalculatorEnabled: {
 		type: 'boolean',
-		default: IS_SHIPPING_CALCULATOR_ENABLED,
+		default: getSetting( 'isShippingCalculatorEnabled', true ),
 	},
 	checkoutPageId: {
 		type: 'number',
 		default: 0,
 	},
-	hasDarkControls: {
+	showRateAfterTaxName: {
 		type: 'boolean',
-		default: HAS_DARK_EDITOR_STYLE_SUPPORT,
+		default: true,
+	},
+	align: {
+		type: 'string',
 	},
 };
-
-export default blockAttributes;

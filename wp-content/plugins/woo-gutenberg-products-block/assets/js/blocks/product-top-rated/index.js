@@ -10,7 +10,6 @@ import { without } from 'lodash';
  * Internal dependencies
  */
 import Block from './block';
-import { deprecatedConvertToShortcode } from '../../utils/deprecations';
 import sharedAttributes, {
 	sharedAttributeBlockTypes,
 } from '../../utils/shared-attributes';
@@ -21,7 +20,7 @@ registerBlockType( blockTypeName, {
 	title: __( 'Top Rated Products', 'woo-gutenberg-products-block' ),
 	icon: {
 		src: <Icon srcElement={ thumbUp } />,
-		foreground: '#96588a',
+		foreground: '#7f54b3',
 	},
 	category: 'woocommerce',
 	keywords: [ __( 'WooCommerce', 'woo-gutenberg-products-block' ) ],
@@ -52,14 +51,6 @@ registerBlockType( blockTypeName, {
 			},
 		],
 	},
-
-	deprecated: [
-		{
-			// Deprecate shortcode save method in favor of dynamic rendering.
-			attributes: sharedAttributes,
-			save: deprecatedConvertToShortcode( blockTypeName ),
-		},
-	],
 
 	/**
 	 * Renders and manages the block.

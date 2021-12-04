@@ -28,7 +28,7 @@ class Cart extends AbstractBlock {
 		$script = [
 			'handle'       => 'wc-' . $this->block_name . '-block',
 			'path'         => $this->asset_api->get_block_asset_build_path( $this->block_name ),
-			'dependencies' => [ 'wc-vendors', 'wc-blocks' ],
+			'dependencies' => [ 'wc-blocks' ],
 		];
 		return $key ? $script[ $key ] : $script;
 	}
@@ -55,8 +55,14 @@ class Cart extends AbstractBlock {
 	 * @param array $attributes  Any attributes that currently are available from the block.
 	 */
 	protected function enqueue_assets( array $attributes ) {
+		/**
+		 * Fires before cart block scripts are enqueued.
+		 */
 		do_action( 'woocommerce_blocks_enqueue_cart_block_scripts_before' );
 		parent::enqueue_assets( $attributes );
+		/**
+		 * Fires after cart block scripts are enqueued.
+		 */
 		do_action( 'woocommerce_blocks_enqueue_cart_block_scripts_after' );
 	}
 
@@ -69,12 +75,37 @@ class Cart extends AbstractBlock {
 	 */
 	protected function render( $attributes, $content ) {
 		// Deregister core cart scripts and styles.
-		wp_deregister_script( 'wc-cart' );
-		wp_deregister_script( 'wc-password-strength-meter' );
-		wp_deregister_script( 'selectWoo' );
-		wp_deregister_style( 'select2' );
+		wp_dequeue_script( 'wc-cart' );
+		wp_dequeue_script( 'wc-password-strength-meter' );
+		wp_dequeue_script( 'selectWoo' );
+		wp_dequeue_style( 'select2' );
 
-		return $this->inject_html_data_attributes( $content . $this->get_skeleton(), $attributes );
+		// If the content contains new inner blocks, it means we're in the newer version of Cart.
+		$regex_for_new_block = '/<div[\n\r\s\ta-zA-Z0-9_\-=\'"]*data-block-name="woocommerce\/filled-cart-block"[\n\r\s\ta-zA-Z0-9_\-=\'"]*>/mi';
+
+		$is_new = preg_match( $regex_for_new_block, $content );
+
+		if ( ! $is_new ) {
+			// This fallback needs to match the default templates defined in our Blocks.
+			$inner_blocks_html = '$0
+			<div data-block-name="woocommerce/filled-cart-block" class="wp-block-woocommerce-filled-cart-block">
+				<div data-block-name="woocommerce/cart-items-block" class="wp-block-woocommerce-cart-items-block">
+					<div data-block-name="woocommerce/cart-line-items-block" class="wp-block-woocommerce-cart-line-items-block"></div>
+				</div>
+				<div data-block-name="woocommerce/cart-totals-block" class="wp-block-woocommerce-cart-totals-block">
+					<div data-block-name="woocommerce/cart-order-summary-block" class="wp-block-woocommerce-cart-order-summary-block"></div>
+					<div data-block-name="woocommerce/cart-express-payment-block" class="wp-block-woocommerce-cart-express-payment-block"></div>
+					<div data-block-name="woocommerce/proceed-to-checkout-block" class="wp-block-woocommerce-proceed-to-checkout-block"></div>
+					<div data-block-name="woocommerce/cart-accepted-payment-methods-block" class="wp-block-woocommerce-cart-accepted-payment-methods-block"></div>
+				</div>
+			</div>
+			<div data-block-name="woocommerce/empty-cart-block" class="wp-block-woocommerce-empty-cart-block">
+			';
+
+			$content = preg_replace( '/<div class="[a-zA-Z0-9_\- ]*wp-block-woocommerce-cart[a-zA-Z0-9_\- ]*">/mi', $inner_blocks_html, $content );
+			$content = $content . '</div>';
+		}
+		return $content;
 	}
 
 	/**
@@ -87,39 +118,55 @@ class Cart extends AbstractBlock {
 	protected function enqueue_data( array $attributes = [] ) {
 		parent::enqueue_data( $attributes );
 
-		if ( ! $this->asset_data_registry->exists( 'shippingCountries' ) ) {
-			$this->asset_data_registry->add( 'shippingCountries', $this->deep_sort_with_accents( WC()->countries->get_shipping_countries() ) );
-		}
+		$this->asset_data_registry->add(
+			'shippingCountries',
+			function() {
+				return $this->deep_sort_with_accents( WC()->countries->get_shipping_countries() );
+			},
+			true
+		);
+		$this->asset_data_registry->add(
+			'shippingStates',
+			function() {
+				return $this->deep_sort_with_accents( WC()->countries->get_shipping_country_states() );
+			},
+			true
+		);
+		$this->asset_data_registry->add(
+			'countryLocale',
+			function() {
+				// Merge country and state data to work around https://github.com/woocommerce/woocommerce/issues/28944.
+				$country_locale = wc()->countries->get_country_locale();
+				$states         = wc()->countries->get_states();
 
-		if ( ! $this->asset_data_registry->exists( 'shippingStates' ) ) {
-			$this->asset_data_registry->add( 'shippingStates', $this->deep_sort_with_accents( WC()->countries->get_shipping_country_states() ) );
-		}
-
-		if ( ! $this->asset_data_registry->exists( 'countryLocale' ) ) {
-			// Merge country and state data to work around https://github.com/woocommerce/woocommerce/issues/28944.
-			$country_locale = wc()->countries->get_country_locale();
-			$states         = wc()->countries->get_states();
-
-			foreach ( $states as $country => $states ) {
-				if ( empty( $states ) ) {
-					$country_locale[ $country ]['state']['required'] = false;
-					$country_locale[ $country ]['state']['hidden']   = true;
+				foreach ( $states as $country => $states ) {
+					if ( empty( $states ) ) {
+						$country_locale[ $country ]['state']['required'] = false;
+						$country_locale[ $country ]['state']['hidden']   = true;
+					}
 				}
-			}
-			$this->asset_data_registry->add( 'countryLocale', $country_locale );
-		}
-
-		$permalink = ! empty( $attributes['checkoutPageId'] ) ? get_permalink( $attributes['checkoutPageId'] ) : false;
-
-		if ( $permalink && ! $this->asset_data_registry->exists( 'page-' . $attributes['checkoutPageId'] ) ) {
-			$this->asset_data_registry->add( 'page-' . $attributes['checkoutPageId'], $permalink );
-		}
+				return $country_locale;
+			},
+			true
+		);
+		$this->asset_data_registry->add( 'baseLocation', wc_get_base_location(), true );
+		$this->asset_data_registry->add( 'isShippingCalculatorEnabled', filter_var( get_option( 'woocommerce_enable_shipping_calc' ), FILTER_VALIDATE_BOOLEAN ), true );
+		$this->asset_data_registry->add( 'displayItemizedTaxes', 'itemized' === get_option( 'woocommerce_tax_total_display' ), true );
+		$this->asset_data_registry->add( 'displayCartPricesIncludingTax', 'incl' === get_option( 'woocommerce_tax_display_cart' ), true );
+		$this->asset_data_registry->add( 'taxesEnabled', wc_tax_enabled(), true );
+		$this->asset_data_registry->add( 'couponsEnabled', wc_coupons_enabled(), true );
+		$this->asset_data_registry->add( 'shippingEnabled', wc_shipping_enabled(), true );
+		$this->asset_data_registry->add( 'hasDarkEditorStyleSupport', current_theme_supports( 'dark-editor-style' ), true );
+		$this->asset_data_registry->register_page_id( isset( $attributes['checkoutPageId'] ) ? $attributes['checkoutPageId'] : 0 );
 
 		// Hydrate the following data depending on admin or frontend context.
 		if ( ! is_admin() && ! WC()->is_rest_api_request() ) {
 			$this->hydrate_from_api();
 		}
 
+		/**
+		 * Fires after cart block data is registered.
+		 */
 		do_action( 'woocommerce_blocks_cart_enqueue_data' );
 	}
 
@@ -147,89 +194,25 @@ class Cart extends AbstractBlock {
 	 * Hydrate the cart block with data from the API.
 	 */
 	protected function hydrate_from_api() {
-		if ( ! $this->asset_data_registry->exists( 'cartData' ) ) {
-			$this->asset_data_registry->add( 'cartData', WC()->api->get_endpoint_data( '/wc/store/cart' ) );
-		}
+		$this->asset_data_registry->hydrate_api_request( '/wc/store/cart' );
 	}
 
 	/**
-	 * Render skeleton markup for the cart block.
+	 * Register script and style assets for the block type before it is registered.
+	 *
+	 * This registers the scripts; it does not enqueue them.
 	 */
-	protected function get_skeleton() {
-		return '
-			<div class="wc-block-skeleton wc-block-components-sidebar-layout wc-block-cart wc-block-cart--is-loading wc-block-cart--skeleton hidden" aria-hidden="true">
-				<div class="wc-block-components-main wc-block-cart__main">
-					<h2><span></span></h2>
-					<table class="wc-block-cart-items">
-						<thead>
-							<tr class="wc-block-cart-items__header">
-								<th class="wc-block-cart-items__header-image"><span /></th>
-								<th class="wc-block-cart-items__header-product"><span /></th>
-								<th class="wc-block-cart-items__header-total"><span /></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr class="wc-block-cart-items__row">
-								<td class="wc-block-cart-item__image">
-									<div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" width="1" height="1" /></div>
-								</td>
-								<td class="wc-block-cart-item__product">
-									<div class="wc-block-cart-item__product-name"></div>
-									<div class="wc-block-cart-item__individual-price"></div>
-									<div class="wc-block-cart-item__product-metadata"></div>
-									<div class="wc-block-components-quantity-selector">
-										<input class="wc-block-components-quantity-selector__input" type="number" step="1" min="0" value="1" />
-										<button class="wc-block-components-quantity-selector__button wc-block-components-quantity-selector__button--minus">－</button>
-										<button class="wc-block-components-quantity-selector__button wc-block-components-quantity-selector__button--plus">＋</button>
-									</div>
-								</td>
-								<td class="wc-block-cart-item__total">
-									<div class="wc-block-cart-item__price"></div>
-								</td>
-							</tr>
-							<tr class="wc-block-cart-items__row">
-								<td class="wc-block-cart-item__image">
-									<div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" width="1" height="1" /></div>
-								</td>
-								<td class="wc-block-cart-item__product">
-									<div class="wc-block-cart-item__product-name"></div>
-									<div class="wc-block-cart-item__individual-price"></div>
-									<div class="wc-block-cart-item__product-metadata"></div>
-									<div class="wc-block-components-quantity-selector">
-										<input class="wc-block-components-quantity-selector__input" type="number" step="1" min="0" value="1" />
-										<button class="wc-block-components-quantity-selector__button wc-block-components-quantity-selector__button--minus">－</button>
-										<button class="wc-block-components-quantity-selector__button wc-block-components-quantity-selector__button--plus">＋</button>
-									</div>
-								</td>
-								<td class="wc-block-cart-item__total">
-									<div class="wc-block-cart-item__price"></div>
-								</td>
-							</tr>
-							<tr class="wc-block-cart-items__row">
-								<td class="wc-block-cart-item__image">
-									<div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=" width="1" height="1" /></div>
-								</td>
-								<td class="wc-block-cart-item__product">
-									<div class="wc-block-cart-item__product-name"></div>
-									<div class="wc-block-cart-item__individual-price"></div>
-									<div class="wc-block-cart-item__product-metadata"></div>
-									<div class="wc-block-components-quantity-selector">
-										<input class="wc-block-components-quantity-selector__input" type="number" step="1" min="0" value="1" />
-										<button class="wc-block-components-quantity-selector__button wc-block-components-quantity-selector__button--minus">－</button>
-										<button class="wc-block-components-quantity-selector__button wc-block-components-quantity-selector__button--plus">＋</button>
-									</div>
-								</td>
-								<td class="wc-block-cart-item__total">
-									<div class="wc-block-cart-item__price"></div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="wc-block-components-sidebar wc-block-cart__sidebar">
-					<div class="components-card"></div>
-				</div>
-			</div>
-		' . $this->get_skeleton_inline_script();
+	protected function register_block_type_assets() {
+		parent::register_block_type_assets();
+		$blocks = [
+			'cart-blocks/express-payment--checkout-blocks/express-payment--checkout-blocks/payment',
+			'cart-blocks/line-items',
+			'cart-blocks/order-summary',
+			'cart-blocks/order-summary--checkout-blocks/billing-address--checkout-blocks/shipping-address',
+			'cart-blocks/checkout-button-frontend.js',
+			'cart-blocks/express-payment',
+		];
+		$chunks = preg_filter( '/$/', '-frontend', $blocks );
+		$this->register_chunk_translations( $chunks );
 	}
 }

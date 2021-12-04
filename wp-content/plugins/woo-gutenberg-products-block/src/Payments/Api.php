@@ -106,7 +106,7 @@ class Api {
 	 */
 	public function register_payment_method_integrations( PaymentMethodRegistry $payment_method_registry ) {
 		// This is temporarily registering Stripe until it's moved to the extension.
-		if ( class_exists( '\WC_Stripe' ) && ! $payment_method_registry->is_registered( 'stripe' ) ) {
+		if ( class_exists( '\WC_Stripe', false ) && ! $payment_method_registry->is_registered( 'stripe' ) ) {
 			$payment_method_registry->register(
 				Package::container()->get( Stripe::class )
 			);
@@ -198,7 +198,7 @@ class Api {
 				if ( ! wp_script_is( $dep, 'registered' ) ) {
 					$error_handle  = $dep . '-dependency-error';
 					$error_message = sprintf(
-						'Payment gateway with handle \'%1$s\' has been deactivated because its dependency \'%2$s\' is not registered. Read the docs about registering assets for payment methods: https://github.com/woocommerce/woocommerce-gutenberg-products-block/blob/trunk/docs/extensibility/payment-method-integration.md#registering-assets',
+						'Payment gateway with handle \'%1$s\' has been deactivated in Cart and Checkout blocks because its dependency \'%2$s\' is not registered. Read the docs about registering assets for payment methods: https://github.com/woocommerce/woocommerce-gutenberg-products-block/blob/trunk/docs/extensibility/payment-method-integration.md#registering-assets',
 						esc_html( $payment_method_script ),
 						esc_html( $dep )
 					);
@@ -216,6 +216,12 @@ class Api {
 
 					$cart_checkout_scripts = [ 'wc-cart-block', 'wc-cart-block-frontend', 'wc-checkout-block', 'wc-checkout-block-frontend' ];
 					foreach ( $cart_checkout_scripts as $script_handle ) {
+						if (
+							! array_key_exists( $script_handle, $wp_scripts->registered ) ||
+							! property_exists( $wp_scripts->registered[ $script_handle ], 'deps' )
+						) {
+							continue;
+						}
 						// Remove payment method script from dependencies.
 						$wp_scripts->registered[ $script_handle ]->deps = array_diff(
 							$wp_scripts->registered[ $script_handle ]->deps,

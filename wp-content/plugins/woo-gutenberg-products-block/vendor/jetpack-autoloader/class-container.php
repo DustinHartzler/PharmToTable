@@ -5,7 +5,7 @@
  * @package automattic/jetpack-autoloader
  */
 
-namespace Automattic\Jetpack\Autoloader\jpb66042b24175ea7250f72a571509119e;
+namespace Automattic\Jetpack\Autoloader\jp019b0df727fea1b5af6b985a11170ab5;
 
  // phpcs:ignore
 
@@ -126,6 +126,7 @@ class Container {
 
 		// Register any classes that we will use elsewhere.
 		require_once __DIR__ . '/class-version-loader.php';
+		require_once __DIR__ . '/class-shutdown-handler.php';
 	}
 
 	/**

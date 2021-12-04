@@ -2,15 +2,12 @@
  * External dependencies
  */
 import { CURRENCY } from '@woocommerce/settings';
-import type { CurrencyResponseInfo } from '@woocommerce/type-defs/cart-response';
-import type { Rate } from '@woocommerce/type-defs/shipping';
-
-/**
- * Internal dependencies
- */
-import type { Currency } from '../types';
-
-type SymbolPosition = 'left' | 'left_space' | 'right' | 'right_space';
+import type {
+	Currency,
+	CurrencyResponse,
+	CartShippingPackageShippingRate,
+	SymbolPosition,
+} from '@woocommerce/types';
 
 /**
  * Get currency prefix.
@@ -69,12 +66,17 @@ const siteCurrencySettings: Currency = {
 
 /**
  * Gets currency information in normalized format from an API response or the server.
+ *
+ * If no currency was provided, or currency_code is empty, the default store currency will be used.
  */
 export const getCurrencyFromPriceResponse = (
 	// Currency data object, for example an API response containing currency formatting data.
-	currencyData: CurrencyResponseInfo | Record< string, never > | Rate
+	currencyData:
+		| CurrencyResponse
+		| Record< string, never >
+		| CartShippingPackageShippingRate
 ): Currency => {
-	if ( ! currencyData || typeof currencyData !== 'object' ) {
+	if ( ! currencyData?.currency_code ) {
 		return siteCurrencySettings;
 	}
 
@@ -113,6 +115,28 @@ export const getCurrency = (
 	};
 };
 
+const applyThousandSeparator = (
+	numberString: string,
+	thousandSeparator: string
+): string => {
+	return numberString.replace( /\B(?=(\d{3})+(?!\d))/g, thousandSeparator );
+};
+
+const splitDecimal = (
+	numberString: string
+): {
+	beforeDecimal: string;
+	afterDecimal: string;
+} => {
+	const parts = numberString.split( '.' );
+	const beforeDecimal = parts[ 0 ];
+	const afterDecimal = parts[ 1 ] || '';
+	return {
+		beforeDecimal,
+		afterDecimal,
+	};
+};
+
 /**
  * Format a price, provided using the smallest unit of the currency, as a
  * decimal complete with currency symbols using current store settings.
@@ -120,7 +144,7 @@ export const getCurrency = (
 export const formatPrice = (
 	// Price in minor unit, e.g. cents.
 	price: number | string,
-	currencyData: Currency
+	currencyData?: Currency
 ): string => {
 	if ( price === '' || price === undefined ) {
 		return '';
@@ -134,9 +158,27 @@ export const formatPrice = (
 	}
 
 	const currency: Currency = getCurrency( currencyData );
-	const formattedPrice: number = priceInt / 10 ** currency.minorUnit;
-	const formattedValue: string =
-		currency.prefix + formattedPrice + currency.suffix;
+
+	const {
+		minorUnit,
+		prefix,
+		suffix,
+		decimalSeparator,
+		thousandSeparator,
+	} = currency;
+
+	const formattedPrice: number = priceInt / 10 ** minorUnit;
+
+	const { beforeDecimal, afterDecimal } = splitDecimal(
+		formattedPrice.toString()
+	);
+
+	const formattedValue = `${ prefix }${ applyThousandSeparator(
+		beforeDecimal,
+		thousandSeparator
+	) }${
+		afterDecimal ? `${ decimalSeparator }${ afterDecimal }` : ''
+	}${ suffix }`;
 
 	// This uses a textarea to magically decode HTML currency symbols.
 	const txt = document.createElement( 'textarea' );

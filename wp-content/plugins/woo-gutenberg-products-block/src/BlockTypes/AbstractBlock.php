@@ -2,9 +2,11 @@
 namespace Automattic\WooCommerce\Blocks\BlockTypes;
 
 use WP_Block;
+use Automattic\WooCommerce\Blocks\Package;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
 use Automattic\WooCommerce\Blocks\Assets\Api as AssetApi;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
+use Automattic\WooCommerce\Blocks\RestApi;
 
 /**
  * AbstractBlock class.
@@ -79,7 +81,9 @@ abstract class AbstractBlock {
 	 */
 	public function render_callback( $attributes = [], $content = '' ) {
 		$render_callback_attributes = $this->parse_render_callback_attributes( $attributes );
-		$this->enqueue_assets( $render_callback_attributes );
+		if ( ! is_admin() ) {
+			$this->enqueue_assets( $render_callback_attributes );
+		}
 		return $this->render( $render_callback_attributes, $content );
 	}
 
@@ -103,7 +107,7 @@ abstract class AbstractBlock {
 	 */
 	protected function initialize() {
 		if ( empty( $this->block_name ) ) {
-			_doing_it_wrong( __METHOD__, esc_html( __( 'Block name is required.', 'woo-gutenberg-products-block' ) ), '4.5.0' );
+			_doing_it_wrong( __METHOD__, esc_html__( 'Block name is required.', 'woo-gutenberg-products-block' ), '4.5.0' );
 			return false;
 		}
 		$this->integration_registry->initialize( $this->block_name . '_block' );
@@ -119,24 +123,52 @@ abstract class AbstractBlock {
 	 */
 	protected function register_block_type_assets() {
 		if ( null !== $this->get_block_type_editor_script() ) {
+			$data     = $this->asset_api->get_script_data( $this->get_block_type_editor_script( 'path' ) );
+			$has_i18n = in_array( 'wp-i18n', $data['dependencies'], true );
+
 			$this->asset_api->register_script(
 				$this->get_block_type_editor_script( 'handle' ),
 				$this->get_block_type_editor_script( 'path' ),
 				array_merge(
 					$this->get_block_type_editor_script( 'dependencies' ),
 					$this->integration_registry->get_all_registered_editor_script_handles()
-				)
+				),
+				$has_i18n
 			);
 		}
 		if ( null !== $this->get_block_type_script() ) {
+			$data     = $this->asset_api->get_script_data( $this->get_block_type_script( 'path' ) );
+			$has_i18n = in_array( 'wp-i18n', $data['dependencies'], true );
+
 			$this->asset_api->register_script(
 				$this->get_block_type_script( 'handle' ),
 				$this->get_block_type_script( 'path' ),
 				array_merge(
 					$this->get_block_type_script( 'dependencies' ),
 					$this->integration_registry->get_all_registered_script_handles()
-				)
+				),
+				$has_i18n
 			);
+		}
+	}
+
+	/**
+	 * Injects Chunk Translations into the page so translations work for lazy loaded components.
+	 *
+	 * The chunk names are defined when creating lazy loaded components using webpackChunkName.
+	 *
+	 * @param string[] $chunks Array of chunk names.
+	 */
+	protected function register_chunk_translations( $chunks ) {
+		foreach ( $chunks as $chunk ) {
+			$handle = 'wc-blocks-' . $chunk . '-chunk';
+			$this->asset_api->register_script( $handle, $this->asset_api->get_block_asset_build_path( $chunk ), [], true );
+			wp_add_inline_script(
+				$this->get_block_type_script( 'handle' ),
+				wp_scripts()->print_translations( $handle, false ),
+				'before'
+			);
+			wp_deregister_script( $handle );
 		}
 	}
 
@@ -144,16 +176,22 @@ abstract class AbstractBlock {
 	 * Registers the block type with WordPress.
 	 */
 	protected function register_block_type() {
+		$block_settings = [
+			'render_callback' => $this->get_block_type_render_callback(),
+			'editor_script'   => $this->get_block_type_editor_script( 'handle' ),
+			'editor_style'    => $this->get_block_type_editor_style(),
+			'style'           => $this->get_block_type_style(),
+			'attributes'      => $this->get_block_type_attributes(),
+			'supports'        => $this->get_block_type_supports(),
+		];
+
+		if ( isset( $this->api_version ) && '2' === $this->api_version ) {
+			$block_settings['api_version'] = 2;
+		}
+
 		register_block_type(
 			$this->get_block_type(),
-			array(
-				'render_callback' => $this->get_block_type_render_callback(),
-				'editor_script'   => $this->get_block_type_editor_script( 'handle' ),
-				'editor_style'    => $this->get_block_type_editor_style(),
-				'style'           => $this->get_block_type_style(),
-				'attributes'      => $this->get_block_type_attributes(),
-				'supports'        => $this->get_block_type_supports(),
-			)
+			$block_settings
 		);
 	}
 
@@ -187,9 +225,9 @@ abstract class AbstractBlock {
 	 */
 	protected function get_block_type_editor_script( $key = null ) {
 		$script = [
-			'handle'       => 'wc-' . $this->block_name,
+			'handle'       => 'wc-' . $this->block_name . '-block',
 			'path'         => $this->asset_api->get_block_asset_build_path( $this->block_name ),
-			'dependencies' => [ 'wc-vendors', 'wc-blocks' ],
+			'dependencies' => [ 'wc-blocks' ],
 		];
 		return $key ? $script[ $key ] : $script;
 	}
@@ -201,7 +239,7 @@ abstract class AbstractBlock {
 	 * @return string|null
 	 */
 	protected function get_block_type_editor_style() {
-		return 'wc-block-editor';
+		return 'wc-blocks-editor-style';
 	}
 
 	/**
@@ -213,7 +251,7 @@ abstract class AbstractBlock {
 	 */
 	protected function get_block_type_script( $key = null ) {
 		$script = [
-			'handle'       => 'wc-' . $this->block_name . '-frontend',
+			'handle'       => 'wc-' . $this->block_name . '-block-frontend',
 			'path'         => $this->asset_api->get_block_asset_build_path( $this->block_name . '-frontend' ),
 			'dependencies' => [],
 		];
@@ -227,7 +265,7 @@ abstract class AbstractBlock {
 	 * @return string|null
 	 */
 	protected function get_block_type_style() {
-		return 'wc-block-style';
+		return 'wc-blocks-style';
 	}
 
 	/**
@@ -243,10 +281,10 @@ abstract class AbstractBlock {
 	/**
 	 * Get block attributes.
 	 *
-	 * @return array|null;
+	 * @return array;
 	 */
 	protected function get_block_type_attributes() {
-		return null;
+		return [];
 	}
 
 	/**
@@ -288,40 +326,7 @@ abstract class AbstractBlock {
 	}
 
 	/**
-	 * Injects block attributes into the block.
-	 *
-	 * @param string $content HTML content to inject into.
-	 * @param array  $attributes Key value pairs of attributes.
-	 * @return string Rendered block with data attributes.
-	 */
-	protected function inject_html_data_attributes( $content, array $attributes ) {
-		return preg_replace( '/<div /', '<div ' . $this->get_html_data_attributes( $attributes ) . ' ', $content, 1 );
-	}
-
-	/**
-	 * Converts block attributes to HTML data attributes.
-	 *
-	 * @param array $attributes Key value pairs of attributes.
-	 * @return string Rendered HTML attributes.
-	 */
-	protected function get_html_data_attributes( array $attributes ) {
-		$data = [];
-
-		foreach ( $attributes as $key => $value ) {
-			if ( is_bool( $value ) ) {
-				$value = $value ? 'true' : 'false';
-			}
-			if ( ! is_scalar( $value ) ) {
-				$value = wp_json_encode( $value );
-			}
-			$data[] = 'data-' . esc_attr( strtolower( preg_replace( '/(?<!\ )[A-Z]/', '-$0', $key ) ) ) . '="' . esc_attr( $value ) . '"';
-		}
-
-		return implode( ' ', $data );
-	}
-
-	/**
-	 * Extra data passed through from server to client for block.
+	 * Data passed through from server to client for block.
 	 *
 	 * @param array $attributes  Any attributes that currently are available from the block.
 	 *                           Note, this will be empty in the editor context when the block is
@@ -334,6 +339,28 @@ abstract class AbstractBlock {
 			if ( ! $this->asset_data_registry->exists( $asset_data_key ) ) {
 				$this->asset_data_registry->add( $asset_data_key, $asset_data_value );
 			}
+		}
+
+		if ( ! $this->asset_data_registry->exists( 'wcBlocksConfig' ) ) {
+			$this->asset_data_registry->add(
+				'wcBlocksConfig',
+				[
+					'buildPhase'    => Package::feature()->get_flag(),
+					'pluginUrl'     => plugins_url( '/', dirname( __DIR__ ) ),
+					'productCount'  => array_sum( (array) wp_count_posts( 'product' ) ),
+					'restApiRoutes' => [
+						'/wc/store' => array_keys( Package::container()->get( RestApi::class )->get_routes_from_namespace( 'wc/store' ) ),
+					],
+					'defaultAvatar' => get_avatar_url( 0, [ 'force_default' => true ] ),
+
+					/*
+					 * translators: If your word count is based on single characters (e.g. East Asian characters),
+					 * enter 'characters_excluding_spaces' or 'characters_including_spaces'. Otherwise, enter 'words'.
+					 * Do not translate into your own language.
+					 */
+					'wordCountType' => _x( 'words', 'Word count type. Do not translate!', 'woo-gutenberg-products-block' ),
+				]
+			);
 		}
 	}
 

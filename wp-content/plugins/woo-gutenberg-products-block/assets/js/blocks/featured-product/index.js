@@ -4,7 +4,7 @@
 import { __ } from '@wordpress/i18n';
 import { InnerBlocks } from '@wordpress/block-editor';
 import { registerBlockType } from '@wordpress/blocks';
-import { DEFAULT_HEIGHT } from '@woocommerce/block-settings';
+import { getSetting } from '@woocommerce/settings';
 import { Icon, star } from '@woocommerce/icons';
 
 /**
@@ -22,7 +22,7 @@ registerBlockType( 'woocommerce/featured-product', {
 	title: __( 'Featured Product', 'woo-gutenberg-products-block' ),
 	icon: {
 		src: <Icon srcElement={ star } />,
-		foreground: '#96588a',
+		foreground: '#7f54b3',
 	},
 	category: 'woocommerce',
 	keywords: [ __( 'WooCommerce', 'woo-gutenberg-products-block' ) ],
@@ -72,7 +72,7 @@ registerBlockType( 'woocommerce/featured-product', {
 		 */
 		height: {
 			type: 'number',
-			default: DEFAULT_HEIGHT,
+			default: getSetting( 'default_height', 500 ),
 		},
 
 		/**

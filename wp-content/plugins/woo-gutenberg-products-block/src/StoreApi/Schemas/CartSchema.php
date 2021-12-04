@@ -3,6 +3,7 @@ namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
 
 use Automattic\WooCommerce\Blocks\StoreApi\Utilities\CartController;
 use Automattic\WooCommerce\Blocks\Domain\Services\ExtendRestApi;
+use WC_Tax;
 use WP_Error;
 
 
@@ -287,6 +288,12 @@ class CartSchema extends AbstractSchema {
 										'context'     => [ 'view', 'edit' ],
 										'readonly'    => true,
 									],
+									'rate'  => [
+										'description' => __( 'The rate at which tax is applied.', 'woo-gutenberg-products-block' ),
+										'type'        => 'string',
+										'context'     => [ 'view', 'edit' ],
+										'readonly'    => true,
+									],
 								],
 							],
 						],
@@ -306,12 +313,6 @@ class CartSchema extends AbstractSchema {
 			'payment_requirements'    => [
 				'description' => __( 'List of required payment gateway features to process the order.', 'woo-gutenberg-products-block' ),
 				'type'        => 'array',
-				'context'     => [ 'view', 'edit' ],
-				'readonly'    => true,
-			],
-			'generated_timestamp'     => [
-				'description' => __( 'The time at which this cart data was prepared', 'woo-gutenberg-products-block' ),
-				'type'        => 'number',
 				'context'     => [ 'view', 'edit' ],
 				'readonly'    => true,
 			],
@@ -370,7 +371,6 @@ class CartSchema extends AbstractSchema {
 			),
 			'errors'                  => $cart_errors,
 			'payment_requirements'    => $this->extend->get_payment_requirements(),
-			'generated_timestamp'     => time(),
 			self::EXTENDING_KEY       => $this->get_extended_data( self::IDENTIFIER ),
 		];
 	}
@@ -389,6 +389,7 @@ class CartSchema extends AbstractSchema {
 			$tax_lines[] = array(
 				'name'  => $cart_tax_total->label,
 				'price' => $this->prepare_money_response( $cart_tax_total->amount, wc_get_price_decimals() ),
+				'rate'  => WC_Tax::get_rate_percent( $cart_tax_total->tax_rate_id ),
 			);
 		}
 

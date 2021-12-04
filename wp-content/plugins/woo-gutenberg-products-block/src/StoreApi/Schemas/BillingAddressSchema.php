@@ -42,12 +42,6 @@ class BillingAddressSchema extends AbstractAddressSchema {
 					'context'     => [ 'view', 'edit' ],
 					'required'    => true,
 				],
-				'phone' => [
-					'description' => __( 'Phone', 'woo-gutenberg-products-block' ),
-					'type'        => 'string',
-					'context'     => [ 'view', 'edit' ],
-					'required'    => true,
-				],
 			]
 		);
 	}
@@ -63,7 +57,6 @@ class BillingAddressSchema extends AbstractAddressSchema {
 	public function sanitize_callback( $address, $request, $param ) {
 		$address          = parent::sanitize_callback( $address, $request, $param );
 		$address['email'] = wc_clean( wp_unslash( $address['email'] ) );
-		$address['phone'] = wc_clean( wp_unslash( $address['phone'] ) );
 		return $address;
 	}
 
@@ -87,13 +80,6 @@ class BillingAddressSchema extends AbstractAddressSchema {
 			);
 		}
 
-		if ( ! empty( $address['phone'] ) && ! \WC_Validation::is_phone( $address['phone'] ) ) {
-			$errors->add(
-				'invalid_phone',
-				__( 'The provided phone number is not valid', 'woo-gutenberg-products-block' )
-			);
-		}
-
 		return $errors->has_errors( $errors ) ? $errors : true;
 	}
 
@@ -107,6 +93,13 @@ class BillingAddressSchema extends AbstractAddressSchema {
 	 */
 	public function get_item_response( $address ) {
 		if ( ( $address instanceof \WC_Customer || $address instanceof \WC_Order ) ) {
+			$billing_country = $address->get_billing_country();
+			$billing_state   = $address->get_billing_state();
+
+			if ( ! $this->validate_state( $billing_state, $billing_country ) ) {
+				$billing_state = '';
+			}
+
 			return (object) $this->prepare_html_response(
 				[
 					'first_name' => $address->get_billing_first_name(),
@@ -115,9 +108,9 @@ class BillingAddressSchema extends AbstractAddressSchema {
 					'address_1'  => $address->get_billing_address_1(),
 					'address_2'  => $address->get_billing_address_2(),
 					'city'       => $address->get_billing_city(),
-					'state'      => $address->get_billing_state(),
+					'state'      => $billing_state,
 					'postcode'   => $address->get_billing_postcode(),
-					'country'    => $address->get_billing_country(),
+					'country'    => $billing_country,
 					'email'      => $address->get_billing_email(),
 					'phone'      => $address->get_billing_phone(),
 				]

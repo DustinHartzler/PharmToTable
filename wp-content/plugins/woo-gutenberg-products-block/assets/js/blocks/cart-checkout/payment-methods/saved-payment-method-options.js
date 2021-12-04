@@ -13,7 +13,7 @@ import RadioControl from '@woocommerce/base-components/radio-control';
 import {
 	usePaymentMethodInterface,
 	usePaymentMethods,
-} from '@woocommerce/base-hooks';
+} from '@woocommerce/base-context/hooks';
 import { getPaymentMethods } from '@woocommerce/blocks-registry';
 
 /**
@@ -40,7 +40,7 @@ const getCcOrEcheckPaymentMethodOption = (
 			/* translators: %1$s is referring to the payment method brand, %2$s is referring to the last 4 digits of the payment card, %3$s is referring to the expiry date.  */
 			__(
 				'%1$s ending in %2$s (expires %3$s)',
-				'woo-gutenberg-product-blocks'
+				'woo-gutenberg-products-block'
 			),
 			method.brand,
 			method.last4,
