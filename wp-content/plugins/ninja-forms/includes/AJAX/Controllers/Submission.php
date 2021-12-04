@@ -100,8 +100,11 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
          * back to the form.
          */
         if ( $is_maintenance ) {
-            $this->_errors[ 'form' ][] = apply_filters( 'nf_maintenance_message', esc_html__( 'This form is currently undergoing maintenance. Please ', 'ninja-forms' )
-                . '<a href="' . $_SERVER[ 'HTTP_REFERER' ] . '">' . esc_html__( 'click here ', 'ninja-forms' ) . '</a>' . esc_html__( 'to reload the form and try again.', 'ninja-forms' )  ) ;
+            $message = sprintf(
+                esc_html__( 'This form is currently undergoing maintenance. Please %sclick here%s to reload the form and try again.', 'ninja-forms' )
+                ,'<a href="' . $_SERVER[ 'HTTP_REFERER' ] . '">', '</a>'
+            );
+            $this->_errors[ 'form' ][] = apply_filters( 'nf_maintenance_message', $message  ) ;
             $this->_respond();
         }
 
@@ -320,7 +323,7 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
             LEFT JOIN `$wpdb->postmeta` AS m
             ON p.ID = m.post_id
             WHERE m.meta_key = '_form_id'
-            AND m.meta_value = $form_id
+            AND m.meta_value = $this->_form_id
             AND p.post_status = 'publish'");
             if ( intval( $result->count ) >= intval( $this->_data[ 'settings' ][ 'sub_limit_number' ] ) ) {
                 $this->_errors[ 'form' ][] = $this->_data[ 'settings' ][ 'sub_limit_msg' ];
