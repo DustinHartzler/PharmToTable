@@ -74,26 +74,29 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 				$values['status']               = ! empty( $commission['status'] ) ? $commission['status'] : 'Active';
 				$values['apply_to']             = ! empty( $commission['apply_to'] ) ? $commission['apply_to'] : 'all';
 				$values['action_for_remaining'] = ! empty( $commission['action_for_remaining'] ) ? $commission['action_for_remaining'] : 'continue';
+				$values['no_of_tiers']          = ! empty( $commission['no_of_tiers'] ) ? $commission['no_of_tiers'] : '1';
+				$values['distribution']         = ! empty( $commission['distribution'] ) ? implode( '|', (array) $commission['distribution'] ) : '';
 
 				if ( $commission_id > 0 ) {
 					$values['commission_id'] = $commission_id;
 					$result                = $wpdb->query( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
-														"UPDATE {$wpdb->prefix}afwc_commission_plans SET name = %s, rules = %s, amount = %s, type = %s, status = %s, apply_to = %s, action_for_remaining = %s WHERE id = %s",
+														"UPDATE {$wpdb->prefix}afwc_commission_plans SET name = %s, rules = %s, amount = %s, type = %s, status = %s, apply_to = %s, action_for_remaining = %s, no_of_tiers = %s, distribution = %s WHERE id = %s",
 														$values
 													)
 					);
 				} else {
 					$result       = $wpdb->query( // phpcs:ignore
-										$wpdb->prepare( // phpcs:ignore
-											"INSERT INTO {$wpdb->prefix}afwc_commission_plans ( name, rules, amount, type, status, apply_to, action_for_remaining ) VALUES ( %s, %s, %s, %s, %s, %s, %s )",
+										$wpdb->prepare( // phpcs:ignore 
+											"INSERT INTO {$wpdb->prefix}afwc_commission_plans ( name, rules, amount, type, status, apply_to, action_for_remaining, no_of_tiers, distribution ) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s )",
 											$values
 										)
 					);
 					$lastid = $wpdb->insert_id;
 					// add id in plan order.
-					$plan_order   = get_option( 'afwc_plan_order', array() );
-					$plan_order[] = $lastid;
+					$plan_order = get_option( 'afwc_plan_order', array() );
+					$len        = count( $plan_order );
+					array_splice( $plan_order, $len, 0, $lastid );
 					update_option( 'afwc_plan_order', $plan_order, 'no' );
 				}
 
@@ -165,6 +168,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 
 			$result['commissions'] = $this->fetch_commission_plans( $params );
 			$plan_order            = get_option( 'afwc_plan_order', array() );
+			$default_plan_id       = (int) get_option( 'afwc_default_commission_plan_id', false );
 			if ( empty( $plan_order ) ) {
 				$plan_order = array_map(
 					function( $x ) {
@@ -172,6 +176,9 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					},
 					$result['commissions']
 				);
+				$key        = array_search( $default_plan_id, $plan_order, true );
+				unset( $plan_order[ $key ] );
+				$plan_order[] = $default_plan_id;
 				update_option( 'afwc_plan_order', $plan_order, 'no' );
 			}
 			$result['plan_order'] = $plan_order;
@@ -214,6 +221,9 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					'ARRAY_A'
 				);
 			}
+			$default_plan_details = afwc_get_default_plan_details();
+			$default_no_of_tiers  = ! empty( $default_plan_details['no_of_tiers'] ) ? $default_plan_details['no_of_tiers'] : 0;
+			$default_distribution = ! empty( $default_plan_details['distribution'] ) ? $default_plan_details['distribution'] : array();
 			if ( ! empty( $afwc_commissions ) ) {
 				foreach ( $afwc_commissions as $afwc_commission ) {
 					$commission['commissionId']         = ! empty( $afwc_commission['id'] ) ? $afwc_commission['id'] : '';
@@ -224,6 +234,8 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					$commission['status']               = ! empty( $afwc_commission['status'] ) ? $afwc_commission['status'] : '';
 					$commission['apply_to']             = ! empty( $afwc_commission['apply_to'] ) ? $afwc_commission['apply_to'] : 'all';
 					$commission['action_for_remaining'] = ! empty( $afwc_commission['action_for_remaining'] ) ? $afwc_commission['action_for_remaining'] : 'continue';
+					$commission['no_of_tiers']          = ! empty( $afwc_commission['no_of_tiers'] ) ? $afwc_commission['no_of_tiers'] : $default_no_of_tiers;
+					$commission['distribution']         = ! empty( $afwc_commission['distribution'] ) ? explode( '|', $afwc_commission['distribution'] ) : $default_distribution;
 					$commissions[]                      = $commission;
 				}
 			}
@@ -236,9 +248,12 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 * @param array $params save plan order params.
 		 */
 		public static function save_plan_order( $params ) {
-			global $wpdb;
+			$default_plan_id = (int) get_option( 'afwc_default_commission_plan_id', false );
 			if ( ! empty( $params['plan_order'] ) ) {
-				$plan_order = json_decode( $params['plan_order'], true );
+				$plan_order = (array) json_decode( $params['plan_order'], true );
+				$key        = array_search( $default_plan_id, $plan_order, true );
+				unset( $plan_order[ $key ] );
+				$plan_order[] = $default_plan_id;
 				update_option( 'afwc_plan_order', $plan_order, 'no' );
 				wp_send_json(
 					array(

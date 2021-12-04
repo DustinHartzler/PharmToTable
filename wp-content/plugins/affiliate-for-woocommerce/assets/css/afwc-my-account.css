@@ -101,8 +101,8 @@ thead, tbody tr {
 		width: 100% !important;
 	}
 	.circle {
-		float: right !important;
 		margin-top: 0.3em;
+		margin-right: 0;
 	}
 }
 .afwc_products tfoot td, .afwc_referrals tfoot td, .afwc_payout_history tfoot td {
@@ -303,6 +303,7 @@ thead, tbody tr {
 	box-sizing: unset;
 	background-color: unset;
 	cursor: pointer;
+	height: unset;
 }
 @media screen and (max-width: 511px) {
 	#afwc_date_range_container {
@@ -359,7 +360,6 @@ thead, tbody tr {
 }
 #afwc_paid_commission, #afwc_unpaid_commission {
 	float: left;
-	padding-left: 0.5em;
 	text-align: center;
 	color: white;
 	font-weight: 600;
@@ -401,6 +401,7 @@ input#afwc_affiliate_link {
 #afwc_resources_wrapper code {
 	cursor: pointer;
 	font-size: 0.8em;
+	display: initial !important;
 }
 #afwc_contact_admin_container {
 	margin-top: 1em;

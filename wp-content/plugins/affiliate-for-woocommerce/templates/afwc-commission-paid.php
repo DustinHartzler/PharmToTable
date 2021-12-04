@@ -58,7 +58,10 @@ if ( $additional_content ) {
 <p><?php echo esc_html__( 'Best regards from your friends at,', 'affiliate-for-woocommerce' ); ?></p>
 <?php
 
-/*
- * @hooked WC_Emails::email_footer() Output the email footer
+/**
+ * Output the email footer
+ *
+ * @hooked WC_Emails::email_footer() Output the email footer.
+ * @param string $email.
  */
 do_action( 'woocommerce_email_footer', $email );

@@ -56,16 +56,18 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 			} else {
 
 				$rules_arr   = array();
-				$props_count = count( $props );
-				for ( $i = 0; $i < $props_count; $i++ ) {
-					$r = $props[ $i ];
-					if ( ! empty( $r['condition'] ) ) {
-						$new1 = new AFWC_Rule_Group( $r );
-						array_push( $rules_arr, $new1 );
-					} elseif ( ! empty( $r['operator'] ) && ! empty( $r['type'] ) ) {
-						$classname = self::$registry['rule'][ $r['type'] ];
-						$new1      = new $classname( $r );
-						array_push( $rules_arr, $new1 );
+				$props_count = ! empty( $props ) ? count( $props ) : 0;
+				if ( ! empty( $props_count ) ) {
+					for ( $i = 0; $i < $props_count; $i++ ) {
+						$r = $props[ $i ];
+						if ( ! empty( $r['condition'] ) ) {
+							$new1 = new AFWC_Rule_Group( $r );
+							array_push( $rules_arr, $new1 );
+						} elseif ( ! empty( $r['operator'] ) && ! empty( $r['type'] ) ) {
+							$classname = self::$registry['rule'][ $r['type'] ];
+							$new1      = new $classname( $r );
+							array_push( $rules_arr, $new1 );
+						}
 					}
 				}
 				return $rules_arr;

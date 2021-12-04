@@ -63,7 +63,10 @@ if ( $additional_content ) {
 	echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
 }
 
-/*
+/**
+ * Output the email footer
+ *
  * @hooked WC_Emails::email_footer() Output the email footer
+ * @param string $email.
  */
 do_action( 'woocommerce_email_footer', $email );

@@ -1,84 +1,200 @@
-#, fuzzy
+# Copyright (C) 2021 StoreApps
+# This file is distributed under the same license as the Affiliate For WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Affiliate For WooCommerce\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-25 06:57+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: Affiliate For WooCommerce 3.10.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/affiliate-for-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.4.4; wp-5.5.3"
+"POT-Creation-Date: 2021-11-19T12:29:14+05:30\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.1.0\n"
+"X-Domain: affiliate-for-woocommerce\n"
 
-#: includes/class-affiliate-for-woocommerce.php:1113
+#. Plugin Name of the plugin
+#: includes/admin/class-afwc-privacy.php:29
+msgid "Affiliate For WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://woocommerce.com/products/affiliate-for-woocommerce/"
+msgstr ""
+
+#. Description of the plugin
+msgid "The best affiliate management plugin for WooCommerce. Track, manage and payout affiliate commissions easily."
+msgstr ""
+
+#. Author of the plugin
+msgid "StoreApps"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://www.storeapps.org/"
+msgstr ""
+
+#: includes/affiliate-for-woocommerce-functions.php:332
+msgid "Join our affiliate program"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:151
+#: includes/class-affiliate-for-woocommerce.php:153
+msgid "Affiliate Tags"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:152
+msgid "Affiliate Tag"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:154
+msgid "Search Affiliate Tag"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:155
+msgid "Popular Affiliate Tags"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:156
+msgid "All Affiliate Tags"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:157
+msgid "Edit Affiliate Tag"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:158
+msgid "Update Affiliate Tag"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:159
+msgid "Add New Affiliate Tag"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:160
+msgid "New Affiliate Tag Name"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:161
+msgid "No Affiliate Tags found"
+msgstr ""
+
+#. translators: A small arrow
+#: includes/class-affiliate-for-woocommerce.php:269
+msgid "Affiliates Dashboard"
+msgstr ""
+
+#. translators: A small arrow
+#: includes/class-affiliate-for-woocommerce.php:269
+#: assets/js/admin.js:1
+msgid "Affiliates"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:278
+msgid "Docs & Support"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:280
+msgid "Affiliate Form Settings"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1190
+msgid "Email"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1196
+msgid "First Name"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1203
+msgid "Last Name"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1210
+msgid "Phone Number / Skype ID / Best method to talk to you"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1216
+msgid "Website"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1222
+msgid "Password"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1229
+msgid "Confirm Password"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1236
+msgid "Tell us more about yourself and why you'd like to partner with us (please include your social media handles, experience promoting others, tell us about your audience etc)"
+msgstr ""
+
+#: includes/class-affiliate-for-woocommerce.php:1242
 msgid " I accept all the terms of this program"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:50
-msgid " is waiting!"
+#. translators: Link to back
+#. translators: Link to go back
+#: includes/migration/class-afwc-migrate-affiliates.php:50
+#: includes/migration/class-afwc-migrate-affiliates.php:197
+#: includes/migration/class-afwc-migrate-affiliates.php:218
+msgid "Could not locate Affiliates plugin. Make sure that it is installed & activated. %s"
 msgstr ""
 
-#: templates/afwc-commission-paid.php:24
-#: templates/plain/afwc-commission-paid.php:25
-msgid " to "
+#. translators: Link to back
+#. translators: Link to go back
+#: includes/migration/class-afwc-migrate-affiliates.php:50
+#: includes/migration/class-afwc-migrate-affiliates.php:197
+#: includes/migration/class-afwc-migrate-affiliates.php:218
+msgid "Back"
 msgstr ""
 
-#. 1: user display name 2: user ID 3: user email
-#: includes/class-afwc-coupon.php:132
+#: includes/migration/class-afwc-migrate-affiliates.php:87
+msgid "We found data from the \"Affiliates\". Do you want to migrate it?"
+msgstr ""
+
+#: includes/migration/class-afwc-migrate-affiliates.php:101
+msgid "Migrate Now"
+msgstr ""
+
+#: includes/migration/class-afwc-migrate-affiliates.php:114
+msgid "Dismiss"
+msgstr ""
+
+#. translators: 1: user display name 2: user ID 3: user email
+#: includes/class-afwc-coupon.php:109
 #: includes/admin/class-afwc-admin-link-unlink-in-order.php:97
-#, php-format
 msgid "%1$s (#%2$s &ndash; %3$s)"
 msgstr ""
 
-#. Number of records updated in referrals table.
-#: includes/admin/class-afwc-admin-dashboard.php:285
-#, php-format
-msgid "%d records updated."
+#: includes/class-afwc-coupon.php:123
+msgid "Assign to affiliate"
 msgstr ""
 
-#. Link to the affiliate registration form page
-#. Link to the affiliate registration form edit page
-#: includes/admin/class-afwc-admin-settings.php:104
-#: includes/admin/class-afwc-admin-settings.php:107
-#, php-format
-msgid "%s | "
+#: includes/class-afwc-coupon.php:124
+msgid "Search by affiliate id or email address"
 msgstr ""
 
-#. Link to the affiliate tags
-#: includes/admin/class-afwc-admin-affiliate.php:206
-#: includes/admin/class-afwc-admin-settings.php:115
-#, php-format
-msgid "%s."
+#: includes/class-afwc-coupon.php:127
+msgid "Search affiliates by id or email address to assign a coupon to them. Affiliates will see this coupon in their account."
 msgstr ""
 
-#. %s: contact information
-#. %s: website URL
-#. %s: user contact label
-#. %s: user website label
-#: templates/afwc-new-registration-received.php:28
-#: templates/afwc-new-registration-received.php:33
-#: templates/plain/afwc-new-registration-received.php:27
-#: templates/plain/afwc-new-registration-received.php:33
-#, php-format
-msgid "%s: "
+#: includes/commission_rules/class-afwc-rule.php:84
+msgid "is"
 msgstr ""
 
-#: templates/plain/afwc-new-registration-received.php:43
-#, php-format
-msgid "(%s)"
+#: includes/commission_rules/class-afwc-rule.php:89
+msgid "is not"
 msgstr ""
 
-#: includes/commission_rules/rules/base_rules/class-afwc-rule-number-commission.php:44
-msgid "<"
+#: includes/commission_rules/class-afwc-rule.php:94
+msgid "any of"
 msgstr ""
 
-#: includes/commission_rules/rules/base_rules/class-afwc-rule-number-commission.php:49
-msgid "<="
+#: includes/commission_rules/class-afwc-rule.php:99
+msgid "none of"
 msgstr ""
 
 #: includes/commission_rules/rules/base_rules/class-afwc-rule-number-commission.php:34
@@ -89,633 +205,80 @@ msgstr ""
 msgid ">="
 msgstr ""
 
-#: includes/admin/class-afwc-admin-affiliate.php:141
-msgid "About affiliate"
+#: includes/commission_rules/rules/base_rules/class-afwc-rule-number-commission.php:44
+msgid "<"
 msgstr ""
 
-#. Link to the Affiliate For WooCommerce Dashboard in admin
-#: includes/admin/about-affiliate-for-woocommerce.php:105
-#, php-format
-msgid "Access affiliate %s."
+#: includes/commission_rules/rules/base_rules/class-afwc-rule-number-commission.php:49
+msgid "<="
 msgstr ""
 
-#: includes/admin/class-afwc-admin-affiliate.php:117
-msgid "Action"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:113
-msgid "Active"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:142
-msgid "Add New Affiliate Tag"
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:228
-#: includes/emails/class-afwc-new-conversion-email.php:232
-#: includes/emails/class-afwc-new-registration-received.php:226
-#: includes/emails/class-afwc-welcome-affiliate-email.php:216
-msgid "Additional content"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:36
-#: templates/plain/afwc-new-registration-received.php:37
-msgid "Additional Information: "
-msgstr ""
-
-#: templates/afwc-commission-paid.php:39
-#: templates/plain/afwc-commission-paid.php:36
-msgid "Additional notes: "
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:47
-#: includes/frontend/class-afwc-my-account.php:171
-#: includes/frontend/class-afwc-my-account.php:1925
-msgid "Affiliate"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:102
-#: includes/admin/class-afwc-privacy.php:356
-msgid "Affiliate - Customer"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:144
-msgid "Affiliate Campaigns"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:175
-msgid "Affiliate coupons"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:150
-msgid "Affiliate Dashboard"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-link-unlink-in-order.php:61
-msgid "Affiliate details"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:168
-msgid "Affiliate earned payout amount"
-msgstr ""
-
-#. Name of the plugin
-#: includes/admin/class-afwc-privacy.php:29
-msgid "Affiliate For WooCommerce"
-msgstr ""
-
-#: affiliate-for-woocommerce.php:80
-msgid "Affiliate for WooCommerce requires WooCommerce to be activated."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:122
-msgid "Affiliate For WooCommerce Settings"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:111
-msgid "Affiliate For WooCommerce settings"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:263
-msgid "Affiliate Form Settings"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:162
-msgid "Affiliate ID"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:132
-msgid "Affiliate information"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:219
-msgid "Affiliate manager email"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:169
-msgid "Affiliate payout currency"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:167
-msgid "Affiliate payout date time"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:171
-msgid "Affiliate payout gateway"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:170
-msgid "Affiliate payout notes"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:172
-msgid "Affiliate receiver"
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:462
-msgid "Affiliate registration form settings"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:142
-msgid "Affiliate Resources"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:135
-msgid "Affiliate Tag"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:134
-#: includes/class-affiliate-for-woocommerce.php:136
-msgid "Affiliate Tags"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:174
-msgid "Affiliate tags"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:165
-msgid "Affiliate URL"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:143
-msgid "Affiliate users roles"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:252
-msgid "Affiliates"
-msgstr ""
-
-#. A small arrow
-#: includes/class-affiliate-for-woocommerce.php:252
-msgid "Affiliates Dashboard"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:220
-msgid ""
-"Affiliates will see a link to contact you in their dashboard - and the link "
-"will point to this email address. Leave this field blank to hide the contact "
-"link."
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:139
-msgid "All Affiliate Tags"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:145
-msgid "all matching products in the order"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:165
-msgid ""
-"All products are eligible for affiliate commission by default. If you want "
-"to exclude some, list them here."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:190
-msgid ""
-"Allow affiliates to use something other than {user_id} as referral "
-"identifier."
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:604
-#: includes/frontend/class-afwc-my-account.php:960
-#: includes/frontend/class-afwc-my-account.php:972
-#: includes/frontend/class-afwc-my-account.php:1721
-msgid "Amount"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:556
-msgid "Anonymized IP Address"
-msgstr ""
-
-#. Email address.
-#: includes/admin/class-afwc-privacy.php:391
-#, php-format
-msgid "Anonymized IP for the user \"%s\""
-msgstr ""
-
-#: includes/commission_rules/class-afwc-rule.php:94
-msgid "any of"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:149
-msgid "apply zero commission"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:134
-msgid "Approval method"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:40
-msgid "Approve / reject / manage this affiliate"
-msgstr ""
-
-#. %s: user's profile url
-#: templates/plain/afwc-new-registration-received.php:41
-#, php-format
-msgid "Approve / reject / manage this affiliate : %s"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:119
-msgid "Approve affiliate"
-msgstr ""
-
-#: includes/class-afwc-coupon.php:146
-msgid "Assign to affiliate"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-link-unlink-in-order.php:111
-msgid "Assigned to affiliate"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:135
-msgid ""
-"Automatically approve all submissions via Affiliate Registration Form - no "
-"manual review needed."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:112
-msgid "Awaiting Approval"
-msgstr ""
-
-#: includes/migration/class-afwc-migrate-affiliates.php:50
-#: includes/migration/class-afwc-migrate-affiliates.php:197
-#: includes/migration/class-afwc-migrate-affiliates.php:218
-msgid "Back"
-msgstr ""
-
-#: templates/afwc-welcome-affiliate-email.php:54
-#: templates/plain/afwc-welcome-affiliate-email.php:58
-msgid "Best Regards"
-msgstr ""
-
-#: templates/afwc-commission-paid.php:58
-#: templates/plain/afwc-commission-paid.php:56
-msgid "Best regards from your friends at,"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:46
-msgid "BTW, you can "
-msgstr ""
-
-#. %s: dashboard url
-#: templates/plain/afwc-new-registration-received.php:46
-#, php-format
-msgid "BTW, you can review and manage all affiliates here: %s"
-msgstr ""
-
-#: includes/admin/class-afwc-campaign-dashboard.php:130
-msgid "Campaign deleted successfully"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:656
-msgid "Campaigns"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1684
-msgid "Change affiliate identifier: "
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:96
-msgid ""
-"Changing affiliate slug will stop tracking the existing URL with the current "
-"slug. Are you sure you want to continue?"
-msgstr ""
-
-#. Link to the Affiliate For WooCommerce Doc
-#: includes/admin/about-affiliate-for-woocommerce.php:123
-#: includes/admin/about-affiliate-for-woocommerce.php:127
-#: includes/admin/about-affiliate-for-woocommerce.php:131
-#: includes/admin/about-affiliate-for-woocommerce.php:137
-#: includes/admin/about-affiliate-for-woocommerce.php:141
-#: includes/admin/about-affiliate-for-woocommerce.php:145
-#, php-format
-msgid "Check %s."
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:238
-#: includes/emails/class-afwc-new-conversion-email.php:242
-#: includes/emails/class-afwc-new-registration-received.php:236
-#: includes/emails/class-afwc-welcome-affiliate-email.php:226
-msgid "Choose which format of email to send."
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1676
-msgid "Click to change"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1695
-#: includes/frontend/class-afwc-my-account.php:1729
-#: includes/frontend/class-afwc-my-account.php:1768
-msgid "Click to copy"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:566
-#: includes/frontend/class-afwc-my-account.php:904
-#: includes/frontend/class-afwc-my-account.php:935
-msgid "Commission"
-msgstr ""
-
-#: templates/afwc-new-conversion.php:47
-msgid "Commission earned"
-msgstr ""
-
-#: templates/plain/afwc-new-conversion.php:34
-msgid "Commission earned: "
-msgstr ""
-
-#: includes/admin/class-afwc-commission-dashboard.php:152
-msgid "Commission plan deleted successfully"
-msgstr ""
-
-#: templates/afwc-commission-paid.php:28
-#: templates/plain/afwc-commission-paid.php:29
-msgid "Commission: "
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:1100
-msgid "Confirm Password"
-msgstr ""
-
-#: templates/afwc-commission-paid.php:22
-#: templates/plain/afwc-commission-paid.php:21
-msgid ""
-"Congratulations on your successful referrals. We just processed your "
-"commission payout."
-msgstr ""
-
-#. Link to the my account page
-#: includes/frontend/class-afwc-registration-form.php:339
-#, php-format
-msgid ""
-"Congratulations, you are successfully registered as our affiliate. %s to "
-"find more details about affiliate program."
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1796
-msgid "Contact store admin"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:147
-msgid "continue matching commission plans"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:849
-msgid "Conversion"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:207
-msgid "Cookie duration (in days)"
-msgstr ""
-
-#. Link to back
-#. Link to go back
-#: includes/migration/class-afwc-migrate-affiliates.php:50
-#: includes/migration/class-afwc-migrate-affiliates.php:197
-#: includes/migration/class-afwc-migrate-affiliates.php:218
-#, php-format
-msgid ""
-"Could not locate Affiliates plugin. Make sure that it is installed & "
-"activated. %s"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1718
-msgid "Coupon code"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:198
-msgid "Coupons for referral"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:178
-msgid "Currency"
-msgstr ""
-
-#: templates/afwc-new-conversion.php:36
-#: includes/frontend/class-afwc-my-account.php:564
-#: includes/frontend/class-afwc-my-account.php:902
-#: includes/frontend/class-afwc-my-account.php:933
-msgid "Customer"
-msgstr ""
-
-#: templates/plain/afwc-new-conversion.php:29
-msgid "Customer: "
-msgstr ""
-
-#: includes/admin/about-affiliate-for-woocommerce.php:113
-msgid "dashboard"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:562
-#: includes/frontend/class-afwc-my-account.php:603
-#: includes/frontend/class-afwc-my-account.php:900
-#: includes/frontend/class-afwc-my-account.php:931
-#: includes/frontend/class-afwc-my-account.php:959
-#: includes/frontend/class-afwc-my-account.php:971
-msgid "Date"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:279
-msgid "Date time"
-msgstr ""
-
-#: includes/gateway/paypal/class-afwc-paypal.php:171
-msgid "Disabled"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:139
-msgid ""
-"Disabling this will require you to review and approve affiliates yourself. "
-"They won't become affiliates until you approve."
-msgstr ""
-
-#: includes/migration/class-afwc-migrate-affiliates.php:114
-msgid "Dismiss"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:50
-msgid "Do respond promptly. "
-msgstr ""
-
-#. %s: affiliate user's name
-#: templates/plain/afwc-new-registration-received.php:50
-#, php-format
-msgid "Do respond promptly. %s is waiting!"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-notifications.php:82
-msgid "Docs"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:261
-msgid "Docs & Support"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:552
-#: includes/frontend/class-afwc-my-account.php:924
-msgid "Draft"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:140
-msgid "Edit Affiliate Tag"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:107
-msgid "Edit form"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:1061
-msgid "Email"
-msgstr ""
-
-#. %s: Affiliate's first name
-#: templates/afwc-new-registration-received.php:42
-#, php-format
-msgid "Email %s and discuss details"
-msgstr ""
-
-#. %s: user's email
-#: templates/plain/afwc-new-registration-received.php:43
-#, php-format
-msgid "Email %s and discuss details "
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:220
-#: includes/emails/class-afwc-new-conversion-email.php:224
-#: includes/emails/class-afwc-new-registration-received.php:218
-#: includes/emails/class-afwc-welcome-affiliate-email.php:208
-msgid "Email Heading"
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:236
-#: includes/emails/class-afwc-new-conversion-email.php:240
-#: includes/emails/class-afwc-new-registration-received.php:234
-#: includes/emails/class-afwc-welcome-affiliate-email.php:224
-msgid "Email type"
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:209
-#: includes/emails/class-afwc-new-conversion-email.php:213
-#: includes/emails/class-afwc-new-registration-received.php:207
-#: includes/emails/class-afwc-welcome-affiliate-email.php:197
-msgid "Enable this email notification"
-msgstr ""
-
-#: includes/integration/woocommerce/compat/class-wcs-afwc-compatibility.php:87
-msgid ""
-"Enable this to give affiliate commissions for subscription recurring orders "
-"also"
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:207
-#: includes/emails/class-afwc-new-conversion-email.php:211
-#: includes/emails/class-afwc-new-registration-received.php:205
-#: includes/emails/class-afwc-welcome-affiliate-email.php:195
-msgid "Enable/Disable"
-msgstr ""
-
-#: includes/gateway/paypal/class-afwc-paypal.php:179
-msgid "Enabled"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1926
-msgid "Endpoint for the My Account &rarr; Affiliate page"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:223
-msgid "Enter email address"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:197
-msgid "Enter PayPal email address for payouts of this affiliate..."
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1763
-msgid "Enter target path here..."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:164
-msgid "Excluded products"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:51
-msgid ""
-"Export/delete of personal data will be processed only after receiving "
-"confirmation about it."
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:49
-msgid "Export/Delete personal data"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:50
-msgid "Exporting personal data is available for both - affiliate and visitor."
-msgstr ""
-
-#: includes/admin/class-afwc-campaign-dashboard.php:123
-msgid "Failed to delete campaign"
-msgstr ""
-
-#: includes/admin/class-afwc-commission-dashboard.php:131
-msgid "Failed to delete commission plan"
-msgstr ""
-
-#: includes/admin/about-affiliate-for-woocommerce.php:119
-msgid "FAQ"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:925
-#: includes/admin/class-afwc-commission-dashboard.php:510
-msgid "Feedback option updated"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:1067
-msgid "First Name"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:52
-msgid ""
-"For deleting cookie data, a visitor can simply delete cookies from their "
-"browser."
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:740
-msgid "From"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-notifications.php:80
-msgid "Getting started"
+#: includes/admin/about-affiliate-for-woocommerce.php:33
+msgid "Thank you for installing Affiliate for WooCommerce"
 msgstr ""
 
 #: includes/admin/about-affiliate-for-woocommerce.php:34
 msgid "Glad to have you onboard. We hope the plugin adds to your success 🏆"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:194
-msgid ""
-"Good idea to keep this on. This allows \"friendly\" looking links - because "
-"people can use their brand name instead of {user_id}."
+#: includes/admin/about-affiliate-for-woocommerce.php:44
+msgid "We discovered that you are using another \"Affiliates\" plugin. Do you want to migrate your existing data to this new Affiliates for WooCommerce plugin?"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:774
-msgid "Gross Commission"
+#: includes/admin/about-affiliate-for-woocommerce.php:59
+msgid "Yes, Migrate existing data."
 msgstr ""
 
-#: includes/emails/class-afwc-new-conversion-email.php:135
-#: includes/emails/class-afwc-new-conversion-email.php:178
-msgid "Guest"
+#: includes/admin/about-affiliate-for-woocommerce.php:73
+msgid "No, I want to start afresh."
 msgstr ""
 
-#. %s: link to submit idea for Affiliate For WooCommerce on WooCommerce idea board
-#: includes/admin/class-afwc-admin-notifications.php:146
-#, php-format
-msgid "Have a feature request? Submit your request from our %s."
+#: includes/admin/about-affiliate-for-woocommerce.php:75
+msgid "Note: Once you migrate from Affiliates plugin, please deactivate it. Affiliates and Affiliate for WooCommerce can't work simultaneously."
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1794
-msgid "Have any queries?"
+#: includes/admin/about-affiliate-for-woocommerce.php:84
+msgid "To get started:"
 msgstr ""
 
+#. translators: Link to the Affiliate For WooCommerce Settings
+#: includes/admin/about-affiliate-for-woocommerce.php:89
+msgid "Review and update your Affiliate For WooCommerce %s"
+msgstr ""
+
+#: includes/admin/about-affiliate-for-woocommerce.php:98
+msgid "Settings &rarr;"
+msgstr ""
+
+#. translators: Link to the Affiliate For WooCommerce Dashboard in admin
+#: includes/admin/about-affiliate-for-woocommerce.php:105
+msgid "Access affiliate %s."
+msgstr ""
+
+#: includes/admin/about-affiliate-for-woocommerce.php:113
+msgid "dashboard"
+msgstr ""
+
+#: includes/admin/about-affiliate-for-woocommerce.php:119
+msgid "FAQ"
+msgstr ""
+
+#: includes/admin/about-affiliate-for-woocommerce.php:122
+msgid "How do I add an affiliate?"
+msgstr ""
+
+#. translators: Link to the Affiliate For WooCommerce Doc
+#: includes/admin/about-affiliate-for-woocommerce.php:123
+#: includes/admin/about-affiliate-for-woocommerce.php:127
+#: includes/admin/about-affiliate-for-woocommerce.php:131
+#: includes/admin/about-affiliate-for-woocommerce.php:137
+#: includes/admin/about-affiliate-for-woocommerce.php:141
+#: includes/admin/about-affiliate-for-woocommerce.php:145
+msgid "Check %s."
+msgstr ""
+
+#. translators: Link to the Affiliate For WooCommerce Doc
+#. translators: 1: Location of the API Credentials
 #: includes/admin/about-affiliate-for-woocommerce.php:123
 #: includes/admin/about-affiliate-for-woocommerce.php:127
 #: includes/admin/about-affiliate-for-woocommerce.php:131
@@ -724,49 +287,16 @@ msgstr ""
 #: includes/admin/about-affiliate-for-woocommerce.php:145
 #: includes/gateway/paypal/class-afwc-paypal.php:173
 #: includes/gateway/paypal/class-afwc-paypal.php:181
+#: assets/js/admin.js:1
 msgid "here"
 msgstr ""
 
-#: templates/afwc-welcome-affiliate-email.php:36
-msgid "Here's our complete product catalog"
+#: includes/admin/about-affiliate-for-woocommerce.php:126
+msgid "Where do affiliates login / get their stats from?"
 msgstr ""
 
-#. %s: Shop page link
-#: templates/plain/afwc-welcome-affiliate-email.php:37
-#, php-format
-msgid "Here's our complete product catalog : %s"
-msgstr ""
-
-#: templates/afwc-new-conversion.php:26
-#: templates/plain/afwc-new-conversion.php:23
-msgid "Here's the summary:"
-msgstr ""
-
-#. %s: Affiliate's first name
-#. %s: admin's first name
-#: templates/afwc-commission-paid.php:20
-#: templates/afwc-new-conversion.php:22
-#: templates/afwc-new-registration-received.php:20
-#: templates/afwc-welcome-affiliate-email.php:20
-#: templates/plain/afwc-commission-paid.php:19
-#: templates/plain/afwc-new-conversion.php:19
-#: templates/plain/afwc-new-registration-received.php:19
-#: templates/plain/afwc-welcome-affiliate-email.php:19
-#, php-format
-msgid "Hi %s,"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:272
-msgid "Hit dateTime"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:163
-#: includes/admin/class-afwc-privacy.php:274
-msgid "Hits count"
-msgstr ""
-
-#: includes/admin/about-affiliate-for-woocommerce.php:122
-msgid "How do I add an affiliate?"
+#: includes/admin/about-affiliate-for-woocommerce.php:130
+msgid "Where's the link an affiliate will use to link to my site?"
 msgstr ""
 
 #: includes/admin/about-affiliate-for-woocommerce.php:136
@@ -781,47 +311,490 @@ msgstr ""
 msgid "How to set different commission rates for affiliates?"
 msgstr ""
 
-#. Author URI of the plugin
-msgid "http://www.storeapps.org/"
+#: includes/admin/class-afwc-admin-affiliate.php:120
+msgid "Affiliate For WooCommerce settings"
 msgstr ""
 
-#. URI of the plugin
-msgid "https://woocommerce.com/products/affiliate-for-woocommerce/"
+#: includes/admin/class-afwc-admin-affiliate.php:126
+msgid "Action"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1896
-msgid "Identifier saved successfully."
+#: includes/admin/class-afwc-admin-affiliate.php:128
+msgid "Approve affiliate"
 msgstr ""
 
-#: includes/admin/class-afwc-privacy.php:47
-msgid ""
-"If you are a visitor accessing our site with the affiliate link, we store "
-"your IP address. And if you place an order, then your order details are "
-"stored along with your IP address."
+#: includes/admin/class-afwc-admin-affiliate.php:129
+msgid "Reject affiliate"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:137
+msgid "Is affiliate?"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:151
+msgid "About affiliate"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:159
+msgid "Way to contact"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:175
+msgid "Affiliate URL"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:185
+msgid "Affiliate coupons"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:206
+#: includes/frontend/class-afwc-my-account.php:1740
+msgid "PayPal email address"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:207
+msgid "Enter PayPal email address for payouts of this affiliate..."
+msgstr ""
+
+#. translators: Link to the affiliate tags
+#: includes/admin/class-afwc-admin-affiliate.php:216
+#: includes/admin/class-afwc-admin-settings.php:115
+msgid "%s."
+msgstr ""
+
+#. translators: Link to the affiliate tags
+#: includes/admin/class-afwc-admin-affiliate.php:216
+msgid "Manage tags"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:220
+msgid "Select tags for affiliate"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:222
+msgid "Search tags"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:244
+msgid "Parent Affiliate"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:246
+msgid "Search for a Parent Affiliate"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-affiliate.php:281
+msgid "Note: Click on Update User button to save changes."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:118
+msgid "Awaiting Approval"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:119
+#: assets/js/admin.js:1
+msgid "Active"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:120
+#: includes/admin/class-afwc-admin-dashboard.php:124
+#: includes/frontend/class-afwc-my-account.php:561
+#: includes/frontend/class-afwc-my-account.php:950
+msgid "Rejected"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:122
+#: includes/frontend/class-afwc-my-account.php:558
+#: includes/frontend/class-afwc-my-account.php:784
+#: includes/frontend/class-afwc-my-account.php:947
+msgid "Unpaid"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:123
+#: includes/frontend/class-afwc-my-account.php:555
+#: includes/frontend/class-afwc-my-account.php:782
+#: includes/frontend/class-afwc-my-account.php:944
+msgid "Paid"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:128
+msgid "This Month"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:129
+msgid "Last Month"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:130
+msgid "This Year"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:151
+msgid "all matching products in the order"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:152
+msgid "only the first matching product"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:153
+msgid "continue matching commission plans"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:154
+msgid "use default commission"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:155
+msgid "apply zero commission"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:267
+#: includes/admin/class-afwc-admin-dashboard.php:321
+msgid "Required params missing"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:294
+msgid "Query failed."
+msgstr ""
+
+#. translators: Number of records updated in referrals table.
+#: includes/admin/class-afwc-admin-dashboard.php:301
+msgid "%d records updated."
+msgstr ""
+
+#. translators: PayPal response message
+#: includes/admin/class-afwc-admin-dashboard.php:343
+msgid "PayPal payout failed. Response: %s."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:348
+msgid "PayPal payout failed"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:409
+msgid "Payout entry failed"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-dashboard.php:1053
+#: includes/admin/class-afwc-commission-dashboard.php:525
+msgid "Feedback option updated"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-link-unlink-in-order.php:61
+msgid "Affiliate details"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-link-unlink-in-order.php:111
+msgid "Assigned to affiliate"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-link-unlink-in-order.php:112
+msgid "Search affiliates by user id or full email address to assign this order to them. Affiliates will see this order in their account."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-link-unlink-in-order.php:114
+msgid "Search by user id or email address"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:47
+#: includes/frontend/class-afwc-my-account.php:171
+#: includes/frontend/class-afwc-my-account.php:1886
+msgid "Affiliate"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:96
+msgid "Changing affiliate slug will stop tracking the existing URL with the current slug. Are you sure you want to continue?"
+msgstr ""
+
+#. translators: Link to the affiliate registration form page
+#. translators: Link to the affiliate registration form edit page
+#: includes/admin/class-afwc-admin-settings.php:104
+#: includes/admin/class-afwc-admin-settings.php:107
+msgid "%s | "
+msgstr ""
+
+#. translators: Link to the affiliate registration form page
+#: includes/admin/class-afwc-admin-settings.php:104
+msgid "Review and publish form"
+msgstr ""
+
+#. translators: Link to the affiliate registration form edit page
+#: includes/admin/class-afwc-admin-settings.php:107
+msgid "Edit form"
+msgstr ""
+
+#. translators: shortcode for affiliate registration form
+#: includes/admin/class-afwc-admin-settings.php:109
+msgid "use %s shortcode on any page."
+msgstr ""
+
+#. translators: Link to the affiliate tags
+#: includes/admin/class-afwc-admin-settings.php:115
+msgid "Manage affiliate tags"
+msgstr ""
+
+#. translators: Link to the plan back link
+#: includes/admin/class-afwc-admin-settings.php:125
+msgid "Default commission plan: %s"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:129
+msgid "Affiliate For WooCommerce Settings"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:134
+msgid "Registration form"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:141
+msgid "Approval method"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:142
+msgid "Automatically approve all submissions via Affiliate Registration Form - no manual review needed."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:146
+msgid "Disabling this will require you to review and approve affiliates yourself. They won't become affiliates until you approve."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:150
+msgid "Affiliate users roles"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:151
+msgid "Users with these roles automatically become affiliates."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:160
+msgid "Referral commission"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:167
+msgid "Excluded products"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:168
+msgid "All products are eligible for affiliate commission by default. If you want to exclude some, list them here."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:177
+msgid "Affiliate tags"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:184
+msgid "Tracking param name"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:188
+msgid "Leaving this blank will use default value ref"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:192
+msgid "Personalize affiliate identifier"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:193
+msgid "Allow affiliates to use something other than {user_id} as referral identifier."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:197
+msgid "Good idea to keep this on. This allows \"friendly\" looking links - because people can use their brand name instead of {user_id}."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:201
+msgid "Coupons for referral"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:202
+msgid "Use coupons for referral - along with affiliated links"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:206
+msgid "Use the <code>Assign to affiliate</code> option while creating a coupon to link the coupon with an affiliate. Whenever that coupon is used, specified affiliate will be credited for the sale."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:210
+msgid "Cookie duration (in days)"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:211
+msgid "Use 0 for \"session only\" referrals. Use 36500 for 100 year / lifetime referrals. If someone makes a purchase within these many days of their first referred visit, affiliate will be credited for the sale."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:222
+msgid "Affiliate manager email"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:223
+msgid "Affiliates will see a link to contact you in their dashboard - and the link will point to this email address. Leave this field blank to hide the contact link."
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:226
+msgid "Enter email address"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-settings.php:253
+msgid "Payout via PayPal"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-notifications.php:80
+msgid "Getting started"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-notifications.php:81
+msgid "Settings"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-notifications.php:82
+msgid "Docs"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-notifications.php:83
+msgid "Support"
+msgstr ""
+
+#: includes/admin/class-afwc-admin-notifications.php:84
+msgid "Review"
+msgstr ""
+
+#. translators: %s: link to review Affiliate For WooCommerce
+#: includes/admin/class-afwc-admin-notifications.php:114
+msgid "If you like %1$sAffiliate For WooCommerce%2$s, please give us %3$s. A huge thanks from WooCommerce & StoreApps in advance!"
+msgstr ""
+
+#. translators: %s: link to submit idea for Affiliate For WooCommerce on WooCommerce idea board
+#: includes/admin/class-afwc-admin-notifications.php:146
+msgid "Have a feature request? Submit your request from our %s."
+msgstr ""
+
+#: includes/admin/class-afwc-campaign-dashboard.php:123
+msgid "Failed to delete campaign"
+msgstr ""
+
+#: includes/admin/class-afwc-campaign-dashboard.php:130
+#: assets/js/admin.js:1
+#: assets/js/frontend.js:1
+msgid "Campaign deleted successfully"
+msgstr ""
+
+#: includes/admin/class-afwc-campaign-dashboard.php:159
+msgid "No campaigns found"
+msgstr ""
+
+#: includes/admin/class-afwc-commission-dashboard.php:134
+msgid "Failed to delete commission plan"
+msgstr ""
+
+#: includes/admin/class-afwc-commission-dashboard.php:155
+#: assets/js/admin.js:1
+msgid "Commission plan deleted successfully"
+msgstr ""
+
+#: includes/admin/class-afwc-commission-dashboard.php:197
+msgid "No commission plans found"
+msgstr ""
+
+#: includes/admin/class-afwc-commission-dashboard.php:507
+msgid "No commissions found"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:44
+msgid "What and where we store:"
 msgstr ""
 
 #: includes/admin/class-afwc-privacy.php:46
-msgid ""
-"If you are an affiliate, we store a cookie with your affiliate ID and map it "
-"to the user accessing our site with your link."
+msgid "If you are an affiliate, we store a cookie with your affiliate ID and map it to the user accessing our site with your link."
 msgstr ""
 
-#. %s: link to review Affiliate For WooCommerce
-#: includes/admin/class-afwc-admin-notifications.php:114
-#, php-format
-msgid ""
-"If you like %1$sAffiliate For WooCommerce%2$s, please give us %3$s. A huge "
-"thanks from WooCommerce & StoreApps in advance!"
+#: includes/admin/class-afwc-privacy.php:47
+msgid "If you are a visitor accessing our site with the affiliate link, we store your IP address. And if you place an order, then your order details are stored along with your IP address."
 msgstr ""
 
-#: templates/plain/afwc-welcome-affiliate-email.php:45
-msgid "If you postpone, you won't see results. "
+#: includes/admin/class-afwc-privacy.php:49
+msgid "Export/Delete personal data"
 msgstr ""
 
-#: templates/plain/afwc-welcome-affiliate-email.php:46
-msgid ""
-"If you take quick actions, you may as well become one of our our superstar "
-"partners! Look forward to working closely with you."
+#: includes/admin/class-afwc-privacy.php:50
+msgid "Exporting personal data is available for both - affiliate and visitor."
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:51
+msgid "Export/delete of personal data will be processed only after receiving confirmation about it."
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:52
+msgid "For deleting cookie data, a visitor can simply delete cookies from their browser."
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:102
+#: includes/admin/class-afwc-privacy.php:356
+msgid "Affiliate - Customer"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:132
+msgid "Affiliate information"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:139
+msgid "User's affiliate information"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:162
+msgid "Affiliate ID"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:163
+#: includes/admin/class-afwc-privacy.php:274
+msgid "Hits count"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:167
+msgid "Affiliate payout date time"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:168
+msgid "Affiliate earned payout amount"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:169
+msgid "Affiliate payout currency"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:170
+msgid "Affiliate payout notes"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:171
+msgid "Affiliate payout gateway"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:172
+msgid "Affiliate receiver"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:173
+msgid "Type"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:177
+msgid "Paid commission amount"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:178
+msgid "Currency"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:179
+#: includes/frontend/class-afwc-my-account.php:579
+#: includes/frontend/class-afwc-my-account.php:934
+#: includes/frontend/class-afwc-my-account.php:965
+msgid "Payout status"
+msgstr ""
+
+#: includes/admin/class-afwc-privacy.php:272
+msgid "Hit dateTime"
 msgstr ""
 
 #: includes/admin/class-afwc-privacy.php:273
@@ -829,471 +802,51 @@ msgstr ""
 msgid "IP address"
 msgstr ""
 
-#: includes/commission_rules/class-afwc-rule.php:84
-msgid "is"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:128
-msgid "Is affiliate?"
-msgstr ""
-
-#: includes/commission_rules/class-afwc-rule.php:89
-msgid "is not"
-msgstr ""
-
-#: includes/integration/woocommerce/compat/class-wcs-afwc-compatibility.php:86
-msgid "Issue recurring commission?"
-msgstr ""
-
-#: includes/affiliate-for-woocommerce-functions.php:332
-msgid "Join our affiliate program"
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:466
-msgid "Label"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:123
-msgid "Last Month"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:1074
-msgid "Last Name"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:185
-msgid "Leaving this blank will use default value ref"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:886
-#: includes/frontend/class-afwc-my-account.php:949
-#: includes/frontend/class-afwc-my-account.php:987
-msgid "Load more"
-msgstr ""
-
-#: templates/afwc-welcome-affiliate-email.php:30
-msgid "Login to "
-msgstr ""
-
-#: templates/afwc-commission-paid.php:45
-msgid "login to your affiliate dashboard"
-msgstr ""
-
-#: templates/plain/afwc-welcome-affiliate-email.php:29
-msgid "Login to your affiliate dashboard regularly."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:115
-msgid "Manage affiliate tags"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:206
-msgid "Manage tags"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:605
-#: includes/frontend/class-afwc-my-account.php:961
-#: includes/frontend/class-afwc-my-account.php:973
-msgid "Method"
-msgstr ""
-
-#: includes/migration/class-afwc-migrate-affiliates.php:101
-msgid "Migrate Now"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1820
-#: includes/frontend/class-afwc-my-account.php:1851
-msgid "Missing data"
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:231
-#: includes/emails/class-afwc-new-conversion-email.php:235
-#: includes/emails/class-afwc-new-registration-received.php:229
-#: includes/emails/class-afwc-welcome-affiliate-email.php:219
-msgid "N/A"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:24
-#: templates/plain/afwc-new-registration-received.php:23
-msgid "Name: "
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:804
-msgid "Net Commission"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:143
-msgid "New Affiliate Tag Name"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:38
-#: templates/plain/afwc-new-registration-received.php:39
-msgid "Next Actions"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:144
-msgid "No Affiliate Tags found"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:266
-msgid "No Campaign yet"
-msgstr ""
-
-#: includes/admin/class-afwc-campaign-dashboard.php:159
-msgid "No campaigns found"
-msgstr ""
-
-#: includes/admin/class-afwc-commission-dashboard.php:190
-msgid "No commission plans found"
-msgstr ""
-
-#: includes/admin/class-afwc-commission-dashboard.php:492
-msgid "No commissions found"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:308
-#: includes/frontend/class-afwc-my-account.php:336
-#: includes/frontend/class-afwc-my-account.php:365
-msgid "No more data to load"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:979
-msgid "No payouts to show"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:878
-msgid "No products to show"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:941
-msgid "No referrals to show"
-msgstr ""
-
-#: includes/admin/about-affiliate-for-woocommerce.php:73
-msgid "No, I want to start afresh."
-msgstr ""
-
-#: includes/commission_rules/class-afwc-rule.php:99
-msgid "none of"
-msgstr ""
-
-#: includes/admin/about-affiliate-for-woocommerce.php:75
-msgid ""
-"Note: Once you migrate from Affiliates plugin, please deactivate it. "
-"Affiliates and Affiliate for WooCommerce can't work simultaneously."
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:606
-#: includes/frontend/class-afwc-my-account.php:962
-#: includes/frontend/class-afwc-my-account.php:974
-msgid "Notes"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1863
-msgid "Numberic values are not allowed."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:146
-msgid "only the first matching product"
-msgstr ""
-
 #: includes/admin/class-afwc-privacy.php:278
 msgid "Order ID"
 msgstr ""
 
-#: templates/afwc-new-conversion.php:43
-msgid "Order total"
+#: includes/admin/class-afwc-privacy.php:279
+msgid "Date time"
 msgstr ""
 
-#: templates/plain/afwc-new-conversion.php:32
-msgid "Order total: "
+#. translators: Email address.
+#: includes/admin/class-afwc-privacy.php:391
+msgid "Anonymized IP for the user \"%s\""
 msgstr ""
 
-#: templates/plain/afwc-welcome-affiliate-email.php:34
-msgid "Our Products"
-msgstr ""
-
-#: templates/afwc-welcome-affiliate-email.php:34
-msgid "Our products"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1760
-msgid "Page URL"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:117
-#: includes/frontend/class-afwc-my-account.php:543
-#: includes/frontend/class-afwc-my-account.php:753
-#: includes/frontend/class-afwc-my-account.php:915
-msgid "Paid"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:177
-msgid "Paid commission amount"
-msgstr ""
-
-#: templates/afwc-welcome-affiliate-email.php:39
-msgid "Partnership and communication are important to us"
-msgstr ""
-
-#: templates/plain/afwc-welcome-affiliate-email.php:39
-msgid "Partnership and communication are important to us."
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:1093
-msgid "Password"
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:96
-msgid "Password does not match"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1776
-msgid "Payment setting"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:393
-msgid "Payout entry failed"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:955
-msgid "Payout History"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:179
-#: includes/frontend/class-afwc-my-account.php:567
-#: includes/frontend/class-afwc-my-account.php:905
-#: includes/frontend/class-afwc-my-account.php:936
-msgid "Payout status"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:250
-msgid "Payout via PayPal"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:196
-#: includes/frontend/class-afwc-my-account.php:1779
-msgid "PayPal email address"
-msgstr ""
-
-#: templates/afwc-commission-paid.php:33
-#: templates/plain/afwc-commission-paid.php:32
-msgid "PayPal email: "
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:332
-msgid "PayPal payout failed"
-msgstr ""
-
-#. PayPal response message
-#: includes/admin/class-afwc-admin-dashboard.php:327
-#, php-format
-msgid "PayPal payout failed. Response: %s."
-msgstr ""
-
-#: templates/afwc-commission-paid.php:24
-#: templates/plain/afwc-commission-paid.php:25
-msgid "Period: "
-msgstr ""
-
-#: templates/afwc-welcome-affiliate-email.php:42
-#: templates/plain/afwc-welcome-affiliate-email.php:43
-msgid "Personal note before signing off"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:189
-msgid "Personalize affiliate identifier"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:1081
-msgid "Phone Number / Skype ID / Best method to talk to you"
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:97
-msgid "Please add a valid URL"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:22
-#: templates/plain/afwc-new-registration-received.php:21
-msgid "Please review and respond to this potential affiliate partner."
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:138
-msgid "Popular Affiliate Tags"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:505
-#: includes/frontend/class-afwc-my-account.php:859
-#: includes/frontend/class-afwc-my-account.php:871
-msgid "Product"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:855
-msgid "Products"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:655
-msgid "Profile"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:507
-#: includes/frontend/class-afwc-my-account.php:861
-#: includes/frontend/class-afwc-my-account.php:873
-msgid "Qty"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:278
-msgid "Query failed."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:153
-msgid "Referral commission (in %)"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1759
-msgid "Referral URL generator"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1767
-msgid "Referral URL: "
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:896
-msgid "Referrals"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:789
-msgid "Refunds"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:150
-msgid "Register as an Affiliate"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:174
-msgid "Register as an affiliate"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:127
-msgid "Registration form"
-msgstr ""
-
-#: templates/afwc-welcome-affiliate-email.php:32
-msgid ""
-"regularly. You will find our current promotion campaigns, marketing assets, "
-"complete record of your referrals and payouts there. You can fully manage "
-"your account there."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:120
-msgid "Reject affiliate"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:114
-#: includes/admin/class-afwc-admin-dashboard.php:118
-#: includes/frontend/class-afwc-my-account.php:549
-#: includes/frontend/class-afwc-my-account.php:921
-msgid "Rejected"
+#: includes/admin/class-afwc-privacy.php:556
+msgid "Anonymized IP Address"
 msgstr ""
 
 #: includes/admin/class-afwc-privacy.php:556
 msgid "Removed Order Personal Data"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:654
-msgid "Reports"
+#: includes/integration/woocommerce/compat/class-wcs-afwc-compatibility.php:86
+msgid "Issue recurring commission?"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1705
-msgid "Request store admin for a coupon"
+#: includes/integration/woocommerce/compat/class-wcs-afwc-compatibility.php:87
+msgid "Enable this to give affiliate commissions for subscription recurring orders also"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-dashboard.php:252
-#: includes/admin/class-afwc-admin-dashboard.php:305
-msgid "Required params missing"
+#: includes/frontend/class-afwc-registration-form.php:95
+msgid "User registration successfull"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-notifications.php:84
-msgid "Review"
+#: includes/frontend/class-afwc-registration-form.php:96
+msgid "Password does not match"
 msgstr ""
 
-#: templates/afwc-new-registration-received.php:46
-msgid "review and manage all affiliates here."
+#: includes/frontend/class-afwc-registration-form.php:97
+msgid "Please add a valid URL"
 msgstr ""
 
-#: includes/admin/class-afwc-admin-settings.php:104
-msgid "Review and publish form"
-msgstr ""
-
-#. Link to the Affiliate For WooCommerce Settings
-#: includes/admin/about-affiliate-for-woocommerce.php:89
-#, php-format
-msgid "Review and update your Affiliate For WooCommerce %s"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:506
-#: includes/frontend/class-afwc-my-account.php:819
-#: includes/frontend/class-afwc-my-account.php:860
-#: includes/frontend/class-afwc-my-account.php:872
-msgid "Sales"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1686
-#: includes/frontend/class-afwc-my-account.php:1784
-#: includes/frontend/class-afwc-registration-form.php:488
-msgid "Save"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:137
-msgid "Search Affiliate Tag"
-msgstr ""
-
-#: includes/class-afwc-coupon.php:150
-msgid ""
-"Search affiliates by id or email address to assign a coupon to them. "
-"Affiliates will see this coupon in their account."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-link-unlink-in-order.php:112
-msgid ""
-"Search affiliates by user id or full email address to assign this order to "
-"them. Affiliates will see this order in their account."
-msgstr ""
-
-#: includes/class-afwc-coupon.php:147
-msgid "Search by affiliate id or email address"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-link-unlink-in-order.php:114
-msgid "Search by user id or email address"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:212
-msgid "Search tags"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:210
-msgid "Select tags for affiliate"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-notifications.php:81
-msgid "Settings"
-msgstr ""
-
-#: includes/admin/about-affiliate-for-woocommerce.php:98
-msgid "Settings &rarr;"
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:424
-msgid "Settings saved sucessfully."
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:465
-msgid "Show"
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:431
-msgid "Something went wrong. Please try again after some time."
+#. translators: Link for mailto affiliate manager
+#: includes/frontend/class-afwc-registration-form.php:123
+#: includes/frontend/class-afwc-registration-form.php:261
+msgid "Your previous request to join our affiliate program has been declined. Please contact the %s for more details."
 msgstr ""
 
 #: includes/frontend/class-afwc-registration-form.php:124
@@ -1301,19 +854,484 @@ msgstr ""
 msgid "store admin"
 msgstr ""
 
-#. Author of the plugin
-msgid "StoreApps"
+#: includes/frontend/class-afwc-registration-form.php:127
+#: includes/frontend/class-afwc-registration-form.php:265
+msgid "Your previous request to join our affiliate program has been declined. Please contact the store admin for more details."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:132
+msgid "Your request is in moderation."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:159
+msgid "Submit"
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:236
+msgid "You are are successfully registered."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:255
+msgid "We have already received your request and will get in touch soon."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:270
+msgid "You are already registered with us as an affiliate."
+msgstr ""
+
+#. translators: Link to the my account page
+#: includes/frontend/class-afwc-registration-form.php:339
+msgid "Congratulations, you are successfully registered as our affiliate. %s to find more details about affiliate program."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:342
+msgid "Visit here"
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:345
+msgid "We have received your request to join our affiliate program. We will review it and will get in touch with you soon!"
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:424
+msgid "Settings saved sucessfully."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:431
+msgid "Something went wrong. Please try again after some time."
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:462
+msgid "Affiliate registration form settings"
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:465
+msgid "Show"
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:466
+msgid "Label"
+msgstr ""
+
+#: includes/frontend/class-afwc-registration-form.php:488
+#: includes/frontend/class-afwc-my-account.php:1647
+#: includes/frontend/class-afwc-my-account.php:1745
+#: assets/js/admin.js:1
+msgid "Save"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:142
+msgid "Affiliate Resources"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:144
+msgid "Affiliate Campaigns"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:150
+msgid "Register as an Affiliate"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:150
+msgid "Affiliate Dashboard"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:174
+msgid "Register as an affiliate"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:272
+msgid "No Campaign yet"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:314
+#: includes/frontend/class-afwc-my-account.php:342
+#: includes/frontend/class-afwc-my-account.php:371
+msgid "No more data to load"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:517
+#: includes/frontend/class-afwc-my-account.php:888
+#: includes/frontend/class-afwc-my-account.php:900
+msgid "Product"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:518
+#: includes/frontend/class-afwc-my-account.php:848
+#: includes/frontend/class-afwc-my-account.php:889
+#: includes/frontend/class-afwc-my-account.php:901
+msgid "Sales"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:519
+#: includes/frontend/class-afwc-my-account.php:890
+#: includes/frontend/class-afwc-my-account.php:902
+msgid "Qty"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:564
+#: includes/frontend/class-afwc-my-account.php:953
+#: assets/js/admin.js:1
+msgid "Draft"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:574
+#: includes/frontend/class-afwc-my-account.php:615
+#: includes/frontend/class-afwc-my-account.php:929
+#: includes/frontend/class-afwc-my-account.php:960
+#: includes/frontend/class-afwc-my-account.php:988
+#: includes/frontend/class-afwc-my-account.php:1000
+#: assets/js/admin.js:1
+msgid "Date"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:576
+#: includes/frontend/class-afwc-my-account.php:931
+#: includes/frontend/class-afwc-my-account.php:962
+#: templates/afwc-new-conversion.php:36
+#: assets/js/admin.js:1
+msgid "Customer"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:578
+#: includes/frontend/class-afwc-my-account.php:933
+#: includes/frontend/class-afwc-my-account.php:964
+#: assets/js/admin.js:1
+msgid "Commission"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:616
+#: includes/frontend/class-afwc-my-account.php:989
+#: includes/frontend/class-afwc-my-account.php:1001
+#: includes/frontend/class-afwc-my-account.php:1682
+#: assets/js/admin.js:1
+msgid "Amount"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:617
+#: includes/frontend/class-afwc-my-account.php:990
+#: includes/frontend/class-afwc-my-account.php:1002
+#: assets/js/admin.js:1
+msgid "Method"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:618
+#: includes/frontend/class-afwc-my-account.php:991
+#: includes/frontend/class-afwc-my-account.php:1003
+#: assets/js/admin.js:1
+msgid "Notes"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:666
+msgid "Reports"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:667
+msgid "Profile"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:668
+#: assets/js/admin.js:1
+msgid "Campaigns"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:769
+msgid "From"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:769
+msgid "To"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:774
+msgid "Total Commissions"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:803
+#: assets/js/admin.js:1
+msgid "Gross Commission"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:818
+msgid "Refunds"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:833
+#: assets/js/admin.js:1
+msgid "Net Commission"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:863
+#: assets/js/admin.js:1
+msgid "Visitors"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:878
+#: assets/js/admin.js:1
+msgid "Conversion"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:884
+msgid "Products"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:907
+msgid "No products to show"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:915
+#: includes/frontend/class-afwc-my-account.php:978
+#: includes/frontend/class-afwc-my-account.php:1016
+msgid "Load more"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:925
+msgid "Referrals"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:970
+msgid "No referrals to show"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:984
+msgid "Payout History"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1008
+msgid "No payouts to show"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1633
+msgid "Your affiliate identifier is: "
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1637
+msgid "Click to change"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1645
+msgid "Change affiliate identifier: "
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1651
+msgid "You can change above identifier to anything like your name, brand name."
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1655
+msgid "Your referral URL is: "
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1656
+#: includes/frontend/class-afwc-my-account.php:1690
+#: includes/frontend/class-afwc-my-account.php:1729
+msgid "Click to copy"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1664
+msgid "Want an exclusive coupon to promote?"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1666
+msgid "Request store admin for a coupon"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1674
+msgid "Your referral coupon details: "
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1679
+msgid "Coupon code"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1720
+msgid "Referral URL generator"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1721
+msgid "Page URL"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1724
+msgid "Enter target path here..."
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1728
+msgid "Referral URL: "
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1737
+msgid "Payment setting"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1742
+msgid "You will receive your affiliate commission on the above PayPal email address."
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1755
+msgid "Have any queries?"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1757
+msgid "Contact store admin"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1781
+#: includes/frontend/class-afwc-my-account.php:1812
+msgid "Missing data"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1824
+#: assets/js/afwc-resource.js:53
+msgid "Numeric values are not allowed."
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1846
+msgid "This URL identifier already exists. Please choose a different identifier"
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1857
+msgid "Identifier saved successfully."
+msgstr ""
+
+#: includes/frontend/class-afwc-my-account.php:1887
+msgid "Endpoint for the My Account &rarr; Affiliate page"
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:36
+msgid "This email will be sent to an affiliate when their commission/payout is processed from affiliate dashboard."
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:87
+#: includes/emails/class-afwc-new-conversion-email.php:131
+#: includes/emails/class-afwc-new-conversion-email.php:177
+#: includes/emails/class-afwc-new-registration-received.php:83
+#: includes/emails/class-afwc-welcome-affiliate-email.php:86
+msgid "there"
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:207
+#: includes/emails/class-afwc-new-conversion-email.php:216
+#: includes/emails/class-afwc-new-registration-received.php:205
+#: includes/emails/class-afwc-welcome-affiliate-email.php:195
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:209
+#: includes/emails/class-afwc-new-conversion-email.php:218
+#: includes/emails/class-afwc-new-registration-received.php:207
+#: includes/emails/class-afwc-welcome-affiliate-email.php:197
+msgid "Enable this email notification"
 msgstr ""
 
 #: includes/emails/class-afwc-commission-paid-email.php:213
-#: includes/emails/class-afwc-new-conversion-email.php:217
+#: includes/emails/class-afwc-new-conversion-email.php:222
 #: includes/emails/class-afwc-new-registration-received.php:211
 #: includes/emails/class-afwc-welcome-affiliate-email.php:201
 msgid "Subject"
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:159
-msgid "Submit"
+#: includes/emails/class-afwc-commission-paid-email.php:220
+#: includes/emails/class-afwc-new-conversion-email.php:229
+#: includes/emails/class-afwc-new-registration-received.php:218
+#: includes/emails/class-afwc-welcome-affiliate-email.php:208
+msgid "Email Heading"
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:228
+#: includes/emails/class-afwc-new-conversion-email.php:237
+#: includes/emails/class-afwc-new-registration-received.php:226
+#: includes/emails/class-afwc-welcome-affiliate-email.php:216
+msgid "Additional content"
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:229
+#: includes/emails/class-afwc-new-conversion-email.php:238
+#: includes/emails/class-afwc-new-registration-received.php:227
+#: includes/emails/class-afwc-welcome-affiliate-email.php:217
+msgid "Text to appear below the main email content."
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:231
+#: includes/emails/class-afwc-new-conversion-email.php:240
+#: includes/emails/class-afwc-new-registration-received.php:229
+#: includes/emails/class-afwc-welcome-affiliate-email.php:219
+msgid "N/A"
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:236
+#: includes/emails/class-afwc-new-conversion-email.php:245
+#: includes/emails/class-afwc-new-registration-received.php:234
+#: includes/emails/class-afwc-welcome-affiliate-email.php:224
+msgid "Email type"
+msgstr ""
+
+#: includes/emails/class-afwc-commission-paid-email.php:238
+#: includes/emails/class-afwc-new-conversion-email.php:247
+#: includes/emails/class-afwc-new-registration-received.php:236
+#: includes/emails/class-afwc-welcome-affiliate-email.php:226
+msgid "Choose which format of email to send."
+msgstr ""
+
+#: includes/emails/class-afwc-new-conversion-email.php:36
+msgid "This email will be sent to an affiliate when an order is placed using their referral link/coupon i.e. on a new conversion."
+msgstr ""
+
+#: includes/emails/class-afwc-new-conversion-email.php:135
+#: includes/emails/class-afwc-new-conversion-email.php:181
+msgid "Guest"
+msgstr ""
+
+#: includes/emails/class-afwc-new-registration-received.php:36
+msgid "This email will be sent to an affiliate manager when a new registration request is received."
+msgstr ""
+
+#: includes/emails/class-afwc-welcome-affiliate-email.php:36
+msgid "This email will be sent to an affiliate after their request to join is approved."
+msgstr ""
+
+#: includes/gateway/paypal/class-afwc-paypal.php:171
+msgid "Disabled"
+msgstr ""
+
+#. translators: 1: Location of the API Credentials
+#: includes/gateway/paypal/class-afwc-paypal.php:173
+msgid "To enable, follow all the requirements mentioned %s."
+msgstr ""
+
+#: includes/gateway/paypal/class-afwc-paypal.php:179
+msgid "Enabled"
+msgstr ""
+
+#. translators: 1: Location of the API Credentials
+#: includes/gateway/paypal/class-afwc-paypal.php:181
+msgid "To disable, empty the API credentials %s"
+msgstr ""
+
+#. translators: %s: Affiliate's first name
+#. translators: %s: admin's first name
+#: templates/afwc-commission-paid.php:20
+#: templates/afwc-new-conversion.php:22
+#: templates/afwc-new-registration-received.php:20
+#: templates/afwc-welcome-affiliate-email.php:20
+#: templates/plain/afwc-commission-paid.php:19
+#: templates/plain/afwc-new-conversion.php:19
+#: templates/plain/afwc-new-registration-received.php:19
+#: templates/plain/afwc-welcome-affiliate-email.php:19
+msgid "Hi %s,"
+msgstr ""
+
+#: templates/afwc-commission-paid.php:22
+#: templates/plain/afwc-commission-paid.php:21
+msgid "Congratulations on your successful referrals. We just processed your commission payout."
+msgstr ""
+
+#: templates/afwc-commission-paid.php:24
+#: templates/plain/afwc-commission-paid.php:25
+msgid "Period: "
+msgstr ""
+
+#: templates/afwc-commission-paid.php:24
+#: templates/plain/afwc-commission-paid.php:25
+msgid " to "
 msgstr ""
 
 #: templates/afwc-commission-paid.php:26
@@ -1321,292 +1339,110 @@ msgstr ""
 msgid "Successful orders: "
 msgstr ""
 
-#: includes/admin/class-afwc-admin-notifications.php:83
-msgid "Support"
+#: templates/afwc-commission-paid.php:28
+#: templates/plain/afwc-commission-paid.php:29
+msgid "Commission: "
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1107
-msgid ""
-"Tell us more about yourself and why you'd like to partner with us (please "
-"include your social media handles, experience promoting others, tell us "
-"about your audience etc)"
+#: templates/afwc-commission-paid.php:33
+#: templates/plain/afwc-commission-paid.php:32
+msgid "PayPal email: "
 msgstr ""
 
-#: includes/emails/class-afwc-commission-paid-email.php:229
-#: includes/emails/class-afwc-new-conversion-email.php:233
-#: includes/emails/class-afwc-new-registration-received.php:227
-#: includes/emails/class-afwc-welcome-affiliate-email.php:217
-msgid "Text to appear below the main email content."
+#: templates/afwc-commission-paid.php:39
+#: templates/plain/afwc-commission-paid.php:36
+msgid "Additional notes: "
 msgstr ""
 
-#: includes/admin/about-affiliate-for-woocommerce.php:33
-msgid "Thank you for installing Affiliate for WooCommerce"
-msgstr ""
-
-#: templates/afwc-new-conversion.php:56
-#: templates/plain/afwc-new-conversion.php:41
-msgid ""
-"Thank you for promoting us. We look forward to send another email like this "
-"very soon!"
-msgstr ""
-
-#: templates/afwc-new-registration-received.php:61
-#: templates/plain/afwc-new-registration-received.php:62
-msgid "Thanks"
-msgstr ""
-
-#. Description of the plugin
-msgid ""
-"The best affiliate management plugin for WooCommerce. Track, manage and "
-"payout affiliate commissions easily."
-msgstr ""
-
-#: templates/plain/afwc-welcome-affiliate-email.php:44
-msgid ""
-"The most important thing I've learnt working with our partners is that the "
-"best way to succeed is quickly start active promotions. "
-msgstr ""
-
-#: templates/afwc-welcome-affiliate-email.php:43
-msgid ""
-"The most important thing I've learnt working with our partners is that the "
-"best way to succeed is quickly start active promotions. If you postpone, you "
-"won't see results. If you take quick actions, you may as well become one of "
-"our our superstar partners! Look forward to working closely with you."
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:87
-#: includes/emails/class-afwc-new-conversion-email.php:131
-#: includes/emails/class-afwc-new-conversion-email.php:174
-#: includes/emails/class-afwc-new-registration-received.php:83
-#: includes/emails/class-afwc-welcome-affiliate-email.php:86
-msgid "there"
-msgstr ""
-
-#: includes/emails/class-afwc-welcome-affiliate-email.php:36
-msgid ""
-"This email will be sent to an affiliate after their request to join is "
-"approved."
-msgstr ""
-
-#: includes/emails/class-afwc-new-registration-received.php:36
-msgid ""
-"This email will be sent to an affiliate manager when a new registration "
-"request is received."
-msgstr ""
-
-#: includes/emails/class-afwc-new-conversion-email.php:36
-msgid ""
-"This email will be sent to an affiliate when an order is placed using their "
-"referral link/coupon i.e. on a new conversion."
-msgstr ""
-
-#: includes/emails/class-afwc-commission-paid-email.php:36
-msgid ""
-"This email will be sent to an affiliate when their commission/payout is "
-"processed from affiliate dashboard."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:122
-msgid "This Month"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1885
-msgid ""
-"This URL identifier already exists. Please choose a diiferent identifier"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:124
-msgid "This Year"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:740
-msgid "To"
-msgstr ""
-
-#. 1: Location of the API Credentials
-#: includes/gateway/paypal/class-afwc-paypal.php:181
-#, php-format
-msgid "To disable, empty the API credentials %s"
-msgstr ""
-
-#. 1: Location of the API Credentials
-#: includes/gateway/paypal/class-afwc-paypal.php:173
-#, php-format
-msgid "To enable, follow all the requirements mentioned %s."
-msgstr ""
-
-#: includes/admin/about-affiliate-for-woocommerce.php:84
-msgid "To get started:"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:745
-msgid "Total Commissions"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:181
-msgid "Tracking param name"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:173
-msgid "Type"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:116
-#: includes/frontend/class-afwc-my-account.php:546
-#: includes/frontend/class-afwc-my-account.php:755
-#: includes/frontend/class-afwc-my-account.php:918
-msgid "Unpaid"
-msgstr ""
-
-#: includes/class-affiliate-for-woocommerce.php:141
-msgid "Update Affiliate Tag"
-msgstr ""
-
-#. shortcode for affiliate registration form
-#: includes/admin/class-afwc-admin-settings.php:109
-#, php-format
-msgid "use %s shortcode on any page."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:208
-msgid ""
-"Use 0 for \"session only\" referrals. Use 36500 for 100 year / lifetime "
-"referrals. If someone makes a purchase within these many days of their first "
-"referred visit, affiliate will be credited for the sale."
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:199
-msgid "Use coupons for referral - along with affiliated links"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-dashboard.php:148
-msgid "use default commission"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:203
-msgid ""
-"Use the <code>Assign to affiliate</code> option while creating a coupon to "
-"link the coupon with an affiliate. Whenever that coupon is used, specified "
-"affiliate will be credited for the sale."
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:95
-msgid "User registration successfull"
-msgstr ""
-
-#: includes/admin/class-afwc-privacy.php:139
-msgid "User's affiliate information"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-settings.php:144
-msgid "Users with these roles automatically become affiliates."
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:342
-msgid "Visit here"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:834
-msgid "Visitors"
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1703
-msgid "Want an exclusive coupon to promote?"
-msgstr ""
-
-#: includes/admin/class-afwc-admin-affiliate.php:149
-msgid "Way to contact"
-msgstr ""
-
-#: includes/admin/about-affiliate-for-woocommerce.php:44
-msgid ""
-"We discovered that you are using another \"Affiliates\" plugin. Do you want "
-"to migrate your existing data to this new Affiliates for WooCommerce plugin?"
-msgstr ""
-
-#: includes/migration/class-afwc-migrate-affiliates.php:87
-msgid "We found data from the \"Affiliates\". Do you want to migrate it?"
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:255
-msgid "We have already received your request and will get in touch soon."
-msgstr ""
-
-#: includes/frontend/class-afwc-registration-form.php:345
-msgid ""
-"We have received your request to join our affiliate program. We will review "
-"it and will get in touch with you soon!"
+#. translators: %1$s: Opening a tage for affiliate my account link %2$s: text for my account %3$s: closing a tag for affiliate my account link
+#: templates/afwc-commission-paid.php:45
+msgid "login to your affiliate dashboard"
 msgstr ""
 
 #: templates/afwc-commission-paid.php:47
 #: templates/plain/afwc-commission-paid.php:44
-msgid ""
-"We look forward to sending bigger payouts to you next time! Keep promoting, "
-"keep living a life you love!"
+msgid "We look forward to sending bigger payouts to you next time! Keep promoting, keep living a life you love!"
 msgstr ""
 
-#: templates/plain/afwc-welcome-affiliate-email.php:40
-msgid ""
-"We value our partnership and are happy to help if you face any problems."
+#: templates/afwc-commission-paid.php:58
+#: templates/plain/afwc-commission-paid.php:56
+msgid "Best regards from your friends at,"
 msgstr ""
 
-#: templates/afwc-welcome-affiliate-email.php:40
-msgid ""
-"We value our partnership and are happy to help if you face any problems. "
-"We'd also love to discuss any novel promotion ideas you may have. Feel free "
-"to reach out to us anytime."
+#: templates/afwc-new-conversion.php:24
+#: templates/plain/afwc-new-conversion.php:21
+msgid "{site_title} just made a sale - thanks to you!"
 msgstr ""
 
-#: templates/plain/afwc-welcome-affiliate-email.php:41
-msgid ""
-"We'd also love to discuss any novel promotion ideas you may have. Feel free "
-"to reach out to us anytime."
+#: templates/afwc-new-conversion.php:26
+#: templates/plain/afwc-new-conversion.php:23
+msgid "Here's the summary:"
 msgstr ""
 
-#: templates/afwc-welcome-affiliate-email.php:23
-#: templates/plain/afwc-welcome-affiliate-email.php:22
-msgid ""
-"We're excited to have you as our affiliate partner. Here are the details "
-"you'll need to get started:"
+#: templates/afwc-new-conversion.php:43
+msgid "Order total"
 msgstr ""
 
-#: includes/class-affiliate-for-woocommerce.php:1087
-msgid "Website"
+#: templates/afwc-new-conversion.php:47
+msgid "Commission earned"
 msgstr ""
 
-#: includes/admin/class-afwc-privacy.php:44
-msgid "What and where we store:"
+#. translators: %1$s: Opening a tage for affiliate my account link %2$s: text for my account %3$s: closing a tag for affiliate my account link
+#: templates/afwc-new-conversion.php:54
+msgid "your account"
 msgstr ""
 
-#: includes/admin/about-affiliate-for-woocommerce.php:126
-msgid "Where do affiliates login / get their stats from?"
+#: templates/afwc-new-conversion.php:56
+#: templates/plain/afwc-new-conversion.php:41
+msgid "Thank you for promoting us. We look forward to send another email like this very soon!"
 msgstr ""
 
-#: includes/admin/about-affiliate-for-woocommerce.php:130
-msgid "Where's the link an affiliate will use to link to my site?"
+#: templates/afwc-new-registration-received.php:22
+#: templates/plain/afwc-new-registration-received.php:21
+msgid "Please review and respond to this potential affiliate partner."
 msgstr ""
 
-#: includes/admin/about-affiliate-for-woocommerce.php:59
-msgid "Yes, Migrate existing data."
+#: templates/afwc-new-registration-received.php:24
+#: templates/plain/afwc-new-registration-received.php:23
+msgid "Name: "
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:270
-msgid "You are already registered with us as an affiliate."
+#. translators: %s: contact information
+#. translators: %s: website URL
+#. translators: %s: user contact label
+#. translators: %s: user website label
+#: templates/afwc-new-registration-received.php:28
+#: templates/afwc-new-registration-received.php:33
+#: templates/plain/afwc-new-registration-received.php:27
+#: templates/plain/afwc-new-registration-received.php:33
+msgid "%s: "
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:236
-msgid "You are are successfully registered."
+#: templates/afwc-new-registration-received.php:36
+#: templates/plain/afwc-new-registration-received.php:37
+msgid "Additional Information: "
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1690
-msgid "You can change above identifier to anything like your name, brand name."
+#: templates/afwc-new-registration-received.php:38
+#: templates/plain/afwc-new-registration-received.php:39
+msgid "Next Actions"
 msgstr ""
 
-#. %s: Affiliate's account link
-#: templates/plain/afwc-welcome-affiliate-email.php:32
-#, php-format
-msgid "You can fully manage your account there: %s"
+#: templates/afwc-new-registration-received.php:40
+msgid "Approve / reject / manage this affiliate"
+msgstr ""
+
+#. translators: %s: Affiliate's first name
+#: templates/afwc-new-registration-received.php:42
+msgid "Email %s and discuss details"
+msgstr ""
+
+#: templates/afwc-new-registration-received.php:46
+msgid "BTW, you can "
+msgstr ""
+
+#: templates/afwc-new-registration-received.php:46
+msgid "review and manage all affiliates here."
 msgstr ""
 
 #: templates/afwc-new-registration-received.php:47
@@ -1614,27 +1450,17 @@ msgstr ""
 msgid "You can process all pending requests from there."
 msgstr ""
 
-#: templates/plain/afwc-welcome-affiliate-email.php:35
-msgid ""
-"You can refer people using your affiliate link above, but you can also "
-"promote individual products if you like."
+#: templates/afwc-new-registration-received.php:50
+msgid "Do respond promptly. "
 msgstr ""
 
-#: templates/afwc-welcome-affiliate-email.php:35
-msgid ""
-"You can refer people using your affiliate link above, but you can also "
-"promote individual products if you like. "
+#: templates/afwc-new-registration-received.php:50
+msgid " is waiting!"
 msgstr ""
 
-#: templates/plain/afwc-welcome-affiliate-email.php:30
-msgid ""
-"You will find our current promotion campaigns, marketing assets, complete "
-"record of your referrals and payouts there."
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1781
-msgid ""
-"You will receive your affiliate commission on the above PayPal email address."
+#: templates/afwc-new-registration-received.php:61
+#: templates/plain/afwc-new-registration-received.php:62
+msgid "Thanks"
 msgstr ""
 
 #: templates/afwc-welcome-affiliate-email.php:22
@@ -1642,8 +1468,17 @@ msgstr ""
 msgid "You're approved!"
 msgstr ""
 
-#: templates/afwc-new-conversion.php:54
-msgid "your account"
+#: templates/afwc-welcome-affiliate-email.php:23
+#: templates/plain/afwc-welcome-affiliate-email.php:22
+msgid "We're excited to have you as our affiliate partner. Here are the details you'll need to get started:"
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:25
+msgid "Your affiliate ID: "
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:27
+msgid "Your personal affiliated link: "
 msgstr ""
 
 #: templates/afwc-welcome-affiliate-email.php:29
@@ -1651,59 +1486,686 @@ msgstr ""
 msgid "Your affiliate dashboard"
 msgstr ""
 
+#: templates/afwc-welcome-affiliate-email.php:30
+msgid "Login to "
+msgstr ""
+
 #: templates/afwc-welcome-affiliate-email.php:31
 msgid "your affiliate dashboard"
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:32
+msgid "regularly. You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there. You can fully manage your account there."
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:34
+msgid "Our products"
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:35
+msgid "You can refer people using your affiliate link above, but you can also promote individual products if you like. "
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:36
+msgid "Here's our complete product catalog"
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:39
+msgid "Partnership and communication are important to us"
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:40
+msgid "We value our partnership and are happy to help if you face any problems. We'd also love to discuss any novel promotion ideas you may have. Feel free to reach out to us anytime."
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:42
+#: templates/plain/afwc-welcome-affiliate-email.php:43
+msgid "Personal note before signing off"
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:43
+msgid "The most important thing I've learnt working with our partners is that the best way to succeed is quickly start active promotions. If you postpone, you won't see results. If you take quick actions, you may as well become one of our our superstar partners! Look forward to working closely with you."
+msgstr ""
+
+#: templates/afwc-welcome-affiliate-email.php:54
+#: templates/plain/afwc-welcome-affiliate-email.php:58
+msgid "Best Regards"
+msgstr ""
+
+#: templates/plain/afwc-new-conversion.php:29
+msgid "Customer: "
+msgstr ""
+
+#: templates/plain/afwc-new-conversion.php:32
+msgid "Order total: "
+msgstr ""
+
+#: templates/plain/afwc-new-conversion.php:34
+msgid "Commission earned: "
+msgstr ""
+
+#. translators: %s: user's profile url
+#: templates/plain/afwc-new-registration-received.php:41
+msgid "Approve / reject / manage this affiliate : %s"
+msgstr ""
+
+#. translators: %s: user's email
+#: templates/plain/afwc-new-registration-received.php:43
+msgid "Email %s and discuss details "
+msgstr ""
+
+#. translators: %s: user's email
+#: templates/plain/afwc-new-registration-received.php:43
+msgid "(%s)"
+msgstr ""
+
+#. translators: %s: dashboard url
+#: templates/plain/afwc-new-registration-received.php:46
+msgid "BTW, you can review and manage all affiliates here: %s"
+msgstr ""
+
+#. translators: %s: affiliate user's name
+#: templates/plain/afwc-new-registration-received.php:50
+msgid "Do respond promptly. %s is waiting!"
 msgstr ""
 
 #: templates/plain/afwc-welcome-affiliate-email.php:24
 msgid "Your affiliate ID:"
 msgstr ""
 
-#: templates/afwc-welcome-affiliate-email.php:25
-msgid "Your affiliate ID: "
-msgstr ""
-
-#: includes/frontend/class-afwc-my-account.php:1672
-msgid "Your affiliate identifier is: "
-msgstr ""
-
 #: templates/plain/afwc-welcome-affiliate-email.php:26
 msgid "Your personal affiliated link:"
 msgstr ""
 
-#: templates/afwc-welcome-affiliate-email.php:27
-msgid "Your personal affiliated link: "
+#: templates/plain/afwc-welcome-affiliate-email.php:29
+msgid "Login to your affiliate dashboard regularly."
 msgstr ""
 
-#. Link for mailto affiliate manager
-#: includes/frontend/class-afwc-registration-form.php:123
-#: includes/frontend/class-afwc-registration-form.php:261
-#, php-format
-msgid ""
-"Your previous request to join our affiliate program has been declined. "
-"Please contact the %s for more details."
+#: templates/plain/afwc-welcome-affiliate-email.php:30
+msgid "You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:127
-#: includes/frontend/class-afwc-registration-form.php:265
-msgid ""
-"Your previous request to join our affiliate program has been declined. "
-"Please contact the store admin for more details."
+#. translators: %s: Affiliate's account link
+#: templates/plain/afwc-welcome-affiliate-email.php:32
+msgid "You can fully manage your account there: %s"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1713
-msgid "Your referral coupon details: "
+#: templates/plain/afwc-welcome-affiliate-email.php:34
+msgid "Our Products"
 msgstr ""
 
-#: includes/frontend/class-afwc-my-account.php:1694
-msgid "Your referral URL is: "
+#: templates/plain/afwc-welcome-affiliate-email.php:35
+msgid "You can refer people using your affiliate link above, but you can also promote individual products if you like."
 msgstr ""
 
-#: includes/frontend/class-afwc-registration-form.php:132
-msgid "Your request is in moderation."
+#. translators: %s: Shop page link
+#: templates/plain/afwc-welcome-affiliate-email.php:37
+msgid "Here's our complete product catalog : %s"
 msgstr ""
 
-#: templates/afwc-new-conversion.php:24
-#: templates/plain/afwc-new-conversion.php:21
-msgid "{site_title} just made a sale - thanks to you!"
+#: templates/plain/afwc-welcome-affiliate-email.php:39
+msgid "Partnership and communication are important to us."
+msgstr ""
+
+#: templates/plain/afwc-welcome-affiliate-email.php:40
+msgid "We value our partnership and are happy to help if you face any problems."
+msgstr ""
+
+#: templates/plain/afwc-welcome-affiliate-email.php:41
+msgid "We'd also love to discuss any novel promotion ideas you may have. Feel free to reach out to us anytime."
+msgstr ""
+
+#: templates/plain/afwc-welcome-affiliate-email.php:44
+msgid "The most important thing I've learnt working with our partners is that the best way to succeed is quickly start active promotions. "
+msgstr ""
+
+#: templates/plain/afwc-welcome-affiliate-email.php:45
+msgid "If you postpone, you won't see results. "
+msgstr ""
+
+#: templates/plain/afwc-welcome-affiliate-email.php:46
+msgid "If you take quick actions, you may as well become one of our our superstar partners! Look forward to working closely with you."
+msgstr ""
+
+#: affiliate-for-woocommerce.php:80
+msgid "Affiliate for WooCommerce requires WooCommerce to be activated."
+msgstr ""
+
+#: assets/js/afwc-resource.js:59
+msgid "Special characters are not allowed."
+msgstr ""
+
+#: assets/js/afwc-user-profile.js:13
+msgid "Are you sure you want to remove this user as an affiliate? Doing this will remove this affiliate and its entire chain from part of the parent-chain relationship of any other affiliate in a multi-tier commission distribution. This change is irreversible."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Loading Affiliates"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Commission plan created successfully"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Commission plan updated successfully"
+msgstr ""
+
+#: assets/js/admin.js:1
+#: assets/js/frontend.js:1
+msgid "Campaign created successfully"
+msgstr ""
+
+#: assets/js/admin.js:1
+#: assets/js/frontend.js:1
+msgid "Campaign updated successfully"
+msgstr ""
+
+#: assets/js/admin.js:1
+#: assets/js/frontend.js:1
+msgid "Loading"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Loading Commission Plans"
+msgstr ""
+
+#: assets/js/admin.js:1
+#: assets/js/frontend.js:1
+msgid "Loading Campaigns"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Search &amp; Filter"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Click on a label to filter. Type in the search box to search."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Reset filters"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Liked"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "plugin?"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Leave us a 5-star rating"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "and boost our motivation! A big thanks in advance from %s team!"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "[Important] Affiliate for WooCommerce requires a database migration. To start, please click "
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Migration process is running:"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Migration done successfully."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Run Migration."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "tasks completed"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "tasks starting"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Dashboard"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Plans"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Add a Campaign"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Add a Plan"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Search"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "placeholder"
+msgid "Search"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "placeholder"
+msgid "start date"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "to"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "placeholder"
+msgid "end date"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "of Total Revenue"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Customers"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Conversion Rate"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Pending Payouts"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "affiliate"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "affiliates"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "needs to be paid total commission of"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Load More"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Net Unpaid Commission"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Orders"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Payouts"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Revenue"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Other Details"
+msgstr ""
+
+#: assets/js/admin.js:1
+#: assets/js/frontend.js:1
+msgid "Link"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Referral Coupon"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "No coupons"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Tags"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "No tags assigned"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Top Products"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Order"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Medium"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Payout processed successfully"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Pay"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Send outstanding commission and/or record the payout."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Payment Method"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "PayPal: Pay & Record"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "PayPal: Record Only"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Other"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Record date"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Cancel"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Send"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Commission status updated successfully"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Please select a order"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Send Payout"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "orders"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "order"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "commission"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Mark as Paid"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Mark as Unpaid"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Mark as Rejected"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Update"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Commission (All Time)"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Paid (All Time)"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Unpaid (All Time)"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Review & Approve Affiliate"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Export"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Standard CSV"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Mass Payout CSV"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "No affiliates yet."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Go to \"Settings\" and select some user roles to automatically make them affiliates."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Or edit your affiliate registration form (link available in Settings) and link it from your site."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Or go to an individual user's profile in WordPress and make them an affiliate."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "This group is a \"pass\" when"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "all"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "at least one"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "of the following conditions is true."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Add a condition"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Add another group"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Remove this group"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "No of Tiers"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "change this to add/remove distribution tiers"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Distribution"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Please add commission title"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Empty rule values are not allowed"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Empty amount value is not allowed"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Add proper value of amount"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Name"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "placeholder"
+msgid "Enter a name for this commission plan"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Status"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Commission Type"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Apply to"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "When"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "condition groups pass"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Plan order saved successfully"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Commission Plans"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Save Order"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "While calculating affiliate commission, plans are validated one after the other, starting from the top. Drag and Drop to reorder and prioritize plans. Click on Save Order to save."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "No commission plans yet."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Go ahead, click that \"Add a Plan\" button in the top bar to create your first commission."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Please add campaign title"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Campaign Detail"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "description"
+msgid "A descriptive title for this campaign - so affiliates can easily understand purpose of the campaign."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Slug"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "description"
+msgid "Short text in links for this campaign"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Destination Link"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "description"
+msgid "Want to take campaign visitors to a specific product / landing page? Or shop / home page? Enter it here."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Short Description"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "description"
+msgid "This will show along with campaign name before people see all the details. Summarize the campaign here."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Full Description"
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "description"
+msgid "Use this editor to insert all the details, rules, creatives, swipes, videos, guidelines or anything else you want to present to affiliate partners. Format it well so that they can easily copy out for their own usage."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgctxt "description"
+msgid "If you prefer, create a .zip file with multiple assets. Upload it to your WordPress Media, and link the file from here. You can also link to any external resources as usual."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Campaigns help you organize your marketing and promotional materials (all the logos, banners, swipes, videos, guidelines, giveaways, social media assets and what have you...) in different \"buckets\"."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Create a campaign for common media assets, or holiday / offer specific materials, or social media shares, or to run an affiliate competition or anything else that makes sense."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Each campaign can have a destination landing page of its own and will get a unique link. When affiliates share the campaign's affiliated link, visitors will arrive on the destination link and will be attributed to the campaign."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Add high quality, well designed graphic assets, email swipes and any other material you'd like to provide to affiliate partners  in the campaign. They can copy / download those assets and quickly start promoting."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "If you find it difficult to add assets / format the campaign page, put everything together in a .zip file and link it from the campaign description so partners can download them easily."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "We track referrals and conversions at both affiliate and campaign level. We will add more reports soon."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "No campaigns yet."
+msgstr ""
+
+#: assets/js/admin.js:1
+msgid "Go ahead, click that \"Add a Campaign\" button in the top bar to create your first campaign."
 msgstr ""

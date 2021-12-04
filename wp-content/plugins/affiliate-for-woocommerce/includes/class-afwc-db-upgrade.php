@@ -46,6 +46,7 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 		 */
 		private function __construct() {
 			$db_upgrading = get_option( 'afwc_db_upgrade_running', false );
+
 			if ( empty( $db_upgrading ) ) {
 				add_action( 'init', array( $this, 'initialize_db_upgrade' ) );
 			}
@@ -64,7 +65,7 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 		 */
 		public function initialize_db_upgrade() {
 			$current_db_version = get_option( '_afwc_current_db_version' );
-			if ( version_compare( $current_db_version, '1.2.7', '<' ) || empty( $current_db_version ) ) {
+			if ( version_compare( $current_db_version, '1.2.9', '<' ) || empty( $current_db_version ) ) {
 				update_option( 'afwc_db_upgrade_running', true, 'no' );
 				$this->do_db_upgrade();
 			}
@@ -116,6 +117,14 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 
 				if ( '1.2.6' === get_option( '_afwc_current_db_version' ) ) {
 					$this->upgrade_to_1_2_7();
+				}
+
+				if ( '1.2.7' === get_option( '_afwc_current_db_version' ) ) {
+					$this->upgrade_to_1_2_8();
+				}
+
+				if ( '1.2.8' === get_option( '_afwc_current_db_version' ) ) {
+					$this->upgrade_to_1_2_9();
 				}
 
 				update_option( 'afwc_db_upgrade_running', false, 'no' );
@@ -175,7 +184,7 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 		 * Function to upgrade the database to version 1.2.2
 		 */
 		public function upgrade_to_1_2_2() {
-			$page_id = create_reg_form_page();
+			$page_id = afwc_create_reg_form_page();
 
 			update_option( '_afwc_current_db_version', '1.2.2', 'no' );
 		}
@@ -542,7 +551,6 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 			update_option( '_afwc_current_db_version', '1.2.6', 'no' );
 		}
 
-
 		/**
 		 * Function to upgrade the database to version 1.2.7
 		 */
@@ -560,6 +568,82 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 				}
 			}
 			update_option( '_afwc_current_db_version', '1.2.7', 'no' );
+
+		}
+
+		/**
+		 * Function to upgrade the database to version 1.2.8
+		 */
+		public function upgrade_to_1_2_8() {
+			global $wpdb;
+			$default_plan = array();
+
+			$table_name = $wpdb->prefix . 'afwc_commission_plans';
+
+			$cols_from_commission_plan = $wpdb->get_col( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_commission_plans" ); // phpcs:ignore
+			if ( ! in_array( 'no_of_tiers', $cols_from_commission_plan, true ) ) {
+				$wpdb->query( "ALTER table {$wpdb->prefix}afwc_commission_plans ADD no_of_tiers VARCHAR(20) default NULL" );// phpcs:ignore
+			}
+			if ( ! in_array( 'distribution', $cols_from_commission_plan, true ) ) {
+				$wpdb->query( "ALTER table {$wpdb->prefix}afwc_commission_plans ADD distribution VARCHAR(50) default NULL" );// phpcs:ignore
+			}
+
+			$table_name_from_db = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) ) );// phpcs:ignore
+			if ( $table_name_from_db === $table_name ) {
+				$storewide_percentage = get_option( 'afwc_storewide_commission', 0 );
+				$storewide_percentage = ( ! empty( $storewide_percentage ) ) ? floatval( $storewide_percentage ) : 0;
+
+				$default_plan['name']                 = 'Storewide Default Commission';
+				$default_plan['rules']                = '';
+				$default_plan['amount']               = $storewide_percentage;
+				$default_plan['type']                 = 'Percentage';
+				$default_plan['status']               = 'Active';
+				$default_plan['apply_to']             = 'all';
+				$default_plan['action_for_remaining'] = 'continue';
+				$default_plan['no_of_tiers']          = '1';
+				$default_plan['distribution']         = '';
+
+				$wpdb->insert( // phpcs:ignore
+					$table_name,
+					$default_plan,
+					array( '%s', '%s', '%f', '%s', '%s', '%s', '%s', '%s', '%s' )
+				);
+
+				$default_plan_id = $wpdb->insert_id;
+				$plan_order      = get_option( 'afwc_plan_order', array() );
+				$plan_order[]    = $default_plan_id;
+				update_option( 'afwc_plan_order', $plan_order, 'no' );
+
+				update_option( 'afwc_default_commission_plan_id', $default_plan_id );
+
+				update_option( '_afwc_current_db_version', '1.2.8', 'no' );
+			}
+
+		}
+
+		/**
+		 * Function to upgrade the database to version 1.2.9
+		 */
+		public function upgrade_to_1_2_9() {
+			global $wpdb;
+			// alter tables.
+			$total_hits_record      = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}afwc_hits" );// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$total_referrals_record = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}afwc_referrals" );// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$total_payouts_record   = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}afwc_payouts" );// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			if ( ! $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_hits LIKE 'migrate_date';" ) && ( $total_hits_record > 0 ) ) {// phpcs:ignore
+				$wpdb->query( "ALTER table {$wpdb->prefix}afwc_hits ADD migrate_date BOOLEAN DEFAULT NULL" );// phpcs:ignore
+			}
+			if ( ! $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_referrals LIKE 'migrate_date';" ) && ( $total_referrals_record > 0 )) {// phpcs:ignore
+				$wpdb->query( "ALTER table {$wpdb->prefix}afwc_referrals ADD migrate_date BOOLEAN DEFAULT NULL" );// phpcs:ignore
+			}
+			if ( ! $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->prefix}afwc_payouts LIKE 'migrate_date';" ) && ( $total_payouts_record > 0 ) ) {// phpcs:ignore
+				$wpdb->query( "ALTER table {$wpdb->prefix}afwc_payouts ADD migrate_date BOOLEAN DEFAULT NULL" );// phpcs:ignore
+			}
+			// check if there is any record, if not found set migration option done.
+			if ( empty( $total_hits_record ) && empty( $total_referrals_record ) && empty( $total_payouts_record ) ) {
+				update_option( 'afwc_dates_migration_done', 'yes', 'no' );
+			}
+			update_option( '_afwc_current_db_version', '1.2.9', 'no' );
 
 		}
 

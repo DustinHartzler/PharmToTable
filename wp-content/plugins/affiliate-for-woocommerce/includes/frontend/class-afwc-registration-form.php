@@ -321,13 +321,13 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 					}
 					$response['status'] = 'success';
 					// save parent child relation if parent cookie present.
-					$parent_affiliate_id = get_referrer_id();
+					$parent_affiliate_id = afwc_get_referrer_id();
 					if ( ! empty( $parent_affiliate_id ) ) {
 						// check if parent affiliate is valid.
 						$is_parent_affiliate = afwc_is_user_affiliate( absint( $parent_affiliate_id ) );
 						if ( 'yes' === $is_parent_affiliate ) {
 							$parent_chain     = get_user_meta( $parent_affiliate_id, 'afwc_parent_chain', true );
-							$new_parent_chain = ( ! empty( $parent_chain ) ) ? $parent_affiliate_id . ',' . $parent_chain : $parent_affiliate_id;
+							$new_parent_chain = ( ! empty( $parent_chain ) ) ? $parent_affiliate_id . '|' . $parent_chain : $parent_affiliate_id . '|';
 							update_user_meta( $user_id, 'afwc_parent_chain', $new_parent_chain );
 						}
 					}

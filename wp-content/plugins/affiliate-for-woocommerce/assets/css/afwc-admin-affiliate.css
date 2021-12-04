@@ -21,4 +21,6 @@
 	border-bottom: 1px solid #ccc;
 	padding: 1em;
 }
-
+.afwc-update-desc {
+	display: none;
+}

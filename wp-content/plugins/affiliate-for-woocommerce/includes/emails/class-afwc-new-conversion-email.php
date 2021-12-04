@@ -137,6 +137,8 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 			$endpoint            = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
 			$my_account_afwc_url = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
 
+			$order_id = isset( $this->email_args['order_id'] ) ? $this->email_args['order_id'] : 0;
+
 			ob_start();
 
 			wc_get_template(
@@ -148,6 +150,7 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 					'order_currency_symbol'    => $order_currency_symbol,
 					'affiliate_name'           => $affiliate_name,
 					'order_total'              => $order_total,
+					'order_id'                 => $order_id,
 					'my_account_afwc_url'      => $my_account_afwc_url,
 					'order_customer_full_name' => $order_customer_full_name,
 					'additional_content'       => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
@@ -179,6 +182,7 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 
 			$endpoint            = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
 			$my_account_afwc_url = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
+			$order_id            = isset( $this->email_args['order_id'] ) ? $this->email_args['order_id'] : 0;
 
 			ob_start();
 
@@ -193,6 +197,7 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 					'order_total'              => $order_total,
 					'my_account_afwc_url'      => $my_account_afwc_url,
 					'order_customer_full_name' => $order_customer_full_name,
+					'order_id'                 => $order_id,
 					'additional_content'       => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 				),
 				$template_path,

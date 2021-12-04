@@ -39,6 +39,7 @@ jQuery(
 		);
 		jQuery('#affiliate_reg_form').css('display', 'none');
 		jQuery('#affiliate_tags').css('display', 'none');
+		jQuery('#afwc_storewide_commission').css('display', 'none');
 
 	}
 );

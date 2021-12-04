@@ -3,7 +3,7 @@
  * Main class for Affiliates Coupon functionality
  *
  * @package     affiliate-for-woocommerce/includes/
- * @version     1.0.3
+ * @version     1.0.4
  */
 
 // Exit if accessed directly.
@@ -30,7 +30,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		 */
 		public function __construct() {
 
-			$use_referral_coupons = get_option( 'afwc_use_referral_coupons', 'no' );
+			$use_referral_coupons = get_option( 'afwc_use_referral_coupons', 'yes' );
 			if ( is_admin() && 'yes' === $use_referral_coupons ) {
 				add_action( 'woocommerce_coupon_options', array( $this, 'affiliate_restriction' ), 10, 2 );
 			}
@@ -38,7 +38,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 
 			add_action( 'woocommerce_applied_coupon', array( $this, 'coupon_applied' ) );
 
-			add_action( 'wp_ajax_afwc_json_search_affiliates', array( $this, 'afwc_json_search_affiliates' ), 1, 2 );
+			add_action( 'wp_ajax_afwc_json_search_affiliates', array( $this, 'afwc_json_search_affiliates' ) );
 
 		}
 
@@ -59,50 +59,27 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		/**
 		 * Search for attribute values and return json
 		 *
-		 * @param string $x string.
-		 * @param string $attribute string.
 		 * @return void
 		 */
-		public function afwc_json_search_affiliates( $x = '', $attribute = '' ) {
+		public function afwc_json_search_affiliates() {
 
 			check_ajax_referer( 'afwc-search-affiliate-users', 'security' );
 
 			$term = ( ! empty( $_GET['term'] ) ) ? (string) urldecode( stripslashes( wp_strip_all_tags( $_GET ['term'] ) ) ) : ''; // phpcs:ignore
 			if ( empty( $term ) ) {
-				die();
+				wp_die();
 			}
 
-			$is_affiliate         = array();
-			$affiliate_role_users = array();
-
-			$args         = array(
-				'search'     => $term,
-				'meta_key'   => 'afwc_is_affiliate', // phpcs:ignore
-				'meta_value' => 'yes', // phpcs:ignore
+			$afwc  = Affiliate_For_WooCommerce::get_instance();
+			$users = $afwc->get_affiliates(
+				array(
+					'search' => '*' . $term . '*',
+				)
 			);
-			$is_affiliate = get_users( $args );
+			$users = ! empty( $users ) ? $users : array();
 
-			$affiliate_user_roles = get_option( 'affiliate_users_roles', '' );
-			if ( ! empty( $affiliate_user_roles ) ) {
-				$args                 = array(
-					'search'   => $term,
-					'role__in' => $affiliate_user_roles,
-				);
-				$affiliate_role_users = get_users( $args );
-			}
-
-			$affiliate_users = array_merge( $is_affiliate, $affiliate_role_users );
-
-			$user = array();
-			if ( $affiliate_users ) {
-				foreach ( $affiliate_users as $users ) {
-					$user[ $users->data->ID ] = $users->data->display_name . ' (#' . $users->data->ID . ' - ' . $users->data->user_email . ')';
-				}
-			}
-
-			echo wp_json_encode( $user );
-			die();
-
+			echo wp_json_encode( $users );
+			wp_die();
 		}
 
 		/**

@@ -1,10 +1,10 @@
 === Affiliate For WooCommerce ===
-Contributors: storeapps, niravmehta, ratnakardubey, Tarun.Parswani, Mansi Shah, malayladu, sandhyam
+Contributors: storeapps, niravmehta, ratnakardubey, Tarun.Parswani, Mansi Shah, malayladu, sandhyam, chandang
 Donate link: http://www.storeapps.org/
 Tags: affiliates, affiliate wordpress, commission, woocommerce, affiliatewp, ecommerce, partner, share, affiliate plugin
-Requires at least: 4.9.0
-Tested up to: 5.7.0
-Stable tag: 3.2.2
+Requires at least: 5.0.0
+Tested up to: 5.8.2
+Stable tag: 3.10.0
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

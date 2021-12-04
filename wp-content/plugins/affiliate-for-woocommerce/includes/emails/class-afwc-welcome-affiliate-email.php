@@ -3,7 +3,7 @@
  * Main class for Welcome affiliate email
  *
  * @package     affiliate-for-woocommerce/includes/emails/
- * @version     1.0.1
+ * @version     1.1.0
  * @since       2.4.0
  */
 
@@ -27,7 +27,7 @@ if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
 		public function __construct() {
 
 			// Set ID, this simply needs to be a unique name.
-			$this->id = 'afwc_new_registration';
+			$this->id = 'afwc_welcome';
 
 			// This is the title in WooCommerce Email settings.
 			$this->title = 'Affiliate - Welcome email';
@@ -88,7 +88,7 @@ if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
 			$pname                                   = get_option( 'afwc_pname', 'ref' );
 			$pname                                   = ( ! empty( $pname ) ) ? $pname : 'ref';
 			$afwc_ref_url_id                         = get_user_meta( $affiliate_id, 'afwc_ref_url_id', true );
-			$affiliate_id                            = get_affiliate_id_based_on_user_id( $affiliate_id );
+			$affiliate_id                            = afwc_get_affiliate_id_based_on_user_id( $affiliate_id );
 			$affiliate_identifier                    = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
 			$endpoint                                = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
 			$my_account_afwc_url                     = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );

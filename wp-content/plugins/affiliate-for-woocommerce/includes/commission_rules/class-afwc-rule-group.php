@@ -40,7 +40,7 @@ if ( ! class_exists( 'AFWC_Rule_Group' ) ) {
 		 */
 		public function __construct( $props ) {
 			$this->condition = ! empty( $props['condition'] ) ? $props['condition'] : 'AND';
-			$this->rules     = AFWC_Registry::resolve_class( $props['rules'] );
+			$this->rules     = ! empty( $props['rules'] ) ? AFWC_Registry::resolve_class( $props['rules'] ) : array();
 		}
 
 		/**

@@ -3,7 +3,7 @@
  * Some common functions for Affiliate For WooCommerce
  *
  * @since       1.0.0
- * @version     1.1.0
+ * @version     1.2.0
  *
  * @package     affiliate-for-woocommerce/includes/
  */
@@ -22,7 +22,7 @@ function afwc_encode_affiliate_id( $affiliate_id ) {
 	return $affiliate_id;
 }
 
-/**
+/**TODO :: not use
  * Get commission payout statuses
  *
  * @return array
@@ -43,7 +43,7 @@ function get_afwc_commission_statuses() {
  * @param  string $name The table.
  * @return string
  */
-function get_afwc_tablename( $name ) {
+function afwc_get_tablename( $name ) {
 	global $wpdb;
 	return $wpdb->prefix . AFWC_TABLE_PREFIX . $name;
 }
@@ -55,7 +55,7 @@ function get_afwc_tablename( $name ) {
  *
  * Credit: [itthinx]
  */
-function get_referrer_id() {
+function afwc_get_referrer_id() {
 	$affiliate_id = isset( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ? trim( wc_clean( wp_unslash( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ) ) : false; // phpcs:ignore
 	return $affiliate_id;
 }
@@ -65,13 +65,14 @@ function get_referrer_id() {
  *
  * @return integer $campaign_id
  */
-function get_campaign_id() {
+function afwc_get_campaign_id() {
 	$campaign_id = isset( $_COOKIE[ 'afwc_campaign' ] ) ? trim( wc_clean( wp_unslash( $_COOKIE[ 'afwc_campaign' ] ) ) ) : false; // phpcs:ignore
 	return $campaign_id;
 }
 
 /**
  * Get date range for smart date selector
+ * TODO:: Not in use
  *
  * @param  string $for    The smart date label.
  * @param  string $format The format.
@@ -150,10 +151,10 @@ function get_afwc_date_range( $for = '', $format = 'd-M-Y' ) {
  * @param  integer $affiliate_id The affiliate id.
  * @return integer
  */
-function get_user_id_based_on_affiliate_id( $affiliate_id ) {
+function afwc_get_user_id_based_on_affiliate_id( $affiliate_id ) {
 	global $wpdb;
 
-	$afwc_affiliates_users = get_afwc_tablename( 'affiliates_users' );
+	$afwc_affiliates_users = afwc_get_tablename( 'affiliates_users' );
 	$is_table              = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $afwc_affiliates_users ) ); // phpcs:ignore
 
 	if ( ! empty( $is_table ) ) {
@@ -192,10 +193,10 @@ function get_user_id_based_on_affiliate_id( $affiliate_id ) {
  * @param  integer $user_id The user id.
  * @return integer
  */
-function get_affiliate_id_based_on_user_id( $user_id ) {
+function afwc_get_affiliate_id_based_on_user_id( $user_id ) {
 	global $wpdb;
 
-	$afwc_affiliates_users = get_afwc_tablename( 'affiliates_users' );
+	$afwc_affiliates_users = afwc_get_tablename( 'affiliates_users' );
 	$is_table              = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $afwc_affiliates_users ) ); // phpcs:ignore
 
 	if ( ! empty( $is_table ) ) {
@@ -249,10 +250,9 @@ function afwc_format_price( $price, $decimals = null, $decimal_separator = null,
 		$decimal_separator = afwc_get_price_decimal_separator();
 	}
 
-	if ( empty( $decimal_separator ) ) {
+	if ( empty( $thousand_separator ) ) {
 		$thousand_separator = afwc_get_price_thousand_separator();
 	}
-
 	return number_format( $price, $decimals, $decimal_separator, $thousand_separator );
 }
 
@@ -322,7 +322,7 @@ function afwc_is_user_affiliate( $user ) {
  *
  * @return int
  */
-function create_reg_form_page() {
+function afwc_create_reg_form_page() {
 	$slug    = 'affiliates';
 	$page_id = '';
 	if ( ! get_page_by_path( $slug ) || ! get_page_by_path( 'afwc_registration_form' ) ) {
@@ -344,7 +344,7 @@ function create_reg_form_page() {
  * @param string $slug campaign slug to get campaign id.
  * @return int $campaign_id campaign id.
  */
-function get_campaign_id_by_slug( $slug ) {
+function afwc_get_campaign_id_by_slug( $slug ) {
 	global $wpdb;
 	$campaign_id = $wpdb->get_var( // phpcs:ignore
 		$wpdb->prepare( // phpcs:ignore
@@ -378,7 +378,7 @@ function afwc_get_prefixed_order_statuses() {
  *
  * @return array $result
  */
-function get_afwc_user_tags_id_name_map() {
+function afwc_get_user_tags_id_name_map() {
 	$result = array();
 	$terms  = get_terms(
 		array(
@@ -400,7 +400,7 @@ function get_afwc_user_tags_id_name_map() {
  * @param string $status commission to fetch.
  * @return array $rules
  */
-function get_commission_plans( $status ) {
+function afwc_get_commission_plans( $status ) {
 	global $wpdb;
 	$status     = ! empty( $status ) ? $status : 'Active';
 	$status     = ucfirst( $status );
@@ -421,7 +421,7 @@ function get_commission_plans( $status ) {
  *
  * @return array $wc_paid_statuses
  */
-function get_afwc_paid_order_status() {
+function afwc_get_paid_order_status() {
 	$wc_paid_statuses = array();
 	$wc_paid_statuses = wc_get_is_paid_statuses();
 	$wc_paid_statuses = apply_filters( 'afwc_paid_order_statuses', $wc_paid_statuses );
@@ -436,12 +436,96 @@ function get_afwc_paid_order_status() {
  *
  * @return array $wc_reject_statuses
  */
-function get_afwc_reject_order_status() {
+function afwc_get_reject_order_status() {
 	$wc_reject_statuses = array();
 	$wc_reject_statuses = apply_filters( 'afwc_rejected_order_statuses', array( 'refunded', 'cancelled', 'failed', 'draft' ) );
 	foreach ( $wc_reject_statuses as $key => $value ) {
 		$wc_reject_statuses[ $key ] = ( strpos( $value, 'wc-' ) === false ) ? 'wc-' . $value : $value;
 	}
 	return $wc_reject_statuses;
+}
+
+/**
+ * Get default plan details
+ *
+ * @return array $storewide_default_plan
+ */
+function afwc_get_default_plan_details() {
+	global $wpdb;
+	$default_plan_details = array();
+	$default_plan_id      = get_option( 'afwc_default_commission_plan_id', false );
+	if ( ! empty( $default_plan_id ) ) {
+		$default_plan_details = $wpdb->get_results( // phpcs:ignore
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}afwc_commission_plans WHERE id = %d",
+				$default_plan_id
+			),
+			ARRAY_A
+		);
+		$default_plan_details = $default_plan_details[0];
+	}
+
+	return $default_plan_details;
+}
+
+/**
+ * Get array of parent chain by user id.
+ *
+ * @param  int|string $user_id User id.
+ * @return array $user_parents
+ */
+function afwc_get_parent_chain( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		return array();
+	}
+	$user_parents = get_user_meta( $user_id, 'afwc_parent_chain', true );
+	return ! empty( $user_parents ) ? array_filter( explode( '|', $user_parents ) ) : array();
+}
+
+/**
+ * Get Children tree
+ *
+ * @param int|string $user_id User id.
+ * @param bool       $is_tree If return value should be with children's parent tree or only child ids.
+ * @return array
+ */
+function afwc_get_children( $user_id = 0, $is_tree = false ) {
+	if ( empty( $user_id ) ) {
+		return array();
+	}
+
+	global $wpdb;
+
+	$children = $wpdb->get_col( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT DISTINCT um.user_id
+		FROM {$wpdb->prefix}usermeta as um
+		WHERE ( um.meta_key = %s AND um.meta_value LIKE %s )",
+			esc_sql( 'afwc_parent_chain' ),
+			esc_sql( '%' . $wpdb->esc_like( $user_id . '|' ) . '%' )
+		)
+	);
+
+	$children_tree = array();
+
+	if ( ! empty( $children ) ) {
+		foreach ( $children as $child ) {
+			$parent_chain = afwc_get_parent_chain( $child );
+			// Check if parent chain is exist.
+			if ( ! empty( $parent_chain ) ) {
+				// Double verify if current user id is exists in the parent chain.
+				if ( in_array( strval( $user_id ), $parent_chain, true ) ) {
+					if ( $is_tree ) {
+						// Assign the parent chain of each child.
+						$children_tree[ $child ] = $parent_chain;
+					} else {
+						// Assign only id of the child.
+						$children_tree[] = $child;
+					}
+				}
+			}
+		}
+	}
+	return apply_filters( 'afwc_get_children', $children_tree );
 }
 

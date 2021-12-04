@@ -127,7 +127,7 @@ if ( ! class_exists( 'AFWC_Migrate_Affiliates' ) ) {
 		public function migrate_affiliates_users() {
 			global $wpdb;
 
-			$afwc_affiliates_users = get_afwc_tablename( 'affiliates_users' );
+			$afwc_affiliates_users = afwc_get_tablename( 'affiliates_users' );
 			$affiliates_users      = _affiliates_get_tablename( 'affiliates_users' );
 			$create_table          = $wpdb->query( "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}afwc_affiliates_users LIKE {$wpdb->prefix}aff_affiliates_users" ); // phpcs:ignore
 			$result                = $wpdb->query( "INSERT {$wpdb->prefix}afwc_affiliates_users SELECT * FROM {$wpdb->prefix}aff_affiliates_users" ); // phpcs:ignore
@@ -258,7 +258,7 @@ if ( ! class_exists( 'AFWC_Migrate_Affiliates' ) ) {
 		public function update_commission_status() {
 			global $wpdb;
 
-			$referrals_table = get_afwc_tablename( 'referrals' );
+			$referrals_table = afwc_get_tablename( 'referrals' );
 
 			$order_ids = $wpdb->get_col( // phpcs:ignore
 				$wpdb->prepare(

@@ -125,6 +125,8 @@ if ( ! class_exists( 'AFWC_Install' ) ) {
 							  status enum ('Active', 'Draft', 'Trash') DEFAULT 'Draft',
 							  apply_to varchar(20) DEFAULT NULL,
 							  action_for_remaining varchar(20) DEFAULT NULL,
+							  no_of_tiers varchar(20) DEFAULT NULL,
+							  distribution varchar(50) DEFAULT NULL,
 							  PRIMARY KEY  (id)
 							) $collate;
 							";

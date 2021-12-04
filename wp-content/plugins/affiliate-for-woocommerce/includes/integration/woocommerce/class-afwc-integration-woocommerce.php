@@ -29,13 +29,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 			add_filter( 'afwc_affiliates_refund', array( $this, 'woocommerce_affiliates_refund' ), 10, 2 );
 			add_filter( 'afwc_all_customer_ids', array( $this, 'woocommerce_all_customer_ids' ), 10, 2 );
 			add_filter( 'afwc_order_details', array( $this, 'woocommerce_order_details' ), 10, 2 );
-			if ( afwc_is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' ) ) {
-				if ( WCS_AFWC_Compatibility::is_wcs_gte_20() ) {
-					add_filter( 'wcs_renewal_order_items', array( $this, 'afwc_modify_wcs_renewal_order' ), 10, 3 );
-				} else {
-					add_filter( 'woocommerce_subscriptions_renewal_order_items', array( $this, 'afwc_modify_renewal_order' ), 10, 5 );
-				}
-			}
+
 		}
 
 		/**
@@ -65,7 +59,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 											                            ON ( posts.ID = postmeta.post_id 
 											                            	AND postmeta.meta_key = %s ) 
 											                        WHERE posts.post_type = %s 
-											                        	AND FIND_IN_SET ( posts.post_status, ( SELECT option_value
+											                        	AND FIND_IN_SET ( posts.post_status COLLATE %s, ( SELECT option_value COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s ) )
 											                        	AND FIND_IN_SET ( post_id, ( SELECT option_value
@@ -73,6 +67,8 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 																									WHERE option_name = %s ) )",
 														'_order_total',
 														'shop_order',
+														AFWC_OPTION_NAME_COLLATION,
+														AFWC_OPTION_NAME_COLLATION,
 														$option_order_status,
 														$option_nm
 													)
@@ -88,11 +84,13 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 											                            ON ( posts.ID = postmeta.post_id 
 											                            	AND postmeta.meta_key = %s ) 
 											                        WHERE posts.post_type = %s 
-											                        	AND FIND_IN_SET ( posts.post_status, ( SELECT option_value
+											                        	AND FIND_IN_SET ( posts.post_status COLLATE %s, ( SELECT option_value COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s ) )",
 														'_order_total',
 														'shop_order',
+														AFWC_OPTION_NAME_COLLATION,
+														AFWC_OPTION_NAME_COLLATION,
 														$option_order_status
 													)
 				);
@@ -207,12 +205,14 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 												                        			AND postmeta.meta_key = %s 
 												                        			AND postmeta.meta_value > 0) 
 												                        WHERE posts.post_type = %s 
-												                        	AND FIND_IN_SET ( posts.post_status, ( SELECT option_value
+												                        	AND FIND_IN_SET ( posts.post_status COLLATE %s, ( SELECT option_value COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s ) )
 												                        	AND posts.post_date BETWEEN %s AND %s",
 														'_customer_user',
 														'shop_order',
+														AFWC_OPTION_NAME_COLLATION,
+														AFWC_OPTION_NAME_COLLATION,
 														$option_order_status,
 														$from . ' 00:00:00',
 														$to . ' 23:59:59'
@@ -228,11 +228,13 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 												                        			AND postmeta.meta_key = %s
 												                        			AND postmeta.meta_value > 0 ) 
 												                        WHERE posts.post_type = %s 
-												                        	AND FIND_IN_SET ( posts.post_status, ( SELECT option_value
+												                        	AND FIND_IN_SET ( posts.post_status COLLATE %s, ( SELECT option_value COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s ) )",
 														'_customer_user',
 														'shop_order',
+														AFWC_OPTION_NAME_COLLATION,
+														AFWC_OPTION_NAME_COLLATION,
 														$option_order_status
 													)
 				);
@@ -290,43 +292,6 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 
 			return $affiliates_order_details;
 
-		}
-
-		/**
-		 * Modify renewal order
-		 *
-		 * @param  mixed           $order_items Order items.
-		 * @param  WC_Order        $renewal_order The renewal order.
-		 * @param  WC_Subscription $subscription The subscription.
-		 * @return mixed
-		 */
-		public function afwc_modify_wcs_renewal_order( $order_items = null, $renewal_order = null, $subscription = null ) {
-			$original_order_id = ( ! empty( $subscription->get_parent() ) && is_object( $subscription->get_parent() ) && is_callable( array( $subscription->get_parent(), 'get_id' ) ) ) ? $subscription->get_parent()->get_id() : 0;
-			$renewal_order_id  = ( ! empty( $renewal_order ) && is_object( $renewal_order ) && is_callable( array( $renewal_order, 'get_id' ) ) ) ? $renewal_order->get_id() : 0;
-			$order_items       = $this->afwc_modify_renewal_order( $order_items, $original_order_id, $renewal_order_id );
-			return $order_items;
-		}
-
-		/**
-		 * Modify renewal order
-		 *
-		 * @param  mixed   $order_items Order items.
-		 * @param  integer $original_order_id The original order id.
-		 * @param  integer $renewal_order_id The renewal order id.
-		 * @param  integer $product_id The product id.
-		 * @param  string  $new_order_role The order role.
-		 * @return mixed
-		 */
-		public function afwc_modify_renewal_order( $order_items = null, $original_order_id = null, $renewal_order_id = null, $product_id = null, $new_order_role = null ) {
-			if ( ! empty( $renewal_order_id ) ) {
-				$is_commission_recorded = get_post_meta( $renewal_order_id, 'is_commission_recorded', true );
-				if ( 'yes' === $is_commission_recorded ) {
-					if ( get_option( 'is_recurring_commission' ) === 'yes' ) {
-						update_post_meta( $renewal_order_id, 'is_commission_recorded', 'no' );
-					}
-				}
-			}
-			return $order_items;
 		}
 
 	}

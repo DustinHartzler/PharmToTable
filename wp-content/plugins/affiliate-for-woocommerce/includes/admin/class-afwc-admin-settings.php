@@ -117,6 +117,13 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 
 			$affiliate_link = trailingslashit( home_url() ) . '?<span id="afwc_pname_span">' . $pname . '</span>={user_id}';
 
+			$plan_dashboard_link = admin_url( 'admin.php?page=affiliate-for-woocommerce#!/plans' );
+			$default_plan        = afwc_get_default_plan_details();
+			$default_plan_name   = $default_plan['name'];
+			if ( ! empty( $plan_dashboard_link ) ) {
+				/* translators: Link to the plan back link */
+				$plan_backlink_desc = sprintf( esc_html__( 'Default commission plan: %s', 'affiliate-for-woocommerce' ), '<strong><a target="_blank" href="' . esc_url( $plan_dashboard_link ) . '">' . esc_attr( $default_plan_name ) . '</a></strong>' );
+			}
 			$afwc_admin_settings = array(
 				array(
 					'title' => __( 'Affiliate For WooCommerce Settings', 'affiliate-for-woocommerce' ),
@@ -150,15 +157,11 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 					'autoload' => false,
 				),
 				array(
-					'name'              => __( 'Referral commission (in %)', 'affiliate-for-woocommerce' ),
-					'id'                => 'afwc_storewide_commission',
-					'type'              => 'number',
-					'desc'              => 'This is your default commission rate. If you want to override, set Affiliate specific commission in Affiliates Dashboard > Plans.',
-					'autoload'          => false,
-					'custom_attributes' => array(
-						'step' => 'any',
-						'min'  => 0,
-					),
+					'name'     => __( 'Referral commission', 'affiliate-for-woocommerce' ),
+					'id'       => 'afwc_storewide_commission',
+					'type'     => 'text',
+					'desc'     => $plan_backlink_desc,
+					'autoload' => false,
 				),
 				array(
 					'name'     => __( 'Excluded products', 'affiliate-for-woocommerce' ),

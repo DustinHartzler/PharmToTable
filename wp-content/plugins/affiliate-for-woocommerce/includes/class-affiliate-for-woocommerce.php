@@ -3,7 +3,7 @@
  * Main class for Affiliate For WooCommerce
  *
  * @since       1.0.0
- * @version     1.4.3
+ * @version     1.4.5
  *
  * @package     affiliate-for-woocommerce/includes/
  */
@@ -95,6 +95,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 */
 		public function constants() {
 
+			global $wpdb;
+
 			$afwc_currency_symbol = get_woocommerce_currency_symbol();
 
 			define( 'AFWC_AFFILIATES_COOKIE_NAME', 'affiliate_for_woocommerce' );
@@ -104,12 +106,12 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			define( 'AFWC_PLUGIN_DIR', dirname( plugin_basename( AFWC_PLUGIN_FILE ) ) );
 			define( 'AFWC_PLUGIN_URL', plugins_url( AFWC_PLUGIN_DIR ) );
 
+			define( 'AFWC_CURRENCY', $afwc_currency_symbol );
 			define( 'AFWC_PNAME', get_option( 'afwc_pname' ) );
 
 			define( 'AFWC_COOKIE_TIMEOUT_BASE', 86400 );
 			define( 'AFWC_REGEX_PATTERN', 'affiliates/([^/]+)/?$' );
 
-			define( 'AFWC_CURRENCY', $afwc_currency_symbol );
 			define( 'AFWC_DEFAULT_COMMISSION_STATUS', get_option( 'afwc_default_commission_status' ) );
 			define( 'AFWC_AJAX_SECURITY', 'affiliate_for_woocommerce_ajax_call' );
 
@@ -119,6 +121,21 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			define( 'AFWC_REFERRAL_STATUS_UNPAID', 'unpaid' );
 			define( 'AFWC_REFERRAL_STATUS_REJECTED', 'rejected' );
 
+			$offset       = get_option( 'gmt_offset' );
+			$timezone_str = sprintf( '%+02d:%02d', (int) $offset, ( $offset - floor( $offset ) ) * 60 );
+			define( 'AFWC_TIMEZONE_STR', $timezone_str );
+
+			// Code to get the 'option_name' collation.
+			$results = $wpdb->get_row( // phpcs:ignore
+				$wpdb->prepare(
+					"SHOW FULL COLUMNS FROM {$wpdb->prefix}options LIKE %s",
+					'option_name'
+				),
+				ARRAY_A
+			);
+
+			$collation = ( ! empty( $results['Collation'] ) ) ? $results['Collation'] : $wpdb->collate;
+			define( 'AFWC_OPTION_NAME_COLLATION', $collation );
 		}
 
 		/**
@@ -290,7 +307,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				$query_vars[] = 'ref';
 			}
 			$query_vars[] = $migrated_pname;
-
 			return $query_vars;
 		}
 
@@ -315,7 +331,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			// Handle Older affiliates link through migrated pname.
 			if ( isset( $wp->query_vars[ $migrated_pname ] ) ) {
 				$id           = trim( $wp->query_vars[ $migrated_pname ] );
-				$affiliate_id = get_user_id_based_on_affiliate_id( $id );
+				$affiliate_id = afwc_get_user_id_based_on_affiliate_id( $id );
 			} elseif ( isset( $wp->query_vars[ $pname ] ) ) {
 				$affiliate_id = trim( $wp->query_vars[ $pname ] );
 			} elseif ( isset( $wp->query_vars['ref'] ) ) {
@@ -397,7 +413,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						);
 						// check for campaign.
 						$utm_campaign = ( ! empty( $_REQUEST ) && ! empty( $_REQUEST['utm_campaign'] ) ) ? wc_clean( wp_unslash( $_REQUEST['utm_campaign'] ) ) : '';// phpcs:ignore
-						$campaign_id  = ( ! empty( $utm_campaign ) ) ? get_campaign_id_by_slug( $utm_campaign ) : 0;
+						$campaign_id  = ( ! empty( $utm_campaign ) ) ? afwc_get_campaign_id_by_slug( $utm_campaign ) : 0;
 						setcookie(
 							'afwc_campaign',
 							$campaign_id,
@@ -598,166 +614,274 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			$args['limit']  = ( ! empty( $args['limit'] ) ) ? $args['limit'] : $limit;
 			$args['offset'] = $offset;
 
-			$num_row = count(
-				array(
-					'_product_id',
-					'_variation_id',
-					'_qty',
-					'_line_total',
-				)
-			);
+			$afwc_excluded_products = get_option( 'afwc_storewide_excluded_products', array() );
 
-			$limit                 *= $num_row;
-			$offset                *= $num_row;
-			$afwc_excluded_products = get_option( 'afwc_storewide_excluded_products' );
+			$prefixed_statuses   = afwc_get_prefixed_order_statuses();
+			$option_order_status = 'afwc_order_statuses_' . uniqid();
+			update_option( $option_order_status, implode( ',', $prefixed_statuses ), 'no' );
 
 			// TODO:: Need to check query for limits and get top products properly.
 			if ( ! empty( $from ) && ! empty( $to ) ) {
-
 				$products_result = $wpdb->get_results( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
-															"SELECT woim.order_item_id,
-																				woim.meta_key,
-																				woim.meta_value
-																		FROM {$wpdb->prefix}woocommerce_order_items AS woi
-																			JOIN {$wpdb->prefix}afwc_referrals AS afwcr
-																				ON (woi.order_id = afwcr.post_id
-																					AND woi.order_item_type = %s)
-																			JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS woim
-																				ON (woim.order_item_id = woi.order_item_id )
-																		WHERE afwcr.affiliate_id = %d
-																			AND woim.meta_key IN (%s,%s,%s,%s)
-																			AND (afwcr.datetime BETWEEN %s AND %s)
-																		LIMIT %d OFFSET %d",
-															'line_item',
+															"SELECT CONCAT(fpid,'_',fvid) as p_vid,
+															fpid as pid,
+															fvid as vid,
+															IFNULL(SUM(fqty), 0) as tot_qty,
+															IFNULL(SUM(ftot), 0) as tot_sales
+														FROM
+														(SELECT 
+														CASE WHEN @order_item_id != order_item_id THEN @pid := -1 END,
+														CASE WHEN @order_item_id != order_item_id THEN @vid := -1 END,
+														CASE WHEN @order_item_id != order_item_id THEN @qty := -1 END,
+														CASE WHEN @order_item_id != order_item_id THEN @tot := -1 END,
+														@order_item_id := order_item_id as foid,
+														@pid := CASE WHEN pid > -1 THEN pid ELSE @pid END as fpid,
+														@vid := CASE WHEN vid > -1 THEN vid ELSE @vid END as fvid,
+														@qty := CASE WHEN qty > -1 THEN qty ELSE @qty END as fqty,
+														@tot := CASE WHEN tot > -1 THEN tot ELSE @tot END as ftot
+														FROM(
+																SELECT woim.order_item_id as order_item_id,
+																IFNULL(CASE WHEN woim.meta_key = '_product_id' THEN woim.meta_value END, -1) as pid,
+																IFNULL(CASE WHEN woim.meta_key = '_variation_id' THEN woim.meta_value END, -1) as vid,
+																IFNULL(CASE WHEN woim.meta_key = '_line_total' THEN woim.meta_value END, -1) as tot,
+																IFNULL(CASE WHEN woim.meta_key = '_qty' THEN woim.meta_value END, -1) as qty
+																FROM {$wpdb->prefix}woocommerce_order_items AS woi
+																	JOIN {$wpdb->prefix}afwc_referrals AS afwcr
+																		ON (woi.order_id = afwcr.post_id
+																			AND woi.order_item_type = 'line_item'
+																			AND afwcr.affiliate_id = %d AND afwcr.status != %s)
+																	JOIN {$wpdb->prefix}woocommerce_order_itemmeta as woim
+																		ON(woim.order_item_id = woi.order_item_id
+																			AND woim.meta_key IN ('_product_id', '_variation_id', '_line_total', '_qty'))
+																WHERE (afwcr.datetime BETWEEN %s AND %s ) AND FIND_IN_SET( afwcr.order_status COLLATE %s, (SELECT option_value COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
+														) as temp,
+														(SELECT @order_item_id := 0,
+																@pid := 0,
+																@vid := 0,
+																@qty := 0,
+																@tot := 0
+															) as temp_variable
+														) as t1
+														WHERE fpid > -1 
+															AND fvid > -1
+															AND fqty > -1
+															AND ftot > -1
+														GROUP BY p_vid
+														ORDER BY tot_sales DESC, tot_qty DESC
+														LIMIT %d OFFSET %d",
 															$affiliate_id,
-															'_product_id',
-															'_variation_id',
-															'_qty',
-															'_line_total',
+															'draft',
 															$from,
 															$to,
+															AFWC_OPTION_NAME_COLLATION,
+															AFWC_OPTION_NAME_COLLATION,
+															$option_order_status,
 															$limit,
 															$offset
 														),
 					'ARRAY_A'
 				);
-
 				$products_total_count = $wpdb->get_var( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
-															"SELECT COUNT(*)
-																		FROM {$wpdb->prefix}woocommerce_order_items AS woi
-																			JOIN {$wpdb->prefix}afwc_referrals AS afwcr
-																				ON (woi.order_id = afwcr.post_id
-																					AND woi.order_item_type = %s)
-																			JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS woim
-																				ON (woim.order_item_id = woi.order_item_id )
-																		WHERE afwcr.affiliate_id = %d
-																			AND woim.meta_key IN (%s,%s,%s,%s)
-																			AND (afwcr.datetime BETWEEN %s AND %s)",
-															'line_item',
+															"SELECT COUNT( DISTINCT(CONCAT(fpid,'_',fvid))) as prod_count
+														FROM
+														(SELECT 
+														CASE WHEN @order_item_id != order_item_id THEN @pid := -1 END,
+														CASE WHEN @order_item_id != order_item_id THEN @vid := -1 END,
+														CASE WHEN @order_item_id != order_item_id THEN @qty := -1 END,
+														CASE WHEN @order_item_id != order_item_id THEN @tot := -1 END,
+														@order_item_id := order_item_id as foid,
+														@pid := CASE WHEN pid > -1 THEN pid ELSE @pid END as fpid,
+														@vid := CASE WHEN vid > -1 THEN vid ELSE @vid END as fvid,
+														@qty := CASE WHEN qty > -1 THEN qty ELSE @qty END as fqty,
+														@tot := CASE WHEN tot > -1 THEN tot ELSE @tot END as ftot
+														FROM(
+																SELECT woim.order_item_id as order_item_id,
+																IFNULL(CASE WHEN woim.meta_key = '_product_id' THEN woim.meta_value END, -1) as pid,
+																IFNULL(CASE WHEN woim.meta_key = '_variation_id' THEN woim.meta_value END, -1) as vid,
+																IFNULL(CASE WHEN woim.meta_key = '_line_total' THEN woim.meta_value END, -1) as tot,
+																IFNULL(CASE WHEN woim.meta_key = '_qty' THEN woim.meta_value END, -1) as qty
+																FROM {$wpdb->prefix}woocommerce_order_items AS woi
+																	JOIN {$wpdb->prefix}afwc_referrals AS afwcr
+																		ON (woi.order_id = afwcr.post_id
+																			AND woi.order_item_type = 'line_item'
+																			AND afwcr.affiliate_id = %d AND afwcr.status != %s)
+																	JOIN {$wpdb->prefix}woocommerce_order_itemmeta as woim
+																		ON(woim.order_item_id = woi.order_item_id
+																			AND woim.meta_key IN ('_product_id', '_variation_id', '_line_total', '_qty'))
+																WHERE (afwcr.datetime BETWEEN %s AND %s ) AND FIND_IN_SET( afwcr.order_status COLLATE %s, (SELECT option_value COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
+														) as temp,
+														(SELECT @order_item_id := 0,
+																@pid := 0,
+																@vid := 0,
+																@qty := 0,
+																@tot := 0
+															) as temp_variable
+														) as t1
+														WHERE fpid > -1 
+															AND fvid > -1
+															AND fqty > -1
+															AND ftot > -1",
 															$affiliate_id,
-															'_product_id',
-															'_variation_id',
-															'_qty',
-															'_line_total',
+															'draft',
 															$from,
-															$to
+															$to,
+															AFWC_OPTION_NAME_COLLATION,
+															AFWC_OPTION_NAME_COLLATION,
+															$option_order_status
 														)
 				);
 			} else {
-
 				$products_result = $wpdb->get_results( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT woim.order_item_id,
-																			woim.meta_key,
-																			woim.meta_value
-																	FROM {$wpdb->prefix}woocommerce_order_items AS woi
-																		JOIN {$wpdb->prefix}afwc_referrals AS afwcr
-																			ON (woi.order_id = afwcr.post_id
-																				AND woi.order_item_type = %s)
-																		JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS woim
-																			ON (woim.order_item_id = woi.order_item_id )
-																	WHERE afwcr.affiliate_id = %d
-																		AND woim.meta_key IN (%s,%s,%s,%s)
-																	LIMIT %d OFFSET %d",
-														'line_item',
-														$affiliate_id,
-														'_product_id',
-														'_variation_id',
-														'_qty',
-														'_line_total',
-														$limit,
-														$offset
-													),
+					$wpdb->prepare( // phpcs:ignore
+						"SELECT CONCAT(fpid,'_',fvid) as p_vid,
+						fpid as pid,
+						fvid as vid,
+						IFNULL(SUM(fqty), 0) as tot_qty,
+						IFNULL(SUM(ftot), 0) as tot_sales
+					FROM
+					(SELECT 
+					CASE WHEN @order_item_id != order_item_id THEN @pid := -1 END,
+					CASE WHEN @order_item_id != order_item_id THEN @vid := -1 END,
+					CASE WHEN @order_item_id != order_item_id THEN @qty := -1 END,
+					CASE WHEN @order_item_id != order_item_id THEN @tot := -1 END,
+					@order_item_id := order_item_id as foid,
+					@pid := CASE WHEN pid > -1 THEN pid ELSE @pid END as fpid,
+					@vid := CASE WHEN vid > -1 THEN vid ELSE @vid END as fvid,
+					@qty := CASE WHEN qty > -1 THEN qty ELSE @qty END as fqty,
+					@tot := CASE WHEN tot > -1 THEN tot ELSE @tot END as ftot
+					FROM(
+							SELECT woim.order_item_id as order_item_id,
+							IFNULL(CASE WHEN woim.meta_key = '_product_id' THEN woim.meta_value END, -1) as pid,
+							IFNULL(CASE WHEN woim.meta_key = '_variation_id' THEN woim.meta_value END, -1) as vid,
+							IFNULL(CASE WHEN woim.meta_key = '_line_total' THEN woim.meta_value END, -1) as tot,
+							IFNULL(CASE WHEN woim.meta_key = '_qty' THEN woim.meta_value END, -1) as qty
+							FROM {$wpdb->prefix}woocommerce_order_items AS woi
+								JOIN {$wpdb->prefix}afwc_referrals AS afwcr
+									ON (woi.order_id = afwcr.post_id
+										AND woi.order_item_type = 'line_item'
+										AND afwcr.affiliate_id = %d AND afwcr.status != %s)
+								JOIN {$wpdb->prefix}woocommerce_order_itemmeta as woim
+									ON(woim.order_item_id = woi.order_item_id
+										AND woim.meta_key IN ('_product_id', '_variation_id', '_line_total', '_qty'))
+							WHERE FIND_IN_SET( afwcr.order_status COLLATE %s, (SELECT option_value COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
+					) as temp,
+					(SELECT @order_item_id := 0,
+							@pid := 0,
+							@vid := 0,
+							@qty := 0,
+							@tot := 0
+						) as temp_variable
+					) as t1
+					WHERE fpid > -1 
+						AND fvid > -1
+						AND fqty > -1
+						AND ftot > -1
+					GROUP BY p_vid
+					ORDER BY tot_sales DESC, tot_qty DESC
+					LIMIT %d OFFSET %d",
+						$affiliate_id,
+						'draft',
+						AFWC_OPTION_NAME_COLLATION,
+						AFWC_OPTION_NAME_COLLATION,
+						$option_order_status,
+						$limit,
+						$offset
+					),
 					'ARRAY_A'
 				);
+
 				$products_total_count = $wpdb->get_var( // phpcs:ignore
-														$wpdb->prepare( // phpcs:ignore
-															"SELECT COUNT(*)
-																		FROM {$wpdb->prefix}woocommerce_order_items AS woi
-																			JOIN {$wpdb->prefix}afwc_referrals AS afwcr
-																				ON (woi.order_id = afwcr.post_id
-																					AND woi.order_item_type = %s)
-																			JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS woim
-																				ON (woim.order_item_id = woi.order_item_id )
-																		WHERE afwcr.affiliate_id = %d
-																			AND woim.meta_key IN (%s,%s,%s,%s)",
-															'line_item',
-															$affiliate_id,
-															'_product_id',
-															'_variation_id',
-															'_qty',
-															'_line_total'
-														)
+					$wpdb->prepare( // phpcs:ignore
+						"SELECT COUNT( DISTINCT(CONCAT(fpid,'_',fvid))) as prod_count
+						FROM
+						(SELECT 
+						CASE WHEN @order_item_id != order_item_id THEN @pid := -1 END,
+						CASE WHEN @order_item_id != order_item_id THEN @vid := -1 END,
+						CASE WHEN @order_item_id != order_item_id THEN @qty := -1 END,
+						CASE WHEN @order_item_id != order_item_id THEN @tot := -1 END,
+						@order_item_id := order_item_id as foid,
+						@pid := CASE WHEN pid > -1 THEN pid ELSE @pid END as fpid,
+						@vid := CASE WHEN vid > -1 THEN vid ELSE @vid END as fvid,
+						@qty := CASE WHEN qty > -1 THEN qty ELSE @qty END as fqty,
+						@tot := CASE WHEN tot > -1 THEN tot ELSE @tot END as ftot
+						FROM(
+								SELECT woim.order_item_id as order_item_id,
+								IFNULL(CASE WHEN woim.meta_key = '_product_id' THEN woim.meta_value END, -1) as pid,
+								IFNULL(CASE WHEN woim.meta_key = '_variation_id' THEN woim.meta_value END, -1) as vid,
+								IFNULL(CASE WHEN woim.meta_key = '_line_total' THEN woim.meta_value END, -1) as tot,
+								IFNULL(CASE WHEN woim.meta_key = '_qty' THEN woim.meta_value END, -1) as qty
+								FROM {$wpdb->prefix}woocommerce_order_items AS woi
+									JOIN {$wpdb->prefix}afwc_referrals AS afwcr
+										ON (woi.order_id = afwcr.post_id
+											AND woi.order_item_type = 'line_item'
+											AND afwcr.affiliate_id = %d AND afwcr.status != %s)
+									JOIN {$wpdb->prefix}woocommerce_order_itemmeta as woim
+										ON(woim.order_item_id = woi.order_item_id
+											AND woim.meta_key IN ('_product_id', '_variation_id', '_line_total', '_qty'))
+								WHERE FIND_IN_SET( afwcr.order_status COLLATE %s, (SELECT option_value COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
+						) as temp,
+						(SELECT @order_item_id := 0,
+								@pid := 0,
+								@vid := 0,
+								@qty := 0,
+								@tot := 0
+							) as temp_variable
+						) as t1
+						WHERE fpid > -1 
+							AND fvid > -1
+							AND fqty > -1
+							AND ftot > -1",
+						$affiliate_id,
+						'draft',
+						AFWC_OPTION_NAME_COLLATION,
+						AFWC_OPTION_NAME_COLLATION,
+						$option_order_status
+					)
 				);
 			}
-			$products = array();
+			$products    = array();
+			$product_ids = array();
 			if ( ! empty( $products_result ) ) {
+				// get the product id name map.
+				$product_ids = array_map(
+					function( $res ) {
+							$product_id = ! empty( $res['vid'] ) ? $res['vid'] : $res['pid'];
+							return $product_id;
+					},
+					$products_result
+				);
+
+				$option_prod_ids = 'afwc_prod_ids_' . uniqid();
+				update_option( $option_prod_ids, implode( ',', $product_ids ), 'no' );
+				$prod_res = $wpdb->get_results(// phpcs:ignore
+						$wpdb->prepare( // phpcs:ignore
+							"SELECT ID, post_title FROM {$wpdb->prefix}posts WHERE FIND_IN_SET( ID, (SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = %s ))",
+							$option_prod_ids
+						),
+					'ARRAY_A'
+				);
+				foreach ( $prod_res as $res ) {
+					$prod_id_name_map[ $res['ID'] ] = $res['post_title'];
+				}
 				$rows = array();
 				foreach ( $products_result as $result ) {
-					if ( empty( $rows[ $result['order_item_id'] ] ) || ! is_array( $rows[ $result['order_item_id'] ] ) ) {
-						$rows[ $result['order_item_id'] ] = array();
+					if ( in_array( $result['pid'], $afwc_excluded_products, true ) || in_array( $result['vid'], $afwc_excluded_products, true ) ) {
+						continue;
 					}
-					$rows[ $result['order_item_id'] ][ $result['meta_key'] ] = $result['meta_value']; // phpcs:ignore
-				}
-
-				if ( ! empty( $rows ) ) {
-					$_rows = array();
-					foreach ( $rows as $item_id => $item ) {
-						// exclude product if exclude in settings.
-						if ( in_array( $item['_product_id'], $afwc_excluded_products, true ) || in_array( $item['_variation_id'], $afwc_excluded_products, true ) ) {
-							continue;
-						}
-						$index = $item['_product_id'] . '_' . $item['_variation_id'];
-						if ( empty( $_rows[ $index ] ) || ! is_array( $_rows[ $index ] ) ) {
-							$_rows[ $index ] = array();
-						}
-						if ( empty( $_rows[ $index ]['product'] ) ) {
-							$product_name = get_the_title( $item['_product_id'] );
-							if ( ! empty( $item['_variation_id'] ) ) {
-								$product_name = get_the_title( $item['_variation_id'] );
-							}
-							$_rows[ $index ]['product'] = $product_name;
-						}
-						if ( ! empty( $_rows[ $index ]['qty'] ) ) {
-							$_rows[ $index ]['qty'] += $item['_qty'];
-						} else {
-							$_rows[ $index ]['qty'] = $item['_qty'];
-						}
-						if ( ! empty( $_rows[ $index ]['sales'] ) ) {
-							$_rows[ $index ]['sales'] += $item['_line_total'];
-						} else {
-							$_rows[ $index ]['sales'] = $item['_line_total'];
-						}
-					}
-					$sorted_rows = wp_list_sort( $_rows, 'sales', 'DESC', true );
+					$product_name                        = ( ! empty( $prod_id_name_map[ $result['vid'] ] ) ) ? $prod_id_name_map[ $result['vid'] ] : $prod_id_name_map[ $result['pid'] ];
+					$rows[ $result['p_vid'] ]['product'] = $product_name;
+					$rows[ $result['p_vid'] ]['qty']     = $result['tot_qty'];
+					$rows[ $result['p_vid'] ]['sales']   = $result['tot_sales'];
 				}
 				$products = array(
-					'rows'        => $sorted_rows,
+					'rows'        => $rows,
 					'total_count' => $products_total_count,
 				);
+				delete_option( $option_prod_ids );
 			}
+			delete_option( $option_order_status );
 			return apply_filters( 'afwc_my_account_products_result', $products, $args );
 		}
 
@@ -787,16 +911,17 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT payouts.payout_id,
-                                                                                                            DATE_FORMAT( payouts.datetime, %s ) as datetime,
+                                                                                                            DATE_FORMAT( CONVERT_TZ( payouts.datetime, '+00:00', %s ), %s ) as datetime,
 																											payouts.amount AS amount,
 																											payouts.currency AS currency,
 																											payouts.payment_gateway AS method,
 																											payouts.payout_notes
 																								FROM {$wpdb->prefix}afwc_payouts AS payouts
 																								WHERE payouts.affiliate_id = %d
-																									AND payouts.datetime BETWEEN %s AND %s
+																									AND payouts.datetime BETWEEN %s AND %s 
 																								ORDER BY payouts.datetime DESC
 																								LIMIT %d,%d",
+																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					current( $affiliate_ids ),
 																					$from . ' 00:00:00',
@@ -811,7 +936,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT payouts.payout_id,
-                                                                                                            DATE_FORMAT( payouts.datetime, %s ) as datetime,
+                                                                                                            DATE_FORMAT( CONVERT_TZ( payouts.datetime, '+00:00', %s ), %s ) as datetime,
 																											payouts.amount AS amount,
 																											payouts.currency AS currency,
 																											payouts.payment_gateway AS method,
@@ -820,6 +945,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																								WHERE payouts.affiliate_id = %d
 																								ORDER BY payouts.datetime DESC
 																								LIMIT %d,%d",
+																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					current( $affiliate_ids ),
 																					$start_limit,
@@ -838,7 +964,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT payouts.payout_id,
-                                                                                                            DATE_FORMAT( payouts.datetime, %s ) as datetime,
+                                                                                                            DATE_FORMAT( CONVERT_TZ( payouts.datetime, '+00:00', %s ), %s ) as datetime,
 																											payouts.amount AS amount,
 																											payouts.currency AS currency,
 																											payouts.payment_gateway AS method,
@@ -847,9 +973,10 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																								WHERE FIND_IN_SET ( payouts.affiliate_id, ( SELECT option_value
 																												FROM {$wpdb->prefix}options
 																												WHERE option_name = %s ) )
-																									AND payouts.datetime BETWEEN %s AND %s
+																									AND payouts.datetime BETWEEN %s AND %s 
 																								ORDER BY payouts.datetime DESC
 																								LIMIT %d,%d",
+																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					$option_nm,
 																					$from . ' 00:00:00',
@@ -863,7 +990,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT payouts.payout_id,
-	                                                                                                        DATE_FORMAT( payouts.datetime, %s ) as datetime,
+	                                                                                                        DATE_FORMAT( CONVERT_TZ( payouts.datetime, '+00:00', %s ), %s ) as datetime,
 																											payouts.amount AS amount,
 																											payouts.currency AS currency,
 																											payouts.payment_gateway AS method,
@@ -874,6 +1001,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																												WHERE option_name = %s ) )
 																								ORDER BY payouts.datetime DESC,
 																								LIMIT %d,%d",
+																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					$option_nm,
 																					$start_limit,
@@ -890,16 +1018,17 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT payouts.payout_id,
-                                                                                                            DATE_FORMAT( payouts.datetime, %s ) as datetime,
+                                                                                                            DATE_FORMAT( CONVERT_TZ( payouts.datetime, '+00:00', %s ), %s ) as datetime,
 																											payouts.amount AS amount,
 																											payouts.currency AS currency,
 																											payouts.payment_gateway AS method,
 																											payouts.payout_notes
 																								FROM {$wpdb->prefix}afwc_payouts AS payouts
 																								WHERE payouts.affiliate_id != %d
-																									AND payouts.datetime BETWEEN %s AND %s
+																									AND payouts.datetime BETWEEN %s AND %s 
 																								ORDER BY payouts.datetime DESC,
 																								LIMIT %d,%d",
+																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					0,
 																					$from . ' 00:00:00',
@@ -913,7 +1042,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						$affiliates_payout_history_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
 																					"SELECT payouts.payout_id,
-                                                                                                            DATE_FORMAT( payouts.datetime, %s ) as datetime,
+                                                                                                            DATE_FORMAT( CONVERT_TZ( payouts.datetime, '+00:00', %s ), %s ) as datetime,
 																											payouts.amount AS amount,
 																											payouts.currency AS currency,
 																											payouts.payment_gateway AS method,
@@ -922,6 +1051,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																								WHERE payouts.affiliate_id != %d
 																								ORDER BY payouts.datetime DESC
 																								LIMIT %d,%d",
+																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
 																					0,
 																					$start_limit,
@@ -944,7 +1074,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																"SELECT COUNT(*)
 																			FROM {$wpdb->prefix}afwc_payouts AS afwc_payouts
 																			WHERE afwc_payouts.affiliate_id = %d
-																				AND (afwc_payouts.datetime BETWEEN %s AND %s)",
+																				AND (afwc_payouts.datetime BETWEEN %s AND %s )",
 																current( $affiliate_ids ),
 																$from,
 																$to
@@ -961,9 +1091,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						);
 					}
 				}
-
 				foreach ( $affiliates_payout_history_results as $result ) {
-
+					$result['amount']            = $result['amount'];
 					$affiliates_payout_history[] = $result;
 					$payout_ids[]                = $result['payout_id'];
 				}
@@ -1118,8 +1247,95 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			add_option( 'afwc_form_fields', $form_fields );
 		}
 
+		/**
+		 * Get affiliate users.
+		 *
+		 * @param string $params Arguments of WP_User_Query.
+		 * @return array
+		 */
+		public function get_affiliates( $params = array() ) {
 
+			$args = array_merge(
+				$params,
+				array(
+					'meta_key'   => 'afwc_is_affiliate', // phpcs:ignore
+					'meta_value' => 'yes', // phpcs:ignore
+				)
+			);
 
+			$affiliate_users = get_users( $args );
+			// Get assigned affiliate roles.
+			$affiliate_user_roles = get_option( 'affiliate_users_roles', '' );
+
+			if ( ! empty( $affiliate_user_roles ) ) {
+				$args = array_merge(
+					$params,
+					array(
+						'role__in' => $affiliate_user_roles,
+					)
+				);
+				// Get users by assigned affiliate user roles.
+				$affiliate_role_users = get_users( $args );
+				if ( ! empty( $affiliate_role_users ) ) {
+					// Merge users of affiliate and users in affiliate user role.
+					$affiliate_users = array_merge( $affiliate_users, $affiliate_role_users );
+				}
+			}
+
+			$users = array();
+			if ( ! empty( $affiliate_users ) ) {
+				foreach ( $affiliate_users as $user ) {
+					$user_data = ! empty( $user->data ) ? $user->data : null;
+					if ( ! empty( $user_data ) && isset( $user_data->ID ) && isset( $user_data->user_email ) ) {
+						$users[ $user_data->ID ] = sprintf(
+							'%1$s (#%2$d &ndash; %3$s)',
+							isset( $user_data->display_name ) ? $user_data->display_name : '',
+							absint( $user_data->ID ),
+							$user_data->user_email
+						);
+					}
+				}
+			}
+
+			return apply_filters( 'afwc_get_affiliates', $users );
+		}
+
+		/**
+		 * Get affiliate parents for commissions.
+		 *
+		 * @param int $user_id User id.
+		 * @return array.
+		 */
+		public function afwc_get_parents_for_commissions( $user_id = 0 ) {
+			global $wpdb;
+			$parents = afwc_get_parent_chain( $user_id );
+			if ( empty( $parents ) ) {
+				return array();
+			}
+
+			$args = array(
+				'include' => $parents,
+			);
+
+			$af_parents = $this->get_affiliates( $args );
+
+			if ( empty( $af_parents ) ) {
+				return array();
+			}
+
+			$af_parents             = is_array( $af_parents ) ? array_filter( array_keys( $af_parents ), 'intval' ) : array();
+			$parents_for_commisions = array();
+
+			foreach ( $parents as $parent ) {
+				// Break if the parents are not in parent chain.
+				if ( ! in_array( intval( $parent ), $af_parents, true ) ) {
+					break;
+				}
+				$parents_for_commisions[] = $parent;
+			}
+
+			return ! empty( $parents_for_commisions ) ? $parents_for_commisions : array();
+		}
 
 	}
 
