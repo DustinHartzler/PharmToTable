@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0b6149e98dbb9577e50463d944ffb2e9
+class ComposerStaticInit85e92774ea328eba624925a5b4484321
 {
     public static $prefixLengthsPsr4 = array (
         'o' => 
@@ -36,18 +36,16 @@ class ComposerStaticInit0b6149e98dbb9577e50463d944ffb2e9
     );
 
     public static $classMap = array (
-        'KubAT\\PhpSimple\\HtmlDomParser' => __DIR__ . '/..' . '/kub-at/php-simple-html-dom-parser/src/KubAT/PhpSimple/HtmlDomParser.php',
-        'oldmine\\RelativeToAbsoluteUrl\\RelativeToAbsoluteUrl' => __DIR__ . '/..' . '/oldmine/relative-to-absolute-url/src/RelativeToAbsoluteUrl.php',
-        'oldmine\\RelativeToAbsoluteUrl\\Tests\\RelativeToAbsoluteUrlTest' => __DIR__ . '/..' . '/oldmine/relative-to-absolute-url/tests/oldmine/tests/RelativeToAbsoluteUrlTest.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0b6149e98dbb9577e50463d944ffb2e9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0b6149e98dbb9577e50463d944ffb2e9::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0b6149e98dbb9577e50463d944ffb2e9::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0b6149e98dbb9577e50463d944ffb2e9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit85e92774ea328eba624925a5b4484321::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit85e92774ea328eba624925a5b4484321::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit85e92774ea328eba624925a5b4484321::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit85e92774ea328eba624925a5b4484321::$classMap;
 
         }, null, ClassLoader::class);
     }

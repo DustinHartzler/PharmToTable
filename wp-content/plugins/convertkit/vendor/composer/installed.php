@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'type' => 'project',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => NULL,
+        'name' => 'convertkit/convertkit-wordpress',
+        'dev' => false,
+    ),
+    'versions' => array(
+        'convertkit/convertkit-wordpress' => array(
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => NULL,
+            'dev_requirement' => false,
+        ),
+        'kub-at/php-simple-html-dom-parser' => array(
+            'pretty_version' => '1.8.2',
+            'version' => '1.8.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../kub-at/php-simple-html-dom-parser',
+            'aliases' => array(),
+            'reference' => '2133982fa268436eca5a8ea2a2dd47344736edb0',
+            'dev_requirement' => false,
+        ),
+        'oldmine/relative-to-absolute-url' => array(
+            'pretty_version' => '1.7.1',
+            'version' => '1.7.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../oldmine/relative-to-absolute-url',
+            'aliases' => array(),
+            'reference' => '51daebf43ee961dd0817ef3440afd540f37430e4',
+            'dev_requirement' => false,
+        ),
+    ),
+);
