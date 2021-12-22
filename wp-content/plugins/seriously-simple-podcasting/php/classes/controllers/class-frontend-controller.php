@@ -2,19 +2,8 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
-use SeriouslySimplePodcasting\Renderers\Renderer;
 use stdClass;
 use WP_Query;
-
-use SeriouslySimplePodcasting\ShortCodes\Player;
-use SeriouslySimplePodcasting\ShortCodes\Podcast;
-use SeriouslySimplePodcasting\ShortCodes\Podcast_Episode;
-use SeriouslySimplePodcasting\ShortCodes\Podcast_Playlist;
-
-use SeriouslySimplePodcasting\Widgets\Playlist;
-use SeriouslySimplePodcasting\Widgets\Series;
-use SeriouslySimplePodcasting\Widgets\Recent_Episodes;
-use SeriouslySimplePodcasting\Widgets\Single_Episode;
 
 use SeriouslySimplePodcasting\Handlers\Options_Handler;
 
@@ -107,6 +96,29 @@ class Frontend_Controller extends Controller {
 
 		// Handle localisation
 		add_action( 'plugins_loaded', array( $this, 'load_localisation' ) );
+
+		add_filter( "archive_template_hierarchy", array( $this, 'fix_template_hierarchy' ) );
+	}
+
+	/**
+	 * Unfortunately, WP core doesn't search for archive-podcast.php automatically (though it should).
+	 * So add the template to search list manually.
+	 *
+	 * @param array $templates
+	 *
+	 * @return array
+	 */
+	public function fix_template_hierarchy( $templates ) {
+		$use_post_tag = apply_filters( 'ssp_use_post_tags', true );
+
+		// Use queried object because is_tax('post_tag') doesn't work ( is_tax is false ).
+		$queried = get_queried_object();
+
+		if ( is_tax( 'series' ) || ( $use_post_tag && 'post_tag' === $queried->taxonomy ) ) {
+			$templates = array_merge( array( 'archive-' . SSP_CPT_PODCAST . '.php' ), $templates );
+		}
+
+		return $templates;
 	}
 
 	public function register_ajax_actions() {
@@ -859,6 +871,7 @@ class Frontend_Controller extends Controller {
 			$podcast_post_types = ssp_post_types( false );
 
 			if ( empty( $podcast_post_types ) ) {
+				$query->set( 'post_type', SSP_CPT_PODCAST );
 				return;
 			}
 
@@ -867,11 +880,9 @@ class Frontend_Controller extends Controller {
 
 				$query->set( 'post__in', $episode_ids );
 
-				$podcast_post_types[] = SSP_CPT_PODCAST;
+				$podcast_post_types = array_merge( array( SSP_CPT_PODCAST ), $podcast_post_types );
 				$query->set( 'post_type', $podcast_post_types );
-
 			}
-
 		}
 
 	}
@@ -886,12 +897,17 @@ class Frontend_Controller extends Controller {
 			return;
 		}
 
-		if ( !is_tag() ) {
+		if ( ! is_tag() ) {
 			return;
 		}
 
-		$post_types             = (array) $query->get( 'post_type' );
+		if ( ! apply_filters( 'ssp_use_post_tags', true ) ) {
+			return;
+		}
+
+		$post_types             = $query->get( 'post_type' ) ?: array();
 		$tag_archive_post_types = apply_filters( 'ssp_tag_archive_post_types', array( 'post', SSP_CPT_PODCAST ) );
+
 		$query->set( 'post_type', array_merge( $post_types, $tag_archive_post_types ) );
 	}
 
@@ -1574,13 +1590,13 @@ class Frontend_Controller extends Controller {
 	/**
 	 * Render the HTML content for the podcast list dynamic block
 	 *
-	 * @param $attributes block attributes
+	 * @param array $attributes Block attributes.
 	 *
 	 * @return string
 	 */
 	public function render_podcast_list_dynamic_block( $attributes ) {
 		$player_style             = (string) get_option( 'ss_podcasting_player_style', '' );
-		$paged                    = ( get_query_var( 'paged' ) ) ?: 1;
+		$paged                    = ( filter_input( INPUT_GET, 'podcast_page' ) ) ?: 1;
 		$podcast_post_types       = ssp_post_types( true );
 		$query_args               = array(
 			'post_status'         => 'publish',
@@ -1625,7 +1641,7 @@ class Frontend_Controller extends Controller {
 						<?php if ( isset( $attributes['featuredImage'] ) ) { ?>
 							<a class="podcast-image-link" href="<?php echo esc_url( get_permalink() ) ?>"
 							   aria-hidden="true" tabindex="-1">
-								<?php echo the_post_thumbnail( 'full' ); ?>
+								<?php the_post_thumbnail( 'full' ); ?>
 							</a>
 						<?php } ?>
 						<?php if ( ! empty( $player ) ) { ?>
@@ -1641,16 +1657,36 @@ class Frontend_Controller extends Controller {
 		}
 		$episode_items = ob_get_clean();
 
-		$next_episodes_link     = get_next_posts_link( 'Older Episodes &raquo;', $episodes_query->max_num_pages );
-		$previous_episodes_link = get_previous_posts_link( '&laquo; Newer Episodes' );
-		if ( ! empty( $previous_episodes_link ) ) {
-			$episode_items .= $previous_episodes_link . ' | ';
+		// We can't use get_next_posts_link() because it doesn't work on single pages.
+		$args = array(
+			'format'    => '?podcast_page=%#%',
+			'total'     => $episodes_query->max_num_pages,
+			'current'   => max( 1, filter_input( INPUT_GET, 'podcast_page' ) ),
+			'prev_text' => __( '&laquo; Newer Episodes' ),
+			'next_text' => __( 'Older Episodes &raquo;' ),
+			'type'      => 'array',
+		);
+
+		$args = apply_filters( 'ssp_podcast_list_paginate_args', $args, $episodes_query );
+
+		$all_links = paginate_links( $args );
+
+		$links = array();
+
+		if ( is_array( $all_links ) ) {
+			foreach ( $all_links as $item ) {
+				if ( strpos( $item, 'class="next' ) || strpos( $item, 'class="prev' ) ) {
+					$links[] = $item;
+				}
+			}
 		}
-		$episode_items .= $next_episodes_link;
+
+		$links = apply_filters( 'ssp_podcast_list_paginate_links', $links, $all_links, $episodes_query );
+
+		$episode_items .= implode( "\n", $links );
 
 		wp_reset_postdata();
 
 		return apply_filters( 'podcast_list_dynamic_block_html_content', '<div>' . $episode_items . '</div>' );
 	}
-
 }
