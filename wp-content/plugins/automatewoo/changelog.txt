@@ -1,5 +1,10 @@
 == AutomateWoo Changelog ==
 
+2021-12-15 - version 5.5.7
+* Fix - Update Test config (#1071)
+* Tweak - Add WooCommerce 6.0.0 to Travis test matrix (#1077)
+* Tweak - Bump "WC tested up to" to version 6.0 (#1079)
+
 2021-11-25 - version 5.5.6
 * Add - Filter for custom workflow timing options.
 

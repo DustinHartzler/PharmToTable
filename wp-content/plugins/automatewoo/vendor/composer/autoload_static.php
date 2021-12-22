@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d
+class ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2
 {
     public static $prefixLengthsPsr4 = array (
         'A' => 
@@ -877,15 +877,14 @@ class ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d
         'AutomateWoo\\Workflows\\VariableParsing\\ParsedVariable' => __DIR__ . '/../..' . '/includes/Workflows/VariableParsing/ParsedVariable.php',
         'AutomateWoo\\Workflows\\VariableParsing\\VariableParser' => __DIR__ . '/../..' . '/includes/Workflows/VariableParsing/VariableParser.php',
         'AutomateWoo_Legacy' => __DIR__ . '/../..' . '/includes/AutomateWoo_Legacy.php',
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitaa54a6191a9bd4083ff8b523c230c66d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2::$classMap;
 
         }, null, ClassLoader::class);
     }

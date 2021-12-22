@@ -857,5 +857,4 @@ return array(
     'AutomateWoo\\Workflows\\VariableParsing\\ParsedVariable' => $baseDir . '/includes/Workflows/VariableParsing/ParsedVariable.php',
     'AutomateWoo\\Workflows\\VariableParsing\\VariableParser' => $baseDir . '/includes/Workflows/VariableParsing/VariableParser.php',
     'AutomateWoo_Legacy' => $baseDir . '/includes/AutomateWoo_Legacy.php',
-    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
 );
