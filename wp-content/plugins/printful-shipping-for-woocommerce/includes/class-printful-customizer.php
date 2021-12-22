@@ -39,7 +39,7 @@ class Printful_Customizer {
         if ($is_customized_product || is_cart()) {
         	$customizer_script_handle = 'printful-product-customizer';
             wp_enqueue_script( $customizer_script_handle, plugins_url( '../assets/js/product-customizer.js', __FILE__ ) );
-            wp_localize_script( $customizer_script_handle, 'pfGlobal', array(
+            wp_localize_script( $customizer_script_handle, 'pfGlobalCustomizer', array(
                 'admin_url' => esc_url(admin_url()),
                 'modal_title' => Printful_Integration::instance()
                     ->get_option( 'pfc_modal_title', Printful_Admin_Settings::DEFAULT_PERSONALIZE_MODAL_TITLE )

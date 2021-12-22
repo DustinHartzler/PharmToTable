@@ -141,7 +141,6 @@
 
 .pf-size-guide-modal-size-chart__table {
     border-collapse: collapse;
-    table-layout: fixed;
     width: 100%;
     overflow-x: auto;
 }

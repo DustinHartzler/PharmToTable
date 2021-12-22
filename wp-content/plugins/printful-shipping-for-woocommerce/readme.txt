@@ -4,7 +4,7 @@ Tags: woocommerce, printful, drop shipping, shipping, shipping rates, fulfillmen
 Requires at least: 5.3
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 2.1.25
+Stable tag: 2.1.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,6 +64,12 @@ Go to https://www.printful.com/dashboard/store , select your WooCommerce store, 
 5. Support page
 
 == Upgrade Notice ==
+
+= 2.1.27 =
+Woocommerce compatibility raised to 6.0. Size guide bug fix
+
+= 2.1.26 =
+Woocommerce compatibility raised to 5.9
 
 = 2.1.25 =
 Woocommerce compatibility raised to 5.5.
@@ -216,6 +222,13 @@ Minor improvements
 First release
 
 == Changelog ==
+
+= 2.1.27 =
+* Woocommerce compatibility raised to 6.0
+* Size guide bug fix
+
+= 2.1.26 =
+* Woocommerce compatibility raised to 5.9
 
 = 2.1.25 =
 * Woocommerce compatibility raised to 5.5

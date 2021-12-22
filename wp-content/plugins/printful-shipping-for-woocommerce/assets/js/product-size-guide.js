@@ -259,7 +259,10 @@ var Printful_Product_Size_Guide;
             // Selected or first if nothing selected
             selectedUnit = selectedUnit || this.getDefaultUnit(availableUnits);
             node.appendChild(this.buildSizeChartTabsNode(measurementData, availableUnits, selectedUnit));
-            node.appendChild(this.buildSizeChartTable(this.getSortedChartRows(sizeRows, selectedUnit)));
+            var wrapper = this.buildEl('div');
+            wrapper.style.overflowX = 'auto';
+            wrapper.appendChild(this.buildSizeChartTable(this.getSortedChartRows(sizeRows, selectedUnit)));
+            node.appendChild(wrapper);
 
             return node;
         },
