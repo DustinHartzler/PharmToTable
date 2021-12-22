@@ -164,7 +164,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <p data-animation="animated slideInUp">
                                             Get personalized, convenient health care that addresses the underlying causes of chronic disease.
                                         </p>
-                                        <a data-animation="animated slideInUp" class="btn btn-light border btn-md" href="https://pharmtotable.life/product/introduction-to-functional-medicine-orientation/">Join a Discovery Call</a>
+                                        <a data-animation="animated slideInUp" class="btn btn-light border btn-md" href="https://pharmtotable.life/product/introduction-to-functional-medicine-orientation/">Download Our Discovery Class</a>
                                     </div>
                                 </div>
                             </div>

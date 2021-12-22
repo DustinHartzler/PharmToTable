@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
+	<meta property="og:image" content="https://pharmtotable.life/wp-content/uploads/2021/11/table-talk-podcast-scaled.jpg" />
 
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title(''); ?></title>
@@ -181,7 +182,7 @@
                             <div class="info">
                                 <h4><?php the_title();?></h4>
                                 <div class="appoinment-btn">
-                                    <a href="<?php echo esc_url( get_the_permalink( $post_id ) );?>" target="_blank">View Episode</a>
+                                    <a href="<?php echo esc_url( get_the_permalink( $post_id ) );?>">View Episode</a>
                                 </div>
                             </div>
                         </div>
