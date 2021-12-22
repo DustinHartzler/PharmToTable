@@ -43,7 +43,7 @@ class OMAPI_ClassicEditor {
 	 *
 	 * @since 2.3.0
 	 *
-	 * @var object
+	 * @var OMAPI
 	 */
 	public $base;
 
@@ -98,7 +98,8 @@ class OMAPI_ClassicEditor {
 			'<button type="button" class="button optin-monster-insert-campaign-button" data-editor="%s" title="%s">%s %s</button>',
 			esc_attr( $editor_id ),
 			esc_attr__( 'Add OptinMonster', 'optin-monster-api' ),
-			$icon, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, unable to escape SVG.
+			$icon,
 			esc_html__( 'Add OptinMonster', 'optin-monster-api' )
 		);
 
@@ -112,11 +113,17 @@ class OMAPI_ClassicEditor {
 			true
 		);
 
+		$i18n                   = $this->base->blocks->get_data_for_js( 'i18n' );
+		$i18n['or_monsterlink'] = esc_html__( 'Or link to a popup campaign', 'optin-monster-api' );
+
 		OMAPI_Utils::add_inline_script(
 			$handle,
 			'OMAPI_Editor',
 			array(
-				'monsterlink' => esc_url_raw( OPTINMONSTER_SHAREABLE_LINK ) . '/c/',
+				'monsterlink'    => esc_url_raw( OPTINMONSTER_SHAREABLE_LINK ) . '/c/',
+				'canMonsterlink' => $this->base->blocks->get_data_for_js( 'canMonsterlink' ),
+				'upgradeUri'     => $this->base->blocks->get_data_for_js( 'upgradeUri' ),
+				'i18n'           => $i18n,
 			)
 		);
 
@@ -168,8 +175,10 @@ class OMAPI_ClassicEditor {
 		$this->base->output_view(
 			'shortcode-modal.php',
 			array(
-				'templatesUri' => $this->base->blocks->get_data_for_js( 'templatesUri' ),
-				'campaigns'    => $campaigns,
+				'templatesUri'   => $this->base->blocks->get_data_for_js( 'templatesUri' ),
+				'upgradeUri'     => OMAPI_Urls::upgrade( 'gutenberg', 'monster-link' ),
+				'canMonsterlink' => $this->base->blocks->get_data_for_js( 'canMonsterlink' ),
+				'campaigns'      => $campaigns,
 			)
 		);
 		$this->base->output_min_css( 'shortcode-modal-css.php' );

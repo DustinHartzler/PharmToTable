@@ -150,7 +150,7 @@ window.OMAPI_Editor = window.OMAPI_Editor || {};
 	app.insertShortcode = function () {
 		const id = app.$inlineSelect.val();
 		if (id) {
-			wp.media.editor.insert(`[optin-monster id="${id}"]`);
+			wp.media.editor.insert(`[optin-monster slug="${id}" followrules="true"]`);
 		}
 	};
 
@@ -203,7 +203,7 @@ window.OMAPI_Editor = window.OMAPI_Editor || {};
 		// Set options to disabled if they are already used.
 		app.$inlineSelect.find('option').each(function () {
 			const $option = $(this);
-			const hasShortcode = editorText.indexOf(`optin-monster id="${$option.val()}"`) >= 0;
+			const hasShortcode = editorText.indexOf(`optin-monster slug="${$option.val()}"`) >= 0;
 			$option.attr('disabled', hasShortcode);
 		});
 	};
@@ -247,15 +247,28 @@ window.OMAPI_Editor = window.OMAPI_Editor || {};
 	 */
 	app.initAdvancedSettings = function () {
 		const $advanced = $(`
-			<p class="howto" id="om-link-campaign-label">Or link to a popup campaign</p>
+			<p class="howto" id="om-link-campaign-label">${app.i18n.or_monsterlink}</p>
 			<div style="margin-bottom: -8px;">
-				<label><span>Select</span>
-					<select name="om-link-class" id="om-link-campaign" aria-describedby="om-link-campaign-label">
-					</select>
-				</label>
+				${
+					app.canMonsterlink
+						? `<label><span>Select</span>
+						<select name="om-link-class" id="om-link-campaign" aria-describedby="om-link-campaign-label">
+						</select>
+					</label>`
+						: `<p class="om-monsterlink-upgrade"><span>${
+								app.i18n.upgrade_monsterlink
+						  }</span> <a href="${app.upgradeUri.replace(
+								'--FEATURE--',
+								'monster-link'
+						  )}" target="_blank" rel="noopener">${app.i18n.upgrade}</a></p>`
+				}
 			</div>
 		`);
 		$advanced.find('select').html(app.$select.find('option').clone());
+		if ($advanced.find('.om-monsterlink-upgrade').length) {
+			const $clone = $('#om-monsterlink-upgrade').clone();
+			$advanced.find('.om-monsterlink-upgrade span').html($clone.html());
+		}
 
 		$('#link-options').append($advanced);
 		app.$linkSelect = $('#om-link-campaign');

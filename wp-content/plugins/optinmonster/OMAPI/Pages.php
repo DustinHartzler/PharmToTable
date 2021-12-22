@@ -130,6 +130,12 @@ class OMAPI_Pages {
 				'callback' => array( $this, 'render_app_loading_page' ),
 			);
 
+			$this->pages['optin-monster-integrations'] = array(
+				'name'     => __( 'Integrations', 'optin-monster-api' ),
+				'app'      => true,
+				'callback' => array( $this, 'render_app_loading_page' ),
+			);
+
 			$this->pages['optin-monster-trustpulse'] = array(
 				'name' => __( 'TrustPulse', 'optin-monster-api' ),
 			);
@@ -164,12 +170,43 @@ class OMAPI_Pages {
 				'hidden'   => true,
 			);
 
+			// If user upgradeable, add an upgrade link to menu.
+			$level = $this->base->can_upgrade();
+			if ( $level ) {
+				$this->pages['optin-monster-upgrade'] = array(
+					'name'     => 'vbp_pro' === $level
+						? __( 'Upgrade to Growth', 'optin-monster-api' )
+						: __( 'Upgrade to Pro', 'optin-monster-api' ),
+					'redirect' => esc_url_raw( OMAPI_Urls::upgrade( 'pluginMenu' ) ),
+					'callback' => '__return_null',
+				);
+				add_filter( 'om_add_inline_script', array( $this, 'addUpgradeUrlToJs' ), 10, 2 );
+			}
+
 			foreach ( $this->pages as $slug => $page ) {
 				$this->pages[ $slug ]['slug'] = $slug;
 			}
 		}
 
 		return $this->pages;
+	}
+
+	/**
+	 * Add the menu upgrade url to the data sento to the global JS file.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param array  $data    Array of data for JS.
+	 * @param string $handle The script handle.
+	 *
+	 * @return $data Array of data for JS.
+	 */
+	public function addUpgradeUrlToJs( $data, $handle ) {
+		if ( $this->base->plugin_slug . '-global' === $handle ) {
+			$data['upgradeUrl'] = esc_url_raw( OMAPI_Urls::upgrade( 'pluginMenu' ) );
+		}
+
+		return $data;
 	}
 
 	/**
@@ -308,6 +345,7 @@ class OMAPI_Pages {
 	public function render_app_loading_page() {
 		$this->load_scripts();
 		echo '<div id="om-app">';
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $this->base->output_view( 'archie-loading.php' );
 		echo '</div>';
 	}
@@ -352,15 +390,17 @@ class OMAPI_Pages {
 					'adminPath'       => $admin_parts['path'],
 					'apijsUrl'        => OPTINMONSTER_APIJS_URL,
 					'omAppUrl'        => untrailingslashit( OPTINMONSTER_APP_URL ),
+					'marketing'       => untrailingslashit( OPTINMONSTER_URL ),
 					'omAppApiUrl'     => untrailingslashit( OPTINMONSTER_API_URL ),
 					'omAppCdnURL'     => untrailingslashit( OPTINMONSTER_CDN_URL ),
 					'newCampaignUrl'  => untrailingslashit( esc_url_raw( admin_url( 'admin.php?page=optin-monster-templates' ) ) ),
+					'shareableUrl'    => untrailingslashit( OPTINMONSTER_SHAREABLE_LINK ),
 					'pluginPath'      => $url_parts['path'],
 					'omStaticDataKey' => 'omWpApi',
 					'isItWp'          => true,
 					// 'scriptPath'   => $path,
 					'pages'           => $pages,
-					'titleTag'        => $this->title_tag,
+					'titleTag'        => html_entity_decode( $this->title_tag ),
 					'isWooActive'     => OMAPI::is_woocommerce_active(),
 					'isWooConnected'  => OMAPI_WooCommerce::is_connected(),
 					'blogname'        => esc_attr( get_option( 'blogname' ) ),
@@ -368,8 +408,10 @@ class OMAPI_Pages {
 					'userFirstName'   => esc_attr( $current_user->user_firstname ),
 					'userLastName'    => esc_attr( $current_user->user_lastname ),
 					'betaVersion'     => $this->base->beta_version(),
+					'pluginVersion'   => $this->base->version,
 					'partnerId'       => OMAPI_Partners::get_id(),
 					'partnerUrl'      => OMAPI_Partners::has_partner_url(),
+					'showReview'      => $this->base->review->should_show_review(),
 				)
 			);
 

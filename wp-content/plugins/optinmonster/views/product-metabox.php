@@ -42,14 +42,14 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Increase Conversions', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_title']; ?>
+								<?php echo esc_html( $data['not_connected_title'] ); ?>
 							<?php endif; ?>
 						</strong></p>
 						<p class="secondary">
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Boost your store sales with one of OptinMonster\'s high-converting popup campaigns.', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_message']; ?>
+								<?php echo esc_html( $data['not_connected_message'] ); ?>
 							<?php endif; ?>
 						</p>
 						<div class="omapi-button-wrap">
@@ -100,14 +100,14 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Reduce Abandonment', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_title']; ?>
+								<?php echo esc_html( $data['not_connected_title'] ); ?>
 							<?php endif; ?>
 						</strong></p>
 						<p class="secondary">
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Grow your store revenue by getting more people to complete your checkout funnel with an OptinMonster Exit Intent® campaign.', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_message']; ?>
+								<?php echo esc_html( $data['not_connected_message'] ); ?>
 							<?php endif; ?>
 						</p>
 						<div class="omapi-button-wrap">
@@ -158,14 +158,14 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Cross Sell Popup', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_title']; ?>
+								<?php echo esc_html( $data['not_connected_title'] ); ?>
 							<?php endif; ?>
 						</strong></p>
 						<p class="secondary">
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Increase your average cart size and order value by promoting related products to your shoppers.', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_message']; ?>
+								<?php echo esc_html( $data['not_connected_message'] ); ?>
 							<?php endif; ?>
 						</p>
 						<div class="omapi-button-wrap">

@@ -26,8 +26,8 @@ $message2 = sprintf(
  */
 ?>
 body.om-campaigns-disabled.om-campaigns-disabled [data-type="optinmonster/campaign-selector"]:before {
-	content: '<?php echo $message; ?>';
+	content: '<?php echo esc_attr( $message ); ?>';
 }
 body.om-campaigns-disabled.om-campaigns-disabled .om-format-popover .components-popover__content:after {
-	content: '<?php echo $message2; ?>';
+	content: '<?php echo esc_attr( $message2 ); ?>';
 }

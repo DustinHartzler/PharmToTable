@@ -187,12 +187,12 @@ class OMAPI_Widget extends WP_Widget {
 		do_action( 'optin_monster_api_widget_before_form', $instance );
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title', 'optin-monster-api' ); ?></label>
-			<input id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%;" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'optin-monster-api' ); ?></label>
+			<input id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%;" />
 		</p>
 		<?php do_action( 'optin_monster_api_widget_middle_form', $instance ); ?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'optin_monster_id' ); ?>"><?php esc_html_e( 'Campaign', 'optin-monster-api' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'optin_monster_id' ) ); ?>"><?php esc_html_e( 'Campaign', 'optin-monster-api' ); ?></label>
 			<select id="<?php echo esc_attr( $this->get_field_id( 'optin_monster_id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'optin_monster_id' ) ); ?>" style="width: 100%;">
 				<?php if ( ! empty( $optins ) ) {
 					foreach ( $optins as $optin ) {
@@ -206,9 +206,9 @@ class OMAPI_Widget extends WP_Widget {
 
 						// Display disabled or enabled selection.
 						if ( $enabled ) {
-							echo '<option value="' . esc_attr( $optin->ID ) . '"' . selected( $optin->ID, $optin_id, false ) . '>' . $optin->post_title . '</option>';
+							echo '<option value="' . esc_attr( $optin->ID ) . '"' . selected( $optin->ID, $optin_id, false ) . '>' . esc_html( $optin->post_title ) . '</option>';
 						} else {
-							echo '<option value="' . esc_attr( $optin->ID ) . '" disabled="disabled"' . selected( $optin->ID, $optin_id, false ) . '>' . $optin->post_title . ' (' . esc_html__( 'Not Enabled', 'optin-monster-api' ) . ')</option>';
+							echo '<option value="' . esc_attr( $optin->ID ) . '" disabled="disabled"' . selected( $optin->ID, $optin_id, false ) . '>' . esc_html( $optin->post_title ) . ' (' . esc_html__( 'Not Enabled', 'optin-monster-api' ) . ')</option>';
 						}
 					}
 				}
@@ -216,8 +216,8 @@ class OMAPI_Widget extends WP_Widget {
 			</select>
 		</p>
 		<p>
-			<input id="<?php echo $this->get_field_id( 'followrules' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'followrules' ) ); ?>" type="checkbox" value="1" <?php checked( $followrules ); ?> />
-			<label for="<?php echo $this->get_field_id( 'followrules' ); ?>"><?php esc_html_e( 'Apply Advanced Output Settings?', 'optin-monster-api' ); ?></label>
+			<input id="<?php echo esc_attr( $this->get_field_id( 'followrules' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'followrules' ) ); ?>" type="checkbox" value="1" <?php checked( $followrules ); ?> />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'followrules' ) ); ?>"><?php esc_html_e( 'Apply Advanced Output Settings?', 'optin-monster-api' ); ?></label>
 		</p>
 		<?php
 

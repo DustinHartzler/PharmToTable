@@ -1,6 +1,92 @@
 # Changelog
 All notable changes to the OptinMonster plugin will be documented in this file.
 
+### 2.6.9 - 2021-11-30
+* Fixes a scenario where non-inline campaigns could be prevented from showing if inline campaigns are present.
+
+### 2.6.8 - 2021-11-16
+* Security hardening.
+* Fixed some output settings not working properly for shortcodes.
+* Address some confusion by updating shortcode output to have the `followrules` attribute on by default for new shortcodes, or to use the `optin-monster-inline` shortcode.
+* Fixed display of redundant errors in the OptinMonster settings pages.
+
+### 2.6.7 - 2021-11-03
+* Fix issue with Visual Composer when monsterlinks are not available to site.
+* Fix issue with tooltip not showing for Site Settings integration default setting.
+
+### 2.6.6 - 2021-10-27
+* Fix distinction between pages/single pages (as there is no page archive).
+* Fix UX issue where clicking the around checkboxes in output settings would sometimes result in the wrong field being checked.
+* Fix issue where Monster Links feature shown when not applicable.
+* Clean up output settings description in block editor sidebar.
+* Improve API requests by caching the results, where applicable.
+* Fixed styling for Gutenberg block on newer versions of WordPress.
+* Fixed Gutenberg Monster Link formatting errors when no text selected, on newer versions of WordPress.
+* Fixed errors for requests on the University page.
+* Fixed issue/conflict when site had a taxonomy registered with the slug of "categories".
+* Fixed "non-static method cannot be called statically" notice.
+
+### 2.6.5 - 2021-10-06
+* Security hardening, and improved notifications.
+
+### 2.6.1 - 2021-09-08
+* Fixed: Security hardening for campaign previews.
+* Updated the notification-fetch logic to not happen on every admin page-load.
+* Updated the review request notice to only shown when significant milestones are met.
+
+### 2.6.0 - 2021-08-10
+* Fix broken integration images for a few integrations.
+* Improved rules debug output for support.
+* Fixes for errors found in WordPress 4.8.
+* Fix onboarding issue where other plugins would redirect to their welcome pages.
+* Other syle improvements to the onboarding process.
+* Fix issue with onboarding process not being able to reopen the app's registration-completion window.
+* Add redirect to welcome page for when plugin is first installed.
+* Fix issuer where the site's default integration setting would not load the available options.
+* Fix styles for setting descriptions in site settings.
+
+### 2.5.2
+* Security hardening.
+
+### 2.5.1 - 2021-07-22
+* Fix issue with adblockers causing integration images not to be shown.
+
+### 2.5.0 - 2021-07-21
+* Fix the Shareable MonsterLink URL for campaigns.
+* Updated integration provider logo images, and prepared for new integrations.
+* Improved workflow for Onboarding Wizard.
+* Prevent wizard keyboard navigation when in input/textarea/form-element.
+* Added filters to many of the script-tags we output.
+
+### 2.4.2
+* Security hardening.
+
+### 2.4.1 - 2021-06-25
+* Fix "Cannot read property 'isDevelopment' of undefined" when connecting woocommerce.
+* Fix static modal positioning so page can scroll (when plugin has not been connected yet).
+
+### 2.4.0 - 2021-06-24
+* Introduce Integrations page to manage and add email integration services, Monster Leads settings, webhooks, zapier connections, etc.
+* Improved UX for select elements where posts/pages were displayed by adding the post/page ID to the label.
+* Addressed some UI issues for RTL language mode.
+* Updated dependencies in the javascript stack.
+* Removing extra "This account does not have any campaigns to retrieve" error.
+* Fixed an issue that could cause the Editor to break on Wordpress versions < 5.3.
+* Update shortcodes to handle the id paramater for back-compat.
+* Update classic editor shortcode button to use the slug parameter.
+* Fix bug causing "To receive the requested features, you will need to upgrade to Pro" notice to show, even after upgrading.
+* Fix preview-campaign not working when site is using OptinMonster custom domains.
+* Improved information in the support data output.
+
+### 2.3.4
+* Security hardening.
+
+### 2.3.3 - 2021-05-12
+* Prevent autoloading WooCommerce classes. Fixes error when Jetpack is active while activating WooCommerce.
+
+### 2.3.2 - 2021-05-05
+* Fixed an issue where the editor would not work in WordPress < 5.3.
+
 ### 2.3.1 - 2021-04-02
 * Fixed issues when multiple tinymce instances existed on a page (specifically, the double OptinMonster link button).
 * Fix console/blocking errors JS errors because specific data was missing on the page related to the OptinMonster Monster Link buttons.
@@ -29,6 +115,9 @@ All notable changes to the OptinMonster plugin will be documented in this file.
 * Fixed bug where output settings would conflict if a post and category had the same ID.
 * Fixed `WP_Scripts::localize` deprecation warning by switching to `wp_add_inline_script()` where applicable.
 
+### 2.2.1
+* Security hardening.
+
 ### 2.2.0 - 2021-02-18
 * Added Elementor Block and other integration.
 * Added WooCommerce Integrations.
@@ -44,6 +133,9 @@ All notable changes to the OptinMonster plugin will be documented in this file.
 * Fix help link in Gutenberg Block's sidebar settings.
 * Fix help link in Gutenberg Block when no campaigns have yet been created.
 * Added additional filter for filtering campaigns to embed on the frontend.
+
+### 2.1.2
+* Security hardening.
 
 ### 2.1.1 - 2021-01-20
 * Notifications improvements.
@@ -63,6 +155,9 @@ All notable changes to the OptinMonster plugin will be documented in this file.
 * Include javascript source map files in build to prevent console notices.
 * Improved account-upgrade workflow.
 * Improved request performance on campaigns page.
+
+### 2.0.4
+* Security hardening.
 
 ### 2.0.3 - 2020-12-07
 * Updates the "get started" interface to be more intuitive for existing users.

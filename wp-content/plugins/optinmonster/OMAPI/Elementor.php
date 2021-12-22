@@ -84,7 +84,8 @@ class OMAPI_Elementor {
 	 * @since 2.2.0
 	 */
 	public function editor_assets() {
-		if ( empty( $_GET['action'] ) || 'elementor' !== $_GET['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		 // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( empty( $_GET['action'] ) || 'elementor' !== $_GET['action'] ) {
 			return;
 		}
 

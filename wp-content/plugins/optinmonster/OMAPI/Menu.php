@@ -107,6 +107,9 @@ class OMAPI_Menu {
 			add_filter( 'admin_body_class', array( $this, 'admin_body_classes' ) );
 
 			add_filter( 'plugin_action_links_' . plugin_basename( OMAPI_FILE ), array( $this, 'output_plugin_links' ) );
+
+			// Add upgrade link to plugin page.
+			add_filter( 'plugin_row_meta', array( $this, 'maybe_add_upgrade_link' ), 10, 2 );
 		}
 	}
 
@@ -200,7 +203,7 @@ class OMAPI_Menu {
 		// Make sure the about page is still the last page.
 		if ( isset( $submenu[ self::SLUG ] ) ) {
 			$after  = array();
-			$at_end = array( 'optin-monster-about' );
+			$at_end = array( 'optin-monster-about', 'optin-monster-upgrade' );
 			foreach ( $submenu[ self::SLUG ] as $key => $menu ) {
 				if ( isset( $menu[2] ) && in_array( $menu[2], $at_end ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 					$after[] = $menu;
@@ -242,6 +245,40 @@ class OMAPI_Menu {
 			);
 
 		$links = array_merge( $new_links, $links );
+
+		return $links;
+	}
+
+	/**
+	 * Add upgrade link to the plugin row.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param  array  $links Default plugin row links.
+	 * @param string $file  The plugin file.
+	 *
+	 * @return array The links array.
+	 */
+	public function maybe_add_upgrade_link( $links, $file ) {
+		if ( $file === plugin_basename( OMAPI_FILE ) ) {
+
+			// If user upgradeable, let's put an upgrade link.
+			$level = $this->base->can_upgrade();
+			if ( $level ) {
+				$label = 'vbp_pro' === $level
+					? __( 'Upgrade to Growth', 'optin-monster-api' )
+					: __( 'Upgrade to Pro', 'optin-monster-api' );
+
+				$upgradeLink = sprintf(
+					'<a href="%s" aria-label="%s" target="_blank" rel="noopener">%s</a>',
+					esc_url_raw( OMAPI_Urls::upgrade( 'plugin_row_meta' ) ),
+					$label,
+					$label
+				);
+
+				array_splice( $links, 1, 0, array( $upgradeLink ) );
+			}
+		}
 
 		return $links;
 	}
@@ -290,7 +327,8 @@ class OMAPI_Menu {
 				return true;
 			}
 		} else {
-			$page = isset( $_GET['page'] ) ? $_GET['page'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 		}
 
 		return false !== strpos( $page, 'optin-monster' );

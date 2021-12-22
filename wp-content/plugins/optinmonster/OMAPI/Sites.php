@@ -91,6 +91,7 @@ class OMAPI_Sites {
 			'siteId'       => '',
 			'siteIds'      => array(),
 			'customApiUrl' => '',
+			'apiCname'     => '',
 		);
 
 		$domain = $this->get_domain();
@@ -121,7 +122,7 @@ class OMAPI_Sites {
 				}
 
 				// Do we have a custom cnamed api url to use?
-				if ( $site->settings->enableCustomCnames && $check_cnames ) {
+				if ( $check_cnames && $site->settings->enableCustomCnames ) {
 
 					$found = false;
 					if ( $site->settings->cdnCname && $site->settings->cdnCnameVerified ) {
@@ -130,13 +131,12 @@ class OMAPI_Sites {
 						$results['customApiUrl'] = 'https://' . $site->settings->cdnUrl . '/app/js/api.min.js';
 						$found                   = true;
 
-					// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedElseif
-					} elseif ( $site->settings->apiCname && $site->settings->apiCnameVerified ) {
-						// phpcs:disable Squiz.Commenting.InlineComment.InvalidEndChar
-						// Not sure if this will wreak havoc during verification of the domains, so leaving it commented out for now.
-						// $results['customApiUrl'] = 'https://' . $site->settings->apiUrl . '/a/app/js/api.min.js';
-						// $found = true;
-						// phpcs:enable
+						if (
+							! empty( $site->settings->apiCname )
+							&& ! empty( $site->settings->apiCnameVerified )
+						) {
+							$results['apiCname'] = $site->settings->apiCname;
+						}
 					}
 
 					// If this isn't a wildcard domain, and we found a custom api url, we don't

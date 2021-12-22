@@ -14,42 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Rules exception base class.
- *
- * @since 1.5.0
- */
-class OMAPI_Rules_Exception extends Exception {
-	protected $bool       = null;
-	protected $exceptions = array();
-	public function __construct( $message = null, $code = 0, Exception $previous = null ) {
-		if ( is_bool( $message ) ) {
-			$this->bool = $message;
-			$message    = null;
-		}
-		parent::__construct( $message, $code, $previous );
-	}
-
-	public function get_bool() {
-		return $this->bool;
-	}
-
-	public function add_exceptions( array $exceptions ) {
-		$this->exceptions = $exceptions;
-	}
-
-	public function get_exceptions() {
-		return (array) $this->exceptions;
-	}
-
-}
-class OMAPI_Rules_False extends OMAPI_Rules_Exception {
-	protected $bool = false;
-}
-class OMAPI_Rules_True extends OMAPI_Rules_Exception {
-	protected $bool = true;
-}
-
-/**
  * Rules class.
  *
  * @since 1.5.0
@@ -309,6 +273,7 @@ class OMAPI_Rules {
 			$this->default_checks();
 			$this->woocommerce_checks();
 			$this->include_if_inline_and_automatic_and_no_advanced_settings();
+			$this->include_if_shortcode_and_no_advanced_settings();
 			$this->output_if_global_override();
 
 			$e = new OMAPI_Rules_False( 'default no show' );
@@ -320,13 +285,16 @@ class OMAPI_Rules {
 			throw $e;
 
 		} catch ( OMAPI_Rules_Exception $e ) {
+
+			$e = apply_filters( 'optinmonster_check_should_output', $e, $this );
+
 			$this->caught  = $e;
 			$should_output = $e instanceof OMAPI_Rules_True;
 		}
 
 		// If query var is set and user can manage OM, output debug data.
-		if ( $this->can_output_debug() ) {
-			$this->output_debug();
+		if ( OMAPI_Debug::can_output_debug() ) {
+			$this->output_rules_debug();
 		}
 
 		return $should_output;
@@ -498,7 +466,7 @@ class OMAPI_Rules {
 		// Check if we should show on a selected singular post type.
 		if ( $this->field_not_empty_array( 'show' ) ) {
 			foreach ( $this->get_field_value( 'show' ) as $show_value ) {
-				if ( 0 ===  strpos( $show_value, 'singular___' ) ) {
+				if ( 0 === strpos( $show_value, 'singular___' ) ) {
 					$post_type = str_replace( 'singular___', '', $show_value );
 					if ( is_singular( $post_type ) ) {
 						throw new OMAPI_Rules_True( 'include on singular post type: ' . $post_type );
@@ -577,6 +545,23 @@ class OMAPI_Rules {
 	}
 
 	/**
+	 * Enable campaign to show if it is a shortcode and there are no advanced settings.
+	 *
+	 * @since 2.6.8
+	 *
+	 * @throws OMAPI_Rules_True
+	 * @return void
+	 */
+	public function include_if_shortcode_and_no_advanced_settings() {
+		if (
+			empty( $this->advanced_settings )
+			&& 'shortcode' === $this->is_inline_check
+		) {
+			throw new OMAPI_Rules_True( 'include if shortcode and no advanced settings' );
+		}
+	}
+
+	/**
 	 * Enable campaign to show if it's global override to show is still true.'
 	 *
 	 * @since  1.5.0
@@ -647,6 +632,21 @@ class OMAPI_Rules {
 			throw new OMAPI_Rules_True( 'post on category' );
 		}
 
+		$tax = get_taxonomy( 'category' );
+		if (
+			! empty( $tax->object_type )
+			&& ! in_array( get_post_type( $this->post_id ), $tax->object_type, true )
+		) {
+
+			unset( $this->advanced_settings['categories'] );
+			throw new OMAPI_Rules_False(
+				sprintf(
+					'categories not associated with this post-type (%s).',
+					get_post_type( $this->post_id )
+				)
+			);
+		}
+
 		throw new OMAPI_Rules_False( 'no category matches found' );
 	}
 
@@ -661,7 +661,7 @@ class OMAPI_Rules {
 			foreach ( $values as $i => $value ) {
 				if ( OMAPI_Utils::field_not_empty_array( $values, $i ) ) {
 					$this->global_override                 = false;
-					$this->advanced_settings['taxonomies'] = $values;
+					$this->advanced_settings['taxonomies'] = $taxonomies;
 					break;
 				}
 			}
@@ -688,15 +688,23 @@ class OMAPI_Rules {
 			$ids_to_check = (array) $ids_to_check;
 
 			if ( $this->post_id ) {
-				$all_terms = get_the_terms( $this->post_id, $taxonomy );
+				$tax       = get_taxonomy( $taxonomy );
+				$post_type = get_post_type( $this->post_id );
 
-				if ( ! empty( $all_terms ) ) {
-					foreach ( $all_terms as $term ) {
-						// TODO: determine why this logic is different than in check_categories_field.
-						if ( in_array( $term->term_id, $ids_to_check ) ) {
-							throw new OMAPI_Rules_True( "post has $taxonomy $term->name" );
+				$valid = ! empty( $tax->object_type ) && in_array( $post_type, $tax->object_type, true );
+
+				if ( $valid ) {
+					$all_terms = get_the_terms( $this->post_id, $taxonomy );
+					if ( ! empty( $all_terms ) ) {
+						foreach ( $all_terms as $term ) {
+							// TODO: determine why this logic is different than in check_categories_field.
+							if ( in_array( $term->term_id, $ids_to_check ) ) {
+								throw new OMAPI_Rules_True( "{$post_type} has {$taxonomy} {$term->name}" );
+							}
 						}
 					}
+				} else {
+					unset( $this->advanced_settings['taxonomies'][ $taxonomy ] );
 				}
 			}
 
@@ -706,6 +714,19 @@ class OMAPI_Rules {
 						throw new OMAPI_Rules_True( "not inline and is on $taxonomy archive" );
 					}
 				}
+			}
+		}
+
+		if ( isset( $this->advanced_settings['taxonomies'] ) ) {
+			$taxonomies = array_filter( $this->advanced_settings['taxonomies'] );
+			if ( empty( $taxonomies ) ) {
+				unset( $this->advanced_settings['taxonomies'] );
+				throw new OMAPI_Rules_False(
+					sprintf(
+						'taxonomies not associated with this post-type (%s).',
+						get_post_type( $this->post_id )
+					)
+				);
 			}
 		}
 
@@ -782,81 +803,31 @@ class OMAPI_Rules {
 	}
 
 	/**
-	 * Check if rules debug can be output.
-	 *
-	 * @since  2.0.0
-	 *
-	 * @return bool
-	 */
-	public function can_output_debug() {
-		$rules_debug = ! empty( $_GET['omwpdebug'] ) ? $_GET['omwpdebug'] : '';
-
-		if ( $rules_debug ) {
-			$omapi         = OMAPI::get_instance();
-			$disable       = 'off' === $rules_debug;
-			$decoded       = base64_decode( base64_decode( $rules_debug ) );
-			$debug_enabled = $omapi->get_option( 'api', 'omwpdebug' );
-			$creds         = $omapi->get_api_credentials();
-			if (
-				! empty( $creds['apikey'] )
-				&& ( $decoded === $creds['apikey'] || $disable )
-			) {
-
-				$option = $omapi->get_option();
-
-				if ( $disable ) {
-					unset( $option['api']['omwpdebug'] );
-					$debug_enabled = false;
-				} else {
-					$option['api']['omwpdebug'] = true;
-					$debug_enabled = true;
-				}
-				update_option( 'optin_monster_api', $option );
-			}
-
-			$rules_debug = $debug_enabled || is_user_logged_in() && $omapi->can_access( 'rules_debug' );
-		}
-
-		// If query var is set and user can manage OM, output debug data.
-		return apply_filters( 'optin_monster_api_should_output_rules_debug', ! empty( $rules_debug ) );
-	}
-
-	/**
 	 * Outputs some debug data for the current campaign object.
 	 *
 	 * @since  1.6.2
 	 *
 	 * @return void
 	 */
-	protected function output_debug() {
-		$show = $this->caught instanceof OMAPI_Rules_True;
+	protected function output_rules_debug() {
+		$show    = $this->caught instanceof OMAPI_Rules_True;
+		$reasons = $this->caught->get_exception_messages();
 
-		echo '<xmp class="_om-campaign-sep">' . str_repeat( '-', 10 ) . $this->optin->post_name . str_repeat( '-', 10 ) . '</xmp>';;
-		echo '<xmp class="_om-post-id">$post_id: ' . print_r( $this->post_id, true ) . '</xmp>';
-		echo '<xmp class="_om-post-id">$debug_enabled: ' . print_r( OMAPI::get_instance()->get_option( 'api', 'omwpdebug' ), true ) . '</xmp>';
-		echo '<xmp class="_om-campaign-status" style="color: ' . ( $show ? 'green' : 'red' ) . ';">' . $this->optin->post_name . ":\n" . print_r( $this->caught->getMessage(), true );
-		$reasons = $this->caught->get_exceptions();
-		if ( ! empty( $reasons ) ) {
-			$messages = array();
-			foreach ( $reasons as $e ) {
-				$messages[] = $e->getMessage();
-			}
-
-			echo ":\n\t- " . implode( "\n\t- ", $messages );
-		}
-		echo '</xmp>';
-
-		if ( ! empty( $this->advanced_settings ) ) {
-			echo '<xmp class="_om-advanced-settings">$advanced_settings: ' . print_r( $this->advanced_settings, true ) . '</xmp>';
-		}
-
-		if ( ! empty( $this->field_values ) ) {
-			echo '<xmp class="_om-field-values" style="display:none;">$field_values: ' . print_r( $this->field_values, true ) . '</xmp>';
-		}
-
-		echo '<xmp class="_om-is-inline-check" style="display:none;">$is_inline_check?: ' . print_r( $this->is_inline_check, true ) . '</xmp>';
-		echo '<xmp class="_om-global-override" style="display:none;">$global_override?: ' . print_r( $this->global_override, true ) . '</xmp>';
-		echo '<xmp class="_om-optin" style="display:none;">$optin: ' . print_r( $this->optin, true ) . '</xmp>';
+		?>
+		<xmp class="_om-debugging _om-campaign-sep"><?php echo esc_html( str_repeat( '-', 10 ) . $this->optin->post_name . str_repeat( '-', 10 ) ); ?></xmp>
+		<xmp class="_om-debugging _om-post-id">$post_id: <?php echo esc_html( print_r( $this->post_id, true ) ); ?></xmp>
+		<xmp class="_om-debugging _om-post-id">$debug_setting_enabled: <?php echo esc_html( print_r( OMAPI::get_instance()->get_option( 'api', 'omwpdebug' ), true ) ); ?></xmp>
+		<xmp class="_om-debugging _om-campaign-status" style="color: <?php echo ( $show ? 'green' : 'red' ); ?>;"><?php echo esc_html( $this->optin->post_name . ":\n" . print_r( $this->caught->getMessage(), true ) ); ?><?php echo ! empty( $reasons ) ? ":\n\t- " . implode( "\n\t- ", array_map( 'esc_html', $reasons ) ) : ''; ?>
+		</xmp>
+		<?php if ( ! empty( $this->advanced_settings ) ) { ?>
+			<xmp class="_om-debugging _om-advanced-settings">$advanced_settings: <?php print_r( $this->advanced_settings ); ?></xmp>
+		<?php } ?>
+		<?php if ( ! empty( $this->field_values ) ) { ?>
+			<xmp class="_om-debugging _om-field-values" style="display:none;">$field_values: <?php print_r( $this->field_values ); ?></xmp>
+		<?php } ?>
+		<xmp class="_om-debugging _om-is-inline-check" style="display:none;">$is_inline_check?: <?php echo esc_html( print_r( $this->is_inline_check, true ) ); ?></xmp>
+		<xmp class="_om-debugging _om-global-override" style="display:none;">$global_override?: <?php echo esc_html( print_r( $this->global_override, true ) ); ?></xmp>
+		<xmp class="_om-debugging _om-optin" style="display:none;">$optin: <?php print_r( $this->optin ); ?></xmp>
+		<?php
 	}
-
 }

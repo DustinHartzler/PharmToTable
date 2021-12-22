@@ -60,11 +60,7 @@ class OMAPI_Ajax {
 		// Load non-WordPress style ajax requests.
 		// phpcs:ignore Generic.Commenting.Todo.TaskFound
 		// TODO move all of this to RestApi, and use rest api for these requests!
-		if ( isset( $_REQUEST['optin-monster-ajax-route'] ) && $_REQUEST['optin-monster-ajax-route'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_REQUEST['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				add_action( 'init', array( $this, 'ajax' ), 999 );
-			}
-		}
+		add_action( 'init', array( $this, 'ajax' ), 999 );
 	}
 
 	/**
@@ -83,8 +79,16 @@ class OMAPI_Ajax {
 	 * @since 1.0.0
 	 */
 	public function ajax() {
+		if (
+			! isset( $_REQUEST['action'] )
+			|| empty( $_REQUEST['optin-monster-ajax-route'] )
+		) {
+			return;
+		}
 
-		switch ( $_REQUEST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		check_ajax_referer( 'omapi', 'nonce' );
+
+		switch ( $_REQUEST['action'] ) {
 			case 'mailpoet':
 				$this->base->mailpoet->handle_ajax_call();
 				break;

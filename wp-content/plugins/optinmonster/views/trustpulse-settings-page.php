@@ -16,7 +16,7 @@
 	<div class="tp-features">
 		<div class="tp-feature tp-feature--text-right">
 			<div class="tp-feature__image">
-				<img src="<?php echo $this->url . 'assets/css/images/features-event.svg'; ?>" alt="Real-Time Event Tracking">
+				<img src="<?php echo esc_url( $this->url . 'assets/css/images/features-event.svg' ); ?>" alt="Real-Time Event Tracking">
 			</div>
 			<div class="tp-feature__text">
 				<h3>Real-Time Event Tracking</h3>
@@ -25,7 +25,7 @@
 		</div>
 		<div class="tp-feature tp-feature--text-left">
 			<div class="tp-feature__image">
-				<img src="<?php echo $this->url . 'assets/css/images/features-fire.svg'; ?>" alt="On Fire Notifications">
+				<img src="<?php echo esc_url( $this->url . 'assets/css/images/features-fire.svg' ); ?>" alt="On Fire Notifications">
 			</div>
 			<div class="tp-feature__text">
 				<h3>"On Fire" Notifications</h3>
@@ -34,7 +34,7 @@
 		</div>
 		<div class="tp-feature tp-feature--text-right">
 			<div class="tp-feature__image">
-				<img src="<?php echo $this->url . 'assets/css/images/home-smart-targeting.svg'; ?>" alt="Real-Time Event Tracking">
+				<img src="<?php echo esc_url( $this->url . 'assets/css/images/home-smart-targeting.svg' ); ?>" alt="Real-Time Event Tracking">
 			</div>
 			<div class="tp-feature__text">
 				<h3>Smart Targeting</h3>
@@ -43,7 +43,7 @@
 		</div>
 		<div class="tp-feature tp-feature--text-left">
 			<div class="tp-feature__image">
-				<img src="<?php echo $this->url . 'assets/css/images/home-flexible.svg'; ?>" alt="Smart Targeting">
+				<img src="<?php echo esc_url( $this->url . 'assets/css/images/home-flexible.svg' ); ?>" alt="Smart Targeting">
 			</div>
 			<div class="tp-feature__text">
 				<h3>Flexible Design Options</h3>
@@ -54,15 +54,15 @@
 	<div class="tp-works-on">
 		<h2 class="tp-heading">TrustPulse works with all popular form and ecommerce plugins<br>for WordPress</h2>
 		<div class="tp-works-on__icons">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/wpforms.png'; ?>" alt="WP Forms">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/logo-om.png'; ?>" alt="OptinMonster">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/woocommerce_logo.png'; ?>" alt="WooCommerce">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/logo-edd.png'; ?>" alt="Easy Digital Downloads">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/BigCommerce-logo.png'; ?>" alt="BigCommerce">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/ninja-forms.png'; ?>" alt="Ninja Forms">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/gravity-forms.png'; ?>" alt="Gravity Forms">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/memberpress-logo.svg'; ?>" alt="MemberPress">
-			<img class="tp-works-on__icon" src="<?php echo $this->url . 'assets/css/images/logo-formidable.png'; ?>" alt="Formidable">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/wpforms.png' ); ?>" alt="WP Forms">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/logo-om.png' ); ?>" alt="OptinMonster">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/woocommerce_logo.png' ); ?>" alt="WooCommerce">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/logo-edd.png' ); ?>" alt="Easy Digital Downloads">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/BigCommerce-logo.png' ); ?>" alt="BigCommerce">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/ninja-forms.png' ); ?>" alt="Ninja Forms">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/gravity-forms.png' ); ?>" alt="Gravity Forms">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/memberpress-logo.svg' ); ?>" alt="MemberPress">
+			<img class="tp-works-on__icon" src="<?php echo esc_url( $this->url . 'assets/css/images/logo-formidable.png' ); ?>" alt="Formidable">
 		</div>
 	</div>
 </div>

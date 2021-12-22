@@ -42,7 +42,7 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Did you know that creating a sticky bar to promote your coupon can help you increase sales?', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_title']; ?>
+								<?php echo esc_html( $data['not_connected_title'] ); ?>
 							<?php endif; ?>
 						</strong></p>
 						<p class="secondary">
@@ -50,7 +50,7 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 								<?php esc_html_e( 'See how one store owner added $23,700 in 5 months with a coupon promoted by an OptinMonster sticky bar.', 'optin-monster-api' ); ?>
 								<a href="https://optinmonster.com/freemium-software-company-unlocked-7000-anonymous-leads-using-popups/?utm_source=WordPress&utm_medium=WooCouponMetabox&utm_campaign=Plugin" class="omapi-metabox__arrow-after omapi-metabox__link-style" target="_blank" rel="noopener"><?php esc_html_e( 'View Case Study', 'optin-monster-api' ); ?></a>
 							<?php else : ?>
-								<?php echo $data['not_connected_message']; ?>
+								<?php echo esc_html( $data['not_connected_message'] ); ?>
 							<?php endif; ?>
 						</p>
 						<div class="omapi-button-wrap">
@@ -74,7 +74,7 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Encourage purchases with a coupon popup!', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_title']; ?>
+								<?php echo esc_html( $data['not_connected_title'] ); ?>
 							<?php endif; ?>
 						</strong></p>
 						<p class="secondary">
@@ -82,7 +82,7 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 								<?php esc_html_e( 'See how this store owner increased revenue by 300% using an OptinMonster coupon popup.', 'optin-monster-api' ); ?>
 								<a href="https://optinmonster.com/case-study-how-win-in-health-used-optinmonster-to-increase-revenue-by-300/?utm_source=WordPress&utm_medium=WooCouponMetabox&utm_campaign=Plugin" class="omapi-metabox__arrow-after omapi-metabox__link-style" target="_blank" rel="noopener"><?php esc_html_e( 'View Case Study', 'optin-monster-api' ); ?></a>
 							<?php else : ?>
-								<?php echo $data['not_connected_message']; ?>
+								<?php echo esc_html( $data['not_connected_message'] ); ?>
 							<?php endif; ?>
 						</p>
 						<div class="omapi-button-wrap">
@@ -106,7 +106,7 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 							<?php if ( $data['has_sites'] ) : ?>
 								<?php esc_html_e( 'Gamified coupon wheels work! Create one for your store and watch sales grow!', 'optin-monster-api' ); ?>
 							<?php else : ?>
-								<?php echo $data['not_connected_title']; ?>
+								<?php echo esc_html( $data['not_connected_title'] ); ?>
 							<?php endif; ?>
 						</strong></p>
 						<p class="secondary">
@@ -114,7 +114,7 @@ $svgpath = plugin_dir_path( OMAPI_FILE ) . '/assets/images/icons/';
 								<?php esc_html_e( 'Learn how to create a gamified coupon wheel popup yourself with our step-by-step tutorial.', 'optin-monster-api' ); ?>
 								<a href="https://optinmonster.com/coupon-wheel-campaign/?utm_source=WordPress&utm_medium=WooCouponMetabox&utm_campaign=Plugin" class="omapi-metabox__arrow-after omapi-metabox__link-style" target="_blank" rel="noopener"><?php esc_html_e( 'View the Tutorial', 'optin-monster-api' ); ?></a>
 							<?php else : ?>
-								<?php echo $data['not_connected_message']; ?>
+								<?php echo esc_html( $data['not_connected_message'] ); ?>
 							<?php endif; ?>
 						</p>
 						<div class="omapi-button-wrap">

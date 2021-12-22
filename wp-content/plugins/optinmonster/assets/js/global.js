@@ -5,15 +5,10 @@
  * https://awesomemotive.com
  * ========================================================== */
 window.OMAPI_Global = window.OMAPI_Global || {};
-
 (function (window, document, $, app, undefined) {
 	'use strict';
 
-	app.init = function () {
-		// If the app is running, we don't need to proceed.
-		if (window.omWpApi) {
-			return;
-		}
+	app.updateNotifications = function () {
 		$.ajax({
 			async: true,
 			url: app.url,
@@ -21,14 +16,13 @@ window.OMAPI_Global = window.OMAPI_Global || {};
 				'x-wp-nonce': app.nonce,
 			},
 		}).done(function (response) {
-			// If the app is running, we don't need to proceed.
+			// If the app is running, we don't need to proceed (the app handles it).
 			if (window.omWpApi) {
 				return;
 			}
 
 			var total = response.length;
-			var $menu = $(document.getElementById('toplevel_page_optin-monster-dashboard'));
-			var $name = $menu.find('.toplevel_page_optin-monster-dashboard .wp-menu-name');
+			var $name = app.$.menu.find('.toplevel_page_optin-monster-dashboard .wp-menu-name');
 			var $count = $name.find('.om-notifications-count');
 			var countString = String(total);
 			var classes = 'om-notifications-count update-plugins count-' + countString;
@@ -46,6 +40,25 @@ window.OMAPI_Global = window.OMAPI_Global || {};
 				);
 			}
 		});
+	};
+
+	app.init = function () {
+		app.$ = {
+			menu: $(document.getElementById('toplevel_page_optin-monster-dashboard')),
+		};
+
+		if (app.upgradeUrl) {
+			app.$.menu
+				.find('.wp-submenu [href="admin.php?page=optin-monster-upgrade"]')
+				.attr('target', '_blank')
+				.attr('rel', 'noopener')
+				.attr('href', app.upgradeUrl);
+		}
+
+		// If the app is not running, and we should fetch updated notifications...
+		if (!window.omWpApi && app.fetchNotifications) {
+			app.updateNotifications();
+		}
 	};
 
 	$(app.init);

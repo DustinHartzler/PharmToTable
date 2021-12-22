@@ -48,6 +48,15 @@ class OMAPI_Shortcode {
 	public $base;
 
 	/**
+	 * Holds the OMAPI_Shortcodes_Shortcode object.
+	 *
+	 * @since 2.6.9
+	 *
+	 * @var object
+	 */
+	public $shortcode;
+
+	/**
 	 * Primary class constructor.
 	 *
 	 * @since 1.0.0
@@ -60,9 +69,9 @@ class OMAPI_Shortcode {
 		// Load actions and filters.
 		add_shortcode( 'optin-monster', array( $this, 'shortcode' ) );
 		add_shortcode( 'optin-monster-shortcode', array( $this, 'shortcode_v1' ) );
+		add_shortcode( 'optin-monster-inline', array( $this, 'inline_campaign_shortcode_with_rules' ) );
 		add_filter( 'widget_text', 'shortcode_unautop' );
 		add_filter( 'widget_text', 'do_shortcode' );
-
 	}
 
 	/**
@@ -71,10 +80,8 @@ class OMAPI_Shortcode {
 	 * @since 1.0.0
 	 */
 	public function set() {
-
 		self::$instance = $this;
 		$this->base     = OMAPI::get_instance();
-
 	}
 
 	/**
@@ -85,73 +92,19 @@ class OMAPI_Shortcode {
 	 * @global object $post The current post object.
 	 *
 	 * @param array $atts Array of shortcode attributes.
-	 * @return string     The optin output.
+	 *
+	 * @return string The shortcode HTML output.
 	 */
 	public function shortcode( $atts ) {
-
-		// Checking if AMP is enabled.
-		if ( OMAPI_Utils::is_amp_enabled() ) {
-			return;
-		}
-
 		global $post;
+		$this->shortcode = new OMAPI_Shortcodes_Shortcode( $atts, $post );
 
-		// Merge default attributes with passed attributes.
-		$atts = shortcode_atts(
-			array(
-				'slug'        => '',
-				'followrules' => 'false',
-				// id attribute is deprecated.
-				'id'          => '',
-			),
-			$atts,
-			'optin-monster'
-		);
-
-		$optin_id = false;
-		if ( ! empty( $atts['id'] ) ) {
-			$optin_id = absint( $atts['id'] );
-		} elseif ( isset( $atts['slug'] ) ) {
-				$optin = $this->base->get_optin_by_slug( $atts['slug'] );
-			if ( $optin ) {
-				 $optin_id = $optin->ID;
-			}
-		} else {
-			// A custom attribute must have been passed. Allow it to be filtered to grab the optin ID from a custom source.
-			$optin_id = apply_filters( 'optin_monster_api_custom_optin_id', false, $atts, $post );
+		try {
+			return $this->shortcode->handle();
+		} catch ( Exception $e ) {
 		}
 
-		// Allow the optin ID to be filtered before it is stored and used to create the optin output.
-		$optin_id = apply_filters( 'optin_monster_api_pre_optin_id', $optin_id, $atts, $post );
-
-		// If there is no optin, do nothing.
-		if ( ! $optin_id ) {
-			return false;
-		}
-
-		if ( empty( $optin->ID ) || (int) $optin_id !== (int) $optin->ID ) {
-			$optin = $this->base->get_optin( $optin_id );
-		}
-
-		// Try to grab the stored HTML.
-		$html = $this->base->output->prepare_campaign( $optin );
-		if ( ! $html ) {
-			return false;
-		}
-
-		if (
-			wp_validate_boolean( $atts['followrules'] )
-			// Do OMAPI Output rules check.
-			&& ! OMAPI_Rules::check_shortcode( $optin, $post->ID )
-		) {
-			return false;
-		}
-
-		// Make sure to apply shortcode filtering.
-		$this->base->output->set_slug( $optin );
-
-		// Return the HTML.
-		return $html;
+		return '';
 	}
 
 	/**
@@ -159,18 +112,68 @@ class OMAPI_Shortcode {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @global object $post The current post object.
-	 *
 	 * @param array $atts Array of shortcode attributes.
-	 * @return string     The optin output.
+	 *
+	 * @return string The shortcode HTML output.
 	 */
 	public function shortcode_v1( $atts ) {
-
 		// Run the v2 implementation.
-		$atts['slug'] = $atts['id'];
-		unset( $atts['id'] );
+		if ( ! empty( $atts['id'] ) ) {
+			$atts['slug'] = $atts['id'];
+			unset( $atts['id'] );
+		}
 
 		return $this->shortcode( $atts );
+	}
+
+	/**
+	 * Creates the inline campaign shortcode, with followrules defaulted to true.
+	 *
+	 * @since 2.6.8
+	 *
+	 * @param array $atts Array of shortcode attributes.
+	 *
+	 * @return string The shortcode HTML output.
+	 */
+	public function inline_campaign_shortcode_with_rules( $atts = array() ) {
+		global $post;
+
+		$html            = '';
+		$this->shortcode = new OMAPI_Shortcodes_Shortcode( $atts, $post );
+
+		try {
+			add_filter( 'optinmonster_check_should_output', array( $this, 'reject_non_inline_campaigns' ), 10, 2 );
+			$html = $this->shortcode->handle_inline();
+		} catch ( Exception $e ) {
+		}
+
+		remove_filter( 'optinmonster_check_should_output', array( $this, 'reject_non_inline_campaigns' ), 10, 2 );
+
+		return $html;
+	}
+
+	/**
+	 * Checks if optin type is inline, and rejects (returns html comment) if not.
+	 *
+	 * @since 2.6.8
+	 *
+	 * @param  OMAPI_Rules_Exception $e A rules exception object.
+	 * @param  OMAPI_Rules           $rules The rules object.
+	 *
+	 * @return OMAPI_Rules_Exception A rules exception object.
+	 */
+	public function reject_non_inline_campaigns( $e, $rules ) {
+		if (
+			! empty( $rules->optin->campaign_type )
+			&& ! empty( $rules->optin->ID )
+			&& ! empty( $this->shortcode->optin->ID )
+			&& (int) $this->shortcode->optin->ID === (int) $rules->optin->ID
+			&& 'inline' !== $rules->optin->campaign_type
+		) {
+			$e = new OMAPI_Rules_False( 'campaign not inline for optin-monster-inline shortcode' );
+		}
+
+		return $e;
 	}
 
 }

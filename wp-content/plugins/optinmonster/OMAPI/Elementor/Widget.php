@@ -553,7 +553,8 @@ class OMAPI_Elementor_Widget extends Widget_Base {
 	 * @since 2.2.0
 	 */
 	public function render_plain_content() {
-		echo $this->get_shortcode_output(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $this->get_shortcode_output();
 	}
 
 	/**

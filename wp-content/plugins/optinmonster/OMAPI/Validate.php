@@ -111,14 +111,21 @@ class OMAPI_Validate {
 	public function validate() {
 
 		$creds = $this->base->get_api_credentials();
+		if (
+			empty( $creds['apikey'] )
+			&& empty( $creds['user'] )
+			&& empty( $creds['key'] )
+		) {
+			return;
+		}
 
 		// Check for new apikey and only use the old user/key if we don't have it.
-		if ( ! $creds['apikey'] ) {
+		if ( empty( $creds['apikey'] ) ) {
 			$api = new OMAPI_Api(
 				'validate/',
 				array(
-					'user' => $creds['user'],
-					'key'  => $creds['key'],
+					'user' => ! empty( $creds['user'] ) ? $creds['user'] : '',
+					'key'  => ! empty( $creds['key'] ) ? $creds['key'] : '',
 				)
 			);
 		} else {
@@ -174,7 +181,8 @@ class OMAPI_Validate {
 	public function notices() {
 
 		global $pagenow;
-		$page = isset( $_GET['page'] ) ? $_GET['page'] : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
 		$option = $this->base->get_option();
 		if ( isset( $option['is_invalid'] ) && $option['is_invalid'] ) {
@@ -186,10 +194,10 @@ class OMAPI_Validate {
 			}
 		} elseif ( isset( $option['is_disabled'] ) && $option['is_disabled'] ) {
 			echo '<div class="notice notice-error"><p>' . esc_html__( 'The subscription to this OptinMonster account has been disabled, likely due to a refund or other administrator action. Please contact OptinMonster support to resolve this issue.', 'optin-monster-api' ) . '</p>';
-			echo '<p><a href="' . OPTINMONSTER_APP_URL . '/account/support/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpdashboard" class="button button-primary button-large omapi-new-optin" title="' . esc_html__( 'Contact OptinMonster Support', 'optin-monster-api' ) . '" target="_blank">' . esc_html__( 'Contact Support', 'optin-monster-api' ) . '</a></p></div>';
+			echo '<p><a href="' . esc_url( OPTINMONSTER_APP_URL ) . '/account/support/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpdashboard" class="button button-primary button-large omapi-new-optin" title="' . esc_html__( 'Contact OptinMonster Support', 'optin-monster-api' ) . '" target="_blank">' . esc_html__( 'Contact Support', 'optin-monster-api' ) . '</a></p></div>';
 		} elseif ( isset( $option['is_expired'] ) && $option['is_expired'] ) {
 			echo '<div class="notice notice-error"><p>' . esc_html__( 'The subscription to this OptinMonster account has expired. Please renew your subscription to use the OptinMonster API.', 'optin-monster-api' ) . '</p>';
-			echo '<p><a href="' . OPTINMONSTER_APP_URL . '/account/billing/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpdashboard" class="button button-primary button-large omapi-new-optin" title="' . esc_html__( 'Renew Subscription', 'optin-monster-api' ) . '" target="_blank">' . esc_html__( 'Renew Subscription', 'optin-monster-api' ) . '</a></p></div>';
+			echo '<p><a href="' . esc_url( OPTINMONSTER_APP_URL ) . '/account/billing/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpdashboard" class="button button-primary button-large omapi-new-optin" title="' . esc_html__( 'Renew Subscription', 'optin-monster-api' ) . '" target="_blank">' . esc_html__( 'Renew Subscription', 'optin-monster-api' ) . '</a></p></div>';
 		} else {
 			if ( $this->should_user_see_connect_nag() ) {
 
@@ -240,7 +248,8 @@ class OMAPI_Validate {
 	 */
 	public function should_user_see_connect_nag() {
 		global $pagenow;
-		$page = isset( $_GET['page'] ) ? $_GET['page'] : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
 		if (
 			$this->base->menu->is_om_page()

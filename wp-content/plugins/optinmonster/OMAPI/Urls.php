@@ -149,7 +149,6 @@ class OMAPI_Urls {
 		return esc_url_raw( $url );
 	}
 
-
 	/**
 	 * Get app url, with proper query args set to ensure going to correct account, and setting return
 	 * query arg to come back (if relevant on the destination page).
@@ -184,6 +183,26 @@ class OMAPI_Urls {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Get upgrade url, with utm_medium param and optional feature.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param  string $utm_medium The utm_medium query param.
+	 * @param  string $return_url Url to return. Will default to wp_get_referer().
+	 *
+	 * @return string        The upgrade url.
+	 */
+	public static function upgrade( $utm_medium, $feature = 'none', $return_url = '' ) {
+		$path = sprintf(
+			'account/upgrade/?utm_source=WordPress&%1$s=pluginMenu&utm_campaign=Plugin&feature=%2$s',
+			$utm_medium,
+			$feature
+		);
+
+		return self::om_app( $path, $return_url );
 	}
 
 	/**

@@ -69,11 +69,12 @@ class OMAPI_Blocks {
 	 * @since 1.9.10
 	 */
 	public function __construct() {
+		// Set our object.
+		$this->set();
 
 		if ( function_exists( 'register_block_type' ) ) {
 
-			// Set our object.
-			$this->set();
+			// Register our blocks.
 			$this->register_blocks();
 
 			add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
@@ -160,12 +161,14 @@ class OMAPI_Blocks {
 			$version
 		);
 
-		wp_enqueue_script(
-			$this->base->plugin_slug . '-gutenberg-format-button',
-			$this->base->url . 'assets/dist/js/om-format.min.js',
-			array( $campaign_selector_handle, 'wp-rich-text', 'wp-element', 'wp-editor' ),
-			$version
-		);
+		if ( version_compare( get_bloginfo( 'version' ), '5.3', '>=' ) ) {
+			wp_enqueue_script(
+				$this->base->plugin_slug . '-gutenberg-format-button',
+				$this->base->url . 'assets/dist/js/om-format.min.js',
+				array( $campaign_selector_handle, 'wp-rich-text', 'wp-element', 'wp-editor' ),
+				$version
+			);
+		}
 	}
 
 	/**
@@ -193,7 +196,7 @@ class OMAPI_Blocks {
 				'campaign_selected'               => esc_html__( 'Campaign', 'optin-monster-api' ),
 				'followrules_label'               => esc_html__( 'Use Output Settings', 'optin-monster-api' ),
 				/* translators: %s - Output Settings (linked).*/
-				'followrules_help'                => esc_html__( 'Ensure this campaign follows any conditions you\'ve selected in its %s.', 'optin-monster-api' ),
+				'followrules_help'                => esc_html__( 'Ensure this campaign follows any conditions you\'ve selected in its %s', 'optin-monster-api' ),
 				'output_settings'                 => esc_html__( 'Output Settings', 'optin-monster-api' ),
 				'no_sites'                        => esc_html__( 'Please create a free account or connect an existing account to use an OptinMonster block.', 'optin-monster-api' ),
 				'no_sites_button_create_account'  => esc_html__( 'Create a Free Account', 'optin-monster-api' ),
@@ -211,6 +214,8 @@ class OMAPI_Blocks {
 				'update_selected_popup'           => esc_html__( 'Update Selected OptinMonster Campaign', 'optin-monster-api' ),
 				'open_popup'                      => esc_html__( 'Open an OptinMonster Popup', 'optin-monster-api' ),
 				'remove_popup'                    => esc_html__( 'Remove Campaign Link', 'optin-monster-api' ),
+				'upgrade_monsterlink'             => esc_html__( 'Unlock access to the OptinMonster click-to-load feature called MonsterLinks by upgrading your subscription.', 'optin-monster-api' ),
+				'upgrade'                         => esc_html__( 'Upgrade Now', 'optin-monster-api' ),
 			);
 			$i18n['description'] = html_entity_decode( $i18n['description'], ENT_COMPAT, 'UTF-8' );
 
@@ -227,10 +232,12 @@ class OMAPI_Blocks {
 				'site_ids'          => ! empty( $site_ids ) ? $site_ids : array(),
 				'post'              => get_post(),
 				'omEnv'             => defined( 'OPTINMONSTER_ENV' ) ? OPTINMONSTER_ENV : '',
+				'canMonsterlink'    => $this->base->has_rule_type( 'monster-link' ),
 				'templatesUri'      => OMAPI_Urls::templates(),
 				'campaignsUri'      => OMAPI_Urls::campaigns(),
 				'settingsUri'       => OMAPI_Urls::settings(),
 				'wizardUri'         => OMAPI_Urls::wizard(),
+				'upgradeUri'        => OMAPI_Urls::upgrade( 'gutenberg', '--FEATURE--' ),
 				'apiUrl'            => esc_url_raw( OPTINMONSTER_APIJS_URL ),
 				'omUserId'          => $this->base->get_option( 'userId' ),
 				'outputSettingsUrl' => OMAPI_Urls::campaign_output_settings( '%s' ),
@@ -267,7 +274,7 @@ class OMAPI_Blocks {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param  $titles_only Whether to include titles only, or separate data as array.
+	 * @param boolean $titles_only Whether to include titles only, or separate data as array.
 	 *
 	 * @return array Array of campaign options.
 	 */
@@ -326,12 +333,18 @@ class OMAPI_Blocks {
 	 */
 	public function get_output( $atts ) {
 		$is_rest  = defined( 'REST_REQUEST' ) && REST_REQUEST;
-		$context  = ! empty( $_REQUEST['context'] ) ? sanitize_text_field( $_REQUEST['context'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$context  = ! empty( $_REQUEST['context'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['context'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$is_gutes = $is_rest && 'edit' === $context;
 
 		// Our Guten-block handles the embed output manually.
 		if ( $is_gutes ) {
 			return;
+		}
+
+		// Gutenberg block shortcodes default to following the rules.
+		// See assets/js/campaign-selector.js, attributes.followrules
+		if ( ! isset( $atts['followrules'] ) ) {
+			$atts['followrules'] = true;
 		}
 
 		$output = $this->base->shortcode->shortcode( $atts );

@@ -145,6 +145,15 @@ class OMAPI_Api {
 	public $response_body = null;
 
 	/**
+	 * JSON decode error from decoding the response, if found.
+	 *
+	 * @since 2.6.6
+	 *
+	 * @var mixed
+	 */
+	public $decode_error = null;
+
+	/**
 	 * Builds the API Object
 	 *
 	 * @since 1.8.0
@@ -242,6 +251,7 @@ class OMAPI_Api {
 			'OMAPI-Referer' => site_url(),
 			'OMAPI-Sender'  => 'WordPress',
 			'OMAPI-Site'    => esc_attr( get_option( 'blogname' ) ),
+			'OMAPI-Version' => esc_attr( OMAPI::get_instance()->version ),
 		);
 
 		if ( $this->apikey ) {
@@ -257,16 +267,12 @@ class OMAPI_Api {
 		);
 
 		// Perform the query and retrieve the response.
-		$this->response = wp_remote_request( $url, $data );
+		$this->handle_response( wp_remote_request( $url, $data ) );
 
 		// Bail out early if there are any errors.
 		if ( is_wp_error( $this->response ) ) {
 			return $this->response;
 		}
-
-		// Get the response code and response body.
-		$this->response_code = wp_remote_retrieve_response_code( $this->response );
-		$this->response_body = json_decode( wp_remote_retrieve_body( $this->response ) );
 
 		// If we used the legacy api-creds, we'll get back a new api key.
 		if (
@@ -276,26 +282,68 @@ class OMAPI_Api {
 			$this->apikey = sanitize_text_field( $this->response['headers']['x-optinmonster-apikey'] );
 		}
 
-		// Get the correct success response code to check against.
-		$success_code = 'DELETE' === $this->method ? 204 : 200;
+		$error = $this->check_response_error();
 
-		// If not a 200 status header, send back error.
-		if ( (int) $success_code !== (int) $this->response_code ) {
-			$type  = ! empty( $this->response_body->type ) ? $this->response_body->type : 'api-error';
-			$error = ! empty( $this->response_body->message ) ? stripslashes( $this->response_body->message ) : '';
-			if ( empty( $error ) ) {
-				$error = ! empty( $this->response_body->status_message ) ? stripslashes( $this->response_body->status_message ) : '';
-			}
-			if ( empty( $error ) ) {
-				$error = ! empty( $this->response_body->error ) ? stripslashes( $this->response_body->error ) : 'unknown';
-			}
-
-			/* translators: %1$s - API response code, %2$s - returned error from API. */
-			return new WP_Error( $type, sprintf( __( 'The API returned a <strong>%1$s</strong> response with this message: <strong>%2$s</strong>', 'optin-monster-api' ), $this->response_code, $error ), $this->response_code );
+		// Bail out early if there are any errors.
+		if ( is_wp_error( $error ) ) {
+			return $error;
 		}
 
 		// Return the json decoded content.
 		return $this->response_body;
+	}
+
+	/**
+	 * Handle setting up the object properties from the response.
+	 *
+	 * @since 2.6.6
+	 *
+	 * @param  object $response The response object from wp_remote_request.
+	 *
+	 * @return void
+	 */
+	public function handle_response( $response ) {
+		$this->response = $response;
+
+		// Get the response code and response body.
+		$this->response_code = wp_remote_retrieve_response_code( $response );
+		$this->response_body = json_decode( wp_remote_retrieve_body( $response ) );
+		$this->decode_error  = json_last_error();
+	}
+
+	/**
+	 * Check for an error response, and return an applicable WP_Error instance.
+	 *
+	 * @since 2.6.6
+	 *
+	 * @return boolean|WP_Error False if no errors, and WP_Error object if found.
+	 */
+	public function check_response_error() {
+		$code = (int) $this->response_code;
+
+		if ( $code < 400 ) {
+			return false;
+		}
+
+		// If not successful status header, send back error.
+		$type    = ! empty( $this->response_body->type ) ? $this->response_body->type : 'api-error';
+		$message = ! empty( $this->response_body->message ) ? stripslashes( $this->response_body->message ) : '';
+		if ( empty( $message ) ) {
+			$message = ! empty( $this->response_body->status_message ) ? stripslashes( $this->response_body->status_message ) : '';
+		}
+
+		if ( empty( $message ) ) {
+			$message = ! empty( $this->response_body->error ) ? stripslashes( $this->response_body->error ) : 'unknown';
+		}
+
+		$message = sprintf(
+			/* translators: %1$s - API response code, %2$s - returned error from API. */
+			__( 'The API returned a <strong>%1$s</strong> response with this message: <strong>%2$s</strong>', 'optin-monster-api' ),
+			$this->response_code,
+			$message
+		);
+
+		return new WP_Error( $type, $message, $this->response_code );
 	}
 
 	/**
@@ -376,6 +424,36 @@ class OMAPI_Api {
 	}
 
 	/**
+	 * Fetch from the OM /me route, and cache results if no error..
+	 *
+	 * @since 2.6.6
+	 *
+	 * @param  bool  $refresh Whether to refresh the cache.
+	 * @param  array $creds   Existing credentials array.
+	 *
+	 * @return array          Requested /me data.
+	 */
+	public static function fetch_me_cached( $refresh = false, $creds = array() ) {
+		$api = self::build( 'v2', 'me?includeOnboarding=true', 'GET', $creds );
+
+		$creds     = array( $api->user, $api->key, $api->apikey );
+		$creds     = array_filter( $creds );
+		$creds     = array_values( $creds );
+		$cache_key = 'omapp_me_cached' . md5( implode( ':', $creds ) );
+		$result    = get_transient( $cache_key );
+
+		if ( empty( $result ) || $refresh ) {
+			$result = $api->request();
+
+			if ( ! is_wp_error( $result ) ) {
+				set_transient( $cache_key, $result, DAY_IN_SECONDS );
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Fetch from the OM /me route, and store data to our options.
 	 *
 	 * @since  2.0.0
@@ -386,8 +464,8 @@ class OMAPI_Api {
 	 * @return array           Updated options array.
 	 */
 	public static function fetch_me( $option = array(), $creds = array() ) {
-		$api    = self::build( 'v2', 'me', 'GET', $creds );
-		$result = $api->request();
+		$result = self::fetch_me_cached( true, $creds );
+		$api    = self::instance();
 
 		if ( is_wp_error( $result ) ) {
 			return $result;

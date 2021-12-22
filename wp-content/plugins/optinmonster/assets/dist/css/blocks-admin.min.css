@@ -15,7 +15,12 @@
     .optinmonster-gutenberg-campaign-selector-wrap .components-placeholder__fieldset-fields .components-button {
       display: block;
       margin-right: 0;
-      line-height: 12px; }
+      line-height: 12px;
+      background: #fff;
+      color: #1e1e1e; }
+    .optinmonster-gutenberg-campaign-selector-wrap .components-placeholder__fieldset-fields .components-select-control__input {
+      padding-top: 0;
+      padding-bottom: 0; }
 
 .optinmonster-gutenberg-campaign-selector-label {
   -webkit-box-align: center;

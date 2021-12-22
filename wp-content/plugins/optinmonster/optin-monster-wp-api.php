@@ -5,11 +5,15 @@
  * Description: OptinMonster is the best WordPress popup plugin that helps you grow your email list and sales with email popups, exit intent popups, floating bars and more!
  * Author:      OptinMonster Team
  * Author URI:  https://optinmonster.com
- * Version:     2.3.1
+ * Version:     2.6.9
  * Text Domain: optin-monster-api
  * Domain Path: languages
+ *
  * WC requires at least: 3.2.0
- * WC tested up to:      4.7.0
+ * WC tested up to:      5.9.0
+ * Requires at least:    4.7.0
+ * Requires PHP:         5.3
+ * Tested up to:         5.8
  *
  * OptinMonster is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +66,7 @@ class OMAPI {
 	 *
 	 * @var string
 	 */
-	public $version = '2.3.1';
+	public $version = '2.6.9';
 
 	/**
 	 * The name of the plugin.
@@ -302,6 +306,10 @@ class OMAPI {
 			define( 'OPTINMONSTER_APP_URL', 'https://app.optinmonster.com' );
 		}
 
+		if ( ! defined( 'OPTINMONSTER_URL' ) ) {
+			define( 'OPTINMONSTER_URL', 'https://optinmonster.com' );
+		}
+
 		if ( ! defined( 'OPTINMONSTER_API_URL' ) ) {
 			define( 'OPTINMONSTER_API_URL', 'https://api.omwpapi.com' );
 		}
@@ -412,6 +420,11 @@ class OMAPI {
 		$this->elementor   = new OMAPI_Elementor();
 		$this->mailpoet    = new OMAPI_MailPoet();
 
+		if ( defined( 'DOING_CRON' ) && DOING_CRON && ! $this->actions ) {
+			$this->save    = new OMAPI_Save();
+			$this->actions = new OMAPI_Actions();
+		}
+
 		// Fire a hook to say that the global classes are loaded.
 		do_action( 'optin_monster_api_global_loaded' );
 
@@ -431,6 +444,7 @@ class OMAPI {
 		$this->refresh       = new OMAPI_Refresh();
 		$this->save          = new OMAPI_Save();
 		$this->notifications = new OMAPI_Notifications();
+		$this->review        = new OMAPI_Review();
 
 		// Fire a hook to say that the global classes are loaded.
 		do_action( 'optin_monster_api_rest_loaded' );
@@ -474,7 +488,8 @@ class OMAPI {
 	 * @return array|bool Array of optin data or false if none found.
 	 */
 	public function get_optin( $id ) {
-		return get_post( absint( $id ) );
+		$optin = get_post( absint( $id ) );
+		return $this->add_campaign_properties( $optin );
 	}
 
 	/**
@@ -486,7 +501,8 @@ class OMAPI {
 	 * @return array|bool  Array of optin data or false if none found.
 	 */
 	public function get_optin_by_slug( $slug ) {
-		return get_page_by_path( sanitize_text_field( $slug ), OBJECT, 'omapi' );
+		$optin = get_page_by_path( sanitize_text_field( $slug ), OBJECT, 'omapi' );
+		return $this->add_campaign_properties( $optin );
 	}
 
 	/**
@@ -558,13 +574,27 @@ class OMAPI {
 			return false;
 		}
 
-		foreach ( $optins as $optin ) {
-			$optin->campaign_type = get_post_meta( $optin->ID, '_omapi_type', true );
-			$optin->enabled       = ! ! get_post_meta( $optin->ID, '_omapi_enabled', true );
-		}
+		$optins = array_map( array( $this, 'add_campaign_properties' ), $optins );
 
 		// Return the optin data.
 		return $optins;
+	}
+
+	/**
+	 * Add campaign-type and enabled status to post object properties.
+	 *
+	 * @since 2.6.8
+	 *
+	 * @param WP_Post $post Optin post object.
+	 */
+	public function add_campaign_properties( $post ) {
+		if ( ! empty( $post ) ) {
+			$post->campaign_type = get_post_meta( $post->ID, '_omapi_type', true );
+			$post->enabled       = ! ! get_post_meta( $post->ID, '_omapi_enabled', true );
+		}
+
+		return $post;
+
 	}
 
 	/**
@@ -761,7 +791,8 @@ class OMAPI {
 	 * @return void
 	 */
 	public function output_view( $file, $data = array() ) {
-		require dirname( $this->file ) . '/views/' . $file;
+		// Potentially use validate_file() (WP function) if we end up needing sub-directories later.
+		require dirname( $this->file ) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . basename( $file );
 	}
 
 	/**
@@ -832,6 +863,43 @@ class OMAPI {
 	}
 
 	/**
+	 * Check if the OM user's plan is upgradeable.
+	 *
+	 * @since 2.4.0
+	 *
+	 * @return boolean Whether OM user's plan is upgradeable.
+	 */
+	public function can_upgrade() {
+		$level = $this->get_level();
+
+		// If plan upgradeable... (e.g. not top tier).
+		return $level && ! in_array(
+			$level,
+			array(
+				'vbp_agency',
+				'vbp_team',
+				'vbp_growth',
+			),
+			true
+		) ? $level : false;
+	}
+
+	/**
+	 * Check if the OM user is allowed MonsterLinks.
+	 *
+	 * @since  2.6.6
+	 *
+	 * @param  string $rule_type The rule type to check.
+	 *
+	 * @return boolean Whether OM user is allowed MonsterLinks.
+	 */
+	public function has_rule_type( $rule_type ) {
+		$data = OMAPI_Api::fetch_me_cached();
+
+		return ! empty( $data->ruleTypes ) && in_array( $rule_type, (array) $data->ruleTypes, true );
+	}
+
+	/**
 	 * Loads the default plugin options.
 	 *
 	 * @since 1.0.0
@@ -842,7 +910,6 @@ class OMAPI {
 
 		$options = array(
 			'api'                => array(),
-			'optins'             => array(),
 			'is_expired'         => false,
 			'is_disabled'        => false,
 			'is_invalid'         => false,
@@ -913,7 +980,8 @@ class OMAPI {
 	 */
 	public function hide_unrelated_admin_notices() {
 		// Bail if we're not on a OptinMonster screen.
-		if ( empty( $_REQUEST['page'] ) || ! preg_match( '/optin-monster-/', esc_html( $_REQUEST['page'] ) ) ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( empty( $_REQUEST['page'] ) || ! preg_match( '/optin-monster-/', sanitize_key( $_REQUEST['page'] ) ) ) {
 			return;
 		}
 
@@ -1136,7 +1204,7 @@ function optin_monster_api_activation_hook( $network_wide ) {
 	global $wp_version;
 	if ( version_compare( $wp_version, '4.7.0', '<' ) && ! defined( 'OPTINMONSTER_FORCE_ACTIVATION' ) ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
-		wp_die( sprintf( __( 'Sorry, but your version of WordPress does not meet OptinMonster\'s required version of <strong>4.7.0</strong> to run properly. The plugin has been deactivated. <a href="%s">Click here to return to the Dashboard</a>.', 'optin-monster-api' ), get_admin_url() ) );
+		wp_die( wp_kses_post( sprintf( __( 'Sorry, but your version of WordPress does not meet OptinMonster\'s required version of <strong>4.7.0</strong> to run properly. The plugin has been deactivated. <a href="%s">Click here to return to the Dashboard</a>.', 'optin-monster-api' ), esc_url( admin_url() ) ) ) );
 	}
 
 	$instance = OMAPI::get_instance();
@@ -1163,6 +1231,15 @@ function optin_monster_api_activation_hook( $network_wide ) {
 		$options['welcome']['status'] = 'none';
 		update_option( 'optin_monster_api', $options );
 	}
+
+	// Abort so we only set the transient for single site installs.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( isset( $_GET['activate-multi'] ) || is_network_admin() ) {
+		return;
+	}
+
+	// Add transient to trigger redirect to the Welcome screen.
+	set_transient( 'optin_monster_api_activation_redirect', true, 30 );
 }
 
 register_uninstall_hook( __FILE__, 'optin_monster_api_uninstall_hook' );

@@ -140,6 +140,11 @@
 		margin: 0 0 20px;
 	}
 
+	#optin-monster-modal #optin-monster-modal-options #om-monsterlink-upgrade {
+		font-size: 17px;
+		text-align: center;
+	}
+
 	#optin-monster-modal #optin-monster-modal-options .optin-monster-modal-inline {
 		display: inline-block;
 		margin: 0;
@@ -239,5 +244,11 @@
 	.mce-container .wp-media-buttons-icon.optin-monster-menu-icon svg {
 		height: 20px;
 		color: #595959;
+	}
+
+	.om-monsterlink-upgrade {
+		color: #646970;
+		margin: 0 0 0 10px;
+		font-size: 12px;
 	}
 </style>

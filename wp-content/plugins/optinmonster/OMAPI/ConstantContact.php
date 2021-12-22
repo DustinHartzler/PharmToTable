@@ -99,7 +99,8 @@ class OMAPI_ConstantContact {
 	 */
 	public function register_cc_page() {
 		$slug        = 'optin-monster-constant-contact';
-		$is_current  = isset( $_GET['page'] ) && $slug === $_GET['page'];
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$is_current  = isset( $_GET['page'] ) && $slug === sanitize_key( wp_unslash( $_GET['page'] ) );
 		$parent_slug = $this->base->menu->parent_slug();
 		if ( ! $is_current ) {
 			$parent_slug .= '-no-menu';

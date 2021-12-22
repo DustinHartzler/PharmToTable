@@ -132,7 +132,12 @@ class OMAPI_MailPoet {
 	 * @since 1.0.0
 	 */
 	public function handle_ajax_call() {
-		// Run a security check first.
+		/*
+		 * Check the nonce is correct first.
+		 *
+		 * As this is a front end form to store the visitor's data in a mailing
+		 * list no capability check is required.
+		 */
 		check_ajax_referer( 'omapi', 'nonce' );
 
 		// Prepare variables.

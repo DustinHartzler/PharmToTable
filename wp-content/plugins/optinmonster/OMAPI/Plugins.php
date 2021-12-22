@@ -314,7 +314,7 @@ class OMAPI_Plugins {
 			throw new Exception( esc_html__( 'Missing required installer!', 'optin-monster-api' ), 500 );
 		}
 
-		$result = $installer->install( esc_url_raw( $plugin_url ) ); // phpcs:ignore
+		$result = $installer->install( esc_url_raw( $plugin_url ) );
 
 		if ( ! $installer->plugin_info() ) {
 			throw new Exception( esc_html__( 'Plugin failed to install!', 'optin-monster-api' ), 500 );
@@ -362,11 +362,27 @@ class OMAPI_Plugins {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		$activate = activate_plugins( sanitize_text_field( $plugin_id ) );
+		$activate = activate_plugin( sanitize_text_field( $plugin_id ), '', false, true );
 
 		if ( is_wp_error( $activate ) ) {
 			$e = new OMAPI_WpErrorException();
 			throw $e->setWpError( $activate );
+		}
+
+		// Prevent the various welcome/onboarding redirects that may occur when activating plugins.
+		switch ( $plugin_id ) {
+			case 'google-analytics-for-wordpress/googleanalytics.php':
+				delete_transient( '_monsterinsights_activation_redirect' );
+				break;
+			case 'wpforms-lite/wpforms.php':
+				update_option( 'wpforms_activation_redirect', true );
+				break;
+			case 'all-in-one-seo-pack/all_in_one_seo_pack.php':
+				update_option( 'aioseo_activation_redirect', true );
+				break;
+			case 'trustpulse-api/trustpulse.php':
+				delete_option( 'trustpulse_api_plugin_do_activation_redirect' );
+				break;
 		}
 
 		return array(

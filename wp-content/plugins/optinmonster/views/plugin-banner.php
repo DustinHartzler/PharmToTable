@@ -10,7 +10,7 @@
 					<?php echo get_admin_page_title(); ?>
 				</span>
 				<?php if ( $this->beta_version() ) : ?>
-					&nbsp;&mdash;&nbsp;<strong>Beta Version: <?php echo $this->beta_version(); ?></strong>
+					&nbsp;&mdash;&nbsp;<strong>Beta Version: <?php echo esc_html( $this->beta_version() ); ?></strong>
 				<?php endif; ?>
 			</div>
 			<ul class="omapi-plugin-banner__icons">

@@ -562,12 +562,12 @@ class OMAPI_WooCommerce {
 	public function maybe_store_note() {
 
 		// Check for Admin Note support.
-		if ( ! class_exists( 'Automattic\WooCommerce\Admin\Notes\Notes' ) || ! class_exists( 'Automattic\WooCommerce\Admin\Notes\Note' ) ) {
+		if ( ! class_exists( 'Automattic\WooCommerce\Admin\Notes\Notes', false ) || ! class_exists( 'Automattic\WooCommerce\Admin\Notes\Note', false ) ) {
 			return;
 		}
 
 		// Make sure the WooCommerce Data Store is available.
-		if ( ! class_exists( 'WC_Data_Store' ) ) {
+		if ( ! class_exists( 'WC_Data_Store', false ) ) {
 			return;
 		}
 

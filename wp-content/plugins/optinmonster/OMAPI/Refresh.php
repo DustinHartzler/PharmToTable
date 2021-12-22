@@ -210,7 +210,8 @@ class OMAPI_Refresh {
 
 		// Set additional flags.
 		$args['wp']      = $GLOBALS['wp_version'];
-		$args['v']       = $this->base->asset_version();
+		$args['av']      = $this->base->asset_version();
+		$args['v']       = $this->base->version;
 		$args['restUrl'] = esc_url_raw( get_rest_url() );
 		$args['homeUrl'] = esc_url_raw( home_url() );
 

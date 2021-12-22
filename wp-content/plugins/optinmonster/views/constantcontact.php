@@ -167,8 +167,8 @@
 	<p><?php esc_html_e( 'Wondering if email marketing is really worth your time?', 'optin-monster-api' ); ?></p>
 	<p><?php echo wp_kses( __( 'Email is hands-down the most effective way to nurture leads and turn them into customers, with a return on investment (ROI) of <strong>$44 back for every $1 spent</strong> according to the Direct Marketing Association.', 'optin-monster-api' ), array( 'strong' => array() ) ); ?></p>
 	<p><?php esc_html_e( 'Here are 3 big reasons why every smart business in the world has an email list:', 'optin-monster-api' ); ?></p>
-	<a href="<?php echo $data['signup_url']; ?>" target="_blank" rel="noopener noreferrer">
-		<img width="350" class="logo" src="<?php echo $data['images_url'] .'constant-contact-OM.png'; ?>" alt="<?php esc_attr_e( 'OptinMonster with Constant Contact - Try us free', 'optin-monster-api' ); ?>"/>
+	<a href="<?php echo esc_url( $data['signup_url'] ); ?>" target="_blank" rel="noopener noreferrer">
+		<img width="350" class="logo" src="<?php echo esc_url( $data['images_url'] .'constant-contact-OM.png' ); ?>" alt="<?php esc_attr_e( 'OptinMonster with Constant Contact - Try us free', 'optin-monster-api' ); ?>"/>
 	</a>
 	<ol class="reasons">
 		<li><?php echo wp_kses( __( '<strong>Email is still #1</strong> - At least 91% of consumers check their email on a daily basis. You get direct access to your subscribers, without having to play by social media&#39;s rules and algorithms.', 'optin-monster-api' ), array( 'strong' => array() ) ); ?></li>
@@ -205,7 +205,7 @@
 	</ol>
 	<p><?php esc_html_e( 'With a powerful email marketing service like Constant Contact, you can instantly send out mass notifications and beautifully designed newsletters to engage your subscribers.', 'optin-monster-api' ); ?></p>
 	<p>
-		<a href="<?php echo $data['signup_url']; ?>" class="button" target="_blank" rel="noopener noreferrer">
+		<a href="<?php echo esc_url( $data['signup_url'] ); ?>" class="button" target="_blank" rel="noopener noreferrer">
 			<?php esc_html_e( 'Get Started with Constant Contact for Free', 'optin-monster-api' ); ?>
 		</a>
 	</p>
@@ -217,7 +217,7 @@
 		<li><?php esc_html_e( 'Get expert marketing and support', 'optin-monster-api' ); ?></li>
 	</ul>
 	<p>
-		<a href="<?php echo $data['signup_url']; ?>" target="_blank" rel="noopener noreferrer">
+		<a href="<?php echo esc_url( $data['signup_url'] ); ?>" target="_blank" rel="noopener noreferrer">
 			<strong><?php esc_html_e( 'Try Constant Contact Today', 'optin-monster-api' ); ?></strong>
 		</a>
 	</p>
@@ -227,26 +227,26 @@
 	<p><?php esc_html_e( 'Here&#39;s how it works.', 'optin-monster-api' ); ?></p>
 	<div class="steps">
 		<div class="step1 step">
-			<a href="<?php echo $data['images_url'] . 'om-step-1.png'; ?>"><img src="<?php echo $data['images_url'] . 'om-step-1-sm.png'; ?>"></a>
+			<a href="<?php echo esc_url( $data['images_url'] . 'om-step-1.png' ); ?>"><img src="<?php echo esc_url( $data['images_url'] . 'om-step-1-sm.png' ); ?>"></a>
 			<p><?php esc_html_e( '1. Select a design from our beautiful, high-converting template library.', 'optin-monster-api' ); ?></p>
 		</div>
 		<div class="step2 step">
-			<a href="<?php echo $data['images_url'] . 'om-step-2.png'; ?>"><img src="<?php echo $data['images_url'] . 'om-step-2-sm.png'; ?>"></a>
+			<a href="<?php echo esc_url( $data['images_url'] . 'om-step-2.png' ); ?>"><img src="<?php echo esc_url( $data['images_url'] . 'om-step-2-sm.png' ); ?>"></a>
 			<p><?php esc_html_e( '2. Drag and drop elements to completely customize the look and feel of your campaign.', 'optin-monster-api' ); ?></p>
 		</div>
 		<div class="step3 step">
-			<a href="<?php echo $data['images_url'] . 'om-step-3.png'; ?>"><img src="<?php echo $data['images_url'] . 'om-step-3-sm.png'; ?>"></a>
+			<a href="<?php echo esc_url( $data['images_url'] . 'om-step-3.png' ); ?>"><img src="<?php echo esc_url( $data['images_url'] . 'om-step-3-sm.png' ); ?>"></a>
 			<p><?php esc_html_e( '3. Connect your Constant Contact email list.', 'optin-monster-api' ); ?></p>
 		</div>
 		<div class="step4 step">
-			<a href="<?php echo $data['images_url'] . 'om-step-4.png'; ?>"><img src="<?php echo $data['images_url'] . 'om-step-4-sm.png'; ?>"></a>
+			<a href="<?php echo esc_url( $data['images_url'] . 'om-step-4.png' ); ?>"><img src="<?php echo esc_url( $data['images_url'] . 'om-step-4-sm.png' ); ?>"></a>
 			<p><?php esc_html_e( '4. Sync your campaign to your WordPress site, then hit Go Live.', 'optin-monster-api' ); ?></p>
 		</div>
 	</div>
 	<p><?php esc_html_e( 'It doesn&#39;t matter what kind of business you run, what kind of website you have, or what industry you are in - you need to start building your email list today.', 'optin-monster-api' ); ?></p>
 	<p><?php esc_html_e( 'With Constant Contact + OptinMonster, growing your list is easy.', 'optin-monster-api' ); ?></p>
 	<p>
-		<a href="<?php echo $data['signup_url']; ?>" target="_blank" rel="noopener noreferrer">
+		<a href="<?php echo esc_url( $data['signup_url'] ); ?>" target="_blank" rel="noopener noreferrer">
 			<strong><?php esc_html_e( 'Try Constant Contact Today', 'optin-monster-api' ); ?></strong>
 		</a>
 	</p>

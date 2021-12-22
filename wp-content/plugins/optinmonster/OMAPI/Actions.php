@@ -59,6 +59,13 @@ class OMAPI_Actions {
 
 		// Add validation messages.
 		add_action( 'admin_init', array( $this, 'maybe_fetch_missing_data' ), 99 );
+
+		// We can run upgrade routines on cron runs and admin requests.
+		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+			add_action( 'optin_monster_api_global_loaded', array( $this, 'check_upgrade_routines' ), 99 );
+		} else {
+			add_action( 'admin_init', array( $this, 'check_upgrade_routines_admin' ), 100 );
+		}
 	}
 
 	/**
@@ -107,7 +114,12 @@ class OMAPI_Actions {
 		}
 
 		// Fetch the SiteIds for this site, if we don't have them.
-		if ( empty( $option['siteIds'] ) || empty( $option['siteId'] ) || $this->site_ids_are_numeric( $option['siteIds'] ) ) {
+		if (
+			empty( $option['siteIds'] )
+			|| empty( $option['siteId'] )
+			|| $this->site_ids_are_numeric( $option['siteIds'] )
+			|| ! isset( $option['apiCname'] )
+		) {
 
 			$result = $this->base->sites->fetch();
 			if ( ! is_wp_error( $result ) ) {
@@ -120,9 +132,7 @@ class OMAPI_Actions {
 		if ( $changed ) {
 			update_option( 'optin_monster_api', $option );
 		}
-
 	}
-
 
 	/**
 	 * In one version of the Plugin, we fetched the numeric SiteIds,
@@ -141,5 +151,99 @@ class OMAPI_Actions {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Runs upgrade routines in the admin, and refreshes the page if needed
+	 * (if options changed, etc).
+	 *
+	 * @since 2.6.5
+	 *
+	 * @return void
+	 */
+	public function check_upgrade_routines_admin() {
+		$refresh = $this->check_upgrade_routines();
+		if ( $refresh ) {
+			wp_safe_redirect( esc_url_raw( add_query_arg( 'om', 1 ) ) );
+			exit;
+		}
+	}
+
+	/**
+	 * Handles running the upgrade routines for each version.
+	 *
+	 * @since 2.6.5
+	 *
+	 * @return bool Whether page should be refreshed.
+	 */
+	public function check_upgrade_routines() {
+		$in_progress = get_option( 'optinmonster_current_upgrade' );
+		if ( ! empty( $in_progress ) ) {
+			return false;
+		}
+
+		$refresh           = false;
+		$plugin_version    = $this->base->version;
+		$upgrade_completed = get_option( 'optinmonster_upgrade_completed', 0 );
+		$upgrade_map       = array(
+			'2.6.5' => 'v265_upgrades',
+		);
+		foreach ( $upgrade_map as $upgrade_version => $method ) {
+			if (
+				version_compare( $plugin_version, $upgrade_version, '>=' )
+				&& version_compare( $upgrade_completed, $upgrade_version, '<' )
+			) {
+				update_option( 'optinmonster_current_upgrade', $upgrade_version );
+				$refresh = $this->{$method}();
+				delete_option( 'optinmonster_current_upgrade' );
+			}
+		}
+
+		if ( (string) $plugin_version !== (string) $upgrade_completed ) {
+			$this->base->notifications->update();
+			update_option( 'optinmonster_upgrade_completed', $plugin_version );
+		}
+
+		return $refresh;
+	}
+
+	/**
+	 * Upgrades for version 2.6.5.
+	 *
+	 * @since 2.6.5
+	 *
+	 * @return bool  Whether upgrade routine was completed successfully.
+	 */
+	public function v265_upgrades() {
+		$creds = $this->base->get_api_credentials();
+
+		// Missing previous api key to verify.
+		if ( empty( $creds['apikey'] ) ) {
+			return false;
+		}
+
+		$api     = OMAPI_Api::build( 'v1', 'verify/', 'POST', $creds );
+		$results = $api->request();
+
+		// Current key is fine.
+		if ( ! is_wp_error( $results ) ) {
+			return false;
+		}
+
+		$error_code = ! empty( $api->response_body->code )
+			? $api->response_body->code
+			: 0;
+		if (
+			in_array( (string) $api->response_code, array( '410', '401', '424', '403' ), true )
+			&& '10051' === (string) $error_code
+		) {
+			OMAPI_ApiKey::regenerate( $creds['apikey'] );
+
+			// Regenerated, so we want to refresh the page.
+			return true;
+		}
+
+		// No luck.
+		return false;
 	}
 }

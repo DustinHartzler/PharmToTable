@@ -55,6 +55,7 @@ class OMAPI_ApiKey {
 		unset( $option['siteId'] );
 		unset( $option['siteIds'] );
 		unset( $option['customApiUrl'] );
+		unset( $option['apiCname'] );
 
 		// Fetch the userId and accountId now.
 		$option = OMAPI_Api::fetch_me( $option, $creds );
@@ -100,6 +101,7 @@ class OMAPI_ApiKey {
 		unset( $option['siteId'] );
 		unset( $option['siteIds'] );
 		unset( $option['customApiUrl'] );
+		unset( $option['apiCname'] );
 		unset( $option['api']['user'] );
 		unset( $option['api']['key'] );
 
@@ -185,5 +187,24 @@ class OMAPI_ApiKey {
 
 		return ! empty( $creds['user'] ) && ! empty( $creds['key'] );
 	}
+
+	/**
+	 * Handles regnerating api key.
+	 *
+	 * @since 2.6.5
+	 *
+	 * @param  string $apikey Api Key to replace after regeneration.
+	 *
+	 * @return mixed  $value  The response to the API call.
+	 */
+	public static function regenerate( $apikey ) {
+		return OMAPI_Api::build( 'v2', 'key/regenerate', 'POST', compact( 'apikey' ) )
+			->request(
+				array(
+					'tt' => OMAPI_ApiAuth::get_tt(),
+				)
+			);
+	}
+
 }
 
