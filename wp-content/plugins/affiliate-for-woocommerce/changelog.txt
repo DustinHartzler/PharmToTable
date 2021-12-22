@@ -1,5 +1,9 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2021-12-21 - version 3.11.0
+* Fix: Affiliate commission calculated for WooCommerce Subscriptions renewal orders when parent order is not purchased through affiliate
+* Update: POT file
+
 2021-11-19 - version 3.10.0
 * New: WooCommerce 5.9.0 compatible
 * New: Assign affiliate parent from user profile [Admin]

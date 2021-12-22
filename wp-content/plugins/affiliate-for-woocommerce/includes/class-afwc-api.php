@@ -2,10 +2,9 @@
 /**
  * Main class for Affiliate For WooCommerce Referral
  *
- * @since       1.10.0
- * @version     1.5.0
- *
  * @package     affiliate-for-woocommerce/includes/
+ * @since       1.10.0
+ * @version     1.5.1
  */
 
 // Exit if accessed directly.
@@ -146,15 +145,14 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 
 				// Handle Subscription.
 				// change affiliate id before calculating commission so that commission calculation will be according to parent order affiliate.
-				if ( afwc_is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' ) && get_option( 'is_recurring_commission' ) === 'yes' ) {
-					$renewal_order    = wc_get_order( $oid );
-					$renewal_order_id = ( is_object( $renewal_order ) && is_callable( array( $renewal_order, 'get_id' ) ) ) ? $renewal_order->get_id() : 0;
-					if ( WCS_AFWC_Compatibility::is_wcs_gte_20() ) {
-						$is_renewal_order = wcs_order_contains_renewal( $renewal_order_id );
-					} else {
-						$is_renewal_order = WC_Subscriptions_Renewal_Order::is_renewal( $renewal_order_id );
-					}
-					if ( $is_renewal_order ) {
+				if ( $this->is_wc_subscriptions_renewal_order( $oid ) ) {
+
+					// Check if recurring commission is allowed.
+					if ( 'yes' === get_option( 'is_recurring_commission', 'no' ) ) {
+
+						$renewal_order = wc_get_order( $oid );
+
+						// Get parent order id.
 						if ( WCS_AFWC_Compatibility::is_wcs_gte_20() ) {
 							$subscription = wcs_get_subscriptions_for_renewal_order( $renewal_order );
 							if ( ! empty( $subscription ) ) {
@@ -165,6 +163,8 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 						} else {
 							$parent_order_id = WC_Subscriptions_Renewal_Order::get_parent_order_id( $renewal_order );
 						}
+
+						// Assign affiliate id from parent order's affiliate id, if parent is exists.
 						if ( ! empty( $parent_order_id ) ) {
 							$conversion_data['affiliate_id'] = $wpdb->get_var( $wpdb->prepare( "SELECT affiliate_id FROM {$wpdb->prefix}afwc_referrals WHERE post_id = %d", $parent_order_id ) ); // phpcs:ignore
 						}
@@ -176,7 +176,15 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 				}
 				$conversion_data = apply_filters( 'afwc_conversion_data', $conversion_data );
 
-				if ( $conversion_data['affiliate_id'] ) {
+				// Return if the affiliate id is empty.
+				if ( empty( $conversion_data['affiliate_id'] ) ) {
+					return;
+				}
+
+				$affiliate = new AFWC_Affiliate( $conversion_data['affiliate_id'] );
+				// Check for valid affiliate.
+				if ( $affiliate->is_valid() ) {
+
 					$values = array( $conversion_data['affiliate_id'], $conversion_data['oid'], $conversion_data['datetime'], $conversion_data['description'], $conversion_data['ip'], $conversion_data['user_id'], $conversion_data['amount'], $conversion_data['currency_id'], $conversion_data['data'], $conversion_data['status'], $conversion_data['type'], $conversion_data['reference'], $conversion_data['campaign_id'] );
 					// track in the db.
 					$referral_added = $wpdb->query( // phpcs:ignore
@@ -532,8 +540,20 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			$order_id = ( ! empty( $conversion_data['oid'] ) ) ? $conversion_data['oid'] : 0;
 
 			if ( 0 !== $order_id ) {
-				$affiliate_id = ( ! empty( $conversion_data['affiliate_id'] ) ) ? $conversion_data['affiliate_id'] : afwc_get_referrer_id();
-				$campaign_id  = afwc_get_campaign_id();
+
+				$affiliate_id = ( ! empty( $conversion_data['affiliate_id'] ) ) ? $conversion_data['affiliate_id'] : 0;
+
+				// Assign referer's id if affiliate id is empty and order should not be renewal.
+				if ( empty( $affiliate_id ) && false === $this->is_wc_subscriptions_renewal_order( $order_id ) ) {
+					$affiliate_id = afwc_get_referrer_id();
+				}
+
+				// Return if affiliate id is not exists.
+				if ( empty( $affiliate_id ) ) {
+					return $conversion_data;
+				}
+
+				$campaign_id = afwc_get_campaign_id();
 
 				$commissions = $this->calculate_commission( $order_id, $affiliate_id );
 				if ( false === $commissions ) {
@@ -689,6 +709,38 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 
 			return $is_valid_order;
 
+		}
+
+		/**
+		 * Return if the order is a wc subscriptions renewal order by wc order id.
+		 *
+		 * @param  integer $order_id Order id.
+		 *
+		 * @return boolean $is_renewal_order
+		 */
+		public function is_wc_subscriptions_renewal_order( $order_id = 0 ) {
+
+			if ( empty( $order_id ) ) {
+				return false;
+			}
+
+			// Initialize renewal order.
+			$is_renewal_order = false;
+
+			// Check if WooCommerce Subscription plugin is active.
+			if ( afwc_is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' ) ) {
+				$renewal_order    = wc_get_order( $order_id );
+				$renewal_order_id = ( is_object( $renewal_order ) && is_callable( array( $renewal_order, 'get_id' ) ) ) ? $renewal_order->get_id() : 0;
+
+				// Check if the order is wc subscriptions renewal order.
+				if ( WCS_AFWC_Compatibility::is_wcs_gte_20() ) {
+					$is_renewal_order = wcs_order_contains_renewal( $renewal_order_id );
+				} else {
+					$is_renewal_order = WC_Subscriptions_Renewal_Order::is_renewal( $renewal_order_id );
+				}
+			}
+
+			return $is_renewal_order;
 		}
 
 	}
