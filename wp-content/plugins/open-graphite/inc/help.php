@@ -1,7 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly 
 
 $fb_app_ID                      = 'https://developers.facebook.com/apps/';
-$fb_app_ID_help                 = 'https://developers.facebook.com/docs/apps/';
+$fb_app_ID_help                 = 'https://developers.facebook.com/docs/development/create-an-app';
 $fb_debugger                    = 'https://developers.facebook.com/tools/debug/';
 $fb_access_token                = 'https://rocketapps.com.au/product/open-graphite-pro/#faq-08';
 $twitter_card                   = 'https://cards-dev.twitter.com/validator/';

@@ -266,7 +266,7 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 					</optgroup><br />
 					</select><br />
 					
-				<?php _e( 'In most cases this is usually set to <strong>website</strong>.', 'open-graphite' ); ?> <a href="https://developers.facebook.com/docs/reference/opengraph#types" target="_blank" rel="noopener"><?php _e( 'Learn about object types', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
+				<?php _e( 'In most cases this is usually set to <strong>website</strong>.', 'open-graphite' ); ?> <a href="https://ogp.me/#types" target="_blank" rel="noopener"><?php _e( 'Learn about object types', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
 			</div>
 				
 			<div class="og-settings" id="facebook">
@@ -288,7 +288,7 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 				<div class="access-token-container">
 					<h3><?php _e( 'Facebook Access Token', 'open-graphite' ); ?> <span class="beta"><?php _e( 'beta', 'open-graphite' ); ?></span></h3>
-					<p><?php _e( 'Automatically push the open graph data of your post to Facebook as soon as it is created or when it is updated.', 'open-graphite' ); ?> <a href="https://rocketapps.com.au/product/open-graphite-pro/#faq-08" target="_blank" rel="noopener"><?php _e( 'Learn more', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></p>
+					<p><?php _e( 'Automatically push the open graph data of your post to Facebook as soon as it is created or when it is updated.', 'open-graphite' ); ?> <a href="https://rocketapps.com.au/product/open-graphite-pro/#what-does-the-facebook-access-token-do" target="_blank" rel="noopener"><?php _e( 'Learn more', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" /></p>
 					<input type="text" name="openg_settings[open_graphite_home_access_token]" id="openg_settings[open_graphite_home_access_token]" value="<?php if($fb_access_token) { echo esc_html($fb_access_token); } ?>" class="half" /><br />
 					<?php if (!$fb_access_token) { ?>
 						<a href="https://developers.facebook.com/tools/explorer/" target="_blank" rel="noopener"><?php _e( 'Get your Facebook Access Token', 'open-graphite' ); ?></a> <img src="<?php echo plugins_url('../images/external.svg', __FILE__ );?>" class="og-external" />
@@ -321,20 +321,20 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 			<div class="og-settings" id="pinterest">
 	
 				<p class="title">
-					<strong><?php _e( 'Pinterest', 'open-graphite' ); ?></strong>
+					<strong><?php _e( 'Pinterest', 'open-graphite' ); ?> <?php echo $utp_notice; ?></strong>
 					<span><?php _e( 'Decide how your content behaves with Pinterest.', 'open-graphite' ); ?></span>
 					<img src="<?php echo plugins_url('../images/settings/pinterest.svg', __FILE__ );?>" />
 				</p>
 				<?php $pinterest = isset($ogoptions['open_graphite_pinterest']) ? $ogoptions['open_graphite_pinterest'] : ''; ?>
 				<ul>
 					<li>
-						<input type="radio" disabled /> <?php _e( 'Allow Pinterest (allow content to be saved to Pinterest)', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+						<input type="radio" disabled /> <?php _e( 'Allow Pinterest (allow content to be saved to Pinterest)', 'open-graphite' ); ?> 
 					</li>
 					<li>
-						<input type="radio" disabled /> <?php _e( 'Prevent content from showing as rich pins (all content can still be saved to Pinterest, but it will not show as a rich pin)', 'open-graphite' ); ?>  <?php echo $utp_notice; ?>
+						<input type="radio" disabled /> <?php _e( 'Prevent content from showing as rich pins (all content can still be saved to Pinterest, but it will not show as a rich pin)', 'open-graphite' ); ?> 
 					</li>
 					<li>
-						<input type="radio" disabled /> <?php _e( 'Deny Pinterest (do not allow content to be saved to Pinterest)', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+						<input type="radio" disabled /> <?php _e( 'Deny Pinterest (do not allow content to be saved to Pinterest)', 'open-graphite' ); ?>
 					</li>
 				</ul>
 			</div>
@@ -342,7 +342,7 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 			<div class="og-settings" id="slack">
 			
 				<p class="title">
-					<strong><?php _e( 'Slack', 'open-graphite' ); ?></strong>
+					<strong><?php _e( 'Slack', 'open-graphite' ); ?> <?php echo $utp_notice; ?></strong>
 					<span><?php _e( 'Enhanced Slack sharing.', 'open-graphite' ); ?></span>
 					<img src="<?php echo plugins_url('../images/settings/slack.svg', __FILE__ );?>" />
 				</p>
@@ -351,7 +351,7 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 					<ul>
 						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Enable author name and reading time', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+							<input type="checkbox" disabled /> <?php _e( 'Enable author name and reading time', 'open-graphite' ); ?>
 						</li>
 					</ul>
 
@@ -391,33 +391,6 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 					}
 				?>
 				<li><input type="checkbox" disabled /> <?php _e( 'Custom Post Types', 'open-graphite' ); ?> <?php echo $utp_notice; ?></li>
-				<?php
-					$post_types = get_post_types( array (
-							'show_ui' => true,
-							'show_in_menu' => true,
-						), 
-							'objects'
-						);
-						foreach ( $post_types as $post_type ) {
-							$post_type_name = $post_type->name;
-							if($post_type_name !== 'attachment' 
-							&& $post_type_name !== 'post' 
-							&& $post_type_name !== 'page'
-							&& $post_type_name !== 'menu_item'
-							&& $post_type_name !== 'revision'
-							&& $post_type_name !== 'nav_menu_item'
-							&& $post_type_name !== 'custom_css'
-							&& $post_type_name !== 'customize_changeset'
-							&& $post_type_name !== 'user_request'
-							&& $post_type_name !== 'wp_block') { 
-						?>
-						<li>
-							<input type="checkbox" disabled /> <?php echo $post_type->label; ?> <?php echo $utp_notice; ?>
-						</li>
-						<?php
-						} 
-					}
-				?>
 				</ul>
 				</div>
 			</div>
@@ -428,21 +401,21 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 				?>
 
 				<p class="title">
-					<strong><?php _e( 'Defaults', 'open-graphite' ); ?></strong>
+					<strong><?php _e( 'Defaults', 'open-graphite' ); ?> <?php echo $utp_notice; ?></strong>
 					<span><?php _e( 'Force these defaults on all post types and pages.', 'open-graphite' ); ?></span>
 				</p>
 				
 				<ul>
 					<li>
-						<input type="checkbox" disabled /> <?php _e( 'Always use the title', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+						<input type="checkbox" disabled /> <?php _e( 'Always use the title', 'open-graphite' ); ?> 
 					</li>
 					
 					<li>
-						<input type="checkbox" disabled /> <?php _e( 'Always use the excerpt for the description (posts only)', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+						<input type="checkbox" disabled /> <?php _e( 'Always use the excerpt for the description (posts only)', 'open-graphite' ); ?> 
 					</li>
 					
 					<li>
-						<input type="checkbox" disabled /> <?php _e( 'Always use the featured image', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+						<input type="checkbox" disabled /> <?php _e( 'Always use the featured image', 'open-graphite' ); ?> 
 					</li>
 				</ul>
 				
@@ -456,21 +429,21 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 							<select disabled>
 								<option></option>
 								<option><?php _e( 'Upgrade to pro', 'open-graphite' ); ?></option>
-							</select> <?php echo $utp_notice; ?>
+							</select>
 							</td>
 						</tr>
 
 						<tr>
 							<th scope="row"><?php _e( 'Title character limit:', 'open-graphite' ); ?></th>
 							<td>
-								<input type="number" min="1" max="300" disabled /> <?php echo $utp_notice; ?>
+								<input type="number" min="1" max="300" disabled />
 							</td>
 						</tr>
 
 						<tr>
 							<th scope="row"><?php _e( 'Description character limit:', 'open-graphite' ); ?></th>
 							<td>
-								<input type="number" min="1" max="300" disabled /> <?php echo $utp_notice; ?>
+								<input type="number" min="1" max="300" disabled />
 							</td>
 						</tr>
 
@@ -482,23 +455,23 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 			<div class="og-settings" id="other">
 				<p class="title">
-					<strong><?php _e( 'Other Settings', 'open-graphite' ); ?></strong>
+					<strong><?php _e( 'Other Settings', 'open-graphite' ); ?> <?php echo $utp_notice; ?></strong>
 					<span><?php _e( 'Additional open graph options.', 'open-graphite' ); ?></span>
 				</p>
 				<p>
 					<strong><?php _e( 'Common options', 'open-graphite' ); ?></strong>
 					<ul>
 						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Force required', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+							<input type="checkbox" disabled /> <?php _e( 'Force required', 'open-graphite' ); ?>
 						</li>
 						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Enable a description of the open graph image (derived from the ALT attribute)', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+							<input type="checkbox" disabled /> <?php _e( 'Enable a description of the open graph image (derived from the ALT attribute)', 'open-graphite' ); ?>
 						</li>
 						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Enable open graph updated time property', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+							<input type="checkbox" disabled /> <?php _e( 'Enable open graph updated time property', 'open-graphite' ); ?>
 						</li>
 						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Disable the quality indicators admin column', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+							<input type="checkbox" disabled /> <?php _e( 'Disable the quality indicators admin column', 'open-graphite' ); ?>
 						</li>
 					</ul>
 				</p>
@@ -507,10 +480,10 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 					<strong><?php _e( 'Options for Article object types only', 'open-graphite' ); ?></strong>
 					<ul>
 						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Include published and modified dates', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+							<input type="checkbox" disabled /> <?php _e( 'Include published and modified dates', 'open-graphite' ); ?>
 						</li>
 						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Enable author URL (authors need to have a URL in the website field on their profile)', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+							<input type="checkbox" disabled /> <?php _e( 'Enable author URL (authors need to have a URL in the website field on their profile)', 'open-graphite' ); ?>
 						</li>
 					</ul>
 				</p>
@@ -519,16 +492,16 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 					<strong><?php _e( 'Locale settings', 'open-graphite' ); ?></strong>
 					<ul>
 						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Disable locale in open graph', 'open-graphite' ); ?> <?php echo $utp_notice; ?>
+							<input type="checkbox" disabled /> <?php _e( 'Disable locale in open graph', 'open-graphite' ); ?>
 						</li>
 					</ul>
 				</p>
 
 				<p>
-					<strong><?php _e( 'Open Graph Check API key', 'open-graphite' ); ?></strong> (<a href="https://rocketapps.com.au/product/open-graphite-pro/#faq-018" target="_blank" rel="noopener"><?php _e( 'Learn more', 'open-graphite' ); ?></a>)
+					<strong><?php _e( 'Open Graph Check API key', 'open-graphite' ); ?></strong> (<a href="https://rocketapps.com.au/product/open-graphite-pro/#open-graph-check-tool" target="_blank" rel="noopener"><?php _e( 'Learn more', 'open-graphite' ); ?></a>)
 					<ul>
 						<li>
-							<input type="text" class="quarter" data-lpignore="true" disabled />  <?php echo $utp_notice; ?>
+							<input type="text" class="quarter" data-lpignore="true" disabled /> 
 						</li>
 					</ul>
 				</p>
@@ -536,7 +509,7 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 			<div class="og-settings" id="previews">
 				<p class="title">
-					<strong><?php _e( 'Previews', 'open-graphite' ); ?></strong>
+					<strong><?php _e( 'Previews', 'open-graphite' ); ?> <?php echo $utp_notice; ?></strong>
 					<span><?php _e( 'See how these social networks view your homepage.', 'open-graphite' ); ?></span>
 				</p>
 				<?php require_once('preview-links.php');?>
@@ -625,34 +598,36 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 <!--/ Start Promo /-->
 <div class="promo">
-	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
-	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
-	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
-	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
-	<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
-	<p><strong>"The best plugin of its kind"</strong></p>
 
-	<img src="<?php echo plugins_url('../images/matt.jpg', __FILE__ );?>" class="matt" />
+	<div class="testimonial">
+		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
+		<p><strong>"The best plugin of its kind"</strong></p>
 
-	<p class="person">
-		<strong><?php _e( 'Matthew Woods', 'open-graphite' ); ?></strong>
-		<span><?php _e( 'Tour Administrator & Web Developer', 'open-graphite' ); ?><br /><a href="https://www.perthobservatory.com.au/" target="_blank" rel="noopener"><?php _e( 'Perth Observatory', 'open-graphite' ); ?></a></span>
-	</p>
+		<img src="<?php echo plugins_url('../images/matt.jpg', __FILE__ );?>" class="matt" />
+
+		<p class="person">
+			<strong><?php _e( 'Matthew Woods', 'open-graphite' ); ?></strong>
+			<span><?php _e( 'Tour Administrator & Web Developer', 'open-graphite' ); ?><br /><a href="https://www.perthobservatory.com.au/" target="_blank" rel="noopener"><?php _e( 'Perth Observatory', 'open-graphite' ); ?></a></span>
+		</p>
+	</div>
 
 	<div class="upgrade">
 		<p><strong>Upgrade to Pro</strong></p>
 		<ul>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Use on all post types', 'open-graphite' ); ?></li>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Specify automatic defaults', 'open-graphite' ); ?></li>
-			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Facebook, Twitter & Linkedin previews for mobile & desktop', 'open-graphite' ); ?></li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Mobile & desktop previews', 'open-graphite' ); ?></li>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'WooCommerce product support', 'open-graphite' ); ?></li>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Pinterest specific options', 'open-graphite' ); ?></li>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Enhanced Slack sharing', 'open-graphite' ); ?></li>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Open Graph content indicators', 'open-graphite' ); ?></li>
-			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Limit the number of characters for titles & descriptions', 'open-graphite' ); ?></li>
+			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Apply character limits', 'open-graphite' ); ?></li>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Open graph check tool', 'open-graphite' ); ?></li>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Additional open graph options', 'open-graphite' ); ?></li>
-			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( '12 months of support & updates', 'open-graphite' ); ?></li>
 			<li><span class="dashicons dashicons-yes og-dashicons-yes"></span><?php _e( 'Prioritised support response', 'open-graphite' ); ?></li>
 		</ul>
 

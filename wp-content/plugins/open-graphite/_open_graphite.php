@@ -3,7 +3,7 @@
 Plugin Name: 	Open Graphite
 Plugin URI: 	https://wordpress.org/plugins/open-graphite/
 Description: 	Control how your content is viewed when shared on social media.
-Version: 		1.4.0
+Version: 		1.4.2
 Author: 		Rocket Apps
 Author URI: 	https://rocketapps.com.au
 License:        GPLv2

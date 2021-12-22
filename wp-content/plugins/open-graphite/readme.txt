@@ -2,7 +2,7 @@
 Contributors:       mikeyott
 Tags:               open graph, social, facebook, twitter, thumbnail
 Requires at least:  4.7
-Tested up to:       5.5
+Tested up to:       5.8
 Stable tag:         trunk
 
 Control how your content is viewed when shared on social media.
@@ -60,10 +60,17 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 * Limit the number of characters for titles and descriptions (prevent your titles and descriptions getting truncated)
 * Open graph check tool
 * Additional open graph options
-* 12 months of updates
 * Priority support
 
 == Changelog ==
+
+= 1.4.2 =
+
+Updated broken external links.
+
+= 1.4.1 =
+
+A few minor, non critical edits.
 
 = 1.4.0 =
 
