@@ -1,10 +1,10 @@
 === Pretty Links - Link Management, Branding, Tracking & Sharing Plugin ===
 Contributors: supercleanse, cartpauj
 Donate link: https://prettylinks.com
-Tags: links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, marketing, redirect, forward, social media, rewrite, shorturl, shorten, shortening, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
+Tags: marketing-automation, shortlink, affiliate-marketing, affiliates, cloaker, social-media, marketing, rewrite, links, urls, shortlinks, link branding, link tracking, affiliate links, link cloaking, redirect, forward, shorturl, shorten, shortening, click, clicks, track, tracking, tiny, tinyurl, budurl, shrinking, domain, shrink, mask, masking, cloak, cloaking, slug, slugs, admin, administration, stats, statistics, stat, statistic, email, ajax, javascript, ui, csv, download, page, post, pages, posts, shortcode, seo, automation, widget, widgets, dashboard
 Requires at least: 5.1
 Tested up to: 5.8
-Stable tag: 3.2.3
+Stable tag: 3.2.4
 
 The best WordPress link management, branding, tracking & sharing plugin. Link shortener helps you easily make pretty & trackable shortlinks.
 
@@ -66,6 +66,9 @@ http://blairwilliams.com/w7a
 3. Make sure you have changed your permalink Common Settings in Settings -> Permalinks away from "Default" to something else. I prefer using custom and then "/%year%/%month%/%postname%/" for the simplest possible URL slugs with the best performance.
 
 == Changelog ==
+= 3.2.4 =
+* Review notification dismissal improvements
+
 = 3.2.3 =
 * Removing vestigial files
 
