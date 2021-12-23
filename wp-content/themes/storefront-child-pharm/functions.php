@@ -385,3 +385,34 @@ function storefront_remove_logo() {
          remove_action( 'storefront_before_content', 'storefront_header_widget_region', 10);
          remove_action( 'storefront_before_content', 'woocommerce_breadcrumb', 10);
  }
+
+
+ function yourprefix_add_to_content( $content ) {
+    if( is_single() ) {
+        $content .= '<!-- Start Author Post --><div class="author-bio">';
+		$content .= '<div class="avatar author-bio">';
+		$content .= get_avatar( get_the_author_meta( 'ID' ), 200 );
+		$content .= '</div><div class="content"><p>';
+		$content .= get_the_author_meta('description');
+		$content .= '</p><h4>';
+		$content .= get_the_author_meta( 'display_name' );
+		$content .= '<div class="appoinment-btn"><a href="';
+		$content .= 'https://nicolegramsrph.azova.com';
+		$content .= '" target="_blank">View Bio</a></div>';
+		$content .= '</h4></div></div><!-- End Author Post -->';
+    }
+    return $content;
+}
+//add_filter( 'the_content', 'yourprefix_add_to_content' );
+
+/**
+ * SVG Favicon
+ */
+function ptt_svg_favicon() {
+	if ( stristr( $_SERVER['HTTP_HOST'], 'pharm.local' ) ) {
+        echo '<link rel="icon" href="' . esc_url( get_stylesheet_directory_uri() . '/assets/img/favicon-orange.png' ) . '" type="image/svg+xml">';
+    } else {
+		echo '<link rel="icon" href="' . esc_url( get_stylesheet_directory_uri() . '/assets/img/favicon.svg' ) . '" type="image/svg+xml">';
+	}
+}
+add_action( 'wp_head', 'ptt_svg_favicon', 100 );
