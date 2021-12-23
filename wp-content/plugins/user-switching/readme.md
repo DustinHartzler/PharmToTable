@@ -1,8 +1,8 @@
 # User Switching
 
-Stable tag: 1.5.6  
+Stable tag: 1.5.8  
 Requires at least: 3.7  
-Tested up to: 5.7  
+Tested up to: 5.8  
 Requires PHP: 5.3  
 License: GPL v2 or later  
 Tags: users, profiles, user switching, fast user switching, multisite, buddypress, bbpress, become, user management, developer  
@@ -85,6 +85,10 @@ User Switching is considered **Ethical Open Source** because it meets all of the
 
 ## Frequently Asked Questions
 
+### Does this plugin work with PHP 8?
+
+Yes.
+
 ### What does "Switch off" mean?
 
 Switching off logs you out of your account but retains your user ID in an authentication cookie so you can switch straight back without having to log in again manually. It's akin to switching to no user, and being able to switch back.
@@ -105,7 +109,7 @@ Yes, and you'll also be able to switch users from member profile screens.
 
 ### Does this plugin work with WooCommerce?
 
-Yes, but for maximum compatibility you should use WooCommerce version 3.6 or later.
+Yes. For maximum compatibility you should use WooCommerce version 3.6 or later.
 
 ### Does this plugin work if my site is using a two-factor authentication plugin?
 
@@ -145,8 +149,21 @@ Yes. Use the `user_switching::maybe_switch_url()` method for this. It takes care
         if ( $url ) {
             printf(
                 '<a href="%1$s">Switch to %2$s</a>',
-                $url,
-                $target_user->display_name
+                esc_url( $url ),
+                esc_html( $target_user->display_name )
+            );
+        }
+    }
+
+This link also works for switching back to the original user, but if you want an explicit link for this you can use the following code:
+
+    if ( method_exists( 'user_switching', 'get_old_user' ) ) {
+        $old_user = user_switching::get_old_user();
+        if ( $old_user ) {
+            printf(
+                '<a href="%1$s">Switch back to %2$s</a>',
+                esc_url( user_switching::switch_back_url( $old_user ) ),
+                esc_html( $old_user->display_name )
             );
         }
     }
@@ -243,6 +260,16 @@ In addition, User Switching respects the following filters from WordPress core w
 
 ## Changelog ##
 
+### 1.5.8 ###
+
+* Avoid a fatal if the `interim-login` query parameter is present on a page other than wp-login.php.
+
+### 1.5.7 ###
+
+* Fix some issues that could lead to PHP errors given a malformed cookie.
+* Fix documentation.
+
+
 ### 1.5.6 ###
 
 * Add a class to the table row on the user edit screen.
@@ -320,19 +347,6 @@ In addition, User Switching respects the following filters from WordPress core w
 * Switch to safe redirects for extra paranoid hardening.
 * Docblock improvements.
 * Coding standards improvements.
-
-### 0.6.1 ###
-
-- Slovak translation by Max Samael.
-
-
-### 0.6 ###
-
-- More intuitive redirecting after switching.
-- Avoid a BuddyPress bug preventing Switch To buttons from appearing.
-- Added a template function: `current_user_switched()` which lets you know if the current user switched into their account.
-- Added some hooks: `switch_to_user`, `switch_back_user` and `switch_off_user`, fired when appropriate.
-
 
 ### 0.5.2 ###
 
