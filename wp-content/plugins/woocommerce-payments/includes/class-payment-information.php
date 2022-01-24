@@ -15,6 +15,7 @@ use WCPay\Constants\Payment_Type;
 use WCPay\Constants\Payment_Initiated_By;
 use WCPay\Constants\Payment_Capture_Type;
 use WCPay\Exceptions\Invalid_Payment_Method_Exception;
+use WCPay\Payment_Methods\CC_Payment_Gateway;
 
 /**
  * Mostly a wrapper containing information on a single payment.
@@ -51,7 +52,7 @@ class Payment_Information {
 	/**
 	 * Indicates whether the payment will be only authorized (true) or captured immediately (false).
 	 *
-	 * @var Capture_Type
+	 * @var Payment_Capture_Type
 	 */
 	private $manual_capture;
 
@@ -96,13 +97,13 @@ class Payment_Information {
 		Payment_Initiated_By $payment_initiated_by = null,
 		Payment_Capture_Type $manual_capture = null
 	) {
-		if ( empty( $payment_method ) && empty( $token ) ) {
+		if ( empty( $payment_method ) && empty( $token ) && ! \WC_Payments::is_network_saved_cards_enabled() ) {
+			// If network-wide cards are enabled, a payment method or token may not be specified and the platform default one will be used.
 			throw new Invalid_Payment_Method_Exception(
 				__( 'Invalid payment method. Please input a new card number.', 'woocommerce-payments' ),
 				'payment_method_not_provided'
 			);
 		}
-
 		$this->payment_method       = $payment_method;
 		$this->order                = $order;
 		$this->token                = $token;
@@ -215,8 +216,13 @@ class Payment_Information {
 	 * @return string
 	 */
 	public static function get_payment_method_from_request( array $request ): string {
-		//phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		return ! empty( $request['wcpay-payment-method'] ) ? wc_clean( $request['wcpay-payment-method'] ) : '';
+		foreach ( [ 'wcpay-payment-method', 'wcpay-payment-method-sepa' ] as $key ) {
+			if ( ! empty( $request[ $key ] ) ) {
+				$normalized = wc_clean( $request[ $key ] );
+				return is_string( $normalized ) ? $normalized : '';
+			}
+		}
+		return '';
 	}
 
 	/**
@@ -231,7 +237,8 @@ class Payment_Information {
 	 * @return \WC_Payment_Token|NULL
 	 */
 	public static function get_token_from_request( array $request ) {
-		$token_request_key = 'wc-' . \WC_Payment_Gateway_WCPay::GATEWAY_ID . '-payment-token';
+		$payment_method    = $request['payment_method'] ?? null;
+		$token_request_key = 'wc-' . $payment_method . '-payment-token';
 		if (
 			! isset( $request[ $token_request_key ] ) ||
 			'new' === $request[ $token_request_key ]
@@ -243,7 +250,7 @@ class Payment_Information {
 		$token = \WC_Payment_Tokens::get( wc_clean( $request[ $token_request_key ] ) );
 
 		// If the token doesn't belong to this gateway or the current user it's invalid.
-		if ( ! $token || \WC_Payment_Gateway_WCPay::GATEWAY_ID !== $token->get_gateway_id() || $token->get_user_id() !== get_current_user_id() ) {
+		if ( ! $token || $payment_method !== $token->get_gateway_id() || $token->get_user_id() !== get_current_user_id() ) {
 			return null;
 		}
 

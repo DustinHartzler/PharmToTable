@@ -18,10 +18,15 @@ use WCPay\Logger;
  */
 class WC_Payments_Account {
 
-	const ACCOUNT_TRANSIENT              = 'wcpay_account_data';
-	const ACCOUNT_RETRIEVAL_ERROR        = 'ERROR';
-	const ON_BOARDING_DISABLED_TRANSIENT = 'wcpay_on_boarding_disabled';
-	const ERROR_MESSAGE_TRANSIENT        = 'wcpay_error_message';
+	// ACCOUNT_TRANSIENT is only used in the supporting dev tools plugin, it can be removed once everyone has upgraded.
+	const ACCOUNT_TRANSIENT                = 'wcpay_account_data';
+	const ACCOUNT_OPTION                   = 'wcpay_account_data';
+	const ACCOUNT_RETRIEVAL_ERROR          = 'ERROR';
+	const ON_BOARDING_DISABLED_TRANSIENT   = 'wcpay_on_boarding_disabled';
+	const ON_BOARDING_STARTED_TRANSIENT    = 'wcpay_on_boarding_started';
+	const ERROR_MESSAGE_TRANSIENT          = 'wcpay_error_message';
+	const ACCOUNT_CACHE_REFRESH_ACTION     = 'wcpay_refresh_account_cache';
+	const INSTANT_DEPOSITS_REMINDER_ACTION = 'wcpay_instant_deposit_reminder';
 
 	/**
 	 * Client for making requests to the WooCommerce Payments API
@@ -38,17 +43,20 @@ class WC_Payments_Account {
 	public function __construct( WC_Payments_API_Client $payments_api_client ) {
 		$this->payments_api_client = $payments_api_client;
 
-		add_action( 'admin_init', [ $this, 'maybe_handle_oauth' ] );
-		add_action( 'admin_init', [ $this, 'check_stripe_account_status' ], 11 ); // Run this after the WC setup wizard redirection logic.
+		add_action( 'admin_init', [ $this, 'maybe_handle_onboarding' ] );
+		add_action( 'admin_init', [ $this, 'maybe_redirect_to_onboarding' ], 11 ); // Run this after the WC setup wizard and onboarding redirection logic.
+		add_action( 'woocommerce_payments_account_refreshed', [ $this, 'handle_instant_deposits_inbox_note' ] );
+		add_action( self::INSTANT_DEPOSITS_REMINDER_ACTION, [ $this, 'handle_instant_deposits_inbox_reminder' ] );
+		add_action( self::ACCOUNT_CACHE_REFRESH_ACTION, [ $this, 'handle_account_cache_refresh' ] );
 		add_filter( 'allowed_redirect_hosts', [ $this, 'allowed_redirect_hosts' ] );
 		add_action( 'jetpack_site_registered', [ $this, 'clear_cache' ] );
 	}
 
 	/**
-	 * Wipes the account transient, forcing to re-fetch the account status from WP.com.
+	 * Wipes the account data option, forcing to re-fetch the account status from WP.com.
 	 */
 	public function clear_cache() {
-		delete_transient( self::ACCOUNT_TRANSIENT );
+		delete_option( self::ACCOUNT_OPTION );
 	}
 
 	/**
@@ -94,7 +102,7 @@ class WC_Payments_Account {
 	 *
 	 * @return bool True if the account is connected, false otherwise, $on_error on error.
 	 */
-	public function is_stripe_connected( $on_error = false ) {
+	public function is_stripe_connected( bool $on_error = false ): bool {
 		try {
 			return $this->try_is_stripe_connected();
 		} catch ( Exception $e ) {
@@ -108,25 +116,20 @@ class WC_Payments_Account {
 	 * @return bool      True if the account is connected, false otherwise.
 	 * @throws Exception Throws exception when unable to detect connection status.
 	 */
-	public function try_is_stripe_connected() {
+	public function try_is_stripe_connected(): bool {
 		$account = $this->get_cached_account_data();
-
 		if ( false === $account ) {
 			throw new Exception( __( 'Failed to detect connection status', 'woocommerce-payments' ) );
 		}
 
-		if ( is_array( $account ) && empty( $account ) ) {
-			// empty means no account.
-			return false;
-		}
-
-		return true;
+		// The empty array indicates that account is not connected yet.
+		return [] !== $account;
 	}
 
 	/**
 	 * Gets the account status data for rendering on the settings page.
 	 *
-	 * @return array An array containing the status data.
+	 * @return array An array containing the status data, or [ 'error' => true ] on error or no connected account.
 	 */
 	public function get_account_status_data() {
 		$account = $this->get_cached_account_data();
@@ -148,6 +151,7 @@ class WC_Payments_Account {
 		}
 
 		return [
+			'email'           => $account['email'] ?? '',
 			'status'          => $account['status'],
 			'paymentsEnabled' => $account['payments_enabled'],
 			'depositsStatus'  => $account['deposits_status'],
@@ -162,9 +166,109 @@ class WC_Payments_Account {
 	 *
 	 * @return string Account statement descriptor.
 	 */
-	public function get_statement_descriptor() {
+	public function get_statement_descriptor() : string {
 		$account = $this->get_cached_account_data();
 		return ! empty( $account ) && isset( $account['statement_descriptor'] ) ? $account['statement_descriptor'] : '';
+	}
+
+	/**
+	 * Gets the business name.
+	 *
+	 * @return string Business profile name.
+	 */
+	public function get_business_name() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['name'] ) ? $account['business_profile']['name'] : '';
+	}
+
+	/**
+	 * Gets the business url.
+	 *
+	 * @return string Business profile url.
+	 */
+	public function get_business_url() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['url'] ) ? $account['business_profile']['url'] : '';
+	}
+
+	/**
+	 * Gets the business support address.
+	 *
+	 * @return array Business profile support address.
+	 */
+	public function get_business_support_address() : array {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['support_address'] ) ? $account['business_profile']['support_address'] : [];
+	}
+
+	/**
+	 * Gets the business support email.
+	 *
+	 * @return string Business profile support email.
+	 */
+	public function get_business_support_email() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['support_email'] ) ? $account['business_profile']['support_email'] : '';
+	}
+
+	/**
+	 * Gets the business support phone.
+	 *
+	 * @return string Business profile support phone.
+	 */
+	public function get_business_support_phone() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['business_profile']['support_phone'] ) ? $account['business_profile']['support_phone'] : '';
+	}
+
+	/**
+	 * Gets the branding logo.
+	 *
+	 * @return string branding logo.
+	 */
+	public function get_branding_logo() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['branding']['logo'] ) ? $account['branding']['logo'] : '';
+	}
+
+	/**
+	 * Gets the branding icon.
+	 *
+	 * @return string branding icon.
+	 */
+	public function get_branding_icon() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['branding']['icon'] ) ? $account['branding']['icon'] : '';
+	}
+
+	/**
+	 * Gets the branding primary color.
+	 *
+	 * @return string branding primary color.
+	 */
+	public function get_branding_primary_color() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['branding']['primary_color'] ) ? $account['branding']['primary_color'] : '';
+	}
+
+	/**
+	 * Gets the branding secondary color.
+	 *
+	 * @return string branding secondary color.
+	 */
+	public function get_branding_secondary_color() : string {
+		$account = $this->get_cached_account_data();
+		return isset( $account['branding']['secondary_color'] ) ? $account['branding']['secondary_color'] : '';
+	}
+
+	/**
+	 * Get card present eligible flag account
+	 *
+	 * @return bool
+	 */
+	public function is_card_present_eligible() {
+		$account = $this->get_cached_account_data();
+		return ! empty( $account ) && isset( $account['card_present_eligible'] ) ? $account['card_present_eligible'] : false;
 	}
 
 	/**
@@ -175,6 +279,26 @@ class WC_Payments_Account {
 	public function get_fees() {
 		$account = $this->get_cached_account_data();
 		return ! empty( $account ) && isset( $account['fees'] ) ? $account['fees'] : [];
+	}
+
+	/**
+	 * Gets the current account email for rendering on the settings page.
+	 *
+	 * @return string Email.
+	 */
+	public function get_account_email(): string {
+		$account = $this->get_cached_account_data();
+		return $account['email'] ?? '';
+	}
+
+	/**
+	 * Gets the customer currencies supported by Stripe available for the account.
+	 *
+	 * @return array Currencies.
+	 */
+	public function get_account_customer_supported_currencies() {
+		$account = $this->get_cached_account_data();
+		return ! empty( $account ) && isset( $account['customer_currencies']['supported'] ) ? $account['customer_currencies']['supported'] : [];
 	}
 
 	/**
@@ -212,7 +336,7 @@ class WC_Payments_Account {
 	 *
 	 * @param string $error_message Optional error message to show in a notice.
 	 */
-	private function redirect_to_onboarding_page( $error_message = null ) {
+	public function redirect_to_onboarding_page( $error_message = null ) {
 		if ( isset( $error_message ) ) {
 			set_transient( self::ERROR_MESSAGE_TRANSIENT, $error_message, 30 );
 		}
@@ -231,29 +355,26 @@ class WC_Payments_Account {
 	}
 
 	/**
-	 * Whether to do a full-page redirect to the WCPay onboarding page. It has several exceptions, to prevent
-	 * "hijacking" the multiple WC/WC-Admin onboarding flows.
-	 * This function assumes that the Stripe account hasn't been setup yet.
-	 *
-	 * @return bool True if the user should be redirected to the WCPay onboarding page, false otherwise.
-	 */
-	private function should_redirect_to_onboarding() {
-		// If the user is in the WCPay settings screen and hasn't onboarded yet, always redirect.
-		if ( WC_Payment_Gateway_WCPay::is_current_page_settings() ) {
-			return true;
-		}
-
-		return get_option( 'wcpay_should_redirect_to_onboarding', false );
-	}
-
-	/**
 	 * Checks if Stripe account is connected and redirects to the onboarding page if it is not.
 	 *
-	 * @return bool True if the account is connected properly.
+	 * @return bool True if the redirection happened.
 	 */
-	public function check_stripe_account_status() {
+	public function maybe_redirect_to_onboarding() {
 		if ( wp_doing_ajax() ) {
-			return;
+			return false;
+		}
+
+		$is_on_settings_page           = WC_Payment_Gateway_WCPay::is_current_page_settings();
+		$should_redirect_to_onboarding = get_option( 'wcpay_should_redirect_to_onboarding', false );
+
+		if (
+			// If not loading the settings page...
+			! $is_on_settings_page
+			// ...and we have redirected before.
+			&& ! $should_redirect_to_onboarding
+		) {
+			// Do not attempt to redirect again.
+			return false;
 		}
 
 		$account = $this->get_cached_account_data();
@@ -262,13 +383,19 @@ class WC_Payments_Account {
 			return false;
 		}
 
-		if ( empty( $account ) ) {
-			if ( $this->should_redirect_to_onboarding() ) {
-				update_option( 'wcpay_should_redirect_to_onboarding', false );
-				$this->redirect_to_onboarding_page();
-			}
+		if ( $should_redirect_to_onboarding ) {
+			// Update the option. If there's an account connected, we won't need to redirect in the future.
+			// If not, we will redirect once and will not want to redirect again.
+			update_option( 'wcpay_should_redirect_to_onboarding', false );
+		}
+
+		if ( ! empty( $account ) ) {
+			// Do not redirect if connected.
 			return false;
 		}
+
+		// Redirect if not connected.
+		$this->redirect_to_onboarding_page();
 		return true;
 	}
 
@@ -285,9 +412,9 @@ class WC_Payments_Account {
 	}
 
 	/**
-	 * Handle OAuth (login/init/redirect) routes
+	 * Handle onboarding (login/init/redirect) routes
 	 */
-	public function maybe_handle_oauth() {
+	public function maybe_handle_onboarding() {
 		if ( ! is_admin() ) {
 			return;
 		}
@@ -296,27 +423,27 @@ class WC_Payments_Account {
 			try {
 				$this->redirect_to_login();
 			} catch ( Exception $e ) {
-				$this->add_notice_to_settings_page(
-					__( 'There was a problem redirecting you to the account dashboard. Please try again.', 'woocommerce-payments' ),
-					'notice-error'
+				wp_safe_redirect(
+					add_query_arg(
+						[ 'wcpay-login-error' => '1' ],
+						self::get_overview_page_url()
+					)
 				);
+				exit;
 			}
 			return;
 		}
 
-		if ( isset( $_GET['wcpay-connection-success'] ) ) {
-			$account_status = $this->get_account_status_data();
-			if ( empty( $account_status['error'] ) && $account_status['paymentsEnabled'] ) {
-				$message = __( 'Thanks for verifying your business details. You\'re ready to start taking payments!', 'woocommerce-payments' );
-			} else {
-				$message = __( 'Thanks for verifying your business details!', 'woocommerce-payments' );
-			}
-			$this->add_notice_to_settings_page( $message, 'notice-success' );
+		if ( isset( $_GET['wcpay-reconnect-wpcom'] ) && check_admin_referer( 'wcpay-reconnect-wpcom' ) ) {
+			$this->payments_api_client->start_server_connection( WC_Payment_Gateway_WCPay::get_settings_url() );
 			return;
 		}
 
 		if ( isset( $_GET['wcpay-connect'] ) && check_admin_referer( 'wcpay-connect' ) ) {
 			$wcpay_connect_param = sanitize_text_field( wp_unslash( $_GET['wcpay-connect'] ) );
+
+			// Hide menu notification badge upon starting setup.
+			update_option( 'wcpay_menu_badge_hidden', 'yes' );
 
 			if ( isset( $_GET['wcpay-connect-jetpack-success'] ) && ! $this->payments_api_client->is_server_connected() ) {
 				$this->redirect_to_onboarding_page(
@@ -336,12 +463,11 @@ class WC_Payments_Account {
 			}
 
 			try {
-				$this->init_stripe_oauth( $wcpay_connect_param );
+				$this->init_stripe_onboarding( $wcpay_connect_param );
 			} catch ( Exception $e ) {
-				Logger::error( 'Init Stripe oauth flow failed. ' . $e );
-				$this->add_notice_to_settings_page(
-					__( 'There was a problem redirecting you to the account connection page. Please try again.', 'woocommerce-payments' ),
-					'notice-error'
+				Logger::error( 'Init Stripe onboarding flow failed. ' . $e );
+				$this->redirect_to_onboarding_page(
+					__( 'There was a problem redirecting you to the account connection page. Please try again.', 'woocommerce-payments' )
 				);
 			}
 			return;
@@ -363,7 +489,7 @@ class WC_Payments_Account {
 	 *
 	 * @return string Stripe account login url.
 	 */
-	public static function get_login_url() {
+	private function get_login_url() {
 		return add_query_arg(
 			[
 				'wcpay-login' => '1',
@@ -375,11 +501,72 @@ class WC_Payments_Account {
 	/**
 	 * Get Stripe connect url
 	 *
+	 * @see WC_Payments_Account::get_onboarding_return_url(). The $wcpay_connect_from param relies on this function returning the corresponding URL.
+	 * @param string $wcpay_connect_from Optional. A page ID representing where the user should be returned to after connecting. Default is '1' - redirects back to the WC Payments overview page.
+	 *
 	 * @return string Stripe account login url.
 	 */
-	public static function get_connect_url() {
-		return wp_nonce_url( add_query_arg( [ 'wcpay-connect' => '1' ] ), 'wcpay-connect' );
+	public static function get_connect_url( $wcpay_connect_from = '1' ) {
+		return wp_nonce_url( add_query_arg( [ 'wcpay-connect' => $wcpay_connect_from ], admin_url( 'admin.php' ) ), 'wcpay-connect' );
 	}
+
+	/**
+	 * Payments task page url
+	 *
+	 * @return string payments task page url
+	 */
+	public static function get_payments_task_page_url() {
+		return add_query_arg(
+			[
+				'page'   => 'wc-admin',
+				'task'   => 'payments',
+				'method' => 'wcpay',
+			],
+			admin_url( 'admin.php' )
+		);
+	}
+
+	/**
+	 * Get overview page url
+	 *
+	 * @return string overview page url
+	 */
+	public static function get_overview_page_url() {
+		return add_query_arg(
+			[
+				'page' => 'wc-admin',
+				'path' => '/payments/overview',
+			],
+			admin_url( 'admin.php' )
+		);
+	}
+
+	/**
+	 * Checks if the current page is overview page
+	 *
+	 * @return boolean
+	 */
+	public static function is_overview_page() {
+		return isset( $_GET['path'] ) && '/payments/overview' === $_GET['path'];
+	}
+
+	/**
+	 * Get WPCOM/Jetpack reconnect url, for use in case of missing connection owner.
+	 *
+	 * @return string WPCOM/Jetpack reconnect url.
+	 */
+	public static function get_wpcom_reconnect_url() {
+		return admin_url(
+			add_query_arg(
+				[
+					'wcpay-reconnect-wpcom' => '1',
+					'_wpnonce'              => wp_create_nonce( 'wcpay-reconnect-wpcom' ),
+				],
+				'admin.php'
+			)
+		);
+	}
+
 
 	/**
 	 * Has on-boarding been disabled?
@@ -400,7 +587,7 @@ class WC_Payments_Account {
 	 * @throws API_Exception If there was an error when registering the site on WP.com.
 	 */
 	private function maybe_init_jetpack_connection( $wcpay_connect_from ) {
-		$is_jetpack_fully_connected = $this->payments_api_client->is_server_connected();
+		$is_jetpack_fully_connected = $this->payments_api_client->is_server_connected() && $this->payments_api_client->has_server_connection_owner();
 		if ( $is_jetpack_fully_connected ) {
 			return;
 		}
@@ -411,7 +598,7 @@ class WC_Payments_Account {
 				'wcpay-connect-jetpack-success' => '1',
 				'_wpnonce'                      => wp_create_nonce( 'wcpay-connect' ),
 			],
-			$this->get_oauth_return_url( $wcpay_connect_from )
+			$this->get_onboarding_return_url( $wcpay_connect_from )
 		);
 		$this->payments_api_client->start_server_connection( $redirect );
 	}
@@ -422,51 +609,78 @@ class WC_Payments_Account {
 	private function redirect_to_login() {
 		// Clear account transient when generating Stripe dashboard's login link.
 		$this->clear_cache();
-
-		$login_data = $this->payments_api_client->get_login_data( WC_Payment_Gateway_WCPay::get_settings_url() );
+		$redirect_url = $this->get_overview_page_url();
+		$login_data   = $this->payments_api_client->get_login_data( $redirect_url );
 		wp_safe_redirect( $login_data['url'] );
 		exit;
 	}
 
 	/**
-	 * Builds the URL to return the user to after the Jetpack/OAuth flow.
+	 * Builds the URL to return the user to after the Jetpack/Onboarding flow.
 	 *
 	 * @param string $wcpay_connect_from - Constant to decide where the user should be returned to after connecting.
 	 * @return string
 	 */
-	private function get_oauth_return_url( $wcpay_connect_from ) {
-		// Usually the return URL is the WCPay plugin settings page.
-		// But if connection originated on the WCADMIN payment task page, return there.
-		return 'WCADMIN_PAYMENT_TASK' === $wcpay_connect_from
-			? add_query_arg(
-				[
-					'page'   => 'wc-admin',
-					'task'   => 'payments',
-					'method' => 'wcpay',
-				],
-				admin_url( 'admin.php' )
-			)
-			: WC_Payment_Gateway_WCPay::get_settings_url();
+	private function get_onboarding_return_url( $wcpay_connect_from ) {
+		$is_from_subscription_product_publish = preg_match(
+			'/WC_SUBSCRIPTIONS_PUBLISH_PRODUCT_(\d+)/',
+			$wcpay_connect_from,
+			$matches
+		);
+
+		if ( 1 === $is_from_subscription_product_publish ) {
+			return add_query_arg(
+				[ 'wcpay-subscriptions-onboarded' => '1' ],
+				get_edit_post_link( $matches[1], 'url' )
+			);
+		}
+
+		// If connection originated on the WCADMIN payment task page, return there.
+		// else goto the overview page, since now it is GA (earlier it was redirected to plugin settings page).
+		switch ( $wcpay_connect_from ) {
+			case 'WCADMIN_PAYMENT_TASK':
+				return $this->get_payments_task_page_url();
+			case 'WC_SUBSCRIPTIONS_TABLE':
+				return admin_url( add_query_arg( [ 'post_type' => 'shop_subscription' ], 'edit.php' ) );
+			default:
+				return $this->get_overview_page_url();
+		}
 	}
 
 	/**
-	 * Initializes the OAuth flow by fetching the URL from the API and redirecting to it.
+	 * Initializes the onboarding flow by fetching the URL from the API and redirecting to it.
 	 *
 	 * @param string $wcpay_connect_from - where the user should be returned to after connecting.
 	 */
-	private function init_stripe_oauth( $wcpay_connect_from ) {
+	private function init_stripe_onboarding( $wcpay_connect_from ) {
+		if ( get_transient( self::ON_BOARDING_STARTED_TRANSIENT ) ) {
+			$this->redirect_to_onboarding_page(
+				__( 'There was a duplicate attempt to initiate account setup. Please wait a few seconds and try again.', 'woocommerce-payments' )
+			);
+			return;
+		}
+
+		// Set a quickly expiring transient to save the current onboarding state and avoid duplicate requests.
+		set_transient( self::ON_BOARDING_STARTED_TRANSIENT, true, 10 );
+
 		// Clear account transient when generating Stripe's oauth data.
 		$this->clear_cache();
 
 		$current_user = wp_get_current_user();
-		$return_url   = $this->get_oauth_return_url( $wcpay_connect_from );
+		$return_url   = $this->get_onboarding_return_url( $wcpay_connect_from );
 
-		$oauth_data = $this->payments_api_client->get_oauth_data(
+		$country = WC()->countries->get_base_country();
+		if ( ! array_key_exists( $country, WC_Payments_Utils::supported_countries() ) ) {
+			$country = null;
+		}
+
+		$onboarding_data = $this->payments_api_client->get_onboarding_data(
 			$return_url,
 			[
 				'email'         => $current_user->user_email,
 				'business_name' => get_bloginfo( 'name' ),
 				'url'           => get_home_url(),
+				'country'       => $country,
 			],
 			[
 				'site_username' => $current_user->user_login,
@@ -474,9 +688,12 @@ class WC_Payments_Account {
 			$this->get_actioned_notes()
 		);
 
+		delete_transient( self::ON_BOARDING_STARTED_TRANSIENT );
+
 		// If an account already exists for this site, we're done.
-		if ( false === $oauth_data['url'] ) {
+		if ( false === $onboarding_data['url'] ) {
 			WC_Payments::get_gateway()->update_option( 'enabled', 'yes' );
+			update_option( '_wcpay_onboarding_stripe_connected', [ 'is_existing_stripe_account' => true ] );
 			wp_safe_redirect(
 				add_query_arg(
 					[ 'wcpay-connection-success' => '1' ],
@@ -486,31 +703,35 @@ class WC_Payments_Account {
 			exit;
 		}
 
-		set_transient( 'wcpay_stripe_oauth_state', $oauth_data['state'], DAY_IN_SECONDS );
+		set_transient( 'wcpay_stripe_onboarding_state', $onboarding_data['state'], DAY_IN_SECONDS );
 
-		wp_safe_redirect( $oauth_data['url'] );
+		wp_safe_redirect( $onboarding_data['url'] );
 		exit;
 	}
 
 	/**
-	 * Once the API redirects back to the site after the OAuth flow, verifies the parameters and stores the data
+	 * Once the API redirects back to the site after the onboarding flow, verifies the parameters and stores the data
 	 *
 	 * @param string $state Secret string.
 	 * @param string $mode Mode in which this account has been connected. Either 'test' or 'live'.
 	 */
 	private function finalize_connection( $state, $mode ) {
-		if ( get_transient( 'wcpay_stripe_oauth_state' ) !== $state ) {
-			$this->add_notice_to_settings_page(
-				__( 'There was a problem processing your account data. Please try again.', 'woocommerce-payments' ),
-				'notice-error'
+		if ( get_transient( 'wcpay_stripe_onboarding_state' ) !== $state ) {
+			$this->redirect_to_onboarding_page(
+				__( 'There was a problem processing your account data. Please try again.', 'woocommerce-payments' )
 			);
 			return;
 		}
-		delete_transient( 'wcpay_stripe_oauth_state' );
+		delete_transient( 'wcpay_stripe_onboarding_state' );
 		$this->clear_cache();
 
-		WC_Payments::get_gateway()->update_option( 'enabled', 'yes' );
-		WC_Payments::get_gateway()->update_option( 'test_mode', 'test' === $mode ? 'yes' : 'no' );
+		$gateway = WC_Payments::get_gateway();
+		$gateway->update_option( 'enabled', 'yes' );
+		$gateway->update_option( 'test_mode', 'test' === $mode ? 'yes' : 'no' );
+
+		// Store a state after completing KYC for tracks. This is stored temporarily in option because
+		// user might not have agreed to TOS yet.
+		update_option( '_wcpay_onboarding_stripe_connected', [ 'is_existing_stripe_account' => false ] );
 
 		wp_safe_redirect(
 			add_query_arg(
@@ -530,23 +751,27 @@ class WC_Payments_Account {
 	/**
 	 * Gets and caches the data for the account connected to this site.
 	 *
+	 * @param bool $force_refresh Forces data to be fetched from the server, rather than using the cache.
+	 *
 	 * @return array|bool Account data or false if failed to retrieve account data.
 	 */
-	private function get_cached_account_data() {
+	public function get_cached_account_data( bool $force_refresh = false ) {
 		if ( ! $this->payments_api_client->is_server_connected() ) {
 			return [];
 		}
 
-		$account = get_transient( self::ACCOUNT_TRANSIENT );
+		// If we want to force a refresh, we can skip this logic and go straight to the server request.
+		if ( ! $force_refresh ) {
+			$account = $this->read_account_from_cache();
 
-		if ( $this->is_valid_cached_account( $account ) ) {
-			return $account;
-		}
+			if ( $this->is_valid_cached_account( $account ) ) {
+				return $account;
+			}
 
-		// If the transient contains the error value and has not expired, return false early and do not attempt another
-		// API call.
-		if ( self::ACCOUNT_RETRIEVAL_ERROR === $account ) {
-			return false;
+			// If the option contains the error value, return false early and do not attempt another API call.
+			if ( self::ACCOUNT_RETRIEVAL_ERROR === $account ) {
+				return false;
+			}
 		}
 
 		try {
@@ -568,7 +793,8 @@ class WC_Payments_Account {
 			} else {
 				// Failed to retrieve account data. Exception is logged in http client.
 				// Rate limit the account retrieval failures - set a transient for a short time.
-				set_transient( self::ACCOUNT_TRANSIENT, self::ACCOUNT_RETRIEVAL_ERROR, 2 * MINUTE_IN_SECONDS );
+				$this->cache_account( self::ACCOUNT_RETRIEVAL_ERROR, 2 * MINUTE_IN_SECONDS );
+
 				// Return false to signal account retrieval error.
 				return false;
 			}
@@ -576,25 +802,49 @@ class WC_Payments_Account {
 
 		// Cache the account details so we don't call the server every time.
 		$this->cache_account( $account );
+
+		// Allow us to tie in functionality to an account refresh.
+		do_action( 'woocommerce_payments_account_refreshed', $account );
 		return $account;
 	}
 
 	/**
-	 * Caches account data for two hours
+	 * Caches account data for a period of time.
 	 *
-	 * @param array $account - Account data to cache.
+	 * @param array|string $account    - Account data to cache.
+	 * @param int|null     $expiration - The length of time to cache the account data, expressed in seconds.
 	 */
-	private function cache_account( $account ) {
-		set_transient( self::ACCOUNT_TRANSIENT, $account, 2 * HOUR_IN_SECONDS );
+	private function cache_account( $account, int $expiration = null ) {
+		// Default expiration to 2.5 hours if not set.
+		if ( null === $expiration ) {
+			$expiration = 2.5 * HOUR_IN_SECONDS;
+		}
+
+		// Add the account data and expiry time to the array we're caching.
+		$account_cache            = [];
+		$account_cache['account'] = $account;
+		$account_cache['expires'] = time() + $expiration;
+
+		// Create or update the account option cache.
+		if ( false === get_option( self::ACCOUNT_OPTION ) ) {
+			$result = add_option( self::ACCOUNT_OPTION, $account_cache, '', 'no' );
+		} else {
+			$result = update_option( self::ACCOUNT_OPTION, $account_cache, 'no' );
+		}
+
+		// Schedule the account cache to be refreshed in 2 hours.
+		$this->schedule_account_cache_refresh();
+
+		return $result;
 	}
 
 	/**
 	 * Refetches account data and returns the fresh data.
 	 *
-	 * @return mixed Either the new account data or false if unavailable.
+	 * @return array|bool|string Either the new account data or false if unavailable.
 	 */
 	public function refresh_account_data() {
-		delete_transient( self::ACCOUNT_TRANSIENT );
+		$this->clear_cache();
 		return $this->get_cached_account_data();
 	}
 
@@ -635,22 +885,6 @@ class WC_Payments_Account {
 	}
 
 	/**
-	 * Adds a notice that will be forced to be visible on the settings page, despite WcAdmin hiding other notices.
-	 *
-	 * @param string $message Notice message.
-	 * @param string $classes Classes to apply, for example notice-error, notice-success.
-	 */
-	private function add_notice_to_settings_page( $message, $classes ) {
-		$classes .= ' wcpay-settings-notice'; // add a class that will be shown on the settings page.
-		add_filter(
-			'admin_notices',
-			function () use ( $message, $classes ) {
-				WC_Payments::display_admin_notice( $message, $classes );
-			}
-		);
-	}
-
-	/**
 	 * Updates Stripe account settings.
 	 *
 	 * @param array $stripe_account_settings Settings to update.
@@ -679,7 +913,7 @@ class WC_Payments_Account {
 	 * @return bool True if at least one parameter value is changed.
 	 */
 	private function settings_changed( $changes = [] ) {
-		$account = get_transient( self::ACCOUNT_TRANSIENT );
+		$account = $this->read_account_from_cache();
 
 		// Consider changes as valid if we don't have cached account data.
 		if ( ! $this->is_valid_cached_account( $account ) ) {
@@ -765,5 +999,123 @@ class WC_Payments_Account {
 	public function get_account_country() {
 		$account = $this->get_cached_account_data();
 		return $account['country'] ?? 'US';
+	}
+
+	/**
+	 * Gets the account default currency.
+	 *
+	 * @return string Currency code in lowercase.
+	 */
+	public function get_account_default_currency() {
+		$account = $this->get_cached_account_data();
+		return $account['store_currencies']['default'] ?? 'usd';
+	}
+
+	/**
+	 * Handles adding a note if the merchant is eligible for Instant Deposits.
+	 *
+	 * @param array $account The account data.
+	 *
+	 * @return void
+	 */
+	public function handle_instant_deposits_inbox_note( $account ) {
+		if ( empty( $account ) ) {
+			return;
+		}
+
+		if ( ! $this->is_instant_deposits_eligible( $account ) ) {
+			return;
+		}
+
+		require_once WCPAY_ABSPATH . 'includes/notes/class-wc-payments-notes-instant-deposits-eligible.php';
+		WC_Payments_Notes_Instant_Deposits_Eligible::possibly_add_note();
+		$this->maybe_add_instant_deposit_note_reminder();
+	}
+
+	/**
+	 * Handles removing note about merchant Instant Deposits eligibility.
+	 * Hands off to handle_instant_deposits_inbox_note to add the new note.
+	 *
+	 * @return void
+	 */
+	public function handle_instant_deposits_inbox_reminder() {
+		require_once WCPAY_ABSPATH . 'includes/notes/class-wc-payments-notes-instant-deposits-eligible.php';
+		WC_Payments_Notes_Instant_Deposits_Eligible::possibly_delete_note();
+		$this->handle_instant_deposits_inbox_note( $this->get_cached_account_data() );
+	}
+
+	/**
+	 * Handles adding scheduled action for the Instant Deposit note reminder.
+	 *
+	 * @return void
+	 */
+	public function maybe_add_instant_deposit_note_reminder() {
+		$action_scheduler_service = new WC_Payments_Action_Scheduler_Service( $this->payments_api_client );
+		$action_hook              = self::INSTANT_DEPOSITS_REMINDER_ACTION;
+
+		if ( $action_scheduler_service->pending_action_exists( $action_hook ) ) {
+			return;
+		}
+
+		$reminder_time = time() + ( 90 * DAY_IN_SECONDS );
+		$action_scheduler_service->schedule_job( $reminder_time, $action_hook );
+	}
+
+	/**
+	 * Handles action scheduler job to refresh the account cache. Will clear the cache, and
+	 * then fetch the account data from the server, also forcing it to be re-cached.
+	 */
+	public function handle_account_cache_refresh() {
+		$this->get_cached_account_data( true );
+	}
+
+	/**
+	 * Checks to see if the account is eligible for Instant Deposits.
+	 *
+	 * @param array $account The account data.
+	 *
+	 * @return bool
+	 */
+	private function is_instant_deposits_eligible( array $account ): bool {
+		if ( empty( $account['instant_deposits_eligible'] ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Read the account from the WP option we cache it in.
+	 *
+	 * @return array|bool
+	 */
+	private function read_account_from_cache() {
+		$account_cache = get_option( self::ACCOUNT_OPTION );
+
+		if ( false === $account_cache || ! isset( $account_cache['account'] ) || ! isset( $account_cache['expires'] ) ) {
+			// No option found or the data isn't in the shape we expect.
+			return false;
+		}
+
+		// Set $account to false if the cache has expired, triggering another fetch.
+		if ( $account_cache['expires'] < time() ) {
+			return false;
+		}
+
+		// We have fresh account data in the cache, so return it.
+		return $account_cache['account'];
+	}
+
+	/**
+	 * Schedule an ActionScheduler job to refresh the cached account data. When the account cache is
+	 * expired, we schedule a job to refresh the cache in 2 hours. The only time this function gets called is
+	 * when we are saving to the cache, so we always want to re-schedule the job even if it already exists.
+	 */
+	private function schedule_account_cache_refresh() {
+		$action_scheduler_service = new WC_Payments_Action_Scheduler_Service( $this->payments_api_client );
+		$action_hook              = self::ACCOUNT_CACHE_REFRESH_ACTION;
+
+		$action_time = time() + ( 2 * HOUR_IN_SECONDS );
+		$action_scheduler_service->schedule_job( $action_time, $action_hook );
 	}
 }

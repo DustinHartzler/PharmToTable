@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WCPay\Logger;
+use WCPay\Payment_Methods\CC_Payment_Gateway;
+use WCPay\Constants\Payment_Method;
 
 /**
  * Handles and process WC payment tokens API.
@@ -44,26 +46,33 @@ class WC_Payments_Token_Service {
 		add_action( 'woocommerce_payment_token_deleted', [ $this, 'woocommerce_payment_token_deleted' ], 10, 2 );
 		add_action( 'woocommerce_payment_token_set_default', [ $this, 'woocommerce_payment_token_set_default' ], 10, 2 );
 		add_filter( 'woocommerce_get_customer_payment_tokens', [ $this, 'woocommerce_get_customer_payment_tokens' ], 10, 3 );
+		add_filter( 'woocommerce_payment_methods_list_item', [ $this, 'get_account_saved_payment_methods_list_item_sepa' ], 10, 2 );
 	}
 
 	/**
 	 * Creates and add a token to an user, based on the payment_method object
 	 *
-	 * @param array   $payment_method Payment method to be added.
-	 * @param WP_User $user           User to attach payment method to.
-	 * @return WC_Payment_Token_CC    The WC object for the payment token.
+	 * @param   array   $payment_method                                          Payment method to be added.
+	 * @param   WP_User $user                                                    User to attach payment method to.
+	 * @return  WC_Payment_Token|WC_Payment_Token_CC|WC_Payment_Token_WCPay_SEPA The WC object for the payment token.
 	 */
 	public function add_token_to_user( $payment_method, $user ) {
 		// Clear cached payment methods.
 		$this->customer_service->clear_cached_payment_methods_for_user( $user->ID );
 
-		$token = new WC_Payment_Token_CC();
+		if ( Payment_Method::SEPA === $payment_method['type'] ) {
+			$token = new WC_Payment_Token_WCPay_SEPA();
+			$token->set_gateway_id( CC_Payment_Gateway::GATEWAY_ID );
+			$token->set_last4( $payment_method[ Payment_Method::SEPA ]['last4'] );
+		} else {
+			$token = new WC_Payment_Token_CC();
+			$token->set_gateway_id( CC_Payment_Gateway::GATEWAY_ID );
+			$token->set_expiry_month( $payment_method[ Payment_Method::CARD ]['exp_month'] );
+			$token->set_expiry_year( $payment_method[ Payment_Method::CARD ]['exp_year'] );
+			$token->set_card_type( strtolower( $payment_method[ Payment_Method::CARD ]['brand'] ) );
+			$token->set_last4( $payment_method[ Payment_Method::CARD ]['last4'] );
+		}
 		$token->set_token( $payment_method['id'] );
-		$token->set_gateway_id( WC_Payment_Gateway_WCPay::GATEWAY_ID );
-		$token->set_card_type( strtolower( $payment_method['card']['brand'] ) );
-		$token->set_last4( $payment_method['card']['last4'] );
-		$token->set_expiry_month( $payment_method['card']['exp_month'] );
-		$token->set_expiry_year( $payment_method['card']['exp_year'] );
 		$token->set_user_id( $user->ID );
 		$token->save();
 
@@ -115,18 +124,24 @@ class WC_Payments_Token_Service {
 			}
 		}
 
-		$payment_methods = $this->customer_service->get_payment_methods_for_customer( $customer_id );
+		$payment_methods = [ [] ];
+		foreach ( WC_Payments::get_gateway()->get_upe_enabled_payment_method_ids() as $type ) {
+			$payment_methods[] = $this->customer_service->get_payment_methods_for_customer( $customer_id, $type );
+		}
+		$payment_methods = array_merge( ...$payment_methods );
 
 		// Prevent unnecessary recursion, WC_Payment_Token::save() ends up calling 'woocommerce_get_customer_payment_tokens' in some cases.
 		remove_action( 'woocommerce_get_customer_payment_tokens', [ $this, 'woocommerce_get_customer_payment_tokens' ], 10, 3 );
 		foreach ( $payment_methods as $payment_method ) {
-			if ( isset( $payment_method['type'] ) && 'card' === $payment_method['type'] ) {
-				if ( ! isset( $stored_tokens[ $payment_method['id'] ] ) ) {
-					$token                      = $this->add_token_to_user( $payment_method, get_user_by( 'id', $user_id ) );
-					$tokens[ $token->get_id() ] = $token;
-				} else {
-					unset( $stored_tokens[ $payment_method['id'] ] );
-				}
+			if ( ! isset( $payment_method['type'] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $stored_tokens[ $payment_method['id'] ] ) ) {
+				$token                      = $this->add_token_to_user( $payment_method, get_user_by( 'id', $user_id ) );
+				$tokens[ $token->get_id() ] = $token;
+			} else {
+				unset( $stored_tokens[ $payment_method['id'] ] );
 			}
 		}
 		add_action( 'woocommerce_get_customer_payment_tokens', [ $this, 'woocommerce_get_customer_payment_tokens' ], 10, 3 );
@@ -134,6 +149,7 @@ class WC_Payments_Token_Service {
 		// Remove the payment methods that no longer exist in Stripe's side.
 		remove_action( 'woocommerce_payment_token_deleted', [ $this, 'woocommerce_payment_token_deleted' ], 10, 2 );
 		foreach ( $stored_tokens as $token ) {
+			unset( $tokens[ $token->get_id() ] );
 			$token->delete();
 		}
 		add_action( 'woocommerce_payment_token_deleted', [ $this, 'woocommerce_payment_token_deleted' ], 10, 2 );
@@ -174,5 +190,21 @@ class WC_Payments_Token_Service {
 				$this->customer_service->clear_cached_payment_methods_for_user( $token->get_user_id() );
 			}
 		}
+	}
+
+	/**
+	 * Controls the output for SEPA on the my account page.
+	 *
+	 * @param  array                                        $item          Individual list item from woocommerce_saved_payment_methods_list.
+	 * @param  WC_Payment_Token|WC_Payment_Token_WCPay_SEPA $payment_token The payment token associated with this method entry.
+	 * @return array                                        Filtered item
+	 */
+	public function get_account_saved_payment_methods_list_item_sepa( $item, $payment_token ) {
+		if ( WC_Payment_Token_WCPay_SEPA::TYPE === strtolower( $payment_token->get_type() ) ) {
+			$item['method']['last4'] = $payment_token->get_last4();
+			$item['method']['brand'] = esc_html__( 'SEPA IBAN', 'woocommerce-payments' );
+		}
+
+		return $item;
 	}
 }

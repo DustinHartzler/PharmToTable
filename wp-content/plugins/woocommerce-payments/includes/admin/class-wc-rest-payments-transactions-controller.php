@@ -34,6 +34,15 @@ class WC_REST_Payments_Transactions_Controller extends WC_Payments_REST_Controll
 		);
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/download',
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'get_transactions_export' ],
+				'permission_callback' => [ $this, 'check_permission' ],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/summary',
 			[
 				'methods'             => WP_REST_Server::READABLE,
@@ -77,6 +86,17 @@ class WC_REST_Payments_Transactions_Controller extends WC_Payments_REST_Controll
 	}
 
 	/**
+	 * Initiate transactions export via API.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 */
+	public function get_transactions_export( $request ) {
+		$filters = $this->get_transactions_filters( $request );
+
+		return $this->forward_request( 'get_transactions_export', [ $filters ] );
+	}
+
+	/**
 	 * Retrieve transaction to respond with via API.
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -115,15 +135,16 @@ class WC_REST_Payments_Transactions_Controller extends WC_Payments_REST_Controll
 	private function get_transactions_filters( $request ) {
 		return array_filter(
 			[
-				'match'        => $request->get_param( 'match' ),
-				'date_before'  => $request->get_param( 'date_before' ),
-				'date_after'   => $request->get_param( 'date_after' ),
-				'date_between' => $request->get_param( 'date_between' ),
-				'type_is'      => $request->get_param( 'type_is' ),
-				'type_is_not'  => $request->get_param( 'type_is_not' ),
-				'search'       => $request->get_param( 'search' ),
+				'match'             => $request->get_param( 'match' ),
+				'date_before'       => $request->get_param( 'date_before' ),
+				'date_after'        => $request->get_param( 'date_after' ),
+				'date_between'      => $request->get_param( 'date_between' ),
+				'type_is'           => $request->get_param( 'type_is' ),
+				'type_is_not'       => $request->get_param( 'type_is_not' ),
+				'store_currency_is' => $request->get_param( 'store_currency_is' ),
+				'search'            => $request->get_param( 'search' ),
 			],
-			function ( $filter ) {
+			static function ( $filter ) {
 				return null !== $filter;
 			}
 		);

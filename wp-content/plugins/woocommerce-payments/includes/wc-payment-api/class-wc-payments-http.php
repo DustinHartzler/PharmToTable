@@ -41,12 +41,13 @@ class WC_Payments_Http implements WC_Payments_Http_Interface {
 	 *
 	 * @param array  $args             - The arguments to passed to Jetpack.
 	 * @param string $body             - The body passed on to the HTTP request.
-	 * @param bool   $is_site_specific - If true, the site ID will be included in the request url.
+	 * @param bool   $is_site_specific - If true, the site ID will be included in the request url. Defaults to true.
+	 * @param bool   $use_user_token   - If true, the request will be signed with the user token rather than blog token. Defaults to false.
 	 *
 	 * @return array HTTP response on success.
 	 * @throws API_Exception - If not connected or request failed.
 	 */
-	public function remote_request( $args, $body = null, $is_site_specific = true ) {
+	public function remote_request( $args, $body = null, $is_site_specific = true, $use_user_token = false ) {
 		// Make sure we're not sending requests if Jetpack is not connected.
 		if ( ! $this->is_connected() ) {
 			Logger::error( 'HTTP_REQUEST_ERROR Site is not connected to WordPress.com' );
@@ -58,7 +59,10 @@ class WC_Payments_Http implements WC_Payments_Http_Interface {
 		}
 
 		$args['blog_id'] = $this->get_blog_id();
-		$args['user_id'] = $this->connection_manager->get_connection_owner_id();
+
+		if ( $use_user_token ) {
+			$args['user_id'] = $this->connection_manager->get_connection_owner_id();
+		}
 
 		if ( $is_site_specific ) {
 			// We expect `url` to include a `%s` placeholder which will allow us inject the blog id.
@@ -68,6 +72,27 @@ class WC_Payments_Http implements WC_Payments_Http_Interface {
 		}
 
 		return self::make_request( $args, $body );
+	}
+
+	/**
+	 * Queries the WordPress.com REST API with a user token.
+	 *
+	 * @param string       $path          REST API path.
+	 * @param string       $version       REST API version. Default is `2`.
+	 * @param array        $args          Arguments to {@see WP_Http}. Default is `array()`.
+	 * @param string|array $body          Body passed to {@see WP_Http}. Default is `null`.
+	 * @param string       $base_api_path REST API root. Default is `wpcom`.
+	 *
+	 * @return array|\WP_Error $response Response data, else WP_Error on failure.
+	 */
+	public function wpcom_json_api_request_as_user(
+		$path,
+		$version = '2',
+		$args = [],
+		$body = null,
+		$base_api_path = 'wpcom'
+	) {
+		return Automattic\Jetpack\Connection\Client::wpcom_json_api_request_as_user( $path, $version, $args, $body, $base_api_path );
 	}
 
 	/**
@@ -82,7 +107,7 @@ class WC_Payments_Http implements WC_Payments_Http_Interface {
 	private static function make_request( $args, $body ) {
 		$response = Automattic\Jetpack\Connection\Client::remote_request( $args, $body );
 
-		if ( is_wp_error( $response ) ) {
+		if ( is_wp_error( $response ) || ! is_array( $response ) ) {
 			Logger::error( 'HTTP_REQUEST_ERROR ' . var_export( $response, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
 			$message = sprintf(
 				// translators: %1: original error message.
@@ -107,6 +132,15 @@ class WC_Payments_Http implements WC_Payments_Http_Interface {
 	}
 
 	/**
+	 * Checks if the site has an admin who is also a connection owner.
+	 *
+	 * @return bool True if Jetpack connection has an owner.
+	 */
+	public function has_connection_owner() {
+		return ! empty( $this->connection_manager->get_connection_owner_id() );
+	}
+
+	/**
 	 * Gets the current WP.com blog ID.
 	 *
 	 * @return integer Current WPCOM blog ID.
@@ -128,7 +162,7 @@ class WC_Payments_Http implements WC_Payments_Http_Interface {
 		$this->connection_manager->enable_plugin();
 
 		// Register the site to wp.com.
-		if ( ! $this->connection_manager->is_registered() ) {
+		if ( ! $this->connection_manager->is_connected() ) {
 			$result = $this->connection_manager->register();
 			if ( is_wp_error( $result ) ) {
 				throw new API_Exception( $result->get_error_message(), 'wcpay_jetpack_register_site_failed', 500 );

@@ -34,6 +34,15 @@ class WC_REST_Payments_Disputes_Controller extends WC_Payments_REST_Controller {
 		);
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/summary',
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_disputes_summary' ],
+				'permission_callback' => [ $this, 'check_permission' ],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/(?P<dispute_id>\w+)',
 			[
 				'methods'             => WP_REST_Server::READABLE,
@@ -74,9 +83,23 @@ class WC_REST_Payments_Disputes_Controller extends WC_Payments_REST_Controller {
 
 	/**
 	 * Retrieve disputes to respond with via API.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
 	 */
-	public function get_disputes() {
-		return $this->forward_request( 'list_disputes', [] );
+	public function get_disputes( WP_REST_Request $request ) {
+		$page      = (int) $request->get_param( 'page' );
+		$page_size = (int) $request->get_param( 'pagesize' );
+		return $this->forward_request( 'list_disputes', [ $page, $page_size ] );
+	}
+
+	/**
+	 * Retrieve transactions summary to respond with via API.
+	 *
+	 * @param  WP_REST_Request $request Request data.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function get_disputes_summary( WP_REST_Request $request ) {
+		return $this->forward_request( 'get_disputes_summary', [] );
 	}
 
 	/**
@@ -85,7 +108,7 @@ class WC_REST_Payments_Disputes_Controller extends WC_Payments_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 */
 	public function get_dispute( $request ) {
-		$dispute_id = $request->get_params()['dispute_id'];
+		$dispute_id = $request->get_param( 'dispute_id' );
 		return $this->forward_request( 'get_dispute', [ $dispute_id ] );
 	}
 
@@ -122,7 +145,7 @@ class WC_REST_Payments_Disputes_Controller extends WC_Payments_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 */
 	public function close_dispute( $request ) {
-		$dispute_id = $request->get_params()['dispute_id'];
+		$dispute_id = $request->get_param( 'dispute_id' );
 		return $this->forward_request( 'close_dispute', [ $dispute_id ] );
 	}
 }
