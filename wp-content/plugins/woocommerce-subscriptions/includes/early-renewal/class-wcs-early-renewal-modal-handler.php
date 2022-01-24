@@ -45,6 +45,7 @@ class WCS_Early_Renewal_Modal_Handler {
 					'process_early_renewal' => true,
 					'wcs_nonce'             => wp_create_nonce( 'wcs-renew-early-modal-' . $subscription->get_id() ),
 				) ),
+				'data-payment-method' => $subscription->get_payment_method(),
 			),
 		);
 
@@ -88,7 +89,7 @@ class WCS_Early_Renewal_Modal_Handler {
 				'new_next_payment_date' => $new_next_payment_date,
 			),
 			'',
-			plugin_dir_path( WC_Subscriptions::$plugin_file ) . '/templates/'
+			WC_Subscriptions_Plugin::instance()->get_plugin_directory( 'templates/' )
 		);
 	}
 
