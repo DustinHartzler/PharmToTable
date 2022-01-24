@@ -8,42 +8,43 @@
 <html lang="en">
 
 <head>
-    <!-- ========== Meta Tags ========== -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
-    <meta property="og:title" content="14-Day Reset" />
-    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/14-day-reset/reset-healthy-eating.jpeg" />
+	<!-- ========== Meta Tags ========== -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
+	<meta property="og:title" content="14-Day Reset" />
+	<meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/14-day-reset/reset-healthy-eating.jpeg" />
 
-    <!-- ========== Page Title ========== -->
-    <title>PharmToTable | <?php wp_title(''); ?></title>
+	<!-- ========== Favicon Icon ========== -->		
+	<link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WMQK3FB');</script>
-<!-- End Google Tag Manager -->
+	<!-- ========== Page Title ========== -->
+	<title>PharmToTable | <?php wp_title(''); ?></title>
 
+	<!-- ====== Google Tag Manager ====== -->
+	<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-WMQK3FB');</script>
 
-<!-- Facebook Pixel Code -->
-    <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '3168022206626913');
-      fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=432268807399441&ev=PageView&noscript=1"
-    /></noscript>
+	<!-- ========== Facebook Pixel ========== -->
+	<script>
+	!function(f,b,e,v,n,t,s)
+	{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+	if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+	n.queue=[];t=b.createElement(e);t.async=!0;
+	t.src=v;s=b.getElementsByTagName(e)[0];
+	s.parentNode.insertBefore(t,s)}(window, document,'script',
+	'https://connect.facebook.net/en_US/fbevents.js');
+	fbq('init', '3168022206626913');
+	fbq('track', 'PageView');
+	</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=432268807399441&ev=PageView&noscript=1"
+	/></noscript>
 <!-- End Facebook Pixel Code -->
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -56,9 +57,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   gtag('config', 'UA-98971040-1');
 </script>
 <!-- End Google Analytics -->
-
-    <!-- ========== Favicon Icon ========== -->
-    <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon">
 
     <!-- ========== Start Stylesheet ========== -->
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" /> <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/font-awesome.min.css" rel="stylesheet" />
@@ -74,17 +72,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/responsive.css" rel="stylesheet" />
     <!-- ========== End Stylesheet ========== -->
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="assets/js/html5/html5shiv.min.js"></script>
-      <script src="assets/js/html5/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- ========== Google Fonts ========== -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600,700,800" rel="stylesheet">
-        <?php wp_head(); ?>
+	<!-- ========== Google Fonts ========== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600,700,800" rel="stylesheet">
+	<?php wp_head(); ?>
 </head>
 
 <body>
@@ -266,12 +257,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                     <div class="opening-info" style="margin:30px;">
                                         <h4>Important Dates</h4>
                                         <ul class="schedule" style="list-style-type: none">
-                                            <li>Sept 22 - 8pm EST <div class="pull-right"> Kick-off Class & Detox Your Body</div></li>
-                                            <li>Sept 28 - 8pm EST <div class="pull-right"> Detox Your Mind </div></li>
-                                            <li>Oct 3 - 9pm EST <div class="pull-right"> Detox Your Life </div></li>
-                                            <li>Oct 7 - 9pm EST <div class="pull-right"> Debrief and Next Steps </div></li>
+                                            <li>Sun, March 20<br>8pm EST <div class="pull-right"> 14 Day Reset Kickoff - Detox Your Body</div></li>
+                                            <li>Tue, March 22<br>8pm EST <div class="pull-right"> Detox Your Mind - The Role Strees Plays in Physical Health</div></li>
+                                            <li>Sun, March 27<br>9pm EST <div class="pull-right"> Detox Your Life </div></li>
+                                            <li>Thu, March 31<br>8pm EST <div class="pull-right"> Final Thoughts and Next Steps </div></li>
                                             <li>*All sessions are recorded <div class="pull-right"> </div></li>
-                                            <p>Your 14 day program can start on your time after the kick-off, most of our team will be starting Saturday the 25th/Sunday the 26th!</p>
+                                            <p>Your 14 day program can start on your time after the kick-off, most of our team will be starting Sunday the 20th or Monday the 21st!</p>
                                         </ul>
                                     </div>
                                 </div>
@@ -301,7 +292,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <ul>
                             <li><div class="info"><p>All the support and accountability you need in a private Facebook group</p></div></li>
                             <li><div class="info"><p>Journal to track progress</p></div></li>
-                            <li><div class="info"><p>BONUS! You’ll also get to join a Functional Medicine Discovery Class for free (a $25 value!)</p></div></li>
+                            <li><div class="info"><p>BONUS! You'll also get to join a Functional Medicine Discovery Class for free (a $25 value!)</p></div></li>
 
                     </ul>
                     </div>
@@ -330,50 +321,50 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  */
 
 $args = array(
-    'post_type' => 'provider',
-    'post_status' => 'publish',
+    'post_type'      => 'provider',
+    'post_status'    => 'publish',
     'posts_per_page' => 4,
-    'post__in' => array(1438,1405,1403,1441),
-    'orderby' => 'rand',
+    'post__in'       => array( 1438, 1405, 1403, 1441 ),
+    'orderby'        => 'rand',
 );
 
-$loop = new WP_Query( $args );
+$loop = new WP_Query($args);
 
-while ( $loop->have_posts() ) : $loop->the_post();
-    $facebook   = get_post_meta( $post->ID, 'provider_facebook', true );
-    $instagram  = get_post_meta( $post->ID, 'provider_instagram', true );
-    $twitter    = get_post_meta( $post->ID, 'provider_twitter', true );
-    $linkedin   = get_post_meta( $post->ID, 'provider_linkedin', true );
-    $pinterest  = get_post_meta( $post->ID, 'provider_pinterest', true );
-    $youtube    = get_post_meta( $post->ID, 'provider_youtube', true );
-    $package    = get_post_meta( $post->ID, 'provider_azova_package', true );
+while ($loop->have_posts()) : $loop->the_post();
+    $facebook   = get_post_meta($post->ID, 'provider_facebook', true);
+    $instagram  = get_post_meta($post->ID, 'provider_instagram', true);
+    $twitter    = get_post_meta($post->ID, 'provider_twitter', true);
+    $linkedin   = get_post_meta($post->ID, 'provider_linkedin', true);
+    $pinterest  = get_post_meta($post->ID, 'provider_pinterest', true);
+    $youtube    = get_post_meta($post->ID, 'provider_youtube', true);
+    $package    = get_post_meta($post->ID, 'provider_azova_package', true);
 ?>
                     <!-- Single Item -->
                     <div class="col-md-6 col-sm-6 equal-height">
                         <div class="item">
                             <div class="thumb">
-                                <?php the_post_thumbnail( array( 600, 600 ) ); ?>
+                                <?php the_post_thumbnail(array( 600, 600 )); ?>
                                 <div class="overlay">
-                                    <a href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>"><i class="fas fa-plus"></i></a>
+                                    <a href="<?php echo esc_url(get_the_permalink($post_id)); ?>"><i class="fas fa-plus"></i></a>
                                 </div>
                                 <div class="social">
                                     <ul>
-                                        <?php if( !empty ( $facebook ) ){ ?>
+                                        <?php if (!empty($facebook)) { ?>
                                             <li class="facebook"><a href="<?php echo get_post_meta($post->ID, 'provider_facebook', true); ?>"><i class="fab fa-facebook-f"></i></a></li>
                                         <?php } ?>
-                                        <?php if( !empty ( $instagram ) ){ ?>
+                                        <?php if (!empty($instagram)) { ?>
                                             <li class="instagram"><a href="<?php echo get_post_meta($post->ID, 'provider_instagram', true); ?>"><i class="fab fa-instagram"></i></a></li>
                                         <?php } ?>
-                                        <?php if( !empty ( $linkedin ) ){ ?>
+                                        <?php if (!empty($linkedin)) { ?>
                                         <li class="linkedin"><a href="<?php echo get_post_meta($post->ID, 'provider_linkedin', true); ?>"><i class="fab fa-linkedin-in"></i></a></li>
                                         <?php } ?>
-                                        <?php if( !empty ( $twitter ) ){ ?>
+                                        <?php if (!empty($twitter)) { ?>
                                         <li class="twitter"><a href="<?php echo get_post_meta($post->ID, 'provider_twitter', true); ?>"><i class="fab fa-twitter"></i></a></li>
                                         <?php } ?>
-                                        <?php if( !empty ( $pinterest ) ){ ?>
+                                        <?php if (!empty($pinterest)) { ?>
                                         <li class="pinterest"><a href="<?php echo get_post_meta($post->ID, 'provider_pinterest', true); ?>"><i class="fab fa-pinterest"></i></a></li>
                                         <?php } ?>
-                                        <?php if( !empty ( $youtube ) ){ ?>
+                                        <?php if (!empty($youtube)) { ?>
                                         <li class="youtube"><a href="<?php echo get_post_meta($post->ID, 'provider_youtube', true); ?>"><i class="fab fa-youtube"></i></a></li>
                                         <?php } ?>
 
@@ -382,7 +373,7 @@ while ( $loop->have_posts() ) : $loop->the_post();
                                 </div>
                             </div>
                             <div class="info">
-                                <a href="<?php echo esc_url( get_the_permalink( $post_id ) ); ?>">
+                                <a href="<?php echo esc_url(get_the_permalink($post_id)); ?>">
                                     <h4><?php the_title();?></h4>
                                     <h5><?php echo get_post_meta($post->ID, 'provider_credentials', true); ?></h5>
                                 </a>
@@ -426,7 +417,7 @@ wp_reset_postdata();
                         <div class="item">
                             <div class="content">
                                 <p>
-                                I joined the program to reset myself after splurging for the holidays.<br><br> Probably the most challenging part about the program was meal prepping and cooking. But that is part of living a healthier lifestyle. I definitely noticed a difference almost right away. I became more regular, had energy and just felt better overall. I had very little bloating, if any, which is common for me. <br><br><em>I loved having a meal plan provided and the support of the team to share successes and failures with during the program.</em><br><br> I also really liked the emphasis on all the ways we need to detox in our lives. I’m actually looking forward to doing this program again!
+                                I joined the program to reset myself after splurging for the holidays.<br><br> Probably the most challenging part about the program was meal prepping and cooking. But that is part of living a healthier lifestyle. I definitely noticed a difference almost right away. I became more regular, had energy and just felt better overall. I had very little bloating, if any, which is common for me. <br><br><em>I loved having a meal plan provided and the support of the team to share successes and failures with during the program.</em><br><br> I also really liked the emphasis on all the ways we need to detox in our lives. I'm actually looking forward to doing this program again!
                                 </p>
                             </div>
                             <div class="provider">
