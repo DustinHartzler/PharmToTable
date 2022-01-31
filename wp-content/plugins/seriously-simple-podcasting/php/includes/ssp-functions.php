@@ -1,6 +1,8 @@
 <?php
 
 use SeriouslySimplePodcasting\Controllers\Episode_Controller;
+use SeriouslySimplePodcasting\Controllers\Frontend_Controller;
+use SeriouslySimplePodcasting\Controllers\Settings_Controller;
 use SeriouslySimplePodcasting\Handlers\Castos_Handler;
 use SeriouslySimplePodcasting\Handlers\Images_Handler;
 
@@ -1008,6 +1010,7 @@ if ( ! function_exists( 'get_series_data_for_castos' ) ) {
 	 * @param $series_id
 	 *
 	 * @return array
+	 * // todo: move to class
 	 */
 	function get_series_data_for_castos( $series_id ) {
 		$podcast = array();
@@ -1096,6 +1099,15 @@ if ( ! function_exists( 'get_series_data_for_castos' ) ) {
 
 		$podcast['itunes']      = get_option( 'ss_podcasting_itunes_url_' . $series_id, '' );
 		$podcast['google_play'] = get_option( 'ss_podcasting_google_play_url_' . $series_id, '' );
+
+		$is_private_option = 'ss_podcasting_is_podcast_private';
+		if ( $series_id ) {
+			$is_private_option .= '_' . $series_id;
+		}
+		$is_private                   = get_option( $is_private_option );
+		$podcast['private_podcast']   = 'yes' === $is_private ? 1 : 0;
+		$podcast['is_feed_protected'] = 'yes' === $is_private ? 1 : 0;
+
 
 		if ( $series_id ) {
 			$guid = get_option( 'ss_podcasting_data_guid_' . $series_id );
@@ -1342,20 +1354,30 @@ if ( ! function_exists( 'ssp_get_feed_url' ) ) {
 	}
 }
 
+
 /**
  * Get the SSP option
  */
 if ( ! function_exists( 'ssp_get_option' ) ) {
 	/**
 	 * @param string $option
-	 * @param mixed $default
+	 * @param string $default
+	 * @param int $series_id
 	 *
 	 * @return string
 	 * @since 2.9.3
 	 */
-	function ssp_get_option( $option, $default = false ) {
-		$option = get_option( 'ss_podcasting_' . $option, $default );
-		return apply_filters( 'ssp_get_option', $option );
+	function ssp_get_option( $option, $default = '', $series_id = '' ) {
+		$option = Settings_Controller::SETTINGS_BASE . $option;
+
+		// Maybe append series ID to option name.
+		if ( $series_id ) {
+			$option .= '_' . $series_id;
+		}
+
+		$data = get_option( $option, $default );
+
+		return apply_filters( 'ssp_get_setting', $data, compact( 'option', 'default', 'series_id' ) );
 	}
 }
 
@@ -1377,6 +1399,23 @@ if ( ! function_exists( 'ssp_is_ajax' ) ) {
 
 
 /**
+ * Get frontend controller.
+ */
+if ( ! function_exists( 'ssp_frontend_controller' ) ) {
+
+	/**
+	 * Get frontend controller.
+	 *
+	 * @return Frontend_Controller
+	 */
+	function ssp_frontend_controller() {
+		global $ss_podcasting;
+		return $ss_podcasting;
+	}
+}
+
+
+/**
  * Get an episode controller.
  */
 if ( ! function_exists( 'ssp_episode_controller' ) ) {
@@ -1387,7 +1426,6 @@ if ( ! function_exists( 'ssp_episode_controller' ) ) {
 	 * @return Episode_Controller
 	 */
 	function ssp_episode_controller() {
-		global $ss_podcasting;
-		return $ss_podcasting->episode_controller;
+		return ssp_frontend_controller()->episode_controller;
 	}
 }

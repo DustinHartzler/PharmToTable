@@ -712,7 +712,8 @@ class Settings_Handler {
 			array(
 				'id'          => 'data_image',
 				'label'       => __( 'Cover Image', 'seriously-simple-podcasting' ),
-				'description' => __( 'The podcast cover image must be between 1400x1400px and 3000x3000px in size and either .jpg or .png file format', 'seriously-simple-podcasting' ),
+				'description' => __( 'The podcast cover image must be between 1400x1400px and 3000x3000px in size and either .jpg or .png file format', 'seriously-simple-podcasting' ) .
+				                 '. ' . __( 'Your image should be perfectly square in order for it to display properly in podcasting directories and mobile apps.', 'seriously-simple-podcasting' ),
 				'type'        => 'image',
 				'default'     => '',
 				'placeholder' => '',
@@ -891,14 +892,30 @@ class Settings_Handler {
 				'callback'    => 'esc_url_raw',
 				'class'       => 'regular-text',
 			),
-			array(
-				'id'          => '',
-				'label'       => __( 'Subscribe button links', 'seriously-simple-podcasting' ),
-				'description' => __( 'To create Subscribe Buttons for your site visitors, enter the Distribution URL to your show in the directories below.', 'seriously-simple-podcasting' ),
-				'type'        => '',
-				'placeholder' => __( 'Subscribe button links', 'seriously-simple-podcasting' ),
-			),
 		);
+
+		$private_podcast = array(
+			'id'          => 'is_podcast_private',
+			'label'       => __( 'Set Podcast To Private', 'seriously-simple-podcasting' ),
+			'type'        => 'radio',
+			'options'     => array(
+				'yes' => __( 'Yes', 'seriously-simple-podcasting' ),
+				'no'  => __( 'No', 'seriously-simple-podcasting' ),
+			),
+			'default'     => 'no',
+		);
+
+		if ( ! ssp_is_connected_to_castos() ) {
+			$private_podcast['description'] = __( 'Setting a podcast as Private is only available to Castos hosting customers.', 'seriously-simple-podcasting' );
+			$private_podcast['type']        = '';
+		}
+
+		if ( class_exists( 'PMPro_Membership_Level' ) ) {
+			$private_podcast['description'] = __( 'Looks like you\'re already using Paid Membership Pro to make your podcast private.', 'seriously-simple-podcasting' );
+			$private_podcast['type']        = '';
+		}
+
+		$feed_details_fields[] = $private_podcast;
 
 		$subscribe_options_array            = $this->get_subscribe_field_options();
 		$settings['feed-details']['fields'] = array_merge( $feed_details_fields, $subscribe_options_array );
@@ -944,31 +961,6 @@ class Settings_Handler {
 					'placeholder' => __( 'Message displayed to users who do not have access to the podcast feed', 'seriously-simple-podcasting' ),
 					'callback'    => array( $this, 'validate_message' ),
 					'class'       => 'large-text',
-				),
-			),
-		);
-
-		$settings['redirection'] = array(
-			'title'       => __( 'Redirection', 'seriously-simple-podcasting' ),
-			'description' => __( 'Use these settings to safely move your podcast to a different location. Only do this once your new podcast is setup and active.', 'seriously-simple-podcasting' ),
-			'fields'      => array(
-				array(
-					'id'          => 'redirect_feed',
-					'label'       => __( 'Redirect podcast feed to new URL', 'seriously-simple-podcasting' ),
-					'description' => sprintf( __( 'Redirect your feed to a new URL (specified below).%1$sThis will inform all podcasting services that your podcast has moved and 48 hours after you have saved this option it will permanently redirect your feed to the new URL.', 'seriously-simple-podcasting' ), '<br/>' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'new_feed_url',
-					'label'       => __( 'New podcast feed URL', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast feed\'s new URL.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => '',
-					'placeholder' => __( 'New feed URL', 'seriously-simple-podcasting' ),
-					'callback'    => 'esc_url_raw',
-					'class'       => 'regular-text',
 				),
 			),
 		);
@@ -1142,7 +1134,13 @@ class Settings_Handler {
 	 * @return array
 	 */
 	public function get_subscribe_field_options() {
-		$subscribe_field_options = array();
+		$subscribe_field_options[] = array(
+			'id'          => '',
+			'label'       => __( 'Subscribe button links', 'seriously-simple-podcasting' ),
+			'description' => __( 'To create Subscribe Buttons for your site visitors, enter the Distribution URL to your show in the directories below.', 'seriously-simple-podcasting' ),
+			'type'        => '',
+			'placeholder' => __( 'Subscribe button links', 'seriously-simple-podcasting' ),
+		);
 
 		$options_handler             = new Options_Handler();
 		$available_subscribe_options = $options_handler->available_subscribe_options;

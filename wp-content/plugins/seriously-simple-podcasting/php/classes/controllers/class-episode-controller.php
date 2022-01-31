@@ -4,33 +4,44 @@ namespace SeriouslySimplePodcasting\Controllers;
 
 use SeriouslySimplePodcasting\Renderers\Renderer;
 use SeriouslySimplePodcasting\Repositories\Episode_Repository;
+use SeriouslySimplePodcasting\Traits\Useful_Variables;
 use WP_Query;
 
 /**
  * SSP Episode Controller
  *
  * @package Seriously Simple Podcasting
+ *
+ * @deprecated Almost all episode-related functions now in Episode_Repository or Frontend_Controller.
+ * So lets just get rid of this class.
+ * @todo: move functions to Episode_Repository, rest - to Frontend Controller
  */
-class Episode_Controller extends Controller {
+class Episode_Controller {
+
+	use Useful_Variables;
 
 	/**
 	 * @var Renderer
 	 * */
-	public $renderer = null;
+	public $renderer;
 
 	/**
 	 * @var Episode_Repository
 	 * */
-	public $episode_repository = null;
+	public $episode_repository;
 
-	public function __construct( $file, $version ) {
-		parent::__construct( $file, $version );
-		$this->renderer = new Renderer();
-		$this->episode_repository = new Episode_Repository(); //Todo: use DI or Facade here
-		$this->init();
+	/**
+	 * @param Renderer $renderer
+	 */
+	public function __construct( $renderer ) {
+		$this->init_useful_variables();
+
+		$this->renderer = $renderer;
+		$this->episode_repository = new Episode_Repository();
+		$this->init_assets();
 	}
 
-	public function init() {
+	protected function init_assets() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_recent_episodes_assets' ) );
 	}
 

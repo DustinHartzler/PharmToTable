@@ -2,10 +2,13 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
+use SeriouslySimplePodcasting\Handlers\CPT_Podcast_Handler;
+use SeriouslySimplePodcasting\Traits\Useful_Variables;
 use stdClass;
 use WP_Query;
 
 use SeriouslySimplePodcasting\Handlers\Options_Handler;
+use WP_Term;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -20,7 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package     SeriouslySimplePodcasting/Controllers
  * @since       1.0
  */
-class Frontend_Controller extends Controller {
+class Frontend_Controller {
+
+	use Useful_Variables;
 
 	/**
 	 * @var Episode_Controller
@@ -34,17 +39,20 @@ class Frontend_Controller extends Controller {
 	public $players_controller;
 
 	/**
-	 * Constructor
+	 * Frontend_Controller constructor.
 	 *
-	 * @param string $file Plugin base file.
-	 * @param string $version Plugin version number
+	 * @param Episode_Controller $episode_controller
+	 * @param Players_Controller $players_controller
 	 */
-	public function __construct( $file, $version ) {
-		parent::__construct( $file, $version );
-		$this->episode_controller = new Episode_Controller( $file, $version );
-		$this->players_controller = new Players_Controller( $file, $version );
+	public function __construct( $episode_controller, $players_controller ) {
+		$this->init_useful_variables();
+
+		$this->episode_controller = $episode_controller;
+		$this->players_controller = $players_controller;
+
 		$this->register_hooks_and_filters();
 		$this->register_ajax_actions();
+		$this->protect_private_podcast_episodes();
 	}
 
 	/**
@@ -101,6 +109,60 @@ class Frontend_Controller extends Controller {
 	}
 
 	/**
+	 * Adds filter for private podcast episodes content.
+	 */
+	protected function protect_private_podcast_episodes() {
+		$filter = array( $this, 'show_private_content_message' );
+		add_filter( 'the_content', $filter, 20 );
+		add_filter( 'the_content_rss', $filter, 20 );
+		add_filter( 'comment_text_rss', $filter, 20 );
+	}
+
+	/**
+	 * Show a message that episode belongs to private podcast.
+	 *
+	 * @param $content
+	 *
+	 * @return mixed|string|void
+	 */
+	public function show_private_content_message( $content ) {
+
+		$post = get_post();
+
+		$ssp_post_types = ssp_post_types();
+
+		if ( ! in_array( $post->post_type, $ssp_post_types ) ) {
+			return $content;
+		}
+
+		$terms = wp_get_post_terms( $post->ID, CPT_Podcast_Handler::TAXONOMY_SERIES );
+
+		if ( ! is_array( $terms ) ) {
+			return $content;
+		}
+
+		$message =  __( 'This content is Private. To access this podcast, contact the site owner.', 'seriously-simple-podcasting' );
+
+		// Protect default feed episodes.
+		if ( empty( $terms ) && 'yes' === ssp_get_option( 'is_podcast_private' ) ) {
+			return $message;
+		}
+
+		/**
+		 * Protect episodes that belong to series.
+		 *
+		 * @var WP_Term[] $terms
+		 * */
+		foreach ( $terms as $term ) {
+			if ( 'yes' === ssp_get_option( 'is_podcast_private', '', $term->term_id ) ) {
+				return $message;
+			}
+		}
+
+		return $content;
+	}
+
+	/**
 	 * Unfortunately, WP core doesn't search for archive-podcast.php automatically (though it should).
 	 * So add the template to search list manually.
 	 *
@@ -114,7 +176,7 @@ class Frontend_Controller extends Controller {
 		// Use queried object because is_tax('post_tag') doesn't work ( is_tax is false ).
 		$queried = get_queried_object();
 
-		if ( is_tax( 'series' ) || ( $use_post_tag && 'post_tag' === $queried->taxonomy ) ) {
+		if ( is_tax( 'series' ) || ( $use_post_tag && isset( $queried->taxonomy ) && 'post_tag' === $queried->taxonomy ) ) {
 			$templates = array_merge( array( 'archive-' . SSP_CPT_PODCAST . '.php' ), $templates );
 		}
 
@@ -1469,7 +1531,7 @@ class Frontend_Controller extends Controller {
 	}
 
 	public function load_localisation () {
-		load_plugin_textdomain( 'seriously-simple-podcasting', false, basename( dirname( $this->file ) ) . '/languages/' );
+		load_plugin_textdomain( 'seriously-simple-podcasting', false, basename( $this->dir ) . '/languages/' );
 	}
 
 	/**
