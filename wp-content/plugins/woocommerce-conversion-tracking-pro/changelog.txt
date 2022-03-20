@@ -1,3 +1,20 @@
+2021-08-19 - version 1.0.7
+===========================
+- Fix: Undefined offset handled for featured image on the product exporter.
+
+2021-03-09 - version 1.0.6
+===========================
+- Fix: Don't close the csv file
+
+2020-01-08 - version 1.0.5
+===========================
+- Fix: Don't show the checkbox for product catefory list
+- Tweak: Product exporter
+
+2019-12-12 - version 1.0.4
+===========================
+- Fix: Print javascript without script tag
+
 2019-05-02 - version 1.0.3
 ===========================
 - New: Add Bing Ads Integration
