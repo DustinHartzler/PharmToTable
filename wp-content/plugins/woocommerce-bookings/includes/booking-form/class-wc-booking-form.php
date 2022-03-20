@@ -73,8 +73,7 @@ class WC_Booking_Form {
 		wp_enqueue_script( 'wc-bookings-booking-form', WC_BOOKINGS_PLUGIN_URL . '/dist/frontend.js', array( 'jquery', 'jquery-blockui', 'jquery-ui-datepicker', 'underscore' ), WC_BOOKINGS_VERSION, true );
 		wp_localize_script( 'wc-bookings-booking-form', 'wc_bookings_booking_form', $wc_bookings_booking_form_args );
 		wp_localize_script( 'wc-bookings-booking-form', 'wc_bookings_date_picker_args', $wc_bookings_date_picker_args );
-		wp_enqueue_script( 'wc-bookings-moment', WC_BOOKINGS_PLUGIN_URL . '/dist/js/lib/moment-with-locales.js', array(), WC_BOOKINGS_VERSION, true );
-		wp_enqueue_script( 'wc-bookings-moment-timezone', WC_BOOKINGS_PLUGIN_URL . '/dist/js/lib/moment-timezone-with-data.js', array(), WC_BOOKINGS_VERSION, true );
+		wp_enqueue_script( 'wc-bookings-date' );
 
 		// Variables for JS scripts
 		$booking_form_params = array(
@@ -287,11 +286,17 @@ class WC_Booking_Form {
 			if ( $resource->get_block_cost() && ! $this->product->get_display_cost() ) {
 				$duration      = $this->product->get_duration();
 				$duration_unit = $this->product->get_duration_unit();
-				
-				if ( in_array( $duration_unit, array( 'minute', 'hour' ) ) ) {
-					$duration_unit = _n( 'block', 'blocks', $duration, 'woocommerce-bookings' );
-				} else if ( in_array( $duration_unit, array( 'day') ) ) {
+
+				if ( 'minute' === $duration_unit ) {
+					$duration_unit = _n( 'minute', 'minutes', $duration, 'woocommerce-bookings' );
+				} elseif ( 'hour' === $duration_unit ) {
+					$duration_unit = _n( 'hour', 'hours', $duration, 'woocommerce-bookings' );
+				} elseif ( 'day' === $duration_unit ) {
 					$duration_unit = _n( 'day', 'days', $duration, 'woocommerce-bookings' );
+				} elseif ( 'month' === $duration_unit ) {
+					$duration_unit = _n( 'month', 'months', $duration, 'woocommerce-bookings' );
+				} else {
+					$duration_unit = _n( 'block', 'blocks', $duration, 'woocommerce-bookings' );
 				}
 
 				// Check for singular display.
@@ -483,11 +488,13 @@ class WC_Booking_Form {
 			$booking_slots_transient_keys[ $this->product->get_id() ] = array();
 		}
 
-		$booking_slots_transient_keys[ $this->product->get_id() ][] = $transient_name;
-
-		// Give array of keys a long ttl because if it expires we won't be able to flush the keys when needed.
-		// We can't use 0 to never expire because then WordPress will autoload the option on every page.
-		WC_Bookings_Cache::set( 'booking_slots_transient_keys', $booking_slots_transient_keys, YEAR_IN_SECONDS );
+		// Don't store in cache if it already exists there.
+		if ( ! in_array( $transient_name, $booking_slots_transient_keys[ $this->product->get_id() ] ) ) {
+			$booking_slots_transient_keys[ $this->product->get_id() ][] = $transient_name;
+			// Give array of keys a long ttl because if it expires we won't be able to flush the keys when needed.
+			// We can't use 0 to never expire because then WordPress will autoload the option on every page.
+			WC_Bookings_Cache::set( 'booking_slots_transient_keys', $booking_slots_transient_keys, YEAR_IN_SECONDS );
+		}
 
 		if ( false === $st_block_html ) {
 			$st_block_html = '';
@@ -565,7 +572,26 @@ class WC_Booking_Form {
 			$end_time = strtotime( '+ ' . $duration_index * $product_duration . ' ' . $this->product->get_duration_unit(), $start_time );
 
 			// Check if $end_time is bookable by rules.
-			if ( ! WC_Product_Booking_Rule_Manager::check_availability_rules_against_time( $start_time, $end_time, $resource_id, $this->product ) ) {
+			if ( 0 === $resource_id && $this->product->has_resources() ) {
+				// If product has multiple resources but no resource_id
+				// specified in request, assume "Automatically assigned"
+				// resources setup.
+				$auto_assigned_bookable = false;
+
+				// Check bookable against every resource.
+				foreach ( $this->product->get_resource_ids() as $auto_assigned_resource_id ) {
+					if ( WC_Product_Booking_Rule_Manager::check_availability_rules_against_time( $start_time, $end_time, $auto_assigned_resource_id, $this->product ) ) {
+						$auto_assigned_bookable = true;
+					}
+				}
+
+				// Only skip the block which has no resources available for booking.
+				if ( ! $auto_assigned_bookable ) {
+					continue;
+				}
+			} elseif ( ! WC_Product_Booking_Rule_Manager::check_availability_rules_against_time( $start_time, $end_time, $resource_id, $this->product ) ) {
+				// If product has no resources OR resource_id is specified.
+				// Assume "Customer selected" resources setup.
 				continue;
 			}
 

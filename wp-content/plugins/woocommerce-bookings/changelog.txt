@@ -1,5 +1,125 @@
 *** WooCommerce Bookings Changelog ***
 
+2022-03-17 - version 1.15.53
+* Fix - Booking Time Not Available After Booking Released from Cart.
+* Fix - Booking changed to "Partially Paid" even when deposit payment failed.
+* Fix - Compatibility issue with WooCommerce Multi-Currency.
+* Fix - Inconsistency manual created bookings vs. frontend.
+* Fix - Min Block Bookable Setting "x" hours into the future does not work with day range bookings.
+* Fix - Overbooking with "Customer defined blocks of".
+* Fix - Partially booked slots not considered for new bookings.
+* Fix - Show category in API only if it has a bookable product.
+* Fix - Undefined array key "resource_id" when using 'Customer defined blocks of'.
+
+2022-02-08 - version 1.15.52
+* Fix - Fixes an issue with the previous build size.
+
+2022-02-08 - version 1.15.51
+* Fix - Adds overflow-x scroll to allow the availability tab to be viewable on smaller resolutions.
+* Fix - Calculated price appending text "From:".
+* Fix - Prices not updating based on Time Range set in Costs settings.
+* Fix - The Booking cost is not showing any price when block and base cost is empty.
+* Fix - The order details page shows duplicate product info when booking multiple slots of the same product.
+* Fix - Try clearing out cached directory to fix tests.
+* Fix - fix/1495 - Resets start date selection in calendar ranger when clicking an earli….
+* Tweak - WC 6.2 compatibility.
+* Tweak - WP 5.9 compatibility.
+
+2022-01-26 - version 1.15.50
+* Fix - Add duration limit unit with max/min duration notice.
+* Fix - Add product information in the cancel email.
+* Fix - Add-Ons info in the Pending Confirmation email.
+* Fix - Added min-width to date picker and date range fields.
+* Fix - Booking events status can not be recognized when looking at the calendar(s).
+* Fix - Booking resources and persons toggle button is closing product data tab.
+* Fix - Bump date line down in the admin calendar so it's easier to read .
+* Fix - Calendar availability incorrect if customers timezone changes date. .
+* Fix - Calendar has warnings if view is 'Month' selected.
+* Fix - Custom availability rules with higher priority to override Google Calendar events.
+* Fix - Deprecated function being used: `woocommerce_before_cart_item_quantity_zero`.
+* Fix - Enhance resource cost unit label.
+* Fix - Ensure end time and start time fields don't overlap in admin bookings view.
+* Fix - Fix/3057 - Adds function to set selected month. Fix for highlighted month disappearing when clicking outside calendar.
+* Fix - Fix: Inconsistencies in start times when resources are assigned to bookable products.
+* Fix - Fix: Memberships discounts are not applied to the booking cost preview on the product's page (only in cart).
+* Fix - Hide past global availabilities from settings.
+* Fix - Overlapping resource availability - Incorrect slot display in the front-end.
+* Fix - The default parameter is not used in the `WC_Bookings_CPT::custom_columns` hook.
+* Fix - UI broken due to Booking product title on Booking >Calendar.
+* Fix - Using start of week setting.
+* Tweak - Cleanup of `was-in-cart` bookings.
+* Tweak - WC 4.7 compatibility.
+* Tweak - WP 5.9 compatibility.
+
+2021-11-30 - version 1.15.49
+* Fix - Availability of the product with multiple auto-assigned resources.
+* Fix - Bring jQuery UI into our codebase instead of loading from a CDN.
+* Fix - DatePicker crash issue while navigating between months.
+* Fix - Deleting the quantity overrides at a product level by another person type.
+* Fix - Deprecated notice with PHP 8 when viewing a Schedule in the back end.
+* Fix - Error notice on unable to initialize a calendar connection.
+* Fix - Fix: Google Calendar 2 way sync offset.
+* Fix - address more dependency conflicts.
+* Tweak - WC 5.9 compatibility.
+* Tweak - WP 5.8 compatibility.
+
+2021-10-20 - version 1.15.48
+* Fix - Include `was-in-cart` bookings to database cleanup tool.
+* Tweak - WC 5.8 compatibility.
+* Tweak - WP 5.8 compatibility.
+
+2021-10-05 - version 1.15.47
+* Add - Filter `woocommerce_bookings_product_defaults` to override default attributes for Product Booking.
+* Fix - Ensure timeframe calculations are correct when using hours in the max bookable setting.
+* Fix - Prevent duplication of transient keys.
+* Fix - Revert "Add the jQuery UI styles and images to our codebase".
+
+2021-10-04 - version 1.15.46
+* Fix - Date correction for bookings that cross days between user's local timezone and site timezone.
+* Tweak - WC 5.7 compatibility.
+
+2021-10-04 - version 1.15.45
+* Add - Bookings made through COD mode of payment are now synced with Google Calendar.
+* Add - New filter `woocommerce_booking_sync_cod_bookings` to enable/disable the COD payment sync with Google Calendar. .
+* Fix - Add unique namespace to more Guzzle functions.
+* Fix - Added validation for start and end dates.
+* Fix - Bring jQuery UI into our codebase instead of loading from a CDN.
+* Fix - Handle Google Calendar connection fatal error in a more human-readable format.
+* Fix - Manually book private products.
+* Fix - Padding of Restrict selectable days table in Availability tab.
+* Fix - Pagination at My Bookings account section.
+* Fix - Restore dropped changelog entry for 1.15.43.
+* Fix - Wrong behavior of "Range of Week" rules.
+* Tweak -  Document since version for `woocommerce_booking_status_changed`.
+* Tweak - WC 5.7 compatibility.
+
+2021-08-24 - version 1.15.44
+* Fix - Add unique namespace to the Guzzle and Google libraries to avoid conflicts.
+* Fix - Build-specific, no changelog entry needed.
+* Fix - Ensure manual orders show the time in customer's timezone, not store timezone.
+* Tweak - WC 5.6 compatibility.
+* Tweak - WP 5.8 compatibility.
+
+2021-07-28 - version 1.15.43
+* Tweak - Introduced a new woocommerce_bookings_filter_time_slots filter to modify availability on a per-product basis.
+
+2021-07-20 - version 1.15.42
+* Fix - Fix the start date in the reminder email when the customer's timezone is different from the shop timezone.
+
+2021-06-15 - version 1.15.41
+* Tweak - Send customer email notification when unpaid bookings are canceled.
+* Tweak - WC 5.4 compatibility.
+* Tweak - WP 5.7 compatibility.
+
+2021-06-01 - version 1.15.40
+* Fix - can't add accommodation booking to cart from wishlist.
+* Tweak - WC 5.3 compatibility.
+* Tweak - WP 5.7 compatibility.
+* Tweak - Send customer email notification when unpaid bookings are canceled.
+
+2021-05-11 - version 1.15.39
+* Fix - Use proper hook function closes #3071.
+
 2021-04-06 - version 1.15.38
 * Fix - Update javascript to directly support jQuery 3 without jQuery Migrate.
 * Fix - Updated path to the single-product/add-to-cart/booking.php template file.

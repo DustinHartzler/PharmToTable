@@ -14,7 +14,6 @@ class WC_Bookings_Menus {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 49 );
 		add_filter( 'menu_order', array( $this, 'menu_order' ), 20 );
 		add_filter( 'admin_url', array( $this, 'add_new_booking_url' ), 10, 2 );
-		add_action( 'wp_enqueue_scripts', array( $this, 'booking_form_styles' ) );
 	}
 
 	/**
@@ -82,11 +81,7 @@ class WC_Bookings_Menus {
 	 * Create booking scripts.
 	 */
 	public function create_booking_page_scripts() {
-		global $wp_scripts;
-
-		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.11.4';
-
-		wp_enqueue_style( 'jquery-ui-style', '//ajax.googleapis.com/ajax/libs/jqueryui/' . $jquery_version . '/themes/smoothness/jquery-ui.min.css' );
+		wp_enqueue_style( 'jquery-ui-style', WC_BOOKINGS_PLUGIN_URL . '/dist/css/jquery-ui-styles.css', array(), '1.11.4-wc-bookings.' . WC_BOOKINGS_VERSION );
 		wp_enqueue_style( 'wc-bookings-styles', WC_BOOKINGS_PLUGIN_URL . '/dist/css/frontend.css', null, WC_BOOKINGS_VERSION );
 	}
 

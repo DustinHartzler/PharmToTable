@@ -307,7 +307,7 @@ class WC_Booking extends WC_Bookings_Data {
 		/**
 		 * Hook: woocommerce_booking_status_changed
 		 *
-		 * @since %VERSION%
+		 * @since 1.15.35
 		 *
 		 * @param string     $from       Previous status.
 		 * @param string     $to         New (current) status.
@@ -709,9 +709,37 @@ class WC_Booking extends WC_Bookings_Data {
 		$start = $this->start_cached;
 		$end   = $this->end_cached;
 
-		if ( ! $start || ! $end || $start >= $block_end || $end <= $block_start ) {
+		// Condition: Already Booked range must be inside (or equals to) the block range.
+		if ( ! $start || ! $end || ! ( $block_start <= $start && $end <= $block_end ) ) {
 			return false;
 		}
+		return true;
+	}
+
+	/**
+	 * See if the booking intersects a block.
+	 *
+	 * @param int $block_start Block start timestamp.
+	 * @param int $block_end Block end timestamp.
+	 *
+	 * @return bool
+	 */
+	public function is_intersecting_block( $block_start, $block_end ) {
+		// Cache start/end to speed up repeated calls.
+		if ( null === $this->start_cached ) {
+			$this->start_cached = $this->get_start();
+		}
+		if ( null === $this->end_cached ) {
+			$this->end_cached = $this->get_end();
+		}
+		$start = $this->start_cached;
+		$end   = $this->end_cached;
+
+		// Condition: Already Booked range must intersect the block range.
+		if ( ! $start || ! $end || $end <= $block_start || $block_end <= $start ) {
+			return false;
+		}
+
 		return true;
 	}
 

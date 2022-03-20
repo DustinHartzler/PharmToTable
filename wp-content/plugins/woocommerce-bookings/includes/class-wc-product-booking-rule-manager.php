@@ -576,11 +576,6 @@ class WC_Product_Booking_Rule_Manager {
 					if ( ! isset( $minute_range['bookable'] ) || empty( $data_for_rule['minutes'] ) ) {
 						continue;
 					}
-					// remove the last minute from the array for hours not to be thrown off
-					// what happens is that this last minute could fall right at the beginning of the
-					// next slot like 7:00 to 8:00 range the last minute will be on 8:00 which means
-					// 8:00 will be removed, leaving the resulting range to start at 8:01.
-					array_pop( $data_for_rule['minutes'] );
 					$resource_minutes[ $id ][ $index ]['bookable'] = array_diff( $minute_range['bookable'], $data_for_rule['minutes'] );
 				}
 			}
@@ -732,7 +727,46 @@ class WC_Product_Booking_Rule_Manager {
 			$minutes['is_bookable'] = $range['rule'];
 		}
 
-		$minutes['minutes'] = self::calculate_minute_range( $from, $to );
+		$calculated_minutes_range = self::calculate_minute_range( $from, $to );
+
+		/**
+		 * Consider an example of a clinic which is open from 11:00am to 4:00pm which offers 30 minute slots
+		 * and also 1:00pm to 2:00pm is already booked.
+		 *
+		 * 11:00am = 11*60 = 660 (opening time)
+		 * 04:00pm = 16*60 = 960 (closing time)
+		 * 01:00pm = 13*60 = 780 (start of an existing booking)
+		 * 02:00pm = 14*60 = 840 (end of an existing booking)
+		 *
+		 * @see https://github.com/woocommerce/woocommerce-bookings/blob/trunk/includes/class-wc-product-booking-rule-manager.php#L571
+		 * The output of array_diff removes 780 and 840 from the range [660-960] which causes this issue:
+		 * @see https://github.com/woocommerce/woocommerce-bookings/issues/2383.
+		 * We need the 780 and 840 to be a part of bookable time array.
+		 * What the below fix does is set the unbookable range as 1:01pm - 1:59pm (781 - 839).
+		 * This is only for unbookable range, when the is_bookable is set to `false`.
+		 */
+		$minutes['overlapping_start_time'] = false;
+		$minutes['overlapping_end_time']   = false;
+
+		/**
+		 * The front end pages usually only display the bookable range, but the
+		 * admin pages like Bookings > Calendar display the unbookable range as well.
+		 * And, since we are removing the first and the last minute from the unbookable range,
+		 * it will display the time incorrectly. This is why we will also return these 2 removed
+		 * values `overlapping_start_time` and `overlapping_end_time` with this method so that
+		 * the unbookable range can be displayed correctly.
+		 *
+		 * @todo Since there are multiple PRs opened to fix the related issues: #2798, #2649 and #3160,
+		 * concurrently, this fix is done here. Once tested and merged, we might want to create a
+		 * separate utility function which takes care of this.
+		 */
+
+		if ( ! $minutes['is_bookable'] ) {
+			$minutes['overlapping_start_time'] = array_shift( $calculated_minutes_range );
+			$minutes['overlapping_end_time']   = array_pop( $calculated_minutes_range );
+		}
+
+		$minutes['minutes'] = $calculated_minutes_range;
 
 		return $minutes;
 	}
@@ -1027,7 +1061,7 @@ class WC_Product_Booking_Rule_Manager {
 
 			if ( 'rrule' === $type ) {
 				if ( self::rrule_matches_timestamp( $range, $slot_start_time + 1 ) || self::rrule_matches_timestamp( $range, $slot_end_time - 1 ) ) {
-					return $range['rule'];
+					$rule_val = self::check_timestamp_against_rule( $slot_start_time, $rule, $bookable_product->get_default_availability() );
 				} else {
 					continue;
 				}
@@ -1115,7 +1149,7 @@ class WC_Product_Booking_Rule_Manager {
 						// slot_end_time has to be also inside of the rule_end_time for products with duration of hours or minutes.
 						$check_in_range = $rule_val && ! $bookable_product->get_default_availability() && ! $bookable_product->get_check_start_block_only();
 
-						if ( $apply_rule_times && $check_in_range && ( $slot_end_time > $rule_end_time ) ) {
+						if ( $apply_rule_times && $check_in_range && ( $slot_start_time < $rule_start_time || $slot_end_time > $rule_end_time ) ) {
 							continue;
 						}
 					}

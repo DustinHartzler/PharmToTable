@@ -104,10 +104,10 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 		self::CALENDAR_DEFAULT_POLLER_RATE * 8,
 	);
 
-	/** 
+	/**
 	 * Limit for the poller retry.
 	 * Even if we will have more consecutive failures we will use this as a maximum value.
-	 * 
+	 *
 	 * @since 1.15.15
 	 */
 	const CALENDAR_POLLER_MAX_RETRY_RATE = 4; // Maximum index for CALENDAR_EXPONENTIAL_BACKOFF_RATES.
@@ -132,6 +132,7 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 		add_action( 'woocommerce_api_wc_bookings_google_calendar', array( $this, 'oauth_redirect_custom' ) );
 
 		add_action( 'init', array( $this, 'register_booking_update_hooks' ) );
+		add_action( 'woocommerce_booking_in-cart_to_unpaid', array( $this, 'sync_cod_booking' ), 10, 2 );
 
 		add_action( 'woocommerce_before_booking_global_availability_object_save', array( $this, 'sync_global_availability' ) );
 
@@ -141,6 +142,8 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 		add_action( 'untrashed_post', array( $this, 'sync_untrashed_booking' ) );
 		add_action( 'wc-booking-poll-google-cal', array( $this, 'poll_google_calendar_events' ) );
 		add_action( 'init', array( $this, 'maybe_schedule_poller' ) );
+		add_action( 'init', array( $this, 'maybe_schedule_deleted_events_cleanup' ) );
+		add_action( 'woocommerce_bookings_cleanup_deleted_events', array( $this, 'cleanup_deleted_events' ) );
 
 		add_action( 'woocommerce_bookings_update_google_client', array( $this, 'maybe_enable_legacy_integration' ), 1, 5 );
 
@@ -195,6 +198,17 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 	 */
 	protected function get_sync_preference() {
 		return $this->get_option( 'sync_preference' );
+	}
+
+	/**
+	 * Returns true if event deletion is preferred when the
+	 * corresponding store availability is deleted, false
+	 * otherwise.
+	 *
+	 * @return boolean
+	 */
+	protected function is_event_deletion_preferred() {
+		return 'yes' === $this->get_option( 'event_deletion_preference' );
 	}
 
 	/**
@@ -321,7 +335,7 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 
 	/**
 	 * Set a delay for the next poller request in case we had an error on the previous request.
-	 * 
+	 *
 	 * This is a very simplified exponential backoff request function. It is simplified because we don't do
 	 * active re-tries in the case of a failure. This means that we don't need advance algorithm but just
 	 * an exponentially growing set of retry times. We also don't need to add the random amount to ensure
@@ -352,7 +366,7 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 
 	/**
 	 * Returns value of poller interval that will be used for next poll.
-	 * 
+	 *
 	 * @return integer Poller interval in seconds.
 	 *
 	 * @since 1.15.15
@@ -362,7 +376,7 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 		$poller_failures            = min( get_option( self::POLLER_BACKOFF_FAILURE_STATE, 0 ), self::CALENDAR_POLLER_MAX_RETRY_RATE );
 		$failures_adjusted_interval = self::CALENDAR_EXPONENTIAL_BACKOFF_RATES[ $poller_failures ];
 		$interval                   = max( $default_interval, $failures_adjusted_interval ); // max in case the user has self defined a bigger interval.
-		
+
 		return $interval * MINUTE_IN_SECONDS; // seconds.
 	}
 
@@ -419,6 +433,49 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 	}
 
 	/**
+	 * Schedule a recurring Action Scheduler every 6 months to cleanup
+	 * the option `woocommerce_bookings_cleanup_deleted_events` which
+	 * stores an array of deleted options.
+	 */
+	public function maybe_schedule_deleted_events_cleanup() {
+		/**
+		 * Return if Google events should be deleted with Global
+		 * availability.
+		 */
+		if ( $this->is_event_deletion_preferred() ) {
+			return;
+		}
+
+		if ( false === as_next_scheduled_action( 'woocommerce_bookings_cleanup_deleted_events' ) ) {
+			as_schedule_recurring_action( time(), MONTH_IN_SECONDS, 'woocommerce_bookings_cleanup_deleted_events' );
+		}
+	}
+
+	/**
+	 * Deletes deleted events before 'today' from option `woocommerce_bookings_deleted_global_availability`.
+	 * 'today' is the day when this method is scheduled to run.
+	 */
+	public function cleanup_deleted_events() {
+		$deleted_availabilities = get_option( 'woocommerce_bookings_deleted_global_availability', array() );
+
+		if ( empty( $deleted_availabilities ) ) {
+			return;
+		}
+
+		$timezone    = new DateTimeZone( wc_booking_get_timezone_string() );
+		$todays_date = new WC_DateTime( 'now', $timezone );
+		$todays_date = $todays_date->date( 'Y-m-d' );
+
+		foreach ( $deleted_availabilities as $event_id => $event_end_date ) {
+			if ( $event_end_date < $todays_date ) {
+				unset( $deleted_availabilities[ $event_id ] );
+			}
+		}
+
+		update_option( 'woocommerce_bookings_deleted_global_availability', $deleted_availabilities );
+	}
+
+	/**
 	 * Registers booking object lifecycle events.
 	 * Needs to happen after init because of the dynamic hook names.
 	 */
@@ -430,6 +487,40 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 
 		add_action( 'woocommerce_booking_cancelled', array( $this, 'remove_booking' ) );
 		add_action( 'woocommerce_booking_process_meta', array( $this, 'sync_edited_booking' ) );
+	}
+
+	/**
+	 * Syncs bookings to Google Calendar that are made using COD
+	 * payment method.
+	 *
+	 * @param int        $booking_id Booking id.
+	 * @param WC_Booking $booking    Booking object.
+	 * @see https://github.com/woocommerce/woocommerce-bookings/issues/2755#issuecomment-829304974
+	 */
+	public function sync_cod_booking( $booking_id, $booking ) {
+		/**
+		 * Filter to enable/disable syncing of bookings that are made
+		 * using COD payment method.
+		 *
+		 * @param int        $booking_id Booking id.
+		 * @param WC_Booking $booking    Booking object.
+		 */
+		if ( ! apply_filters( 'woocommerce_booking_sync_cod_bookings', true, $booking_id, $booking ) ) {
+			return;
+		}
+
+		$order = $booking->get_order();
+
+		if ( false === $order ) {
+			return;
+		}
+
+		$payment_method = $order->get_payment_method();
+
+		// Only sync with google calendar if payment method is `COD`.
+		if ( 'cod' === $payment_method ) {
+			$this->sync_booking( $booking_id );
+		}
 	}
 
 	/**
@@ -683,7 +774,17 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 
 			$events = $this->get_events();
 
+			$deleted_availabilities = get_option( 'woocommerce_bookings_deleted_global_availability', array() );
+
 			foreach ( $events as $event ) {
+				/**
+				 * If a global store availability was deleted once, then prevent
+				 * the event from being imported from Google calendar once again.
+				 */
+				if ( isset( $deleted_availabilities[ $event['id'] ] ) ) {
+					continue;
+				}
+
 				$availabilities = $global_availability_data_store->get_all(
 					array(
 						array(
@@ -797,6 +898,13 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 				'desc_tip'      => true,
 				'default'       => 'one_way',
 				'display_check' => array( $this, 'display_connection_settings' ),
+			),
+			'event_deletion_preference' => array(
+				'title'       => __( 'Deletion Preference', 'woocommerce-bookings' ),
+				'type'        => 'checkbox',
+				'label'       => __( 'Delete Events from Google Calendar', 'woocommerce-bookings' ),
+				'default'     => 'no',
+				'description' => __( 'Check this to delete an event from Google Calendar when the corresponding store availability is deleted.', 'woocommerce-bookings' ),
 			),
 			'debug'           => array(
 				'title'       => __( 'Debug Log', 'woocommerce-bookings' ),
@@ -946,7 +1054,7 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 			}
 		}
 		return parent::validate_text_field( $key, $value );
-	}	
+	}
 
 	/**
 	 * Generate the Google Calendar Authorization field.
@@ -989,9 +1097,13 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 	public function admin_options() {
 		echo '<p>' . esc_html__( 'To sync with Google Calendar using an app provided by WooCommerce.com, click the "Connect with Google" button below to authorize access to your Google calendar.', 'woocommerce-bookings' ) . '</p>';
 
-		echo '<table class="form-table">';
+		try {
+			echo '<table class="form-table">';
 			$this->generate_settings_html();
-		echo '</table>';
+			echo '</table>';
+		} catch ( Exception $e ) {
+			$this->log( 'The Google Calendar API is facing issues: ' . $e->getMessage() );
+		}
 	}
 
 	/**
@@ -1073,7 +1185,26 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 		);
 
 		$client = $this->get_client();
-		$client->setAccessToken( $access_token );
+
+		try {
+			$client->setAccessToken( $access_token );
+
+			if ( WC_Admin_Notices::has_notice( 'bookings_google_calendar_invalid_token_error' ) ) {
+				WC_Admin_Notices::remove_notice( 'bookings_google_calendar_invalid_token_error' );
+			}
+		} catch( Exception $e ) {
+			$this->log(
+				$e->getMessage(),
+				array(),
+				WC_Log_Levels::ERROR
+			);
+
+			WC_Admin_Notices::add_custom_notice(
+				'bookings_google_calendar_invalid_token_error',
+				'<strong>' . esc_html__( 'Google Calendar', 'woocommerce-bookings' ) . '</strong> ' . $e->getMessage()
+			);
+		}
+
 		unset( $access_token['refresh_token'] ); // unset this since we store it in an option.
 		set_transient( 'wc_bookings_gcalendar_access_token', $access_token, self::TOKEN_TRANSIENT_TIME );
 		update_option( 'wc_bookings_gcalendar_refresh_token', $client->getRefreshToken() );
@@ -1154,7 +1285,7 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 			$code   = sanitize_text_field( $_GET['code'] );
 			$client = $this->get_client();
 			$client->setClientId( $this->client_id );
-			$client->setClientSecret( $this->client_secret );	
+			$client->setClientSecret( $this->client_secret );
 			$access_token = $client->fetchAccessTokenWithAuthCode( $code );
 
 			if ( empty( $access_token ) ) {
@@ -1265,6 +1396,8 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 		$timezone        = wc_booking_get_timezone_string();
 		$description     = '';
 		$customer        = $booking->get_customer();
+		$status          = $booking->get_status();
+		$status_label    = isset( $status ) ? WC_Bookings_Calendar::get_booking_status_label( $status ) : '';
 
 		$booking_data = array(
 			__( 'Booking ID', 'woocommerce-bookings' )   => $booking_id,
@@ -1315,7 +1448,13 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 
 		// Set the event data.
 		$product_title = $product ? html_entity_decode( $product->get_title() ) : __( 'Booking', 'woocommerce-bookings' );
-		$event->setSummary( wp_kses_post( sprintf( "%s, %s - #%s", $customer->name, $product_title, $booking->get_id() ) ) );
+
+		// Prepend booking status.
+		if ( ! empty( $status_label ) ) {
+			$event->setSummary( wp_kses_post( sprintf( "[%s] %s, %s - #%s", $status_label, $customer->name, $product_title, $booking->get_id() ) ) );
+		} else {
+			$event->setSummary( wp_kses_post( sprintf( "%s, %s - #%s", $customer->name, $product_title, $booking->get_id() ) ) );
+		}
 
 		// Set the event start and end dates.
 		$start = new Google_Service_Calendar_EventDateTime();
@@ -1436,7 +1575,7 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 
 		if ( 'cancelled' === $status ) {
 			$this->remove_booking( $booking_id );
-		} elseif ( in_array( $status, $this->get_booking_is_paid_statuses(), true ) ) {
+		} else {
 			$this->sync_booking( $booking_id );
 		}
 	}
@@ -1476,6 +1615,41 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 	 * @param WC_Global_Availability $availability Availability to delete.
 	 */
 	public function delete_global_availability( WC_Global_Availability $availability ) {
+		/**
+		 * Prevents deletion of an event from Google calendar whenever the
+		 * corresponding store availability is deleted.
+		 */
+		if ( ! $this->is_event_deletion_preferred() ) {
+			// Get event IDs of all deleted global store availabilities.
+			$deleted_availabilities = get_option( 'woocommerce_bookings_deleted_global_availability', array() );
+			if ( ! isset( $deleted_availabilities[ $availability->get_gcal_event_id() ] ) ) {
+
+				/**
+				 * We store the event IDs of all the global store availabilities
+				 * that are deleted from WC but don't want it to be deleted from
+				 * Google Calendar. We later refer to this to prevent re-importing
+				 * deleted events from GC again.
+				 *
+				 */
+				$range_type = $availability->get_range_type();
+
+				if ( 'custom' === $range_type ) {
+					$event_end_date = $availability->get_to_range();
+				} else if ( 'custom:daterange' === $range_type ) {
+					$event_end_date = $availability->get_to_date();
+				}
+
+				/**
+				 * This option can grow indefinitely. This is why we store
+				 * the event IDs along with the event end date, so that the
+				 * Action Scheduler can clean up old events.
+				 */
+				$deleted_availabilities[ $availability->get_gcal_event_id() ] = $event_end_date;
+				update_option( 'woocommerce_bookings_deleted_global_availability', $deleted_availabilities, 'no' );
+			}
+			return;
+		}
+
 		$this->maybe_init_service();
 
 		if ( $availability->get_gcal_event_id() ) {
@@ -1570,15 +1744,6 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 
 			$start_date = new WC_DateTime( $event->getStart()->getDateTime() );
 			$end_date   = new WC_DateTime( $event->getEnd()->getDateTime() );
-
-			try {
-				// Our date ranges are inclusive, Google's are not, so shift the range (e.g. [10:00, 11:00] -> [10:01. 10:59])
-				$start_date->add( new DateInterval( 'PT60S' ) );
-				$end_date->sub( new DateInterval( 'PT1S' ) );
-			} catch ( Exception $e ) {
-				$this->log( $e->getMessage() );
-				// Should never happen.
-			}
 
 			$availability->set_range_type( 'custom:daterange' )
 				->set_from_date( $start_date->format( 'Y-m-d' ) )
@@ -1774,10 +1939,10 @@ class WC_Bookings_Google_Calendar_Connection extends WC_Settings_API {
 	 * @return array
 	 */
 	private function renew_access_token( $refresh_token, $client ) {
-		
+
 		if ( get_option( 'wc_bookings_google_calendar_custom_connection' ) ) {
 			$client->setClientId( $this->client_id );
-			$client->setClientSecret( $this->client_secret );	
+			$client->setClientSecret( $this->client_secret );
 			return $client->fetchAccessTokenWithRefreshToken( $refresh_token );
 		}
 

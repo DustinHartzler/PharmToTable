@@ -72,7 +72,18 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	 * @param int|WC_Product|object $product Product to init.
 	 */
 	public function __construct( $product = 0 ) {
-		$this->data = array_merge( $this->data, $this->defaults );
+		/**
+		 * Override default attributes for Product Booking.
+		 *
+		 * @since 1.15.46
+		 *
+		 * @param array $defaults Default values to init new Product.
+		 * @param int|WC_Product|object $product Product to init.
+		 *
+		 * @see WC_Product_Booking::defaults
+		 */
+		$defaults   = apply_filters( 'woocommerce_bookings_product_defaults', $this->defaults, $product );
+		$this->data = array_merge( $this->data, $defaults );
 		parent::__construct( $product );
 	}
 
@@ -1469,6 +1480,37 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	*/
 
 	/**
+	 * Get the duration time interval in minutes.
+	 *
+	 * @return int duration in minutes.
+	 */
+	public function get_time_interval_in_minutes() {
+		$duration      = $this->get_duration();
+		$duration_unit = $this->get_duration_unit();
+
+		switch ( $duration_unit ) {
+			case 'month':
+				$interval = ( $duration * MONTH_IN_SECONDS ) + DAY_IN_SECONDS;
+				break;
+			case 'week':
+				$interval = $duration * WEEK_IN_SECONDS;
+				break;
+			case 'day':
+				$interval = $duration * DAY_IN_SECONDS;
+				break;
+			case 'hour':
+				$interval = $duration * HOUR_IN_SECONDS;
+				break;
+			default:
+				$interval = $duration * MINUTE_IN_SECONDS;
+				break;
+		}
+
+		// Convert seconds to minute.
+		return $interval / MINUTE_IN_SECONDS;
+	}
+
+	/**
 	 * Check the resources availability against all the blocks.
 	 *
 	 * @param  string $start_date
@@ -1481,7 +1523,9 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	public function get_blocks_availability( $start_date, $end_date, $qty, $booking_resource = null, $intervals = array() ) {
 
 		$resource_id = isset( $booking_resource ) ? $booking_resource->get_id() : 0;
-		$interval    = 'hour' === $this->get_duration_unit() ? $this->get_duration() * 60 : $this->get_duration();
+
+		// Get duration interval in minutes.
+		$interval = $this->get_time_interval_in_minutes();
 
 		$bookings_end_date = $end_date - 1;
 
@@ -1512,7 +1556,8 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 
 			foreach ( $existing_bookings as $existing_booking ) {
 
-				if ( ! $existing_booking->is_within_block( $block, strtotime( "+{$interval} minutes", $block ) ) ) {
+				// Skip the block if it's not intersected by a booking.
+				if ( ! $existing_booking->is_intersecting_block( $block, strtotime( "+{$interval} minutes", $block ) ) ) {
 					continue;
 				}
 				$existing_booking_product    = $existing_booking->get_product();
@@ -2273,13 +2318,36 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 			if ( empty( $data['_duration'] ) ) {
 				return new WP_Error( 'Error', __( 'Duration is required - please enter a duration greater than zero', 'woocommerce-bookings' ) );
 			}
+			$duration_unit = $this->get_duration_unit();
 			if ( $data['_duration'] > $this->get_max_duration() ) {
-				/* translators: 1: maximum duration */
-				return new WP_Error( 'Error', sprintf( __( 'The maximum duration is %d', 'woocommerce-bookings' ), $this->get_max_duration() ) );
+				if ( 'minute' === $duration_unit ) {
+					$duration_unit = _n( 'minute', 'minutes', $this->get_max_duration(), 'woocommerce-bookings' );
+				} elseif ( 'hour' === $duration_unit ) {
+					$duration_unit = _n( 'hour', 'hours', $this->get_max_duration(), 'woocommerce-bookings' );
+				} elseif ( 'day' === $duration_unit ) {
+					$duration_unit = _n( 'day', 'days', $this->get_max_duration(), 'woocommerce-bookings' );
+				} elseif ( 'month' === $duration_unit ) {
+					$duration_unit = _n( 'month', 'months', $this->get_max_duration(), 'woocommerce-bookings' );
+				} else {
+					$duration_unit = _n( 'block', 'blocks', $this->get_max_duration(), 'woocommerce-bookings' );
+				}
+				/* translators: 1: maximum duration 2: duration unit */
+				return new WP_Error( 'Error', sprintf( __( 'The maximum duration is %1$d %2$s', 'woocommerce-bookings' ), $this->get_max_duration(), $duration_unit ) );
 			}
 			if ( $data['_duration'] < $this->get_min_duration() ) {
-				/* translators: 1: minimum duration */
-				return new WP_Error( 'Error', sprintf( __( 'The minimum duration is %d', 'woocommerce-bookings' ), $this->get_min_duration() ) );
+				if ( 'minute' === $duration_unit ) {
+					$duration_unit = _n( 'minute', 'minutes', $this->get_min_duration(), 'woocommerce-bookings' );
+				} elseif ( 'hour' === $duration_unit ) {
+					$duration_unit = _n( 'hour', 'hours', $this->get_min_duration(), 'woocommerce-bookings' );
+				} elseif ( 'day' === $duration_unit ) {
+					$duration_unit = _n( 'day', 'days', $this->get_min_duration(), 'woocommerce-bookings' );
+				} elseif ( 'month' === $duration_unit ) {
+					$duration_unit = _n( 'month', 'months', $this->get_min_duration(), 'woocommerce-bookings' );
+				} else {
+					$duration_unit = _n( 'block', 'blocks', $this->get_min_duration(), 'woocommerce-bookings' );
+				}
+				/* translators: 1: minimum duration 2: duration unit */
+				return new WP_Error( 'Error', sprintf( __( 'The minimum duration is %1$d %2$s', 'woocommerce-bookings' ), $this->get_min_duration(), $duration_unit ) );
 			}
 		}
 
@@ -2350,14 +2418,16 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 			if ( $this->has_person_types() ) {
 				$person_types = $this->get_person_types();
 				foreach ( $person_types as $person ) {
+					$person_qty = $data['_persons'][ $person->get_id() ] ?? 0;
+
 					$person_max = $person->get_max();
-					if ( is_numeric( $person_max ) && isset( $data['_persons'][ $person->get_id() ] ) && $data['_persons'][ $person->get_id() ] > $person_max ) {
+					if ( is_numeric( $person_max ) && $person_qty > $person_max ) {
 						/* translators: 1: person name 2: maximum persons */
 						return new WP_Error( 'Error', sprintf( __( 'The maximum %1$s per group is %2$d', 'woocommerce-bookings' ), $person->post_title, $person_max ) );
 					}
 
 					$person_min = $person->get_min();
-					if ( is_numeric( $person_min ) && isset( $data['_persons'][ $person->get_id() ] ) && $data['_persons'][ $person->get_id() ] < $person_min ) {
+					if ( is_numeric( $person_min ) && $person_qty  < $person_min ) {
 						/* translators: 1: person name 2: minimum persons */
 						return new WP_Error( 'Error', sprintf( __( 'The minimum %1$s per group is %2$d', 'woocommerce-bookings' ), $person->post_title, $person_min ) );
 					}
