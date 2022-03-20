@@ -1,9 +1,10 @@
 <?php
 /**
- * Affiliate Payout Sent Email Content
+ * Affiliate Payout Sent Email Content (Affiliate - Commission Paid)
  *
- * @version     1.0.0
  * @package     affiliate-for-woocommerce/templates/
+ * @since       2.4.1
+ * @version     1.0.1
  */
 
 // Exit if accessed directly.
@@ -42,7 +43,7 @@ if ( ! empty( $payout_notes ) ) {
 ?>
 
 <?php /* translators: %1$s: Opening a tage for affiliate my account link %2$s: text for my account %3$s: closing a tag for affiliate my account link */ ?>
-<p><?php printf( esc_html__( 'We\'ve already updated your account with this info. You can %1$s%2$s%3$s to track all referrals, payouts and campaigns.' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', esc_html__( 'login to your affiliate dashboard', 'affiliate-for-woocommerce' ), '</a>' ); ?>
+<p><?php printf( esc_html__( 'We\'ve already updated your account with this info. You can %1$s%2$s%3$s to track all referrals, payouts and campaigns.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', esc_html__( 'login to your affiliate dashboard', 'affiliate-for-woocommerce' ), '</a>' ); ?>
 
 <p><?php echo esc_html__( 'We look forward to sending bigger payouts to you next time! Keep promoting, keep living a life you love!', 'affiliate-for-woocommerce' ); ?></p>
 

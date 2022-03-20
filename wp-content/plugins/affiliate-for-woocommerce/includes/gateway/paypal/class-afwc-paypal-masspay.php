@@ -1,11 +1,10 @@
 <?php
 /**
- * Main class for Affiliate For WooCommerce Gateway PayPal
- *
- * @since       1.0.0
- * @version     1.1.3
+ * Main class for Affiliate For WooCommerce, PayPal Gateway - MassPay API
  *
  * @package     affiliate-for-woocommerce/includes/gateway/paypal/
+ * @since       4.0.0
+ * @version     1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,37 +12,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'AFWC_Paypal' ) ) {
+if ( ! class_exists( 'AFWC_PayPal_Masspay' ) ) {
 
 	/**
-	 * Gateway PayPal
+	 * PayPal Masspay
 	 */
-	class AFWC_Paypal {
+	class AFWC_PayPal_Masspay extends AFWC_PayPal_API {
 
 		const USE_PROXY  = false;
 		const PROXY_HOST = '127.0.0.1';
 		const PROXY_PORT = '8080';
 
 		/**
-		 * The API username
+		 * The key name for the payout method.
 		 *
-		 * @var string $api_username
+		 * @var string $subject
 		 */
-		public $api_username = null;
-
-		/**
-		 * The API password
-		 *
-		 * @var string $api_password
-		 */
-		public $api_password = null;
-
-		/**
-		 * The API signature
-		 *
-		 * @var string $api_signature
-		 */
-		public $api_signature = null;
+		public $key = 'paypal_masspay';
 
 		/**
 		 * The receiver type
@@ -51,13 +36,6 @@ if ( ! class_exists( 'AFWC_Paypal' ) ) {
 		 * @var string $receiver_type
 		 */
 		public $receiver_type = 'EmailAddress';
-
-		/**
-		 * The email address
-		 *
-		 * @var string $email_subject
-		 */
-		public $email_subject = 'EmailSubject';
 
 		/**
 		 * The subject
@@ -74,30 +52,6 @@ if ( ! class_exists( 'AFWC_Paypal' ) ) {
 		public $version = '98.0';
 
 		/**
-		 * The currency
-		 *
-		 * @var string $currency
-		 */
-		public $currency = 'USD';
-
-		/**
-		 * The PayPal supported currencies
-		 *
-		 * @var array $paypal_supported_currency
-		 */
-		public static $paypal_supported_currency = array( 'AUD', 'BRL', 'CAD', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'ILS', 'JPY', 'MYR', 'MXN', 'NOK', 'NZD', 'PHP', 'PLN', 'GBP', 'SGD', 'SEK', 'CHF', 'TWD', 'THB', 'USD' );
-
-		/**
-		 * The API endpoint
-		 *
-		 * @var string $api_endpoint
-		 */
-		public $api_endpoint = '';
-		// phpcs:disable
-		// public $api_endpoint = 'https://api-3t.paypal.com/nvp';
-		// phpcs:enable
-
-		/**
 		 * Variable to hold instance of this class
 		 *
 		 * @var $instance
@@ -107,7 +61,7 @@ if ( ! class_exists( 'AFWC_Paypal' ) ) {
 		/**
 		 * Get single instance of this class
 		 *
-		 * @return AFWC_Paypal Singleton object of this class
+		 * @return AFWC_PayPal_Masspay Singleton object of this class
 		 */
 		public static function get_instance() {
 
@@ -123,131 +77,33 @@ if ( ! class_exists( 'AFWC_Paypal' ) ) {
 		 * Constructor
 		 */
 		private function __construct() {
-			$this->init_settings();
-
-			add_action( 'wp_ajax_get_paypal_balance', array( $this, 'get_paypal_balance' ) );
+			$this->init_credentials();
 		}
 
 		/**
-		 * Initialize settings
+		 * Initialize api credentials.
 		 */
-		public function init_settings() {
-
-			$woocommerce_paypal_settings = get_option( 'woocommerce_paypal_settings' );
-
-			$is_sandbox = ( ! empty( $woocommerce_paypal_settings['testmode'] ) ) ? $woocommerce_paypal_settings['testmode'] : 'yes';
-
-			if ( 'yes' === $is_sandbox ) {
-				$this->api_endpoint  = 'https://api-3t.sandbox.paypal.com/nvp';
-				$this->api_username  = ( ! empty( $woocommerce_paypal_settings['sandbox_api_username'] ) ) ? $woocommerce_paypal_settings['sandbox_api_username'] : '';
-				$this->api_password  = ( ! empty( $woocommerce_paypal_settings['sandbox_api_password'] ) ) ? $woocommerce_paypal_settings['sandbox_api_password'] : '';
-				$this->api_signature = ( ! empty( $woocommerce_paypal_settings['sandbox_api_signature'] ) ) ? $woocommerce_paypal_settings['sandbox_api_signature'] : '';
-			} else {
-				$this->api_endpoint  = 'https://api-3t.paypal.com/nvp';
-				$this->api_username  = ( ! empty( $woocommerce_paypal_settings['api_username'] ) ) ? $woocommerce_paypal_settings['api_username'] : '';
-				$this->api_password  = ( ! empty( $woocommerce_paypal_settings['api_password'] ) ) ? $woocommerce_paypal_settings['api_password'] : '';
-				$this->api_signature = ( ! empty( $woocommerce_paypal_settings['api_signature'] ) ) ? $woocommerce_paypal_settings['api_signature'] : '';
-			}
-		}
-
-		/**
-		 * Function to get api setting status
-		 *
-		 * @return array $status
-		 */
-		public function get_api_setting_status() {
-
-			$paypal_setting_page_url = add_query_arg(
-				array(
-					'page'    => 'wc-settings',
-					'tab'     => 'checkout',
-					'section' => 'paypal',
-				),
-				admin_url( 'admin.php' )
-			);
-
-			$status = array(
-				'value'    => 'no',
-				'desc'     => __( 'Disabled', 'affiliate-for-woocommerce' ),
-				/* translators: 1: Location of the API Credentials */
-				'desc_tip' => sprintf( __( 'To enable, follow all the requirements mentioned %s.', 'affiliate-for-woocommerce' ), '<a href="https://docs.woocommerce.com/document/affiliate-for-woocommerce/how-to-payout-commissions-in-affiliate-for-woocommerce/#section-2" target="_blank">' . __( 'here', 'affiliate-for-woocommerce' ) . '</a>' ),
-			);
-
-			if ( ! empty( $this->api_username ) && ! empty( $this->api_password ) && ! empty( $this->api_signature ) ) {
-				$status = array(
-					'value'    => 'yes',
-					'desc'     => __( 'Enabled', 'affiliate-for-woocommerce' ),
-					/* translators: 1: Location of the API Credentials */
-					'desc_tip' => sprintf( __( 'To disable, empty the API credentials %s', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $paypal_setting_page_url ) . '" target="_blank">' . __( 'here', 'affiliate-for-woocommerce' ) . '</a>' ),
-				);
+		public function init_credentials() {
+			if ( false === $this->is_set_credentials( $this->key ) ) {
+				// Set paypal_standard credentials for MassPay api call.
+				$this->set_credentials( 'paypal_standard' );
 			}
 
-			return $status;
-		}
-
-		/**
-		 * Get PayPal balance
-		 */
-		public function get_paypal_balance() {
-
-			check_ajax_referer( AFWC_AJAX_SECURITY, 'security' );
-
-			$paypal_response = $this->get_balance();
-
-			$response = array();
-
-			if ( ! empty( $paypal_response['ACK'] ) && 'Success' === $paypal_response['ACK'] ) {
-
-				$response = array(
-					'amount'   => ( ! empty( $paypal_response['L_AMT0'] ) ) ? $paypal_response['L_AMT0'] : 0,
-					'currency' => ( ! empty( $paypal_response['L_CURRENCYCODE0'] ) ) ? $paypal_response['L_CURRENCYCODE0'] : '',
-				);
-
-			}
-
-			wp_send_json( $response );
-
-		}
-
-		/**
-		 * Process PayPal mass payment
-		 *
-		 * @param  array  $affiliates The affiliates.
-		 * @param  string $currency   The currency code.
-		 * @return array  $response
-		 */
-		public function process_paypal_mass_payment( $affiliates, $currency ) {
-			$response = $this->make_payment( $affiliates, $currency );
-			return $response;
-		}
-
-		/**
-		 * Get balance
-		 *
-		 * @return mixed $result
-		 */
-		public function get_balance() {
-			$nvp_str  = '';
-			$nvp_str .= $this->get_nvp_header();
-			$result   = $this->hash_call( 'GetBalance', $nvp_str );
-
-			return $result;
+			$this->api_endpoint = $this->sandbox ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp';
 		}
 
 		/**
 		 * Make payment
 		 *
-		 * @param  array  $affiliates The affiliates.
-		 * @param  string $currency   The currency code.
+		 * @param  array $affiliates The affiliates.
 		 * @return mixed $result
 		 */
-		public function make_payment( $affiliates, $currency ) {
+		public function make_payment( $affiliates = array() ) {
 
 			$result = null;
-			if ( count( $affiliates ) > 0 ) {
-				$nvp_str        = '';
-				$j              = 0;
-				$this->currency = $currency;
+			if ( is_array( $affiliates ) && count( $affiliates ) > 0 ) {
+				$nvp_str = '';
+				$j       = 0;
 				// @TODO: encode data in nvpstr.
 				foreach ( $affiliates as $key => $affiliate ) {
 					if ( isset( $affiliate['email'] ) && '' !== $affiliate['email'] && isset( $affiliate['amount'] ) && 0 < floatval( $affiliate['amount'] ) ) {
@@ -276,6 +132,9 @@ if ( ! class_exists( 'AFWC_Paypal' ) ) {
 		 * @return string $nvp_header
 		 */
 		public function get_nvp_header() {
+
+			$auth_mode  = '';
+			$nvp_header = '';
 
 			if ( ! empty( $this->api_username ) && ! empty( $this->api_password ) && ! empty( $this->api_signature ) && ! empty( $this->subject ) ) {
 				$auth_mode = 'THIRDPARTY';
@@ -399,8 +258,32 @@ if ( ! class_exists( 'AFWC_Paypal' ) ) {
 			return $nvp_array;
 		}
 
+		/**
+		 * Check masspay status
+		 *
+		 * @return string|bool $result
+		 */
+		public function mass_pay_status() {
+			$this->init_credentials();
+
+			if ( false === $this->is_set_credentials( $this->key ) ) {
+				return false;
+			}
+
+			$nvp_header = $this->get_nvp_header();
+			$nvp_str    = "&L_EMAIL0=payee1@example.com&L_AMT0=1&EMAILSUBJECT=$this->email_subject&RECEIVERTYPE=$this->receiver_type&CURRENCYCODE=$this->currency";
+			$nvp_str    = $nvp_header . $nvp_str;
+
+			$result = $this->hash_call( 'MassPay', $nvp_str );
+
+			if ( isset( $result['L_ERRORCODE0'] ) && ( '10007' === $result['L_ERRORCODE0'] || '10301' === $result['L_ERRORCODE0'] ) ) {
+				return 'not_allowed';
+			}
+
+			return true;
+
+		}
+
 	}
 
 }
-
-return AFWC_Paypal::get_instance();

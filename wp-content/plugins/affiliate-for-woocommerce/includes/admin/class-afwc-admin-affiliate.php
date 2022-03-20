@@ -2,10 +2,9 @@
 /**
  * Main class for Affiliate settings under user profile
  *
- * @since       1.0.0
- * @version     1.4.0
- *
  * @package     affiliate-for-woocommerce/includes/admin/
+ * @since       1.0.0
+ * @version     1.4.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -198,7 +197,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 							<?php
 						}
 
-						$paypal_api_settings = AFWC_Paypal::get_instance()->get_api_setting_status();
+						$paypal_api_settings = AFWC_PayPal_API::get_instance()->get_api_setting_status();
 						if ( 'yes' === $paypal_api_settings['value'] ) {
 							$afwc_paypal_email = ( ! empty( $user_id ) ) ? get_user_meta( $user->ID, 'afwc_paypal_email', true ) : '';
 							?>
@@ -212,8 +211,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 						$affiliate_tags_desc        = '';
 						$affiliate_manage_tags_link = admin_url( 'edit-tags.php?taxonomy=afwc_user_tags' );
 						if ( ! empty( $affiliate_manage_tags_link ) ) {
-							/* translators: Link to the affiliate tags */
-							$affiliate_tags_desc = sprintf( esc_html__( '%s.', 'affiliate-for-woocommerce' ), '<strong><a target="_blank" href="' . esc_url( $affiliate_manage_tags_link ) . '">' . esc_html__( 'Manage tags', 'affiliate-for-woocommerce' ) . '</a></strong>' );
+							/* translators: %1$s: Opening strong tag %2$s: Opening a tage for affiliate manage tag page link %3$s: closing strong tag %4$s: closing a tag for affiliate manage tag page link */
+							$affiliate_tags_desc = sprintf( esc_html__( '%1$s%2$sManage affiliate tags%3$s%4$s', 'affiliate-for-woocommerce' ), '<strong>', '<a target="_blank" href="' . esc_url( $affiliate_manage_tags_link ) . '">', '</a>', '</strong>' );
 						}
 						?>
 						<tr>

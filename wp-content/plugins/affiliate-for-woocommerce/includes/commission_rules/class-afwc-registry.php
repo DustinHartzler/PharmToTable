@@ -2,14 +2,14 @@
 /**
  * Class for Registry
  *
+ * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.5.0
- * @version     1.0.2
- *
- * @package     affiliate-for-woocommerce/includes/commission_rules
+ * @version     1.0.3
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 if ( ! class_exists( 'AFWC_Registry' ) ) {
@@ -42,6 +42,18 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 		 */
 		public static function get_registry() {
 			return self::$registry;
+		}
+
+		/**
+		 * Function to get translatable group titles.
+		 *
+		 * @return array
+		 */
+		public static function get_rule_group_titles() {
+			return array(
+				'affiliate' => __( 'Affiliate', 'affiliate-for-woocommerce' ),
+				'product'   => __( 'Product', 'affiliate-for-woocommerce' ),
+			);
 		}
 
 		/**

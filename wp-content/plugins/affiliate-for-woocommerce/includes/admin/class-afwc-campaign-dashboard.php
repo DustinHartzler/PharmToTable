@@ -3,7 +3,7 @@
  * Main class for Campaigns Dashboard
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.0.1
+ * @version     1.0.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -90,14 +90,14 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 				}
 
 				if ( false === $result ) {
-					throw new RuntimeException( __( 'Unable to save campaign. Database error.', 'funnelwise' ) );
+					throw new RuntimeException( __( 'Unable to save campaign. Database error.', 'affiliate-for-woocommerce' ) );
 				}
 
 				$response                     = array( 'ACK' => 'Success' );
 				$response['last_inserted_id'] = ! empty( $lastid ) ? $lastid : 0;
 			}
-			wp_send_json( $response );
 
+			wp_send_json( $response );
 		}
 
 		/**
@@ -134,12 +134,10 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 			}
 		}
 
-
-
 		/**
 		 * Function to handle fetch data
 		 *
-		 *  @param array $params fetch campaign dashboard data params.
+		 * @param array $params fetch campaign dashboard data params.
 		 */
 		public function fetch_dashboard_data( $params ) {
 
@@ -166,7 +164,8 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 		/**
 		 * Function to handle fetch campaigns
 		 *
-		 *  @param array $params fetch campaign params.
+		 * @param array $params fetch campaign params.
+		 * @return array $campaigns
 		 */
 		public static function fetch_camapigns( $params ) {
 			global $wpdb;
@@ -203,8 +202,8 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 		/**
 		 * Function to get campaign KIPs
 		 *
-		 *  @param array $params fetch params.
-		 *  @return array $kpi
+		 * @param array $params fetch params.
+		 * @return array $kpi
 		 */
 		public function fetch_kpi( $params ) {
 			global $wpdb;
@@ -223,10 +222,7 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 			$kpi['conversion'] = ( $kpi['total_hits'] > 0 ) ? round( ( ( $kpi['total_orders'] * 100 ) / $kpi['total_hits'] ), 2 ) : 0;
 
 			return $kpi;
-
 		}
-
-
 
 	}
 

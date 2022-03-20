@@ -1,5 +1,42 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2022-03-14 - version 4.0.1
+* New: WooCommerce 6.3.1 compatible
+* Fix: Translation not working for commission plan rules: group name, title, placeholder [Admin]
+* Fix: Missing translation for Docs & Settings title in Navbar [Admin]
+* Update: POT file
+
+2022-03-03 - version 4.0.0
+* New: WooCommerce 6.1.1, 6.2.1 compatible
+* New: Tested up to WordPress 5.9.1
+* New: Commission payouts with PayPal Payouts API using WooCommerce PayPal Payments plugin [Read more: https://woocommerce.com/document/affiliate-for-woocommerce/how-to-payout-commissions-in-affiliate-for-woocommerce/#section-1]
+* New: Show Order ID for a referral in Referrals table under My Account > Affiliate > Reports [User]
+* New: Hide Campaigns tab under My Account > Affiliate if no active campaigns [User]
+* Fix: Strings from emails (Affiliate - Commission Paid and Affiliate - New Conversion Received) not translating due to missing text domain [Thanks to: Thibault Nelkin]
+* Fix: Incorrect text domain at few places
+* Fix: Affiliate search not working in commission plans if affiliates are made via user role [Admin]
+* Update: Affiliate display in affiliate rule under commission plans [Admin]
+* Update: Welcome page
+* Update: Documentation links
+* Update: Review and comment links
+* Update: Code cleanup and improvements
+* Update: POT file
+
+2022-01-25 - version 3.13.0
+* Fix: Marking commission as paid for one affiliate's order updating the commission status to paid for all the chained affiliates [Multi-tier]
+* Update: POT file
+
+2022-01-10 - version 3.12.0
+* New: WooCommerce 6.0.0 compatible
+* New: Show count of affiliates on the affiliate tags list [Admin]
+* Fix: Date picker showing date in GMT instead of user's local timezone [Admin]
+* Fix: Missing translation for commission statuses and 'all' word [Admin]
+* Fix: Storewide commission plan auto-hidden in some cases [Admin]
+* Update: UX improvements on storewide commission plan [Admin]
+* Update: Label consistency for 'Manage affiliate tags' [Admin]
+* Update: Code improvements
+* Update: POT file
+
 2021-12-21 - version 3.11.0
 * Fix: Affiliate commission calculated for WooCommerce Subscriptions renewal orders when parent order is not purchased through affiliate
 * Update: POT file
@@ -22,7 +59,7 @@
 
 2021-10-22 - version 3.8.0
 * Fix: Visitors counts not matching in CSV export, My Account and Admin dashboard
-* Update: CSS prefix in My Account > Campaigns to avoid conflicts [User]
+* Update: CSS prefix in My Account > Affiliate > Campaigns to avoid conflicts [User]
 * Update: POT file
 
 2021-10-16 - version 3.7.1
@@ -276,7 +313,7 @@
 * New: Send email notification to affiliate when their request to join is approved
 * New: Template for 'New affiliate registration' email
 * Update: Send 'New affiliate registration' email to Affiliate Manager
-* Update: Responsiveness for Payout History on My Account > Affiliate > Profile [User]
+* Update: Responsiveness for Payout History on My Account > Affiliate > Reports [User]
 * Update: Registration form message when an existing user tries to join
 * Update: My account link to My Account > Affiliate link when auto-approval is enabled
 * Update: Add title for 'Register as an affiliate' tab in My Account [User]

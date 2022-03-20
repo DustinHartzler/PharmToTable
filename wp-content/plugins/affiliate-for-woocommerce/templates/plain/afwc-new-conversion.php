@@ -1,9 +1,10 @@
 <?php
 /**
- * Affiliate New Conversion Email Content
+ * Affiliate New Conversion Email Content (Affiliate - New Conversion Received)
  *
- * @version     1.1.0
- * @package     affiliate-for-woocommerce/templates/
+ * @package     affiliate-for-woocommerce/templates/plain/
+ * @since       2.3.0
+ * @version     1.1.1
  */
 
 // Exit if accessed directly.
@@ -36,7 +37,7 @@ echo esc_html__( 'Commission earned: ', 'affiliate-for-woocommerce' ) . "\t " . 
 echo "\n----------------------------------------\n\n";
 
 /* translators: %s: Affiliate's my account link */
-echo sprintf( esc_html__( 'We have already updated your account to reflect this: %s' ), esc_url( $my_account_afwc_url ) ) . "\n\n";
+echo sprintf( esc_html__( 'We have already updated your account to reflect this: %s', 'affiliate-for-woocommerce' ), esc_url( $my_account_afwc_url ) ) . "\n\n";
 
 echo esc_html__( 'Thank you for promoting us. We look forward to send another email like this very soon!', 'affiliate-for-woocommerce' ) . "\n\n";
 

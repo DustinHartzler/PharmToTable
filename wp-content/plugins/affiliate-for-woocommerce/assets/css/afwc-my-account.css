@@ -1,4 +1,5 @@
 /* phpcs:ignoreFile */
+/* For Reports/Dashboard and tab switching */
 .nav-tab-wrapper {
 	border-bottom: 1px solid #ccc;
 	padding-top: 9px;
@@ -71,20 +72,35 @@ thead, tbody tr {
 	text-align: right;
 }
 @media only screen and (min-width: 760px) {
-	.afwc_referrals thead th:nth-child(1), .afwc_referrals tbody td:nth-child(1), .afwc_payout_history thead th:nth-child(1), .afwc_payout_history tbody td:nth-child(1) {
-		width: 30%;
+	.afwc_referrals thead th:nth-child(1), .afwc_referrals tbody td:nth-child(1) {
+		width: 15%;
 	}
-	.afwc_referrals thead th:nth-child(2), .afwc_referrals tbody td:nth-child(2), .afwc_payout_history thead th:nth-child(2), .afwc_payout_history tbody td:nth-child(2) {
+	.afwc_referrals thead th:nth-child(2), .afwc_referrals tbody td:nth-child(2) {
 		width: 25%;
 	}
-	.afwc_referrals thead th:nth-child(3), .afwc_referrals tbody td:nth-child(3), .afwc_payout_history thead th:nth-child(3), .afwc_payout_history tbody td:nth-child(3) {
-		width: 25%;
+	.afwc_referrals thead th:nth-child(3), .afwc_referrals tbody td:nth-child(3) {
+		width: 20%;
 	}
-	.afwc_referrals thead th:nth-child(4), .afwc_referrals tbody td:nth-child(4), .afwc_payout_history thead th:nth-child(4), .afwc_payout_history tbody td:nth-child(4) {
+	.afwc_referrals thead th:nth-child(4), .afwc_referrals tbody td:nth-child(4) {
+		width: 20%;
+	}
+	.afwc_referrals thead th:nth-child(5), .afwc_referrals tbody td:nth-child(5) {
 		width: 20%;
 	}
 	.afwc_referrals tbody td:last-child {
 		padding-top: 1.4em;
+	}
+	.afwc_payout_history thead th:nth-child(1), .afwc_payout_history tbody td:nth-child(1) {
+		width: 30%;
+	}
+	.afwc_payout_history thead th:nth-child(2), .afwc_payout_history tbody td:nth-child(2) {
+		width: 25%;
+	}
+	.afwc_payout_history thead th:nth-child(3), .afwc_payout_history tbody td:nth-child(3) {
+		width: 25%;
+	}
+	.afwc_payout_history thead th:nth-child(4), .afwc_payout_history tbody td:nth-child(4) {
+		width: 20%;
 	}
 	.afwc_products thead th:nth-child(1), .afwc_products tbody td:nth-child(1) {
 		width: 60%;

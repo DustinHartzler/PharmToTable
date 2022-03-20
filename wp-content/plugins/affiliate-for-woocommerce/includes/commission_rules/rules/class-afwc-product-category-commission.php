@@ -2,10 +2,9 @@
 /**
  * Class for product category commissions rules
  *
+ * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.7.1
- * @version     1.0.0
- *
- * @package     affiliate-for-woocommerce/includes/commission_rules
+ * @version     1.1.0
  */
 
 // Exit if accessed directly.
@@ -21,15 +20,16 @@ if ( ! class_exists( 'AFWC_Product_Category_Commission' ) ) {
 	class AFWC_Product_Category_Commission extends AFWC_Rule_Number_Commission {
 
 		/**
-		 * Function to get current context key
-		 * string
+		 * Method to get current context key.
+		 *
+		 * @return string
 		 */
 		protected function get_context_key() {
 			return 'product_category';
 		}
 
 		/**
-		 * Function to get current category
+		 * Method to get current category
 		 *
 		 * @return string
 		 */
@@ -38,9 +38,27 @@ if ( ! class_exists( 'AFWC_Product_Category_Commission' ) ) {
 		}
 
 		/**
-		 * Function to return possible operator
+		 * Method to get rule title.
 		 *
-		 * @return $possible_operators
+		 * @return string
+		 */
+		public function get_title() {
+			return __( 'Product Category', 'affiliate-for-woocommerce' );
+		}
+
+		/**
+		 * Method to get placeholder for the rule.
+		 *
+		 * @return string
+		 */
+		public function get_placeholder() {
+			return _x( 'Search for a product category', 'commission rule placeholder', 'affiliate-for-woocommerce' );
+		}
+
+		/**
+		 * Method to return possible operators.
+		 *
+		 * @return array $possible_operators
 		 */
 		public function get_possible_operators() {
 			$list = array( 'gt', 'gte', 'lt', 'eq', 'lte', 'neq' );

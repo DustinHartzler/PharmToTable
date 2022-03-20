@@ -2,10 +2,9 @@
 /**
  * Main class for Affiliate For WooCommerce
  *
- * @since       1.0.0
- * @version     1.4.5
- *
  * @package     affiliate-for-woocommerce/includes/
+ * @since       1.0.0
+ * @version     1.4.7
  */
 
 // Exit if accessed directly.
@@ -67,6 +66,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			add_action( 'trashed_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
 			add_action( 'untrashed_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
 			add_action( 'delete_post', array( $this, 'afwc_update_referral_on_trash_delete_untrash' ), 9, 1 );
+
+			add_action( 'init', array( $this, 'afwc_set_payout_method' ) );
 		}
 
 		/**
@@ -97,45 +98,74 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 
 			global $wpdb;
 
-			$afwc_currency_symbol = get_woocommerce_currency_symbol();
+			if ( ! defined( 'AFWC_AFFILIATES_COOKIE_NAME' ) ) {
+				define( 'AFWC_AFFILIATES_COOKIE_NAME', 'affiliate_for_woocommerce' );
+			}
+			if ( ! defined( 'AFWC_TABLE_PREFIX' ) ) {
+				define( 'AFWC_TABLE_PREFIX', 'afwc_' );
+			}
+			if ( ! defined( 'AFWC_PLUGIN_BASENAME' ) ) {
+				define( 'AFWC_PLUGIN_BASENAME', plugin_basename( AFWC_PLUGIN_FILE ) );
+			}
+			if ( ! defined( 'AFWC_PLUGIN_DIR' ) ) {
+				define( 'AFWC_PLUGIN_DIR', dirname( plugin_basename( AFWC_PLUGIN_FILE ) ) );
+			}
+			if ( ! defined( 'AFWC_PLUGIN_URL' ) ) {
+				define( 'AFWC_PLUGIN_URL', plugins_url( AFWC_PLUGIN_DIR ) );
+			}
+			if ( ! defined( 'AFWC_CURRENCY' ) ) {
+				define( 'AFWC_CURRENCY', get_woocommerce_currency_symbol() );
+			}
+			if ( ! defined( 'AFWC_PNAME' ) ) {
+				define( 'AFWC_PNAME', get_option( 'afwc_pname', 'ref' ) );
+			}
+			if ( ! defined( 'AFWC_COOKIE_TIMEOUT_BASE' ) ) {
+				define( 'AFWC_COOKIE_TIMEOUT_BASE', 86400 );
+			}
+			if ( ! defined( 'AFWC_REGEX_PATTERN' ) ) {
+				define( 'AFWC_REGEX_PATTERN', 'affiliates/([^/]+)/?$' );
+			}
+			if ( ! defined( 'AFWC_DEFAULT_COMMISSION_STATUS' ) ) {
+				define( 'AFWC_DEFAULT_COMMISSION_STATUS', get_option( 'afwc_default_commission_status' ) );
+			}
+			if ( ! defined( 'AFWC_AJAX_SECURITY' ) ) {
+				define( 'AFWC_AJAX_SECURITY', 'affiliate_for_woocommerce_ajax_call' );
+			}
+			if ( ! defined( 'AFWC_REFERRAL_STATUS_PENDING' ) ) {
+				define( 'AFWC_REFERRAL_STATUS_PENDING', 'pending' );
+			}
+			if ( ! defined( 'AFWC_REFERRAL_STATUS_DRAFT' ) ) {
+				define( 'AFWC_REFERRAL_STATUS_DRAFT', 'draft' );
+			}
+			if ( ! defined( 'AFWC_REFERRAL_STATUS_PAID' ) ) {
+				define( 'AFWC_REFERRAL_STATUS_PAID', 'paid' );
+			}
+			if ( ! defined( 'AFWC_REFERRAL_STATUS_UNPAID' ) ) {
+				define( 'AFWC_REFERRAL_STATUS_UNPAID', 'unpaid' );
+			}
+			if ( ! defined( 'AFWC_REFERRAL_STATUS_REJECTED' ) ) {
+				define( 'AFWC_REFERRAL_STATUS_REJECTED', 'rejected' );
+			}
 
-			define( 'AFWC_AFFILIATES_COOKIE_NAME', 'affiliate_for_woocommerce' );
-			define( 'AFWC_TABLE_PREFIX', 'afwc_' );
+			if ( ! defined( 'AFWC_TIMEZONE_STR' ) ) {
+				$offset       = get_option( 'gmt_offset' );
+				$timezone_str = sprintf( '%+02d:%02d', (int) $offset, ( $offset - floor( $offset ) ) * 60 );
+				define( 'AFWC_TIMEZONE_STR', $timezone_str );
+			}
 
-			define( 'AFWC_PLUGIN_BASENAME', plugin_basename( AFWC_PLUGIN_FILE ) );
-			define( 'AFWC_PLUGIN_DIR', dirname( plugin_basename( AFWC_PLUGIN_FILE ) ) );
-			define( 'AFWC_PLUGIN_URL', plugins_url( AFWC_PLUGIN_DIR ) );
+			if ( ! defined( 'AFWC_OPTION_NAME_COLLATION' ) ) {
+					// Code to get the 'option_name' collation.
+				$results = $wpdb->get_row( // phpcs:ignore
+					$wpdb->prepare(
+						"SHOW FULL COLUMNS FROM {$wpdb->prefix}options LIKE %s",
+						'option_name'
+					),
+					ARRAY_A
+				);
 
-			define( 'AFWC_CURRENCY', $afwc_currency_symbol );
-			define( 'AFWC_PNAME', get_option( 'afwc_pname' ) );
-
-			define( 'AFWC_COOKIE_TIMEOUT_BASE', 86400 );
-			define( 'AFWC_REGEX_PATTERN', 'affiliates/([^/]+)/?$' );
-
-			define( 'AFWC_DEFAULT_COMMISSION_STATUS', get_option( 'afwc_default_commission_status' ) );
-			define( 'AFWC_AJAX_SECURITY', 'affiliate_for_woocommerce_ajax_call' );
-
-			define( 'AFWC_REFERRAL_STATUS_PENDING', 'pending' );
-			define( 'AFWC_REFERRAL_STATUS_DRAFT', 'draft' );
-			define( 'AFWC_REFERRAL_STATUS_PAID', 'paid' );
-			define( 'AFWC_REFERRAL_STATUS_UNPAID', 'unpaid' );
-			define( 'AFWC_REFERRAL_STATUS_REJECTED', 'rejected' );
-
-			$offset       = get_option( 'gmt_offset' );
-			$timezone_str = sprintf( '%+02d:%02d', (int) $offset, ( $offset - floor( $offset ) ) * 60 );
-			define( 'AFWC_TIMEZONE_STR', $timezone_str );
-
-			// Code to get the 'option_name' collation.
-			$results = $wpdb->get_row( // phpcs:ignore
-				$wpdb->prepare(
-					"SHOW FULL COLUMNS FROM {$wpdb->prefix}options LIKE %s",
-					'option_name'
-				),
-				ARRAY_A
-			);
-
-			$collation = ( ! empty( $results['Collation'] ) ) ? $results['Collation'] : $wpdb->collate;
-			define( 'AFWC_OPTION_NAME_COLLATION', $collation );
+				$collation = ( ! empty( $results['Collation'] ) ) ? $results['Collation'] : $wpdb->collate;
+				define( 'AFWC_OPTION_NAME_COLLATION', $collation );
+			}
 		}
 
 		/**
@@ -146,8 +176,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				'afwc_user_tags', // taxonomy name.
 				'user', // object for which the taxonomy is created.
 				array( // taxonomy details.
-					'public'                => true,
-					'labels'                => array(
+					'public'       => true,
+					'labels'       => array(
 						'name'          => __( 'Affiliate Tags', 'affiliate-for-woocommerce' ),
 						'singular_name' => __( 'Affiliate Tag', 'affiliate-for-woocommerce' ),
 						'menu_name'     => __( 'Affiliate Tags', 'affiliate-for-woocommerce' ),
@@ -160,10 +190,8 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						'new_item_name' => __( 'New Affiliate Tag Name', 'affiliate-for-woocommerce' ),
 						'not_found'     => __( 'No Affiliate Tags found', 'affiliate-for-woocommerce' ),
 					),
-					'show_in_menu'          => false,
-					'update_count_callback' => function() {
-						return;
-					},
+					'show_in_menu' => false,
+					'hierarchical' => true,
 				)
 			);
 
@@ -219,7 +247,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			if ( afwc_is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' ) ) {
 				include_once 'integration/woocommerce/compat/class-wcs-afwc-compatibility.php';
 			}
-			include_once 'gateway/paypal/class-afwc-paypal.php';
+			include_once 'gateway/paypal/class-afwc-paypal-api.php'; // TODO: remove usage from my account and then move this file to include under only admin.
 			include_once 'integration/woocommerce/class-afwc-integration-woocommerce.php';
 			include_once 'class-afwc-affiliate.php';
 			include_once 'class-afwc-api.php';
@@ -275,7 +303,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 
 			if ( 'affiliate-for-woocommerce-documentation' === $get_page ) {
-				add_submenu_page( 'woocommerce', sprintf( __( 'Docs & Support', 'affiliate-for-woocommerce' ), '&rsaquo;' ), __( 'Docs & Support', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce-documentation', 'AFWC_Admin_Docs::afwc_docs' );
+				add_submenu_page( 'woocommerce', sprintf( __( 'Getting Started', 'affiliate-for-woocommerce' ), '&rsaquo;' ), __( 'Getting Started', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-for-woocommerce-documentation', 'AFWC_Admin_Docs::afwc_docs' );
 			}
 			add_submenu_page( 'woocommerce', sprintf( __( 'Affiliate Form Settings', 'affiliate-for-woocommerce' ), '&rsaquo;' ), __( 'Affiliate Form Settings', 'affiliate-for-woocommerce' ), 'manage_woocommerce', 'affiliate-form-settings', 'AFWC_Registration_Form::reg_form_settings' );
 
@@ -1335,6 +1363,25 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 
 			return ! empty( $parents_for_commisions ) ? $parents_for_commisions : array();
+		}
+
+		/**
+		 * Set payout method if not exist.
+		 * To set method on plugin upgrade/activation for commission payouts
+		 *
+		 * @since 4.0.0
+		 * @return void.
+		 */
+		public function afwc_set_payout_method() {
+			if ( 'no' === get_option( 'afwc_is_set_commission_payout_method', 'no' ) ) {
+				$afwc_paypal = AFWC_PayPal_API::get_instance();
+
+				if ( is_callable( array( $afwc_paypal, 'get_payout_method' ) ) ) {
+					$afwc_paypal->get_payout_method( true );
+				}
+
+				update_option( 'afwc_is_set_commission_payout_method', 'yes', 'no' );
+			}
 		}
 
 	}

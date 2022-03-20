@@ -2,10 +2,9 @@
 /**
  * Some common functions for Affiliate For WooCommerce
  *
- * @since       1.0.0
- * @version     1.2.0
- *
  * @package     affiliate-for-woocommerce/includes/
+ * @since       1.0.0
+ * @version     1.2.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,18 +21,55 @@ function afwc_encode_affiliate_id( $affiliate_id ) {
 	return $affiliate_id;
 }
 
-/**TODO :: not use
- * Get commission payout statuses
+/**
+ * Get commission statuses
  *
- * @return array
+ * @param string $status Commission Status.
+ *
+ * @return array|string
  */
-function get_afwc_commission_statuses() {
+function afwc_get_commission_statuses( $status = '' ) {
 
-	return array(
-		AFWC_REFERRAL_STATUS_PAID     => 'Paid',
-		AFWC_REFERRAL_STATUS_UNPAID   => 'Unpaid',
-		AFWC_REFERRAL_STATUS_REJECTED => 'Rejected',
+	$statuses = array(
+		AFWC_REFERRAL_STATUS_PAID     => __( 'Paid', 'affiliate-for-woocommerce' ),
+		AFWC_REFERRAL_STATUS_UNPAID   => __( 'Unpaid', 'affiliate-for-woocommerce' ),
+		AFWC_REFERRAL_STATUS_REJECTED => __( 'Rejected', 'affiliate-for-woocommerce' ),
+		AFWC_REFERRAL_STATUS_DRAFT    => __( 'Draft', 'affiliate-for-woocommerce' ),
 	);
+
+	// Return array of statuses if the provided status is empty.
+	if ( empty( $status ) ) {
+		return $statuses;
+	}
+
+	return ( ! empty( $statuses[ $status ] ) ) ? $statuses[ $status ] : '';
+}
+
+/**
+ * Get commission status colors.
+ *
+ * @param string $status Commission Status.
+ *
+ * @return array|string
+ */
+function afwc_get_commission_status_colors( $status = '' ) {
+
+	$colors = apply_filters(
+		'afwc_commission_status_colors',
+		array(
+			AFWC_REFERRAL_STATUS_PAID     => 'green',
+			AFWC_REFERRAL_STATUS_UNPAID   => 'orange',
+			AFWC_REFERRAL_STATUS_REJECTED => 'red',
+			AFWC_REFERRAL_STATUS_DRAFT    => 'gray',
+		)
+	);
+
+	// Return array of colors if the provided status is empty.
+	if ( empty( $status ) ) {
+		return $colors;
+	}
+
+	return ( ! empty( $colors[ $status ] ) ) ? $colors[ $status ] : '';
 
 }
 
@@ -58,16 +94,6 @@ function afwc_get_tablename( $name ) {
 function afwc_get_referrer_id() {
 	$affiliate_id = isset( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ? trim( wc_clean( wp_unslash( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ) ) : false; // phpcs:ignore
 	return $affiliate_id;
-}
-
-/**
- * Get campaign id from cookie
- *
- * @return integer $campaign_id
- */
-function afwc_get_campaign_id() {
-	$campaign_id = isset( $_COOKIE[ 'afwc_campaign' ] ) ? trim( wc_clean( wp_unslash( $_COOKIE[ 'afwc_campaign' ] ) ) ) : false; // phpcs:ignore
-	return $campaign_id;
 }
 
 /**
@@ -339,6 +365,16 @@ function afwc_create_reg_form_page() {
 }
 
 /**
+ * Get campaign id from cookie
+ *
+ * @return integer $campaign_id
+ */
+function afwc_get_campaign_id() {
+	$campaign_id = isset( $_COOKIE[ 'afwc_campaign' ] ) ? trim( wc_clean( wp_unslash( $_COOKIE[ 'afwc_campaign' ] ) ) ) : false; // phpcs:ignore
+	return $campaign_id;
+}
+
+/**
  * Function to get campaign id from slug
  *
  * @param string $slug campaign slug to get campaign id.
@@ -357,6 +393,22 @@ function afwc_get_campaign_id_by_slug( $slug ) {
 }
 
 /**
+ * Function to check if we have any active campaigns.
+ *
+ * @return string if we find active campaigns else NULL.
+ */
+function afwc_is_campaign_active() {
+	global $wpdb;
+	$is_found = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare( // phpcs:ignore
+			"SELECT id FROM {$wpdb->prefix}afwc_campaigns WHERE status = %s LIMIT 1",
+			'Active'
+		)
+	);
+	return apply_filters( 'afwc_is_campaign_active', ! empty( $is_found ) );
+}
+
+/**
  * Add prefix to WC order statuses
  *
  * @return $prefixed_statuses
@@ -371,7 +423,6 @@ function afwc_get_prefixed_order_statuses() {
 
 	return $prefixed_statuses;
 }
-
 
 /**
  * Get id name map for affiliate tags
@@ -453,7 +504,7 @@ function afwc_get_reject_order_status() {
 function afwc_get_default_plan_details() {
 	global $wpdb;
 	$default_plan_details = array();
-	$default_plan_id      = get_option( 'afwc_default_commission_plan_id', false );
+	$default_plan_id      = afwc_get_default_commission_plan_id();
 	if ( ! empty( $default_plan_id ) ) {
 		$default_plan_details = $wpdb->get_results( // phpcs:ignore
 			$wpdb->prepare(
@@ -529,3 +580,15 @@ function afwc_get_children( $user_id = 0, $is_tree = false ) {
 	return apply_filters( 'afwc_get_children', $children_tree );
 }
 
+/**
+ * Get default commission plan id.
+ *
+ * @return int
+ */
+function afwc_get_default_commission_plan_id() {
+
+	return apply_filters(
+		'afwc_default_commission_plan_id',
+		intval( get_option( 'afwc_default_commission_plan_id', 0 ) )
+	);
+}

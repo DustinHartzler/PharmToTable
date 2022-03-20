@@ -2,10 +2,9 @@
 /**
  * Affiliate For WooCommerce Admin Notifications
  *
- * @since       1.3.4
- * @version     1.0.7
- *
  * @package     affiliate-for-woocommerce/includes/admin/
+ * @since       1.3.4
+ * @version     1.0.8
  */
 
 // Exit if accessed directly.
@@ -79,9 +78,9 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 			$action_links = array(
 				'getting-started' => '<a href="' . esc_url( $getting_started_link ) . '">' . esc_html( __( 'Getting started', 'affiliate-for-woocommerce' ) ) . '</a>',
 				'settings'        => '<a href="' . esc_url( $settings_link ) . '">' . esc_html( __( 'Settings', 'affiliate-for-woocommerce' ) ) . '</a>',
-				'docs'            => '<a target="_blank" href="' . esc_url( 'https://docs.woocommerce.com/document/affiliate-for-woocommerce/' ) . '">' . __( 'Docs', 'affiliate-for-woocommerce' ) . '</a>',
+				'docs'            => '<a target="_blank" href="' . esc_url( 'https://woocommerce.com/document/affiliate-for-woocommerce/' ) . '">' . __( 'Docs', 'affiliate-for-woocommerce' ) . '</a>',
 				'support'         => '<a target="_blank" href="' . esc_url( 'https://woocommerce.com/my-account/create-a-ticket/' ) . '">' . __( 'Support', 'affiliate-for-woocommerce' ) . '</a>',
-				'review'          => '<a target="_blank" href="' . esc_url( 'https://woocommerce.com/products/affiliate-for-woocommerce/#comments' ) . '">' . __( 'Review', 'affiliate-for-woocommerce' ) . '</a>',
+				'review'          => '<a target="_blank" href="' . esc_url( 'https://woocommerce.com/products/affiliate-for-woocommerce/#reviews' ) . '">' . __( 'Review', 'affiliate-for-woocommerce' ) . '</a>',
 			);
 
 			return array_merge( $action_links, $links );
@@ -111,7 +110,7 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 					</style>
 					<?php
 					/* translators: %s: link to review Affiliate For WooCommerce */
-					$afw_rating_text = wp_kses_post( sprintf( __( 'If you like %1$sAffiliate For WooCommerce%2$s, please give us %3$s. A huge thanks from WooCommerce & StoreApps in advance!', 'affiliate-for-woocommerce' ), '<strong>', '</strong>', '<a target="_blank" href="' . esc_url( 'https://woocommerce.com/products/affiliate-for-woocommerce/#comments' ) . '" style="color: #5850EC;">5-star rating</a>' ) );
+					$afw_rating_text = wp_kses_post( sprintf( __( 'If you like %1$sAffiliate For WooCommerce%2$s, please give us %3$s. A huge thanks from WooCommerce & StoreApps in advance!', 'affiliate-for-woocommerce' ), '<strong>', '</strong>', '<a target="_blank" href="' . esc_url( 'https://woocommerce.com/products/affiliate-for-woocommerce/?review' ) . '" style="color: #5850EC;">5-star rating</a>' ) );
 				}
 			}
 

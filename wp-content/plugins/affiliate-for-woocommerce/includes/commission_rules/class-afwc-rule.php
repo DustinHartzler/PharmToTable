@@ -2,20 +2,20 @@
 /**
  * Class for Rule
  *
+ * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.5.0
- * @version     1.0.3
- *
- * @package     affiliate-for-woocommerce/includes/commission_rules
+ * @version     1.0.4
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 if ( ! class_exists( 'AFWC_Rule' ) ) {
 
 	/**
-	 * Class for AFWC_Rule_Group of Affiliate For WooCommerce
+	 * Class for AFWC_Rule of Affiliate For WooCommerce
 	 */
 	abstract class AFWC_Rule {
 
@@ -102,7 +102,6 @@ if ( ! class_exists( 'AFWC_Rule' ) ) {
 			);
 
 			$this->valid_rule_product_ids = array();
-
 		}
 
 		/**

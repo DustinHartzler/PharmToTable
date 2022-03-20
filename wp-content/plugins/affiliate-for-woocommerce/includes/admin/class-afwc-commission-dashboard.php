@@ -4,11 +4,12 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       2.5.0
- * @version     1.1.4
+ * @version     1.1.7
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
 
 if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
@@ -24,14 +25,12 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		public function __construct() {
 			add_action( 'wp_ajax_afwc_commission_controller', array( $this, 'request_handler' ) );
 			add_action( 'wp_ajax_afwc_json_search_rule_values', array( $this, 'afwc_json_search_rule_values' ), 1, 2 );
-
 		}
 
 		/**
 		 * Function to handle all ajax request
 		 */
 		public function request_handler() {
-
 			if ( empty( $_REQUEST ) || empty( $_REQUEST['cmd'] ) ) {
 				return;
 			}
@@ -101,14 +100,13 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 				}
 
 				if ( false === $result ) {
-					throw new RuntimeException( __( 'Unable to save commission plan. Database error.', 'funnelwise' ) );
+					throw new RuntimeException( __( 'Unable to save commission plan. Database error.', 'affiliate-for-woocommerce' ) );
 				}
 
 				$response                     = array( 'ACK' => 'Success' );
 				$response['last_inserted_id'] = ! empty( $lastid ) ? $lastid : 0;
 			}
 			wp_send_json( $response );
-
 		}
 
 		/**
@@ -121,6 +119,18 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 
 			$response = array( 'ACK' => 'Failed' );
 			if ( ! empty( $params['commission_id'] ) ) {
+
+				$default_plan = afwc_get_default_commission_plan_id();
+
+				if ( intval( $params['commission_id'] ) === $default_plan ) {
+					return wp_send_json(
+						array(
+							'ACK' => 'Error',
+							'msg' => __( 'Default plan can not be deleted', 'affiliate-for-woocommerce' ),
+						)
+					);
+				}
+
 				$result = $wpdb->query( // phpcs:ignore
 					$wpdb->prepare(
 						"DELETE FROM {$wpdb->prefix}afwc_commission_plans WHERE id = %d",
@@ -162,13 +172,13 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		/**
 		 * Function to handle fetch data
 		 *
-		 *  @param array $params fetch commission dashboard data params.
+		 * @param array $params fetch commission dashboard data params.
 		 */
 		public function fetch_dashboard_data( $params ) {
 
 			$result['commissions'] = $this->fetch_commission_plans( $params );
 			$plan_order            = get_option( 'afwc_plan_order', array() );
-			$default_plan_id       = (int) get_option( 'afwc_default_commission_plan_id', false );
+			$default_plan_id       = afwc_get_default_commission_plan_id();
 			if ( empty( $plan_order ) ) {
 				$plan_order = array_map(
 					function( $x ) {
@@ -177,7 +187,9 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					$result['commissions']
 				);
 				$key        = array_search( $default_plan_id, $plan_order, true );
-				unset( $plan_order[ $key ] );
+				if ( false !== $key ) {
+					unset( $plan_order[ $key ] );
+				}
 				$plan_order[] = $default_plan_id;
 				update_option( 'afwc_plan_order', $plan_order, 'no' );
 			}
@@ -204,7 +216,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		/**
 		 * Function to handle fetch commissions
 		 *
-		 *  @param array $params fetch commission params.
+		 * @param array $params fetch commission params.
 		 */
 		public static function fetch_commission_plans( $params ) {
 			global $wpdb;
@@ -248,12 +260,18 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 * @param array $params save plan order params.
 		 */
 		public static function save_plan_order( $params ) {
-			$default_plan_id = (int) get_option( 'afwc_default_commission_plan_id', false );
+			$default_plan_id = afwc_get_default_commission_plan_id();
 			if ( ! empty( $params['plan_order'] ) ) {
 				$plan_order = (array) json_decode( $params['plan_order'], true );
-				$key        = array_search( $default_plan_id, $plan_order, true );
-				unset( $plan_order[ $key ] );
-				$plan_order[] = $default_plan_id;
+
+				if ( ! empty( $default_plan_id ) ) {
+					$key = array_search( $default_plan_id, $plan_order, true );
+					if ( false !== $key ) {
+						unset( $plan_order[ $key ] );
+					}
+					$plan_order[] = $default_plan_id;
+				}
+
 				update_option( 'afwc_plan_order', $plan_order, 'no' );
 				wp_send_json(
 					array(
@@ -302,62 +320,36 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		/**
 		 * Get user id name map
 		 *
-		 * @param string $term string.
+		 * @param string $term Searched string.
 		 * @param string $for_ajax string.
 		 * @return $rule_values array
 		 */
-		public static function get_affiliate_id_name_map( $term, $for_ajax = true ) {
-
-			global $wpdb;
+		public static function get_affiliate_id_name_map( $term = '', $for_ajax = true ) {
 
 			$rule_values = array();
 
-			$afwc_is_affiliate = 'yes';
+			if ( empty( $term ) ) {
+				return $rule_values;
+			}
 
-			if ( $for_ajax ) {
-				if ( is_integer( $term ) ) {
-					$res = $wpdb->get_results( // phpcs:ignore
-						$wpdb->prepare( // phpcs:ignore
-							"SELECT id, display_name FROM {$wpdb->prefix}users as u JOIN {$wpdb->usermeta} as um
-																ON(um.user_id = u.ID 
-																AND um.meta_key = 'afwc_is_affiliate' )
-														WHERE um.meta_value = %s  AND id = %d",
-							$afwc_is_affiliate,
-							$term
-						),
-						'ARRAY_A'
-					);
-				} else {
-					$res = $wpdb->get_results( // phpcs:ignore
-						$wpdb->prepare( // phpcs:ignore
-							"SELECT id, display_name FROM {$wpdb->prefix}users as u JOIN {$wpdb->usermeta} as um
-																ON(um.user_id = u.ID 
-																AND um.meta_key = 'afwc_is_affiliate' )
-														WHERE um.meta_value = %s AND (user_email LIKE %s OR display_name LIKE %s)",
-							$afwc_is_affiliate,
-							'%' . $term . '%',
-							'%' . $term . '%'
-						),
-						'ARRAY_A'
-					);
-				}
-			} else {
-				$res = $wpdb->get_results( // phpcs:ignore
-					$wpdb->prepare( // phpcs:ignore
-						"SELECT id, display_name FROM {$wpdb->prefix}users u JOIN {$wpdb->usermeta} as um
-																ON(um.user_id = u.ID 
-																AND um.meta_key = 'afwc_is_affiliate' AND um.meta_value = 'yes' ) WHERE id IN (" . implode( ',', array_fill( 0, count( $term ), '%d' ) ) . ')',
-						$term
-					),
-					'ARRAY_A'
+			global $affiliate_for_woocommerce;
+
+			if ( true === $for_ajax ) {
+				$search = array(
+					'search'         => '*' . $term . '*',
+					'search_columns' => array( 'ID', 'user_nicename', 'user_login', 'user_email' ),
 				);
-
-			}
-			if ( ! empty( $res ) ) {
-				foreach ( $res as $value ) {
-					$rule_values[ $value['id'] ] = $value['display_name'];
+			} else {
+				// Fetch affiliates by user ids.
+				if ( ! is_array( $term ) ) {
+					$term = (array) $term;
 				}
+				$search = array(
+					'include' => $term,
+				);
 			}
+
+			$rule_values = is_callable( array( $affiliate_for_woocommerce, 'get_affiliates' ) ) ? $affiliate_for_woocommerce->get_affiliates( $search ) : $rule_values;
 
 			return $rule_values;
 

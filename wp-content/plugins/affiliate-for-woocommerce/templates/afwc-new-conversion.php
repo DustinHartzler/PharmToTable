@@ -1,9 +1,10 @@
 <?php
 /**
- * Affiliate New Conversion Email Content
+ * Affiliate New Conversion Email Content (Affiliate - New Conversion Received)
  *
- * @version     1.1.0
  * @package     affiliate-for-woocommerce/templates/
+ * @since       2.3.0
+ * @version     1.1.1
  */
 
 // Exit if accessed directly.
@@ -51,7 +52,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 </div>
 
 <?php /* translators: %1$s: Opening a tage for affiliate my account link %2$s: text for my account %3$s: closing a tag for affiliate my account link */ ?>
-<p><?php printf( esc_html__( 'We have already updated %1$s%2$s%3$s to reflect this.' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', esc_html__( 'your account', 'affiliate-for-woocommerce' ), '</a>' ); ?>
+<p><?php printf( esc_html__( 'We have already updated %1$s%2$s%3$s to reflect this.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', esc_html__( 'your account', 'affiliate-for-woocommerce' ), '</a>' ); ?>
 
 <p><?php echo esc_html__( 'Thank you for promoting us. We look forward to send another email like this very soon!', 'affiliate-for-woocommerce' ); ?></p>
 

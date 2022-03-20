@@ -3,7 +3,8 @@
  * Main class for Affiliates My Account
  *
  * @package     affiliate-for-woocommerce/includes/frontend/
- * @version     1.4.4
+ * @since       1.0.0
+ * @version     1.4.6
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -550,20 +551,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				do_action( 'afwc_before_ajax_load_more_referrals', $referrals, $args, $this );
 				foreach ( $referrals['rows'] as $referral ) {
 
-					// $referral_status is passed like this so it is available in the translation.
-					if ( 'paid' === $referral['status'] ) {
-						$referral_status = __( 'Paid', 'affiliate-for-woocommerce' );
-						$status_color    = 'green';
-					} elseif ( 'unpaid' === $referral['status'] ) {
-						$referral_status = __( 'Unpaid', 'affiliate-for-woocommerce' );
-						$status_color    = 'orange';
-					} elseif ( 'rejected' === $referral['status'] ) {
-						$referral_status = __( 'Rejected', 'affiliate-for-woocommerce' );
-						$status_color    = 'red';
-					} elseif ( 'draft' === $referral['status'] ) {
-						$referral_status = __( 'Draft', 'affiliate-for-woocommerce' );
-						$status_color    = 'gray';
-					}
+					$referral_status = ( ! empty( $referral['status'] ) ) ? $referral['status'] : '';
 
 					$customer_name = ( strlen( $referral['display_name'] ) > 20 ) ? substr( $referral['display_name'], 0, 19 ) . '...' : $referral['display_name'];
 					$commission    = ( html_entity_decode( get_woocommerce_currency_symbol( $referral['currency_id'] ) ) ) . $referral['amount'];
@@ -571,12 +559,13 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 					$is_show_customer_column = apply_filters( 'afwc_account_show_customer_column', true, array( 'source' => $this ) );
 					?>
 						<tr>
+							<td data-title="<?php echo esc_html__( 'Order ID', 'affiliate-for-woocommerce' ); ?>"> <?php echo esc_html( $referral['post_id'] ); ?></td>
 							<td data-title="<?php echo esc_html__( 'Date', 'affiliate-for-woocommerce' ); ?>"> <?php echo esc_html( gmdate( $date_format, strtotime( $referral['datetime'] ) ) ); ?></td>
 							<?php if ( true === $is_show_customer_column ) { ?>
 								<td data-title="<?php echo esc_html__( 'Customer', 'affiliate-for-woocommerce' ); ?>" title = "<?php echo esc_html( $referral['display_name'] ); ?>"><?php echo esc_html( $customer_name ); ?></td>
 							<?php } ?>
 							<td data-title="<?php echo esc_html__( 'Commission', 'affiliate-for-woocommerce' ); ?>"><?php echo wp_kses_post( $commission ); // phpcs:ignore ?></td>
-							<td data-title="<?php echo esc_html__( 'Payout status', 'affiliate-for-woocommerce' ); ?>" title = "<?php echo esc_html( $referral_status ); ?>"><div class="circle <?php echo esc_attr( 'fill_' . $status_color ); ?>"></div></td>
+							<td data-title="<?php echo esc_html__( 'Payout status', 'affiliate-for-woocommerce' ); ?>" title = "<?php echo esc_html( ( ! empty( $referral_status ) ) ? afwc_get_commission_statuses( $referral_status ) : '' ); ?>"><div class="circle <?php echo esc_attr( 'fill_' . ( ! empty( $referral_status ) ? afwc_get_commission_status_colors( $referral_status ) : '' ) ); ?>"></div></td>
 						</tr>
 					<?php
 				}
@@ -647,13 +636,12 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			if ( 'not_registered' === $is_affiliate ) {
 				echo do_shortcode( '[afwc_registration_form]' );
 			}
-
 		}
 
 		/**
 		 * Function to display tabs headers
 		 *
-		 * @param  WP_User $user The user object.
+		 * @param WP_User $user The user object.
 		 */
 		public function tabs( $user = null ) {
 			if ( ! is_object( $user ) || empty( $user->ID ) ) {
@@ -665,8 +653,13 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			$tabs = array(
 				''          => esc_html__( 'Reports', 'affiliate-for-woocommerce' ),
 				'resources' => esc_html__( 'Profile', 'affiliate-for-woocommerce' ),
-				'campaigns' => esc_html__( 'Campaigns', 'affiliate-for-woocommerce' ),
 			);
+
+			// Add campaigns tab only if we find any active campaigns on the store.
+			if ( afwc_is_campaign_active() ) {
+				$tabs['campaigns'] = esc_html__( 'Campaigns', 'affiliate-for-woocommerce' );
+			}
+
 			$tabs = apply_filters( 'afwc_myaccount_tabs', $tabs );
 			?>
 
@@ -687,7 +680,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		/**
 		 * Function to display tabs content on my account.
 		 *
-		 * @param  WP_User $user The user object.
+		 * @param WP_User $user The user object.
 		 */
 		public function tab_content( $user = null ) {
 			if ( ! is_object( $user ) || empty( $user->ID ) ) {
@@ -699,7 +692,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				$this->dashboard_content( $user );
 			} elseif ( ! empty( $wp->query_vars[ $this->endpoint ] ) && 'resources' === $wp->query_vars[ $this->endpoint ] ) {
 				$this->resources_content( $user );
-			} elseif ( ! empty( $wp->query_vars[ $this->endpoint ] ) && 'campaigns' === $wp->query_vars[ $this->endpoint ] ) {
+			} elseif ( ! empty( $wp->query_vars[ $this->endpoint ] ) && 'campaigns' === $wp->query_vars[ $this->endpoint ] && afwc_is_campaign_active() ) {
 				$this->campaigns_content( $user );
 			}
 
@@ -707,8 +700,9 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 
 		/**
 		 * Function to display dashboard content on my account.
+		 * Default: Reports tab.
 		 *
-		 * @param  WP_User $user The user object.
+		 * @param WP_User $user The user object.
 		 */
 		public function dashboard_content( $user = null ) {
 			global $wpdb;
@@ -778,7 +772,10 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 								<div id ="afwc_unpaid_commission" class="fill_orange" style="<?php echo esc_html( $unpaid_commission_percentage_style ) . 'width:' . esc_html( $unpaid_commission_percentage ) . '%'; ?>"></div>
 							</div>
 							<div id ="afwc_commission_stats">
-								<?php if ( ! empty( $paid_commission_percentage ) ) { ?>
+								<?php
+									// TODO: can fetch commission statuses from function.
+								if ( ! empty( $paid_commission_percentage ) ) {
+									?>
 									<div id="afwc_commission_stats_paid" class="afwc_kpis_text"><?php echo esc_html__( 'Paid', 'affiliate-for-woocommerce' ) . ': ' . wp_kses_post( wc_price( $kpis['paid_commission'] ) ); //phpcs:ignore ?></div>
 								<?php } if ( ! empty( $unpaid_commission_percentage ) ) { ?>
 									<div id="afwc_commission_stats_unpaid" class="afwc_kpis_text"><?php echo esc_html__( 'Unpaid', 'affiliate-for-woocommerce' ) . ': ' . wp_kses_post( wc_price( $kpis['unpaid_commission'] ) ); //phpcs:ignore ?></div>
@@ -926,6 +923,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				<table class="afwc_referrals">
 					<thead>
 						<tr>
+							<th><?php echo esc_html__( 'Order ID', 'affiliate-for-woocommerce' ); ?></th>
 							<th><?php echo esc_html__( 'Date', 'affiliate-for-woocommerce' ); ?></th>
 							<?php if ( true === $is_show_customer_column ) { ?>
 							<th><?php echo esc_html__( 'Customer', 'affiliate-for-woocommerce' ); ?></th>
@@ -939,30 +937,18 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 							<?php
 							foreach ( $referrals['rows'] as $referral ) {
 
-								// $referral_status is passed like this so it is available in the translation.
-								if ( 'paid' === $referral['status'] ) {
-									$referral_status = __( 'Paid', 'affiliate-for-woocommerce' );
-									$status_color    = 'green';
-								} elseif ( 'unpaid' === $referral['status'] ) {
-									$referral_status = __( 'Unpaid', 'affiliate-for-woocommerce' );
-									$status_color    = 'orange';
-								} elseif ( 'rejected' === $referral['status'] ) {
-									$referral_status = __( 'Rejected', 'affiliate-for-woocommerce' );
-									$status_color    = 'red';
-								} elseif ( 'draft' === $referral['status'] ) {
-									$referral_status = __( 'Draft', 'affiliate-for-woocommerce' );
-									$status_color    = 'gray';
-								}
+								$referral_status = ( ! empty( $referral['status'] ) ) ? $referral['status'] : '';
 
 								$customer_name = ( strlen( $referral['display_name'] ) > 20 ) ? substr( $referral['display_name'], 0, 19 ) . '...' : $referral['display_name'];
 								?>
 							<tr>
+								<td data-title="<?php echo esc_html__( 'Order ID', 'affiliate-for-woocommerce' ); ?>"><?php echo esc_html( $referral['post_id'] ); ?></td>
 								<td data-title="<?php echo esc_html__( 'Date', 'affiliate-for-woocommerce' ); ?>"><?php echo esc_html( gmdate( $date_format, strtotime( $referral['datetime'] ) ) ); ?></td>
 								<?php if ( true === $is_show_customer_column ) { ?>
 								<td data-title="<?php echo esc_html__( 'Customer', 'affiliate-for-woocommerce' ); ?>" title = "<?php echo esc_html( $referral['display_name'] ); ?>"><?php echo esc_html( $customer_name ); ?></td>
 							<?php } ?>
 								<td data-title="<?php echo esc_html__( 'Commission', 'affiliate-for-woocommerce' ); ?>"><?php echo wp_kses_post( wc_price( $referral['amount'] ) ); // phpcs:ignore ?></td>
-								<td data-title="<?php echo esc_html__( 'Payout status', 'affiliate-for-woocommerce' ); ?>" title = "<?php echo esc_html( $referral_status ); ?>"><div class="circle <?php echo esc_attr( 'fill_' . $status_color ); ?>"></div></td>
+								<td data-title="<?php echo esc_html__( 'Payout status', 'affiliate-for-woocommerce' ); ?>" title = "<?php echo esc_html( ( ! empty( $referral_status ) ) ? afwc_get_commission_statuses( $referral_status ) : '' ); ?>"><div class="circle <?php echo esc_attr( 'fill_' . ( ! empty( $referral_status ) ? afwc_get_commission_status_colors( $referral_status ) : '' ) ); ?>"></div></td>
 							</tr>
 							<?php } ?>
 						<?php } else { ?>
@@ -1524,6 +1510,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			foreach ( $referrals_details as $referral ) {
 				$referral_id_detail_map[ $referral['order_id'] ] = $referral['display_name'];
 			}
+
 			foreach ( $referrals_result as $key => $ref ) {
 				$referrals_result[ $key ]['display_name'] = ( ! empty( $referral_id_detail_map[ $ref['post_id'] ] ) ) ? $referral_id_detail_map[ $ref['post_id'] ] : __( 'Guest', 'affiliate-for-woocomerce' );
 			}
@@ -1538,7 +1525,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		}
 
 		/**
-		 * Function to show content resources
+		 * Function to show content in affiliate profile tab.
 		 *
 		 * @param WP_User $user The user object.
 		 */
@@ -1556,19 +1543,20 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				include_once WP_PLUGIN_DIR . '/woocommerce/includes/class-wc-ajax.php';
 			}
 
+			// Data.
 			$pname           = get_option( 'afwc_pname', 'ref' );
 			$pname           = ( ! empty( $pname ) ) ? $pname : 'ref';
-			$date_format     = get_option( 'date_format' );
+			$date_format     = get_option( 'date_format' ); // TODO: not used so remove?.
 			$affiliate_id    = afwc_get_affiliate_id_based_on_user_id( $user->ID );
 			$afwc_ref_url_id = get_user_meta( $user->ID, 'afwc_ref_url_id', true );
 			$affiliate_id    = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
-			$affiliate_link  = add_query_arg( $pname, $affiliate_id, trailingslashit( home_url() ) );
+			$affiliate_link  = add_query_arg( $pname, $affiliate_id, trailingslashit( home_url() ) ); // TODO: not used so remove?.
 
 			$use_referral_coupons = get_option( 'afwc_use_referral_coupons', 'yes' );
 			$afwc_coupon          = AFWC_Coupon::get_instance();
 			$referral_coupon_code = $afwc_coupon->get_referral_coupon( array( 'user_id' => $user->ID ) );
 
-			$paypal_api_settings = AFWC_Paypal::get_instance()->get_api_setting_status();
+			$paypal_api_settings = AFWC_PayPal_API::get_instance()->get_api_setting_status();
 			if ( 'yes' === $paypal_api_settings['value'] ) {
 				$afwc_paypal_email = get_user_meta( $user->ID, 'afwc_paypal_email', true );
 			}

@@ -3,21 +3,21 @@
  * Plugin Name: Affiliate For WooCommerce
  * Plugin URI: https://woocommerce.com/products/affiliate-for-woocommerce/
  * Description: The best affiliate management plugin for WooCommerce. Track, manage and payout affiliate commissions easily.
- * Version: 3.11.0
+ * Version: 4.0.1
  * Author: StoreApps
  * Author URI: http://www.storeapps.org/
  * Developer: StoreApps
  * Developer URI: https://www.storeapps.org/
  * Requires at least: 5.0.0
- * Tested up to: 5.8.2
+ * Tested up to: 5.9.2
  * WC requires at least: 3.6.0
- * WC tested up to: 5.9.0
+ * WC tested up to: 6.3.1
  * Text Domain: affiliate-for-woocommerce
  * Domain Path: /languages/
  * Woo: 4830848:0f21ae7f876a631d2db8952926715502
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
- * Copyright (c) 2019-2021 StoreApps All rights reserved.
+ * Copyright (c) 2019-2022 StoreApps All rights reserved.
  *
  * @package affiliate-for-woocommerce
  */

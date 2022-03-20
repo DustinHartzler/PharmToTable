@@ -2,19 +2,20 @@
 /**
  * Class for rule group
  *
+ * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.5.0
- * @version     1.0.1
- *
- * @package     affiliate-for-woocommerce/includes/commission_rules
+ * @version     1.0.2
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+	exit;
 }
+
 if ( ! class_exists( 'AFWC_Plan' ) ) {
 
 	/**
-	 * Class for AFWC_Rule_Group of Affiliate For WooCommerce
+	 * Class for AFWC_Plan of Affiliate For WooCommerce
 	 */
 	class AFWC_Plan extends AFWC_Rule_Group {
 
