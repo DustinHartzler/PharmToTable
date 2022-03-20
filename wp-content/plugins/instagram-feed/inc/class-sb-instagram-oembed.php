@@ -218,7 +218,8 @@ class SB_Instagram_Oembed
 		$will_expire = SB_Instagram_Oembed::oembed_access_token_will_expire();
 		if ( ! empty( $oembed_token_settings['access_token'] )
 		     && (! $will_expire || $will_expire > time()) ) {
-			return sbi_maybe_clean( sbi_fixer( $oembed_token_settings['access_token'] ) );
+			$return = sbi_maybe_clean( $oembed_token_settings['access_token'] );
+			return $return;
 		} else {
 			$if_database_settings = sbi_get_database_settings();
 
@@ -235,7 +236,8 @@ class SB_Instagram_Oembed
 			}
 
 			if ( ! empty( $oembed_token_settings['access_token'] ) ) {
-				return sbi_maybe_clean( sbi_fixer( $oembed_token_settings['access_token'] ) );
+				$return = sbi_maybe_clean( $oembed_token_settings['access_token'] );
+				return $return;
 			}
 
 			if ( class_exists( 'CFF_Oembed' ) ) {

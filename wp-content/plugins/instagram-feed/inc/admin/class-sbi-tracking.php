@@ -146,12 +146,11 @@ class SB_Instagram_Tracking {
 		$data['php_version']   = $php_version;
 		$data['mi_version']    = SBIVER;
 		$data['wp_version']    = $wp_version;
-		$data['server']        = isset( $_SERVER['SERVER_SOFTWARE'] ) ? $_SERVER['SERVER_SOFTWARE'] : '';
+		$data['server']        = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '';
 		$data['multisite']     = is_multisite();
 		$data['url']           = home_url();
 		$data['themename']     = $theme_data->Name;
 		$data['themeversion']  = $theme_data->Version;
-		$data['settings']      = array();
 		$data['pro']           = (int) sbi_is_pro_version();
 		$data['sites']         = $count_b;
 		$data['usagetracking'] = get_option( 'sbi_usage_tracking_config', false );
