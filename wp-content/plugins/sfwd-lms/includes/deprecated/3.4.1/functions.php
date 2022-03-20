@@ -195,7 +195,7 @@ if ( ! function_exists( 'learndash_all_group_leader_ids' ) ) {
 		$group_leader_user_ids = array();
 		$group_leader_users    = learndash_all_group_leaders();
 		if ( ! empty( $group_leader_users ) ) {
-			$group_leader_user_ids = wp_list_pluck( $group_users, 'ID' );
+			$group_leader_user_ids = wp_list_pluck( $group_leader_users, 'ID' );
 		}
 		return $group_leader_user_ids;
 	}

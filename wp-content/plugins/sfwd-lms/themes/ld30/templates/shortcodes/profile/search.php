@@ -28,7 +28,7 @@ $learndash_search_is_expanded = ( false !== (bool) $learndash_profile_search_que
 	<h4>
 	<?php
 		printf(
-			// translators: Profile Search Courses
+			// translators: Profile Search Courses.
 			esc_html_x( 'Search Your %s', 'Profile Search Courses', 'learndash' ),
 			esc_attr( LearnDash_Custom_Label::get_label( 'courses' ) )
 		);
@@ -41,7 +41,7 @@ $learndash_search_is_expanded = ( false !== (bool) $learndash_profile_search_que
 			<label for="course_name_field">
 			<?php
 				printf(
-					// translators: Profile Course Label
+					// translators: Profile Course Label.
 					esc_html_x( '%s Name', 'Profile Course Label', 'learndash' ),
 					esc_attr( LearnDash_Custom_Label::get_label( 'course' ) )
 				);

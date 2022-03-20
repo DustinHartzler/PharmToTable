@@ -18,21 +18,26 @@ if ( ( ! class_exists( 'Transactions_Widget' ) ) && ( class_exists( 'WP_Widget' 
 	 * @since 2.1.0
 	 * @uses WP_Widget
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class Transactions_Widget extends WP_Widget {
+	class Transactions_Widget extends WP_Widget { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
+		 * Post type
+		 *
 		 * @var string $post_type.
 		 */
 		protected $post_type = 'sfwd-transactions';
 
 		/**
+		 * Post name
+		 *
 		 * @var string $post_name.
 		 */
 		protected $post_name = 'Transactions';
 
 		/**
-		 * @var object $post_arga.
+		 * Post arguments
+		 *
+		 * @var object $post_args.
 		 */
 		protected $post_args;
 
@@ -66,10 +71,8 @@ if ( ( ! class_exists( 'Transactions_Widget' ) ) && ( class_exists( 'WP_Widget' 
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $args     widget arguments
-		 * @param  array $instance widget instance
-		 *
-		 * @return string widget output
+		 * @param array $args     widget arguments.
+		 * @param array $instance widget instance.
 		 */
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
@@ -112,8 +115,8 @@ if ( ( ! class_exists( 'Transactions_Widget' ) ) && ( class_exists( 'WP_Widget' 
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $new_instance
-		 * @param  array $old_instance
+		 * @param array $new_instance New instance.
+		 * @param array $old_instance Old instance.
 		 *
 		 * @return array $instance
 		 */
@@ -129,7 +132,9 @@ if ( ( ! class_exists( 'Transactions_Widget' ) ) && ( class_exists( 'WP_Widget' 
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $instance widget instance
+		 * @param array $instance widget instance.
+		 *
+		 * @return string Default return is 'noform'.
 		 */
 		public function form( $instance ) {
 			if ( $instance ) {
@@ -144,6 +149,7 @@ if ( ( ! class_exists( 'Transactions_Widget' ) ) && ( class_exists( 'WP_Widget' 
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 			</p>
 			<?php
+			return '';
 		}
 	}
 

@@ -172,7 +172,7 @@ function learndash_get_user_assignments( $post_id, $user_id, $course_id = 0 ) {
  * @param int $fname   Assignment file name.
  */
 function learndash_upload_assignment_init( $post_id, $fname ) {
-	// Initialize an empty array
+	// Initialize an empty array.
 	global $wp;
 
 	if ( ! function_exists( 'wp_get_current_user' ) ) {
@@ -265,7 +265,7 @@ function learndash_upload_assignment_init( $post_id, $fname ) {
 	if ( ! empty( $auto_approve ) ) {
 		learndash_approve_assignment( $current_user->ID, $post_id, $assignment_post_id );
 
-		// assign full points if auto approve & points are enabled
+		// assign full points if auto approve & points are enabled.
 		if ( 'on' === $points_enabled ) {
 			$points = learndash_get_setting( $post, 'lesson_assignment_points_amount' );
 			update_post_meta( $assignment_post_id, 'points', intval( $points ) );
@@ -370,21 +370,21 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 	if ( is_array( $uploadfiles ) ) {
 
 		foreach ( $uploadfiles['name'] as $key => $value ) {
-			// look only for uploded files
+			// look only for uploded files.
 			if ( 0 == $uploadfiles['error'][ $key ] ) {
 
 				$filetmp = $uploadfiles['tmp_name'][ $key ];
 
-				// clean filename
+				// clean filename.
 				$filename = learndash_clean_filename( $uploadfiles['name'][ $key ] );
 
-				// extract extension
+				// extract extension.
 				if ( ! function_exists( 'wp_get_current_user' ) ) {
 					include ABSPATH . 'wp-includes/pluggable.php';
 				}
 
 				// Before this function we have already validated the file extention/type via the function learndash_check_upload
-				// @2.5.4
+				// @2.5.4.
 				$file_title = pathinfo( basename( $filename ), PATHINFO_FILENAME );
 				$file_ext   = pathinfo( basename( $filename ), PATHINFO_EXTENSION );
 
@@ -402,7 +402,7 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 					}
 				}
 
-				// Add an index.php file to prevent directory browesing
+				// Add an index.php file to prevent directory browesing.
 				$_index = trailingslashit( $upload_dir_path ) . 'index.php';
 				if ( ! file_exists( $_index ) ) {
 					learndash_put_directory_index_file( $_index );
@@ -472,6 +472,8 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 			}
 		}
 	}
+
+	return array();
 }
 
 /**
@@ -510,7 +512,7 @@ function learndash_lesson_hasassignments( $post ) {
  * @return boolean Returns true if the assignment is approved otherwise false.
  */
 function learndash_approve_assignment_by_id( $assignment_id ) {
-	$assignment_post = get_post( $assignment );
+	$assignment_post = get_post( $assignment_id );
 	$user_id         = $assignment_post->post_author;
 	$lesson_id       = get_post_meta( $assignment_post->ID, 'lesson_id', true );
 	return learndash_approve_assignment( $user_id, $lesson_id, $assignment_id );
@@ -549,9 +551,7 @@ function learndash_approve_assignment( $user_id, $lesson_id, $assignment_post_id
 		$assignment_course_id            = get_post_meta( $assignment_post_id, 'course_id', true );
 		$learndash_process_mark_complete = learndash_process_mark_complete( $user_id, $lesson_id, null, $assignment_course_id );
 		if ( $learndash_process_mark_complete ) {
-			/**
-			 * @TODO This query needs to be reworked to NOT query all posts with that meta_key. Better off using WP_Query.
-			 */
+			// @TODO This query needs to be reworked to NOT query all posts with that meta_key. Better off using WP_Query.
 			global $wpdb;
 			$assignment_ids = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %d", 'lesson_id', $lesson_id ) );
 
@@ -578,6 +578,8 @@ function learndash_approve_assignment( $user_id, $lesson_id, $assignment_post_id
 
 		return $learndash_process_mark_complete;
 	}
+
+	return false;
 }
 
 
@@ -904,6 +906,8 @@ function learndash_assignment_points_awarded( $assignment_id ) {
 			$current
 		);
 	}
+
+	return '';
 }
 
 /**
@@ -921,7 +925,7 @@ function learndash_assignment_points_awarded( $assignment_id ) {
 function learndash_get_assignment_points_awarded( $assignment_id ) {
 	$current = get_post_meta( $assignment_id, 'points', true );
 
-	// We can't compare against the actual post meta value because it was a translatable string until 2.6.4
+	// We can't compare against the actual post meta value because it was a translatable string until 2.6.4.
 	if ( ( ! empty( $current ) ) && ( ! is_numeric( $current ) ) ) {
 		return esc_html__( 'Pending', 'learndash' );
 	}
@@ -958,6 +962,8 @@ function learndash_get_assignment_points_awarded( $assignment_id ) {
 			$percentage
 		);
 	}
+
+	return '';
 }
 
 /**

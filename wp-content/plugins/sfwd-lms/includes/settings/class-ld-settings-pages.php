@@ -12,11 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 	/**
-	 * Absract for LearnDash Settings Pages.
+	 * Class for LearnDash Settings Pages.
 	 *
 	 * @since 2.4.0
 	 */
-	abstract class LearnDash_Settings_Page {
+	class LearnDash_Settings_Page {
 
 		/**
 		 * Variable to hold all settings page instances.
@@ -108,6 +108,27 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 		protected $settings_form_wrap = true;
 
 		/**
+		 * Show metaboxes are sub-pages. (One per sub-menu).
+		 *
+		 * @var boolean $settings_metabox_as_sub
+		 */
+		protected $settings_metabox_as_sub = false;
+
+		/**
+		 * Set from the current metabox showing.
+		 *
+		 * @var string $settings_metabox_as_sub_current
+		 */
+		protected $settings_metabox_as_sub_current = '';
+
+		/**
+		 * Collection of page sections.
+		 *
+		 * @var array $page_sections
+		 */
+		protected $page_sections = null;
+
+		/**
 		 * Public constructor for class
 		 *
 		 * @since 2.4.0
@@ -124,8 +145,16 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 				$this->settings_tab_title = $this->settings_page_title;
 			}
 
-			if ( ( ! empty( $this->settings_page_id ) ) && ( ! isset( $learndash_pages[ $this->settings_page_id ] ) ) ) {
-				$learndash_pages[] = $this->settings_page_id;
+			if ( ! empty( $this->settings_page_id ) ) {
+				add_filter( 'option_page_capability_' . $this->settings_page_id, array( $this, 'filter_option_page_capability' ), 10, 1 );
+
+				if ( ! isset( $learndash_pages[ $this->settings_page_id ] ) ) {
+					$learndash_pages[] = $this->settings_page_id;
+				}
+			}
+
+			if ( true === $this->settings_metabox_as_sub ) {
+				add_filter( 'learndash_show_section', array( $this, 'should_show_settings_section' ), 10, 3 );
 			}
 		}
 
@@ -142,6 +171,36 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 			if ( ! empty( $page_key ) ) {
 				if ( isset( self::$_instances[ $page_key ] ) ) {
 					return self::$_instances[ $page_key ];
+				}
+			}
+
+			return null;
+		}
+
+		/**
+		 * Function to get a specific setting page instance.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @param string $criteria_field Page field to compare.
+		 * @param string $criteria_value Page field value to compare.
+		 * @param string $return_field   Page field to return. If empty object is returned.
+		 *
+		 * @return mixed Page object or individual field per `$return_field` value.
+		 */
+		final public static function get_page_instance_by( $criteria_field = '', $criteria_value = '', $return_field = '' ) {
+			if ( ( ! empty( $criteria_field ) ) && ( ! empty( $criteria_value ) ) ) {
+				if ( ! empty( self::$_instances ) ) {
+					foreach ( self::$_instances as $_instance_key => $_instance_object ) {
+						if ( ( $_instance_object ) && ( is_a( $_instance_object, 'LearnDash_Settings_Page' ) ) ) {
+							if ( ( property_exists( $_instance_object, $criteria_field ) ) && ( $_instance_object->$criteria_field === $criteria_value ) ) {
+								if ( ( ! empty( $return_field ) ) && ( property_exists( $_instance_object, $return_field ) ) ) {
+									return $_instance_object->$return_field;
+								}
+								return $_instance_object;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -173,7 +232,13 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 			 */
 			do_action( 'learndash_settings_page_init', $this->settings_page_id );
 
-			if ( true === $this->show_submit_meta ) {
+			/**
+			 * Filters whether the show the section submit.
+			 *
+			 * @param bool   $show_submit_meta show section submit.
+			 * @param string $settings_page_id Settings Page ID.
+			 */
+			if ( true === apply_filters( 'learndash_settings_show_section_submit', $this->show_submit_meta, $this->settings_page_id ) ) {
 				$submit_obj = new LearnDash_Settings_Section_Side_Submit(
 					array(
 						'settings_screen_id' => $this->settings_screen_id,
@@ -182,7 +247,13 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 				);
 			}
 
-			if ( true === $this->show_quick_links_meta ) {
+			/**
+			 * Filters whether the show the section quick links .
+			 *
+			 * @param bool   $show_quick_links_meta show section quick links.
+			 * @param string $settings_page_id Settings Page ID.
+			 */
+			if ( true === apply_filters( 'learndash_settings_show_section_quick_liinks', $this->show_quick_links_meta, $this->settings_page_id )  ) {
 				$ql_obj = new LearnDash_Settings_Section_Side_Quick_Links(
 					array(
 						'settings_screen_id' => $this->settings_screen_id,
@@ -299,10 +370,27 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 			/**
 			 * Fires on LearnDash settings page load.
 			 *
+			 * @deprecated 3.2.3 Use {@see 'learndash_settings_page_load'} instead.
+			 *
 			 * @param string $setting_screen_id Settings screen ID.
 			 * @param string $setting_page_id   Settings page ID.
 			 */
-			do_action( 'learndash-settings-page-load', $this->settings_screen_id, $this->settings_page_id );
+			do_action_deprecated(
+				'learndash-settings-page-load',
+				array( $this->settings_screen_id, $this->settings_page_id ),
+				'3.6.0',
+				'learndash_settings_page_load'
+			);
+
+			/**
+			 * Fires on LearnDash settings page load.
+			 *
+			 * @since 3.6.0
+			 *
+			 * @param string $setting_screen_id Settings screen ID.
+			 * @param string $setting_page_id   Settings page ID.
+			 */
+			do_action( 'learndash_settings_page_load', $this->settings_screen_id, $this->settings_page_id );
 		}
 
 		/**
@@ -310,8 +398,8 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param integer $columns Number of columns to show.
-		 * @param Object  $screen Current screen object.
+		 * @param integer $columns   Number of columns to show.
+		 * @param Object  $screen_id Current screen object.
 		 *
 		 * @return integer $columns
 		 */
@@ -395,8 +483,8 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 			if ( defined( 'LEARNDASH_SETTINGS_SECTION_TYPE' ) && ( 'metabox' === LEARNDASH_SETTINGS_SECTION_TYPE ) ) {
 				?>
 				<div class="wrap learndash-settings-page-wrap">
-
 					<?php settings_errors(); ?>
+					<?php $this->show_settings_sections_sub_menu(); ?>
 					<?php
 					/**
 					 * Fires before the settings page title.
@@ -564,6 +652,132 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 					return apply_filters( 'learndash_admin_page_form', '</form>', $start );
 				}
 			}
+			return '';
+		}
+
+		/**
+		 * Get the Sections associated with the current page.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @return array array of Sections for the current page.
+		 */
+		protected function get_settings_sections() {
+			if ( is_null( $this->page_sections ) ) {
+				$this->page_sections = LearnDash_Settings_Section::get_all_sections_by( 'settings_page_id', $this->settings_page_id );
+			}
+			return $this->page_sections;
+		}
+		/**
+		 * Show the Page sections sub menu
+		 *
+		 * @since 3.6.0
+		 */
+		public function show_settings_sections_sub_menu() {
+			if ( true === $this->settings_metabox_as_sub ) {
+				$page_sections = LearnDash_Settings_Section::get_all_sections_by( 'settings_page_id', $this->settings_page_id, null, 'settings_section_key' );
+				if ( ! empty( $page_sections ) ) {
+					$current_sub = $this->get_current_settings_section_as_sub();
+
+					$q_links = array();
+					foreach ( $page_sections as $section_id => $section ) {
+						$q_links[ $section_id ] = array(
+							'url'   => add_query_arg( 'section-advanced', esc_attr( $section_id ) ),
+							'label' => $section->get_settings_section_sub_label(),
+						);
+					}
+				}
+
+				if ( ! empty( $q_links ) ) {
+					echo '<div id="learndash-settings-sub-wrap"  class="wrap">';
+					echo '<ul id="learndash-settings-sub-advanced" class="learndash-settings-sub subsubsub">';
+
+					if ( ! empty( $q_links ) ) {
+						$links = '';
+						foreach ( $q_links as $q_link_key => $q_link ) {
+							if ( ! empty( $links ) ) {
+								$links .= ' | ';
+							}
+							$q_link_class = '';
+							if ( $current_sub === $q_link_key ) {
+								$q_link_class = ' class="learndash-settings-sub-current" ';
+							}
+							$links .= '<li' . $q_link_class . '><a href="' . esc_url( $q_link['url'] ) . '" >' . esc_html( $q_link['label'] ) . '</a></li>';
+						}
+						echo wp_kses_post( $links );
+					}
+					echo '</ul>';
+				}
+			}
+		}
+
+		/**
+		 * Get the current Settings Section when using section-as-sub logic.
+		 *
+		 * See `$settings_metabox_as_sub` class variable.
+		 *
+		 * @since 3.6.0
+		 */
+		protected function get_current_settings_section_as_sub() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ( isset( $_GET['section-advanced'] ) ) && ( ! empty( $_GET['section-advanced'] ) ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$this->settings_metabox_as_sub_current = esc_attr( $_GET['section-advanced'] );
+			}
+
+			$page_sections = LearnDash_Settings_Section::get_all_sections_by( 'settings_page_id', $this->settings_page_id, null, 'settings_section_key' );
+			if ( ! empty( $page_sections ) ) {
+				if ( ! isset( $page_sections[ $this->settings_metabox_as_sub_current ] ) ) {
+					foreach ( $page_sections as $key => $section ) {
+						$this->settings_metabox_as_sub_current = $key;
+						break;
+					}
+				}
+			} else {
+				$this->settings_metabox_as_sub_current = null;
+			}
+
+			return $this->settings_metabox_as_sub_current;
+		}
+
+		/**
+		 * Function to check if metabox should be shown.
+		 *
+		 * Called from filter `learndash_show_metabox` to check if metabox should be shown
+		 * on page. This is called just before the `add_meta_box()` function.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @param bool   $show               Default is true.
+		 * @param string $section_key        The section key to be added/shown.
+		 * @param string $settings_screen_id Screen ID.
+		 */
+		public function should_show_settings_section( $show, $section_key, $settings_screen_id ) {
+			if ( $settings_screen_id === $this->settings_screen_id ) {
+				if ( true === $show ) {
+					if ( ( ! empty( $section_key ) ) && ( $section_key !== $this->get_current_settings_section_as_sub() ) ) {
+						$show = false;
+					}
+				}
+			}
+
+			return $show;
+		}
+
+		/**
+		 * Filter function to override default settings save user capability 'manage_options'.
+		 *
+		 * @since 3.6.1
+		 *
+		 * @param string $capability User capability to save options page.
+		 * @return string.
+		 */
+		public function filter_option_page_capability( $capability ) {
+			if ( defined( 'LEARNDASH_ADMIN_CAPABILITY_CHECK' ) && LEARNDASH_ADMIN_CAPABILITY_CHECK ) {
+				$capability = LEARNDASH_ADMIN_CAPABILITY_CHECK;
+			}
+
+			return $capability;
 		}
 
 		// End of functions.
@@ -579,8 +793,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
  */
 function learndash_admin_settings_page_assets() {
 	global $learndash_assets_loaded;
-	/** This filter is documented in includes/class-ld-lms.php */
-	if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+	if ( learndash_use_select2_lib() ) {
 		if ( ! isset( $learndash_assets_loaded['styles']['learndash-select2-jquery-style'] ) ) {
 			wp_enqueue_style(
 				'learndash-select2-jquery-style',
@@ -746,14 +959,36 @@ add_action(
 			$query_args['orderby'] = 'title';
 		}
 
+		$include_selected = 0;
+		if ( ( isset( $query_args['ld_include_selected'] ) ) && ( ! empty( $query_args['ld_include_selected'] ) ) ) {
+			$include_selected = absint( $query_args['ld_include_selected'] ) ;
+		}
+
 		$query_results = new WP_Query( $query_args );
 		if ( ( $query_results ) && ( is_a( $query_results, 'WP_Query' ) ) ) {
 			$result_array['items'] = array();
+
+			if ( ( ! empty( $include_selected ) ) && ( $query_args['paged'] == 1 ) ) {
+				$title = get_the_title( $include_selected );
+				$title = sprintf(
+					// translators: placeholder: post title.
+					esc_html_x( '%s (current selection)', 'placeholder: post title', 'learndash' ), $title);
+				if ( ! empty( $title ) ) {
+					$result_array['items'][] = array(
+						'id'   => $include_selected,
+						'text' => $title,
+					);
+				}
+			}
+
 			if ( ( property_exists( $query_results, 'posts' ) ) && ( is_array( $query_results->posts ) ) && ( ! empty( $query_results->posts ) ) ) {
 				foreach ( $query_results->posts as $item ) {
+				
+					$title = learndash_format_step_post_title_with_status_label( $item );
+					
 					$result_array['items'][] = array(
 						'id'   => $item->ID,
-						'text' => $item->post_title,
+						'text' => $title,
 					);
 				}
 			}

@@ -17,8 +17,12 @@ if ( ( ! class_exists( 'LD_REST_Echo_Controller_V1' ) ) && ( class_exists( 'WP_R
 	 *
 	 * @since 3.0.7
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Echo_Controller_V1 extends WP_REST_Controller {
+	class LD_REST_Echo_Controller_V1 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+		/**
+		 * Version
+		 *
+		 * @var string
+		 */
 		protected $version = 'v1';
 
 		/**

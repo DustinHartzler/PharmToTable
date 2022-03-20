@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts {
+ * @param array  $atts {
  *    An array of shortcode attributes.
  *
  *    @type int       $user_id            User ID. Defaults to current user ID.
@@ -31,16 +31,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type string    $show_header        Whether to show header. Default 'yes'.
  *    @type string    $show_quizzes       Whether to show quizzes. Default 'yes'.
  *    @type string    $show_search        Whether to allow search. Default 'yes'.
- *    @type string    $search             Serch query string. Default empty.
+ *    @type string    $search             Search query string. Default empty.
+ *    @type false|int $quiz_num           Number of quiz attempts to show per course listing
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_profile'.
  *
  * @return string The `ld_profile` shortcode ouput.
  */
-function learndash_profile( $atts = array(), $content = '' ) {
+function learndash_profile( $atts = array(), $content = '', $shortcode_slug = 'ld_profile' ) {
 	global $learndash_shortcode_used;
 
-	// Add check to ensure user it logged in
+	// Add check to ensure user it logged in.
 	if ( ! is_user_logged_in() ) {
 		return '';
 	}
@@ -57,8 +59,27 @@ function learndash_profile( $atts = array(), $content = '' ) {
 		'show_quizzes'       => 'yes',
 		'show_search'        => 'yes',
 		'search'             => '',
+		'quiz_num'           => false,
 	);
 	$atts     = wp_parse_args( $atts, $defaults );
+
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
+
+	/**
+	 * LEARNDASH-6274: Patch to ensure the user_id is valid.
+	 */
+	if ( ( (int) $atts['user_id'] !== (int) get_current_user_id() ) && ( ! learndash_is_admin_user( get_current_user_id() ) ) ) {
+		if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
+			// If group leader user we ensure the preview user_id is within their group(s).
+			if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $atts['user_id'] ) ) {
+				$atts['user_id'] = get_current_user_id();
+			}
+		} else {
+			// If neither admin or group leader then we don't see the user_id for the shortcode.
+			$atts['user_id'] = get_current_user_id();
+		}
+	}
 
 	$enabled_values = array( 'yes', 'true', 'on', '1' );
 	if ( in_array( strtolower( $atts['expand_all'] ), $enabled_values, true ) ) {
@@ -86,9 +107,15 @@ function learndash_profile( $atts = array(), $content = '' ) {
 	}
 
 	if ( false === $atts['per_page'] ) {
-		$atts['per_page'] = $atts['quiz_num'] = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
+		$atts['per_page'] = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
 	} else {
 		$atts['per_page'] = intval( $atts['per_page'] );
+	}
+
+	if ( false === $atts['quiz_num'] ) {
+		$atts['quiz_num'] = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
+	} else {
+		$atts['quiz_num'] = intval( $atts['quiz_num'] );
 	}
 
 	if ( $atts['per_page'] > 0 ) {
@@ -137,42 +164,26 @@ function learndash_profile( $atts = array(), $content = '' ) {
 	$current_user = get_user_by( 'id', $atts['user_id'] );
 	$user_courses = ld_get_mycourses( $atts['user_id'], $atts );
 
-	$usermeta           = get_user_meta( $atts['user_id'], '_sfwd-quizzes', true );
-	$quiz_attempts_meta = empty( $usermeta ) ? false : $usermeta;
-	$quiz_attempts      = array();
-
-	if ( ! empty( $quiz_attempts_meta ) ) {
-
-		foreach ( $quiz_attempts_meta as $quiz_attempt ) {
-			$c                          = learndash_certificate_details( $quiz_attempt['quiz'], $atts['user_id'] );
-			$quiz_attempt['post']       = get_post( $quiz_attempt['quiz'] );
-			$quiz_attempt['percentage'] = ! empty( $quiz_attempt['percentage'] ) ? $quiz_attempt['percentage'] : ( ! empty( $quiz_attempt['count'] ) ? $quiz_attempt['score'] * 100 / $quiz_attempt['count'] : 0 );
-
-			if ( get_current_user_id() == $atts['user_id'] && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
-				$quiz_attempt['certificate'] = $c;
-				if ( ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) && ( ! empty( $quiz_attempt['certificate']['certificateLink'] ) ) ) {
-					$quiz_attempt['certificate']['certificateLink'] = add_query_arg( array( 'time' => $quiz_attempt['time'] ), $quiz_attempt['certificate']['certificateLink'] );
-				}
-			}
-
-			if ( ! isset( $quiz_attempt['course'] ) ) {
-				$quiz_attempt['course'] = learndash_get_course_id( $quiz_attempt['quiz'] );
-			}
-			$course_id = intval( $quiz_attempt['course'] );
-
-			$quiz_attempts[ $course_id ][] = $quiz_attempt;
-		}
-	}
+	$quiz_attempts = learndash_get_user_profile_quiz_attempts( $current_user->ID );
 
 	$profile_pager = array();
 
 	if ( ( isset( $atts['per_page'] ) ) && ( intval( $atts['per_page'] ) > 0 ) ) {
 		$atts['per_page'] = intval( $atts['per_page'] );
 
-		if ( ( isset( $_GET['ld-profile-page'] ) ) && ( ! empty( $_GET['ld-profile-page'] ) ) ) {
+		if ( ( ( isset( $_GET['ld-profile-page'] ) ) && ( ! empty( $_GET['ld-profile-page'] ) ) ) ) {
 			$profile_pager['paged'] = intval( $_GET['ld-profile-page'] );
+			$quiz_attempts['quizzes-paged'] = ( isset( $_GET['profile-quizzes'] ) ? intval( $_GET['profile-quizzes'] ) : 1 );
+		} elseif ( ( ( isset( $_GET['profile-quizzes'] ) ) && ( ! empty( $_GET['profile-quizzes'] ) ) ) ) {
+			$quiz_attempts['quizzes-paged'] = intval( $_GET['profile-quizzes'] );
+			if ( ( ( isset( $_GET['ld-profile-page'] ) ) && ( ! empty( $_GET['ld-profile-page'] ) ) ) ) {
+				$profile_pager['paged'] = intval( $_GET['ld-profile-page'] );
+			} else {
+				$profile_pager['paged'] = 1;
+			}
 		} else {
-			$profile_pager['paged'] = 1;
+			$profile_pager['paged']         = 1;
+			$quiz_attempts['quizzes-paged'] = 1;
 		}
 
 		$profile_pager['total_items'] = count( $user_courses );
@@ -195,4 +206,4 @@ function learndash_profile( $atts = array(), $content = '' ) {
 		)
 	);
 }
-add_shortcode( 'ld_profile', 'learndash_profile', 10, 2 );
+add_shortcode( 'ld_profile', 'learndash_profile', 10, 3 );

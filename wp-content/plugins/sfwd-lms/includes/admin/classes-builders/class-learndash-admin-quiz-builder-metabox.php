@@ -22,6 +22,13 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 	class Learndash_Admin_Metabox_Quiz_Builder extends Learndash_Admin_Builder {
 
 		/**
+		 * LearnDash quiz question object
+		 *
+		 * @var object
+		 */
+		public $ld_quiz_questions_object;
+
+		/**
 		 * Public constructor for class
 		 *
 		 * @since 2.6.0
@@ -176,8 +183,6 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 		 *
 		 * @param string  $post_type Post Type slug.
 		 * @param boolean $singular True if singular label needed. False for plural.
-		 *
-		 * @return string.
 		 */
 		public function get_label_for_post_type( $post_type = '', $singular = true ) {
 			switch ( $post_type ) {
@@ -196,6 +201,9 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Quiz_Builder' ) ) && ( class_exi
 						return 'questions';
 					}
 					break;
+
+				default:
+					return '';
 			}
 		}
 

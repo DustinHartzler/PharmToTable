@@ -75,7 +75,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$html .= $this->get_field_attribute_id( $field_args );
 			$html .= $this->get_field_attribute_class( $field_args );
 
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === LEARNDASH_SELECT2_LIB ) ) {
+			if ( learndash_use_select2_lib() ) {
 				if ( ! isset( $field_args['attrs']['data-ld-select2'] ) ) {
 					$html .= ' data-ld-select2="1" ';
 				}
@@ -88,8 +88,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			$html .= ' >';
 
-			/** This filter is documented in includes/class-ld-lms.php */
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+			if ( learndash_use_select2_lib() ) {
 				$html .= '   <option value="-1">';
 			} else {
 				$html .= '   <option value="">';

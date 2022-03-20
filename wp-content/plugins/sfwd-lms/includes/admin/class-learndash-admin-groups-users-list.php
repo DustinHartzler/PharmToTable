@@ -20,31 +20,43 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 	class Learndash_Admin_Groups_Users_List {
 
 		/**
+		 * List table object
+		 *
 		 * @var object $list_table Post List table instance
 		 */
 		public $list_table;
 
 		/**
+		 * Form method
+		 *
 		 * @var string $form_method Form Method
 		 */
 		public $form_method = 'get';
 
 		/**
+		 * Title
+		 *
 		 * @var string $title Title
 		 */
 		public $title = '';
 
 		/**
+		 * Current table action
+		 *
 		 * @var string $current_action Current table action
 		 */
 		public $current_action = '';
 
 		/**
+		 * Group ID
+		 *
 		 * @var integer $group_id Group ID
 		 */
 		public $group_id = 0;
 
 		/**
+		 * User ID
+		 *
 		 * @var integer $user_id User ID
 		 */
 		public $user_id = 0;
@@ -152,7 +164,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 			);
 			$learndash_assets_loaded['scripts']['sfwd-module-script'] = __FUNCTION__;
 
-			// Because we need the ajaxurl for the pagination AJAX
+			// Because we need the ajaxurl for the pagination AJAX.
 			$data = array();
 			if ( ! isset( $data['ajaxurl'] ) ) {
 				$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
@@ -396,7 +408,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 			}
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }
 
@@ -421,7 +433,7 @@ function learndash_data_group_reports_ajax() {
 		}
 	}
 
-	wp_die(); // this is required to terminate immediately and return a proper response
+	wp_die(); // this is required to terminate immediately and return a proper response.
 }
 
 add_action( 'wp_ajax_learndash_data_group_reports', 'learndash_data_group_reports_ajax' );

@@ -11,8 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( ! class_exists( 'LDLMS_Model_Activity' ) ) && ( class_exists( 'LDLMS_Model' ) ) ) {
+	/**
+	 * Class for LearnDash Model Activity
+	 */
 	class LDLMS_Model_Activity extends LDLMS_Model {
-
 		/**
 		 * Activity ID.
 		 *
@@ -108,14 +110,17 @@ if ( ( ! class_exists( 'LDLMS_Model_Activity' ) ) && ( class_exists( 'LDLMS_Mode
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param int $post_id Course Post ID to load.
-		 *
-		 * @return mixed instance of class or exception.
+		 * @param mixed $activity Activity.
 		 */
 		public function __construct( $activity = '' ) {
 			$this->cast( $activity );
 		}
 
+		/**
+		 * Cast Activity
+		 *
+		 * @param mixed $activity Activity.
+		 */
 		public function cast( $activity = '' ) {
 
 			$this_reflection            = new ReflectionObject( $this );
@@ -145,6 +150,9 @@ if ( ( ! class_exists( 'LDLMS_Model_Activity' ) ) && ( class_exists( 'LDLMS_Mode
 			$this->format_vars();
 		}
 
+		/**
+		 * Format variables
+		 */
 		public function format_vars() {
 
 			$this->activity_id        = absint( $this->activity_id );

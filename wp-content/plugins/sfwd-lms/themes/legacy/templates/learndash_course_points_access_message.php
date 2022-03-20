@@ -13,10 +13,9 @@
  *
  * @package LearnDash\Templates\Legacy\Course
  */
-?>
-<?php
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 ?>
 <div id="learndash_course_points_access_message">

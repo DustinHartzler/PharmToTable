@@ -98,7 +98,7 @@ if ( ! class_exists( 'LDLMS_Free_Answer' ) ) {
 
 			$question_answer_sets = $this->get_answers();
 
-			//$answer_sets = wp_list_pluck( $this->parsed_answers, 'label' );
+			// $answer_sets = wp_list_pluck( $this->parsed_answers, 'label' );
 
 			foreach ( $this->student_answers as $student_answer_key => $student_answer ) {
 				$answers[ $student_answer_key ] = array(

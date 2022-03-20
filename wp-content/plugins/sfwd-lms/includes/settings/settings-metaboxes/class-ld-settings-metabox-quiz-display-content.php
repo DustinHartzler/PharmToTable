@@ -19,6 +19,20 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 	class LearnDash_Settings_Metabox_Quiz_Display_Content extends LearnDash_Settings_Metabox {
 
 		/**
+		 * Quiz edit object
+		 *
+		 * @var object
+		 */
+		protected $quiz_edit = null;
+
+		/**
+		 * LearnDash quiz question object
+		 *
+		 * @var object
+		 */
+		protected $ld_quiz_questions_object = null;
+
+		/**
 		 * Variable to hold the number of questions.
 		 *
 		 * @var integer $questions_count

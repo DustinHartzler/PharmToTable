@@ -59,11 +59,11 @@ class WpProQuiz_Helper_DbUpgrade {
 		}
 
 		$charset_collate = '';
-		if ( ! empty( $wpdb->charset ) ) {
-			$charset_collate .= "DEFAULT CHARACTER SET $wpdb->charset";
+		if ( ! empty( $this->_wpdb->charset ) ) {
+			$charset_collate .= "DEFAULT CHARACTER SET ". $this->_wpdb->charset;
 		}
-		if ( ! empty( $wpdb->collate ) ) {
-			$charset_collate .= " COLLATE $wpdb->collate";
+		if ( ! empty( $this->_wpdb->collate ) ) {
+			$charset_collate .= " COLLATE " . $this->_wpdb->collate;
 		}
 
 		dbDelta(
@@ -233,57 +233,57 @@ class WpProQuiz_Helper_DbUpgrade {
 		$valid_index = LDLMS_DB::check_table_primary_index( 'quiz_category' );
 		if ( false === $valid_index ) {
 			// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-			$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_category' ) ) . ' WHERE category_id = %d', 0 ) );
+			$this->_wpdb->query( $this->_wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_category' ) ) . ' WHERE category_id = %d', 0 ) );
 
-			$wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_category' ) ) . ' MODIFY COLUMN category_id int(10) unsigned NOT NULL AUTO_INCREMENT' );
+			$this->_wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_category' ) ) . ' MODIFY COLUMN category_id int(10) unsigned NOT NULL AUTO_INCREMENT' );
 		}
 
 		$valid_index = LDLMS_DB::check_table_primary_index( 'quiz_form' );
 		if ( false === $valid_index ) {
 			// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-			$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_form' ) ) . ' WHERE form_id = %d', 0 ) );
+			$this->_wpdb->query( $this->_wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_form' ) ) . ' WHERE form_id = %d', 0 ) );
 
-			$wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_form' ) ) . ' MODIFY COLUMN form_id int(11) NOT NULL AUTO_INCREMENT' );
+			$this->_wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_form' ) ) . ' MODIFY COLUMN form_id int(11) NOT NULL AUTO_INCREMENT' );
 		}
 
 		$valid_index = LDLMS_DB::check_table_primary_index( 'quiz_master' );
 		if ( false === $valid_index ) {
 			// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-			$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_master' ) ) . ' WHERE id = %d', 0 ) );
+			$this->_wpdb->query( $this->_wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_master' ) ) . ' WHERE id = %d', 0 ) );
 
-			$wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_master' ) ) . ' MODIFY COLUMN id int(11) NOT NULL AUTO_INCREMENT' );
+			$this->_wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_master' ) ) . ' MODIFY COLUMN id int(11) NOT NULL AUTO_INCREMENT' );
 		}
 
 		$valid_index = LDLMS_DB::check_table_primary_index( 'quiz_question' );
 		if ( false === $valid_index ) {
 			// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-			$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE id = %d', 0 ) );
+			$this->_wpdb->query( $this->_wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE id = %d', 0 ) );
 
-			$wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' MODIFY COLUMN id int(11) NOT NULL AUTO_INCREMENT' );
+			$this->_wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' MODIFY COLUMN id int(11) NOT NULL AUTO_INCREMENT' );
 		}
 
 		$valid_index = LDLMS_DB::check_table_primary_index( 'quiz_statistic_ref' );
 		if ( false === $valid_index ) {
 			// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-			$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_statistic_ref' ) ) . ' WHERE statistic_ref_id = %d', 0 ) );
+			$this->_wpdb->query( $this->_wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_statistic_ref' ) ) . ' WHERE statistic_ref_id = %d', 0 ) );
 
-			$wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_statistic_ref' ) ) . ' MODIFY COLUMN statistic_ref_id int(10) unsigned NOT NULL AUTO_INCREMENT' );
+			$this->_wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_statistic_ref' ) ) . ' MODIFY COLUMN statistic_ref_id int(10) unsigned NOT NULL AUTO_INCREMENT' );
 		}
 
 		$valid_index = LDLMS_DB::check_table_primary_index( 'quiz_template' );
 		if ( false === $valid_index ) {
 			// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-			$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_template' ) ) . ' WHERE template_id = %d', 0 ) );
+			$this->_wpdb->query( $this->_wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_template' ) ) . ' WHERE template_id = %d', 0 ) );
 
-			$wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_template' ) ) . ' MODIFY COLUMN template_id int(11) NOT NULL AUTO_INCREMENT' );
+			$this->_wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_template' ) ) . ' MODIFY COLUMN template_id int(11) NOT NULL AUTO_INCREMENT' );
 		}
 
 		$valid_index = LDLMS_DB::check_table_primary_index( 'quiz_toplist' );
 		if ( false === $valid_index ) {
 			// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-			$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_toplist' ) ) . ' WHERE toplist_id = %d', 0 ) );
+			$this->_wpdb->query( $this->_wpdb->prepare( 'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_toplist' ) ) . ' WHERE toplist_id = %d', 0 ) );
 
-			$wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_toplist' ) ) . ' MODIFY COLUMN toplist_id int(11) NOT NULL AUTO_INCREMENT' );
+			$this->_wpdb->query( 'ALTER TABLE ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_toplist' ) ) . ' MODIFY COLUMN toplist_id int(11) NOT NULL AUTO_INCREMENT' );
 		}
 	}
 

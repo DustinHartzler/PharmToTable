@@ -3,7 +3,7 @@
  * LearnDash REST API loader
  *
  * @since 2.4.5
-* @package LearnDash\REST
+ * @package LearnDash\REST
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -201,6 +201,11 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						'register_routes' => true,
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-progress-status-controller.php',
 					),
+
+					'LD_REST_Exams_Controller_V2' => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-exams-controller.php',
+					),
 				);
 
 				$this->controllers = array_merge( $controllers_v1, $controllers_v2 );
@@ -235,9 +240,9 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 		 *
 		 * @return The *Singleton* instance.
 		 */
-		public static function get_instance() {
+		final public static function get_instance() {
 			if ( null === static::$instance ) {
-				static::$instance = new static();
+				static::$instance = new self();
 			}
 
 			return static::$instance;
@@ -308,7 +313,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 		}
 
 		/**
-		 * get REST controller for post type.
+		 * Get REST controller for post type.
 		 *
 		 * @since 2.5.8
 		 *

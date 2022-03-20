@@ -113,6 +113,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		 * Public Initialize function for class
 		 *
 		 * @since 2.6.0
+		 *
+		 * @param bool $force_reload Force reload.
 		 */
 		public static function init( $force_reload = false ) {
 
@@ -141,6 +143,14 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			}
 		}
 
+		/**
+		 * Get tables base
+		 *
+		 * @param string $table_section    Table section.
+		 * @param bool   $return_sections Whether to return sections.
+		 *
+		 * @return array
+		 */
 		public static function get_tables_base( $table_section = '', $return_sections = false ) {
 			$tables_return = array();
 
@@ -193,7 +203,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 					}
 				} else {
 					if ( true === $return_sections ) {
-						$tables_return = self::$table[ $blog_id ];
+						$tables_return = self::$tables[ $blog_id ];
 					} else {
 						foreach ( self::$tables[ $blog_id ] as $section_key  => $section_tables ) {
 							$tables_return = array_merge( $tables_return, $section_tables );
@@ -242,6 +252,13 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			return apply_filters( 'learndash_table_prefix', $table_prefix, $table_section );
 		}
 
+		/**
+		 * Get table sub prefix
+		 *
+		 * @param string $table_section Table section.
+		 *
+		 * @return string
+		 */
 		public static function get_table_sub_prefix( $table_section = '' ) {
 			$table_sub_prefix = '';
 
@@ -305,8 +322,14 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			if ( isset( $tables[ $table_name ] ) ) {
 				return $tables[ $table_name ];
 			}
+			return '';
 		}
 
+		/**
+		 * Get table status info
+		 *
+		 * @param string $table_name Name of the table.
+		 */
 		public static function get_table_status_info( $table_name = '' ) {
 			global $wpdb;
 
@@ -398,6 +421,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 					}
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -411,6 +436,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			if ( ( ! empty( $table_name ) ) && ( isset( self::$tables_primary_indexes[ $table_name ] ) ) ) {
 				return self::$tables_primary_indexes[ $table_name ];
 			}
+			return [];
 		}
 
 		/**
@@ -463,8 +489,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param $items Array of items to process.
-		 * @param $force_type Optional type to enforce for all items.
+		 * @param array  $items Array of items to process.
+		 * @param string $force_type Optional type to enforce for all items.
 		 *
 		 * @return Array with 'placeholders' and 'values' elements.
 		 */
@@ -529,8 +555,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param $items      Array of items to process.
-		 * @param $force_type Optional type to enforce for all items.
+		 * @param array  $items      Array of items to process.
+		 * @param string $force_type Optional type to enforce for all items.
 		 *
 		 * @return array Returns array.
 		 */
@@ -539,6 +565,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			if ( isset( $in_array['placeholders'] ) ) {
 				return $in_array['placeholders'];
 			}
+
+			return [];
 		}
 
 		/**
@@ -546,8 +574,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param $items      Array of items to process.
-		 * @param $force_type Optional type to enforce for all items.
+		 * @param array  $items      Array of items to process.
+		 * @param string $force_type Optional type to enforce for all items.
 		 *
 		 * @return array Returns array.
 		 */
@@ -556,6 +584,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			if ( isset( $in_array['values'] ) ) {
 				return $in_array['values'];
 			}
+
+			return [];
 		}
 
 		// End of functions.

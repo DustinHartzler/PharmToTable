@@ -1,4 +1,11 @@
 <?php
+/**
+ * LearnDash Settings functions
+ *
+ * @since 3.5.0
+ * @package LearnDash
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -36,9 +43,11 @@ function learndash_get_setting( $post, $setting = null ) {
 		}
 
 		$post_type_prefix = learndash_get_post_type_key( $post->post_type );
-		if ( in_array( $setting, array( $post_type_prefix . '_price_billing_p3', $post_type_prefix . '_price_billing_t3' ), true ) ) {
-			$price_billing_p3 = 0;
-			$price_billing_t3 = get_post_meta( $post->ID, $post_type_prefix . '_price_billing_t3', true );
+		if ( in_array( $setting, array( $post_type_prefix . '_price_billing_p3', $post_type_prefix . '_price_billing_t3', $post_type_prefix . '_trial_duration_t1', $post_type_prefix . '_trial_duration_p1' ), true ) ) {
+			$price_billing_p3  = 0;
+			$price_billing_t3  = get_post_meta( $post->ID, $post_type_prefix . '_price_billing_t3', true );
+			$trial_duration_p1 = 0;
+			$trial_duration_t1 = get_post_meta( $post->ID, $post_type_prefix . '_trial_duration_t1', true );
 			if ( ! empty( $price_billing_t3 ) ) {
 				$price_billing_t3_new = learndash_billing_cycle_field_frequency_validate( $price_billing_t3 );
 				if ( $price_billing_t3 !== $price_billing_t3_new ) {
@@ -64,10 +73,39 @@ function learndash_get_setting( $post, $setting = null ) {
 				}
 			}
 
+			if ( ! empty( $trial_duration_t1 ) ) {
+				$trial_duration_t1_new = learndash_billing_cycle_field_frequency_validate( $trial_duration_t1 );
+				if ( $trial_duration_t1 !== $trial_duration_t1_new ) {
+					$trial_duration_t1 = $trial_duration_t1_new;
+					if ( ! empty( $trial_duration_t1 ) ) {
+						update_post_meta( $post->ID, $post_type_prefix . '_trial_duration_t1', $trial_duration_t1 );
+					} else {
+						delete_post_meta( $post->ID, $post_type_prefix . '_trial_duration_t1' );
+					}
+				}
+
+				$trial_duration_p1 = absint( get_post_meta( $post->ID, $post_type_prefix . '_trial_duration_p1', true ) );
+				if ( ! empty( $trial_duration_p1 ) ) {
+					$trial_duration_p1_new = learndash_billing_cycle_field_interval_validate( $trial_duration_p1, $trial_duration_t1 );
+					if ( $trial_duration_p1 !== $trial_duration_p1_new ) {
+						$trial_duration_p1 = $trial_duration_p1_new;
+						if ( ! empty( $trial_duration_p1 ) ) {
+							update_post_meta( $post->ID, $post_type_prefix . '_trial_duration_p1', $trial_duration_p1 );
+						} else {
+							delete_post_meta( $post->ID, $post_type_prefix . '_trial_duration_p1' );
+						}
+					}
+				}
+			}
+
 			if ( $setting === $post_type_prefix . '_price_billing_p3' ) {
 				return $price_billing_p3;
 			} elseif ( $setting === $post_type_prefix . '_price_billing_t3' ) {
 				return $price_billing_t3;
+			} elseif ( $setting === $post_type_prefix . '_trial_duration_p1' ) {
+				return $trial_duration_p1;
+			} elseif ( $setting === $post_type_prefix . '_trial_duration_t1' ) {
+				return $trial_duration_t1;
 			}
 		}
 
@@ -188,8 +226,53 @@ function learndash_update_setting( $post, $setting, $value ) {
 			} else {
 				delete_post_meta( $post->ID, 'group_price_billing_p3' );
 			}
+		} elseif ( 'course_trial_duration_t1' === $setting ) {
+			if ( ! empty( $value ) ) {
+				update_post_meta( $post->ID, 'course_trial_duration_t1', $value );
+			} else {
+				delete_post_meta( $post->ID, 'course_trial_duration_t1' );
+			}
+		} elseif ( 'course_trial_duration_p1' === $setting ) {
+			if ( ! empty( $value ) ) {
+				update_post_meta( $post->ID, 'course_trial_duration_p1', $value );
+			} else {
+				delete_post_meta( $post->ID, 'course_trial_duration_p1' );
+			}
+		} elseif ( 'group_trial_duration_t1' === $setting ) {
+			if ( ! empty( $value ) ) {
+				update_post_meta( $post->ID, 'group_trial_duration_t1', $value );
+			} else {
+				delete_post_meta( $post->ID, 'group_trial_duration_t1' );
+			}
+		} elseif ( 'group_trial_duration_p1' === $setting ) {
+			if ( ! empty( $value ) ) {
+				update_post_meta( $post->ID, 'group_trial_duration_p1', $value );
+			} else {
+				delete_post_meta( $post->ID, 'group_trial_duration_p1' );
+			}
 		} elseif ( 'certificate' === $setting ) {
 			update_post_meta( $post->ID, '_ld_certificate', $value );
+		} elseif ( 'exam_challenge' === $setting ) {
+			$value = intval( $value );
+			if ( ! empty( $value ) ) {
+				learndash_update_course_exam_challenge( $post->ID, $value, false );
+			} else {
+				learndash_update_course_exam_challenge( $post->ID, $value, true );
+			}
+		} elseif ( 'exam_challenge_course_show' === $setting ) {
+			$value = intval( $value );
+			if ( ! empty( $value ) ) {
+				update_post_meta( $post->ID, $setting, $value );
+			} else {
+				delete_post_meta( $post->ID, $setting );
+			}
+		} elseif ( 'exam_challenge_course_passed' === $setting ) {
+			$value = intval( $value );
+			if ( ! empty( $value ) ) {
+				update_post_meta( $post->ID, $setting, $value );
+			} else {
+				delete_post_meta( $post->ID, $setting );
+			}
 		} elseif ( 'threshold' === $setting ) {
 			update_post_meta( $post->ID, '_ld_certificate_threshold', $value );
 		} elseif ( 'lesson' === $setting ) {
@@ -204,7 +287,7 @@ function learndash_update_setting( $post, $setting, $value ) {
 		} elseif ( 'quiz_pro' === $setting ) {
 			$value = absint( $value );
 
-			// Moved from includes/class-ld-semper-fi-module.php line1052
+			// Moved from includes/class-ld-semper-fi-module.php line1052.
 			$quiz_pro_id_new = $value;
 			$quiz_pro_id_org = absint( get_post_meta( $post->ID, 'quiz_pro_id', true ) );
 

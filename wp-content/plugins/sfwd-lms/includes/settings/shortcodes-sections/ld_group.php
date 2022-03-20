@@ -14,8 +14,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	/**
 	 * Class LearnDash Shortcode Section for Group [ld_group].
 	 */
-	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
-	class LearnDash_Shortcodes_Section_ld_group extends LearnDash_Shortcodes_Section {
+	class LearnDash_Shortcodes_Section_ld_group extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 
 		/**
 		 * Public constructor for class.
@@ -29,7 +28,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			$this->shortcodes_section_title = learndash_get_custom_label( 'group' );
 			$this->shortcodes_section_type        = 2;
 			$this->shortcodes_section_description = sprintf(
-				// translators: group
+				// translators: group.
 				esc_html_x( 'This shortcode shows the content if the user is enrolled in a specific %s.', 'placeholder: group', 'learndash' ),
 				learndash_get_custom_label_lower( 'group' )
 			);
@@ -55,10 +54,10 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'id'        => $this->shortcodes_section_key . '_group_id',
 					'name'      => 'group_id',
 					'type'      => 'number',
-					// translators: group
+					// translators: group.
 					'label'     => sprintf( esc_html_x( '%s ID', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 					'help_text' => sprintf(
-						// translators: group, group
+						// translators: group, group.
 						esc_html_x( 'Enter single %1$s ID. Leave blank for any %2$s.', 'placeholder: group, group', 'learndash' ),
 						learndash_get_custom_label_lower( 'group' ),
 						learndash_get_custom_label_lower( 'group' )
@@ -92,7 +91,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			if ( ( ! isset( $this->fields_args['post_type'] ) ) || ( 'groups' != $this->fields_args['post_type'] ) ) {
 				$this->shortcodes_option_fields['group_id']['required']  = 'required';
 				$this->shortcodes_option_fields['group_id']['help_text'] = sprintf(
-					// translators: placeholder: group
+					// translators: placeholder: group.
 					esc_html_x( 'Enter single %s ID.', 'placeholder: group', 'learndash' ),
 					learndash_get_custom_label_lower( 'group' )
 				);

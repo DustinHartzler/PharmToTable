@@ -59,7 +59,7 @@ function learndash_certificate_details( $post_id, $cert_user_id = null ) {
 					);
 
 					// We add the user query string key/value if the viewing user is an admin. This
-					// allows the admin to view other user's certificated
+					// allows the admin to view other user's certificated.
 					if ( ( $cert_user_id != $view_user_id ) && ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) ) {
 						$cert_query_args['user'] = $cert_user_id;
 					}
@@ -135,7 +135,7 @@ function learndash_get_course_certificate_link( $course_id, $cert_user_id = null
 	);
 
 	// We add the user query string key/value if the viewing user is an admin. This
-	// allows the admin to view other user's certificated
+	// allows the admin to view other user's certificated.
 	if ( ( $cert_user_id != $view_user_id ) && ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) ) {
 		$cert_query_args['user'] = $cert_user_id;
 	}
@@ -384,13 +384,13 @@ function learndash_certificate_options_metabox( $certificate ) {
  */
 function learndash_certificates_save_meta_box( $post_id ) {
 	// verify if this is an auto save routine.
-	// If it is our form has not been submitted, so we dont want to do anything
+	// If it is our form has not been submitted, so we dont want to do anything.
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
 
 	// verify this came from the our screen and with proper authorization,
-	// because save_post can be triggered at other times
+	// because save_post can be triggered at other times.
 	if ( ! isset( $_POST['learndash_certificates_nonce'] ) || ! wp_verify_nonce( $_POST['learndash_certificates_nonce'], plugin_basename( __FILE__ ) ) ) {
 		return;
 	}
@@ -399,7 +399,7 @@ function learndash_certificates_save_meta_box( $post_id ) {
 		return;
 	}
 
-	// Check permissions
+	// Check permissions.
 	if ( ! current_user_can( 'edit_post', $post_id ) ) {
 		return;
 	}
@@ -442,7 +442,7 @@ function learndash_certificates_post_updated_messages( $messages ) {
 
 	$published_message = wp_kses_post(
 		sprintf(
-		// translators: quiz, course
+		// translators: quiz, course.
 			_x(
 				'Certificate published. <br /><br />To view the certificate, you must assign it to a %1$s or %2$s. <br />Once you complete the assigned milestone, you can generate the certificate. <br /><br />Click here to read more about this topic: <a href="https://www.learndash.com/support/docs/core/certificates/create-certificate/#previewing_certificates" target="_blank">Previewing Certificates</a>.',
 				'placeholder: quiz, course',
@@ -455,7 +455,7 @@ function learndash_certificates_post_updated_messages( $messages ) {
 
 	$updated_message = wp_kses_post(
 		sprintf(
-		// translators: quiz, course
+		// translators: quiz, course.
 			_x(
 				'Certificate updated. <br /><br />To view the certificate, you must assign it to a %1$s or %2$s. <br />Once you complete the assigned milestone, you can generate the certificate. <br /><br />Click here to read more about this topic: <a href="https://www.learndash.com/support/docs/core/certificates/create-certificate/#previewing_certificates" target="_blank">Previewing Certificates</a>.',
 				'placeholder: quiz, course',
@@ -478,9 +478,9 @@ function learndash_certificates_post_updated_messages( $messages ) {
 		7  => esc_html__( 'Certificate saved.', 'learndash' ),
 		8  => esc_html__( 'Certificate submitted.', 'learndash' ),
 		9  => sprintf(
-			// translators: plaeholder: Post Date.
-			esc_html_x( 'Certificate scheduled for: <strong>%s</strong>.', 'plaeholder: Post Date', 'learndash' ),
-			// translators: Publish box date format, see https://secure.php.net/date
+			// translators: placeholder: Post Date.
+			esc_html_x( 'Certificate scheduled for: <strong>%s</strong>.', 'placeholder: Post Date', 'learndash' ),
+			// translators: Publish box date format, see https://secure.php.net/date.
 			date_i18n( __( 'M j, Y @ H:i', 'learndash' ), strtotime( $post->post_date ) )
 		),
 		10 => esc_html__( 'Certificate draft updated.', 'learndash' ),
@@ -495,8 +495,9 @@ add_filter( 'post_updated_messages', 'learndash_certificates_post_updated_messag
  *
  * @since 3.2.0
  *
- * @param  int $group_id
- * @param  int $user_id
+ * @param  int $group_id     Group ID.
+ * @param  int $cert_user_id User ID.
+ *
  * @return string
  */
 function learndash_get_group_certificate_link( $group_id, $cert_user_id = null ) {
@@ -535,7 +536,7 @@ function learndash_get_group_certificate_link( $group_id, $cert_user_id = null )
 	);
 
 	// We add the user query string key/value if the viewing user is an admin. This
-	// allows the admin to view other user's certificated
+	// allows the admin to view other user's certificated.
 	if ( ( $cert_user_id != $view_user_id ) && ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) ) {
 		$cert_query_args['user'] = $cert_user_id;
 	}
@@ -740,7 +741,7 @@ function learndash_certificate_display() {
 		 */
 		do_action( 'learndash_certificate_disallowed' );
 
-		// If here we display the error and exit;
+		// If here we display the error and exit.
 		esc_html_e( 'Access to certificate page is disallowed.', 'learndash' );
 		die();
 
@@ -784,9 +785,9 @@ function learndash_certificate_get_used_by( $post_id = 0, $post_type = '' ) {
 			}
 
 			LDLMS_Transients::set( $transient_key, $post_ids, MINUTE_IN_SECONDS );
+		} else {
+			$post_ids = $post_ids_transient;
 		}
-	} else {
-		$post_ids = $post_ids_transient;
 	}
 
 	return $post_ids;

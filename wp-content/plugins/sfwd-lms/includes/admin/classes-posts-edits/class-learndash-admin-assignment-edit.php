@@ -241,7 +241,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 						<span class="sfwd_option_input"><div class="sfwd_option_div">
 						<?php
 
-							// link handling
+							// Link handling.
 							$file_link = get_post_meta( $post->ID, 'file_link', true );
 
 							echo "<a href='" . esc_url( $file_link ) . "' target='_blank' class='button'>" . esc_html__( 'Download', 'learndash' ) . '</a>';
@@ -303,17 +303,17 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 			if ( isset( $_POST['assignment-points'] ) ) {
 
-				// update points
+				// update points.
 				$points = intval( $_POST['assignment-points'] );
 				update_post_meta( $assignment_id, 'points', $points );
 
-				// approve assignment
+				// approve assignment.
 				$assignment_post = get_post( $assignment_id );
 				$lesson_id       = get_post_meta( $assignment_id, 'lesson_id', true );
 				learndash_approve_assignment( $assignment_post->post_author, $lesson_id, $assignment_post->ID );
 			} elseif ( ( isset( $_POST['assignment-status'] ) ) && ( esc_html__( 'Approve', 'learndash' ) == $_POST['assignment-status'] ) ) {
 
-				// approve assignment
+				// approve assignment.
 				$assignment_post = get_post( $assignment_id );
 				$lesson_id       = get_post_meta( $assignment_id, 'lesson_id', true );
 				learndash_approve_assignment( $assignment_post->post_author, $lesson_id, $assignment_post->ID );
@@ -331,8 +331,9 @@ new Learndash_Admin_Assignment_Edit();
  *
  * @since 3.4.0
  *
- * parameters documents in /wp-includes/class-wp-user.php
+ * parameters documented in /wp-includes/class-wp-user.php
  */
+// phpcs:ignore Squiz.Commenting.FunctionComment
 function learndash_group_leader_can_edit_assignment_filter( $allcaps, $cap, $args, $user ) {
 	global $pagenow, $typenow;
 

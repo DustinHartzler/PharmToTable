@@ -70,7 +70,7 @@ if ( ! function_exists( 'learndash_focus_mode_comments_list' ) ) {
 						<a class="ld-comment-permalink" href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>">
 						<?php
 						printf(
-							// translators: placeholders: %1$s: Comment Date, %2$s: Comment Time
+							// translators: placeholders: %1$s: Comment Date, %2$s: Comment Time.
 							esc_html_x( '%1$s at %2$s', 'placeholders: comment date, comment time', 'learndash' ),
 							'<span> ' . esc_html( get_comment_date() ) . '</span>',
 							'<span> ' . esc_html( get_comment_time() ) . '</span>'

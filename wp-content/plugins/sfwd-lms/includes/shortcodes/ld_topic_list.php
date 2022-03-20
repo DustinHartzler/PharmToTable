@@ -18,16 +18,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
  *    Default empty array. {@see 'ld_course_list'}
- * }
+ * }.
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_topic_list'.
  *
  * @return string The `ld_topic_list` shortcode output.
  */
-function ld_topic_list( $attr = array(), $content = '' ) {
+function ld_topic_list( $attr = array(), $content = '', $shortcode_slug = 'ld_topic_list' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -73,6 +74,9 @@ function ld_topic_list( $attr = array(), $content = '' ) {
 		}
 	}
 
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
+
 	return ld_course_list( $attr );
 }
-add_shortcode( 'ld_topic_list', 'ld_topic_list', 10, 2 );
+add_shortcode( 'ld_topic_list', 'ld_topic_list', 10, 3 );

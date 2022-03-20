@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Questions_Controller_V1 extends WP_REST_Controller {
+	class LD_REST_Questions_Controller_V1 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Registers the routes for the objects of the controller.
@@ -56,7 +55,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 						'args'                => array(
 							'id' => array(
 								'description'       => sprintf(
-									// translators: question
+									// translators: question.
 									esc_html_x( 'The %s ID', 'placeholder: question', 'learndash' ),
 									learndash_get_custom_label_lower( 'question' )
 								),
@@ -75,7 +74,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 						'args'                => array(
 							'id' => array(
 								'description'       => sprintf(
-									// translators: question
+									// translators: question.
 									esc_html_x( 'The %s ID', 'placeholder: question', 'learndash' ),
 									learndash_get_custom_label_lower( 'question' )
 								),
@@ -94,7 +93,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 						'args'                => array(
 							'id' => array(
 								'description'       => sprintf(
-									// translators: question
+									// translators: question.
 									esc_html_x( 'The %s ID', 'placeholder: question', 'learndash' ),
 									learndash_get_custom_label_lower( 'question' )
 								),
@@ -312,14 +311,14 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 						'readonly'    => true,
 					),
 					'_quizId'                         => array(
-						// translators: quiz, question
+						// translators: quiz, question.
 						'description' => sprintf( esc_html_x( 'The ID of the %1$s associated with the %2$s.', 'placeholder: quiz, question', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'_sort'                           => array(
-						// translators: question, quiz
+						// translators: question, quiz.
 						'description' => sprintf( esc_html_x( 'The order of the %1$s in the %2$s', 'placeholder: question, quiz', 'learndash' ), learndash_get_custom_label_lower( 'question' ), learndash_get_custom_label_lower( 'quiz' ) ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit' ),
@@ -330,7 +329,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 						'context'     => array( 'view', 'edit' ),
 					),
 					'_question'                       => array(
-						// translators: question
+						// translators: question.
 						'description' => sprintf( esc_html_x( 'The %s content', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit' ),
@@ -361,7 +360,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 						'context'     => array( 'view', 'edit' ),
 					),
 					'_points'                         => array(
-						// translators: placeholder: question
+						// translators: placeholder: question.
 						'description' => sprintf( esc_html_x( 'The total number of points that can be obtained from the %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'boolean',
 						'context'     => array( 'view', 'edit' ),
@@ -447,7 +446,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 								'context'     => array( 'view', 'edit' ),
 							),
 							'_gradingProgression' => array(
-								// translators: question, quiz
+								// translators: question, quiz.
 								'description' => sprintf( esc_html_x( 'Determines how should the answer to this %1$s be marked and graded upon %2$s submission.', 'placeholder: question, quiz', 'learndash' ), learndash_get_custom_label_lower( 'question' ), learndash_get_custom_label_lower( 'quiz' ) ),
 								'type'        => 'text',
 								'context'     => array( 'view', 'edit' ),
@@ -462,14 +461,14 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 						),
 					),
 					'question_id'                     => array(
-						// translators: question
+						// translators: question.
 						'description' => sprintf( esc_html_x( 'The %s post ID.', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'question_post_title'             => array(
-						// translators: question
+						// translators: question.
 						'description' => sprintf( esc_html_x( 'The %s post title.', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit' ),

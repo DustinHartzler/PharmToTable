@@ -49,14 +49,14 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			// Section label/header.
 			$this->settings_section_label = sprintf(
-				// translators: placeholder: Group Leader
+				// translators: placeholder: Group Leader.
 				esc_html_x( '%s User Settings', 'placeholder: Group Leader', 'learndash' ),
 				learndash_get_custom_label( 'group_leader' )
 			);
 
 			$this->settings_section_description = wp_kses_post(
 				sprintf(
-					// translators: placeholder: Group Leader
+					// translators: placeholder: Group Leader.
 					esc_html_x( 'Controls the %s capabilities.', 'placeholder: Group Leader', 'learndash' ),
 					esc_html( learndash_get_custom_label( 'group_leader' ) )
 				)
@@ -292,7 +292,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'     => $this->setting_option_values['bypass_course_limits'],
 					'options'   => array(
 						''    => sprintf(
-							// translators: placeholder: Group Leader
+							// translators: placeholder: Group Leader.
 							esc_html_x( '%s must follow the progression and access rules', 'placeholder: Group Leader', 'learndash' ),
 							learndash_get_custom_label( 'group_leader' )
 						),
@@ -406,7 +406,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'type'                => 'checkbox-switch',
 					'label'               => esc_html__( 'Manage Users', 'learndash' ),
 					'help_text'           => sprintf(
-						// translators: Group leader
+						// translators: Group leader.
 						esc_html_x( 'Allow %s to create and manage users.', 'placeholder: Group leader', 'learndash' ),
 						learndash_get_custom_label_lower( 'group_leader' )
 					),
@@ -434,7 +434,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						'advanced' => array(
 							'label'       => esc_html__( 'Advanced', 'learndash' ),
 							'description' => sprintf(
-								// translators: placeholder: Group leader
+								// translators: placeholder: Group leader.
 								esc_html_x( '%s can create, manage and delete ANY users on the site.', 'placeholder: Group leader', 'learndash' ),
 								learndash_get_custom_label( 'group_leader' )
 							),
@@ -455,9 +455,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param array  $value Array of section fields values.
-		 * @param array  $old_value Array of old values.
-		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 * @param array  $new_values         Array of section fields values.
+		 * @param array  $old_values         Array of old values.
+		 * @param string $setting_option_key Section option key should match $this->setting_option_key.
 		 */
 		public function section_pre_update_option( $new_values = '', $old_values = '', $setting_option_key = '' ) {
 			global $wpdb;
@@ -486,7 +486,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				 * Added to correct issues with Group Leader User capabilities.
 				 * See LEARNDASH-5707.
 				 *
-				 * if $gl_user_activate is not empty it will force changes needed.
+				 * If $gl_user_activate is not empty it will force changes needed.
 				 *
 				 * @since 3.4.0.2
 				 */
@@ -567,8 +567,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param string $content    Content to show before row
-		 * @param array  $field_args Row field Args
+		 * @param string $content    Content to show before row.
+		 * @param array  $field_args Row field Args.
 		 */
 		public function learndash_settings_row_outside_before( $content = '', $field_args = array() ) {
 			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'manage_groups_enabled' ), true ) ) ) {

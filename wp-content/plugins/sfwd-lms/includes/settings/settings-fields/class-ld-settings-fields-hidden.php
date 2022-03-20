@@ -66,6 +66,22 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
+
+		/**
+		 * Validate field
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param mixed  $val Value to validate.
+		 * @param string $key Key of value being validated.
+		 * @param array  $args Array of field args.
+		 *
+		 * @return string value.
+		 */
+		public function validate_section_field( $val, $key, $args = array() ) {
+			return sanitize_text_field( $val );
+		}
+
 	}
 }
 add_action(

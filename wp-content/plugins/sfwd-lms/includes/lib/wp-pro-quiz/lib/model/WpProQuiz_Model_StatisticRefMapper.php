@@ -675,7 +675,7 @@ class WpProQuiz_Model_StatisticRefMapper extends WpProQuiz_Model_Mapper {
 	}
 
 	public function fetchStatisticOverview( $quizId, $onlyCompleded, $start, $limit ) {
-		return $this->fetchStatisticOverview(
+		return $this->fetchStatisticOverviewWithArgs(
 			array(
 				'quizId'        => $quizId,
 				'onlyCompleded' => $onlyCompleded,

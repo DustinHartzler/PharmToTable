@@ -5,6 +5,7 @@
  * @since 2.3.0
  * @package LearnDash
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,6 +24,48 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 		 * @var array $process_times
 		 */
 		protected $process_times = array();
+
+		/**
+		 * Parent menu page URL
+		 *
+		 * @var string
+		 */
+		protected $parent_menu_page_url;
+
+		/**
+		 * Capability for menu page
+		 *
+		 * @var string
+		 */
+		protected $menu_page_capability;
+
+		/**
+		 * Settings page ID
+		 *
+		 * @var string
+		 */
+		protected $settings_page_id;
+
+		/**
+		 * Settings page title
+		 *
+		 * @var string
+		 */
+		protected $settings_page_title;
+
+		/**
+		 * Settings tab title
+		 *
+		 * @var string
+		 */
+		protected $settings_tab_title;
+
+		/**
+		 * Settings tab priority
+		 *
+		 * @var integer
+		 */
+		protected $settings_tab_priority = 0;
 
 		/**
 		 * Report actions
@@ -75,7 +118,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 
 						$transient_data = $this->get_transient( $transient_key );
 						if ( ( isset( $transient_data['report_filename'] ) ) && ( ! empty( $transient_data['report_filename'] ) ) ) {
-							//$report_filename = ABSPATH . $transient_data['report_filename'];
+							// $report_filename = ABSPATH . $transient_data['report_filename'];
 							$report_filename = $transient_data['report_filename'];
 							if ( ( file_exists( $report_filename ) ) && ( is_readable( $report_filename ) ) ) {
 								$http_headers = array(
@@ -146,7 +189,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 				add_action( 'load-' . $this->settings_page_id, array( $this, 'on_load_panel' ) );
 
 			} else {
-				// If the data upgrades have not been performed then we call the old Reports page output in ld-admin.php
+				// If the data upgrades have not been performed then we call the old Reports page output in ld-admin.php.
 				$this->settings_page_id = add_submenu_page(
 					'learndash-lms',
 					$this->settings_page_title,
@@ -163,8 +206,8 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param object $admin_menu_section Settings Section instance
-		 * @param object $ld_admin_tabs      LearnDash Admin Tabs instance
+		 * @param object $admin_menu_section Settings Section instance.
+		 * @param object $ld_admin_tabs      LearnDash Admin Tabs instance.
 		 */
 		public function admin_tabs( $admin_menu_section, $ld_admin_tabs ) {
 			if ( $admin_menu_section == $this->parent_menu_page_url ) {
@@ -250,17 +293,17 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 			 */
 			do_action( 'learndash_settings_page_before_content' );
 			?>
-			<div id="learndash-settings" class="wrap">
-				<h1><?php esc_html_e( 'User Reports', 'learndash' ); ?></h1>
+			<div id="learndash-settings" class="wrap learndash-settings-page-wrap">
+				<h1 class="learndash-empty-page-title"></h1>
 				<form method="post" action="options.php">
-					<div class="sfwd_options_wrapper sfwd_settings_left">
+					<div id="poststuff">
 						<div id="advanced-sortables" class="meta-box-sortables">
-							<div id="sfwd-courses_metabox" class="postbox learndash-settings-postbox">
-								<div class="handlediv" title="<?php esc_html_e( 'Click to toggle', 'learndash' ); ?>"><br></div>
-								<h3 class="hndle"><span><?php esc_html_e( 'User Reports', 'learndash' ); ?></span></h3>
+							<div id="sfwd-courses_metabox" class="postbox ld_settings_postbox learndash-settings-postbox">
+								<div class="postbox-header">
+									<h2 class="hndle ui-sortable-handle"><?php esc_html_e( 'User Reports', 'learndash' ); ?></h2>
+								</div>
 								<div class="inside">
 									<div class="sfwd sfwd_options sfwd-courses_settings">
-
 										<table id="learndash-data-reports" class="wc_status_table widefat" cellspacing="0">
 										<?php
 										wp_nonce_field( 'learndash-data-reports-nonce-' . get_current_user_id(), 'learndash-data-reports-nonce' );
@@ -285,7 +328,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 		 * @since 2.3.0
 		 *
 		 * @param array $post_data  Array of post data to process.
-		 * @param array $reply_data Array of reply data to return;
+		 * @param array $reply_data Array of reply data to return.
 		 *
 		 * @return array
 		 */
@@ -328,7 +371,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 			$this->process_times['ticks']   = $this->process_times['current_time'] - $this->process_times['started'];
 			$this->process_times['percent'] = ( $this->process_times['ticks'] / $this->process_times['limit'] ) * 100;
 
-			// If we are over 80% of the allowed processing time or over 10 seconds then finish up and return
+			// If we are over 80% of the allowed processing time or over 10 seconds then finish up and return.
 			if ( ( $this->process_times['percent'] >= LEARNDASH_PROCESS_TIME_PERCENT ) || ( $this->process_times['ticks'] > LEARNDASH_PROCESS_TIME_SECONDS ) ) {
 				return true;
 			}
@@ -361,7 +404,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 						return;
 					}
 
-					if ( file_exists( $ld_transient_filename ) ) { 
+					if ( file_exists( $ld_transient_filename ) ) {
 						$transient_fp = fopen( $ld_transient_filename, 'r' );
 						if ( $transient_fp ) {
 							$transient_data = '';
@@ -421,11 +464,11 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 			}
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }
 
-// Go ahead and inlcude out User Meta Courses upgrade class
+// Go ahead and inlcude out User Meta Courses upgrade class.
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-reports-actions/class-learndash-admin-data-reports-user-courses.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-reports-actions/class-learndash-admin-data-reports-user-quizzes.php';
 
@@ -459,7 +502,7 @@ function learndash_data_reports_ajax() {
 			}
 		}
 	}
-	wp_die(); // this is required to terminate immediately and return a proper response
+	wp_die(); // this is required to terminate immediately and return a proper response.
 }
 
 add_action( 'wp_ajax_learndash-data-reports', 'learndash_data_reports_ajax' );

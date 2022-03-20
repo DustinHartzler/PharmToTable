@@ -21,17 +21,19 @@ import { registerBlockType } from '@wordpress/blocks';
 import { InnerBlocks, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 
+const block_key   = 'learndash/ld-group';
 const block_title = sprintf(
-		// translators: placeholder: Group.
+	// translators: placeholder: Group.
 	_x('LearnDash %s', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group')
-	);
+);
 
 registerBlockType(
-	'learndash/ld-group',
+	block_key,
 	{
 		title: block_title,
-		// translators: placeholder: Group.
-		description: sprintf(_x( 'This block shows the content if the user is enrolled into the %s.', 'learndash'), ldlms_get_custom_label('group')),
+		description: sprintf(
+			// translators: placeholder: Group.
+			_x( 'This block shows the content if the user is enrolled into the %s.', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group')),
 		icon: 'groups',
 		category: 'learndash-blocks',
 		supports: {
@@ -59,19 +61,33 @@ registerBlockType(
 						title={__('Settings', 'learndash')}
 					>
 						<TextControl
-							// translators: placeholder: Group.
-							label={sprintf(_x('%s ID', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'))}
-							// translators: placeholder: Group.
-							help={sprintf(_x('%s ID (required)', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'))}
+							label={sprintf(
+								// translators: placeholder: Group.
+								_x('%s ID', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'))}
+							help={sprintf(
+								// translators: placeholder: Group.
+								_x('%s ID (required)', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'))}
 							value={group_id || ''}
-							onChange={group_id => setAttributes({ group_id })}
-						/>
+							type={'number'}
+							onChange={ function( new_group_id ) {
+								if ( new_group_id != "" && new_group_id < 0 ) {
+									setAttributes({ group_id: "0" });
+								} else {
+									setAttributes({ group_id: new_group_id });
+								}
+							}}						/>
 						<TextControl
 							label={__('User ID', 'learndash')}
 							help={__('Enter specific User ID. Leave blank for current User.', 'learndash')}
 							value={user_id || ''}
-							onChange={user_id => setAttributes({ user_id })}
-						/>
+							type={'number'}
+							onChange={ function( new_user_id ) {
+								if ( new_user_id != "" && new_user_id < 0 ) {
+									setAttributes({ user_id: "0" });
+								} else {
+									setAttributes({ user_id: new_user_id });
+								}
+							}}						/>
 						<ToggleControl
 							label={__('Auto Paragraph', 'learndash')}
 							checked={!!autop}
@@ -84,8 +100,9 @@ registerBlockType(
 			let ld_block_error_message = '';
 			let preview_group_id = ldlms_get_integer_value(group_id);
 			if (preview_group_id == 0) {
-				// translators: placeholder: Group.
-				ld_block_error_message = sprintf(_x('%s ID is required.', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'));
+				ld_block_error_message = sprintf(
+					// translators: placeholder: Group.
+					_x('%s ID is required.', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'));
 			}
 
 			if (ld_block_error_message.length) {

@@ -152,7 +152,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @param array $q_vars Query vars.
 		 *
-		 * @return array $q_vars Query vars.
+		 * @return array $q_vars Query vars
 		 */
 		public function users_list_table_query_args( $q_vars = array() ) {
 			if ( $this->post_type_check() ) {
@@ -170,6 +170,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 				return $q_vars;
 			}
+
+			return array();
 		}
 
 		/**
@@ -177,7 +179,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param array $q_vars   Query vars for table listing
+		 * @param array $q_vars   Query vars for table listing.
 		 * @param array $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -188,7 +190,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					$group_ids = learndash_get_administrators_group_ids( get_current_user_id() );
 					$group_ids = array_map( 'absint', $group_ids );
 
-					// If the Group Leader doesn't have groups or not a managed group them clear our selected group_id
+					// If the Group Leader doesn't have groups or not a managed group them clear our selected group_id.
 					if ( ( empty( $group_ids ) ) || ( in_array( absint( $selector['selected'] ), $group_ids, true ) === false ) ) {
 						$selector['selected'] = 0;
 					}
@@ -209,7 +211,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  array $q_vars   Query vars used for the table listing
+		 * @param  array $q_vars   Query vars used for the table listing.
 		 * @param  array $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return array $q_vars.
@@ -227,14 +229,43 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							}
 						}
 						if ( empty( $course_ids ) ) {
-							$filter_course_id = 0;
+							$course_ids = array_map( 'absint', $course_ids );
+							if ( ! in_array( absint( $selector['selected'] ), $course_ids, true ) ) {
+								return $q_vars;
+							}
 						}
 					}
 				}
 
 				if ( ! empty( $selector['selected'] ) ) {
-					$q_vars['meta_key']     = 'course_' . absint( $selector['selected'] ) . '_access_from';
-					$q_vars['meta_compare'] = 'EXISTS';
+					$course_price_type = learndash_get_setting( $selector['selected'], 'course_price_type' );
+					if ( 'open' !== $course_price_type ) {
+						$q_vars['include'] = array( 0 );
+
+						$course_users_query = learndash_get_users_for_course( $selector['selected'], array(), false );
+						if ( is_a( $course_users_query, 'WP_User_Query' ) ) {
+							$q_vars['include'] = $course_users_query->get_results();
+						}
+
+						if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) {
+							$admin_users = get_users(
+								array(
+									'role'   => 'administrator',
+									'fields' => array( 'ID' ),
+								)
+							);
+							if ( ! empty( $admin_users ) ) {
+								$user_ids = wp_list_pluck( $admin_users, 'ID' );
+								if ( ! empty( $user_ids ) ) {
+									$user_ids = array_map( 'absint', $user_ids );
+									$user_ids = array_diff( $user_ids, [0] );
+								}
+								if ( ! empty( $user_ids ) ) {
+									$q_vars['include'] = array_merge( $q_vars['include'], $user_ids );
+								}
+							}
+						}
+					}
 				}
 			}
 
@@ -332,7 +363,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @param string  $column_content Optional. Column content. Default empty.
 		 * @param string  $column_name    Column slug or row being displayed.
-		 * @param integer $post_id        Post ID of row being displayed.
+		 * @param integer $user_id        User ID of row being displayed.
 		 */
 		public function manage_user_column_rows( $column_content = '', $column_name = '', $user_id = 0 ) {
 			if ( $this->post_type_check() ) {

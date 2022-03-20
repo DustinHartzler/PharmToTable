@@ -74,7 +74,7 @@ $cat_points    = array();
 								'quiz_post_id' => $quiz->getID(),
 								'context'      => 'quiz_question_list_2_message',
 								'message'      => sprintf(
-									// translators: placeholder: question, question number, questions total
+									// translators: placeholder: question, question number, questions total.
 									esc_html_x( '%1$s %2$s of %3$s', 'placeholder: question, question number, questions total', 'learndash' ),
 									learndash_get_custom_label( 'question' ),
 									'<span>' . $index . '</span>',
@@ -279,7 +279,7 @@ $cat_points    = array();
 
 								$datapos = $answer_index;
 								if ( $question->getAnswerType() === 'sort_answer' || $question->getAnswerType() === 'matrix_sort_answer' ) {
-									$datapos = $v_idx; //LD_QuizPro::datapos( $question->getId(), $answer_index );
+									$datapos = $v_idx; // LD_QuizPro::datapos( $question->getId(), $answer_index );
 								}
 								?>
 
@@ -655,7 +655,7 @@ $cat_points    = array();
 							array(
 								'quiz_post_id' => $quiz->getID(),
 								'context'      => 'quiz_skip_button_label',
-								// translators: placeholder: question
+								// translators: placeholder: question.
 								'message'      => sprintf( esc_html_x( 'Skip %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 							)
 						)
@@ -741,11 +741,11 @@ $cat_points    = array();
 	<?php if ( $quiz->getQuizModus() == WpProQuiz_Model_Quiz::QUIZ_MODUS_SINGLE ) { ?>
 		<div>
 			<input type="button" name="wpProQuiz_pageLeft" data-text="<?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
-				// translators: placeholder: page number
+				// translators: placeholder: page number.
 				echo esc_html__( 'Page %d', 'learndash' );
 			?>" style="float: left; display: none;" class="wpProQuiz_button wpProQuiz_QuestionButton"> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
 			<input type="button" name="wpProQuiz_pageRight" data-text="<?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
-				// translators: placeholder: page number
+				// translators: placeholder: page number.
 				echo esc_html__( 'Page %d', 'learndash' );
 			?>" style="float: right; display: none;" class="wpProQuiz_button wpProQuiz_QuestionButton"> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
 

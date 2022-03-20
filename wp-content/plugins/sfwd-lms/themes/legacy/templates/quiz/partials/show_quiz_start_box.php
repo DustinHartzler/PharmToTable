@@ -23,7 +23,7 @@ $learndash_quiz_resume_id   = 0;
 $learndash_quiz_resume_data = array();
 
 if ( ( ! empty( $learndash_quiz_post_id ) ) && ( get_current_user_id() ) ) {
-	$learndash_quiz_resume_enabled = learndash_get_setting( $learndash_quiz_post_id, 'quiz_resume' );
+	$learndash_quiz_resume_enabled = (bool) learndash_get_setting( $learndash_quiz_post_id, 'quiz_resume' );
 	if ( true === $learndash_quiz_resume_enabled ) {
 		$learndash_course_id            = learndash_get_course_id();
 		$learndash_quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( get_current_user_id(), $learndash_quiz_post_id, $learndash_course_id );

@@ -44,7 +44,6 @@ do_action( 'learndash-' . $context . '-progress-bar-before', $course_id, $user_i
 
 /**
  * In the topic context we're measuring progress through a lesson, not the course itself
- * @var [type]
  */
 if ( 'topic' !== $context ) {
 
@@ -83,7 +82,7 @@ if ( 'topic' !== $context ) {
 	$progress = apply_filters( 'learndash-' . $context . '-progress-stats', learndash_course_progress( $progress_args ) );
 
 } else {
-	global $post;
+	//global $post;
 
 	/** This filter is documented in themes/ld30/templates/modules/progress.php */
 	$progress = apply_filters( 'learndash-' . $context . '-progress-stats', learndash_lesson_progress( $post, $course_id ) );
@@ -106,7 +105,7 @@ if ( $progress ) :
 					<div class="ld-progress-label">
 					<?php
 					echo sprintf(
-						// translators: placeholder: Lesson Progress
+						// translators: placeholder: Lesson Progress.
 						esc_html_x( '%s Progress', 'Placeholder: Lesson Progress', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'lesson' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
@@ -117,7 +116,7 @@ if ( $progress ) :
 					<div class="ld-progress-percentage ld-secondary-color">
 					<?php
 					echo sprintf(
-						// translators: placeholder: Progress percentage
+						// translators: placeholder: Progress percentage.
 						esc_html_x( '%s%% Complete', 'placeholder: Progress percentage', 'learndash' ),
 						esc_html( $progress['percentage'] )
 					);
@@ -134,7 +133,7 @@ if ( $progress ) :
 							);
 							$course_activity = learndash_get_user_activity( $course_args );
 
-							if ( ! empty( $course_activity->activity_updated ) && get_post_type() === 'sfwd-courses' ) :
+							if ( ! empty( $course_activity->activity_updated ) && 'course' === $context ) :
 								echo sprintf(
 									// translators: Last activity date in infobar.
 									esc_html_x( 'Last activity on %s', 'Last activity date in infobar', 'learndash' ),

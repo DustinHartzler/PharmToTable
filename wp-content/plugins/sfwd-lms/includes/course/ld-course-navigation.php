@@ -405,7 +405,7 @@ function learndash_topic_dots( $lesson_id, $show_text = false, $type = 'dots', $
  *
  * @since 2.1.0
  *
- * @param int|null $for_lesson_id The ID of the lesson to get topics.
+ * @param int|null $lesson_id The ID of the lesson to get topics.
  * @param int|null $course_id     Course ID.
  *
  * @return array An array of topics list.

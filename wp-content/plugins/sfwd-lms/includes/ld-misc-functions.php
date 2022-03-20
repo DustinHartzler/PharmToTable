@@ -42,7 +42,7 @@ function learndash_get_option( $post_type, $setting = '' ) {
 	$options = get_option( 'sfwd_cpt_options' );
 
 	// In LD v2.4 we moved all the settings to the new Settings API. Because of this we need to merge the value(s)
-	// into the legacy values but keep in mind other add-ons might be extending the $post_args sections
+	// into the legacy values but keep in mind other add-ons might be extending the $post_args sections.
 	if ( 'sfwd-lessons' === $post_type ) {
 		if ( false === $options ) {
 			$options = array();
@@ -91,7 +91,7 @@ if ( ! function_exists( 'sfwd_lms_get_post_options' ) ) {
 	function sfwd_lms_get_post_options( $post_type ) {
 		global $sfwd_lms;
 
-		// Set our default options
+		// Set our default options.
 
 		$ret = array(
 			'order'          => 'ASC',
@@ -337,7 +337,9 @@ function learndash_post_type_has_archive( $post_type = '' ) {
  * Utility function to check if a LearnDash post type supports Search and extra parameter.
  *
  * @since 3.0
- * @param string $post_type LearnDash Post Type.
+ * @param string $post_type    LearnDash Post Type.
+ * @param string $search_param Search parameter.
+ *
  * @return boolean true/false.
  */
 function learndash_post_type_search_param( $post_type = '', $search_param = '' ) {
@@ -501,7 +503,7 @@ add_action(
  *
  * @since 2.1.0
  *
- * @param int $inputSeconds The seconds value.
+ * @param int $input_seconds The seconds value.
  *
  * @return string The time output string.
  */
@@ -513,7 +515,7 @@ function learndash_seconds_to_time( $input_seconds = 0 ) {
 
 	$return = '';
 
-	// extract days
+	// extract days.
 	$days = floor( $input_seconds / $seconds_day );
 	if ( ! empty( $days ) ) {
 		if ( ! empty( $return ) ) {
@@ -523,7 +525,7 @@ function learndash_seconds_to_time( $input_seconds = 0 ) {
 		$return .= sprintf( _n( '%s day', '%s days', $days, 'learndash' ), number_format_i18n( $days ) );
 	}
 
-	// extract hours
+	// extract hours.
 	$hour_seconds = $input_seconds % $seconds_day;
 	$hours        = floor( $hour_seconds / $seconds_hour );
 	if ( ! empty( $hours ) ) {
@@ -534,7 +536,7 @@ function learndash_seconds_to_time( $input_seconds = 0 ) {
 		$return .= sprintf( _n( '%s hour', '%s hours', $hours, 'learndash' ), number_format_i18n( $hours ) );
 	}
 
-	// extract minutes
+	// extract minutes.
 	$minute_seconds = $input_seconds % $seconds_hour;
 	$minutes        = floor( $minute_seconds / $seconds_minute );
 	if ( ! empty( $minutes ) ) {
@@ -546,7 +548,7 @@ function learndash_seconds_to_time( $input_seconds = 0 ) {
 
 	}
 
-	// extract the remaining seconds
+	// extract the remaining seconds.
 	$remaining_seconds = $input_seconds % $seconds_minute;
 	$seconds           = ceil( $remaining_seconds );
 	if ( ! empty( $seconds ) ) {
@@ -593,7 +595,7 @@ function learndash_adjust_date_time_display( $timestamp = 0, $display_format = '
 			$display_format = apply_filters( 'learndash_date_time_formats', $date_format . ' ' . $time_format );
 		}
 
-		// First we convert the timestamp to local Y-m-d H:i:s format
+		// First we convert the timestamp to local Y-m-d H:i:s format.
 		$date_time_display = get_date_from_gmt( date( 'Y-m-d H:i:s', $timestamp ), 'Y-m-d H:i:s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 
 		// Then we take that value and reconvert it to a timestamp and call date_i18n to translate the month, date name etc.
@@ -943,7 +945,7 @@ function learndash_get_ignored_upload_file_extensions() {
  *
  * @since 3.1.7
  *
- * @param integer $post_id Post ID for Assignment or Essay
+ * @param integer $post_id Post ID for Assignment or Essay.
  *
  * @return array allowed file extensions with mime.
  */
@@ -1044,7 +1046,7 @@ function learndash_post_type_supports_feed( $feed_post_type = '' ) {
 	if ( ( ! empty( $feed_post_type ) ) && ( in_array( $feed_post_type, LDLMS_Post_Types::get_post_types(), true ) ) ) {
 		$feed_post_type_object = get_post_type_object( $feed_post_type );
 		if ( ( $feed_post_type_object ) && ( is_a( $feed_post_type_object, 'WP_Post_Type' ) ) ) {
-			// Default for LD Post types is false;
+			// Default for LD Post types is false.
 			$cpt_has_feed = false;
 
 			$class_key = array(
@@ -1094,7 +1096,7 @@ function learndash_post_type_supports_comments( $feed_post_type = '' ) {
 	if ( ( ! empty( $feed_post_type ) ) && ( in_array( $feed_post_type, learndash_get_post_types( 'course' ), true ) ) ) {
 		$feed_post_type_object = get_post_type_object( $feed_post_type );
 		if ( ( $feed_post_type_object ) && ( is_a( $feed_post_type_object, 'WP_Post_Type' ) ) ) {
-			// Default for LD Post types is false;
+			// Default for LD Post types is false.
 			$cpt_has_comments = false;
 
 			$class_key = array(
@@ -1125,6 +1127,7 @@ function learndash_post_type_supports_comments( $feed_post_type = '' ) {
 			return $cpt_has_comments;
 		}
 	}
+	return false;
 }
 
 /**
@@ -1172,7 +1175,7 @@ function learndash_post_updated_messages( $post_messages = array() ) {
 			);
 		}
 
-		// translators: Publish box date format, see https://secure.php.net/date
+		// translators: Publish box date format, see https://secure.php.net/date.
 		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'learndash' ), strtotime( $post->post_date ) );
 
 		$post_messages[ $post_type ] = array(
@@ -1444,7 +1447,7 @@ function learndash_is_protected_meta( $protected = false, $meta_key = '', $meta_
 
 		// If post type is not empty and onf othe LD types.
 		if ( ( ! empty( $post_type ) ) && ( in_array( $post_type, learndash_get_post_types(), true ) ) ) {
-			$protected_meta_keys = array( 'course_id', 'lesson_id', 'course_price_billing_p3', 'course_price_billing_t3', 'course_sections', 'ld_course_steps', 'course_access_list', 'quiz_pro_id', 'ld_course_steps_dirty', 'ld_auto_enroll_group_courses', 'group_price_billing_p3', 'group_price_billing_t3', 'ld_auto_enroll_group_course_ids', 'question_pro_id', 'course_points', 'ld_quiz_questions', 'ld_quiz_questions_dirty', 'learndash_certificate_options', 'question_id', 'ld_essay_grading_response', 'question_points', 'question_type', 'question_pro_id', 'question_pro_category' );
+			$protected_meta_keys = array( 'course_id', 'lesson_id', 'course_price_billing_p3', 'course_price_billing_t3', 'course_sections', 'ld_course_steps', 'course_access_list', 'quiz_pro_id', 'ld_course_steps_dirty', 'ld_auto_enroll_group_courses', 'group_price_billing_p3', 'group_price_billing_t3', 'ld_auto_enroll_group_course_ids', 'question_pro_id', 'course_points', 'ld_quiz_questions', 'ld_quiz_questions_dirty', 'learndash_certificate_options', 'question_id', 'ld_essay_grading_response', 'question_points', 'question_type', 'question_pro_id', 'question_pro_category', 'course_trial_duration_p1', 'course_trial_duration_t1', 'course_price_type_subscribe_billing_recurring_times', 'group_trial_duration_p1', 'group_trial_duration_t1', 'group_price_type_subscribe_billing_recurring_times', 'exam_challenge_course_show', 'exam_challenge_course_passed' );
 
 			if ( ( in_array( $meta_key, $protected_meta_keys, true ) ) ) {
 				$protected = true;
@@ -1636,7 +1639,7 @@ function learndash_body_classes( $classes = array() ) {
 		$custom_classes[] = 'learndash-cpt';
 		$custom_classes[] = 'learndash-cpt-' . get_post_type();
 
-		// Add active LD theme template
+		// Add active LD theme template.
 		$custom_classes[] = 'learndash-template-' . LearnDash_Theme_Register::get_active_theme_key();
 
 		// Add classes or current course steps.
@@ -1719,7 +1722,7 @@ function learndash_recount_serialized_bytes( $serialized_text = '' ) {
 			$new_digits = strlen( $new_number );
 
 			if ( $number != $new_number ) {
-				// Change stored number
+				// Change stored number.
 				$serialized_text = substr_replace( $serialized_text, $new_number, $pos, $digits );
 				$pos            += $new_digits - $digits;
 			}
@@ -1864,6 +1867,7 @@ function learndash_safe_redirect( $location = '', $status = null, $exit = true, 
 			return $redirect_status;
 		}
 	}
+	return false;
 }
 
 /**
@@ -1881,6 +1885,7 @@ function learndash_use_select2_lib() {
 	if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
 		return true;
 	}
+	return false;
 }
 
 /**
@@ -1900,13 +1905,19 @@ function learndash_use_select2_lib_ajax_fetch() {
 			return true;
 		}
 	}
+	return false;
 }
 
+/**
+ * Add index file to directory
+ *
+ * @param string $index_filename File name.
+ */
 function learndash_put_directory_index_file( $index_filename = '' ) {
 	if ( ! empty( $index_filename ) ) {
 		global $wp_filesystem;
 
-		// Initialize the WP filesystem, no more using 'file-put-contents' function
+		// Initialize the WP filesystem, no more using 'file-put-contents' function.
 		if ( empty( $wp_filesystem ) ) {
 			require_once ABSPATH . '/wp-admin/includes/file.php';
 			WP_Filesystem();
@@ -1924,8 +1935,7 @@ function learndash_put_directory_index_file( $index_filename = '' ) {
  * @param string $content The content to be formatted.
  * @param string $context Optional. Some unique context ID to control logic. Recommended: the calling function name.
  *
- * @return string $content.
- *
+ * @return string $content
  */
 function learndash_the_content( $content = '', $context = '' ) {
 	if ( apply_filters( 'learndash_use_wp_the_content_filters', true, $context ) ) {
@@ -1991,3 +2001,82 @@ function learndash_the_content( $content = '', $context = '' ) {
 
 	return $content;
 }
+
+/**
+ * Gets the user's quiz attempts for the ld_profile shortcode/block
+ *
+ * @since 4.0
+ *
+ * @param int $user_id Optional. The ID of the user to get quiz attempts. Default 0.
+ *
+ * @return array An array of quiz attempts, otherwise false.
+ */
+function learndash_get_user_profile_quiz_attempts( $user_id = 0 ) {
+
+	$user_id = absint( $user_id );
+	$user = get_user_by( 'id', $user_id );
+
+	$quiz_attempts = array();
+
+	if ( ! $user ) {
+		return $quiz_attempts;
+	}
+
+	$usermeta           = get_user_meta( $user_id, '_sfwd-quizzes', true );
+	$quiz_attempts_meta = empty( $usermeta ) ? false : $usermeta;
+
+	if ( ! empty( $quiz_attempts_meta ) ) {
+
+		foreach ( $quiz_attempts_meta as $quiz_attempt ) {
+			$c                          = learndash_certificate_details( $quiz_attempt['quiz'], $user_id );
+			$quiz_attempt['post']       = get_post( $quiz_attempt['quiz'] );
+			$quiz_attempt['percentage'] = ! empty( $quiz_attempt['percentage'] ) ? $quiz_attempt['percentage'] : ( ! empty( $quiz_attempt['count'] ) ? $quiz_attempt['score'] * 100 / $quiz_attempt['count'] : 0 );
+
+			if ( get_current_user_id() == $user_id && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
+				$quiz_attempt['certificate'] = $c;
+				if ( ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) && ( ! empty( $quiz_attempt['certificate']['certificateLink'] ) ) ) {
+					$quiz_attempt['certificate']['certificateLink'] = add_query_arg( array( 'time' => $quiz_attempt['time'] ), $quiz_attempt['certificate']['certificateLink'] );
+				}
+			}
+
+			if ( ! isset( $quiz_attempt['course'] ) ) {
+				$quiz_attempt['course'] = learndash_get_course_id( $quiz_attempt['quiz'] );
+			}
+			$course_id = intval( $quiz_attempt['course'] );
+
+			$quiz_attempts[ $course_id ][] = $quiz_attempt;
+
+		}
+
+		return $quiz_attempts;
+	}
+}
+
+ /* Returns the title for the post
+ *
+ * @since 4.0
+ *
+ * @param string $post_title Title of the post.
+ * @param int    $post_id         ID of the post.
+ *
+ * @return string $post_title The title of the post
+ */
+function learndash_get_post_title_filter( $post_title = '', $post_id = 0 ) {
+
+	if ( ! empty( $post_title ) ) {
+		return $post_title;
+	}
+
+	if ( empty( $post_id ) ) {
+		return $post_title;
+	}
+
+	if ( ! in_array( get_post_type( $post_id ), learndash_get_post_types(), true ) ) {
+		return $post_title;
+	}
+
+	$post_title = 'Untitled - #' . $post_id;
+
+	return $post_title;
+}
+add_filter( 'the_title', 'learndash_get_post_title_filter', 99, 2 );

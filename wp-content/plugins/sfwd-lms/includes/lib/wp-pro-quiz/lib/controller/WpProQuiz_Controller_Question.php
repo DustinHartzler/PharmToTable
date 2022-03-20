@@ -7,6 +7,12 @@ class WpProQuiz_Controller_Question extends WpProQuiz_Controller_Controller {
 
 	private $_quizId;
 
+	/**
+	 * View instance
+	 * @var object $view.
+	 */
+	protected $view;
+
 	public function route() {
 
 		if ( ! isset( $_GET['quiz_id'] ) || empty( $_GET['quiz_id'] ) ) {
@@ -118,7 +124,7 @@ class WpProQuiz_Controller_Question extends WpProQuiz_Controller_Controller {
 		$this->view->question   = $question;
 		$this->view->data       = $this->setAnswerObject( $question );
 
-		// translators: placeholder: question
+		// translators: placeholder: question.
 		$this->view->header = $questionId ? sprintf( esc_html_x( 'Edit %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) ) : sprintf( esc_html_x( 'New %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) );
 
 		if ( $this->view->question->isAnswerPointsActivated() ) {
@@ -306,8 +312,8 @@ class WpProQuiz_Controller_Question extends WpProQuiz_Controller_Controller {
 		$this->view->data       = $this->setAnswerObject( $this->view->question );
 		$this->view->categories = $cateoryMapper->fetchAll();
 
-		// translators: placeholder: question
-		$this->view->header = sprintf( esc_html_x( 'Edit %s', 'placeholder: question', 'learndash' ), leanrndash_get_custom_label( 'question' ) );
+		// translators: placeholder: question.
+		$this->view->header = sprintf( esc_html_x( 'Edit %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) );
 
 		if ( $this->view->question->isAnswerPointsActivated() ) {
 			$this->view->question->setPoints( 1 );
@@ -381,7 +387,7 @@ class WpProQuiz_Controller_Question extends WpProQuiz_Controller_Controller {
 		$this->view->data       = $this->setAnswerObject();
 		$this->view->templates  = $templateMapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUESTION, false );
 
-		// translators: placeholder: question
+		// translators: placeholder: question.
 		$this->view->header = sprintf( esc_html_x( 'New %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) );
 
 		if ( $this->view->question->isAnswerPointsActivated() ) {

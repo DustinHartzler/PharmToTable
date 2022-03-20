@@ -24,8 +24,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 	 * @since 3.3.0
 	 * @uses WP_REST_Posts_Controller
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Posts_Controller_V2 extends WP_REST_Posts_Controller {
+	class LD_REST_Posts_Controller_V2 extends WP_REST_Posts_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * REST API version.
@@ -134,9 +133,25 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		protected $route_methods_collection = array( WP_REST_Server::READABLE, WP_REST_Server::CREATABLE );
 
 		/**
+		 * Taxonomies
+		 *
+		 * @var array
+		 */
+		protected $taxonomies = array();
+
+		/**
+		 * Rest sub base
+		 *
+		 * @var string
+		 */
+		protected $rest_sub_base;
+
+		/**
 		 * Protected constructor for class
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param string $post_type Post type.
 		 */
 		public function __construct( $post_type = '' ) {
 			parent::__construct( $post_type );
@@ -481,10 +496,10 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array  $postdata   Post data array.
-		 * @param string $field_name Field Name for $postdata value.
-		 * @param object $request    Request object.
-		 * @param string $post_type  Post Type for request.
+		 * @param array           $postdata   Post data array.
+		 * @param string          $field_name Field Name for $postdata value.
+		 * @param WP_REST_Request $request    Request object.
+		 * @param string          $post_type  Post Type for request.
 		 */
 		public function get_rest_settings_field_value( array $postdata, $field_name, WP_REST_Request $request, $post_type ) {
 			if ( ( isset( $postdata['id'] ) ) && ( ! empty( $postdata['id'] ) ) ) {
@@ -498,7 +513,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 							if ( ( isset( $field_set['metabox'] ) ) && ( ! empty( $field_set['metabox'] ) ) && ( 'LearnDash_Settings_Metabox' === get_parent_class( $field_set['metabox'] ) ) ) {
 								$metabox_class_name = get_class( $field_set['metabox'] );
 								if ( ( $metabox_class_name ) && ( isset( $this->metaboxes[ $metabox_class_name ] ) ) ) {
-									$this->metaboxes[ $metabox_class_name ]->init( $ld_post );
+									$this->metaboxes[ $metabox_class_name ]->init( $ld_post, true );
 									$field_value = $this->metaboxes[ $metabox_class_name ]->get_metabox_settings_value_by_key( $field_set['settings_field']['name'] );
 								}
 							} else {
@@ -527,11 +542,11 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param mixed  $post_value  Value of setting to update.
-		 * @param object $post        Post object being updated.
-		 * @param string $field_name  Settings file name/key.
-		 * @param object $request     Request object.
-		 * @param string $post_type   Post type string.
+		 * @param mixed           $post_value  Value of setting to update.
+		 * @param WP_Post         $post        Post object being updated.
+		 * @param string          $field_name  Settings file name/key.
+		 * @param WP_REST_Request $request     Request object.
+		 * @param string          $post_type   Post type string.
 		 */
 		public function update_rest_settings_field_value( $post_value, WP_Post $post, $field_name, WP_REST_Request $request, $post_type ) {
 			if ( ( is_a( $post, 'WP_Post' ) ) && ( $post->post_type == $this->post_type ) ) {
@@ -575,8 +590,8 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array  $query_params Quest params array.
-		 * @param string $post_type    Post type string.
+		 * @param array        $query_params Quest params array.
+		 * @param WP_Post_Type $post_type    Post type string.
 		 */
 		public function rest_collection_params_filter( array $query_params, WP_Post_Type $post_type ) {
 			if ( ( in_array( $this->post_type, learndash_get_post_types( 'course_steps' ), true ) ) ) {
@@ -589,7 +604,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 					$query_params['order']['default'] = 'asc';
 				}
 
-				// We add 'course' to the filtering as an option to filter course steps by
+				// We add 'course' to the filtering as an option to filter course steps by.
 				if ( ! isset( $query_params['course'] ) ) {
 					if ( $this->rest_post_type_has_archive( $this->post_type ) ) {
 						$course_required = false;
@@ -635,9 +650,9 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Response $response WP_REST_Response instance.
+		 * @param WP_Post          $post     WP_Post instance.
+		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 			if ( ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'nested_urls' ) == 'yes' ) && ( in_array( $post->post_type, learndash_get_post_types( 'course_steps' ), true ) ) ) {
@@ -660,11 +675,12 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		}
 
 		/**
-		 * Register Settings fields to REST .
+		 * Register Settings fields to REST.
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array $fields Array of fields for section.
+		 * @param array  $fields  Array of fields for section.
+		 * @param object $metabox Metabox object.
 		 */
 		public function register_rest_fields( $fields = array(), $metabox = null ) {
 
@@ -791,7 +807,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param string post_type_slug The post type slug to check.
+		 * @param string $post_type_slug The post type slug to check.
 		 *
 		 * @return bool true if has archive.
 		 */
@@ -816,7 +832,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param object $request WP_REST_Request instance.
+		 * @param WP_REST_Request $request WP_REST_Request instance.
 		 * @return void.
 		 */
 		protected function rest_init_request_posts( WP_REST_Request $request ) {
@@ -884,7 +900,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.4.2
 		 *
-		 * @param object $request WP_REST_Request Request instance.
+		 * @param WP_REST_Request $request WP_REST_Request Request instance.
 		 *
 		 * @return bool true if match.
 		 */
@@ -893,8 +909,9 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 			if ( strncasecmp( $request->get_route(), $request_route_base, strlen( $request_route_base ) ) === 0 ) {
 				return true;
 			}
+			return false;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

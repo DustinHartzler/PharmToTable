@@ -216,8 +216,8 @@ if ( ! function_exists( 'learndash_get_legacy_course_id' ) ) {
 		$term_taxonomy_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"
-			SELECT `term_taxonomy_id` FROM $wpdb->term_taxonomy tt, $wpdb->terms t 
-			WHERE slug = %s 
+			SELECT `term_taxonomy_id` FROM $wpdb->term_taxonomy tt, $wpdb->terms t
+			WHERE slug = %s
 			AND t.term_id = tt.term_id
 			AND tt.taxonomy = 'courses'
 			",
@@ -228,11 +228,11 @@ if ( ! function_exists( 'learndash_get_legacy_course_id' ) ) {
 		$course_id = $wpdb->get_var(
 			$wpdb->prepare(
 				"
-			SELECT `ID` FROM $wpdb->term_relationships, $wpdb->posts 
+			SELECT `ID` FROM $wpdb->term_relationships, $wpdb->posts
 			WHERE `ID` = `object_id`
 			AND `term_taxonomy_id` = %d
 			AND `post_type` = 'sfwd-courses'
-			AND `post_status` = 'publish' 
+			AND `post_status` = 'publish'
 			",
 				$term_taxonomy_id
 			)
@@ -321,7 +321,7 @@ if ( ! function_exists( 'learndash_transition_course_shared_steps' ) ) {
 			if ( 'yes' !== LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
 				$course_steps = get_post_meta( $course_id, 'ld_course_steps', true );
 				if ( isset( $course_steps['h'] ) ) {
-					// If here then Shared Steps was enabled
+					// If here then Shared Steps was enabled.
 
 					$ld_course_steps_object = LDLMS_Factory_Post::course_steps( $course_id );
 					$ld_course_steps_object->set_steps( $course_steps['h'] );
@@ -498,7 +498,7 @@ if ( ! function_exists( 'get_course_groups_users_access' ) ) {
 			_deprecated_function( __FUNCTION__, '3.4.0', 'learndash_get_course_groups_users_access' );
 		}
 
-		return learndash_get_course_groups_users_access( $post );
+		return learndash_get_course_groups_users_access( $course_id );
 	}
 }
 

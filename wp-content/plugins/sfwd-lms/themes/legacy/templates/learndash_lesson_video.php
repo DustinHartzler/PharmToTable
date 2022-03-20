@@ -43,5 +43,5 @@ if ( ! empty( $video_content ) ) {
 echo $content;
 
 
-// https://youtu.be/ALu-whwI8fA
-// https://youtu.be/HECa3bAFAYk
+// https://youtu.be/ALu-whwI8fA.
+// https://youtu.be/HECa3bAFAYk.

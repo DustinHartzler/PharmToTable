@@ -19,8 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param int   $course_id         Course ID.
  * @param array $widget_instance   Optional. An array of widget settings. Default empty array.
  * @param array $lesson_query_args Optional. An array of lesson `WP_Query` arguments. Default empty array.
- *
- * @return string The course navigation widget output.
  */
 function learndash_course_navigation( $course_id, $widget_instance = array(), $lesson_query_args = array() ) {
 	$course = get_post( $course_id );
@@ -85,8 +83,6 @@ function learndash_course_navigation( $course_id, $widget_instance = array(), $l
  * @param int   $course_id         Course ID.
  * @param array $instance          Optional. An array of widget settings. Default empty array.
  * @param array $lesson_query_args Optional. An array of lesson `WP_Query` arguments. Default empty array.
- *
- * @return string The course navigation widget output.
  */
 function learndash_course_navigation_admin( $course_id, $instance = array(), $lesson_query_args = array() ) {
 	$course = get_post( $course_id );
@@ -249,7 +245,7 @@ function learndash_course_navigation_admin_box_content() {
 								}
 							}
 						} elseif ( in_array( $current_post->post_type, array( 'sfwd-quiz' ), true ) ) {
-							// If here we have a global Quiz. So we set the pager to the max number
+							// If here we have a global Quiz. So we set the pager to the max number.
 							$course_lesson_ids = learndash_course_get_steps_by_type( $course_id, 'sfwd-lessons' );
 							if ( ! empty( $course_lesson_ids ) ) {
 								$course_lessons_paged       = array_chunk( $course_lesson_ids, $course_lessons_per_page, true );
@@ -327,7 +323,7 @@ function learndash_ajax_course_registered_pager() {
 					$paged = intval( $_POST['paged'] );
 				}
 
-				// Always return $paged
+				// Always return $paged.
 				return $paged;
 			},
 			10,
@@ -408,7 +404,7 @@ add_action( 'wp_ajax_ld_course_registered_pager', 'learndash_ajax_course_registe
  * @return void|string
  */
 function learndash_ajax_course_progress_pager() {
-	// Not sure why this is here since we have the 'wp_ajax_nopriv_ld_course_progress_pager' action setup
+	// Not sure why this is here since we have the 'wp_ajax_nopriv_ld_course_progress_pager' action setup.
 	if ( ! is_user_logged_in() ) {
 		return '';
 	}
@@ -422,7 +418,7 @@ function learndash_ajax_course_progress_pager() {
 					$paged = intval( $_POST['paged'] );
 				}
 
-				// Always return $paged
+				// Always return $paged.
 				return $paged;
 			},
 			10,

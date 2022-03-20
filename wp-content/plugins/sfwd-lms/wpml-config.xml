@@ -81,5 +81,12 @@
 			<key name="button_mark_complete" />
 			<key name="button_click_here_to_continue" />
 		</key>
+		<key name="learndash_settings_registration_fields" >
+			<key name="username_label" />
+			<key name="email_label" />
+			<key name="first_name_label" />
+			<key name="last_name_label" />
+			<key name="password_label" />
+		</key>
 	</admin-texts>	
 </wpml-config>

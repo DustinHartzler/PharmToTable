@@ -155,10 +155,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param mixed  $val        Value from REST to be converted to internal value.
-		 * @param string $key        Key field for value.
-		 * @param array  $field_args Array of field args.
-		 * @param object $request    Request object.
+		 * @param mixed           $val        Value from REST to be converted to internal value.
+		 * @param string          $key        Key field for value.
+		 * @param array           $field_args Array of field args.
+		 * @param WP_REST_Request $request    Request object.
 		 */
 		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
 			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {
@@ -185,14 +185,14 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			return $val;
 		}
 
-				/**
+		/**
 		 * Convert REST submit value to internal Settings Field acceptable value.
 		 *
 		 * @since 3.3.0
 		 *
 		 * @param mixed  $val         Value from REST to be converted to internal value.
 		 * @param string $key         Key field for value.
-		 * @param array  $fields_args Array of field args.
+		 * @param array  $field_args Array of field args.
 		 */
 		public function rest_value_to_field_value( $val = '', $key = '', $field_args = array() ) {
 			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {

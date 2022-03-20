@@ -1186,7 +1186,7 @@ class LD_QuizPro {
 		}
 
 		$quizdata['ld_version'] = LEARNDASH_VERSION;
-		
+
 		$quizdata['quiz_key'] = $quizdata['completed'] . '_' . absint( $quiz_pro_id ) . '_' . absint( $quiz_post_id ) . '_' . absint( $course_id );
 
 		if ( ! empty( $user_id ) ) {
@@ -1245,6 +1245,10 @@ class LD_QuizPro {
 						}
 					}
 				}
+			}
+
+			if ( 0 === $quizdata['pass'] ) {
+				$send_quiz_completed = false;
 			}
 
 			if ( true === $send_quiz_completed ) {
@@ -1315,30 +1319,6 @@ class LD_QuizPro {
 		// We should not exit here. The calling action source needs to complete the processing and lock.
 		//exit();
 	}
-
-
-
-	/**
-	 * Returns the Quiz ID when submitting the Pro Quiz ID
-	 *
-	 * @since 2.1.0
-	 *
-	 * @param int $pro_quizid WPProQuiz ID
-	 *
-	 * @return int quiz ID
-	 */
-	function get_ld_quiz_id( $pro_quizid ) {
-		$quizzes = SFWD_SlickQuiz::get_all_quizzes();
-
-		foreach ( $quizzes as $quiz ) {
-			$quizmeta = get_post_meta( $quiz->ID, '_sfwd-quiz', true );
-			if ( ! empty( $quizmeta['sfwd-quiz_quiz_pro'] ) && $quizmeta['sfwd-quiz_quiz_pro'] == $pro_quizid ) {
-				return $quiz->ID;
-			}
-		}
-	}
-
-
 
 	/**
 	 * Returns an array of quizes in the string format of "$quiz_id - $quiz_name"

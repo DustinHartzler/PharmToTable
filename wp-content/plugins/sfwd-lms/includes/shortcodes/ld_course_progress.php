@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @global boolean $learndash_shortcode_used
  *
- * @param array $atts {
+ * @param array  $atts {
  *    An array of shortcode attributes.
  *
  *    @type int     $course_id Course ID. Default 0.
@@ -25,10 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type boolean $array     Whether to return array. Default false.
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'learndash_course_progress'.
  *
  * @return string|array The `learndash_course_progress` shortcode output.
  */
-function learndash_course_progress( $atts = array(), $content = '' ) {
+function learndash_course_progress( $atts = array(), $content = '', $shortcode_slug = 'learndash_course_progress' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -54,6 +55,9 @@ function learndash_course_progress( $atts = array(), $content = '' ) {
 	if ( ( empty( $atts['user_id'] ) ) || ( empty( $atts['course_id'] ) ) ) {
 		return '';
 	}
+
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
 	$completed = 0;
 	$total     = 0;
@@ -104,4 +108,4 @@ function learndash_course_progress( $atts = array(), $content = '' ) {
 		)
 	);
 }
-add_shortcode( 'learndash_course_progress', 'learndash_course_progress', 10, 2 );
+add_shortcode( 'learndash_course_progress', 'learndash_course_progress', 10, 3 );

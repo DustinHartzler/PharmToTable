@@ -16,6 +16,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 	 */
 	class LearnDash_Settings_Metabox_Quiz_Results_Options extends LearnDash_Settings_Metabox {
 
+		/**
+		 * Quiz edit
+		 *
+		 * @var object
+		 */
 		protected $quiz_edit = null;
 		/**
 		 * Public constructor for class
@@ -57,6 +62,12 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			parent::__construct();
 		}
 
+		/**
+		 * Save fields to post
+		 *
+		 * @param object $pro_quiz_edit   WpProQuiz_Controller_Quiz instance (not used).
+		 * @param array  $settings_values Settings values.
+		 */
 		public function save_fields_to_post( $pro_quiz_edit, $settings_values = array() ) {
 			foreach ( $settings_values as $setting_key => $setting_value ) {
 				if ( isset( $this->settings_fields_map[ $setting_key ] ) ) {
@@ -589,7 +600,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			return $settings_values;
 		}
-
+		/**
+		 * Get custom results messages
+		 */
 		public function get_custom_result_messages() {
 			$result_text = $this->setting_option_values['resultText'];
 			$html        = '';

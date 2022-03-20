@@ -139,7 +139,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			$this->columns = array(
 				'title'           => array(
 					'label' => sprintf(
-						// translators: placeholder: Essay Question Title
+						// translators: placeholder: Essay Question Title.
 						esc_html_x( 'Essay %s Title', 'placeholder: Essay Question Title', 'learndash' ),
 						learndash_get_custom_label( 'question' )
 					),
@@ -290,10 +290,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @param array  $q_vars    Array of query vars.
 		 * @param string $post_type Post Type being displayed.
-		 * @param array  $query     Main Query.
 		 */
-
-		public function learndash_listing_selector_user_query_args_essays( $q_vars, $selector, $post_type ) {
+		public function learndash_listing_selector_user_query_args_essays( $q_vars, $post_type ) {
 			if ( $post_type === $this->post_type ) {
 				$group_selector = $this->get_selector( 'group_id' );
 				if ( ( isset( $group_selector['selected'] ) ) && ( ! empty( $group_selector['selected'] ) ) ) {
@@ -323,7 +321,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3.4
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -432,7 +430,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3.4
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -591,7 +589,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 								$quiz_score_difference = 1;
 							}
 
-							// First we update the essat post with the new post_status
+							// First we update the essat post with the new post_status.
 							$essay_post->post_status = 'graded';
 							wp_update_post( $essay_post );
 
@@ -599,7 +597,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							$quiz_id     = get_post_meta( $essay_post->ID, 'quiz_id', true );
 							$question_id = get_post_meta( $essay_post->ID, 'question_id', true );
 
-							// Stole the following section ot code from learndash_save_essay_status_metabox_data();
+							// Stole the following section ot code from learndash_save_essay_status_metabox_data().
 							$submitted_essay_data = learndash_get_submitted_essay_data( $quiz_id, $question_id, $essay_post );
 
 							if ( isset( $submitted_essay_data['points_awarded'] ) ) {
@@ -828,32 +826,37 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				if ( ! empty( $quiz_post_id ) ) {
-					$filter_url = add_query_arg( 'quiz_id', $quiz_post_id, $this->get_clean_filter_url() );
+					$quiz_post = get_post( $quiz_post_id );
+					if ( ( $quiz_post ) && ( is_a( $quiz_post, 'WP_Post' ) ) ) {
+						$quiz_title = learndash_format_step_post_title_with_status_label( $quiz_post );
 
-					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $quiz_post_id ) ) . '</a>';
-					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
+						$filter_url = add_query_arg( 'quiz_id', $quiz_post_id, $this->get_clean_filter_url() );
 
-					$course_id = get_post_meta( $post_id, 'course_id', true );
-					if ( current_user_can( 'edit_post', $quiz_post_id ) ) {
-						$edit_url = get_edit_post_link( $quiz_post_id );
+						echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . wp_kses_post( $quiz_title ) . '</a>';
+						$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-						if ( ! empty( $course_id ) ) {
-							$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
+						$course_id = get_post_meta( $post_id, 'course_id', true );
+						if ( current_user_can( 'edit_post', $quiz_post_id ) ) {
+							$edit_url = get_edit_post_link( $quiz_post_id );
+
+							if ( ! empty( $course_id ) ) {
+								$edit_url = add_query_arg( 'course_id', $course_id, $edit_url );
+							}
+
+							$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
 						}
 
-						$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-					}
+						if ( is_post_type_viewable( get_post_type( $quiz_post_id ) ) ) {
+							if ( ! empty( $course_id ) ) {
+								$view_url = learndash_get_step_permalink( $quiz_post_id, $course_id );
+							} else {
+								$view_url = get_permalink( $quiz_post_id );
+							}
 
-					if ( is_post_type_viewable( get_post_type( $quiz_post_id ) ) ) {
-						if ( ! empty( $course_id ) ) {
-							$view_url = learndash_get_step_permalink( $quiz_post_id, $course_id );
-						} else {
-							$view_url = get_permalink( $quiz_post_id );
+							$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 						}
-
-						$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+						echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 					}
-					echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 				}
 			}
 		}
@@ -883,30 +886,35 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				if ( ! empty( $question_post_id ) ) {
-					$filter_url = add_query_arg( 'question_id', $question_post_id, $this->get_clean_filter_url() );
+					$question_post = get_post( $question_post_id );
+					if ( ( $question_post ) && ( is_a( $question_post, 'WP_Post' ) ) ) {
+						$question_title = learndash_format_step_post_title_with_status_label( $question_post );
 
-					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $question_post_id ) ) . '</a>';
-					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
+						$filter_url = add_query_arg( 'question_id', $question_post_id, $this->get_clean_filter_url() );
 
-					$quiz_id = get_post_meta( $question_post_id, 'quiz_id', true );
-					if ( current_user_can( 'edit_post', $question_post_id ) ) {
-						$edit_url = get_edit_post_link( $question_post_id );
+						echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . wp_kses_post( $question_title ) . '</a>';
+						$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-						if ( ! empty( $quiz_id ) ) {
-							$edit_url = add_query_arg( 'quiz_id', $quiz_id, $edit_url );
+						$quiz_id = get_post_meta( $question_post_id, 'quiz_id', true );
+						if ( current_user_can( 'edit_post', $question_post_id ) ) {
+							$edit_url = get_edit_post_link( $question_post_id );
+
+							if ( ! empty( $quiz_id ) ) {
+								$edit_url = add_query_arg( 'quiz_id', $quiz_id, $edit_url );
+							}
+
+							$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
 						}
 
-						$row_actions['ld-post-edit'] = '<a href="' . esc_url( $edit_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'edit' ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-					}
+						if ( is_post_type_viewable( get_post_type( $question_post_id ) ) ) {
+							if ( ! empty( $quiz_id ) ) {
+								$view_url = learndash_get_step_permalink( $question_post_id, $quiz_id );
 
-					if ( is_post_type_viewable( get_post_type( $question_post_id ) ) ) {
-						if ( ! empty( $quiz_id ) ) {
-							$view_url = learndash_get_step_permalink( $question_post_id, $quiz_id );
-
-							$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+								$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
+							}
 						}
+						echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 					}
-					echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 				}
 			}
 		}
@@ -917,7 +925,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars      Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -950,7 +958,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars      Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -978,7 +986,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -1007,7 +1015,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars      Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -1046,7 +1054,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars      Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.

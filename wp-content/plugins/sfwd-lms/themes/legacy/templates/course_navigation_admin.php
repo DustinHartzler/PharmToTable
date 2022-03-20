@@ -25,8 +25,8 @@ if ( ( isset( $course_id ) ) && ( ! empty( $course_id ) ) ) {
 	}
 
 	// Not sure why this is here.
-	//if ( !isset( $course_progress ) )
-	//	$course_progress = array();
+	// if ( !isset( $course_progress ) )
+	// $course_progress = array();
 
 
 	$widget['nonce'] = wp_create_nonce( 'ld_course_navigation_admin_pager_nonce_' . $course_id . '_' . get_current_user_id() );
@@ -42,28 +42,10 @@ if ( ( isset( $course_id ) ) && ( ! empty( $course_id ) ) ) {
 		if ( ( isset( $lessons ) ) && ( ! empty( $lessons ) ) ) {
 
 			foreach ( $lessons as $course_lesson_id => $course_lesson ) {
-				$lesson_meta = get_post_meta( $course_lesson['post']->ID, '_sfwd-lessons', true );
-
-				$current_topic_ids  = '';
-				$lesson_topics_list = learndash_topic_dots( $course_lesson['post']->ID, false, 'array', $user_id, $course_id );
-				/*
-				if ( ! empty( $lesson_topics_list ) ) {
-					$topic_pager_args = array(
-						'course_id' => $course_id,
-						'lesson_id' => $course_lesson['post']->ID
-					);
-					$lesson_topics_list = learndash_process_lesson_topics_pager( $lesson_topics_list, $topic_pager_args );
-				}
-				*/
-
+				$lesson_meta         = get_post_meta( $course_lesson['post']->ID, '_sfwd-lessons', true );
+				$current_topic_ids   = '';
+				$lesson_topics_list  = learndash_topic_dots( $course_lesson['post']->ID, false, 'array', $user_id, $course_id );
 				$load_lesson_quizzes = true;
-				/*
-				if ( isset( $course_pager_results[ $course_lesson['post']->ID ]['pager'] ) ) {
-					if ( $course_pager_results[ $course_lesson['post']->ID ]['pager']['paged'] < $course_pager_results[ $course_lesson['post']->ID ]['pager']['total_pages'] ) {
-						$load_lesson_quizzes = false;
-					}
-				}
-				*/
 
 				if ( true === $load_lesson_quizzes ) {
 					$lesson_quizzes_list = learndash_get_lesson_quiz_list( $course_lesson['post']->ID, $user_id, $course_id );
@@ -223,8 +205,6 @@ if ( ( isset( $course_id ) ) && ( ! empty( $course_id ) ) ) {
 											?>
 												<li class="quiz-item">
 												<?php
-												//if ( ( ( $pagenow == 'profile.php' ) || ( $pagenow == 'user-edit.php' ) ) && ( learndash_is_admin_user( ) ) ) {
-												//if ( ( learndash_is_admin_user( ) ) || ( learndash_is_group_leader_user() ) ) {
 												if ( learndash_show_user_course_complete( $user_id ) ) {
 
 													$user_quiz_progress              = array();
@@ -259,21 +239,6 @@ if ( ( isset( $course_id ) ) && ( ! empty( $course_id ) ) ) {
 									}
 									?>
 										</ul>
-										<?php
-										/*
-										if ( isset( $course_pager_results[ $course_lesson['post']->ID ]['pager'] ) ) {
-											echo SFWD_LMS::get_template(
-												'learndash_pager.php',
-												array(
-													'pager_results' => $course_pager_results[ $course_lesson['post']->ID ]['pager'],
-													'pager_context' => 'course_topics',
-													'href_query_arg' => 'ld-topic-page',
-													'href_val_prefix' => $course_lesson['post']->ID . '-'
-												)
-											);
-										}
-										*/
-										?>
 									</div>
 									<?php
 							}
@@ -303,8 +268,6 @@ if ( ( isset( $course_id ) ) && ( ! empty( $course_id ) ) ) {
 							<div class="list_lessons">
 								<div class="lesson" >
 									<?php
-										//if ( ( ( $pagenow == 'profile.php' ) || ( $pagenow == 'user-edit.php' ) ) && ( learndash_is_admin_user( ) ) ) {
-										//if ( ( learndash_is_admin_user( ) ) || ( learndash_is_group_leader_user() ) ) {
 									if ( learndash_show_user_course_complete( $user_id ) ) {
 
 										$user_quiz_progress              = array();

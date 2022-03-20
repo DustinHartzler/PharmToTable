@@ -69,9 +69,9 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $header_data Array of header data used by the Header Panel React app.
+		 * @param array  $header_data Array of header data used by the Header Panel React app.
 		 * @param string $menu_key The menu key being displayed.
-		 * @param array $menu_items Array of menu/tab items.
+		 * @param array  $menu_items Array of menu/tab items.
 		 *
 		 * @return array $header_data.
 		 */
@@ -426,7 +426,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					<p aria-hidden="true" class="fyi-description">
 					<?php
 					printf(
-						// translators: placeholder: Number of ratings
+						// translators: placeholder: Number of ratings.
 						esc_html( _n( '(based on %s rating)', '(based on %s ratings)', esc_html( $api->num_ratings ), 'learndash' ) ),
 						esc_html( number_format_i18n( $api->num_ratings ) )
 					);
@@ -445,7 +445,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 						$_rating    = $api->num_ratings ? ( $ratecount / $api->num_ratings ) : 0;
 						$aria_label = esc_attr(
 							sprintf(
-								// translators: 1: number of stars (used to determine singular/plural), 2: number of reviews
+								// translators: 1: number of stars (used to determine singular/plural), 2: number of reviews.
 								_n( 'Reviews with %1$d star: %2$s. Opens in a new window.', 'Reviews with %1$d stars: %2$s. Opens in a new window.', $key, 'learndash' ),
 								$key,
 								number_format_i18n( $ratecount ),
@@ -459,7 +459,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 									<?php
 									printf(
 										esc_html(
-											// translators: placeholder: Number of stars
+											// translators: placeholder: Number of stars.
 											_n( '%d star', '%d stars', $key, 'learndash' )
 										),
 										esc_html( $key )

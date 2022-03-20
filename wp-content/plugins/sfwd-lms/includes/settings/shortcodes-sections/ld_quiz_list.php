@@ -16,8 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
-	class LearnDash_Shortcodes_Section_ld_quiz_list extends LearnDash_Shortcodes_Section {
+	class LearnDash_Shortcodes_Section_ld_quiz_list extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 
 		/**
 		 * Public constructor for class.

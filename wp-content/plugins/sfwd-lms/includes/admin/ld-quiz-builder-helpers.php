@@ -144,14 +144,14 @@ function get_quiz_data( $data ) {
 		'essay'             => array(
 			esc_html__( 'How should the user submit their answer?', 'learndash' ),
 			sprintf(
-				// translators: placeholders: question, course
+				// translators: placeholders: question, course.
 				esc_html_x( 'This is a %1$s that can be graded and potentially prevent a user from progressing to the next step of the %2$s.', 'placeholders: question, course', 'learndash' ),
 				\learndash_get_custom_label_lower( 'question' ),
 				\learndash_get_custom_label_lower( 'course' )
 			),
 			esc_html__( 'The user can only progress if the essay is marked as "Graded" and if the user has enough points to move on.', 'learndash' ),
 			sprintf(
-				// translators: placeholders: question, quiz
+				// translators: placeholders: question, quiz.
 				esc_html_x( 'How should the answer to this %1$s be marked and graded upon %2$s submission?', 'placeholders: question, quiz', 'learndash' ),
 				\learndash_get_custom_label_lower( 'question' ),
 				\learndash_get_custom_label_lower( 'quiz' )

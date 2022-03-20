@@ -377,7 +377,11 @@ class WpProQuiz_Controller_Admin {
 		$_POST['results']['comp']['points']           = intval( $total_awarded_points );
 		$_POST['results']['comp']['correctQuestions'] = intval( $total_correct );
 
-		$comp_result = round( ( $total_awarded_points / $total_possible_points ) * 100, 2 );
+		if ( ! empty( $total_possible_points ) ) {
+			$comp_result = round( ( $total_awarded_points / $total_possible_points ) * 100, 2 );
+		} else {
+			$comp_result = 0.00;
+		}
 		if ( floatval( $comp_result ) !== floatval( $_POST['results']['comp']['result'] ) ) {
 			learndash_quiz_debug_log_message( 'invalid or mismatched [comp][result] percentage sent [' . floatval( $_POST['results']['comp']['result'] ) . ']' );
 			learndash_quiz_debug_log_message( 'Recalculated result value [' . floatval( $comp_result ) . '] will be used.' );
@@ -502,7 +506,7 @@ class WpProQuiz_Controller_Admin {
 				$c = new WpProQuiz_Controller_Toplist();
 				break;
 			case 'wpq_support':
-				$c = new WpProQuiz_Controller_WpqSupport();
+				//$c = new WpProQuiz_Controller_WpqSupport();
 				break;
 		}
 

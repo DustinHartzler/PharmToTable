@@ -1,7 +1,4 @@
 <?php
-/*
-WordPress language functions
-*/
 /**
  * LearnDash Admin Translations handler.
  * This class connects to a remote GlotPress server to retreive needed translations for LearnDash core and related add-ons.
@@ -119,6 +116,8 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 					return str_replace( $abspath_tmp, '/', trailingslashit( self::$project_slugs[ $project_slug ] ) );
 				}
 			}
+
+			return '';
 		}
 
 		/**
@@ -134,6 +133,8 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 					return true;
 				}
 			}
+
+			return false;
 		}
 
 		/**
@@ -147,6 +148,8 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 			if ( isset( $ld_translations['translation_sets'][ $project_slug ] ) ) {
 				return true;
 			}
+
+			return false;
 		}
 
 		/** Return available translations for project slug.
@@ -167,6 +170,8 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 				}
 				return $ld_translations['translation_sets'][ $project_slug ];
 			}
+
+			return [];
 		}
 
 		/**
@@ -199,6 +204,8 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 
 				return $action_url;
 			}
+
+			return '';
 		}
 
 		/**
@@ -257,6 +264,11 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 			return $reply_data;
 		}
 
+		/**
+		 * Download .pot file
+		 *
+		 * @param string $project_slug Translation project slug.
+		 */
 		public static function download_pot_file( $project_slug = '' ) {
 			$reply_data = array();
 
@@ -280,6 +292,12 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 			}
 		}
 
+		/**
+		 * Download .po file
+		 *
+		 * @param string $project_slug Translation project slug.
+		 * @param string $locale_slug  Locale slug.
+		 */
 		public static function download_po_file( $project_slug = '', $locale_slug = '' ) {
 			$reply_data = array();
 
@@ -508,12 +526,15 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 
 			<h4><?php esc_html_e( 'Installed Translations', 'learndash' ); ?></h4>
 			<table class="ld-installed-translations wp-list-table widefat fixed striped posts">
+			<thead>
 				<tr>
 					<th class="column-locale"><?php esc_html_e( 'Locale', 'learndash' ); ?></th>
 					<th class="column-title"><?php esc_html_e( 'Name / Native', 'learndash' ); ?></th>
 					<th class="column-actions-local"><?php esc_html_e( 'Download', 'learndash' ); ?></th>
 					<th class="column-action-remote"><?php esc_html_e( 'Actions', 'learndash' ); ?></th>
 				</tr>
+			</thead>
+			<tbody>
 				<?php
 				if ( ( is_array( $this->available_translations ) ) && ( ! empty( $this->available_translations ) ) && ( is_array( $this->installed_translations ) ) && ( ! empty( $this->installed_translations ) ) ) {
 					foreach ( $this->available_translations as $idx => $translation_set ) {
@@ -546,6 +567,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 						<?php
 				}
 				?>
+			</tbody>
 			</table>
 			<p>
 			<?php
@@ -630,7 +652,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 			}
 
 			// Taken from options-general.php.
-			if ( ! is_multisite() && defined( 'WPLANG' ) && '' !== WPLANG && 'en_US' !== WPLANG && ! in_array( WPLANG, $languages, true ) ) {
+			if ( ! is_multisite() && defined( 'WPLANG' ) && '' !== WPLANG && 'en_US' !== WPLANG && ! in_array( WPLANG, $wp_languages, true ) ) {
 				$wp_languages[] = WPLANG;
 			}
 
@@ -715,6 +737,8 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 
 		/**
 		 * Get installed trnalsations.
+		 *
+		 * @param string $project_slug Translation project slug.
 		 */
 		public static function get_installed_translations( $project_slug = '' ) {
 			$translation_files = array();
@@ -750,10 +774,18 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 			return $translation_files;
 		}
 
+		/**
+		 * Log debug message
+		 *
+		 * @param string $message Message.
+		 */
 		public static function log_debug_message( $message = '' ) {
 			self::$debug_log_array[] = $message;
 		}
 
+		/**
+		 * Show debug log output
+		 */
 		public static function show_debug_log_output() {
 			if ( ! empty( self::$debug_log_array ) ) {
 				foreach ( self::$debug_log_array as $message ) {
@@ -761,6 +793,6 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 				}
 			}
 		}
-		// End of functions
+		// End of functions.
 	}
 }

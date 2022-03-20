@@ -68,7 +68,7 @@ function learndash_register_essay_post_type() {
 
 	$args = array(
 		'label'               => esc_html__( 'sfwd-essays', 'learndash' ),
-		// translators: quiz, question
+		// translators: quiz, question.
 		'description'         => sprintf( esc_html_x( 'Submitted essays via a %1$s %2$s.', 'placeholder: quiz, question', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ), learndash_get_custom_label_lower( 'question' ) ),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'editor', 'comments', 'author' ),
@@ -80,7 +80,6 @@ function learndash_register_essay_post_type() {
 		'query_var'           => true,
 		'rewrite'             => array( 'slug' => 'essay' ),
 		'menu_position'       => 5,
-		'show_in_admin_bar'   => false,
 		'show_in_nav_menus'   => false,
 		'can_export'          => true,
 		'has_archive'         => false,
@@ -167,7 +166,7 @@ function learndash_map_metacap_essays( $caps, $cap, $user_id, $args = array() ) 
 	/* If editing, deleting, or reading a essays, get the post and post type object. */
 	if ( 'edit_essay' == $cap || 'delete_essay' == $cap || 'read_essay' == $cap ) {
 
-		// Ensure $args is valid
+		// Ensure $args is valid.
 		if ( ( ! is_array( $args ) ) || ( ! isset( $args[0] ) ) ) {
 			return $caps;
 		}
@@ -320,7 +319,7 @@ function learndash_essay_permissions() {
 	}
 }
 
-add_action( 'wp', 'learndash_essay_permissions' ); //, 0, 3 );
+add_action( 'wp', 'learndash_essay_permissions' );
 
 /**
  * Adds a new essay response.
@@ -343,7 +342,7 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 
 	$user = wp_get_current_user();
 
-	// essay args defaults
+	// essay args defaults.
 	$essay_args = array(
 		'post_title'  => $this_question->getTitle(),
 		'post_status' => 'draft',
@@ -354,7 +353,7 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 	$essay_data = $this_question->getAnswerData();
 	$essay_data = array_shift( $essay_data );
 
-	// switch on grading progression in order to set post status
+	// switch on grading progression in order to set post status.
 	switch ( $essay_data->getGradingProgression() ) {
 		case '':
 		case 'not-graded-none':
@@ -371,7 +370,7 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 	$essay_args['post_status'] = 'draft';
 
 	// switch on graded type to handle the response
-	// used a switch in case we add more types
+	// used a switch in case we add more types.
 	switch ( $essay_data->getGradedType() ) {
 		case 'text':
 			$essay_args['post_content'] = wp_kses(
@@ -467,7 +466,7 @@ function learndash_get_submitted_essay_data( $quiz_id, $question_id, $essay ) {
 
 		foreach ( $users_quiz_data as $quiz_data ) {
 			// We check for a match on the quiz time from the essay postmeta first.
-			// If the essay_quiz_time is not empty and does NOT match then continue;
+			// If the essay_quiz_time is not empty and does NOT match then continue.
 			if ( ( absint( $essay_quiz_time ) ) && ( isset( $quiz_data['time'] ) ) && ( absint( $essay_quiz_time ) !== absint( $quiz_data['time'] ) ) ) {
 				continue;
 			}
@@ -511,7 +510,7 @@ function learndash_update_submitted_essay_data( $quiz_id, $question_id, $essay, 
 
 	foreach ( $users_quiz_data as $quiz_key => $quiz_data ) {
 		// We check for a match on the quiz time from the essay postmeta first.
-		// If the essay_quiz_time is not empty and does NOT match then continue;
+		// If the essay_quiz_time is not empty and does NOT match then continue.
 		if ( ( absint( $essay_quiz_time ) ) && ( isset( $quiz_data['time'] ) ) && ( absint( $essay_quiz_time ) !== absint( $quiz_data['time'] ) ) ) {
 			continue;
 		}
@@ -570,7 +569,7 @@ function learndash_update_quiz_data( $quiz_id, $question_id, $updated_scoring, $
 	foreach ( $users_quiz_data as $quiz_key => $quiz_data ) {
 
 		// We check for a match on the quiz time from the essay postmeta first.
-		// If the essay_quiz_time is not empty and does NOT match then continue;
+		// If the essay_quiz_time is not empty and does NOT match then continue.
 		if ( ( absint( $essay_quiz_time ) ) && ( isset( $quiz_data['time'] ) ) && ( absint( $essay_quiz_time ) !== absint( $quiz_data['time'] ) ) ) {
 			continue;
 		}
@@ -585,17 +584,17 @@ function learndash_update_quiz_data( $quiz_id, $question_id, $updated_scoring, $
 
 		$affected_quiz_keys[] = $quiz_key;
 
-		// update total score
+		// update total score.
 		$users_quiz_data[ $quiz_key ]['score'] = $users_quiz_data[ $quiz_key ]['score'] + $updated_scoring['score_difference'];
 
-		// update total points
+		// update total points.
 		$users_quiz_data[ $quiz_key ]['points'] = $users_quiz_data[ $quiz_key ]['points'] + $updated_scoring['points_awarded_difference'];
 
-		// update total score percentage
+		// update total score percentage.
 		$updated_percentage                         = ( $users_quiz_data[ $quiz_key ]['points'] / $users_quiz_data[ $quiz_key ]['total_points'] ) * 100;
 		$users_quiz_data[ $quiz_key ]['percentage'] = round( $updated_percentage, 2 );
 
-		// update passing score
+		// update passing score.
 		$quizmeta                             = get_post_meta( $quiz_data['quiz'], '_sfwd-quiz', true );
 		$passingpercentage                    = intVal( $quizmeta['sfwd-quiz_passingpercentage'] );
 		$users_quiz_data[ $quiz_key ]['pass'] = ( $users_quiz_data[ $quiz_key ]['percentage'] >= $passingpercentage ) ? 1 : 0;
@@ -660,7 +659,7 @@ function learndash_update_quiz_activity( $user_id = 0, $quiz_data = array() ) {
 
 		$quiz_data_meta = $quiz_data;
 
-		// Remove many fields that we either don't need or are duplicate of the main table columns
+		// Remove many fields that we either don't need or are duplicate of the main table columns.
 		unset( $quiz_data_meta['quiz'] );
 		unset( $quiz_data_meta['pro_quizid'] );
 		unset( $quiz_data_meta['time'] );
@@ -848,25 +847,25 @@ add_action( 'wp_ajax_nopriv_learndash_upload_essay', 'learndash_upload_essay' );
 function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 	if ( is_array( $uploadfiles ) ) {
 
-		// look only for uploded files
+		// look only for uploded files.
 		if ( 0 == $uploadfiles['error'] ) {
 
 			$filetmp = $uploadfiles['tmp_name'];
 
-			//clean filename
+			// clean filename.
 			$filename = learndash_clean_filename( $uploadfiles['name'] );
 
-			//extract extension
+			// extract extension.
 			if ( ! function_exists( 'wp_get_current_user' ) ) {
 				include ABSPATH . 'wp-includes/pluggable.php';
 			}
 
-			//current user
+			// current user.
 			$user = get_current_user_id();
 
 			$limit_file_exts = learndash_get_allowed_upload_mime_extensions_for_post( $question_id );
 
-			// get file info
+			// get file info.
 			// @fixme: wp checks the file extension....
 			$filetype = wp_check_filetype( basename( $filename ), $limit_file_exts );
 			if ( ( empty( $filetype ) ) || ( empty( $filetype['ext'] ) ) || ( empty( $filetype['type'] ) ) || ( ! $limit_file_exts[ strtolower( $filetype['ext'] ) ] ) ) {
@@ -907,7 +906,7 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 				}
 			}
 
-			// Add an index.php file to prevent directory browesing
+			// Add an index.php file to prevent directory browesing.
 			$_index = trailingslashit( $upload_dir_path ) . 'index.php';
 			if ( ! file_exists( $_index ) ) {
 				file_put_contents( $_index, '//LearnDash is THE Best LMS' );
@@ -924,9 +923,9 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 
 			while ( file_exists( $upload_dir_path . '/' . $filename ) ) {
 				$i++;
-				//$filename = sprintf( 'question_%d_%s_%d.%s', $question_id, $filetitle, $i, $filetype['ext'] );
+				// $filename = sprintf( 'question_%d_%s_%d.%s', $question_id, $filetitle, $i, $filetype['ext'] );
 				/** This filter is documented in includes/import/class-ld-import-quiz-statistics.php */
-				//$filename = apply_filters( 'learndash_essay_upload_filename_dup', $filename, $question_id, $filetitle, $i, $filetype['ext'] );
+				// $filename = apply_filters( 'learndash_essay_upload_filename_dup', $filename, $question_id, $filetitle, $i, $filetype['ext'] );
 				$filename = $file_title . '_' . $i . '.' . $file_ext;
 			}
 
@@ -965,6 +964,7 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 			return $file_desc;
 		}
 	}
+	return array();
 }
 
 

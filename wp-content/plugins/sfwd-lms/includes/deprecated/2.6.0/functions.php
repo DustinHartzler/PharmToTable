@@ -35,7 +35,11 @@ if ( ! function_exists( 'ld_course_access_update' ) ) {
 }
 
 if ( ( ! class_exists( 'Learndash_Admin_Settings_Data_Upgrades' ) ) && ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) ) {
+	/**
+	 * Deprecated Class for admin settings data upgrades
+	 */
 	class Learndash_Admin_Settings_Data_Upgrades {
+		// phpcs:ignore Squiz.Commenting.FunctionComment
 		public static function get_instance( $instance_key = '' ) {
 			if ( function_exists( '_deprecated_function' ) ) {
 				_deprecated_function( 'Learndash_Admin_Settings_Data_Upgrades::get_instance()', '2.6.0', 'Learndash_Admin_Data_Upgrades::get_instance()' );

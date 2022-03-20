@@ -1,12 +1,8 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
- * LearnDash Import CPT
+ * LearnDash Import Quiz CPT
  *
- * This file contains functions to handle import of the LearnDash CPT Topic
+ * This file contains functions to handle import of the LearnDash Quiz CPT
  *
  * @package LearnDash
  * @subpackage LearnDash
@@ -18,27 +14,72 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( ! class_exists( 'LearnDash_Import_Quiz' ) ) && ( class_exists( 'LearnDash_Import_Post' ) ) ) {
+	/**
+	 * Class to import quizzes
+	 */
 	class LearnDash_Import_Quiz extends LearnDash_Import_Post {
+		/**
+		 * Version
+		 *
+		 * @var string Version.
+		 */
 		private $version = '1.0';
 
+		/**
+		 * Destination Post Type
+		 *
+		 * @var string $dest_post_type
+		 */
 		protected $dest_post_type   = 'sfwd-quiz';
+
+		/**
+		 * Source Post Type
+		 *
+		 * @var string $source_post_type
+		 */
 		protected $source_post_type = 'sfwd-quiz';
 
+		/**
+		 * Constructor
+		 */
 		public function __construct() {
 		}
 
+		/**
+		 * Duplicate post
+		 *
+		 * @param integer $source_post_id Post ID to copy.
+		 * @param boolean $force_copy     Whether to force the copy. Default false.
+		 *
+		 * @return WP_Post
+		 */
 		public function duplicate_post( $source_post_id = 0, $force_copy = false ) {
 			$new_post = parent::duplicate_post( $source_post_id, $force_copy );
 
 			return $new_post;
 		}
 
+		/**
+		 * Duplicate Post's taxonomies
+		 *
+		 * @param WP_Term $source_term    WP_Term to duplicate.
+		 * @param boolean $create_parents Whether to create parent taxonomies. Default false.
+		 *
+		 * @return WP_Term
+		 */
 		public function duplicate_post_tax_term( $source_term, $create_parents = false ) {
 			$new_term = parent::duplicate_post( $source_term, $create_parents );
 
 			return $new_term;
 		}
 
+		/**
+		 * Get all quiz questions
+		 *
+		 * @param int $ld_quiz_id Quiz ID.
+		 *
+		 * @return array
+		 */
 		public function fetchAllQuizQuestions( $ld_quiz_id = 0 ) {
 			if ( ! empty( $ld_quiz_id ) ) {
 				$ld_pro_quiz_id = get_post_meta( $ld_quiz_id, 'quiz_pro_id', true );
@@ -60,15 +101,28 @@ if ( ( ! class_exists( 'LearnDash_Import_Quiz' ) ) && ( class_exists( 'LearnDash
 					}
 				}
 			}
+
+			return array();
 		}
 
-
+		/**
+		 * Get quiz set
+		 *
+		 * @return array
+		 */
 		public function startQuizSet() {
 			$pro_quiz_import = new WpProQuiz_Model_Quiz();
 
 			return $pro_quiz_import->get_object_as_array();
 		}
 
+		/**
+		 * Save quiz set
+		 *
+		 * @param array $quiz_data Quiz data.
+		 *
+		 * @return int
+		 */
 		public function saveQuizSet( $quiz_data = array() ) {
 			if ( ! empty( $quiz_data ) ) {
 
@@ -82,8 +136,10 @@ if ( ( ! class_exists( 'LearnDash_Import_Quiz' ) ) && ( class_exists( 'LearnDash
 
 				return $quiz_id;
 			}
+
+			return null;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

@@ -171,7 +171,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @since 3.0.0
 		 *
 		 * @param array   $row_actions Existing Row actions for course.
-		 * @param WP_Post $course_post Course Post object for current row.
+		 * @param WP_Post $post Course Post object for current row.
 		 *
 		 * @return array $row_actions
 		 */
@@ -248,7 +248,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.4.2
 		 *
-		 * @param  object $q_vars Query vars used for the table listing
+		 * @param  object $q_vars Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.

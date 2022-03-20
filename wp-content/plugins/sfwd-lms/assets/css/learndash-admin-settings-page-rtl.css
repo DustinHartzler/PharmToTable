@@ -1230,19 +1230,21 @@ Quiz Edit Result Text lists
   font-weight: bold;
 }
 
-
-.sfwd_options .ld-settings-info-banner {
+/**
+Sections/Settings Info banners.
+*/
+.ld_settings_postbox .ld-settings-info-banner {
   display: block;
   padding: 5px 10px 5px 10px;
   margin: 5px 0;
 }
 
-.sfwd_options .ld-settings-info-banner p::before {
+.ld_settings_postbox .ld-settings-info-banner p::before {
   font: normal 20px/1 dashicons;
   float: right;
 }
 
-.sfwd_options .ld-settings-info-banner p {
+.ld_settings_postbox .ld-settings-info-banner p {
   margin: .5em 0;
   padding: 0;
 	font-size: 13px;
@@ -1252,23 +1254,49 @@ Quiz Edit Result Text lists
 	vertical-align: top;
 }
 
-.sfwd_options .ld-settings-info-banner.ld-settings-info-banner-alert {
+.ld_settings_postbox .ld-settings-info-banner.ld-settings-info-banner-alert {
   background-color: #fbeaea;
   border-right-color: #dc3232;
   border-right-width: 2px;
   border-right-style: solid;
 }
 
-.sfwd_options .ld-settings-info-banner.ld-settings-info-banner-alert p::before {
+.ld_settings_postbox .ld-settings-info-banner.ld-settings-info-banner-alert p::before {
 	color: #dc3232;
   content: "\f534";
   margin-left: 6px;
 }
 
-.sfwd_options .ld-settings-info-banner.ld-settings-info-banner-success {
+.ld_settings_postbox .ld-settings-info-banner.ld-settings-info-banner-success {
   border-color: #46b450;
   border-width: 0 2px 1px 0;
   border-style: solid;
+}
+
+/* LearnDash Settings Sub menu */
+ul.learndash-settings-sub {
+  float: none;
+}
+
+ul.learndash-settings-sub li.learndash-settings-sub-current a {
+  font-weight: bold;
+}
+
+/* LearnDash Settings Table general styles */
+table.learndash-settings-table th {
+  font-weight: bold;
+}
+
+table.learndash-settings-table td.col-valign-middle {
+  vertical-align: middle;
+}
+
+table.learndash-settings-table-sortable .ui-sortable-helper {
+    display: table;
+}
+
+table.learndash-settings-table-sortable td.col-name-move {
+  cursor: grab;
 }
 
 /*
@@ -1301,6 +1329,7 @@ Quiz Edit Result Text lists
 .edit-post-meta-boxes-area #poststuff #learndash_course_builder .postbox-header .hndle,
 .edit-post-meta-boxes-area #poststuff #learndash_quiz_builder .postbox-header .hndle {
 	border-bottom: none;
+	padding: 5px 12px;
 	width: auto;
 }
 
@@ -1332,4 +1361,30 @@ body[data-active-tab="learndash_quiz_builder"] .postbox-header .handle-actions .
 #certificate-shortcodes.wrap .inside .dashicons,
 #certificate-shortcodes.wrap .inside .dashicons-before::before {
   text-decoration: none;
+}
+
+/* Stripe Payments Settings */
+
+.sfwd_options .learndash-stripe-connect, .notice.connect-stripe .learndash-stripe-connect {
+	align-items: center;
+	background: #6772e5;
+	border-radius: 5px;
+	color: #fff;
+	display: flex;
+	font-size: 16px;
+	justify-content: center;
+	letter-spacing: .6px;
+	padding: 6px 24px;
+	text-decoration: none;
+	transition: all .3s ease;
+	width: 200px;
+}
+
+.sfwd_options .learndash-stripe-connect:active, .learndash-stripe-connect:focus, .learndash-stripe-connect:hover, .notice.connect-stripe .learndash-stripe-connect:active, .notice.connect-stripe .learndash-stripe-connect:focus, .notice.connect-stripe .learndash-stripe-connect:hover {
+	background: #3f4ddf;
+	color: #fff;
+}
+
+.sfwd_options .learndash-stripe-connect .stripe-logo, .notice.connect-stripe .learndash-stripe-connect .stripe-logo {
+	padding: 2px 0 0 10px;
 }

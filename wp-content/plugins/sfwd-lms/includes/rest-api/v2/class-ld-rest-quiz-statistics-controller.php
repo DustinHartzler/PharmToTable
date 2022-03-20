@@ -1184,7 +1184,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 			$stat_response->id   = $this->current()->getStatisticRefId();
 			$stat_response->quiz = $this->getQuizId();
 			$stat_response->user = $this->current()->getUserId();
-			$stat_response->date = $this->prepare_date_response( date( 'Y-m-d h:i:s', $this->current()->getCreateTime() ) );
+			$stat_response->date = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $this->current()->getCreateTime() ) );
 			//$stat_response->date              = mysql_to_rfc3339( wp_date( 'Y-m-d H:i:s', $this->current()->getCreateTime() ) ); //phpcs:ignore PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 			$stat_response->answers_correct   = $this->get_count( $stats, 'getCorrectCount' );
 			$stat_response->answers_incorrect = $this->get_count( $stats, 'getIncorrectCount' );

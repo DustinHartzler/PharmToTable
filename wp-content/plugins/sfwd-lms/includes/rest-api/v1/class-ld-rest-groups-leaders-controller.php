@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Groups_Leaders_Controller_V1 extends LD_REST_Users_Controller_V1 {
+	class LD_REST_Groups_Leaders_Controller_V1 extends LD_REST_Users_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Supported Collection Parameters.
@@ -105,7 +104,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 						'args'                => array(
 							'user_ids' => array(
 								'description' => sprintf(
-									// translators: placeholders: Group Leader, Group
+									// translators: placeholders: Group Leader, Group.
 									esc_html_x(
 										'%1$s User IDs to enroll into %2$s',
 										'placeholders: group leader, group',
@@ -129,7 +128,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 						'args'                => array(
 							'user_ids' => array(
 								'description' => sprintf(
-									// translators: placeholders: Group Leader, Group
+									// translators: placeholders: Group Leader, Group.
 									esc_html_x(
 										'%1$s User IDs to remove from %2$s',
 										'placeholders: group leader, group',
@@ -238,7 +237,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -255,7 +254,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group leader
+						// translators: placeholder: group leader.
 						esc_html_x(
 							'Missing %s User IDs.',
 							'placeholder: group leader',
@@ -275,10 +274,10 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -297,7 +296,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -314,7 +313,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group leader
+						// translators: placeholder: group leader.
 						esc_html_x(
 							'Missing %s User IDs.',
 							'placeholder: group leader',
@@ -334,10 +333,10 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -357,7 +356,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -515,7 +514,6 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 			$query_params['fields']  = array(
 				'description' => __( 'Returned values.', 'learndash' ),
 				'type'        => 'string',
-				'type'        => 'string',
 				'default'     => 'ids',
 				'enum'        => array(
 					'ids',
@@ -531,6 +529,6 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

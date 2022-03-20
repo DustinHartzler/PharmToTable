@@ -69,6 +69,8 @@ class WpProQuiz_Plugin_BpAchievementsV2 {
  * Handles the pro quiz finished dpa action.
  */
 function dpa_handle_action_wp_pro_quiz_quiz_finished() {
-	$func_get_args = func_get_args();
-	dpa_handle_action( 'wp_pro_quiz_quiz_finished', $func_get_args );
+	if ( function_exists( 'dpa_handle_action' ) ) {
+		$func_get_args = func_get_args();
+		dpa_handle_action( 'wp_pro_quiz_quiz_finished', $func_get_args );
+	}
 }

@@ -351,7 +351,7 @@ function learndash_show_user_course_complete( $user_id = 0 ) {
 		}
 	}
 
-	// See example snippet of this filter https://developers.learndash.com/hook/learndash_show_user_course_complete_options/
+	// See example snippet of this filter https://developers.learndash.com/hook/learndash_show_user_course_complete_options/.
 	/**
 	 * Filters the status of whether the course is completed for a user or not.
 	 *
@@ -395,215 +395,261 @@ function learndash_save_user_course_complete( $user_id = 0 ) {
 			if ( wp_verify_nonce( $_POST[ 'user_progress-' . $user_id . '-nonce' ], 'user_progress-' . $user_id ) ) {
 				$user_progress = (array) json_decode( stripslashes( $_POST['user_progress'][ $user_id ] ) );
 				$user_progress = json_decode( wp_json_encode( $user_progress ), true );
-
-				$processed_course_ids = array();
-
-				if ( ( isset( $user_progress['course'] ) ) && ( ! empty( $user_progress['course'] ) ) ) {
-
-					$usermeta        = get_user_meta( $user_id, '_sfwd-course_progress', true );
-					$course_progress = empty( $usermeta ) ? array() : $usermeta;
-
-					$course_changed = false; // Simple flag to let us know we changed the quiz data so we can save it back to user meta.
-
-					foreach ( $user_progress['course'] as $course_id => $course_data_new ) {
-
-						$processed_course_ids[ intval( $course_id ) ] = intval( $course_id );
-
-						if ( isset( $course_progress[ $course_id ] ) ) {
-							$course_data_old = $course_progress[ $course_id ];
-						} else {
-							$course_data_old = array();
-						}
-
-						$course_data_new = learndash_course_item_to_activity_sync( $user_id, $course_id, $course_data_new, $course_data_old );
-
-						$course_progress[ $course_id ] = $course_data_new;
-
-						$course_changed = true;
-					}
-
-					if ( true === $course_changed ) {
-						update_user_meta( $user_id, '_sfwd-course_progress', $course_progress );
-					}
-				}
-
-				if ( ( isset( $user_progress['quiz'] ) ) && ( ! empty( $user_progress['quiz'] ) ) ) {
-
-					$usermeta       = get_user_meta( $user_id, '_sfwd-quizzes', true );
-					$quizz_progress = empty( $usermeta ) ? array() : $usermeta;
-					$quiz_changed   = false; // Simple flag to let us know we changed the quiz data so we can save it back to user meta.
-
-					foreach ( $user_progress['quiz'] as $course_id => $course_quiz_set ) {
-						foreach ( $course_quiz_set as  $quiz_id => $quiz_new_status ) {
-							$quiz_meta = get_post_meta( $quiz_id, '_sfwd-quiz', true );
-
-							if ( ! empty( $quiz_meta ) ) {
-								$quiz_old_status = ! learndash_is_quiz_notcomplete( $user_id, array( $quiz_id => 1 ), false, $course_id );
-
-								// For Quiz if the admin marks a qiz complete we don't attempt to update an existing attempt for the user quiz.
-								// Instead we add a new entry. LD doesn't care as it will take the complete one for calculations where needed.
-								if ( (bool) true === (bool) $quiz_new_status ) {
-									if ( (bool) true !== (bool) $quiz_old_status ) {
-
-										if ( isset( $quiz_meta['sfwd-quiz_lesson'] ) ) {
-											$lesson_id = absint( $quiz_meta['sfwd-quiz_lesson'] );
-										} else {
-											$lesson_id = 0;
-										}
-
-										if ( isset( $quiz_meta['sfwd-quiz_topic'] ) ) {
-											$topic_id = absint( $quiz_meta['sfwd-quiz_topic'] );
-										} else {
-											$topic_id = 0;
-										}
-
-										// If the admin is marking the quiz complete AND the quiz is NOT already complete...
-										// Then we add the minimal quiz data to the user profile.
-										$quizdata = array(
-											'quiz'         => $quiz_id,
-											'score'        => 0,
-											'count'        => 0,
-											'question_show_count' => 0,
-											'pass'         => true,
-											'rank'         => '-',
-											'time'         => time(),
-											'pro_quizid'   => absint( $quiz_meta['sfwd-quiz_quiz_pro'] ),
-											'course'       => $course_id,
-											'lesson'       => $lesson_id,
-											'topic'        => $topic_id,
-											'points'       => 0,
-											'total_points' => 0,
-											'percentage'   => 0,
-											'timespent'    => 0,
-											'has_graded'   => false,
-											'statistic_ref_id' => 0,
-											'm_edit_by'    => get_current_user_id(), // Manual Edit By ID.
-											'm_edit_time'  => time(), // Manual Edit timestamp.
-										);
-
-										$quizz_progress[] = $quizdata;
-
-										if ( true === $quizdata['pass'] ) {
-											$quizdata_pass = true;
-										} else {
-											$quizdata_pass = false;
-										}
-
-										// Then we add the quiz entry to the activity database.
-										learndash_update_user_activity(
-											array(
-												'course_id' => $course_id,
-												'user_id' => $user_id,
-												'post_id' => $quiz_id,
-												'activity_type' => 'quiz',
-												'activity_action' => 'insert',
-												'activity_status' => $quizdata_pass,
-												'activity_started' => $quizdata['time'],
-												'activity_completed' => $quizdata['time'],
-												'activity_meta' => $quizdata,
-											)
-										);
-
-										$quiz_changed = true;
-
-										if ( ( isset( $quizdata['course'] ) ) && ( ! empty( $quizdata['course'] ) ) ) {
-											$quizdata['course'] = get_post( $quizdata['course'] );
-										}
-
-										if ( ( isset( $quizdata['lesson'] ) ) && ( ! empty( $quizdata['lesson'] ) ) ) {
-											$quizdata['lesson'] = get_post( $quizdata['lesson'] );
-										}
-
-										if ( ( isset( $quizdata['topic'] ) ) && ( ! empty( $quizdata['topic'] ) ) ) {
-											$quizdata['topic'] = get_post( $quizdata['topic'] );
-										}
-
-										/**
-										 * Fires after the quiz is marked as complete.
-										 *
-										 * @param arrat   $quizdata An array of quiz data.
-										 * @param WP_User $user     WP_User object.
-										 */
-										do_action( 'learndash_quiz_completed', $quizdata, get_user_by( 'ID', $user_id ) );
-
-									}
-								} elseif ( true !== $quiz_new_status ) {
-									// If we are unsetting a quiz ( changing from complete to incomplete). We need to do some complicated things...
-									if ( true === $quiz_old_status ) {
-
-										if ( ! empty( $quizz_progress ) ) {
-											foreach ( $quizz_progress as $quiz_idx => $quiz_item ) {
-
-												if ( ( $quiz_item['quiz'] == $quiz_id ) && ( true === $quiz_item['pass'] ) ) {
-													$quizz_progress[ $quiz_idx ]['pass'] = false;
-
-													// We need to update the activity database records for this quiz_id
-													$activity_query_args = array(
-														'post_ids'      => $quiz_id,
-														'user_ids'      => $user_id,
-														'activity_type' => 'quiz',
-													);
-													$quiz_activity       = learndash_reports_get_activity( $activity_query_args );
-													if ( ( isset( $quiz_activity['results'] ) ) && ( ! empty( $quiz_activity['results'] ) ) ) {
-														foreach ( $quiz_activity['results'] as $result ) {
-															if ( ( isset( $result->activity_meta['pass'] ) ) && ( true === $result->activity_meta['pass'] ) ) {
-
-																// If the activity meta 'pass' element is set to true we want to update it to false.
-																learndash_update_user_activity_meta( $result->activity_id, 'pass', false );
-
-																// Also we need to update the 'activity_status' for this record
-																learndash_update_user_activity(
-																	array(
-																		'activity_id' => $result->activity_id,
-																		'course_id' => $course_id,
-																		'user_id' => $user_id,
-																		'post_id' => $quiz_id,
-																		'activity_type' => 'quiz',
-																		'activity_action' => 'update',
-																		'activity_status' => false,
-																	)
-																);
-															}
-														}
-													}
-
-													$quiz_changed = true;
-												}
-
-												/**
-												 * Remove the quiz lock.
-												 *
-												 * @since 2.3.1
-												 */
-												if ( ( isset( $quiz_item['pro_quizid'] ) ) && ( ! empty( $quiz_item['pro_quizid'] ) ) ) {
-													learndash_remove_user_quiz_locks( $user_id, $quiz_item['quiz'] );
-												}
-											}
-										}
-									}
-								}
-
-								$processed_course_ids[ intval( $course_id ) ] = intval( $course_id );
-							}
-						}
-					}
-
-					if ( true === $quiz_changed ) {
-						update_user_meta( $user_id, '_sfwd-quizzes', $quizz_progress );
-					}
-				}
-
-				if ( ! empty( $processed_course_ids ) ) {
-					foreach ( array_unique( $processed_course_ids ) as $course_id ) {
-						learndash_process_mark_complete( $user_id, $course_id );
-						learndash_update_group_course_user_progress( $course_id, $user_id );
-					}
-				}
+				learndash_process_user_course_progress_update( $user_id, $user_progress );
 			}
 		}
 	}
 }
 
+/**
+ * Process user course progress changes.
+ * 
+ * @since 4.0.0
+ * @param int   $user_id       User ID to update.
+ * @param array $user_progress User progress array.
+ * 
+ * @return array Array of processed course IDs.
+ *
+ * The user_progress structure should be as the following:
+ * The top-level nodes are 'course' and 'quiz'. Within each of these there is an array
+ * of course IDs. Within the course array there is an array of course steps.
+ *
+ * array(
+ *	[course] => array (
+ * 		[123] => array(
+ *			[completed] => 0
+ *			[total] => 6
+ *			[lessons] => array(
+ *				[111] => 1
+ *				[222] => 1
+ *			)
+ *
+ *			[topics] => array (
+ *				[111] => array (
+ *					[555] => 1
+ *					[666] => 1
+ *				)
+ *			)
+ *		)
+ *	)
+ *	[quiz] => array (
+ *		[123] => array (
+ *			[888] => 1
+ *			[999] => 1
+ *		)
+ *	)
+ * )
+ */
+function learndash_process_user_course_progress_update( $user_id = 0, $user_progress = array() ) {
+	$processed_course_ids = array();
+
+	if ( empty( $user_id ) ) {
+		return $processed_course_ids;
+	}
+
+	if ( ( isset( $user_progress['course'] ) ) && ( ! empty( $user_progress['course'] ) ) ) {
+		$usermeta        = get_user_meta( $user_id, '_sfwd-course_progress', true );
+		$course_progress = empty( $usermeta ) ? array() : $usermeta;
+
+		$course_changed = false; // Simple flag to let us know we changed the quiz data so we can save it back to user meta.
+
+		foreach ( $user_progress['course'] as $course_id => $course_data_new ) {
+
+			$processed_course_ids[ intval( $course_id ) ] = intval( $course_id );
+
+			if ( isset( $course_progress[ $course_id ] ) ) {
+				$course_data_old = $course_progress[ $course_id ];
+			} else {
+				$course_data_old = array();
+			}
+
+			$course_data_new = learndash_course_item_to_activity_sync( $user_id, $course_id, $course_data_new, $course_data_old );
+
+			$course_progress[ $course_id ] = $course_data_new;
+
+			$course_changed = true;
+		}
+
+		if ( true === $course_changed ) {
+			update_user_meta( $user_id, '_sfwd-course_progress', $course_progress );
+		}
+	}
+
+	if ( ( isset( $user_progress['quiz'] ) ) && ( ! empty( $user_progress['quiz'] ) ) ) {
+
+		$usermeta       = get_user_meta( $user_id, '_sfwd-quizzes', true );
+		$quizz_progress = empty( $usermeta ) ? array() : $usermeta;
+		$quiz_changed   = false; // Simple flag to let us know we changed the quiz data so we can save it back to user meta.
+
+		foreach ( $user_progress['quiz'] as $course_id => $course_quiz_set ) {
+			foreach ( $course_quiz_set as  $quiz_id => $quiz_new_status ) {
+				$quiz_meta = get_post_meta( $quiz_id, '_sfwd-quiz', true );
+
+				if ( ! empty( $quiz_meta ) ) {
+					$quiz_old_status = ! learndash_is_quiz_notcomplete( $user_id, array( $quiz_id => 1 ), false, $course_id );
+
+					// For Quiz if the admin marks a qiz complete we don't attempt to update an existing attempt for the user quiz.
+					// Instead we add a new entry. LD doesn't care as it will take the complete one for calculations where needed.
+					if ( (bool) true === (bool) $quiz_new_status ) {
+						if ( (bool) true !== (bool) $quiz_old_status ) {
+
+							if ( isset( $quiz_meta['sfwd-quiz_lesson'] ) ) {
+								$lesson_id = absint( $quiz_meta['sfwd-quiz_lesson'] );
+							} else {
+								$lesson_id = 0;
+							}
+
+							if ( isset( $quiz_meta['sfwd-quiz_topic'] ) ) {
+								$topic_id = absint( $quiz_meta['sfwd-quiz_topic'] );
+							} else {
+								$topic_id = 0;
+							}
+
+							// If the admin is marking the quiz complete AND the quiz is NOT already complete...
+							// Then we add the minimal quiz data to the user profile.
+							$quizdata = array(
+								'quiz'         => $quiz_id,
+								'score'        => 0,
+								'count'        => 0,
+								'question_show_count' => 0,
+								'pass'         => true,
+								'rank'         => '-',
+								'time'         => time(),
+								'pro_quizid'   => absint( $quiz_meta['sfwd-quiz_quiz_pro'] ),
+								'course'       => $course_id,
+								'lesson'       => $lesson_id,
+								'topic'        => $topic_id,
+								'points'       => 0,
+								'total_points' => 0,
+								'percentage'   => 0,
+								'timespent'    => 0,
+								'has_graded'   => false,
+								'statistic_ref_id' => 0,
+								'm_edit_by'    => get_current_user_id(), // Manual Edit By ID.
+								'm_edit_time'  => time(), // Manual Edit timestamp.
+							);
+
+							$quizz_progress[] = $quizdata;
+
+							if ( true === $quizdata['pass'] ) {
+								$quizdata_pass = true;
+							} else {
+								$quizdata_pass = false;
+							}
+
+							// Then we add the quiz entry to the activity database.
+							learndash_update_user_activity(
+								array(
+									'course_id' => $course_id,
+									'user_id' => $user_id,
+									'post_id' => $quiz_id,
+									'activity_type' => 'quiz',
+									'activity_action' => 'insert',
+									'activity_status' => $quizdata_pass,
+									'activity_started' => $quizdata['time'],
+									'activity_completed' => $quizdata['time'],
+									'activity_meta' => $quizdata,
+								)
+							);
+
+							$quiz_changed = true;
+
+							if ( ( isset( $quizdata['course'] ) ) && ( ! empty( $quizdata['course'] ) ) ) {
+								$quizdata['course'] = get_post( $quizdata['course'] );
+							}
+
+							if ( ( isset( $quizdata['lesson'] ) ) && ( ! empty( $quizdata['lesson'] ) ) ) {
+								$quizdata['lesson'] = get_post( $quizdata['lesson'] );
+							}
+
+							if ( ( isset( $quizdata['topic'] ) ) && ( ! empty( $quizdata['topic'] ) ) ) {
+								$quizdata['topic'] = get_post( $quizdata['topic'] );
+							}
+
+							/**
+							 * Fires after the quiz is marked as complete.
+							 *
+							 * @param arrat   $quizdata An array of quiz data.
+							 * @param WP_User $user     WP_User object.
+							 */
+							do_action( 'learndash_quiz_completed', $quizdata, get_user_by( 'ID', $user_id ) );
+
+						}
+					} elseif ( true !== $quiz_new_status ) {
+						// If we are unsetting a quiz ( changing from complete to incomplete). We need to do some complicated things...
+						if ( true === $quiz_old_status ) {
+
+							if ( ! empty( $quizz_progress ) ) {
+								foreach ( $quizz_progress as $quiz_idx => $quiz_item ) {
+
+									if ( ( $quiz_item['quiz'] == $quiz_id ) && ( true === $quiz_item['pass'] ) ) {
+										$quizz_progress[ $quiz_idx ]['pass'] = false;
+
+										// We need to update the activity database records for this quiz_id.
+										$activity_query_args = array(
+											'post_ids'      => $quiz_id,
+											'user_ids'      => $user_id,
+											'activity_type' => 'quiz',
+										);
+										$quiz_activity       = learndash_reports_get_activity( $activity_query_args );
+										if ( ( isset( $quiz_activity['results'] ) ) && ( ! empty( $quiz_activity['results'] ) ) ) {
+											foreach ( $quiz_activity['results'] as $result ) {
+												if ( ( isset( $result->activity_meta['pass'] ) ) && ( true === $result->activity_meta['pass'] ) ) {
+
+													// If the activity meta 'pass' element is set to true we want to update it to false.
+													learndash_update_user_activity_meta( $result->activity_id, 'pass', false );
+
+													// Also we need to update the 'activity_status' for this record.
+													learndash_update_user_activity(
+														array(
+															'activity_id' => $result->activity_id,
+															'course_id' => $course_id,
+															'user_id' => $user_id,
+															'post_id' => $quiz_id,
+															'activity_type' => 'quiz',
+															'activity_action' => 'update',
+															'activity_status' => false,
+														)
+													);
+												}
+											}
+										}
+
+										$quiz_changed = true;
+									}
+
+									/**
+									 * Remove the quiz lock.
+									 *
+									 * @since 2.3.1
+									 */
+									if ( ( isset( $quiz_item['pro_quizid'] ) ) && ( ! empty( $quiz_item['pro_quizid'] ) ) ) {
+										learndash_remove_user_quiz_locks( $user_id, $quiz_item['quiz'] );
+									}
+								}
+							}
+						}
+					}
+
+					$processed_course_ids[ intval( $course_id ) ] = intval( $course_id );
+				}
+			}
+		}
+
+		if ( true === $quiz_changed ) {
+			update_user_meta( $user_id, '_sfwd-quizzes', $quizz_progress );
+		}
+	}
+
+	if ( ! empty( $processed_course_ids ) ) {
+		foreach ( array_unique( $processed_course_ids ) as $course_id ) {
+			learndash_process_mark_complete( $user_id, $course_id );
+			learndash_update_group_course_user_progress( $course_id, $user_id );
+		}
+	}
+
+	return $processed_course_ids;
+}
 
 /**
  * Syncs the course date with the user activity.
@@ -634,7 +680,7 @@ function learndash_course_item_to_activity_sync( $user_id = 0, $course_id = 0, $
 		}
 	}
 
-	// First we loop over the new Course data lessons. We add any items not in the old array to the activity table
+	// First we loop over the new Course data lessons. We add any items not in the old array to the activity table.
 	if ( ( isset( $course_data_new['lessons'] ) ) && ( ! empty( $course_data_new['lessons'] ) ) ) {
 		foreach ( $course_data_new['lessons'] as $lesson_id => $lesson_complete ) {
 			$lesson_complete = (bool) $lesson_complete;
@@ -812,6 +858,83 @@ function learndash_course_item_to_activity_sync( $user_id = 0, $course_id = 0, $
 
 	// Then return the new course data to the caller.
 	return $course_data_new;
+}
+
+/**
+ * Mark all course steps as complete for a user.
+ *
+ * @since 4.0.0
+ *
+ * @param int $user_id User ID.
+ * @param int $course_id Course ID.
+ *
+ * @return bool true if course steps marked as complete, false if not.
+ */
+function learndash_user_course_complete_all_steps( $user_id = 0, $course_id = 0 ) {
+	$user_id   = absint( $user_id );
+	$course_id = absint( $course_id );
+
+	if ( ( empty( $user_id ) ) || ( empty( $course_id ) ) ) {
+		return false;
+	}
+
+	// User must have access to the course.
+	$course_access = sfwd_lms_has_access( $course_id, $user_id );
+	if ( true !== $course_access ) {
+		return;
+	}
+
+
+	// If the course is already complete.
+	if ( learndash_course_completed( $user_id, $course_id ) ) {
+		return;
+	}
+
+	$course_progress_object = LDLMS_Factory_User::course_progress( $user_id );
+	if ( ! $course_progress_object ) {
+		return false;
+	}
+
+	$course_progress_steps_legacy = $course_progress_object->get_progress( $course_id, 'legacy' );
+
+	if ( isset( $course_progress_steps_legacy['lessons'] ) ) {
+		foreach ( $course_progress_steps_legacy['lessons'] as $lesson_id => &$lesson_completed ) {
+			$lesson_completed = 1;
+		}
+	}
+
+	if ( isset( $course_progress_steps_legacy['topics'] ) ) {
+		foreach ( $course_progress_steps_legacy['topics'] as $lesson_id => &$lesson_topics ) {
+			foreach ( $lesson_topics as $topic_id => &$topic_complete ) {
+				$topic_complete = 1;
+			}
+		}
+	}
+
+	$quiz_progress = array();
+
+	$course_progress_steps_co = $course_progress_object->get_progress( $course_id, 'co' );
+	foreach( $course_progress_steps_co as $key => $value ) {
+		list( $step_type, $step_id ) = explode( ':', $key );
+		if ( $step_type === learndash_get_post_type_slug( 'quiz') ) {
+			$quiz_progress[ absint( $step_id ) ] = 1;
+		}
+	}
+
+	$user_progress = array(
+		'course' => array(
+			$course_id => $course_progress_steps_legacy,
+		),
+		'quiz' => array(
+			$course_id => $quiz_progress,
+		),
+	);
+	$changed_courses_count = learndash_process_user_course_progress_update( $user_id, $user_progress );
+	if ( empty( $changed_courses_count ) ) {
+		return false;
+	}
+	
+	return true;
 }
 
 /**
@@ -1241,4 +1364,25 @@ function learndash_get_expired_user_courses_from_meta( $user_id = 0 ) {
 		}
 	}
 	return $expired_user_course_ids;
+}
+
+/**
+ * Utility function to check if users can register for the site.
+ *
+ * @since 3.6.0
+ */
+function learndash_users_can_register() {
+	if ( is_multisite() ) {
+		$users_can_register = (bool) users_can_register_signup_filter();
+	} else {
+		$users_can_register = (bool) get_option( 'users_can_register' );
+	}
+
+	/**
+	 * Filter for users can register.
+	 *
+	 * @since 3.6.0
+	 * @param bool $users_can_register True if users can register.
+	 */
+	return (bool) apply_filters( 'learndash_users_can_register', $users_can_register );
 }

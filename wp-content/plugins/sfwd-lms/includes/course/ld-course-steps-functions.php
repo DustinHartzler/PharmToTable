@@ -229,7 +229,6 @@ function learndash_course_get_topics( $course_id = 0, $lesson_id = 0, $query_arg
  *
  * @return array of Quizzes.
  */
-
 function learndash_course_get_quizzes( $course_id = 0, $parent_id = 0, $query_args = array() ) {
 	$quizzes = array();
 
@@ -537,6 +536,8 @@ function learndash_get_courses_for_step( $step_id = 0, $return_flat_array = fals
 
 		return $course_ids;
 	}
+
+	return array();
 }
 
 /**
@@ -597,9 +598,8 @@ function learndash_get_primary_course_for_step( $step_id = 0 ) {
  *
  * @since 3.2.0
  *
- * @param integer $step_id Course step post ID.
- *
- * @return integer $course_id Primary Course ID if found.
+ * @param integer $step_id   Course step post ID.
+ * @param integer $course_id Course ID.
  */
 function learndash_set_primary_course_for_step( $step_id = 0, $course_id = 0 ) {
 	$step_id   = absint( $step_id );
@@ -707,7 +707,7 @@ function learndash_check_course_step( $wp ) {
 						}
 					}
 				} else {
-					// If we don't have a valid Course post
+					// If we don't have a valid Course post.
 					global $wp_query;
 					$wp_query->set_404();
 
@@ -718,7 +718,7 @@ function learndash_check_course_step( $wp ) {
 				if ( learndash_is_admin_user() ) {
 					return;
 				} else {
-					// If we don't have a course part of the URL then we check if the step has a primary (legacy) course
+					// If we don't have a course part of the URL then we check if the step has a primary (legacy) course.
 					$step_courses = learndash_get_courses_for_step( $post->ID, false );
 
 					// If we do have a primary (legacy) then we redirect the user there.
@@ -735,7 +735,7 @@ function learndash_check_course_step( $wp ) {
 						}
 					} else {
 						if ( learndash_is_admin_user() ) {
-							// Alow the admin to view the lesson/topic before it is added to a course
+							// Alow the admin to view the lesson/topic before it is added to a course.
 							return;
 						} elseif ( ( 'sfwd-quiz' === $post->post_type ) && ( empty( $step_courses['secondary'] ) ) ) {
 							// If here we have a quiz with no primary or secondary courses. So it is standalone and allowed.
@@ -772,6 +772,7 @@ function learndash_transition_course_step_post_status( $new_status, $old_status,
 
 	if ( $new_status !== $old_status ) {
 		if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) && ( in_array( $post->post_type, learndash_get_post_types( 'course_steps' ), true ) ) ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$course_ids = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = %d AND (meta_key = %s OR meta_key LIKE %s)",
@@ -851,6 +852,79 @@ function learndash_get_step_post_status_slug( $post ) {
 		}
 		return $post->post_status;
 	}
+
+	return '';
+}
+
+/**
+ * Get single course step post status label.
+ *
+ * @since 4.0.0
+ *
+ * @param object $post WP_Post object.
+ *
+ * @return string
+ */
+function learndash_get_step_post_status_label( $post ) {
+	$post_status_label = '';
+	if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) ) {
+		$post_status_slug = learndash_get_step_post_status_slug( $post );
+		$post_statuses    = learndash_get_step_post_statuses();
+		if ( isset( $post_statuses[ $post_status_slug ] ) ) {
+			$post_status_label = $post_statuses[ $post_status_slug ];
+		}
+	}
+
+	return $post_status_label;
+}
+
+/**
+ * Get the post title formatted with post status label.
+ *
+ * @since 4.0.0
+ * @param object $post          WP_Post object.
+ * @param array  $skip_statuses Optional. Array of post_stati to skip.
+ * @param string $before_label  Optional. String to prepend to the status label.
+ * @param string $after_label   Optional. String to append to the status label.
+ *
+ * @return string Formatted post title.
+ */
+function learndash_format_step_post_title_with_status_label( $post, $skip_statuses = array( 'publish' ), $before_label = '(', $after_label = ')' ) {
+	$post_title = '';
+
+	if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) ) {
+		$post_title = get_the_title( $post->ID );
+
+		if ( ! empty( $skip_statuses ) ) {
+			if ( ! is_array( $skip_statuses ) ) {
+				$skip_statuses = array( $skip_statuses );
+			}
+		}
+
+		$post_status_slug = learndash_get_step_post_status_slug( $post );
+		if ( ! in_array( $post_status_slug, $skip_statuses, true ) ) {
+			$post_statuses = learndash_get_step_post_statuses();
+
+			$post_status_label = '';
+			if ( isset( $post_statuses[ $post_status_slug ] ) ) {
+				$post_status_label = esc_html( $before_label ) . esc_html( $post_statuses[ $post->post_status ] ) . esc_html( $after_label );
+			} else {
+				$post_status_label = esc_html( $before_label ) . esc_html__( 'Unknown', 'learndash' ) . esc_html( $after_label );
+			}
+
+			if ( ! empty( $post_status_label ) ) {
+
+				$post_title = sprintf(
+					// translators: placeholder: post title, post status.
+					esc_html_x( '%1$s %2$s', 'placeholder: post title, post status', 'learndash' ),
+					$post_title,
+					esc_html( $post_status_label )
+				);
+			}
+		}
+	}
+
+	return $post_title;
 }
 
 /**
@@ -862,7 +936,7 @@ function learndash_get_step_post_status_slug( $post ) {
  *
  * @since 3.4.0.3
  *
- * @param int    $post_ID Post ID.
+ * @param int    $post_id Post ID.
  * @param object $post    WP_Post object.
  * @param bool   $update  Whether this is an existing post being updated.
  */

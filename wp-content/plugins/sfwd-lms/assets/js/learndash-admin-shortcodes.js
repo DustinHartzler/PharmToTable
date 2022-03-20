@@ -173,6 +173,16 @@ var learndash_shortcodes = jQuery.extend( learndash_shortcodes || {}, {
 			var field_count = 0;
 			while ( field_count < elements.length ) {
 				var field = elements[field_count];
+				field_count += 1;
+
+				var field_shortcode_exclude = field.getAttribute(
+					"data-shortcode-exclude"
+				);
+				
+				// Skip excluded shortcode fields.
+				if ( ( typeof field_shortcode_exclude !== 'undefined' ) && ( field_shortcode_exclude == '1' ) ) {
+					continue;
+				}
 
 				switch ( field.type ) {
 					case 'textarea':
@@ -225,8 +235,6 @@ var learndash_shortcodes = jQuery.extend( learndash_shortcodes || {}, {
 						}
 						break;
 				}
-
-				field_count += 1;
 			}
 		}
 		content += ']';

@@ -18,8 +18,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Quiz_Progress_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Users_Quiz_Progress_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Supported Collection Parameters.
@@ -46,6 +45,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 		 * Public constructor for class
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param string $post_type Post type.
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -360,11 +361,11 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 			$user_course_ids = array();
 			if ( ( $current_user_id !== $user_id ) && ( ! learndash_is_admin_user( $current_user_id ) ) ) {
 				if ( learndash_is_group_leader_user( $current_user_id ) ) {
-					if ( ! learndash_is_group_leader_of_user( $current_leader_id, $user_id ) ) {
+					if ( ! learndash_is_group_leader_of_user( $current_user_id, $user_id ) ) {
 						return new WP_Error( 'rest_user_invalid_id', esc_html__( 'Not allowed to view other user content.', 'learndash' ), array( 'status' => 401 ) );
 					}
 
-					$group_leader_group_ids = learndash_get_administrators_group_ids( $current_leader_id );
+					$group_leader_group_ids = learndash_get_administrators_group_ids( $current_user_id );
 					if ( empty( $group_leader_group_ids ) ) {
 						return new WP_Error( 'rest_user_invalid_id', esc_html__( 'Not allowed to view other user content.', 'learndash' ), array( 'status' => 401 ) );
 					}
@@ -506,14 +507,20 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 
 					$quiz['key'] = $quiz['time'] . '-' . $quiz['quiz'] . '-' . $quiz['course'];
 
-					$quiz['points_scored'] = $quiz['points'];
-					unset( $quiz['points'] );
+					if ( isset( $quiz['points'] ) ) {
+						$quiz['points_scored'] = $quiz['points'];
+						unset( $quiz['points'] );
+					}
 
-					$quiz['points_total'] = $quiz['total_points'];
-					unset( $quiz['total_points'] );
+					if ( isset( $quiz['total_points'] ) ) {
+						$quiz['points_total'] = $quiz['total_points'];
+						unset( $quiz['total_points'] );
+					}
 
-					$quiz['statistic'] = $quiz['statistic_ref_id'];
-					unset( $quiz['statistic_ref_id'] );
+					if ( isset( $quiz['statistic_ref_id'] ) ) {
+						$quiz['statistic'] = $quiz['statistic_ref_id'];
+						unset( $quiz['statistic_ref_id'] );
+					}
 
 					foreach ( $quiz as $_key => $_val ) {
 						if ( ! isset( $quiz_defaults[ $_key ] ) ) {
@@ -522,15 +529,15 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 					}
 
 					if ( ! empty( $quiz['m_edit_time'] ) ) {
-						$quiz['m_edit_time'] = $this->prepare_date_response( gmdate( 'Y-m-d h:i:s', $quiz['m_edit_time'] ) );
+						$quiz['m_edit_time'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $quiz['m_edit_time'] ) );
 					}
 
 					if ( ! empty( $quiz['started'] ) ) {
-						$quiz['started'] = $this->prepare_date_response( gmdate( 'Y-m-d h:i:s', $quiz['started'] ) );
+						$quiz['started'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $quiz['started'] ) );
 					}
 
 					if ( ! empty( $quiz['completed'] ) ) {
-						$quiz['completed'] = $this->prepare_date_response( gmdate( 'Y-m-d h:i:s', $quiz['completed'] ) );
+						$quiz['completed'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $quiz['completed'] ) );
 					}
 
 					$quiz_key = $quiz['key'];
@@ -672,6 +679,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 			return $query_params;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

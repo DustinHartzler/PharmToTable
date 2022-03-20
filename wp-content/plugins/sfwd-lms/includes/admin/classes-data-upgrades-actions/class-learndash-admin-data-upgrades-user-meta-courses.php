@@ -355,7 +355,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						$user_course_access_from = 0;
 						$user_course_completed   = 0;
 
-						// We replace the $course_data with the newer logic
+						// We replace the $course_data with the newer logic.
 						$course_data = learndash_user_get_course_progress( $user_id, $course_id, 'legacy' );
 
 						// Then loop over Lessons.
@@ -373,9 +373,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 										'activity_meta' => array(),
 									);
 
-									//if ( ! empty( $user_course_access_from ) ) {
-									//	$lesson_args['activity_started'] = $user_course_access_from;
-									//}
+									// if ( ! empty( $user_course_access_from ) ) {
+									// $lesson_args['activity_started'] = $user_course_access_from;
+									// }
 
 									if ( true == $lesson_complete ) {
 										$lesson_args['activity_status'] = true;
@@ -410,9 +410,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 												'activity_meta' => array(),
 											);
 
-											//if ( ! empty( $user_course_access_from ) ) {
-											//	$topic_args['activity_started'] = $user_course_access_from;
-											//}
+											// if ( ! empty( $user_course_access_from ) ) {
+											// $topic_args['activity_started'] = $user_course_access_from;
+											// }
 
 											if ( true == $topic_complete ) {
 												$topic_args['activity_status'] = true;

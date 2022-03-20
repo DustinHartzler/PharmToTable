@@ -19,6 +19,20 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 	class LearnDash_Settings_Section_Support_Database_Tables extends LearnDash_Settings_Section {
 
 		/**
+		 * Array of DB tables
+		 *
+		 * @var array
+		 */
+		protected $db_tables = array();
+
+		/**
+		 * Arrey of System Info
+		 *
+		 * @var array
+		 */
+		protected $system_info = array();
+
+		/**
 		 * Settings set array for this section.
 		 *
 		 * @var array $settings_set Array of settings used by this section.
@@ -43,9 +57,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// This is the 'option_name' key used in the wp_options table.
 			$this->setting_option_key = 'ld_database_tables';
 
-			// This is the HTML form field prefix used.
-			// $this->setting_field_prefix = 'learndash_settings_paypal';
-
 			// Used within the Settings API to uniquely identify this section.
 			$this->settings_section_key = 'settings_support_ld_database_tables';
 
@@ -66,7 +77,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param array $support_sections Support sections array
+		 * @param array $support_sections Support sections array.
 		 */
 		public function learndash_support_sections_init( $support_sections = array() ) {
 			global $wpdb, $wp_version, $wp_rewrite;
@@ -202,6 +213,12 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			return $support_sections;
 		}
 
+		/**
+		 * Show support section
+		 *
+		 * @param string $settings_section_key Section key.
+		 * @param string $settings_screen_id   Screen ID.
+		 */
 		public function show_support_section( $settings_section_key = '', $settings_screen_id = '' ) {
 			if ( $settings_section_key === $this->settings_section_key ) {
 				$support_page_instance = LearnDash_Settings_Page::get_page_instance( 'LearnDash_Settings_Page_Support' );

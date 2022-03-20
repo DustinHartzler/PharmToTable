@@ -26,12 +26,8 @@ if ( is_multisite() ) {
 	$can_register = get_option( 'users_can_register' );
 }
 ?>
-<div class="ld-modal ld-login-modal
-<?php
-if ( $can_register ) {
-	echo esc_attr( 'ld-can-register' ); }
-?>
-">
+
+<div class="ld-modal ld-login-modal<?php echo ( $can_register ? ' ld-can-register' : '' ); ?>">
 
 	<span class="ld-modal-closer ld-icon ld-icon-delete"></span>
 
@@ -122,7 +118,7 @@ if ( $can_register ) {
 				 */
 				do_action( 'learndash-login-modal-form-before' );
 
-				// Just so users can supply their own args if desired
+				// Just so users can supply their own args if desired.
 				$login_form_args = array();
 
 				/**
@@ -184,14 +180,35 @@ if ( $can_register ) {
 	<?php
 	if ( $can_register ) :
 
+		// Set the default register_url to show the inline registration form.
+		$register_url = '#ld-user-register';
+
+		// New since LD 3.6.0 are we using the new Registration page?
+		if ( ! is_multisite() ) {
+			$ld_registration_page_id = (int) LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Registration_Pages', 'registration' );
+
+			if ( ! empty( $ld_registration_page_id ) ) {
+				$register_url = get_permalink( $ld_registration_page_id );
+				if ( in_array( get_post_type(), learndash_get_post_type_slug( array( 'course', 'group' ) ), true ) ) {
+					// If we are showing on a Course or Group we inlcude the 'ld_register_id' query string param.
+					$register_url = add_query_arg( 'ld_register_id', get_the_ID(), $register_url );
+				} elseif ( get_the_ID() === $ld_registration_page_id ) {
+					// If we are showing on the new Registration page we make sure to include the
+					if ( isset( $_GET['ld_register_id'] ) ) {
+						$register_url = add_query_arg( 'ld_register_id', absint( $_GET['ld_register_id'] ), $register_url );
+					}
+				}
+			}
+		}
+
 		/**
 		 * Filters the LearnDash login modal registration URL.
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param string $registration_url    Login modal registration url.
+		 * @param string $register_url Login modal registration url.
 		 */
-		$register_url = apply_filters( 'learndash_login_model_register_url', '#ld-user-register' );
+		$register_url = apply_filters( 'learndash_login_model_register_url', $register_url );
 		/**
 		 * Filters the LearnDash login modal registration header text.
 		 *

@@ -173,8 +173,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'type'              => 'number',
 					'label'             => sprintf(
 						// translators: placeholder: Quiz.
-						esc_html_x( '%s Attempts', 'placeholder: Quiz', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'quiz' )
+						esc_html_x( '%s Attempts', 'placeholder: Quiz.', 'learndash' ),
+						learndash_get_custom_label( 'quiz' )
 					),
 					'value'             => $this->setting_option_values['quiz_num'],
 					'attrs'             => array(

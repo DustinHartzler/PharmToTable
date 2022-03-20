@@ -52,7 +52,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				learndash_get_custom_label_lower( 'quiz' )
 			);
 
-			// Define the depreacted Class and Fields
+			// Define the depreacted Class and Fields.
 			$this->settings_deprecated = array(
 				'LearnDash_Settings_Quizzes_Admin_Email' => array(
 					'option_key' => 'learndash_settings_quizzes_admin_email',
@@ -288,8 +288,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param string $content    Content to show before row
-		 * @param array  $field_args Row field Args
+		 * @param string $content    Content to show before row.
+		 * @param array  $field_args Row field Args.
 		 */
 		public function learndash_settings_row_outside_before( $content = '', $field_args = array() ) {
 			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'admin_mail_from_name', 'user_mail_from_name' ), true ) ) ) {

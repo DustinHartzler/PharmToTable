@@ -17,8 +17,14 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Lessons_Controller_V1 extends LD_REST_Posts_Controller_V1 {
+	class LD_REST_Lessons_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+
+		/**
+		 * LearnDash course steps object
+		 *
+		 * @var object
+		 */
+		protected $ld_course_steps_object = null;
 
 		/**
 		 * Public constructor for class
@@ -123,7 +129,7 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param array $query_params Quest params array.
+		 * @param array        $query_params Quest params array.
 		 * @param WP_Post_Type $post_type    Post type object.
 		 */
 		public function rest_collection_params_filter( $query_params, $post_type ) {
@@ -180,17 +186,17 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 				if ( empty( $course_id ) ) {
 					$user_enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
 					if ( empty( $user_enrolled_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 
 					$step_courses = learndash_get_courses_for_step( $request['id'], true );
 					if ( empty( $step_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 					$user_enrolled_courses = array_intersect( $user_enrolled_courses, array_keys( $step_courses ) );
 
 					if ( empty( $user_enrolled_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				} else {
 					/**
@@ -215,17 +221,17 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 					}
 
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 					$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->course_post->ID );
 					$this->ld_course_steps_object->load_steps();
 					$lesson_ids = $this->ld_course_steps_object->get_children_steps( $this->course_post->ID, $this->post_type );
 					if ( empty( $lesson_ids ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 
 					if ( ! in_array( $request['id'], $lesson_ids, true ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				}
 			}
@@ -279,7 +285,7 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 							array( 'status' => 404 )
 						);
 					} elseif ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				}
 			}
@@ -287,9 +293,18 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 			return $return;
 		}
 
+		/**
+		 * Filter query args.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @param array           $args     Key value array of query var to query value.
+		 * @param WP_REST_Request $request  The request used.
+		 *
+		 * @return array Key value array of query var to query value.
+		 */
 		public function rest_query_filter( $args, $request ) {
-
-			// The course_post should be set in the local method get_items_permissions_check()
+			// The course_post should be set in the local method get_items_permissions_check().
 			if ( ( $this->course_post ) && ( is_a( $this->course_post, 'WP_Post' ) ) && ( 'sfwd-courses' === $this->course_post->post_type ) ) {
 				$step_ids = learndash_course_get_steps_by_type( $this->course_post->ID, $this->post_type );
 				if ( ! empty( $step_ids ) ) {
@@ -319,6 +334,6 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 			return $args;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

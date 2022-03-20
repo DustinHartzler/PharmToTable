@@ -238,9 +238,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @param array  $q_vars    Array of query vars.
 		 * @param string $post_type Post Type being displayed.
-		 * @param array  $query     Main Query.
 		 */
-		public function learndash_listing_selector_user_query_args_assignments( $q_vars, $selector, $post_type ) {
+		public function learndash_listing_selector_user_query_args_assignments( $q_vars, $post_type ) {
 			if ( $post_type === $this->post_type ) {
 				$group_selector = $this->get_selector( 'group_id' );
 				if ( ( isset( $group_selector['selected'] ) ) && ( ! empty( $group_selector['selected'] ) ) ) {
@@ -271,7 +270,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3.4
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -398,7 +397,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3.4
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing
+		 * @param  object $q_vars   Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.
@@ -617,7 +616,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars Query vars used for the table listing
+		 * @param  object $q_vars Query vars used for the table listing.
 		 * @param  array  $selector Array of attributes used to display the filter selector.
 		 *
 		 * @return object $q_vars.

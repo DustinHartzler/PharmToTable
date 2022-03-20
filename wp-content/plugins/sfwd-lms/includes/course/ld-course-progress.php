@@ -389,7 +389,7 @@ function learndash_mark_complete_process( $post = null ) {
 				if ( isset( $_COOKIE[ 'learndash_timer_cookie_' . $timer_cookie_key ] ) ) {
 					unset( $_COOKIE[ 'learndash_timer_cookie_' . $timer_cookie_key ] );
 				}
-				// empty value and expiration one hour before
+				// empty value and expiration one hour before.
 				$res = setcookie( 'learndash_timer_cookie_' . $timer_cookie_key, '', time() - 3600 );
 			}
 
@@ -478,9 +478,9 @@ function learndash_get_next_lesson_redirect( $post = null ) {
 		if ( ! empty( $link ) ) {
 			learndash_safe_redirect( $link );
 		}
-	} else {
-		return '';
 	}
+
+	return '';
 }
 
 /**
@@ -527,12 +527,6 @@ function learndash_quiz_redirect() {
 				$course_id = learndash_get_course_id();
 			}
 
-			// We don't need to check if the quiz can be retaken because the learndash_next_lesson_quiz() function does that for us.
-			// if ( $can_attempt_again ) {
-			// $link = learndash_next_lesson_quiz( true, $user_id, $lesson_id, null );
-			// } else {
-			// $link = learndash_next_lesson_quiz( true, $user_id, $lesson_id, array($quiz_id) );
-			// }
 			$link = learndash_next_lesson_quiz( true, $user_id, $lesson_id, null );
 			if ( empty( $link ) ) {
 				$link = learndash_next_post_link( '', true );
@@ -553,8 +547,6 @@ function learndash_quiz_redirect() {
 				}
 			}
 
-			// v2.3: Removed this and moved to an earlier step
-			// learndash_update_completion( $user_id );
 			if ( ! empty( $link ) ) {
 
 				/** This filter is documented in includes/course/ld-course-progress.php */
@@ -649,13 +641,15 @@ function learndash_is_previous_complete( $post ) {
  *
  * @param WP_Post $post The `WP_Post` object.
  *
- * @return WP_Post The `WP_Post` object of lesson/topic to be completed.
+ * @return WP_Post|null The `WP_Post` object of lesson/topic to be completed.
  */
 function learndash_get_previous( $post ) {
 	$progress = learndash_get_course_progress( null, $post->ID );
 	if ( ! empty( $progress['prev'] ) ) {
 		return $progress['prev'];
 	}
+
+	return null;
 }
 
 /**
@@ -793,7 +787,7 @@ function learndash_process_mark_complete( $user_id = null, $postid = null, $only
 
 	$course_earliest_completed_time = learndash_activity_course_get_earliest_started( $current_user->ID, $course_id, $course_completed_time );
 
-	// If course is completed
+	// If course is completed.
 	if ( ( $course_progress['completed'] >= $completed_old ) && ( $course_progress['completed'] >= $course_progress['total'] ) ) {
 
 		/**
@@ -1025,10 +1019,9 @@ function learndash_is_quiz_notcomplete( $user_id = null, $quizzes = null, $retur
 
 	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
-	}
-
-	if ( empty( $user_id ) ) {
-		return;
+		if ( empty( $user_id ) ) {
+			return true;
+		}
 	}
 
 	if ( ( is_null( $quizzes ) ) || ( ! is_array( $quizzes ) ) || ( empty( $quizzes ) ) ) {
@@ -1278,10 +1271,11 @@ function learndash_is_lesson_notcomplete( $user_id = null, $lessons = array(), $
  * Checks if a topic is complete.
  *
  * @since 2.3.1
+ * @since 3.2.0 Added $course_id
  *
  * @param int $user_id  Optional. User ID. Defaults to the current logged-in user. Default null.
  * @param int $topic_id Topic ID.
- * @param int $course_id Course ID. @since 3.20
+ * @param int $course_id Course ID.
  *
  * @return boolean Returns true if the topic is completed otherwise false.
  */
@@ -1293,10 +1287,11 @@ function learndash_is_topic_complete( $user_id = null, $topic_id = 0, $course_id
  * Checks if a topic is not complete.
  *
  * @since 2.3.1
+ * @since 3.2.0 Added $course_id
  *
  * @param int|null $user_id Optional. User ID. Defaults to the current logged-in user. Default null.
  * @param array    $topics  An array of topic IDs.
- * @param int $course_id Course ID. @since 3.20
+ * @param int      $course_id Course ID.
  *
  * @return boolean Returns true if the topic is not completed otherwise false.
  */
@@ -1852,9 +1847,9 @@ function learndash_next_lesson_quiz( $url = true, $user_id = null, $lesson_id = 
 		if ( learndash_user_is_course_children_progress_complete( $user_id, $course_id, $lesson_id ) ) {
 			learndash_process_mark_complete( $user_id, $lesson_id, false, $course_id );
 		}
-	} else {
-		return $return;
 	}
+
+	return $return;
 }
 
 /**
@@ -1878,11 +1873,17 @@ function learndash_can_complete_step( $user_id = 0, $step_id = 0, $course_id = 0
 	$step_id   = absint( $step_id );
 	$course_id = absint( $course_id );
 	if ( empty( $course_id ) ) {
-		$course_id = learndash_get_course_id();
+		$course_id = learndash_get_course_id( $step_id );
 	}
 
 	if ( ( ! empty( $user_id ) ) && ( ! empty( $step_id ) ) && ( ! empty( $course_id ) ) ) {
-		if ( in_array( get_post_type( $step_id ), array( learndash_get_post_type_slug( 'lesson' ), learndash_get_post_type_slug( 'topic' ) ), true ) ) {
+		// If we have ANY previous incomplete steps then we can't complete this step.
+		$incomplete_step_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $step_id );
+		if ( ! empty( $incomplete_step_id ) && ( $incomplete_step_id !== $step_id ) ) {
+			return false;
+		}
+
+		if ( in_array( get_post_type( $step_id ), learndash_get_post_type_slug( array( 'lesson', 'topic' ) ), true ) ) {
 
 			// Check the Lesson Timer...
 			$step_timer_time = learndash_forced_lesson_time( $step_id );
@@ -1916,7 +1917,7 @@ function learndash_can_complete_step( $user_id = 0, $step_id = 0, $course_id = 0
 			}
 
 			// Next check if all child steps are completed.
-			if ( ! learndash_user_is_course_children_progress_complete( $user_id, $step_id, $course_id ) ) {
+			if ( ! learndash_user_is_course_children_progress_complete( $user_id, $course_id, $step_id ) ) {
 				return false;
 			}
 		}
@@ -1983,6 +1984,8 @@ function learndash_lesson_progression_enabled( $course_id = 0 ) {
 		 */
 		return apply_filters( 'learndash_course_progression_enabled', empty( $setting ), $course_id );
 	}
+
+	return false;
 }
 
 /**
@@ -2196,7 +2199,7 @@ function learndash_delete_course_progress( $course_id, $user_id ) {
 function learndash_delete_quiz_progress( $user_id, $quiz_id ) {
 	global $wpdb;
 
-	// Clear User Meta
+	// Clear User Meta.
 	$usermeta = get_user_meta( $user_id, '_sfwd-quizzes', true );
 
 	if ( ! empty( $usermeta ) && is_array( $usermeta ) ) {
@@ -2209,7 +2212,7 @@ function learndash_delete_quiz_progress( $user_id, $quiz_id ) {
 		update_user_meta( $user_id, '_sfwd-quizzes', $usermeta_new );
 	}
 
-	// Pro Quiz Data
+	// ProQuiz Data.
 	$pro_quiz_id = learndash_get_setting( $quiz_id, 'quiz_pro' );
 
 	$ref_ids = $wpdb->get_col(
@@ -2429,7 +2432,7 @@ function learndash_process_mark_incomplete( $user_id = 0, $course_id = 0, $step_
 				$user_course_progress[ $course_id ]['completed']                            -= 1;
 
 				/** This filter is documented in includes/course/ld-course-progress.php */
-				do_action( 'learndash_mark_incomplete_process', $user_id, $course_id, $topic_id );
+				do_action( 'learndash_mark_incomplete_process', $user_id, $course_id, $step_id );
 
 				$topic_args     = array(
 					'course_id'     => $course_id,
@@ -2557,6 +2560,8 @@ function learndash_get_user_quiz_attempt( $user_id = 0, $args = array() ) {
 
 		return $user_quizzes;
 	}
+
+	return array();
 }
 
 /**
@@ -2702,6 +2707,8 @@ function learndash_remove_user_quiz_attempt( $user_id = 0, $args = array() ) {
 
 		return $user_quizzes;
 	}
+
+	return array();
 }
 
 /**
@@ -2775,7 +2782,7 @@ function learndash_show_mark_incomplete( $post, $atts = array() ) {
 
 	$button_label = LearnDash_Custom_Label::get_label( 'button_mark_incomplete' );
 	if ( empty( $button_label ) ) {
-		$button_label = 'Mark Incomplete';
+		$button_label = esc_html__( 'Mark Incomplete', 'learndash' );
 	}
 	$form_fields = '<input type="hidden" value="' . $post->ID . '" name="post" />
 				<input type="hidden" value="' . learndash_get_course_id( $post->ID ) . '" name="course_id" />

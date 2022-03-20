@@ -18,7 +18,13 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 	 */
 	class LearnDash_Settings_Courses_Themes extends LearnDash_Settings_Section {
 
+		/**
+		 * List of themes
+		 *
+		 * @var array
+		 */
 		private $themes_list = array();
+
 		/**
 		 * Protected constructor for class
 		 *
@@ -41,7 +47,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// Section label/header.
 			$this->settings_section_label = esc_html__( 'Design & Content Elements', 'learndash' );
 
-			// Used to show the section description above the fields. Can be empty
+			// Used to show the section description above the fields. Can be empty.
 			$this->settings_section_description = esc_html__( 'Alter the look and feel of your Learning Management System', 'learndash' );
 
 			add_action( 'learndash_section_fields_after', array( $this, 'learndash_section_fields_after' ), 10, 2 );
@@ -57,9 +63,13 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			$themes = LearnDash_Theme_Register::get_themes();
-
 			$this->themes_list = array();
+
+			$themes = LearnDash_Theme_Register::get_themes();
+			if ( ! is_array( $themes ) ) {
+				$themes = array();
+			}
+
 			foreach ( $themes as $theme ) {
 				$this->themes_list[ $theme['theme_key'] ] = $theme['theme_name'];
 			}
@@ -72,6 +82,30 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['active_theme'] = LEARNDASH_LEGACY_THEME;
 				}
 			}
+
+			$themes_list_options = array();
+
+			$active_theme_key = $this->setting_option_values['active_theme'];
+			if ( ( ! empty( $active_theme_key ) ) && ( isset( $this->themes_list[ $active_theme_key ] ) ) ) {
+				$themes_list_options['active'] = array(
+					'optgroup_label'   => esc_html( 'Active Theme', 'learndash' ),
+					'optgroup_options' => 	array(
+						$active_theme_key => $this->themes_list[ $active_theme_key ],
+					)
+				);
+				unset( $this->themes_list[ $active_theme_key ] );
+			}
+
+			if ( ! empty( $this->themes_list ) ) {
+				$themes_list_options['available'] = array(
+					'optgroup_label'   => esc_html( 'Available Themes', 'learndash' ),
+					'optgroup_options' => $this->themes_list,
+				);
+			}
+
+			$this->themes_list = $themes_list_options;
+
+
 		}
 
 		/**
@@ -102,8 +136,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param string $settings_section_key Section Key
-		 * @param string $settings_screen_id   Screen ID
+		 * @param string $settings_section_key Section Key.
+		 * @param string $settings_screen_id   Screen ID.
 		 */
 		public function learndash_section_fields_after( $settings_section_key, $settings_screen_id ) {
 			if ( $settings_section_key === $this->settings_section_key ) {
@@ -126,6 +160,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 										$theme_state = 'open';
 									}
 									echo '<div id="learndash_theme_settings_section_' . esc_attr( $theme_instance->get_theme_key() ) . '" class="ld-theme-settings-section ld-theme-settings-section-' . esc_attr( $theme_instance->get_theme_key() ) . ' ld-theme-settings-section-state-' . esc_attr( $theme_state ) . '">';
+									$section_instance->show_settings_section_nonce_field();
 									$this->show_settings_section_fields( $section_instance->settings_page_id, $section_key );
 									echo '</div>';
 								}

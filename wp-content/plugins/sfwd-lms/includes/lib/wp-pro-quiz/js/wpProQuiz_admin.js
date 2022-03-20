@@ -1726,17 +1726,16 @@ jQuery( function($) {
 						var findPoints = 0;
 
 						$('.classic_answer .answerList').children().each(function() {
+							
 							var t = $(this);
-
-							if(!global.isEmpty(t.find('textarea[name="answerData[][answer]"]').val())) {
+							if(!global.isEmpty(t.find('textarea.wpProQuiz_single_text').val())) {
 								findText++;
 
-								if(t.find('input[name="answerData[][correct]"]:checked').length) {
+								if(t.find('input.wpProQuiz_classCorrect:checked').length) {
 									findCorrect++;
 								}
 
-								var p = t.find('input[name="answerData[][points]"]').val();
-
+								var p = t.find('input.wpProQuiz_points').val();
 								if(global.isNumber(p) && p >= 0) {
 									findPoints++;
 								}
@@ -1765,7 +1764,7 @@ jQuery( function($) {
 					},
 
 					free_answer: function() {
-						if(global.isEmpty($('.free_answer textarea[name="answerData[][answer]"]').val())) {
+						if(global.isEmpty($('.free_answer textarea.wpProQuiz_free_text').val())) {
 							alert(wpProQuizLocalize.no_answer_msg);
 							return false;
 						}
@@ -1789,10 +1788,10 @@ jQuery( function($) {
 						$('.sort_answer .answerList').children().each(function() {
 							var t = $(this);
 
-							if(!global.isEmpty(t.find('textarea[name="answerData[][answer]"]').val())) {
+							if(!global.isEmpty(t.find('textarea.wpProQuiz_sort_answer').val())) {
 								findText++;
 
-								var p = t.find('input[name="answerData[][points]"]').val();
+								var p = t.find('input.wpProQuiz_points').val();
 
 								if(global.isNumber(p) && p >= 0) {
 									findPoints++;
@@ -1821,13 +1820,13 @@ jQuery( function($) {
 
 						$('.matrix_sort_answer .answerList').children().each(function() {
 							var t = $(this);
-							var p = t.find('input[name="answerData[][points]"]').val();
+							var p = t.find('input.wpProQuiz_points').val();
 
-							if(!global.isEmpty(t.find('textarea[name="answerData[][answer]"]').val())) {
+							if(!global.isEmpty(t.find('textarea.wpProQuiz_matrix_answer').val())) {
 								findText++;
 								menge++;
 
-								if(global.isEmpty(t.find('textarea[name="answerData[][sort_string]"]').val())) {
+								if(global.isEmpty(t.find('textarea.wpProQuiz_matrix_sort_string').val())) {
 									sortString = false;
 								}
 
@@ -1835,7 +1834,7 @@ jQuery( function($) {
 									findPoints++;
 								}
 							} else {
-								if(!global.isEmpty(t.find('textarea[name="answerData[][sort_string]"]').val())) {
+								if(!global.isEmpty(t.find('textareawpProQuiz_matrix_sort_string').val())) {
 									menge++;
 
 									if(global.isNumber(p) && p >= 0) {

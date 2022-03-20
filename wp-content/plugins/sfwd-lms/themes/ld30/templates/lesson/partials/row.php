@@ -26,7 +26,7 @@ $quizzes       = learndash_get_lesson_quiz_list( $lesson['post']->ID, $user_id, 
 $attributes    = learndash_get_lesson_attributes( $lesson );
 $content_count = learndash_get_lesson_content_count( $lesson, $course_id );
 
-// Fallbacks
+// Fallbacks.
 $count    = ( isset( $count ) ? $count : 0 );
 $sections = ( isset( $sections ) ? $sections : array() );
 

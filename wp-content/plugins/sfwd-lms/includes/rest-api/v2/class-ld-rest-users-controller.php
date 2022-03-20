@@ -23,8 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_
 	 * @since 3.3.0
 	 * @uses WP_REST_Users_Controller
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Controller_V2 extends WP_REST_Users_Controller {
+	class LD_REST_Users_Controller_V2 extends WP_REST_Users_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * REST API version.
@@ -49,7 +48,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @var array $sub_controllers.
 		 */
-		protected $sub_base = '';
+		protected $rest_sub_base = '';
 
 		/**
 		 * Protected constructor for class
@@ -119,7 +118,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_
 		 * @since 3.3.0
 		 *
 		 * @param WP_REST_Response $response The response object.
-		 * @param object           $user     User object used to create response.
+		 * @param WP_User          $user     User object used to create response.
 		 * @param WP_REST_Request  $request  Request object.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_User $user, WP_REST_Request $request ) {
@@ -191,7 +190,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.4.2
 		 *
-		 * @param object $request WP_REST_Request Request instance.
+		 * @param WP_REST_Request $request WP_REST_Request Request instance.
 		 *
 		 * @return bool true if match.
 		 */
@@ -200,6 +199,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V2' ) ) && ( class_exists( 'WP_
 			if ( strncasecmp( $request->get_route(), $request_route_base, strlen( $request_route_base ) ) === 0 ) {
 				return true;
 			}
+			return false;
 		}
 
 		// End of functions.

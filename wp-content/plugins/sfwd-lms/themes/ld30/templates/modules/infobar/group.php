@@ -88,7 +88,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 		do_action( 'learndash-group-infobar-noaccess-status-before', get_post_type(), $group_id, $user_id );
 		?>
 
-		<div class="ld-course-status-segment ld-course-status-seg-status">
+		<div class="ld-course-status-segment ld-course-status-seg-price">
 
 			<?php do_action( 'learndash-group-infobar-status-cell-before', get_post_type(), $group_id, $user_id ); ?>
 
@@ -121,44 +121,202 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 		 * @param int          $user_id   User ID.
 		 */
 		do_action( 'learndash-group-infobar-noaccess-price-before', get_post_type(), $group_id, $user_id );
+
+		/**
+		 * Fires inside the un-enrolled course infobox before the price.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string|false $post_type Post type slug.
+		 * @param int          $course_id Course ID.
+		 * @param int          $user_id   User ID.
+		 */
+		do_action( 'learndash-course-infobar-noaccess-price-before', get_post_type(), $group_id, $user_id );
 		?>
 
-		<div class="ld-course-status-segment ld-course-status-seg-price">
+		<div class="ld-course-status-segment ld-course-status-seg-price ld-course-status-mode-<?php echo esc_attr( $group_pricing['type'] ); ?>">
 
-			<?php do_action( 'learndash-group-infobar-price-cell-before', get_post_type(), $group_id, $user_id ); ?>
+			<?php
+			/**
+			 * Fires before the course infobar price cell.
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param string|false $post_type Post type slug.
+			 * @param int          $course_id Course ID.
+			 * @param int          $user_id   User ID.
+			 */
+			do_action( 'learndash-course-infobar-price-cell-before', get_post_type(), $group_id, $user_id );
+			?>
 
 			<span class="ld-course-status-label"><?php echo esc_html__( 'Price', 'learndash' ); ?></span>
 
 			<div class="ld-course-status-content">
+			<?php
+			// Some simple price settings validation logic. Not 100%.
+			$group_pricing = wp_parse_args(
+				$group_pricing,
+				array(
+					'type'             => LEARNDASH_DEFAULT_GROUP_PRICE_TYPE,
+					'price'            => '',
+					'interval'         => '',
+					'frequency'        => '',
+					'trial_price'      => '',
+					'trial_interval'   => '',
+					'trial_frequency'  => '',
+					'repeats'          => '',
+					'repeat_frequency' => '',
+				)
+			);
+
+			if ( 'subscribe' === $group_pricing['type'] ) {
+				if ( ( empty( $group_pricing['price'] ) ) || ( empty( $group_pricing['interval'] ) ) || ( empty( $group_pricing['frequency'] ) ) ) {
+					$group_pricing['type']             = LEARNDASH_DEFAULT_GROUP_PRICE_TYPE;
+					$group_pricing['interval']         = '';
+					$group_pricing['frequency']        = '';
+					$group_pricing['trial_price']      = '';
+					$group_pricing['trial_interval']   = '';
+					$group_pricing['trial_frequency']  = '';
+					$group_pricing['repeats']          = '';
+					$group_pricing['repeat_frequency'] = '';
+				} else {
+					if ( empty( $group_pricing['trial_price'] ) ) {
+						$group_pricing['trial_interval']  = '';
+						$group_pricing['trial_frequency'] = '';
+					} elseif ( ( empty( $group_pricing['trial_interval'] ) ) || ( empty( $group_pricing['trial_frequency'] ) ) ) {
+						$group_pricing['trial_price'] = '';
+					}
+				}
+			}
+
+			if ( 'subscribe' !== $group_pricing['type'] ) {
+				?>
 				<span class="ld-course-status-price">
 					<?php
-					if ( isset( $group_pricing['price'] ) && ! empty( $group_pricing['price'] ) ) :
-						if ( 'closed' !== $group_pricing['type'] ) :
-							echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span>' );
-							endif;
+					if ( ! empty( $group_pricing['price'] ) ) {
+						echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
 						echo wp_kses_post( $group_pricing['price'] );
-						else :
-								$label = apply_filters( 'learndash_no_price_price_label', ( 'closed' === $group_pricing['type'] ? __( 'Closed', 'learndash' ) : __( 'Free', 'learndash' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Late escaped on output
-								echo esc_html( $label );
-						endif;
+					} elseif ( in_array( $group_pricing['type'], array( 'closed', 'free' ), true ) ) {
+							/**
+							 * Filters label to be displayed when there is no price set for a course or it is closed.
+							 *
+							 * @since 3.0.0
+							 *
+							 * @param string $label The label displayed when there is no price.
+							 */
+							$label = apply_filters( 'learndash_no_price_price_label', ( 'closed' === $group_pricing['type'] ? __( 'Closed', 'learndash' ) : __( 'Free', 'learndash' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Late escaped on output
+							echo esc_html( $label );
+					}
+					?>
+				</span>
+				<?php
+			} elseif ( 'subscribe' === $group_pricing['type'] ) {
+				if ( ! empty( $group_pricing['price'] ) ) {
+					if ( ! empty( $group_pricing['trial_price'] ) ) {
+						?>
+						<span class="ld-course-status-trial-price">
+						<?php
+						echo '<p class="ld-text ld-trial-text">';
+						echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+						echo wp_kses_post( $group_pricing['trial_price'] );
+						echo '</p>';
+						echo '<p class="ld-trial-pricing ld-pricing">';
+						if ( ( ! empty( $group_pricing['trial_interval'] ) ) && ( ! empty( $group_pricing['trial_frequency'] ) ) ) {
+							printf(
+								// translators: placeholders: Trial interval, Trial frequency.
+								esc_html_x( 'Trial price for %1$s %2$s, then', 'placeholders: Trial interval, Trial frequency', 'learndash' ),
+								absint( $group_pricing['trial_interval'] ),
+								esc_html( $group_pricing['trial_frequency'] )
+							);
+						}
+						echo '</p>'; // closing '<p class="ld-trial-pricing ld-pricing">'
+						?>
+						</span>
+						<span class="ld-course-status-course-price">
+							<?php
+							echo '<p class="ld-text ld-course-text">';
+							echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+							echo wp_kses_post( $group_pricing['price'] );
+							echo '</p>';
+							echo '<p class="ld-course-pricing ld-pricing">';
 
-						if ( isset( $group_pricing['type'] ) && 'subscribe' === $group_pricing['type'] ) :
+							if ( ( ! empty( $group_pricing['interval'] ) ) && ( ! empty( $group_pricing['frequency'] ) ) ) {
+								printf(
+									// translators: placeholders: %1$s Interval of recurring payments (number), %2$s Frequency of recurring payments: day, week, month or year.
+									esc_html_x( 'Full price every %1$s %2$s afterward', 'Recurring duration message', 'learndash' ),
+									absint( $group_pricing['interval'] ),
+									esc_html( $group_pricing['frequency'] )
+								);
+
+								if ( ! empty( $group_pricing['repeats'] ) ) {
+									echo ' ';
+									printf(
+										// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
+										esc_html__( 'for %1$s %2$s', 'learndash' ),
+										// Get correct total time by multiplying interval by number of repeats
+										absint( $group_pricing['interval'] * $group_pricing['repeats'] ),
+										esc_html( $group_pricing['repeat_frequency'] )
+									);
+								}
+							}
+
+							echo '</p>'; // closing '<p class="ld-course-pricing ld-pricing">'.
 							?>
-							<span class="ld-text ld-recurring-duration">
-									<?php
+						</span>
+						<?php
+					} else {
+						?>
+						<span class="ld-course-status-price">
+						<?php
+						if ( ! empty( $group_pricing['price'] ) ) {
+							if ( ! empty( $group_pricing['price'] ) ) {
+								echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span>' );
+								echo wp_kses_post( $group_pricing['price'] );
+							}
+						}
+						?>
+						</span>
+						<span class="ld-text ld-recurring-duration">
+								<?php
+								if ( ( ! empty( $group_pricing['interval'] ) ) && ( ! empty( $group_pricing['frequency'] ) ) ) {
 									echo sprintf(
 										// translators: Recurring duration message.
 										esc_html_x( 'Every %1$s %2$s', 'Recurring duration message', 'learndash' ),
 										esc_html( $group_pricing['interval'] ),
 										esc_html( $group_pricing['frequency'] )
 									);
-									?>
-							</span>
-						<?php endif; ?>
-				</span>
+
+									if ( ( ! empty( $group_pricing['repeats'] ) ) && ( ! empty( $group_pricing['repeat_frequency'] ) ) ) {
+										printf(
+											// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
+											esc_html__( ' for %1$s %2$s', 'learndash' ),
+											// Get correct total time by multiplying interval by number of repeats
+											absint( $group_pricing['interval'] * $group_pricing['repeats'] ),
+											esc_html( $group_pricing['repeat_frequency'] )
+										);
+									}
+								}
+								?>
+						</span>
+						<?php
+					}
+				}
+			}
+			?>
 			</div>
 
-			<?php do_action( 'learndash-group-infobar-price-cell-after', get_post_type(), $group_id, $user_id ); ?>
+			<?php
+			/**
+			 * Fires after the infobar price cell.
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param string|false $post_type Post type slug.
+			 * @param int          $course_id Course ID.
+			 * @param int          $user_id   User ID.
+			 */
+			do_action( 'learndash-course-infobar-price-cell-after', get_post_type(), $group_id, $user_id );
+			?>
 
 		</div> <!--/.ld-group-status-segment-->
 
@@ -223,7 +381,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 									esc_html_x( 'This %s is currently closed', 'placeholder: group', 'learndash' ),
 									esc_html( learndash_get_custom_label_lower( 'group' ) )
 								)
-									 . '</span>';
+									. '</span>';
 								else :
 									echo $button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Outputs Button HTML
 								endif;

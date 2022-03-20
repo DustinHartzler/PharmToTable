@@ -84,27 +84,27 @@ foreach ( $tabs as $tab ) {
 	<?php
 	/**
 	 * If we have more than one tab, show them
-	 * @var [type]
 	 */
 	if ( $tab_count > 1 ) :
 		$i = 0;
 		?>
-		<div class="ld-tabs-navigation">
+		<div role="tablist" class="ld-tabs-navigation">
 			<?php
 			foreach ( $tabs as $tab ) :
 
-				// Skip if conditionally indicated
+				// Skip if conditionally indicated.
 				if ( isset( $tab['condition'] ) && ! $tab['condition'] ) {
 					continue;
 				}
 
 				$tab_class = 'ld-tab ' . ( 0 === $i ? 'ld-active' : '' );
+				$attrs = ( 0 === $i ? 'aria-selected="true"' : '' );
 				?>
 
-				<div class="<?php echo esc_attr( $tab_class ); ?>" data-ld-tab="<?php echo esc_attr( 'ld-tab-' . $tab['id'] . '-' . get_the_ID() ); ?>">
+				<button <?php echo esc_attr( $attrs ); ?> role="tab" aria-controls="<?php echo esc_attr( $tab['id'] . '-tab' ); ?>" id="<?php echo esc_attr( $tab['id'] ); ?>" class="<?php echo esc_attr( $tab_class ); ?>" data-ld-tab="<?php echo esc_attr( 'ld-tab-' . $tab['id'] . '-' . get_the_ID() ); ?>">
 					<span class="<?php echo esc_attr( 'ld-icon ' . $tab['icon'] ); ?>"></span>
 					<span class="ld-text"><?php echo esc_attr( $tab['label'] ); ?></span>
-				</div>
+			</button>
 					<?php
 					$i++;
 				endforeach;
@@ -142,7 +142,7 @@ foreach ( $tabs as $tab ) {
 
 		$i = 0;
 		foreach ( $tabs as $tab ) :
-			// Skip if conditionally indicated
+			// Skip if conditionally indicated.
 			if ( isset( $tab['condition'] ) && ! $tab['condition'] ) {
 				continue;
 			}
@@ -164,7 +164,7 @@ foreach ( $tabs as $tab ) {
 			do_action( 'learndash-content-tabs-' . $tab['id'] . '-before', get_the_ID(), $context, $course_id, $user_id );
 			?>
 
-			<div class="<?php echo esc_attr( $tab_class ); ?>" id="<?php echo esc_attr( 'ld-tab-' . $tab['id'] . '-' . get_the_ID() ); ?>">
+			<div role="tabpanel" tabindex="0" aria-labelledby="<?php echo esc_attr( $tab['id'] ); ?>" class="<?php echo esc_attr( $tab_class ); ?>" id="<?php echo esc_attr( 'ld-tab-' . $tab['id'] . '-' . get_the_ID() ); ?>">
 				<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Might output HTML?>
 				<?php echo $tab['content']; ?>
 			</div>

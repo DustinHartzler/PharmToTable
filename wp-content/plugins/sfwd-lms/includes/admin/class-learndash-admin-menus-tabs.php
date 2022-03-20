@@ -29,14 +29,14 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 		/**
 		 * Admin tab sets
 		 *
-		 * @var array $admin_tab_sets
+		 * @var array
 		 */
 		protected $admin_tab_sets = array();
 
 		/**
 		 * Admin Tab Priorities
 		 *
-		 * @var array $admin_tab_priorities
+		 * @var array
 		 */
 		public $admin_tab_priorities = array(
 			'private'  => 0,
@@ -70,9 +70,9 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 		 *
 		 * @since 2.4.0
 		 */
-		public static function get_instance() {
+		final public static function get_instance() {
 			if ( null === self::$instance ) {
-				self::$instance = new static();
+				self::$instance = new self();
 			}
 
 			return self::$instance;
@@ -90,10 +90,10 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 			global $wp_filter;
 
 			/***********************************************************************
-			admin_menu
-			************************************************************************/
+			 * Admin_menu
+			 ***********************************************************************
+			*/
 			// Set a default priority.
-
 			$top_priority = 100;
 			if ( defined( 'LEARNDASH_SUBMENU_SETTINGS_PRIORITY' ) ) {
 				$top_priority = intval( LEARNDASH_SUBMENU_SETTINGS_PRIORITY );
@@ -142,7 +142,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param array $menu_args Menu args
+		 * @param array $menu_args Menu args.
 		 */
 		public function learndash_admin_menu_tabs( $menu_args = array() ) {
 			$menu_item_tabs = array();
@@ -180,7 +180,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param string $menu_slug Menu slug
+		 * @param string $menu_slug Menu slug.
 		 * @param array  $menu_item Menu item. See WP $submenu global.
 		 */
 		public function add_admin_tab_set( $menu_slug, $menu_item ) {
@@ -206,7 +206,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 							);
 						}
 
-						// Edit - We add in the 1 position
+						// Edit - We add in the 1 position.
 						if ( substr( $menu_item_section[2], 0, strlen( 'edit.php?' ) ) == 'edit.php?' ) {
 							$all_title = $menu_item_section[0];
 							if ( ( isset( $link_params['post_type'] ) ) && ( ! empty( $link_params['post_type'] ) ) ) {
@@ -253,7 +253,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param string  $menu_slug     Menu slug
+		 * @param string  $menu_slug     Menu slug.
 		 * @param array   $menu_item     Menu item. See WP $submenu global.
 		 * @param integer $menu_priority Tab priority.
 		 */
@@ -389,6 +389,20 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					);
 					$this->add_admin_tab_set( 'edit.php?post_type=groups', $submenu['edit.php?post_type=groups'] );
 				}
+			}
+
+			// Exams
+
+			$exam_post_type_slug = learndash_get_post_type_slug( 'exam' );
+			$exam_post_type_url  = 'edit.php?post_type=' . $exam_post_type_slug;
+			if ( isset( $submenu[ $exam_post_type_url ] ) ) {
+				$add_submenu[ $exam_post_type_slug ] = array(
+					'name'  => LearnDash_Custom_Label::get_label( 'exams' ),
+					'cap'   => 'edit_courses',
+					'link'  => $exam_post_type_url,
+					'class' => 'submenu-ldlms-exams',
+				);
+				$this->add_admin_tab_set( $exam_post_type_url, $submenu[ $exam_post_type_url ] );
 			}
 
 			if ( current_user_can( 'edit_assignments' ) ) {
@@ -569,6 +583,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 				 * to something like 'lms-learndash_page_learndash-lms-reports' in the French
 				 * or something entirely different in other languages. So we add a secondary
 				 * check on the 'page' query string param.
+				 *
 				 * @since 3.0.7
 				 */
 				elseif ( ( isset( $_GET['page'] ) ) && ( 'learndash-lms-reports' === $_GET['page'] ) ) {
@@ -947,8 +962,8 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 
 					if ( ! empty( $this->admin_tab_sets[ $menu_tab_key ] ) ) {
 						global $learndash_current_page_link;
-						if ( ( isset( $admin_tab_item['parent_menu_link'] ) ) && ( ! empty( $admin_tab_item['parent_menu_link'] ) ) ) {
-							$learndash_current_page_link = trim( $admin_tab_item['parent_menu_link'] );
+						if ( ( isset( $this->admin_tab_sets[ $menu_tab_key ]['parent_menu_link'] ) ) && ( ! empty( $this->admin_tab_sets[ $menu_tab_key ]['parent_menu_link'] ) ) ) {
+							$learndash_current_page_link = trim( $this->admin_tab_sets[ $menu_tab_key ]['parent_menu_link'] );
 						} else {
 							$learndash_current_page_link = $menu_tab_key;
 						}
@@ -967,8 +982,8 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param string $menu_tab_key    Menu tab key
-		 * @param string $current_page_id Current Page ID
+		 * @param string $menu_tab_key    Menu tab key.
+		 * @param string $current_page_id Current Page ID.
 		 */
 		public function show_admin_tabs( $menu_tab_key = '', $current_page_id = '' ) {
 
@@ -987,13 +1002,11 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					$this->admin_tab_sets[ $menu_tab_key ] = apply_filters( 'learndash_admin_tab_sets', $this->admin_tab_sets[ $menu_tab_key ], $menu_tab_key, $current_page_id );
 					if ( ! empty( $this->admin_tab_sets[ $menu_tab_key ] ) ) {
 						global $learndash_current_page_link;
-						if ( ( isset( $admin_tab_item['parent_menu_link'] ) ) && ( ! empty( $admin_tab_item['parent_menu_link'] ) ) ) {
-							$learndash_current_page_link = trim( $admin_tab_item['parent_menu_link'] );
+						if ( ( isset( $this->admin_tab_sets[ $menu_tab_key ]['parent_menu_link'] ) ) && ( ! empty( $this->admin_tab_sets[ $menu_tab_key ]['parent_menu_link'] ) ) ) {
+							$learndash_current_page_link = trim( $this->admin_tab_sets[ $menu_tab_key ]['parent_menu_link'] );
 						} else {
 							if ( 'edit.php?post_type=sfwd-essays' === $menu_tab_key ) {
-								if ( true === learndash_is_group_leader_user() ) {
-									// Nothing here.
-								} else {
+								if ( true !== learndash_is_group_leader_user() ) {
 									$learndash_current_page_link = 'edit.php?post_type=sfwd-quiz';
 								}
 							} elseif ( 'edit.php?post_type=sfwd-transactions' === $menu_tab_key ) {
@@ -1127,7 +1140,6 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'sfwd-topics'         => \LearnDash_Custom_Label::get_label( 'topics' ),
 					'sfwd-quiz'           => \LearnDash_Custom_Label::get_label( 'quiz' ),
 					'sfwd-quizzes'        => \LearnDash_Custom_Label::get_label( 'quizzes' ),
-					'sfwd-courses'        => \LearnDash_Custom_Label::get_label( 'courses' ),
 					'sfwd-question'       => \LearnDash_Custom_Label::get_label( 'question' ),
 					'sfwd-certificates'   => esc_html__( 'Certificates', 'learndash' ),
 					'start-adding-lesson' => sprintf(
@@ -1175,8 +1187,8 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'save'                               => esc_html__( 'Save', 'learndash' ),
 					'settings'                           => esc_html__( 'Settings', 'learndash' ),
 					'edit_question'                      => sprintf(
-						// translators: placeholder: question
-						esc_html_x( 'Click here to edit the %s', 'placeholder: question', 'learndash' ),
+						// translators: placeholder: question.
+						esc_html_x( 'Click here to edit the %s', 'placeholder: question.', 'learndash' ),
 						learndash_get_custom_label_lower( 'question' )
 					),
 					'correct_answer_message'             => esc_html__( 'Message for correct answer - optional', 'learndash' ),
@@ -2001,9 +2013,11 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 						learndash_get_post_type_slug( 'topic' ),
 						learndash_get_post_type_slug( 'question' ),
 						learndash_get_post_type_slug( 'group' ),
+						learndash_get_post_type_slug( 'exam' ),
 					),
 					true
 				) ) {
+					/* The above code is adding the metaboxes to the post type. */
 					$post_settings_metaboxes = array();
 
 					switch ( $screen_post_type ) {
@@ -2105,6 +2119,17 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 									)
 								);
 							}
+
+							break;
+
+						case learndash_get_post_type_slug( 'exam' ):
+							$post_settings_metaboxes = array_merge(
+								$post_settings_metaboxes,
+								[
+									$screen_post_type,
+									'learndash-exam-display-content-settings',
+								]
+							);
 
 							break;
 					}
@@ -2305,7 +2330,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 
 			return add_query_arg( $url_params, admin_url( 'admin.php' ) );
 		}
-		// End of methods
+		// End of methods.
 	}
 }
 
@@ -2316,7 +2341,7 @@ $ld_admin_menus_tabs = Learndash_Admin_Menus_Tabs::get_instance();
  *
  * @since 2.4.0
  *
- * @param string  $menu_slug     Menu slug
+ * @param string  $menu_slug     Menu slug.
  * @param array   $menu_item     Menu item. See WP $submenu global.
  * @param integer $menu_priority Tab priority.
  */

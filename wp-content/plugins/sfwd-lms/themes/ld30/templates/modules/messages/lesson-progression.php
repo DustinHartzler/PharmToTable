@@ -29,7 +29,7 @@ if ( ! empty( $previous_item ) && $previous_item instanceof WP_Post ) {
 	switch ( $previous_item->post_type ) {
 		case ( 'sfwd-quiz' ):
 			$alert['message'] = sprintf(
-				// translators: placeholder: Quiz label
+				// translators: placeholder: Quiz label.
 				esc_html_x( 'Please go back and complete the previous %s.', 'placeholders: Quiz label', 'learndash' ),
 				esc_html( learndash_get_custom_label_lower( 'quiz' ) )
 			);
@@ -37,13 +37,13 @@ if ( ! empty( $previous_item ) && $previous_item instanceof WP_Post ) {
 		case ( 'sfwd-topic' ):
 			if ( ( isset( $sub_context ) ) && ( 'video_progression' === $sub_context ) ) {
 				$alert['message'] = sprintf(
-					// translators: placeholder: Topic label
+					// translators: placeholder: Topic label.
 					esc_html_x( 'Please go back and watch the video for the previous %s.', 'placeholders: topic label', 'learndash' ),
 					esc_html( learndash_get_custom_label_lower( 'topic' ) )
 				);
 			} else {
 				$alert['message'] = sprintf(
-					// translators: placeholder: Topic label
+					// translators: placeholder: Topic label.
 					esc_html_x( 'Please go back and complete the previous %s.', 'placeholders: topic label', 'learndash' ),
 					esc_html( learndash_get_custom_label_lower( 'topic' ) )
 				);
@@ -52,13 +52,13 @@ if ( ! empty( $previous_item ) && $previous_item instanceof WP_Post ) {
 		default:
 			if ( ( isset( $sub_context ) ) && ( 'video_progression' === $sub_context ) ) {
 				$alert['message'] = sprintf(
-					// translators: placeholder: Lesson label
+					// translators: placeholder: Lesson label.
 					esc_html_x( 'Please go back and watch the video for the previous %s.', 'placeholders: lesson label', 'learndash' ),
 					esc_html( learndash_get_custom_label_lower( 'lesson' ) )
 				);
 			} else {
 				$alert['message'] = sprintf(
-					// translators: placeholder: Lesson Label
+					// translators: placeholder: Lesson Label.
 					esc_html_x( 'Please go back and complete the previous %s.', 'placeholders: lesson label', 'learndash' ),
 					esc_html( learndash_get_custom_label_lower( 'lesson' ) )
 				);
@@ -68,7 +68,7 @@ if ( ! empty( $previous_item ) && $previous_item instanceof WP_Post ) {
 } else {
 
 	$alert['message'] = sprintf(
-		// translators: placeholder: Lesson
+		// translators: placeholder: Lesson.
 		esc_html_x( 'Please go back and complete the previous %s.', 'placeholders lesson', 'learndash' ),
 		esc_html( learndash_get_custom_label_lower( 'lesson' ) )
 	);

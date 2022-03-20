@@ -11,14 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Defaults for fallbacks
+// Defaults for fallbacks.
 $certificate_link = null;
 $score            = null;
 $stats            = '--';
 
 /**
  * Set the quiz status and certificate link (if applicable)
- * @var [type]
  */
 if ( ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) && ( ! empty( $quiz_attempt['certificate']['certificateLink'] ) ) ) {
 	$certificate_link = $quiz_attempt['certificate']['certificateLink'];
@@ -30,13 +29,11 @@ $status = empty( $quiz_attempt['pass'] ) ? 'failed' : 'passed';
 
 /**
  * Populate the score variables
- * @var [type]
  */
 $score = round( $quiz_attempt['percentage'], 2 ) . '%';
 
 /**
  * Populate the stats variable
- * @var [type]
  */
 if ( get_current_user_id() === absint( $user_id ) || learndash_is_admin_user() || learndash_is_group_leader_user() ) :
 

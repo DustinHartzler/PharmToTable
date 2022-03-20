@@ -357,8 +357,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 					// LEARNDASH-2744 : Not sure why these lines are here. We shoul be use the original started/completed dates
 					// ----------------
-					//unset( $quiz_data['started'] );
-					//unset( $quiz_data['completed'] );
+					// unset( $quiz_data['started'] );
+					// unset( $quiz_data['completed'] );
 
 					if ( ( ! isset( $quiz_data['completed'] ) ) || ( empty( $quiz_data['completed'] ) ) ) {
 						if ( ( isset( $quiz_data['time'] ) ) && ( ! empty( $quiz_data['time'] ) ) ) {

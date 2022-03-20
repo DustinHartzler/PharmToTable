@@ -131,9 +131,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param mixed  $val Value to validate.
-		 * @param string $key Key of value being validated.
-		 * @param array  $args Array of field args.
+		 * @param mixed  $val       Value to validate.
+		 * @param string $key       Key of value being validated.
+		 * @param array  $args      Array of field args.
+		 * @param array  $post_args Array of post args.
 		 *
 		 * @return mixed $val validated value.
 		 */

@@ -17,6 +17,11 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 	 * @since 2.5.2
 	 */
 	class LearnDash_Settings_Page_Translations extends LearnDash_Settings_Page {
+		/**
+		 * Option key
+		 *
+		 * @var string
+		 */
 		private $ld_options_key = 'ld-translatation-message';
 
 		/**
@@ -103,7 +108,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		public function handle_translation_message() {
 			$reply = get_option( $this->ld_options_key, array() );
 			if ( ! empty( $reply ) ) {
-				// Delete the option we don't need anymore
+				// Delete the option we don't need anymore.
 				delete_option( $this->ld_options_key );
 
 				if ( ( isset( $reply['status'] ) ) && ( isset( $reply['message'] ) ) ) {

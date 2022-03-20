@@ -23,8 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Users_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
@@ -73,8 +72,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 					),
 					array(
 						'methods'             => WP_REST_Server::READABLE,
-						'callback'            => array( $this, 'get_items' ),
-						'permission_callback' => array( $this, 'get_items_permissions_check' ),
+						'callback'            => array( $this, 'get_user_courses' ),
+						'permission_callback' => array( $this, 'get_user_courses_permissions_check' ),
 						'args'                => $this->get_collection_params(),
 					),
 					array(
@@ -144,6 +143,52 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 			return $schema;
 		}
 
+		public function get_user_courses( $request ) {
+			$user_id = $request['id'];
+			if ( empty( $user_id ) ) {
+				return new WP_Error(
+					'rest_user_invalid_id',
+					esc_html__( 'Invalid User ID.', 'learndash' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
+
+			$user = get_user_by( 'id', $user_id );
+			if ( ( ! $user ) || ( ! is_a( $user, 'WP_User' ) ) ) {
+				return new WP_Error(
+					'rest_user_invalid_id',
+					esc_html__( 'Invalid User ID.', 'learndash' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
+
+			$user_courses = array();
+
+			$course_ids = learndash_user_get_enrolled_courses( $user_id, array(), true );
+			if ( ! empty( $course_ids ) ) {
+
+				$route_url = '/' . $this->namespace . '/' . $this->get_rest_base( 'courses' );
+				$request   = new WP_REST_Request( 'GET', $route_url );
+				$request->set_query_params( array( 'include' => $course_ids ) );
+
+				$response     = rest_do_request( $request );
+				$server       = rest_get_server();
+				$user_courses = $server->response_to_data( $response, false );
+			}
+
+			// Create the response object.
+			$response = rest_ensure_response( $user_courses );
+
+			// Add a custom status code.
+			$response->set_status( 200 );
+
+			return $response;
+		}
+
 		/**
 		 * Checks if a given request has access to read user courses.
 		 *
@@ -153,11 +198,13 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 		 *
 		 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 		 */
-		public function get_items_permissions_check( $request ) {
+		public function get_user_courses_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -175,6 +222,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -192,6 +241,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -334,10 +385,10 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -476,102 +527,11 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
-
-			return $response;
-		}
-
-		/**
-		 * Filter Users Courses query args.
-		 *
-		 * @since 3.3.0
-		 *
-		 * @param array           $query_args Key value array of query var to query value.
-		 * @param WP_REST_Request $request    The request used.
-		 *
-		 * @return array Key value array of query var to query value.
-		 */
-		public function rest_query_filter( $query_args, $request ) {
-			if ( ! $this->is_rest_request( $request ) ) {
-				return $query_args;
-			}
-
-			$query_args = parent::rest_query_filter( $query_args, $request );
-
-			$route_url    = $request->get_route();
-			$ld_route_url = '/' . $this->namespace . '/' . $this->rest_base . '/' . absint( $request['id'] ) . '/' . $this->rest_sub_base;
-			if ( ( ! empty( $route_url ) ) && ( $ld_route_url === $route_url ) ) {
-				$user_id = $request['id'];
-				if ( empty( $user_id ) ) {
-					return new WP_Error( 'rest_user_invalid_id', esc_html__( 'Invalid User ID.', 'learndash' ), array( 'status' => 404 ) );
-				}
-
-				if ( is_user_logged_in() ) {
-					$current_user_id = get_current_user_id();
-				} else {
-					$current_user_id = 0;
-				}
-
-				$query_args['post__in'] = array( 0 );
-				if ( ! empty( $current_user_id ) ) {
-					$course_ids = learndash_user_get_enrolled_courses( $user_id, array(), true );
-					if ( ! empty( $course_ids ) ) {
-						$query_args['post__in'] = $course_ids;
-					}
-				}
-			}
-			return $query_args;
-		}
-
-		/**
-		 * Override the REST response links.
-		 *
-		 * @since 3.3.0
-		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
-		 */
-		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
-			$user_id = (int) $request['id'];
-			if ( ! empty( $user_id ) ) {
-				// Need to compare the requested route to this controller route.
-				$route_url    = $request->get_route();
-				$ld_route_url = '/' . $this->namespace . '/' . $this->rest_base . '/' . $user_id . '/courses';
-				if ( ( ! empty( $route_url ) ) && ( $ld_route_url === $route_url ) && ( $post->post_type === $this->post_type ) ) {
-					$current_links = $response->get_links();
-
-					if ( ! empty( $current_links ) ) {
-						foreach ( $current_links as $rel => $links ) {
-							if ( in_array( $rel, array( 'self', 'collection' ), true ) ) {
-								$links_changed = false;
-								foreach ( $links as $lidx => $link ) {
-									if ( ( isset( $link['href'] ) ) && ( ! empty( $link['href'] ) ) ) {
-										$link_href = str_replace(
-											'/' . $this->namespace . '/' . $this->rest_base,
-											'/' . $this->namespace . '/' . $this->get_rest_base( 'courses' ),
-											$link['href']
-										);
-										if ( $link['href'] !== $link_href ) {
-											$links[ $lidx ]['href'] = $link_href;
-											$links_changed          = true;
-										}
-									}
-								}
-
-								if ( true === $links_changed ) {
-									$response->remove_link( $rel );
-									$response->add_links( array( $rel => $links ) );
-								}
-							}
-						}
-					}
-				}
-			}
 
 			return $response;
 		}

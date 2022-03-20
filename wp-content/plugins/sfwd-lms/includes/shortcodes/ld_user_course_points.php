@@ -23,10 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type string $context The shortcode context. Default empty.
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_user_course_points'.
  *
  * @return void|string The `ld_user_course_points` shortcode output.
  */
-function learndash_user_course_points_shortcode( $atts = array(), $content = '' ) {
+function learndash_user_course_points_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_user_course_points' ) {
 	global $learndash_shortcode_used;
 
 	$defaults = array(
@@ -34,6 +35,9 @@ function learndash_user_course_points_shortcode( $atts = array(), $content = '' 
 		'context' => 'ld_user_course_points',
 	);
 	$atts     = wp_parse_args( $atts, $defaults );
+
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
 	if ( ! isset( $atts['user_id'] ) ) {
 		return;
@@ -54,4 +58,4 @@ function learndash_user_course_points_shortcode( $atts = array(), $content = '' 
 	);
 	return $content;
 }
-add_shortcode( 'ld_user_course_points', 'learndash_user_course_points_shortcode', 10, 2 );
+add_shortcode( 'ld_user_course_points', 'learndash_user_course_points_shortcode', 10, 3 );

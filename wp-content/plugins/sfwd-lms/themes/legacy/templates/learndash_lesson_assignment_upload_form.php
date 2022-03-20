@@ -1,6 +1,6 @@
 <?php
 /**
- * lesson/topic assignment upload form.
+ * Lesson/topic assignment upload form.
  *
  * If the lesson/topic is set to be an assignment there will be an upload form displayed to the user.
  *

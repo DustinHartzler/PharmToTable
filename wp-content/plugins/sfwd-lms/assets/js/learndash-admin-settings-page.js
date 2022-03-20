@@ -1247,6 +1247,10 @@ function learndash_course_edit_page_billing_cycle_javascript() {
 			output_message(billing_cycle);
 		});
 	}
+
+	if ( jQuery( 'table.learndash-settings-table-sortable').length) {
+		jQuery( 'table.learndash-settings-table-sortable tbody').sortable();
+	}
 };
 
 function learndash_get_base_select2_args() {

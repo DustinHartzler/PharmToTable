@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Controller_V1' ) ) && ( class_exists( 'LD
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 {
+	class LD_REST_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
@@ -144,6 +143,8 @@ if ( ( ! class_exists( 'LD_REST_Groups_Controller_V1' ) ) && ( class_exists( 'LD
 		public function get_items_permissions_check( $request ) {
 			if ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -167,8 +168,8 @@ if ( ( ! class_exists( 'LD_REST_Groups_Controller_V1' ) ) && ( class_exists( 'LD
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param array           $query_args Key value array of query var to query value.
-		 * @param WP_REST_Request $request    The request used.
+		 * @param array           $args     Key value array of query var to query value.
+		 * @param WP_REST_Request $request  The request used.
 		 *
 		 * @return array Key value array of query var to query value.
 		 */
@@ -219,6 +220,6 @@ if ( ( ! class_exists( 'LD_REST_Groups_Controller_V1' ) ) && ( class_exists( 'LD
 			return $response;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

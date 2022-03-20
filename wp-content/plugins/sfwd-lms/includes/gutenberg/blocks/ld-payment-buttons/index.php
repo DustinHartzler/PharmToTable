@@ -25,16 +25,22 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 			$this->shortcode_slug   = 'learndash_payment_buttons';
 			$this->block_slug       = 'ld-payment-buttons';
 			$this->block_attributes = array(
+				'display_type'      => array(
+					'type' => 'string',
+				),
 				'course_id'         => array(
+					'type' => 'string',
+				),
+				'group_id'          => array(
 					'type' => 'string',
 				),
 				'preview_show'      => array(
 					'type' => 'boolean',
 				),
-				'preview_course_id' => array(
+				'preview_user_id'   => array(
 					'type' => 'string',
 				),
-				'meta'              => array(
+				'editing_post_meta' => array(
 					'type' => 'object',
 				),
 			);
@@ -52,30 +58,40 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param array $attributes Shortcode attrbutes.
+		 * @param array    $block_attributes The block attrbutes.
+		 * @param string   $block_content    The block content.
+		 * @param WP_block $block            The block object.
+		 *
 		 * @return none The output is echoed.
 		 */
-		public function render_block( $attributes = array() ) {
-			$attributes = $this->preprocess_block_attributes( $attributes );
+		public function render_block( $block_attributes = array(), $block_content = '', WP_block $block = null ) {
+			$course_post = null;
 
-			/** Here we don't render the button via the shortcode. We can't due to the CSS/JS needed to be loaded
-			 * like for Stripe. So we just show a button and let it go at that.
-			 */
-			$attributes_meta = array();
-			if ( isset( $attributes['meta'] ) ) {
-				$attributes_meta = $attributes['meta'];
-				unset( $attributes['meta'] );
-			}
+			$block_attributes = $this->preprocess_block_attributes( $block_attributes );
 
-			if ( ( isset( $attributes['preview_show'] ) ) && ( ! empty( $attributes['preview_show'] ) ) ) {
-				if ( ( isset( $attributes['preview_course_id'] ) ) && ( ! empty( $attributes['preview_course_id'] ) ) ) {
-					$attributes['course_id'] = absint( $attributes['preview_course_id'] );
-					unset( $attributes['preview_course_id'] );
+			// Only the 'editing_post_meta' element will be sent from within the post edit screen.
+			if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+				$block_attributes['course_id'] = $this->block_attributes_get_post_id( $block_attributes, 'course' );
+				$block_attributes['group_id']  = $this->block_attributes_get_post_id( $block_attributes, 'group' );
+
+				if ( ( empty( $block_attributes['course_id'] ) ) && ( empty( $block_attributes['group_id'] ) ) ) {
+					$edit_post_type = $this->block_attributes_get_editing_post_type( $block_attributes );
+					$edit_post_id   = $this->block_attributes_get_editing_post_id( $block_attributes );
+
+					if ( learndash_get_post_type_slug( 'group' ) === $edit_post_type ) {
+						if ( ! empty( $edit_post_id ) ) {
+							$block_attributes['group_id'] = $edit_post_id;
+						}
+					}
+
+					if ( learndash_get_post_type_slug( 'course' ) === $edit_post_type ) {
+						if ( ! empty( $edit_post_id ) ) {
+							$block_attributes['course_id'] = $edit_post_id;
+						}
+					}
 				}
-			}
 
-			if ( ( ! isset( $attributes['course_id'] ) ) || ( empty( $attributes['course_id'] ) ) ) {
-				if ( ( ! isset( $attributes_meta['course_id'] ) ) || ( empty( $attributes_meta['course_id'] ) ) ) {
+				if ( ( empty( $block_attributes['course_id'] ) ) && ( empty( $block_attributes['group_id'] ) ) ) {
 					return $this->render_block_wrap(
 						'<span class="learndash-block-error-message">' . sprintf(
 						// translators: placeholder: Course, Course.
@@ -84,66 +100,119 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 							LearnDash_Custom_Label::get_label( 'course' )
 						) . '</span>'
 					);
-				} else {
-					$attributes['course_id'] = (int) $attributes_meta['course_id'];
+				}
+
+				if ( ! empty( $block_attributes['course_id'] ) ) {
+					$course_post = get_post( (int) $block_attributes['course_id'] );
+					if ( ( ! is_a( $course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $course_post->post_type ) ) {
+						return $this->render_block_wrap(
+							'<span class="learndash-block-error-message">' . sprintf(
+							// translators: placeholder: Course.
+								_x( 'Invalid %1$s ID.', 'placeholder: Course', 'learndash' ),
+								LearnDash_Custom_Label::get_label( 'course' )
+							) . '</span>'
+						);
+					}
+				}
+
+				if ( ! empty( $block_attributes['group_id'] ) ) {
+					$group_post = get_post( (int) $block_attributes['group_id'] );
+					if ( ( ! is_a( $group_post, 'WP_Post' ) ) || ( learndash_get_post_type_slug( 'group' ) !== $group_post->post_type ) ) {
+						return $this->render_block_wrap(
+							'<span class="learndash-block-error-message">' . sprintf(
+							// translators: placeholder: Group.
+								_x( 'Invalid %1$s ID.', 'placeholder: Group', 'learndash' ),
+								LearnDash_Custom_Label::get_label( 'group' )
+							) . '</span>'
+						);
+					}
 				}
 			}
 
-			$course_post = get_post( (int) $attributes['course_id'] );
-			if ( ( ! is_a( $course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $course_post->post_type ) ) {
-				return $this->render_block_wrap(
-					'<span class="learndash-block-error-message">' . sprintf(
-					// translators: placeholder: Course.
-						_x( 'Invalid %1$s ID.', 'placeholder: Course', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'course' )
-					) . '</span>'
-				);
-			}
-
-			$course_price_type = learndash_get_setting( $course_post, 'course_price_type' );
-			if ( ( ! empty( $course_price_type ) ) && ( in_array( $course_price_type, array( 'free', 'paynow', 'subscribe' ) ) ) ) {
-				$button_text = LearnDash_Custom_Label::get_label( 'button_take_this_course' );
-				if ( ! empty( $button_text ) ) {
-					$shortcode_out = '<a class="btn-join" href="#" id="btn-join">' . $button_text . '</a>';
-				} else {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
-				}
-
-				return $this->render_block_wrap( $shortcode_out );
-			} else {
-				return $this->render_block_wrap(
-					'<span class="learndash-block-error-message">' . sprintf(
-					// translators: placeholder: Course.
-						esc_html_x( '%s Price Type must be Free, PayNow or Subscribe.', 'placeholder: Course', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'course' )
-					) . '</span>'
-				);
-			}
-			wp_die();
-		}
-
-		/**
-		 * Called from the LD function learndash_convert_block_markers_shortcode() when parsing the block content.
-		 *
-		 * @since 2.5.9
-		 *
-		 * @param array  $attributes The array of attributes parse from the block content.
-		 * @param string $shortcode_slug This will match the related LD shortcode ld_profile, ld_course_list, etc.
-		 * @param string $block_slug This is the block token being processed. Normally same as the shortcode but underscore replaced with dash.
-		 * @param string $content This is the orignal full content being parsed.
-		 *
-		 * @return array $attributes.
-		 */
-		public function learndash_block_markers_shortcode_atts_filter( $attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
-			if ( $shortcode_slug === $this->shortcode_slug ) {
-				if ( isset( $attributes['preview_show'] ) ) {
-					unset( $attributes['preview_show'] );
-				}
-				if ( isset( $attributes['preview_user_id'] ) ) {
-					unset( $attributes['preview_user_id'] );
+			if ( ( empty( $atts['course_id'] ) ) && ( empty( $atts['course_id'] ) ) ) {
+				$viewed_post_id = (int) get_the_ID();
+				if ( ! empty( $viewed_post_id ) ) {
+					if ( in_array( get_post_type( $viewed_post_id ), learndash_get_post_types( 'course' ), true ) ) {
+						$block_attributes['course_id'] = learndash_get_course_id( $viewed_post_id );
+					} elseif ( get_post_type( $viewed_post_id ) === learndash_get_post_type_slug( 'group' ) ) {
+						$block_attributes['group_id'] = $viewed_post_id;
+					}
 				}
 			}
-			return $attributes;
+
+			$shortcode_out = '';
+
+			if ( ! empty( $block_attributes['course_id'] ) ) {
+				$course_price_type = learndash_get_setting( $course_post, 'course_price_type' );
+				if ( empty( $course_price_type ) ) {
+					$course_price_type = LEARNDASH_DEFAULT_COURSE_PRICE_TYPE;
+				}
+
+				if ( ! in_array( $course_price_type, array( 'free', 'paynow', 'subscribe' ), true ) ) {
+					if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+						return $this->render_block_wrap(
+							'<span class="learndash-block-error-message">' . sprintf(
+							// translators: placeholder: Course.
+								esc_html_x( '%s Price Type must be Free, PayNow or Subscribe.', 'placeholder: Course', 'learndash' ),
+								LearnDash_Custom_Label::get_label( 'course' )
+							) . '</span>'
+						);
+					}
+				}
+
+				$shortcode_str = $this->build_block_shortcode( $block_attributes, $block_content );
+				if ( ! empty( $shortcode_str ) ) {
+					$shortcode_out = do_shortcode( $shortcode_str );
+
+					// In case the button shortcode does not render and if we are editing we show a default button for the output.
+					if ( ( empty( $shortcode_out ) ) && ( $this->block_attributes_is_editing_post( $block_attributes ) ) ) {
+						$button_text = LearnDash_Custom_Label::get_label( 'button_take_this_course' );
+						if ( ! empty( $button_text ) ) {
+							$shortcode_out = '<a class="btn-join" href="#" id="btn-join">' . $button_text . '</a>';
+							if ( ! empty( $shortcode_out ) ) {
+								$shortcode_out = $this->render_block_wrap( $shortcode_out );
+							}
+						}
+					}
+				}
+
+				return $shortcode_out;
+			} elseif ( ! empty( $block_attributes['group_id'] ) ) {
+				$group_price_type = learndash_get_setting( $block_attributes['group_id'], 'group_price_type' );
+				if ( empty( $group_price_type ) ) {
+					$group_price_type = LEARNDASH_DEFAULT_GROUP_PRICE_TYPE;
+				}
+
+				if ( ! in_array( $group_price_type, array( 'free', 'paynow', 'subscribe' ), true ) ) {
+					if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+						return $this->render_block_wrap(
+							'<span class="learndash-block-error-message">' . sprintf(
+							// translators: placeholder: Group.
+								esc_html_x( '%s Price Type must be Free, PayNow or Subscribe.', 'placeholder: Group', 'learndash' ),
+								LearnDash_Custom_Label::get_label( 'group' )
+							) . '</span>'
+						);
+					}
+				}
+
+				$shortcode_str = $this->build_block_shortcode( $block_attributes, $block_content );
+				if ( ! empty( $shortcode_str ) ) {
+					$shortcode_out = do_shortcode( $shortcode_str );
+
+					// In case the button shortcode does not render and if we are editing we show a default button for the output.
+					if ( ( empty( $shortcode_out ) ) && ( $this->block_attributes_is_editing_post( $block_attributes ) ) ) {
+						$button_text = LearnDash_Custom_Label::get_label( 'button_take_this_group' );
+						if ( ! empty( $button_text ) ) {
+							$shortcode_out = '<a class="btn-join" href="#" id="btn-join">' . $button_text . '</a>';
+							if ( ! empty( $shortcode_out ) ) {
+								$shortcode_out = $this->render_block_wrap( $shortcode_out );
+							}
+						}
+					}
+				}
+
+				return $shortcode_out;
+			}
 		}
 
 		// End of functions.

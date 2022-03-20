@@ -13,14 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * DEPRECATED
- * @var [type]
  */
 
 $certificateLink = null;
 
 /**
  * Identify the quiz status and certification
- *
  */
 if ( isset( $quiz_attempt['has_graded'] ) && true === (bool) $quiz_attempt['has_graded'] && true === (bool) LD_QuizPro::quiz_attempt_has_ungraded_question( $quiz_attempt ) ) :
 	$status = 'pending';
@@ -31,15 +29,12 @@ endif;
 
 /**
  * Set the quiz title and link
- *
  */
 $quiz_title = ! empty( $quiz_attempt['post']->post_title ) ? $quiz_attempt['post']->post_title : @$quiz_attempt['quiz_title'];
 $quiz_link  = ! empty( $quiz_attempt['post']->ID ) ? learndash_get_step_permalink( intval( $quiz_attempt['post']->ID ), $course_id ) : '#';
 
 /**
  * Only display the quiz if we've found a title
- *
- * @var [string] $quiz_title
  */
 if ( ! empty( $quiz_title ) ) : ?>
 

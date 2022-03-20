@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 
+	/**
+	 * Class to update LearnDash
+	 */
 	class nss_plugin_updater_sfwd_lms {
 
 		/**
@@ -50,18 +53,45 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 */
 		public $code;
 
+		/**
+		 * Updater object
+		 *
+		 * @var object
+		 */
 		private $ld_updater;
 
+		/**
+		 * Upgrade notice
+		 *
+		 * @var array
+		 */
 		private $upgrade_notice = array();
 
+		/**
+		 * Minutes value of how frequent we validate the license.
+		 *
+		 * @since 3.6.0.3
+		 *
+		 * @var integer $plugin_license_cache_time_limit (minutes).
+		 */
+		private $plugin_license_cache_time_limit;
+
+		/**
+		 * Minutes value of how frequent we check for new plugin information.
+		 *
+		 * @since 3.6.0.3
+		 *
+		 * @var integer $plugin_info_cache_time_limit (minutes).
+		 */
+		private $plugin_info_cache_time_limit;
 
 		/**
 		 * Initialize a new instance of the WordPress Auto-Update class
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param string $update_path
-		 * @param string $plugin_slug
+		 * @param string $update_path Update path.
+		 * @param string $plugin_slug Plugin slug.
 		 */
 		public function __construct( $update_path, $plugin_slug ) {
 
@@ -74,6 +104,16 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 			$this->slug       = str_replace( '.php', '', $t2 );
 			$code             = esc_attr( $this->slug );
 			$this->code       = $code;
+
+			$this->plugin_license_cache_time_limit = 3600; // 60 minutes
+			if ( ( defined( 'LEARNDASH_PLUGIN_LICENSE_INTERVAL' ) ) && ( LEARNDASH_PLUGIN_LICENSE_INTERVAL > 3600 ) ) {
+				$this->plugin_license_cache_time_limit = LEARNDASH_PLUGIN_LICENSE_INTERVAL;
+			}
+
+			$this->plugin_info_cache_time_limit = 600; // 10 minutes
+			if ( ( defined( 'LEARNDASH_PLUGIN_INFO_INTERVAL' ) ) && ( LEARNDASH_PLUGIN_INFO_INTERVAL > 600 ) ) {
+				$this->plugin_info_cache_time_limit = LEARNDASH_PLUGIN_INFO_INTERVAL;
+			}
 
 			$license      = get_option( 'nss_plugin_license_' . $code );
 			$licenseemail = get_option( 'nss_plugin_license_email_' . $code );
@@ -89,6 +129,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 							'licenseemail'    => rawurlencode( $licenseemail ),
 							'nsspu_wpurl'     => rawurlencode( get_bloginfo( 'wpurl' ) ),
 							'nsspu_admin'     => rawurlencode( get_bloginfo( 'admin_email' ) ),
+							'nsspu_test'      => 'TEST',
 							'current_version' => $this->current_version,
 						),
 						$update_path
@@ -96,13 +137,13 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 				}
 			}
 
-			// Add Menu
+			// Add Menu.
 			add_action( 'admin_menu', array( $this, 'nss_plugin_license_menu' ), 1 );
 
-			// define the alternative API for updating checking
+			// define the alternative API for updating checking.
 			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
 
-			// Define the alternative response for information checking
+			// Define the alternative response for information checking.
 			add_filter( 'plugins_api', array( $this, 'check_info' ), 50, 3 );
 			add_action( 'in_admin_header', array( $this, 'check_notice' ) );
 
@@ -119,30 +160,43 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 * @since 3.0
 		 */
 		public function nss_plugin_license_update() {
+			if ( ( isset( $_GET['force-check'] ) ) && ( '1' === $_GET['force-check'] ) ) {
+				delete_option( 'nss_plugin_info_check_' . $this->slug );
+				delete_option( 'nss_plugin_check_' . $this->slug );
+			}
+
 			// See if the user has posted us some information
-			// If they did, this hidden field will be set to 'Y'
+			// If they did, this hidden field will be set to 'Y'.
 			if ( ( isset( $_POST['ld_plugin_license_nonce'] ) ) && ( ! empty( $_POST['ld_plugin_license_nonce'] ) ) && ( wp_verify_nonce( $_POST['ld_plugin_license_nonce'], 'update_nss_plugin_license_' . $this->code ) ) ) {
 				$license = '';
 				if ( ( isset( $_POST[ 'nss_plugin_license_' . $this->code ] ) ) && ( ! empty( $_POST[ 'nss_plugin_license_' . $this->code ] ) ) ) {
-					$license = esc_attr( $_POST[ 'nss_plugin_license_' . $this->code ] );
+					$license = trim( sanitize_text_field( wp_unslash( $_POST[ 'nss_plugin_license_' . $this->code ] ) ) );
 				}
 
 				$email = '';
 				if ( ( isset( $_POST[ 'nss_plugin_license_email_' . $this->code ] ) ) && ( is_email( $_POST[ 'nss_plugin_license_email_' . $this->code ] ) ) ) {
-					$email = $_POST[ 'nss_plugin_license_email_' . $this->code ];
+					$email = trim( sanitize_text_field( wp_unslash( $_POST[ 'nss_plugin_license_email_' . $this->code ] ) ) );
 				}
 
-				// Save the posted value in the database
+				// Save the posted value in the database.
 				update_option( 'nss_plugin_license_' . $this->code, trim( $license ) );
 				update_option( 'nss_plugin_license_email_' . $this->code, trim( $email ) );
 
 				$this->reset();
+
+				$this->getRemote_license();
 				?>
 				<script> window.location = window.location; </script>
 				<?php
 			}
 		}
 
+		/**
+		 * Show upgrade notification
+		 *
+		 * @param array $current_plugin_metadata Current metadata.
+		 * @param array $new_plugin_metadata     New metadata.
+		 */
 		public function show_upgrade_notification( $current_plugin_metadata, $new_plugin_metadata ) {
 			$upgrade_notice = $this->get_plugin_upgrade_notice();
 			if ( ! empty( $upgrade_notice ) ) {
@@ -154,10 +208,6 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 * Utility function to the status of the license.
 		 */
 		public function is_license_valid() {
-			//if ( ! learndash_updates_enabled() ) {
-			//	return true;
-			//}
-
 			$license = get_option( 'nss_plugin_remote_license_' . $this->slug );
 			if ( ( isset( $license['value'] ) ) && ( '1' === $license['value'] ) ) {
 				return true;
@@ -171,6 +221,11 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 * @since 2.1.0
 		 */
 		public function check_notice() {
+			if ( ( isset( $_GET['force-check'] ) ) && ( '1' === $_GET['force-check'] ) ) {
+				delete_option( 'nss_plugin_info_check_' . $this->slug );
+				delete_option( 'nss_plugin_check_' . $this->slug );
+			}
+
 			if ( ( isset( $_REQUEST['page'] ) ) && ( 'nss_plugin_license-' . $this->code . '-settings' === $_REQUEST['page'] ) ||
 				( isset( $_REQUEST['page'] ) ) && ( 'learndash_lms_overview' === $_REQUEST['page'] ) ) {
 				$this->check_update( array() );
@@ -189,16 +244,31 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 * @return bool
 		 */
 		public function time_to_recheck() {
-			$nss_plugin_check = get_option( 'nss_plugin_check_' . $this->slug );
+			return $this->time_to_recheck_license();
+		}
 
-			if ( ( empty( $nss_plugin_check ) )
-			|| ( ! empty( $_REQUEST['pluginupdate'] ) && $_REQUEST['pluginupdate'] == $this->code )
-			|| ( ! empty( $_GET['force-check'] ) )
-			|| ( $nss_plugin_check <= time() - 12 * 60 * 60 ) ) {
+		public function time_to_recheck_license() {
+			if ( ( isset( $_REQUEST['pluginupdate'] ) ) && ( $_REQUEST['pluginupdate'] === $this->code ) ) {
+				//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': return true #2' );
 				return true;
-			} else {
-				return false;
 			}
+
+			$nss_plugin_check = get_option( 'nss_plugin_check_' . $this->slug );
+			$nss_plugin_check = absint( $nss_plugin_check );
+
+			//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': nss_plugin_check['. $nss_plugin_check . ']' );
+
+			$time_less_interval = $nss_plugin_check + ( $this->plugin_license_cache_time_limit * MINUTE_IN_SECONDS ) - time();
+			//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': time_less_interval['. $time_less_interval . ']' );
+
+
+			if ( $time_less_interval < 0 ) {
+				//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': return true #3' );
+				return true;
+			}
+
+			//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': return false' );
+			return false;
 		}
 
 		/**
@@ -211,9 +281,8 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 			delete_option( 'nss_plugin_remote_license_' . $this->slug );
 			delete_option( 'nss_plugin_info_' . $this->slug );
 			delete_option( 'nss_plugin_check_' . $this->slug );
+			delete_option( 'nss_plugin_info_check_' . $this->slug );
 		}
-
-
 
 		/**
 		 * Echos the administrative notice if the plugin license is incorrect
@@ -297,58 +366,51 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param $transient
+		 * @param mixed $transient Value of transient.
 		 *
 		 * @return object $transient
 		 */
 		public function check_update( $transient ) {
 
+			if ( ( isset( $_GET['force-check'] ) ) && ( $_GET['force-check'] === $this->code ) ) {
+			error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': return true #2' );
+			//	return true;
+			}
+
 			if ( is_array( $transient ) ) {
 				$transient = (object) $transient;
 			}
 
-			if ( ! $this->time_to_recheck() ) {
-				$remote_version = get_option( 'nss_plugin_remote_version_' . $this->slug );
-				$license        = get_option( 'nss_plugin_remote_license_' . $this->slug );
-			} else {
-				$remote_version = '';
-				$license        = '';
+			// If the update_pathis not set then abort.
+			if ( empty( $this->update_path ) ) {
+				return $transient;
 			}
+
+			$remote_version = '';
+			$license        = '';
 
 			// Get the remote version
-			if ( empty( $remote_version ) ) {
-				$info = $this->getRemote_information();
-				if ( ( $info ) && ( property_exists( $info, 'new_version' ) ) ) {
-					$remote_version = $info->new_version;
-					update_option( 'nss_plugin_remote_version_' . $this->slug, $remote_version );
-					update_option( 'nss_plugin_info_' . $this->slug, $info );
-				}
+			$info = $this->getRemote_information();
+			if ( ( $info ) && ( property_exists( $info, 'new_version' ) ) ) {
+				$remote_version = $info->new_version;
+				update_option( 'nss_plugin_remote_version_' . $this->slug, $remote_version );
+				//update_option( 'nss_plugin_info_' . $this->slug, $info );
 			}
 
-			if ( empty( $license ) ) {
-				$value   = $this->getRemote_license();
-				$license = array( 'value' => $value );
-				update_option( 'nss_plugin_remote_license_' . $this->slug, $license );
-			}
 
-			// If a newer version is available, add the update
-			if ( version_compare( $this->current_version, $remote_version, '<' ) ) {
+			// If a newer version is available, add the update.
+			if ( ( ! empty( $remote_version ) ) && ( version_compare( $this->current_version, $remote_version, '<' ) ) ) {
 				$obj              = new stdClass();
 				$obj->slug        = $this->slug;
 				$obj->new_version = $remote_version;
 				$obj->plugin      = 'sfwd-lms/' . $this->slug;
 
-				if ( ! empty( $this->update_path ) ) {
-					$obj->url     = $this->update_path;
-					$obj->package = $this->update_path;
-				} else {
-					$obj->url     = null;
-					$obj->package = null;
-				}
+				$obj->url     = $this->update_path;
+				$obj->package = $this->update_path;
 
 				$plugin_readme = $this->get_plugin_readme();
 				if ( ! empty( $plugin_readme ) ) {
-					// First we remove the properties we DON'T want from the support site
+					// First we remove the properties we DON'T want from the support site.
 					foreach ( array( 'sections', 'requires', 'tested', 'last_updated' ) as $property_key ) {
 						if ( property_exists( $obj, $property_key ) ) {
 							unset( $obj->$property_key );
@@ -379,21 +441,31 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 			return $transient;
 		}
 
+		/**
+		 * Get plugin readme
+		 */
 		public function get_plugin_readme() {
 			$override_cache = false;
 			if ( isset( $_GET['force-check'] ) ) {
 				$override_cache = true;
 			}
 
-			if ( class_exists( 'LearnDash_Addon_Updater' ) ) {
-				if ( is_null( $this->ld_updater ) ) {
-					$this->ld_updater = LearnDash_Addon_Updater::get_instance();
+			if ( ! empty( $this->update_path ) ) {
+				if ( class_exists( 'LearnDash_Addon_Updater' ) ) {
+					if ( is_null( $this->ld_updater ) ) {
+						$this->ld_updater = LearnDash_Addon_Updater::get_instance();
+					}
+					$this->ld_updater->get_addon_plugins( $override_cache );
+					return $this->ld_updater->update_plugin_readme( 'learndash-core-readme', $override_cache );
 				}
-				$this->ld_updater->get_addon_plugins( $override_cache );
-				return $this->ld_updater->update_plugin_readme( 'learndash-core-readme', $override_cache );
 			}
 		}
 
+		/**
+		 * Get plugin upgrade notice
+		 *
+		 * @param string $admin Which upgrade notice to process.
+		 */
 		public function get_plugin_upgrade_notice( $admin = 'upgrade_notice' ) {
 			$upgrade_notice = '';
 
@@ -431,9 +503,9 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param boolean $false
-		 * @param array   $action
-		 * @param object  $arg
+		 * @param bool   $false  $false.
+		 * @param array  $action Action to perform.
+		 * @param object $arg    Object of arguments.
 		 *
 		 * @return bool|object
 		 */
@@ -444,7 +516,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 
 			if ( $arg->slug === $this->slug ) {
 
-				if ( ! $this->time_to_recheck() ) {
+				if ( ! $this->time_to_recheck_license() ) {
 					$info = get_option( 'nss_plugin_info_' . $this->slug );
 					if ( ! empty( $info ) ) {
 						return $info;
@@ -471,15 +543,34 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 */
 		public function getRemote_version() {
 			if ( ! empty( $this->update_path ) ) {
-				$request = wp_remote_post(
-					$this->update_path,
-					array(
-						'body'    => array( 'action' => 'version' ),
-						'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
-					)
-				);
+				//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': update_path['. $this->update_path . ']' );
+
+				if ( defined( 'LEARNDASH_UPDATE_HTTP_METHOD' ) ) {
+					//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': LEARNDASH_UPDATE_HTTP_METHOD['. LEARNDASH_UPDATE_HTTP_METHOD . ']' );
+
+					if ( 'post' === LEARNDASH_UPDATE_HTTP_METHOD  ) {
+						$request = wp_remote_post(
+							$this->update_path,
+							array(
+								'body'    => array( 'action' => 'version' ),
+								'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
+							)
+						);
+					} elseif ( 'get' === LEARNDASH_UPDATE_HTTP_METHOD ) {
+						$request = wp_remote_get(
+							$this->update_path,
+							array(
+								'body'    => array( 'action' => 'version' ),
+								'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
+							)
+						);
+					}
+				}
+
 				if ( ! is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) === 200 ) {
-					return $request['body'];
+					$request_body = wp_remote_retrieve_body( $request );
+					//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': request_body['. $request_body . ']' );
+					return $request_body;
 				}
 			}
 
@@ -492,24 +583,45 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 * @return bool|object
 		 */
 		public function getRemote_information() {
-			if ( ! empty( $this->update_path ) ) {
-				$request = wp_remote_post(
-					$this->update_path,
-					array(
-						'body'    => array( 'action' => 'info' ),
-						'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
-					)
-				);
+			$information = get_option( 'nss_plugin_info_' . $this->slug );
+
+			if ( ( ! empty( $this->update_path ) ) && ( $this->time_to_recheck_information() ) ) {
+				//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': update_path['. $this->update_path . ']' );
+
+				if ( defined( 'LEARNDASH_UPDATE_HTTP_METHOD' ) ) {
+					//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': LEARNDASH_UPDATE_HTTP_METHOD['. LEARNDASH_UPDATE_HTTP_METHOD . ']' );
+
+					if ( 'post' === LEARNDASH_UPDATE_HTTP_METHOD  ) {
+						$request = wp_remote_post(
+							$this->update_path,
+							array(
+								'body'    => array( 'action' => 'info' ),
+								'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
+							)
+						);
+					} elseif ( 'get' === LEARNDASH_UPDATE_HTTP_METHOD ) {
+						$request = wp_remote_get(
+							$this->update_path,
+							array(
+								'body'    => array( 'action' => 'info' ),
+								'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
+							)
+						);
+					}
+				}
 
 				if ( ! is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) === 200 ) {
-					$information = @unserialize( $request['body'] );
+					$request_body = wp_remote_retrieve_body( $request );
+					//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': request_body['. $request_body . ']' );
+
+					$information = @unserialize( $request_body );
 					if ( empty( $information ) ) {
 						$information = new stdClass();
 					}
 
 					$plugin_readme = $this->get_plugin_readme();
 					if ( ! empty( $plugin_readme ) ) {
-						// First we remove the properties we DON'T want from the support site
+						// First we remove the properties we DON'T want from the support site.
 						foreach ( array( 'sections', 'requires', 'tested', 'last_updated' ) as $property_key ) {
 							if ( property_exists( $information, $property_key ) ) {
 								unset( $information->$property_key );
@@ -523,14 +635,49 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 						}
 					}
 
+					update_option( 'nss_plugin_info_' . $this->slug, $information );
+					update_option( 'nss_plugin_info_check_' . $this->slug, time() );
+
 					return $information;
 				}
 			}
 
-			return false;
+			return $information;
 		}
 
+		/**
+		 * Determines if the plugin should check for plugin information.
+		 *
+		 * @since 3.6.0.3
+		 *
+		 * @return bool
+		 */
+		public function time_to_recheck_information() {
+			if ( ( isset( $_REQUEST['pluginupdate'] ) ) && ( $_REQUEST['pluginupdate'] === $this->code ) ) {
+				//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': return true #1' );
+				return true;
+			}
 
+			//if ( ( isset( $_GET['force-check'] ) ) && ( $_GET['force-check'] === $this->code ) ) {
+			//	error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': return true #2' );
+			//	return true;
+			//}
+
+			$nss_plugin_check = get_option( 'nss_plugin_info_check_' . $this->slug );
+			$nss_plugin_check = absint( $nss_plugin_check );
+			//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': nss_plugin_check['. $nss_plugin_check . ']' );
+
+			$time_less_interval = $nss_plugin_check + ( $this->plugin_info_cache_time_limit * MINUTE_IN_SECONDS ) - time();
+			//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': time_less_interval['. $time_less_interval . ']' );
+
+			if ( $time_less_interval < 0 ) {
+				//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': return true #3' );
+				return true;
+			}
+
+			//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': return false' );
+			return false;
+		}
 
 		/**
 		 * Return the status of the plugin licensing, or returns true
@@ -540,28 +687,62 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 * @return bool|string $remote_license
 		 */
 		public function getRemote_license() {
-			if ( ! empty( $this->update_path ) ) {
-				$request = wp_remote_post(
-					$this->update_path,
-					array(
-						'body'    => array( 'action' => 'license' ),
-						'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
-					)
-				);
+			$license_status = get_option( 'nss_plugin_remote_license_' . $this->slug );
+			if ( isset( $license_status['value'] ) ) {
+				$license_status = $license_status['value'];
+			} else {
+				$license_status = false;
+			}
+
+			if ( ( ! empty( $this->update_path ) ) && ( $this->time_to_recheck_license() ) ) {
+				//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': update_path['. $this->update_path . ']' );
+
+				if ( defined( 'LEARNDASH_UPDATE_HTTP_METHOD' ) ) {
+					//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': LEARNDASH_UPDATE_HTTP_METHOD['. LEARNDASH_UPDATE_HTTP_METHOD . ']' );
+
+					if ( 'post' === LEARNDASH_UPDATE_HTTP_METHOD  ) {
+						$request = wp_remote_post(
+							$this->update_path,
+							array(
+								'body'    => array( 'action' => 'license' ),
+								'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
+							)
+						);
+					} elseif ( 'get' === LEARNDASH_UPDATE_HTTP_METHOD ) {
+						$request = wp_remote_get(
+							$this->update_path,
+							array(
+								'body'    => array( 'action' => 'license' ),
+								'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
+							)
+						);
+					}
+				}
 
 				if ( ! is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) === 200 ) {
+					$request_body = wp_remote_retrieve_body( $request );
+					//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': request_body['. $request_body . ']' );
 
-					if ( '1' !== $request['body'] ) {
+					if ( '1' !== $request_body ) {
 						$this->reset();
 						add_action( 'admin_notices', array( &$this, 'admin_notice' ) );
-						return false;
+						return $license_status;
+					} else {
+						$license_status = $request_body;
+						update_option( 'nss_plugin_check_' . $this->slug, time() );
+
+						/**
+						 * NOTE: The getRemote_license() does not update the option.
+						 * So we need to do it. And it needs to be set as an array structure.
+						 */
+						update_option( 'nss_plugin_remote_license_' . $this->slug, array( 'value' => $license_status ) );
 					}
 
-					return $request['body'];
+					return $license_status;
 				}
 			}
 
-			return false;
+			return $license_status;
 		}
 
 		/**
@@ -573,16 +754,37 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		 */
 		public function getRemote_current_license() {
 			if ( ! empty( $this->update_path ) ) {
-				$request = wp_remote_post(
-					$this->update_path,
-					array(
-						'body'    => array( 'action' => 'current_license' ),
-						'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
-					)
-				);
+				//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': update_path['. $this->update_path . ']' );
+
+				if ( defined( 'LEARNDASH_UPDATE_HTTP_METHOD' ) ) {
+					//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': LEARNDASH_UPDATE_HTTP_METHOD['. LEARNDASH_UPDATE_HTTP_METHOD . ']' );
+
+					if ( 'post' === LEARNDASH_UPDATE_HTTP_METHOD  ) {
+						$request = wp_remote_post(
+							$this->update_path,
+							array(
+								'body'    => array( 'action' => 'current_license' ),
+								'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
+							)
+						);
+					} elseif ( 'get' === LEARNDASH_UPDATE_HTTP_METHOD ) {
+						$request = wp_remote_get(
+							$this->update_path,
+							array(
+								'body'    => array( 'action' => 'current_license' ),
+								'timeout' => LEARNDASH_HTTP_REMOTE_POST_TIMEOUT,
+							)
+						);
+					}
+				}
+
+				//error_log( 'request<pre>' . print_r( $request, true ) . '</pre>' );
 
 				if ( ! is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) === 200 ) {
-					return $request['body'];
+					$request_body = wp_remote_retrieve_body( $request );
+					//error_log( $_SERVER['SERVER_NAME'] . ': ' . __FUNCTION__ . ': request_body['. $request_body . ']' );
+
+					return $request_body;
 				}
 			}
 
@@ -614,12 +816,12 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		public function nss_plugin_license_menupage() {
 			$code = $this->code;
 
-			// must check that the user has the required capability
+			// must check that the user has the required capability.
 			if ( ! learndash_is_admin_user() ) {
 				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'learndash' ) );
 			}
 
-			// Read in existing option value from database
+			// Read in existing option value from database.
 			$license = get_option( 'nss_plugin_license_' . $code );
 			$email   = get_option( 'nss_plugin_license_email_' . $code );
 
@@ -629,12 +831,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 			$license_status = false;
 
 			if ( ! empty( $license ) && ! empty( $email ) ) {
-				$license_status = get_option( 'nss_plugin_remote_license_' . $this->slug );
-				if ( isset( $license_status['value'] ) ) {
-					$license_status = $license_status['value'];
-				} else {
-					$license_status = $this->getRemote_license();
-				}
+				$license_status = $this->getRemote_license();
 			}
 
 			?>
@@ -703,7 +900,6 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 					 * The dynamic part of the hook `$code` refers to the slug of the plugin.
 					 *
 					 * @since 2.1.0
-					 *
 					 */
 					do_action( esc_attr( $code ) . '-nss_license_footer' );
 
@@ -728,13 +924,21 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
  *
  * If the instance already exists it returns the existing instance otherwise creates a new instance.
  *
+ * @param bool $force_new Whether to force a new instance. @since 4.0.0
  * @return void|nss_plugin_updater_sfwd_lms The `nss_plugin_updater_sfwd_lms` instance.
  */
-function learndash_get_updater_instance() {
+function learndash_get_updater_instance( $force_new = false ) {
 	static $updater_sfwd_lms = null;
 
-	if ( ( ! $updater_sfwd_lms ) || ( ! is_a( $updater_sfwd_lms, 'nss_plugin_updater_sfwd_lms' ) ) ) {
+	if ( true === $force_new ) {
+		if ( ! is_null( $updater_sfwd_lms ) ) {
+			$updater_sfwd_lms = null;
+		}
+	}
+
+	if ( ! is_a( $updater_sfwd_lms, 'nss_plugin_updater_sfwd_lms' ) ){
 		$nss_plugin_updater_plugin_remote_path = 'https://support.learndash.com/';
+		//$nss_plugin_updater_plugin_remote_path = 'http://local-support.learndash.com/';
 		$nss_plugin_updater_plugin_slug        = basename( LEARNDASH_LMS_PLUGIN_DIR ) . '/sfwd_lms.php';
 		$updater_sfwd_lms                      = new nss_plugin_updater_sfwd_lms( $nss_plugin_updater_plugin_remote_path, $nss_plugin_updater_plugin_slug );
 	}
@@ -754,6 +958,8 @@ function learndash_is_learndash_license_valid() {
 	if ( ( $updater_sfwd_lms ) && ( is_a( $updater_sfwd_lms, 'nss_plugin_updater_sfwd_lms' ) ) ) {
 		return $updater_sfwd_lms->is_license_valid();
 	}
+
+	return false;
 }
 
 

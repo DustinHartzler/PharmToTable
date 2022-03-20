@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( ( isset( $_GET['post'] ) ) && ( ! empty( $_GET['post'] ) ) ) {

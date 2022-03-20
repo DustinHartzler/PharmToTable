@@ -23,8 +23,14 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Course_Progress_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Users_Course_Progress_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+
+		/**
+		 * User course activity
+		 *
+		 * @var array
+		 */
+		protected $user_course_activty = array();
 
 		/**
 		 * Supported Collection Parameters.
@@ -52,7 +58,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 		 *
 		 * @var object $current_user_id;
 		 */
-
 		private $current_user_id = null;
 
 		/**
@@ -365,6 +370,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 		 * Common function to check and set request params used by the endpoints.
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param WP_REST_Request $request WP_REST_Request Object.
 		 */
 		protected function check_request_params( $request ) {
 			$this->user_id = $request['id'];
@@ -410,6 +417,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 		 * Common function to get the displayable Courses.
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param WP_REST_Request $request WP_REST_Request Object.
 		 *
 		 * @return array $user_course_ids.
 		 */
@@ -464,6 +473,9 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 		 * Common function to get the query_args.
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param WP_REST_Request $request WP_REST_Request Object.
+		 * @param array           $user_course_ids         Course IDs.
 		 *
 		 * @return array $args.
 		 */
@@ -531,6 +543,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 					return true;
 				}
 			}
+			return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		/**
@@ -559,6 +572,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 					return true;
 				}
 			}
+			return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		/**
@@ -582,6 +596,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 					return true;
 				}
 			}
+			return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		/**
@@ -923,7 +938,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 
 			$user_course_started = get_user_meta( $user_id, 'course_' . $course_id . '_access_from', true );
 			if ( ! empty( $user_course_started ) ) {
-				$user_course_progress_header['date_started'] = $this->prepare_date_response( gmdate( 'Y-m-d h:i:s', $user_course_started ) );
+				$user_course_progress_header['date_started'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $user_course_started ) );
 			} elseif ( ( isset( $step_item['date_started'] ) ) && ( ! empty( $step_item['date_started'] ) ) ) {
 				$user_course_progress_header['date_started'] = $step_item['date_started'];
 			} else {
@@ -932,7 +947,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 
 			$user_course_completed = get_user_meta( $user_id, 'course_completed_' . $course_id, true );
 			if ( ! empty( $user_course_completed ) ) {
-				$user_course_progress_header['date_completed'] = $this->prepare_date_response( gmdate( 'Y-m-d h:i:s', $user_course_completed ) );
+				$user_course_progress_header['date_completed'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $user_course_completed ) );
 			} elseif ( ( isset( $step_item['date_completed'] ) ) && ( ! empty( $step_item['date_completed'] ) ) ) {
 				$user_course_progress_header['date_completed'] = $step_item['date_completed'];
 			} else {
@@ -1105,13 +1120,13 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 					$user_course_activity_row['post_type'] = esc_attr( $result->post_type );
 
 					if ( ! empty( $result->activity_started ) ) {
-						$user_course_activity_row['date_started'] = $this->prepare_date_response( gmdate( 'Y-m-d h:i:s', $result->activity_started ) );
+						$user_course_activity_row['date_started'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $result->activity_started ) );
 					} else {
 						$user_course_activity_row['date_started'] = '';
 					}
 
 					if ( ! empty( $result->activity_completed ) ) {
-						$user_course_activity_row['date_completed'] = $this->prepare_date_response( gmdate( 'Y-m-d h:i:s', $result->activity_completed ) );
+						$user_course_activity_row['date_completed'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $result->activity_completed ) );
 					} else {
 						$user_course_activity_row['date_completed'] = '';
 					}

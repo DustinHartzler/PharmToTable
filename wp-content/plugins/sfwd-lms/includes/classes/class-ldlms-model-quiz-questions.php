@@ -415,7 +415,7 @@ if ( ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) && ( class_exists( 'LDLMS_Mode
 
 			$quiz_questions_intersect = array_intersect( $quiz_questions_new, $quiz_questions_old );
 
-			// Add Questions
+			// Add Questions.
 			$quiz_questions_add = array_diff( $quiz_questions_new, $quiz_questions_intersect );
 			if ( ! empty( $quiz_questions_add ) ) {
 				$quiz_questions_add_chunks = array_chunk( $quiz_questions_add, LEARNDASH_LMS_DEFAULT_CB_INSERT_CHUNK_SIZE );
@@ -449,12 +449,12 @@ if ( ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) && ( class_exists( 'LDLMS_Mode
 			 * remove we need to also remove the legacy 'course_id' association.
 			 */
 			$sql_str = $wpdb->prepare(
-				'SELECT posts.ID as post_id FROM ' . $wpdb->posts . ' as posts 
-				INNER JOIN ' . $wpdb->postmeta . " as postmeta 
-				ON posts.ID = postmeta.post_id 
+				'SELECT posts.ID as post_id FROM ' . $wpdb->posts . ' as posts
+				INNER JOIN ' . $wpdb->postmeta . " as postmeta
+				ON posts.ID = postmeta.post_id
 				WHERE 1=1
 				AND posts.post_type = '" . learndash_get_post_type_slug( 'question' ) . "'
-				AND postmeta.meta_key = %s 
+				AND postmeta.meta_key = %s
 				AND postmeta.meta_value = %d",
 				'quiz_id',
 				$this->quiz_primary_id

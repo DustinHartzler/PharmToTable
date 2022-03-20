@@ -11,22 +11,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Builds the `[learndash_group_user_list]` shortcode output.
+ * Group user list
  *
- * @since 2.1.0
+ * @param array  $attr {
+ *    An array of shortcode attributes.
+ * }.
+ * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'learndash_group_user_list'.
  *
- * @global boolean $learndash_shortcode_used
- *
- * @param int $group_id ID of the group to get list for.
- *
- * @return string|void Echos shortcode output or returns string if no users found.
+ * @return string
  */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-function learndash_group_user_list( $attr = array(), $content = '' ) {
+function learndash_group_user_list( $attr = array(), $content = '', $shortcode_slug = 'learndash_group_user_list' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -43,6 +38,9 @@ function learndash_group_user_list( $attr = array(), $content = '' ) {
 		),
 		$attr
 	);
+
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
 
 	$attr['group_post'] = null;
 	if ( ! empty( $attr['group_id'] ) ) {
@@ -113,5 +111,6 @@ function learndash_group_user_list( $attr = array(), $content = '' ) {
 			}
 		}
 	}
+	return '';
 }
-add_shortcode( 'learndash_group_user_list', 'learndash_group_user_list', 10, 2 );
+add_shortcode( 'learndash_group_user_list', 'learndash_group_user_list', 10, 3 );

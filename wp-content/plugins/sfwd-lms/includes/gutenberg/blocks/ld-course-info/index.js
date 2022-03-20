@@ -9,8 +9,9 @@
  * LearnDash block functions
  */
 import {
+	ldlms_get_post_edit_meta,
 	ldlms_get_custom_label,
-	ldlms_get_per_page,
+	ldlms_get_per_page
 } from '../ldlms.js';
 
 /**
@@ -19,16 +20,23 @@ import {
 import { __, _x, sprintf} from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, SelectControl, TextControl, ToggleControl, PanelRow } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
+import { useMemo } from "@wordpress/element";
+
+const block_key   = 'learndash/ld-course-info';
+const block_title = sprintf(
+	// translators: placeholder: Course.
+	_x('LearnDash %s Info [ld_course_info]', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course')
+);
 
 registerBlockType(
-	'learndash/ld-course-info',
+	block_key,
 	{
-		// translators: placeholder: Course.
-		title: sprintf(_x('LearnDash %s Info [ld_course_info]', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course')),
-		// translators: placeholder: Courses.
-		description: sprintf(_x('This block shows the %s and progress for the user.', 'placeholders: Courses', 'learndash'), ldlms_get_custom_label('course') ),
+		title: block_title,
+		description: sprintf(
+			// translators: placeholder: Courses.
+			_x('This block shows the %s and progress for the user.', 'placeholder: Courses', 'learndash'), ldlms_get_custom_label('course') ),
 		icon: 'analytics',
 		category: 'learndash-blocks',
 		example: {
@@ -108,7 +116,7 @@ registerBlockType(
 				type: 'boolean',
 				default: 0
 			},
-			meta: {
+			editing_post_meta: {
 				type: 'object',
 			}
 		},
@@ -125,24 +133,33 @@ registerBlockType(
 						label={__('User ID', 'learndash')}
 						help={__('Enter specific User ID. Leave blank for current User.', 'learndash')}
 						value={user_id || ''}
-						onChange={user_id => setAttributes({ user_id })}
-					/>
+						type={'number'}
+						onChange={ function( new_user_id ) {
+							if ( new_user_id != "" && new_user_id < 0 ) {
+								setAttributes({ user_id: "0" });
+							} else {
+								setAttributes({ user_id: new_user_id });
+							}
+						}}					/>
 
 					<ToggleControl
-						// translators: placeholder: Courses.
-						label={sprintf(_x('Show Registered %s', 'placeholder: Courses', 'learndash'), ldlms_get_custom_label('courses') ) }
+						label={sprintf(
+							// translators: placeholder: Courses.
+							_x('Show Registered %s', 'placeholder: Courses', 'learndash'), ldlms_get_custom_label('courses') ) }
 						checked={!!registered_show}
 						onChange={registered_show => setAttributes({ registered_show })}
 					/>
 					<ToggleControl
-						// translators: placeholder: Course.
-						label={sprintf(_x('Show %s Progress', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ) }
+						label={sprintf(
+							// translators: placeholder: Course.
+							_x('Show %s Progress', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ) }
 						checked={!!progress_show}
 						onChange={progress_show => setAttributes({ progress_show })}
 					/>
 					<ToggleControl
-						// translators: placeholder: Quiz.
-						label={sprintf(_x('Show %s Attempts', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz'))}
+						label={sprintf(
+							// translators: placeholder: Quiz.
+							_x('Show %s Attempts', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz'))}
 						checked={!!quiz_show}
 						onChange={quiz_show => setAttributes({ quiz_show })}
 					/>
@@ -153,8 +170,9 @@ registerBlockType(
 			if ( registered_show === true ) {
 				panelbody_registered = (
 					<PanelBody
-						// translators: placeholder: Courses.
-						title={sprintf(_x('Registered %s', 'placeholder: Courses', 'learndash'), ldlms_get_custom_label('courses') ) }
+					title={sprintf(
+							// translators: placeholder: Courses.
+							_x('Registered %s', 'placeholder: Courses', 'learndash'), ldlms_get_custom_label('courses') ) }
 						initialOpen={false}
 					>
 						<ToggleControl
@@ -164,13 +182,20 @@ registerBlockType(
 						/>
 						<TextControl
 							label={__('per page', 'learndash')}
-							// translators: placeholder: default per page.
-							help={sprintf(_x('Leave empty for default (%d) or 0 to show all items.', 'placeholder: default per page', 'learndash'), ldlms_get_per_page('per_page'))}
+							help={sprintf(
+								// translators: placeholder: per_page.
+								_x('Leave empty for default (%d) or 0 to show all items.', 'placeholder: per_page', 'learndash'), ldlms_get_per_page('per_page'))}
 							value={registered_num || ''}
 							min={0}
 							max={100}
-							onChange={registered_num => setAttributes({ registered_num })}
-						/>
+							type={'number'}
+							onChange={ function( new_registered_num ) {
+								if ( new_registered_num != "" && new_registered_num < 0 ) {
+									setAttributes({ registered_num: "0" });
+								} else {
+									setAttributes({ registered_num: new_registered_num });
+								}
+							}}						/>
 						<SelectControl
 							key="registered_orderby"
 							label={__('Order by', 'learndash')}
@@ -219,19 +244,27 @@ registerBlockType(
 			if (progress_show === true) {
 				panelbody_progress = (
 					<PanelBody
-						// translators: placeholder: Course.
-						title={sprintf(_x('%s Progress', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ) }
+					title={sprintf(
+							// translators: placeholder: Course.
+							_x('%s Progress', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ) }
 						initialOpen={false}
 					>
 						<TextControl
 							label={__('per page', 'learndash')}
-							// translators: placeholder: default per page.
-							help={sprintf(_x('Leave empty for default (%d) or 0 to show all items.', 'placeholder: default per page', 'learndash'), ldlms_get_per_page('progress_num' ) ) }
+							help={sprintf(
+								// translators: placeholder: progress_num.
+								_x('Leave empty for default (%d) or 0 to show all items.', 'placeholder: progress_num', 'learndash'), ldlms_get_per_page('progress_num' ) ) }
 							value={progress_num || ''}
 							min={0}
 							max={100}
-							onChange={progress_num => setAttributes({ progress_num })}
-						/>
+							type={'number'}
+							onChange={ function( new_progress_num ) {
+								if ( new_progress_num != "" && new_progress_num < 0 ) {
+									setAttributes({ progress_num: "0" });
+								} else {
+									setAttributes({ progress_num: new_progress_num });
+								}
+							}}						/>
 						<SelectControl
 							key="progress_orderby"
 							label={__('Order by', 'learndash')}
@@ -280,19 +313,27 @@ registerBlockType(
 			if ( quiz_show === true ) {
 				panelbody_quiz = (
 					<PanelBody
-						// translators: placeholder: Quiz.
-						title={sprintf(_x('%s Attempts', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz') ) }
+					title={sprintf(
+							// translators: placeholder: Quiz.
+							_x('%s Attempts', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz') ) }
 						initialOpen={false}
 					>
 						<TextControl
 							label={__('per page', 'learndash')}
-							// translators: placeholder: default per page.
-							help={sprintf(_x('Leave empty for default (%d) or 0 to show all items.', 'placeholder: default per page', 'learndash'), ldlms_get_per_page('quiz_num') ) }
+							help={sprintf(
+								// translators: placeholder: quiz_num.
+								_x('Leave empty for default (%d) or 0 to show all items.', 'placeholder: quiz_num', 'learndash'), ldlms_get_per_page('quiz_num') ) }
 							value={quiz_num || ''}
 							min={0}
 							max={100}
-							onChange={quiz_num => setAttributes({ quiz_num })}
-						/>
+							type={'number'}
+							onChange={ function( new_quiz_num ) {
+								if ( new_quiz_num != "" && new_quiz_num < 0 ) {
+									setAttributes({ quiz_num: "0" });
+								} else {
+									setAttributes({ quiz_num: new_quiz_num });
+								}
+							}}						/>
 						<SelectControl
 							key="quiz_orderby"
 							label={__('Order by', 'learndash')}
@@ -342,55 +383,75 @@ registerBlockType(
 
 			const inspectorControls = (
 				<InspectorControls key="controls">
-					{ panelbody_header }
-					{ panelbody_registered }
-					{ panelbody_progress }
-					{ panelbody_quiz }
+					{panelbody_header}
+					{panelbody_registered}
+					{panelbody_progress}
+					{panelbody_quiz}
 
-					<PanelBody
-						title={ __( 'Preview', 'learndash' ) }
-						initialOpen={ false }
-					>
+					<PanelBody title={__("Preview", "learndash")} initialOpen={false}>
 						<ToggleControl
-							label={ __('Show Preview', 'learndash') }
-							checked={ !!preview_show }
-							onChange={ preview_show => setAttributes( { preview_show } ) }
+							label={__("Show Preview", "learndash")}
+							checked={!!preview_show}
+							onChange={(preview_show) => setAttributes({ preview_show })}
 						/>
+
+						<PanelRow className="learndash-block-error-message">
+							{__("Preview settings are not saved.", "learndash")}
+						</PanelRow>
+
 						<TextControl
-							label={ __( 'User ID', 'learndash' ) }
-							help={ __('Enter a User ID to test preview', 'learndash') }
-							value={ preview_user_id || '' }
-							type={ 'number' }
-							onChange={ preview_user_id => setAttributes( { preview_user_id } ) }
+							label={__("Preview User ID", "learndash")}
+							help={__("Enter a User ID to test preview", "learndash")}
+							value={preview_user_id || ""}
+							type={"number"}
+							onChange={function (preview_new_user_id) {
+								if (preview_new_user_id != "" && preview_new_user_id < 0) {
+									setAttributes({ preview_user_id: "0" });
+								} else {
+									setAttributes({ preview_user_id: preview_new_user_id });
+								}
+							}}
 						/>
 					</PanelBody>
 				</InspectorControls>
 			);
 
+			function get_default_message() {
+				return sprintf(
+					// translators: placeholder: block_title.
+					_x('%s block output shown here', 'placeholder: block_title', 'learndash'), block_title
+				);
+			}
+
+			function empty_response_placeholder_function(props) {
+				return get_default_message();
+			}
+
 			function do_serverside_render( attributes ) {
 				if ( attributes.preview_show == true ) {
+					// We add the meta so the server knowns what is being edited.
+					attributes.editing_post_meta = ldlms_get_post_edit_meta();
+
 					return <ServerSideRender
-					block="learndash/ld-course-info"
-					attributes={ attributes }
-					key="learndash/ld-course-info"
+						block={block_key}
+						attributes={ attributes }
+						key={block_key}
+						EmptyResponsePlaceholder={ empty_response_placeholder_function }
 					/>
 				} else {
-					return __( '[ld_course_info] shortcode output shown here', 'learndash' );
+					return get_default_message();
 				}
 			}
 
 			return [
 				inspectorControls,
-				do_serverside_render( props.attributes )
+				useMemo(() => do_serverside_render(props.attributes), [props.attributes]),
 			];
 		},
 
 		save: props => {
-			// Delete meta from props to prevent it being saved.
-			delete (props.attributes.meta);
-
-			// Delete preview_user_id from props to prevent it being saved.
-			delete (props.attributes.preview_user_id);
+			delete (props.attributes.example_show);
+			delete (props.attributes.editing_post_meta);
 		}
 	},
 );

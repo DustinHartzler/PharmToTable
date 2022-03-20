@@ -27,7 +27,7 @@ if ( ! class_exists( 'LDLMS_Sort_Answer' ) ) {
 		 */
 		public function setup() {
 			parent::setup();
-			//add_filter( 'learndash_rest_statistic_answer_node_data', array( $this, 'student_answers_value_key' ), 30, 5 );
+			// add_filter( 'learndash_rest_statistic_answer_node_data', array( $this, 'student_answers_value_key' ), 30, 5 );
 		}
 
 		/**
@@ -122,7 +122,7 @@ if ( ! class_exists( 'LDLMS_Sort_Answer' ) ) {
 			switch ( $answer_type ) {
 
 				case 'answer':
-					//unset( $answer_data['label'] );
+					// unset( $answer_data['label'] );
 					unset( $answer_data['points'] );
 					break;
 				case 'student':

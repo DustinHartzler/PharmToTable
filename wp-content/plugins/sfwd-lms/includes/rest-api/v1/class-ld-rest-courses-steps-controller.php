@@ -11,12 +11,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
-	class LD_REST_Courses_Steps_Controller_V1 extends LD_REST_Posts_Controller_V1 {
+	/**
+	 * Class LearnDash REST API V1 Courses Steps Controller.
+	 *
+	 * @since 2.5.8
+	 */
+	class LD_REST_Courses_Steps_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
+		/**
+		 * Enrolled courses
+		 *
+		 * @var array
+		 */
+		protected $enrolled_courses = array();
+
+		/**
+		 * Supported Collection Parameters.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @var array $supported_collection_params.
+		 */
 		private $supported_collection_params = array(
 			'filter' => 'filter',
 		);
 
+		/**
+		 * Public constructor for class
+		 *
+		 * @since 2.5.8
+		 *
+		 * @param string $post_type Post type.
+		 */
 		public function __construct( $post_type = '' ) {
 			$this->post_type  = 'sfwd-courses';
 			$this->taxonomies = array();
@@ -26,6 +52,13 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 			$this->rest_base = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_REST_API', 'sfwd-courses' );
 		}
 
+		/**
+		 * Registers the routes for the objects of the controller.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @see register_rest_route() in WordPress core.
+		 */
 		public function register_routes() {
 			$this->register_fields();
 
@@ -47,7 +80,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 				array(
 					'args'   => array(
 						'id' => array(
-							// translators: course
+							// translators: course.
 							'description' => sprintf( esc_html_x( '%s ID to enroll user into.', 'placeholder: course', 'learndash' ), learndash_get_custom_label( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
@@ -109,6 +142,11 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 
 		}
 
+		/**
+		 * Get collection parameters
+		 *
+		 * @return array
+		 */
 		public function get_collection_params() {
 			$query_params_default = parent::get_collection_params();
 
@@ -132,6 +170,11 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 			return $query_params;
 		}
 
+		/**
+		 * Course steps permissions check
+		 *
+		 * @param WP_REST_Request $request WP_REST_Request instance.
+		 */
 		public function get_course_steps_permissions_check( $request ) {
 			if ( is_user_logged_in() ) {
 				if ( learndash_is_admin_user() ) {
@@ -145,7 +188,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 				// Ensure the user has some courses.
 				if ( ! empty( $this->enrolled_courses ) ) {
 
-					/// Secondary check if they are wanting steps for a specific course ID.
+					// Secondary check if they are wanting steps for a specific course ID.
 					$course_id = $request['id'];
 					if ( ! empty( $course_id ) ) {
 						// And if that course ID is in their enrolled courses.
@@ -161,6 +204,11 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 			}
 		}
 
+		/**
+		 * Get course steps
+		 *
+		 * @param WP_REST_Request $request WP_REST_Request instance.
+		 */
 		public function get_course_steps( $request ) {
 			$current_user_id = get_current_user_id();
 			if ( empty( $current_user_id ) ) {
@@ -178,20 +226,33 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 
 			$data = $course_steps;
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
 		}
 
+		/**
+		 * Update course steps permissions check
+		 *
+		 * @param WP_REST_Request $request WP_REST_Request instance.
+		 */
 		public function update_course_steps_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
 			}
 		}
+
+		/**
+		 * Update course steps
+		 *
+		 * @param WP_REST_Request $request WP_REST_Request instance.
+		 *
+		 * @return WP_REST_REQUEST
+		 */
 		public function update_course_steps( $request ) {
 			$current_user_id = get_current_user_id();
 			if ( empty( $current_user_id ) ) {
@@ -255,15 +316,15 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 			$course_steps = $ld_course_steps_object->get_steps( 'h' );
 			$data         = $course_steps;
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

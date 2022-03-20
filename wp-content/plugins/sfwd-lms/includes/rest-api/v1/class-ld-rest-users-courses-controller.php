@@ -11,8 +11,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
-	class LD_REST_Users_Courses_Controller_V1 extends LD_REST_Posts_Controller_V1 {
+	/**
+	 * Class LearnDash REST API V1 Courses Controller.
+	 *
+	 * @since 2.5.8
+	 */
+	class LD_REST_Users_Courses_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
+		/**
+		 * Supported Collection Parameters.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @var array $supported_collection_params.
+		 */
 		private $supported_collection_params = array(
 			'exclude'  => 'post__not_in',
 			'include'  => 'post__in',
@@ -25,6 +37,11 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 			'fields'   => 'fields',
 		);
 
+		/**
+		 * Public constructor for class
+		 *
+		 * @since 2.5.8
+		 */
 		public function __construct() {
 			$this->post_type  = 'sfwd-courses';
 			$this->taxonomies = array();
@@ -73,7 +90,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 						'permission_callback' => array( $this, 'update_user_courses_permissions_check' ),
 						'args'                => array(
 							'course_ids' => array(
-								// translators: courses
+								// translators: courses.
 								'description' => sprintf( esc_html_x( '%s IDs to add to User.', 'placeholder: courses', 'learndash' ), learndash_get_custom_label( 'courses' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -89,7 +106,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 						'permission_callback' => array( $this, 'delete_user_courses_permissions_check' ),
 						'args'                => array(
 							'course_ids' => array(
-								// translators: courses
+								// translators: courses.
 								'description' => sprintf( esc_html_x( '%s IDs to remove from User.', 'placeholder: courses', 'learndash' ), learndash_get_custom_label( 'courses' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -122,7 +139,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 						'readonly'    => true,
 					),
 					'course_ids' => array(
-						// translators: course
+						// translators: course.
 						'description' => sprintf( esc_html_x( 'The %s IDs.', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 						'type'        => 'array',
 						'items'       => array(
@@ -136,6 +153,13 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 			return $schema;
 		}
 
+		/**
+		 * Check User Courses Read Permissions.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @param object $request  WP_REST_Request instance.
+		 */
 		public function get_user_courses_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
@@ -144,6 +168,13 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 			}
 		}
 
+		/**
+		 * Check User Courses Update Permissions.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @param object $request  WP_REST_Request instance.
+		 */
 		public function update_user_courses_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
@@ -152,6 +183,13 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 			}
 		}
 
+		/**
+		 * Check User Courses Delete Permissions.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @param object $request  WP_REST_Request instance.
+		 */
 		public function delete_user_courses_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
@@ -160,6 +198,13 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 			}
 		}
 
+		/**
+		 * Update User Courses.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @param object $request  WP_REST_Request instance.
+		 */
 		public function update_user_courses( $request ) {
 			$user_id = $request['id'];
 			if ( empty( $user_id ) ) {
@@ -171,7 +216,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: course
+						// translators: placeholder: course.
 						esc_html_x(
 							'Missing %s IDs.',
 							'placeholder: course',
@@ -191,15 +236,22 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
 		}
 
+		/**
+		 * Delete User Courses.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @param object $request  WP_REST_Request instance.
+		 */
 		public function delete_user_courses( $request ) {
 			$user_id = $request['id'];
 			if ( empty( $user_id ) ) {
@@ -211,7 +263,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: course
+						// translators: placeholder: course.
 						esc_html_x(
 							'Missing %s IDs.',
 							'placeholder: course',
@@ -231,15 +283,22 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
 		}
 
+		/**
+		 * Get User Courses.
+		 *
+		 * @since 2.5.8
+		 *
+		 * @param object $request  WP_REST_Request instance.
+		 */
 		public function get_user_courses( $request ) {
 			$user_id = $request['id'];
 			if ( empty( $user_id ) ) {
@@ -326,7 +385,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 
 			$posts_query  = new WP_Query();
 			$query_result = $posts_query->query( $query_args );
-			//error_log('query_result<pre>'. print_r($query_result, true) .'</pre>');
+			// error_log('query_result<pre>'. print_r($query_result, true) .'</pre>');
 
 			// Allow access to all password protected posts if the context is edit.
 			if ( 'edit' === $request['context'] ) {
@@ -348,7 +407,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 				$response = rest_ensure_response( $posts );
 
 			} else {
-				//$data = $query_result;
+				// $data = $query_result;
 				$response = rest_ensure_response( $query_result );
 			}
 
@@ -401,9 +460,14 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 			return $response;
 		}
 
+		/**
+		 * Get Collection parameters
+		 *
+		 * @since 2.5.8
+		 */
 		public function get_collection_params() {
 			$query_params_default = parent::get_collection_params();
-			//error_log('query_params_default<pre>'. print_r($query_params_default, true) .'</pre>');
+			// error_log('query_params_default<pre>'. print_r($query_params_default, true) .'</pre>');
 
 			$query_params_default['context']['default'] = 'view';
 
@@ -411,7 +475,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 			$query_params['context'] = $query_params_default['context'];
 			$query_params['fields']  = array(
 				'description' => __( 'Returned values.', 'learndash' ),
-				'type'        => 'string',
 				'type'        => 'string',
 				'default'     => 'ids',
 				'enum'        => array(

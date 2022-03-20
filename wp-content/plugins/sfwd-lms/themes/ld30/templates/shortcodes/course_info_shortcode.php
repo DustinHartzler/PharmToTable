@@ -54,7 +54,6 @@ $shortcode_atts_json = htmlspecialchars( wp_json_encode( $shortcode_atts ) );
 									'courses_registered' => $courses_registered,
 									'shortcode_atts'     => $shortcode_atts,
 									'course_progress'    => $course_progress,
-									'shortcode_atts'     => $shortcode_atts,
 									'course_id'          => $course_id,
 								),
 								true

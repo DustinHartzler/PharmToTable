@@ -21,6 +21,8 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 	class Learndash_Admin_Data_Reports_Courses extends Learndash_Admin_Settings_Data_Reports {
 
 		/**
+		 * Instance
+		 *
 		 * @var object $instance Object instance of class.
 		 */
 		public static $instance = null;
@@ -84,10 +86,10 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		 * @since 2.3.0
 		 */
 		public static function getInstance() {
-			if ( ! isset( self::$_instance ) ) {
-				self::$_instance = new self();
+			if ( ! isset( self::$instance ) ) {
+				self::$instance = new self();
 			}
-			return self::$_instance;
+			return self::$instance;
 		}
 
 		/**
@@ -100,7 +102,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		 * @return array
 		 */
 		public function register_report_action( $report_actions = array() ) {
-			// Add ourselved to the upgrade actions
+			// Add ourselved to the upgrade actions.
 			$report_actions[ $this->data_slug ] = array(
 				'class'    => get_class( $this ),
 				'instance' => $this,
@@ -120,7 +122,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		public function show_report_action() {
 			?>
 			<tr id="learndash-data-reports-container-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-reports-container">
-				<td class="learndash-data-reports-button-container" style="width:20%">
+				<td class="learndash-data-reports-button-container" style="width: 20%">
 					<button class="learndash-data-reports-button button button-primary" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-data-reports-' . $this->data_slug . '-' . get_current_user_id() ) ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
 					<?php
 					printf(
@@ -149,7 +151,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		 *
 		 * @since 2.3.0
 		 *
-		 * @param array $data Post data from AJAX call
+		 * @param array $data Post data from AJAX call.
 		 *
 		 * @return array $data Post data from AJAX call
 		 */
@@ -184,7 +186,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 
 					$this->csv_parse = new lmsParseCSV();
 
-					// On the 'init' (the first call via AJAX we load up the transient with the user_ids)
+					// On the 'init' (the first call via AJAX we load up the transient with the user_ids).
 					if ( ( isset( $data['init'] ) ) && ( 1 == $data['init'] ) ) {
 						$_doing_init = true;
 
@@ -219,7 +221,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 						$data['report_download_link'] = $this->transient_data['report_url'];
 						$data['total_count']          = $this->transient_data['total_users'];
 
-						// Clear out any previous file
+						// Clear out any previous file.
 						// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 						$reports_fp = fopen( $this->report_filename, 'w' );
 						// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
@@ -262,7 +264,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 
 								unset( $this->transient_data['users_ids'][ $user_id_idx ] );
 
-								//$this->set_option_cache( $this->transient_key, $this->transient_data );
+								// $this->set_option_cache( $this->transient_key, $this->transient_data );
 
 								$report_user = get_user_by( 'id', $user_id );
 								if ( false !== $report_user ) {
@@ -359,7 +361,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 								$this->csv_parse->file            = $this->report_filename;
 								$this->csv_parse->output_filename = $this->report_filename;
 
-								// legacy
+								// legacy.
 								/** This filter is documented in includes/class-ld-lms.php */
 								$this->csv_parse = apply_filters( 'learndash_csv_object', $this->csv_parse, 'courses' );
 
@@ -468,7 +470,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 				$this->csv_parse->file            = $this->report_filename;
 				$this->csv_parse->output_filename = $this->report_filename;
 
-				// legacy
+				// legacy.
 				/** This filter is documented in includes/class-ld-lms.php */
 				$this->csv_parse = apply_filters( 'learndash_csv_object', $this->csv_parse, 'courses' );
 
@@ -496,7 +498,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 
 			$ld_wp_upload_filename = $wp_upload_dir['basedir'] . $ld_file_part;
 			if ( wp_mkdir_p( dirname( $ld_wp_upload_filename ) ) === false ) {
-				$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . $ld_wp_upload_dir;
+				$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . $ld_wp_upload_filename;
 				return $data;
 			}
 			learndash_put_directory_index_file( trailingslashit( dirname( $ld_wp_upload_filename ) ) . 'index.php' );
@@ -591,7 +593,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 					$column_value = '0';
 
 					if ( ! empty( $course_id ) ) {
-						// First check if the user previously completed the course
+						// First check if the user previously completed the course.
 						$user_completed_course = false;
 						$completed_on          = get_user_meta( $report_item->user_id, 'course_completed_' . $course_id, true );
 						if ( ! empty( $completed_on ) ) {
@@ -666,7 +668,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		}
 
 
-		// End of functions
+		// End of functions.
 	}
 }
 

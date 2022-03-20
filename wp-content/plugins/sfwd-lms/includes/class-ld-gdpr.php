@@ -15,12 +15,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'LearnDash_GDPR' ) ) {
+
+	/**
+	 * Class to handle GDPR
+	 */
 	class LearnDash_GDPR {
 
 		/**
 		 * Default per_page limit
 		 *
 		 * @since 2.5.8
+		 *
+		 * @var int
 		 */
 		private $per_page_default = 20;
 
@@ -725,7 +731,7 @@ if ( ! class_exists( 'LearnDash_GDPR' ) ) {
 									}
 								}
 
-								// SAMCART Transactions
+								// SAMCART Transactions.
 								if ( empty( $transaction_meta_fields ) ) {
 									$order_ip_address = get_post_meta( $transaction->ID, 'order_ip_address', true );
 									if ( ! empty( $order_ip_address ) ) {
@@ -810,8 +816,8 @@ if ( ! class_exists( 'LearnDash_GDPR' ) ) {
 		 * Get post meta keys for processing based on action.
 		 *
 		 * @since 2.5.8
-		 * @param string $action The value will be either export or erase.
-		 * @param object $transaction The sfwd-transactions post object being processed.
+		 * @param string  $action The value will be either export or erase.
+		 * @param WP_Post $transaction The sfwd-transactions post object being processed.
 		 *
 		 * @return array of meta keys to process
 		 */

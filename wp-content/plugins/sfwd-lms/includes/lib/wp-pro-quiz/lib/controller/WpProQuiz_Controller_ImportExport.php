@@ -5,6 +5,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 // phpcs:disable WordPress.NamingConventions.ValidVariableName,WordPress.NamingConventions.ValidFunctionName,WordPress.NamingConventions.ValidHookName,PSR2.Classes.PropertyDeclaration.Underscore
 class WpProQuiz_Controller_ImportExport extends WpProQuiz_Controller_Controller {
 
+	/**
+	 * View instance
+	 * @var object $view.
+	 */
+	protected $view;
+
 	public function route() {
 
 		@set_time_limit( 0 );

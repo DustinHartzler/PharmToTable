@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Courses_Users_Controller_V1 extends LD_REST_Users_Controller_V1 {
+	class LD_REST_Courses_Users_Controller_V1 extends LD_REST_Users_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Supported Collection Parameters.
@@ -43,8 +42,6 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 		 * Public constructor for class
 		 *
 		 * @since 2.5.8
-		 *
-		 * @param string $post_type Post type.
 		 */
 		public function __construct() {
 
@@ -82,7 +79,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 				array(
 					'args'   => array(
 						'id' => array(
-							// translators: course
+							// translators: course.
 							'description' => sprintf( esc_html_x( '%s ID.', 'placeholder: course', 'learndash' ), learndash_get_custom_label( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
@@ -100,7 +97,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 						'permission_callback' => array( $this, 'update_courses_users_permissions_check' ),
 						'args'                => array(
 							'user_ids' => array(
-								// translators: course
+								// translators: course.
 								'description' => sprintf( esc_html_x( 'User IDs to enroll into %s. Limit 50 per request.', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -116,7 +113,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 						'permission_callback' => array( $this, 'delete_courses_users_permissions_check' ),
 						'args'                => array(
 							'user_ids' => array(
-								// translators: group
+								// translators: group.
 								'description' => sprintf( esc_html_x( 'User IDs to remove from %s. Limit 50 per request.', 'placeholder: group', 'learndash' ), learndash_get_custom_label_lower( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -243,10 +240,10 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -290,10 +287,10 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -472,7 +469,6 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 			$query_params['fields']  = array(
 				'description' => __( 'Returned values.', 'learndash' ),
 				'type'        => 'string',
-				'type'        => 'string',
 				'default'     => 'ids',
 				'enum'        => array(
 					'ids',
@@ -488,6 +484,6 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

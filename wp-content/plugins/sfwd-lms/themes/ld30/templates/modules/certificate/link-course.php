@@ -1,4 +1,12 @@
 <?php
+/**
+ * LearnDash LD30 show certificate link on course.
+ *
+ * @since 3.0.0
+ *
+ * @package LearnDash\Templates\LD30
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

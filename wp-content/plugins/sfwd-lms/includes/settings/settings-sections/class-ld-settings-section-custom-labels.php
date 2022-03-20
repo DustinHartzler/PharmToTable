@@ -24,7 +24,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 * @since 2.4.0
 		 */
 		protected function __construct() {
-			$this->settings_page_id = 'learndash_lms_settings_custom_labels';
+			$this->settings_page_id = 'learndash_lms_advanced';
 
 			// This is the 'option_name' key used in the wp_options table.
 			$this->setting_option_key = 'learndash_settings_custom_labels';
@@ -184,6 +184,22 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'     => isset( $this->setting_option_values['group_leader'] ) ? $this->setting_option_values['group_leader'] : '',
 					'class'     => 'regular-text',
 				),
+				'exam'                          => array(
+					'name'      => 'exam',
+					'type'      => 'text',
+					'label'     => esc_html__( 'Challenge Exam', 'learndash' ),
+					'help_text' => esc_html__( 'Label to replace "challenge exam" (singular).', 'learndash' ),
+					'value'     => $this->setting_option_values['exam'] ?? '',
+					'class'     => 'regular-text',
+				),
+				'exams'                         => array(
+					'name'      => 'exams',
+					'type'      => 'text',
+					'label'     => esc_html__( 'Challenge Exams', 'learndash' ),
+					'help_text' => esc_html__( 'Label to replace "challenge exams" (plural).', 'learndash' ),
+					'value'     => $this->setting_option_values['exams'] ?? '',
+					'class'     => 'regular-text',
+				),
 				'button_take_this_course'       => array(
 					'name'      => 'button_take_this_course',
 					'type'      => 'text',
@@ -236,9 +252,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param array $new_values Array of section fields values.
-		 * @param array $old_values Array of old values.
-		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 * @param array  $new_values         Array of section fields values.
+		 * @param array  $old_values         Array of old values.
+		 * @param string $setting_option_key Section option key should match $this->setting_option_key.
 		 */
 		public function section_pre_update_option( $new_values = '', $old_values = '', $setting_option_key = '' ) {
 			if ( $setting_option_key === $this->setting_option_key ) {
@@ -252,6 +268,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$old_values['group_leader'] = '';
 				}
 
+				if ( empty( $new_values['group_leader'] ) ) {
+					$new_values['group_leader'] = esc_html__( 'Group Leader', 'learndash' );
+				}
 				if ( $old_values['group_leader'] !== $new_values['group_leader'] ) {
 					$group_leader = get_role( 'group_leader' );
 					if ( ! is_null( $group_leader ) ) {

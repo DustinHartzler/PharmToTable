@@ -49,10 +49,7 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID ); ?>
 			 */
 			do_action( 'learndash-assignment-row-delete-before', $assignment, get_the_ID(), $course_id, $user_id );
 
-			/**
-			 * Delete assignment link
-			 *
-			 */
+			// Delete assignment link.
 			if ( ! learndash_is_assignment_approved_by_meta( $assignment->ID ) ) :
 				if ( ( isset( $post_settings['lesson_assignment_deletion_enabled'] ) && 'on' === $post_settings['lesson_assignment_deletion_enabled'] && absint( $assignment->post_author ) === absint( $user_id ) ) || ( learndash_is_admin_user( $user_id ) ) || ( learndash_is_group_leader_of_user( $user_id, $assignment->post_author ) ) ) :
 					?>
@@ -107,7 +104,7 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID ); ?>
 		<div class="ld-table-list-columns">
 
 			<?php
-			// Use an array so it can be filtered later
+			// Use an array so it can be filtered later.
 			$row_columns = array();
 
 			/**
@@ -155,7 +152,7 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID ); ?>
 				echo '';
 			};
 
-			// Add the markup to the array
+			// Add the markup to the array.
 			$row_columns['comments'] = ob_get_clean();
 			ob_flush();
 

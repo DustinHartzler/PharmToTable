@@ -33,7 +33,7 @@ function ld_course_check_user_access( $course_id, $user_id = null ) {
  *
  * @since 2.1.0
  *
- * @param int|null $user_id User ID. Default null
+ * @param int|null $user_id User ID. Default null.
  * @param array    $atts {
  *    Optional. An array of attributes. Default empty array.
  *
@@ -317,7 +317,7 @@ function ld_course_access_expires_on( $course_id, $user_id ) {
 	// Set a default return var.
 	$course_access_upto = 0;
 
-	// Check access to course_id + user_id
+	// Check access to course_id + user_id.
 	$courses_access_from = ld_course_access_from( $course_id, $user_id );
 
 	// If the course_id + user_id is not set we check the group courses.
@@ -328,7 +328,7 @@ function ld_course_access_expires_on( $course_id, $user_id ) {
 	// If we have a non-empty access from...
 	if ( abs( intval( $courses_access_from ) ) ) {
 
-		// Check the course is using expire access
+		// Check the course is using expire access.
 		$expire_access = learndash_get_setting( $course_id, 'expire_access' );
 		// The value stored in the post meta for 'expire_access' is 'on' not true/false 1 or 0. The string 'on'.
 		if ( ! empty( $expire_access ) ) {
@@ -470,6 +470,8 @@ function ld_course_access_from_update( $course_id, $user_id, $access = '', $is_g
 			return update_user_meta( $user_id, 'course_' . $course_id . '_access_from', $access_time );
 		}
 	}
+
+	return false;
 }
 
 /**
@@ -577,12 +579,17 @@ function ld_update_course_access( $user_id, $course_id, $remove = false ) {
 	 *
 	 * @since 2.1.0
 	 *
-	 * @param int     $user_id            User ID.
-	 * @param int     $course_id          Course ID.
-	 * @param string  $course_access_list A comma-separated list of user IDs used for the course_access_list field.
-	 * @param boolean $remove             Whether to remove course access from the user.
+	 * @param int          $user_id            User ID.
+	 * @param int          $course_id          Course ID.
+	 * @param string|null  $course_access_list A comma-separated list of user IDs used for the course_access_list field.
+	 * Note: Used if `learndash_use_legacy_course_access_list()` returns true. Otherwise null is sent.
+	 * @param boolean      $remove             Whether to remove course access from the user.
 	 */
 	do_action( 'learndash_update_course_access', $user_id, $course_id, $course_access_list, $remove );
+
+	// Finally clear our cache for other services.
+	$transient_key = 'learndash_user_courses_' . $user_id;
+	LDLMS_Transients::delete( $transient_key );
 
 	return $action_success;
 }
@@ -633,7 +640,7 @@ function ld_lesson_access_from( $lesson_id, $user_id, $course_id = null, $bypass
 		$visible_after_specific_date = learndash_get_setting( $lesson_id, 'visible_after_specific_date' );
 		if ( ! empty( $visible_after_specific_date ) ) {
 			if ( ! is_numeric( $visible_after_specific_date ) ) {
-				// If we a non-numberic value like a date stamp Y-m-d hh:mm:ss we want to convert it to a GMT timestamp
+				// If we a non-numberic value like a date stamp Y-m-d hh:mm:ss we want to convert it to a GMT timestamp.
 				$visible_after_specific_date = learndash_get_timestamp_from_date_string( $visible_after_specific_date, true );
 			}
 

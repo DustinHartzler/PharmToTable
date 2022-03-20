@@ -52,7 +52,6 @@ endif;
 
 /**
  * Should we show quizzes in the course navigation based on pagination?
- * @var [type]
  */
 $show_course_quizzes = true;
 

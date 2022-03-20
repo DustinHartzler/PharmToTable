@@ -29,6 +29,13 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		private $pro_question_edit = null;
 
 		/**
+		 * WPProQuiz View QuestionEdit instance.
+		 *
+		 * @var WpProQuiz_View_QuestionEdit
+		 */
+		private $view = null;
+
+		/**
 		 * Public constructor for class.
 		 *
 		 * @since 2.6.0
@@ -138,6 +145,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/** This function is documented in includes/admin/class-learndash-admin-posts-edit.php */
+		// phpcs:ignore Squiz.Commenting.FunctionComment
 		public function edit_post_post_type( $post_id = 0, $post = null ) {
 			$post_id = absint( $post_id );
 			if ( ! $this->post_type_check( $post ) ) {
@@ -502,7 +510,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			<p class="description">
 				<?php
 					printf(
-						// translators: placeholder: question
+						// translators: placeholder: question.
 						esc_html_x( 'Points for this %s (Standard is 1 point)', 'placeholder: question', 'learndash' ),
 						learndash_get_custom_label_lower( 'question' )
 					)
@@ -514,7 +522,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			<p class="description">
 				<?php
 					printf(
-						// translators: placeholder: question
+						// translators: placeholder: question.
 						esc_html_x( 'These points will be rewarded, only if the user chooses the %s correctly', 'placeholder: question', 'learndash' ),
 						learndash_get_custom_label( 'question' )
 					)
@@ -792,12 +800,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 									?>
 								</select><br />
 								<input type="text" placeholder="<?php esc_html_e( 'new template name', 'learndash' ); ?>" class="regular-text" name="templateName">
-								<?php
-								/*?>
-								<br />
-								<input type="submit" name="template" class="button-primary" id="wpProQuiz_saveTemplate" value="<?php esc_html_e( 'Save as template', 'learndash' ); ?>">
-								<?php */
-								?>
 							</td>
 						</tr>
 					</tbody>

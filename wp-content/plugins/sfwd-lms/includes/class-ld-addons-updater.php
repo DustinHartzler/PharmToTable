@@ -103,9 +103,9 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 		 *
 		 * @since 1.0.0
 		 */
-		public static function get_instance() {
+		final public static function get_instance() {
 			if ( ! isset( static::$instance ) ) {
-				static::$instance = new static();
+				static::$instance = new self();
 			}
 
 			return static::$instance;
@@ -275,7 +275,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 				return $data;
 			}
 
-			$this->load_repositories_options();
+			$this->get_addon_plugins();
 
 			if ( isset( $this->data['plugins'][ $args->slug ] ) ) {
 				$data = json_decode( wp_json_encode( $this->data['plugins'][ $args->slug ] ), false );
@@ -512,7 +512,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 			}
 
 			if ( isset( $_GET['repo_reset'] ) ) {
-				//$this->reset_repo();
+				// $this->reset_repo();
 				$this->data['repo_reset'] = 1;
 				$this->update_repositories_options();
 

@@ -16,8 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
-	class LearnDash_Shortcodes_Section_quizinfo extends LearnDash_Shortcodes_Section {
+	class LearnDash_Shortcodes_Section_quizinfo extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -47,20 +46,17 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
 				'show'     => array(
-					'id'        => $this->shortcodes_section_key . '_show',
-					'name'      => 'show',
-					'type'      => 'select',
-					'label'     => esc_html__( 'Show', 'learndash' ),
-					'help_text' => sprintf(
-						// translators: placeholders: quizzes, course, quizzes, course.
-						wp_kses_post( _x( 'This parameter determines the information to be shown by the shortcode.<br />cumulative - average for all %1$s of the %2$s.<br />aggregate - sum for all %3$s of the %4$s.', 'placeholders: quizzes, course, quizzes, course', 'learndash' ) ),
-						learndash_get_custom_label_lower( 'quizzes' ),
-						learndash_get_custom_label_lower( 'course' ),
-						learndash_get_custom_label_lower( 'quizzes' ),
-						learndash_get_custom_label_lower( 'course' )
-					),
-					'value'     => 'ID',
-					'options'   => array(
+					'id'      => $this->shortcodes_section_key . '_show',
+					'name'    => 'show',
+					'type'    => 'select',
+					'label'   => esc_html__( 'Show', 'learndash' ),
+					'value'   => 'quiz_title',
+					'options' => array(
+						'quiz_title'   => sprintf(
+							// translators: placeholder: Quiz.
+							esc_html_x( '%s Title', 'placeholder: Quiz', 'learndash' ),
+							LearnDash_Custom_Label::get_label( 'quiz' )
+						),
 						'score'        => esc_html__( 'Score', 'learndash' ),
 						'count'        => esc_html__( 'Count', 'learndash' ),
 						'pass'         => esc_html__( 'Pass', 'learndash' ),
@@ -68,8 +64,6 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						'points'       => esc_html__( 'Points', 'learndash' ),
 						'total_points' => esc_html__( 'Total Points', 'learndash' ),
 						'percentage'   => esc_html__( 'Percentage', 'learndash' ),
-						// translators: placeholder: Quiz.
-						'quiz_title'   => sprintf( _x( '%s Title', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ),
 						// translators: placeholder: Course.
 						'course_title' => sprintf( _x( '%s Title', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
 						'timespent'    => esc_html__( 'Time Spent', 'learndash' ),
@@ -82,59 +76,62 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'type'      => 'text',
 					'label'     => esc_html__( 'Custom Field ID', 'learndash' ),
 					// translators: placeholder: quiz.
-					'help_text' => sprintf( esc_html_x( 'The Field ID is show on the %s Custom Fields table.', 'placeholder: quiz', 'learndash' ), learndash_get_custom_label( 'quiz' ) ),
+					'help_text' => sprintf( esc_html_x( 'The Field ID is shown on the %s Custom Fields table.', 'placeholder: quiz', 'learndash' ), learndash_get_custom_label( 'quiz' ) ),
 					'value'     => '',
 				),
 				'format'   => array(
-					'id'        => $this->shortcodes_section_key . '_format',
-					'name'      => 'format',
-					'type'      => 'text',
-					'label'     => esc_html__( 'Format', 'learndash' ),
-					'help_text' => wp_kses_post( __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formating strings  here.</a>', 'learndash' ) ),
-					'value'     => '',
+					'id'          => $this->shortcodes_section_key . '_format',
+					'name'        => 'format',
+					'type'        => 'text',
+					'label'       => esc_html__( 'Format', 'learndash' ),
+					'placeholder' => esc_html__( 'F j, Y, g:i a shown as March 10, 2001, 5:16 pm', 'learndash' ),
+					'help_text'   => wp_kses_post( __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formating strings  here.</a>', 'learndash' ) ),
+					'value'       => '',
 				),
 			);
 
-			$post_types = array(
-				learndash_get_post_type_slug( 'certificate' ),
-				learndash_get_post_type_slug( 'quiz' ),
+			$this->shortcodes_option_fields['quiz'] = array(
+				'id'        => $this->shortcodes_section_key . '_quiz',
+				'name'      => 'quiz',
+				'type'      => 'number',
+				'label'     => sprintf(
+					// translators: placeholder: Quiz.
+					esc_html_x( '%s ID', 'placeholder: Quiz', 'learndash' ),
+					LearnDash_Custom_Label::get_label( 'quiz' )
+				),
+				'help_text' => sprintf(
+					// translators: placeholder: Quiz, Quiz.
+					esc_html_x( 'Enter a single %1$s ID. Leave blank if used within a %2$s or Certificate.', 'placeholder: Quiz, Quiz', 'learndash' ),
+					LearnDash_Custom_Label::get_label( 'quiz' ),
+					LearnDash_Custom_Label::get_label( 'quiz' )
+				),
+				'value'     => '',
+				'class'     => 'small-text',
+				'required'  => 'required',
 			);
-			if ( ( ! isset( $this->fields_args['typenow'] ) ) || ( ! in_array( $this->fields_args['typenow'], $post_types, true ) ) ) {
-				$this->shortcodes_option_fields['quiz'] = array(
-					'id'        => $this->shortcodes_section_key . '_quiz',
-					'name'      => 'quiz',
-					'type'      => 'number',
-					// translators: placeholder: Quiz.
-					'label'     => sprintf( esc_html_x( '%s ID', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ),
-					// translators: placeholder: Quiz.
-					'help_text' => sprintf( esc_html_x( 'Enter single %s ID', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ),
-					'value'     => '',
-					'class'     => 'small-text',
-					'required'  => 'required',
-				);
 
-				$this->shortcodes_option_fields['user_id'] = array(
-					'id'        => $this->shortcodes_section_key . '_user_id',
-					'name'      => 'user_id',
-					'type'      => 'number',
-					'label'     => esc_html__( 'User ID', 'learndash' ),
-					'help_text' => esc_html__( 'Enter specific User ID', 'learndash' ),
-					'value'     => '',
-					'class'     => 'small-text',
-					'required'  => 'required',
-				);
+			$this->shortcodes_option_fields['user_id'] = array(
+				'id'        => $this->shortcodes_section_key . '_user_id',
+				'name'      => 'user_id',
+				'type'      => 'number',
+				'label'     => esc_html__( 'User ID', 'learndash' ),
+				'help_text' => esc_html__( 'Enter a single User ID. Leave blank if used within a Certificate.', 'learndash' ),
+				'value'     => '',
+				'class'     => 'small-text',
+			);
 
-				$this->shortcodes_option_fields['time'] = array(
-					'id'        => $this->shortcodes_section_key . '_time',
-					'name'      => 'time',
-					'type'      => 'text',
-					'label'     => esc_html__( 'Timestamp', 'learndash' ),
+			$this->shortcodes_option_fields['time'] = array(
+				'id'        => $this->shortcodes_section_key . '_time',
+				'name'      => 'time',
+				'type'      => 'text',
+				'label'     => esc_html__( 'Attempt timestamp', 'learndash' ),
+				'help_text' => sprintf(
 					// translators: placeholder: Quiz.
-					'help_text' => sprintf( esc_html_x( 'Enter single %s attempt timestamp', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ),
-					'value'     => '',
-					'required'  => 'required',
-				);
-			}
+					esc_html_x( 'Single %s attempt timestamp. See WP user profile "#" link on attempt row. Leave blank to use latest attempt or within a Certificate', 'placeholder: Quiz', 'learndash' ),
+					LearnDash_Custom_Label::get_label( 'quiz' )
+				),
+				'value'     => '',
+			);
 
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
 			$this->shortcodes_option_fields = apply_filters( 'learndash_settings_fields', $this->shortcodes_option_fields, $this->shortcodes_section_key );
@@ -154,7 +151,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					if ( jQuery( 'form#learndash_shortcodes_form_quizinfo select#quizinfo_show' ).length) {
 						jQuery( 'form#learndash_shortcodes_form_quizinfo select#quizinfo_show').on( 'change', function() {
 							var selected = jQuery(this).val();
-
+							console.log( 'selected[%o]', selected );
 							if ( ( selected == 'timestamp' ) || ( selected == 'field' ) ) {
 
 								// Show the format field row.
@@ -179,6 +176,42 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 							}
 						});
 						jQuery( 'form#learndash_shortcodes_form_quizinfo select#quizinfo_show').change();
+					}
+
+					if ( jQuery( 'form#learndash_shortcodes_form_quizinfo input#quizinfo_time' ).length) {
+						jQuery( 'form#learndash_shortcodes_form_quizinfo input#quizinfo_time').on( 'change', function(event) {
+							var input_value = jQuery(event.currentTarget).val();
+							if ( ( input_value.length ) && ( input_value.startsWith('data:quizinfo:', 0 ) ) ) {
+								var input_value_parts = input_value.split(':');
+								if ( input_value_parts.length > 2 ) {
+									var field_id = '';
+									for (let index = 2; index < input_value_parts.length; index++) {
+										if ( field_id == '' ) {
+											if ( input_value_parts[index] == 'quiz' ) {
+												field_id = 'quiz_id';
+											} else if ( input_value_parts[index] == 'user' ) {
+												field_id = 'user_id';
+											} else if ( input_value_parts[index] == 'time' ) {
+												field_id = 'time';
+											}
+											continue;
+										} else {
+											if ( field_id == 'quiz_id' ) {
+												jQuery( 'form#learndash_shortcodes_form_quizinfo input#quizinfo_quiz').val(input_value_parts[index]);
+											} else if ( field_id == 'user_id' ) {
+												jQuery( 'form#learndash_shortcodes_form_quizinfo input#quizinfo_user_id').val(input_value_parts[index]);
+											} else if ( field_id == 'time' ) {
+												jQuery( 'form#learndash_shortcodes_form_quizinfo input#quizinfo_time').val(input_value_parts[index]);
+											}
+											field_id = '';
+											continue;
+										}									
+									}
+								}
+							}
+
+						});
+						jQuery( 'form#learndash_shortcodes_form_quizinfo select#quizinfo_time').change();
 					}
 				});
 			</script>

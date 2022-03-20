@@ -21,6 +21,13 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Course_Builder' ) ) && ( class_e
 	class Learndash_Admin_Metabox_Course_Builder extends Learndash_Admin_Builder {
 
 		/**
+		 * LearnDash course steps object
+		 *
+		 * @var object
+		 */
+		public $ld_course_steps_object;
+
+		/**
 		 * Public constructor for class
 		 */
 		public function __construct() {
@@ -241,8 +248,6 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Course_Builder' ) ) && ( class_e
 		 *
 		 * @param string  $post_type Post Type slug.
 		 * @param boolean $singular True if singular label needed. False for plural.
-		 *
-		 * @return string.
 		 */
 		public function get_label_for_post_type( $post_type = '', $singular = true ) {
 			switch ( $post_type ) {
@@ -277,6 +282,9 @@ if ( ( ! class_exists( 'Learndash_Admin_Metabox_Course_Builder' ) ) && ( class_e
 						return 'quizzes';
 					}
 					break;
+
+				default:
+					return '';
 			}
 		}
 

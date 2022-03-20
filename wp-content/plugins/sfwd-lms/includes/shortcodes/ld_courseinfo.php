@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
  *    @type string     $show           The course info field to display. Default 'course_title'.
@@ -30,10 +30,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type int        $decimals       The number of decimal points. Default 2.
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'courseinfo'.
  *
  * @return string The `courseinfo` shortcode output.
  */
-function learndash_courseinfo( $attr = array(), $content = '' ) {
+function learndash_courseinfo( $attr = array(), $content = '', $shortcode_slug = 'courseinfo' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -64,6 +65,9 @@ function learndash_courseinfo( $attr = array(), $content = '' ) {
 			$shortcode_atts['user_id'] = intval( $_GET['user_id'] );
 		}
 	}
+
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$shortcode_atts = apply_filters( 'learndash_shortcode_atts', $shortcode_atts, $shortcode_slug );
 
 	if ( empty( $shortcode_atts['user_id'] ) ) {
 		$shortcode_atts['user_id'] = get_current_user_id();
@@ -402,4 +406,4 @@ function learndash_courseinfo( $attr = array(), $content = '' ) {
 			return apply_filters( 'learndash_courseinfo', '', $shortcode_atts );
 	}
 }
-add_shortcode( 'courseinfo', 'learndash_courseinfo', 10, 2 );
+add_shortcode( 'courseinfo', 'learndash_courseinfo', 10, 3 );

@@ -342,7 +342,9 @@ jQuery( function( $ ) {
 		var $tab = $( '#' + $( this ).attr( 'data-ld-tab' ) );
 		if ( $tab.length ) {
 			$( '.ld-tabs-navigation .ld-tab.ld-active' ).removeClass( 'ld-active' );
+			$( '.ld-tabs-navigation .ld-tab' ).removeAttr( 'aria-selected' );
 			$( this ).addClass( 'ld-active' );
+			$( this ).attr( 'aria-selected', 'true' );
 			$( '.ld-tabs-content .ld-tab-content.ld-visible' ).removeClass( 'ld-visible' );
 			$tab.addClass( 'ld-visible' );
 		}
@@ -622,6 +624,10 @@ jQuery( function( $ ) {
 			linkVars.shortcode_instance = $( '#ld-profile' ).data( 'shortcode_instance' );
 		}
 
+		if ( 'profile_quizzes' == linkVars.context ) {
+			$( '#ld-course-list-item-' + linkVars.pager_results.quiz_course_id + ' .ld-item-contents' ).addClass( 'ld-loading' );
+		}
+
 		if ( 'course_info_courses' == linkVars.context ) {
 			$( '.ld-user-status' ).addClass( 'ld-loading' );
 			linkVars.shortcode_instance = $( '.ld-user-status' ).data( 'shortcode-atts' );
@@ -720,6 +726,13 @@ jQuery( function( $ ) {
 				if ( 'profile' == linkVars.context ) {
 					if ( 'undefined' !== typeof response.data.markup ) {
 						$( '#ld-profile' ).html( response.data.markup );
+					}
+				}
+
+				if ( 'profile_quizzes' == linkVars.context ) {
+					if ( 'undefined' !== typeof response.data.markup ) {
+						$( '#ld-course-list-item-' + linkVars.pager_results.quiz_course_id + ' .ld-item-list-item-expanded .ld-item-contents' ).replaceWith( response.data.markup );
+						$( '#ld-course-list-item-' + linkVars.pager_results.quiz_course_id ).get( 0 ).scrollIntoView( { behavior: 'smooth' } );
 					}
 				}
 

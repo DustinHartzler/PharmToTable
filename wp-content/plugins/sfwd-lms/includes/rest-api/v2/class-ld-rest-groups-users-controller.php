@@ -23,8 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 	 * @since 3.3.0
 	 * @uses LD_REST_Users_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Groups_Users_Controller_V2 extends LD_REST_Users_Controller_V2 {
+	class LD_REST_Groups_Users_Controller_V2 extends LD_REST_Users_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
@@ -87,7 +86,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'update_groups_users_permissions_check' ),
 						'args'                => array(
 							'user_ids' => array(
-								// translators: group
+								// translators: group.
 								'description' => sprintf( esc_html_x( 'User IDs to enroll into %s.', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -103,7 +102,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'delete_groups_users_permissions_check' ),
 						'args'                => array(
 							'user_ids' => array(
-								// translators: group
+								// translators: group.
 								'description' => sprintf( esc_html_x( 'User IDs to remove from %s.', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -158,6 +157,8 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 					return true;
 				}
 			}
+
+			return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		/**
@@ -172,6 +173,8 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 		public function update_groups_users_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -187,6 +190,8 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 		public function delete_groups_users_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -218,7 +223,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -310,10 +315,10 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -334,7 +339,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -426,10 +431,10 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -460,7 +465,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 					return new WP_Error(
 						'rest_post_invalid_id',
 						sprintf(
-							// translators: placeholder: group
+							// translators: placeholder: group.
 							esc_html_x(
 								'Invalid %s ID.',
 								'placeholder: group',
@@ -490,6 +495,6 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V2' ) ) && ( class_exist
 			return $query_args;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

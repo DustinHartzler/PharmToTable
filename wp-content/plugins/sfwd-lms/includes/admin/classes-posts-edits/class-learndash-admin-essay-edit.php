@@ -63,9 +63,11 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					'core'
 				);
 
-				// This is added here because we wanted the inline comments ability on the single edit post type form. But since
-				// This post type uses custom post statuses the default logic in WP was failing.
-				// add_meta_box( 'commentsdiv', esc_html__( 'Comments', 'learndash' ), 'post_comment_meta_box', null, 'normal', 'core' );
+				/**
+				 * This is added here because we wanted the inline comments ability on the single edit post type form. But since
+				 * This post type uses custom post statuses the default logic in WP was failing.
+				 * add_meta_box( 'commentsdiv', esc_html__( 'Comments', 'learndash' ), 'post_comment_meta_box', null, 'normal', 'core' );
+				 */
 			}
 		}
 
@@ -118,7 +120,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 						<div class="misc-pub-section">
 							<?php if ( $question && is_a( $question, 'WpProQuiz_Model_Question' ) ) : ?>
 								<p>
-									<?php // translators: placeholder: question ?>
+									<?php // translators: placeholder: question. ?>
 									<strong><?php echo sprintf( esc_html_x( 'Essay %s', 'placeholder: question', 'learndash' ), esc_html( learndash_get_custom_label( 'question' ) ) ); ?>:</strong> <?php echo wp_kses_post( $question->getQuestion() ); ?>
 									<?php
 										$test_url          = admin_url( 'admin.php' );
@@ -155,7 +157,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 								<input name="question_id" type="hidden" value="<?php echo esc_attr( $question->getId() ); ?>">
 							<?php else : ?>
 								<p> <?php printf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
-									// translators: placeholder: question
+									// translators: placeholder: question.
 									esc_html_x( 'We could not find the essay %s for this response', 'placeholder: question', 'learndash' ),
 									esc_html( learndash_get_custom_label_lower( 'question' ) )
 								) ?> </p> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd ?>
@@ -260,13 +262,13 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 							?>
 						</div>
 						<?php
-						// translators: Publish box date format, see https://secure.php.net/date
+						// translators: Publish box date format, see https://secure.php.net/date.
 						$datef = esc_html__( 'M j, Y @ H:i', 'learndash' );
 						if ( 0 != $essay->ID ) {
 							$date = date_i18n( $datef, strtotime( $essay->post_date ) );
 						}
 
-						if ( $can_publish ) : // Contributors don't get to choose the date of publish
+						if ( $can_publish ) : // Contributors don't get to choose the date of publish.
 							?>
 							<div class="misc-pub-section curtime misc-pub-curtime">
 								<span id="timestamp"><?php printf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
@@ -330,7 +332,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				printf( '<a target="_blank" href="%1$s">%s</a>', esc_url( $upload ) );
 			} else {
 				printf(
-					// translators: placeholder: question
+					// translators: placeholder: question.
 					esc_html_x( 'Upload was not provided for this %s', 'placeholder: question', 'learndash' ),
 					esc_html( learndash_get_custom_label_lower( 'question' ) )
 				);
@@ -475,8 +477,9 @@ new Learndash_Admin_Essay_Edit();
  *
  * @since 3.4.0
  *
- * parameters documents in /wp-includes/class-wp-user.php
+ * parameters documented in /wp-includes/class-wp-user.php
  */
+// phpcs:ignore Squiz.Commenting.FunctionComment
 function learndash_group_leader_can_edit_essay_filter( $allcaps, $cap, $args, $user ) {
 	global $pagenow, $typenow;
 

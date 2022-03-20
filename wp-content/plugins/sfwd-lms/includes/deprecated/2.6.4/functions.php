@@ -32,7 +32,7 @@ if ( ! function_exists( 'learndash_group_updated_messages' ) ) {
 	}
 }
 
-// Get all users with explicit 'course_XX_access_from' access
+// Get all users with explicit 'course_XX_access_from' access.
 if ( ! function_exists( 'get_course_users_access_from_meta' ) ) {
 	/**
 	 * Gets the user course access from the meta.
@@ -68,7 +68,7 @@ if ( ! function_exists( 'get_course_expired_access_from_meta' ) ) {
 			_deprecated_function( __FUNCTION__, '2.6.4', 'learndash_get_course_expired_access_from_meta()' );
 		}
 
-		return learndash_get_course_expired_access_from_meta( $course_id );
+		return learndash_get_course_expired_access_from_meta( $couese_id );
 	}
 }
 

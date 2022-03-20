@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * LearnDash LD30 Displays the infobar in course context
  *
@@ -34,9 +30,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0.0
  *
  * @package LearnDash\Templates\LD30\Modules
- */ ?>
+ */
 
-<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $course_pricing = learndash_get_course_price( $course_id );
 
 if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
@@ -130,7 +129,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 				<span class="ld-status ld-status-waiting ld-tertiary-background" data-ld-tooltip="
 				<?php
 					printf(
-						// translators: placeholder: course
+						// translators: placeholder: course.
 						esc_attr_x( 'Enroll in this %s to get access', 'placeholder: course', 'learndash' ),
 						esc_html( learndash_get_custom_label_lower( 'course' ) )
 					);
@@ -167,7 +166,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 		do_action( 'learndash-course-infobar-noaccess-price-before', get_post_type(), $course_id, $user_id );
 		?>
 
-		<div class="ld-course-status-segment ld-course-status-seg-price">
+		<div class="ld-course-status-segment ld-course-status-seg-price ld-course-status-mode-<?php echo esc_attr( $course_pricing['type'] ); ?>">
 
 			<?php
 			/**
@@ -185,39 +184,157 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 			<span class="ld-course-status-label"><?php echo esc_html__( 'Price', 'learndash' ); ?></span>
 
 			<div class="ld-course-status-content">
+			<?php
+			// Some simple price settings validation logic. Not 100%.
+			$course_pricing = wp_parse_args(
+				$course_pricing,
+				array(
+					'type'             => LEARNDASH_DEFAULT_COURSE_PRICE_TYPE,
+					'price'            => '',
+					'interval'         => '',
+					'frequency'        => '',
+					'trial_price'      => '',
+					'trial_interval'   => '',
+					'trial_frequency'  => '',
+					'repeats'          => '',
+					'repeat_frequency' => '',
+				)
+			);
+
+			if ( 'subscribe' === $course_pricing['type'] ) {
+				if ( ( empty( $course_pricing['price'] ) ) || ( empty( $course_pricing['interval'] ) ) || ( empty( $course_pricing['frequency'] ) ) ) {
+					$course_pricing['type']             = LEARNDASH_DEFAULT_COURSE_PRICE_TYPE;
+					$course_pricing['interval']         = '';
+					$course_pricing['frequency']        = '';
+					$course_pricing['trial_price']      = '';
+					$course_pricing['trial_interval']   = '';
+					$course_pricing['trial_frequency']  = '';
+					$course_pricing['repeats']          = '';
+					$course_pricing['repeat_frequency'] = '';
+				} else {
+					if ( empty( $course_pricing['trial_price'] ) ) {
+						$course_pricing['trial_interval']  = '';
+						$course_pricing['trial_frequency'] = '';
+					} elseif ( ( empty( $course_pricing['trial_interval'] ) ) || ( empty( $course_pricing['trial_frequency'] ) ) ) {
+						$course_pricing['trial_price'] = '';
+					}
+				}
+			}
+
+			if ( 'subscribe' !== $course_pricing['type'] ) {
+				?>
 				<span class="ld-course-status-price">
 					<?php
-					if ( isset( $course_pricing['price'] ) && ! empty( $course_pricing['price'] ) ) :
-						if ( 'closed' !== $course_pricing['type'] ) :
-							echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span>' );
-							endif;
+					if ( ! empty( $course_pricing['price'] ) ) {
+						echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
 						echo wp_kses_post( $course_pricing['price'] );
-						else :
-								/**
-								 * Filters label to be displayed when there is no price set for a course or it is closed.
-								 *
-								 * @since 3.0.0
-								 *
-								 * @param string $label The label displayed when there is no price.
-								 */
-								$label = apply_filters( 'learndash_no_price_price_label', ( 'closed' === $course_pricing['type'] ? __( 'Closed', 'learndash' ) : __( 'Free', 'learndash' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Late escaped on output
-								echo esc_html( $label );
-						endif;
+					} elseif ( in_array( $course_pricing['type'], array( 'closed', 'free' ), true ) ) {
+							/**
+							 * Filters label to be displayed when there is no price set for a course or it is closed.
+							 *
+							 * @since 3.0.0
+							 *
+							 * @param string $label The label displayed when there is no price.
+							 */
+							$label = apply_filters( 'learndash_no_price_price_label', ( 'closed' === $course_pricing['type'] ? __( 'Closed', 'learndash' ) : __( 'Free', 'learndash' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Late escaped on output
+							echo esc_html( $label );
+					}
+					?>
+				</span>
+				<?php
+			} elseif ( 'subscribe' === $course_pricing['type'] ) {
+				if ( ! empty( $course_pricing['price'] ) ) {
+					if ( ! empty( $course_pricing['trial_price'] ) ) {
+						?>
+						<span class="ld-course-status-trial-price">
+						<?php
+						echo '<p class="ld-text ld-trial-text">';
+						echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+						echo wp_kses_post( $course_pricing['trial_price'] );
+						echo '</p>';
+						echo '<p class="ld-trial-pricing ld-pricing">';
+						if ( ( ! empty( $course_pricing['trial_interval'] ) ) && ( ! empty( $course_pricing['trial_frequency'] ) ) ) {
+							printf(
+								// translators: placeholders: Trial interval, Trial frequency.
+								esc_html_x( 'Trial price for %1$s %2$s, then', 'placeholders: Trial interval, Trial frequency', 'learndash' ),
+								absint( $course_pricing['trial_interval'] ),
+								esc_html( $course_pricing['trial_frequency'] )
+							);
+						}
+						echo '</p>'; // closing '<p class="ld-trial-pricing ld-pricing">'
+						?>
+						</span>
+						<span class="ld-course-status-course-price">
+							<?php
+							echo '<p class="ld-text ld-course-text">';
+							echo '<span class="ld-currency">' . wp_kses_post( learndash_30_get_currency_symbol() ) . '</span>';
+							echo wp_kses_post( $course_pricing['price'] );
+							echo '</p>';
+							echo '<p class="ld-course-pricing ld-pricing">';
 
-						if ( isset( $course_pricing['type'] ) && 'subscribe' === $course_pricing['type'] ) :
+							if ( ( ! empty( $course_pricing['interval'] ) ) && ( ! empty( $course_pricing['frequency'] ) ) ) {
+								printf(
+									// translators: placeholders: %1$s Interval of recurring payments (number), %2$s Frequency of recurring payments: day, week, month or year.
+									esc_html_x( 'Full price every %1$s %2$s afterward', 'Recurring duration message', 'learndash' ),
+									absint( $course_pricing['interval'] ),
+									esc_html( $course_pricing['frequency'] )
+								);
+
+								if ( ! empty( $course_pricing['repeats'] ) ) {
+									echo ' ';
+									printf(
+										// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
+										esc_html__( 'for %1$s %2$s', 'learndash' ),
+										// Get correct total time by multiplying interval by number of repeats
+										absint( $course_pricing['interval'] * $course_pricing['repeats'] ),
+										esc_html( $course_pricing['repeat_frequency'] )
+									);
+								}
+							}
+
+							echo '</p>'; // closing '<p class="ld-course-pricing ld-pricing">'.
 							?>
-							<span class="ld-text ld-recurring-duration">
-									<?php
+						</span>
+						<?php
+					} else {
+						?>
+						<span class="ld-course-status-price">
+						<?php
+						if ( ! empty( $course_pricing['price'] ) ) {
+							if ( ! empty( $course_pricing['price'] ) ) {
+								echo wp_kses_post( '<span class="ld-currency">' . learndash_30_get_currency_symbol() . '</span>' );
+								echo wp_kses_post( $course_pricing['price'] );
+							}
+						}
+						?>
+						</span>
+						<span class="ld-text ld-recurring-duration">
+								<?php
+								if ( ( ! empty( $course_pricing['interval'] ) ) && ( ! empty( $course_pricing['frequency'] ) ) ) {
 									echo sprintf(
 										// translators: Recurring duration message.
 										esc_html_x( 'Every %1$s %2$s', 'Recurring duration message', 'learndash' ),
 										esc_html( $course_pricing['interval'] ),
 										esc_html( $course_pricing['frequency'] )
 									);
-									?>
-							</span>
-						<?php endif; ?>
-				</span>
+
+									if ( ( ! empty( $course_pricing['repeats'] ) ) && ( ! empty( $course_pricing['repeat_frequency'] ) ) ) {
+										printf(
+											// translators: placeholders: %1$s Number of times the recurring payment repeats, %2$s Frequency of recurring payments: day, week, month, year.
+											esc_html__( ' for %1$s %2$s', 'learndash' ),
+											// Get correct total time by multiplying interval by number of repeats
+											absint( $course_pricing['interval'] * $course_pricing['repeats'] ),
+											esc_html( $course_pricing['repeat_frequency'] )
+										);
+									}
+								}
+								?>
+						</span>
+						<?php
+					}
+				}
+			}
+			?>
 			</div>
 
 			<?php
@@ -302,7 +419,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 							break;
 						case ( 'paynow' ):
 						case ( 'subscribe' ):
-							// Price (Free / Price)
+							// Price (Free / Price).
 							$ld_payment_buttons = learndash_payment_buttons( $post );
 							echo $ld_payment_buttons; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Outputs Button HTML
 
@@ -319,11 +436,11 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 							$button = learndash_payment_buttons( $post );
 							if ( empty( $button ) ) :
 								echo '<span class="ld-text">' . sprintf(
-									// translators: placeholder: course
+									// translators: placeholder: course.
 									esc_html_x( 'This %s is currently closed', 'placeholder: course', 'learndash' ),
 									esc_html( learndash_get_custom_label_lower( 'course' ) )
 								)
-									 . '</span>';
+									. '</span>';
 								else :
 									echo $button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Outputs Button HTML
 								endif;

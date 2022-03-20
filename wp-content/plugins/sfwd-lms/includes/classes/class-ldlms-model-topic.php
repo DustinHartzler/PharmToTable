@@ -24,15 +24,20 @@ if ( ( class_exists( 'LDLMS_Model_Post' ) ) && ( ! class_exists( 'LDLMS_Model_To
 		 *
 		 * @since 2.6.1
 		 *
-		 * @param int $post_id Topic Post ID to load.
-		 *
-		 * @return bool True if post was loaded. False otherwise.
+		 * @param int $topic_id Topic Post ID to load.
 		 */
 		public function __construct( $topic_id = 0 ) {
 			$this->post_type = learndash_get_post_type_slug( 'topic' );
 
 			$this->load( $topic_id );
 		}
+
+		/**
+		 * Load topic
+		 *
+		 * @param int $topic_id Topic ID.
+		 */
+		public function load( $topic_id ) {}
 
 		// End of functions.
 	}

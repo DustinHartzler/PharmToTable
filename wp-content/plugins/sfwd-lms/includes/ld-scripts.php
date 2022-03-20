@@ -72,6 +72,12 @@ function learndash_load_resources() {
 		$learndash_assets_loaded['styles']['learndash_template_style_css'] = __FUNCTION__;
 	}
 
+	$filepath = LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-password-strength-meter.js';
+	if ( ! empty( $filepath ) ) {
+		wp_register_script( 'learndash-password-strength-meter', $filepath, array( 'jquery', 'password-strength-meter' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
+		$learndash_assets_loaded['scripts']['learndash-password-strength-meter'] = __FUNCTION__;
+	}
+
 	/** This filter is documented in includes/ld-misc-functions.php */
 	if ( true === apply_filters( 'learndash_responsive_video', true, get_post_type(), get_the_ID() ) ) {
 		$filepath = SFWD_LMS::get_template( 'learndash_lesson_video.css', null, null, true );
@@ -82,7 +88,7 @@ function learndash_load_resources() {
 	}
 
 	if ( ! isset( $learndash_assets_loaded['scripts']['learndash_template_script_js'] ) ) {
-		// First check if the theme has the file learndash/learndash_template_script.js or learndash_template_script.js file
+		// First check if the theme has the file learndash/learndash_template_script.js or learndash_template_script.js file.
 		$filepath = SFWD_LMS::get_template( 'learndash_template_script.js', null, null, true );
 		if ( ! empty( $filepath ) ) {
 			wp_enqueue_script( 'learndash_template_script_js', learndash_template_url_from_path( $filepath ), array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );

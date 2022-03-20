@@ -44,7 +44,6 @@ do_action( 'learndash-' . $context . '-progress-bar-before', $group_id, $user_id
 
 /**
  * In the topic context we're measuring progress through a lesson, not the course itself
- * @var [type]
  */
 if ( 'group' === $context ) {
 	$progress = apply_filters( 'learndash-' . $context . '-progress-stats', learndash_get_user_group_progress( $group_id, $user_id ) );
@@ -58,7 +57,7 @@ if ( 'group' === $context ) {
 					<div class="ld-progress-label">
 					<?php
 					echo sprintf(
-						// translators: placeholder: Group
+						// translators: placeholder: Group.
 						esc_html_x( '%s Progress', 'Placeholder: Group', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'group' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
@@ -69,7 +68,7 @@ if ( 'group' === $context ) {
 					<div class="ld-progress-percentage ld-secondary-color">
 					<?php
 					echo sprintf(
-						// translators: placeholder: Progress percentage
+						// translators: placeholder: Progress percentage.
 						esc_html_x( '%s%% Complete', 'placeholder: Progress percentage', 'learndash' ),
 						esc_html( $progress['percentage'] )
 					);
@@ -78,7 +77,7 @@ if ( 'group' === $context ) {
 					<div class="ld-progress-steps">
 						<?php
 						echo sprintf(
-							// translators: placeholder: completed steps, total steps, Courses
+							// translators: placeholder: completed steps, total steps, Courses.
 							esc_html_x( '%1$d/%2$d %3$s', 'placeholder: completed steps, total steps, Courses', 'learndash' ),
 							esc_html( $progress['completed'] ),
 							esc_html( $progress['total'] ),

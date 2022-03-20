@@ -112,6 +112,7 @@ function learndash_get_quiz_id_by_pro_quiz_id( $quiz_pro_id = 0 ) {
 			return $quiz_post_ids[ $quiz_pro_id ];
 		}
 	}
+	return null;
 }
 
 /**
@@ -293,6 +294,7 @@ function learndash_update_pro_question( $question_pro_id = 0, $post_data = array
 		$question_pro_id = $question->getId();
 		return $question_pro_id;
 	}
+	return null;
 }
 
 /**
@@ -386,6 +388,7 @@ function learndash_get_quizzes_for_question( $question_post_id = 0, $return_flat
 
 		return $quiz_ids;
 	}
+	return array();
 }
 
 /**
@@ -411,7 +414,7 @@ function learndash_get_quiz_id( $id = null ) {
 
 	if ( empty( $id ) ) {
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-			//return false;
+			// return false;
 		} else {
 			if ( is_admin() ) {
 				global $parent_file, $post_type, $pagenow;
@@ -529,6 +532,7 @@ function learndash_get_quiz_questions( $quiz_id = 0 ) {
 			return $ld_quiz_questions;
 		}
 	}
+	return array();
 }
 
 /**
@@ -662,11 +666,11 @@ function learndash_wp_ajax_ld_quiz_navigation_admin_pager() {
 		if ( ( ! empty( $quiz_id ) ) && ( ! empty( $widget_data ) ) ) {
 			if ( ( isset( $_POST['widget_data']['nonce'] ) ) && ( ! empty( $_POST['widget_data']['nonce'] ) ) && ( wp_verify_nonce( $_POST['widget_data']['nonce'], 'ld_quiz_navigation_admin_pager_nonce_' . $quiz_id . '_' . get_current_user_id() ) ) ) {
 				$questions_query_args = array();
-				//$course_lessons_per_page = learndash_get_course_lessons_per_page( $course_id );
-				//if ( $course_lessons_per_page > 0 ) {
+				// $course_lessons_per_page = learndash_get_course_lessons_per_page( $course_id );
+				// if ( $course_lessons_per_page > 0 ) {
 					$questions_query_args['pagination'] = 'true';
 					$questions_query_args['paged']      = $paged;
-				//}
+				// }
 				$widget_data['show_widget_wrapper'] = false;
 				$level                              = ob_get_level();
 				ob_start();
@@ -768,6 +772,7 @@ function learndash_proquiz_sync_question_category( $question_post_id = 0, $quest
 			}
 		}
 	}
+	return array();
 }
 
 /**
@@ -792,6 +797,7 @@ function learndash_get_quiz_post_ids( $quiz_pro_id = 0 ) {
 			if ( ! empty( $quiz_pro_id ) ) {
 				$quiz_query_args = array(
 					'post_type'      => learndash_get_post_type_slug( 'quiz' ),
+					'post_status'    => 'any',
 					'posts_per_page' => -1,
 					'fields'         => 'ids',
 					'orderby'        => 'ID',
@@ -814,6 +820,7 @@ function learndash_get_quiz_post_ids( $quiz_pro_id = 0 ) {
 
 		return $quiz_post_ids[ $quiz_pro_id ];
 	}
+	return array();
 }
 
 /**
@@ -923,6 +930,7 @@ function learndash_get_quiz_primary_shared( $quiz_pro_id = 0, $set_first = true 
 
 				$quiz_query_args = array(
 					'post_type'      => learndash_get_post_type_slug( 'quiz' ),
+					'post_status'    => 'any',
 					'posts_per_page' => -1,
 					'fields'         => 'ids',
 					'orderby'        => 'ID',
@@ -957,6 +965,7 @@ function learndash_get_quiz_primary_shared( $quiz_pro_id = 0, $set_first = true 
 
 		return $quiz_primary_post_ids[ $quiz_pro_id ];
 	}
+	return null;
 }
 
 /**
@@ -1045,7 +1054,7 @@ function learndash_quiz_result_message_sort( $messages = array() ) {
  *
  * @since 3.2.3.4
  *
- * @param integer $quiz_post_id Quiz Post ID
+ * @param integer $quiz_post_id Quiz Post ID.
  */
 function learndash_quiz_get_repeats( $quiz_post_id = 0 ) {
 	$repeats = '';
@@ -1066,7 +1075,7 @@ function learndash_quiz_get_repeats( $quiz_post_id = 0 ) {
  *
  * @since 3.2.3.4
  *
- * @param array $cookie_quiz Array of Quiz cookie data
+ * @param array $cookie_quiz Array of Quiz cookie data.
  */
 function learndash_quiz_convert_lock_cookie( $cookie_quiz = null ) {
 	if ( ! is_array( $cookie_quiz ) ) {
@@ -1146,8 +1155,8 @@ function learndash_quiz_statistics_users_select2() {
 				if ( ! empty( $user_query_args ) ) {
 					$user_query = new WP_User_Query( $user_query_args );
 					if ( ( $user_query ) && ( is_a( $user_query, 'WP_User_Query' ) ) ) {
-						if ( ( learndash_is_admin_user() ) || ( ( learndash_is_group_leader_user() ) && ( 'advanced' === learndash_get_group_leader_manage_users() ) ) ) {
-							if ( ( $user_query_args['paged'] === 1 ) && ( ( ! isset( $user_query_args['search'] ) ) ) || ( empty( $user_query_args['search'] ) ) ) {
+						if ( learndash_is_admin_user() ) {
+							if ( ( 1 === $user_query_args['paged'] ) && ( ( ! isset( $user_query_args['search'] ) ) ) || ( empty( $user_query_args['search'] ) ) ) {
 								$reply_data['items'] = array(
 									array(
 										'id'       => 'filters_group',
@@ -1222,6 +1231,44 @@ function learndash_quiz_statistics_users_select2() {
 	}
 
 	echo wp_json_encode( $reply_data );
-	wp_die(); // this is required to terminate immediately and return a proper response
+	wp_die(); // this is required to terminate immediately and return a proper response.
 }
 add_action( 'wp_ajax_learndash_quiz_statistics_users_select2', 'learndash_quiz_statistics_users_select2' );
+
+/**
+ * Utility function to prepare Quiz Resume PHP array to JSON.
+ *
+ * @since 3.5.1.2
+ * @uses `esc_js()`
+ *
+ * @param array $quiz_resume_data Quiz Resume array.
+ */
+function learndash_prepare_quiz_resume_data_to_js( $quiz_resume_data = array() ) {
+	if ( ! empty( $quiz_resume_data ) ) {
+		foreach( $quiz_resume_data as $key => &$set ) {
+			if ( 'formData' === substr( $key, 0, strlen( 'formData' ) ) ) { // Handle the form fields.
+				if ( ( isset( $set['type'] ) ) && ( in_array( $set['type'], array( WpProQuiz_Model_Form::FORM_TYPE_TEXT, WpProQuiz_Model_Form::FORM_TYPE_TEXTAREA ) ) ) ) {
+					if ( ( isset( $set['value'] ) ) && ( is_string( $set['value'] ) ) && ( ! empty( $set['value'] ) ) ) {
+						$set['value'] = esc_js( $set['value'] );
+					}
+				}
+			} elseif ( isset( $set['type'] ) ) { // Handle the question fields.
+				if ( ( isset( $set['value'] ) ) && ( ! empty( $set['value'] ) ) ) {
+					if ( in_array( $set['type'], array( 'free_answer', 'essay', 'cloze_answer' ), true ) ) {
+						if ( is_string( $set['value'] ) ) {
+							$set['value'] = esc_js( $set['value'] );
+						} elseif ( is_array( $set['value'] ) ) {
+							foreach ( $set['value'] as $set_value_idx => &$set_value_value ) {
+								if ( ( is_string( $set_value_value ) ) && ( ! empty( $set_value_value ) ) ) {
+									$set_value_value = esc_js( $set_value_value );
+								}		
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return $quiz_resume_data;
+}

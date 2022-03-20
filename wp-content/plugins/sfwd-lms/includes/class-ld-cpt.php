@@ -13,16 +13,45 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'SFWD_CPT' ) ) {
-
+	/**
+	 * Abstract class to setup LearnDash CPTs
+	 */
 	abstract class SFWD_CPT extends Semper_Fi_Module {
 
+		/**
+		 * Post type name
+		 *
+		 * @var string
+		 */
 		protected $post_name;
+
+		/**
+		 * Post type
+		 *
+		 * @var string
+		 */
 		protected $post_type;
+
+		/**
+		 * Post type options
+		 *
+		 * @var array
+		 */
 		protected $post_options;
+
+		/**
+		 * Post type slug
+		 *
+		 * @var string
+		 */
 		protected $slug_name;
+
+		/**
+		 * Post type taxonomies
+		 *
+		 * @var object
+		 */
 		protected $taxonomies = null;
-
-
 
 		/**
 		 * Set up post type and taxonomy to be registered
@@ -82,6 +111,8 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		}
 
 		/**
+		 * Activate
+		 *
 		 * @todo  consider for removal, this never gets fired
 		 *        add_post_type is fired elsewhere
 		 *
@@ -93,7 +124,9 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		}
 
 		/**
-		 * @todo  consider for removal, this never gets fired
+		 * Deactivate
+		 *
+		 *  @todo  consider for removal, this never gets fired
 		 *
 		 * @since 2.1.0
 		 */
@@ -139,7 +172,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 				return;
 			}
 
-			// If for some reason we have already flushed rewrites. abort
+			// If for some reason we have already flushed rewrites. abort.
 			if ( $rewrite_flushed ) {
 				return;
 			}
@@ -172,7 +205,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $tax_data
+		 * @param  array $tax_data Taxonomy data.
 		 * @return array $tax_data
 		 */
 		public function register_tax( $tax_data ) {
@@ -217,8 +250,8 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array  $atts    shortcode attributes
-		 * @param  string $content short content
+		 * @param  array  $atts    shortcode attributes.
+		 * @param  string $content short content.
 		 * @return string            shortcode output
 		 */
 		public static function loop_shortcode( $atts, $content = null ) {
@@ -323,7 +356,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 			}
 
 			foreach ( $posts as $post ) {
-				$id                    = $post->ID; // allow use of id variable in template
+				$id                    = $post->ID; // allow use of id variable in template.
 				$class                 = '';
 				$status                = '';
 				$sample                = '';
@@ -435,7 +468,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  object $post WP_Post
+		 * @param  object $post WP_Post.
 		 * @return bool
 		 */
 		public static function show_content( $post ) {
@@ -461,9 +494,9 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array  $atts    shortcode attributes
-		 * @param  string $content short content
-		 * @param  string $code    post type
+		 * @param  array  $atts    shortcode attributes.
+		 * @param  string $content short content.
+		 * @param  string $code    post type.
 		 * @return string            shortcode output
 		 */
 		public function shortcode( $atts, $content = null, $code = '' ) {
@@ -521,7 +554,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $location post type
+		 * @param  string $location post type.
 		 * @return array  $setting  post type setting
 		 */
 		public function get_settings_values( $location = null ) {
@@ -544,8 +577,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $location post type
-		 * @return string           settings output
+		 * @param  string $location post type.
 		 */
 		public function display_settings_values( $location = null ) {
 			$meta = $this->get_settings_values( $location );

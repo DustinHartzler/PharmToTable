@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Groups_Users_Controller_V1 extends LD_REST_Users_Controller_V1 {
+	class LD_REST_Groups_Users_Controller_V1 extends LD_REST_Users_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Supported Collection Parameters.
@@ -79,7 +78,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 				array(
 					'args'   => array(
 						'id' => array(
-							// translators: group, group leader
+							// translators: group, group leader.
 							'description' => sprintf( esc_html_x( '%1$s ID to enroll %2$s into.', 'placeholder: group, group leader', 'learndash' ), learndash_get_custom_label_lower( 'group' ), learndash_get_custom_label_lower( 'group_leader' ) ),
 							'required'    => true,
 							'type'        => 'integer',
@@ -197,7 +196,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -379,7 +378,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -404,10 +403,10 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -426,7 +425,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -451,10 +450,10 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -475,7 +474,6 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 			$query_params['fields']  = array(
 				'description' => __( 'Returned values.', 'learndash' ),
 				'type'        => 'string',
-				'type'        => 'string',
 				'default'     => 'ids',
 				'enum'        => array(
 					'ids',
@@ -491,6 +489,6 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts {
+ * @param array  $atts {
  *    An array of shortcode attributes. Default empty array.
  *
  *    @type string  $content    The shortcode content. Default empty.
@@ -28,10 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type boolean $autop      Whether to replace linebreaks with paragraph elements. Default true.
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'course_complete'.
  *
  * @return string The `course_complete` shortcode output.
  */
-function learndash_course_complete_shortcode( $atts = array(), $content = '' ) {
+function learndash_course_complete_shortcode( $atts = array(), $content = '', $shortcode_slug = 'course_complete' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -59,6 +60,9 @@ function learndash_course_complete_shortcode( $atts = array(), $content = '' ) {
 			$atts['autop'] = false;
 		}
 
+		/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+		$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
+
 		/**
 		 * Filters `course_complete` shortcode attributes.
 		 *
@@ -75,5 +79,6 @@ function learndash_course_complete_shortcode( $atts = array(), $content = '' ) {
 			false
 		);
 	}
+	return '';
 }
-add_shortcode( 'course_complete', 'learndash_course_complete_shortcode', 10, 2 );
+add_shortcode( 'course_complete', 'learndash_course_complete_shortcode', 10, 3 );

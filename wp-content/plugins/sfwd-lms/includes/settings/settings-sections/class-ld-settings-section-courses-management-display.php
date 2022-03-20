@@ -47,14 +47,14 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				LearnDash_Custom_Label::get_label( 'course' )
 			);
 
-			// Used to show the section description above the fields. Can be empty
+			// Used to show the section description above the fields. Can be empty.
 			$this->settings_section_description = sprintf(
 				// translators: placeholder: course.
 				esc_html_x( 'Control settings for %s creation, and visual organization', 'placeholder: course', 'learndash' ),
 				learndash_get_custom_label_lower( 'course' )
 			);
 
-			// Define the depreacted Class and Fields
+			// Define the depreacted Class and Fields.
 			$this->settings_deprecated = array(
 				'LearnDash_Settings_Courses_Builder' => array(
 					'option_key' => 'learndash_settings_courses_builder',
@@ -67,7 +67,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'LearnDash_Settings_Section_Lessons_Display_Order' => array(
 					'option_key' => 'learndash_settings_lessons_display_order',
 					'fields'     => array(
-						'posts_per_page' => 'course_pagination_lessons',
+						'posts_per_page' => 'course_pagination_lessons', // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 						'order'          => 'lesson_topic_order',
 						'orderby'        => 'lesson_topic_orderby',
 					),
@@ -379,9 +379,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $value Array of section fields values.
-		 * @param array $old_value Array of old values.
-		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 * @param array  $current_values Array of section fields values.
+		 * @param array  $old_values     Array of old values.
+		 * @param string $option         Section option key should match $this->setting_option_key.
 		 */
 		public function section_pre_update_option( $current_values = '', $old_values = '', $option = '' ) {
 			if ( $option === $this->setting_option_key ) {
@@ -413,7 +413,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						$current_values['course_pagination_topics']  = LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE;
 					}
 
-					// Lessonand Topic Order and Order By
+					// Lessonand Topic Order and Order By.
 					if ( ( isset( $current_values['lesson_topic_order_enabled'] ) ) && ( 'yes' === $current_values['lesson_topic_order_enabled'] ) ) {
 						if ( ( ! isset( $current_values['lesson_topic_order'] ) ) || ( empty( $current_values['lesson_topic_order'] ) ) ) {
 							$current_values['lesson_topic_order'] = 'ASC';

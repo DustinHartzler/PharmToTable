@@ -106,7 +106,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			dbDelta( $learndash_user_activity_meta_db_table_create_query );
 
 			/**
-			 * v2.5.0 Patch here to reset the AUTO INCREMENT in the PRIMARY column. Had reports from one ticket
+			 * 2.5.0 Patch here to reset the AUTO INCREMENT in the PRIMARY column. Had reports from one ticket
 			 * this extra column setting was somehow dropped. After testing found that dbDelta does not re-add this
 			 * attribute.
 			 */

@@ -319,7 +319,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					if ( isset( $current_course_data['course_access_list_new'] ) ) {
 						$course_access_list_new = count( $current_course_data['course_access_list_new'] );
 					}
-					
+
 					$data['progress_label'] .= ' - ' . sprintf(
 						// translators: placeholders: placeholders: Course title, users processed, users total.
 						esc_html_x( '%1$s: %2$d of %3$d users processed', 'placeholders: Course title, users processed, users total', 'learndash' ),
@@ -464,7 +464,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param integer $course_id Course ID
+		 * @param integer $course_id Course ID.
 		 */
 		private function get_course_access_list( $course_id = 0 ) {
 			$course_access_list = array();
@@ -493,8 +493,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param integer $course_id Course ID
-		 * @param integer $user_id   User ID
+		 * @param integer $course_id Course ID.
+		 * @param integer $user_id   User ID.
 		 *
 		 * @return array activity row
 		 */
@@ -507,6 +507,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				$activity_row = $wpdb->get_row( $sql_str, ARRAY_A );
 				return $activity_row;
 			}
+
+			return array();
 		}
 
 		/**
@@ -514,10 +516,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param integer $course_id Course ID
-		 * @param array   $user_ids  User IDs
-		 *
-		 * @return array activity row
+		 * @param integer $course_id Course ID.
+		 * @param array   $user_ids  User IDs.
 		 */
 		private function remove_course_activity_access( $course_id = 0, $user_ids = array() ) {
 			global $wpdb;
@@ -533,7 +533,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					foreach( $activity as $item ) {
 						if ( in_array( absint( $item->user_id ), $user_ids, true ) !== false ) {
 							$activity_ids[] = $item->activity_id;
-						} 
+						}
 					}
 					if ( ! empty( $activity_ids ) ) {
 						$activity_ids_chunks = array_chunk( $activity_ids, 100 );

@@ -75,7 +75,7 @@ $course_icon_class = apply_filters(
 				echo esc_html( get_the_title( $course_id ) );
 
 				$components = array(
-					// translators: User Status Course Progress
+					// translators: User Status Course Progress.
 					'progress' => sprintf( esc_html_x( '%s%% Complete', 'User Status Course Progress', 'learndash' ), $progress['percentage'] ),
 					// translators: User Status Course Steps.
 					'steps'    => sprintf( esc_html_x( '%1$d/%2$d Steps', 'User Status Course Steps', 'learndash' ), $progress['completed'], $progress['total'] ),

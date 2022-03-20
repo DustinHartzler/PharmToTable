@@ -23,8 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Groups_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Users_Groups_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
@@ -84,7 +83,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'update_user_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								// translators: group
+								// translators: group.
 								'description' => sprintf( esc_html_x( '%s IDs to add to User.', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -100,7 +99,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'delete_user_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								// translators: group
+								// translators: group.
 								'description' => sprintf( esc_html_x( '%s IDs to remove from User.', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -145,6 +144,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -162,6 +163,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -179,6 +182,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 				return true;
 			} elseif ( get_current_user_id() == $request['id'] ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -306,10 +311,10 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -409,10 +414,10 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;

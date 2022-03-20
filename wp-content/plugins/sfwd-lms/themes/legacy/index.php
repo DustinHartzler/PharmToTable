@@ -1,4 +1,10 @@
 <?php
+/**
+ * LearnDash legacy template init.
+ *
+ * @package LearnDash\Templates\Legacy
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

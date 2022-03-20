@@ -33,6 +33,26 @@ if ( ( class_exists( 'LearnDash_Theme_Register' ) ) && ( ! class_exists( 'LearnD
 			$this->theme_template_dir = $this->theme_base_dir . '/templates';
 			$this->theme_template_url = $this->theme_base_url . '/templates';
 		}
+
+		/**
+		 * Load the theme files and assets.
+		 *
+		 * @since 4.0.0
+		 */
+		public function load_theme() {
+			include_once trailingslashit( $this->get_theme_base_dir() ) . 'includes/helpers.php';
+		}
+
+		/**
+		 * Load the theme settings sections.
+		 *
+		 * @since 4.0.0
+		 */
+		public function load_settings_sections() {
+			include_once trailingslashit( $this->get_theme_base_dir() ) . 'includes/class-ld-settings-section-theme-ld30.php';
+		}
+
+		// End of functions.
 	}
 }
 
@@ -42,9 +62,3 @@ add_action(
 		LearnDash_Theme_Register_LD30::add_theme_instance( 'ld30' );
 	}
 );
-
-
-if ( learndash_is_active_theme( 'ld30' ) ) {
-	// Include the helper functions
-	include_once __DIR__ . '/helpers.php';
-}

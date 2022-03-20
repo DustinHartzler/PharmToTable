@@ -10,13 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-//require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-section-fields.php';
+// require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-section-fields.php';
 
 if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 	/**
-	 * Absract for LearnDash Settings Sections.
+	 * Class for LearnDash Settings Sections.
 	 */
-	abstract class LearnDash_Settings_Metabox {
+	class LearnDash_Settings_Metabox {
 
 		/**
 		 * Static array of section instances.
@@ -129,6 +129,13 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 * @var array $settings_fields_map
 		 */
 		protected $settings_fields_map = array();
+
+		/**
+		 * Settings screen ID
+		 *
+		 * @var string
+		 */
+		protected $settings_screen_id = '';
 
 		/**
 		 * Legacy Settings fields.
@@ -269,6 +276,12 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			return true;
 		}
 
+		/**
+		 * Get save settings fields map from post values.
+		 *
+		 * @param array $post_values Post values.
+		 * @return array
+		 */
 		public function get_save_settings_fields_map_form_post_values( $post_values = array() ) {
 			return $this->settings_fields_map;
 		}
@@ -298,6 +311,13 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			$this->settings_fields_loaded = true;
 		}
 
+		/**
+		 * Load settings fields
+		 *
+		 * @param array $setting_option_field Settings option field.
+		 *
+		 * @return array
+		 */
 		public function load_settings_field( $setting_option_field = array() ) {
 			if ( ! isset( $setting_option_field['type'] ) ) {
 				return $setting_option_field;
@@ -472,6 +492,9 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 
 		/**
 		 * Show Settings Section meta box.
+		 *
+		 * @param WP_Post $post Post.
+		 * @param object  $metabox Metabox.
 		 */
 		public function show_meta_box( $post = null, $metabox = null ) {
 			if ( $post ) {
@@ -636,7 +659,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		/**
 		 * Show the meta box settings
 		 *
-		 * @param string $section Section to be shown.
+		 * @param object $metabox Metabox.
 		 */
 		public function show_settings_metabox( $metabox = null ) {
 			if ( ( $metabox ) && ( is_object( $metabox ) ) && ( isset( self::$_instances[ get_class( $metabox ) ] ) ) ) {
@@ -702,8 +725,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		/**
 		 * Show Settings Section Fields.
 		 *
-		 * @param string $page Page shown.
-		 * @param string $section Section shown.
+		 * @param object $metabox Metabox.
 		 */
 		protected function show_settings_metabox_fields( $metabox = null ) {
 			if ( $metabox ) {
@@ -755,7 +777,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param array $settings_values Array of key/value settings changes.
+		 * @param array $settings_field_updates Array of key/value settings changes.
 		 */
 		public function apply_metabox_settings_fields_changes( $settings_field_updates = array() ) {
 			$settings_field_values = $this->get_settings_metabox_values();
@@ -775,9 +797,9 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 * handled by this metabox,
 		 *
 		 * @since 3.0
-		 * @param array $settings_fields Array of settings fields.
+		 * @param array  $settings_fields Array of settings fields.
 		 * @param string $location Screen/Post Type location.
-		 * @param array $settings_values Array of current field values.
+		 * @param array  $settings_values Array of current field values.
 		 */
 		public function display_settings_filter( $settings_fields = array(), $location = '', $settings_values = array() ) {
 			if ( ( $location === $this->settings_screen_id ) && ( ! empty( $settings_fields ) ) ) {
@@ -808,6 +830,11 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			return $settings_fields;
 		}
 
+		/**
+		 * Get settings by field key
+		 *
+		 * @param string $field_key Field key.
+		 */
 		public function get_settings_field_by_key( $field_key = '' ) {
 			if ( ! empty( $field_key ) ) {
 				if ( ! empty( $this->setting_option_fields ) ) {
@@ -826,6 +853,14 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			}
 		}
 
+		/**
+		 * Initialize quiz edit.
+		 *
+		 * @param WP_Post $post            Post object.
+		 * @param boolean $reload_pro_quiz Whether to reload the quiz.
+		 *
+		 * @return object
+		 */
 		public function init_quiz_edit( $post, $reload_pro_quiz = false ) {
 			static $pro_quiz_edit = array();
 
@@ -927,8 +962,17 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 
 				return $pro_quiz_edit[ $pro_quiz_id ];
 			}
+
+			return null;
 		}
 
+		/**
+		 * Check legacy metabox fields
+		 *
+		 * @param array $legacy_fields Array of legacy fields.
+		 *
+		 * @return array
+		 */
 		public function check_legacy_metabox_fields( $legacy_fields = array() ) {
 			if ( ! empty( $legacy_fields ) ) {
 				foreach ( $legacy_fields as $field_key => $field_value ) {

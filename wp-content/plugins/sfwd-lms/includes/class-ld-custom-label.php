@@ -1,12 +1,17 @@
 <?php
 /**
  * LearnDash Custom Label class.
+ *
+ * @package LearnDash
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Class LearnDash Custom Label
+ */
 class LearnDash_Custom_Label {
 	/**
 	 * Construct
@@ -15,92 +20,105 @@ class LearnDash_Custom_Label {
 	}
 
 	/**
-	 * Get label based on key name
+	 * Get label based on key name.
 	 *
-	 * @param  string $key Key name of setting field.
+	 * @param string $key Key name of setting field.
+	 *
 	 * @return string Label entered on settings page.
 	 */
-	public static function get_label( $key ) {
-		$labels = array();
+	public static function get_label( string $key ): string {
 		$key    = strtolower( $key );
-
 		$labels = get_option( 'learndash_settings_custom_labels', array() );
+
 		if ( ! is_array( $labels ) ) {
 			$labels = array();
 		}
 
-		switch ( $key ) {
-			case 'course':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Course', 'learndash' );
-				break;
+		if ( ! empty( $labels[ $key ] ) ) {
+			$label = $labels[ $key ];
+		} else {
+			switch ( $key ) {
+				case 'course':
+					$label = esc_html__( 'Course', 'learndash' );
+					break;
 
-			case 'courses':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Courses', 'learndash' );
-				break;
+				case 'courses':
+					$label = esc_html__( 'Courses', 'learndash' );
+					break;
 
-			case 'lesson':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Lesson', 'learndash' );
-				break;
+				case 'lesson':
+					$label = esc_html__( 'Lesson', 'learndash' );
+					break;
 
-			case 'lessons':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Lessons', 'learndash' );
-				break;
+				case 'lessons':
+					$label = esc_html__( 'Lessons', 'learndash' );
+					break;
 
-			case 'topic':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Topic', 'learndash' );
-				break;
+				case 'topic':
+					$label = esc_html__( 'Topic', 'learndash' );
+					break;
 
-			case 'topics':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Topics', 'learndash' );
-				break;
+				case 'topics':
+					$label = esc_html__( 'Topics', 'learndash' );
+					break;
 
-			case 'quiz':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Quiz', 'learndash' );
-				break;
+				case 'exam':
+					$label = esc_html__( 'Challenge Exam', 'learndash' );
+					break;
 
-			case 'quizzes':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Quizzes', 'learndash' );
-				break;
+				case 'exams':
+					$label = esc_html__( 'Challenge Exams', 'learndash' );
+					break;
 
-			case 'question':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Question', 'learndash' );
-				break;
+				case 'quiz':
+					$label = esc_html__( 'Quiz', 'learndash' );
+					break;
 
-			case 'questions':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Questions', 'learndash' );
-				break;
+				case 'quizzes':
+					$label = esc_html__( 'Quizzes', 'learndash' );
+					break;
 
-			case 'group':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Group', 'learndash' );
-				break;
+				case 'question':
+					$label = esc_html__( 'Question', 'learndash' );
+					break;
 
-			case 'groups':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Groups', 'learndash' );
-				break;
+				case 'questions':
+					$label = esc_html__( 'Questions', 'learndash' );
+					break;
 
-			case 'group_leader':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Group Leader', 'learndash' );
-				break;
+				case 'group':
+					$label = esc_html__( 'Group', 'learndash' );
+					break;
 
-			case 'button_take_this_course':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Take this Course', 'learndash' );
-				break;
+				case 'groups':
+					$label = esc_html__( 'Groups', 'learndash' );
+					break;
 
-			case 'button_take_this_group':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Enroll in Group', 'learndash' );
-				break;
+				case 'group_leader':
+					$label = esc_html__( 'Group Leader', 'learndash' );
+					break;
 
-			case 'button_mark_complete':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Mark Complete', 'learndash' );
-				break;
+				case 'button_take_this_course':
+					$label = esc_html__( 'Take this Course', 'learndash' );
+					break;
 
-			case 'button_click_here_to_continue':
-				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Click Here to Continue', 'learndash' );
-				break;
+				case 'button_take_this_group':
+					$label = esc_html__( 'Enroll in Group', 'learndash' );
+					break;
 
-			default:
-				$label = '';
+				case 'button_mark_complete':
+					$label = esc_html__( 'Mark Complete', 'learndash' );
+					break;
+
+				case 'button_click_here_to_continue':
+					$label = esc_html__( 'Click Here to Continue', 'learndash' );
+					break;
+
+				default:
+					$label = '';
+			}
 		}
+
 		/**
 		 * Filters the value of label settings entered in the settings page. Used to filter label value in get_label function.
 		 *

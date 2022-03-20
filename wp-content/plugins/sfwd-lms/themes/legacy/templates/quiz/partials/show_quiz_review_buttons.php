@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				array(
 					'quiz_post_id' => $quiz->getID(),
 					'context'      => 'quiz_review_question_button_label',
-					// translators: placeholder: question
+					// translators: placeholder: question.
 					'message'      => sprintf( esc_html_x( 'Review %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) ),
 				)
 			)

@@ -55,7 +55,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$html .= $this->get_field_attribute_class( $field_args );
 			$html .= $this->get_field_attribute_placeholder( $field_args );
 
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === LEARNDASH_SELECT2_LIB ) ) {
+			if ( learndash_use_select2_lib() ) {
 				if ( ! isset( $field_args['attrs']['data-ld-select2'] ) ) {
 					$html .= ' data-ld-select2="1" ';
 				}
@@ -68,7 +68,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			if ( ( isset( $field_args['options'] ) ) && ( ! empty( $field_args['options'] ) ) ) {
 				foreach ( $field_args['options'] as $option_key => $option_label ) {
-					if ( ( '' === $option_key ) && ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === LEARNDASH_SELECT2_LIB ) ) {
+					if ( ( '' === $option_key ) && ( learndash_use_select2_lib() ) ) {
 						continue;
 					}
 					$selected_item = '';
@@ -125,10 +125,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param mixed  $val        Value from REST to be converted to internal value.
-		 * @param string $key        Key field for value.
-		 * @param array  $field_args Array of field args.
-		 * @param object $request    Request object.
+		 * @param mixed           $val        Value from REST to be converted to internal value.
+		 * @param string          $key        Key field for value.
+		 * @param array           $field_args Array of field args.
+		 * @param WP_REST_Request $request    Request object.
 		 */
 		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
 			if ( ! is_array( $val ) ) {

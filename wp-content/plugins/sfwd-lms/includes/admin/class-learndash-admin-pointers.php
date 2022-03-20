@@ -18,9 +18,18 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 	 */
 	class Learndash_Admin_Pointers {
 		/**
+		 * Array of registered pointers
+		 *
 		 * @var array $pointers Current registered pointers.
 		 */
 		protected $pointers = array();
+
+		/**
+		 * Screen ID
+		 *
+		 * @var string
+		 */
+		public $screen_id;
 
 		/**
 		 * Register variables and start up plugin
@@ -53,7 +62,7 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 			wp_enqueue_style( 'wp-pointer' );
 			wp_enqueue_script( 'wp-pointer' );
 
-			// Make sure some metaboxes can't be toggled off
+			// Make sure some metaboxes can't be toggled off.
 			wp_enqueue_script(
 				'learndash-admin-pointer-script',
 				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-pointers' . learndash_min_asset() . '.js',
@@ -150,7 +159,7 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 				delete_user_meta( get_current_user_id(), 'dismissed_wp_pointers' );
 			}
 
-			// Get dismissed pointers
+			// Get dismissed pointers.
 			$get_dismissed = get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true );
 			$dismissed     = explode( ',', (string) $get_dismissed );
 
@@ -188,13 +197,13 @@ add_filter(
 						'target'   => '#toplevel_page_learndash-lms .wp-menu-name',
 						'title'    => '<span id="ld-pointer-title-learndash-new-install" class="ld-pointer-title">' . esc_html__( 'First time using LearnDash?', 'learndash' ) . '</span>',
 						'content'  => '<span class="ld-pointer-content">' . sprintf(
-							// translators: placeholder: Link to Bootcamp page
+							// translators: placeholder: Link to Bootcamp page.
 							esc_html_x( 'Go to the LearnDash %s', 'placeholder: Link to Bootcamp page', 'learndash' ),
 							'<a href="' . admin_url( 'admin.php?page=learndash_lms_overview' ) . '">' . esc_html__( 'mini-Bootcamp', 'learndash' ) . '</a>'
 						) . '</span>',
 						'position' => array(
-							'edge'  => is_rtl() ? 'right' : 'left', // top, bottom, left, right
-							'align' => 'middle', // top, bottom, left, right, middle
+							'edge'  => is_rtl() ? 'right' : 'left', // top, bottom, left, right.
+							'align' => 'middle', // top, bottom, left, right, middle.
 						),
 					);
 				}

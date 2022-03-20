@@ -12,40 +12,69 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Legacy function used when not calling the WordPress shortcode API.
+ *
+ * @since 4.0.0
+ *
+ * @param array   $atts    See `learndash_quiz_shortcode_function` function for parameter details.
+ * @param string  $content See `learndash_quiz_shortcode_function` function for parameter details.
+ * @param boolean 	 Whether to show quiz materials. Default false.
+ */
+function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materials = false ) {
+	$atts['show_materials'] = $show_materials;
+
+	return learndash_quiz_shortcode_function( $atts, $content );
+}
+
+/**
  * Builds the `[ld_quiz]` shortcode output.
  *
  * @global boolean $learndash_shortcode_used
  * @global array   $learndash_shortcode_atts
  *
- * @param array   $atts {
- *    An array of shortcode attributes.
+ * @param array  $atts {
+ *   An array of shortcode attributes.
  *
  *    @type int  $course_id   Course ID. Default 0.
  *    @type int  $quiz_id     Quiz ID. Default 0.
  *    @type int  $quiz_pro_id Quiz pro ID. Default 0.
  * }
- * @param string  $content        The shortcode content. Default empty.
- * @param boolean $show_materials Whether to show quiz materials. Default false.
+ * @param string $content        The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_quiz'.
  *
  * @return string The `ld_quiz` shortcode output.
  */
-function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materials = false ) {
+function learndash_quiz_shortcode_function( $atts = array(), $content = '', $shortcode_slug = 'ld_quiz' ) {
 
 	global $learndash_shortcode_used, $learndash_shortcode_atts;
 
+//	if ( isset( $atts['show_materials'] ) ) {
+//		$show_materials = (bool) $atts['show_materials'];
+//	}
+
 	$atts = shortcode_atts(
 		array(
-			'quiz_id'     => 0,
-			'course_id'   => 0,
-			'quiz_pro_id' => 0,
+			'quiz_id'        => 0,
+			'course_id'      => 0,
+			'quiz_pro_id'    => 0,
+			'show_materials' => 0,
 		),
 		$atts
 	);
 
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
+	
 	// Just to ensure compliance.
-	$quiz_id     = $atts['quiz_id'] = absint( $atts['quiz_id'] );
-	$course_id   = $atts['course_id'] = absint( $atts['course_id'] );
+	$quiz_id     = $atts['quiz_id']     = absint( $atts['quiz_id'] );
+	$course_id   = $atts['course_id']   = absint( $atts['course_id'] );
 	$quiz_pro_id = $atts['quiz_pro_id'] = absint( $atts['quiz_pro_id'] );
+
+	if ( ( ! isset( $atts['show_materials'] ) ) || ( true === $atts['show_materials'] ) || ( 'true' === $atts['show_materials'] ) || ( '1' === $atts['show_materials'] ) ) {
+		$atts['show_materials'] = true;
+	} else {
+		$atts['show_materials'] = false;
+	}
 
 	if ( empty( $atts['quiz_id'] ) ) {
 		return $content;
@@ -199,11 +228,19 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 		if ( ! is_null( $access_message ) ) {
 			$quiz_content = $access_message;
 		} else {
-			if ( true === $show_materials ) {
-				if ( ! empty( $quiz_settings['quiz_materials'] ) ) {
+			if ( true === $atts['show_materials'] ) {
+				if ( ! isset( $quiz_settings['quiz_materials_enabled'] ) ) {
+					$quiz_settings['quiz_materials_enabled'] = '';
+					if ( ( isset( $quiz_settings['quiz_materials'] ) ) && ( ! empty( $quiz_settings['quiz_materials'] ) ) ) {
+						$quiz_settings['quiz_materials_enabled'] = 'on';
+					}
+				}
+
+				if ( ( 'on' === $quiz_settings['quiz_materials_enabled'] ) && ( ! empty( $quiz_settings['quiz_materials'] ) ) ) {
 					$materials = wp_specialchars_decode( $quiz_settings['quiz_materials'], ENT_QUOTES );
 					if ( ! empty( $materials ) ) {
 						$materials = do_shortcode( $materials );
+						$materials = wpautop( $materials );
 					}
 				}
 			}
@@ -265,7 +302,7 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 		$content = learndash_ob_get_clean( $level );
 
 		// Added this defined wrap in v2.1.8 as it was effecting <pre></pre>, <code></code> and other formatting of the content.
-		// See wrike https://www.wrike.com/open.htm?id=77352698 as to why this define exists
+		// See wrike https://www.wrike.com/open.htm?id=77352698 as to why this define exists.
 		if ( ( defined( 'LEARNDASH_NEW_LINE_AND_CR_TO_SPACE' ) ) && ( LEARNDASH_NEW_LINE_AND_CR_TO_SPACE == true ) ) {
 
 			// Why is this here?
@@ -280,4 +317,4 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 
 	return $content;
 }
-add_shortcode( 'ld_quiz', 'learndash_quiz_shortcode', 10, 2 );
+add_shortcode( 'ld_quiz', 'learndash_quiz_shortcode_function', 10, 3 );

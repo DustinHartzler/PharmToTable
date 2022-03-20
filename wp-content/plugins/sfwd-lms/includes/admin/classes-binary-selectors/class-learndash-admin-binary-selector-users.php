@@ -48,11 +48,11 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Users' ) ) && ( class_exists( 
 			parent::__construct( $args );
 
 			if ( ( isset( $this->args['included_ids'] ) ) && ( ! empty( $this->args['included_ids'] ) ) ) {
-				$this->query_args['include'] = $this->args['included_ids'];
+				$this->args['include'] = $this->args['included_ids'];
 			}
 
 			if ( ( isset( $this->args['excluded_ids'] ) ) && ( ! empty( $this->args['excluded_ids'] ) ) ) {
-				$this->query_args['exclude'] = $this->args['excluded_ids'];
+				$this->args['exclude'] = $this->args['excluded_ids'];
 			}
 		}
 

@@ -35,9 +35,6 @@ if ( ( ! class_exists( 'LearnDash_Binary_Selector_Course_Users' ) ) && ( class_e
 				'course_id'          => 0,
 				'html_title'         => '<h3>' .
 				// translators: placeholder: Course.
-				esc_html_x( '%s Users', 'Course Users Label', 'learndash' ) . '</h3>',
-				'html_title'         => '<h3>' .
-				// translators: placeholder: Course.
 				sprintf( esc_html_x( '%s Users', 'Course Users label', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ) . '</h3>',
 				'html_id'            => 'learndash_course_users',
 				'html_class'         => 'learndash_course_users',

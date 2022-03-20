@@ -72,7 +72,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 						<p class="description">
 							<?php
 								printf(
-									// translators: placeholder: question
+									// translators: placeholder: question.
 									esc_html_x( 'Points for this %s (Standard is 1 point)', 'placeholder: question', 'learndash' ),
 									esc_html( learndash_get_custom_label_lower( 'question' ) )
 								)
@@ -361,7 +361,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 						</div>
 					</td>
 					<td style="padding: 5px; vertical-align: top;">
-						<textarea rows="2" cols="50" class="large-text wpProQuiz_text" name="answerData[][answer]" style="resize:vertical;"><?php echo esc_html( $d->getAnswer() ); ?></textarea>
+						<textarea rows="2" cols="50" class="large-text wpProQuiz_text wpProQuiz_single_text" name="answerData[][answer]" style="resize:vertical;"><?php echo esc_html( $d->getAnswer() ); ?></textarea>
 					</td>
 				</tr>
 			</tbody>
@@ -398,10 +398,10 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 								</label>
 							</td>
 							<td style="border-right: 1px solid #9E9E9E; padding: 5px; vertical-align: top;">
-								<textarea rows="4" name="answerData[][answer]" class="wpProQuiz_text" style="width: 100%; resize:vertical;"><?php echo wp_kses_post( $d->getAnswer() ); ?></textarea>
+								<textarea rows="4" name="answerData[][answer]" class="wpProQuiz_text wpProQuiz_matrix_answer" style="width: 100%; resize:vertical;"><?php echo wp_kses_post( $d->getAnswer() ); ?></textarea>
 							</td>
 							<td style="padding: 5px; vertical-align: top;">
-								<textarea rows="4" name="answerData[][sort_string]" class="wpProQuiz_text" style="width: 100%; resize:vertical;"><?php echo wp_kses_post( $d->getSortString() ); ?></textarea>
+								<textarea rows="4" name="answerData[][sort_string]" class="wpProQuiz_text wpProQuiz_matrix_sort_string" style="width: 100%; resize:vertical;"><?php echo wp_kses_post( $d->getSortString() ); ?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -458,7 +458,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 								</div>
 							</td>
 							<td style="padding: 5px; vertical-align: top;">
-								<textarea rows="2" cols="100" class="large-text wpProQuiz_text" name="answerData[][answer]" style="resize:vertical;"><?php echo wp_kses_post( $d->getAnswer() ); ?></textarea>
+								<textarea rows="2" cols="100" class="large-text wpProQuiz_text wpProQuiz_sort_answer" name="answerData[][answer]" style="resize:vertical;"><?php echo wp_kses_post( $d->getAnswer() ); ?></textarea>
 							</td>
 						</tr>
 					</tbody>
@@ -480,7 +480,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 			<?php echo esc_html_x( 'Correct answers (one per line) (answers will be converted to lower case). If mode "Different points for each answer" is activated, you can assign points to each answer using "|". Example: One|15. The default point value is 1.', 'Question type description for Free Answers', 'learndash' ); ?>
 		</p>
 		<p style="border-bottom:1px dotted #ccc;">
-			<textarea rows="6" cols="100" class="large-text" name="answerData[][answer]"><?php echo wp_kses_post( $single->getAnswer() ); ?></textarea>
+			<textarea rows="6" cols="100" class="large-text wpProQuiz_text wpProQuiz_free_text" name="answerData[][answer]"><?php echo wp_kses_post( $single->getAnswer() ); ?></textarea>
 		</p>
 	</div>
 		<?php

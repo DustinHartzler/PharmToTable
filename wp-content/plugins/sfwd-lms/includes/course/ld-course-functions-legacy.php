@@ -99,6 +99,8 @@ function learndash_get_lesson_list( $id = null, $atts = array() ) {
 	if ( ! empty( $lessons_args ) ) {
 		return ld_lesson_list( $lessons_args );
 	}
+
+	return array();
 }
 
 /**
@@ -308,6 +310,8 @@ function learndash_get_topic_list_legacy( $for_lesson_id = null, $course_id = nu
 	} else {
 		return $topics_array;
 	}
+
+	return array();
 }
 
 /**
@@ -350,7 +354,6 @@ function learndash_get_course_quiz_list_legacy( $course = null, $user_id = null 
 		'posts_per_page' => -1,
 		'user_id'        => $user_id,
 		'return'         => 'array',
-		'user_id'        => $user_id,
 	);
 
 	if ( learndash_is_course_shared_steps_enabled() ) {
@@ -414,7 +417,6 @@ function learndash_get_lesson_quiz_list_legacy( $lesson, $user_id = null, $cours
 		'posts_per_page' => -1,
 		'user_id'        => $user_id,
 		'return'         => 'array',
-		'user_id'        => $user_id,
 		'course_id'      => $course_id,
 	);
 
@@ -463,7 +465,7 @@ function learndash_get_global_quiz_list_legacy( $id = null ) {
 		}
 	}
 
-	//COURSEIDCHANGE
+	// COURSEIDCHANGE.
 	$course_id = learndash_get_course_id( $id );
 	if ( ! empty( $course_id ) ) {
 		if ( learndash_is_course_shared_steps_enabled() ) {
@@ -516,6 +518,8 @@ function learndash_get_global_quiz_list_legacy( $id = null ) {
 			return $quizzes_new;
 		}
 	}
+
+	return array();
 }
 
 /**
@@ -1210,7 +1214,7 @@ function learndash_get_course_steps_legacy( $course_id = 0, $include_post_types 
 				}
 			}
 
-			// For Topics we still require the parent lessons items
+			// For Topics we still require the parent lessons items.
 			if ( in_array( 'sfwd-topic', $include_post_types, true ) ) {
 
 				if ( ! empty( $steps['sfwd-lessons'] ) ) {
@@ -1396,7 +1400,7 @@ function learndash_process_mark_complete_legacy( $user_id = null, $postid = null
 	$course_progress[ $course_id ]['last_id'] = $post->ID;
 
 	$course_completed_time = time();
-	// If course is completed
+	// If course is completed.
 	if ( ( $course_progress[ $course_id ]['completed'] >= $completed_old ) && ( $course_progress[ $course_id ]['completed'] >= $course_progress[ $course_id ]['total'] ) ) {
 
 		/**

@@ -552,7 +552,7 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					<tr class="wpProQuiz_reviewQuestionOptions" style="display: none;">
 						<th scope="row">
 							<?php
-							// translators: placeholder: question
+							// translators: placeholder: question.
 							printf( esc_html_x( 'Skip %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) );
 							?>
 						</th>
@@ -561,7 +561,7 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 								<legend class="screen-reader-text">
 									<span>
 									<?php
-									// translators: placeholder: question
+									// translators: placeholder: question.
 									printf( esc_html_x( 'Skip %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) );
 									?>
 									</span>

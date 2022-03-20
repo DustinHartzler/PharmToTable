@@ -41,8 +41,9 @@ if ( ! class_exists( 'LDLMS_Factory' ) ) {
 		 *
 		 * @since 2.5.0
 		 *
-		 * @param string $instance_key Unique identifier for instance.
-		 * @return object instance of class.
+		 * @param string $model        Unique identifier for model.
+		 * @param string $key          Unique identifier for instance.
+		 * @param bool   $add_instance Optional. Whether to add an instance. Default true.
 		 */
 		protected static function get_instance( $model = '', $key = null, $add_instance = true ) {
 			$model = esc_attr( $model );
@@ -62,9 +63,9 @@ if ( ! class_exists( 'LDLMS_Factory' ) ) {
 		 *
 		 * @since 2.5.0
 		 *
-		 * @param string  $model  Class name to add.
-		 * @param integer $key    Unique ID for instance.
-		 * @param mixed   $args   Args passed to class constructor.
+		 * @param string  $model    Class name to add.
+		 * @param integer $key      Unique ID for instance.
+		 * @param mixed   ...$args  Args passed to class constructor.
 		 */
 		protected static function add_instance( $model = '', $key = null, ...$args ) {
 			$model = esc_attr( $model );

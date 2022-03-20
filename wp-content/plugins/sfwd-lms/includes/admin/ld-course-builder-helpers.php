@@ -155,14 +155,15 @@ function learndash_get_course_data( $data ) {
 
 					// Output lesson with child tree.
 					$output_lessons[] = array(
-						'ID'          => $lesson_post->ID,
-						'expanded'    => false,
-						'post_title'  => $lesson_post->post_title,
-						'post_status' => learndash_get_step_post_status_slug( $lesson_post ),
-						'type'        => $lesson_post->post_type,
-						'url'         => learndash_get_step_permalink( $lesson_post->ID, $course_id ),
-						'edit_link'   => get_edit_post_link( $lesson_post->ID, '' ),
-						'tree'        => array_merge( $output_topics, $output_quizzes ),
+						'ID'            => $lesson_post->ID,
+						'expanded'      => false,
+						'post_title'    => $lesson_post->post_title,
+						'post_status'   => learndash_get_step_post_status_slug( $lesson_post ),
+						'type'          => $lesson_post->post_type,
+						'url'           => learndash_get_step_permalink( $lesson_post->ID, $course_id ),
+						'edit_link'     => get_edit_post_link( $lesson_post->ID, '' ),
+						'tree'          => array_merge( $output_topics, $output_quizzes ),
+						'sample_lesson' => learndash_is_sample( $lesson_post->ID ),
 					);
 				}
 			}
@@ -208,6 +209,26 @@ function learndash_get_course_data( $data ) {
 
 			if ( ( is_array( $sections ) ) && ( ! empty( $sections ) ) ) {
 				foreach ( $sections as $section ) {
+					if ( ! is_object( $section ) ) {
+						continue;
+					}
+
+					if ( ( ! property_exists( $section, 'ID' ) ) || ( empty( $section->ID ) ) ) {
+						continue;
+					}
+
+					if ( ! property_exists( $section, 'order' ) ) {
+						continue;
+					}
+
+					if ( ( ! property_exists( $section, 'post_title' ) ) || ( empty( $section->post_title ) ) ) {
+						continue;
+					}
+
+					if ( ( ! property_exists( $section, 'type' ) ) || ( empty( $section->type ) ) ) {
+						continue;
+					}
+
 					array_splice( $output_lessons, (int) $section->order, 0, array( $section ) );
 				}
 			}

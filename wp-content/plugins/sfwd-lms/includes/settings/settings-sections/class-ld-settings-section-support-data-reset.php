@@ -36,9 +36,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// This is the 'option_name' key used in the wp_options table.
 			$this->setting_option_key = 'ld_data_reset';
 
-			// This is the HTML form field prefix used.
-			//$this->setting_field_prefix = 'learndash_settings_paypal';
-
 			// Used within the Settings API to uniquely identify this section.
 			$this->settings_section_key = 'settings_support_data_reset';
 
@@ -50,7 +47,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->metabox_context  = 'side';
 			$this->metabox_priority = 'high';
 
-			add_action( 'learndash-settings-page-load', array( $this, 'on_settings_page_load' ), 10, 2 );
+			add_action( 'learndash_settings_page_load', array( $this, 'on_settings_page_load' ), 10, 2 );
 			add_action( 'learndash_section_fields_before', array( $this, 'show_support_section' ), 30, 2 );
 
 			parent::__construct();

@@ -6,7 +6,6 @@
  *
  * @since 3.0.0
  * @package LearnDash
-
  */
 
 namespace LearnDash\Admin\Gutenberg;
@@ -33,7 +32,7 @@ function disable_on_cpts( $is_enabled, $post_type ) {
 		'sfwd-question',
 		'sfwd-certificates',
 		'sfwd-essays',
-		//'groups',
+		// 'groups',
 	);
 
 	if ( in_array( $post_type, $disabled_cpts, true ) ) {

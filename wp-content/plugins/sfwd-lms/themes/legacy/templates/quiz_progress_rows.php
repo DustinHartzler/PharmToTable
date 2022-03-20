@@ -194,7 +194,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<?php echo esc_html__( ' on ', 'learndash' ); ?>
 			<?php
 			/** This filter is documented in includes/ld-misc-functions.php */
-			echo date_i18n( apply_filters( 'learndash_date_time_formats', get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ), $v['time'] + get_option( 'gmt_offset' ) * 3600 ); //date_i18n( DATE_RSS, $v['time'] );
+			echo date_i18n( apply_filters( 'learndash_date_time_formats', get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ), $v['time'] + get_option( 'gmt_offset' ) * 3600 );
+
+			if ( is_admin() ) {
+				echo ' <a onClick="return false;" title="' . esc_html__( 'copy link to use in [quizinfo] block.', 'learndash' ) . '" href="data:quizinfo:quiz:' . absint( $quiz->ID ) . ':user:' . absint( $user_id ) . ':time:' . absint( $v['time'] ) . '">' . esc_html__( '#', 'learndash' ) . '</a>';
+			}
 
 			/**
 			 * Filters content to be echoed after course info shortcode item.

@@ -23,8 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 	 * @since 3.3.0
 	 * @uses LD_REST_Users_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Courses_Users_Controller_V2 extends LD_REST_Users_Controller_V2 {
+	class LD_REST_Courses_Users_Controller_V2 extends LD_REST_Users_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
@@ -206,6 +205,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 		public function get_courses_users_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -221,6 +222,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 		public function update_courses_users_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -236,6 +239,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 		public function delete_courses_users_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -393,10 +398,10 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -537,15 +542,15 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 				$data[] = $data_item;
 			}
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

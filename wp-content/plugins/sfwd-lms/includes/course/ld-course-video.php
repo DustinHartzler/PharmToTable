@@ -54,24 +54,28 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 		/**
 		 * User ID.
+		 *
 		 * @var int $user_id.
 		 */
 		private $user_id;
 
 		/**
 		 * Course ID.
+		 *
 		 * @var int $course_id.
 		 */
 		private $course_id;
 
 		/**
 		 * Course Step ID.
+		 *
 		 * @var int $step_id.
 		 */
 		private $step_id;
 
 		/**
 		 * Course Step Settings array.
+		 *
 		 * @var array $step_settings.
 		 */
 		private $step_settings = array();
@@ -93,9 +97,14 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 			add_filter( 'learndash_process_mark_complete', array( $this, 'process_mark_complete' ), 99, 3 );
 		}
 
-		public static function get_instance() {
+		/**
+		 * Get instance.
+		 *
+		 * @since 2.4.0
+		 */
+		final public static function get_instance() {
 			if ( null === self::$instance ) {
-				self::$instance = new static();
+				self::$instance = new self();
 			}
 
 			return self::$instance;
@@ -136,11 +145,11 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 			if ( ( isset( $this->step_settings['lesson_video_enabled'] ) ) && ( 'on' === $this->step_settings['lesson_video_enabled'] ) ) {
 				if ( ( isset( $this->step_settings['lesson_video_url'] ) ) && ( ! empty( $this->step_settings['lesson_video_url'] ) ) ) {
-					// Because some copy/paste can result in leading whitespace. LEARNDASH-3819
+					// Because some copy/paste can result in leading whitespace. LEARNDASH-3819.
 					$this->step_settings['lesson_video_url'] = trim( $this->step_settings['lesson_video_url'] );
 					$this->step_settings['lesson_video_url'] = html_entity_decode( $this->step_settings['lesson_video_url'] );
 
-					// Just to ensure the proper settings are available
+					// Just to ensure the proper settings are available.
 					if ( ( ! isset( $this->step_settings['lesson_video_shown'] ) ) || ( empty( $this->step_settings['lesson_video_shown'] ) ) ) {
 						$this->step_settings['lesson_video_shown'] = 'BEFORE';
 					}
@@ -165,7 +174,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 							$progress = learndash_get_course_progress( $this->user_id, $post->ID );
 
 							if ( ( ! empty( $progress['this'] ) ) && ( $progress['this'] instanceof WP_Post ) && ( true === (bool) $progress['this']->completed ) ) {
-								// The student has completes this step so we show the video but don't apply the logic
+								// The student has completes this step so we show the video but don't apply the logic.
 								$show_video  = true;
 								$logic_video = false;
 							} else {
@@ -218,7 +227,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 							$progress = learndash_get_course_progress( $this->user_id, $post->ID );
 
 							if ( ( ! empty( $progress['this'] ) ) && ( $progress['this'] instanceof WP_Post ) && ( true === (bool) $progress['this']->completed ) ) {
-								// The student has completes this step so we show the video but don't apply the logic
+								// The student has completes this step so we show the video but don't apply the logic.
 								$show_video  = true;
 								$logic_video = false;
 							} else {
@@ -317,7 +326,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 							$this->video_data['videos_found_type'] = 'embed_shortcode';
 						} elseif ( substr( $this->step_settings['lesson_video_url'], 0, strlen( '[video' ) ) == '[video' ) {
 							$this->video_data['videos_found_type'] = 'video_shortcode';
-						} elseif ( substr( $this->step_settings['lesson_video_url'], 0, strlen( '<iframe' ) ) == '<iframe' ) {
+						} elseif ( strpos( $this->step_settings['lesson_video_url'], '<iframe' ) !== false ) {
 							$this->video_data['videos_found_type'] = 'iframe';
 						} else {
 							if ( 'vooplayer' === $this->video_data['videos_found_provider'] ) {
@@ -332,7 +341,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 						if ( ( false !== $this->video_data['videos_found_provider'] ) && ( false !== $this->video_data['videos_found_type'] ) ) {
 							if ( 'local' === $this->video_data['videos_found_provider'] ) {
 								if ( 'video_url' === $this->video_data['videos_found_type'] ) {
-									// Nothing here
+									// Nothing here.
 
 								} elseif ( 'embed_shortcode' === $this->video_data['videos_found_type'] ) {
 									global $wp_embed;
@@ -393,7 +402,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 										preg_match( $video_preg_pattern, $this->video_content, $matches );
 										if ( ( is_array( $matches ) ) && ( isset( $matches[1] ) ) && ( ! empty( $matches[1] ) ) ) {
 
-											// Next we need to check if the video is YouTube, Vimeo, etc. so we check the matches[1]
+											// Next we need to check if the video is YouTube, Vimeo, etc. so we check the matches[1].
 											if ( 'youtube' === $this->video_data['videos_found_provider'] ) {
 												/**
 												 * Filters post content video parameters.
@@ -581,9 +590,9 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 						 */
 						$this->video_data = apply_filters( 'learndash_lesson_video_data', $this->video_data, $this->step_settings );
 
-						//if ( $this->is_video_cookie_complete( $this->video_data['video_cookie_key'] ) ) {
-						//	$logic_video = false;
-						//}
+						// if ( $this->is_video_cookie_complete( $this->video_data['video_cookie_key'] ) ) {
+						// $logic_video = false;
+						// }
 
 						if ( true === $logic_video ) {
 							$logic_video_str = 'true';
@@ -665,9 +674,9 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 		 *
 		 * @since 2.4.6
 		 *
-		 * @param bool   $process_complete.
-		 * @param Object $post         WP_Post object beiing marked complete.
-		 * @param Object $current_user The User perforning the action.
+		 * @param bool   $process_complete Process complete.
+		 * @param Object $post             WP_Post object beiing marked complete.
+		 * @param Object $current_user     The User perforning the action.
 		 */
 		public function process_mark_complete( $process_complete, $post, $current_user ) {
 			if ( ( isset( $_GET['quiz_redirect'] ) ) && ( ! empty( $_GET['quiz_redirect'] ) ) && ( isset( $_GET['quiz_type'] ) ) && ( 'lesson' === $_GET['quiz_type'] ) ) {
@@ -768,7 +777,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param string $cookie_key Cookie key. See build_video_cookie_key();
+		 * @param string $cookie_key Cookie key. See build_video_cookie_key().
 		 * @return bool true if complete.
 		 */
 		public function is_video_cookie_complete( $cookie_key = '' ) {
@@ -780,6 +789,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 					}
 				}
 			}
+			return false;
 		}
 
 		/**
@@ -792,7 +802,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 		 * @param int $user_id   User ID.
 		 *
 		 * @return bool true if complete.
-		*/
+		 */
 		public function check_video_complete( $step_id = 0, $course_id = 0, $user_id = 0 ) {
 			$this->step_id   = absint( $step_id );
 			$this->user_id   = absint( $user_id );
@@ -825,6 +835,8 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 					return true;
 				}
 			}
+
+			return false;
 		}
 
 		// End of functions.
@@ -848,12 +860,14 @@ add_action(
  * @param int $user_id   User ID.
  *
  * @return bool true if complete.
-*/
+ */
 function learndash_video_complete_for_step( $step_id = 0, $course_id = 0, $user_id = 0 ) {
 	$ld_video_instance = Learndash_Course_Video::get_instance();
 	if ( $ld_video_instance ) {
 		return $ld_video_instance->check_video_complete( $step_id, $course_id, $user_id );
 	}
+
+	return false;
 }
 
 /**
@@ -887,7 +901,7 @@ function learndash_video_delete_cookie_for_step( $step_id = 0, $course_id = 0, $
 					$video_track_path = COOKIEPATH;
 				}
 
-				// empty value and expiration one hour before
+				// empty value and expiration one hour before.
 				$res = setcookie( $video_cookie_key, '', time() - 3600, $video_track_path, $video_track_domain );
 			}
 		}

@@ -11,9 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
-* @todo fix typo in navigation - consider reverse compatibility
-*/
+// @todo fix typo in navigation - consider reverse compatibility
 ?>
 <div class="learndash_navigation_lesson_topics_list">
 

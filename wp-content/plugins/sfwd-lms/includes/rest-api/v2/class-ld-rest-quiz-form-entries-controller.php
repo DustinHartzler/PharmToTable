@@ -18,8 +18,12 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Form_Entries_Controller_V2' ) ) && ( class_
 	 * @since 3.5.0
 	 * @uses WP_REST_Controller
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Quiz_Form_Entries_Controller_V2 extends WP_REST_Controller {
+	class LD_REST_Quiz_Form_Entries_Controller_V2 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+		/**
+		 * Version
+		 *
+		 * @var string
+		 */
 		protected $version = 'v2';
 
 		/**
@@ -110,6 +114,8 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Form_Entries_Controller_V2' ) ) && ( class_
 		public function get_items_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -235,7 +241,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Form_Entries_Controller_V2' ) ) && ( class_
 										'id'        => $statistic_model->getStatisticRefId(),
 										'user'      => $statistic_model->getUserId(),
 										'quiz'      => $quiz_id,
-										'date'      => $this->prepare_date_response( gmdate( 'Y-m-d h:i:s', $statistic_model->getCreateTime() ) ),
+										'date'      => $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $statistic_model->getCreateTime() ) ),
 										'form_data' => $user_form_data,
 									);
 

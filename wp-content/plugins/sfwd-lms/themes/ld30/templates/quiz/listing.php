@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Extra sanity check that this lesson has quizzes
+// Extra sanity check that this lesson has quizzes.
 if ( ! empty( $quizzes ) ) :
 
 	/**
@@ -75,9 +75,9 @@ if ( ! empty( $quizzes ) ) :
 			/**
 			 * TODO @37designs - need to create a function to count quizes complete / incomplete
 			 *
-			<span><?php sprintf( '%s% Complete', $lesson_progress['percentage'] ); ?></span>
-			<span><?php sprintf( '%s/%s Steps', $lesson_progress['complete'], $lesson_progress['total'] ); ?></span>
-			*/
+			 <span><?php sprintf( '%s% Complete', $lesson_progress['percentage'] ); ?></span>
+			 <span><?php sprintf( '%s/%s Steps', $lesson_progress['complete'], $lesson_progress['total'] ); ?></span>
+			 */
 			?>
 
 			<div class="ld-table-list-lesson-details"></div>

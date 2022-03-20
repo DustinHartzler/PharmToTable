@@ -15,7 +15,6 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 	 * Class to create the instance.
 	 */
 	class LDLMS_Post_Types {
-
 		/**
 		 * Collection of all post types.
 		 *
@@ -32,6 +31,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 			'assignment'  => 'sfwd-assignment',
 			'essay'       => 'sfwd-essays',
 			'certificate' => 'sfwd-certificates',
+			'exam'        => 'ld-exam',
 		);
 
 		/**
@@ -51,6 +51,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 				'assignment',
 				'essay',
 				'certificate',
+				'exam',
 			),
 			'course'         => array(
 				'course',
@@ -113,8 +114,8 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 		 * @since 3.2.3 Added `$return_type` and `$quote_char` parameter.
 		 *
 		 * @param string $post_type_section Which group of post_types to return. Default is all.
-		 * @param string       $return_type   Used to designate the returned value. String or array.
-		 * @param string       $quote_char    Wrap the return values in quote character. Only for return_type 'string'.
+		 * @param string $return_type       Used to designate the returned value. String or array.
+		 * @param string $quote_char        Wrap the return values in quote character. Only for return_type 'string'.
 		 *
 		 * @return array of post type slugs.
 		 */
@@ -207,6 +208,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 					}
 				}
 			}
+			return '';
 		}
 
 		/**
@@ -226,6 +228,19 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 					}
 				}
 			}
+
+			return '';
+		}
+
+		/**
+		 * Utility function to return array of all LearnDash post types with key.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @return array array of all post types with key.
+		 */
+		public static function get_all_post_types_set() {
+			return self::$post_types;
 		}
 
 		// End of functions.
@@ -237,16 +252,19 @@ global $learndash_post_types;
 $learndash_post_types = LDLMS_Post_Types::get_post_types();
 
 /** This function is documented in includes/class-ldlms-post-types.php */
+// phpcs:ignore Squiz.Commenting.FunctionComment
 function learndash_get_post_types( $post_section_key = 'all', $return_type = 'array', $quote_char = '' ) {
 	return LDLMS_Post_Types::get_post_types( $post_section_key, $return_type, $quote_char );
 }
 
 /** This function is documented in includes/class-ldlms-post-types.php */
+// phpcs:ignore Squiz.Commenting.FunctionComment
 function learndash_get_post_type_slug( $post_type_key = '', $return_type = '', $quote_char = '' ) {
 	return LDLMS_Post_Types::get_post_type_slug( $post_type_key, $return_type, $quote_char );
 }
 
 /** This function is documented in includes/class-ldlms-post-types.php */
+// phpcs:ignore Squiz.Commenting.FunctionComment
 function learndash_get_post_type_key( $post_type_slug = '' ) {
 	return LDLMS_Post_Types::get_post_type_key( $post_type_slug );
 }
@@ -258,10 +276,11 @@ function learndash_get_post_type_key( $post_type_slug = '' ) {
  *
  * @param string $post_type_slug Post Type slug.
  *
- * @return string post type key if found.
+ * @return bool true if post type key is found.
  */
 function learndash_is_valid_post_type( $post_type_slug = '' ) {
 	if ( ( ! empty( $post_type_slug ) ) && ( in_array( $post_type_slug, LDLMS_Post_Types::get_post_types(), true ) ) ) {
 		return true;
 	}
+	return false;
 }

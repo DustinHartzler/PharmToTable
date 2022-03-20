@@ -26,7 +26,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param integer $course Either course_id integer or WP_Post instance.
 		 * @param boolean $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course
+		 * @return new instance of LDLMS_Model_Course or null
 		 */
 		public static function course( $course = null, $reload = false ) {
 			if ( ! empty( $course ) ) {
@@ -46,6 +46,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $course_id, $course_id );
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -54,7 +56,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param integer $lesson Either lesson_id integer or WP_Post instance.
 		 * @param boolean $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Lesson
+		 * @return new instance of LDLMS_Model_Lesson or null
 		 */
 		public static function lesson( $lesson = null, $reload = false ) {
 			if ( ! empty( $lesson ) ) {
@@ -74,8 +76,16 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $lesson_id, $lesson_id );
 				}
 			}
+
+			return null;
 		}
 
+		/**
+		 * Get Course.
+		 *
+		 * @param mixed $course Either course_id integer or WP_Post instance.
+		 */
+		public static function get_course( $course ) {}
 
 		/**
 		 * Get Course Lessons.
@@ -83,7 +93,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param mixed $course Either course_id integer or WP_Post instance.
 		 * @param mixed $lesson Either lesson_id integer or WP_Post instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course.
+		 * @return new instance of LDLMS_Model_Course or null
 		 */
 		public static function get_course_lessons( $course = null, $lesson = null ) {
 			if ( ! empty( $course ) ) {
@@ -102,6 +112,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return $course_lesson;
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -110,7 +122,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param mixed   $quiz Either quiz_id integer or WP_Post instance.
 		 * @param boolean $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course
+		 * @return new instance of LDLMS_Quiz_Questions or null
 		 */
 		public static function quiz_questions( $quiz = null, $reload = false ) {
 			if ( ! empty( $quiz ) ) {
@@ -131,6 +143,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $quiz_id, $quiz_id );
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -160,6 +174,77 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $course_id, $course_id );
 				}
 			}
+
+			return null;
 		}
+
+		/**
+		 * Get a Exam.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param integer $exam   Either exam_id integer or WP_Post instance.
+		 * @param array   $atts   Array of attributes (course_id, user_id).
+		 * @param boolean $reload To force reload of instance.
+		 *
+		 * @return new instance of LDLMS_Model_Exam or null
+		 */
+		public static function exam( $exam = null, $atts = array(), $reload = false ) {
+			if ( ! empty( $exam ) ) {
+				$model = 'LDLMS_Model_Exam';
+
+				$exam_id = 0;
+				if ( ( is_a( $exam, 'WP_Post' ) ) && ( learndash_get_post_type_slug( 'exam' ) === $exam->post_type ) ) {
+					$exam_id = absint( $exam->ID );
+				} else {
+					$exam_id = absint( $exam );
+				}
+
+				if ( ! empty( $exam_id ) ) {
+					$model_key = $exam_id;
+					if ( ( is_array( $atts ) ) && ( ! empty( $atts ) ) ) {
+						ksort( $atts );
+						$model_key = $exam_id . '-' . md5( serialize( $atts ) );
+					}
+
+					if ( true === $reload ) {
+						self::remove_instance( $model, $model_key );
+					}
+					return self::add_instance( $model, $model_key, $exam_id, $atts );
+				}
+			}
+
+			return null;
+		}
+
+		/**
+		 * Get a Exam Question.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param array   $exam_question_block Array of question attributes.
+		 * @param boolean $reload              To force reload of instance.
+		 *
+		 * @return new instance of LDLMS_Model_Exam_Question or null
+		 */
+		public static function exam_question( $exam_question_block = array(), $reload = false ) {
+			if ( ! empty( $exam_question_block ) ) {
+				if ( isset( $exam_question_block['attrs']['question_type'] ) ) {
+					$exam_question_key = $exam_question_block['attrs']['question_type'] . '-' . ( isset( $exam_question_block['attrs']['exam_id'] ) ? $exam_question_block['attrs']['exam_id'] : '0' ) . '-' . ( isset( $exam_question_block['attrs']['question_idx'] ) ? $exam_question_block['attrs']['question_idx'] : '0' );
+
+					$model = LDLMS_Model_Exam_Question::get_model_by_type( $exam_question_block['attrs']['question_type'] );
+					if ( $model ) {
+						if ( true === $reload ) {
+							self::remove_instance( $model, $exam_question_key );
+						}
+						return self::add_instance( $model, $exam_question_key, $exam_question_block );
+					}
+				}
+			}
+
+			return null;
+		}
+
+		// End of functions.
 	}
 }

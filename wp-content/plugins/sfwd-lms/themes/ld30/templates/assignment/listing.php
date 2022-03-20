@@ -91,7 +91,7 @@ if ( isset( $course_step_post ) && $course_step_post instanceof WP_Post ) :
 	 */
 	do_action( 'learndash-assignment-alerts-after', $course_step_post->ID, $course_id, $user_id );
 
-	// Default to empty to prevent count errors
+	// Default to empty to prevent count errors.
 	if ( ! $assignments || empty( $assignments ) ) {
 		$assignments = array();
 	}

@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes    = '';
 $content_count = 0;
 
-// Fallbacks
+// Fallbacks.
 $count = ( isset( $count ) ? $count : 0 );
 
 /**

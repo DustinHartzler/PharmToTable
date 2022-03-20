@@ -102,7 +102,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			<?php
 		}
 
-		// This is a requires function.
+		/**
+		 * Load settings fields
+		 *
+		 * This is a requires function.
+		 */
 		public function load_settings_fields() {
 		}
 	}

@@ -126,7 +126,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					array(
 						'quiz_post_id' => $quiz->getID(),
 						'context'      => 'quiz_earned_points_message',
-						// translators: placeholder: points earned, points total, points percentage
+						// translators: placeholder: points earned, points total, points percentage.
 						'message'      => sprintf( esc_html_x( 'Earned Point(s): %1$s of %2$s, (%3$s)', 'placeholder: points earned, points total, points percentage', 'learndash' ), '<span>0</span>', '<span>0</span>', '<span>0</span>' ),
 						'placeholders' => array( '0', '0', '0' ),
 					)
@@ -282,6 +282,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php
 			/**
 			 *  See snippet https://developers.learndash.com/hook/show_quiz_continue_buttom_on_fail/
+			 *
 			 * @since 2.3.0.2
 			 */
 			$show_quiz_continue_buttom_on_fail = apply_filters( 'show_quiz_continue_buttom_on_fail', false, learndash_get_quiz_id_by_pro_quiz_id( $quiz->getId() ) );

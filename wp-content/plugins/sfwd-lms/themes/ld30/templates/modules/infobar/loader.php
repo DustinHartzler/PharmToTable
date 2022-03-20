@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * LearnDash LD30 Displays an informational bar
  *
@@ -26,6 +22,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package LearnDash\Templates\LD30\Modules
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Thought process:
  *
@@ -42,7 +42,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * } else {
  *      return $slug . '-' . 'generic.php';
  * }
- *
  */
 
 /**
@@ -55,7 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 do_action( 'learndash-all-infobar-before', get_post_type(), $user_id );
 
-SFWD::get_template_part( 'infobar', get_post_type() );
+learndash_get_template_part( 'infobar', get_post_type() );
 
 /**
  * Fires after the infobar (all locations).
@@ -72,13 +71,11 @@ if ( $logged_in ) :
 
 	/**
 	 * User is logged in - can contextualize
-	 * @var [type]
 	 *
 	 * Some logic to determine if this is a course lesson, topic, quiz, etc...
 	 */
 
-	// TODO: Needs to be a filterable template call with more elegant fallback
-
+	// TODO: Needs to be a filterable template call with more elegant fallback.
 	if ( file_exists( 'infobar-' . get_post_type() . '.php' ) ) {
 		include 'infobar-' . get_post_type() . '.php';
 	} else {
@@ -89,7 +86,6 @@ else :
 
 	/**
 	 * User isn't logged in - can't contextualize
-	 * @var [type]
 	 */
 
 endif;

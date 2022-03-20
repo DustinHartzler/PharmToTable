@@ -16,7 +16,8 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 	 *
 	 * @since 3.2.0
 	 */
-	class LD_Groups_Membership {
+	class LD_Groups_Membership { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+
 		/**
 		 * Static instance variable to ensure
 		 * only one instance of class is used.
@@ -49,7 +50,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 		/**
 		 * Array of runtime vars.
 		 *
-		 * Includes post_id, post, user_id, user, debug
+		 * @var array $vars Includes post_id, post, user_id, user, debug.
 		 */
 		protected $vars = array();
 
@@ -58,9 +59,9 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 		 *
 		 * @since 3.2.0
 		 */
-		public static function get_instance() {
+		final public static function get_instance() {
 			if ( ! isset( static::$instance ) ) {
-				static::$instance = new static();
+				static::$instance = new self();
 			}
 
 			return static::$instance;
@@ -89,8 +90,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 
 			if ( in_array( $typenow, $this->get_global_included_post_types(), true ) ) {
 
-				/** This filter is documented in includes/class-ld-lms.php */
-				if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+				if ( learndash_use_select2_lib() ) {
 					if ( ! isset( $learndash_assets_loaded['styles']['learndash-select2-jquery-style'] ) ) {
 						wp_enqueue_style(
 							'learndash-select2-jquery-style',
@@ -228,8 +228,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 
 				$select_groups_options = $sfwd_lms->select_a_group();
 				if ( ! empty( $select_groups_options ) ) {
-					/** This filter is documented in includes/class-ld-lms.php */
-					if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+					if ( learndash_use_select2_lib() ) {
 						$select_groups_options_default = sprintf(
 							// translators: placeholder: Group.
 							esc_html_x( 'Search or select a %s…', 'placeholder: Group', 'learndash' ),
@@ -244,7 +243,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 							),
 						);
 						if ( ( is_array( $select_groups_options ) ) && ( ! empty( $select_groups_options ) ) ) {
-							$select_groups_options = $select_groups_options_default + $select_group_options;
+							$select_groups_options = $select_groups_options_default + $select_groups_options;
 						} else {
 							$select_groups_options = $select_groups_options_default;
 						}
@@ -390,7 +389,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param integer $post_id Post ID
+		 * @param integer $post_id Post ID.
 		 * @param object  $post    WP_Post object.
 		 */
 		public function save_post_bulk_edit( $post_id, $post ) {
@@ -660,7 +659,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param integer $pot_id Post ID to get settings for.
+		 * @param integer $post_id Post ID to get settings for.
 		 *
 		 * @return array of settings.
 		 */
@@ -674,7 +673,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param integer $pot_id Post ID to get settings for.
+		 * @param integer $post_id Post ID to get settings for.
 		 *
 		 * @return array of post groups.
 		 */
@@ -701,7 +700,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param integer $pot_id Post ID to get settings for.
+		 * @param integer $post_id Post ID to get settings for.
 		 *
 		 * @return array of post groups.
 		 */
@@ -767,7 +766,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param integer $post_id Post ID
+		 * @param integer $post_id Post ID.
 		 *
 		 * @return boolean
 		 */
@@ -790,6 +789,8 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 				}
 				$this->add_debug_message( __FUNCTION__ . ': post type [' . get_post_type( $post_id ) . '] not under membership control. bypased' );
 			}
+
+			return false;
 		}
 
 		/**
@@ -797,8 +798,8 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param integer $post_id Post ID
-		 * @param integer $user_id USer ID
+		 * @param integer $post_id Post ID.
+		 * @param integer $user_id USer ID.
 		 *
 		 * @return boolean
 		 */
@@ -829,9 +830,9 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 						$this->add_debug_message( __FUNCTION__ . ': empty user. post groups exists. blocked.' );
 					}
 				}
-
 				return true;
 			}
+			return true;
 		}
 
 		/**
@@ -1030,8 +1031,6 @@ function learndash_get_post_group_membership_settings( $post_id = 0 ) {
  *
  * @param integer $post_id  Post ID.
  * @param array   $settings Array of settings.
- *
- * @return array Array of settings.
  */
 function learndash_set_post_group_membership_settings( $post_id = 0, $settings = array() ) {
 	if ( ! empty( $post_id ) ) {

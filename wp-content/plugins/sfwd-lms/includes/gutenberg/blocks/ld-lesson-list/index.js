@@ -9,6 +9,7 @@
  * LearnDash block functions
  */
 import {
+	ldlms_get_post_edit_meta,
 	ldlms_get_custom_label,
 	ldlms_get_per_page,
 } from '../ldlms.js';
@@ -19,16 +20,22 @@ import {
 import { __, _x, sprintf} from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, RangeControl, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, RangeControl, SelectControl, TextControl, ToggleControl, PanelRow } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
+import { useMemo } from "@wordpress/element";
 
+const block_key   = 'learndash/ld-lesson-list';
+const block_title = sprintf(
+	// translators: placeholder: Lesson.
+	_x('LearnDash %s List', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson')
+);
 registerBlockType(
-	'learndash/ld-lesson-list',
+	block_key,
 	{
-		// translators: placeholder: Lesson.
-		title: sprintf(_x('LearnDash %s List', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson')),
-		// translators: placeholder: Lessons.
-		description: sprintf(_x('This block shows a list of %s.', 'placeholders: Lessons', 'learndash'), ldlms_get_custom_label('lessons')),
+		title: block_title,
+		description: sprintf(
+			// translators: placeholder: Lessons.
+			_x('This block shows a list of %s.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons')),
 		icon: 'list-view',
 		category: 'learndash-blocks',
 		example: {
@@ -108,20 +115,27 @@ registerBlockType(
 				type: 'boolean',
 			},
 			col: {
-				type: 'string',
+				type: 'integer',
 				default: (ldlms_settings['plugins']['learndash-course-grid']['enabled']['col_default'] || 3),
 			},
 			preview_show: {
 				type: 'boolean',
 				default: true
 			},
+			preview_user_id: {
+				type: 'string',
+				default: '',
+			},
 			example_show: {
 				type: 'boolean',
 				default: 0
 			},
+			editing_post_meta: {
+				type: 'object',
+			}
 		},
 		edit: function (props) {
-			const { attributes: { orderby, order, per_page, course_id, show_content, show_thumbnail, lesson_category_name, lesson_cat, lesson_categoryselector, lesson_tag, lesson_tag_id, category_name, cat, categoryselector, tag, tag_id, course_grid, col, preview_show, example_show },
+			const { attributes: { orderby, order, per_page, course_id, show_content, show_thumbnail, lesson_category_name, lesson_cat, lesson_categoryselector, lesson_tag, lesson_tag_id, category_name, cat, categoryselector, tag, tag_id, course_grid, col, preview_show, preview_user_id, example_show },
 				setAttributes } = props;
 
 			let field_show_content = '';
@@ -144,7 +158,10 @@ registerBlockType(
 						initialOpen={lesson_grid_section_open}
 					>
 						<ToggleControl
-							label={__('Show Grid', 'learndash')}
+							label={
+								__('Show Grid',
+								'learndash')
+							}
 							checked={!!course_grid_default}
 							onChange={course_grid => setAttributes({ course_grid })}
 						/>
@@ -181,13 +198,21 @@ registerBlockType(
 					title={__('Settings', 'learndash')}
 				>
 					<TextControl
-						// translators: placeholder: Course.
-						label={sprintf(_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course'))}
-						// translators: placeholders: Course, Course.
-						help={sprintf(_x('Enter single %1$s ID to limit listing. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course'))}
+						label={sprintf(
+							// translators: placeholder: Course.
+							_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course'))}
+						help={sprintf(
+							// translators: placeholders: Course, Course.
+							_x('Enter single %1$s ID to limit listing. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course'))}
 						value={course_id || ''}
-						onChange={course_id => setAttributes({ course_id })}
-					/>
+						type={'number'}
+						onChange={ function( new_course_id ) {
+							if ( new_course_id != "" && new_course_id < 0 ) {
+								setAttributes({ course_id: "0" });
+							} else {
+								setAttributes({ course_id: new_course_id });
+							}
+						}}					/>
 
 					<SelectControl
 						key="orderby"
@@ -230,14 +255,21 @@ registerBlockType(
 						onChange={order => setAttributes({ order })}
 					/>
 					<TextControl
-						// translators: placeholder: Lessons.
-						label={sprintf(_x('%s per page', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
-						// translators: placeholder: default per page.
-						help={sprintf(_x('Leave empty for default (%d) or 0 to show all items.', 'placeholder: default per page', 'learndash'), ldlms_get_per_page('per_page'))}
+						label={sprintf(
+							// translators: placeholder: Lessons.
+							_x('%s per page', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+						help={sprintf(
+							// translators: placeholder: per_page.
+							_x('Leave empty for default (%d) or 0 to show all items.', 'placeholder: per_page', 'learndash'), ldlms_get_per_page('per_page'))}
 						value={per_page || ''}
 						type={'number'}
-						onChange={per_page => setAttributes({ per_page })}
-					/>
+						onChange={ function( new_per_page ) {
+							if ( new_per_page != "" && new_per_page < 0 ) {
+								setAttributes({ per_page: "0" });
+							} else {
+								setAttributes({ per_page: new_per_page });
+							}
+						}}					/>
 
 					{field_show_content}
 					{field_show_thumbnail}
@@ -252,32 +284,45 @@ registerBlockType(
 				}
 				panel_lesson_category_section = (
 					<PanelBody
-						// translators: placeholder: Lesson.
-						title={sprintf(_x('%s Category Settings', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
+						title={sprintf(
+							// translators: placeholder: Lesson.
+							_x('%s Category Settings', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
 						initialOpen={panel_lesson_category_section_open}
 					>
 						<TextControl
-							// translators: placeholder: Lesson.
-							label={sprintf(_x('%s Category Slug', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows %s with mentioned category slug.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							label={sprintf(
+								// translators: placeholder: Lesson.
+								_x('%s Category Slug', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows %s with mentioned category slug.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							value={lesson_category_name || ''}
 							onChange={lesson_category_name => setAttributes({ lesson_category_name })}
 						/>
 
 						<TextControl
-							// translators: placeholder: Lesson.
-							label={sprintf(_x('%s Category ID', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows %s with mentioned category ID.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							label={sprintf(
+								// translators: placeholder: Lesson.
+								_x('%s Category ID', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows %s with mentioned category ID.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							value={lesson_cat || ''}
-							onChange={lesson_cat => setAttributes({ lesson_cat })}
-						/>
+							type={'number'}
+							onChange={ function( new_lesson_cat ) {
+								if ( new_lesson_cat != "" && new_lesson_cat < 0 ) {
+									setAttributes({ lesson_cat: "0" });
+								} else {
+									setAttributes({ lesson_cat: new_lesson_cat });
+								}
+							}}						/>
 						<ToggleControl
-							// translators: placeholder: Lesson.
-							label={sprintf(_x('%s Category Selector', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows a %s category dropdown.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							label={sprintf(
+								// translators: placeholder: Lesson.
+								_x('%s Category Selector', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows a %s category dropdown.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							checked={!!lesson_categoryselector}
 							onChange={lesson_categoryselector => setAttributes({ lesson_categoryselector })}
 						/>
@@ -293,26 +338,38 @@ registerBlockType(
 				}
 				panel_lesson_tag_section = (
 					<PanelBody
-						// translators: placeholder: Lesson.
-						title={sprintf(_x('%s Tag Settings', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
+						title={sprintf(
+							// translators: placeholder: Lesson.
+							_x('%s Tag Settings', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
 						initialOpen={panel_lesson_tag_section_open}
 					>
 						<TextControl
-							// translators: placeholder: Lesson.
-							label={sprintf(_x('%s Tag Slug', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows %s with mentioned tag slug.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							label={sprintf(
+								// translators: placeholder: Lesson.
+								_x('%s Tag Slug', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows %s with mentioned tag slug.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							value={lesson_tag || ''}
 							onChange={lesson_tag => setAttributes({ lesson_tag })}
 						/>
 
 						<TextControl
-							// translators: placeholder: Lesson.
-							label={sprintf(_x('%s Tag ID', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows %s with mentioned tag ID.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							label={sprintf(
+								// translators: placeholder: Lesson.
+								_x('%s Tag ID', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows %s with mentioned tag ID.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							value={lesson_tag_id || ''}
-							onChange={lesson_tag_id => setAttributes({ lesson_tag_id })}
+							type={'number'}
+							onChange={ function( new_lesson_tag_id ) {
+								if ( new_lesson_tag_id != "" && new_lesson_tag_id < 0 ) {
+									setAttributes({ lesson_tag_id: "0" });
+								} else {
+									setAttributes({ lesson_tag_id: new_lesson_tag_id });
+								}
+							}}
 						/>
 					</PanelBody>
 				);
@@ -331,19 +388,29 @@ registerBlockType(
 					>
 						<TextControl
 							label={__('WP Category Slug', 'learndash')}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows %s with mentioned WP category slug.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows %s with mentioned WP Category slug.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							value={category_name || ''}
 							onChange={category_name => setAttributes({ category_name })}
 						/>
 
 						<TextControl
-							// translators: placeholder: Lesson.
-							label={sprintf(_x('%s Category ID', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows %s with mentioned category ID.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							label={sprintf(
+								// translators: placeholder: Lesson.
+								_x('%s Category ID', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows %s with mentioned category ID.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							value={cat || ''}
-							onChange={cat => setAttributes({ cat })}
+							type={'number'}
+							onChange={ function( new_cat ) {
+								if ( new_cat != "" && new_cat < 0 ) {
+									setAttributes({ cat: "0" });
+								} else {
+									setAttributes({ cat: new_cat });
+								}
+							}}
 						/>
 						<ToggleControl
 							label={__('WP Category Selector', 'learndash')}
@@ -368,32 +435,56 @@ registerBlockType(
 					>
 						<TextControl
 							label={__('WP Tag Slug', 'learndash')}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows %s with mentioned WP tag slug.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows %s with mentioned WP tag slug.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							value={tag || ''}
 							onChange={tag => setAttributes({ tag })}
 						/>
 
 						<TextControl
 							label={__('WP Tag ID', 'learndash')}
-							// translators: placeholder: Lessons.
-							help={sprintf(_x('shows %s with mentioned WP tag ID.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
+							help={sprintf(
+								// translators: placeholder: Lessons.
+								_x('shows %s with mentioned WP tag ID.', 'placeholder: Lessons', 'learndash'), ldlms_get_custom_label('lessons'))}
 							value={tag_id || ''}
-							onChange={tag_id => setAttributes({ tag_id })}
+							type={'number'}
+							onChange={ function( new_tag_id ) {
+								if ( new_tag_id != "" && new_tag_id < 0 ) {
+									setAttributes({ tag_id: "0" });
+								} else {
+									setAttributes({ tag_id: new_tag_id });
+								}
+							}}
 						/>
 					</PanelBody>
 				);
 			}
 
 			const panel_preview = (
-				<PanelBody
-					title={__('Preview', 'learndash')}
-					initialOpen={false}
-				>
+				<PanelBody title={__("Preview", "learndash")} initialOpen={false}>
 					<ToggleControl
-						label={__('Show Preview', 'learndash')}
+						label={__("Show Preview", "learndash")}
 						checked={!!preview_show}
-						onChange={preview_show => setAttributes({ preview_show })}
+						onChange={(preview_show) => setAttributes({ preview_show })}
+					/>
+
+					<PanelRow className="learndash-block-error-message">
+						{__("Preview settings are not saved.", "learndash")}
+					</PanelRow>
+
+					<TextControl
+						label={__("Preview User ID", "learndash")}
+						help={__("Enter a User ID to test preview", "learndash")}
+						value={preview_user_id || ""}
+						type={"number"}
+						onChange={function (preview_new_user_id) {
+							if (preview_new_user_id != "" && preview_new_user_id < 0) {
+								setAttributes({ preview_user_id: "0" });
+							} else {
+								setAttributes({ preview_user_id: preview_new_user_id });
+							}
+						}}
 					/>
 				</PanelBody>
 			);
@@ -410,25 +501,42 @@ registerBlockType(
 				</InspectorControls>
 			);
 
+			function get_default_message() {
+				return sprintf(
+					// translators: placeholder: block_title.
+					_x('%s block output shown here', 'placeholder: block_title', 'learndash'), block_title
+				);
+			}
+
+			function empty_response_placeholder_function(props) {
+				return get_default_message();
+			}
+
 			function do_serverside_render(attributes) {
 				if (attributes.preview_show == true) {
+					// We add the meta so the server knowns what is being edited.
+					attributes.editing_post_meta = ldlms_get_post_edit_meta();
+
 					return <ServerSideRender
-						block="learndash/ld-lesson-list"
+						block={block_key}
 						attributes={attributes}
-						key="learndash/ld-lesson-list"
+						key={block_key}
+						EmptyResponsePlaceholder={ empty_response_placeholder_function }
 					/>
 				} else {
-					return __('[ld_lesson_list] shortcode output shown here', 'learndash');
+					return get_default_message();
 				}
 			}
 
 			return [
 				inspectorControls,
-				do_serverside_render(props.attributes)
+				useMemo(() => do_serverside_render(props.attributes), [props.attributes]),
 			];
 		},
 
 		save: props => {
+			delete (props.attributes.example_show);
+			delete (props.attributes.editing_post_meta);
 		}
 	},
 );

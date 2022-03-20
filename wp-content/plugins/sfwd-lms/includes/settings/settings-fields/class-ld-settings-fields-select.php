@@ -52,8 +52,9 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$html .= $this->get_field_attribute_name( $field_args );
 			$html .= $this->get_field_attribute_id( $field_args );
 			$html .= $this->get_field_attribute_class( $field_args );
+			$html .= $this->get_field_attribute_placeholder( $field_args );
 
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === LEARNDASH_SELECT2_LIB ) ) {
+			if ( learndash_use_select2_lib() ) {
 				if ( ! isset( $field_args['attrs']['data-ld-select2'] ) ) {
 					$html .= ' data-ld-select2="1" ';
 				}
@@ -80,28 +81,49 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 					}
 
 					if ( is_array( $option_label ) ) {
-						if ( ( isset( $option_label['label'] ) ) && ( ! empty( $option_label['label'] ) ) ) {
-							$html .= '<option value="' . esc_attr( $option_key ) . '" ' . $selected_item . '>' . wp_kses_post( $option_label['label'] ) . '</option>';
-						}
 
-						if ( ( isset( $option_label['inline_fields'] ) ) && ( ! empty( $option_label['inline_fields'] ) ) ) {
-							foreach ( $option_label['inline_fields'] as $sub_field_key => $sub_fields ) {
-								$html .= ' data-settings-inner-trigger="ld-settings-inner-' . esc_attr( $sub_field_key ) . '" ';
+						// Support for <optgroup> within the select.
+						if ( ( isset( $option_label['optgroup_options'] ) ) && ( ! empty( $option_label['optgroup_options'] ) ) ) {
 
-								if ( ( isset( $option_label['inner_section_state'] ) ) && ( 'open' === $option_label['inner_section_state'] ) ) {
-									$inner_section_state = 'open';
-								} else {
-									$inner_section_state = 'closed';
+							$html .= '<optgroup ';
+							if ( ( isset( $option_label['optgroup_label'] ) ) && ( ! empty( $option_label['optgroup_label'] ) ) ) {
+								$html .= ' label="' . esc_html( $option_label['optgroup_label'] ) . '" ';
+							}
+							$html .= '>';
+
+							foreach( $option_label['optgroup_options'] as $optgroup_option_key => $optgroup_option_label ) {
+								$html .= '<option value="' . esc_attr( $optgroup_option_key ) . '" ' . $selected_item . '>' . wp_kses_post( $optgroup_option_label ) . '</option>';
+							}
+							$html .= '</optgroup>';
+						} else {
+							/**
+							 * Support for nested inline fields. See 'quizModus' settings field in
+							 * includes/settings/settings-metaboxes/class-ld-settings-metabox-quiz-display-content.php
+							 * as example.
+							 */
+							if ( ( isset( $option_label['label'] ) ) && ( ! empty( $option_label['label'] ) ) ) {
+								$html .= '<option value="' . esc_attr( $option_key ) . '" ' . $selected_item . '>' . wp_kses_post( $option_label['label'] ) . '</option>';
+							}
+
+							if ( ( isset( $option_label['inline_fields'] ) ) && ( ! empty( $option_label['inline_fields'] ) ) ) {
+								foreach ( $option_label['inline_fields'] as $sub_field_key => $sub_fields ) {
+									$html .= ' data-settings-inner-trigger="ld-settings-inner-' . esc_attr( $sub_field_key ) . '" ';
+
+									if ( ( isset( $option_label['inner_section_state'] ) ) && ( 'open' === $option_label['inner_section_state'] ) ) {
+										$inner_section_state = 'open';
+									} else {
+										$inner_section_state = 'closed';
+									}
+									$html_sub_fields .= '<div class="ld-settings-inner ld-settings-inner-' . esc_attr( $sub_field_key ) . ' ld-settings-inner-state-' . esc_attr( $inner_section_state ) . '">';
+
+									$level = ob_get_level();
+									ob_start();
+									foreach ( $sub_fields as $sub_field ) {
+										self::show_section_field_row( $sub_field );
+									}
+									$html_sub_fields .= learndash_ob_get_clean( $level );
+									$html_sub_fields .= '</div>';
 								}
-								$html_sub_fields .= '<div class="ld-settings-inner ld-settings-inner-' . esc_attr( $sub_field_key ) . ' ld-settings-inner-state-' . esc_attr( $inner_section_state ) . '">';
-
-								$level = ob_get_level();
-								ob_start();
-								foreach ( $sub_fields as $sub_field ) {
-									self::show_section_field_row( $sub_field );
-								}
-								$html_sub_fields .= learndash_ob_get_clean( $level );
-								$html_sub_fields .= '</div>';
 							}
 						}
 					} elseif ( is_string( $option_label ) ) {
@@ -152,10 +174,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param mixed  $val        Value from REST to be converted to internal value.
-		 * @param string $key        Key field for value.
-		 * @param array  $field_args Array of field args.
-		 * @param object $request    Request object.
+		 * @param mixed           $val        Value from REST to be converted to internal value.
+		 * @param string          $key        Key field for value.
+		 * @param array           $field_args Array of field args.
+		 * @param WP_REST_Request $request    Request object.
 		 */
 		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
 			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {

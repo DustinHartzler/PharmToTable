@@ -16,8 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.5
 	 */
-	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
-	class LearnDash_Shortcodes_Section_ld_video extends LearnDash_Shortcodes_Section {
+	class LearnDash_Shortcodes_Section_ld_video extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 
 		/**
 		 * Public constructor for class.
@@ -36,10 +35,10 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			$this->shortcodes_section_description = sprintf( esc_html_x( 'This shortcode is used on %1$s and %2$s where Video Progression is enabled. The video player will be added above the content. This shortcode allows positioning the player elsewhere within the content. This shortcode does not take any parameters.', 'placeholders: Lessons, Topics', 'learndash' ), LearnDash_Custom_Label::get_label( 'lessons' ), LearnDash_Custom_Label::get_label( 'topics' ) );
 
 			if ( learndash_get_post_type_slug( 'lesson' ) == $this->fields_args['post_type'] ) {
-				// translators: placeholder: lesson
+				// translators: placeholder: lesson.
 				$this->shortcodes_section_title = sprintf( esc_html_x( '%s Video', 'placeholder: lesson', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) );
 			} elseif ( learndash_get_post_type_slug( 'topic' ) == $this->fields_args['post_type'] ) {
-				// translators: placeholder: topic
+				// translators: placeholder: topic.
 				$this->shortcodes_section_title = sprintf( esc_html_x( '%s Video', 'placeholder: topic', 'learndash' ), LearnDash_Custom_Label::get_label( 'topic' ) );
 			}
 

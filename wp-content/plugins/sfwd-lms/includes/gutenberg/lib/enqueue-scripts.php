@@ -28,15 +28,17 @@ function learndash_editor_scripts() {
 		'ldlms-blocks-js',
 		plugins_url( $learndash_block_path, __FILE__ ),
 		$learndash_block_dependencies['dependencies'],
-		LEARNDASH_SCRIPT_VERSION_TOKEN
+		LEARNDASH_SCRIPT_VERSION_TOKEN,
+		true
 	);
 
-	/**
-	 * @TODO: This needs to move to an external JS library since it will be used globally.
-	 */
+	// @TODO: This needs to move to an external JS library since it will be used globally.
 	$ldlms                                       = array(
 		'settings' => array(),
 	);
+
+	$ldlms_settings['version'] = LEARNDASH_VERSION;
+
 	$ldlms_settings['settings']['custom_labels'] = LearnDash_Settings_Section_Custom_Labels::get_section_settings_all();
 	if ( ( is_array( $ldlms_settings['settings']['custom_labels'] ) ) && ( ! empty( $ldlms_settings['settings']['custom_labels'] ) ) ) {
 		foreach ( $ldlms_settings['settings']['custom_labels'] as $key => $val ) {
@@ -50,13 +52,40 @@ function learndash_editor_scripts() {
 		}
 	}
 
-	$ldlms_settings['settings']['per_page']           = LearnDash_Settings_Section_General_Per_Page::get_section_settings_all();
-	$ldlms_settings['settings']['courses_taxonomies'] = LearnDash_Settings_Courses_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['lessons_taxonomies'] = LearnDash_Settings_Lessons_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['topics_taxonomies']  = LearnDash_Settings_Topics_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['quizzes_taxonomies'] = LearnDash_Settings_Quizzes_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['groups_taxonomies']  = LearnDash_Settings_Groups_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['groups_cpt']         = array( 'public' => LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) );
+	$ldlms_settings['settings']['per_page']            = LearnDash_Settings_Section_General_Per_Page::get_section_settings_all();
+	$ldlms_settings['settings']['courses_taxonomies']  = LearnDash_Settings_Courses_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['lessons_taxonomies']  = LearnDash_Settings_Lessons_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['topics_taxonomies']   = LearnDash_Settings_Topics_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['quizzes_taxonomies']  = LearnDash_Settings_Quizzes_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['groups_taxonomies']   = LearnDash_Settings_Groups_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['groups_cpt']          = array( 'public' => LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) );
+	$ldlms_settings['settings']['registration_fields'] = LearnDash_Settings_Section_Registration_Fields::get_section_settings_all();
+
+	// Templates - Added LD v4.0.0.
+	$ldlms_settings['templates'] = array(
+		'active' => LearnDash_Theme_Register::get_active_theme_key(),
+	);
+
+	$themes = LearnDash_Theme_Register::get_themes();
+	if ( ! is_array( $themes ) ) {
+		$themes = array();
+	}
+
+	$themes_list = array();
+	foreach ( $themes as $theme ) {
+		$ldlms_settings['templates']['list'][ $theme['theme_key'] ] = $theme['theme_name'];
+	}
+
+	/**
+	 * Include the LD post types with key.
+	 * @since 4.0.0
+	 */
+	$ldlms_settings['post_types'] = LDLMS_Post_Types::get_all_post_types_set();
+
+	$ldlms_settings['plugins'] = array();
+
+	$ldlms_settings['plugins']['learndash-core']            = array();
+	$ldlms_settings['plugins']['learndash-core']['version'] = LEARNDASH_VERSION;
 
 	$ldlms_settings['plugins']['learndash-course-grid']                = array();
 	$ldlms_settings['plugins']['learndash-course-grid']['enabled']     = learndash_enqueue_course_grid_scripts();
@@ -80,7 +109,7 @@ function learndash_editor_scripts() {
 	}
 
 	$ldlms_settings['meta']                   = array();
-	$ldlms_settings['meta']['posts_per_page'] = get_option( 'posts_per_page' );
+	$ldlms_settings['meta']['posts_per_page'] = get_option( 'posts_per_page' ); // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 
 	$ldlms_settings['meta']['post']              = array();
 	$ldlms_settings['meta']['post']['post_id']   = 0;
@@ -102,15 +131,13 @@ function learndash_editor_scripts() {
 			$ldlms_settings['meta']['post']['course_id'] = 0;
 
 			if ( ! empty( $post_type ) ) {
-				$course_post_types = array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz' );
+				$course_post_types = LDLMS_Post_Types::get_post_types( 'course' );
 
-				$course_id = 0;
 				if ( 'sfwd-courses' === $post_type ) {
-					$course_id = $post->ID;
+					$ldlms_settings['meta']['post']['course_id'] = $post->ID;
 				} elseif ( in_array( $post_type, $course_post_types, true ) ) {
-					$course_id = learndash_get_course_id();
+					$ldlms_settings['meta']['post']['course_id'] = learndash_get_course_id();
 				}
-				$ldlms_settings['meta']['post']['course_id'] = $course_id;
 			}
 		}
 	}
@@ -162,16 +189,8 @@ function learndash_enqueue_course_grid_scripts() {
 		// Newer versions of Coure Grid have a function to load resources.
 		if ( function_exists( 'learndash_course_grid_load_resources' ) ) {
 			learndash_course_grid_load_resources();
-		} else {
-			// Handle older versions of Course Grid. 1.4.1 and lower.
-			wp_enqueue_style( 'learndash_course_grid_css', plugins_url( 'style.css', LEARNDASH_COURSE_GRID_FILE ) );
-			wp_style_add_data( 'learndash_course_grid_css', 'rtl', 'replace' );
-			wp_enqueue_script( 'learndash_course_grid_js', plugins_url( 'script.js', LEARNDASH_COURSE_GRID_FILE ), array( 'jquery' ) );
-			wp_enqueue_style( 'ld-cga-bootstrap', plugins_url( 'bootstrap.min.css', LEARNDASH_COURSE_GRID_FILE ) );
-			wp_style_add_data( 'ld-cga-bootstrap', 'rtl', 'replace' );
+			return true;
 		}
-
-		return true;
 	}
 
 	return false;
@@ -240,6 +259,34 @@ function learndash_block_categories_all( $block_categories, $block_editor_contex
 	return $block_categories;
 }
 
+/**
+ * Register Block Pattern Categories.
+ */
+function learndash_block_pattern_categories() {
+	register_block_pattern_category(
+		'learndash',
+		array(
+			'label' => __( 'LearnDash', 'learndash' ),
+		)
+	);
+}
+
+/**
+ * Register Block Patterns.
+ */
+function learndash_register_block_patterns() {
+	register_block_pattern(
+		'learndash/course-content',
+		array(
+			'title'       => __( 'Course Content Blocks', 'learndash' ),
+			'categories'  => array( 'learndash' ),
+			'description' => esc_html_x( 'Display the course or step content blocks collection.', 'Block pattern description', 'learndash' ),
+			'content'     => "<!-- wp:learndash/ld-infobar /-->\n<!-- wp:learndash/ld-course-content /-->",
+			'blockTypes'  => array( 'ld-course-content', 'ld-course-progress' ),
+		)
+	);
+}
+
 add_filter(
 	'learndash_init',
 	function() {
@@ -250,5 +297,33 @@ add_filter(
 		} else {
 			add_filter( 'block_categories', 'learndash_block_categories', 30, 2 );
 		}
+
+		learndash_block_pattern_categories();
+		learndash_register_block_patterns();
 	}
 );
+
+/**
+ * Get the Legacy template not supported message.
+ * 
+ * This message is shows on blocks and shortcodes which don't support the "Legacy"
+ * templates. 
+ *
+ * @since 4.0.0
+ */
+function learndash_get_legacy_not_supported_message() {
+	$message = '';
+	if ( 'legacy' === LearnDash_Theme_Register::get_active_theme_key() ) {
+		$message = sprintf(
+			// translators: placeholder: current template name.
+			esc_html_x(
+				'The current LearnDash template "%s" may not support this block. Please select a different template.',
+				"placeholder: current template name",
+				"learndash"
+			),
+			LearnDash_Theme_Register::get_active_theme_name()
+		);
+	}
+
+	return $message;
+}

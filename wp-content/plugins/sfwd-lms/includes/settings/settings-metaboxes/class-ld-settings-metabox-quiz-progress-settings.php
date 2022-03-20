@@ -18,6 +18,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 	 */
 	class LearnDash_Settings_Metabox_Quiz_Progress_Settings extends LearnDash_Settings_Metabox {
 
+		/**
+		 * Quiz edit
+		 *
+		 * @var object
+		 */
 		protected $quiz_edit = null;
 		/**
 		 * Public constructor for class
@@ -117,9 +122,12 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 
 				if ( ( isset( $this->setting_option_values['quiz_resume_cookie_send_timer'] ) ) && ( '' !== $this->setting_option_values['quiz_resume_cookie_send_timer'] ) ) {
-					$this->setting_option_values['quiz_resume_cookie_send_timer'] = intval( $this->setting_option_values['quiz_resume_cookie_send_timer'] );
+					$this->setting_option_values['quiz_resume_cookie_send_timer'] = absint( $this->setting_option_values['quiz_resume_cookie_send_timer'] );
+					if ( LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN < $this->setting_option_values['quiz_resume_cookie_send_timer'] ) {
+						$this->setting_option_values['quiz_resume_cookie_send_timer'] = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
+					}
 				} else {
-					$this->setting_option_values['quiz_resume_cookie_send_timer'] = '20';
+					$this->setting_option_values['quiz_resume_cookie_send_timer'] = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_DEFAULT;
 				}
 
 				if ( ( isset( $this->quiz_edit['quiz'] ) ) && ( ! empty( $this->quiz_edit['quiz'] ) ) ) {
@@ -191,8 +199,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			$select_cert_options         = array();
 			$select_cert_query_data_json = '';
 
-			/** This filter is documented in includes/class-ld-lms.php */
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+			if ( learndash_use_select2_lib() ) {
 				$select_cert_options_default = array(
 					'-1' => esc_html__( 'Search or select a certificate…', 'learndash' ),
 				);
@@ -204,8 +211,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					}
 				}
 
-				/** This filter is includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
-				if ( ( defined( 'LEARNDASH_SELECT2_LIB_AJAX_FETCH' ) ) && ( true === apply_filters( 'learndash_select2_lib_ajax_fetch', LEARNDASH_SELECT2_LIB_AJAX_FETCH ) ) ) {
+				if ( learndash_use_select2_lib_ajax_fetch() ) {
 					$select_cert_query_data_json = $this->build_settings_select2_lib_ajax_fetch_json(
 						array(
 							'query_args'       => array(
@@ -300,7 +306,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'max' => '100',
 					),
 					'value'          => $this->setting_option_values['threshold'],
-					'class'          => '-small',
 					'parent_setting' => 'certificate',
 					'rest'           => array(
 						'show_in_rest' => LearnDash_REST_API::enabled(),
@@ -361,7 +366,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'        => '',
 					'attrs'          => array(
 						'step' => 1,
-						'min'  => 5,
+						'min'  => LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN,
 					),
 					'rest'           => array(
 						'show_in_rest' => LearnDash_REST_API::enabled(),
@@ -370,13 +375,12 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								'field_key'   => 'quiz_resume_cookie_send_timer',
 								'description' => esc_html__( 'Save cookie data to the server every', 'learndash' ),
 								'type'        => 'integer',
-								'default'     => 0,
+								'default'     => LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_DEFAULT,
 							),
 						),
 					),
 
 				),
-
 				'retry_restrictions'            => array(
 					'name'                => 'retry_restrictions',
 					'label'               => sprintf(

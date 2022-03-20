@@ -11,9 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * @var [type]
- */
 $course      = get_post( $course_id );
 $course_link = get_permalink( $course_id );
 /**

@@ -44,14 +44,14 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				'preview_show'      => array(
 					'type' => 'boolean',
 				),
-				'preview_course_id' => array(
-					'type' => 'string',
-				),
 				'preview_user_id'   => array(
 					'type' => 'string',
 				),
 				'example_show'      => array(
 					'type' => 'boolean',
+				),
+				'editing_post_meta' => array(
+					'type' => 'object',
 				),
 			);
 
@@ -67,118 +67,71 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 3.1.4
 		 *
-		 * @param array $attributes Shortcode attrbutes.
+		 * @param array    $block_attributes The block attrbutes.
+		 * @param string   $block_content    The block content.
+		 * @param WP_block $block            The block object.
+		 *
 		 * @return none The output is echoed.
 		 */
-		public function render_block( $attributes = array() ) {
-			$attributes = $this->preprocess_block_attributes( $attributes );
+		public function render_block( $block_attributes = array(), $block_content = '', WP_block $block = null ) {
+			$block_attributes = $this->preprocess_block_attributes( $block_attributes );
 
-			if ( is_user_logged_in() ) {
+			if ( ( isset( $block_attributes['example_show'] ) ) && ( ! empty( $block_attributes['example_show'] ) ) ) {
+				$block_attributes['user_id']      = $this->get_example_user_id();
+				$block_attributes['preview_show'] = true;
 
-				if ( ( isset( $attributes['example_show'] ) ) && ( ! empty( $attributes['example_show'] ) ) ) {
-					$attributes['preview_course_id'] = $this->get_example_post_id( learndash_get_post_type_slug( 'course' ) );
-					$attributes['preview_user_id']   = $this->get_example_user_id();
-					$attributes['preview_show']      = true;
-					unset( $attributes['example_show'] );
-				}
+				unset( $block_attributes['example_show'] );
+			}
 
-				if ( ( isset( $attributes['preview_show'] ) ) && ( ! empty( $attributes['preview_show'] ) ) ) {
-					unset( $attributes['preview_show'] );
-					if ( ( isset( $attributes['preview_course_id'] ) ) && ( ! empty( $attributes['preview_course_id'] ) ) ) {
-						$attributes['course_id'] = absint( $attributes['preview_course_id'] );
-						unset( $attributes['preview_course_id'] );
-					}
-					if ( ( isset( $attributes['preview_quiz_id'] ) ) && ( ! empty( $attributes['preview_quiz_id'] ) ) ) {
-						$attributes['quiz_id'] = absint( $attributes['preview_quiz_id'] );
-						unset( $attributes['preview_quiz_id'] );
-					}
-					if ( ( isset( $attributes['preview_user_id'] ) ) && ( ! empty( $attributes['preview_user_id'] ) ) ) {
-						$attributes['user_id'] = absint( $attributes['preview_user_id'] );
-						unset( $attributes['preview_user_id'] );
-					}
-				}
+			// Only the 'editing_post_meta' element will be sent from within the post edit screen.
+			if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+				$block_attributes['course_id'] = $this->block_attributes_get_post_id( $block_attributes, 'course' );
+				$block_attributes['user_id']   = $this->block_attributes_get_user_id( $block_attributes );
 
-				if ( ( ( ! isset( $attributes['course_id'] ) ) || ( empty( $attributes['course_id'] ) ) ) ) {
-					if ( learndash_get_post_type_slug( 'course' ) === get_post_type() ) {
-						$attributes['course_id'] = get_the_ID();
-
-					} else {
+				if ( ! empty( $block_attributes['course_id'] ) ) {
+					$course_post = get_post( $block_attributes['course_id'] );
+					if ( ( ! is_a( $course_post, 'WP_Post' ) ) || ( learndash_get_post_type_slug( 'course' ) !== $course_post->post_type ) ) {
 						return $this->render_block_wrap(
 							'<span class="learndash-block-error-message">' . sprintf(
-							// translators: placeholder: Course, Course.
-								_x( '%1$s ID is required when not used within a %2$s.', 'placeholder: Course, QCourse', 'learndash' ),
-								LearnDash_Custom_Label::get_label( 'course' ),
+							// translators: placeholder: Course.
+								_x( 'Invalid %1$s ID.', 'placeholder: Course', 'learndash' ),
 								LearnDash_Custom_Label::get_label( 'course' )
 							) . '</span>'
 						);
 					}
 				}
 
-				$shortcode_params_str = '';
-				foreach ( $attributes as $key => $val ) {
-					if ( ( empty( $key ) ) || ( empty( $val ) ) || ( is_null( $val ) ) ) {
-						continue;
-					}
-
-					if ( ( 'user_id' === $key ) && ( '' !== $val ) ) {
-						if ( learndash_is_admin_user( get_current_user_id() ) ) {
-							// If admin user they can preview any user_id.
-						} elseif ( learndash_is_group_leader_user( get_current_user_id() ) ) {
-							// If group leader user we ensure the preview user_id is within their group(s).
-							if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $val ) ) {
-								continue;
-							}
-						} else {
-							// If neither admin or group leader then we don't see the user_id for the shortcode.
-							continue;
-						}
-
-						$key = str_replace( 'preview_', '', $key );
-						$val = intval( $val );
-					}
-
-					if ( ! empty( $shortcode_params_str ) ) {
-						$shortcode_params_str .= ' ';
-					}
-					$shortcode_params_str .= $key . '="' . esc_attr( $val ) . '"';
-				}
-
-				$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
-				$shortcode_out        = do_shortcode( $shortcode_params_str );
-				if ( empty( $shortcode_out ) ) {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
-				}
-
-				return $this->render_block_wrap( $shortcode_out );
-			}
-			wp_die();
-		}
-
-		/**
-		 * Called from the LD function learndash_convert_block_markers_shortcode() when parsing the block content.
-		 *
-		 * @since 3.1.4
-		 *
-		 * @param array  $attributes The array of attributes parse from the block content.
-		 * @param string $shortcode_slug This will match the related LD shortcode ld_profile, ld_course_list, etc.
-		 * @param string $block_slug This is the block token being processed. Normally same as the shortcode but underscore replaced with dash.
-		 * @param string $content This is the orignal full content being parsed.
-		 *
-		 * @return array $attributes.
-		 */
-		public function learndash_block_markers_shortcode_atts_filter( $attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
-			if ( $shortcode_slug === $this->shortcode_slug ) {
-				if ( isset( $attributes['preview_show'] ) ) {
-					unset( $attributes['preview_show'] );
-				}
-				if ( isset( $attributes['preview_course_id'] ) ) {
-					unset( $attributes['preview_course_id'] );
-				}
-				if ( isset( $attributes['preview_user_id'] ) ) {
-					unset( $attributes['preview_user_id'] );
+				if ( empty( $block_attributes['course_id'] ) ) {
+					return $this->render_block_wrap(
+						'<span class="learndash-block-error-message">' . sprintf(
+						// translators: placeholder: Course, Course.
+							_x( '%1$s ID is required when not used within a %2$s.', 'placeholder: Course, Course', 'learndash' ),
+							LearnDash_Custom_Label::get_label( 'course' ),
+							LearnDash_Custom_Label::get_label( 'course' )
+						) . '</span>'
+					);
 				}
 			}
-			return $attributes;
+
+			/** This filter is documented in includes/gutenberg/blocks/ld-course-list/index.php */
+			$block_attributes = apply_filters( 'learndash_block_markers_shortcode_atts', $block_attributes, $this->shortcode_slug, $this->block_slug, '' );
+
+			$shortcode_out = '';
+
+			$shortcode_str = $this->build_block_shortcode( $block_attributes, $block_content );
+			if ( ! empty( $shortcode_str ) ) {
+				$shortcode_out = do_shortcode( $shortcode_str );
+			}
+
+			if ( ! empty( $shortcode_out ) ) {
+				if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+					$shortcode_out = $this->render_block_wrap( $shortcode_out );
+				} else {
+					$shortcode_out = '<div class="learndash-wrap">' . $shortcode_out . '</div>';
+				}
+			}
+
+			return $shortcode_out;
 		}
 
 		// End of functions.

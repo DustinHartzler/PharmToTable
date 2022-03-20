@@ -48,33 +48,33 @@ function learndash_update_user_activity( $args = array() ) {
 		// Can be passed in if we are updating a specific existing activity row.
 		'activity_id'        => 0,
 
-		// Required. This is the ID of the Course. Unique key part 1/4
+		// Required. This is the ID of the Course. Unique key part 1/4.
 		'course_id'          => 0,
 
-		// Required. This is the ID of the Course, Lesson, Topic, Quiz item. Unique key part 2/4
+		// Required. This is the ID of the Course, Lesson, Topic, Quiz item. Unique key part 2/4.
 		'post_id'            => 0,
 
-		// Optional. Will use get_current_user_id() if left 0. Unique key part 3/4
+		// Optional. Will use get_current_user_id() if left 0. Unique key part 3/4.
 		'user_id'            => 0,
 
 		// Will be the token stats that described the status_times array (next argument) Can be most anything.
 		// From 'course', 'lesson', 'topic', 'access' or 'expired'. Unique key part 4/4.
 		'activity_type'      => '',
 
-		// true if the lesson, topic, course, quiz is complete. False if not complete. null if not started
+		// true if the lesson, topic, course, quiz is complete. False if not complete. null if not started.
 		'activity_status'    => '',
 
-		// Should be the timstamp when the 'status' started
+		// Should be the timstamp when the 'status' started.
 		'activity_started'   => '',
 
-		// Should be the timstamp when the 'status' completed
+		// Should be the timstamp when the 'status' completed.
 		'activity_completed' => '',
 
-		// Should be the timstamp when the activity record was last updated. Used as a sort column for ProPanel and other queries
+		// Should be the timstamp when the activity record was last updated. Used as a sort column for ProPanel and other queries.
 		'activity_updated'   => '',
 
 		// Flag to indicate what we are 'update', 'insert', 'delete'. The default action 'update' will cause this function
-		// to check for an existing record to update (if found)
+		// to check for an existing record to update (if found).
 		'activity_action'    => 'update',
 		'activity_meta'      => '',
 	);
@@ -87,12 +87,12 @@ function learndash_update_user_activity( $args = array() ) {
 	}
 
 	if ( empty( $args['user_id'] ) ) {
-		// If we don't have a user_id passed via args
+		// If we don't have a user_id passed via args.
 		if ( ! is_user_logged_in() ) {
-			return; // If not logged in, abort
+			return; // If not logged in, abort.
 		}
 
-		// Else use the logged in user ID as the args user_id
+		// Else use the logged in user ID as the args user_id.
 		$args['user_id'] = get_current_user_id();
 	}
 
@@ -115,10 +115,10 @@ function learndash_update_user_activity( $args = array() ) {
 	);
 
 	$types_array = array(
-		'%d', // user_id
-		'%d', // course_id
-		'%d', // post_id
-		'%s', // activity_type
+		'%d', // user_id.
+		'%d', // course_id.
+		'%d', // post_id.
+		'%s', // activity_type.
 	);
 
 	if ( ( true === (bool) $args['activity_status'] ) || ( false === (bool) $args['activity_status'] ) ) {
@@ -184,7 +184,7 @@ function learndash_update_user_activity( $args = array() ) {
 				),
 				$update_types_array,
 				array(
-					'%d', // activity_id
+					'%d', // activity_id.
 				)
 			);
 
@@ -209,7 +209,7 @@ function learndash_update_user_activity( $args = array() ) {
 		}
 	}
 
-	// Finally for the course we update the activity meta
+	// Finally for the course we update the activity meta.
 	if ( ( ! empty( $args['activity_id'] ) ) && ( ! empty( $args['activity_meta'] ) ) ) {
 		foreach ( $args['activity_meta'] as $meta_key => $meta_value ) {
 			learndash_update_user_activity_meta( $args['activity_id'], $meta_key, $meta_value );
@@ -317,18 +317,18 @@ function learndash_get_user_activity( $args = array(), $activity_create = false 
  * Gets the user activity meta.
  *
  * @since 2.3.0
- * @since 3.5.0 Added $return_activity_meta_value_unserialize param.
+ * @since 3.5.0 Added $return_activity_meta_value_unserialized param.
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
- * @param int     $activity_id                     Optional. Activity ID. Default 0.
- * @param string  $activity_meta_key               Optional. The activity meta key to get. Default empty.
- * @param boolean $return_activity_meta_value_only Optional. Whether to return only activity meta value. Default true.
- * @param boolean $return_activity_meta_value_unserialize Options. Whether to unserialize the single meta value.
+ * @param int     $activity_id                             Optional. Activity ID. Default 0.
+ * @param string  $activity_meta_key                       Optional. The activity meta key to get. Default empty.
+ * @param boolean $return_activity_meta_value_only         Optional. Whether to return only activity meta value. Default true.
+ * @param boolean $return_activity_meta_value_unserialized Optional. Whether to unserialize the single meta value.
  *
  * @return object Activity meta object.
  */
-function learndash_get_user_activity_meta( $activity_id = 0, $activity_meta_key = '', $return_activity_meta_value_only = true, $return_activity_meta_value_unserialied = false ) {
+function learndash_get_user_activity_meta( $activity_id = 0, $activity_meta_key = '', $return_activity_meta_value_only = true, $return_activity_meta_value_unserialized = false ) {
 
 	global $wpdb;
 
@@ -347,7 +347,7 @@ function learndash_get_user_activity_meta( $activity_id = 0, $activity_meta_key 
 		if ( ! empty( $activity_meta ) ) {
 			if ( true === (bool) $return_activity_meta_value_only ) {
 				if ( property_exists( $activity_meta, 'activity_meta_value' ) ) {
-					if ( true === (bool) $return_activity_meta_value_unserialied ) {
+					if ( true === (bool) $return_activity_meta_value_unserialized ) {
 						return maybe_unserialize( $activity_meta->activity_meta_value );
 					} else {
 						return $activity_meta->activity_meta_value;
@@ -357,7 +357,7 @@ function learndash_get_user_activity_meta( $activity_id = 0, $activity_meta_key 
 		}
 		return $activity_meta;
 	} else {
-		// Here we return ALL meta for the given activity_id
+		// Here we return ALL meta for the given activity_id.
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity_meta' ) ) . ' WHERE activity_id=%d',
@@ -398,12 +398,12 @@ function learndash_update_user_activity_meta( $activity_id = 0, $meta_key = '', 
 				'activity_meta_id' => $activity->activity_meta_id,
 			),
 			array(
-				'%d',   // activity_id
-				'%s',   // meta_key
-				'%s',    // meta_value
+				'%d',   // activity_id.
+				'%s',   // meta_key.
+				'%s',   // meta_value.
 			),
 			array(
-				'%d',    // activity_meta_id
+				'%d',   // activity_meta_id.
 			)
 		);
 
@@ -416,9 +416,9 @@ function learndash_update_user_activity_meta( $activity_id = 0, $meta_key = '', 
 				'activity_meta_value' => maybe_serialize( $meta_value ),
 			),
 			array(
-				'%d',   // activity_id
-				'%s',   // meta_key
-				'%s',    // meta_value
+				'%d',   // activity_id.
+				'%s',   // meta_key.
+				'%s',   // meta_value.
 			)
 		);
 	}
@@ -431,8 +431,8 @@ function learndash_update_user_activity_meta( $activity_id = 0, $meta_key = '', 
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
- * @param int         $activity_id Optional. Activity ID. Default 0.
- * @param string      $meta_key    Optional. The activity meta key to delete. If empty will delete all.
+ * @param int    $activity_id Optional. Activity ID. Default 0.
+ * @param string $meta_key    Optional. The activity meta key to delete. If empty will delete all.
  */
 function learndash_delete_user_activity_meta( $activity_id = 0, $meta_key = '' ) {
 	global $wpdb;
@@ -454,7 +454,7 @@ function learndash_delete_user_activity_meta( $activity_id = 0, $meta_key = '' )
 					'activity_meta_id' => $activity_item->activity_meta_id,
 				),
 				array(
-					'%d',   // activity_meta_id
+					'%d',   // activity_meta_id.
 				)
 			);
 		}
@@ -493,9 +493,9 @@ function learndash_delete_user_activity( $activity_id = 0 ) {
  *
  * @since 3.5.0
  *
- * @param int $user_id   User ID.
- * @param int $course_id Course ID.
- * @param int $default   Default value.
+ * @param int $user_id          User ID.
+ * @param int $course_id        Course ID.
+ * @param int $default_started  Default value.
  */
 function learndash_activity_course_get_earliest_started( $user_id = 0, $course_id = 0, $default_started = 0 ) {
 	$user_id   = absint( $user_id );
@@ -586,6 +586,7 @@ function learndash_activity_complete_step( $user_id = 0, $course_id = 0, $step_i
 	if ( ! empty( $activity_id ) ) {
 		return learndash_get_user_activity( $activity, true );
 	}
+	return null;
 }
 
 /**
@@ -604,7 +605,7 @@ function learndash_activity_start_course( $user_id = 0, $course_id = 0, $startti
 	$activity = learndash_activity_start_step( $user_id, $course_id, $course_id, 'course', $starttime );
 	if ( $activity ) {
 
-		if ( ( ! empty( $starttime ) ) && ( absint( $activity->activity_started ) !== absint( $starttime ) ) ) {
+		if ( ( ! empty( absint( $starttime ) ) ) && ( empty( absint( $activity->activity_started ) ) ) ) {
 			$activity->activity_started = absint( $starttime );
 			learndash_update_user_activity( $activity );
 		}

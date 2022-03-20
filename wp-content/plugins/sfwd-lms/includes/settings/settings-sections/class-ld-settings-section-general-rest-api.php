@@ -19,12 +19,26 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 	class LearnDash_Settings_Section_General_REST_API extends LearnDash_Settings_Section {
 
 		/**
+		 * Setting Option Fields REST API V1
+		 *
+		 * @var array
+		 */
+		protected $setting_option_fields_v1 = array();
+
+		/**
+		 * Setting Option Fields REST API V2
+		 *
+		 * @var array
+		 */
+		protected $setting_option_fields_v2 = array();
+
+		/**
 		 * Protected constructor for class
 		 *
 		 * @since 2.5.8
 		 */
 		protected function __construct() {
-			$this->settings_page_id = 'learndash_lms_settings';
+			$this->settings_page_id = 'learndash_lms_advanced';
 
 			// This is the 'option_name' key used in the wp_options table.
 			$this->setting_option_key = 'learndash_settings_rest_api';
@@ -36,7 +50,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_key = 'settings_rest_api';
 
 			// Section label/header.
-			$this->settings_section_label = esc_html__( 'REST API Settings', 'learndash' );
+			$this->settings_section_label     = esc_html__( 'REST API Settings', 'learndash' );
+			$this->settings_section_sub_label = esc_html__( 'REST API', 'learndash' );
 
 			$this->settings_section_description = esc_html__( 'Control and customize the REST API endpoints.', 'learndash' );
 
@@ -146,6 +161,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			if ( ( ! isset( $this->setting_option_values['groups-users_v2'] ) ) || ( empty( $this->setting_option_values['groups-users_v2'] ) ) ) {
 				$this->setting_option_values['groups-users_v2'] = 'users';
 			}
+
+			$this->setting_option_values['exams_v2'] = $this->setting_option_values['exams_v2'] ?? 'exams';
+
+			//$this->setting_option_values['exam_questions_v2'] = $this->setting_option_values['exam_questions_v2'] ?? 'questions';
 
 			if ( ( ! isset( $this->setting_option_values['assignments_v2'] ) ) || ( empty( $this->setting_option_values['assignments_v2'] ) ) ) {
 				$this->setting_option_values['assignments_v2'] = learndash_get_post_type_slug( 'assignment' );
@@ -503,6 +522,30 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'class'          => '-medium',
 					'parent_setting' => 'groups_v2',
 				),
+				'exams_v2'                        => array(
+					'name'         => 'exams_v2',
+					'type'         => 'text',
+					'label'        => LearnDash_Custom_Label::get_label( 'exam' ),
+					'value'        => $this->setting_option_values['exams_v2'],
+					'value_prefix' => $value_prefix_top,
+					'class'        => '-medium',
+					'placeholder'  => 'exams',
+				),
+				/*
+				'exam_questions_v2'               => array(
+					'name'         => 'exam_questions_v2',
+					'type'         => 'text',
+					'label'        => sprintf(
+						// translators: placeholder: Questions.
+						esc_html_x( 'Exam %s', 'placeholder: Questions', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'questions' )
+					),
+					'value'        => $this->setting_option_values['exam_questions_v2'],
+					'value_prefix' => $value_prefix_top,
+					'class'        => '-medium',
+					'placeholder'  => 'questions',
+				),
+				*/
 				'users_v2'                        => array(
 					'name'                => 'users_v2',
 					'type'                => 'text',
@@ -639,8 +682,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param string $content    Content to show before row
-		 * @param array  $field_args Row field Args
+		 * @param string $content    Content to show before row.
+		 * @param array  $field_args Row field Args.
 		 */
 		public function learndash_settings_row_outside_before( $content = '', $field_args = array() ) {
 			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'sfwd-courses', 'courses_v2' ), true ) ) ) {
@@ -666,7 +709,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			return $content;
 		}
 
-		// End of function
+		// End of function.
 	}
 }
 add_action(

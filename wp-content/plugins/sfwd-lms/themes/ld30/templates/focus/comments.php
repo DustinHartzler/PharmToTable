@@ -35,7 +35,7 @@ if ( post_password_required() ) {
 				<?php
 				printf(
 					esc_html(
-						// translators: single approved comment, multiple approved comments
+						// translators: single approved comment, multiple approved comments.
 						_nx( '%s Comment', '%s Comments', $learndash_comment_count->approved, 'comments', 'learndash' )
 					),
 					esc_html( number_format_i18n( $learndash_comment_count->approved ) )

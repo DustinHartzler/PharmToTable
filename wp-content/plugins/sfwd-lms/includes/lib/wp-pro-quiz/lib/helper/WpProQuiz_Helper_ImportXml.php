@@ -10,7 +10,7 @@ class WpProQuiz_Helper_ImportXml {
 
 	public function setImportFileUpload( $file ) {
 		if ( ! is_uploaded_file( $file['tmp_name'] ) ) {
-			$this->setError( __( 'File was not uploaded', 'learndash' ) );
+			//$this->setError( __( 'File was not uploaded', 'learndash' ) );
 			return false;
 		}
 

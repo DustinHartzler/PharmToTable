@@ -1594,6 +1594,25 @@ jQuery( function() {
 			jQuery( 'form#posts-filter input.learndash-award-points[data-learndash-input-changed="1"]' ).attr( 'disabled', false );
 		} );
 	}
+
+	if ( jQuery( 'body.wp-admin.edit-php.post-type-sfwd-transactions form#posts-filter' ).length ) {
+		if ( jQuery( 'form#posts-filter button.ld_remove_access_single' ).length ) {
+			jQuery( 'form#posts-filter button.ld_remove_access_single' ).on( 'click', function( e ) {
+				e.preventDefault();
+				var transaction_id = jQuery( this ).attr( 'id' ).replace( 'ld_remove_access_', '' );
+
+				if ( ( typeof transaction_id !== 'undefined' ) && ( transaction_id != '' ) ) {
+					if ( jQuery( 'form#posts-filter input#cb-select-' + transaction_id ).length ) {
+						jQuery( 'form#posts-filter input#cb-select-' + transaction_id ).prop( 'checked', true );
+					}
+					if ( jQuery( 'form#posts-filter select#bulk-action-selector-top' ).length ) {
+						jQuery( 'form#posts-filter select#bulk-action-selector-top' ).val( 'remove_access' );
+					}
+					jQuery( 'form#posts-filter input#doaction' ).trigger( 'click' );
+				}
+			} );
+		}
+	}
 } );
 
 jQuery( function() {
@@ -1902,3 +1921,66 @@ jQuery( function() {
 		} );
 	}
 } );
+
+
+jQuery(function () {
+	if (
+		jQuery("body.wp-admin.profile-php #course_progress_details").length ||
+		jQuery("body.wp-admin.user-edit-php #course_progress_details").length
+	) {
+		jQuery("#course_progress_details").on(
+			"click",
+			"a.learndash-course-exam-challenge-reset",
+			function (e) {
+				e.preventDefault();
+
+				var clicked_el = e.currentTarget;
+				if ( ! clicked_el.hasAttribute("disabled") ) {
+					var exam_data = jQuery(clicked_el).data("exam");
+					if (typeof exam_data !== "undefined") {
+						exam_data["action"] = "learndash_exam_process_reset";
+
+						learndash_exam_process_ajax(clicked_el, exam_data);
+					}
+				}
+			}
+		);
+
+		jQuery("#course_progress_details").on(
+			"click",
+			"a.learndash-course-exam-challenge-complete",
+			function (e) {
+				e.preventDefault();
+
+				var clicked_el = e.currentTarget;
+
+				if ( ! clicked_el.hasAttribute("disabled") ) {
+					var exam_data = jQuery(clicked_el).data("exam");
+					if (typeof exam_data !== "undefined") {
+						exam_data["action"] = "learndash_exam_process_complete";
+
+						learndash_exam_process_ajax(clicked_el, exam_data);
+					}
+				}
+			}
+		);
+
+		function learndash_exam_process_ajax( clicked_el, exam_data ) {
+			jQuery.post(
+				ajaxurl,
+				exam_data,
+				function (json) {
+					if (typeof json.success !== "undefined" && json.success == 1) {
+						jQuery(clicked_el).attr("disabled", "disabled");
+
+						// Update the link text is returned.
+						if (typeof json.data.link_text !== "undefined") {
+							jQuery(clicked_el).text(json.data.link_text);
+						}
+					}
+				},
+				"json"
+			);
+		}
+	}
+});

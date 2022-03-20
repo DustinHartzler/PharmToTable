@@ -26,6 +26,7 @@ require_once __DIR__ . '/settings-billing-functions.php';
 
 require_once __DIR__ . '/class-ld-settings-fields.php';
 require_once __DIR__ . '/class-ld-settings-pages.php';
+require_once __DIR__ . '/class-ld-settings-pages-deprecated.php';
 require_once __DIR__ . '/class-ld-settings-sections.php';
 require_once __DIR__ . '/class-ld-theme-settings-sections.php';
 require_once __DIR__ . '/class-ld-settings-metaboxes.php';

@@ -56,16 +56,25 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Quiz_Progress' ) ) && ( class_exists( '
 		protected $progress = array();
 
 		/**
+		 * Progress loaded
+		 *
+		 * @var bool
+		 */
+		protected $progress_loaded;
+
+		/**
 		 * Public constructor for class.
 		 *
 		 * @since 3.2.0
+		 *
 		 * @param integer $user_id User ID.
+		 *
+		 * @throws LDLMS_Exception_NotFound When no user.
 		 */
 		public function __construct( $user_id = 0 ) {
 			if ( ! $this->initialize( $user_id ) ) {
 				throw new LDLMS_Exception_NotFound();
 			} else {
-
 				add_action( 'updated_user_meta', array( $this, 'updated_user_meta_progress' ), 30, 4 );
 				return $this;
 			}
@@ -89,10 +98,9 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Quiz_Progress' ) ) && ( class_exists( '
 					$this->user    = $user;
 
 					return true;
-				} else {
-					return false;
 				}
 			}
+			return false;
 		}
 
 		/**
@@ -132,6 +140,11 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Quiz_Progress' ) ) && ( class_exists( '
 			}
 		}
 
+		/**
+		 * Build Quiz Progress
+		 *
+		 * @param array $progress_legacy Legacy progress.
+		 */
 		protected function build_quiz_progress( $progress_legacy = array() ) {
 			$this->progress = array();
 
@@ -220,7 +233,8 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Quiz_Progress' ) ) && ( class_exists( '
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param integer $quiz_id Quiz Post ID to load progress for.
+		 * @param integer $quiz_id   Quiz Post ID to load progress for.
+		 * @param integer $course_id Course Post ID .
 		 */
 		protected function load_quiz_progress( $quiz_id = 0, $course_id = 0 ) {
 			if ( ! empty( $quiz_id ) ) {
@@ -284,7 +298,7 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Quiz_Progress' ) ) && ( class_exists( '
 					$this->load_progress();
 					$this->progress[ $course_id ] = $progress;
 					$this->progess_loaded         = false;
-					return update_user_meta( $this->user_id, $this->user_meta_key, $this->progress );
+					return update_user_meta( $this->user_id, $this->progress_meta_key, $this->progress );
 				}
 			}
 		}
@@ -296,7 +310,6 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Quiz_Progress' ) ) && ( class_exists( '
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param integer $user_id   User ID.
 		 * @param integer $quiz_id   Quiz Post ID.
 		 * @param integer $course_id Course Post ID.
 		 *
@@ -354,6 +367,8 @@ function learndash_user_get_quiz_progress( $user_id = 0, $quiz_id = 0, $course_i
 			return $quiz_progress_object->get_progress( $quiz_id, $course_id );
 		}
 	}
+
+	return array();
 }
 
 /**
@@ -366,8 +381,6 @@ function learndash_user_get_quiz_progress( $user_id = 0, $quiz_id = 0, $course_i
  * @param integer $user_id   User ID.
  * @param integer $quiz_id   Quiz Post ID.
  * @param integer $course_id Course Post ID.
- *
- * @return boolean
  */
 function learndash_user_quiz_has_completed( $user_id = 0, $quiz_id = 0, $course_id = 0 ) {
 	$user_id   = absint( $user_id );

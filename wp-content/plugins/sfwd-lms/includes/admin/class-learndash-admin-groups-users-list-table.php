@@ -24,21 +24,29 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 	class Learndash_Admin_Groups_Users_List_Table extends WP_List_Table {
 
 		/**
+		 * Array of filters
+		 *
 		 * @var array $filters
 		 */
 		public $filters = array();
 
 		/**
+		 * Items per page
+		 *
 		 * @var integer $per_page
 		 */
 		public $per_page = 20;
 
 		/**
+		 * Array of columns
+		 *
 		 * @var array $columns
 		 */
 		public $columns = array();
 
 		/**
+		 * Group ID
+		 *
 		 * @var integer $group_id
 		 */
 		public $group_id = 0;
@@ -51,12 +59,12 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 		public function __construct() {
 			global $status, $page;
 
-			//Set parent defaults
+			// Set parent defaults.
 			parent::__construct(
 				array(
-					'singular' => 'group',        //singular name of the listed records
-					'plural'   => 'groups',           //plural name of the listed records
-					'ajax'     => true,            //does this table support ajax?
+					'singular' => 'group',        // singular name of the listed records.
+					'plural'   => 'groups',       // plural name of the listed records.
+					'ajax'     => true,           // does this table support ajax?
 				)
 			);
 		}
@@ -79,8 +87,8 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 		 *
 		 * @since 2.3.0
 		 *
-		 * @param string $text      Search text
-		 * @param string $input_id  Search field HTML ID
+		 * @param string $text      Search text.
+		 * @param string $input_id  Search field HTML ID.
 		 */
 		public function search_box( $text, $input_id ) {
 			if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
@@ -269,6 +277,13 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 			echo esc_html( $item->user_email );
 		}
 
+		/**
+		 * Show row item user actions
+		 *
+		 * @since 2.3.0
+		 *
+		 * @param object $item Group WP_Post object.
+		 */
 		public function column_user_actions( $item ) {
 			?>
 			<a href="<?php echo esc_url( add_query_arg( 'user_id', $item->ID, remove_query_arg( array( 's', 'paged', 'learndash-search', 'ld-group-list-view-nonce', '_wp_http_referer', '_wpnonce' ) ) ) ); ?>"><?php esc_html_e( 'Report', 'learndash' ); ?></a>
@@ -343,9 +358,9 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 
 			$this->set_pagination_args(
 				array(
-					'total_items' => intval( $total_items ),    //WE have to calculate the total number of items
-					'per_page'    => intval( $per_page ),       //WE have to determine how many items to show on a page
-					'total_pages' => ceil( intval( $total_items ) / intval( $per_page ) ),   //WE have to calculate the total number of pages
+					'total_items' => intval( $total_items ),    // We have to calculate the total number of items.
+					'per_page'    => intval( $per_page ),       // We have to determine how many items to show on a page.
+					'total_pages' => ceil( intval( $total_items ) / intval( $per_page ) ),   // We have to calculate the total number of pages.
 				)
 			);
 		}

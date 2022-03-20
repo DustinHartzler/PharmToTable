@@ -44,7 +44,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_label = esc_html__( 'Certificate Custom Styles', 'learndash' );
 
 			// Used to show the section description above the fields. Can be empty.
-			$this->settings_section_description = esc_html__( 'Add Custom Styles (CSS) to be used on all Certificates', 'learndash' );
+			$this->settings_section_description = esc_html__( 'Add Custom Styles (CSS) to be used on all legacy certificates, does not work on certificates created with the Certificate Builder addon.', 'learndash' );
 
 			parent::__construct();
 		}
@@ -84,7 +84,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'name'      => 'styles',
 					'type'      => 'textarea',
 					'label'     => esc_html__( 'Custom Styles (CSS)', 'learndash' ),
-					'help_text' => esc_html__( 'Add custom styles (CSS) to be used.', 'learndash' ),
+					'help_text' => esc_html__( 'Add custom styles (CSS) to be used on legacy certificates.', 'learndash' ),
 					'value'     => $this->setting_option_values['styles'],
 					'attrs'     => array(
 						'rows' => '8',
@@ -104,9 +104,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param array $value Array of section fields values.
-		 * @param array $old_value Array of old values.
-		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 * @param array  $new_values         Array of section fields values.
+		 * @param array  $old_values         Array of old values.
+		 * @param string $setting_option_key Section option key should match $this->setting_option_key.
 		 */
 		public function section_pre_update_option( $new_values = '', $old_values = '', $setting_option_key = '' ) {
 			if ( $setting_option_key === $this->setting_option_key ) {

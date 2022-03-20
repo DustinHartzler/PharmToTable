@@ -104,7 +104,7 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 
 		$quiz = $quizMapper->fetch( $quizId );
 
-		if ( ( defined( 'LEARNDASH_SELECT2_LIB_AJAX_FETCH' ) ) && ( true === apply_filters( 'learndash_select2_lib_ajax_fetch', LEARNDASH_SELECT2_LIB_AJAX_FETCH ) ) ) {
+		if ( learndash_use_select2_lib_ajax_fetch() ) {
 			$users = array();
 		} else {
 			if ( has_action( 'pre_user_query', 'ure_exclude_administrators' ) ) {
@@ -192,7 +192,7 @@ class WpProQuiz_Controller_Statistics extends WpProQuiz_Controller_Controller {
 
 		$values     = $this->makeDataList( $quiz, $array, $userId, $quiz->getQuizModus() );
 		$formValues = $this->makeFormData( $quiz, $userId, isset( $this->_post['forms'] ) ? $this->_post['forms'] : null );
-		
+
 		if ( false === $values ) {
 			return;
 		}

@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 {
+	class LD_REST_Users_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Supported Collection Parameters.
@@ -43,8 +42,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 		 * Public constructor for class
 		 *
 		 * @since 2.5.8
-		 *
-		 * @param string $post_type Post type.
 		 */
 		public function __construct() {
 			$this->post_type  = 'groups';
@@ -87,7 +84,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'update_user_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								// translators: group
+								// translators: group.
 								'description' => sprintf( esc_html_x( '%s IDs to add to User.', 'placeholder: g roup', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -103,7 +100,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'delete_user_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								// translators: group
+								// translators: group.
 								'description' => sprintf( esc_html_x( '%s IDs to remove from User.', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -139,7 +136,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 					),
 					'group_ids' => array(
 						'description' => sprintf(
-							// translators: placholder: group
+							// translators: placholder: group.
 							esc_html_x(
 								'The %s IDs.',
 								'placeholder: group',
@@ -242,10 +239,10 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -289,10 +286,10 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -478,7 +475,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 			$query_params['context'] = $query_params_default['context'];
 			$query_params['fields']  = array(
 				'description' => __( 'Returned values.', 'learndash' ),
-				'type'        => 'string',
 				'type'        => 'string',
 				'default'     => 'ids',
 				'enum'        => array(

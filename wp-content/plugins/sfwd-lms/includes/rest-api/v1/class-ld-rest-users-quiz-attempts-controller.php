@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Attempts_Controller_V1' ) ) && ( clas
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Quiz_Attempts_Controller_V1 extends LD_REST_Posts_Controller_V1 {
+	class LD_REST_Users_Quiz_Attempts_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Supported Collection Parameters.
@@ -39,8 +38,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Attempts_Controller_V1' ) ) && ( clas
 		 * Public constructor for class
 		 *
 		 * @since 2.5.8
-		 *
-		 * @param string $post_type Post type.
 		 */
 		public function __construct() {
 			$this->post_type  = 'sfwd-courses';
@@ -73,7 +70,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Attempts_Controller_V1' ) ) && ( clas
 				array(
 					'args' => array(
 						'id' => array(
-							// translators: course
+							// translators: course.
 							'description' => sprintf( esc_html_x( 'User ID to show %s progress.', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
@@ -167,12 +164,12 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Attempts_Controller_V1' ) ) && ( clas
 				foreach ( $course_info['quizzes'] as &$quiz ) {
 					if ( ( isset( $quiz['time'] ) ) && ( ! empty( $quiz['time'] ) ) ) {
 						// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-						$quiz['time'] = $this->prepare_date_response( date( 'Y-m-d h:i:s', $quiz['time'] ) );
+						$quiz['time'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $quiz['time'] ) );
 					}
 
 					if ( ( isset( $quiz['m_edit_time'] ) ) && ( ! empty( $quiz['m_edit_time'] ) ) ) {
 						// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-						$quiz['m_edit_time'] = $this->prepare_date_response( date( 'Y-m-d h:i:s', $quiz['m_edit_time'] ) );
+						$quiz['m_edit_time'] = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $quiz['m_edit_time'] ) );
 					}
 				}
 				$response = rest_ensure_response( $course_info['quizzes'] );
@@ -241,6 +238,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Attempts_Controller_V1' ) ) && ( clas
 			return $query_params;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

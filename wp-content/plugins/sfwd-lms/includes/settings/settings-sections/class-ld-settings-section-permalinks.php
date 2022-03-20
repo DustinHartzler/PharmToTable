@@ -240,8 +240,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function save_settings_fields() {
 
 			if ( isset( $_POST[ $this->setting_field_prefix ] ) ) {
-				if ( ( isset( $_POST[ $this->setting_field_prefix ]['nonce'] ) ) && ( wp_verify_nonce( $_POST[ $this->setting_field_prefix ]['nonce'], 'learndash_permalinks_nonce' ) ) ) {
-
+				if ( $this->verify_metabox_nonce_field() ) {
 					$post_fields = $_POST[ $this->setting_field_prefix ];
 
 					if ( ( isset( $post_fields['courses'] ) ) && ( ! empty( $post_fields['courses'] ) ) ) {
@@ -318,7 +317,36 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$value = str_replace( 'http://', '', $value );
 				return untrailingslashit( $value );
 			}
+			return '';
 		}
+
+		/**
+		 * Verify Settings Section nonce field POST value.
+		 *
+		 * @since 3.6.0.1
+		 */
+		public function verify_metabox_nonce_field() {
+			if ( ( isset( $_POST[ $this->setting_field_prefix ]['nonce'] ) ) && ( wp_verify_nonce( $_POST[ $this->setting_field_prefix ]['nonce'], 'learndash_permalinks_nonce' ) ) ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Show Settings Section Description
+		 *
+		 * @since 3.6.0.1
+		 */
+		public function show_settings_section_description() {
+
+			if ( ! empty( $this->settings_section_description ) ) {
+				echo wp_kses_post( wpautop( $this->settings_section_description ) );
+			}
+		}
+
+
+		// End of functions.
 	}
 }
 add_action(

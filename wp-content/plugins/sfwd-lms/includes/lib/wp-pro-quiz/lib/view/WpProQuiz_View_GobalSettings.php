@@ -625,7 +625,7 @@ class WpProQuiz_View_GobalSettings extends WpProQuiz_View_View {
 									<?php esc_html_e( 'Activate', 'learndash' ); ?> <span class="description">(
 									<?php
 									// translators: placeholder: span HTML element.
-									printf( wp_kses_post( _x( 'It is recommended %s this option on your system.', 'plaeholder: span HTML element', 'learndash' ) ), '<span style=" font-weight: bold;">' . $rawSystem . '</span>' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded, escaped in variable
+									printf( wp_kses_post( _x( 'It is recommended %s this option on your system.', 'placeholder: span HTML element', 'learndash' ) ), '<span style=" font-weight: bold;">' . $rawSystem . '</span>' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded, escaped in variable
 									?>
 									)</span>
 								</label>

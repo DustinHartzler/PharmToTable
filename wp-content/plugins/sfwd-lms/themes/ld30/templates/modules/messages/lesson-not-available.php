@@ -16,10 +16,10 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
-// First generate the message
+// First generate the message.
 $message = sprintf(
 	wp_kses_post(
 		// translators: Date when content will be available.
@@ -30,7 +30,7 @@ $message = sprintf(
 
 $button = false;
 
-// The figure out how to display it
+// The figure out how to display it.
 if ( 'lesson' === $context ) {
 
 	$button = array(

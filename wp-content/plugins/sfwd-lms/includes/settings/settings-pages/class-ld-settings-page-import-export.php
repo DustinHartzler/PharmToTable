@@ -18,6 +18,14 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 	 */
 	class LearnDash_Settings_Page_Import_Export extends LearnDash_Settings_Page {
 
+
+		/**
+		 * LearnDash Admin Import Export instance
+		 *
+		 * @var Learndash_Admin_Import_Export
+		 */
+		public $import_export = null;
+
 		/**
 		 * Public constructor for class
 		 *

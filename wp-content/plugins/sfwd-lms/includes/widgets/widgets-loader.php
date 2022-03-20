@@ -24,3 +24,5 @@ require_once __DIR__ . '/ld_course.php';
 require_once __DIR__ . '/ld_lesson.php';
 require_once __DIR__ . '/ld_quiz.php';
 require_once __DIR__ . '/ld_transactions.php';
+require_once __DIR__ . '/ld_user_status.php';
+require_once __DIR__ . '/learndash_replace_widgets_alert.php';

@@ -54,7 +54,7 @@ list-style: initial;
 	text-align: center;
 	padding: 0 !important;
 }
- 
+
 .course_navigation .learndash_topic_widget_list  a > span {
 	overflow: hidden;
 	margin: 0 5px 0 0;
@@ -131,7 +131,7 @@ list-style: initial;
 	background-image: url("../images/green_arrow_collapse_rtl.png");
 }
 .rtl .list_arrow.collapse, .rtl .lesson_incomplete.list_arrow.collapse {
-    background-image: url("../images/gray_arrow_collapse_rtl.png");	
+    background-image: url("../images/gray_arrow_collapse_rtl.png");
 }
 .learndash_navigation_lesson_topics_list  .list_arrow.expand {
 	background-position: 50% 10px;
@@ -163,11 +163,11 @@ list-style: initial;
 	margin-right: 40px;
 }
 
-#sfwd-quiz_quiz_pro_html input[name="form_delete"], 
+#sfwd-quiz_quiz_pro_html input[name="form_delete"],
 #sfwd-quiz_quiz_pro_html a.form_move {
 	font-size: 12px;
 	border-radius: 3px;
-} 
+}
 .post-new-php.post-type-sfwd-quiz #sfwd-quiz_quiz_pro {
 	display: none;
 }
@@ -205,7 +205,7 @@ list-style: initial;
 	margin-right: 0;
 }
 
-#course_progress_details .learndash_topic_widget_list ul { 
+#course_progress_details .learndash_topic_widget_list ul {
 	margin-right: 15px;
 }
 
@@ -270,7 +270,7 @@ body.edit-php.post-type-sfwd-assignment .column-approval_status .ld-approval-poi
 
 body.post-type-sfwd-essays .column-approval_status .ld-approval-points input[type="number"],
 body.edit-php.post-type-sfwd-assignment .column-approval_status .ld-approval-points input[type="number"] {
-	line-height: 1 !important; 
+	line-height: 1 !important;
 	min-height: 20px !important;
 }
 
@@ -285,23 +285,23 @@ body.edit-php.post-type-sfwd-assignment .column-approval_status .ld-approval-act
 
 body.post-type-sfwd-courses .column-categories,
 body.post-type-sfwd-courses .column-tags,
-body.post-type-sfwd-courses .column-taxonomy-ld_course_category, 
+body.post-type-sfwd-courses .column-taxonomy-ld_course_category,
 body.post-type-sfwd-courses .column-taxonomy-ld_course_tag,
 body.post-type-sfwd-courses .column-price_type,
 
 body.post-type-sfwd-lessons .column-categories,
 body.post-type-sfwd-lessons .column-tags,
-body.post-type-sfwd-lessons .column-taxonomy-ld_lesson_category, 
-body.post-type-sfwd-lessons .column-taxonomy-ld_lesson_tag, 
+body.post-type-sfwd-lessons .column-taxonomy-ld_lesson_category,
+body.post-type-sfwd-lessons .column-taxonomy-ld_lesson_tag,
 
 body.post-type-sfwd-topic .column-categories,
 body.post-type-sfwd-topic .column-tags,
-body.post-type-sfwd-topic .column-taxonomy-ld_topic_category, 
+body.post-type-sfwd-topic .column-taxonomy-ld_topic_category,
 body.post-type-sfwd-topic .column-taxonomy-ld_topic_tag,
 
 body.post-type-sfwd-quiz .column-categories,
 body.post-type-sfwd-quiz .column-tags,
-body.post-type-sfwd-quiz .column-taxonomy-ld_quiz_category, 
+body.post-type-sfwd-quiz .column-taxonomy-ld_quiz_category,
 body.post-type-sfwd-quiz .column-taxonomy-ld_quiz_tag,
 
 body.post-type-sfwd-question .column-proquiz_question_category,
@@ -310,7 +310,7 @@ body.post-type-sfwd-certificates .column-certificate_groups_courses_quizzes,
 
 body.post-type-groups .column-categories,
 body.post-type-groups .column-tags,
-body.post-type-groups .column-taxonomy-ld_group_category, 
+body.post-type-groups .column-taxonomy-ld_group_category,
 body.post-type-groups .column-taxonomy-ld_group_tag,
 body.post-type-groups .column-groups_courses_users,
 body.post-type-groups .column-price_type {

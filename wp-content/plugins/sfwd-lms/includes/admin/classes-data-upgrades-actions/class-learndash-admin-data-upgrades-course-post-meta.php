@@ -18,6 +18,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 		/**
 		 * DB Version. This is used to trigger future processing actions.
+		 *
+		 * @var string $db_version DB Version.
 		 */
 		private $db_version = '3.4.1';
 
@@ -32,6 +34,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 		/**
 		 * Initialize the Post Meta Processing.
+		 *
+		 * @param bool $force Force processing. Optional. Default false.
 		 *
 		 * @since 3.4.0
 		 */
@@ -73,6 +77,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		}
 
 		/** This function is documented in includes/admin/class-learndash-admin-data-upgrades.php */
+		// phpcs:ignore Squiz.Commenting.FunctionComment
 		public function set_last_run_info( $data = array() ) {
 			$data = array_merge( $data, array( 'version' => $this->db_version ) );
 			parent::set_last_run_info( $data );

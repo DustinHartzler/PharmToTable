@@ -16,7 +16,6 @@ $quizzes    = learndash_get_lesson_quiz_list( $lesson['post']->ID, get_current_u
 
 /**
  * Should this lesson be expandable, false by default
- * @var $expandable boolean
  */
 $expandable = false;
 
@@ -133,7 +132,7 @@ endif; ?>
 
 			<span class="ld-expand-button ld-button-alternate <?php echo esc_attr( $expand_class ); ?>" aria-label="
 			<?php
-			// translators: placeholder: lesson
+			// translators: placeholder: lesson.
 			echo sprintf( esc_html_x( 'Expand %s', 'placeholder: Lesson', 'learndash' ), esc_html( learndash_get_custom_label( 'lesson' ) ) );
 			?>
 			" data-ld-expands="<?php echo esc_attr( 'ld-nav-content-list-' . $lesson['post']->ID ); ?>" data-ld-collapse-text="false">

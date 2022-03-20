@@ -16,8 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
-	class LearnDash_Shortcodes_Section_ld_profile extends LearnDash_Shortcodes_Section {
+	class LearnDash_Shortcodes_Section_ld_profile extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 
 		/**
 		 * Public constructor for class.
@@ -58,7 +57,17 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'value'     => false,
 					'class'     => 'small-text',
 				),
-
+				'quiz_num'           => array(
+					'id'        => $this->shortcodes_section_key . '_quiz_num',
+					'name'      => 'quiz_num',
+					'type'      => 'number',
+					// translators: placeholder: Quiz, Course.
+					'label'     => sprintf( esc_html_x( '%1$s attempts per %2$s', 'placeholder: Quiz, Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'Quiz' ), LearnDash_Custom_Label::get_label( 'Course') ),
+					// translators: placeholder: placeholder: Quiz, Course, default per page.
+					'help_text' => sprintf( esc_html_x( '%1$s attempts per %2$s. Default is %2$d. Set to zero for all.', 'placeholder: Quiz, default per page', 'learndash' ), LearnDash_Custom_Label::get_label( 'Quiz' ), LearnDash_Custom_Label::get_label( 'Course' ), LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ) ),
+					'value'     => false,
+					'class'     => 'small-text',
+				),
 				'orderby'            => array(
 					'id'        => $this->shortcodes_section_key . '_orderby',
 					'name'      => 'orderby',
@@ -91,7 +100,6 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'name'      => 'show_search',
 					'type'      => 'select',
 					'label'     => esc_html__( 'Show Search', 'learndash' ),
-					'help_text' => esc_html__( 'Show Search', 'learndash' ),
 					'value'     => 'yes',
 					'options'   => array(
 						''   => esc_html__( 'Yes', 'learndash' ),

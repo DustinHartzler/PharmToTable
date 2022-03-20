@@ -75,8 +75,12 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				'example_show'              => array(
 					'type' => 'boolean',
 				),
+				'editing_post_meta'         => array(
+					'type' => 'object',
+				),
+
 			);
-			$this->self_closing     = true;
+			$this->self_closing = true;
 
 			$this->init();
 		}
@@ -90,161 +94,81 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param array $attributes Shortcode attrbutes.
+		 * @param array    $block_attributes The block attrbutes.
+		 * @param string   $block_content    The block content.
+		 * @param WP_block $block            The block object.
+		 *
 		 * @return none The output is echoed.
 		 */
-		public function render_block( $attributes = array() ) {
+		public function render_block( $block_attributes = array(), $block_content = '', WP_block $block = null ) {
+			$block_attributes = $this->preprocess_block_attributes( $block_attributes );
 
-			$attributes = $this->preprocess_block_attributes( $attributes );
-
-			$attributes_meta = array();
-			if ( isset( $attributes['meta'] ) ) {
-				$attributes_meta = $attributes['meta'];
-				unset( $attributes['meta'] );
+			if ( ( isset( $block_attributes['example_show'] ) ) && ( ! empty( $block_attributes['example_show'] ) ) ) {
+				$block_attributes['user_id']      = $this->get_example_user_id();
+				$block_attributes['preview_show'] = true;
+				unset( $block_attributes['example_show'] );
 			}
 
-			if ( is_user_logged_in() ) {
+			// Only the 'editing_post_meta' element will be sent from within the post edit screen.
+			if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+				$block_attributes['user_id'] = $this->block_attributes_get_user_id( $block_attributes );
+			}
 
-				if ( ( isset( $attributes['example_show'] ) ) && ( ! empty( $attributes['example_show'] ) ) ) {
-					$attributes['preview_user_id'] = $this->get_example_user_id();
-					$attributes['preview_show']    = 1;
-					unset( $attributes['example_show'] );
+			$types = array();
+			if ( isset( $block_attributes['registered_show'] ) ) {
+				if ( true === $block_attributes['registered_show'] ) {
+					$types[] = 'registered';
 				}
+				unset( $block_attributes['registered_show'] );
+			}
 
-				$shortcode_params_str = '';
-				$types                = array();
-				if ( isset( $attributes['registered_show'] ) ) {
-					if ( true === $attributes['registered_show'] ) {
-						$types[] = 'registered';
-					}
-					unset( $attributes['registered_show'] );
-				}
-
-				if ( isset( $attributes['registered_show_thumbnail'] ) ) {
-					if ( true === $attributes['registered_show_thumbnail'] ) {
-						$attributes['registered_show_thumbnail'] = 'true';
-					} else {
-						$attributes['registered_show_thumbnail'] = 'false';
-					}
-				}
-
-				if ( isset( $attributes['progress_show'] ) ) {
-					if ( true === $attributes['progress_show'] ) {
-						$types[] = 'course';
-					}
-					unset( $attributes['progress_show'] );
-				}
-				if ( isset( $attributes['quiz_show'] ) ) {
-					if ( true === $attributes['quiz_show'] ) {
-						$types[] = 'quiz';
-					}
-					unset( $attributes['quiz_show'] );
-				}
-				if ( ! empty( $types ) ) {
-					if ( ! empty( $shortcode_params_str ) ) {
-						$shortcode_params_str .= ' ';
-					}
-					$shortcode_params_str .= 'type="' . implode( ',', $types ) . '"';
-
-					foreach ( $attributes as $key => $val ) {
-						if ( ( empty( $key ) ) || ( is_null( $val ) ) ) {
-							continue;
-						}
-
-						if ( substr( $key, 0, strlen( 'preview_' ) ) == 'preview_' ) {
-							if ( ( ! isset( $attributes['user_id'] ) ) && ( 'preview_user_id' === $key ) && ( '' !== $val ) ) {
-								if ( learndash_is_admin_user( get_current_user_id() ) ) {
-									// If admin user they can preview any user_id.
-								} elseif ( learndash_is_group_leader_user( get_current_user_id() ) ) {
-									// If group leader user we ensure the preview user_id is within their group(s).
-									if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $val ) ) {
-										continue;
-									}
-								} else {
-									// If neither admin or group leader then we don't see the user_id for the shortcode.
-									continue;
-								}
-								$key = str_replace( 'preview_', '', $key );
-								$val = intval( $val );
-							}
-						}
-
-						if ( ! empty( $shortcode_params_str ) ) {
-							$shortcode_params_str .= ' ';
-						}
-						$shortcode_params_str .= $key . '="' . esc_attr( $val ) . '"';
-					}
-
-					$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
-					$shortcode_out        = do_shortcode( $shortcode_params_str );
-					if ( empty( $shortcode_out ) ) {
-						$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
-					}
-
-					// This is mainly to protect against emty returns with the Gutenberg ServerSideRender function.
-					return $this->render_block_wrap( $shortcode_out );
+			if ( isset( $block_attributes['registered_show_thumbnail'] ) ) {
+				if ( true === $block_attributes['registered_show_thumbnail'] ) {
+					$block_attributes['registered_show_thumbnail'] = 'true';
 				} else {
-					return $this->render_block_wrap( '<span class="learndash-block-error-message">' . __( "Please enable one or more 'Show' options within the Block Settings.", 'learndash' ) . '</span>' );
+					$block_attributes['registered_show_thumbnail'] = 'false';
 				}
 			}
-			wp_die();
-		}
 
-		/**
-		 * Called from the LD function learndash_convert_block_markers_shortcode() when parsing the block content.
-		 *
-		 * @since 2.5.9
-		 *
-		 * @param array  $attributes The array of attributes parse from the block content.
-		 * @param string $shortcode_slug This will match the related LD shortcode ld_profile, ld_course_list, etc.
-		 * @param string $block_slug This is the block token being processed. Normally same as the shortcode but underscore replaced with dash.
-		 * @param string $content This is the orignal full content being parsed.
-		 *
-		 * @return array $attributes.
-		 */
-		public function learndash_block_markers_shortcode_atts_filter( $attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
-			if ( $shortcode_slug === $this->shortcode_slug ) {
-				if ( isset( $attributes['preview_show'] ) ) {
-					unset( $attributes['preview_show'] );
+			if ( isset( $block_attributes['progress_show'] ) ) {
+				if ( true === $block_attributes['progress_show'] ) {
+					$types[] = 'course';
 				}
-				if ( isset( $attributes['preview_user_id'] ) ) {
-					unset( $attributes['preview_user_id'] );
-				}
+				unset( $block_attributes['progress_show'] );
+			}
 
-				if ( isset( $attributes['registered_show_thumbnail'] ) ) {
-					if ( true === $attributes['registered_show_thumbnail'] ) {
-						$attributes['registered_show_thumbnail'] = 'true';
-					} else {
-						$attributes['registered_show_thumbnail'] = 'false';
-					}
+			if ( isset( $block_attributes['quiz_show'] ) ) {
+				if ( true === $block_attributes['quiz_show'] ) {
+					$types[] = 'quiz';
 				}
+				unset( $block_attributes['quiz_show'] );
+			}
 
-				if ( ! isset( $attributes['type'] ) ) {
-					$types_array = array( 'registered', 'course', 'quiz' );
-					if ( isset( $attributes['registered_show'] ) ) {
-						if ( false === $attributes['registered_show'] ) {
-							$types_array = array_diff( $types_array, array( 'registered' ) );
-						}
-						unset( $attributes['registered_show'] );
-					}
-					if ( isset( $attributes['progress_show'] ) ) {
-						if ( false === $attributes['progress_show'] ) {
-							$types_array = array_diff( $types_array, array( 'course' ) );
-						}
-						unset( $attributes['progress_show'] );
-					}
-					if ( isset( $attributes['quiz_show'] ) ) {
-						if ( false === $attributes['quiz_show'] ) {
-							$types_array = array_diff( $types_array, array( 'quiz' ) );
-						}
-						unset( $attributes['quiz_show'] );
-					}
-					if ( ! empty( $types_array ) ) {
-						$attributes['type'] = implode( ',', $types_array );
-					}
+			if ( empty( $types ) ) {
+				$block_attributes['type'] = implode( ',', array( 'registered', 'course', 'quiz' ) );
+			} else {
+				$block_attributes['type'] = implode( ',', $types );
+			}
+
+			/** This filter is documented in includes/gutenberg/blocks/ld-course-list/index.php */
+			$block_attributes = apply_filters( 'learndash_block_markers_shortcode_atts', $block_attributes, $this->shortcode_slug, $this->block_slug, '' );
+
+			$shortcode_out = '';
+
+			$shortcode_str = $this->build_block_shortcode( $block_attributes, $block_content );
+			if ( ! empty( $shortcode_str ) ) {
+				$shortcode_out = do_shortcode( $shortcode_str );
+			}
+
+			if ( ! empty( $shortcode_out ) ) {
+				if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+					$shortcode_out = $this->render_block_wrap( $shortcode_out );
+				} else {
+					$shortcode_out = '<div class="learndash-wrap">' . $shortcode_out . '</div>';
 				}
 			}
-			return $attributes;
+
+			return $shortcode_out;
 		}
 
 		// End of functions.

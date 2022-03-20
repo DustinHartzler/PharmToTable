@@ -10,7 +10,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'shared_questions' ) !== 'yes' ) {
@@ -104,11 +104,9 @@ if ( ( isset( $_GET['post'] ) ) && ( ! empty( $_GET['post'] ) ) ) {
 					}
 
 					foreach ( $quiz_set as $quiz_id => $quiz_title ) {
-						//if ( intval( $course_id ) != intval( $default_course_id ) ) {
-							$item_url = add_query_arg( 'quiz_id', $quiz_id, $item_url );
-						//}
-
+						$item_url = add_query_arg( 'quiz_id', $quiz_id, $item_url );
 						$selected = '';
+
 						if ( 'sfwd-quiz' == $post->post_type ) {
 							if ( $quiz_id == $quiz_post_id ) {
 								$selected = ' selected="selected" ';

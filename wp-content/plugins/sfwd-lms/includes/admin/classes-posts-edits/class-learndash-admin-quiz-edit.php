@@ -28,6 +28,14 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		private $pro_quiz_edit = null;
 
+
+		/**
+		 * Quiz Builder instance.
+		 *
+		 * @var Learndash_Admin_Metabox_Quiz_Builder
+		 */
+		protected $quiz_builder = null;
+
 		/**
 		 * Object level flag to contain setting is Quiz Builder
 		 * is to be used.
@@ -545,13 +553,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 									?>
 								</select><br />
 								<input type="text" placeholder="<?php esc_html_e( 'new template name', 'learndash' ); ?>" class="regular-text" name="templateName">
-								<?php
-								/*
-								?>
-								<br />
-								<input type="submit" name="template" class="button-primary" id="wpProQuiz_saveTemplate" value="<?php esc_html_e( 'Save as template', 'learndash' ); ?>">
-								<?php */
-								?>
 							</td>
 						</tr>
 					</tbody>

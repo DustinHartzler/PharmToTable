@@ -43,5 +43,5 @@ if ( ! empty( $video_content ) ) {
 echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Could be URL, iframe or shortcode for a video
 
 
-// https://youtu.be/ALu-whwI8fA
-// https://youtu.be/HECa3bAFAYk
+// https://youtu.be/ALu-whwI8fA.
+// https://youtu.be/HECa3bAFAYk.

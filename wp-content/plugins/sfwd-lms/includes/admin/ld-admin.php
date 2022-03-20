@@ -154,10 +154,10 @@ function learndash_load_admin_resources() {
 		/**
 		 * Needed for standalone Builders.
 		 */
-		// to get the tinyMCE editor
+		// to get the tinyMCE editor.
 		wp_enqueue_editor();
 
-		// for media uploads
+		// for media uploads.
 		wp_enqueue_media();
 
 		wp_enqueue_style(
@@ -367,7 +367,7 @@ function learndash_element_lazy_loader() {
 
 	echo wp_json_encode( $reply_data );
 
-	wp_die(); // this is required to terminate immediately and return a proper response
+	wp_die(); // this is required to terminate immediately and return a proper response.
 }
 add_action( 'wp_ajax_learndash_element_lazy_loader', 'learndash_element_lazy_loader' );
 
@@ -540,8 +540,7 @@ function learndash_delete_all_data() {
 	 * is shared. Removing the LD user data could result in lost information for other sites.
 	 */
 	if ( ! is_multisite() ) {
-		// USER META SETTINGS
-		//
+		// USER META SETTINGS.
 
 		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key='_sfwd-course_progress'" );
 		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key='_sfwd-quizzes'" );
@@ -558,14 +557,12 @@ function learndash_delete_all_data() {
 		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key = 'course_points'" );
 	}
 
-	// CUSTOM OPTIONS
-	//
+	// CUSTOM OPTIONS.
 
 	$wpdb->query( 'DELETE FROM ' . $wpdb->options . " WHERE option_name LIKE 'learndash_%'" );
 	$wpdb->query( 'DELETE FROM ' . $wpdb->options . " WHERE option_name LIKE 'wpProQuiz_%'" );
 
-	// CUSTOMER POST TYPES
-	//
+	// CUSTOMER POST TYPES.
 
 	$ld_post_types = '';
 	foreach ( $learndash_post_types as $post_type ) {
@@ -594,14 +591,13 @@ function learndash_delete_all_data() {
 		}
 	}
 
-	// CUSTOM TAXONOMIES & TERMS
-	//
+	// CUSTOM TAXONOMIES & TERMS.
 
 	foreach ( $learndash_taxonomies as $taxonomy ) {
-		// Prepare & excecute SQL
+		// Prepare & excecute SQL.
 		$terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) );
 
-			// Delete Terms
+			// Delete Terms.
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
 				$wpdb->delete( $wpdb->term_taxonomy, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
@@ -609,12 +605,12 @@ function learndash_delete_all_data() {
 			}
 		}
 
-		// Delete Taxonomy
+		// Delete Taxonomy.
 		$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
 	}
 
-	// CUSTOM DB TABLES
-	//
+	// CUSTOM DB TABLES.
+
 	$learndash_db_tables = LDLMS_DB::get_tables();
 	if ( ! empty( $learndash_db_tables ) ) {
 		foreach ( $learndash_db_tables as $table_name ) {
@@ -624,12 +620,11 @@ function learndash_delete_all_data() {
 		}
 	}
 
-	// USER ROLES AND CAPABILITIES
-	//
+	// USER ROLES AND CAPABILITIES.
 
 	remove_role( 'group_leader' );
 
-	// Remove any user/role capabilities we added
+	// Remove any user/role capabilities we added.
 	$roles = get_editable_roles();
 	if ( ! empty( $roles ) ) {
 		foreach ( $roles as $role_name => $role_info ) {
@@ -675,8 +670,7 @@ function learndash_delete_all_data() {
 		}
 	}
 
-	// ASSIGNMENT & ESSAY UPLOADS
-	//
+	// ASSIGNMENT & ESSAY UPLOADS.
 
 	$url_link_arr   = wp_upload_dir();
 	$assignment_dir = $url_link_arr['basedir'] . '/assignments';

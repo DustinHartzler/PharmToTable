@@ -28,46 +28,64 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 	class Learndash_Admin_Addons_List_Table extends WP_Plugin_Install_List_Table {
 
 		/**
+		 * Array of filters.
+		 *
 		 * @var array $filters
 		 */
 		public $filters = array();
 
 		/**
+		 * Items shown per page.
+		 *
 		 * @var integer $per_page
 		 */
 		public $per_page = 50;
 
 		/**
+		 * Array of columns.
+		 *
 		 * @var array $columns
 		 */
 		public $columns = array();
 
 		/**
+		 * Add-on Updater object.
+		 *
 		 * @var object $addon_updater
 		 */
 		public $addon_updater = null;
 
 		/**
+		 * Group ID.
+		 *
 		 * @var integer $group_id
 		 */
 		public $group_id = 0;
 
 		/**
+		 * Sort order.
+		 *
 		 * @var string $order
 		 */
 		public $order = 'DESC';
 
 		/**
+		 * Orderby.
+		 *
 		 * @var string $orderby
 		 */
 		public $orderby = 'last_updated';
 
 		/**
+		 * Arrya of tabs.
+		 *
 		 * @var array $tabs
 		 */
 		public $tabs = array();
 
 		/**
+		 * Current tab.
+		 *
 		 * @var string $current_tab
 		 */
 		public $current_tab = 'learndash';
@@ -183,7 +201,6 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 			$api = plugins_api( 'query_plugins', $args );
 
 			if ( is_wp_error( $api ) ) {
-				$this->error = $api;
 				return;
 			}
 
@@ -241,8 +258,8 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param object $plugin_a Add-on instance
-		 * @param object $plugin_b Add-on instance
+		 * @param object $plugin_a Add-on instance.
+		 * @param object $plugin_b Add-on instance.
 		 *
 		 * @return int
 		 */
@@ -484,14 +501,14 @@ if ( ( class_exists( 'WP_Plugin_Install_List_Table' ) ) && ( ! class_exists( 'Le
 		}
 
 		/**
-		 * display_tablenav.
+		 * Display Tablenav.
 		 *
 		 * @since 2.5.5
 		 *
-		 * @param string $which
+		 * @param string $which Filter.
 		 */
 		protected function display_tablenav( $which ) {
-			// Empty function
+			// Empty function.
 		}
 
 		/**

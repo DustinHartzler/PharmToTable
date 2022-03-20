@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="learndash-user-groups-header">
 		<?php
 		printf(
-			// translators: placeholder: Group Leader
+			// translators: placeholder: Group Leader.
 			esc_html_x( '%s in : ', 'placeholder: Group Leader', 'learndash' ),
 			learndash_get_custom_label( 'group_leader' )
 		)
@@ -65,7 +65,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="learndash-user-groups-header">
 		<?php
 		printf(
-			// translators: group
+			// translators: group.
 			esc_html_x( 'Assigned %s(s) : ', 'placeholder: group', 'learndash' ),
 			learndash_get_custom_label( 'group' )
 		)

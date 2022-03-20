@@ -15,14 +15,14 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 ?>
 
 <div class="learndash-wrapper">
 	<?php
 	$message = sprintf(
-		// translators: placehodes: %1$s: Course, %2$s: course access points, %3$s: user course points
+		// translators: placehodes: %1$s: Course, %2$s: course access points, %3$s: user course points.
 		esc_html_x(
 			'To take this %1$s you need at least %2$.01f total points. You currently have %3$.01f points.',
 			'placeholders: (1) will be Course. (2) course_access_points. (3) user_course_points ',

@@ -41,7 +41,7 @@ if ( ( class_exists( 'LearnDash_Theme_Settings_Section' ) ) && ( ! class_exists(
 			// Section label/header.
 			$this->settings_section_label = esc_html__( 'Theme LearnDash 3.0 Options', 'learndash' );
 
-			// Set Associated Theme ID
+			// Set Associated Theme ID.
 			$this->settings_theme_key = 'ld30';
 
 			$ld30_colors_defs = array(
@@ -53,6 +53,8 @@ if ( ( class_exists( 'LearnDash_Theme_Settings_Section' ) ) && ( ! class_exists(
 			foreach ( $ld30_colors_defs as $definition => $value ) {
 				if ( ! defined( $definition ) ) {
 					/**
+					 * Ignore
+					 *
 					 * @ignore
 					 */
 					define( $definition, $value ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound -- Inside a protected constructor

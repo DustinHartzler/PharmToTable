@@ -19,7 +19,6 @@ if ( ! function_exists( 'leandash_redirect_post_location' ) ) {
 	 * @since 2.5.0
 	 * @deprecated 2.5.0 Use {@see 'learndash_redirect_post_location'} instead.
 	 *
-	 *
 	 * @param string $location Optional. Location.  Default empty.
 	 */
 	function leandash_redirect_post_location( $location = '' ) {

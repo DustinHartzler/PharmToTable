@@ -53,7 +53,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				LearnDash_Custom_Label::get_label( 'quiz' )
 			);
 
-			// Define the depreacted Class and Fields
+			// Define the depreacted Class and Fields.
 			$this->settings_deprecated = array(
 				'LearnDash_Settings_Quizzes_Builder'      => array(
 					'option_key' => 'learndash_settings_quizzes_builder',
@@ -217,8 +217,16 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					// Used to show the section description above the fields. Can be empty.
 					$desc_before_enabled = '<span class="error">' . sprintf(
 						// translators: placeholder: Link to Data Upgrade page.
-						_x( 'The Data Upgrade %s must be run to enable the following settings.', 'placeholder: Link to Data Upgrade page', 'learndash' ),
-						'<strong><a href="' . add_query_arg( 'page', 'learndash_data_upgrades', 'admin.php' ) . '">Upgrade WPProQuiz Question</a></strong>'
+						esc_html_x( 'The Data Upgrade %s must be run to enable the following settings.', 'placeholder: Link to Data Upgrade page', 'learndash' ),
+						'<strong><a href="' . add_query_arg(
+							array(
+								'page'    => 'learndash_lms_advanced',
+								'section-advanced' => 'settings_data_upgrades',
+							),
+							'admin.php'
+						) . '">' .
+						// translators: placeholder: Question.
+						sprintf( esc_html_x( 'Upgrade WPProQuiz %s', 'placeholder: Question.', 'learndash' ), learndash_get_custom_label( 'question' ) ) . '</a></strong>'
 					) . '</span>';
 				}
 
@@ -255,7 +263,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 								learndash_get_custom_label( 'questions' )
 							),
 							'help_text'      => sprintf(
-								// translators: placeholder: questions, Quiz
+								// translators: placeholder: questions, Quiz.
 								esc_html_x( 'Number of additional %1$s displayed in the %2$s Builder sidebar when clicking the "Load More" link.', 'placeholder: questions, Quiz', 'learndash' ),
 								learndash_get_custom_label_lower( 'questions' ),
 								learndash_get_custom_label( 'quiz' )
@@ -279,7 +287,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 								LearnDash_Custom_Label::get_label( 'questions' )
 							),
 							'help_text'      => sprintf(
-								// translators: placeholder: questions, quizzes, quiz
+								// translators: placeholder: questions, quizzes, quiz.
 								esc_html_x( 'Share %1$s across multiple %2$s. Progress and statistics are maintained on a per-%3$s basis.', 'placeholder: placeholder: questions, quizzes, quiz', 'learndash' ),
 								learndash_get_custom_label_lower( 'questions' ),
 								learndash_get_custom_label_lower( 'quizzes' ),
@@ -289,7 +297,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							'options'        => array(
 								''    => '',
 								'yes' => sprintf(
-									// translators: placeholder: questions, quizzes
+									// translators: placeholder: questions, quizzes.
 									esc_html_x( 'All %1$s can be used across multiple %2$s', 'placeholder: questions, quizzes', 'learndash' ),
 									learndash_get_custom_label_lower( 'questions' ),
 									learndash_get_custom_label_lower( 'quizzes' )
@@ -339,7 +347,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			}
 
 			$time_formats_off_state_text = sprintf(
-				// translators: placeholder: Date preview, Time preview, Date format string, Time format string,
+				// translators: placeholder: Date preview, Time preview, Date format string, Time format string.
 				esc_html_x( 'Default format: %1$s %2$s  %3$s %4$s ', '', 'learndash' ),
 				date_i18n( get_option( 'date_format' ) ),
 				date_i18n( get_option( 'time_format' ) ),
@@ -477,9 +485,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array  $value Array of section fields values.
-		 * @param array  $old_value Array of old values.
-		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 * @param array  $current_values Array of section fields values.
+		 * @param array  $old_values     Array of old values.
+		 * @param string $option         Section option key should match $this->setting_option_key.
 		 */
 		public function section_pre_update_option( $current_values = '', $old_values = '', $option = '' ) {
 			if ( $option === $this->setting_option_key ) {
@@ -498,8 +506,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 					if ( ( isset( $current_values['quiz_builder_time_formats'] ) ) && ( 'yes' === $current_values['quiz_builder_time_formats'] ) ) {
 						if ( ( isset( $current_values['statistics_time_format'] ) ) && ( 'custom' === $current_values['statistics_time_format'] ) ) {
-							// POST nonce verification take place in parent::verify_metabox_nonce_field()
-							// phpcs:ignore WordPress.Security.NonceVerification.Missing
+							// phpcs:ignore WordPress.Security.NonceVerification.Missing -- POST nonce verification takes place in parent::verify_metabox_nonce_field().
 							if ( ( isset( $_POST['statistics_time_format_custom'] ) ) && ( ! empty( $_POST['statistics_time_format_custom'] ) ) ) {
 								// phpcs:ignore WordPress.Security.NonceVerification.Missing
 								$current_values['statistics_time_format'] = esc_attr( stripslashes( $_POST['statistics_time_format_custom'] ) );

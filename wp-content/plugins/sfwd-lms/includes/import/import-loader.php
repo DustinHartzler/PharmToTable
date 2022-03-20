@@ -1,4 +1,11 @@
 <?php
+/**
+ * Import loader
+ *
+ * @since 1.0.0
+ * @package LearnDash
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

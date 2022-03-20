@@ -40,7 +40,8 @@ $course_class = apply_filters(
 	'ld-item-list-item ld-item-list-item-course ld-expandable ' . ( 100 === absint( $progress['percentage'] ) ? 'learndash-complete' : 'learndash-incomplete' ),
 	$course,
 	$user_id
-); ?>
+);
+?>
 
 <div class="<?php echo esc_attr( $course_class ); ?>" id="<?php echo esc_attr( 'ld-course-list-item-' . $course_id ); ?>">
 	<div class="ld-item-list-item-preview">
@@ -88,7 +89,22 @@ $course_class = apply_filters(
 
 		$assignments = learndash_get_course_assignments( $course_id, $user_id );
 
+		$learndash_posts_per_page = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
+		if ( isset( $shortcode_atts['quiz_num'] ) && '' !== $shortcode_atts['quiz_num'] && intval( $shortcode_atts['quiz_num'] ) > 0 ) {
+			$learndash_quizzes_per_page = intval( $shortcode_atts['quiz_num'] );
+		} else {
+			$learndash_quizzes_per_page = intval( $learndash_posts_per_page );
+		}
+
 		if ( $assignments || ! empty( $quiz_attempts[ $course_id ] ) ) :
+			if ( isset( $quiz_attempts[ $course_id ] ) ) {
+				$quiz_attempts['total_quiz_items'] = count( $quiz_attempts[ $course_id ] );
+				$quiz_attempts['total_quiz_pages'] = ceil( count( $quiz_attempts[ $course_id ] ) / $learndash_quizzes_per_page );
+				$quiz_attempts['quizzes-paged']    = ( isset( $_GET['profile-quizzes'] ) ? intval( $_GET['profile-quizzes'] ) : 1 );
+				if ( $quiz_attempts['total_quiz_items'] >= $quiz_attempts['total_quiz_pages'] ) {
+					$quiz_attempts[ $course_id ] = array_slice( $quiz_attempts[ $course_id ], ( $quiz_attempts['quizzes-paged'] * $learndash_quizzes_per_page ) - $learndash_quizzes_per_page, $learndash_quizzes_per_page, false );
+				}
+			}
 			?>
 
 			<div class="ld-item-contents">
@@ -113,6 +129,22 @@ $course_class = apply_filters(
 						true
 					);
 
+					$learndash_profile_quiz_pager = array(
+						'paged'          => $quiz_attempts['quizzes-paged'],
+						'total_items'    => $quiz_attempts['total_quiz_items'],
+						'total_pages'    => $quiz_attempts['total_quiz_pages'],
+						'quiz_num'       => $learndash_quizzes_per_page,
+						'quiz_course_id' => $course_id,
+					);
+
+					learndash_get_template_part(
+						'modules/pagination',
+						array(
+							'pager_results' => $learndash_profile_quiz_pager,
+							'pager_context' => 'profile_quizzes',
+						),
+						true
+					);
 				endif;
 				?>
 

@@ -1,5 +1,3 @@
-//import './i18n.js';
-
 /**
  * Import LearnDash blocks
  */
@@ -30,3 +28,14 @@ import './ld-courseinfo';
 import './ld-quizinfo';
 import './ld-groupinfo';
 import './ld-usermeta';
+import './ld-registration';
+import './ld-infobar';
+import './ld-materials';
+import './ld-user-status';
+import './ld-navigation';
+
+import './ld-exam';
+import './ld-exam/ld-exam-question';
+import './ld-exam/ld-exam-question/answers-block';
+import './ld-exam/ld-exam-question/answer-message-block';
+import './ld-exam/ld-exam-question/question-description-block';

@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	abstract class LD_REST_Posts_Controller_V1 extends WP_REST_Posts_Controller {
+	abstract class LD_REST_Posts_Controller_V1 extends WP_REST_Posts_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * REST API version.
@@ -54,6 +53,13 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 		 * @var WP_Post $topic_post.
 		 */
 		protected $topic_post = null;
+
+		/**
+		 * Taxonomies
+		 *
+		 * @var array
+		 */
+		protected $taxonomies = array();
 
 		/**
 		 * Public constructor for class
@@ -177,8 +183,8 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 		 * @since 2.5.8
 		 *
 		 * @param mixed  $value REST request value.
-		 * @param array  $args  REST request args
-		 * @param string $param REST request param
+		 * @param array  $args  REST request args.
+		 * @param string $param REST request param.
 		 */
 		public function ld_rest_validate_request_arg( $value, $args, $param = '' ) {
 			return true;
@@ -189,10 +195,10 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param array  $postdata   Post data
-		 * @param string $field_name Field name
-		 * @param object $request    WP_REST_Request instance
-		 * @param string $post_type  Post Type
+		 * @param array           $postdata   Post data.
+		 * @param string          $field_name Field name.
+		 * @param WP_REST_Request $request    WP_REST_Request instance.
+		 * @param string          $post_type  Post Type.
 		 */
 		public function ld_get_field_value( array $postdata, $field_name, WP_REST_Request $request, $post_type ) {
 			if ( ( isset( $postdata['id'] ) ) && ( ! empty( $postdata['id'] ) ) ) {
@@ -229,10 +235,11 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param mixed  $value      Field value
-		 * @param object $post       WP_Post instance
-		 * @param object $request    WP_REST_Request instance
-		 * @param string $post_type  Post Type
+		 * @param mixed           $value      Field value.
+		 * @param WP_Post         $post       WP_Post instance.
+		 * @param string          $field_name Field name.
+		 * @param WP_REST_Request $request    WP_REST_Request instance.
+		 * @param string          $post_type  Post Type.
 		 */
 		public function ld_update_field_value( $value, WP_Post $post, $field_name, WP_REST_Request $request, $post_type ) {
 			switch ( $field_name ) {
@@ -261,7 +268,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param array $query_params Quest params array.
+		 * @param array        $query_params Quest params array.
 		 * @param WP_Post_Type $post_type    Post type object.
 		 */
 		public function rest_collection_params_filter( $query_params, $post_type ) {
@@ -286,7 +293,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param array           $query_args Key value array of query var to query value.
+		 * @param array           $args Key value array of query var to query value.
 		 * @param WP_REST_Request $request    The request used.
 		 *
 		 * @return array Key value array of query var to query value.
@@ -300,9 +307,9 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Response $response WP_REST_Response instance.
+		 * @param WP_Post          $post     WP_Post instance.
+		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 			if ( ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'nested_urls' ) == 'yes' ) && ( in_array( $post->post_type, learndash_get_post_types( 'course_steps' ), true ) ) ) {
@@ -329,7 +336,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 		 *
 		 * @since 3.4.2
 		 *
-		 * @param object $request WP_REST_Request Request instance.
+		 * @param WP_REST_Request $request WP_REST_Request Request instance.
 		 *
 		 * @return bool true if match.
 		 */
@@ -338,8 +345,9 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 			if ( strncasecmp( $request->get_route(), $request_route_base, strlen( $request_route_base ) ) === 0 ) {
 				return true;
 			}
+			return false;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

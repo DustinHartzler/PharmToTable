@@ -137,10 +137,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					),
 					'value'               => $this->setting_option_values['proquiz_question_category'],
 					'options'             => array(
-						'yes' => esc_html__( 'Yes', 'learndash' ),
-					),
-					'options'             => array(
 						'yes' => array(
+							'label'       => esc_html__( 'Yes', 'learndash' ),
+							'description' => '',
 							'tooltip' => sprintf(
 								// translators: placeholder: Question.
 								esc_html_x( '%s categories cannot be disabled.', 'placeholder: Question', 'learndash' ),

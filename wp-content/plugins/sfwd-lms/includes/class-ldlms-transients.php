@@ -70,6 +70,7 @@ if ( ! class_exists( 'LDLMS_Transients' ) ) {
 					 * @param string  $transient_key  Transient Key.
 					 */
 					if ( apply_filters( 'learndash_object_cache_enabled', LEARNDASH_OBJECT_CACHE_ENABLED, $transient_key ) ) {
+						$found = false;
 						$transient_data = wp_cache_get( $transient_key, self::$cache_group, false, $found );
 						if ( false === $found ) {
 							$transient_data = false;

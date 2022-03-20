@@ -18,8 +18,12 @@ if ( ( ! class_exists( 'LD_REST_Question_Types_Controller_V2' ) ) && ( class_exi
 	 * @since 3.3.0
 	 * @uses WP_REST_Controller
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Question_Types_Controller_V2 extends WP_REST_Controller {
+	class LD_REST_Question_Types_Controller_V2 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+		/**
+		 * Version
+		 *
+		 * @var string
+		 */
 		protected $version = 'v2';
 
 		/**
@@ -205,7 +209,7 @@ if ( ( ! class_exists( 'LD_REST_Question_Types_Controller_V2' ) ) && ( class_exi
 				return new WP_Error(
 					'rest_question_type_invalid',
 					sprintf(
-						// translators: placeholder: Question
+						// translators: placeholder: Question.
 						_x( 'Invalid %s Type.', 'placeholder: Question', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'question' )
 					),

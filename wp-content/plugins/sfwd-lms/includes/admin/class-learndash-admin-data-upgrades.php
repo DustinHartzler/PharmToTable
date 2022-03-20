@@ -174,18 +174,19 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 *
 		 * @return object instance of class.
 		 */
-		public static function get_instance( $instance_key = '' ) {
+		final public static function get_instance( $instance_key = '' ) {
 			if ( ! empty( $instance_key ) ) {
 				if ( isset( self::$_instances[ $instance_key ] ) ) {
 					return self::$_instances[ $instance_key ];
 				}
 			} else {
 				if ( null === self::$instance ) {
-					self::$instance = new static();
+					self::$instance = new self();
 				}
 
 				return self::$instance;
 			}
+			return null;
 		}
 
 		/**
@@ -252,7 +253,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 						// If we have a prior version of LD.
 						$this->data_settings['prior_version'] = '0.0.0.0';
 					} else {
-						// Else we have a new install
+						// Else we have a new install.
 						$this->data_settings['prior_version'] = 'new';
 					}
 					$this->data_settings['version_history'][0] = $this->data_settings['prior_version'];
@@ -394,8 +395,12 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 * @since 2.6.0
 		 */
 		public function admin_page() {
-			?>
+			$banner_message = esc_html__( 'The Data Upgrades should only be run if prompted or advised by LearnDash Support. There is no need to re-run the Data Upgrades every time you update LearnDash core or one of the add-ons. Re-running the data upgrades when not needed can result in data corruption.', 'learndash' );
 
+			$banner_content = '<div class="ld-settings-info-banner ld-settings-info-banner-alert">' . wpautop( wptexturize( $banner_message ) ) . '</div>';
+			echo $banner_content;
+
+			?>
 			<table id="learndash-data-upgrades" class="wc_status_table widefat" cellspacing="0">
 			<?php
 			wp_nonce_field( 'learndash-data-upgrades-nonce-' . get_current_user_id(), 'learndash-data-upgrades-nonce' );
@@ -585,7 +590,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 						return;
 					}
 
-					if ( file_exists( $ld_transient_filename ) ) { 
+					if ( file_exists( $ld_transient_filename ) ) {
 						$transient_fp = fopen( $ld_transient_filename, 'r' );
 						if ( $transient_fp ) {
 							$transient_data = '';
@@ -622,9 +627,10 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 					if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
 						$wp_upload_dir = wp_upload_dir();
 
-						$ld_file_part = '/learndash/cache/learndash_data_upgrade_' . $transient_key . '.txt';
+						$ld_file_part = '/learndash/cache/learndash_data_upgrade_' . $options_key . '.txt';
 
 						$ld_transient_filename = $wp_upload_dir['basedir'] . $ld_file_part;
+
 						if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {
 							$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . dirname( $ld_transient_filename );
 							return;
@@ -657,7 +663,7 @@ require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-ac
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-user-activity-db-table.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-user-meta-courses.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-user-meta-quizzes.php';
-//require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-access-list.php';
+// require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-access-list.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-quiz-questions.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-access-list-convert.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-rename_wpproquiz-tables.php';
@@ -709,6 +715,7 @@ function learndash_is_data_upgrade_quiz_questions_updated() {
 	if ( ( isset( $data_settings_quiz_questions['last_run'] ) ) && ( ! empty( $data_settings_quiz_questions['last_run'] ) ) ) {
 		return true;
 	}
+	return false;
 }
 
 /**
@@ -716,7 +723,7 @@ function learndash_is_data_upgrade_quiz_questions_updated() {
  *
  * @since 3.1.3
  *
- * @param string $settings_key Settings key
+ * @param string $settings_key Settings key.
  */
 function learndash_data_upgrades_setting( $settings_key = '' ) {
 	$element = Learndash_Admin_Data_Upgrades::get_instance();

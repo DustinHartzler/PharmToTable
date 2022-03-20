@@ -47,6 +47,7 @@ if ( ! class_exists( 'LearnDash_BitBucket_API' ) ) {
 		private $request_method    = 'GET';
 		private $repo_url_base     = 'https://api.bitbucket.org/2.0/repositories/learndash';
 		private $download_url_base = 'https://bitbucket.org/learndash';
+		private $readme_url_base   = '';
 
 		/**
 		 * Repository Lock file ref.
@@ -2160,12 +2161,12 @@ if ( ! class_exists( 'LearnDashWPReadmeParser' ) ) {
 		# Static Methods
 		#
 
-		static function instance( $name = 'default' ) {
+		final public static function instance( $name = 'default' ) {
 			if ( isset( self::$instances[ $name ] ) ) {
 				return self::$instances[ $name ];
 			}
 
-			$instance = new static();
+			$instance = new self();
 
 			self::$instances[ $name ] = $instance;
 

@@ -62,29 +62,26 @@ function learndash_get_course_price( $course = null ) {
 
 	if ( 'subscribe' === $course_price['type'] ) {
 
-		$frequency = learndash_get_setting( $course->ID, 'course_price_billing_t3' );
-		$interval  = learndash_get_setting( $course->ID, 'course_price_billing_p3' );
+		$interval        = learndash_get_setting( $course->ID, 'course_price_billing_p3' );
+		$frequency       = learndash_get_setting( $course->ID, 'course_price_billing_t3' );
+		$repeats         = learndash_get_setting( $course->ID, 'course_no_of_cycles' );
+		$trial_interval  = learndash_get_setting( $course->ID, 'course_trial_duration_p1' );
+		$trial_frequency = learndash_get_setting( $course->ID, 'course_trial_duration_t1' );
 
-		$label = '';
+		$course_price['interval']  = $interval;
+		$course_price['frequency'] = learndash_get_grammatical_number_label_for_interval( $interval, $frequency );
 
-		switch ( $frequency ) {
-			case ( 'D' ):
-				$label = _n( 'day', 'days', $interval, 'learndash' );
-				break;
-			case ( 'W' ):
-				$label = _n( 'week', 'weeks', $interval, 'learndash' );
-				break;
-			case ( 'M' ):
-				$label = _n( 'month', 'months', $interval, 'learndash' );
-				break;
-			case ( 'Y' ):
-				$label = _n( 'year', 'years', $interval, 'learndash' );
-				break;
+		if ( ! empty( $repeats ) ) {
+			$course_price['repeats']          = $repeats;
+			$course_price['repeat_frequency'] = learndash_get_grammatical_number_label_for_interval( $repeats, $frequency );
 		}
 
-		$course_price['frequency'] = $label;
-		$course_price['interval']  = $interval;
+		$course_price['trial_price'] = ! empty( learndash_get_setting( $course->ID, 'course_trial_price' ) ) ? learndash_get_setting( $course->ID, 'course_trial_price' ) : '';
 
+		if ( ! empty( $trial_interval ) ) {
+			$course_price['trial_interval']  = $trial_interval;
+			$course_price['trial_frequency'] = learndash_get_grammatical_number_label_for_interval( $trial_interval, $trial_frequency );
+		}
 	}
 
 	/**
@@ -96,6 +93,102 @@ function learndash_get_course_price( $course = null ) {
 	 */
 	return apply_filters( 'learndash_get_course_price', $course_price );
 
+}
+
+/**
+ * Get group price
+ *
+ * Return an array of price type, amount and cycle
+ *
+ * @since 3.2.0
+ *
+ * @param  int/object $group
+ * @return array      price details
+ */
+function learndash_get_group_price( $group = null ) {
+
+	if ( null === $group ) {
+		global $post;
+		$group = $post;
+	}
+
+	if ( is_numeric( $group ) ) {
+		$group = get_post( $group );
+	}
+	if ( ! is_a( $group, 'WP_Post' ) ) {
+		return false;
+	}
+
+	// Get the course price
+	$meta = get_post_meta( $group->ID, '_groups', true );
+
+	$group_price = array(
+		'type'  => ! empty( $meta['groups_group_price_type'] ) ? $meta['groups_group_price_type'] : LEARNDASH_DEFAULT_GROUP_PRICE_TYPE,
+		'price' => ! empty( $meta['groups_group_price'] ) ? $meta['groups_group_price'] : '',
+	);
+
+	if ( 'subscribe' === $group_price['type'] ) {
+
+		$frequency       = learndash_get_setting( $group->ID, 'group_price_billing_t3', true );
+		$interval        = learndash_get_setting( $group->ID, 'group_price_billing_p3', true );
+		$repeats         = learndash_get_setting( $group->ID, 'post_no_of_cycles' );
+		$trial_interval  = learndash_get_setting( $group->ID, 'group_trial_duration_p1' );
+		$trial_frequency = learndash_get_setting( $group->ID, 'group_trial_duration_t1' );
+
+		$group_price['interval']  = $interval;
+		$group_price['frequency'] = learndash_get_grammatical_number_label_for_interval( $interval, $frequency );
+
+		if ( ! empty( $repeats ) ) {
+			$group_price['repeats']          = $repeats;
+			$group_price['repeat_frequency'] = learndash_get_grammatical_number_label_for_interval( $repeats, $frequency );
+		}
+
+		$group_price['trial_price'] = ! empty( learndash_get_setting( $group->ID, 'group_trial_price' ) ) ? learndash_get_setting( $group->ID, 'group_trial_price' ) : '';
+
+		if ( ! empty( $trial_interval ) ) {
+			$group_price['trial_interval']  = $trial_interval;
+			$group_price['trial_frequency'] = learndash_get_grammatical_number_label_for_interval( $trial_interval, $trial_frequency );
+		}
+	}
+
+	/**
+	 * Filter Group Price details.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param array $group_price Group Price Details array.
+	 */
+	return apply_filters( 'learndash_get_group_price', $group_price );
+
+}
+
+/**
+ * Get the singular or plural label for recurring payment intervals
+ *
+ * @since 3.6.0
+ *
+ * @param string $interval  Number of payment intervals.
+ * @param string $frequency PayPal symbol for day, week, month or year.
+ *
+ * @return string
+ */
+function learndash_get_grammatical_number_label_for_interval( $interval, $frequency ) {
+	switch ( $frequency ) {
+		case ( 'D' ):
+			return _n( 'day', 'days', $interval, 'learndash' );
+
+		case ( 'W' ):
+			return _n( 'week', 'weeks', $interval, 'learndash' );
+
+		case ( 'M' ):
+			return _n( 'month', 'months', $interval, 'learndash' );
+
+		case ( 'Y' ):
+			return _n( 'year', 'years', $interval, 'learndash' );
+
+		default:
+			return '';
+	}
 }
 
 /**
@@ -704,7 +797,7 @@ function learndash_lesson_row_class( $lesson = null, $has_access = false, $topic
 		$lesson_class .= ' ld-expandable';
 	}
 
-	if ( ( isset( $is_current_lesson ) && $is_current_lesson ) || ( isset( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) && absint( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) === absint( $lesson['post']->ID ) ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Data is only used for conditional and not further processed.
+	if ( ( isset( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) && absint( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) === absint( $lesson['post']->ID ) ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Data is only used for conditional and not further processed.
 		$lesson_class .= ' ld-current-lesson';
 	}
 
@@ -1241,7 +1334,10 @@ function learndash_30_focus_mode( $template ) {
 		if ( in_array( get_post_type(), $post_types, true ) && is_singular( $post_types ) ) {
 			$focus_index_template = SFWD_LMS::get_template( 'focus/index.php', null, false, true );
 			if ( empty( $focus_index_template ) ) {
-				$focus_index_template = LEARNDASH_LMS_PLUGIN_DIR . 'themes/ld30/templates/focus/index.php';
+				$active_theme_base_dir = LearnDash_Theme_Register::get_active_theme_base_dir();
+				if ( ( ! empty( $active_theme_base_dir ) ) && ( file_exists( trailingslashit( $active_theme_base_dir ) . 'templates/focus/index.php' ) ) ) {
+					$focus_index_template = trailingslashit( $active_theme_base_dir ) . 'templates/focus/index.php';
+				}
 			}
 
 			/**
@@ -1337,11 +1433,14 @@ function learndash_30_template_assets() {
 	wp_register_style( 'learndash-front', $theme_template_url . '/assets/css/learndash' . learndash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
 	wp_register_script( 'learndash-front', $theme_template_url . '/assets/js/learndash.js', array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
 
+	wp_register_script( 'learndash-exam', $theme_template_url . '/assets/js/learndash-exam' . learndash_min_asset() . '.js', array(), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
+
 	wp_register_style( 'learndash-quiz-front', $theme_template_url . '/assets/css/learndash.quiz.front' . learndash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
 
 	wp_enqueue_style( 'learndash-front' );
 	wp_style_add_data( 'learndash-front', 'rtl', 'replace' );
 	wp_enqueue_script( 'learndash-front' );
+	wp_enqueue_script( 'learndash-exam' );
 
 	wp_localize_script(
 		'learndash-front',
@@ -1378,223 +1477,8 @@ add_action( 'enqueue_block_editor_assets', 'learndash_30_editor_scripts' );
  * @since 3.0.0
  */
 function learndash_30_editor_scripts() {
-
-	wp_enqueue_style( 'learndash-front', LEARNDASH_LMS_PLUGIN_URL . 'themes/ld30/assets/css/learndash' . learndash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
-	wp_style_add_data( 'learndash-front', 'rtl', 'replace' );
-	wp_enqueue_script( 'learndash-front', LEARNDASH_LMS_PLUGIN_URL . 'themes/ld30/assets/js/learndash' . learndash_min_asset() . '.js', array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
-
+	learndash_30_template_assets();
 }
-
-class LearnDash_User_Status_Widget extends WP_Widget {
-
-	/**
-	 * Setup Course Info Widget
-	 */
-	public function __construct() {
-		$widget_ops  = array(
-			'classname'   => 'widget_lduserstatus',
-			'description' => sprintf(
-				// translators: placeholder: Courses.
-				esc_html_x( 'LearnDash - Registered %s and progress information of users. Visible only to users logged in.', 'placeholders: courses', 'learndash' ),
-				LearnDash_Custom_Label::get_label( 'courses' )
-			),
-		);
-		$control_ops = array(); // 'width' => 400, 'height' => 350);
-		parent::__construct( 'lduserstatus', __( 'User Status', 'learndash' ), $widget_ops, $control_ops );
-	}
-
-
-
-	/**
-	 * Displays widget
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param  array $args     widget arguments
-	 * @param  array $instance widget instance
-	 * @return string          widget output
-	 */
-	public function widget( $args, $instance ) {
-		global $learndash_shortcode_used;
-
-		extract( $args );
-
-		/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
-		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance );
-
-		if ( empty( $user_id ) ) {
-			$current_user = wp_get_current_user();
-			if ( empty( $current_user->ID ) ) {
-				return;
-			}
-
-			$user_id = $current_user->ID;
-		}
-
-		if ( empty( $args ) ) {
-			$args = array(
-				'return' => true,
-			);
-		} elseif ( ! isset( $args['return'] ) ) {
-			$args['return'] = true;
-		}
-
-		if ( isset( $instance['registered_num'] ) ) {
-			$args['registered_num'] = intval( $instance['registered_num'] );
-		}
-
-		if ( isset( $instance['registered_orderby'] ) ) {
-			$args['registered_orderby'] = sanitize_text_field( $instance['registered_orderby'] );
-		}
-
-		if ( isset( $instance['registered_order'] ) ) {
-			$args['registered_order'] = sanitize_text_field( $instance['registered_order'] );
-		}
-
-		$course_info = SFWD_LMS::get_course_info( $user_id, $args );
-
-		$user_status = learndash_get_template_part(
-			'shortcodes/user-status.php',
-			array(
-				'course_info'    => $course_info,
-				'shortcode_atts' => $args,
-				'context'        => 'widget',
-			),
-			false
-		);
-
-		if ( empty( $user_status ) ) {
-			return;
-		}
-
-		echo $before_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML output before widget
-
-		if ( ! empty( $title ) ) {
-			echo $before_title . $title . $after_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML output before and after title
-		}
-
-		echo $user_status; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML output user status
-		echo $after_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HTML output after widget
-
-		$learndash_shortcode_used = true;
-	}
-
-
-	/**
-	 * Handles widget updates in admin
-	 *
-	 * @since 2.1.0
-	 *
-	 * @param  array $new_instance
-	 * @param  array $old_instance
-	 * @return array $instance
-	 */
-	public function update( $new_instance, $old_instance ) {
-		$instance          = $old_instance;
-		$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
-
-		$instance['registered_show_thumbnail'] = esc_attr( $new_instance['registered_show_thumbnail'] );
-		if ( '' !== $new_instance['registered_num'] ) {
-			$instance['registered_num'] = intval( $new_instance['registered_num'] );
-		} else {
-			$instance['registered_num'] = false;
-		}
-
-		$instance['registered_orderby'] = esc_attr( $new_instance['registered_orderby'] );
-		$instance['registered_order']   = esc_attr( $new_instance['registered_order'] );
-
-		return $instance;
-	}
-
-
-	/**
-	 * Display widget form in admin
-	 *
-	 * @since 2.1.0
-	 *
-	 * @param  array $instance widget instance
-	 */
-	public function form( $instance ) {
-		$instance = wp_parse_args(
-			(array) $instance,
-			array(
-				'title'                     => '',
-				'registered_show_thumbnail' => '',
-				'registered_num'            => false,
-				'registered_orderby'        => '',
-				'registered_order'          => '',
-			)
-		);
-
-		$title = wp_strip_all_tags( $instance['title'] );
-
-		$registered_show_thumbnail = esc_attr( $instance['registered_show_thumbnail'] );
-
-		if ( '' !== $instance['registered_num'] ) {
-			$registered_num = abs( intval( $instance['registered_num'] ) );
-		} else {
-			$registered_num = '';
-		}
-
-		$registered_orderby = esc_attr( $instance['registered_orderby'] );
-		$registered_order   = esc_attr( $instance['registered_order'] );
-
-		?>
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
-				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
-			</p>
-
-
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'registered_show_thumbnail' ) ); ?>"><?php esc_html_e( 'Registered show thumbnail:', 'learndash' ); ?></label>
-				<select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'registered_show_thumbnail' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'registered_show_thumbnail' ) ); ?>">
-					<option value="" <?php selected( $registered_show_thumbnail, '' ); ?>><?php esc_html_e( 'Yes (default)', 'learndash' ); ?></option>
-					<option value="false" <?php selected( $registered_show_thumbnail, 'false' ); ?>><?php esc_html_e( 'No', 'learndash' ); ?></option>
-				</select>
-			</p>
-
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'registered_num' ) ); ?>"><?php esc_html_e( 'Registered per page:', 'learndash' ); ?></label>
-				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'registered_num' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'registered_num' ) ); ?>" type="number" min="0" value="<?php echo esc_attr( $registered_num ); ?>" />
-				<span class="description">
-				<?php
-					printf(
-						// translators: placeholders: Default amount shown per page
-						esc_html_x( 'Default is %d. Set to zero for no pagination.', 'placeholders: default per page', 'learndash' ),
-						esc_html( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ) )
-					);
-				?>
-				</span>
-			</p>
-
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'registered_orderby' ) ); ?>"><?php esc_html_e( 'Registered order by:', 'learndash' ); ?></label>
-				<select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'registered_orderby' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'registered_orderby' ) ); ?>">
-					<option value="" <?php selected( $registered_orderby, '' ); ?>><?php esc_html_e( 'Title (default) - Order by post title', 'learndash' ); ?></option>
-					<option value="id" <?php selected( $registered_orderby, 'id' ); ?>><?php esc_html_e( 'ID - Order by post id', 'learndash' ); ?></option>
-					<option value="date" <?php selected( $registered_orderby, 'date' ); ?>><?php esc_html_e( 'Date - Order by post date', 'learndash' ); ?></option>
-					<option value="menu_order" <?php selected( $registered_orderby, 'menuorder' ); ?>><?php esc_html_e( 'Menu - Order by Page Order Value', 'learndash' ); ?></option>
-				</select>
-			</p>
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'registered_order' ) ); ?>"><?php esc_html_e( 'Registered order:', 'learndash' ); ?></label>
-				<select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'registered_order' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'registered_order' ) ); ?>">
-					<option value="" <?php selected( $registered_order, '' ); ?>><?php esc_html_e( 'ASC (default) - lowest to highest values', 'learndash' ); ?></option>
-					<option value="DESC" <?php selected( $registered_order, 'DESC' ); ?>><?php esc_html_e( 'DESC - highest to lowest values', 'learndash' ); ?></option>
-				</select>
-			</p>
-
-		<?php
-	}
-}
-
-add_action(
-	'widgets_init',
-	function() {
-		return register_widget( 'LearnDash_User_Status_Widget' );
-	}
-);
 
 add_action( 'init', 'learndash_30_nav_menus' );
 /**
@@ -1876,6 +1760,7 @@ function learndash_30_custom_colors() {
 		.learndash-wrapper .ld-alert-success {
 			border-color: <?php echo esc_attr( $colors['secondary'] ); ?>;
 			background-color: transparent !important;
+			color: <?php echo esc_attr( $colors['secondary'] ); ?>;
 		}
 
 		.learndash-wrapper .wpProQuiz_content .wpProQuiz_reviewQuestion li.wpProQuiz_reviewQuestionSolved,
@@ -2067,6 +1952,7 @@ function learndash_30_ajax_pager() {
 
 	$contexts_without_course_id = array(
 		'profile',
+		'profile_quizzes',
 		'course_info_courses',
 		'group_courses',
 	);
@@ -2424,6 +2310,63 @@ function learndash_30_ajax_pager() {
 			)
 		);
 
+	} elseif ( 'profile_quizzes' === $context ) {
+
+		$quiz_attempts = learndash_get_user_profile_quiz_attempts( $user_id );
+
+		$paging_results = $_GET['pager_results'];
+		$per_page       = intval( $paging_results['quiz_num'] );
+		$course_id      = intval( $paging_results['quiz_course_id'] );
+
+		$posts_per_page   = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
+		$quizzes_per_page = ( 0 !== $per_page ? $per_page : $posts_per_page );
+		if ( isset( $quiz_attempts[ $course_id ] ) ) {
+			$quiz_attempts['total_quiz_items'] = count( $quiz_attempts[ $course_id ] );
+			$quiz_attempts['total_quiz_pages'] = ceil( count( $quiz_attempts[ $course_id ] ) / $quizzes_per_page );
+			$quiz_attempts['quizzes-paged']    = ( isset( $_GET['profile-quizzes'] ) ? intval( $_GET['profile-quizzes'] ) : 1 );
+			if ( $quiz_attempts['total_quiz_items'] >= $quiz_attempts['total_quiz_pages'] ) {
+				$quiz_attempts[ $course_id ] = array_slice( $quiz_attempts[ $course_id ], ( $quiz_attempts['quizzes-paged'] * $quizzes_per_page ) - $quizzes_per_page, $quizzes_per_page, false );
+			}
+		}
+
+		ob_start();
+		echo '<div class="ld-item-contents">';
+		// Need to output the quiz attempts template here for paginating across the ld_profile quiz attempts for each quiz.
+		learndash_get_template_part(
+			'shortcodes/profile/quizzes.php',
+			array(
+				'user_id'       => $user_id,
+				'course_id'     => $course_id,
+				'quiz_attempts' => $quiz_attempts,
+			),
+			true
+		);
+		$learndash_profile_quiz_pager = array(
+			'paged'          => $quiz_attempts['quizzes-paged'],
+			'total_items'    => $quiz_attempts['total_quiz_items'],
+			'total_pages'    => $quiz_attempts['total_quiz_pages'],
+			'quiz_num'       => $per_page,
+			'quiz_course_id' => $course_id,
+		);
+
+		if ( isset( $_GET['profile-quizzes'] ) ) {
+			learndash_get_template_part(
+				'modules/pagination',
+				array(
+					'pager_results' => $learndash_profile_quiz_pager,
+					'pager_context' => 'profile_quizzes',
+				),
+				true
+			);
+		}
+		echo '</div>';
+		wp_send_json_success(
+			array(
+				'success' => true,
+				'markup'  => ob_get_clean(),
+			)
+		);
+
 	} elseif ( 'course_content_shortcode' === $context ) {
 
 		ob_start();
@@ -2436,6 +2379,13 @@ function learndash_30_ajax_pager() {
 		 * @param array $shortcode_instance Shortcode instance
 		 */
 		$atts = apply_filters( 'learndash_course_content_shortcode_ajax_pagination_atts', $_GET['shortcode_instance'] );
+
+		if ( isset( $_GET['ld-courseinfo-lesson-page'] ) ) {
+			$atts['paged'] = intval( $_GET['ld-courseinfo-lesson-page'] );
+		}
+
+		// On the AJAX Pager logic we don't want to include the outer wrappers.
+		$atts['wrapper'] = 0;
 
 		echo learndash_course_content_shortcode( $atts ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Outputs the LearnDash Course Content shortcode
 
@@ -2488,6 +2438,21 @@ function learndash_30_ajax_pager() {
 			$args['registered_order'] = sanitize_text_field( $instance['registered_order'] );
 		}
 
+		if ( isset( $instance['isblock'] ) && ! empty( $instance['isblock'] ) ) {
+			$instance['isblock'] = '1';
+		}
+
+		/*
+		If we are using the new LearnDash User Status block, set the right context, else the old User Status widget is being used
+		*/
+		if ( '1' === $instance['isblock'] ) {
+			$context = 'block';
+			$args['isblock'] = 'block';
+		} else {
+			$context = 'widget';
+			$args['isblock'] = '';
+		}
+
 		$course_info = SFWD_LMS::get_course_info( $user_id, $args );
 
 		ob_start();
@@ -2497,7 +2462,7 @@ function learndash_30_ajax_pager() {
 			array(
 				'course_info'    => $course_info,
 				'shortcode_atts' => $args,
-				'context'        => 'widget',
+				'context'        => $context,
 			),
 			true
 		);
@@ -3067,19 +3032,27 @@ function learndash_30_the_currency_symbol() {
  * @return string|false Returns currency symbol.
  */
 function learndash_30_get_currency_symbol() {
+	$currency = '';
 
-	$options          = get_option( 'sfwd_cpt_options' );
-	$currency_setting = class_exists( 'LearnDash_Settings_Section' ) ? LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'paypal_currency' ) : null;
-	$currency         = '';
-	$stripe_settings  = get_option( 'learndash_stripe_settings' );
+	$options         = get_option( 'sfwd_cpt_options' );
+	$stripe_settings = get_option( 'learndash_stripe_settings' );
+
+	if ( class_exists( 'LearnDash_Settings_Section' ) ) {
+		$paypal_enabled          = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'enabled' );
+		$paypal_currency         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'paypal_currency' );
+		$stripe_connect_enabled  = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Stripe_Connect', 'enabled' );
+		$stripe_connect_currency = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Stripe_Connect', 'currency' );
+	}
 
 	if ( ! function_exists( 'is_plugin_active' ) ) {
 		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
 	if ( is_plugin_active( 'learndash-stripe/learndash-stripe.php' ) && ! empty( $stripe_settings ) && ! empty( $stripe_settings['currency'] ) ) {
 		$currency = $stripe_settings['currency'];
-	} elseif ( isset( $currency_setting ) || ! empty( $currency_setting ) ) {
-		$currency = $currency_setting;
+	} elseif ( isset( $paypal_enabled ) && $paypal_enabled && ! empty( $paypal_currency ) ) {
+		$currency = $paypal_currency;
+	} elseif ( isset( $stripe_connect_enabled ) && $stripe_connect_enabled && ! empty( $stripe_connect_currency ) ) {
+		$currency = $stripe_connect_currency;
 	} elseif ( isset( $options['modules'] ) && isset( $options['modules']['sfwd-courses_options'] ) && isset( $options['modules']['sfwd-courses_options']['sfwd-courses_paypal_currency'] ) ) {
 		$currency = $options['modules']['sfwd-courses_options']['sfwd-courses_paypal_currency'];
 	}
@@ -3144,74 +3117,3 @@ add_filter(
 	30,
 	3
 );
-
-
-/**
- * Get group price
- *
- * Return an array of price type, amount and cycle
- *
- * @since 3.2.0
- *
- * @param  int/object $group
- * @return array      price details
- */
-function learndash_get_group_price( $group = null ) {
-
-	if ( null === $group ) {
-		global $post;
-		$group = $post;
-	}
-
-	if ( is_numeric( $group ) ) {
-		$group = get_post( $group );
-	}
-	if ( ! is_a( $group, 'WP_Post' ) ) {
-		return false;
-	}
-
-	// Get the course price
-	$meta = get_post_meta( $group->ID, '_groups', true );
-
-	$group_price = array(
-		'type'  => ! empty( $meta['groups_group_price_type'] ) ? $meta['groups_group_price_type'] : LEARNDASH_DEFAULT_GROUP_PRICE_TYPE,
-		'price' => ! empty( $meta['groups_group_price'] ) ? $meta['groups_group_price'] : '',
-	);
-
-	if ( 'subscribe' === $group_price['type'] ) {
-
-		$frequency = get_post_meta( $group->ID, 'group_price_billing_t3', true );
-		$interval  = intval( get_post_meta( $group->ID, 'group_price_billing_p3', true ) );
-
-		$label = '';
-
-		switch ( $frequency ) {
-			case ( 'D' ):
-				$label = _n( 'day', 'days', $interval, 'learndash' );
-				break;
-			case ( 'W' ):
-				$label = _n( 'week', 'weeks', $interval, 'learndash' );
-				break;
-			case ( 'M' ):
-				$label = _n( 'month', 'months', $interval, 'learndash' );
-				break;
-			case ( 'Y' ):
-				$label = _n( 'year', 'years', $interval, 'learndash' );
-				break;
-		}
-
-		$group_price['frequency'] = $label;
-		$group_price['interval']  = $interval;
-
-	}
-
-	/**
-	 * Filter Group Price details.
-	 *
-	 * @since 3.2.0
-	 *
-	 * @param array $group_price Group Price Details array.
-	 */
-	return apply_filters( 'learndash_get_group_price', $group_price );
-
-}

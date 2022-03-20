@@ -80,7 +80,7 @@ foreach ( $course_progress as $course_id => $coursep ) {
 		}
 	}
 
-	// Display the Course Access if expired or expiring
+	// Display the Course Access if expired or expiring.
 	$expire_access = learndash_get_setting( $course_id, 'expire_access' );
 	if ( ! empty( $expire_access ) ) {
 		$expired           = ld_course_access_expired( $course_id, $user_id );
@@ -168,6 +168,17 @@ foreach ( $course_progress as $course_id => $coursep ) {
 						true
 					);
 				?>
+				<?php
+					SFWD_LMS::get_template(
+						'exam/profile_course_exam_challenge_admin.php',
+						array(
+							'user_id'         => $user_id,
+							'course_id'       => $course_id,
+						),
+						true
+					);
+				?>
+
 				<input id="learndash-mark-course-complete-<?php echo absint( $course_id ); ?>" type="checkbox" <?php echo $course_checked; ?> class="learndash-mark-course-complete" data-name="<?php echo htmlspecialchars( json_encode( $user_course_progress, JSON_FORCE_OBJECT ) ) ?>" <?php echo $unchecked_children_message ?> /><label for="learndash-mark-course-complete-<?php echo absint( $course_id ); ?>"><?php
 				// translators: placeholder: Course.
 				echo sprintf( esc_html_x( '%s All Complete', 'placeholder: Course', 'learndash' ), esc_html( LearnDash_Custom_Label::get_label( 'course' ) ) ) ?></label><br />

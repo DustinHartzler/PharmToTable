@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS
  * Plugin URI: http://www.learndash.com
  * Description: LearnDash LMS Plugin - Turn your WordPress site into a learning management system.
- * Version: 3.5.1.1
+ * Version: 4.0.1
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * Text Domain: learndash
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @var string PHP version x.x.x or x.x.x.x format.
  */
-define( 'LEARNDASH_VERSION', '3.5.1.1' );
+define( 'LEARNDASH_VERSION', '4.0.1' );
 
 /**
  * Define LearnDash LMS - Set the settings database version.
@@ -455,6 +455,17 @@ if ( ! defined( 'LEARNDASH_GUTENBERG' ) ) {
 	define( 'LEARNDASH_GUTENBERG', true );
 }
 
+if ( ! defined( 'LEARNDASH_GUTENBERG_CONTENT_PARSE_LEGACY' ) ) {
+	/**
+	 * Define LearnDash LMS - Use legacy content parse for Gutenberg block rendering.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool Default is false.
+	 */
+	define( 'LEARNDASH_GUTENBERG_CONTENT_PARSE_LEGACY', false );
+}
+
 if ( ! defined( 'LEARNDASH_TRANSLATIONS' ) ) {
 	/**
 	 * Define LearnDash LMS - Enable support for Translations downloads via GlotPress.
@@ -795,6 +806,28 @@ if ( ! defined( 'LEARNDASH_QUIZ_RESULT_MESSAGE_MAX' ) ) {
 	define( 'LEARNDASH_QUIZ_RESULT_MESSAGE_MAX', 15 );
 }
 
+if ( ! defined( 'LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN' ) ) {
+	/**
+	 * Define LearnDash LMS - Set the minimum second for sending quiz resume data to server.
+	 *
+	 * @since 3.6.1
+	 *
+	 * @var int Default is 5.
+	 */
+	define( 'LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN', 5 );
+}
+
+if ( ! defined( 'LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_DEFAULT' ) ) {
+	/**
+	 * Define LearnDash LMS - Set the default second for sending quiz resume data to server.
+	 *
+	 * @since 3.6.1
+	 *
+	 * @var int Default is 5.
+	 */
+	define( 'LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_DEFAULT', 20 );
+}
+
 if ( ! defined( 'LEARNDASH_QUIZ_ANSWER_MESSAGE_HTML_TYPE' ) ) {
 	/**
 	 * Define LearnDash LMS - Set the Quiz answer message wrapper
@@ -882,6 +915,21 @@ if ( ! defined( 'LEARNDASH_DISABLE_TEMPLATE_CONTENT_OUTSIDE_LOOP' ) ) {
 	 * }
 	 */
 	define( 'LEARNDASH_DISABLE_TEMPLATE_CONTENT_OUTSIDE_LOOP', true );
+}
+
+if ( ! defined( 'LEARNDASH_TEMPLATE_CONTENT_METHOD' ) ) {
+	/**
+	 * Define LearnDash LMS - Controls the method the template content is rendered.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string {
+	 *    Only one of the following values.
+	 *    @type string 'template'  Content will be redered via the template. This is the legacy/default method.
+	 *    @type string 'shortcode' Content will be rendered via shortcodes.
+	 * }
+	 */
+	define( 'LEARNDASH_TEMPLATE_CONTENT_METHOD', 'shortcode' );
 }
 
 if ( ! defined( 'LEARNDASH_GROUP_ENROLLED_COURSE_FROM_USER_REGISTRATION' ) ) {
@@ -1052,6 +1100,43 @@ if ( ! defined( 'LEARNDASH_UPDATES_ENABLED' ) ) {
 	define( 'LEARNDASH_UPDATES_ENABLED', true );
 }
 
+if ( ! defined( 'LEARNDASH_UPDATE_HTTP_METHOD' ) ) {
+	/**
+	 * Define LearnDash LMS - Configure the HTTP method use to connect to the support/license server.
+	 *
+	 * @since 3.6.0.3
+	 *
+	 * @var string {
+	 *    Only one of the following values.
+	 *    @type string 'post' Use HTTP POST (wp_remote_post) to connect to the server. Default.
+	 *    @type string 'get'  Use HTTP GET (wp_remote_get) to connect to the server. Default.
+	 * }
+	 */
+	define( 'LEARNDASH_UPDATE_HTTP_METHOD', 'get' );
+}
+
+if ( ! defined( 'LEARNDASH_PLUGIN_LICENSE_INTERVAL' ) ) {
+	/**
+	 * Define LearnDash LMS - Configure the interval for support license check.
+	 *
+	 * @since 3.6.0.3
+	 *
+	 * @var int number of minutes between license checks. Default is 3600 minutes (60 minutes).
+	 */
+	define( 'LEARNDASH_PLUGIN_LICENSE_INTERVAL', 3600 );
+}
+
+if ( ! defined( 'LEARNDASH_PLUGIN_INFO_INTERVAL' ) ) {
+	/**
+	 * Define LearnDash LMS - Configure the interval for support information check.
+	 *
+	 * @since 3.6.0.3
+	 *
+	 * @var int number of minutes between information checks. Default is 600 minutes (10 minutes).
+	 */
+	define( 'LEARNDASH_PLUGIN_INFO_INTERVAL', 600 );
+}
+
 if ( ! defined( 'LEARNDASH_ADDONS_UPDATER' ) ) {
 	if ( true === LEARNDASH_UPDATES_ENABLED ) {
 		$learndash_define_addons_updater_value = true;
@@ -1212,6 +1297,11 @@ require_once dirname( __FILE__ ) . '/includes/ld-assignment-uploads.php';
 require_once dirname( __FILE__ ) . '/includes/ld-groups.php';
 
 /**
+ * Exam functions
+ */
+require_once dirname( __FILE__ ) . '/includes/exam/ld-exam-functions.php';
+
+/**
  * Group Membership functions
  */
 require_once dirname( __FILE__ ) . '/includes/group/ld-groups-membership.php';
@@ -1255,6 +1345,16 @@ require_once dirname( __FILE__ ) . '/includes/admin/ld-gutenberg.php';
  * LearnDash Settings Page Base
  */
 require_once dirname( __FILE__ ) . '/includes/settings/settings-loader.php';
+
+/**
+ * LearnDash Registration Form Functions
+ */
+require_once LEARNDASH_LMS_PLUGIN_DIR . '/includes/payments/ld-login-registration-functions.php';
+
+/**
+ * LearnDash Emails Functions
+ */
+require_once dirname( __FILE__ ) . '/includes/payments/ld-emails-functions.php';
 
 /**
  * LearnDash Shortcodes Base
@@ -1311,23 +1411,38 @@ if ( ( true === LEARNDASH_ADDONS_UPDATER ) && ( true === LEARNDASH_UPDATES_ENABL
 	 */
 	if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 		/**
+		 * Dummy class
+		 *
 		 * @ignore
 		 */
 		class LearnDash_Addon_Updater {
+			/**
+			 * Instance
+			 *
+			 * @var object
+			 * @ignore
+			 */
 			protected static $instance = null;
 
 			/**
+			 * Get instance
+			 *
 			 * @ignore
 			 */
 			public static function get_instance() {
 				if ( ! isset( static::$instance ) ) {
-					static::$instance = new static();
+					static::$instance = new self();
 				}
 
 				return static::$instance;
 			}
 
 			/**
+			 * Call
+			 *
+			 * @param string $name      Name.
+			 * @param array  $arguments Arguments.
+			 *
 			 * @ignore
 			 */
 			public function __call( $name, $arguments ) {

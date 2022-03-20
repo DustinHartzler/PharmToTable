@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V1' ) ) && ( cl
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Course_Progress_Controller_V1 extends LD_REST_Posts_Controller_V1 {
+	class LD_REST_Users_Course_Progress_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
@@ -56,7 +55,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V1' ) ) && ( cl
 				array(
 					'args' => array(
 						'id' => array(
-							// translators: course
+							// translators: course.
 							'description' => sprintf( esc_html_x( 'User ID to show %s progress', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
@@ -365,9 +364,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V1' ) ) && ( cl
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param array $progress Array of course progress data
+		 * @param array $progress Array of course progress data.
 		 */
-
 		public function user_meta_progress_normalized( $progress = array() ) {
 			$converted = array();
 

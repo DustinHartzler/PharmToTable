@@ -63,7 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<h2>
 						<?php
 						printf(
-							// translators: group
+							// translators: group.
 							esc_html_x( 'Assigned %s(s)', 'placeholder: group', 'learndash' ),
 							learndash_get_custom_label( 'group' )
 						)

@@ -23,13 +23,14 @@ if ( ( ! class_exists( 'LD_REST_Courses_Controller_V2' ) ) && ( class_exists( 'L
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param string $post_type Post type.
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -135,59 +136,62 @@ if ( ( ! class_exists( 'LD_REST_Courses_Controller_V2' ) ) && ( class_exists( 'L
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Response $response WP_REST_Response instance.
+		 * @param WP_Post          $post     WP_Post instance.
+		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 
 			if ( $this->post_type === $post->post_type ) {
-				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
+				$base          = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
+				$request_route = $request->get_route();
+			
+				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
+					$links = array();
 
-				$links = array();
+					$current_links = $response->get_links();
 
-				$current_links = $response->get_links();
+					if ( ! isset( $current_links['price-type'] ) ) {
+						$course_price_type = learndash_get_course_meta_setting( $post->ID, 'course_price_type' );
+						if ( ! empty( $course_price_type ) ) {
+							$links[ $this->get_rest_base( 'price-types' ) ] = array(
+								'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'price-types' ) . '/' . $course_price_type ),
+								'embeddable' => true,
+							);
+						}
+					}
 
-				if ( ! isset( $current_links['price-type'] ) ) {
-					$course_price_type = learndash_get_course_meta_setting( $post->ID, 'course_price_type' );
-					if ( ! empty( $course_price_type ) ) {
-						$links[ $this->get_rest_base( 'price-types' ) ] = array(
-							'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'price-types' ) . '/' . $course_price_type ),
+					if ( ! isset( $current_links['prerequisites'] ) ) {
+						$links['prerequisites'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-prerequisites' ),
 							'embeddable' => true,
 						);
 					}
-				}
 
-				if ( ! isset( $current_links['prerequisites'] ) ) {
-					$links['prerequisites'] = array(
-						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-prerequisites' ),
-						'embeddable' => true,
-					);
-				}
+					if ( ! isset( $current_links['steps'] ) ) {
+						$links['steps'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-steps' ),
+							'embeddable' => true,
+						);
+					}
 
-				if ( ! isset( $current_links['steps'] ) ) {
-					$links['steps'] = array(
-						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-steps' ),
-						'embeddable' => true,
-					);
-				}
+					if ( ! isset( $current_links['users'] ) ) {
+						$links['users'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-users' ),
+							'embeddable' => true,
+						);
+					}
 
-				if ( ! isset( $current_links['users'] ) ) {
-					$links['users'] = array(
-						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-users' ),
-						'embeddable' => true,
-					);
-				}
+					if ( ! isset( $current_links['groups'] ) ) {
+						$links['groups'] = array(
+							'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-groups' ),
+							'embeddable' => true,
+						);
+					}
 
-				if ( ! isset( $current_links['groups'] ) ) {
-					$links['groups'] = array(
-						'href'       => rest_url( trailingslashit( $base ) . $post->ID ) . '/' . $this->get_rest_base( 'courses-groups' ),
-						'embeddable' => true,
-					);
-				}
-
-				if ( ! empty( $links ) ) {
-					$response->add_links( $links );
+					if ( ! empty( $links ) ) {
+						$response->add_links( $links );
+					}
 				}
 			}
 

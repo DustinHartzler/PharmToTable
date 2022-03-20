@@ -28,6 +28,20 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		protected $settings = null;
 
 		/**
+		 * Tables base
+		 *
+		 * @var array
+		 */
+		public $tables_base = array();
+
+		/**
+		 * Tables lists
+		 *
+		 * @var array
+		 */
+		public $tables_lists = array();
+
+		/**
 		 * Protected constructor for class
 		 *
 		 * @since 2.6.0
@@ -339,6 +353,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 				return $table_list;
 			}
+
+			return array();
 		}
 
 		/**
@@ -346,7 +362,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param string $table_name Single table name to check
+		 * @param string $table_name Single table name to check.
 		 *
 		 * @return boolean
 		 */
@@ -357,10 +373,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				$db_table_name = $wpdb->get_var( "SHOW TABLES LIKE '" . esc_sql( $table_name ) . "'" );
 				if ( $db_table_name == $table_name ) {
 					return true;
-				} else {
-					return false;
 				}
 			}
+
+			return false;
 		}
 
 		/**
@@ -372,8 +388,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			global $wpdb;
 
 			$this->tables_base = LDLMS_DB::get_tables_base( 'wpproquiz' );
-
-			$this->tables_lists = array();
 
 			foreach ( $this->tables_base as $table_key => $table_name ) {
 				foreach ( $this->settings['prefixes'] as $table_sub_prefix ) {
@@ -516,7 +530,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					}
 				}
 			}
-			//}
 
 			$this->transient_data['total_count']   = count( $process_tables );
 			$this->transient_data['process_items'] = $process_tables;
@@ -579,8 +592,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param string $old_table Old table name
-		 * @param string $new_table New table name
+		 * @param string $old_table Old table name.
+		 * @param string $new_table New table name.
 		 *
 		 * @return mixed New table name (string) if complete, false if not.
 		 */

@@ -134,6 +134,15 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( isset( $this->columns['quiz'] ) ) {
 					unset( $this->columns['quiz'] );
 				}
+
+				if ( isset( $this->selectors['quiz_id'] ) ) {
+					if ( isset( $this->selectors['quiz_id']['show_empty_value'] ) ) {
+						unset( $this->selectors['quiz_id']['show_empty_value'] );
+					}
+					if ( isset( $this->selectors['quiz_id']['show_empty_label'] ) ) {
+						unset( $this->selectors['quiz_id']['show_empty_label'] );
+					}
+				}
 			}
 
 			// If Group Leader remove the selector empty option.
@@ -402,7 +411,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param object $q_vars   Query vars used for the table listing
+		 * @param object $q_vars   Query vars used for the table listing.
 		 * @param array  $selector Selector array.
 		 *
 		 * @return object $q_vars.

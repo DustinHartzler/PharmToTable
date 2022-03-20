@@ -32,7 +32,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 			// Set up the defaut query args for the Users.
 			$defaults = array(
 				'paged'               => 1,
-				'posts_per_page'      => LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ),
+				'posts_per_page'      => (int) LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ),
 				'orderby'             => 'title',
 				'order'               => 'ASC',
 				'ignore_sticky_posts' => true,
@@ -48,7 +48,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 			parent::__construct( $args );
 
 			if ( ( isset( $this->args['included_ids'] ) ) && ( ! empty( $this->args['included_ids'] ) ) ) {
-				$this->query_args['include'] = $this->args['included_ids'];
+				$this->args['include'] = $this->args['included_ids'];
 			}
 		}
 
@@ -173,21 +173,11 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 					foreach ( $this->element_items[ $position ] as $post ) {
 						$disabled_class = '';
 						$disabled_state = '';
-						/** This filter is documented in includes/admin/classes-binary-selectors/class-learndash-admin-binary-selector-users.php */
-						$item_title = apply_filters( 'learndash_binary_selector_item', $post->post_title, $post, $position, $this->selector_class );
-						if ( ! empty( $item_title ) ) {
-							$item_title = wp_strip_all_tags( $item_title );
-						} else {
-							$item_title = $post->post_title;
-						}
 
-						$post_status_slug = learndash_get_step_post_status_slug( $post );
-						if ( ( ! empty( $post_status_slug ) ) && ( 'publish' !== $post_status_slug ) ) {
-							$post_statuses = learndash_get_step_post_statuses();
-							if ( isset( $post_statuses[ $post_status_slug ] ) ) {
-								$item_title .= ' (' . esc_html( $post_statuses[ $post_status_slug ] ) . ')';
-							}
-						}
+						$item_title = learndash_format_step_post_title_with_status_label( $post );
+
+						/** This filter is documented in includes/admin/classes-binary-selectors/class-learndash-admin-binary-selector-users.php */
+						$item_title = apply_filters( 'learndash_binary_selector_item', $item_title, $post, $position, $this->selector_class );
 
 						if ( ( is_array( $this->args['selected_ids'] ) ) && ( ! empty( $this->args['selected_ids'] ) ) ) {
 							if ( in_array( absint( $post->ID ), $this->args['selected_ids'], true ) ) {
@@ -198,7 +188,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 							}
 						}
 
-						$options_html .= '<option class="learndash-binary-selector-item ' . $disabled_class . '" ' . $disabled_state . ' value="' . $post->ID . '" data-value="' . $post->ID . '">' . $item_title . '</option>';
+						$options_html .= '<option class="learndash-binary-selector-item ' . $disabled_class . '" ' . $disabled_state . ' value="' . $post->ID . '" data-value="' . $post->ID . '">' . wp_strip_all_tags( $item_title ) . '</option>';
 					}
 				}
 			}

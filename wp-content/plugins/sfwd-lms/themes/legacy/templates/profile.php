@@ -112,9 +112,7 @@ if ( ! isset( $learndash_assets_loaded['scripts']['learndash_template_script_js'
 
 
 					<?php
-					/**
-					 * @todo Remove h4 container.
-					 */
+					// @todo Remove h4 container.
 					?>
 					<h4>
 						<div class="learndash-course-link"><a href="<?php echo esc_url( $course_link ); ?>"><?php echo $course->post_title; ?></a></div>
@@ -159,7 +157,7 @@ if ( ! isset( $learndash_assets_loaded['scripts']['learndash_template_script_js'
 
 								<div class="right">
 									<?php
-									// translators: placeholder: percent complete
+									// translators: placeholder: percent complete.
 									echo sprintf( esc_html_x( '%s%% Complete', 'placeholder: percent complete', 'learndash' ), $progress['percentage'] );
 									?>
 								</div>

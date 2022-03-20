@@ -20,19 +20,21 @@ import {
 import { __, _x, sprintf } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
 import { InnerBlocks, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, TextControl } from '@wordpress/components';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 
+const block_key   = 'learndash/ld-quiz-complete';
 const block_title = sprintf(
 	// translators: placeholder: Quiz.
 	_x('LearnDash %s Complete', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz')
 );
 
 registerBlockType(
-	'learndash/ld-quiz-complete',
+	block_key,
 	{
 		title: block_title,
-		// translators: placeholder: Quiz.
-		description: sprintf(_x('This block shows the content if the user has completed the %s.', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz')),
+		description: sprintf(
+			// translators: placeholder: Quiz.
+			_x('This block shows the content if the user has completed the %s.', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz')),
 		icon: 'star-filled',
 		category: 'learndash-blocks',
 		supports: {
@@ -51,9 +53,13 @@ registerBlockType(
 				type: 'string',
 				default: '',
 			},
+			autop: {
+				type: 'boolean',
+				default: true
+			},
 		},
 		edit: props => {
-			const { attributes: { course_id, quiz_id, user_id }, className, setAttributes } = props;
+			const { attributes: { course_id, quiz_id, user_id, autop }, className, setAttributes } = props;
 
 			const inspectorControls = (
 				<InspectorControls key="controls">
@@ -61,27 +67,53 @@ registerBlockType(
 						title={__('Settings', 'learndash')}
 					>
 						<TextControl
-							// translators: placeholder: Quiz.
-							label={sprintf(_x('%s ID', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz'))}
-							// translators: placeholders: Quiz, Quiz.
-							help={sprintf(_x('Enter single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Quiz, Quiz', 'learndash'), ldlms_get_custom_label('quiz'), ldlms_get_custom_label('quiz'))}
+							label={sprintf(
+								// translators: placeholder: Quiz.
+								_x('%s ID', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz'))}
+							help={sprintf(
+								// translators: placeholders: Quiz, Quiz.
+								_x('Enter single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Quiz, Quiz', 'learndash'), ldlms_get_custom_label('quiz'), ldlms_get_custom_label('quiz'))}
 							value={quiz_id || ''}
-							onChange={quiz_id => setAttributes({ quiz_id })}
-						/>
+							type={'number'}
+							onChange={ function( new_quiz_id ) {
+								if ( new_quiz_id != "" && new_quiz_id < 0 ) {
+									setAttributes({ quiz_id: "0" });
+								} else {
+									setAttributes({ quiz_id: new_quiz_id });
+								}
+							}}						/>
 						<TextControl
-							// translators: placeholder: Course.
-							label={sprintf(_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') )}
-							// translators: placeholders: Course, Course.
-							help={sprintf(_x('Enter single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course' ) ) }
+							label={sprintf(
+								// translators: placeholder: Course.
+								_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') )}
+							help={sprintf(
+								// translators: placeholders: Course, Course.
+								_x('Enter single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course' ) ) }
 							value={course_id || ''}
-							onChange={course_id => setAttributes({ course_id })}
-						/>
-
+							type={'number'}
+							onChange={ function( new_course_id ) {
+								if ( new_course_id != "" && new_course_id < 0 ) {
+									setAttributes({ course_id: "0" });
+								} else {
+									setAttributes({ course_id: new_course_id });
+								}
+							}}						/>
 						<TextControl
 							label={__('User ID', 'learndash')}
 							help={__('Enter specific User ID. Leave blank for current User.', 'learndash')}
 							value={user_id || ''}
-							onChange={user_id => setAttributes({ user_id })}
+							type={'number'}
+							onChange={ function( new_user_id ) {
+								if ( new_user_id != "" && new_user_id < 0 ) {
+									setAttributes({ user_id: "0" });
+								} else {
+									setAttributes({ user_id: new_user_id });
+								}
+							}}						/>
+						<ToggleControl
+							label={__('Auto Paragraph', 'learndash')}
+							checked={!!autop}
+							onChange={autop => setAttributes({ autop })}
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -95,8 +127,9 @@ registerBlockType(
 					preview_quiz_id = ldlms_get_integer_value(preview_quiz_id);
 				}
 				if (preview_quiz_id == 0) {
-					// translators: placeholders: Quiz, Quiz.
-					ld_block_error_message = sprintf(_x('%1$s ID is required when not used within a %2$s.', 'placeholders: Quiz, Quiz', 'learndash'), ldlms_get_custom_label('quiz'), ldlms_get_custom_label('quiz'));
+					ld_block_error_message = sprintf(
+						// translators: placeholders: Quiz, Quiz.
+						_x('%1$s ID is required when not used within a %2$s.', 'placeholders: Quiz, Quiz', 'learndash'), ldlms_get_custom_label('quiz'), ldlms_get_custom_label('quiz'));
 				}
 			}
 

@@ -19,6 +19,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 	class LearnDash_Settings_Metabox_Quiz_Access_Settings extends LearnDash_Settings_Metabox {
 
 		/**
+		 * Quiz edit object
+		 *
+		 * @var object
+		 */
+		public $quiz_edit = null;
+
+		/**
 		 * Public constructor for class
 		 *
 		 * @since 3.0.0
@@ -132,8 +139,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			$select_course_options         = array();
 			$select_course_query_data_json = '';
 
-			/** This filter is documented in includes/class-ld-lms.php */
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+			if ( learndash_use_select2_lib() ) {
 				$select_course_options_default = array(
 					'-1' => sprintf(
 						// translators: placeholder: course.
@@ -149,8 +155,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					}
 				}
 
-				/** This filter is includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
-				if ( ( defined( 'LEARNDASH_SELECT2_LIB_AJAX_FETCH' ) ) && ( true === apply_filters( 'learndash_select2_lib_ajax_fetch', LEARNDASH_SELECT2_LIB_AJAX_FETCH ) ) ) {
+				if ( learndash_use_select2_lib_ajax_fetch() ) {
 					$select_course_query_data_json = $this->build_settings_select2_lib_ajax_fetch_json(
 						array(
 							'query_args'       => array(
@@ -194,7 +199,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			}
 
 			/** This filter is documented in includes/class-ld-lms.php */
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+			if ( learndash_use_select2_lib() ) {
 				$select_lesson_options_default = array(
 					'-1' => sprintf(
 						// translators: placeholder: Lesson, Topic.
@@ -226,7 +231,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 			}
 
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+			if ( learndash_use_select2_lib() ) {
 				$select_quiz_prerequisite_options_default = array(
 					'-1' => sprintf(
 						// translators: placeholder: Quiz.

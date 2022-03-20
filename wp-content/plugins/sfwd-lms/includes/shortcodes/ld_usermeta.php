@@ -19,17 +19,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $atts {
+ * @param array  $attr {
  *     An array of shortcode attributes.
  *
  *    @type string  $field   The usermeta field to show
  *    @type int     $user_id User ID. Default current user ID.
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'usermeta'.
  *
  * @return string            output of shortcode
  */
-function learndash_usermeta_shortcode( $attr = array(), $content = '' ) {
+function learndash_usermeta_shortcode( $attr = array(), $content = '', $shortcode_slug = 'usermeta' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -43,6 +44,9 @@ function learndash_usermeta_shortcode( $attr = array(), $content = '' ) {
 		),
 		$attr
 	);
+
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$attr = apply_filters( 'learndash_shortcode_atts', $attr, $shortcode_slug );
 
 	if ( ( ! empty( $attr['user_id'] ) ) && ( ! empty( $attr['field'] ) ) ) {
 
@@ -90,4 +94,4 @@ function learndash_usermeta_shortcode( $attr = array(), $content = '' ) {
 
 	return $content;
 }
-add_shortcode( 'usermeta', 'learndash_usermeta_shortcode', 10, 2 );
+add_shortcode( 'usermeta', 'learndash_usermeta_shortcode', 10, 3 );

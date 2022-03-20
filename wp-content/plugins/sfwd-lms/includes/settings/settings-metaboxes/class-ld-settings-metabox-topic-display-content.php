@@ -44,7 +44,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
-				// New fields
+				// New fields.
 				'topic_materials_enabled'            => 'topic_materials_enabled',
 				'topic_materials'                    => 'topic_materials',
 
@@ -301,7 +301,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						esc_html_x( 'Specify a delay between video completion and %s completion.', 'placeholder: topic', 'learndash' ),
 						learndash_get_custom_label_lower( 'topic' )
 					),
-					'default'     => 0,
 					'rest'        => array(
 						'show_in_rest' => LearnDash_REST_API::enabled(),
 						'rest_args'    => array(
@@ -382,7 +381,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'options'   => array(
 						'on' => '',
 					),
-					'default'   => 0,
 					'rest'      => array(
 						'show_in_rest' => LearnDash_REST_API::enabled(),
 						'rest_args'    => array(
@@ -912,11 +910,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				),
 			);
 
-			if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
-				unset( $this->setting_option_fields['course'] );
-				unset( $this->setting_option_fields['lesson'] );
-			}
-
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
 			$this->setting_option_fields = apply_filters( 'learndash_settings_fields', $this->setting_option_fields, $this->settings_metabox_key );
 
@@ -928,7 +921,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param array $settings_values Array of key/value settings changes.
+		 * @param array $settings_field_updates Array of key/value settings changes.
 		 */
 		public function apply_metabox_settings_fields_changes( $settings_field_updates = array() ) {
 			$settings_field_values = $this->get_settings_metabox_values();

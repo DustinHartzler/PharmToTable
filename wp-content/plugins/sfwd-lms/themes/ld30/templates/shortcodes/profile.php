@@ -68,7 +68,7 @@ endif; ?>
 					<div class="ld-profile-avatar">
 						<?php
 						/**
-						 * related to the CSS themes/ld30/assets/css/learndash.css
+						 * Related to the CSS themes/ld30/assets/css/learndash.css
 						 * .learndash-wrapper .ld-profile-summary .ld-profile-card .ld-profile-avatar
 						 */
 						echo wp_kses_post( get_avatar( $user_id, 150 ) );
@@ -160,7 +160,7 @@ endif; ?>
 				<h3>
 					<?php
 					printf(
-						// translators: Profile Course Content Label
+						// translators: Profile Course Content Label.
 						esc_html_x( 'Your %s', 'Profile Course Content Label', 'learndash' ),
 						esc_attr( LearnDash_Custom_Label::get_label( 'courses' ) )
 					);

@@ -26,6 +26,14 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		protected $settings_set = array();
 
 		/**
+		 * Settings template array for this section.
+		 *
+		 * @var array $template_array Array of template used by this section.
+		 */
+		protected $template_array = array();
+
+
+		/**
 		 * Protected constructor for class
 		 *
 		 * @since 3.1.0
@@ -35,9 +43,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			// This is the 'option_name' key used in the wp_options table.
 			$this->setting_option_key = 'ld_templates';
-
-			// This is the HTML form field prefix used.
-			//$this->setting_field_prefix = 'learndash_settings_paypal';
 
 			// Used within the Settings API to uniquely identify this section.
 			$this->settings_section_key = 'settings_support_ld_templates';

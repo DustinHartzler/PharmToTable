@@ -97,10 +97,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param mixed  $val        Value from REST to be converted to internal value.
-		 * @param string $key        Key field for value.
-		 * @param array  $field_args Array of field args.
-		 * @param object $request    Request object.
+		 * @param mixed           $val        Value from REST to be converted to internal value.
+		 * @param string          $key        Key field for value.
+		 * @param array           $field_args Array of field args.
+		 * @param WP_REST_Request $request    Request object.
 		 */
 		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
 			$field_value = array(

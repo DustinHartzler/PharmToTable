@@ -122,8 +122,8 @@ if ( ! class_exists( 'LearnDash_Search' ) ) {
 		/**
 		 * Filter WP_Query 'where' string to add LD search logic.
 		 *
-		 * @param string  $where SQL where part.
-		 * @param Object  $query WP_Query object.
+		 * @param string $where SQL where part.
+		 * @param Object $query WP_Query object.
 		 * @return string $where.
 		 */
 		public function posts_where_request( $where, $query ) {
@@ -190,8 +190,8 @@ if ( ! class_exists( 'LearnDash_Search' ) ) {
 		/**
 		 * Filter WP_Query 'join' string to add LD search logic.
 		 *
-		 * @param string  $join SQL join part.
-		 * @param Object  $query WP_Query object.
+		 * @param string $join SQL join part.
+		 * @param Object $query WP_Query object.
 		 * @return string $join.
 		 */
 		public function posts_join_request( $join, $query ) {
@@ -208,8 +208,8 @@ if ( ! class_exists( 'LearnDash_Search' ) ) {
 		/**
 		 * Filter WP_Query 'distinct' string to add LD search logic.
 		 *
-		 * @param string  $distinct SQL distinct part.
-		 * @param Object  $query WP_Query object.
+		 * @param string $distinct SQL distinct part.
+		 * @param Object $query WP_Query object.
 		 * @return string $distinct.
 		 */
 		public function posts_distinct_request( $distinct, $query ) {

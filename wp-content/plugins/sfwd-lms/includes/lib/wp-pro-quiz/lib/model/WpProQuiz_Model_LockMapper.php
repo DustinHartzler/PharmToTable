@@ -23,9 +23,8 @@ class WpProQuiz_Model_LockMapper extends WpProQuiz_Model_Mapper {
 				'user_id'   => $lock->getUserId(),
 				'lock_type' => $lock->getLockType(),
 				'lock_date' => $lock->getLockDate(),
-				'lock_type' => $lock->getLockType(),
 			),
-			array( '%d', '%s', '%d', '%d', '%d', '%d' )
+			array( '%d', '%s', '%d', '%d', '%d' )
 		);
 	}
 

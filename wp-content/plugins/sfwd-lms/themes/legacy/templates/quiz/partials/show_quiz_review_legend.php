@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Common
+// Common.
 $learndash_quiz_legend_current_label = SFWD_LMS::get_template(
 	'learndash_quiz_messages',
 	array(
@@ -43,7 +43,7 @@ $learndash_quiz_legend_review_label = SFWD_LMS::get_template(
 );
 $learndash_quiz_legend_review_label = apply_filters( 'learndash_quiz_legend_review_label', $learndash_quiz_legend_review_label );
 
-// Single Grading
+// Single Grading.
 $learndash_quiz_legend_answered_label = SFWD_LMS::get_template(
 	'learndash_quiz_messages',
 	array(

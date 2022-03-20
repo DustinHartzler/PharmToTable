@@ -28,8 +28,8 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			$this->menu_page_capability  = LEARNDASH_ADMIN_CAPABILITY_CHECK;
 			$this->settings_page_id      = 'learndash_lms_settings_license';
 			$this->settings_page_title   = esc_html__( 'License Settings', 'learndash' );
-			$this->settings_tab_title    = esc_html__( 'LMS License', 'learndash' );
-			$this->settings_tab_priority = 90;
+			$this->settings_tab_title    = esc_html__( 'LMS License XXX', 'learndash' );
+			//$this->settings_tab_priority = 90;
 
 			parent::__construct();
 		}

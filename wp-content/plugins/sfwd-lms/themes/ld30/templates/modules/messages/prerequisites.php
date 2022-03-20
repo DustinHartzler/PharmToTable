@@ -42,7 +42,7 @@ if ( ! empty( $prerequisite_posts_all ) ) {
 	if ( 'ANY' === $course_prereq_compare && $i > 1 ) {
 
 		$message .= sprintf(
-			// translators: placeholders: course, courses
+			// translators: placeholders: course, courses.
 			esc_html_x(
 				'To take this %1$s, you need to complete any of the following %2$s first:',
 				'placeholders: course, courses',

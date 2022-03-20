@@ -129,8 +129,8 @@ if ( ( ! class_exists( 'LDLMS_Model_Post' ) ) && ( class_exists( 'LDLMS_Model' )
 		 * @since 3.4.0
 		 *
 		 * @param string $setting_key           Setting key to retreive. Blank to retreive all settings.
-		 * @param string $setting_default_value Setting default value is setting_key is not set.
-		 * @param string $force                 Control reloading of settings.
+		 * @param string $setting_default_value Setting default value if setting_key is not set.
+		 * @param bool   $force                 Control reloading of settings.
 		 *
 		 * @return mixed Setting value.
 		 */
@@ -156,19 +156,19 @@ if ( ( ! class_exists( 'LDLMS_Model_Post' ) ) && ( class_exists( 'LDLMS_Model' )
 		 * @since 3.4.0
 		 *
 		 * @param string $setting_key           Setting key to retreive. Blank to retreive all settings.
-		 * @param string $setting_default_value Setting default value is setting_key is not set.
-		 * @param string $update                Control saving postmeta after of settings change.
+		 * @param string $setting_value         Setting default value if setting_key is not set.
+		 * @param string $force                 Control saving postmeta after of settings change.
 		 *
 		 * @return mixed Setting value.
 		 */
-		public function set_setting( $setting_key = '', $setting_value = '', $update = true ) {
+		public function set_setting( $setting_key = '', $setting_value = '', $force = false ) {
 			$this->load_settings( $force );
 
 			if ( ! empty( $setting_key ) ) {
 				$this->settings[ $setting_key ] = $setting_value;
 				$this->settings_changed         = true;
 
-				//$update
+				// $update
 			}
 
 			return $setting_value;

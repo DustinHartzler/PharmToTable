@@ -32,12 +32,11 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 		</div>
 		<div class="ld-table-list-columns">
 			<?php
-			// Use an array so it can be filtered later
+			// Use an array so it can be filtered later.
 			$row_columns = array();
 
 			/**
 			 * Comment count and link to assignment
-			 * @var [type]
 			 */
 			if ( true === (bool) $assignment_post_type_object->publicly_queryable ) :
 
@@ -60,7 +59,7 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 					); ?> "><?php echo esc_html( get_comments_number( $assignment->ID ) ); ?><span class="ld-icon ld-icon-comments"></span></a> <?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Generic.WhiteSpace.ScopeIndent.Incorrect ?>
 
 					<?php
-					// Add the markup to the array
+					// Add the markup to the array.
 					$row_columns['comments'] = ob_get_clean();
 					ob_flush();
 
@@ -94,7 +93,7 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 					<?php
 					if ( $assignment_points ) :
 						echo sprintf(
-							// translators: placeholder: %1$s: Current points, %2$s: Maximum points
+							// translators: placeholder: %1$s: Current points, %2$s: Maximum points.
 							esc_html__( '%1$s/%2$s Points Awarded ', 'learndash' ),
 							esc_html( $assignment_points['current'] ),
 							esc_html( $assignment_points['max'] )
@@ -113,7 +112,7 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 
 			$row_columns['date'] = get_the_date( get_option( 'date_format' ), $assignment->ID );
 
-			// Apply a fitler so devs can add more info here later
+			// Apply a fitler so devs can add more info here later.
 			/** This filter is documented in themes/ld30/templates/assignment/partials/row.php */
 			$row_columns = apply_filters( 'learndash-assignment-list-columns-content', $row_columns );
 			if ( ! empty( $row_columns ) ) :

@@ -26,7 +26,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param integer $user   Either user_id integer or WP_User instance.
 		 * @param boolean $reload True to force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_User
+		 * @return new instance of LDLMS_Model_User or null
 		 */
 		public static function user( $user = null, $reload = false ) {
 			$model = 'LDLMS_Model_User';
@@ -47,6 +47,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 					return self::add_instance( $model, $user_id, $user_id );
 				}
 			}
+
+			return null;
 		}
 
 
@@ -56,7 +58,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param integer $user Either user_id integer or WP_User instance.
 		 * @param boolean $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course
+		 * @return new instance of LDLMS_Model_Course or null
 		 */
 		public static function course_progress( $user = null, $reload = false ) {
 			$model = 'LDLMS_Model_User_Course_Progress';
@@ -75,6 +77,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 				}
 				return self::add_instance( $model, $user_id, $user_id );
 			}
+
+			return null;
 		}
 
 		/**
@@ -83,7 +87,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param integer $user Either user_id integer or WP_User instance.
 		 * @param boolean $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course
+		 * @return new instance of LDLMS_Model_Course or null
 		 */
 		public static function quiz_progress( $user = null, $reload = false ) {
 			$model = 'LDLMS_Model_User_Quiz_Progress';
@@ -102,6 +106,8 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 				}
 				return self::add_instance( $model, $user_id, $user_id );
 			}
+
+			return null;
 		}
 	}
 }

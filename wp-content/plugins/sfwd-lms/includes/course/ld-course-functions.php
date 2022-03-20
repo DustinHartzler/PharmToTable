@@ -147,6 +147,8 @@ function learndash_get_lesson_id( $post_id = null, $course_id = null ) {
 			return get_post_meta( $post->ID, 'lesson_id', true );
 		}
 	}
+
+	return '';
 }
 
 /**
@@ -284,6 +286,7 @@ function learndash_set_course_prerequisite( $course_id = 0, $course_prerequisite
 
 		return learndash_update_setting( $course_id, 'course_prerequisite', (array) $course_prerequisites );
 	}
+	return false;
 }
 
 /**
@@ -653,7 +656,7 @@ function learndash_get_course_meta_setting( $course_id = 0, $setting_key = '' ) 
 		$meta = array();
 	}
 
-	// we only want/need to reformat the access list of we are returning ALL setting or just the access list
+	// we only want/need to reformat the access list of we are returning ALL setting or just the access list.
 	if ( ( empty( $setting_key ) ) || ( 'course_access_list' === $setting_key ) ) {
 		if ( ! isset( $meta['sfwd-courses_course_access_list'] ) ) {
 			$meta['sfwd-courses_course_access_list'] = '';
@@ -672,7 +675,7 @@ function learndash_get_course_meta_setting( $course_id = 0, $setting_key = '' ) 
 			$meta['sfwd-courses_course_access_list'] = array();
 		}
 
-		// Need to remove the empty '0' items
+		// Need to remove the empty '0' items.
 		$meta['sfwd-courses_course_access_list'] = array_diff( $meta['sfwd-courses_course_access_list'], array( 0, '' ) );
 	}
 
@@ -847,22 +850,21 @@ function learndash_get_page_by_path( $slug = '', $post_type = '' ) {
 function learndash_get_course_lessons_per_page( $course_id = 0 ) {
 	$course_lessons_per_page = 0;
 
-	$lessons_options = learndash_get_option( 'sfwd-lessons' );
-	if ( isset( $lessons_options['posts_per_page'] ) ) {
-		$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
+	$course_lessons_per_page = (int) get_option( 'posts_per_page' );
+
+	$course_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Courses_Management_Display' );
+	if ( ( isset( $course_settings['course_pagination_enabled'] ) ) && ( 'yes' === $course_settings['course_pagination_enabled'] ) ) {
+		if ( isset( $course_settings['course_pagination_lessons'] ) ) {
+			$course_lessons_per_page = absint( $course_settings['course_pagination_lessons'] );
+		} elseif ( isset( $course_settings['posts_per_page'] ) ) {
+			$course_lessons_per_page = absint( $course_settings['posts_per_page'] );
+		}
 	}
 
 	if ( ! empty( $course_id ) ) {
 		$course_settings = learndash_get_setting( intval( $course_id ) );
-
 		if ( ( isset( $course_settings['course_lesson_per_page'] ) ) && ( 'CUSTOM' === $course_settings['course_lesson_per_page'] ) && ( isset( $course_settings['course_lesson_per_page_custom'] ) ) ) {
-			$course_lessons_per_page = intval( $course_settings['course_lesson_per_page_custom'] );
-		} else {
-			if ( ( ! isset( $lessons_options['posts_per_page'] ) ) || ( is_null( $lessons_options['posts_per_page'] ) ) ) {
-				$course_lessons_per_page = get_option( 'posts_per_page' );
-			} else {
-				$course_lessons_per_page = intval( $lessons_options['posts_per_page'] );
-			}
+			$course_lessons_per_page = absint( $course_settings['course_lesson_per_page_custom'] );
 		}
 	}
 
@@ -955,7 +957,11 @@ function learndash_process_lesson_topics_pager( $topics = array(), $args = array
 	$paged_values = learndash_get_lesson_topic_paged_values();
 
 	if ( ! empty( $topics ) ) {
-		$topics_per_page = learndash_get_course_topics_per_page( $args['course_id'], $args['lesson_id'] );
+		if ( ! isset( $args['per_page'] ) ) {
+			$topics_per_page = learndash_get_course_topics_per_page( $args['course_id'], $args['lesson_id'] );
+		} else {
+			$topics_per_page = intval( $args['per_page'] );
+		}
 		if ( ( $topics_per_page > 0 ) && ( count( $topics ) > $topics_per_page ) ) {
 			$topics_chunks = array_chunk( $topics, $topics_per_page );
 
@@ -1123,16 +1129,21 @@ function learndash_convert_course_access_list( $course_access_list = '', $return
 function learndash_get_course_topics_per_page( $course_id = 0, $lesson_id = 0 ) {
 	$course_topics_per_page = 0;
 
-	$lessons_options = learndash_get_option( 'sfwd-lessons' );
-	if ( isset( $lessons_options['posts_per_page'] ) ) {
-		$course_topics_per_page = intval( $lessons_options['posts_per_page'] );
+	$course_topics_per_page = (int) get_option( 'posts_per_page' );
+
+	$course_settings = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Courses_Management_Display' );
+	if ( ( isset( $course_settings['course_pagination_enabled'] ) ) && ( 'yes' === $course_settings['course_pagination_enabled'] ) ) {
+		if ( isset( $course_settings['course_pagination_topics'] ) ) {
+			$course_topics_per_page = absint( $course_settings['course_pagination_topics'] );
+		} elseif ( isset( $course_settings['posts_per_page'] ) ) {
+			$course_topics_per_page = absint( $course_settings['posts_per_page'] );
+		}
 	}
 
 	if ( ! empty( $course_id ) ) {
 		$course_settings = learndash_get_setting( intval( $course_id ) );
-
 		if ( ( isset( $course_settings['course_lesson_per_page'] ) ) && ( 'CUSTOM' === $course_settings['course_lesson_per_page'] ) && ( isset( $course_settings['course_topic_per_page_custom'] ) ) ) {
-			$course_topics_per_page = intval( $course_settings['course_topic_per_page_custom'] );
+			$course_topics_per_page = absint( $course_settings['course_topic_per_page_custom'] );
 		}
 	}
 
@@ -1352,8 +1363,8 @@ function learndash_is_course_shared_steps_enabled() {
  *
  * @since 3.4.1
  *
- * @param string  $price_type       Price Type: open, free, closed, paynow, etc.
  * @param string  $post_type        Post Type slug: sfwd-courses or group.
+ * @param string  $price_type       Price Type: open, free, closed, paynow, etc.
  * @param boolean $bypass_transient Optional. Whether to bypass transient cache. Default false.
  *
  * @return @array Array of Course IDs.
@@ -1453,9 +1464,10 @@ function learndash_post_meta_processed( $post_type = '' ) {
 		 *
 		 * @since 3.4.1
 		 *
-		 * @param boolean $process   True or Fals to process post meta.
+		 * @param boolean $process   True or False to process post meta.
 		 * @param string  $post_type The post type slug.
 		 */
 		return apply_filters( 'learndash_post_meta_processed', $post_meta_processed, $post_type );
 	}
+	return false;
 }

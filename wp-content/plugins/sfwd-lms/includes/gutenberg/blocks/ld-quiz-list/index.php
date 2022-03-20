@@ -82,10 +82,13 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 					'type' => 'boolean',
 				),
 				'col'                   => array(
-					'type' => 'string',
+					'type' => 'integer',
 				),
 				'example_show'          => array(
 					'type' => 'boolean',
+				),
+				'editing_post_meta'     => array(
+					'type' => 'object',
 				),
 			);
 			$this->self_closing     = true;
@@ -102,26 +105,50 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param array $attributes Shortcode attrbutes.
+		 * @param array    $block_attributes The block attrbutes.
+		 * @param string   $block_content    The block content.
+		 * @param WP_block $block            The block object.
+		 *
 		 * @return none The output is echoed.
 		 */
-		public function render_block( $attributes = array() ) {
-			$attributes = $this->preprocess_block_attributes( $attributes );
+		public function render_block( $block_attributes = array(), $block_content = '', WP_block $block = null ) {
+			$block_attributes = $this->preprocess_block_attributes( $block_attributes );
 
-			if ( is_user_logged_in() ) {
-				/** This filter is documented in includes/gutenberg/blocks/ld-course-list/index.php */
-				$attributes           = apply_filters( 'learndash_block_markers_shortcode_atts', $attributes, $this->shortcode_slug, $this->block_slug, '' );
-				$shortcode_params_str = $this->prepare_course_list_atts_to_param( $attributes );
-				$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
-				$shortcode_out        = do_shortcode( $shortcode_params_str );
-				if ( empty( $shortcode_out ) ) {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
-				}
-
-				// This is mainly to protect against emty returns with the Gutenberg ServerSideRender function.
-				return $this->render_block_wrap( $shortcode_out );
+			// Only the 'editing_post_meta' element will be sent from within the post edit screen.
+			if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+				$block_attributes['user_id'] = $this->block_attributes_get_user_id( $block_attributes );
 			}
-			wp_die();
+
+			/**
+			 * Filters WordPress block content shortcode attributes.
+			 *
+			 * @since 2.5.9
+			 *
+			 * @param array  $block_attributes An array of shortcode attributes.
+			 * @param string $shortcode_slug   Slug of the shortcode.
+			 * @param string $block_slug       Slug of the gutenberg block.
+			 * @param string $content          Shortcode content.
+			 */
+			$block_attributes = apply_filters( 'learndash_block_markers_shortcode_atts', $block_attributes, $this->shortcode_slug, $this->block_slug, '' );
+
+			$shortcode_out = '';
+
+			$shortcode_str = $this->prepare_course_list_atts_to_param( $block_attributes );
+			$shortcode_str = '[' . $this->shortcode_slug . ' ' . $shortcode_str . ']';
+
+			if ( ! empty( $shortcode_str ) ) {
+				$shortcode_out = do_shortcode( $shortcode_str );
+			}
+
+			if ( ! empty( $shortcode_out ) ) {
+				if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+					$shortcode_out = $this->render_block_wrap( $shortcode_out );
+				} else {
+					$shortcode_out = '<div class="learndash-wrap">' . $shortcode_out . '</div>';
+				}
+			}
+
+			return $shortcode_out;
 		}
 
 		/**
@@ -129,52 +156,44 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param array  $attributes The array of attributes parse from the block content.
+		 * @param array  $block_attributes The array of attributes parse from the block content.
 		 * @param string $shortcode_slug This will match the related LD shortcode ld_profile, ld_course_list, etc.
 		 * @param string $block_slug This is the block token being processed. Normally same as the shortcode but underscore replaced with dash.
 		 * @param string $content This is the orignal full content being parsed.
 		 *
-		 * @return array $attributes.
+		 * @return array $block_attributes.
 		 */
-		public function learndash_block_markers_shortcode_atts_filter( $attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
+		public function learndash_block_markers_shortcode_atts_filter( $block_attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
 			if ( $shortcode_slug === $this->shortcode_slug ) {
-				if ( isset( $attributes['preview_show'] ) ) {
-					unset( $attributes['preview_show'] );
-				}
-
-				if ( isset( $attributes['preview_user_id'] ) ) {
-					unset( $attributes['preview_user_id'] );
-				}
-
-				if ( isset( $attributes['per_page'] ) ) {
-					if ( ! isset( $attributes['num'] ) ) {
-						$attributes['num'] = $attributes['per_page'];
-						unset( $attributes['per_page'] );
+				if ( isset( $block_attributes['per_page'] ) ) {
+					if ( ! isset( $block_attributes['num'] ) ) {
+						$block_attributes['num'] = $block_attributes['per_page'];
+						unset( $block_attributes['per_page'] );
 					}
 				}
 
-				if ( ( ! isset( $attributes['course_grid'] ) ) || ( true === $attributes['course_grid'] ) ) {
-					$attributes['course_grid'] = 'true';
+				if ( ( ! isset( $block_attributes['course_grid'] ) ) || ( true === $block_attributes['course_grid'] ) ) {
+					$block_attributes['course_grid'] = 'true';
 				}
 
-				if ( ( isset( $attributes['quiz_categoryselector'] ) ) && ( true === $attributes['quiz_categoryselector'] ) ) {
-					$attributes['quiz_categoryselector'] = 'true';
+				if ( ( isset( $block_attributes['quiz_categoryselector'] ) ) && ( true === $block_attributes['quiz_categoryselector'] ) ) {
+					$block_attributes['quiz_categoryselector'] = 'true';
 				}
 
-				if ( ( isset( $attributes['categoryselector'] ) ) && ( true === $attributes['categoryselector'] ) ) {
-					$attributes['categoryselector'] = 'true';
+				if ( ( isset( $block_attributes['categoryselector'] ) ) && ( true === $block_attributes['categoryselector'] ) ) {
+					$block_attributes['categoryselector'] = 'true';
 				}
 
 				/**
 				 * Not the best place to make this call this but we need to load the
 				 * Course Grid resources.
 				 */
-				if ( 'true' === $attributes['course_grid'] ) {
+				if ( 'true' === $block_attributes['course_grid'] ) {
 					learndash_enqueue_course_grid_scripts();
 				}
 			}
 
-			return $attributes;
+			return $block_attributes;
 		}
 
 		// End of functions.

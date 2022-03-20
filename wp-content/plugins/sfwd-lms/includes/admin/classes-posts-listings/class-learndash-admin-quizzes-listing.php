@@ -242,7 +242,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @since 3.0.0
 		 *
 		 * @param array   $row_actions Existing Row actions for course.
-		 * @param WP_Post $course_post Course Post object for current row.
+		 * @param WP_Post $post Course Post object for current row.
 		 *
 		 * @return array $row_actions
 		 */

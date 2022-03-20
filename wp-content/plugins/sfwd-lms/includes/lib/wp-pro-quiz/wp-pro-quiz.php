@@ -111,22 +111,6 @@ function wpProQuiz_pluginLoaded() {
 }
 
 /**
- * Instansiates the `WpProQuiz_Plugin_BpAchievementsV3` class.
- *
- * Fires on `dpa_ready` hook.
- */
-function wpProQuiz_achievementsV3() {
-	achievements()->extensions->wp_pro_quiz = new WpProQuiz_Plugin_BpAchievementsV3();
-
-	/**
-	 * Fires after instansiating WpProQuiz_Plugin_BpAchievementsV3 class.
-	 */
-	do_action( 'wpProQuiz_achievementsV3' );
-}
-
-add_action( 'dpa_ready', 'wpProQuiz_achievementsV3' );
-
-/**
  * Formats the quiz cloze type answers into an array to be used when comparing responses.
  *
  * The function is copied from `WpProQuiz_View_FrontQuiz` class.
@@ -241,7 +225,15 @@ function learndash_question_cloze_fetch_data( $answer_text, $convert_to_lower = 
 		if ( ! isset( $data['replace'] ) ) {
 			$data['replace'] = $answer_text;
 		}
-		$a  = '<span class="wpProQuiz_cloze"><input autocomplete="off" data-wordlen="' . max( $len ) . '" type="text" value=""> ';
+		$input_size = absint( max( $len ) );
+		if ( $input_size < 1 ) {
+			$input_size = 1;
+		}
+
+		$input_max = $input_size + 5;
+
+		$a  = '<span class="wpProQuiz_cloze"><input autocomplete="off" data-wordlen="' . absint( $input_size ) . '" type="text" value="" size="' . absint( $input_size ) . '" maxlength="' . absint( $input_max ) . '"> ';
+
 		$a .= '<span class="wpProQuiz_clozeCorrect" style="display: none;"></span></span>';
 
 		$replace_key = '@@wpProQuizCloze-' . $k . '@@';
@@ -415,7 +407,8 @@ function learndash_question_free_get_answer_data( $data, $question = null ) {
 			continue;
 		}
 
-		$question_data['correct'][] = esc_attr( $item_value );
+		//$question_data['correct'][] = esc_attr( $item_value );
+		$question_data['correct'][] = $item_value;
 		$question_data['points'][]  = (int) $item_points;
 	}
 

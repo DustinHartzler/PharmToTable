@@ -14,14 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( 'str_getcsv' ) ) {
 
 	/**
-	 * Input a text filename of a comma seperated file, and parse it, returning the data as an array
+	 * Input a text file name of a comma seperated file, and parse it, returning the data as an array
 	 *
 	 * @since 2.1.0
 	 *
-	 * @param  string $input     filename
-	 * @param  string $delimiter
-	 * @param  string $enclosure
-	 * @param  string $escape
+	 * @param  string $input     File name.
+	 * @param  string $delimiter Delimiter.
+	 * @param  string $enclosure Enclosure.
+	 * @param  string $escape    Escape.
 	 *
 	 * @return array Array of strings that are parsed as comma seperated values
 	 */
@@ -40,6 +40,9 @@ if ( ! function_exists( 'str_getcsv' ) ) {
  */
 if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
+	/**
+	 * Abstract base class
+	 */
 	abstract class Semper_Fi_Module {
 
 		/**
@@ -113,14 +116,14 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		protected $default_options;
 
 		/**
-		 * organize settings into settings pages with a menu items and/or metaboxes on post types edit screen; optional
+		 * Organize settings into settings pages with a menu items and/or metaboxes on post types edit screen; optional
 		 *
 		 * @var null|array
 		 */
 		protected $locations = null;
 
 		/**
-		 * organize settings on a settings page into multiple, separate metaboxes; optional
+		 * Organize settings on a settings page into multiple, separate metaboxes; optional
 		 *
 		 * @var null|array
 		 */
@@ -169,6 +172,13 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		protected $post_metaboxes = array();
 
 		/**
+		 * Post type
+		 *
+		 * @var string
+		 */
+		protected $post_type;
+
+		/**
 		 * Tabbed metaboxes
 		 *
 		 * @var bool
@@ -210,8 +220,10 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $name
-		 * @param  array  $arguments
+		 * @param  string $name      Method name.
+		 * @param  array  $arguments Arguments.
+		 *
+		 * @throws InvalidArgumentException When method doesn't exist.
 		 */
 		public function __call( $name, $arguments ) {
 			if ( strpos( $name, 'display_settings_page_' ) === 0 ) {
@@ -245,9 +257,9 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string               $name
-		 * @param  boolean|string|array $default
-		 * @param  boolean              $use_cache
+		 * @param  string               $name      Name of the option.
+		 * @param  boolean|string|array $default   Value to return if the option doesn't exist.
+		 * @param  boolean              $use_cache Whether to use cache. Default true.
 		 * @return string
 		 */
 		public function get_option( $name, $default = false, $use_cache = true ) {
@@ -263,8 +275,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $option   Option to be changed
-		 * @param  string $newvalue Value of new option
+		 * @param  string $option   Option to be changed.
+		 * @param  string $newvalue Value of new option.
 		 * @return bool
 		 */
 		public function update_option( $option, $newvalue ) {
@@ -280,7 +292,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $option
+		 * @param  string $option Name of option to delete.
 		 * @return bool
 		 */
 		public function delete_option( $option ) {
@@ -322,8 +334,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string      $option_data
-		 * @param  bool|string $option_name
+		 * @param  string      $option_data Option value.
+		 * @param  bool|string $option_name Name of the option to update.
 		 * @return bool
 		 */
 		public function update_class_option( $option_data, $option_name = false ) {
@@ -352,7 +364,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  bool $delete
+		 * @param  bool $delete Whether to delete.
 		 * @return bool
 		 */
 		public function delete_class_option( $delete = false ) {
@@ -395,8 +407,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string      $option     Option for this prefix
-		 * @param  null|string $location    $this->locations array index
+		 * @param  string      $option     Option for this prefix.
+		 * @param  null|string $location   $this->locations array index.
 		 * @return bool
 		 */
 		public function option_isset( $option, $location = null ) {
@@ -412,11 +424,11 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  null|string $location $this->locations array index
+		 * @param  null|string $location $this->locations array index.
 		 */
 		public function display_tabs( $location ) {
-			if ( ( null !== $location ) && isset( $locations[ $location ]['tabs'] ) ) {
-				$tabs = $locations['location']['tabs'];
+			if ( ( null !== $location ) && isset( $this->locations[ $location ]['tabs'] ) ) {
+				$tabs = $this->locations['location']['tabs'];
 			} else {
 				$tabs = $this->tabs;
 			}
@@ -450,8 +462,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $buf
-		 * @return string        Saved options line seperated
+		 * @param  string $buf Buffer.
+		 * @return string      Saved options line seperated
 		 */
 		public function settings_export( $buf ) {
 			global $sfwd_options, $sfp;
@@ -545,7 +557,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 						continue;
 					}
 
-					// don't re-export all module settings -- pdb
+					// Don't re-export all module settings -- pdb.
 					if ( is_array( $value ) ) {
 						$value = "'" . str_replace( array( "'", "\n", "\r" ), array( "\'", '\n', '\r' ), trim( serialize( $value ) ) ) . "'";
 					} else {
@@ -566,7 +578,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $error Error message
+		 * @param  string $error Error message.
 		 * @return bool
 		 */
 		public function output_error( $error ) {
@@ -582,7 +594,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $csv Comma seperated text string
+		 * @param  string $csv Comma seperated text string.
 		 * @return array      Array representation of comma seperated text
 		 */
 		public function csv_to_array( $csv ) {
@@ -706,7 +718,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 			wp_localize_script( 'sfwd-module-script', 'sfwd_data', $data );
 
 			if ( ! isset( $learndash_assets_loaded['scripts']['learndash_template_script_js'] ) ) {
-				// First check if the theme has the file learndash/learndash_template_script.js or learndash_template_script.js file
+				// First check if the theme has the file learndash/learndash_template_script.js or learndash_template_script.js file.
 				$filepath = SFWD_LMS::get_template( 'learndash_template_script.js', null, null, true );
 
 				if ( ! empty( $filepath ) ) {
@@ -724,10 +736,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 * @since 2.1.0
 		 */
 		public function settings_page_init() {
-
 		}
-
-
 
 		/**
 		 * Filter out admin pointers that have already been clicked.
@@ -745,9 +754,6 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 			}
 		}
 
-
-
-
 		/**
 		 * Add basic hooks when on the module's page.
 		 */
@@ -764,31 +770,24 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 			add_action( $this->prefix . 'settings_header', array( $this, 'display_tabs' ) );
 		}
 
-
-
-
 		/**
 		 * Collect metabox data together for tabbed metaboxes.
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $args
+		 * @param  array $args Arguments to merge with metaboxes.
 		 * @return array Merged array
 		 */
 		public function filter_return_metaboxes( $args ) {
 			return array_merge( $args, $this->post_metaboxes );
 		}
 
-
-
-
 		/**
 		 * Add submenu for module, call page hooks, set up metaboxes.
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param string $parent_slug
-		 * @return bool
+		 * @param string $parent_slug Parent menu slug.
 		 */
 		public function add_menu( $parent_slug ) {
 			if ( empty( $parent_slug ) ) {
@@ -887,7 +886,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 							}
 
 							/**
-							 * enqueue_scripts action add
+							 * Enqueue_scripts action
 							 *
 							 * Adds 'admin_print_scripts-post.php' to the enqueued scripts hook
 							 *
@@ -898,7 +897,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 							add_action( 'admin_print_scripts-post.php', array( $this, 'enqueue_scripts' ) );
 
 							/**
-							 * enqueue_scripts action add
+							 * Enqueue_scripts action
 							 *
 							 * Adds admin_print_scripts-post-new.php to the 'enqueue_scripts' hook
 							 *
@@ -909,7 +908,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 							add_action( 'admin_print_scripts-post-new.php', array( $this, 'enqueue_scripts' ) );
 
 							/**
-							 * enqueue_styles action add
+							 * Enqueue_styles action
 							 *
 							 * Adds admin_print_styles-post.php to the 'enqueue_styles' hook
 							 *
@@ -920,7 +919,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 							add_action( 'admin_print_styles-post.php', array( $this, 'enqueue_styles' ) );
 
 							/**
-							 * enqueue_scripts action add
+							 * Enqueue_scripts action
 							 *
 							 * Adds the filename 'admin_print_styles-post-new.php' to the 'enqueue_styles' hook
 							 *
@@ -943,7 +942,9 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  int $post_id
+		 * @param int     $post_id    Post ID.
+		 * @param WP_Post $saved_post WP Post object.
+		 * @param bool    $update     Whether this is an existing post.
 		 */
 		public function save_post_data( $post_id = 0, $saved_post = null, $update = null ) {
 			if ( null !== $this->locations ) {
@@ -1158,7 +1159,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $args
+		 * @param  array $args Arguments.
 		 * @return string
 		 */
 		public function do_multi_input( $args ) {
@@ -1270,7 +1271,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $args
+		 * @param  array $args Arguments.
 		 * @return string|array
 		 */
 		public function get_option_html( $args ) {
@@ -1488,9 +1489,9 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  string $name
-		 * @param  array  $opts
-		 * @param  array  $args
+		 * @param  string $name Name of the option.
+		 * @param  array  $opts array of options.
+		 * @param  array  $args Array of arguments.
 		 * @return string
 		 */
 		public function get_option_row( $name, $opts, $args ) {
@@ -1539,8 +1540,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  null|string $location  $this->locations array index
-		 * @param  null|array  $meta_args
+		 * @param  null|string $location  $this->locations array index.
+		 * @param  null|array  $meta_args Arguments.
 		 */
 		public function display_options( $location = null, $meta_args = null ) {
 			global $sfwd_lms;
@@ -1677,7 +1678,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		/**
 		 * Sanitize options
 		 *
-		 * @param  null|string $location   $this->locations array index
+		 * @param  null|string $location   $this->locations array index.
 		 */
 		public function sanitize_options( $location = null ) {
 			foreach ( $this->setting_options( $location ) as $k => $v ) {
@@ -1723,8 +1724,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  object $post
-		 * @param  array  $metabox
+		 * @param  object $post    Post object.
+		 * @param  array  $metabox Metabox.
 		 */
 		public function display_metabox( $post, $metabox ) {
 			$this->display_options( $metabox['args']['location'], $metabox );
@@ -1737,8 +1738,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  null|string $location   $this->locations array index
-		 * @param  bool        $delete     delete options flag
+		 * @param  null|string $location   $this->locations array index.
+		 * @param  bool        $delete     delete options flag.
 		 */
 		public function reset_options( $location = null, $delete = false ) {
 			if ( true === $delete ) {
@@ -1758,11 +1759,11 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 
 		/**
-		 * handle option resetting and updating
+		 * Handle option resetting and updating
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  null|string $location   $this->locations array index
+		 * @param  null|string $location   $this->locations array index.
 		 */
 		public function handle_settings_updates( $location = null ) {
 
@@ -1843,7 +1844,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  null|string $location   $this->locations array index
+		 * @param  null|string $location   $this->locations array index.
 		 */
 		public function display_settings_page( $location = null ) {
 			return;
@@ -1854,7 +1855,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  null|string $location   $this->locations array index
+		 * @param  null|string $location   $this->locations array index.
 		 * @return string
 		 */
 		public function get_prefix( $location = null ) {
@@ -1872,8 +1873,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  null|string $location   $this->locations array index
-		 * @param  null|array  $defaults
+		 * @param  null|string $location   $this->locations array index.
+		 * @param  null|array  $defaults   Defaults.
 		 * @return array
 		 */
 		public function setting_options( $location = null, $defaults = null ) {
@@ -2011,8 +2012,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  null|string $location   $this->locations array index
-		 * @param  null|array  $defaults
+		 * @param  null|string $location   $this->locations array index.
+		 * @param  null|array  $defaults   Defaults.
 		 * @return array
 		 */
 		public function default_options( $location = null, $defaults = null ) {
@@ -2035,10 +2036,10 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array       $opts       Array of options
-		 * @param  null|string $location   $this->locations array index
-		 * @param  null|array  $defaults
-		 * @param  null|object $post
+		 * @param  array       $opts       Array of options.
+		 * @param  null|string $location   $this->locations array index.
+		 * @param  null|array  $defaults   Defaults.
+		 * @param  null|object $post       Post object.
 		 * @return array
 		 */
 		public function get_current_options( $opts = array(), $location = null, $defaults = null, $post = null ) {
@@ -2081,11 +2082,12 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array       $opts       Array of options
-		 * @param  null|string $location   $this->locations array index
-		 * @param  null|array  $defaults
+		 * @param  array       $opts       Array of options.
+		 * @param  null|string $location   $this->locations array index.
+		 * @param  null|array  $defaults   Defaults.
 		 */
 		public function update_options( $opts = array(), $location = null, $defaults = null ) {
+			$type = '';
 			if ( is_null( $location ) ) {
 				$type = 'settings';
 			} else {
@@ -2102,7 +2104,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				$this->setting_options( $location, $defaults );
 			}
 
-			// hack -- make sure this runs anyhow, for now -- pdb
+			// Hack -- make sure this runs anyhow, for now -- pdb.
 			$this->options = wp_parse_args( $opts, $get_opts );
 		}
 	}

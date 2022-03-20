@@ -21,9 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Identify the max upload file size. Compares the server enviornment limit to what's configured through LD
+ *
  * @var $php_max_upload (int)
  */
-
 $php_max_upload = ini_get( 'upload_max_filesize' );
 
 if ( isset( $post_settings['assignment_upload_limit_size'] ) && ! empty( $post_settings['assignment_upload_limit_size'] ) ) {
@@ -48,7 +48,7 @@ if ( isset( $post_settings['assignment_upload_limit_extensions'] ) && ! empty( $
 	$limit_file_exts = learndash_validate_extensions( $post_settings['assignment_upload_limit_extensions'] );
 	if ( ! empty( $limit_file_exts ) ) {
 		$upload_message .= ' ' . sprintf(
-			// translators: placeholder: Comma separated list of file extentions
+			// translators: placeholder: Comma separated list of file extentions.
 			esc_html_x( 'Allowed file types: %s', 'placeholder: Comma separated list of file extentions', 'learndash' ),
 			implode( ', ', $limit_file_exts )
 		);

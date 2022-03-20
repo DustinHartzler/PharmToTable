@@ -583,8 +583,12 @@ var PostTitle = /*#__PURE__*/function (_PureComponent) {
 
           if (titleField) {
             titleField.addEventListener('input', function (e) {
+              var _target$value;
+
+              var target = e.target;
+              var newValue = (_target$value = target.value) !== null && _target$value !== void 0 ? _target$value : target.textContent;
               self.setState({
-                post_title: e.target.value
+                post_title: newValue
               });
             });
             observer.disconnect();
@@ -733,7 +737,8 @@ var Tabs = /*#__PURE__*/function (_PureComponent) {
     _this.state = {
       currentTab: activeTab,
       tabs: _this.props.data.tabs || [],
-      popover: false
+      popover: false,
+      addNewEntityButton: null
     };
     _this.dropdownRef = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createRef();
     _this.handleTabClick = _this.handleTabClick.bind(_assertThisInitialized(_this));
@@ -755,7 +760,15 @@ var Tabs = /*#__PURE__*/function (_PureComponent) {
 
       var _this$state = this.state,
           tabs = _this$state.tabs,
-          currentTab = _this$state.currentTab; // The page has tabs, add a class to body to push down Gutenberg if needed
+          currentTab = _this$state.currentTab,
+          addNewEntityButton = _this$state.addNewEntityButton;
+
+      if (addNewEntityButton === null) {
+        this.setState({
+          addNewEntityButton: document.querySelector('.page-title-action')
+        });
+      } // The page has tabs, add a class to body to push down Gutenberg if needed
+
 
       if (0 !== tabs.length) {
         document.body.classList.add('ld-header-has-tabs');
@@ -1071,14 +1084,18 @@ var Tabs = /*#__PURE__*/function (_PureComponent) {
       var _this$state2 = this.state,
           tabs = _this$state2.tabs,
           currentTab = _this$state2.currentTab,
-          popover = _this$state2.popover;
-      var addNewEntityButton = document.querySelector('.page-title-action');
+          popover = _this$state2.popover,
+          addNewEntityButton = _this$state2.addNewEntityButton;
       var currentTabObject = tabs.filter(function (tab) {
         return currentTab === tab.id;
       })[0] || tabs[0];
       var hasActions = currentTabObject && 'actions' in currentTabObject && 0 !== currentTabObject.actions.length;
 
       if (0 !== tabs.length) {
+        if (addNewEntityButton) {
+          addNewEntityButton.remove();
+        }
+
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
           className: "ld-global-header-new-settings"
         }, addNewEntityButton && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {

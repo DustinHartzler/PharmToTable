@@ -24,7 +24,7 @@ if ( ( ! class_exists( 'LDLMS_Model_Lesson' ) ) && ( class_exists( 'LDLMS_Model_
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param int $post_id Lesson Post ID to load.
+		 * @param int $lesson_id Lesson Post ID to load.
 		 *
 		 * return mixed instance of class or exception.
 		 */
@@ -38,9 +38,7 @@ if ( ( ! class_exists( 'LDLMS_Model_Lesson' ) ) && ( class_exists( 'LDLMS_Model_
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param int $post_id Lesson Post ID to load.
-		 *
-		 * @return bool True if post was loaded. False otherwise.
+		 * @param int $lesson_id Lesson Post ID to load.
 		 */
 		public function initialize( $lesson_id ) {
 			if ( ! empty( $lesson_id ) ) {
@@ -66,7 +64,7 @@ if ( ( ! class_exists( 'LDLMS_Model_Lesson' ) ) && ( class_exists( 'LDLMS_Model_
 				return $is_sample;
 			}
 
-			if ( learndash_get_setting( $post->ID, 'sample_lesson' ) ) {
+			if ( learndash_get_setting( $this->post_id, 'sample_lesson' ) ) {
 				$is_sample = true;
 			}
 

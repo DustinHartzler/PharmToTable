@@ -110,7 +110,7 @@ do_action( 'learndash-topic-list-before', $lesson['post']->ID, $course_id, $user
 					<span class="ld-lesson-list-progress">
 					<?php
 					echo sprintf(
-						// translators: placeholder: Lesson Complete Percentage
+						// translators: placeholder: Lesson Complete Percentage.
 						esc_html_x( '%s%% Complete', 'Lesson Complete Percentage', 'learndash' ),
 						esc_html( $lesson_progress['percentage'] )
 					);
@@ -133,7 +133,7 @@ do_action( 'learndash-topic-list-before', $lesson['post']->ID, $course_id, $user
 					<span class="ld-lesson-list-steps">
 					<?php
 					echo sprintf(
-						// translators: placeholder: %1$s: Lesson Steps Complete %2$s: Total lesson steps
+						// translators: placeholder: %1$s: Lesson Steps Complete %2$s: Total lesson steps.
 						esc_html_x( '%1$d/%2$d Steps', '%1$s: Lesson Steps Complete %2$s: Total lesson steps', 'learndash' ),
 						esc_html( $lesson_progress['completed'] ),
 						esc_html( $lesson_progress['total'] )

@@ -31,7 +31,7 @@ function learndash_mce_init() {
 }
 
 /**
- * changes hook in LD v2.3 to only hook into the load of post.php and post-new.php
+ * Changes hook in LD v2.3 to only hook into the load of post.php and post-new.php
  */
 add_action( 'load-post.php', 'learndash_mce_init' );
 add_action( 'load-post-new.php', 'learndash_mce_init' );
@@ -92,7 +92,7 @@ function learndash_wp_tiny_mce_before_init( $init_array ) {
 		jQuery("#content_ifr").contents().find("#tinymce").css
 		({"background-image":"url($img_path)"
 		});
-		
+
 		if(editorId == 'wp_mce_fullscreen'){
 		jQuery("#wp_mce_fullscreen_ifr").contents().find("#tinymce").css
 		({"background-image":"url($img_path)"
@@ -127,4 +127,5 @@ function learndash_get_thumb_url( $post_id = 0, $size = 'full' ) {
 			return $image_src_array[0];
 		}
 	}
+	return '';
 }

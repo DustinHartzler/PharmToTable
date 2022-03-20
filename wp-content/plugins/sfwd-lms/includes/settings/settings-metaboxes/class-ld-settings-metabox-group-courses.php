@@ -46,8 +46,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.2.0
 		 *
-		 * @param string $page Page shown.
-		 * @param string $section Section shown.
+		 * @param object $metabox Metabox object.
 		 */
 		protected function show_settings_metabox_fields( $metabox = null ) {
 			if ( ( is_object( $metabox ) ) && ( is_a( $metabox, 'LearnDash_Settings_Metabox' ) ) && ( $metabox->settings_metabox_key === $this->settings_metabox_key ) ) {

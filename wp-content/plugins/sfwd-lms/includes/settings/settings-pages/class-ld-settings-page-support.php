@@ -36,12 +36,12 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			$this->settings_page_id      = 'learndash_support';
 			$this->settings_page_title   = esc_html__( 'Support', 'learndash' );
 			$this->settings_tab_title    = $this->settings_page_title;
-			$this->settings_tab_priority = 30;
+			$this->settings_tab_priority = 60;
 			$this->settings_form_wrap    = false;
 			$this->show_submit_meta      = false;
 			$this->show_quick_links_meta = true;
 
-			add_action( 'learndash-settings-page-load', array( $this, 'learndash_settings_page_load' ) );
+			add_action( 'learndash_settings_page_load', array( $this, 'learndash_settings_page_load' ) );
 
 			parent::__construct();
 		}
@@ -51,7 +51,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param string $settings_screen_id Screen ID
+		 * @param string $settings_screen_id Screen ID.
 		 */
 		public function learndash_settings_page_load( $settings_screen_id = '' ) {
 			global $sfwd_lms;

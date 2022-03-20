@@ -259,8 +259,6 @@ if ( ! function_exists( 'learndash_restrict_essay_listings_for_group_admins' ) )
 	 * @deprecated 3.2.3
 	 *
 	 * @param object $query The `WP_Query` instance (passed by reference).
-	 *
-	 * @return object $query The `WP_Query` instance (passed by reference).
 	 */
 	function learndash_restrict_essay_listings_for_group_admins( $query ) {
 		if ( function_exists( '_deprecated_function' ) ) {
@@ -334,8 +332,6 @@ if ( ! function_exists( 'learndash_restrict_assignment_listings' ) ) {
 	 * @deprecated 3.2.3
 	 *
 	 * @param WP_Query $query  The WP_Query query object.
-	 *
-	 * @return WP_Query The modified WP_Query query object.
 	 */
 	function learndash_restrict_assignment_listings( $query ) {
 		if ( function_exists( '_deprecated_function' ) ) {

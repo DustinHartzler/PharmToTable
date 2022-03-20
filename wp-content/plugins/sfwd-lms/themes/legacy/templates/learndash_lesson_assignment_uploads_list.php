@@ -1,6 +1,6 @@
 <?php
 /**
- * lesson/topic assignment uploads list.
+ * Lesson/topic assignment uploads list.
  *
  * If ther user has previouly uploaded assignment files they will be show via this template
  *

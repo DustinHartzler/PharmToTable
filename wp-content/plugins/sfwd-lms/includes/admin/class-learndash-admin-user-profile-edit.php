@@ -196,7 +196,7 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 		 *
 		 * @since 2.5.0
 		 *
-		 * @param WP_USer $user WP_User object.
+		 * @param WP_User $user WP_User object.
 		 */
 		private function show_user_delete_data_link( WP_User $user ) {
 			if ( ! current_user_can( 'edit_users' ) ) {
@@ -218,7 +218,7 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 				<?php
 				echo wp_kses_post(
 					sprintf(
-						// translators: placeholder: course
+						// translators: placeholder: course.
 						_x( 'Check and click update profile to permanently delete users LearnDash %s data. <strong>This cannot be undone.</strong>', 'placeholder: course', 'learndash' ),
 						esc_html( learndash_get_custom_label_lower( 'course' ) )
 					)
@@ -259,7 +259,7 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 								<?php
 								wp_kses_post(
 									printf(
-										// translators: placeholder: quiz
+										// translators: placeholder: quiz.
 										esc_html_x( 'Remove the %s lock(s) for this user.', 'placeholder: quiz', 'learndash' ),
 										esc_html( learndash_get_custom_label_lower( 'quiz' ) )
 									)

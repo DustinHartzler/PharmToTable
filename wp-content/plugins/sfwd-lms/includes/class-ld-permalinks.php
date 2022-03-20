@@ -12,6 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
+	/**
+	 * Class for LearnDash Permalinks
+	 */
 	class LearnDash_Permalinks {
 
 		/**
@@ -91,23 +94,23 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 				);
 
 				$ld_rewrite_patterns = array(
-					// Course > Quiz
+					// Course > Quiz.
 					'{{courses_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)/comment-page-([0-9]{1,})/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{quizzes_cpt_name}}=$matches[2]&cpage=$matches[3]',
 					'{{courses_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{quizzes_cpt_name}}=$matches[2]&page=$matches[3]',
 
-					// Course > Lesson
+					// Course > Lesson.
 					'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/comment-page-([0-9]{1,})/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&cpage=$matches[3]',
 					'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&page=$matches[3]',
 
-					// Course > Lesson > Quiz
+					// Course > Lesson > Quiz.
 					'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)/comment-page-([0-9]{1,})/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{quizzes_cpt_name}}=$matches[3]&cpage=$matches[4]',
 					'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{quizzes_cpt_name}}=$matches[3]&page=$matches[4]',
 
-					// Course > Lesson > Topic
+					// Course > Lesson > Topic.
 					'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{topics_cpt_slug}}/([^/]+)/comment-page-([0-9]{1,})/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{topics_cpt_name}}=$matches[3]&cpage=$matches[4]',
 					'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{topics_cpt_slug}}/([^/]+)(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{topics_cpt_name}}=$matches[3]&page=$matches[4]',
 
-					// Course > Lesson > Topic > Quiz
+					// Course > Lesson > Topic > Quiz.
 					'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{topics_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)/comment-page-([0-9]{1,})/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{topics_cpt_name}}=$matches[3]&{{quizzes_cpt_name}}=$matches[4]&cpage=$matches[5]',
 					'{{courses_cpt_slug}}/([^/]+)/{{lessons_cpt_slug}}/([^/]+)/{{topics_cpt_slug}}/([^/]+)/{{quizzes_cpt_slug}}/([^/]+)(?:/([0-9]+))?/?$' => 'index.php?{{courses_cpt_name}}=$matches[1]&{{lessons_cpt_name}}=$matches[2]&{{topics_cpt_name}}=$matches[3]&{{quizzes_cpt_name}}=$matches[4]&page=$matches[5]',
 				);
@@ -167,7 +170,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 
 			if ( ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'nested_urls' ) == 'yes' ) && ( in_array( $post->post_type, learndash_get_post_types( 'course_steps' ), true ) ) ) {
 
-				// If we are viewing one of the list tables we only effect the link if the course_id URL param is set
+				// If we are viewing one of the list tables we only effect the link if the course_id URL param is set.
 				if ( ( is_admin() ) && ( 'edit.php' == $pagenow ) ) {
 					if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
 						$course_id = 0;
@@ -606,7 +609,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 			}
 		}
 
-		// End of function
+		// End of function.
 	}
 }
 

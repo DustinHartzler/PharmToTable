@@ -19,8 +19,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// TODO @37designs this is a bit confusing still, as you can still navigate left / right on lessons even with topics
-$parent_id                  = ( get_post_type() === 'sfwd-lessons' ? absint( $course_id ) : learndash_course_get_single_parent_step( $course_id, get_the_ID() ) );
+// TODO @37designs this is a bit confusing still, as you can still navigate left / right on lessons even with topics.
+if ( ( isset( $course_step_post ) ) && ( is_a( $course_step_post, 'WP_Post' ) ) && ( in_array( $course_step_post->post_type, learndash_get_post_types( 'course' ), true ) ) ) {
+	if ( learndash_get_post_type_slug( 'lesson' ) === $course_step_post->post_type ) {
+		$parent_id = absint( $course_id	);
+	} else {
+		$parent_id = learndash_course_get_single_parent_step( $course_id, $course_step_post->ID );
+	}
+} else {
+	$parent_id = ( get_post_type() === 'sfwd-lessons' ? absint( $course_id ) : learndash_course_get_single_parent_step( $course_id, get_the_ID() ) );
+}
+	
 $learndash_previous_step_id = learndash_previous_post_link( null, 'id', $course_step_post );
 if ( ( empty( $learndash_previous_step_id ) ) && ( learndash_get_post_type_slug( 'topic' ) === $course_step_post->post_type ) ) {
 
@@ -155,7 +164,7 @@ if ( ! empty( $parent_lesson_id ) ) {
 	$complete_button = learndash_mark_complete( $course_step_post );
 }
 
-//if ( ! empty( $learndash_previous_nav ) || ! empty( $learndash_next_nav ) || ! empty( $complete_button ) ) : ?>
+// if ( ! empty( $learndash_previous_nav ) || ! empty( $learndash_next_nav ) || ! empty( $complete_button ) ) : ?>
 
 <div class="ld-content-actions">
 
@@ -184,7 +193,7 @@ if ( ! empty( $parent_lesson_id ) ) {
 	 * @param int          $user_id   User ID.
 	 */
 	do_action( 'learndash-' . $context . '-course-steps-before', get_post_type(), $course_id, $user_id );
-	$learndash_current_post_type = get_post_type();
+	//$learndash_current_post_type = get_post_type();
 	?>
 	<div class="ld-content-action <?php if ( ! $learndash_previous_step_id ) : ?>ld-empty<?php endif; ?>">
 	<?php if ( $learndash_previous_step_id ) : ?>

@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param array $attr {
+ * @param array  $attr {
  *    An array of shortcode attributes.
  *
  *    @type string     $show     The quiz info field to display. Default empty.
@@ -31,16 +31,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type string     $format   Date display format. Default 'F j, Y, g:i a'.
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'quizinfo'.
  *
  * @return string The `ld_quiz_complete` shortcode output.
  */
-function learndash_quizinfo( $attr = array(), $content = '' ) {
+function learndash_quizinfo( $attr = array(), $content = '', $shortcode_slug = 'quizinfo' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
 	$shortcode_atts = shortcode_atts(
 		array(
-			'show'     => '', // [score], [count], [pass], [rank], [timestamp], [pro_quizid], [points], [total_points], [percentage], [timespent]
+			'show'     => '', // [score], [count], [pass], [rank], [timestamp], [pro_quizid], [points], [total_points], [percentage], [timespent].
 			'user_id'  => '',
 			'quiz'     => '',
 			'time'     => '',
@@ -50,14 +51,24 @@ function learndash_quizinfo( $attr = array(), $content = '' ) {
 		$attr
 	);
 
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$shortcode_atts = apply_filters( 'learndash_shortcode_atts', $shortcode_atts, $shortcode_slug );
+
+	$time_range_start = 0;
+	$time_range_end   = 0;
+
+	if ( ( isset( $shortcode_atts['time'] ) ) && ( '' !== $shortcode_atts['time'] ) ) {
+		$shortcode_atts['time'] = absint( $shortcode_atts['time'] );
+	}
+
 	extract( $shortcode_atts );
 
-	$time      = ( empty( $time ) && isset( $_REQUEST['time'] ) ) ? $_REQUEST['time'] : $time;
-	$show      = ( empty( $show ) && isset( $_REQUEST['show'] ) ) ? $_REQUEST['show'] : $show;
-	$quiz      = ( empty( $quiz ) && isset( $_REQUEST['quiz'] ) ) ? $_REQUEST['quiz'] : $quiz;
-	$user_id   = ( empty( $user_id ) && isset( $_REQUEST['user_id'] ) ) ? $_REQUEST['user_id'] : $user_id;
-	$course_id = ( empty( $course_id ) && isset( $_REQUEST['course_id'] ) ) ? $_REQUEST['course_id'] : null;
-	$field_id  = ( empty( $field_id ) && isset( $_REQUEST['field_id'] ) ) ? $_REQUEST['field_id'] : $field_id;
+	$time      = ( empty( $time ) && isset( $_REQUEST['time'] ) ) ? absint( $_REQUEST['time'] ) : $time;
+	$show      = ( empty( $show ) && isset( $_REQUEST['show'] ) ) ? esc_attr( $_REQUEST['show'] ) : $show;
+	$quiz      = ( empty( $quiz ) && isset( $_REQUEST['quiz'] ) ) ? absint( $_REQUEST['quiz'] ) : $quiz;
+	$user_id   = ( empty( $user_id ) && isset( $_REQUEST['user_id'] ) ) ? absint( $_REQUEST['user_id'] ) : $user_id;
+	$course_id = ( empty( $course_id ) && isset( $_REQUEST['course_id'] ) ) ? absint( $_REQUEST['course_id'] ) : null;
+	$field_id  = ( empty( $field_id ) && isset( $_REQUEST['field_id'] ) ) ? absint( $_REQUEST['field_id'] ) : $field_id;
 
 	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
@@ -97,9 +108,16 @@ function learndash_quizinfo( $attr = array(), $content = '' ) {
 
 	foreach ( $quizinfo as $quiz_i ) {
 
-		if ( isset( $quiz_i['time'] ) && $quiz_i['time'] == $time && $quiz_i['quiz'] == $quiz ) {
+		if ( ( isset( $quiz_i['time'] ) ) && ( ! empty( $time ) ) && ( absint( $quiz_i['time'] ) == $time ) && ( absint( $quiz_i['quiz'] ) == absint( $quiz ) ) ) {
 			$selected_quizinfo = $quiz_i;
 			break;
+		}
+
+		if ( ( ! empty( $time_range_start ) ) && ! ( empty( $time_range_end ) ) ) {
+			if ( ( isset( $quiz_i['time'] ) ) && ( $quiz_i['time'] >= $time_range_start ) && ( $quiz_i['time'] <= $time_range_end ) && ( $quiz_i['quiz'] == $quiz ) ) {
+				$selected_quizinfo2 = $quiz_i;
+				break;
+			}
 		}
 
 		if ( $quiz_i['quiz'] == $quiz ) {
@@ -109,31 +127,42 @@ function learndash_quizinfo( $attr = array(), $content = '' ) {
 
 	$selected_quizinfo = empty( $selected_quizinfo ) ? $selected_quizinfo2 : $selected_quizinfo;
 
+	if ( ! is_array( $selected_quizinfo ) ) {
+		$selected_quizinfo = array();
+	}
+
 	switch ( $show ) {
 		case 'timestamp':
-			// date_default_timezone_set( get_option( 'timezone_string' ) );
-			// $selected_quizinfo['timestamp'] = date_i18n( $format, $selected_quizinfo['time'] );
-			$selected_quizinfo['timestamp'] = learndash_adjust_date_time_display( $selected_quizinfo['time'], $format );
+			if ( ( isset( $selected_quizinfo['time'] ) ) && ( ! empty( $selected_quizinfo['time'] ) ) ) {
+				$selected_quizinfo['timestamp'] = learndash_adjust_date_time_display( $selected_quizinfo['time'], $format );
+			} else {
+				$selected_quizinfo['timestamp'] = '';
+			}
 			break;
 
 		case 'percentage':
-			if ( empty( $selected_quizinfo['percentage'] ) ) {
-				$selected_quizinfo['percentage'] = empty( $selected_quizinfo['count'] ) ? 0 : $selected_quizinfo['score'] * 100 / $selected_quizinfo['count'];
+			if ( ( isset( $selected_quizinfo['count'] ) ) && ( isset( $selected_quizinfo['score'] ) ) && ( ! empty( $selected_quizinfo['count'] ) ) ) {
+				$selected_quizinfo['percentage'] = $selected_quizinfo['score'] * 100 / $selected_quizinfo['count'];
+			} else {
+				$selected_quizinfo['percentage'] = '';
 			}
 
 			break;
 
 		case 'pass':
-			$selected_quizinfo['pass'] = ! empty( $selected_quizinfo['pass'] ) ? esc_html__( 'Yes', 'learndash' ) : esc_html__( 'No', 'learndash' );
+			if ( ( isset( $selected_quizinfo['pass'] ) ) && ( ! empty( $selected_quizinfo['pass'] ) ) ) {
+				$selected_quizinfo['pass'] = esc_html__( 'Yes', 'learndash' );
+			} else {
+				$selected_quizinfo['pass'] = esc_html__( 'No', 'learndash' );
+			}
 			break;
 
 		case 'quiz_title':
-			$quiz_post = get_post( $quiz );
-
-			if ( ! empty( $quiz_post->post_title ) ) {
-				$selected_quizinfo['quiz_title'] = $quiz_post->post_title;
+			if ( ( ! empty( $quiz ) ) && ( get_post_type( $quiz ) == learndash_get_post_type_slug( 'quiz' ) ) ) {
+				$selected_quizinfo['quiz_title'] = get_the_title( $quiz );
+			} else {
+				$selected_quizinfo['quiz_title'] = '';
 			}
-
 			break;
 
 		case 'course_title':
@@ -142,17 +171,17 @@ function learndash_quizinfo( $attr = array(), $content = '' ) {
 			} else {
 				$course_id = learndash_get_setting( $quiz, 'course' );
 			}
-			if ( ! empty( $course_id ) ) {
-				$course = get_post( $course_id );
-				if ( ( is_a( $course, 'WP_Post' ) ) && ( ! empty( $course->post_title ) ) ) {
-					$selected_quizinfo['course_title'] = $course->post_title;
-				}
+			if ( ( ! empty( $course_id ) ) && ( get_post_type( $course_id ) == learndash_get_post_type_slug( 'course' ) ) ) {
+				$selected_quizinfo['course_title'] = get_the_title( $course_id );
+			} else {
+				$selected_quizinfo['course_title'] = '';
 			}
-
 			break;
 
 		case 'timespent':
-			$selected_quizinfo['timespent'] = isset( $selected_quizinfo['timespent'] ) ? learndash_seconds_to_time( $selected_quizinfo['timespent'] ) : '';
+			if ( ( isset( $selected_quizinfo['timespent'] ) ) && ( ! empty( $selected_quizinfo['timespent'] ) ) ) {
+				$selected_quizinfo['timespent'] = learndash_seconds_to_time( $selected_quizinfo['timespent'] );
+			}
 			break;
 
 		case 'field':
@@ -205,4 +234,4 @@ function learndash_quizinfo( $attr = array(), $content = '' ) {
 		return apply_filters( 'learndash_quizinfo', '', $shortcode_atts, $selected_quizinfo );
 	}
 }
-add_shortcode( 'quizinfo', 'learndash_quizinfo', 10, 2 );
+add_shortcode( 'quizinfo', 'learndash_quizinfo', 10, 3 );

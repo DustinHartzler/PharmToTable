@@ -23,8 +23,14 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Essays_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Essays_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+
+		/**
+		 * LearnDash course steps object
+		 *
+		 * @var object
+		 */
+		protected $ld_course_steps_object = null;
 
 		/**
 		 * Essay Post data
@@ -37,6 +43,8 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 * Public constructor for class
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param string $post_type Post type.
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -67,7 +75,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 * @see register_rest_route() in WordPress core.
 		 */
 		public function register_routes() {
-			//$args = $this->get_collection_params();
+			// $args = $this->get_collection_params();
 
 			parent::register_routes();
 		}
@@ -247,17 +255,17 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 				if ( empty( $course_id ) ) {
 					$user_enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
 					if ( empty( $user_enrolled_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 
 					$step_courses = learndash_get_courses_for_step( $request['id'], true );
 					if ( empty( $step_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 					$user_enrolled_courses = array_intersect( $user_enrolled_courses, array_keys( $step_courses ) );
 
 					if ( empty( $user_enrolled_courses ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				} else {
 					/**
@@ -282,17 +290,17 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 					}
 
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 					$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->course_post->ID );
 					$this->ld_course_steps_object->load_steps();
 					$lesson_ids = $this->ld_course_steps_object->get_children_steps( $this->course_post->ID, $this->post_type );
 					if ( empty( $lesson_ids ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 
 					if ( ! in_array( $request['id'], $lesson_ids, true ) ) {
-						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
+						return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
 				}
 			}
@@ -471,55 +479,65 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param object $response WP_REST_Response instance.
-		 * @param object $post     WP_Post instance.
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Response $response WP_REST_Response instance.
+		 * @param WP_Post          $post     WP_Post instance.
+		 * @param WP_REST_Request  $request  WP_REST_Request instance.
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
-			$current_links = $response->get_links();
+			if ( $this->post_type === $post->post_type ) {
+				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
+				$request_route = $request->get_route();
+				
+				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
 
-			list( $course_id, $lesson_id, $topic_id, $parent_id ) = $this->get_essay_post_data( $post->ID );
+					$links = array();
 
-			$links = array();
-			if ( ( ! isset( $response->links['course'] ) ) && ( ! empty( $course_id ) ) ) {
-				$links['course'] = array(
-					'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'courses' ) . '/' . $course_id ),
-					'embeddable' => true,
-				);
-			}
+					$current_links = $response->get_links();
 
-			if ( ( ! isset( $response->links['lesson'] ) ) && ( ! empty( $lesson_id ) ) ) {
-				$lesson_url = rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'lessons' ) . '/' . $lesson_id );
+					list( $course_id, $lesson_id, $topic_id, $parent_id ) = $this->get_essay_post_data( $post->ID );
 
-				if ( ! empty( $course_id ) ) {
-					$lesson_url = add_query_arg( 'course', $course_id, $lesson_url );
+					
+					if ( ( ! isset( $response->links['course'] ) ) && ( ! empty( $course_id ) ) ) {
+						$links['course'] = array(
+							'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'courses' ) . '/' . $course_id ),
+							'embeddable' => true,
+						);
+					}
+
+					if ( ( ! isset( $response->links['lesson'] ) ) && ( ! empty( $lesson_id ) ) ) {
+						$lesson_url = rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'lessons' ) . '/' . $lesson_id );
+
+						if ( ! empty( $course_id ) ) {
+							$lesson_url = add_query_arg( 'course', $course_id, $lesson_url );
+						}
+
+						$links['lesson'] = array(
+							'href'       => $lesson_url,
+							'embeddable' => true,
+						);
+					}
+
+					if ( ( ! isset( $response->links['topic'] ) ) && ( ! empty( $topic_id ) ) ) {
+						$topic_url = rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'topics' ) . '/' . $topic_id );
+
+						if ( ! empty( $course_id ) ) {
+							$topic_url = add_query_arg( 'course', $course_id, $topic_url );
+						}
+
+						if ( ! empty( $lesson_id ) ) {
+							$topic_url = add_query_arg( 'lesson', $lesson_id, $topic_url );
+						}
+
+						$links['topic'] = array(
+							'href'       => $topic_url,
+							'embeddable' => true,
+						);
+					}
+
+					if ( ! empty( $links ) ) {
+						$response->add_links( $links );
+					}
 				}
-
-				$links['lesson'] = array(
-					'href'       => $lesson_url,
-					'embeddable' => true,
-				);
-			}
-
-			if ( ( ! isset( $response->links['topic'] ) ) && ( ! empty( $topic_id ) ) ) {
-				$topic_url = rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'topics' ) . '/' . $topic_id );
-
-				if ( ! empty( $course_id ) ) {
-					$topic_url = add_query_arg( 'course', $course_id, $topic_url );
-				}
-
-				if ( ! empty( $lesson_id ) ) {
-					$topic_url = add_query_arg( 'lesson', $lesson_id, $topic_url );
-				}
-
-				$links['topic'] = array(
-					'href'       => $topic_url,
-					'embeddable' => true,
-				);
-			}
-
-			if ( ! empty( $links ) ) {
-				$response->add_links( $links );
 			}
 
 			return $response;
@@ -532,8 +550,8 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array  $query_params Quest params array.
-		 * @param string $post_type    Post type string.
+		 * @param array        $query_params Quest params array.
+		 * @param WP_Post_Type $post_type    Post type string.
 		 */
 		public function rest_collection_params_filter( array $query_params, WP_Post_Type $post_type ) {
 			if ( $post_type->name === $this->post_type ) {
@@ -542,7 +560,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 					$query_params['status']['items']['enum'] = array_intersect( array( 'graded', 'not_graded' ), $query_params['status']['items']['enum'] );
 				}
 
-				// We add 'course' to the filtering as an optiont to filter course steps by
+				// We add 'course' to the filtering as an optiont to filter course steps by.
 				if ( ! isset( $query_params['course'] ) ) {
 					$query_params['course'] = array(
 						'description' => sprintf(
@@ -597,10 +615,10 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param array  $postdata   Post data array.
-		 * @param string $field_name Field Name for $postdata value.
-		 * @param object $request    Request object.
-		 * @param string $post_type  Post Type for request.
+		 * @param array           $postdata   Post data array.
+		 * @param string          $field_name Field Name for $postdata value.
+		 * @param WP_REST_Request $request    Request object.
+		 * @param string          $post_type  Post Type for request.
 		 */
 		public function get_rest_settings_field_value( array $postdata, $field_name, WP_REST_Request $request, $post_type ) {
 
@@ -737,24 +755,24 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param mixed  $post_value  Value of setting to update.
-		 * @param object $post        Post object being updated.
-		 * @param string $field_name  Settings file name/key.
-		 * @param object $request     Request object.
-		 * @param string $post_type   Post type string.
+		 * @param mixed           $post_value  Value of setting to update.
+		 * @param WP_Post         $post        Post object being updated.
+		 * @param string          $field_name  Settings file name/key.
+		 * @param WP_REST_Request $request     Request object.
+		 * @param string          $post_type   Post type string.
 		 */
 		public function update_rest_settings_field_value( $post_value, WP_Post $post, $field_name, WP_REST_Request $request, $post_type ) {
 			if ( ( is_a( $post, 'WP_Post' ) ) && ( $post->post_type == $this->post_type ) ) {
 
-				//$lesson_id = (int) get_post_meta( $post->ID, 'lesson_id', true );
-				//if ( empty( $lesson_id ) ) {
-				//	return false;
-				//}
+				// $lesson_id = (int) get_post_meta( $post->ID, 'lesson_id', true );
+				// if ( empty( $lesson_id ) ) {
+				// return false;
+				// }
 
-				//$lesson_post = get_post( $lesson_id );
-				//if ( ( ! $lesson_post ) && ( ! is_a( $lesson_post, 'WP_Post' ) ) ) {
-				//	return false;
-				//}
+				// $lesson_post = get_post( $lesson_id );
+				// if ( ( ! $lesson_post ) && ( ! is_a( $lesson_post, 'WP_Post' ) ) ) {
+				// return false;
+				// }
 
 				switch ( $field_name ) {
 					case 'points_awarded':
@@ -782,7 +800,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 
 								$awarded_points = absint( $post_value );
 
-								// Check that award points is not greater then max points
+								// Check that award points is not greater then max points.
 								if ( $awarded_points > $max_points ) {
 									$awarded_points = $max_points;
 								}
@@ -823,7 +841,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 
 						break;
 
-					// We don't allow updates to Course, Lesson, Lesson Points enabled, Lesson Points max
+					// We don't allow updates to Course, Lesson, Lesson Points enabled, Lesson Points max.
 					case 'course':
 					case 'lesson':
 					case 'points_enabled':
@@ -834,6 +852,6 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 			}
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

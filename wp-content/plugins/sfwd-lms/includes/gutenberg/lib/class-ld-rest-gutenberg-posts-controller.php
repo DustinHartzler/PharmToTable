@@ -49,6 +49,26 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 
 			register_rest_route(
 				$namespace,
+				'/' . $this->post_type,
+				array(
+					array(
+						'methods'             => WP_REST_Server::READABLE,
+						'callback'            => array( $this, 'get_items' ),
+						'permission_callback' => array( $this, 'get_items_permissions_check' ),
+						//'args'                => $this->get_collection_params(),
+					),
+					array(
+						'methods'             => WP_REST_Server::CREATABLE,
+						'callback'            => array( $this, 'create_item' ),
+						'permission_callback' => array( $this, 'create_item_permissions_check' ),
+						//'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+					),
+					'schema' => array( $this, 'get_schema' ),
+				)
+			);
+
+			register_rest_route(
+				$namespace,
 				'/' . $this->post_type . '/(?P<id>[\d]+)',
 				array(
 					'args'   => array(
@@ -140,6 +160,90 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 			}
 		}
 
-		// End of functions
+		/**
+		 * Checks whether a given request has permission to read post type.
+		 *
+	 	 * @since 3.6.0
+		 *
+		 * @param WP_REST_Request $request Full details about the request.
+		 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
+		 */
+		public function get_items_permissions_check( $request ) {
+			if ( learndash_is_valid_post_type( $this->post_type ) ) {
+				$post_type_object = get_post_type_object( $this->post_type );
+				if ( ( ! $post_type_object ) || ( ! is_a( $post_type_object, 'WP_Post_Type' ) ) ) {
+					return new WP_Error(
+						'rest_type_invalid',
+						__( 'Invalid post type.', 'learndash' ),
+						array( 'status' => 404 )
+					);
+				}
+				
+				if ( ( ! property_exists( $post_type_object, 'show_in_rest' ) ) || ( true !== $post_type_object->show_in_rest ) ) {
+					return new WP_Error(
+						'rest_cannot_read_type',
+						__( 'Cannot view post type.', 'learndash' ),
+						array( 'status' => rest_authorization_required_code() )
+					);
+				}
+
+				$can_view_archive = false;
+				if ( learndash_post_type_has_archive( $this->post_type ) ) {
+					$can_view_archive = true;
+				} else if ( current_user_can( $post_type_object->cap->edit_posts ) ) {
+					$can_view_archive = true;
+				}
+
+				/**
+				 * Filter to allow access to the post type archive REST endpoint.
+				 *
+				 * @since 3.6.0
+				 * @param bool            $can_view_archive true/false.
+				 * @param string          $post_type        The post type slug. 
+				 * @param WP_REST_Request $request          Full details about the request.
+				 *
+				 * @return bool true Return true to allow access.
+				 */
+				$can_view_archive = apply_filters( 'learndash_rest_wp_archive_viewable', $can_view_archive, $this->post_type, $request );
+				if ( ! $can_view_archive ) {
+					return new WP_Error(
+						'rest_cannot_view',
+						__( 'Sorry, you are not allowed to edit posts in this post type.', 'learndash' ),
+						array( 'status' => rest_authorization_required_code() )
+					);
+				}
+			}
+
+			return true;
+		}
+
+		/**
+		 * Retrieves all public post types.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @param WP_REST_Request $request Full details about the request.
+		 *
+		 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+		 */
+		public function get_items( $request ) {
+			$data = parent::get_items( $request );
+
+			/**
+			 * Filter archive REST data.
+			 *
+			 * @since 3.6.0
+			 * @param object $data             WP_REST_Response.
+			 * @param string $post_type        The post type slug. 
+			 * @param WP_REST_Request $request Full details about the request.
+			 *
+			 * @return object WP_REST_Response
+			 */
+			$data = apply_filters( 'learndash_rest_wp_archive_repsonse', $data, $this->post_type, $request );
+
+			return rest_ensure_response( $data );
+		}
+
+		// End of functions.
 	}
 }

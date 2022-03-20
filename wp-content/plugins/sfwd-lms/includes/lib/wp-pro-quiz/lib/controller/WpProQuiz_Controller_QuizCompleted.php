@@ -7,6 +7,9 @@ class WpProQuiz_Controller_QuizCompleted {
 
 	private $data = array();
 
+	private $_post   = null;
+	private $_cookie = null;
+
 	public function __construct( $data ) {
 		$this->data = $data;
 	}

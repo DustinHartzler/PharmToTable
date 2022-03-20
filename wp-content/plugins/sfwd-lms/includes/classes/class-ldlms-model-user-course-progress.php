@@ -61,6 +61,8 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 		 * Used to prevent the hooks into the WP user meta add/update from being processed.
 		 *
 		 * @since 3.4.0
+		 *
+		 * @var bool $user_meta_updating Flag indicating user meta is updated.
 		 */
 		private $user_meta_updating = false;
 
@@ -70,6 +72,8 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 		 * @since 3.4.0
 		 *
 		 * @param integer $user_id User ID.
+		 *
+		 * @throws LDLMS_Exception_NotFound When no user.
 		 */
 		public function __construct( $user_id = 0 ) {
 			if ( ! $this->initialize( $user_id ) ) {
@@ -88,7 +92,7 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param  int  $user_id   User ID to use for class instance.
+		 * @param int $user_id User ID to use for class instance.
 		 *
 		 * @return bool True if success.
 		 */
@@ -167,6 +171,7 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 					return true;
 				}
 			}
+			return false;
 		}
 
 		/**
@@ -580,13 +585,13 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
  *
  * @since 3.4.0
  *
- * @param integer $user_id       User ID.
- * @param integer $course_id     Course ID.
- * @param string  $progress_type Progress Type. Default 'legacy'.
- * possible values 'legacy', 'co', 'summary'
+ * @param integer $user_id   User ID.
+ * @param integer $course_id Course ID.
+ * @param string  $type      Progress Type. Default 'legacy'.
+ * possible values 'legacy', 'co', 'summary'.
  *
- * @return array  Array of single course user progress. Format of
- *                array should match 'legacy' structure.
+ * @return Array of single course user progress. Format of
+ *         array should match 'legacy' structure.
  */
 function learndash_user_get_course_progress( $user_id = 0, $course_id = 0, $type = 'legacy' ) {
 	$user_id   = absint( $user_id );
@@ -598,6 +603,8 @@ function learndash_user_get_course_progress( $user_id = 0, $course_id = 0, $type
 			return $course_progress_object->get_progress( $course_id, $type );
 		}
 	}
+
+	return array();
 }
 
 /**
@@ -737,6 +744,8 @@ function learndash_user_progress_get_first_incomplete_step( $user_id = 0, $cours
 	if ( ! empty( $incomplete_steps ) ) {
 		return $incomplete_steps[0];
 	}
+
+	return array();
 }
 
 /**

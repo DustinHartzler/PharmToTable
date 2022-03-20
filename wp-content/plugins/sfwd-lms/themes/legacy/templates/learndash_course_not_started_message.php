@@ -8,7 +8,7 @@
  *   integer $user_id User ID context for message shown.
  *   string  $content Message to be shown.
  *   boolean $autop True to filter message via wpautop() function.
-  * }
+ * }
  *
  * @since 2.5.9
  *

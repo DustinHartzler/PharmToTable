@@ -44,7 +44,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
-				// New fields
+				// New fields.
 				'lesson_materials_enabled'           => 'lesson_materials_enabled',
 				'lesson_materials'                   => 'lesson_materials',
 
@@ -303,7 +303,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						esc_html_x( 'Specify a delay between video completion and %s completion.', 'placeholder: lesson', 'learndash' ),
 						learndash_get_custom_label_lower( 'lesson' )
 					),
-					'default'     => 0,
 					'rest'        => array(
 						'show_in_rest' => LearnDash_REST_API::enabled(),
 						'rest_args'    => array(
@@ -384,7 +383,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'options'   => array(
 						'on' => '',
 					),
-					'default'   => 0,
 					'rest'      => array(
 						'show_in_rest' => LearnDash_REST_API::enabled(),
 						'rest_args'    => array(
@@ -921,7 +919,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param array $settings_values Array of key/value settings changes.
+		 * @param array $settings_field_updates Array of key/value settings changes.
 		 */
 		public function apply_metabox_settings_fields_changes( $settings_field_updates = array() ) {
 			$settings_field_values = $this->get_settings_metabox_values();

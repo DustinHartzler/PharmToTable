@@ -13,11 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 
 	/**
-	 * Absract for LearnDash Settings Sections.
+	 * Class for LearnDash Settings Sections.
 	 *
 	 * @since 2.4.0
 	 */
-	abstract class LearnDash_Settings_Section {
+	class LearnDash_Settings_Section {
 
 		/**
 		 * Static array of section instances.
@@ -117,6 +117,13 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		protected $settings_section_description = '';
 
 		/**
+		 * Used to associate a section with a parent section.
+		 *
+		 * @since 3.6.0
+		 */
+		protected $settings_parent_section_key = '';
+
+		/**
 		 * Used to transition settings from one class to another. Can be empty.
 		 * Set at the class then combined into the $settings_deprecated array.
 		 *
@@ -179,6 +186,47 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		protected $load_options = true;
 
 		/**
+		 * Label used for metabox sub menu.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @var string $settings_section_sub_label;
+		 */
+		protected $settings_section_sub_label = '';
+
+		/**
+		 * Section Listing label.
+		 *
+		 * Used when the sections are listed in a table.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @var string $settings_section_listing_label;
+		 */
+		protected $settings_section_listing_label = '';
+
+		/**
+		 * Section Listing description.
+		 *
+		 * Used when the sections are listed in a table.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @var string $settings_section_listing_description;
+		 */
+		protected $settings_section_listing_description = '';
+
+		/**
+		 * Controls if nonce validation is required.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @var boolean $settings_bypass_nonce_check
+		 */
+		protected $settings_bypass_nonce_check = false;
+
+
+		/**
 		 * Public constructor for class
 		 *
 		 * @since 2.4.0
@@ -192,6 +240,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 
 			add_filter( 'pre_update_option_' . $this->setting_option_key, array( $this, 'section_pre_update_option' ), 30, 3 );
 			add_action( 'update_option_' . $this->setting_option_key, array( $this, 'section_update_option' ), 30, 3 );
+			add_filter( 'learndash_settings_section_save_fields_' . $this->setting_option_key, array( $this, 'filter_section_save_fields' ), 30, 4 );
 
 			$this->metabox_key = $this->setting_option_key . '_' . $this->settings_section_key;
 
@@ -224,6 +273,83 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 					return self::$_instances[ $section_key ];
 				}
 			}
+		}
+
+		/**
+		 * Get the instance of our class based on the metabox_key
+		 *
+		 * @since 3.6.0
+		 *
+		 * @param string $criteria_field Section field to compare.
+		 * @param string $criteria_value Section field value to compare.
+		 * @param string $return_field   Section field to return. If empty object is returned.
+		 *
+		 * @return mixed Section object or individual field per `$return_field` value.
+		 */
+		final public static function get_section_instance_by( $criteria_field = '', $criteria_value = '', $return_field = '' ) {
+			if ( ( ! empty( $criteria_field ) ) && ( ! empty( $criteria_value ) ) ) {
+				if ( ! empty( self::$_instances ) ) {
+					foreach ( self::$_instances as $_instance_key => $_instance_object ) {
+						if ( ( $_instance_object ) && ( is_a( $_instance_object, 'LearnDash_Settings_Section' ) ) ) {
+							if ( ( property_exists( $_instance_object, $criteria_field ) ) && ( $_instance_object->$criteria_field === $criteria_value ) ) {
+								if ( ( ! empty( $return_field ) ) && ( property_exists( $_instance_object, $return_field ) ) ) {
+									return $_instance_object->$return_field;
+								}
+								return $_instance_object;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/**
+		 * Get the instance of our class based on the page_id
+		 *
+		 * @since 3.6.0
+		 *
+		 * @param string $criteria_field Section field to compare.
+		 * @param string $criteria_value Section field value to compare.
+		 * @param string $return_field   Section field to return. If empty object is returned.
+		 * @param string $return_key     Section field to user as array key for return.
+		 *
+		 * @return array An array of sections.
+		 */
+		final public static function get_all_sections_by( $criteria_field = '', $criteria_value = '', $return_field = '', $return_key = '' ) {
+			$sections = array();
+			if ( ( ! empty( $criteria_field ) ) && ( ! empty( $criteria_value ) ) ) {
+				if ( ! empty( self::$_instances ) ) {
+					foreach ( self::$_instances as $_instance_key => $_instance_object ) {
+						if ( ( $_instance_object ) && ( is_a( $_instance_object, 'LearnDash_Settings_Section' ) ) ) {
+							if ( ( property_exists( $_instance_object, $criteria_field ) ) && ( $_instance_object->$criteria_field === $criteria_value ) ) {
+								$return_key_value = '';
+								if ( ( ! empty( $return_key ) ) && ( property_exists( $_instance_object, $return_key ) ) ) {
+									$field_type = gettype( $_instance_object->$return_key );
+									if ( in_array( gettype( $_instance_object->$return_key ), array( 'boolean', 'integer', 'double', 'float', 'string' ), true ) ) {
+										$return_key_value = $_instance_object->$return_key;
+									}
+								}
+
+								if ( ( ! empty( $return_field ) ) && ( property_exists( $_instance_object, $return_field ) ) ) {
+									if ( ! empty( $return_key_value ) ) {
+										$sections[ $return_key_value ] = $return_field;
+									} else {
+										$sections[] = $return_field;
+									}
+								} else {
+									if ( ! empty( $return_key_value ) ) {
+										$sections[ $return_key_value ] = $_instance_object;
+									} else {
+										$sections[] = $_instance_object;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			return $sections;
 		}
 
 		/**
@@ -355,7 +481,14 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 */
 		public function save_settings_values() {
 			$this->settings_values_loaded = false;
+
+			// Turn off the nonce verify logic.
+			$this->settings_bypass_nonce_check = true;
+
 			update_option( $this->setting_option_key, $this->setting_option_values );
+
+			// Turn on the nonce verify logic.
+			$this->settings_bypass_nonce_check = false;
 		}
 
 		/**
@@ -433,10 +566,14 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		/**
 		 * Output Settings Section nonce field.
 		 *
-		 * @since 3.0.0
+		 * @since 3.0.0 Initial release.
+		 * @since 3.6.0 Added $referer and $echo params.
+		 *
+		 * @param bool $referer (Optional) Whether to set the referer field for validation. Default value: true @since 3.6.0.
+		 * @param bool $echo    (Optional) Whether to display or return hidden form field. Default value: true @since 3.6.0.
 		 */
-		public function show_settings_section_nonce_field() {
-			wp_nonce_field( $this->setting_option_key, $this->setting_option_key . '_nonce' );
+		public function show_settings_section_nonce_field( $referer = true, $echo = true ) {
+			wp_nonce_field( $this->setting_option_key, $this->setting_option_key . '_nonce', $referer, $echo );
 		}
 
 		/**
@@ -444,19 +581,46 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array  $value Array of section fields values.
-		 * @param array  $old_value Array of old values.
-		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 * @param array  $value              Array of section fields values.
+		 * @param array  $old_value          Array of old values.
+		 * @param string $setting_option_key Section option key should match $this->setting_option_key.
 		 */
-		public function section_pre_update_option( $value, $old_value, $section_key = '' ) {
-			if ( ( empty( $section_key ) ) || ( $section_key !== $this->setting_option_key ) ) {
+		public function section_pre_update_option( $value, $old_value, $setting_option_key = '' ) {
+			if ( ( empty( $setting_option_key ) ) || ( $setting_option_key !== $this->setting_option_key ) ) {
 				return $old_value;
 			}
 
-			if ( ! $this->verify_metabox_nonce_field() ) {
-				$old_value;
+			if ( ! (bool) $this->verify_metabox_nonce_field() ) {
+				return $old_value;
 			}
 
+			/**
+			 * Filters settings section save fields.
+			 *
+			 * The dynamic portion of the hook `$section_key` refers to the settings_section_key also
+			 * used as option name while saving settings in options table.
+			 *
+			 * @param array  $value                An array of setting fields values.
+			 * @param array  $old_value            An array of setting fields old values.
+			 * @param string $settings_section_key Settings section key.
+			 * @param string $settings_screen_id   Settings screen ID.
+			 */
+			$value = apply_filters( 'learndash_settings_section_save_fields_' . $this->setting_option_key, $value, $old_value, $this->settings_section_key, $this->settings_screen_id );
+
+			return $value;
+		}
+
+		/**
+		 * Filter the section saved values.
+		 * 
+		 * @since 3.6.0
+		 * 
+		 * @param array  $value                An array of setting fields values.
+		 * @param array  $old_value            An array of setting fields old values.
+		 * @param string $settings_section_key Settings section key.
+		 * @param string $settings_screen_id   Settings screen ID.
+		 */
+		public function filter_section_save_fields( $value, $old_value, $settings_section_key, $settings_screen_id ) {
 			return $value;
 		}
 
@@ -465,8 +629,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array  $value Array of section fields values.
-		 * @param array  $old_value Array of old values.
+		 * @param array  $old_value   Array of section fields values.
+		 * @param array  $value       Array of old values.
 		 * @param string $section_key Section option key should match $this->setting_option_key.
 		 */
 		public function section_update_option( $old_value = '', $value = '', $section_key = '' ) {
@@ -497,9 +661,15 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 * @since 3.0.0
 		 */
 		public function verify_metabox_nonce_field() {
+			if ( true === $this->settings_bypass_nonce_check ) {
+				return true;
+			}
+			
 			if ( ( isset( $_POST[ $this->setting_option_key . '_nonce' ] ) ) && ( ! empty( $_POST[ $this->setting_option_key . '_nonce' ] ) ) && ( wp_verify_nonce( esc_attr( $_POST[ $this->setting_option_key . '_nonce' ] ), $this->setting_option_key ) ) ) {
 				return true;
 			}
+
+			return false;
 		}
 
 		/**
@@ -534,9 +704,23 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 			global $learndash_metaboxes;
 
 			if ( $settings_screen_id === $this->settings_screen_id ) {
-				/** This filter is documented in includes/settings/class-ld-settings-metaboxes.php */
-				if ( apply_filters( 'learndash_show_metabox', true, $this->metabox_key, $this->settings_screen_id ) ) {
+				$show_section = true;
 
+				/** This filter is documented in includes/settings/class-ld-settings-metaboxes.php */
+				$show_section = apply_filters( 'learndash_show_metabox', $show_section, $this->metabox_key, $this->settings_screen_id );
+
+				/**
+				 * Filters whether to show settings section.
+				 *
+				 * @since 3.6.0
+				 *
+				 * @param boolean $show_section         Whether to show settings metabox.
+				 * @param string  $settings_section_key Settings section key.
+				 * @param string  $settings_screen_id   Settings screen ID.
+				 */
+				$show_section = apply_filters( 'learndash_show_section', $show_section, $this->settings_section_key, $this->settings_screen_id );
+
+				if ( true === $show_section ) {
 					if ( ! isset( $learndash_metaboxes[ $this->settings_screen_id ] ) ) {
 						$learndash_metaboxes[ $this->settings_screen_id ] = array();
 					}
@@ -742,6 +926,18 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		}
 
 		/**
+		 * Static function to set section setting.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param string $field_key Section field key.
+		 * @param mixed  $default_return Default value if field not found.
+		 */
+		public static function set_setting( $field_key = '', $field_value = '' ) {
+			return self::set_section_setting( get_called_class(), $field_key, $field_value );
+		}
+
+		/**
 		 * Static function to get all section settings.
 		 *
 		 * @since 2.4.0
@@ -810,8 +1006,20 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 				if ( isset( self::$_instances[ $section ] ) ) {
 					self::$_instances[ $section ]->init();
 
+					$value_changed = false;
 					if ( isset( self::$_instances[ $section ]->setting_option_fields[ $field_key ] ) ) {
 						self::$_instances[ $section ]->setting_option_fields[ $field_key ]['value'] = $new_value;
+						
+						$value_changed = true;
+					}
+
+					if ( isset( self::$_instances[ $section ]->setting_option_values[ $field_key ] ) ) {
+						self::$_instances[ $section ]->setting_option_values[ $field_key ] = $new_value;
+
+						$value_changed = true;
+					}
+
+					if ( true === $value_changed ) {
 						self::$_instances[ $section ]->save_settings_values();
 					}
 				}
@@ -823,8 +1031,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param string $section Settings Section.
-		 * @param string $field Settings Section field key.
+		 * @param string $section_org Settings Section.
+		 * @param string $field       Settings Section field key.
 		 */
 		public static function get_section_settings_all( $section_org = '', $field = 'value' ) {
 			if ( empty( $section_org ) ) {
@@ -936,8 +1144,10 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 * Transition old Settiings Class field(s) to new one(s).
 		 *
 		 * @since 3.0.0
+		 *
 		 * @param string $field_key Old section field key.
-		 * @param string $section Old section class.
+		 * @param string $old_section Old section class.
+		 *
 		 * @return string new field key.
 		 */
 		public static function check_deprecated_field_key( $field_key = '', $old_section = '' ) {
@@ -954,5 +1164,20 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 
 			return $field_key;
 		}
+
+		/**
+		 * Get the Settings Section sub label.
+		 *
+		 * @since 3.6.0
+		 */
+		public function get_settings_section_sub_label() {
+			if ( empty( $this->settings_section_sub_label ) ) {
+				$this->settings_section_sub_label = $this->settings_section_label;
+			}
+
+			return $this->settings_section_sub_label;
+		}
+
+		// End of functions.
 	}
 }

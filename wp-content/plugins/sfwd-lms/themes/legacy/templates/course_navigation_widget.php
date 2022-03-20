@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Filter to allow override of widget instance arguments.
+ *
  * @since 2.3.3
  */
 if ( ! isset( $widget_instance ) ) {

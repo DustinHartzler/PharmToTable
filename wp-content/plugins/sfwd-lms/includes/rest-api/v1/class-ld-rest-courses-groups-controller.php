@@ -17,8 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Courses_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 {
+	class LD_REST_Courses_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Supported Collection Parameters.
@@ -86,7 +85,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 				array(
 					'args'   => array(
 						'id' => array(
-							// translators: course
+							// translators: course.
 							'description' => sprintf( esc_html_x( '%s ID to enroll into.', 'placeholder: course', 'learndash' ), learndash_get_custom_label( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
@@ -104,7 +103,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 						'permission_callback' => array( $this, 'update_courses_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								// translators: group, course
+								// translators: group, course.
 								'description' => sprintf( esc_html_x( '%1$s IDs to enroll into %2$s.', 'placeholder: group, course', 'learndash' ), learndash_get_custom_label( 'group' ), learndash_get_custom_label( 'course' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -120,7 +119,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 						'permission_callback' => array( $this, 'delete_courses_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								// translators: group, course
+								// translators: group, course.
 								'description' => sprintf( esc_html_x( '%1$s IDs to remove from %2$s.', 'placeholder: group, course', 'learndash' ), learndash_get_custom_label( 'group' ), learndash_get_custom_label( 'course' ) ),
 								'required'    => true,
 								'type'        => 'array',
@@ -158,7 +157,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 					),
 					'group_ids' => array(
 						'description' => sprintf(
-							// translators: placholder: group
+							// translators: placholder: group.
 							esc_html_x(
 								'The %s IDs.',
 								'placeholder: group',
@@ -183,7 +182,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Request $request WP_REST_Request instance.
 		 */
 		public function get_courses_groups_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
@@ -196,7 +195,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Request $request WP_REST_Request instance.
 		 */
 		public function update_courses_groups_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
@@ -209,9 +208,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 		 *
 		 * @since 2.5.8
 		 *
-		 * @param object $request  WP_REST_Request instance.
+		 * @param WP_REST_Request $request WP_REST_Request instance.
 		 */
-
 		public function delete_courses_groups_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
@@ -268,10 +266,10 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -328,10 +326,10 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 
 			$data = array();
 
-			// Create the response object
+			// Create the response object.
 			$response = rest_ensure_response( $data );
 
-			// Add a custom status code
+			// Add a custom status code.
 			$response->set_status( 200 );
 
 			return $response;
@@ -530,7 +528,6 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 			$query_params['fields']  = array(
 				'description' => __( 'Returned values.', 'learndash' ),
 				'type'        => 'string',
-				'type'        => 'string',
 				'default'     => 'ids',
 				'enum'        => array(
 					'ids',
@@ -546,6 +543,6 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

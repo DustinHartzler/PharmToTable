@@ -137,6 +137,10 @@ class WpProQuiz_Controller_Toplist extends WpProQuiz_Controller_Controller {
 			$user_id = 0;
 		}
 
+		if ( ( isset( $this->_post['results'] ) ) && ( ! empty( $this->_post['results'] ) ) && ( is_string( $this->_post['results'] ) ) ) {
+			$this->_post['results'] = json_decode( stripslashes( $this->_post['results'] ), true );
+		}
+
 		$include_admin_in_reports = true;
 		if ( ! empty( $user_id ) ) {
 			if ( learndash_is_admin_user( $user_id ) ) {
@@ -245,7 +249,7 @@ class WpProQuiz_Controller_Toplist extends WpProQuiz_Controller_Controller {
 					$this->_post['results'][ $r_idx ]['possiblePoints'] = 0;
 				}
 				$total_awarded_points  += intval( $this->_post['results'][ $r_idx ]['points'] );
-				$total_possible_points += intval( $_POST['results'][ $r_idx ]['possiblePoints'] );
+				$total_possible_points += intval( $this->_post['results'][ $r_idx ]['possiblePoints'] );
 			}
 		}
 

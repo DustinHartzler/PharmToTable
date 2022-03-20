@@ -41,10 +41,8 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $args     widget arguments
-		 * @param  array $instance widget instance
-		 *
-		 * @return string          widget output
+		 * @param array $args     widget arguments.
+		 * @param array $instance widget instance.
 		 */
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
@@ -95,7 +93,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 							}
 						}
 					} elseif ( in_array( $post->post_type, array( 'sfwd-quiz' ), true ) ) {
-						// If here we have a global Quiz. So we set the pager to the max number
+						// If here we have a global Quiz. So we set the pager to the max number.
 						$course_lesson_ids = learndash_course_get_steps_by_type( $course_id, 'sfwd-lessons' );
 						if ( ! empty( $course_lesson_ids ) ) {
 							$course_lessons_paged       = array_chunk( $course_lesson_ids, $course_lessons_per_page, true );
@@ -138,8 +136,8 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $new_instance
-		 * @param  array $old_instance
+		 * @param array $new_instance New instance.
+		 * @param array $old_instance Old instance.
 		 *
 		 * @return array $instance
 		 */
@@ -160,7 +158,9 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $instance widget instance
+		 * @param array $instance widget instance.
+		 *
+		 * @return string Default return is 'noform'.
 		 */
 		public function form( $instance ) {
 			$instance            = wp_parse_args( (array) $instance, array( 'title' => '' ) );
@@ -168,7 +168,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 			$show_lesson_quizzes = isset( $instance['show_lesson_quizzes'] ) ? (bool) $instance['show_lesson_quizzes'] : false;
 			$show_topic_quizzes  = isset( $instance['show_topic_quizzes'] ) ? (bool) $instance['show_topic_quizzes'] : false;
 			$show_course_quizzes = isset( $instance['show_course_quizzes'] ) ? (bool) $instance['show_course_quizzes'] : false;
-
+			learndash_replace_widgets_alert();
 			?>
 				<p>
 					<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
@@ -202,6 +202,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 					</label>
 				</p>
 			<?php
+			return '';
 		}
 	}
 

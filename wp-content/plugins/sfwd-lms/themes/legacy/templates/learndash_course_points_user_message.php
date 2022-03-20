@@ -13,20 +13,21 @@
  * ld_user_course_points : default value set from that ld_user_course_points shortcode
  * profile : Set when used within the user's WP Profile output
  * ld_profile : Set when used from the LearnDash [ld_profile] shortcode
+ *
  * @since 2.4
  *
  * @package LearnDash\Templates\Legacy\Course
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
 // First generate the message
 // translators: placeholder: Course.
 $message = '<strong>' . sprintf( esc_html_x( 'Earned %s Points:', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ) . '</strong> ' . $user_course_points;
 
-// The figure out how to display it
+// The figure out how to display it.
 if ( $shortcode_atts['context'] == 'ld_profile' ) {
 	?><div id="learndash_course_points_user_message" class="learndash-course-points"><?php echo $message; ?></div>
 	<?php

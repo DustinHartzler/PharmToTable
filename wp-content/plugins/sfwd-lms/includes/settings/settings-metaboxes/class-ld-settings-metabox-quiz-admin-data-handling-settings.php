@@ -18,7 +18,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 	 */
 	class LearnDash_Settings_Metabox_Quiz_Admin_Data_Handling_Settings extends LearnDash_Settings_Metabox {
 
+		/**
+		 * Quiz edit
+		 *
+		 * @var object
+		 */
 		protected $quiz_edit = null;
+
 		/**
 		 * Public constructor for class
 		 *
@@ -455,7 +461,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'type'              => 'select',
 					'label_full'        => true,
 					'label'             => sprintf(
-						// translators: Quiz
+						// translators: Quiz.
 						esc_html_x( 'Associated %s Database Table', 'placeholder: Quiz', 'learndash' ),
 						learndash_get_custom_label( 'quiz' )
 					),
@@ -479,7 +485,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'value'               => $this->setting_option_values['formActivated'],
 					'default'             => '',
 					'help_text'           => sprintf(
-						// translators: placeholder: quiz, Quiz
+						// translators: placeholder: quiz, Quiz.
 						esc_html_x( 'Enable this option to gather data from your users before or after the %1$s. All data is stored in the %2$s Statistics.', 'placeholder: quiz, Quiz', 'learndash' ),
 						learndash_get_custom_label_lower( 'quiz' ),
 						learndash_get_custom_label( 'quiz' )

@@ -122,13 +122,13 @@
 					limit = this.counter;
 				}
 
-				if ( config.quiz_resume_enabled === '1' && typeof config.quiz_resume_data !== 'undefined' ) {
-					var resume_data = JSON.parse( config.quiz_resume_data );
+				var resume_data = learndash_prepare_quiz_resume_data( config );
+				if ( resume_data !== false ) {
 					if ( resume_data[this.timer_cookie] ) {
 						limit = resume_data[this.timer_cookie];
 					}
 				}
-
+				
 				var x = limit * 1000;
 
 				var $timeText = globalElements.timelimit.find( 'span' ).text( plugin.methode.parseTime( limit ) );
@@ -188,6 +188,39 @@
 					$( '.wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-incorrect' ).hide();
 				}
 
+				this.reset();
+
+				var resume_data = learndash_prepare_quiz_resume_data( config );
+				if ( typeof resume_data.reviewBox !== 'undefined' ) {
+					jQuery( resume_data.reviewBox ).each( function( idx, item ) {
+						if ( typeof item === 'object' ) {
+							var item_tmp = item;
+							item = {};
+							if ( typeof item_tmp.solved !== 'undefined' ) {
+								item.solved = true;
+							}
+
+							if ( typeof item_tmp.correct !== 'undefined' ) {
+								item.correct = true;
+							}
+
+							if ( typeof item_tmp.incorrect !== 'undefined' ) {
+								item.incorrect = true;
+							}
+
+							if ( typeof item_tmp.skip !== 'undefined' ) {
+								item.skip = true;
+							}
+
+							if ( typeof item_tmp.review !== 'undefined' ) {
+								item.review = true;
+							}									
+						}
+						itemsStatus[idx] = item;
+						setColor( idx );
+					} );
+				}
+
 				$cursor.on( 'mousedown', function( e ) {
 					e.preventDefault();
 					e.stopPropagation();
@@ -205,16 +238,19 @@
 				$e.on( 'questionSolved', function( e ) {
 					itemsStatus[e.values.index].solved = e.values.solved;
 					setColor( e.values.index );
+					updateItemsStatus();
 				} );
 
 				$e.on( 'questionSolvedCorrect', function( e ) {
 					itemsStatus[e.values.index].correct = true;
 					setColor( e.values.index );
+					updateItemsStatus();
 				} );
 
 				$e.on( 'questionSolvedIncorrect', function( e ) {
 					itemsStatus[e.values.index].incorrect = true;
 					setColor( e.values.index );
+					updateItemsStatus();
 				} );
 
 				$e.on( 'changeQuestion', function( e ) {
@@ -229,6 +265,7 @@
 					//$items.removeClass('wpProQuiz_reviewQuestionReview');
 
 					$items.eq( e.values.index ).addClass( 'wpProQuiz_reviewQuestionTarget' );
+					//updateItemsStatus();
 
 					scroll( e.values.index );
 				} );
@@ -236,11 +273,13 @@
 				$e.on( 'skipQuestion', function( e ) {
 					itemsStatus[e.values.index].skip = ! itemsStatus[e.values.index].skip;
 					setColor( e.values.index );
+					updateItemsStatus();
 				} );
 
 				$e.on( 'reviewQuestion', function( e ) {
 					itemsStatus[e.values.index].review = ! itemsStatus[e.values.index].review;
 					setColor( e.values.index );
+					updateItemsStatus();
 				} );
 
 				/*
@@ -290,7 +329,7 @@
 				max = h - c;
 				diff = max / x;
 
-				this.reset();
+				//this.reset();
 
 				if ( h > 100 ) {
 					$cursor.show();
@@ -388,7 +427,7 @@
 				$items.eq( index ).removeClass( 'wpProQuiz_reviewQuestionReview' );
 				$items.eq( index ).removeClass( 'wpProQuiz_reviewQuestionSkip' );
 
-				if ( css_class != '' ) {
+				if ( css_class != '' ) {		
 					$items.eq( index ).addClass( css_class );
 				}
 			}
@@ -418,6 +457,12 @@
 
 				$( document ).unbind( '.scrollEvent' );
 			}
+
+			function updateItemsStatus() {
+				//console.log( 'updateItemsStatus: itemsStatus[%o]', itemsStatus );
+				plugin.methode.saveMetaDataToCookie( { reviewBox: itemsStatus } );
+			}
+
 		};
 
 		function QuestionTimer() {
@@ -662,6 +707,8 @@
 					}
 				} );
 			} else if ( question_data.type == 'free_answer' ) {
+				question_value = learndash_decodeHTML( question_value );
+
 				$questionList.children().each( function( i ) {
 					var $item = $( this );
 					$( '.wpProQuiz_questionInput', this ).val( question_value );
@@ -704,7 +751,7 @@
 				// Get the input fields within the questionList parent
 				jQuery( 'span.wpProQuiz_cloze input[type="text"]', $questionList ).each( function( index ) {
 					if ( typeof question_value[index] !== 'undefined' ) {
-						$( this ).val( question_value[index] );
+						$( this ).val( learndash_decodeHTML( question_value[index] ) );
 						if ( lockQuestion ) {
 							$( this ).attr( 'disabled', 'disabled' );
 							navigationElementslockQuestion( question );
@@ -738,9 +785,6 @@
 					}
 					$e.trigger( { type: 'questionSolved', values: { item: question, index: question.index(), solved: true } } );
 				}
-			} else {
-				//console.log('unsupported type[%o]', question_data.type);
-				//console.log('setResponse: question_data[%o] question_value[%o] question[%o], $questionList[%o]', question_data, question_value, question, $questionList);
 			}
 			if ( lockQuestion ) {
 				plugin.methode.setCheckedStatusFromData(question_data, question, $questionList );
@@ -948,7 +992,11 @@
 					return;
 				}
 
-				var resume_data = JSON.parse( config.quiz_resume_data );
+				var resume_data = learndash_prepare_quiz_resume_data( config );
+				if ( resume_data === false ) {
+					return;
+				}
+
 				var that = this;
 				$e.find( '.wpProQuiz_forms input, .wpProQuiz_forms textarea, .wpProQuiz_forms .wpProQuiz_formFields, .wpProQuiz_forms select' ).each( function() {
 					var $this = $( this );
@@ -963,7 +1011,10 @@
 								case that.typeConst.SELECT:
 								case that.typeConst.NUMBER:
 								case that.typeConst.EMAIL:
-									$this.val( resume_data[formId].value );
+
+									var form_value = resume_data[formId].value;
+									form_value = learndash_decodeHTML( form_value );
+									$this.val( form_value );
 									break;
 								case that.typeConst.CHECKBOX:
 									if ( resume_data[formId].value ) {
@@ -1191,10 +1242,14 @@
 				}
 
 				plugin.methode.loadQuizData();
-
-				if ( 'undefined' !== typeof config.quiz_resume_data ) {
-					quiz_resume_data = JSON.parse(config.quiz_resume_data);
+				//console.log( 'in loadQuizData');
+				
+				quiz_resume_data = learndash_prepare_quiz_resume_data( config );
+				if ( quiz_resume_data === false ) {
+					quiz_resume_data = {};
 				}
+				//console.log( 'quiz_resume_data[%o]', quiz_resume_data );
+
 
 				if ( bitOptions.randomQuestion && ( jQuery.isEmptyObject( quiz_resume_data ) && ! quiz_resume_data.randomQuestions ) ) {
 					plugin.methode.random( globalElements.questionList, 'question' );
@@ -1262,10 +1317,40 @@
 					plugin.methode.showSinglePage( 0 );
 				}
 
-				if ( config.mode !== 3 && 'number' !== typeof quiz_resume_data.lastQuestion ) {
+				if ( 'number' !== typeof quiz_resume_data.lastQuestion ) {
+					quiz_resume_data.lastQuestion = 0;
+				}
+
+				// Original
+				/*
+				if ( config.mode !== 3 ) {
 					currentQuestion = $listItem.eq( 0 ).show();
 					var questionId = currentQuestion.find( globalNames.questionList ).data( 'question_id' );
 					questionTimer.questionStart( questionId );
+				}
+				*/
+
+				if ( config.mode !== 3 ) {
+					//console.log( 'quiz_resume_data.lastQuestion[%o]', quiz_resume_data.lastQuestion );
+
+					if ( quiz_resume_data.lastQuestion > 0 ) {
+						$listItem.each( function(q_idx, q_item) {
+							var q_id = $(q_item).find( '.wpProQuiz_questionList' ).data( 'question_id' );
+							//console.log('q_id[%o] quiz_resume_data.lastQuestion[%o]', q_id, quiz_resume_data.lastQuestion );
+
+							if ( q_id === quiz_resume_data.lastQuestion) {
+								currentQuestion = $listItem.eq( q_idx );
+								//console.log('currentQuestion[%o]', currentQuestion);
+								//console.log('$listItem[%o]', $listItem);
+								
+								//$listItem.eq( q_idx ).show();
+								return false;
+							}
+						} );
+					} else {
+						currentQuestion = $listItem.eq( 0 );
+						$listItem.eq( 0 ).show();
+					}
 				}
 
 				questionTimer.startQuiz();
@@ -1332,11 +1417,15 @@
 				plugin.methode.setupMatrixSortHeights();
 				//});
 
+				//console.log('currentQuestion.index() [%o]', currentQuestion.index());
 				if ( config.mode != 3 ) {
+					
 					$e.trigger( { type: 'changeQuestion', values: { item: currentQuestion, index: currentQuestion.index() } } );
 				}
 			},
 			showSingleQuestion: function( question ) {
+				//console.log('in showSingleQuestion question[%o]', question);
+
 				var page = question ? Math.ceil( question / config.qpp ) : 1;
 
 				if ( config.mode === 3 && 'number' !== typeof quiz_resume_data.lastQuestion ) {
@@ -1429,6 +1518,9 @@
 			},
 
 			showQuestionObject: function( obj ) {
+				//console.trace();
+				//console.log('showQuestionObject[%o]', obj);
+
 				if ( ! obj.length && bitOptions.forcingQuestionSolve && bitOptions.quizSummeryHide && bitOptions.reviewQustion ) {
 					// First get all the questions...
 					list = globalElements.questionList.children();
@@ -1802,8 +1894,19 @@
 
 				// Add tip / hint count to results object.
 				// Server-side data
+
+				var quiz_resume_data = learndash_prepare_quiz_resume_data( config );
+				if ( quiz_resume_data === false ) {
+					quiz_resume_data = {};
+				}
+
 				if ( 'undefined' !== typeof config.quiz_resume_data ) {
-					var quiz_resume_data = JSON.parse( config.quiz_resume_data );
+					try {
+						var quiz_resume_data = JSON.parse( config.quiz_resume_data );
+					} catch ( exception ) {
+						console.log('JSON.parse error [%o]', exception );
+						var quiz_resume_data = {};
+					}
 					if ( ! jQuery.isEmptyObject( quiz_resume_data ) ) {
 						for ( var element in quiz_resume_data ) {
 							if ( element.startsWith('tip') ) {
@@ -2640,7 +2743,7 @@
 					captcha: $addBox.find( 'input[name="wpProQuiz_captcha"]' ).val(),
 					prefix: $addBox.find( 'input[name="wpProQuiz_captchaPrefix"]' ).val(),
 					//points: 99, //results.comp.points, // LD v2.4.3 Calculated on server
-					results: results,
+					results: JSON.stringify( results ),
 					//p_nonce: results.comp.p_nonce, // LD v2.4.3 Calculated on server
 					//totalPoints:config.globalPoints, // LD v2.4.3 Calculated on server
 					timespent: timespent,
@@ -2815,12 +2918,13 @@
 				//	console.log('in initQuiz');
 				//}
 
-				plugin.methode.setClozeStyle();
+				//plugin.methode.setClozeStyle();
 				plugin.methode.registerSolved();
 
 				globalElements.next.on( 'click', plugin.methode.nextQuestionClicked );
 
-				globalElements.back.on( 'click', function() {
+				globalElements.back.on( 'click', function(e) {
+					//console.log('back button clicked [%o]', e);
 					plugin.methode.prevQuestion();
 				} );
 
@@ -2896,16 +3000,18 @@
 				if ( ! cookie_value || cookie_value == undefined || cookie_value === '%7B%7D' ) {
 					cookie_value = {};
 				} else {
-					cookie_value = JSON.parse( cookie_value );
+					try {
+						cookie_value = JSON.parse( cookie_value );
+					} catch ( exception ) {
+						console.log('JSON.parse error [%o]', exception );
+						cookie_value = {};
+					}
 				}
 
 				// If we have form entries at the start, save them to cookie.
 				if ( bitOptions.formActivated && config.formPos === formPosConst.START && formClass.checkForm() ) {
 					formClass.saveFormDataToCookie();
 				}
-				//if (config.ld_script_debug == true) {
-				//	console.log('CookieInit: cookie_name[%o] cookie_value[%o]', cookie_name, cookie_value);
-				//}
 
 				plugin.methode.CookieSetResponses();
 				plugin.methode.CookieResponseTimer();
@@ -3019,7 +3125,6 @@
 				if ( ( ( cookie_value == undefined ) || ( ! Object.keys( cookie_value ).length ) ) && ! config.quiz_resume_id ) {
 					return;
 				}
-
 				var list = globalElements.questionList.children();
 				list.each( function() {
 					var $this = $( this );
@@ -3029,9 +3134,6 @@
 
 					// Handle server-side data
 					if ( quiz_resume_data[form_question_id] != undefined ) {
-						//if (config.ld_script_debug == true) {
-						// console.log('CookieSetResponses quiz resume data: form_question_data[%o] quiz_resume_data.value[%o]', form_question_data, quiz_resume_data.value);
-						//}
 
 						var quiz_resume_question_data = quiz_resume_data[form_question_id];
 						var form_question_data = config.json[$questionList.data( 'question_id' )];
@@ -3046,10 +3148,6 @@
 
 						var form_question_data = config.json[$questionList.data( 'question_id' )];
 						if ( form_question_data.type === cookie_question_data.type ) {
-							//if (config.ld_script_debug == true) {
-							// console.log('CookieSetResponses cookie question data: form_question_data[%o] cookie_question_data.value[%o]', form_question_data, cookie_question_data.value);
-							//}
-
 							setResponse( form_question_data, cookie_question_data.value, $this, $questionList, cookie_question_data.lockQuestion );
 						}
 					}
@@ -3057,8 +3155,10 @@
 					// Move to next unanswered question
 					if ( typeof quiz_resume_data !== 'undefined' && typeof cookie_value !== 'undefined' ) {
 						if ( typeof cookie_value['nextQuestion'] !== 'undefined' && cookie_value['nextQuestion'] ) {
+							//console.log('cookie_value[%o]', cookie_value);
 							plugin.methode.moveToNextUnansweredQuestion( cookie_value );
 						} else {
+							//console.log('quiz_resume_data[%o]', quiz_resume_data);
 							plugin.methode.moveToNextUnansweredQuestion( quiz_resume_data );
 						}
 					}
@@ -3119,9 +3219,15 @@
 				}
 			},
 			moveToNextUnansweredQuestion: function( data ) {
+				//console.log( 'in moveToNextUnansweredQuestion' );
+				//console.log('data[%o]', data);
+				//console.log('config.mode[%o]', config.mode);
+				
 				if ( typeof data !== 'undefined' ) {
 					var nextQuestion = typeof data.nextQuestion === 'number' ? data.nextQuestion : 0;
+					//console.log('nextQuestion[%o]', nextQuestion);
 					var lastQuestion = typeof data.lastQuestion === 'number' ? data.lastQuestion : 0;
+					//console.log('lastQuestion[%o]', lastQuestion);
 
 					if ( config.mode === 3 ) {
 						if ( ! config.qpp ) {
@@ -3141,12 +3247,21 @@
 					}
 
 					if ( config.mode !== 3 ) {
-						jQuery(globalElements.listItems).each(function(index, listItem) {
+						if ( ( config.mode == 1 ) && ( nextQuestion > 0 ) ) {
+							nextQuestion = lastQuestion;
+						}
+ 						jQuery(globalElements.listItems).each(function(index, listItem) {
+							var question_pro_id = $( listItem ).data( 'question-meta' ).question_pro_id;
+							
+							//console.log( 'question_pro_id[%o] nextQuestion[%o]', question_pro_id, nextQuestion );
+
 							if ( $( listItem ).data( 'question-meta' ).question_pro_id === nextQuestion ) {
 								currentQuestion = globalElements.listItems.eq( index );
 								var questionId = currentQuestion.find( globalNames.questionList ).data( 'question_id' );
 								questionTimer.questionStart( questionId );
 								plugin.methode.showQuestionObject( currentQuestion );
+								
+								return false; // break out of the loop.
 							};
 						})
 					}
@@ -3369,3 +3484,37 @@
 		} );
 	};
 }( jQuery ) );
+
+var learndash_prepare_quiz_resume_data = function ( config ) {
+	if ( config.quiz_resume_enabled === "undefined" ) {
+		return false;
+	}
+	if ( config.quiz_resume_enabled !== '1' ) {
+		return false;
+	}
+
+	if ( config.quiz_resume_data === "undefined" ) {
+		return false;
+	}
+
+	var resume_data = {};
+	try {
+		resume_data = JSON.parse( config.quiz_resume_data );
+	} catch ( exception ) {
+		console.log('JSON.parse error [%o]', exception );
+	}
+
+	return resume_data
+}
+var learndash_decodeHTML = function (html) {
+	html = html || '';
+
+	if ( ( html.length > 0 ) && ( typeof html === 'string') ) {
+		var txt = document.createElement('textarea');
+		txt.innerHTML = html;
+
+		html = txt.value;
+	}
+
+	return html;
+};

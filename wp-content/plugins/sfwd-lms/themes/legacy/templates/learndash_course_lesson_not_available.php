@@ -16,10 +16,10 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+	exit; // Exit if accessed directly.
 }
 
-// First generate the message
+// First generate the message.
 $message = sprintf(
 	// translators: Date when content will be available.
 	wp_kses_post( __( '<span class="ld-display-label">Available on:</span> <span class="ld-display-date">%s</span>', 'learndash' ) ),
@@ -28,7 +28,7 @@ $message = sprintf(
 $wrap_start = '<small class="notavailable_message">';
 $wrap_end   = '</small>';
 
-// The figure out how to display it
+// The figure out how to display it.
 if ( $context == 'lesson' ) {
 	// On the lesson single we display additional information.
 	$message .= '<br><br><a href="' . get_permalink( $course_id ) . '">' .
@@ -39,9 +39,9 @@ if ( $context == 'lesson' ) {
 	$wrap_end   = '</div>';
 
 } elseif ( $context == 'course' ) {
-	// No changes for course
+	// No changes for course.
 } else {
-	// Default no changes
+	// Default no changes.
 }
 /** This filter is documented in themes/ld30/templates/modules/messages/lesson-not-available.php */
 echo $wrap_start . apply_filters( 'learndash_lesson_available_from_text', $message, get_post( $lesson_id ), $lesson_access_from_int ) . $wrap_end;

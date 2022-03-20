@@ -17,12 +17,28 @@ if ( ( ! class_exists( 'LD_REST_Users_Controller_V1' ) ) && ( class_exists( 'WP_
 	 *
 	 * @since 2.5.8
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Users_Controller_V1 extends WP_REST_Users_Controller {
+	class LD_REST_Users_Controller_V1 extends WP_REST_Users_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
+		/**
+		 * Version
+		 *
+		 * @var string
+		 */
 		protected $version = 'v1';
 
+		/**
+		 * Sub controllers
+		 *
+		 * @var array
+		 */
 		protected $sub_controllers = array();
+
+		/**
+		 * Taxonomies
+		 *
+		 * @var array
+		 */
+		protected $taxonomies = array();
 
 		/**
 		 * Public constructor for class

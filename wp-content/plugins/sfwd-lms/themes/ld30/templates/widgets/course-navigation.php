@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Filter to allow override of widget instance arguments.
- * @since 3.0.0
  */
 if ( ! isset( $widget_instance ) ) {
 	$widget_instance = array();
@@ -60,7 +59,7 @@ $widget_data_json = htmlspecialchars( wp_json_encode( $widget_data ) ); ?>
 		<div class="ld-course-navigation-heading">
 			<div class="ld-course-navigation-actions">
 				<a class="ld-home-link" href="<?php echo esc_url( get_permalink( $course->ID ) ); ?>"><?php printf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
-					// translators: placeholder: Course Navigation Home Label
+					// translators: placeholder: Course Navigation Home Label.
 					esc_html_x( '%s Home', 'Course Navigation Home Label', 'learndash' ),
 					LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 				); ?></a> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>

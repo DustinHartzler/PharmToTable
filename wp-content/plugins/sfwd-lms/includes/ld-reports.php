@@ -39,6 +39,7 @@ function learndash_get_users_query( $query_args = array() ) {
 		$user_query = new WP_User_Query( $query_args );
 		return $user_query->get_results();
 	}
+	return array();
 }
 
 /**
@@ -81,7 +82,7 @@ function learndash_get_report_user_ids( $user_id = 0, $query_args = array() ) {
 		$include_user_ids = learndash_get_group_leader_groups_users( $user_id );
 
 		// Even though we have the users ids from the learndash_get_group_leader_groups_users() we need to validate them
-		// by running them against the WP_User_Query
+		// by running them against the WP_User_Query.
 		if ( ! empty( $include_user_ids ) ) {
 			$query_args['include'] = $include_user_ids;
 		}
@@ -179,7 +180,7 @@ function learndash_get_assignments_pending_count( $query_args = array(), $return
 		),
 	);
 
-	// added logic for non-admin user like group leaders who will only see a sub-set of assignments
+	// added logic for non-admin user like group leaders who will only see a sub-set of assignments.
 	$user_id = get_current_user_id();
 	if ( learndash_is_group_leader_user( $user_id ) ) {
 		$group_ids  = learndash_get_administrators_group_ids( $user_id );
@@ -266,7 +267,7 @@ function learndash_admin_get_assignments_listing_link( $link_args = array() ) {
 
 	$link_args = wp_parse_args( $link_args, $default_args );
 
-	// Just in case someone tried to insert action/actions triggers. Remove them
+	// Just in case someone tried to insert action/actions triggers. Remove them.
 	if ( isset( $link_args['action'] ) ) {
 		unset( $link_args['action'] );
 	}
@@ -284,6 +285,7 @@ function learndash_admin_get_assignments_listing_link( $link_args = array() ) {
 	if ( ! empty( $link_args ) ) {
 		return add_query_arg( $link_args, admin_url( 'edit.php' ) );
 	}
+	return '';
 }
 
 /**
@@ -318,7 +320,7 @@ function learndash_get_essays_pending_count( $query_args = array(), $return_fiel
 		'fields'      => 'ids',
 	);
 
-	// added logic for non-admin user like group leaders who will only see a sub-set of assignments
+	// added logic for non-admin user like group leaders who will only see a sub-set of assignments.
 	$user_id = get_current_user_id();
 	if ( learndash_is_group_leader_user( $user_id ) ) {
 		$group_ids  = learndash_get_administrators_group_ids( $user_id );
@@ -405,7 +407,7 @@ function learndash_admin_get_essays_listing_link( $link_args = array() ) {
 
 	$link_args = wp_parse_args( $link_args, $default_args );
 
-	// Just in case someone tried to insert action/actions triggers. Remove them
+	// Just in case someone tried to insert action/actions triggers. Remove them.
 	if ( isset( $link_args['action'] ) ) {
 		unset( $link_args['action'] );
 	}
@@ -423,6 +425,8 @@ function learndash_admin_get_essays_listing_link( $link_args = array() ) {
 	if ( ! empty( $link_args ) ) {
 		return add_query_arg( $link_args, admin_url( 'edit.php' ) );
 	}
+
+	return '';
 }
 
 /**
@@ -632,51 +636,51 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 	$activity_status_has_null = false;
 
 	$defaults = array(
-		// array or comma lst of group ids to use in query. Default is all groups
+		// array or comma lst of group ids to use in query. Default is all groups.
 		'group_ids'                   => '',
 
 		// array or comma list of course.
 		'course_ids'                  => '',
 		'course_ids_action'           => 'IN',
 
-		// array or comma list of course, lesson, topic, etc. Default is all posts
+		// array or comma list of course, lesson, topic, etc. Default is all posts.
 		'post_ids'                    => '',
 		'post_ids_action'             => 'IN',
 
-		// array or comma list of LD specific post types. See $learndash_post_types for possible values
+		// array or comma list of LD specific post types. See $learndash_post_types for possible values.
 		'post_types'                  => '',
 
-		// array or comma list of post statuses. See $learndash_post_types for possible values
+		// array or comma list of post statuses. See $learndash_post_types for possible values.
 		'post_status'                 => '',
 
 		// array or comma list of user ids. Defaults to all user ids.
 		'user_ids'                    => '',
 		'user_ids_action'             => 'IN',
 
-		// An array of activity_type values to filter. Default is all types
+		// An array of activity_type values to filter. Default is all types.
 		'activity_types'              => '',
 
-		// An array of activity_status values to filter. Possible values 'NOT_STARTED' , 'IN_PROGRESS', 'COMPLETED'
+		// An array of activity_status values to filter. Possible values 'NOT_STARTED' , 'IN_PROGRESS', 'COMPLETED'.
 		'activity_status'             => '',
 
-		// controls number of items to return for request. Pass 0 for ALL items
+		// controls number of items to return for request. Pass 0 for ALL items.
 		'per_page'                    => 10,
 
 		// Used in combination with 'per_page' to set the page set of items to return.
 		'paged'                       => 1,
-		// order by fields AND order (DESC, ASC) combined to allow multiple fields and directions
+		// order by fields AND order (DESC, ASC) combined to allow multiple fields and directions.
 		'orderby_order'               => 'GREATEST(ld_user_activity.activity_started, ld_user_activity.activity_completed) DESC',
 		// Search value. See 'search_context' for specifying search fields.
 		's'                           => '',
 
-		// Limit search to 'post_title' OR 'display_name'. If empty will include both
+		// Limit search to 'post_title' OR 'display_name'. If empty will include both.
 		's_context'                   => '',
 
 		// start and/or end time filtering. Should be date format strings 'YYYY-MM-DD HH:mm:ss' or 'YYYY-MM-DD'.
 		'time_start'                  => 0,
 		'time_end'                    => 0,
 
-		// Indicators to tell the logic if the values passed via 'time_start' and 'time_end' are GMT or local (timezone offset),
+		// Indicators to tell the logic if the values passed via 'time_start' and 'time_end' are GMT or local (timezone offset).
 		'time_start_is_gmt'           => false,
 		'time_end_is_gmt'             => false,
 
@@ -688,16 +692,16 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		'include_meta'                => true,
 		'meta_fields'                 => array(),
 
-		// controls if the queries are actually executed. You can pass in true or 1 to have the logic tested without running the actual query
+		// controls if the queries are actually executed. You can pass in true or 1 to have the logic tested without running the actual query.
 		'dry_run'                     => 0,
 
-		// Supress ALL filters. This include both the query_args and query_str filters
+		// Supress ALL filters. This include both the query_args and query_str filters.
 		'suppress_filters_all'        => 0,
 
-		// If the 'suppress_filters_all' is NOT set you can set this to control just filters for the final query_args;
+		// If the 'suppress_filters_all' is NOT set you can set this to control just filters for the final query_args.
 		'suppress_filters_query_args' => 0,
 
-		// If the 'suppress_filters_all' is NOT set you can set this to control just filters for the final query_str;
+		// If the 'suppress_filters_all' is NOT set you can set this to control just filters for the final query_str.
 		'suppress_filters_query_str'  => 0,
 	);
 
@@ -803,13 +807,15 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 	} else {
 		if ( ! learndash_is_group_leader_user( $current_user_id ) ) {
 			if ( learndash_is_admin_user( $current_user_id ) ) {
-				// If the group_ids parameter is passed in we need to determine the course_ids contains in the group_ids
+				// If the group_ids parameter is passed in we need to determine the course_ids contains in the group_ids.
 				if ( '' != $query_args['group_ids'] ) {
 					$query_args['post_ids'] = learndash_get_groups_courses_ids( $current_user_id, $query_args['group_ids'] );
 				}
 			} else {
-				// If the user if not a group leader and not admin then abort until we have added support for those roles.
-				//return $activity_results;
+				/**
+				 * If the user if not a group leader and not admin then abort until we have added support for those roles.
+				 * return $activity_results;
+				 */
 				if ( empty( $query_args['user_ids'] ) ) {
 					$query_args['user_ids'] = array( get_current_user_id() );
 				}
@@ -1064,13 +1070,13 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 			// Need to convert the item date. Actually add a new property which is the formatted date.
 			foreach ( $activity_results['results'] as &$result_item ) {
 				// There are three date fields we need format.
-				// 1. activity_started
+				// 1. activity_started.
 				if ( ( property_exists( $result_item, 'activity_started' ) ) && ( ! empty( $result_item->activity_started ) ) ) {
 					 // phpcs:ignore: WordPress.DateTime.RestrictedFunctions.date_date
 					$result_item->activity_started_formatted = get_date_from_gmt( date( 'Y-m-d H:i:s', $result_item->activity_started ), $query_args['date_format'] );
 				}
 
-				// 2. activity_completed
+				// 2. activity_completed.
 				if ( ( property_exists( $result_item, 'activity_completed' ) ) && ( ! empty( $result_item->activity_completed ) ) ) {
 					 // phpcs:ignore: WordPress.DateTime.RestrictedFunctions.date_date
 					$result_item->activity_completed_formatted = get_date_from_gmt( date( 'Y-m-d H:i:s', $result_item->activity_completed ), $query_args['date_format'] );
@@ -1131,7 +1137,7 @@ function learndash_report_course_users_progress( $course_id = 0, $user_query_arg
 
 	if ( ! empty( $course_id ) ) {
 
-		// If the user_ids was not passed from the caller then we need to do that work
+		// If the user_ids was not passed from the caller then we need to do that work.
 		if ( ( ! isset( $activity_query_args['user_ids'] ) ) || ( empty( $activity_query_args['user_ids'] ) ) ) {
 			$course_user_query = learndash_get_users_for_course( intval( $course_id ), $user_query_args );
 			if ( $course_user_query instanceof WP_User_Query ) {
@@ -1375,12 +1381,12 @@ function learndash_report_user_courses_progress( $user_id = 0, $course_query_arg
 
 	if ( empty( $user_id ) ) {
 		if ( ! is_user_logged_in() ) {
-			return $course_progress_data;
+			return $user_courses_progress_data;
 		}
 		$user_id = get_current_user_id();
 	}
 
-	// If the post_ids (Course ids) was not passed from the caller then we need to do that work
+	// If the post_ids (Course ids) was not passed from the caller then we need to do that work.
 	if ( ( ! isset( $activity_query_args['post_ids'] ) ) || ( empty( $activity_query_args['post_ids'] ) ) ) {
 		$activity_query_args['post_ids'] = learndash_user_get_enrolled_courses( intval( $user_id ), $course_query_args );
 	}
@@ -1517,7 +1523,7 @@ function learndash_get_user_course_attempts_time_spent( $user_id = 0, $course_id
 
 	$attempts = learndash_get_user_course_attempts( $user_id, $course_id );
 
-	// We should only ever have one entry for a user+course_id. But still we are returned an array of objects
+	// We should only ever have one entry for a user+course_id. But still we are returned an array of objects.
 	if ( ( ! empty( $attempts ) ) && ( is_array( $attempts ) ) ) {
 		foreach ( $attempts as $attempt ) {
 
@@ -1526,7 +1532,7 @@ function learndash_get_user_course_attempts_time_spent( $user_id = 0, $course_id
 				$total_time_spent += ( $attempt->activity_completed - $attempt->activity_started );
 			} else {
 				// But if the Course is not complete we calculate the time based on the updated timestamp
-				// This is updated on the course for each lesson, topic, quiz
+				// This is updated on the course for each lesson, topic, quiz.
 				$total_time_spent += ( $attempt->activity_updated - $attempt->activity_started );
 			}
 		}

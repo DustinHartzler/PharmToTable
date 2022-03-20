@@ -189,9 +189,9 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 			}
 
 			// Future Implementation logic to handle changes in meta structure between versions.
-			//if ( isset( $this->meta['version'] ) ) {
+			// if ( isset( $this->meta['version'] ) ) {
 				// We need to perform any needed upgrade logic.
-			//}
+			// }
 
 			/**
 			 * We check the 'course_id' to verify the step metadata. This helps
@@ -336,7 +336,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 					$steps_count += count( $this->steps['t']['sfwd-lessons'] );
 				}
 
-				// All topics
+				// All topics.
 				if ( isset( $this->steps['t']['sfwd-topic'] ) ) {
 					$steps_count += count( $this->steps['t']['sfwd-topic'] );
 				}
@@ -620,7 +620,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 			}
 
 			$sections_array = json_decode( $sections_raw );
-			if ( ( empty( $sections_array ) ) || ( ! is_array( $sections_array ) ) ) {
+			if ( empty( $sections_array ) || ( ! is_array( $sections_array ) ) ) {
 				return $sections;
 			}
 
@@ -630,6 +630,26 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 			$lessons = array_keys( $steps['sfwd-lessons'] );
 
 			foreach ( $sections_array as $section ) {
+				if ( ! is_object( $section ) ) {
+					continue;
+				}
+
+				if ( ( ! property_exists( $section, 'ID' ) ) || ( empty( $section->ID ) ) ) {
+					continue;
+				}
+				
+				if ( ! property_exists( $section, 'order' ) ) {
+					continue;
+				}
+
+				if ( ( ! property_exists( $section, 'post_title' ) ) || ( empty( $section->post_title ) ) ) {
+					continue;
+				}
+
+				if ( ( ! property_exists( $section, 'type' ) ) || ( empty( $section->type ) ) ) {
+					continue;
+				}
+				
 				array_splice( $lessons, (int) $section->order, 0, array( $section ) );
 			}
 
@@ -987,7 +1007,18 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		public function set_section_headings( $sections = array() ) {
 			// This probably should call the REST endpoint.
 			if ( ! empty( $sections ) ) {
-				return update_post_meta( $this->course_id, 'course_sections', wp_json_encode( array_values( $sections ), JSON_UNESCAPED_UNICODE ) );
+				foreach( $sections as &$section ) {
+					if ( ! isset( $section['post_title'] ) ) {
+						$section['post_title'] = '';
+					} elseif ( ! empty( $section['post_title'] ) ) {
+
+						$section['post_title'] = strip_tags( $section['post_title'] );
+						//$section['post_title'] = wp_kses_post( $section['post_title'] );
+					}
+				}
+
+				$sections_json = wp_slash( wp_json_encode( array_values( $sections ), JSON_UNESCAPED_UNICODE ) );
+				return update_post_meta( $this->course_id, 'course_sections', $sections_json );
 			} else {
 				return delete_post_meta( $this->course_id, 'course_sections' );
 			}
@@ -1151,7 +1182,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 				}
 			}
 
-			// Remove Steps
+			// Remove Steps.
 			$course_steps_remove = array_diff( $course_steps_old, $course_steps_intersect );
 			if ( ! empty( $course_steps_remove ) ) {
 				foreach ( $course_steps_remove as $post_id ) {
@@ -1172,8 +1203,6 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		 *
 		 * @param array $steps       Array of Course step nodes and items.
 		 * @param int   $parent_lesson_id Parent Lesson ID.
-		 *
-		 * @return array Array of steps.
 		 */
 		private function set_step_to_course_relationship( $steps = array(), $parent_lesson_id = 0 ) {
 			global $wpdb;
@@ -1209,9 +1238,9 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 									( postmeta.meta_key = 'course_id'
 										AND CAST(postmeta.meta_value AS SIGNED) = %d )
 								AND
-  							  		(
+									(
 									( mt1.meta_key = 'lesson_id' AND CAST(mt1.meta_value AS SIGNED) = '0' )
-    								OR
+									OR
 									mt2.post_id IS NULL
 									)
 								)
@@ -1281,8 +1310,6 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		 * @since 2.5.0
 		 *
 		 * @param array $steps Array of Course step nodes and items.
-		 *
-		 * @return array Array of steps.
 		 */
 		private function set_step_to_course_order( $steps = array() ) {
 			global $wpdb;
@@ -1344,7 +1371,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 					$course_lesson_order = learndash_get_course_lessons_order( $this->course_id );
 				}
 
-				// Course > Lessons
+				// Course > Lessons.
 				$lesson_steps_query_args = array(
 					'post_type'      => learndash_get_post_type_slug( 'lesson' ),
 					'posts_per_page' => -1,
@@ -1371,7 +1398,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 						$this->objects[ $lesson->ID ] = $lesson;
 
-						// Course > Lesson > Topics
+						// Course > Lesson > Topics.
 						$topic_steps_query_args = array(
 							'post_type'      => learndash_get_post_type_slug( 'topic' ),
 							'posts_per_page' => -1,
@@ -1401,7 +1428,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 
 								$this->objects[ $topic->ID ] = $topic;
 
-								// Course > Lesson > Topic > Quizzes
+								// Course > Lesson > Topic > Quizzes.
 								$topic_quiz_steps_query_args = array(
 									'post_type'      => learndash_get_post_type_slug( 'quiz' ),
 									'posts_per_page' => -1,
@@ -1434,7 +1461,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 							}
 						}
 
-						// Course > Lesson > Quizzes
+						// Course > Lesson > Quizzes.
 						$lesson_quiz_steps_query_args = array(
 							'post_type'      => learndash_get_post_type_slug( 'quiz' ),
 							'posts_per_page' => -1,
@@ -1469,7 +1496,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 					$steps[ learndash_get_post_type_slug( 'lesson' ) ] = array();
 				}
 
-				// Course > Quizzes (Global Quizzes)
+				// Course > Quizzes (Global Quizzes).
 				$quiz_steps_query_args = array(
 					'post_type'      => learndash_get_post_type_slug( 'quiz' ),
 					'posts_per_page' => -1,
@@ -1520,7 +1547,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		 * @since 2.5.0
 		 *
 		 * @param int    $post_id Current step post ID.
-		 * @param string $post_type Parent step post_type to
+		 * @param string $post_type Parent step post_type to.
 		 */
 		public function get_item_parent_steps( $post_id = 0, $post_type = '' ) {
 			$item_ancestor_steps = array();
@@ -1643,7 +1670,6 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		 *
 		 * @param array  $steps       Array of steps.
 		 * @param string $parent_type Parent Post Type slug.
-		 *
 		 */
 		public static function steps_split_keys( $steps, $parent_type = '' ) {
 			if ( learndash_get_post_type_slug( 'lesson' ) === $parent_type ) {

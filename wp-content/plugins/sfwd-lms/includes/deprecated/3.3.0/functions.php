@@ -13,10 +13,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'is_data_upgrade_quiz_questions_updated' ) ) {
 	/**
-	* Utility function to check if the data upgrade for Quiz Questions has been run.
-	*
-	* @deprecated 3.3.0 Use {@see 'learndash_is_data_upgrade_quiz_questions_updated'} instead.
-	*/
+	 * Utility function to check if the data upgrade for Quiz Questions has been run.
+	 *
+	 * @deprecated 3.3.0 Use {@see 'learndash_is_data_upgrade_quiz_questions_updated'} instead.
+	 */
 	function is_data_upgrade_quiz_questions_updated() {
 		if ( function_exists( '_deprecated_function' ) ) {
 			_deprecated_function( __FUNCTION__, '3.3.0', 'learndash_is_data_upgrade_quiz_questions_updated' );
@@ -32,6 +32,9 @@ if ( ! function_exists( 'leandash_get_question_pro_fields' ) ) {
 	 * Gets the `WPProQuiz` Question row column fields.
 	 *
 	 * @deprecated 3.3.0 Use {@see 'learndash_get_question_pro_fields'} instead.
+	 *
+	 * @param int          $question_pro_id Optional. The `WPProQuiz` Question ID. Default 0.
+	 * @param string|array $fields          Optional. An array or comma delimited string of fields to return. Default null.
 	 */
 	function leandash_get_question_pro_fields( $question_pro_id = 0, $fields = null ) {
 		if ( function_exists( '_deprecated_function' ) ) {
@@ -47,6 +50,9 @@ if ( ! function_exists( 'leandash_get_quiz_pro_fields' ) ) {
 	 * Gets the `WPProQuiz` Quiz row column fields.
 	 *
 	 * @deprecated 3.3.0 Use {@see 'learndash_get_question_pro_fields'} instead.
+	 *
+	 * @param int          $quiz_pro_id Optional. The `WPProQuiz` Question ID. Default 0.
+	 * @param string|array $fields       Optional. An array or comma delimited string of fields to return. Default null.
 	 */
 	function leandash_get_quiz_pro_fields( $quiz_pro_id = 0, $fields = null ) {
 		if ( function_exists( '_deprecated_function' ) ) {

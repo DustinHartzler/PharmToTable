@@ -1,10 +1,6 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
- * LearnDash Import CPT
+ * LearnDash Import Quiz Statistics
  *
  * This file contains functions to handle import of the LearnDash Quiz Statistics
  *
@@ -18,25 +14,54 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( ! class_exists( 'LearnDash_Import_Quiz_Statistics' ) ) && ( class_exists( 'LearnDash_Import_Post' ) ) ) {
+	/**
+	 * Class to import quiz statistics
+	 */
 	class LearnDash_Import_Quiz_Statistics extends LearnDash_Import_Post {
+		/**
+		 * Version
+		 *
+		 * @var string Version.
+		 */
 		private $version = '1.0';
 
+		/**
+		 * Constructor
+		 */
 		public function __construct() {
 		}
 
+		/**
+		 * Get quiz statistics ref model
+		 *
+		 * @return array
+		 */
 		public function startQuizStatisticsHeader() {
 			$statistic_ref_model = new WpProQuiz_Model_StatisticRefModel();
 
 			return $statistic_ref_model->get_object_as_array();
 		}
 
+		/**
+		 * Get quiz statistics question
+		 *
+		 * @return array
+		 */
 		public function startQuizStatisticsQuestion() {
 			$pro_quiz_statistic_import = new WpProQuiz_Model_Statistic();
 
 			return $pro_quiz_statistic_import->get_object_as_array();
 		}
 
-		// $quiz_statistic_data should be an array of arrays. Each array item represents a single user question response
+		/**
+		 * Save quiz statistics set.
+		 *
+		 * $quiz_statistic_data should be an array of arrays. Each array item represents a single user question response.
+		 *
+		 * @param array $quiz_statistic_header  Quiz statistics header.
+		 * @param array $quiz_statistic_details Quiz statistics details.
+		 * @return int|null
+		 */
 		public function saveQuizStatisticSet( $quiz_statistic_header = array(), $quiz_statistic_details = array() ) {
 			if ( ( ! empty( $quiz_statistic_header ) ) && ( ! empty( $quiz_statistic_details ) ) ) {
 
@@ -45,7 +70,7 @@ if ( ( ! class_exists( 'LearnDash_Import_Quiz_Statistics' ) ) && ( class_exists(
 
 				$statistic_values = array();
 				foreach ( $quiz_statistic_details as $quiz_statistic_details ) {
-					// Called to ensure we have a working Question Set ( WpProQuiz_Model_Question )
+					// Called to ensure we have a working Question Set ( WpProQuiz_Model_Question ).
 					$pro_quiz_statistic_import = new WpProQuiz_Model_Statistic();
 					$pro_quiz_statistic_import->set_array_to_object( $quiz_statistic_details );
 					$statistic_values[] = $pro_quiz_statistic_import;
@@ -55,17 +80,27 @@ if ( ( ! class_exists( 'LearnDash_Import_Quiz_Statistics' ) ) && ( class_exists(
 				$statistic_ref_mapper_id = $statistic_ref_mapper->statisticSave( $statistic_ref_model, $statistic_values );
 				return $statistic_ref_mapper_id;
 			}
+
+			return null;
 		}
 
-		// $file_upload_full is the full path to the existin file.
-		// $question_id is needed when building the essay filename
+		/**
+		 * Migrate file upload to essay
+		 *
+		 * $file_upload_full is the full path to the existing file.
+		 * $question_id is needed when building the essay filename.
+		 *
+		 * @param string $file_upload_full Full path to file.
+		 * @param int    $question_id      Question ID.
+		 * @return string
+		 */
 		public function migrate_file_upload_to_essay( $file_upload_full = '', $question_id = 0 ) {
 			if ( ! empty( $file_upload_full ) ) {
 
-				// This logic was copied from LD core includes/quiz/ld-quiz-essay.php learndash_essay_fileupload_process()
+				// This logic was copied from LD core includes/quiz/ld-quiz-essay.php learndash_essay_fileupload_process().
 				$filename = learndash_clean_filename( basename( $file_upload_full ) );
 
-				// get file info
+				// get file info.
 				// @fixme: wp checks the file extension....
 				$filetype  = wp_check_filetype( basename( $filename ), null );
 				$filetitle = preg_replace( '/\.[^.]+$/', '', basename( $filename ) );
@@ -135,6 +170,7 @@ if ( ( ! class_exists( 'LearnDash_Import_Quiz_Statistics' ) ) && ( class_exists(
 					return $upload_url_path . $filename;
 				}
 			}
+			return '';
 		}
 
 
@@ -183,6 +219,12 @@ if ( ( ! class_exists( 'LearnDash_Import_Quiz_Statistics' ) ) && ( class_exists(
 		</pre>
 		*/
 
+		/**
+		 * Add quiz attempts to user
+		 *
+		 * @param int   $user_id     User ID.
+		 * @param array $quiz_attempt Quiz attempts.
+		 */
 		public function add_user_quiz_attempt( $user_id = 0, $quiz_attempt = array() ) {
 			if ( ( ! empty( $user_id ) ) && ( ! empty( $quiz_attempt ) ) ) {
 
@@ -199,6 +241,6 @@ if ( ( ! class_exists( 'LearnDash_Import_Quiz_Statistics' ) ) && ( class_exists(
 		}
 
 
-		// End of functions
+		// End of functions.
 	}
 }

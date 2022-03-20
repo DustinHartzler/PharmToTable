@@ -63,6 +63,12 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				'example_show'       => array(
 					'type' => 'boolean',
 				),
+				'quiz_num'           => array(
+					'type' => 'string',
+				),
+				'editing_post_meta'  => array(
+					'type' => 'object',
+				),
 			);
 			$this->self_closing     = true;
 
@@ -78,59 +84,39 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param array $attributes Shortcode attrbutes.
+		 * @param array    $block_attributes The block attrbutes.
+		 * @param string   $block_content    The block content.
+		 * @param WP_block $block            The block object.
+		 *
 		 * @return none The output is echoed.
 		 */
-		public function render_block( $attributes = array() ) {
-			$attributes = $this->preprocess_block_attributes( $attributes );
+		public function render_block( $block_attributes = array(), $block_content = '', WP_block $block = null ) {
+			$block_attributes = $this->preprocess_block_attributes( $block_attributes );
 
-			if ( is_user_logged_in() ) {
+			if ( ( isset( $block_attributes['example_show'] ) ) && ( ! empty( $block_attributes['example_show'] ) ) ) {
+				$block_attributes['user_id']      = $this->get_example_user_id();
+				$block_attributes['preview_show'] = 1;
 
-				if ( ( isset( $attributes['example_show'] ) ) && ( ! empty( $attributes['example_show'] ) ) ) {
-					$attributes['preview_user_id'] = $this->get_example_user_id();
-					$attributes['preview_show']    = 1;
-					unset( $attributes['example_show'] );
-				}
-
-				$shortcode_params_str = '';
-				foreach ( $attributes as $key => $val ) {
-					if ( ( empty( $key ) ) || ( is_null( $val ) ) ) {
-						continue;
-					}
-
-					if ( substr( $key, 0, strlen( 'preview_' ) ) == 'preview_' ) {
-						if ( ( ! isset( $attributes['user_id'] ) ) && ( 'preview_user_id' === $key ) && ( '' !== $val ) ) {
-							if ( learndash_is_admin_user( get_current_user_id() ) ) {
-								// If admin user they can preview any user_id.
-							} elseif ( learndash_is_group_leader_user( get_current_user_id() ) ) {
-								// If group leader user we ensure the preview user_id is within their group(s).
-								if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $val ) ) {
-									continue;
-								}
-							} else {
-								// If neither admin or group leader then we don't see the user_id for the shortcode.
-								continue;
-							}
-							$key = str_replace( 'preview_', '', $key );
-							$val = intval( $val );
-						}
-					}
-
-					if ( ! empty( $shortcode_params_str ) ) {
-						$shortcode_params_str .= ' ';
-					}
-					$shortcode_params_str .= $key . '="' . esc_attr( $val ) . '"';
-				}
-
-				$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
-				$shortcode_out        = do_shortcode( $shortcode_params_str );
-				if ( empty( $shortcode_out ) ) {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
-				}
-
-				return $this->render_block_wrap( $shortcode_out );
+				unset( $block_attributes['example_show'] );
 			}
-			wp_die();
+
+			/** This filter is documented in includes/gutenberg/blocks/ld-course-list/index.php */
+			$block_attributes = apply_filters( 'learndash_block_markers_shortcode_atts', $block_attributes, $this->shortcode_slug, $this->block_slug, '' );
+
+			$shortcode_out = '';
+
+			$shortcode_str = $this->build_block_shortcode( $block_attributes, $block_content );
+			if ( ! empty( $shortcode_str ) ) {
+				$shortcode_out = do_shortcode( $shortcode_str );
+			}
+
+			if ( ! empty( $shortcode_out ) ) {
+				if ( $this->block_attributes_is_editing_post( $block_attributes ) ) {
+					$shortcode_out = $this->render_block_wrap( $shortcode_out );
+				}
+			}
+
+			return $shortcode_out;
 		}
 
 		/**
@@ -138,50 +124,41 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 2.5.9
 		 *
-		 * @param array  $attributes The array of attributes parse from the block content.
+		 * @param array  $block_attributes The array of attributes parse from the block content.
 		 * @param string $shortcode_slug This will match the related LD shortcode ld_profile, ld_course_list, etc.
 		 * @param string $block_slug This is the block token being processed. Normally same as the shortcode but underscore replaced with dash.
 		 * @param string $content This is the orignal full content being parsed.
 		 *
-		 * @return array $attributes.
+		 * @return array $block_attributes.
 		 */
-		public function learndash_block_markers_shortcode_atts_filter( $attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
+		public function learndash_block_markers_shortcode_atts_filter( $block_attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
 			if ( $shortcode_slug === $this->shortcode_slug ) {
 
-				if ( isset( $attributes['preview_show'] ) ) {
-					unset( $attributes['preview_show'] );
-				}
-				if ( isset( $attributes['preview_user_id'] ) ) {
-					unset( $attributes['preview_user_id'] );
-				}
-
-				if ( isset( $attributes['course_points_user'] ) ) {
-					if ( false == $attributes['course_points_user'] ) {
-						$attributes['course_points_user'] = 'no';
+				if ( isset( $block_attributes['course_points_user'] ) ) {
+					if ( false == $block_attributes['course_points_user'] ) {
+						$block_attributes['course_points_user'] = 'no';
 					}
 				}
 
-				if ( isset( $attributes['profile_link'] ) ) {
-					if ( false == $attributes['profile_link'] ) {
-						$attributes['profile_link'] = 'no';
+				if ( isset( $block_attributes['profile_link'] ) ) {
+					if ( false == $block_attributes['profile_link'] ) {
+						$block_attributes['profile_link'] = 'no';
 					}
 				}
 
-				if ( isset( $attributes['show_quizzes'] ) ) {
-					if ( false == $attributes['show_quizzes'] ) {
-						$attributes['show_quizzes'] = 'no';
+				if ( isset( $block_attributes['show_quizzes'] ) ) {
+					if ( false == $block_attributes['show_quizzes'] ) {
+						$block_attributes['show_quizzes'] = 'no';
 					}
 				}
 
-				if ( isset( $attributes['show_search'] ) ) {
-					if ( false == $attributes['show_search'] ) {
-						$attributes['show_search'] = 'no';
-					} elseif ( true == $attributes['show_search'] ) {
-						$attributes['show_quizzes'] = 'yes';
+				if ( isset( $block_attributes['show_search'] ) ) {
+					if ( false == $block_attributes['show_search'] ) {
+						$block_attributes['show_search'] = 'no';
 					}
 				}
 			}
-			return $attributes;
+			return $block_attributes;
 		}
 
 		// End of functions.

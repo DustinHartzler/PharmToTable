@@ -1,8 +1,4 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * LearnDash Import CPT
  *
@@ -13,15 +9,63 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LearnDash_Import_Post' ) ) {
+	/**
+	 * Class to import posts.
+	 */
 	class LearnDash_Import_Post {
 
+		/**
+		 * Converted Items
+		 *
+		 * @var array $converted_items
+		 */
 		public $converted_items = array();
-		public $config          = array();
 
+		/**
+		 * Config
+		 *
+		 * @var array @config
+		 */
+		public $config = array();
+
+		/**
+		 * Destination Post Type
+		 *
+		 * @var string $dest_post_type
+		 */
+		protected $dest_post_type;
+
+		/**
+		 * Source Post Type
+		 *
+		 * @var string $source_post_type
+		 */
+		protected $source_post_type;
+
+		/**
+		 * Destination Taxonomy
+		 *
+		 * @var string $dest_taxonomy
+		 */
+		protected $dest_taxonomy;
+
+		/**
+		 * Constructor
+		 */
 		public function __construct() {
 		}
 
+		/**
+		 * Get duplicate link
+		 *
+		 * @param int    $post_id Post ID.
+		 * @param string $action  Action.
+		 */
 		public function get_duplicate_link( $post_id = 0, $action = '' ) {
 
 			$post = get_post( $post_id );
@@ -59,6 +103,14 @@ if ( ! class_exists( 'LearnDash_Import_Post' ) ) {
 			}
 		}
 
+		/**
+		 * Duplicate post
+		 *
+		 * @param integer $source_post_id Post ID to copy.
+		 * @param boolean $force_copy     Whether to force the copy. Default false.
+		 *
+		 * @return WP_Post
+		 */
 		public function duplicate_post( $source_post_id = 0, $force_copy = false ) {
 
 			if ( ! empty( $source_post_id ) ) {
@@ -126,13 +178,21 @@ if ( ! class_exists( 'LearnDash_Import_Post' ) ) {
 			return false;
 		}
 
+		/**
+		 * Duplicate Post's taxonomies
+		 *
+		 * @param WP_Term $source_term    WP_Term to duplicate.
+		 * @param boolean $create_parents Whether to create parent taxonomies. Default false.
+		 *
+		 * @return WP_Term|null
+		 */
 		public function duplicate_post_tax_term( $source_term, $create_parents = false ) {
 
 			if ( ( $source_term ) && ( is_a( $source_term, 'WP_Term' ) ) ) {
 				$terms_to_add      = array();
 				$ld_parent_term_id = 0;
 
-				// First we build the parent tree if needed
+				// First we build the parent tree if needed.
 				if ( ( ! empty( $source_term->parent ) ) && ( is_taxonomy_hierarchical( $source_term->taxonomy ) ) && ( true == $create_parents ) ) {
 					$term_parents = get_ancestors( $source_term->term_id, $source_term->taxonomy );
 					if ( ! empty( $term_parents ) ) {
@@ -186,14 +246,28 @@ if ( ! class_exists( 'LearnDash_Import_Post' ) ) {
 
 				return $new_term;
 			}
+
+			return null;
 		}
 
+		/**
+		 * Set Taxonomies of Post
+		 *
+		 * @param int   $dest_post_id Destination Post ID.
+		 * @param array $term_ids     Term IDs.
+		 * @param bool  $replace      Whether to replace the taxonomies. Default false.
+		 */
 		public function set_post_tax_terms( $dest_post_id, $term_ids, $replace = false ) {
 			if ( ( ! empty( $dest_post_id ) ) && ( ! empty( $term_ids ) ) ) {
 				wp_set_object_terms( $dest_post_id, $term_ids, $this->dest_taxonomy, true );
 			}
 		}
 
+		/**
+		 * Get imported
+		 *
+		 * @param int $source_post_id Source Post ID.
+		 */
 		public function get_imported( $source_post_id = 0 ) {
 			if ( ! empty( $source_post_id ) ) {
 
@@ -217,6 +291,6 @@ if ( ! class_exists( 'LearnDash_Import_Post' ) ) {
 			return false;
 		}
 
-		// End of functions
+		// End of functions.
 	}
 }

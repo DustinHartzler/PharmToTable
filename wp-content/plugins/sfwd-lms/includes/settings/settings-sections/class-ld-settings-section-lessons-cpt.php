@@ -201,7 +201,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'type'           => 'checkbox-switch',
 					'label'          => esc_html__( 'RSS/Atom Feed', 'learndash' ),
 					'help_text'      => sprintf(
-						// translators: placeholder: lesson
+						// translators: placeholder: lesson.
 						esc_html_x( 'Enables an RSS feed for all %1$s posts.', 'placeholder: lesson', 'learndash' ),
 						learndash_get_custom_label_lower( 'lesson' )
 					),
@@ -247,9 +247,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 2.4.0
 		 *
-		 * @param array  $value Array of section fields values.
-		 * @param array  $old_value Array of old values.
-		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 * @param array  $new_values         Array of section fields values.
+		 * @param array  $old_values         Array of old values.
+		 * @param string $setting_option_key Section option key should match $this->setting_option_key.
 		 */
 		public function section_pre_update_option( $new_values = '', $old_values = '', $setting_option_key = '' ) {
 			if ( $setting_option_key === $this->setting_option_key ) {

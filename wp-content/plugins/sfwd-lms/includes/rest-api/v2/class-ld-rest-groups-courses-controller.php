@@ -24,13 +24,14 @@ if ( ( ! class_exists( 'LD_REST_Groups_Courses_Controller_V2' ) ) && ( class_exi
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Groups_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 {
+	class LD_REST_Groups_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 
 		/**
 		 * Public constructor for class
 		 *
 		 * @since 3.3.0
+		 *
+		 * @param string $post_type Post type.
 		 */
 		public function __construct( $post_type = '' ) {
 			if ( empty( $post_type ) ) {
@@ -169,6 +170,8 @@ if ( ( ! class_exists( 'LD_REST_Groups_Courses_Controller_V2' ) ) && ( class_exi
 		public function get_groups_courses_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -184,6 +187,8 @@ if ( ( ! class_exists( 'LD_REST_Groups_Courses_Controller_V2' ) ) && ( class_exi
 		public function update_groups_courses_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -199,6 +204,8 @@ if ( ( ! class_exists( 'LD_REST_Groups_Courses_Controller_V2' ) ) && ( class_exi
 		public function delete_groups_courses_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
+			} else {
+				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}
 
@@ -230,7 +237,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Courses_Controller_V2' ) ) && ( class_exi
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -361,7 +368,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Courses_Controller_V2' ) ) && ( class_exi
 				return new WP_Error(
 					'rest_post_invalid_id',
 					sprintf(
-						// translators: placeholder: group
+						// translators: placeholder: group.
 						esc_html_x(
 							'Invalid %s ID.',
 							'placeholder: group',
@@ -504,7 +511,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Courses_Controller_V2' ) ) && ( class_exi
 					return new WP_Error(
 						'rest_post_invalid_id',
 						sprintf(
-							// translators: placeholder: group
+							// translators: placeholder: group.
 							esc_html_x(
 								'Invalid %s ID.',
 								'placeholder: group',

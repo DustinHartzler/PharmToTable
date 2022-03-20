@@ -1,4 +1,12 @@
 <?php
+/**
+ * LearnDash LD30.
+ *
+ * @since 3.0.0
+ *
+ * @package LearnDash\Templates\LD30
+ */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -43,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  */
 
-// No access to any certificates if you're not logged in
+// No access to any certificates if you're not logged in.
 if ( $logged_in ) {
 
 	// SFWD::get_template_part( 'modules/link', get_post_type() );
