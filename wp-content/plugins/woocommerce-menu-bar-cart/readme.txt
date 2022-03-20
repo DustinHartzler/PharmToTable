@@ -1,11 +1,11 @@
 === WooCommerce Menu Cart ===
-Contributors: jprummer, pomegranate
-Donate link: https://www.wpovernight.com/
+Contributors: pomegranate, jprummer, alexmigf, yordansoares, kluver, dpeyou
+Donate link: https://wpovernight.com/downloads/menu-cart-pro/
 Tags: woocommerce, menu, bar, cart, basket, header, shopping cart, navigation, edd, ecommerce, eshop, wp-ecommerce, jigoshop, wpec
 Requires at least: 3.4
-Tested up to: 5.6
+Tested up to: 5.9
 Requires PHP: 5.3
-Stable tag: 2.9.7
+Stable tag: 2.10.4
 
 Automatically displays a shopping cart in your menu bar. Works with WooCommerce, WP-Ecommerce, EDD, Eshop and Jigoshop
 
@@ -84,6 +84,32 @@ Once the plugin is activated navigate to Settings > Menu Cart Setup. Select your
 == Frequently Asked Questions ==
 
 == Changelog ==
+
+= 2.10.4 =
+* Tested up to WooCommerce 6.1 & WP5.9
+
+= 2.10.3 =
+* Fix: Updated WooCommerce compatibility header
+
+= 2.10.2 =
+* Translations: Add German (Formal)
+* Tested up to WooCommerce 6.0
+
+= 2.10.1 =
+* Fix: WP eCommerce compatibility
+* New: Better custom ajax options, using a custom event trigger (`wpmenucart_update_cart_ajax`)
+* Tested up to WooCommerce 5.8
+
+= 2.10.0 =
+* New: use minified JS & CSS files to reduce load time on live sites (enabling `SCRIPT_DEBUG` will load full versions)
+* Tested up to WooCommerce 5.7 & WP5.8
+
+= 2.9.8 =
+* Fix: Don't load free version if Pro version is loaded/installed
+* Fix: jQuery deprecation notices
+* Tweak: parse font stylesheet to use absolute links
+* Translations: updated template & added translation hints
+* Tested up to WooCommerce 5.4 & WP5.7
 
 = 2.9.7 =
 * Tested up to WooCommerce 5.1 & WP5.6

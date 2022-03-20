@@ -323,8 +323,9 @@ class WpMenuCart_Settings {
 	 * Styles for settings page
 	 */
 	public function wpmenucart_admin_styles() {
-		wp_enqueue_style( 'wpmenucart-admin', plugins_url( 'css/wpmenucart-icons.css', dirname(__FILE__) ), array(), WPMENUCART_VERSION, 'all' );
-		wp_enqueue_style( 'wpmenucart-font', plugins_url( '/css/wpmenucart-font.css',  dirname(__FILE__) ), array(), WPMENUCART_VERSION, 'all' );
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		wp_enqueue_style( 'wpmenucart-admin', plugins_url( '/assets/css/wpmenucart-icons'.$suffix.'.css', dirname(__FILE__) ), array(), WPMENUCART_VERSION, 'all' );
+		wp_enqueue_style( 'wpmenucart-font', plugins_url( '/assets/css/wpmenucart-font'.$suffix.'.css',  dirname(__FILE__) ), array(), WPMENUCART_VERSION, 'all' );
 	}
 	 
 	/**
@@ -376,7 +377,7 @@ class WpMenuCart_Settings {
 				if (!$this->get_menu_array()) {
 				?>
 				<div class="error" style="width:400px; padding:10px;">
-					You need to create a menu before you can use Menu Cart. Go to <strong>Appearence > Menus</strong> and create menu to add the cart to.
+					<?php _e( 'You need to create a menu before you can use Menu Cart. Go to <strong>Appearence > Menus</strong> and create menu to add the cart to.', 'wp-menu-cart' ); ?>
 				</div>
 				<?php } ?>
 				<form method="post" action="options.php">
@@ -390,12 +391,15 @@ class WpMenuCart_Settings {
 
 			</form>
 			<script type="text/javascript">
-			jQuery('.hidden-input').click(function() {
-				jQuery(this).closest('.hidden-input').prev('.pro-feature').show('slow');
-				jQuery(this).closest('.hidden-input').hide();
-			});
-			jQuery('.hidden-input-icon').click(function() {
-				jQuery('.pro-icon').show('slow');
+			jQuery( function ( $ ) {
+				$('.hidden-input').on('click', function() {
+					$(this).closest('.hidden-input').prev('.pro-feature').show('slow');
+					$(this).closest('.hidden-input').hide();
+				});
+
+				$('.hidden-input-icon').on('click', function() {
+					$('.pro-icon').show('slow');
+				});
 			});
 			</script>
 			<style type="text/css">
@@ -424,7 +428,7 @@ class WpMenuCart_Settings {
 			}
 			</style>
 			<div class="menucart-pro-ad menucart-pro-ad-small"> 
-				Want To Stand Out? <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartgopro">Go Pro.</a>
+				<?php _e( 'Want To Stand Out?', 'wp-menu-cart' ); ?> <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartgopro"><?php _e( 'Go Pro.', 'wp-menu-cart' ); ?></a>
 				<ul style="font-size: 12px;list-style-type:circle;margin-left: 20px">
 					<li><?php _e('Unlimited Menus', 'wp-menu-cart' ) ?></li>
 					<li><?php _e('Choice of 14 icons', 'wp-menu-cart' ) ?></li>
@@ -434,7 +438,7 @@ class WpMenuCart_Settings {
 				</ul>
 			</div>
 			<div class="menucart-pro-ad menucart-pro-ad-big"> 
-				<img src="<?php echo plugins_url( 'images/', dirname(__FILE__) ) . 'wpo-helper.png'; ?>" class="wpo-helper">
+				<img src="<?php echo plugins_url( 'assets/images/', dirname(__FILE__) ) . 'wpo-helper.png'; ?>" class="wpo-helper">
 				<h2><?php _e('Sell In Style With Menu Cart Pro!', 'wp-menu-cart' ) ?></h2>
 				<br>
 				<?php _e('Go Pro with Menu Cart Pro. Includes all the great standard features found in this free version plus:', 'wp-menu-cart' ) ?>
@@ -450,8 +454,8 @@ class WpMenuCart_Settings {
 					<li><?php _e('Put the cart anywhere with the [wpmenucart] shortcode', 'wp-menu-cart' ) ?></li>
 				</ul>
 				<?php
-				$menucartadmore = '<a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartadmore">';
-				printf (__('Need to see more? %sClick here%s to check it out. Add a product to your cart and watch what happens!', 'wp-menu-cart' ), $menucartadmore,'</a>'); ?><br><br>
+				/* translators: 1,2: <a> tags */
+				printf (__('Need to see more? %1$sClick here%2$s to check it out. Add a product to your cart and watch what happens!', 'wp-menu-cart' ), '<a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartadmore">','</a>'); ?><br><br>
 				<a class="button button-primary" style="text-align: center;margin: 0px auto" href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartadbuy"><?php _e('Buy Now', 'wp-menu-cart' ) ?></a>
 			</div>
 		</div>
@@ -712,7 +716,7 @@ class WpMenuCart_Settings {
 				$icons .= sprintf( '<td style="padding-bottom:0;font-size:16pt;" align="center"><label for="%1$s[%2$s][%3$s]"><i class="wpmenucart-icon-shopping-cart-%4$s"></i></label></td>', $menu, $id, $key, $iconnumber);
 				$radios .= sprintf( '<td style="padding-top:0" align="center"><input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s"%4$s /></td>', $menu, $id, $key, checked( $current, $key, false ) );
 			} else {
-				$icons .= sprintf( '<td style="padding-bottom:0;font-size:16pt;" align="center"><label for="%1$s[%2$s][%3$s]"><img src="%4$scart-icon-%5$s.png" /></label></td>', $menu, $id, $key, plugins_url( 'images/', dirname(__FILE__) ), $iconnumber);
+				$icons .= sprintf( '<td style="padding-bottom:0;font-size:16pt;" align="center"><label for="%1$s[%2$s][%3$s]"><img src="%4$scart-icon-%5$s.png" /></label></td>', $menu, $id, $key, plugins_url( 'assets/images/', dirname(__FILE__) ), $iconnumber);
 				$radio = sprintf( '<input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s" disabled />', $menu, $id, $key);
 				$radio .= '<div style="position:absolute; left:0; right:0; top:0; bottom:0; background-color:white; -moz-opacity: 0; opacity:0;filter: alpha(opacity=0);" class="hidden-input-icon"></div>';
 				$radio = '<div style="display:inline-block; position:relative;">'.$radio.'</div>';
@@ -784,12 +788,12 @@ class WpMenuCart_Settings {
 		<p>
 			<input value="custom" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" type="text" />
 			<input id="custom-menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" type="text" value="" />
-			<input id="custom-menu-item-name" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" type="text" title="<?php esc_attr_e('Menu Item'); ?>" />
+			<input id="custom-menu-item-name" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" type="text" title="<?php esc_attr_e('Menu Item', 'wp-menu-cart'); ?>" />
 		</p>
 
 		<p class="wpmenucart-meta-box" id="wpmenucart-meta-box">
 			<span class="add-to-menu">
-				<input type="submit"<?php disabled( $nav_menu_selected_id, 0 ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e('Add to Menu'); ?>" name="menucart-menu-item" id="menucart-menu-item" />
+				<input type="submit"<?php disabled( $nav_menu_selected_id, 0 ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e('Add to Menu', 'wp-menu-cart'); ?>" name="menucart-menu-item" id="menucart-menu-item" />
 				<span class="spinner"></span>
 			</span>
 		</p>
