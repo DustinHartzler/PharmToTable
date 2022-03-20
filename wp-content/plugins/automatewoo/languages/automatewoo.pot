@@ -1,15 +1,15 @@
-# Copyright (C) 2021 WooCommerce
+# Copyright (C) 2022 WooCommerce
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: AutomateWoo 5.5.7\n"
+"Project-Id-Version: AutomateWoo 5.5.12\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/my-account/create-a-ticket/\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-12-15 21:38:19+00:00\n"
+"POT-Creation-Date: 2022-03-16 19:7:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: automatewoo\n"
@@ -985,6 +985,8 @@ msgid "General"
 msgstr ""
 
 #: admin/settings-tabs/general.php:28
+#: assets/js/build/marketing-optin-block.js:1
+#: assets/js/marketing-optin-block/edit.js:25
 msgid "Marketing opt-in"
 msgstr ""
 
@@ -2232,6 +2234,14 @@ msgid "Add Note"
 msgstr ""
 
 #: includes/Actions/Order_Add_Note.php:29
+msgid "Note author"
+msgstr ""
+
+#: includes/Actions/Order_Add_Note.php:32
+msgid "Author of the Note. If not set, will default to 'WooCommerce'"
+msgstr ""
+
+#: includes/Actions/Order_Add_Note.php:38
 #: includes/Actions/Order_Update_Customer_Shipping_Note.php:29
 msgid "Note"
 msgstr ""
@@ -3246,11 +3256,11 @@ msgstr ""
 msgid "Email address is blacklisted."
 msgstr ""
 
-#: includes/Mailer_Abstract.php:212
+#: includes/Mailer_Abstract.php:213
 msgid "PHP Mailer - %s"
 msgstr ""
 
-#: includes/Mailer_Abstract.php:215
+#: includes/Mailer_Abstract.php:216
 msgid "The wp_mail() function returned false."
 msgstr ""
 
@@ -4557,23 +4567,23 @@ msgstr ""
 msgid "Add one email per line..."
 msgstr ""
 
-#: includes/Tools/Optout_Importer.php:62
+#: includes/Tools/Optout_Importer.php:63
 msgid "Missing a required field."
 msgstr ""
 
-#: includes/Tools/Optout_Importer.php:69
+#: includes/Tools/Optout_Importer.php:70
 msgid "%s is not a valid email."
 msgstr ""
 
-#: includes/Tools/Optout_Importer.php:86
+#: includes/Tools/Optout_Importer.php:87
 msgid "Could not process."
 msgstr ""
 
-#: includes/Tools/Optout_Importer.php:111
+#: includes/Tools/Optout_Importer.php:112
 msgid "Are you sure you want to opt-out <strong>%s customers</strong>?"
 msgstr ""
 
-#: includes/Tools/Optout_Importer.php:133
+#: includes/Tools/Optout_Importer.php:134
 msgid "+ %d more items..."
 msgstr ""
 
@@ -6072,6 +6082,10 @@ msgstr ""
 msgid "Displays a link to the wishlist."
 msgstr ""
 
+#: includes/WooCommerce_Blocks_Integration.php:73
+msgid "Subscribe to marketing opt-in."
+msgstr ""
+
 #: includes/Workflows.php:47
 msgid "Automatic"
 msgstr ""
@@ -6365,4 +6379,19 @@ msgstr ""
 
 #: admin/assets/build/index.js:11
 msgid "AutomateWoo Manual Workflow Runner"
+msgstr ""
+
+#: assets/js/build/marketing-optin-block.js:1
+#: assets/js/marketing-optin-block/edit.js:29
+msgid "AutomateWoo marketing opt-in would be shown here if enabled. You can enable this from the settings page."
+msgstr ""
+
+#: assets/js/build/marketing-optin-block.js:1
+#: assets/js/marketing-optin-block/edit.js:41
+msgid "Enable opt-in for Checkout"
+msgstr ""
+
+#: assets/js/marketing-optin-block/block.json
+msgctxt "block title"
+msgid "AutomateWoo Marketing opt-in"
 msgstr ""

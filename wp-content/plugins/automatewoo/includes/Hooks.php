@@ -61,6 +61,7 @@ class Hooks {
 		add_action( 'woocommerce_checkout_after_terms_and_conditions', [ 'AutomateWoo\Frontend', 'output_checkout_optin_checkbox' ] );
 		add_action( 'woocommerce_register_form', [ 'AutomateWoo\Frontend', 'output_signup_optin_checkbox' ], 20 );
 		add_action( 'woocommerce_checkout_order_processed', [ 'AutomateWoo\Frontend', 'process_checkout_optin' ], 20 );
+		add_action( 'woocommerce_blocks_checkout_update_order_from_request', [ 'AutomateWoo\Frontend', 'process_checkout_block_optin' ], 10, 2 );
 		add_action( 'woocommerce_created_customer', [ 'AutomateWoo\Frontend', 'process_account_signup_optin' ], 20 );
 
 		// workflow fatal error monitor
@@ -97,7 +98,7 @@ class Hooks {
 	 * Action endpoints
 	 */
 	static function check_for_action_endpoint() {
-		if ( empty( $_GET[ 'aw-action' ] ) || is_ajax() || is_admin() ) {
+		if ( empty( $_GET[ 'aw-action' ] ) || wp_doing_ajax() || is_admin() ) {
 			return;
 		}
 

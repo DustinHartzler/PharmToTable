@@ -48,6 +48,7 @@ class Tool_Optout_Importer extends Tool_Background_Processed_Abstract {
 	function parse_emails( $emails ) {
 		$emails = explode( PHP_EOL, $emails );
 		$emails = array_map( 'trim', $emails );
+		$emails = array_map( 'stripslashes', $emails);
 
 		return $emails;
 	}

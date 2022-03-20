@@ -55,7 +55,7 @@ class Email_Content extends Field {
 			]
 		);
 
-		if ( is_ajax() ) {
+		if ( wp_doing_ajax() ) {
 			$this->ajax_init( $id );
 		}
 	}

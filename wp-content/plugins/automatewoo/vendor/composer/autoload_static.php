@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2
+class ComposerStaticInit7faaa460bea6f93d388110ecadf81946
 {
     public static $prefixLengthsPsr4 = array (
         'A' => 
@@ -171,6 +171,7 @@ class ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2
         'AutomateWoo\\Background_Processes\\Tools' => __DIR__ . '/../..' . '/includes/Background_Processes/Tools.php',
         'AutomateWoo\\Background_Processes\\Wishlist_Item_On_Sale' => __DIR__ . '/../..' . '/includes/Background_Processes/Wishlist_Item_On_Sale.php',
         'AutomateWoo\\Background_Processes\\Workflows' => __DIR__ . '/../..' . '/includes/Background_Processes/Workflows.php',
+        'AutomateWoo\\Blocks\\Marketing_Optin_Block' => __DIR__ . '/../..' . '/includes/Blocks/Marketing_Optin_Block.php',
         'AutomateWoo\\Cache' => __DIR__ . '/../..' . '/includes/Cache.php',
         'AutomateWoo\\Cart' => __DIR__ . '/../..' . '/includes/Cart.php',
         'AutomateWoo\\Cart_Factory' => __DIR__ . '/../..' . '/includes/Cart_Factory.php',
@@ -853,6 +854,8 @@ class ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2
         'AutomateWoo\\WC_Emails' => __DIR__ . '/../..' . '/includes/WC_Emails.php',
         'AutomateWoo\\Wishlist' => __DIR__ . '/../..' . '/includes/Wishlist.php',
         'AutomateWoo\\Wishlists' => __DIR__ . '/../..' . '/includes/Wishlists.php',
+        'AutomateWoo\\WooCommerce_Blocks_Integration' => __DIR__ . '/../..' . '/includes/WooCommerce_Blocks_Integration.php',
+        'AutomateWoo\\WooCommerce_Payments_Integration' => __DIR__ . '/../..' . '/includes/WooCommerce_Payments_Integration.php',
         'AutomateWoo\\Workflow' => __DIR__ . '/../..' . '/includes/Workflow.php',
         'AutomateWoo\\Workflow_Background_Process_Helper' => __DIR__ . '/../..' . '/includes/Workflow_Background_Process_Helper.php',
         'AutomateWoo\\Workflow_Email' => __DIR__ . '/../..' . '/includes/Workflow_Email.php',
@@ -882,9 +885,9 @@ class ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1bf47c2f2c2432583b69ccdff26c2bc2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7faaa460bea6f93d388110ecadf81946::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7faaa460bea6f93d388110ecadf81946::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7faaa460bea6f93d388110ecadf81946::$classMap;
 
         }, null, ClassLoader::class);
     }

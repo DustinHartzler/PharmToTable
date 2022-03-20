@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php wp_nonce_field( $tool->get_id() ); ?>
 
 			<?php foreach ( $args as $key => $value ) : ?>
-				<input type="hidden" name="args[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $value ); ?>">
+				<input type="hidden" name="args[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( stripslashes( $value ) ); ?>">
 			<?php endforeach ?>
 
 			<div class="automatewoo-metabox postbox">

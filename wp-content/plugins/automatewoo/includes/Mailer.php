@@ -6,6 +6,7 @@ namespace AutomateWoo;
 defined( 'ABSPATH' ) || exit;
 
 use Pelago\Emogrifier;
+use Pelago\Emogrifier\CssInliner;
 
 /**
  * Mailer class for HTML emails that use a template.
@@ -388,30 +389,6 @@ class Mailer extends Mailer_Abstract {
 
 
 	/**
-	 * Returns the emogrifier library.
-	 *
-	 * Emogrifier 2.0+ should be returned but it's possible that another plugin could have loaded the
-	 * library earlier and thefore loaded an older version of the library.
-	 *
-	 * Returns false if emogrifier is not supported.
-	 *
-	 * @since 4.4.2
-	 *
-	 * @param string $html The HTML.
-	 * @param string $css  The CSS to be inlined.
-	 *
-	 * @return Emogrifier|false
-	 */
-	public function get_emogrifier( $html, $css ) {
-		if ( ! class_exists( 'DOMDocument' ) || ! class_exists( Emogrifier::class ) ) {
-			return false;
-		}
-
-		return new Emogrifier( $html, $css );
-	}
-
-
-	/**
 	 * Add inline CSS to HTML with the Emogrifier library.
 	 *
 	 * If Emogrifier can't be used the unmodified HTML will be returned.
@@ -425,9 +402,16 @@ class Mailer extends Mailer_Abstract {
 	 * @return string
 	 */
 	public function emogrify( $html, $css, $parse_html_style_blocks = false ) {
-		$emogrifier = $this->get_emogrifier( $html, $css );
+		if ( ! class_exists( 'DOMDocument' ) ) {
+			return $html;
+		}
 
-		if ( ! $emogrifier ) {
+		// First check if CssInliner can be used since the Emogrifier class is deprecated.
+		if ( class_exists( CssInliner::class ) ) {
+			$emogrifier = CssInliner::fromHtml( $html );
+		} elseif ( class_exists( Emogrifier::class ) ) {
+			$emogrifier = new Emogrifier( $html, $css );
+		} else {
 			return $html;
 		}
 
@@ -446,7 +430,11 @@ class Mailer extends Mailer_Abstract {
 				$emogrifier->disableInvisibleNodeRemoval();
 			}
 
-			$html = $emogrifier->emogrify();
+			if ( $emogrifier instanceof CssInliner ) {
+				$html = $emogrifier->inlineCss( $css )->render();
+			} else {
+				$html = $emogrifier->emogrify();
+			}
 		} catch ( \Exception $e ) {
 			Logger::error( 'emogrifier', $e->getMessage() );
 		}

@@ -227,6 +227,24 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 		new AutomateWoo\Privacy();
 		( new \AutomateWoo\LegacyAddonHandler() )->init();
 
+		/**
+		 * Check if WooCommerce blocks are active
+		 *
+		 * @since 5.6.0
+		 */
+		if ( \AutomateWoo\Integrations::is_woocommerce_blocks_active() && Options::optin_enabled() ) {
+			new \AutomateWoo\WooCommerce_Blocks_Integration();
+		}
+
+		/**
+		 * Check if WooCommerce Payments is active
+		 *
+		 * @since 5.5.12
+		 */
+		if ( class_exists( '\WC_Payments' ) ) {
+			new \AutomateWoo\WooCommerce_Payments_Integration();
+		}
+
 		do_action( 'automatewoo_loaded' );
 	}
 

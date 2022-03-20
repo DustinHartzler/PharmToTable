@@ -12,6 +12,7 @@ class Integrations {
 	const REQUIRED_BOOKINGS_VERSION = '1.15.35';
 	const REQUIRED_MEMBERSHIPS_VERSION = '1.7';
 	const REQUIRED_POINTS_AND_REWARDS_VERSION = '1.6.15';
+	const REQUIRED_WOOCOMMERCE_BLOCKS_VERSION = '6.3.0';
 	const REQUIRED_DEPOSITS_VERSION = '1.4';
 	const REQUIRED_FREE_GIFT_COUPONS_VERSION = '2.0.0';
 
@@ -32,7 +33,8 @@ class Integrations {
 
 
 	/**
-	 * Is the WooCommerce Subscriptions plugin active?
+	 * Is the WooCommerce Subscriptions plugin active or
+	 * is the WC_Subscriptions_Core_Plugin class available?
 	 *
 	 * @since 4.5.0
 	 *
@@ -41,10 +43,15 @@ class Integrations {
 	 * @return bool
 	 */
 	static function is_subscriptions_active( $min_version = self::REQUIRED_SUBSCRIPTIONS_VERSION ) {
-		if ( ! class_exists( '\WC_Subscriptions' ) ) {
+		if ( ! class_exists( '\WC_Subscriptions' ) && ! class_exists( '\WC_Subscriptions_Core_Plugin' ) ) {
 			return false;
 		}
-		return version_compare( \WC_Subscriptions::$version, $min_version, '>=' );
+
+		$version = class_exists( '\WC_Subscriptions_Core_Plugin' )
+			? \WC_Subscriptions_Core_Plugin::instance()->get_plugin_version()
+			: \WC_Subscriptions::$version;
+
+		return version_compare( $version, $min_version, '>=' );
 	}
 
 
@@ -177,6 +184,22 @@ class Integrations {
 	}
 
 	/**
+	 * is_woocommerce_blocks_active method.
+	 *
+	 * @since 5.6.0
+	 *
+	 * @param string $min_version
+	 *
+	 * @return bool
+	 */
+	static function is_woocommerce_blocks_active( $min_version = self::REQUIRED_WOOCOMMERCE_BLOCKS_VERSION ) {
+		if ( ! class_exists( '\Automattic\WooCommerce\Blocks\Package' ) ) {
+			return false;
+		}
+		return version_compare( \Automattic\WooCommerce\Blocks\Package::get_version(), $min_version, '>=' );
+	}
+
+	/**
 	 * Is the WooCommerce Deposits plugin active?
 	 *
 	 * @since 4.8.0
@@ -235,5 +258,3 @@ class Integrations {
 	}
 
 }
-
-

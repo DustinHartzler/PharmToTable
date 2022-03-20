@@ -122,6 +122,27 @@ class Frontend {
 		$customer->opt_in();
 	}
 
+	/**
+	 * @param \WC_Order $order
+	 * @param \WP_Request $request
+	 */
+	static function process_checkout_block_optin( $order, $request ) {
+		if ( ! Options::optin_enabled() || ! Options::checkout_optin_enabled() ) {
+			return;
+		}
+
+		if ( ! $order ) {
+			return;
+		}
+
+		if ( empty( $request['extensions']['automatewoo'][ 'optin' ] ) ) {
+			return;
+		}
+
+		$customer = Customer_Factory::get_by_order( $order );
+		$customer->opt_in();
+	}
+
 
 	/**
 	 * @param int $user_id

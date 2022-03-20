@@ -34,6 +34,7 @@ class Action_Subscription_Add_Note extends Action_Order_Add_Note {
 	 */
 	public function run() {
 		$note_type    = $this->get_option( 'note_type' );
+		$author       = $this->get_option( 'note_author' );
 		$note         = $this->get_option( 'note', true );
 		$subscription = $this->workflow->data_layer()->get_subscription();
 
@@ -41,6 +42,10 @@ class Action_Subscription_Add_Note extends Action_Order_Add_Note {
 			return;
 		}
 
-		$subscription->add_order_note( $note, $note_type === 'customer', false );
+		if ( ! empty( $author ) && is_string( $author ) ) {
+			$this->add_custom_author( $author );
+		}
+
+		$subscription->add_order_note( $note, 'customer' === $note_type, false );
 	}
 }

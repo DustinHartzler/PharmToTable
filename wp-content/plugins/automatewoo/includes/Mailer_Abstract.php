@@ -192,9 +192,10 @@ abstract class Mailer_Abstract {
 			$headers[] = 'Reply-To: ' . $this->reply_to;
 		}
 
-		$sent = wp_mail(
+		$subject = wp_specialchars_decode( $this->subject, ENT_QUOTES );
+		$sent    = wp_mail(
 			$this->email,
-			$this->subject,
+			$subject,
 			$this->get_email_body(),
 			$headers,
 			$this->attachments

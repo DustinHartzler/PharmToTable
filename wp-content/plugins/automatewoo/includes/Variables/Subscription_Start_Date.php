@@ -24,6 +24,12 @@ class Variable_Subscription_Start_Date extends Variable_Abstract_Datetime {
 	 * @return string
 	 */
 	function get_value( $subscription, $parameters ) {
-		return $this->format_datetime( $subscription->get_date_created(), $parameters );
+		$start_date = $subscription->get_date_created();
+
+		if ( Integrations::is_subscriptions_active( '2.4' ) ) {
+			$start_date = $subscription->get_date( 'start' );
+		}
+
+		return $this->format_datetime( $start_date, $parameters );
 	}
 }

@@ -40,7 +40,7 @@ class Installer {
 	 */
 	static function admin_init() {
 
-		if ( defined( 'IFRAME_REQUEST' ) || is_ajax() ) {
+		if ( defined( 'IFRAME_REQUEST' ) || wp_doing_ajax() ) {
 			return;
 		}
 
