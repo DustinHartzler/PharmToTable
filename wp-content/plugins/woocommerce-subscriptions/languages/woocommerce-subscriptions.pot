@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the WooCommerce Subscriptions plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Subscriptions 4.0.1\n"
+"Project-Id-Version: WooCommerce Subscriptions 4.0.2\n"
 "Report-Msgid-Bugs-To: https://woocommerce.com/contact-us\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-01-19T14:15:39+00:00\n"
+"POT-Creation-Date: 2022-02-07T04:08:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.5.1-alpha\n"
+"X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: woocommerce-subscriptions\n"
 
 #. Plugin Name of the plugin
@@ -2396,8 +2396,6 @@ msgid "Items"
 msgstr ""
 
 #: vendor/woocommerce/subscriptions-core/includes/admin/class-wcs-admin-post-types.php:425
-#: build/index.js:8
-#: build/index.js:14
 #: vendor/woocommerce/subscriptions-core/build/index.js:11
 #: vendor/woocommerce/subscriptions-core/build/index.js:17
 msgid "Total"
@@ -2802,7 +2800,6 @@ msgstr ""
 
 #: vendor/woocommerce/subscriptions-core/includes/admin/meta-boxes/class-wcs-meta-box-subscription-data.php:228
 #: vendor/woocommerce/subscriptions-core/includes/class-wc-subscriptions-extend-store-endpoint.php:256
-#: build/index.js:3
 #: vendor/woocommerce/subscriptions-core/build/index.js:6
 msgid "Shipping"
 msgstr ""
@@ -3457,7 +3454,6 @@ msgid "Renewal Discount"
 msgstr ""
 
 #: vendor/woocommerce/subscriptions-core/includes/class-wc-subscriptions-coupon.php:697
-#: build/index.js:3
 #: vendor/woocommerce/subscriptions-core/build/index.js:6
 msgid "Discount"
 msgstr ""
@@ -4093,55 +4089,55 @@ msgid "Weekly"
 msgstr ""
 
 #: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-initial-payment.php:65
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:203
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:206
 msgid "That doesn't appear to be your order."
 msgstr ""
 
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:218
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:221
 msgid "This order can no longer be paid because the corresponding subscription does not require payment at this time."
 msgstr ""
 
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:239
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:242
 msgid "Complete checkout to renew your subscription."
 msgstr ""
 
 #. translators: placeholder is an item name
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:322
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:325
 msgid "The %s product has been deleted and can no longer be renewed. Please choose a new product or contact us for assistance."
 msgstr ""
 
 #. translators: %s is subscription's number
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:357
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:360
 msgid "Subscription #%s has not been added to the cart."
 msgstr ""
 
 #. translators: %s is order's number
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:360
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:363
 msgid "Order #%s has not been added to the cart."
 msgstr ""
 
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:399
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:402
 msgid "We couldn't find the original subscription for an item in your cart. The item was removed."
 msgid_plural "We couldn't find the original subscriptions for items in your cart. The items were removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:406
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:409
 msgid "We couldn't find the original renewal order for an item in your cart. The item was removed."
 msgid_plural "We couldn't find the original renewal orders for items in your cart. The items were removed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:686
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:689
 msgid "All linked subscription items have been removed from the cart."
 msgstr ""
 
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:715
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:718
 msgctxt "Used in WooCommerce by removed item notification: \"_All linked subscription items were_ removed. Undo?\" Filter for item title."
 msgid "All linked subscription items were"
 msgstr ""
 
-#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:1479
+#: vendor/woocommerce/subscriptions-core/includes/class-wcs-cart-renewal.php:1482
 msgctxt "The place order button text while renewing a subscription"
 msgid "Renew subscription"
 msgstr ""
@@ -6780,7 +6776,6 @@ msgstr ""
 msgid "%1$sWooCommerce Subscriptions is inactive.%2$s This version of Subscriptions requires WooCommerce %3$s or newer. Please %4$supdate WooCommerce to version %3$s or newer &raquo;%5$s"
 msgstr ""
 
-#: build/index.js:1
 #: vendor/woocommerce/subscriptions-core/build/index.js:1
 msgctxt "Used in recurring totals section in Cart. 2+ will need plural, 1 will need singular."
 msgid "day"
@@ -6788,7 +6783,6 @@ msgid_plural "days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/index.js:1
 #: vendor/woocommerce/subscriptions-core/build/index.js:1
 msgctxt "Used in recurring totals section in Cart. 2+ will need plural, 1 will need singular."
 msgid "week"
@@ -6796,7 +6790,6 @@ msgid_plural "weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/index.js:1
 #: vendor/woocommerce/subscriptions-core/build/index.js:1
 msgctxt "Used in recurring totals section in Cart. 2+ will need plural, 1 will need singular."
 msgid "month"
@@ -6804,7 +6797,6 @@ msgid_plural "months"
 msgstr[0] ""
 msgstr[1] ""
 
-#: build/index.js:1
 #: vendor/woocommerce/subscriptions-core/build/index.js:1
 msgctxt "Used in recurring totals section in Cart. 2+ will need plural, 1 will need singular."
 msgid "year"
@@ -6813,130 +6805,107 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %1$s is the price of the product. %2$s is the separator used e.g "every" or "/", %3$d is the length, %4$s is week, month, year
-#: build/index.js:3
 #: vendor/woocommerce/subscriptions-core/build/index.js:6
 msgid "%1$s %2$s %3$d %4$s"
 msgstr ""
 
 #. translators: %s selected shipping rate (ex: flat rate)
-#: build/index.js:4
 #: vendor/woocommerce/subscriptions-core/build/index.js:7
 msgid "via %s"
 msgstr ""
 
 #. Translators: %1$s is a date.
-#: build/index.js:6
 #: vendor/woocommerce/subscriptions-core/build/index.js:9
 msgid "Due: %1$s"
 msgstr ""
 
 #. Translators: %1$s is a date.
-#: build/index.js:8
 #: vendor/woocommerce/subscriptions-core/build/index.js:11
 msgid "Starting: %1$s"
 msgstr ""
 
-#: build/index.js:8
 #: vendor/woocommerce/subscriptions-core/build/index.js:11
 msgid "Daily recurring total"
 msgstr ""
 
-#: build/index.js:8
 #: vendor/woocommerce/subscriptions-core/build/index.js:11
 msgid "Weekly recurring total"
 msgstr ""
 
-#: build/index.js:8
 #: vendor/woocommerce/subscriptions-core/build/index.js:11
 msgid "Monthly recurring total"
 msgstr ""
 
-#: build/index.js:8
 #: vendor/woocommerce/subscriptions-core/build/index.js:11
 msgid "Yearly recurring total"
 msgstr ""
 
 #. translators: %1$s is week, month, year
-#: build/index.js:10
 #: vendor/woocommerce/subscriptions-core/build/index.js:13
 msgid "Recurring total every 2nd %1$s"
 msgstr ""
 
 #. Translators: %1$s is week, month, year
-#: build/index.js:12
 #: vendor/woocommerce/subscriptions-core/build/index.js:15
 msgid "Recurring total every 3rd %1$s"
 msgstr ""
 
 #. Translators: %1$d is number of weeks, months, days, years. %2$s is week, month, year
-#: build/index.js:14
 #: vendor/woocommerce/subscriptions-core/build/index.js:17
 msgid "Recurring total every %1$dth %2$s"
 msgstr ""
 
-#: build/index.js:14
 #: vendor/woocommerce/subscriptions-core/build/index.js:17
 msgid "Details"
 msgstr ""
 
-#: build/index.js:14
 #: vendor/woocommerce/subscriptions-core/build/index.js:17
 msgid "Total due today"
 msgstr ""
 
 #. translators: the word used to describe billing frequency, e.g. "fo1" 1 day or "for" 1 month.
-#: build/index.js:15
 #: vendor/woocommerce/subscriptions-core/build/index.js:18
 msgid "for 1"
 msgstr ""
 
 #. translators: the word used to describe billing frequency, e.g. "for" 6 days or "for" 2 weeks.
-#: build/index.js:16
 #: vendor/woocommerce/subscriptions-core/build/index.js:19
 msgid "for"
 msgstr ""
 
 #. translators: the word used to describe billing frequency, e.g. "every" 6 days or "every" 2 weeks.
-#: build/index.js:17
 #: vendor/woocommerce/subscriptions-core/build/index.js:20
 msgid "every"
 msgstr ""
 
 #. translators: %s Product name.
-#: build/index.js:18
 #: vendor/woocommerce/subscriptions-core/build/index.js:21
 msgid "%s (resubscription)"
 msgstr ""
 
 #. translators: %1$s Product name, %2$s Switch type (upgraded, downgraded, or crossgraded).
-#: build/index.js:19
 #: vendor/woocommerce/subscriptions-core/build/index.js:22
 msgid "%1$s (%2$s)"
 msgstr ""
 
-#: build/index.js:19
 #: vendor/woocommerce/subscriptions-core/build/index.js:22
 msgid "Upgrade"
 msgstr ""
 
-#: build/index.js:19
 #: vendor/woocommerce/subscriptions-core/build/index.js:22
 msgid "Downgrade"
 msgstr ""
 
-#: build/index.js:19
 #: vendor/woocommerce/subscriptions-core/build/index.js:22
 msgid "Crossgrade"
 msgstr ""
 
 #. translators: %s is the subscription price to pay immediately (ie: $10).
-#: build/index.js:21
 #: vendor/woocommerce/subscriptions-core/build/index.js:24
 msgid "Due today %s"
 msgstr ""
 
 #. translators: %s is the subscription price to pay immediately (ie: $10).
-#: build/index.js:23
 #: vendor/woocommerce/subscriptions-core/build/index.js:26
 msgid "%s due today"
 msgstr ""
