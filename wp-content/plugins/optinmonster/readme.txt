@@ -1,10 +1,10 @@
 === WordPress Popups for Marketing and Email Newsletters, Lead Generation and Conversions by OptinMonster ===
 Contributors: optinmonster, griffinjt, smub
-Tags: popups, popup builder, conversion, marketing, newsletter, popup, popup maker, email marketing, exit popup, ecommerce, woocommerce, lightbox
+Tags: popup, popups, optin, conversion, marketing, newsletter, popup builder, popup maker, email marketing, exit popup, ecommerce, woocommerce, lightbox
 Requires at least: 4.7.0
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.3
-Stable tag: 2.6.9
+Stable tag: 2.6.11
 License: GNU General Public License v2.0 or later
 
 Create popups, opt-in forms, & floating bars to get more email newsletter subscribers, leads, and increase sales conversion - #1 marketing popup builder plugin.
@@ -457,6 +457,15 @@ Syed Balkhi
 == Changelog ==
 
 **Most Recent Changes:**
+
+= 2.6.11 =
+* Fixed an issue where inline campaigns were not being output on the front-end of the site.
+
+= 2.6.10 =
+* Updated email providers in the onboarding wizard.
+* Added support for Gutenberg's blocks.json when registering our Campaign Selector block.
+* Fixed display of an authentication error for non-authentication errors.
+* Fixed error that can occur during plugin upgrade processes.
 
 = 2.6.9 =
 * Fixes a scenario where non-inline campaigns could be prevented from showing if inline campaigns are present.

@@ -108,10 +108,15 @@ class OMAPI_Blocks {
 	 * @since 1.9.10
 	 */
 	public function register_blocks() {
-		register_block_type(
-			'optinmonster/campaign-selector',
-			array(
-				'attributes'      => array(
+		$use_blocks_json = version_compare( $GLOBALS['wp_version'], '5.8', '>=' );
+		$attributes      = array();
+		$block_type      = $use_blocks_json
+			? plugin_dir_path( OMAPI_FILE ) . 'assets/js/'
+			: 'optinmonster/campaign-selector';
+
+		if ( ! $use_blocks_json ) {
+			$attributes = array(
+				'attributes' => array(
 					'slug'        => array(
 						'type' => 'string',
 					),
@@ -119,9 +124,13 @@ class OMAPI_Blocks {
 						'type' => 'boolean',
 					),
 				),
-				'render_callback' => array( $this, 'get_output' ),
-			)
-		);
+			);
+		}
+
+		// Add the `render_callback` to the attributes.
+		$attributes['render_callback'] = array( $this, 'get_output' );
+
+		register_block_type( $block_type, $attributes );
 	}
 
 	/**
@@ -246,6 +255,7 @@ class OMAPI_Blocks {
 					rawurlencode( OMAPI_Urls::campaign_output_settings( '--CAMPAIGN_SLUG--' ) )
 				),
 				'monsterlink'       => esc_url_raw( OPTINMONSTER_SHAREABLE_LINK ) . '/c/',
+				'wpVersion'         => $GLOBALS['wp_version'],
 			);
 		}
 

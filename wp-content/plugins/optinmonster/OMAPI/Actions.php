@@ -200,6 +200,9 @@ class OMAPI_Actions {
 		}
 
 		if ( (string) $plugin_version !== (string) $upgrade_completed ) {
+			if ( empty( $this->base->notifications ) ) {
+				$this->base->notifications = new OMAPI_Notifications();
+			}
 			$this->base->notifications->update();
 			update_option( 'optinmonster_upgrade_completed', $plugin_version );
 		}

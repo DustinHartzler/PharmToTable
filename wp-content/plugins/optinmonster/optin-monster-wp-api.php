@@ -5,15 +5,15 @@
  * Description: OptinMonster is the best WordPress popup plugin that helps you grow your email list and sales with email popups, exit intent popups, floating bars and more!
  * Author:      OptinMonster Team
  * Author URI:  https://optinmonster.com
- * Version:     2.6.9
+ * Version:     2.6.11
  * Text Domain: optin-monster-api
  * Domain Path: languages
  *
  * WC requires at least: 3.2.0
- * WC tested up to:      5.9.0
+ * WC tested up to:      6.2.0
  * Requires at least:    4.7.0
  * Requires PHP:         5.3
- * Tested up to:         5.8
+ * Tested up to:         5.9
  *
  * OptinMonster is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ class OMAPI {
 	 *
 	 * @var string
 	 */
-	public $version = '2.6.9';
+	public $version = '2.6.11';
 
 	/**
 	 * The name of the plugin.
