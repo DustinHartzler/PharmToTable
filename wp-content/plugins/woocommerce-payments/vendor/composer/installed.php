@@ -1,236 +1,215 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => 'dev-trunk',
-    'version' => 'dev-trunk',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-trunk',
+        'version' => 'dev-trunk',
+        'type' => 'wordpress-plugin',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => '01d1aa0981d8bb128386051faf4568f7c04df893',
+        'name' => 'woocommerce/payments',
+        'dev' => false,
     ),
-    'reference' => '8da9e1a883488306cf489ef4357ff63c39cae28c',
-    'name' => 'woocommerce/payments',
-  ),
-  'versions' => 
-  array (
-    'automattic/jetpack-a8c-mc-stats' => 
-    array (
-      'pretty_version' => 'v1.4.10',
-      'version' => '1.4.10.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'f24331c8cc098e81225c131e3d25f7df85ee9cd7',
+    'versions' => array(
+        'automattic/jetpack-a8c-mc-stats' => array(
+            'pretty_version' => 'v1.4.12',
+            'version' => '1.4.12.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-a8c-mc-stats',
+            'aliases' => array(),
+            'reference' => '38b3d11fec181d90abe6d80f5184fff6d2ef694c',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-assets' => array(
+            'pretty_version' => 'v1.17.5',
+            'version' => '1.17.5.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-assets',
+            'aliases' => array(),
+            'reference' => 'e653e30470bbc460b06446a685454a422f6d71c7',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-autoloader' => array(
+            'pretty_version' => 'v2.10.11',
+            'version' => '2.10.11.0',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/../automattic/jetpack-autoloader',
+            'aliases' => array(),
+            'reference' => '924226c0a9e2f9b0be022fc6bab2a90f5e610ef3',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-config' => array(
+            'pretty_version' => 'v1.6.1',
+            'version' => '1.6.1.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-config',
+            'aliases' => array(),
+            'reference' => '34ed249c0be9f8c871c5a28411913983fb1ce7d7',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-connection' => array(
+            'pretty_version' => 'v1.36.0',
+            'version' => '1.36.0.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-connection',
+            'aliases' => array(),
+            'reference' => '5b3c85c0f5e874bb1eb64feecff19de9e7f40d82',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-constants' => array(
+            'pretty_version' => 'v1.6.15',
+            'version' => '1.6.15.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-constants',
+            'aliases' => array(),
+            'reference' => 'f203b7c8ce89760ff8a70abcfbd1308765038fc9',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-heartbeat' => array(
+            'pretty_version' => 'v1.4.0',
+            'version' => '1.4.0.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-heartbeat',
+            'aliases' => array(),
+            'reference' => 'c35053475b1cb7363aee847e0d025f0a043dc3d5',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-identity-crisis' => array(
+            'pretty_version' => 'v0.7.0',
+            'version' => '0.7.0.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-identity-crisis',
+            'aliases' => array(),
+            'reference' => '1953d572dd0f5e722315b9c5c2191311acef67d6',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-logo' => array(
+            'pretty_version' => 'v1.5.14',
+            'version' => '1.5.14.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-logo',
+            'aliases' => array(),
+            'reference' => '9fbc006fd49e61c70ddbfc92dfea06338822656a',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-options' => array(
+            'pretty_version' => 'v1.14.2',
+            'version' => '1.14.2.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-options',
+            'aliases' => array(),
+            'reference' => '9cd0f27ae970097bf6a8bc5b3c80cf079e4bf3f2',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-password-checker' => array(
+            'pretty_version' => 'v0.2.2',
+            'version' => '0.2.2.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-password-checker',
+            'aliases' => array(),
+            'reference' => 'f3fe0234d7f196c64f9fadb87408c74502d4de9c',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-redirect' => array(
+            'pretty_version' => 'v1.7.10',
+            'version' => '1.7.10.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-redirect',
+            'aliases' => array(),
+            'reference' => 'f2facf6874cb9faffdb767e514a97b8949b95561',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-roles' => array(
+            'pretty_version' => 'v1.4.14',
+            'version' => '1.4.14.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-roles',
+            'aliases' => array(),
+            'reference' => '3cccac277e4f7fed80ce7929d4313c8aa40b65e4',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-status' => array(
+            'pretty_version' => 'v1.10.0',
+            'version' => '1.10.0.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-status',
+            'aliases' => array(),
+            'reference' => 'c339904491b53319bff13aaa77bd74b39c011617',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-sync' => array(
+            'pretty_version' => 'v1.29.2',
+            'version' => '1.29.2.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-sync',
+            'aliases' => array(),
+            'reference' => '38816b4b303a5dc6f1eb00507aa3166b3e530fe0',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-terms-of-service' => array(
+            'pretty_version' => 'v1.9.19',
+            'version' => '1.9.19.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-terms-of-service',
+            'aliases' => array(),
+            'reference' => '2a30cf6db575e62b996febd6fd761bb4aec4a527',
+            'dev_requirement' => false,
+        ),
+        'automattic/jetpack-tracking' => array(
+            'pretty_version' => 'v1.14.1',
+            'version' => '1.14.1.0',
+            'type' => 'jetpack-library',
+            'install_path' => __DIR__ . '/../automattic/jetpack-tracking',
+            'aliases' => array(),
+            'reference' => '68a0fe8a7fc498915c4944e07c6d0f7ec54da562',
+            'dev_requirement' => false,
+        ),
+        'composer/installers' => array(
+            'pretty_version' => 'v1.10.0',
+            'version' => '1.10.0.0',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/./installers',
+            'aliases' => array(),
+            'reference' => '1a0357fccad9d1cc1ea0c9a05b8847fbccccb78d',
+            'dev_requirement' => false,
+        ),
+        'myclabs/php-enum' => array(
+            'pretty_version' => '1.7.7',
+            'version' => '1.7.7.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../myclabs/php-enum',
+            'aliases' => array(),
+            'reference' => 'd178027d1e679832db9f38248fcc7200647dc2b7',
+            'dev_requirement' => false,
+        ),
+        'roundcube/plugin-installer' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '*',
+            ),
+        ),
+        'shama/baton' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '*',
+            ),
+        ),
+        'woocommerce/payments' => array(
+            'pretty_version' => 'dev-trunk',
+            'version' => 'dev-trunk',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => '01d1aa0981d8bb128386051faf4568f7c04df893',
+            'dev_requirement' => false,
+        ),
+        'woocommerce/subscriptions-core' => array(
+            'pretty_version' => '1.6.4',
+            'version' => '1.6.4.0',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../woocommerce/subscriptions-core',
+            'aliases' => array(),
+            'reference' => '7cdddd4887080595bf08b6e48ba51514ce8c14f5',
+            'dev_requirement' => false,
+        ),
     ),
-    'automattic/jetpack-assets' => 
-    array (
-      'pretty_version' => 'v1.15.0',
-      'version' => '1.15.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'c49569503e992a28ac8b6bff1d62f0845e58c3d8',
-    ),
-    'automattic/jetpack-autoloader' => 
-    array (
-      'pretty_version' => 'v2.10.10',
-      'version' => '2.10.10.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8060f5c5822671b146ce8f57380193c8fb8e2571',
-    ),
-    'automattic/jetpack-config' => 
-    array (
-      'pretty_version' => 'v1.5.3',
-      'version' => '1.5.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '3526c284d3b845d57275fe1f64fbb2c71649b16e',
-    ),
-    'automattic/jetpack-connection' => 
-    array (
-      'pretty_version' => 'v1.30.13',
-      'version' => '1.30.13.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b6cb5e87ffe1dca5260307066f720f8ddcfebda3',
-    ),
-    'automattic/jetpack-constants' => 
-    array (
-      'pretty_version' => 'v1.6.13',
-      'version' => '1.6.13.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '5a14050ea6d27d92cba3cfcf76d02a8235912d1a',
-    ),
-    'automattic/jetpack-heartbeat' => 
-    array (
-      'pretty_version' => 'v1.3.15',
-      'version' => '1.3.15.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '990678483baf84ed18545782c8a2b1c324297d91',
-    ),
-    'automattic/jetpack-options' => 
-    array (
-      'pretty_version' => 'v1.14.1',
-      'version' => '1.14.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a87629f83f0486ef505e3651ea6bf8c9412d2274',
-    ),
-    'automattic/jetpack-redirect' => 
-    array (
-      'pretty_version' => 'v1.7.8',
-      'version' => '1.7.8.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '09bab23e80bbb397986accfee6129f4c54fe935b',
-    ),
-    'automattic/jetpack-roles' => 
-    array (
-      'pretty_version' => 'v1.4.12',
-      'version' => '1.4.12.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a39955125dde3480bcc111482e80ede86e6d3ccb',
-    ),
-    'automattic/jetpack-status' => 
-    array (
-      'pretty_version' => 'v1.9.4',
-      'version' => '1.9.4.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '14da3bae567c96a8ea11adaeb37c276999fcf701',
-    ),
-    'automattic/jetpack-terms-of-service' => 
-    array (
-      'pretty_version' => 'v1.9.17',
-      'version' => '1.9.17.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '425420572afec29d8afe22561c7fc29579efa543',
-    ),
-    'automattic/jetpack-tracking' => 
-    array (
-      'pretty_version' => 'v1.13.19',
-      'version' => '1.13.19.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'd4aeda56969750ed2724831057707b6bf3a424a9',
-    ),
-    'composer/installers' => 
-    array (
-      'pretty_version' => 'v1.10.0',
-      'version' => '1.10.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1a0357fccad9d1cc1ea0c9a05b8847fbccccb78d',
-    ),
-    'myclabs/php-enum' => 
-    array (
-      'pretty_version' => '1.7.7',
-      'version' => '1.7.7.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'd178027d1e679832db9f38248fcc7200647dc2b7',
-    ),
-    'roundcube/plugin-installer' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '*',
-      ),
-    ),
-    'shama/baton' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '*',
-      ),
-    ),
-    'symfony/polyfill-php71' => 
-    array (
-      'pretty_version' => 'v1.20.0',
-      'version' => '1.20.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2d6cdeca7ea470e50db9e544c9ec4b1955036c22',
-    ),
-    'symfony/polyfill-php72' => 
-    array (
-      'pretty_version' => 'v1.23.0',
-      'version' => '1.23.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '9a142215a36a3888e30d0a9eeea9766764e96976',
-    ),
-    'symfony/polyfill-php73' => 
-    array (
-      'pretty_version' => 'v1.23.0',
-      'version' => '1.23.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'fba8933c384d6476ab14fb7b8526e5287ca7e010',
-    ),
-    'symfony/polyfill-php74' => 
-    array (
-      'pretty_version' => 'v1.23.0',
-      'version' => '1.23.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a5d80cdf049bd3b0af6da91184a2cd37533c0fd8',
-    ),
-    'symfony/polyfill-php80' => 
-    array (
-      'pretty_version' => 'v1.23.1',
-      'version' => '1.23.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1100343ed1a92e3a38f9ae122fc0eb21602547be',
-    ),
-    'symfony/polyfill-php81' => 
-    array (
-      'pretty_version' => 'v1.23.0',
-      'version' => '1.23.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'e66119f3de95efc359483f810c4c3e6436279436',
-    ),
-    'woocommerce/payments' => 
-    array (
-      'pretty_version' => 'dev-trunk',
-      'version' => 'dev-trunk',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8da9e1a883488306cf489ef4357ff63c39cae28c',
-    ),
-    'woocommerce/subscriptions-core' => 
-    array (
-      'pretty_version' => '1.6.2',
-      'version' => '1.6.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'bc48cd0437fc4601643e72abc4a7cd9beffb35b5',
-    ),
-  ),
 );
