@@ -1,8 +1,8 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '3.0.3',
-    'version' => '3.0.3.0',
+    'pretty_version' => '3.2.1',
+    'version' => '3.2.1.0',
     'aliases' => 
     array (
     ),
@@ -45,8 +45,8 @@
     ),
     'woocommerce/woocommerce-admin' => 
     array (
-      'pretty_version' => '3.0.3',
-      'version' => '3.0.3.0',
+      'pretty_version' => '3.2.1',
+      'version' => '3.2.1.0',
       'aliases' => 
       array (
       ),

@@ -181,13 +181,29 @@ abstract class AbstractBlock {
 			'editor_script'   => $this->get_block_type_editor_script( 'handle' ),
 			'editor_style'    => $this->get_block_type_editor_style(),
 			'style'           => $this->get_block_type_style(),
-			'attributes'      => $this->get_block_type_attributes(),
-			'supports'        => $this->get_block_type_supports(),
 		];
 
 		if ( isset( $this->api_version ) && '2' === $this->api_version ) {
 			$block_settings['api_version'] = 2;
 		}
+
+		$metadata_path = $this->asset_api->get_block_metadata_path( $this->block_name );
+		// Prefer to register with metadata if the path is set in the block's class.
+		if ( ! empty( $metadata_path ) ) {
+			register_block_type(
+				$metadata_path,
+				$block_settings
+			);
+			return;
+		}
+
+		/*
+		 * Insert attributes and supports if we're not registering the block using metadata.
+		 * These are left unset until now and only added here because if they were set when registering with metadata,
+		 * the attributes and supports from $block_settings would override the values from metadata.
+		 */
+		$block_settings['attributes'] = $this->get_block_type_attributes();
+		$block_settings['supports']   = $this->get_block_type_supports();
 
 		register_block_type(
 			$this->get_block_type(),
@@ -373,38 +389,5 @@ abstract class AbstractBlock {
 		if ( null !== $this->get_block_type_script() ) {
 			wp_enqueue_script( $this->get_block_type_script( 'handle' ) );
 		}
-	}
-
-	/**
-	 * Script to append the correct sizing class to a block skeleton.
-	 *
-	 * @return string
-	 */
-	protected function get_skeleton_inline_script() {
-		return "<script>
-			var containers = document.querySelectorAll( 'div.wc-block-skeleton' );
-
-			if ( containers.length ) {
-				Array.prototype.forEach.call( containers, function( el, i ) {
-					var w = el.offsetWidth;
-					var classname = '';
-
-					if ( w > 700 )
-						classname = 'is-large';
-					else if ( w > 520 )
-						classname = 'is-medium';
-					else if ( w > 400 )
-						classname = 'is-small';
-					else
-						classname = 'is-mobile';
-
-					if ( ! el.classList.contains( classname ) )  {
-						el.classList.add( classname );
-					}
-
-					el.classList.remove( 'hidden' );
-				} );
-			}
-		</script>";
 	}
 }
