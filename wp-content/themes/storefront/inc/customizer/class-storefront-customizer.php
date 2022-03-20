@@ -43,7 +43,7 @@ if ( ! class_exists( 'Storefront_Customizer' ) ) :
 				$args = array(
 					'storefront_heading_color'           => '#333333',
 					'storefront_text_color'              => '#6d6d6d',
-					'storefront_accent_color'            => '#96588a',
+					'storefront_accent_color'            => '#7f54b3',
 					'storefront_hero_heading_color'      => '#000000',
 					'storefront_hero_text_color'         => '#000000',
 					'storefront_header_background_color' => '#ffffff',
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Storefront_Customizer' ) ) :
 			$wp_customize->add_setting(
 				'storefront_accent_color',
 				array(
-					'default'           => apply_filters( 'storefront_default_accent_color', '#96588a' ),
+					'default'           => apply_filters( 'storefront_default_accent_color', '#7f54b3' ),
 					'sanitize_callback' => 'sanitize_hex_color',
 				)
 			);
@@ -1205,47 +1205,6 @@ if ( ! class_exists( 'Storefront_Customizer' ) ) :
 			return true;
 		}
 
-		/**
-		 * Setup the WordPress core custom header feature.
-		 *
-		 * @deprecated 2.4.0
-		 * @return void
-		 */
-		public function custom_header_setup() {
-			if ( function_exists( 'wc_deprecated_function' ) ) {
-				wc_deprecated_function( __FUNCTION__, '2.4.0' );
-			} else {
-				_deprecated_function( __FUNCTION__, '2.4.0' );
-			}
-		}
-
-		/**
-		 * Get Customizer css associated with WooCommerce.
-		 *
-		 * @deprecated 2.4.0
-		 * @return void
-		 */
-		public function get_woocommerce_css() {
-			if ( function_exists( 'wc_deprecated_function' ) ) {
-				wc_deprecated_function( __FUNCTION__, '2.3.1' );
-			} else {
-				_deprecated_function( __FUNCTION__, '2.3.1' );
-			}
-		}
-
-		/**
-		 * Assign Storefront styles to individual theme mods.
-		 *
-		 * @deprecated 2.3.1
-		 * @return void
-		 */
-		public function set_storefront_style_theme_mods() {
-			if ( function_exists( 'wc_deprecated_function' ) ) {
-				wc_deprecated_function( __FUNCTION__, '2.3.1' );
-			} else {
-				_deprecated_function( __FUNCTION__, '2.3.1' );
-			}
-		}
 	}
 
 endif;
