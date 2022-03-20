@@ -36,6 +36,7 @@ class WC_Product_Addons_Admin {
 
 		add_action( 'wp_ajax_wc_pao_get_addon_options', array( $this, 'ajax_get_addon_options' ) );
 		add_action( 'wp_ajax_wc_pao_get_addon_field', array( $this, 'ajax_get_addon_field' ) );
+		add_action( 'admin_init', array( $this, 'add_settings' ) );
 	}
 
 	/**
@@ -62,6 +63,26 @@ class WC_Product_Addons_Admin {
 				'capability' => 'manage_woocommerce',
 			)
 		);
+	}
+
+	/**
+	 * Configure Settings
+	 */
+	public function add_settings() {
+		register_setting( 'product_addons_options', 'product_addons_options' );
+		add_settings_section( 'show_incomplete_subtotal', 'Settings', 0, 'show_incomplete_subtotal' );
+		add_settings_field( 'show_incomplete_subtotal_option', __( 'Show Incomplete subtotal', 'woocommerce-product-addons' ), array( $this, 'show_incomplete_subtotal_option' ), 'show_incomplete_subtotal', 'show_incomplete_subtotal' );
+	}
+
+	/**
+	 * Add checkbox to settings section
+	 */
+	public function show_incomplete_subtotal_option() {
+		$show_incomplete_subtotal = isset( get_option( 'product_addons_options' )['show-incomplete-subtotal'] ) ? get_option( 'product_addons_options' )['show-incomplete-subtotal'] : '';
+		$html                     = '<input type="checkbox" id="show-incomplete-subtotal" name="product_addons_options[show-incomplete-subtotal]" value="1"' . checked( 1, $show_incomplete_subtotal, false ) . '/>';
+		$html                    .= '<label for="show-incomplete-subtotal-label">' . esc_html( __( 'Show running subtotal, even if not all required add-on choices have been made.', 'woocommerce-product-addons' ) ) . '</label>';
+
+		echo $html;
 	}
 
 	/**
@@ -346,6 +367,7 @@ class WC_Product_Addons_Admin {
 
 		update_post_meta( $edit_id, '_priority', $priority );
 		update_post_meta( $edit_id, '_product_addons', $product_addons );
+		update_option( 'woocommerce_global_product_addons_last_modified', current_time( 'U' ) );
 
 		return $edit_id;
 	}
@@ -642,7 +664,7 @@ class WC_Product_Addons_Admin {
 					$var_id = esc_html( $item->get_variation_id() );
 				} else {
 					/* translators: %s ID of variation */
-					$var_id = sprintf( esc_html__( '%s (No longer exists)', 'woocommerce-product-addons' ), $item->get_variation_id() );
+					$var_id = sprintf( esc_html__( '%s (No longer exists)', 'woocommerce-product-addons' ), esc_html( $item->get_variation_id() ) );
 				}
 
 				$addon_html = str_replace( '<div class="wc-order-item-variation"><strong>' . esc_html__( 'Variation ID:', 'woocommerce-product-addons' ) . '</strong> ' . $var_id . '</div>', '', $addon_html );

@@ -1,5 +1,56 @@
 *** Product Addons Changelog ***
 
+2022-02-16 - version 4.7.0
+* Fix - Hook to toggle the price from add-ons name does not work.
+* Fix - Incorrect add-on price according to the location-based tax.
+* Fix - Remove duplicate entries from the exclude list in composer.json.
+* Fix - Text character limit doesn't show until you start typing in field.
+* Fix - The HTML structure for checkboxes and radio buttons is improved.
+* Fix - Updated script that reads 'show-incomplete-sub-total' data. Fixes conflict with Composite Products extension.
+
+2022-02-08 - version 4.6.0
+* Fix - Add option to show incomplete subtotal.
+* Fix - Fix CI build errors.
+
+2022-01-12 - version 4.5.0
+* Fix - Fixed an issue where the subtotal price for a variable product was shown incorrectly on a product page.
+* Fix - Fixes an issue in the admin panel when adding add ons.
+* Tweak - WC 6.1 compatibility.
+* Tweak - WP 5.8 compatibility.
+
+2021-11-16 - version 4.4.0
+* Fix - Escape output in some places across the plugin.
+* Fix - Improve performance when displaying many global product addons.
+* Tweak - WC 5.9 compatibility.
+* Tweak - WP 5.8 compatibility.
+
+2021-10-26 - version 4.3.0
+* Tweak - Add filters to allow for extensibility.
+
+2021-09-21 - version 4.2.0
+* Fix - Fix page going off center after submitting an invalid form in some themes.
+* Tweak - WC 5.8 compatibility.
+
+2021-06-15 - version 4.1.0
+* Fix - Reduce the number of events that trigger an add-on price calculation in the product page.
+* Tweak - WC 5.5 compatibility.
+* Tweak - WP 5.8 compatibility.
+
+2021-05-11 - version 4.0.0
+* Fix - Fix a notice when adding a product with an addon to the cart.
+* Tweak - WC 5.3 compatibility.
+
+2021-04-29 - version 3.9.1
+* Fix - Fix uncompressed release archive by reintroducing postarchive step.
+
+2021-04-28 - version 3.9.0
+* Fix - Move to dart-sass to support M1.
+* Fix - Refactor Cart price calculation to prevent conflicts with other plugins.
+* Fix - Update build scripts and tooling.
+
+2021-04-13 - version 3.8.0
+* Fix - Sort Global Add-ons in the backend by priority.
+
 2021-04-06 - version 3.7.0
 * Fix - Honor taxes in Customer Defined Price add-ons when store shows prices including tax.
 
