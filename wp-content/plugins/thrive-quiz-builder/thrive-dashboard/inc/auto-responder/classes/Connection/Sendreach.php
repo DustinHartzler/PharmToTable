@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Danut
  * Date: 7/22/2015
@@ -39,14 +48,14 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$key    = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
-		$secret = ! empty( $_POST['connection']['secret'] ) ? $_POST['connection']['secret'] : '';
+		$key    = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$secret = ! empty( $_POST['connection']['secret'] ) ? sanitize_text_field( $_POST['connection']['secret'] ) : '';
 
 		if ( empty( $key ) || empty( $secret ) ) {
 			return $this->error( 'You must provide valid credentials!' );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -201,7 +210,7 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
 
 		$credentials = $this->getCredentials();
-		$api = new Thrive_Dash_Api_SendreachV2( $credentials['key'], $credentials['secret'] );
+		$api         = new Thrive_Dash_Api_SendreachV2( $credentials['key'], $credentials['secret'] );
 
 		try {
 			$api->addSubscriber( $list_identifier, $first_name, $last_name, $arguments['email'] );
@@ -219,5 +228,9 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 	 */
 	public static function getEmailMergeTag() {
 		return '[EMAIL]';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 }

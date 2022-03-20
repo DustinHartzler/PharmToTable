@@ -136,14 +136,23 @@ class TCB_Lead_Generation_Element extends TCB_Cloud_Template_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-
-					'consent' => array(
+					'consent'        => array(
 						'config' => array(
 							'labels' => array(
 								'wordpress' => __( 'Create Wordpress account', 'thrive-cb' ),
 								'default'   => __( '{service}', 'thrive-cb' ),
 							),
 						),
+					),
+					'FormIdentifier' => array(
+						'config'  => array(
+							'label'        => __( 'Form identifier', 'thrive-cb' ),
+							'full-width'   => true,
+							'tooltip'      => __( 'Used in other Thrive plugins to identify this form. It should be unique.', 'thrive-cb' ),
+							'tooltip_side' => 'top',
+							'width'        => '100%',
+						),
+						'extends' => 'LabelInput',
 					),
 				),
 			),

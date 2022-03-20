@@ -49,7 +49,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 			return $this->error( __( 'You must provide a valid SG-Autorepondeur key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -62,34 +62,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 		 */
 		$this->save();
 
-		/** @var Thrive_Dash_List_Connection_Mandrill $related_api */
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mandrill' );
-
-		if ( ! empty( $mandrill_key ) ) {
-			/**
-			 * Try to connect to the email service too
-			 */
-
-			$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mandrill' );
-			$r_result    = true;
-			if ( ! $related_api->isConnected() ) {
-				$r_result = $related_api->readCredentials();
-			}
-
-			if ( $r_result !== true ) {
-				$this->disconnect();
-
-				return $this->error( $r_result );
-			}
-		} else {
-			/**
-			 * let's make sure that the api was not edited and disconnect it
-			 */
-			$related_api->setCredentials( array() );
-			Thrive_Dash_List_Manager::save( $related_api );
-		}
-
-		return $this->success( __( 'Mailchimp connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SG Autorepondeur connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
 	}
 
 	/**
@@ -218,6 +191,10 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 		Thrive_Dash_List_Manager::save( $this );
 
 		return $this;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 
 }

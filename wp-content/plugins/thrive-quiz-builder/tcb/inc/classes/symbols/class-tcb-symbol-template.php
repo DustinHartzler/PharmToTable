@@ -30,6 +30,7 @@ class TCB_Symbol_Template {
 	 * @return mixed|string
 	 */
 	public static function render_content( $config = array(), $do_shortcodes = false ) {
+		static::enter_symbol_render();
 
 		$symbol_id = ( ! empty( $config ) && isset( $config['id'] ) ) ? $config['id'] : get_the_ID();
 		$content   = self::content( $symbol_id );
@@ -69,19 +70,25 @@ class TCB_Symbol_Template {
 		if ( ! is_editor_page() && ! wp_doing_ajax() ) {
 			$content = tve_restore_script_tags( $content );
 
-			$post = get_post( get_the_ID() );
+			$content = tve_get_shared_styles( $content ) . $content;
+
 			/**
-			 * Adds the global style node if it's not in the editor page
-			 * Also only load if the parent is TAR enabled already
+			 * IF yoast is active reset printed styles because they mess up the post queries
 			 */
-			if ( ! empty( $post ) && $post->post_type !== TCB_Symbols_Post_Type::SYMBOL_POST_TYPE && ! get_post_meta( $post->ID, 'tcb_editor_enabled', true ) ) {
-				$content = tve_get_shared_styles( $content ) . $content;
+			if ( is_plugin_active( 'wordpress-seo/wp-seo.php' ) ) {
+				$GLOBALS['tve_parsed_shared_styles'] = array();
+			}
+			//if it has custom icons make sure that font family is loaded
+			if ( tve_get_post_meta( $symbol_id, 'thrive_icon_pack' ) ) {
+				TCB_Icon_Manager::enqueue_icon_pack();
 			}
 		}
 
 		$content = apply_filters( 'tcb_symbol_template', $content );
 
 		$content = preg_replace( '!\s+!', ' ', $content );
+
+		static::exit_symbol_render();
 
 		return $content;
 	}
@@ -123,7 +130,17 @@ class TCB_Symbol_Template {
 	public static function tcb_symbol_get_css( $config ) {
 		$symbol_id = ( ! empty( $config ) && isset( $config['id'] ) ) ? $config['id'] : 0;
 
-		return "<style class='tve-symbol-custom-style'>" . static::css( $symbol_id ) . '</style>';
+		$css = "<style class='tve-symbol-custom-style'>" . static::css( $symbol_id ) . '</style>';
+
+		$lightspeed = \TCB\Lightspeed\Css::get_instance( $symbol_id );
+
+		if ( $lightspeed->should_load_optimized_styles() ) {
+			$css = $lightspeed->get_optimized_styles() . $css;
+		} else {
+			\TCB\Lightspeed\Css::enqueue_flat();
+		}
+
+		return $css;
 	}
 
 	/**
@@ -135,6 +152,8 @@ class TCB_Symbol_Template {
 	 */
 	public static function css( $id ) {
 		$css = trim( get_post_meta( (int) $id, 'tve_custom_css', true ) );
+
+		$css = TCB\Lightspeed\Fonts::parse_google_fonts( $css );
 
 		/* If we want to change the symbol css just before is being inserted in the page */
 		$css = apply_filters( 'tcb_symbol_css_before', $css, $id );
@@ -174,12 +193,20 @@ class TCB_Symbol_Template {
 			$post = get_post( $symbol_id );
 
 			if ( $post instanceof WP_Post && $post->post_status === 'publish' ) {
-				$content = self::render_content( $config, $wrap );
-				$css     = self::tcb_symbol_get_css( $config );
-				$type    = substr( TCB_Symbols_Taxonomy::get_symbol_type( $symbol_id ), 0, - 1 );
+				$content    = self::render_content( $config, $wrap );
+				$css        = self::tcb_symbol_get_css( $config );
+				$type       = substr( TCB_Symbols_Taxonomy::get_symbol_type( $symbol_id ), 0, - 1 );
+				$js_modules = '';
+
+				if ( TCB_Utils::is_rest() || wp_doing_ajax() ) {
+					/* we should return this inline when we retrieve the symbol with ajax */
+					$js_modules = \TCB\Lightspeed\JS::get_instance( $symbol_id )->load_modules( true );
+				} else {
+					\TCB\Lightspeed\JS::get_instance( $symbol_id )->enqueue_scripts();
+				}
 
 				/**
-				 * forcing this type allows to know better whether or not is a gutenberg block
+				 * forcing this type allows knowing better whether is a gutenberg block
 				 */
 				if ( strpos( $type, 'gutenberg' ) !== false ) {
 					$type = 'gutenberg_block';
@@ -188,7 +215,7 @@ class TCB_Symbol_Template {
 				$shortcode_class = in_array( $type, self::$symbol_with_states, true ) ? 'tve-default-state' : '';
 				$name            = is_editor_page_raw() ? ' data-name="' . esc_attr( $post->post_title ) . '"' : '';
 
-				$content = '<div class="thrive-shortcode-html thrive-symbol-shortcode ' . $shortcode_class . '"' . $name . self::data_attr( $symbol_id ) . '>' . $css . $content . '</div>';
+				$content = '<div class="thrive-shortcode-html thrive-symbol-shortcode ' . $shortcode_class . '"' . $name . self::data_attr( $symbol_id ) . '>' . $css . $js_modules . $content . '</div>';
 
 				if ( $wrap ) {
 
@@ -206,6 +233,29 @@ class TCB_Symbol_Template {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Check if a symbol is rendering right now
+	 *
+	 * @return bool
+	 */
+	public static function is_outside_symbol_render() {
+		return empty( $GLOBALS[ TCB_RENDERING_SYMBOL ] );
+	}
+
+	/**
+	 * Mark that we started rendering a symbol
+	 */
+	public static function enter_symbol_render() {
+		$GLOBALS[ TCB_RENDERING_SYMBOL ] = true;
+	}
+
+	/**
+	 * Mark that we finished rendering a symbol
+	 */
+	public static function exit_symbol_render() {
+		$GLOBALS[ TCB_RENDERING_SYMBOL ] = false;
 	}
 
 	/**

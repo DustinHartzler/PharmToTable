@@ -55,7 +55,7 @@ class TCB_User_Profile_Handler {
 		/**
 		 * Check whether or not the form settings exist
 		 */
-		if ( empty( $_POST['form_id'] ) || ! $config = get_option( $_POST['form_id'] ) ) {
+		if ( empty( $_POST['form_id'] ) || ! $config = get_option( sanitize_text_field( $_POST['form_id'] ) ) ) {
 			$response['errors'] = __( 'Form settings validation failed', 'thrive-cb' );
 		} else {
 			$config = json_decode( wp_unslash( $config ) );
@@ -271,7 +271,7 @@ class TCB_User_Profile_Handler {
 	 * @return array
 	 */
 	public static function content_allowed_shortcodes_filter( $shortcodes ) {
-		if ( is_editor_page() ) {
+		if ( is_editor_page_raw( true ) ) {
 			$shortcodes[] = static::SHORTCODE;
 		}
 

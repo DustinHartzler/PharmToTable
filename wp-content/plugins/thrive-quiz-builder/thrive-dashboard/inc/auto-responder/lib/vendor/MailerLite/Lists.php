@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_Api_MailerLite_Lists extends Thrive_Dash_Api_MailerLite_Rest {
 
 	public function __construct($apiKey)

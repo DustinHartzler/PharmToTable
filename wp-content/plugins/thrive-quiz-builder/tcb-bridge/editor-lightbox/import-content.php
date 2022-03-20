@@ -3,33 +3,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-$variation         = tqb_get_variation( $_REQUEST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] );
+$variation         = tqb_get_variation( ! empty( $_REQUEST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) ? absint( $_REQUEST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) : 0 );
 $variation_manager = new TQB_Variation_Manager( $variation['quiz_id'], $variation['page_id'] );
 $child_variations  = $variation_manager->get_page_variations( array( 'parent_id' => $variation['id'] ) );
 ?>
 
-<h2 class="tcb-modal-title"><?php echo __( 'Import content', Thrive_Quiz_Builder::T ); ?></h2>
+<span class="tcb-modal-title ml-0 mt-0"><?php echo esc_html__( 'Import content', Thrive_Quiz_Builder::T ); ?></span>
 <div class="margin-top-20">
-	<?php echo __( 'Select the state you want to bring content from:', Thrive_Quiz_Builder::T ) ?>
+	<?php echo esc_html__( 'Select the state you want to bring content from:', Thrive_Quiz_Builder::T ) ?>
 </div>
-<div class="row margin-top-20">
-	<div class="col col-xs-12">
-		<select id="tqb-import-from">
-			<option value=""><?php echo __( 'Select an interval', Thrive_Quiz_Builder::T ) ?></option>
-			<?php
-			foreach ( $child_variations as $child ) :
-				?>
-				<option value="<?php echo $child['id']; ?>"><?php echo $child['post_title']; ?></option>
-				<?php
-			endforeach;
+<div class="mt-20">
+	<select id="tqb-import-from">
+		<option value=""><?php echo esc_html__( 'Select an interval', Thrive_Quiz_Builder::T ) ?></option>
+		<?php
+		foreach ( $child_variations as $child ) :
 			?>
-		</select>
-	</div>
+			<option value="<?php echo esc_attr( $child['id'] ); ?>"><?php echo esc_html( $child['post_title'] ); ?></option>
+			<?php
+		endforeach;
+		?>
+	</select>
 </div>
-<div class="tcb-modal-footer clearfix padding-top-20 row end-xs">
-	<div class="col col-xs-12">
-		<button type="button" class="tcb-right tve-button medium green click" data-fn="import_content">
-			<?php echo __( 'Import', Thrive_Quiz_Builder::T ) ?>
-		</button>
-	</div>
+<div class="tcb-modal-footer flex-end pr-0">
+	<button type="button" class="tcb-right tve-button medium white-text green click" data-fn="import_content">
+		<?php echo esc_html__( 'Import', Thrive_Quiz_Builder::T ) ?>
+	</button>
 </div>

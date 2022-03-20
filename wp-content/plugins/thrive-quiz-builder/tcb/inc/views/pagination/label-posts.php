@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <p class="tcb-pagination-label-content">
-	<?php echo __( 'Showing ', 'thrive-cb' ); ?>
+	<?php echo esc_html__( 'Showing ', 'thrive-cb' ); ?>
 	<span class="thrive-inline-shortcode" contenteditable="false">
 		<span class="thrive-shortcode-content" contenteditable="false" data-extra_key="" data-shortcode="tcb_pagination_current_posts" data-shortcode-name="Number of posts on this page">
 			1-15
 		</span>
 	</span>
-	<?php echo __( ' of ', 'thrive-cb' ); ?>
+	<?php echo esc_html__( ' of ', 'thrive-cb' ); ?>
 	<span class="thrive-inline-shortcode" contenteditable="false">
 		<span class="thrive-shortcode-content" contenteditable="false" data-extra_key="" data-shortcode="tcb_pagination_total_posts" data-shortcode-name="Total number of posts">
 			365

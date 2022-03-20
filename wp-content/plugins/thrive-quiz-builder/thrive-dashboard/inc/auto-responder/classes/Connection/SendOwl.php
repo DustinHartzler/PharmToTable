@@ -43,7 +43,7 @@ class Thrive_Dash_List_Connection_SendOwl extends Thrive_Dash_List_Connection_Ab
 	 * @return mixed|void
 	 */
 	public function readCredentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid SendOwl key', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -51,7 +51,7 @@ class Thrive_Dash_List_Connection_SendOwl extends Thrive_Dash_List_Connection_Ab
 
 		$url = self::sendowl_url;
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 

@@ -1,6 +1,6 @@
 <div id="tve-default_typography-component" class="tve-component" data-view="DefaultTypography">
 	<div class="dropdown-header" data-prop="docked">
-		<div class="group-description"><?php echo __( 'Typography', 'thrive-cb' ); ?></div>
+		<div class="group-description"><?php echo esc_html__( 'Typography', 'thrive-cb' ); ?></div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -23,7 +23,7 @@
 		<div class="tcb-text-center clear-formatting mt-10">
 			<hr class="hide-states">
 			<span class="click tcb-text-uppercase clear-format custom-icon" data-fn="clear_formatting">
-				<?php echo __( 'Clear element formatting', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Clear element formatting', 'thrive-cb' ); ?>
 			</span>
 		</div>
 	</div>

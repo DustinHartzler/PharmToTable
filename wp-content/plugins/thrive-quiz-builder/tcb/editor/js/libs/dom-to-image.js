@@ -2,13 +2,13 @@
 ( function ( global ) {
 	'use strict';
 
-	var util = newUtil();
-	var inliner = newInliner();
-	var fontFaces = newFontFaces();
-	var images = newImages();
+	const util = newUtil();
+	const inliner = newInliner();
+	const fontFaces = newFontFaces();
+	const images = newImages();
 
 	// Default impl options
-	var defaultOptions = {
+	const defaultOptions = {
 		// Default is to fail on error, no placeholder
 		imagePlaceholder: undefined,
 		// Default cache bust is false, it will use the cache
@@ -17,7 +17,7 @@
 		useCredentials: false
 	};
 
-	var domtoimage = {
+	const domtoimage = {
 		toSvg: toSvg,
 		toPng: toPng,
 		toJpeg: toJpeg,
@@ -25,13 +25,17 @@
 		toPixelData: toPixelData,
 		toCanvas: toCanvas,
 		impl: {
-			fontFaces: fontFaces,
-			images: images,
-			util: util,
-			inliner: inliner,
+			fontFaces,
+			images,
+			util,
+			inliner,
 			options: {}
 		}
 	};
+
+	if ( typeof window === "object" ) {
+		window.domtoimage = domtoimage;
+	}
 
 	if ( typeof exports === "object" && typeof module === "object" ) {
 		module.exports = domtoimage;
@@ -588,7 +592,7 @@
 				if ( domtoimage.impl.options.useCredentials ) {
 					request.withCredentials = true;
 				}
-				if ( ! url.includes( window.location.hostname ) ) {
+				if ( ! url.includes( window.location.hostname ) && ! url.includes( 'gravatar' ) ) {
 					url = '//cors-anywhere.herokuapp.com/' + url;
 				}
 

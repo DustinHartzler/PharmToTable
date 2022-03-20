@@ -114,9 +114,11 @@ class Main {
 	 * @return mixed|string
 	 */
 	public static function render_link_shortcode( $attr ) {
-
 		$attr = shortcode_atts( array(
-			'id' => '',
+			'id'                   => '',
+			'product-id'           => '',
+			'product-variation-id' => '',
+			'redirect-destination' => '',
 		), $attr );
 
 		switch ( $attr['id'] ) {
@@ -134,6 +136,26 @@ class Main {
 				break;
 			case 'add_to_cart':
 				$link = wc_get_cart_url() . '?add-to-cart=' . get_the_ID();
+				break;
+			case 'dynamic_product_link':
+				$product_id = $attr['product-id'];
+				$link       = $attr['redirect-destination'] === 'cart' ? wc_get_cart_url() : Woo_Main::get_checkout_url();
+
+				if ( $product_id ) {
+					$variation_id = empty( $attr['product-variation-id'] ) ? 0 : $attr['product-variation-id'];
+					$product      = wc_get_product( $product_id );
+					$link         = add_query_arg( array(
+						'add-to-cart' => $variation_id ? $variation_id : $product_id,
+					), $link );
+
+					if ( $product->get_type() === 'grouped' ) {
+						$children = $product->get_children();
+						foreach ( $children as $child ) {
+							//the default quantity for each part of a grouped product is 1
+							$link .= "&quantity[$child]=1";
+						}
+					}
+				}
 				break;
 			default:
 				$link = '#';

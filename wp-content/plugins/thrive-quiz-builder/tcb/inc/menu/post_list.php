@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-post_list-component" class="tve-component" data-view="post_list">
 	<div class="dropdown-header component-name" data-prop="docked">
-		<?php echo __( 'Post List', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Post List', 'thrive-cb' ); ?>
 	</div>
 	<div class="dropdown-content">
 		<?php
@@ -25,8 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		?>
 		<div class="row sep-bottom tcb-text-center post-list-actions">
 			<div class="col-xs-12">
-				<button class="tve-button orange click" data-fn="editMode"><?php echo __( 'Edit Design', 'thrive-cb' ); ?></button>
-				<button class="tve-button grey click margin-left-20" data-fn="filterPosts"><?php echo __( 'Filter Posts', 'thrive-cb' ); ?></button>
+				<button class="tve-button orange click" data-fn="editMode"><?php echo esc_html__( 'Edit Design', 'thrive-cb' ); ?></button>
+				<button class="tve-button grey click margin-left-20" data-fn="filterPosts"><?php echo esc_html__( 'Filter Posts', 'thrive-cb' ); ?></button>
 			</div>
 		</div>
 
@@ -50,7 +50,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-control no-space hide-tablet hide-mobile" data-view="ReadMoreText"></div>
 			<div class="info-text grey-text sep-bottom pb-5">
 			<span>
-				<?php echo __( "This is added after the post content, it doesn't apply to the Read More button.", 'thrive-cb' ); ?>
+				<?php echo esc_html__( "This is added after the post content, it doesn't apply to the Read More button.", 'thrive-cb' ); ?>
 			</span>
 			</div>
 
@@ -59,7 +59,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<div class="tve-control no-space hide-tablet hide-mobile" data-view="Linker"></div>
 		<div class="info-text orange hide-tablet hide-mobile tve-post-list-link-info">
-			<?php echo __( 'This option disables all animations for this element and all child link options', 'thrive-cb' ); ?>
+			<?php echo esc_html__( 'This option disables all animations for this element and all child link options', 'thrive-cb' ); ?>
 		</div>
 	</div>
 </div>

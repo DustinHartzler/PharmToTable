@@ -93,6 +93,14 @@ class TCB_Megamenu_Element extends TCB_Menu_Element {
 					'singular' => __( '-- Menu Image %s', 'thrive-cb' ),
 				),
 				array(
+					'value'    => 'menu-images',
+					'selector' => '.tcb-menu-item-image:not(.tcb-elem-placeholder)',
+					'element'  => '.tcb-menu-item-image',
+					'name'     => __( 'All Menu Images', 'thrive-cb' ),
+					/* Translators: %s represents index of the unlocked item */
+					'singular' => __( '-- Menu Image %s', 'thrive-cb' ),
+				),
+				array(
 					'value'    => 'second-lvl',
 					'selector' => '.tcb-mega-drop-inner > ul > li > a',
 					'element'  => '.tcb-mega-drop-inner > ul > li > a',

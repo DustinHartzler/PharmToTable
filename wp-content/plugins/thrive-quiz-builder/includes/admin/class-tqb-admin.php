@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Thrive_Quiz_Builder_Admin class.
  */
 class Thrive_Quiz_Builder_Admin {
+	
+	const NONCE_KEY_AJAX = 'tqb_admin_ajax_request';
 
 	/**
 	 * Constructor for Thrive_Quiz_Builder_Admin
@@ -222,7 +224,7 @@ class Thrive_Quiz_Builder_Admin {
 			return false;
 		}
 
-		$nonce = ! empty( $_GET['tqb_answ_csv_nonce'] ) ? ( $_GET['tqb_answ_csv_nonce'] ) : '';
+		$nonce = ! empty( $_GET['tqb_answ_csv_nonce'] ) ? sanitize_text_field( $_GET['tqb_answ_csv_nonce'] ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, 'tqb_answers_csv' ) ) {
 			die( 'Security check error' );
@@ -248,7 +250,7 @@ class Thrive_Quiz_Builder_Admin {
 			return false;
 		}
 
-		$nonce = ! empty( $_GET['tqb_csv_nonce'] ) ? ( $_GET['tqb_csv_nonce'] ) : '';
+		$nonce = ! empty( $_GET['tqb_csv_nonce'] ) ? sanitize_text_field( $_GET['tqb_csv_nonce'] ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, 'tqb_question_cvs' ) ) {
 			die( 'Security check error' );

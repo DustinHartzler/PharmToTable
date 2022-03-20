@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Aurelian Pop
  * Date: 06-Jan-16
@@ -44,13 +53,13 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 	public function readCredentials() {
 		$ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $ajax_call ? __( 'You must provide a valid SendinBlue key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid SendinBlue key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -362,7 +371,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 			return $mapped_data;
 		}
 
-		$form_data = unserialize( base64_decode( $args['tve_mapping'] ) );
+		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 
 		$mapped_fields = $this->getMappedFieldsIDs();
 
@@ -464,5 +473,56 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 		}
 
 		return $prepared_fields;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
+	}
+	/**
+	 * Checks if a connection is V3
+	 *
+	 * @return bool
+	 */
+	public function is_v3() {
+		$is_v3 = $this->param( 'v3' );
+
+		return ! empty( $is_v3 );
+	}
+
+	/**
+	 * Upgrades a connection from V2 to V3, by generating a V3 key
+	 *
+	 * @return string
+	 */
+	public function upgrade() {
+		$api              = $this->getApi();
+		$api_key          = $this->param( 'key' );
+		$upgrade_response = array();
+		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'sendinblueemail' );
+
+		try {
+			$upgrade_response = $api->upgrade_to_v3( $api_key );
+			$new_key          = $upgrade_response['data']['value'];
+
+			$connection = array(
+				'v3'             => true,
+				'key'            => $new_key,
+				'new_connection' => '0',
+			);
+
+			$this->setCredentials( $connection );
+
+			/* Update also the credentials of the related api */
+			if ( $related_api->isConnected() ) {
+				$related_api->setCredentials( $connection );
+				$related_api->save();
+			}
+			$this->save();
+		} catch ( Exception $e ) {
+			return $e->getMessage();
+		}
+
+
+		return $upgrade_response;
 	}
 }

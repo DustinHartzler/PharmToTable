@@ -9,12 +9,13 @@ $interval_content = array();
 ?>
 
 <div id="tqb-draggable-state-area" class="ui-widget-content" style="position: absolute; top:100px; left:0;">
-	<p class="tqb-state-title"><?php echo __( 'Preview Mode', Thrive_Quiz_Builder::T ); ?></p>
+	<p class="tqb-state-title"><?php echo esc_html__( 'Preview Mode', Thrive_Quiz_Builder::T ); ?></p>
 	<div class="tqb-state-picker">
-		<p class="tqb-state-option"><?php echo __( 'Choose state to preview:', Thrive_Quiz_Builder::T ); ?></p>
+		<p class="tqb-state-option"><?php echo esc_html__( 'Choose state to preview:', Thrive_Quiz_Builder::T ); ?></p>
 		<select id="tqb-state-picker">
 			<?php foreach ( $intervals as $key => $value ) : ?>
-				<option value="<?php echo $value['id']; ?>"><?php echo $value['post_title']; ?></option>
+				<option
+					value="<?php echo esc_attr( $value['id'] ); ?>"><?php echo esc_html( $value['post_title'] ); ?></option>
 				<?php $interval_content[ $value['id'] ] = $value['content']; ?>
 			<?php endforeach; ?>
 		</select>
@@ -22,7 +23,7 @@ $interval_content = array();
 	<script type="text/javascript">
 		var interval_content = [];
 		<?php foreach ( $intervals as $key => $value ) : ?>
-		interval_content[<?php echo $value['id']; ?>] = '<?php echo $value['id'];//echo preg_replace( '/\r|\n/', '', $value['content'] ); ?>';
+		interval_content[<?php echo esc_js( $value['id'] ); ?>] = '<?php echo esc_js( $value['id'] );//echo preg_replace( '/\r|\n/', '', $value['content'] ); ?>';
 		<?php endforeach; ?>
 	</script>
 </div>

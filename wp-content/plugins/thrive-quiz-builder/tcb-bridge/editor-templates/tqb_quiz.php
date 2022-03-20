@@ -8,16 +8,16 @@
 
 
 $post_id = ! empty( $_GET['tqb_redirect_post_id'] ) ? (int) $_GET['tqb_redirect_post_id'] : 0;
-$quiz_id = ! empty( $_GET['p'] ) ? (int) $_GET['p'] : 0;
+$quiz_id = ! empty( $_GET['tqb_quiz_id'] ) ? (int) $_GET['tqb_quiz_id'] : 0;
 
 if ( empty( $post_id ) || empty( $quiz_id ) ) {
 	exit( 'Invalid Post' );
 }
 
-$image_url   = $_GET['image_url'];
-$description = rawurlencode( $_GET['description'] );
+$image_url   = sanitize_text_field( $_GET['image_url'] );
+$description = rawurlencode( sanitize_text_field( $_GET['description'] ) );
 
-$site_url        = site_url( '?post_type=' . Thrive_Quiz_Builder::SHORTCODE_NAME . '&p=' . $quiz_id . '&tqb_redirect_post_id=' . $post_id . '&image_url=' . $image_url . '&description=' . $description );
+$site_url        = site_url( '?post_type=' . Thrive_Quiz_Builder::SHORTCODE_NAME . '&tqb_quiz_id=' . $quiz_id . '&tqb_redirect_post_id=' . $post_id . '&image_url=' . $image_url . '&description=' . $description );
 $facebook_app_id = get_option( 'tve_social_fb_app_id', '' );
 ?>
 

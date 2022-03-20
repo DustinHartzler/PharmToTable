@@ -51,21 +51,22 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 	 * @return mixed|void
 	 */
 	public function readCredentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$connection = $this->post( 'connection' );
+		$key        = ! empty( $connection['key'] ) ? $connection['key'] : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid MailRelay key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$_POST['connection']['domain'] = isset( $_POST['connection']['url'] ) ? $_POST['connection']['url'] : $_POST['connection']['domain'];
+		$connection['domain'] = isset( $connection['url'] ) ? $connection['url'] : $connection['domain'];
 
-		$url = ! empty( $_POST['connection']['domain'] ) ? $_POST['connection']['domain'] : '';
+		$url = ! empty( $connection['domain'] ) ? $connection['domain'] : '';
 
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false || empty( $url ) ) {
 			return $this->error( __( 'You must provide a valid MailRelay URL', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $connection );
 
 		$result = $this->testConnection();
 
@@ -86,7 +87,8 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 
 		$r_result = true;
 		if ( ! $related_api->isConnected() ) {
-			$_POST['connection']['new_connection'] = isset( $_POST['connection']['new_connection'] ) ? $_POST['connection']['new_connection'] : 1;
+			$_POST['connection']                   = $connection;
+			$_POST['connection']['new_connection'] = isset( $connection['new_connection'] ) ? absint( $connection['new_connection'] ) : 1;
 
 			$r_result = $related_api->readCredentials();
 		}

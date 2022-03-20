@@ -33,41 +33,42 @@ if ( ! isset( $lp_template ) ) {
 
 		<?php $tcb_landing_page->head(); ?>
 
-		<style type="text/css">
-			html {
-				height: auto;
-			}
+		<style>
+            html {
+                height: auto;
+            }
 
-			html.tcb-editor {
-				overflow-y: initial;
-			}
+            html.tcb-editor {
+                overflow-y: initial;
+            }
 
-			body:before, body:after {
-				height: 0 !important;
-			}
+            body:before, body:after {
+                height: 0 !important;
+            }
 
-			.thrv_page_section .out {
-				max-width: none
-			}
+            .thrv_page_section .out {
+                max-width: none
+            }
 
-			.tve_wrap_all {
-				position: relative;
-			}
+            .tve_wrap_all {
+                position: relative;
+            }
 
-			/* Content Width - inherit Content Width directly from LP settings */
-			.thrv-page-section[data-inherit-lp-settings="1"] .tve-page-section-in {
-				max-width: 1080px !important;
-				max-width: var(--page-section-max-width) !important;
-			}
-
-			body.tcb-full-header .thrv_header,
-			body.tcb-full-footer .thrv_footer {
-				width: 100vw;
-				left: 50%;
-				right: 50%;
-				margin-left: -50vw !important;
-				margin-right: -50vw !important;
-			}
+            /* Content Width - inherit Content Width directly from LP settings */
+            .thrv-page-section[data-inherit-lp-settings="1"] .tve-page-section-in {
+                max-width: 1080px !important;
+                max-width: var(--page-section-max-width) !important;
+            }
+			/* set the max-width also for over content settings */
+            body.tcb-full-header .thrv_header,
+            body.tcb-full-footer .thrv_footer {
+                width: 100vw;
+				max-width: 100vw;
+                left: 50%;
+                right: 50%;
+                margin-left: -50vw !important;
+                margin-right: -50vw !important;
+            }
 		</style>
 
 	</head>
@@ -75,13 +76,13 @@ if ( ! isset( $lp_template ) ) {
 	$css_data = $tcb_landing_page->get_css_data();
 	remove_all_filters( 'body_class' ); // strip out any custom classes added by the theme for the <body> tag
 	?>
-	<body <?php body_class( $css_data['class'] ); ?> style="<?php echo $css_data['css']; ?>"<?php echo $css_data['custom_color']; ?>>
+	<body <?php body_class( $css_data['class'] ); ?>style="<?php echo esc_attr( $css_data['css'] ); ?>"<?php echo $css_data['custom_color']; ?>> <?php // phpcs:ignore ?>
 		<?php $tcb_landing_page->after_body_open(); ?>
 		<div class="wrp cnt bSe" style="display: none">
 			<div class="awr"></div>
 		</div>
 		<div class="tve_wrap_all" id="tcb_landing_page">
-			<div class="tve_post_lp tve_lp_<?php echo $lp_template; ?> tve_lp_template_wrapper" style="<?php echo $css_data['main_area']['css']; ?>">
+			<div class="tve_post_lp tve_lp_<?php echo esc_attr( $lp_template ); ?> tve_lp_template_wrapper" style="<?php echo esc_attr( $css_data['main_area']['css'] ); ?>">
 				<?php
 				/**
 				 * we re-add the_content filter here, it was removed inside the tcb_custom_editable_content to prevent applying inside the <head> section
@@ -91,7 +92,7 @@ if ( ! isset( $lp_template ) ) {
 					add_filter( 'the_content', 'tve_editor_content' );
 				}
 				?>
-				<?php echo apply_filters( 'tve_landing_page_content', '' ); ?>
+				<?php echo apply_filters( 'tve_landing_page_content', '' ); //phpcs:ignore ?>
 			</div>
 			<?php /* to inherit the default styles from the landing page typography */ ?>
 			<div class="fr-dropdown-holder tcb-style-wrap"></div>

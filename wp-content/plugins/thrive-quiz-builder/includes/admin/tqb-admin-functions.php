@@ -31,7 +31,7 @@ function tqb_get_localization() {
 			'quizzes_displayed' => Thrive_Quiz_Builder::TQB_DASH_MAX_QUIZZES_IDENTIFIER,
 		),
 		'data'                 => array(
-			'settings'                  => tqb_get_option( Thrive_Quiz_Builder::PLUGIN_SETTINGS, tqb_get_default_values( Thrive_Quiz_Builder::PLUGIN_SETTINGS ) ),
+			'settings'                  => Thrive_Quiz_Builder::get_settings(),
 			//'quizzes'                   => TQB_Quiz_Manager::get_quizzes(),
 			'quiz_types'                => array(
 				'number'      => Thrive_Quiz_Builder::QUIZ_TYPE_NUMBER,
@@ -92,7 +92,7 @@ function tqb_get_localization() {
 			'months12'   => Thrive_Quiz_Builder::TQB_LAST_12_MONTHS,
 			'custom'     => Thrive_Quiz_Builder::TQB_CUSTOM_DATE_RANGE,
 		),
-		'admin_nonce'          => wp_create_nonce( 'tqb_admin_ajax_request' ),
+		'admin_nonce'          => wp_create_nonce( Thrive_Quiz_Builder_Admin::NONCE_KEY_AJAX ),
 		'admin_csv_nonce'      => wp_create_nonce( 'tqb_question_cvs' ),
 		'admin_answ_csv_nonce' => wp_create_nonce( 'tqb_answers_csv' ),
 		'ajax_actions'         => array(

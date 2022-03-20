@@ -166,6 +166,10 @@ final class TD_Inbox {
 			$this->add_notification( 'webinarjamstudio_updated' );
 		}
 
+		if ( $this->api_is_connected( 'sendinblue' ) ) {
+			$this->add_notification( 'sendinblue_outdated' );
+		}
+
 		$this->add_notification( 'zoom_temporary_disabled' );
 	}
 
@@ -315,6 +319,14 @@ final class TD_Inbox {
 			case'zoom_temporary_disabled':
 				$message = array(
 					'title' => __( 'The Zoom integration was temporarily removed, we are sorry for any inconvenience!', TVE_DASH_TRANSLATE_DOMAIN ),
+					'info'  => '',
+					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
+				);
+				break;
+
+			case'sendinblue_outdated':
+				$message = array(
+					'title' => __( 'Starting with 25th June SendinBlue API v2 will be deprecated. In order to switch to v3, please navigate to Thrive Dashboard, API connections and under SendInBlue, click on "I want to use API v3".', TVE_DASH_TRANSLATE_DOMAIN ),
 					'info'  => '',
 					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
 				);
@@ -487,7 +499,7 @@ final class TD_Inbox {
 			return $html;
 		}
 
-		echo $html;
+		echo $html; // phpcs:ignore
 	}
 
 	/**
@@ -548,7 +560,7 @@ final class TD_Inbox {
 	 * @return null
 	 */
 	protected function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		return isset( $_POST[ $key ] ) ? map_deep( $_POST[ $key ], 'sanitize_text_field' ) : ( isset( $_REQUEST[ $key ] ) ? map_deep( $_REQUEST[ $key ], 'sanitize_text_field' ) : $default );
 	}
 
 	/**

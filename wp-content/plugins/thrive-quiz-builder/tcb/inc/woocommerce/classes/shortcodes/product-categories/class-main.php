@@ -38,6 +38,11 @@ class Main {
 	 * @return string
 	 */
 	public static function render( $attr = array() ) {
+		/* the woocommerce hooks are not initialized during REST / ajax requests, so we do it manually */
+		if ( \TCB_Utils::is_rest() || wp_doing_ajax() ) {
+			Main_Woo::init_frontend_woo_functionality();
+		}
+
 		$in_editor = is_editor_page_raw( true );
 
 		static::before_render( $attr, $in_editor );
@@ -91,7 +96,7 @@ class Main {
 
 		if ( ! $in_editor && ! empty( $attr['hide-title'] ) ) {
 			/* by removing this action we actually hide the title; the action is added back in after_render() */
-			remove_action( 'woocommerce_shop_loop_subcategory_title', 'woocommerce_template_loop_category_title', 10 );
+			remove_action( 'woocommerce_shop_loop_subcategory_title', 'woocommerce_template_loop_category_title' );
 		}
 
 		/* add our custom text wrapper through woo actions */
@@ -110,10 +115,10 @@ class Main {
 	 * @param $attr
 	 * @param $in_editor
 	 */
-	public static function after_render( &$attr, $in_editor ) {
+	public static function after_render( $attr, $in_editor ) {
 		if ( ! $in_editor && ! empty( $attr['hide-title'] ) ) {
 			/* re-add the action that we removed so we don't affect other product categories  */
-			add_action( 'woocommerce_shop_loop_subcategory_title', 'woocommerce_template_loop_category_title', 10 );
+			add_action( 'woocommerce_shop_loop_subcategory_title', 'woocommerce_template_loop_category_title' );
 		}
 
 		/* remove our custom text wrapper */
@@ -157,7 +162,7 @@ class Main {
 	 */
 	public static function add_thrive_product_count( $category ) {
 		if ( $category->count > 0 ) {
-			echo \TCB_Utils::wrap_content( $category->count . ' products', 'p', '', 'thrive-product-category-count' );
+			echo \TCB_Utils::wrap_content( $category->count . ' products', 'p', '', 'thrive-product-category-count' ); //phpcs:ignore
 		}
 
 	}

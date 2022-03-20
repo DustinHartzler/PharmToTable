@@ -109,14 +109,14 @@ class Post_Type {
 		}
 
 		if ( $echo ) {
-			echo $styles;
+			echo $styles; //phpcs:ignore
 		} else {
 			return $styles;
 		}
 	}
 
 	public static function init() {
-		static::register_post_types();
+		static::register_post_type();
 
 		add_filter( 'tve_dash_exclude_post_types_from_index', array( __CLASS__, 'exclude_from_index' ) );
 
@@ -181,7 +181,7 @@ class Post_Type {
 		return $post_types;
 	}
 
-	public static function register_post_types() {
+	public static function register_post_type() {
 		register_post_type(
 			static::NAME,
 			array(
@@ -192,6 +192,7 @@ class Post_Type {
 				'rewrite'             => false,
 				'_edit_link'          => 'post.php?post=%d',
 				'map_meta_cap'        => true,
+				'label'               => Main::title(),
 				'capabilities'        => array(
 					'edit_others_posts'    => TVE_DASH_EDIT_CPT_CAPABILITY,
 					'edit_published_posts' => TVE_DASH_EDIT_CPT_CAPABILITY,

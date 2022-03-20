@@ -5,10 +5,10 @@
 ?>
 <div id="thrive_architect_license_wrapper">
 	<div id="thrive_architect_license_logo">
-		<img src="<?php echo tve_editor_url() . '/admin/assets/images/admin-logo.png'; ?>">
+		<img src="<?php echo esc_url( tve_editor_url() . '/admin/assets/images/admin-logo.png' ); ?>">
 	</div>
 	<div id="thrive_architect_license_text">
-		<p><?php echo sprintf( __( 'You need to %s before you can use the editor!', 'thrive-cb' ), '<a class="tve-license-link" href="' . admin_url( 'admin.php?page=tve_dash_license_manager_section&return=' . rawurlencode( tcb_get_editor_url() ) ) . '">' . __( 'activate your license', 'thrive-cb' ) . '</a>' ) ?></p>
+		<p><?php echo wp_kses_post( sprintf( __( 'You need to %s before you can use the editor!', 'thrive-cb' ), '<a class="tve-license-link" href="' . admin_url( 'admin.php?page=tve_dash_license_manager_section&return=' . rawurlencode( tcb_get_editor_url() ) ) . '">' . __( 'activate your license', 'thrive-cb' ) . '</a>' ) ); ?></p>
 	</div>
 </div>
 <style type="text/css">

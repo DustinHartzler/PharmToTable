@@ -1,16 +1,16 @@
 <div class="thrv_wrapper tqb-question-wrapper tcb-local-vars-root tve-only-inner-drop">
 	<div class="thrive-colors-palette-config" style="display: none !important">
-		<?php echo $colors; ?>
+		<?php echo esc_html( $colors ); ?>
 	</div>
 	<div class="thrv_wrapper tqb-progress-container tcb-hidden">
-		<div class="tqb-progress-box tqb-progress-style-<?php echo $quiz_style; ?>">
+		<div class="tqb-progress-box tqb-progress-style-<?php echo esc_attr( $quiz_style ); ?>">
 			<div class="thrv_wrapper tqb-progress-label">
-				<span>33% <?php echo $progress_settings['label_text']; ?></span>
+				<span>33% <?php echo esc_html( $progress_settings['label_text'] ); ?></span>
 			</div>
 			<div class="tqb-progress tcb-local-vars-root <?php echo $palettes->has_pg_palettes() ? 'tcb-local-vars-root' : '' ?>">
 				<div class="thrive-colors-palette-config" style="display: none !important">
 					<?php if ( $palettes->has_pg_palettes() ): ?>
-						<?php echo $palettes->get_palettes_as_string( $palettes->get_pg_palettes() ); ?>
+						<?php echo esc_html( $palettes->get_palettes_as_string( $palettes->get_pg_palettes() ) ); ?>
 					<?php endif; ?>
 				</div>
 				<div class="tqb-progress-completed"></div>
@@ -169,7 +169,7 @@
 				<div class="tqb-answer-action tqb-open-ended-wrapper">
 					<div class="tqb-answer-open-type">
 						<textarea name="" id="tqb-open-type-answer" rows="<#= settings.get('form_size') #>" placeholder="<#= question.get('settings').get('placeholder')#>"></textarea>
-						<p class="tqb-answer-status tqb-gray-text"><?php echo __( 'Characters: ', Thrive_Quiz_Builder::T ) ?></p>
+						<p class="tqb-answer-status tqb-gray-text"><?php echo esc_html__( 'Characters: ', Thrive_Quiz_Builder::T ) ?><#= settings.get_max_value() #></p>
 					</div>
 					<button class="tqb-open-type-button">
 						<div class="thrv_wrapper tqb-icon tqb-next-icon tcb-icon-display tcb-local-vars-root">

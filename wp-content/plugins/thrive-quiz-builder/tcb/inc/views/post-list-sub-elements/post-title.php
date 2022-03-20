@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $title = get_the_title();
 
 if ( empty( $title ) ) {
-	echo TCB_Editor()->is_inner_frame() || TCB_Utils::is_rest() ? __( 'No Title', 'thrive-cb' ) : '';
+	echo TCB_Editor()->is_inner_frame() || TCB_Utils::is_rest() ? esc_html__( 'No Title', 'thrive-cb' ) : '';
 } else {
 	$queried_object = get_queried_object();
 
@@ -22,7 +22,7 @@ if ( empty( $title ) ) {
 	$same_page_as_post = ! empty( $queried_object ) && ! empty( $queried_object->ID ) && $queried_object->ID === get_the_ID();
 
 	if ( $is_inline_shortcode_without_url ) {
-		echo $title;
+		echo $title; // phpcs:ignore
 	} else {
 		$attrs = array(
 			'href'     => $same_page_as_post ? '#' : get_the_permalink(),
@@ -38,6 +38,6 @@ if ( empty( $title ) ) {
 			$attrs['rel'] = 'nofollow';
 		}
 
-		echo TCB_Utils::wrap_content( $title, 'a', '', '', $attrs );
+		echo TCB_Utils::wrap_content( $title, 'a', '', '', $attrs ); // phpcs:ignore
 	}
 }

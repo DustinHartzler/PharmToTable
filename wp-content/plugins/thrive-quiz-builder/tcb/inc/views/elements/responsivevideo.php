@@ -12,10 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<div class="tcb-elem-placeholder thrv_responsive_video thrv_wrapper" data-type="youtube">
+<div class="tcb-elem-placeholder thrv_responsive_video thrv_wrapper tcb-lazy-load" data-type="youtube">
 	<span class="tcb-inline-placeholder-action with-icon">
 		<?php tcb_icon( 'video-player', false, 'editor' ); ?>
-		<?php echo __( 'Insert Video', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Insert Video', 'thrive-cb' ); ?>
 	</span>
 
 	<div class="tve_responsive_video_container" style="display: none;">

@@ -51,17 +51,18 @@ class TCB_Megamenu_Item_Element extends TCB_Menu_Item_Element {
 		return array(
 			'megamenu_item' => array(
 				'config' => array(
-					'HasIcon'     => array(
+					'HasIconImage'     => array(
 						'config'  => array(
-							'label' => __( 'Show Icon', 'thrive-cb' ),
+							'name'    => __( 'Display', 'thrive-cb' ),
+							'options' => array(
+								'text'       => __( 'Text only', 'thrive-cb' ),
+								'icon'       => __( 'Icon only', 'thrive-cb' ),
+								'icon-text'  => __( 'Icon and text', 'thrive-cb' ),
+								'image'      => __( 'Image only', 'thrive-cb' ),
+								'image-text' => __( 'Image and text', 'thrive-cb' ),
+							),
 						),
-						'extends' => 'Switch',
-					),
-					'HasImage'    => array(
-						'config'  => array(
-							'label' => __( 'Show Section Image', 'thrive-cb' ),
-						),
-						'extends' => 'Switch',
+						'extends' => 'Select',
 					),
 					'ImageSide'   => array(
 						'extends' => 'ButtonGroup',

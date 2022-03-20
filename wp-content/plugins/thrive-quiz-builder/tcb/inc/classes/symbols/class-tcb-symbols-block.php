@@ -28,7 +28,8 @@ class TCB_Symbols_Block {
 
 
 	static public function hooks() {
-		add_filter( 'block_categories', array( __CLASS__, 'register_block_category' ), 10, 2 );
+		global $wp_version;
+		add_filter( version_compare( $wp_version, '5.7.9', '>' ) ? 'block_categories_all' : 'block_categories', array( __CLASS__, 'register_block_category' ), 10, 2 );
 	}
 
 	static public function register_block() {

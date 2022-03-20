@@ -28,7 +28,7 @@ class Cart_Total extends Abstract_Sub_Element {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.woocommerce-mini-cart__total';
+		return '.tcb-woo-mini-cart-content .woocommerce-mini-cart__total';
 	}
 
 	/**

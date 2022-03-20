@@ -31,18 +31,18 @@ if ( $symbol_vars['css_class'] === 'thrv_header' ) {
 			<div class="tve_flt" id="tve_flt">
 				<?php if ( isset( $_GET['tve'] ) ) { ?>
 					<div class="symbol-extra-info">
-						<p class="sym-l"><?php echo __( "Currently Editing {$type} \"{$symbol_title}\"" ); ?></p>
-						<p class="sym-r"><?php echo __( "Note that this {$symbol_vars['type']} doesn't have any width settings. <br />It will expand to the full width of the content area of your theme." ); ?></p>
+						<p class="sym-l"><?php echo esc_html__( "Currently Editing {$type} \"{$symbol_title}\"" ); ?></p>
+						<p class="sym-r"><?php echo sprintf( esc_html__( "Note that this {$symbol_vars['type']} doesn't have any width settings. %sIt will expand to the full width of the content area of your theme." ), '<br>' ); ?></p>
 					</div>
 				<?php } ?>
 				<div id="tve_editor">
-					<div class="tve_editable thrv_symbol <?php echo $symbol_vars['css_class'] ?> thrv_symbol_<?php echo $symbol_id ?>" data-id="<?php echo $symbol_id ?>">
-						<div class="thrive-symbol-shortcode <?php echo $shortcode_class ?>"<?php echo $data_attr; ?>>
+					<div class="tve_editable thrv_symbol <?php echo esc_attr( $symbol_vars['css_class'] ); ?> thrv_symbol_<?php echo esc_attr( $symbol_id ) ?>" data-id="<?php echo esc_attr( $symbol_id ) ?>">
+						<div class="thrive-symbol-shortcode <?php echo esc_attr( $shortcode_class ); ?>"<?php echo $data_attr; ?>> <?php // phpcs:ignore ?>
 							<?php if ( empty( $content ) ) { ?>
 								<div class="symbol-section-out"></div>
 								<div class="symbol-section-in"></div>
 							<?php } else { ?>
-								<?php echo $content; ?>
+								<?php echo $content; //phpcs:ignore ?>
 							<?php } ?>
 						</div>
 					</div>

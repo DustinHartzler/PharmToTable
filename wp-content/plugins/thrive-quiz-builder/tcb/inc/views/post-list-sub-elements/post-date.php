@@ -12,11 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 $date = $data['date'];
 
 if ( empty( $data['link'] ) ) {
-	echo $date;
+	echo esc_html( $date );
 } else {
 
 	$attrs = array(
-		'href'     =>get_month_link( get_the_date( 'Y' ), get_the_date( 'm' ) ),
+		'href'     => get_month_link( get_the_date( 'Y' ), get_the_date( 'm' ) ),
 		'title'    => $date,
 		'data-css' => empty( $data['css'] ) ? '' : $data['css'],
 	);
@@ -28,5 +28,5 @@ if ( empty( $data['link'] ) ) {
 	if ( ! empty( $data['rel'] ) && ( $data['rel'] === '1' ) ) {
 		$attrs['rel'] = 'nofollow';
 	}
-	echo TCB_Utils::wrap_content( $date, 'a', '', '', $attrs );
+	echo TCB_Utils::wrap_content( $date, 'a', '', '', $attrs ); // phpcs:ignore
 }

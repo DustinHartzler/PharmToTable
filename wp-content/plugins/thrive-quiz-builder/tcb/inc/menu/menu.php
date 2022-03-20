@@ -19,7 +19,7 @@ if ( is_ssl() ) {
 	<div class="action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -33,8 +33,8 @@ if ( is_ssl() ) {
 			<div class="control-grid hide-tablet hide-mobile only-wp">
 				<span class="blue-text">
 					<svg class="tcb-icon tcb-icon-info"><use xlink:href="#icon-info"></use></svg>
-					<a class="tve-edit-menu tve-wpmenu-info" href="<?php echo $admin_base_url; ?>nav-menus.php?action=edit&menu=0" target="_blank">
-						<?php echo __( 'Click here to edit this WordPress menu.', 'thrive-cb' ); ?>
+					<a class="tve-edit-menu tve-wpmenu-info" href="<?php echo esc_url( $admin_base_url ); ?>nav-menus.php?action=edit&menu=0" target="_blank">
+						<?php echo esc_html__( 'Click here to edit this WordPress menu.', 'thrive-cb' ); ?>
 					</a>
 				</span>
 			</div>
@@ -49,10 +49,10 @@ if ( is_ssl() ) {
 			<div class="tve-control if-horizontal" data-view="LogoSplit"></div>
 			<hr>
 			<div class="tve-control if-vertical" data-view="ContentAlign"></div>
-			<div class="mb-10 if-vertical"><?php echo __( 'Menu alignment', 'thrive-cb' ); ?></div>
+			<div class="mb-10 if-vertical"><?php echo esc_html__( 'Menu alignment', 'thrive-cb' ); ?></div>
 			<div class="tve-control if-vertical pt-5 gl-st-button-toggle-2" data-key="Align" data-view="ButtonGroup"></div>
 			<div class="tve-control if-vertical gl-st-button-toggle-2" data-view="MenuWidth"></div>
-			<div class="mb-10"><?php echo __( 'Sub menu options', 'thrive-cb' ); ?></div>
+			<div class="mb-10"><?php echo esc_html__( 'Sub menu options', 'thrive-cb' ); ?></div>
 			<div class="tve-control if-vertical hide-tablet hide-mobile" data-view="DropdownDirection"></div>
 			<div class="tve-control" data-key="DropdownIcon" data-initializer="dropdownIcon"></div>
 			<div class="tve-control if-not-hamburger" data-view="DropdownAnimation"></div>
@@ -71,12 +71,12 @@ if ( is_ssl() ) {
 				<div class="tve-advanced-controls extend-grey menu-items">
 					<div class="dropdown-header" data-prop="advanced">
 						<span>
-							<?php echo __( 'Menu Items', 'thrive-cb' ); ?>
+							<?php echo esc_html__( 'Menu Items', 'thrive-cb' ); ?>
 						</span>
 					</div>
 					<div class="dropdown-content pl-0 pr-0 tcb-relative pt-25">
 						<button class="tve-button blue click tcb-absolute" style="right: 1px; top: 0; padding: 5px 8px;" data-fn="addMenuItem">
-							<?php echo __( 'Add new', 'thrive-cb' ); ?>
+							<?php echo esc_html__( 'Add new', 'thrive-cb' ); ?>
 						</button>
 						<div class="clear"></div>
 						<div class="tve-control tve-order-list mb-0" data-key="OrderList" data-initializer="orderItems"></div>

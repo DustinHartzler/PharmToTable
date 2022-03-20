@@ -1,4 +1,18 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+
+use TVD\Dashboard\Access_Manager\Admin_Bar_Visibility;
+use TVD\Dashboard\Access_Manager\Login_Redirect;
+use TVD\Dashboard\Access_Manager\Main;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Created by PhpStorm.
  * User: Andrei
@@ -105,7 +119,7 @@ class TVE_Dash_AjaxController {
 	 * @return mixed
 	 */
 	private function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		return isset( $_POST[ $key ] ) ? map_deep( $_POST[ $key ], 'sanitize_text_field' ) : ( isset( $_REQUEST[ $key ] ) ? map_deep( $_REQUEST[ $key ], 'sanitize_text_field' ) : $default );
 	}
 
 	/**
@@ -120,22 +134,42 @@ class TVE_Dash_AjaxController {
 	}
 
 	/**
+	 * Save FontAwesomePro kit
+	 */
+	public function saveFaKitAction() {
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'tve-dash' ) ) {
+			wp_send_json( null, 400 );
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json( 'You do not have access', 403 );
+		}
+
+		update_option( sanitize_text_field( $_POST['option_name'] ), sanitize_text_field( $_POST['option_value'] ) );
+
+		wp_send_json( 'success', 200 );
+	}
+
+	/**
 	 * save global settings for the plugin
 	 */
 	public function generalSettingsAction() {
-		$allowed = array(
+		$allowed = apply_filters( 'tvd_ajax_allowed_settings', array(
 			'tve_social_fb_app_id',
 			'tve_comments_facebook_admins',
 			'tve_comments_disqus_shortname',
 			'tve_google_fonts_disable_api_call',
 			'tvd_enable_login_design',
-			'tve_allow_video_src'
-		);
-		$field   = $this->param( 'field' );
-		$value   = map_deep( $this->param( 'value' ), 'sanitize_text_field' );
+			'tve_allow_video_src',
+			'tvd_coming_soon_page_id',
+		) );
+
+		$field = $this->param( 'field' );
+		$value = map_deep( $this->param( 'value' ), 'sanitize_text_field' );
 
 		if ( ! in_array( $field, $allowed ) ) {
-			exit();
+			wp_die( 'unknown setting.' );
 		}
 
 		$result = array(
@@ -167,9 +201,9 @@ class TVE_Dash_AjaxController {
 	}
 
 	public function licenseAction() {
-		$email = ! empty( $_POST['email'] ) ? trim( $_POST['email'], ' ' ) : '';
-		$key   = ! empty( $_POST['license'] ) ? trim( $_POST['license'], ' ' ) : '';
-		$tag   = ! empty( $_POST['tag'] ) ? trim( $_POST['tag'], ' ' ) : false;
+		$email = ! empty( $_POST['email'] ) ? sanitize_email( trim( $_POST['email'], ' ' ) ) : ''; // phpcs:ignore
+		$key   = ! empty( $_POST['license'] ) ? sanitize_text_field( trim( $_POST['license'], ' ' ) ) : ''; // phpcs:ignore
+		$tag   = ! empty( $_POST['tag'] ) ? sanitize_text_field( trim( $_POST['tag'], ' ' ) ) : false; // phpcs:ignore
 
 		$licenseManager = TVE_Dash_Product_LicenseManager::getInstance();
 		$response       = $licenseManager->checkLicense( $email, $key, $tag );
@@ -425,15 +459,10 @@ class TVE_Dash_AjaxController {
 
 	public function getErrorLogsAction() {
 
-		$order_by     = $_GET['orderby'];
-		$order        = $_GET['order'];
-		$per_page     = $_GET['per_page'];
-		$current_page = $_GET['current_page'];
-
-		$order_by     = ! empty( $order_by ) ? $order_by : 'date';
-		$order        = ! empty( $order ) ? $order : 'DESC';
-		$per_page     = ! empty( $per_page ) ? $per_page : 10;
-		$current_page = ! empty( $current_page ) ? $current_page : 1;
+		$order_by     = ! empty( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'date';
+		$order        = ! empty( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC';
+		$per_page     = ! empty( $_GET['per_page'] ) ? sanitize_text_field( $_GET['per_page'] ) : 10;
+		$current_page = ! empty( $_GET['current_page'] ) ? sanitize_text_field( $_GET['current_page'] ) : 1;
 
 		return tve_dash_get_error_log_entries( $order_by, $order, $per_page, $current_page );
 
@@ -445,54 +474,132 @@ class TVE_Dash_AjaxController {
 	 * @return array
 	 */
 	public function changeCapabilityAction() {
-		/* Check if the current can use AM */
-		if ( ! current_user_can( TVE_DASH_CAPABILITY ) ) {
-			$response = array(
-				'success' => false,
-				'message' => __( 'You do not have this capability', TVE_DASH_TRANSLATE_DOMAIN ),
-			);
+		$response = array();
 
-			return $response;
+		if ( is_super_admin() ) {
+			if ( current_user_can( TVE_DASH_CAPABILITY ) ) {
+				$role = $this->param( 'role' );
+				if ( $wp_role = get_role( $role ) ) {
+					$capability = $this->param( 'capability' );
+					$action     = $this->param( 'capability_action' );
+
+					/** User should not be allowed to remove TD capability of the administrator */
+					if ( $role === 'administrator' && $capability === TVE_DASH_CAPABILITY ) {
+						$response = array(
+							'success' => false,
+							'message' => __( 'You are not allowed to remove this capability!', TVE_DASH_TRANSLATE_DOMAIN ),
+						);
+					} else {
+						/**
+						 * Add the capability to edit Thrive CPT was set for the users which have edit_posts capability
+						 *
+						 * eg. Edit Leads Form if you have granted access
+						 *
+						 */
+						$wp_role->add_cap( TVE_DASH_EDIT_CPT_CAPABILITY );
+
+						if ( $action === 'add' ) {
+							$wp_role->add_cap( $capability );
+						} else {
+							$wp_role->remove_cap( $capability );
+						}
+
+						$success  = $action === 'add' ? $wp_role->has_cap( $capability ) : ! $wp_role->has_cap( $capability );
+						$response = array(
+							'success' => $success,
+							'message' => $success ? __( 'Capability changed successfully', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Changing capability failed', TVE_DASH_TRANSLATE_DOMAIN ),
+						);
+					}
+				} else {
+					$response = array(
+						'success' => false,
+						'message' => __( 'This role does not exist anymore', TVE_DASH_TRANSLATE_DOMAIN ),
+					);
+				}
+
+			} else {
+				$response = array(
+					'success' => false,
+					'message' => __( 'You do not have this capability', TVE_DASH_TRANSLATE_DOMAIN ),
+				);
+			}
 		}
-		$role = $this->param( 'role' );
 
-		/* Check if the role still exists */
-		if ( ! $wp_role = get_role( $role ) ) {
+		return $response;
+	}
+
+	/**
+	 * Add functionalities for users
+	 *
+	 * @return array
+	 */
+	public function updateUserFunctionalityAction() {
+		$response = array();
+
+		if ( is_super_admin() ) {
+			$functionality_tag = $this->param( 'functionality' );
+			$role              = $this->param( 'role' );
+			$updated_value     = $this->param( 'value' );
+
+			$functionality = Main::get_all_functionalities( $functionality_tag );
+			$functionality::update_option_value( $role, $updated_value );
+			$success = $functionality::get_option_value( $role ) === $updated_value;
+
 			$response = array(
-				'success' => false,
-				'message' => __( 'This role does not exist anymore', TVE_DASH_TRANSLATE_DOMAIN ),
+				'success' => $success,
+				'message' => $success ? __( 'Functionality changed successfully', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Changing functionality failed', TVE_DASH_TRANSLATE_DOMAIN ),
 			);
-
-			return $response;
 		}
 
-		$capability = $this->param( 'capability' );
-		$action     = $this->param( 'capability_action' );
+		return $response;
+	}
 
-		/** User should not be allowed to remove TD capability of the administrator */
-		if ( $role === 'administrator' && $capability === TVE_DASH_CAPABILITY ) {
+	/**
+	 * Reset capabilities & functionalities to their default value
+	 *
+	 * @return array
+	 */
+	public function resetCapabilitiesToDefaultAction() {
+		$response = array();
+
+		if ( is_super_admin() ) {
+			$role                    = $this->param( 'role' );
+			$wp_role                 = get_role( $role );
+			$should_have_capability  = $role === 'administrator' || $role === 'editor';
+			$capability_action       = $should_have_capability ? 'add' : 'remove';
+			$updated_products        = array();
+			$updated_functionalities = array();
+			$success                 = true;
+
+			/* Reset product capabilities */
+			foreach ( Main::get_products() as $product ) {
+				if ( $capability_action === 'add' ) {
+					$wp_role->add_cap( $product['prod_capability'] );
+				} else if ( $capability_action = 'remove' ) {
+					$wp_role->remove_cap( $product['prod_capability'] );
+				}
+				$updated_products[ $product['tag'] ] = $wp_role->has_cap( $product['prod_capability'] );
+				$success                             = $success && ( $should_have_capability === $updated_products[ $product['tag'] ] );
+			}
+
+			/* Reset functionalities */
+			foreach ( Main::get_all_functionalities() as $functionality ) {
+				$default_value     = $functionality::get_default();
+				$functionality_tag = $functionality::get_tag();
+
+				$functionality::update_option_value( $role, $default_value );
+				$success                                       = $success && $functionality::get_option_value( $role ) === $default_value;
+				$updated_functionalities[ $functionality_tag ] = $functionality::get_option_value( $role );
+			}
+
+
 			$response = array(
-				'success' => false,
-				'message' => __( 'You are not allowed to remove this capability!', TVE_DASH_TRANSLATE_DOMAIN ),
+				'success'                 => $success,
+				'message'                 => $success ? __( 'Default values were set successfully', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Changing functionality failed', TVE_DASH_TRANSLATE_DOMAIN ),
+				'updated_products'        => $updated_products,
+				'updated_functionalities' => $updated_functionalities,
 			);
-
-			return $response;
 		}
-
-		/**
-		 * Addthe capability to edit Thrive CPT was set for the users which have edit_posts capability
-		 *
-		 * eg. Edit Leads Form if you have granted access
-		 *
-		 */
-		$wp_role->add_cap( TVE_DASH_EDIT_CPT_CAPABILITY );
-		$action === 'add' ? $wp_role->add_cap( $capability ) : $wp_role->remove_cap( $capability );
-
-		$success  = $action === 'add' ? $wp_role->has_cap( $capability ) : ! $wp_role->has_cap( $capability );
-		$response = array(
-			'success' => $success,
-			'message' => $success ? '' : __( 'Changing capability failed', TVE_DASH_TRANSLATE_DOMAIN ),
-		);
 
 		return $response;
 	}

@@ -57,7 +57,7 @@ class TCB_Section_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		$section = array(
-			'section'    => array(
+			'section'             => array(
 				'config' => array(
 					'SectionHeight'    => array(
 						'config'  => array(
@@ -65,7 +65,7 @@ class TCB_Section_Element extends TCB_Element_Abstract {
 							'min'     => '1',
 							'max'     => '1000',
 							'label'   => __( 'Section Minimum Height', 'thrive-cb' ),
-							'um'      => array( 'px', 'vh' ),
+							'um'      => [ 'px', 'vh' ],
 							'css'     => 'min-height',
 						),
 						'to'      => '.tve-page-section-in',
@@ -77,7 +77,7 @@ class TCB_Section_Element extends TCB_Element_Abstract {
 							'min'     => '100',
 							'max'     => '2000',
 							'label'   => __( 'Content Maximum Width', 'thrive-cb' ),
-							'um'      => array( 'px', '%' ),
+							'um'      => [ 'px', '%' ],
 							'css'     => 'max-width',
 						),
 						'to'      => '.tve-page-section-in',
@@ -112,71 +112,74 @@ class TCB_Section_Element extends TCB_Element_Abstract {
 					'VerticalPosition' => array(
 						'config'  => array(
 							'name'    => __( 'Vertical Position', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'top',
 									'default' => true,
 									'value'   => '',
-								),
-								array(
+								],
+								[
 									'icon'  => 'vertical',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'icon'  => 'bot',
 									'value' => 'flex-end',
-								),
-							),
+								],
+							],
 							'info'    => true,
 						),
 						'extends' => 'ButtonGroup',
 					),
 				),
 			),
-			'background' => array(
-				'config'            => array(
+			'background'          => [
+				'config'            => [
 					'to' => '.tve-page-section-out',
-				),
-				'disabled_controls' => array(),
-			),
-			'shadow'     => array(
-				'config' => array(
+				],
+				'disabled_controls' => [],
+			],
+			'shadow'              => [
+				'config' => [
 					'to' => '.tve-page-section-out',
-				),
-			),
-			'layout'     => array(
-				'disabled_controls' => array( 'Width', 'Alignment', 'Float', 'Position', 'PositionFrom' ),
-				'config'            => array(
-					'Height' => array(
+				],
+			],
+			'layout'              => [
+				'disabled_controls' => [ 'Width', 'Alignment', 'Float', 'Position', 'PositionFrom' ],
+				'config'            => [
+					'Height' => [
 						'to'        => '.tve-page-section-in',
 						'important' => true,
-					),
-				),
-			),
-			'animation'  => array(
+					],
+				],
+			],
+			'animation'           => [
 				'hidden' => true,
-			),
-			'borders'    => array(
-				'config' => array(
-					'Borders' => array(),
-					'Corners' => array(),
-				),
-			),
-			'typography' => array(
-				'disabled_controls' => array(),
-				'config'            => array(
+			],
+			'borders'             => [
+				'config' => [
+					'Borders' => [],
+					'Corners' => [],
+				],
+			],
+			'typography'          => [
+				'disabled_controls' => [],
+				'config'            => [
 					'to'             => '.tve-page-section-in',
-					'ParagraphStyle' => array( 'hidden' => false ),
-				),
-			),
-			'decoration' => array(
-				'config' => array(
+					'ParagraphStyle' => [ 'hidden' => false ],
+				],
+			],
+			'decoration'          => [
+				'config' => [
 					'to' => '.tve-page-section-out',
-				),
-			),
-			'scroll'     => array(
+				],
+			],
+			'scroll'              => [
 				'hidden' => false,
-			),
+			],
+			'conditional-display' => [
+				'hidden' => false,
+			],
 		);
 
 		if ( tcb_post()->is_landing_page() ) {
@@ -218,12 +221,12 @@ class TCB_Section_Element extends TCB_Element_Abstract {
 	 * @return string|string[][]
 	 */
 	public function info() {
-		return array(
-			'instructions' => array(
+		return [
+			'instructions' => [
 				'type' => 'help',
 				'url'  => 'background_section',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425770-how-to-use-the-background-section-element',
-			),
-		);
+			],
+		];
 	}
 }

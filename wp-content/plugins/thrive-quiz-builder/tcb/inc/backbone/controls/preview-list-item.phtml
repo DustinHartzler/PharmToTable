@@ -6,7 +6,9 @@
 	<a href="javascript:void(0)"  class="item-icon <#= item.get('icon_click') ? ' click' : ''#>" data-fn="iconClick" data-index="<#=item.index#>">
 		<#=item.get('icon')#>
 	</a>
+	<# if( ! item.get( 'preventOrderChange' ) ){#>
 	<div class="preview-list-sort-handle col-sep"><?php tcb_icon( 'dots2' ); ?></div>
+	<# } #>
 	<div class="item-label tcb-truncate">
 		<#=item.get('label')#>
 		<# if(item.get('dynamic_icon')) { #>
@@ -37,6 +39,18 @@
 	   data-index="<#=item.index#>">
 		<?php tcb_icon( 'trash-light' ) ?>
 	</a>
+	<# } #>
+	<# if ( item.get('toggleControl') ) { #>
+	<span data-side="right" class="visibility-control action-toggle click" data-value="<#=item.get('visible')?'show':'hide'#>">
+		<button data-side="right" data-tooltip="<?php esc_attr_e( 'Toggle visibility', 'thrive-cb' ) ?>"
+				class="full-opacity hide-icon-button visibility-control click" data-fn="toggle_item" data-visibility="hide" data-index="<#=item.index#>">
+			<?php tcb_icon( 'eye-slash-regular2' ); ?>
+		</button>
+		<button data-side="right" data-tooltip="<?php esc_attr_e( 'Toggle visibility', 'thrive-cb' ) ?>"
+				class="full-opacity show-icon-button visibility-control click" data-fn="toggle_item" data-visibility="show" data-index="<#=item.index#>">
+			<?php tcb_icon( 'eye-regular' ); ?>
+		</button>
+	</span>
 	<# } #>
 </div>
 <#=item.get('dynamic_ui')#>

@@ -18,13 +18,13 @@ $has_data = array(
 		<?php if ( $has_data['vars'] ) : ?>
 			<div class="tve-btn click" data-fn="dom_switch_section" data-value="vars">
 				<span><?php tcb_icon( 'palette' ); ?></span>
-				<span><?php echo __( 'Colors', 'thrive-cb' ); ?></span>
+				<span><?php echo esc_html__( 'Colors', 'thrive-cb' ); ?></span>
 			</div>
 		<?php endif; ?>
 		<?php if ( $has_data['styles'] ) : ?>
 			<div class="tve-btn click" data-fn="dom_switch_section" data-value="styles">
 				<span><?php tcb_icon( 'blocks' ); ?></span>
-				<span><?php echo __( 'Elements', 'thrive-cb' ); ?></span>
+				<span><?php echo esc_html__( 'Elements', 'thrive-cb' ); ?></span>
 			</div>
 		<?php endif; ?>
 	</div>
@@ -37,7 +37,7 @@ $has_data = array(
 				<?php endif; ?>
 				<div class="c-s-p-tpl-list-wrapper">
 					<span class="c-s-p-list-title"></span>
-					<div class="c-s-p-tpl-list" data-list="<?php echo $key; ?>"></div>
+					<div class="c-s-p-tpl-list" data-list="<?php echo esc_attr( $key ); ?>"></div>
 				</div>
 			<?php endforeach; ?>
 		</div>

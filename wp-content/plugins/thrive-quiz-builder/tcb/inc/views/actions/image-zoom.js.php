@@ -66,7 +66,7 @@ if ( typeof img_size === 'undefined' ) {
 			$parent.css( {display: 'block', visibility: 'hidden'} );
 			height = $element.height();
 			width = $element.width();
-			$parent.css( {display: 'hidden', visibility: ''} );
+			$parent.css( {display: 'none', visibility: ''} );
 		}
 
 		img_size = {

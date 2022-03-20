@@ -1,5 +1,5 @@
 <#if(typeof no_item !== 'undefined' && no_item){#>
-<div class="list-no-items tcb-text-center"><?php echo __( 'None', 'thrive-cb' ); ?></div>
+<div class="list-no-items tcb-text-center"><?php echo esc_html__( 'None', 'thrive-cb' ); ?></div>
 <#} else {#>
 <div data-level="<#=item.get('level')#>" class="preview-list-item tcb-relative" style="margin-left:<#=(25*item.get('level'))#>px"
 	 data-fn="item_click" data-index="<#=item.index#>" data-id="<#=item.get('id')#>">

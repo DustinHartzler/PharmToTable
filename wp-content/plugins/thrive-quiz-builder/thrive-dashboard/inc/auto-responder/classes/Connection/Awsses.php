@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Aurelian Pop
  * Date: 04-Jan-16
@@ -40,9 +49,10 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	public function readCredentials() {
 		$ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-		$key       = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
-		$secretkey = ! empty( $_POST['connection']['secretkey'] ) ? $_POST['connection']['secretkey'] : '';
-		$email     = ! empty( $_POST['connection']['email'] ) ? $_POST['connection']['email'] : '';
+		$key       = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$secretkey = ! empty( $_POST['connection']['secretkey'] ) ? sanitize_text_field( $_POST['connection']['secretkey'] ) : '';
+		$email     = ! empty( $_POST['connection']['email'] ) ? sanitize_email( $_POST['connection']['email'] ) : '';
+		$country   = ! empty( $_POST['connection']['country'] ) ? sanitize_text_field( $_POST['connection']['country'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service key', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -55,8 +65,13 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 		if ( empty( $email ) ) {
 			return $ajax_call ? __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
-
-		$this->setCredentials( $_POST['connection'] );
+		$credentials = array(
+			'key'       => $key,
+			'secretkey' => $secretkey,
+			'email'     => $email,
+			'country'   => $country,
+		);
+		$this->setCredentials( $credentials );
 
 		$result = $this->testConnection();
 		// $result = true;
@@ -85,8 +100,8 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 		$awsses = $this->getApi();
 
 		if ( isset( $_POST['connection']['email'] ) ) {
-			$from_email = $_POST['connection']['email'];
-			$to         = $_POST['connection']['email'];
+			$from_email = sanitize_email( $_POST['connection']['email'] );
+			$to         = sanitize_email( $_POST['connection']['email'] );
 		} else {
 			$credentials = Thrive_Dash_List_Manager::credentials( 'awsses' );
 			if ( isset( $credentials ) ) {

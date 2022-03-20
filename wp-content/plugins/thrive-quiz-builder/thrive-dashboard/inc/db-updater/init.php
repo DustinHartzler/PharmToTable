@@ -5,6 +5,10 @@
  *
  * @package thrive-dashboard
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 
 require __DIR__ . '/class-updater.php';
 

@@ -72,7 +72,7 @@ class TCB_Post_Read_More_Element extends TCB_Button_Element {
 	 * @return string
 	 */
 	protected function html() {
-		return tcb_template( 'elements/read-more.php', $this, true );;
+		return tcb_template( 'elements/read-more.php', $this, true );
 	}
 
 	/**

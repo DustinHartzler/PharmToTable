@@ -216,7 +216,7 @@ class TD_TTW_Connection {
 			return $html;
 		}
 
-		echo $html;
+		echo $html; // phpcs:ignore
 	}
 
 	protected function _is_valid_token( $token ) {
@@ -270,7 +270,7 @@ class TD_TTW_Connection {
 	 */
 	public function process_request() {
 
-		if ( ! $this->_is_valid_token( base64_decode( $_REQUEST['td_token'] ) ) ) {
+		if ( ! empty( $_REQUEST['td_token'] ) && ! $this->_is_valid_token( base64_decode( sanitize_text_field( $_REQUEST['td_token'] ) ) ) ) {
 
 			$this->_errors[] = __( 'Invalid token', TVE_DASH_TRANSLATE_DOMAIN );
 
@@ -320,12 +320,12 @@ class TD_TTW_Connection {
 
 			//this has to be in clear; not encoded
 			if ( in_array( $key, $no_decode, false ) ) {
-				$data[ $key ] = $_REQUEST[ $key ];
+				$data[ $key ] = ! empty( $_REQUEST[ $key ] ) ? sanitize_text_field( $_REQUEST[ $key ] ) : '';
 				continue;
 			}
 
 			if ( ! empty( $_REQUEST[ $key ] ) ) {
-				$data[ $key ] = base64_decode( urldecode( $_REQUEST[ $key ] ) );
+				$data[ $key ] = base64_decode( urldecode( sanitize_text_field( $_REQUEST[ $key ] ) ) );
 			}
 		}
 

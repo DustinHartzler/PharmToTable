@@ -11,5 +11,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <div class="thrv_wrapper thrv_text_element">
-	<p><?php echo __( 'Enter your text here...', 'thrive-cb' ) ?></p>
+	<p><?php echo esc_html__( 'Enter your text here...', 'thrive-cb' ) ?></p>
 </div>

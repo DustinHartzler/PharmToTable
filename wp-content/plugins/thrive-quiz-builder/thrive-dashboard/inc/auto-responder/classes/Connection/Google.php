@@ -52,14 +52,14 @@ class Thrive_Dash_List_Connection_Google extends Thrive_Dash_List_Connection_Abs
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$client_id     = ! empty( $_POST['client_id'] ) ? $_POST['client_id'] : '';
-		$client_secret = ! empty( $_POST['client_secret'] ) ? $_POST['client_secret'] : '';
+		$client_id     = ! empty( $_POST['client_id'] ) ? sanitize_text_field( $_POST['client_id'] ) : '';
+		$client_secret = ! empty( $_POST['client_secret'] ) ? sanitize_text_field( $_POST['client_secret'] ) : '';
 
 		if ( empty( $client_id ) || empty( $client_secret ) ) {
 			return $this->error( __( 'Both Client ID and Client Secret fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST );
+		$this->setCredentials( array( 'client_id' => $client_id, 'client_secret' => $client_secret ) );
 
 		$result = $this->testConnection();
 

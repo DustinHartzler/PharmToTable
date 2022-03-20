@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * SDK interface for managing transmissions
  */
 class Thrive_Dash_Api_SparkPost_Connection extends Thrive_Dash_Api_SparkPost_APIResource {

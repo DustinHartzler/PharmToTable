@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-icon-component" class="tve-component" data-view="Icon">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="hide-states pt-10">
 			<div class="tve-control gl-st-icon-toggle-1" data-view="Slider"></div>
 			<div class="tve-control" data-view="RotateIcon"></div>
-			<div class="tve-control" data-key="ToggleURL" data-extends="Switch" data-label="<?php echo __( 'Add link to icon', 'thrive-cb' ); ?>"></div>
+			<div class="tve-control" data-key="ToggleURL" data-extends="Switch" data-label="<?php echo esc_html__( 'Add link to icon', 'thrive-cb' ); ?>"></div>
 			<div class="tve-control link-control" data-key="link" data-initializer="elementLink"></div>
 		</div>
 	</div>

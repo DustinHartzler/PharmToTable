@@ -66,23 +66,6 @@ class TCB_Search_Form_Submit_Element extends TCB_Element_Abstract {
 		);
 
 		return array(
-			'search_form_submit' => array(
-				'config' => array(
-					'MasterColor'  => array(
-						'css_suffix' => $controls_default_config['css_suffix'],
-						'css_prefix' => $prefix,
-						'config'     => array(
-							'default'             => '000',
-							'label'               => __( 'Master Color', 'thrive-cb' ),
-							'important'           => true,
-							'affected_components' => array( 'shadow', 'background', 'borders' ),
-							'options'             => array(
-								'showGlobals' => false,
-							),
-						),
-					),
-				),
-			),
 			'typography'         => array(
 				'config' => array(
 					'FontSize'      => $controls_default_config,

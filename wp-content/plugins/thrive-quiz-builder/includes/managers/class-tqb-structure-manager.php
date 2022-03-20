@@ -218,9 +218,9 @@ class TQB_Structure_Manager {
 	/**
 	 * Get page html to display on frontend
 	 *
-	 * @return int|WP_Error
+	 * @return array|bool
 	 */
-	public function get_page_content( $page_type, $points = null, $post_id = 0 ) {
+	public function get_page_content( $page_type, $points = null, $post_id = 0, $with_scripts = true, $render_shortcodes = true ) {
 		$structure = $this->get_quiz_structure_meta();
 
 		if ( ! is_numeric( $structure[ $page_type ] ) ) {
@@ -242,10 +242,7 @@ class TQB_Structure_Manager {
 		if ( ! empty( $tcb_fields[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) ) { /* inline style rules = custom colors */
 			$dynamic_content_rules = '';
 			if ( ! empty( $variation[ 'dynamic_content_' . Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) && is_array( $variation[ 'dynamic_content_' . Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) ) {
-
-				foreach ( $variation[ 'dynamic_content_' . Thrive_Quiz_Builder::FIELD_INLINE_CSS ] as $media => $css_code ) {
-					$dynamic_content_rules .= '@media ' . $media . '{' . $css_code . '}';
-				}
+				$dynamic_content_rules = tqb_merge_media_query_styles( $variation[ 'dynamic_content_' . Thrive_Quiz_Builder::FIELD_INLINE_CSS ] );
 			}
 
 			$css = apply_filters( 'tcb_custom_css', $tcb_fields[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] . $dynamic_content_rules );
@@ -257,7 +254,17 @@ class TQB_Structure_Manager {
 			/**
 			 * TODO: remove the if clause after some time.
 			 */
-			$variation[ Thrive_Quiz_Builder::FIELD_CONTENT ] .= tve_get_shared_styles( $variation[ Thrive_Quiz_Builder::FIELD_CONTENT ] );
+
+			/**
+			 * We have to store global styles in a global as this method is called multiple times and at some calls they are empty
+			 */
+			global $shared_styles;
+
+			$styles = tve_get_shared_styles( $variation[ Thrive_Quiz_Builder::FIELD_CONTENT ] );
+
+			if ( ! empty( $styles ) ) {
+				$shared_styles[ $page_type ] = $styles;
+			}
 		}
 
 		list( $variation_type, $key ) = TQB_Template_Manager::tpl_type_key( $tcb_fields[ Thrive_Quiz_Builder::FIELD_TEMPLATE ] );
@@ -296,7 +303,10 @@ class TQB_Structure_Manager {
 
 		$data[ Thrive_Quiz_Builder::FIELD_USER_CSS ]     = ( ! empty( $tcb_fields[ Thrive_Quiz_Builder::FIELD_USER_CSS ] ) ) ? $tcb_fields[ Thrive_Quiz_Builder::FIELD_USER_CSS ] : '';
 		$variation[ Thrive_Quiz_Builder::FIELD_CONTENT ] = preg_replace( "/\[tqb_quiz id=(\"|')(\d+)(\"|')\]/", '', $variation[ Thrive_Quiz_Builder::FIELD_CONTENT ] );
-		$data['html']                                    = do_shortcode( tve_do_wp_shortcodes( tve_thrive_shortcodes( $variation[ Thrive_Quiz_Builder::FIELD_CONTENT ] ) ) );
+		$data['html']                                    = $variation[ Thrive_Quiz_Builder::FIELD_CONTENT ];
+		if ( $render_shortcodes ) {
+			$data['html'] = do_shortcode( tve_do_wp_shortcodes( tve_thrive_shortcodes( $data['html'] ) ) );
+		}
 		if ( function_exists( 'tve_restore_script_tags' ) ) {
 			$data['html'] = tve_restore_script_tags( $data['html'] );
 		}
@@ -304,6 +314,12 @@ class TQB_Structure_Manager {
 		$data['variation_id']     = $variation['id'];
 		$data['quiz_id']          = $variation['quiz_id'];
 		$data['quiz_user_result'] = $variation['quiz_user_result'];
+
+		if ( true === $with_scripts ) {
+			$data['optimized_assets'] = TQB_Lightspeed::get_optimized_assets( $variation );
+		}
+
+		$data['fonts'] = TQB_Lightspeed::optimize_font_imports( $data['fonts'] );
 
 		return $data;
 	}
@@ -348,7 +364,7 @@ class TQB_Structure_Manager {
 							$result['error'][ $page ] = __( 'Your Splash Page is empty! Make sure you have at least one variation for it.', Thrive_Quiz_Builder::T );
 							$result['notice']         = true;
 						} else {
-							$data = $this->get_page_content( $page );
+							$data = $this->get_page_content( $page, null, 0, false, false );
 							if ( ! $data ) {
 								$result['error'][ $page ] = $this->get_error( 'no_splash_design' );
 								$result['notice']         = true;
@@ -368,7 +384,7 @@ class TQB_Structure_Manager {
 							$result['error'][ $page ] = __( 'Your Opt-in Page is empty! Make sure you have at least one variation.', Thrive_Quiz_Builder::T );
 							$result['notice']         = true;
 						} else {
-							$data = $this->get_page_content( $page );
+							$data = $this->get_page_content( $page, null, 0, false, false );
 							if ( ! $data ) {
 								$result['error'][ $page ] = $this->get_error( 'no_optin_design' );
 								$result['notice']         = true;
@@ -401,7 +417,7 @@ class TQB_Structure_Manager {
 						$result['error'][ $page ] = __( 'Your Results Page has not been set!', Thrive_Quiz_Builder::T );
 						$result['valid']          = false;
 					} else {
-						$data = $this->get_page_content( $page );
+						$data = $this->get_page_content( $page, null, 0, false, false );
 						if ( ! $data && $results_page_settings && $results_page_settings->type === 'page' ) {
 							$result['error'][ $page ] = $this->get_error( 'no_results_design' );
 							$result['valid']          = false;

@@ -66,7 +66,7 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 		 * @param $data
 		 */
 		public function applyContentFilter( $data ) {
-			$lightbox_id = isset( $data['config']['l_id'] ) ? intval( $data['config']['l_id'] ) : 0;
+			$lightbox_id = isset( $data['config']['l_id'] ) ? (int) $data['config']['l_id'] : 0;
 
 			if ( ! $lightbox_id ) {
 				return false;
@@ -106,9 +106,10 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 			self::$loaded_lightboxes[ $lightbox_id ] = $lightbox_html;
 
 			ob_start();
+			TCB\Lightspeed\Css::get_instance( $lightbox_id )->load_optimized_style( 'base' );
+			TCB\Lightspeed\JS::get_instance( $lightbox_id )->load_modules();
 			tve_load_custom_css( $lightbox_id );
-			$lightbox_html = ob_get_contents() . $lightbox_html;
-			ob_end_clean();
+			$lightbox_html = ob_get_clean() . $lightbox_html;
 
 			return $lightbox_html;
 		}
@@ -151,9 +152,6 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 
 			tve_enqueue_extra_resources( $lightbox_id );
 
-			/* check for the lightbox style and include it */
-			tve_enqueue_style_family( $lightbox_id );
-
 			tve_enqueue_custom_fonts( $lightbox_id, true );
 
 			/* output any css needed for the extra (imported) fonts */
@@ -167,6 +165,23 @@ if ( ! class_exists( 'TCB_Thrive_Lightbox' ) ) {
 
 			$lightbox_content = get_post_meta( $lightbox_id, 'tve_updated_post', true );
 			tve_parse_events( $lightbox_content );
+
+
+			$lightspeed_css = \TCB\Lightspeed\Css::get_instance( $lightbox_id );
+
+			if ( $lightspeed_css->should_load_optimized_styles() ) {
+				$optimized_styles = $lightspeed_css->get_optimized_styles();
+			}
+
+			TCB\Lightspeed\JS::get_instance( $lightbox_id )->load_modules();
+
+			if ( ! empty( $optimized_styles ) ) {
+				if ( wp_doing_ajax() ) {
+					$lightbox_content = $optimized_styles . $lightbox_content;
+				} else {
+					echo $optimized_styles;
+				}
+			}
 
 			$globals = tve_get_post_meta( $lightbox_id, 'tve_globals' );
 			if ( ! empty( $globals['js_sdk'] ) ) {

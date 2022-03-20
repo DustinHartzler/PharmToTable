@@ -173,6 +173,24 @@ class TCB_Style_Provider {
 			$data['@imports'] = array();
 		}
 
+		$media_query_order = array_flip( array(
+			'(min-width: 300px)',
+			'(max-width: 1023px)',
+			'(max-width: 767px)',
+		) );
+
+		/* Make sure the media queries are in the correct order */
+		uksort( $data['media'], static function ( $key1, $key2 ) use ( $media_query_order ) {
+			if ( ! isset( $media_query_order[ $key2 ] ) ) {
+				return 1;
+			}
+			if ( ! isset( $media_query_order[ $key1 ] ) ) {
+				return - 1;
+			}
+
+			return $media_query_order[ $key1 ] - $media_query_order[ $key2 ];
+		} );
+
 		if ( $return === 'string' ) {
 			$css = $include_fonts ? implode( "", $data['@imports'] ) : '';
 			foreach ( $data['media'] as $media => $css_str ) {

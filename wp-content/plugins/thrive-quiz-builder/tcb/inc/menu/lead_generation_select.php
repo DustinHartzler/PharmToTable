@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-lead_generation_select-component" class="tve-component" data-view="LeadGenerationSelect">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -34,16 +34,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="dropdown-content pt-0">
 				<div class="tve-lg-invalid-string pb-10 tcb-hidden">
 					<div class="info-text red">
-						<span><?php echo __( 'There are errors in your dropdown list values:', 'thrive-cb' ); ?>	</span>
+						<span><?php echo esc_html__( 'There are errors in your dropdown list values:', 'thrive-cb' ); ?>	</span>
 						<div class="flex row ml-15 mb-10 mt-10">
-							<span class="tve-lg-invalid-data tve-lg-invalid-label tcb-hidden"><?php echo __( 'Duplicate labels detected', 'thrive-cb' ); ?>	</span>
-							<span class="tve-lg-invalid-data tve-lg-invalid-value tcb-hidden"><?php echo __( 'Incorrect data on one or more rows', 'thrive-cb' ); ?></span>
+							<span class="tve-lg-invalid-data tve-lg-invalid-label tcb-hidden"><?php echo esc_html__( 'Duplicate labels detected', 'thrive-cb' ); ?>	</span>
+							<span class="tve-lg-invalid-data tve-lg-invalid-value tcb-hidden"><?php echo esc_html__( 'Incorrect data on one or more rows', 'thrive-cb' ); ?></span>
 						</div>
-						<span><?php echo __( 'Please resolve and update again', 'thrive-cb' ); ?>	</span>
+						<span><?php echo esc_html__( 'Please resolve and update again', 'thrive-cb' ); ?>	</span>
 					</div>
 				</div>
 				<div class="tve-control" data-view="MultipleOptions"></div>
-				<button class="tve-button blue long click" data-fn="buildOptionsFromInput"><?php echo __( 'Apply changes', 'thrive-cb' ); ?></button>
+				<button class="tve-button blue long click" data-fn="buildOptionsFromInput"><?php echo esc_html__( 'Apply changes', 'thrive-cb' ); ?></button>
 			</div>
 		</div>
 

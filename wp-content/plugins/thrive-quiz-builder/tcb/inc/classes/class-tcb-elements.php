@@ -236,7 +236,7 @@ class TCB_Elements {
 			do_action( 'admin_footer-widgets.php' );
 
 			$current_screen = $prev_screen;
-			$pagenow        = $prev_screen->id;
+			$pagenow        = $prev_screen === null ? 0 : $prev_screen->id;
 		}
 	}
 

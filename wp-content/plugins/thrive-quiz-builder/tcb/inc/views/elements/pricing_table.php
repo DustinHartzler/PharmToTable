@@ -19,35 +19,35 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 ?>
 <div class="thrv_wrapper thrv-pricing-table" data-ct="pricing_table-24177" data-ct-name="Default Pricing Table">
 	<div class="thrv_wrapper thrv-button-group tcb-no-clone tcb-no-delete tve_no_drag tcb-no-save tcb-permanently-hidden">
-		<div class="thrv_wrapper thrv-button-group-item tcb-active-state tcb-no-clone tcb-no-delete tve_no_drag tcb-no-title tcb-no-save" data-default="true" data-instance="<?php echo $instance_1; ?>">
+		<div class="thrv_wrapper thrv-button-group-item tcb-active-state tcb-no-clone tcb-no-delete tve_no_drag tcb-no-title tcb-no-save" data-default="true" data-instance="<?php echo esc_attr( $instance_1 ); ?>">
 			<a href="#" class="tcb-button-link">
 				<span class="tcb-button-texts"><span class="tcb-button-text thrv-inline-text">Instance 1</span></span>
 			</a>
 		</div>
 	</div>
-	<div class="tcb-flex-row tcb-pricing-table-box-container tcb--cols--3" data-instance="<?php echo $instance_1; ?>">
+	<div class="tcb-flex-row tcb-pricing-table-box-container tcb--cols--3" data-instance="<?php echo esc_attr( $instance_1 ); ?>">
 		<div class="tcb-flex-col" data-label="Basic">
 			<div class="tcb-col">
 				<div class="thrv_wrapper thrv_contentbox_shortcode thrv-content-box tcb-pt-cb-wrapper">
 					<div class="tve-content-box-background tcb-pt-card"></div>
 					<div class="tve-cb tcb-pt-card-content">
 						<div class="thrv_wrapper thrv_heading" data-tag="h6">
-							<h5 class="tcb-pt-card-title"><?php echo __( 'Basic', 'thrive-cb' ) ?></h5>
+							<h5 class="tcb-pt-card-title"><?php echo esc_html__( 'Basic', 'thrive-cb' ) ?></h5>
 						</div>
 						<div class="thrv_wrapper thrv_text_element tcb-pt-card-description">
 							<p>
-								<em><?php echo __( 'Simple, fast and effective flexible move', 'thrive-cb' ) ?></em>
+								<em><?php echo esc_html__( 'Simple, fast and effective flexible move', 'thrive-cb' ) ?></em>
 							</p>
 						</div>
 						<div class="tcb-pt-wrapper">
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-currency">
-								<p><?php echo __( '$', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '$', 'thrive-cb' ) ?></p>
 							</div>
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-value">
-								<p><?php echo __( '99.99', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '99.99', 'thrive-cb' ) ?></p>
 							</div>
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-period">
-								<p><?php echo __( '/mo', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '/mo', 'thrive-cb' ) ?></p>
 							</div>
 						</div>
 						<div class="thrv_wrapper thrv-styled_list" data-icon-code="icon-check">
@@ -58,7 +58,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Working time 24/7 all days', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Working time 24/7 all days', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -66,7 +66,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Free Tea & Coffee', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Free Tea & Coffee', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -74,7 +74,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Max 15 team members', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Max 15 team members', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -82,7 +82,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Superfast wifi', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Superfast wifi', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -90,13 +90,13 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Free Kitchen', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Free Kitchen', 'thrive-cb' ) ?></span>
 								</li>
 							</ul>
 						</div>
 						<div class="thrv_wrapper thrv-button tcb-pt-button">
 							<a href="#" class="tcb-button-link tcb-pt-button-link">
-								<span class="tcb-button-texts"><span class="tcb-button-text thrv-inline-text"><?php echo __( 'Book Now', 'thrive-cb' ) ?></span></span>
+								<span class="tcb-button-texts"><span class="tcb-button-text thrv-inline-text"><?php echo esc_html__( 'Book Now', 'thrive-cb' ) ?></span></span>
 							</a>
 						</div>
 					</div>
@@ -109,22 +109,22 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 					<div class="tve-content-box-background tcb-pt-card"></div>
 					<div class="tve-cb tcb-pt-card-content">
 						<div class="thrv_wrapper thrv_heading" data-tag="h6">
-							<h5 class="tcb-pt-card-title"><?php echo __( 'Fulltime', 'thrive-cb' ) ?></h5>
+							<h5 class="tcb-pt-card-title"><?php echo esc_html__( 'Fulltime', 'thrive-cb' ) ?></h5>
 						</div>
 						<div class="thrv_wrapper thrv_text_element tcb-pt-card-description">
 							<p>
-								<em><?php echo __( 'Creative working space, not noisy, fully equipped and convenient', 'thrive-cb' ) ?></em>
+								<em><?php echo esc_html__( 'Creative working space, not noisy, fully equipped and convenient', 'thrive-cb' ) ?></em>
 							</p>
 						</div>
 						<div class="tcb-pt-wrapper">
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-currency">
-								<p><?php echo __( '$', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '$', 'thrive-cb' ) ?></p>
 							</div>
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-value">
-								<p><?php echo __( '199.99', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '199.99', 'thrive-cb' ) ?></p>
 							</div>
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-period">
-								<p><?php echo __( '/mo', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '/mo', 'thrive-cb' ) ?></p>
 							</div>
 						</div>
 						<div class="thrv_wrapper thrv-styled_list" data-icon-code="icon-check">
@@ -135,7 +135,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Working time 24/7 all days', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Working time 24/7 all days', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -143,7 +143,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Free Tea & Coffee', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Free Tea & Coffee', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -151,7 +151,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Max 15 team members', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Max 15 team members', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -159,7 +159,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Superfast wifi', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Superfast wifi', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -167,7 +167,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( '1 free meeting room', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( '1 free meeting room', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -175,13 +175,13 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Free Kitchen', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Free Kitchen', 'thrive-cb' ) ?></span>
 								</li>
 							</ul>
 						</div>
 						<div class="thrv_wrapper thrv-button tcb-pt-button tcb-excluded-from-group-item">
 							<a href="#" class="tcb-button-link tcb-pt-button-link">
-								<span class="tcb-button-texts"><span class="tcb-button-text thrv-inline-text"><?php echo __( 'Book Now', 'thrive-cb' ) ?></span></span>
+								<span class="tcb-button-texts"><span class="tcb-button-text thrv-inline-text"><?php echo esc_html__( 'Book Now', 'thrive-cb' ) ?></span></span>
 							</a>
 						</div>
 					</div>
@@ -194,22 +194,22 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 					<div class="tve-content-box-background tcb-pt-card"></div>
 					<div class="tve-cb tcb-pt-card-content">
 						<div class="thrv_wrapper thrv_heading" data-tag="h5">
-							<h5 class="tcb-pt-card-title"><?php echo __( 'Private', 'thrive-cb' ) ?></h5>
+							<h5 class="tcb-pt-card-title"><?php echo esc_html__( 'Private', 'thrive-cb' ) ?></h5>
 						</div>
 						<div class="thrv_wrapper thrv_text_element tcb-pt-card-description">
 							<p>
-								<em><?php echo __( 'Simple, fast and effective flexible move', 'thrive-cb' ) ?></em>
+								<em><?php echo esc_html__( 'Simple, fast and effective flexible move', 'thrive-cb' ) ?></em>
 							</p>
 						</div>
 						<div class="tcb-pt-wrapper">
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-currency">
-								<p><?php echo __( '$', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '$', 'thrive-cb' ) ?></p>
 							</div>
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-value">
-								<p><?php echo __( '299.99', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '299.99', 'thrive-cb' ) ?></p>
 							</div>
 							<div class="thrv_wrapper thrv_text_element tcb-pt-price tcb-pt-period">
-								<p><?php echo __( '/mo', 'thrive-cb' ) ?></p>
+								<p><?php echo esc_html__( '/mo', 'thrive-cb' ) ?></p>
 							</div>
 						</div>
 						<div class="thrv_wrapper thrv-styled_list" data-icon-code="icon-check">
@@ -220,7 +220,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Working time 24/7 all days', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Working time 24/7 all days', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -228,7 +228,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Free Tea & Coffee', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Free Tea & Coffee', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -236,7 +236,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Max 15 team members', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Max 15 team members', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -244,7 +244,7 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Superfast wifi', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Superfast wifi', 'thrive-cb' ) ?></span>
 								</li>
 								<li class="thrv-styled-list-item">
 									<div class="tcb-styled-list-icon">
@@ -252,13 +252,13 @@ $svg_icon_check = '<svg class="tcb-icon" viewBox="0 0 32 32" data-name="check"><
 											<?php echo $svg_icon_check; ?>
 										</div>
 									</div>
-									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo __( 'Free Kitchen', 'thrive-cb' ) ?></span>
+									<span class="thrv-advanced-inline-text tve_editable tcb-styled-list-icon-text tcb-no-delete tcb-no-save"><?php echo esc_html__( 'Free Kitchen', 'thrive-cb' ) ?></span>
 								</li>
 							</ul>
 						</div>
 						<div class="thrv_wrapper thrv-button tcb-pt-button">
 							<a href="#" class="tcb-button-link tcb-pt-button-link">
-								<span class="tcb-button-texts"><span class="tcb-button-text thrv-inline-text"><?php echo __( 'Book Now', 'thrive-cb' ) ?></span></span>
+								<span class="tcb-button-texts"><span class="tcb-button-text thrv-inline-text"><?php echo esc_html__( 'Book Now', 'thrive-cb' ) ?></span></span>
 							</a>
 						</div>
 					</div>

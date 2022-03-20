@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-numberedlist-component" class="tve-component" data-view="NumberedList">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="item_spacing"></div>
 		<div class="tve-control" data-key="preview" data-initializer="list_preview_control"></div>
 		<div class="tve-button click whitey dashed" data-fn-click="add_list_item">
-			<?php echo __( 'Add new', 'thrive-cb' ); ?>
+			<?php echo esc_html__( 'Add new', 'thrive-cb' ); ?>
 		</div>
 	</div>
 </div>

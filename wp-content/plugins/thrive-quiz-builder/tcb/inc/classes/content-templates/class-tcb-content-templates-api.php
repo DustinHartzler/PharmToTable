@@ -49,7 +49,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			$args,
 			array(
 				'route'       => 'getAll',
-				'tar_version' => TVE_VERSION,
+				'tar_version' => defined( 'TCB_CLOUD_DEBUG' ) && TCB_CLOUD_DEBUG ? '10' : TVE_VERSION,
 				'type'        => $type,
 				'ct'          => md5( time() ),
 			)
@@ -153,6 +153,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			'v'           => (int) ( isset( $meta['v'] ) ? $meta['v'] : 0 ),
 			'config'      => isset( $meta['config'] ) ? $meta['config'] : array(),
 			'tve_globals' => isset( $meta['tve_globals'] ) ? $meta['tve_globals'] : array(),
+			'thumb'       => isset( $meta['thumb'] ) ? $meta['thumb'] : array(),
 		);
 
 		return apply_filters( 'tcb_alter_cloud_template_meta', $data, $meta, $do_shortcode );
@@ -257,6 +258,7 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 			'custom_css'  => $template_data['custom_css'],
 			'config'      => isset( $template_data['config'] ) ? $template_data['config'] : array(),
 			'tve_globals' => isset( $template_data['tve_globals'] ) ? $template_data['tve_globals'] : array(),
+			'thumb'       => isset( $template_data['thumb'] ) ? $template_data['thumb'] : array(),
 		), $template_data, $do_shortcode ) );
 
 		return $id;
@@ -323,15 +325,27 @@ class TCB_Content_Templates_Api extends TCB_Landing_Page_Cloud_Templates_Api {
 
 		$type = empty( $config['type'] ) ? '' : $config['type'] . '/';
 
-		$uri = trailingslashit( str_replace( array(
+		$baseurl = str_replace(
+			array(
 				'http://',
 				'https://',
-			), '//', $upload['baseurl'] ) ) . TVE_CLOUD_TEMPLATES_FOLDER . '/' . $type . 'images/';
+			),
+			'//',
+			$upload['baseurl']
+		);
 
-		$this->replace_images( $config['head_css'], $config['image_map'], $uri );
-		$this->replace_images( $config['content'], $config['image_map'], $uri );
+		$upload_url = trailingslashit( $baseurl ) . TVE_CLOUD_TEMPLATES_FOLDER . '/' . $type;
+
+		$images_uri = $upload_url . 'images/';
+
+		$this->replace_images( $config['head_css'], $config['image_map'], $images_uri );
+		$this->replace_images( $config['content'], $config['image_map'], $images_uri );
 
 		@unlink( $folder . 'data.json' );
+
+		if ( ! empty( $config['thumb']['url'] ) ) {
+			$config['thumb']['url'] = $upload_url . 'thumbnails/' . $config['thumb']['url'];
+		}
 
 		return $config;
 	}

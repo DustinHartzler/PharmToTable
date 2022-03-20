@@ -1,11 +1,11 @@
 <div data-id="<#=image.id#>"
-	 data-caption="<#=image.caption ? image.caption : ''#>"
+	 data-caption="<#=captionLinks && captionLinks[image.id] && captionLinks[image.id].text ? captionLinks[image.id].text : image.caption || ''#>"
 	 data-position="<#=imageObj.getImagePosition(image)#>"
 	 data-index="<#=index#>" class="thrv_wrapper tve_image_caption tve-draggable tve-droppable <#=captionSettings.position ? captionSettings.position.classes : ''#> <#=image.styleClass#>"
 	 draggable="true">
 	<span class="tve_image_frame">
-	<#if(imageLinks.length && imageLinks[index] && imageLinks[index].hasLink){#>
-	<a href="<#=imageLinks[index].href#>" target="<#=imageLinks[index].target#>" rel="<#=imageLinks[index].rel#>">
+	<#if(imageLinks && imageLinks[image.id] && imageLinks[image.id].hasLink){#>
+	<a href="<#=imageLinks[image.id].href#>" target="<#=imageLinks[image.id].target#>" rel="<#=imageLinks[image.id].rel#>">
 	<# } #>
 		<img class="tve_image wp-image-<#=image.id#>"
 			 alt="<#=image.alt#>"
@@ -17,7 +17,7 @@
 			 data-src="<#=image.sizes && image.sizes[imageObj.getFullwidthSize()] ? image.sizes[imageObj.getFullwidthSize()].url : image.url#>"
 			 loading="lazy"
 			 draggable="false">
-	<#if(imageLinks.length && imageLinks[index] && imageLinks[index].hasLink){#>
+	<#if(imageLinks && imageLinks[image.id] && imageLinks[image.id].hasLink){#>
 	</a>
 	<# } #>
 	</span>
@@ -26,11 +26,11 @@
 	<#= captionSettings.position ? captionSettings.position.attr : '' #>
 	<#= captionSettings.alignment ? captionSettings.alignment.attr : '' #>
 	>
-	<#if(captionLinks.length && captionLinks[index] && captionLinks[index].hasLink){#>
-	<a href="<#=captionLinks[index].href#>" target="<#=captionLinks[index].target#>" rel="<#=captionLinks[index].rel#>">
+	<#if(captionLinks && captionLinks[image.id] && captionLinks[image.id].hasLink){#>
+	<a href="<#=captionLinks[image.id].href#>" target="<#=captionLinks[image.id].target#>" rel="<#=captionLinks[image.id].rel#>">
 		<# } #>
-		<#=image.caption ? image.caption : '&nbsp;'#>
-		<#if(captionLinks.length && captionLinks[index] && captionLinks[index].hasLink){#>
+		<#=captionLinks && captionLinks[image.id] && captionLinks[image.id].text ? captionLinks[image.id].text : image.caption || '&nbsp;'#>
+		<#if(captionLinks && captionLinks[image.id] && captionLinks[image.id].hasLink){#>
 	</a>
 	<# } #>
 	</p>

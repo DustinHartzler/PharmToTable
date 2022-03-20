@@ -21,7 +21,7 @@ var TVD_SS = TVD_SS || {};
 		/* wrap the content so it behaves like a link */
 		if ( shortcodeData.key === 'thrv_dynamic_data_user' && userDataWithLink.includes( shortcodeData.extra_key ) ) {
 			var link = shortcodeData.configOptions.filter( opt => opt.key === 'link' )[ 0 ];
-			if ( link.value === '1' ) {
+			if ( link && link.value === '1' ) {
 				content = '<a href="#">' + content + '</a>'
 			}
 		}

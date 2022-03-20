@@ -21,6 +21,25 @@ class TQB_Results_Page extends TQB_Structure_Page {
 		);
 
 	/**
+	 * Holds allowed columns to be inserted in results_links
+	 *
+	 * @var array
+	 */
+	private $_allowed_fields = [
+		'type',
+		'lower_bound',
+		'upper_bound',
+		'quiz_id',
+		'page_id',
+		'post_id',
+		'result_id',
+		'date_added',
+		'date_modified',
+		'status',
+		'link',
+	];
+
+	/**
 	 * Set defaults metas for current post
 	 *
 	 * @return bool
@@ -193,7 +212,9 @@ class TQB_Results_Page extends TQB_Structure_Page {
 			$link['link'] = 'http://' . $link['link'];
 		}
 
-		$link['link'] = wp_sanitize_redirect( $link['link'] );
+		if ( ! empty( $link['link'] ) ) {
+			$link['link'] = wp_sanitize_redirect( $link['link'] );
+		}
 
 		unset( $link['post_title'] );
 		unset( $link['result_name'] );
@@ -203,7 +224,14 @@ class TQB_Results_Page extends TQB_Structure_Page {
 			$result                = $wpdb->update( $table_name, $link, array( 'id' => $link['id'] ) );
 		} else {
 			$link['date_added'] = date( 'Y-m-d H:i:s' );
-			$result             = $wpdb->insert( $table_name, $link );
+
+			foreach ( $link as $key => $field ) {
+				if ( ! in_array( $key, $this->_allowed_fields ) ) {
+					unset( $link[ $key ] );
+				}
+			}
+
+			$result = $wpdb->insert( $table_name, $link );
 		}
 
 		if ( false === $result ) {

@@ -261,57 +261,6 @@ function tve_get_cloud_template_config( $lp_template, $validate = true ) {
 }
 
 /**
- * main entry-point for Landing Pages stored in the cloud - get all, download etc
- */
-function tve_ajax_landing_page_cloud() {
-	if ( empty( $_POST['task'] ) ) {
-		$error = __( 'Invalid request', 'thrive-cb' );
-	}
-
-	if ( ! isset( $error ) ) {
-
-		/**
-		 * Post Constants - similar with tve_globals but do not depend on the Landing Page Key
-		 *
-		 * Usually stores flags for a particular post
-		 */
-		if ( ! empty( $_POST['tve_post_constants'] ) && is_array( $_POST['tve_post_constants'] ) && ! empty( $_POST['post_id'] ) ) {
-			update_post_meta( $_POST['post_id'], '_tve_post_constants', $_POST['tve_post_constants'] );
-		}
-
-		if ( isset( $_POST['header'] ) ) {
-			update_post_meta( $_POST['post_id'], '_tve_header', (int) $_POST['header'] );
-		}
-		if ( isset( $_POST['footer'] ) ) {
-			update_post_meta( $_POST['post_id'], '_tve_footer', (int) $_POST['footer'] );
-		}
-
-		try {
-			switch ( $_POST['task'] ) {
-				case 'download':
-					$template = isset( $_POST['template'] ) ? $_POST['template'] : '';
-					$post_id  = isset( $_POST['post_id'] ) ? $_POST['post_id'] : '';
-					if ( empty( $template ) ) {
-						throw new Exception( __( 'Invalid template', 'thrive-cb' ) );
-					}
-					TCB_Landing_Page::apply_cloud_template( $post_id, $template );
-
-					wp_send_json( array(
-						'success' => true,
-					) );
-			}
-		} catch ( Exception $e ) {
-			wp_send_json( array(
-				'success' => false,
-				'message' => $e->getMessage(),
-			) );
-		}
-	}
-
-	wp_die();
-}
-
-/**
  * check if a landing page template is originating from the cloud (has been downloaded previously)
  *
  * @param string $lp_template

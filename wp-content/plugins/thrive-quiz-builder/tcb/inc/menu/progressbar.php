@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -31,13 +31,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-progress-complete mb-5"></div>
 
 			<div class="tve-control-grid control-grid nodes">
-				<div class="label"><?php echo __( 'Nodes', 'thrive-cb' ); ?></div>
+				<div class="label"><?php echo esc_html__( 'Nodes', 'thrive-cb' ); ?></div>
 				<div class="full">
 					<a class="tcb-right click tve-lg-add-field" data-fn="addNode">
 						<i class="mr-5">
 							<?php tcb_icon( 'plus-regular' ); ?>
 						</i>
-						<?php echo __( 'Add', 'thrive-cb' ); ?>
+						<?php echo esc_html__( 'Add', 'thrive-cb' ); ?>
 					</a>
 				</div>
 			</div>
@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-advanced-controls extend-grey">
 				<div class="dropdown-header" data-prop="advanced">
 					<span>
-						<?php echo __( 'Advanced', 'thrive-cb' ); ?>
+						<?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?>
 					</span>
 				</div>
 				<div class="dropdown-content pt-0">
@@ -59,7 +59,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 					<div class="hide-dynamic">
 						<hr>
-						<div class="label mb-5 mt-5"><?php echo __( 'Hide progress bar when', 'thrive-cb' ); ?></div>
+						<div class="label mb-5 mt-5"><?php echo esc_html__( 'Hide progress bar when', 'thrive-cb' ); ?></div>
 						<div class="tve-control simple nodes" data-view="HideEmpty"></div>
 						<div class="tve-control simple nodes mb-5" data-view="HideFull"></div>
 					</div>

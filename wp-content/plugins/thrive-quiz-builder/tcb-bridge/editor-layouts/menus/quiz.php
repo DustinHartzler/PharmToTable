@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-quiz-component" class="tve-component" data-view="quiz">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Quiz Options', Thrive_Quiz_Builder::T ); ?>
+		<?php echo esc_html__( 'Quiz Options', Thrive_Quiz_Builder::T ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">

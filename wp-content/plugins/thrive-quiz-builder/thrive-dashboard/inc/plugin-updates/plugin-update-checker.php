@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Plugin Update Checker Library 1.3.2
  * http://w-shadow.com/
@@ -21,21 +30,25 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 	class TVE_PluginUpdateChecker_1_3_2 {
 		protected $secret_key = '@#$()%*%$^&*(#@$%@#$%93827456MASDFJIK3245';
 
-		public $metadataUrl = ''; //The URL of the plugin's metadata file.
+		public $metadataUrl        = ''; //The URL of the plugin's metadata file.
 		public $pluginAbsolutePath = ''; //Full path of the main plugin file.
-		public $pluginFile = '';  //Plugin filename relative to the plugins directory. Many WP APIs use this to identify plugins.
-		public $slug = '';        //Plugin slug.
-		public $checkPeriod = 12; //How often to check for updates (in hours).
-		public $optionName = '';  //Where to store the update info.
+		public $pluginFile         = '';  //Plugin filename relative to the plugins directory. Many WP APIs use this to identify plugins.
+		public $slug               = '';        //Plugin slug.
+		public $checkPeriod        = 12; //How often to check for updates (in hours).
+		public $optionName         = '';  //Where to store the update info.
 
 		public $debugMode = false; //Set to TRUE to enable error reporting. Errors are raised using trigger_error()
 		//and should be logged to the standard PHP error log.
 
-		private $cronHook = null;
-		private $debugBarPlugin = null;
+		private $cronHook               = null;
+		private $debugBarPlugin         = null;
 		private $cachedInstalledVersion = null;
-		private $php_version = 0;
-		private $required_php_version = '5.3.0';
+		private $php_version            = 0;
+		private $site_url               = null;
+		private $channel                = null;
+		private $ttw_id                 = 0;
+		private $required_php_version   = '5.3.0';
+		private $wp_version             = '';
 
 		protected $api_slug = '';
 
@@ -58,6 +71,10 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 			$this->debugMode          = defined( 'WP_DEBUG' ) && WP_DEBUG;
 			$this->api_slug           = $api_slug;
 			$this->php_version        = PHP_VERSION;
+			$this->site_url           = home_url();
+			$this->channel            = tvd_get_update_channel();
+			$this->ttw_id             = TD_TTW_Connection::get_instance()->is_connected() ? TD_TTW_Connection::get_instance()->ttw_id : 0;
+			$this->wp_version         = get_bloginfo( 'version' );
 
 			//If no slug is specified, use the name of the main plugin file as the slug.
 			//For example, 'my-cool-plugin/cool-plugin.php' becomes 'cool-plugin'.
@@ -156,7 +173,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 
 			$message = __( $plugin_data['Name'] . ' requires PHP version ' . $this->required_php_version . '. Your current version is ' . $this->php_version . '. Please contact your hosting provider and ask them to update your PHP.', TVE_DASH_TRANSLATE_DOMAIN );
 
-			echo sprintf( '<div class="error"><p>%s</p></div>', $message );
+			echo wp_kses_post( sprintf( '<div class="error"><p>%s</p></div>', $message ) );
 		}
 
 		/**
@@ -229,6 +246,10 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 			$options['body']                       = $queryArgs;
 			$options['body']['api_slug']           = $this->api_slug;
 			$options['body']['client_php_version'] = $this->php_version;
+			$options['body']['channel']            = $this->channel;
+			$options['body']['client_site_url']    = $this->site_url;
+			$options['body']['ttw_id']             = (string) $this->ttw_id;
+			$options['body']['wp_version']         = (string) $this->wp_version;
 			$url                                   = add_query_arg( array( 'p' => $this->calc_hash( $options['body'] ) ), $url );
 
 			$result = wp_remote_post(
@@ -249,7 +270,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 				} else {
 					$message .= "wp_remote_get() returned an unexpected result.";
 				}
-				trigger_error( $message, E_USER_WARNING );
+				trigger_error( esc_html( $message ), E_USER_WARNING );
 			}
 
 			$pluginInfo = apply_filters( 'puc_request_info_result-' . $this->slug, $pluginInfo, $result );
@@ -641,7 +662,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		 */
 		public function displayManualCheckResult() {
 			if ( isset( $_GET['puc_update_check_result'], $_GET['puc_slug'] ) && ( $_GET['puc_slug'] == $this->slug ) ) {
-				$status = strval( $_GET['puc_update_check_result'] );
+				$status = sanitize_text_field( $_GET['puc_update_check_result'] );
 				if ( $status == 'no_update' ) {
 					$message = 'This plugin is up to date.';
 				} else if ( $status == 'update_available' ) {
@@ -895,16 +916,16 @@ if ( ! class_exists( 'TVE_PluginUpdate_1_3', false ) ) {
 	 * @access    public
 	 */
 	class TVE_PluginUpdate_1_3 {
-		public $id = 0;
-		public $slug;
-		public $version;
-		public $homepage;
-		public $download_url;
-		public $upgrade_notice;
-		public $tested;
-		public $icons;
+		public         $id = 0;
+		public         $slug;
+		public         $version;
+		public         $homepage;
+		public         $download_url;
+		public         $upgrade_notice;
+		public         $tested;
+		public         $icons;
 		private static $fields
-			= array(
+		                   = array(
 				'id',
 				'slug',
 				'version',
@@ -1036,7 +1057,7 @@ if ( ! class_exists( 'TVE_PucFactory', false ) ) {
 	 */
 	class TVE_PucFactory {
 		protected static $classVersions = array();
-		protected static $sorted = false;
+		protected static $sorted        = false;
 
 		/**
 		 * Create a new instance of PluginUpdateChecker.

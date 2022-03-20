@@ -1,5 +1,5 @@
 <h4 class="tl-clickable tl-toggle-tab-display collapsed tvd-pointer" data-target="#tve-shortcode-list">
-	<?php echo __( 'Available Shortcodes', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+	<?php echo esc_html__( 'Available Shortcodes', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 </h4>
 <div class="tvd-relative">
 	<ul class="tvd-collection tvd-not-visible" id="tve-shortcode-list">
@@ -12,12 +12,12 @@
 				</div>
 				<div class="tve-shortcode-copy">
 					<a class="tve-copy-to-clipboard tve_editor_button tve_editor_button_blue" href="javascript:void(0)">
-						<span class="tve-copy-text"><?php echo __( 'Copy', TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
+						<span class="tve-copy-text"><?php echo esc_html__( 'Copy', TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
 					</a>
 				</div>
 				<div class="tvd-col tvd-s6">
 					<div class="tve-align-stupid-text">
-						<?php echo __( 'Displays the email of the person who opted in.', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+						<?php echo esc_html__( 'Displays the email of the person who opted in.', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 					</div>
 				</div>
 			</div>
@@ -31,12 +31,12 @@
 				</div>
 				<div class="tve-shortcode-copy">
 					<a class="tve-copy-to-clipboard tve_editor_button tve_editor_button_blue" href="javascript:void(0)">
-						<span class="tve-copy-text"><?php echo __( 'Copy', TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
+						<span class="tve-copy-text"><?php echo esc_html__( 'Copy', TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
 					</a>
 				</div>
 				<div class="tvd-col tvd-s6">
 					<div class="tve-align-stupid-text">
-						<?php echo __( 'Displays the name of the person who opted in.', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+						<?php echo esc_html__( 'Displays the name of the person who opted in.', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 					</div>
 				</div>
 			</div>

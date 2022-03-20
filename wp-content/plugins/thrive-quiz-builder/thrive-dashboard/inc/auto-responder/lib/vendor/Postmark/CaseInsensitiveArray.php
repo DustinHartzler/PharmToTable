@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * CaseInsensitiveArray allows accessing elements with mixed-case keys.
  *
  * This allows access to the array to be very forgiving. (i.e. If you access something

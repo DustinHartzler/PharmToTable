@@ -67,6 +67,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</g>
 	</svg>
 	<div class="tar-block-title"><h2 class="mb-10">Thrive Block</h2></div>
-	<div class="tar-new-block-description"><?php echo __( 'Currently this block has no content.', 'thrive-cb' ); ?></div>
-	<div class="tvo-new-block-description mb-10"><?php echo __( 'It will update once your block has been saved in Architect.', 'thrive-cb' ); ?></div>
+	<div class="tar-new-block-description"><?php echo esc_html__( 'Currently this block has no content.', 'thrive-cb' ); ?></div>
+	<div class="tvo-new-block-description mb-10"><?php echo esc_html__( 'It will update once your block has been saved in Architect.', 'thrive-cb' ); ?></div>
 </div>

@@ -20,7 +20,7 @@ class TGE_Ajax {
 	public static function add_ajax_events() {
 
 		$ajax_events = array(
-			'tge_admin_ajax_controller' => true,
+			'tge_admin_ajax_controller' => false,
 		);
 
 		foreach ( $ajax_events as $action => $nopriv ) {
@@ -45,6 +45,16 @@ class TGE_Ajax {
 	}
 
 	public static function tge_admin_ajax_controller() {
+		if ( empty( $_REQUEST['_nonce'] ) || ! wp_verify_nonce( $_REQUEST['_nonce'], self::AJAX_NONCE_NAME ) ) {
+			exit( 0 );
+		}
+		/**
+		 * User needs to have TQB capability to use the graph editor
+		 */
+		if ( ! TQB_Product::has_access() ) {
+			$this->error( __( 'You do not have this capability', Thrive_Quiz_Builder::T ) );
+		}
+
 		$response = TGE_Ajax_Controller::instance()->handle();
 
 		self::clear_cache();

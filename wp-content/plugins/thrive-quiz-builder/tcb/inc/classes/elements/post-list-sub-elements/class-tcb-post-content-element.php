@@ -14,7 +14,12 @@ class TCB_Post_Content_Element extends TCB_Post_List_Sub_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Post Content', 'thrive-cb' );
+		/**
+		 * Used In TA Visual Builder
+		 *
+		 * @param string $post_content
+		 */
+		return apply_filters( 'tcb_post_content_element_title', __( 'Post Content', 'thrive-cb' ) );
 	}
 
 	/**
@@ -42,6 +47,18 @@ class TCB_Post_Content_Element extends TCB_Post_List_Sub_Element_Abstract {
 	 */
 	public function shortcode() {
 		return 'tcb_post_content';
+	}
+
+	/**
+	 * Element category
+	 *
+	 * Calls a filter that allows other plugins to modify the category.
+	 * Used in Thrive Apprentice Plugin - Visual Builder
+	 *
+	 * @return string
+	 */
+	public function category() {
+		return apply_filters( 'tcb_post_content_element_category', parent::category() );
 	}
 
 	/**
@@ -75,7 +92,7 @@ class TCB_Post_Content_Element extends TCB_Post_List_Sub_Element_Abstract {
 		}
 
 		$components['typography']['config']['css_suffix'] = $elements;
-		$components['layout']['disabled_controls'] = [];
+		$components['layout']['disabled_controls']        = [];
 
 		$components['post_content'] = array(
 			'order'  => 1,
@@ -115,8 +132,8 @@ class TCB_Post_Content_Element extends TCB_Post_List_Sub_Element_Abstract {
 				),
 				'ReadMoreText' => array(
 					'config'  => array(
-						'label'       => __( 'Read More Text', 'thrive-cb' ),
-						'default'     => '...',
+						'label'   => __( 'Read More Text', 'thrive-cb' ),
+						'default' => '...',
 					),
 					'extends' => 'LabelInput',
 				),

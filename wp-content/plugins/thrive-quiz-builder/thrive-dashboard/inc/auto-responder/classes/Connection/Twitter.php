@@ -57,16 +57,21 @@ class Thrive_Dash_List_Connection_Twitter extends Thrive_Dash_List_Connection_Ab
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$access_token = ! empty( $_POST['access_token'] ) ? $_POST['access_token'] : '';
-		$token_secret = ! empty( $_POST['token_secret'] ) ? $_POST['token_secret'] : '';
-		$api_key      = ! empty( $_POST['api_key'] ) ? $_POST['api_key'] : '';
-		$api_secret   = ! empty( $_POST['api_secret'] ) ? $_POST['api_secret'] : '';
+		$access_token = ! empty( $_POST['access_token'] ) ? sanitize_text_field( $_POST['access_token'] ) : '';
+		$token_secret = ! empty( $_POST['token_secret'] ) ? sanitize_text_field( $_POST['token_secret'] ) : '';
+		$api_key      = ! empty( $_POST['api_key'] ) ? sanitize_text_field( $_POST['api_key'] ) : '';
+		$api_secret   = ! empty( $_POST['api_secret'] ) ? sanitize_text_field( $_POST['api_secret'] ) : '';
 
 		if ( empty( $access_token ) || empty( $token_secret ) || empty( $api_key ) || empty( $api_secret ) ) {
 			return $this->error( __( 'All fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST );
+		$this->setCredentials( array(
+			'access_token' => $access_token,
+			'token_secret' => $token_secret,
+			'api_key'      => $api_key,
+			'api_secret'   => $api_secret,
+		) );
 
 		$result = $this->testConnection();
 

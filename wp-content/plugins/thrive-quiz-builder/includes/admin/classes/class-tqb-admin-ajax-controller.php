@@ -53,7 +53,8 @@ class TQB_Admin_Ajax_Controller {
 	 * @param string $status  the error status.
 	 */
 	protected function error( $message, $status = '404 Not Found' ) {
-		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status );
+		$protocol = ! empty( $_SERVER['SERVER_PROTOCOL'] ) ? sanitize_text_field( $_SERVER['SERVER_PROTOCOL'] ) : 'HTTP/1.0';
+		header( $protocol . ' ' . $status );
 		echo esc_attr( $message );
 		wp_die();
 	}
@@ -67,7 +68,13 @@ class TQB_Admin_Ajax_Controller {
 	 * @return mixed|null|$default
 	 */
 	protected function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		if ( isset( $_POST[ $key ] ) ) {
+			$value = $_POST[ $key ]; //phpcs:ignore
+		} else {
+			$value = isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default; //phpcs:ignore
+		}
+
+		return map_deep( $value, 'sanitize_text_field' );
 	}
 
 	/**
@@ -82,6 +89,10 @@ class TQB_Admin_Ajax_Controller {
 		 */
 		if ( ! TQB_Product::has_access() ) {
 			$this->error( __( 'You do not have this capability', Thrive_Quiz_Builder::T ) );
+		}
+
+		if ( wp_verify_nonce( $this->param( '_nonce' ), Thrive_Quiz_Builder_Admin::NONCE_KEY_AJAX ) === false ) {
+			$this->error( __( 'This page has expired. Please reload and try again', Thrive_Quiz_Builder::T ), 403 );
 		}
 
 		$route = $this->param( 'route' );
@@ -104,7 +115,7 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function quiz_action() {
 
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		if ( ( $custom = $this->param( 'custom' ) ) ) {
 			switch ( $custom ) {
@@ -207,7 +218,7 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function style_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -237,7 +248,7 @@ class TQB_Admin_Ajax_Controller {
 	 * @return array
 	 */
 	protected function quizzes_action() {
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -289,7 +300,7 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function reporting_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -322,7 +333,7 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function usersreporting_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -349,7 +360,7 @@ class TQB_Admin_Ajax_Controller {
 	 * @return array
 	 */
 	protected function useranswers_action() {
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 		switch ( $method ) {
 			case 'POST':
 			case 'PUT':
@@ -378,7 +389,7 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function structure_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -412,7 +423,7 @@ class TQB_Admin_Ajax_Controller {
 
 	protected function structureitem_action() {
 
-		$model = ! empty( $_POST['model'] ) ? $_POST['model'] : array();
+		$model = ! empty( $_POST['model'] ) ? array_map( 'sanitize_text_field', $_POST['model'] ) : array();
 
 		/** @var TQB_Structure_Page $item */
 		$item = TQB_Structure_Manager::make_page( (int) $model['ID'] );
@@ -434,7 +445,7 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function type_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 		switch ( $method ) {
 			case 'POST':
 			case 'PUT':
@@ -486,13 +497,13 @@ class TQB_Admin_Ajax_Controller {
 	 * @return array|bool|null|WP_Post
 	 */
 	protected function page_action() {
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		if ( ( $custom = $this->param( 'custom_action' ) ) ) {
 			switch ( $custom ) {
 				case 'check_variations_content':
 					$page_id           = $this->param( 'ID', 0 );
-					$quiz_id           = intval( $_POST['quiz_id'] );
+					$quiz_id           = ! empty( $_POST['quiz_id'] ) ? ( int ) $_POST['quiz_id'] : 0;
 					$variation_manager = new TQB_Variation_Manager( $quiz_id, $page_id );
 					$page_variations   = $variation_manager->get_page_variations( array(
 						'post_status' => Thrive_Quiz_Builder::VARIATION_STATUS_PUBLISH,
@@ -508,7 +519,7 @@ class TQB_Admin_Ajax_Controller {
 					break;
 				case 'gdpr_user_consent':
 					$page_id = $this->param( 'ID', 0 );
-					$checked = intval( $_POST['checked'] );
+					$checked = isset( $_POST['checked'] ) ? (int) $_POST['checked'] : 0;
 
 					$return = array(
 						'ok'  => 0,
@@ -562,15 +573,16 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function variation_action() {
 		$model         = json_decode( file_get_contents( 'php://input' ), true );
-		$method        = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method        = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 		$custom_action = $this->param( 'custom_action' );
 
 		if ( ! empty( $custom_action ) ) {
 			switch ( $custom_action ) {
 				case 'clone_variation':
-					if ( $this->param( 'id', 0 ) == $_POST['id'] && ! empty( $_POST['id'] ) && ! empty( $_POST['quiz_id'] ) ) {
-						$manager                     = new TQB_Variation_Manager( $_POST['quiz_id'], $_POST['page_id'] );
-						$variation                   = $manager->clone_variation( $_POST );
+					$id = (int) $this->param( 'id', 0 );
+					if ( $id && ! empty( $_POST['quiz_id'] ) ) {
+						$manager                     = new TQB_Variation_Manager( absint( $_POST['quiz_id'] ), absint( $_POST['page_id'] ) ); // phpcs:ignore
+						$variation                   = $manager->clone_variation( $id );
 						$variation['tcb_editor_url'] = TQB_Variation_Manager::get_editor_url( $variation['page_id'], $variation['id'] );
 
 						return $variation;
@@ -590,7 +602,7 @@ class TQB_Admin_Ajax_Controller {
 				case 'generate_first_variation':
 					if ( ! empty( $_POST['quiz_id'] ) && is_numeric( $_POST['quiz_id'] ) && empty( $_POST['id'] ) ) {
 						$model     = $_POST;
-						$structure = new TQB_Structure_Manager( $_POST['quiz_id'] );
+						$structure = new TQB_Structure_Manager( absint( $_POST['quiz_id'] ) );
 						$model     = $structure->generate_first_variation( $model );
 
 						return $model;
@@ -730,7 +742,7 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function test_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -764,7 +776,7 @@ class TQB_Admin_Ajax_Controller {
 	 */
 	protected function testitem_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 		switch ( $method ) {
 			case 'POST':
 			case 'PUT':
@@ -804,8 +816,9 @@ class TQB_Admin_Ajax_Controller {
 	 * @return array
 	 */
 	protected function settings_action() {
-		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? $_SERVER['REQUEST_METHOD'] : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']; // TODO: Change this!
+		$model          = json_decode( file_get_contents( 'php://input' ), true );
+		$request_method = ! empty( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 'GET';
+		$method         = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? $request_method : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ); // TODO: Change this!
 		switch ( $method ) {
 			case 'POST':
 			case 'PUT':
@@ -870,8 +883,9 @@ class TQB_Admin_Ajax_Controller {
 	}
 
 	public function resultspage_action() {
-		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? $_SERVER['REQUEST_METHOD'] : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']; // TODO: Change this!
+		$model          = json_decode( file_get_contents( 'php://input' ), true );
+		$request_method = ! empty( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 'GET';
+		$method         = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? $request_method : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ); // TODO: Change this!
 		switch ( $method ) {
 			case 'POST':
 			case 'PUT':
@@ -977,10 +991,11 @@ class TQB_Admin_Ajax_Controller {
 
 	public function redirectlink_action() {
 
-		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? $_SERVER['REQUEST_METHOD'] : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']; // TODO: Change this!
+		$model          = json_decode( file_get_contents( 'php://input' ), true );
+		$request_method = ! empty( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( $_SERVER['REQUEST_METHOD'] ) : 'GET';
+		$method         = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? $request_method : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ); // TODO: Change this!
 
-		if ( ! empty( $_REQUEST['custom'] ) && $_REQUEST['custom'] === 'bulk_save' ) {
+		if ( ! empty( $_REQUEST['custom'] ) && sanitize_text_field( $_REQUEST['custom'] ) === 'bulk_save' ) {
 			foreach ( $model['links'] as $link ) {
 				TQB_Structure_Manager::make_page( $link['page_id'] )->save_link( $link );
 			}
@@ -1014,7 +1029,7 @@ class TQB_Admin_Ajax_Controller {
 
 		$response = array();
 		$status   = 400;
-		$quiz_id  = (int) sanitize_text_field( $_POST['quiz_id'] );
+		$quiz_id  = ! empty( $_POST['quiz_id'] ) ? absint( $_POST['quiz_id'] ) : 0;
 
 		$step_name = sanitize_text_field( ! empty( $_POST['step'] ) ? $_POST['step'] : '' );
 		$last_step = (int) sanitize_text_field( ! empty( $_POST['last_step'] ) ? $_POST['last_step'] : 0 ) === 1;

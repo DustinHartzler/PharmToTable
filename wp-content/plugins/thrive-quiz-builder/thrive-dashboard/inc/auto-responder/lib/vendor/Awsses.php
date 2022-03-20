@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  *
  * Copyright (c) 2014, Daniel Zahariev.
@@ -44,7 +53,7 @@
 /**
  * SimpleEmailService PHP class
  *
- * @link https://github.com/daniel-zahariev/php-aws-ses
+ * @link    https://github.com/daniel-zahariev/php-aws-ses
  * @package AmazonSimpleEmailService
  */
 class Thrive_Dash_Api_Awsses {
@@ -53,7 +62,7 @@ class Thrive_Dash_Api_Awsses {
 	 */
 	const AWS_US_EAST_1 = 'email.us-east-1.amazonaws.com';
 	const AWS_US_WEST_2 = 'email.us-west-2.amazonaws.com';
-	const AWS_EU_WEST1 = 'email.eu-west-1.amazonaws.com';
+	const AWS_EU_WEST1  = 'email.eu-west-1.amazonaws.com';
 
 	protected $__accessKey; // AWS Access key
 	protected $__secretKey; // AWS Secret key
@@ -97,9 +106,9 @@ class Thrive_Dash_Api_Awsses {
 	/**
 	 * Constructor
 	 *
-	 * @param string $accessKey Access key
-	 * @param string $secretKey Secret key
-	 * @param string $host Amazon Host through which to send the emails
+	 * @param string  $accessKey      Access key
+	 * @param string  $secretKey      Secret key
+	 * @param string  $host           Amazon Host through which to send the emails
 	 * @param boolean $trigger_errors Trigger PHP errors when AWS SES API returns an error
 	 *
 	 * @return void
@@ -109,12 +118,13 @@ class Thrive_Dash_Api_Awsses {
 			$this->setAuth( $accessKey, $secretKey );
 		}
 		$this->__host           = $host;
-		$this->_short_host           = $this->getShortServer( $host );
+		$this->_short_host      = $this->getShortServer( $host );
 		$this->__trigger_errors = $trigger_errors;
 	}
 
 	public function getShortServer( $host ) {
-		$tag = str_replace('.amazonaws.com','', str_replace('email.', '', $host));
+		$tag = str_replace( '.amazonaws.com', '', str_replace( 'email.', '', $host ) );
+
 		return $tag;
 	}
 
@@ -306,9 +316,9 @@ class Thrive_Dash_Api_Awsses {
 	/**
 	 * Given a SimpleEmailServiceMessage object, submits the message to the service for sending.
 	 *
-	 * @param Thrive_Dash_Api_Awsses_SimpleEmailServiceMessage $sesMessage An instance of the message class
-	 * @param boolean $use_raw_request If this is true or there are attachments to the email `SendRawEmail` call will be used
-	 * @param boolean $trigger_error Optionally overwrite the class setting for triggering an error (with type check to true/false)
+	 * @param Thrive_Dash_Api_Awsses_SimpleEmailServiceMessage $sesMessage      An instance of the message class
+	 * @param boolean                                          $use_raw_request If this is true or there are attachments to the email `SendRawEmail` call will be used
+	 * @param boolean                                          $trigger_error   Optionally overwrite the class setting for triggering an error (with type check to true/false)
 	 *
 	 * @return array An array containing the unique identifier for this message and a separate request id.
 	 *         Returns false if the provided message is missing any required fields.
@@ -390,9 +400,11 @@ class Thrive_Dash_Api_Awsses {
 
 		$rest = $rest->getResponse();
 
-		$response = json_decode( $rest['body'] );
+		$response = json_decode( wp_remote_retrieve_body( $rest ) );
 
-		if ( $rest['response']['code'] !== 200 ) {
+		if ( is_wp_error( $rest ) ) {
+			throw new Thrive_Dash_Api_Awsses_Exception( $rest->get_error_message() );
+		} elseif ( $rest['response']['code'] !== 200 ) {
 			throw new Thrive_Dash_Api_Awsses_Exception( $response->Error->Message );
 		}
 
@@ -403,8 +415,8 @@ class Thrive_Dash_Api_Awsses {
 	 * Trigger an error message
 	 *
 	 * {@internal Used by member functions to output errors}
-	 * @param  string $functionname The name of the function that failed
-	 * @param array $error Array containing error information
+	 * @param string $functionname The name of the function that failed
+	 * @param array  $error        Array containing error information
 	 *
 	 * @return  void
 	 */

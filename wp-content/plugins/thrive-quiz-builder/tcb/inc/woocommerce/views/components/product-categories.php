@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-product-categories-component" class="tve-component" data-view="ProductCategories">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Category List Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Category List Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
 		<div class="center-xs col-xs-12 mb-10 product-cat-edit-mode-hidden">
 			<button class="tve-button orange click" data-fn="editProductCategories">
-				<?php echo __( 'Edit Design', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Edit Design', 'thrive-cb' ); ?>
 			</button>
 		</div>
 		<div class="hide-tablet hide-mobile">
@@ -48,13 +48,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-advanced-controls product-cat-edit-mode-hidden">
 				<div class="dropdown-header" data-prop="advanced">
 				<span class="mb-5">
-					<?php echo __( 'Filter categories', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Filter categories', 'thrive-cb' ); ?>
 				</span>
 				</div>
 				<div class="dropdown-content pt-0">
 					<div class="ids-container mb-5">
-						<label for="tcb-woo-category-ids-select">
-							<?php echo __( 'Show individual categories', 'thrive-cb' ); ?>
+						<label for="tcb-woo-product-category-select">
+							<?php echo esc_html__( 'Show individual categories', 'thrive-cb' ); ?>
 						</label>
 						<select id="tcb-woo-product-category-select" class="tcb-woo-select"></select>
 					</div>

@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="dropdown-content">
 		<div class="no-api tcb-text-center mb-10 mr-5 ml-5">
 			<button class="tve-button orange click" data-fn="enterEditMode">
-				<?php echo __( 'Edit File Upload', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Edit File Upload', 'thrive-cb' ); ?>
 			</button>
 		</div>
 		<hr class="mt-10 mb-10">

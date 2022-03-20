@@ -9,4 +9,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-echo TCB\Integrations\WooCommerce\Shortcodes\MiniCart\Main::render();
+echo TCB\Integrations\WooCommerce\Shortcodes\MiniCart\Main::render(); // phpcs:ignore

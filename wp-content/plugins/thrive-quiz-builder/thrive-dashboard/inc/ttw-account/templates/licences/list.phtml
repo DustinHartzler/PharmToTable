@@ -19,9 +19,9 @@
 
 			<div class="td-rcnt">
 				<?php if ( ! $license->is_refunded() && ! empty( $license->get_expiration() ) ) : ?>
-					<span><?php echo __( 'Renewal date- ', TVE_DASH_TRANSLATE_DOMAIN ) . $license->get_expiration(); ?></span>
+					<span><?php echo __( 'Renewal date - ', TVE_DASH_TRANSLATE_DOMAIN ) . $license->get_expiration(); ?></span>
 				<?php elseif ( ! empty( $license->get_refunded_date() ) ) : ?>
-					<span><?php echo __( 'Refund date- ', TVE_DASH_TRANSLATE_DOMAIN ) . $license->get_refunded_date(); ?></span>
+					<span><?php echo __( 'Refund date - ', TVE_DASH_TRANSLATE_DOMAIN ) . $license->get_refunded_date(); ?></span>
 				<?php endif; ?>
 			</div>
 

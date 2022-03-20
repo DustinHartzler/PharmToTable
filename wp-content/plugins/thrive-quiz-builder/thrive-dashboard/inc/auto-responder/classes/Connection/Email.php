@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Thrive Themes - https://thrivethemes.com
  */
@@ -272,6 +281,7 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 	 */
 	public function get_email_fields( $message, $args, $time ) {
 		$has_shortcode = strpos( $args['email_message'], '[ form_fields ]' );
+		$labels        = ! empty( $args['tve_labels'] ) ? thrive_safe_unserialize( base64_decode( $args['tve_labels'] ) ) : array();
 		if ( strpos( $message, '[all_form_fields]' ) !== false ) {
 			$has_shortcode = true;
 		}
@@ -282,7 +292,7 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 
 		$html = ob_get_clean();
 
-		$html = $html . $this->generate_custom_fields_html( $args );
+		$html = $html . $this->generate_custom_fields_html( $args, $labels );
 		$html = preg_replace( "/[\r\n]+/", "", $html );
 
 		return $html;
@@ -296,8 +306,15 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 	 * @return array
 	 */
 	private function _get_custom_fields( $args ) {
-		$mapping         = unserialize( base64_decode( $args['tve_mapping'] ) );
-		$apis            = Thrive_Dash_List_Manager::getAvailableAPIsByType( true, array( 'email', 'other' ) );
+
+		if ( empty( $args['tve_mapping'] ) ) {
+			$mapping = array();
+		} else {
+			$mapping = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
+		}
+
+		$apis = Thrive_Dash_List_Manager::getAvailableAPIsByType( true, array( 'email', 'other' ) );
+
 		$custom_fields   = array();
 		$excluded_fields = array( 'name', 'email', 'phone' );
 
@@ -328,20 +345,19 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 	 * Generate the html for custom fields added in lg
 	 *
 	 * @param array $args
+	 * @param array $labels
 	 *
 	 * @return string
 	 */
-	public function generate_custom_fields_html( $args ) {
+	public function generate_custom_fields_html( $args, $labels ) {
 
-		$html   = '';
-		$labels = ! empty( $args['tve_labels'] ) ? unserialize( base64_decode( $args['tve_labels'] ) ) : array();
+		$html = '';
 
 		foreach ( $this->_get_custom_fields( $args ) as $field ) {
 			$label = ! empty( $labels[ $field ] ) ? sanitize_text_field( $labels[ $field ] ) : __( 'Extra Data', TVE_DASH_TRANSLATE_DOMAIN );
 
 			if ( strpos( $field, 'textarea' ) !== false ) { /* preserve textarea formatting */
 				$value = ! empty( $args[ $field ] ) ? sanitize_textarea_field( $args[ $field ] ) : '';
-				$value = str_replace( ' ', '&nbsp;', $value );
 			} else {
 				$field = str_replace( '[]', '', $field );
 				if ( ! empty( $args[ $field ] ) ) {
@@ -406,7 +422,7 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 			$time,
 			$args['url'],
 			tve_dash_get_ip(),
-			htmlspecialchars( $_SERVER['HTTP_USER_AGENT'] ),
+			htmlspecialchars( isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : '' ),
 		);
 
 		/**

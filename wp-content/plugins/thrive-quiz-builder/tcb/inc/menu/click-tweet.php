@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="borders-options action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-control pb-5" data-view="ShareUrlCheckbox"></div>
 			<div class="tve-control label-hidden" data-view="ShareUrlInput"></div>
 			<div class="tcb-text-right">
-				<button class="tve-button click blue" data-fn="preview"><?php echo __( 'Preview', 'thrive-cb' ); ?></button>
+				<button class="tve-button click blue" data-fn="preview"><?php echo esc_html__( 'Preview', 'thrive-cb' ); ?></button>
 			</div>
 		</div>
 	</div>

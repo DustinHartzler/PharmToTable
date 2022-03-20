@@ -54,13 +54,13 @@ class Thrive_Dash_List_Connection_SendGrid extends Thrive_Dash_List_Connection_A
 	 */
 	public function readCredentials() {
 
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid SendGrid key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( map_deep( $_POST['connection'], 'sanitize_text_field' ) );
 
 		$result = $this->testConnection();
 

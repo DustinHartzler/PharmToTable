@@ -41,8 +41,12 @@ class TQB_Export_Step_Badge extends TQB_Export_Step_Abstract {
 			/** @var WP_Filesystem_Direct $wp_filesystem */
 			global $wp_filesystem, $wpdb;
 
-			$img_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid=%s", $badge_url ) );
-
+			$cache_key = md5( $badge_url );
+			$img_id    = wp_cache_get( $cache_key, 'TQB' );
+			if ( ! $img_id ) {
+				$img_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid=%s", $badge_url ) );
+				wp_cache_set( $cache_key, $img_id, 'TQB', DAY_IN_SECONDS );
+			}
 			if ( $img_id ) {
 				$img_path = realpath( get_attached_file( $img_id ) );
 

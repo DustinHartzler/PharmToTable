@@ -277,7 +277,14 @@ class TD_TTW_Update_Manager {
 		/**  @var TD_TTW_User_Licenses $licenses */
 		$licenses = TD_TTW_User_Licenses::get_instance();
 
-		return $licenses->has_membership() && $licenses->get_membership()->can_update();
+		/**
+		 * We will always allow updates for single product licenses
+		 */
+		if ( ! empty( $licenses->get() ) && ! $licenses->has_membership() ) {
+			return true;
+		}
+
+		return $licenses->get_membership()->can_update();
 	}
 
 	/**
@@ -368,9 +375,9 @@ class TD_TTW_Update_Manager {
 			return;
 		}
 
-		if ( ! empty( $_REQUEST['url'] ) && ! empty( $_REQUEST['td_action'] ) && $_REQUEST['td_action'] === 'set_url' ) {
+		if ( ! empty( $_REQUEST['url'] ) && ! empty( $_REQUEST['td_action'] ) && sanitize_text_field( $_REQUEST['td_action'] ) === 'set_url' ) {
 
-			update_option( 'tpm_ttw_url', $_REQUEST['url'] );
+			update_option( 'tpm_ttw_url', sanitize_text_field( $_REQUEST['url'] ) );
 
 			wp_redirect( $this->get_admin_url() );
 			die;

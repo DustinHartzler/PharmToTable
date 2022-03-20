@@ -1,5 +1,5 @@
 <div style="margin: 20px auto; width: 911px">
-	<button id="transient_remove" class="button button-primary"><?php echo __( 'Remove all transients', TVE_DASH_TRANSLATE_DOMAIN ); ?></button>
+	<button id="transient_remove" class="button button-primary"><?php echo esc_html__( 'Remove all transients', TVE_DASH_TRANSLATE_DOMAIN ); ?></button>
 
 	<hr>
 

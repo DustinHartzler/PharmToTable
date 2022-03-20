@@ -112,7 +112,7 @@ function tve_get_event_actions( $scope = '' ) {
  * @return TCB_Event_Action_Abstract[] with action_key => Action Name (Action name will be taken from the class representing the Action)
  */
 function tve_get_event_actions_old( $scope = '' ) {
-	$post_id           = empty( $_POST['post_id'] ) ? get_the_ID() : $_POST['post_id'];
+	$post_id           = empty( $_POST['post_id'] ) ? get_the_ID() : absint( $_POST['post_id'] );
 	$tcb_event_actions = array(
 		''     => array(
 			'thrive_lightbox'  => array(

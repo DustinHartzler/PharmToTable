@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * The PostmarkAdminClient allows users to access and modify
  *  "Account-wide" settings. At this time the API supports
  *  management of the "Sender Signatures", and "Servers."

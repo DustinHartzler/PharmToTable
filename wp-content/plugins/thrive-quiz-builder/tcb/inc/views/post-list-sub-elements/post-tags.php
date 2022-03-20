@@ -18,9 +18,9 @@ if ( ! empty( $post ) ) {
 if ( empty( $tags ) ) {
 
 	if ( TCB_Editor()->is_inner_frame() || TCB_Utils::is_rest() ) {
-		echo __( 'No Tags', 'thrive-cb' );
+		echo esc_html__( 'No Tags', 'thrive-cb' );
 	} elseif ( ! empty( $data['default'] ) ) {
-		echo $data['default'];
+		echo esc_html( $data['default'] );
 	}
 
 } else {
@@ -46,5 +46,5 @@ if ( empty( $tags ) ) {
 			: TCB_Utils::wrap_content( $tag->name, 'a', '', '', $attrs );
 	}, $tags );
 
-	echo implode( ', ', $tags );
+	echo implode( ', ', $tags ); //phpcs:ignore
 }

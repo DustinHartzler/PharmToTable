@@ -89,7 +89,7 @@ class Main {
 		$post_type = get_post_type();
 
 		if ( empty( $post_type ) && is_admin() && isset( $_GET['post'] ) ) {
-			$post_type = get_post_type( $_GET['post'] );
+			$post_type = get_post_type( sanitize_text_field( $_GET['post'] ) );
 		}
 
 		return isset( $_GET[ Main::EDIT_FLAG ] ) || $post_type === Post_Type::NAME;

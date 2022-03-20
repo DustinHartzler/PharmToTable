@@ -7,6 +7,9 @@
 
 namespace TCB\Integrations\WooCommerce;
 
+use TCB\Lightspeed\JSModule;
+use TCB\Lightspeed\Woocommerce;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -81,7 +84,7 @@ class Main {
 		require_once $integration_path . 'classes/shortcodes/product-categories/class-main.php';
 		require_once $integration_path . 'classes/shortcodes/mini-cart/class-main.php';
 
-		require_once $integration_path . 'classes/class-widgets.php';
+		require_once $integration_path . 'classes/shortcodes/widgets/class-widgets.php';
 	}
 
 	/**
@@ -120,6 +123,15 @@ class Main {
 	 */
 	public static function active() {
 		return class_exists( 'WooCommerce', false );
+	}
+
+	/**
+	 * Enqueues woo scripts in the editor and in the frontend
+	 */
+	public static function enqueue_scripts() {
+		if ( self::needs_woo_enqueued() ) {
+			tve_enqueue_script( 'tve_woo', tve_editor_js( '/woo' . \TCB_Utils::get_js_suffix() ), [ 'jquery', 'tve_frontend' ], false, true );
+		}
 	}
 
 	/**
@@ -170,5 +182,38 @@ class Main {
 	 */
 	public static function is_woo_page() {
 		return static::active() && ( is_shop() || is_cart() || is_checkout() || is_account_page() );
+	}
+
+	/**
+	 * Checks if the woo scripts are needed on that page
+	 *
+	 * @return bool
+	 */
+	public static function needs_woo_enqueued() {
+		$id                   = get_the_ID();
+		$is_lp                = tve_post_is_landing_page( $id );
+		$woocommerce_disabled = \TCB\Lightspeed\Woocommerce::is_woocommerce_disabled( $is_lp );
+		$woocommerce_key      = $is_lp ? \TCB\Lightspeed\Woocommerce::DISABLE_WOOCOMMERCE_LP : \TCB\Lightspeed\Woocommerce::DISABLE_WOOCOMMERCE;
+
+		$woo_option = get_post_meta( $id, $woocommerce_key, true );
+
+		$needs_woocommerce = ( isset( $GLOBALS['optimized_advanced_assets'] ) ||
+		                       ! isset( $woo_option ) ||
+		                       ! empty( $woo_option ) ||
+		                       ! $woocommerce_disabled ||
+		                       ! empty( $_GET['force-all-js'] ) ||
+		                       is_editor_page_raw() || /* never optimize editor JS */
+		                       ! empty( get_post_meta( get_the_ID(), Woocommerce::WOO_MODULE_META_NAME, true ) ) ); /* make sure the meta is set */
+
+		return apply_filters( 'tcb_lightspeed_optimize_woo', $needs_woocommerce );
+	}
+
+	/**
+	 * Checks if cart pages are needed on that page
+	 *
+	 * @return bool
+	 */
+	public static function needs_woo_cart_enqueued() {
+		return is_cart() || self::needs_woo_enqueued();
 	}
 }

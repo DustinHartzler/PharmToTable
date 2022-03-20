@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-product-star-rating-component" class="tve-component" data-view="ProductStarRating">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Star Rating', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Star Rating', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">

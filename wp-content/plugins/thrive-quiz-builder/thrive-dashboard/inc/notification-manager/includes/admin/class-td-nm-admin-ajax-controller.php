@@ -56,7 +56,7 @@ class TD_NM_Admin_Ajax_Controller {
 	 * @return mixed|null|$default
 	 */
 	protected function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		return isset( $_POST[ $key ] ) ? map_deep( $_POST[ $key ], 'sanitize_text_field' ) : ( isset( $_REQUEST[ $key ] ) ? map_deep( $_REQUEST[ $key ], 'sanitize_text_field' ) : $default );
 	}
 
 	public function handle() {
@@ -78,7 +78,7 @@ class TD_NM_Admin_Ajax_Controller {
 
 	public function notification_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -108,7 +108,7 @@ class TD_NM_Admin_Ajax_Controller {
 	public function action_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
 		$model  = tve_sanitize_data_recursive( $model, 'sanitize_textarea_field' );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -163,7 +163,7 @@ class TD_NM_Admin_Ajax_Controller {
 
 	public function trigger_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -211,7 +211,7 @@ class TD_NM_Admin_Ajax_Controller {
 			$this->error( $saved );
 		}
 
-		update_option( 'tvd-nm-email-service', $_POST['api'] );
+		update_option( 'tvd-nm-email-service', $this->param( 'api' ) );
 
 		return $saved;
 	}

@@ -72,8 +72,9 @@
 			window.tar_trigger_viewport = trigger_elements;
 			window.tar_trigger_exit_viewport = trigger_exit;
 
-			var $to_test = $( '.tve_et_tve-viewport' );
+			let $to_test = $( '.tve_et_tve-viewport' );
 			$window.scroll( function () {
+				$to_test = $( '.tve_et_tve-viewport' );
 				trigger_elements( $to_test.filter( ':not(.tve-viewport-triggered)' ) );
 				trigger_exit( $to_test.filter( '.tve-viewport-triggered' ) );
 

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_Api_Mailgun_ExceptionMessages {
 	const EXCEPTION_INVALID_CREDENTIALS = "Your credentials are incorrect.";
 	const EXCEPTION_GENERIC_HTTP_ERROR = "An HTTP Error has occurred! Check your network connection and try again.";

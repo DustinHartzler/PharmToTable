@@ -26,6 +26,10 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 		public $post;
 
 		public function __construct( $post_id = null ) {
+			global $tve_post;
+			if ( empty( $post_id ) && ! empty( $tve_post ) ) {
+				$post_id = $tve_post->ID;
+			}
 			$this->post = get_post( $post_id );
 		}
 
@@ -280,7 +284,7 @@ if ( ! class_exists( 'TCB_Post' ) ) {
 		public function is_landing_page() {
 
 			$is_landing_page = $this->post instanceof WP_Post;
-			$is_landing_page = $is_landing_page && apply_filters( 'tve_allowed_post_type', true, $this->post->post_type );;
+			$is_landing_page = $is_landing_page && apply_filters( 'tve_allowed_post_type', true, $this->post->post_type );
 
 			if ( $is_landing_page ) {
 				$is_landing_page = $this->meta( 'tve_landing_page' );

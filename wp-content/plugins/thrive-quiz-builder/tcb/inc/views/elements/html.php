@@ -14,6 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="thrv_wrapper thrv_custom_html_shortcode tcb-elem-placeholder">
 	<span class="tcb-inline-placeholder-action with-icon">
 		<?php tcb_icon( 'custom_html', false, 'editor' ); ?>
-		<?php echo __( 'Insert Custom HTML', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Insert Custom HTML', 'thrive-cb' ); ?>
 	</span>
 </div>

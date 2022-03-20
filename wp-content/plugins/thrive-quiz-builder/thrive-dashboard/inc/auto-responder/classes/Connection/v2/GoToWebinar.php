@@ -1,9 +1,13 @@
 <?php
+
 /**
  * Thrive Themes - https://thrivethemes.com
  *
  * @package thrive-dashboard
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connection_Abstract {
 
@@ -81,17 +85,16 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 	 * @return mixed|Thrive_Dash_List_Connection_Abstract
 	 */
 	public function readCredentials() {
-
-		$email    = $_POST['gtw_email'];
-		$password = $_POST['gtw_password'];
-
-		if ( empty( $email ) || empty( $password ) ) {
+		if ( empty( $_POST['gtw_email'] ) || empty( $_POST['gtw_password'] ) ) {
 			return $this->error( __( 'Email and password are required', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
+		$email    = $this->post( 'gtw_email' );
+		$password = $this->post( 'gtw_password' );
+
 		$v = array(
-			'version'    => ! empty( $_POST['connection']['version'] ) ? $_POST['connection']['version'] : '',
-			'versioning' => ! empty( $_POST['connection']['versioning'] ) ? $_POST['connection']['versioning'] : '',
+			'version'    => ! empty( $_POST['connection']['version'] ) ? sanitize_text_field( $_POST['connection']['version'] ) : '',
+			'versioning' => ! empty( $_POST['connection']['versioning'] ) ? sanitize_text_field( $_POST['connection']['versioning'] ) : '',
 			'username'   => $email,
 			'password'   => $password,
 		);

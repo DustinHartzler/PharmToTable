@@ -28,6 +28,7 @@ function tcb_admin_get_localization() {
 			'symbols_terms'      => rest_url( sprintf( '%s/%s', 'wp/v2', TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY ) ),
 			'symbols_short_path' => TCB_Admin::TCB_REST_NAMESPACE . '/symbols',
 		),
+		'notifications'      => TCB\Notifications\Main::get_localized_data(),
 		'nonce'              => TCB_Utils::create_nonce(),
 		'symbols_tax'        => TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY,
 		'symbols_tax_terms'  => $tcb_symbol_taxonomy->get_symbols_tax_terms(),
@@ -103,5 +104,5 @@ function tcb_admin_icon( $icon, $return = false ) {
 		return $html;
 	}
 
-	echo $html;
+	echo $html; // phpcs:ignore
 }

@@ -11,4 +11,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 
-<h2 class="tcb-modal-title"><?php echo __( 'Choose Header', 'thrive-cb' ); ?></h2>
+<h2 class="tcb-modal-title"><?php echo esc_html__( 'Choose Header', 'thrive-cb' ); ?></h2>

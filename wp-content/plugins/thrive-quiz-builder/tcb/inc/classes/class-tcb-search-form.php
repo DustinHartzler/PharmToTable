@@ -34,7 +34,7 @@ class TCB_Search_Form {
 	 */
 	public function init_shortcode() {
 
-		add_shortcode( $this->shortcode_tag, function ( $attr, $content, $tag ) {
+		add_shortcode( $this->shortcode_tag, static function ( $attr ) {
 
 			/**
 			 * Type validation
@@ -51,7 +51,7 @@ class TCB_Search_Form {
 				$attr['post-types'] = json_decode( $attr['post-types'], true );
 			}
 
-			return TCB_Search_Form::render( $attr );
+			return static::render( $attr );
 		} );
 	}
 
@@ -72,7 +72,7 @@ class TCB_Search_Form {
 		// IF main query and search page
 		if ( $query->is_main_query() && $query->is_search() && isset( $_GET['tcb_sf_post_type'] ) ) {
 
-			$post_types = $_GET['tcb_sf_post_type'];
+			$post_types = map_deep( $_GET['tcb_sf_post_type'], 'sanitize_text_field' );
 
 			/**
 			 * Type validation

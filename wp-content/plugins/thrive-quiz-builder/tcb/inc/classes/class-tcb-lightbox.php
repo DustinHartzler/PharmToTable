@@ -7,7 +7,7 @@
  */
 class TCB_Lightbox extends TCB_Post {
 	public function get_html() {
-		if ( ! $this->post ) {
+		if ( ! $this->post || ( $this->post && $this->post->post_status === 'trash' ) ) {
 			return '';
 		}
 		$lightbox_id      = $this->post->ID;
@@ -128,7 +128,7 @@ class TCB_Lightbox extends TCB_Post {
 	 */
 	public function output_layout() {
 		if ( is_editor_page() ) {
-			tve_enqueue_style( 'tve_lightbox_post', tve_editor_css() . '/editor_lightbox.css' );
+			tve_enqueue_style( 'tve_lightbox_post', tve_editor_css( 'editor_lightbox.css' ) );
 		}
 
 		/**
@@ -142,7 +142,7 @@ class TCB_Lightbox extends TCB_Post {
 			wp_enqueue_style( 'tve_thesis_css', THESIS_USER_SKIN_URL . '/css.css' );
 		}
 
-		$landing_page_dir = plugin_dir_path( dirname( dirname( __FILE__ ) ) ) . 'landing-page';
+		$landing_page_dir = plugin_dir_path( dirname( __DIR__ ) ) . 'landing-page';
 
 		if ( $for_landing_page = $this->meta( 'tve_lp_lightbox' ) ) {
 			if ( tve_is_cloud_template( $for_landing_page ) ) {

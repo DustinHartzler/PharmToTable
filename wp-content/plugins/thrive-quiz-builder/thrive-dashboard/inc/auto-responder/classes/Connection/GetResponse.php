@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: radu
  * Date: 03.04.2015
@@ -40,19 +49,18 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$key     = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
-		$url     = ! empty( $_POST['connection']['url'] ) ? $_POST['connection']['url'] : '';
-		$version = ! empty( $_POST['connection']['version'] ) ? $_POST['connection']['version'] : '';
+		$connection = $this->post( 'connection' );
+		$version    = (string) ( isset( $connection['version'] ) ? $connection['version'] : '' );
 
-		if ( empty( $key ) ) {
+		if ( empty( $connection['key'] ) ) {
 			return $this->error( __( 'You must provide a valid GetResponse key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		if ( $version && $version == 3 && empty( $url ) ) {
+		if ( $version === '3' && empty( $connection['url'] ) ) {
 			return $this->error( __( 'You must provide a valid GetResponse V3 API URL', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $connection );
 
 		$result = $this->testConnection();
 
@@ -103,17 +111,18 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 	protected function _apiInstance() {
 		if ( ! $this->param( 'version' ) || $this->param( 'version' ) == 2 ) {
 			return new Thrive_Dash_Api_GetResponse( $this->param( 'key' ) );
-		} else {
-			$getresponse = new Thrive_Dash_Api_GetResponseV3( $this->param( 'key' ), $this->param( 'url' ) );
-
-			$enterprise_param = $this->param( 'enterprise' );
-			if ( ! empty( $enterprise_param ) ) {
-				$getresponse->enterprise_domain = $this->param( 'enterprise' );
-
-			}
-
-			return $getresponse;
 		}
+
+		$getresponse = new Thrive_Dash_Api_GetResponseV3( $this->param( 'key' ), $this->param( 'url' ) );
+
+		$enterprise_param = $this->param( 'enterprise' );
+		if ( ! empty( $enterprise_param ) ) {
+			$getresponse->enterprise_domain = $this->param( 'enterprise' );
+
+		}
+
+		return $getresponse;
+
 	}
 
 	/**
@@ -156,10 +165,43 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 	}
 
 	/**
+	 * delete a contact from the list
+	 *
+	 * @param string $email
+	 * @param array $arguments
+	 *
+	 * @return mixed
+	 */
+	public function deleteSubscriber( $email, $arguments = array() ) {
+		$api = $this->getApi();
+		if ( ! empty( $email ) ) {
+
+			$contacts = $api->searchContacts(
+				array(
+					'query' => array(
+						'email' => $email
+					),
+				)
+			);
+
+			if ( ! empty( $contacts ) ) {
+				foreach ( $contacts as $contact ) {
+					$api->deleteContact( $contact->contactId, array() );
+
+				}
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * add a contact to a list
 	 *
 	 * @param string $list_identifier
-	 * @param array $arguments
+	 * @param array  $arguments
 	 *
 	 * @return mixed
 	 */
@@ -169,8 +211,8 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 		$api         = $this->getApi();
 		$credentials = $this->getCredentials();
 
-		$return      = true;
-		$version     = empty( $credentials['version'] ) ? 2 : (int) $credentials['version'];
+		$return  = true;
+		$version = empty( $credentials['version'] ) ? 2 : (int) $credentials['version'];
 
 		try {
 			if ( 2 === $version ) {
@@ -178,12 +220,12 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 					$arguments['name'] = ' ';
 				}
 				/** @var Thrive_Dash_Api_GetResponse $api */
-				$api->addContact( $list_identifier, $arguments['name'], $arguments['email'], 'standard', (int) empty($arguments['get-response_cycleday'])? 0 : $arguments['get-response_cycleday'] );
+				$api->addContact( $list_identifier, $arguments['name'], $arguments['email'], 'standard', (int) empty( $arguments['get-response_cycleday'] ) ? 0 : $arguments['get-response_cycleday'] );
 			} else {
 
 				$params = array(
 					'email'      => $arguments['email'],
-					'dayOfCycle' => empty($arguments['get-response_cycleday'])? 0 : $arguments['get-response_cycleday'],
+					'dayOfCycle' => empty( $arguments['get-response_cycleday'] ) ? 0 : $arguments['get-response_cycleday'],
 					'campaign'   => array(
 						'campaignId' => $list_identifier,
 					),
@@ -214,8 +256,8 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 					 * this contact may be in other list but try to add it in the current on
 					 */
 					$api->addContact( $params );
+					return true;
 				} catch ( Exception $e ) {
-					return $e->getMessage();
 				}
 
 				/**
@@ -263,7 +305,7 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 			return array();
 		}
 
-		$form_data = unserialize( base64_decode( $args['tve_mapping'] ) );
+		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 
 		if ( is_array( $form_data ) ) {
 
@@ -526,17 +568,21 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 
 		foreach ( $api_fields as $field ) {
 			foreach ( $custom_fields as $key => $custom_field ) {
-				if (  $field['id'] == $key ) {
+				if ( $field['id'] == $key ) {
 
-					array_push($prepared_fields,array(
-							'customFieldId' =>  $field['id'],
-							'value'         => array( $custom_field ),
-						));
+					array_push( $prepared_fields, array(
+						'customFieldId' => $field['id'],
+						'value'         => array( $custom_field ),
+					) );
 				}
 			}
 		}
 
 		return $prepared_fields;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		return array( 'mailing_list' );
 	}
 }
 

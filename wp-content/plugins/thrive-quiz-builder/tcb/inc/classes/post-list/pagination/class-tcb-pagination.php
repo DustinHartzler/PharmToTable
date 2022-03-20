@@ -14,7 +14,7 @@ abstract class TCB_Pagination {
 
 	/* possible types for pagination */
 	const LOAD_MORE = 'load_more';
-	const NONE = 'none';
+	const NONE      = 'none';
 
 	public static $all_types = array( TCB_Pagination::NONE, 'numeric', TCB_Pagination::LOAD_MORE );
 

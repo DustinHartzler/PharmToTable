@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 data-hour="0"
 	 data-min="0"
 	 data-sec="0"
-	 data-id="<?php echo uniqid( 'evergreen_' ); ?>"
+	 data-id="<?php echo esc_attr( uniqid( 'evergreen_' ) ); ?>"
 	 data-expday="0"
 	 data-exphour="1"
 	 data-norestart="0">

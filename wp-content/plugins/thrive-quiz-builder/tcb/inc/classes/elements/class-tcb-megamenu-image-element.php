@@ -24,7 +24,7 @@ class TCB_Megamenu_Image_Element extends TCB_Image_Element {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.tcb-mega-drop .tcb-mm-image';
+		return '.tcb-mega-drop .tcb-mm-image,.tcb-mega-drop .tcb-mm-image.tcb-elem-placeholder';
 	}
 
 	/**
@@ -71,12 +71,26 @@ class TCB_Megamenu_Image_Element extends TCB_Image_Element {
 		);
 		$components['shadow']['config']['disabled_controls'] = array( 'text' );
 		$components['megamenu_image']['config']              = array(
-			'ImagePicker' => array(
+			'ImagePicker'    => array(
 				'config' => array(
 					'label' => __( 'Replace Image', 'thrive-cb' ),
 				),
 			),
-			'Height'      => array(
+			'ExternalFields' => array(
+				'config'  => array(
+					'main_dropdown'     => array(
+						''         => __( 'Select a source', 'thrive-cb' ),
+						'featured' => __( 'Featured image', 'thrive-cb' ),
+						'author'   => __( 'Author image', 'thrive-cb' ),
+						'user'     => __( 'User image', 'thrive-cb' ),
+						'custom'   => __( 'Custom fields', 'thrive-cb' ),
+					),
+					'key'               => 'image',
+					'shortcode_element' => 'img.tve_image',
+				),
+				'extends' => 'CustomFields',
+			),
+			'Height'         => array(
 				'config'  => array(
 					'default' => 'auto',
 					'min'     => '20',

@@ -13,6 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="thrv_wrapper thrv_ct_symbol tcb-elem-placeholder">
 	<span class="tcb-inline-placeholder-action with-icon">
 		<?php tcb_icon( 'add', false, 'editor' ); ?>
-		<?php echo __( 'Insert Content Template or Symbol', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Insert Content Template or Symbol', 'thrive-cb' ); ?>
 	</span>
 </div>

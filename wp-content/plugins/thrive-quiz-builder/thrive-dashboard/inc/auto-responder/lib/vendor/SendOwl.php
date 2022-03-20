@@ -69,7 +69,7 @@ class Thrive_Dash_Api_SendOwl {
 	/**
 	 * Prepare the call CRUD data
 	 *
-	 * @param array $params
+	 * @param array  $params which are sent in body
 	 * @param string $method
 	 *
 	 * @return array
@@ -81,9 +81,9 @@ class Thrive_Dash_Api_SendOwl {
 	}
 
 	/**
-	 * @param $method
-	 * @param $endpointUrl
-	 * @param null $body
+	 * @param       $method
+	 * @param       $endpointUrl
+	 * @param null  $body
 	 * @param array $headers
 	 *
 	 * @return mixed
@@ -167,8 +167,8 @@ class Thrive_Dash_Api_SendOwl {
 	/**
 	 * Prepare uri for request
 	 *
-	 * @param null $search_by
-	 * @param $endpoint
+	 * @param null  $search_by
+	 * @param       $endpoint
 	 * @param array $actions
 	 * @param array $params
 	 *
@@ -206,8 +206,8 @@ class Thrive_Dash_Api_SendOwl {
 	 *
 	 * @return array
 	 */
-	public function getDiscounts() {
-		return $this->call( array( 'endpoint' => 'discounts' ), 'GET' );
+	public function getDiscounts( $params = array() ) {
+		return $this->call( array( 'endpoint' => 'discounts', 'body' => $params ), 'GET' );
 	}
 
 	/**
@@ -298,7 +298,10 @@ class Thrive_Dash_Api_SendOwl {
 	 * @return array
 	 */
 	public function checkLicenseValidity( $product_id, $license ) {
-		$product_uri = $this->prepareRequestParams( $product_id, 'products', array( 'licenses', 'check_valid' ), array( 'key' => $license ) );
+		$product_uri = $this->prepareRequestParams( $product_id, 'products', array(
+			'licenses',
+			'check_valid'
+		), array( 'key' => $license ) );
 
 		return $this->call( array( 'endpoint' => $product_uri ), 'GET' );
 	}
@@ -354,7 +357,7 @@ class Thrive_Dash_Api_SendOwl {
 	/**
 	 * @return array
 	 */
-	public function getBundles($params = array()) {
+	public function getBundles( $params = array() ) {
 		return $this->call( array( 'endpoint' => 'packages', 'body' => $params ), 'GET' );
 	}
 

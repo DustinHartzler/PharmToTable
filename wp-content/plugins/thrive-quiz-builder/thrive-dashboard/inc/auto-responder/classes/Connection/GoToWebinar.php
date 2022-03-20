@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: radu
  * Date: 06.05.2015
@@ -84,16 +93,16 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$email    = $_POST['gtw_email'];
-		$password = $_POST['gtw_password'];
-
-		if ( empty( $email ) || empty( $password ) ) {
+		if ( empty( $_POST['gtw_email'] ) || empty( $_POST['gtw_password'] ) ) {
 			return $this->error( __( 'Email and password are required', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
+		$email    = sanitize_text_field( $_POST['gtw_email'] );
+		$password = sanitize_text_field( $_POST['gtw_password'] );
+
 		$v = array(
-			'version'    => ! empty( $_POST['connection']['version'] ) ? $_POST['connection']['version'] : '',
-			'versioning' => ! empty( $_POST['connection']['versioning'] ) ? $_POST['connection']['versioning'] : '',
+			'version'    => ! empty( $_POST['connection']['version'] ) ? sanitize_text_field( $_POST['connection']['version'] ) : '',
+			'versioning' => ! empty( $_POST['connection']['versioning'] ) ? sanitize_text_field( $_POST['connection']['versioning'] ) : '',
 		);
 
 		/** @var Thrive_Dash_Api_GoToWebinar $api */
@@ -302,7 +311,8 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 
 			$settings = array(
 				'version'       => $this->param( 'version' ),
-				'versioning'    => $this->param( 'versioning' ), // used on class instances from [/v1/, /v2/ etc] namespace folder
+				'versioning'    => $this->param( 'versioning' ),
+				// used on class instances from [/v1/, /v2/ etc] namespace folder
 				'expires_in'    => $this->param( 'expires_in' ),
 				'auth_type'     => $this->param( 'auth_type' ),
 				'refresh_token' => $this->param( 'refresh_token' ),
@@ -349,4 +359,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 
 	}
 
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
+	}
 }

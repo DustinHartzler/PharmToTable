@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -28,7 +37,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 	 */
 	public function readCredentials() {
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -281,7 +290,7 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 			return $mapped_data;
 		}
 
-		$form_data = unserialize( base64_decode( $args['tve_mapping'] ) );
+		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 
 		$mapped_fields = $this->getMappedFieldsIDs();
 
@@ -383,4 +392,9 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 
 		return $prepared_fields;
 	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
+	}
+
 }

@@ -11,15 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-contact_form-component" class="tve-component" data-view="ContactForm">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
 		<div class="control-grid">
-			<div class="label"><?php echo __( 'Form Fields', 'thrive-cb' ); ?></div>
+			<div class="label"><?php echo esc_html__( 'Form Fields', 'thrive-cb' ); ?></div>
 			<div class="full">
 				<button class="tcb-right tve-button blue click" id="tcb-add-contact-form-item" data-fn="add_cf_item">
-					<?php echo __( 'ADD NEW', 'thrive-cb' ) ?>
+					<?php echo esc_html__( 'ADD NEW', 'thrive-cb' ) ?>
 				</button>
 			</div>
 		</div>
@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-control mb-5" data-key="ZapierIp" data-view="Checkbox"></div>
 			<div class="tve-control" data-key="ZapierTags" data-view="LabelInput"></div>
 			<span class="info-text grey-text">
-				<?php echo __( 'Comma-separated lists of tags', 'thrive-cb' ) ?>
+				<?php echo esc_html__( 'Comma-separated lists of tags', 'thrive-cb' ) ?>
 			</span>
 		</div>
 		<div class="tve-cf-email-setup">
@@ -41,19 +41,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="control-grid">
 				<button class="blue button-link click" data-fn="manage_settings" style="font-size: 13px;">
 					<?php tcb_icon( 'envelope' ); ?>
-					<?php echo __( 'Email & after submit setup', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Email & after submit setup', 'thrive-cb' ); ?>
 				</button>
 			</div>
 		</div>
 		<div class="tve-advanced-controls extend-grey">
 			<div class="dropdown-header" data-prop="advanced">
 				<span>
-					<?php echo __( 'Advanced', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?>
 				</span>
 			</div>
 			<div class="dropdown-content pt-0">
 				<button class="tve-button blue long click" data-fn="manage_error_messages">
-					<?php echo __( 'Edit error messages', 'thrive-cb' ) ?>
+					<?php echo esc_html__( 'Edit error messages', 'thrive-cb' ) ?>
 				</button>
 			</div>
 		</div>

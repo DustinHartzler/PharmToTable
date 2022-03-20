@@ -8,7 +8,7 @@
 ?>
 <div id="tve-postgrid-layout-component" class="tve-component" data-view="PostGridLayout">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Layout', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Layout', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -17,7 +17,7 @@
 		<div class="tve-control" data-view="display"></div>
 		<div class="tve-control" data-view="text_type"></div>
 		<hr>
-		<span class="grey-text"><?php echo __( 'Teaser Layout', 'thrive-cb' ); ?></span>
+		<span class="grey-text"><?php echo esc_html__( 'Teaser Layout', 'thrive-cb' ); ?></span>
 		<div class="row">
 			<div class="col-xs-6">
 				<div class="tve-control" data-view="featured_image"></div>
@@ -33,14 +33,14 @@
 			</div>
 		</div>
 		<hr>
-		<span class="grey-text"><?php echo __( 'Display Order', 'thrive-cb' ); ?></span>
+		<span class="grey-text"><?php echo esc_html__( 'Display Order', 'thrive-cb' ); ?></span>
 		<div class="tve-control" data-key="preview" data-initializer="order_control"></div>
 	</div>
 </div>
 
 <div id="tve-postgrid-query-component" class="tve-component" data-view="PostGridQuery">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Query', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Query', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -49,7 +49,7 @@
 		<div class="tve-control" data-view="order_by"></div>
 		<div class="tve-control" data-view="order_mode"></div>
 		<div class="control-grid no-space">
-			<div class="label"><?php echo __( 'Show Items More recent than', 'thrive-cb' ); ?></div>
+			<div class="label"><?php echo esc_html__( 'Show Items More recent than', 'thrive-cb' ); ?></div>
 			<div class="tve-control input" data-view="recent_days"></div>
 		</div>
 		<div class="tve-control" data-view="start"></div>
@@ -58,7 +58,7 @@
 
 <div id="tve-postgrid-filter-component" class="tve-component" data-view="PostGridFilter">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Filters', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Filters', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">

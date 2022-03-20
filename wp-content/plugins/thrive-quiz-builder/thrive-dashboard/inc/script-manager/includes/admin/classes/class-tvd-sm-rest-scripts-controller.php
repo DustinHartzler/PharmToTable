@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class TVD_SM_REST_Scripts_Controller {
 
 	public $version = 1;

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -34,9 +43,9 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$url = ! empty( $_POST['connection']['url'] ) ? $_POST['connection']['url'] : '';
+		$url = ! empty( $_POST['connection']['url'] ) ? esc_url_raw( $_POST['connection']['url'] ) : '';
 
-		$lists = ! empty( $_POST['connection']['lists'] ) ? $_POST['connection']['lists'] : array();
+		$lists = ! empty( $_POST['connection']['lists'] ) ? map_deep( $_POST['connection']['lists'], 'sanitize_text_field' ) : array();
 		$lists = array_map( 'trim', $lists );
 		$lists = array_filter( $lists );
 
@@ -46,7 +55,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 
 		$_POST['connection']['lists'] = $lists;
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( map_deep( $_POST['connection'], 'sanitize_text_field' ) );
 
 		$result = $this->testConnection();
 

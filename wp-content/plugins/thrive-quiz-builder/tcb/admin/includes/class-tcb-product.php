@@ -53,8 +53,8 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 	public function __construct( $data = array() ) {
 		parent::__construct( $data );
 
-		$this->logoUrl      = tve_editor_css() . '/images/thrive-architect-logo.png';
-		$this->logoUrlWhite = tve_editor_css() . '/images/thrive-architect-logo-white.png';
+		$this->logoUrl      = tve_editor_css( 'images/thrive-architect-logo.png' );
+		$this->logoUrlWhite = tve_editor_css( 'images/thrive-architect-logo-white.png' );
 
 		$this->description = __( 'Create beautiful content & conversion optimized landing pages.', 'thrive-cb' );
 
@@ -77,7 +77,7 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 			'support'   => array(
 				'class'      => 'tve-leads-tutorials',
 				'icon_class' => 'tvd-icon-life-bouy',
-				'href'       => 'https://thrivethemes.com/forums/forum/plugins/thrive-architect/',
+				'href'       => 'https://thrivethemes.com/support/',
 				'target'     => '_blank',
 				'text'       => __( 'Support', 'thrive-cb' ),
 			),
@@ -96,6 +96,7 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 					'tcb_lightbox',
 					TCB_CT_POST_TYPE,
 					TCB_Symbols_Post_Type::SYMBOL_POST_TYPE,
+					\TCB\inc\helpers\FormSettings::POST_TYPE,
 				),
 				'fields'         => 'ids',
 				'posts_per_page' => '-1',
@@ -112,7 +113,6 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 			'tve_social_fb_app_id',
 			'tve_comments_disqus_shortname',
 			'tve_comments_facebook_admins',
-
 			'tve_fa_kit',
 			'tve_user_templates',
 		);

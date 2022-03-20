@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Created by PhpStorm.
  * User: Danut
@@ -47,12 +56,12 @@ class Tve_Dash_Font_Import_Manager {
 		$handler = new Tve_Dash_Font_Import_Manager_Data();
 
 		if ( ! empty( $_POST['attachment_id'] ) && $_POST['attachment_id'] != - 1 ) {
-			$maybe_zip_file = get_attached_file( $_POST['attachment_id'] );
-			$maybe_zip_url  = wp_get_attachment_url( $_POST['attachment_id'] );
+			$maybe_zip_file = get_attached_file( absint( $_POST['attachment_id'] ) );
+			$maybe_zip_url  = wp_get_attachment_url( absint( $_POST['attachment_id'] ) );
 
 			try {
 				$new_font_pack                  = $handler->processZip( $maybe_zip_file, $maybe_zip_url );
-				$new_font_pack['attachment_id'] = $_POST['attachment_id'];
+				$new_font_pack['attachment_id'] = absint( $_POST['attachment_id'] );
 
 				update_option( self::OPTION_NAME, $new_font_pack );
 
@@ -113,6 +122,7 @@ class Tve_Dash_Font_Import_Manager {
 		}
 
 		$css_file = str_replace( array( 'http:', 'https:' ), '', $font_pack['css_file'] );
+
 		return $css_file;
 	}
 

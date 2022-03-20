@@ -28,7 +28,7 @@ class Cart_Wrapper extends Abstract_Sub_Element {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.widget_shopping_cart_content';
+		return '.tcb-woo-mini-cart-content .widget_shopping_cart_content';
 	}
 
 	/**

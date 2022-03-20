@@ -50,8 +50,8 @@ class TIE_Ajax_Controller {
 	 * @param string $status  the error status.
 	 */
 	protected function error( $message, $status = '404 Not Found' ) {
-		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status );
-		wp_send_json_error( array( 'message' => $message ) );
+		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status ); //phpcs:ignore
+		wp_send_json_error( [ 'message' => $message ] );
 	}
 
 	/**
@@ -63,7 +63,13 @@ class TIE_Ajax_Controller {
 	 * @return mixed|null|$default
 	 */
 	protected function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		if ( isset( $_POST[ $key ] ) ) {
+			$value = $_POST[ $key ]; //phpcs:ignore
+		} else {
+			$value = isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default; //phpcs:ignore
+		}
+
+		return map_deep( $value, 'sanitize_text_field' );
 	}
 
 	/**
@@ -83,10 +89,10 @@ class TIE_Ajax_Controller {
 			$this->error( sprintf( __( 'Method %s not implemented', Thrive_Quiz_Builder::T ), $function ) );
 		}
 
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
 
-		return call_user_func( array( $this, $function ), $method, $model );
+		return call_user_func( [ $this, $function ], $method, $model );
 	}
 
 	protected function image_action( $method, $model ) {

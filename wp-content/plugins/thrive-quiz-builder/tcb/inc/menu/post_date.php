@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-post_date-component" class="tve-component" data-view="PostDate">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Post Date Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Post Date Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<div class="control-grid tcb-date-format-input">
 			<div class="tcb-label">
-				<?php echo __( 'Format String', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Format String', 'thrive-cb' ); ?>
 				<span class="click tcb-post-date-tooltip-icon" data-fn="openTooltip">
 					<?php tcb_icon( 'info-circle-solid' ); ?>
 				</span>
@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<div class="control-grid tcb-time-format-input">
 			<div class="tcb-label">
-				<?php echo __( 'Format String', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Format String', 'thrive-cb' ); ?>
 				<span class="click tcb-post-date-tooltip-icon" data-fn="openTooltip">
 					<?php tcb_icon( 'info-circle-solid' ); ?>
 				</span>

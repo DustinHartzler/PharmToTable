@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -34,8 +43,8 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 	 */
 	public function readCredentials() {
 
-		$key   = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
-		$email = ! empty( $_POST['connection']['domain'] ) ? $_POST['connection']['domain'] : '';
+		$key   = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$email = ! empty( $_POST['connection']['domain'] ) ? sanitize_text_field( $_POST['connection']['domain'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid SparkPost key', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -45,7 +54,7 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -71,7 +80,7 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 		$sparkpost = $this->getApi();
 
 		if ( isset( $_POST['connection']['domain'] ) ) {
-			$domain = $_POST['connection']['domain'];
+			$domain = sanitize_text_field( $_POST['connection']['domain'] );
 		} else {
 			$credentials = Thrive_Dash_List_Manager::credentials( 'sparkpost' );
 			if ( isset( $credentials ) ) {

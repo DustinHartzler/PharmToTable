@@ -117,34 +117,34 @@ class TCB_Lead_Generation_Select_Element extends TCB_Element_Abstract {
 						'config' => array(
 							'label'   => __( 'Choose dropdown style', 'thrive-cb' ),
 							'items'   => array(
-								'default' => array(
+								'default'  => array(
 									'label' => __( 'Default', 'thrive-cb' ),
 								),
-								'style-1' => array(
+								'style-1'  => array(
 									'label' => __( 'Style 1', 'thrive-cb' ),
 								),
-								'style-2' => array(
+								'style-2'  => array(
 									'label' => __( 'Style 2', 'thrive-cb' ),
 								),
-								'style-3' => array(
+								'style-3'  => array(
 									'label' => __( 'Style 3', 'thrive-cb' ),
 								),
-								'style-4' => array(
+								'style-4'  => array(
 									'label' => __( 'Style 4', 'thrive-cb' ),
 								),
-								'style-5' => array(
+								'style-5'  => array(
 									'label' => __( 'Style 5', 'thrive-cb' ),
 								),
-								'style-6' => array(
+								'style-6'  => array(
 									'label' => __( 'Style 6', 'thrive-cb' ),
 								),
-								'style-7' => array(
+								'style-7'  => array(
 									'label' => __( 'Style 7', 'thrive-cb' ),
 								),
-								'style-8' => array(
+								'style-8'  => array(
 									'label' => __( 'Style 8', 'thrive-cb' ),
 								),
-								'style-9' => array(
+								'style-9'  => array(
 									'label' => __( 'Style 9', 'thrive-cb' ),
 								),
 								'style-10' => array(
@@ -230,11 +230,7 @@ class TCB_Lead_Generation_Select_Element extends TCB_Element_Abstract {
 			'animation'              => array(
 				'hidden' => true,
 			),
-			'styles-templates'       => array(
-				'config' => array(
-					'to' => 'select',
-				),
-			),
+			'styles-templates'       => array(),
 			'responsive'             => array(
 				'hidden' => true,
 			),

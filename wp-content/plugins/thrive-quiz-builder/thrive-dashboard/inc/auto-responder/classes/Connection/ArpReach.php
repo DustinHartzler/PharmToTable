@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Danut
  * Date: 9/10/2015
@@ -9,6 +18,7 @@
 class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
 	public static function getType() {
@@ -37,11 +47,9 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 * on error, it should register an error message (and redirect?)
 	 */
 	public function readCredentials() {
-		$url = ! empty( $_POST['connection']['url'] ) ? $_POST['connection']['url'] : '';
-
-		$app_key = ! empty( $_POST['connection']['api_key'] ) ? $_POST['connection']['api_key'] : '';
-
-		$lists = ! empty( $_POST['connection']['lists'] ) ? $_POST['connection']['lists'] : array();
+		$url     = ! empty( $_POST['connection']['url'] ) ? sanitize_text_field( $_POST['connection']['url'] ) : '';
+		$app_key = ! empty( $_POST['connection']['api_key'] ) ? sanitize_text_field( $_POST['connection']['api_key'] ) : '';
+		$lists   = ! empty( $_POST['connection']['lists'] ) ? map_deep( $_POST['connection']['lists'], 'sanitize_text_field' ) : array();
 
 		$lists = array_filter( $lists );
 
@@ -53,9 +61,9 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 			return $this->error( __( 'Please provide at least one list for your subscribers', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$_POST['connection']['lists'] = $lists;
+		$credentials = array( 'lists' => $lists, 'api_key' => $app_key, 'url' => $url );
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $credentials );
 
 		if ( $this->testConnection() !== true ) {
 			return $this->error( __( "Invalid URL or API key", TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -170,9 +178,14 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 
 	/**
 	 * Return the connection email merge tag
+	 *
 	 * @return String
 	 */
 	public static function getEmailMergeTag() {
 		return '{EMAIL_ADDRESS}';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 }

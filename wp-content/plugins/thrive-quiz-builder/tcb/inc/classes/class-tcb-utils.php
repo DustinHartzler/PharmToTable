@@ -659,20 +659,25 @@ class TCB_Utils {
 			'weights'  => array(),
 			'query'    => array(),
 		);
-		$import = str_replace( array( '"', "'", '@import url(', ');' ), '', $import );
+		$import = str_replace( array( '"', "'", '@import url(', ')', ';' ), '', $import );
 
 		$result = parse_url( $import );
 		if ( $result ) {
 			$data['base_url'] = ( isset( $result['host'] ) ? 'https://' . $result['host'] : '' ) . $result['path'];
 
-			parse_str( $result['query'], $query );
-			list( $family, $weights ) = explode( ':', $query['family'] );
-			unset( $query['family'] );
+			if ( ! empty( $result['query'] ) ) {
+				parse_str( $result['query'], $query );
 
-			$data['family'] = $family;
-			/* hold weights as keys, so it's less expensive to get unique weights */
-			$data['weights'] = array_flip( array_filter( explode( ',', $weights ) ) );
-			$data['query']   = $query;
+				list( $family, $weights ) = explode( ':', $query['family'] );
+				unset( $query['family'] );
+
+				$data['family'] = $family;
+				/* hold weights as keys, so it's less expensive to get unique weights */
+				$data['weights'] = array_flip( array_filter( explode( ',', $weights ), function ( $weight ) {
+					return filter_var( $weight, FILTER_VALIDATE_INT );
+				} ) );
+				$data['query']   = $query;
+			}
 		}
 
 		return $data;
@@ -718,6 +723,40 @@ class TCB_Utils {
 	}
 
 	/**
+	 * Mark that we started processing custom CSS
+	 */
+	public static function before_custom_css_processing() {
+		$GLOBALS[ TVE_IS_PROCESSING_CUSTOM_CSS ] = true;
+	}
+
+	/**
+	 * Mark that we finished processing custom CSS
+	 */
+	public static function after_custom_css_processing() {
+		$GLOBALS[ TVE_IS_PROCESSING_CUSTOM_CSS ] = false;
+	}
+
+	/**
+	 * Check if we're currently processing CSS.
+	 * Useful in shortcode handlers in case you want to see if the shortcode is called from CSS or HTML.
+	 *
+	 * @return bool
+	 */
+	public static function is_processing_custom_css() {
+		return ! empty( $GLOBALS[ TVE_IS_PROCESSING_CUSTOM_CSS ] );
+	}
+
+	/**
+	 * If we're in a debug environment, we're not minifying JS files.
+	 * The constant should be defined in the wp-config.php file
+	 *
+	 * @return string
+	 */
+	public static function get_js_suffix() {
+		return tve_dash_is_debug_on() ? '.js' : '.min.js';
+	}
+
+	/**
 	 * Shortcut function that will output json encoded data or return it as it is based on the second parameter.
 	 *
 	 * @param mixed $data
@@ -731,5 +770,94 @@ class TCB_Utils {
 		} else {
 			return $data;
 		}
+	}
+
+	/**
+	 * Write file using wordpress functionality
+	 *
+	 * @param        $file
+	 * @param string $content
+	 * @param int    $mode
+	 *
+	 * @return boolean
+	 */
+	public static function write_file( $file, $content = '', $mode = 0644 ) {
+		require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
+		/* make sure that the FS_METHOD defaults to 'direct' so we use WP_Filesystem_direct in order to avoid the FTP implementations of put_contents */
+		defined( 'FS_METHOD' ) || define( 'FS_METHOD', 'direct' );
+
+		global $wp_filesystem;
+
+		return WP_Filesystem() && $wp_filesystem->put_contents( $file, $content, $mode );
+	}
+
+	/**
+	 * Restore some fields of the $_POST data that have been previously replaced from javascript
+	 * Wordfence blocks certain strings in POST - these are replaced from javascript before sending the ajax request to some equivalents
+	 * Currently, this method handles:
+	 * - <svg and </svg> ( these are replaced from javascript into <_wafsvg_ and </_wafsvg )
+	 */
+	public static function restore_post_waf_content() {
+		/**
+		 * Filter the list of fields that should be processed
+		 *
+		 * @param array $field_list
+		 */
+		$field_list = apply_filters( 'tcb_waf_fields_restore', [
+			'template',
+			'template_content',
+			'tve_content',
+			'tve_stripped_content',
+			'symbol_content',
+		] );
+		/* map of search_string => replace_string */
+		$replace_map = [
+			'_wafsvg_' => 'svg',
+		];
+		$search      = array_keys( $replace_map );
+		$replace     = array_values( $replace_map );
+
+		foreach ( $field_list as $field ) {
+			if ( ! empty( $_POST[ $field ] ) && is_string( $_POST[ $field ] ) ) {
+				$_POST[ $field ] = str_replace( $search, $replace, $_POST[ $field ] );
+			}
+		}
+	}
+
+	/**
+	 * Get some values from the queried object.
+	 *
+	 * @return array
+	 */
+	public static function get_filtered_queried_object() {
+		$queried_object = get_queried_object();
+		$qo             = [];
+
+		if ( $queried_object ) {
+			/* when we're using demo content the $queried_object can get weird, so check stuff before using it */
+			if (
+				property_exists( $queried_object, 'data' )
+				&& property_exists( $queried_object->data, 'ID' )
+				&&
+				! empty( $queried_object->data->ID )
+			) {
+				$qo ['ID'] = $queried_object->data->ID;
+			} elseif ( property_exists( $queried_object, 'ID' ) && ! empty( $queried_object->ID ) ) {
+				$qo ['ID'] = $queried_object->ID;
+			}
+
+			/* only keep the values for the specified keys */
+			$qo = array_filter( (array) $queried_object, function ( $key ) {
+				return in_array( $key, [ 'post_author', 'taxonomy', 'term_id', 'ID' ] );
+			}, ARRAY_FILTER_USE_KEY );
+		}
+
+		/**
+		 * Filters the queried object needed in the frontend localization (used in generating "Edit with TTB" links that will show the same content)
+		 *
+		 * @param array $qo associative array the should have at least an `ID` key
+		 */
+		return apply_filters( 'tcb_frontend_queried_object', $qo );
 	}
 }

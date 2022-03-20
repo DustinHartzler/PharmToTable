@@ -275,14 +275,16 @@ class TQB_Page_Manager {
 							if ( ! empty( $tcb_fields[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) ) {
 								$variation[ 'dynamic_content_' . Thrive_Quiz_Builder::FIELD_INLINE_CSS ] = $tcb_fields[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ];
 							}
+							$variation['content_child_variation_id'] = $child_variation['id'];
 						}
 						break;
 					case Thrive_Quiz_Builder::QUIZ_TYPE_PERCENTAGE:
-						if ( floatval( $result ) >= $child_variation['tcb_fields']['min'] && floatval( $result ) <= $child_variation['tcb_fields']['max'] ) {
+						if ( (float) $result >= $child_variation['tcb_fields']['min'] && (float) $result <= $child_variation['tcb_fields']['max'] ) {
 							$content = explode( Thrive_Quiz_Builder::STATES_DYNAMIC_CONTENT_PATTERN, $child_variation['content'] );
 							if ( ! empty( $tcb_fields[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) ) {
 								$variation[ 'dynamic_content_' . Thrive_Quiz_Builder::FIELD_INLINE_CSS ] = $tcb_fields[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ];
 							}
+							$variation['content_child_variation_id'] = $child_variation['id'];
 						}
 						break;
 					case Thrive_Quiz_Builder::QUIZ_TYPE_PERSONALITY:
@@ -291,6 +293,7 @@ class TQB_Page_Manager {
 							if ( ! empty( $tcb_fields[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) ) {
 								$variation[ 'dynamic_content_' . Thrive_Quiz_Builder::FIELD_INLINE_CSS ] = $tcb_fields[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ];
 							}
+							$variation['content_child_variation_id'] = $child_variation['id'];
 						}
 						break;
 				}
@@ -312,7 +315,7 @@ class TQB_Page_Manager {
 			$variation['content'] = str_replace( Thrive_Quiz_Builder::QUIZ_RESULT_SHORTCODE, '', $content );
 		}
 
-		$variation['quiz_user_result'] = ! empty( $result ) ? $result : '';
+		$variation['quiz_user_result'] = ! empty( $result ) || ( isset( $result ) && is_numeric( $result ) ) ? $result : '';
 
 		return $variation;
 	}

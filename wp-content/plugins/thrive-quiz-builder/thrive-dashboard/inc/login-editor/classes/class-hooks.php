@@ -238,7 +238,7 @@ class Hooks {
 		echo '</style>';
 
 		echo '<script type="text/javascript">';
-		include dirname( __DIR__ ) . '/assets/js/image-fix.js';
+		include dirname( __DIR__ ) . '/assets/dist/image-fix' . ( tve_dash_is_debug_on() ? '' : '.min' ) . '.js';
 		echo '</script>';
 	}
 
@@ -331,7 +331,7 @@ class Hooks {
 	 * @return array
 	 */
 	public static function tcb_element_instances( $instances ) {
-		if ( Main::is_edit_screen() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		if ( Main::is_edit_screen() || wp_doing_ajax() ) {
 			$instances = array_merge( $instances, Main::$elements );
 		}
 
@@ -418,7 +418,7 @@ class Hooks {
 				foreach ( $urls as $url ) {
 					if ( strpos( $url, $home_url ) === false ) {
 						try {
-							$post_id = (int) $_REQUEST['post_id'];
+							$post_id = ! empty( $_REQUEST['post_id'] ) ? absint( $_REQUEST['post_id'] ) : 0;
 							$new_url = media_sideload_image( $url, $post_id, null, 'src' );
 
 							$data['head_css'] = str_replace( $url, $new_url, $data['head_css'] );

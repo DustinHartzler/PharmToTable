@@ -79,7 +79,7 @@ class TQB_Quiz_Manager {
 		foreach ( $posts as $index => $post ) {
 			$post            = TQB_Quiz_Manager::get_quiz_post_details( $post );
 			$posts[ $index ] = $post;
-			if ( strpos( strtolower( $post->post_title ), strtolower( $search_word ) ) !== false ) {
+			if ( stripos( $post->post_title, $search_word ) !== false ) {
 				$matched_quizzes[] = TQB_Quiz_Manager::get_quiz_post_details( $post );
 			}
 		}
@@ -341,7 +341,7 @@ class TQB_Quiz_Manager {
 			$deleted                 = wp_update_post( $this->quiz );
 		}
 
-		$deleted = $deleted === 0 || is_wp_error( $deleted ) ? false : true;
+		$deleted = ! ( $deleted === 0 || is_wp_error( $deleted ) );
 
 		if ( $deleted && $force_delete ) {
 			tie()->delete_images( $this->quiz );
@@ -533,9 +533,33 @@ class TQB_Quiz_Manager {
 
 							$shortcode_content['page']['html_canvas'] = do_shortcode( $html );
 							$shortcode_content['page']['html_canvas'] = str_replace( Thrive_Quiz_Builder::QUIZ_RESULT_SHORTCODE, $result, $shortcode_content['page']['html_canvas'] ); //old implementation
-							$shortcode_content['page']['html_canvas'] = $shortcode_content['page']['html_canvas'] . get_post_meta( $quiz_id, 'tqb_quiz_badge_css', true );
+							$shortcode_content['page']['html_canvas'] .= get_post_meta( $quiz_id, 'tqb_quiz_badge_css', true );
 						}
 					}
+				}
+
+				$user_data = tvd_get_current_user_details();
+				$form_data = empty( $_REQUEST['form_data'] ) ? null : $_REQUEST['form_data'];
+
+
+				if ( $form_data ) {
+					$form_data = tve_sanitize_data_recursive( $form_data, 'sanitize_textarea_field' );
+				}
+
+				$email = '';
+				if ( ! empty( $form_data['email'] ) ) {
+					$email = $form_data['email'];
+				}
+
+				if ( ! empty( $email ) && ! is_user_logged_in() ) {
+					$matched_user = get_user_by( 'email', $email );
+					if ( ! empty( $matched_user ) ) {
+						$user_data = tvd_get_current_user_details( $matched_user->ID );
+					}
+				}
+
+				if ( empty( $email ) && ! empty( $user_data['email'] ) && is_user_logged_in() ) {
+					$email = $user_data['email'];
 				}
 
 				/**
@@ -545,10 +569,11 @@ class TQB_Quiz_Manager {
 				 *
 				 * @param array Quiz Details
 				 * @param array User Details
+				 * @param array Lead Data
 				 *
 				 * @api
 				 */
-				do_action( 'thrive_quizbuilder_quiz_completed', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique, $points['explicit'] ), tvd_get_current_user_details() );
+				do_action( 'thrive_quizbuilder_quiz_completed', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique, $points['explicit'], $email ), $user_data, $form_data );
 
 				break;
 		}
@@ -631,8 +656,7 @@ class TQB_Quiz_Manager {
 	 * Register a page impression
 	 */
 	public static function tqb_register_impression( $variation, $user_unique ) {
-
-		if ( current_user_can( 'manage_options' ) || TQB_Product::has_access() || tve_dash_is_crawler() ) {
+		if ( static::prevent_access() ) {
 			return;
 		}
 
@@ -685,7 +709,7 @@ class TQB_Quiz_Manager {
 	 * Register a page conversion
 	 */
 	public static function tqb_register_conversion( $variation, $user_unique ) {
-		if ( current_user_can( 'manage_options' ) || TQB_Product::has_access() || tve_dash_is_crawler() ) {
+		if ( static::prevent_access() ) {
 			return;
 		}
 
@@ -738,24 +762,19 @@ class TQB_Quiz_Manager {
 	 * Register a page conversion
 	 */
 	public static function tqb_register_optin_conversion( $post ) {
-		if ( current_user_can( 'manage_options' ) || TQB_Product::has_access() || tve_dash_is_crawler() ) {
+		if ( empty( $post['tqb-variation-page_id'] ) || empty( $post['tqb-variation-user_unique'] ) || static::prevent_access() ) {
 			return;
 		}
 
-		if ( empty( $post['tqb-variation-page_id'] ) || empty( $post['tqb-variation-user_unique'] ) ) {
-			//Solves warning that was triggered in leads reported by Aurelian in TTW project
+		if ( isset( $_COOKIE[ 'tqb-conversion-' . $post['tqb-variation-page_id'] . '-' . str_replace( '.', '_', $post['tqb-variation-user_unique'] ) ] ) ) {
 			return;
 		}
 
-		if ( isset( $post['tqb-variation-page_id'] ) && isset( $_COOKIE[ 'tqb-conversion-' . $post['tqb-variation-page_id'] . '-' . str_replace( '.', '_', $post['tqb-variation-user_unique'] ) ] ) ) {
-			return;
-		}
-
-		if ( isset( $post['tqb-variation-page_id'] ) && isset( $_COOKIE[ 'tqb-conversion-' . $post['tqb-variation-page_id'] ] ) ) {
+		if ( isset( $_COOKIE[ 'tqb-conversion-' . $post['tqb-variation-page_id'] ] ) ) {
 			$data['duplicate'] = 1;
 		}
 
-		$page = isset( $post['tqb-variation-page_id'] ) ? get_post( $post['tqb-variation-page_id'] ) : null;
+		$page = get_post( $post['tqb-variation-page_id'] );
 
 		if ( empty( $page ) ) {
 			return;
@@ -817,7 +836,7 @@ class TQB_Quiz_Manager {
 	 */
 	public static function tqb_register_social_media_conversion( $post ) {
 
-		if ( current_user_can( 'manage_options' ) || TQB_Product::has_access() || tve_dash_is_crawler() ) {
+		if ( static::prevent_access() ) {
 			return;
 		}
 
@@ -867,10 +886,19 @@ class TQB_Quiz_Manager {
 	}
 
 	/**
+	 * Whether or not we have to prevent access to events
+	 *
+	 * @return bool
+	 */
+	public static function prevent_access() {
+		return current_user_can( 'manage_options' ) || TQB_Product::has_access() || tve_dash_is_crawler();
+	}
+
+	/**
 	 * Register optin skip event
 	 */
 	public static function tqb_register_skip_optin_event( $variation, $user_unique ) {
-		if ( current_user_can( 'manage_options' ) || TQB_Product::has_access() || tve_dash_is_crawler() ) {
+		if ( static::prevent_access() ) {
 			return;
 		}
 
@@ -906,7 +934,7 @@ class TQB_Quiz_Manager {
 		global $tqbdb;
 		$page = get_post( $page_id );
 
-		if ( ! empty( $page ) && ( $page->post_type == Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_OPTIN || $page->post_type == Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_RESULTS ) ) {
+		if ( ! empty( $page ) && ( $page->post_type === Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_OPTIN || $page->post_type === Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_RESULTS ) ) {
 			$user = TQB_Quiz_Manager::get_quiz_user( $user_unique, $page->post_parent, true );
 			$tqbdb->save_quiz_user( array( 'id' => $user['id'], 'completed_quiz' => 1 ) );
 
@@ -932,7 +960,7 @@ class TQB_Quiz_Manager {
 	 *
 	 * @return array
 	 */
-	public static function get_quiz_details( $quiz_id, $user_unique, $result = '' ) {
+	public static function get_quiz_details( $quiz_id, $user_unique, $result = '', $email = '' ) {
 		$answers = array();
 
 		if ( ! empty( $user_unique ) ) {
@@ -948,12 +976,13 @@ class TQB_Quiz_Manager {
 		}
 
 		return array(
-			'quiz_id'   => $quiz_id,
-			'quiz_name' => get_the_title( $quiz_id ),
-			'result'    => $result,
-			'answers'   => $answers,
-			'user_id'   => get_current_user_id(),
-			'form_data' => array(),
+			'quiz_id'    => $quiz_id,
+			'quiz_name'  => get_the_title( $quiz_id ),
+			'result'     => $result,
+			'answers'    => $answers,
+			'user_id'    => get_current_user_id(),
+			'form_data'  => array(),
+			'user_email' => $email,
 		);
 	}
 
@@ -982,9 +1011,9 @@ class TQB_Quiz_Manager {
 				'quiz_id'           => $quiz_id,
 				'ignore_user'       => $ignore_user,
 			) );
-		} else {
-			return $full_data ? $user : $user['id'];
 		}
+
+		return $full_data ? $user : $user['id'];
 	}
 
 	public function save_results( $results = array(), $prev_results = array() ) {
@@ -1472,7 +1501,8 @@ class TQB_Quiz_Manager {
 		}
 
 		$url = set_url_scheme( get_edit_post_link( $this->quiz->ID, '' ) );
-		$url = esc_url(
+
+		return esc_url(
 			add_query_arg(
 				array(
 					'action' => 'architect',
@@ -1481,7 +1511,5 @@ class TQB_Quiz_Manager {
 				$url
 			)
 		);
-
-		return $url;
 	}
 }

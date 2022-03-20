@@ -68,15 +68,15 @@ class Tcb_Scripts {
 	 */
 	public function hooks() {
 		add_action( 'wp_head', function () {
-			echo $this->get_all( self::HEAD_SCRIPT );
+			echo $this->get_all( self::HEAD_SCRIPT ); // phpcs:ignore;
 		} );
 
 		add_action( 'theme_after_body_open', function () {
-			echo $this->get_all( self::BODY_SCRIPT );
+			echo $this->get_all( self::BODY_SCRIPT ); // phpcs:ignore;
 		} );
 
 		add_action( 'theme_before_body_close', function () {
-			echo $this->get_all( self::FOOTER_SCRIPT );
+			echo $this->get_all( self::FOOTER_SCRIPT ); // phpcs:ignore;
 		} );
 	}
 

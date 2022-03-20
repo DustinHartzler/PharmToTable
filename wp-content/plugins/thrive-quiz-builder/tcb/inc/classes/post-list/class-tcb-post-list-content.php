@@ -70,11 +70,19 @@ class TCB_Post_List_Content {
 				)
 			);
 
-			return TCB_Post_List_Shortcodes::before_wrap( array(
+			/**
+			 * Allows other functionality to hook here
+			 *
+			 * Used in TA Visual builder to completely hide post content from frontend if is empty
+			 *
+			 * @param string $post_content
+			 * @param string $content
+			 */
+			return apply_filters( 'tcb_get_post_content', TCB_Post_List_Shortcodes::before_wrap( array(
 				'content' => $content,
 				'tag'     => 'section',
 				'class'   => $element_class,
-			), $attr );
+			), $attr ), trim( $content ) );
 		}
 
 		$attr = array_merge( static::default_attr(), $attr );

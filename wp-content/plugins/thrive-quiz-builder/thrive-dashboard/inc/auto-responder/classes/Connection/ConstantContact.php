@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Danut
  * Date: 9/16/2015
@@ -48,14 +57,14 @@ class Thrive_Dash_List_Connection_ConstantContact extends Thrive_Dash_List_Conne
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$api_key   = ! empty( $_POST['connection']['api_key'] ) ? $_POST['connection']['api_key'] : '';
-		$api_token = ! empty( $_POST['connection']['api_token'] ) ? $_POST['connection']['api_token'] : '';
+		$api_key   = ! empty( $_POST['connection']['api_key'] ) ? sanitize_text_field( $_POST['connection']['api_key'] ) : '';
+		$api_token = ! empty( $_POST['connection']['api_token'] ) ? sanitize_text_field( $_POST['connection']['api_token'] ) : '';
 
 		if ( empty( $api_key ) || empty( $api_token ) ) {
 			return $this->error( __( 'You must provide a valid Constant Contact API Key and API token', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( array( 'api_key' => $api_key, 'api_token' => $api_token ) );
 
 		$result = $this->testConnection();
 
@@ -173,5 +182,9 @@ class Thrive_Dash_List_Connection_ConstantContact extends Thrive_Dash_List_Conne
 	 */
 	public static function getEmailMergeTag() {
 		return '{Email Address}';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 }

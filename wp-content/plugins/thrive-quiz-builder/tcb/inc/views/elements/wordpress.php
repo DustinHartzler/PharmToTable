@@ -13,6 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="thrv_wrapper tve_wp_shortcode tcb-elem-placeholder">
 	<span class="tcb-inline-placeholder-action with-icon">
 		<?php tcb_icon( 'wordpress', false, 'editor' ); ?>
-		<?php echo __( 'Insert WordPress Content', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Insert WordPress Content', 'thrive-cb' ); ?>
 	</span>
 </div>

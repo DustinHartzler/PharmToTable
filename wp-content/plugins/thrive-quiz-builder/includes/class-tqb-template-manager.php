@@ -68,7 +68,7 @@ class TQB_Template_Manager extends TQB_Request_Handler {
 
 		if ( ! is_array( $variation ) || empty( $variation ) ) {
 			if ( ! empty( $_REQUEST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) ) {
-				$variation = tqb_get_variation( $_REQUEST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] );
+				$variation = tqb_get_variation( absint( $_REQUEST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) );
 			} else {
 				$variation = array();
 			}
@@ -372,17 +372,32 @@ class TQB_Template_Manager extends TQB_Request_Handler {
 				}
 
 				$item = '';
-				$item .= '<div class="tve-template-item">';
-				$item .= '<div class="template-wrapper click" data-fn="select_template" data-key="user-saved-template-' . $index . '">';
-				$item .= '<div class="template-thumbnail" style="background-image: url(' . $img . ')">';
-				$item .= '<div class="template-thumbnail-overlay">';
-				$item .= '<div class="tcb-right margin-right-5 tcb-delete-saved-template click" data-fn="delete_confirmation">';
-				$item .= tcb_icon( 'trash', true );
+				$item .= '<div class="cloud-template-item modal-item click" data-fn="selectTemplate" data-key="user-saved-template-' . $index . '">';
+				$item .= '<div class="modal-title-w-options">';
+				$item .= '<div class="cb-template-name-wrapper">';
+				$item .= '<div class="cb-template-name">' . $template['name'] . '</div>';
+				$item .= '<div class="cb-template-date">' . ' [' . strftime( '%d.%m.%y', strtotime( $template['date'] ) ) . ']' . '</div>';
+				$item .= '</div>';
+				$item .= tcb_icon( 'check-light', true );
+				$item .= '<div class="tcb-dropdown-dots click" data-fn="openOptionsTooltip">';
+				$item .= tcb_icon( 'three-dots', true );
+				$item .= '</div>';
+				$item .= '<div class="tcb-template-options-tooltip">';
+				$item .= '<button class="tcb-tooltip-row click" data-fn="deleteConfirmation">' . 'Delete' . '</button>';
 				$item .= '</div>';
 				$item .= '</div>';
+				$item .= '<div class="cloud-item click">';
+				$item .= '<div class="symbol-delete-notice " style="display: none">';
+				$item .= '<span class="click" data-fn="hideDelete">' . tcb_icon( 'close2', true ) . '</span>';
+				$item .= '<div class="delete-text mt-10">' . 'Are you sure?' . '</div>';
+				$item .= '<div class="delete action mt-10 mb-10">';
+				$item .= '<button class="click" data-fn="hideDelete">' . 'No, cancel' . '</button>';
+				$item .= '<button  class="click" data-id="<#= item.id #>" data-fn="deleteSavedTemplate">' . 'Yes, delete' . '</button>';
 				$item .= '</div>';
-				$item .= '<div class="template-name">' . $template['name'] . '<br>(' . strftime( '%d.%m.%y', strtotime( $template['date'] ) ) . ')</div>';
-				$item .= '<div class="selected"></div>';
+				$item .= '</div>';
+				$item .= '<div class="cb-template-wrapper">';
+				$item .= '<img class="cb-template-thumbnail" src="' . $img . '">';
+				$item .= '</div>';
 				$item .= '</div>';
 				$item .= '</div>';
 
@@ -396,7 +411,7 @@ class TQB_Template_Manager extends TQB_Request_Handler {
 		if ( $return ) {
 			return $html;
 		}
-		echo $html;
+		echo $html; // phpcs:ignore
 		exit();
 	}
 

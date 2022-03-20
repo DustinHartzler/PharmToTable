@@ -100,11 +100,16 @@ class TCB_Quiz_Element extends TCB_Element_Abstract {
 			return $return;
 		}
 
+		/**
+		 * Display only valid quizzes
+		 */
 		foreach ( $this->quizzes as $quiz ) {
-			$return[] = array(
-				'name'  => $quiz->post_title,
-				'value' => $quiz->ID,
-			);
+			if ( $quiz->validation['valid'] ) {
+				$return[] = array(
+					'name'  => $quiz->post_title,
+					'value' => $quiz->ID,
+				);
+			}
 		}
 
 		return $return;

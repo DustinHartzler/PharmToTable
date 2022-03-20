@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Danut
  * Date: 4/9/2015
@@ -40,14 +49,14 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$key    = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
-		$app_id = ! empty( $_POST['connection']['app_id'] ) ? $_POST['connection']['app_id'] : '';
+		$key    = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$app_id = ! empty( $_POST['connection']['app_id'] ) ? sanitize_text_field( $_POST['connection']['app_id'] ) : '';
 
 		if ( empty( $key ) || empty( $app_id ) ) {
 			return $this->error( __( 'You must provide a valid Ontraport AppID/APIKey', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -187,6 +196,10 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 
 	public static function getEmailMergeTag() {
 		return '[Email]';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 
 }

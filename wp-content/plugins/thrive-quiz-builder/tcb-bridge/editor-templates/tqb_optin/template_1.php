@@ -5,7 +5,7 @@ $config = array(
 	'required' => 'Please fill in the required fields',
 )
 ?>
-<div data-css="tve-u-16d632405fa" class="thrv_wrapper tve-tqb-page-type tqb-optin-template-1 tve_editor_main_content" style="<?php echo $main_content_style; ?>">
+<div data-css="tve-u-16d632405fa" class="thrv_wrapper tve-tqb-page-type tqb-optin-template-1 tve_editor_main_content" style="<?php echo esc_attr( $main_content_style ); ?>">
 	<div data-css="tve-u-16d678d5a2c" class="thrv_wrapper thrv_heading tve-draggable tve-droppable">
 		<h2 data-css="tve-u-15d9c5854a2" data-default="Your Heading Here">Great Job, You’ve Finished the Quiz!</h2>
 	</div>
@@ -37,7 +37,7 @@ $config = array(
 			</div>
 			<div class="thrv_wrapper thrv_text_element tve-draggable tve-droppable tve_empty_dropzone">
 				<p class="tve-droppable" data-css="tve-u-15d9c642540">
-					<a href="javascript:void(0)" class="tve_evt_manager_listen tve_et_click" data-shortcode-id="next_step_in_quiz_<?php echo $variation['quiz_id']; ?>" data-dynamic-link="tqb_quiz_options">
+					<a href="javascript:void(0)" class="tve_evt_manager_listen tve_et_click" data-shortcode-id="next_step_in_quiz_<?php echo esc_attr( $variation['quiz_id'] ); ?>" data-dynamic-link="tqb_quiz_options">
 						<span data-css="tve-u-15d9c642547">Skip this step</span>
 					</a>
 				</p>

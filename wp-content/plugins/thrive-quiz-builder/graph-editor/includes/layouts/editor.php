@@ -35,7 +35,7 @@ nocache_headers();
 		<div class="tge-scroll tge-scroll-left" data-dir="left"></div>
 		<div id="tge-add-new-question">
 			<span class="tvd-icon-plus tvd-icon-small"></span>
-			<?php echo __( 'Add Question', Thrive_Graph_Editor::T ) ?>
+			<?php echo esc_html__( 'Add Question', Thrive_Graph_Editor::T ) ?>
 		</div>
 	</section>
 
@@ -43,8 +43,8 @@ nocache_headers();
 
 	<div id="tge-navigator">
 		<div class="tge-nav-title">
-			<?php echo __( 'Navigator', Thrive_Graph_Editor::T ) ?>
-			<span id="tge-nav-control" class="tvd-icon-minus tvd-tooltipped" data-position="top" data-tooltip="<?php echo __( 'Minimize', Thrive_Graph_Editor::T ) ?>"></span>
+			<?php echo esc_html__( 'Navigator', Thrive_Graph_Editor::T ) ?>
+			<span id="tge-nav-control" class="tvd-icon-minus tvd-tooltipped" data-position="top" data-tooltip="<?php echo esc_html__( 'Minimize', Thrive_Graph_Editor::T ) ?>"></span>
 		</div>
 		<div style="position: relative;">
 			<div id="tge-nav-paper" class="joint-theme-modern joint-paper"></div>

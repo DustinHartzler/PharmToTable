@@ -2,6 +2,16 @@
 
 namespace TD\DB_Updater;
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+
 abstract class Updater {
 	protected $product = 'Thrive Dashboard';
 
@@ -10,7 +20,7 @@ abstract class Updater {
 	}
 
 	public function output_welcome_message() {
-		echo "<h4>The database tables for {$this->product} need updating. Click the button below to start the process.</h4>";
+		echo "<h4>The database tables for {$this->product} need updating. Click the button below to start the process.</h4>"; // phpcs:ignore
 	}
 
 	public function get_dashboard_url() {
@@ -26,7 +36,7 @@ abstract class Updater {
 				'error' => 'Invalid step',
 			);
 		} else {
-			$response = (array) $this->execute_step( $_REQUEST['step'] );
+			$response = (array) $this->execute_step( sanitize_text_field( $_REQUEST['step'] ) );
 		}
 
 		wp_send_json( $response );

@@ -14,6 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="thrv_wrapper thrv-content-block tcb-elem-placeholder">
 	<span class="tcb-inline-placeholder-action with-icon">
 		<?php tcb_icon( 'add', false, 'editor' ); ?>
-		<?php echo __( 'Add Content Block', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Add Content Block', 'thrive-cb' ); ?>
 	</span>
 </div>

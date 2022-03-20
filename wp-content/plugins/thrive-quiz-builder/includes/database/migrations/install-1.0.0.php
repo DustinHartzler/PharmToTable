@@ -20,7 +20,7 @@ $this->create_table( 'variations', "
 	`quiz_id` INT NOT NULL ,
 	`date_added` DATETIME NOT NULL ,
 	`date_modified` DATETIME NOT NULL ,
-	`page_id` INT NOT NULL ,
+	`page_id` BIGINT(20) UNSIGNED NOT NULL ,
 	`parent_id` INT NOT NULL DEFAULT '0' ,
 	`post_status` VARCHAR(20) NOT NULL DEFAULT 'publish' ,
 	`post_title` TEXT NOT NULL ,

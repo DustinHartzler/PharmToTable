@@ -55,19 +55,19 @@ class TQB_Product extends TVE_Dash_Product_Abstract {
 		);
 
 		$this->moreLinks = array(
-			'support'   => array(
-				'class'      => '',
-				'icon_class' => 'tvd-icon-life-bouy',
-				'href'       => 'https://thrivethemes.com/forums/forum/plugins/thrive-quiz-builder/',
-				'target'     => '_blank',
-				'text'       => __( 'Support', Thrive_Quiz_Builder::T ),
-			),
 			'tutorials' => array(
 				'class'      => '',
 				'icon_class' => 'tvd-icon-graduation-cap',
-				'href'       => 'https://thrivethemes.com/thrive-knowledge-base/thrive-quiz-builder/',
+				'href'       => 'https://thrivethemes.com/thrive-quiz-builder-tutorials/',
 				'target'     => '_blank',
 				'text'       => __( 'Tutorials', Thrive_Quiz_Builder::T ),
+			),
+			'support'   => array(
+				'class'      => '',
+				'icon_class' => 'tvd-icon-life-bouy',
+				'href'       => 'https://thrivethemes.com/support/',
+				'target'     => '_blank',
+				'text'       => __( 'Support', Thrive_Quiz_Builder::T ),
 			),
 		);
 	}

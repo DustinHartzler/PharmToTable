@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 	extends Thrive_Dash_List_Connection_Abstract
 	implements Thrive_Dash_List_Connection_FileUpload_Interface {
@@ -66,7 +75,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 			$this->save();
 		} catch ( Thrive_Dash_Api_Google_Exception $e ) {
 
-			echo 'caught ex: ' . $e->getMessage();
+			echo 'caught ex: ' . esc_html( $e->getMessage() );
 			$this->_credentials = array();
 			$this->save();
 

@@ -33,7 +33,7 @@ class TCB_Admin_Ajax {
 	 * @param string $status  the error status.
 	 */
 	protected function error( $message, $status = '404 Not Found' ) {
-		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status );
+		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status ); //phpcs:ignore
 		echo esc_attr( $message );
 		wp_die();
 	}
@@ -47,7 +47,7 @@ class TCB_Admin_Ajax {
 	 * @return mixed|null|$default
 	 */
 	protected function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		return isset( $_POST[ $key ] ) ? map_deep( $_POST[ $key ], 'sanitize_text_field' ) : ( isset( $_REQUEST[ $key ] ) ? map_deep( $_REQUEST[ $key ], 'sanitize_text_field' ) : $default );
 	}
 
 	/**
@@ -82,7 +82,7 @@ class TCB_Admin_Ajax {
 	 */
 	public function templates_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -136,7 +136,7 @@ class TCB_Admin_Ajax {
 
 	public function templatemodel_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 		switch ( $method ) {
 			case 'POST':
 			case 'PUT':
@@ -155,7 +155,7 @@ class TCB_Admin_Ajax {
 				}
 
 				$tpl_categories[ $model['id'] ]['name'] = $model['name'];
-				update_option( 'tve_user_templates_categories', $tpl_categories );
+				update_option( 'tve_user_templates_categories', $tpl_categories, 'no' );
 
 				return array( 'text' => __( 'The category name was modified!', 'thrive-cb' ) );
 				break;
@@ -177,7 +177,7 @@ class TCB_Admin_Ajax {
 				$base       = $upload_dir['basedir'] . '/' . self::UPLOAD_DIR_CUSTOM_FOLDER . '/user_templates';
 
 				unset( $tpl_categories[ $id ] );
-				update_option( 'tve_user_templates_categories', $tpl_categories );
+				update_option( 'tve_user_templates_categories', $tpl_categories, 'no' );
 
 				// Move existing templates belonging to the deleted category to uncategorized
 				$categ_tpls = tcb_admin_get_category_templates( $templates );
@@ -219,7 +219,7 @@ class TCB_Admin_Ajax {
 	 */
 	public function templatecategory_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':
@@ -251,7 +251,7 @@ class TCB_Admin_Ajax {
 					}
 				}
 
-				update_option( 'tve_user_templates_categories', $template_categories );
+				update_option( 'tve_user_templates_categories', $template_categories, 'no' );
 
 				return array( 'text' => __( 'The category was saved!', 'thrive-cb' ) );
 				break;
@@ -270,7 +270,7 @@ class TCB_Admin_Ajax {
 	 */
 	public function usertpl_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
 			case 'POST':

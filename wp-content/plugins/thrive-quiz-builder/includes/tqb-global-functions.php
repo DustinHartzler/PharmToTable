@@ -176,36 +176,21 @@ function tqb_enqueue_variation_scripts( $for_variation = null ) {
 
 /**
  * Enqueue the default styles when they are needed
- *
- * @return array the enqueued styles
  */
 function tqb_enqueue_default_scripts() {
-
-	$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
-
-	/* flat is the default style */
-	global $tve_style_family_classes;
-	$tve_style_families = tve_get_style_families();
-	$style_family       = 'Flat';
-	$style_key          = 'tve_style_family_' . strtolower( $tve_style_family_classes[ $style_family ] );
-
-	/** Style family */
-	wp_style_is( $style_key ) || tve_enqueue_style( $style_key, $tve_style_families[ $style_family ] );
-
-	/** Basic Standard Shortcode Style */
-	wp_enqueue_style( 'tqb-shortcode', tqb()->plugin_url( 'assets/css/frontend/tqb-shortcode.css' ) );
-
-	$frontend_options = array(
-		'is_editor_page'   => is_editor_page(),
-		'page_events'      => array(),
-		'is_single'        => 1,
-		'ajaxurl'          => admin_url( 'admin-ajax.php' ),
-		'social_fb_app_id' => function_exists( 'tve_get_social_fb_app_id' ) ? tve_get_social_fb_app_id() : '',
-	);
-
 	if ( ! wp_script_is( 'tve_frontend' ) ) {
+		if ( TQB_Lightspeed::has_lightspeed() ) {
+			\TCB\Lightspeed\JS::get_instance( get_the_ID() )->enqueue_scripts();
+		}
 
-		tve_enqueue_script( 'tve_frontend', tve_editor_js() . '/frontend' . $js_suffix, array( 'jquery' ), false, true );
+		$frontend_options = array(
+			'is_editor_page'   => is_editor_page(),
+			'page_events'      => array(),
+			'is_single'        => 1,
+			'ajaxurl'          => admin_url( 'admin-ajax.php' ),
+			'social_fb_app_id' => function_exists( 'tve_get_social_fb_app_id' ) ? tve_get_social_fb_app_id() : '',
+		);
+
 		/**
 		 * Allows adding frontend options from different plugins
 		 *
@@ -214,6 +199,9 @@ function tqb_enqueue_default_scripts() {
 		$frontend_options = apply_filters( 'tve_frontend_options_data', $frontend_options );
 		wp_localize_script( 'tve_frontend', 'tve_frontend_options', $frontend_options );
 	}
+
+	/** Basic Standard Shortcode Style */
+	wp_enqueue_style( 'tqb-shortcode', tqb()->plugin_url( 'assets/css/frontend/tqb-shortcode.css' ) );
 }
 
 /**
@@ -463,14 +451,15 @@ function tqb_get_default_values( $option = '' ) {
 
 	switch ( $option ) {
 		case Thrive_Quiz_Builder::PLUGIN_SETTINGS:
-			return array(
-				'tqb_promotion_badge' => ( empty( $has_quizzes[0] ) ) ? 1 : 0,
+			$default_values = array(
+				'tqb_promotion_badge' => empty( $has_quizzes[0] ) ? 1 : 0,
 			);
 			break;
 		default:
-			return array();
-			break;
+			$default_values = array();
 	}
+
+	return $default_values;
 }
 
 function tqb_get_svg_icon( $icon, $class = '', $return = false ) {
@@ -483,7 +472,7 @@ function tqb_get_svg_icon( $icon, $class = '', $return = false ) {
 	if ( false !== $return ) {
 		return $html;
 	}
-	echo $html;
+	echo $html; // phpcs:ignore
 }
 
 function tqb_add_frontend_svg_file() {
@@ -561,6 +550,27 @@ function tqb_get_all_post_types() {
 		Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_OPTIN,
 		Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_RESULTS,
 	);
+}
+
+/**
+ * Merge css in case it was saved as array of media queries
+ *
+ * @param array|string $styles
+ *
+ * @return string
+ */
+function tqb_merge_media_query_styles( $styles ) {
+	$css = '';
+
+	if ( is_array( $styles ) ) {
+		foreach ( $styles as $media => $style ) {
+			$css .= '@media ' . $media . '{' . $style . '}';
+		}
+	} else if ( is_string( $styles ) ) {
+		$css = $styles;
+	}
+
+	return $css;
 }
 
 /**

@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-countdownevergreen-component" class="tve-component" data-view="CountdownEvergreen">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
 		<div class="tve-control" data-key="style" data-initializer="countdown_style_control"></div>
 		<div class="tve-control" data-view="Color"></div>
 		<div class="control-grid no-space">
-			<div class="label"><?php echo __( 'Time', 'thrive-cb' ); ?></div>
+			<div class="label"><?php echo esc_html__( 'Time', 'thrive-cb' ); ?></div>
 			<div class="input flex space-between">
 				<span class="tve-control" data-view="Day"></span>
 				<span class="tve-control" data-view="Hour"></span>

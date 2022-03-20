@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="action-group" >
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -22,9 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-control" data-view="DefaultTab"></div>
 			<div class="control-grid">
 				<span class="label">
-					<?php echo __( 'Tabs', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Tabs', 'thrive-cb' ); ?>
 				</span>
-				<button class="tve-button blue click" data-fn="addTabs"><?php echo __( 'Add New', 'thrive-cb' ); ?></button>
+				<button class="tve-button blue click" data-fn="addTabs"><?php echo esc_html__( 'Add New', 'thrive-cb' ); ?></button>
 			</div>
 			<div id="tabs-list"></div>
 			<div class="tve-control" data-view="TabsWidth"></div>
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-advanced-controls extend-grey">
 				<div class="dropdown-header" data-prop="advanced">
 				<span>
-					<?php echo __( 'Advanced', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?>
 				</span>
 				</div>
 

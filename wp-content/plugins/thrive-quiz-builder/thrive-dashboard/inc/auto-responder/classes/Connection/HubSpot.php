@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Laura
  * Date: 21.09.2015
@@ -38,13 +47,13 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid HubSpot key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( array( 'key' => $key ) );
 
 		$result = $this->testConnection();
 
@@ -148,4 +157,9 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	public static function getEmailMergeTag() {
 		return '{{contact.email}}';
 	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
+	}
+
 }

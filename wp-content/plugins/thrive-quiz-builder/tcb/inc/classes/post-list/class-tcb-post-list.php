@@ -18,6 +18,8 @@ defined( 'TCB_SHORTCODE_CLASS' ) || define( 'TCB_SHORTCODE_CLASS', 'tcb-shortcod
 /* class that applies ONLY to the post-list shortcodes */
 defined( 'TCB_DO_NOT_RENDER_POST_LIST' ) || define( 'TCB_DO_NOT_RENDER_POST_LIST', 'do-not-render-post-list' );
 
+defined( 'TCB_RENDERING_SYMBOL' ) || define( 'TCB_RENDERING_SYMBOL', 'tcb-symbol-render' );
+
 defined( 'TCB_POST_WRAPPER_CLASS' ) || define( 'TCB_POST_WRAPPER_CLASS', 'post-wrapper' );
 defined( 'TCB_POST_LIST_LOCALIZE' ) || define( 'TCB_POST_LIST_LOCALIZE', 'tcb_post_list_localize' );
 
@@ -210,13 +212,22 @@ class TCB_Post_List {
 	 * @return array
 	 */
 	public static function post_shortcode_data( $attr = array() ) {
-		$data = array();
+		$data = [];
+
+		if ( empty( $attr ) || ! is_array( $attr ) ) {
+			return $data;
+		}
+
+		$article_data_prefix = 'article-';
 
 		foreach ( $attr as $k => $v ) {
-			if ( strpos( $k, 'article-' ) !== false ) {
-				$data[ str_replace( 'article-', '', $k ) ] = $v;
+			if ( strpos( $k, $article_data_prefix ) === 0 ) {
+				$data[ str_replace( $article_data_prefix, '', $k ) ] = $v;
 			}
 		}
+
+		/* remove this attribute because we're not using it anymore */
+		unset( $data['permalink'] );
 
 		return $data;
 	}
@@ -254,13 +265,13 @@ class TCB_Post_List {
 	 * @return mixed|string
 	 */
 	public function article_content() {
-		$attributes = apply_filters( 'tcb_post_attributes', $this->article_attr, get_post() );
+		$article_attr = apply_filters( 'tcb_post_attributes', $this->article_attr, get_post() );
 
 		$post_id = get_the_ID();
 
 		if ( $this->in_editor_render ) {
 			/* in edit mode, add the post id to each article */
-			$attributes['data-id'] = $post_id;
+			$article_attr['data-id'] = $post_id;
 		}
 
 		$content = empty( $this->article ) ? tcb_template( 'elements/post-list-article.php', null, true ) : $this->article;
@@ -275,23 +286,28 @@ class TCB_Post_List {
 			remove_filter( 'the_content_more_link', array( 'TCB_Post_List_Content', 'the_content_more_link_filter' ) );
 		}
 
-		$content = TCB_Post_List_Shortcodes::before_wrap( array(
+		/* only in preview + front, add a div containing a link that covers the article */
+		if ( ! $this->in_editor_render && isset( $this->attr['disabled-links'] ) && (int) $this->attr['disabled-links'] === 1 ) {
+			$permalink = get_permalink( $post_id );
+
+			/**
+			 * Add an anchor inside the article cover so the post has link options on right click
+			 * The <a> needs text for SEO reasons, but the text needs to be hidden ( this is done from CSS )
+			 */
+			$article_link = TCB_Utils::wrap_content( get_the_title(), 'a', '', 'tcb-article-cover-link', array( 'href' => $permalink ) );
+
+			$article_cover = TCB_Utils::wrap_content( $article_link, 'div', '', 'tve-article-cover' );
+
+			$content .= $article_cover;
+		}
+
+		return TCB_Post_List_Shortcodes::before_wrap( array(
 			'content' => apply_filters( 'tcb_post_list_article_content', $content ),
 			'tag'     => 'article',
 			'id'      => 'post-' . $post_id,
 			'class'   => static::post_class(),
-			'attr'    => $attributes + array( 'data-selector' => '.' . TCB_POST_WRAPPER_CLASS ),
+			'attr'    => $article_attr + array( 'data-selector' => '.' . TCB_POST_WRAPPER_CLASS ),
 		), $this->article_attr );
-
-		//Replace the permalink shortcode and add the cover div only on preview
-		if ( ! TCB_Utils::in_editor_render() && ! empty( $this->attr['article-permalink'] ) ) {
-			$permalink = get_permalink( $post_id );
-			$content   = str_replace( '[tcb-article-permalink]', $permalink, $content );
-			/* add an anchor so the post has link options on right click */
-			$content = substr_replace( $content, '<div class="tve-article-cover"><a href="' . $permalink . '"></a></div></article>', - 10 );
-		}
-
-		return $content;
 	}
 
 	/**
@@ -355,7 +371,7 @@ class TCB_Post_List {
 					'read_more' => '',
 					'words'     => 500,
 				) ),
-				'author_picture'            => TCB_Post_List_Author_Image::get_default_url( $id ),
+				'author_picture'            => TCB_Post_List_Author_Image::author_avatar(),
 				'tcb_post_author_role'      => TCB_Post_List_Shortcodes::author_role(),
 				'tcb_post_the_permalink'    => get_permalink( $id ),
 				'tcb_post_archive_link'     => static::get_post_type_archive_link( $id ),
@@ -431,7 +447,7 @@ class TCB_Post_List {
 		/* when we're on the frontend, localize these for infinite load / load more pagination */
 		if ( ! TCB_Editor()->is_inner_frame() && ! is_editor_page_raw() ) {
 			foreach ( $GLOBALS[ TCB_POST_LIST_LOCALIZE ] as $post_list ) {
-
+// phpcs:disable
 				echo TCB_Utils::wrap_content(
 					str_replace( array( '[', ']' ), array( '{({', '})}' ), $post_list['content'] ),
 					'script',
@@ -442,6 +458,7 @@ class TCB_Post_List {
 						'data-identifier' => $post_list['template'],
 					)
 				);
+				//phpcs:enable
 			}
 
 			/* remove the post content before localizing the posts */
@@ -452,7 +469,7 @@ class TCB_Post_List {
 					return $item;
 				}, $GLOBALS[ TCB_POST_LIST_LOCALIZE ] );
 
-			echo TCB_Utils::wrap_content( "var tcb_post_lists=JSON.parse('" . addslashes( json_encode( $posts_localize ) ) . "');", 'script', '', '', array( 'type' => 'text/javascript' ) );
+			echo TCB_Utils::wrap_content( "var tcb_post_lists=JSON.parse('" . addslashes( json_encode( $posts_localize ) ) . "');", 'script', '', '', array( 'type' => 'text/javascript' ) ); // phpcs:ignore
 		}
 	}
 
@@ -497,7 +514,6 @@ class TCB_Post_List {
 
 		$args = array_merge( $defaults, $args );
 
-		/* Note: if at some point the queried object will require more arguments, remember to whitelist them in JS in getQueriedObject() */
 		if ( TCB_Utils::is_rest() && isset( $args['queried_object'] ) ) {
 			$queried_object = (object) $args['queried_object'];
 		} else {
@@ -565,8 +581,7 @@ class TCB_Post_List {
 
 							default:
 								$post_terms = wp_get_post_terms( $queried_object->ID, $taxonomy, array( 'fields' => 'ids' ) );
-								if ( ! empty( $post_terms ) ) {
-									$query_args['tax_query'][] = array(
+								if ( ! empty( $post_terms ) && ! ( $post_terms instanceof WP_Error ) ) {									$query_args['tax_query'][] = array(
 										'taxonomy' => $taxonomy,
 										'field'    => 'term_id',
 										'terms'    => array_map( function ( $term ) {
@@ -665,6 +680,15 @@ class TCB_Post_List {
 			}
 		}
 
+		/**
+		 * Filter the excluded posts
+		 *
+		 * @param array - ids of excluded posts
+		 *
+		 * @return array - modified array of excluded post ids
+		 */
+		$query_args['post__not_in'] = apply_filters( 'tcb_post_list_excluded_post_ids', empty( $query_args['post__not_in'] ) ? [] : $query_args['post__not_in'] );
+
 		return $query_args;
 	}
 
@@ -691,7 +715,6 @@ class TCB_Post_List {
 		/* check if we're in a rest request or not */
 		$is_rest = defined( 'REST_REQUEST' ) && REST_REQUEST;
 
-		/* Note: if at some point the queried object will require more arguments, remember to whitelist them in JS in getQueriedObject() */
 		if ( $is_rest && isset( $args['queried_object'] ) ) {
 			$queried_object = (object) $args['queried_object'];
 		} else {
@@ -906,6 +929,8 @@ class TCB_Post_List {
 			array( 'paged' => 1 ),
 			json_decode( $decoded_string, true )
 		);
+		/* this will be localized for each page */
+		unset( $this->query['queried_object'] );
 
 		/* If the Post List has a Featured List attached  we parse all Posts Lists from the page */
 		if ( ! empty( $this->attr['featured-list'] ) ) {
@@ -1069,6 +1094,7 @@ class TCB_Post_List {
 		'css',
 		'masonry',
 		'type',
+		'hide', //used for TOC headings
 		'pagination-type',
 		'no_posts_text',
 		'layout',
@@ -1076,7 +1102,6 @@ class TCB_Post_List {
 		'total_sticky_count',
 		'pages_near_current',
 		'disabled-links',
-		'permalink',
 		'featured-list',
 		'template-id',
 		'styled-scrollbar',

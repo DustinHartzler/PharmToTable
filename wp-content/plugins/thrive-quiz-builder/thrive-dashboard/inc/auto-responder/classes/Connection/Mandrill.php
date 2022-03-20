@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Aurelian
  * Date: 14/10/2015
@@ -54,12 +63,12 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 */
 	public function readCredentials() {
 
-		$mailchimp_key = ! empty( $_POST['connection']['mailchimp_key'] ) ? $_POST['connection']['mailchimp_key'] : '';
-		$email         = ! empty( $_POST['connection']['email'] ) ? $_POST['connection']['email'] : '';
+		$mailchimp_key = ! empty( $_POST['connection']['mailchimp_key'] ) ? sanitize_text_field( $_POST['connection']['mailchimp_key'] ) : '';
+		$email         = ! empty( $_POST['connection']['email'] ) ? sanitize_text_field( $_POST['connection']['email'] ) : '';
 
-		if ( isset( $_POST['connection']['mandrill-key'] ) ) {
-			$_POST['connection']['mailchimp_key'] = $_POST['connection']['key'];
-			$_POST['connection']['key']           = $_POST['connection']['mandrill-key'];
+		if ( isset( $_POST['connection']['mandrill-key'] ) && isset( $_POST['connection']['key'] ) ) {
+			$_POST['connection']['mailchimp_key'] = sanitize_text_field( $_POST['connection']['key'] );
+			$_POST['connection']['key']           = sanitize_text_field( $_POST['connection']['mandrill-key'] );
 		}
 
 		if ( empty( $_POST['connection']['key'] ) ) {
@@ -70,7 +79,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 		if ( $result !== true ) {
@@ -130,8 +139,8 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		$mandrill = $this->getApi();
 
 		if ( isset( $_POST['connection']['email'] ) ) {
-			$from_email = $_POST['connection']['email'];
-			$to         = $_POST['connection']['email'];
+			$from_email = sanitize_text_field( $_POST['connection']['email'] );
+			$to         = $from_email;
 		} else {
 			$credentials = Thrive_Dash_List_Manager::credentials( 'mandrill' );
 			if ( isset( $credentials ) ) {

@@ -185,6 +185,10 @@ class Thrive_Dash_Api_Ontraport {
 			$data['email'] = $fields['email'];
 		}
 
+		if ( ! empty( $fields['phone'] ) ) {
+			$data['office_phone'] = $fields['phone'];
+		}
+
 		$data['use_utm_names'] = false;
 		$data['ignore_blanks'] = false;
 
@@ -281,7 +285,7 @@ class Thrive_Dash_Api_Ontraport {
 
 	/**
 	 * @param        $path
-	 * @param array  $params
+	 * @param array $params
 	 * @param string $method
 	 *
 	 * @return array|mixed|object

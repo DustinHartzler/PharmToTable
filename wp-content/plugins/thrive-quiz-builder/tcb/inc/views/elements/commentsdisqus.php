@@ -12,5 +12,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <div class="thrv_wrapper thrv_disqus_comments">
-	<div id="disqus_thread" data-disqus_identifier="368" data-disqus_shortname="<?php echo tve_get_comments_disqus_shortname(); ?>" data-disqus_url=""></div>
+	<div id="disqus_thread" data-disqus_identifier="368" data-disqus_shortname="<?php echo esc_attr( tve_get_comments_disqus_shortname() ); ?>" data-disqus_url=""></div>
 </div>

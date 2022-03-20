@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="action-group" >
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -24,9 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<hr>
 			<div class="control-grid">
 				<span class="label">
-					<?php echo __( 'Toggles', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Toggles', 'thrive-cb' ); ?>
 				</span>
-				<button class="tve-button blue click" data-fn="add_toggle"><?php echo __( 'Add New', 'thrive-cb' ); ?></button>
+				<button class="tve-button blue click" data-fn="add_toggle"><?php echo esc_html__( 'Add New', 'thrive-cb' ); ?></button>
 			</div>
 			<div id="toggle-list" class="no-space"></div>
 		</div>

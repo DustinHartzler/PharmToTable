@@ -54,7 +54,7 @@ class Thrive_Dash_List_Manager {
 			'recaptcha'            => 'Thrive_Dash_List_Connection_ReCaptcha',
 			'sendreach'            => 'Thrive_Dash_List_Connection_Sendreach',
 			'sendgrid'             => 'Thrive_Dash_List_Connection_SendGrid',
-			'sendinblue'           => 'Thrive_Dash_List_Connection_Sendinblue',
+			'sendinblue'           => 'Thrive_Dash_List_Connection_SendinblueV3',
 			'sendy'                => 'Thrive_Dash_List_Connection_Sendy',
 			'sg-autorepondeur'     => 'Thrive_Dash_List_Connection_SGAutorepondeur',
 			'twitter'              => 'Thrive_Dash_List_Connection_Twitter',
@@ -72,7 +72,7 @@ class Thrive_Dash_List_Manager {
 			'mailrelayemail'       => 'Thrive_Dash_List_Connection_MailRelayEmail',
 			'postmark'             => 'Thrive_Dash_List_Connection_Postmark',
 			'sendgridemail'        => 'Thrive_Dash_List_Connection_SendGridEmail',
-			'sendinblueemail'      => 'Thrive_Dash_List_Connection_SendinblueEmail',
+			'sendinblueemail'      => 'Thrive_Dash_List_Connection_SendinblueEmailV3',
 			'sparkpost'            => 'Thrive_Dash_List_Connection_SparkPost',
 			'sendowl'              => 'Thrive_Dash_List_Connection_SendOwl',
 			'sendlane'             => 'Thrive_Dash_List_Connection_Sendlane',
@@ -357,9 +357,9 @@ class Thrive_Dash_List_Manager {
 		if ( empty( $string ) ) {
 			return array();
 		}
-		$data = @unserialize( $string );
+		$data = thrive_safe_unserialize( $string );
 
-		return empty( $data ) ? array() : tve_sanitize_data_recursive( $data, 'sanitize_textarea_field' );
+		return empty( $data ) || ! is_array( $data ) ? array() : tve_sanitize_data_recursive( $data, 'sanitize_textarea_field' );
 	}
 
 	public static function toJSON( $APIs = array() ) {

@@ -1,4 +1,4 @@
-<div class="thrv_wrapper tve-tqb-page-type tqb-splash-template-3 tve_editor_main_content" style="<?php echo $main_content_style; ?>">
+<div class="thrv_wrapper tve-tqb-page-type tqb-splash-template-3 tve_editor_main_content" style="<?php echo esc_attr( $main_content_style ); ?>">
 	<div class="tqb-hp1 thrv_wrapper thrv_heading thrv_text_element">
 		<h2>How can we make Thrive Themes Better for you?</h2>
 	</div>
@@ -13,7 +13,7 @@
 
 	<div class="tcb-clear">
 		<div class="tqb-btn1 thrv_wrapper thrv-button tqb-btn-start">
-			<a href="#" class="tcb-button-link tve_evt_manager_listen tve_et_click" rel="noopener noreferrer" draggable="false" data-shortcode-id="next_step_in_quiz_<?php echo $variation['quiz_id']; ?>" data-dynamic-link="tqb_quiz_options">
+			<a href="#" class="tcb-button-link tve_evt_manager_listen tve_et_click" rel="noopener noreferrer" draggable="false" data-shortcode-id="next_step_in_quiz_<?php echo esc_attr( $variation['quiz_id'] ); ?>" data-dynamic-link="tqb_quiz_options">
 			<span class="tcb-button-texts">
 				<span class="tcb-button-text thrv-inline-text">Start the survey</span>
 			</span>

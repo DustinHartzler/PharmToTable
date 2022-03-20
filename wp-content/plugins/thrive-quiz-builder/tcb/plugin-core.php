@@ -26,6 +26,7 @@ define( 'TVE_LOCAL_GRADIENT_VAR_CSS_PREFIX', '--tcb-local-gradient-' );
 define( 'TVE_MAIN_COLOR_H', '--tcb-main-master-h' ); //Main Color Hue
 define( 'TVE_MAIN_COLOR_S', '--tcb-main-master-s' ); //Main Color Saturation
 define( 'TVE_MAIN_COLOR_L', '--tcb-main-master-l' ); //Main Color Lightness
+define( 'TVE_MAIN_COLOR_A', '--tcb-main-master-a' ); //Main Color Alpha
 define( 'TVE_GLOBAL_STYLE_CLS_PREFIX', 'tcb-global-' );
 define( 'TVE_GLOBAL_STYLE_BUTTON_CLS_PREFIX', TVE_GLOBAL_STYLE_CLS_PREFIX . 'button-' );
 define( 'TVE_GLOBAL_STYLE_SECTION_CLS_PREFIX', TVE_GLOBAL_STYLE_CLS_PREFIX . 'section-' );
@@ -33,23 +34,25 @@ define( 'TVE_GLOBAL_STYLE_CONTENTBOX_CLS_PREFIX', TVE_GLOBAL_STYLE_CLS_PREFIX . 
 define( 'TVE_GLOBAL_STYLE_LINK_CLS_PREFIX', TVE_GLOBAL_STYLE_CLS_PREFIX . 'link-' );
 define( 'TVE_GLOBAL_STYLE_TEXT_CLS_PREFIX', TVE_GLOBAL_STYLE_CLS_PREFIX . 'text-' );
 defined( 'TVE_ICON_API' ) || define( 'TVE_ICON_API', '//landingpages.thrivethemes.com/cloud-api/icons-api.php' );
+defined( 'TVE_IS_PROCESSING_CUSTOM_CSS' ) || define( 'TVE_IS_PROCESSING_CUSTOM_CSS', 'tve_is_processing_custom_css' );
+
+defined( 'TVE_EXTENDED_MEMORY_LIMIT' ) || define( 'TVE_EXTENDED_MEMORY_LIMIT', '512M' );
+
+/**
+ * Used to store the TCB Flag HTML Element
+ * Used also in TA Visual Builder
+ */
+defined( 'TVE_FLAG_HTML_ELEMENT' ) || define( 'TVE_FLAG_HTML_ELEMENT', '<div class="tcb_flag" style="display: none"></div>' );
+
+global $tve_style_family_classes;
+$tve_style_family_classes = [ 'Flat' => 'tve_flt' ];
 
 // global options
-// all style sheet families listed below will be added to the editor.
-global $tve_style_family_classes;
 global $tve_thrive_shortcodes;
-// append version to dynamically changed stylesheets, because browsers will cache them
-$_version = get_bloginfo( 'version' );
 
-$tve_style_family_classes = array(
-	'Flat'    => 'tve_flt',
-	'Classy'  => 'tve_clsy',
-	'Minimal' => 'tve_min',
-);
-
-/* theme shortcodes available in TCB */
-// list of shortcode identifier => callback function
 /*
+ * theme shortcodes available in TCB
+ * list of shortcode identifier => callback function
  * the callback function will be called with an array of attributes and must return a html code to be inserted into the DOM
  */
 $tve_thrive_shortcodes = array(
@@ -85,6 +88,7 @@ if ( file_exists( plugin_dir_path( __FILE__ ) . '.flag-nocache' ) ) {
 	defined( 'TCB_CLOUD_DEBUG' ) || define( 'TCB_CLOUD_DEBUG', true );
 	defined( 'TL_CLOUD_DEBUG' ) || define( 'TL_CLOUD_DEBUG', true );
 }
+
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-custom-fields-shortcode.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/compat.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/social.php';
@@ -96,9 +100,13 @@ require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-elements.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-color-manager.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-font-manager.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-icon-manager.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/lightspeed/class-main.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-post.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-utils.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-content-handler.php';
+
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-search-form.php';
+
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list-content.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/class-tcb-post-list-author-image.php';
@@ -110,12 +118,19 @@ require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/pagination/class-tcb-pag
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/pagination/class-tcb-pagination-none.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/post-list/pagination/class-tcb-pagination-numeric.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/logo/class-tcb-logo.php';
+
 require_once TVE_TCB_ROOT_PATH . 'inc/woocommerce/classes/class-main.php';
+
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/notifications/class-main.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/classes/conditional-display/class-main.php';
+
+require_once TVE_TCB_ROOT_PATH . 'inc/automator/class-main.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbols-post-type.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbol-template.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbols-dashboard.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbols-taxonomy.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/symbols/class-tcb-symbols-block.php';
+
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-menu-walker.php';
 require_once TVE_TCB_ROOT_PATH . 'landing-page/inc/class-tcb-landing-page.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-lightbox.php';
@@ -123,6 +138,7 @@ require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-login-element-handler.ph
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-user-profile-handler.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/form.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/helpers/file-upload.php';
+require_once TVE_TCB_ROOT_PATH . 'inc/helpers/form-hooks.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-show-when.php';
 require_once TVE_TCB_ROOT_PATH . 'inc/classes/class-tcb-scripts.php';
 
@@ -132,25 +148,11 @@ require_once TVE_TCB_ROOT_PATH . 'event-manager/init.php';
 add_action( 'admin_init', 'tve_revert_page_to_theme' );
 
 /* ajax calls through WP API */
-add_action( 'wp_ajax_tve_ajax_load', 'tve_ajax_load' );
-add_action( 'wp_ajax_tve_load_user_template', 'tve_load_user_template' );
-add_action( 'wp_ajax_load_element_from_api', 'tve_load_element_from_api' );
-add_action( 'wp_ajax_tve_landing_pages_load', 'tve_landing_pages_load' );
-add_action( 'wp_ajax_tve_do_post_grid_shortcode', 'tve_do_post_grid_shortcode' );
-add_action( 'wp_ajax_tve_ajax_update_option', 'tve_ajax_update_option' );
 add_action( 'wp_ajax_tve_social_count', 'tve_social_ajax_count' );
 add_action( 'wp_ajax_nopriv_tve_social_count', 'tve_social_ajax_count' );
 add_action( 'wp_ajax_tve_cf_submit', 'tve_submit_contact_form' );
 add_action( 'wp_ajax_nopriv_tve_cf_submit', 'tve_submit_contact_form' );
 add_action( 'admin_action_tve_new_post', 'tve_new_post' );
-
-/**
- * Landing page import/export
- */
-add_action( 'wp_ajax_tve_lp_export', 'tve_ajax_landing_page_export' );
-add_action( 'wp_ajax_tve_lp_import', 'tve_ajax_landing_page_import' );
-
-add_action( 'wp_ajax_tve_cloud_templates', 'tve_ajax_landing_page_cloud' );
 
 add_action( 'wp_enqueue_scripts', 'tve_enqueue_editor_scripts' );
 
@@ -167,13 +169,12 @@ add_filter( 'tve_dash_main_ajax_tcb_social', 'tve_social_dash_ajax_share_counts'
 /**
  * Autoresponder APIs AJAX calls
  */
-if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || apply_filters( 'tve_leads_include_auto_responder', false ) ) {
+if ( wp_doing_ajax() || apply_filters( 'tve_leads_include_auto_responder', false ) ) {
 	/**
 	 * submit Lead Generation form element via AJAX
 	 */
 	add_action( 'wp_ajax_nopriv_tve_api_form_submit', 'tve_api_form_submit' );
 	add_action( 'wp_ajax_tve_api_form_submit', 'tve_api_form_submit' );
-
 	add_action( 'wp_ajax_nopriv_tve_custom_form_submit', 'tve_custom_form_submit' );
 	add_action( 'wp_ajax_tve_custom_form_submit', 'tve_custom_form_submit' );
 }
@@ -198,12 +199,16 @@ add_filter( 'tve_landing_page_content', 'tve_editor_content' );
 add_filter( 'page_row_actions', 'thrive_page_row_buttons', 10, 2 );
 add_filter( 'post_row_actions', 'thrive_page_row_buttons', 10, 2 );
 
-/* we need to always load this into the head section, because some themes styles will overwrite the font settings */
-add_action( 'wp_head', 'tve_load_font_css' );
-add_action( 'wp_head', 'tve_load_global_variables' );
+add_action( 'wp_head', function () {
+	/* we need to always load this into the head section, because some themes styles will overwrite the font settings */
+	tve_load_font_css();
+	tve_load_global_variables();
 
-/* load meta tags so scrapers can find them */
-add_action( 'wp_head', 'tve_load_meta_tags' );
+	/* load meta tags so scrapers can find them */
+	tve_load_meta_tags();
+
+	\TCB\Lightspeed\Main::preload_assets( get_the_ID() );
+} );
 
 // add thrive edit link to admin bar
 add_filter( 'tve_dash_admin_bar_nodes', 'thrive_editor_admin_bar' );
@@ -215,6 +220,13 @@ if ( ! is_admin() ) {
 	function tve_wp_action() {
 		add_filter( 'the_content', 'tve_clean_wp_editor_content', - 100 );
 		add_filter( 'the_content', 'tve_editor_content', is_editor_page() ? PHP_INT_MAX : 10 );
+		if ( tcb_editor()->is_inner_frame() ) {
+			global $post;
+			if ( ! empty( $post->post_password ) ) {
+				/* remove password protection on editor pages */
+				add_filter( 'post_password_required', '__return_false' );
+			}
+		}
 	}
 } else {
 	require_once( TVE_TCB_ROOT_PATH . 'admin/class-tcb-admin.php' );
@@ -229,12 +241,6 @@ if ( has_filter( 'dd_hook_wp_content' ) ) {
 // make sure WP editor page doesn't overwrite TCB content
 add_filter( 'is_protected_meta', 'tve_hide_custom_fields', 10, 2 );
 
-// use settings API to store non post-level settings
-add_action( 'init', 'tve_global_options_init' );
-
-/* hook to defined location of translations files */
-add_action( 'init', 'tve_load_plugin_textdomain' );
-
 add_action( 'thrive_dashboard_loaded', 'tcb_dashboard_loaded' );
 
 /* hook for displaying the main editor page ( control panel + content frame ) - only if the tve param is present */
@@ -247,14 +253,17 @@ if ( ! empty( $_REQUEST[ TVE_EDITOR_FLAG ] ) ) {
 	add_action( 'post_action_architect', array( tcb_editor(), 'post_action_architect' ), 0 );
 }
 
-//rest routes
-add_action( 'rest_api_init', 'tcb_create_admin_rest_routes' );
-
 add_action( 'rest_api_init', 'tcb_rest_api_init' );
 
 function tcb_rest_api_init() {
+	tcb_create_admin_rest_routes();
+
 	TCB_Post_List::rest_api_init();
 	TCB_Logo::rest_api_init();
+
+	if ( ! empty( $_POST['tar_editor_page'] ) && TCB_Product::has_external_access() ) {
+		TCB_Utils::restore_post_waf_content();
+	}
 }
 
 // hook for detecting if a post is setup as a Custom Editable piece of content
@@ -277,8 +286,23 @@ add_filter( 'tve_filter_custom_fonts_for_enqueue_in_editor', 'tve_filter_custom_
  */
 add_action( 'post-upload-ui', 'tve_media_restrict_filetypes' );
 
-/* only TCB-specific classes should be loaded here */
-add_action( 'init', 'tve_load_tcb_classes' );
+add_action( 'init', function () {
+
+	/* use settings API to store non post-level settings */
+	tve_global_options_init();
+
+	/* hook to defined location of translations files */
+	tve_load_plugin_textdomain();
+
+	/* only TCB-specific classes should be loaded here */
+	tve_load_tcb_classes();
+
+	\TCB\Notifications\Main::init();
+
+	\TCB\ConditionalDisplay\Main::init();
+} );
+
+\TCB\Lightspeed\Main::init();
 
 add_action( 'wp_footer', array( tcb_editor(), 'inner_frame_menus' ), 100 );
 add_action( 'wp', array( tcb_editor(), 'clean_inner_frame' ) );
@@ -358,7 +382,32 @@ function tcb_custom_css( $css ) {
 		$css = preg_replace( '/@import url\((\\\)?\"(http:|https:)?\/\/fonts\.(googleapis|gstatic)\.com([^)]*)\);/', '', $css );
 	}
 
+	$css = tve_minify_css( $css );
+
 	return str_replace( '#tve_editor', tcb_selection_root(), $css );
+}
+
+/**
+ * Try some css minification
+ *
+ * @param string $css
+ *
+ * @return string
+ */
+function tve_minify_css( $css = '' ) {
+
+	/* replace new line with empty space */
+	$css = preg_replace( '/\n|\r/m', '', $css );
+
+	/* replace more than two spaces with just one space */
+	$css = preg_replace( '/\s{2,}/m', '', $css );
+
+	/* remove spaces before and after , : and ; */
+	$css = preg_replace_callback( '/\s*([,;:{}])\s*/m', static function ( $match ) {
+		return $match[1];
+	}, $css );
+
+	return $css;
 }
 
 /**
@@ -491,5 +540,5 @@ add_action( 'wp_footer', function () {
 	 */
 	echo "<script type='text/javascript'>";
 	include( 'editor/js/inline/toast-message.js' );
-	echo "</script>";
+	echo '</script>';
 } );

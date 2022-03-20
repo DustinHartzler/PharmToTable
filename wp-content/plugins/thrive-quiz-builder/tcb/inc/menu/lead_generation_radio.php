@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-lead_generation_radio-component" class="tve-component" data-view="LeadGenerationRadio">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 
@@ -24,9 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<hr>
 		<div class="control-grid">
 				<span class="label">
-					<?php echo __( 'Options', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Options', 'thrive-cb' ); ?>
 				</span>
-			<button class="tve-button blue click" data-fn="addOption"><?php echo __( 'Add', 'thrive-cb' ); ?></button>
+			<button class="tve-button blue click" data-fn="addOption"><?php echo esc_html__( 'Add', 'thrive-cb' ); ?></button>
 		</div>
 		<div id="option-list" class="no-space"></div>
 		<div class="tve-control" data-view="AnswerTag"></div>

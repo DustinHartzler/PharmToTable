@@ -5,6 +5,8 @@ $settings = array(
 		'checked_val'   => 1,
 		'unchecked_val' => 0,
 		'label'         => __( 'Autoplay', 'thrive-cb' ),
+		'info'          => true,
+		'info_fn'       => 'openTooltip',
 	),
 	array(
 		'setting'       => 'no-cookie',

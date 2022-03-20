@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Danut
  * Date: 9/25/2015
@@ -27,7 +36,7 @@ class Tve_Dash_Font_Import_Manager_View {
 		}
 
 		if ( ! is_file( $this->path . '/' . $file ) ) {
-			echo sprintf( __( "No template found for %s", TVE_DASH_TRANSLATE_DOMAIN ), $file );
+			echo sprintf( esc_html__( "No template found for %s", TVE_DASH_TRANSLATE_DOMAIN ), esc_html( $file ) );
 
 			return;
 		}

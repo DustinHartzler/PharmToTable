@@ -53,13 +53,13 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 	public function readCredentials() {
 		$ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $ajax_call ? __( 'You must provide a valid SendGrid key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid SendGrid key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -80,7 +80,7 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 
 		$r_result = true;
 		if ( ! $related_api->isConnected() ) {
-			$_POST['connection']['new_connection'] = isset( $_POST['connection']['new_connection'] ) ? $_POST['connection']['new_connection'] : 1;
+			$_POST['connection']['new_connection'] = isset( $_POST['connection']['new_connection'] ) ? sanitize_text_field( $_POST['connection']['new_connection'] ) : 1;
 
 			$r_result = $related_api->readCredentials();
 		}

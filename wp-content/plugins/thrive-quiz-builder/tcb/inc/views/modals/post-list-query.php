@@ -14,15 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 </div>
 
-<div class="tcb-modal-footer clearfix padding-top-20 row">
-	<div class="col col-xs-6">
-		<button type="button" class="tcb-left tve-button grey tcb-modal-cancel">
-			<?php echo __( 'Cancel', 'thrive-cb' ); ?>
-		</button>
-	</div>
-	<div class="col col-xs-6">
-		<button type="button" class="green tcb-modal-save tcb-right tve-button">
-			<?php echo __( 'Save and Close', 'thrive-cb' ); ?>
-		</button>
-	</div>
+<div class="tcb-modal-footer">
+	<button type="button" class="tcb-left tve-button white-text grey tcb-modal-cancel">
+		<?php echo esc_html__( 'Cancel', 'thrive-cb' ); ?>
+	</button>
+	<button type="button" class="green tcb-modal-save tcb-right tve-button">
+		<?php echo esc_html__( 'Save and Close', 'thrive-cb' ); ?>
+	</button>
 </div>

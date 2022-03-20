@@ -1,7 +1,11 @@
 <div class="tqb-feedback-settings">
 
 	<p class="tqb-mpbt tqb-feedback-text">
+		<# if(	model.get( 'highlight_and_show_feedback' ) == 1) { #>
 		<?php echo __( 'How long should the highlight and feedback be displayed for?', Thrive_Quiz_Builder::T ) ?>
+		<# }else{ #>
+		<?php echo __( 'How long should the highlight be displayed for?', Thrive_Quiz_Builder::T ) ?>
+		<# } #>
 	</p>
 
 	<div class="tqb-options">

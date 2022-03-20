@@ -1,9 +1,18 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * This file contains the Thrive_Dash_Api_Sendreach_Request class used in the MailWizzApi PHP-SDK.
  *
- * @author Serban George Cristian <cristian.serban@mailwizz.com>
- * @link http://www.mailwizz.com/
+ * @author    Serban George Cristian <cristian.serban@mailwizz.com>
+ * @link      http://www.mailwizz.com/
  * @copyright 2013-2015 http://www.mailwizz.com/
  */
 
@@ -11,10 +20,10 @@
 /**
  * Thrive_Dash_Api_Sendreach_Request is the request class used to send the requests to the API endpoints.
  *
- * @author Serban George Cristian <cristian.serban@mailwizz.com>
- * @package MailWizzApi
+ * @author     Serban George Cristian <cristian.serban@mailwizz.com>
+ * @package    MailWizzApi
  * @subpackage Http
- * @since 1.0
+ * @since      1.0
  */
 class Thrive_Dash_Api_Sendreach_Request extends Thrive_Dash_Api_Sendreach {
 	/**
@@ -43,46 +52,46 @@ class Thrive_Dash_Api_Sendreach_Request extends Thrive_Dash_Api_Sendreach {
 	 */
 	public function send() {
 
-		foreach ($this->getEventHandlers(self::EVENT_BEFORE_SEND_REQUEST) as $callback) {
-			call_user_func_array($callback, array($this));
+		foreach ( $this->getEventHandlers( self::EVENT_BEFORE_SEND_REQUEST ) as $callback ) {
+			call_user_func_array( $callback, array( $this ) );
 		}
 
-		$client         = $this->client;
-		$registry       = $this->registry;
-		$isCacheable    = $registry->contains('cache') && $client->isGetMethod && $client->enableCache;
-		$requestUrl     = rtrim($client->url, '/'); // no trailing slash
-		$scheme         = parse_url($requestUrl, PHP_URL_SCHEME);
+		$client      = $this->client;
+		$registry    = $this->registry;
+		$isCacheable = $registry->contains( 'cache' ) && $client->isGetMethod && $client->enableCache;
+		$requestUrl  = rtrim( $client->url, '/' ); // no trailing slash
+		$scheme      = parse_url( $requestUrl, PHP_URL_SCHEME );
 
-		$getParams = (array)$client->paramsGet->toArray();
-		if (!empty($getParams)) {
-			ksort($getParams, SORT_STRING);
-			$queryString = http_build_query($getParams, '', '&');
-			if (!empty($queryString)) {
-				$requestUrl .= '?'.$queryString;
+		$getParams = (array) $client->paramsGet->toArray();
+		if ( ! empty( $getParams ) ) {
+			ksort( $getParams, SORT_STRING );
+			$queryString = http_build_query( $getParams, '', '&' );
+			if ( ! empty( $queryString ) ) {
+				$requestUrl .= '?' . $queryString;
 			}
 		}
 
-		$this->sign($requestUrl);
+		$this->sign( $requestUrl );
 
-		if ($isCacheable) {
+		if ( $isCacheable ) {
 			$client->getResponseHeaders = true;
 
-			$bodyFromCache  = null;
-			$etagCache      = null;
-			$params         = $getParams;
+			$bodyFromCache = null;
+			$etagCache     = null;
+			$params        = $getParams;
 
-			foreach (array('X-MW-PUBLIC-KEY', 'X-MW-TIMESTAMP', 'X-MW-REMOTE-ADDR') as $header) {
-				$params[$header] = $client->headers->itemAt($header);
+			foreach ( array( 'X-MW-PUBLIC-KEY', 'X-MW-TIMESTAMP', 'X-MW-REMOTE-ADDR' ) as $header ) {
+				$params[ $header ] = $client->headers->itemAt( $header );
 			}
 
-			$cacheKey    = $requestUrl;
-			$cache        = $this->cache->get($cacheKey);
+			$cacheKey = $requestUrl;
+			$cache    = $this->cache->get( $cacheKey );
 
-			if (isset($cache['headers']) && is_array($cache['headers'])) {
-				foreach ($cache['headers'] as $header) {
-					if (preg_match('/etag:(\s+)?(.*)/ix', $header, $matches)) {
-						$etagCache = trim($matches[2]);
-						$client->headers->add('If-None-Match', $etagCache);
+			if ( isset( $cache['headers'] ) && is_array( $cache['headers'] ) ) {
+				foreach ( $cache['headers'] as $header ) {
+					if ( preg_match( '/etag:(\s+)?(.*)/ix', $header, $matches ) ) {
+						$etagCache = trim( $matches[2] );
+						$client->headers->add( 'If-None-Match', $etagCache );
 						$bodyFromCache = $cache['body'];
 						break;
 					}
@@ -90,32 +99,32 @@ class Thrive_Dash_Api_Sendreach_Request extends Thrive_Dash_Api_Sendreach {
 			}
 		}
 
-		if ($client->isPutMethod || $client->isDeleteMethod) {
-			$client->headers->add('X-HTTP-Method-Override', strtoupper($client->method));
+		if ( $client->isPutMethod || $client->isDeleteMethod ) {
+			$client->headers->add( 'X-HTTP-Method-Override', strtoupper( $client->method ) );
 		}
 
-		if ($client->headers->count > 0) {
+		if ( $client->headers->count > 0 ) {
 			$headers = array();
-			foreach($client->headers as $name => $value) {
-				$headers[] = $name.': '.$value;
+			foreach ( $client->headers as $name => $value ) {
+				$headers[] = $name . ': ' . $value;
 			}
 		}
 
-		if ($client->isPostMethod || $client->isPutMethod || $client->isDeleteMethod) {
+		if ( $client->isPostMethod || $client->isPutMethod || $client->isDeleteMethod ) {
 
-			$params = new Thrive_Dash_Api_Sendreach_Params($client->paramsPost);
-			$params->mergeWith($client->paramsPut);
-			$params->mergeWith($client->paramsDelete);
+			$params = new Thrive_Dash_Api_Sendreach_Params( $client->paramsPost );
+			$params->mergeWith( $client->paramsPut );
+			$params->mergeWith( $client->paramsDelete );
 		}
 
 		$body = '';
-		if($client->isPostMethod || $client->isPutMethod || $client->isDeleteMethod) {
+		if ( $client->isPostMethod || $client->isPutMethod || $client->isDeleteMethod ) {
 			$body = $client->paramsPost->toArray();
 		}
 
-		$tve_headers                 = $client->headers->toArray();
-		$tve_headers['User-Agent']   = 'MailWizzApi Client version ' . Thrive_Dash_Api_Sendreach_Client::CLIENT_VERSION;
-		if($client->getIsGetMethod()) {
+		$tve_headers               = $client->headers->toArray();
+		$tve_headers['User-Agent'] = 'MailWizzApi Client version ' . Thrive_Dash_Api_Sendreach_Client::CLIENT_VERSION;
+		if ( $client->getIsGetMethod() ) {
 //			$tve_headers['Content-type'] = 'application/json';
 		}
 
@@ -137,20 +146,20 @@ class Thrive_Dash_Api_Sendreach_Request extends Thrive_Dash_Api_Sendreach {
 		/**
 		 * maybe we will need the headers for something sometime
 		 */
-		$headers = $result['headers'];
-		$body = $result['body'];
+		$headers       = $result['headers'];
+		$body          = $result['body'];
 		$response_code = $result['response']['code'];
 
 
-		$decodedBody = Thrive_Dash_Api_Sendreach_Json::decode($body, true);
+		$decodedBody = Thrive_Dash_Api_Sendreach_Json::decode( $body, true );
 
 		/**
 		 * error handling
 		 */
-		switch ($response_code)  {
+		switch ( $response_code ) {
 			case 400:
 			case 422:
-				throw new Thrive_Dash_Api_Sendreach_Exception("Invalid API request. Message: " . $decodedBody['error']);
+				throw new Thrive_Dash_Api_Sendreach_Exception( "Invalid API request. Message: " . $decodedBody['error'] );
 			default:
 				break;
 		}
@@ -172,7 +181,7 @@ class Thrive_Dash_Api_Sendreach_Request extends Thrive_Dash_Api_Sendreach {
 		$specialHeaderParams = array(
 			'X-MW-PUBLIC-KEY'  => $publicKey,
 			'X-MW-TIMESTAMP'   => $timestamp,
-			'X-MW-REMOTE-ADDR' => isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : null,
+			'X-MW-REMOTE-ADDR' => isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : null,
 		);
 
 		foreach ( $specialHeaderParams as $key => $value ) {

@@ -12,7 +12,7 @@
 		$( document ).ready( function () {
 			setTimeout( function () {
 				ThriveGlobal.$j( document ).trigger( 'tqb_quiz_loaded', {
-					quiz_id: '<?php echo $quiz_id; ?>'
+					quiz_id: '<?php echo esc_js( $quiz_id ); ?>'
 				} )
 			}, 2000 )
 		} );

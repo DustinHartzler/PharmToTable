@@ -1,6 +1,6 @@
 <div id="tve-toc_title-component" class="tve-component" data-view="TOCTitle">
 	<div class="dropdown-header" data-prop="docked">
-		<div class="group-description"><?php echo __( 'Main Options', 'thrive-cb' ); ?></div>
+		<div class="group-description"><?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?></div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">

@@ -2,7 +2,7 @@
 	<?php if ( isset( $this->messages['error'] ) && count( $this->messages['error'] ) ) : ?>
 		<?php foreach ( $this->messages['error'] as $error ) : ?>
 			<div class="error">
-				<p><?php echo $error ?></p>
+				<p><?php echo esc_html( $error ); ?></p>
 			</div>
 		<?php endforeach; ?>
 	<?php endif; ?>
@@ -10,7 +10,7 @@
 	<?php if ( isset( $this->messages['success'] ) && count( $this->messages['success'] ) ) : ?>
 		<?php foreach ( $this->messages['success'] as $success ) : ?>
 			<div class="updated">
-				<p><?php echo $success ?></p>
+				<p><?php echo esc_html( $success ); ?></p>
 			</div>
 		<?php endforeach; ?>
 	<?php endif; ?>

@@ -12,7 +12,7 @@
 
 $translate_domain = 'thrive-cb';
 
-return array(
+return [
 	'templates'                => __( 'Templates', $translate_domain ),
 	'dashboard'                => __( 'Thrive Dashboard', $translate_domain ),
 	'no_categories'            => __( 'Please insert some categories!', $translate_domain ),
@@ -82,4 +82,4 @@ return array(
 	'footer_name_required'     => __( 'Footer name is required', $translate_domain ),
 	'empty_list'               => __( 'You have no %s yet. You can start building %s by clicking on the button above.', $translate_domain ),
 	'text_not_deleted'         => __( 'This item could not be deleted', $translate_domain ),
-);
+];

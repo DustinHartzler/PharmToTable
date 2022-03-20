@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-pagination-component" class="tve-component" data-view="Pagination">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Pagination', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Pagination', 'thrive-cb' ); ?>
 	</div>
 	<div class="dropdown-content">
 		<div class="tve-control hide-tablet hide-mobile" data-view="Type"></div>

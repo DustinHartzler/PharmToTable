@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-lead_generation_input-component" class="tve-component" data-view="LeadGenerationInput">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control tcb-icon-side-wrapper" data-key="icon_side" data-icon="true" data-view="ButtonGroup"></div>
 		<div class="tcb-text-center mt-10" data-icon="true">
 			<span class="click clear-format" data-fn="remove_icon">
-				<?php tcb_icon( 'close2' ); ?>&nbsp;<?php echo __( 'Remove Input Icon', 'thrive-cb' ); ?>
+				<?php tcb_icon( 'close2' ); ?>&nbsp;<?php echo esc_html__( 'Remove Input Icon', 'thrive-cb' ); ?>
 			</span>
 		</div>
 		<div class="tve-control" data-icon="false" data-view="ModalPicker"></div>

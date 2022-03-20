@@ -171,7 +171,7 @@ class Element extends \TCB_Cloud_Template_Element_Abstract {
 					'sale-flash-visibility'       => array(
 						'config'  => array(
 							'name'    => '',
-							'label'   => __( 'Sale Flash ', 'thrive-cb' ),
+							'label'   => __( 'Sale flash ', 'thrive-cb' ),
 							'default' => true,
 						),
 						'extends' => 'Switch',

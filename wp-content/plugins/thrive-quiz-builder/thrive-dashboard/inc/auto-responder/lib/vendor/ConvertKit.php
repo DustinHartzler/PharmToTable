@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 require_once dirname( __FILE__ ) . "/ConvertKit/Exception.php";
 
 class Thrive_Dash_Api_ConvertKit {
@@ -308,6 +317,16 @@ class Thrive_Dash_Api_ConvertKit {
 		return $tag;
 	}
 
+	public function unsubscribeUser( $email_address, $arguments ) {
+		if ( empty( $email_address ) ) {
+			return false;
+		}
+
+		$arguments['email'] = $email_address;
+
+		return $this->_call( 'unsubscribe', $arguments, 'PUT' );
+	}
+
 	/**
 	 * Does the calls to the API
 	 *
@@ -318,13 +337,19 @@ class Thrive_Dash_Api_ConvertKit {
 	 * @return array|WP_Error
 	 * @throws Thrive_Dash_Api_ConvertKit_Exception
 	 */
-	protected function _call( $path, $args = array(), $method = "GET" ) {
+	protected function _call( $path, $args = array(), $method = 'GET' ) {
 		$url = $this->build_request_url( $path, $args );
 		//build parameters depending on the send method type
 		if ( $method == 'GET' ) {
 			$request = tve_dash_api_remote_get( $url, $args );
 		} elseif ( $method == 'POST' ) {
-			$request = tve_dash_api_remote_post( $url, $args );
+			$args['api_key'] = $this->key;
+			$request         = tve_dash_api_remote_post( $url, $args );
+		} elseif ( $method == 'PUT' ) {
+			$args['method']  = $method;
+			$args['api_key'] = $this->key;
+
+			$request = tve_dash_api_remote_request( $url, $args );
 		} else {
 			$request = null;
 		}

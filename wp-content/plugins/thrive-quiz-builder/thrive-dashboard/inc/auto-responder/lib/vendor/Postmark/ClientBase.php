@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 /*
  * Author:   Wildbit (http://wildbit.com)
  * License:  http://creativecommons.org/licenses/MIT/ MIT

@@ -111,12 +111,13 @@ class TCB_Admin {
 			'admin_page_tcb_admin_dashboard',  // Not visible in Thrive Dashboard side menu
 		) );
 
-		if ( 'post.php' == $hook || 'post-new.php' == $hook ) {
-			if ( tve_is_post_type_editable( get_post_type( get_the_ID() ) ) ) {
-				$this->enqueue_post_editor();
+		/* if classic editor plugin is activated ( `should_load_blocks()` => false ), load styles on post.php and post-new.php */
+		$should_load = tve_should_load_blocks() || $hook === 'post.php' || $hook === 'post-new.php';
 
-				return;
-			}
+		if ( $should_load && tve_is_post_type_editable( get_post_type( get_the_ID() ) ) ) {
+			$this->enqueue_post_editor();
+
+			return;
 		}
 
 		if ( ! in_array( $hook, $accepted_hooks, true ) ) {
@@ -127,7 +128,7 @@ class TCB_Admin {
 			return;
 		}
 
-		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
+		$js_suffix = TCB_Utils::get_js_suffix();
 
 		/**
 		 * Enqueue dash scripts
@@ -205,12 +206,12 @@ class TCB_Admin {
 	 * Enqueue and localize scripts on the admin post edit page.
 	 */
 	public function enqueue_post_editor() {
-		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
+		$js_suffix = TCB_Utils::get_js_suffix();
 
 		wp_enqueue_style( 'wp-pointer' );
 		wp_enqueue_script( 'wp-pointer' );
 
-		tve_enqueue_script( 'tcb-admin-edit-post', tve_editor_js() . '/admin' . $js_suffix );
+		tve_enqueue_script( 'tcb-admin-edit-post', tve_editor_js( '/admin' . $js_suffix ) );
 		wp_localize_script( 'tcb-admin-edit-post', 'TCB_Post_Edit_Data', array_merge( tcb_admin_get_localization(), array(
 			'post_id'      => get_the_ID(),
 			'landing_page' => tve_post_is_landing_page(),
@@ -274,6 +275,7 @@ class TCB_Admin {
 			'show_migrate_button' => $show_migrate_button,
 			'landing_page'        => $landing_page,
 			'tcb_enabled'         => ! $show_migrate_button && $this->tcb_enabled( $post_id ),
+			'nonce'               => wp_create_nonce( 'tcb_revert_content' ),
 		) );
 	}
 
@@ -321,10 +323,11 @@ class TCB_Admin {
 			'show_migrate_button' => $show_migrate_button,
 			'landing_page'        => $landing_page,
 			'tcb_enabled'         => ! $show_migrate_button && $this->tcb_enabled( $post_id ),
+			'nonce'               => wp_create_nonce( 'tcb_revert_content' ),
 		) );
 		echo '</script>';
-		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
-		tve_enqueue_script( 'thrive-gutenberg-switch', tve_editor_url() . '/editor/js/dist/gutenberg' . $js_suffix, array( 'jquery' ) );
+		$js_suffix = TCB_Utils::get_js_suffix();
+		tve_enqueue_script( 'thrive-gutenberg-switch', tve_editor_js( '/gutenberg' . $js_suffix ), array( 'jquery' ) );
 	}
 
 	/**
@@ -368,7 +371,7 @@ class TCB_Admin {
 	public function maybe_disable_tcb_editor() {
 		global $post;
 		$tcb_post = tcb_post( $post );
-		if ( ! empty( $_POST['tcb_disable_editor'] ) && wp_verify_nonce( $_POST['tcb_disable_editor'], 'tcb_disable_editor' ) ) {
+		if ( ! empty( $_POST['tcb_disable_editor'] ) && wp_verify_nonce( sanitize_text_field( $_POST['tcb_disable_editor'] ), 'tcb_disable_editor' ) ) {
 			$tcb_post->disable_editor();
 		}
 	}

@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Add one or more tags to a subscriber in an autoresponder that’s connected through the API.
  *
  * @param string $connection Connection (required) [href = #connection]

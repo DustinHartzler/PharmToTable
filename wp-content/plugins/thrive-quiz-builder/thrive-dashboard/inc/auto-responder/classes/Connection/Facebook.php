@@ -56,8 +56,8 @@ class Thrive_Dash_List_Connection_Facebook extends Thrive_Dash_List_Connection_A
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$app_id     = ! empty( $_REQUEST['app_id'] ) ? $_REQUEST['app_id'] : '';
-		$app_secret = ! empty( $_REQUEST['app_secret'] ) ? $_REQUEST['app_secret'] : '';
+		$app_id     = ! empty( $_REQUEST['app_id'] ) ? sanitize_text_field( $_REQUEST['app_id'] ) : '';
+		$app_secret = ! empty( $_REQUEST['app_secret'] ) ? sanitize_text_field( $_REQUEST['app_secret'] ) : '';
 
 		if ( empty( $app_id ) || empty( $app_secret ) ) {
 			return $this->error( __( 'Both Client ID and Client Secret fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );

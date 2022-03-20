@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * SimpleEmailServiceRequest PHP class
  *
  * @link    https://github.com/daniel-zahariev/php-aws-ses
@@ -9,13 +18,13 @@
 final class Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest {
 
 	private $ses, $verb, $parameters = array();
-	public $response;
+	public               $response;
 
 	/**
 	 * For Signature V4 https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html
 	 */
-	const SERVICE = 'email';
-	const DOMAIN = 'amazonaws.com';
+	const SERVICE   = 'email';
+	const DOMAIN    = 'amazonaws.com';
 	const ALGORITHM = 'AWS4-HMAC-SHA256';
 
 	private $_aws_key;
@@ -104,7 +113,7 @@ final class Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest {
 	private function _generateDataSignature() {
 
 		$parameters     = $this->parameters;
-		$this->_headers = [];
+		$this->_headers = array();
 		$canonical_uri  = '/';
 		ksort( $parameters );
 		$query_parameters  = '';
@@ -145,7 +154,7 @@ final class Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest {
 	/**
 	 * Get the response
 	 *
-	 * @return object | false
+	 * @return WP_Error|mixed
 	 */
 	public function getResponse() {
 

@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php echo $data['icon']; ?>
 	<span class="tcb-button-texts">
 		<span class="tcb-button-text thrv-inline-text">
-			<?php echo __( $data['name'], 'thrive-cb' ); ?>
+			<?php echo esc_html__( $data['name'], 'thrive-cb' ); ?>
 		</span>
 	</span>
 </a>

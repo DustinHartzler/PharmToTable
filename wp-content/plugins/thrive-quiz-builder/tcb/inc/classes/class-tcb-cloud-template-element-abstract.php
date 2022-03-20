@@ -84,10 +84,11 @@ abstract class TCB_Cloud_Template_Element_Abstract extends TCB_Element_Abstract 
 			return new WP_Error( 'invalid_element', __( 'Element does not have cloud templates', 'thrive-cb' ) );
 		}
 
+		$type = ! empty( $_REQUEST['type'] ) ? sanitize_text_field( $_REQUEST['type'] ) : '';
 		/**
 		 *Allows changing cloud template tag
 		 */
-		$tag = apply_filters( 'tcb_cloud_templates_replace_featured_tag', $this->get_template_tag(), $_REQUEST['type'] );
+		$tag = apply_filters( 'tcb_cloud_templates_replace_featured_tag', $this->get_template_tag(), $type );
 
 		return tve_get_cloud_content_templates( $tag, apply_filters( 'tcb_get_cloud_templates_default_args', $args ) );
 	}

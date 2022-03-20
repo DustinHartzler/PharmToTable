@@ -4,12 +4,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="tcb-modal-content sym-admin-modal">
-	<h2 class="tcb-modal-title">
+	<span class="tcb-modal-title">
 		<#= title #>
-	</h2>
+	</span>
 	<div class="error-container"></div>
 
-	<p class="tcb-modal-desc">
+	<p class="tcb-modal-description">
 		<#= description #>
 	</p>
 
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<# } #>
 	</div>
 
-	<div class="tcb-modal-footer clearfix align-left">
+	<div class="tcb-modal-footer">
 		<button type="button" class="tvd-modal-close">
 			<?php echo __( 'Cancel', 'thrive-cb' ) ?>
 		</button>

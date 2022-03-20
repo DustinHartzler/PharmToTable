@@ -33,17 +33,18 @@ function tqb_purge_cache() {
  * Get variation from variation table based on variation ID
  *
  * @param int $variation_id
+ * @param int $parent_id
  *
  * @return array|bool|null|object
  */
-function tqb_get_variation( $variation_id = 0 ) {
+function tqb_get_variation( $variation_id = 0, $parent_id = 0 ) {
 	global $tqbdb;
 
 	if ( empty( $variation_id ) ) {
 		return false;
 	}
 
-	$variation = $tqbdb->get_page_variations( array( 'id' => $variation_id ), ARRAY_A );
+	$variation = $tqbdb->get_page_variations( array( 'id' => $variation_id, 'parent_id' => $parent_id ), ARRAY_A );
 
 	if ( empty( $variation ) ) {
 		return false;

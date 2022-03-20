@@ -1,22 +1,22 @@
 <?php
 $post_id        = get_the_ID();
-$revisions      = wp_get_post_revisions( $post_id );
+$revisions      = wp_get_post_revisions( $post_id, array('numberposts' => 10) );
 $first_revision = reset( $revisions );
 ?>
-<h2 class="tcb-modal-title"><?php echo __( 'Revision Manager', 'thrive-cb' ) ?></h2>
-<p><?php echo __( 'Use the revision manager to restore your page to a previous version:', 'thrive-cb' ); ?></p>
-<div class="pt-40 row" id="tcb-revision-list"></div>
-<div class="tcb-modal-footer clearfix pt-40 row">
-	<div class="col col-xs-9">
+<h2 class="tcb-modal-title ml-0"><?php echo esc_html__( 'Revision Manager', 'thrive-cb' ) ?></h2>
+<p class="tcb-modal-description mb-0"><?php echo esc_html__( 'Use the revision manager to restore your page to a previous version:', 'thrive-cb' ); ?></p>
+<div id="tcb-revision-list"></div>
+<div class="tcb-modal-footer tcb-modal-footer pl-0 pr-0 pt-0">
+	<div>
 		<?php if ( empty( $first_revision ) ) : ?>
-			<?php echo __( 'The current post has no revisions!', 'thrive-cb' ); ?>
+			<?php echo esc_html__( 'The current post has no revisions!', 'thrive-cb' ); ?>
 		<?php else : ?>
-			<a href="<?php echo add_query_arg( array( 'revision' => $first_revision->ID ), admin_url( 'revision.php' ) ) ?>"
+			<a href="<?php echo esc_url(add_query_arg( array( 'revision' => $first_revision->ID ), admin_url( 'revision.php' ) )); ?>"
 			   class="tcb-modal-lnk blue"
-			   target="_blank"><?php tcb_icon( 'revision' ); ?>&nbsp;<?php echo __( 'Show the default Wordpress Revision Manager', 'thrive-cb' ); ?></a>
+			   target="_blank"><?php tcb_icon( 'revision' ); ?>&nbsp;<?php echo esc_html__( 'Show the default Wordpress Revision Manager', 'thrive-cb' ); ?></a>
 		<?php endif; ?>
 	</div>
-	<div class="col col-xs-3">
-		<button type="button" class="tcb-right tve-button medium green tcb-modal-cancel"><?php echo __( 'Close', 'thrive-cb' ) ?></button>
+	<div>
+		<button type="button" class="tcb-right tve-button medium green white-text tcb-modal-cancel"><?php echo esc_html__( 'Close', 'thrive-cb' ) ?></button>
 	</div>
 </div>

@@ -324,7 +324,7 @@ class TCB_Hooks {
 		if ( self::is_editable( get_post_type( $post ) ) && ! empty( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) ) {
 
 			$preview_link = add_query_arg( array(
-				Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME => $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ],
+				Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME => sanitize_text_field( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ),
 			), $preview_link );
 		}
 
@@ -448,7 +448,7 @@ class TCB_Hooks {
 		if ( self::is_editable( $type ) ) {
 			global $variation;
 			if ( empty( $variation ) ) {
-				$variation = tqb_get_variation( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] );
+				$variation = tqb_get_variation( ! empty( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) ? absint( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) : 0 );
 			}
 
 			$allow_tqb_advanced = TCB_Hooks::enable_tqb_advanced_menu( $variation['post_type'] );
@@ -944,7 +944,7 @@ class TCB_Hooks {
 		if ( empty( $_POST['post_id'] ) ) {
 			return $show_submit;
 		}
-		$post = get_post( $_POST['post_id'] );
+		$post = get_post( absint( $_POST['post_id'] ) );
 		if ( empty( $post ) ) {
 			return $show_submit;
 		}
@@ -964,7 +964,7 @@ class TCB_Hooks {
 	 */
 	public static function tqb_filter_autoresponder_connection_type( $connection_types ) {
 
-		$post = get_post( $_POST['post_id'] );
+		$post = get_post( ! empty( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0 );
 		if ( empty( $post ) ) {
 			return $connection_types;
 		}
@@ -1006,7 +1006,7 @@ class TCB_Hooks {
 	 * @return array
 	 */
 	public static function tqb_save_user_template( $template = array() ) {
-		$post_type = get_post_type( $_REQUEST['post_id'] );
+		$post_type = get_post_type( ! empty( $_REQUEST['post_id'] ) ? absint( $_REQUEST['post_id'] ) : 0 );
 
 		if ( ! self::is_editable( $post_type ) ) {
 			return $template;
@@ -1039,7 +1039,14 @@ class TCB_Hooks {
 		}
 
 		if ( empty( $variation ) ) {
-			$variation = tqb_get_variation( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] );
+			$variation_id = isset( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_CHILD_KEY_NAME ] ) ? absint( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_CHILD_KEY_NAME ] ) : $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ];
+			$parent_id    = isset( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_CHILD_KEY_NAME ] ) ? absint( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) : 0;
+
+			$variation = tqb_get_variation( $variation_id, $parent_id );
+
+			if ( isset( $variation[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) ) {
+				$variation[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] = tqb_merge_media_query_styles( $variation[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] );
+			}
 		}
 
 		if ( empty( $variation ) ) {
@@ -1052,12 +1059,7 @@ class TCB_Hooks {
 		$allow_tqb_advanced = ( ! empty( $variation[ Thrive_Quiz_Builder::FIELD_TEMPLATE ] ) && TCB_Hooks::enable_tqb_advanced_menu( $variation['post_type'] ) ) ? true : false;
 
 		/* flat is the default style for Thrive Quiz Builder designs */
-		global $tve_style_family_classes;
-		$tve_style_families = tve_get_style_families();
-		$style_family       = 'Flat';
-		$style_key          = 'tve_style_family_' . strtolower( $tve_style_family_classes[ $style_family ] );
-		/* Style family */
-		wp_style_is( $style_key ) || tve_enqueue_style( $style_key, $tve_style_families[ $style_family ] );
+		tve_enqueue_style( 'tve_style_family_tve_flt', tve_editor_css() . '/thrive_flat.css' );
 
 		if ( is_editor_page() ) {
 			tqb_enqueue_style( 'tqb-variation-editor', tqb()->plugin_url( 'tcb-bridge/assets/css/editor.css' ) );
@@ -1126,20 +1128,12 @@ class TCB_Hooks {
 			//TODO: implement this.
 		}
 
-		$_version = get_bloginfo( 'version' );
-
 		/** clear out any data that's not necessary on the editor and add form variation custom data */
 		$js_params['landing_page']          = '';
 		$js_params['landing_page_config']   = array();
 		$js_params['landing_pages']         = array();
 		$js_params['page_events']           = array();
 		$js_params['landing_page_lightbox'] = array();
-		$js_params['style_families']        = array(
-			'Flat' => tve_editor_css() . '/thrive_flat.css?ver=' . $_version,
-		);
-		$js_params['style_classes']         = array(
-			'Flat' => 'tve_flt',
-		);
 		$js_params['custom_post_data']      = array(
 			Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME => $variation['id'],
 			'post_type'                                   => $variation['post_type'],
@@ -1187,7 +1181,7 @@ class TCB_Hooks {
 			'success' => true,
 		);
 
-		if ( empty( $_POST['post_id'] ) || ! TQB_Product::has_access() || ! current_user_can( 'edit_post', $_POST['post_id'] ) || empty( $_POST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) ) {
+		if ( empty( $_POST['post_id'] ) || ! TQB_Product::has_access() || ! current_user_can( 'edit_post', absint( $_POST['post_id'] ) ) || empty( $_POST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) ) {
 			$response = array(
 				'success' => false,
 				'message' => __( 'Invalid Parameters', Thrive_Quiz_Builder::T ),
@@ -1200,7 +1194,7 @@ class TCB_Hooks {
 			ob_clean();
 		}
 
-		$variation = tqb_get_variation( $_POST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] );
+		$variation = tqb_get_variation( absint( $_POST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) );
 		if ( empty( $variation ) ) {
 			$response = array(
 				'success' => false,
@@ -1220,16 +1214,20 @@ class TCB_Hooks {
 			 * IE inserts a space after the "display:" -> (\s*)
 			 * IE puts a semicolon after none ;?
 			 */
-			preg_match( $pattern, $_POST['tve_content'], $m );
+			preg_match( $pattern, ! empty( $_POST['tve_content'] ) ? $_POST['tve_content'] : '', $m ); //phpcs:ignore
 			$dynamic_content = '';
 			if ( ! empty( $m[1] ) ) { // . '<div class="tve_content_inner tqb-content-inner">'  . '</div>'
 				$dynamic_content = Thrive_Quiz_Builder::STATES_DYNAMIC_CONTENT_PATTERN . $m[1] . Thrive_Quiz_Builder::STATES_DYNAMIC_CONTENT_PATTERN;
 			}
 
-			$child_variation                                                        = TQB_Variation_Manager::get_variation( $_POST['tqb_child_variation_id'] );
-			$child_variation['tcb_fields'][ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] = ! empty( $_POST['tqb_child_variation_css'] ) ? json_decode( stripslashes( $_POST['tqb_child_variation_css'] ), true ) : '';
+			$child_variation = TQB_Variation_Manager::get_variation( $_POST['tqb_child_variation_id'] );
+
+			$child_variation['tcb_fields'][ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] = ! empty( $_POST['tqb_child_variation_css'] ) ? json_decode( stripslashes( $_POST['tqb_child_variation_css'] ), true ) : ''; //phpcs:ignore
+
+			TQB_Lightspeed::save_optimized_assets( $_POST['post_id'], $_POST['tqb_child_variation_id'] );
+
 			TQB_Variation_Manager::save_child_variation( array(
-				'id'         => $_POST['tqb_child_variation_id'],
+				'id'         => sanitize_text_field( $_POST['tqb_child_variation_id'] ),
 				'parent_id'  => $variation['id'],
 				'content'    => $dynamic_content,
 				'tcb_fields' => $child_variation['tcb_fields'],
@@ -1238,19 +1236,21 @@ class TCB_Hooks {
 		/*
 		 * END: Prepare the child variation content
 		 */
-		$variation[ Thrive_Quiz_Builder::FIELD_CONTENT ]            = $_POST['tve_content'];
-		$variation[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ]         = trim( $_POST['inline_rules'] );
-		$variation[ Thrive_Quiz_Builder::FIELD_USER_CSS ]           = $_POST['tve_custom_css'];
-		$variation[ Thrive_Quiz_Builder::FIELD_CUSTOM_FONTS ]       = self::tqb_get_custom_font_links( empty( $_POST['custom_font_classes'] ) ? array() : $_POST['custom_font_classes'] );
+		$variation[ Thrive_Quiz_Builder::FIELD_CONTENT ]            = $_POST['tve_content']; //phpcs:ignore
+		$variation[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ]         = trim( $_POST['inline_rules'] ); //phpcs:ignore
+		$variation[ Thrive_Quiz_Builder::FIELD_USER_CSS ]           = $_POST['tve_custom_css']; //phpcs:ignore
+		$variation[ Thrive_Quiz_Builder::FIELD_CUSTOM_FONTS ]       = self::tqb_get_custom_font_links( empty( $_POST['custom_font_classes'] ) ? array() : $_POST['custom_font_classes'] ); //phpcs:ignore
 		$variation[ Thrive_Quiz_Builder::FIELD_TYPEFOCUS ]          = empty( $_POST['tve_has_typefocus'] ) ? 0 : 1;
 		$variation[ Thrive_Quiz_Builder::FIELD_MASONRY ]            = empty( $_POST['tve_has_masonry'] ) ? 0 : 1;
 		$variation[ Thrive_Quiz_Builder::FIELD_ICON_PACK ]          = empty( $_POST['has_icons'] ) ? 0 : 1;
-		$variation[ Thrive_Quiz_Builder::FIELD_SOCIAL_SHARE_BADGE ] = ( strpos( $_POST['tve_content'], '"tqb-social-share-badge-container' ) !== false ) ? 1 : 0;
+		$variation[ Thrive_Quiz_Builder::FIELD_SOCIAL_SHARE_BADGE ] = strpos( $_POST['tve_content'], '"tqb-social-share-badge-container' ) !== false ? 1 : 0;
 
 		$variation_manager = new TQB_Variation_Manager( $variation['quiz_id'], $variation['page_id'] );
 
 		//Save only the content and the tcb_fields. nothing else.
 		$variation = $variation_manager->prepare_variation_for_tcb_save( $variation );
+
+		TQB_Lightspeed::save_optimized_assets( $variation['page_id'], $variation['id'] );
 
 		$variation_manager->save_variation( $variation, false );
 
@@ -1295,7 +1295,7 @@ class TCB_Hooks {
 	public static function editor_append_preview_link_args( $current_args, $post_id ) {
 
 		if ( self::is_editable( $post_id ) && ! empty( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) ) {
-			$current_args [ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] = $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ];
+			$current_args [ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] = sanitize_text_field( $_GET[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] );
 		}
 
 		return $current_args;
@@ -1308,30 +1308,30 @@ class TCB_Hooks {
 		add_filter( 'tcb_is_editor_page_ajax', '__return_true' );
 		add_filter( 'tcb_is_editor_page_raw_ajax', '__return_true' );
 
-		if ( empty( $_POST['page_id'] ) || ! TQB_Product::has_access() || ! current_user_can( 'edit_post', $_POST['page_id'] ) || empty( $_POST['variation_id'] ) || ! is_numeric( $_POST['variation_id'] ) || empty( $_POST['custom'] ) ) {
+		if ( empty( $_POST['page_id'] ) || ! TQB_Product::has_access() || ! current_user_can( 'edit_post', absint( $_POST['page_id'] ) ) || empty( $_POST['variation_id'] ) || ! is_numeric( $_POST['variation_id'] ) || empty( $_POST['custom'] ) ) {
 			exit();
 		}
 
-		if ( ! ( $variation = tqb_get_variation( $_POST['variation_id'] ) ) ) {
+		if ( ! ( $variation = tqb_get_variation( absint( $_POST['variation_id'] ) ) ) ) {
 			exit( '1' );
 		}
 
-		TQB_Template_Manager::get_instance( $variation )->api( $_POST['custom'] );
+		TQB_Template_Manager::get_instance( $variation )->api( sanitize_text_field( $_POST['custom'] ) );
 	}
 
 	public static function state_action() {
 		add_filter( 'tcb_is_editor_page_ajax', '__return_true' );
 		add_filter( 'tcb_is_editor_page_raw_ajax', '__return_true' );
 
-		if ( empty( $_POST['page_id'] ) || ! TQB_Product::has_access() || ! current_user_can( 'edit_post', $_POST['page_id'] ) || empty( $_POST['variation_id'] ) || ! is_numeric( $_POST['variation_id'] ) || empty( $_POST['custom'] ) ) {
+		if ( empty( $_POST['page_id'] ) || ! TQB_Product::has_access() || ! current_user_can( 'edit_post', absint( $_POST['page_id'] ) ) || empty( $_POST['variation_id'] ) || ! is_numeric( $_POST['variation_id'] ) || empty( $_POST['custom'] ) ) {
 			exit();
 		}
 
-		if ( ! ( $variation = tqb_get_variation( $_POST['variation_id'] ) ) ) {
+		if ( ! ( $variation = tqb_get_variation( absint( $_POST['variation_id'] ) ) ) ) {
 			exit( '1' );
 		}
 
-		TQB_State_Manager::get_instance( $variation )->api( $_POST['custom'] );
+		TQB_State_Manager::get_instance( $variation )->api( sanitize_text_field( $_POST['custom'] ) );
 
 	}
 
@@ -1528,12 +1528,12 @@ class TCB_Hooks {
 		if ( ! empty( $_GET['tqb_redirect_post_id'] )
 		     && is_numeric( $_GET['tqb_redirect_post_id'] )
 		     && ! empty( $_SERVER['HTTP_REFERER'] )
-		     && ( strpos( $_SERVER['HTTP_REFERER'], 'facebook' ) !== false )
+		     && ( strpos( sanitize_text_field( $_SERVER['HTTP_REFERER'] ), 'facebook' ) !== false )
 			/**
 			 * It is important to have the referer here for when the user comes to the site from facebook, we can redirect him to the post where the badge is located
 			 */
 		) {
-			wp_redirect( get_permalink( $_GET['tqb_redirect_post_id'] ) );
+			wp_redirect( get_permalink( absint( $_GET['tqb_redirect_post_id'] ) ) );
 			exit();
 		}
 	}
@@ -1554,7 +1554,7 @@ class TCB_Hooks {
 
 		$css = '';
 		if ( ! empty( $variation[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) ) { /* inline style rules = custom colors */
-			$css .= sprintf( '<style type="text/css" class="tve_custom_style">%s</style>', $variation[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] );
+			$css = sprintf( '<style type="text/css" class="tve_custom_style">%s</style>', $variation[ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] );
 		}
 
 		/** user-defined Custom CSS rules for the form */
@@ -1581,7 +1581,7 @@ class TCB_Hooks {
 			return $css;
 		}
 
-		echo $css;
+		echo $css; // phpcs:ignore
 	}
 
 	/**

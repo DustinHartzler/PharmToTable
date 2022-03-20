@@ -48,7 +48,7 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 			),
 		) );
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/cloud/(?P<id>[\d]+)', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/cloud/(?P<id>.+)', array(
 			'args' => array(
 				'id' => array(
 					'description' => __( 'Unique identifier for the object.' ),

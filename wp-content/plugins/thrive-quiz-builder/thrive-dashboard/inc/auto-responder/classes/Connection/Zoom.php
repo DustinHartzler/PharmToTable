@@ -1,9 +1,13 @@
 <?php
+
 /**
  * Thrive Themes - https://thrivethemes.com
  *
  * @package thrive-dashboard
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstract {
 
@@ -38,7 +42,7 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 	 * @return mixed|Thrive_Dash_List_Connection_Abstract
 	 */
 	public function readCredentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid Zoom key', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -46,7 +50,7 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 
 		$url = self::zoom_url;
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -170,5 +174,9 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 
 			return false;
 		}
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 }

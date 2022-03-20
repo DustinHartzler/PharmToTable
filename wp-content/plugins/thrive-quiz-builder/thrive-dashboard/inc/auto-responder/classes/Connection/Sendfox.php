@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_List_Connection_Sendfox extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -35,7 +44,7 @@ class Thrive_Dash_List_Connection_Sendfox extends Thrive_Dash_List_Connection_Ab
 			return $this->error( __( 'Api key is required', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -110,12 +119,35 @@ class Thrive_Dash_List_Connection_Sendfox extends Thrive_Dash_List_Connection_Ab
 			$lists = $api->getLists();
 
 			if ( isset( $lists['data'] ) && is_array( $lists['data'] ) ) {
+				/* First page of lists */
 				$result = $lists['data'];
+
+				/* For multiple pages */
+				if ( ! empty( $lists['total'] ) ) {
+					$lists_total       = (int) $lists['total'];
+					$list_per_page     = (int) $lists['per_page'];
+					$pagination_needed = (int) ( $lists_total / $list_per_page ) + 1;
+
+					/* Request pages >=2 and merge lists */
+					if ( $pagination_needed >= 2 ) {
+						for ( $i = 2; $i <= $pagination_needed; $i ++ ) {
+							$response_pages = $api->getListsOnPage( $i );
+
+							if ( isset( $response_pages['data'] ) && is_array( $response_pages['data'] ) ) {
+								$result = array_merge( $result, $response_pages['data'] );
+							}
+						}
+					}
+				}
 			}
 		} catch ( Exception $e ) {
 
 		}
 
 		return $result;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 }

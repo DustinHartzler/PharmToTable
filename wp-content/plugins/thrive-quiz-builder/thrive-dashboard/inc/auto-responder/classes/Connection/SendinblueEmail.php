@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Aurelian Pop
  * Date: 06-Jan-16
@@ -50,13 +59,13 @@ class Thrive_Dash_List_Connection_SendinblueEmail extends Thrive_Dash_List_Conne
 	public function readCredentials() {
 		$ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $ajax_call ? __( 'You must provide a valid SendinBlue key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid SendinBlue key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -77,7 +86,7 @@ class Thrive_Dash_List_Connection_SendinblueEmail extends Thrive_Dash_List_Conne
 
 		$r_result = true;
 		if ( ! $related_api->isConnected() ) {
-			$_POST['connection']['new_connection'] = isset( $_POST['connection']['new_connection'] ) ? $_POST['connection']['new_connection'] : 1;
+			$_POST['connection']['new_connection'] = isset( $_POST['connection']['new_connection'] ) ? absint( $_POST['connection']['new_connection'] ) : 1;
 
 			$r_result = $related_api->readCredentials();
 		}
@@ -390,5 +399,16 @@ class Thrive_Dash_List_Connection_SendinblueEmail extends Thrive_Dash_List_Conne
 	 */
 	public static function getEmailMergeTag() {
 		return '{EMAIL}';
+	}
+
+	/**
+	 * Checks if a connection is V3
+	 *
+	 * @return bool
+	 */
+	public function is_v3() {
+		$is_v3 = $this->param( 'v3' );
+
+		return ! empty( $is_v3 );
 	}
 }

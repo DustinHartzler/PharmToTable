@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Class Thrive_Dash_List_Connection_Abstract
  *
  * base class for all connections
@@ -170,7 +179,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * @return Thrive_Dash_List_Connection_Abstract
 	 */
 	public function error( $message ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( wp_doing_ajax() ) {
 			return $message;
 		}
 
@@ -185,7 +194,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * @return Thrive_Dash_List_Connection_Abstract
 	 */
 	public function success( $message ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( wp_doing_ajax() ) {
 			return true;
 		}
 
@@ -283,6 +292,18 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	public abstract function addSubscriber( $list_identifier, $arguments );
 
 	/**
+	 * delete a contact matching arguments
+	 *
+	 * @param string $email
+	 * @param array $arguments
+	 *
+	 * @return mixed
+	 */
+	public function deleteSubscriber( $email, $arguments = array() ) {
+		return false;
+	}
+
+	/**
 	 * get all Subscriber Lists from this API service
 	 * it will first check a local cache for the existing lists
 	 *
@@ -338,6 +359,36 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 */
 	public function getListSubtitle() {
 		return '';
+	}
+
+	/**
+	 * get an array with field keys that are required for automator subscribe user action
+	 *
+	 * @return array
+	 */
+	public function get_automator_autoresponder_fields() {
+		return array();
+	}
+
+	/**
+	 * Enable custom subfields based on api
+	 * @param $fields
+	 * @param $field
+	 * @param $action_data
+	 *
+	 * @return mixed
+	 */
+	public function set_custom_autoresponder_fields( $fields, $field, $action_data ) {
+		return $fields;
+	}
+
+	/**
+	 * get an array with field keys required by automator tag user in autoresponder action
+	 *
+	 * @return array
+	 */
+	public function get_automator_autoresponder_tag_fields() {
+		return array( 'tag_input' );
 	}
 
 	/**
@@ -456,6 +507,9 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * @return array
 	 */
 	public function get_api_data( $params = array(), $force = false ) {
+		if ( empty( $params ) ) {           //in case it comes out empty string
+			$params = array();
+		}
 
 		$transient = 'tve_api_data_' . $this->getKey();
 		$data      = get_transient( $transient );
@@ -587,6 +641,29 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * @return array|bool for error
 	 */
 	protected abstract function _getLists();
+
+	/**
+	 * Whether or not the integration supports forms
+	 *
+	 * @return bool
+	 */
+	public function hasForms() {
+		return false;
+	}
+
+	protected function _getForms() {
+		return array();
+	}
+
+	public function getForms() {
+		if ( ! $this->isConnected() ) {
+			$this->_error = $this->getTitle() . ' ' . __( 'is not connected', TVE_DASH_TRANSLATE_DOMAIN );
+
+			return false;
+		}
+
+		return $this->_getForms();
+	}
 
 	/**
 	 * Get API Videos URLs
@@ -778,7 +855,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 		$custom_fields = tve_sanitize_data_recursive( $custom_fields );
 
-		return set_transient( $this->_custom_fields_transient, $custom_fields );
+		return set_transient( $this->_custom_fields_transient, $custom_fields, WEEK_IN_SECONDS );
 	}
 
 	public function processField( $field ) {
@@ -804,9 +881,18 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return string
 	 */
-	protected function getTagsKey() {
+	public function getTagsKey() {
 
 		return $this->_key . '_tags';
+	}
+
+	public function getFormsKey() {
+		return $this->_key . '_form';
+	}
+
+	public function getOptinKey() {
+
+		return $this->_key . '_optin';
 	}
 
 	/**
@@ -927,14 +1013,16 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 	/**
 	 * Prepare necessary arguments for adding a tag
-	 * @param       $email
+	 *
+	 * @param string       $email
 	 * @param array|string $tags
-	 * @param array $extra
+	 * @param array        $extra
+	 *
 	 * @return array
 	 */
 	public function getArgsForTagsUpdate( $email, $tags = '', $extra = array() ) {
 
-		$tags_key   = $this->getTagsKey();
+		$tags_key = $this->getTagsKey();
 
 		$return = array(
 			'email'   => $email,
@@ -989,6 +1077,20 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	public function getAvailableCustomFields( $data = array() ) {
 
 		return method_exists( $this, 'getAllCustomFields' ) ? $this->getAllCustomFields( true ) : array();
+	}
+
+	/**
+	 * Get a sanitized value from post
+	 *
+	 * @param string $key
+	 * @param mixed  $default
+	 */
+	protected function post( $key, $default = null ) {
+		if ( ! isset( $_POST[ $key ] ) ) {
+			return $default;
+		}
+
+		return map_deep( $_POST[ $key ], 'sanitize_text_field' );
 	}
 }
 

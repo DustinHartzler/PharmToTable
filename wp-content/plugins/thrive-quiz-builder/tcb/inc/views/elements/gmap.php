@@ -12,5 +12,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <div class="thrv_wrapper thrv-google-map-embedded-code tve-flexible-container">
-	<iframe title="Google Map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=New%20York&t=m&z=10&output=embed&iwloc=near"></iframe>
+	<iframe title="Google Map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src=""></iframe>
 </div>

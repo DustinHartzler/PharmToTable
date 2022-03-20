@@ -1,12 +1,22 @@
-<?php if ( isset( $show_textarea ) ) : ?>
-	<textarea name="tve_lead_generation_code" placeholder="<?php echo __( "Insert your code here", TVE_DASH_TRANSLATE_DOMAIN ) ?>"
+<?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+ if ( isset( $show_textarea ) ) : ?>
+	<textarea name="tve_lead_generation_code" placeholder="<?php echo esc_html__( "Insert your code here", TVE_DASH_TRANSLATE_DOMAIN ) ?>"
 	          class="tve_lightbox_textarea"></textarea>
 	<div class="tve_clearfix">
 		<a href="javascript:void(0)" class="tve_editor_button tve_editor_button_default tve_right tve_button_margin tve_click "
-		   data-ctrl="function:auto_responder.dashboard"><?php echo __( "Cancel", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+		   data-ctrl="function:auto_responder.dashboard"><?php echo esc_html__( "Cancel", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
 		<a href="javascript:void(0)"
 		   class="tve_editor_button tve_editor_button_success tve_right tve_lead_generate_fields tve_click"
-		   data-ctrl="function:auto_responder.generate_fields"><?php echo __( "Generate Fields", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+		   data-ctrl="function:auto_responder.generate_fields"><?php echo esc_html__( "Generate Fields", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
 	</div>
 <?php endif ?>
 <div class="tve_large_lightbox tve_lead_gen_lightbox_small">
@@ -19,7 +29,7 @@
 		<table>
 			<tfoot>
 			<tr>
-				<td style="width: 10%;"><?php echo __( "Choose an icon", TVE_DASH_TRANSLATE_DOMAIN ) ?></td>
+				<td style="width: 10%;"><?php echo esc_html__( 'Choose an icon', TVE_DASH_TRANSLATE_DOMAIN ) ?></td>
 				<td>
 					<?php $icon_click = 'function:auto_responder.choose_icon';
 					$icon_hide_header = true;

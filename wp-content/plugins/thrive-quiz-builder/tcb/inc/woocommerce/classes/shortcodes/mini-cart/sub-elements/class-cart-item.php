@@ -28,7 +28,7 @@ class Cart_Item extends Abstract_Sub_Element {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.woocommerce-mini-cart-item';
+		return '.tcb-woo-mini-cart-content .woocommerce-mini-cart-item';
 	}
 
 	/**

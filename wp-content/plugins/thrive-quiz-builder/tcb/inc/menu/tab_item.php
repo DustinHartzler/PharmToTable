@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div id="tve-tab_item-component" class="tve-component" data-view="TabItem">
 	<div class="dropdown-header" data-prop="docked">
 		<div class="group-description">
-			<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+			<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		</div>
 		<i></i>
 	</div>
@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 		<div class="tve-control" data-view="HasImage"></div>
 		<div class="tve-tab-icon-position">
-			<span class="label"><?php echo __( 'Icon / Image Position', 'thrive-cb' ); ?></span>
+			<span class="label"><?php echo esc_html__( 'Icon / Image Position', 'thrive-cb' ); ?></span>
 			<div class="tve-control mt-10" data-extends="ButtonGroup" data-view="IconPosition"></div>
 		</div>
 	</div>

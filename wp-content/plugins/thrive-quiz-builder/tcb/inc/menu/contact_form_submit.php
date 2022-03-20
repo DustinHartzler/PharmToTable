@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-contact_form_submit-component" class="tve-component" data-view="ContactFormSubmit">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
 		<div class="tve-control tcb-icon-side-wrapper hide-states" data-key="icon_side" data-icon="true" data-view="ButtonGroup"></div>
 		<div class="tcb-text-center mt-10 hide-states" data-icon="true">
 			<span class="click tcb-text-uppercase clear-format" data-fn="remove_icon">
-				<?php tcb_icon( 'close2' ) ?>&nbsp;<?php echo __( 'Remove Input Icon', 'thrive-cb' ) ?>
+				<?php tcb_icon( 'close2' ) ?>&nbsp;<?php echo esc_html__( 'Remove Input Icon', 'thrive-cb' ) ?>
 			</span>
 		</div>
 		<div class="tve-control gl-st-button-toggle-2" data-icon="false"  data-view="ModalPicker"></div>

@@ -30,7 +30,7 @@ class TD_TTW_User_Licenses {
 
 	const CACHE_LIFE_TIME = 28800; //8 hours
 
-	private $_licenses_instances = [];
+	private $_licenses_instances = array();
 
 	private function __construct() {
 
@@ -49,7 +49,7 @@ class TD_TTW_User_Licenses {
 			$tag = ! empty( $item['tag'] ) ? $item['tag'] : '';
 
 			if ( is_array( $tag ) ) {
-				$tag = in_array( self::TTB_TAG, $tag )
+				$tag = in_array( self::TTB_TAG, $tag, true )
 					? self::TTB_TAG
 					: TD_TTW_License::MEMBERSHIP_TAG;
 			}
@@ -145,7 +145,7 @@ class TD_TTW_User_Licenses {
 			return $this->_licenses_instances[ $tag ];
 		}
 
-		return new TD_TTW_License( [] );
+		return new TD_TTW_License( array() );
 	}
 
 	/**
@@ -202,15 +202,18 @@ class TD_TTW_User_Licenses {
 	 */
 	public function get_recheck_url() {
 
-		if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] === TD_TTW_Update_Manager::NAME ) {
-			$url = $_SERVER['REQUEST_URI'];
+		if ( isset( $_REQUEST['page'] ) && sanitize_text_field( $_REQUEST['page'] ) === TD_TTW_Update_Manager::NAME ) {
+			$url = ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( $_SERVER['REQUEST_URI'] ) : '';
 		} else {
 			$url = admin_url( 'plugins.php' );
 		}
 
-		return add_query_arg( array(
-			TD_TTW_User_Licenses::RECHECK_KEY => 1,
-		), $url );
+		return add_query_arg(
+			array(
+				TD_TTW_User_Licenses::RECHECK_KEY => 1,
+			),
+			$url
+		);
 	}
 
 	/**
@@ -228,11 +231,11 @@ class TD_TTW_User_Licenses {
 		include $this->path( 'templates/debugger.phtml' );
 		$html = ob_get_clean();
 
-		if ( $return === true ) {
+		if ( true === $return ) {
 			return $html;
 		}
 
-		echo $html;
+		echo $html; //phpcs:ignore
 	}
 
 	/**
@@ -249,8 +252,13 @@ class TD_TTW_User_Licenses {
 		}
 
 		$licenses = get_transient( self::NAME );
+		/* some sanity checks : there are cases when this is an array containing a single empty array. this IF identifies and corrects that case */
+		if ( is_array( $licenses ) && ! empty( $licenses ) && empty( array_filter( $licenses ) ) ) {
+			// force a re-fetch
+			$licenses = false;
+		}
 
-		if ( $licenses !== false ) {
+		if ( false !== $licenses ) {
 
 			return $licenses;
 		}
@@ -271,7 +279,6 @@ class TD_TTW_User_Licenses {
 		$body = json_decode( $body, true );
 
 		if ( ! is_array( $body ) || ! isset( $body['success'] ) || $body['success'] === false ) {
-
 			set_transient( self::NAME, array(), self::CACHE_LIFE_TIME );
 
 			return array();

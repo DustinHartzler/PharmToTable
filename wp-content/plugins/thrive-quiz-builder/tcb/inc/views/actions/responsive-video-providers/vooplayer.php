@@ -1,6 +1,6 @@
 <div class="control-grid wrap">
 	<label for="v-v-url">
-		<?php echo __( 'URL', 'thrive-cb' ) ?>
+		<?php echo esc_html__( 'URL', 'thrive-cb' ) ?>
 	</label>
 	<input type="text" data-setting="url" class="v-url tve_provider_url full-width" id="v-v-url" placeholder="e.g. https://domain.vooplayer.com/22676965">
 </div>

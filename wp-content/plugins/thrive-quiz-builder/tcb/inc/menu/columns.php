@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -25,13 +25,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<hr>
 			<div class="tve-control" data-view="ColumnsOrder"></div>
 			<div class="tve-control" data-view="Wrap"></div>
-			<span class="info-text grey-text"><?php echo __( 'If you enable wrapping, the columns will not be resizable anymore', 'thrive-cb' ); ?></span>
+			<span class="info-text grey-text"><?php echo esc_html__( 'If you enable wrapping, the columns will not be resizable anymore', 'thrive-cb' ); ?></span>
 
 			<div class="tve-control pt-10" data-view="ColumnWidth"></div>
 			<div class="tve-control" data-view="FullWidth"></div>
 			<div class="click flex-center mt-10 tve-columns-reset" data-fn="resetLayout">
 				<span class="mr-10"><?php tcb_icon( 'sync-regular' ); ?></span>
-				<span><?php echo __( 'Reset column layout', 'thrive-cb' ); ?></span>
+				<span><?php echo esc_html__( 'Reset column layout', 'thrive-cb' ); ?></span>
 			</div>
 		</div>
 	</div>

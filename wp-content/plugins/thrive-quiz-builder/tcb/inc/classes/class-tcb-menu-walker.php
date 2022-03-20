@@ -18,7 +18,13 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	 *
 	 * @var string
 	 */
-	public static $mega_image_template = '<span class="tcb-mm-image menu-item-{ITEM_ID}-img tve_editable{CLS}" style=\'background-image:{IMG}\'></span>';
+	public static $mega_image_template = '<span class="tcb-mm-image menu-item-{ITEM_ID}-img tve_editable{CLS}" {DYNAMIC_ATTR} style=\'background-image:{IMG}\'></span>';
+	/**
+	 * Regular Menu images - raw template
+	 *
+	 * @var string
+	 */
+	public static $menu_item_image_template = '<span class="tcb-menu-item-image menu-item-{ITEM_ID}-img tve_editable{CLS}" {DYNAMIC_ATTR} style=\'background-image:{IMG}\'></span>';
 
 	/**
 	 * unlinked selector: <LI> element
@@ -280,18 +286,56 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		if ( $this->is_out_of_group_editing( $item->ID, self::UNLINKED_A ) ) {
 			$link_classes [] = self::CLS_UNLINKED;
 		}
+		/* Add the responsive classes on the menu item */
+		$responsive_attributes = (array) $this->get_config( 'responsive_attributes', array() );
+
+		$parent_field = $this->db_fields['parent'];
+		$item_id      = '.menu-item-' . $item->ID;
+		$itemKey      = '';
+		/* Get the item key of this item */
+		if ( ! empty( $responsive_attributes[ $item_id ] ) ) {
+			$itemKey = $item_id;
+		} else if ( $menu_type === 'mega' && ! empty( $responsive_attributes["{$item_id}-a"] ) ) {
+			$itemKey = "{$item_id}-a";
+		} else if ( empty( $item->$parent_field ) ) {
+			$itemKey = 'top';
+		} else if ( $menu_type === 'mega' && $depth > 0 ) {
+			$itemKey = 1 === $depth ? 'mega_main' : 'mega_sub';
+		} else {
+			$itemKey = 'sub';
+		}
+
+		$responsive_attrs = '';
+		/* Build the responsive data attributes */
+		if ( ! empty( $responsive_attributes[ $itemKey ] ) ) {
+			$devices = array( 'desktop', 'tablet', 'mobile' );
+			foreach ( $devices as $device ) {
+				if ( ! empty( $responsive_attributes[ $itemKey ][ $device ] ) ) {
+					$responsive_attrs .= 'data-item-display-' . $device . '="' . $responsive_attributes[ $itemKey ][ $device ] . '"';
+				}
+			}
+		}
+
 		/* handle link classes for menu images */
-		if ( 1 === $depth && 'mega' === $menu_type ) {
+		if ( 'mega' === $menu_type || 'regular' === $menu_type ) {
 			$item_image        = $this->get_config( "images/{$item->ID}", array() );
 			$image_placeholder = (array) $this->get_config( 'img_settings', array() );
+			$container_class   = 'mega' === $menu_type && 1 === $depth ? 'tcb-mm-container' : 'tcb-menu-item-container';
+			$place             = $this->get_image_placement( $item, $depth );
 			if ( ! empty( $item_image ) ) {
-				$link_classes [] = 'tcb-mm-container';
+				$link_classes [] = $container_class;
 				$link_classes [] = isset( $item_image['o'] ) ? "tcb--{$item_image['o']}" : 'tcb--row';
-			} elseif ( ! empty( $image_placeholder['enabled'] ) ) {
-				$link_classes [] = 'tcb-mm-container ' . ( isset( $image_placeholder['o'] ) ? "tcb--{$image_placeholder['o']}" : 'tcb--row' );
+			} elseif ( 1 === $depth && 'mega' === $menu_type && ! empty( $image_placeholder['enabled'] ) ) {
+				$link_classes [] = $container_class . ' ' . ( isset( $image_placeholder['o'] ) ? "tcb--{$image_placeholder['o']}" : 'tcb--row' );
 				$item_image      = array(
 					'placeholder' => true,
-					'o'           => $image_placeholder['o'],
+					'o'           => isset( $image_placeholder['o'] ) ? $image_placeholder['o'] : '',
+				);
+			} elseif ( ! empty( $image_placeholder[ $place ] ) && isset( $image_placeholder[ $place ]['enabled'] ) && $image_placeholder[ $place ]['enabled'] ) {
+				$link_classes [] = $container_class . ' ' . ( isset( $image_placeholder[ $place ]['o'] ) ? "tcb--{$image_placeholder[ $place ]['o']}" : 'tcb--row' );
+				$item_image      = array(
+					'placeholder' => true,
+					'o'           => isset( $image_placeholder[ $place ]['o'] ) ? $image_placeholder[ $place ]['o'] : '',
 				);
 			}
 		}
@@ -337,7 +381,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		}
 
 		$top_cls = (array) $this->get_config( 'top_cls', array() );
-		if ( 0 === $depth && ! empty( $top_cls ) ) {
+		if ( ! empty( $top_cls ) ) {
 			$unlinked_key = ! empty( $item->_tcb_pos_selector ) ? $item->_tcb_pos_selector : '.menu-item-' . $item->ID;
 			$is_unlinked  = ! empty( $this->get_config( "unlinked/$unlinked_key", array() ) );
 
@@ -379,7 +423,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		$id = apply_filters( 'nav_menu_item_id', 'menu-item-' . $item->ID, $item, $args, $depth );
 		$id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
 
-		$output .= $indent . '<li' . $id . $class_names . ' data-id="' . $item->ID . '">';
+		$output .= $indent . '<li' . $id . $class_names . ' data-id="' . $item->ID . '" ' . $responsive_attrs . ' >';
 
 		$link_attr['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
 		$link_attr['target'] = ! empty( $item->target ) ? $item->target : '';
@@ -429,6 +473,10 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 			}
 		}
 
+		if ( $depth > 0 && $menu_type === 'mega' ) {
+			$attributes .= ' ' . $responsive_attrs . ' ';
+		}
+
 		/** This filter is documented in wp-includes/post-template.php */
 		$title = apply_filters( 'the_title', $item->title, $item->ID );
 
@@ -446,7 +494,11 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		$title       = apply_filters( 'nav_menu_item_title', $title, $item, $args, $depth );
 		$item_output = $args->before . '<a' . $attributes . '>';
 		if ( ! empty( $item_image ) ) {
-			$item_output      .= $this->build_image( $item_image, $item ) . '<span class="tcb-mm-text">';
+			$item_output .= $this->build_image( $item_image, $item, $depth );
+
+			if ( 1 === $depth && 'mega' === $menu_type ) {
+				$item_output .= '<span class="tcb-mm-text">';
+			}
 			$args->link_after = $args->link_after . '</span>';
 		}
 		$item_output .= $this->icon( $item, $depth );
@@ -561,19 +613,71 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	 *
 	 * @return string
 	 */
-	protected function build_image( $image, $item ) {
+	protected function build_image( $image, $item, $depth ) {
 		if ( empty( $image ) ) {
 			return '';
 		}
 
-		$template = empty( $image['placeholder'] ) ? self::$mega_image_template : $this->get_image_placeholder();
+		$dynamic_attr = '';
+
+		/* If the image is dynamic, we change the url accordingly */
+		if ( ! empty( $image['d'] ) ) {
+			switch ( $image['d'] ) {
+				case 'user':
+					$image['i'] = 'url("' . tcb_dynamic_user_image_instance( get_current_user_id() )->user_avatar() . '")';
+					break;
+				case 'author':
+					$image['i'] = 'url("' . TCB_Post_List_Author_Image::author_avatar() . '")';
+					TCB_Post_List_Author_Image::author_avatar();
+					break;
+				case 'featured':
+					/* In editor we add the placeholder, in front-end we leave the link empty*/
+					$featured_img = get_the_post_thumbnail_url( get_the_ID() );
+					if ( empty( $featured_img ) && is_editor_page() ) {
+						$featured_img = TCB_Post_List_Featured_Image::get_default_url( get_the_ID() );
+					}
+					$image['i'] = 'url("' . $featured_img . '")';
+					break;
+				default:
+					break;
+			}
+
+			$dynamic_attr = 'data-d-f="' . $image['d'] . '"';
+		}
+
+		$menu_type        = $this->get_menu_type();
+		$template         = 'mega' === $menu_type && 1 === $depth ? self::$mega_image_template : self::$menu_item_image_template;
+		$containter_class = 'mega' === $menu_type && 1 === $depth ? 'tcb-mm-image' : 'tcb-menu-item-image';
+
+		$template = empty( $image['placeholder'] ) ? $template : $this->get_image_placeholder();
 		$classes  = $this->is_out_of_group_editing( $item->ID, self::UNLINKED_IMG ) ? ' ' . self::CLS_UNLINKED : '';
 
 		$background = str_replace( "'", '"', isset( $image['i'] ) ? $image['i'] : '' );
 
+		if ( ! empty( $image['cfVariable'] ) ) {
+			$background .= '; --tcb-background-custom-field:' . str_replace( "'", '"', $image['cfVariable'] );
+		}
+
+		if ( ! empty( $image['d'] ) ) {
+			$classes .= ' tcb-dynamic-field-source';
+		}
+
+		if ( ! empty( $image['cf'] ) ) {
+			$classes      .= ' tcb-custom-field-source';
+			$dynamic_attr .= ' data-c-f-id="' . $image['d'] . '"';
+		}
+
+		if ( ! empty( $image['cfAttr'] ) ) {
+			foreach ( $image['cfAttr'] as $attr => $value ) {
+				if ( ! empty( $value ) ) {
+					$dynamic_attr .= 'data-' . $attr . '="' . $value . '"';
+				}
+			}
+		}
+
 		return str_replace(
-			array( '{ITEM_ID}', '{CLS}', '{IMG}' ),
-			array( $item->ID, $classes, stripslashes( $background ) ),
+			array( '{ITEM_ID}', '{CLS}', '{IMG}', '{ITEM_TYPE_CLS}', '{DYNAMIC_ATTR}' ),
+			array( $item->ID, $classes, stripslashes( $background ), $containter_class, $dynamic_attr ),
 			$template
 		);
 	}
@@ -617,5 +721,23 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	 */
 	public function get_logo_split_breakpoint() {
 		return (int) floor( $GLOBALS['tcb_wp_menu']['top_level_count'] / 2 );
+	}
+
+	public function get_image_placement( $item, $current_level ) {
+		$parent_field = $this->db_fields['parent'];
+		$key          = '';
+
+		/* check top level */
+		if ( empty( $item->$parent_field ) ) {
+			$key = 'top';
+		} else if ( $this->get_menu_type() === 'regular' ) {
+			$key = 'sub';
+		}
+		/* check for mega menu */
+		if ( $this->get_menu_type() === 'mega' && $current_level > 0 ) {
+			$key = $current_level === 1 ? 'mega_main' : 'mega_sub';
+		}
+
+		return $key;
 	}
 }

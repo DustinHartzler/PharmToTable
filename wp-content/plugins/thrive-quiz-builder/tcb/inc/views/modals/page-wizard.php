@@ -45,28 +45,28 @@ usort( $items, function ( $a, $b ) {
 	return $a['order'] - $b['order'];
 } )
 ?>
-<h2><?php echo __( 'What page would you like to create?', 'thrive-cb' ); ?></h2>
+<h2><?php echo esc_html__( 'What page would you like to create?', 'thrive-cb' ); ?></h2>
 <div class="info-text red">
 	<span>
-		<?php echo __( 'Warning!', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Warning!', 'thrive-cb' ); ?>
 	</span>
 	<span>
-		<?php echo __( 'If you change your page template, any custom content you added to the page will be deleted', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'If you change your page template, any custom content you added to the page will be deleted', 'thrive-cb' ); ?>
 	</span>
 </div>
 <div class="parent">
 	<?php foreach ( $items as $item ) : ?>
-		<div class="click item" data-fn="chooseLayout" data-layout="<?php echo $item['layout']; ?>">
+		<div class="click item" data-fn="chooseLayout" data-layout="<?php echo esc_attr( $item['layout'] ); ?>">
 			<div>
-				<img src="<?php echo $item['picture']; ?>" alt="Item Picture"/>
+				<img src="<?php echo esc_url( $item['picture'] ); ?>" alt="Item Picture"/>
 			</div>
 			<div>
-				<span><?php echo $item['title']; ?></span>
+				<span><?php echo esc_html( $item['title'] ); ?></span>
 			</div>
 			<hr class="mb-20">
 			<div>
 				<?php foreach ( $item['text'] as $text ) : ?>
-					<p><?php echo $text; ?></p>
+					<p><?php echo esc_html( $text ); ?></p>
 				<?php endforeach; ?>
 			</div>
 		</div>

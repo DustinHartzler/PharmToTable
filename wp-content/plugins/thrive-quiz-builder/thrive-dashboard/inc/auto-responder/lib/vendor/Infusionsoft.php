@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Created by PhpStorm.
  * User: Danut
@@ -19,7 +28,7 @@ class Thrive_Dash_Api_Infusionsoft {
 		$this->subdomain = $subdomain;
 		$this->api_key   = $api_key;
 		if ( empty( $this->subdomain ) || empty( $this->api_key ) ) {
-			throw new Thrive_Dash_Api_Infusionsoft_InfusionsoftException( "You must provide a ClientID and API key for your Infusionsoft application." );
+			throw new Thrive_Dash_Api_Infusionsoft_InfusionsoftException( "You must provide a ClientID and API key for your Keap (Infusionsoft) application." );
 		}
 	}
 
@@ -31,7 +40,7 @@ class Thrive_Dash_Api_Infusionsoft {
 
 		// Make sure no error already exists
 		if ( $this->error ) {
-			throw new Thrive_Dash_Api_Infusionsoft_InfusionsoftException( __( 'You must provide a subdomain and API key for your Infusionsoft application.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Thrive_Dash_Api_Infusionsoft_InfusionsoftException( __( 'You must provide a subdomain and API key for your Keap (Infusionsoft) application.', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
 		// Get the full method name with the service and method

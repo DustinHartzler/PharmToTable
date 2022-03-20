@@ -16,9 +16,9 @@ if ( $data['cls']->_config['display'] === 'grid' && ( $index === 1 || ( ( $index
 	endif;
 	?>
 
-	<div class="tve_post tve_post_width_<?php echo $data['cls']->_config['columns'] ?>">
+	<div class="tve_post tve_post_width_<?php echo esc_attr( $data['cls']->_config['columns'] ); ?>">
 		<div class="tve_pg_container">
-			<?php echo $data['cls']->get_post_content( $data['post'] ); ?>
+			<?php echo $data['cls']->get_post_content( $data['post'] ); //phpcs:ignore ?>
 		</div>
 	</div>
 

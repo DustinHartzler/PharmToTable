@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Contains:
  * - autoloaders for the main library files
@@ -45,6 +54,9 @@ function tve_dash_api_remote_get( $url, $args = array() ) {
 	/* SUPP-988 increased timeout to 15, it seems some hosts have some issues, not being able to resolve API URLs in 5 seconds */
 	$args['timeout'] = tve_dash_request_timeout( 'get' );
 
+	/* makes sure this is NEVER used to download files */
+	unset( $args['stream'], $args['filename'] );
+
 	return wp_remote_get( $url, $args );
 }
 
@@ -76,6 +88,9 @@ function tve_dash_api_remote_post( $url, $args = array() ) {
 	$args['sslverify'] = false;
 	$args['timeout']   = tve_dash_request_timeout( 'post' );
 
+	/* makes sure this is NEVER used to download files */
+	unset( $args['stream'], $args['filename'] );
+
 	return wp_remote_post( $url, $args );
 }
 
@@ -94,6 +109,9 @@ function tve_dash_api_remote_post( $url, $args = array() ) {
 function tve_dash_api_remote_request( $url, $args = array() ) {
 	$args['sslverify'] = false;
 
+	/* makes sure this is NEVER used to download files */
+	unset( $args['stream'], $args['filename'] );
+
 	return wp_remote_request( $url, $args );
 }
 
@@ -110,8 +128,8 @@ function tve_saved_api_version( $api_name = '' ) {
 		return array();
 	}
 
-	$version    = empty( $_REQUEST['connection']['version'] ) ? '' : $_REQUEST['connection']['version'];
-	$versioning = empty( $_REQUEST['connection']['versioning'] ) ? '' : $_REQUEST['connection']['versioning'];
+	$version    = empty( $_REQUEST['connection']['version'] ) ? '' : sanitize_text_field( $_REQUEST['connection']['version'] );
+	$versioning = empty( $_REQUEST['connection']['versioning'] ) ? '' : sanitize_text_field( $_REQUEST['connection']['versioning'] );
 
 	if ( empty( $version ) && empty( $versioning ) ) {
 		$saved      = get_option( 'thrive_mail_list_api', array() );
@@ -234,13 +252,13 @@ function tve_dash_api_form_retry() {
 	if ( ! current_user_can( TVE_DASH_CAPABILITY ) ) {
 		wp_die( '' );
 	}
-	$connection_name = ! empty( $_POST['connection_name'] ) ? $_POST['connection_name'] : null;
-	$list_id         = ! empty( $_POST['list_id'] ) ? $_POST['list_id'] : null;
-	$email           = ! empty( $_POST['email'] ) ? $_POST['email'] : null;
-	$name            = ! empty( $_POST['name'] ) ? $_POST['name'] : '';
-	$phone           = ! empty( $_POST['phone'] ) ? $_POST['phone'] : '';
-	$log_id          = ! empty( $_POST['log_id'] ) ? intval( $_POST['log_id'] ) : null;
-	$url             = ! empty( $_POST['url'] ) ? $_POST['url'] : null;
+	$connection_name = ! empty( $_POST['connection_name'] ) ? sanitize_text_field( $_POST['connection_name'] ) : null;
+	$list_id         = ! empty( $_POST['list_id'] ) ? sanitize_text_field( $_POST['list_id'] ) : null;
+	$email           = ! empty( $_POST['email'] ) ? sanitize_text_field( $_POST['email'] ) : null;
+	$name            = ! empty( $_POST['name'] ) ? sanitize_text_field( $_POST['name'] ) : '';
+	$phone           = ! empty( $_POST['phone'] ) ? sanitize_text_field( $_POST['phone'] ) : '';
+	$log_id          = ! empty( $_POST['log_id'] ) ? absint( $_POST['log_id'] ) : null;
+	$url             = ! empty( $_POST['url'] ) ? sanitize_text_field( $_POST['url'] ) : null;
 
 	if ( empty( $connection_name ) ) {
 		exit( json_encode( array(
@@ -277,10 +295,10 @@ function tve_dash_api_form_retry() {
 			$response = __( 'Cannot establish API connection', TVE_DASH_TRANSLATE_DOMAIN );
 		} else {
 
-			$post_data['_asset_group'] = $_POST['_asset_group'];
-			$post_data['email']        = $_POST['email'];
+			$post_data['_asset_group'] = ! empty( $_POST['_asset_group'] ) ? sanitize_text_field( $_POST['_asset_group'] ) : '';
+			$post_data['email']        = sanitize_email( $_POST['email'] );
 			if ( isset( $_POST['name'] ) ) {
-				$post_data['name'] = $_POST['name'];
+				$post_data['name'] = sanitize_text_field( $_POST['name'] );
 			}
 
 			$response = true;

@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Created by PhpStorm.
  * User: dan bilauca
@@ -47,6 +56,7 @@ class TD_REST_Controller extends WP_REST_Controller {
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => array( $this, 'authenticate' ),
 				'permission_callback' => array( $this, 'permission_callback' ),
+				'args'                => $this->route_args(),
 			)
 		);
 
@@ -57,6 +67,22 @@ class TD_REST_Controller extends WP_REST_Controller {
 				'permission_callback' => '__return_true',
 			),
 		) );
+	}
+
+	/**
+	 * Args required by routes that need permission
+	 * @return array[]
+	 */
+	public function route_args() {
+		return array(
+			'api_key' => array(
+				'type'              => 'string',
+				'required'          => true,
+				'validate_callback' => static function ( $param ) {
+					return ! empty( $param );
+				},
+			),
+		);
 	}
 
 	/**
@@ -83,8 +109,8 @@ class TD_REST_Controller extends WP_REST_Controller {
 			global $wpdb;
 
 			$log_data = array(
-				'date'          => date( 'Y-m-d H:i:s' ),
-				'error_message' => "No email inside webhook payload",
+				'date'          => gmdate( 'Y-m-d H:i:s' ),
+				'error_message' => 'No email inside webhook payload',
 				'api_data'      => serialize( tve_sanitize_data_recursive( $request ) ),
 				'connection'    => $api,
 				'list_id'       => 'asset',
@@ -116,10 +142,7 @@ class TD_REST_Controller extends WP_REST_Controller {
 	 * @return bool|WP_Error
 	 */
 	public function permission_callback( $request ) {
-
-		$api_key = $request->get_param( 'api_key' );
-
-		return ! empty( $api_key ) && $this->validate_api_key( $api_key );
+		return $this->validate_api_key( $request->get_param( 'api_key' ) );
 	}
 
 	/**

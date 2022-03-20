@@ -1,4 +1,13 @@
-<?PHP
+<?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 /**
  * This class is a wrapper for the Guzzle (HTTP Client Library).

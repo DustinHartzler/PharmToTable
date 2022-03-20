@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * OAuthApplication
  *
  * Base class to represent an OAuthConsumer application.  This class is
@@ -443,7 +452,7 @@ class Thrive_Dash_Api_AWeber_Oauth_Application implements Thrive_Dash_Api_AWeber
 		}
 
 		if ( $this->debug ) {
-			echo "\n** {$method}: $url\n";
+			echo esc_html( "\n** {$method}: $url\n" );
 		}
 
 		$args = array(
@@ -500,9 +509,9 @@ class Thrive_Dash_Api_AWeber_Oauth_Application implements Thrive_Dash_Api_AWeber
 		// enable debug output
 		if ( $this->debug ) {
 			echo "<pre>";
-			print_r( $oauth );
-			echo " --> Status: {$resp->headers['Status-Code']}\n";
-			echo " --> Body: {$resp->body}";
+			print_r( $oauth ); // phpcs:ignore
+			echo " --> Status: {$resp->headers['Status-Code']}\n"; // phpcs:ignore
+			echo " --> Body: {$resp->body}"; // phpcs:ignore
 			echo "</pre>";
 		}
 
@@ -604,4 +613,4 @@ class Thrive_Dash_Api_AWeber_Oauth_Application implements Thrive_Dash_Api_AWeber
 
 		return $data;
 	}
-} 
+}

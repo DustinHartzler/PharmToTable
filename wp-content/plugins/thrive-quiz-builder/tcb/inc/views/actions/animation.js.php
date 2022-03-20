@@ -8,13 +8,16 @@ if ( ! config.loop && $at.data( 'a-done' ) ) {
 	return;
 }
 $at.data( 'a-done', 1 );
+const hadAnimStart = $at.hasClass( 'tve_anim_start' );
 $at.removeClass( function ( i, cls ) {
 	return cls.split( ' ' ).filter( function ( item ) {
 		return item.indexOf( 'tve_anim_' ) === 0;
 	} ).join( ' ' );
 } ).addClass( 'tve_anim_' + config.anim ).removeClass( 'tve_anim_start' );
 if ( config.loop ) {
-	$at.addClass( 'tve_anim_start' );
+	setTimeout( function () {
+		$at.addClass( 'tve_anim_start' );
+	}, hadAnimStart ? 50 : 0 );
 	if ( trigger === 'mouseover' ) {
 		$element.one( 'mouseleave', function () {
 			$at.removeClass( 'tve_anim_start' );

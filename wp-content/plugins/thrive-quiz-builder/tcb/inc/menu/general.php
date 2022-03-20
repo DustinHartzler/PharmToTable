@@ -3,7 +3,7 @@
 <div id="tve-responsive-component" class="tve-component" data-view="Responsive">
 	<div class="dropdown-header" data-prop="docked">
 		<div class="group-description">
-			<?php echo __( 'Responsive', 'thrive-cb' ) ?>
+			<?php echo esc_html__( 'Responsive', 'thrive-cb' ) ?>
 		</div>
 		<i></i>
 	</div>
@@ -15,20 +15,60 @@
 	</div>
 </div>
 
-<div id="tve-styles-templates-component" class="tve-component" data-view="StylesTemplates">
+<div id="tve-conditional-display-component" class="tve-component" data-view="ConditionalDisplay">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'HTML Attributes', 'thrive-cb' ); ?>
+		<div class="group-description">
+			<?php echo esc_html__( 'Conditional Display', 'thrive-cb' ) ?>
+		</div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
-		<div class="tve-control" data-input="class" data-key="Class" data-extends="LabelInput" data-label="<?php echo __( 'Class', 'thrive-cb' ); ?>"></div>
-		<div class="tve-control" data-input="id" data-key="ID" data-extends="LabelInput" data-label="<?php echo __( 'ID', 'thrive-cb' ); ?>"></div>
+		<div class="display-order">
+			<?php echo esc_html__( 'Display order', 'thrive-cb' ) ?>
+		</div>
+		<div class="display-list">
+			<div class="custom-display-list"></div>
+			<div class="default-display-list"></div>
+		</div>
+		<button class="tve-button green ghost long click mt-10" data-fn="addDisplay">
+			<?php tcb_icon( 'plus-regular' ); ?>
+			<?php echo esc_html__( 'Add display', 'thrive-cb' ) ?>
+		</button>
+		<div class="tve-advanced-controls mt-20 hide-states">
+			<div class="dropdown-header with-info" data-prop="advanced">
+				<div class="dropdown-info">
+					<span class="mr-10"><?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?></span>
+					<span class="click tve-lazy-load-info" data-fn="openTooltip"><?php tcb_icon( 'info-circle-solid' ); ?></span>
+				</div>
+			</div>
+
+			<div class="dropdown-content pt-0">
+				<div class="hide-states">
+					<div class="tve-control no-space" data-view="LazyLoad"></div>
+					<div class="tve-cond-lazy-load-settings">
+						<div class="tve-control no-space" data-view="UniformHeights"></div>
+						<div class="tve-control full-width" data-view="InheritBackground"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="tve-styles-templates-component" class="tve-component" data-view="StylesTemplates">
+	<div class="dropdown-header" data-prop="docked">
+		<?php echo esc_html__( 'HTML Attributes', 'thrive-cb' ); ?>
+		<i></i>
+	</div>
+	<div class="dropdown-content">
+		<div class="tve-control" data-input="class" data-key="Class" data-extends="LabelInput" data-label="<?php echo esc_html__( 'Class', 'thrive-cb' ); ?>"></div>
+		<div class="tve-control" data-input="id" data-key="ID" data-extends="LabelInput" data-label="<?php echo esc_html__( 'ID', 'thrive-cb' ); ?>"></div>
 	</div>
 </div>
 
 <div id="tve-background-component" class="tve-component" data-view="Background">
 	<div class="dropdown-header" data-prop="docked">
-		<div class="group-description"><?php echo __( 'Background Style', 'thrive-cb' ); ?></div>
+		<div class="group-description"><?php echo esc_html__( 'Background Style', 'thrive-cb' ); ?></div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -37,13 +77,13 @@
 		<div class="tve-control bg-icons" data-view="PreviewList"></div>
 		<div class="v-sep"></div>
 		<div class="tve-control" data-view="ColorPicker" data-show-gradient="0"></div>
-		<div class="tve-control video-bg white" data-label="<?php echo __( 'Video background', 'thrive-cb' ); ?>" data-key="video" data-initializer="video"></div>
+		<div class="tve-control video-bg white" data-label="<?php echo esc_attr__( 'Video background', 'thrive-cb' ); ?>" data-key="video" data-initializer="video"></div>
 	</div>
 </div>
 
 <div id="tve-typography-component" class="tve-component" data-view="Typography">
 	<div class="dropdown-header" data-prop="docked">
-		<div class="group-description"><?php echo __( 'Typography', 'thrive-cb' ); ?></div>
+		<div class="group-description"><?php echo esc_html__( 'Typography', 'thrive-cb' ); ?></div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -64,14 +104,14 @@
 		<hr>
 		<div class="tcb-text-center clear-formatting mt-10">
 			<span class="click tcb-text-uppercase clear-format custom-icon" data-fn="clear_formatting">
-				<?php echo __( 'Clear element formatting', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Clear element formatting', 'thrive-cb' ); ?>
 			</span>
 		</div>
 
 		<div class="tve-advanced-controls extend-grey hide-states">
 			<div class="dropdown-header" data-prop="advanced">
 				<span>
-					<?php echo __( 'Advanced', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Advanced', 'thrive-cb' ); ?>
 				</span>
 			</div>
 
@@ -91,7 +131,7 @@
 	<div class="borders-options action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Borders & Corners', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Borders & Corners', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -143,11 +183,11 @@
 						<?php elseif ( isset( $tab['actions'] ) ) : ?>
 							<?php if ( $key === 'popup' ) : ?>
 								<div class="control-grid animation-popup-trigger">
-									<label for="a-popup-trigger"><?php echo __( 'Trigger', 'thrive-cb' ) ?></label>
+									<label for="a-popup-trigger"><?php echo esc_html__( 'Trigger', 'thrive-cb' ) ?></label>
 									<select id="a-popup-trigger">
-										<option value="click" selected><?php echo __( 'Click', 'thrive-cb' ) ?></option>
+										<option value="click" selected><?php echo esc_html__( 'Click', 'thrive-cb' ) ?></option>
 										<option
-												value="tve-viewport"><?php echo __( 'Comes into viewport', 'thrive-cb' ) ?></option>
+												value="tve-viewport"><?php echo esc_html__( 'Comes into viewport', 'thrive-cb' ) ?></option>
 									</select>
 								</div>
 							<?php endif ?>
@@ -187,7 +227,7 @@
 	<div class="borders-options action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Shadow', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Shadow', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -203,7 +243,7 @@
 <div id="tve-cloud-templates-component" data-key="cloud_templates" class="tve-component dynamic-component"
 	 style="order: 5;" data-view="CloudTemplates">
 	<div class="dropdown-header" data-prop="docked">
-		<div class="group-description"><?php echo __( 'Template Options', 'thrive-cb' ); ?></div>
+		<div class="group-description"><?php echo esc_html__( 'Template Options', 'thrive-cb' ); ?></div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -217,7 +257,7 @@
 
 <div id="tve-group-component" class="tve-component" data-view="Group">
 	<div class="dropdown-header" data-prop="docked">
-		<div class="group-description"><?php echo __( 'Currently styling', 'thrive-cb' ); ?></div>
+		<div class="group-description"><?php echo esc_html__( 'Currently styling', 'thrive-cb' ); ?></div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -228,7 +268,7 @@
 		<hr>
 		<div class="tcb-text-center">
 			<a href="javascript:void(0);" class="click clear-format"
-			   data-fn="close_group_options"><?php tcb_icon( 'exit-to-app' ); ?><?php echo __( 'Exit Group Styling', 'thrive-cb' ); ?></a>
+			   data-fn="close_group_options"><?php tcb_icon( 'exit-to-app' ); ?><?php echo esc_html__( 'Exit Group Styling', 'thrive-cb' ); ?></a>
 		</div>
 
 	</div>
@@ -236,7 +276,7 @@
 
 <div id="tve-scroll-component" class="tve-component" data-view="Scroll">
 	<div class="dropdown-header" data-prop="docked">
-		<div class="group-description"><?php echo __( 'Scroll Behavior', 'thrive-cb' ); ?></div>
+		<div class="group-description"><?php echo esc_html__( 'Scroll Behavior', 'thrive-cb' ); ?></div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -245,26 +285,26 @@
 		<div class="tve-control padding-top-10" data-extends="ButtonGroup" data-key="Devices" data-required="1" data-name="<?php esc_attr_e( 'Visible on', 'thrive-cb' ); ?>" data-checkbox="true"></div>
 		<div class="if-parallax">
 			<div class="tve-control" data-key="ParallaxEffectsControl" data-initializer="initParallaxEffects"></div>
-			<div id="add-parallax-effect" class="tve-button click" data-fn="addNewParallax"><?php echo __( 'Add New Effect', 'thrive-cb' ); ?></div>
+			<div id="add-parallax-effect" class="tve-button click" data-fn="addNewParallax"><?php echo esc_html__( 'Add New Effect', 'thrive-cb' ); ?></div>
 			<div class="tve-control mt-5" data-key="ParallaxPreview" data-extends="Switch" data-label="<?php esc_attr_e( 'Parallax Preview', 'thrive-cb' ); ?>"></div>
 		</div>
 		<div class="if-sticky">
 			<div class="tve-control mb-10" data-extends="ButtonGroup" data-key="stickyPosition" data-name="<?php esc_attr_e( 'Stick to screen', 'thrive-cb' ); ?>"></div>
 			<div class="tve-control" data-extends="Slider" data-key="top"
-				 data-label="<?php echo __( 'Distance from the top of the screen', 'thrive-cb' ); ?>"></div>
-			<div class="tve-control no-space" data-extends="Select" data-key="until" data-label="<?php echo __( 'Sticky until', 'thrive-cb' ); ?>"></div>
+				 data-label="<?php echo esc_html__( 'Distance from the top of the screen', 'thrive-cb' ); ?>"></div>
+			<div class="tve-control no-space" data-extends="Select" data-key="until" data-label="<?php echo esc_html__( 'Sticky until', 'thrive-cb' ); ?>"></div>
 			<div class="tve-control no-space if-until-element padding-top-10" data-extends="LabelInput" data-key="element_id"
-				 data-label="<?php echo __( 'Element ID', 'thrive-cb' ); ?>"></div>
-			<div class="info-text if-until-element"><?php echo __( 'You can set the ID of an element from the "HTML Attributes" section', 'thrive-cb' ); ?></div>
-			<div class="tve-control mt-10" data-extends="Switch" data-key="switchOnScroll" data-label="<?php echo __( 'Switch on scroll', 'thrive-cb' ); ?>"></div>
-			<div class="tve-control no-space" data-extends="Slider" data-key="switchAfter" data-label="<?php echo __( 'Switch after', 'thrive-cb' ); ?>"></div>
+				 data-label="<?php echo esc_html__( 'Element ID', 'thrive-cb' ); ?>"></div>
+			<div class="info-text if-until-element"><?php echo esc_html__( 'You can set the ID of an element from the "HTML Attributes" section', 'thrive-cb' ); ?></div>
+			<div class="tve-control mt-10" data-extends="Switch" data-key="switchOnScroll" data-label="<?php echo esc_html__( 'Switch on scroll', 'thrive-cb' ); ?>"></div>
+			<div class="tve-control no-space" data-extends="Slider" data-key="switchAfter" data-label="<?php echo esc_html__( 'Switch after', 'thrive-cb' ); ?>"></div>
 		</div>
 	</div>
 </div>
 
 <div id="tve-shared-styles-component" class="tve-component" data-view="SharedStyles">
 	<div class="dropdown-header" data-prop="docked">
-		<div><?php echo __( 'Style Options', 'thrive-cb' ) ?></div>
+		<div><?php echo esc_html__( 'Style Options', 'thrive-cb' ) ?></div>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -280,11 +320,11 @@
 			</div>
 
 			<div class="shared-styles-actions" data-state="1">
-				<a href="javascript:void(0)" class="click" data-fn="edit_style" data-side="top" data-tooltip="<?php echo __( 'Edit Global Style', 'thrive-cb' ); ?>">
+				<a href="javascript:void(0)" class="click" data-fn="edit_style" data-side="top" data-tooltip="<?php echo esc_attr__( 'Edit Global Style', 'thrive-cb' ); ?>">
 					<?php tcb_icon( 'edit' ); ?>
 				</a>
 
-				<a href="javascript:void(0)" class="click" data-fn="dom_unlink_style" data-side="top" data-tooltip="<?php echo __( 'Unlink Global Style', 'thrive-cb' ); ?>">
+				<a href="javascript:void(0)" class="click" data-fn="dom_unlink_style" data-side="top" data-tooltip="<?php echo esc_attr__( 'Unlink Global Style', 'thrive-cb' ); ?>">
 					<?php tcb_icon( 'unlink-regular' ); ?>
 				</a>
 
@@ -295,9 +335,9 @@
 
 			<div class="control-grid no-space shared-styles-actions" data-state="2">
 				<span class="global-edit-warning">
-					<span><?php echo __( 'You are editing the Global Style', 'thrive-cb' ); ?>: </span>
+					<span><?php echo esc_html__( 'You are editing the Global Style', 'thrive-cb' ); ?>: </span>
 					<strong><span class="shared-styles-name"></span></strong>.
-					<span> <?php echo __( 'The changes you make on it will affect all elements which use this style.', 'thrive-cb' ); ?></span>
+					<span> <?php echo esc_html__( 'The changes you make on it will affect all elements which use this style.', 'thrive-cb' ); ?></span>
 				</span>
 			</div>
 
@@ -307,10 +347,10 @@
 
 			<ul class="shared-styles-drop-content tcb-hide">
 				<li class="click" data-fn="rename">
-					<a href="javascript:void(0)"><?php echo __( 'Rename', 'thrive-cb' ) ?></a>
+					<a href="javascript:void(0)"><?php echo esc_html__( 'Rename', 'thrive-cb' ) ?></a>
 				</li>
 				<li class="click" data-fn="delete">
-					<a href="javascript:void(0)"><?php echo __( 'Delete', 'thrive-cb' ) ?></a>
+					<a href="javascript:void(0)"><?php echo esc_html__( 'Delete', 'thrive-cb' ) ?></a>
 				</li>
 			</ul>
 		</div>
@@ -318,7 +358,7 @@
 
 	<div class="control-grid pt-5 no-space shared-styles-actions" data-state="1">
 		<span class="global-edit-warning">
-			<?php echo __( 'This element has a Global Style applied: some of its properties are not editable at the instance level (e.g. Typography, Background, Borders etc). You can modify these by clicking on the pencil icon above.', 'thrive-cb' ); ?>
+			<?php echo esc_html__( 'This element has a Global Style applied: some of its properties are not editable at the instance level (e.g. Typography, Background, Borders etc). You can modify these by clicking on the pencil icon above.', 'thrive-cb' ); ?>
 		</span>
 	</div>
 </div>

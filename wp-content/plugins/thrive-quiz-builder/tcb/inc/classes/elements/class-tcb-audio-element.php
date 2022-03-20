@@ -82,7 +82,7 @@ class TCB_Audio_Element extends TCB_Element_Abstract {
 						'important' => true,
 					),
 					'Height' => array(
-						'css_suffix' => ' iframe',
+						'css_suffix' => array( ' iframe', ' > :first-child' ),
 					),
 				),
 				'disabled_controls' => array( 'Overflow', 'ScrollStyle' ),

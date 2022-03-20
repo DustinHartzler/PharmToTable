@@ -45,7 +45,7 @@ class TQB_Frontend_Ajax_Controller {
 	 * @param string $status  the error status.
 	 */
 	protected function error( $message, $status = '404 Not Found' ) {
-		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status );
+		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status ); // phpcs:ignore
 		echo esc_attr( $message );
 		wp_die();
 	}
@@ -59,7 +59,13 @@ class TQB_Frontend_Ajax_Controller {
 	 * @return mixed|null|$default
 	 */
 	protected function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		if ( isset( $_POST[ $key ] ) ) {
+			$value = $_POST[ $key ]; //phpcs:ignore
+		} else {
+			$value = isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default; //phpcs:ignore
+		}
+
+		return map_deep( $value, 'sanitize_text_field' );
 	}
 
 	/**
@@ -89,12 +95,12 @@ class TQB_Frontend_Ajax_Controller {
 	 * @return mixed
 	 */
 	protected function shortcode_action() {
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		$custom = $this->param( 'custom_action' );
 		if ( ! empty( $custom ) ) {
 			if ( $custom === 'log_social_share_conversion' ) {
-				do_action( 'tqb_register_social_media_conversion', $_POST );
+				do_action( 'tqb_register_social_media_conversion', $_POST ); // phpcs:ignore
 
 				return true;
 			} elseif ( $custom === 'save_user_custom_social_share_badge' ) {
@@ -111,13 +117,13 @@ class TQB_Frontend_Ajax_Controller {
 				$quiz_id = $this->param( 'quiz_id' );
 
 				$badge = new TQB_Badge( $result, $quiz_id );
-				$url   = $badge->save( $_FILES['user_badge'] );
+				$url   = $badge->save( $_FILES['user_badge'] ); // phpcs:ignore
 
 				if ( empty( $url ) ) {
 					$this->error( __( 'Badge could not be generated', Thrive_Quiz_Builder::T ) );
 				}
 
-				do_action( 'tqb_generate_user_social_badge_link', $_REQUEST['user_id'], $url );
+				do_action( 'tqb_generate_user_social_badge_link', ! empty( $_REQUEST['user_id'] ) ? sanitize_text_field( $_REQUEST['user_id'] ) : '', $url );
 
 				return $url . '?r=' . rand();
 			} elseif ( $custom === 'register_question_answer' ) {
@@ -214,7 +220,7 @@ class TQB_Frontend_Ajax_Controller {
 	 */
 	protected function rendershortcode_action() {
 
-		$quizzes_id = isset( $_POST['quizzes'] ) ? $_POST['quizzes'] : array();
+		$quizzes_id = isset( $_POST['quizzes'] ) ? array_map( 'sanitize_text_field', $_POST['quizzes'] ) : array();
 		$result     = array();
 
 		foreach ( $quizzes_id as $id ) {
@@ -255,8 +261,8 @@ class TQB_Frontend_Ajax_Controller {
 				$data['html'] = $part;
 			}
 
-			$data['tve_custom_style'] = $tve_custom_css;
-			$data['quiz_type']        = TQB_Post_meta::get_quiz_type_meta( $id, true );
+			$data['tve_custom_style']          = $tve_custom_css;
+			$data['quiz_type']                 = TQB_Post_meta::get_quiz_type_meta( $id, true );
 			$data['question']['data']['media'] = $question_manager->tqb_build_media_display( $data['question'] );
 
 			$result[ $id ] = $data;

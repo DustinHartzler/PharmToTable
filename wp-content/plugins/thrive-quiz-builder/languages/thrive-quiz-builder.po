@@ -8,112 +8,116 @@ msgid ""
 msgstr ""
 "Project-Id-Version: thrive-quiz-builder 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-29 15:05+0300\n"
+"POT-Creation-Date: 2022-03-09 09:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: includes/admin/class-tqb-admin.php:70 includes/admin/class-tqb-admin.php:71
+#: includes/admin/class-tqb-admin.php:72 includes/admin/class-tqb-admin.php:73
 #: includes/class-tqb-privacy.php:57 includes/class-tqb-privacy.php:73
 #: tcb-bridge/editor-elements/class-tcb-dynamic-content-element.php:89
 #: tcb-bridge/editor-elements/class-tcb-social-share-badge-element.php:105
 msgid "Thrive Quiz Builder"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:84
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:91
 msgid "You do not have this capability"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:93
-#: includes/class-tqb-frontend-ajax-controller.php:79
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:95
+msgid "This page has expired. Please reload and try again"
+msgstr ""
+
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:104
+#: includes/class-tqb-frontend-ajax-controller.php:85
 #, php-format
 msgid "Method %s not implemented"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:143
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:154
 msgid "Could not reset quiz statistics"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:162
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:173
 msgid "Could not save"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:185
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:196
 msgid "Could not delete"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:195
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:206
 msgid "Quiz not found"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:223
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:234
 msgid "Style could not be saved"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:310
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:338
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:366
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:1040
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:1067
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:321
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:349
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:377
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:1055
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:1082
 msgid "Something went wrong"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:401
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:412
 msgid "Structure could not be saved"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:463
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:474
 msgid ""
 "The list of results has changed. Your questions flow and results page might "
 "be affected by this change."
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:465
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:476
 msgid "Changes were saved!"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:471
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:482
 msgid ""
 "Type could not be saved. There was an error while saving the quiz type. "
 "Please contact the support team."
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:515
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:526
 msgid ""
 "An error occurred. The page id provided was invalid! Please contact Thrive "
 "Support!"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:524
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:535
 msgid "The setting was saved for this quiz page!"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:549
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:552
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:560
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:563
 msgid "Item not found"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:660
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:672
 msgid "Error while inserting a new variation"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:668
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:680
 msgid "Error while deleting the variation"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:753
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:765
 msgid "Test not found"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:1032
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:1047
 msgid "Step executed with success"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-admin-ajax-controller.php:1059
+#: includes/admin/classes/class-tqb-admin-ajax-controller.php:1074
 msgid "Quiz Imported Successfully"
 msgstr ""
 
@@ -171,24 +175,24 @@ msgid "Quiz Builder Dashboard"
 msgstr ""
 
 #: includes/admin/classes/class-tqb-product.php:63
-msgid "Support"
-msgstr ""
-
-#: includes/admin/classes/class-tqb-product.php:70
 msgid "Tutorials"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-results-page.php:106
+#: includes/admin/classes/class-tqb-product.php:70
+msgid "Support"
+msgstr ""
+
+#: includes/admin/classes/class-tqb-results-page.php:125
 #: includes/admin/i18n.php:39 includes/admin/i18n.php:100
 #: includes/admin/views/templates/reporting/flow-section.phtml:25
 msgid "Results Page"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-results-page.php:110
+#: includes/admin/classes/class-tqb-results-page.php:129
 msgid "URL Redirect"
 msgstr ""
 
-#: includes/admin/classes/class-tqb-results-page.php:210
+#: includes/admin/classes/class-tqb-results-page.php:238
 msgid "Redirect Link could not be saved into database: "
 msgstr ""
 
@@ -356,7 +360,6 @@ msgstr ""
 #: includes/admin/views/templates/modals/edit-quiz-type.phtml:32
 #: includes/admin/views/templates/modals/new-quiz.phtml:20
 #: includes/admin/views/templates/modals/new-quiz.phtml:49
-#: tcb-bridge/editor-lightbox/save-validation.php:15
 msgid "Continue"
 msgstr ""
 
@@ -628,7 +631,7 @@ msgstr ""
 msgid "The quiz could not be duplicated"
 msgstr ""
 
-#: includes/admin/i18n.php:94 includes/managers/class-tqb-quiz-manager.php:1235
+#: includes/admin/i18n.php:94 includes/managers/class-tqb-quiz-manager.php:1264
 #: includes/admin/views/templates/modals/copy-quiz-shortcode.phtml:17
 #: includes/admin/views/templates/quiz/edit.phtml:19
 msgid "Copy"
@@ -648,11 +651,12 @@ msgid "Search Quizzes"
 msgstr ""
 
 #: includes/admin/i18n.php:98
-#: includes/admin/views/templates/quiz/settings/feedback.phtml:4
+#: includes/admin/views/templates/quiz/settings/feedback.phtml:5
 msgid "How long should the highlight and feedback be displayed for?"
 msgstr ""
 
 #: includes/admin/i18n.php:99
+#: includes/admin/views/templates/quiz/settings/feedback.phtml:7
 msgid "How long should the highlight be displayed for?"
 msgstr ""
 
@@ -788,19 +792,19 @@ msgid ""
 "this quiz type is disabled"
 msgstr ""
 
-#: includes/class-tqb-db.php:1681
+#: includes/class-tqb-db.php:1685
 msgid "Copy of "
 msgstr ""
 
-#: includes/class-tqb-frontend-ajax-controller.php:103
+#: includes/class-tqb-frontend-ajax-controller.php:109
 msgid "Share Badge not available"
 msgstr ""
 
-#: includes/class-tqb-frontend-ajax-controller.php:117
+#: includes/class-tqb-frontend-ajax-controller.php:123
 msgid "Badge could not be generated"
 msgstr ""
 
-#: includes/class-tqb-frontend-ajax-controller.php:179
+#: includes/class-tqb-frontend-ajax-controller.php:185
 msgid "You have nothing"
 msgstr ""
 
@@ -845,31 +849,15 @@ msgstr ""
 msgid "Template saved."
 msgstr ""
 
-#: includes/class-tqb-template-manager.php:394
+#: includes/class-tqb-template-manager.php:409
 msgid "No saved templates found"
-msgstr ""
-
-#: includes/database/class-tqb-database-manager.php:209
-#, php-format
-msgid ""
-"There was an error while updating the database tables needed by Thrive Quiz "
-"Builder. Detailed error message: %s. If you continue seeing this message, "
-"please contact %s"
-msgstr ""
-
-#: includes/database/class-tqb-database-manager.php:211
-msgid "Thrive Themes Support"
-msgstr ""
-
-#: includes/frontend/views/templates/question-answer.php:56
-msgid "Write your response here"
 msgstr ""
 
 #: includes/managers/class-tqb-quiz-manager.php:405
 msgid "The shortcode is broken"
 msgstr ""
 
-#: includes/managers/class-tqb-quiz-manager.php:556
+#: includes/managers/class-tqb-quiz-manager.php:581
 msgid "There is an error in the quiz structure"
 msgstr ""
 
@@ -905,87 +893,87 @@ msgstr ""
 msgid "Control"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:348
+#: includes/managers/class-tqb-structure-manager.php:364
 msgid ""
 "Your Splash Page is empty! Make sure you have at least one variation for it."
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:368
+#: includes/managers/class-tqb-structure-manager.php:384
 msgid "Your Opt-in Page is empty! Make sure you have at least one variation."
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:401
+#: includes/managers/class-tqb-structure-manager.php:417
 msgid "Your Results Page has not been set!"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:455
+#: includes/managers/class-tqb-structure-manager.php:471
 msgid "Something when wrong!"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:459
+#: includes/managers/class-tqb-structure-manager.php:475
 msgid "splash editor"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:462
+#: includes/managers/class-tqb-structure-manager.php:478
 msgid "This Quiz doesn't have a Splash Page"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:466
+#: includes/managers/class-tqb-structure-manager.php:482
 msgid "optin gate editor"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:468
+#: includes/managers/class-tqb-structure-manager.php:484
 msgid "This Quiz doesn't have an Optin Gate"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:472
+#: includes/managers/class-tqb-structure-manager.php:488
 msgid "questions editor"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:474
+#: includes/managers/class-tqb-structure-manager.php:490
 msgid "This Quiz doesn't have a Start Question"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:478
+#: includes/managers/class-tqb-structure-manager.php:494
 msgid "redirect manager"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:480
+#: includes/managers/class-tqb-structure-manager.php:496
 msgid "This Quiz doesn't have a Redirect"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:484
+#: includes/managers/class-tqb-structure-manager.php:500
 msgid "results page editor"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:486
+#: includes/managers/class-tqb-structure-manager.php:502
 msgid "This Quiz doesn't have a Results Page"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:489
+#: includes/managers/class-tqb-structure-manager.php:505
 msgid "quiz type"
 msgstr ""
 
-#: includes/managers/class-tqb-structure-manager.php:492
+#: includes/managers/class-tqb-structure-manager.php:508
 msgid "This Quiz doesn't have a type set."
 msgstr ""
 
-#: includes/tqb-data-functions.php:476
+#: includes/tqb-data-functions.php:477
 msgid "The quiz is no longer available!"
 msgstr ""
 
-#: includes/tqb-global-functions.php:370
+#: includes/tqb-global-functions.php:358
 msgid "Conversion rate over time"
 msgstr ""
 
-#: includes/tqb-global-functions.php:373
+#: includes/tqb-global-functions.php:361
 #: includes/admin/views/templates/tests/view.phtml:65
 #: includes/admin/views/templates/tests/view.phtml:67
 #: includes/admin/views/templates/variations/list.phtml:10
 msgid "Conversion Rate"
 msgstr ""
 
-#: includes/tqb-global-functions.php:424
+#: includes/tqb-global-functions.php:412
 msgid "Error:"
 msgstr ""
 
@@ -1053,7 +1041,6 @@ msgid "Social Badge Created"
 msgstr ""
 
 #: includes/admin/views/templates/badge/card.phtml:8
-#: tcb-bridge/editor-lightbox/remove-interval.php:14
 msgid "Remove"
 msgstr ""
 
@@ -1186,8 +1173,6 @@ msgid "Choose a Social Share Badge template or start creating one from scratch"
 msgstr ""
 
 #: includes/admin/views/templates/modals/badge-templates.phtml:20
-#: tcb-bridge/editor-lightbox/social-share-badge-template.php:30
-#: tcb-bridge/editor-lightbox/variation-templates.php:57
 msgid "Choose Template"
 msgstr ""
 
@@ -1589,12 +1574,12 @@ msgid "Don't display feedback"
 msgstr ""
 
 #: includes/admin/views/templates/quiz/settings/feedback-extended.phtml:20
-#: includes/admin/views/templates/quiz/settings/feedback.phtml:13
+#: includes/admin/views/templates/quiz/settings/feedback.phtml:17
 msgid " seconds"
 msgstr ""
 
 #: includes/admin/views/templates/quiz/settings/feedback-extended.phtml:26
-#: includes/admin/views/templates/quiz/settings/feedback.phtml:18
+#: includes/admin/views/templates/quiz/settings/feedback.phtml:22
 msgid "Until the user presses the Next button"
 msgstr ""
 
@@ -2344,16 +2329,6 @@ msgstr ""
 msgid "Next Step in Quiz"
 msgstr ""
 
-#: tcb-bridge/editor-backbone/autofill-info.php:4
-msgid ""
-"The hidden field will be automatically populated with the result that the "
-"user obtains in the quiz"
-msgstr ""
-
-#: tcb-bridge/editor-backbone/autofill-info.php:8
-msgid "Learn More"
-msgstr ""
-
 #: tcb-bridge/editor-elements/class-tcb-dynamic-content-element.php:20
 msgid "Dynamic Content"
 msgstr ""
@@ -2362,11 +2337,11 @@ msgstr ""
 msgid "Quiz"
 msgstr ""
 
-#: tcb-bridge/editor-elements/class-tcb-quiz-element.php:147
+#: tcb-bridge/editor-elements/class-tcb-quiz-element.php:152
 msgid "Change quiz"
 msgstr ""
 
-#: tcb-bridge/editor-elements/class-tcb-quiz-element.php:156
+#: tcb-bridge/editor-elements/class-tcb-quiz-element.php:161
 msgid "Enable quiz scroll"
 msgstr ""
 
@@ -2440,7 +2415,6 @@ msgid "percentage_remaining"
 msgstr ""
 
 #: tcb-bridge/editor-elements/class-tcb-tqb-progress-bar-element.php:68
-#: tcb-bridge/editor-layouts/menus/qna/tqb-progress-bar.php:19
 msgid "Progress bar Label"
 msgstr ""
 
@@ -2494,288 +2468,15 @@ msgstr ""
 msgid "Quiz Question"
 msgstr ""
 
-#: tcb-bridge/editor-layouts/element-menus/sidebar-settings.php:13
-#, php-format
-msgid "Save %s Template"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/element-menus/sidebar-settings.php:17
-#, php-format
-msgid "Reset %s Template"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/element-menus/sidebar-settings.php:21
-#, php-format
-msgid "%s Settings"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/elements/question.php:172
-msgid "Characters: "
-msgstr ""
-
-#: tcb-bridge/editor-layouts/elements/quiz.php:4
-msgid "Select a Quiz"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/elements/social-share-badge.php:3
-msgid "Insert Social Share Badge"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/menus/qna/question.php:13
-#: tcb-bridge/editor-layouts/menus/qna/tqb-progress-bar.php:10
-msgid "Main Options"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/menus/qna/question.php:20
-msgid "Reset to default layout"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/menus/quiz.php:16
-msgid "Quiz Options"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/menus/social-share-badge.php:16
-msgid "Social Share Badge Options"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/menus/social-share-badge.php:23
-msgid "Change Template"
-msgstr ""
-
-#: tcb-bridge/editor-layouts/menus/social-share-badge.php:38
-msgid "Social Networks"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/delete-dynamic-content.php:7
-#: tcb-bridge/editor-lightbox/equalize-intervals.php:7
-#: tcb-bridge/editor-lightbox/remove-interval.php:7
-msgid "Confirmation"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/delete-dynamic-content.php:9
-msgid ""
-"By deleting the Dynamic Content Element from the page you'll loose all the "
-"settings you've made to the intervals."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/delete-dynamic-content.php:14
-msgid "Delete Dynamic Content"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/equalize-intervals.php:9
-msgid "Are you sure you want to equalize all intervals?"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/equalize-intervals.php:14
-msgid "Equalize Sizes"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/import-content.php:11
-msgid "Import content"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/import-content.php:13
-msgid "Select the state you want to bring content from:"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/import-content.php:18
-msgid "Select an interval"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/import-content.php:32
-msgid "Import"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/remove-interval.php:9
-msgid "Are you sure you want to delete this state?"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:12
-msgid "You have no questions defined"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:15
-msgid ""
-"There are no questions defined for this quiz so the dynamic content cannot "
-"be added!"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:19
-msgid "Add Questions"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:24
-msgid "There seems to be a problem with your quiz"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:27
-msgid ""
-"The minimum and maximum result cannot be the same! First you need to add "
-"points to the quiz answers and then add the dynamic content in your page."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:31
-msgid "Edit Questions"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:42
-msgid "Dynamic content intervals"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:45
+#: tcb-bridge/editor-lightbox/result-intervals.php:38
 #, php-format
 msgid ""
 "Before adding your Dynamic Content, please choose how to split your results "
 "into intervals.<br> You can create a maximum of %s intervals"
 msgstr ""
 
-#: tcb-bridge/editor-lightbox/result-intervals.php:49
-msgid "Split available results range into: "
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:55
-msgid "equal intervals"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:61
-msgid "Create new dynamic content intervals"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:84
-#, php-format
-msgid "You can choose to import intervals from the %s."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:89
-msgid "If you choose this, only the intervals ranges will be imported."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/result-intervals.php:94
-#, php-format
-msgid "Import intervals from %s"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/save-validation.php:7
-msgid "Links missing"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/save-validation.php:9
-msgid ""
-"Your page has neither a link to the next step in the quiz nor a form "
-"connected to the email service, so your visitors will be blocked on this "
-"step."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/save-validation.php:10
-msgid "Learn how to add links to the next step in the quiz."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/social-share-badge-template.php:8
-msgid "Social share badge template"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/social-share-badge-template.php:10
-msgid "Select the display template for the social share badge."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-reset.php:7
-#: tcb-bridge/editor-lightbox/variation-reset.php:14
-msgid "Reset to default content"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-reset.php:9
-msgid ""
-"Are you sure you want to reset this variation to the default template? This "
-"action cannot be undone."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-save.php:7
-msgid "Save Page Template"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-save.php:9
-msgid ""
-"You can save the current page as a template for use on another post / page "
-"on your site."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-save.php:14
-msgid "Template Name"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-save.php:20
-msgid "Save Template"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-templates.php:23
-#, php-format
-msgid "Choose %s Template"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-templates.php:25
-msgid ""
-"Any changes you’ve made to the current page will be lost when you select a "
-"new template. We recommend you to save your current template first."
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-templates.php:29
-msgid "Default Templates"
-msgstr ""
-
-#: tcb-bridge/editor-lightbox/variation-templates.php:30
-#, php-format
-msgid "Saved %s Templates"
-msgstr ""
-
-#: tcb-bridge/editor/page/state-picker.php:12
-msgid "Preview Mode"
-msgstr ""
-
-#: tcb-bridge/editor/page/state-picker.php:14
-msgid "Choose state to preview:"
-msgstr ""
-
-#: tcb-bridge/editor/page/states.php:30
-msgid "Results:"
-msgstr ""
-
 #: tcb-bridge/editor/page/states.php:37
 msgid "Import Content"
-msgstr ""
-
-#: tcb-bridge/editor/page/states.php:65
-msgid "Results Intervals:"
-msgstr ""
-
-#: tcb-bridge/editor/page/states.php:107
-msgid "Apply"
-msgstr ""
-
-#: tcb-bridge/editor/page/states.php:141
-msgid "Equalize sizes"
-msgstr ""
-
-#: tcb-bridge/editor/page/states.php:145
-msgid "Reset all"
-msgstr ""
-
-#: tcb-bridge/editor/page/tqb_optin.php:12
-#: tcb-bridge/editor/page/tqb_qna.php:13
-msgid ""
-"This is a Variation type called \"Q&A\". It is displayed on posts that have "
-"its code in the content."
-msgstr ""
-
-#: tcb-bridge/editor/page/tqb_results.php:13
-msgid ""
-"This is a Variation type called \"Result page\". It is displayed on posts "
-"that have its code in the content."
-msgstr ""
-
-#: tcb-bridge/editor/page/tqb_splash.php:13
-msgid ""
-"This is a Variation type called \"Splash page\". It is displayed on posts "
-"that have its code in the content."
 msgstr ""
 
 #: tcb-bridge/tqb-class-hooks.php:358
@@ -2848,11 +2549,11 @@ msgstr ""
 msgid "The maximum value cannot be greater than "
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:1193
+#: tcb-bridge/tqb-class-hooks.php:1187
 msgid "Invalid Parameters"
 msgstr ""
 
-#: tcb-bridge/tqb-class-hooks.php:1207
+#: tcb-bridge/tqb-class-hooks.php:1201
 msgid ""
 "Could not find the variation you are editing... Is it possible that someone "
 "deleted it from the admin panel?"

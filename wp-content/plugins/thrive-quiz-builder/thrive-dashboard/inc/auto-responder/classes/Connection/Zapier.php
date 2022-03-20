@@ -1,11 +1,20 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 /**
  * Created by PhpStorm.
  * User: dan bilauca
  * Date: 23-Jul-19
  * Time: 04:27 PM
  */
-
 class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -70,8 +79,8 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 
 		$this->setCredentials(
 			array(
-				'api_key'  => sanitize_text_field( $_POST['connection']['api_key'] ),
-				'blog_url' => sanitize_text_field( $_POST['connection']['blog_url'] ),
+				'api_key'  => ! empty( $_POST['connection']['api_key'] ) ? sanitize_text_field( $_POST['connection']['api_key'] ) : '',
+				'blog_url' => ! empty( $_POST['connection']['blog_url'] ) ? sanitize_text_field( $_POST['connection']['blog_url'] ) : '',
 			)
 		);
 
@@ -213,7 +222,7 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 			}
 		}
 
-		$params['source_url'] = filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_URL );
+		$params['source_url'] = filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_URL ); // phpcs:ignore
 
 		// Add all dynamic messages for textarea
 		$messages = array();
@@ -310,6 +319,10 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	 */
 	public static function getEmailMergeTag() {
 		return '';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		return array( 'tag_input' );
 	}
 }
 

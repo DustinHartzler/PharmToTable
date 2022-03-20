@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_Api_CampaignMonitor_List {
 
 	/**
@@ -82,6 +91,22 @@ class Thrive_Dash_Api_CampaignMonitor_List {
 		);
 
 		$this->_manager->request( 'subscribers/' . $this->id, 'post', $data );
+	}
+
+	/**
+	 * Delete a subscriber
+	 *
+	 * @param $email
+	 *
+	 * @throws Exception
+	 */
+	public function delete_subscriber( $email ) {
+
+		$data = array(
+			'body' => array( 'email' => $email )
+		);
+
+		$this->_manager->request( 'subscribers/' . $this->id, 'DELETE', $data );
 	}
 
 	/**

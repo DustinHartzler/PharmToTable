@@ -93,7 +93,7 @@ abstract class TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function own_components() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -108,39 +108,39 @@ abstract class TCB_Element_Abstract {
 		 * Avoid creating extra javascript configuration data
 		 */
 		if ( $this->inherit_components_from() || $this->is_placeholder() ) {
-			return array();
+			return [];
 		}
-		$texts = array(
+		$texts = [
 			' p',
 			' li',
 			' blockquote',
 			' address',
 			' .tcb-plain-text',
 			' label',
-		);
+		];
 
-		$headings = array(
+		$headings = [
 			' h1',
 			' h2',
 			' h3',
 			' h4',
 			' h5',
 			' h6',
-		);
+		];
 
-		$h1_spacing = $h2_spacing = $h3_spacing = $p_spacing = array(
+		$h1_spacing = $h2_spacing = $h3_spacing = $p_spacing = [
 			'css_suffix' => ' p',
 			'important'  => true,
-			'config'     => array(
+			'config'     => [
 				'default' => '',
 				'min'     => '0',
 				'max'     => '100',
 				'label'   => __( 'Paragraph Spacing', 'thrive-cb' ),
-				'um'      => array( 'px', 'em' ),
+				'um'      => [ 'px', 'em' ],
 				'css'     => 'fontSize',
-			),
+			],
 			'extends'    => 'Slider',
-		);
+		];
 
 		$h1_spacing['css_suffix']      = ' h1';
 		$h1_spacing['config']['label'] = __( 'H1 Spacing', 'thrive-cb' );
@@ -149,242 +149,273 @@ abstract class TCB_Element_Abstract {
 		$h3_spacing['css_suffix']      = ' h3';
 		$h3_spacing['config']['label'] = __( 'H3 Spacing', 'thrive-cb' );
 
-		return array(
-			'typography' => array(
-				'disabled_controls' => array(
+		return [
+			'typography' => [
+				'disabled_controls' => [
 					'.tve-advanced-controls',
 					'p_spacing',
 					'h1_spacing',
 					'h2_spacing',
 					'h3_spacing',
-				),
+				],
 				'order'             => 90,
-				'config'            => array(
-					'ParagraphStyle'       => array(
+				'config'            => [
+					'ParagraphStyle'       => [
 						'hidden'  => true,
-						'config'  => array(
+						'config'  => [
 							'label' => __( 'Paragraph Style', 'thrive-cb' ),
-						),
+						],
 						'extends' => 'StyleChange',
-					),
-					'ParagraphStylePicker' => array(
-						'config' => array(
+					],
+					'ParagraphStylePicker' => [
+						'config' => [
 							'label'         => __( 'Choose Default Paragraph Style', 'thrive-cb' ),
 							'default'       => '',
 							'default_label' => __( tcb_post()->is_landing_page() ? 'Landing Page Default' : 'Default', 'thrive-cb' ),
-						),
-					),
-					'ToggleControls'       => array(
-						'config'  => array(
-							'buttons' => array(
-								array(
+						],
+					],
+					'ToggleControls'       => [
+						'config'  => [
+							'buttons' => [
+								[
 									'value'   => 'tcb-typography-font-size',
 									'text'    => __( 'Font Size', 'thrive-cb' ),
 									'default' => true,
-								),
-								array(
+								],
+								[
 									'value' => 'tcb-typography-line-height',
 									'text'  => __( 'Line Height', 'thrive-cb' ),
-								),
-								array(
+								],
+								[
 									'value' => 'tcb-typography-letter-spacing',
 									'text'  => __( 'Letter Spacing', 'thrive-cb' ),
-								),
-							),
-						),
+								],
+							],
+						],
 						'extends' => 'ButtonGroup',
-					),
-					'FontSize'             => array(
+					],
+					'FontSize'             => [
 						'css_suffix' => $texts,
 						'css_prefix' => $prefix_config . ' ',
-						'config'     => array(
+						'config'     => [
 							'default' => '16',
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => '',
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'fontSize',
-						),
+						],
 						'extends'    => 'FontSize',
-					),
-					'LetterSpacing'        => array(
+					],
+					'LetterSpacing'        => [
 						'css_suffix' => $texts,
-						'config'     => array(
+						'config'     => [
 							'default' => 'auto',
 							'min'     => '0',
 							'max'     => '100',
 							'label'   => '',
-							'um'      => array( 'px' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'letterSpacing',
-						),
+						],
 						'extends'    => 'Slider',
-					),
-					'FontColor'            => array(
+					],
+					'FontColor'            => [
 						'css_suffix' => array_merge( $texts, $headings ),
 						'css_prefix' => $prefix_config . ' ',
-						'config'     => array(
+						'config'     => [
 							'default' => '000',
 							'label'   => 'Color',
-							'options' => array(
+							'options' => [
 								'output' => 'object',
-							),
-						),
+							],
+						],
 						'extends'    => 'ColorPicker',
-					),
-					'TextAlign'            => array(
-						'config'  => array(
+					],
+					'TextAlign'            => [
+						'config'  => [
 							'name'    => __( 'Alignment', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'format-align-left',
 									'text'    => '',
 									'value'   => 'left',
 									'default' => true,
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-align-center',
 									'text'  => '',
 									'value' => 'center',
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-align-right',
 									'text'  => '',
 									'value' => 'right',
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-align-justify',
 									'text'  => '',
 									'value' => 'justify',
-								),
-							),
-						),
+								],
+							],
+						],
 						'extends' => 'ButtonGroup',
-					),
-					'TextStyle'            => array(
+					],
+					'TextStyle'            => [
 						'css_suffix' => $texts,
 						'css_prefix' => $prefix_config . ' ',
-					),
-					'TextTransform'        => array(
+					],
+					'TextTransform'        => [
 						'css_suffix' => array_merge( $texts, $headings ),
 						'css_prefix' => $prefix_config . ' ',
-						'config'     => array(
+						'config'     => [
 							'name'    => __( 'Transform', 'thrive-cb' ),
-							'buttons' => array(
-								array(
+							'buttons' => [
+								[
 									'icon'    => 'none',
 									'text'    => '',
 									'value'   => 'none',
 									'default' => true,
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-all-caps',
 									'text'  => '',
 									'value' => 'uppercase',
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-capital',
 									'text'  => '',
 									'value' => 'capitalize',
-								),
-								array(
+								],
+								[
 									'icon'  => 'format-lowercase',
 									'text'  => '',
 									'value' => 'lowercase',
-								),
-							),
-						),
+								],
+							],
+						],
 						'extends'    => 'ButtonGroup',
-					),
-					'FontFace'             => array(
-						'css_suffix' => $texts,
+					],
+					'FontFace'             => [
+						'css_suffix' => array_merge( $texts, $headings ),
 						'css_prefix' => $prefix_config . ' ',
-						'config'     => array(
+						'config'     => [
 							'template' => 'controls/font-manager',
 							'inline'   => false,
-						),
-					),
-					'LineHeight'           => array(
+						],
+					],
+					'LineHeight'           => [
 						'css_suffix' => $texts,
 						'css_prefix' => $prefix_config . ' ',
-						'config'     => array(
+						'config'     => [
 							'default' => '16',
 							'min'     => '1',
 							'max'     => '100',
 							'label'   => '',
-							'um'      => array( 'px', 'em' ),
+							'um'      => [ 'px', 'em' ],
 							'css'     => 'lineHeight',
-						),
+						],
 						'extends'    => 'LineHeight',
-					),
+					],
 					'p_spacing'            => $p_spacing,
 					'h1_spacing'           => $h1_spacing,
 					'h2_spacing'           => $h2_spacing,
 					'h3_spacing'           => $h3_spacing,
-				),
-			),
-			'layout'     => array(
+				],
+			],
+			'layout'     => [
 				'order'             => 100,
-				'disabled_controls' => array(
+				'disabled_controls' => [
 					'ScrollStyle',
-				),
-			),
-			'background' => array(
+				],
+			],
+			'background' => [
 				'order'             => 110,
-				'config'            => array(
-					'ColorPicker'       => array(
-						'config' => array(
+				'config'            => [
+					'ColorPicker'       => [
+						'config' => [
 							'icon'      => true,
 							'important' => true,
-							'options'   => array( 'noBeforeInit' => false ),
-						),
-					),
-					'PreviewFilterList' => array(
-						'config' => array(
+							'options'   => [ 'noBeforeInit' => false ],
+						],
+					],
+					'PreviewFilterList' => [
+						'config' => [
 							'sortable'    => false,
 							'extra_class' => 'tcb-preview-list-white',
-						),
-					),
-					'PreviewList'       => array(
-						'config' => array(
+						],
+					],
+					'PreviewList'       => [
+						'config' => [
 							'sortable' => true,
-						),
-					),
-				),
-				'disabled_controls' => array(
+						],
+					],
+				],
+				'disabled_controls' => [
 					'video',
-				),
-			),
-			'borders'    => array(
+				],
+			],
+			'borders'    => [
 				'order'  => 120,
-				'config' => array(
-					'Corners' => array(
+				'config' => [
+					'Corners' => [
 						'overflow' => true,
-					),
-				),
-			),
-			'animation'  => array(
+					],
+				],
+			],
+			'animation'  => [
 				'order' => 130,
-			),
+			],
 			/**
 			 * Reorder the sidebar, now the Shadow is before Responsive
 			 */
 
-			'shadow'           => array(
+			'shadow'              => [
 				'order'          => 140,
 				'inline_text_to' => '',
-			),
-			'responsive'       => array(
+			],
+			'responsive'          => [
 				'order' => 150,
-			),
-			'styles-templates' => array(
+			],
+			'conditional-display' => [
+				'hidden' => true,
+				'order'  => 155,
+				'config' => [
+					'LazyLoad'          => [
+						'config'  => [
+							'name'    => '',
+							'label'   => __( 'Lazy load', 'thrive-cb' ),
+							'default' => false,
+
+						],
+						'extends' => 'Switch',
+					],
+					'UniformHeights'    => [
+						'config'  => [
+							'name'    => '',
+							'label'   => __( 'Uniform display heights', 'thrive-cb' ),
+							'default' => false,
+						],
+						'extends' => 'Switch',
+					],
+					'InheritBackground' => [
+						'config'  => [
+							'name'    => '',
+							'label'   => __( 'Lazy load background inherited from', 'thrive-cb' ),
+							'options' => [],
+						],
+						'extends' => 'Select',
+					],
+				],
+			],
+			'styles-templates'    => [
 				'order' => 160,
-			),
-			'scroll'           => array(
+			],
+			'scroll'              => [
 				'hidden' => true,
 				'order'  => 125,
-			),
+			],
 
-		);
+		];
 	}
 
 	/**
@@ -395,7 +426,7 @@ abstract class TCB_Element_Abstract {
 	 */
 	public function config() {
 
-		$config = array(
+		$config = [
 			'components'                  => $this->components(),
 			'identifier'                  => $this->identifier(),
 			'name'                        => $this->name(),
@@ -411,7 +442,7 @@ abstract class TCB_Element_Abstract {
 			'has_group'                   => $this->has_group_editing(),
 			'category'                    => $this->category(),
 			'info'                        => $this->info(),
-		);
+		];
 		if ( ( $inherit_from = $this->inherit_components_from() ) ) {
 			$config['inherit_from'] = $inherit_from;
 		}
@@ -428,7 +459,7 @@ abstract class TCB_Element_Abstract {
 	 *
 	 * @return array
 	 */
-	private function normalize_components( $components = array() ) {
+	private function normalize_components( $components = [] ) {
 		$i = 1;
 		foreach ( $components as $key => $c ) {
 			/**
@@ -451,12 +482,12 @@ abstract class TCB_Element_Abstract {
 
 			/* by default, if nothing is set, the nothing is hidden in the component */
 			if ( ! isset( $c['hide'] ) ) {
-				$components[ $key ]['hide'] = array();
+				$components[ $key ]['hide'] = [];
 			}
 
 			/* if nothing is added, by default the config is empty */
 			if ( ! isset( $c['config'] ) ) {
-				$components[ $key ]['config'] = array();
+				$components[ $key ]['config'] = [];
 			}
 		}
 
@@ -536,14 +567,14 @@ abstract class TCB_Element_Abstract {
 		$extra_state = $this->get_sidebar_extra_state();
 
 		if ( empty( $extra_state ) ) {
-			$sidebars = array();
+			$sidebars = [];
 		} else {
-			$sidebars = array(
-				$this->_tag => array(
+			$sidebars = [
+				$this->_tag => [
 					'template' => $extra_state,
 					'title'    => $this->name(),
-				),
-			);
+				],
+			];
 		}
 
 		return $sidebars;
@@ -693,11 +724,11 @@ abstract class TCB_Element_Abstract {
 			$title = $this->name();
 		}
 
-		return tcb_template( 'elements/element-placeholder', array(
+		return tcb_template( 'elements/element-placeholder', [
 			'icon'  => $this->icon(),
-			'class' => str_replace( array( ',.', ',', '.' ), array( ' ', '', '' ), $this->identifier() ),
+			'class' => str_replace( [ ',.', ',', '.' ], [ ' ', '', '' ], $this->identifier() ),
 			'title' => $title,
-		), true );
+		], true );
 	}
 
 	/**
@@ -744,33 +775,33 @@ abstract class TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function group_component() {
-		return array(
-			'group' => array(
-				'config' => array(
-					'ButtonToggle' => array(
-						'config' => array(
+		return [
+			'group' => [
+				'config' => [
+					'ButtonToggle' => [
+						'config' => [
 							'label'         => '',
 							'class'         => 'tcb-group-toggle-btn',
 							'icon_active'   => 'unlock-alt-regular',
 							'icon_inactive' => 'lock-alt-regular',
-							'tooltip'       => array(
+							'tooltip'       => [
 								'active'   => __( 'Group styling disabled. The styling will be applied only for the selected element.', 'thrive-cb' ),
 								'inactive' => __( 'Group styling active. The same styling will be applied to similar elements.', 'thrive-cb' ),
-							),
-						),
-					),
-					'preview'      => array(
-						'config'  => array(
+							],
+						],
+					],
+					'preview'      => [
+						'config'  => [
 							'name'       => '',
 							'full-width' => true,
-							'options'    => array(),
-						),
+							'options'    => [],
+						],
 						'extends' => 'Select',
-					),
+					],
 
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 
 	/**
@@ -779,21 +810,21 @@ abstract class TCB_Element_Abstract {
 	 * @return array
 	 */
 	public function shared_styles_component() {
-		return array(
-			'shared-styles' => array(
+		return [
+			'shared-styles' => [
 				'order'  => 1,
-				'config' => array(
-					'global_style' => array(
-						'config' => array(),
-					),
-					'preview'      => array(
-						'config' => array(
+				'config' => [
+					'global_style' => [
+						'config' => [],
+					],
+					'preview'      => [
+						'config' => [
 							'label' => __( 'Style', 'thrive-cb' ),
-							'items' => array(),
-						),
-					),
-				),
-			),
-		);
+							'items' => [],
+						],
+					],
+				],
+			],
+		];
 	}
 }

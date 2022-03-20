@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-image-component" class="tve-component" data-view="Image">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="ImageSize"></div>
 		<div class="tve-control" data-view="ImageHeight"></div>
 		<div class="control-grid center reset-size tcb-hidden">
-			<span class="click tcb-text-uppercase" data-fn="resetToDefaultSize"><?php tcb_icon( 'undo' ); ?><?php echo __( 'Reset to default size', 'thrive-cb' ); ?></span>
+			<span class="click tcb-text-uppercase" data-fn="resetToDefaultSize"><?php tcb_icon( 'undo' ); ?><?php echo esc_html__( 'Reset to default size', 'thrive-cb' ); ?></span>
 		</div>
 		<hr>
 		<div class="tve-control" data-view="StyleChange"></div>
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<hr>
 
 		<div class="tve-control no-space mb-5" data-view="ImageCaption"></div>
-		<div class="tve-control no-space" data-key="ToggleURL" data-extends="Switch" data-label="<?php echo __( 'Add link to image', 'thrive-cb' ); ?>"></div>
+		<div class="tve-control no-space" data-key="ToggleURL" data-extends="Switch" data-label="<?php echo esc_html__( 'Add link to image', 'thrive-cb' ); ?>"></div>
 
 		<div class="image-link mt-10"></div>
 
@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-image-effects-component" class="tve-component" data-view="ImageEffects">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Image Effects', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Image Effects', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -63,7 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="ImageOverlay"></div>
 
 		<button class="click tve-button" data-fn="set_default">
-			<?php echo __( 'Reset to Default', 'thrive-cb' ); ?>
+			<?php echo esc_html__( 'Reset to Default', 'thrive-cb' ); ?>
 		</button>
 	</div>
 </div>

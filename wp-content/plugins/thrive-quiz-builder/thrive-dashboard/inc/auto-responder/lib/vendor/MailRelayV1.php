@@ -107,7 +107,6 @@ class Thrive_Dash_Api_MailRelayV1 {
 
 		return $lists;
 	}
-
 	/**
 	 * Adds a subscriber to a group into MailRelay
 	 * - does a check for existence before sending it through API
@@ -129,13 +128,6 @@ class Thrive_Dash_Api_MailRelayV1 {
 		if ( false === is_array( $args ) || false === isset( $args['email'] ) ) {
 			throw new  Thrive_Dash_Api_MailRelay_Exception( 'Invalid email', 400 );
 		}
-
-		//make an api call checking if subscriber already exists
-		$subscriber = $this->_request( '/subscribers', 'get',
-			array(
-				'q[email_eq]' => $args['email'],
-			)
-		);
 
 		/**
 		 * if subscriber has phone custom field set then send it along with it
@@ -161,7 +153,6 @@ class Thrive_Dash_Api_MailRelayV1 {
 				if ( is_array( $phone_field ) && ! empty( $phone_field['id'] ) ) {
 					$args['custom_fields'][ $phone_field['id'] ] = $phone;
 				}
-			} catch ( Thrive_Dash_Api_MailRelay_Exception $e ) {
 			} catch ( Exception $e ) {
 			}
 		}

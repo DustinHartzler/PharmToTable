@@ -57,9 +57,9 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 	 */
 	public function own_components() {
 		return array(
-			'menu_item'  => array(
+			'menu_item'           => array(
 				'config' => array(
-					'HoverEffect' => array(
+					'HoverEffect'  => array(
 						'config'  => array(
 							'name'    => __( 'Hover Effect', 'thrive-cb' ),
 							'options' => array(
@@ -72,32 +72,53 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 						),
 						'extends' => 'Select',
 					),
-					'StyleChange' => array(
+					'StyleChange'  => array(
 						'config' => array(
 							'label'      => __( 'Item style', 'thrive-cb' ),
 							'label_none' => __( 'Choose...', 'thrive-cb' ),
 						),
 					),
-					'StylePicker' => array(
+					'StylePicker'  => array(
 						'config' => array(
 							'label' => __( 'Choose item style', 'thrive-cb' ),
 							'items' => $this->get_templates(),
 						),
 					),
-					'HasIcon'     => array(
+					'HasIconImage' => array(
 						'config'  => array(
-							'label' => __( 'Show Icon', 'thrive-cb' ),
+							'name'    => __( 'Display', 'thrive-cb' ),
+							'options' => array(
+								'text'       => __( 'Text only', 'thrive-cb' ),
+								'icon'       => __( 'Icon only', 'thrive-cb' ),
+								'icon-text'  => __( 'Icon and text', 'thrive-cb' ),
+								'image'      => __( 'Image only', 'thrive-cb' ),
+								'image-text' => __( 'Image and text', 'thrive-cb' ),
+							),
 						),
-						'extends' => 'Switch',
+						'extends' => 'Select',
 					),
-					'ColorPicker' => array(
+					'Display'      => array(
+						'config'  => array(
+							'name'    => __( 'Show when', 'thrive-cb' ),
+							'options' => array(
+								'always'     => __( 'Always', 'thrive-cb' ),
+								'logged-in'  => __( 'Logged in', 'thrive-cb' ),
+								'logged-out' => __( 'Logged out', 'thrive-cb' ),
+							),
+						),
+						'extends' => 'Select',
+					),
+					'ImageSide'    => array(
+						'extends' => 'ButtonGroup',
+					),
+					'ColorPicker'  => array(
 						'css_suffix' => ' > a .m-icon',
 						'config'     => array(
 							'label'   => __( 'Icon Color', 'thrive-cb' ),
 							'options' => array( 'noBeforeInit' => false ),
 						),
 					),
-					'Slider'      => array(
+					'Slider'       => array(
 						'css_suffix' => ' > a .m-icon',
 						'config'     => array(
 							'default' => 30,
@@ -110,7 +131,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					),
 				),
 			),
-			'typography' => array(
+			'typography'          => array(
 				'disabled_controls' => array(
 					'.tve-advanced-controls',
 				),
@@ -149,7 +170,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					),
 				),
 			),
-			'background' => array(
+			'background'          => array(
 				'config' => array(
 					'ColorPicker' => array(
 						'config' => array(
@@ -158,7 +179,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					),
 				),
 			),
-			'layout'     => array(
+			'layout'              => array(
 				'disabled_controls' => array(
 					'margin-top',
 					'margin-bottom',
@@ -167,7 +188,7 @@ class TCB_Menu_Item_Element extends TCB_Label_Element {
 					'Display',
 				),
 			),
-			'borders'    => array(
+			'borders'             => array(
 				'config' => array(
 					'Corners' => array(
 						'overflow' => false,

@@ -8,10 +8,10 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-$spinner_gif = tve_editor_css() . '/images/loading-spinner.gif';
+$spinner_gif = tve_editor_css( 'images/loading-spinner.gif' );
 ?>
 
-<div class="lp-template-item <#- active ? 'selected': ''#>" data-key="<#- key #>" data-cloud="<#- cloud #>">
+<div class="lp-template-item modal-item <#- active ? 'selected': ''#>" data-key="<#- key #>" data-cloud="<#- cloud #>" data-uid="<#= uid || ''#>">
 	<div class="tcb-relative">
 		<div class="lp-template-title mb-10">
 			<span class="lp-set-title"><#= name #></span>

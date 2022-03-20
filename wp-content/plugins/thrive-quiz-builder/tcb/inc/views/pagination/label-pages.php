@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <p class="tcb-pagination-label-content">
-	<?php echo __( 'Page ', 'thrive-cb' ); ?>
+	<?php echo esc_html__( 'Page ', 'thrive-cb' ); ?>
 	<span class="thrive-inline-shortcode" contenteditable="false">
 		<span class="thrive-shortcode-content" contenteditable="false" data-extra_key="" data-shortcode="tcb_pagination_current_page" data-shortcode-name="Current page number">
 			1
 		</span>
 	</span>
-	<?php echo __( ' of ', 'thrive-cb' ); ?>
+	<?php echo esc_html__( ' of ', 'thrive-cb' ); ?>
 	<span class="thrive-inline-shortcode" contenteditable="false">
 		<span class="thrive-shortcode-content" contenteditable="false" data-extra_key="" data-shortcode="tcb_pagination_total_pages" data-shortcode-name="Total number of pages">
 			8

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-toc-component" class="tve-component" data-view="TOC">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -20,13 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-toc-default">
 				<div class="tcb-text-center mb-10 mr-5 ml-5">
 					<button class="tve-button orange click" data-fn="editElement">
-						<?php echo __( 'Edit table of contents', 'thrive-cb' ); ?>
+						<?php echo esc_html__( 'Edit table of contents', 'thrive-cb' ); ?>
 					</button>
 				</div>
 				<div class="tve-control tve-toc-control" data-view="TOCPalettes"></div>
 				<div class="tve-control tve-toc-control" data-view="Headings"></div>
 				<span class="click blue-text center-text mt-5 mb-10 flex-mid" data-fn="refresh">
-						<?php tcb_icon( 'sync-regular' ); ?>&nbsp; <?php echo __( 'Update table', 'thrive-cb' ) ?>
+						<?php tcb_icon( 'sync-regular' ); ?>&nbsp; <?php echo esc_html__( 'Update table', 'thrive-cb' ) ?>
 					</span>
 				<hr>
 				<div class="tve-control" data-view="Columns"></div>
@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="tve-advanced-controls extend-grey toc-items">
 					<div class="dropdown-header" data-prop="advanced">
 						<span>
-							<?php echo __( 'Modify Headings', 'thrive-cb' ); ?>
+							<?php echo esc_html__( 'Modify Headings', 'thrive-cb' ); ?>
 						</span>
 					</div>
 					<div class="dropdown-content pl-0 pr-0 tcb-relative pt-5">
@@ -54,7 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 							<i class="mr-5">
 								<?php tcb_icon( 'sync-regular' ); ?>
 							</i>
-							<?php echo __( 'Sync', 'thrive-cb' ); ?>
+							<?php echo esc_html__( 'Sync', 'thrive-cb' ); ?>
 						</a>
 					</div>
 

@@ -1611,7 +1611,7 @@ msgstr ""
 
 #: inc/icon-manager/views/main.php:11
 msgid ""
-"Thrive Themes / Content Builder integrate with IcoMoon. Here's how it works:"
+"Thrive Themes integrate with IcoMoon. Here's how it works:"
 msgstr ""
 
 #: inc/icon-manager/views/main.php:13

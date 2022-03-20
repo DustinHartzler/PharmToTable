@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-styledlist-component" class="tve-component" data-view="StyledList">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -20,9 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="item_spacing"></div>
 		<hr>
 		<div class="control-grid">
-			<span class="label"><?php echo __( 'Items', 'thrive-cb' ); ?></span>
+			<span class="label"><?php echo esc_html__( 'Items', 'thrive-cb' ); ?></span>
 			<div class="tve-button click blue" data-fn-click="add_list_item">
-				<?php echo __( 'Add New', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Add New', 'thrive-cb' ); ?>
 			</div>
 		</div>
 

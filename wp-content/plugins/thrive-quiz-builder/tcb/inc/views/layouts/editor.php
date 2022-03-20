@@ -15,16 +15,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width">
-	<title><?php echo get_the_title() . ' | ' . apply_filters( 'tcb_editor_title', __( 'Thrive Architect', 'thrive-cb' ) ); ?></title>
+	<title><?php echo esc_html( get_the_title() . ' | ' . apply_filters( 'tcb_editor_title', __( 'Thrive Architect', 'thrive-cb' ) ) ); ?></title>
 	<?php wp_head(); ?>
 	<?php do_action( 'tcb_hook_editor_head' ); ?>
 	<?php tve_load_global_variables(); ?>
 	<?php echo tve_get_shared_styles( '', '300' ); ?>
 	<script>
-		var ajaxurl = '<?php echo admin_url( 'admin-ajax.php', 'relative' ); ?>';
+		var ajaxurl = '<?php echo esc_js( admin_url( 'admin-ajax.php', 'relative' ) ); ?>';
 	</script>
 </head>
-<body class="tcb-editor-main preview-desktop" style="padding: 0;margin: 0;height: 100%;overflow:hidden;">
+<body class="tcb-editor-main preview-desktop <?php echo get_post_type() ?>" style="padding: 0;margin: 0;height: 100%;overflow:hidden;">
 <div class="tcb-wrap-all" id="tve-main-frame">
 	<div id="tve-page-loader" class="tve-open">
 		<?php tcb_template( 'loading-spinner.php' ); ?>
@@ -34,8 +34,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<?php if ( tcb_editor()->has_post_breadcrumb_option() ) : ?>
 			<?php $post_breadcrumb_data = tcb_editor()->post_breadcrumb_data(); ?>
-			<span id="tcb-post-option-breadcrumb" class="tcb-left pr-5 click tcb-active-element-breadcrumbs-item" data-index="" data-selector="<?php echo $post_breadcrumb_data['selector']; ?>" data-fn="postOptionsClicked">
-				<span class="tcb-breadcrumb-name"><?php echo $post_breadcrumb_data['label']; ?></span>
+			<span id="tcb-post-option-breadcrumb" class="tcb-left pr-5 click tcb-active-element-breadcrumbs-item" data-index="" data-selector="<?php echo esc_attr( $post_breadcrumb_data['selector'] ); ?>" data-fn="postOptionsClicked">
+				<span class="tcb-breadcrumb-name"><?php echo esc_html( $post_breadcrumb_data['label'] ); ?></span>
 				<span class="tcb-icon"><?php tcb_icon( 'cog-regular' ); ?><?php tcb_icon( 'cog-solid' ); ?></span>
 				<span class="cont"><i></i></span>
 			</span>
@@ -56,8 +56,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php tcb_editor()->render_menu(); ?>
 	<?php do_action( 'tcb_editor_iframe_before' ); ?>
 	<div id="tcb-frame-container">
-		<?php $id = get_the_ID() === $_GET['post'] ? get_the_ID() : $_GET['post']; //MMM compatibility ?>
-		<iframe tabindex="-1" id="tve-editor-frame" data-src="<?php echo tcb_get_editor_url( $id, false ); ?>"></iframe>
+		<?php $id = get_the_ID() === absint( $_GET['post'] ) ? get_the_ID() : absint( $_GET['post'] ); //MMM compatibility ?>
+		<iframe tabindex="-1" id="tve-editor-frame" data-src="<?php echo esc_attr( tcb_get_editor_url( $id, false ) ); ?>"></iframe>
 		<div class="top canvas-border"></div>
 		<div class="right canvas-border"></div>
 		<div class="bottom canvas-border"></div>
@@ -82,7 +82,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php do_action( 'admin_print_footer_scripts' ); ?>
 <?php do_action( 'tcb_hook_editor_footer' ); ?>
 <div style="display: none" id="tve-static-elements">
-	<?php echo tcb_editor()->elements->layout(); ?>
+	<?php echo tcb_editor()->elements->layout(); //phpcs:ignore ?>
 </div>
 </body>
 </html>

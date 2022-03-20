@@ -284,7 +284,7 @@ class TQB_Variation_Manager {
 
 		$same_variation_key = 'tqb_t_' . $test['id'] . '_p_' . $test['page_id'];
 		if ( isset( $_COOKIE[ $same_variation_key ] ) && isset( $variations[ $_COOKIE[ $same_variation_key ] ] ) ) {
-			$variation_index = $_COOKIE[ $same_variation_key ];
+			$variation_index = sanitize_text_field( $_COOKIE[ $same_variation_key ] );
 		} else {
 			$variation_index = tqb_get_random_index( count( $variations ) );
 		}
@@ -335,14 +335,16 @@ class TQB_Variation_Manager {
 	 */
 	public function prepare_variation_for_tcb_save( $variation = array() ) {
 
-		unset( $variation['cache_impressions'] );
-		unset( $variation['cache_optins'] );
-		unset( $variation['cache_optins_conversions'] );
-		unset( $variation['cache_social_shares'] );
-		unset( $variation['cache_social_shares_conversions'] );
-		unset( $variation['post_status'] );
-		unset( $variation['is_control'] );
-		unset( $variation['post_title'] );
+		unset(
+			$variation['cache_impressions'],
+			$variation['cache_optins'],
+			$variation['cache_optins_conversions'],
+			$variation['cache_social_shares'],
+			$variation['cache_social_shares_conversions'],
+			$variation['post_status'],
+			$variation['is_control'],
+			$variation['post_title']
+		);
 
 		return $variation;
 	}
@@ -351,20 +353,18 @@ class TQB_Variation_Manager {
 	/**
 	 * Clone variation
 	 *
-	 * @param array $variation
+	 * @param int $id id of variation to be cloned
 	 *
 	 * @return array|bool
 	 */
-	public function clone_variation( $variation = array() ) {
-		if ( empty( $variation['id'] ) && ! is_numeric( $variation['id'] ) ) {
-			return false;
-		}
+	public function clone_variation( $id ) {
+		$id = (int) $id;
 
 		global $tqbdb;
-		$inserted_id = $tqbdb->clone_variation( $variation );
+		$inserted_id = $tqbdb->clone_variation( $id );
 
 		// Duplicate also the child variations
-		$child_variations = $tqbdb->get_page_variations( array( 'parent_id' => $variation['id'] ) );
+		$child_variations = $tqbdb->get_page_variations( array( 'parent_id' => $id ) );
 		if ( ! empty( $child_variations ) ) {
 
 			foreach ( $child_variations as $child_variation ) {
@@ -377,9 +377,7 @@ class TQB_Variation_Manager {
 			}
 		}
 
-		$variation['id'] = $inserted_id;
-
-		return $variation;
+		return tqb_get_variation( $inserted_id );
 	}
 
 	/**

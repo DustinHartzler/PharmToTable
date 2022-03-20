@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-reveal-component" class="tve-component" data-view="Reveal">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -20,6 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<hr>
 		<div class="tve-control" data-view="AutoScroll"></div>
 		<hr>
-		<div class="tve-control" data-view="RedirectURL"></div>
+		<div class="tve-control full-width" data-view="RedirectURL"></div>
 	</div>
 </div>

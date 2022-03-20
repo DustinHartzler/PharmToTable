@@ -21,7 +21,7 @@ $time_settings = tve_get_time_settings();
 
 <div id="tve-countdown-component" class="tve-component" data-view="Countdown">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -29,7 +29,7 @@ $time_settings = tve_get_time_settings();
 			<div class="tve-cd-default">
 				<div class="tcb-text-center mb-10 mr-5 ml-5">
 					<button class="tve-button orange click" data-fn="editElement">
-						<?php echo __( 'Edit design', 'thrive-cb' ); ?>
+						<?php echo esc_html__( 'Edit design', 'thrive-cb' ); ?>
 					</button>
 				</div>
 				<div class="tve-control" data-view="CountdownPalette"></div>
@@ -38,7 +38,7 @@ $time_settings = tve_get_time_settings();
 				<div class="custom-fields-state" data-state="static">
 					<div class="tve-control" data-view="EndDate"></div>
 					<div class="control-grid">
-						<div class="label self-baseline"><?php echo __( 'Time', 'thrive-cb' ); ?></div>
+						<div class="label self-baseline"><?php echo esc_html__( 'Time', 'thrive-cb' ); ?></div>
 						<div class="input flex space-between wrap">
 							<div class="tve-control tve-evergreen mb-10" data-view="Day"></div>
 							<div class="tve-control  mb-10" data-view="Hour"></div>
@@ -57,8 +57,8 @@ $time_settings = tve_get_time_settings();
 						</div>
 					</div>
 				</div>
-				<div class="control-grid timezone-notice" data-timezone="<?php echo $time_settings['tzd']; ?>">
-					<span class="info-text grey-text fill mt-0"><?php echo __( 'Timezone', 'thrive-cb' ); ?> UTC <?php echo $time_settings['tzd']; ?></span>
+				<div class="control-grid timezone-notice" data-timezone="<?php echo esc_attr( $time_settings['tzd'] ); ?>">
+					<span class="info-text grey-text fill mt-0"><?php echo esc_html__( 'Timezone', 'thrive-cb' ); ?> UTC <?php echo esc_html( $time_settings['tzd'] ); ?></span>
 				</div>
 			</div>
 			<div class="tve-control full-width" data-name="<?php esc_attr_e( 'Visible countdown tiles', 'thrive-cb' ); ?>" data-view="VisibleTiles" data-extends="ButtonGroup" data-required="1" data-checkbox="true"></div>
@@ -99,7 +99,7 @@ $time_settings = tve_get_time_settings();
 							</svg>
 						</div>
 						<div class="upsell-message">
-							<span><?php echo __( 'For more countdown timers and advanced scarcity marketing, get ', 'thrive-cb' ) ?></span>
+							<span><?php echo esc_html__( 'For more countdown timers and advanced scarcity marketing, get ', 'thrive-cb' ) ?></span>
 							<a href="//thrivethemes.com/ultimatum/upgrade/" target="_blank" class="blue-text">Thrive Ultimatum</a>
 						</div>
 					</div>

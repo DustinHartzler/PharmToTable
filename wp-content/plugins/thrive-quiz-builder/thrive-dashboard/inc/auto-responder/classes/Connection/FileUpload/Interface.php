@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Interface Thrive_Dash_List_Connection_FileUpload_Interface
  *
  * Holds definitions for all the necessary functionality for connecting a file upload service with a Form element

@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Created by PhpStorm.
  * User: radu
@@ -15,6 +24,7 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 	class Tve_Dash_Thrive_Icon_Manager {
 		/**
 		 * singleton instance
+		 *
 		 * @var Tve_Dash_Thrive_Icon_Manager
 		 */
 		protected static $instance = null;
@@ -26,6 +36,7 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 
 		/**
 		 * success / error messages
+		 *
 		 * @var array
 		 *
 		 */
@@ -72,7 +83,7 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 				'icon_pack_name' => empty( $icon_pack ) ? '' : $icon_pack['attachment_name'],
 				'icon_pack_id'   => empty( $icon_pack ) ? '' : $icon_pack['attachment_id'],
 				'variations'     => empty( $icon_pack ) || empty( $icon_pack['variations'] ) ? array() : $icon_pack['variations'],
-				'messages'       => $this->messages
+				'messages'       => $this->messages,
 			);
 
 			$this->view->render( 'main', $data );
@@ -87,8 +98,8 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 			$handler       = new Tve_Dash_Thrive_Icon_Manager_Data();
 
 			if ( ! empty( $_POST['attachment_id'] ) ) {
-				$maybe_zip_file = get_attached_file( $_POST['attachment_id'] );
-				$maybe_zip_url  = wp_get_attachment_url( $_POST['attachment_id'] );
+				$maybe_zip_file = get_attached_file( absint( $_POST['attachment_id'] ) );
+				$maybe_zip_url  = wp_get_attachment_url( absint( $_POST['attachment_id'] ) );
 
 				try {
 					$new_icon_pack = $handler->processZip( $maybe_zip_file, $maybe_zip_url );
@@ -98,7 +109,7 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 						$font_family = isset( $icon_pack['fontFamily'] ) ? $icon_pack['fontFamily'] : '';
 						$old_handler->removeIcoMoonFolder( $icon_pack['folder'], $font_family );
 					}
-					$new_icon_pack['attachment_id']   = $_POST['attachment_id'];
+					$new_icon_pack['attachment_id']   = absint( $_POST['attachment_id'] );
 					$new_icon_pack['attachment_name'] = basename( $maybe_zip_file );
 
 					$success = __( 'New IcoMoon Font Pack installed. ', TVE_DASH_TRANSLATE_DOMAIN );
@@ -133,7 +144,11 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 		protected function enqueue() {
 			tve_dash_enqueue();
 			wp_enqueue_media();
-			tve_dash_enqueue_script( 'tve_dash_icon_manager_options', TVE_DASH_URL . '/inc/icon-manager/views/js/manager.js', array( 'jquery', 'media-upload', 'thickbox' ) );
+			tve_dash_enqueue_script( 'tve_dash_icon_manager_options', TVE_DASH_URL . '/inc/icon-manager/views/js/manager.js', array(
+				'jquery',
+				'media-upload',
+				'thickbox',
+			) );
 			tve_dash_enqueue_style( 'tve_dash_icon_manager_style', TVE_DASH_URL . '/inc/icon-manager/views/css/manager.css' );
 		}
 

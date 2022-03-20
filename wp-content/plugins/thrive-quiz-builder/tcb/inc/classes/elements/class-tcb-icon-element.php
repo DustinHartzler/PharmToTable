@@ -42,7 +42,7 @@ class TCB_Icon_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function identifier() {
-		return '.tve_lg_file .thrv_icon,.thrv_icon:not(.tve_lg_input_container .thrv_icon, .tve-login-form-input .thrv_icon)';
+		return '.tve_lg_file .thrv_icon,.thrv_icon:not(.tve_lg_input_container .thrv_icon, .tve-login-form-input .thrv_icon, .tcb-carousel-arrow)';
 	}
 
 	/**
@@ -120,7 +120,11 @@ class TCB_Icon_Element extends TCB_Element_Abstract {
 				),
 			),
 			'layout'     => array(
-				'config'            => array(),
+				'config'            => array(
+					'Position' => array(
+						'important' => true,
+					),
+				),
 				'disabled_controls' => array(
 					'Width',
 					'Height',

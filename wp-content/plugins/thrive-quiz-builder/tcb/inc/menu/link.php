@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="text-options action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -45,7 +45,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<hr class="hide-states">
 			<div class="tcb-text-center hide-states">
 				<span class="click tcb-text-uppercase clear-format custom-icon" data-fn="clearFormatting">
-					<?php echo __( 'Clear all formatting', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Clear all formatting', 'thrive-cb' ); ?>
 				</span>
 			</div>
 		</div>

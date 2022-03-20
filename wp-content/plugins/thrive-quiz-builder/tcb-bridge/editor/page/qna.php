@@ -55,14 +55,15 @@ $is_write_wrong    = 'right_wrong' === $quiz_type;
 		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<?php foreach ( $question_manager->get_question_css() as $css_file ) : ?>
-			<link rel="stylesheet" type="text/css" href="<?php echo $css_file; ?>" media="all">
+			<link rel="stylesheet" type="text/css" href="<?php echo esc_url( $css_file ); ?>" media="all">
 		<?php endforeach; ?>
 		<?php wp_head(); ?>
 	</head>
 <body <?php body_class(); ?>>
-<div id="tve_editor" class="no-touch tqb-shortcode-new-content tqb-template-style-<?php echo $quiz_style; ?>">
+<div id="tve_editor"
+	 class="no-touch tqb-shortcode-new-content tqb-template-style-<?php echo esc_attr( $quiz_style ); ?>">
 	<?php if ( $has_qna_templates ): ?>
-		<?php echo $content; ?>
+		<?php echo $content; // phpcs:ignore ?>
 	<?php else: ?>
 		<?php
 		ob_start();
@@ -70,7 +71,7 @@ $is_write_wrong    = 'right_wrong' === $quiz_type;
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		echo $content;
+		echo $content; // phpcs:ignore
 		?>
 	<?php endif; ?>
 </div>
@@ -81,26 +82,26 @@ tqb_add_frontend_svg_file();
 <style>
 
 	.tqb-progress-label {
-		color: <?php echo $progress_settings['label_color'];?>;
+		color: <?php echo esc_attr($progress_settings['label_color']);?>;
 	}
 
 	.tqb-progress-completed {
 		width: calc(33%) !important;
-		background-color: <?php echo $progress_settings['fill_color'];?>;
+		background-color: <?php echo esc_attr($progress_settings['fill_color']);?>;
 	}
 
 	.tqb-next-item {
 		width: calc(33%) !important;
-		background-color: <?php echo $progress_settings['next_step_color'];?>;
+		background-color: <?php echo esc_attr($progress_settings['next_step_color']);?>;
 	}
 
 	.tqb-remaining-progress {
 		width: calc(35%) !important;
-		background-color: <?php echo $progress_settings['background_color'];?>;
+		background-color: <?php echo esc_attr($progress_settings['background_color']);?>;
 	}
 
 	.tqb-progress-label, .tqb-next-item, .tqb-remaining-progress {
-		font-size: <?php echo $progress_settings['font_size'];?>px;
+		font-size: <?php echo esc_attr($progress_settings['font_size']);?>px;
 	}
 
 </style>

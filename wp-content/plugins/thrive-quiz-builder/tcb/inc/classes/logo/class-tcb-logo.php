@@ -65,8 +65,12 @@ class TCB_Logo {
 
 		/* get the src for each attachment ID */
 		foreach ( $active_logos as $key => $logo ) {
-			$active_logos[ $key ]['src'] = static::get_src( $logo['id'] );
-		};
+			$logo_data                        = static::get_attachment_data( $logo['id'], $logo );
+			$active_logos[ $key ]['src']      = $logo_data['src'];
+			$active_logos[ $key ]['width']    = $logo_data['width'];
+			$active_logos[ $key ]['height']   = $logo_data['height'];
+			$active_logos[ $key ]['data-alt'] = empty( $logo_data['data-alt'] ) ? '' : $logo_data['data-alt'];
+		}
 
 		$data['logo'] = array(
 			'routes'              => array(
@@ -76,6 +80,8 @@ class TCB_Logo {
 			/* only localize the active logos */
 			'sources'             => array_values( $active_logos ),
 			'deleted_placeholder' => tve_editor_url( static::DELETED_PLACEHOLDER_SRC ),
+			'is_ttb_active'       => wp_get_theme()->get_stylesheet() === 'thrive-theme',
+			'is_ta_active'        => is_plugin_active( 'thrive-apprentice/thrive-apprentice.php' ),
 		);
 
 		return $data;
@@ -98,15 +104,25 @@ class TCB_Logo {
 		$desktop_id = (int) $attr['data-id-d'];
 
 		/* set the desktop source as a fallback; get only the src here, since this is an all-browser compatible version */
-		$fallback_data = static::get_attachment_data( $desktop_id );
+		$fallback_data = static::get_attachment_data( $desktop_id, self::get_logos()[ $desktop_id ] );
+
+		/* If we do not have alt in attr, we read it from fallback data */
+		if ( empty( $attr['data-alt'] ) ) {
+			$attr['data-alt'] = empty( $fallback_data['data-alt'] ) ? '' : $fallback_data['data-alt'];
+		}
 
 		$img_attr = array(
 			'src'    => $fallback_data['src'],
 			'height' => $fallback_data['height'],
 			'width'  => $fallback_data['width'],
-			'alt'    => empty( $attr['data-alt'] ) ? '' : $attr['data-alt'],
+			'alt'    => $attr['data-alt'],
 			'style'  => ! empty( $attr['data-img-style'] ) ? $attr['data-img-style'] : '',
 		);
+
+		/* GIFs aren't compatible with srcset, so we use the fallback version */
+		if ( ! empty( $img_attr['src'] ) && substr( $img_attr['src'], - 4 ) === '.gif' ) {
+			$render_fallback = true;
+		}
 
 		/* in the editor or when doing ajax ( when the logo is in a symbol ) or when doing rest ( when you add new headers/footers and start from cloud templates ) or when we set a flag, return the desktop src only */
 		if ( TCB_Utils::in_editor_render() || wp_doing_ajax() || TCB_Utils::is_rest() || $render_fallback ) {
@@ -134,6 +150,20 @@ class TCB_Logo {
 			} else {
 				$attr['href'] = $logo_url;
 			}
+		}
+
+		$href = isset( $attr['href'] ) ? $attr['href'] : '';
+
+		/**
+		 * Allows filtering the final value of the `href` logo attribute
+		 *
+		 * @param string $href current url
+		 * @param array  $attr array of shortcode attributes
+		 */
+		$href = apply_filters( 'tcb_logo_url', $href, $attr );
+
+		if ( ! empty( $href ) ) {
+			$attr['href'] = $href;
 		}
 
 		return TCB_Utils::wrap_content( $content, 'a', '', static::get_classes( $attr ), static::get_attr( $attr ) );
@@ -188,16 +218,19 @@ class TCB_Logo {
 	/**
 	 * Get all the attachment data for this logo ID. If the logo ID is not found or we don't have an attachment ID, return placeholder data instead.
 	 *
-	 * @param $id
+	 * @param int   $id
+	 * @param array $logo
 	 *
 	 * @return array
 	 */
-	public static function get_attachment_data( $id ) {
+	public static function get_attachment_data(
+		$id, $logo = null
+	) {
 		$attachment_id = static::get_attachment_id( $id );
 
 		if ( empty( $attachment_id ) ) {
 			/* get the placeholder for this id ( it can differ depending on the ID : 0 and 1 have their own placeholder ) */
-			$data = static::get_placeholder_data( $id );
+			$data = static::get_placeholder_data( $id, $logo );
 		} else {
 			$attachment_data = wp_get_attachment_image_src( $attachment_id, 'full' );
 
@@ -205,9 +238,10 @@ class TCB_Logo {
 				$data = static::get_placeholder_data( $id );
 			} else {
 				$data = array(
-					'src'    => $attachment_data[0],
-					'width'  => $attachment_data[1],
-					'height' => $attachment_data[2],
+					'src'      => $attachment_data[0],
+					'width'    => $attachment_data[1],
+					'height'   => $attachment_data[2],
+					'data-alt' => trim( strip_tags( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ),
 				);
 			}
 		}
@@ -292,18 +326,21 @@ class TCB_Logo {
 	 * Return the placeholder data according to the ID.
 	 * For id = 0 or 1, return the light/dark placeholder, for any other ID, return a 'logo has been deleted' placeholder.
 	 *
-	 * @param int $id
+	 * @param int   $id
+	 * @param array $logo
 	 *
 	 * @return array
 	 */
-	public static function get_placeholder_data( $id = 0 ) {
-		$data = array(
+	public static function get_placeholder_data( $id, $logo = null ) {
+		$data            = array(
 			'height' => '',
 			'width'  => '',
 		);
-		if ( $id === 0 ) {
+		$is_default_logo = ! empty( $logo ) && isset( $logo['scope'] ) && $logo['scope'] === 'tva';
+
+		if ( $id === 0 || ( $is_default_logo && $logo['name'] === 'Dark' ) ) {
 			$data['src'] = tve_editor_url( 'editor/css/images/logo_placeholder_dark.svg' );
-		} elseif ( $id === 1 ) {
+		} elseif ( $id === 1 || ( $is_default_logo && $logo['name'] === 'Light' ) ) {
 			$data['src'] = tve_editor_url( 'editor/css/images/logo_placeholder_light.svg' );
 		} else {
 			/* If we're in the editor, render a <logo image deleted> image. On the frontend, leave it blank. */
@@ -359,15 +396,25 @@ class TCB_Logo {
 	/**
 	 * Get the logo data. ( get_option() is cached, so it's ok to call this lots of times ).
 	 *
+	 * @param bool $apply_filter
+	 *
 	 * @return mixed|void
 	 */
-	public static function get_logos() {
+	public static function get_logos( $apply_filter = true ) {
 		$logos = get_option( static::OPTION_NAME );
 
 		/* if the option is empty, then we have to initialize the logo array with the default values */
 		if ( empty( $logos ) ) {
 			/* initialize the default logos */
 			$logos = static::initialize_default_logos();
+		}
+
+		if ( $apply_filter ) {
+			/**
+			 * Allow other plugins to alter the logo list.
+			 * Used in Thrive Apprentice plugin to modify the default light and dark logo when the system edits an apprentice page
+			 */
+			$logos = apply_filters( 'tcb_get_logos', $logos );
 		}
 
 		return $logos;
@@ -413,7 +460,14 @@ class TCB_Logo {
 	 */
 	public function init_shortcode() {
 		add_shortcode( static::SHORTCODE_TAG, function ( $attr, $content, $tag ) {
-			$attr = TCB_Post_List_Shortcodes::parse_attr( $attr, $tag );
+			/**
+			 * Ability to modify logo attributes before render.
+			 *
+			 * Used in thrive apprentice to modify the image URL for apprentice pages
+			 *
+			 * @param array $attributes
+			 */
+			$attr = apply_filters( 'tcb_logo_attributes', TCB_Post_List_Shortcodes::parse_attr( $attr, $tag ) );
 
 			return TCB_Logo::render_logo( $attr );
 		} );

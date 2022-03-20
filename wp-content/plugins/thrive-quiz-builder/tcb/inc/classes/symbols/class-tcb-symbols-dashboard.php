@@ -75,7 +75,7 @@ class TCB_Symbols_Dashboard {
 			$features['symbols_manager'] = array(
 				'icon'        => 'tvd-ct-symbols-icon',
 				'title'       => __( 'Global Elements', 'thrive-cb' ),
-				'description' => __( 'Create and manage templates, symbols, headers and footers', 'thrive-cb' ),
+				'description' => __( 'Create and manage templates, symbols, notification toasts, headers and footers', 'thrive-cb' ),
 				'btn_link'    => add_query_arg( 'page', $this->_tcb_admin_dashboard . '#templatessymbols', admin_url( 'admin.php' ) ),
 				'btn_text'    => __( 'Manage Global Elements', 'thrive-cb' ),
 			);

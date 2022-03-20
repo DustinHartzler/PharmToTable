@@ -32,10 +32,18 @@ class Empty_Cart extends Abstract_Sub_Element {
 	}
 
 	/**
+	 * Set borders to be important
+	 * @return bool
+	 */
+	public function has_important_border() {
+		return true;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function own_components() {
-		return $this->_components();
+		return $this->_components( false );
 	}
 }
 

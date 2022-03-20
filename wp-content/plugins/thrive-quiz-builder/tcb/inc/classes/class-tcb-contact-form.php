@@ -105,7 +105,7 @@ class TCB_Contact_Form {
 
 		$this->config = base64_decode( $data['config'] );
 		if ( false !== $this->config ) {
-			$this->config = maybe_unserialize( $this->config );
+			$this->config = thrive_safe_unserialize( $this->config );
 		}
 
 		if ( empty( $this->config['to_email'] ) || empty( $this->config['submit'] ) ) {
@@ -114,7 +114,7 @@ class TCB_Contact_Form {
 			return false;
 		}
 		$this->security = json_decode( wp_unslash( $data['security'] ), true );
-		if ( ! is_array( $this->security ) || intval( $this->security['check'] ) !== 1 ) {
+		if ( ! is_array( $this->security ) || (int) $this->security['check'] !== 1 ) {
 			$this->config_parsing_error = __( 'ERROR: Security Warning', 'thrive-cb' );
 
 			return false;
@@ -249,7 +249,7 @@ class TCB_Contact_Form {
 			$_captcha_params = array(
 				'response' => $this->posted_data['g-recaptcha-response'],
 				'secret'   => empty( $captcha_api['secret_key'] ) ? '' : $captcha_api['secret_key'],
-				'remoteip' => $_SERVER['REMOTE_ADDR'],
+				'remoteip' => ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '',
 			);
 
 			$request_captcha = tve_dash_api_remote_post( 'https://www.google.com/recaptcha/api/siteverify', array( 'body' => $_captcha_params ) );

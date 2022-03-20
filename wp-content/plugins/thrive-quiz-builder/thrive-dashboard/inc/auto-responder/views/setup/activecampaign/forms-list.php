@@ -1,14 +1,24 @@
-<?php if ( ! empty( $data['forms'] ) ): ?>
+<?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+ if ( ! empty( $data['forms'] ) ): ?>
 	<div class="tve-sp"></div>
-	<p class="tl-mock-paragraph"><?php echo __( 'Choose the form you want to use:', TVE_DASH_TRANSLATE_DOMAIN ) ?></p>
+	<p class="tl-mock-paragraph"><?php echo esc_html__( 'Choose the form you want to use:', TVE_DASH_TRANSLATE_DOMAIN ) ?></p>
 	<div class="tvd-row tvd-collapse">
 		<div class="tvd-col tvd-s4">
 			<div class="tve_lightbox_select_holder tve_lightbox_input_inline tve_lightbox_select_inline tve_activecampaign_select tvd-input-field">
 				<?php foreach ( $data['forms'] as $list_id => $forms ): ?>
 					<label for="tve-api-extra" class="tve-custom-select">
-						<select data-list-id="<?php echo $list_id; ?>" style="display: none;" class="tve-api-extra tve_disabled tl-api-connection-list" name="activecampaign_form">
+						<select data-list-id="<?php echo esc_attr( $list_id ); ?>" style="display: none;" class="tve-api-extra tve_disabled tl-api-connection-list" name="activecampaign_form">
 							<?php foreach ( $forms as $id => $form ): ?>
-								<option value="<?php echo $form['id']; ?>" <?php echo ! empty( $data['form'] ) && $data['form'] == $form['id'] ? 'selected' : ''; ?>><?php echo $form['name']; ?></option>
+								<option value="<?php echo esc_attr( $form['id'] ); ?>" <?php echo ! empty( $data['form'] ) && $data['form'] == $form['id'] ? 'selected' : ''; ?>><?php echo esc_html( $form['name'] ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</label>
@@ -18,27 +28,27 @@
 	</div>
 	<div class="tve_activecampaign_no_forms">
 		<p>
-			<?php echo __( 'No forms available for this list!', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+			<?php echo esc_html__( 'No forms available for this list!', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 		</p>
 	</div>
 <?php elseif ( ! empty( $this->_error ) ): ?>
 	<div class="tve_activecampaign_error">
 		<p>
-			<?php echo __( 'No forms available!', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+			<?php echo esc_html__( 'No forms available!', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 		</p>
 	</div>
 <?php endif; ?>
 <div class="tve-sp"></div>
 <div class="tvd-v-spacer vs-2"></div>
 <div class="tvd-input-field">
-	<input id="activecampaign_tags" type="text" class="tve-api-extra tve_lightbox_input tve_lightbox_input_inline" name="activecampaign_tags" value="<?php echo ! empty( $data['tags'] ) ? $data['tags'] : '' ?>" size="40"/>
-	<label for="activecampaign_tags"><?php echo __( 'Tags', TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
+	<input id="activecampaign_tags" type="text" class="tve-api-extra tve_lightbox_input tve_lightbox_input_inline" name="activecampaign_tags" value="<?php echo ! empty( $data['tags'] ) ? esc_attr( $data['tags'] ) : '' ?>" size="40"/>
+	<label for="activecampaign_tags"><?php echo esc_html__( 'Tags', TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
 </div>
 <?php
-	$tags_message = __( "Comma-separated lists of tags to assign to a new contact in ActiveCampaign", TVE_DASH_TRANSLATE_DOMAIN );
-	$tags_message = apply_filters('tvd_tags_text_for_' . $this->getKey(), $tags_message);
+$tags_message = __( "Comma-separated lists of tags to assign to a new contact in ActiveCampaign", TVE_DASH_TRANSLATE_DOMAIN );
+$tags_message = apply_filters( 'tvd_tags_text_for_' . $this->getKey(), $tags_message );
 ?>
-<p><?php echo $tags_message ?></p>
+<p><?php echo esc_html( $tags_message ); ?></p>
 <script type="text/javascript">
 	(
 		function ( $ ) {

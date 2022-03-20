@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * The DynamicResponseModel class allows flexible and forgiving access to responses from the Postmark API.
  *
  * Most responses from the PostmarkClient return a DynamicResponseModel, so understanding how it works is useful.

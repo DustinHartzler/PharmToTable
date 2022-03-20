@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_Api_Sendfox {
 
 	/**
@@ -116,6 +125,16 @@ class Thrive_Dash_Api_Sendfox {
 	public function getLists() {
 
 		return $this->_request( '/lists' );
+	}
+	/**
+	 * Get lists from a certain page
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public function getListsOnPage( $page ) {
+
+		return $this->_request( '/lists?page=' . $page );
 	}
 
 	/**

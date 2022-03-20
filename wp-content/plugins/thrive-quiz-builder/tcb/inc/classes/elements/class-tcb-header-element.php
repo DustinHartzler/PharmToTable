@@ -81,7 +81,7 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 		$content_selector    = '.symbol-section-in';
 
 		$components = array(
-			'header'     => array(
+			'header'           => array(
 				'config' => array(
 					'Visibility'         => array(
 						'config'  => array(
@@ -194,40 +194,40 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 					),
 				),
 			),
-			'background' => array(
+			'background'       => array(
 				'config'            => array(
 					'to' => $background_selector,
 				),
 				'disabled_controls' => array(),
 			),
-			'shadow'     => array(
+			'shadow'           => array(
 				'config' => array(
 					'to' => $background_selector,
 				),
 			),
-			'layout'     => array(
+			'layout'           => array(
 				'disabled_controls' => array( '.tve-advanced-controls', 'Float', 'hr', 'Position', 'PositionFrom', 'zIndex', 'Width', 'Height', 'Alignment', 'Display' ),
 			),
-			'borders'    => array(
+			'borders'          => array(
 				'config' => array(
 					'Borders'    => array(),
 					'Corners'    => array(),
 					'css_suffix' => ' .thrive-symbol-shortcode',
 				),
 			),
-			'typography' => array(
+			'typography'       => array(
 				'disabled_controls' => array(),
 				'config'            => array(
 					'to' => $content_selector,
 				),
 			),
-			'decoration' => array(
+			'decoration'       => array(
 				'config' => array(
 					'to' => $background_selector,
 				),
 			),
-			'animation'  => array( 'hidden' => true ),
-			'scroll'     => array(
+			'animation'        => array( 'hidden' => true ),
+			'scroll'           => array(
 				'order'             => 2,
 				'config'            => array(
 					'to' => '.thrive-symbol-shortcode',
@@ -235,6 +235,7 @@ class TCB_Header_Element extends TCB_Symbol_Element_Abstract {
 				'disabled_controls' => array( '[data-value="parallax"]' ),
 				'hidden'            => false,
 			),
+			'styles-templates' => array( 'hidden' => true ),
 		);
 
 		$components['layout']['config']['MarginAndPadding']['padding_to'] = $content_selector;

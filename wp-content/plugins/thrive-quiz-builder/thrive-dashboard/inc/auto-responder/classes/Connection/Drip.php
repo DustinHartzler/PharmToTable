@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Danut
  * Date: 9/15/2015
@@ -57,14 +66,14 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$token     = ! empty( $_POST['connection']['token'] ) ? $_POST['connection']['token'] : '';
-		$client_id = ! empty( $_POST['connection']['client_id'] ) ? $_POST['connection']['client_id'] : '';
+		$token     = ! empty( $_POST['connection']['token'] ) ? sanitize_text_field( $_POST['connection']['token'] ) : '';
+		$client_id = ! empty( $_POST['connection']['client_id'] ) ? sanitize_text_field( $_POST['connection']['client_id'] ) : '';
 
 		if ( empty( $token ) || empty( $client_id ) ) {
 			return $this->error( __( 'You must provide a valid Drip token and Client ID', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( array( 'token' => $token, 'client_id' => $client_id ) );
 
 		$result = $this->testConnection();
 
@@ -153,7 +162,7 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 
 			if ( isset( $arguments['drip_type'] ) && 'automation' === $arguments['drip_type'] ) {
 				$proprieties->thrive_referer    = $url;
-				$proprieties->thrive_ip_address = $_SERVER['REMOTE_ADDR'];
+				$proprieties->thrive_ip_address = sanitize_text_field( $_SERVER['REMOTE_ADDR'] ); //phpcs:ignore
 
 				if ( ! empty( $arguments['drip_field'] ) ) {
 					foreach ( $arguments['drip_field'] as $field => $field_value ) {
@@ -177,7 +186,7 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 				'account_id'    => $this->param( 'client_id' ),
 				'campaign_id'   => $list_identifier,
 				'email'         => $arguments['email'],
-				'ip_address'    => $_SERVER['REMOTE_ADDR'],
+				'ip_address'    => sanitize_text_field( $_SERVER['REMOTE_ADDR'] ), // phpcs:ignore
 				'custom_fields' => $proprieties,
 			);
 
@@ -245,7 +254,7 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 	public function get_extra_settings( $params = array() ) {
 		$processed_params = array();
 
-		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_drip_optin'] ) ? $_COOKIE['tve_api_drip_optin'] : 'd' ) : $params['optin'];
+		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_drip_optin'] ) ? sanitize_text_field( $_COOKIE['tve_api_drip_optin'] ) : 'd' ) : $params['optin'];
 		setcookie( 'tve_api_drip_optin', $params['optin'], strtotime( '+6 months' ), '/' );
 
 		if ( ! empty( $params ) ) {
@@ -270,7 +279,7 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 	 */
 	public function renderExtraEditorSettings( $params = array() ) {
 		$processed_params = array();
-		$params['optin']  = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_drip_optin'] ) ? $_COOKIE['tve_api_drip_optin'] : 'd' ) : $params['optin'];
+		$params['optin']  = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_drip_optin'] ) ? sanitize_text_field( $_COOKIE['tve_api_drip_optin'] ) : 'd' ) : $params['optin'];
 		setcookie( 'tve_api_drip_optin', $params['optin'], strtotime( '+6 months' ), '/' );
 		if ( ! empty( $params ) ) {
 			foreach ( $params as $k => $v ) {
@@ -441,7 +450,11 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 		$serialized = base64_decode( $arguments['tve_mapping'] );
 		$mapping    = array();
 		if ( $serialized ) {
-			$mapping = maybe_unserialize( $serialized );
+			$mapping = thrive_safe_unserialize( $serialized );
+		}
+
+		if ( empty( $mapping ) ) {
+			return $fields;
 		}
 
 		foreach ( $mapping as $name => $field ) {
@@ -481,7 +494,7 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 				'account_id'    => $this->param( 'client_id' ),
 				'campaign_id'   => $list_id,
 				'email'         => $email,
-				'ip_address'    => $_SERVER['REMOTE_ADDR'],
+				'ip_address'    => sanitize_text_field( $_SERVER['REMOTE_ADDR'] ), // phpcs:ignore
 				'custom_fields' => (object) $this->_prepareCustomFieldsForApi( $custom_fields ),
 			);
 
@@ -537,5 +550,9 @@ class Thrive_Dash_List_Connection_Drip extends Thrive_Dash_List_Connection_Abstr
 		}
 
 		return $prepared_fields;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list', 'optin', 'tag_input' );
 	}
 }

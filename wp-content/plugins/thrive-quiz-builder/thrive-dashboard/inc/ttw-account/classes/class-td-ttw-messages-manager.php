@@ -69,7 +69,7 @@ class TD_TTW_Messages_Manager {
 			return $html;
 		}
 
-		echo $html;
+		echo $html; //phpcs:ignore
 	}
 
 	/**

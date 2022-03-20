@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-commentsfacebook-component" class="tve-component" data-view="CommentsFacebook">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -23,12 +23,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-advanced-controls extend-grey">
 			<div class="dropdown-header" data-prop="advanced">
 				<span>
-					<?php echo __( 'Comments Moderators', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Comments Moderators', 'thrive-cb' ); ?>
 				</span>
 			</div>
 			<div class="dropdown-content pt-0">
 				<div class="tve-control" data-view="moderators"></div>
-				<div class="info-text grey-text"><?php echo __( 'This only works if you are friends on Facebook with the moderator(s)', 'thrive-cb' ); ?></div>
+				<div class="info-text grey-text"><?php echo esc_html__( 'This only works if you are friends on Facebook with the moderator(s)', 'thrive-cb' ); ?></div>
 			</div>
 		</div>
 

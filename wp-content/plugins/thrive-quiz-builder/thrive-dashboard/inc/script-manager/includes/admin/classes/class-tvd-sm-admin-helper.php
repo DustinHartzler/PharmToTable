@@ -68,7 +68,7 @@ class TVD_SM_Admin_Helper {
 	 * @return array|mixed
 	 */
 	public function tvd_sm_get_option( $option_name, $default_values = array() ) {
-		$option = maybe_unserialize( get_option( $option_name ) );
+		$option = get_option( $option_name );
 
 		if ( empty( $option ) ) {
 
@@ -123,10 +123,14 @@ class TVD_SM_Admin_Helper {
 	 * @param $a
 	 * @param $b
 	 *
-	 * @return bool
+	 * @return int
 	 */
 	public function sort_by_order( $a, $b ) {
-		return $a['order'] > $b['order'];
+		if ( $a['order'] === $b['order'] ) {
+			return 0;
+		}
+
+		return ( $a['order'] > $b['order'] ) ? 1 : - 1;
 	}
 
 	/**

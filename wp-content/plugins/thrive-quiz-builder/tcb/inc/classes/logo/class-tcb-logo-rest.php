@@ -67,6 +67,7 @@ class TCB_Logo_REST {
 	public static function add( $request ) {
 		$attachment_id = $request->get_param( 'attachment_id' );
 		$name          = $request->get_param( 'name' );
+		$scope         = $request->get_param( 'scope' );
 
 		/* added logos are active by default */
 		$active = 1;
@@ -76,21 +77,32 @@ class TCB_Logo_REST {
 
 		$logos = TCB_Logo::get_logos();
 
-		$logo_id = count( $logos );
+		/* search for an already existing logo with the same $attachment_id */
+		foreach ( $logos as $index => $logo ) {
+			if ( $attachment_id && (int) $logo['attachment_id'] === (int) $attachment_id ) {
+				$new_logo = $logo;
+				break;
+			}
+		}
 
-		$new_logo = array(
-			'id'            => $logo_id,
-			'attachment_id' => $attachment_id,
-			'name'          => $name,
-			'default'       => $default,
-			'active'        => $active,
-		);
+		if ( ! isset( $new_logo ) ) {
+			$logo_id = count( $logos );
 
-		/* add the new logo to the logo array */
-		$logos[] = $new_logo;
+			$new_logo = array(
+				'id'            => $logo_id,
+				'attachment_id' => $attachment_id,
+				'name'          => $name,
+				'default'       => $default,
+				'active'        => $active,
+				'scope'         => $scope,
+			);
 
-		/* update inside the DB */
-		update_option( TCB_Logo::OPTION_NAME, $logos );
+			/* add the new logo to the logo array */
+			$logos[] = $new_logo;
+
+			/* update inside the DB */
+			update_option( TCB_Logo::OPTION_NAME, $logos );
+		}
 
 		/* return the new logo ID */
 

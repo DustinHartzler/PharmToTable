@@ -3,7 +3,17 @@
 		<div><?php echo esc_html__( 'I want to display the following', 'thrive-cb' ); ?></div>
 		<div class="query-type-switch">
 			<button class="click" data-fn="q_filter" data-filter="custom"><?php echo esc_html__( 'Custom Query', 'thrive-cb' ); ?></button>
-			<button <?php echo apply_filters( 'tcb_post_list.disable_related', '' ); ?> class="click" data-fn="q_filter" data-filter="related"><?php echo esc_html__( 'Related Posts', 'thrive-cb' ); ?></button>
+			<button <?php echo apply_filters( 'tcb_post_list.disable_related', '' ); ?> class="click" data-fn="q_filter" data-filter="related">
+				<?php echo esc_html__( 'Related Posts', 'thrive-cb' ); ?>
+			</button>
+			<div class="related-posts-disabled-tooltip">
+				<div>
+					<?php echo esc_html__( 'The "Related Posts" section will show the content related to the post or page you\'re adding the "Post List" element to. Posts or pages are "related" if they share a common tag/category/author/format.', 'thrive-cb' ); ?>
+				</div>
+				<div>
+					<?php echo esc_html__( 'The "Related Posts" section is not available for "Blog", as there aren\'t any categories, tags, authors etc. assigned to it.', 'thrive-cb' ); ?>
+				</div>
+			</div>
 		</div>
 		<input class="query-arg" type="hidden" data-arg="filter" value="">
 	</div>
@@ -26,7 +36,7 @@
 
 		<p>
 			<?php $text = esc_html__( 'Display results related to the current page, by the following criteria: ', 'thrive-cb' ); ?>
-			<?php echo apply_filters( 'tcb_post_list.related_text', $text );; ?>
+			<?php echo apply_filters( 'tcb_post_list.related_text', $text ); ?>
 		</p>
 		<ul class="tth-options q-related-taxonomies"></ul>
 	</div>

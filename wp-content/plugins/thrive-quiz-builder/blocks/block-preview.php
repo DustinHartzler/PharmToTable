@@ -3,7 +3,7 @@
  * Used to preview the quiz in gutenberg
  */
 
-$quiz_id = $_REQUEST['quiz_id'];
+$quiz_id = ! empty( $_REQUEST['quiz_id'] ) ? sanitize_text_field( $_REQUEST['quiz_id'] ) : null;
 $data    = array( 'id' => $quiz_id );
 ?>
 
@@ -30,7 +30,7 @@ $data    = array( 'id' => $quiz_id );
 			'ajax_url'     => admin_url( 'admin-ajax.php' ) . '?action=tqb_frontend_ajax_controller',
 			'is_preview'   => TQB_Product::has_access(),
 			'post_id'      => $quiz_id,
-			'settings'     => tqb_get_option( Thrive_Quiz_Builder::PLUGIN_SETTINGS, tqb_get_default_values( Thrive_Quiz_Builder::PLUGIN_SETTINGS ) ),
+			'settings'     => Thrive_Quiz_Builder::get_settings(),
 			'quiz_options' => array(),
 			't'            => array(
 				'chars' => __( 'Characters', 'thrive-quiz-builder' ),

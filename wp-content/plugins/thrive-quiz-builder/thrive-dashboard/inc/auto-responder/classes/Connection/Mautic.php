@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: radu
  * Date: 02.04.2015
@@ -76,9 +85,9 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	 */
 	public function getAuthorizeUrl() {
 
-		$url    = ! empty( $_POST['connection']['baseUrl'] ) ? $_POST['connection']['baseUrl'] : '';
-		$key    = ! empty( $_POST['connection']['clientKey'] ) ? $_POST['connection']['clientKey'] : '';
-		$secret = ! empty( $_POST['connection']['clientSecret'] ) ? $_POST['connection']['clientSecret'] : '';
+		$url    = ! empty( $_POST['connection']['baseUrl'] ) ? sanitize_text_field( $_POST['connection']['baseUrl'] ) : '';
+		$key    = ! empty( $_POST['connection']['clientKey'] ) ? sanitize_text_field( $_POST['connection']['clientKey'] ) : '';
+		$secret = ! empty( $_POST['connection']['clientSecret'] ) ? sanitize_text_field( $_POST['connection']['clientSecret'] ) : '';
 
 
 		if ( empty( $url ) ) {
@@ -224,7 +233,7 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 		}
 
 		try {
-			$args['ipAddress'] = $_SERVER['REMOTE_ADDR'];
+			$args['ipAddress'] = ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '';
 			$args['email']     = $arguments['email'];
 			$lead              = $contacts->create( $args );
 
@@ -293,6 +302,10 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 		}
 
 		return $this->_api;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 
 }

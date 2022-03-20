@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Utility functions to be used in all Thrive Products
  */
@@ -31,17 +40,45 @@ function tve_dash_get_thrivethemes_shares( $network = 'facebook' ) {
  */
 function tve_dash_fetch_share_count_facebook( $url ) {
 	$credentials = Thrive_Dash_List_Manager::credentials( 'facebook' );
+
 	if ( ! empty( $credentials ) && ! empty( $credentials['app_id'] ) && ! empty( $credentials['app_secret'] ) ) {
-		$fb_url = add_query_arg( array(
+		/* General query args for the Facebook API requests */
+		$query_args  = array(
 			'id'           => rawurlencode( $url ),
 			'access_token' => $credentials['app_id'] . '|' . $credentials['app_secret'],
-			'fields'       => 'engagement',
-		), 'https://graph.facebook.com/v3.0/' );
+		);
+		$url_post_id = url_to_postid( $url );
 
-		$data = _tve_dash_util_helper_get_json( $fb_url );
+		/* If we have an id, the url is on this site, so we can save the last updated time */
+		if ( $url_post_id ) {
+			$last_updated_time = get_post_meta( url_to_postid( $url ), 'tve_facebook_count_updated', true );
+			$updated_time      = current_time( 'timestamp' );
+
+			/* We scrape the url every hour or if it was not already scraped */
+			if ( empty( $last_updated_time ) || $updated_time - $last_updated_time > ( 60 * 60 ) ) {
+				$update_query_args = $query_args;
+				/* Reference here: https://developers.facebook.com/docs/sharing/opengraph/using-objects#update */
+				$update_query_args['scraped'] = 'true';
+				$fb_url_update     = add_query_arg( $update_query_args, 'https://graph.facebook.com/v12.0/' );
+
+				/* Make the post call so that Facebook will scrape again the url */
+				_tve_dash_util_helper_get_json( $fb_url_update, 'wp_remote_post' );
+
+				/* Update in post meta the time of the last update */
+				update_post_meta( $url_post_id, 'tve_facebook_count_updated', $updated_time );
+			}
+		}
+
+		/* Changed from engagement to og_object{engagement} to get the accurate number of shares
+		Unofficial reference: https://developers.facebook.com/community/threads/178543204270768/ */
+		$query_args['fields'] = 'og_object{engagement}';
+		$fb_url_get     = add_query_arg( $query_args, 'https://graph.facebook.com/v12.0/' );
+
+		/* Get the Share count */
+		$data = _tve_dash_util_helper_get_json( $fb_url_get );
 	}
 
-	return ! empty( $data['engagement'] ) ? (int) $data['engagement']['share_count'] : 0;
+	return ! empty( $data['og_object'] ) && ! empty( $data['og_object']['engagement'] ) ? (int) $data['og_object']['engagement']['count'] : 0;
 
 }
 
@@ -196,7 +233,7 @@ function tve_dash_is_crawler( $apply_filter = false ) {
 		return $GLOBALS['thrive_dashboard_bot_detection'] = false;
 	}
 
-	$user_agent = trim( $_SERVER['HTTP_USER_AGENT'] );
+	$user_agent = sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] );
 
 	$uas_list = require plugin_dir_path( __FILE__ ) . '_crawlers.php';
 	$regexp   = '#(' . implode( '|', $uas_list ) . ')#i';
@@ -424,13 +461,13 @@ function tve_dash_show_activation_error( $error_type, $_ = null ) {
 		if ( class_exists( 'WP_CLI' ) ) {
 			$message = WP_CLI::colorize( '%r' . trim( $message ) . '%n' );
 		}
-		echo $message . PHP_EOL;
+		echo $message . PHP_EOL; // phpcs:ignore
 		exit( 1 );
 	}
 
 	/* Regular WP-admin html error */
 	$style = '<style type="text/css">body,html {height:100%;margin: 0;padding: 0;font-family: "Open Sans",sans-serif;font-size:13px;color:#810000}div{height:75%;display:flex;align-items:center}</style>';
-	exit( $style . '<div><span>' . $message . '</span></div>' );
+	exit( $style . '<div><span>' . esc_html( $message ) . '</span></div>' ); // phpcs:ignore
 }
 
 /**
@@ -482,7 +519,7 @@ function tve_dash_get_webhook_trigger_integrated_apis() {
 		),
 		'infusionsoft'   => array(
 			'key'        => 'infusionsoft',
-			'label'      => 'InfusionSoft',
+			'label'      => 'Keap (Infusionsoft)',
 			'image'      => TVE_DASH_URL . '/inc/auto-responder/views/images/infusionsoft.png',
 			'selected'   => false,
 			'kb_article' => 'http://help.thrivethemes.com/en/articles/4741865-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-infusionsoft',
@@ -500,7 +537,7 @@ function tve_dash_get_webhook_trigger_integrated_apis() {
 			'image'      => TVE_DASH_URL . '/inc/auto-responder/views/images/email.png',
 			'selected'   => false,
 			'kb_article' => 'http://help.thrivethemes.com/en/articles/4741872-how-to-set-up-incoming-webhooks-in-thrive-ultimatum-using-generic-webhook',
-		)
+		),
 	);
 }
 
@@ -518,3 +555,6 @@ function tve_dash_get_general_webhook_data( $request ) {
 	return array( 'email' => empty( $contact ) ? '' : $contact );
 }
 
+function tve_dash_is_ttb_active() {
+	return wp_get_theme()->name === 'Thrive Theme Builder';
+}

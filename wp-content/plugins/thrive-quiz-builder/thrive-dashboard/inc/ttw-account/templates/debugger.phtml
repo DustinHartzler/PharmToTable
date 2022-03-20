@@ -29,6 +29,10 @@
 			   target="_blank"><?php echo TD_TTW_Connection::get_ttw_url() ?></a>
 		</li>
 		<li>
+			<b>License details fetched from TTW:</b>
+			<?php echo var_export( TD_TTW_User_Licenses::get_instance()->get(), true ); ?>
+		</li>
+		<li>
 			<b>OLD way thrive_license</b>: <?php echo var_export( get_option( 'thrive_license', array() ), true ) ?>
 		</li>
 		<li>

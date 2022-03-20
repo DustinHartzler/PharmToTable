@@ -1,4 +1,15 @@
-<?php
+<?php /** @noinspection PhpCSValidationInspection */
+/** @noinspection PhpCSValidationInspection */
+/** @noinspection PhpCSValidationInspection */
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 /**
  * Created by PhpStorm.
@@ -180,12 +191,14 @@ abstract class TVE_Dash_Product_Abstract {
 	}
 
 	/**
-	 * Check if the current has access to the product
+	 * Check if the current user has access to the product
 	 *
 	 * @return bool
 	 */
 	public static function has_access() {
-		return current_user_can( self::cap() );
+		$product = static::instance()->getTag();
+
+		return apply_filters( 'thrive_has_access_' . $product, current_user_can( self::cap() ) );
 	}
 
 	public static function cap() {

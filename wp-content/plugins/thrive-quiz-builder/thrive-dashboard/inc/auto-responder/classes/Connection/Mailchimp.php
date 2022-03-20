@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: radu
  * Date: 02.04.2015
@@ -63,19 +72,20 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$mandrill_key = ! empty( $_POST['connection']['mandrill-key'] ) ? $_POST['connection']['mandrill-key'] : '';
+		$connection   = $this->post( 'connection' );
+		$mandrill_key = ! empty( $connection['mandrill-key'] ) ? $connection['mandrill-key'] : '';
 
-		if ( isset( $_POST['connection']['mailchimp_key'] ) ) {
-			$_POST['connection']['mandrill-key'] = $_POST['connection']['key'];
-			$_POST['connection']['key']          = $_POST['connection']['mailchimp_key'];
-			$mandrill_key                        = $_POST['connection']['mandrill-key'];
+		if ( isset( $connection['mailchimp_key'] ) ) {
+			$connection['mandrill-key'] = $connection['key'];
+			$connection['key']          = $connection['mailchimp_key'];
+			$mandrill_key               = $connection['mandrill-key'];
 		}
 
 		if ( empty( $_POST['connection']['key'] ) ) {
 			return $this->error( __( 'You must provide a valid Mailchimp key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $connection );
 
 		$result = $this->testConnection();
 
@@ -324,7 +334,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			return $merge_fields;
 		}
 
-		$mapped_form_data = unserialize( base64_decode( $args['tve_mapping'] ) );
+		$mapped_form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 
 		if ( is_array( $mapped_form_data ) && is_object( $merge_fields ) && $list_identifier ) {
 
@@ -397,9 +407,6 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				$status = $contact->status;
 			}
 
-			if ( 'unsubscribed' === $contact->status ) {
-				$optin = 'pending';
-			}
 		} catch ( Exception $exception ) {
 		}
 
@@ -407,6 +414,29 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			$optin,
 			$status,
 		);
+	}
+
+	/**
+	 * delete a contact from the list
+	 *
+	 * @param string $email
+	 * @param array $arguments
+	 *
+	 * @return mixed
+	 */
+	public function deleteSubscriber( $email, $arguments = array() ) {
+		$api = $this->getApi();
+		if ( ! empty( $email ) && ! empty( $arguments['list_identifier'] ) ) {
+
+			$contact = $this->get_contact( $arguments['list_identifier'], $email );
+
+			if ( ! empty( $contact ) && $contact->status !== 'archived' ) {
+				$user_hash = md5( $email );
+				$api->request( 'lists/' . $arguments['list_identifier'] . '/members/' . $user_hash, array(), 'DELETE' );
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -457,7 +487,6 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			}
 
 			$member = $this->get_contact( $list_identifier, $email );
-
 			if ( $member ) { //update contact
 				$api->request( 'lists/' . $list_identifier . '/members/' . $user_hash, $data, 'PUT' );
 			} else { //create contact
@@ -728,7 +757,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 * @throws Thrive_Dash_Api_Mailchimp_Exception
 	 */
 	public function get_extra_settings( $params = array() ) {
-		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_mailchimp_optin'] ) ? $_COOKIE['tve_api_mailchimp_optin'] : 'd' ) : $params['optin'];
+		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_mailchimp_optin'] ) ? sanitize_text_field( $_COOKIE['tve_api_mailchimp_optin'] ) : 'd' ) : $params['optin'];
 		setcookie( 'tve_api_mailchimp_optin', $params['optin'], strtotime( '+6 months' ), '/' );
 		$groups           = $this->_getGroups( $params );
 		$params['groups'] = $groups;
@@ -842,7 +871,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 * @throws Thrive_Dash_Api_Mailchimp_Exception
 	 */
 	public function renderExtraEditorSettings( $params = array() ) {
-		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_mailchimp_optin'] ) ? $_COOKIE['tve_api_mailchimp_optin'] : 'd' ) : $params['optin'];
+		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_mailchimp_optin'] ) ? sanitize_text_field( $_COOKIE['tve_api_mailchimp_optin'] ) : 'd' ) : $params['optin'];
 		setcookie( 'tve_api_mailchimp_optin', $params['optin'], strtotime( '+6 months' ), '/' );
 		$groups           = $this->_getGroups( $params );
 		$params['groups'] = $groups;
@@ -1015,5 +1044,13 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		}
 
 		return $prepared_fields;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		return array( 'mailing_list', 'optin', 'tag_input' );
+	}
+
+	public function get_automator_autoresponder_tag_fields() {
+		return array( 'mailing_list', 'tag_input' );
 	}
 }

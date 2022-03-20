@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class TVD_SM_Frontend {
 
-	const LP_HOOK_HEAD       = 'tcb_landing_head';
+	const LP_HOOK_HEAD       = 'tcb_landing_head_frontend';
 	const LP_HOOK_BODY_OPEN  = 'tcb_landing_body_open_frontend';
 	const LP_HOOK_BODY_CLOSE = 'tcb_landing_body_close_frontend';
 
@@ -84,17 +84,17 @@ class TVD_SM_Frontend {
 
 	public function head_scripts() {
 		/* add all the head scripts */
-		echo $this->frontend_scripts[ TVD_SM_Constants::HEAD_PLACEMENT ][ self::LP_LOCATION ];
+		echo $this->frontend_scripts[ TVD_SM_Constants::HEAD_PLACEMENT ][ self::LP_LOCATION ]; // phpcs:ignore
 	}
 
 	public function body_open_scripts() {
 		/* add all the body start scripts */
-		echo $this->frontend_scripts[ TVD_SM_Constants::BODY_OPEN_PLACEMENT ][ self::LP_LOCATION ];
+		echo $this->frontend_scripts[ TVD_SM_Constants::BODY_OPEN_PLACEMENT ][ self::LP_LOCATION ]; // phpcs:ignore
 	}
 
 	public function body_close_scripts() {
 		/* add all the body end scripts */
-		echo $this->frontend_scripts[ TVD_SM_Constants::BODY_CLOSE_PLACEMENT ][ self::LP_LOCATION ];
+		echo $this->frontend_scripts[ TVD_SM_Constants::BODY_CLOSE_PLACEMENT ][ self::LP_LOCATION ]; // phpcs:ignore
 	}
 }
 

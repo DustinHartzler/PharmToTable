@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Aurelian
  * Date: 14/10/2015
@@ -38,8 +47,8 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 * on error, it should register an error message (and redirect?)
 	 */
 	public function readCredentials() {
-		$key   = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
-		$email = ! empty( $_POST['connection']['email'] ) ? $_POST['connection']['email'] : '';
+		$key   = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_text_field( $_POST['connection']['email'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid Postmark key', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -49,7 +58,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -75,8 +84,8 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 		$postmark = $this->getApi();
 
 		if ( isset( $_POST['connection']['email'] ) ) {
-			$from_email = $_POST['connection']['email'];
-			$to         = $_POST['connection']['email'];
+			$from_email = sanitize_email( $_POST['connection']['email'] );
+			$to         = $from_email;
 		} else {
 			$credentials = Thrive_Dash_List_Manager::credentials( 'postmark' );
 			if ( isset( $credentials ) ) {

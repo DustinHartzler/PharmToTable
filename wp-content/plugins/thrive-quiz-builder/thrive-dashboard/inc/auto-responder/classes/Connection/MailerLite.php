@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: radu
  * Date: 02.04.2015
@@ -38,13 +47,13 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 	 * @return mixed|void
 	 */
 	public function readCredentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid MailerLite key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( array( 'key' => $key ) );
 
 		$result = $this->testConnection();
 
@@ -137,9 +146,9 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
 
 		/** @var Thrive_Dash_Api_MailerLite $api */
-		$api = $this->getApi();
+		$api            = $this->getApi();
 		$args['fields'] = array();
-		$args['email'] = $arguments['email'];
+		$args['email']  = $arguments['email'];
 
 		if ( ! empty( $first_name ) ) {
 			$args['fields']['name'] = $first_name;
@@ -285,7 +294,7 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 			return $mapped_data;
 		}
 
-		$form_data = unserialize( base64_decode( $args['tve_mapping'] ) );
+		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 
 		$mapped_fields = $this->getMappedFieldsIDs();
 
@@ -398,5 +407,9 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 		}
 
 		return $prepared_fields;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 }

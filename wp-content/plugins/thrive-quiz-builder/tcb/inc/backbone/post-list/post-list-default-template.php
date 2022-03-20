@@ -17,8 +17,8 @@ foreach ( TCB_Post_List::default_args() as $key => $value ) {
 
 ?>
 
-<main class="tcb-post-list tcb-compact-element thrv_wrapper" <?php echo $data_attr; ?> data-element-name="Post List" draggable="true" data-css="tve-u-16b3297f569">
-	<article class="<?php echo TCB_POST_WRAPPER_CLASS; ?>">
+<main class="tcb-post-list tcb-compact-element thrv_wrapper" <?php echo $data_attr; ?> data-element-name="Post List" draggable="true" data-css="tve-u-16b3297f569"><?php // phpcs:ignore ?>
+	<article class="<?php echo esc_attr(TCB_POST_WRAPPER_CLASS); ?>">
 		<a class="tcb-post-thumbnail tcb-shortcode thrv_wrapper tve-draggable tve-droppable tcb-selector-no_save tcb-post-list-shortcode" href="#" title="blank post 5" data-type-url="post_url" data-type-display="default_image" data-css="" data-size="medium" data-post_id="" draggable="true" data-shortcode="tcb_post_featured_image"></a>
 		<div class="tcb-clear tcb-post-list-cb-clear">
 			<div class="thrv_wrapper thrv_contentbox_shortcode thrv-content-box tcb-post-list-cb tve-draggable tve-droppable" draggable="true">
@@ -46,7 +46,7 @@ foreach ( TCB_Post_List::default_args() as $key => $value ) {
 			<div class="tcb-post-read-more thrv_wrapper tve-draggable tve-droppable" draggable="true">
 				<a href="#" class="tcb-button-link tcb-post-read-more-link" draggable="false">
 					<span class="tcb-button-texts">
-						<span class="tcb-button-text thrv-inline-text"><?php echo __( '​Read More', 'thrive-cb' ); ?></span>
+						<span class="tcb-button-text thrv-inline-text"><?php echo esc_html__( 'Read More', 'thrive-cb' ); ?></span>
 					</span>
 				</a>
 			</div>

@@ -44,17 +44,17 @@ $items = array(
 );
 ?>
 
-<h2><?php echo __( 'Help Corner', 'thrive-cb' ); ?></h2>
+<h2><?php echo esc_html__( 'Help Corner', 'thrive-cb' ); ?></h2>
 <div class="parent">
 	<?php foreach ( $items as $item ) : ?>
-		<div class="<?php echo $item['class']; ?> click item" data-fn="chooseLink">
-			<img src="<?php echo $item['picture']; ?>" alt="<?php echo $item['picture-alt']; ?>"/>
+		<div class="<?php echo esc_attr( $item['class'] ); ?> click item" data-fn="chooseLink">
+			<img src="<?php echo esc_url( $item['picture'] ); ?>" alt="<?php echo esc_attr( $item['picture-alt'] ); ?>"/>
 			<div class="item-title">
-				<span><?php echo $item['title']; ?></span>
+				<span><?php echo esc_html( $item['title'] ); ?></span>
 			</div>
 			<div class="item-text">
 				<?php foreach ( $item['text'] as $text ) : ?>
-					<p><?php echo $text; ?></p>
+					<p><?php echo esc_html( $text ); ?></p>
 				<?php endforeach; ?>
 			</div>
 			<?php if ( $item['title'] == 'Knowledge Base' ): ?>

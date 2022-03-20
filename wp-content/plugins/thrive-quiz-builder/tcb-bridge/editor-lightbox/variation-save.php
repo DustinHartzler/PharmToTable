@@ -4,20 +4,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<h2 class="tcb-modal-title"><?php echo __( 'Save Page Template', Thrive_Quiz_Builder::T ); ?></h2>
+<span class="tcb-modal-title"><?php echo esc_html__( 'Save Page Template', Thrive_Quiz_Builder::T ); ?></span>
 <div class="margin-top-20">
-	<?php echo __( 'You can save the current page as a template for use on another post / page on your site.', Thrive_Quiz_Builder::T ) ?>
+	<?php echo esc_html__( 'You can save the current page as a template for use on another post / page on your site.', Thrive_Quiz_Builder::T ) ?>
 </div>
 <div class="tve-templates-wrapper">
 	<div class="tvd-input-field margin-bottom-5 margin-top-25">
 		<input type="text" id="tve-template-name" required>
-		<label for="tve-template-name"><?php echo __( 'Template Name', Thrive_Quiz_Builder::T ); ?></label>
+		<label for="tve-template-name"><?php echo esc_html__( 'Template Name', Thrive_Quiz_Builder::T ); ?></label>
 	</div>
 </div>
-<div class="tcb-modal-footer clearfix padding-top-20 row end-xs">
-	<div class="col col-xs-12">
-		<button type="button" class="tcb-right tve-button medium green click" data-fn="save">
-			<?php echo __( 'Save Template', Thrive_Quiz_Builder::T ) ?>
-		</button>
-	</div>
+<div class="tcb-modal-footer flex-end">
+	<button type="button" class="tcb-right tve-button medium green click" data-fn="save">
+		<?php echo esc_html__( 'Save Template', Thrive_Quiz_Builder::T ) ?>
+	</button>
 </div>

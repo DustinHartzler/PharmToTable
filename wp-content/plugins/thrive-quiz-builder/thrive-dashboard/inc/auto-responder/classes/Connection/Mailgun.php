@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Aurelian Pop
  * Date: 28-Dec-15
@@ -40,8 +49,9 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 	public function readCredentials() {
 		$ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-		$key    = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
-		$domain = ! empty( $_POST['connection']['domain'] ) ? $_POST['connection']['domain'] : '';
+		$key    = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$domain = ! empty( $_POST['connection']['domain'] ) ? sanitize_text_field( $_POST['connection']['domain'] ) : '';
+		$zone   = ! empty( $_POST['connection']['zone'] ) ? sanitize_text_field( $_POST['connection']['zone'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $ajax_call ? __( 'You must provide a valid Mailgun key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid Mailgun key', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -51,7 +61,7 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 			return $ajax_call ? __( 'The domain name field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'The domain name field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( compact( 'key', 'domain', 'zone' ) );
 
 		$result = $this->testConnection();
 
@@ -81,7 +91,7 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 		$mailgun = $this->getApi();
 
 		if ( isset( $_POST['connection']['domain'] ) ) {
-			$domain = $_POST['connection']['domain'];
+			$domain = sanitize_text_field( $_POST['connection']['domain'] );
 		} else {
 			$credentials = Thrive_Dash_List_Manager::credentials( 'mailgun' );
 			if ( isset( $credentials ) ) {

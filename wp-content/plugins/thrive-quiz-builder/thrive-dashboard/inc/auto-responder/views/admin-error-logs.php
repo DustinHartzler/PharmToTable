@@ -1,12 +1,12 @@
 <div class="tvd-error-log-table">
 	<div class="tvd-row tvd-collapse">
 		<div class="tvd-col tvd-s6">
-			<h3 class="tvd-title"><?php echo __( "Thrive API Connections - error logs", TVE_DASH_TRANSLATE_DOMAIN ) ?></h3>
+			<h3 class="tvd-title"><?php echo esc_html__( "Thrive API Connections - error logs", TVE_DASH_TRANSLATE_DOMAIN ) ?></h3>
 		</div>
 		<div class="tvd-col tvd-s6">
 			<h5 class="tvd-right-align">
 				<span class="tvd-error-log-item-number"></span>
-				<span><?php echo __( "items", TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
+				<span><?php echo esc_html__( "items", TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
 			</h5>
 		</div>
 	</div>
@@ -15,31 +15,31 @@
 		<tr class="tvd-collection-header">
 			<td>
 				<h5>
-					<?php echo __( 'Form data', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+					<?php echo esc_html__( 'Form data', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 				</h5>
 			</td>
 			<td class="tvd-error-log-connection tvd-col tvd-s1 tvd_filter_desc tvd-pointer"
-			    data-val="connection">
+				data-val="connection">
 				<h5>
-					<?php echo __( 'Service', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+					<?php echo esc_html__( 'Service', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 					<span class="tvd-icon-expanded tvd-orderby-icons"></span>
 				</h5>
 			</td>
 			<td class="tvd-error-log-date tvd-col tvd-s1 tvd-pointer tvd_filter_desc tvd-order-filter-active"
-			    data-val="date">
+				data-val="date">
 				<h5>
-					<?php echo __( 'Date', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+					<?php echo esc_html__( 'Date', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 					<span class="tvd-icon-expanded tvd-orderby-icons"></span>
 				</h5>
 			</td>
 			<td>
 				<h5>
-					<?php echo __( 'Error Message', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+					<?php echo esc_html__( 'Error Message', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 				</h5>
 			</td>
 			<td class="tvd-center-align">
 				<h5>
-					<?php echo __( 'Actions', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+					<?php echo esc_html__( 'Actions', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 				</h5>
 			</td>
 		</tr>
@@ -53,12 +53,12 @@
 				<div class="tvd-right">
 					<p class="tvd-inline-block tvd-small-text tvd-no-margin">
 						<strong>
-							<?php echo __( 'Rows per page', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+							<?php echo esc_html__( 'Rows per page', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 						</strong>
 					</p>
 					<div class="tvd-input-field tvd-inline-block tvd-input-field-small tvd-no-margin">
 						<select class="" id="tvd-row-nr-per-page" tabindex="-1"
-						        aria-hidden="true">
+								aria-hidden="true">
 							<option value="5">5</option>
 							<option value="10" selected>10</option>
 							<option value="15">15</option>
@@ -68,25 +68,25 @@
 					<span class="tvd-inline-block tvd-margin-left"></span>
 					<p class="tvd-inline-block tvd-small-text tvd-no-margin">
 						<strong>
-							<?php echo __( 'Jump to page', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+							<?php echo esc_html__( 'Jump to page', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 						</strong>
 					</p>
 					<div class="tvd-input-field tvd-inline-block">
 						<input class="tvd-jump-to-page tvd-no-margin tvd-input-field-small" type="text" name="current_page"
-						       data-error="<?php echo __( 'Page doesn\'t exist', TVE_DASH_TRANSLATE_DOMAIN ) ?>"
-						       id="current-page-input" value="">
+							   data-error="<?php echo esc_html__( 'Page doesn\'t exist', TVE_DASH_TRANSLATE_DOMAIN ) ?>"
+							   id="current-page-input" value="">
 					</div>
 					<a class="tvd-jump-to-page-button tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-blue tvd-btn-small tvd-margin-left-small"
-					   href="javascript:void(0)" tabindex="1"><?php echo __( 'Go', TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+					   href="javascript:void(0)" tabindex="1"><?php echo esc_html__( 'Go', TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
 				</div>
 			</td>
 			<td>
 				<div class="tvd-pagination-container">
 					<p class="tvd-inline-block tvd-small-text">
 						<strong>
-							<?php echo __( 'Page', TVE_DASH_TRANSLATE_DOMAIN ) ?>
+							<?php echo esc_html__( 'Page', TVE_DASH_TRANSLATE_DOMAIN ) ?>
 							<span class="tvd-error-log-current-page"></span>&nbsp;
-							<?php echo __( 'of', TVE_DASH_TRANSLATE_DOMAIN ) ?>&nbsp;
+							<?php echo esc_html__( 'of', TVE_DASH_TRANSLATE_DOMAIN ) ?>&nbsp;
 							<span class="tvd-error-log-total-pages"></span>
 						</strong>
 					</p>
@@ -101,7 +101,7 @@
 	</table>
 </div>
 <a class="tvd-waves-effect tvd-waves-light tvd-btn-small tvd-btn-gray"
-   href="<?php echo admin_url( "admin.php?page=tve_dash_api_connect" ) ?>"><?php echo __( "Back to API Connections", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+   href="<?php echo esc_url( admin_url( "admin.php?page=tve_dash_api_connect" ) ); ?>"><?php echo esc_html__( "Back to API Connections", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
 
 
 <script type="text/template" id="tvd-error-log-entry-template">

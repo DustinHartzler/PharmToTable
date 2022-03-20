@@ -19,18 +19,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Abstract_Sub_Element extends \TCB_Element_Abstract {
 	/**
 	 * All sub elements are not visible
+	 *
 	 * @return bool
 	 */
 	public function hide() {
 		return true;
 	}
 
+	public function has_important_border() {
+		return false;
+	}
+
 	/**
+	 * TODO find a better way to define custom settings
+	 *
 	 * @param bool $hide_typography
+	 * @param bool $important_border
 	 *
 	 * @return array
 	 */
-	public function _components( $hide_typography = false ) {
+	public function _components( $hide_typography = false, $important_border = false ) {
 		$components = $this->general_components();
 
 		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );
@@ -49,6 +57,10 @@ class Abstract_Sub_Element extends \TCB_Element_Abstract {
 				/* typography should apply only on the current element */
 				$components['typography']['config'][ $control ]['css_suffix'] = array( '' );
 			}
+		}
+
+		if ( $this->has_important_border() ) {
+			$components['borders']['config']['Borders']['important'] = true;
 		}
 
 		$components['layout']['disabled_controls'] = array( 'Display', 'Alignment', '.tve-advanced-controls' );

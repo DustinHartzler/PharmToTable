@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Danut
  * Date: 7/30/2015
@@ -40,9 +49,9 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$url = ! empty( $_POST['connection']['url'] ) ? $_POST['connection']['url'] : '';
+		$url = ! empty( $_POST['connection']['url'] ) ? sanitize_text_field( $_POST['connection']['url'] ) : '';
 
-		$lists = ! empty( $_POST['connection']['lists'] ) ? $_POST['connection']['lists'] : array();
+		$lists = ! empty( $_POST['connection']['lists'] ) ? array_map( 'sanitize_text_field', $_POST['connection']['lists'] ) : array();
 		$lists = array_map( 'trim', $lists );
 		$lists = array_filter( $lists );
 
@@ -52,7 +61,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 
 		$_POST['connection']['lists'] = $lists;
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -152,6 +161,10 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 	 */
 	public static function getEmailMergeTag() {
 		return '[Email]';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 
 }

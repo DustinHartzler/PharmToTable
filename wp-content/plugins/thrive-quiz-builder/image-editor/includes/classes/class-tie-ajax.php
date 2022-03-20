@@ -21,8 +21,8 @@ class TIE_Ajax {
 
 		$ajax_events = array(
 			'tie_admin_ajax_controller' => false,
-			'tie_save_image_content'    => true,
-			'tie_save_image_file'       => true,
+			'tie_save_image_content'    => false,
+			'tie_save_image_file'       => false,
 		);
 
 		foreach ( $ajax_events as $action => $nopriv ) {
@@ -35,11 +35,29 @@ class TIE_Ajax {
 	}
 
 	public static function tie_admin_ajax_controller() {
+		if ( empty( $_REQUEST['_nonce'] ) || ! wp_verify_nonce( $_REQUEST['_nonce'], self::AJAX_NONCE_NAME ) ) {
+			exit( 0 );
+		}
+		/**
+		 * User needs to have TQB capability to use the image editor
+		 */
+		if ( ! TQB_Product::has_access() ) {
+			exit( 0 );
+		}
 		$response = TIE_Ajax_Controller::instance()->handle();
 		wp_send_json( $response );
 	}
 
 	public static function tie_save_image_file() {
+
+		$nonce = ! empty( $_POST['nonce'] ) ? $_POST['nonce'] : null;
+		if ( false === wp_verify_nonce( $nonce, 'tie_editor_ajax_nonce' ) ) {
+			exit( 0 );
+		}
+
+		if ( ! TQB_Product::has_access() ) {
+			exit( 0 );
+		}
 
 		if ( ! isset( $_FILES['badge'] ) ) {
 			wp_send_json_error( array(
@@ -47,9 +65,9 @@ class TIE_Ajax {
 			) );
 		}
 
-		$image = new TIE_Image( $_POST['post_id'] );
+		$image = new TIE_Image( ! empty( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0 );
 
-		$url = $image->save_file( $_FILES['badge'] );
+		$url = $image->save_file( $_FILES['badge'] ); // phpcs:ignore;
 
 		if ( empty( $url ) ) {
 			wp_send_json_error( array(
@@ -66,17 +84,21 @@ class TIE_Ajax {
 
 	public static function tie_save_image_content() {
 
-		$nonce = ! empty( $_POST['nonce'] ) ? $_POST['nonce'] : null;
+		$nonce = ! empty( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : null;
 		if ( false === wp_verify_nonce( $nonce, 'tie_editor_ajax_nonce' ) ) {
-			exit;
+			exit( 0 );
 		}
 
-		$image = new TIE_Image( $_REQUEST['post_id'] );
+		if ( ! TQB_Product::has_access() ) {
+			exit( 0 );
+		}
+
+		$image = new TIE_Image( ! empty( $_REQUEST['post_id'] ) ? absint( $_REQUEST['post_id'] ) : 0 );
 
 		if ( isset( $_REQUEST['html_canvas'] ) ) {
-			$image->save_html_canvas( $_REQUEST['html_canvas'] );
+			$image->save_html_canvas( $_REQUEST['html_canvas'] ); //phpcs:ignore
 
-			$img_post = get_post( $_REQUEST['post_id'] );
+			$img_post = get_post( ! empty( $_REQUEST['post_id'] ) ? absint( $_REQUEST['post_id'] ) : 0 );
 
 			/**
 			 * Not needed anymore as now we have the correct share badge url
@@ -86,7 +108,7 @@ class TIE_Ajax {
 			}
 		}
 
-		if ( isset( $_REQUEST['content'] ) && $image->save_content( $_REQUEST['content'] ) ) {
+		if ( isset( $_REQUEST['content'] ) && $image->save_content( $_REQUEST['content'] ) ) { //phpcs:ignore
 
 			if ( isset( $_REQUEST['image_settings'] ) ) {
 				$image->get_settings()->save( $_REQUEST['image_settings'] );

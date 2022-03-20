@@ -14,6 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="thrv_wrapper thrv_post_grid tcb-elem-placeholder">
 	<span class="tcb-inline-placeholder-action with-icon">
 		<?php tcb_icon( 'post_grid', false, 'editor' ); ?>
-		<?php echo __( 'Add post grid', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Add post grid', 'thrive-cb' ); ?>
 	</span>
 </div>

@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Danut
  * Date: 4/10/2015
@@ -9,6 +18,7 @@
 class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
 	public static function getType() {
@@ -39,15 +49,15 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$apiId       = ! empty( $_POST['connection']['appId'] ) ? $_POST['connection']['appId'] : '';
-		$apiUsername = ! empty( $_POST['connection']['apiUsername'] ) ? $_POST['connection']['apiUsername'] : '';
-		$apiPassword = ! empty( $_POST['connection']['apiPassword'] ) ? $_POST['connection']['apiPassword'] : '';
+		$apiId       = ! empty( $_POST['connection']['appId'] ) ? sanitize_text_field( $_POST['connection']['appId'] ) : '';
+		$apiUsername = ! empty( $_POST['connection']['apiUsername'] ) ? sanitize_text_field( $_POST['connection']['apiUsername'] ) : '';
+		$apiPassword = ! empty( $_POST['connection']['apiPassword'] ) ? sanitize_text_field( $_POST['connection']['apiPassword'] ) : '';
 
 		if ( empty( $apiId ) || empty( $apiUsername ) || empty( $apiPassword ) ) {
 			return $this->error( __( 'You must provide a valid iContact AppID/Username/Password', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -101,7 +111,7 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 				foreach ( $data as $item ) {
 					$lists[] = array(
 						'id'   => $item->listId,
-						'name' => $item->name
+						'name' => $item->name,
 					);
 				}
 			}
@@ -159,5 +169,9 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 			return $e->getMessage();
 		}
 
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 }

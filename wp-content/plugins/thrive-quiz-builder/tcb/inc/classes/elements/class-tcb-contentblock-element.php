@@ -225,7 +225,7 @@ class TCB_Contentblock_Element extends TCB_Cloud_Template_Element_Abstract {
 			'nocache' => false,
 		) );
 
-		$pack_id = isset( $_GET['pack'] ) ? $_GET['pack'] : '';
+		$pack_id = isset( $_GET['pack'] ) ? sanitize_text_field( $_GET['pack'] ) : '';
 		$return  = array();
 
 		$do_not_use_cache = ( defined( 'TCB_TEMPLATE_DEBUG' ) && TCB_TEMPLATE_DEBUG ) || $args['nocache'];

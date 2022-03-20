@@ -21,6 +21,7 @@ class TCB_Font_Manager {
 	 * @var TCB_Font_Manager
 	 */
 	private static $instance;
+
 	/**
 	 * Singleton instance method
 	 *
@@ -42,16 +43,19 @@ class TCB_Font_Manager {
 	public function all_fonts() {
 		$fonts = array(
 			'google' => array(
-				'label' => __( 'Google Fonts', 'thrive-cb' ),
-				'fonts' => array(), // $this->google_fonts() - we'll get those from js
+				'label'           => __( 'Google Fonts', 'thrive-cb' ),
+				'fonts'           => array(), // $this->google_fonts() - we'll get those from js
+				'search_priority' => 99,
 			),
 			'safe'   => array(
-				'label' => __( 'Web Safe Fonts', 'thrive-cb' ),
-				'fonts' => self::safe_fonts(),
+				'label'           => __( 'Web Safe Fonts', 'thrive-cb' ),
+				'fonts'           => self::safe_fonts(),
+				'search_priority' => 1,
 			),
 			'custom' => array(
-				'label' => __( 'Custom Fonts', 'thrive-cb' ),
-				'fonts' => $this->custom_fonts(),
+				'label'           => __( 'Custom Fonts', 'thrive-cb' ),
+				'fonts'           => $this->custom_fonts(),
+				'search_priority' => 1,
 			),
 		);
 
@@ -70,8 +74,9 @@ class TCB_Font_Manager {
 
 			if ( $bsf ) {
 				$fonts['custom_fonts_plugin'] = array(
-					'label' => __( 'Custom Fonts Plugin', 'thrive-cb' ),
-					'fonts' => $bsf,
+					'label'           => __( 'Custom Fonts Plugin', 'thrive-cb' ),
+					'fonts'           => $bsf,
+					'search_priority' => 1,
 				);
 			}
 		}

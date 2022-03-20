@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 
 class Thrive_Dash_Api_Dropbox_Service {
 
@@ -35,7 +44,7 @@ class Thrive_Dash_Api_Dropbox_Service {
 				'response_type'     => 'code',
 				'redirect_uri'      => rawurlencode( $this->get_redirect_uri() ),
 				'client_id'         => $this->client_id,
-				'scope'             => urlencode( 'sharing.write files.content.write files.metadata.write' ),
+				'scope'             => urlencode( 'sharing.write files.content.write files.metadata.write account_info.read' ),
 			),
 			static::AUTH_URI
 		);
@@ -164,7 +173,13 @@ class Thrive_Dash_Api_Dropbox_Service {
 	 * @throws Thrive_Dash_Api_Dropbox_Exception
 	 */
 	public function check_user( $params = array( 'query' => 'EchoMessage' ) ) {
-		return $this->post( static::BASE_API_URI . '2/check/user', $params );
+		return $this->post(
+			static::BASE_API_URI . '2/check/user',
+			$params,
+			array(
+				'Content-type' => 'application/json',
+			)
+		);
 	}
 
 	/**

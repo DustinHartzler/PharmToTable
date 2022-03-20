@@ -10,22 +10,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <ul>
-    <li class="<#= page == 'global_fields' ? 'active' : '' #>">
-        <a href="#global_fields">
-            <?php echo dashboard_icon( 'global-fields' ) ?>
-            <span>
+	<li class="<#= page === 'global-fields' ? 'active' : '' #>">
+		<a href="#global-fields">
+			<?php echo dashboard_icon( 'global-fields' ) ?>
+			<span>
                 <?php _e( 'Global Fields', TVE_DASH_TRANSLATE_DOMAIN ); ?>
             </span>
-        </a>
-    </li>
-<!--    <span class="tvd-tss-hl"></span>-->
-    <li class="<#= page == 'smart_complete' ? 'active' : '' #>">
-<!--        <a href="#smart_complete">-->
-<!--            --><?php //echo dashboard_icon( 'smart-complete' ) ?>
-<!--            <span>-->
-<!--                --><?php //_e( 'Smart Complete', TVE_DASH_TRANSLATE_DOMAIN ); ?>
-<!--            </span>-->
-<!--        </a>-->
-    </li>
-<!--    <span class="tvd-tss-hl"></span>-->
+		</a>
+	</li>
+	<?php if ( tvd_content_sets()->show_ui() ) : ?>
+		<li class="<#= page === 'content-sets' ? 'active' : '' #>">
+			<a href="#content-sets">
+				<?php echo dashboard_icon( 'content-sets' ) ?>
+				<span>
+                <?php _e( 'Content Sets', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+            </span>
+			</a>
+		</li>
+	<?php endif; ?>
 </ul>
+<a href="<?php echo admin_url( 'admin.php?page=tve_dash_section' ); ?>" class="tvd-waves-effect tvd-waves-light tvd-btn-small tvd-btn-gray tvd-tss-back">
+	<?php echo __( "Back To Dashboard", TVE_DASH_TRANSLATE_DOMAIN ); ?>
+</a>

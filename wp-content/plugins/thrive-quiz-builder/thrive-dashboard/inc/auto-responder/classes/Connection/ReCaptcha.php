@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: radu
  * Date: 07.05.2015
@@ -39,14 +48,21 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$site   = ! empty( $_POST['site_key'] ) ? $_POST['site_key'] : '';
-		$secret = ! empty( $_POST['secret_key'] ) ? $_POST['secret_key'] : '';
+		$site   = ! empty( $_POST['site_key'] ) ? sanitize_text_field( $_POST['site_key'] ) : '';
+		$secret = ! empty( $_POST['secret_key'] ) ? sanitize_text_field( $_POST['secret_key'] ) : '';
 
 		if ( empty( $site ) || empty( $secret ) ) {
 			return $this->error( __( 'Both Site Key and Secret Key fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST );
+		//recreate credential object
+		$credentials = array(
+			'connection' => $this->post( 'connection' ),
+			'site_key'   => $site,
+			'secret_key' => $secret,
+		);
+
+		$this->setCredentials( $credentials );
 
 		$result = $this->testConnection();
 

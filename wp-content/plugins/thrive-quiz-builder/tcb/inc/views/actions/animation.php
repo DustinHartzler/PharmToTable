@@ -15,7 +15,7 @@
 </div>
 <div class="sep"></div>
 <div class="trigger-container" id="anim-trigger" style="display: none">
-	<label for="animation-trigger"><?php echo __( 'Animation Trigger', 'thrive-cb' ) ?></label>
+	<label for="animation-trigger"><?php echo esc_html__( 'Animation Trigger', 'thrive-cb' ) ?></label>
 	<select id="animation-trigger" class="change tcb-select" data-fn="change_trigger"></select>
 </div>
 <label class="tcb-checkbox"><input type="checkbox" class="anim-loop tcb-checkbox"><span><?php esc_html_e( 'Loop animation', 'thrive-cb' ) ?></span></label>

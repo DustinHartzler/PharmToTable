@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<a href="[tcb_post_the_permalink]" class="tcb-button-link tcb-post-read-more-link">
 		<span class="tcb-button-texts">
 			<span class="tcb-button-text thrv-inline-text">
-				​<?php echo __( 'Read More', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Read More', 'thrive-cb' ); ?>
 			</span>
 		</span>
 		</a>

@@ -262,8 +262,12 @@ class TQB_Database {
 		}
 
 		if ( ! empty( $filters['post_id'] ) ) {
-			$sql       .= ' AND page_id = %d';
-			$params [] = $filters['post_id'];
+			if ( is_array( $filters['post_id'] ) ) {
+				$sql .= ' AND page_id IN (' . implode( ',', $filters['post_id'] ) . ')';
+			} else {
+				$sql       .= ' AND page_id = %d';
+				$params [] = $filters['post_id'];
+			}
 		}
 
 		if ( ! empty( $filters['post_status'] ) ) {
@@ -304,7 +308,7 @@ class TQB_Database {
 				$models[ $key ]['cache_social_share_conversion_rate'] = tqb_conversion_rate( $model['cache_social_shares'], $model['cache_social_shares_conversions'] );
 				$models[ $key ]['tcb_fields']                         = unserialize( $model['tcb_fields'] );
 			}
-		};
+		}
 
 		return $models;
 	}
@@ -1671,18 +1675,18 @@ class TQB_Database {
 	/**
 	 * Clone variation database method
 	 *
-	 * @param array $data
+	 * @param int $id
 	 *
 	 * @return int
 	 */
-	public function clone_variation( $data = array() ) {
+	public function clone_variation( $id ) {
 
 		$query = 'INSERT INTO ' . tqb_table_name( 'variations' ) . ' (quiz_id, date_added, date_modified, page_id, parent_id, post_title,tcb_fields, content) 
 		SELECT quiz_id, NOW(), NOW(), page_id, parent_id, CONCAT("' . __( 'Copy of ', Thrive_Quiz_Builder::T ) . '",post_title),tcb_fields, content FROM ' . tqb_table_name( 'variations' ) . ' WHERE id = %d';
 
-		$query = $this->prepare( $query, array( 'id' => $data['id'] ) );
+		$query = $this->prepare( $query, array( 'id' => $id ) );
 		$this->wpdb->query( $query );
-		$this->replace_variation_id( $data['id'], $this->wpdb->insert_id );
+		$this->replace_variation_id( $id, $this->wpdb->insert_id );
 
 		return $this->wpdb->insert_id;
 	}

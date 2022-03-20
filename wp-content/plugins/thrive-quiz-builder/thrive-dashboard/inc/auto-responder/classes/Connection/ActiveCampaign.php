@@ -1,4 +1,13 @@
-<?php
+<?php /** @noinspection ALL */
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 /**
  * Created by PhpStorm.
@@ -49,14 +58,14 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$url = ! empty( $_POST['connection']['api_url'] ) ? $_POST['connection']['api_url'] : '';
-		$key = ! empty( $_POST['connection']['api_key'] ) ? $_POST['connection']['api_key'] : '';
+		$api_url = ! empty( $_POST['connection']['api_url'] ) ? sanitize_text_field( $_POST['connection']['api_url'] ) : '';
+		$api_key = ! empty( $_POST['connection']['api_key'] ) ? sanitize_text_field( $_POST['connection']['api_key'] ) : '';
 
-		if ( empty( $key ) || empty( $url ) ) {
+		if ( empty( $api_key ) || empty( $api_url ) || empty( $_POST['connection'] ) ) {
 			return $this->error( __( 'Both API URL and API Key fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( compact( 'api_url', 'api_key' ) );
 
 		$result = $this->testConnection();
 
@@ -195,6 +204,29 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 	}
 
 	/**
+	 * delete a contact from the list
+	 *
+	 * @param string $email
+	 * @param array $arguments
+	 *
+	 * @return mixed
+	 */
+	public function deleteSubscriber( $email, $arguments = array() ) {
+		$api     = $this->getApi();
+		$contact = $api->call( 'contact_view_email', array( 'email' => $email ) );
+
+		if ( isset( $contact['result_code'] ) && $contact['result_code'] == 1 ) {
+
+			$body = array( 'id' => $contact['id'] );
+			$result = $api->call( 'contact_delete', $body, array() );
+			return isset( $result['result_code'] ) && $result['result_code'] == 1;
+		}
+
+		return true;
+
+	}
+
+	/**
 	 * add a contact to a list
 	 *
 	 * @param mixed $list_identifier
@@ -211,7 +243,7 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
 			$name_array = array(
 				'firstname' => $first_name,
-				'lastName'  => $last_name
+				'lastName'  => $last_name,
 			);
 		}
 
@@ -305,8 +337,8 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 	 * Update custom fields
 	 *
 	 * @param string|int $list_identifier
-	 * @param array $arguments form data
-	 * @param array $prepared_args prepared array for subscription
+	 * @param array      $arguments     form data
+	 * @param array      $prepared_args prepared array for subscription
 	 *
 	 * @return bool|string
 	 */
@@ -473,7 +505,7 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 			return $mapped_data;
 		}
 
-		$form_data = unserialize( base64_decode( $args['tve_mapping'] ) );
+		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 
 		if ( is_array( $form_data ) ) {
 
@@ -563,7 +595,7 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 	 * Prepare custom fields for api call
 	 *
 	 * @param array $custom_fields
-	 * @param null $list_identifier
+	 * @param null  $list_identifier
 	 *
 	 * @return array
 	 */
@@ -576,5 +608,40 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		}
 
 		return $prepared_fields;
+	}
+
+	public function get_automator_autoresponder_fields() {
+		return array( 'mailing_list', 'tag_input' );
+	}
+
+	/**
+	 * Enable form list based only once the we have the mailing list set
+	 *
+	 * @param $fields
+	 * @param $field
+	 * @param $action_data
+	 *
+	 * @return array|mixed
+	 */
+	public function set_custom_autoresponder_fields( $fields, $field, $action_data ) {
+		if ( is_array( $field ) ) {
+			$field = $field[0];
+		}
+		if ( $field !== 'mailing_list' && ! empty( $action_data->autoresponder->subfield->mailing_list->value ) ) {
+			$fields                      = [];
+			$available_fields            = \Thrive\Automator\Items\Action_Field::get();
+			$field                       = $available_fields['form_list'];
+			$field_data                  = $field::localize();
+			$forms                       = $field::get_options_callback( $action_data->autoresponder->value );
+			$field_data['values']        = $forms[ $action_data->autoresponder->subfield->mailing_list->value ];
+			$fields[ $field_data['id'] ] = $field_data;
+		}
+
+		return $fields;
+
+	}
+
+	public function hasForms() {
+		return true;
 	}
 }

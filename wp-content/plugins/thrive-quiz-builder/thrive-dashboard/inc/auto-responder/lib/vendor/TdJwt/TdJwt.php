@@ -1,9 +1,13 @@
 <?php
+
 /**
  * Thrive Themes - https://thrivethemes.com
  *
  * @package thrive-dashboard
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 
 require_once dirname( dirname( __FILE__ ) ) . '/TdJwt/SignatureInvalidException.php';
 require_once dirname( dirname( __FILE__ ) ) . '/TdJwt/ExpiredException.php';

@@ -92,9 +92,11 @@ class TQB_Shortcodes {
 		$quiz_id   = $attributes['id'];
 		$unique_id = 'tqb-' . uniqid();
 
+		$placeholder_style = TQB_Lightspeed::get_quiz_placeholder_style( $quiz_id );
+
 		$style = TQB_Post_meta::get_quiz_style_meta( $quiz_id );
 		$html  = '<div class="tve_flt" id="tve_editor">
-			<div class="tqb-shortcode-wrapper" id="tqb-shortcode-wrapper-' . $quiz_id . '-' . $unique_id . '" data-quiz-id="' . $quiz_id . '" data-unique="' . $unique_id . '" >
+			<div class="tqb-shortcode-wrapper" id="tqb-shortcode-wrapper-' . $quiz_id . '-' . $unique_id . '" ' . $placeholder_style . ' data-quiz-id="' . $quiz_id . '" data-unique="' . $unique_id . '" >
 				<div class="tqb-loading-overlay tqb-template-overlay-style-' . $style . '">
 					<div class="tqb-loading-bullets"></div>
 				</div>

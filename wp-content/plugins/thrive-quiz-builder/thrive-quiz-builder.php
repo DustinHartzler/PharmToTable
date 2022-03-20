@@ -3,7 +3,7 @@
 /*
 Plugin Name: Thrive Quiz Builder
 Plugin URI: https://thrivethemes.com
-Version: 2.4.0.2
+Version: 3.5
 Author: <a href="https://thrivethemes.com">Thrive Themes</a>
 Description: The plugin is built to deliver the following benefits to users: engage visitors with fun and interesting quizzes, lower bounce rate, generate more leads and gain visitor insights to find out about their interests.
 Text Domain: thrive-quiz-builder
@@ -24,12 +24,12 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		/**
 		 * Plugin version
 		 */
-		const V = '2.4.0.2';
+		const V = '3.5';
 
 		/**
 		 * Quiz Builder Database Version
 		 */
-		const DB = '1.0.5';
+		const DB = '1.0.6';
 
 		/**
 		 * Quiz Builder database prefix
@@ -132,6 +132,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		 * Other Constants
 		 */
 		const VARIATION_QUERY_KEY_NAME = 'tqb_key';
+		const VARIATION_QUERY_CHILD_KEY_NAME = 'tqb_child_key';
 
 		/**
 		 * Fields
@@ -343,6 +344,13 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			}
 
 			add_action( 'wp_head', 'tve_load_custom_css', 100, 0 );
+
+			TQB_Lightspeed::init();
+
+			add_action( 'thrive_automator_init', array( 'TQB\Automator\Main', 'init' ) );
+
+			add_filter( 'tcb_can_export_content', array( $this, 'hide_export_content' ), 10, 2 );
+			add_filter( 'tve_aut_banned_post_types', array( $this, 'tcb_hide_templates' ) );
 		}
 
 
@@ -445,7 +453,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		public function display_infusion_soft_tags_text() {
 
 			if ( ! empty( $_REQUEST['post_id'] ) ) {
-				$page = get_post( $_REQUEST['post_id'] );
+				$page = get_post( absint( $_REQUEST['post_id'] ) );
 
 				if ( $page instanceof WP_Post && $page->post_parent ) {
 					$display_tags = (bool) get_post_meta( $page->post_parent, 'tge_display_tags', true );
@@ -453,7 +461,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			}
 
 			if ( isset( $_REQUEST['tqb_key'], $display_tags, $display_tags ) ) {
-				echo '<br/><p>' . __( $this->tvd_tags_text, self::T ) . '</p>';
+				echo '<br/><p>' . esc_html__( $this->tvd_tags_text, self::T ) . '</p>';
 			}
 		}
 
@@ -467,7 +475,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		public function filter_tags_text( $text ) {
 
 			if ( ! empty( $_REQUEST['post_id'] ) ) {
-				$page = get_post( $_REQUEST['post_id'] );
+				$page = get_post( absint( $_REQUEST['post_id'] ) );
 
 				if ( $page instanceof WP_Post && $page->post_parent ) {
 					$display_tags = (bool) get_post_meta( $page->post_parent, 'tge_display_tags', true );
@@ -475,7 +483,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			}
 
 			if ( isset( $_REQUEST['tqb_key'], $display_tags, $display_tags ) ) {
-				$text .= '. <br/> ' . __( $this->tvd_tags_text, self::T );
+				$text .= '. <br/> ' . esc_html__( $this->tvd_tags_text, self::T );
 			}
 
 			return $text;
@@ -499,7 +507,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		 */
 		public function tqb_frontend_ajax_load() {
 
-			$quiz_ids     = $_REQUEST['quiz_ids'];
+			$quiz_ids     = ! empty( $_REQUEST['quiz_ids'] ) ? array_map( 'absint', $_REQUEST['quiz_ids'] ) : [];
 			$restart_quiz = ! empty( $_POST['restart_quiz'] ) && (int) $_POST['restart_quiz'] === 1;
 			$data         = array();
 			foreach ( $quiz_ids as $key => $id ) {
@@ -524,7 +532,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				$data[ $key ]                  = TQB_Quiz_Manager::get_shortcode_content( $id );
 				$data[ $key ]['all_questions'] = $questions;
 				$data[ $key ]['quiz_id']       = $id;
-				$data[ $key ]['quiz_url']      = get_permalink( $id );
+				$data[ $key ]['quiz_url']      = str_replace( array( '?p=', '&p=' ), array( '?tqb_quiz_id=', '&tqb_quiz_id=' ), get_permalink( $id ) );
 				$data[ $key ]['quiz_type']     = $quiz_type;
 
 				$data[ $key ]['results_settings'] = array();
@@ -548,9 +556,14 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				$data[ $key ]['quiz_style']         = TQB_Post_meta::get_quiz_style_meta( $id );
 				$data[ $key ]['tve_qna_templates']  = get_post_meta( $id, 'tve_qna_templates', true );
 
-				$tve_custom_css                   = tve_get_post_meta( $id, 'tve_custom_css', true );
-				$tve_custom_css                   = tve_prepare_global_variables_for_front( $tve_custom_css );
+				$tve_custom_css = tve_get_post_meta( $id, 'tve_custom_css', true );
+				$tve_custom_css = tve_prepare_global_variables_for_front( $tve_custom_css );
+
 				$data[ $key ]['tve_custom_style'] = $tve_custom_css;
+
+				global $shared_styles;
+
+				$data[ $key ]['tve_shared_styles'] = $shared_styles;
 			}
 
 			/**
@@ -658,6 +671,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			require_once( 'includes/class-tqb-privacy.php' );
 			require_once( 'includes/database/class-tqb-database-manager.php' );
 			require_once( 'includes/class-tqb-db.php' );
+			require_once( 'includes/class-tqb-lightspeed.php' );
 			require_once( 'includes/managers/class-tqb-structure-manager.php' );
 			require_once( 'includes/managers/class-tqb-variation-manager.php' );
 			require_once( 'includes/managers/class-tqb-page-manager.php' );
@@ -686,6 +700,11 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			 *  Include frontend files
 			 */
 			require_once( 'includes/class-tqb-shortcodes.php' );
+
+			/**
+			 *  Include automator and its files
+			 */
+			require_once( 'automator/class-main.php' );
 
 			$this->resolve_tqb_conflicts();
 		}
@@ -1433,6 +1452,10 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				}
 
 				tve_dash_show_activation_error( 'wp_version', 'Thrive Quiz Builder', TCB_MIN_WP_VERSION );
+			} else {
+				if ( method_exists( '\TCB\Lightspeed\Main', 'first_time_enable_lightspeed' ) ) {
+					\TCB\Lightspeed\Main::first_time_enable_lightspeed();
+				}
 			}
 		}
 
@@ -1790,8 +1813,6 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			if ( ! $scripts_loaded ) {
 				add_action( 'wp_print_footer_scripts', array( 'TQB_Shortcodes', 'render_backbone_templates' ) );
 				add_action( 'wp_print_footer_scripts', 'tqb_add_frontend_svg_file' );
-				// Enqueue html2canvas script
-				wp_enqueue_script( 'tqb-html2canvas', tie()->url( 'assets/js/html2canvas/html2canvas.js' ) );
 
 				tqb_enqueue_default_scripts();
 				TCB_Icon_Manager::enqueue_icon_pack(); // Include Thrive Icon pack
@@ -1816,7 +1837,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 						'ajax_url'     => admin_url( 'admin-ajax.php' ) . '?action=tqb_frontend_ajax_controller',
 						'is_preview'   => TQB_Product::has_access(),
 						'post_id'      => get_the_ID(),
-						'settings'     => tqb_get_option( Thrive_Quiz_Builder::PLUGIN_SETTINGS, tqb_get_default_values( Thrive_Quiz_Builder::PLUGIN_SETTINGS ) ),
+						'settings'     => Thrive_Quiz_Builder::get_settings(),
 						'quiz_options' => array(),
 						't'            => array(
 							'chars' => __( 'Characters', 'thrive-quiz-builder' ),
@@ -1831,9 +1852,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 					static function () use ( $quiz_id ) {
 						ob_start();
 						include __DIR__ . '/includes/frontend/views/trigger.tqb_quiz_loaded.php';
-						$html = ob_get_contents();
-						ob_end_clean();
-						echo $html;
+						$html = ob_get_clean();
+						echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					}
 				);
 			}
@@ -1850,6 +1870,46 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			$user_result = isset( $_POST['tqb-quiz-user-result'], $_POST['tqb-variation-page_id'] ) ? sanitize_text_field( $_POST['tqb-quiz-user-result'] ) : '';
 
 			return str_replace( self::QUIZ_RESULT_SHORTCODE, $user_result, $tags );
+		}
+
+		/**
+		 * Return all settings or a specific setting
+		 *
+		 * @param null $key
+		 *
+		 * @return array|mixed
+		 */
+		public static function get_settings( $key = null ) {
+			$settings = tqb_get_option( Thrive_Quiz_Builder::PLUGIN_SETTINGS, tqb_get_default_values( Thrive_Quiz_Builder::PLUGIN_SETTINGS ) );
+
+			return $key === null ? $settings : $settings[ $key ];
+		}
+
+		public function hide_export_content( $allow, $post ) {
+			if ( in_array( $post->post_type, array(
+				self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE,
+				self::QUIZ_STRUCTURE_ITEM_OPTIN,
+				self::QUIZ_STRUCTURE_ITEM_RESULTS,
+			) ) ) {
+				$allow = false;
+			}
+
+			return $allow;
+		}
+
+		/**
+		 * Data related to quiz pages should not be displayed since the frontend data would be based on actual post
+		 *
+		 * @param $post_types
+		 *
+		 * @return mixed
+		 */
+		public static function tcb_hide_templates( $post_types ) {
+			return array_merge( $post_types, array(
+				self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE,
+				self::QUIZ_STRUCTURE_ITEM_OPTIN,
+				self::QUIZ_STRUCTURE_ITEM_RESULTS,
+			) );
 		}
 	}
 

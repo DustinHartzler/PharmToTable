@@ -19,27 +19,28 @@ class TCB_Post_List_Shortcodes {
 	private $execution_stack = array();
 
 	public static $dynamic_shortcodes = array(
-		'tcb_post_content'            => 'the_content',
-		'tcb_post_title'              => 'the_title',
-		'tcb_post_featured_image'     => 'post_thumbnail',
-		'tcb_post_author_picture'     => 'author_picture',
-		'tcb_post_list'               => 'post_list',
-		'tcb_post_published_date'     => 'post_date',
-		'tcb_post_tags'               => 'the_tags',
-		'tcb_post_categories'         => 'the_category',
-		'tcb_post_author_name'        => 'the_author',
-		'tcb_post_author_bio'         => 'author_bio',
-		'tcb_post_comments_number'    => 'comments_number',
-		'tcb_post_author_role'        => 'author_role',
-		'tcb_featured_image_url'      => 'the_post_thumbnail_url',
-		'tcb_author_image_url'        => 'author_image_url',
-		'tcb_user_image_url'          => 'user_image_url',
-		'tcb_the_id'                  => 'the_id',
-		'tcb_post_list_dynamic_style' => 'tcb_post_list_dynamic_style',
-		'tcb_pagination'              => 'pagination',
-		'tcb_post_custom_field'       => 'custom_field',
-		'tcb_post_custom_external'    => 'externals',
-		'thrive_author_url'           => 'author_link_shortcode',
+		'tcb_post_content'               => 'the_content',
+		'tcb_post_title'                 => 'the_title',
+		'tcb_post_featured_image'        => 'post_thumbnail',
+		'tcb_post_author_picture'        => 'author_picture',
+		'tcb_post_list'                  => 'post_list',
+		'tcb_post_published_date'        => 'post_date',
+		'tcb_post_tags'                  => 'the_tags',
+		'tcb_post_categories'            => 'the_category',
+		'tcb_post_author_name'           => 'the_author',
+		'tcb_post_author_bio'            => 'author_bio',
+		'tcb_post_comments_number'       => 'comments_number',
+		'tcb_post_author_role'           => 'author_role',
+		'tcb_featured_image_url'         => 'the_post_thumbnail_url',
+		'tcb_author_image_url'           => 'author_image_url',
+		'tcb_user_image_url'             => 'user_image_url',
+		'tcb_the_id'                     => 'the_id',
+		'tcb_post_list_dynamic_style'    => 'tcb_post_list_dynamic_style',
+		'tcb_pagination'                 => 'pagination',
+		'tcb_post_custom_field'          => 'custom_field',
+		'tcb_post_custom_external'       => 'externals',
+		'tcb_video_cover_featured_image' => 'video_cover_featured_image',
+		'thrive_author_url'              => 'author_link_shortcode',
 	);
 
 	public function __construct() {
@@ -50,6 +51,19 @@ class TCB_Post_List_Shortcodes {
 		add_filter( 'tcb_content_allowed_shortcodes', array( $this, 'tcb_content_allowed_shortcodes' ) );
 
 		add_filter( 'tcb_inline_shortcodes', array( $this, 'tcb_inline_shortcodes' ), 11 );
+
+		add_filter( 'aioseo_conflicting_shortcodes', array( $this, 'remove_shortcode_conflicts' ) );
+	}
+
+	/**
+	 * Dont allow AllinOne SEO to do shortcodes while getting description for meta tags
+	 *
+	 * @param $shortcodes
+	 *
+	 * @return array
+	 */
+	public function remove_shortcode_conflicts( $shortcodes ) {
+		return array_merge( $shortcodes, array_keys( TCB_Post_List_Shortcodes::$dynamic_shortcodes ) );
 	}
 
 	/**
@@ -295,6 +309,14 @@ class TCB_Post_List_Shortcodes {
 	 */
 	public static function author_bio( $attr = array() ) {
 		$content = tcb_template( 'post-list-sub-elements/author-bio.php', $attr, true );
+
+		/**
+		 * Filter the author bio content.
+		 *
+		 * @param string $content
+		 * @param array  $attr shortcode attributes
+		 */
+		$content = apply_filters( 'tcb_author_bio', $content, $attr );
 
 		if ( ! static::is_inline( $attr ) ) {
 			$tag     = empty( $attr['tag'] ) ? 'div' : $attr['tag'];
@@ -601,11 +623,17 @@ class TCB_Post_List_Shortcodes {
 				'title' => get_the_title(),
 			);
 		}
+		$classes = array( TCB_POST_THUMBNAIL_IDENTIFIER, TCB_SHORTCODE_CLASS );
+		/* add the responsive classes, if they are present */
+		if ( ! empty( $attr['class'] ) ) {
+			$classes[] = $attr['class'];
+		}
+		$classes = implode( ' ', $classes );
 
 		return static::before_wrap( array(
 			'content' => $image,
 			'tag'     => 'a',
-			'class'   => TCB_POST_THUMBNAIL_IDENTIFIER . ' ' . TCB_SHORTCODE_CLASS,
+			'class'   => $classes,
 			'attr'    => array_merge( $url_attr, $title_attr ),
 		), $attr );
 	}
@@ -743,7 +771,7 @@ class TCB_Post_List_Shortcodes {
 		$style_css      = '';
 		$post_list_vars = apply_filters( 'tcb_get_post_list_variables', '', $article_id );
 		if ( ! empty( $post_list_vars ) ) {
-			$style_css .= sprintf( 'article#post-%d{%s}', $article_id, $post_list_vars );;
+			$style_css .= sprintf( 'article#post-%d{%s}', $article_id, $post_list_vars );
 		}
 
 		return $style_css;
@@ -787,6 +815,16 @@ class TCB_Post_List_Shortcodes {
 		return $image_url;
 	}
 
+	public static function video_cover_featured_image() {
+		if ( has_post_thumbnail() ) {
+			$image_url = static::shortcode_function_content( 'the_post_thumbnail_url' );
+		} else {
+			$image_url = TCB_Post_List_Featured_Image::get_default_url();
+		}
+
+		return TCB_Utils::wrap_content( '', 'img', '', 'tcb-video-cover-image', [ 'src' => $image_url ] );
+	}
+
 	/**
 	 * Author image url
 	 * We are calling this from the theme also
@@ -798,6 +836,13 @@ class TCB_Post_List_Shortcodes {
 	 * @return string
 	 */
 	public static function author_image_url( $attr = array(), $content = '', $tag = 'tcb_author_image_url' ) {
+		/**
+		 * When we're outside the post list, skip rendering, but only if the shortcode is in the CSS.
+		 * [backwards compat only] This can also be a shortcode inside a HTML tag ( in an img src ), and it renders in do_shortcodes_in_html_tags() which is called before do_shortcode
+		 */
+		if ( TCB_Post_List::is_outside_post_list_render() && ! TCB_Utils::is_processing_custom_css() ) {
+			return '[' . $tag . ']';
+		}
 
 		return TCB_Post_List_Author_Image::author_avatar();
 	}

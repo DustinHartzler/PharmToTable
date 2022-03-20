@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Created by PhpStorm.
  * User: radu
@@ -13,7 +22,7 @@ add_action( 'admin_notices', 'tve_dash_api_admin_notices', 9 );
 add_action( 'wp_ajax_tve_dash_api_form_retry', 'tve_dash_api_form_retry' );
 add_action( 'wp_ajax_tve_dash_api_delete_log', 'tve_dash_api_delete_log' );
 
-if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+if ( wp_doing_ajax() ) {
 	add_action( 'wp_ajax_tve_dash_api_handle_save', 'tve_dash_api_handle_save' );
 	add_action( 'wp_ajax_tve_dash_api_handle_redirect', 'tve_dash_api_api_handle_redirect' );
 } else {
@@ -92,7 +101,7 @@ function tve_dash_api_admin_notices() {
 		$html .= sprintf( $template, 'error', $err, $nonce );
 	}
 
-	echo $html;
+	echo $html; // phpcs:ignore
 }
 
 /**
@@ -128,7 +137,7 @@ function tve_dash_api_connect() {
 		);
 	}
 
-	$current_key = ! empty( $_REQUEST['api'] ) ? $_REQUEST['api'] : '';
+	$current_key = ! empty( $_REQUEST['api'] ) ? sanitize_text_field( $_REQUEST['api'] ) : '';
 
 	Thrive_Dash_List_Manager::flashMessages();
 
@@ -140,10 +149,10 @@ function tve_dash_api_connect() {
  */
 function tve_dash_api_handle_save() {
 	if ( ! current_user_can( TVE_DASH_CAPABILITY ) ) {
-		wp_die('');
+		wp_die( '' );
 	}
 	require_once dirname( __FILE__ ) . '/misc.php';
-	$is_google_drive_response = ! empty( $_REQUEST['state'] ) && strpos( $_REQUEST['state'], 'connection_google_drive' ) === 0;
+	$is_google_drive_response = ! empty( $_REQUEST['state'] ) && strpos( sanitize_text_field( $_REQUEST['state'] ), 'connection_google_drive' ) === 0;
 
 	/**
 	 * either a POST from a regular form, or an oauth redirect
@@ -157,7 +166,7 @@ function tve_dash_api_handle_save() {
 			$api = 'google_drive';
 			break;
 		default:
-			$api = $_REQUEST['api'];
+			$api = sanitize_text_field( $_REQUEST['api'] );
 			break;
 	}
 
@@ -195,6 +204,13 @@ function tve_dash_api_handle_save() {
 		$response['success'] = $saved === true ? true : false;
 		$response['message'] = $saved === true ? __( 'Connection established', TVE_DASH_TRANSLATE_DOMAIN ) : $saved;
 	}
+	/* Check if we need to upgrade an api */
+	if ( ! empty( $_REQUEST['api'] ) ) {
+		$upgraded_key = $_REQUEST['api'] . '-upgraded';
+		if ( ! empty( $_REQUEST[ $upgraded_key ] ) && $_REQUEST[ $upgraded_key ] === '1' && method_exists( $connection, 'upgrade' ) ) {
+			$response = $connection->upgrade();
+		}
+	}
 
 	if ( $doing_ajax ) {
 		exit( json_encode( $response ) );
@@ -215,7 +231,7 @@ function tve_dash_api_handle_save() {
  */
 function tve_dash_api_api_handle_redirect() {
 	if ( ! current_user_can( TVE_DASH_CAPABILITY ) ) {
-		wp_die('');
+		wp_die( '' );
 	}
 
 	if ( empty( $_REQUEST['api'] ) && empty( $_REQUEST['oauth_token'] ) && empty( $_REQUEST['disconnect'] ) ) {
@@ -225,18 +241,18 @@ function tve_dash_api_api_handle_redirect() {
 	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
 	require_once dirname( __FILE__ ) . '/misc.php';
-	$connection = Thrive_Dash_List_Manager::connectionInstance( $_REQUEST['api'] );
+	$connection = Thrive_Dash_List_Manager::connectionInstance( sanitize_text_field( $_REQUEST['api'] ) );
 
 	if ( is_null( $connection ) ) {
 		return;
 	}
 
-	$response = array(
+	$response    = array(
 		'success' => false,
 		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN ),
 	);
-
-	$connection->setCredentials( $_POST['connection'] );
+	$credentials = ! empty( $_POST['connection'] ) ? map_deep( $_POST['connection'], 'sanitize_text_field' ) : array();
+	$connection->setCredentials( $credentials );
 	$result = $connection->getAuthorizeUrl();
 
 	$response['success'] = ( filter_var( $result, FILTER_VALIDATE_URL ) ) === false ? false : true;
@@ -246,7 +262,7 @@ function tve_dash_api_api_handle_redirect() {
 		exit( json_encode( $response ) );
 	}
 
-	wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . '#failed/' . $_REQUEST['api'] );
+	wp_redirect( admin_url( 'admin.php?page=tve_dash_api_connect' ) . '#failed/' . sanitize_text_field( $_REQUEST['api'] ) );
 
 	exit();
 }
@@ -306,11 +322,11 @@ function tve_dash_api_error_log() {
  * hide notices for a specific API connection
  */
 function tve_dash_api_hide_notice() {
-	if ( ! wp_verify_nonce( $_POST['nonce'], 'tve_api_dismiss' ) ) {
+	if ( ! empty( $_POST['nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), 'tve_api_dismiss' ) ) {
 		exit( '-1' );
 	}
 
-	$key = $_POST['key'];
+	$key = ! empty( $_POST['key'] ) ? sanitize_text_field( $_POST['key'] ) : '';
 
 	require_once dirname( __FILE__ ) . '/misc.php';
 
@@ -349,5 +365,4 @@ function tve_dash_api_filter_ui_hooks( $hooks ) {
 
 	return $hooks;
 }
-
 

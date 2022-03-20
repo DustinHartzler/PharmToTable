@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Created by PhpStorm.
  * User: Laura
  * Date: 09.09.2015
@@ -39,14 +48,14 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$key      = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
-		$username = ! empty( $_POST['connection']['username'] ) ? $_POST['connection']['username'] : '';
+		$key      = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$username = ! empty( $_POST['connection']['username'] ) ? sanitize_text_field( $_POST['connection']['username'] ) : '';
 
 		if ( empty( $key ) || empty( $username ) ) {
 			return $this->error( __( 'Username and API Key are required', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( array( 'key' => $key, 'username' => $username ) );
 
 		$result = $this->testConnection();
 
@@ -146,5 +155,9 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 	 */
 	public static function getEmailMergeTag() {
 		return '(email)';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
 	}
 }

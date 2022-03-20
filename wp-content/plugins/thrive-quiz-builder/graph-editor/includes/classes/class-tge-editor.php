@@ -160,8 +160,8 @@ class TGE_Editor {
 
 		$js_suffix = defined( 'TVE_DEBUG' ) && TVE_DEBUG ? '.js' : '.min.js';
 
-		wp_enqueue_script( 'tge-jquery', tge()->url( 'assets/vendors/jquery.min.js' ), array(), Thrive_Quiz_Builder::V );
-		wp_enqueue_script( 'tge-lodash', tge()->url( 'assets/vendors/lodash.min.js' ), array(), Thrive_Quiz_Builder::V );
+		wp_enqueue_script( 'tge-jquery', tge()->url( 'assets/vendors/jquery.min.js' ), array( 'jquery' ), Thrive_Quiz_Builder::V );
+		wp_enqueue_script( 'tge-lodash', tge()->url( 'assets/vendors/lodash.min.js' ), array( 'jquery' ), Thrive_Quiz_Builder::V );
 		wp_enqueue_script( 'tge-backbone', tge()->url( 'assets/vendors/backbone-min.js' ), array(
 			'tge-jquery',
 			'tge-lodash',

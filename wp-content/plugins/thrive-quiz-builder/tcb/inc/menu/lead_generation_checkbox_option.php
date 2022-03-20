@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-lead_generation_checkbox_option-component" class="tve-component" data-view="LeadGenerationCheckboxOption">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 
@@ -28,11 +28,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-advanced-controls">
 			<div class="dropdown-header" data-prop="advanced">
 				<span class="mb-5">
-					<?php echo __( 'Answer based tagging', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Answer based tagging', 'thrive-cb' ); ?>
 				</span>
 			</div>
 			<div class="dropdown-content pt-0">
-				<span><?php echo __( 'The following tag will be sent to your autoresponder if this answer is selected', 'thrive-cb' ); ?></span>
+				<span><?php echo esc_html__( 'The following tag will be sent to your autoresponder if this answer is selected', 'thrive-cb' ); ?></span>
 				<div class="tve-control mt-10" data-view="CustomAnswerInput"></div>
 			</div>
 		</div>

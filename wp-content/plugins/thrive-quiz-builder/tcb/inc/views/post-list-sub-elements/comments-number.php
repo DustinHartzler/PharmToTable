@@ -18,7 +18,7 @@ $comments_number = get_comments_number();
  * 2 - post comments url
  */
 if ( empty( $data['url'] ) ) {
-	echo $comments_number;
+	echo esc_html( $comments_number );
 } else {
 	global $post;
 
@@ -39,5 +39,5 @@ if ( empty( $data['url'] ) ) {
 			break;
 	}
 
-	echo TCB_Utils::wrap_content( $comments_number, 'a', '', '', $link_attr );
+	echo TCB_Utils::wrap_content( $comments_number, 'a', '', '', $link_attr ); // phpcs:ignore
 }

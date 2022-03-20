@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_List_Connection_FileUpload_Dropbox
 	extends Thrive_Dash_List_Connection_Abstract
 	implements Thrive_Dash_List_Connection_FileUpload_Interface {
@@ -44,7 +53,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 	 * @return bool|mixed|string|Thrive_Dash_List_Connection_Abstract
 	 */
 	public function readCredentials() {
-		$code = empty( $_REQUEST['code'] ) ? '' : $_REQUEST['code'];
+		$code = empty( $_REQUEST['code'] ) ? '' : sanitize_text_field( $_REQUEST['code'] );
 
 		if ( empty( $code ) ) {
 			return $this->error( 'Missing `code` parameter' );

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="text-options action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tve-master-color">
 				<div class="tve-control gl-st-button-toggle-1" data-view="MasterColor"></div>
 				<div class="master_color_warning global-edit-warning tcb-hide">
-					<?php echo __( 'Changing the Master Color will unlink the element from any global color/gradient which was applied on it previously.', 'thrive-cb' ); ?>
+					<?php echo esc_html__( 'Changing the Master Color will unlink the element from any global color/gradient which was applied on it previously.', 'thrive-cb' ); ?>
 				</div>
 			</div>
 			<div class="hide-states">

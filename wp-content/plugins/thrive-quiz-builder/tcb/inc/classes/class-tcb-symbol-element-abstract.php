@@ -278,6 +278,13 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		}
 
 		/**
+		 * Added some defaults
+		 */
+		$symbol_data = array_merge( array(
+			'has_icons' => 0,
+		), $symbol_data );
+
+		/**
 		 * update CSS text to reflect new symbol id ( replace cloud id placeholder with local id in css text)
 		 */
 		$symbol_data['css'] = str_replace( '|TEMPLATE_ID|', $symbol_data['id'], $symbol_data['css'] );
@@ -285,6 +292,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		update_post_meta( $symbol_data['id'], 'tve_updated_post', $symbol_data['content'] );
 		update_post_meta( $symbol_data['id'], 'tve_custom_css', $symbol_data['css'] );
 		update_post_meta( $symbol_data['id'], 'tve_globals', $symbol_data['tve_globals'] );
+		update_post_meta( $symbol_data['id'], 'thrive_icon_pack', $symbol_data['has_icons'] );
 
 		$symbol = get_post( $symbol_data['id'] );
 
@@ -337,9 +345,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		$symbol = get_post( $post_id );
 
 		//prepare the symbol to be inserted in the page after a successful save
-		$response = $this->prepare_symbol( $symbol );
-
-		return $response;
+		return $this->prepare_symbol( $symbol );
 	}
 
 	/**
@@ -349,6 +355,12 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 * @param array $symbol_data
 	 */
 	public function after_save( $post_id, $symbol_data ) {
+		/**
+		 * Added some defaults
+		 */
+		$symbol_data = array_merge( array(
+			'has_icons' => 0,
+		), $symbol_data );
 
 		//if we are sending the category than assign the symbol to it
 		$terms = isset( $symbol_data['term_id'] ) ? array( $symbol_data['term_id'] ) : array();
@@ -404,6 +416,9 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		update_post_meta( $post_id, 'tve_updated_post', $symbol_data['content'] );
 		update_post_meta( $post_id, 'tve_custom_css', $symbol_data['css'] );
 		update_post_meta( $post_id, 'tve_globals', $symbol_data['tve_globals'] );
+		update_post_meta( $post_id, 'thrive_icon_pack', $symbol_data['has_icons'] );
+
+		\TCB\Lightspeed\Main::handle_optimize_saves( $post_id, $symbol_data );
 	}
 
 	/**
@@ -438,8 +453,8 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	public function generate_preview( $post_id, $element_type = 'symbol' ) {
 
 		add_filter( 'upload_dir', array( $this, 'upload_dir' ) );
-
-		$moved_file = wp_handle_upload( $_FILES['preview_file'], array(
+		$preview_file = ! empty( $_FILES['preview_file'] ) ? $_FILES['preview_file'] : array(); // phpcs:ignore
+		$moved_file   = wp_handle_upload( $preview_file, array(
 			'action'                   => TCB_Editor_Ajax::ACTION,
 			'unique_filename_callback' => array( $this, 'get_preview_filename' ),
 		) );

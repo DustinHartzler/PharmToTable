@@ -46,13 +46,13 @@ class Thrive_Dash_List_Connection_SendGrid extends Thrive_Dash_List_Connection_A
 	 * @return mixed|void
 	 */
 	public function readCredentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid SendGrid key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection' ) );
 
 		$result = $this->testConnection();
 
@@ -272,4 +272,9 @@ class Thrive_Dash_List_Connection_SendGrid extends Thrive_Dash_List_Connection_A
 
 		return $this;
 	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list' );
+	}
+
 }

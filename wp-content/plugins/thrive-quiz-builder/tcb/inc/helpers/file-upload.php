@@ -370,7 +370,7 @@ add_filter( 'tve_thrive_shortcodes', static function ( $content, $is_editor_page
  */
 function upload_error_handler( $error, $code = 400 ) {
 	status_header( $code );
-	echo $error;
+	echo esc_html( $error );
 	die();
 }
 
@@ -391,7 +391,7 @@ function handle_upload() {
 		upload_error_handler( 'Error uploading file', 500 );
 	}
 
-	$config = FileUploadConfig::get_one( $_REQUEST['id'] );
+	$config = FileUploadConfig::get_one( isset( $_REQUEST['id'] ) ? sanitize_text_field( $_REQUEST['id'] ) : '' );
 	if ( ! $config->ID ) {
 		upload_error_handler( 'Missing / Invalid request parameter' );
 	}
@@ -406,7 +406,7 @@ function handle_upload() {
 		upload_error_handler( 'This type of file is not accepted' );
 	}
 
-	if ( ! $config->size_allowed( filesize( $_FILES['file']['tmp_name'] ) ) ) {
+	if ( ! $config->size_allowed( filesize( $_FILES['file']['tmp_name'] ) ) ) { // phpcs:ignore
 		upload_error_handler( 'File is too big' );
 	}
 
@@ -416,12 +416,12 @@ function handle_upload() {
 	}
 
 	$file_meta = array(
-		'originalName' => $_FILES['file']['name'],
+		'originalName' => $_FILES['file']['name'], // phpcs:ignore
 		'name'         => $config->get_upload_filename( $info['filename'] ) . '.' . $info['extension'],
 	);
 
 	/** @var string|\WP_Error $result */
-	$result = $api->upload( file_get_contents( $_FILES['file']['tmp_name'] ), $config->folder, $file_meta );
+	$result = $api->upload( file_get_contents( $_FILES['file']['tmp_name'] ), $config->folder, $file_meta ); // phpcs:ignore
 	if ( is_wp_error( $result ) ) {
 		/**
 		 * Log API Error
@@ -462,16 +462,16 @@ function handle_remove() {
 		exit();
 	}
 
-	if ( ! FileUploadConfig::verify_nonce( $_POST['nonce'], $_POST['file_id'] ) ) {
+	if ( ! FileUploadConfig::verify_nonce( sanitize_text_field( $_POST['nonce'] ), sanitize_text_field( $_POST['file_id'] ) ) ) {
 		exit();
 	}
 
-	$api = FileUploadConfig::get_one( $_POST['id'] )->get_service();
+	$api = FileUploadConfig::get_one( sanitize_text_field( $_POST['id'] ) )->get_service();
 	if ( is_wp_error( $api ) ) {
 		exit();
 	}
 
-	$api->delete( $_POST['file_id'] );
+	$api->delete( sanitize_text_field( $_POST['file_id'] ) );
 	exit();
 }
 

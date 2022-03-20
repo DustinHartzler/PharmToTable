@@ -222,6 +222,13 @@ class TCB_Video_Youtube extends TCB_Video_Base {
 class TCB_Video_Vimeo extends TCB_Video_Base {
 	public function get_url() {
 		$url = 'https://player.vimeo.com/video/' . $this->get_id();
+
+		if ( ! empty( $this->params['hash'] ) ) {
+			$url = add_query_arg( array(
+				'h'    =>  $this->params['hash'],
+			), $url );
+		}
+
 		$url = add_query_arg( array(
 			'color'    => $this->_get( 'c', 'ffffff' ),
 			'portrait' => (int) $this->_get( 'p', 0 ),

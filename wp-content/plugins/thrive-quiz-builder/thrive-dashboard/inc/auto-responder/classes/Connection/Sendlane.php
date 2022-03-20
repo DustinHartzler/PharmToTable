@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 /**
  * Created by PhpStorm.
  * User: User
@@ -45,7 +54,7 @@ class Thrive_Dash_List_Connection_Sendlane extends Thrive_Dash_List_Connection_A
 	 */
 	public function readCredentials() {
 
-		$connection = $_POST['connection'];
+		$connection = $this->post( 'connection', array() );
 
 		if ( empty( $connection['api_url'] ) || empty( $connection['api_key'] ) || empty( $connection['hash_key'] ) ) {
 			return $this->error( __( 'All fields are required!', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -161,5 +170,9 @@ class Thrive_Dash_List_Connection_Sendlane extends Thrive_Dash_List_Connection_A
 	 */
 	public static function getEmailMergeTag() {
 		return 'VAR_EMAIL';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list', 'tag_input' );
 	}
 }

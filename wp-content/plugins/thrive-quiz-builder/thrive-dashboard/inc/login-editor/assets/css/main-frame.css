@@ -9,3 +9,7 @@
 #tcb-modal-cloud-templates .warning-ct-change {
     display: none !important;
 }
+
+#tcb-modal-reset-login-design-modal {
+    padding-bottom: 40px;
+}

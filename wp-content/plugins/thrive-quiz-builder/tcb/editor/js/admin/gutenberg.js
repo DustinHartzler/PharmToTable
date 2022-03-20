@@ -58,7 +58,14 @@
 				shouldBindEvents = false;
 			if ( this.isPostBox ) {
 				if ( ! $( '#tar-display' ).length ) {
-					this.$gutenberg.find( '.editor-post-title' ).append( this.$architectDisplay );
+					var $postTitle = this.$gutenberg.find( '.editor-post-title' );
+					if ( $postTitle.length ) {
+						if ( $postTitle[ 0 ].tagName === 'DIV' ) {
+							$postTitle.append( this.$architectDisplay );
+						} else {
+							$postTitle.after( this.$architectDisplay );
+						}
+					}
 
 					this.$gutenberg.find( '.editor-block-list__layout,.block-editor-block-list__layout' ).hide();
 					this.$gutenberg.find( '.editor-post-title__block' ).css( 'margin-bottom', '0' );
@@ -77,6 +84,8 @@
 				}
 			}
 
+			// so we can use saved styles
+			$( '.editor-block-list__layout,.block-editor-block-list__layout' ).addClass( 'tcb-style-wrap' );
 			if ( shouldBindEvents ) {
 				this.bindEvents();
 			}
@@ -185,7 +194,7 @@
 		window.addEventListener( 'load', function () {
 			$( '.tcb-revert' ).on( 'click', function () {
 				if ( confirm( 'Are you sure you want to DELETE all of the content that was created in this landing page and revert to the theme page? \n If you click OK, any custom content you added to the landing page will be deleted.' ) ) {
-					location.href = location.href + '&tve_revert_theme=1';
+					location.href = location.href + '&tve_revert_theme=1&nonce=' + this.dataset.nonce;
 					$( '#editor' ).find( '.edit-post-header-toolbar' ).css( 'visibility', 'visible' );
 				}
 			} );

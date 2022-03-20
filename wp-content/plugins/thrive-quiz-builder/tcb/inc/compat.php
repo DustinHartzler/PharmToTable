@@ -32,7 +32,7 @@ if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'surveyfunnel/su
 /**
  * Compatibility with Total Themes & Advanced Custom Fields
  */
-if ( isset( $_GET['tve'] ) && 'true' == $_GET['tve'] ) {
+if ( isset( $_GET['tve'] ) && 'true' === $_GET['tve'] ) {
 	add_filter( 'wpex_toggle_bar_active', '__return_false' );
 	add_filter( 'acf/settings/enqueue_select2', '__return_false' );
 }
@@ -194,12 +194,12 @@ function tve_compat_right_after_init() {
 			 * action => architect
 			 * post => numeric
 			 */
-			$is_espresso_page  = ! empty( $_REQUEST['page'] ) && strpos( $_REQUEST['page'], 'espresso_' ) === 0;
-			$is_architect_link = ! empty( $_REQUEST['tve'] ) && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === 'architect';
+			$is_espresso_page  = ! empty( $_REQUEST['page'] ) && strpos( $_REQUEST['page'], 'espresso_' ) === 0; //phpcs:ignore
+			$is_architect_link = ! empty( $_REQUEST['tve'] ) && ! empty( $_REQUEST['action'] ) && $_REQUEST['action'] === 'architect'; //phpcs:ignore
 			$is_post           = ! empty( $_REQUEST['post'] ) && is_numeric( $_REQUEST['post'] );
 
 			if ( $is_espresso_page && $is_architect_link && $is_post ) {
-				$GLOBALS['post'] = get_post( (int) $_REQUEST['post'] );
+				$GLOBALS['post'] = get_post( absint( $_REQUEST['post'] ) );
 				do_action( 'post_action_architect' );
 			}
 		}
@@ -219,24 +219,7 @@ add_action( 'init', 'tve_compat_right_after_init', 11 );
  * @return string
  */
 function tve_compat_content_filters_before_shortcode( $content ) {
-	/**
-	 * Digital Access Pass %% links in the content, e.g.: %%LOGIN_FORM%%
-	 */
-	if ( function_exists( 'dap_login' ) ) {
-		$content = dap_login( $content );
-	}
-
-	if ( function_exists( 'dap_personalize' ) ) {
-		$content = dap_personalize( $content );
-	}
-
-	if ( function_exists( 'dap_personalize_error' ) ) {
-		$content = dap_personalize_error( $content );
-	}
-
-	if ( function_exists( 'dap_product_links' ) ) {
-		$content = dap_product_links( $content );
-	}
+	$content = tcb_dap_shortcode_in_content( $content );
 
 	/**
 	 * s3 amazon links - they don't handle shortcodes in the "WP" way
@@ -340,9 +323,11 @@ function tve_compat_content_filters_after_shortcode( $content ) {
 
 	/* Compat with TOC Plus plugin
 	*/
-	if ( class_exists( 'toc', false ) && method_exists( 'toc', 'the_content' ) ) {
+	if ( class_exists( 'toc', false ) ) {
 		global $tic;
-		$content = $tic->the_content( $content );
+		if ( ! empty( $tic ) && method_exists( $tic, 'the_content' ) ) {
+			$content = $tic->the_content( $content );
+		}
 	}
 
 	return $content;
@@ -416,7 +401,7 @@ function tve_membership_plugin_can_display_content() {
 	/**
 	 * MemberPress plugin compatibility - hide TCB content for protected posts/pages
 	 */
-	$uri = $_SERVER['REQUEST_URI'];
+	$uri = ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( $_SERVER['REQUEST_URI'] ) : '';
 	if ( class_exists( 'MeprRule' ) && ( MeprRule::is_locked( $post ) || MeprRule::is_uri_locked( $uri ) ) ) {
 		return false;
 	}
@@ -535,7 +520,9 @@ if ( function_exists( 'pmpro_wp' ) ) {
  * Event Manager compatibility
  */
 function tve_em_remove_content_filter() {
-	if ( get_post_type() === 'event' and is_singular() ) {
+	global $EM_Event;
+
+	if ( ! empty( $EM_Event ) && get_post_type() === 'event' && is_singular() ) {
 		remove_filter( 'the_content', 'tve_editor_content', 10 );
 	}
 }
@@ -616,6 +603,33 @@ function tve_compat_plugins_loaded_hook() {
 	if ( ! empty( $sitepress ) && ! empty( $_REQUEST[ TVE_EDITOR_FLAG ] ) ) {
 		remove_action( 'init', array( $sitepress, 'js_load' ), 2 );
 	}
+}
+
+/**
+ * Digital Access Pass %% links in the content, e.g.: %%LOGIN_FORM%%
+ *
+ * @param string $content content with possible shortcodes
+ *
+ * @return string updated content
+ */
+function tcb_dap_shortcode_in_content( $content ) {
+	if ( function_exists( 'dap_login' ) ) {
+		$content = dap_login( $content );
+	}
+
+	if ( function_exists( 'dap_personalize' ) ) {
+		$content = dap_personalize( $content );
+	}
+
+	if ( function_exists( 'dap_personalize_error' ) ) {
+		$content = dap_personalize_error( $content );
+	}
+
+	if ( function_exists( 'dap_product_links' ) ) {
+		$content = dap_product_links( $content );
+	}
+
+	return $content;
 }
 
 add_action( 'plugins_loaded', 'tve_compat_plugins_loaded_hook' );
@@ -738,11 +752,21 @@ add_action( 'tcb_landing_page_template_redirect', function () {
  * Fixes compatibility with optimole that causes the Symbols not to render in the Globals dashboard
  */
 add_filter( 'optml_should_replace_page', function ( $value ) {
-	if ( TCB_Utils::is_rest() && ! empty( $_REQUEST['optimole_skip_processing'] ) ) {
+	if ( ! empty( $_REQUEST['optimole_skip_processing'] ) ) {
 		$value = true;
 	}
 
 	return $value;
+} );
+
+/**
+ * Lazyload from optimole conflicts with autoplay videos
+ */
+add_filter( 'optml_iframe_lazyload_flags', function ( $strings ) {
+	$strings [] = 'autoplay'; // disable optimole lazyload for autoplay videos
+	$strings [] = 'autopause=0'; // vimeo uses autopause instead of autoplay, because why not
+
+	return $strings;
 } );
 
 /**
@@ -780,3 +804,22 @@ add_filter( 'tve_dash_yoast_sitemap_exclude_taxonomies', static function ( $taxo
 
 	return $taxonomies;
 } );
+
+/**
+ * Replace page & post identifiers
+ *
+ */
+add_action( 'after_thrive_clone_item', static function ( $new_id, $old_id ) {
+	$css = tve_get_post_meta( $new_id, 'tve_custom_css' );
+
+	$css = str_replace( [ "page-id-$old_id", "postid-$old_id" ], [ "page-id-$new_id", "postid-$new_id" ], $css );
+
+	tve_update_post_meta( $new_id, 'tve_custom_css', $css );
+}, 10, 2 );
+
+/**
+ * Modify the page, header/footer, and template sections content so that Digital Access Pass shortcodes are rendered
+ */
+add_filter( 'thrive_template_structure', 'tcb_dap_shortcode_in_content' );
+add_filter( 'thrive_template_header_content', 'tcb_dap_shortcode_in_content' );
+add_filter( 'thrive_template_footer_content', 'tcb_dap_shortcode_in_content' );

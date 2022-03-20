@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 require_once dirname( __FILE__ ) . '/AWeber/exceptions.php';
 
 /**
@@ -144,7 +153,7 @@ class Thrive_Dash_Api_AWeber extends Thrive_Dash_Api_AWeber_Base {
 		if ( $item == 'user' ) {
 			return $this->adapter->user;
 		}
-		trigger_error( "Could not find \"{$item}\"" );
+		trigger_error( "Could not find \"{$item}\"" ); //phpcs:ignore
 	}
 
 	/**

@@ -54,13 +54,14 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 */
 	public function readCredentials() {
 
-		$key = ! empty( $_POST['connection']['key'] ) ? $_POST['connection']['key'] : '';
+		$key   = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_email( $_POST['connection']['email'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid Campaign Monitor key', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( compact( 'key', 'email' ) );
 
 		$result = $this->testConnection();
 
@@ -81,7 +82,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 
 		$r_result = true;
 		if ( ! $related_api->isConnected() ) {
-			$_POST['connection']['new_connection'] = isset( $_POST['connection']['new_connection'] ) ? $_POST['connection']['new_connection'] : 1;
+			$_POST['connection']['new_connection'] = isset( $_POST['connection']['new_connection'] ) ? sanitize_text_field( $_POST['connection']['new_connection'] ) : 1;
 
 			$r_result = $related_api->readCredentials();
 		}
@@ -109,8 +110,8 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 		$to         = '';
 
 		if ( isset( $_POST['connection']['email'] ) ) {
-			$from_email = $_POST['connection']['email'];
-			$to         = $_POST['connection']['email'];
+			$from_email = sanitize_email( $_POST['connection']['email'] );
+			$to         = sanitize_email( $_POST['connection']['email'] );
 		} else {
 			$credentials = Thrive_Dash_List_Manager::credentials( 'campaignmonitoremail' );
 			if ( isset( $credentials ) ) {

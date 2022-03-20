@@ -15,7 +15,7 @@ $time_settings = tve_get_time_settings();
 
 <div id="tve-countdown_old-component" class="tve-component" data-view="CountdownOld">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -25,7 +25,7 @@ $time_settings = tve_get_time_settings();
 		<div class="custom-fields-state" data-state="static">
 			<div class="tve-control" data-view="EndDate"></div>
 			<div class="control-grid">
-				<div class="label"><?php echo __( 'Time', 'thrive-cb' ); ?></div>
+				<div class="label"><?php echo esc_html__( 'Time', 'thrive-cb' ); ?></div>
 				<div class="input flex space-between">
 					<div class="tve-control" data-view="Hour"></div>
 					<div class="tve-control" data-view="Minute"></div>
@@ -33,7 +33,7 @@ $time_settings = tve_get_time_settings();
 			</div>
 		</div>
 		<div class="control-grid">
-			<span class="info-text grey-text fill mt-0"><?php echo __( 'Timezone', 'thrive-cb' ); ?> UTC <?php echo $time_settings['tzd']; ?></span>
+			<span class="info-text grey-text fill mt-0"><?php echo esc_html__( 'Timezone', 'thrive-cb' ); ?> UTC <?php echo esc_html( $time_settings['tzd'] ); ?></span>
 		</div>
 		<div class="tve-control fill" data-view="CompleteText"></div>
 	</div>

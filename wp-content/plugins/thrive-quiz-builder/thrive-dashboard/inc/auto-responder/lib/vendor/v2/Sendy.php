@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 require_once dirname( dirname( __FILE__ ) ) . '/Sendy/Exception.php';
 
 class Thrive_Dash_Api_Sendy {

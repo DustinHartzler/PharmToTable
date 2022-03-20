@@ -53,6 +53,8 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 	public function hide() {
 		$blacklisted_post_types = TCB_Utils::get_banned_post_types();
 
+		$blacklisted_post_types = array_diff( $blacklisted_post_types, array( 'tcb_symbol' ) );
+
 		$hide = in_array( get_post_type( get_the_ID() ), $blacklisted_post_types );
 
 		return apply_filters( 'tcb_hide_post_list_element', $hide );

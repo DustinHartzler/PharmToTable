@@ -12,8 +12,8 @@
 			<?php tcb_icon( 'mobile-light' ); ?>
 		</a>
 		<?php if ( tcb_editor()->has_preview_button() ) : ?>
-			<a href="<?php echo tcb_get_preview_url(); ?>" target="_blank" class="preview-content tvd-fixed-right" data-width="fluid" data-tooltip="<?php echo __( 'Preview Saved Version', 'thrive-cb' ); ?>" data-side="top">
-				<span><?php echo __( 'Preview', 'thrive-cb' ); ?></span>
+			<a href="<?php echo esc_url( tcb_get_preview_url() ); ?>" target="_blank" class="preview-content tvd-fixed-right" data-width="fluid" data-tooltip="<?php echo esc_attr__( 'Preview Saved Version', 'thrive-cb' ); ?>" data-side="top">
+				<span><?php echo esc_html__( 'Preview', 'thrive-cb' ); ?></span>
 			</a>
 		<?php endif; ?>
 	</div>

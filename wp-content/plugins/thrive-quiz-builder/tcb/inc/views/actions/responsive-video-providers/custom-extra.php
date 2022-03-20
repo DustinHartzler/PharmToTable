@@ -5,6 +5,8 @@ $settings = array(
 		'checked_val'   => 1,
 		'unchecked_val' => 0,
 		'label'         => __( 'Autoplay', 'thrive-cb' ),
+		'info'          => true,
+		'info_fn'       => 'openTooltip',
 	),
 	array(
 		'setting'            => 'controls',
@@ -24,7 +26,7 @@ $settings = array(
 		'setting'       => 'no-download',
 		'checked_val'   => 0,
 		'unchecked_val' => 1,
-		'label'         => __( 'Allow Users to Download', 'thrive-cb' ),
+		'label'         => __( 'Allow users to download', 'thrive-cb' ),
 	),
 );
 

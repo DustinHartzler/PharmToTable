@@ -2,6 +2,16 @@
 
 namespace Mailgun\Messages;
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+
 use Mailgun\Constants\Api;
 use Mailgun\Constants\Thrive_Dash_Api_Mailgun_ExceptionMessages;
 use Mailgun\Messages\Exceptions\TooManyParameters;

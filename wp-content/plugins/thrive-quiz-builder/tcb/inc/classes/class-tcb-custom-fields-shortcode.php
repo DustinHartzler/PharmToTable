@@ -88,13 +88,14 @@ class TCB_Custom_Fields_Shortcode {
 		'rank_math_',           //Rank Math SEO metadata
 		'pb_original_content',  //PageBuilder meta content breaks editor localization
 		'export_id', //symbols post meta
+		'aFhfc_' //hurrytime plugin saves some css as metadata and will break CF functionality
 	);
 
 	private $video_regex = array(
 		'/https?:\/\/(.+)\.(cdn\.(vooplayer|spotlightr)\.com)\/(publish|watch)\/(.+)/'                                                          => 'vooplayer',
 		'/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/'                => 'youtube',
 		'/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|list\/|playlist\?list=|playlist\?.+&list=))((\w|-){18})(?:\S+)?$/' => 'youtube',
-		'/(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|)(\d+)(?:|\/\?)/'                             => 'vimeo',
+		'/(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|)(\d+)(?:|\/\?)\/?([a-zA-Z0-9]+)?/'           => 'vimeo',
 		'/https?:\/\/(.+)?(wistia.com|wi.st)\/(?:medias|embed)\/(.+)/'                                                                          => 'wistia',
 		'/https?:\/\/(.+)?fast.wistia.net\/embed\/(.+?)\/(.+)/'                                                                                 => 'wistia',
 	);
@@ -482,14 +483,15 @@ class TCB_Custom_Fields_Shortcode {
 				'latitude'  => 0,
 				'longitude' => 0,
 				'zoom'      => 0,
+				'hidden'    => '',
 			);
 
 			if ( isset( $args['data-placeholder'] ) && is_string( $args['data-placeholder'] ) && preg_match( '/(-?[0-9]+\.[0-9]+),(-?[0-9]+\.[0-9]+)/', $args['data-placeholder'], $match ) ) {
-				$params = array(
+				$params = array_merge( $params, array(
 					'latitude'  => $match[1],
 					'longitude' => $match[2],
 					'zoom'      => isset( $args['zoom'] ) ? $args['zoom'] : 0,
-				);
+				) );
 			} else {
 				$params['hidden'] = 'data-c-f-hidden=1 ';
 			}
@@ -536,29 +538,59 @@ class TCB_Custom_Fields_Shortcode {
 	}
 
 	private function get_video_params( $args, $params, $set_source = false ) {
-		$params['value']    = empty( $params['value'] ) ? '' : $params['value'];
-		$params['video_id'] = $this->verify_video_url( $params['value'], true );
-		$args['data-type']  = $set_source ? $params['video_id'] : $args['data-type'];
-
+		$params['value']   = empty( $params['value'] ) ? '' : $params['value'];
+		$matches           = $this->verify_video_url( $params['value'], true );
+		$args['data-type'] = $set_source ? $matches : $args['data-type'];
 		switch ( $args['data-type'] ) {
 			case 'youtube':
-				$params['video_id']    = empty( $params['video_id'] ) ? '' : $params['video_id'][1];
-				$params['embeded_url'] = 'https://www.youtube.com/embed/' . $params['video_id'] . $args['data-query'];
+				$params['video_id'] = empty( $matches ) ? '' : $matches[1];
+				//we need something custom for the youtube video used as background from a custom field
+				if ( ! empty( $args['data-is-video-background'] ) ) {
+					$parsed_query       = [];
+					$args['data-query'] = 'autoplay=1&mute=1&loop=1&controls=0&playsinline=1';
+					parse_str( $args['data-query'], $parsed_query );
+
+					//we must make sure the playlist and the video id are the same (without a playlist the video won't loop thanks youtube)
+					if ( empty( $parsed_query['amp;playlist'] ) ) {
+						$parsed_query['playlist'] = $params['video_id'];
+					} else {
+						$parsed_query['amp;playlist'] = $params['video_id'];
+					}
+					$args['data-query'] = urldecode( http_build_query( $parsed_query, '', '&' ) );
+				}
+				$domain = 'youtube';
+				if ( ! empty( $args['data-cookie'] ) && $args['data-cookie'] === '1' ) {
+					$domain = 'youtube-nocookie';
+				}
+
+				$params['embeded_url'] = 'https://www.' . $domain . '.com/embed/' . $params['video_id'] . '?' . $args['data-query'];
 				break;
 			case 'vimeo':
-				$params['video_id']    = empty( $params['video_id'] ) ? '' : $params['video_id'][4];
-				$params['embeded_url'] = 'https://player.vimeo.com/video/' . $params['video_id'] . $args['data-query'];
+				if ( ! empty( $args['data-is-video-background'] ) ) {
+					$args['data-query'] = '?loop=1&autoplay=1&background=1&muted=1&autopause=0';
+				}
+				$params['video_hash']  = empty( $matches[5] ) ? '' : $matches[5];
+				$params['video_id']    = empty( $matches ) ? '' : $matches[4];
+				$params['embeded_url'] = 'https://player.vimeo.com/video/' . $params['video_id'];
+				if ( $params['video_hash'] !== '' ) {
+					$params['embeded_url'] = $params['embeded_url'] . '?h='
+					                         . $params['video_hash'] . '&'
+					                         . substr( $args['data-query'], 1, strlen( $args['data-query'] ) - 1 );
+				} else {
+					$params['embeded_url'] = $params['embeded_url'] . $args['data-query'];
+				}
+
 				break;
 			case 'wistia':
-				$params['video_id']    = empty( $params['video_id'] ) ? '' : $params['video_id'][ count( $params['video_id'] ) - 1 ];
-				$params['embeded_url'] = 'https://fast.wistia.net/embed/iframe/' . $params['video_id'] . $args['data-query'];
+				$params['video_id']    = empty( $matches ) ? '' : $matches[ count( $matches ) - 1 ];
+				$params['embeded_url'] = 'https://fast.wistia.net/embed/iframe/' . $params['video_id'];
 				break;
 			case 'vooplayer':
 				/**
 				 * 3 was never working it should have been 4 in order to  match the video id
 				 * changed to 5 since the links can be watch|publish  so the regex match is changed
 				 */
-				$params['video_id'] = empty( $params['video_id'] ) ? '' : $params['video_id'][5];
+				$params['video_id'] = empty( $matches ) ? '' : $matches[5];
 				break;
 		}
 
@@ -566,7 +598,6 @@ class TCB_Custom_Fields_Shortcode {
 	}
 
 	public function render_custom_fields_video( $args = array(), $param = null ) {
-
 		$params = empty( $args['in_postlist'] ) ? $this->get_custom_fields_shortcode_params( $args['data-id'], 'video' ) : $param;
 		if ( ! empty( $params ) ) {
 			if ( empty( $params['extra'] ) ) {
@@ -579,14 +610,16 @@ class TCB_Custom_Fields_Shortcode {
 			$params['extra'] .= empty( $args['in_postlist'] ) ? '' : ' data-post-list="1" ';
 			$params['extra'] .= empty( $args['data-query'] ) ? '' : $args['data-query'];
 		}
+
 		/** Set placeholder data  for (empty links) and (videos with diff source in postlist)*/
 		if ( empty( $params ) || ( ! empty( $args['data-type'] ) && $video_provider['video_src'] !== $args['data-type'] && ! empty( $args['in_postlist'] ) ) ) {
 			$params                      = array_merge( $params, array(
-				'mime_type' => 'video/mp4',
-				'id'        => '0',
-				'title'     => 'Placeholder',
-				'url'       => '',
-				'name'      => $args['data-id'],
+				'mime_type'           => 'video/mp4',
+				'id'                  => '0',
+				'title'               => 'Placeholder',
+				'data-is-placeholder' => 1,             //flag needed when we save the page and the background displayed is the placeholder
+				'url'                 => '',
+				'name'                => $args['data-id'],
 			) );
 			$video_provider['video_src'] = 'external';
 			if ( isset( $args['data-placeholder'] ) ) {
@@ -607,19 +640,64 @@ class TCB_Custom_Fields_Shortcode {
 			}
 		}
 
-		$template = tcb_template( 'custom-fields-elements/video.phtml', $params, true );
+		$template = empty( $args['data-is-video-background'] ) ?
+			tcb_template( 'custom-fields-elements/video.phtml', $params, true ) :
+			tcb_template( 'custom-fields-elements/video-background.phtml', $params, true );
 
 		$args['data-type'] = empty( $args['data-type'] ) ? 'external' : $video_provider['video_src'];
 		switch ( $args['data-type'] ) {
 			case 'youtube':
 			case 'vimeo':
-			case 'wistia':
 				$params   = $this->get_video_params( $args, $params );
-				$template = '<iframe class="tcb-responsive-video" data-code="' . $params['video_id'] . '" data-provider="' . $args['data-type'] . '" src="' . $params['embeded_url'] . '" data-src="' . $params['embeded_url'] . '" frameborder="0" allowfullscreen data-c-f-id="' . $args['data-id'] . '"' . $params['extra'] . '"></iframe>';
+				$template = empty( $args['data-is-video-background'] ) ?
+					$this->get_video_template( 'tcb-responsive-video', $params, $args ) :
+					$this->get_video_template( 'dynamic-source', $params, $args );
+				break;
+			case 'wistia':
+				$params = $this->get_video_params( $args, $params );
+				if ( empty( $args['data-is-video-background'] ) ) {
+					$template = $this->get_video_template( 'tcb-responsive-video', $params, $args );
+				} else {
+					$template = TCB_Utils::wrap_content( '<script src="//fast.wistia.com/embed/medias/' . $params['video_id'] . '.jsonp" async></script>' .
+					                                     '<script src="//fast.wistia.com/assets/external/E-v1.js" async></script>',
+						'div',
+						'',
+						'wistia_embed dynamic-source wmode=transparent playButton=false autoPlay=1 controlsVisibleOnLoad=0 fullscreenButton=0 volume=0 wistia_async_' . $params['video_id'],
+						array(
+							'data-id'     => $params['video_id'],
+							'data-c-f-id' => $args['data-id'],
+							'style'       => 'width: 100%;height: 100%',
+						) );
+				}
 				break;
 			case 'vooplayer':
 				$params   = $this->get_video_params( $args, $params );
-				$template = '<iframe allow="autoplay" data-code="' . $params['video_id'] . '" data-provider="' . $args['data-type'] . '" class="video-player-container vooplayer tcb-responsive-video" data-playerId="' . $params['video_id'] . '" url-params="" allowtransparency="true"  name="vooplayerframe" frameborder="0" allowfullscreen="true" scrolling="no" style="max-width: 100%; position:relative; opacity: 1; min-width: 100%; height:100% !important; width: auto; top: auto;" data-c-f-id="' . $args['data-id'] . '"' . $params['extra'] . '"></iframe>';
+				$template = '<iframe allow="autoplay" data-code="' . $params['video_id'] .
+				            '" data-provider="' . $args['data-type'] .
+				            '" class="video-player-container vooplayer tcb-responsive-video" data-playerId="' . $params['video_id'] .
+				            '" url-params="" allowtransparency="true"  name="vooplayerframe" frameborder="0" allowfullscreen="true" scrolling="no" style="max-width: 100%; position:relative; opacity: 1; min-width: 100%; height:100% !important; width: auto; top: auto;" data-c-f-id="' . $args['data-id'] .
+				            '" ' . $params['extra'] . ' "></iframe>';
+				break;
+			case 'external':
+				if ( ! empty( $args['data-is-video-background'] ) ) {
+					if ( empty( $params['data-is-placeholder'] ) ) {
+						$params['data-is-placeholder'] = 0;
+					}
+					$template = TCB_Utils::wrap_content( '<source src="' . $params['url'] . '" type="' . $params['mime_type'] . '">',
+						'video',
+						'',
+						'tcb-bg-video dynamic-source',
+						array(
+							'playsinline'         => '',
+							'autoplay'            => '',
+							'muted'               => '',
+							'loop'                => '',
+							'data-is-placeholder' => $params['data-is-placeholder'],
+							'data-id'             => $params['name'],
+							'data-c-f-id'         => $params['name'],
+							'data-title'          => $params['title'],
+						) );
+				}
 				break;
 		}
 
@@ -715,7 +793,7 @@ class TCB_Custom_Fields_Shortcode {
 			$dynamic_acf_key => 1,
 			'id'             => $args['data-id'],
 			'fallback'       => urldecode( $args['data-placeholder'] ),
-		), empty( $params['url'] )? '' : $params['url'] );
+		), empty( $params['url'] ) ? '' : $params['url'] );
 	}
 
 	public function render_custom_fields_countdown( $args = array(), $param = null ) {
@@ -805,6 +883,23 @@ class TCB_Custom_Fields_Shortcode {
 
 
 		return htmlspecialchars( wp_json_encode( $return ), ENT_QUOTES );
+	}
+
+	public function get_video_template( $class, $params, $args ) {
+		return TCB_Utils::wrap_content( '',
+			'iframe',
+			'',
+			$class,
+			array(
+				'data-code'       => $params['video_id'],
+				'data-provider'   => $args['data-type'],
+				'src'             => $params['embeded_url'],
+				'data-src'        => $params['embeded_url'],
+				'frameborder'     => '0',
+				'allowfullscreen' => null,
+				'data-c-f-id'     => $args['data-id'],
+				$params['extra']  => null,
+			) );
 	}
 
 	/**

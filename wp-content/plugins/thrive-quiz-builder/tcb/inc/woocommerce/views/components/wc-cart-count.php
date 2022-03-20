@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-wc-cart-count-component" class="tve-component" data-view="CartCount">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Cart Items Count', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Cart Items Count', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: thrive-image-editor 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-29 15:05+0300\n"
+"POT-Creation-Date: 2022-03-09 09:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,49 +17,48 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: includes/classes/class-tie-ajax-controller.php:83
+#: includes/classes/class-tie-ajax-controller.php:89
 #, php-format
 msgid "Method %s not implemented"
 msgstr ""
 
-#: includes/classes/class-tie-ajax-controller.php:99
+#: includes/classes/class-tie-ajax-controller.php:105
 msgid "Image Post could not be saved"
 msgstr ""
 
-#: includes/classes/class-tie-ajax-controller.php:112
+#: includes/classes/class-tie-ajax-controller.php:118
 msgid "Invalid parameter"
 msgstr ""
 
-#: includes/classes/class-tie-ajax-controller.php:123
+#: includes/classes/class-tie-ajax-controller.php:129
 msgid "Image Post could not be deleted"
 msgstr ""
 
-#: includes/classes/class-tie-ajax-controller.php:130
+#: includes/classes/class-tie-ajax-controller.php:136
 msgid "Bad request"
 msgstr ""
 
-#: includes/classes/class-tie-ajax.php:46
+#: includes/classes/class-tie-ajax.php:64
 msgid "Badge content empty"
 msgstr ""
 
-#: includes/classes/class-tie-ajax.php:56
+#: includes/classes/class-tie-ajax.php:74
 msgid "Badge could not be saved"
 msgstr ""
 
-#: includes/classes/class-tie-ajax.php:61
+#: includes/classes/class-tie-ajax.php:79
 msgid "Badge saved"
 msgstr ""
 
-#: includes/classes/class-tie-ajax.php:96
+#: includes/classes/class-tie-ajax.php:118
 msgid "All changes saved!"
 msgstr ""
 
-#: includes/classes/class-tie-ajax.php:101
+#: includes/classes/class-tie-ajax.php:123
 msgid "Changes could not be saved!"
 msgstr ""
 
 #: includes/classes/class-tie-editor.php:163
-#: includes/templates/control-panel.php:117
 msgid "Copy"
 msgstr ""
 
@@ -68,7 +67,6 @@ msgid "Saving..."
 msgstr ""
 
 #: includes/classes/class-tie-editor.php:165
-#: includes/templates/control-panel.php:140
 msgid "Your changes are auto-saved"
 msgstr ""
 
@@ -240,70 +238,6 @@ msgstr ""
 
 #: includes/layouts/editor.php:416
 msgid "Line height"
-msgstr ""
-
-#: includes/templates/control-panel.php:24
-msgid "Simple Content Elements"
-msgstr ""
-
-#: includes/templates/control-panel.php:29
-msgid "Paragraph/Text"
-msgstr ""
-
-#: includes/templates/control-panel.php:33
-msgid "Canvas Properties"
-msgstr ""
-
-#: includes/templates/control-panel.php:36
-msgid "Color Overlay"
-msgstr ""
-
-#: includes/templates/control-panel.php:40
-msgid "Color"
-msgstr ""
-
-#: includes/templates/control-panel.php:49
-msgid "Opacity"
-msgstr ""
-
-#: includes/templates/control-panel.php:65
-msgid "Background Image"
-msgstr ""
-
-#: includes/templates/control-panel.php:72
-msgid "Size & Position"
-msgstr ""
-
-#: includes/templates/control-panel.php:85
-msgid "none"
-msgstr ""
-
-#: includes/templates/control-panel.php:93
-msgid "Canvas Size"
-msgstr ""
-
-#: includes/templates/control-panel.php:98
-msgid "Set Custom Dimensions"
-msgstr ""
-
-#: includes/templates/control-panel.php:101
-msgid "Use default size"
-msgstr ""
-
-#: includes/templates/control-panel.php:106
-msgid "Dynamic result"
-msgstr ""
-
-#: includes/templates/control-panel.php:129
-msgid "Save and generate the image."
-msgstr ""
-
-#: includes/templates/control-panel.php:130
-msgid "Save & Exit"
-msgstr ""
-
-#: includes/templates/control-panel.php:135
-msgid "Preview"
 msgstr ""
 
 #: includes/templates/images/a-blank/_config.php:19

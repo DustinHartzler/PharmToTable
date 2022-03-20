@@ -5,18 +5,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 $style_templates = tqb()->get_tcb_social_share_badge_templates();
 ?>
 
-<h2 class="tcb-modal-title"><?php echo __( 'Social share badge template', Thrive_Quiz_Builder::T ); ?></h2>
-<div class="margin-top-20">
-	<?php echo __( 'Select the display template for the social share badge.', Thrive_Quiz_Builder::T ) ?>
+<span class="tcb-modal-title ml-0 mt-0"><?php echo esc_html__( 'Social share badge template', Thrive_Quiz_Builder::T ); ?></span>
+<div class="tcb-modal-description mb-10">
+	<?php echo esc_html__( 'Select the display template for the social share badge.', Thrive_Quiz_Builder::T ) ?>
 </div>
 <div class="tve-templates-wrapper">
 	<div class="tve-default-templates-list expanded-set">
 		<?php foreach ( $style_templates as $key => $template ) : ?>
 			<div class="tve-template-item">
-				<div class="template-wrapper click" data-fn="select_template" data-key="<?php echo $template['file']; ?>">
+				<div class="template-wrapper click" data-fn="select_template" data-key="<?php echo esc_attr( $template['file'] ); ?>">
 					<div class="template-thumbnail" style="background-image: url('<?php echo $template['image']; ?>')"></div>
 					<div class="template-name">
-						<?php echo $template['name']; ?>
+						<?php echo esc_html( $template['name'] ); ?>
 					</div>
 					<div class="selected"></div>
 				</div>
@@ -24,10 +24,8 @@ $style_templates = tqb()->get_tcb_social_share_badge_templates();
 		<?php endforeach; ?>
 	</div>
 </div>
-<div class="tcb-modal-footer clearfix padding-top-20 row end-xs">
-	<div class="col col-xs-12">
-		<button type="button" class="tcb-right tve-button medium green click" data-fn="choose_template">
-			<?php echo __( 'Choose Template', Thrive_Quiz_Builder::T ) ?>
-		</button>
-	</div>
+<div class="tcb-modal-footer flex-end pr-0">
+	<button type="button" class="tcb-right tve-button medium white-text green click" data-fn="choose_template">
+		<?php echo esc_html__( 'Choose Template', Thrive_Quiz_Builder::T ) ?>
+	</button>
 </div>

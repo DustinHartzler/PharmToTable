@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-mini-cart-component" class="tve-component" data-view="MiniCart">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Mini Cart Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Mini Cart Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
 		<div class="center-xs col-xs-12 mb-10 hide-states">
 			<button class="tve-button orange mini-cart-edit-mode click" data-fn="enterEditMode">
-				<?php echo __( 'Edit Design', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Edit Design', 'thrive-cb' ); ?>
 			</button>
 		</div>
 		<hr class="mini-cart-edit-mode">

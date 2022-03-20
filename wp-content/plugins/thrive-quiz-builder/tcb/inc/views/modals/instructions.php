@@ -9,10 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 ?>
-<div class="tcb-modal-header">
+<div class="tcb-modal-tabs">
 	<span class="tcb-new-tab click" data-fn="openIntercomArticle">
 		<?php tcb_icon( 'external-link-regular' ); ?>
-		<?php echo __( 'Open in new tab', 'thrive-cb' ) ?>
+		<?php echo esc_html__( 'Open in new tab', 'thrive-cb' ) ?>
 	</span>
 </div>
 <div class="tve-modal-content">
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<iframe></iframe>
 	</div>
 	<div class="tcb-article-instructions">
-		<h1 class="tcb-article-title"></h1>
+		<h1 class="tcb-article-title mt-0"></h1>
 		<div class="tcb-article-content"></div>
 	</div>
 </div>

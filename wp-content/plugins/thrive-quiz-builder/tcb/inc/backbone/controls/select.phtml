@@ -1,4 +1,4 @@
-<div class="control-grid<#=this.get_extra_class()#>">
+<div class="control-grid<#=this.getExtraClass()#>">
 	<div class="label"><#= this.get_config( 'name' ) || this.get_config('label') || this.el.dataset.name #>
 		<# if ( this.model.config.info ) { #>
 		<span class="click tve-select-info" data-fn="openTooltip" <#=this.model.config.info_hover ? 'data-paneltlt-hover' : ''#> ><?php tcb_icon( 'info-circle-solid' ); ?></span>

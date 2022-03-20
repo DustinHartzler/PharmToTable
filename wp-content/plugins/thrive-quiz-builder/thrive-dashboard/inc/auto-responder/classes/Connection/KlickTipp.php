@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -91,8 +100,8 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 	 * @return mixed
 	 */
 	public function readCredentials() {
-		$user     = ! empty( $_POST['connection']['kt_user'] ) ? $_POST['connection']['kt_user'] : '';
-		$password = ! empty( $_POST['connection']['kt_password'] ) ? $_POST['connection']['kt_password'] : '';
+		$user     = ! empty( $_POST['connection']['kt_user'] ) ? sanitize_text_field( $_POST['connection']['kt_user'] ) : '';
+		$password = ! empty( $_POST['connection']['kt_password'] ) ? sanitize_text_field( $_POST['connection']['kt_password'] ) : '';
 
 		if ( empty( $user ) || empty( $password ) ) {
 			return $this->error( __( 'Email and password are required', TVE_DASH_TRANSLATE_DOMAIN ) );
@@ -305,5 +314,13 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 	 */
 	public static function getEmailMergeTag() {
 		return '%Subscriber:EmailAddress%';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list', 'tag_select' );
+	}
+
+	public function get_automator_autoresponder_tag_fields() {
+		return array( 'tag_select' );
 	}
 }

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-tqb_progress_bar-component" class="tve-component" data-view="progressBar">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-quiz-builder' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-quiz-builder' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="ProgressBarType"></div>
 		<div class="tve-progress-bar-label">
 				<span>
-					<?php echo __( 'Progress bar Label', Thrive_Quiz_Builder::T ); ?>
+					<?php echo esc_html__( 'Progress bar Label', Thrive_Quiz_Builder::T ); ?>
 				</span>
 			<div class="mt-10">
 				<input type="text" class="change" data-fn="changePgLabel" value=""/>

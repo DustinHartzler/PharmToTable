@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Ovidiu
@@ -16,7 +17,13 @@ class TQB_Request_Handler {
 	 * @return mixed
 	 */
 	protected function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		if ( isset( $_POST[ $key ] ) ) {
+			$value = $_POST[ $key ]; //phpcs:ignore
+		} else {
+			$value = isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default; //phpcs:ignore
+		}
+
+		return map_deep( $value, 'sanitize_text_field' );
 	}
 
 	/**
@@ -28,7 +35,7 @@ class TQB_Request_Handler {
 	public function api( $action ) {
 		$method = 'api_' . $action;
 
-		$result = call_user_func( array( $this, $method ) );
+		$result = call_user_func( [ $this, $method ] );
 
 		wp_send_json( $result );
 	}

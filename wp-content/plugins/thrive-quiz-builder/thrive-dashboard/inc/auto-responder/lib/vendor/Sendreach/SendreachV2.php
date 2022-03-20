@@ -39,7 +39,7 @@ class Thrive_Dash_Api_SendreachV2 {
 			'first_name' => $first_name,
 			'last_name'  => $last_name,
 			'email'      => $email,
-			'client_ip'  => $_SERVER['REMOTE_ADDR'],
+			'client_ip'  => ! empty( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '',
 		);
 
 		$this->_send( $params );

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="action-group">
 		<div class="dropdown-header" data-prop="docked">
 			<div class="group-description">
-				<?php echo __( 'Thrive Lightbox options', 'thrive-cb' ); ?>
+				<?php echo esc_html__( 'Thrive Lightbox options', 'thrive-cb' ); ?>
 			</div>
 			<i></i>
 		</div>

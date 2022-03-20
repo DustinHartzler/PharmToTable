@@ -5,7 +5,7 @@ $config = array(
 	'required' => 'Please fill in the required fields',
 )
 ?>
-<div data-css="tve-u-16d3eaaa219" class="thrv_wrapper tve-tqb-page-type tqb-result-template-2 tve_editor_main_content" style="<?php echo $main_content_style; ?>">
+<div data-css="tve-u-16d3eaaa219" class="thrv_wrapper tve-tqb-page-type tqb-result-template-2 tve_editor_main_content" style="<?php echo esc_attr( $main_content_style ); ?>">
 	<div class="thrv_wrapper thrv_contentbox_shortcode thrv-content-box tve-draggable tve-droppable" data-css="tve-u-15d9cfa5375">
 		<div class="tve-content-box-background" data-css="tve-u-15d9cf56168"></div>
 		<div class="tve-cb tve_empty_dropzone">

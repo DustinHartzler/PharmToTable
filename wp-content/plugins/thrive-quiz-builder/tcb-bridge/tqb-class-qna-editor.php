@@ -38,7 +38,7 @@ class TQB_QNA_Editor {
 	 */
 	public static function maybe_redirect() {
 
-		$post = get_post( isset( $_REQUEST['post'] ) ? $_REQUEST['post'] : 0 );
+		$post = get_post( isset( $_REQUEST['post'] ) ? absint( $_REQUEST['post'] ) : 0 );
 
 		if ( true !== $post instanceof WP_Post ) {
 			return;
@@ -48,6 +48,7 @@ class TQB_QNA_Editor {
 
 		if ( self::is_editable( $post->post_type ) && ! in_array( (int) $quiz_style, self::get_editable_styles() ) ) {
 			wp_redirect( admin_url( 'admin.php?page=tqb_admin_dashboard' ) );
+			exit();
 		}
 	}
 

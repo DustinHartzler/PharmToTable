@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * Class Thrive_Dash_Api_Mailchimp
  */
 class Thrive_Dash_Api_Mailchimp {
@@ -31,7 +40,7 @@ class Thrive_Dash_Api_Mailchimp {
 	 * Thrive_Dash_Api_Mailchimp constructor.
 	 *
 	 * @param string $apikey
-	 * @param array  $clientOptions
+	 * @param array $clientOptions
 	 *
 	 * @throws Thrive_Dash_Api_Mailchimp_Exception
 	 */
@@ -47,9 +56,9 @@ class Thrive_Dash_Api_Mailchimp {
 
 	/**
 	 * @param        $resource
-	 * @param array  $arguments
+	 * @param array $arguments
 	 * @param string $method
-	 * @param bool   $no_body
+	 * @param bool $no_body
 	 *
 	 * @return mixed
 	 * @throws Thrive_Dash_Api_Mailchimp_Exception
@@ -66,8 +75,8 @@ class Thrive_Dash_Api_Mailchimp {
 	 * Enable proxy if needed.
 	 *
 	 * @param string $host
-	 * @param int    $port
-	 * @param bool   $ssl
+	 * @param int $port
+	 * @param bool $ssl
 	 * @param string $username
 	 * @param string $password
 	 *
@@ -134,11 +143,17 @@ class Thrive_Dash_Api_Mailchimp {
 
 		$options      = $this->getOptions( $method, $arguments );
 		$query_string = '';
+		$body         = array();
 		switch ( $method ) {
 			case 'get':
 				$fn           = 'tve_dash_api_remote_get';
 				$body         = isset( $options['query'] ) ? $options['query'] : '';
 				$query_string = isset( $options['query'] ) ? '?' . http_build_query( $options['query'] ) : '';
+				break;
+			case 'delete':
+				$method  = 'DELETE';
+				$fn      = 'tve_dash_api_remote_request';
+				$no_body = true;
 				break;
 			default:
 				$fn                                 = 'tve_dash_api_remote_post';
@@ -156,7 +171,7 @@ class Thrive_Dash_Api_Mailchimp {
 		);
 
 		// Mailchimp returns 404 sometimes on GET requests with body params
-		if ( strtolower( $method ) === 'get' && $no_body ) {
+		if ( in_array( strtolower( $method ), array( 'get', 'delete' ) ) && $no_body ) {
 			unset( $args['body'] );
 		}
 
@@ -170,7 +185,8 @@ class Thrive_Dash_Api_Mailchimp {
 		$response_code    = $response['response']['code'];
 		$response_message = $this->get_error_message( $response );
 
-		if ( $response_code != 200 ) {
+
+		if ( $response_code >= 300 ) {
 			throw new Thrive_Dash_Api_Mailchimp_Exception( $response_message );
 		}
 
@@ -181,7 +197,7 @@ class Thrive_Dash_Api_Mailchimp {
 
 	/**
 	 * @param string $method
-	 * @param array  $arguments
+	 * @param array $arguments
 	 *
 	 * @return array
 	 */

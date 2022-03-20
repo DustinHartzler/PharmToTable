@@ -2,6 +2,16 @@
 
 namespace Mailgun\Lists;
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+
 use Mailgun\Messages\Exceptions\InvalidParameter;
 use Mailgun\Messages\Exceptions\TooManyParameters;
 use Mailgun\Messages\Expcetions\InvalidParameterType;

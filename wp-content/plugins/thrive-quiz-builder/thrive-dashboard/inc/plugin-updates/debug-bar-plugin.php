@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
 if ( ! class_exists( 'PucDebugBarPlugin' ) ) {
 
 	class PucDebugBarPlugin {
@@ -55,14 +64,14 @@ if ( ! class_exists( 'PucDebugBarPlugin' ) ) {
 		 * the update checking process works as expected.
 		 */
 		public function ajaxCheckNow() {
-			if ( $_POST['slug'] !== $this->updateChecker->slug ) {
+			if ( empty( $_POST['slug'] ) || sanitize_text_field( $_POST['slug'] ) !== $this->updateChecker->slug ) {
 				return;
 			}
 			$this->preAjaxReqest();
 			$update = $this->updateChecker->checkForUpdates();
 			if ( $update !== null ) {
 				echo "An update is available:";
-				echo '<pre>', htmlentities( print_r( $update, true ) ), '</pre>';
+				echo '<pre>', htmlentities( print_r( $update, true ) ), '</pre>'; // phpcs:ignore
 			} else {
 				echo 'No updates found.';
 			}
@@ -73,14 +82,14 @@ if ( ! class_exists( 'PucDebugBarPlugin' ) ) {
 		 * Request plugin info and output it.
 		 */
 		public function ajaxRequestInfo() {
-			if ( $_POST['slug'] !== $this->updateChecker->slug ) {
+			if ( empty( $_POST['slug'] ) || sanitize_text_field( $_POST['slug'] ) !== $this->updateChecker->slug ) {
 				return;
 			}
 			$this->preAjaxReqest();
 			$info = $this->updateChecker->requestInfo();
 			if ( $info !== null ) {
 				echo 'Successfully retrieved plugin info from the metadata URL:';
-				echo '<pre>', htmlentities( print_r( $info, true ) ), '</pre>';
+				echo '<pre>', htmlentities( print_r( $info, true ) ), '</pre>'; // phpcs:ignore
 			} else {
 				echo 'Failed to retrieve plugin info from the metadata URL.';
 			}

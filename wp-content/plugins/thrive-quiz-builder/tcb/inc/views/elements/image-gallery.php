@@ -13,6 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="thrv_wrapper tcb-image-gallery tcb-elem-placeholder tcb-gallery-placeholder">
 	<span class="tcb-inline-placeholder-action with-icon">
 		<?php tcb_icon( 'images', false, 'editor' ); ?>
-		<span class="tcb-placeholder-text"><?php echo __( '+ Select images', 'thrive-cb' ); ?></span>
+		<span class="tcb-placeholder-text"><?php echo esc_html__( '+ Select images', 'thrive-cb' ); ?></span>
 	</span>
 </div>

@@ -12,7 +12,7 @@ class TCB_Login_Element_Handler {
 	}
 
 	public function hooks() {
-		if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		if ( wp_doing_ajax() ) {
 			add_action( 'wp_ajax_nopriv_tve_login_submit', array( $this, 'submit' ) );
 			add_action( 'wp_ajax_tve_login_submit', array( $this, 'submit' ) );
 		}
@@ -69,7 +69,7 @@ class TCB_Login_Element_Handler {
 	 */
 	public function action_login( $data, $json_output = true ) {
 		$args['user_login']    = isset( $data['username'] ) ? sanitize_text_field( $data['username'] ) : '';
-		$args['user_password'] = isset( $data['password'] ) ? sanitize_text_field( $data['password'] ) : '';
+		$args['user_password'] = isset( $data['password'] ) ? $data['password'] : '';
 		$args['remember']      = ! empty( $data['remember_me'] );
 
 		/**
@@ -104,70 +104,19 @@ class TCB_Login_Element_Handler {
 	 * @param array $data
 	 */
 	public function action_recover_password( $data ) {
-		$data['success'] = false;
-		$data['errors']  = array();
+		$response   = array(
+			'success' => true,
+			'errors'  => array(),
+		);
+		$user_login = sanitize_text_field( $data['login'] );
 
-		$user_data = $this->get_user( sanitize_text_field( $data['login'] ) );
-
-		if ( ! empty( $user_data['errors'] ) ) {
-
-			$data['errors'] = $user_data['errors'];
-
-			wp_send_json( $data );
+		$result = retrieve_password( $user_login );
+		if ( is_wp_error( $result ) ) {
+			$response['success'] = false;
+			$response['errors']  = $result->get_error_messages();
 		}
 
-		$key = get_password_reset_key( $user_data['user'] );
-
-		if ( is_wp_error( $key ) ) {
-			$data['errors']['nokey'] = __( 'Failed to reset password. Please try again', 'thrive-cb' );
-
-			wp_send_json( $data );
-		}
-
-		$result = $this->send_recover_pass_msg( $user_data['user'], $key );
-
-		$data['success'] = $result;
-
-		if ( true !== $result ) {
-			$data['errors']['failed_email'] = __( 'Failed to send password recovery email!', 'thrive-cb' );
-		}
-
-		wp_send_json( $data );
-	}
-
-	/**
-	 * Send Recover Password Message
-	 *
-	 * @param WP_User $user
-	 * @param string  $key
-	 *
-	 * @return bool
-	 */
-	public function send_recover_pass_msg( WP_User $user, $key ) {
-		if ( is_multisite() ) {
-			$site_name = get_network()->site_name;
-		} else {
-			/*
-			 * The blogname option is escaped with esc_html on the way into the database
-			 * in sanitize_option we want to reverse this for the plain text arena of emails.
-			 */
-			$site_name = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-		}
-
-		ob_start();
-
-		include tve_editor_path( 'inc/views/actions/login/recover-password.php' );
-
-		$message = ob_get_contents();
-
-		ob_end_clean();
-
-		/**
-		 * Password Recover Email Subject
-		 */
-		$title = sprintf( __( '[%s] Password Reset' ), $site_name );
-
-		return wp_mail( $user->user_email, wp_specialchars_decode( $title ), $message, 'Content-Type: text/html; charset=UTF-8' );
+		wp_send_json( $response );
 	}
 
 	/**
@@ -217,7 +166,7 @@ class TCB_Login_Element_Handler {
 		}
 
 		/* This filter is incorrectly named. It should be renamed to something like "tcb_prepare_login_response". Kept to maintain backwards compat. */
-		$result = apply_filters( 'tcb_after_user_logged_in', $result );
+		$result = apply_filters( 'tcb_after_user_logged_in', $result + $data );
 
 		$result['success']   = true;
 		$result['logged_in'] = $logged_in;

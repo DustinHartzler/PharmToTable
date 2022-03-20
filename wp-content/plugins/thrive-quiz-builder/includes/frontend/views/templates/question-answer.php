@@ -19,12 +19,15 @@
 
 			<?php if ( ! $media && $question['image'] ) : ?>
 				<div class="tqb-question-image-container">
-					<img src="<?php echo isset( $question['image']->sizes->large ) ? $question['image']->sizes->large->url : $question['image']->sizes->full->url; ?>" alt="question-image">
+					<img
+						src="<?php echo isset( $question['image']->sizes->large ) ? esc_url( $question['image']->sizes->large->url ) : esc_url( $question['image']->sizes->full->url ); ?>"
+						alt="question-image">
 				</div>
 			<?php endif; ?>
 
 		</div>
-		<div class="tqb-answers-container tve_no_icons <?php if ( $question['answers'][0]['image'] ) : ?> tqb-answer-has-image <?php endif; ?>">
+		<div
+			class="tqb-answers-container tve_no_icons <?php if ( $question['answers'][0]['image'] ) : ?> tqb-answer-has-image <?php endif; ?>">
 			<?php if ( ! empty( $question['answers'] ) && is_array( $question['answers'] ) ) : ?>
 				<?php foreach ( $question['answers'] as $answer ) : ?>
 					<div class="tqb-answer-inner-wrapper">
@@ -32,11 +35,13 @@
 							<?php if ( $answer['image'] ) : ?>
 								<div class="tqb-answer-image-type">
 									<div class="tqb-answer-image-container">
-										<img src="<?php echo $answer['image']->sizes->thumbnail->url; ?>" alt="" class="tqb-answer-image">
+										<img src="<?php echo esc_url( $answer['image']->sizes->thumbnail->url ); ?>"
+											 alt=""
+											 class="tqb-answer-image">
 									</div>
 									<div class="tqb-answer-text-container">
 										<div class="tqb-answer-text">
-											<?php echo $answer['text']; ?>
+											<?php echo esc_html( $answer['text'] ); ?>
 										</div>
 									</div>
 								</div>
@@ -53,7 +58,7 @@
 							<?php else : ?>
 								<div class="tqb-answer-oeq-type">
 									<div class="tqb-answer-oeq">
-										<?php echo __( 'Write your response here', Thrive_Quiz_Builder::T ); ?>
+										<?php echo esc_html__( 'Write your response here', Thrive_Quiz_Builder::T ); ?>
 									</div>
 								</div>
 							<?php endif; ?>

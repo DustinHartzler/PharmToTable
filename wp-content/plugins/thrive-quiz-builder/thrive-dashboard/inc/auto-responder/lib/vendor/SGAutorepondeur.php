@@ -1,10 +1,19 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 class Thrive_Dash_Api_SGAutorepondeur {
 
 	private $_membreid;
 	private $_codeactivation;
-	private $_datas = array();
+	private $_datas  = array();
 	private $_apiUrl = 'https://sg-autorepondeur.com/API_V2/';
 
 	public function __construct( $membreid, $codeactivation ) {
@@ -40,12 +49,17 @@ class Thrive_Dash_Api_SGAutorepondeur {
 			$error_message = $result->get_error_message();
 			throw new Exception( $error_message );
 		} else {
-			$body = wp_remote_retrieve_body($result);
-			$decoded = json_decode($body);
+			$body    = wp_remote_retrieve_body( $result );
+			$decoded = json_decode( $body );
 
-			if($decoded->valid == false) {
-				throw new Exception( $decoded->reponse );
+			if ( $decoded->valid == false ) {
+				$response = $decoded->reponse;
+				if ( is_object( $response ) && isset( $response->info ) ) {
+					$response = is_array( $response->info ) ? implode( "\n", $response->info ) : (string) $response->info;
+				}
+				throw new Exception( $response );
 			}
+
 			return $decoded;
 		}
 	}

@@ -21,12 +21,10 @@ final class TVD_Smart_Shortcodes {
 	 */
 	private $db;
 
-	public static $smart_shortcodes
-		= array(
-			TVD_Smart_Site::GLOBAL_FIELDS_SHORTCODE     => 'tvd_tss_smart_fields',
-			TVD_Smart_Site::GLOBAL_FIELDS_SHORTCODE_URL => 'tvd_tss_smart_url',
-
-		);
+	public static $smart_shortcodes = array(
+		TVD_Smart_Site::GLOBAL_FIELDS_SHORTCODE     => 'tvd_tss_smart_fields',
+		TVD_Smart_Site::GLOBAL_FIELDS_SHORTCODE_URL => 'tvd_tss_smart_url',
+	);
 
 	/**
 	 * TVD_Smart_Shortcodes constructor.

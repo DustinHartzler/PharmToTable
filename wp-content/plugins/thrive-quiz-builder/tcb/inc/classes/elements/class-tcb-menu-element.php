@@ -384,7 +384,7 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 			'animation'  => array( 'hidden' => true ),
 			'shadow'     => array(
 				'config' => array(
-					'to' => '.tve_w_menu',
+					'css_suffix' => ' .tve_w_menu',
 				),
 			),
 			'borders'    => array(
@@ -415,6 +415,9 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 				),
 			),
+			'conditional-display' => [
+				'hidden' => false,
+			],
 		);
 
 		return array_merge( $menu, $this->group_component() );
@@ -461,6 +464,22 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 					'name'     => __( 'All Dropdown Items', 'thrive-cb' ),
 					/* Translators: %s represents index of the unlocked item */
 					'singular' => __( '-- Item %s', 'thrive-cb' ),
+				),
+				array(
+					'value'    => 'menu-images',
+					'selector' => '.tcb-menu-item-image:not(.tcb-elem-placeholder)',
+					'element'  => '.tcb-menu-item-image',
+					'name'     => __( 'All Menu Images', 'thrive-cb' ),
+					/* Translators: %s represents index of the unlocked item */
+					'singular' => __( '-- Menu Image %s', 'thrive-cb' ),
+				),
+				array(
+					'value'    => 'menu-images-hamburger',
+					'selector' => '.tcb-menu-img-hamburger .tcb-mm-image:not(.tcb-elem-placeholder)',
+					'element'  => '.tcb-menu-img-hamburger .tcb-mm-image',
+					'name'     => __( 'All Menu Images', 'thrive-cb' ),
+					/* Translators: %s represents index of the unlocked item */
+					'singular' => __( '-- Menu Image %s', 'thrive-cb' ),
 				),
 			),
 		);

@@ -181,7 +181,7 @@ class TQB_State_Manager extends TQB_Request_Handler {
 		$quiz_min_val  = $this->param( 'quiz_min' );
 		$quiz_max_val  = $this->param( 'quiz_max' );
 
-		if ( empty( $child_id ) && ! is_numeric( $child_id ) || ! is_numeric( $min ) || ! is_numeric( $max ) ) {
+		if ( ( empty( $child_id ) && ! is_numeric( $child_id ) ) || ! is_numeric( $min ) || ! is_numeric( $max ) ) {
 			return false;
 		}
 
@@ -418,6 +418,7 @@ class TQB_State_Manager extends TQB_Request_Handler {
 			if ( ! empty( $child['tcb_fields'][ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) ) {
 				$tcb_fields = array_merge( $tcb_fields, array( Thrive_Quiz_Builder::FIELD_INLINE_CSS => $child['tcb_fields'][ Thrive_Quiz_Builder::FIELD_INLINE_CSS ] ) );
 			}
+
 			TQB_Variation_Manager::save_child_variation( array_merge( $child, array(
 				'id'         => $child['id'],
 				'post_title' => $intervals[ $key ]['min'] . ' - ' . $intervals[ $key ]['max'],

@@ -1,6 +1,6 @@
 <div id="lb-container"></div>
 <div class="control-grid no-space">
-	<label for="lb-animation"><?php echo __( 'Animation', 'thrive-cb' ) ?></label>
+	<label for="lb-animation"><?php echo esc_html__( 'Animation', 'thrive-cb' ) ?></label>
 	<div class="input">
 		<select id="lb-animation">
 			<?php foreach ( $data as $k => $s ) : ?>

@@ -39,7 +39,7 @@ class TD_NM_Action_Custom_Script extends TD_NM_Action_Abstract {
 
 		if ( ! empty( $tl_data['tve_labels'] ) ) {
 			$base64_decoded = base64_decode( $tl_data['tve_labels'] );
-			$labels         = unserialize( $base64_decoded );
+			$labels         = thrive_safe_unserialize( $base64_decoded );
 		}
 
 		if ( is_array( $labels ) && ! empty( $labels ) ) {

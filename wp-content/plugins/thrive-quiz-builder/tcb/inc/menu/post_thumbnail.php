@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="tve-post_thumbnail-component" class="tve-component" data-view="PostThumbnail">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Featured Image Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Featured Image Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">

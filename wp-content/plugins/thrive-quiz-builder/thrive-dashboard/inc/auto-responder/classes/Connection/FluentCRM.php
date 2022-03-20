@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
 use FluentCrm\App\Models\CustomContactField;
 
 class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_Abstract {
@@ -53,7 +62,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 			return $this->error( __( 'FluentCRM plugin must be installed and activated.', TVE_DASH_TRANSLATE_DOMAIN ) );
 		}
 
-		$this->setCredentials( $_POST['connection'] );
+		$this->setCredentials( $this->post( 'connection', array() ) );
 
 		$result = $this->testConnection();
 
@@ -99,7 +108,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
 			$name_array = array(
 				'first_name' => $first_name,
-				'last_name'  => $last_name
+				'last_name'  => $last_name,
 			);
 		}
 
@@ -186,7 +195,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 			return $mapped_data;
 		}
 
-		$form_data = unserialize( base64_decode( $args['tve_mapping'] ) );
+		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 		if ( is_array( $form_data ) ) {
 
 			foreach ( $this->getMappedFieldsIDs() as $mapped_field ) {
@@ -361,9 +370,14 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 
 	/**
 	 * Return the connection email merge tag
+	 *
 	 * @return String
 	 */
 	public static function getEmailMergeTag() {
 		return '{{contact.email}}';
+	}
+
+	public function get_automator_autoresponder_fields() {
+		 return array( 'mailing_list', 'optin', 'tag_input' );
 	}
 }

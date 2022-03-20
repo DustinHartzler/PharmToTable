@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TCB_Post_List_REST {
 
 	public static $namespace = 'tcb/v1';
-	public static $route     = '/posts';
+	public static $route = '/posts';
 
 	public function __construct() {
 		$this->register_routes();
@@ -152,7 +152,6 @@ class TCB_Post_List_REST {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_posts( $request ) {
-
 		$post_type = $request->get_param( 'post_type' );
 		$search    = $request->get_param( 'search' );
 
@@ -178,6 +177,8 @@ class TCB_Post_List_REST {
 		}
 
 		$all = get_posts( $args );
+
+		$all = apply_filters( 'tcb_filter_rest_products', $all, $request);
 
 		$posts = array_map( function ( $item ) {
 			return array(
@@ -317,7 +318,7 @@ class TCB_Post_List_REST {
 						/*on a page with sticky posts the first 'normal' post will always have the offset 1*/
 						$args['query']['offset'] = 1;
 					} else {
-						/*compute the ofset of the first normal post displayed on a page with only normal posts*/
+						/*compute the offset of the first normal post displayed on a page with only normal posts*/
 						$args['query']['offset'] = $args['query']['posts_per_page'] * ( $query_args_sticky['paged'] - 1 ) - $args['attr']['total_sticky_count'] + 1;
 					}
 				}

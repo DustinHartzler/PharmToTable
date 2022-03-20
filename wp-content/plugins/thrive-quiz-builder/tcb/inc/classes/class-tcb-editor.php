@@ -166,7 +166,8 @@ class TCB_Editor {
 			return $this->can_edit_post;
 		}
 		// @codingStandardsIgnoreStart
-		$this->post = get_post();
+		$this->set_post( get_post() );
+
 		if ( ! $this->post ) {
 			return $this->can_edit_post = false;
 		}
@@ -213,7 +214,7 @@ class TCB_Editor {
 		/**
 		 * The iframe receives a query string variable
 		 */
-		if ( ! wp_verify_nonce( $_REQUEST[ TVE_FRAME_FLAG ], TVE_FRAME_FLAG ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( $_REQUEST[ TVE_FRAME_FLAG ] ), TVE_FRAME_FLAG ) ) { //phpcs:ignore
 			return false;
 		}
 
@@ -240,10 +241,7 @@ class TCB_Editor {
 	 * Enqueue scripts and styles for the main frame
 	 */
 	public function main_frame_enqueue() {
-		/**
-		 * The constant should be defined somewhere in wp-config.php file
-		 */
-		$js_suffix = tve_dash_is_debug_on() ? '.js' : '.min.js';
+		$js_suffix = TCB_Utils::get_js_suffix();
 
 		$this->enqueue_media();
 		// WP colour picker
@@ -256,11 +254,11 @@ class TCB_Editor {
 
 		wp_enqueue_script( 'tcb-scrollbar', TVE_DASH_URL . '/js/util/jquery.scrollbar.min.js' );
 
-		wp_enqueue_script( 'tcb-moment', tve_editor_url() . '/editor/js/libs/moment.min.js' );
+		wp_enqueue_script( 'tcb-moment', tve_editor_url( 'editor/js/libs/moment.min.js' ) );
 
 		$locale = tve_get_locale();
 		if ( file_exists( TVE_TCB_ROOT_PATH . '/editor/js/libs/moment-locale/' . $locale . '.js' ) ) {
-			wp_enqueue_script( 'tcb-moment-locale', tve_editor_url() . '/editor/js/libs/moment-locale/' . $locale . '.js' );
+			wp_enqueue_script( 'tcb-moment-locale', tve_editor_url( 'editor/js/libs/moment-locale/' . $locale . '.js' ) );
 		}
 
 		if ( function_exists( 'wp_enqueue_code_editor' ) ) {
@@ -283,9 +281,9 @@ class TCB_Editor {
 			'backbone',
 		) );
 
-		tve_enqueue_script( 'tve-main', tve_editor_js() . '/main' . $js_suffix, $main_deps, false, true );
+		tve_enqueue_script( 'tve-main', tve_editor_js( '/main' . $js_suffix ), $main_deps, false, true );
 
-		tve_enqueue_style( 'tve2_editor_style', tve_editor_css() . '/main/style.css' );
+		tve_enqueue_style( 'tve2_editor_style', tve_editor_css( 'main/style.css' ) );
 
 		/* wp-auth-login */
 		wp_enqueue_script( 'wp-auth-check' );
@@ -306,11 +304,11 @@ class TCB_Editor {
 		tve_enqueue_style( 'tve-editor-font', 'https://fonts.googleapis.com/css?family=Rubik:400,500,700' );
 
 		//Default datepicker design
-		wp_enqueue_style( 'jquery-ui-datepicker', tve_editor_css() . '/jquery-ui-1.10.4.custom.min.css' );
+		wp_enqueue_style( 'jquery-ui-datepicker', tve_editor_css( 'jquery-ui-1.10.4.custom.min.css' ) );
 
 		if ( tve_check_if_thrive_theme() ) {
 			/* include the css needed for the shortcodes popup (users are able to insert Thrive themes shortcode inside the WP editor on frontend) - using the "Insert WP Shortcode" element */
-			tve_enqueue_style( 'tve_shortcode_popups', tve_editor_css() . '/thrive_shortcodes_popup.css' );
+			tve_enqueue_style( 'tve_shortcode_popups', tve_editor_css( 'thrive_shortcodes_popup.css' ) );
 		}
 
 		/*Include Select2*/
@@ -363,6 +361,35 @@ class TCB_Editor {
 		wp_dequeue_style( 'ihc_public_style' );
 		wp_deregister_style( 'ihc_public_style' );
 
+		/* Woocommerce */
+		wp_dequeue_style( 'woocommerce_admin' );
+		wp_deregister_style( 'woocommerce_admin' );
+
+		wp_dequeue_style( 'woocommerce_admin_menu_styles' );
+		wp_deregister_style( 'woocommerce_admin_menu_styles' );
+
+		/* Woocommerce Etsy plugin */
+		wp_dequeue_style( 'ced-boot-css' );
+		wp_deregister_style( 'ced-boot-css' );
+		wp_dequeue_style( 'woocommmerce-etsy-integration' );
+		wp_deregister_style( 'woocommmerce-etsy-integration' );
+
+		/* ACF */
+		wp_dequeue_style( 'acf-global' );
+		wp_deregister_style( 'acf-global' );
+		wp_dequeue_style( 'acf-input' );
+		wp_deregister_style( 'acf-input' );
+		wp_dequeue_style( 'acf-datepicker' );
+		wp_deregister_style( 'acf-datepicker' );
+		wp_dequeue_style( 'acf-timepicker' );
+		wp_deregister_style( 'acf-timepicker' );
+
+		wp_dequeue_script( 'acf' );
+		wp_deregister_script( 'acf' );
+		wp_dequeue_script( 'acf-input' );
+		wp_deregister_script( 'acf-input' );
+		wp_dequeue_script( 'acf-timepicker' );
+		wp_deregister_script( 'acf-timepicker' );
 
 		/**
 		 * Dequeue custom font js from main frame
@@ -473,8 +500,14 @@ class TCB_Editor {
 			'dash_url'                      => TVE_DASH_URL,
 			'pinned_category'               => $this->elements->pinned_category,
 			'social_fb_app_id'              => tve_get_social_fb_app_id(),
+			'google_maps_embeded_app_id'    => tve_get_google_maps_embedded_app_id(),
 			'disable_google_fonts'          => tve_dash_is_google_fonts_blocked(),
 			'allow_video_src'               => tve_dash_allow_video_src(),
+			'lightspeed'                    => [
+				'js_modules'         => \TCB\Lightspeed\JS::get_module_data( '', 'identifier' ),
+				'styles_to_optimize' => \TCB\Lightspeed\CSS::get_instance( $this->post->ID )->get_styles_to_optimize(),
+				'gutenberg_modules'  => \TCB\Lightspeed\Gutenberg::get_gutenberg_assets( null, 'identifier' ),
+			],
 			'api_connections'               => $api_connections,
 			'api_connections_data'          => $api_connections_data,
 			'storage_apis'                  => array_map( static function ( $connection ) {
@@ -562,6 +595,7 @@ class TCB_Editor {
 				/* Menu Descriptions template (applicable in Mega Menus) */
 				'mega_desc_tpl'            => TCB_Menu_Walker::$mega_description_template,
 				'mega_image_tpl'           => TCB_Menu_Walker::$mega_image_template,
+				'menu_item_image_tpl'      => TCB_Menu_Walker::$menu_item_image_template,
 			),
 			'lead_generation'               => array(
 				/**
@@ -576,9 +610,10 @@ class TCB_Editor {
 			'default_styles'                => tve_get_default_styles( false ),
 			'post_login_actions'            => TCB_Login_Element_Handler::get_post_login_actions(),
 			'post_register_actions'         => TCB_Login_Element_Handler::get_post_register_actions(),
-			'is_woo_active'                 => \Tcb\Integrations\WooCommerce\Main::active() ? 1 : 0,
+			'is_woo_active'                 => \TCB\Integrations\WooCommerce\Main::active() ? 1 : 0,
 			'lg_email_shortcodes'           => $this->get_lg_email_shortcodes(),
 			'dismissed_tooltips'            => (array) get_user_meta( wp_get_current_user()->ID, 'tcb_dismissed_tooltips', true ),
+			'post_parent'                   => empty( $post->post->post_parent ) ? '' : get_post( $post->post->post_parent ),
 		);
 
 		/** Do not localize anything that's not necessary */
@@ -706,6 +741,7 @@ class TCB_Editor {
 			'content_template',
 			'tcb_lightbox',
 			TCB_Symbols_Post_Type::SYMBOL_POST_TYPE,
+			'tve_notifications',
 		) ) );
 	}
 
@@ -796,6 +832,8 @@ class TCB_Editor {
 		remove_all_actions( 'print_media_templates' );
 		// enqueue scripts for tapping into media thickbox
 		wp_enqueue_media();
+		/* Compatibility fix for Media Modal when Unsplash plugin is active */
+		wp_dequeue_script( 'unsplash-media-selector' );
 	}
 
 	/**
@@ -886,8 +924,8 @@ class TCB_Editor {
 			case 'cloud-templates':
 				if ( $this->has_templates_tab() ) {
 					$display = 'show';
-				} /* Only in TAr, the icon can be 'unavailable' */
-				else if ( $post_type === 'post' || $post_type === 'page' ) {
+				} else if ( $post_type === 'post' || $post_type === 'page' ) {
+					/* Only in TAr, the icon can be 'unavailable' */
 					$display = 'unavailable';
 				} else {
 					$display = 'hide';
@@ -902,6 +940,8 @@ class TCB_Editor {
 					break;
 				}
 				$display = 'hide';
+				break;
+			default:
 				break;
 		}
 
@@ -930,12 +970,10 @@ class TCB_Editor {
 
 		$landing_page = tcb_landing_page( $this->post->ID );
 
-		$data = apply_filters( 'tcb_alter_template_data', array(
+		return apply_filters( 'tcb_alter_template_data', array(
 			'styles' => $landing_page->template_styles,
 			'vars'   => $landing_page->template_vars,
 		), $landing_page );
-
-		return $data;
 	}
 
 	/**
@@ -999,25 +1037,62 @@ class TCB_Editor {
 		if ( ! $this->post ) {
 			return false;
 		}
+
 		/**
 		 * Filter that allows others plugins to use a landing page template on their custom post type
 		 */
-
 		$is_allowed = apply_filters( 'tve_allowed_post_type', true, $this->post->post_type );
 
 		return apply_filters( 'tcb_can_use_landing_pages', $is_allowed );
 	}
 
 	/**
+	 * Whether or not the current post can use external content
+	 *
+	 * @return false|mixed|void
+	 */
+	public function allow_import_content() {
+		if ( ! $this->post ) {
+			return false;
+		}
+
+		return apply_filters( 'tcb_can_import_content', true, $this->post );
+	}
+
+	/**
+	 * Whether or not the current post can export its content
+	 *
+	 * @return false|mixed|void
+	 */
+	public function allow_export_content() {
+		if ( ! $this->post ) {
+			return false;
+		}
+
+		return apply_filters( 'tcb_can_export_content', ! $this->is_landing_page(), $this->post );
+	}
+
+	/**
 	 * Sets post after given post ID
 	 *
 	 * @param int|WP_POST $post
+	 * @param boolean     $set_global_post
 	 */
-	public function set_post( $post ) {
-		if ( is_integer( $post ) ) {
+	public function set_post( $post, $set_global_post = false ) {
+		if ( is_numeric( $post ) ) {
 			$this->post = get_post( $post );
 		} elseif ( $post instanceof WP_Post ) {
 			$this->post = $post;
+		}
+		/**
+		 * Set the current edited post as global in the case the GLOBAL['post'] is overwritten by 3rd party plugins so we have a fallback
+		 */
+		global $tve_post;
+		$tve_post = $this->post;
+
+		if ( $set_global_post ) {
+			global $post;
+			$post = $tve_post;
 		}
 	}
 
@@ -1181,6 +1256,5 @@ class TCB_Editor {
 			default:
 		}
 
-		return;
 	}
 }

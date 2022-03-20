@@ -254,9 +254,9 @@ class TIE_Image {
 		if ( ! ( $this->get_settings() instanceof TIE_Image_Settings ) ) {
 			return $style;
 		}
-		$_opacity = intval( $this->get_settings()->get_data( 'overlay/opacity' ) );
+		$_opacity = (int) $this->get_settings()->get_data( 'overlay/opacity' );
 		if ( $_opacity > 1 ) {
-			$_opacity = $_opacity / 100;
+			$_opacity /= 100;
 		}
 		$style .= "background-color: {$this->get_settings()->get_data('overlay/bg_color')};";
 		$style .= "opacity: {$_opacity};";
@@ -269,7 +269,7 @@ class TIE_Image {
 
 		if ( ! empty( $fonts ) ) {
 			foreach ( $fonts as $font_name => $font_url ) {
-				printf( '<link rel="stylesheet" class="tie-loaded-google-fonts" data-family="%s" type="text/css" href="%s">' . "\n", $font_name, $font_url );
+				printf( '<link rel="stylesheet" class="tie-loaded-google-fonts" data-family="%s" type="text/css" href="%s">' . "\n", esc_attr( $font_name ), esc_url( $font_url ) );
 			}
 		}
 	}

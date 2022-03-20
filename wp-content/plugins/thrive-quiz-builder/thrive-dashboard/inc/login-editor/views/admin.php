@@ -1,56 +1,66 @@
-<?php include TVE_DASH_PATH . '/templates/header.phtml'; ?>
+<?php
+
+/**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+ include TVE_DASH_PATH . '/templates/header.phtml'; ?>
 
 <div class="tvd-breadcrumb login-nav">
-	<a href="<?php echo admin_url( 'admin.php?page=tve_dash_section' ); ?>" class="tvd-breadcrumb-back">
-		<?php echo __( 'Thrive Dashboard', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+	<a href="<?php echo esc_url( admin_url( 'admin.php?page=tve_dash_section' ) ); ?>" class="tvd-breadcrumb-back">
+		<?php echo esc_html__( 'Thrive Dashboard', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 	</a>
 	<span>
-		<?php echo __( 'WordPress Login Screen Branding', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+		<?php echo esc_html__( 'WordPress Login Screen Branding', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 	</span>
 </div>
 
 <div class="tvd-wrap">
 	<div class="tvd-login-preview">
-		<iframe scrolling="no" src="<?php echo $design_enabled ? $preview_url : $default_url; ?>" data-preview-url="<?php echo $preview_url ?>" data-default-url="<?php echo $default_url; ?>"></iframe>
+		<iframe scrolling="no" src="<?php echo esc_url( $design_enabled ? $preview_url : $default_url ); ?>" data-preview-url="<?php echo esc_url( $preview_url ) ?>" data-default-url="<?php echo esc_url( $default_url ); ?>"></iframe>
 	</div>
 	<div class="tvd-actions">
 		<h2>
-			<?php echo __( 'Add your own brand to the default WordPress login screen', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+			<?php echo esc_html__( 'Add your own brand to the default WordPress login screen', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 		</h2>
 		<p>
-			<?php echo __( 'Visually design the WordPress login screen.  This screen is used when users wish to login to the site, set a new password and similar flows.', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+			<?php echo esc_html__( 'Visually design the WordPress login screen.  This screen is used when users wish to login to the site, set a new password and similar flows.', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 		</p>
 		<p>
-			<?php echo __( 'Activating this feature will mean taking over the default WordPress design.', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+			<?php echo esc_html__( 'Activating this feature will mean taking over the default WordPress design.', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 			<a class="learn-more-link" href="http://help.thrivethemes.com/en/articles/4519097-how-to-use-the-wordpress-login-screen-branding-feature">
-				<?php echo __( 'Learn more', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+				<?php echo esc_html__( 'Learn more', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 			</a>
 		</p>
 		<div class="tvd-wrap space-between">
 			<div class="tvd-switch">
 				<label>
-					<?php echo __( 'ACTIVE', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+					<?php echo esc_html__( 'ACTIVE', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 					<input type="checkbox" class="tvd-toggle-input" <?php checked( true, $design_enabled ); ?>>
 					<span class="tvd-lever"></span>
 				</label>
 			</div>
 			<div class="tvd-wrap tvd-template-links" style="visibility: <?php echo $design_enabled ? 'visible' : 'hidden'; ?>;">
-				<a target="_blank" href="<?php echo $preview_url; ?>">
+				<a target="_blank" href="<?php echo esc_url( $preview_url ); ?>">
 					<span class="tvd-icon-eye"></span>
-					<?php echo __( 'View', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+					<?php echo esc_html__( 'View', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 				</a>
 				<span class="tvd-sep"></span>
-				<a target="_blank" href="<?php echo $edit_url; ?>">
+				<a target="_blank" href="<?php echo esc_url( $edit_url ); ?>">
 					<span class="tvd-icon-architect"></span>
-					<?php echo __( 'Edit with Thrive Architect', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+					<?php echo esc_html__( 'Edit with Thrive Architect', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 				</a>
 			</div>
 		</div>
 	</div>
 </div>
 <div id="tvd-back-td" class="tvd-col tvd-m6">
-	<a href="<?php echo admin_url( 'admin.php?page=tve_dash_section' ); ?>" class="tvd-waves-effect tvd-waves-light tvd-btn-small tvd-btn-gray">
-		<?php echo __( 'Back To Dashboard', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+	<a href="<?php echo esc_url( admin_url( 'admin.php?page=tve_dash_section' ) ); ?>" class="tvd-waves-effect tvd-waves-light tvd-btn-small tvd-btn-gray">
+		<?php echo esc_html__( 'Back To Dashboard', TVE_DASH_TRANSLATE_DOMAIN ); ?>
 	</a>
 </div>
 

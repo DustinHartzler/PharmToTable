@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Thrive Themes - https://thrivethemes.com
+ *
+ * @package thrive-dashboard
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Silence is golden!
+}
+
+/**
  * SendinBlue REST client
  */
 class Thrive_Dash_Api_Sendinblue {
@@ -50,7 +59,7 @@ class Thrive_Dash_Api_Sendinblue {
 		try {
 			$result = json_decode( wp_remote_retrieve_body( $result ), true );
 		} catch ( Exception $e ) {
-			$result = [];
+			$result = array();
 		}
 
 		if ( isset( $result['code'] ) && $result['code'] !== 'success' ) {
@@ -901,6 +910,39 @@ class Thrive_Dash_Api_Sendinblue {
 		unset( $data['id'] );
 
 		return $this->get( "sms/" . $id, json_encode( $data ) );
+	}
+
+	public function upgrade_to_v3( $api_v2 ) {
+		$result = tve_dash_api_remote_post( 'https://api.sendinblue.com/v2.0/account/generateapiv3key', array(
+			'body'      => json_encode( array( 'name' => 'My v3 key name' ) ),
+			'headers'   => array(
+				'Accept'       => 'application/json',
+				'Content-Type' => 'application/json',
+				'api-key'      => $api_v2,
+			),
+			'sslverify' => false,
+		) );
+
+		if ( is_wp_error( $result ) ) {
+			throw new Thrive_Dash_Api_SendinBlue_Exception( 'We were unable to decode the JSON response from the Sendinblue API: ' . $result->get_error_message() );
+		}
+
+		try {
+			$result = json_decode( wp_remote_retrieve_body( $result ), true );
+		} catch ( Exception $e ) {
+			$result = array();
+		}
+
+		/* Adjust the response to match the APIs error handling */
+		if ( isset( $result['code'] ) && $result['code'] === 'success' ) {
+			$result['success'] = true;
+		}
+
+		if ( isset( $result['code'] ) && $result['code'] !== 'success' ) {
+			throw new Thrive_Dash_Api_SendinBlue_Exception( $result['message'] );
+		}
+
+		return $result;
 	}
 
 }

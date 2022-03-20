@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: thrive-graph-editor 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-29 15:05+0300\n"
+"POT-Creation-Date: 2022-03-09 09:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: includes/classes/class-tge-ajax-controller.php:87
+#: includes/classes/class-tge-ajax-controller.php:93
 #, php-format
 msgid "Method %s not implemented"
 msgstr ""
 
-#: includes/classes/class-tge-ajax-controller.php:122
+#: includes/classes/class-tge-ajax-controller.php:128
 msgid "Question actions cannot be performed without quiz_id"
 msgstr ""
 
-#: includes/classes/class-tge-ajax-controller.php:132
+#: includes/classes/class-tge-ajax-controller.php:138
 msgid "Question could not be saved"
 msgstr ""
 
-#: includes/classes/class-tge-ajax-controller.php:143
+#: includes/classes/class-tge-ajax-controller.php:147
 msgid "No action could be executed on question route"
 msgstr ""
 
-#: includes/classes/class-tge-ajax-controller.php:154
-#: includes/classes/class-tge-ajax-controller.php:167
+#: includes/classes/class-tge-ajax-controller.php:158
+#: includes/classes/class-tge-ajax-controller.php:171
 msgid "No action could be executed on connection route"
+msgstr ""
+
+#: includes/classes/class-tge-ajax.php:55
+msgid "You do not have this capability"
 msgstr ""
 
 #: includes/classes/class-tge-editor.php:203
@@ -126,7 +130,6 @@ msgid "Changes saved"
 msgstr ""
 
 #: includes/classes/class-tge-editor.php:224
-#: includes/templates/control-panel.php:45
 msgid "All your changes are auto saved"
 msgstr ""
 
@@ -138,7 +141,7 @@ msgstr ""
 msgid "Edit question"
 msgstr ""
 
-#: includes/classes/class-tge-editor.php:227 includes/layouts/editor.php:47
+#: includes/classes/class-tge-editor.php:227
 msgid "Minimize"
 msgstr ""
 
@@ -421,32 +424,6 @@ msgstr ""
 msgid "Open Ended Question"
 msgstr ""
 
-#: includes/layouts/editor.php:38
-#: includes/templates/backbone/modals/add-question.phtml:27
-msgid "Add Question"
-msgstr ""
-
-#: includes/layouts/editor.php:46
-msgid "Navigator"
-msgstr ""
-
-#: includes/templates/control-panel.php:20
-#: includes/templates/backbone/progress/settings.phtml:3
-msgid "Quiz Settings"
-msgstr ""
-
-#: includes/templates/control-panel.php:26
-msgid "Your Questions"
-msgstr ""
-
-#: includes/templates/control-panel.php:36
-msgid "Save & Exit"
-msgstr ""
-
-#: includes/templates/control-panel.php:43
-msgid "Every change you make is automatically saved."
-msgstr ""
-
 #: includes/templates/backbone/answer/feedback.phtml:2
 msgid ""
 "Whatever you type here will be displayed if the user chooses this answer"
@@ -497,6 +474,10 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
+#: includes/templates/backbone/modals/add-question.phtml:27
+msgid "Add Question"
+msgstr ""
+
 #: includes/templates/backbone/modals/add-question.phtml:35
 msgid "Back"
 msgstr ""
@@ -528,6 +509,10 @@ msgstr ""
 msgid ""
 "Displaying a progress highlights how many more questions are remaining and "
 "can often increase the engagement of your quiz."
+msgstr ""
+
+#: includes/templates/backbone/progress/settings.phtml:3
+msgid "Quiz Settings"
 msgstr ""
 
 #: includes/templates/backbone/progress/settings.phtml:13
@@ -702,16 +687,4 @@ msgstr ""
 
 #: includes/templates/backbone/scroll/settings.phtml:3
 msgid "Enable Quiz Scroll"
-msgstr ""
-
-#: database/class-tge-database-manager.php:211
-#, php-format
-msgid ""
-"There was an error while updating the database tables needed by Thrive "
-"Question Editor. Detailed error message: %s. If you continue seeing this "
-"message, please contact %s"
-msgstr ""
-
-#: database/class-tge-database-manager.php:213
-msgid "Thrive Themes Support"
 msgstr ""

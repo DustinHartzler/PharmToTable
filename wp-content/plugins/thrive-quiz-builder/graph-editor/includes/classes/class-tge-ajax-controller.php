@@ -52,7 +52,7 @@ class TGE_Ajax_Controller {
 	 * @return null
 	 */
 	protected function error( $message, $status = '404 Not Found' ) {
-		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status );
+		header( $_SERVER['SERVER_PROTOCOL'] . ' ' . $status ); //phpcs:ignore
 		wp_send_json_error( array( 'message' => $message ) );
 
 		return null;
@@ -67,7 +67,13 @@ class TGE_Ajax_Controller {
 	 * @return mixed|null|$default
 	 */
 	protected function param( $key, $default = null ) {
-		return isset( $_POST[ $key ] ) ? $_POST[ $key ] : ( isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default );
+		if ( isset( $_POST[ $key ] ) ) {
+			$value = $_POST[ $key ]; //phpcs:ignore
+		} else {
+			$value = isset( $_REQUEST[ $key ] ) ? $_REQUEST[ $key ] : $default; //phpcs:ignore
+		}
+
+		return map_deep( $value, 'sanitize_text_field' );
 	}
 
 	/**
@@ -87,7 +93,7 @@ class TGE_Ajax_Controller {
 			$this->error( sprintf( __( 'Method %s not implemented', Thrive_Graph_Editor::T ), $function ) );
 		}
 
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
 
 		return call_user_func( array( $this, $function ), $method, $model );
@@ -130,14 +136,12 @@ class TGE_Ajax_Controller {
 				}
 
 				return $this->error( __( 'Question could not be saved' ), Thrive_Graph_Editor::T );
-				break;
-			case 'DELETE':
-				$id               = intval( $this->param( 'id' ) );
-				$question_manager = new TGE_Question_Manager();
-				$deleted          = $question_manager->delete_question( $id );
 
-				return $deleted;
-				break;
+			case 'DELETE':
+				$id               = (int) $this->param( 'id' );
+				$question_manager = new TGE_Question_Manager();
+
+				return $question_manager->delete_question( $id );
 		}
 
 		$this->error( __( 'No action could be executed on question route', Thrive_Graph_Editor::T ) );

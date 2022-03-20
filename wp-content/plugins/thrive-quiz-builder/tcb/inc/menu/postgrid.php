@@ -12,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-postgrid-component" class="tve-component" data-view="PostGrid">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo __( 'Main Options', 'thrive-cb' ); ?>
+		<?php echo esc_html__( 'Main Options', 'thrive-cb' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
 		<div class="flex-mid pb-10">
-			<button class="tve-button orange click" data-fn="edit_grid_options"><?php echo __( 'Edit Grid Options', 'thrive-cb' ); ?></button>
+			<button class="tve-button orange click" data-fn="edit_grid_options"><?php echo esc_html__( 'Edit Grid Options', 'thrive-cb' ); ?></button>
 		</div>
 		<hr>
 		<div class="tve-control no-space" data-extends="Tabs" data-key="tabs" data-target=".tabs-options"></div>

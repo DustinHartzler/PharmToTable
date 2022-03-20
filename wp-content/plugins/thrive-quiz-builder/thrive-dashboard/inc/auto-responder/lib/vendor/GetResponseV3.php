@@ -380,31 +380,30 @@ class Thrive_Dash_Api_GetResponseV3 {
 		if ( ! empty( $this->enterprise_domain ) ) {
 			$headers['X-Domain'] = $this->enterprise_domain;
 		}
-
+		$args = array(
+			'timeout'   => 15,
+			'headers'   => $headers,
+			'sslverify' => false,
+		);
 		switch ( $http_method ) {
 			case 'GET':
 				$fn = 'tve_dash_api_remote_get';
 				break;
+			case 'DELETE':
+				$args['method'] = 'DELETE';
+				$fn             = 'tve_dash_api_remote_request';
+				break;
 			default:
-				$fn     = 'tve_dash_api_remote_post';
-				$params = json_encode( $params );
+				$fn           = 'tve_dash_api_remote_post';
+				$args['body'] = json_encode( $params );
 				break;
 		}
 
-		$response = $fn(
-			$url,
-			array(
-				'body'      => $params,
-				'timeout'   => 15,
-				'headers'   => $headers,
-				'sslverify' => false,
-			)
-		);
-
+		$response = $fn( $url, $args );
 		$response_code = wp_remote_retrieve_response_code( $response );
 
 		// Allowed response codes: Accepted 200 & 202 [validated & accepted]
-		if ( ! in_array( (int) $response_code, array( 200, 202 ), true ) ) {
+		if ( ! in_array( (int) $response_code, array( 200, 202, 204 ), true ) ) {
 			$message = wp_remote_retrieve_response_message( $response );
 			throw new Thrive_Dash_Api_GetResponse_Exception( $message, $response_code );
 		}
