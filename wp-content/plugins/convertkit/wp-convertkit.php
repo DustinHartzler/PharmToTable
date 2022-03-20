@@ -9,7 +9,7 @@
  * Plugin Name: ConvertKit
  * Plugin URI: https://convertkit.com/
  * Description: Quickly and easily integrate ConvertKit forms into your site.
- * Version: 1.9.6.4
+ * Version: 1.9.7.0
  * Author: ConvertKit
  * Author URI: https://convertkit.com/
  * Text Domain: convertkit
@@ -24,13 +24,14 @@ if ( class_exists( 'WP_ConvertKit' ) ) {
 define( 'CONVERTKIT_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CONVERTKIT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CONVERTKIT_PLUGIN_PATH', __DIR__ );
-define( 'CONVERTKIT_PLUGIN_VERSION', '1.9.6.4' );
+define( 'CONVERTKIT_PLUGIN_VERSION', '1.9.7.0' );
 
 // Load files that are always required.
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/functions.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-wp-convertkit.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-ajax.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-api.php';
+require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-gutenberg.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-log.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-output.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-post.php';
@@ -38,6 +39,7 @@ require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-resource.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-resource-forms.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-resource-landing-pages.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-resource-tags.php';
+require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-review-request.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-settings.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-shortcodes.php';
 require_once CONVERTKIT_PLUGIN_PATH . '/includes/class-convertkit-system-info.php';
@@ -63,7 +65,6 @@ require_once CONVERTKIT_PLUGIN_PATH . '/includes/integrations/woocommerce/class-
 // Load files that are only used in the WordPress Administration interface.
 if ( is_admin() ) {
 	require_once CONVERTKIT_PLUGIN_PATH . '/admin/class-convertkit-admin-category.php';
-	require_once CONVERTKIT_PLUGIN_PATH . '/admin/class-convertkit-admin-gutenberg.php';
 	require_once CONVERTKIT_PLUGIN_PATH . '/admin/class-convertkit-admin-post.php';
 	require_once CONVERTKIT_PLUGIN_PATH . '/admin/class-convertkit-admin-settings.php';
 	require_once CONVERTKIT_PLUGIN_PATH . '/admin/class-convertkit-admin-tinymce.php';

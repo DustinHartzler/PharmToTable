@@ -21,8 +21,8 @@ class ConvertKit_Block_Content extends ConvertKit_Block {
 	 */
 	public function __construct() {
 
-		// Register this block with the ConvertKit Plugin.
-		add_filter( 'convertkit_blocks', array( $this, 'register' ) );
+		// Register this as a shortcode in the ConvertKit Plugin.
+		add_filter( 'convertkit_shortcodes', array( $this, 'register' ) );
 
 	}
 
@@ -30,6 +30,8 @@ class ConvertKit_Block_Content extends ConvertKit_Block {
 	 * Returns this block's programmatic name, excluding the convertkit- prefix.
 	 *
 	 * @since   1.9.6
+	 *
+	 * @return  string
 	 */
 	public function get_name() {
 
@@ -46,6 +48,8 @@ class ConvertKit_Block_Content extends ConvertKit_Block {
 	 * Returns this block's Title, Icon, Categories, Keywords and properties.
 	 *
 	 * @since   1.9.6
+	 *
+	 * @return  array
 	 */
 	public function get_overview() {
 
@@ -74,9 +78,28 @@ class ConvertKit_Block_Content extends ConvertKit_Block {
 	}
 
 	/**
+	 * Returns this block's Attributes
+	 *
+	 * @since   1.9.6.5
+	 *
+	 * @return  array
+	 */
+	public function get_attributes() {
+
+		return array(
+			'tag' => array(
+				'type' => 'string',
+			),
+		);
+
+	}
+
+	/**
 	 * Returns this block's Fields
 	 *
 	 * @since   1.9.6
+	 *
+	 * @return  mixed   bool | array
 	 */
 	public function get_fields() {
 
@@ -105,11 +128,13 @@ class ConvertKit_Block_Content extends ConvertKit_Block {
 	}
 
 	/**
-	 * Returns this block's UI Tabs / sections.
+	 * Returns this block's UI panels / sections.
 	 *
 	 * @since   1.9.6
+	 *
+	 * @return  mixed   bool | array
 	 */
-	public function get_tabs() {
+	public function get_panels() {
 
 		// Bail if the request is not for the WordPress Administration or frontend editor.
 		if ( ! WP_ConvertKit()->is_admin_or_frontend_editor() ) {
@@ -131,6 +156,8 @@ class ConvertKit_Block_Content extends ConvertKit_Block {
 	 * Returns this block's Default Values
 	 *
 	 * @since   1.9.6
+	 *
+	 * @return  array
 	 */
 	public function get_default_values() {
 
