@@ -2,7 +2,6 @@
 /**
  * WCS_ATT_Integrations class
  *
- * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    1.0.0
  */
@@ -52,6 +51,27 @@ class WCS_ATT_Integrations {
 		// Flatsome compatibility.
 		if ( function_exists( 'wc_is_active_theme' ) && wc_is_active_theme( 'flatsome' ) ) {
 			require_once( WCS_ATT_ABSPATH . 'includes/integrations/class-wcs-att-integration-fs.php' );
+		}
+
+		// Square compatibility.
+		if (  class_exists( 'WooCommerce\Square\Plugin' ) ) {
+			require_once( WCS_ATT_ABSPATH . 'includes/integrations/class-wcs-att-integration-square.php' );
+		}
+
+		// AfterPay compatibility.
+		if ( class_exists( 'WC_Gateway_Afterpay' ) && is_callable( array( 'WC_Gateway_Afterpay', 'getInstance' ) ) ) {
+			require_once( WCS_ATT_ABSPATH . 'includes/integrations/class-wcs-att-integration-afterpay.php' );
+			WCS_ATT_Integration_AfterPay::init();
+		}
+
+		// Stripe compatibility.
+		if ( class_exists( 'WC_Gateway_Stripe' ) ) {
+			require_once( WCS_ATT_ABSPATH . 'includes/integrations/class-wcs-att-integration-stripe.php' );
+		}
+
+		// WooCommerce Payments compatibility.
+		if ( class_exists( 'WC_Payments' ) ) {
+			require_once( WCS_ATT_ABSPATH . 'includes/integrations/class-wcs-att-integration-wc-payments.php' );
 		}
 
 		// Define dependencies.
@@ -355,4 +375,4 @@ class WCS_ATT_Integrations {
 	}
 }
 
-add_action( 'plugins_loaded', array( 'WCS_ATT_Integrations', 'init' ), 99 );
+add_action( 'plugins_loaded', array( 'WCS_ATT_Integrations', 'init' ), 20 );

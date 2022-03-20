@@ -2,7 +2,6 @@
 /**
  * WCS_ATT_Integration_PB_CP class
  *
- * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    2.3.0
  */
@@ -16,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Compatibility with Product Bundles and Composite Products.
  *
  * @class    WCS_ATT_Integration_PB_CP
- * @version  3.1.21
+ * @version  3.2.1
  */
 class WCS_ATT_Integration_PB_CP {
 
@@ -181,6 +180,9 @@ class WCS_ATT_Integration_PB_CP {
 		add_filter( 'wcsatt_single_product_one_time_option_data', array( __CLASS__, 'bundle_one_time_option_data' ), 10, 2 );
 		add_filter( 'wcsatt_single_product_subscription_option_data', array( __CLASS__, 'bundle_subscription_option_data' ), 10, 3 );
 
+		// Make sure child order items inherit the subscription plans of their parent.
+		add_filter( 'woocommerce_order_item_product', array( __CLASS__, 'restore_bundle_type_product_from_order_item' ), 5, 2 );
+
 		/*
 		 * All types: Display/templates integration.
 		 */
@@ -217,48 +219,47 @@ class WCS_ATT_Integration_PB_CP {
 		/*
 		 * Subscriptions management: Switching.
 		 */
+		if ( WCS_ATT()->is_module_registered( 'manage' ) ) {
 
-		// Add extra 'Allow Switching' options. See 'WCS_ATT_Admin::allow_switching_options'.
-		add_filter( 'woocommerce_subscriptions_allow_switching_options', array( __CLASS__, 'add_bundle_switching_options' ), 11 );
+			// Add extra 'Allow Switching' options. See 'WCS_ATT_Admin::allow_switching_options'.
+			add_filter( 'woocommerce_subscriptions_allow_switching_options', array( __CLASS__, 'add_bundle_switching_options' ), 11 );
 
-		// Hide "Upgrade or Downgrade" switching buttons of bundle-type line items under 'My Account > Subscriptions'.
-		add_filter( 'woocommerce_subscriptions_can_item_be_switched', array( __CLASS__, 'can_switch_bundle_type_item' ), 10, 3 );
+			// Hide "Upgrade or Downgrade" switching buttons of bundle-type line items under 'My Account > Subscriptions'.
+			add_filter( 'woocommerce_subscriptions_can_item_be_switched', array( __CLASS__, 'can_switch_bundle_type_item' ), 10, 3 );
 
-		// Add content switching support to Bundle-type products.
-		add_filter( 'wcsatt_product_supports_feature', array( __CLASS__, 'bundle_supports_switching' ), 10, 4 );
+			// Add content switching support to Bundle-type products.
+			add_filter( 'wcsatt_product_supports_feature', array( __CLASS__, 'bundle_supports_switching' ), 10, 4 );
 
-		// Make WCS see products with a switched scheme as non-identical ones.
-		add_filter( 'woocommerce_subscriptions_switch_is_identical_product', array( __CLASS__, 'bundle_is_identical' ), 10, 6 );
+			// Make WCS see products with a switched scheme as non-identical ones.
+			add_filter( 'woocommerce_subscriptions_switch_is_identical_product', array( __CLASS__, 'bundle_is_identical' ), 10, 6 );
 
-		// Only allow content switching: Bundle schemes should be limited to the one matching the subscription while the product is being switched.
-		add_filter( 'wcsatt_product_subscription_schemes', array( __CLASS__, 'limit_switched_bundle_type_schemes' ), 100, 2 );
+			// Only allow content switching: Bundle schemes should be limited to the one matching the subscription while the product is being switched.
+			add_filter( 'wcsatt_product_subscription_schemes', array( __CLASS__, 'limit_switched_bundle_type_schemes' ), 100, 2 );
 
-		// Disallow plan switching for bundle types. Only content switching permitted!
-		add_filter( 'wcsatt_force_subscription', array( __CLASS__, 'force_switched_bundle_type_subscription' ), 10, 2 );
+			// Disallow plan switching for bundle types. Only content switching permitted!
+			add_filter( 'wcsatt_force_subscription', array( __CLASS__, 'force_switched_bundle_type_subscription' ), 10, 2 );
 
-		// Restore bundle configuration when switching.
-		add_filter( 'woocommerce_subscriptions_switch_url', array( __CLASS__, 'bundle_type_switch_configuration_url' ), 10, 4 );
+			// Restore bundle configuration when switching.
+			add_filter( 'woocommerce_subscriptions_switch_url', array( __CLASS__, 'bundle_type_switch_configuration_url' ), 10, 4 );
 
-		// Change the order item status of old child items when the new parent is added.
-		add_action( 'woocommerce_subscription_item_switched', array( __CLASS__, 'remove_switched_subscription_child_items' ), 10, 4 );
+			// Change the order item status of old child items when the new parent is added.
+			add_action( 'woocommerce_subscription_item_switched', array( __CLASS__, 'remove_switched_subscription_child_items' ), 10, 4 );
 
-		// Make sure child order items inherit the subscription plans of their parent.
-		add_filter( 'woocommerce_order_item_product', array( __CLASS__, 'restore_bundle_type_product_from_order_item' ), 5, 2 );
+			// Disable proration when switching.
+			add_filter( 'wcs_switch_proration_switch_type', array( __CLASS__, 'force_bundle_switch_type' ), 10, 3 );
+			add_filter( 'woocommerce_before_calculate_totals', array( __CLASS__, 'restore_bundle_switch_type' ), 100 );
 
-		// Disable proration when switching.
-		add_filter( 'wcs_switch_proration_switch_type', array( __CLASS__, 'force_bundle_switch_type' ), 10, 3 );
-		add_filter( 'woocommerce_before_calculate_totals', array( __CLASS__, 'restore_bundle_switch_type' ), 100 );
+			if ( class_exists( 'WC_Bundles' ) ) {
 
-		if ( class_exists( 'WC_Bundles' ) ) {
+				// Copy switch parameters from parent item.
+				add_filter( 'woocommerce_bundled_item_cart_data', array( __CLASS__, 'bundled_item_switch_cart_data' ), 10, 2 );
+			}
 
-			// Copy switch parameters from parent item.
-			add_filter( 'woocommerce_bundled_item_cart_data', array( __CLASS__, 'bundled_item_switch_cart_data' ), 10, 2 );
-		}
+			if ( class_exists( 'WC_Composite_Products' ) ) {
 
-		if ( class_exists( 'WC_Composite_Products' ) ) {
-
-			// Copy switch parameters from parent item.
-			add_filter( 'woocommerce_composited_cart_item_data', array( __CLASS__, 'composited_item_switch_cart_data' ), 10, 2 );
+				// Copy switch parameters from parent item.
+				add_filter( 'woocommerce_composited_cart_item_data', array( __CLASS__, 'composited_item_switch_cart_data' ), 10, 2 );
+			}
 		}
 
 		/*
@@ -442,16 +443,24 @@ class WCS_ATT_Integration_PB_CP {
 	 * @param  array     $order_item
 	 * @param  WC_Order  $order
 	 * @param  boolean   $return_ids
+	 * @param  boolean   $deep
 	 * @return mixed
 	 */
-	public static function get_bundle_type_order_items( $order_item, $order = false, $return_ids = false ) {
+	public static function get_bundle_type_order_items( $order_item, $order = false, $return_ids = false, $deep = false ) {
 
 		$children = array();
 
-		foreach ( self::$child_order_item_getters as $child_order_item_getter ) {
-			$children = call_user_func_array( $child_order_item_getter, array( $order_item, $order, $return_ids ) );
-			if ( ! empty( $children ) ) {
-				break;
+		if ( $deep && function_exists( 'wc_cp_is_composite_container_order_item' ) && wc_cp_is_composite_container_order_item( $order_item ) ) {
+
+			$children = wc_cp_get_composited_order_items( $order_item, $order, $return_ids, true );
+
+		} else {
+
+			foreach ( self::$child_order_item_getters as $child_order_item_getter ) {
+				$children = call_user_func_array( $child_order_item_getter, array( $order_item, $order, $return_ids ) );
+				if ( ! empty( $children ) ) {
+					break;
+				}
 			}
 		}
 
@@ -880,8 +889,9 @@ class WCS_ATT_Integration_PB_CP {
 			}
 
 			$data[ 'option_details_html' ] = WCS_ATT_Product_Prices::get_price_html( $product, $subscription_scheme->get_key(), array(
-				'context' => 1 === sizeof( $subscription_schemes ) && $force_subscription ? 'catalog' : 'options',
-				'price'   => '%p'
+				'context'         => 1 === count( $subscription_schemes ) && $force_subscription ? 'catalog' : 'options',
+				'append_discount' => 1 < count( $subscription_schemes ) || ! $force_subscription,
+				'price'           => '%p'
 			) );
 
 			$data[ 'option_has_price' ]           = false !== strpos( $data[ 'option_details_html' ], '%p' );
@@ -978,7 +988,9 @@ class WCS_ATT_Integration_PB_CP {
 				}
 			}
 
-			$subtotal = WC_Subscriptions_Switcher::add_cart_item_switch_direction( $subtotal, $cart_item, $cart_item_key );
+			if ( WCS_ATT()->is_module_registered( 'manage' ) && WC_Subscriptions_Switcher::cart_contains_switches() ) {
+				$subtotal = WC_Subscriptions_Switcher::add_cart_item_switch_direction( $subtotal, $cart_item, $cart_item_key );
+			}
 		}
 
 		return $subtotal;
@@ -1068,7 +1080,7 @@ class WCS_ATT_Integration_PB_CP {
 		if ( $can ) {
 
 			$items    = $subscription->get_items();
-			$count    = sizeof( $items );
+			$count    = count( $items );
 			$subtract = 0;
 
 			foreach ( $items as $item ) {
@@ -1080,7 +1092,6 @@ class WCS_ATT_Integration_PB_CP {
 					if ( ! $parent_item_visible ) {
 						$subtract += 1;
 					}
-
 
 					$bundled_order_items = self::get_bundle_type_order_items( $item, $subscription );
 
@@ -1279,7 +1290,11 @@ class WCS_ATT_Integration_PB_CP {
 				$can = false;
 			// If the parent is switchable, then the child is switchable, too!
 			} else {
-				$can = WC_Subscriptions_Switcher::can_item_be_switched( self::get_bundle_type_order_item_container( $item, $subscription ), $subscription );
+				if ( WC_Subscriptions_Switcher::cart_contains_switches() ) {
+					$can = WC_Subscriptions_Switcher::can_item_be_switched( self::get_bundle_type_order_item_container( $item, $subscription ), $subscription );
+				} else {
+					$can = false;
+				}
 			}
 		}
 
@@ -1320,7 +1335,7 @@ class WCS_ATT_Integration_PB_CP {
 
 						if ( 'no' !== $option_value ) {
 							$subscription_schemes = WCS_ATT_Product_Schemes::get_subscription_schemes( $product );
-							$is_feature_supported = sizeof( $subscription_schemes ) && ( $product->contains( 'options' ) || $product->contains( 'priced_indefinitely' ) );
+							$is_feature_supported = count( $subscription_schemes ) && ( $product->contains( 'options' ) || $product->contains( 'priced_indefinitely' ) );
 						}
 
 					} elseif ( $product->is_type( 'composite' ) ) {
@@ -1329,7 +1344,7 @@ class WCS_ATT_Integration_PB_CP {
 
 						if ( 'no' !== $option_value ) {
 							$subscription_schemes = WCS_ATT_Product_Schemes::get_subscription_schemes( $product );
-							$is_feature_supported = sizeof( $subscription_schemes );
+							$is_feature_supported = count( $subscription_schemes );
 						}
 					}
 				}
@@ -1562,7 +1577,7 @@ class WCS_ATT_Integration_PB_CP {
 
 		$removing_item = $subscription->get_item( $removing_item_id );
 
-		if ( $child_items = self::get_bundle_type_order_items( $removing_item, $subscription, true ) ) {
+		if ( $child_items = self::get_bundle_type_order_items( $removing_item, $subscription, true, true ) ) {
 			foreach ( $child_items as $child_item ) {
 				wcs_update_order_item_type( $child_item, 'line_item_switched', $subscription->get_id() );
 			}
@@ -1604,7 +1619,11 @@ class WCS_ATT_Integration_PB_CP {
 		if ( self::is_bundle_type_product( $product ) ) {
 			if ( WCS_ATT_Manage_Switch::is_switch_request_for_product( $product ) ) {
 
-				$subscription = wcs_get_subscription( $_GET[ 'switch-subscription' ] );
+				if ( ! isset( $_GET[ 'switch-subscription' ] ) ) {
+					return $schemes;
+				}
+
+				$subscription = wcs_get_subscription( absint( $_GET[ 'switch-subscription' ] ) );
 
 				if ( ! $subscription ) {
 					return $schemes;
@@ -1984,12 +2003,7 @@ class WCS_ATT_Integration_PB_CP {
 				if ( $item = $subscription->get_item( $cart_item[ 'subscription_switch' ][ 'item_id' ] ) ) {
 
 					$aggregated_total_old = $item->get_total();
-
-					if ( function_exists( 'wc_cp_is_composite_container_order_item' ) && wc_cp_is_composite_container_order_item( $item ) ) {
-						$child_items = wc_cp_get_composited_order_items( $item, $subscription, false, true );
-					} else {
-						$child_items = self::get_bundle_type_order_items( $item, $subscription );
-					}
+					$child_items          = self::get_bundle_type_order_items( $item, $subscription, false, true );
 
 					if ( ! empty( $child_items ) ) {
 						foreach ( $child_items as $child_item ) {

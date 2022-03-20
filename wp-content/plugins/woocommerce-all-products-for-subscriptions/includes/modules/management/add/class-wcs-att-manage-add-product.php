@@ -2,7 +2,6 @@
 /**
  * WCS_ATT_Manage_Add_Product class
  *
- * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    2.1.0
  */
@@ -16,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Add stuff to existing subscriptions.
  *
  * @class    WCS_ATT_Manage_Add_Product
- * @version  3.1.25
+ * @version  3.2.1
  */
 class WCS_ATT_Manage_Add_Product extends WCS_ATT_Abstract_Module {
 
@@ -55,7 +54,7 @@ class WCS_ATT_Manage_Add_Product extends WCS_ATT_Abstract_Module {
 	private static function register_template_hooks() {
 
 		// Render the add-to-subscription wrapper element in single-product pages.
-		add_filter( 'woocommerce_after_add_to_cart_button', array( __CLASS__, 'options_template' ), 1000 );
+		add_action( 'woocommerce_after_add_to_cart_button', array( __CLASS__, 'options_template' ), 1000 );
 
 		// Render subscriptions list.
 		add_action( 'wcsatt_add_product_to_subscription_html', array( __CLASS__, 'matching_subscriptions_template' ), 10, 3 );
@@ -88,7 +87,7 @@ class WCS_ATT_Manage_Add_Product extends WCS_ATT_Abstract_Module {
 		}
 
 		// Bypass when switching.
-		if ( WCS_ATT_Manage_Switch::is_switch_request_for_product( $product ) ) {
+		if ( WCS_ATT()->is_module_registered( 'manage' ) && WCS_ATT_Manage_Switch::is_switch_request_for_product( $product ) ) {
 			return;
 		}
 
@@ -113,7 +112,7 @@ class WCS_ATT_Manage_Add_Product extends WCS_ATT_Abstract_Module {
 
 			$subscription_schemes                 = WCS_ATT_Product_Schemes::get_subscription_schemes( $product );
 			$force_subscription                   = WCS_ATT_Product_Schemes::has_forced_subscription_scheme( $product );
-			$is_single_scheme_forced_subscription = $force_subscription && sizeof( $subscription_schemes ) === 1;
+			$is_single_scheme_forced_subscription = $force_subscription && count( $subscription_schemes ) === 1;
 			$default_subscription_scheme_key      = apply_filters( 'wcsatt_get_default_subscription_scheme_id', WCS_ATT_Product_Schemes::get_default_subscription_scheme( $product, 'key' ), $subscription_schemes, false === $force_subscription, $product ); // Why 'false === $force_subscription'? The answer is back-compat.
 
 			if ( isset( $_REQUEST[ 'add-to-cart' ] ) ) {

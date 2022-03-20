@@ -2,7 +2,6 @@
 /**
  * WCS_ATT_Scheme class
  *
- * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    2.0.0
  */
@@ -16,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Subscription scheme object. May extend the WC_Data class or handle CRUD in the future, if schemes are moved out of meta.
  *
  * @class    WCS_ATT_Scheme
- * @version  3.1.17
+ * @version  3.2.1
  */
 class WCS_ATT_Scheme implements ArrayAccess {
 
@@ -303,13 +302,27 @@ class WCS_ATT_Scheme implements ArrayAccess {
 				$prices[ 'sale_price' ]    = '' !== $prices[ 'sale_price' ] ? $prices[ 'sale_price' ] + $raw_prices[ 'offset_price' ] : $prices[ 'sale_price' ];
 			}
 
-		} elseif ( 'inherit' === $this->get_pricing_mode() && $this->get_discount() > 0 && $raw_prices[ 'price' ] > 0 ) {
+		} elseif ( 'inherit' === $this->get_pricing_mode() && $this->get_discount() > 0 ) {
 
-			$prices[ 'regular_price' ] = empty( $prices[ 'regular_price' ] ) ? $prices[ 'price' ] : $prices[ 'regular_price' ];
-			$prices[ 'price' ]         = $this->get_discounted_price( $raw_prices );
+			$populate_prices = true;
 
-			if ( $prices[ 'price' ] < $prices[ 'regular_price' ] ) {
-				$prices[ 'sale_price' ] = $prices[ 'price' ] ;
+			if ( '' === $prices[ 'regular_price' ] && '' === $prices[ 'price' ] ) {
+				$populate_prices = false;
+			}
+
+			if ( $populate_prices ) {
+
+				if ( '' === $prices[ 'regular_price' ] ) {
+					$prices[ 'regular_price' ] = $prices[ 'price' ];
+				} elseif ( '' === $prices[ 'price' ] ) {
+					$prices[ 'price' ] = $prices[ 'regular_price' ];
+				}
+
+				$prices[ 'price' ] = $this->get_discounted_price( $prices );
+
+				if ( $prices[ 'price' ] < $prices[ 'regular_price' ] ) {
+					$prices[ 'sale_price' ] = $prices[ 'price' ];
+				}
 			}
 		}
 
@@ -426,15 +439,15 @@ class WCS_ATT_Scheme implements ArrayAccess {
 			$scheme_sync_day           = $this->get_sync_date();
 			$subscription_next_payment = $subscription->get_time( 'next_payment', '' );
 
-			if ( 'week' === $period && $scheme_sync_day !== intval( date( 'N', $subscription_next_payment ) ) ) {
+			if ( 'week' === $period && $scheme_sync_day !== intval( gmdate( 'N', $subscription_next_payment ) ) ) {
 				return false;
 			}
 
-			if ( 'month' === $period && $scheme_sync_day !== intval( date( 'j', $subscription_next_payment ) ) ) {
+			if ( 'month' === $period && $scheme_sync_day !== intval( gmdate( 'j', $subscription_next_payment ) ) ) {
 				return false;
 			}
 
-			if ( 'year' === $period && ( $scheme_sync_day[ 'day' ] !== date( 'd', $subscription_next_payment ) || $scheme_sync_day[ 'month' ] !== date( 'm', $subscription_next_payment ) ) ) {
+			if ( 'year' === $period && ( $scheme_sync_day[ 'day' ] !== gmdate( 'd', $subscription_next_payment ) || $scheme_sync_day[ 'month' ] !== gmdate( 'm', $subscription_next_payment ) ) ) {
 				return false;
 			}
 		}

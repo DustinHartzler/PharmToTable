@@ -1,5 +1,47 @@
 *** WooCommerce All Products For Subscriptions ***
 
+2022.03.16 - version 3.2.1
+* Tweak - Used new WooCommerce brand colors.
+* Fix - Made sure that the 'wcsatt_price_html_discount_format' filter is added only when there is at least one discounted subscription plan. 
+
+2022.01.17 - version 3.2.0
+* Feature - Added support for WooCommerce Subscriptions v4+.
+* Feature - Added integration with Subscriptions Core loaded via WooCommerce Payments. Important: Adding products/carts to existing subscriptions is not supported at this point when using WooCommerce Payments.
+
+2021.12.23 - version 3.1.33
+* Fix - Fixed an issue where 'Add this cart to an existing subscription' is displayed when user not logged in.
+
+2021.12.21 - version 3.1.32
+* Feature - Hide WooCommerce Payments quick-pay buttons in product pages with Subscription plans.
+* Fix - Fixed an issue that resulted in an immediate charge of synchronized subscription plans. Introduced in v3.1.31 after changing the priorities of price filters.
+* Fix - Fixed an issue that prevented bundled items from being removed from a subscription when removing their parent Bundle, in scenarios when the parent Bundle is part of a Composite Product.
+
+2021.12.03 - version 3.1.31
+* Feature - Added integration with PayPal Payments to hide quick-pay buttons in product pages with subscription plans.
+* Fix - Fixed missing notices.
+* Fix - Fixed PHP warning triggered when selecting a discounted Subscription plan for a Product Bundle without a Regular/Sale price.
+
+2021.08.27 - version 3.1.30
+* Feature - Added integration with Stripe to hide quick-pay buttons in product pages with σubscription plans.
+* Fix - Fixed floating Add to Cart button in pages created by Elementor.
+* Fix - Hide AfterPay quick-pay buttons from Variable Products with Subscription plans.
+* Fix - Make sure cart plan discounts are applied when manually paying for failed subscription orders.
+* Fix - Do not change a switching fee when switch proration is disabled. Regression introduced in v3.1.29.
+
+2021.07.12 - version 3.1.29
+* Feature - Added integration with AfterPay gateway.
+* Tweak - Use sale price as crossed-out price in subscription plan prices if the product is on sale.
+* Fix - Fixed an issue that prevented the crossed-out price from showing up in discounted subscription prices if the product has a scheduled Sale Price.
+* Fix - Restored functionality in the Square integration.
+
+2021.05.24 - version 3.1.28
+* Fix - Make sure dummy subscription plan is applied correctly when renewing subscriptions manually.
+
+2021.05.20 - version 3.1.27
+* Fix - Fixed checkboxes and radio buttons layout in the Twenty Twenty/Twenty-One themes.
+* Fix - Construct and apply a dummy subscription plan to supported products when renewing subscriptions manually.
+* Fix - Removed Square Digital Wallet buttons in product, cart and checkout pages when viewing/purchasing products with Subscription plans.
+
 2021.03.18 - version 3.1.26
 * Fix - Fixed 'woocommerce_is_nyp' deprecated filter warning.
 * Fix - Bundle/Composite Subscription plans prices are still not calculated correctly when 'wcsatt_discount_from_regular' is active.

@@ -2,7 +2,6 @@
 /**
  * WCS_ATT_Manage_Add class
  *
- * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    2.1.0
  */
@@ -16,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Add stuff to existing subscriptions.
  *
  * @class    WCS_ATT_Manage_Add
- * @version  3.1.19
+ * @version  3.2.1
  */
 class WCS_ATT_Manage_Add extends WCS_ATT_Abstract_Module {
 
@@ -32,8 +31,8 @@ class WCS_ATT_Manage_Add extends WCS_ATT_Abstract_Module {
 
 		// Initialize modules.
 		$this->modules = array(
-			'WCS_ATT_Manage_Add_Product',
-			'WCS_ATT_Manage_Add_Cart'
+			'manage_add_product' => 'WCS_ATT_Manage_Add_Product',
+			'manage_add_cart'    => 'WCS_ATT_Manage_Add_Cart'
 		);
 	}
 
@@ -74,7 +73,7 @@ class WCS_ATT_Manage_Add extends WCS_ATT_Abstract_Module {
 				if ( ! empty( $_REQUEST[ 'add-product-to-subscription' ] ) && is_numeric( $_REQUEST[ 'add-product-to-subscription' ] ) ) {
 
 					$posted_data[ 'product_id' ]          = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $_REQUEST[ 'add-product-to-subscription' ] ) );
-					$posted_data[ 'nonce' ]               = ! empty( $_REQUEST[ 'wcsatt_nonce_' . $posted_data[ 'product_id' ] ] ) ? $_REQUEST[ 'wcsatt_nonce_' . $posted_data[ 'product_id' ] ] : '';
+					$posted_data[ 'nonce' ]               = ! empty( $_REQUEST[ 'wcsatt_nonce_' . $posted_data[ 'product_id' ] ] ) ? wc_clean( $_REQUEST[ 'wcsatt_nonce_' . $posted_data[ 'product_id' ] ] ) : '';
 					$posted_data[ 'subscription_id' ]     = absint( $_REQUEST[ 'add-to-subscription' ] );
 					$posted_data[ 'subscription_scheme' ] = WCS_ATT_Product_Schemes::get_posted_subscription_scheme( $posted_data[ 'product_id' ] );
 				}
@@ -91,7 +90,7 @@ class WCS_ATT_Manage_Add extends WCS_ATT_Abstract_Module {
 
 				if ( ! empty( $_REQUEST[ 'add-cart-to-subscription' ] ) && is_numeric( $_REQUEST[ 'add-cart-to-subscription' ] ) ) {
 
-					$posted_data[ 'nonce' ]               = ! empty( $_REQUEST[ 'wcsatt_nonce' ] ) ? $_REQUEST[ 'wcsatt_nonce' ] : '';
+					$posted_data[ 'nonce' ]               = ! empty( $_REQUEST[ 'wcsatt_nonce' ] ) ? wc_clean( $_REQUEST[ 'wcsatt_nonce' ] ) : '';
 					$posted_data[ 'subscription_id' ]     = absint( $_REQUEST[ 'add-cart-to-subscription' ] );
 					$posted_data[ 'subscription_scheme' ] = WCS_ATT_Cart::get_cart_subscription_scheme();
 				}
@@ -231,7 +230,7 @@ class WCS_ATT_Manage_Add extends WCS_ATT_Abstract_Module {
 			WC()->cart->calculate_totals();
 		}
 
-		if ( empty( WC()->cart->recurring_carts ) || 1 !== sizeof( WC()->cart->recurring_carts ) ) {
+		if ( empty( WC()->cart->recurring_carts ) || 1 !== count( WC()->cart->recurring_carts ) ) {
 			wc_add_notice( __( 'Action failed. Please get in touch with us for assistance.', 'woocommerce-all-products-for-subscriptions' ), 'error' );
 			return;
 		}

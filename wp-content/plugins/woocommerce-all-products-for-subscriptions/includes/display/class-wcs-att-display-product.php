@@ -2,7 +2,6 @@
 /**
  * WCS_ATT_Display_Product class
  *
- * @author   SomewhereWarm <info@somewherewarm.com>
  * @package  WooCommerce All Products For Subscriptions
  * @since    2.0.0
  */
@@ -16,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Single-product template modifications.
  *
  * @class    WCS_ATT_Display_Product
- * @version  3.1.18
+ * @version  3.2.1
  */
 class WCS_ATT_Display_Product {
 
@@ -49,7 +48,7 @@ class WCS_ATT_Display_Product {
 		add_filter( 'woocommerce_available_variation', array( __CLASS__, 'add_subscription_options_to_variation_data' ), 1, 3 );
 
 		// Add product page class if a product has subscription plans.
-		add_filter( 'woocommerce_post_class', array( __CLASS__, 'add_product_class' ), 10, 2 );
+		add_filter( 'post_class', array( __CLASS__, 'add_product_class' ), 10, 3 );
 	}
 
 	/**
@@ -548,7 +547,7 @@ class WCS_ATT_Display_Product {
 			$subscription_schemes                 = WCS_ATT_Product_Schemes::get_subscription_schemes( $variation_product );
 			$force_subscription                   = WCS_ATT_Product_Schemes::has_forced_subscription_scheme( $variation_product );
 			$price_filter_exists                  = WCS_ATT_Product_Schemes::price_filter_exists( $subscription_schemes );
-			$is_single_scheme_forced_subscription = $force_subscription && sizeof( $subscription_schemes ) === 1;
+			$is_single_scheme_forced_subscription = $force_subscription && count( $subscription_schemes ) === 1;
 			$has_equal_variation_prices           = '' === $variation_data[ 'price_html' ];
 
 			/*
@@ -731,7 +730,13 @@ class WCS_ATT_Display_Product {
 	 * @param  array       $classes
 	 * @param  WC_Product  $product
 	 */
-	public static function add_product_class( $classes, $product ) {
+	public static function add_product_class( $classes, $class, $product_id ) {
+
+		global $product;
+
+		if ( $product && ! is_a( $product, 'WC_Product' ) ) {
+			return $classes;
+		}
 
 		if ( WCS_ATT_Product_Schemes::has_subscription_schemes( $product ) ) {
 			$classes[] = 'has-subscription-plans';
