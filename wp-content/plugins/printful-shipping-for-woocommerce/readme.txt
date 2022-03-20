@@ -2,9 +2,9 @@
 Contributors: girts_u, kievins, kberzins
 Tags: woocommerce, printful, drop shipping, shipping, shipping rates, fulfillment, printing, fedex, carriers, checkout, t-shirts
 Requires at least: 5.3
-Tested up to: 5.6
+Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.1.27
+Stable tag: 2.1.30
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,15 +16,15 @@ Grow your store with the top print-on-demand dropshipping plugin
 
 With Printful, you can focus on building your store. We'll print, fulfill and ship your products for you. Simply upload your design, add it to your store, and we'll do the rest.
 
-We offer more than 270+ products in various categories—apparel, home & living items, jewelry, accessories, and more!  Once your orders start rolling in, we’ll fulfill and ship each one under your brand at our in-house and partner facilities, located globally.
+We offer more than 305+ products in various categories—apparel, home & living items, jewelry, accessories, and more!  Once your orders start rolling in, we’ll fulfill and ship each one under your brand at our in-house and partner facilities, located globally.
 
-Printful customers have already made more than $795 million in sales, so start selling today!
+Printful customers have already made more than $1 billion in sales, so start selling today!
 
 = How does Printful work? =
 
 When a customer buys something from your WooCommerce store, the order is automatically imported to Printful, where we fulfill and ship it to them under your brand. You can then see your order, revenue, and profit statistics on your WooCommerce dashboard.
 
-We’re trusted to print over 27 million products and we can't wait to print yours!
+We’re trusted to print over 1 million products monthly and we can't wait to print yours!
 
 Learn more about the WooCommerce + Printful integration [here](https://www.printful.com/dashboard/woocommerce/register):
 
@@ -64,6 +64,15 @@ Go to https://www.printful.com/dashboard/store , select your WooCommerce store, 
 5. Support page
 
 == Upgrade Notice ==
+
+= 2.1.30 =
+Additional billing setting check
+
+= 2.1.29 =
+WordPress compatibility raised to 5.8. Size guide bugfix
+
+= 2.1.28 =
+Woocommerce compatibility raised to 6.1
 
 = 2.1.27 =
 Woocommerce compatibility raised to 6.0. Size guide bug fix
@@ -222,6 +231,15 @@ Minor improvements
 First release
 
 == Changelog ==
+
+= 2.1.30 =
+Additional billing setting check
+
+= 2.1.29 =
+* WordPress compatibility raised to 5.8. Size guide bugfix
+
+= 2.1.28 =
+* Woocommerce compatibility raised to 6.1
 
 = 2.1.27 =
 * Woocommerce compatibility raised to 6.0

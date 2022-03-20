@@ -272,6 +272,7 @@ class Printful_Shipping extends WC_Shipping_Method
 			if ( $response === false ) {
 				$response = $client->post( 'shipping/rates', $request, array(
 					'expedited' => true,
+                    'is_billing_phone_number_mandatory' => $this->isBillingPhoneNumberRequired(),
 				) );
 				//Cache locally, since WC < 2.6 had problems with caching rates form multiple packages internally
 				set_transient( $key, $response, 1800 );
@@ -328,4 +329,9 @@ class Printful_Shipping extends WC_Shipping_Method
 
 		return '<p>ERROR: ' . htmlspecialchars( $message ) . '</p>';
 	}
+
+    private function isBillingPhoneNumberRequired()
+    {
+        return get_option('woocommerce_checkout_phone_field', 'required') === 'required';
+    }
 }

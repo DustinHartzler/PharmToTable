@@ -124,6 +124,8 @@ class Printful_Size_Chart_Tab {
 		self::$saved_meta_boxes = true;
 
 		//save
-		update_post_meta($post_id, 'pf_size_chart', htmlspecialchars($_POST['pf_size_chart']));
+        if (!empty($_POST['pf_size_chart'])) {
+            update_post_meta($post_id, 'pf_size_chart', htmlspecialchars($_POST['pf_size_chart']));
+        }
 	}
 }
