@@ -7,10 +7,10 @@
  * Text Domain: wcopc
  * Domain Path: languages
  * Plugin URI:  https://woocommerce.com/products/woocommerce-one-page-checkout/
- * Version: 1.7.11
- * Tested up to: 5.6
+ * Version: 1.9.3
+ * Tested up to: 5.8.2
  * WC requires at least: 2.5
- * WC tested up to: 5.0
+ * WC tested up to: 6.0.0
  * Woo: 527886:c9ba8f8352cd71b5508af5161268619a
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,7 +56,7 @@ if ( ! is_woocommerce_active() || version_compare( get_option( 'woocommerce_db_v
 	return;
 }
 
-define( 'WC_ONE_PAGE_CHECKOUT_VERSION', '1.7.11' ); // WRCS: DEFINED_VERSION.
+define( 'WC_ONE_PAGE_CHECKOUT_VERSION', '1.9.3' ); // WRCS: DEFINED_VERSION.
 
 add_filter( 'woocommerce_translations_updates_for_woocommerce-one-page-checkout', '__return_true' );
 
@@ -79,48 +79,13 @@ function wcopc_load_plugin_textdomain() {
 add_action( 'plugins_loaded', 'wcopc_load_plugin_textdomain' );
 
 /**
- * Function that devs can use to check if a page includes the OPC shortcode
+ * Whether a page includes the OPC shortcode, a OPC product page or the
+ * 'product_page' shortcode of a OPC product.
  *
  * @since 1.1
  */
 function is_wcopc_checkout( $post_id = null ) {
-
-	// If no post_id specified try getting the post_id from the URL (excluding admin pages).
-	if ( empty( $post_id ) && ! is_admin() ) {
-		global $post;
-
-		if ( is_object( $post ) ) {
-			$post_id = $post->ID;
-		} else {
-			// Try to get the post ID from the URL in case this function is called before init
-			$schema = is_ssl() ? 'https://' : 'http://';
-			$url = explode('?', $schema . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] );
-			$post_id = url_to_postid( $url[0] );
-		}
-	}
-
-	// If still no post_id return straight away
-	if ( empty( $post_id ) || is_admin() ) {
-
-		$is_opc = false;
-
-	} else {
-
-		if ( 0 == PP_One_Page_Checkout::$shortcode_page_id ) {
-			$post_to_check = ! empty( $post ) ? $post : get_post( $post_id );
-			PP_One_Page_Checkout::check_for_shortcode( $post_to_check );
-		}
-
-		// Compare IDs
-		if ( $post_id == PP_One_Page_Checkout::$shortcode_page_id || ( 'yes' == get_post_meta( $post_id, '_wcopc', true ) ) ) {
-			$is_opc = true;
-		} else {
-			$is_opc = false;
-		}
-
-	}
-
-	return apply_filters( 'is_wcopc_checkout', $is_opc, $post_id );
+	return PP_One_Page_Checkout::is_wcopc_checkout( $post_id );
 }
 
 /**
@@ -130,7 +95,7 @@ function is_wcopc_checkout( $post_id = null ) {
  *
  * @since 1.0
  */
-function initialize_one_page_checkout(){
+function initialize_one_page_checkout() {
 	PP_One_Page_Checkout::init();
 }
 
@@ -150,7 +115,7 @@ class PP_One_Page_Checkout {
 
 	static $shortcode_page_temp_id = 0;
 
-	static $products_to_display =  null;
+	static $products_to_display = null;
 
 	static $categories_to_display = null;
 
@@ -172,6 +137,8 @@ class PP_One_Page_Checkout {
 
 	static $guest_checkout_option_changed = false;
 
+	static $main_post_id = null;
+
 	public static function init() {
 
 		self::$active_plugins = get_option( 'active_plugins', array() );
@@ -180,9 +147,9 @@ class PP_One_Page_Checkout {
 			self::$active_plugins = array_merge( self::$active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
 		}
 
-		self::$plugin_url     = untrailingslashit( plugins_url( '/', __FILE__ ) );
-		self::$plugin_path    = untrailingslashit( plugin_dir_path( __FILE__ ) );
-		self::$template_path  = self::$plugin_path . '/templates/';
+		self::$plugin_url    = untrailingslashit( plugins_url( '/', __FILE__ ) );
+		self::$plugin_path   = untrailingslashit( plugin_dir_path( __FILE__ ) );
+		self::$template_path = self::$plugin_path . '/templates/';
 
 		require_once self::$plugin_path . '/functions.php';
 		require_once self::$plugin_path . '/classes/class-wcopc-admin-editor.php';
@@ -193,34 +160,40 @@ class PP_One_Page_Checkout {
 		require_once self::$plugin_path . '/classes/class-wcopc-compat-name-your-price.php';
 		require_once self::$plugin_path . '/classes/class-wcopc-settings.php';
 
-		self::$templates   = apply_filters( 'wcopc_templates', array(
-			'product-table' => array(
-				'label'               => __( 'Product Table', 'wcopc' ),
-				'description'         => __( 'Display a row for each product containing its thumbnail, title and price. Best for a few simple products where the thumbnails are helpful, e.g. a set of halloween masks.', 'wcopc' ),
-				'supports_containers' => false,
-			),
-			'product-list' => array(
-				'label'               => __( 'Product List', 'wcopc' ),
-				'description'         => __( 'Display a list of products with a radio button for selection. Useful when the customer does not need a description or photograph to choose, e.g. versions of an eBook.', 'wcopc' ),
-				'supports_containers' => false,
-			),
-			'product-single'  => array(
-				'label'               => __( 'Single Product', 'wcopc' ),
-				'description'         => __( "Display the single product template for each product. Useful when the description, images, gallery and other meta data will help the customer choose, e.g. evening gowns.", 'wcopc' ),
-				'supports_containers' => false,
-			),
-			'pricing-table'  => array(
-				'label'               => __( 'Pricing Table', 'wcopc' ),
-				'description'         => __( "Display a simple pricing table with each product's attributes, weight and dimensions. Useful to allow customers to compare different, but related products, e.g. membership subscriptions.", 'wcopc' ),
-				'supports_containers' => false,
-			),
-		) );
+		self::$templates = apply_filters(
+			'wcopc_templates',
+			array(
+				'product-table'  => array(
+					'label'               => __( 'Product Table', 'wcopc' ),
+					'description'         => __( 'Display a row for each product containing its thumbnail, title and price. Best for a few simple products where the thumbnails are helpful, e.g. a set of halloween masks.', 'wcopc' ),
+					'supports_containers' => false,
+				),
+				'product-list'   => array(
+					'label'               => __( 'Product List', 'wcopc' ),
+					'description'         => __( 'Display a list of products with a radio button for selection. Useful when the customer does not need a description or photograph to choose, e.g. versions of an eBook.', 'wcopc' ),
+					'supports_containers' => false,
+				),
+				'product-single' => array(
+					'label'               => __( 'Single Product', 'wcopc' ),
+					'description'         => __( 'Display the single product template for each product. Useful when the description, images, gallery and other meta data will help the customer choose, e.g. evening gowns.', 'wcopc' ),
+					'supports_containers' => false,
+				),
+				'pricing-table'  => array(
+					'label'               => __( 'Pricing Table', 'wcopc' ),
+					'description'         => __( "Display a simple pricing table with each product's attributes, weight and dimensions. Useful to allow customers to compare different, but related products, e.g. membership subscriptions.", 'wcopc' ),
+					'supports_containers' => false,
+				),
+			)
+		);
+
+		// Save the global $post id so we can reference it later.
+		add_action( 'wp_head', array( __CLASS__, 'save_main_post_id' ) );
 
 		add_filter( 'woocommerce_ajax_get_endpoint', array( __CLASS__, 'make_sure_ajax_url_is_relative' ) );
 		add_action( 'woocommerce_before_checkout_form', array( __CLASS__, 'add_product_selection_fields' ), 9 );
 
 		// Change add to cart messages on OPC pages to say "Add to Order" and do not include the "View Cart ->" button
-		add_filter( 'woocommerce_add_error', array( __CLASS__, 'maybe_filter_error_message'), 10, 1 );
+		add_filter( 'woocommerce_add_error', array( __CLASS__, 'maybe_filter_error_message' ), 10, 1 );
 		if ( self::is_woocommerce_pre( '3.0' ) ) {
 			add_filter( 'wc_add_to_cart_message', array( __CLASS__, 'maybe_filter_add_to_cart_message' ), 10, 2 );
 		} else {
@@ -305,11 +278,11 @@ class PP_One_Page_Checkout {
 		add_action( 'template_redirect', array( __CLASS__, 'maybe_set_session' ), 1 );
 
 		// Enable robots on OPC pages.
-		add_action( 'wp_head', array( __CLASS__, 'maybe_enable_robots' ), 5 );
+		self::maybe_enable_robots();
 
 		// Hook in just before (and after) 'woocommerce_checkout_payment' to adjust needs_payment() to ensure the payment methods are displayed on page load
-		add_action( 'woocommerce_checkout_order_review', array( __CLASS__, 'maybe_toggle_cart_needs_payment'), 19 );
-		add_action( 'woocommerce_checkout_order_review', array( __CLASS__, 'maybe_toggle_cart_needs_payment'), 21 );
+		add_action( 'woocommerce_checkout_order_review', array( __CLASS__, 'maybe_toggle_cart_needs_payment' ), 19 );
+		add_action( 'woocommerce_checkout_order_review', array( __CLASS__, 'maybe_toggle_cart_needs_payment' ), 21 );
 
 		// Add a variable for opc to check what the default/original guest checkout is before extensions like subscriptions override
 		if ( self::is_woocommerce_pre( '3.3' ) ) {
@@ -329,6 +302,90 @@ class PP_One_Page_Checkout {
 		self::get_settings_instance()->init();
 
 		do_action( 'wcopc_loaded' );
+	}
+
+	/**
+	 * Saves the post ID of the page currently displayed. This allows retrieving
+	 * this ID when inside another loop, like when rendering the 'product_page'
+	 * shortcode.
+	 */
+	public static function save_main_post_id() {
+		global $post;
+		self::$main_post_id = $post->ID;
+	}
+
+	/**
+	 * Whether a page includes the OPC shortcode, a OPC product page or the
+	 * 'product_page' shortcode of a OPC product.
+	 *
+	 * @return boolean
+	 */
+	public static function is_wcopc_checkout( $post_id = null ) {
+
+		// Do not define checkout context in admin pages, CRON, REST and AJAX requests.
+		if ( is_admin() || defined( 'DOING_CRON' ) || WC()->is_rest_api_request() || wp_doing_ajax() || is_favicon() || is_404() ) {
+			return false;
+		}
+
+		if ( empty( $post_id ) ) {
+			$post_id = self::$main_post_id;
+		}
+
+		$is_opc = self::post_is_opc( get_post( $post_id ) );
+
+		return apply_filters( 'is_wcopc_checkout', $is_opc, $post_id );
+	}
+
+	/**
+	 * Checks if it's a OPC product page, a page that contains a `product_page`
+	 * shortcode pointing to a OPC product or a page that contains the
+	 * `woocommerce_one_page_checkout`shortcode.
+	 *
+	 * @return boolean
+	 */
+	public static function post_is_opc( $post ) {
+
+		if ( ! is_object( $post ) ) {
+			// Try to get the post ID from the URL in case this function is called before init
+			$schema  = is_ssl() ? 'https://' : 'http://';
+			$url     = explode( '?', $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+			$post_id = url_to_postid( $url[0] );
+			$post    = get_post( $post_id );
+		}
+
+		if ( ! $post || false !== stripos( $post->post_content, '[woocommerce_one_page_checkout' ) ) {
+			return true;
+		}
+
+		if ( 'yes' === get_post_meta( $post->ID, '_wcopc', true ) ) {
+			return true;
+		}
+
+		// Check for the `product_page` shortcode.
+		preg_match_all( '/' . get_shortcode_regex( array( 'product_page' ) ) . '/', $post->post_content, $matches, PREG_SET_ORDER );
+
+		foreach ( $matches as $match ) {
+			foreach ( $match as $attribute ) {
+				$parsed_attr = shortcode_parse_atts( $attribute );
+				if ( ! is_array( $parsed_attr ) ) {
+					continue;
+				}
+				$keys = array_keys( $parsed_attr );
+				if ( $keys[0] === 'id' ) {
+					$product_id = $parsed_attr['id'];
+					break;
+				} elseif ( $keys[0] === 'sku' ) {
+					$product_sku = $parsed_attr['sku'];
+					$product_id  = wc_get_product_id_by_sku( $product_sku );
+					break;
+				}
+			}
+			if ( $product_id && 'yes' === get_post_meta( $product_id, '_wcopc', true ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -356,11 +413,11 @@ class PP_One_Page_Checkout {
 		$is_opc = false;
 
 		// Modify template if the page being loaded (non-ajax) is an OPC page
-		if ( is_wcopc_checkout() ) {
+		if ( self::is_wcopc_checkout() ) {
 
 			$is_opc = true;
 
-		// Modify template when doing a 'woocommerce_update_order_review' ajax request
+			// Modify template when doing a 'woocommerce_update_order_review' ajax request
 		} elseif ( isset( $_POST['post_data'] ) ) {
 
 			parse_str( $_POST['post_data'], $checkout_post_data );
@@ -369,7 +426,7 @@ class PP_One_Page_Checkout {
 				$is_opc = true;
 			}
 
-		// Modify template when doing ajax and sending an OPC request
+			// Modify template when doing ajax and sending an OPC request
 		} elseif ( check_ajax_referer( self::$nonce_action, 'nonce', false ) ) {
 
 			$is_opc = true;
@@ -385,7 +442,15 @@ class PP_One_Page_Checkout {
 	 * @return void
 	 */
 	public static function load_opc_order_review_template( $deprecated = false ) {
-		wc_get_template( 'checkout/deprecated/review-order.php', array( 'checkout' => WC()->checkout(), 'is_ajax' => $deprecated ), '', PP_One_Page_Checkout::$template_path );
+		wc_get_template(
+			'checkout/deprecated/review-order.php',
+			array(
+				'checkout' => WC()->checkout(),
+				'is_ajax'  => $deprecated,
+			),
+			'',
+			self::$template_path
+		);
 	}
 
 	/**
@@ -421,7 +486,7 @@ class PP_One_Page_Checkout {
 			// To have control over when the create account fields are displayed - we'll display them all the time and hide/show with js
 			if ( ! is_user_logged_in() ) {
 				if ( false === $checkout->enable_guest_checkout ) {
-					$checkout->enable_guest_checkout = true;
+					$checkout->enable_guest_checkout     = true;
 					self::$guest_checkout_option_changed = true;
 				}
 			}
@@ -433,7 +498,7 @@ class PP_One_Page_Checkout {
 
 			// Reset guest checkout option
 			if ( true === self::$guest_checkout_option_changed ) {
-				$checkout->enable_guest_checkout = false;
+				$checkout->enable_guest_checkout     = false;
 				self::$guest_checkout_option_changed = false;
 			}
 
@@ -453,8 +518,8 @@ class PP_One_Page_Checkout {
 	 * @return string
 	 */
 	public static function override_checkout_template( $located, $template_name, $args, $template_path, $default_path ) {
-		if ( 'checkout/review-order.php' == $template_name && $default_path !== PP_One_Page_Checkout::$template_path && self::is_any_form_of_opc_page() ) {
-			$located = wc_locate_template( 'checkout/review-order-opc.php', '', PP_One_Page_Checkout::$template_path );
+		if ( 'checkout/review-order.php' == $template_name && $default_path !== self::$template_path && self::is_any_form_of_opc_page() ) {
+			$located = wc_locate_template( 'checkout/review-order-opc.php', '', self::$template_path );
 		}
 
 		return $located;
@@ -490,7 +555,7 @@ class PP_One_Page_Checkout {
 	 */
 	public static function opc_single_add_to_cart_core_types( $post_id ) {
 		global $product;
-		wc_get_template( 'checkout/add-to-cart/' . wcopc_get_product_type( $product ) . '.php', array( 'product' => $product ), '', PP_One_Page_Checkout::$template_path );
+		wc_get_template( 'checkout/add-to-cart/' . wcopc_get_product_type( $product ) . '.php', array( 'product' => $product ), '', self::$template_path );
 	}
 
 	/**
@@ -500,7 +565,7 @@ class PP_One_Page_Checkout {
 	 */
 	public static function maybe_filter_add_to_cart_message( $message, $product_id ) {
 
-		if ( is_wcopc_checkout() ) {
+		if ( self::is_wcopc_checkout() ) {
 
 			if ( is_array( $product_id ) ) {
 				$product_ids    = $product_id;
@@ -529,9 +594,9 @@ class PP_One_Page_Checkout {
 	 */
 	public static function maybe_filter_error_message( $message ) {
 
-		if ( is_wcopc_checkout() ) {
+		if ( self::is_wcopc_checkout() ) {
 
-			$message = preg_replace('/<a[^>]*>(' . __( 'View Cart', 'wcopc' ) .')<\/a>/iU','',$message);
+			$message = preg_replace( '/<a[^>]*>(' . esc_html__( 'View Cart', 'wcopc' ) . ')<\/a>/iU', '', $message );
 
 		}
 
@@ -551,11 +616,12 @@ class PP_One_Page_Checkout {
 			$product_title = $quantity . ' &times; ' . $product_title;
 		}
 
-		return sprintf( __( '%s&quot; added to your order. Complete your order below.', 'wcopc' ), $product_title );
+		return sprintf( esc_html__( '%s&quot; added to your order. Complete your order below.', 'wcopc' ), $product_title );
 	}
 
 	/**
 	 * Change button 'Add to cart' text to 'Add to order' in OPC pages
+	 *
 	 * @param  WC_Product $product
 	 * @return string
 	 */
@@ -588,7 +654,7 @@ class PP_One_Page_Checkout {
 	 */
 	public static function add_product_selection_fields() {
 
-		if ( 0 == self::$shortcode_page_id ) {
+		if ( 0 === self::$shortcode_page_id ) {
 			return;
 		}
 
@@ -620,9 +686,9 @@ class PP_One_Page_Checkout {
 				if ( self::$categories_to_display ) {
 					$args['tax_query'] = array(
 						array(
-							'taxonomy'  => 'product_cat',
-							'terms'     => explode( ',', self::$categories_to_display )
-						)
+							'taxonomy' => 'product_cat',
+							'terms'    => explode( ',', self::$categories_to_display ),
+						),
 					);
 				}
 
@@ -632,8 +698,8 @@ class PP_One_Page_Checkout {
 						array(
 							'key'     => '_visibility',
 							'value'   => array( 'catalog', 'visible' ),
-							'compare' => 'IN'
-						)
+							'compare' => 'IN',
+						),
 					);
 				} else {
 					$args['tax_query'][] = array(
@@ -669,7 +735,6 @@ class PP_One_Page_Checkout {
 							$products = self::build_products_array( $child, $products );
 						}
 					}
-
 				} else {
 					$products = self::build_products_array( $product, $products );
 				}
@@ -679,11 +744,12 @@ class PP_One_Page_Checkout {
 		$products = apply_filters( 'wcopc_products_for_selection_fields', $products, self::$template, self::$raw_shortcode_atts );
 
 		?>
-		<div id="opc-product-selection" data-opc_id="<?php echo self::$shortcode_page_id; ?>" class="wcopc">
+		<div id="opc-product-selection" data-opc_id="<?php echo esc_attr( self::$shortcode_page_id ); ?>" class="wcopc">
 			<?php if ( ! empty( $products ) ) : ?>
 				<?php wc_get_template( self::$template, array( 'products' => $products ), '', self::$template_path ); ?>
 			<?php endif; ?>
-		</div><!-- .opc-product-selection --><?php
+		</div><!-- .opc-product-selection -->
+		<?php
 
 		self::maybe_show_shipping( $products );
 
@@ -718,8 +784,8 @@ class PP_One_Page_Checkout {
 
 			$visible_children = wcopc_get_visible_children( $product );
 
-			foreach( $visible_children as $product_id ) {
-				if ( array_key_exists( $product_id , $products_in_cart ) ) {
+			foreach ( $visible_children as $product_id ) {
+				if ( array_key_exists( $product_id, $products_in_cart ) ) {
 					wcopc_set_products_prop( $product, 'in_cart', true );
 					wcopc_set_products_prop( $product, 'cart_item', $products_in_cart[ $product_id ] );
 				}
@@ -734,7 +800,7 @@ class PP_One_Page_Checkout {
 	/**
 	 * Check if all variation's attributes are set
 	 *
-	 * @param  WC_Product_Variation  $variation
+	 * @param  WC_Product_Variation $variation
 	 * @return boolean
 	 */
 	private static function all_variation_attributes_set( $variation ) {
@@ -742,8 +808,8 @@ class PP_One_Page_Checkout {
 		$set = true;
 
 		// undefined attributes have null strings as array values
-		foreach( $variation->get_variation_attributes() as $att ){
-			if( ! $att ){
+		foreach ( $variation->get_variation_attributes() as $att ) {
+			if ( ! $att ) {
 				$set = false;
 				break;
 			}
@@ -772,8 +838,9 @@ class PP_One_Page_Checkout {
 
 			foreach ( $variation_attributes as $name => $value ) {
 
-				if ( '' === $value )
+				if ( '' === $value ) {
 					continue;
+				}
 
 				$taxonomy = wc_attribute_taxonomy_name( str_replace( 'attribute_pa_', '', urldecode( $name ) ) );
 
@@ -785,7 +852,7 @@ class PP_One_Page_Checkout {
 					}
 					$label = wc_attribute_label( $taxonomy );
 
-				// If this is a custom option slug, get the options name
+					// If this is a custom option slug, get the options name
 				} else {
 
 					if ( isset( $product_attributes[ str_replace( 'attribute_', '', $name ) ] ) ) {
@@ -806,7 +873,7 @@ class PP_One_Page_Checkout {
 
 				$item_data[] = array(
 					'key'   => $label,
-					'value' => apply_filters( 'woocommerce_variation_option_name', $value )
+					'value' => apply_filters( 'woocommerce_variation_option_name', $value ),
 				);
 			}
 		}
@@ -829,7 +896,6 @@ class PP_One_Page_Checkout {
 				wc_get_template( 'cart/cart-item-data.php', array( 'item_data' => $item_data ) );
 				return ob_get_clean();
 			}
-
 		}
 
 		return '';
@@ -842,9 +908,9 @@ class PP_One_Page_Checkout {
 	 *
 	 * Attribute labels(titles?) are already handled by wc_attribute_label()
 	 *
-	 * @param  string 	$attribute_title
-	 * @param  string 	$attribute_value
-	 * @param  array 	$product_attributes (optional)
+	 * @param  string $attribute_title
+	 * @param  string $attribute_value
+	 * @param  array  $product_attributes (optional)
 	 * @return void
 	 */
 	public static function get_formatted_attribute_value( $attribute_title = '', $attribute_value = '', $product_attributes = null ) {
@@ -913,7 +979,7 @@ class PP_One_Page_Checkout {
 					$remove = true;
 				}
 
-			// Requests coming from OPC items reference their own product_id and OPC id.
+				// Requests coming from OPC items reference their own product_id and OPC id.
 			} elseif ( isset( $_POST['add_to_cart'] ) && ( $value['product_id'] == $_POST['add_to_cart'] || $value['variation_id'] == $_POST['add_to_cart'] ) ) {
 				$remove = true;
 			}
@@ -925,7 +991,7 @@ class PP_One_Page_Checkout {
 			WC()->cart->set_quantity( $cart_item_id, 0 );
 			wc_add_notice( sprintf( __( '&quot;%s&quot; was successfully removed from your order.', 'wcopc' ), get_the_title( $value['product_id'] ) ), 'success' );
 			$response_data['result'] = 'success';
-			$item_removed = true;
+			$item_removed            = true;
 			break;
 		}
 
@@ -1020,7 +1086,7 @@ class PP_One_Page_Checkout {
 					if ( $value ) {
 						// Custom product attribute, get a formatted versin of the name so it displays nicely on the Review Order table
 						if ( ! taxonomy_exists( esc_attr( str_replace( 'attribute_', '', $name ) ) ) ) {
-							$variations[ $name ] = PP_One_Page_Checkout::get_formatted_attribute_value( $name, $value, $attributes );
+							$variations[ $name ] = self::get_formatted_attribute_value( $name, $value, $attributes );
 						}
 						continue;
 					}
@@ -1030,7 +1096,7 @@ class PP_One_Page_Checkout {
 
 				if ( $all_variations_set ) {
 					// Add to cart validation
-					$passed_validation 	= apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations );
+					$passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations );
 
 					if ( $passed_validation ) {
 						if ( WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variations ) ) {
@@ -1042,7 +1108,7 @@ class PP_One_Page_Checkout {
 					wc_add_notice( __( 'Please choose product options&hellip;', 'wcopc' ), 'error' );
 				}
 
-			// Variable product handling
+				// Variable product handling
 			} elseif ( 'variable' === $add_to_cart_handler ) {
 
 				$variation_id       = empty( $_REQUEST['variation_id'] ) ? '' : absint( $_REQUEST['variation_id'] );
@@ -1086,7 +1152,7 @@ class PP_One_Page_Checkout {
 
 				if ( $all_variations_set ) {
 					// Add to cart validation
-					$passed_validation 	= apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations );
+					$passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations );
 
 					if ( $passed_validation ) {
 						if ( WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variations ) ) {
@@ -1101,12 +1167,12 @@ class PP_One_Page_Checkout {
 					wc_add_notice( __( 'Please choose product options&hellip;', 'wcopc' ), 'error' );
 				}
 
-			// Custom Handler
-			} elseif ( has_action( 'wcopc_add_to_cart_handler_' . $add_to_cart_handler ) ){
+				// Custom Handler
+			} elseif ( has_action( 'wcopc_add_to_cart_handler_' . $add_to_cart_handler ) ) {
 
 				do_action( 'wcopc_add_to_cart_handler_' . $add_to_cart_handler, $url );
 
-			// Simple Products
+				// Simple Products
 			} else {
 
 				$quantity = empty( $_REQUEST['quantity'] ) ? 1 : wc_stock_amount( $_REQUEST['quantity'] );
@@ -1121,9 +1187,7 @@ class PP_One_Page_Checkout {
 						$was_added_to_cart = true;
 					}
 				}
-
 			}
-
 		} else {
 
 			$was_added_to_cart = true;
@@ -1189,7 +1253,7 @@ class PP_One_Page_Checkout {
 					$update = true;
 				}
 
-			// Requests coming from OPC items reference their own product_id and OPC ID.
+				// Requests coming from OPC items reference their own product_id and OPC ID.
 			} elseif ( isset( $_POST['add_to_cart'] ) && ( $value['product_id'] == $_POST['add_to_cart'] || $value['variation_id'] == $_POST['add_to_cart'] ) ) {
 				$update = true;
 			}
@@ -1232,7 +1296,7 @@ class PP_One_Page_Checkout {
 
 		// Setup initial fragments array including the mini cart
 		$fragments = array(
-			'div.widget_shopping_cart_content' => '<div class="widget_shopping_cart_content">' . $mini_cart . '</div>'
+			'div.widget_shopping_cart_content' => '<div class="widget_shopping_cart_content">' . $mini_cart . '</div>',
 		);
 
 		// Allow plugins and themes to add their own fragments to be updated e.g. storefront header cart
@@ -1260,13 +1324,16 @@ class PP_One_Page_Checkout {
 
 		wp_enqueue_script( 'woocommerce-one-page-checkout', self::$plugin_url . '/js/one-page-checkout.js', array( 'jquery', 'wc-add-to-cart-variation' ), '1.0', true );
 
-		$params = apply_filters( 'wcopc_script_data', array(
-			'wcopc_nonce'                 => wp_create_nonce( self::$nonce_action ),
-			'wcopc_complete_order_prompt' => '<a class="wc-south opc-complete-order" href="#customer_details">' . __( 'Modify &amp; complete order below', 'wcopc' ) . '</a>',
-			'ajax_error_notice'           => '<div class="woocommerce-error">' . __( 'Error processing your request. Please try refreshing the page. Contact us if you continue to have issues.', 'wcopc' ) . '</div>',
-			'ajax_url'                    => WC()->ajax_url(),
-			'autoscroll'                  => self::get_settings_instance()->get_setting( 'autoscroll' ),
-		) );
+		$params = apply_filters(
+			'wcopc_script_data',
+			array(
+				'wcopc_nonce'                 => wp_create_nonce( self::$nonce_action ),
+				'wcopc_complete_order_prompt' => '<a class="wc-south opc-complete-order" href="#customer_details">' . __( 'Modify &amp; complete order below', 'wcopc' ) . '</a>',
+				'ajax_error_notice'           => '<div class="woocommerce-error">' . __( 'Error processing your request. Please try refreshing the page. Contact us if you continue to have issues.', 'wcopc' ) . '</div>',
+				'ajax_url'                    => WC()->ajax_url(),
+				'autoscroll'                  => self::get_settings_instance()->get_setting( 'autoscroll' ),
+			)
+		);
 
 		wp_localize_script( 'woocommerce-one-page-checkout', 'wcopc', $params );
 
@@ -1312,7 +1379,7 @@ class PP_One_Page_Checkout {
 				),
 			);
 
-			foreach( $handles as $handle_details ) {
+			foreach ( $handles as $handle_details ) {
 				if ( current_theme_supports( $handle_details['theme_feature'] ) ) {
 
 					wp_enqueue_script( $handle_details['script_handle'], '', array( 'jquery' ), WC_VERSION );
@@ -1342,10 +1409,10 @@ class PP_One_Page_Checkout {
 			return $posts;
 		}
 
-		if ( 0 == self::$shortcode_page_id ) {
+		if ( 0 === self::$shortcode_page_id ) {
 			foreach ( $posts as $post ) {
-				if ( ( false !== stripos( $post->post_content, '[woocommerce_one_page_checkout' ) ) || ( 'yes' == get_post_meta( $post->ID, '_wcopc', true ) ) ) {
-					self::$add_scripts = true;
+				if ( self::post_is_opc( $post ) ) {
+					self::$add_scripts       = true;
 					self::$shortcode_page_id = $post->ID;
 					break;
 				}
@@ -1367,7 +1434,7 @@ class PP_One_Page_Checkout {
 	public static function is_checkout_hack( $page_id ) {
 		global $wp;
 
-		if ( 0 != self::$shortcode_page_id ) {
+		if ( 0 !== self::$shortcode_page_id ) {
 
 			$backtrace = debug_backtrace( false ); // Warned you it was a hack
 
@@ -1395,12 +1462,12 @@ class PP_One_Page_Checkout {
 	/**
 	 * Filter the result of `is_checkout()` for OPC posts/pages
 	 *
-	 * @param  boolean  $return
+	 * @param  boolean $return
 	 * @return boolean
 	 */
 	public static function is_checkout_filter( $return = false ) {
 
-		if ( is_wcopc_checkout() ) {
+		if ( self::is_wcopc_checkout() ) {
 			$return = true;
 		}
 
@@ -1419,7 +1486,7 @@ class PP_One_Page_Checkout {
 		// WC 3.3+ deprecates handle-specific filters in favour of 'woocommerce_get_script_data'.
 		if ( 'woocommerce_get_script_data' === current_filter() && 'wc-checkout' !== $handle ) {
 			return $params;
-		} elseif ( $post->ID == self::$shortcode_page_id ) {
+		} elseif ( $post->ID === self::$shortcode_page_id ) {
 			$params['is_checkout'] = true;
 		}
 
@@ -1434,13 +1501,15 @@ class PP_One_Page_Checkout {
 	 * 'woocommerce_params' which is run on 'wp_enqueue_script' (i.e. before the shortcode is evaluated).
 	 *
 	 * @since 1.0
+	 * @deprecated 1.8.0
 	 */
 	public static function check_for_shortcode( $post_to_check ) {
+		wc_deprecated_function( __METHOD__, '1.8.0' );
 
 		if ( false !== stripos( $post_to_check->post_content, '[woocommerce_one_page_checkout' ) ) {
-			self::$add_scripts = true;
+			self::$add_scripts       = true;
 			self::$shortcode_page_id = $post_to_check->ID;
-			$contains_shortcode = true;
+			$contains_shortcode      = true;
 		} else {
 			$contains_shortcode = false;
 		}
@@ -1462,7 +1531,15 @@ class PP_One_Page_Checkout {
 
 		self::$evaluated_shortcode = true;
 
-		return WC_Shortcodes::shortcode_wrapper( __CLASS__ . '::one_page_checkout_shortcode', $atts, array( 'class'  => 'wcopc', 'before' => null, 'after'  => null ) );
+		return WC_Shortcodes::shortcode_wrapper(
+			__CLASS__ . '::one_page_checkout_shortcode',
+			$atts,
+			array(
+				'class'  => 'wcopc',
+				'before' => null,
+				'after'  => null,
+			)
+		);
 	}
 
 	/**
@@ -1471,7 +1548,7 @@ class PP_One_Page_Checkout {
 	 *
 	 * @since 1.0
 	 */
-	public static function one_page_checkout_shortcode( $atts ){
+	public static function one_page_checkout_shortcode( $atts ) {
 
 		if ( ! wcopc_is_frontend_request() ) {
 			return;
@@ -1481,7 +1558,7 @@ class PP_One_Page_Checkout {
 
 		if ( isset( $atts['product_ids'] ) ) {
 			self::$products_to_display = $atts['product_ids'];
-		} else if ( isset( $atts['category_ids'] ) ) {
+		} elseif ( isset( $atts['category_ids'] ) ) {
 			self::$categories_to_display = $atts['category_ids'];
 		}
 
@@ -1513,7 +1590,7 @@ class PP_One_Page_Checkout {
 		// Get checkout object for WC 2.0+
 		$checkout = WC()->checkout();
 
-		wc_get_template( 'checkout/form-checkout.php', array( 'checkout' => $checkout )  );
+		wc_get_template( 'checkout/form-checkout.php', array( 'checkout' => $checkout ) );
 
 	}
 
@@ -1536,7 +1613,7 @@ class PP_One_Page_Checkout {
 	 * Returns the product or variation ID of all products in the cart.
 	 * To allow table/list templates to recognize & manage their own cart items, pass the id of the current OPC container to retrieve cart items added by this OPC container only.
 	 *
-	 * @param  int   $opc_id  Only return cart items managed by a specific OPC page.
+	 * @param  int $opc_id  Only return cart items managed by a specific OPC page.
 	 * @return array          Associated array of with product or variation IDs as the keys and quantity as the values.
 	 * @since 1.0
 	 */
@@ -1574,7 +1651,7 @@ class PP_One_Page_Checkout {
 	 * @link https://github.com/woocommerce/woocommerce/issues/19116
 	 * @link https://github.com/woocommerce/woocommerce/pull/19139
 	 *
-	 * @param string $url	Ajax URL
+	 * @param string $url   Ajax URL
 	 *
 	 * @return string The new URL
 	 */
@@ -1593,16 +1670,18 @@ class PP_One_Page_Checkout {
 	 */
 	public static function woocommerce_inactive_notice() {
 		if ( current_user_can( 'activate_plugins' ) ) :
-			if ( ! is_woocommerce_active() ) : ?>
+			if ( ! is_woocommerce_active() ) :
+				?>
 				<div id="message" class="error">
-					<p><?php printf( __( '%sWooCommerce One Page Checkout is inactive.%s The %sWooCommerce plugin%s must be active for WooCommerce One Page Checkout to work. Please %sinstall & activate WooCommerce%s', 'wcopc' ), '<strong>', '</strong>', '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>', '<a href="' . admin_url( 'plugins.php' ) . '">', '&nbsp;&raquo;</a>' ); ?></p>
+					<p><?php printf( esc_html__( '%1$sWooCommerce One Page Checkout is inactive.%2$s The %3$sWooCommerce plugin%4$s must be active for WooCommerce One Page Checkout to work. Please %5$sinstall & activate WooCommerce%6$s', 'wcopc' ), '<strong>', '</strong>', '<a href="http://wordpress.org/extend/plugins/woocommerce/">', '</a>', '<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '">', '&nbsp;&raquo;</a>' ); ?></p>
 				</div>
 						<?php elseif ( version_compare( get_option( 'woocommerce_db_version' ), '2.5', '<' ) ) : ?>
 				<div id="message" class="error">
-					<p><?php printf( __( '%sWooCommerce One Page Checkout is inactive.%s This plugin requires WooCommerce 2.5 or newer. Please %supdate WooCommerce to version 2.5 or newer%s', 'wcopc' ), '<strong>', '</strong>', '<a href="' . admin_url( 'plugins.php' ) . '">', '&nbsp;&raquo;</a>' ); ?></p>
+					<p><?php printf( esc_html__( '%1$sWooCommerce One Page Checkout is inactive.%2$s This plugin requires WooCommerce 2.5 or newer. Please %3$supdate WooCommerce to version 2.5 or newer%4$s', 'wcopc' ), '<strong>', '</strong>', '<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '">', '&nbsp;&raquo;</a>' ); ?></p>
 				</div>
 		<?php endif; ?>
-	<?php endif;
+			<?php
+	endif;
 	}
 
 	/**
@@ -1628,19 +1707,19 @@ class PP_One_Page_Checkout {
 	/**
 	 * Add 'wooommerce' body class. Helps with consistency of WooCommerce styles
 	 */
-	public static function opc_woocommerce_body_class($classes) {
+	public static function opc_woocommerce_body_class( $classes ) {
 		global $post;
 
 		if ( empty( $post ) ) {
 			return $classes;
 		}
 
-		if ( $post->ID == self::$shortcode_page_id ) {
-			array_push($classes, 'woocommerce', 'woocommerce-page');
+		if ( $post->ID === self::$shortcode_page_id ) {
+			array_push( $classes, 'woocommerce', 'woocommerce-page' );
 		}
 
-		if ( 'yes' == get_post_meta( $post->ID, '_wcopc', true ) ) {
-			array_push($classes, 'wcopc-product-single' );
+		if ( self::post_is_opc( $post ) ) {
+			array_push( $classes, 'wcopc-product-single' );
 		}
 
 		return $classes;
@@ -1656,7 +1735,7 @@ class PP_One_Page_Checkout {
 	 */
 	public static function maybe_display_notices( $content ) {
 
-		if ( wcopc_is_frontend_request() && is_wcopc_checkout() ) {
+		if ( wcopc_is_frontend_request() && self::is_wcopc_checkout() ) {
 			ob_start();
 			wc_print_notices();
 			$notices = ob_get_clean();
@@ -1688,10 +1767,10 @@ class PP_One_Page_Checkout {
 	 */
 	public static function add_to_cart_redirect( $url ) {
 
-		if ( ! is_ajax() && is_wcopc_checkout() ) {
+		if ( ! is_ajax() && self::is_wcopc_checkout() ) {
 			$schema = is_ssl() ? 'https://' : 'http://';
-			$url = explode('?', $schema . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] );
-			$url = remove_query_arg( array( 'add-to-cart', 'variation_id', 'quantity' ), $url[0] );
+			$url    = explode( '?', $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+			$url    = remove_query_arg( array( 'add-to-cart', 'variation_id', 'quantity' ), $url[0] );
 		}
 
 		return $url;
@@ -1700,14 +1779,14 @@ class PP_One_Page_Checkout {
 	/*
 	 * Add checkbox to product data metabox title
 	 */
-	public static function product_type_options( $options ){
+	public static function product_type_options( $options ) {
 
 		$options['wcopc'] = array(
 			'id'            => '_wcopc',
 			'wrapper_class' => '',
-			'label'         => __( 'One Page Checkout', 'wcopc'),
-			'description'   => __( 'Add checkout to product page.', 'wcopc'),
-			'default'       => 'no'
+			'label'         => __( 'One Page Checkout', 'wcopc' ),
+			'description'   => __( 'Add checkout to product page.', 'wcopc' ),
+			'default'       => 'no',
 		);
 
 		return $options;
@@ -1719,7 +1798,7 @@ class PP_One_Page_Checkout {
 	 */
 	public static function save_product_meta( $post_id, $post ) {
 
-		$product_type 	= empty( $_POST['product-type'] ) ? 'simple' : sanitize_title( stripslashes( $_POST['product-type'] ) );
+		$product_type = empty( $_POST['product-type'] ) ? 'simple' : sanitize_title( stripslashes( $_POST['product-type'] ) );
 
 		if ( isset( $_POST['_wcopc'] ) ) {
 			update_post_meta( $post_id, '_wcopc', 'yes' );
@@ -1733,7 +1812,22 @@ class PP_One_Page_Checkout {
 	 * Append opc checkout form template to core single product template if enabled
 	 */
 	public static function single_product_wcopc() {
-		if ( is_wcopc_checkout() && is_product() ) {
+		global $wp_query;
+		$query_post_type = isset( $wp_query->query['post_type'] ) ? $wp_query->query['post_type'] : array();
+		if ( null === $query_post_type ) {
+			$query_post_type = array();
+		}
+		if ( is_string( $query_post_type ) ) {
+			$query_post_type = array( $query_post_type );
+		}
+		if (
+			self::is_wcopc_checkout() &&
+			(
+				is_product() ||
+				in_array( 'product_variation', $query_post_type, true ) ||
+				in_array( 'product', $query_post_type, true )
+			)
+		) {
 
 			do_action( 'wcopc_before_display_checkout' );
 
@@ -1745,17 +1839,16 @@ class PP_One_Page_Checkout {
 			// Get checkout object for WC 2.0+
 			$checkout = WC()->checkout();
 
-			wc_get_template( 'checkout/form-checkout.php', array( 'checkout' => $checkout )  );
+			wc_get_template( 'checkout/form-checkout.php', array( 'checkout' => $checkout ) );
 
 		}
-
 	}
 
 	/**
 	 * Modifications to the core single product section when opc is enabled
 	 */
 	public static function filter_single_product_wcopc() {
-		if ( is_wcopc_checkout() ) {
+		if ( self::is_wcopc_checkout() ) {
 			// modify add to cart text
 			add_filter( 'woocommerce_product_single_add_to_cart_text', array( __CLASS__, 'modify_single_add_to_cart_text' ) );
 
@@ -1769,8 +1862,12 @@ class PP_One_Page_Checkout {
 				// show the shipping fields if needed
 				if ( ! empty( $product ) && 'yes' == wcopc_get_products_prop( $product, 'wcopc', '_' ) ) {
 					if ( $product->is_type( 'variable' ) || $product->is_type( 'grouped' ) ) {
-						$products = array_filter( array_map( 'wc_get_product',
-							wcopc_get_all_child_products( $product ) ) );
+						$products = array_filter(
+							array_map(
+								'wc_get_product',
+								wcopc_get_all_child_products( $product )
+							)
+						);
 					} else {
 						$products = array( $product );
 					}
@@ -1801,7 +1898,7 @@ class PP_One_Page_Checkout {
 	 * @since 1.2.1
 	 */
 	public static function maybe_set_session() {
-		if ( is_wcopc_checkout() && ! WC()->session->has_session() ) {
+		if ( self::is_wcopc_checkout() && ! WC()->session->has_session() ) {
 			WC()->session->set_customer_session_cookie( true );
 		}
 	}
@@ -1810,13 +1907,20 @@ class PP_One_Page_Checkout {
 	 * Re-enables robots on OPC pages.
 	 *
 	 * WC 3.2 started adding no-index tags to checkout pages, this was introduced on
-	 * https://github.com/woocommerce/woocommerce/blob/master/includes/wc-template-functions.php#L3233-L3243
+	 * https://github.com/woocommerce/woocommerce/blob/master/includes/wc-template-functions.php#L3625-3635
+	 * 
+	 * Later, as WP 5.7 deprecated the `wp_robots_no_robots` function and WC dropped
+	 * support for 5.6 in 5.0, a new filter was introduced on
+	 * https://github.com/woocommerce/woocommerce/blob/master/includes/wc-template-functions.php#3645-3652
+	 * 
+	 * We are removing both of them in case we are in a OPC page.
 	 *
 	 * @since 1.5.6
 	 */
 	public static function maybe_enable_robots() {
-		if ( is_wcopc_checkout() ) {
+		if( self::is_wcopc_checkout() ) {
 			remove_action( 'wp_head', 'wc_page_noindex' );
+			remove_filter( 'wp_robots', 'wc_page_no_robots' );
 		}
 	}
 
@@ -1902,7 +2006,7 @@ class PP_One_Page_Checkout {
 
 		if ( self::is_any_form_of_opc_page() ) {
 			$woocommerce_params['wcopc_option_guest_checkout'] = get_option( 'woocommerce_enable_guest_checkout' );
-			$woocommerce_params['option_guest_checkout'] = 'yes';
+			$woocommerce_params['option_guest_checkout']       = 'yes';
 		}
 		return $woocommerce_params;
 	}
@@ -1995,10 +2099,12 @@ class PP_One_Page_Checkout {
 			return array();
 		}
 
-		return wc_get_products( array(
-			'return'  => 'ids',
-			'include' => $product_ids,
-		) );
+		return wc_get_products(
+			array(
+				'return'  => 'ids',
+				'include' => $product_ids,
+			)
+		);
 	}
 
 	/**
