@@ -1,13 +1,8 @@
 /**
  * External dependencies
  */
-import {
-	render,
-	screen,
-	fireEvent,
-	waitFor,
-	act,
-} from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { previewCart } from '@woocommerce/resource-previews';
 import { dispatch } from '@wordpress/data';
 import { CART_STORE_KEY as storeKey } from '@woocommerce/block-data';
@@ -135,7 +130,7 @@ describe( 'Testing Payment Method Data Context Provider', () => {
 			registerMockPaymentMethods( false );
 
 			fetchMock.mockResponse( ( req ) => {
-				if ( req.url.match( /wc\/store\/cart/ ) ) {
+				if ( req.url.match( /wc\/store\/v1\/cart/ ) ) {
 					return Promise.resolve( JSON.stringify( previewCart ) );
 				}
 				return Promise.resolve( '' );
@@ -186,7 +181,7 @@ describe( 'Testing Payment Method Data Context Provider', () => {
 
 		act( () => {
 			// Express payment method clicked.
-			fireEvent.click(
+			userEvent.click(
 				screen.getByText( 'express-payment express payment method' )
 			);
 		} );
@@ -200,7 +195,7 @@ describe( 'Testing Payment Method Data Context Provider', () => {
 
 		act( () => {
 			// Express payment method closed.
-			fireEvent.click(
+			userEvent.click(
 				screen.getByText(
 					'express-payment express payment method close'
 				)
@@ -225,7 +220,7 @@ describe( 'Testing Payment Method Data Context Provider with saved cards turned 
 			registerMockPaymentMethods( true );
 
 			fetchMock.mockResponse( ( req ) => {
-				if ( req.url.match( /wc\/store\/cart/ ) ) {
+				if ( req.url.match( /wc\/store\/v1\/cart/ ) ) {
 					return Promise.resolve( JSON.stringify( previewCart ) );
 				}
 				return Promise.resolve( '' );
@@ -285,7 +280,7 @@ describe( 'Testing Payment Method Data Context Provider with saved cards turned 
 
 		act( () => {
 			// Express payment method clicked.
-			fireEvent.click(
+			userEvent.click(
 				screen.getByText( 'express-payment express payment method' )
 			);
 		} );
@@ -301,7 +296,7 @@ describe( 'Testing Payment Method Data Context Provider with saved cards turned 
 
 		act( () => {
 			// Express payment method closed.
-			fireEvent.click(
+			userEvent.click(
 				screen.getByText(
 					'express-payment express payment method close'
 				)

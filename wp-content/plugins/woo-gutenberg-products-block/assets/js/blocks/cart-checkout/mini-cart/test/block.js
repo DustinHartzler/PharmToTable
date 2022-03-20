@@ -5,7 +5,6 @@ import {
 	act,
 	render,
 	screen,
-	fireEvent,
 	waitFor,
 	waitForElementToBeRemoved,
 } from '@testing-library/react';
@@ -14,6 +13,7 @@ import { dispatch } from '@wordpress/data';
 import { CART_STORE_KEY as storeKey } from '@woocommerce/block-data';
 import { SlotFillProvider } from '@woocommerce/blocks-checkout';
 import { default as fetchMock } from 'jest-fetch-mock';
+import userEvent from '@testing-library/user-event';
 
 /**
  * Internal dependencies
@@ -32,7 +32,7 @@ const MiniCartBlock = ( props ) => (
 
 const mockEmptyCart = () => {
 	fetchMock.mockResponse( ( req ) => {
-		if ( req.url.match( /wc\/store\/cart/ ) ) {
+		if ( req.url.match( /wc\/store\/v1\/cart/ ) ) {
 			return Promise.resolve(
 				JSON.stringify( defaultCartState.cartData )
 			);
@@ -43,7 +43,7 @@ const mockEmptyCart = () => {
 
 const mockFullCart = () => {
 	fetchMock.mockResponse( ( req ) => {
-		if ( req.url.match( /wc\/store\/cart/ ) ) {
+		if ( req.url.match( /wc\/store\/v1\/cart/ ) ) {
 			return Promise.resolve( JSON.stringify( previewCart ) );
 		}
 		return Promise.resolve( '' );
@@ -68,7 +68,7 @@ describe( 'Testing Mini Cart', () => {
 		render( <MiniCartBlock /> );
 		await waitFor( () => expect( fetchMock ).toHaveBeenCalled() );
 		act( () => {
-			fireEvent.click( screen.getByLabelText( /items/i ) );
+			userEvent.click( screen.getByLabelText( /items/i ) );
 		} );
 
 		expect( fetchMock ).toHaveBeenCalledTimes( 1 );
@@ -82,7 +82,7 @@ describe( 'Testing Mini Cart', () => {
 
 		await waitFor( () => expect( fetchMock ).toHaveBeenCalled() );
 		act( () => {
-			fireEvent.click( screen.getByLabelText( /items/i ) );
+			userEvent.click( screen.getByLabelText( /items/i ) );
 		} );
 
 		expect( fetchMock ).toHaveBeenCalledTimes( 1 );

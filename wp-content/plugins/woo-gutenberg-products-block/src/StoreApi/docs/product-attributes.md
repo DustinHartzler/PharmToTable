@@ -1,7 +1,7 @@
 # Product Attributes API <!-- omit in toc -->
 
-- [List Product Attributes](#list-product-attributes)
-- [Single Product Attribute](#single-product-attribute)
+-   [List Product Attributes](#list-product-attributes)
+-   [Single Product Attribute](#single-product-attribute)
 
 ## List Product Attributes
 
@@ -11,8 +11,8 @@ GET /products/attributes
 
 There are no parameters required for this endpoint.
 
-```http
-curl "https://example-store.com/wp-json/wc/store/products/attributes"
+```sh
+curl "https://example-store.com/wp-json/wc/store/v1/products/attributes"
 ```
 
 Example response:
@@ -50,8 +50,8 @@ GET /products/attributes/:id
 | :-------- | :------ | :------: | :----------------------------------- |
 | `id`      | integer |   Yes    | The ID of the attribute to retrieve. |
 
-```http
-curl "https://example-store.com/wp-json/wc/store/products/attributes/1"
+```sh
+curl "https://example-store.com/wp-json/wc/store/v1/products/attributes/1"
 ```
 
 **Example response:**
@@ -66,3 +66,12 @@ curl "https://example-store.com/wp-json/wc/store/products/attributes/1"
 	"has_archives": false
 }
 ```
+
+<!-- FEEDBACK -->
+---
+
+[We're hiring!](https://woocommerce.com/careers/) Come work with us!
+
+🐞 Found a mistake, or have a suggestion? [Leave feedback about this document here.](https://github.com/woocommerce/woocommerce-gutenberg-products-block/issues/new?assignees=&labels=type%3A+documentation&template=--doc-feedback.md&title=Feedback%20on%20./src/StoreApi/docs/product-attributes.md)
+<!-- /FEEDBACK -->
+

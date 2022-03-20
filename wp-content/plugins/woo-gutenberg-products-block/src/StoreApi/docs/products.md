@@ -2,8 +2,8 @@
 
 The store products API provides public product data so it can be rendered on the client side.
 
-- [List Products](#list-products)
-- [Single Product](#single-product)
+-   [List Products](#list-products)
+-   [Single Product](#single-product)
 
 ## List Products
 
@@ -64,8 +64,8 @@ GET /products?return_rating_counts=true
 | `catalog_visibility` | string  |    no    | Determines if hidden or visible catalog products are shown. Allowed values: `any`, `visible`, `catalog`, `search`, `hidden`                                               |
 | `rating`             | boolean |    no    | Limit result set to products with a certain average rating.                                                                                                               |
 
-```http
-curl "https://example-store.com/wp-json/wc/store/products"
+```sh
+curl "https://example-store.com/wp-json/wc/store/v1/products"
 ```
 
 **Example response:**
@@ -132,8 +132,8 @@ GET /products/:id
 | :-------- | :------ | :------: | :--------------------------------- |
 | `id`      | integer |   Yes    | The ID of the product to retrieve. |
 
-```http
-curl "https://example-store.com/wp-json/wc/store/products/34"
+```sh
+curl "https://example-store.com/wp-json/wc/store/v1/products/34"
 ```
 
 **Example response:**
@@ -185,3 +185,12 @@ curl "https://example-store.com/wp-json/wc/store/products/34"
 	}
 }
 ```
+
+<!-- FEEDBACK -->
+---
+
+[We're hiring!](https://woocommerce.com/careers/) Come work with us!
+
+🐞 Found a mistake, or have a suggestion? [Leave feedback about this document here.](https://github.com/woocommerce/woocommerce-gutenberg-products-block/issues/new?assignees=&labels=type%3A+documentation&template=--doc-feedback.md&title=Feedback%20on%20./src/StoreApi/docs/products.md)
+<!-- /FEEDBACK -->
+
