@@ -38,17 +38,8 @@ class Episode_Controller {
 
 		$this->renderer = $renderer;
 		$this->episode_repository = new Episode_Repository();
-		$this->init_assets();
 	}
 
-	protected function init_assets() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_recent_episodes_assets' ) );
-	}
-
-	public function load_recent_episodes_assets() {
-		wp_register_style( 'ssp-recent-episodes', $this->assets_url . 'css/recent-episodes.css', array(), $this->version );
-		wp_enqueue_style( 'ssp-recent-episodes' );
-	}
 
 	/**
 	 * Get episode enclosure
@@ -56,14 +47,10 @@ class Episode_Controller {
 	 * @param integer $episode_id ID of episode
 	 *
 	 * @return string              URL of enclosure
+	 * @deprecated Use Episode_Repository::get_enclosure()
 	 */
 	public function get_enclosure( $episode_id = 0 ) {
-
-		if ( $episode_id ) {
-			return apply_filters( 'ssp_episode_enclosure', get_post_meta( $episode_id, apply_filters( 'ssp_audio_file_meta_key', 'audio_file' ), true ), $episode_id );
-		}
-
-		return '';
+		return $this->episode_repository->get_enclosure( $episode_id );
 	}
 
 	/**
@@ -73,39 +60,10 @@ class Episode_Controller {
 	 * @param string $referrer
 	 *
 	 * @return string
+	 * @deprecated Use Episode_Repository::get_episode_download_link()
 	 */
-
 	public function get_episode_download_link( $episode_id, $referrer = '' ) {
-
-		// Get file URL
-		$file = $this->get_enclosure( $episode_id );
-
-		if ( ! $file ) {
-			return '';
-		}
-
-		// Get download link based on permalink structure
-		if ( get_option( 'permalink_structure' ) ) {
-			$episode = get_post( $episode_id );
-			// Get file extension - default to MP3 to prevent empty extension strings
-			$ext = pathinfo( $file, PATHINFO_EXTENSION );
-			if ( ! $ext ) {
-				$ext = 'mp3';
-			}
-			$link = $this->home_url . 'podcast-download/' . $episode_id . '/' . $episode->post_name . '.' . $ext;
-		} else {
-			$link = add_query_arg( array( 'podcast_episode' => $episode_id ), $this->home_url );
-		}
-
-		// Allow for dyamic referrer
-		$referrer = apply_filters( 'ssp_download_referrer', $referrer, $episode_id );
-
-		// Add referrer flag if supplied
-		if ( $referrer ) {
-			$link = add_query_arg( array( 'ref' => $referrer ), $link );
-		}
-
-		return apply_filters( 'ssp_episode_download_link', esc_url( $link ), $episode_id, $file );
+		return $this->episode_repository->get_episode_download_link( $episode_id, $referrer );
 	}
 
 	/**
@@ -114,29 +72,10 @@ class Episode_Controller {
 	 * @param int $episode_id
 	 *
 	 * @return string
-	 *
-	 * Todo: move it to Episode_Repository
+	 * @deprecated Use Episode_Repository::get_episode_player_link()
 	 */
 	public function get_episode_player_link( $episode_id ) {
-		$file = $this->get_episode_download_link( $episode_id );
-
-		// Switch to podcast player URL
-		$file = str_replace( 'podcast-download', 'podcast-player', $file );
-
-		return $file;
-	}
-
-	/**
-	 * Returns the no album art image
-	 *
-	 * @return array
-	 */
-	private function get_no_album_art_image_array() {
-		$src    = SSP_PLUGIN_URL . 'assets/images/no-album-art.png';
-		$width  = 300;
-		$height = 300;
-
-		return compact( 'src', 'width', 'height' );
+		return $this->episode_repository->get_episode_player_link( $episode_id );
 	}
 
 	/**
@@ -151,75 +90,10 @@ class Episode_Controller {
 	 *
 	 * @since 1.19.4
 	 *
-	 * Todo: move it to Episode_Repository
+	 * @deprecated Please use Episode_Repository::get_album_art()
 	 */
 	public function get_album_art( $episode_id = false, $size = 'full' ) {
-
-		/**
-		 * In case the episode id is not passed
-		 */
-		if ( ! $episode_id ) {
-			return $this->get_no_album_art_image_array();
-		}
-
-		/**
-		 * Option 1: if the episode has a custom field image that is square, then use that
-		 */
-		$thumb_id = get_post_meta( $episode_id, 'cover_image_id', true );
-		if ( ! empty( $thumb_id ) ) {
-			$image_data_array = ssp_get_attachment_image_src( $thumb_id, $size );
-			if ( ssp_is_image_square( $image_data_array ) ) {
-				return $image_data_array;
-			}
-		}
-
-		/**
-		 * Option 2: if the episode belongs to a series, which has an image that is square, then use that
-		 */
-		$series_id  = $this->episode_repository->get_episode_series_id( $episode_id );
-
-		if ( $series_id ) {
-			$series_image_attachment_id = get_term_meta( $series_id, $this->token . '_series_image_settings', true );
-		}
-
-		if ( ! empty( $series_image_attachment_id ) ) {
-			$image_data_array = ssp_get_attachment_image_src( $series_image_attachment_id, $size );
-			if ( ssp_is_image_square( $image_data_array ) ) {
-				return $image_data_array;
-			}
-		}
-
-		/**
-		 * Option 3: if the series feed settings have an image that is square, then use that
-		 */
-		if ( $series_id ) {
-			$feed_image = get_option( 'ss_podcasting_data_image_' . $series_id, false );
-		}
-
-		if ( ! empty( $feed_image ) ) {
-			$feed_image_attachment_id = attachment_url_to_postid( $feed_image );
-			$image_data_array         = ssp_get_attachment_image_src( $feed_image_attachment_id, $size );
-			if ( ssp_is_image_square( $image_data_array ) ) {
-				return $image_data_array;
-			}
-		}
-
-		/**
-		 * Option 4: if the default feed settings have an image that is square, then use that
-		 */
-		$feed_image = get_option( 'ss_podcasting_data_image', false );
-		if ( $feed_image ) {
-			$feed_image_attachment_id = attachment_url_to_postid( $feed_image );
-			$image_data_array         = ssp_get_attachment_image_src( $feed_image_attachment_id, $size );
-			if ( ssp_is_image_square( $image_data_array ) ) {
-				return $image_data_array;
-			}
-		}
-
-		/**
-		 * Option 5: None of the above passed, return the no-album-art image
-		 */
-		return $this->get_no_album_art_image_array();
+		return $this->episode_repository->get_album_art( $episode_id, $size );
 	}
 
 	/**
@@ -320,43 +194,6 @@ class Episode_Controller {
 	 * @return \WP_Post[]
 	 */
 	public function get_recent_episodes( $args = array() ) {
-		$defaults = array(
-			'episodes_number' => 3,
-			'episode_types'   => 'all_podcast_types',
-			'order_by'        => 'published',
-		);
-
-		$args = wp_parse_args( $args, $defaults );
-
-		$post_types = ( 'all_podcast_types' === $args['episode_types'] ) ? ssp_post_types( true ) : SSP_CPT_PODCAST;
-
-		$query = array(
-			'posts_per_page' => $args['episodes_number'],
-			'post_type'      => $post_types,
-			'post_status'    => array( 'publish' ),
-		);
-
-		if ( 'recorded' === $args['order_by'] ) {
-			$query['orderby']  = 'meta_value';
-			$query['meta_key'] = 'date_recorded';
-			$query['order']    = 'DESC';
-		}
-
-		$episodes_query = new WP_Query( $query );
-
-		return $episodes_query->get_posts();
+		return $this->episode_repository->get_recent_episodes( $args );
 	}
-
-	/**
-	 * Render the template for the Elementor Recent Episodes Widget
-	 *
-	 * @return mixed|void
-	 */
-	public function render_recent_episodes( $template_data ) {
-		$template_data['episodes'] = $this->get_recent_episodes( $template_data );
-		$template_data             = apply_filters( 'recent_episodes_template_data', $template_data );
-
-		return $this->renderer->fetch( 'episodes/recent-episodes', $template_data );
-	}
-
 }
