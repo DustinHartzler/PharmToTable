@@ -155,7 +155,7 @@ class WebhookTopicsController extends WC_REST_Controller {
 				continue;
 			}
 
-			if ( strlen( $request['search'] ) > 0 ) {
+			if ( isset( $request['search'] ) && is_string( $request['search'] ) && strlen( $request['search'] ) > 0 ) {
 				// Filter by search term (in key or in name).
 				if ( false === stripos( $topic_key, $request['search'] ) && false === stripos( $topic_name, $request['search'] ) ) {
 					continue;

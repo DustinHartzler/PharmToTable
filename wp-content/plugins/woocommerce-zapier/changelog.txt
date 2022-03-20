@@ -1,5 +1,33 @@
 === WooCommerce Zapier Changelog ===
 
+2022-01-24 - version 2.3.0
+* Full details: https://om4.io/?p=20152
+* New: Improved support for popular security plugins (such as Wordfence Security). Authentication is now possible whilst using Wordfence Security's Two Factor Authentication on your WordPress user account. Please see https://docs.om4.io/woocommerce-zapier/plugin-compatibility/#wordfence-security for details. PR #527
+* New: Compatible with PHP 8.1 when using WordPress 5.9 or newer. PR #511
+* Fix: System Status screen not showing all Zapier webhooks - was only showing the first 10 webhooks. PR #537
+* Change: Task History records are now kept indefinitely, rather than being deleted automatically after 30 days. This should help avoid confusion when viewing the **WooCommerce Zapier** metaboxes in the WordPress admin area. #504
+* Change: Remove **View/Edit Zap** links from the **WooCommerce** -> **Zapier** screen because Zap IDs are no longer available for new Zaps/webhooks created after June 2021. Automatically rename all existing WooCommerce Zapier webhooks to `WooCommerce Zapier` for consistency. #518, #528
+* Change: WooCommerce Zapier now integrates with 4000+ apps on Zapier.com.
+* Change: Minimum required PHP version is now 7.2.0 No longer supporting PHP 7.1.x or 7.0.x. #517
+* Change: Minimum required WordPress version is 5.3.0. #517
+* Change: Minimum required WooCommerce version is 4.2.0. #517
+* Change: Minimum required WooCommerce Subscriptions version is 3.0.0. #517
+* Change: Marked as compatible with WooCommerce 6.1. PR #525
+* Change: Marked as compatible with WooCommerce Subscriptions v4.0. PR #534
+* Change: Marked as compatible with WooCommerce Bookings v1.15.49. PR #514
+
+2021-09-29 - version 2.2.2
+* Full details: https://om4.io/?p=20127
+* Change: WooCommerce Zapier now integrates with 3,800+ apps on Zapier.com. #499
+* Change: Legacy Feed Migration deadline. PR #500
+* Change: Marked as compatible with WooCommerce 5.8. #499
+
+2021-07-23 - version 2.2.1
+* Full details: https://om4.io/?p=20105
+* Security: Automatically revoke all existing WooCommerce Zapier API Keys based on advice in https://woocommerce.com/posts/critical-vulnerability-detected-july-2021/.
+* Change: Marked as compatible with WooCommerce 5.5. PR #474
+* Change: Marked as compatible with WordPress 5.8. PR #474
+
 2021-05-26 - version 2.2.0
 * Full details: https://om4.io/?p=20075
 * New: Added WooCommerce Bookings support. The minimum required WooCommerce Bookings version is 1.15.35. PR #413

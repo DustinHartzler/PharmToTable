@@ -48,7 +48,7 @@ class Plugin extends Base {
 	/**
 	 * The minimum WooCommerce Subscriptions version that this plugin supports.
 	 */
-	const MINIMUM_SUPPORTED_VERSION = '2.4.3';
+	const MINIMUM_SUPPORTED_VERSION = '3.0.0';
 
 	/**
 	 * Constructor.

@@ -193,6 +193,9 @@ class SessionAuthenticate {
 	/**
 	 * Authenticate a user, confirming the login credentials are valid.
 	 *
+	 * Attempts to authenticate using Application Password authentication if available,
+	 * then falls back to normal WordPress auth.
+	 *
 	 * @param string $username Username or Email Address.
 	 * @param string $password User password.
 	 *
@@ -200,6 +203,15 @@ class SessionAuthenticate {
 	 *                          otherwise WP_Error.
 	 */
 	protected function authenticate_user( $username, $password ) {
+		if ( function_exists( 'wp_authenticate_application_password' ) ) {
+			// The site supports Application Passwords.
+			// Attempt authentication using the Application Password mechanism, in order to improve compatibility with many 2FA security plugins.
+			$user = wp_authenticate_application_password( null, $username, $password );
+			if ( ! is_null( $user ) && is_a( $user, WP_User::class ) ) {
+				// Successful authentication using an Application Password.
+				return $user;
+			}
+		}
 		return wp_authenticate( $username, $password );
 	}
 

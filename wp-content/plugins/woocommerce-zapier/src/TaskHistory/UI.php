@@ -101,7 +101,7 @@ class UI {
 		$this->list_table->prepare_items();
 		$this->list_table->display();
 		// Translators: Days for storing Zapier Task History.
-		echo '<p>' . esc_html( sprintf( __( 'This screen shows a history of your WooCommerce store\'s integration with Zapier for the the last %s days.', 'woocommerce-zapier' ), TaskDataStore::TASK_RETENTION_DAYS ) ) . '</p>';
+		echo '<p>' . esc_html( __( 'This screen shows a history of your WooCommerce store\'s integration with Zapier.', 'woocommerce-zapier' ) ) . '</p>';
 		echo '<p>' . esc_html__( 'This includes any time that your WooCommerce store\'s data is sent to one of your Zapier Zaps, or any time that Zapier creates or updates data in your WooCommerce store via one of your Zaps.', 'woocommerce-zapier' ) . '</p>';
 		// Translators: URL to Zapier Task History.
 		echo '<p>' . wp_kses( sprintf( __( 'You can also <a href="%s">view your Task History at zapier.com</a>', 'woocommerce-zapier' ), 'https://zapier.com/app/history/' ), 'post' ) . '</p>';

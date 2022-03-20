@@ -2,6 +2,7 @@
 
 namespace OM4\WooCommerceZapier\Webhook;
 
+use OM4\WooCommerceZapier\Webhook\DataStore;
 use WC_Webhook;
 
 defined( 'ABSPATH' ) || exit;
@@ -18,43 +19,31 @@ class ZapierWebhook extends WC_Webhook {
 	 * Whether or not the specified WooCommerce webhook is one that was created
 	 * by the WooCommerce Zapier integration.
 	 *
+	 * A Zapier webhook is one that:
+	 * - has a delivery URL containing `hooks.zapier.com`
+	 * - name equals to `WooCommerce Zapier`.
+	 *
+	 * Passing a different name to the $name argument allows us to target pre version 2.3.0 name schemas.
+	 *
+	 * @param string $name Name of the Zapier webhook.
+	 *
 	 * @return boolean
 	 */
-	public function is_zapier_webhook() {
-		if ( false === strpos( $this->get_name(), 'Zapier #' ) ) {
-			return false;
-		}
+	public function is_zapier_webhook( $name = DataStore::ZAPIER_WEBHOOK_DEFAULT_NAME ) {
 		if ( false === strpos( $this->get_delivery_url(), 'hooks.zapier.com' ) ) {
 			return false;
 		}
-		return true;
-	}
-
-	/**
-	 * Get a Zap ID from the specified webhook.
-	 * The webhook name contains the Zap number (ID) in the format Zapier #{123}
-	 *
-	 * @return string
-	 */
-	public function get_zap_id() {
-		preg_match( '/^Zapier #([0-9]+)/', $this->get_name(), $matches );
-		if ( isset( $matches[1] ) ) {
-			return $matches[1];
+		if ( DataStore::ZAPIER_WEBHOOK_DEFAULT_NAME === $name ) {
+			// New, stricter check.
+			if ( $this->get_name() === DataStore::ZAPIER_WEBHOOK_DEFAULT_NAME ) {
+				return true;
+			}
+		} else {
+			// Pre version 2.3.0 name check.
+			if ( 0 === strpos( $this->get_name(), $name ) ) {
+				return true;
+			}
 		}
-		return '';
+		return false;
 	}
-
-	/**
-	 * Get the URL to the Zap that the specified Webhook uses.
-	 *
-	 * @return string
-	 */
-	public function get_zap_url() {
-		$id = $this->get_zap_id();
-		if ( strlen( $id ) > 0 ) {
-			return "https://zapier.com/app/editor/$id";
-		}
-		return '';
-	}
-
 }

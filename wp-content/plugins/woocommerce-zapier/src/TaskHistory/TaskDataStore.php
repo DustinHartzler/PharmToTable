@@ -20,13 +20,6 @@ defined( 'ABSPATH' ) || exit;
 class TaskDataStore implements WC_Object_Data_Store_Interface {
 
 	/**
-	 * Number of days to retain task history records for.
-	 *
-	 * Any records older than this are automatically deleted each day.
-	 */
-	const TASK_RETENTION_DAYS = '30';
-
-	/**
 	 * Database table name for storing task history records.
 	 */
 	const TASK_HISTORY_TABLE = 'wc_zapier_history';
@@ -291,25 +284,6 @@ class TaskDataStore implements WC_Object_Data_Store_Interface {
 			'%d',
 			'%s',
 			'%s',
-		);
-	}
-
-	/**
-	 * Deletes Task records older than 30 days.
-	 *
-	 * Executed daily as part of the `wc_zapier_history_cleanup` scheduled job.
-	 *
-	 * @return void
-	 */
-	public function cleanup_old_tasks() {
-		$retention = '-' . self::TASK_RETENTION_DAYS . 'days';
-		$timestamp = strtotime( $retention );
-		if ( ! $timestamp ) {
-			return;
-		}
-
-		$this->wp_db->query(
-			$this->wp_db->prepare( 'DELETE FROM ' . $this->get_table_name() . ' WHERE date_time < %s', gmdate( 'Y-m-d H:i:s', $timestamp ) )
 		);
 	}
 

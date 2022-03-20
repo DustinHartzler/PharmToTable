@@ -35,7 +35,7 @@ class Uninstall {
 
 		// Delete all existing WooCommerce Zapier Webhooks.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-		$wpdb->query( "DELETE FROM `{$wpdb->prefix}wc_webhooks` WHERE `name` LIKE 'Zapier #%' AND `delivery_url` LIKE '%hooks.zapier.com%'" );
+		$wpdb->query( "DELETE FROM `{$wpdb->prefix}wc_webhooks` WHERE `name` = 'WooCommerce Zapier' AND `delivery_url` LIKE '%hooks.zapier.com%'" );
 
 		// Delete all existing WooCommerce Zapier REST API Keys.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

@@ -41,6 +41,7 @@ abstract class Collection extends Base implements ArrayAccess, Countable, Iterat
 	 * @param   array|Iterator $data Data to fill properties at once.
 	 * @return  static
 	 */
+	#[\ReturnTypeWillChange]
 	final public static function from_data( $data ) {
 		$collection = new static();
 		foreach ( $data as $key => $value ) {
@@ -122,6 +123,7 @@ abstract class Collection extends Base implements ArrayAccess, Countable, Iterat
 	 * @param   int|string $key  Name of the property.
 	 * @return  bool             True if property exist, false otherwise.
 	 */
+	#[\ReturnTypeWillChange]
 	final public function offsetExists( $key ) {
 		return isset( $this->items[ $key ] );
 	}
@@ -133,6 +135,7 @@ abstract class Collection extends Base implements ArrayAccess, Countable, Iterat
 	 * @throws InvalidPropertyException Key unavailable.
 	 * @return  mixed                   The value of the property.
 	 */
+	#[\ReturnTypeWillChange]
 	final public function offsetGet( $key ) {
 		if ( ! $this->offsetExists( $key ) ) {
 			throw new InvalidPropertyException( get_called_class(), $key );
@@ -146,6 +149,7 @@ abstract class Collection extends Base implements ArrayAccess, Countable, Iterat
 	 * @param   null|int|string $key   Name of the property.
 	 * @param   mixed           $value The value of the property.
 	 */
+	#[\ReturnTypeWillChange]
 	final public function offsetSet( $key, $value ) {
 		$key = is_null( $key ) ? count( $this->items ) : $key;
 		$this->validate( $key, $value );
@@ -157,6 +161,7 @@ abstract class Collection extends Base implements ArrayAccess, Countable, Iterat
 	 *
 	 * @param   int|string $key Name of the property.
 	 */
+	#[\ReturnTypeWillChange]
 	final public function offsetUnset( $key ) {
 		unset( $this->items[ $key ] );
 	}
@@ -166,6 +171,7 @@ abstract class Collection extends Base implements ArrayAccess, Countable, Iterat
 	 *
 	 * @return  int  The count as integer.
 	 */
+	#[\ReturnTypeWillChange]
 	final public function count() {
 		return count( $this->items );
 	}
@@ -175,6 +181,7 @@ abstract class Collection extends Base implements ArrayAccess, Countable, Iterat
 	 *
 	 * @return  Traversable An instance of an object implementing Iterator or Traversable
 	 */
+	#[\ReturnTypeWillChange]
 	final public function getIterator() {
 		return new ArrayIterator( $this->items );
 	}

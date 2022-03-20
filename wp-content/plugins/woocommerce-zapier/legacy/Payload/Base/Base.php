@@ -112,6 +112,7 @@ abstract class Base implements Contract {
 	 * @throws IncompletePayloadException Payload not completely filled.
 	 * @return mixed                      Data which can be serialized by json_encode.
 	 */
+	#[\ReturnTypeWillChange]
 	final public function jsonSerialize() {
 		list( $buffer, $nulls ) = $this->proper_array_and_nulls( $this->get_properties() );
 		if ( ! empty( $nulls ) ) {

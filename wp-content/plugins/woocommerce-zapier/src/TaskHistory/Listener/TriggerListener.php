@@ -108,15 +108,14 @@ class TriggerListener {
 			);
 		} else {
 			// Successful delivery.
-			// Log the success message, along with the trigger rule name and Zap view/edit URL.
+			// Log the success message, along with the trigger rule name.
 			$topics     = $this->webhook_resources->get_topics();
 			$topic_name = isset( $topics[ $webhook->get_topic() ] ) ? $topics[ $webhook->get_topic() ] : $webhook->get_topic();
 			$task->set_message(
 				sprintf(
-					// Translators: 1: Trigger Rule Name. 2: Zap View/Edit URL.
-					__( 'Sent to Zapier successfully via the <em>%1$s</em> trigger.<br /><a target="_blank" href="%2$s">View/Edit Zap</a>', 'woocommerce-zapier' ),
-					$topic_name,
-					esc_attr( $webhook->get_zap_url() )
+					// Translators: 1: Trigger Rule Name.
+					__( 'Sent to Zapier successfully via the <em>%1$s</em> trigger.', 'woocommerce-zapier' ),
+					$topic_name
 				)
 			);
 		}

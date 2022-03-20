@@ -64,13 +64,8 @@ class Installer {
 	 */
 	public function initialise() {
 		add_action( 'wc_zapier_db_upgrade_v_5_to_6', array( $this, 'install_database_table' ) );
-
-		// Daily Cleanup Cron Installation.
-		add_action( 'wc_zapier_db_upgrade_v_7_to_8', array( $this, 'create_cron_jobs' ) );
-		add_action( 'wc_zapier_plugin_deactivate', array( $this, 'delete_cron_jobs' ) );
-
-		// Daily Cleanup Cron Execution.
-		add_action( 'wc_zapier_history_cleanup', array( $this->task_data_store, 'cleanup_old_tasks' ) );
+		add_action( 'wc_zapier_db_upgrade_v_13_to_14', array( $this, 'delete_cron_jobs' ) );
+		add_action( 'wc_zapier_db_upgrade_v_13_to_14', array( $this, 'update_messages_to_remove_view_edit_zap_link' ) );
 	}
 
 	/**
@@ -118,22 +113,6 @@ SQL;
 	}
 
 	/**
-	 * Create Task History related Action Scheduler cron job(s).
-	 *
-	 * Executed during initial plugin activation, and when an existing user upgrades.
-	 *
-	 * @return void
-	 */
-	public function create_cron_jobs() {
-		if ( ! did_action( 'init' ) ) {
-			// Activation has ran too early before Action Scheduler is correctly initialised.
-			return;
-		}
-		$this->delete_cron_jobs();
-		WC()->queue()->schedule_recurring( time() + ( 3 * HOUR_IN_SECONDS ), DAY_IN_SECONDS, 'wc_zapier_history_cleanup', array(), 'wc-zapier' );
-	}
-
-	/**
 	 * Delete Task History related Action Scheduler cron job(s).
 	 *
 	 * Executed during plugin deactivation.
@@ -151,5 +130,21 @@ SQL;
 	 */
 	public function database_table_exists() {
 		return $this->db_table === $this->wp_db->get_var( strval( $this->wp_db->prepare( 'SHOW TABLES LIKE %s', $this->db_table ) ) );
+	}
+
+	/**
+	 * Update all existing messages in the Task History Table,
+	 * removing the `View/Edit Zap` link.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return void
+	 */
+	public function update_messages_to_remove_view_edit_zap_link() {
+		// Bulk update all messages, and only keep the message text up to the <br /> tag.
+		$result = $this->wp_db->query(
+			'UPDATE ' . $this->task_data_store->get_table_name() . " SET `message` = (SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(message,'<br />',1),'<br />',-1) AS columName) WHERE message LIKE '%<br />%'"
+		);
+		$this->logger->info( '%d task history record(s) updated to remove View/Edit Zap link.', array( $result ) );
 	}
 }

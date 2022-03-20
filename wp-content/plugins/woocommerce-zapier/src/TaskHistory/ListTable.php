@@ -239,16 +239,6 @@ class ListTable extends WP_List_Table {
 					$message,
 					$this->get_webhook_topic_name( $task->get_webhook()->get_topic() )
 				);
-				$webhook = $task->get_webhook();
-				if ( '' !== $webhook->get_zap_url() ) {
-					// Webhook has a Zap URL, so add a link to it.
-					$message = sprintf(
-					// Translators: 1: Message. 2: Zap Edit URL.
-						__( '%1$s<br /><a target="_blank" href="%2$s">View/Edit Zap</a>', 'woocommerce-zapier' ),
-						$message,
-						esc_attr( $webhook->get_zap_url() )
-					);
-				}
 			}
 
 			return wp_kses_post( $message );

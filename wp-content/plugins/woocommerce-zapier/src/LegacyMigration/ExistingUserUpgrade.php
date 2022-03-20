@@ -63,7 +63,7 @@ class ExistingUserUpgrade {
 	 * The deadline of the migration, users have to migrate to the new REST API before this.
 	 * To access this date, use the `get_migration_deadline()` method which provides a localisation as well.
 	 */
-	const MIGRATION_DEADLINE = '30 September 2021';
+	const MIGRATION_DEADLINE = '30 April 2022';
 
 	/**
 	 * Constructor.

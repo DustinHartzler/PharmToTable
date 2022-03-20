@@ -49,6 +49,7 @@ class Installer {
 	public function initialise() {
 		add_action( 'wc_zapier_plugin_deactivate', array( $this, 'pause_zapier_webhooks' ) );
 		add_action( 'wc_zapier_db_upgrade_v_9_to_10', array( $this, 'unpause_zapier_webhooks' ) );
+		add_action( 'wc_zapier_db_upgrade_v_13_to_14', array( $this, 'rename_existing_webhooks' ) );
 	}
 
 	/**
@@ -79,7 +80,11 @@ class Installer {
 	 * @return void
 	 */
 	public function unpause_zapier_webhooks() {
-		$webhooks = $this->webhook_data_store->get_paused_zapier_webhooks();
+		// look for paused webhook in pre-2.3.0 format webhooks.
+		$old_webhooks = $this->webhook_data_store->get_paused_zapier_webhooks( 'Zapier #' );
+		// look for new (2.3.0) format webhooks.
+		$new_webhooks = $this->webhook_data_store->get_paused_zapier_webhooks();
+		$webhooks     = \array_merge( $old_webhooks, $new_webhooks );
 
 		if ( empty( $webhooks ) ) {
 			return;
@@ -91,5 +96,33 @@ class Installer {
 			$this->logger->info( 'Paused Webhook ID %d (%s) set to active.', array( $webhook->get_id(), $webhook->get_name() ) );
 		}
 		$this->logger->info( '%d paused webhook(s) reactivated.', array( count( $webhooks ) ) );
+	}
+
+	/**
+	 * Rename any existing WooCommerce Zapier webhooks to a new standardised name.
+	 *
+	 * Executed when users upgraded to version 2.3.0.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return void
+	 */
+	public function rename_existing_webhooks() {
+		$webhooks = $this->webhook_data_store->get_zapier_webhooks( 'Zapier #' );
+
+		if ( empty( $webhooks ) ) {
+			return;
+		}
+
+		foreach ( $webhooks as $webhook ) {
+			$name = $webhook->get_name();
+			$webhook->set_name( 'WooCommerce Zapier' );
+			$webhook->save();
+			$this->logger->warning(
+				'%s Webhook ID %d (%s) renamed to `WooCommerce Zapier`.',
+				array( $webhook->get_status(), $webhook->get_id(), $name )
+			);
+		}
+		$this->logger->warning( '%d webhook(s) renamed to `WooCommerce Zapier`.', array( count( $webhooks ) ) );
 	}
 }

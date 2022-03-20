@@ -188,7 +188,7 @@ class UI {
 		$count  = $this->task_data_store->get_tasks_count();
 		$rows[] = array(
 			'name'    => __( 'Task History Record Count', 'woocommerce-zapier' ),
-			'help'    => __( 'Indicates how many times (within the last 30 days) that data has been sent to from WooCommerce to a Zapier Zap, and how many times data has been sent to WooCommerce from a Zapier Zap.', 'woocommerce-zapier' ),
+			'help'    => __( 'Indicates how many times that data has been sent to from WooCommerce to a Zapier Zap, and how many times data has been sent to WooCommerce from a Zapier Zap.', 'woocommerce-zapier' ),
 			'success' => $count > 0,
 			'note'    => (string) $count,
 		);
@@ -226,7 +226,7 @@ class UI {
 						'%1$s<br />
 - Status: %2$s<br />
 - Trigger: %3$s<br />
-- Delivery Count (Last 30 Days): %4$s',
+- Delivery Count: %4$s',
 						'woocommerce-zapier'
 					),
 					$webhook->get_name(),
@@ -245,9 +245,7 @@ class UI {
 				}
 			}
 			$rows[] = array(
-				// Translators: 1: Webhook ID.
 				'name' => __( 'Deleted Webhook Delivery Count', 'woocommerce-zapier' ),
-				'help' => __( 'Within the last 30 days.', 'woocommerce-zapier' ),
 				'note' => $count,
 			);
 		}
@@ -271,7 +269,7 @@ class UI {
 				'name' => sprintf( __( '%1$s Action Count', 'woocommerce-zapier' ), $resource_type ),
 				'note' => (string) $action_count['count'],
 				// Translators: 1: Resource Name.
-				'help' => sprintf( __( 'The number of times (within the last 30 days) that a %1$s has been created or updated in WooCommerce from a Zapier Zap.', 'woocommerce-zapier' ), $resource_type ),
+				'help' => sprintf( __( 'The number of times that a %1$s has been created or updated in WooCommerce from a Zapier Zap.', 'woocommerce-zapier' ), $resource_type ),
 			);
 		}
 		return $rows;

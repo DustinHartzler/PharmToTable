@@ -8,15 +8,15 @@ defined( 'ABSPATH' ) || exit;
 /*
 Plugin Name: WooCommerce Zapier
 Plugin URI: https://woocommerce.com/products/woocommerce-zapier/
-Description: Integrates WooCommerce with <a href="https://zapier.com/" target="_blank">Zapier</a>. Send WooCommerce data to 3000+ cloud services. Create or update WooCommerce data from 3000+ cloud services via Zaps.
-Version: 2.2.0
+Description: Integrates WooCommerce with <a href="https://zapier.com/" target="_blank">Zapier</a>. Send WooCommerce data to 4000+ cloud services. Create or update WooCommerce data from 4000+ cloud services via Zaps.
+Version: 2.3.0
 Author: OM4 Software
 Author URI: https://om4.io/
 Text Domain: woocommerce-zapier
 Domain Path: /languages/
 Woo: 243589:0782bdbe932c00f4978850268c6cfe40
-WC requires at least: 3.7
-WC tested up to: 5.3
+WC requires at least: 4.2
+WC tested up to: 6.1
 */
 
 /*
@@ -38,7 +38,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 define( 'WC_ZAPIER_PLUGIN_FILE', __FILE__ );
-define( 'WC_ZAPIER_MINIMUM_SUPPORTED_PHP_VERSION', '7.0.0' );
+define( 'WC_ZAPIER_MINIMUM_SUPPORTED_PHP_VERSION', '7.2.0' );
 
 /**
  * Displays a message if PHP version isn't supported.
