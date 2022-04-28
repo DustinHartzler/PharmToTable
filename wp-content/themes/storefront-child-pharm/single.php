@@ -205,7 +205,7 @@
                                     <div class="content">
                                         <p><?php the_author_description(); ?></p>
                                         <h4><?php the_author_posts_link(); ?></h4>
-										<button>View Provider</button>
+										
                                     </div>
                                 </div>
                                 <!-- End Author Post -->
