@@ -178,11 +178,8 @@
                         <div class="item">
 
                             <!-- Start Post Thumb -->
-                            <div class="thumb">
+                            <div>
                                 <?php the_post_thumbnail( array( 600, 600 ) ); ?>
-                                <div class="post-type">
-                                    <i class="fas fa-images"></i>
-                                </div>
                             </div>
                             <!-- Start Post Thumb -->
 
@@ -208,6 +205,7 @@
                                     <div class="content">
                                         <p><?php the_author_description(); ?></p>
                                         <h4><?php the_author_posts_link(); ?></h4>
+										<button>View Provider</button>
                                     </div>
                                 </div>
                                 <!-- End Author Post -->
