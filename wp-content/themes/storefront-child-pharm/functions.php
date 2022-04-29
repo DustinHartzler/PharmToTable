@@ -22,7 +22,7 @@ add_action( 'after_setup_theme', 'mytheme_add_woocommerce_support' );
 *  Display Providers Randomly on Providers page
 */
 function dh_providers_random( $query ) {
-	if( $query->is_main_query() && !is_admin() && is_post_type_archive( 'provider' ) ) {
+	if( $query->is_main_query() && !	is_admin() && is_post_type_archive( 'provider' ) ) {
 		$query->set( 'orderby', 'rand' );
 	}
 }
@@ -416,3 +416,16 @@ function ptt_svg_favicon() {
 	}
 }
 add_action( 'wp_head', 'ptt_svg_favicon', 100 );
+
+function wc_subscriptions_custom_price_string( $pricestring ) {
+    global $product;
+
+    $products_to_change = array( 1197 );
+
+    if ( in_array( $product->id, $products_to_change ) ) {
+        $pricestring = str_replace( 'free trial', 'onboarding period (free)', $pricestring );
+    }
+
+    return $pricestring;
+}
+add_filter( 'woocommerce_subscriptions_product_price_string', 'wc_subscriptions_custom_price_string' );
