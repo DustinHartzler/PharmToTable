@@ -181,21 +181,21 @@
                             <div>
                                 <?php the_post_thumbnail( array( 600, 600 ) ); ?>
                             </div>
-                            <!-- Start Post Thumb -->
+                            <!-- End Post Thumb -->
 
                             <div class="info">
                                 <div class="meta">
-								<div class="avatar">
+									<div class="avatar">
                                         <?php echo get_avatar( get_the_author_meta( 'ID' ), 50 ); ?>
-                                    
                                     <ul>
                                         <li><a href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ); ?>"><?php the_author();?></a></li>
                                         <li><?php the_date();?></li>
                                     </ul>
 									</div>
                                 </div>
-                                <h3><?php the_title(); ?></h3>
-                                <?php the_content(); ?>
+							</div>
+                            <h3><?php the_title(); ?></h3>
+                            <?php the_content(); ?>
 
 								<!-- Start Author Post -->
                                 <div class="author-bio">
@@ -205,7 +205,11 @@
                                     <div class="content">
                                         <p><?php the_author_description(); ?></p>
                                         <h4><?php the_author_posts_link(); ?></h4>
-										
+										<?php if ('' != get_the_author_meta( 'url', $author_id )){ ?>
+											<div class="appoinment-btn">
+												<a href="<?php echo get_the_author_meta( 'url', $author_id );?>">View Provider Bio</a>
+											</div>
+										<?php } ?> 
                                     </div>
                                 </div>
                                 <!-- End Author Post -->
