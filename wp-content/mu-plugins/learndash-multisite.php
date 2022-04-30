@@ -49,6 +49,8 @@ if ( ! class_exists( 'LD_Multisite' ) ) {
 
 		/**
 		 * Set when the user is activated.
+		 *
+		 * @var int
 		 */
 		private $activated_user_id = 0;
 
@@ -60,10 +62,10 @@ if ( ! class_exists( 'LD_Multisite' ) ) {
 		 */
 		public static function get_instance() {
 			if ( ! isset( static::$instance ) ) {
-				static::$instance = new static();
+				self::$instance = new self();
 			}
 
-			return static::$instance;
+			return self::$instance;
 		}
 
 		/**
