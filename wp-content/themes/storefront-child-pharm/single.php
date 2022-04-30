@@ -206,7 +206,7 @@
                                         <p><?php the_author_description(); ?></p>
                                         <h4><?php the_author_posts_link(); ?></h4>
 										<?php if ('' != get_the_author_meta( 'url', $author_id )){ ?>
-											<div class="appoinment-btn">
+											<div class="appoinment-btn" style="max-width: 215px;">
 												<a href="<?php echo get_the_author_meta( 'url', $author_id );?>">View Provider Bio</a>
 											</div>
 										<?php } ?> 
