@@ -194,12 +194,12 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6">
-					<h1>Podcast</h1>
+					<h1><?php the_title(); ?></h1>
 				</div>
 				<div class="col-md-6 text-right">
 					<ul class="breadcrumb">
-						<li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-						<li class="active">Podcast</li>
+						<li><a href="https://pharmtotable.life"><i class="fas fa-home"></i> Home</a></li>
+						<li class="active">Table Talk Podcast</li>
 					</ul>
 				</div>
 			</div>
@@ -219,25 +219,11 @@
 						<div class="item">
 
 							<!-- Start Post Thumb -->
-							<div class="thumb">
+							<div>
 								<?php the_post_thumbnail( array( 600, 600 ) ); ?>
-								<div class="post-type">
-									<i class="fas fa-images"></i>
-								</div>
 							</div>
-							<!-- Start Post Thumb -->
-							<h2><?php the_title(); ?></h2>
+							<!-- Stop Post Thumb -->
 							<div class="info">
-								<div class="meta">
-									<ul>
-										<li><a
-												href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>"><?php the_author();?></a>
-										</li>
-										<li><?php the_date();?>
-										</li>
-									</ul>
-								</div>
-								
 								<?php the_content(); ?>
 								<!-- Start Post Pagination -->
 								<div class="post-pagi-area">
