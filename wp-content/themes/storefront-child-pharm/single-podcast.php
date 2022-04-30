@@ -214,13 +214,13 @@
 		<div class="container">
 			<div class="row">
 				<div class="blog-items">
-					<div class="blog-content col-md-8">
+					<div class="blog-content podcast-content col-md-8">
 						<?php while ( have_posts() ) : the_post(); ?>
 						<div class="item">
 
 							<!-- Start Post Thumb -->
 							<div>
-								<?php the_post_thumbnail( array( 600, 600 ) ); ?>
+								<?php the_post_thumbnail( array( 750, 600 ) ); ?>
 							</div>
 							<!-- Stop Post Thumb -->
 							<div class="info">
@@ -231,11 +231,11 @@
                                     $prev_post = get_adjacent_post(false, '', true);
                                     $next_post = get_adjacent_post(false, '', false);
 if (!empty($prev_post)) {
-    echo '<a href="' . get_permalink($prev_post->ID) . '" title="' . $prev_post->post_title . '"><i class="fas fa-angle-double-left"></i>Previous Post</a>';
+    echo '<a href="' . get_permalink($prev_post->ID) . '" title="' . $prev_post->post_title . '"><i class="fas fa-angle-double-left"></i>'. $prev_post->post_title .'</a>';
 }
 
 if (!empty($next_post)) {
-    echo '<a href="' . get_permalink($next_post->ID) . '" title="' . $next_post->post_title . '">Next Podcast<i class="fas fa-angle-double-right"></i></a>';
+    echo '<a href="' . get_permalink($next_post->ID) . '" title="' . $next_post->post_title . '">'. $next_post->post_title .'<i class="fas fa-angle-double-right"></i></a>';
 } else {
     echo '<a href="#">&nbsp;</a>';
 }
