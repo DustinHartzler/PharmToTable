@@ -2,84 +2,82 @@
 <html lang="en">
 
 <head>
-    <!-- ========== Meta Tags ========== -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
+	<!-- ========== Meta Tags ========== -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
 	<meta property="og:image" content="https://pharmtotable.life/wp-content/uploads/2021/11/table-talk-podcast-scaled.jpg" />
 
-    <!-- ========== Page Title ========== -->
-    <title>PharmToTable | <?php wp_title(''); ?></title>
+	<!-- ========== Page Title ========== -->
+	<title>PharmToTable | <?php wp_title( '' ); ?></title>
 
-<!-- Facebook Pixel Code -->
-    <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '3168022206626913');
-      fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=432268807399441&ev=PageView&noscript=1"
-    /></noscript>
+	<!-- Facebook Pixel Code -->
+	<script>
+	!function(f,b,e,v,n,t,s)
+		{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+			n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+			if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+			n.queue=[];t=b.createElement(e);t.async=!0;
+			t.src=v;s=b.getElementsByTagName(e)[0];
+			s.parentNode.insertBefore(t,s)}(window, document,'script',
+			'https://connect.facebook.net/en_US/fbevents.js');
+			fbq('init', '3168022206626913');
+			fbq('track', 'PageView');
+	</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=432268807399441&ev=PageView&noscript=1"
+	/></noscript>
 <!-- End Facebook Pixel Code -->
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-98971040-1"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
 
-  gtag('config', 'UA-98971040-1');
+	gtag('config', 'UA-98971040-1');
 </script>
 <!-- End Google Analytics -->
 
-    <!-- ========== Start Stylesheet ========== -->
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/flaticon-set.css" rel="stylesheet" />
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/magnific-popup.css" rel="stylesheet" />
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/owl.carousel.min.css" rel="stylesheet" />
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/owl.theme.default.min.css" rel="stylesheet" />
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/animate.css" rel="stylesheet" />
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootsnav.css" rel="stylesheet" />
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/style.css" rel="stylesheet">
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/style2.css" rel="stylesheet">
-    <link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/responsive.css" rel="stylesheet" />
-    <!-- ========== End Stylesheet ========== -->
+	<!-- ========== Start Stylesheet ========== -->
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/font-awesome.min.css" rel="stylesheet" />
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/flaticon-set.css" rel="stylesheet" />
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/magnific-popup.css" rel="stylesheet" />
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/owl.carousel.min.css" rel="stylesheet" />
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/owl.theme.default.min.css" rel="stylesheet" />
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/animate.css" rel="stylesheet" />
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/bootsnav.css" rel="stylesheet" />
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/style.css" rel="stylesheet">
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/style2.css" rel="stylesheet">
+	<link href="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/css/responsive.css" rel="stylesheet" />
+	<!-- ========== End Stylesheet ========== -->
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="assets/js/html5/html5shiv.min.js"></script>
-      <script src="assets/js/html5/respond.min.js"></script>
-    <![endif]-->
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+		<script src="assets/js/html5/html5shiv.min.js"></script>
+		<script src="assets/js/html5/respond.min.js"></script>
+	<![endif]-->
 
-    <!-- ========== Google Fonts ========== -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600,700,800" rel="stylesheet">
+	<!-- ========== Google Fonts ========== -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600,700,800" rel="stylesheet">
 
 </head>
 
 <body>
+	<!-- Preloader Start -->
+	<div class="se-pre-con"></div>
+	<!-- Preloader Ends -->
 
-    <!-- Preloader Start -->
-    <div class="se-pre-con"></div>
-    <!-- Preloader Ends -->
+	<!-- Header ============================================= -->
+	<header id="home">
 
-    <!-- Header
-    ============================================= -->
-    <header id="home">
-
-        <!-- Start Navigation -->
-        <nav class="navbar navbar-default attr-border navbar-sticky bootsnav">
+	<!-- Start Navigation -->
+	<nav class="navbar navbar-default attr-border navbar-sticky bootsnav">
 
             <!-- Start Top Search -->
             <div class="container">
@@ -104,7 +102,6 @@
                 <!-- Start Atribute Navigation -->
                 <div class="attr-nav">
                     <ul>
-                        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
                         <li class="quote-btn"><a href="<?php bloginfo('url'); ?>/provider">Make Appointment</a></li>
                     </ul>
                 </div>
@@ -124,7 +121,8 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="navbar-menu">
 
-                <?php wp_nav_menu( array(
+                <?php wp_nav_menu(
+					array(
                             'sort_column' => 'menu_order',
                             'theme_location' => 'main',
                             'container' => 'ul',
@@ -226,15 +224,15 @@
 
                 <div class="f-items default-padding">
                     <!-- Single Item -->
-                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-1") ) : ?>
+                    <?php if ( ! function_exists( 'dynamic_sidebar' ) || ! dynamic_sidebar( "child-footer-1" ) ) : ?>
                     <?php endif;?>
                     <!-- End Single Item -->
                     <!-- Single Item -->
-                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-2") ) : ?>
+                    <?php if ( ! function_exists( 'dynamic_sidebar' ) || ! dynamic_sidebar( "child-footer-2" ) ) : ?>
                     <?php endif;?>
                     <!-- End Single Item -->
                     <!-- Single Item -->
-                    <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-3") ) : ?>
+                    <?php if ( ! function_exists( 'dynamic_sidebar' ) || ! dynamic_sidebar( "child-footer-3" ) ) : ?>
                     <?php endif;?>
                     <!-- End Single Item -->
                 </div>
