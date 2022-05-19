@@ -80,34 +80,11 @@
     <!-- Header
     ============================================= -->
     <header id="home">
-
-        <!-- Start Navigation -->
-        <nav class="navbar navbar-default attr-border navbar-sticky bootsnav">
-
-            <!-- Start Top Search -->
-            <div class="container">
-                <div class="row">
-                    <div class="top-search">
-                        <div class="input-group">
-                            <form action="#">
-                            <?php get_search_form(); ?>
-                                <input type="text" name="text" class="form-control" placeholder="Search">
-                                <button type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Top Search -->
-
             <div class="container">
 
                 <!-- Start Atribute Navigation -->
                 <div class="attr-nav">
                     <ul>
-                        <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
                         <li class="quote-btn"><a href="<?php bloginfo('url'); ?>/provider">Make Appointment</a></li>
                     </ul>
                 </div>
