@@ -80,6 +80,10 @@
     <!-- Header
     ============================================= -->
     <header id="home">
+
+        <!-- Start Navigation -->
+        <nav class="navbar navbar-default attr-border navbar-sticky bootsnav">
+
             <div class="container">
 
                 <!-- Start Atribute Navigation -->
