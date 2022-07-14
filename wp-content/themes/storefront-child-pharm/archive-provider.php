@@ -223,7 +223,10 @@
                 </div>
                 <div class="doctor-items text-center">
                     <!-- Single Item -->
-                    <?php while ( have_posts() ) : the_post(); ?>
+                    <?php 
+					global $query_string;
+					query_posts( $query_string . '&posts_per_page=-1' );
+					while ( have_posts() ) : the_post(); ?>
 
                     <?php   $facebook   = get_post_meta( $post->ID, 'provider_facebook', true );
                             $instagram  = get_post_meta( $post->ID, 'provider_instagram', true );
