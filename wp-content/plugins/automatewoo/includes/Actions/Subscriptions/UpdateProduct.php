@@ -52,7 +52,7 @@ class UpdateProduct extends \AutomateWoo\Action_Subscription_Edit_Product_Abstra
 	public function load_admin_details() {
 		parent::load_admin_details();
 		$this->title       = __( 'Update Product', 'automatewoo' );
-		$this->description = __( 'Update an existing product line item on a subscription. Only the data set on the action will be updated. This action can be used for bulk editing subscriptions, like changing price or product name', 'automatewoo' );
+		$this->description = __( 'Update an existing product line item on a subscription. Only the data set on the action will be updated. This action can be used for bulk editing subscriptions, like changing price or product name. Please note that any coupons applied in the subscription will be reapplied for all line items.', 'automatewoo' );
 	}
 
 

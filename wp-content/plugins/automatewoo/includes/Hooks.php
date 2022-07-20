@@ -61,7 +61,13 @@ class Hooks {
 		add_action( 'woocommerce_checkout_after_terms_and_conditions', [ 'AutomateWoo\Frontend', 'output_checkout_optin_checkbox' ] );
 		add_action( 'woocommerce_register_form', [ 'AutomateWoo\Frontend', 'output_signup_optin_checkbox' ], 20 );
 		add_action( 'woocommerce_checkout_order_processed', [ 'AutomateWoo\Frontend', 'process_checkout_optin' ], 20 );
-		add_action( 'woocommerce_blocks_checkout_update_order_from_request', [ 'AutomateWoo\Frontend', 'process_checkout_block_optin' ], 10, 2 );
+
+		if ( Integrations::is_woocommerce_blocks_active( '7.2.0' ) ) {
+			add_action( 'woocommerce_store_api_checkout_update_order_from_request', [ 'AutomateWoo\Frontend', 'process_checkout_block_optin' ], 10, 2 );
+		} else {
+			add_action( 'woocommerce_blocks_checkout_update_order_from_request', [ 'AutomateWoo\Frontend', 'process_checkout_block_optin' ], 10, 2 );
+		}
+
 		add_action( 'woocommerce_created_customer', [ 'AutomateWoo\Frontend', 'process_account_signup_optin' ], 20 );
 
 		// workflow fatal error monitor

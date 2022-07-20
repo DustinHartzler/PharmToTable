@@ -218,7 +218,8 @@ abstract class Model {
 				$this->exists = true;
 				$this->id = $wpdb->insert_id;
 			} else {
-				Logger::critical( 'errors', sprintf( __( 'Could not insert \'%1$s\' item to database. AutomateWoo tables may not be installed.', 'automatewoo' ), $this->object_type ) );
+				$aw_catch_db_error = 'Error: '.$wpdb->last_error.' (Query: '.$wpdb->last_query.')';
+				Logger::critical( 'errors', sprintf( __( 'Could not insert \'%1$s\' item to database. AutomateWoo tables may not be installed. (%2$s)', 'automatewoo' ), $this->object_type, $aw_catch_db_error) );
 
 				// Return here to prevent cache updates on error
 				return false;

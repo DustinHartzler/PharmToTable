@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7faaa460bea6f93d388110ecadf81946
+class ComposerStaticInit3b8e1dd629c83c8ce03581cc50acbfe5
 {
     public static $prefixLengthsPsr4 = array (
         'A' => 
@@ -96,6 +96,7 @@ class ComposerStaticInit7faaa460bea6f93d388110ecadf81946
         'AutomateWoo\\Actions\\ActionInterface' => __DIR__ . '/../..' . '/includes/Actions/ActionInterface.php',
         'AutomateWoo\\Actions\\Mailchimp_Update_Tags' => __DIR__ . '/../..' . '/includes/Actions/Mailchimp_Update_Tags.php',
         'AutomateWoo\\Actions\\PreviewableInterface' => __DIR__ . '/../..' . '/includes/Actions/PreviewableInterface.php',
+        'AutomateWoo\\Actions\\Subscriptions\\AbstractEditDateItem' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/AbstractEditDateItem.php',
         'AutomateWoo\\Actions\\Subscriptions\\AbstractEditItem' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/AbstractEditItem.php',
         'AutomateWoo\\Actions\\Subscriptions\\AbstractEditShipping' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/AbstractEditShipping.php',
         'AutomateWoo\\Actions\\Subscriptions\\AddShipping' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/AddShipping.php',
@@ -103,10 +104,12 @@ class ComposerStaticInit7faaa460bea6f93d388110ecadf81946
         'AutomateWoo\\Actions\\Subscriptions\\RegenerateDownloadPermissions' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/RegenerateDownloadPermissions.php',
         'AutomateWoo\\Actions\\Subscriptions\\RemoveShipping' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/RemoveShipping.php',
         'AutomateWoo\\Actions\\Subscriptions\\UpdateCurrency' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/UpdateCurrency.php',
+        'AutomateWoo\\Actions\\Subscriptions\\UpdateEndDate' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/UpdateEndDate.php',
         'AutomateWoo\\Actions\\Subscriptions\\UpdateNextPaymentDate' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/UpdateNextPaymentDate.php',
         'AutomateWoo\\Actions\\Subscriptions\\UpdateProduct' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/UpdateProduct.php',
         'AutomateWoo\\Actions\\Subscriptions\\UpdateSchedule' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/UpdateSchedule.php',
         'AutomateWoo\\Actions\\Subscriptions\\UpdateShipping' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/UpdateShipping.php',
+        'AutomateWoo\\Actions\\Subscriptions\\UpdateTrialEndDate' => __DIR__ . '/../..' . '/includes/Actions/Subscriptions/UpdateTrialEndDate.php',
         'AutomateWoo\\Actions\\TestableInterface' => __DIR__ . '/../..' . '/includes/Actions/TestableInterface.php',
         'AutomateWoo\\Active_Triggers_Cache' => __DIR__ . '/../..' . '/includes/Active_Triggers_Cache.php',
         'AutomateWoo\\ActivityPanelInbox\\SubscriptionsAddonDeactivatedNote' => __DIR__ . '/../..' . '/includes/ActivityPanelInbox/SubscriptionsAddonDeactivatedNote.php',
@@ -880,14 +883,15 @@ class ComposerStaticInit7faaa460bea6f93d388110ecadf81946
         'AutomateWoo\\Workflows\\VariableParsing\\ParsedVariable' => __DIR__ . '/../..' . '/includes/Workflows/VariableParsing/ParsedVariable.php',
         'AutomateWoo\\Workflows\\VariableParsing\\VariableParser' => __DIR__ . '/../..' . '/includes/Workflows/VariableParsing/VariableParser.php',
         'AutomateWoo_Legacy' => __DIR__ . '/../..' . '/includes/AutomateWoo_Legacy.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7faaa460bea6f93d388110ecadf81946::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7faaa460bea6f93d388110ecadf81946::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit7faaa460bea6f93d388110ecadf81946::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3b8e1dd629c83c8ce03581cc50acbfe5::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3b8e1dd629c83c8ce03581cc50acbfe5::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3b8e1dd629c83c8ce03581cc50acbfe5::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -223,16 +223,14 @@ abstract class AbstractEditItem extends Action {
 	/**
 	 * Recalculate a subscription's totals.
 	 *
-	 * Recalculates coupons if possible, method was protected until WC 3.8.
-	 *
-	 * @todo deprecate this
+	 * Recalculates coupons if they have been applied to the subscription.
 	 *
 	 * @param \WC_Subscription $subscription
 	 *
 	 * @since 4.8.0
 	 */
 	protected function recalculate_subscription_totals( $subscription ) {
-		if ( is_callable( [ $subscription, 'recalculate_coupons' ] ) ) {
+		if ( ! empty( $subscription->get_coupons() ) ) {
 			$subscription->recalculate_coupons();
 		} else {
 			$subscription->calculate_totals();

@@ -62,7 +62,7 @@ final class JSON_Search {
 		$results = [];
 
 		foreach ( $products as $product ) {
-			$results[ $product->get_id() ] = rawurldecode( $product->get_formatted_name() );
+			$results[ $product->get_id() ] = rawurldecode( sanitize_text_field( $product->get_formatted_name() ) );
 		}
 
 		wp_send_json( apply_filters( 'woocommerce_json_search_found_products', $results ) );

@@ -30,7 +30,7 @@ class Action_Subscription_Remove_Product extends Action_Subscription_Edit_Produc
 	public function load_admin_details() {
 		parent::load_admin_details();
 		$this->title       = __( 'Remove Product', 'automatewoo' );
-		$this->description = __( 'Remove a product line item or items from a subscription, if any line items match the chosen product. This is useful for bulk editing subscriptions, or to change the products provided to a subscriber at different stages of their subscription\'s lifecycle. Please note: all line items that match the chosen product will be removed. Choosing a variable product will also remove any variations of that product. Choose a variation to remove only specific variations.', 'automatewoo' );
+		$this->description = __( 'Remove a product line item or items from a subscription, if any line items match the chosen product. This is useful for bulk editing subscriptions, or to change the products provided to a subscriber at different stages of their subscription\'s lifecycle. Please note: all line items that match the chosen product will be removed. Choosing a variable product will also remove any variations of that product. Choose a variation to remove only specific variations. Also note that any coupons applied in the subscription will be reapplied for all remaining line items.', 'automatewoo' );
 	}
 
 

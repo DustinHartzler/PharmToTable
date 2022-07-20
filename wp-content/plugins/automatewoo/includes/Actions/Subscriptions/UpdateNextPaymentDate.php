@@ -9,7 +9,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 5.4.0
  */
-class UpdateNextPaymentDate extends AbstractEditItem {
+class UpdateNextPaymentDate extends AbstractEditDateItem {
+
+	/**
+	 * @var string Date field name to update for this subscription.
+	 */
+	protected $date_field = 'payment';
+
+	/**
+	 * @var string Subscription date to update.
+	 */
+	protected $subscription_date = 'next_payment';
 
 	/**
 	 * Explain to store admin what this action does via a unique title and description.
@@ -18,39 +28,6 @@ class UpdateNextPaymentDate extends AbstractEditItem {
 		parent::load_admin_details();
 		$this->title       = __( 'Update Next Payment Date', 'automatewoo' );
 		$this->description = __( 'Change a subscription\'s next payment date.', 'automatewoo' );
-	}
-
-	/**
-	 * Method to get the new next payment date for the subscription.
-	 *
-	 * @return string MySQL date/time string representation of the DateTime object in UTC timezone.
-	 */
-	protected function get_object_for_edit() {
-		$new_next_payment_date = wcs_get_datetime_from(
-			sprintf(
-				'%1$s %2$s:00',
-				$this->get_option( 'new_payment_date' ),
-				implode( ':', $this->get_option( 'new_payment_time' ) )
-			)
-		);
-
-		return wcs_get_datetime_utc_string( $new_next_payment_date );
-	}
-
-	/**
-	 * Edit the item managed by this class on the subscription passed in the workflow's trigger
-	 *
-	 * @param string           $new_next_payment_date Next payment date string.
-	 * @param \WC_Subscription $subscription          Instance of the subscription being edited by this action.
-	 *
-	 * @throws \Exception When there is an error.
-	 *
-	 * @return bool True if the subscription was edited, false if no change was made.
-	 */
-	public function edit_subscription( $new_next_payment_date, $subscription ) {
-		$subscription->update_dates( array( 'next_payment' => $new_next_payment_date ) );
-
-		return true;
 	}
 
 	/**
