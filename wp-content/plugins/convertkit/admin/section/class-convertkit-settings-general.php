@@ -81,7 +81,10 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 			__( 'API Key', 'convertkit' ),
 			array( $this, 'api_key_callback' ),
 			$this->settings_key,
-			$this->name
+			$this->name,
+			array(
+				'label_for' => 'api_key',
+			)
 		);
 
 		add_settings_field(
@@ -89,7 +92,10 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 			__( 'API Secret', 'convertkit' ),
 			array( $this, 'api_secret_callback' ),
 			$this->settings_key,
-			$this->name
+			$this->name,
+			array(
+				'label_for' => 'api_secret',
+			)
 		);
 
 		foreach ( convertkit_get_supported_post_types() as $supported_post_type ) {
@@ -112,7 +118,10 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 				array( $this, 'custom_post_types_callback' ),
 				$this->settings_key,
 				$this->name,
-				$supported_post_type
+				array(
+					'label_for' => '_wp_convertkit_settings_' . $supported_post_type . '_form',
+					'post_type' => $supported_post_type,
+				)
 			);
 		}
 
@@ -121,7 +130,10 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 			__( 'Debug', 'convertkit' ),
 			array( $this, 'debug_callback' ),
 			$this->settings_key,
-			$this->name
+			$this->name,
+			array(
+				'label_for' => 'debug',
+			)
 		);
 
 		add_settings_field(
@@ -129,7 +141,21 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 			__( 'Disable JavaScript', 'convertkit' ),
 			array( $this, 'no_scripts_callback' ),
 			$this->settings_key,
-			$this->name
+			$this->name,
+			array(
+				'label_for' => 'no_scripts',
+			)
+		);
+
+		add_settings_field(
+			'no_css',
+			__( 'Disable CSS', 'convertkit' ),
+			array( $this, 'no_css_callback' ),
+			$this->settings_key,
+			$this->name,
+			array(
+				'label_for' => 'no_css',
+			)
 		);
 
 	}
@@ -204,7 +230,8 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 		);
 		$html .= '<p class="description">' . esc_html__( 'The name of your connected ConvertKit account.', 'convertkit' ) . '</p>';
 
-		echo $html; // phpcs:ignore
+		// Output has already been run through escaping functions above.
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 
 	/**
@@ -216,7 +243,7 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 
 		// If the API Key is stored as a constant, it cannot be edited here.
 		if ( $this->settings->is_api_key_a_constant() ) {
-			echo $this->get_masked_value( // phpcs:ignore
+			echo $this->get_masked_value( // phpcs:ignore WordPress.Security.EscapeOutput
 				$this->settings->get_api_key(),
 				esc_html__( 'Your API Key has been defined in your wp-config.php file. For security, it is not displayed here.', 'convertkit' )
 			);
@@ -224,9 +251,9 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 		}
 
 		// Output field.
-		echo $this->get_text_field( // phpcs:ignore
+		echo $this->get_text_field( // phpcs:ignore WordPress.Security.EscapeOutput
 			'api_key',
-			$this->settings->get_api_key(), // phpcs:ignore
+			esc_attr( $this->settings->get_api_key() ),
 			array(
 				sprintf(
 					/* translators: %1$s: Link to ConvertKit Account */
@@ -253,7 +280,7 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 
 		// If the API Secret is stored as a constant, it cannot be edited here.
 		if ( $this->settings->is_api_secret_a_constant() ) {
-			echo $this->get_masked_value( // phpcs:ignore
+			echo $this->get_masked_value( // phpcs:ignore WordPress.Security.EscapeOutput
 				$this->settings->get_api_secret(),
 				esc_html__( 'Your API Secret has been defined in your wp-config.php file. For security, it is not displayed here.', 'convertkit' )
 			);
@@ -261,9 +288,9 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 		}
 
 		// Output field.
-		echo $this->get_text_field( // phpcs:ignore
+		echo $this->get_text_field( // phpcs:ignore WordPress.Security.EscapeOutput
 			'api_secret',
-			$this->settings->get_api_secret(), // phpcs:ignore
+			esc_attr( $this->settings->get_api_secret() ),
 			array(
 				sprintf(
 					/* translators: %1$s: Link to ConvertKit Account */
@@ -286,19 +313,22 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 	 *
 	 * @since  1.9.6
 	 *
-	 * @param   string $post_type  Post Type.
+	 * @param   array $args  Field arguments.
 	 */
-	public function custom_post_types_callback( $post_type ) {
+	public function custom_post_types_callback( $args ) {
 
 		// Refresh Forms.
 		if ( ! $this->forms ) {
 			$this->forms = new ConvertKit_Resource_Forms();
 			$this->forms->refresh();
 
-			// Also refresh Landing Pages and Tags. Whilst not displayed in the Plugin Settings, this ensures up to date
+			// Also refresh Landing Pages, Tags and Posts. Whilst not displayed in the Plugin Settings, this ensures up to date
 			// lists are stored for when editing e.g. Pages.
 			$landing_pages = new ConvertKit_Resource_Landing_Pages();
 			$landing_pages->refresh();
+
+			$posts = new ConvertKit_Resource_Posts();
+			$posts->refresh();
 
 			$tags = new ConvertKit_Resource_Tags();
 			$tags->refresh();
@@ -323,8 +353,17 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 			$options[ esc_attr( $form['id'] ) ] = esc_html( $form['name'] );
 		}
 
+		// Build field.
+		$select_field = $this->get_select_field(
+			$args['post_type'] . '_form',
+			$this->settings->get_default_form( $args['post_type'] ),
+			$options,
+			false,
+			array( 'convertkit-select2' )
+		);
+
 		// Output field.
-		echo '<div class="convertkit-select2-container">' . $this->get_select_field( $post_type . '_form', $this->settings->get_default_form( $post_type ), $options, false, array( 'convertkit-select2' ) ) . '</div>'; // phpcs:ignore
+		echo '<div class="convertkit-select2-container">' . $select_field . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput
 
 	}
 
@@ -336,10 +375,10 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 	public function debug_callback() {
 
 		// Output field.
-		echo $this->get_checkbox_field( // phpcs:ignore
+		echo $this->get_checkbox_field( // phpcs:ignore WordPress.Security.EscapeOutput
 			'debug',
 			'on',
-			$this->settings->debug_enabled(), // phpcs:ignore
+			$this->settings->debug_enabled(), // phpcs:ignore WordPress.Security.EscapeOutput
 			esc_html__( 'Log requests to file and output browser console messages.', 'convertkit' ),
 			esc_html__( 'You can ignore this unless you\'re working with our support team to resolve an issue. Decheck this option to improve performance.', 'convertkit' )
 		);
@@ -354,12 +393,30 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 	public function no_scripts_callback() {
 
 		// Output field.
-		echo $this->get_checkbox_field( // phpcs:ignore
+		echo $this->get_checkbox_field( // phpcs:ignore WordPress.Security.EscapeOutput
 			'no_scripts',
 			'on',
-			$this->settings->scripts_disabled(), // phpcs:ignore
+			$this->settings->scripts_disabled(), // phpcs:ignore WordPress.Security.EscapeOutput
 			esc_html__( 'Prevent plugin from loading JavaScript files. This will disable the custom content and tagging features of the plugin. Does not apply to landing pages. Use with caution!', 'convertkit' )
 		);
 
 	}
+
+	/**
+	 * Renders the input for the Disable CSS setting.
+	 *
+	 * @since   1.9.6.9
+	 */
+	public function no_css_callback() {
+
+		// Output field.
+		echo $this->get_checkbox_field( // phpcs:ignore WordPress.Security.EscapeOutput
+			'no_css',
+			'on',
+			$this->settings->css_disabled(), // phpcs:ignore WordPress.Security.EscapeOutput
+			esc_html__( 'Prevent plugin from loading CSS files. This will disable styling on the broadcasts shortcode and block. Use with caution!', 'convertkit' )
+		);
+
+	}
+
 }

@@ -97,17 +97,11 @@ class ConvertKit_Admin_TinyMCE {
 		);
 
 		// Enqueue Quicktag CSS.
-		wp_enqueue_style( 'convertkit-admin-quicktags', CONVERTKIT_PLUGIN_URL . '/resources/backend/css/quicktags.css', array(), CONVERTKIT_PLUGIN_VERSION );
+		wp_enqueue_style( 'convertkit-admin-quicktags', CONVERTKIT_PLUGIN_URL . 'resources/backend/css/quicktags.css', array(), CONVERTKIT_PLUGIN_VERSION );
 
 		// Output Backbone View Template.
-		?>
-		<script type="text/template" id="tmpl-convertkit-quicktags-modal">
-			<div id="convertkit-quicktags-modal">
-				<div class="media-frame-title"><h1>Title</h1></div>
-				<div class="media-frame-content">Content</div>
-			</div>
-		</script>
-		<?php
+		add_action( 'wp_print_footer_scripts', array( $this, 'output_quicktags_modal' ) );
+		add_action( 'admin_print_footer_scripts', array( $this, 'output_quicktags_modal' ) );
 
 	}
 
@@ -132,7 +126,7 @@ class ConvertKit_Admin_TinyMCE {
 		// Enqueue TinyMCE CSS and JS.
 		wp_enqueue_script( 'convertkit-admin-tinymce', CONVERTKIT_PLUGIN_URL . 'resources/backend/js/tinymce.js', array( 'jquery' ), CONVERTKIT_PLUGIN_VERSION, true );
 		wp_enqueue_script( 'convertkit-admin-modal', CONVERTKIT_PLUGIN_URL . 'resources/backend/js/modal.js', array( 'jquery' ), CONVERTKIT_PLUGIN_VERSION, true );
-		wp_enqueue_style( 'convertkit-admin-tinymce', CONVERTKIT_PLUGIN_URL . '/resources/backend/css/tinymce.css', array(), CONVERTKIT_PLUGIN_VERSION );
+		wp_enqueue_style( 'convertkit-admin-tinymce', CONVERTKIT_PLUGIN_URL . 'resources/backend/css/tinymce.css', array(), CONVERTKIT_PLUGIN_VERSION );
 
 		// Register JS variable convertkit_admin_tinymce.nonce for AJAX calls.
 		wp_localize_script(
@@ -179,6 +173,25 @@ class ConvertKit_Admin_TinyMCE {
 		}
 
 		return $buttons;
+
+	}
+
+	/**
+	 * Outputs the QuickTags modal view in the footer of the site, which is
+	 * used when using the Text editor button to insert a shortcode.
+	 *
+	 * @since   1.9.7.5
+	 */
+	public function output_quicktags_modal() {
+
+		?>
+		<script type="text/template" id="tmpl-convertkit-quicktags-modal">
+			<div id="convertkit-quicktags-modal">
+				<div class="media-frame-title"><h1>Title</h1></div>
+				<div class="media-frame-content">Content</div>
+			</div>
+		</script>
+		<?php
 
 	}
 

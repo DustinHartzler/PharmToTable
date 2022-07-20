@@ -169,7 +169,7 @@ class ConvertKit_Settings {
 	 * @since   1.9.6
 	 *
 	 * @param   string $post_type  Post Type.
-	 * @return  string              Default Form (default|form id)
+	 * @return  string|int          Default Form (default|form id)
 	 */
 	public function get_default_form( $post_type ) {
 
@@ -229,6 +229,19 @@ class ConvertKit_Settings {
 	}
 
 	/**
+	 * Returns whether stylesheets are disabled in the Plugin settings.
+	 *
+	 * @since   1.9.6.9
+	 *
+	 * @return  bool
+	 */
+	public function css_disabled() {
+
+		return ( $this->settings['no_css'] === 'on' ? true : false );
+
+	}
+
+	/**
 	 * The default settings, used when the ConvertKit Plugin Settings haven't been saved
 	 * e.g. on a new installation.
 	 *
@@ -243,6 +256,7 @@ class ConvertKit_Settings {
 			'api_secret' => '', // string.
 			'debug'      => '', // blank|on.
 			'no_scripts' => '', // blank|on.
+			'no_css'     => '', // blank|on.
 		);
 
 		// Add Post Type Default Forms.
