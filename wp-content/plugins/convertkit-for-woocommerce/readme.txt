@@ -3,7 +3,7 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
-Tested up to: 5.9.2
+Tested up to: 6.0
 Requires PHP: 5.6.20
 Stable tag: trunk
 License: GPLv2 or later
@@ -46,6 +46,13 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 
 == Changelog ==
 
+### 1.4.7 2022-06-23
+* Fix: Type checks and consistent return types on API class
+* Fix: Performance: Improved caching of Forms, Tags and Sequences to prevent API timeouts and slow loading in the WordPress Administration
+
+### 1.4.6 2022-04-19
+* Added: Settings: Import and Export configuration
+
 ### 1.4.5 2022-03-17
 * Added: Settings: Purchase Data: Option to specify when purchase data should be sent to ConvertKit based on WooCommerce Order status 
 
@@ -61,7 +68,7 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 ### 1.4.2 2022-01-28
 * Added: Testing and compatibility for WooCommerce 6.1
 * Added: PHP 8.x compatibility
-* Added: Developers: Action and filter hooks.  See https://github.com/ConvertKit/convertkit-woocommerce/blob/master/ACTIONS-FILTERS.md
+* Added: Developers: Action and filter hooks.  See https://github.com/ConvertKit/convertkit-woocommerce/blob/main/ACTIONS-FILTERS.md
 * Added: Localization and .pot file for translators
 * Fix: Settings: Only show conditional settings if other settings enabled/disabled
 * Fix: Settings: API Key and Secret: Don't need to save settings twice for API Key and Secret to work
