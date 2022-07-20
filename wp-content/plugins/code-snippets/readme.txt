@@ -1,11 +1,11 @@
 === Code Snippets ===
 Contributors: bungeshea, ver3
-Donate link: https://sheabunge.com/donate
-Tags: snippets, functions, code, php, multisite
+Donate link: https://codesnippets.pro
+Tags: snippets, functions, multisite, code, php, html, css, javascript
 License: MIT
 License URI: license.txt
-Stable tag: 2.14.3
-Tested up to: 5.8.2
+Stable tag: 3.1.1
+Tested up to: 6.0
 
 An easy, clean and simple way to run code snippets on your site.
 
@@ -16,6 +16,10 @@ Code Snippets is an easy, clean and simple way to run code snippets on your site
 A snippet is a small chunk of PHP code that you can use to extend the functionality of a WordPress-powered website; essentially a mini-plugin with less load on your site.
 Most snippet-hosting sites tell you to add snippet code to your active theme's `functions.php` file, which can get rather long and messy after a while.
 Code Snippets changes that by providing a GUI interface for adding snippets and **actually running them on your site** just as if they were in your theme's `functions.php` file.
+
+**Watch this video for a quick overview by Imran Siddiq:**
+
+https://youtu.be/EMjIWjcYONk
 
 Code Snippets provides graphical interface, similar to the Plugins menu, for managing snippets. Snippets can be activated and deactivated, just like plugins. The snippet editor includes fields for a name, a visual editor-enabled description, tags to allow you to categorize snippets, and a full-featured code editor. Snippets can be exported for transfer to another site, either in JSON for later importing by the Code Snippets plugin, or in PHP for creating your own plugin or theme.
 
@@ -80,20 +84,14 @@ Network Activating Code Snippets through the Network Dashboard will enable a spe
 
 A full list of our Frequently Asked Questions can be found at [help.codesnippets.pro](https://help.codesnippets.pro/collection/3-faq).
 
-= How do I insert snippets into the post text editor? =
-Code Snippets v2 is designed to be used with PHP Function Snippets, which are not intended to be inserted as content, but instead persistently on your site as if they were part of a plugin or your theme's functions.php file.
-
-Code Snippets v3 will bring a new type of snippet, Content Snippets, which are designed to be included in the content of a post or page. Stay tuned for the release!
-
 = How can I recover my site if it is crashed by a buggy snippet? =
-
-You can recover your site by enabling the Code Snippets safe mode feature. Instructions for how to turn it on are available here: https://help.codesnippets.pro/article/12-safe-mode.
+You can recover your site by enabling the Code Snippets safe mode feature. Instructions for how to turn it on are available here: <https://help.codesnippets.pro/article/12-safe-mode>.
 
 = Will I lose my snippets if I change the theme or upgrade WordPress? =
 No, the snippets are stored in the WordPress database, independent of the theme and unaffected by WordPress upgrades.
 
 = Can the plugin be completely uninstalled? =
-If you enable the 'Complete Uninstall' option on the plugin settings page, Code Snippets will clean up all of its data when deleted through the WordPress 'Plugins' menu. This includes all of the stored snippets. If you would like to preserve the snippets, ensure they are exported first.
+If you enable the 'Complete Uninstall' option on the plugin settings page, Code Snippets will clean up all of its data when deleted through the WordPress 'Plugins' menu. This includes all stored snippets. If you would like to preserve the snippets, ensure they are exported first.
 
 = Can I copy snippets that I have created to another WordPress site? =
 Yes! You can individually export a single snippet using the link below the snippet name on the 'Manage Snippets' page or bulk export multiple snippets using the 'Bulk Actions' feature. Snippets can later be imported using the 'Import Snippets' page by uploading the export file.
@@ -121,6 +119,79 @@ The best way to do this is to fork the [repository on GitHub](https://github.com
 4. Importing snippets from an export file
 
 == Changelog ==
+
+= 3.1.1 (13 Jun 2022) =
+* Fixed: Download snippets feature not including snippet content.
+* Fixed: Alignment of 'opens externally' dashicon.
+* Improved: Added additional parameters to `code_snippets/export/filename` filter.
+
+= 3.1.0 (17 May 2022) =
+* Fixed: Caching inconsistencies preventing snippets and settings from refreshing on sites with persistent object caching.
+* Improved: Simplified database queries.
+* Added: More comprehensive cache coverage, including for active snippets.
+* Added: Icon to 'Go Pro' button indicating it opens an external tab.
+* Improved: Allow display styles in snippet descriptions.
+
+= 3.0.1 (14 May 2022) =
+* Fixed: Incompatibility issue with earlier versions of PHP.
+
+= 3.0.0 (14 May 2022) =
+
+__Added__
+
+* Added: HTML content snippets for displaying as shortcodes or including in the page head or footer area.
+* Added: Notice reminding users to upgrade unsupported PHP versions.
+* Added: Visual settings to add attributes to shortcodes.
+* Added: Shortcode buttons to the post and page content editors.
+* Added: Basic REST API endpoints.
+* Added: Snippet type column to the snippets table.
+* Added: Snippet type badges to Edit and Add New Snippet pages.
+* Added: Setting to control whether the current line of the code editor is highlighted.
+* Added: Display a warning when saving a snippet with missing title or code.
+* Added: Add suffix to title of cloned snippets.
+
+__Changed__
+
+* Improved: Updated plugin code to use namespaces, preventing name collisions with other plugins.
+* Improved: Added key for the 'active' and 'scope' database table columns to speed up queries.
+* Improved: Redirect from edit menu if not editing a valid snippet.
+* Improved: Moved activation switch into its own table column.
+* Improved: Updated code documentation according to WordPress standards.
+* Improved: Added snippet type labels to the tabs on the Snippets page.
+* Improved: Split settings page into tabs.
+* Improved: Use the version of CodeMirror included with WordPress where possible to inherit the additional built-in features.
+* Improved: Added hover effect to priority settings in the snippets table to show that they are editable.
+* Fixed: Snippets table layout on smaller screens.
+
+__Deprecated__
+
+* Removed: Deprecated functions and compatibility code for unsupported PHP versions.
+* Removed: Option to disable snippet scopes.
+
+__New in Pro__
+
+* Added: CSS style snippets for the site front-end and admin area.
+* Added: JavaScript snippets for the site head and body area on the front-end.
+* Added: Browser cache versioning for CSS and JavaScript snippets.
+* Added: Support for exporting and downloading CSS and JavaScript snippets.
+* Added: Support for highlighting code on the front-end.
+* Added: Editor syntax highlighting for CSS, JavaScript and HTML snippets.
+* Added: Button to preview full file when editing CSS or JavaScript snippets.
+* Added: Option to minify CSS and JavaScript snippets.
+* Added: Gutenberg editor block for displaying content snippets.
+* Added: Gutenberg editor block for displaying snippet source code.
+* Added: Elementor widget for displaying content snippets.
+* Added: Elementor widget for displaying snippet source code.
+
+= 2.14.6 (13 May 2022) =
+* Fixed: Issue with processing uploaded import files.
+* Fixed: Issue with processing tag filters.
+
+= 2.14.5 (10 May 2022) =
+* Fixed: Incompatibility issue with older versions of PHP.
+
+= 2.14.4 (5 May 2022) =
+* Fixed: Prevent array key errors when loading the snippet table with unknown order values.
 
 = 2.14.3 (10 Dec 2021) =
 * Fixed: Potential security issue outputting snippets-safe-mode query variable value as-is. Thanks to Krzysztof Zając for reporting.
@@ -224,48 +295,21 @@ The best way to do this is to fork the [repository on GitHub](https://github.com
 * Added: Filter hook for controlling the default list table view
 * Added: Action for cloning snippets
 
-= 2.10.2 (21 Jul 2018) =
-* Added: Button to reset settings to their default values
-* Improved: Made uninstall cleanup optional through a plugin setting
-* Fixed: Applied formatting filters to snippet descriptions in the table
-* Improved: Ordered tags by name in the filter dropdown menu
-* Fixed: Incorrectly translated strings
-* Added: Belarusian translation by Hrank.com
-* Improved: Enabled sorting snippets table by tags
-* Updated CodeMirror to version 5.39.0
-
-= 2.10.1 (10 Feb 2018) =
-* Fixed: Prevent errors when trying to export no snippets
-* Fixed: Use wp_json_encode() to encode export data
-* Fixed: Check both the file extension and MIME type of uploaded import files
-
-= 2.10.0 (18 Jan 2018) =
-* Improved: Added support for importing from multiple export files at once
-* Improved: Unbold the titles of inactive snippets for greater visual distinction
-* Added: New scope for single-use snippets
-* Improved: Don't show network snippets on subsites by default, and only to super admins
-* Improved: Export snippets to JSON instead of XML
-* Improved: More options for importing duplicate snippets
-* Improved: Use strings for representing scopes internally instead of numbers
-* Added: Allowed plugin settings to be unified on multisite through Network Settings option
-* Fixed: Issue with incorrectly treating network snippets as site-wide for code validation
-* Improved: Rename 'Export to PHP' to 'Download', and add button to edit snippet page
-
 **[The full changelog is available on GitHub](https://github.com/sheabunge/code-snippets/blob/master/CHANGELOG.md)**
 
 == Upgrade Notice ==
+
+= 3.1.1 =
+Fixed download snippets feature.
+
+= 3.1.0 =
+Comprehensive persistent object caching support.
 
 = 2.14.2 =
 New color picker and code validator improvements.
 
 = 2.14.0 =
-Security update, last modified dates, and other improvements
+Security update, last modified dates, and other improvements.
 
 = 2.13.1 =
-Fixes for single-use snippets and French translation
-
-= 2.11.0 =
-Snippet priorities and other small features
-
-= 2.10.0 =
-Improvements for multisite and new single-use snippet scope
+Fixes for single-use snippets and French translation.

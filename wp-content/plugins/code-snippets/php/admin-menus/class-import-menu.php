@@ -1,17 +1,21 @@
 <?php
 
+namespace Code_Snippets;
+
 /**
- * This class handles the import admin menu
- * @since 2.4.0
+ * This class handles the import admin menu.
+ *
+ * @since   2.4.0
  * @package Code_Snippets
  */
-class Code_Snippets_Import_Menu extends Code_Snippets_Admin_Menu {
+class Import_Menu extends Admin_Menu {
 
 	/**
 	 * Class constructor
 	 */
-	function __construct() {
-		parent::__construct( 'import',
+	public function __construct() {
+		parent::__construct(
+			'import',
 			_x( 'Import', 'menu label', 'code-snippets' ),
 			__( 'Import Snippets', 'code-snippets' )
 		);
@@ -32,7 +36,7 @@ class Code_Snippets_Import_Menu extends Code_Snippets_Admin_Menu {
 	public function load() {
 		parent::load();
 
-		$contextual_help = new Code_Snippets_Contextual_Help( 'import' );
+		$contextual_help = new Contextual_Help( 'import' );
 		$contextual_help->load();
 
 		$this->process_import_files();
@@ -40,15 +44,15 @@ class Code_Snippets_Import_Menu extends Code_Snippets_Admin_Menu {
 
 	/**
 	 * Process the uploaded import files
-	 *
-	 * @uses import_snippets() to process the import file
-	 * @uses wp_redirect() to pass the import results to the page
-	 * @uses add_query_arg() to append the results to the current URI
 	 */
 	private function process_import_files() {
 
 		/* Ensure the import file exists */
-		if ( ! isset( $_FILES['code_snippets_import_files'] ) || ! count( $_FILES['code_snippets_import_files'] ) ) {
+		if ( ! isset(
+			$_FILES['code_snippets_import_files']['name'],
+			$_FILES['code_snippets_import_files']['type'],
+			$_FILES['code_snippets_import_files']['tmp_name']
+		) ) {
 			return;
 		}
 
@@ -56,26 +60,32 @@ class Code_Snippets_Import_Menu extends Code_Snippets_Admin_Menu {
 
 		$count = 0;
 		$network = is_network_admin();
-		$uploads = $_FILES['code_snippets_import_files'];
-		$dup_action = isset( $_POST['duplicate_action'] ) ? $_POST['duplicate_action'] : 'ignore';
 		$error = false;
+
+		$upload_files = array_map( 'sanitize_text_field', wp_unslash( $_FILES['code_snippets_import_files']['tmp_name'] ) );
+		$upload_filenames = array_map( 'sanitize_text_field', wp_unslash( $_FILES['code_snippets_import_files']['name'] ) );
+		$upload_mime_types = array_map( 'sanitize_mime_type', wp_unslash( $_FILES['code_snippets_import_files']['type'] ) );
+
+		$dup_action = isset( $_POST['duplicate_action'] ) ? sanitize_key( $_POST['duplicate_action'] ) : 'ignore';
 
 		/* Loop through the uploaded files and import the snippets */
 
-		foreach ( $uploads['tmp_name'] as $i => $import_file ) {
-			$ext = pathinfo( $uploads['name'][ $i ] );
+		foreach ( $upload_files as $i => $import_file ) {
+			$ext = pathinfo( $upload_filenames[ $i ] );
 			$ext = $ext['extension'];
-			$mime_type = $uploads['type'][ $i ];
+			$mime_type = $upload_mime_types[ $i ];
+
+			$import = new Import( $import_file, $network, $dup_action );
 
 			if ( 'json' === $ext || 'application/json' === $mime_type ) {
-				$result = import_snippets_json( $import_file, $network, $dup_action );
+				$result = $import->import_json();
 			} elseif ( 'xml' === $ext || 'text/xml' === $mime_type ) {
-				$result = import_snippets_xml( $import_file, $network, $dup_action );
+				$result = $import->import_xml();
 			} else {
 				$result = false;
 			}
 
-			if ( false === $result || -1 === $result ) {
+			if ( false === $result ) {
 				$error = true;
 			} else {
 				$count += count( $result );
@@ -84,14 +94,14 @@ class Code_Snippets_Import_Menu extends Code_Snippets_Admin_Menu {
 
 		/* Send the amount of imported snippets to the page */
 		$url = add_query_arg( $error ? array( 'error' => true ) : array( 'imported' => $count ) );
-		wp_redirect( esc_url_raw( $url ) );
+		wp_safe_redirect( esc_url_raw( $url ) );
 		exit;
 	}
 
 	/**
 	 * Add the importer to the Tools > Import menu
 	 */
-	function register_importer() {
+	public function register_importer() {
 
 		/* Only register the importer if the current user can manage snippets */
 		if ( ! defined( 'WP_LOAD_IMPORTERS' ) || ! code_snippets()->current_user_can() ) {
@@ -112,13 +122,13 @@ class Code_Snippets_Import_Menu extends Code_Snippets_Admin_Menu {
 	 */
 	protected function print_messages() {
 
-		if ( isset( $_REQUEST['error'] ) && $_REQUEST['error'] ) {
+		if ( ! empty( $_REQUEST['error'] ) ) {
 			echo '<div id="message" class="error fade"><p>';
-			_e( 'An error occurred when processing the import files.', 'code-snippets' );
+			esc_html_e( 'An error occurred when processing the import files.', 'code-snippets' );
 			echo '</p></div>';
 		}
 
-		if ( isset( $_REQUEST['imported'] ) && intval( $_REQUEST['imported'] ) >= 0 ) {
+		if ( ! empty( $_REQUEST['imported'] ) && intval( $_REQUEST['imported'] ) >= 0 ) {
 			echo '<div id="message" class="updated fade"><p>';
 
 			$imported = intval( $_REQUEST['imported'] );
@@ -127,20 +137,27 @@ class Code_Snippets_Import_Menu extends Code_Snippets_Admin_Menu {
 				esc_html_e( 'No snippets were imported.', 'code-snippets' );
 
 			} else {
-
-				printf(
-					/* translators: 1: amount of snippets imported, 2: link to Snippets menu */
-					_n(
-						'Successfully imported <strong>%1$d</strong> snippet. <a href="%2$s">Have fun!</a>',
-						'Successfully imported <strong>%1$d</strong> snippets. <a href="%2$s">Have fun!</a>',
-						$imported, 'code-snippets'
-					),
+				/* translators: 1: amount of snippets imported, 2: link to Snippets menu */
+				$text = _n(
+					'Successfully imported <strong>%1$d</strong> snippet. <a href="%2$s">Have fun!</a>',
+					'Successfully imported <strong>%1$d</strong> snippets. <a href="%2$s">Have fun!</a>',
 					$imported,
-					code_snippets()->get_menu_url( 'manage' )
+					'code-snippets'
 				);
+
+				printf( wp_kses_post( $text ), esc_html( $imported ), esc_url( code_snippets()->get_menu_url( 'manage' ) ) );
 			}
 
 			echo '</p></div>';
 		}
+	}
+
+	/**
+	 * Empty implementation for enqueue_assets.
+	 *
+	 * @return void
+	 */
+	public function enqueue_assets() {
+		// none required.
 	}
 }

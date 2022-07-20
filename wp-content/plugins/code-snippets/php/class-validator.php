@@ -1,18 +1,24 @@
 <?php
 
+namespace Code_Snippets;
+
 /**
  * Validates code prior to execution.
  *
  * @package Code_Snippets
  */
-class Code_Snippets_Validator {
+class Validator {
 
 	/**
+	 * Code to validate.
+	 *
 	 * @var string
 	 */
 	private $code;
 
 	/**
+	 * List of tokens.
+	 *
 	 * @var array
 	 */
 	private $tokens;
@@ -76,20 +82,14 @@ class Code_Snippets_Validator {
 	}
 
 	/**
-	 * Move the pointer to the next token, if there is one
+	 * Move the pointer to the next token, if there is one.
 	 *
-	 * If the first argument is provided, only move the pointer if the tokens match
-	 *
-	 * @return bool Whether the pointer was advanced.
+	 * If the first argument is provided, only move the pointer if the tokens match.
 	 */
 	private function next() {
-		if ( $this->end() ) {
-			return false;
+		if ( ! $this->end() ) {
+			$this->current++;
 		}
-
-		$this->current++;
-
-		return true;
 	}
 
 	/**
@@ -130,6 +130,7 @@ class Code_Snippets_Validator {
 
 	/**
 	 * Validate the given PHP code and return the result.
+	 *
 	 * @return array|bool Array containing message if an error was encountered, false if validation was successful.
 	 */
 	public function validate() {
@@ -142,23 +143,23 @@ class Code_Snippets_Validator {
 				continue;
 			}
 
-			// if this is a function or class exists check, then allow this function or class to be defined
+			// If this is a function or class exists check, then allow this function or class to be defined.
 			if ( T_STRING === $token[0] && 'function_exists' === $token[1] || 'class_exists' === $token[1] ) {
 				$type = 'function_exists' === $token[1] ? T_FUNCTION : T_CLASS;
 
-				// eat tokens until we find the function or class name
+				// Eat tokens until we find the function or class name.
 				while ( ! $this->end() && T_CONSTANT_ENCAPSED_STRING !== $token[0] ) {
 					$token = $this->peek();
 					$this->next();
 				}
 
-				// add the identifier to the list of exceptions
+				// Add the identifier to the list of exceptions.
 				$this->exceptions[ $type ] = isset( $this->exceptions[ $type ] ) ? $this->exceptions[ $type ] : array();
 				$this->exceptions[ $type ][] = trim( $token[1], '\'"' );
 				continue;
 			}
 
-			// if we have a double colon, followed by a class, then consume it before the next section
+			// If we have a double colon, followed by a class, then consume it before the next section.
 			if ( T_DOUBLE_COLON === $token[0] ) {
 				$token = $this->peek();
 				$this->next();
@@ -169,21 +170,21 @@ class Code_Snippets_Validator {
 				}
 			}
 
-			// only look for class and function declaration tokens
+			// Only look for class and function declaration tokens.
 			if ( T_CLASS !== $token[0] && T_FUNCTION !== $token[0] ) {
 				continue;
 			}
 
 			$structure_type = $token[0];
 
-			// continue eating tokens until we find the name of the class or function
+			// Continue eating tokens until we find the name of the class or function.
 			while ( ! $this->end() && T_STRING !== $token[0] &&
 			        ( T_FUNCTION !== $structure_type || '(' !== $token ) && ( T_CLASS !== $structure_type || '{' !== $token ) ) {
 				$token = $this->peek();
 				$this->next();
 			}
 
-			// if we've eaten all of the tokens without discovering a name, then there must be a syntax error, so return appropriately
+			// If we've eaten all the tokens without discovering a name, then there must be a syntax error, so return appropriately.
 			if ( $this->end() ) {
 				return array(
 					'message' => __( 'Parse error: syntax error, unexpected end of snippet.', 'code-snippets' ),
@@ -191,10 +192,10 @@ class Code_Snippets_Validator {
 				);
 			}
 
-			// if the function or class is anonymous, with no name, then no need to check
+			// If the function or class is anonymous, with no name, then no need to check.
 			if ( ! ( T_FUNCTION === $structure_type && '(' === $token ) && ! ( T_CLASS === $structure_type && '{' === $token ) ) {
 
-				// check whether the name has already been defined
+				// Check whether the name has already been defined.
 				if ( $this->check_duplicate_identifier( $structure_type, $token[1] ) ) {
 					switch ( $structure_type ) {
 						case T_FUNCTION:
@@ -221,18 +222,18 @@ class Code_Snippets_Validator {
 				}
 			}
 
-			// if we have entered into a class, eat tokens until we find the closing brace
+			// If we have entered into a class, eat tokens until we find the closing brace.
 			if ( T_CLASS !== $structure_type ) {
 				continue;
 			}
 
-			// find the opening brace for the class
+			// Find the opening brace for the class.
 			while ( ! $this->end() && '{' !== $token ) {
 				$token = $this->peek();
 				$this->next();
 			}
 
-			// continue traversing the class tokens until we have found the class closing brace
+			// Continue traversing the class tokens until we have found the class closing brace.
 			$depth = 1;
 			while ( ! $this->end() && $depth > 0 ) {
 				$token = $this->peek();
@@ -246,7 +247,7 @@ class Code_Snippets_Validator {
 				$this->next();
 			}
 
-			// if we did not make it out of the class, then there's a problem
+			// If we did not make it out of the class, then there's a problem.
 			if ( $depth > 0 ) {
 				return array(
 					'message' => __( 'Parse error: syntax error, unexpected end of snippet', 'code-snippets' ),

@@ -1,11 +1,13 @@
 <?php
 
+namespace Code_Snippets;
+
 /**
  * Functions used to manage the database tables
  *
  * @package Code_Snippets
  */
-class Code_Snippets_DB {
+class DB {
 
 	/**
 	 * Unprefixed site-wide table name
@@ -42,9 +44,8 @@ class Code_Snippets_DB {
 	 * Register the snippet table names with WordPress
 	 *
 	 * @since 2.0
-	 * @uses  $wpdb
 	 */
-	function set_table_vars() {
+	public function set_table_vars() {
 		global $wpdb;
 
 		$this->table = $wpdb->prefix . self::TABLE_NAME;
@@ -61,11 +62,11 @@ class Code_Snippets_DB {
 	/**
 	 * Validate the multisite parameter of the get_table_name() function
 	 *
-	 * @param bool|null $network
+	 * @param bool|null $network Value of multisite parameter – true for multisite, false for single-site.
 	 *
-	 * @return bool
+	 * @return bool Validated value of multisite parameter.
 	 */
-	function validate_network_param( $network ) {
+	public static function validate_network_param( $network ) {
 
 		/* If multisite is not active, then the parameter should always be false */
 		if ( ! is_multisite() ) {
@@ -83,13 +84,12 @@ class Code_Snippets_DB {
 	/**
 	 * Return the appropriate snippet table name
 	 *
-	 * @param string|bool|null $multisite Retrieve the multisite table name or the site table name?
+	 * @param string|bool|null $multisite Whether retrieve the multisite table name (true) or the site table name (false).
 	 *
 	 * @return string The snippet table name
 	 * @since 2.0
-	 *
 	 */
-	function get_table_name( $multisite = null ) {
+	public function get_table_name( $multisite = null ) {
 
 		/* If the first parameter is a string, assume it is a table name */
 		if ( is_string( $multisite ) ) {
@@ -99,24 +99,34 @@ class Code_Snippets_DB {
 		/* Validate the multisite parameter */
 		$multisite = $this->validate_network_param( $multisite );
 
-		/* Retrieve the table name from $wpdb depending on the value of $multisite */
+		/* return the correct table name depending on the value of $multisite */
+		return $multisite ? $this->ms_table : $this->table;
+	}
 
-		return ( $multisite ? $this->ms_table : $this->table );
+	/**
+	 * Determine whether a database table exists.
+	 *
+	 * @param string $table_name Name of database table to check.
+	 *
+	 * @return bool Whether the database table exists.
+	 */
+	public static function table_exists( $table_name ) {
+		global $wpdb;
+		return $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name; // cache pass, db call ok.
 	}
 
 	/**
 	 * Create the snippet tables if they do not already exist
 	 */
 	public function create_missing_tables() {
-		global $wpdb;
 
 		/* Create the network snippets table if it doesn't exist */
-		if ( is_multisite() && $wpdb->get_var( "SHOW TABLES LIKE '$this->ms_table'" ) !== $this->ms_table ) {
+		if ( is_multisite() && ! self::table_exists( $this->ms_table ) ) {
 			$this->create_table( $this->ms_table );
 		}
 
 		/* Create the table if it doesn't exist */
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$this->table'" ) !== $this->table ) {
+		if ( ! self::table_exists( $this->table ) ) {
 			$this->create_table( $this->table );
 		}
 	}
@@ -135,12 +145,11 @@ class Code_Snippets_DB {
 	/**
 	 * Create a snippet table if it does not already exist
 	 *
-	 * @param $table_name
+	 * @param string $table_name Name of database table.
 	 */
 	public static function create_missing_table( $table_name ) {
-		global $wpdb;
 
-		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name ) {
+		if ( self::table_exists( $table_name ) ) {
 			return;
 		}
 
@@ -148,11 +157,11 @@ class Code_Snippets_DB {
 	}
 
 	/**
-	 * Create a single snippet table
+	 * Create a single snippet table.
 	 *
-	 * @param string $table_name The name of the table to create
+	 * @param string $table_name The name of the table to create.
 	 *
-	 * @return bool whether the table creation was successful
+	 * @return bool Whether the table creation was successful.
 	 * @since 1.6
 	 * @uses  dbDelta() to apply the SQL code
 	 */
@@ -171,7 +180,9 @@ class Code_Snippets_DB {
 				priority    SMALLINT    NOT NULL DEFAULT 10,
 				active      TINYINT(1)  NOT NULL DEFAULT 0,
 				modified    DATETIME    NOT NULL DEFAULT '0000-00-00 00:00:00',
-				PRIMARY KEY  (id)
+				PRIMARY KEY  (id),
+				KEY scope (scope),
+				KEY active (active)
 			) $charset_collate;";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -184,5 +195,105 @@ class Code_Snippets_DB {
 		}
 
 		return $success;
+	}
+
+	/**
+	 * Build a list of formatting placeholders for an array of data.
+	 *
+	 * @param int    $count       Length of data.
+	 * @param string $placeholder Placeholder to use. Defaults to string placeholder.
+	 *
+	 * @return string List of placeholders, ready for inclusion in query.
+	 */
+	private static function build_format_list( $count, $placeholder = '%s' ) {
+		return implode( ',', array_fill( 0, $count, $placeholder ) );
+	}
+
+	/**
+	 * Fetch a list of active snippets from a database table.
+	 *
+	 * @param string $table_name  Name of table to fetch snippets from.
+	 * @param array  $scopes      List of scopes to include in query.
+	 * @param array  $active_only Whether to only fetch active snippets from the table.
+	 *
+	 * @return array|false List of active snippets, if any could be retrieved.
+	 *
+	 * @phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+	 */
+	private static function fetch_snippets_from_table( $table_name, array $scopes, $active_only = true ) {
+		global $wpdb;
+
+		$cache_key = sprintf( 'active_snippets_%s_%s', sanitize_key( join( '_', $scopes ) ), $table_name );
+		$cached_snippets = wp_cache_get( $cache_key, CACHE_GROUP );
+
+		if ( is_array( $cached_snippets ) ) {
+			return $cached_snippets;
+		}
+
+		if ( ! self::table_exists( $table_name ) ) {
+			return false;
+		}
+
+		$scopes_format = self::build_format_list( count( $scopes ) );
+		$extra_where = $active_only ? 'AND active=1' : '';
+
+		$snippets = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+				SELECT id, code, scope, active
+				FROM $table_name
+				WHERE scope IN ($scopes_format) $extra_where
+				ORDER BY priority, id",
+				$scopes
+			),
+			'ARRAY_A'
+		); // db call ok.
+
+		// Cache the full list of snippets.
+		if ( is_array( $snippets ) ) {
+			wp_cache_set( $cache_key, $snippets, CACHE_GROUP );
+			return $snippets;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Generate the SQL for fetching active snippets from the database.
+	 *
+	 * @param array|string $scopes List of scopes to retrieve in.
+	 *
+	 * @return array List of active snippets, indexed by table.
+	 */
+	public function fetch_active_snippets( $scopes ) {
+		$active_snippets = array();
+
+		// Ensure that the list of scopes is an array.
+		if ( ! is_array( $scopes ) ) {
+			$scopes = array( $scopes );
+		}
+
+		// Fetch the active snippets for the current site, if there are any.
+		$snippets = $this->fetch_snippets_from_table( $this->table, $scopes );
+		if ( $snippets ) {
+			$active_snippets[ $this->table ] = $snippets;
+		}
+
+		// If multisite is enabled, fetch all snippets from the network table, and filter down to only active snippets.
+		if ( is_multisite() ) {
+			$active_shared_ids = (array) get_option( 'active_shared_network_snippets', array() );
+			$ms_snippets = $this->fetch_snippets_from_table( $this->ms_table, $scopes, false );
+
+			if ( $ms_snippets ) {
+				$active_snippets[ $this->ms_table ] = array_filter(
+					$ms_snippets,
+					function ( $snippet ) use ( $active_shared_ids ) {
+						return $snippet['active'] || in_array( intval( $snippet['id'] ), $active_shared_ids, true );
+					}
+				);
+			}
+		}
+
+		return $active_snippets;
 	}
 }
