@@ -1,16 +1,13 @@
 <?php
-namespace Automattic\WooCommerce\Blocks\StoreApi\Utilities;
+namespace Automattic\WooCommerce\StoreApi\Utilities;
 
 use Automattic\WooCommerce\Checkout\Helpers\ReserveStock;
-use Automattic\WooCommerce\Blocks\StoreApi\Utilities\DraftOrderTrait;
+use Automattic\WooCommerce\StoreApi\Utilities\DraftOrderTrait;
 
 /**
  * QuantityLimits class.
  *
  * Returns limits for products and cart items when using the StoreAPI and supporting classes.
- *
- * @internal This API is used internally by Blocks--it is still in flux and may be subject to revisions.
- * @since 2.5.0
  */
 final class QuantityLimits {
 	use DraftOrderTrait;
@@ -93,7 +90,7 @@ final class QuantityLimits {
 		if ( ! $limits['editable'] ) {
 			return new \WP_Error(
 				'readonly_quantity',
-				__( 'This item is already in the cart and it\'s quantity cannot be edited', 'woocommerce' )
+				__( 'This item is already in the cart and its quantity cannot be edited', 'woocommerce' )
 			);
 		}
 
@@ -136,14 +133,14 @@ final class QuantityLimits {
 	/**
 	 * Get the limit for the total number of a product allowed in the cart.
 	 *
-	 * This is based on product properties, including remaining stock, and defaults to a maximum of 99 of any product
+	 * This is based on product properties, including remaining stock, and defaults to a maximum of 9999 of any product
 	 * in the cart at once.
 	 *
 	 * @param \WC_Product $product Product instance.
 	 * @return int
 	 */
 	protected function get_product_quantity_limit( \WC_Product $product ) {
-		$limits = [ 99 ];
+		$limits = [ 9999 ];
 
 		if ( $product->is_sold_individually() ) {
 			$limits[] = 1;
@@ -156,7 +153,7 @@ final class QuantityLimits {
 		 *
 		 * Filters the variation option name for custom option slugs.
 		 *
-		 * @param integer $quantity_limit Quantity limit which defaults to 99 unless sold individually.
+		 * @param integer $quantity_limit Quantity limit which defaults to 9999 unless sold individually.
 		 * @param \WC_Product $product Product instance.
 		 * @return integer
 		 */

@@ -6,3 +6,6 @@ export * from './currency';
 export * from './payments';
 export * from './objects';
 export * from './payment-method-interface';
+export * from './blocks';
+export * from './utils';
+export * from './taxes';

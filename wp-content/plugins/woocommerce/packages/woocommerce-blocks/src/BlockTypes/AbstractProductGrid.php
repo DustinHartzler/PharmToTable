@@ -2,8 +2,8 @@
 namespace Automattic\WooCommerce\Blocks\BlockTypes;
 
 use Automattic\WooCommerce\Blocks\Utils\BlocksWpQuery;
-use Automattic\WooCommerce\Blocks\StoreApi\SchemaController;
-use Automattic\WooCommerce\Blocks\Package;
+use Automattic\WooCommerce\StoreApi\SchemaController;
+use Automattic\WooCommerce\StoreApi\StoreApi;
 
 /**
  * AbstractProductGrid class.
@@ -101,7 +101,7 @@ abstract class AbstractProductGrid extends AbstractDynamicBlock {
 				rawurlencode(
 					wp_json_encode(
 						array_map(
-							[ Package::container()->get( SchemaController::class )->get( 'product' ), 'get_item_response' ],
+							[ StoreApi::container()->get( SchemaController::class )->get( 'product' ), 'get_item_response' ],
 							$products
 						)
 					)
@@ -131,6 +131,7 @@ abstract class AbstractProductGrid extends AbstractDynamicBlock {
 		return array(
 			'type'       => 'object',
 			'properties' => array(
+				'image'  => $this->get_schema_boolean( true ),
 				'title'  => $this->get_schema_boolean( true ),
 				'price'  => $this->get_schema_boolean( true ),
 				'rating' => $this->get_schema_boolean( true ),
@@ -167,6 +168,7 @@ abstract class AbstractProductGrid extends AbstractDynamicBlock {
 			'categories'        => array(),
 			'catOperator'       => 'any',
 			'contentVisibility' => array(
+				'image'  => true,
 				'title'  => true,
 				'price'  => true,
 				'rating' => true,
@@ -517,6 +519,9 @@ abstract class AbstractProductGrid extends AbstractDynamicBlock {
 	 * @return string
 	 */
 	protected function get_image_html( $product ) {
+		if ( array_key_exists( 'image', $this->attributes['contentVisibility'] ) && false === $this->attributes['contentVisibility']['image'] ) {
+			return '';
+		}
 
 		$attr = array(
 			'alt' => '',

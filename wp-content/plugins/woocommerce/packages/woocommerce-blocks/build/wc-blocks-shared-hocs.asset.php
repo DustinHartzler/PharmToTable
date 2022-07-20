@@ -1,1 +1,1 @@
-<?php return array('dependencies' => array('wc-blocks-shared-context', 'wp-api-fetch', 'wp-element', 'wp-polyfill'), 'version' => '62ad3fdebe194702a0a778770e4d03dd');
+<?php return array('dependencies' => array('wc-blocks-shared-context', 'wp-api-fetch', 'wp-element', 'wp-polyfill'), 'version' => 'f4ab71ec1e2ed5f50599111063555d61');

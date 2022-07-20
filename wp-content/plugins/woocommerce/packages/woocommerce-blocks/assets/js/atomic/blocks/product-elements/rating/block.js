@@ -14,6 +14,11 @@ import { withProductDataContext } from '@woocommerce/shared-hocs';
  * Internal dependencies
  */
 import './style.scss';
+import {
+	useColorProps,
+	useSpacingProps,
+	useTypographyProps,
+} from '../../../../hooks/style-attributes';
 
 /**
  * Product Rating Block Component.
@@ -22,10 +27,13 @@ import './style.scss';
  * @param {string} [props.className] CSS Class name for the component.
  * @return {*} The component.
  */
-const Block = ( { className } ) => {
+const Block = ( props ) => {
 	const { parentClassName } = useInnerBlockLayoutContext();
 	const { product } = useProductDataContext();
 	const rating = getAverageRating( product );
+	const colorProps = useColorProps( props );
+	const typographyProps = useTypographyProps( props );
+	const spacingProps = useSpacingProps( props );
 
 	if ( ! rating ) {
 		return null;
@@ -59,12 +67,17 @@ const Block = ( { className } ) => {
 	return (
 		<div
 			className={ classnames(
-				className,
+				colorProps.className,
 				'wc-block-components-product-rating',
 				{
 					[ `${ parentClassName }__product-rating` ]: parentClassName,
 				}
 			) }
+			style={ {
+				...colorProps.style,
+				...typographyProps.style,
+				...spacingProps.style,
+			} }
 		>
 			<div
 				className={ classnames(

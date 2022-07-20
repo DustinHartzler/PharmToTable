@@ -6,7 +6,6 @@ use Automattic\WooCommerce\Blocks\Package;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
 use Automattic\WooCommerce\Blocks\Assets\Api as AssetApi;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
-use Automattic\WooCommerce\Blocks\RestApi;
 
 /**
  * AbstractBlock class.
@@ -173,7 +172,28 @@ abstract class AbstractBlock {
 	}
 
 	/**
+	 * Generate an array of chunks paths for loading translation.
+	 *
+	 * @param string $chunks_folder The folder to iterate over.
+	 * @return string[] $chunks list of chunks to load.
+	 */
+	protected function get_chunks_paths( $chunks_folder ) {
+		$build_path = \Automattic\WooCommerce\Blocks\Package::get_path() . 'build/';
+		$blocks     = [];
+		if ( ! is_dir( $build_path . $chunks_folder ) ) {
+			return [];
+		}
+		foreach ( new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator( $build_path . $chunks_folder ) ) as $block_name ) {
+			$blocks[] = str_replace( $build_path, '', $block_name );
+		}
+
+		$chunks = preg_filter( '/.js/', '', $blocks );
+		return $chunks;
+	}
+	/**
 	 * Registers the block type with WordPress.
+	 *
+	 * @return string[] Chunks paths.
 	 */
 	protected function register_block_type() {
 		$block_settings = [
@@ -190,7 +210,7 @@ abstract class AbstractBlock {
 		$metadata_path = $this->asset_api->get_block_metadata_path( $this->block_name );
 		// Prefer to register with metadata if the path is set in the block's class.
 		if ( ! empty( $metadata_path ) ) {
-			register_block_type(
+			register_block_type_from_metadata(
 				$metadata_path,
 				$block_settings
 			);
@@ -365,7 +385,7 @@ abstract class AbstractBlock {
 					'pluginUrl'     => plugins_url( '/', dirname( __DIR__ ) ),
 					'productCount'  => array_sum( (array) wp_count_posts( 'product' ) ),
 					'restApiRoutes' => [
-						'/wc/store' => array_keys( Package::container()->get( RestApi::class )->get_routes_from_namespace( 'wc/store' ) ),
+						'/wc/store/v1' => array_keys( $this->get_routes_from_namespace( 'wc/store/v1' ) ),
 					],
 					'defaultAvatar' => get_avatar_url( 0, [ 'force_default' => true ] ),
 
@@ -378,6 +398,30 @@ abstract class AbstractBlock {
 				]
 			);
 		}
+	}
+
+	/**
+	 * Get routes from a REST API namespace.
+	 *
+	 * @param string $namespace Namespace to retrieve.
+	 * @return array
+	 */
+	protected function get_routes_from_namespace( $namespace ) {
+		$rest_server     = rest_get_server();
+		$namespace_index = $rest_server->get_namespace_index(
+			[
+				'namespace' => $namespace,
+				'context'   => 'view',
+			]
+		);
+
+		if ( is_wp_error( $namespace_index ) ) {
+			return [];
+		}
+
+		$response_data = $namespace_index->get_data();
+
+		return $response_data['routes'] ?? [];
 	}
 
 	/**
