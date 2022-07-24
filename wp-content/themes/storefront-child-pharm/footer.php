@@ -97,4 +97,4 @@
 <script type="text/javascript" src="https://a.omappapi.com/app/js/api.min.js" data-account="44742" data-user="39038" async></script>
 <!-- / https://optinmonster.com -->
 
-<chat-widget style="--chat-widget-primary-color: #167938; --chat-widget-active-color:#167938 ;--chat-widget-bubble-color: #167938" location-id="b673jIFyEKZBQFHQ1rCO" prompt-avatar="https://widgets.leadconnectorhq.com/chat-widget/assets/defaultAvatar.png" agency-name="FG Funnels" agency-website="http://fgfunnels.com" ></chat-widget> <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" > </script>
+<chat-widget style="--chat-widget-primary-color: #003D42; --chat-widget-active-color:#003D42 ;--chat-widget-bubble-color: #003D42" location-id="b673jIFyEKZBQFHQ1rCO" prompt-avatar="https://widgets.leadconnectorhq.com/chat-widget/assets/defaultAvatar.png" agency-name="FG Funnels" agency-website="http://fgfunnels.com" ></chat-widget> <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" > </script>
