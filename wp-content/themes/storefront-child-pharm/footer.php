@@ -54,18 +54,18 @@
             <div class="row">
 
                 <div class="f-items default-padding">
-                    <!-- Single Item -->
+                    <!-- Footer 1 Item -->
                     <?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-1")) : ?>
                     <?php endif;?>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
+                    <!-- End Footer 1 Item -->
+                    <!-- Footer 2 Item -->
                     <?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-2")) : ?>
                     <?php endif;?>
-                    <!-- End Single Item -->
-                    <!-- Single Item -->
+                    <!-- End Footer 2 Item -->
+                    <!-- Footer 3 Item -->
                     <?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-3")) : ?>
                     <?php endif;?>
-                    <!-- End Single Item -->
+                    <!-- End Footer 3 Item -->
                 </div>
             </div>
         </div>
@@ -96,3 +96,5 @@
 <!-- This site is converting visitors into subscribers and customers with OptinMonster - https://optinmonster.com -->
 <script type="text/javascript" src="https://a.omappapi.com/app/js/api.min.js" data-account="44742" data-user="39038" async></script>
 <!-- / https://optinmonster.com -->
+
+<chat-widget style="--chat-widget-primary-color: #167938; --chat-widget-active-color:#167938 ;--chat-widget-bubble-color: #167938" location-id="b673jIFyEKZBQFHQ1rCO" prompt-avatar="https://widgets.leadconnectorhq.com/chat-widget/assets/defaultAvatar.png" agency-name="FG Funnels" agency-website="http://fgfunnels.com" ></chat-widget> <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" > </script>
