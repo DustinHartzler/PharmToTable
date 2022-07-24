@@ -153,7 +153,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- Wrapper for slides -->
         <div class="carousel-inner text-light carousel-zoom">
             <div class="item active">
-                <div class="slider-thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/family.jpg);"></div>
+                <div class="slider-thumb bg-cover" style="background-image: url(<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/home-pharmtotableteam.jpg);"></div>
                 <div class="box-table shadow dark">
                     <div class="box-cell">
                         <div class="container">
