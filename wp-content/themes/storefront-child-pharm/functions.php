@@ -80,24 +80,24 @@ if ( function_exists('register_sidebar') ) {
     register_sidebar(array(
       'name' => 'Footer 1',
       'id'            => 'child-footer-1',
-      'before_widget' => '<div class="col-md-4 item"><div class="f-item">',
-      'after_widget' => '</div></div>',
+      'before_widget' => '<div class="f-item" style="padding-bottom: 20px">',
+      'after_widget' => '</div>',
       'before_title' => '<h4>',
       'after_title' => '</h4>',
     ));
     register_sidebar(array(
       'name' => 'Footer 2',
       'id'            => 'child-footer-2',
-      'before_widget' => '<div class="col-md-4 item"><div class="f-item">',
-      'after_widget' => '</div></div>',
+      'before_widget' => '<div class="f-item" style="padding-bottom: 20px">',
+      'after_widget' => '</div>',
       'before_title' => '<h4>',
       'after_title' => '</h4>',
     ));
     register_sidebar(array(
       'name' => 'Footer 3',
       'id'            => 'child-footer-3',
-      'before_widget' => '<div class="col-md-4 item"><div class="f-item">',
-      'after_widget' => '</div></div>',
+      'before_widget' => '<div class="f-item" style="padding-bottom: 20px">',
+      'after_widget' => '</div>',
       'before_title' => '<h4>',
       'after_title' => '</h4>',
     ));

@@ -55,16 +55,22 @@
 
                 <div class="f-items default-padding">
                     <!-- Footer 1 Item -->
-                    <?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-1")) : ?>
-                    <?php endif;?>
+					<div class="col-md-4 item">
+							<?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-1")) : ?>
+							<?php endif;?>
+					</div>
                     <!-- End Footer 1 Item -->
                     <!-- Footer 2 Item -->
-                    <?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-2")) : ?>
-                    <?php endif;?>
+					<div class="col-md-4 item">
+						<?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-2")) : ?>
+						<?php endif;?>
+					</div>
                     <!-- End Footer 2 Item -->
                     <!-- Footer 3 Item -->
-                    <?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-3")) : ?>
-                    <?php endif;?>
+					<div class="col-md-4 item">
+						<?php if (!function_exists('dynamic_sidebar') || !dynamic_sidebar("child-footer-3")) : ?>
+						<?php endif;?>
+					</div>
                     <!-- End Footer 3 Item -->
                 </div>
             </div>
