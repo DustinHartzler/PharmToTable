@@ -31,24 +31,25 @@ class WC_Booking_Form {
 		global $wp_locale;
 
 		$wc_bookings_booking_form_args = array(
-			'closeText'                  => __( 'Close', 'woocommerce-bookings' ),
-			'currentText'                => __( 'Today', 'woocommerce-bookings' ),
-			'prevText'                   => __( 'Previous', 'woocommerce-bookings' ),
-			'nextText'                   => __( 'Next', 'woocommerce-bookings' ),
-			'monthNames'                 => array_values( $wp_locale->month ),
-			'monthNamesShort'            => array_values( $wp_locale->month_abbrev ),
-			'dayNames'                   => array_values( $wp_locale->weekday ),
-			'dayNamesShort'              => array_values( $wp_locale->weekday_abbrev ),
-			'dayNamesMin'                => array_values( $wp_locale->weekday_initial ),
-			'firstDay'                   => get_option( 'start_of_week' ),
-			'current_time'               => date( 'Ymd', current_time( 'timestamp' ) ),
-			'check_availability_against' => $this->product->get_check_start_block_only() ? 'start' : '',
-			'duration_type'              => $this->product->get_duration_type(),
-			'duration_unit'              => $this->product->get_duration_unit(),
-			'resources_assignment'       => ! $this->product->has_resources() ? 'customer' : $this->product->get_resources_assignment(),
-			'isRTL'                      => is_rtl(),
-			'product_id'                 => $this->product->get_id(),
-			'default_availability'       => $this->product->get_default_availability(),
+			'closeText'                    => __( 'Close', 'woocommerce-bookings' ),
+			'currentText'                  => __( 'Today', 'woocommerce-bookings' ),
+			'prevText'                     => __( 'Previous', 'woocommerce-bookings' ),
+			'nextText'                     => __( 'Next', 'woocommerce-bookings' ),
+			'monthNames'                   => array_values( $wp_locale->month ),
+			'monthNamesShort'              => array_values( $wp_locale->month_abbrev ),
+			'dayNames'                     => array_values( $wp_locale->weekday ),
+			'dayNamesShort'                => array_values( $wp_locale->weekday_abbrev ),
+			'dayNamesMin'                  => array_values( $wp_locale->weekday_initial ),
+			'firstDay'                     => get_option( 'start_of_week' ),
+			'current_time'                 => date( 'Ymd', current_time( 'timestamp' ) ),
+			'check_availability_against'   => $this->product->get_check_start_block_only() ? 'start' : '',
+			'duration_type'                => $this->product->get_duration_type(),
+			'duration_unit'                => $this->product->get_duration_unit(),
+			'resources_assignment'         => ! $this->product->has_resources() ? 'customer' : $this->product->get_resources_assignment(),
+			'isRTL'                        => is_rtl(),
+			'product_id'                   => $this->product->get_id(),
+			'default_availability'         => $this->product->get_default_availability(),
+			'default_blocks_area_text'     => __( 'Choose a date above to see available times.', 'woocommerce-bookings' ),
 		);
 
 		$wc_bookings_date_picker_args = array(
@@ -91,6 +92,7 @@ class WC_Booking_Form {
 			'i18n_dates'                 => __( 'Dates', 'woocommerce-bookings' ),
 			'i18n_choose_options'        => __( 'Please select the options for your booking and make sure duration rules apply.', 'woocommerce-bookings' ),
 			'i18n_clear_date_selection'  => __( 'To clear selection, pick a new start date', 'woocommerce-bookings' ),
+			'i18n_request_failed'        => __( 'We weren\'t able to get that information. Please contact the store owner for help.', 'woocommerce-bookings' ),
 			'pao_pre_30'                 => ( defined( 'WC_PRODUCT_ADDONS_VERSION' ) && version_compare( WC_PRODUCT_ADDONS_VERSION, '3.0', '<' ) ) ? 'true' : 'false',
 			'pao_active'                 => class_exists( 'WC_Product_Addons' ),
 			'timezone_conversion'        => wc_should_convert_timezone(),
@@ -659,7 +661,15 @@ class WC_Booking_Form {
 
 		$block_html .= '</select></div>';
 
-		return $block_html;
+		/**
+		 * Filter the endtime display html.
+		 *
+		 * @param string $block_html endtime display html.
+		 * @param array  $data   available end time.
+		 * @param array  $blocks
+		 * @param WC_Product_Booking $product Booking product data.
+		 */
+		return apply_filters( 'wc_bookings_get_end_time_html', $block_html, $data, $blocks, $this->product );
 	}
 
 	/**
@@ -687,7 +697,7 @@ class WC_Booking_Form {
 				if ( $quantity['available'] > 0 ) {
 					if ( $quantity['booked'] ) {
 						/* translators: 1: quantity available */
-						$block_html .= '<li class="block" data-block="' . esc_attr( date( 'Hi', $block ) ) . '" data-remaining="' . esc_attr( $quantity['available'] ) . '" ><a href="#" data-value="' . get_time_as_iso8601( $block ) . '">' . date_i18n( wc_bookings_time_format(), $block ) . ' <small class="booking-spaces-left">(' . sprintf( _n( '%d left', '%d left', $quantity['available'], 'woocommerce-bookings' ), absint( $quantity['available'] ) ) . ')</small></a></li>';
+						$block_html .= '<li class="block" data-block="' . esc_attr( date( 'Hi', $block ) ) . '" data-remaining="' . esc_attr( $quantity['available'] ) . '" ><a href="#" data-value="' . get_time_as_iso8601( $block ) . '" data-remaining="' . sprintf( _n( '%d left', '%d left', $quantity['available'], 'woocommerce-bookings' ), absint( $quantity['available'] ) ) . '">' . date_i18n( wc_bookings_time_format(), $block ) . ' <small class="booking-spaces-left">(' . sprintf( _n( '%d left', '%d left', $quantity['available'], 'woocommerce-bookings' ), absint( $quantity['available'] ) ) . ')</small></a></li>';
 					} else {
 						$block_html .= '<li class="block" data-block="' . esc_attr( date( 'Hi', $block ) ) . '"><a href="#" data-value="' . get_time_as_iso8601( $block ) . '">' . date_i18n( wc_bookings_time_format(), $block ) . '</a></li>';
 					}
@@ -695,6 +705,6 @@ class WC_Booking_Form {
 			}
 		}
 
-		return apply_filters( 'wc_bookings_get_time_slots_html', $block_html, $available_blocks, $blocks );
+		return apply_filters( 'wc_bookings_get_time_slots_html', $block_html, $available_blocks, $blocks, $this->product );
 	}
 }

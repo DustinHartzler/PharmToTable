@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit79d8a9f1c61663746bc305470e48b87d
+class ComposerStaticInit44d3ac892b250bcb68d9077b46b74240
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -682,6 +682,7 @@ class ComposerStaticInit79d8a9f1c61663746bc305470e48b87d
         'WC_Bookings_Tools' => __DIR__ . '/../..' . '/includes/admin/class-wc-bookings-tools.php',
         'WC_Bookings_Tracks' => __DIR__ . '/../..' . '/includes/admin/tracks/class-wc-bookings-tracks.php',
         'WC_Bookings_WC_Ajax' => __DIR__ . '/../..' . '/includes/class-wc-bookings-wc-ajax.php',
+        'WC_Bookings_WC_Status_Dashboard' => __DIR__ . '/../..' . '/includes/admin/class-wc-bookings-wc-status-dashboard.php',
         'WC_Data_Exception' => __DIR__ . '/../..' . '/includes/compatibility/class-wc-data-exception.php',
         'WC_Data_Store' => __DIR__ . '/../..' . '/includes/compatibility/class-wc-data-store.php',
         'WC_Data_Store_WP' => __DIR__ . '/../..' . '/includes/compatibility/class-wc-data-store-wp.php',
@@ -706,6 +707,8 @@ class ComposerStaticInit79d8a9f1c61663746bc305470e48b87d
         'WC_Product_Booking_Rule_Manager' => __DIR__ . '/../..' . '/includes/class-wc-product-booking-rule-manager.php',
         'WC_Product_Data_Store_CPT' => __DIR__ . '/../..' . '/includes/compatibility/class-wc-product-data-store-cpt.php',
         'WC_Product_Skeleton_Booking' => __DIR__ . '/../..' . '/includes/class-wc-product-skeleton-booking.php',
+        'WooCommerce\\Bookings\\Blocks\\Bookings_Gateway' => __DIR__ . '/../..' . '/includes/blocks/class-wc-bookings-gateway.php',
+        'WooCommerce\\Bookings\\Blocks\\WC_Bookings_Blocks_Integration' => __DIR__ . '/../..' . '/includes/blocks/class-wc-bookings-blocks.php',
         'phpseclib3\\Common\\Functions\\Strings' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/Common/Functions/Strings.php',
         'phpseclib3\\Crypt\\AES' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/Crypt/AES.php',
         'phpseclib3\\Crypt\\Blowfish' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/Crypt/Blowfish.php',
@@ -1040,10 +1043,10 @@ class ComposerStaticInit79d8a9f1c61663746bc305470e48b87d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit79d8a9f1c61663746bc305470e48b87d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit79d8a9f1c61663746bc305470e48b87d::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit79d8a9f1c61663746bc305470e48b87d::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit79d8a9f1c61663746bc305470e48b87d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit44d3ac892b250bcb68d9077b46b74240::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit44d3ac892b250bcb68d9077b46b74240::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit44d3ac892b250bcb68d9077b46b74240::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit44d3ac892b250bcb68d9077b46b74240::$classMap;
 
         }, null, ClassLoader::class);
     }

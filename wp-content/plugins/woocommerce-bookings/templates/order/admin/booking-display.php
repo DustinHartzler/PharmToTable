@@ -26,7 +26,9 @@ if ( $booking_ids ) {
 	$text_align  = is_rtl() ? 'right' : 'left';
 	$margin_side = is_rtl() ? 'left' : 'right';
 
+	$sent_to_admin    = isset( $sent_to_admin ) && $sent_to_admin;
 	$show_status_date = ! ( isset( $only_title ) && $only_title );
+	$show_title       = ! ( isset( $hide_item_details ) && $hide_item_details );
 
 	foreach ( $booking_ids as $booking_id ) {
 		$booking    = new WC_Booking( $booking_id );
@@ -39,20 +41,23 @@ if ( $booking_ids ) {
 				if ( $item_id !== $booking->get_order_item_id() ) {
 					continue;
 				}
-				// Product name.
-				echo wp_kses_post( apply_filters( 'woocommerce_order_item_name', $item->get_name(), $item, false ) );
 
-				// allow other plugins to add additional product information here.
-				do_action( 'woocommerce_order_item_meta_start', $item_id, $item, $order, $plain_text );
+				if ( $show_title ) {
+					// Product name.
+					echo wp_kses_post( apply_filters( 'woocommerce_order_item_name', $item->get_name(), $item, false ) );
 
-				wc_display_item_meta(
-					$item,
-					array(
-						'label_before' => '<strong class="wc-item-meta-label" style="float: ' . esc_attr( $text_align ) . '; margin-' . esc_attr( $margin_side ) . ': .25em; clear: both">',
-					)
-				);
+					// allow other plugins to add additional product information here.
+					do_action( 'woocommerce_order_item_meta_start', $item_id, $item, $order, $plain_text );
 
-				if ( $show_status_date  ) :
+					wc_display_item_meta(
+						$item,
+						array(
+							'label_before' => '<strong class="wc-item-meta-label" style="float: ' . esc_attr( $text_align ) . '; margin-' . esc_attr( $margin_side ) . ': .25em; clear: both">',
+						)
+					);
+				}
+
+				if ( $show_status_date ) :
 					?>
 					<strong class="wc-booking-summary-number">
 						<?php
@@ -74,7 +79,7 @@ if ( $booking_ids ) {
 					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-ajax.php?action=wc-booking-confirm&booking_id=' . $booking_id ), 'wc-booking-confirm' ) ); ?>"><?php esc_html_e( 'Confirm booking', 'woocommerce-bookings' ); ?></a>
 				<?php endif; ?>
 
-				<?php if ( $booking_id ) : ?>
+				<?php if ( $booking_id && ( ! $show_title || ( $sent_to_admin || $order->get_customer_id() ) ) ) : ?>
 					<a href="<?php echo esc_url( admin_url( 'post.php?post=' . absint( $booking_id ) . '&action=edit' ) ); ?>"><?php esc_html_e( 'View booking &rarr;', 'woocommerce-bookings' ); ?></a>
 				<?php endif; ?>
 			</div>
