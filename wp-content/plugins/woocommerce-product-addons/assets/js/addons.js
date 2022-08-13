@@ -59,22 +59,42 @@ jQuery(function ($) {
 		},
 
 		formatMoney: function (amount) {
+			let formatNumDecimal = woocommerce_addons_params.currency_format_num_decimals;
+
+			// Remove trailing zeros.
+			if ( woocommerce_addons_params.trim_trailing_zeros ) {
+				const amountIsInteger = parseFloat( amount ) % 1 === 0;
+
+				// Remove zeros.
+				// if float, 4.6500 => 4.65
+				// if integer, 4.0000 => 4
+				amount = parseFloat( amount );
+
+				// Set precision value (mandatory to be passed).
+				if ( amountIsInteger ) {
+					// Set 0 decimal precision for integers.
+					formatNumDecimal = 0;
+				} else {
+					// Count decimal from amount (zeros skipped already) and set as precision.
+					// 4.655 => 3 digits after decimal point.
+					formatNumDecimal = amount.toString().split( '.' )[ 1 ].length;
+				}
+			}
+
 			return accounting.formatMoney(amount, {
 				symbol: woocommerce_addons_params.currency_format_symbol,
 				decimal: woocommerce_addons_params.currency_format_decimal_sep,
 				thousand:
 					woocommerce_addons_params.currency_format_thousand_sep,
-				precision: !woocommerce_addons_params.trim_trailing_zeros
-					? woocommerce_addons_params.currency_format_num_decimals
-					: 0,
+				precision: formatNumDecimal,
 				format: woocommerce_addons_params.currency_format,
 			});
 		},
 
 		init: function (cart) {
-			var cartFormForValidity = document.querySelector('form.cart');
 			var show_subtotal_panel = false;
 			var $cart = cart,
+				cartFormForValidity = $cart.get( 0 ),
 				$variation_input = $cart.hasClass('variations_form')
 					? $cart.find(
 							'input[name="variation_id"], input.variation_id'
@@ -179,7 +199,7 @@ jQuery(function ($) {
 
 				.on('woocommerce-product-addons-update', function () {
 					// Check if all required fields have been filled, to determine whether we should show the subtotal panel.
-					var formValid = cartFormForValidity.checkValidity();
+					var formValid = 'form' === cartFormForValidity.tagName.toLowerCase() ? cartFormForValidity.checkValidity() : true;
 					var total = 0,
 						total_raw = 0,
 						$totals = $cart.find('#product-addons-total'),
