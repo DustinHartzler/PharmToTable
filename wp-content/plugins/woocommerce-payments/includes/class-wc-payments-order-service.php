@@ -6,6 +6,7 @@
  */
 
 use WCPay\Logger;
+use WCPay\Constants\Payment_Method;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,26 @@ class WC_Payments_Order_Service {
 	const STATUS_ON_HOLD   = 'on-hold';
 	const STATUS_PENDING   = 'pending';
 
+	const ADD_FEE_BREAKDOWN_TO_ORDER_NOTES = 'wcpay_add_fee_breakdown_to_order_notes';
+
+	/**
+	 * Client for making requests to the WooCommerce Payments API
+	 *
+	 * @var WC_Payments_API_Client
+	 */
+	protected $api_client;
+
+	/**
+	 * WC_Payments_Order_Service constructor.
+	 *
+	 * @param WC_Payments_API_Client $api_client - WooCommerce Payments API client.
+	 */
+	public function __construct( WC_Payments_API_Client $api_client ) {
+		$this->api_client = $api_client;
+
+		add_action( self::ADD_FEE_BREAKDOWN_TO_ORDER_NOTES, [ $this, 'add_fee_breakdown_to_order_notes' ], 10, 2 );
+	}
+
 	/**
 	 * Updates an order to processing/completed status, while adding a note with a link to the transaction.
 	 *
@@ -37,8 +58,24 @@ class WC_Payments_Order_Service {
 			return;
 		}
 
+		$note = $this->generate_payment_success_note( $intent_id, $charge_id, $this->get_order_amount( $order ) );
+
+		if ( $this->order_note_exists( $order, $note ) ) {
+			return;
+		}
+
+		// Update the note with the fee breakdown details async.
+		WC_Payments::get_action_scheduler_service()->schedule_job(
+			time(),
+			self::ADD_FEE_BREAKDOWN_TO_ORDER_NOTES,
+			[
+				'order_id'  => $order->get_id(),
+				'intent_id' => $intent_id,
+			]
+		);
+
 		$this->update_order_status( $order, 'payment_complete', $intent_id );
-		$this->add_payment_success_note( $order, $intent_id, $charge_id );
+		$order->add_order_note( $note );
 		$this->complete_order_processing( $order, $intent_status );
 	}
 
@@ -60,8 +97,14 @@ class WC_Payments_Order_Service {
 			return;
 		}
 
+		$note = $this->generate_payment_failure_note( $intent_id, $charge_id, $message, $this->get_order_amount( $order ) );
+
+		if ( $this->order_note_exists( $order, $note ) ) {
+			return;
+		}
+
 		$this->update_order_status( $order, self::STATUS_FAILED );
-		$this->add_payment_failure_note( $order, $intent_id, $charge_id, $message );
+		$order->add_order_note( $note );
 		$this->complete_order_processing( $order, $intent_status );
 	}
 
@@ -98,7 +141,6 @@ class WC_Payments_Order_Service {
 	 */
 	public function mark_payment_started( $order, $intent_id, $intent_status, $charge_id ) {
 		if ( ! $order->has_status( [ self::STATUS_PENDING ] )
-			|| 'requires_action' === $order->get_meta( '_intention_status' )
 			|| ! $this->order_prepared_for_processing( $order, $intent_id ) ) {
 			return;
 		}
@@ -162,8 +204,14 @@ class WC_Payments_Order_Service {
 			return;
 		}
 
+		$note = $this->generate_capture_expired_note( $intent_id, $charge_id );
+
+		if ( $this->order_note_exists( $order, $note ) ) {
+			return;
+		}
+
 		$this->update_order_status( $order, self::STATUS_CANCELLED );
-		$this->add_capture_expired_note( $order, $intent_id, $charge_id );
+		$order->add_order_note( $note );
 		$this->complete_order_processing( $order, $intent_status );
 	}
 
@@ -201,9 +249,16 @@ class WC_Payments_Order_Service {
 			return;
 		}
 
+		$note = $this->generate_dispute_created_note( $dispute_id, $reason );
+
+		if ( $this->order_note_exists( $order, $note ) ) {
+			return;
+		}
+
 		$this->update_order_status( $order, self::STATUS_ON_HOLD );
-		$this->add_dispute_created_note( $order, $dispute_id, $reason );
+		$order->add_order_note( $note );
 		$order->save();
+
 	}
 
 	/**
@@ -217,6 +272,12 @@ class WC_Payments_Order_Service {
 	 */
 	public function mark_payment_dispute_closed( $order, $dispute_id, $status ) {
 		if ( ! is_a( $order, 'WC_Order' ) ) {
+			return;
+		}
+
+		$note = $this->generate_dispute_closed_note( $dispute_id, $status );
+
+		if ( $this->order_note_exists( $order, $note ) ) {
 			return;
 		}
 
@@ -234,7 +295,7 @@ class WC_Payments_Order_Service {
 			$this->update_order_status( $order, self::STATUS_COMPLETED );
 		}
 
-		$this->add_dispute_closed_note( $order, $dispute_id, $status );
+		$order->add_order_note( $note );
 		$order->save();
 	}
 
@@ -254,23 +315,81 @@ class WC_Payments_Order_Service {
 	}
 
 	/**
-	 * Adds the success order note, if needed.
+	 * Check if a note content has already existed in the order.
 	 *
-	 * @param WC_Order $order     Order object.
-	 * @param string   $intent_id The ID of the intent associated with this order.
-	 * @param string   $charge_id The charge ID related to the intent/order.
+	 * @param WC_Order $order        The order object to add the note.
+	 * @param string   $note_content Note content.
 	 *
-	 * @return void
+	 * @return bool true if the note content exists, false otherwise.
 	 */
-	private function add_payment_success_note( $order, $intent_id, $charge_id ) {
-		$payment_needed = $order->get_total() > 0;
+	public function order_note_exists( WC_Order $order, string $note_content ): bool {
+		// Get current notes of the order.
+		$current_notes = wc_get_order_notes(
+			[ 'order_id' => $order->get_id() ]
+		);
 
-		if ( ! $payment_needed ) {
-			return;
+		foreach ( $current_notes as $current_note ) {
+			if ( $current_note->content === $note_content ) {
+				return true;
+			}
 		}
 
-		$transaction_url = $this->compose_transaction_url( $charge_id );
-		$note            = sprintf(
+		return false;
+	}
+
+	/**
+	 * Adds a note with the fee breakdown for the order.
+	 *
+	 * @param string $order_id  WC Order Id.
+	 * @param string $intent_id The intent id for the payment.
+	 */
+	public function add_fee_breakdown_to_order_notes( $order_id, $intent_id ) {
+		$order = wc_get_order( $order_id );
+		try {
+			$events = $this->api_client->get_timeline( $intent_id );
+
+			$captured_event = current(
+				array_filter(
+					$events['data'],
+					function ( array $event ) {
+						return 'captured' === $event['type'];
+					}
+				)
+			);
+
+			$details = ( new WC_Payments_Captured_Event_Note( $captured_event ) )->generate_html_note();
+
+			// Add fee breakdown details to the note.
+			$title = WC_Payments_Utils::esc_interpolated_html(
+				// phpcs:ignore WordPress.WP.I18n.NoHtmlWrappedStrings
+				__( '<strong>Fee details:</strong>', 'woocommerce-payments' ),
+				[
+					'strong' => '<strong>',
+				]
+			);
+			$note = $title . $details;
+			// Update the order with the new note.
+			$order->add_order_note( $note );
+			$order->save();
+
+		} catch ( Exception $e ) {
+			Logger::log( sprintf( 'Can not generate the detailed note for intent_id %1$s. Reason: %2$s', $intent_id, $e->getMessage() ) );
+		}
+	}
+
+	/**
+	 * Get content for the success order note.
+	 *
+	 * @param string $intent_id        The payment intent ID related to the intent/order.
+	 * @param string $charge_id        The charge ID related to the intent/order.
+	 * @param string $formatted_amount The formatted order total.
+	 *
+	 * @return string Note content.
+	 */
+	private function generate_payment_success_note( $intent_id, $charge_id, $formatted_amount ) {
+		$transaction_url = WC_Payments_Utils::compose_transaction_url( $intent_id, $charge_id );
+
+		return sprintf(
 			WC_Payments_Utils::esc_interpolated_html(
 				/* translators: %1: the successfully charged amount, %2: transaction ID of the payment */
 				__( 'A payment of %1$s was <strong>successfully charged</strong> using WooCommerce Payments (<a>%2$s</a>).', 'woocommerce-payments' ),
@@ -279,25 +398,23 @@ class WC_Payments_Order_Service {
 					'a'      => ! empty( $transaction_url ) ? '<a href="' . $transaction_url . '" target="_blank" rel="noopener noreferrer">' : '<code>',
 				]
 			),
-			$this->get_order_amount( $order ),
-			$charge_id
+			$formatted_amount,
+			WC_Payments_Utils::get_transaction_url_id( $intent_id, $charge_id )
 		);
-
-		$order->add_order_note( $note );
 	}
 
 	/**
-	 * Adds the failure order note and additional message, if included.
+	 * Get content for the failure order note and additional message, if included.
 	 *
-	 * @param WC_Order $order     Order object.
-	 * @param string   $intent_id The ID of the intent associated with this order.
-	 * @param string   $charge_id The charge ID related to the intent/order.
-	 * @param string   $message   Optional message to add to the note.
+	 * @param string $intent_id        The ID of the intent associated with this order.
+	 * @param string $charge_id        The charge ID related to the intent/order.
+	 * @param string $message          Optional message to add to the note.
+	 * @param string $formatted_amount The formatted order total.
 	 *
-	 * @return void
+	 * @return string Note content.
 	 */
-	private function add_payment_failure_note( $order, $intent_id, $charge_id, $message ) {
-		$transaction_url = $this->compose_transaction_url( $charge_id );
+	private function generate_payment_failure_note( $intent_id, $charge_id, $message, $formatted_amount ) {
+		$transaction_url = WC_Payments_Utils::compose_transaction_url( $intent_id, $charge_id );
 		$note            = sprintf(
 			WC_Payments_Utils::esc_interpolated_html(
 				/* translators: %1: the authorized amount, %2: transaction ID of the payment */
@@ -307,15 +424,15 @@ class WC_Payments_Order_Service {
 					'a'      => ! empty( $transaction_url ) ? '<a href="' . $transaction_url . '" target="_blank" rel="noopener noreferrer">' : '<code>',
 				]
 			),
-			$this->get_order_amount( $order ),
-			$intent_id
+			$formatted_amount,
+			WC_Payments_Utils::get_transaction_url_id( $intent_id, $charge_id )
 		);
 
 		if ( ! empty( $message ) ) {
 			$note .= ' ' . $message;
 		}
 
-		$order->add_order_note( $note );
+		return $note;
 	}
 
 	/**
@@ -328,7 +445,7 @@ class WC_Payments_Order_Service {
 	 * @return void
 	 */
 	private function add_payment_authorized_note( $order, $intent_id, $charge_id ) {
-		$transaction_url = $this->compose_transaction_url( $charge_id );
+		$transaction_url = WC_Payments_Utils::compose_transaction_url( $intent_id, $charge_id );
 		$note            = sprintf(
 			WC_Payments_Utils::esc_interpolated_html(
 				/* translators: %1: the authorized amount, %2: transaction ID of the payment */
@@ -339,7 +456,7 @@ class WC_Payments_Order_Service {
 				]
 			),
 			$this->get_order_amount( $order ),
-			$intent_id
+			WC_Payments_Utils::get_transaction_url_id( $intent_id, $charge_id )
 		);
 
 		$order->add_order_note( $note );
@@ -381,7 +498,7 @@ class WC_Payments_Order_Service {
 	 * @return void
 	 */
 	private function add_capture_success_note( $order, $intent_id, $charge_id ) {
-		$transaction_url = $this->compose_transaction_url( $charge_id );
+		$transaction_url = WC_Payments_Utils::compose_transaction_url( $intent_id, $charge_id );
 		$note            = sprintf(
 			WC_Payments_Utils::esc_interpolated_html(
 				/* translators: %1: the successfully charged amount, %2: transaction ID of the payment */
@@ -392,7 +509,7 @@ class WC_Payments_Order_Service {
 				]
 			),
 			$this->get_order_amount( $order ),
-			$charge_id
+			WC_Payments_Utils::get_transaction_url_id( $intent_id, $charge_id )
 		);
 
 		$order->add_order_note( $note );
@@ -409,7 +526,7 @@ class WC_Payments_Order_Service {
 	 * @return void
 	 */
 	private function add_capture_failed_note( $order, $intent_id, $charge_id, $message ) {
-		$transaction_url = $this->compose_transaction_url( $charge_id );
+		$transaction_url = WC_Payments_Utils::compose_transaction_url( $intent_id, $charge_id );
 		$note            = sprintf(
 			WC_Payments_Utils::esc_interpolated_html(
 				/* translators: %1: the authorized amount, %2: transaction ID of the payment */
@@ -420,7 +537,7 @@ class WC_Payments_Order_Service {
 				]
 			),
 			$this->get_order_amount( $order ),
-			$intent_id
+			WC_Payments_Utils::get_transaction_url_id( $intent_id, $charge_id )
 		);
 
 		if ( ! empty( $message ) ) {
@@ -431,17 +548,17 @@ class WC_Payments_Order_Service {
 	}
 
 	/**
-	 * Adds the expired order note.
+	 * Get content for the capture expired note.
 	 *
-	 * @param WC_Order $order     Order object.
-	 * @param string   $intent_id The ID of the intent associated with this order.
-	 * @param string   $charge_id The charge ID related to the intent/order.
+	 * @param string $intent_id The ID of the intent associated with this order.
+	 * @param string $charge_id The charge ID related to the intent/order.
 	 *
-	 * @return void
+	 * @return string Note content.
 	 */
-	private function add_capture_expired_note( $order, $intent_id, $charge_id ) {
-		$transaction_url = $this->compose_transaction_url( $charge_id );
-		$note            = sprintf(
+	private function generate_capture_expired_note( $intent_id, $charge_id ) {
+		$transaction_url = WC_Payments_Utils::compose_transaction_url( $intent_id, $charge_id );
+
+		return sprintf(
 			WC_Payments_Utils::esc_interpolated_html(
 				/* translators: %1: the authorized amount, %2: transaction ID of the payment */
 				__( 'Payment authorization has <strong>expired</strong> (<a>%1$s</a>).', 'woocommerce-payments' ),
@@ -450,10 +567,9 @@ class WC_Payments_Order_Service {
 					'a'      => ! empty( $transaction_url ) ? '<a href="' . $transaction_url . '" target="_blank" rel="noopener noreferrer">' : '<code>',
 				]
 			),
-			$intent_id
+			WC_Payments_Utils::get_transaction_url_id( $intent_id, $charge_id )
 		);
 
-		$order->add_order_note( $note );
 	}
 
 	/**
@@ -473,17 +589,17 @@ class WC_Payments_Order_Service {
 	}
 
 	/**
-	 * Adds the dispute created order note.
+	 * Get content for the dispute created order note.
 	 *
-	 * @param WC_Order $order      Order object.
-	 * @param string   $dispute_id The ID of the dispute associated with this order.
-	 * @param string   $reason     The reason for the dispute.
+	 * @param string $dispute_id The ID of the dispute associated with this order.
+	 * @param string $reason     The reason for the dispute.
 	 *
-	 * @return void
+	 * @return string Note content.
 	 */
-	private function add_dispute_created_note( $order, $dispute_id, $reason ) {
+	private function generate_dispute_created_note( $dispute_id, $reason ) {
 		$dispute_url = $this->compose_dispute_url( $dispute_id );
-		$note        = sprintf(
+
+		return sprintf(
 			WC_Payments_Utils::esc_interpolated_html(
 				/* translators: %1: the dispute reason */
 				__( 'Payment has been disputed as %1$s. See <a>dispute overview</a> for more details.', 'woocommerce-payments' ),
@@ -493,22 +609,19 @@ class WC_Payments_Order_Service {
 			),
 			$reason
 		);
-
-		$order->add_order_note( $note );
 	}
 
 	/**
-	 * Adds the dispute closed order note.
+	 * Get content for the dispute closed order note.
 	 *
-	 * @param WC_Order $order      Order object.
-	 * @param string   $dispute_id The ID of the dispute associated with this order.
-	 * @param string   $status     The status of the dispute.
+	 * @param string $dispute_id The ID of the dispute associated with this order.
+	 * @param string $status     The status of the dispute.
 	 *
-	 * @return void
+	 * @return string Note content.
 	 */
-	private function add_dispute_closed_note( $order, $dispute_id, $status ) {
+	private function generate_dispute_closed_note( $dispute_id, $status ) {
 		$dispute_url = $this->compose_dispute_url( $dispute_id );
-		$note        = sprintf(
+		return sprintf(
 			WC_Payments_Utils::esc_interpolated_html(
 				/* translators: %1: the dispute status */
 				__( 'Payment dispute has been closed with status %1$s. See <a>dispute overview</a> for more details.', 'woocommerce-payments' ),
@@ -517,30 +630,6 @@ class WC_Payments_Order_Service {
 				]
 			),
 			$status
-		);
-
-		$order->add_order_note( $note );
-	}
-
-	/**
-	 * Composes url for transaction details page.
-	 *
-	 * @param string $charge_id Charge id.
-	 *
-	 * @return string Transaction details page url.
-	 */
-	private function compose_transaction_url( $charge_id ) {
-		if ( empty( $charge_id ) ) {
-			return '';
-		}
-
-		return add_query_arg(
-			[
-				'page' => 'wc-admin',
-				'path' => '/payments/transactions/details',
-				'id'   => $charge_id,
-			],
-			admin_url( 'admin.php' )
 		);
 	}
 
@@ -644,6 +733,8 @@ class WC_Payments_Order_Service {
 	 * @return boolean True if it has a paid status, false if not.
 	 */
 	private function is_order_paid( $order ) {
+		wp_cache_delete( $order->get_id(), 'posts' );
+
 		// Read the latest order properties from the database to avoid race conditions if webhook was handled during this request.
 		$clone_order = clone $order;
 		$clone_order->get_data_store()->read( $clone_order );

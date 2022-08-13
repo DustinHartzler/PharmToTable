@@ -43,6 +43,15 @@ class WC_REST_Payments_Disputes_Controller extends WC_Payments_REST_Controller {
 		);
 		register_rest_route(
 			$this->namespace,
+			'/' . $this->rest_base . '/download',
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'get_disputes_export' ],
+				'permission_callback' => [ $this, 'check_permission' ],
+			]
+		);
+		register_rest_route(
+			$this->namespace,
 			'/' . $this->rest_base . '/(?P<dispute_id>\w+)',
 			[
 				'methods'             => WP_REST_Server::READABLE,
@@ -59,7 +68,6 @@ class WC_REST_Payments_Disputes_Controller extends WC_Payments_REST_Controller {
 				'permission_callback' => [ $this, 'check_permission' ],
 			]
 		);
-
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<dispute_id>\w+)/close',
@@ -136,6 +144,18 @@ class WC_REST_Payments_Disputes_Controller extends WC_Payments_REST_Controller {
 	}
 
 	/**
+	 * Initiate disputes export via API.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 */
+	public function get_disputes_export( $request ) {
+		$user_email = $request->get_param( 'user_email' );
+		$filters    = $this->get_disputes_filters( $request );
+
+		return $this->forward_request( 'get_disputes_export', [ $filters, $user_email ] );
+	}
+
+	/**
 	 * Extract disputes filters from request
 	 * The reason to map the filter properties is to keep consitency between the front-end models.
 	 *
@@ -149,6 +169,7 @@ class WC_REST_Payments_Disputes_Controller extends WC_Payments_REST_Controller {
 				'created_before'  => $request->get_param( 'date_before' ),
 				'created_after'   => $request->get_param( 'date_after' ),
 				'created_between' => $request->get_param( 'date_between' ),
+				'search'          => $request->get_param( 'search' ),
 				'status_is'       => $request->get_param( 'status_is' ),
 				'status_is_not'   => $request->get_param( 'status_is_not' ),
 			],

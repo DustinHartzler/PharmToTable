@@ -98,6 +98,7 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 
 	/**
 	 * Given an intent ID and an order ID, add the intent ID to the order and capture it.
+	 * Use-cases: Mobile apps using it for `card_present` and `interac_present` payment types.
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -133,7 +134,8 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 			$order->set_payment_method_title( __( 'WooCommerce In-Person Payments', 'woocommerce-payments' ) );
 			$intent_id     = $intent->get_id();
 			$intent_status = $intent->get_status();
-			$charge_id     = $intent->get_charge_id();
+			$charge        = $intent->get_charge();
+			$charge_id     = $charge ? $charge->get_id() : null;
 			$this->gateway->attach_intent_info_to_order(
 				$order,
 				$intent_id,
@@ -159,7 +161,7 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 				'id'     => $intent->get_id(),
 			];
 
-			$result = $is_intent_captured ? $result_for_captured_intent : $this->gateway->capture_charge( $order );
+			$result = $is_intent_captured ? $result_for_captured_intent : $this->gateway->capture_charge( $order, false );
 
 			if ( 'succeeded' !== $result['status'] ) {
 				$http_code = $result['http_code'] ?? 502;
@@ -176,7 +178,7 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 			// Store receipt generation URL for mobile applications in order meta-data.
 			$order->add_meta_data( 'receipt_url', get_rest_url( null, sprintf( '%s/payments/readers/receipts/%s', $this->namespace, $intent->get_id() ) ) );
 			// Actualize order status.
-			$this->order_service->mark_terminal_payment_completed( $order, $intent_id, $intent_status, $charge_id );
+			$this->order_service->mark_terminal_payment_completed( $order, $intent_id, $result['status'], $charge_id );
 
 			return rest_ensure_response(
 				[
@@ -192,11 +194,15 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 
 	/**
 	 * Returns customer id from order. Create or update customer if needed.
+	 * Use-cases: It was used by older versions of our Mobile apps in their workflows.
+	 *
+	 * @deprecated 3.9.0
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_customer( $request ) {
+		wc_deprecated_function( __FUNCTION__, '3.9.0' );
 		try {
 			$order_id = $request['order_id'];
 
@@ -242,6 +248,7 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 
 	/**
 	 * Create a new in-person payment intent for the given order ID without confirming it.
+	 * Use-cases: Mobile apps using it for `card_present` payment types. (`interac_present` is handled by the apps via Stripe SDK).
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -254,11 +261,67 @@ class WC_REST_Payments_Orders_Controller extends WC_Payments_REST_Controller {
 		}
 
 		try {
-			$result = $this->gateway->create_intent( $order, [ Payment_Method::CARD_PRESENT ], 'manual' );
+			$result = $this->gateway->create_intent(
+				$order,
+				$this->get_terminal_intent_payment_method( $request ),
+				$this->get_terminal_intent_capture_method( $request ),
+				$request->get_param( 'metadata' ) ?? [],
+				$request->get_param( 'customer_id' )
+			);
 			return rest_ensure_response( $result );
 		} catch ( \Throwable $e ) {
 			Logger::error( 'Failed to create an intention via REST API: ' . $e );
 			return new WP_Error( 'wcpay_server_error', __( 'Unexpected server error', 'woocommerce-payments' ), [ 'status' => 500 ] );
 		}
+	}
+
+	/**
+	 * Return terminal intent payment method array based on payment methods request.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @param array           $default_value - default value.
+	 *
+	 * @return array|null
+	 * @throws \Exception
+	 */
+	public function get_terminal_intent_payment_method( $request, array $default_value = [ Payment_Method::CARD_PRESENT ] ) :array {
+		$payment_methods = $request->get_param( 'payment_methods' );
+		if ( null === $payment_methods ) {
+			return $default_value;
+		}
+
+		if ( ! is_array( $payment_methods ) ) {
+			throw new \Exception( 'Invalid param \'payment_methods\'!' );
+		}
+
+		foreach ( $payment_methods as $value ) {
+			if ( ! in_array( $value, Payment_Method::IPP_ALLOWED_PAYMENT_METHODS, true ) ) {
+				throw new \Exception( 'One or more payment methods are not supported!' );
+			}
+		}
+
+		return $payment_methods;
+	}
+
+	/**
+	 * Return terminal intent capture method based on capture method request.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @param string          $default_value default value.
+	 *
+	 * @return string|null
+	 * @throws \Exception
+	 */
+	public function get_terminal_intent_capture_method( $request, string $default_value = 'manual' ) : string {
+		$capture_method = $request->get_param( 'capture_method' );
+		if ( null === $capture_method ) {
+			return $default_value;
+		}
+
+		if ( ! in_array( $capture_method, [ 'manual', 'automatic' ], true ) ) {
+			throw new \Exception( 'Invalid param \'capture_method\'!' );
+		}
+
+		return $capture_method;
 	}
 }
