@@ -3,6 +3,7 @@ namespace Automattic\WooCommerce\Blocks\Domain;
 
 use Automattic\WooCommerce\Blocks\Assets\Api as AssetApi;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
+use Automattic\WooCommerce\Blocks\Migration;
 use Automattic\WooCommerce\Blocks\AssetsController;
 use Automattic\WooCommerce\Blocks\BlockTemplatesController;
 use Automattic\WooCommerce\Blocks\BlockTypesController;
@@ -12,6 +13,8 @@ use Automattic\WooCommerce\Blocks\Domain\Services\FeatureGating;
 use Automattic\WooCommerce\Blocks\Domain\Services\GoogleAnalytics;
 use Automattic\WooCommerce\Blocks\InboxNotifications;
 use Automattic\WooCommerce\Blocks\Installer;
+use Automattic\WooCommerce\Blocks\Templates\ProductSearchResultsTemplate;
+use Automattic\WooCommerce\Blocks\Templates\ClassicTemplatesCompatibility;
 use Automattic\WooCommerce\Blocks\Payments\Api as PaymentsApi;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\BankTransfer;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\CashOnDelivery;
@@ -19,6 +22,7 @@ use Automattic\WooCommerce\Blocks\Payments\Integrations\Cheque;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\PayPal;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Automattic\WooCommerce\Blocks\Registry\Container;
+use Automattic\WooCommerce\Blocks\Templates\ProductAttributeTemplate;
 use Automattic\WooCommerce\StoreApi\StoreApi;
 use Automattic\WooCommerce\StoreApi\RoutesController;
 use Automattic\WooCommerce\StoreApi\SchemaController;
@@ -44,6 +48,14 @@ class Bootstrap {
 	 */
 	private $package;
 
+
+	/**
+	 * Holds the Migration instance
+	 *
+	 * @var Migration
+	 */
+	private $migration;
+
 	/**
 	 * Constructor
 	 *
@@ -52,6 +64,8 @@ class Bootstrap {
 	public function __construct( Container $container ) {
 		$this->container = $container;
 		$this->package   = $container->get( Package::class );
+		$this->migration = $container->get( Migration::class );
+
 		if ( $this->has_core_dependencies() ) {
 			$this->init();
 			/**
@@ -70,6 +84,13 @@ class Bootstrap {
 	protected function init() {
 		$this->register_dependencies();
 		$this->register_payment_methods();
+
+		if ( $this->package->is_experimental_build() && is_admin() ) {
+			if ( $this->package->get_version() !== $this->package->get_version_stored_on_db() ) {
+				$this->migration->run_migrations();
+				$this->package->set_version_stored_on_db();
+			}
+		}
 
 		add_action(
 			'admin_init',
@@ -95,6 +116,9 @@ class Bootstrap {
 		$this->container->get( GoogleAnalytics::class );
 		$this->container->get( BlockTypesController::class );
 		$this->container->get( BlockTemplatesController::class );
+		$this->container->get( ProductSearchResultsTemplate::class );
+		$this->container->get( ProductAttributeTemplate::class );
+		$this->container->get( ClassicTemplatesCompatibility::class );
 		if ( $this->package->feature()->is_feature_plugin_build() ) {
 			$this->container->get( PaymentsApi::class );
 		}
@@ -217,8 +241,27 @@ class Bootstrap {
 		);
 		$this->container->register(
 			BlockTemplatesController::class,
+			function ( Container $container ) {
+				return new BlockTemplatesController( $container->get( Package::class ) );
+			}
+		);
+		$this->container->register(
+			ProductSearchResultsTemplate::class,
 			function () {
-				return new BlockTemplatesController();
+				return new ProductSearchResultsTemplate();
+			}
+		);
+		$this->container->register(
+			ProductAttributeTemplate::class,
+			function () {
+				return new ProductAttributeTemplate();
+			}
+		);
+		$this->container->register(
+			ClassicTemplatesCompatibility::class,
+			function ( Container $container ) {
+				$asset_data_registry = $container->get( AssetDataRegistry::class );
+				return new ClassicTemplatesCompatibility( $asset_data_registry );
 			}
 		);
 		$this->container->register(
@@ -264,31 +307,84 @@ class Bootstrap {
 		$this->container->register(
 			'Automattic\WooCommerce\Blocks\StoreApi\Formatters',
 			function( Container $container ) {
-				_deprecated_function( 'Automattic\WooCommerce\Blocks\StoreApi\Formatters', '7.2.0', 'Automattic\WooCommerce\StoreApi\Formatters' );
+				$this->deprecated_dependency( 'Automattic\WooCommerce\Blocks\StoreApi\Formatters', '7.2.0', 'Automattic\WooCommerce\StoreApi\Formatters', '7.4.0' );
 				return $container->get( StoreApi::class )::container()->get( \Automattic\WooCommerce\StoreApi\Formatters::class );
 			}
 		);
 		$this->container->register(
 			'Automattic\WooCommerce\Blocks\Domain\Services\ExtendRestApi',
 			function( Container $container ) {
-				_deprecated_function( 'Automattic\WooCommerce\Blocks\Domain\Services\ExtendRestApi', '7.2.0', 'Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema' );
+				$this->deprecated_dependency( 'Automattic\WooCommerce\Blocks\Domain\Services\ExtendRestApi', '7.2.0', 'Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema', '7.4.0' );
 				return $container->get( StoreApi::class )::container()->get( \Automattic\WooCommerce\StoreApi\Schemas\ExtendSchema::class );
 			}
 		);
 		$this->container->register(
 			'Automattic\WooCommerce\Blocks\StoreApi\SchemaController',
 			function( Container $container ) {
-				_deprecated_function( 'Automattic\WooCommerce\Blocks\StoreApi\SchemaController', '7.2.0', 'Automattic\WooCommerce\StoreApi\SchemaController' );
+				$this->deprecated_dependency( 'Automattic\WooCommerce\Blocks\StoreApi\SchemaController', '7.2.0', 'Automattic\WooCommerce\StoreApi\SchemaController', '7.4.0' );
 				return $container->get( StoreApi::class )::container()->get( SchemaController::class );
 			}
 		);
 		$this->container->register(
 			'Automattic\WooCommerce\Blocks\StoreApi\RoutesController',
 			function( Container $container ) {
-				_deprecated_function( 'Automattic\WooCommerce\Blocks\StoreApi\RoutesController', '7.2.0', 'Automattic\WooCommerce\StoreApi\RoutesController' );
+				$this->deprecated_dependency( 'Automattic\WooCommerce\Blocks\StoreApi\RoutesController', '7.2.0', 'Automattic\WooCommerce\StoreApi\RoutesController', '7.4.0' );
 				return $container->get( StoreApi::class )::container()->get( RoutesController::class );
 			}
 		);
+	}
+
+	/**
+	 * Throws a deprecation notice for a dependency without breaking requests.
+	 *
+	 * @param string $function Class or function being deprecated.
+	 * @param string $version Version in which it was deprecated.
+	 * @param string $replacement Replacement class or function, if applicable.
+	 * @param string $trigger_error_version Optional version to start surfacing this as a PHP error rather than a log. Defaults to $version.
+	 */
+	protected function deprecated_dependency( $function, $version, $replacement = '', $trigger_error_version = '' ) {
+		if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
+			return;
+		}
+
+		$trigger_error_version = $trigger_error_version ? $trigger_error_version : $version;
+		$error_message         = $replacement ? sprintf(
+			'%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.',
+			$function,
+			$version,
+			$replacement
+		) : sprintf(
+			'%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.',
+			$function,
+			$version
+		);
+
+		do_action( 'deprecated_function_run', $function, $replacement, $version );
+
+		$log_error = false;
+
+		// If headers have not been sent yet, log to avoid breaking the request.
+		if ( ! headers_sent() ) {
+			$log_error = true;
+		}
+
+		// If the $trigger_error_version was not yet reached, only log the error.
+		if ( version_compare( $this->package->get_version(), $trigger_error_version, '<' ) ) {
+			$log_error = true;
+		}
+
+		// Apply same filter as WP core.
+		if ( ! apply_filters( 'deprecated_function_trigger_error', true ) ) {
+			$log_error = true;
+		}
+
+		if ( $log_error ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( $error_message );
+		} else {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+			trigger_error( $error_message, E_USER_DEPRECATED );
+		}
 	}
 
 	/**

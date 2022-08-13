@@ -1,8 +1,9 @@
 <?php
 namespace Automattic\WooCommerce\Blocks\Domain;
 
-use Automattic\WooCommerce\Blocks\Package as NewPackage;
+use Automattic\WooCommerce\Blocks\Options;
 use Automattic\WooCommerce\Blocks\Domain\Services\FeatureGating;
+
 
 /**
  * Main package class.
@@ -52,9 +53,6 @@ class Package {
 		$this->version        = $version;
 		$this->path           = $plugin_path;
 		$this->feature_gating = $feature_gating;
-
-		// Append index.php so WP does not return the parent directory.
-		$this->plugin_dir_url = plugin_dir_url( $this->path . '/index.php' );
 	}
 
 	/**
@@ -64,6 +62,24 @@ class Package {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	/**
+	 * Returns the version of the plugin stored in the database.
+	 *
+	 * @return string
+	 */
+	public function get_version_stored_on_db() {
+		return get_option( Options::WC_BLOCK_VERSION, '' );
+	}
+
+	/**
+	 * Set the version of the plugin stored in the database.
+	 * This is useful during the first installation or after the upgrade process.
+	 */
+	public function set_version_stored_on_db() {
+		update_option( Options::WC_BLOCK_VERSION, $this->get_version() );
+
 	}
 
 	/**
@@ -87,6 +103,11 @@ class Package {
 	 * @return string
 	 */
 	public function get_url( $relative_url = '' ) {
+		if ( ! $this->plugin_dir_url ) {
+			// Append index.php so WP does not return the parent directory.
+			$this->plugin_dir_url = plugin_dir_url( $this->path . '/index.php' );
+		}
+
 		return $this->plugin_dir_url . $relative_url;
 	}
 

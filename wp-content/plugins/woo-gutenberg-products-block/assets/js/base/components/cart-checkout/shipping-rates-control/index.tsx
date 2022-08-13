@@ -33,15 +33,15 @@ interface PackagesProps {
 /**
  * Renders multiple packages within the slotfill.
  *
- * @param {Object} props Incoming props.
- * @param {Array} props.packages Array of packages.
- * @param {boolean} props.collapsible If the package should be rendered as a
- * @param {ReactElement} props.noResultsMessage Rendered when there are no rates in a package.
- * collapsible panel.
- * @param {boolean} props.collapse If the panel should be collapsed by default,
- * only works if collapsible is true.
- * @param {boolean} props.showItems If we should items below the package name.
- * @param {PackageRateRenderOption} [props.renderOption] Function to render a shipping rate.
+ * @param {Object}                  props                  Incoming props.
+ * @param {Array}                   props.packages         Array of packages.
+ * @param {boolean}                 props.collapsible      If the package should be rendered as a
+ * @param {ReactElement}            props.noResultsMessage Rendered when there are no rates in a package.
+ *                                                         collapsible panel.
+ * @param {boolean}                 props.collapse         If the panel should be collapsed by default,
+ *                                                         only works if collapsible is true.
+ * @param {boolean}                 props.showItems        If we should items below the package name.
+ * @param {PackageRateRenderOption} [props.renderOption]   Function to render a shipping rate.
  * @return {JSX.Element|null} Rendered components.
  */
 const Packages = ( {
@@ -63,9 +63,11 @@ const Packages = ( {
 					key={ packageId }
 					packageId={ packageId }
 					packageData={ packageData }
-					collapsible={ collapsible }
-					collapse={ collapse }
-					showItems={ showItems }
+					collapsible={ !! collapsible }
+					collapse={ !! collapse }
+					showItems={
+						showItems || packageData?.shipping_rates?.length > 1
+					}
 					noResultsMessage={ noResultsMessage }
 					renderOption={ renderOption }
 				/>
@@ -86,14 +88,14 @@ interface ShippingRatesControlProps {
 /**
  * Renders the shipping rates control element.
  *
- * @param {Object} props Incoming props.
- * @param {Array} props.shippingRates Array of packages containing shipping rates.
- * @param {boolean} props.isLoadingRates True when rates are being loaded.
- * @param {string} props.className Class name for package rates.
- * @param {boolean} [props.collapsible] If true, when multiple packages are rendered they can be toggled open and closed.
+ * @param {Object}       props                  Incoming props.
+ * @param {Array}        props.shippingRates    Array of packages containing shipping rates.
+ * @param {boolean}      props.isLoadingRates   True when rates are being loaded.
+ * @param {string}       props.className        Class name for package rates.
+ * @param {boolean}      [props.collapsible]    If true, when multiple packages are rendered they can be toggled open and closed.
  * @param {ReactElement} props.noResultsMessage Rendered when there are no packages.
- * @param {Function} [props.renderOption] Function to render a shipping rate.
- * @param {string} [props.context] String equal to the block name where the Slot is rendered
+ * @param {Function}     [props.renderOption]   Function to render a shipping rate.
+ * @param {string}       [props.context]        String equal to the block name where the Slot is rendered
  */
 const ShippingRatesControl = ( {
 	shippingRates,
@@ -165,6 +167,7 @@ const ShippingRatesControl = ( {
 			ShippingRatesControlPackage,
 		},
 		context,
+		shippingRates,
 	};
 	const { isEditor } = useEditorContext();
 
@@ -190,6 +193,7 @@ const ShippingRatesControl = ( {
 					/>
 					<ExperimentalOrderShippingPackages>
 						<Packages
+							showItems={ shippingRates.length > 1 }
 							packages={ shippingRates }
 							noResultsMessage={ noResultsMessage }
 							renderOption={ renderOption }
