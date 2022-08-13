@@ -2,11 +2,11 @@
 Contributors: girts_u, kievins, kberzins
 Tags: woocommerce, printful, drop shipping, shipping, shipping rates, fulfillment, printing, fedex, carriers, checkout, t-shirts
 Requires at least: 5.3
-Tested up to: 5.8
+Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 2.1.30
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Stable tag: 2.1.34
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
 Grow your store with the top print-on-demand dropshipping plugin
 
@@ -39,8 +39,6 @@ Learn more about the WooCommerce + Printful integration [here](https://www.print
 - Discounted samples: Order samples of your products with 20% off + free shipping to select destinations to ensure your customers are getting quality products.
 - 24/7 support: Get in touch with us using chat or email
 
-Still not convinced? Check out our [demo store](https://woocommerce-demo.printful.com/) to see what's possible!
-
 == Installation ==
 1. Upload 'printful-shipping-for-woocommerce' to the '/wp-content/plugins/' directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
@@ -64,6 +62,19 @@ Go to https://www.printful.com/dashboard/store , select your WooCommerce store, 
 5. Support page
 
 == Upgrade Notice ==
+
+= 2.1.34 =
+Woocommerce compatibility raised to 6.7
+
+= 2.1.33 =
+Plugin version fix
+
+= 2.1.32 =
+Woocommerce compatibility raised to 6.5.1
+WordPress compatibility raised to 6.0
+
+= 2.1.31 =
+Licence updated to GPLv3. WordPress compatibility raised to 5.9 and Woocommerce compatibility raised to 6.4
 
 = 2.1.30 =
 Additional billing setting check
@@ -231,6 +242,21 @@ Minor improvements
 First release
 
 == Changelog ==
+
+= 2.1.34 =
+* Woocommerce compatibility raised to 6.7
+
+= 2.1.33 =
+* Plugin version fix
+
+= 2.1.32 =
+* Woocommerce compatibility raised to 6.5.1
+* WordPress compatibility raised to 6.0
+
+= 2.1.31 =
+* Licence updated to GPLv3
+* WordPress compatibility raised to 5.9
+* Woocommerce compatibility raised to 6.4
 
 = 2.1.30 =
 Additional billing setting check
