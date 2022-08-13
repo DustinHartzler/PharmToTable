@@ -483,6 +483,7 @@ class SBI_New_User extends SBI_Notifications {
 
 			} elseif ( 'later' === $rating_ignore ) {
 				set_transient( 'instagram_feed_rating_notice_waiting', 'waiting', 2 * WEEK_IN_SECONDS );
+				delete_option( 'sbi_review_consent' );
 				update_option( 'sbi_rating_notice', 'pending', false );
 			}
 		}

@@ -3,7 +3,7 @@
 Plugin Name: Smash Balloon Instagram Feed
 Plugin URI: https://smashballoon.com/instagram-feed
 Description: Display beautifully clean, customizable, and responsive Instagram feeds.
-Version: 6.0.4
+Version: 6.0.6
 Author: Smash Balloon
 Author URI: https://smashballoon.com/
 License: GPLv2 or later
@@ -22,6 +22,9 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+use InstagramFeed\Helpers\SB_Instagram_Tracking;
+
 if ( ! defined( 'SBI_STORE_URL' ) ) {
 	define( 'SBI_STORE_URL', 'https://smashballoon.com/' );
 }
@@ -29,7 +32,7 @@ if ( ! defined( 'SBI_PLUGIN_NAME' ) ) {
 	define( 'SBI_PLUGIN_NAME', 'Instagram Feed Free' );
 }
 if ( ! defined( 'SBIVER' ) ) {
-	define( 'SBIVER', '6.0.4' );
+	define( 'SBIVER', '6.0.6' );
 }
 // Db version.
 if ( ! defined( 'SBI_DBVERSION' ) ) {
@@ -109,7 +112,7 @@ if ( function_exists( 'sb_instagram_feed_init' ) ) {
 		    define( 'SBI_BUILDER_URL', SBI_PLUGIN_URL . 'admin/builder/' );
 		}
 
-
+		require SBI_PLUGIN_DIR . 'vendor/autoload.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/if-functions.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-api-connect.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-cache.php';
@@ -132,9 +135,13 @@ if ( function_exists( 'sb_instagram_feed_init' ) ) {
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-single.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/class-sb-instagram-token-refresher.php';
 		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/admin/blocks/class-sbi-blocks.php';
-		require_once trailingslashit( SBI_PLUGIN_DIR ) . 'inc/admin/class-sbi-tracking.php';
 
 		$sbi_blocks = new SB_Instagram_Blocks();
+		new SB_Instagram_Tracking();
+
+		//Boot all services
+		$service_container = new \InstagramFeed\Services\ServiceContainer();
+		$service_container->register();
 
 		if ( $sbi_blocks->allow_load() ) {
 			$sbi_blocks->load();

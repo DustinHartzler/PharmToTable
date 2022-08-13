@@ -101,7 +101,6 @@ add_filter( "plugin_action_links_instagram-feed/instagram-feed.php", 'sbi_add_se
 
 function sb_instagram_admin_style() {
 	wp_register_style( 'sb_instagram_admin_css', SBI_PLUGIN_URL . 'css/sb-instagram-admin.css', array(), SBIVER );
-	wp_enqueue_style( 'sb_instagram_font_awesome', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' );
 	wp_enqueue_style( 'sb_instagram_admin_css' );
 	wp_enqueue_style( 'wp-color-picker' );
 }
@@ -237,6 +236,49 @@ function sbi_admin_error_notices() {
 					<?php endif; ?>
 				</div>
 			</div>
+
+		<?php endif;
+
+		if ( ! empty( $errors ) && ( ! empty( $errors['unused_feed'] ) ) ) : ?>
+            <div class="sbi-admin-notices sbi-critical-error-notice">
+				<span class="sb-notice-icon sb-error-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V13H11V15ZM11 11H9V5H11V11Z"
+                              fill="#D72C2C"/>
+                    </svg>
+				</span>
+                <div class="sbi-notice-body">
+                    <h3 class="sb-notice-title">
+						<?php echo esc_html__( 'Action Required Within 7 Days:', 'instagram-feed' ); ?>
+                    </h3>
+                    <p><?php echo wp_kses_post( $errors['unused_feed'] ); ?></p>
+                    <p><?php echo esc_html__( 'Or you can simply press the "Fix Usage" button to fix this issue.', 'instagram-feed' ); ?></p>
+                    <br>
+                    <p class="sbi-error-directions">
+                        <button class="sbi-reset-unused-feed-usage sbi-space-left sbi-btn sbi-notice-btn sbi-btn-blue"><?php esc_html_e( 'Fix Usage', 'instagram-feed' ); ?></button>
+                    </p>
+                </div>
+            </div>
+
+		<?php endif;
+
+		if ( ! empty( $errors ) && ( ! empty( $errors['platform_data_deleted'] ) ) ) : ?>
+            <div class="sbi-admin-notices sbi-critical-error-notice">
+				<span class="sb-notice-icon sb-error-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V13H11V15ZM11 11H9V5H11V11Z"
+                              fill="#D72C2C"/>
+                    </svg>
+				</span>
+                <div class="sbi-notice-body">
+                    <h3 class="sb-notice-title">
+						<?php echo esc_html__( 'All Instagram Data has Been Removed:', 'instagram-feed' ); ?>
+                    </h3>
+                    <p><?php echo wp_kses_post( $errors['platform_data_deleted'] ); ?></p>
+                    <p><?php echo esc_html__( 'To fix your feeds, reconnect all accounts that were in use on the Settings page.', 'instagram-feed' ); ?></p>
+                    <br>
+                </div>
+            </div>
 
 		<?php endif;
 		$errors = $sb_instagram_posts_manager->get_critical_errors();

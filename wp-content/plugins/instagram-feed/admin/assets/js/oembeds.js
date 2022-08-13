@@ -18,6 +18,7 @@ var sbioembeds_data = {
     openFacebookInstaller: false,
     loaderSVG: sbi_oembeds.loaderSVG,
     checkmarkSVG: sbi_oembeds.checkmarkSVG,
+    timesCircleSVG: sbi_oembeds.timesCircleSVG,
     installerStatus: null
 }
 
@@ -153,7 +154,7 @@ var sbioEmbeds = new Vue({
             } else if( this.installerStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if( this.installerStatus == 'error' ) {
-                return `<i class="fa fa-times-circle"></i>`;
+                return this.timesCircleSVG;
             }
         },
 

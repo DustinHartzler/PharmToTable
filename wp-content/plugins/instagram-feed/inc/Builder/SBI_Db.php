@@ -33,11 +33,11 @@ class SBI_Db {
 			unset( $args['page'] );
 		}
 
-		$offset = max( 0, $page * self::RESULTS_PER_PAGE );
+		$offset = max( 0, $page * 400 );
 
 		if ( empty( $args ) ) {
 
-			$limit = (int) self::RESULTS_PER_PAGE;
+			$limit = 400;
 			$sql   = "SELECT s.id, s.account_id, s.account_type, s.privilege, s.access_token, s.username, s.info, s.error, s.expires, count(f.id) as used_in
 				FROM $sources_table_name s
 				LEFT JOIN $feeds_table_name f ON f.settings LIKE CONCAT('%', s.account_id, '%')
@@ -548,6 +548,25 @@ class SBI_Db {
 
 		echo sbi_json_encode( SBI_Feed_Builder::get_feed_list() );
 		wp_die();
+	}
+
+	/**
+	 * Query to Remove Source from Database
+	 *
+	 * @param array $source_id
+	 *
+	 * @since 6.0.6
+	 */
+	public static function delete_source( $source_id ) {
+		global $wpdb;
+		$sources_table_name = $wpdb->prefix . 'sbi_sources';
+		return $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM $sources_table_name WHERE id = %d; ",
+				$source_id
+			)
+		);
+
 	}
 
 	/**

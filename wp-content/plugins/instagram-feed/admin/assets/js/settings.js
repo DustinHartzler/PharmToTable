@@ -48,6 +48,7 @@ var settings_data = {
     import_file: null,
     gdprInfoTooltip: null,
     loaderSVG: sbi_settings.loaderSVG,
+    timesCircleSVG: sbi_settings.timesCircleSVG,
     checkmarkSVG: sbi_settings.checkmarkSVG,
     uploadSVG: sbi_settings.uploadSVG,
     exportSVG: sbi_settings.exportSVG,
@@ -505,9 +506,9 @@ var sbiSettings = new Vue({
             } else if ( this.recheckLicenseStatus == 'loading' ) {
                 return this.loaderSVG;
             } else if ( this.recheckLicenseStatus == 'success' ) {
-                return '<i class="fa fa-check-circle"></i> ' + this.generalTab.licenseBox.licenseValid;
+                return this.timesCircleSVG + ' ' + this.generalTab.licenseBox.licenseValid;
             } else if ( this.recheckLicenseStatus == 'error' ) {
-                return '<i class="fa fa-times-circle"></i> ' + this.generalTab.licenseBox.licenseExpired;
+                return this.timesCircleSVG + ' ' + this.generalTab.licenseBox.licenseExpired;
             }
         },
         recheckBtnText: function( btnName ) {
@@ -516,18 +517,18 @@ var sbiSettings = new Vue({
             } else if ( this.recheckLicenseStatus == 'loading' && this.pressedBtnName == btnName  ) {
                 return this.loaderSVG;
             } else if ( this.recheckLicenseStatus == 'success' ) {
-                return '<i class="fa fa-check-circle"></i> ' + this.generalTab.licenseBox.licenseValid;
+                return this.timesCircleSVG + ' ' + this.generalTab.licenseBox.licenseValid;
             } else if ( this.recheckLicenseStatus == 'error' ) {
-                return '<i class="fa fa-times-circle"></i> ' + this.generalTab.licenseBox.licenseExpired;
+                return this.timesCircleSVG + ' ' + this.generalTab.licenseBox.licenseExpired;
             }
         },
         testConnectionIcon: function() {
             if ( this.testConnectionStatus == 'loading' ) {
                 return this.loaderSVG;
             } else if ( this.testConnectionStatus == 'success' ) {
-                return '<i class="fa fa-check-circle"></i> ' + this.generalTab.licenseBox.connectionSuccessful;
+                return this.timesCircleSVG + ' ' + this.generalTab.licenseBox.connectionSuccessful;
             } else if ( this.testConnectionStatus == 'error' ) {
-                return `<i class="fa fa-times-circle"></i> ${this.generalTab.licenseBox.connectionFailed} ${this.testConnectionStatusMessage}</a>`;
+                return this.timesCircleSVG + ' ' + ` ${this.generalTab.licenseBox.connectionFailed} ${this.testConnectionStatusMessage}`;
             }
         },
         importFile: function() {
@@ -719,7 +720,7 @@ var sbiSettings = new Vue({
         } else if ( this.clearErrorLogStatus == 'success' ) {
           return this.checkmarkSVG;
         } else if ( this.clearErrorLogStatus == 'error' ) {
-          return `<i class="fa fa-times-circle"></i>`;
+          return this.timesCircleSVG;
         }
       },
         saveChangesIcon: function() {
@@ -728,7 +729,7 @@ var sbiSettings = new Vue({
             } else if ( this.btnStatus === 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.btnStatus === 'error' ) {
-                return `<i class="fa fa-times-circle"></i>`;
+                return this.timesCircleSVG;
             }
         },
         importBtnIcon: function() {
@@ -740,7 +741,7 @@ var sbiSettings = new Vue({
             } else if ( this.uploadStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.uploadStatus == 'error' ) {
-                return `<i class="fa fa-times-circle"></i>`;
+                return this.timesCircleSVG;
             }
         },
         clearCacheIcon: function() {
@@ -752,7 +753,7 @@ var sbiSettings = new Vue({
             } else if ( this.clearCacheStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.clearCacheStatus == 'error' ) {
-                return `<i class="fa fa-times-circle"></i>`;
+                return this.timesCircleSVG;
             }
         },
         clearImageResizeCacheIcon: function() {
@@ -764,7 +765,7 @@ var sbiSettings = new Vue({
             } else if ( this.optimizeCacheStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.optimizeCacheStatus == 'error' ) {
-                return `<i class="fa fa-times-circle"></i>`;
+                return this.timesCircleSVG;
             }
         },
         dpaResetStatusIcon: function() {
@@ -776,7 +777,7 @@ var sbiSettings = new Vue({
             } else if ( this.dpaResetStatus == 'success' ) {
                 return this.checkmarkSVG;
             } else if ( this.dpaResetStatus == 'error' ) {
-                return `<i class="fa fa-times-circle"></i>`;
+                return this.timesCircleSVG;
             }
         },
 

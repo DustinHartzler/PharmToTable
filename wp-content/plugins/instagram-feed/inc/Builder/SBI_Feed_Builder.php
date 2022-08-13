@@ -13,7 +13,6 @@ class SBI_Feed_Builder {
 	private static $instance;
 	public static function instance() {
 		if ( null === self::$instance) {
-			require SBI_PLUGIN_DIR . 'vendor/autoload.php';
 			self::$instance = new self();
 			return self::$instance;
 
@@ -243,6 +242,8 @@ class SBI_Feed_Builder {
 			        'svgIcons' => $this->builder_svg_icons(),
 					'installPluginsPopup' => $this->install_plugins_popup(),
 			        'feeds' => SBI_Feed_Builder::get_feed_list(),
+			        'itemsPerPage'			=> SBI_Db::RESULTS_PER_PAGE,
+			        'feedsCount' 			=> SBI_Db::feeds_count(),
 			        'sources' => self::get_source_list(),
 					'sourceConnectionURLs' => SBI_Source::get_connection_urls(),
 

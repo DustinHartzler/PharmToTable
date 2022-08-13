@@ -331,6 +331,10 @@ sbiBuilder = new Vue({
 			self.updatedTimeStamp = new Date().getTime();
 		}
 
+		if(self.customizerFeedData == undefined){
+			self.feedPagination.pagesNumber = self.feedPagination.feedsCount != null ? Math.ceil(self.feedPagination.feedsCount / self.feedPagination.itemsPerPage) : 1
+		}
+
 		window.addEventListener('beforeunload', (event) => {
 			if( self.customizerFeedData ){
 		        self.leaveWindowHandler(event);

@@ -5,5 +5,13 @@
             "InstagramFeed\\": "inc/"
         }
     },
-    "require": {}
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:awesomemotive/sb-stubs.git"
+        }
+    ],
+    "require": {
+        "smashballoon/stubs": "dev-master"
+    }
 }

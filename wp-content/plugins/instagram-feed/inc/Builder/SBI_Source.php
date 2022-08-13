@@ -350,7 +350,7 @@ class SBI_Source {
 		);
 		$results                               = SBI_Db::source_query( $args );
 		$already_connected_as_business_account = ( isset( $results[0] ) && $results[0]['account_type'] === 'business' );
-		$matches_existing_personal             = ( isset( $results[0] ) && $results[0]['account_type'] === 'personal' );
+		$matches_existing_personal             = ( isset( $results[0] ) && $results[0]['account_type'] !== 'business' );
 
 		if ( $already_connected_as_business_account ) {
 			$return['matchingExistingAccounts']           = $results[0];
@@ -360,6 +360,7 @@ class SBI_Source {
 			$return['notice'] = __( 'The Instagram account you are logged into is already connected as a "business" account. Remove the business account if you\'d like to connect as a basic account instead (not recommended).', 'instagram-feed' );
 		} elseif ( $matches_existing_personal ) {
 			$return['matchingExistingAccounts'] = $results[0];
+			SBI_Db::delete_source( $results[0]['id'] );
 			self::update_or_insert( $source_data );
 			$return['notice']         = '';
 			$return['didQuickUpdate'] = true;
@@ -476,12 +477,14 @@ class SBI_Source {
 					);
 					$results                               = SBI_Db::source_query( $args );
 					$already_connected_as_business_account = ( isset( $results[0] ) && $results[0]['account_type'] === 'business' );
-					$matches_existing_personal             = ( isset( $results[0] ) && $results[0]['account_type'] === 'personal' );
+					$matches_existing_personal             = ( isset( $results[0] ) && $results[0]['account_type'] !== 'business' );
 
 					if ( $already_connected_as_business_account ) {
+						SBI_Db::delete_source( $results[0]['id'] );
 						self::update_or_insert( $source_data );
 					} elseif ( $matches_existing_personal && $return['numFound'] === 1 ) {
 						$return['didQuickUpdate'] = true;
+						SBI_Db::delete_source( $results[0]['id'] );
 						self::update_or_insert( $source_data );
 					}
 				} else {

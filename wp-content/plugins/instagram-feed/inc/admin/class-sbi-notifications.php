@@ -172,6 +172,11 @@ class SBI_Notifications {
 		$option = $this->get_option();
 
 		foreach ( $notifications as $notification ) {
+			// Ignore if not a targeted plugin
+			if ( ! empty( $notification['plugin'] ) && is_array( $notification['plugin'] ) && ! in_array( self::PLUGIN, $notification['plugin'], true ) ) {
+				continue;
+			}
+
 			// Ignore if max wp version detected
 			if ( ! empty( $notification['maxwpver'] ) && version_compare( get_bloginfo( 'version' ), $notification['maxwpver'], '>' ) ) {
 				continue;
@@ -255,6 +260,10 @@ class SBI_Notifications {
 				unset( $notifications[ $key ] );
 			}
 
+			if ( empty( $notification['recent_install_override'] ) && $this->recently_installed() ) {
+				unset( $notifications[ $key ] );
+			}
+
 			// Ignore if max version has been reached
 			if ( ! empty( $notification['maxver'] ) && version_compare( $notification['maxver'],  SBIVER ) < 0 ) {
 				unset( $notifications[ $key ] );
@@ -282,6 +291,26 @@ class SBI_Notifications {
 		}
 
 		return $notifications;
+	}
+
+	/**
+	 * @return bool
+	 *
+	 * @since 1.4.5/1.4.2
+	 */
+	public function recently_installed() {
+		$sbi_statuses_option = get_option( 'sbi_statuses', array() );
+
+		if ( ! isset( $sbi_statuses_option['first_install'] ) ) {
+			return false;
+		}
+
+		// Plugin was installed less than a week ago
+		if ( (int) $sbi_statuses_option['first_install'] > time() - WEEK_IN_SECONDS ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -461,7 +490,7 @@ class SBI_Notifications {
 	public function output() {
 		$current_screen = get_current_screen();
 		// if we are one single feed page then return
-		if ( $current_screen->base == "instagram-feed_page_sbi-feed-builder" && isset( $_GET['feed_id'] ) ) {
+		if ( isset( $_GET['feed_id'] ) ) {
 			return;
 		}
 

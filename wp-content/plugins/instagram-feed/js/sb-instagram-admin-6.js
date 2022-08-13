@@ -94,6 +94,27 @@ jQuery(document).ready(function($) {
     }); // ajax call
   });
 
+  $('.sbi-reset-unused-feed-usage').on('click', function (event) {
+    event.preventDefault();
+    const $btn = $(this);
+    $btn.prop('disabled', true).addClass('loading').html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
+    $.ajax({
+      url: sbiA.ajax_url,
+      type: 'post',
+      data: {
+        action: 'sbi_reset_unused_feed_usage',
+        sbi_nonce: sbiA.sbi_nonce,
+      },
+      success: function (data) {
+        if (typeof data.data.message !== 'undefined') {
+          $btn.closest('p').after(data.data.message);
+          $btn.remove();
+        }
+      },
+      error: function (data) {}
+    });
+  });
+
   $('.sbi-clear-errors-visit-page').on('click', function(event) {
     event.preventDefault();
     var $btn = $(this);

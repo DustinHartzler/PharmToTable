@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Smashballoon\\Stubs\\' => array($vendorDir . '/smashballoon/stubs/src'),
     'InstagramFeed\\' => array($baseDir . '/inc'),
 );

@@ -51,7 +51,7 @@ class SBI_Admin_Notices
 
         $output = '';
 
-        $upgrade_url = 'https://smashballoon.com/instagram-feed/?utm_campaign=instagram-free&utm_source=lite-upgrade-bar';
+        $upgrade_url = 'https://smashballoon.com/instagram-feed/demo/?utm_campaign=instagram-free&utm_source=lite-upgrade-bar';
         $output .= '<div id="sbi-notice-bar" class="sbi-header-notice">';
         $output .= sprintf(
             '<span class="sbi-notice-bar-message">%s <a href="%s" target="_blank" rel="noopener noreferrer">%s</a></span>',
@@ -109,7 +109,7 @@ class SBI_Admin_Notices
             'instagram-feed_page_sbi-support',
         );
 
-        if ( in_array( $current_screen->base, $not_allowed_screens ) ) {
+        if ( in_array( $current_screen->base, $not_allowed_screens ) || strpos( $current_screen->base, 'sbi-' ) !== false ) {
             remove_all_actions('admin_notices');
             remove_all_actions('all_admin_notices');
         }

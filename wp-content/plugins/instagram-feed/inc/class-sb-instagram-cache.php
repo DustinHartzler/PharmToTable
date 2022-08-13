@@ -646,4 +646,29 @@ class SB_Instagram_Cache {
 		return $affected;
 	}
 
+	/**
+	 * Get active/all cache count.
+	 *
+	 * @param bool $active when set to true only items updated in the last months are returned.
+	 *
+	 * @return int
+	 */
+	public function get_cache_count($active = false) {
+		global $wpdb;
+		$cache_table_name = $wpdb->prefix . 'sbi_feed_caches';
+		$query = "SELECT COUNT(DISTINCT feed_id, cache_key) as cache_count FROM $cache_table_name WHERE feed_id Not Like '%_CUSTOMIZER%'";
+
+		if($active === true) {
+			$query .= " AND feed_id Not Like '%_MODMODE%' AND last_updated >= DATE_SUB(NOW(), INTERVAL 1 MONTH)";
+		}
+
+		$sql = $wpdb->prepare($query);
+		$caches = $wpdb->get_results( $sql );
+
+		if(!empty($caches)) {
+			return $caches[0]->cache_count;
+		}
+
+		return 0;
+	}
 }

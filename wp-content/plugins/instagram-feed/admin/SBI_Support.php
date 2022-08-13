@@ -184,9 +184,9 @@ class SBI_Support {
 				'collapse'     => __( 'Collapse', 'instagram-feed' ),
 			),
 			'icons'               => array(
-				'rocket'       => SBI_PLUGIN_URL . 'admin/assets/img/rocket-icon.png',
-				'book'         => SBI_PLUGIN_URL . 'admin/assets/img/book-icon.png',
-				'save'         => SBI_PLUGIN_URL . 'admin/assets/img/save-plus-icon.png',
+				'rocket'       => SBI_PLUGIN_URL . 'admin/assets/img/rocket-icon.svg',
+				'book'         => SBI_PLUGIN_URL . 'admin/assets/img/book-icon.svg',
+				'save'         => SBI_PLUGIN_URL . 'admin/assets/img/save-plus-icon.svg',
 				'magnify'      => '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.91667 0.5C7.35326 0.5 8.73101 1.07068 9.74683 2.08651C10.7627 3.10233 11.3333 4.48008 11.3333 5.91667C11.3333 7.25833 10.8417 8.49167 10.0333 9.44167L10.2583 9.66667H10.9167L15.0833 13.8333L13.8333 15.0833L9.66667 10.9167V10.2583L9.44167 10.0333C8.45879 10.8723 7.20892 11.3333 5.91667 11.3333C4.48008 11.3333 3.10233 10.7627 2.08651 9.74683C1.07068 8.73101 0.5 7.35326 0.5 5.91667C0.5 4.48008 1.07068 3.10233 2.08651 2.08651C3.10233 1.07068 4.48008 0.5 5.91667 0.5ZM5.91667 2.16667C3.83333 2.16667 2.16667 3.83333 2.16667 5.91667C2.16667 8 3.83333 9.66667 5.91667 9.66667C8 9.66667 9.66667 8 9.66667 5.91667C9.66667 3.83333 8 2.16667 5.91667 2.16667Z" fill="#141B38"/></svg>',
 				'rightAngle'   => '<svg width="7" height="11" viewBox="0 0 5 8" fill="#000" xmlns="http://www.w3.org/2000/svg"><path d="M1.00006 0L0.0600586 0.94L3.11339 4L0.0600586 7.06L1.00006 8L5.00006 4L1.00006 0Z" fill="#000"/></svg>',
 				'linkIcon'     => '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.166626 10.6583L8.99163 1.83329H3.49996V0.166626H11.8333V8.49996H10.1666V3.00829L1.34163 11.8333L0.166626 10.6583Z" fill="#141B38"/></svg>',

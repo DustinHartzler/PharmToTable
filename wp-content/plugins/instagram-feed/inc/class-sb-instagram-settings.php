@@ -370,7 +370,8 @@ class SB_Instagram_Settings {
 		$allowed_legacy_shortcode = array(
 			'feed',
 			'headersource',
-			'customizer'
+			'customizer',
+			'class'
 		);
 
 		if ( ! empty( $sbi_statuses['support_legacy_shortcode'] )

@@ -493,7 +493,9 @@ Header
     align-items: center;
     height: 52px;
 }
-
+body.jetpack-masterbar .sbi-csz-header-insider {
+  width: calc(100% - 272px);
+}
 @media all and (max-width: 960px) {
     .sbi-csz-header-insider{
         width: calc(100% - 36px);
@@ -501,6 +503,12 @@ Header
     .sb-customizer-ctn .sb-customizer-sidebar{
         left: 36px;
     }
+  body.jetpack-masterbar .sb-customizer-sidebar {
+    left: 36px;
+  }
+  body.jetpack-masterbar .sbi-csz-header-insider {
+    width: calc(100% - 36px);
+  }
 }
 
 .sbi-fb-hd-btn{
@@ -2785,6 +2793,9 @@ Feed Instance Popup
     overflow: auto;
     bottom: 0px;
     padding-bottom: 50px;
+}
+.jetpack-masterbar .sb-customizer-sidebar {
+  left: 272px;
 }
 body.folded .sb-customizer-sidebar{
     left: 36px;
