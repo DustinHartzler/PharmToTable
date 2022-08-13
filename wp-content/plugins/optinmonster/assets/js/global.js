@@ -53,6 +53,8 @@ window.OMAPI_Global = window.OMAPI_Global || {};
 				.attr('target', '_blank')
 				.attr('rel', 'noopener')
 				.attr('href', app.upgradeUrl);
+
+			app.$.menu.find('.om-menu-highlight').closest('li').addClass('om-submenu-highlight');
 		}
 
 		// If the app is not running, and we should fetch updated notifications...

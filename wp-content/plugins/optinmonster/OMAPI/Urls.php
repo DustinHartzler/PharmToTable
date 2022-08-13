@@ -197,7 +197,7 @@ class OMAPI_Urls {
 	 */
 	public static function upgrade( $utm_medium, $feature = 'none', $return_url = '' ) {
 		$path = sprintf(
-			'account/upgrade/?utm_source=WordPress&%1$s=pluginMenu&utm_campaign=Plugin&feature=%2$s',
+			'account/upgrade/?utm_source=WordPress&utm_medium=%1$s&utm_campaign=Plugin&feature=%2$s',
 			$utm_medium,
 			$feature
 		);

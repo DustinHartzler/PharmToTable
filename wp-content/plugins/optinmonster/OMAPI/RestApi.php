@@ -18,53 +18,34 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.8.0
  */
-class OMAPI_RestApi {
-
-	/**
-	 * The Base OMAPI Object
-	 *
-	 *  @since 1.8.0
-	 *
-	 * @var OMAPI
-	 */
-	protected $base;
-
-	/**
-	 * The REST API Namespace
-	 *
-	 *  @since 1.8.0
-	 *
-	 * @var string The namespace
-	 */
-	protected $namespace = 'omapp/v1';
-
-	/**
-	 * Whether request was given a valid api key.
-	 *
-	 *  @since 2.0.0
-	 *
-	 * @var null|bool
-	 */
-	protected $has_valid_api_key = null;
+class OMAPI_RestApi extends OMAPI_BaseRestApi {
 
 	/**
 	 * Whether Access-Control-Allow-Headers header was set/updated by us.
 	 *
-	 *  @since 1.9.12
+	 * @since 1.9.12
 	 *
 	 * @var bool
 	 */
 	protected $allow_header_set = false;
 
 	/**
-	 * Build our object.
+	 * The OMAPI_WooCommerce_RestApi instance.
 	 *
-	 * @since 1.8.0
+	 * @since 2.8.0
+	 *
+	 * @var null|OMAPI_WooCommerce_RestApi
 	 */
-	public function __construct() {
-		$this->base = OMAPI::get_instance();
-		$this->register_rest_routes();
-	}
+	public $woocommerce = null;
+
+	/**
+	 * The OMAPI_EasyDigitalDownloads_RestApi instance.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @var null|OMAPI_EasyDigitalDownloads_RestApi
+	 */
+	public $edd = null;
 
 	/**
 	 * Registers our Rest Routes for this App
@@ -241,46 +222,6 @@ class OMAPI_RestApi {
 
 		register_rest_route(
 			$this->namespace,
-			'woocommerce/autogenerate',
-			array(
-				'methods'             => 'POST',
-				'permission_callback' => array( $this, 'can_update_settings' ),
-				'callback'            => array( $this, 'woocommerce_autogenerate' ),
-			)
-		);
-
-		register_rest_route(
-			$this->namespace,
-			'woocommerce/save',
-			array(
-				'methods'             => 'POST',
-				'permission_callback' => array( $this, 'can_update_settings' ),
-				'callback'            => array( $this, 'woocommerce_save' ),
-			)
-		);
-
-		register_rest_route(
-			$this->namespace,
-			'woocommerce/disconnect',
-			array(
-				'methods'             => 'POST',
-				'permission_callback' => array( $this, 'can_update_settings' ),
-				'callback'            => array( $this, 'woocommerce_disconnect' ),
-			)
-		);
-
-		register_rest_route(
-			$this->namespace,
-			'woocommerce/key',
-			array(
-				'methods'             => 'GET',
-				'permission_callback' => array( $this, 'logged_in_and_can_access_route' ),
-				'callback'            => array( $this, 'woocommerce_get_key' ),
-			)
-		);
-
-		register_rest_route(
-			$this->namespace,
 			'api',
 			array(
 				'methods'             => 'POST',
@@ -361,6 +302,28 @@ class OMAPI_RestApi {
 				'callback'            => array( $this, 'get_guides' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'account/sync',
+			array(
+				'methods'             => 'POST',
+				'permission_callback' => array( $this, 'logged_in_or_has_api_key' ),
+				'callback'            => array( $this, 'sync_account' ),
+			)
+		);
+
+		if ( OMAPI_WooCommerce::is_active() ) {
+			$this->woocommerce = new OMAPI_WooCommerce_RestApi();
+		}
+
+		if ( OMAPI_WPForms::is_active() ) {
+			new OMAPI_WPForms_RestApi();
+		}
+
+		if ( OMAPI_EasyDigitalDownloads::is_active() ) {
+			$this->edd = new OMAPI_EasyDigitalDownloads_RestApi();
+		}
 	}
 
 	/**
@@ -707,7 +670,11 @@ class OMAPI_RestApi {
 		if ( $request->get_param( 'refresh' ) ) {
 			$result = $this->refresh_campaigns();
 			if ( is_wp_error( $result ) ) {
-				return $result;
+				$error_data = $result->get_error_data();
+
+				if ( empty( $error_data['type'] ) || 'no-campaigns-error' !== $error_data['type'] ) {
+					return $result;
+				}
 			}
 		}
 
@@ -722,7 +689,6 @@ class OMAPI_RestApi {
 			}
 		}
 
-		$has_woo  = OMAPI::is_woocommerce_active();
 		$mailpoet = $this->base->is_mailpoet_active();
 
 		$taxonomy_map = array();
@@ -774,13 +740,16 @@ class OMAPI_RestApi {
 
 		// Get "Config" data.
 		$config = array(
-			'hasMailPoet'    => $mailpoet,
-			'isWooActive'    => $has_woo,
-			'isWooConnected' => OMAPI_WooCommerce::is_connected(),
-			'mailPoetLists'  => $mailpoet && ! in_array( 'mailPoetLists', $excluded, true )
+			'hasMailPoet'     => $mailpoet,
+			'isWooActive'     => OMAPI_WooCommerce::is_active(),
+			'isWooConnected'  => OMAPI_WooCommerce::is_connected(),
+			'isWPFormsActive' => OMAPI_WPForms::is_active(),
+			'isEddActive'     => OMAPI_EasyDigitalDownloads::is_active(),
+			'isEddConnected'  => OMAPI_EasyDigitalDownloads::is_connected(),
+			'mailPoetLists'   => $mailpoet && ! in_array( 'mailPoetLists', $excluded, true )
 				? $this->base->mailpoet->get_lists()
 				: array(),
-			'mailPoetFields' => $mailpoet && ! in_array( 'mailPoetFields', $excluded, true )
+			'mailPoetFields'  => $mailpoet && ! in_array( 'mailPoetFields', $excluded, true )
 				? $this->base->mailpoet->get_custom_fields()
 				: array(),
 		);
@@ -908,7 +877,7 @@ class OMAPI_RestApi {
 	}
 
 	/**
-	 * Maybe allow api-key authenticted user to see notifications.
+	 * Maybe allow api-key authenticated user to see notifications.
 	 *
 	 * @since  2.0.0
 	 *
@@ -1001,205 +970,6 @@ class OMAPI_RestApi {
 		} catch ( Exception $e ) {
 			return $this->exception_to_response( $e );
 		}
-	}
-
-	/**
-	 * Handles auto-generating the WooCommerce API key/secret.
-	 *
-	 * Route: POST omapp/v1/woocommerce/autogenerate
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param WP_REST_Request $request The REST Request.
-	 *
-	 * @return WP_REST_Response The API Response
-	 * @throws Exception If plugin action fails.
-	 */
-	public function woocommerce_autogenerate( $request ) {
-		try {
-
-			$auto_generated_keys = $this->base->save->woocommerce_autogenerate();
-			if ( is_wp_error( $auto_generated_keys ) ) {
-				$e = new OMAPI_WpErrorException();
-				throw $e->setWpError( $auto_generated_keys );
-			}
-
-			if ( empty( $auto_generated_keys ) ) {
-				throw new Exception( esc_html__( 'WooCommerce REST API keys could not be auto-generated on your behalf. Please try again.', 'optin-monster-api' ), 400 );
-			}
-
-			$data = $this->base->get_option();
-
-			// Merge data array, with auto-generated keys array.
-			$data = array_merge( $data, $auto_generated_keys );
-
-			$this->base->save->woocommerce_connect( $data );
-
-			if ( ! empty( $this->base->save->error ) ) {
-				throw new Exception( $this->base->save->error, 400 );
-			}
-
-			return $this->woocommerce_get_key( $request );
-
-		} catch ( Exception $e ) {
-			return $this->exception_to_response( $e );
-		}
-	}
-
-	/**
-	 * Handles saving the WooCommerce API key/secret.
-	 *
-	 * Route: POST omapp/v1/woocommerce/save
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param WP_REST_Request $request The REST Request.
-	 *
-	 * @return WP_REST_Response The API Response
-	 * @throws Exception If plugin action fails.
-	 */
-	public function woocommerce_save( $request ) {
-		try {
-
-			$woo_key = $request->get_param( 'key' );
-			if ( empty( $woo_key ) ) {
-				throw new Exception( esc_html__( 'Consumer key missing!', 'optin-monster-api' ), 400 );
-			}
-
-			$woo_secret = $request->get_param( 'secret' );
-			if ( empty( $woo_secret ) ) {
-				throw new Exception( esc_html__( 'Consumer secret missing!', 'optin-monster-api' ), 400 );
-			}
-
-			$data = array(
-				'consumer_key'    => $woo_key,
-				'consumer_secret' => $woo_secret,
-			);
-
-			$this->base->save->woocommerce_connect( $data );
-
-			if ( ! empty( $this->base->save->error ) ) {
-				throw new Exception( $this->base->save->error, 400 );
-			}
-
-			return $this->woocommerce_get_key( $request );
-
-		} catch ( Exception $e ) {
-			return $this->exception_to_response( $e );
-		}
-	}
-
-	/**
-	 * Handles disconnecting the WooCommerce API key/secret.
-	 *
-	 * Route: POST omapp/v1/woocommerce/disconnect
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param WP_REST_Request $request The REST Request.
-	 *
-	 * @return WP_REST_Response The API Response
-	 * @throws Exception If plugin action fails.
-	 */
-	public function woocommerce_disconnect( $request ) {
-		try {
-
-			$this->base->save->woocommerce_disconnect( array() );
-
-			if ( ! empty( $this->base->save->error ) ) {
-				throw new Exception( $this->base->save->error, 400 );
-			}
-
-			return new WP_REST_Response(
-				array( 'message' => esc_html__( 'OK', 'optin-monster-api' ) ),
-				200
-			);
-
-		} catch ( Exception $e ) {
-			return $this->exception_to_response( $e );
-		}
-	}
-
-	/**
-	 * Gets the associated WooCommerce API key data.
-	 *
-	 * Route: GET omapp/v1/woocommerce/key
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param WP_REST_Request $request The REST Request.
-	 *
-	 * @return WP_REST_Response The API Response
-	 * @throws Exception If plugin action fails.
-	 */
-	public function woocommerce_get_key( $request ) {
-		try {
-
-			$keys_tab       = OMAPI_WooCommerce::version_compare( '3.4.0' ) ? 'advanced' : 'api';
-			$keys_admin_url = admin_url( "admin.php?page=wc-settings&tab={$keys_tab}&section=keys" );
-
-			if ( ! OMAPI_WooCommerce::is_minimum_version() && OMAPI_WooCommerce::is_connected() ) {
-
-				$error = '<p>' . esc_html( sprintf( __( 'OptinMonster requires WooCommerce %s or above.', 'optin-monster-api' ), OMAPI_WooCommerce::MINIMUM_VERSION ) ) . '</p>'
-					. '<p>' . esc_html_x( 'This site is currently running: ', 'the current version of WooCommerce: "WooCommerce x.y.z"', 'optin-monster-api' )
-					. '<code>WooCommerce ' . esc_html( OMAPI_WooCommerce::version() ) . '</code>.</p>'
-					. '<p>' . esc_html__( 'Please upgrade to the latest version of WooCommerce to enjoy deeper integration with OptinMonster.', 'optin-monster-api' ) . '</p>';
-
-				throw new Exception( $error, 404 );
-			}
-
-			if ( ! OMAPI_WooCommerce::is_connected() ) {
-				$error = '<p>' . sprintf( __( 'In order to integrate WooCommerce with the Display Rules in the campaign builder, OptinMonster needs <a href="%s" target="_blank">WooCommerce REST API credentials</a>. OptinMonster only needs Read access permissions to work.', 'optin-monster-api' ), esc_url( $keys_admin_url ) ) . '</p>';
-
-				throw new Exception( $error, 404 );
-			}
-
-			// Set some default key details.
-			$defaults = array(
-				'key_id'        => '',
-				'description'   => esc_html__( 'no description found', 'optin-monster-api' ),
-				'truncated_key' => esc_html__( 'no truncated key found', 'optin-monster-api' ),
-			);
-
-			// Get the key details.
-			$key_id  = $this->base->get_option( 'woocommerce', 'key_id' );
-			$details = OMAPI_WooCommerce::get_key_details_by_id( $key_id );
-			$r       = wp_parse_args( array_filter( $details ), $defaults );
-
-			return new WP_REST_Response(
-				array(
-					'id'          => $key_id,
-					'description' => esc_html( $r['description'] ),
-					'truncated'   => esc_html( $r['truncated_key'] ),
-					'editUrl'     => esc_url_raw( add_query_arg( 'edit-key', $r['key_id'], $keys_admin_url ) ),
-				),
-				200
-			);
-
-		} catch ( Exception $e ) {
-			return $this->exception_to_response( $e );
-		}
-	}
-
-	/**
-	 * Determine if we can store settings.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param  WP_REST_Request $request The REST Request.
-	 *
-	 * @return bool
-	 */
-	public function can_update_settings( $request ) {
-		try {
-
-			$this->verify_request_nonce( $request );
-
-		} catch ( Exception $e ) {
-			return $this->exception_to_response( $e );
-		}
-
-		return OMAPI::get_instance()->can_access( 'settings_update' );
 	}
 
 	/**
@@ -1551,172 +1321,6 @@ class OMAPI_RestApi {
 	}
 
 	/**
-	 * Determine if OM API key is provided and valid.
-	 *
-	 * @since  1.9.10
-	 *
-	 * @param  WP_REST_Request $request The REST Request.
-	 *
-	 * @return bool
-	 */
-	public function has_valid_api_key( $request ) {
-		$header = $request->get_header( 'X-OptinMonster-ApiKey' );
-
-		// Use this API Key to validate.
-		if ( ! $this->validate_api_key( $header ) ) {
-			return new WP_Error(
-				'omapp_rest_forbidden',
-				esc_html__( 'Could not verify your API Key.', 'optin-monster-api' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
-		return $this->has_valid_api_key;
-	}
-
-	/**
-	 * Determine if logged in or OM API key is provided and valid.
-	 *
-	 * @since  1.9.10
-	 *
-	 * @param  WP_REST_Request $request The REST Request.
-	 *
-	 * @return bool
-	 */
-	public function logged_in_or_has_api_key( $request ) {
-		return $this->logged_in_and_can_access_route( $request )
-			|| true === $this->has_valid_api_key( $request );
-	}
-
-	/**
-	 * Determine if logged in user can access this route (calls current_user_can).
-	 *
-	 * @since 2.6.4
-	 *
-	 * @param  WP_REST_Request $request The REST Request.
-	 *
-	 * @return bool
-	 */
-	public function logged_in_and_can_access_route( $request ) {
-		return OMAPI::get_instance()->can_access( $request->get_route() );
-	}
-
-	/**
-	 * Validate this API Key
-	 * We validate an API Key by fetching the Sites this key can fetch
-	 * And then confirming that this key has access to at least one of these sites
-	 *
-	 * @since 1.8.0
-	 *
-	 * @param string $apikey The OM api key.
-	 *
-	 * @return bool True if the Key can be validated
-	 */
-	public function validate_api_key( $apikey ) {
-		$this->has_valid_api_key = OMAPI_ApiKey::validate( $apikey );
-
-		return $this->has_valid_api_key;
-	}
-
-	/**
-	 * Convert an exception to a REST API WP_Error object.
-	 *
-	 * @since  2.0.0
-	 *
-	 * @param  Exception $e The exception.
-	 *
-	 * @return WP_Error
-	 */
-	protected function exception_to_response( Exception $e ) {
-
-		// Return WP_Error objects directly.
-		if ( $e instanceof OMAPI_WpErrorException && $e->getWpError() ) {
-			return $e->getWpError();
-		}
-
-		$data = ! empty( $e->data ) ? $e->data : array();
-		$data = wp_parse_args(
-			$data,
-			array(
-				'status' => $e->getCode(),
-			)
-		);
-
-		$error_code = rest_authorization_required_code() === $e->getCode()
-			? 'omapp_rest_forbidden'
-			: 'omapp_rest_error';
-
-		return new WP_Error( $error_code, $e->getMessage(), $data );
-	}
-
-	/**
-	 * Convert a WP_Error to a proper REST API WP_Error object.
-	 *
-	 * @since 2.6.5
-	 *
-	 * @param  WP_Error $e The WP_Error object.
-	 * @param  mixed    $data Data to include in the error data.
-	 *
-	 * @return WP_Error
-	 */
-	protected function wp_error_to_response( WP_Error $e, $data = array() ) {
-		$api = OMAPI_Api::instance();
-
-		$data          = is_array( $data ) || is_object( $data ) ? (array) $data : array();
-		$error_data    = $e->get_error_data();
-		$error_message = $e->get_error_message();
-		$error_code    = $e->get_error_code();
-
-		if ( empty( $error_data['status'] ) ) {
-
-			$status     = is_numeric( $error_data ) ? $error_data : 400;
-			$error_code = (string) rest_authorization_required_code() === (string) $status
-				? 'omapp_rest_forbidden'
-				: 'omapp_rest_error';
-
-			$error_data = wp_parse_args(
-				array(
-					'status' => $status,
-				),
-				$data
-			);
-
-		} else {
-			$error_data = wp_parse_args( $error_data, $data );
-		}
-
-		return new WP_Error( $error_code, $error_message, $error_data );
-	}
-
-	/**
-	 * Verify the request nonce and throw an exception if verification fails.
-	 *
-	 * @since  2.0.0
-	 *
-	 * @param  WP_REST_Request $request The REST request.
-	 *
-	 * @return void
-	 */
-	public function verify_request_nonce( $request ) {
-		$nonce = $request->get_param( 'nonce' );
-		if ( empty( $nonce ) ) {
-			$nonce = $request->get_header( 'X-WP-Nonce' );
-		}
-
-		if ( empty( $nonce ) ) {
-			throw new Exception( esc_html__( 'Missing security token!', 'optin-monster-api' ), rest_authorization_required_code() );
-		}
-
-		// Check the nonce.
-		$result = wp_verify_nonce( $nonce, 'wp_rest' );
-		if ( ! $result ) {
-			throw new Exception( esc_html__( 'Security token invalid!', 'optin-monster-api' ), rest_authorization_required_code() );
-		}
-	}
-
-	/**
 	 * Determine if user can dismiss review.
 	 *
 	 * @since 2.6.1
@@ -1823,5 +1427,30 @@ class OMAPI_RestApi {
 		} catch ( Exception $e ) {
 			return $this->exception_to_response( $e );
 		}
+	}
+
+	/**
+	 * Triggering refreshing/syncing of account settings.
+	 *
+	 * Route: POST omapp/v1/account/sync
+	 *
+	 * @since 2.6.13
+	 *
+	 * @param WP_REST_Request $request The REST Request.
+	 * @return WP_REST_Response The API Response
+	 */
+	public function sync_account( $request ) {
+		$data = OMAPI_Api::fetch_me_cached( true );
+		if ( is_wp_error( $data ) ) {
+			return new WP_REST_Response(
+				array( 'message' => esc_html__( 'Sync failed!', 'optin-monster-api' ) ),
+				400
+			);
+		}
+
+		return new WP_REST_Response(
+			array( 'message' => esc_html__( 'Sync succeeded!', 'optin-monster-api' ) ),
+			200
+		);
 	}
 }

@@ -190,7 +190,7 @@ class OMAPI_Api {
 	 * @since 1.0.0
 	 *
 	 * @param string $route   The API route to target.
-	 * @param array  $creds    Array of API credentials.
+	 * @param array  $creds   Array of API credentials.
 	 * @param string $method  The API method.
 	 * @param string $version The version number of our API.
 	 */
@@ -252,6 +252,7 @@ class OMAPI_Api {
 			'OMAPI-Sender'  => 'WordPress',
 			'OMAPI-Site'    => esc_attr( get_option( 'blogname' ) ),
 			'OMAPI-Version' => esc_attr( OMAPI::get_instance()->version ),
+			'OMAPI-Plugins' => ( new OMAPI_Plugins() )->get_active_plugins_header_value(),
 		);
 
 		if ( $this->apikey ) {
@@ -447,6 +448,9 @@ class OMAPI_Api {
 
 			if ( ! is_wp_error( $result ) ) {
 				set_transient( $cache_key, $result, DAY_IN_SECONDS );
+
+				// Force the option to be updated when we gather new data from the API.
+				self::return_option_from_fetch( $result, array(), $creds, true );
 			}
 		}
 
@@ -465,14 +469,29 @@ class OMAPI_Api {
 	 */
 	public static function fetch_me( $option = array(), $creds = array() ) {
 		$result = self::fetch_me_cached( true, $creds );
-		$api    = self::instance();
-
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
 
-		$update = empty( $option );
-		if ( $update ) {
+		return self::return_option_from_fetch( $result, $option, $creds, empty( $option ) );
+	}
+
+	/**
+	 * Return the option after fetching data from the /me route, potentially
+	 * updating it in the database as well.
+	 *
+	 * @since 2.6.13
+	 *
+	 * @param  stdClass $result        The /me route result.
+	 * @param  array    $option        Possible option to be passed.
+	 * @param  array    $creds         Possible creds to be passed.
+	 * @param  bool     $should_update Flag to update the option in the database or not.
+	 *
+	 * @return array                   Updated options array.
+	 */
+	public static function return_option_from_fetch( $result, $option = array(), $creds = array(), $should_update = false ) {
+		$api = self::instance();
+		if ( $should_update ) {
 			$option = OMAPI::get_instance()->get_option();
 		}
 
@@ -481,8 +500,7 @@ class OMAPI_Api {
 			$option['api'] = array( 'apikey' => $api->apikey );
 
 			if ( $api->user && $api->key ) {
-
-				// Notifiy user of credentials replacement.
+				// Notify user of credentials replacement.
 				OMAPI::get_instance()->notifications->add_event(
 					array(
 						'type'    => 'success',
@@ -503,18 +521,17 @@ class OMAPI_Api {
 			$option['userId'] = $result->id;
 		}
 
-		$to_store = array( 'accountId', 'currentLevel', 'plan' );
+		$to_store = array( 'accountId', 'currentLevel', 'plan', 'revenueAttribution' );
 		foreach ( $to_store as $key ) {
 			if ( isset( $result->{$key} ) ) {
-				$option[ $key ] = $result->{$key};
+				$option[ $key ] = is_object( $result->{$key} ) ? (array) $result->{$key} : $result->{$key};
 			}
 		}
 
-		if ( $update ) {
+		if ( $should_update ) {
 			OMAPI::get_instance()->save->update_option( $option, $creds );
 		}
 
 		return $option;
 	}
-
 }

@@ -1,7 +1,7 @@
 /* ==========================================================
  * mailpoet.js
  * ==========================================================
- * Copyright 2019 Awesome Motive.
+ * Copyright 2022 Awesome Motive.
  * https://awesomemotive.com
  * ========================================================== */
 jQuery(document).ready(function ($) {

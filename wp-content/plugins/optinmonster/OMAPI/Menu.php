@@ -103,6 +103,10 @@ class OMAPI_Menu {
 			// Load actions and filters.
 			add_action( 'admin_menu', array( $this, 'menu' ) );
 			add_action( 'admin_menu', array( $this, 'after_menu_registration' ), 999 );
+
+			// Load custom admin bar menu items.
+			add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ), 999 );
+
 			// Load helper body classes.
 			add_filter( 'admin_body_class', array( $this, 'admin_body_classes' ) );
 
@@ -167,6 +171,45 @@ class OMAPI_Menu {
 			'__return_null'
 		);
 		add_action( 'load-' . $hook, array( $this, 'redirect_to_dashboard' ) );
+
+		// Register link under the appearance menu for "Popup Builder".
+		global $submenu;
+		if ( current_user_can( $this->base->access_capability( self::SLUG ) ) && $submenu ) {
+			$submenu['themes.php'][] = array(
+				esc_html__( 'Popup Builder', 'optin-monster-api' ),
+				$this->base->access_capability( self::SLUG ),
+				esc_url_raw( OMAPI_Urls::templates() ),
+			);
+		}
+
+		// Maybe add custom CSS for our menu upgrade link.
+		$level   = $this->base->get_level();
+		$upgrade = $this->base->can_upgrade();
+		if ( $upgrade || '' === $level ) {
+			add_action( 'admin_footer', array( $this, 'add_upgrade_link_css' ) );
+		}
+	}
+
+	/**
+	 * Loads custom items in the WP admin bar menu.
+	 *
+	 * @since 2.6.12
+	 *
+	 * @param object $admin_bar The WP admin bar object.
+	 */
+	public function admin_bar_menu( $admin_bar ) {
+		if ( ! current_user_can( $this->base->access_capability( self::SLUG ) ) ) {
+			return;
+		}
+
+		$admin_bar->add_node(
+			array(
+				'id'     => 'om-new-campaign',
+				'title'  => esc_html__( 'Popup', 'optin-monster-api' ),
+				'href'   => esc_url_raw( OMAPI_Urls::templates() ),
+				'parent' => 'new-content',
+			)
+		);
 	}
 
 	/**
@@ -235,6 +278,14 @@ class OMAPI_Menu {
 	 */
 	public function output_plugin_links( $links ) {
 
+		// Maybe add an upgrade link to the plugin links.
+		$upgrade_links = array();
+		$upgrade       = $this->base->can_upgrade();
+		$level         = $this->base->get_level();
+		if ( $upgrade || '' === $level ) {
+			$upgrade_links[] = sprintf( '<a class="om-plugin-upgrade-link" href="%s">%s</a>', OMAPI_Urls::upgrade( 'plugin_action_link' ), 'vbp_pro' === $level ? __( 'Upgrade to Growth', 'optin-monster-api' ) : __( 'Upgrade to Pro', 'optin-monster-api' ) );
+		}
+
 		$new_links = $this->base->get_api_credentials()
 			? array(
 				sprintf( '<a href="%s">%s</a>', OMAPI_Urls::campaigns(), __( 'Campaigns', 'optin-monster-api' ) ),
@@ -244,7 +295,7 @@ class OMAPI_Menu {
 				sprintf( '<a href="%s">%s</a>', OMAPI_Urls::onboarding(), __( 'Get Started', 'optin-monster-api' ) ),
 			);
 
-		$links = array_merge( $new_links, $links );
+		$links = array_merge( $upgrade_links, $new_links, $links );
 
 		return $links;
 	}
@@ -262,15 +313,16 @@ class OMAPI_Menu {
 	public function maybe_add_upgrade_link( $links, $file ) {
 		if ( $file === plugin_basename( OMAPI_FILE ) ) {
 
-			// If user upgradeable, let's put an upgrade link.
-			$level = $this->base->can_upgrade();
-			if ( $level ) {
+			// If user upgradeable or not registered yet, let's put an upgrade link.
+			$upgrade = $this->base->can_upgrade();
+			$level   = $this->base->get_level();
+			if ( $upgrade || '' === $level ) {
 				$label = 'vbp_pro' === $level
 					? __( 'Upgrade to Growth', 'optin-monster-api' )
 					: __( 'Upgrade to Pro', 'optin-monster-api' );
 
 				$upgradeLink = sprintf(
-					'<a href="%s" aria-label="%s" target="_blank" rel="noopener">%s</a>',
+					'<a class="om-plugin-upgrade-link" href="%s" aria-label="%s" target="_blank" rel="noopener">%s</a>',
 					esc_url_raw( OMAPI_Urls::upgrade( 'plugin_row_meta' ) ),
 					$label,
 					$label
@@ -517,5 +569,14 @@ class OMAPI_Menu {
 	 */
 	public function add_jiggle_css() {
 		$this->base->output_min_css( 'jiggle-css.php' );
+	}
+
+	/**
+	 * Output the css that highlights the OM upgrade menu link.
+	 *
+	 * @since 2.6.12
+	 */
+	public function add_upgrade_link_css() {
+		$this->base->output_min_css( 'upgrade-link-css.php' );
 	}
 }

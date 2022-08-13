@@ -159,6 +159,7 @@ class OMAPI_Support {
 			'PHP Version'        => function_exists( 'phpversion' ) ? esc_html( phpversion() ) : 'Unable to check.',
 			'Error Log Location' => function_exists( 'ini_get' ) ? ini_get( 'error_log' ) : 'Unable to locate.',
 			'Default Timezone'   => date_default_timezone_get(),
+			'Site Timezone'      => wp_timezone_string(),
 			'Site Name'          => esc_html( get_option( 'blogname' ) ),
 			'Admin Email'        => esc_html( get_site_option( 'admin_email' ) ),
 			'WordPress Home URL' => esc_url_raw( get_home_url() ),

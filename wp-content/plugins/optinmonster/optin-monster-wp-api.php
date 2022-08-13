@@ -2,10 +2,10 @@
 /**
  * Plugin Name: OptinMonster
  * Plugin URI:  https://optinmonster.com
- * Description: OptinMonster is the best WordPress popup plugin that helps you grow your email list and sales with email popups, exit intent popups, floating bars and more!
- * Author:      OptinMonster Team
+ * Description: OptinMonster is the best WordPress popup builder plugin that helps you grow your email newsletter list and sales with email popups, exit intent popups, floating bars and more!
+ * Author:      OptinMonster Popup Builder Team
  * Author URI:  https://optinmonster.com
- * Version:     2.6.11
+ * Version:     2.9.0
  * Text Domain: optin-monster-api
  * Domain Path: languages
  *
@@ -13,7 +13,7 @@
  * WC tested up to:      6.2.0
  * Requires at least:    4.7.0
  * Requires PHP:         5.3
- * Tested up to:         5.9
+ * Tested up to:         6.0
  *
  * OptinMonster is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,7 +66,7 @@ class OMAPI {
 	 *
 	 * @var string
 	 */
-	public $version = '2.6.11';
+	public $version = '2.9.0';
 
 	/**
 	 * The name of the plugin.
@@ -136,6 +136,22 @@ class OMAPI {
 	 * @var OMAPI_WooCommerce
 	 */
 	public $woocommerce;
+
+	/**
+	 * OMAPI_WPForms object.
+	 *
+	 * @since 2.9.0
+	 *
+	 * @var OMAPI_WPForms
+	 */
+	public $wpforms;
+
+	/**
+	 * OMAPI_EasyDigitalDownloads object.
+	 *
+	 * @var OMAPI_EasyDigitalDownloads
+	 */
+	public $edd;
 
 	/**
 	 * OMAPI_Elementor object.
@@ -416,9 +432,12 @@ class OMAPI {
 		$this->type        = new OMAPI_Type();
 		$this->output      = new OMAPI_Output();
 		$this->shortcode   = new OMAPI_Shortcode();
+		$this->revenue     = new OMAPI_RevenueAttribution();
 		$this->woocommerce = new OMAPI_WooCommerce();
+		$this->wpforms     = new OMAPI_WPForms();
 		$this->elementor   = new OMAPI_Elementor();
 		$this->mailpoet    = new OMAPI_MailPoet();
+		$this->edd         = new OMAPI_EasyDigitalDownloads();
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON && ! $this->actions ) {
 			$this->save    = new OMAPI_Save();
@@ -722,10 +741,14 @@ class OMAPI {
 	 *
 	 * @since 1.1.9
 	 *
+	 * @deprecated 2.8.0 Use `OMAPI_WooCommerce::is_active` instead.
+	 *
 	 * @return bool
 	 */
 	public static function is_woocommerce_active() {
-		return class_exists( 'WooCommerce', true );
+		_deprecated_function( __FUNCTION__, '2.8.0', 'OMAPI_WooCommerce::is_active' );
+
+		return OMAPI_WooCommerce::is_active();
 	}
 
 	/**
@@ -971,6 +994,19 @@ class OMAPI {
 	public function get_site_id() {
 		$option = $this->get_option();
 		return ! empty( $option['siteId'] ) ? (string) $option['siteId'] : '';
+	}
+
+	/**
+	 * Gets the revenue attribution settings associated with the
+	 * account that has registered this site.
+	 *
+	 * @since 2.6.13
+	 *
+	 * @return array
+	 */
+	public function get_revenue_attribution() {
+		$option = $this->get_option();
+		return ! empty( $option['revenueAttribution'] ) ? (array) $option['revenueAttribution'] : array();
 	}
 
 	/**

@@ -187,6 +187,7 @@ class OMAPI_Actions {
 		$upgrade_completed = get_option( 'optinmonster_upgrade_completed', 0 );
 		$upgrade_map       = array(
 			'2.6.5' => 'v265_upgrades',
+			'2.9.0' => 'v290_upgrades',
 		);
 		foreach ( $upgrade_map as $upgrade_version => $method ) {
 			if (
@@ -248,5 +249,32 @@ class OMAPI_Actions {
 
 		// No luck.
 		return false;
+	}
+
+	/**
+	 * Upgrades for version 2.9.0.
+	 *
+	 * This adds an admin_url to the site.
+	 *
+	 * @since 2.9.0
+	 *
+	 * @return bool  Whether upgrade routine was completed successfully.
+	 */
+	public function v290_upgrades() {
+		$creds  = $this->base->get_api_credentials();
+		$siteId = $this->base->get_site_id();
+
+		if ( empty( $creds['apikey'] ) || empty( $siteId ) ) {
+			return false;
+		}
+
+		$args = array(
+			'admin_url' => esc_url_raw( get_admin_url() ),
+		);
+
+		$api     = OMAPI_Api::build( 'v2', 'sites/' . $siteId, 'PUT', $creds );
+		$results = $api->request( $args );
+
+		return ! is_wp_error( $results );
 	}
 }

@@ -367,138 +367,52 @@ class OMAPI_Save {
 	 * Handles auto-generating WooCommerce API keys for use with OM.
 	 *
 	 * @since 1.7.0
+	 * @since 2.8.0 All the logic was moved to OMAPI_WooCommerce_Save class.
+	 *
+	 * @deprecated 2.8.0 Use `OMAPI_WooCommerce_Save->autogenerate()` instead.
 	 *
 	 * @return array
 	 */
 	public function woocommerce_autogenerate() {
-		$cookies = array();
-		foreach ( $_COOKIE as $name => $val ) {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-			$cookies[] = "$name=" . rawurlencode( is_array( $val ) ? serialize( $val ) : $val );
-		}
-		$cookies = implode( '; ', $cookies );
+		_deprecated_function( __FUNCTION__, '2.8.0', 'OMAPI_WooCommerce_Save->autogenerate()' );
 
-		$request_args = array(
-			'sslverify' => apply_filters( 'https_local_ssl_verify', true ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-			'body'      => array(
-				'action'      => 'woocommerce_update_api_key',
-				'description' => esc_html__( 'OptinMonster API Read-Access (Auto-Generated)', 'optin-monster-api' ),
-				'permissions' => 'read',
-				'user'        => get_current_user_id(),
-				'security'    => wp_create_nonce( 'update-api-key' ),
-			),
-			'timeout'   => 60,
-			'headers'   => array(
-				'cookie' => $cookies,
-			),
-		);
-		$response     = wp_remote_post( admin_url( 'admin-ajax.php' ), $request_args );
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-
-		$code = wp_remote_retrieve_response_code( $response );
-		$body = json_decode( wp_remote_retrieve_body( $response ) );
-
-		if (
-			200 === intval( $code )
-			&& ! empty( $body->success )
-			&& ! empty( $body->data->consumer_key )
-			&& ! empty( $body->data->consumer_secret )
-		) {
-
-			return (array) $body->data;
-		}
-
-		return array();
+		return $this->base->woocommerce->save->autogenerate();
 	}
 
 	/**
 	 * Handles connecting WooCommerce when the connect button is clicked.
 	 *
 	 * @since 1.7.0
+	 * @since 2.8.0 All the logic was moved to OMAPI_WooCommerce_Save class.
+	 *
+	 * @deprecated 2.8.0 Use `OMAPI_WooCommerce_Save->connect()` instead.
 	 *
 	 * @param array $data The data passed in via POST request.
 	 *
 	 * @return void
 	 */
 	public function woocommerce_connect( $data ) {
-		$keys = $this->base->woocommerce->validate_keys( $data );
+		_deprecated_function( __FUNCTION__, '2.8.0', 'OMAPI_WooCommerce_Save->connect()' );
 
-		if ( isset( $keys['error'] ) ) {
-			$this->error = $keys['error'];
-		} else {
-
-			// Get the version of the REST API we should use. The
-			// `v3` route wasn't added until WooCommerce 3.5.0.
-			$api_version = OMAPI_WooCommerce::version_compare( '3.5.0' )
-				? 'v3'
-				: 'v2';
-
-			// Get current site url.
-			$url = esc_url_raw( site_url() );
-
-			// Make a connection request.
-			$response = $this->base->woocommerce->connect(
-				array(
-					'consumerKey'    => $keys['consumer_key'],
-					'consumerSecret' => $keys['consumer_secret'],
-					'apiVersion'     => $api_version,
-					'shop'           => $url,
-					'name'           => esc_html( get_bloginfo( 'name' ) ),
-				)
-			);
-
-			// Output an error or register a successful connection.
-			if ( is_wp_error( $response ) ) {
-				$this->error = isset( $response->message )
-					? $response->message
-					: esc_html__( 'WooCommerce could not be connected to OptinMonster. The OptinMonster API returned with the following response: ', 'optin-monster-api' ) . $response->get_error_message();
-			} else {
-
-				// Get the shop hostname.
-				$site = OMAPI_Utils::parse_url( $url );
-				$host = isset( $site['host'] ) ? $site['host'] : '';
-
-				// Set up the connected WooCommerce options.
-				$option                = $this->base->get_option();
-				$option['woocommerce'] = array(
-					'api_version' => $api_version,
-					'key_id'      => $keys['key_id'],
-					'shop'        => $host,
-				);
-
-				// Save the option.
-				$this->update_option( $option, $data );
-			}
-		}
+		return $this->base->woocommerce->save->connect( $data );
 	}
 
 	/**
 	 * Handles disconnecting WooCommerce when the disconnect button is clicked.
 	 *
 	 * @since 1.7.0
+	 * @since 2.8.0 All the logic was moved to OMAPI_WooCommerce_Save class.
+	 *
+	 * @deprecated 2.8.0 Use `OMAPI_WooCommerce_Save->disconnect()` instead.
 	 *
 	 * @param array $data The data passed in via POST request.
 	 *
 	 * @return void
 	 */
 	public function woocommerce_disconnect( $data ) {
-		$response = $this->base->woocommerce->disconnect();
+		_deprecated_function( __FUNCTION__, '2.8.0', 'OMAPI_WooCommerce_Save->disconnect()' );
 
-		// Output an error or register a successful disconnection.
-		if ( is_wp_error( $response ) ) {
-			$this->error = isset( $response->message )
-				? $response->message
-				: esc_html__( 'WooCommerce could not be disconnected from OptinMonster. The OptinMonster API returned with the following response: ', 'optin-monster-api' ) . $response->get_error_message();
-		} else {
-			$option = $this->base->get_option();
-
-			unset( $option['woocommerce'] );
-
-			// Save the option.
-			$this->update_option( $option, $data );
-		}
+		return $this->base->woocommerce->save->disconnect( $data );
 	}
 
 	/**

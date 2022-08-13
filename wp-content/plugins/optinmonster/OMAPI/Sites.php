@@ -191,6 +191,7 @@ class OMAPI_Sites {
 				'wordpress' => 1,
 				'homeUrl'   => esc_url_raw( home_url() ),
 				'restUrl'   => esc_url_raw( get_rest_url() ),
+				'adminUrl'  => esc_url_raw( get_admin_url() ),
 			),
 		);
 

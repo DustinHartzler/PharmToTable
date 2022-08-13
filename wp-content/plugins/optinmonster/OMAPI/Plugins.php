@@ -391,4 +391,26 @@ class OMAPI_Plugins {
 		);
 	}
 
+	/**
+	 * Get a active plugins header value for OM app requests.
+	 *
+	 * @since 2.9.0
+	 *
+	 * @return string The plugins header value.
+	 */
+	public function get_active_plugins_header_value() {
+		$wpf_active = $this->base->wpforms->is_active();
+
+		// Set initial values.
+		$plugins = array(
+			// We want to know information about WPForms regardless
+			// of if it's active. We'll use this to "disconnect" WPForms if it's not active.
+			'wpf' => array(
+				'a' => $wpf_active,
+				'v' => $wpf_active ? $this->base->wpforms->get_version() : 0,
+			),
+		);
+
+		return http_build_query( $plugins );
+	}
 }

@@ -93,6 +93,15 @@ class OMAPI_Output {
 	public $shortcodes = array();
 
 	/**
+	 * The OMAPI_EasyDigitalDownloads_Output instance.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @var null|OMAPI_EasyDigitalDownloads_Output
+	 */
+	public $edd_output = null;
+
+	/**
 	 * Whether we are in a live campaign preview.
 	 *
 	 * @since 2.2.0
@@ -159,6 +168,10 @@ class OMAPI_Output {
 
 		// Keep these around for back-compat.
 		$this->fields = $rules->fields;
+
+		if ( OMAPI_EasyDigitalDownloads::is_active() ) {
+			$this->edd_output = new OMAPI_EasyDigitalDownloads_Output();
+		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		self::$live_preview       = ! empty( $_GET['om-live-preview'] )
@@ -658,7 +671,7 @@ class OMAPI_Output {
 		<script type="text/javascript">var omapi_localized = {
 			ajax: '<?php echo esc_url_raw( add_query_arg( 'optin-monster-ajax-route', true, admin_url( 'admin-ajax.php' ) ) ); ?>',
 			nonce: '<?php echo esc_js( wp_create_nonce( 'omapi' ) ); ?>',
-			slugs: 
+			slugs:
 			<?php
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, method is escaping.
 				echo OMAPI_Utils::json_encode( $this->slugs );
@@ -693,7 +706,7 @@ class OMAPI_Output {
 	public function wp_helper() {
 		wp_enqueue_script(
 			$this->base->plugin_slug . '-wp-helper',
-			$this->base->url . 'assets/js/helper.js',
+			$this->base->url . 'assets/dist/js/helper.min.js',
 			array(),
 			$this->base->asset_version(),
 			true
@@ -760,16 +773,20 @@ class OMAPI_Output {
 			}
 		}
 
-		$output = apply_filters(
-			'optin_monster_display_rules_data_output',
-			array(
-				'wc_cart'     => $this->woocommerce_cart(),
-				'object_id'   => $object_id,
-				'object_key'  => $object_key,
-				'object_type' => $object_type,
-				'term_ids'    => $tax_terms,
-			)
+		$output = array(
+			'wc_cart'     => $this->base->woocommerce->get_cart(),
+			'object_id'   => $object_id,
+			'object_key'  => $object_key,
+			'object_type' => $object_type,
+			'term_ids'    => $tax_terms,
+			'wp_json'     => untrailingslashit( get_rest_url() ),
 		);
+
+		if ( OMAPI_EasyDigitalDownloads::is_active() ) {
+			$output['edd'] = $this->edd_output->display_rules_data();
+		}
+
+		$output = apply_filters( 'optin_monster_display_rules_data_output', $output );
 
 		// Output JS variable.
 		?>
@@ -845,60 +862,16 @@ class OMAPI_Output {
 	 * AJAX callback for returning WooCommerce cart information.
 	 *
 	 * @since 1.7.0
+	 * @since 2.8.0 All the logic was moved to OMAPI_WooCommerce class.
+	 *
+	 * @deprecated 2.8.0 Use `OMAPI_WooCommerce->get_cart()` instead.
 	 *
 	 * @return array An array of WooCommerce cart data.
 	 */
 	public function woocommerce_cart() {
-		// Bail if WooCommerce isn't currently active.
-		if ( ! OMAPI::is_woocommerce_active() ) {
-			return array();
-		}
+		_deprecated_function( __FUNCTION__, '2.8.0', 'OMAPI_WooCommerce->get_cart()' );
 
-		// Check if WooCommerce is the minimum version.
-		if ( ! OMAPI_WooCommerce::is_minimum_version() ) {
-			return array();
-		}
-
-		// Bail if we don't have a cart object.
-		if ( ! isset( WC()->cart ) || '' === WC()->cart ) {
-			return array();
-		}
-
-		// Calculate the cart totals.
-		WC()->cart->calculate_totals();
-
-		// Get initial cart data.
-		$cart               = WC()->cart->get_totals();
-		$cart['cart_items'] = WC()->cart->get_cart();
-
-		// Set the currency data.
-		$currencies       = get_woocommerce_currencies();
-		$currency_code    = get_woocommerce_currency();
-		$cart['currency'] = array(
-			'code'   => $currency_code,
-			'symbol' => get_woocommerce_currency_symbol( $currency_code ),
-			'name'   => isset( $currencies[ $currency_code ] ) ? $currencies[ $currency_code ] : '',
-		);
-
-		// Add in some extra data to the cart item.
-		foreach ( $cart['cart_items'] as $key => $item ) {
-			$item_details = array(
-				'type'              => $item['data']->get_type(),
-				'sku'               => $item['data']->get_sku(),
-				'categories'        => $item['data']->get_category_ids(),
-				'tags'              => $item['data']->get_tag_ids(),
-				'regular_price'     => $item['data']->get_regular_price(),
-				'sale_price'        => $item['data']->get_sale_price() ? $item['data']->get_sale_price() : $item['data']->get_regular_price(),
-				'virtual'           => $item['data']->is_virtual(),
-				'downloadable'      => $item['data']->is_downloadable(),
-				'sold_individually' => $item['data']->is_sold_individually(),
-			);
-			unset( $item['data'] );
-			$cart['cart_items'][ $key ] = array_merge( $item, $item_details );
-		}
-
-		// Send back a response.
-		return $cart;
+		return $this->base->woocommerce->get_cart();
 	}
 
 	/**

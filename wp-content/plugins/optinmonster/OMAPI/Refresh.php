@@ -209,13 +209,14 @@ class OMAPI_Refresh {
 	public function get_info_args( $args = array() ) {
 
 		// Set additional flags.
-		$args['wp']      = $GLOBALS['wp_version'];
-		$args['av']      = $this->base->asset_version();
-		$args['v']       = $this->base->version;
-		$args['restUrl'] = esc_url_raw( get_rest_url() );
-		$args['homeUrl'] = esc_url_raw( home_url() );
+		$args['wp']       = $GLOBALS['wp_version'];
+		$args['av']       = $this->base->asset_version();
+		$args['v']        = $this->base->version;
+		$args['restUrl']  = esc_url_raw( get_rest_url() );
+		$args['homeUrl']  = esc_url_raw( home_url() );
+		$args['adminUrl'] = esc_url_raw( get_admin_url() );
 
-		if ( OMAPI::is_woocommerce_active() ) {
+		if ( OMAPI_WooCommerce::is_active() ) {
 			$args['wc'] = OMAPI_WooCommerce::version();
 		}
 

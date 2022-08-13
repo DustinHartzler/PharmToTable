@@ -1,6 +1,36 @@
 # Changelog
 All notable changes to the OptinMonster plugin will be documented in this file.
 
+### 2.9.0 - 2022-08-11
+* Introduce integration support with WPForms! Now WPForms forms will be able to be embedded within campaigns, and conversions/success tracked.
+* Minification to our frontend JS helper file.
+
+### 2.8.1 - 2022-07-21
+* Fix issue with Ecommerce Output rules being applied even when the Ecommerce was not connected anymore.
+* Fix issue with `optin-monster-inline` shortcode not working in many cases.
+* Fix issue in built JS files which caused them to be falsely-flagged in virus software.
+* Updated build script to keep file-names consistent when possible.
+
+### 2.8.0 - 2022-07-18
+* Introduce integration support with Easy Digital Downloads!
+* Fix issue with the OptinMonster "Disable All" setting in block editor when custom fields not supported for the post-type.
+* Fix issue where "This account does not have any campaigns to retrieve" error would show incorrectly.
+* Fix issue with output settings link having an incorrect trailing slash sometimes causing 404s.
+* Code refactor and function/method deprecations.
+
+### 2.7.0 - 2022-05-17
+* Introduce revenue attribution support for EDD and WooCommerce, and add revenue attribution settings
+* Format dates for subscriber information according to the WordPress site timezone
+* Fixed some broken template image icon urls
+* Fix broken utm_medium query args for some urls
+* Javascript package updates
+
+### 2.6.12 - 2022-03-23
+* Improved support for ecommerce display rule targeting.
+* Improved goal support during onboarding.
+* Added new links to quickly create campaigns from the dashboard.
+* Improve display of new campaigns by prioritizing Featured templates.
+
 ### 2.6.11 - 2022-02-15
 * Fixed an issue where inline campaigns were not being output on the front-end of the site.
 

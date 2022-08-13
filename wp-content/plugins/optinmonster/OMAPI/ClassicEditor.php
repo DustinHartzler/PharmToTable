@@ -191,15 +191,21 @@ class OMAPI_ClassicEditor {
 	 */
 	public function settings_meta_box() {
 		$types = array_values( get_post_types( array( 'public' => true ) ) );
-		add_meta_box(
-			'om-global-post-settings',
-			esc_html__( 'OptinMonster Settings', 'optin-monster-api' ),
-			array( $this, 'settings_meta_box_output' ),
-			$types,
-			'side',
-			'default',
-			array( '__back_compat_meta_box' => true )
-		);
+		foreach ( $types as $type ) {
+			$supports_custom_fields = post_type_supports( $type, 'custom-fields' );
+			// If custom fields aren't supported, change title to avoid duplicate 'OptinMonster' sections.
+			// @see https://github.com/awesomemotive/optin-monster-wp-api/issues/391
+			$title = $supports_custom_fields ? 'OptinMonster Settings' : 'Campaign Settings';
+			add_meta_box(
+				'om-global-post-settings',
+				esc_html__( $title, 'optin-monster-api' ),
+				array( $this, 'settings_meta_box_output' ),
+				$type,
+				'side',
+				'default',
+				array( '__back_compat_meta_box' => $supports_custom_fields )
+			);
+		}
 	}
 
 	/**

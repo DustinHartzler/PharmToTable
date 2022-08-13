@@ -41,23 +41,6 @@ class OMAPI_Rules {
 		'show',
 		'type',
 		'test',
-		'show_on_woocommerce',
-		'is_wc_shop',
-		'is_wc_product',
-		'is_wc_cart',
-		'is_wc_checkout',
-		'is_wc_account',
-		'is_wc_endpoint',
-		'is_wc_endpoint_order_pay',
-		'is_wc_endpoint_order_received',
-		'is_wc_endpoint_view_order',
-		'is_wc_endpoint_edit_account',
-		'is_wc_endpoint_edit_address',
-		'is_wc_endpoint_lost_password',
-		'is_wc_endpoint_customer_logout',
-		'is_wc_endpoint_add_payment_method',
-		'is_wc_product_category',
-		'is_wc_product_tag',
 	);
 
 	/**
@@ -122,6 +105,20 @@ class OMAPI_Rules {
 	protected $global_override = true;
 
 	/**
+	 * The OMAPI_WooCommerce_Rules instance.
+	 *
+	 * @var OMAPI_WooCommerce_Rules
+	 */
+	protected $woocommerce_rules = null;
+
+	/**
+	 * The OMAPI_EasyDigitalDownloads_Rules instance.
+	 *
+	 * @var OMAPI_EasyDigitalDownloads_Rules
+	 */
+	protected $edd_rules = null;
+
+	/**
 	 * The last instance called of this class.
 	 *
 	 * @var OMAPI_Rules
@@ -145,13 +142,32 @@ class OMAPI_Rules {
 	 * @param  bool        $is_inline_check Whether we're checking for inline display.
 	 */
 	public function __construct( $optin = null, $post_id = 0, $is_inline_check = false ) {
-		$this->fields = apply_filters( 'optin_monster_api_output_fields', $this->fields );
-
 		// Default to allowing global override if not an inline check.
 		$this->optin           = $optin;
 		$this->post_id         = $post_id;
 		$this->is_inline_check = $is_inline_check;
 		$this->global_override = ! $is_inline_check;
+
+		// Set our object.
+		$this->set();
+	}
+
+	/**
+	 * Sets our object instance and base class instance.
+	 *
+	 * @since 2.8.0
+	 */
+	public function set() {
+		$this->woocommerce_rules = new OMAPI_WooCommerce_Rules( $this );
+		$this->edd_rules         = new OMAPI_EasyDigitalDownloads_Rules( $this );
+
+		$fields = array_merge(
+			$this->fields,
+			$this->woocommerce_rules->get_fields(),
+			$this->edd_rules->get_fields()
+		);
+
+		$this->fields = apply_filters( 'optin_monster_api_output_fields', $fields );
 
 		self::$last_instance = $this;
 	}
@@ -271,7 +287,7 @@ class OMAPI_Rules {
 			$this->exclude_if_inline_and_not_automatic();
 
 			$this->default_checks();
-			$this->woocommerce_checks();
+			$this->plugin_checks();
 			$this->include_if_inline_and_automatic_and_no_advanced_settings();
 			$this->include_if_shortcode_and_no_advanced_settings();
 			$this->output_if_global_override();
@@ -477,36 +493,16 @@ class OMAPI_Rules {
 	}
 
 	/**
-	 * Check for woocommerce rules.
+	 * Run checks for for external plugins rules.
 	 *
-	 * @since  1.5.0
+	 * @since 2.8.0
 	 *
 	 * @throws OMAPI_Rules_False
 	 * @return void
 	 */
-	public function woocommerce_checks() {
-		// If WooCommerce is enabled we can look for WooCommerce specific settings.
-		if ( OMAPI::is_woocommerce_active() ) {
-
-			if (
-				! $this->is_inline_check
-				// Separate never checks for WooCommerce pages that don't ID match
-				// No global check on purpose. Global is still true if only this setting is populated.
-				&& $this->item_in_field( wc_get_page_id( 'shop' ), 'never' )
-				&& is_shop()
-			) {
-				throw new OMAPI_Rules_False( 'never on wc is_shop' );
-			}
-
-			try {
-				$this->check_woocommerce_field();
-			} catch ( OMAPI_Rules_Exception $e ) {
-				if ( $e instanceof OMAPI_Rules_True ) {
-					throw new OMAPI_Rules_True( 'include woocommerce', 0, $e );
-				}
-				$this->reasons[] = $e;
-			}
-		}
+	public function plugin_checks() {
+		$this->woocommerce_rules->run_checks();
+		$this->edd_rules->run_checks();
 	}
 
 	/**
@@ -739,41 +735,6 @@ class OMAPI_Rules {
 		}
 	}
 
-	protected function check_woocommerce_field() {
-
-		$wc_checks = array(
-			'show_on_woocommerce'               => array( 'is_woocommerce' ), // is woocommerce anything
-			'is_wc_shop'                        => array( 'is_shop' ),
-			'is_wc_product'                     => array( 'is_product' ),
-			'is_wc_cart'                        => array( 'is_cart' ),
-			'is_wc_checkout'                    => array( 'is_checkout' ),
-			'is_wc_account'                     => array( 'is_account_page' ),
-			'is_wc_endpoint'                    => array( 'is_wc_endpoint_url' ),
-			'is_wc_endpoint_order_pay'          => array( 'is_wc_endpoint_url', 'order-pay' ),
-			'is_wc_endpoint_order_received'     => array( 'is_wc_endpoint_url', 'order-received' ),
-			'is_wc_endpoint_view_order'         => array( 'is_wc_endpoint_url', 'view-order' ),
-			'is_wc_endpoint_edit_account'       => array( 'is_wc_endpoint_url', 'edit-account' ),
-			'is_wc_endpoint_edit_address'       => array( 'is_wc_endpoint_url', 'edit-address' ),
-			'is_wc_endpoint_lost_password'      => array( 'is_wc_endpoint_url', 'lost-password' ),
-			'is_wc_endpoint_customer_logout'    => array( 'is_wc_endpoint_url', 'customer-logout' ),
-			'is_wc_endpoint_add_payment_method' => array( 'is_wc_endpoint_url', 'add-payment-method' ),
-		);
-
-		foreach ( $wc_checks as $field => $callback ) {
-			if ( $this->field_empty( $field ) ) {
-				continue;
-			}
-
-			$this->global_override             = false;
-			$this->advanced_settings[ $field ] = $this->get_field_value( $field );
-
-			if ( call_user_func_array( array_shift( $callback ), $callback ) ) {
-				// If it passes, send it back.
-				throw new OMAPI_Rules_True( $field );
-			}
-		}
-	}
-
 	/**
 	 * Magic getter for our object.
 	 *
@@ -800,6 +761,52 @@ class OMAPI_Rules {
 		}
 
 		throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'optin-monster-api' ), __CLASS__, $property ) );
+	}
+
+	/**
+	 * Add a new reason to the reasons array
+	 *
+	 * @since 2.8.0
+	 *
+	 * @param  mixed $reason The reason to add
+	 *
+	 * @return self
+	 */
+	public function add_reason( $reason ) {
+		 $this->reasons[] = $reason;
+
+		return $this;
+	}
+
+	/**
+	 * Setter for $advanced_settings attribute
+	 *
+	 * @since 2.8.0
+	 *
+	 * @param  string $field The advanced settings field to set
+	 * @param  string $value The field value
+	 *
+	 * @return self
+	 */
+	public function set_advanced_settings_field( $field, $value ) {
+		 $this->advanced_settings[ $field ] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Setter for $global_override attribute
+	 *
+	 * @since 2.8.0
+	 *
+	 * @param  bool $value The new value
+	 *
+	 * @return self
+	 */
+	public function set_global_override( $value ) {
+		 $this->global_override = $value;
+
+		return $this;
 	}
 
 	/**

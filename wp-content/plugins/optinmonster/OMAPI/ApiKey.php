@@ -56,6 +56,11 @@ class OMAPI_ApiKey {
 		unset( $option['siteIds'] );
 		unset( $option['customApiUrl'] );
 		unset( $option['apiCname'] );
+		unset( $option['userId'] );
+		unset( $option['accountId'] );
+		unset( $option['currentLevel'] );
+		unset( $option['plan'] );
+		unset( $option['revenueAttribution'] );
 
 		// Fetch the userId and accountId now.
 		$option = OMAPI_Api::fetch_me( $option, $creds );

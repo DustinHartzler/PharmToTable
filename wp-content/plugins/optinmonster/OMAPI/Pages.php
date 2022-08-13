@@ -171,12 +171,13 @@ class OMAPI_Pages {
 			);
 
 			// If user upgradeable, add an upgrade link to menu.
-			$level = $this->base->can_upgrade();
-			if ( $level ) {
+			$level   = $this->base->get_level();
+			$upgrade = $this->base->can_upgrade();
+			if ( $upgrade || '' === $level ) {
 				$this->pages['optin-monster-upgrade'] = array(
 					'name'     => 'vbp_pro' === $level
-						? __( 'Upgrade to Growth', 'optin-monster-api' )
-						: __( 'Upgrade to Pro', 'optin-monster-api' ),
+						? '<span class="om-menu-highlight">' . __( 'Upgrade to Growth', 'optin-monster-api' ) . '</span>'
+						: '<span class="om-menu-highlight">' . __( 'Upgrade to Pro', 'optin-monster-api' ) . '</span>',
 					'redirect' => esc_url_raw( OMAPI_Urls::upgrade( 'pluginMenu' ) ),
 					'callback' => '__return_null',
 				);
@@ -401,8 +402,10 @@ class OMAPI_Pages {
 					// 'scriptPath'   => $path,
 					'pages'           => $pages,
 					'titleTag'        => html_entity_decode( $this->title_tag ),
-					'isWooActive'     => OMAPI::is_woocommerce_active(),
+					'isWooActive'     => OMAPI_WooCommerce::is_active(),
 					'isWooConnected'  => OMAPI_WooCommerce::is_connected(),
+					'isEddActive'     => OMAPI_EasyDigitalDownloads::is_active(),
+					'isEddConnected'  => OMAPI_EasyDigitalDownloads::is_connected(),
 					'blogname'        => esc_attr( get_option( 'blogname' ) ),
 					'userEmail'       => esc_attr( $current_user->user_email ),
 					'userFirstName'   => esc_attr( $current_user->user_firstname ),
@@ -412,6 +415,7 @@ class OMAPI_Pages {
 					'partnerId'       => OMAPI_Partners::get_id(),
 					'partnerUrl'      => OMAPI_Partners::has_partner_url(),
 					'showReview'      => $this->base->review->should_show_review(),
+					'timezone'        => wp_timezone_string(),
 				)
 			);
 
