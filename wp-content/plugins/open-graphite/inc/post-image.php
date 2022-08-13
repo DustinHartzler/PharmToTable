@@ -7,19 +7,19 @@ $the_ogvar = open_graphite_vars();
 	$image_ID                = attachment_url_to_postid($filename); /* $filename is specified in _open_graphite_pro.php */
 
 	$small_image             = wp_get_attachment_image_src( $image_ID, $size = 'thumbnail', $icon = false);
-	$small_image_URL         = $small_image[0];
-	$small_image_width       = $small_image[1];
-	$small_image_height      = $small_image[2];
+	$small_image_URL         = $small_image[0] ?? '';
+	$small_image_width       = $small_image[1] ?? '';
+	$small_image_height      = $small_image[2] ?? '';
 
 	$full_image              = wp_get_attachment_image_src( $image_ID, $size = 'full', $icon = false);
-	$full_image_URL          = $full_image[0];
-	$full_image_width        = $full_image[1];
-	$full_image_height       = $full_image[2];
+	$full_image_URL          = $full_image[0] ?? '';
+	$full_image_width        = $full_image[1] ?? '';
+	$full_image_height       = $full_image[2] ?? '';
 
 	$featured_image          = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', $icon = false);
-	$featured_image_URL      = $featured_image[0];
-	$featured_image_width    = $featured_image[1];
-	$featured_image_height   = $featured_image[2];
+	$featured_image_URL      = $featured_image[0] ?? '';
+	$featured_image_width    = $featured_image[1] ?? '';
+	$featured_image_height   = $featured_image[2] ?? '';
 ?>
 
 <?php /* If there is a custom image, show the Edit Image icon. */

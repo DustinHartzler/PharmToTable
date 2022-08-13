@@ -91,9 +91,9 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 		<div class="og-settings" id="homepage">
 				<?php /* Image */
-				$default_image 		= $ogoptions['default_home_image'];
-				$default_image_id	= attachment_url_to_postid($default_image); 
-				$image_attributes   = wp_get_attachment_image_src( $default_image_id, 'full' );
+				$default_image 		= $ogoptions['default_home_image'] ?? '';
+				$default_image_id	= attachment_url_to_postid($default_image) ?? ''; 
+				$image_attributes   = wp_get_attachment_image_src( $default_image_id, 'full' ) ?? '';
 				
 				if($default_image) {
 					wp_get_attachment_image_src($default_image_id);
@@ -229,7 +229,7 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 			
 
 				<select id="openg_settings[open_graphite_open_type_homepage_default]" name="openg_settings[open_graphite_open_type_homepage_default]" class="quarter" required>
-					<?php $ot = $ogoptions['open_graphite_open_type_homepage_default']; ?>
+					<?php $ot = $ogoptions['open_graphite_open_type_homepage_default'] ?? ''; ?>
 					<option></option>
 					
 					<optgroup label="<?php _e( 'Global', 'open-graphite' ); ?>">
@@ -313,8 +313,8 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 
 				<h3><?php _e( 'Card type', 'open-graphite' ); ?><sup>*</sup></h3>
 				<ul>
-					<li><input type="radio" name="openg_settings[open_graphite_home_twitter_card_type]" value="summary" <?php checked( 'summary' == $ogoptions['open_graphite_home_twitter_card_type'] ); ?> required /><?php _e( 'Summary', 'open-graphite' ); ?></li>
-					<li><input type="radio" name="openg_settings[open_graphite_home_twitter_card_type]" value="summary_large_image" <?php checked( 'summary_large_image' == $ogoptions['open_graphite_home_twitter_card_type'] ); ?> /><?php _e( 'Summary with large image (recommended)', 'open-graphite' ); ?></li>
+					<li><input type="radio" name="openg_settings[open_graphite_home_twitter_card_type]" value="summary" <?php checked( 'summary' == $twitter_card_type); ?> required /><?php _e( 'Summary', 'open-graphite' ); ?></li>
+					<li><input type="radio" name="openg_settings[open_graphite_home_twitter_card_type]" value="summary_large_image" <?php checked( 'summary_large_image' == $twitter_card_type); ?> /><?php _e( 'Summary with large image (recommended)', 'open-graphite' ); ?></li>
 				</ul>
 			</div>
 
@@ -347,17 +347,11 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 					<img src="<?php echo plugins_url('../images/settings/slack.svg', __FILE__ );?>" />
 				</p>
 
-				<?php if(get_option('open_graphitepro_key')) { ?>
-
-					<ul>
-						<li>
-							<input type="checkbox" disabled /> <?php _e( 'Enable author name and reading time', 'open-graphite' ); ?>
-						</li>
-					</ul>
-
-				<?php } else { ?>
-					<p><strong><?php printf(__( 'Pro tip: <a href="%1$s">Enter your license key</a> to enable all the pro options.', 'open-graphite' ), $license_link); ?></strong></p>
-				<?php } ?>
+				<ul>
+                    <li>
+                        <input type="checkbox" disabled /> <?php _e( 'Enable author name and reading time', 'open-graphite' ); ?>
+                    </li>
+                </ul>
 
 			</div>
 			

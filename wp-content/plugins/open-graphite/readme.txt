@@ -1,9 +1,14 @@
 === Open Graphite ===
+Plugin Name:        Open Graphite
 Contributors:       mikeyott
+Author URI:         https://rocketapps.com.au/
+Plugin URI:         https://wordpress.org/plugins/open-graphite/
 Tags:               open graph, social, facebook, twitter, thumbnail
 Requires at least:  4.7
-Tested up to:       5.8
+Tested up to:       5.9
 Stable tag:         trunk
+License:            GPLv3 or later
+License URI:        https://www.gnu.org/licenses/gpl-3.0.html
 
 Control how your content is viewed when shared on social media.
 
@@ -50,12 +55,12 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 <a href="https://rocketapps.com.au/open-graphite-pro/?origin=open-graphite">Open Graphite Pro</a> has additional features, such as:
 
 * The ability to use with any custom post type
-* Automatically force Facebook to immediately update your title, description or featured image when you make edits (no need to use the Facebook debugger)
+* Force Facebook to automatically and immediately update your title, description or featured image when you make edits (no need to use the Facebook debugger)
 * Mobile and desktop previews for Facebook, Twitter and Linkedin
 * WooCommerce product support
 * Pinterest specific options
 * Enhanced Slack sharing
-* Specify automatic defaults for titles, descriptions, featured images and object types
+* Enable automatic defaults for titles, descriptions, featured images and object types
 * Open Graph content indicators
 * Limit the number of characters for titles and descriptions (prevent your titles and descriptions getting truncated)
 * Open graph check tool
@@ -63,6 +68,19 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 * Priority support
 
 == Changelog ==
+
+= 1.5.1 =
+
+Fixed a couple of stray PHP warnings.
+
+= 1.5.0 =
+
+A few minor improvements.
+
+= 1.4.3 =
+
+Fixed PHP warnings.
+Minor UX tweak.
 
 = 1.4.2 =
 

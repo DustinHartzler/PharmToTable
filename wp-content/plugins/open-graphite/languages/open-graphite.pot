@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Open Graphite\n"
-"POT-Creation-Date: 2020-12-07 09:50+0800\n"
-"PO-Revision-Date: 2020-12-07 09:50+0800\n"
+"POT-Creation-Date: 2022-05-18 12:10+0800\n"
+"PO-Revision-Date: 2022-05-18 12:10+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,235 +26,197 @@ msgid "Settings"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-#: _open_graphite.php:92 _open_graphite.php:379
+#: _open_graphite.php:92 _open_graphite.php:390
 msgid "Open Graphite"
 msgstr ""
 
-#: _open_graphite.php:126 inc/settings-ui.php:188
+#: _open_graphite.php:129 inc/settings-ui.php:188
 msgid "Title"
 msgstr ""
 
-#: _open_graphite.php:127
+#: _open_graphite.php:130
 msgid ""
 "The title that will be shown when this post is shared on social networks."
 msgstr ""
 
-#: _open_graphite.php:131
+#: _open_graphite.php:138
 msgid "Copy from title"
 msgstr ""
 
-#: _open_graphite.php:135
+#: _open_graphite.php:144
 msgid ""
 "You have set the open graph title to always use the <strong>post title</"
 "strong>."
 msgstr ""
 
-#: _open_graphite.php:145 inc/settings-ui.php:227
+#: _open_graphite.php:154 inc/settings-ui.php:227
 msgid "Object Type"
 msgstr ""
 
-#: _open_graphite.php:146 inc/settings-ui.php:269
+#: _open_graphite.php:155 inc/settings-ui.php:269
 msgid "Learn about object types"
 msgstr ""
 
-#: _open_graphite.php:154 inc/settings-ui.php:235
+#: _open_graphite.php:163 inc/settings-ui.php:235
 msgid "Global"
 msgstr ""
 
-#: _open_graphite.php:155 inc/settings-ui.php:236
+#: _open_graphite.php:164 inc/settings-ui.php:236
 msgid "article"
 msgstr ""
 
-#: _open_graphite.php:156 inc/settings-ui.php:237
+#: _open_graphite.php:165 inc/settings-ui.php:237
 msgid "book"
 msgstr ""
 
-#: _open_graphite.php:157 inc/settings-ui.php:238
+#: _open_graphite.php:166 inc/settings-ui.php:238
 msgid "books.author"
 msgstr ""
 
-#: _open_graphite.php:158 inc/settings-ui.php:239
+#: _open_graphite.php:167 inc/settings-ui.php:239
 msgid "books.book"
 msgstr ""
 
-#: _open_graphite.php:159 inc/settings-ui.php:240
+#: _open_graphite.php:168 inc/settings-ui.php:240
 msgid "books.genre"
 msgstr ""
 
-#: _open_graphite.php:160 inc/settings-ui.php:241
+#: _open_graphite.php:169 inc/settings-ui.php:241
 msgid "profile"
 msgstr ""
 
-#: _open_graphite.php:161 inc/settings-ui.php:242
+#: _open_graphite.php:170 inc/settings-ui.php:242
 msgid "website"
 msgstr ""
 
-#: _open_graphite.php:164 inc/settings-ui.php:245
+#: _open_graphite.php:173 inc/settings-ui.php:245
 msgid "Music"
 msgstr ""
 
-#: _open_graphite.php:165 inc/settings-ui.php:246
+#: _open_graphite.php:174 inc/settings-ui.php:246
 msgid "music.album"
 msgstr ""
 
-#: _open_graphite.php:166 inc/settings-ui.php:247
+#: _open_graphite.php:175 inc/settings-ui.php:247
 msgid "music.radio_station"
 msgstr ""
 
-#: _open_graphite.php:167 inc/settings-ui.php:248
+#: _open_graphite.php:176 inc/settings-ui.php:248
 msgid "music.song"
 msgstr ""
 
-#: _open_graphite.php:170 inc/settings-ui.php:251
+#: _open_graphite.php:179 inc/settings-ui.php:251
 msgid "Video"
 msgstr ""
 
-#: _open_graphite.php:171 inc/settings-ui.php:252
+#: _open_graphite.php:180 inc/settings-ui.php:252
 msgid "video.episode"
 msgstr ""
 
-#: _open_graphite.php:172 inc/settings-ui.php:253
+#: _open_graphite.php:181 inc/settings-ui.php:253
 msgid "video.movie"
 msgstr ""
 
-#: _open_graphite.php:173 inc/settings-ui.php:254
+#: _open_graphite.php:182 inc/settings-ui.php:254
 msgid "video.other"
 msgstr ""
 
-#: _open_graphite.php:174 inc/settings-ui.php:255
+#: _open_graphite.php:183 inc/settings-ui.php:255
 msgid "video.tv_show"
 msgstr ""
 
-#: _open_graphite.php:177 inc/settings-ui.php:258
+#: _open_graphite.php:186 inc/settings-ui.php:258
 msgid "Other"
 msgstr ""
 
-#: _open_graphite.php:178 inc/settings-ui.php:259
+#: _open_graphite.php:187 inc/settings-ui.php:259
 msgid "business.business"
 msgstr ""
 
-#: _open_graphite.php:179 inc/settings-ui.php:260
+#: _open_graphite.php:188 inc/settings-ui.php:260
 msgid "object"
 msgstr ""
 
-#: _open_graphite.php:180 inc/settings-ui.php:261
+#: _open_graphite.php:189 inc/settings-ui.php:261
 msgid "place"
 msgstr ""
 
-#: _open_graphite.php:181 inc/settings-ui.php:262
+#: _open_graphite.php:190 inc/settings-ui.php:262
 msgid "product"
 msgstr ""
 
-#: _open_graphite.php:182 inc/settings-ui.php:263
+#: _open_graphite.php:191 inc/settings-ui.php:263
 msgid "product.group"
 msgstr ""
 
-#: _open_graphite.php:183 inc/settings-ui.php:264
+#: _open_graphite.php:192 inc/settings-ui.php:264
 msgid "restaurant.menu"
 msgstr ""
 
-#: _open_graphite.php:184 inc/settings-ui.php:265
+#: _open_graphite.php:193 inc/settings-ui.php:265
 msgid "restaurant.menu_item"
 msgstr ""
 
-#: _open_graphite.php:193
+#: _open_graphite.php:202
 #, php-format
 msgid ""
 "You have set the open graph object type to always be <strong>%1$s</strong>."
 msgstr ""
 
-#: _open_graphite.php:203 inc/settings-ui.php:206
+#: _open_graphite.php:212 inc/settings-ui.php:206
 msgid "Description"
 msgstr ""
 
-#: _open_graphite.php:204
+#: _open_graphite.php:213
 msgid ""
 "The text that will be shown when this post is shared on social networks."
 msgstr ""
 
-#: _open_graphite.php:212
+#: _open_graphite.php:221
 msgid ""
 "You have set the open graph description to always use the <strong>excerpt</"
 "strong>."
 msgstr ""
 
-#: _open_graphite.php:217 _open_graphite.php:225
+#: _open_graphite.php:226 _open_graphite.php:234
 msgid "Copy from excerpt"
 msgstr ""
 
-#: _open_graphite.php:236 inc/settings-ui.php:109
+#: _open_graphite.php:245 inc/settings-ui.php:109
 msgid "Image"
 msgstr ""
 
-#: _open_graphite.php:237
+#: _open_graphite.php:246
 msgid ""
 "The image that will be shown when this post is shared on social networks."
 msgstr ""
 
-#: _open_graphite.php:261
+#: _open_graphite.php:270
 msgid ""
 "You have set the open graph image to always use the <strong>featured image</"
 "strong>."
 msgstr ""
 
-#: _open_graphite.php:271 inc/settings-ui.php:83 inc/settings-ui.php:547
+#: _open_graphite.php:280 inc/settings-ui.php:83 inc/settings-ui.php:514
 msgid "Debugging"
 msgstr ""
 
-#: _open_graphite.php:272 inc/settings-ui.php:540
+#: _open_graphite.php:281 inc/settings-ui.php:507
 msgid "See how these social networks view your homepage."
 msgstr ""
 
-#: _open_graphite.php:274 inc/preview-links.php:1 inc/settings-ui.php:64
-#: inc/settings-ui.php:275 inc/settings-ui.php:552
+#: _open_graphite.php:283 inc/preview-links.php:1 inc/settings-ui.php:64
+#: inc/settings-ui.php:275 inc/settings-ui.php:519
 msgid "Facebook"
 msgstr ""
 
-#: _open_graphite.php:274 inc/preview-links.php:2 inc/settings-ui.php:68
-#: inc/settings-ui.php:305 inc/settings-ui.php:553
+#: _open_graphite.php:283 inc/preview-links.php:2 inc/settings-ui.php:68
+#: inc/settings-ui.php:305 inc/settings-ui.php:520
 msgid "Twitter"
 msgstr ""
 
-#: _open_graphite.php:380
+#: _open_graphite.php:391
 msgid "Help"
-msgstr ""
-
-#: inc/cm-form.php:4
-msgid "Rocket Apps Newsletter"
-msgstr ""
-
-#: inc/cm-form.php:5
-msgid ""
-"Subscribe to be first to learn about any new features, updates or special "
-"offers."
-msgstr ""
-
-#: inc/cm-form.php:7
-msgid "Email Address"
-msgstr ""
-
-#: inc/cm-form.php:12
-msgid "Subscribe"
-msgstr ""
-
-#: inc/cm-form.php:16
-msgid "Resources"
-msgstr ""
-
-#: inc/cm-form.php:18
-msgid "Website"
-msgstr ""
-
-#: inc/cm-form.php:19
-msgid "Documentation"
-msgstr ""
-
-#: inc/cm-form.php:20
-msgid "Rate this plugin"
-msgstr ""
-
-#: inc/cm-form.php:21
-msgid "Support"
 msgstr ""
 
 #: inc/help.php:20
@@ -491,11 +453,11 @@ msgstr ""
 msgid "Slack"
 msgstr ""
 
-#: inc/settings-ui.php:79 inc/settings-ui.php:368
+#: inc/settings-ui.php:79 inc/settings-ui.php:362
 msgid "Enabled Post Types"
 msgstr ""
 
-#: inc/settings-ui.php:80 inc/settings-ui.php:431
+#: inc/settings-ui.php:80 inc/settings-ui.php:398
 msgid "Defaults"
 msgstr ""
 
@@ -503,11 +465,11 @@ msgstr ""
 msgid "Other settings"
 msgstr ""
 
-#: inc/settings-ui.php:82 inc/settings-ui.php:539
+#: inc/settings-ui.php:82 inc/settings-ui.php:506
 msgid "Previews"
 msgstr ""
 
-#: inc/settings-ui.php:84 inc/settings-ui.php:562
+#: inc/settings-ui.php:84 inc/settings-ui.php:529
 msgid "Troubleshooting"
 msgstr ""
 
@@ -522,7 +484,7 @@ msgstr ""
 msgid "It is recommended the image be %1$s or %2$s at very least."
 msgstr ""
 
-#: inc/settings-ui.php:110 inc/settings-ui.php:291 inc/settings-ui.php:528
+#: inc/settings-ui.php:110 inc/settings-ui.php:291 inc/settings-ui.php:495
 msgid "Learn more"
 msgstr ""
 
@@ -654,213 +616,202 @@ msgstr ""
 msgid "Enhanced Slack sharing."
 msgstr ""
 
-#: inc/settings-ui.php:354
+#: inc/settings-ui.php:352
 msgid "Enable author name and reading time"
 msgstr ""
 
-#: inc/settings-ui.php:359
-#, php-format
-msgid ""
-"Pro tip: <a href=\"%1$s\">Enter your license key</a> to enable all the pro "
-"options."
-msgstr ""
-
-#: inc/settings-ui.php:369
+#: inc/settings-ui.php:363
 msgid "The post types to show the Open Graphite metabox."
 msgstr ""
 
-#: inc/settings-ui.php:393
+#: inc/settings-ui.php:387
 msgid "Custom Post Types"
 msgstr ""
 
-#: inc/settings-ui.php:432
+#: inc/settings-ui.php:399
 msgid "Force these defaults on all post types and pages."
 msgstr ""
 
-#: inc/settings-ui.php:437
+#: inc/settings-ui.php:404
 msgid "Always use the title"
 msgstr ""
 
-#: inc/settings-ui.php:441
+#: inc/settings-ui.php:408
 msgid "Always use the excerpt for the description (posts only)"
 msgstr ""
 
-#: inc/settings-ui.php:445
+#: inc/settings-ui.php:412
 msgid "Always use the featured image"
 msgstr ""
 
-#: inc/settings-ui.php:454
+#: inc/settings-ui.php:421
 msgid "Always use this object type:"
 msgstr ""
 
-#: inc/settings-ui.php:458
+#: inc/settings-ui.php:425
 msgid "Upgrade to pro"
 msgstr ""
 
-#: inc/settings-ui.php:464
+#: inc/settings-ui.php:431
 msgid "Title character limit:"
 msgstr ""
 
-#: inc/settings-ui.php:471
+#: inc/settings-ui.php:438
 msgid "Description character limit:"
 msgstr ""
 
-#: inc/settings-ui.php:485
+#: inc/settings-ui.php:452
 msgid "Other Settings"
 msgstr ""
 
-#: inc/settings-ui.php:486
+#: inc/settings-ui.php:453
 msgid "Additional open graph options."
 msgstr ""
 
-#: inc/settings-ui.php:489
+#: inc/settings-ui.php:456
 msgid "Common options"
 msgstr ""
 
-#: inc/settings-ui.php:492
+#: inc/settings-ui.php:459
 msgid "Force required"
 msgstr ""
 
-#: inc/settings-ui.php:495
+#: inc/settings-ui.php:462
 msgid ""
 "Enable a description of the open graph image (derived from the ALT attribute)"
 msgstr ""
 
-#: inc/settings-ui.php:498
+#: inc/settings-ui.php:465
 msgid "Enable open graph updated time property"
 msgstr ""
 
-#: inc/settings-ui.php:501
+#: inc/settings-ui.php:468
 msgid "Disable the quality indicators admin column"
 msgstr ""
 
-#: inc/settings-ui.php:507
+#: inc/settings-ui.php:474
 msgid "Options for Article object types only"
 msgstr ""
 
-#: inc/settings-ui.php:510
+#: inc/settings-ui.php:477
 msgid "Include published and modified dates"
 msgstr ""
 
-#: inc/settings-ui.php:513
+#: inc/settings-ui.php:480
 msgid ""
 "Enable author URL (authors need to have a URL in the website field on their "
 "profile)"
 msgstr ""
 
-#: inc/settings-ui.php:519
+#: inc/settings-ui.php:486
 msgid "Locale settings"
 msgstr ""
 
-#: inc/settings-ui.php:522
+#: inc/settings-ui.php:489
 msgid "Disable locale in open graph"
 msgstr ""
 
-#: inc/settings-ui.php:528
+#: inc/settings-ui.php:495
 msgid "Open Graph Check API key"
 msgstr ""
 
-#: inc/settings-ui.php:548
+#: inc/settings-ui.php:515
 msgid "Test your page using official and 3rd party online tools."
 msgstr ""
 
-#: inc/settings-ui.php:554
+#: inc/settings-ui.php:521
 msgid "Linkedin Post Inspector"
 msgstr ""
 
-#: inc/settings-ui.php:555
+#: inc/settings-ui.php:522
 msgid "iFramely"
 msgstr ""
 
-#: inc/settings-ui.php:563
+#: inc/settings-ui.php:530
 msgid "May solve compatibility issues with certain themes and plugins."
 msgstr ""
 
-#: inc/settings-ui.php:566
+#: inc/settings-ui.php:533
 msgid "Theme output priority"
 msgstr ""
 
-#: inc/settings-ui.php:568
+#: inc/settings-ui.php:535
 msgid "Low"
 msgstr ""
 
-#: inc/settings-ui.php:569
+#: inc/settings-ui.php:536
 msgid "High"
 msgstr ""
 
-#: inc/settings-ui.php:570
+#: inc/settings-ui.php:537
 msgid "Auto (default)"
 msgstr ""
 
-#: inc/settings-ui.php:574
+#: inc/settings-ui.php:541
 msgid "Jetpack"
 msgstr ""
 
-#: inc/settings-ui.php:576
+#: inc/settings-ui.php:543
 msgid "Avoid Jetpack open graph meta tag conflict."
 msgstr ""
 
-#: inc/settings-ui.php:638
+#: inc/settings-ui.php:607
 msgid "Matthew Woods"
 msgstr ""
 
-#: inc/settings-ui.php:639
+#: inc/settings-ui.php:608
 msgid "Tour Administrator & Web Developer"
 msgstr ""
 
-#: inc/settings-ui.php:639
+#: inc/settings-ui.php:608
 msgid "Perth Observatory"
 msgstr ""
 
-#: inc/settings-ui.php:645
+#: inc/settings-ui.php:615
 msgid "Use on all post types"
 msgstr ""
 
-#: inc/settings-ui.php:646
+#: inc/settings-ui.php:616
 msgid "Specify automatic defaults"
 msgstr ""
 
-#: inc/settings-ui.php:647
-msgid "Facebook, Twitter & Linkedin previews for mobile & desktop"
+#: inc/settings-ui.php:617
+msgid "Mobile & desktop previews"
 msgstr ""
 
-#: inc/settings-ui.php:648
+#: inc/settings-ui.php:618
 msgid "WooCommerce product support"
 msgstr ""
 
-#: inc/settings-ui.php:649
+#: inc/settings-ui.php:619
 msgid "Pinterest specific options"
 msgstr ""
 
-#: inc/settings-ui.php:650
+#: inc/settings-ui.php:620
 msgid "Enhanced Slack sharing"
 msgstr ""
 
-#: inc/settings-ui.php:651
+#: inc/settings-ui.php:621
 msgid "Open Graph content indicators"
 msgstr ""
 
-#: inc/settings-ui.php:652
-msgid "Limit the number of characters for titles & descriptions"
+#: inc/settings-ui.php:622
+msgid "Apply character limits"
 msgstr ""
 
-#: inc/settings-ui.php:653
+#: inc/settings-ui.php:623
 msgid "Open graph check tool"
 msgstr ""
 
-#: inc/settings-ui.php:654
+#: inc/settings-ui.php:624
 msgid "Additional open graph options"
 msgstr ""
 
-#: inc/settings-ui.php:655
-msgid "12 months of support & updates"
-msgstr ""
-
-#: inc/settings-ui.php:656
+#: inc/settings-ui.php:625
 msgid "Prioritised support response"
 msgstr ""
 
-#: inc/settings-ui.php:660
+#: inc/settings-ui.php:629
 msgid "Upgrade to Pro Now"
 msgstr ""
 

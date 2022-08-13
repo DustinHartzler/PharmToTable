@@ -3,7 +3,7 @@
 Plugin Name: 	Open Graphite
 Plugin URI: 	https://wordpress.org/plugins/open-graphite/
 Description: 	Control how your content is viewed when shared on social media.
-Version: 		1.4.2
+Version: 		1.5.1
 Author: 		Rocket Apps
 Author URI: 	https://rocketapps.com.au
 License:        GPLv2
@@ -104,7 +104,7 @@ class open_graphite_otmeta {
     function render_open_graphite_meta_box(){
         global $post;
 		$ogoptions = get_option( 'openg_settings' ); 
-		wp_nonce_field( plugin_basename( __FILE__ ), '_open_graphite_open_type__nounce' );
+		wp_nonce_field( plugin_basename( __FILE__ ), '_open_graphite_open_type__nonce' );
 
 		$open_graphite_title 				= get_post_meta($post->ID, '_open_graph_title', true);
 		$open_graphite_description			= get_post_meta($post->ID, '_open_graph_description', true);
@@ -114,6 +114,9 @@ class open_graphite_otmeta {
 		$title_char_limit					= isset($ogoptions['open_graphite_title_char_limit']) ? $ogoptions['open_graphite_title_char_limit'] : '';
 		$description_char_limit				= isset($ogoptions['open_graphite_description_char_limit']) ? $ogoptions['open_graphite_description_char_limit'] : '';
 		$open_graphite_post_type_default	= isset($ogoptions['open_graphite_open_type_post_default']) ? $ogoptions['open_graphite_open_type_post_default'] : '';
+		$the_ogvar 							= open_graphite_vars();
+		global $current_screen;
+		$current_screen = get_current_screen();
 		?>
 		
 		<!--/ Start Metabox /-->
@@ -128,7 +131,13 @@ class open_graphite_otmeta {
 				</p>
 				<?php if(!$open_graphite_title_default) { ?>
 					<input type="text" id="_open_graph_title" name="_open_graph_title" value="<?php if ($open_graphite_title) { echo esc_html($open_graphite_title); } ?>" maxlength="<?php if($title_char_limit) { echo $title_char_limit; } else { echo $the_ogvar['default_title_chars']; } ?>" />
-					<a class="get-title"><?php _e( 'Copy from title', 'open-graphite' ); ?></a>
+
+					<?php if ( method_exists($current_screen, 'is_block_editor') && $current_screen->is_block_editor() ) {
+						// TODO: Copy text from Gutenberg title element
+					} else { ?>
+						<a class="get-title"><?php _e( 'Copy from title', 'open-graphite' ); ?></a>
+					<?php } ?>
+
 				<?php } else { ?>
 					<p class="using-default">
 						<span class="dashicons dashicons-info"></span>
@@ -313,10 +322,12 @@ class open_graphite_otmeta {
 
 function save_data($post_id) {
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+	
 		return;
 
-		if ( !wp_verify_nonce( $_POST['_open_graphite_open_type__nounce'], plugin_basename( __FILE__ ) ) )
-		return;
+		if ( !isset($_POST['_open_graphite_open_type__nonce']) || !wp_verify_nonce( $_POST['_open_graphite_open_type__nonce'], plugin_basename(__FILE__) )) {
+			return;
+		}
 
 		require_once('inc/update-post-meta.php');
 
@@ -432,8 +443,8 @@ if($disable_jetpack_og) {
 add_action('wp_head', 'openghead', $output_priority);
 function openghead() { 
 	global $post;
-	$ogoptions 				= get_option( 'openg_settings' ); 
-	$home_url 				= get_option('home');
+	$ogoptions 							= get_option( 'openg_settings' ); 
+	$home_url 							= get_option('home');
 	$default_title						= isset($ogoptions['open_graphite_default_title']) ? $ogoptions['open_graphite_default_title'] : '';
 	$ot 								= isset($ogoptions['open_graphite_open_type_homepage_default']) ? $ogoptions['open_graphite_open_type_homepage_default'] : '';
 	$default_description				= isset($ogoptions['open_graphite_default_description']) ? $ogoptions['open_graphite_default_description'] : '';
@@ -441,23 +452,24 @@ function openghead() {
 	$fb_app_ID							= isset($ogoptions['open_graphite_home_fb_app_id']) ? $ogoptions['open_graphite_home_fb_app_id'] : '';
 	$open_graphite_post_type_default	= isset($ogoptions['open_graphite_open_type_post_default']) ? $ogoptions['open_graphite_open_type_post_default'] : '';
 	$open_graphite_description_default 	= isset($ogoptions['open_graphite_description_default']) ? $ogoptions['open_graphite_description_default'] : '';
+	$twitter_card 						= isset($ogoptions['open_graphite_home_twitter_card_type']) ? $ogoptions['open_graphite_home_twitter_card_type'] : '';
+	$twitter_username 					= isset($ogoptions['open_graphite_twitter_username']) ? $ogoptions['open_graphite_twitter_username'] : '';
 
-	$twitter_card			= $ogoptions['open_graphite_home_twitter_card_type'];
 	if($twitter_card) {
 		$twitter_card = $twitter_card;
 	} else {
 		$twitter_card = 'summary';
 	}
-	$twitter_username = $ogoptions['open_graphite_twitter_username'];
+	
 	if($twitter_username) { 
 		$twitter_username = '
 <meta name="twitter:creator" content="' . $twitter_username . '" />';
 	}
 	$image_ID				= attachment_url_to_postid($default_image);
 	$full_image				= wp_get_attachment_image_src( $image_ID, $size = 'full', $icon = false);
-	$full_image_URL			= $full_image[0];
-	$full_image_width		= $full_image[1];
-	$full_image_height		= $full_image[2];
+	$full_image_URL 	    = $full_image[0] ?? '';
+	$full_image_width		= $full_image[1] ?? '';
+	$full_image_height		= $full_image[2] ?? '';
 
 	if($fb_app_ID) { 
 		$fb_app_ID = '
@@ -546,9 +558,9 @@ function openghead() {
 
 			$image_ID                = attachment_url_to_postid($open_graphite_image);
 			$full_image              = wp_get_attachment_image_src( $image_ID, $size = 'full', $icon = false);
-			$full_image_URL          = $full_image[0];
-			$full_image_width        = $full_image[1];
-			$full_image_height       = $full_image[2];
+			$full_image_URL 	    = $full_image[0] ?? '';
+			$full_image_width		= $full_image[1] ?? '';
+			$full_image_height		= $full_image[2] ?? '';
 			
 			$open_graphite_head = '
 <!--/ Open Graphite /-->
