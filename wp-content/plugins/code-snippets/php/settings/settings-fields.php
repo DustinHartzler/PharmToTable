@@ -80,13 +80,13 @@ function get_settings_fields() {
 				'modified-desc' => __( 'Modified (latest first)', 'code-snippets' ),
 				'modified-asc'  => __( 'Modified (oldest first)', 'code-snippets' ),
 			],
-			'default' => 'priority',
+			'default' => 'priority-asc',
 		],
 
 		'disable_prism' => [
 			'name'    => __( 'Disable Shortcode Syntax Highlighter', 'code-snippets' ),
 			'type'    => 'checkbox',
-			'label'   => __( 'Disable the syntax highlighting for the [code_snippet] shortcode on the front-end.', 'code-snippets' ),
+			'label'   => __( 'Disable syntax highlighting when displaying snippet code on the front-end.', 'code-snippets' ),
 			'default' => false,
 		],
 

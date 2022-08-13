@@ -70,8 +70,6 @@ class Plugin {
 
 		wp_cache_add_global_groups( CACHE_GROUP );
 
-		add_action( 'init', array( $this, 'load_textdomain' ), 9 );
-
 		add_filter( 'code_snippets/execute_snippets', array( $this, 'disable_snippet_execution' ), 5 );
 
 		if ( isset( $_REQUEST['snippets-safe-mode'] ) ) {
@@ -259,23 +257,6 @@ class Plugin {
 	}
 
 	/**
-	 * Load up the localization file if we're using WordPress in a different language.
-	 *
-	 * If you wish to contribute a language file to be included in the Code Snippets package,
-	 * please see create an issue on GitHub: https://github.com/sheabunge/code-snippets/issues
-	 */
-	public function load_textdomain() {
-		$domain = 'code-snippets';
-		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
-
-		// wp-content/languages/code-snippets/code-snippets-[locale].mo.
-		load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . "$domain/$domain-$locale.mo" );
-
-		// wp-content/plugins/code-snippets/languages/code-snippets-[locale].mo.
-		load_plugin_textdomain( $domain, false, dirname( plugin_basename( $this->file ) ) . '/languages' );
-	}
-
-	/**
 	 * Inject the safe mode query var into URLs
 	 *
 	 * @param string $url Original URL.
@@ -296,11 +277,24 @@ class Plugin {
 	 *
 	 * @return array
 	 */
-	public function get_types() {
+	public static function get_types() {
 		return array(
 			'php'  => __( 'Functions', 'code-snippets' ),
 			'html' => __( 'Content', 'code-snippets' ),
+			'css'  => __( 'Styles', 'code-snippets' ),
+			'js'   => __( 'Scripts', 'code-snippets' ),
 		);
+	}
+
+	/**
+	 * Determine whether a snippet type is Pro-only.
+	 *
+	 * @param string $type Snippet type name.
+	 *
+	 * @return bool
+	 */
+	public static function is_pro_type( $type ) {
+		return 'css' === $type || 'js' === $type;
 	}
 
 	/**
@@ -314,6 +308,8 @@ class Plugin {
 		$descriptions = array(
 			'php'  => __( 'Function snippets are run on your site as if there were in a plugin or theme functions.php file.', 'code-snippets' ),
 			'html' => __( 'Content snippets are bits of reusable PHP and HTML content that can be inserted into posts and pages.', 'code-snippets' ),
+			'css'  => __( 'Style snippets are written in CSS and loaded in the admin area or on the site front-end, just like the theme style.css.', 'code-snippets' ),
+			'js'   => __( 'Script snippets are loaded on the site front-end in a JavaScript file, either in the head or body sections.', 'code-snippets' ),
 		);
 
 		return isset( $descriptions[ $type ] ) ? $descriptions[ $type ] : '';

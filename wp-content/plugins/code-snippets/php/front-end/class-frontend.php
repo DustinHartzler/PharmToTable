@@ -47,7 +47,7 @@ class Frontend {
 		add_filter(
 			'mce_external_plugins',
 			function ( $plugins ) {
-				$plugins['code_snippets'] = plugins_url( 'js/min/mce.js', PLUGIN_FILE );
+				$plugins['code_snippets'] = plugins_url( 'dist/mce.js', PLUGIN_FILE );
 				return $plugins;
 			}
 		);
@@ -85,20 +85,26 @@ class Frontend {
 			return $posts;
 		}
 
-		// Loop through all the posts, checking for instances where the source tag is used.
-		foreach ( $posts as $post ) {
+		// Concatenate all provided content together, so we can check it all in one go.
+		$content = implode( ' ', wp_list_pluck( $posts, 'post_content' ) );
 
-			if ( false === stripos( $post->post_content, '[' . self::SOURCE_SHORTCODE ) &&
-			     ! ( function_exists( 'has_block' ) && has_block( 'code-snippets/source', $post ) ) ) {
-				continue;
-			}
-
-			// Register the syntax highlighter assets and exit from the loop once a match is discovered.
-			$this->register_prism_assets();
-			wp_enqueue_style( self::PRISM_HANDLE );
-			wp_enqueue_script( self::PRISM_HANDLE );
-			break;
+		// Bail now if the provided post don't contain the source shortcode or block editor block.
+		if ( false === stripos( $content, '[' . self::SOURCE_SHORTCODE ) &&
+		     false === strpos( $content, '<!-- wp:code-snippets/source ' ) ) {
+			return $posts;
 		}
+
+		// Load Prism assets on the appropriate hook.
+		$this->register_prism_assets();
+
+		add_action(
+			'wp_enqueue_scripts',
+			function () {
+				wp_enqueue_style( self::PRISM_HANDLE );
+				wp_enqueue_script( self::PRISM_HANDLE );
+			},
+			100
+		);
 
 		return $posts;
 	}
@@ -111,14 +117,14 @@ class Frontend {
 
 		wp_register_style(
 			self::PRISM_HANDLE,
-			plugins_url( 'css/min/prism.css', $plugin->file ),
+			plugins_url( 'dist/prism.css', $plugin->file ),
 			array(),
 			$plugin->version
 		);
 
-		wp_enqueue_script(
+		wp_register_script(
 			self::PRISM_HANDLE,
-			plugins_url( 'js/min/prism.js', $plugin->file ),
+			plugins_url( 'dist/prism.js', $plugin->file ),
 			array(),
 			$plugin->version,
 			true
@@ -223,6 +229,18 @@ class Frontend {
 	}
 
 	/**
+	 * Converts a value and key into an HTML attribute pair.
+	 *
+	 * @param string $value Attribute value.
+	 * @param string $key   Attribute name.
+	 *
+	 * @return void
+	 */
+	private static function create_attribute_pair( &$value, $key ) {
+		$value = sprintf( '%s="%s"', sanitize_key( $key ), esc_attr( $value ) );
+	}
+
+	/**
 	 * Render the source code of a given snippet
 	 *
 	 * @param Snippet $snippet Snippet object.
@@ -231,22 +249,47 @@ class Frontend {
 	 * @return string Shortcode content.
 	 */
 	private function render_snippet_source( Snippet $snippet, $atts = [] ) {
-		$atts = array_merge( [ 'line_numbers' => false ], $atts );
+		$atts = array_merge(
+			array(
+				'line_numbers'    => false,
+				'highlight_lines' => '',
+			),
+			$atts
+		);
 
-		if ( ! trim( $snippet->code ) ) {
-			return '';
-		}
+		$language = 'css' === $snippet->type ? 'css' : ( 'js' === $snippet->type ? 'js' : 'php' );
 
-		$class = 'language-' . $snippet->type;
+		$pre_attributes = array(
+			'id'    => "code-snippet-source-$snippet->id",
+			'class' => 'code-snippet-source',
+		);
+
+		$code_attributes = array(
+			'class' => "language-$language",
+		);
 
 		if ( $atts['line_numbers'] ) {
-			$class .= ' line-numbers';
+			$code_attributes['class'] .= ' line-numbers';
+			$pre_attributes['class'] .= ' linkable-line-numbers';
 		}
 
+		if ( $atts['highlight_lines'] ) {
+			$pre_attributes['data-line'] = $atts['highlight_lines'];
+		}
+
+		$pre_attributes = apply_filters( 'code_snippets/prism_pre_attributes', $pre_attributes, $snippet, $atts );
+		$code_attributes = apply_filters( 'code_snippets/prism_code_attributes', $code_attributes, $snippet, $atts );
+
+		array_walk( $code_attributes, array( $this, 'create_attribute_pair' ) );
+		array_walk( $pre_attributes, array( $this, 'create_attribute_pair' ) );
+
+		$code = 'php' === $snippet->type ? "<?php\n\n$snippet->code" : $snippet->code;
+
 		return sprintf(
-			'<pre><code class="%s">%s</code></pre>',
-			$class,
-			esc_html( $snippet->code )
+			'<pre %s><code %s>%s</code></pre>',
+			implode( ' ', $pre_attributes ),
+			implode( ' ', $code_attributes ),
+			esc_html( $code )
 		);
 	}
 
@@ -261,10 +304,11 @@ class Frontend {
 
 		$atts = shortcode_atts(
 			array(
-				'id'           => 0,
-				'snippet_id'   => 0,
-				'network'      => false,
-				'line_numbers' => false,
+				'id'              => 0,
+				'snippet_id'      => 0,
+				'network'         => false,
+				'line_numbers'    => false,
+				'highlight_lines' => '',
 			),
 			$atts,
 			self::SOURCE_SHORTCODE
@@ -280,4 +324,3 @@ class Frontend {
 		return $this->render_snippet_source( $snippet, $atts );
 	}
 }
-

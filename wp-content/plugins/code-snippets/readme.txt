@@ -4,8 +4,8 @@ Donate link: https://codesnippets.pro
 Tags: snippets, functions, multisite, code, php, html, css, javascript
 License: MIT
 License URI: license.txt
-Stable tag: 3.1.1
-Tested up to: 6.0
+Stable tag: 3.2.0
+Tested up to: 6.0.1
 
 An easy, clean and simple way to run code snippets on your site.
 
@@ -13,21 +13,29 @@ An easy, clean and simple way to run code snippets on your site.
 
 Code Snippets is an easy, clean and simple way to run code snippets on your site. It removes the need to add custom snippets to your theme's `functions.php` file.
 
+[**Code Snippets Pro** is now available, with full CSS, JavaScript, Gutenberg and Elementor integrations.](https://codesnippets.pro/pricing/)
+
 A snippet is a small chunk of PHP code that you can use to extend the functionality of a WordPress-powered website; essentially a mini-plugin with less load on your site.
+
 Most snippet-hosting sites tell you to add snippet code to your active theme's `functions.php` file, which can get rather long and messy after a while.
+
 Code Snippets changes that by providing a GUI interface for adding snippets and **actually running them on your site** just as if they were in your theme's `functions.php` file.
 
-**Watch this video for a quick overview by Imran Siddiq:**
+**Quick overview of Code Snippets by Imran Siddiq**
 
 https://youtu.be/EMjIWjcYONk
 
-Code Snippets provides graphical interface, similar to the Plugins menu, for managing snippets. Snippets can be activated and deactivated, just like plugins. The snippet editor includes fields for a name, a visual editor-enabled description, tags to allow you to categorize snippets, and a full-featured code editor. Snippets can be exported for transfer to another site, either in JSON for later importing by the Code Snippets plugin, or in PHP for creating your own plugin or theme.
+Code Snippets provides graphical interface, similar to the Plugins menu, for managing snippets. Snippets can be activated and deactivated, just like plugins.
 
-If you have any feedback, issues, or suggestions for improvements please leave a topic in the [Support Forum](https://wordpress.org/support/plugin/code-snippets), or [join the community on Facebook](https://facebook.com/groups/codesnippetsplugin).
+The snippet editor includes fields for a name, a visual editor-enabled description, tags to allow you to categorize snippets, and a full-featured code editor. Snippets can be exported for transfer to another site, either in JSON for later importing by the Code Snippets plugin, or in PHP for creating your own plugin or theme.
+
+**Comprehensive Code Snippets tutorial with practical examples by Ferdy Korpershoek**
+
+https://youtu.be/29jD2BcBX5w
+
+If you have any feedback, issues, or suggestions for improvements please leave a topic in the [Support Forum](https://wordpress.org/support/plugin/code-snippets), [join the community on Facebook](https://facebook.com/groups/codesnippetsplugin), or [check us out on GitHub](https://github.com/sheabunge/code-snippets).
 
 If you like this plugin, or it is useful to you in some way, please consider reviewing it on [WordPress.org](https://wordpress.org/support/view/plugin-reviews/code-snippets).
-
-If you'd like to contribute to the plugin's code or translate it into another language, you can [fork the plugin on GitHub](https://github.com/sheabunge/code-snippets).
 
 == Translations ==
 
@@ -119,6 +127,30 @@ The best way to do this is to fork the [repository on GitHub](https://github.com
 4. Importing snippets from an export file
 
 == Changelog ==
+
+= 3.2.0 (22 July 2022) =
+* Fixed: Remove default value from SQL columns to improve compatibility with certain versions of MySQL.
+* Fixed: Delay loading snippets in Gutenberg editor blocks. (PRO)
+* Added: Option to show and hide line numbers in Gutenberg source code editor block. (PRO)
+* Added: Support for highlighting HTML, CSS, JS and embedded code in the front-end PrismJS code highlighter.
+* Added: Additional features to front-end PrismJS code highlighter, including automatic links and a copy button.
+* Added: Support for multiple code styles in the source code Gutenberg editor block. (PRO)
+* Added: Admin notice announcing release of Code Snippets Pro.
+* Fixed: Inconsistencies with translations between different plugin versions.
+* Fixed: Issue with Content Snippet shortcode information not displaying.
+* Added: Button for copying shortcode text to clipboard.
+* Improved: Include Code Snippets CSS and JS source code in distributed package.
+* Improved: Don't delete data from plugin if deleting Code Snippets Free while Code Snippets Pro is active.
+* Improved: Streamlined user interface and experience in Gutenberg editor blocks. (PRO)
+* Added: Option to choose from 44 different themes for the Prism code highlighter in the source editor block and Elementor widget. (PRO)
+* Improved: Compatibility of Elementor widgets with the latest version of Elementor. (PRO)
+* Improved: Replace icon font menu icon with embedded SVG icon.
+
+= 3.1.2 (3 July 2022) =
+* Updated external links and branding for Code Snippets Pro.
+* Improved: Add link URLs to settings pages, as an alternative to in-page navigation.
+* Fixed: Various fixes to block editor scripts. (PRO)
+* Fixed: Improved visual style of Gutenberg editor blocks. (PRO)
 
 = 3.1.1 (13 Jun 2022) =
 * Fixed: Download snippets feature not including snippet content.
@@ -232,84 +264,9 @@ __New in Pro__
 * Fixed: Check the referer on the import menu to prevent CSRF attacks. Thanks to [Chloe with the Wordfence Threat Intelligence team](https://www.wordfence.com/blog/author/wfchloe/) for reporting.
 * Fixed: Ensure that individual snippet action links use proper verification.
 
-= 2.13.3 (13 Mar 2019) =
-* Added: Hover effect to activation switches.
-* Added: Additional save buttons above snippet editor.
-* Added: List save keyboard shortcuts to the help tooltip.
-* Added: Change "no items found" message when search filters match nothing.
-* Fixed: Calling deprecated code in database upgrade process.
-* Fixed: Include snippet priority in export files.
-* Fixed: Use Unix newlines in code export file.
-* Updated CodeMirror to version 5.44.0.
-* Fixed: Correctly register snippet tables with WordPress to prevent database repair errors [[#](https://wordpress.org/support/topic/database-corrupted-4/)]
-* Fixed: CodeMirror indentation settings being applied incorrectly
-
-= 2.13.2 (25 Jan 2019) =
-* Removed potentially problematic cursor position saving feature
-
-= 2.13.1 (22 Jan 2019) =
-* Added: Add menu buttons to settings page for compact menu
-* Updated: French translation updated thanks to momo-fr
-* Fixed: Split code editor and tag editor scripts into their own files to prevent dependency errors
-* Fixed: Handling of single-use shared network snippets
-* Fixed: Minor translation template issues
-* Added: Help tooltop to snippet editor for keyboard shortcuts, thanks to Michael DeWitt
-* Improved: Added button for executing single-use snippets to snippets table
-* Added: Sample snippet for ordering snippets table by name by default
-* Updated CodeMirror to version 5.43.0
-
-= 2.13.0 (17 Dec 2018) =
-* Added: Search/replace functionality to the snippet editor. [See here for a list of keyboard shortcuts.](https://codemirror.net/demo/search.html) [[#](https://wordpress.org/support/topic/feature-request-codemirror-search-and-replace/)]
-* Updated CodeMirror to version 5.42.0
-* Added: Option to make admin menu more compact
-* Fixed: Problem clearing recently active snippet list
-* Improved: Integration between plugin and the CodeMirror library, to prevent collisions
-* Improved: Added additional styles to editor settings preview
-* Added: PHP linter to code editor
-* Improved: Use external scripts instead of inline scripts
-* Fixed: Missing functionality for 'Auto Close Brackets' and 'Highlight Selection Matches' settings
-
-= 2.12.1 (15 Nov 2018) =
-* Improved: CodeMirror updated to version 5.41.0
-* Improved: Attempt to create database columns that might be missing after a table upgrade
-* Improved: Streamlined upgrade process
-* Fixed: Interface layout on sites using right-to-left languages
-* Improved: Made search box appear at top of page on mobile [[#](https://wordpress.org/support/topic/small-modification-for-mobile-ux/)]
-* Updated screenshots
-
-= 2.12.0 (23 Sep 2018) =
-* Fixed: Prevented hidden columns setting from reverting to default
-* Improved: Updated import page to improve usability
-* Improved: Added Import button next to page title on manage page
-* Improved: Added coloured banner indicating whether a snippet is active when editing
-* Update CodeMirror to 5.40.0
-
-= 2.11.0 (24 Jul 2018) =
-* Added: Ability to assign a priority to snippets, to determine the order in which they are executed
-* Improvement: The editor cursor position will be preserved when saving a snippet
-* Added: Pressing Ctrl/Cmd + S while writing a snippet will save it
-* Added: Shadow opening PHP tag above the code editor
-* Improved: Updated the message shown when there are no snippets
-* Added: Install sample snippets when the plugin is installed
-* Improved: Show all available tags when selecting the tag field
-* Added: Filter hook for controlling the default list table view
-* Added: Action for cloning snippets
-
 **[The full changelog is available on GitHub](https://github.com/sheabunge/code-snippets/blob/master/CHANGELOG.md)**
 
 == Upgrade Notice ==
 
-= 3.1.1 =
-Fixed download snippets feature.
-
-= 3.1.0 =
-Comprehensive persistent object caching support.
-
-= 2.14.2 =
-New color picker and code validator improvements.
-
-= 2.14.0 =
-Security update, last modified dates, and other improvements.
-
-= 2.13.1 =
-Fixes for single-use snippets and French translation.
+= 3.2.0 =
+Code Snippets Pro is here! Improvements to front-end syntax highlighter in this version.
