@@ -9,13 +9,13 @@
  * Plugin Name: ConvertKit for WooCommerce
  * Plugin URI:  https://www.convertkit.com
  * Description: Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account.
- * Version: 1.4.7
+ * Version: 1.4.8
  * Author: ConvertKit
  * Author URI: https://www.convertkit.com
  * Text Domain: woocommerce-convertkit
  *
  * WC requires at least: 3.0
- * WC tested up to: 6.6.1
+ * WC tested up to: 6.7.0
  */
 
 // Bail if Plugin is already loaded.
@@ -28,7 +28,7 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '1.4.7' );
+define( 'CKWC_PLUGIN_VERSION', '1.4.8' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
 if ( ! class_exists( 'ConvertKit_API' ) ) {
@@ -57,8 +57,11 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-wc-subscriptions.php';
 // Load files that are only used in the WordPress Administration interface.
 if ( is_admin() ) {
 	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-ajax.php';
+	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-bulk-edit.php';
 	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
 	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
+	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';
+	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-refresh-resources.php';
 }
 
 /**
@@ -66,7 +69,7 @@ if ( is_admin() ) {
  *
  * @since   1.4.2
  */
-function WP_CKWC() { // phpcs:ignore
+function WP_CKWC() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
 
 	return WP_CKWC::get_instance();
 
@@ -77,7 +80,7 @@ function WP_CKWC() { // phpcs:ignore
  *
  * @since   1.0.0
  */
-function WP_CKWC_Integration() { // phpcs:ignore
+function WP_CKWC_Integration() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName
 
 	// Bail if WooCommerce isn't active.
 	if ( ! function_exists( 'WC' ) ) {
