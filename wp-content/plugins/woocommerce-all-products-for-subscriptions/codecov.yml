@@ -1,8 +1,0 @@
-comment: false
-
-coverage:
-  precision: 2
-  round: nearest
-  range: "50...75"
-  status:
-    patch: off
