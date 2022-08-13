@@ -1,11 +1,21 @@
 <?php
+/**
+ * @see Elementor_Episode_List_Widget::render()
+ *
+ * @var WP_Query $episodes_query
+ * @var string $show_featured_image
+ * @var string $show_episode_player
+ * @var string $show_episode_excerpt
+ * @var array $settings
+ * @var \SeriouslySimplePodcasting\Controllers\Players_Controller $player
+ * */
 
-while ( $episodes->have_posts() ) : $episodes->the_post();
+while ( $episodes_query->have_posts() ) : $episodes_query->the_post();
 
 	$player_style = get_option( 'ss_podcasting_player_style', 'standard' );
 
 	if ( $player_style === 'standard' ) {
-		$media_player = $player->media_player( get_post()->ID );
+		$media_player = $player->render_media_player( get_post()->ID );
 	} else {
 		$media_player = $player->render_html_player( get_post()->ID );
 	}
@@ -17,16 +27,16 @@ while ( $episodes->have_posts() ) : $episodes->the_post();
 			</a>
 		</h2>
         <div class="podcast-content">
-            <?php if ( isset( $settings['show_featured_image'] ) && 'yes' === $settings['show_featured_image'] ) { ?>
+            <?php if ( 'yes' === $show_featured_image ) { ?>
                 <a class="podcast-image-link" href="<?php echo get_post()->guid ?>" aria-hidden="true"
                    tabindex="-1">
                     <?php echo get_the_post_thumbnail( get_post()->ID, 'full' ); ?>
                 </a>
             <?php } ?>
-            <?php if ( isset( $settings['show_episode_player'] ) && 'yes' === $settings['show_episode_player'] ) {
+            <?php if ( 'yes' === $show_episode_player ) {
                 echo $media_player;
             } ?>
-            <?php if ( isset( $settings['show_episode_excerpt'] ) && 'yes' === $settings['show_episode_excerpt'] ) { ?>
+            <?php if ( 'yes' === $show_episode_excerpt ) { ?>
                 <p><?php echo get_the_excerpt( get_post()->ID ); ?></p>
             <?php } ?>
         </div>
@@ -34,14 +44,14 @@ while ( $episodes->have_posts() ) : $episodes->the_post();
 <?php
 endwhile;
 
-$total_pages = $episodes->max_num_pages;
+$total_pages = $episodes_query->max_num_pages;
 
 if ( $total_pages > 1 ) {
 
 	$current_page = max( 1, get_query_var( 'paged' ) );
 
 	echo paginate_links( array(
-		'base'      => get_pagenum_link( 1 ) . '%_%',
+		'base'      => get_pagenum_link() . '%_%',
 		'format'    => '/page/%#%',
 		'current'   => $current_page,
 		'total'     => $total_pages,
@@ -51,4 +61,3 @@ if ( $total_pages > 1 ) {
 }
 
 wp_reset_postdata();
-?>

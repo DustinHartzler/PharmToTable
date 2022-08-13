@@ -32,12 +32,13 @@ class Episode_Controller {
 
 	/**
 	 * @param Renderer $renderer
+	 * @param Episode_Repository $episode_repository
 	 */
-	public function __construct( $renderer ) {
+	public function __construct( $renderer, $episode_repository ) {
 		$this->init_useful_variables();
 
 		$this->renderer = $renderer;
-		$this->episode_repository = new Episode_Repository();
+		$this->episode_repository = $episode_repository;
 	}
 
 
@@ -111,89 +112,5 @@ class Episode_Controller {
 			return null;
 		}
 		return ssp_get_attachment_image_src( $thumb_id, $size );
-	}
-
-
-	/**
-	 * Get Episode List
-	 *
-	 * @param array $episode_ids , array of episode ids being loaded into the player
-	 * @param $include_title
-	 * @param $include_excerpt
-	 * @param $include_player
-	 * @param $include_subscribe_links
-	 *
-	 * @return array [ $src, $width, $height ]
-	 *
-	 * @since 2.2.3
-	 */
-	public function episode_list( $episode_ids, $include_title = false, $include_excerpt = false, $include_player = false, $include_subscribe_links = false ) {
-		$episodes = null;
-
-		if ( ! empty( $episode_ids ) ) {
-			$args = array(
-				'include'        => array_values( $episode_ids ),
-				'post_type'      => SSP_CPT_PODCAST,
-				'numberposts'    => -1
-			);
-
-			$episodes = get_posts( $args );
-		}
-
-		$episodes_template_data = array(
-			'episodes'       => $episodes,
-		);
-
-		$episodes_template_data = apply_filters( 'episode_list_data', $episodes_template_data );
-
-		return $this->renderer->render_deprecated( $episodes_template_data, 'episodes/episode-list' );
-	}
-
-	/**
-	 * Render a list of all episodes, based on settings sent
-	 * @todo, currently used for Elementor, update to use for the Block editor as well.
-	 *
-	 * @param $settings
-	 *
-	 * @return string
-	 */
-	public function render_episodes( $settings ) {
-		global $ss_podcasting;
-		$player = $ss_podcasting->players_controller;
-		$paged  = get_query_var( 'paged' );
-
-		$args = array(
-			'post_type'      => SSP_CPT_PODCAST,
-			'posts_per_page' => 10,
-			'paged'          => $paged ?: 1,
-		);
-
-		$episodes               = new WP_Query( $args );
-		$episodes_template_data = array(
-			'player'   => $player,
-			'episodes' => $episodes,
-			'settings' => $settings,
-		);
-
-		$episodes_template_data = apply_filters( 'episode_list_data', $episodes_template_data );
-
-		return $this->renderer->fetch( 'episodes/all-episodes-list', $episodes_template_data );
-	}
-
-	/**
-	 * Gather a list of the last 3 episodes for the Elementor Recent Episodes Widget
-	 *
-	 * @param array $args {
-	 *     Optional. Array or string of Query parameters.
-	 *
-	 *     @type int    $episodes_number Number of episodes. Default: 3.
-	 *     @type string $episode_types   Episode types. Variants: all_podcast_types, podcast. Default: podcast.
-	 *     @type string $order_by        Order by field. Variants: published, recorded. Default: published.
-	 * }
-	 *
-	 * @return \WP_Post[]
-	 */
-	public function get_recent_episodes( $args = array() ) {
-		return $this->episode_repository->get_recent_episodes( $args );
 	}
 }

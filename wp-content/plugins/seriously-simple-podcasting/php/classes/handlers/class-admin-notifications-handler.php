@@ -2,6 +2,8 @@
 
 namespace SeriouslySimplePodcasting\Handlers;
 
+use SeriouslySimplePodcasting\Interfaces\Service;
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -15,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package     SeriouslySimplePodcasting/Controllers
  * @since       1.0
  */
-class Admin_Notifications_Handler {
+class Admin_Notifications_Handler implements Service {
 
 	public $token;
 
@@ -162,7 +164,7 @@ class Admin_Notifications_Handler {
 	 */
 	public function show_series_helper_text(){
 		$text = '
-		A new Series will create an entirely new Podcast Feed. <br>
+		A new Podcast will create an entirely new Podcast Feed. <br>
 		Only do this if you want to have multiple shows within your WordPress site. <br>
 		If you just want to organize episodes within the same feed we suggest using Tags.';
 		echo sprintf('<div class="notice series-notice notice-warning"><p>%s</p></div>', $text);
@@ -635,7 +637,7 @@ class Admin_Notifications_Handler {
 
 	public function show_elementor_templates_available() {
 		// only show this on podcast list pages
-		$post_type = ( isset( $_GET['post_type'] ) ? filter_var( $_GET['post_type'], FILTER_SANITIZE_STRING ) : '' );
+		$post_type = ( isset( $_GET['post_type'] ) ? filter_var( $_GET['post_type'], FILTER_DEFAULT ) : '' );
 		if ( empty( $post_type ) || SSP_CPT_PODCAST !== $post_type ) {
 			return;
 		}

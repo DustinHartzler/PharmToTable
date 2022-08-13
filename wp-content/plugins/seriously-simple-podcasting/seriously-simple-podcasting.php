@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: Seriously Simple Podcasting
- * Version: 2.11.0
+ * Version: 2.15.2
  * Plugin URI: https://castos.com/seriously-simple-podcasting/?utm_medium=sspodcasting&utm_source=wordpress&utm_campaign=wpplugin_08_2019
  * Description: Podcasting the way it's meant to be. No mess, no fuss - just you and your content taking over the world.
  * Author: Castos
  * Author URI: https://castos.com/?utm_medium=sspodcasting&utm_source=wordpress&utm_campaign=wpplugin_08_2019
  * Requires PHP: 5.6
  * Requires at least: 4.4
- * Tested up to: 5.8
+ * Tested up to: 5.9
  *
  * Text Domain: seriously-simple-podcasting
  *
@@ -23,9 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use SeriouslySimplePodcasting\Controllers\App_Controller;
-
-define( 'SSP_VERSION', '2.11.0' );
+define( 'SSP_VERSION', '2.15.2' );
+define( 'SSP_PLUGIN_FILE', __FILE__ );
 define( 'SSP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'SSP_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
@@ -46,5 +45,4 @@ require SSP_PLUGIN_PATH . 'vendor/autoload.php';
 
 require_once SSP_PLUGIN_PATH . 'php/includes/ssp-functions.php';
 
-global $ssp_app;
-$ssp_app = new App_Controller( __FILE__, SSP_VERSION );
+ssp_app();

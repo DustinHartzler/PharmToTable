@@ -2,15 +2,19 @@
 
 namespace SeriouslySimplePodcasting\Handlers;
 
+use SeriouslySimplePodcasting\Interfaces\Service;
+
 /**
  * SSP Custom Post Type Podcast Handler
  *
  * @package Seriously Simple Podcasting
  * @since 2.6.3 Moved from the admin controller class
  */
-class CPT_Podcast_Handler {
+class CPT_Podcast_Handler implements Service {
 
 	const TAXONOMY_SERIES = 'series';
+
+	const DEFAULT_SERIES_SLUG = 'podcasts';
 
 	protected $roles_handler;
 
@@ -43,7 +47,8 @@ class CPT_Podcast_Handler {
 		$podcast_post_types = ssp_post_types( true );
 
 		$args = $this->get_series_args();
-		register_taxonomy( apply_filters( 'ssp_series_taxonomy', self::TAXONOMY_SERIES ), $podcast_post_types, $args );
+		$this->register_series_taxonomy( $podcast_post_types, $args );
+		$this->listen_updating_series_slug( $podcast_post_types, $args );
 
 		// Add Tags to podcast post type
 		if ( apply_filters( 'ssp_use_post_tags', true ) ) {
@@ -58,11 +63,46 @@ class CPT_Podcast_Handler {
 		}
 	}
 
+	/**
+	 * @param array $podcast_post_types
+	 * @param array $args
+	 *
+	 * @return void
+	 */
+	protected function listen_updating_series_slug( $podcast_post_types, $args ) {
+		add_filter( 'pre_update_option_ss_podcasting_series_slug', function ( $slug ) use ( $podcast_post_types, $args ) {
+			$forbidden = array(
+				'podcast',
+				'category'
+			);
+
+			$slug = empty( $slug ) || in_array( $slug, $forbidden ) ? ssp_series_slug() : $slug;
+
+			$args['rewrite']['slug'] = $slug;
+
+			// Reregister series taxonomy with the new slug and flush rewrite rules after that.
+			$this->register_series_taxonomy( $podcast_post_types, $args );
+			flush_rewrite_rules();
+
+			return $slug;
+		} );
+	}
+
+	/**
+	 * @param array $podcast_post_types
+	 * @param array $args
+	 *
+	 * @return void
+	 */
+	protected function register_series_taxonomy( $podcast_post_types, $args ) {
+		register_taxonomy( apply_filters( 'ssp_series_taxonomy', self::TAXONOMY_SERIES ), $podcast_post_types, $args );
+	}
+
 	protected function get_podcast_args() {
 		$labels = array(
 			'name'                  => _x( 'Podcast', 'post type general name', 'seriously-simple-podcasting' ),
 			'singular_name'         => _x( 'Podcast', 'post type singular name', 'seriously-simple-podcasting' ),
-			'add_new'               => _x( 'Add New', SSP_CPT_PODCAST, 'seriously-simple-podcasting' ),
+			'add_new'               => _x( 'Add New Episode', SSP_CPT_PODCAST, 'seriously-simple-podcasting' ),
 			'add_new_item'          => sprintf( __( 'Add New %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
 			'edit_item'             => sprintf( __( 'Edit %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
 			'new_item'              => sprintf( __( 'New %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
@@ -72,7 +112,7 @@ class CPT_Podcast_Handler {
 			'not_found'             => sprintf( __( 'No %s Found', 'seriously-simple-podcasting' ), __( 'Episodes', 'seriously-simple-podcasting' ) ),
 			'not_found_in_trash'    => sprintf( __( 'No %s Found In Trash', 'seriously-simple-podcasting' ), __( 'Episodes', 'seriously-simple-podcasting' ) ),
 			'parent_item_colon'     => '',
-			'menu_name'             => __( 'Podcast', 'seriously-simple-podcasting' ),
+			'menu_name'             => __( 'Podcasting', 'seriously-simple-podcasting' ),
 			'filter_items_list'     => sprintf( __( 'Filter %s list', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
 			'items_list_navigation' => sprintf( __( '%s list navigation', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
 			'items_list'            => sprintf( __( '%s list', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
@@ -148,31 +188,31 @@ class CPT_Podcast_Handler {
 
 	protected function get_series_args() {
 		$series_labels = array(
-			'name'                       => __( 'Podcast Series', 'seriously-simple-podcasting' ),
-			'singular_name'              => __( 'Series', 'seriously-simple-podcasting' ),
-			'search_items'               => __( 'Search Series', 'seriously-simple-podcasting' ),
-			'all_items'                  => __( 'All Series', 'seriously-simple-podcasting' ),
-			'parent_item'                => __( 'Parent Series', 'seriously-simple-podcasting' ),
-			'parent_item_colon'          => __( 'Parent Series:', 'seriously-simple-podcasting' ),
-			'edit_item'                  => __( 'Edit Series', 'seriously-simple-podcasting' ),
-			'update_item'                => __( 'Update Series', 'seriously-simple-podcasting' ),
-			'add_new_item'               => __( 'Add New Series', 'seriously-simple-podcasting' ),
-			'new_item_name'              => __( 'New Series Name', 'seriously-simple-podcasting' ),
-			'menu_name'                  => __( 'Series', 'seriously-simple-podcasting' ),
-			'view_item'                  => __( 'View Series', 'seriously-simple-podcasting' ),
-			'popular_items'              => __( 'Popular Series', 'seriously-simple-podcasting' ),
-			'separate_items_with_commas' => __( 'Separate series with commas', 'seriously-simple-podcasting' ),
-			'add_or_remove_items'        => __( 'Add or remove Series', 'seriously-simple-podcasting' ),
-			'choose_from_most_used'      => __( 'Choose from the most used Series', 'seriously-simple-podcasting' ),
-			'not_found'                  => __( 'No Series Found', 'seriously-simple-podcasting' ),
-			'items_list_navigation'      => __( 'Series list navigation', 'seriously-simple-podcasting' ),
-			'items_list'                 => __( 'Series list', 'seriously-simple-podcasting' ),
+			'name'                       => __( 'Podcasts', 'seriously-simple-podcasting' ),
+			'singular_name'              => __( 'Podcast', 'seriously-simple-podcasting' ),
+			'search_items'               => __( 'Search Podcasts', 'seriously-simple-podcasting' ),
+			'all_items'                  => __( 'All Podcasts', 'seriously-simple-podcasting' ),
+			'parent_item'                => __( 'Parent Podcast', 'seriously-simple-podcasting' ),
+			'parent_item_colon'          => __( 'Parent Podcast:', 'seriously-simple-podcasting' ),
+			'edit_item'                  => __( 'Edit Podcast', 'seriously-simple-podcasting' ),
+			'update_item'                => __( 'Update Podcast', 'seriously-simple-podcasting' ),
+			'add_new_item'               => __( 'Add New Podcast', 'seriously-simple-podcasting' ),
+			'new_item_name'              => __( 'New Podcast Name', 'seriously-simple-podcasting' ),
+			'menu_name'                  => __( 'All Podcasts', 'seriously-simple-podcasting' ),
+			'view_item'                  => __( 'View Podcast', 'seriously-simple-podcasting' ),
+			'popular_items'              => __( 'Popular Podcasts', 'seriously-simple-podcasting' ),
+			'separate_items_with_commas' => __( 'Separate podcasts with commas', 'seriously-simple-podcasting' ),
+			'add_or_remove_items'        => __( 'Add or remove Podcasts', 'seriously-simple-podcasting' ),
+			'choose_from_most_used'      => __( 'Choose from the most used Podcasts', 'seriously-simple-podcasting' ),
+			'not_found'                  => __( 'No Podcasts Found', 'seriously-simple-podcasting' ),
+			'items_list_navigation'      => __( 'Podcasts list navigation', 'seriously-simple-podcasting' ),
+			'items_list'                 => __( 'Podcasts list', 'seriously-simple-podcasting' ),
 		);
 
 		$series_args = array(
 			'public'            => true,
 			'hierarchical'      => true,
-			'rewrite'           => array( 'slug' => apply_filters( 'ssp_series_slug', self::TAXONOMY_SERIES ) ),
+			'rewrite'           => array( 'slug' => ssp_series_slug() ),
 			'labels'            => $series_labels,
 			'show_in_rest'      => true,
 			'show_admin_column' => true,
@@ -343,12 +383,12 @@ class CPT_Podcast_Handler {
 			 * New iTunes Tag Announced At WWDC 2017
 			 */
 			$fields['itunes_title'] = array(
-				'name'             => __( 'iTunes Episode Title (Exclude Your Series / Show Number):', 'seriously-simple-podcasting' ),
-				'description'      => __( 'The iTunes Episode Title. NO Series / Show Number Should Be Included.', 'seriously-simple-podcasting' ),
+				'name'             => __( 'iTunes Episode Title (Exclude Your Podcast / Show Number):', 'seriously-simple-podcasting' ),
+				'description'      => __( 'The iTunes Episode Title. NO Podcast / Show Number Should Be Included.', 'seriously-simple-podcasting' ),
 				'type'             => 'text',
 				'default'          => '',
 				'section'          => 'info',
-				'meta_description' => __( 'The iTunes Episode Title. NO Series / Show Number Should Be Included', 'seriously-simple-podcasting' ),
+				'meta_description' => __( 'The iTunes Episode Title. NO Podcast / Show Number Should Be Included', 'seriously-simple-podcasting' ),
 			);
 
 			/**

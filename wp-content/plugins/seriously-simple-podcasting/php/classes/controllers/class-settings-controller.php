@@ -50,7 +50,7 @@ class Settings_Controller extends Controller {
 	/**
 	 * @var Settings_Handler
 	 * */
-	protected $settings_handler;
+	public $settings_handler;
 
 	/**
 	 * @var Series_Handler
@@ -119,19 +119,47 @@ class Settings_Controller extends Controller {
 			'maybe_disconnect_from_castos'
 		), 10, 2 );
 
-		// Quick and dirty colour picker implementation
-		// If we do not have the WordPress core colour picker field, then we don't break anything
-		add_action( 'admin_footer', function () {
-			?>
-			<script>
-				jQuery(document).ready(function ($) {
-					if ("function" === typeof $.fn.wpColorPicker) {
-						$('.ssp-color-picker').wpColorPicker();
+		$this->generate_dynamic_color_scheme();
+	}
+
+	protected function generate_dynamic_color_scheme() {
+		$color_settings = $this->settings_handler->get_player_color_settings();
+		foreach ( $color_settings as $color_setting ) {
+			add_action( 'update_option_' . $this->settings_base . $color_setting['id'], function () {
+				$dynamic_style_path = $this->get_dynamic_style_path();
+				wp_mkdir_p( dirname( $dynamic_style_path ) );
+				file_put_contents( $dynamic_style_path, $this->generate_player_css() );
+				update_option( self::SETTINGS_BASE . 'dynamic_style_version', wp_generate_password( 6, false ) );
+			}, 10, 2 );
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function generate_player_css() {
+		$color_settings = $this->settings_handler->get_player_color_settings();
+
+		$css = '';
+		foreach ( $color_settings as $color_setting ) {
+			if ( ! empty( $color_setting['css_var'] ) ) {
+				$default = empty( $color_setting['default'] ) ? '' : $color_setting['default'];
+
+				$value = ssp_get_option( $color_setting['id'], $default );
+				if ( $value ) {
+					foreach ( (array) $color_setting['css_var'] as $var ) {
+						$css .= sprintf( '%s:%s;', $var, $value );
 					}
-				});
-			</script>
-			<?php
-		}, 99 );
+				}
+			}
+		}
+
+		return sprintf( ':root {%s}', $css );
+	}
+
+	protected function get_dynamic_style_path(){
+		$upload_dir = wp_upload_dir()['basedir'];
+		return $upload_dir . '/ssp/css/ssp-dynamic-style.css';
 	}
 
 	/**
@@ -195,7 +223,7 @@ class Settings_Controller extends Controller {
 	 */
 	public function enqueue_scripts() {
 		global $pagenow;
-		$page  = ( isset( $_GET['page'] ) ? filter_var( $_GET['page'], FILTER_SANITIZE_STRING ) : '' );
+		$page  = ( isset( $_GET['page'] ) ? filter_var( $_GET['page'], FILTER_DEFAULT ) : '' );
 		$pages = array( 'post-new.php', 'post.php' );
 		if ( in_array( $pagenow, $pages, true ) || ( ! empty( $page ) && 'podcast_settings' === $page ) ) {
 			wp_enqueue_media();
@@ -248,7 +276,7 @@ class Settings_Controller extends Controller {
 		$feed_series = '';
 		$section_title = $data['title'];
 		if ( 'feed-details' === $section ) {
-			$feed_series = ( isset( $_REQUEST['feed-series'] ) ? filter_var( $_REQUEST['feed-series'], FILTER_SANITIZE_STRING ) : '' );
+			$feed_series = ( isset( $_REQUEST['feed-series'] ) ? filter_var( $_REQUEST['feed-series'], FILTER_DEFAULT ) : '' );
 			if ( $feed_series && 'default' !== $feed_series ) {
 
 				// Get selected series.
@@ -302,9 +330,9 @@ class Settings_Controller extends Controller {
 	 * @return string
 	 */
 	protected function get_settings_section(){
-		$tab = ( isset( $_POST['tab'] ) ? filter_var( $_POST['tab'], FILTER_SANITIZE_STRING ) : '' );
+		$tab = ( isset( $_POST['tab'] ) ? filter_var( $_POST['tab'], FILTER_DEFAULT ) : '' );
 		if ( ! $tab ) {
-			$tab = ( isset( $_GET['tab'] ) ? filter_var( $_GET['tab'], FILTER_SANITIZE_STRING ) : '' );
+			$tab = ( isset( $_GET['tab'] ) ? filter_var( $_GET['tab'], FILTER_DEFAULT ) : '' );
 		}
 
 		return $tab ?: 'general';
@@ -341,8 +369,11 @@ class Settings_Controller extends Controller {
 		// Register setting.
 		register_setting( 'ss_podcasting', $option_name, $validation );
 
+		// If field is hidden, lets hide the settings parent <tr>, otherwise it shows redundant empty space
 		if ( 'hidden' === $field['type'] ) {
-			return;
+			$field['container_class'] = isset( $field['container_class'] ) ? $field['container_class'] : '';
+			$field['container_class'] .= ' hidden';
+			$field['label'] = '';
 		}
 
 		$container_class = '';
@@ -382,6 +413,16 @@ class Settings_Controller extends Controller {
 		switch ( $section['id'] ) {
 			case 'feed-details':
 				$feed_series = isset( $_GET['feed-series'] ) ? esc_attr( $_GET['feed-series'] ) : 'default';
+
+				$term = get_term_by( 'slug', $feed_series, 'series' );
+
+				if ( $term ) {
+					$edit_podcast_url = sprintf( 'term.php?taxonomy=series&tag_ID=%d&post_type=%s', $term->term_id, SSP_CPT_PODCAST );
+
+					$html .= '<p><a class="view-feed-link" href="' . esc_url( $edit_podcast_url ) . '">
+								<span class="dashicons dashicons-edit"></span>' . __( 'Edit Podcast Settings', 'seriously-simple-podcasting' ) .
+							 '</a></p>' . "\n";
+				}
 
 				$feed_url = ssp_get_feed_url( $feed_series );
 
@@ -606,12 +647,18 @@ class Settings_Controller extends Controller {
 
 		if ( 'import' !== $tab ) {
 			$html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
-		}
 
-		// Add current series to posted data
-		if ( 'feed-details' === $tab ) {
-			$current_series = $this->get_current_series();
-			$html           .= '<input type="hidden" name="feed-series" value="' . esc_attr( $current_series ) . '" />' . "\n";
+			// Add current series to posted data
+			if ( 'feed-details' === $tab ) {
+				$current_series = $this->get_current_series();
+				$html           .= '<input type="hidden" name="feed-series" value="' . esc_attr( $current_series ) . '" />' . "\n";
+			}
+
+			// Add current integration to posted data
+			if ( 'integrations' === $tab ) {
+				$current_integration = $this->get_current_integration();
+				$html .= '<input type="hidden" name="ssp_integration" value="' . esc_attr( $current_integration ) . '" />' . "\n";
+			}
 		}
 
 		return apply_filters( sprintf( 'ssp_settings_show_tab_%s_before_settings', $tab ), $html );
@@ -769,8 +816,12 @@ class Settings_Controller extends Controller {
 	 */
 	protected function get_current_integration() {
 		$integration = $this->get_current_parameter( 'integration' );
+		if ( 'default' === $integration && ! empty( $_POST['ssp_integration'] ) ) {
+			$integration = $_POST['ssp_integration'];
+		}
+
+		// If no integration provided, let's get the first one.
 		if ( 'default' === $integration ) {
-			// If no integration provided, let's get the first one.
 			$item        = reset( $this->settings['integrations']['items'] );
 			$integration = isset( $item['id'] ) ? $item['id'] : '';
 		}
@@ -1050,7 +1101,7 @@ class Settings_Controller extends Controller {
 			<?php } ?>
 			<?php if ( count( $series ) > 1 ) { ?>
 				<tr>
-					<th scope="row">Series</th>
+					<th scope="row">Podcast</th>
 					<td>
 						<select id="import_series" name="import_series">
 							<?php foreach ( $series as $series_item ) { ?>

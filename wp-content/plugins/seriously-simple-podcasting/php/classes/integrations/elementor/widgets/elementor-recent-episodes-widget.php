@@ -7,21 +7,17 @@ use Elementor\Plugin as ElementorPlugin;
 use Elementor\Widget_Base;
 use SeriouslySimplePodcasting\Renderers\Renderer;
 use SeriouslySimplePodcasting\Repositories\Episode_Repository;
+use SeriouslySimplePodcasting\Traits\Elementor_Widget_Helper;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
 
 class Elementor_Recent_Episodes_Widget extends Widget_Base {
 
 	use Useful_Variables;
-
-	/**
-	 * @var Renderer
-	 * */
-	protected $renderer;
+	use Elementor_Widget_Helper;
 
 	public function __construct( $data = [], $args = null ) {
 		parent::__construct( $data, $args );
 		$this->init_useful_variables();
-		$this->renderer = new Renderer();
 
 		// Enqueue styles early in preview mode
 		if ( ElementorPlugin::$instance->preview->is_preview_mode() ) {
@@ -167,56 +163,18 @@ class Elementor_Recent_Episodes_Widget extends Widget_Base {
 
 		$this->end_controls_section();
 
-		$this->start_controls_section(
-			'query_section',
-			array(
-				'label' => __( 'Query', 'seriously-simple-podcasting' ),
-				'tab'   => 'Query',
-			)
-		);
-
-		$this->add_control(
-			'episode_types',
-			array(
-				'label'   => __( 'Post type', 'seriously-simple-podcasting' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => array(
-					'only_podcast'      => sprintf( __( 'Only %s' ), SSP_CPT_PODCAST ),
-					'all_podcast_types' => __( 'All podcast post types' ),
-				),
-				'default' => 'all_podcast_types',
-			)
-		);
-
-		$this->add_control(
-			'episodes_number',
-			array(
-				'label'   => __( 'Episodes Number', 'seriously-simple-podcasting' ),
-				'type'    => Controls_Manager::NUMBER,
-				'default' => 3,
-			)
-		);
-
-		$this->add_control(
-			'order_by',
-			array(
-				'label'   => __( 'Order Episodes By', 'seriously-simple-podcasting' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => array(
-					'published' => __( 'Published date' ),
-					'recorded'  => __( 'Recorded date' ),
-				),
-				'default' => 'published',
-			)
-		);
-
-		$this->end_controls_section();
+		$this->add_episodes_query_controls();
 	}
 
 	protected function render() {
-		$settings = $this->get_settings_for_display();
+		$template_data = $this->get_settings_for_display();
 
-		echo $this->render_recent_episodes( $settings );
+		$this->enqueue_style();
+		$episode_repository        = new Episode_Repository();
+		$template_data['episodes'] = $episode_repository->get_episodes_query( $template_data )->get_posts();
+		$template_data             = apply_filters( 'recent_episodes_template_data', $template_data );
+
+		$this->renderer()->render( 'episodes/recent-episodes', $template_data );
 	}
 
 	/**
@@ -226,20 +184,6 @@ class Elementor_Recent_Episodes_Widget extends Widget_Base {
 	 */
 	public function render_plain_content() {
 		echo '';
-	}
-
-	/**
-	 * Render the template for the Elementor Recent Episodes Widget
-	 *
-	 * @return string
-	 */
-	protected function render_recent_episodes( $template_data ) {
-		$this->enqueue_style();
-		$episode_repository        = new Episode_Repository();
-		$template_data['episodes'] = $episode_repository->get_recent_episodes( $template_data );
-		$template_data             = apply_filters( 'recent_episodes_template_data', $template_data );
-
-		return $this->renderer->fetch( 'episodes/recent-episodes', $template_data );
 	}
 
 	protected function enqueue_style() {

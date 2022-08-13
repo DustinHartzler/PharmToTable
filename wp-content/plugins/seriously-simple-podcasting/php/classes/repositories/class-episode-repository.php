@@ -2,8 +2,10 @@
 
 namespace SeriouslySimplePodcasting\Repositories;
 
+use SeriouslySimplePodcasting\Handlers\CPT_Podcast_Handler;
 use SeriouslySimplePodcasting\Handlers\Options_Handler;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
+use WP_Query;
 
 /**
  * Episode Repository
@@ -234,8 +236,6 @@ class Episode_Repository {
 				if ( 'Auto Draft' === $post->post_title ) {
 					$post->post_title = __( 'Current Episode', 'seriously-simple-podcasting' );
 				}
-
-
 			}
 
 			if ( '-1' == $id ) {
@@ -476,15 +476,20 @@ class Episode_Repository {
 	 *     @type int    $episodes_number Number of episodes. Default: 3.
 	 *     @type string $episode_types   Episode types. Variants: all_podcast_types, podcast. Default: podcast.
 	 *     @type string $order_by        Order by field. Variants: published, recorded. Default: published.
+	 *     @type string $podcast_term    Fetch episodes from the specified podcast.
+	 *     @type int $paged              Page number.
 	 * }
 	 *
-	 * @return \WP_Post[]
+	 * @return WP_Query
 	 */
-	public function get_recent_episodes( $args = array() ) {
+	public function get_episodes_query( $args = array() ) {
 		$defaults = array(
 			'episodes_number' => 3,
 			'episode_types'   => 'all_podcast_types',
 			'order_by'        => 'published',
+			'podcast_term'    => 0,
+			'paged'           => 1,
+			'order'           => 'DESC',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -495,16 +500,159 @@ class Episode_Repository {
 			'posts_per_page' => $args['episodes_number'],
 			'post_type'      => $post_types,
 			'post_status'    => array( 'publish' ),
+			'paged'          => $args['paged'],
+			'order'          => $args['order'],
 		);
 
 		if ( 'recorded' === $args['order_by'] ) {
 			$query['orderby']  = 'meta_value';
 			$query['meta_key'] = 'date_recorded';
-			$query['order']    = 'DESC';
 		}
 
-		$episodes_query = new \WP_Query( $query );
+		if ( $args['podcast_term'] ) {
+			$query['tax_query'] = array(
+				array(
+					'taxonomy' => CPT_Podcast_Handler::TAXONOMY_SERIES,
+					'field'    => 'id',
+					'terms'    => $args['podcast_term'],
+				),
+			);
+		}
 
-		return $episodes_query->get_posts();
+		return new WP_Query( $query );
+	}
+
+	/**
+	 * Get the type of podcast episode (audio or video)
+	 * @param  int $episode_id ID of episode
+	 * @return string  The type of the episode (audio|video).
+	 */
+	public function get_episode_type( $episode_id = 0 ) {
+
+		if( ! $episode_id ) {
+			return false;
+		}
+
+		$type = get_post_meta( $episode_id , 'episode_type' , true );
+
+		if( ! $type ) {
+			$type = 'audio';
+		}
+
+		return $type;
+	}
+
+
+	/**
+	 * Get size of media file
+	 * @param  string  $file File name & path
+	 * @return boolean       File size on success, boolean false on failure
+	 */
+	public function get_file_size( $file = '' ) {
+
+		/**
+		 * ssp_enable_get_file_size filter to allow this functionality to be disabled programmatically
+		 */
+		$enabled = apply_filters( 'ssp_enable_get_file_size', true );
+		if ( ! $enabled ) {
+			return false;
+		}
+
+		if ( $file ) {
+
+			// Include media functions if necessary
+			if ( ! function_exists( 'wp_read_audio_metadata' ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/media.php' );
+			}
+
+			// translate file URL to local file path if possible
+			$file = $this->get_local_file_path( $file );
+
+			// Get file data (for local file)
+			$data = wp_read_audio_metadata( $file );
+
+			$raw = $formatted = '';
+
+			if ( $data ) {
+				$raw = $data['filesize'];
+				$formatted = $this->format_bytes( $raw );
+			} else {
+
+				// get file data (for remote file)
+				$data = wp_remote_head( $file, array( 'timeout' => 10, 'redirection' => 5 ) );
+
+				if ( ! is_wp_error( $data ) && is_array( $data ) && isset( $data['headers']['content-length'] ) ) {
+					$raw = $data['headers']['content-length'];
+					$formatted = $this->format_bytes( $raw );
+				}
+			}
+
+			if ( $raw || $formatted ) {
+
+				$size = array(
+					'raw' => $raw,
+					'formatted' => $formatted
+				);
+
+				return apply_filters( 'ssp_file_size', $size, $file );
+			}
+
+		}
+
+		return false;
+	}
+
+	/**
+	 * Format filesize for display
+	 * @param  int $size      Raw file size
+	 * @param  int $precision Level of precision for formatting
+	 * @return int|false          Formatted file size on success, false on failure
+	 */
+	protected function format_bytes( $size , $precision = 2 ) {
+
+		if ( $size ) {
+
+			$base = log ( $size ) / log( 1024 );
+			$suffixes = array( '' , 'k' , 'M' , 'G' , 'T' );
+			$formatted_size = round( pow( 1024 , $base - floor( $base ) ) , $precision ) . $suffixes[ floor( $base ) ];
+
+			return apply_filters( 'ssp_file_size_formatted', $formatted_size, $size );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns a local file path for the given file URL if it's local. Otherwise
+	 * returns the original URL
+	 *
+	 * @param    string    file
+	 * @return   string    file or local file path
+	 */
+	public function get_local_file_path( $file ) {
+
+		// Identify file by root path and not URL (required for getID3 class)
+		$site_root = trailingslashit( ABSPATH );
+
+		// Remove common dirs from the ends of site_url and site_root, so that file can be outside of the WordPress installation
+		$root_chunks = explode( '/', $site_root );
+		$url_chunks  = explode( '/', $this->site_url );
+
+		end( $root_chunks );
+		end( $url_chunks );
+
+		while ( ! is_null( key( $root_chunks ) ) && ! is_null( key( $url_chunks ) ) && ( current( $root_chunks ) == current( $url_chunks ) ) ) {
+			array_pop( $root_chunks );
+			array_pop( $url_chunks );
+			end( $root_chunks );
+			end( $url_chunks );
+		}
+
+		$site_root = implode('/', $root_chunks);
+		$site_url  = implode('/', $url_chunks);
+
+		$file = str_replace( $site_url, $site_root, $file );
+
+		return $file;
 	}
 }

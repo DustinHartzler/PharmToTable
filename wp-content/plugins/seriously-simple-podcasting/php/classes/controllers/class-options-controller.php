@@ -251,13 +251,13 @@ class Options_Controller extends Controller {
 	 */
 	public function register_options() {
 		if ( is_array( $this->options ) ) {
-			$tab = ( isset( $_POST['tab'] ) ? filter_var( $_POST['tab'], FILTER_SANITIZE_STRING ) : '' );
+			$tab = ( isset( $_POST['tab'] ) ? filter_var( $_POST['tab'], FILTER_DEFAULT ) : '' );
 			// Check posted/selected tab.
 			$current_section = 'subscribe';
 			if ( ! empty( $tab ) ) {
 				$current_section = $tab;
 			} else {
-				$tab = ( isset( $_GET['tab'] ) ? filter_var( $_GET['tab'], FILTER_SANITIZE_STRING ) : '' );
+				$tab = ( isset( $_GET['tab'] ) ? filter_var( $_GET['tab'], FILTER_DEFAULT ) : '' );
 				if ( ! empty( $tab ) ) {
 					$current_section = $tab;
 				}
@@ -597,9 +597,9 @@ class Options_Controller extends Controller {
 				// Set feed URL based on site's permalink structure
 				if ( get_option( 'permalink_structure' ) ) {
 					$feed_slug = apply_filters( 'ssp_feed_slug', $this->token );
-					$url       = $this->home_url . 'feed/' . $feed_slug . '/series-slug';
+					$url       = $this->home_url . 'feed/' . $feed_slug . '/podcast-slug';
 				} else {
-					$url = $this->home_url . '?feed=' . $this->token . '&podcast_series=series-slug';
+					$url = $this->home_url . '?feed=' . $this->token . '&podcast_series=podcast-slug';
 				}
 
 				$html .= esc_url( $url ) . "\n";

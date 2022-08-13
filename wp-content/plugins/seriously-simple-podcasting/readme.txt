@@ -2,9 +2,9 @@
 Contributors: PodcastMotor, psykro, zahardoc, simondowdles, hlashbrooke, whyisjake
 Tags: podcast, audio, video, vodcast, rss, mp3, mp4, feed, itunes, podcasting, media, stitcher, google play, playlist
 Requires at least: 4.4
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 5.6
-Stable tag: 2.11.0
+Stable tag: 2.15.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,7 +88,7 @@ Feature embedded video players within any podcast post.
 
 - Embed video players from Vimeo, VideoPress, or the common video block.
 - Display the embedded video player anywhere within your podcast post.
-- With Castos, host your audio and video podcast files with our [Growth and Pro plans](https://castos.com/pricing/).
+- With Castos, host your audio and video podcast files with our [Pro plan](https://castos.com/pricing/).
 
 ***FREE ANALYTICS ADD-ONS & INTEGRATIONS***
 
@@ -122,7 +122,7 @@ Seriously Simple Podcasting comes with complete user and developer [documentati
 
 **How to contribute**
 
-If you want to contribute to Seriously Simple Podcasting, you can [fork the GitHub repository](https://github.com/thecraighewitt/Seriously-Simple-Podcasting) – please read the [contributor guidelines](https://github.com/thecraighewitt/Seriously-Simple-Podcasting/blob/master/CONTRIBUTING.md) for more information on how you can do this.
+If you want to contribute to Seriously Simple Podcasting, you can [fork the GitLab repository](https://gitlab.com/castos/Seriously-Simple-Podcasting) – please read the [contributor guidelines](https://gitlab.com/castos/Seriously-Simple-Podcasting/-/blob/master/CONTRIBUTING.md) for more information on how you can do this.
 
 **Help translate this plugin**
 
@@ -160,6 +160,88 @@ You can find complete user and developer documentation (along with the FAQs) on 
 15. View podcast episodes in the At A Glance widget on the main WordPress dashboard.
 
 == Changelog ==
+
+= 2.15.2 =
+* 2022-08-04
+* UPDATE SUMMARY: Fixed duplicated player meta data for the shortcode
+* [FIX] Fixed duplicated player meta data for [ss_player] shortcode
+
+= 2.15.1 =
+* 2022-08-03
+* UPDATE SUMMARY: Fixed the feed redirection bug
+* [FIX] Fixed the feed redirection bug
+
+= 2.15.0 =
+* 2022-08-02
+* UPDATE SUMMARY: Option to adjust player colors, PMPro sync improvements, player improvements
+* [UPDATE] Option to adjust player colors
+* [UPDATE] PMPro: bulk subscribers synchronization improvements
+* [UPDATE] Show notification for plugin review
+* [UPDATE] Made onboarding steps translatable
+* [UPDATE] Added distribute links to onboarding, step 4
+* [UPDATE] Gutenberg: show meta data underneath player
+* [UPDATE] Elementor: possibility to Enable/Disable Player Metadata
+* [UPDATE] Added option for Audible podcast URL
+* [UPDATE] Settings language improvements: renamed author to host
+* [FIX] Fixed episode image synchronization with Castos
+* [FIX] Fixed canonical feed URL
+
+= 2.14.2 =
+* 2022-06-27
+* UPDATE SUMMARY: Fixed custom feed template support
+* [FIX] Fixed custom feed template support
+
+= 2.14.1 =
+* 2022-06-23
+* UPDATE SUMMARY: Fixed radio button settings
+* [FIX] Fixed radio button settings
+
+= 2.14.0 =
+* 2022-06-20
+* UPDATE SUMMARY: Renamed Series to Podcasts, improved transcripts features, other improvements
+* [UPDATE] Renamed Series to Podcasts, renamed appropriate menu items
+* [UPDATE] Added settings for changing Podcasts (Series) slug
+* [UPDATE] Improved UX/UI for the Podcast (Series) settings
+* [UPDATE] Filtering by Podcast (Series) for Elementor Recent Episodes widget
+* [UPDATE] Filtering by Podcast (Series) for Elementor Episode List Widget
+* [UPDATE] Podcast 2.0 namespace: added podcast:transcript tag
+* [UPDATE] Prepared plugin for PHP 8.1 (removed FILTER_SANITIZE_STRING)
+* [UPDATE] Show correct images in podcast overview column “Image”
+* [UPDATE] Possibility to disable PodPing notification
+* [UPDATE] Hide Disconnect Castos checkbox if site is not connected to Castos
+* [UPDATE] Gutenberg settings to hide any block from feed
+* [UPDATE] Elementor: feed hidden settings for Text Editor and Transcripts
+* [UPDATE] Include more info link about PodPing
+* [UPDATE] Added a generator tag to SSP feeds
+* [UPDATE] Removed confusing synchronization between SSP and Castos private settings
+* [UPDATE] Renamed Castos token to Castos key
+* [UPDATE] Updated feed details Learn More links
+* [UPDATE] Code refactoring
+* [FIX] Fixed notification error
+* [FIX] LifterLMS: fixed potential sync issue
+
+
+= 2.13.0 =
+* 2022-04-18
+* UPDATE SUMMARY: Podping notification when feed is updated, code refactoring, minor improvements
+* [UPDATE] Podping notification when feed is updated
+* [UPDATE] Code refactoring: moved podcast CPT functions to a separate controller
+* [UPDATE] PMPro integration: possibility to enable/disable integration with settings
+* [UPDATE] Changed the contributing guide from GitHub to GitLab
+* [FIX] Fixed Elementor episode list widget in compact mode
+* [FIX] Bug fixed: Yoast integration critical error
+* [FIX] Fixed the Twitter share URL
+* [FIX] Fixed intermittent update episode error
+
+= 2.12.0 =
+* 2022-03-29
+* UPDATE SUMMARY: Lifter LMS integration, improvements for Yoast SEO and PMPro integration, minor fixes
+* [UPDATE] Lifter LMS integration
+* [UPDATE] Yoast SEO integration improvements
+* [UPDATE] Added a filter to dynamically change Castos API token
+* [UPDATE] Show private podcast feed URLs in Paid Memberships Pro dashboard
+* [FIX] Elementor Castos player episodes limit fixed
+* [FIX] Fixed periodical disappearance of the podcast audio field
 
 = 2.11.0 =
 * 2022-02-04

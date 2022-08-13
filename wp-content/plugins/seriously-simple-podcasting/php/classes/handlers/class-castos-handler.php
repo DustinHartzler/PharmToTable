@@ -4,13 +4,14 @@ namespace SeriouslySimplePodcasting\Handlers;
 
 use Braintree\Exception;
 use SeriouslySimplePodcasting\Helpers\Log_Helper;
+use SeriouslySimplePodcasting\Interfaces\Service;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Castos_Handler {
+class Castos_Handler implements Service {
 
 	/**
 	 * @const int
@@ -314,6 +315,7 @@ class Castos_Handler {
 
 		if ( ! isset( $response_object->status ) || ! $response_object->status || empty( $response_object->success ) ) {
 			$this->logger->log( 'An error occurred uploading the episode data to Castos', $response_object );
+			$this->logger->log( sprintf( 'Response: %s', $response_object->message ) );
 			$this->update_response( 'message', 'An error occurred uploading the episode data to Castos' );
 
 			return $this->response;
@@ -358,8 +360,8 @@ class Castos_Handler {
 		$attachment_id = filter_input( INPUT_POST, $id_key );
 
 		if ( ! $episode_image || ! $this->is_valid_episode_image( $attachment_id ) ) {
-			$episode_image = get_post_meta( $post->ID, $key );
-			$attachment_id = get_post_meta( $post->ID, $id_key );
+			$episode_image = get_post_meta( $post->ID, $key, true );
+			$attachment_id = get_post_meta( $post->ID, $id_key, true );
 		}
 
 		if ( ! $episode_image || ! $this->is_valid_episode_image( $attachment_id ) ) {
@@ -503,16 +505,16 @@ class Castos_Handler {
 	/**
 	 * Upload series data to Castos
 	 *
-	 * @param array $series_data
+	 * @param array $podcast_data
 	 *
 	 * @return array
 	 */
-	public function upload_series_to_podmotor( $series_data ) {
+	public function update_podcast_data( $podcast_data ) {
 		$this->setup_default_response();
 
-		if ( empty( $series_data ) ) {
-			$this->update_response( 'message', 'Invalid Series data' );
-			$this->logger->log( 'Invalid Series data when uploading series data' );
+		if ( empty( $podcast_data ) ) {
+			$this->update_response( 'message', 'Invalid Podcast data' );
+			$this->logger->log( 'Invalid Podcast data when uploading' );
 
 			return $this->response;
 		}
@@ -521,13 +523,13 @@ class Castos_Handler {
 
 		$this->logger->log( 'API URL', $api_url );
 
-		$series_data['token'] = $this->api_token;
+		$podcast_data['token'] = $this->api_token;
 
 		$app_response = wp_remote_post(
 			$api_url,
 			array(
 				'timeout' => 45,
-				'body'    => $series_data,
+				'body'    => $podcast_data,
 			)
 		);
 
@@ -548,9 +550,9 @@ class Castos_Handler {
 			return $this->response;
 		}
 
-		$this->logger->log( 'Series data successfully uploaded to Castos' );
+		$this->logger->log( 'Podcast data successfully uploaded to Castos' );
 		$this->update_response( 'status', 'success' );
-		$this->update_response( 'message', 'Series data successfully uploaded to Castos' );
+		$this->update_response( 'message', 'Podcast data successfully uploaded to Castos' );
 
 		return $this->response;
 	}
@@ -708,6 +710,111 @@ class Castos_Handler {
 
 
 	/**
+	 * Add subscriber to multiple podcasts.
+	 *
+	 * @param array $podcast_ids
+	 * @param array $subscribers {
+	 *  array(
+	 *     Subscriber data
+	 *     @type string $email User email.
+	 *     @type string $name  User name.
+	 *  )
+	 * }
+	 *
+	 * @return int Number of added subscribers sent to all podcasts
+	 */
+	public function add_subscribers_to_podcasts( $podcast_ids, $subscribers ) {
+		$count = 0;
+		$this->logger->log(
+			__METHOD__,
+			array( 'podcast_ids' => $podcast_ids, 'subscribers' => array_keys( $subscribers ) )
+		);
+
+		$podcasts = array();
+
+		foreach ( $podcast_ids as $podcast_id ) {
+			$podcasts[] = array( 'id' => $podcast_id );
+		}
+
+		// If there's a lot of subscribers, API might fail, so let's chunk it and send 100 users per request
+		$subscribers_groups = array_chunk( $subscribers, 100 );
+
+		foreach ( $subscribers_groups as $subscribers_group ) {
+
+			// Make sure that all subscribers are valid (have email and name);
+			$subscribers_to_send = array_map( function ( $s ) {
+				if ( empty( $s['email'] ) || empty( $s['name'] ) ) {
+					$this->logger->log( __METHOD__, 'Error: wrong subscriber data: ' . print_r( $s, true ) );
+
+					return null;
+				}
+
+				return array(
+					'email' => $s['email'],
+					'name'  => $s['name'],
+				);
+			}, $subscribers_group );
+
+			$subscribers_to_send = array_filter( $subscribers_to_send );
+
+			$res = $this->send_request(
+				'api/v2/create-private-subscribers',
+				array(
+					'podcasts'    => $podcasts,
+					'subscribers' => $subscribers_to_send,
+				),
+				'POST'
+			);
+
+			if ( ! empty( $res['success'] ) ) {
+				$count += count( $subscribers_to_send );
+			} else {
+				$this->logger->log( __METHOD__, 'API response error!' );
+			}
+		}
+
+		return $count;
+	}
+
+	/**
+	 * Revoke subscriber from multiple podcasts.
+	 *
+	 * @param array $podcast_ids
+	 * @param string[] $emails
+	 *
+	 * @return int Number of revoked subscribers from all podcasts
+	 */
+	public function revoke_subscribers_from_podcasts( $podcast_ids, $emails ) {
+		$count = 0;
+		$this->logger->log( __METHOD__, compact( 'podcast_ids', 'emails' ) );
+
+		// If there's a lot of emails, API might fail, so let's chunk it and send 100 per request
+		$email_groups = array_chunk( $emails, 100 );
+
+		foreach ( $podcast_ids as $podcast_id ) {
+			foreach ( $email_groups as $email_group ) {
+				$subscribers = array();
+				foreach ( $email_group as $email ) {
+					$subscribers[] = array(
+						'email'      => $email,
+						'podcast_id' => $podcast_id,
+					);
+				}
+				$res = $this->send_request( sprintf( 'api/v2/revoke-private-subscribers' ), compact( 'subscribers' ), 'POST' );
+
+				if ( ! empty( $res['success'] ) ) {
+					$count += count( $subscribers );
+				} else {
+					$this->logger->log( __METHOD__, 'API response error!' );
+				}
+			}
+		}
+
+		return $count;
+	}
+
+
+	/**
 	 * Revoke subscriber from multiple podcasts.
 	 *
 	 * @param array $podcast_ids
@@ -747,10 +854,12 @@ class Castos_Handler {
 
 		$this->logger->log( sprintf( 'Sending %s request to: ', $method ), compact( 'api_url', 'args', 'method' ) );
 
+		$token = apply_filters( 'ssp_castos_api_token', $this->api_token, $api_url, $args, $method );
+
 		// Some endpoints ask for token, some - for api_token. Let's provide both.
 		$default_args = array(
-			'token'     => $this->api_token,
-			'api_token' => $this->api_token,
+			'token'     => $token,
+			'api_token' => $token,
 		);
 
 		$body = array_merge( $default_args, $args );
@@ -774,5 +883,114 @@ class Castos_Handler {
 		}
 
 		return json_decode( wp_remote_retrieve_body( $app_response ), true );
+	}
+
+
+	/**
+	 * Get series data for Castos.
+	 *
+	 * @param int $series_id
+	 *
+	 * @return array
+	 */
+	public function get_series_data_for_castos( $series_id ) {
+
+		$podcast = array();
+
+		// Podcast title
+		$title = ssp_get_option( 'data_title', get_bloginfo( 'name' ) );
+
+		$series_title = ssp_get_option( 'data_title', '', $series_id );
+		if ( $series_title ) {
+			$title = $series_title;
+		}
+		$podcast['podcast_title'] = $title;
+
+		// Podcast description
+		$description        = ssp_get_option( 'data_description', get_bloginfo( 'description' ) );
+		$series_description = ssp_get_option( 'data_description', '', $series_id );
+		if ( $series_description ) {
+			$description = $series_description;
+		}
+		$podcast_description            = mb_substr( wp_strip_all_tags( $description ), 0, 3999 );
+		$podcast['podcast_description'] = $podcast_description;
+
+		// Podcast author
+		$author        = ssp_get_option( 'data_author', get_bloginfo( 'name' ) );
+		$series_author = ssp_get_option( 'data_author', '', $series_id );
+		if ( $series_author ) {
+			$author = $series_author;
+		}
+		$podcast['author_name'] = $author;
+
+		// Podcast owner name
+		$owner_name        = ssp_get_option( 'data_owner_name', get_bloginfo( 'name' ) );
+		$series_owner_name = ssp_get_option( 'data_owner_name', '', $series_id );
+		if ( $series_owner_name ) {
+			$owner_name = $series_owner_name;
+		}
+		$podcast['podcast_owner'] = $owner_name;
+
+		// Podcast owner email address
+		$owner_email        = ssp_get_option( 'data_owner_email', get_bloginfo( 'admin_email' ) );
+		$series_owner_email = ssp_get_option( 'data_owner_email', '', $series_id );
+		if ( $series_owner_email ) {
+			$owner_email = $series_owner_email;
+		}
+		$podcast['owner_email'] = $owner_email;
+
+		// Podcast explicit setting
+		$explicit_option = ssp_get_option( 'ss_podcasting_explicit', '', $series_id );
+		if ( 'on' === $explicit_option ) {
+			$podcast['explicit'] = 1;
+		} else {
+			$podcast['explicit'] = 0;
+		}
+
+		// Podcast language
+		$language        = ssp_get_option( 'data_language', get_bloginfo( 'language' ) );
+		$series_language = ssp_get_option( 'data_language', '', $series_id );
+		if ( $series_language ) {
+			$language = $series_language;
+		}
+		$podcast['language'] = $language;
+
+		// Podcast cover image
+		$image        = ssp_get_option( 'data_image' );
+		$series_image = ssp_get_option( 'data_image', 'no-image', $series_id );
+		if ( 'no-image' !== $series_image ) {
+			$image = $series_image;
+		}
+		$podcast['cover_image'] = $image;
+
+		// Podcast copyright string
+		$copyright        = ssp_get_option( 'data_copyright', '&#xA9; ' . date( 'Y' ) . ' ' . get_bloginfo( 'name' ) );
+		$series_copyright = ssp_get_option( 'data_copyright', '', $series_id );
+		if ( $series_copyright ) {
+			$copyright = $series_copyright;
+		}
+		$podcast['copyright'] = $copyright;
+
+		// Podcast Categories
+		$itunes_category1            = ssp_get_feed_category_output( 1, $series_id );
+		$itunes_category2            = ssp_get_feed_category_output( 2, $series_id );
+		$itunes_category3            = ssp_get_feed_category_output( 3, $series_id );
+		$podcast['itunes_category1'] = $itunes_category1['category'];
+		$podcast['itunes_category2'] = $itunes_category2['category'];
+		$podcast['itunes_category3'] = $itunes_category3['category'];
+		$podcast['itunes']           = ssp_get_option( 'itunes_url', '', $series_id );
+		$podcast['google_play']      = ssp_get_option( 'google_play_url', '', $series_id );
+		$guid                        = ssp_get_option( 'data_guid', '', $series_id );
+
+		if ( $guid ) {
+			$podcast['guid'] = $guid;
+		}
+
+		$itunes_type = ssp_get_option( 'consume_order', '', $series_id );
+		if ( $itunes_type ) {
+			$podcast['itunes_type'] = $itunes_type;
+		}
+
+		return $podcast;
 	}
 }

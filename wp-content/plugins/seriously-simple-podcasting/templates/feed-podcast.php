@@ -7,7 +7,7 @@
  *
  * Refactoring history:
  * Moved the data preparation to the feed controller
- * @see \SeriouslySimplePodcasting\Controllers\Feed_Controller::load_feed_template()
+ * @see \SeriouslySimplePodcasting\Controllers\Feed_Controller::get_podcast_feed()
  *
  * @var $stylesheet_url
  * @var $title
@@ -84,10 +84,10 @@ if ( $stylesheet_url ) {
 		<copyright><?php echo esc_html( $copyright ); ?></copyright>
 		<itunes:subtitle><?php echo esc_html( $subtitle ); ?></itunes:subtitle>
 		<itunes:author><?php echo esc_html( $author ); ?></itunes:author>
-		<?php if ( $itunes_type ) : ?>
-			<itunes:type><?php echo $itunes_type; ?></itunes:type>
-		<?php endif ?>
-		<itunes:summary><?php echo esc_html( $description ); ?></itunes:summary>
+		<?php if ( $itunes_type ) :
+		?><itunes:type><?php echo $itunes_type; ?></itunes:type>
+		<?php endif
+		?><itunes:summary><?php echo esc_html( $description ); ?></itunes:summary>
 		<itunes:owner>
 			<itunes:name><?php echo esc_html( $owner_name ); ?></itunes:name>
 			<itunes:email><?php echo esc_html( $owner_email ); ?></itunes:email>
@@ -157,6 +157,11 @@ if ( $stylesheet_url ) {
 		if ( $guid ) :
 		?><podcast:guid><?php echo esc_attr( $guid ) ?></podcast:guid>
 		<?php endif;
+		?>
+
+		<!-- podcast_generator="SSP by Castos/<?php echo SSP_VERSION ?>" Seriously Simple Podcasting plugin for WordPress (https://wordpress.org/plugins/seriously-simple-podcasting/) -->
+		<?php
+
 
 		// Prevent WP core from outputting an <image> element
 		remove_action( 'rss2_head', 'rss2_site_icon' );
