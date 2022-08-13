@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/
  * @since       2.4.1
- * @version     1.0.1
+ * @version     1.1.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Affiliate's first name */ ?>
-<p><?php printf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $affiliate_name ) ); ?></p>
+<p><?php echo sprintf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $affiliate_name ) ); ?></p>
 
 <p><?php echo esc_html__( 'Congratulations on your successful referrals. We just processed your commission payout.', 'affiliate-for-woocommerce' ); ?></p>
 
@@ -42,10 +42,14 @@ if ( ! empty( $payout_notes ) ) {
 }
 ?>
 
-<?php /* translators: %1$s: Opening a tage for affiliate my account link %2$s: text for my account %3$s: closing a tag for affiliate my account link */ ?>
-<p><?php printf( esc_html__( 'We\'ve already updated your account with this info. You can %1$s%2$s%3$s to track all referrals, payouts and campaigns.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', esc_html__( 'login to your affiliate dashboard', 'affiliate-for-woocommerce' ), '</a>' ); ?>
+<p>
+	<?php
+		/* translators: %1$s: Opening a tag for affiliate my account link %2$s: closing a tag for affiliate my account link */
+		echo sprintf( esc_html__( 'We have already updated your account with this info. You can %1$slogin to your affiliate dashboard%2$s to track all referrals, payouts and campaigns.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', '</a>' );
+	?>
+</p>
 
-<p><?php echo esc_html__( 'We look forward to sending bigger payouts to you next time! Keep promoting, keep living a life you love!', 'affiliate-for-woocommerce' ); ?></p>
+<p><?php echo esc_html__( 'We look forward to sending bigger payouts to you next time. Keep promoting more and keep living a life you love.', 'affiliate-for-woocommerce' ); ?></p>
 
 <?php
 /**
@@ -54,10 +58,6 @@ if ( ! empty( $payout_notes ) ) {
 if ( $additional_content ) {
 	echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
 }
-
-?>
-<p><?php echo esc_html__( 'Best regards from your friends at,', 'affiliate-for-woocommerce' ); ?></p>
-<?php
 
 /**
  * Output the email footer

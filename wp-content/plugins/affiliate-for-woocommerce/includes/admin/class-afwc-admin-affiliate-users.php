@@ -1,13 +1,13 @@
 <?php
 /**
- * Main class for Affiliate search and tags on users page
- *
- * @since       1.4.0
- * @version     1.1.3
+ * Main class for Affiliate tags.
  *
  * @package     affiliate-for-woocommerce/includes/admin/
+ * @since       1.4.0
+ * @version     1.2.0
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,10 +23,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate_Users' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
-			add_action( 'pre_get_users', array( $this, 'search_by_users_query' ), 20 );
 			add_action( 'admin_menu', array( $this, 'afwc_add_user_tags_admin_page' ) );
 			add_filter( 'parent_file', array( $this, 'afwc_set_submenu_active' ) );
-
 		}
 
 		/**
@@ -44,42 +42,6 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate_Users' ) ) {
 		}
 
 		/**
-		 * Function to search for affiliates on Users Dashboard
-		 *
-		 * @param Object $query WP_User_Query.
-		 */
-		public function search_by_users_query( $query ) {
-			global $pagenow;
-
-			if ( 'users.php' !== $pagenow ) {
-				return;
-			}
-
-			if ( empty( $query->query_vars['search'] ) ) {
-				return;
-			}
-
-			// Remove trailing and starting empty spaces.
-			$search_term = trim( $query->query_vars['search'] );
-
-			// Remove * from the search term.
-			$search_term = trim( $query->query_vars['search'], '*' );
-
-			if ( 'affiliate:' === strtolower( substr( $search_term, 0, 10 ) ) ) {
-				$is_user_afiliate = trim( substr( $search_term, 11 ) );
-
-				if ( 'no' === $is_user_afiliate ) {
-					return;
-				} elseif ( 'yes' === $is_user_afiliate ) {
-					$query->set( 'meta_key', 'afwc_is_affiliate' );
-					$query->set( 'meta_value', $is_user_afiliate );
-					$query->set( 'meta_compare', 'LIKE' );
-					$query->set( 'search', '' );
-				}
-			}
-		}
-
-		/**
 		 * Function to add page for affiliate tags
 		 */
 		public function afwc_add_user_tags_admin_page() {
@@ -87,9 +49,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate_Users' ) ) {
 			add_submenu_page( 'users', esc_attr( $taxonomy->labels->menu_name ), esc_attr( $taxonomy->labels->menu_name ), $taxonomy->cap->manage_terms, 'edit-tags.php?taxonomy=' . $taxonomy->name );
 		}
 
-
 		/**
-		 * Function to set affiliate submenu active
+		 * Function to set Affiliates submenu active.
 		 *
 		 * @param String $parent_file file reference for menu.
 		 */
@@ -97,7 +58,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate_Users' ) ) {
 			global $current_screen;
 
 			$id = $current_screen->id;
-			if ( 'edit-afwc_user_tags' === $id ) {
+			if ( 'edit-afwc_user_tags' === $id || 'woocommerce_page_affiliate-form-settings' === $id ) {
 				$parent_file = 'woocommerce';
 				?>
 				<script type="text/javascript">

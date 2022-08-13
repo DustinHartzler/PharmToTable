@@ -1,61 +1,63 @@
 /* phpcs:ignoreFile */
 jQuery(function(){
+	const { _x } = wp.i18n;
 	// form validation
 	// validate password and confirm password
-	var password = jQuery("#afwc_reg_password")
-	  , confirm_password = jQuery("#afwc_reg_confirm_password");
+	let password = jQuery("#afwc_reg_password"),
+	    confirmPassword = jQuery("#afwc_reg_confirm_password");
 
 	function validatePassword(){
-		if (password.val() != confirm_password.val()) {
-			confirm_password[0].setCustomValidity( afwc_reg_pre_data.password_error );
+		if (password.val() != confirmPassword.val()) {
+			confirmPassword[0].setCustomValidity( _x( 'Passwords do not match.', 'Registration form error message for password mismatch', 'affiliate-for-woocommerce' ) );
 		} else {
-			confirm_password[0].setCustomValidity('');
+			confirmPassword[0].setCustomValidity('');
 		}
 	}
-	jQuery(password).on('change', function(){
+	password.on('change', function(){
 		validatePassword();
 	});
-	jQuery(confirm_password).on('keyup', function(){
+	confirmPassword.on('keyup', function(){
 		validatePassword();
 	});
 
 	// Form submission
-	jQuery(document).on('submit', '#afwc_registration_form', function (e) {
+	jQuery(document).on('submit', '#afwc_registration_form', async function (e) {
 		e.preventDefault();
-		var form = jQuery(this);
-		jQuery(form).find('input[type="submit"]').attr('disabled', true);
+		let form = jQuery(this);
+		form.find('input[type="submit"]').attr('disabled', true);
 		var formData = {};
 		jQuery.each(form.serializeArray(), function() {
 			formData[this.name] = this.value;
 		});
-		if ( formData['afwc_hp_email'] !== '' ) {
-			jQuery(form).find('.afwc_reg_message').addClass('success').html( afwc_reg_pre_data.hp_success_msg ).show();
-			jQuery(form)[0].reset();
+		if ('' !== formData['afwc_hp_email']) {
+			form.find('.afwc_reg_message').addClass('success').html( _x( 'User registered successfully.', 'Registration form success message for user register', 'affiliate-for-woocommerce' ) ).show();
+			form[0].reset();
 			return;
 		}
 		formData['action'] = 'afwc_register_user';
 		formData['security'] = jQuery('#afwc_registration').val();
-		jQuery(form).find('.afwc_reg_loader').show().css('display', 'inline-block');
-		var actionUrl = afwc_reg_pre_data.ajaxurl;
-		jQuery.ajax({
+		form.find('.afwc_reg_loader').css('display', 'inline-block');
+		await jQuery.ajax({
 			type: 'POST',
-			url: actionUrl,
+			url: afwcRegistrationFormParams.ajaxurl || '',
 			data: formData,
 			dataType: 'json',
 			success: function (response) {
-				jQuery(form).find('.afwc_reg_loader').hide();
 				if ( response.status && 'success' == response.status ) {
-					jQuery(form).find('.afwc_reg_message').addClass('success').html( response.message ).show();
+					form.find('.afwc_reg_message').addClass('success');
 				} else {
-					jQuery(form).find('.afwc_reg_message').addClass('error').html( response.message ).show();
+					form.find('.afwc_reg_message').addClass('error');
 				}
-				jQuery(form)[0].reset();
-				jQuery(form).find('input[type="submit"]').attr('disabled', false);
+				form[0].reset();
+				if(response.message){
+					form.find('.afwc_reg_message').html( response.message ).show();
+				}
 			},
 			error: function (err) {
-				console.log(err, 'error');
-				jQuery(form).find('input[type="submit"]').attr('disabled', false);
+				console.log('[ERROR]', err);
 			},
 		});
+		form.find('.afwc_reg_loader').hide();
+		form.find('input[type="submit"]').attr('disabled', false);
 	});
 });

@@ -3,8 +3,8 @@
  * Main class for Affiliate conversion received Email
  *
  * @package     affiliate-for-woocommerce/includes/emails/
- * @version     1.0.1
- * @since       2.4.1
+ * @since       2.4.2
+ * @version     1.3.0
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'AFWC_Commission_Paid_Email' ) ) {
+if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 
 	/**
 	 * The Affiliate Payout Sent Email class
 	 *
 	 * @extends \WC_Email
 	 */
-	class AFWC_Commission_Paid_Email extends WC_Email {
+	class AFWC_Email_Commission_Paid extends WC_Email {
 
 		/**
 		 * Set email defaults
@@ -48,7 +48,7 @@ if ( ! class_exists( 'AFWC_Commission_Paid_Email' ) ) {
 			$this->placeholders = array();
 
 			// Trigger on new conversion.
-			add_action( 'afwc_commission_paid_email', array( $this, 'trigger' ), 10, 1 );
+			add_action( 'afwc_email_commission_paid', array( $this, 'trigger' ), 10, 1 );
 
 			// Call parent constructor to load any other defaults not explicity defined here.
 			parent::__construct();
@@ -106,7 +106,7 @@ if ( ! class_exists( 'AFWC_Commission_Paid_Email' ) ) {
 			$email_content = ( is_callable( array( $this, 'format_string' ) ) ) ? $this->format_string( $email_content ) : $email_content;
 
 			// Send email.
-			if ( $this->is_enabled() && $this->get_recipient() ) {
+			if ( ! empty( $email_content ) && $this->is_enabled() && $this->get_recipient() ) {
 				$this->send( $this->get_recipient(), $this->get_subject(), $email_content, $this->get_headers(), $this->get_attachments() );
 			}
 
@@ -130,35 +130,24 @@ if ( ! class_exists( 'AFWC_Commission_Paid_Email' ) ) {
 		 * @return string Email content html
 		 */
 		public function get_content_html() {
-			$default_path  = $this->template_base;
-			$template_path = AFWC_Emails::get_instance()->get_template_base_dir( $this->template_html );
+			global $affiliate_for_woocommerce;
 
-			$email_heading = $this->get_heading();
+			$email_arguments = $this->get_template_args();
 
-			ob_start();
+			if ( ! empty( $email_arguments ) ) {
+				ob_start();
 
-			wc_get_template(
-				$this->template_html,
-				array(
-					'email'                 => $this,
-					'email_heading'         => $email_heading,
-					'affiliate_name'        => $this->email_args['affiliate_name'],
-					'commission_amount'     => $this->email_args['commission_amount'],
-					'currency_symbol'       => $this->email_args['currency_symbol'],
-					'start_date'            => $this->email_args['start_date'],
-					'end_date'              => $this->email_args['end_date'],
-					'total_orders'          => $this->email_args['total_orders'],
-					'payout_notes'          => $this->email_args['payout_notes'],
-					'payment_gateway'       => $this->email_args['payment_gateway'],
-					'paypal_receiver_email' => $this->email_args['paypal_receiver_email'],
-					'my_account_afwc_url'   => $this->email_args['my_account_afwc_url'],
-					'additional_content'    => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
-				),
-				$template_path,
-				$default_path
-			);
+				wc_get_template(
+					$this->template_html,
+					$email_arguments,
+					is_callable( array( $affiliate_for_woocommerce, 'get_template_base_dir' ) ) ? $affiliate_for_woocommerce->get_template_base_dir( $this->template_html ) : '',
+					$this->template_base
+				);
 
-			return ob_get_clean();
+				return ob_get_clean();
+			}
+
+			return '';
 		}
 
 		/**
@@ -167,35 +156,48 @@ if ( ! class_exists( 'AFWC_Commission_Paid_Email' ) ) {
 		 * @return string Email plain content
 		 */
 		public function get_content_plain() {
-			$default_path  = $this->template_base;
-			$template_path = AFWC_Emails::get_instance()->get_template_base_dir( $this->template_plain );
+			global $affiliate_for_woocommerce;
 
-			$email_heading = $this->get_heading();
+			$email_arguments = $this->get_template_args();
 
-			ob_start();
+			if ( ! empty( $email_arguments ) ) {
+				ob_start();
 
-			wc_get_template(
-				$this->template_plain,
-				array(
-					'email'                 => $this,
-					'email_heading'         => $email_heading,
-					'affiliate_name'        => $this->email_args['affiliate_name'],
-					'commission_amount'     => $this->email_args['commission_amount'],
-					'currency_symbol'       => $this->email_args['currency_symbol'],
-					'start_date'            => $this->email_args['start_date'],
-					'end_date'              => $this->email_args['end_date'],
-					'total_orders'          => $this->email_args['total_orders'],
-					'payout_notes'          => $this->email_args['payout_notes'],
-					'payment_gateway'       => $this->email_args['payment_gateway'],
-					'paypal_receiver_email' => $this->email_args['paypal_receiver_email'],
-					'my_account_afwc_url'   => $this->email_args['my_account_afwc_url'],
-					'additional_content'    => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
-				),
-				$template_path,
-				$default_path
+				wc_get_template(
+					$this->template_plain,
+					$email_arguments,
+					is_callable( array( $affiliate_for_woocommerce, 'get_template_base_dir' ) ) ? $affiliate_for_woocommerce->get_template_base_dir( $this->template_plain ) : '',
+					$this->template_base
+				);
+
+				return ob_get_clean();
+			}
+
+			return '';
+
+		}
+
+		/**
+		 * Function to return the required email arguments for this email template.
+		 *
+		 * @return array Email arguments.
+		 */
+		public function get_template_args() {
+			return array(
+				'email'                 => $this,
+				'email_heading'         => is_callable( array( $this, 'get_heading' ) ) ? $this->get_heading() : '',
+				'affiliate_name'        => $this->email_args['affiliate_name'],
+				'commission_amount'     => $this->email_args['commission_amount'],
+				'currency_symbol'       => $this->email_args['currency_symbol'],
+				'start_date'            => $this->email_args['start_date'],
+				'end_date'              => $this->email_args['end_date'],
+				'total_orders'          => $this->email_args['total_orders'],
+				'payout_notes'          => $this->email_args['payout_notes'],
+				'payment_gateway'       => $this->email_args['payment_gateway'],
+				'paypal_receiver_email' => $this->email_args['paypal_receiver_email'],
+				'my_account_afwc_url'   => $this->email_args['my_account_afwc_url'],
+				'additional_content'    => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 			);
-
-			return ob_get_clean();
 		}
 
 		/**

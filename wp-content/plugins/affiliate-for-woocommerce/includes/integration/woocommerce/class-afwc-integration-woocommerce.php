@@ -3,7 +3,7 @@
  * Main class for Affiliate For WooCommerce Integration
  *
  * @since       1.0.0
- * @version     1.2.3
+ * @version     1.2.4
  *
  * @package     affiliate-for-woocommerce/includes/integration/woocommerce/
  */
@@ -43,10 +43,6 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 
 			global $wpdb;
 
-			$prefixed_statuses   = afwc_get_prefixed_order_statuses();
-			$option_order_status = 'afwc_order_status_' . uniqid();
-			update_option( $option_order_status, implode( ',', $prefixed_statuses ), 'no' );
-
 			if ( ! empty( $post_ids ) ) {
 				$option_nm = 'afwc_woo_storewise_sales_post_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', $post_ids ), 'no' );
@@ -57,19 +53,13 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 											                        FROM {$wpdb->posts} AS posts 
 											                       JOIN {$wpdb->postmeta} AS postmeta 
 											                            ON ( posts.ID = postmeta.post_id 
-											                            	AND postmeta.meta_key = %s ) 
-											                        WHERE posts.post_type = %s 
-											                        	AND FIND_IN_SET ( posts.post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )
-											                        	AND FIND_IN_SET ( post_id, ( SELECT option_value
+											                            	AND postmeta.meta_key = %s 
+																			AND posts.post_type = %s) 
+											                        WHERE FIND_IN_SET ( post_id, ( SELECT option_value
 																									FROM {$wpdb->prefix}options
 																									WHERE option_name = %s ) )",
 														'_order_total',
 														'shop_order',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_order_status,
 														$option_nm
 													)
 				);
@@ -82,24 +72,16 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 											                        FROM {$wpdb->posts} AS posts 
 											                        JOIN {$wpdb->postmeta} AS postmeta 
 											                            ON ( posts.ID = postmeta.post_id 
-											                            	AND postmeta.meta_key = %s ) 
-											                        WHERE posts.post_type = %s 
-											                        	AND FIND_IN_SET ( posts.post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )",
+											                            	AND postmeta.meta_key = %s 
+																			posts.post_type = %s )",
 														'_order_total',
-														'shop_order',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_order_status
+														'shop_order'
 													)
 				);
 			}
 
-			delete_option( $option_order_status );
-
 			if ( ! empty( $woocommerce_sales ) ) {
-				$storewide_sales = $storewide_sales + $woocommerce_sales;
+				$storewide_sales = floatval( $storewide_sales ) + floatval( $woocommerce_sales );
 			}
 
 			return $storewide_sales;

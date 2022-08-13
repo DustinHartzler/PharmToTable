@@ -1,9 +1,10 @@
 <?php
 /**
- * Affiliate New Conversion Email Content
+ * Affiliate New Registration Email Content (Affiliate Manager - New Registration Received)
  *
- * @version     1.0.1
  * @package     affiliate-for-woocommerce/templates/
+ * @since       2.4.0
+ * @version     1.2.0
  */
 
 // Exit if accessed directly.
@@ -17,39 +18,51 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: admin's first name */ ?>
-<p><?php printf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $admin_name ) ); ?></p>
+<p><?php echo sprintf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $admin_name ) ); ?></p>
 
-<p><?php echo esc_html__( 'Please review and respond to this potential affiliate partner.', 'affiliate-for-woocommerce' ); ?></p>
+<p>
+	<?php echo 'yes' === $is_auto_approved ? esc_html__( 'Congratulations! You got a new affiliate partner.', 'affiliate-for-woocommerce' ) : esc_html__( 'Please review and respond to this potential affiliate partner request.', 'affiliate-for-woocommerce' ); ?>
+</p>
 
 <p><strong><?php echo esc_html__( 'Name: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_attr( $user_name ) . ' (' . esc_attr( $user_email ) . ')'; ?></p>
 
 <?php if ( ! empty( $user_contact ) ) { ?>
 	<?php /* translators: %s: contact information */ ?>
-<p><strong><?php printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_contact_label ) ); ?></strong><?php echo esc_attr( $user_contact ); ?></p>
+<p><strong><?php echo sprintf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_contact_label ) ); ?></strong><?php echo esc_attr( $user_contact ); ?></p>
 <?php } ?>
 
 <?php if ( ! empty( $user_url ) ) { ?>
 	<?php /* translators: %s: website URL */ ?>
-<p><strong><?php printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_website_label ) ); ?></strong><?php echo esc_url( $user_url ); ?></p>
+<p><strong><?php echo sprintf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_website_label ) ); ?></strong><?php echo esc_url( $user_url ); ?></p>
 <?php } ?>
 
 <p><strong><?php echo esc_html__( 'Additional Information: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_html( $user_desc ); ?></p>
 
 <p><strong><?php echo esc_html__( 'Next Actions', 'affiliate-for-woocommerce' ); ?></strong>
 <ul>
-	<li><a href="<?php echo esc_url( $manage_url ); ?>"  target="_blank" ><?php esc_html_e( 'Approve / reject / manage this affiliate', 'affiliate-for-woocommerce' ); ?></a></li>
+	<li>
+		<a href="<?php echo esc_url( $manage_url ); ?>"  target="_blank" >
+			<?php echo 'yes' === $is_auto_approved ? esc_html__( 'Manage this affiliate', 'affiliate-for-woocommerce' ) : esc_html__( 'Approve / reject / manage this affiliate', 'affiliate-for-woocommerce' ); ?>
+		</a>
+	</li>
 	<?php /* translators: %s: Affiliate's first name */ ?>
-	<li><a href="mailto:<?php echo esc_attr( $user_email ); ?>" target="_blank" ><?php printf( esc_html__( 'Email %s and discuss details', 'affiliate-for-woocommerce' ), esc_html( $user_name ) ); ?></a></li>
+	<li><a href="mailto:<?php echo esc_attr( $user_email ); ?>" target="_blank" ><?php printf( esc_html__( 'Email %s and discuss more details', 'affiliate-for-woocommerce' ), esc_html( $user_name ) ); ?></a></li>
 </ul>
 </p>
 
-<p><?php echo esc_html__( 'BTW, you can ', 'affiliate-for-woocommerce' ); ?><a href="<?php echo esc_url( $dashboard_url ); ?>" ><?php esc_html_e( 'review and manage all affiliates here.', 'affiliate-for-woocommerce' ); ?></a>
-<?php echo esc_html__( 'You can process all pending requests from there.', 'affiliate-for-woocommerce' ); ?>
-</p>
-
-<p><?php echo esc_html__( 'Do respond promptly. ', 'affiliate-for-woocommerce' ); ?><strong><?php echo esc_attr( $user_name ); ?></strong><?php echo esc_html__( ' is waiting!', 'affiliate-for-woocommerce' ); ?></p>
-
+<?php /* translators: %1$s: Opening a tag for admin affiliate dashboard link %2$s: closing a tag for admin affiliate dashboard link */ ?>
+<p><?php echo sprintf( esc_html__( 'BTW, you can review and manage all affiliates and also process pending requests from %1$shere%2$s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $dashboard_url ) . '">', '</a>' ); ?></p>
 <?php
+if ( 'yes' !== $is_auto_approved ) {
+	?>
+	<p>
+	<?php
+	/* translators: %1$s: Opening strong tag %2$s: affiliate's name %3$s: closing strong tag */
+	echo sprintf( esc_html__( 'Do respond promptly. %1$s%2$s%3$s is waiting!', 'affiliate-for-woocommerce' ), '<strong>', esc_attr( $user_name ), '</strong>' );
+	?>
+	</p>
+	<?php
+}
 /**
  * Show user-defined additional content - this is set in each email's settings.
  */
@@ -58,7 +71,7 @@ if ( $additional_content ) {
 }
 
 ?>
-<p><?php echo esc_html__( 'Thanks', 'affiliate-for-woocommerce' ); ?></p>
+<p><?php echo esc_html__( 'Thanks!', 'affiliate-for-woocommerce' ); ?></p>
 <?php
 
 /**

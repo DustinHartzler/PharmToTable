@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.4.2
+ * @version     1.4.9
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -43,6 +43,9 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 			add_action( 'show_user_profile', array( $this, 'afwc_can_be_affiliate' ) );
 			add_action( 'edit_user_profile', array( $this, 'afwc_can_be_affiliate' ) );
 
+			// Validate the affiliate fields.
+			add_action( 'user_profile_update_errors', array( $this, 'validate_fields' ) );
+
 			add_action( 'personal_options_update', array( $this, 'save_afwc_can_be_affiliate' ) );
 			add_action( 'edit_user_profile_update', array( $this, 'save_afwc_can_be_affiliate' ) );
 
@@ -80,6 +83,25 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 		}
 
 		/**
+		 * Validate the fields.
+		 *
+		 * @param  WP_Error $errors WP_Error object.
+		 * @return void.
+		 */
+		public function validate_fields( $errors = null ) {
+			// prevent processing requests external of the site.
+			if ( empty( $_POST['afwc_affiliate_settings_security'] ) || ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['afwc_affiliate_settings_security'] ) ), 'afwc_affiliate_settings_security' )  ) { // phpcs:ignore
+				return;
+			}
+
+			if ( ! empty( $_POST['afwc_paypal_email'] ) && false === is_email( wc_clean( wp_unslash( $_POST['afwc_paypal_email'] ) ) ) ) { // phpcs:ignore
+				if ( $errors instanceof WP_Error && is_callable( array( $errors, 'add' ) ) ) {
+					$errors->add( 'paypal_email_validation', _x( '<strong>Error</strong>: The PayPal email address is incorrect.', 'WP Users page: PayPal email validation', 'affiliate-for-woocommerce' ), array( 'form-field' => 'afwc_paypal_email' ) );
+				}
+			}
+		}
+
+		/**
 		 * Can user be affiliate?
 		 * Add settings if user is affiliate
 		 *
@@ -101,7 +123,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 			// Register script.
 			wp_register_script( 'afwc-user-profile-js', AFWC_PLUGIN_URL . '/assets/js/afwc-user-profile.js', array( 'jquery', 'wp-i18n' ), $plugin_data['Version'], true );
 			if ( function_exists( 'wp_set_script_translations' ) ) {
-				wp_set_script_translations( 'afwc-user-profile-js', 'affiliate-for-woocommerce' );
+				wp_set_script_translations( 'afwc-user-profile-js', 'affiliate-for-woocommerce', AFWC_PLUGIN_DIR_PATH . 'languages' );
 			}
 
 			$profile_js_params = array(
@@ -119,14 +141,24 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 				<h2 id="afwc-settings"><?php echo esc_html__( 'Affiliate For WooCommerce settings', 'affiliate-for-woocommerce' ); ?></h2>
 				<table class="form-table" id="afwc">
 						<?php
-						if ( 'pending' === $is_affiliate ) {
+						if ( in_array( $is_affiliate, array( 'pending', 'no' ), true ) ) {
 							?>
-							<tr>
+							<tr id="afwc_action_row">
 								<th><label for="afwc_affiliate_action"><?php echo esc_html__( 'Action', 'affiliate-for-woocommerce' ); ?></label></th>
 								<td>
-									<span class="afwc-approve afwc-actions-wrap"><i class="dashicons dashicons-yes"></i><a href="#" class="afwc_actions" data-afwc_action="approve" > <?php echo esc_html__( 'Approve affiliate', 'affiliate-for-woocommerce' ); ?></a></span>
-									<span class="afwc-disapprove afwc-actions-wrap"><i class="dashicons dashicons-no-alt"></i><a href="#" class="afwc_actions" data-afwc_action="disapprove"> <?php echo esc_html__( 'Reject affiliate', 'affiliate-for-woocommerce' ); ?></a></span>
-									<input type="hidden" id="afwc_review_pending" name="afwc_review_pending" value="yes"/>
+									<?php
+									if ( 'pending' === $is_affiliate ) {
+										?>
+										<span class="afwc-approve afwc-actions-wrap"><i class="dashicons dashicons-yes"></i><a href="#" id="afwc_actions" data-affiliate-status="<?php echo esc_attr( 'yes' ); ?>"> <?php echo esc_html_x( 'Approve affiliate', 'Affiliate action', 'affiliate-for-woocommerce' ); ?></a></span>
+										<span class="afwc-disapprove afwc-actions-wrap"><i class="dashicons dashicons-no-alt"></i><a href="#" id="afwc_actions" data-affiliate-status="<?php echo esc_attr( 'no' ); ?>"> <?php echo esc_html_x( 'Reject affiliate', 'Affiliate action', 'affiliate-for-woocommerce' ); ?></a></span>
+										<?php
+									} elseif ( 'no' === $is_affiliate ) {
+										?>
+										<a href="#" id="afwc_actions" data-affiliate-status="<?php echo esc_attr( 'not_registered' ); ?>"> <?php echo esc_html_x( 'Allow this user to signup via affiliate form', 'Affiliate action', 'affiliate-for-woocommerce' ); ?></a> |
+										<a href="#" id="afwc_actions" data-affiliate-status="<?php echo esc_attr( 'yes' ); ?>"> <?php echo esc_html_x( 'Make this user an Affiliate', 'Affiliate action', 'affiliate-for-woocommerce' ); ?></a>
+										<?php
+									}
+									?>
 								</td> 
 							</tr>
 							<?php
@@ -134,14 +166,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 						?>
 						<tr id="afwc_is_affiliate_row">
 							<th><label for="afwc_affiliate_link"><?php echo esc_html__( 'Is affiliate?', 'affiliate-for-woocommerce' ); ?></label></th>
-							<td><input type="checkbox" name="afwc_is_affiliate" value="yes" 
-							<?php
-							if ( 'yes' === $is_affiliate ) {
-								echo esc_attr( 'checked="checked"' );
-							}
-							?>
-							>
-							</td>
+							<td><input type="checkbox" name="<?php echo esc_attr( 'afwc_is_affiliate' ); ?>" value="<?php echo esc_attr( 'yes' ); ?>" <?php checked( $is_affiliate, 'yes' ); ?>></td>
 						</tr>
 						<?php
 						if ( ! empty( $afwc_affiliate_desc ) ) {
@@ -171,7 +196,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 						$affiliate_link  = add_query_arg( $pname, $affiliate_id, trailingslashit( home_url() ) );
 						?>
 						<tr>
-							<th><label for="afwc_affiliate_link"><?php echo esc_html__( 'Affiliate URL', 'affiliate-for-woocommerce' ); ?></label></th>
+							<th><label for="afwc_affiliate_link"><?php echo esc_html__( 'Referral link', 'affiliate-for-woocommerce' ); ?></label></th>
 							<td><label><?php echo esc_url( $affiliate_link ); ?></label></td>
 						</tr>
 						<?php
@@ -181,7 +206,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 						if ( 'yes' === $use_referral_coupons && ! empty( $referral_coupons ) && is_array( $referral_coupons ) ) {
 							?>
 							<tr>
-								<th><label for="afwc_referral_coupon"><?php echo esc_html__( 'Affiliate coupons', 'affiliate-for-woocommerce' ); ?></label></th>
+								<th><label for="afwc_referral_coupon"><?php echo esc_html__( 'Referral coupons', 'affiliate-for-woocommerce' ); ?></label></th>
 								<td><label>
 									<?php
 									foreach ( $referral_coupons as $coupon_id => $coupon_code ) {
@@ -197,13 +222,15 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 							<?php
 						}
 
-						$paypal_api_settings = AFWC_PayPal_API::get_instance()->get_api_setting_status();
-						if ( 'yes' === $paypal_api_settings['value'] ) {
+						if ( 'yes' === get_option( 'afwc_allow_paypal_email', 'no' ) ) {
 							$afwc_paypal_email = ( ! empty( $user_id ) ) ? get_user_meta( $user->ID, 'afwc_paypal_email', true ) : '';
 							?>
 							<tr>
 								<th><label for="afwc_paypal_email"><?php echo esc_html__( 'PayPal email address', 'affiliate-for-woocommerce' ); ?></label></th>
-								<td><input type="email" name="afwc_paypal_email" id="afwc_paypal_email" value="<?php echo esc_attr( $afwc_paypal_email ); ?>" class="regular-text" placeholder="<?php echo esc_attr__( 'Enter PayPal email address for payouts of this affiliate...', 'affiliate-for-woocommerce' ); ?>"></td>
+								<td>
+									<input type="email" id="afwc_paypal_email" name="afwc_paypal_email" style="width: 50%;" value="<?php echo esc_attr( $afwc_paypal_email ); ?>" class="regular-text" placeholder="<?php echo esc_attr__( 'Enter PayPal email address where affiliate will receive commission', 'affiliate-for-woocommerce' ); ?>">
+									<p class="description"><?php esc_html_e( 'This affiliate will receive their commission on the above PayPal email address.', 'affiliate-for-woocommerce' ); ?></p>
+								</td>
 							</tr>
 							<?php
 						}
@@ -211,14 +238,14 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 						$affiliate_tags_desc        = '';
 						$affiliate_manage_tags_link = admin_url( 'edit-tags.php?taxonomy=afwc_user_tags' );
 						if ( ! empty( $affiliate_manage_tags_link ) ) {
-							/* translators: %1$s: Opening strong tag %2$s: Opening a tage for affiliate manage tag page link %3$s: closing strong tag %4$s: closing a tag for affiliate manage tag page link */
+							/* translators: %1$s: Opening strong tag %2$s: Opening a tag for affiliate manage tag page link %3$s: closing strong tag %4$s: closing a tag for affiliate manage tag page link */
 							$affiliate_tags_desc = sprintf( esc_html__( '%1$s%2$sManage affiliate tags%3$s%4$s', 'affiliate-for-woocommerce' ), '<strong>', '<a target="_blank" href="' . esc_url( $affiliate_manage_tags_link ) . '">', '</a>', '</strong>' );
 						}
 						?>
 						<tr>
 							<th><label for="afwc_user_tags"><?php esc_attr_e( 'Select tags for affiliate', 'affiliate-for-woocommerce' ); ?></label><br><br><?php echo wp_kses_post( $affiliate_tags_desc ); ?></th>
 							<td>
-								<select id="afwc_user_tags" name="afwc_user_tags[]" style="width: 50%;" class="wc-afw-tags-search" data-placeholder="<?php esc_attr_e( 'Search tags', 'affiliate-for-woocommerce' ); ?>" data-allow_clear="true" data-action="afwc_json_search_tags" multiple="multiple">
+								<select id="afwc_user_tags" name="afwc_user_tags[]" style="width: 50%;" class="wc-afw-tags-search" data-placeholder="<?php esc_attr_e( 'Search tags', 'affiliate-for-woocommerce' ); ?>" data-action="afwc_json_search_tags" multiple="multiple" data-allow-clear="true">
 									<?php
 									$html = '';
 									foreach ( $all_tags as $id => $tag ) {
@@ -235,35 +262,27 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 						<?php
 					}
 					if ( ( 'not_registered' !== $is_affiliate ) && ( 'no' !== $is_affiliate ) ) {
-						$parent_chain            = afwc_get_parent_chain( $user_id );
-						$is_parent_chain_disable = ( 'yes' === $is_affiliate ) ? '' : 'disabled';
-						$parent_id               = '';
+						$parent_chain = afwc_get_parent_chain( $user_id );
+						$parent_id    = ! empty( $parent_chain ) && is_array( $parent_chain ) ? intval( current( $parent_chain ) ) : 0;
 						?>
 						<tr>				
-							<th><label for="afwc_parent_id"><?php echo esc_html__( 'Parent Affiliate', 'affiliate-for-woocommerce' ); ?></label></th>
+							<th><label for="afwc_parent_id"><?php echo esc_html__( 'Parent affiliate', 'affiliate-for-woocommerce' ); ?></label></th>
 							<td>
-								<select id="afwc_parent_id" name="afwc_parent_id" style="width: 50%;" class="wc-afw-afwc-parent-name-search" data-placeholder="<?php esc_attr_e( 'Search for a Parent Affiliate', 'affiliate-for-woocommerce' ); ?>" data-allow_clear="true" data-user="<?php echo esc_attr( $user_id ); ?>" data-action="afwc_json_search_parent_affiliates" <?php echo esc_attr( $is_parent_chain_disable ); ?>>
+								<select id="afwc_parent_id" name="afwc_parent_id" style="width: 50%;" class="wc-afw-parent-name-search" data-placeholder="<?php esc_attr_e( 'Search for a parent affiliate', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="true" data-user="<?php echo esc_attr( $user_id ); ?>" data-action="afwc_json_search_parent_affiliates" <?php echo esc_attr( 'yes' === $is_affiliate ? '' : 'disabled' ); ?>>
 								<?php
-								if ( ! empty( $parent_chain ) && is_array( $parent_chain ) ) {
-
-									$parent_id = current( $parent_chain );
-									$parent    = get_user_by( 'id', $parent_id );
-
-									if ( ! empty( $parent ) ) {
-										$parent_string = sprintf(
-											'%1$s (#%2$d &ndash; %3$s)',
-											isset( $parent->display_name ) ? $parent->display_name : '',
-											absint( $parent_id ),
-											$parent->user_email
-										);
-
+								if ( ! empty( $parent_id ) ) {
+									$parent = get_user_by( 'id', $parent_id );
+									if ( $parent instanceof WP_User && ! empty( $parent->user_email ) ) {
 										?>
-										<option value="<?php echo esc_attr( $parent_id ); ?>"  selected="<?php echo esc_attr( 'selected' ); ?>" ><?php echo esc_html( htmlspecialchars( wp_kses_post( $parent_string ) ) ); ?></option>
+										<option value="<?php echo esc_attr( $parent_id ); ?>" selected="<?php echo esc_attr( 'selected' ); ?>" >
+											<?php echo esc_html( htmlspecialchars( wp_kses_post( sprintf( '%1$s (#%2$d &ndash; %3$s)', ( ! empty( $parent->display_name ) ? $parent->display_name : '' ), absint( $parent_id ), $parent->user_email ) ) ) ); ?>
+										</option>
 										<?php
 									}
 								}
 								?>
 								</select>
+								<p class="description"><?php esc_html_e( 'The commission will be distributed to this parent affiliate on a multi-tier commission plan.', 'affiliate-for-woocommerce' ); ?></p>
 								<?php
 								if ( 'pending' === $is_affiliate ) {
 									?>
@@ -418,28 +437,27 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 				return;
 			}
 
-			$post_afwc_review_pending    = ( isset( $_POST['afwc_review_pending'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_review_pending'] ) ) : ''; // phpcs:ignore
 			$post_afwc_is_affiliate      = ( isset( $_POST['afwc_is_affiliate'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_is_affiliate'] ) ) : ''; // phpcs:ignore
 			$post_afwc_paypal_email      = ( isset( $_POST['afwc_paypal_email'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_paypal_email'] ) ) : ''; // phpcs:ignore
 			$post_afwc_user_tags         = ( isset( $_POST['afwc_user_tags'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_user_tags'] ) ) : array(); // phpcs:ignore
 			$post_afwc_parent_affiliate  = ( isset( $_POST['afwc_parent_id'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_parent_id'] ) ) : 0; // phpcs:ignore
 			$post_afwc_pending_parent_id = ( isset( $_POST['afwc_pending_parent_id'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_pending_parent_id'] ) ) : 0; // phpcs:ignore
 
-			$user             = get_user_by( 'id', $user_id );
-			$old_is_affiliate = afwc_is_user_affiliate( $user );
+			$old_is_affiliate = afwc_is_user_affiliate( intval( $user_id ) );
 
 			if ( 'yes' === $post_afwc_is_affiliate ) {
 				update_user_meta( $user_id, 'afwc_is_affiliate', $post_afwc_is_affiliate );
 				if ( 'pending' === $old_is_affiliate ) {
 					// Send welcome email to affiliate.
-					$mailer = WC()->mailer();
-					if ( $mailer->emails['Afwc_Welcome_Affiliate_Email']->is_enabled() ) {
-						// Prepare args.
-						$args = array(
-							'affiliate_id' => $user_id,
-						);
+					if ( true === AFWC_Emails::is_afwc_mailer_enabled( 'afwc_email_welcome_affiliate' ) ) {
 						// Trigger email.
-						do_action( 'afwc_welcome_affiliate_email', $args );
+						do_action(
+							'afwc_email_welcome_affiliate',
+							array(
+								'affiliate_id'     => $user_id,
+								'is_auto_approved' => get_option( 'afwc_auto_add_affiliate', 'no' ),
+							)
+						);
 					}
 				}
 
@@ -454,18 +472,31 @@ if ( ! class_exists( 'AFWC_Admin_Affiliate' ) ) {
 					}
 				}
 			} else {
-				$afwc_is_affiliate = ( 'yes' === $post_afwc_review_pending ) ? 'pending' : 'no';
-				// Check if the affiliate is disabled.
-				if ( 'no' === $afwc_is_affiliate ) {
-					// Delete parent chain meta.
-					$this->delete_parent_chain_meta( $user_id );
+
+				// Set 'no'(reject) if posted affiliate status is empty and user had assigned to affiliate.
+				$post_afwc_is_affiliate = ( empty( $post_afwc_is_affiliate ) && 'yes' === $old_is_affiliate ) ? 'no' : $post_afwc_is_affiliate;
+
+				// Prevent the action if there is not triggered any action.
+				if ( ! empty( $post_afwc_is_affiliate ) ) {
+
+					// Delete parent chain if the user is assigned to an affiliate.
+					if ( 'yes' === $old_is_affiliate ) {
+						$this->delete_parent_chain_meta( $user_id );
+					}
+
+					if ( 'not_registered' === $post_afwc_is_affiliate ) {
+						delete_user_meta( $user_id, 'afwc_is_affiliate' );
+					} else {
+						// Update affiliate status.
+						update_user_meta( $user_id, 'afwc_is_affiliate', $post_afwc_is_affiliate );
+					}
 				}
-				// Update affiliate status.
-				update_user_meta( $user_id, 'afwc_is_affiliate', $afwc_is_affiliate );
 			}
 
 			if ( ! empty( $post_afwc_paypal_email ) ) {
-				update_user_meta( $user_id, 'afwc_paypal_email', $post_afwc_paypal_email );
+				if ( is_email( $post_afwc_paypal_email ) ) {
+					update_user_meta( $user_id, 'afwc_paypal_email', sanitize_email( $post_afwc_paypal_email ) );
+				}
 			} else {
 				delete_user_meta( $user_id, 'afwc_paypal_email' );
 			}

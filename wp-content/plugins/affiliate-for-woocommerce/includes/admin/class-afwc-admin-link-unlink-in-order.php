@@ -2,9 +2,9 @@
 /**
  * Class for Affiliates Order linking and Unlinking
  *
+ * @package     affiliate-for-woocommerce/includes/admin/
  * @since       2.1.1
- * @version     1.2.0
- * @package     affiliate-for-woocommerce/includes/admin
+ * @version     1.2.3
  */
 
 // Exit if accessed directly.
@@ -73,12 +73,16 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			}
 
 			$plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
-			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array(), $plugin_data['Version'], true );
+			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array( 'jquery', 'wp-i18n' ), $plugin_data['Version'], true );
+			if ( function_exists( 'wp_set_script_translations' ) ) {
+				wp_set_script_translations( 'affiliate-user-search', 'affiliate-for-woocommerce' );
+			}
 			wp_enqueue_script( 'affiliate-user-search' );
 
 			$affiliate_params = array(
-				'ajax_url'      => admin_url( 'admin-ajax.php' ),
-				'afwc_security' => wp_create_nonce( 'afwc-search-affiliate-users' ),
+				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+				'afwcSecurity'   => wp_create_nonce( 'afwc-search-affiliate-users' ),
+				'allowSelfRefer' => afwc_allow_self_refer(),
 			);
 			wp_localize_script( 'affiliate-user-search', 'affiliate_params', $affiliate_params );
 
@@ -86,19 +90,19 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			$affiliate_data         = $this->get_order_affiliate_data( $order_id );
 
 			$user_string = '';
-			$user_id     = '';
-
 			if ( 'yes' === $is_commission_recorded && ! empty( $affiliate_data ) ) {
 				$user_id = afwc_get_user_id_based_on_affiliate_id( $affiliate_data['affiliate_id'] );
 				if ( ! empty( $user_id ) ) {
-					$user        = get_user_by( 'id', $user_id );
-					$user_string = sprintf(
-						/* translators: 1: user display name 2: user ID 3: user email */
-						esc_html__( '%1$s (#%2$s &ndash; %3$s)', 'affiliate-for-woocommerce' ),
-						$user->display_name,
-						absint( $user_id ),
-						$user->user_email
-					);
+					$user = get_user_by( 'id', $user_id );
+					if ( is_object( $user ) && $user instanceof WP_User ) {
+						$user_string = sprintf(
+							/* translators: 1: user display name 2: user ID 3: user email */
+							esc_html__( '%1$s (#%2$s &ndash; %3$s)', 'affiliate-for-woocommerce' ),
+							$user->display_name,
+							absint( $user_id ),
+							$user->user_email
+						);
+					}
 				}
 			}
 
@@ -109,10 +113,16 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			<div class="options_group afwc-field">
 				<p class="form-field">
 					<label for="afwc_referral_order_of"><?php esc_attr_e( 'Assigned to affiliate', 'affiliate-for-woocommerce' ); ?></label>
-					<?php echo wp_kses_post( wc_help_tip( __( 'Search affiliates by user id or full email address to assign this order to them. Affiliates will see this order in their account.', 'affiliate-for-woocommerce' ) ) ); ?>
+					<?php echo wp_kses_post( wc_help_tip( _x( 'Search affiliate by email, username, name or user id to assign this order to them. Affiliates will see this order in their My account > Affiliates > Reports.', 'help tip for search and assign affiliate', 'affiliate-for-woocommerce' ) ) ); ?>
 					<br><br>
-					<select id="afwc_referral_order_of" name="afwc_referral_order_of" style="width: 100%;" class="wc-afw-customer-search" data-placeholder="<?php esc_attr_e( 'Search by user id or email address', 'affiliate-for-woocommerce' ); ?>" data-allow_clear="<?php echo esc_attr( $allow_clear ); ?>" data-action="afwc_json_search_affiliates" <?php echo esc_attr( $disabled ); ?>>
-						<option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo esc_html( htmlspecialchars( wp_kses_post( $user_string ) ) ); ?><option>
+					<select id="afwc_referral_order_of" name="afwc_referral_order_of" style="width: 100%;" class="wc-afw-customer-search" data-placeholder="<?php echo esc_attr_x( 'Search by email, username or name', 'affiliate search placeholder', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="<?php echo esc_attr( $allow_clear ); ?>" data-action="afwc_json_search_affiliates" <?php echo esc_attr( $disabled ); ?>>
+						<?php
+						if ( ! empty( $user_id ) ) {
+							?>
+							<option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo esc_html( htmlspecialchars( wp_kses_post( $user_string ) ) ); ?><option>
+							<?php
+						}
+						?>
 					</select>
 				</p>
 			</div>
@@ -163,7 +173,6 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			$affiliate_id = isset( $_POST['afwc_referral_order_of'] ) ? wc_clean( wp_unslash( $_POST['afwc_referral_order_of'] ) ) : ''; // phpcs:ignore
 
 			if ( ! empty( $affiliate_id ) ) {
-
 				$old_affiliate_id = $wpdb->get_var( // phpcs:ignore
 					$wpdb->prepare(
 						"SELECT IFNULL( (CASE WHEN status = 'paid' THEN -1 ELSE affiliate_id END), 0 ) as affiliate_id
@@ -204,7 +213,6 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		 * @return bool.
 		 */
 		public function unlink_affiliate_from_order( $order_id = 0 ) {
-
 			if ( empty( $order_id ) ) {
 				return false;
 			}
@@ -244,7 +252,7 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		 * Function to assign the affiliate to an order.
 		 *
 		 * @param int $order_id     The Order ID.
-		 * @param int $affiliate_id The affiliate ID.
+		 * @param int $affiliate_id The Affiliate ID.
 		 * @return void.
 		 */
 		public function link_affiliate_on_order( $order_id = 0, $affiliate_id = 0 ) {
@@ -254,7 +262,7 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			}
 
 			$affiliate_api = AFWC_API::get_instance();
-			$affiliate_api->track_conversion( $order_id, $affiliate_id, '', array() );
+			$affiliate_api->track_conversion( $order_id, $affiliate_id, '', array( 'is_affiliate_eligible' => true ) );
 			$order      = wc_get_order( $order_id );
 			$new_status = is_object( $order ) && is_callable( array( $order, 'get_status' ) ) ? $order->get_status() : '';
 			$affiliate_api->update_referral_status( $order_id, '', $new_status );

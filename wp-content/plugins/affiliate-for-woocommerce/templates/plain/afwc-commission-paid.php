@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/plain/
  * @since       2.4.1
- * @version     1.0.1
+ * @version     1.1.0
  */
 
 // Exit if accessed directly.
@@ -39,10 +39,10 @@ if ( ! empty( $payout_notes ) ) {
 
 echo "\n----------------------------------------\n\n";
 
-/* translators: %s: Affiliate's my account link */
-echo sprintf( esc_html__( 'We\'ve already updated your account with this info. You can login to your affiliate dashboard to track all referrals, payouts and campaigns: %s', 'affiliate-for-woocommerce' ), esc_url( $my_account_afwc_url ) ) . "\n\n";
+/* translators: %s: Affiliate my account link */
+echo sprintf( esc_html__( 'We have already updated your account with this info. You can login to your affiliate dashboard to track all referrals, payouts and campaigns: %s', 'affiliate-for-woocommerce' ), esc_url( $my_account_afwc_url ) ) . "\n\n";
 
-echo esc_html__( 'We look forward to sending bigger payouts to you next time! Keep promoting, keep living a life you love!', 'affiliate-for-woocommerce' ) . "\n\n";
+echo esc_html__( 'We look forward to sending bigger payouts to you next time. Keep promoting more and keep living a life you love.', 'affiliate-for-woocommerce' ) . "\n\n";
 
 echo "\n\n----------------------------------------\n\n";
 
@@ -53,8 +53,6 @@ if ( $additional_content ) {
 	echo esc_html( wp_strip_all_tags( wptexturize( $additional_content ) ) );
 	echo "\n\n----------------------------------------\n\n";
 }
-
-echo esc_html__( 'Best regards from your friends at,', 'affiliate-for-woocommerce' ) . "\n\n";
 
 // Output the email footer.
 echo wp_kses_post( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );

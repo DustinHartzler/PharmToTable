@@ -3,8 +3,8 @@
  * Main class for Affiliate Emails functionality
  *
  * @package     affiliate-for-woocommerce/includes/
- * @version     1.0.1
  * @since       2.3.0
+ * @version     1.1.1
  */
 
 // Exit if accessed directly.
@@ -75,42 +75,32 @@ if ( ! class_exists( 'AFWC_Emails' ) ) {
 		}
 
 		/**
-		 * Function to get template base directory for Smart Coupons' email templates
+		 * Check whether an email is enabled or not based on the given action.
 		 *
-		 * @param  string $template_name Template name.
-		 * @return string $template_base_dir Base directory for Smart Coupons' email templates.
+		 * @param string $action The email action name.
+		 * @return bool Return true whether the email is enabled otherwise false.
 		 */
-		public function get_template_base_dir( $template_name = '' ) {
-
-			$template_base_dir = '';
-			$plugin_base_dir   = substr( plugin_basename( AFWC_PLUGIN_FILE ), 0, strpos( plugin_basename( AFWC_PLUGIN_FILE ), '/' ) + 1 );
-			$afwc_base_dir     = 'woocommerce/' . $plugin_base_dir;
-
-			// First locate the template in woocommerce/affiliate-for-woocommerce folder of active theme.
-			$template = locate_template(
-				array(
-					$afwc_base_dir . $template_name,
-				)
-			);
-
-			if ( ! empty( $template ) ) {
-				$template_base_dir = $afwc_base_dir;
-			} else {
-				// If not found then locate the template in affiliate-for-woocommerce folder of active theme.
-				$template = locate_template(
-					array(
-						$plugin_base_dir . $template_name,
-					)
-				);
-
-				if ( ! empty( $template ) ) {
-					$template_base_dir = $plugin_base_dir;
-				}
+		public static function is_afwc_mailer_enabled( $action = '' ) {
+			if ( empty( $action ) ) {
+				return false;
 			}
 
-			$template_base_dir = apply_filters( 'afwc_template_base_dir', $template_base_dir, $template_name );
+			$action_without_prefix = str_replace( 'afwc_', '', $action );
 
-			return $template_base_dir;
+			$class_name = ( ! empty( $action_without_prefix ) ) ? sprintf( 'AFWC_%1$s', ucwords( $action_without_prefix, '_' ) ) : '';
+
+			// Return false if the class name is not found.
+			if ( empty( $class_name ) ) {
+				return false;
+			}
+
+			$wc_mailer = is_callable( array( WC(), 'mailer' ) ) ? WC()->mailer() : null;
+
+			if ( $wc_mailer instanceof WC_Emails && ! empty( $wc_mailer->emails[ $class_name ] ) && is_callable( array( $wc_mailer->emails[ $class_name ], 'is_enabled' ) ) && $wc_mailer->emails[ $class_name ]->is_enabled() ) {
+				return true;
+			}
+
+			return false;
 		}
 
 	}

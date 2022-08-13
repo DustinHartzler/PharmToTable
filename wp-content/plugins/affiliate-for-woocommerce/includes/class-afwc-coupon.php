@@ -3,7 +3,8 @@
  * Main class for Affiliates Coupon functionality
  *
  * @package     affiliate-for-woocommerce/includes/
- * @version     1.0.4
+ * @since       1.7.0
+ * @version     1.0.7
  */
 
 // Exit if accessed directly.
@@ -90,20 +91,25 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		 */
 		public function affiliate_restriction( $coupon_id = 0, $coupon = null ) {
 
+			if ( empty( $coupon_id ) ) {
+				return;
+			}
+
 			$plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array(), $plugin_data['Version'], true );
 			wp_enqueue_script( 'affiliate-user-search' );
 
 			$affiliate_params = array(
-				'ajax_url'      => admin_url( 'admin-ajax.php' ),
-				'afwc_security' => wp_create_nonce( 'afwc-search-affiliate-users' ),
+				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
+				'afwcSecurity' => wp_create_nonce( 'afwc-search-affiliate-users' ),
 			);
 			wp_localize_script( 'affiliate-user-search', 'affiliate_params', $affiliate_params );
 
-			if ( ! empty( $coupon_id ) ) {
-				$user_id = get_post_meta( $coupon_id, 'afwc_referral_coupon_of', true );
-				if ( ! empty( $user_id ) ) {
-					$user        = get_user_by( 'id', $user_id );
+			$user_string = '';
+			$user_id     = get_post_meta( $coupon_id, 'afwc_referral_coupon_of', true );
+			if ( ! empty( $user_id ) ) {
+				$user = get_user_by( 'id', $user_id );
+				if ( is_object( $user ) && $user instanceof WP_User ) {
 					$user_string = sprintf(
 						/* translators: 1: user display name 2: user ID 3: user email */
 						esc_html__( '%1$s (#%2$s &ndash; %3$s)', 'affiliate-for-woocommerce' ),
@@ -111,9 +117,6 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 						absint( $user_id ),
 						$user->user_email
 					);
-				} else {
-					$user_string = '';
-					$user_id     = '';
 				}
 			}
 
@@ -121,10 +124,16 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 			<div class="options_group afwc-field">
 				<p class="form-field">
 					<label for="afwc_referral_coupon_of"><?php esc_attr_e( 'Assign to affiliate', 'affiliate-for-woocommerce' ); ?></label>
-					<select id="afwc_referral_coupon_of" name="afwc_referral_coupon_of" style="width: 50%;" class="wc-afw-customer-search" data-placeholder="<?php esc_attr_e( 'Search by affiliate id or email address', 'affiliate-for-woocommerce' ); ?>" data-allow_clear="true" data-action="afwc_json_search_affiliates">
-						<option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo esc_html( htmlspecialchars( wp_kses_post( $user_string ) ) ); ?><option>
+					<select id="afwc_referral_coupon_of" name="afwc_referral_coupon_of" style="width: 50%;" class="wc-afw-customer-search" data-placeholder="<?php echo esc_attr_x( 'Search by email, username or name', 'affiliate search placeholder', 'affiliate-for-woocommerce' ); ?>" data-allow-clear="true" data-action="afwc_json_search_affiliates">
+						<?php
+						if ( ! empty( $user_id ) ) {
+							?>
+							<option value="<?php echo esc_attr( $user_id ); ?>" selected="selected"><?php echo esc_html( htmlspecialchars( wp_kses_post( $user_string ) ) ); ?><option>
+							<?php
+						}
+						?>
 					</select>
-					<?php echo wp_kses_post( wc_help_tip( __( 'Search affiliates by id or email address to assign a coupon to them. Affiliates will see this coupon in their account.', 'affiliate-for-woocommerce' ) ) ); ?>
+					<?php echo wp_kses_post( wc_help_tip( _x( 'Search affiliate by email, username, name or user id to assign this coupon to them. Affiliates will see this coupon in their My account > Affiliates > Profile.', 'help tip for search and assign affiliate', 'affiliate-for-woocommerce' ) ) ); ?>
 				</p>
 			</div>
 			<?php
@@ -166,7 +175,6 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 			} else {
 				delete_post_meta( $post_id, 'afwc_referral_coupon_of' );
 			}
-
 		}
 
 		/**

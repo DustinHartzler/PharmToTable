@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.2.2
+ * @version     1.2.7
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -74,6 +74,30 @@ function afwc_get_commission_status_colors( $status = '' ) {
 }
 
 /**
+ * Get payout methods.
+ *
+ * @param string $method Payout method.
+ *
+ * @return array|string
+ */
+function afwc_get_payout_methods( $method = '' ) {
+
+	$payout_methods = array(
+		'paypal'        => esc_html__( 'PayPal', 'affiliate-for-woocommerce' ),
+		'paypal-manual' => esc_html__( 'PayPal Manual', 'affiliate-for-woocommerce' ),
+		'other'         => esc_html__( 'Other', 'affiliate-for-woocommerce' ),
+	);
+
+	// Return array of payout methods if method is not provided.
+	if ( empty( $method ) ) {
+		return $payout_methods;
+	}
+
+	return ( ! empty( $payout_methods[ $method ] ) ) ? $payout_methods[ $method ] : $method;
+
+}
+
+/**
  * Get table name
  *
  * @param  string $name The table.
@@ -85,15 +109,23 @@ function afwc_get_tablename( $name ) {
 }
 
 /**
- * Get referrer id
+ * Get referrer id from cookie
  *
- * @return integer $affiliate_id
+ * @return integer Return the affiliate id if exists in the cookie otherwise 0.
  *
  * Credit: [itthinx]
  */
 function afwc_get_referrer_id() {
-	$affiliate_id = isset( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ? trim( wc_clean( wp_unslash( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ) ) : false; // phpcs:ignore
-	return $affiliate_id;
+	return ! empty( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ? intval( trim( wc_clean( wp_unslash( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ) ) ) : 0; // phpcs:ignore
+}
+
+/**
+ * Get campaign id from cookie
+ *
+ * @return integer Return the campain id if exists in the cookie otherwise 0.
+ */
+function afwc_get_campaign_id() {
+	return ! empty( $_COOKIE[ AFWC_CAMPAIGN_COOKIE_NAME ] ) ? intval( trim( wc_clean( wp_unslash( $_COOKIE[ AFWC_CAMPAIGN_COOKIE_NAME ] ) ) ) ) : 0; // phpcs:ignore
 }
 
 /**
@@ -312,32 +344,33 @@ function afwc_get_price_decimal_separator() {
 }
 
 /**
- * Check if the user is affilaite or not
+ * Check if the user is affiliate or not.
  *
- * @param  WP_User $user The user object.
- * @return yes/no/pending/not_registered
+ * @param  WP_User|int $user The user object/ID.
+ *
+ * @return string Return affiliate status(yes/no/pending/not_registered).
  */
-function afwc_is_user_affiliate( $user ) {
-	$is_affiliate = 'no';
-	$user_id      = 0;
-	if ( is_int( $user ) ) {
-		$user_id = $user;
-		$user    = new WP_User( $user );
-	} elseif ( $user instanceof WP_User ) {
-		$user_id = $user->ID;
+function afwc_is_user_affiliate( $user = null ) {
+	$is_affiliate = 'not_registered';
+
+	// Create User object if user id is provided.
+	$user = is_int( $user ) ? new WP_User( $user ) : $user;
+
+	if ( ! $user instanceof WP_User || empty( $user->ID ) ) {
+		return $is_affiliate;
 	}
 
-	if ( $user instanceof WP_User ) {
+	// Get affiliate status from meta.
+	$have_meta = get_user_meta( $user->ID, 'afwc_is_affiliate', true );
 
-		$have_meta = get_user_meta( $user_id, 'afwc_is_affiliate', true );
-		if ( $have_meta ) {
-			$is_affiliate = ( ! empty( $have_meta ) ) ? $have_meta : 'no';
-		} else {
-			$role_name           = $user->roles[0];
-			$get_affiliate_roles = get_option( 'affiliate_users_roles', array() );
-			$is_affiliate        = ( in_array( $role_name, $get_affiliate_roles, true ) ) ? 'yes' : 'no';
-			$is_affiliate        = ( 'no' === $is_affiliate && '' === $have_meta ) ? 'not_registered' : $is_affiliate;
-		}
+	if ( empty( $have_meta ) ) {
+		// Check if the affiliate exists in the affiliate user roles.
+		$user_roles      = ! empty( $user->roles ) ? $user->roles : array();
+		$affiliate_roles = get_option( 'affiliate_users_roles', array() );
+		$is_affiliate    = ( is_array( $affiliate_roles ) && is_array( $user_roles ) ) && count( array_intersect( $affiliate_roles, $user_roles ) ) > 0 ? 'yes' : $is_affiliate;
+	} else {
+		// Assign the affiliate meta.
+		$is_affiliate = $have_meta;
 	}
 
 	return $is_affiliate;
@@ -362,16 +395,6 @@ function afwc_create_reg_form_page() {
 		$page_id  = wp_insert_post( $reg_page );
 	}
 	return $page_id;
-}
-
-/**
- * Get campaign id from cookie
- *
- * @return integer $campaign_id
- */
-function afwc_get_campaign_id() {
-	$campaign_id = isset( $_COOKIE[ 'afwc_campaign' ] ) ? trim( wc_clean( wp_unslash( $_COOKIE[ 'afwc_campaign' ] ) ) ) : false; // phpcs:ignore
-	return $campaign_id;
 }
 
 /**
@@ -591,4 +614,13 @@ function afwc_get_default_commission_plan_id() {
 		'afwc_default_commission_plan_id',
 		intval( get_option( 'afwc_default_commission_plan_id', 0 ) )
 	);
+}
+
+/**
+ * Check if self-refer is allowed by the affiliate settings.
+ *
+ * @return bool Return true if affiliates are allowed to self-refer otherwise false.
+ */
+function afwc_allow_self_refer() {
+	return boolval( 'yes' === get_option( 'afwc_allow_self_refer', 'yes' ) );
 }

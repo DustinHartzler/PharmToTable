@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.10.0
- * @version     1.5.1
+ * @version     1.5.5
  */
 
 // Exit if accessed directly.
@@ -169,11 +169,15 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 							$conversion_data['affiliate_id'] = $wpdb->get_var( $wpdb->prepare( "SELECT affiliate_id FROM {$wpdb->prefix}afwc_referrals WHERE post_id = %d", $parent_order_id ) ); // phpcs:ignore
 						}
 					}
+				} elseif ( empty( $conversion_data['affiliate_id'] ) ) {
+					$conversion_data['affiliate_id'] = afwc_get_referrer_id();
 				}
-				$is_valid_for_tracking = $this->afwc_is_valid_order( $oid, $conversion_data['affiliate_id'], $params );
+
+				$is_valid_for_tracking = $this->is_eligible_for_commission( $oid, $conversion_data['affiliate_id'], $params );
 				if ( empty( $is_valid_for_tracking ) ) {
 					return;
 				}
+
 				$conversion_data = apply_filters( 'afwc_conversion_data', $conversion_data );
 
 				// Return if the affiliate id is empty.
@@ -213,17 +217,17 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 						update_post_meta( $conversion_data['oid'], 'is_commission_recorded', 'yes' );
 
 						// Send new conversion email to affiliate if enabled.
-						$mailer = WC()->mailer();
-						if ( $mailer->emails['AFWC_New_Conversion_Email']->is_enabled() ) {
-							// Prepare args.
-							$args = array(
-								'affiliate_id'            => $conversion_data['affiliate_id'],
-								'order_commission_amount' => $conversion_data['amount'],
-								'currency_id'             => $conversion_data['currency_id'],
-								'order_id'                => $conversion_data['oid'],
-							);
+						if ( true === AFWC_Emails::is_afwc_mailer_enabled( 'afwc_email_new_conversion_received' ) ) {
 							// Trigger email.
-							do_action( 'afwc_new_conversion_received_email', $args );
+							do_action(
+								'afwc_email_new_conversion_received',
+								array(
+									'affiliate_id' => $conversion_data['affiliate_id'],
+									'order_commission_amount' => $conversion_data['amount'],
+									'currency_id'  => $conversion_data['currency_id'],
+									'order_id'     => $conversion_data['oid'],
+								)
+							);
 						}
 					}
 				}
@@ -313,8 +317,13 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			}
 			$afwc_plans = afwc_get_commission_plans( 'Active' );
 
-			// reorder as per option save.
-			$plan_order = get_option( 'afwc_plan_order', array() );
+			if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
+				include_once AFWC_PLUGIN_DIRPATH . '/includes/admin/class-afwc-commission-dashboard.php';
+			}
+
+			$afwc_commission = is_callable( array( 'AFWC_Commission_Dashboard', 'get_instance' ) ) ? AFWC_Commission_Dashboard::get_instance() : null;
+			$plan_order      = is_callable( array( $afwc_commission, 'get_commission_plans_order' ) ) ? $afwc_commission->get_commission_plans_order() : array();
+
 			if ( ! empty( $plan_order ) ) {
 
 				foreach ( $plan_order as $k ) {
@@ -337,7 +346,7 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 				$ordered_plans = $afwc_plans;
 			}
 			if ( ! empty( $ordered_plans ) ) {
-				// remove last storewide plan.
+				// remove storewide plan.
 				$ordered_plans = array_filter(
 					$ordered_plans,
 					function( $p ) use ( $default_plan_id ) {
@@ -503,7 +512,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			}
 		}
 
-
 		/**
 		 * Record referral when renewal order created
 		 *
@@ -652,7 +660,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 				// set new order status in referral table.
 				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET order_status = %s WHERE post_id = %d", $new_status, $order_id ) ); // phpcs:ignore
 			}
-
 		}
 
 		/**
@@ -669,49 +676,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		}
 
 		/**
-		 * Check if order is valid for affiliate id
-		 *
-		 * @param  integer $order_id Order id.
-		 * @param  integer $affiliate_id The original affiliate id.
-		 * @param  mixed   $params extra params.
-		 * @return boolean $is_valid_order flag
-		 */
-		public function afwc_is_valid_order( $order_id, $affiliate_id, $params ) {
-			global $wpdb;
-			$is_valid_order = true;
-			$force_record   = ! empty( $params['force_record'] ) ? $params['force_record'] : false;
-
-			if ( true === $force_record ) {
-				$is_valid_order = true;
-				return $is_valid_order;
-			}
-
-			$is_commission_recorded = get_post_meta( $order_id, 'is_commission_recorded', true );
-
-			if ( 'yes' === $is_commission_recorded ) {
-				$is_valid_order = false;
-			} else {
-				// check if commission already recorded in table but not updated in postmeta.
-				$order_count = $wpdb->get_var( // phpcs:ignore
-					$wpdb->prepare( // phpcs:ignore
-						"SELECT COUNT(post_id)
-									FROM {$wpdb->prefix}afwc_referrals
-									WHERE post_id = %d AND affiliate_id = %d",
-						$order_id,
-						$affiliate_id
-					)
-				);
-				if ( $order_count > 0 ) {
-					$is_valid_order = false;
-
-				}
-			}
-
-			return $is_valid_order;
-
-		}
-
-		/**
 		 * Return if the order is a wc subscriptions renewal order by wc order id.
 		 *
 		 * @param  integer $order_id Order id.
@@ -719,7 +683,6 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 		 * @return boolean $is_renewal_order
 		 */
 		public function is_wc_subscriptions_renewal_order( $order_id = 0 ) {
-
 			if ( empty( $order_id ) ) {
 				return false;
 			}
@@ -741,6 +704,117 @@ if ( ! class_exists( 'AFWC_API' ) ) {
 			}
 
 			return $is_renewal_order;
+		}
+
+		/**
+		 * Check if order is valid for affiliate id
+		 *
+		 * @param  integer $order_id     The Order id.
+		 * @param  integer $affiliate_id The original affiliate id.
+		 * @param  mixed   $params       The additional params.
+		 * @return boolean $is_valid_order flag
+		 */
+		public function afwc_is_valid_order( $order_id, $affiliate_id, $params ) {
+
+			global $wpdb;
+
+			$is_valid_order = true;
+			$force_record   = ! empty( $params['force_record'] ) ? $params['force_record'] : false;
+
+			if ( true === $force_record ) {
+				$is_valid_order = true;
+				return $is_valid_order;
+			}
+
+			$is_commission_recorded = get_post_meta( $order_id, 'is_commission_recorded', true );
+			if ( 'yes' === $is_commission_recorded ) {
+				$is_valid_order = false;
+			} else {
+				// check if commission already recorded in table but not updated in postmeta.
+				$order_count = $wpdb->get_var( // phpcs:ignore
+					$wpdb->prepare( // phpcs:ignore
+						"SELECT COUNT(post_id)
+									FROM {$wpdb->prefix}afwc_referrals
+									WHERE post_id = %d AND affiliate_id = %d",
+						$order_id,
+						$affiliate_id
+					)
+				);
+				if ( $order_count > 0 ) {
+					$is_valid_order = false;
+				}
+			}
+
+			return $is_valid_order;
+
+		}
+
+		/**
+		 * Return if the commission allowed self-refer.
+		 *
+		 * @param int   $order_id     The Order id.
+		 * @param int   $affiliate_id The Affiliate id.
+		 * @param array $params       The additional params.
+		 *
+		 * @return bool Return true if the order is eligible for self-refer otherwise false.
+		 */
+		public function allow_self_order_for_order( $order_id = 0, $affiliate_id = 0, $params = array() ) {
+			if ( empty( $order_id ) || empty( $affiliate_id ) ) {
+				return false;
+			}
+
+			// set true if forced affiliate to be eligible or self-refer is allowed.
+			if ( ( ! empty( $params['is_affiliate_eligible'] ) && true === $params['is_affiliate_eligible'] ) || true === afwc_allow_self_refer() ) {
+				return true;
+			}
+
+			$order = wc_get_order( $order_id );
+			if ( $order instanceof WC_Order && is_callable( array( $order, 'get_user_id' ) ) ) {
+				$customer_id = $order->get_user_id();
+				if ( ! empty( $customer_id ) && intval( $customer_id ) === intval( $affiliate_id ) ) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		/**
+		 * Return if the order is eligible for commission.
+		 *
+		 * @param int   $order_id The Order id.
+		 * @param int   $affiliate_id The Affiliate id.
+		 * @param array $params The Params.
+		 *
+		 * @return bool Return true whether the order is eligible for commission otherwise false.
+		 */
+		public function is_eligible_for_commission( $order_id = 0, $affiliate_id = 0, $params = array() ) {
+			$is_eligible = false;
+
+			if ( empty( $order_id ) || empty( $affiliate_id ) ) {
+				return $is_eligible;
+			}
+
+			// TODO: Simplify this code if in the future we want to add more checks.
+			if ( true === $this->afwc_is_valid_order( $order_id, $affiliate_id, $params ) && true === $this->allow_self_order_for_order( $order_id, $affiliate_id, $params ) ) {
+				$is_eligible = true;
+			}
+
+			/**
+			 * Filter for whether order is eligible for commission.
+			 *
+			 * @param bool  $is_eligible whether eligible for the commission or not.
+			 * @param array The params
+			 */
+			return apply_filters(
+				'afwc_is_eligible_for_commission',
+				$is_eligible,
+				array(
+					'order_id'     => $order_id,
+					'affiliate_id' => $affiliate_id,
+					'source'       => $this,
+				)
+			);
 		}
 
 	}

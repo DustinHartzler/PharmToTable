@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.2.1
+ * @version     1.2.4
  */
 
 // Exit if accessed directly.
@@ -112,17 +112,32 @@ $plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 						) . '">' . esc_html__( 'dashboard', 'affiliate-for-woocommerce' ) . '</a>'
 					);
 					?>
+				<br>
+				<?php
+					echo sprintf(
+						/* translators: Link to the Affiliate For WooCommerce Plans Dashboard in admin */
+						esc_html__( 'Setup default commission rate for Storewide Default Commission in %s.', 'affiliate-for-woocommerce' ),
+						'<a target="_blank" href="' . esc_url(
+							add_query_arg(
+								array(
+									'page' => 'affiliate-for-woocommerce#!/plans',
+								),
+								admin_url( 'admin.php' )
+							)
+						) . '">' . esc_html__( 'plans', 'affiliate-for-woocommerce' ) . '</a>'
+					);
+					?>
 		</div>
 		<hr>
 		<div class="afw-faq">
 			<h3><?php echo esc_html__( 'Quick links', 'affiliate-for-woocommerce' ); ?></h3>
 			<div class="has-3-columns feature-section col three-col">
 				<div class="column col">
-					<h4><?php echo esc_html__( 'How do I add an affiliate?', 'affiliate-for-woocommerce' ); ?></h4>
+					<h4><?php echo esc_html__( 'How do I add/make a user an affiliate?', 'affiliate-for-woocommerce' ); ?></h4>
 					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-5">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
 				</div>
 				<div class="column col">
-					<h4><?php echo esc_html__( 'Where do affiliates login / get their stats from?', 'affiliate-for-woocommerce' ); ?></h4>
+					<h4><?php echo esc_html__( 'Where do affiliates login and get their stats from?', 'affiliate-for-woocommerce' ); ?></h4>
 					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-9">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
 				</div>
 				<div class="column col last-feature">
@@ -146,20 +161,34 @@ $plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
 			</div>
 			<div class="has-3-columns feature-section col three-col">
 				<div class="column col">
+					<h4><?php echo esc_html__( 'All about commission plans', 'affiliate-for-woocommerce' ); ?></h4>
+					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-create-affiliate-commission-plans/">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
+				</div>
+				<div class="column col">
 					<h4><?php echo esc_html__( 'Set different commission rates for affiliates', 'affiliate-for-woocommerce' ); ?></h4>
 					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-different-affiliate-commission-rates-for-affiliates/">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
 				</div>
-				<div class="column col">
+				<div class="column col last-feature">
 					<h4><?php echo esc_html__( 'Set different affiliate commission rates for product or product category', 'affiliate-for-woocommerce' ); ?></h4>
 					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-different-affiliate-commission-rates-for-product-or-product-category/">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
 				</div>
+			</div>
+			<div class="has-3-columns feature-section col three-col">
+				<div class="column col">
+					<h4><?php echo esc_html__( 'Set up a multilevel referral/multi-tier affiliate program', 'affiliate-for-woocommerce' ); ?></h4>
+					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-set-up-a-multilevel-referral-multi-tier-affiliate-program/">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
+				</div>
+				<div class="column col">
+					<h4><?php echo esc_html__( 'How to export affiliate data to CSV?', 'affiliate-for-woocommerce' ); ?></h4>
+					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/how-to-export-affiliate-data-to-csv/">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
+				</div>
 				<div class="column col last-feature">
 					<h4><?php echo esc_html__( 'FAQ\'s', 'affiliate-for-woocommerce' ); ?></h4>
-					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-23">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
+					<p><?php /* translators: Link to the Affiliate For WooCommerce Doc */ echo sprintf( esc_html__( 'Check %s.', 'affiliate-for-woocommerce' ), '<a target="_blank" href="https://woocommerce.com/document/affiliate-for-woocommerce/#section-25">' . esc_html__( 'here', 'affiliate-for-woocommerce' ) . '</a>' ); ?></p>
 				</div>
 			</div>
 			<br>
-			<div>
+			<div style="font-size:1.25em;">
 				<?php
 					echo sprintf(
 						/* translators: Link to the Affiliate For WooCommerce documentation */

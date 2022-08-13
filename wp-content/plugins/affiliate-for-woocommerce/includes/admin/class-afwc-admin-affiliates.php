@@ -3,7 +3,7 @@
  * Main class for Affiliates Admin
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.3.2
+ * @version     1.3.5
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -141,7 +141,14 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 		 *
 		 * @var int $batch_limit
 		 */
-		public $batch_limit = 5;
+		public $batch_limit = 0;
+
+		/**
+		 * Affiliates referrals details
+		 *
+		 * @var array $affiliates_referrals
+		 */
+		public $affiliates_referrals = array();
 
 		/**
 		 *  Constructor
@@ -156,11 +163,21 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			$this->from             = ( ! empty( $from ) ) ? gmdate( 'Y-m-d', strtotime( $from ) ) : '';
 			$this->to               = ( ! empty( $to ) ) ? gmdate( 'Y-m-d', strtotime( $to ) ) : '';
 			$this->sales_post_types = apply_filters( 'afwc_sales_post_types', array( 'shop_order' ) );
+			$this->batch_limit      = $this->get_batch_limit();
 			$this->start_limit      = ( ! empty( $page ) ) ? ( intval( $page ) - 1 ) * $this->batch_limit : 0;
 		}
 
 		/**
-		 * Function to call all functions to get all data
+		 * Function to get batch limit per page load.
+		 *
+		 * @return int
+		 */
+		public function get_batch_limit() {
+			return apply_filters( 'afwc_admin_affiliate_details_limit_per_page', intval( get_option( 'afwc_admin_affiliate_details_limit_per_page', AFWC_ADMIN_DASHBOARD_DEFAULT_BATCH_LIMIT ) ) );
+		}
+
+		/**
+		 * Function to call all functions to get all data.
 		 *
 		 * @return void
 		 */
@@ -332,14 +349,26 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 		}
 
 		/**
-		 * Function to get affiliates sales
+		 * Function to get affiliates sales.
 		 *
-		 * @return float $$affiliates_sales affiliates sales
+		 * @return float Affiliate sales amount.
 		 */
 		public function get_affiliates_sales() {
 			global $wpdb;
 
-			$post_ids = $this->affiliates_orders;
+			if ( empty( $this->affiliates_orders ) ) {
+				return 0;
+			}
+
+			$post_ids = array();
+
+			$prefixed_statuses = afwc_get_prefixed_order_statuses();
+
+			foreach ( $this->affiliates_orders as $key => $order_id ) {
+				if ( ! empty( $this->affiliates_referrals[ $order_id ] ) && in_array( $this->affiliates_referrals[ $order_id ], $prefixed_statuses, true ) && ! in_array( $order_id, $post_ids, true ) ) {
+					$post_ids[] = $order_id;
+				}
+			}
 
 			$affiliates_sales           = 0;
 			$completed_affiliates_sales = 0;
@@ -349,9 +378,9 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				// Let 3rd party plugin developers to calculate affiliates sales for their custom post type.
 				$completed_affiliates_sales = apply_filters( 'afwc_completed_affiliates_sales', $completed_affiliates_sales, $post_ids );
 
-				$refunded_affiliates_sales = $this->affiliates_refund;
+				$refunded_affiliates_sales = ! empty( $this->affiliates_refund ) ? $this->affiliates_refund : 0;
 
-				$affiliates_sales = $completed_affiliates_sales + $refunded_affiliates_sales;
+				$affiliates_sales = floatval( $completed_affiliates_sales ) + floatval( $refunded_affiliates_sales );
 			}
 
 			return floatval( $affiliates_sales );
@@ -718,26 +747,28 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				if ( 1 === count( $this->affiliate_ids ) ) {
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						$affiliates_orders = $wpdb->get_col( // phpcs:ignore
+						$affiliates_referrals = $wpdb->get_results( // phpcs:ignore
 															$wpdb->prepare( // phpcs:ignore
-																"SELECT DISTINCT post_id
+																"SELECT DISTINCT post_id, order_status
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE affiliate_id = %d
 																				AND datetime BETWEEN %s AND %s",
 																current( $this->affiliate_ids ),
 																$this->from . ' 00:00:00',
 																$this->to . ' 23:59:59'
-															)
+															),
+							'ARRAY_A'
 						);
 
 					} else {
-						$affiliates_orders = $wpdb->get_col( // phpcs:ignore
+						$affiliates_referrals = $wpdb->get_results( // phpcs:ignore
 															$wpdb->prepare( // phpcs:ignore
-																"SELECT DISTINCT post_id
+																"SELECT DISTINCT post_id, order_status
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE affiliate_id = %d",
 																current( $this->affiliate_ids )
-															)
+															),
+							'ARRAY_A'
 						);
 					}
 				} else {
@@ -746,9 +777,9 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					update_option( $option_nm, implode( ',', $this->affiliate_ids ), 'no' );
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						$affiliates_orders = $wpdb->get_col( // phpcs:ignore
+						$affiliates_referrals = $wpdb->get_results( // phpcs:ignore
 															$wpdb->prepare( // phpcs:ignore
-																"SELECT DISTINCT post_id
+																"SELECT DISTINCT post_id, order_status
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE FIND_IN_SET ( affiliate_id, ( SELECT option_value
 																											FROM {$wpdb->prefix}options
@@ -757,18 +788,20 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																$option_nm,
 																$this->from . ' 00:00:00',
 																$this->to . ' 23:59:59'
-															)
+															),
+							'ARRAY_A'
 						); // phpcs:ignore
 					} else {
-						$affiliates_orders = $wpdb->get_col( // phpcs:ignore
+						$affiliates_referrals = $wpdb->get_results( // phpcs:ignore
 															$wpdb->prepare( // phpcs:ignore
-																"SELECT DISTINCT post_id
+																"SELECT DISTINCT post_id, order_status
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE FIND_IN_SET ( affiliate_id, ( SELECT option_value
 																											FROM {$wpdb->prefix}options
 																											WHERE option_name = %s ) )",
 																$option_nm
-															)
+															),
+							'ARRAY_A'
 						); // phpcs:ignore
 					}
 
@@ -777,33 +810,54 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			} else {
 
 				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-					$affiliates_orders = $wpdb->get_col( // phpcs:ignore
+					$affiliates_referrals = $wpdb->get_results( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
-															"SELECT DISTINCT post_id
+															"SELECT DISTINCT post_id, order_status
 																		FROM {$wpdb->prefix}afwc_referrals
 																		WHERE affiliate_id != %d
 																			AND datetime BETWEEN %s AND %s",
 															0,
 															$this->from . ' 00:00:00',
 															$this->to . ' 23:59:59'
-														)
+														),
+						'ARRAY_A'
 					);
 				} else {
-					$affiliates_orders = $wpdb->get_col( // phpcs:ignore
+					$affiliates_referrals = $wpdb->get_results( // phpcs:ignore
 														$wpdb->prepare( // phpcs:ignore
-															"SELECT DISTINCT post_id
+															"SELECT DISTINCT post_id, order_status
 																		FROM {$wpdb->prefix}afwc_referrals
 																		WHERE affiliate_id != %d",
 															0
-														)
+														),
+						'ARRAY_A'
 					);
 				}
 			}
-			return $affiliates_orders;
+
+			if ( empty( $affiliates_referrals ) ) {
+				return array();
+			}
+
+			$order_id_statuses = array();
+			foreach ( $affiliates_referrals as $key => $referral ) {
+				if ( ! empty( $referral['post_id'] ) ) {
+					$order_id_statuses[ $referral['post_id'] ] = ! empty( $referral['order_status'] ) ? $referral['order_status'] : '';
+				}
+			}
+
+			if ( empty( $order_id_statuses ) ) {
+				return array();
+			}
+
+			$this->affiliates_referrals = $order_id_statuses;
+			return array_keys( $order_id_statuses );
 		}
 
 		/**
 		 * Function to get affiliates order details
+		 *
+		 * @todo Return the affiliate count for conditionally load more show/hide.
 		 *
 		 * @return array $affiliates_order_details affiliates order details
 		 */
@@ -1149,8 +1203,10 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 
 				if ( ! empty( $results ) ) {
 					foreach ( $results as $detail ) {
-						$orders_billing_name[ $detail['order_id'] ]['billing_name']        = $detail['billing_name'];
-						$orders_billing_name[ $detail['order_id'] ]['customer_orders_url'] = add_query_arg( ( ( empty( $detail['customer_user'] ) ) ? array( 's' => $detail['billing_email'] ) : array( '_customer_user' => $detail['customer_user'] ) ), admin_url( 'edit.php?post_type=shop_order' ) );
+						$order_filters = ! empty( $detail['customer_user'] ) ? array( '_customer_user' => $detail['customer_user'] ) : ( ( ! empty( $detail['billing_email'] ) ) ? array( 's' => $detail['billing_email'] ) : array() );
+
+						$orders_billing_name[ $detail['order_id'] ]['customer_orders_url'] = ! empty( $order_filters ) ? add_query_arg( $order_filters, admin_url( 'edit.php?post_type=shop_order' ) ) : '';
+						$orders_billing_name[ $detail['order_id'] ]['billing_name']        = ! empty( $detail['billing_name'] ) ? $detail['billing_name'] : ( ( ! empty( $detail['billing_email'] ) ) ? $detail['billing_email'] : __( 'Guest', 'affiliate-for-woocommerce' ) );
 						$orders_billing_name[ $detail['order_id'] ]['currency']            = html_entity_decode( get_woocommerce_currency_symbol( $detail['currency'] ) );
 					}
 
@@ -1421,9 +1477,9 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			$products             = Affiliate_For_WooCommerce::get_products_data( $args );
 			if ( ! empty( $products['rows'] ) ) {
 				foreach ( $products['rows'] as $id => $product ) {
-					$products['rows'][ $id ]['sales']   = afwc_format_price( $product['sales'] );
-					$products['rows'][ $id ]['product'] = html_entity_decode( $product['product'] );
-
+					$products['rows'][ $id ]['sales']    = ! empty( $product['sales'] ) ? afwc_format_price( $product['sales'] ) : 0;
+					$products['rows'][ $id ]['product']  = ! empty( $product['product'] ) ? html_entity_decode( $product['product'] ) : null;
+					$products['rows'][ $id ]['quantity'] = ! empty( $product['qty'] ) ? intval( $product['qty'] ) : 0;
 				}
 			}
 			return $products;

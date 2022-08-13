@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/
  * @since       2.3.0
- * @version     1.1.1
+ * @version     1.2.0
  */
 
 // Exit if accessed directly.
@@ -20,11 +20,11 @@ $text_align = is_rtl() ? 'right' : 'left';
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Affiliate's first name */ ?>
-<p><?php printf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $affiliate_name ) ); ?></p>
+<p><?php echo sprintf( esc_html__( 'Hi %s,', 'affiliate-for-woocommerce' ), esc_html( $affiliate_name ) ); ?></p>
 
 <p><?php echo esc_html__( '{site_title} just made a sale - thanks to you!', 'affiliate-for-woocommerce' ); ?></p>
 
-<p><?php echo esc_html__( 'Here\'s the summary:', 'affiliate-for-woocommerce' ); ?></p>
+<p><?php echo esc_html__( 'Here is the summary:', 'affiliate-for-woocommerce' ); ?></p>
 
 <div style="margin-bottom: 20px;">
 	<table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
@@ -51,10 +51,10 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 	</table>
 </div>
 
-<?php /* translators: %1$s: Opening a tage for affiliate my account link %2$s: text for my account %3$s: closing a tag for affiliate my account link */ ?>
-<p><?php printf( esc_html__( 'We have already updated %1$s%2$s%3$s to reflect this.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', esc_html__( 'your account', 'affiliate-for-woocommerce' ), '</a>' ); ?>
+<?php /* translators: %1$s: Opening a tag for affiliate my account link %2$s: closing a tag for affiliate my account link */ ?>
+<p><?php echo sprintf( esc_html__( 'We have already updated %1$syour account%2$s to reflect this.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '" class="button alt link">', '</a>' ); ?>
 
-<p><?php echo esc_html__( 'Thank you for promoting us. We look forward to send another email like this very soon!', 'affiliate-for-woocommerce' ); ?></p>
+<p><?php echo esc_html__( 'Thank you for promoting us. We look forward to sending another email like this very soon.', 'affiliate-for-woocommerce' ); ?></p>
 
 <?php
 /**

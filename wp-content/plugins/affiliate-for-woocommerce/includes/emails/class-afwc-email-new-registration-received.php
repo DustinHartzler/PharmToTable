@@ -3,8 +3,8 @@
  * Main class for New  registration to admin Email
  *
  * @package     affiliate-for-woocommerce/includes/emails/
- * @version     1.0.1
  * @since       2.4.0
+ * @version     1.4.0
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
+if ( ! class_exists( 'AFWC_Email_New_Registration_Received' ) ) {
 
 	/**
 	 * The Affiliate New Registration to admin
 	 *
 	 * @extends \WC_Email
 	 */
-	class Afwc_New_Registration_Received extends WC_Email {
+	class AFWC_Email_New_Registration_Received extends WC_Email {
 
 		/**
 		 * Set email defaults
@@ -29,14 +29,14 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 			// Set ID, this simply needs to be a unique name.
 			$this->id = 'afwc_new_registration';
 
-			// This is the title in WooCommerce Email settings.
+			// This is the title in WooCommerce email settings.
 			$this->title = 'Affiliate Manager - New Registration Received';
 
 			// This is the description in WooCommerce email settings.
-			$this->description = __( 'This email will be sent to an affiliate manager when a new registration request is received.', 'affiliate-for-woocommerce' );
+			$this->description = __( 'This email will be sent to an affiliate manager when a new affiliate registration request is received OR an affiliate joins automatically.', 'affiliate-for-woocommerce' );
 
 			// These are the default heading and subject lines that can be overridden using the settings.
-			$this->subject = '{site_title} -  New affiliate user registration';
+			$this->subject = '{site_title} - New affiliate user registration';
 			$this->heading = 'New affiliate registration';
 
 			// Email template location.
@@ -49,7 +49,7 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 			$this->placeholders = array();
 
 			// Trigger on new conversion.
-			add_action( 'afwc_new_registration_received_email', array( $this, 'trigger' ), 10, 1 );
+			add_action( 'afwc_email_new_registration_received', array( $this, 'trigger' ), 10, 1 );
 
 			// Call parent constructor to load any other defaults not explicity defined here.
 			parent::__construct();
@@ -94,6 +94,8 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 			$this->email_args['user_url']           = ! empty( $this->email_args['userdata']['user_url'] ) ? $this->email_args['userdata']['user_url'] : '';
 			$this->email_args['user_contact_label'] = $user_contact_label;
 			$this->email_args['user_website_label'] = $user_website_label;
+			$this->email_args['is_auto_approved']   = ! empty( $this->email_args['is_auto_approved'] ) ? $this->email_args['is_auto_approved'] : get_option( 'afwc_auto_add_affiliate', 'no' );
+
 			// Set the locale to the store locale for customer emails to make sure emails are in the store language.
 			$this->setup_locale();
 
@@ -105,7 +107,7 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 			$email_content = ( is_callable( array( $this, 'format_string' ) ) ) ? $this->format_string( $email_content ) : $email_content;
 
 			// Send email.
-			if ( $this->is_enabled() && $this->get_recipient() ) {
+			if ( ! empty( $email_content ) && $this->is_enabled() && $this->get_recipient() ) {
 				$this->send( $this->get_recipient(), $this->get_subject(), $email_content, $this->get_headers(), $this->get_attachments() );
 			}
 
@@ -129,35 +131,25 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 		 * @return string Email content html
 		 */
 		public function get_content_html() {
-			$default_path  = $this->template_base;
-			$template_path = AFWC_Emails::get_instance()->get_template_base_dir( $this->template_html );
+			global $affiliate_for_woocommerce;
 
-			$email_heading = $this->get_heading();
+			$email_arguments = $this->get_template_args();
 
-			ob_start();
+			if ( ! empty( $email_arguments ) ) {
+				ob_start();
 
-			wc_get_template(
-				$this->template_html,
-				array(
-					'email'              => $this,
-					'email_heading'      => $email_heading,
-					'admin_name'         => $this->email_args['admin_name'],
-					'user_email'         => $this->email_args['user_email'],
-					'user_name'          => $this->email_args['user_name'],
-					'dashboard_url'      => $this->email_args['dashboard_url'],
-					'manage_url'         => $this->email_args['manage_url'],
-					'user_contact'       => $this->email_args['user_contact'],
-					'user_contact_label' => $this->email_args['user_contact_label'],
-					'user_desc'          => $this->email_args['user_desc'],
-					'user_url'           => $this->email_args['user_url'],
-					'user_website_label' => $this->email_args['user_website_label'],
-					'additional_content' => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
-				),
-				$template_path,
-				$default_path
-			);
+				wc_get_template(
+					$this->template_html,
+					$email_arguments,
+					is_callable( array( $affiliate_for_woocommerce, 'get_template_base_dir' ) ) ? $affiliate_for_woocommerce->get_template_base_dir( $this->template_html ) : '',
+					$this->template_base
+				);
 
-			return ob_get_clean();
+				return ob_get_clean();
+			}
+
+			return '';
+
 		}
 
 		/**
@@ -166,34 +158,48 @@ if ( ! class_exists( 'Afwc_New_Registration_Received' ) ) {
 		 * @return string Email plain content
 		 */
 		public function get_content_plain() {
-			$default_path  = $this->template_base;
-			$template_path = AFWC_Emails::get_instance()->get_template_base_dir( $this->template_plain );
+			global $affiliate_for_woocommerce;
 
-			$email_heading = $this->get_heading();
-			ob_start();
+			$email_arguments = $this->get_template_args();
 
-			wc_get_template(
-				$this->template_plain,
-				array(
-					'email'              => $this,
-					'email_heading'      => $email_heading,
-					'admin_name'         => $this->email_args['admin_name'],
-					'user_email'         => $this->email_args['user_email'],
-					'user_name'          => $this->email_args['user_name'],
-					'dashboard_url'      => $this->email_args['dashboard_url'],
-					'manage_url'         => $this->email_args['manage_url'],
-					'user_contact'       => $this->email_args['user_contact'],
-					'user_contact_label' => $this->email_args['user_contact_label'],
-					'user_desc'          => $this->email_args['user_desc'],
-					'user_url'           => $this->email_args['user_url'],
-					'user_website_label' => $this->email_args['user_website_label'],
-					'additional_content' => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
-				),
-				$template_path,
-				$default_path
+			if ( ! empty( $email_arguments ) ) {
+				ob_start();
+
+				wc_get_template(
+					$this->template_plain,
+					$email_arguments,
+					is_callable( array( $affiliate_for_woocommerce, 'get_template_base_dir' ) ) ? $affiliate_for_woocommerce->get_template_base_dir( $this->template_plain ) : '',
+					$this->template_base
+				);
+
+				return ob_get_clean();
+			}
+
+			return '';
+		}
+
+		/**
+		 * Function to return the required email arguments for this email template.
+		 *
+		 * @return array Email arguments.
+		 */
+		public function get_template_args() {
+			return array(
+				'email'              => $this,
+				'email_heading'      => is_callable( array( $this, 'get_heading' ) ) ? $this->get_heading() : '',
+				'admin_name'         => $this->email_args['admin_name'],
+				'user_email'         => $this->email_args['user_email'],
+				'user_name'          => $this->email_args['user_name'],
+				'dashboard_url'      => esc_url( $this->email_args['dashboard_url'] ),
+				'manage_url'         => esc_url( $this->email_args['manage_url'] ),
+				'user_contact'       => $this->email_args['user_contact'],
+				'user_contact_label' => $this->email_args['user_contact_label'],
+				'user_desc'          => $this->email_args['user_desc'],
+				'user_url'           => esc_url( $this->email_args['user_url'] ),
+				'user_website_label' => $this->email_args['user_website_label'],
+				'is_auto_approved'   => $this->email_args['is_auto_approved'],
+				'additional_content' => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 			);
-
-			return ob_get_clean();
 		}
 
 		/**

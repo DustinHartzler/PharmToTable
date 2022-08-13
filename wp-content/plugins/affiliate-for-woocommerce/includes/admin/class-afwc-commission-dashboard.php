@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       2.5.0
- * @version     1.1.7
+ * @version     1.2.2
  */
 
 // Exit if accessed directly.
@@ -18,6 +18,27 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 	 * Main class for Commission Dashboard
 	 */
 	class AFWC_Commission_Dashboard {
+
+		/**
+		 * Variable to hold instance of AFWC_Commission_Dashboard
+		 *
+		 * @var $instance
+		 */
+		private static $instance = null;
+
+		/**
+		 * Get single instance of this class
+		 *
+		 * @return AFWC_Commission_Dashboard Singleton object of this class
+		 */
+		public static function get_instance() {
+			// Check if instance is already exists.
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
+			}
+
+			return self::$instance;
+		}
 
 		/**
 		 * Constructor
@@ -92,9 +113,12 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 										)
 					);
 					$lastid = $wpdb->insert_id;
-					// add id in plan order.
-					$plan_order = get_option( 'afwc_plan_order', array() );
+
+					$plan_order = $this->get_commission_plans_order();
 					$len        = count( $plan_order );
+
+					// add new plan id to the -2 position.
+
 					array_splice( $plan_order, $len, 0, $lastid );
 					update_option( 'afwc_plan_order', $plan_order, 'no' );
 				}
@@ -146,7 +170,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					);
 				} else {
 					// delete from plan order.
-					$plan_order = get_option( 'afwc_plan_order', array() );
+					$plan_order = $this->get_commission_plans_order();
 					if ( ! empty( $plan_order ) ) {
 						$c          = $params['commission_id'];
 						$plan_order = array_filter(
@@ -174,42 +198,28 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 *
 		 * @param array $params fetch commission dashboard data params.
 		 */
-		public function fetch_dashboard_data( $params ) {
+		public function fetch_dashboard_data( $params = array() ) {
 
-			$result['commissions'] = $this->fetch_commission_plans( $params );
-			$plan_order            = get_option( 'afwc_plan_order', array() );
-			$default_plan_id       = afwc_get_default_commission_plan_id();
-			if ( empty( $plan_order ) ) {
-				$plan_order = array_map(
-					function( $x ) {
-							return absint( $x['commissionId'] );
-					},
-					$result['commissions']
-				);
-				$key        = array_search( $default_plan_id, $plan_order, true );
-				if ( false !== $key ) {
-					unset( $plan_order[ $key ] );
-				}
-				$plan_order[] = $default_plan_id;
-				update_option( 'afwc_plan_order', $plan_order, 'no' );
-			}
-			$result['plan_order'] = $plan_order;
+			$commission_plans = self::fetch_commission_plans( $params );
 
-			if ( ! empty( $result ) ) {
+			if ( ! empty( $commission_plans ) ) {
 				wp_send_json(
 					array(
 						'ACK'    => 'Success',
-						'result' => $result,
-					)
-				);
-			} else {
-				wp_send_json(
-					array(
-						'ACK' => 'Success',
-						'msg' => __( 'No commission plans found', 'affiliate-for-woocommerce' ),
+						'result' => array(
+							'commissions' => $commission_plans,
+							'plan_order'  => $this->get_commission_plans_order(),
+						),
 					)
 				);
 			}
+
+			wp_send_json(
+				array(
+					'ACK' => 'Failed',
+					'msg' => __( 'No commission plans found', 'affiliate-for-woocommerce' ),
+				)
+			);
 
 		}
 
@@ -218,7 +228,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 *
 		 * @param array $params fetch commission params.
 		 */
-		public static function fetch_commission_plans( $params ) {
+		public static function fetch_commission_plans( $params = array() ) {
 			global $wpdb;
 			$commissions = array();
 
@@ -271,12 +281,12 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					}
 					$plan_order[] = $default_plan_id;
 				}
-
+				$plan_order = array_values( $plan_order );
 				update_option( 'afwc_plan_order', $plan_order, 'no' );
 				wp_send_json(
 					array(
 						'ACK'    => 'Success',
-						'result' => true,
+						'result' => $plan_order,
 					)
 				);
 			} else {
@@ -320,8 +330,9 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		/**
 		 * Get user id name map
 		 *
-		 * @param string $term Searched string.
-		 * @param string $for_ajax string.
+		 * @param string|array $term The searched term.
+		 * @param bool         $for_ajax Check if call with ajax.
+		 *
 		 * @return $rule_values array
 		 */
 		public static function get_affiliate_id_name_map( $term = '', $for_ajax = true ) {
@@ -358,38 +369,38 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		/**
 		 * Get product id name map
 		 *
-		 * @param string $term string.
-		 * @param string $for_ajax string.
+		 * @param string|array $term The searched term.
+		 * @param bool         $for_ajax Check if call with ajax.
+		 *
 		 * @return $rule_values array
 		 */
-		public static function get_product_id_name_map( $term, $for_ajax = true ) {
-
-			global $wpdb;
+		public static function get_product_id_name_map( $term = '', $for_ajax = true ) {
 
 			$rule_values = array();
-			if ( $for_ajax ) {
-				$args = array(
-					'post_type'   => array( 'product', 'product_variation' ),
-					'numberposts' => -1,
-					'post_status' => 'publish',
-					'fields'      => 'ids',
-					's'           => $term,
-				);
-			} else {
-				$args = array(
-					'post_type'   => array( 'product', 'product_variation' ),
-					'numberposts' => -1,
-					'post_status' => 'publish',
-					'fields'      => 'ids',
-					'post__in'    => $term,
-				);
+
+			if ( empty( $term ) ) {
+				return $rule_values;
 			}
 
-			$res = get_posts( $args );
+			$search_meta_key = ( false === $for_ajax && is_array( $term ) ) ? 'post__in' : 's';
 
-			if ( ! empty( $res ) ) {
-				foreach ( $res as $id ) {
-					$rule_values[ $id ] = get_the_title( $id );
+			$products = get_posts(
+				array(
+					'post_type'      => array( 'product', 'product_variation' ),
+					'numberposts'    => -1,
+					'post_status'    => 'publish',
+					'fields'         => 'ids',
+					$search_meta_key => $term,
+				)
+			);
+
+			if ( ! empty( $products ) ) {
+				foreach ( $products as $id ) {
+					$product = wc_get_product( $id );
+
+					if ( $product instanceof WC_Product && is_callable( array( $product, 'get_formatted_name' ) ) ) {
+						$rule_values[ $id ] = $product->get_formatted_name();
+					}
 				}
 			}
 
@@ -400,14 +411,18 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		/**
 		 * Get affiliate tag id name map
 		 *
-		 * @param string $term string.
-		 * @param string $for_ajax string.
+		 * @param string|array $term The searched term.
+		 * @param bool         $for_ajax Check if call with ajax.
+		 *
 		 * @return $rule_values array
 		 */
-		public static function get_affiliate_tag_id_name_map( $term, $for_ajax = true ) {
-			global $wpdb;
+		public static function get_affiliate_tag_id_name_map( $term = '', $for_ajax = true ) {
 
 			$rule_values = array();
+
+			if ( empty( $term ) ) {
+				return $rule_values;
+			}
 
 			if ( $for_ajax ) {
 				$args = array(
@@ -438,14 +453,18 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		/**
 		 * Get product category id name map
 		 *
-		 * @param string $term string.
-		 * @param string $for_ajax string.
+		 * @param string|array $term The searched term.
+		 * @param bool         $for_ajax Check if call with ajax.
+		 *
 		 * @return $rule_values array
 		 */
-		public static function get_product_category_id_name_map( $term, $for_ajax = true ) {
-			global $wpdb;
+		public static function get_product_category_id_name_map( $term = '', $for_ajax = true ) {
 
 			$rule_values = array();
+
+			if ( empty( $term ) ) {
+				return $rule_values;
+			}
 
 			if ( $for_ajax ) {
 				$args = array(
@@ -520,8 +539,58 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 			}
 		}
 
+		/**
+		 * Get the commission plans order.
+		 *
+		 * @return array
+		 */
+		public function get_commission_plans_order() {
+
+			$plan_order  = get_option( 'afwc_plan_order', array() );
+			$_plan_order = $plan_order;
+
+			// Set plan order if plan order is empty.
+			if ( empty( $plan_order ) ) {
+				$commission_plans = self::fetch_commission_plans();
+				$plan_order       = ( is_array( $commission_plans ) && ! empty( $commission_plans ) ) ? array_filter(
+					array_map(
+						function( $x ) {
+								return ! empty( $x['commissionId'] ) ? absint( $x['commissionId'] ) : 0;
+						},
+						$commission_plans
+					)
+				) : array();
+			}
+
+			$default_plan_id = afwc_get_default_commission_plan_id();
+			if ( ! empty( $default_plan_id ) ) {
+				$key = array_search( $default_plan_id, $plan_order, true );
+				// Unset the default plan id if exists in $plan_order.
+				if ( false !== $key ) {
+					unset( $plan_order[ $key ] );
+				}
+
+				// Assign default plan at last position of the array.
+				$plan_order[] = $default_plan_id;
+			}
+
+			$plan_order = array_values( $plan_order );
+
+			if ( $_plan_order !== $plan_order ) {
+				update_option( 'afwc_plan_order', $plan_order, 'no' );
+			}
+
+			/**
+			 * Filter for commission plan order.
+			 *
+			 * @param array Ordered plan list.
+			 * @param array
+			 */
+			return apply_filters( 'afwc_get_commission_plans_order', $plan_order, array( 'source' => $this ) );
+		}
+
 	}
 
 }
 
-return new AFWC_Commission_Dashboard();
+return AFWC_Commission_Dashboard::get_instance();

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/gateway/paypal/
  * @since       4.0.0
- * @version     1.0.0
+ * @version     1.1.0
  */
 
 // Exit if accessed directly.
@@ -82,7 +82,13 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 		public function make_payment( $affiliates = array() ) {
 
 			if ( empty( $affiliates ) ) {
-				return new WP_Error( 422, __( 'Affiliate details not found', 'affiliate-for-woocommerce' ) );
+				return new WP_Error( 422, _x( 'Missing affiliate details.', 'payout error message', 'affiliate-for-woocommerce' ) );
+			}
+
+			$items = $this->get_items( $affiliates );
+
+			if ( empty( $items ) ) {
+				return new WP_Error( 422, _x( 'Missing payout data.', 'payout error message', 'affiliate-for-woocommerce' ) );
 			}
 
 			$token = $this->get_token();
@@ -104,9 +110,9 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 						array(
 							'sender_batch_header' => array(
 								'sender_batch_id' => md5( Affiliate_For_WooCommerce::uniqid( 'afwc_payout' ) ),
-								'email_subject'   => ! empty( $this->email_subject ) ? $this->email_subject : __( 'You have a payout!', 'affiliate-for-woocommerce' ),
+								'email_subject'   => ! empty( $this->email_subject ) ? $this->email_subject : _x( 'You have a payout!', 'payout email title', 'affiliate-for-woocommerce' ),
 							),
-							'items'               => $this->get_items( $affiliates ),
+							'items'               => $items,
 						)
 					),
 				)
@@ -117,18 +123,22 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 
 			if ( is_wp_error( $request ) ) {
 				/* translators: 1: Error code */
-				Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( __( 'Payment request failed with error code: %s', 'affiliate-for-woocommerce' ), $code ) );
+				Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( _x( 'Payment request failed with error code: %s', 'payout error message', 'affiliate-for-woocommerce' ), $code ) );
 
 				return $request;
 
 			} elseif ( 201 === $code ) {
+				$result = json_decode( $body, true );
 
-				return $this->format_result( json_decode( $body, true ) );
+				$amounts          = array_column( $items, 'amount' );
+				$result['amount'] = ! empty( $amounts ) ? array_sum( array_column( $amounts, 'value' ) ) : 0.00;
+
+				return $this->format_result( $result );
 
 			} else {
 				$message = wp_remote_retrieve_response_message( $request );
 				/* translators: 1: Error code 2: Error message */
-				Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( __( 'Payment request failed with error code: %1$s - %2$s', 'affiliate-for-woocommerce' ), $code, $message ) );
+				Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( _x( 'Payment request failed with error code: %1$s - %2$s', 'payout error message', 'affiliate-for-woocommerce' ), $code, $message ) );
 
 				return new WP_Error( $code, $message );
 
@@ -155,7 +165,7 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 						$items[] = array(
 							'recipient_type' => $this->receiver_type,
 							'amount'         => array(
-								'value'    => floatval( $affiliate['amount'] ),
+								'value'    => $this->get_formatted_amount( $affiliate['amount'] ),
 								'currency' => $this->currency,
 							),
 							'receiver'       => ( ! empty( $affiliate['email'] ) ) ? sanitize_email( $affiliate['email'] ) : '',
@@ -184,9 +194,33 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 				return array(
 					'ACK'      => 'Success',
 					'batch_id' => ! empty( $response['batch_header']['payout_batch_id'] ) ? $response['batch_header']['payout_batch_id'] : '',
+					'amount'   => ! empty( $response['amount'] ) ? $response['amount'] : 0.00,
 				);
 			}
 			return array();
+		}
+
+		/**
+		 * Get the formated amount for payout.
+		 *
+		 * @see https://developer.paypal.com/docs/api/payments.payouts-batch/v1/#definition-currency
+		 * @see https://developer.paypal.com/reference/currency-codes/#link-currencycodes
+		 *
+		 * @param  int|string $amount The amount value.
+		 *
+		 * @return int|float
+		 */
+		public function get_formatted_amount( $amount = 0 ) {
+
+			if ( empty( $amount ) ) {
+				return 0;
+			}
+
+			if ( in_array( $this->currency, array( 'HUF', 'JPY', 'TWD' ), true ) ) {
+				return intval( $amount );
+			}
+
+			return number_format( floatval( $amount ), 2, '.', '' );
 		}
 
 	}

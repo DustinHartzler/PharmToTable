@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.0.0
- * @version     1.2.9
+ * @version     1.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -112,7 +112,7 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 			$affiliate_tags_desc        = '';
 			$affiliate_manage_tags_link = admin_url( 'edit-tags.php?taxonomy=afwc_user_tags' );
 			if ( ! empty( $affiliate_manage_tags_link ) ) {
-				/* translators: %1$s: Opening strong tag %2$s: Opening a tage for affiliate manage tag page link %3$s: closing strong tag %4$s: closing a tag for affiliate manage tag page link */
+				/* translators: %1$s: Opening strong tag %2$s: Opening a tag for affiliate manage tag page link %3$s: closing strong tag %4$s: closing a tag for affiliate manage tag page link */
 				$affiliate_tags_desc = sprintf( esc_html__( '%1$s%2$sManage affiliate tags%3$s%4$s', 'affiliate-for-woocommerce' ), '<strong>', '<a target="_blank" href="' . esc_url( $affiliate_manage_tags_link ) . '">', '</a>', '</strong>' );
 			}
 
@@ -220,6 +220,15 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 					),
 				),
 				array(
+					'name'     => _x( 'Affiliate self-refer', 'setting name', 'affiliate-for-woocommerce' ),
+					'desc'     => _x( 'Allow affiliates to earn commissions on their own orders', 'setting description', 'affiliate-for-woocommerce' ),
+					'desc_tip' => _x( 'Disabling this will not record a commission if an affiliate uses their own referral link/coupons during orders', 'setting description tip', 'affiliate-for-woocommerce' ),
+					'id'       => 'afwc_allow_self_refer',
+					'type'     => 'checkbox',
+					'default'  => 'yes',
+					'autoload' => false,
+				),
+				array(
 					'name'        => __( 'Affiliate manager email', 'affiliate-for-woocommerce' ),
 					'desc'        => __( 'Affiliates will see a link to contact you in their dashboard - and the link will point to this email address. Leave this field blank to hide the contact link.', 'affiliate-for-woocommerce' ),
 					'id'          => 'afwc_contact_admin_email_address',
@@ -250,6 +259,15 @@ if ( ! class_exists( 'AFWC_Admin_Settings' ) ) {
 				//  'autoload' => false,
 				// ),
 				// phpcs:enable
+				array(
+					'name'     => _x( 'PayPal email address', 'setting name', 'affiliate-for-woocommerce' ),
+					'desc'     => _x( 'Allow affiliates to enter their PayPal email address from their My Account > Affiliates > Profile for PayPal payouts', 'setting description', 'affiliate-for-woocommerce' ),
+					'desc_tip' => _x( 'Disabling this will not show PayPal email address in My Account > Affiliates > Profile & WordPress Admin > Users > User profile.', 'setting description tip', 'affiliate-for-woocommerce' ),
+					'id'       => 'afwc_allow_paypal_email',
+					'type'     => 'checkbox',
+					'default'  => 'no',
+					'autoload' => false,
+				),
 				array(
 					'title'             => __( 'Payout via PayPal', 'affiliate-for-woocommerce' ),
 					'type'              => 'checkbox',

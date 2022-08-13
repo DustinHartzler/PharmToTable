@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/gateway/paypal/
  * @since       4.0.0
- * @version     1.2.0
+ * @version     1.2.2
  */
 
 // Exit if accessed directly.
@@ -240,13 +240,11 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 
 						if ( is_callable( array( $obj, 'make_payment' ) ) && $this->is_set_credentials( $this->payout_method ) ) {
 
-							$this->currency = $currency;
-							$result         = $obj->make_payment( $affiliates );
+							$obj->currency = $currency;
+							$result        = $obj->make_payment( $affiliates );
 
 							/**
 							 * Fires immediately after PayPal commission payout.
-							 *
-							 * @since 4.0.0
 							 *
 							 * @param array $result      The results
 							 * @param array $affiliates  Whether the user data was also flagged for deletion.
@@ -281,12 +279,7 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 				$is_loaded_paypal_standard = is_callable( array( $wc_paypal_gateway, 'should_load' ) ) ? $wc_paypal_gateway->should_load() : false;
 
 				if ( false === $is_loaded_paypal_standard ) {
-					$paypal_payment_credentials = $this->get_paypal_payments_credentials();
-
-					if ( ! empty( $paypal_payment_credentials ) && ! empty( $paypal_payment_credentials['username'] ) && ! empty( $paypal_payment_credentials['password'] ) ) {
-						$method = 'paypal_payout';
-						update_option( 'afwc_commission_payout_method', $method, 'no' );
-					}
+					$this->check_for_paypal_payout();
 				}
 			}
 
@@ -312,8 +305,6 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 
 			/**
 			 * Filters the PayPal Payout method.
-			 *
-			 * @since 4.0.0
 			 *
 			 * @param string  $method The method can be 'paypal_payout|paypal_masspay' in default.
 			 * @param array   $this   The arguments.
@@ -428,6 +419,20 @@ if ( ! class_exists( 'AFWC_PayPal_API' ) ) {
 			}
 
 			return $is_set;
+		}
+
+		/**
+		 * Check and update if PayPal Payout is available.
+		 *
+		 * @return void.
+		 */
+		public function check_for_paypal_payout() {
+			$credentials = $this->get_paypal_payments_credentials();
+
+			if ( ! empty( $credentials ) && ! empty( $credentials['username'] ) && ! empty( $credentials['password'] ) ) {
+				update_option( 'afwc_commission_payout_method', 'paypal_payout', 'no' );
+			}
+
 		}
 
 	}

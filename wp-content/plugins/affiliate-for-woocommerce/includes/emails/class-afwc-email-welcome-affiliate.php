@@ -3,8 +3,8 @@
  * Main class for Welcome affiliate email
  *
  * @package     affiliate-for-woocommerce/includes/emails/
- * @version     1.1.0
  * @since       2.4.0
+ * @version     1.4.0
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
+if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 
 	/**
 	 * Welcome email for affiliate
 	 *
 	 * @extends \WC_Email
 	 */
-	class Afwc_Welcome_Affiliate_Email extends WC_Email {
+	class AFWC_Email_Welcome_Affiliate extends WC_Email {
 
 		/**
 		 * Set email defaults
@@ -29,11 +29,11 @@ if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
 			// Set ID, this simply needs to be a unique name.
 			$this->id = 'afwc_welcome';
 
-			// This is the title in WooCommerce Email settings.
-			$this->title = 'Affiliate - Welcome email';
+			// This is the title in WooCommerce email settings.
+			$this->title = 'Affiliate - Welcome Email';
 
 			// This is the description in WooCommerce email settings.
-			$this->description = __( 'This email will be sent to an affiliate after their request to join is approved.', 'affiliate-for-woocommerce' );
+			$this->description = __( 'This email will be sent to an affiliate after their request to join is approved OR if they automatically become an affiliate.', 'affiliate-for-woocommerce' );
 
 			// These are the default heading and subject lines that can be overridden using the settings.
 			$this->subject = 'Welcome to {site_title}';
@@ -49,7 +49,7 @@ if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
 			$this->placeholders = array();
 
 			// Trigger on new conversion.
-			add_action( 'afwc_welcome_affiliate_email', array( $this, 'trigger' ), 10, 1 );
+			add_action( 'afwc_email_welcome_affiliate', array( $this, 'trigger' ), 10, 1 );
 
 			// Call parent constructor to load any other defaults not explicity defined here.
 			parent::__construct();
@@ -96,6 +96,8 @@ if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
 			$this->email_args['shop_page']           = get_permalink( wc_get_page_id( 'shop' ) );
 			$this->email_args['my_account_afwc_url'] = $my_account_afwc_url;
 			$this->email_args['affiliate_id']        = $affiliate_identifier;
+			$this->email_args['is_auto_approved']    = ! empty( $this->email_args['is_auto_approved'] ) ? $this->email_args['is_auto_approved'] : get_option( 'afwc_auto_add_affiliate', 'no' );
+
 			// For any email placeholders.
 			$this->set_placeholders();
 
@@ -104,7 +106,7 @@ if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
 			$email_content = ( is_callable( array( $this, 'format_string' ) ) ) ? $this->format_string( $email_content ) : $email_content;
 
 			// Send email.
-			if ( $this->is_enabled() && $this->get_recipient() ) {
+			if ( ! empty( $email_content ) && $this->is_enabled() && $this->get_recipient() ) {
 				$this->send( $this->get_recipient(), $this->get_subject(), $email_content, $this->get_headers(), $this->get_attachments() );
 			}
 
@@ -128,30 +130,24 @@ if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
 		 * @return string Email content html
 		 */
 		public function get_content_html() {
-			$default_path  = $this->template_base;
-			$template_path = AFWC_Emails::get_instance()->get_template_base_dir( $this->template_html );
+			global $affiliate_for_woocommerce;
 
-			$email_heading = $this->get_heading();
+			$email_arguments = $this->get_template_args();
 
-			ob_start();
+			if ( ! empty( $email_arguments ) ) {
+				ob_start();
 
-			wc_get_template(
-				$this->template_html,
-				array(
-					'email'               => $this,
-					'email_heading'       => $email_heading,
-					'user_name'           => $this->email_args['user_name'],
-					'affiliate_link'      => $this->email_args['affiliate_link'],
-					'affiliate_id'        => $this->email_args['affiliate_id'],
-					'shop_page'           => $this->email_args['shop_page'],
-					'my_account_afwc_url' => $this->email_args['my_account_afwc_url'],
-					'additional_content'  => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
-				),
-				$template_path,
-				$default_path
-			);
+				wc_get_template(
+					$this->template_html,
+					$email_arguments,
+					is_callable( array( $affiliate_for_woocommerce, 'get_template_base_dir' ) ) ? $affiliate_for_woocommerce->get_template_base_dir( $this->template_html ) : '',
+					$this->template_base
+				);
 
-			return ob_get_clean();
+				return ob_get_clean();
+			}
+
+			return '';
 		}
 
 		/**
@@ -160,30 +156,43 @@ if ( ! class_exists( 'Afwc_Welcome_Affiliate_Email' ) ) {
 		 * @return string Email plain content
 		 */
 		public function get_content_plain() {
-			$default_path  = $this->template_base;
-			$template_path = AFWC_Emails::get_instance()->get_template_base_dir( $this->template_plain );
+			global $affiliate_for_woocommerce;
 
-			$email_heading = $this->get_heading();
+			$email_arguments = $this->get_template_args();
 
-			ob_start();
+			if ( ! empty( $email_arguments ) ) {
+				ob_start();
 
-			wc_get_template(
-				$this->template_plain,
-				array(
-					'email'               => $this,
-					'email_heading'       => $email_heading,
-					'user_name'           => $this->email_args['user_name'],
-					'affiliate_link'      => $this->email_args['affiliate_link'],
-					'affiliate_id'        => $this->email_args['affiliate_id'],
-					'shop_page'           => $this->email_args['shop_page'],
-					'my_account_afwc_url' => $this->email_args['my_account_afwc_url'],
-					'additional_content'  => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
-				),
-				$template_path,
-				$default_path
+				wc_get_template(
+					$this->template_plain,
+					$email_arguments,
+					is_callable( array( $affiliate_for_woocommerce, 'get_template_base_dir' ) ) ? $affiliate_for_woocommerce->get_template_base_dir( $this->template_plain ) : '',
+					$this->template_base
+				);
+
+				return ob_get_clean();
+			}
+
+			return '';
+		}
+
+		/**
+		 * Function to return the required email arguments for this email template.
+		 *
+		 * @return array Email arguments.
+		 */
+		public function get_template_args() {
+			return array(
+				'email'               => $this,
+				'email_heading'       => is_callable( array( $this, 'get_heading' ) ) ? $this->get_heading() : '',
+				'user_name'           => $this->email_args['user_name'],
+				'affiliate_link'      => esc_url( $this->email_args['affiliate_link'] ),
+				'affiliate_id'        => $this->email_args['affiliate_id'],
+				'shop_page'           => $this->email_args['shop_page'],
+				'my_account_afwc_url' => esc_url( $this->email_args['my_account_afwc_url'] ),
+				'is_auto_approved'    => $this->email_args['is_auto_approved'],
+				'additional_content'  => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 			);
-
-			return ob_get_clean();
 		}
 
 		/**

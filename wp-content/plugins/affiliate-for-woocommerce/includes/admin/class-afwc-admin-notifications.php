@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.3.4
- * @version     1.0.8
+ * @version     1.0.9
  */
 
 // Exit if accessed directly.
@@ -142,7 +142,7 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 					</style>
 					<?php
 					/* translators: %s: link to submit idea for Affiliate For WooCommerce on WooCommerce idea board */
-					$afw_text = sprintf( __( 'Have a feature request? Submit your request from our %s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( 'https://ideas.woocommerce.com/forums/133476-woocommerce?category_id=379618' ) . '" target="_blank" style="color: #5850EC;">idea board</a>' );
+					$afw_text = sprintf( __( 'Have a feature request? Want to suggest an enhancement? Submit it from %s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( 'https://woocommerce.com/feature-requests/affiliate-for-woocommerce/' ) . '" target="_blank" style="color: #5850EC;">here</a>' );
 				}
 			}
 

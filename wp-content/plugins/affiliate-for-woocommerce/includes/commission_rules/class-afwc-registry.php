@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/commission_rules/
  * @since       2.5.0
- * @version     1.0.3
+ * @version     1.0.4
  */
 
 // Exit if accessed directly.
@@ -41,7 +41,10 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 		 * @return $registry mixed
 		 */
 		public static function get_registry() {
-			return self::$registry;
+			return array_merge(
+				self::$registry,
+				array( 'meta' => array( 'rule_group_titles' => self::get_rule_group_titles() ) )
+			);
 		}
 
 		/**
@@ -49,7 +52,7 @@ if ( ! class_exists( 'AFWC_Registry' ) ) {
 		 *
 		 * @return array
 		 */
-		public static function get_rule_group_titles() {
+		private static function get_rule_group_titles() {
 			return array(
 				'affiliate' => __( 'Affiliate', 'affiliate-for-woocommerce' ),
 				'product'   => __( 'Product', 'affiliate-for-woocommerce' ),

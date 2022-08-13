@@ -12,10 +12,11 @@ jQuery(function(){
         }
         jQuery('#afwc_generated_affiliate_link').text( affiliate_link );
     });
-    jQuery('#afwc_save_account_button').on('click', function(){
-        let form_data      = jQuery('#afwc_account_form').serialize();
-        let status_element = jQuery('#afwc_account_form .afwc_save_account_status');
-        status_element.removeClass('afwc_status_yes').removeClass('afwc_status_no').removeClass('afwc_status_spinner').addClass('afwc_status_spinner');
+    jQuery('#afwc_account_form').on('submit', function(e){
+        e.preventDefault();
+        let formData      = jQuery(this).serialize();
+        let statusElement = jQuery(this).find('.afwc_save_account_status');
+        statusElement.removeClass('afwc_status_yes afwc_status_no').addClass('afwc_status_spinner');
         jQuery.ajax({
             url: afwcResourceParams.afwc_save_account_details,
             type: 'post',
@@ -23,14 +24,14 @@ jQuery(function(){
             data: {
                 security: afwcResourceParams.save_account_security,
                 user_id: afwcResourceParams.userid,
-                form_data: decodeURIComponent( form_data )
+                form_data: decodeURIComponent( formData )
             },
             success: function( response ) {
                 if ( response.success ) {
                     if ( 'yes' === response.success ) {
-                        status_element.removeClass('afwc_status_yes').removeClass('afwc_status_no').removeClass('afwc_status_spinner').addClass('afwc_status_yes');
+                        statusElement.removeClass('afwc_status_spinner').addClass('afwc_status_yes');
                     } else if ( 'no' === response.success ) {
-                        status_element.removeClass('afwc_status_yes').removeClass('afwc_status_no').removeClass('afwc_status_spinner').addClass('afwc_status_no');
+                        statusElement.removeClass('afwc_status_spinner').addClass('afwc_status_no');
                         if ( response.message ) {
                             alert( response.message );
                         }
@@ -97,6 +98,8 @@ function afwc_copy_affiliate_link( obj ) {
     let element = jQuery("<input>");
     jQuery("body").append(element);
     element.val(jQuery(obj).text()).select();
-    document.execCommand("copy");
+    if( navigator && navigator.clipboard ) {
+        navigator.clipboard.writeText(element.val());
+    }
     element.remove();
 }

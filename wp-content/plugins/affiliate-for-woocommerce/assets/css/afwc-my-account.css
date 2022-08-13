@@ -46,7 +46,7 @@
 #afwc_load_more_products, #afwc_load_more_referrals, #afwc_load_more_payouts {
 	cursor: pointer;
 }
-#afwc_load_more_products.disabled, #afwc_load_more_referrals.disabled {
+#afwc_load_more_products.disabled, #afwc_load_more_referrals.disabled, #afwc_load_more_payouts.disabled {
 	pointer-events: none;
 	cursor: default;
 }
@@ -62,7 +62,7 @@ thead, tbody tr {
 	width: 100%;
 	table-layout: fixed;
 }
-.circle {
+.afwc_circle {
 	width: 1em;
 	height: 1em;
 	border-radius: 50%;
@@ -103,20 +103,21 @@ thead, tbody tr {
 		width: 20%;
 	}
 	.afwc_products thead th:nth-child(1), .afwc_products tbody td:nth-child(1) {
-		width: 60%;
+		width: 55%;
 	}
 	.afwc_products thead th:nth-child(2), .afwc_products tbody td:nth-child(2) {
-		width: 25%;
+		width: 20%;
+		text-align: right;
 	}
 	.afwc_products thead th:nth-child(3), .afwc_products tbody td:nth-child(3) {
-		width: 15%;
+		width: 25%;
 	}
 }
 @media only screen and (max-width: 760px) {
 	#afwc_commission_lbl, #afwc_commission_container {
 		width: 100% !important;
 	}
-	.circle {
+	.afwc_circle {
 		margin-top: 0.3em;
 		margin-right: 0;
 	}
@@ -321,7 +322,12 @@ thead, tbody tr {
 	cursor: pointer;
 	height: unset;
 }
-@media screen and (max-width: 511px) {
+@media screen and (max-width: 470px) {
+	#afwc_date_range_container {
+		width: 100%;
+	}
+}
+@media screen and (min-width: 471px) and (max-width: 511px) {
 	#afwc_date_range_container {
 		width: 36%;
 	}

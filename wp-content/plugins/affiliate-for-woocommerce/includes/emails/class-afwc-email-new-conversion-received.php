@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.3.0
- * @version     1.0.3
+ * @version     1.2.0
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
+if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 
 	/**
 	 * The Affiliate New Conversion Email class
 	 *
 	 * @extends \WC_Email
 	 */
-	class AFWC_New_Conversion_Email extends WC_Email {
+	class AFWC_Email_New_Conversion_Received extends WC_Email {
 
 		/**
 		 * Set email defaults
@@ -48,7 +48,7 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 			$this->placeholders = array();
 
 			// Trigger on new conversion.
-			add_action( 'afwc_new_conversion_received_email', array( $this, 'trigger' ), 10, 1 );
+			add_action( 'afwc_email_new_conversion_received', array( $this, 'trigger' ), 10, 1 );
 
 			// Call parent constructor to load any other defaults not explicity defined here.
 			parent::__construct();
@@ -87,8 +87,17 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 
 			$order_id                                     = isset( $this->email_args['order_id'] ) ? $this->email_args['order_id'] : 0;
 			$order                                        = wc_get_order( $order_id );
-			$this->email_args['order_total']              = $order->get_total();
+			$this->email_args['order_total']              = is_callable( array( $order, 'get_total' ) ) ? $order->get_total() : 0;
 			$this->email_args['order_customer_full_name'] = $order->get_formatted_billing_full_name();
+			$this->email_args['order_commission_amount']  = ! empty( $this->email_args['order_commission_amount'] ) ? wc_format_decimal( $this->email_args['order_commission_amount'], wc_get_price_decimals() ) : 0.00;
+			$this->email_args['order_currency_symbol']    = ! empty( $this->email_args['currency_id'] ) ? get_woocommerce_currency_symbol( $this->email_args['currency_id'] ) : get_woocommerce_currency_symbol();
+			$this->email_args['affiliate_name']           = ! empty( $this->email_args['user_name'] ) ? $this->email_args['user_name'] : __( 'there', 'affiliate-for-woocommerce' );
+			$this->email_args['my_account_afwc_url']      = wc_get_endpoint_url(
+				get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' ),
+				'',
+				wc_get_page_permalink( 'myaccount' )
+			);
+			$this->email_args['order_customer_full_name'] = ! empty( $this->email_args['order_customer_full_name'] ) ? $this->email_args['order_customer_full_name'] : __( 'Guest', 'affiliate-for-woocommerce' );
 
 			// For any email placeholders.
 			$this->set_placeholders();
@@ -98,7 +107,7 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 			$email_content = ( is_callable( array( $this, 'format_string' ) ) ) ? $this->format_string( $email_content ) : $email_content;
 
 			// Send email.
-			if ( $this->is_enabled() && $this->get_recipient() ) {
+			if ( ! empty( $email_content ) && $this->is_enabled() && $this->get_recipient() ) {
 				$this->send( $this->get_recipient(), $this->get_subject(), $email_content, $this->get_headers(), $this->get_attachments() );
 			}
 
@@ -122,44 +131,24 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 		 * @return string Email content html
 		 */
 		public function get_content_html() {
-			$default_path  = $this->template_base;
-			$template_path = AFWC_Emails::get_instance()->get_template_base_dir( $this->template_html );
+			global $affiliate_for_woocommerce;
 
-			$email_heading           = $this->get_heading();
-			$order_commission_amount = isset( $this->email_args['order_commission_amount'] ) ? wc_format_decimal( $this->email_args['order_commission_amount'], wc_get_price_decimals() ) : 0.00;
-			$order_currency_symbol   = isset( $this->email_args['currency_id'] ) ? get_woocommerce_currency_symbol( $this->email_args['currency_id'] ) : get_woocommerce_currency_symbol();
-			$affiliate_name          = isset( $this->email_args['user_name'] ) ? $this->email_args['user_name'] : __( 'there', 'affiliate-for-woocommerce' );
+			$email_arguments = $this->get_template_args();
 
-			$order_total = isset( $this->email_args['order_total'] ) ? $this->email_args['order_total'] : 0;
+			if ( ! empty( $email_arguments ) ) {
+				ob_start();
 
-			$order_customer_full_name = ( $this->email_args['order_customer_full_name'] ) ? $this->email_args['order_customer_full_name'] : __( 'Guest', 'affiliate-for-woocommerce' );
+				wc_get_template(
+					$this->template_html,
+					$email_arguments,
+					is_callable( array( $affiliate_for_woocommerce, 'get_template_base_dir' ) ) ? $affiliate_for_woocommerce->get_template_base_dir( $this->template_html ) : '',
+					$this->template_base
+				);
 
-			$endpoint            = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
-			$my_account_afwc_url = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
+				return ob_get_clean();
+			}
 
-			$order_id = isset( $this->email_args['order_id'] ) ? $this->email_args['order_id'] : 0;
-
-			ob_start();
-
-			wc_get_template(
-				$this->template_html,
-				array(
-					'email'                    => $this,
-					'email_heading'            => $email_heading,
-					'order_commission_amount'  => $order_commission_amount,
-					'order_currency_symbol'    => $order_currency_symbol,
-					'affiliate_name'           => $affiliate_name,
-					'order_total'              => $order_total,
-					'order_id'                 => $order_id,
-					'my_account_afwc_url'      => $my_account_afwc_url,
-					'order_customer_full_name' => $order_customer_full_name,
-					'additional_content'       => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
-				),
-				$template_path,
-				$default_path
-			);
-
-			return ob_get_clean();
+			return '';
 		}
 
 		/**
@@ -168,43 +157,44 @@ if ( ! class_exists( 'AFWC_New_Conversion_Email' ) ) {
 		 * @return string Email plain content
 		 */
 		public function get_content_plain() {
-			$default_path  = $this->template_base;
-			$template_path = AFWC_Emails::get_instance()->get_template_base_dir( $this->template_plain );
+			global $affiliate_for_woocommerce;
 
-			$email_heading           = $this->get_heading();
-			$order_commission_amount = isset( $this->email_args['order_commission_amount'] ) ? wc_format_decimal( $this->email_args['order_commission_amount'], wc_get_price_decimals() ) : 0.00;
-			$order_currency_symbol   = isset( $this->email_args['currency_id'] ) ? get_woocommerce_currency_symbol( $this->email_args['currency_id'] ) : get_woocommerce_currency_symbol();
-			$affiliate_name          = isset( $this->email_args['user_name'] ) ? $this->email_args['user_name'] : __( 'there', 'affiliate-for-woocommerce' );
+			$email_arguments = $this->get_template_args();
 
-			$order_total = isset( $this->email_args['order_total'] ) ? $this->email_args['order_total'] : 0;
+			if ( ! empty( $email_arguments ) ) {
+				ob_start();
 
-			$order_customer_full_name = ( $this->email_args['order_customer_full_name'] ) ? $this->email_args['order_customer_full_name'] : __( 'Guest', 'affiliate-for-woocommerce' );
+				wc_get_template(
+					$this->template_plain,
+					$email_arguments,
+					is_callable( array( $affiliate_for_woocommerce, 'get_template_base_dir' ) ) ? $affiliate_for_woocommerce->get_template_base_dir( $this->template_plain ) : '',
+					$this->template_base
+				);
 
-			$endpoint            = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
-			$my_account_afwc_url = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
-			$order_id            = isset( $this->email_args['order_id'] ) ? $this->email_args['order_id'] : 0;
+				return ob_get_clean();
+			}
 
-			ob_start();
+			return '';
+		}
 
-			wc_get_template(
-				$this->template_plain,
-				array(
-					'email'                    => $this,
-					'email_heading'            => $email_heading,
-					'order_commission_amount'  => $order_commission_amount,
-					'order_currency_symbol'    => $order_currency_symbol,
-					'affiliate_name'           => $affiliate_name,
-					'order_total'              => $order_total,
-					'my_account_afwc_url'      => $my_account_afwc_url,
-					'order_customer_full_name' => $order_customer_full_name,
-					'order_id'                 => $order_id,
-					'additional_content'       => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
-				),
-				$template_path,
-				$default_path
+		/**
+		 * Function to return the required email arguments for this email template.
+		 *
+		 * @return array Email arguments.
+		 */
+		public function get_template_args() {
+			return array(
+				'email'                    => $this,
+				'email_heading'            => is_callable( array( $this, 'get_heading' ) ) ? $this->get_heading() : '',
+				'order_commission_amount'  => $this->email_args['order_commission_amount'],
+				'order_currency_symbol'    => $this->email_args['order_currency_symbol'],
+				'affiliate_name'           => $this->email_args['affiliate_name'],
+				'order_total'              => $this->email_args['order_total'],
+				'my_account_afwc_url'      => $this->email_args['my_account_afwc_url'],
+				'order_customer_full_name' => $this->email_args['order_customer_full_name'],
+				'order_id'                 => $this->email_args['order_id'],
+				'additional_content'       => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 			);
-
-			return ob_get_clean();
 		}
 
 		/**

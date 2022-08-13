@@ -2,10 +2,9 @@
 /**
  * Class for ugrading Ddatabase of Affiliate For WooCommerce
  *
- * @since       1.2.1
- * @version     1.2.3
- *
  * @package     affiliate-for-woocommerce/includes/
+ * @since       1.2.1
+ * @version     1.2.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -65,7 +64,7 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 		 */
 		public function initialize_db_upgrade() {
 			$current_db_version = get_option( '_afwc_current_db_version' );
-			if ( version_compare( $current_db_version, '1.2.9', '<' ) || empty( $current_db_version ) ) {
+			if ( version_compare( $current_db_version, '1.3.0', '<' ) || empty( $current_db_version ) ) {
 				update_option( 'afwc_db_upgrade_running', true, 'no' );
 				$this->do_db_upgrade();
 			}
@@ -125,6 +124,10 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 
 				if ( '1.2.8' === get_option( '_afwc_current_db_version' ) ) {
 					$this->upgrade_to_1_2_9();
+				}
+
+				if ( '1.2.9' === get_option( '_afwc_current_db_version' ) ) {
+					$this->upgrade_to_1_3_0();
 				}
 
 				update_option( 'afwc_db_upgrade_running', false, 'no' );
@@ -645,6 +648,23 @@ if ( ! class_exists( 'AFWC_DB_Upgrade' ) ) {
 			}
 			update_option( '_afwc_current_db_version', '1.2.9', 'no' );
 
+		}
+
+		/**
+		 * Function to upgrade the database to version 1.3.0
+		 * to update PayPal display option to yes for users using PayPal payouts.
+		 */
+		public function upgrade_to_1_3_0() {
+			if ( 'not_found' === get_option( 'afwc_allow_paypal_email', 'not_found' ) ) {
+				$afwc_paypal = is_callable( array( 'AFWC_PayPal_API', 'get_instance' ) ) ? AFWC_PayPal_API::get_instance() : null;
+				if ( ! empty( $afwc_paypal ) && is_callable( array( $afwc_paypal, 'get_api_setting_status' ) ) ) {
+					$paypal_api_settings = $afwc_paypal->get_api_setting_status();
+					if ( ! empty( $paypal_api_settings ) && ! empty( $paypal_api_settings['value'] ) && 'yes' === $paypal_api_settings['value'] ) {
+						update_option( 'afwc_allow_paypal_email', 'yes' );
+					}
+				}
+			}
+			update_option( '_afwc_current_db_version', '1.3.0', 'no' );
 		}
 
 	}

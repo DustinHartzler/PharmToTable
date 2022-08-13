@@ -2,7 +2,7 @@
 .afwc_affiliate_desc {
 	width: 25em;
 }
-.afwc_actions {
+.afwc-approve a#afwc_actions, .afwc-disapprove a#afwc_actions {
 	text-decoration: none;
 }
 .afwc-approve {
