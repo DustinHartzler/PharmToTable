@@ -1,11 +1,11 @@
 === Storefront ===
 Contributors: automattic, tiagonoronha, jameskoster
 Requires at least: 5.3.4
-Tested up to: 5.9.0
-Stable tag: 4.0.0
-Version: 4.0.0
+Tested up to: 6.0.0
+Stable tag: 4.1.2
+Version: 4.1.2
 WC requires at least: 4.2
-WC tested up to: 5.5
+WC tested up to: 6.7
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Tags: e-commerce, two-columns, left-sidebar, right-sidebar, custom-background, custom-colors, custom-header, custom-menu, featured-images, full-width-template, threaded-comments, accessibility-ready, rtl-language-support, footer-widgets, sticky-post, theme-options, editor-style
@@ -50,6 +50,15 @@ To the best of our knowledge, Google doesn’t track nor share end user data.
 Privacy Policy for the Google Fonts API: https://developers.google.com/fonts/faq#what_does_using_the_google_fonts_api_mean_for_the_privacy_of_my_users
 
 == Changelog ==
+
+= 4.1.2 - 2022-08-02 =
+- Fix – Update the "Development blog" link. ([#2021](https://github.com/woocommerce/storefront/pull/2021))
+
+= 4.1.1 - 2022-06-28 =
+- Fix – Fix mobile nav menu in AMP.
+
+= 4.1.0 - 2022-03-08 =
+- Dev – Update various dependencies.
 
 = 4.0.0 - 2022-03-08 =
 - Fix - Fix editor alignment issues with heading and blockquote blocks.
