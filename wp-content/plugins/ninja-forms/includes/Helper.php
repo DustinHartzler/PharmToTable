@@ -518,4 +518,78 @@ final class WPN_Helper
 
         return false;
     }
+
+    /**
+     * Sanitizes single/multiple CSS classNames
+     *
+     * Explodes on space, sanitize each className, implode with space to recombine
+     * @param string $value
+     * @return string
+    */
+    public static function sanitize_classes($value):string {
+        
+        $outgoing = $value;
+        $sanitized = [];
+        
+        $exploded = explode(' ',$value);
+
+        foreach($exploded as $singleClass){
+            $sanitized[] = sanitize_html_class($singleClass);
+        }
+
+        $outgoing = implode(' ',$sanitized);
+
+        return $outgoing;
+    }
+
+    /**
+     * Sanitizes string values for field settings 
+     * 
+     * WIP methods can still be implemented for this.
+     *
+     * @param string $key Setting name
+     * @param string $value of setting
+     * @return string sanitized value for setting
+    */
+    public static function sanitize_string_setting_value($key, $value):string {
+
+        if( in_array( $key, ["element_class", "container_class"] ) ) {
+            $value = self::sanitize_classes($value);
+        } else if( in_array( $key, ["label"] )){
+            $value = self::sanitize_text_field($value);
+        }
+
+
+        return $value;
+    }
+
+    /**
+     * Check the DISALLOW_UNFILTERED_HTML constant value and return early if true. 
+     * If false, return opposite for 'unfiltered_html' current user capability
+     * 
+     * @return bool
+    */
+    public static function maybe_disallow_unfiltered_html_for_sanitization():bool {
+
+        /**
+         * Exit early if the config setting is TRUE to mimic WordPress capability check.
+         */
+        if( defined( 'DISALLOW_UNFILTERED_HTML' ) && DISALLOW_UNFILTERED_HTML ) return true;
+
+        $disallow_unfiltered_html = ! current_user_can( 'unfiltered_html' );
+        return $disallow_unfiltered_html;
+    }
+
+    /**
+     * Check the DISALLOW_UNFILTERED_HTML constant value only on the escaping side
+     * 
+     * @return bool
+    */
+    public static function maybe_disallow_unfiltered_html_for_escaping():bool {
+
+        $disallow_unfiltered_html = defined( 'DISALLOW_UNFILTERED_HTML' ) ? DISALLOW_UNFILTERED_HTML : false;
+
+        return $disallow_unfiltered_html;
+    }
+    
 } // End Class WPN_Helper
