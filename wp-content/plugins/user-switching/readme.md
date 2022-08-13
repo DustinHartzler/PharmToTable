@@ -1,11 +1,11 @@
 # User Switching
 
-Stable tag: 1.5.8  
+Stable tag: 1.7.0  
 Requires at least: 3.7  
-Tested up to: 5.8  
+Tested up to: 6.0  
 Requires PHP: 5.3  
 License: GPL v2 or later  
-Tags: users, profiles, user switching, fast user switching, multisite, buddypress, bbpress, become, user management, developer  
+Tags: users, user switching, fast user switching, multisite, woocommerce, buddypress, bbpress  
 Contributors: johnbillion  
 Donate link: https://github.com/sponsors/johnbillion
 
@@ -13,21 +13,20 @@ Donate link: https://github.com/sponsors/johnbillion
 
 Instant switching between user accounts in WordPress.
 
-[![](https://img.shields.io/badge/ethical-open%20source-4baaaa.svg?style=for-the-badge)](#ethical-open-source)
-[![](https://img.shields.io/wordpress/plugin/installs/user-switching?style=for-the-badge)](https://wordpress.org/plugins/user-switching/)
-[![](https://img.shields.io/github/workflow/status/johnbillion/user-switching/Test/develop?style=for-the-badge)](https://github.com/johnbillion/user-switching/actions)
+[![](https://img.shields.io/badge/ethical-open%20source-4baaaa.svg?style=flat-square)](#ethical-open-source)
+[![](https://img.shields.io/wordpress/plugin/installs/user-switching?style=flat-square)](https://wordpress.org/plugins/user-switching/)
+[![](https://img.shields.io/github/workflow/status/johnbillion/user-switching/Test/develop?style=flat-square)](https://github.com/johnbillion/user-switching/actions)
 
 ## Description
 
-This plugin allows you to quickly swap between user accounts in WordPress at the click of a button. You'll be instantly logged out and logged in as your desired user. This is handy for test environments where you regularly log out and in between different accounts, or for administrators who need to switch between multiple accounts.
+This plugin allows you to quickly swap between user accounts in WordPress at the click of a button. You'll be instantly logged out and logged in as your desired user. This is handy for testing environments, for helping customers on WooCommerce sites, or for any site where administrators need to switch between multiple accounts.
 
 ### Features
 
  * Switch user: Instantly switch to any user account from the *Users* screen.
  * Switch back: Instantly switch back to your originating account.
  * Switch off: Log out of your account but retain the ability to instantly switch back in again.
- * Switching between users is secure (see the *Security* section below).
- * Compatible with WordPress, WordPress Multisite, WooCommerce, BuddyPress, bbPress, and most two-factor authentication plugins.
+ * Compatible with Multisite, WooCommerce, BuddyPress, bbPress, and most two-factor authentication plugins.
 
 ### Security
 
@@ -55,7 +54,7 @@ I maintain several other plugins for developers. Check them out:
 
 ### Privacy Statement
 
-User Switching makes use of browser cookies in order to allow users to switch to another account. Its cookies operate using the same mechanism as the authentication cookies in WordPress core, therefore their values contain the user's `user_login` field in plain text which should be treated as potentially personally identifiable information. The names of the cookies are:
+User Switching makes use of browser cookies in order to allow users to switch to another account. Its cookies operate using the same mechanism as the authentication cookies in WordPress core, which means their values contain the user's `user_login` field in plain text which should be treated as potentially personally identifiable information (PII) for privacy and regulatory reasons (GDPR, CCPA, etc). The names of the cookies are:
 
 * `wordpress_user_sw_{COOKIEHASH}`
 * `wordpress_user_sw_secure_{COOKIEHASH}`
@@ -65,29 +64,18 @@ User Switching does not send data to any third party, nor does it include any th
 
 See also the FAQ for some questions relating to privacy and safety when switching between users.
 
-### Ethical Open Source
-
-User Switching is considered **Ethical Open Source** because it meets all of the criteria of [The Ethical Source Definition (ESD)](https://ethicalsource.dev/definition/):
-
-1. It benefits the commons.
-2. It is created in the open.
-3. Its community is welcoming and just.
-4. It puts accessibility first.
-5. It prioritizes user safety.
-6. It protects user privacy.
-7. It encourages fair compensation.
-
 ## Screenshots
 
-1. The *Switch To* link on the Users screen<br>![The Switch To link on the Users screen](.wordpress-org/screenshot-1.png)
-
-2. The *Switch To* link on a user's profile<br>![The Switch To link on a user's profile](.wordpress-org/screenshot-2.png)
+1. The *Switch To* link on the Users screen  
+   ![The Switch To link on the Users screen](.wordpress-org/screenshot-1.png)
+2. The *Switch To* link on a user's profile  
+   ![The Switch To link on a user's profile](.wordpress-org/screenshot-2.png)
 
 ## Frequently Asked Questions
 
 ### Does this plugin work with PHP 8?
 
-Yes.
+Yes, it's actively tested and working up to PHP 8.1.
 
 ### What does "Switch off" mean?
 
@@ -99,6 +87,10 @@ The *Switch Off* link can be found in your profile menu in the WordPress toolbar
 
 Yes, and you'll also be able to switch users from the Users screen in Network Admin.
 
+### Does this plugin work with WooCommerce?
+
+Yes, and you'll also be able to switch users from various WooCommerce administration screens.
+
 ### Does this plugin work with BuddyPress?
 
 Yes, and you'll also be able to switch users from member profile screens and the member listing screen.
@@ -106,10 +98,6 @@ Yes, and you'll also be able to switch users from member profile screens and the
 ### Does this plugin work with bbPress?
 
 Yes, and you'll also be able to switch users from member profile screens.
-
-### Does this plugin work with WooCommerce?
-
-Yes. For maximum compatibility you should use WooCommerce version 3.6 or later.
 
 ### Does this plugin work if my site is using a two-factor authentication plugin?
 
@@ -125,18 +113,33 @@ A user needs the `edit_users` capability in order to switch user accounts. By de
 
 Yes. The `switch_users` meta capability can be explicitly granted to a user or a role to allow them to switch users regardless of whether or not they have the `edit_users` capability. For practical purposes, the user or role will also need the `list_users` capability so they can access the Users menu in the WordPress admin area.
 
+~~~php
+add_filter( 'user_has_cap', function( $allcaps, $caps, $args, $user ) {
+	if ( 'switch_to_user' === $args[0] ) {
+		if ( my_condition( $user ) ) {
+			$allcaps['switch_users'] = true;
+		}
+	}
+	return $allcaps;
+}, 9, 4 );
+~~~
+
+Note that this needs to happen before User Switching's own capability filtering, hence the priority of `9`.
+
 ### Can the ability to switch accounts be denied from users?
 
 Yes. User capabilities in WordPress can be set to `false` to deny them from a user. Denying the `switch_users` capability prevents the user from switching users, even if they have the `edit_users` capability.
 
-    add_filter( 'user_has_cap', function( $allcaps, $caps, $args, $user ) {
-        if ( 'switch_to_user' === $args[0] ) {
-            if ( my_condition() ) {
-                $allcaps['switch_users'] = false;
-            }
-        }
-        return $allcaps;
-    }, 9, 4 );
+~~~php
+add_filter( 'user_has_cap', function( $allcaps, $caps, $args, $user ) {
+	if ( 'switch_to_user' === $args[0] ) {
+		if ( my_condition( $user ) ) {
+			$allcaps['switch_users'] = false;
+		}
+	}
+	return $allcaps;
+}, 9, 4 );
+~~~
 
 Note that this needs to happen before User Switching's own capability filtering, hence the priority of `9`.
 
@@ -144,41 +147,47 @@ Note that this needs to happen before User Switching's own capability filtering,
 
 Yes. Use the `user_switching::maybe_switch_url()` method for this. It takes care of authentication and returns a nonce-protected URL for the current user to switch into the provided user account.
 
-    if ( method_exists( 'user_switching', 'maybe_switch_url' ) ) {
-        $url = user_switching::maybe_switch_url( $target_user );
-        if ( $url ) {
-            printf(
-                '<a href="%1$s">Switch to %2$s</a>',
-                esc_url( $url ),
-                esc_html( $target_user->display_name )
-            );
-        }
-    }
+~~~php
+if ( method_exists( 'user_switching', 'maybe_switch_url' ) ) {
+	$url = user_switching::maybe_switch_url( $target_user );
+	if ( $url ) {
+		printf(
+			'<a href="%1$s">Switch to %2$s</a>',
+			esc_url( $url ),
+			esc_html( $target_user->display_name )
+		);
+	}
+}
+~~~
 
 This link also works for switching back to the original user, but if you want an explicit link for this you can use the following code:
 
-    if ( method_exists( 'user_switching', 'get_old_user' ) ) {
-        $old_user = user_switching::get_old_user();
-        if ( $old_user ) {
-            printf(
-                '<a href="%1$s">Switch back to %2$s</a>',
-                esc_url( user_switching::switch_back_url( $old_user ) ),
-                esc_html( $old_user->display_name )
-            );
-        }
-    }
+~~~php
+if ( method_exists( 'user_switching', 'get_old_user' ) ) {
+	$old_user = user_switching::get_old_user();
+	if ( $old_user ) {
+		printf(
+			'<a href="%1$s">Switch back to %2$s</a>',
+			esc_url( user_switching::switch_back_url( $old_user ) ),
+			esc_html( $old_user->display_name )
+		);
+	}
+}
+~~~
 
 ### Can I determine whether the current user switched into their account?
 
 Yes. Use the `current_user_switched()` function for this.
 
-    if ( function_exists( 'current_user_switched' ) ) {
-        $switched_user = current_user_switched();
-        if ( $switched_user ) {
-            // User is logged in and has switched into their account.
-            // $switched_user is the WP_User object for their originating user.
-        }
-    }
+~~~php
+if ( function_exists( 'current_user_switched' ) ) {
+	$switched_user = current_user_switched();
+	if ( $switched_user ) {
+		// User is logged in and has switched into their account.
+		// $switched_user is the WP_User object for their originating user.
+	}
+}
+~~~
 
 ### Does this plugin allow a user to frame another user for an action?
 
@@ -205,49 +214,55 @@ Yes, there's a third party add-on plugin for this: [Admin Bar User Switching](ht
 
 Yes. When a user switches to another account, the `switch_to_user` hook is called:
 
-    /**
-     * Fires when a user switches to another user account.
-     *
-     * @since 0.6.0
-     * @since 1.4.0 The `$new_token` and `$old_token` parameters were added.
-     *
-     * @param int    $user_id     The ID of the user being switched to.
-     * @param int    $old_user_id The ID of the user being switched from.
-     * @param string $new_token   The token of the session of the user being switched to. Can be an empty string
-     *                            or a token for a session that may or may not still be valid.
-     * @param string $old_token   The token of the session of the user being switched from.
-     */
-    do_action( 'switch_to_user', $user_id, $old_user_id, $new_token, $old_token );
+~~~php
+/**
+ * Fires when a user switches to another user account.
+ *
+ * @since 0.6.0
+ * @since 1.4.0 The `$new_token` and `$old_token` parameters were added.
+ *
+ * @param int    $user_id     The ID of the user being switched to.
+ * @param int    $old_user_id The ID of the user being switched from.
+ * @param string $new_token   The token of the session of the user being switched to. Can be an empty string
+ *                            or a token for a session that may or may not still be valid.
+ * @param string $old_token   The token of the session of the user being switched from.
+ */
+do_action( 'switch_to_user', $user_id, $old_user_id, $new_token, $old_token );
+~~~
 
 When a user switches back to their originating account, the `switch_back_user` hook is called:
 
-    /**
-     * Fires when a user switches back to their originating account.
-     *
-     * @since 0.6.0
-     * @since 1.4.0 The `$new_token` and `$old_token` parameters were added.
-     *
-     * @param int       $user_id     The ID of the user being switched back to.
-     * @param int|false $old_user_id The ID of the user being switched from, or false if the user is switching back
-     *                               after having been switched off.
-     * @param string    $new_token   The token of the session of the user being switched to. Can be an empty string
-     *                               or a token for a session that may or may not still be valid.
-     * @param string    $old_token   The token of the session of the user being switched from.
-     */
-    do_action( 'switch_back_user', $user_id, $old_user_id, $new_token, $old_token );
+~~~php
+/**
+ * Fires when a user switches back to their originating account.
+ *
+ * @since 0.6.0
+ * @since 1.4.0 The `$new_token` and `$old_token` parameters were added.
+ *
+ * @param int       $user_id     The ID of the user being switched back to.
+ * @param int|false $old_user_id The ID of the user being switched from, or false if the user is switching back
+ *                               after having been switched off.
+ * @param string    $new_token   The token of the session of the user being switched to. Can be an empty string
+ *                               or a token for a session that may or may not still be valid.
+ * @param string    $old_token   The token of the session of the user being switched from.
+ */
+do_action( 'switch_back_user', $user_id, $old_user_id, $new_token, $old_token );
+~~~
 
 When a user switches off, the `switch_off_user` hook is called:
 
-    /**
-     * Fires when a user switches off.
-     *
-     * @since 0.6.0
-     * @since 1.4.0 The `$old_token` parameter was added.
-     *
-     * @param int    $old_user_id The ID of the user switching off.
-     * @param string $old_token   The token of the session of the user switching off.
-     */
-    do_action( 'switch_off_user', $old_user_id, $old_token );
+~~~php
+/**
+ * Fires when a user switches off.
+ *
+ * @since 0.6.0
+ * @since 1.4.0 The `$old_token` parameter was added.
+ *
+ * @param int    $old_user_id The ID of the user switching off.
+ * @param string $old_token   The token of the session of the user switching off.
+ */
+do_action( 'switch_off_user', $old_user_id, $old_token );
+~~~
 
 In addition, User Switching respects the following filters from WordPress core when appropriate:
 
@@ -256,9 +271,23 @@ In addition, User Switching respects the following filters from WordPress core w
 
 ### Do you accept donations?
 
-[I am accepting sponsorships via the GitHub Sponsors program](https://johnblackbourn.com/donations/) and any support you can give will help me maintain this plugin and keep it free for everyone.
+[I am accepting sponsorships via the GitHub Sponsors program](https://github.com/sponsors/johnbillion) and any support you can give will help me maintain this plugin and keep it free for everyone.
 
 ## Changelog ##
+
+### 1.7.0 ###
+
+* Redirect to the current post, term, user, or comment being edited when switching off
+* Clean up some user-facing messages
+* Apply basic styling to the Switch Back link that appears in the footer
+* Use a better placement for the Switch To menu on bbPress profiles
+* Use a more appropriate HTTP response code if switching off fails
+* Exclude `.editorconfig` from dist ZIP
+
+### 1.6.0 ###
+
+* Add a 'Switch To' link to the order screen in WooCommerce
+* Add a 'Switch back' link to the My Account screen and the login screen in WooCommerce
 
 ### 1.5.8 ###
 
@@ -348,79 +377,86 @@ In addition, User Switching respects the following filters from WordPress core w
 * Docblock improvements.
 * Coding standards improvements.
 
-### 0.5.2 ###
+### 1.0.9 ###
 
-- Farsi (Persian) translation by Amin Ab.
-- Display switch back links in Network Admin and login screen.
-- Avoid a BuddyPress bug preventing Switch To buttons from appearing.
+- Remove the bundled languages in favour of language packs from translate.wordpress.org.
 
 
-### 0.5.1 ###
+### 1.0.8 ###
 
-- Toolbar tweaks for WordPress 3.3.
-
-
-### 0.5.1.1 ###
-
-- Chinese Simplified translation by Sparanoid.
+- Chinese (Taiwan) and Czech translations.
+- Updated Dutch, Spanish, Hebrew, and German translations.
+- Add an ID attribute to the links that User Switching outputs on the WordPress login screen, BuddyPress screens, and bbPress screens.
+- Avoid a deprecated argument notice when the `user-actions` admin toolbar node has been removed.
 
 
-### 0.5.1.2 ###
+### 1.0.7 ###
 
-- German translation by Ralph Stenzel.
-
-
-### 0.5 ###
-
-- New "Switch off" function: Log out and log instantly back in again when needed (see the FAQ).
-
-
-### 0.4.1 ###
-
-- Support for upcoming changes to the admin bar in WordPress 3.3.
+- Azerbaijani, Danish, and Bosnian translations.
+- Add back the 'User Switching' heading on the user profile screen.
+- Correct the value passed to the `$old_user_id` parameter of the `switch_back_user` hook when a user has been switched off. This should be boolean `false` rather than `0`.
+- Docblocks for actions and filters.
+- More code standards tweaks.
 
 
-### 0.4 ###
+### 1.0.6 ###
 
-- Add some extended support for BuddyPress.
-- Add some extended support for Multisite.
-- Fix a permissions problem for users with no privileges.
-- Fix a PHP warning when used as a mu-plugin (thanks Scribu).
+- Correct the values passed to the `switch_back_user` action when a user switches back.
+- More code standards tweaks.
 
 
-### 0.3.2 ###
+### 1.0.5 ###
 
-- Fix the 'Switch back to' menu item in the WordPress admin bar (WordPress 3.1+).
-- Fix a formatting issue on the user profile page.
-
-
-### 0.3.1 ###
-
-- Prevent admins switching to multisite super admin accounts.
+- Norwegian translation by Per Søderlind.
+- Code standards tweaks.
 
 
-### 0.3 ###
+### 1.0.4 ###
 
-- Adds an admin bar menu item (WordPress 3.1+) for switching back to the user you switched from.
-
-
-### 0.2.2 ###
-
-- Respect the current 'Remember me' setting when switching users.
-- Redirect to home page instead of admin screen if the user you're switching to has no privileges.
+- Support for the new `logout_redirect` and `removable_query_args` filters in WordPress 4.2.
 
 
-### 0.2.1 ###
+### 1.0.3 ###
 
-- Edge case bugfix to prevent 'Switch back to...' message appearing when it shouldn't.
-
-
-### 0.2 ###
-
-- Functionality for switching back to user you switched from.
+- Croation translation by Ante Sepic.
+- Avoid PHP notices caused by other plugins which erroneously use boolean `true` as a capability.
 
 
-### 0.1 ###
+### 1.0.2 ###
 
-- Initial release.
+- Turkish translation by Abdullah Pazarbasi.
+- Romanian translation by ArianServ.
+- Dutch translation by Thom.
+- Greek translation by evigiannakou.
+- Bulgarian translation by Petya Raykovska.
+- Finnish translation by Sami Keijonen.
+- Italian translation by Alessandro Curci and Alessandro Tesoro.
+- Updated Arabic, Spanish, German, and Polish translations.
+
+
+### 1.0.1 ###
+
+- Shorten the names of User Switching's cookies to avoid problems with Suhosin's over-zealous default rules.
+- Add backwards compatibility for the deprecated `OLDUSER_COOKIE` constant.
+
+
+### 1.0 ###
+
+- Security hardening for sites that use HTTPS in the admin area and HTTP on the front end.
+- Add an extra auth check before the nonce verification.
+- Pretty icon next to the switch back links.
+
+
+### 0.9 ###
+
+- Minor fixes for the `login_redirect` filter.
+- Increase the specificity of the `switch_to_old_user` and `switch_off` nonces.
+
+
+### 0.8.9 ###
+
+- French translation by Fx Bénard.
+- Hebrew translation by Rami Y.
+- Indonesian translation by Eko Ikhyar.
+- Portuguese translation by Raphael Mendonça.
 
