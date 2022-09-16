@@ -11,7 +11,7 @@ Author:       Dustin Hartzler
 # Add support for Custom Post Type
 #-----------------------------------------------------------------
 function pharm_custom_post() {
-	//Providers
+	// Providers.
 	$labels = array(
 		'name'               => _x( 'Providers', 'post type general name' ),
 		'singular_name'      => _x( 'Provider', 'post type singular name' ),
@@ -25,22 +25,22 @@ function pharm_custom_post() {
 		'not_found'          => __( 'Nothing found' ),
 		'not_found_in_trash' => __( 'Nothing found in the Trash' ),
 		'parent_item_colon'  => '',
-		'menu_name'          => 'Providers'
+		'menu_name'          => 'Providers',
 	);
-	$args = array(
-		'labels'        => $labels,
-		'description'   => 'Holds all Providers',
-		'public'        => true,
+	$args   = array(
+		'labels'             => $labels,
+		'description'        => 'Holds all Providers',
+		'public'             => true,
 		'publicly_queryable' => true,
-		'menu_position' => 5,
-		'menu_icon'		=> 'dashicons-businessperson',
-		'show_in_rest'  => true,
-		'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields' ),
-		'has_archive'   => true,
+		'menu_position'      => 5,
+		'menu_icon'          => 'dashicons-businessperson',
+		'show_in_rest'       => true,
+		'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'custom-fields' ),
+		'has_archive'        => true,
 	);
 	register_post_type( 'provider', $args );
 
-    //Testimonials
+	// Testimonials.
 	$labels = array(
 		'name'               => _x( 'Testimonials', 'post type general name' ),
 		'singular_name'      => _x( 'Testimonial', 'post type singular name' ),
@@ -99,16 +99,14 @@ function my_taxonomies_providers() {
   }
   add_action( 'init', 'my_taxonomies_providers', 0 );
 
-function set_order_post_type($query) {
-  if($query->is_admin) {
-
-        if ($query->get('post_type') == 'provider')
-        {
-          $query->set('orderby', 'title');
-          $query->set('order', 'ASC');
-        }
-  }
-  return $query;
+/**
+ * Set order to random on Provider page.
+ */
+function set_order_post_type( $query ) {
+	if ( $query->get( 'post_type' ) === 'provider' ) {
+		$query->set( 'orderby', 'rand' );
+	}
+	return $query;
 }
 add_filter('pre_get_posts', 'set_order_post_type');
 

@@ -17,17 +17,6 @@ function mytheme_add_woocommerce_support() {
 }
 add_action( 'after_setup_theme', 'mytheme_add_woocommerce_support' );
 
-
-/**
-*  Display Providers Randomly on Providers page
-*/
-function dh_providers_random( $query ) {
-	if( $query->is_main_query() && !	is_admin() && is_post_type_archive( 'provider' ) ) {
-		$query->set( 'orderby', 'rand' );
-	}
-}
-add_action( 'pre_get_posts', 'dh_providers_random' );
-
 /**
 *  Allow HTML in Author's Bios
 */
