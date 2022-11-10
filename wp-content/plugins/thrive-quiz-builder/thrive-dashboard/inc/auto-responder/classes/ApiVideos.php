@@ -116,6 +116,7 @@ class ApiVideos {
 			'google_drive'     => '//fast.wistia.net/embed/iframe/q2u7970z2q?popover=true',
 			'dropbox'          => '//fast.wistia.net/embed/iframe/wzepho8uws?popover=true',
 			'fluentcrm'        => '//fast.wistia.net/embed/iframe/s29mi56rhr?popover=true',
+			'slack'            => '//fast.wistia.net/embed/iframe/08xwh61ctp?popover=true',
 		);
 
 	/**

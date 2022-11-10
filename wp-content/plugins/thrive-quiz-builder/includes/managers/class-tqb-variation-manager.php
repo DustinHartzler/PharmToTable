@@ -395,6 +395,15 @@ class TQB_Variation_Manager {
 			$quiz_template_id   = TQB_Post_meta::get_quiz_tpl_meta( $model['quiz_id'] );
 			$all_quiz_templates = tqb()->get_quiz_templates();
 			$quiz_template      = null;
+			$quiz_type_meta     = TQB_Post_meta::get_quiz_type_meta( $model['quiz_id'] );
+
+			if ( $quiz_template_id === '1' && $quiz_type_meta['type'] === Thrive_Quiz_Builder::QUIZ_TYPE_SURVEY ) {
+				$all_quiz_templates[0]['default_page_templates'] = array(
+					'tqb_splash'  => 'template_3',
+					'tqb_optin'   => 'template_1',
+					'tqb_results' => 'template_4',
+				);
+			}
 
 			foreach ( $all_quiz_templates as $qt ) {
 				if ( $quiz_template_id == $qt['id'] ) {

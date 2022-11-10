@@ -4,7 +4,8 @@
 <#=(item.rel ? ' rel="' + item.rel + '"' : '')#>
 <#=(item['jump-animation'] ? ' jump-animation="' + item['jump-animation'] + '"' : '')#>
 <#=(item['data-shortcode-id'] ? ' data-shortcode-id="' + item['data-shortcode-id'] + '"' : '')#>
-<#=(item['data-dynamic-link'] ? ' data-dynamic-link="' + item['data-dynamic-link'] + '"' : '')#>>
+<#=(item['data-dynamic-link'] ? ' data-dynamic-link="' + item['data-dynamic-link'] + '"' : '')#>
+<#=(item['data-custom-redirect'] ? ' data-custom-redirect="' + item['data-custom-redirect'] + '"' : '')#>>
 <# if ( config.type === 'mega' && level === 1 ) { #><span class="tcb-mm-text"><# } #><span class="tve-disabled-text-inner"><#= item.shortcode ? item.shortcode : item.label#></span><#if (item.children && item.children.length) { #><span class="tve-item-dropdown-trigger"><#=dropdown_icon#></span><#}#></span></a>
 
 <# if ( config.type === 'mega' && level === 1 && menuDescriptions[ item.id ] ) { #><#= menuDescriptions[ item.id ] #><# } #>

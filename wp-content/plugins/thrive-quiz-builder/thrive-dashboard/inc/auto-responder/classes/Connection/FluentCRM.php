@@ -17,22 +17,28 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'FluentCRM';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function hasTags() {
+	public function has_tags() {
+		return true;
+	}
 
+	/**
+	 * @return bool
+	 */
+	public function has_optin() {
 		return true;
 	}
 
@@ -48,8 +54,8 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'fluentcrm' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'fluentcrm' );
 	}
 
 	/**
@@ -57,14 +63,14 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed|void
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		if ( ! $this->pluginInstalled() ) {
-			return $this->error( __( 'FluentCRM plugin must be installed and activated.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'FluentCRM plugin must be installed and activated.', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $this->post( 'connection', array() ) );
+		$this->set_credentials( $this->post( 'connection', array() ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
 			return $this->error( '<strong>' . $result . '</strong>)' );
@@ -82,9 +88,9 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		if ( ! $this->pluginInstalled() ) {
-			return __( 'FluentCRM plugin must be installed and activated.', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'FluentCRM plugin must be installed and activated.', 'thrive-dash' );
 		}
 
 		return true;
@@ -98,14 +104,14 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		if ( ! $this->pluginInstalled() ) {
-			return __( 'FluentCRM plugin is not installed / activated', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'FluentCRM plugin is not installed / activated', 'thrive-dash' );
 		}
 
 		$name_array = array();
 		if ( ! empty( $arguments['name'] ) ) {
-			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 			$name_array = array(
 				'first_name' => $first_name,
 				'last_name'  => $last_name,
@@ -120,7 +126,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 			$prepared_args['custom_values'] = $this->buildMappedCustomFields( $arguments );
 		}
 		$prepared_args['tags'] = array();
-		$tag_key               = $this->getTagsKey();
+		$tag_key               = $this->get_tags_key();
 		if ( ! empty( $arguments[ $tag_key ] ) ) {
 			$prepared_args['tags'] = $this->importTags( $arguments[ $tag_key ] );
 		}
@@ -131,7 +137,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 
 		$data = [
 			'email' => $arguments['email'],
-			'lists' => array( $list_identifier )
+			'lists' => array( $list_identifier ),
 		];
 
 		$data = array_merge( $data, $name_array, $prepared_args );
@@ -140,7 +146,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 			$fluent  = FluentCrmApi( 'contacts' );
 			$contact = $fluent->createOrUpdate( $data );
 
-			if ( $contact->status == 'pending' ) {
+			if ( $contact->status === 'pending' ) {
 				$contact->sendDoubleOptinEmail();
 			}
 
@@ -154,7 +160,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	/**
 	 * Import tags
 	 *
-	 * @return bool|string true for success or error message for failure
+	 * @return array true for success or error message for failure
 	 */
 	public function importTags( $tags ) {
 		$imported_tags = array();
@@ -163,15 +169,15 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 			$tags = explode( ',', trim( $tags, ' ,' ) );
 
 			foreach ( $tags as $tag ) {
-				array_push( $inserted_tags, array(
+				$inserted_tags[] = array(
 					'title' => $tag,
-				) );
+				);
 			}
 
 			$inserted_tags = FluentCrmApi( 'tags' )->importBulk( $inserted_tags );//[1,2,3]
 
 			foreach ( $inserted_tags as $new_tag ) {
-				array_push( $imported_tags, $new_tag->id );
+				$imported_tags[] = $new_tag->id;
 
 			}
 		}
@@ -198,7 +204,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 		$form_data = thrive_safe_unserialize( base64_decode( $args['tve_mapping'] ) );
 		if ( is_array( $form_data ) ) {
 
-			foreach ( $this->getMappedFieldsIDs() as $mapped_field ) {
+			foreach ( $this->get_mapped_field_ids() as $mapped_field ) {
 
 				// Extract an array with all custom fields (siblings) names from form data
 				// {ex: [mapping_url_0, .. mapping_url_n] / [mapping_text_0, .. mapping_text_n]}
@@ -217,7 +223,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 						$field_id = $form_data[ $cf_name ][ $this->_key ];
 						$cf_name  = str_replace( '[]', '', $cf_name );
 						if ( ! empty( $args[ $cf_name ] ) ) {
-							$args[ $cf_name ]         = $this->processField( $args[ $cf_name ] );
+							$args[ $cf_name ]         = $this->process_field( $args[ $cf_name ] );
 							$mapped_data[ $field_id ] = sanitize_text_field( $args[ $cf_name ] );
 						}
 
@@ -234,7 +240,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		// no API instance needed here
 		return null;
 	}
@@ -244,10 +250,10 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return array|bool
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 		if ( ! $this->pluginInstalled() ) {
-			$this->_error = __( 'FluentCRM plugin could be found.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = __( 'FluentCRM plugin could be found.', 'thrive-dash' );
 
 			return false;
 		}
@@ -272,7 +278,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	public function get_tags() {
 
 		if ( ! $this->pluginInstalled() ) {
-			$this->_error = __( 'FluentCRM plugin could be found.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = __( 'FluentCRM plugin could be found.', 'thrive-dash' );
 
 			return array();
 		}
@@ -315,7 +321,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 */
 	public function get_api_custom_fields( $params, $force = false, $get_all = false ) {
 
-		return $this->getAllCustomFields( $force );
+		return $this->get_all_custom_fields( $force );
 	}
 
 	/**
@@ -323,12 +329,12 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return array|mixed
 	 */
-	public function getAllCustomFields( $force ) {
+	public function get_all_custom_fields( $force ) {
 
 		$custom_data = array();
 		if ( class_exists( 'FluentCrm\App\Models\CustomContactField' ) ) {
 
-			$cached_data = $this->_get_cached_custom_fields();
+			$cached_data = $this->get_cached_custom_fields();
 			if ( false === $force && ! empty( $cached_data ) ) {
 				return $cached_data;
 			}
@@ -373,11 +379,11 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '{{contact.email}}';
 	}
 
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list', 'optin', 'tag_input' );
+	public function get_automator_add_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'mailing_list', 'api_fields', 'optin', 'tag_input' ) );
 	}
 }

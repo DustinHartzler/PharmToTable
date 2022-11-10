@@ -9,9 +9,9 @@ $interval_content = array();
 ?>
 
 <div id="tqb-draggable-state-area" class="ui-widget-content" style="position: absolute; top:100px; left:0;">
-	<p class="tqb-state-title"><?php echo esc_html__( 'Preview Mode', Thrive_Quiz_Builder::T ); ?></p>
+	<p class="tqb-state-title"><?php echo esc_html__( 'Preview Mode', 'thrive-quiz-builder' ); ?></p>
 	<div class="tqb-state-picker">
-		<p class="tqb-state-option"><?php echo esc_html__( 'Choose state to preview:', Thrive_Quiz_Builder::T ); ?></p>
+		<p class="tqb-state-option"><?php echo esc_html__( 'Choose state to preview:', 'thrive-quiz-builder' ); ?></p>
 		<select id="tqb-state-picker">
 			<?php foreach ( $intervals as $key => $value ) : ?>
 				<option

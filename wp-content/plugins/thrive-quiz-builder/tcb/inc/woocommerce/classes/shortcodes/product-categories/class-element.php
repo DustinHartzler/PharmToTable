@@ -231,7 +231,7 @@ class Element extends \TCB_Element_Abstract {
 								array(
 									array(
 										'name'  => __( 'Display top level categories', 'thrive-cb' ),
-										'value' => '',
+										'value' => 0,
 									),
 								),
 								Main::get_product_categories_for_select()

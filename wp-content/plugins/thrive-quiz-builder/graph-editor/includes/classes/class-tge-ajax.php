@@ -2,7 +2,7 @@
 /**
  * Thrive Themes - https://thrivethemes.com
  *
- * @package thrive-quiz-builder
+ * @package thrive-graph-editor
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -52,7 +52,7 @@ class TGE_Ajax {
 		 * User needs to have TQB capability to use the graph editor
 		 */
 		if ( ! TQB_Product::has_access() ) {
-			$this->error( __( 'You do not have this capability', Thrive_Quiz_Builder::T ) );
+			exit( 1 );
 		}
 
 		$response = TGE_Ajax_Controller::instance()->handle();

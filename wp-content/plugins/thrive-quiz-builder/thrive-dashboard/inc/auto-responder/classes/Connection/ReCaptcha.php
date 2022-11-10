@@ -18,16 +18,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'recaptcha';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'ReCaptcha';
 	}
 
@@ -36,8 +37,8 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'recaptcha' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'recaptcha' );
 	}
 
 	/**
@@ -47,12 +48,12 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$site   = ! empty( $_POST['site_key'] ) ? sanitize_text_field( $_POST['site_key'] ) : '';
 		$secret = ! empty( $_POST['secret_key'] ) ? sanitize_text_field( $_POST['secret_key'] ) : '';
 
 		if ( empty( $site ) || empty( $secret ) ) {
-			return $this->error( __( 'Both Site Key and Secret Key fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Both Site Key and Secret Key fields are required', 'thrive-dash' ) );
 		}
 
 		//recreate credential object
@@ -62,12 +63,12 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 			'secret_key' => $secret,
 		);
 
-		$this->setCredentials( $credentials );
+		$this->set_credentials( $credentials );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Incorrect Secret Key.', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Incorrect Secret Key.', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -75,7 +76,7 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 		 */
 		$this->save();
 
-		return $this->success( __( 'ReCaptcha connected successfully!', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'ReCaptcha connected successfully!', 'thrive-dash' ) );
 	}
 
 	/**
@@ -83,12 +84,12 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		$CAPTCHA_URL = 'https://www.google.com/recaptcha/api/siteverify';
 
 		$_capthca_params = array(
 			'response' => '',
-			'secret'   => $this->param( 'secret_key' )
+			'secret'   => $this->param( 'secret_key' ),
 		);
 
 		$request  = tve_dash_api_remote_post( $CAPTCHA_URL, array( 'body' => $_capthca_params ) );
@@ -102,7 +103,7 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 
 
 	public function getSiteKey() {
-		$this->getCredentials();
+		$this->get_credentials();
 
 		return $this->param( 'site_key' );
 	}
@@ -110,20 +111,20 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 	/**
 	 * @return string
 	 */
-	public function customSuccessMessage() {
+	public function custom_success_message() {
 		return ' ';
 	}
 
 	/*
 	 * Those functions do not apply
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 	}
 
-	protected function _getLists() {
+	protected function _get_lists() {
 	}
 
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 	}
 
 

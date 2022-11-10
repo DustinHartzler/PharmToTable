@@ -6,6 +6,7 @@
 		'staging1' => 'https://staging.thrivethemes.com',
 		'staging2' => 'https://staging2.thrivethemes.com',
 		'staging3' => 'https://staging3.thrivethemes.com',
+		'staging5' => 'https://staging-ttw.com',
 		'hetzner'  => 'https://staging-hetz.thrivethemes.com',
 	);
 	?>
@@ -30,7 +31,9 @@
 		</li>
 		<li>
 			<b>License details fetched from TTW:</b>
-			<?php echo var_export( TD_TTW_User_Licenses::get_instance()->get(), true ); ?>
+			<pre>
+					<?php echo print_r( TD_TTW_User_Licenses::get_instance()->get(), true ); ?>
+			</pre>
 		</li>
 		<li>
 			<b>OLD way thrive_license</b>: <?php echo var_export( get_option( 'thrive_license', array() ), true ) ?>

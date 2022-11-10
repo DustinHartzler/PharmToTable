@@ -474,9 +474,9 @@ class TCB_Editor {
 		/* build api connections localization */
 		$api_connections      = array();
 		$api_connections_data = array();
-		foreach ( Thrive_Dash_List_Manager::getAvailableAPIs( true, array( 'email', 'social', 'storage' ) ) as $key => $connection_instance ) {
-			$api_connections[ $key ]      = $connection_instance->getTitle();
-			$api_connections_data[ $key ] = $connection_instance->getDataForSetup();
+		foreach ( Thrive_Dash_List_Manager::get_available_apis( true, [ 'exclude_types' => [ 'email', 'social', 'storage', 'collaboration' ] ] ) as $key => $connection_instance ) {
+			$api_connections[ $key ]      = $connection_instance->get_title();
+			$api_connections_data[ $key ] = $connection_instance->get_data_for_setup();
 		}
 
 		$data = array(
@@ -495,7 +495,6 @@ class TCB_Editor {
 			'options'                       => $this->elements->component_options(),
 			'fonts'                         => $fm->all_fonts(),
 			'landing_page'                  => $is_landing_page,
-			'tve_global_scripts'            => $this->post_global_scripts( $post ),
 			'templates_path'                => TVE_LANDING_PAGE_TEMPLATE,
 			'dash_url'                      => TVE_DASH_URL,
 			'pinned_category'               => $this->elements->pinned_category,
@@ -516,18 +515,18 @@ class TCB_Editor {
 				 */
 				$base_path = TVE_DASH_PATH . '/inc/auto-responder/views/images/';
 				$base_url  = TVE_DASH_URL . '/inc/auto-responder/views/images/';
-				$png       = $connection->getKey() . '.png';
+				$png       = $connection->get_key() . '.png';
 
-				$credentials = $connection->getCredentials();
+				$credentials = $connection->get_credentials();
 
 				return array(
-					'name'      => $connection->getTitle(),
+					'name'      => $connection->get_title(),
 					'client_id' => isset( $credentials['client_id'] ) ? $credentials['client_id'] : '',
 					'logo'      => file_exists( $base_path . 'square/' . $png ) ? ( $base_url . 'square/' . $png ) : ( $base_url . $png ),
 				);
-			}, Thrive_Dash_List_Manager::getAvailableAPIsByType( true, array( 'storage' ) ) ),
-			'connected_apis_custom_fields'  => is_callable( 'Thrive_Dash_List_Manager::getAvailableCustomFields' ) ? Thrive_Dash_List_Manager::getAvailableCustomFields() : array(),
-			'apis_custom_fields_mapper'     => is_callable( 'Thrive_Dash_List_Manager::getCustomFieldsMapper' ) ? Thrive_Dash_List_Manager::getCustomFieldsMapper() : array(),
+			}, Thrive_Dash_List_Manager::get_available_apis( true, [ 'include_types' => [ 'storage' ] ] ) ),
+			'connected_apis_custom_fields'  => Thrive_Dash_List_Manager::get_available_custom_fields(),
+			'apis_custom_fields_mapper'     => Thrive_Dash_List_Manager::get_custom_fields_mapper(),
 			'colors'                        => array(
 				'favorites'      => tve_convert_favorite_colors(),
 				'globals'        => array_reverse( tcb_color_manager()->get_list() ),
@@ -605,6 +604,7 @@ class TCB_Editor {
 				 *
 				 */
 				'file_upload_validation' => apply_filters( 'tcb_file_upload_validation', true ),
+				'custom_tag_apis'        => TCB_Utils::get_api_list_with_tag_support(),
 			),
 			'froalaMode'                    => get_user_meta( $current_user->ID, 'froalaMode', true ),
 			'default_styles'                => tve_get_default_styles( false ),
@@ -614,6 +614,7 @@ class TCB_Editor {
 			'lg_email_shortcodes'           => $this->get_lg_email_shortcodes(),
 			'dismissed_tooltips'            => (array) get_user_meta( wp_get_current_user()->ID, 'tcb_dismissed_tooltips', true ),
 			'post_parent'                   => empty( $post->post->post_parent ) ? '' : get_post( $post->post->post_parent ),
+			'categories'                    => TCB_Post_List_Filter::localize_filter_categories(),
 		);
 
 		/** Do not localize anything that's not necessary */
@@ -635,6 +636,20 @@ class TCB_Editor {
 				$data['global_styles']['tpl_button']     = $landing_page->template_styles['button'];
 				$data['global_styles']['tpl_section']    = $landing_page->template_styles['section'];
 				$data['global_styles']['tpl_contentbox'] = $landing_page->template_styles['contentbox'];
+			}
+
+			/* Only localize when TTB is not active */
+			if ( ! tve_dash_is_ttb_active() ) {
+				$lp_palettes_instance = $landing_page->get_palette_instance();
+				if ( $lp_palettes_instance ) {
+					$data['template_palettes'] = $lp_palettes_instance->get_smart_lp_palettes_v2();
+					$data['skin_colors']       = array(
+						'skin_palettes'      => $lp_palettes_instance->get_smart_lp_palettes_v2(),
+						'skin_main_variable' => '--tcb-theme-main-master',
+						'palette_colors'     => $lp_palettes_instance->tcb_get_palettes_from_config(),
+					);
+				}
+
 			}
 		}
 
@@ -971,8 +986,9 @@ class TCB_Editor {
 		$landing_page = tcb_landing_page( $this->post->ID );
 
 		return apply_filters( 'tcb_alter_template_data', array(
-			'styles' => $landing_page->template_styles,
-			'vars'   => $landing_page->template_vars,
+			'styles'        => $landing_page->template_styles,
+			'vars'          => $landing_page->template_vars,
+			'skin_palettes' => $landing_page->palettes,
 		), $landing_page );
 	}
 
@@ -1147,11 +1163,14 @@ class TCB_Editor {
 	/**
 	 * Prepare the global scripts ( head, body ) for a (possible) landing page
 	 *
-	 * @param TCB_Post $post
+	 * @param null|TCB_Post $post
 	 *
 	 * @return array
 	 */
-	public function post_global_scripts( $post ) {
+	public function post_global_scripts( $post = null ) {
+		if ( ! $post ) {
+			$post = tcb_post();
+		}
 		/* landing page template - we need to allow the user to setup head and footer scripts */
 		$tve_global_scripts = $post->meta( 'tve_global_scripts' );
 		if ( empty( $tve_global_scripts ) || ! $post->is_landing_page() ) {

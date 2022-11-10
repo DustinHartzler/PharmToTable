@@ -86,7 +86,7 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 		}
 
 		$menu = array(
-			'menu'       => array(
+			'menu'                => array(
 				'config' => array(
 					'MenuPalettes'       => array(
 						'config'  => array(),
@@ -107,7 +107,6 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 						),
 					),
 					'SelectMenu'         => array(),
-					'MenuDirection'      => array(),
 					'HoverEffect'        => array(
 						'config'  => array(
 							'name'    => __( 'Hover Effect', 'thrive-cb' ),
@@ -373,21 +372,21 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 				),
 			),
-			'background' => array(
+			'background'          => array(
 				'config' => array(
 					'css_suffix' => ' .tve_w_menu',
 				),
 			),
-			'typography' => array(
+			'typography'          => array(
 				'hidden' => true,
 			),
-			'animation'  => array( 'hidden' => true ),
-			'shadow'     => array(
+			'animation'           => array( 'hidden' => true ),
+			'shadow'              => array(
 				'config' => array(
 					'css_suffix' => ' .tve_w_menu',
 				),
 			),
-			'borders'    => array(
+			'borders'             => array(
 				'config' => array(
 					'css_suffix' => ' .tve_w_menu',
 					'Corners'    => array(
@@ -395,7 +394,7 @@ class TCB_Menu_Element extends TCB_Cloud_Template_Element_Abstract {
 					),
 				),
 			),
-			'layout'     => array(
+			'layout'              => array(
 				'disabled_controls' => array(
 					'Display',
 					'Width',

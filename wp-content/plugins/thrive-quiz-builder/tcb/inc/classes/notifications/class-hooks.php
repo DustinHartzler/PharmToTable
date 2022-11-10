@@ -118,8 +118,7 @@ class Hooks {
 	 * Only load global variables in the Global Elements tab inside the Dashboard
 	 */
 	public static function add_global_variables() {
-		$screen = get_current_screen();
-		if ( $screen !== null && $screen->id === 'admin_page_tcb_admin_dashboard' ) {
+		if ( tve_get_current_screen_key() === 'admin_page_tcb_admin_dashboard' ) {
 			tve_load_global_variables();
 		}
 	}

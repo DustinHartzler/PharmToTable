@@ -19,10 +19,6 @@ final class Thrive_Image_Editor {
 	const VIDEO_URL = '//fast.wistia.net/embed/iframe/h20luxtirb?popover=true';
 
 	/**
-	 * Translation Domain
-	 */
-	const T = 'thrive_image_editor';
-	/**
 	 * @var $this
 	 */
 	private static $_instance;
@@ -97,6 +93,7 @@ final class Thrive_Image_Editor {
 
 	private function init() {
 		add_action( 'template_redirect', array( $this, 'init_editor' ) );
+		$this->load_plugin_textdomain();
 	}
 
 	public function init_editor() {
@@ -134,6 +131,13 @@ final class Thrive_Image_Editor {
 		foreach ( $images as $image ) {
 			tie_delete_image( $image );
 		}
+	}
+
+	public function load_plugin_textdomain() {
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'thrive-image-editor' );
+
+		load_textdomain( 'thrive-image-editor', WP_LANG_DIR . '/thrive/thrive-image-editor-' . $locale . '.mo' );
+		load_plugin_textdomain( 'thrive-image-editor', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 	}
 
 	public function url( $file = '' ) {

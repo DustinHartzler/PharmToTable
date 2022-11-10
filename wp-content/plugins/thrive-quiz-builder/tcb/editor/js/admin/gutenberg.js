@@ -1,5 +1,5 @@
 ( function ( $ ) {
-	var ThriveGutenbergSwitch = {
+	const ThriveGutenbergSwitch = {
 
 		/**
 		 * Check if we're using the block editor
@@ -10,36 +10,36 @@
 		},
 
 		init: function () {
-			var self = this;
+			const self = this;
 			this.$gutenberg = $( '#editor' );
 			this.$architectNotificationContent = $( '#thrive-gutenberg-switch' ).html();
 			this.$architectDisplay = $( '<div id="tar-display">' ).append( this.$architectNotificationContent );
 			this.$architectLauncher = this.$architectDisplay.find( '#thrive_preview_button' );
 			this.isPostBox = this.$architectNotificationContent.indexOf( 'postbox' ) !== - 1;
 
-			$( window ).on( 'storage.tcb', function ( e ) {
-				var current_post = wp.data.select( "core/editor" ).getCurrentPost(),
-					post;
+			$( window ).on( 'storage.tcb', function ( event ) {
+				const currentPost = wp.data.select( 'core/editor' ).getCurrentPost();
+					let post;
 
 				try {
-					post = JSON.parse( e.originalEvent.newValue );
+					post = JSON.parse( event.originalEvent.newValue );
 				} catch ( e ) {
 
 				}
 
-				if ( post && post.ID && e.originalEvent.key === 'tve_post_options_change' && post.ID === Number( current_post.id ) ) {
+				if ( post && post.ID && event.originalEvent.key === 'tve_post_options_change' && post.ID === Number( currentPost.id ) ) {
 					window.location.reload();
 				}
 			} );
 
 			wp.data.subscribe( function () {
-				var coreEditor = wp.data.select( 'core/editor' );
+				const coreEditor = wp.data.select( 'core/editor' );
 				if ( coreEditor ) {
-					var isSavingPost = coreEditor.isSavingPost(),
+					const isSavingPost = coreEditor.isSavingPost(),
 						isAutosavingPost = coreEditor.isAutosavingPost();
 
 					if ( isSavingPost && ! isAutosavingPost ) {
-						var data = JSON.stringify( coreEditor.getCurrentPost() );
+						const data = JSON.stringify( coreEditor.getCurrentPost() );
 
 						window.localStorage.setItem( 'tve_post_options_change', data );
 					}
@@ -54,11 +54,11 @@
 			} );
 		},
 		render: function () {
-			var self = this,
-				shouldBindEvents = false;
+			const self = this;
+			let shouldBindEvents = false;
 			if ( this.isPostBox ) {
 				if ( ! $( '#tar-display' ).length ) {
-					var $postTitle = this.$gutenberg.find( '.editor-post-title' );
+					const $postTitle = this.$gutenberg.find( '.editor-post-title' );
 					if ( $postTitle.length ) {
 						if ( $postTitle[ 0 ].tagName === 'DIV' ) {
 							$postTitle.append( this.$architectDisplay );
@@ -84,7 +84,7 @@
 				}
 			}
 
-			// so we can use saved styles
+			/* So we can use saved styles */
 			$( '.editor-block-list__layout,.block-editor-block-list__layout' ).addClass( 'tcb-style-wrap' );
 			if ( shouldBindEvents ) {
 				this.bindEvents();
@@ -92,9 +92,9 @@
 		},
 
 		bindEvents: function () {
-			var self = this;
+			const self = this;
 			$( '#tcb2-show-wp-editor' ).on( 'click', function () {
-				var $editlink = self.$gutenberg.find( '.tcb-enable-editor' ),
+				const $editlink = self.$gutenberg.find( '.tcb-enable-editor' ),
 					$postbox = $editlink.closest( '.postbox' );
 
 				$.ajax( {
@@ -107,7 +107,6 @@
 						action: 'tcb_admin_ajax_controller',
 						route: 'disable_tcb'
 					}
-				} ).done( function ( response ) {
 				} );
 
 				$postbox.next( '.tcb-flags' ).find( 'input' ).prop( 'disabled', false );
@@ -137,12 +136,12 @@
 		 * Fix block height once returning to gutenberg editor
 		 */
 		fixBlocksPreview: function () {
-			var blocks = document.querySelectorAll( '[data-type*="thrive"] iframe' ),
+			const blocks = document.querySelectorAll( '[data-type*="thrive"] iframe' ),
 				tveOuterHeight = function ( el ) {
 					if ( ! el ) {
 						return 0;
 					}
-					var height = el.offsetHeight,
+					let height = el.offsetHeight,
 						style = getComputedStyle( el );
 
 					height += parseInt( style.marginTop ) + parseInt( style.marginBottom );
@@ -150,7 +149,7 @@
 				};
 
 			Array.prototype.forEach.call( blocks, function ( iframe ) {
-				var iframeDocument = iframe.contentDocument;
+				const iframeDocument = iframe.contentDocument;
 
 				iframe.style.setProperty(
 					'height',
@@ -171,7 +170,7 @@
 				} );
 
 
-				var height = tveOuterHeight(
+				const height = tveOuterHeight(
 					iframeDocument.body
 				);
 

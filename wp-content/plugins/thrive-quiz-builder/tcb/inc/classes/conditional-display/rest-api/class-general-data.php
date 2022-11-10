@@ -191,6 +191,8 @@ class General_Data {
 	 * @return \WP_Error|bool
 	 */
 	public static function route_permission() {
-		return \TCB_Product::has_external_access();
+		$post_id = isset( $_REQUEST['post_id'] ) ? $_REQUEST['post_id'] : null;
+
+		return \TCB_Product::has_external_access( $post_id );
 	}
 }

@@ -2,7 +2,7 @@
 
 class TCB_TQB_Answer_Feedback extends TCB_Element_Abstract {
 	public function name() {
-		return __( 'Answer Feedback Container', Thrive_Quiz_Builder::T );
+		return __( 'Answer Feedback Container', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {

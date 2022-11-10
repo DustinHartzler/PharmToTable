@@ -40,7 +40,7 @@ class Thrive_Dash_Api_Infusionsoft {
 
 		// Make sure no error already exists
 		if ( $this->error ) {
-			throw new Thrive_Dash_Api_Infusionsoft_InfusionsoftException( __( 'You must provide a subdomain and API key for your Keap (Infusionsoft) application.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Thrive_Dash_Api_Infusionsoft_InfusionsoftException( __( 'You must provide a subdomain and API key for your Keap (Infusionsoft) application.', 'thrive-dash' ) );
 		}
 
 		// Get the full method name with the service and method

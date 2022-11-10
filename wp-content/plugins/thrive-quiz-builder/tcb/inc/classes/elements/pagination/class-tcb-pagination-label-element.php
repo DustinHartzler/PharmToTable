@@ -54,11 +54,12 @@ class TCB_Pagination_Label_Element extends TCB_Element_Abstract {
 			),
 		);
 
-		$components['typography']['config']['css_suffix'] = ' p';
+		$pagination_label_class = 'tcb-pagination-label-content';
+		$components['typography']['config']['css_suffix'] = ' .' . $pagination_label_class;
 
 		foreach ( $components['typography']['config'] as $control => $config ) {
 			if ( is_array( $config ) && $control !== 'FontFace' ) {
-				$components['typography']['config'][ $control ]['css_suffix'] = ' p';
+				$components['typography']['config'][ $control ]['css_suffix'] = ' .' . $pagination_label_class;
 				$components['typography']['config'][ $control ]['important']  = true;
 			}
 		}
@@ -66,10 +67,10 @@ class TCB_Pagination_Label_Element extends TCB_Element_Abstract {
 		/* fontface uses 'to' instead of css_suffix so it reads the values properly */
 		$components['typography']['config']['FontFace']['css_suffix'] = '';
 		$components['typography']['config']['FontFace']['important']  = true;
-		$components['typography']['config']['FontFace']['to']         = 'p';
+		$components['typography']['config']['FontFace']['to']         = '.' . $pagination_label_class;
 
 		/* add a suffix and prefix for the shadow controls */
-		$components['shadow']['config']['css_suffix'] = ' p';
+		$components['shadow']['config']['css_suffix'] = ' .' . $pagination_label_class;
 		$components['shadow']['config']['css_prefix'] = $prefix_config;
 		$components['shadow']['config']['important']  = true;
 

@@ -61,7 +61,7 @@ class TIE_Ajax {
 
 		if ( ! isset( $_FILES['badge'] ) ) {
 			wp_send_json_error( array(
-				'message' => __( 'Badge content empty', Thrive_Image_Editor::T ),
+				'message' => __( 'Badge content empty', 'thrive-image-editor' ),
 			) );
 		}
 
@@ -71,12 +71,12 @@ class TIE_Ajax {
 
 		if ( empty( $url ) ) {
 			wp_send_json_error( array(
-				'message' => __( 'Badge could not be saved', Thrive_Image_Editor::T ),
+				'message' => __( 'Badge could not be saved', 'thrive-image-editor' ),
 			) );
 		}
 
 		wp_send_json_success( array(
-			'message' => __( 'Badge saved', Thrive_Image_Editor::T ),
+			'message' => __( 'Badge saved', 'thrive-image-editor' ),
 			'url'     => $url,
 		) );
 
@@ -115,12 +115,12 @@ class TIE_Ajax {
 			}
 
 			wp_send_json_success( array(
-				'message' => __( 'All changes saved!', Thrive_Image_Editor::T ),
+				'message' => __( 'All changes saved!', 'thrive-image-editor' ),
 			) );
 		}
 
 		wp_send_json_error( array(
-			'message' => __( 'Changes could not be saved!', Thrive_Image_Editor::T ),
+			'message' => __( 'Changes could not be saved!', 'thrive-image-editor' ),
 		) );
 	}
 }

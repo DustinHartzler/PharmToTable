@@ -58,7 +58,7 @@
 							<?php else : ?>
 								<div class="tqb-answer-oeq-type">
 									<div class="tqb-answer-oeq">
-										<?php echo esc_html__( 'Write your response here', Thrive_Quiz_Builder::T ); ?>
+										<?php echo esc_html__( 'Write your response here', 'thrive-quiz-builder' ); ?>
 									</div>
 								</div>
 							<?php endif; ?>

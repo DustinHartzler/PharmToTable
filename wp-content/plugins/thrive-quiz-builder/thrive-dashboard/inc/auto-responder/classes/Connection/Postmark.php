@@ -21,14 +21,14 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'email';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Postmark';
 	}
 
@@ -37,8 +37,8 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'postmark' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'postmark' );
 	}
 
 	/**
@@ -46,25 +46,25 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 *
 	 * on error, it should register an error message (and redirect?)
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$key   = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_text_field( $_POST['connection']['email'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Postmark key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Postmark key', 'thrive-dash' ) );
 		}
 
 		if ( empty( $email ) ) {
-			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Email field must not be empty', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Postmark using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Postmark using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -72,7 +72,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 		 */
 		$this->save();
 
-		return $this->success( __( 'Postmark connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Postmark connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -80,8 +80,8 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
-		$postmark = $this->getApi();
+	public function test_connection() {
+		$postmark = $this->get_api();
 
 		if ( isset( $_POST['connection']['email'] ) ) {
 			$from_email = sanitize_email( $_POST['connection']['email'] );
@@ -127,7 +127,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 		/**
 		 * @var $postmark Thrive_Dash_Api_Postmark
 		 */
-		$postmark = $this->getApi();
+		$postmark = $this->get_api();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'postmark' );
 		if ( is_array( $credentials ) && ! empty( $credentials['email'] ) ) {
@@ -207,13 +207,13 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 *
 	 */
 	public function sendEmail( $post_data ) {
-		$postmark    = $this->getApi();
-		$credentials = $this->getCredentials();
+		$postmark    = $this->get_api();
+		$credentials = $this->get_credentials();
 
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );
@@ -268,7 +268,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_Postmark( $this->param( 'key' ) );
 	}
 
@@ -277,7 +277,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 	}
 
@@ -289,7 +289,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 	}
 }

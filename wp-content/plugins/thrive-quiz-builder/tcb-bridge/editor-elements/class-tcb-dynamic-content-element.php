@@ -17,7 +17,7 @@ class TCB_Dynamic_Content_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Dynamic Content', Thrive_Quiz_Builder::T );
+		return __( 'Dynamic Content', 'thrive-quiz-builder' );
 	}
 
 	/**
@@ -86,6 +86,6 @@ class TCB_Dynamic_Content_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return __( 'Thrive Quiz Builder', Thrive_Quiz_Builder::T );
+		return __( 'Thrive Quiz Builder', 'thrive-quiz-builder' );
 	}
 }

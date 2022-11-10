@@ -90,7 +90,7 @@ class TGE_Ajax_Controller {
 		$function = $route . '_action';
 
 		if ( ! method_exists( $this, $function ) ) {
-			$this->error( sprintf( __( 'Method %s not implemented', Thrive_Graph_Editor::T ), $function ) );
+			$this->error( sprintf( __( 'Method %s not implemented', 'thrive-graph-editor' ), $function ) );
 		}
 
 		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
@@ -125,7 +125,7 @@ class TGE_Ajax_Controller {
 		switch ( $method ) {
 			case 'PUT':
 				if ( empty( $model['quiz_id'] ) ) {
-					$this->error( __( 'Question actions cannot be performed without quiz_id', Thrive_Graph_Editor::T ) );
+					$this->error( __( 'Question actions cannot be performed without quiz_id', 'thrive-graph-editor' ) );
 				}
 				$question_manager = new TGE_Question_Manager( $model['quiz_id'] );
 
@@ -135,7 +135,7 @@ class TGE_Ajax_Controller {
 					return $question_manager->prepare_question( $question );
 				}
 
-				return $this->error( __( 'Question could not be saved' ), Thrive_Graph_Editor::T );
+				return $this->error( __( 'Question could not be saved' ), 'thrive-graph-editor' );
 
 			case 'DELETE':
 				$id               = (int) $this->param( 'id' );
@@ -144,7 +144,7 @@ class TGE_Ajax_Controller {
 				return $question_manager->delete_question( $id );
 		}
 
-		$this->error( __( 'No action could be executed on question route', Thrive_Graph_Editor::T ) );
+		$this->error( __( 'No action could be executed on question route', 'thrive-graph-editor' ) );
 	}
 
 	protected function connection_action( $method, $model ) {
@@ -155,7 +155,7 @@ class TGE_Ajax_Controller {
 				return $link_manager->connect();
 				break;
 		}
-		$this->error( __( 'No action could be executed on connection route', Thrive_Graph_Editor::T ) );
+		$this->error( __( 'No action could be executed on connection route', 'thrive-graph-editor' ) );
 	}
 
 	protected function disconnection_action( $method, $model ) {
@@ -168,7 +168,7 @@ class TGE_Ajax_Controller {
 				return $saved;
 				break;
 		}
-		$this->error( __( 'No action could be executed on connection route', Thrive_Graph_Editor::T ) );
+		$this->error( __( 'No action could be executed on connection route', 'thrive-graph-editor' ) );
 	}
 
 	/**

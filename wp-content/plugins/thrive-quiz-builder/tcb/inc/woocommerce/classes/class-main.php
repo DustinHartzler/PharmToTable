@@ -190,12 +190,12 @@ class Main {
 	 * @return bool
 	 */
 	public static function needs_woo_enqueued() {
-		$id                   = get_the_ID();
-		$is_lp                = tve_post_is_landing_page( $id );
+		$post_id              = get_the_ID();
+		$is_lp                = tve_post_is_landing_page( $post_id );
 		$woocommerce_disabled = \TCB\Lightspeed\Woocommerce::is_woocommerce_disabled( $is_lp );
 		$woocommerce_key      = $is_lp ? \TCB\Lightspeed\Woocommerce::DISABLE_WOOCOMMERCE_LP : \TCB\Lightspeed\Woocommerce::DISABLE_WOOCOMMERCE;
 
-		$woo_option = get_post_meta( $id, $woocommerce_key, true );
+		$woo_option = get_post_meta( $post_id, $woocommerce_key, true );
 
 		$needs_woocommerce = ( isset( $GLOBALS['optimized_advanced_assets'] ) ||
 		                       ! isset( $woo_option ) ||
@@ -203,7 +203,7 @@ class Main {
 		                       ! $woocommerce_disabled ||
 		                       ! empty( $_GET['force-all-js'] ) ||
 		                       is_editor_page_raw() || /* never optimize editor JS */
-		                       ! empty( get_post_meta( get_the_ID(), Woocommerce::WOO_MODULE_META_NAME, true ) ) ); /* make sure the meta is set */
+		                       ! empty( get_post_meta( $post_id, Woocommerce::WOO_MODULE_META_NAME, true ) ) ); /* make sure the meta is set */
 
 		return apply_filters( 'tcb_lightspeed_optimize_woo', $needs_woocommerce );
 	}

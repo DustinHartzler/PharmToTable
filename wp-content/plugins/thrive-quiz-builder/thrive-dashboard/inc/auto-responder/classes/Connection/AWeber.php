@@ -5,6 +5,7 @@
  *
  * @package thrive-dashboard
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -16,8 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Time: 17:31
  */
 class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abstract {
-	const APP_ID          = '10fd90de';
-	const CONSUMER_KEY    = 'AkkjPM2epMfahWNUW92Mk2tl';
+	const APP_ID = '10fd90de';
+	const CONSUMER_KEY = 'AkkjPM2epMfahWNUW92Mk2tl';
 	const CONSUMER_SECRET = 'V9bzMop78pXTlPEAo30hxZF7dXYE6T6Ww2LAH95m';
 
 	/**
@@ -25,14 +26,14 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function hasTags() {
+	public function has_tags() {
 
 		return true;
 	}
@@ -44,7 +45,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 */
 	public function getAuthorizeUrl() {
 		/** @var Thrive_Dash_Api_AWeber $aweber */
-		$aweber      = $this->getApi();
+		$aweber      = $this->get_api();
 		$callbackUrl = admin_url( 'admin.php?page=tve_dash_api_connect&api=aweber' );
 
 		list ( $requestToken, $requestTokenSecret ) = $aweber->getRequestToken( $callbackUrl );
@@ -57,14 +58,14 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	/**
 	 * @return bool|void
 	 */
-	public function isConnected() {
+	public function is_connected() {
 		return $this->param( 'token' ) && $this->param( 'secret' );
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'AWeber';
 	}
 
@@ -73,8 +74,8 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'aweber' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'aweber' );
 	}
 
 	/**
@@ -84,9 +85,9 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		/** @var Thrive_Dash_Api_AWeber $aweber */
-		$aweber = $this->getApi();
+		$aweber = $this->get_api();
 
 		$aweber->user->tokenSecret  = get_option( 'thrive_aweber_rts' );
 		$aweber->user->requestToken = ! empty( $_REQUEST['oauth_token'] ) ? sanitize_text_field( $_REQUEST['oauth_token'] ) : '';
@@ -94,7 +95,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 
 		try {
 			list( $accessToken, $accessTokenSecret ) = $aweber->getAccessToken();
-			$this->setCredentials( array(
+			$this->set_credentials( array(
 				'token'  => $accessToken,
 				'secret' => $accessTokenSecret,
 			) );
@@ -104,9 +105,9 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 			return false;
 		}
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 		if ( $result !== true ) {
-			$this->error( sprintf( __( 'Could not test AWeber connection: %s', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			$this->error( sprintf( __( 'Could not test AWeber connection: %s', 'thrive-dash' ), $result ) );
 
 			return false;
 		}
@@ -127,13 +128,12 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/** @var Thrive_Dash_Api_AWeber $aweber */
-		$aweber = $this->getApi();
+		$aweber = $this->get_api();
 
 		try {
 			$account = $aweber->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
-			$isValid = $account->lists;
 
 			return true;
 		} catch ( Exception $e ) {
@@ -147,7 +147,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_AWeber( self::CONSUMER_KEY, self::CONSUMER_SECRET );
 	}
 
@@ -156,9 +156,9 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return array
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		/** @var Thrive_Dash_Api_AWeber $aweber */
-		$aweber = $this->getApi();
+		$aweber = $this->get_api();
 
 		try {
 			$lists   = array();
@@ -188,11 +188,11 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 		try {
 			/** @var Thrive_Dash_Api_AWeber $aweber */
-			$aweber  = $this->getApi();
+			$aweber  = $this->get_api();
 			$account = $aweber->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
 			$listURL = "/accounts/{$account->id}/lists/{$list_identifier}";
 			$list    = $account->loadFromUrl( $listURL );
@@ -252,14 +252,15 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 			}
 
 			if ( ! $new_subscriber ) {
-				return sprintf( __( "Could not add contact: %s to list: %s", TVE_DASH_TRANSLATE_DOMAIN ), $arguments['email'], $list->name );
+				return sprintf( __( "Could not add contact: %s to list: %s", 'thrive-dash' ), $arguments['email'], $list->name );
 			}
 
 			// Update custom fields
 			// Make another call to update custom mapped fields in order not to break the subscription call,
 			// if custom data doesn't pass API custom fields validation
+
 			$mapping = thrive_safe_unserialize( base64_decode( $arguments['tve_mapping'] ) );
-			if ( ! empty( $mapping ) ) {
+			if ( ! empty( $mapping ) || ! empty( $arguments['automator_custom_fields'] ) ) {
 				$this->updateCustomFields( $list_identifier, $arguments, $params );
 			}
 
@@ -277,7 +278,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 			if ( stripos( $custom->name, 'phone' ) !== false ) {
 				//return the name of the phone custom field cos users can set its name as: Phone/phone/pHone/etc
 				//used in custom_fields for subscribers parameters
-				/** @see addSubscriber */
+				/** @see add_subscriber */
 				return $custom->name;
 			}
 		}
@@ -299,8 +300,8 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @param array $params allow various different calls to this method
 	 */
-	public function renderExtraEditorSettings( $params = array() ) {
-		$this->_directFormHtml( 'aweber/tags', $params );
+	public function render_extra_editor_settings( $params = array() ) {
+		$this->output_controls_html( 'aweber/tags', $params );
 	}
 
 	/**
@@ -308,20 +309,20 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '{!email}';
 	}
 
 	/**
-	 * @param array $params  which may contain `list_id`
-	 * @param bool  $force   make a call to API and invalidate cache
-	 * @param bool  $get_all where to get lists with their custom fields
+	 * @param array $params which may contain `list_id`
+	 * @param bool $force make a call to API and invalidate cache
+	 * @param bool $get_all where to get lists with their custom fields
 	 *
 	 * @return array
 	 */
 	public function get_api_custom_fields( $params, $force = false, $get_all = true ) {
 
-		$lists = $this->getAllCustomFields( $force );
+		$lists = $this->get_all_custom_fields( $force );
 
 		// Get custom fields for all list ids [used on localize in TAr]
 		if ( true === $get_all ) {
@@ -344,17 +345,17 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return array|mixed
 	 */
-	public function getAllCustomFields( $force ) {
+	public function get_all_custom_fields( $force ) {
 
 		// Serve from cache if exists and requested
-		$cached_data = $this->_get_cached_custom_fields();
+		$cached_data = $this->get_cached_custom_fields();
 
 		if ( false === $force && ! empty( $cached_data ) ) {
 			return $cached_data;
 		}
 
 		$custom_fields = array();
-		$lists         = $this->_getLists();
+		$lists         = $this->_get_lists();
 
 		if ( is_array( $lists ) ) {
 			foreach ( $lists as $list ) {
@@ -388,7 +389,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 		}
 
 		try {
-			$account  = $this->getApi()->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
+			$account  = $this->get_api()->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
 			$list_url = "/accounts/{$account->id}/lists/{$list_id}";
 			$list_obj = $account->loadFromUrl( $list_url );
 
@@ -437,9 +438,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 */
 	public function get_custom_fields( $params = array() ) {
 
-		$fields = array_merge( parent::get_custom_fields(), $this->_mapped_custom_fields );
-
-		return $fields;
+		return array_merge( parent::get_custom_fields(), $this->_mapped_custom_fields );
 	}
 
 	/**
@@ -452,29 +451,32 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 * @return bool
 	 */
 	public function updateCustomFields( $list_identifier, $arguments, $data ) {
-
+		if ( ! $list_identifier || empty( $arguments ) || empty( $data['email'] ) ) {
+			return false;
+		}
 		$saved = false;
 
-		if ( ! $list_identifier || empty( $arguments ) || empty( $data['email'] ) ) {
-			return $saved;
-		}
-
 		/** @var Thrive_Dash_Api_AWeber $aweber */
-		$aweber   = $this->getApi();
+		$aweber   = $this->get_api();
 		$account  = $aweber->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
 		$list_url = "/accounts/{$account->id}/lists/{$list_identifier}";
 		$list     = $account->loadFromUrl( $list_url );
 
-		$custom_fields        = $this->buildMappedCustomFields( $list_identifier, $arguments );
+		if ( empty( $arguments['automator_custom_fields'] ) ) {
+			$custom_fields = $this->buildMappedCustomFields( $list_identifier, $arguments );
+		} else {
+			$custom_fields = $arguments['automator_custom_fields'];
+		}
+
 		$existing_subscribers = $list->subscribers->find( array( 'email' => $data['email'] ) );
-		if ( $existing_subscribers && $existing_subscribers->count() === 1 ) {
+		if ( $existing_subscribers && $existing_subscribers->count() === 1 && ! empty( $custom_fields ) ) {
 			$subscriber                = $existing_subscribers->current();
 			$subscriber->custom_fields = $custom_fields;
 			$saved                     = $subscriber->save();
 		}
 
 		if ( ! $saved ) {
-			$this->api_log_error( $list_identifier, $custom_fields, __( 'Could not update custom fields', TVE_DASH_TRANSLATE_DOMAIN ) );
+			$this->api_log_error( $list_identifier, $custom_fields, __( 'Could not update custom fields', 'thrive-dash' ) );
 		}
 
 		return $saved;
@@ -501,7 +503,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 			$api_custom_fields = $this->buildCustomFieldsList();
 
 			// Loop trough allowed custom fields names
-			foreach ( $this->getMappedFieldsIDs() as $mapped_field_name ) {
+			foreach ( $this->get_mapped_field_ids() as $mapped_field_name ) {
 
 				// Extract an array with all custom fields (siblings) names from the form data
 				// {ex: [mapping_url_0, .. mapping_url_n] / [mapping_text_0, .. mapping_text_n]}
@@ -517,22 +519,47 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 							continue;
 						}
 
-						$args[ $cf_form_name ] = $this->processField( $args[ $cf_form_name ] );
+						$args[ $cf_form_name ] = $this->process_field( $args[ $cf_form_name ] );
 
 						$mapped_form_field_id = $mapped_form_data[ $cf_form_name ][ $this->_key ];
 						$field_label          = $api_custom_fields[ $list_identifier ][ $mapped_form_field_id ];
 
 						$cf_form_name = str_replace( '[]', '', $cf_form_name );
 						if ( ! empty( $args[ $cf_form_name ] ) ) {
-							$args[ $cf_form_name ] = $this->processField( $args[ $cf_form_name ] );
+							$args[ $cf_form_name ]         = $this->process_field( $args[ $cf_form_name ] );
+							$custom_fields[ $field_label ] = sanitize_text_field( $args[ $cf_form_name ] );
 						}
-						$custom_fields[ $field_label ] = sanitize_text_field( $args[ $cf_form_name ] );
 					}
 				}
 			}
 		}
 
 		return $custom_fields;
+	}
+
+
+	/**
+	 * Build custom fields mapping for automations
+	 *
+	 * @param $automation_data
+	 *
+	 * @return array
+	 */
+	public function build_automation_custom_fields( $automation_data ) {
+		$mapped_data = array();
+		if ( $automation_data['mailing_list'] ) {
+			$api_custom_fields = $this->buildCustomFieldsList();
+
+			foreach ( $automation_data['api_fields'] as $pair ) {
+				$value = sanitize_text_field( $pair['value'] );
+				if ( $value ) {
+					$field_label                 = $api_custom_fields[ $automation_data['mailing_list'] ][ $pair['key'] ];
+					$mapped_data[ $field_label ] = $value;
+				}
+			}
+		}
+
+		return $mapped_data;
 	}
 
 	/**
@@ -544,7 +571,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 
 		$parsed = array();
 
-		foreach ( $this->getAllCustomFields( false ) as $list_id => $merge_field ) {
+		foreach ( $this->get_all_custom_fields( false ) as $list_id => $merge_field ) {
 			array_map(
 				function ( $var ) use ( &$parsed, $list_id ) {
 					$parsed[ $list_id ][ $var['id'] ] = $var['name'];
@@ -563,11 +590,11 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return false|int
 	 */
-	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+	public function add_custom_fields( $email, $custom_fields = array(), $extra = array() ) {
 
 		try {
 			/** @var Thrive_Dash_Api_AWeber $api */
-			$api     = $this->getApi();
+			$api     = $this->get_api();
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
@@ -577,7 +604,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 				$args['name'] = $extra['name'];
 			}
 
-			$this->addSubscriber( $list_id, $args );
+			$this->add_subscriber( $list_id, $args );
 
 			$account  = $api->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
 			$list_url = "/accounts/{$account->id}/lists/{$list_id}";
@@ -587,7 +614,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 
 			if ( $existing_subscribers && $existing_subscribers->count() === 1 ) {
 				$subscriber      = $existing_subscribers->current();
-				$prepared_fields = $this->_prepareCustomFieldsForApi( $custom_fields, $list_id );
+				$prepared_fields = $this->prepare_custom_fields_for_api( $custom_fields, $list_id );
 
 				$subscriber->custom_fields = array_merge( $subscriber->data['custom_fields'], $prepared_fields );
 
@@ -605,11 +632,11 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 * Prepare custom fields for api call
 	 *
 	 * @param array $custom_fields
-	 * @param null  $list_identifier
+	 * @param null $list_identifier
 	 *
 	 * @return array
 	 */
-	protected function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+	protected function prepare_custom_fields_for_api( $custom_fields = array(), $list_identifier = null ) {
 
 		if ( empty( $list_identifier ) ) { // list identifier required here
 			return array();
@@ -625,7 +652,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 
 		foreach ( $api_fields[ $list_identifier ] as $field ) {
 			foreach ( $custom_fields as $key => $custom_field ) {
-				if ( (int) $field['id'] === (int) $key ) {
+				if ( (int) $field['id'] === (int) $key && $custom_field ) {
 					$prepared_fields[ $field['name'] ] = $custom_field;
 
 					unset( $custom_fields[ $key ] ); // avoid unnecessary loops
@@ -640,11 +667,15 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 		return $prepared_fields;
 	}
 
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list', 'tag_input' );
+	public function get_automator_add_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'mailing_list' => array( 'api_fields' ), 'tag_input' => array() ) );
 	}
 
-	public function get_automator_autoresponder_tag_fields() {
-		return array( 'mailing_list', 'tag_input' );
+	public function get_automator_tag_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'mailing_list', 'tag_input' ) );
+	}
+
+	public function has_custom_fields() {
+		return true;
 	}
 }

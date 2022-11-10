@@ -208,9 +208,9 @@ class Thrive_Graph_Editor_Database_Manager {
 
 		echo '<div class="notice notice-error is-dismissible"><p>' .
 		     sprintf(
-			     esc_html__( 'There was an error while updating the database tables needed by Thrive Question Editor. Detailed error message: %s. If you continue seeing this message, please contact %s', Thrive_Graph_Editor::T ),
+			     esc_html__( 'There was an error while updating the database tables needed by Thrive Question Editor. Detailed error message: %s. If you continue seeing this message, please contact %s', 'thrive-graph-editor' ),
 			     '<strong>' . esc_html( self::$last_db_error ) . '</strong>',
-			     '<a target="_blank" href="https://thrivethemes.com/forums/">' . esc_html__( 'Thrive Themes Support', Thrive_Graph_Editor::T ) . '</a>'
+			     '<a target="_blank" href="https://thrivethemes.com/forums/">' . esc_html__( 'Thrive Themes Support', 'thrive-graph-editor' ) . '</a>'
 		     ) .
 		     '</p></div>';
 	}

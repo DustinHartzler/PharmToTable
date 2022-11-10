@@ -21,14 +21,14 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'email';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Amazon SES';
 	}
 
@@ -37,8 +37,8 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'awsses' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'awsses' );
 	}
 
 	/**
@@ -46,44 +46,45 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * on error, it should register an error message (and redirect?)
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$ajax_call = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
-		$key       = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
-		$secretkey = ! empty( $_POST['connection']['secretkey'] ) ? sanitize_text_field( $_POST['connection']['secretkey'] ) : '';
-		$email     = ! empty( $_POST['connection']['email'] ) ? sanitize_email( $_POST['connection']['email'] ) : '';
-		$country   = ! empty( $_POST['connection']['country'] ) ? sanitize_text_field( $_POST['connection']['country'] ) : '';
-
+		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 		if ( empty( $key ) ) {
-			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service key', 'thrive-dash' ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service key', 'thrive-dash' ) );
 		}
+
+		$secretkey = ! empty( $_POST['connection']['secretkey'] ) ? sanitize_text_field( $_POST['connection']['secretkey'] ) : '';
 
 		if ( empty( $secretkey ) ) {
-			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service secret key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service secret key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service secret key', 'thrive-dash' ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service secret key', 'thrive-dash' ) );
 		}
 
+		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_email( $_POST['connection']['email'] ) : '';
+
 		if ( empty( $email ) ) {
-			return $ajax_call ? __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'Email field must not be empty', 'thrive-dash' ) : $this->error( __( 'Email field must not be empty', 'thrive-dash' ) );
 		}
+		$country = ! empty( $_POST['connection']['country'] ) ? sanitize_text_field( $_POST['connection']['country'] ) : '';
+
 		$credentials = array(
 			'key'       => $key,
 			'secretkey' => $secretkey,
 			'email'     => $email,
 			'country'   => $country,
 		);
-		$this->setCredentials( $credentials );
+		$this->set_credentials( $credentials );
 
-		$result = $this->testConnection();
-		// $result = true;
+		$result = $this->test_connection();
 		if ( $result !== true ) {
-			return $ajax_call ? sprintf( __( 'Could not connect to Amazon Web Services Simple Email Service using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) : $this->error( sprintf( __( 'Could not connect to Amazon Web Services Simple Email Service using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $ajax_call ? sprintf( __( 'Could not connect to Amazon Web Services Simple Email Service using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) : $this->error( sprintf( __( 'Could not connect to Amazon Web Services Simple Email Service using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
 		 * finally, save the connection details
 		 */
 		$this->save();
-		$this->success( __( 'Amazon Web Services Simple Email Service connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'Amazon Web Services Simple Email Service connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -96,8 +97,8 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
-		$awsses = $this->getApi();
+	public function test_connection() {
+		$awsses = $this->get_api();
 
 		if ( isset( $_POST['connection']['email'] ) ) {
 			$from_email = sanitize_email( $_POST['connection']['email'] );
@@ -147,7 +148,7 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 * @return bool|string true for success or error message for failure
 	 */
 	public function sendCustomEmail( $data ) {
-		$awsses = $this->getApi();
+		$awsses = $this->get_api();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'awsses' );
 		if ( isset( $credentials ) ) {
@@ -180,7 +181,7 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 * @return bool|string
 	 */
 	public function sendMultipleEmails( $data ) {
-		$awsses = $this->getApi();
+		$awsses = $this->get_api();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'awsses' );
 		if ( isset( $credentials ) ) {
@@ -247,13 +248,13 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 */
 	public function sendEmail( $post_data ) {
 
-		$awsses      = $this->getApi();
-		$credentials = $this->getCredentials();
+		$awsses      = $this->get_api();
+		$credentials = $this->get_credentials();
 
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );
@@ -295,9 +296,7 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 		$messsage->setSubject( $subject );
 		$messsage->setMessageFromString( $text_content, $html_content );
 
-		$result = $awsses->sendEmail( $messsage );
-
-		return $result;
+		return $awsses->sendEmail( $messsage );
 	}
 
 	/**
@@ -305,7 +304,7 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		switch ( $this->param( 'country' ) ) {
 			case 'ireland':
 				$country = "email.eu-west-1.amazonaws.com";
@@ -326,7 +325,7 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 	}
 
@@ -338,7 +337,7 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 	}
 }

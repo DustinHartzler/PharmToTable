@@ -59,15 +59,15 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Zapier';
 	}
 
 	/**
 	 * Template
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'zapier' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'zapier' );
 	}
 
 	/**
@@ -75,16 +75,16 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return string|true
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 
-		$this->setCredentials(
+		$this->set_credentials(
 			array(
 				'api_key'  => ! empty( $_POST['connection']['api_key'] ) ? sanitize_text_field( $_POST['connection']['api_key'] ) : '',
 				'blog_url' => ! empty( $_POST['connection']['blog_url'] ) ? sanitize_text_field( $_POST['connection']['blog_url'] ) : '',
 			)
 		);
 
-		$_test_passed = $this->testConnection();
+		$_test_passed = $this->test_connection();
 
 		if ( true === $_test_passed ) {
 			$this->save();
@@ -99,7 +99,7 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return $this|Thrive_Dash_List_Connection_Abstract
 	 */
-	public function beforeDisconnect() {
+	public function before_disconnect() {
 
 		foreach ( array( 'td_api_key', 'td_optin_webhook', 'td_cf-optin_webhook' ) as $option_name ) {
 			delete_option( $option_name );
@@ -111,12 +111,12 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	/**
 	 * @return true|string true on SUCCESS or error message on FAILURE
 	 */
-	public function testConnection() {
+	public function test_connection() {
 
 		$_is_working = true;
 
 		/** @var Thrive_Dash_Api_Zapier $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		/** @var WP_Error|bool $response */
 		$response = $api->authenticate();
@@ -137,17 +137,17 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed|Thrive_Dash_List_Connection_Abstract
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 		$params        = $this->_prepare_args( $arguments );
 		$subscribe_url = $this->_get_hook_url( $arguments );
 
 		if ( ! empty( $subscribe_url ) ) {
 
-			return $this->getApi()->trigger_subscribe( $subscribe_url, $params );
+			return $this->get_api()->trigger_subscribe( $subscribe_url, $params );
 		}
 
-		return $this->error( __( 'There was an error sending your message, please make sure your Zap is activated or contact support.', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->error( __( 'There was an error sending your message, please make sure your Zap is activated or contact support.', 'thrive-dash' ) );
 	}
 
 	/**
@@ -242,7 +242,7 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	/**
 	 * @return mixed|Thrive_Dash_Api_Zapier
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 
 		return new Thrive_Dash_Api_Zapier( $this->param( 'api_key' ), $this->param( 'blog_url' ) );
 	}
@@ -250,14 +250,14 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	/**
 	 * @return array|bool
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		return array();
 	}
 
 	/**
 	 * @return string
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'integrations';
 	}
 
@@ -305,7 +305,7 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return array
 	 */
-	public function getWebhookdata( $request ) {
+	public function get_webhook_data( $request ) {
 
 		$contact = $request->get_param( 'email' );
 
@@ -317,12 +317,13 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '';
 	}
 
-	public function get_automator_autoresponder_fields() {
-		return array( 'tag_input' );
+
+	public function get_automator_add_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'tag_input', 'api_fields' ) );
 	}
 }
 

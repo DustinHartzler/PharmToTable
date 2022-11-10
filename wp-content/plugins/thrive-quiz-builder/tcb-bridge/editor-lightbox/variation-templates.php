@@ -24,31 +24,31 @@ $templates        = TQB_Template_Manager::get_templates( $variation['post_type']
 	<div class="lp-search">
 		<?php tcb_icon( 'search-regular' ); ?>
 		<input class="tve-c-modal-search-input input" type="text" data-source="search" data-fn="onSearch"
-			   placeholder="<?php echo esc_html__( 'Search', Thrive_Quiz_Builder::T ); ?>"/>
+			   placeholder="<?php echo esc_html__( 'Search', 'thrive-quiz-builder' ); ?>"/>
 		<?php tcb_icon( 'close2', false, 'sidebar', 'click', array( 'data-fn' => 'clearSearch' ) ); ?>
 	</div>
 
 	<div class="lp-menu-wrapper">
 		<div class="mt-30">
 			<div class="sidebar-title">
-				<p><?php echo esc_html__( 'Type', Thrive_Quiz_Builder::T ); ?></p>
+				<p><?php echo esc_html__( 'Type', 'thrive-quiz-builder' ); ?></p>
 				<span class="tcb-hl"></span>
 			</div>
 			<div id="tqb-default-filters">
 				<a href="javascript:void(0);" class="click tqb-category-filter active" data-content="default" data-fn="filterClick">
-					<span class="tqb-filter-label"><?php echo esc_html__( 'Default templates', Thrive_Quiz_Builder::T ); ?></span>
+					<span class="tqb-filter-label"><?php echo esc_html__( 'Default templates', 'thrive-quiz-builder' ); ?></span>
 					<span class="tqb-filter-counter"></span>
 				</a>
 			</div>
 		</div>
 		<div class="mt-30">
 			<div class="sidebar-title">
-				<p><?php echo esc_html__( 'My Templates', Thrive_Quiz_Builder::T ); ?></p>
+				<p><?php echo esc_html__( 'My Templates', 'thrive-quiz-builder' ); ?></p>
 				<span class="tcb-hl"></span>
 			</div>
 			<div id="tqb-saved-filters">
 				<a href="javascript:void(0);" class="click tqb-category-filter" data-content="saved" data-fn="filterClick">
-					<span class="tqb-filter-label"><?php echo esc_html__( 'Saved templates', Thrive_Quiz_Builder::T ); ?></span>
+					<span class="tqb-filter-label"><?php echo esc_html__( 'Saved templates', 'thrive-quiz-builder' ); ?></span>
 					<span class="tqb-filter-counter"></span>
 				</a>
 			</div>
@@ -56,11 +56,11 @@ $templates        = TQB_Template_Manager::get_templates( $variation['post_type']
 	</div>
 </div>
 <div class="modal-content">
-	<span class="tcb-modal-title ml-30"><?php echo sprintf( esc_html__( 'Choose %s Template', Thrive_Quiz_Builder::T ), $page_type_name ); ?></span>
+	<span class="tcb-modal-title ml-30"><?php echo sprintf( esc_html__( 'Choose %s Template', 'thrive-quiz-builder' ), $page_type_name ); ?></span>
 	<div class="warning-ct-change ml-30 mr-30">
 		<div class="tcb-notification info-text">
 			<div class="tcb-notification-content">
-				<?php echo esc_html__( 'Any changes you’ve made to the current form will be lost when you select a new template. We recommend you to save your current template first.', Thrive_Quiz_Builder::T ) ?>
+				<?php echo esc_html__( 'Any changes you’ve made to the current form will be lost when you select a new template. We recommend you to save your current template first.', 'thrive-quiz-builder' ) ?>
 			</div>
 		</div>
 	</div>

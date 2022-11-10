@@ -17,21 +17,21 @@ class Form_List_Field extends Action_Field {
 	 * Field name
 	 */
 	public static function get_name() {
-		return __( 'Select the form', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Select the form', 'thrive-dash' );
 	}
 
 	/**
 	 * Field description
 	 */
 	public static function get_description() {
-		return __( 'Choose the form you want to use', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Choose the form you want to use', 'thrive-dash' );
 	}
 
 	/**
 	 * Field input placeholder
 	 */
 	public static function get_placeholder() {
-		return __( 'Choose form', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Choose form', 'thrive-dash' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Form_List_Field extends Action_Field {
 	 * @return string
 	 */
 	public static function get_preview_template() {
-		return 'Form: $$value';
+		return '';
 	}
 
 	public static function get_id() {
@@ -53,12 +53,24 @@ class Form_List_Field extends Action_Field {
 		return 'select';
 	}
 
-	public static function get_options_callback() {
-		$args         = func_get_args();
-		$values       = array();
-		$api_instance = Thrive_Dash_List_Manager::connectionInstance( $args[0] );
-		if ( $api_instance && $api_instance->isConnected() && $api_instance->hasForms() ) {
-			$values = $api_instance->getForms();
+	public static function get_options_callback( $action_id, $action_data ) {
+		$values = array();
+
+		if ( ! empty( $action_data ) ) {
+			if ( is_string( $action_data ) ) {
+				$api = $action_data;
+			} else if ( property_exists( $action_data, 'autoresponder' ) ) {
+				$api = $action_data->autoresponder->value;
+			}
+		}
+		if ( ! empty( $api ) ) {
+			$api_instance = Thrive_Dash_List_Manager::connection_instance( $api );
+			if ( $api_instance && $api_instance->is_connected() && $api_instance->has_forms() ) {
+				$forms = $api_instance->get_forms();
+				if ( ! empty( $forms[ $action_data->autoresponder->subfield->mailing_list->value ] ) ) {
+					$values = $forms[ $action_data->autoresponder->subfield->mailing_list->value ];
+				}
+			}
 		}
 
 		return $values;

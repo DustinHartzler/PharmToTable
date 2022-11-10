@@ -105,6 +105,11 @@ class Dashboard {
 				'route'   => get_rest_url( get_current_blog_id(), 'tcb/v1/lightspeed' ),
 				/* if a user needs a bigger timeout, he can set the constant in wp config */
 				'timeout' => defined( 'LIGHTSPEED_TIMEOUT' ) ? LIGHTSPEED_TIMEOUT : 10,
+				't' => array(
+					'assets'   => __( 'Asset Optimization', 'thrive-cb' ),
+					'fonts'    => __( 'Font Settings', 'thrive-cb' ),
+					'advanced' => __( 'Advanced Settings', 'thrive-cb' ),
+				)
 			];
 
 			if ( \TCB\Integrations\WooCommerce\Main::active() ) {

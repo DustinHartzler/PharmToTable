@@ -3,7 +3,7 @@
 class TCB_TQB_Question_Text extends TCB_TQB_QNA_Text {
 
 	public function name() {
-		return __( 'Quiz Question', Thrive_Quiz_Builder::T );
+		return __( 'Quiz Question', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {

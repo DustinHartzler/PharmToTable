@@ -39,7 +39,7 @@ class Main {
 	 * @return string|void
 	 */
 	public static function title() {
-		return __( 'Coming Soon Mode', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Coming Soon Mode', 'thrive-dash' );
 	}
 
 	/**

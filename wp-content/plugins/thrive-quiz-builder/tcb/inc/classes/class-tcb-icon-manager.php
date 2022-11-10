@@ -46,19 +46,17 @@ class TCB_Icon_Manager {
 		if ( empty( $post_id ) ) {
 			$post_id = get_the_ID();
 		}
-		$icon_data = get_option( 'thrive_icon_pack' );
+		$icon_data = get_option( 'thrive_icon_pack', [] );
 		if ( empty( $icon_data['icons'] ) ) {
-			$icon_data['icons'] = array();
+			$icon_data['icons'] = [];
 		}
 		$icon_data['icons'] = apply_filters( 'tcb_get_extra_icons', $icon_data['icons'], $post_id ); //
 
-		$data = array(
+		return [
 			'style'  => 'icomoon',
 			'prefix' => 'icon',
 			'icons'  => $icon_data['icons'],
-		);
-
-		return $data;
+		];
 	}
 
 	/**

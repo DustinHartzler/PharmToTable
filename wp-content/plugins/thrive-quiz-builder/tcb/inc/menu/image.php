@@ -36,6 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<hr>
 
+		<div class="tve-control no-space mb-5" data-view="ImageLoading"></div>
 		<div class="tve-control no-space mb-5" data-view="ImageCaption"></div>
 		<div class="tve-control no-space" data-key="ToggleURL" data-extends="Switch" data-label="<?php echo esc_html__( 'Add link to image', 'thrive-cb' ); ?>"></div>
 

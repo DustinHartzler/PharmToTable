@@ -355,10 +355,10 @@ function tqb_get_conversion_rate_test_data( $filter ) {
 	$average_rate = (float) tqb_conversion_rate( $impressions, $conversions, '', 2 );
 
 	return array(
-		'chart_title'  => __( 'Conversion rate over time', Thrive_Quiz_Builder::T ),
+		'chart_title'  => __( 'Conversion rate over time', 'thrive-quiz-builder' ),
 		'chart_data'   => $chart_data,
 		'chart_x_axis' => $dates,
-		'chart_y_axis' => __( 'Conversion Rate', Thrive_Quiz_Builder::T ) . ' (%)',
+		'chart_y_axis' => __( 'Conversion Rate', 'thrive-quiz-builder' ) . ' (%)',
 		'table_data'   => array(
 			'count_table_data' => count( $dates ),
 			'average_rate'     => $average_rate,
@@ -409,7 +409,7 @@ function tqb_norm_dist( $x ) {
 function tqb_create_frontend_error_message( $text ) {
 	$html = '';
 	foreach ( $text as $error ) {
-		$html .= '<div class="tqb-frontend-error-message-individual"><p class="tqb-error-message"><span>' . __( 'Error:', Thrive_Quiz_Builder::T ) . ' </span> ' . $error . '</p></div>';
+		$html .= '<div class="tqb-frontend-error-message-individual"><p class="tqb-error-message"><span>' . __( 'Error:', 'thrive-quiz-builder' ) . ' </span> ' . $error . '</p></div>';
 	}
 
 	return $html;

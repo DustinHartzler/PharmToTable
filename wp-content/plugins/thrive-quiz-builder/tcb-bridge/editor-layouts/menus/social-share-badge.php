@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-tqb_social_share_badge-component" class="tve-component" data-view="tqb_social_share_badge">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo esc_html__( 'Social Share Badge Options', Thrive_Quiz_Builder::T ); ?>
+		<?php echo esc_html__( 'Social Share Badge Options', 'thrive-quiz-builder' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
 		<div class="row padding-top-10 middle-xs">
 			<div class="col-xs-12 tcb-text-center">
 				<button class="blue tve-button click" data-fn="change_template">
-					<?php echo esc_html__( 'Change Template', Thrive_Quiz_Builder::T ); ?>
+					<?php echo esc_html__( 'Change Template', 'thrive-quiz-builder' ); ?>
 				</button>
 			</div>
 		</div>
@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<hr>
 		<div class="row middle-xs between-xs">
 			<div class="col-xs-8">
-				<span class="input-label"><?php echo esc_html__( 'Social Networks', Thrive_Quiz_Builder::T ) ?></span>
+				<span class="input-label"><?php echo esc_html__( 'Social Networks', 'thrive-quiz-builder' ) ?></span>
 			</div>
 		</div>
 		<div class="tve-control" data-key="selector" data-initializer="selector_control"></div>

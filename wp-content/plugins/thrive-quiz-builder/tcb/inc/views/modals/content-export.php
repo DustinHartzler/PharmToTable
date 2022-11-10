@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<span class="tcb-modal-title m-0"><?php echo esc_html__( 'Export Content', 'thrive-cb' ) ?></span>
+<span class="tcb-modal-title m-0"><?php echo esc_html__( 'Export Content', 'thrive-cb' ); ?></span>
 <div class="error-container" style="display: none;"></div>
 
 <div class="tve-template-image">
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="tcb-modal-footer m-20 p-0 flex-end">
 	<button type="button" class="tcb-right tve-button medium green tcb-modal-save">
-		<?php echo esc_html__( 'Download File', 'thrive-cb' ) ?>
+		<?php echo esc_html__( 'Download File', 'thrive-cb' ); ?>
 	</button>
 </div>
 

@@ -97,14 +97,13 @@ class Conditional_Display_Group {
 
 	public function create() {
 		$post_id = wp_insert_post( [
-				'post_title'  => static::title(),
-				'post_type'   => static::NAME,
-				'post_status' => 'publish',
-				'meta_input'  => [
-					'key' => $this->key,
-				],
-			]
-		);
+			'post_title'  => static::title(),
+			'post_type'   => static::NAME,
+			'post_status' => 'publish',
+			'meta_input'  => [
+				'key' => $this->key,
+			],
+		] );
 
 		$this->post = get_post( $post_id );
 	}
@@ -114,14 +113,101 @@ class Conditional_Display_Group {
 			$this->create();
 		}
 
-		foreach ( $this->get_data_attributes() as $key => $meta ) {
+		foreach ( static::get_data_attributes() as $key => $meta_key ) {
 			if ( isset( $data[ $key ] ) ) {
-				update_post_meta( $this->post->ID, $meta, $data[ $key ] );
+				$this->update_meta_key( $meta_key, $data[ $key ] );
 			}
 		}
 	}
 
-	public function get_data_attributes() {
+	/**
+	 * @return string
+	 */
+	public function get_key() {
+		return $this->key;
+	}
+
+	/**
+	 * @param $meta_key
+	 * @param $default
+	 *
+	 * @return mixed|null
+	 */
+	public function get_meta_value( $meta_key, $default = null ) {
+		return $this->post === null ? $default : get_post_meta( $this->post->ID, $meta_key, true );
+	}
+
+	/**
+	 * @param $meta_key
+	 * @param $meta_value
+	 *
+	 * @return void
+	 */
+	public function update_meta_key( $meta_key, $meta_value ) {
+		update_post_meta( $this->post->ID, $meta_key, $meta_value );
+	}
+
+	/**
+	 * Clone group and displays and return the new type
+	 *
+	 * @return Conditional_Display_Group
+	 */
+	public function clone_group( $css_id_map = [] ) {
+		$new_group_key = uniqid( 'tve-dg', false );
+
+		$new_group = new Conditional_Display_Group( null, $new_group_key );
+		$new_group->create();
+
+		$old_group_key = $this->get_key();
+
+		foreach ( static::get_data_attributes() as $meta_key ) {
+			$meta_value = $this->get_meta_value( $meta_key );
+
+			if ( $meta_key === static::DISPLAYS_META_KEY && is_array( $meta_value ) ) {
+				/* generate new keys for each display */
+				foreach ( $meta_value as $index => $display ) {
+					if ( $display['key'] !== 'default' ) {
+
+						$old_display_key = $display['key'];
+						$new_display_key = uniqid( '', false );
+
+						$display['key'] = $new_display_key;
+
+						/* replace old display key with the new one */
+						$display['html'] = str_replace( $old_display_key, $new_display_key, $display['html'] );
+					}
+
+					/* replace old group key with the new one */
+					$display['html'] = str_replace( $old_group_key, $new_group_key, $display['html'] );
+
+					/* replace css ids with newly generated ones */
+					$display['html'] = str_replace( array_keys( $css_id_map ), array_values( $css_id_map ), $display['html'] );
+
+					/* replace other groups inside the display */
+					$display['html'] = static::clone_conditional_groups_in_content( $display['html'], $css_id_map );
+
+					$meta_value[ $index ] = $display;
+				}
+			} elseif ( \is_string( $meta_value ) ) {
+				/* just replace the group key in every string */
+				$meta_value = str_replace( $old_group_key, $new_group_key, $meta_value );
+
+				/* also replace css ids */
+				$meta_value = str_replace( array_keys( $css_id_map ), array_values( $css_id_map ), $meta_value );
+			}
+
+			$new_group->update_meta_key( $meta_key, $meta_value );
+		}
+
+		return $new_group;
+	}
+
+	/**
+	 * Data attributes
+	 *
+	 * @return string[]
+	 */
+	public static function get_data_attributes() {
 		return [
 			'displays'         => static::DISPLAYS_META_KEY,
 			'lazy-load'        => static::LAZY_LOAD_META_KEY,
@@ -145,11 +231,11 @@ class Conditional_Display_Group {
 		if ( empty( $this->post ) ) {
 			$displays = [];
 		} else {
-			$displays = get_post_meta( $this->post->ID, static::DISPLAYS_META_KEY, true );
+			$displays = $this->get_meta_value( static::DISPLAYS_META_KEY );
 
 			if ( empty( $displays ) ) {
 				$displays = [];
-			} else if ( $ordered ) {
+			} elseif ( $ordered ) {
 				$default_display_index = array_search( 'default', array_column( $displays, 'key' ), true );
 
 				$displays[ $default_display_index ]['order'] = $is_editor_page ? - 1 : PHP_INT_MAX;
@@ -223,7 +309,7 @@ class Conditional_Display_Group {
 								'name'       => $name,
 							];
 						}
-					} else if ( $display['key'] === 'default' ) {
+					} elseif ( $display['key'] === 'default' ) {
 						$display['sets'][] = [ 'is_default' => true ];
 					}
 				}
@@ -275,19 +361,28 @@ class Conditional_Display_Group {
 	 * @return bool
 	 */
 	public function has_lazy_load() {
-		return $this->post && get_post_meta( $this->post->ID, static::LAZY_LOAD_META_KEY, true ) === '1';
+		return $this->get_meta_value( static::LAZY_LOAD_META_KEY ) === '1';
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function has_uniformed_heights() {
-		return $this->post && get_post_meta( $this->post->ID, static::UNIFORM_HEIGHT_META_KEY, true ) === '1';
+		return $this->get_meta_value( static::UNIFORM_HEIGHT_META_KEY ) === '1';
 	}
 
+	/**
+	 * @return mixed|null
+	 */
 	public function get_display_heights() {
-		return $this->post ? get_post_meta( $this->post->ID, static::DISPLAY_HEIGHTS_META_KEY, true ) : [];
+		return $this->get_meta_value( static::DISPLAY_HEIGHTS_META_KEY, [] );
 	}
 
+	/**
+	 * @return mixed|null
+	 */
 	public function get_inherit_background() {
-		return $this->post ? get_post_meta( $this->post->ID, static::INHERIT_BACKGROUND_META_KEY, true ) : '';
+		return $this->get_meta_value( static::INHERIT_BACKGROUND_META_KEY, '' );
 	}
 
 	/**
@@ -297,9 +392,11 @@ class Conditional_Display_Group {
 	 */
 	public function get_placeholder_css() {
 		$css = '';
+
 		if ( $this->post ) {
-			$css = get_post_meta( $this->post->ID, static::PLACEHOLDER_CSS_META_KEY, true );
+			$css = $this->get_meta_value( static::PLACEHOLDER_CSS_META_KEY );
 		}
+
 		if ( ! empty( $css ) ) {
 			$css = \TCB_Utils::wrap_content( $css, 'style', '', 'tve-cd-placeholder-css-' . $this->key );
 		}
@@ -307,13 +404,9 @@ class Conditional_Display_Group {
 		return $css;
 	}
 
-	public function get_placeholder_html() {
-		return get_post_meta( $this->post->ID, static::PLACEHOLDER_HTML_META_KEY, true );
-	}
-
 	public function lazy_load_placeholder() {
 		$placeholder_css  = $this->get_placeholder_css();
-		$placeholder_html = $this->get_placeholder_html();
+		$placeholder_html = $this->get_meta_value( static::PLACEHOLDER_HTML_META_KEY );
 
 		return empty( $placeholder_html ) ? '<div class="tcb-conditional-display-placeholder" data-group="' . $this->key . '">' . $placeholder_css . '</div>' : ( $placeholder_css . $placeholder_html );
 	}
@@ -340,5 +433,32 @@ class Conditional_Display_Group {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Clone conditional groups from content and replace them with new ids
+	 *
+	 * @param string $content
+	 * @param array  $css_id_map
+	 *
+	 * @return string
+	 */
+	public static function clone_conditional_groups_in_content( $content, $css_id_map = [] ) {
+		/* match display group key */
+		preg_match_all( '/\[' . Shortcode::NAME . " group='([^']*)'/m", $content, $matches );
+
+		if ( $matches !== null ) {
+			foreach ( $matches[1] as $display_group_key ) {
+				$display_group = static::get_instance( $display_group_key );
+
+				if ( $display_group !== null ) {
+					$new_display_group = $display_group->clone_group( $css_id_map );
+
+					$content = str_replace( $display_group_key, $new_display_group->get_key(), $content );
+				}
+			}
+		}
+
+		return $content;
 	}
 }

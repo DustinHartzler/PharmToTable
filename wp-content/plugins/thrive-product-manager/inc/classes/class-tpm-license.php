@@ -88,7 +88,7 @@ class TPM_License {
 	 * Fetches a list of licenses which are used on current site
 	 * - each license may have more tags
 	 *
-	 * @return array
+	 * @return TPM_License[]
 	 */
 	public static function get_saved_licenses() {
 

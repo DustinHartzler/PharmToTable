@@ -13,11 +13,11 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 	extends Thrive_Dash_List_Connection_Abstract
 	implements Thrive_Dash_List_Connection_FileUpload_Interface {
 
-	public static function getType() {
+	public static function get_type() {
 		return 'storage';
 	}
 
-	public function getTitle() {
+	public function get_title() {
 		return 'Dropbox';
 	}
 
@@ -26,12 +26,12 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 	 *
 	 * @return bool
 	 */
-	public function isConnected() {
+	public function is_connected() {
 		return (bool) $this->param( 'access_token' );
 	}
 
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'dropbox' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'dropbox' );
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 	public function getAuthorizeUrl() {
 		$this->save(); // save the client_id and client_secret for later use
 
-		return $this->getApi()->get_authorize_url();
+		return $this->get_api()->get_authorize_url();
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 	 *
 	 * @return bool|mixed|string|Thrive_Dash_List_Connection_Abstract
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$code = empty( $_REQUEST['code'] ) ? '' : sanitize_text_field( $_REQUEST['code'] );
 
 		if ( empty( $code ) ) {
@@ -61,7 +61,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 
 		try {
 			/* get access token from dropbox */
-			$response = $this->getApi()->get_access_token( $code );
+			$response = $this->get_api()->get_access_token( $code );
 			if ( empty( $response['access_token'] ) ) {
 				throw new Thrive_Dash_Api_Dropbox_Exception( 'Missing token from response data' );
 			}
@@ -86,18 +86,18 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 		return true;
 	}
 
-	public function testConnection() {
+	public function test_connection() {
 
 		$result = array(
 			'success' => true,
-			'message' => __( 'Connection works', TVE_DASH_TRANSLATE_DOMAIN ),
+			'message' => __( 'Connection works', 'thrive-dash' ),
 		);
 		try {
 			/**
 			 * Just trigger a "check user" API call
 			 * https://www.dropbox.com/developers/documentation/http/documentation#check-user
 			 */
-			$this->getApi()->check_user();
+			$this->get_api()->check_user();
 		} catch ( Thrive_Dash_Api_Dropbox_Exception $e ) {
 			$result['success'] = false;
 			$result['message'] = $e->getMessage();
@@ -123,7 +123,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 		);
 
 		try {
-			$file = $this->getApi()->upload( $file_contents, $dropbox_request );
+			$file = $this->get_api()->upload( $file_contents, $dropbox_request );
 		} catch ( Thrive_Dash_Api_Dropbox_Exception $e ) {
 			if ( $folder_id && strpos( $e->getMessage(), 'path/no_write_permission' ) !== false ) {
 				/* try again, uploading to the root folder of the app */
@@ -157,7 +157,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 			$new_path = rtrim( dirname( $file['path'] ), '/' ) . '/' . $new_name;
 
 			if ( $new_name !== $file['name'] ) {
-				$this->getApi()->move_file( $file['path'], $new_path );
+				$this->get_api()->move_file( $file['path'], $new_path );
 				$file['url']  = dirname( $file['url'] ) . '/' . $callback( basename( $file['url'] ) );
 				$file['path'] = $new_path;
 				$file['name'] = $new_name;
@@ -178,7 +178,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 	 */
 	public function delete( $file_id ) {
 		try {
-			$this->getApi()->delete( $file_id );
+			$this->get_api()->delete( $file_id );
 			$result = true;
 		} catch ( Thrive_Dash_Api_Dropbox_Exception $e ) {
 			$result = new WP_Error( 'tcb_file_upload_error', $e->getMessage() );
@@ -203,7 +203,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 		);
 
 		try {
-			$file         = $this->getApi()->get_file( $file_id );
+			$file         = $this->get_api()->get_file( $file_id );
 			$data['url']  = $file['url'];
 			$data['name'] = $file['name'];
 			$data['path'] = $file['path_display'];
@@ -213,7 +213,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 		return $data;
 	}
 
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 	}
 
 	/**
@@ -222,7 +222,7 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 	 * @return Thrive_Dash_Api_Dropbox_Service
 	 * @throws Thrive_Dash_Api_Dropbox_Exception
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		$api = new Thrive_Dash_Api_Dropbox_Service(
 			$this->param( 'client_id' ),
 			$this->param( 'client_secret' ),
@@ -240,6 +240,6 @@ class Thrive_Dash_List_Connection_FileUpload_Dropbox
 		return $api;
 	}
 
-	protected function _getLists() {
+	protected function _get_lists() {
 	}
 }

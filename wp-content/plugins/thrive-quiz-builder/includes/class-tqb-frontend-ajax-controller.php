@@ -82,7 +82,7 @@ class TQB_Frontend_Ajax_Controller {
 		$method_name = $route . '_action';
 
 		if ( ! method_exists( $this, $method_name ) ) {
-			$this->error( sprintf( __( 'Method %s not implemented', Thrive_Quiz_Builder::T ), $method_name ) );
+			$this->error( sprintf( __( 'Method %s not implemented', 'thrive-quiz-builder' ), $method_name ) );
 		}
 
 		return $this->{$method_name}();
@@ -106,7 +106,7 @@ class TQB_Frontend_Ajax_Controller {
 			} elseif ( $custom === 'save_user_custom_social_share_badge' ) {
 
 				if ( ! isset( $_FILES['user_badge'] ) ) {
-					$this->error( __( 'Share Badge not available', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Share Badge not available', 'thrive-quiz-builder' ) );
 				}
 
 				if ( ! class_exists( 'TQB_Badge' ) ) {
@@ -120,7 +120,7 @@ class TQB_Frontend_Ajax_Controller {
 				$url   = $badge->save( $_FILES['user_badge'] ); // phpcs:ignore
 
 				if ( empty( $url ) ) {
-					$this->error( __( 'Badge could not be generated', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Badge could not be generated', 'thrive-quiz-builder' ) );
 				}
 
 				do_action( 'tqb_generate_user_social_badge_link', ! empty( $_REQUEST['user_id'] ) ? sanitize_text_field( $_REQUEST['user_id'] ) : '', $url );
@@ -131,6 +131,7 @@ class TQB_Frontend_Ajax_Controller {
 				$user_unique = $this->param( 'user_unique' );
 				$quiz_id     = $this->param( 'quiz_id' );
 				$answer_text = $this->param( 'answer_text' );
+				$post_id     = $this->param( 'tqb-post-id' );
 				$answer_text = sanitize_textarea_field( $answer_text );
 
 				if ( empty( $answer_id ) || empty( $user_unique ) || empty( $quiz_id ) ) {
@@ -138,7 +139,9 @@ class TQB_Frontend_Ajax_Controller {
 				}
 
 				//Store TQB User inside the DB, if it doesn't exist for computing the answers
-				$user_id = TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id );
+				$user_id = TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id, false, array(
+					'object_id'   => $post_id,
+				) );
 
 				TQB_Quiz_Manager::register_answer( $answer_id, $user_unique, $quiz_id, $answer_text );
 
@@ -182,7 +185,7 @@ class TQB_Frontend_Ajax_Controller {
 				$qna        = get_post_meta( $quiz_id, 'tve_qna_templates', true );
 
 				if ( empty( $data ) ) {
-					$this->error( __( 'You have nothing', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'You have nothing', 'thrive-quiz-builder' ) );
 				}
 
 				if ( $in_tcb_editor === 'inside_tcb' && ( empty( $qna[ $quiz_style ] ) || $data['page'] ) ) {
@@ -208,7 +211,13 @@ class TQB_Frontend_Ajax_Controller {
 					}
 				}
 
-				return $data;
+				/**
+				 * Returned value that is sent to front-end
+				 *
+				 * @param array $data
+				 * @param int   $post_id
+				 */
+				return apply_filters( 'tqb_quiz_shortcode_action_response', $data, $post_id );
 				break;
 		}
 	}

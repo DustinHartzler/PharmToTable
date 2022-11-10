@@ -89,15 +89,41 @@ class TD_TTW_Update_Manager {
 	/**
 	 * @param stdClass $transient
 	 *
-	 * @return mixed
+	 * @return stdClass
 	 */
 	public function hide_theme_updates( $transient ) {
 
-		if ( self::is_wp_core_update_screen() && ! self::allow_membership_updates() ) {
+		if ( static::is_wp_core_update_screen() && false === static::has_access_to_updates( TD_TTW_User_Licenses::TTB_TAG ) ) {
 			unset( $transient->response[ self::TTB_DOMAIN ] );
 		}
 
 		return $transient;
+	}
+
+	/**
+	 * Checks if there is a membership which can_update
+	 * or check if there is a license with $tag which can_update
+	 *
+	 * On false - another logic for reason message has to be applied
+	 *
+	 * @param string $tag
+	 *
+	 * @return bool
+	 */
+	public static function has_access_to_updates( $tag ) {
+
+		$is_connected = TD_TTW_Connection::get_instance()->is_connected();
+
+		/** @var TD_TTW_User_Licenses $licenses */
+		$licenses = TD_TTW_User_Licenses::get_instance();
+
+		$membership           = $licenses->get_membership();
+		$has_valid_membership = $membership && true === $membership->can_update();
+
+		$ttb_license       = $licenses->get_license( $tag );
+		$has_valid_license = $ttb_license && true === $ttb_license->can_update();
+
+		return $is_connected && ( $has_valid_membership || $has_valid_license );
 	}
 
 	/**
@@ -107,12 +133,12 @@ class TD_TTW_Update_Manager {
 	 */
 	public function wp_prepare_themes_for_js( $themes ) {
 
-		$cant_update = isset( $themes[ self::TTB_DOMAIN ] )
-		               && is_array( $themes[ self::TTB_DOMAIN ] )
-		               && ! self::allow_membership_updates() //check membership allowance
-		               && ! TD_TTW_User_Licenses::get_instance()->can_update_ttb(); // check product allowance
+		$is_ttb_installed = isset( $themes[ self::TTB_DOMAIN ] );
+		$is_ttb_installed = $is_ttb_installed && is_array( $themes[ self::TTB_DOMAIN ] );
 
-		if ( $cant_update ) {
+		//ttb is installed and doesn't have access to updates
+		//then display update message - why it doesn't have access to updates
+		if ( true === $is_ttb_installed && false === static::has_access_to_updates( TD_TTW_User_Licenses::TTB_TAG ) ) {
 			$themes[ self::TTB_DOMAIN ]['hasPackage'] = 0;
 			$themes[ self::TTB_DOMAIN ]['update']     = $this->_get_theme_update_message( $themes[ self::TTB_DOMAIN ] );
 		}
@@ -147,15 +173,53 @@ class TD_TTW_Update_Manager {
 			$themes_update['url']
 		);
 
-		return TD_TTW_Messages_Manager::render(
-			'theme-update',
-			true,
-			[
-				'name'        => $data['name'],
-				'version'     => $themes_update['new_version'],
-				'details_url' => $details_url,
-			]
+		$template      = 'theme/update';
+		$template_data = array(
+			'name'        => $data['name'],
+			'version'     => $themes_update['new_version'],
+			'details_url' => $details_url,
+			'recheck_url' => add_query_arg(
+				array(
+					'theme' => 'thrive-theme',
+				),
+				TD_TTW_User_Licenses::get_instance()->get_recheck_url( 'themes.php' )
+			),
 		);
+
+		$membership = static::get_membership();
+		/** @var TD_TTW_User_Licenses $licenses */
+		$licenses      = TD_TTW_User_Licenses::get_instance();
+		$theme_license = $licenses->get_license( TD_TTW_User_Licenses::TTB_TAG );
+
+		if ( false === TD_TTW_Connection::get_instance()->is_connected() ) {
+			$template = 'theme/disconnected';
+		} elseif ( $membership && false === $membership->is_active() ) {
+			$template = 'theme/membership-expired';
+		} elseif ( $theme_license && false === $theme_license->can_update() ) {
+			$template = 'theme/license-expired';
+		} elseif ( ! $membership && ! $theme_license ) {
+			$template = 'theme/no-license-found';
+		}
+
+		$error = thrive_get_transient( 'td_ttw_connection_error' );
+		if ( ! empty( $error ) ) {
+			$template                       = 'error';
+			$template_data['error_message'] = $error;
+		}
+
+		return TD_TTW_Messages_Manager::render(
+			$template,
+			true,
+			$template_data
+		);
+	}
+
+	/**
+	 * @return TD_TTW_License|null
+	 */
+	public static function get_membership() {
+
+		return TD_TTW_User_Licenses::get_instance()->get_membership();
 	}
 
 	/**
@@ -172,7 +236,7 @@ class TD_TTW_Update_Manager {
 		/**  @var TD_TTW_User_Licenses $licenses */
 		$licenses = TD_TTW_User_Licenses::get_instance();
 
-		return $licenses->has_membership() && $licenses->get_membership()->can_update();
+		return $licenses->get_membership() && $licenses->get_membership()->can_update();
 	}
 
 	/**
@@ -263,28 +327,7 @@ class TD_TTW_Update_Manager {
 	 */
 	public static function can_see_updates() {
 
-		if ( ! self::is_wp_core_update_screen() ) {
-			return true;
-		}
-
-		/**  @var TD_TTW_Connection $connection */
-		$connection = TD_TTW_Connection::get_instance();
-
-		if ( ! $connection->is_connected() ) {
-			return false;
-		}
-
-		/**  @var TD_TTW_User_Licenses $licenses */
-		$licenses = TD_TTW_User_Licenses::get_instance();
-
-		/**
-		 * We will always allow updates for single product licenses
-		 */
-		if ( ! empty( $licenses->get() ) && ! $licenses->has_membership() ) {
-			return true;
-		}
-
-		return $licenses->get_membership()->can_update();
+		return false === static::is_wp_core_update_screen();
 	}
 
 	/**
@@ -327,7 +370,6 @@ class TD_TTW_Update_Manager {
 				/** @var $licenses TD_TTW_User_Licenses */
 				$licenses = TD_TTW_User_Licenses::get_instance();
 
-				delete_transient( TD_TTW_User_Licenses::NAME );
 				$licenses->get_licenses_details(); //get licenses details
 
 				if ( $licenses->has_membership() && $licenses->is_membership_active() ) {
@@ -351,6 +393,7 @@ class TD_TTW_Update_Manager {
 
 		if ( ! empty( $_REQUEST['td_disconnect'] ) ) {
 
+			/** @var TD_TTW_Connection $connection */
 			$connection = TD_TTW_Connection::get_instance();
 
 			$params  = array(
@@ -410,8 +453,7 @@ class TD_TTW_Update_Manager {
 	 * @return bool
 	 */
 	public function is_known_page() {
-
-		return isset( $_REQUEST['page'] ) && $_REQUEST['page'] === self::NAME;
+		return isset( $_REQUEST['page'] ) && self::NAME === $_REQUEST['page'];
 	}
 }
 

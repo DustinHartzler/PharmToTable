@@ -124,19 +124,19 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 							'default' => 'no_style',
 						),
 					),
-					'ImageTitle'     => array(
+					'ImageTitle'    => array(
 						'config'  => array(
 							'label' => __( 'Title', 'thrive-cb' ),
 						),
 						'extends' => 'LabelInput',
 					),
-					'ImageAltText'   => array(
+					'ImageAltText'  => array(
 						'config'  => array(
 							'label' => __( 'Alt text', 'thrive-cb' ),
 						),
 						'extends' => 'LabelInput',
 					),
-					'ImageCaption'   => array(
+					'ImageCaption'  => array(
 						'config'  => array(
 							'name'    => '',
 							'label'   => __( 'Add caption text', 'thrive-cb' ),
@@ -144,7 +144,15 @@ class TCB_Image_Element extends TCB_Element_Abstract {
 						),
 						'extends' => 'Switch',
 					),
-					'ImageFullSize'  => array(
+					'ImageLoading'  => array(
+						'config'  => array(
+							'name'    => '',
+							'label'   => __( 'Lazy-load image', 'thrive-cb' ),
+							'default' => true,
+						),
+						'extends' => 'Switch',
+					),
+					'ImageFullSize' => array(
 						'config'  => array(
 							'name'    => '',
 							'label'   => __( 'Open full size image on click', 'thrive-cb' ),

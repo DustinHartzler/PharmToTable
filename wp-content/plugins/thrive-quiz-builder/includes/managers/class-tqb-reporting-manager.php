@@ -43,13 +43,13 @@ class TQB_Reporting_Manager {
 				$data = $this->get_completions_report( $filters );
 				break;
 			case 'flow':
-				$data = $this->get_flow_report();
+				$data = $this->get_flow_report( $filters );
 				break;
 			case 'questions':
-				$data = $this->get_questions_report();
+				$data = $this->get_questions_report( $filters );
 				break;
 			case 'users':
-				$data = $this->get_users_report();
+				$data = $this->get_users_report( $filters );
 				break;
 		}
 
@@ -66,21 +66,26 @@ class TQB_Reporting_Manager {
 			$filters['date'] = Thrive_Quiz_Builder::TQB_LAST_7_DAYS;
 		}
 
+		if ( empty( $filters['location'] ) ) {
+			$filters['location'] = 'all';
+		}
+
 		$data = $this->tqbdb->get_quiz_completion_report( $this->quiz_id, $filters );
 
 		return array(
 			'chart_data'   => $data['graph_quiz'],
 			'chart_x_axis' => $data['intervals'],
-			'chart_y_axis' => __( 'Completions', Thrive_Quiz_Builder::T ),
+			'chart_y_axis' => __( 'Completions', 'thrive-quiz-builder' ),
 			'quiz_id'      => $this->quiz_id,
 			'date'         => $filters['date'],
 			'interval'     => $filters['interval'],
+			'locations'    => $this->tqbdb->get_quiz_locations( $this->quiz_id ),
 			'quiz_list'    => $data['table_quizzes'],
 			'since'        => $this->get_report_collection_data(),
 		);
 	}
 
-	public function get_flow_report() {
+	public function get_flow_report( $filters ) {
 		$structure_manager = new TQB_Structure_Manager( $this->quiz_id );
 		$structure         = $structure_manager->get_quiz_structure_meta();
 		if ( empty( $structure['ID'] ) ) {
@@ -95,19 +100,26 @@ class TQB_Reporting_Manager {
 			Thrive_Quiz_Builder::TQB_SKIP_OPTIN => 0,
 		);
 
-		if ( is_numeric( $structure['splash'] ) ) {
-			$data['splash'] = $this->get_flow_splash( $structure['splash'], $data['since']['date'] );
-		} else {
-			$data['splash'] = false;
+		if ( ! empty( $filters['location'] ) && $filters['location'] !== 'all' ) {
+			$params['location'] = $filters['location'];
 		}
 
-		$data['qna']   = $this->get_flow_qna( $data['since']['date'] );
+		$params['since']['date'] = $data['since']['date'];
+
+		if ( is_numeric( $structure['splash'] ) ) {
+			$data['splash'] = $this->get_flow_splash( $structure['splash'], $params );
+		} else {
+			$data['splash']      = false;
+			$params['no_splash'] = true;
+		}
+
+		$data['qna']   = $this->get_flow_qna( $params );
 		$data['users'] = isset( $data['splash'][ Thrive_Quiz_Builder::TQB_IMPRESSION ] ) ? $data['splash'][ Thrive_Quiz_Builder::TQB_IMPRESSION ] : null;
 		$data['users'] = isset( $data['users'] ) ? $data['users'] : $data['qna'][ Thrive_Quiz_Builder::TQB_IMPRESSION ];
 
 		if ( is_numeric( $structure['optin'] ) ) {
-			$data['optin']             = $this->get_flow_optin( $structure['optin'], $data['since']['date'] );
-			$data['optin_subscribers'] = $this->get_page_subscribers( $structure['optin'], $data['since']['date'] );
+			$data['optin']             = $this->get_flow_optin( $structure['optin'], $params );
+			$data['optin_subscribers'] = $this->get_page_subscribers( $structure['optin'], $params );
 		} elseif ( $structure['optin'] ) {
 			$data['optin']             = $default_values;
 			$data['optin_subscribers'] = 0;
@@ -116,12 +128,14 @@ class TQB_Reporting_Manager {
 			$data['optin_subscribers'] = 0;
 		}
 
+		$data['results'] = $default_values;
+
 		if ( is_numeric( $structure['results'] ) ) {
-			$data['results']               = $this->get_flow_results( $structure['results'], $data['since']['date'] );
-			$data['results_subscribers']   = $this->get_page_subscribers( $structure['results'], $data['since']['date'] );
-			$data['results_social_shares'] = $this->get_page_social_shares( $structure['results'], $data['since']['date'] );
+			$data['completions']                                    = $this->tqbdb->get_completed_quiz_count( $this->quiz_id, $params );
+			$data['results'][ Thrive_Quiz_Builder::TQB_IMPRESSION ] = $data['completions'];
+			$data['results_subscribers']                            = $this->get_page_subscribers( $structure['results'], $params );
+			$data['results_social_shares']                          = $this->get_page_social_shares( $structure['results'], $params );
 		} else {
-			$data['results']               = $default_values;
 			$data['results_subscribers']   = 0;
 			$data['results_social_shares'] = 0;
 		}
@@ -129,44 +143,50 @@ class TQB_Reporting_Manager {
 		$results_page         = TQB_Structure_Manager::make_page( $structure['results'] );
 		$data['results_page'] = $results_page->to_json();
 
-		$data['completions'] = $this->tqbdb->get_completed_quiz_count( $this->quiz_id, $data['since']['date'] );
-
 		$data['quiz_id'] = $this->quiz_id;
+
+		$data['locations'] = $this->tqbdb->get_quiz_locations( $this->quiz_id );
 
 		return $data;
 	}
 
-	public function get_page_subscribers( $id, $last_modified ) {
+	public function get_page_subscribers( $id, $params ) {
 
-		return $this->tqbdb->get_page_subscribers( $id, $last_modified );
+		return $this->tqbdb->get_page_subscribers( $id, $params );
 	}
 
-	public function get_page_social_shares( $id, $last_modified ) {
+	public function get_page_social_shares( $id, $params ) {
 
-		return $this->tqbdb->get_page_social_shares( $id, $last_modified );
+		return $this->tqbdb->get_page_social_shares( $id, $params );
 	}
 
-	public function get_flow_splash( $id, $last_modified ) {
-
-		return $this->tqbdb->get_flow_data( $id, $last_modified );
+	public function get_flow_splash( $id, $params ) {
+		return $this->tqbdb->get_flow_splash_impressions( $id, $params ) + $this->tqbdb->get_flow_data( $id, $params );
 	}
 
-	public function get_flow_qna( $last_modified ) {
-		return $this->tqbdb->get_flow_data( $this->quiz_id, $last_modified );
+	public function get_flow_qna( $params ) {
+		return $this->tqbdb->get_flow_data( $this->quiz_id, $params );
 	}
 
-	public function get_flow_optin( $id, $last_modified ) {
-		return $this->tqbdb->get_flow_data( $id, $last_modified );
+	public function get_flow_optin( $id, $params ) {
+		return $this->tqbdb->get_flow_data( $id, $params );
 	}
 
-	public function get_flow_results( $id, $last_modified ) {
-		return $this->tqbdb->get_flow_data( $id, $last_modified );
+	public function get_flow_results( $id, $params ) {
+		return $this->tqbdb->get_flow_data( $id, $params );
 	}
 
-	public function get_questions_report() {
+	public function get_questions_report( $filters ) {
 
-		$data['questions'] = $this->tqbdb->get_questions_report_data( $this->quiz_id );
+		$params = [];
+
+		if ( ! empty( $filters['location'] ) && $filters['location'] !== 'all' ) {
+			$params['location'] = $filters['location'];
+		}
+
+		$data['questions'] = $this->tqbdb->get_questions_report_data( $this->quiz_id, $params );
 		$data['since']     = $this->get_report_collection_data();
+		$data['locations'] = $this->tqbdb->get_quiz_locations( $this->quiz_id );
 
 		return $data;
 	}
@@ -212,26 +232,60 @@ class TQB_Reporting_Manager {
 		if ( empty( $params['offset'] ) ) {
 			$params['offset'] = 0;
 		}
-		$result['since'] = $this->get_report_collection_data();
-
-		$result['data'] = $this->tqbdb->get_quiz_users( $this->quiz_id, array(
-			'per_page' => $params['per_page'],
-			'offset'   => $params['offset'],
-		) );
-
-		if ( empty( $result['data'] ) ) {
-			return $result;
-		}
+		$result['since']     = $this->get_report_collection_data();
+		$result['locations'] = $this->tqbdb->get_quiz_locations( $this->quiz_id );
 
 		$quiz_type = TQB_Post_meta::get_quiz_type_meta( $this->quiz_id );
 
 		if ( empty( $quiz_type ) ) {
 			return false;
 		}
+
+		$user_params = array(
+			'per_page'      => $params['per_page'],
+			'offset'        => $params['offset'],
+			'progress'      => isset( $params['progress'] ) ? $params['progress'] : null,
+			'result_min'    => isset( $params['result_min'] ) ? $params['result_min'] : null,
+			'result_max'    => isset( $params['result_max'] ) ? $params['result_max'] : null,
+			'categories'    => isset( $params['categories'] ) ? $params['categories'] : null,
+			'date_started'  => isset( $params['date_started'] ) ? $params['date_started'] : null,
+			'date_finished' => isset( $params['date_finished'] ) ? $params['date_finished'] : null,
+			'location'      => isset( $params['location'] ) && $params['location'] !== 'all' ? $params['location'] : null,
+			'quiz_type'     => $quiz_type['type'],
+		);
+
+		$result['data'] = $this->tqbdb->get_quiz_users( $this->quiz_id, $user_params );
+
+		if ( empty( $result['data'] ) ) {
+			return $result;
+		}
+
+		if ( $params['offset'] === 0 ) {
+			$total_items = $this->tqbdb->get_filtered_users_count( $this->quiz_id, $user_params );
+
+			if ( empty( $total_items ) ) {
+				return $result;
+			}
+
+			$result['total_items'] = intval( $total_items[0]->total_items );
+		} else if ( isset( $params['total_items'] ) ) {
+			$result['total_items'] = $params['total_items'];
+		}
+
 		$timezone_diff = current_time( 'timestamp' ) - time();
 		foreach ( $result['data'] as $key => $item ) {
-			$result['data'][ $key ]->date_started = date( 'Y-m-d H:i:s', strtotime( $result['data'][ $key ]->date_started ) + $timezone_diff );
-			$result['data'][ $key ]->number       = $params['offset'] + $key + 1;
+			$result['data'][ $key ]->date_started  = date( 'Y-m-d H:i:s', strtotime( $result['data'][ $key ]->date_started ) + $timezone_diff );
+			$result['data'][ $key ]->date_finished = $item->date_finished ? date( 'Y-m-d H:i:s', strtotime( $result['data'][ $key ]->date_finished ) + $timezone_diff ) : null;
+			$result['data'][ $key ]->number        = $params['offset'] + $key + 1;
+
+			if ( ! empty( $result['data'][ $key ]->wp_user_id ) ) {
+				$customer = new TQB_Customer( $result['data'][ $key ]->wp_user_id );
+
+				$result['data'][ $key ]->display_name = $customer->get_display_name();
+				if ( empty( $result['data'][ $key ]->email ) ) {
+					$result['data'][ $key ]->email = $customer->get_email();
+				}
+			}
 
 			$result['data'][ $key ]->points = TQB_Quiz_Manager::get_user_points( $item->random_identifier, $item->quiz_id );
 			if ( $result['data'][ $key ]->points === '-' ) {
@@ -242,8 +296,11 @@ class TQB_Reporting_Manager {
 					$result['data'][ $key ]->points = '-';
 				}
 			}
+
+			if ( $quiz_type['type'] == 'survey' ) {
+				$result['data'][ $key ]->points = null;
+			}
 		}
-		$result['total_items']  = $this->tqbdb->get_quiz_users_count( $this->quiz_id, false );
 		$result['per_page']     = $params['per_page'];
 		$result['offset']       = $params['offset'];
 		$result['quiz_id']      = $this->quiz_id;
@@ -259,10 +316,10 @@ class TQB_Reporting_Manager {
 
 		if ( empty( $structure_meta['last_reset'] ) ) {
 			$quiz         = get_post( $this->quiz_id );
-			$data['text'] = __( 'Data collected since: ', Thrive_Quiz_Builder::T );
+			$data['text'] = __( 'Data collected since: ', 'thrive-quiz-builder' );
 			$data['date'] = $quiz->post_date;
 		} else {
-			$data['text'] = __( 'Data collected since latest reset: ', Thrive_Quiz_Builder::T );
+			$data['text'] = __( 'Data collected since latest reset: ', 'thrive-quiz-builder' );
 			$data['date'] = date( 'Y-m-d H:i:s', $structure_meta['last_reset'] );
 		}
 
@@ -280,17 +337,17 @@ class TQB_Reporting_Manager {
 		if ( empty( $structure_meta['last_reset'] ) && empty( $structure_meta['last_modified'] ) ) {
 			$quiz = get_post( $this->quiz_id );
 
-			$data['text'] = __( 'Data collected since latest saved quiz structure: ', Thrive_Quiz_Builder::T );
+			$data['text'] = __( 'Data collected since latest saved quiz structure: ', 'thrive-quiz-builder' );
 			$data['date'] = $quiz->post_date;
 
 			return $data;
 		}
 
 		if ( $structure_meta['last_reset'] > $structure_meta['last_modified'] ) {
-			$data['text'] = __( 'Data collected since latest reset: ', Thrive_Quiz_Builder::T );
+			$data['text'] = __( 'Data collected since latest reset: ', 'thrive-quiz-builder' );
 			$data['date'] = date( 'Y-m-d H:i:s', $structure_meta['last_reset'] );
 		} else {
-			$data['text'] = __( 'Data collected since latest  saved quiz structure: ', Thrive_Quiz_Builder::T );
+			$data['text'] = __( 'Data collected since latest  saved quiz structure: ', 'thrive-quiz-builder' );
 			$data['date'] = date( 'Y-m-d H:i:s', $structure_meta['last_modified'] );
 		}
 
@@ -305,9 +362,9 @@ class TQB_Reporting_Manager {
 			$questions[ $qkey ]['answers'] = $this->tgedb->get_answers( array( 'question_id' => $question['id'] ), false );
 			foreach ( $questions[ $qkey ]['answers'] as $i => $answer ) {
 				foreach ( $user_answers as $key => $user_answer ) {
-					if ( $user_answer->answer_id == $answer['id'] ) {
+					if ( $user_answer['answer_id'] == $answer['id'] ) {
 						$questions[ $qkey ]['answers'][ $i ]['chosen']      = true;
-						$questions[ $qkey ]['answers'][ $i ]['answer_text'] = $user_answer->answer_text;
+						$questions[ $qkey ]['answers'][ $i ]['answer_text'] = $user_answer['answer_text'];
 					}
 				}
 			}

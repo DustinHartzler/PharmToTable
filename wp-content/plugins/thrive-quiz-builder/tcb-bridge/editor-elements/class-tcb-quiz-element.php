@@ -16,18 +16,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Quiz Builder Product - Allows inserting quizzes into pages
  */
 class TCB_Quiz_Element extends TCB_Element_Abstract {
-	private $quizzes = null;
-
-	/**
-	 * TCB_Quiz_Element constructor.
-	 *
-	 * @param string $tag
-	 */
-	public function __construct( $tag = '' ) {
-		$this->quizzes = TQB_Quiz_Manager::get_quizzes();
-
-		parent::__construct( $tag );
-	}
 
 	/**
 	 * Get element alternate
@@ -44,7 +32,7 @@ class TCB_Quiz_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Quiz', Thrive_Quiz_Builder::T );
+		return __( 'Quiz', 'thrive-quiz-builder' );
 	}
 
 	/**
@@ -90,55 +78,6 @@ class TCB_Quiz_Element extends TCB_Element_Abstract {
 	}
 
 	/**
-	 * Prepares the quizzes for change quiz control
-	 *
-	 * @return array
-	 */
-	private function get_quizes_for_component() {
-		$return = array();
-		if ( $this->quizzes === null ) {
-			return $return;
-		}
-
-		/**
-		 * Display only valid quizzes
-		 */
-		foreach ( $this->quizzes as $quiz ) {
-			if ( $quiz->validation['valid'] ) {
-				$return[] = array(
-					'name'  => $quiz->post_title,
-					'value' => $quiz->ID,
-				);
-			}
-		}
-
-		return $return;
-	}
-
-	/**
-	 * Get quizzes scroll options
-	 *
-	 * @return array
-	 */
-	private function _get_quizzes_scroll_options() {
-
-		$result = array();
-
-		if ( ! is_array( $this->quizzes ) ) {
-			return $result;
-		}
-
-		foreach ( $this->quizzes as $quiz ) {
-			$result[] = array(
-				'id'     => $quiz->ID,
-				'scroll' => TQB_Post_meta::get_quiz_scroll_settings_meta( $quiz->ID ),
-			);
-		}
-
-		return $result;
-	}
-
-	/**
 	 * Component and control config
 	 *
 	 * @return array
@@ -147,25 +86,35 @@ class TCB_Quiz_Element extends TCB_Element_Abstract {
 		return array(
 			'quiz'             => array(
 				'config' => array(
-					'change_quiz' => array(
+					'change_quiz'          => array(
 						'config'  => array(
-							'name'        => __( 'Change quiz', Thrive_Quiz_Builder::T ),
+							'name'        => esc_html__( 'Change quiz', 'thrive-quiz-builder' ),
 							'label_col_x' => 4,
-							'options'     => $this->get_quizes_for_component(),
+							'options'     => array(),
 						),
 						'extends' => 'Select',
 					),
-					'quiz_scroll' => array(
+					'quiz_scroll'          => array(
 						'config'     => array(
 							'name'    => '',
-							'label'   => __( 'Enable quiz scroll', Thrive_Quiz_Builder::T ),
+							'label'   => esc_html__( 'Enable quiz scroll', 'thrive-quiz-builder' ),
 							'default' => true,
-							'options' => $this->_get_quizzes_scroll_options(),
 						),
 						'css_suffix' => '',
 						'css_prefix' => '',
 						'extends'    => 'Switch',
 					),
+					'SaveUserQuizProgress' => [
+						'config'  => [
+							'name'        => '',
+							'label'       => esc_html__( 'Save users quiz progress', 'thrive-quiz-builder' ),
+							'default'     => true,
+							'info'        => true,
+							'icontooltip' => esc_html__( 'This will allow logged-in users to return to the same page and resume their progress or see their results.', 'thrive-quiz-builder' ),
+							'iconside'    => 'bottom',
+						],
+						'extends' => 'Switch',
+					],
 				),
 			),
 			'typography'       => array( 'hidden' => true ),
@@ -184,7 +133,7 @@ class TCB_Quiz_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return $this->get_thrive_integrations_label();
+		return static::get_thrive_integrations_label();
 	}
 
 	/**

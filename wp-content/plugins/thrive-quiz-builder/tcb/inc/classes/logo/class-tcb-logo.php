@@ -80,8 +80,8 @@ class TCB_Logo {
 			/* only localize the active logos */
 			'sources'             => array_values( $active_logos ),
 			'deleted_placeholder' => tve_editor_url( static::DELETED_PLACEHOLDER_SRC ),
-			'is_ttb_active'       => wp_get_theme()->get_stylesheet() === 'thrive-theme',
-			'is_ta_active'        => is_plugin_active( 'thrive-apprentice/thrive-apprentice.php' ),
+			'is_ttb_active'       => tve_dash_is_ttb_active(),
+			'is_ta_active'        => tve_dash_is_plugin_active( 'thrive-apprentice' ),
 		);
 
 		return $data;
@@ -104,7 +104,7 @@ class TCB_Logo {
 		$desktop_id = (int) $attr['data-id-d'];
 
 		/* set the desktop source as a fallback; get only the src here, since this is an all-browser compatible version */
-		$fallback_data = static::get_attachment_data( $desktop_id, self::get_logos()[ $desktop_id ] );
+		$fallback_data = static::get_attachment_data( $desktop_id, static::get_logos()[ $desktop_id ] );
 
 		/* If we do not have alt in attr, we read it from fallback data */
 		if ( empty( $attr['data-alt'] ) ) {
@@ -118,6 +118,16 @@ class TCB_Logo {
 			'alt'    => $attr['data-alt'],
 			'style'  => ! empty( $attr['data-img-style'] ) ? $attr['data-img-style'] : '',
 		);
+
+		/**
+		 * Handle logo image loading
+		 */
+		if ( isset( $attr['loading'] ) ) {
+			$img_attr['loading'] = $attr['loading'];
+			unset( $attr['loading'] );
+		} else {
+			$img_attr['class'] = 'tve-not-lazy-loaded';
+		}
 
 		/* GIFs aren't compatible with srcset, so we use the fallback version */
 		if ( ! empty( $img_attr['src'] ) && substr( $img_attr['src'], - 4 ) === '.gif' ) {
@@ -140,7 +150,11 @@ class TCB_Logo {
 
 		/* We have to process the shortcode here because we cannot send it as a param inside another shortcode ( logo ) */
 		if ( ! empty( $attr['data-dynamic-link'] ) ) {
-			$attr['href'] = do_shortcode( "[{$attr['data-dynamic-link']} id={$attr['data-shortcode-id']}]" );
+			$shortcode = "{$attr['data-dynamic-link']} id={$attr['data-shortcode-id']}";
+			if ( ! empty( $attr['data-custom-redirect'] ) ) {
+				$shortcode .= " logout-redirect={$attr['data-custom-redirect']}";
+			}
+			$attr['href'] = do_shortcode( "[{$shortcode}]" );
 		}
 
 		/* embed the img in a link instead of wrapping it in a div (if an url exists) */

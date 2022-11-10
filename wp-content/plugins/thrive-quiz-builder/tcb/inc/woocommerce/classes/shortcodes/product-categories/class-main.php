@@ -88,11 +88,20 @@ class Main {
 			'orderby'       => 'name',
 			'order'         => 'asc',
 			'ids'           => '',
-			'parent'        => '',
+			'parent'        => 0,
 			'align-items'   => 'center',
 			'text-layout'   => 'text_on_image',
 			'text-position' => 'center',
 		), is_array( $attr ) ? $attr : array() );
+
+		/*
+		 * Fix for an earlier mistake, or maybe something that WooCommerce changed since then:
+		 * The default value for 'parent' should be 0, not '', otherwise
+		 * all the product categories are displayed, not only the top-level ones.
+		 */
+		if ( $attr['parent'] === '' ) {
+			$attr['parent'] = 0;
+		}
 
 		if ( ! $in_editor && ! empty( $attr['hide-title'] ) ) {
 			/* by removing this action we actually hide the title; the action is added back in after_render() */

@@ -272,6 +272,9 @@ class JS {
 				'identifier'   => '.tcb-post-list, .tva-course-list',
 				'dependencies' => [ 'post-grid-compat', 'dropdown' ],
 			],
+			'post-list-filter'             => [
+				'identifier'   => '.tcb-post-list-filter',
+			],
 			'pricing-table'         => [
 				'identifier' => '.thrv-pricing-table',
 			],
@@ -313,7 +316,11 @@ class JS {
 			}, $data );
 		}
 
-		return empty( $module ) ? $data : $data[ $module ];
+		if ( ! empty( $module ) ) {
+			$data = isset( $data[ $module ] ) ? $data[ $module ] : [];
+		}
+
+		return $data;
 	}
 
 	/**

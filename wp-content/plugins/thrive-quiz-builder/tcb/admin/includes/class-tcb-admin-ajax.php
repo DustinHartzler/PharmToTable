@@ -12,11 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class TCB_Admin_Ajax {
 	const ACTION = 'tcb_admin_ajax_controller';
-	const NONCE = 'tcb_admin_ajax_request';
-
-	const USER_TEMPLATES = 'tve_user_templates';
-	const USER_TEMPLATES_CATEGORIES = 'tve_user_templates_categories';
-	const UPLOAD_DIR_CUSTOM_FOLDER = 'thrive-visual-editor';
+	const NONCE  = 'tcb_admin_ajax_request';
 
 	/**
 	 * Init the object, during the AJAX request. Adds ajax handlers and verifies nonces
@@ -74,152 +70,169 @@ class TCB_Admin_Ajax {
 	}
 
 	/**
-	 * Template action callback
-	 * Templates collection
-	 */
-	/**
+	 * Returns the templates grouped by category.
+	 *
+	 * Retrieves the templates and categories
+	 *
+	 * //todo transform into a rest route
+	 * //todo return separately, not grouped, and do the rest in JS ( skip the complex processing logic )
+	 *
 	 * @return array
 	 */
-	public function templates_action() {
-		$model  = json_decode( file_get_contents( 'php://input' ), true );
+	public function templates_fetch_action() {
+		$templates_grouped_by_categories = [];
+
 		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
 
 		switch ( $method ) {
-			case 'POST':
-			case 'PUT':
-			case 'PATCH':
-			case 'DELETE':
-				$this->error( __( 'Invalid call', 'thrive-cb' ) );
-				break;
 			case 'GET':
-				$templates = get_option( self::USER_TEMPLATES, array() );
-				if ( empty( $templates ) ) {
-					$templates = array();
-				}
+				$templates = TCB\UserTemplates\Template::get_all();
 				$templates = array_reverse( $templates );
 
 				if ( $search = $this->param( 'search' ) ) {
 					$templates = tcb_filter_templates( $templates, $search );
 				}
 
-				$tpl_categs = get_option( self::USER_TEMPLATES_CATEGORIES, array() );
-				if ( empty( $tpl_categs ) ) {
-					$tpl_categs = array();
+				$categories = TCB\UserTemplates\Category::get_all();
+
+				/* todo: this next section has to be refactored (see function comments), for now it has to stay like this in order to avoid having to rewrite the JS */
+				$templates_for_category = tcb_admin_get_category_templates( $templates );
+
+				foreach ( $categories as $category ) {
+					/* @var \TCB\UserTemplates\Category */
+					$category_instance = \TCB\UserTemplates\Category::get_instance_with_id( $category['id'] );
+
+					if ( empty( $category_instance->get_meta( 'type' ) ) ) {
+						$templates_grouped_by_categories[] = [
+							'id'   => $category['id'],
+							'name' => $category['name'],
+							'tpl'  => empty( $templates_for_category[ $category['id'] ] ) ? [] : $templates_for_category[ $category['id'] ],
+						];
+					}
 				}
 
-				$categ_tpls = tcb_admin_get_category_templates( $templates );
-				$return     = array();
-
-				foreach ( $tpl_categs as $categ ) {
-					$return[] = array(
-						'id'   => $categ['id'],
-						'name' => $categ['name'],
-						'tpl'  => ! empty( $categ_tpls[ $categ['id'] ] ) ? $categ_tpls[ $categ['id'] ] : array(),
-					);
-				}
-				$return[] = array(
+				$templates_grouped_by_categories[] = [
 					'id'   => 'uncategorized',
 					'name' => __( 'Uncategorized templates', 'thrive-cb' ),
-					'tpl'  => ! empty( $categ_tpls['uncategorized'] ) ? $categ_tpls['uncategorized'] : array(),
-				);
+					'tpl'  => empty( $templates_for_category['uncategorized'] ) ? [] : $templates_for_category['uncategorized'],
+				];
 
-				$return[] = array(
-					'id'   => '[#page#]',
+				$page_template_identifier = \TCB\UserTemplates\Category::PAGE_TEMPLATE_IDENTIFIER;
+
+				$templates_grouped_by_categories[] = [
+					'id'   => $page_template_identifier,
 					'name' => __( 'Page Templates', 'thrive-cb' ),
-					'tpl'  => ! empty( $categ_tpls['[#page#]'] ) ? $categ_tpls['[#page#]'] : array(),
-				);
+					'tpl'  => empty( $templates_for_category[ $page_template_identifier ] ) ? [] : $templates_for_category[ $page_template_identifier ],
+				];
 
-				return $return;
+				break;
+			case 'POST':
+			case 'PUT':
+			case 'PATCH':
+			case 'DELETE':
+				$this->error( __( 'Invalid call', 'thrive-cb' ) );
+				break;
+			default:
 				break;
 		}
+
+		return $templates_grouped_by_categories;
 	}
 
-	public function templatemodel_action() {
-		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
+	/**
+	 * Category rename and category delete
+	 *
+	 * //todo transform into a rest route
+	 *
+	 * @return array
+	 */
+	public function template_category_model_action() {
+		$model    = json_decode( file_get_contents( 'php://input' ), true );
+		$method   = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
+		$response = [];
+
 		switch ( $method ) {
 			case 'POST':
 			case 'PUT':
 			case 'PATCH':
-				//Modify the category name
+				$categories = TCB\UserTemplates\Category::get_all();
 
-				$tpl_categories = get_option( self::USER_TEMPLATES_CATEGORIES );
-				if ( empty( $tpl_categories ) || ! is_array( $tpl_categories ) ) {
+				if ( empty( $categories ) ) {
 					$this->error( __( 'The template category list is empty!', 'thrive-cb' ) );
 					break;
 				}
-
-				if ( ! is_numeric( $model['id'] ) || empty( $model['name'] ) || empty( $tpl_categories[ $model['id'] ] ) ) {
+				if ( ! is_numeric( $model['id'] ) || empty( $model['name'] ) ) {
 					$this->error( __( 'Invalid parameters', 'thrive-cb' ) );
 					break;
 				}
 
-				$tpl_categories[ $model['id'] ]['name'] = $model['name'];
-				update_option( 'tve_user_templates_categories', $tpl_categories, 'no' );
+				/* @var TCB\UserTemplates\Category $category_instance */
+				$category_instance = TCB\UserTemplates\Category::get_instance_with_id( $model['id'] );
+				$category_instance->rename( $model['name'] );
 
-				return array( 'text' => __( 'The category name was modified!', 'thrive-cb' ) );
+				$response = [
+					'text' => __( 'The category name was modified!', 'thrive-cb' ),
+				];
 				break;
 			case 'DELETE':
-				$id             = $this->param( 'id', '' );
-				$tpl_categories = get_option( self::USER_TEMPLATES_CATEGORIES );
-				$templates      = get_option( self::USER_TEMPLATES );
+				$id = $this->param( 'id', '' );
 
 				if ( ! is_numeric( $id ) ) {
 					$this->error( __( 'Undefined parameter: id', 'thrive-cb' ) );
 					break;
 				}
 
-				if ( empty( $tpl_categories ) || ! is_array( $tpl_categories ) || empty( $tpl_categories[ $id ] ) ) {
-					$this->error( __( 'Invalid category template', 'thrive-cb' ) );
-				}
-
-				$upload_dir = wp_upload_dir();
-				$base       = $upload_dir['basedir'] . '/' . self::UPLOAD_DIR_CUSTOM_FOLDER . '/user_templates';
-
-				unset( $tpl_categories[ $id ] );
-				update_option( 'tve_user_templates_categories', $tpl_categories, 'no' );
+				$templates = TCB\UserTemplates\Template::get_all();
 
 				// Move existing templates belonging to the deleted category to uncategorized
-				$categ_tpls = tcb_admin_get_category_templates( $templates );
-				if ( ! empty( $categ_tpls[ $id ] ) ) {
+				$templates_grouped_by_category = tcb_admin_get_category_templates( $templates );
 
-					if ( ! empty( $_POST['extra_setting_check'] ) ) {
-						foreach ( $templates as $key => $value ) {
-							if ( isset( $value['id_category'] ) && is_numeric( $value['id_category'] ) && $value['id_category'] == $id ) {
-								unset( $templates[ $key ] );
+				if ( ! empty( $templates_grouped_by_category[ $id ] ) ) {
+					foreach ( $templates_grouped_by_category[ $id ] as $template ) {
+						if ( isset( $template['id_category'] ) && (int) $template['id_category'] === (int) $id ) {
 
-								// Delete Cover Image
-								$file_name = $base . '/' . $value['name'] . '.png';
-								@unlink( $file_name );
-							}
-						}
-					} else {
-						foreach ( $templates as $key => $value ) {
-							if ( isset( $value['id_category'] ) && is_numeric( $value['id_category'] ) && $value['id_category'] == $id ) {
-								unset( $templates[ $key ]['id_category'] );
+							/* @var \TCB\UserTemplates\Template $template_instance */
+							$template_instance = TCB\UserTemplates\Template::get_instance_with_id( $template['id'] );
+
+							if ( empty( $_POST['extra_setting_check'] ) ) {
+								$template_instance->update( [ 'id_category' => '' ] );
+							} else {
+								$template_instance->delete();
 							}
 						}
 					}
-
-					update_option( 'tve_user_templates', $templates, 'no' );
 				}
 
-				return array( 'text' => __( 'The category was deleted!', 'thrive-cb' ) );
+				/* @var TCB\UserTemplates\Category $category_instance */
+				$category_instance = TCB\UserTemplates\Category::get_instance_with_id( $id );
+				$category_instance->delete();
+
+				$response = [
+					'text' => __( 'The category was deleted!', 'thrive-cb' ),
+				];
 				break;
 			case 'GET':
 				$this->error( __( 'Invalid call', 'thrive-cb' ) );
 				break;
+			default:
+				break;
 		}
+
+		return $response;
 	}
 
 	/**
 	 * Template Category action callback
 	 *
+	 * Strictly for adding new categories
+	 * //todo transform into a rest route
+	 *
 	 * @return array
 	 */
-	public function templatecategory_action() {
-		$model  = json_decode( file_get_contents( 'php://input' ), true );
-		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
+	public function template_category_action() {
+		$model    = json_decode( file_get_contents( 'php://input' ), true );
+		$method   = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
+		$response = [];
 
 		switch ( $method ) {
 			case 'POST':
@@ -230,123 +243,104 @@ class TCB_Admin_Ajax {
 					break;
 				}
 
-				$template_categories = get_option( self::USER_TEMPLATES_CATEGORIES );
-				if ( ! is_array( $template_categories ) ) {
-					$template_categories = array();
-				}
-
-				$last_category = end( $template_categories );
-				if ( ! empty( $last_category ) ) {
-					$index = $last_category['id'] + 1;
-				} else {
-					$index = 0;
-				}
+				/* multiple categories can be saved at the same time....for some reason */
 				foreach ( $model['category'] as $category ) {
-					if ( ! empty( $category ) ) {
-						$template_categories[] = array(
-							'id'   => $index,
-							'name' => $category,
-						);
-						$index ++;
-					}
+					TCB\UserTemplates\Category::add( $category );
 				}
 
-				update_option( 'tve_user_templates_categories', $template_categories, 'no' );
-
-				return array( 'text' => __( 'The category was saved!', 'thrive-cb' ) );
+				$response = [
+					'text' => __( 'The category was saved!', 'thrive-cb' ),
+				];
 				break;
 			case 'DELETE':
 			case 'GET':
 				$this->error( __( 'Invalid call', 'thrive-cb' ) );
 				break;
-
+			default:
+				break;
 		}
+
+		return $response;
 	}
 
 	/**
-	 * User template action callbacks
+	 * Template update - name and category
+	 * Template delete
+	 * Template preview
+	 *
+	 * //todo change to rest routes
 	 *
 	 * @return array
 	 */
-	public function usertpl_action() {
+	public function template_action() {
 		$model  = json_decode( file_get_contents( 'php://input' ), true );
 		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
+
+		$response = [];
 
 		switch ( $method ) {
 			case 'POST':
 			case 'PUT':
 			case 'PATCH':
-				// Modify the template name or template category
-				$templates = array_reverse( get_option( self::USER_TEMPLATES ) );
-
-				if ( empty( $templates ) || ! is_array( $templates ) ) {
-					$this->error( __( 'The template list is empty', 'thrive-cb' ) );
-					break;
-				}
-
-				if ( ! is_numeric( $model['id'] ) || empty( $model['name'] ) || empty( $templates[ $model['id'] ] ) ) {
+				if ( empty( $model['id'] ) || empty( $model['name'] ) ) {
 					$this->error( __( 'Invalid parameters', 'thrive-cb' ) );
 					break;
 				}
 
-				$templates[ $model['id'] ]['name'] = $model['name'];
-				if ( isset( $model['id_category'] ) && is_numeric( $model['id_category'] ) ) {
-					$templates[ $model['id'] ]['id_category'] = $model['id_category'];
-				} else {
-					unset( $templates[ $model['id'] ]['id_category'] );
+				$data_to_update = [
+					'name' => $model['name'],
+				];
+
+				if ( isset( $model['id_category'] ) ) {
+					$data_to_update['id_category'] = $model['id_category'];
 				}
 
-				update_option( 'tve_user_templates', $templates, 'no' );
+				/* @var \TCB\UserTemplates\Template $template_instance */
+				$template_instance = \TCB\UserTemplates\Template::get_instance_with_id( $model['id'] );
+				$template_instance->update( $data_to_update );
 
-				return array( 'text' => __( 'The template saved!', 'thrive-cb' ) );
+				$response = [ 'text' => __( 'The template saved!', 'thrive-cb' ) ];
 				break;
 			case 'DELETE':
-				$id        = $this->param( 'id', '' );
-				$templates = array_reverse( get_option( self::USER_TEMPLATES, array() ) );
+				$id = $this->param( 'id', '' );
 
-				if ( ! is_numeric( $id ) ) {
-					$this->error( __( 'Undefined parameter: id', 'thrive-cb' ) );
-					break;
-				}
+				/* @var \TCB\UserTemplates\Template $template_instance */
+				$template_instance = \TCB\UserTemplates\Template::get_instance_with_id( $id );
+				$template_instance->delete();
 
-				if ( empty( $templates[ $id ] ) ) {
-					$this->error( __( 'Invalid template', 'thrive-cb' ) );
-				}
-
-				// Delete Cover Image
-				$upload_dir = wp_upload_dir();
-				$base       = $upload_dir['basedir'] . '/' . self::UPLOAD_DIR_CUSTOM_FOLDER . '/user_templates';
-				$file_name  = $base . '/' . $templates[ $id ]['name'] . '.png';
-				@unlink( $file_name );
-
-				// Delete Template
-				unset( $templates[ $id ] );
-				update_option( 'tve_user_templates', array_values( array_reverse( $templates ) ), 'no' );
-
-
-				return array( 'text' => __( 'The template was deleted!', 'thrive-cb' ) );
+				$response = [ 'text' => __( 'The template was deleted!', 'thrive-cb' ) ];
 				break;
+			/* template preview */
 			case 'GET':
-				$id        = $this->param( 'id', '' );
-				$templates = array_reverse( get_option( self::USER_TEMPLATES ) );
+				$id = $this->param( 'id', '' );
 
 				if ( ! is_numeric( $id ) ) {
 					$this->error( __( 'Undefined parameter: id', 'thrive-cb' ) );
 					break;
 				}
 
-				if ( empty( $templates[ $id ] ) ) {
-					$this->error( __( 'Invalid template', 'thrive-cb' ) );
+				/* @var \TCB\UserTemplates\Template $template_instance */
+				$template_instance = \TCB\UserTemplates\Template::get_instance_with_id( $id );
+
+				$response = $template_instance->get();
+
+				if ( empty( $response['thumb'] ) ) {
+					$response['thumb'] = [
+						'url' => '',
+						'w'   => '',
+						'h'   => '',
+					];
 				}
 
-				if ( empty( $templates[ $id ]['thumb']['url'] ) ) {
-					$templates[ $id ]['thumb']['url'] = tcb_admin()->admin_url( 'assets/images/no-template-preview.jpg' );
+				if ( empty( $response['thumb']['url'] ) ) {
+					$response['thumb']['url'] = TCB_Utils::get_placeholder_url();
 				}
-
-				return array_merge( array( 'id' => $id ), $templates[ $id ] );
+				break;
+			default:
 				break;
 		}
 
+		return $response;
 	}
 
 	/**

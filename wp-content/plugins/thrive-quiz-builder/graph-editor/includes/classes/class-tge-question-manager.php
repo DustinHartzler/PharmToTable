@@ -163,7 +163,7 @@ class TGE_Question_Manager {
 			$file_name     = end( $url_arr );
 			$mime_arr      = explode( '.', $file_name );
 			$mime_type     = end( $mime_arr );
-			$not_supported = __( 'Your browser does not support the audio tag.', Thrive_Graph_Editor::T );
+			$not_supported = __( 'Your browser does not support the audio tag.', 'thrive-graph-editor' );
 
 			return '<div class="tqb-tar-question-audio">
 				<audio controls playsinline controlsList="nodownload" style="width: 100%;"' . $autoplay . ' ' . $loop . '
@@ -415,17 +415,17 @@ class TGE_Question_Manager {
 			array(
 				'id'   => 1,
 				'key'  => 'button',
-				'name' => __( 'Multiple Choice with Buttons', Thrive_Graph_Editor::T ),
+				'name' => __( 'Multiple Choice with Buttons', 'thrive-graph-editor' ),
 			),
 			array(
 				'id'   => 2,
 				'key'  => 'image',
-				'name' => __( 'Multiple Choice with Images', Thrive_Graph_Editor::T ),
+				'name' => __( 'Multiple Choice with Images', 'thrive-graph-editor' ),
 			),
 			array(
 				'id'   => 3,
 				'key'  => 'open',
-				'name' => __( 'Open Ended Question', Thrive_Graph_Editor::T ),
+				'name' => __( 'Open Ended Question', 'thrive-graph-editor' ),
 			),
 		);
 	}
@@ -678,6 +678,20 @@ class TGE_Question_Manager {
 
 		$min = PHP_INT_MAX;
 		$max = - 1;
+
+		/**
+		 * Cycle check!
+		 * Questions that end in an infinite loop is not permitted.
+		 * Therefore we break the recursion here if a visited node has been found
+		 */
+		if ( ! empty( $this->questions[ $q['id'] ]['visited'] ) ) {
+			return array(
+				'min' => 0,
+				'max' => 0,
+			);
+		}
+		$this->questions[ $q['id'] ]['visited'] = 1;
+
 		foreach ( $q['answers'] as $answer ) {
 			if ( empty( $answer['next'] ) && empty( $q['next'] ) ) {
 				$min_max = array( 'min' => 0, 'max' => 0 );

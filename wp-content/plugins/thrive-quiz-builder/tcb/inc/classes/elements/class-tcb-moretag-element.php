@@ -67,7 +67,7 @@ class TCB_Moretag_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return self::get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**

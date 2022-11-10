@@ -46,12 +46,12 @@ class TQB_Product extends TVE_Dash_Product_Abstract {
 
 		$this->incompatible_architect_version = ! tqb()->check_tcb_version();
 
-		$this->description = __( 'Engage your visitors with a fun quiz and find out more about them.', Thrive_Quiz_Builder::T );
+		$this->description = __( 'Engage your visitors with a fun quiz and find out more about them.', 'thrive-quiz-builder' );
 
 		$this->button = array(
 			'active' => true,
 			'url'    => admin_url( 'admin.php?page=tqb_admin_dashboard' ),
-			'label'  => __( 'Quiz Builder Dashboard', Thrive_Quiz_Builder::T ),
+			'label'  => __( 'Quiz Builder Dashboard', 'thrive-quiz-builder' ),
 		);
 
 		$this->moreLinks = array(
@@ -60,14 +60,14 @@ class TQB_Product extends TVE_Dash_Product_Abstract {
 				'icon_class' => 'tvd-icon-graduation-cap',
 				'href'       => 'https://thrivethemes.com/thrive-quiz-builder-tutorials/',
 				'target'     => '_blank',
-				'text'       => __( 'Tutorials', Thrive_Quiz_Builder::T ),
+				'text'       => __( 'Tutorials', 'thrive-quiz-builder' ),
 			),
 			'support'   => array(
 				'class'      => '',
 				'icon_class' => 'tvd-icon-life-bouy',
 				'href'       => 'https://thrivethemes.com/support/',
 				'target'     => '_blank',
-				'text'       => __( 'Support', Thrive_Quiz_Builder::T ),
+				'text'       => __( 'Support', 'thrive-quiz-builder' ),
 			),
 		);
 	}

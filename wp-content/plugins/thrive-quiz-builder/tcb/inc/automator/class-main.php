@@ -24,7 +24,11 @@ class Main {
 	 *
 	 */
 	public static function init() {
-		self::add_hooks();
+		if ( defined( 'THRIVE_AUTOMATOR_RUNNING' )
+		     && ( ( defined( 'TVE_DEBUG' ) && TVE_DEBUG )
+		          || ( defined( 'TAP_VERSION' ) && version_compare( TAP_VERSION, '1.0', '>=' ) ) ) ) {
+			static::add_hooks();
+		}
 	}
 
 	/**
@@ -37,14 +41,24 @@ class Main {
 	}
 
 	public static function add_hooks() {
-		self::load_data_objects();
-		self::load_fields();
-		self::load_action_fields();
-		self::load_actions();
-		self::load_triggers();
+		static::load_apps();
+		static::load_data_objects();
+		static::load_fields();
+		static::load_action_fields();
+		static::load_actions();
+		static::load_trigger_fields();
+		static::load_triggers();
 		add_action( 'tap_output_extra_svg', array( 'TCB\Integrations\Automator\Main', 'display_icons' ) );
 
 		add_filter( 'tvd_automator_api_data_sets', array( 'TCB\Integrations\Automator\Main', 'dashboard_sets' ), 1, 1 );
+
+		add_filter( 'tve_automator_should_use_form', array( 'TCB\Integrations\Automator\Main', 'filter_lgs' ), 10, 4 );
+	}
+
+	public static function load_apps() {
+		foreach ( static::load_files( 'apps' ) as $app ) {
+			\thrive_automator_register_app( new $app() );
+		}
 	}
 
 	public static function load_triggers() {
@@ -62,6 +76,12 @@ class Main {
 	public static function load_action_fields() {
 		foreach ( static::load_files( 'action-fields' ) as $field ) {
 			\thrive_automator_register_action_field( new $field() );
+		}
+	}
+
+	public static function load_trigger_fields() {
+		foreach ( static::load_files( 'trigger-fields' ) as $field ) {
+			\thrive_automator_register_trigger_field( new $field() );
 		}
 	}
 
@@ -87,7 +107,7 @@ class Main {
 		$local_classes = array();
 		foreach ( glob( $integration_path . '/*.php' ) as $file ) {
 			require_once $file;
-			$class = 'TCB\Integrations\Automator\\' . self::get_class_name_from_filename( $file );
+			$class = 'TCB\Integrations\Automator\\' . static::get_class_name_from_filename( $file );
 			if ( class_exists( $class ) ) {
 				$local_classes[] = $class;
 			}
@@ -97,7 +117,7 @@ class Main {
 	}
 
 	public static function get_class_name_from_filename( $filename ) {
-		$name = str_replace( [ 'class-' ], '', basename( $filename, '.php' ) );
+		$name = str_replace( 'class-', '', basename( $filename, '.php' ) );
 
 		return str_replace( '-', '_', ucwords( $name, '-' ) );
 	}
@@ -113,5 +133,14 @@ class Main {
 		$sets[] = 'form_data';
 
 		return $sets;
+	}
+
+	public static function filter_lgs( $allow, $lg_post, $trigger_id, $trigger_data ) {
+		$form_type = $lg_post->form_type;
+		if ( $trigger_id === Register_Form_Submit::get_id() && ( empty( $form_type ) || $form_type !== 'registration_form' ) ) {
+			$allow = false;
+		}
+
+		return $allow;
 	}
 }

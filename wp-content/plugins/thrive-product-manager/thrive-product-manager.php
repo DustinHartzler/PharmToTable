@@ -4,16 +4,26 @@
  * Plugin Name: Thrive Product Manager
  * Plugin URI: http://thrivethemes.com
  * Description: Connect this site with Thrive Themes account to install and activate Thrive product.
- * Version: 1.2.5
+ * Version: 1.3.0
  * Author: Thrive Themes
  * Author URI: http://thrivethemes.com
  */
 class Thrive_Product_Manager {
 
-	const V = '1.2.5';
+	const V = '1.3.0';
 	const T = 'thrive_product_manager';
 
 	protected static $_instance;
+
+	public static $ttw_urls = array(
+		'local'    => 'http://local.thrivethemes.com',
+		'live'     => 'https://thrivethemes.com',
+		'staging1' => 'https://staging.thrivethemes.com',
+		'staging2' => 'https://staging2.thrivethemes.com',
+		'staging3' => 'https://staging3.thrivethemes.com',
+		'staging5' => 'https://staging-ttw.com',
+		'hetzner'  => 'https://staging-hetz.thrivethemes.com',
+	);
 
 	const CACHE_ENABLED = true;
 
@@ -70,9 +80,15 @@ class Thrive_Product_Manager {
 			/** @var WP_Error $error */
 			$this->global_error = $error;
 		} );
+
+		if ( TPM_Connection::get_instance()->is_connected() ) {
+			TPM_Dashboard::init();
+		}
 	}
 
 	protected function _includes() {
+
+		require __DIR__ . '/inc/functions.php';
 
 		require_once __DIR__ . '/inc/classes/class-tpm-request.php';
 		require_once __DIR__ . '/inc/classes/class-tpm-proxy-request.php';
@@ -89,6 +105,7 @@ class Thrive_Product_Manager {
 		require_once __DIR__ . '/inc/classes/class-tpm-product-skin.php';
 		require_once __DIR__ . '/inc/classes/class-tpm-license-manager.php';
 		require_once __DIR__ . '/inc/classes/class-tpm-cron.php';
+		require_once __DIR__ . '/inc/classes/class-tpm-dashboard.php';
 	}
 
 	/**
@@ -345,6 +362,22 @@ class Thrive_Product_Manager {
 		$product_list = TPM_Product_List::get_instance();
 		$product      = $product_list->get_product_instance( $tag );
 
+		/* for installing plugins, user needs to have the `install_plugins` cap */
+		if ( $product instanceof TPM_Product_Plugin && ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error( array(
+				'status' => 'failed',
+				'extra'  => 'You are not allowed to install/license plugins!',
+			) );
+		}
+
+		/* for installing themes, user needs to have the `install_themes` cap */
+		if ( $product instanceof TPM_Product_Theme && ! current_user_can( 'install_themes' ) ) {
+			wp_send_json_error( array(
+				'status' => 'failed',
+				'extra'  => 'You are not allowed to install/license themes!',
+			) );
+		}
+
 		$data = array(
 			'status'  => null,
 			'tag'     => $product->get_tag(),
@@ -438,6 +471,23 @@ class Thrive_Product_Manager {
 
 		foreach ( $_REQUEST['tags'] as $tag ) {
 			$product = $productList->get_product_instance( $tag );
+
+			/* for activating plugins, user needs to have the `activate_plugins` cap */
+			if ( $product instanceof TPM_Product_Plugin && ! current_user_can( 'activate_plugins' ) ) {
+				wp_send_json_error( array(
+					'status' => 'failed',
+					'extra'  => 'No capabilities',
+				) );
+			}
+
+			/* for activating themes, user needs to have the `switch_themes` cap */
+			if ( $product instanceof TPM_Product_Theme && ! current_user_can( 'switch_themes' ) ) {
+				wp_send_json_error( array(
+					'status' => 'failed',
+					'extra'  => 'No capabilities',
+				) );
+			}
+
 			if ( $product->get_tag() === 'ttb' ) {
 				$product->set_previously_installed( true );
 			}
@@ -477,6 +527,22 @@ class Thrive_Product_Manager {
 
 		$productList = TPM_Product_List::get_instance();
 		$product     = $productList->get_product_instance( $_REQUEST['tag'] );
+		/* for activating plugins, user needs to have the `activate_plugins` cap */
+		if ( $product instanceof TPM_Product_Plugin && ! current_user_can( 'activate_plugins' ) ) {
+			wp_send_json_error( array(
+				'status' => 'failed',
+				'extra'  => 'No capabilities',
+			) );
+		}
+
+		/* for activating themes, user needs to have the `switch_themes` cap */
+		if ( $product instanceof TPM_Product_Theme && ! current_user_can( 'switch_themes' ) ) {
+			wp_send_json_error( array(
+				'status' => 'failed',
+				'extra'  => 'No capabilities',
+			) );
+		}
+
 		$product->activate();
 
 		if ( $product->is_licensed() ) {
@@ -569,7 +635,7 @@ class Thrive_Product_Manager {
 			return;
 		}
 
-		if ( ! empty( $_REQUEST['url'] ) && ! empty( $_REQUEST['tpm_action'] ) && $_REQUEST['tpm_action'] === 'set_url' ) {
+		if ( ! empty( $_REQUEST['url'] ) && ! empty( $_REQUEST['tpm_action'] ) && $_REQUEST['tpm_action'] === 'set_url' && in_array( $_REQUEST['url'], static::$ttw_urls, true ) ) {
 
 			update_option( 'tpm_ttw_url', $_REQUEST['url'] );
 

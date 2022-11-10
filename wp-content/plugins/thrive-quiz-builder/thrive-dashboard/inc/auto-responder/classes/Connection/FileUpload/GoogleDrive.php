@@ -13,11 +13,11 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 	extends Thrive_Dash_List_Connection_Abstract
 	implements Thrive_Dash_List_Connection_FileUpload_Interface {
 
-	public static function getType() {
+	public static function get_type() {
 		return 'storage';
 	}
 
-	public function getTitle() {
+	public function get_title() {
 		return 'Google Drive';
 	}
 
@@ -29,7 +29,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 	public function getAuthorizeUrl() {
 		$this->save(); // save the client_id and client_secret for later use
 
-		return $this->getApi()->get_authorize_url();
+		return $this->get_api()->get_authorize_url();
 	}
 
 	/**
@@ -37,12 +37,12 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 	 *
 	 * @return bool
 	 */
-	public function isConnected() {
+	public function is_connected() {
 		return $this->param( 'access_token' ) && $this->param( 'refresh_token' );
 	}
 
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'google-drive' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'google-drive' );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 	 *
 	 * @return bool|mixed|string|Thrive_Dash_List_Connection_Abstract
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$code = empty( $_REQUEST['code'] ) ? '' : $_REQUEST['code'];
 
 		if ( empty( $code ) ) {
@@ -61,7 +61,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 
 		try {
 			/* get access token from googleapis */
-			$response = $this->getApi()->get_access_token( $code );
+			$response = $this->get_api()->get_access_token( $code );
 			if ( empty( $response['access_token'] ) ) {
 				throw new Thrive_Dash_Api_Google_Exception( 'Missing token from response data' );
 			}
@@ -87,14 +87,14 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 		return true;
 	}
 
-	public function testConnection() {
+	public function test_connection() {
 
 		$result = array(
 			'success' => true,
-			'message' => __( 'Connection works', TVE_DASH_TRANSLATE_DOMAIN ),
+			'message' => __( 'Connection works', 'thrive-dash' ),
 		);
 		try {
-			$this->getApi()->get_files();
+			$this->get_api()->get_files();
 		} catch ( Thrive_Dash_Api_Google_Exception $e ) {
 			$result['success'] = false;
 			$result['message'] = $e->getMessage();
@@ -116,7 +116,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 		$metadata['parents'] = array( $folder_id );
 
 		try {
-			$file = $this->getApi()->multipart_upload( $file_contents, $metadata );
+			$file = $this->get_api()->multipart_upload( $file_contents, $metadata );
 		} catch ( Thrive_Dash_Api_Google_Exception $e ) {
 			return new WP_Error( 'tcb_file_upload_error', $e->getMessage() );
 		}
@@ -133,7 +133,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 	 */
 	public function delete( $file_id ) {
 		try {
-			$this->getApi()->delete( $file_id );
+			$this->get_api()->delete( $file_id );
 			$result = true;
 		} catch ( Thrive_Dash_Api_Google_Exception $e ) {
 			$result = new WP_Error( 'tcb_file_upload_error', $e->getMessage() );
@@ -158,7 +158,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 		);
 
 		try {
-			$file = $this->getApi()->get_file( $file_id, 'webViewLink,name' );
+			$file = $this->get_api()->get_file( $file_id, 'webViewLink,name' );
 			if ( ! empty( $file['webViewLink'] ) ) {
 				$data['url']  = $file['webViewLink'];
 				$data['name'] = $file['name'];
@@ -190,7 +190,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 		try {
 			$new_name = $callback( $file['name'] );
 			if ( $new_name !== $file['name'] ) {
-				$this->getApi()->update_file_metadata( $file_id, array(
+				$this->get_api()->update_file_metadata( $file_id, array(
 					'name' => $new_name,
 				) );
 				$file['name'] = $new_name;
@@ -207,7 +207,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 	 *
 	 * @return Thrive_Dash_Api_Google_Service
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		$api = new Thrive_Dash_Api_Google_Service(
 			$this->param( 'client_id' ),
 			$this->param( 'client_secret' ),
@@ -225,9 +225,9 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 		return $api;
 	}
 
-	protected function _getLists() {
+	protected function _get_lists() {
 	}
 
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 	}
 }

@@ -5,6 +5,7 @@
  *
  * @package thrive-dashboard
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -22,7 +23,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
@@ -31,22 +32,28 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '*|EMAIL|*';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Mailchimp';
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function hasTags() {
+	public function has_tags() {
+		return true;
+	}
 
+	/**
+	 * @return bool
+	 */
+	public function has_optin() {
 		return true;
 	}
 
@@ -55,15 +62,15 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mandrill' );
-		if ( $related_api->isConnected() ) {
-			$credentials = $related_api->getCredentials();
-			$this->setParam( 'email', $credentials['email'] );
-			$this->setParam( 'mandrill-key', $credentials['key'] );
+	public function output_setup_form() {
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'mandrill' );
+		if ( $related_api->is_connected() ) {
+			$credentials = $related_api->get_credentials();
+			$this->set_param( 'email', $credentials['email'] );
+			$this->set_param( 'mandrill-key', $credentials['key'] );
 		}
 
-		$this->_directFormHtml( 'mailchimp' );
+		$this->output_controls_html( 'mailchimp' );
 	}
 
 	/**
@@ -71,7 +78,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @return mixed
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$connection   = $this->post( 'connection' );
 		$mandrill_key = ! empty( $connection['mandrill-key'] ) ? $connection['mandrill-key'] : '';
 
@@ -82,15 +89,15 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		}
 
 		if ( empty( $_POST['connection']['key'] ) ) {
-			return $this->error( __( 'You must provide a valid Mailchimp key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mailchimp key', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $connection );
+		$this->set_credentials( $connection );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Mailchimp using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Mailchimp using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -99,17 +106,17 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		$this->save();
 
 		/** @var Thrive_Dash_List_Connection_Mandrill $related_api */
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mandrill' );
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'mandrill' );
 
 		if ( ! empty( $mandrill_key ) ) {
 			/**
 			 * Try to connect to the email service too
 			 */
 
-			$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mandrill' );
+			$related_api = Thrive_Dash_List_Manager::connection_instance( 'mandrill' );
 			$r_result    = true;
-			if ( ! $related_api->isConnected() ) {
-				$r_result = $related_api->readCredentials();
+			if ( ! $related_api->is_connected() ) {
+				$r_result = $related_api->read_credentials();
 			}
 
 			if ( $r_result !== true ) {
@@ -121,7 +128,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			/**
 			 * let's make sure that the api was not edited and disconnect it
 			 */
-			$related_api->setCredentials( array() );
+			$related_api->set_credentials( array() );
 			Thrive_Dash_List_Manager::save( $related_api );
 		}
 
@@ -131,7 +138,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		 */
 		$this->get_api_custom_fields( array(), true, true );
 
-		return $this->success( __( 'Mailchimp connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Mailchimp connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -139,14 +146,14 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/**
 		 * just try getting a list as a connection test
 		 */
 
 		try {
 			/** @var Thrive_Dash_Api_Mailchimp $mc */
-			$mc = $this->getApi();
+			$mc = $this->get_api();
 
 			$mc->request( 'lists' );
 		} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
@@ -161,15 +168,15 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 */
 	public function disconnect() {
 
-		$this->beforeDisconnect();
-		$this->setCredentials( array() );
+		$this->before_disconnect();
+		$this->set_credentials( array() );
 		Thrive_Dash_List_Manager::save( $this );
 
 		/**
 		 * disconnect the email service too
 		 */
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mandrill' );
-		$related_api->setCredentials( array() );
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'mandrill' );
+		$related_api->set_credentials( array() );
 		Thrive_Dash_List_Manager::save( $related_api );
 
 		return $this;
@@ -205,7 +212,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 			try {
 
-				$grouping = $this->_getGroups( $params );
+				$grouping = $this->_get_groups( $params );
 			} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
 			}
 
@@ -239,7 +246,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		}
 
 		if ( ! empty( $arguments['name'] ) ) {
-			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 		}
 
 		// First name
@@ -261,7 +268,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		if ( ! empty( $arguments['phone'] ) ) {
 
 			$phone_tag  = false;
-			$api        = $this->getApi();
+			$api        = $this->get_api();
 			$merge_vars = $this->getCustomFields( $list_identifier );
 
 			foreach ( $merge_vars as $item ) {
@@ -307,7 +314,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 		$parsed = array();
 
-		foreach ( $this->getAllCustomFields( false ) as $list_id => $merge_field ) {
+		foreach ( $this->get_all_custom_fields( false ) as $list_id => $merge_field ) {
 			array_map(
 				function ( $var ) use ( &$parsed, $list_id ) {
 					$parsed[ $list_id ][ $var['id'] ] = $var['name'];
@@ -346,7 +353,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			}
 
 			// Loop trough allowed custom fields names
-			foreach ( $this->getMappedFieldsIDs() as $mapped_field_name ) {
+			foreach ( $this->get_mapped_field_ids() as $mapped_field_name ) {
 
 				// Extract an array with all custom fields (siblings) names from the form data
 				// {ex: [mapping_url_0, .. mapping_url_n] / [mapping_text_0, .. mapping_text_n]}
@@ -357,7 +364,6 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 					// Pull form allowed data, sanitize it and build the custom fields array
 					foreach ( $cf_form_fields as $cf_form_name ) {
-
 						if ( empty( $mapped_form_data[ $cf_form_name ][ $this->_key ] ) ) {
 							continue;
 						}
@@ -367,16 +373,39 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 						$cf_form_name = str_replace( '[]', '', $cf_form_name );
 						if ( ! empty( $args[ $cf_form_name ] ) ) {
-							$args[ $cf_form_name ] = $this->processField( $args[ $cf_form_name ] );
+							$args[ $cf_form_name ]        = $this->process_field( $args[ $cf_form_name ] );
+							$merge_fields->{$field_label} = sanitize_text_field( $args[ $cf_form_name ] );
 						}
-
-						$merge_fields->{$field_label} = sanitize_text_field( $args[ $cf_form_name ] );
 					}
 				}
 			}
 		}
 
 		return $merge_fields;
+	}
+
+	/**
+	 * Build custom fields mapping for automations
+	 *
+	 * @param $automation_data
+	 *
+	 * @return object
+	 */
+	public function build_automation_custom_fields( $automation_data ) {
+		$mapped_data = new stdClass();
+		if ( $automation_data['mailing_list'] ) {
+			$api_custom_fields = $this->buildCustomFieldsList();
+
+			foreach ( $automation_data['api_fields'] as $pair ) {
+				$value = sanitize_text_field( $pair['value'] );
+				if ( $value ) {
+					$field_label               = $api_custom_fields[ $automation_data['mailing_list'] ][ $pair['key'] ];
+					$mapped_data->$field_label = $value;
+				}
+			}
+		}
+
+		return $mapped_data;
 	}
 
 	/**
@@ -397,7 +426,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		$user_hash = md5( strtolower( $arguments['email'] ) );
 		$optin     = isset( $arguments['mailchimp_optin'] ) && 's' === $arguments['mailchimp_optin'] ? 'subscribed' : 'pending';
 
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		try {
 
@@ -420,12 +449,12 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 * delete a contact from the list
 	 *
 	 * @param string $email
-	 * @param array $arguments
+	 * @param array  $arguments
 	 *
 	 * @return mixed
 	 */
-	public function deleteSubscriber( $email, $arguments = array() ) {
-		$api = $this->getApi();
+	public function delete_subscriber( $email, $arguments = array() ) {
+		$api = $this->get_api();
 		if ( ! empty( $email ) && ! empty( $arguments['list_identifier'] ) ) {
 
 			$contact = $this->get_contact( $arguments['list_identifier'], $email );
@@ -446,12 +475,12 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 * @return bool|mixed|string|void
 	 * @throws Thrive_Dash_Api_Mailchimp_Exception
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 		$arguments = (array) $arguments;
 
 		if ( empty( $list_identifier ) || empty( $arguments ) ) {
-			return __( 'Invalid arguments supplied in ' . __METHOD__, TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'Invalid arguments supplied in ' . __METHOD__, 'thrive-dash' );
 		}
 
 		// Build optin and status
@@ -461,7 +490,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		$user_hash = md5( $email );
 
 		/** @var Thrive_Dash_Api_Mailchimp $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		// Subscribe
 		try {
@@ -479,6 +508,9 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				// Append custom fields to existing ones
 				$data['merge_fields'] = $this->buildMappedCustomFields( $list_identifier, $arguments, $data['merge_fields'] );
 			}
+			if ( ! empty( $arguments['automator_custom_fields'] ) ) {
+				$data['merge_fields'] = (object) array_merge( (array) $data['merge_fields'], (array) $arguments['automator_custom_fields'] );
+			}
 
 			// On double optin, send the tags directly to the body [known problems on mailchimp tags endpoint]
 			if ( isset( $arguments['mailchimp_optin'] ) && 'd' === $arguments['mailchimp_optin'] && ! empty( $arguments['mailchimp_tags'] ) ) {
@@ -494,9 +526,9 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			}
 		} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
 			// mailchimp returns 404 if email contact already exists?
-			//$e->getMessage() ? $e->getMessage() : __( 'Unknown Mailchimp Error', TVE_DASH_TRANSLATE_DOMAIN );
+			//$e->getMessage() ? $e->getMessage() : __( 'Unknown Mailchimp Error', 'thrive-dash' );
 		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ?: __( 'Unknown Error', 'thrive-dash' );
 		}
 
 		// Add tags for other optin beside double
@@ -505,7 +537,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				$tags = explode( ',', $arguments['mailchimp_tags'] );
 				$this->addTagsToContact( $list_identifier, $email, $tags );
 			} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
-				return __( 'Assign tag error: ' . $e->getMessage(), TVE_DASH_TRANSLATE_DOMAIN );
+				return __( 'Assign tag error: ' . $e->getMessage(), 'thrive-dash' );
 			}
 		}
 
@@ -518,12 +550,12 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 * @return array
 	 * @throws Thrive_Dash_Api_Mailchimp_Exception
 	 */
-	protected function _getGroups( $params ) {
+	protected function _get_groups( $params ) {
 
 		$return    = array();
 		$groupings = new stdClass();
 		/** @var Thrive_Dash_Api_Mailchimp $api */
-		$api   = $this->getApi();
+		$api   = $this->get_api();
 		$lists = $api->request( 'lists', array( 'count' => 1000 ) );
 
 		if ( empty( $params['list_id'] ) && ! empty( $lists ) ) {
@@ -565,7 +597,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 		try {
 			/** @var Thrive_Dash_Api_Mailchimp $api */
-			$api = $this->getApi();
+			$api = $this->get_api();
 
 			$query      = array(
 				'count' => 1000,
@@ -576,9 +608,9 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				return array();
 			}
 		} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Mailchimp Error', 'thrive-dash' );
+			return $e->getMessage() ?: __( 'Unknown Mailchimp Error', 'thrive-dash' );
 		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', 'thrive-dash' );
+			return $e->getMessage() ?: __( 'Unknown Error', 'thrive-dash' );
 		}
 
 		return $merge_vars->merge_fields;
@@ -594,9 +626,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 */
 	public function addTagsToContact( $list_id, $email_address, $tags ) {
 		if ( ! $list_id || ! $email_address || ! $tags ) {
-			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', TVE_DASH_TRANSLATE_DOMAIN ) );
-
-			return false;
+			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', 'thrive-dash' ) );
 		}
 
 		$list_tags = $this->getListTags( $list_id );
@@ -613,7 +643,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 					try {
 						$this->assignTag( $list_id, $tag_id, $email_address );
 					} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
-						$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', TVE_DASH_TRANSLATE_DOMAIN );
+						$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', 'thrive-dash' );
 					}
 
 					continue;
@@ -645,7 +675,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 		do {
 			/** @var Thrive_Dash_Api_Mailchimp $api */
-			$api = $this->getApi();
+			$api = $this->get_api();
 
 			$response = $api->request(
 				'lists/' . $list_id . '/segments',
@@ -688,18 +718,14 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	public function assignTag( $list_id, $tag_id, $email_address ) {
 
 		if ( ! $list_id || ! $tag_id || ! $email_address ) {
-			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', 'thrive-dash' ) );
 
 			return false;
 		}
 
-		$save_tag = $this->getApi()->request( 'lists/' . $list_id . '/segments/' . $tag_id . '/members', array( 'email_address' => $email_address ), 'POST' );
+		$save_tag = $this->get_api()->request( 'lists/' . $list_id . '/segments/' . $tag_id . '/members', array( 'email_address' => $email_address ), 'POST' );
 
-		if ( is_object( $save_tag ) && isset( $save_tag->id ) ) {
-			return true;
-		}
-
-		return false;
+		return is_object( $save_tag ) && isset( $save_tag->id );
 	}
 
 	/**
@@ -739,12 +765,10 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			return false;
 		}
 
-		$tag = $this->getApi()->request( 'lists/' . $list_id . '/segments', array(
+		return $this->get_api()->request( 'lists/' . $list_id . '/segments', array(
 			'name'           => $tag_name,
 			'static_segment' => array(),
 		), 'POST' );
-
-		return $tag;
 	}
 
 	/**
@@ -759,7 +783,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	public function get_extra_settings( $params = array() ) {
 		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_mailchimp_optin'] ) ? sanitize_text_field( $_COOKIE['tve_api_mailchimp_optin'] ) : 'd' ) : $params['optin'];
 		setcookie( 'tve_api_mailchimp_optin', $params['optin'], strtotime( '+6 months' ), '/' );
-		$groups           = $this->_getGroups( $params );
+		$groups           = $this->_get_groups( $params );
 		$params['groups'] = $groups;
 
 		return $params;
@@ -791,7 +815,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			foreach ( $custom_fields as $field ) {
 				$field = (object) $field; // just making sure we work with objects [APIs can change the structure]
 
-				if ( ! empty( $field->type ) && in_array( $field->type, $allowed_types, true ) && 1 === (int) $field->public ) {
+				if ( ! empty( $field->type ) && 1 === (int) $field->public && in_array( $field->type, $allowed_types, true ) ) {
 					$extract[] = $this->normalize_custom_field( $field );
 				}
 			}
@@ -807,18 +831,18 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @return array
 	 */
-	public function getAllCustomFields( $force ) {
+	public function get_all_custom_fields( $force ) {
 
 		$custom_data = array();
 
 		// Serve from cache if exists and requested
-		$cached_data = $this->_get_cached_custom_fields();
+		$cached_data = $this->get_cached_custom_fields();
 		if ( false === $force && ! empty( $cached_data ) ) {
 			return $cached_data;
 		}
 
 		// Build custom fields for every list
-		$lists = $this->getLists( $force );
+		$lists = $this->get_lists( $force );
 
 		foreach ( $lists as $list ) {
 			if ( ! empty( $list['id'] ) ) {
@@ -842,7 +866,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 */
 	public function get_api_custom_fields( $params, $force = false, $get_all = false ) {
 
-		$lists = $this->getAllCustomFields( $force );
+		$lists = $this->get_all_custom_fields( $force );
 
 		// Get custom fields for all list ids [used on localize in TAr]
 		if ( true === $get_all ) {
@@ -855,11 +879,9 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			$list_id = current( array_keys( $lists ) );
 		}
 
-		$fields = array(
+		return array(
 			$list_id => $lists[ $list_id ],
 		);
-
-		return $fields;
 	}
 
 	/**
@@ -870,13 +892,13 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @throws Thrive_Dash_Api_Mailchimp_Exception
 	 */
-	public function renderExtraEditorSettings( $params = array() ) {
+	public function render_extra_editor_settings( $params = array() ) {
 		$params['optin'] = empty( $params['optin'] ) ? ( isset( $_COOKIE['tve_api_mailchimp_optin'] ) ? sanitize_text_field( $_COOKIE['tve_api_mailchimp_optin'] ) : 'd' ) : $params['optin'];
 		setcookie( 'tve_api_mailchimp_optin', $params['optin'], strtotime( '+6 months' ), '/' );
-		$groups           = $this->_getGroups( $params );
+		$groups           = $this->_get_groups( $params );
 		$params['groups'] = $groups;
-		$this->_directFormHtml( 'mailchimp/api-groups', $params );
-		$this->_directFormHtml( 'mailchimp/optin-type', $params );
+		$this->output_controls_html( 'mailchimp/api-groups', $params );
+		$this->output_controls_html( 'mailchimp/optin-type', $params );
 	}
 
 	/**
@@ -885,7 +907,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 * @return mixed|Thrive_Dash_Api_Mailchimp
 	 * @throws Thrive_Dash_Api_Mailchimp_Exception
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_Mailchimp( $this->param( 'key' ) );
 	}
 
@@ -894,11 +916,11 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @return array|bool
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 		try {
 			/** @var Thrive_Dash_Api_Mailchimp $mc */
-			$mc = $this->getApi();
+			$mc = $this->get_api();
 
 			$raw   = $mc->request( 'lists', array( 'count' => 1000 ) );
 			$lists = array();
@@ -916,7 +938,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 			return $lists;
 		} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', 'thrive-dash' );
 
 			return false;
 		}
@@ -933,7 +955,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	public function get_contact( $list_id, $email ) {
 
 		/** @var Thrive_Dash_Api_Mailchimp $api */
-		$api     = $this->getApi();
+		$api     = $this->get_api();
 		$contact = null;
 		try {
 			$contact = $api->request( 'lists/' . $list_id . '/members/' . md5( $email ) );
@@ -953,9 +975,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 */
 	public function get_custom_fields( $params = array() ) {
 
-		$fields = array_merge( parent::get_custom_fields(), $this->_mapped_custom_fields );
-
-		return $fields;
+		return array_merge( parent::get_custom_fields(), $this->_mapped_custom_fields );
 	}
 
 	/**
@@ -982,11 +1002,11 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 *
 	 * @return false|int
 	 */
-	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
+	public function add_custom_fields( $email, $custom_fields = array(), $extra = array() ) {
 
 		try {
 			/** @var Thrive_Dash_Api_Mailchimp $api */
-			$api     = $this->getApi();
+			$api     = $this->get_api();
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
 			$args    = array(
 				'email' => $email,
@@ -995,11 +1015,11 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			if ( ! empty( $extra['name'] ) ) {
 				$args['name'] = $extra['name'];
 			}
-			$this->addSubscriber( $list_id, $args );
+			$this->add_subscriber( $list_id, $args );
 
 			$member = $this->get_contact( $list_id, $email );
 			$data   = array(
-				'merge_fields'  => (object) $this->_prepareCustomFieldsForApi( $custom_fields, $list_id ),
+				'merge_fields'  => (object) $this->prepare_custom_fields_for_api( $custom_fields, $list_id ),
 				'email_address' => $email,
 			);
 
@@ -1016,11 +1036,11 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 * Prepare custom fields for api call
 	 *
 	 * @param array $custom_fields
-	 * @param null $list_identifier
+	 * @param null  $list_identifier
 	 *
 	 * @return array
 	 */
-	public function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
+	public function prepare_custom_fields_for_api( $custom_fields = array(), $list_identifier = null ) {
 
 		$prepared_fields = array();
 		$api_fields      = $this->get_api_custom_fields( array( 'list_id' => $list_identifier ), true );
@@ -1046,11 +1066,15 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		return $prepared_fields;
 	}
 
-	public function get_automator_autoresponder_fields() {
-		return array( 'mailing_list', 'optin', 'tag_input' );
+	public function get_automator_add_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'mailing_list' => array( 'api_fields' ), 'optin' => array(), 'tag_input' => array() ) );
 	}
 
-	public function get_automator_autoresponder_tag_fields() {
-		return array( 'mailing_list', 'tag_input' );
+	public function get_automator_tag_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'mailing_list', 'tag_input' ) );
+	}
+
+	public function has_custom_fields() {
+		return true;
 	}
 }

@@ -73,7 +73,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 			$this->php_version        = PHP_VERSION;
 			$this->site_url           = home_url();
 			$this->channel            = tvd_get_update_channel();
-			$this->ttw_id             = TD_TTW_Connection::get_instance()->is_connected() ? TD_TTW_Connection::get_instance()->ttw_id : 0;
+			$this->ttw_id             = class_exists( 'TD_TTW_Connection', false ) && TD_TTW_Connection::get_instance()->is_connected() ? TD_TTW_Connection::get_instance()->ttw_id : 0;
 			$this->wp_version         = get_bloginfo( 'version' );
 
 			//If no slug is specified, use the name of the main plugin file as the slug.
@@ -171,7 +171,7 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 		public function php_version_notice() {
 			$plugin_data = get_plugin_data( $this->pluginAbsolutePath, false, false );
 
-			$message = __( $plugin_data['Name'] . ' requires PHP version ' . $this->required_php_version . '. Your current version is ' . $this->php_version . '. Please contact your hosting provider and ask them to update your PHP.', TVE_DASH_TRANSLATE_DOMAIN );
+			$message = __( $plugin_data['Name'] . ' requires PHP version ' . $this->required_php_version . '. Your current version is ' . $this->php_version . '. Please contact your hosting provider and ask them to update your PHP.', 'thrive-dash' );
 
 			echo wp_kses_post( sprintf( '<div class="error"><p>%s</p></div>', $message ) );
 		}
@@ -553,16 +553,24 @@ if ( ! class_exists( 'TVE_PluginUpdateChecker_1_3_2', false ) ) {
 					 */
 					if ( class_exists( 'TD_TTW_Messages_Manager', false ) ) {
 
-						if ( true !== TD_TTW_Update_Manager::can_see_updates() ) {
+						$update_message  = TD_TTW_Messages_Manager::get_update_message( $state, $plugin_data );
+						$can_see_updates = TD_TTW_Update_Manager::can_see_updates();
+						if ( null === $update_message || ( ! $can_see_updates && strpos( $update_message, 'thrv-deny-updates' ) !== false ) ) {
 							return null;
 						}
 
-						$update->upgrade_notice .= TD_TTW_Messages_Manager::get_update_message( $state, $plugin_data );
+						$update->upgrade_notice .= $update_message;
 					}
 
 					if ( ! empty( $update->upgrade_notice ) ) {
-						remove_action( 'in_plugin_update_message-' . $this->pluginFile, array( $this, 'upgrade_notice' ), 10 );
-						add_action( 'in_plugin_update_message-' . $this->pluginFile, array( $this, 'upgrade_notice' ), 10, 2 );
+						remove_action( 'in_plugin_update_message-' . $this->pluginFile, array(
+							$this,
+							'upgrade_notice'
+						), 10 );
+						add_action( 'in_plugin_update_message-' . $this->pluginFile, array(
+							$this,
+							'upgrade_notice'
+						), 10, 2 );
 					}
 
 					return $update;

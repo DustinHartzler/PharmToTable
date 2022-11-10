@@ -8,13 +8,13 @@ $variation_manager = new TQB_Variation_Manager( $variation['quiz_id'], $variatio
 $child_variations  = $variation_manager->get_page_variations( array( 'parent_id' => $variation['id'] ) );
 ?>
 
-<span class="tcb-modal-title ml-0 mt-0"><?php echo esc_html__( 'Import content', Thrive_Quiz_Builder::T ); ?></span>
+<span class="tcb-modal-title ml-0 mt-0"><?php echo esc_html__( 'Import content', 'thrive-quiz-builder' ); ?></span>
 <div class="margin-top-20">
-	<?php echo esc_html__( 'Select the state you want to bring content from:', Thrive_Quiz_Builder::T ) ?>
+	<?php echo esc_html__( 'Select the state you want to bring content from:', 'thrive-quiz-builder' ) ?>
 </div>
 <div class="mt-20">
 	<select id="tqb-import-from">
-		<option value=""><?php echo esc_html__( 'Select an interval', Thrive_Quiz_Builder::T ) ?></option>
+		<option value=""><?php echo esc_html__( 'Select an interval', 'thrive-quiz-builder' ) ?></option>
 		<?php
 		foreach ( $child_variations as $child ) :
 			?>
@@ -26,6 +26,6 @@ $child_variations  = $variation_manager->get_page_variations( array( 'parent_id'
 </div>
 <div class="tcb-modal-footer flex-end pr-0">
 	<button type="button" class="tcb-right tve-button medium white-text green click" data-fn="import_content">
-		<?php echo esc_html__( 'Import', Thrive_Quiz_Builder::T ) ?>
+		<?php echo esc_html__( 'Import', 'thrive-quiz-builder' ) ?>
 	</button>
 </div>

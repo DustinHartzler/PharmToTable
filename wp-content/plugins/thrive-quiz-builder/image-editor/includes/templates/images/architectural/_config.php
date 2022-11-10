@@ -17,6 +17,6 @@ $settings['fonts'] = array(
 );
 
 return array(
-	'name'     => __( 'Architectural', Thrive_Image_Editor::T ),
+	'name'     => __( 'Architectural', 'thrive-image-editor' ),
 	'settings' => $settings
 );

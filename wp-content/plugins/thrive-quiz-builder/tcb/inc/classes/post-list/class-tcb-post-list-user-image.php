@@ -42,7 +42,7 @@ class TCB_Post_List_User_Image {
 	 * @return string
 	 */
 	public function get_default_url() {
-		$url = self::get_placeholder_url();
+		$url = static::get_placeholder_url();
 
 		if ( ! empty( $this->user_id ) ) {
 

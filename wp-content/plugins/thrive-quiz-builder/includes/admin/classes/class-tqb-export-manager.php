@@ -36,7 +36,7 @@ class TQB_Export_Manager {
 			return new $class_name();
 		}
 
-		throw new Exception( sprintf( __( 'Could not find a specific implementation for step: %s', Thrive_Quiz_Builder::T ), $step_name ) );
+		throw new Exception( sprintf( __( 'Could not find a specific implementation for step: %s', 'thrive-quiz-builder' ), $step_name ) );
 	}
 
 	/**
@@ -74,11 +74,11 @@ class TQB_Export_Manager {
 		$wp_filesystem->delete( $zip_path . $zip_filename );
 
 		if ( false === $wp_filesystem->is_dir( $quiz_folder ) ) {
-			throw new Exception( __( 'Quiz folder was not created', Thrive_Quiz_Builder::T ) );
+			throw new Exception( __( 'Quiz folder was not created', 'thrive-quiz-builder' ) );
 		}
 
 		if ( $zip->open( trailingslashit( $zip_path ) . $zip_filename, ZipArchive::CREATE ) !== true ) {
-			throw new Exception( __( 'Could not create zip archive', Thrive_Quiz_Builder::T ) );
+			throw new Exception( __( 'Could not create zip archive', 'thrive-quiz-builder' ) );
 		}
 
 		foreach ( $wp_filesystem->dirlist( $quiz_folder ) as $item ) {
@@ -86,7 +86,7 @@ class TQB_Export_Manager {
 		}
 
 		if ( ! $zip->close() ) {
-			throw new Exception( __( 'Could not write the zip file', Thrive_Quiz_Builder::T ) );
+			throw new Exception( __( 'Could not write the zip file', 'thrive-quiz-builder' ) );
 		}
 
 		umask( $old_umask );

@@ -19,7 +19,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * @var array connection details (used for API calls)
 	 */
-	protected $_credentials = array();
+	protected $_credentials = [];
 
 	/**
 	 * @var string internal key for the connection api
@@ -50,7 +50,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @var array
 	 */
-	protected $_mapped_custom_fields = array();
+	protected $_mapped_custom_fields = [];
 
 	/**
 	 * @param string $key
@@ -59,16 +59,64 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 		$this->_key                     = $key;
 		$this->_custom_fields_transient = 'api_custom_fields_' . $key;
-		$this->_setMappingCustomFields();
+		$this->set_custom_fields_mapping();
 	}
 
 	/**
-	 * Return the connection type
+	 * If the snake_case version of the function does not exist, attempt to call the camelCase version.
+	 * Can be deleted after we switch everything to snake_case.
+	 *
+	 * @param $method_name
+	 * @param $arguments
+	 *
+	 * @return mixed
+	 */
+	public function __call( $method_name, $arguments ) {
+		$camel_case_method_name = tve_dash_to_camel_case( $method_name );
+
+		return method_exists( $this, $camel_case_method_name ) ? call_user_func_array( [ $this, $camel_case_method_name ], $arguments ) : null;
+	}
+
+	/**
+	 * Same as above, but for static calls.
+	 * Can be deleted after we switch everything to snake_case.
+	 *
+	 * @param $method_name
+	 * @param $arguments
+	 *
+	 * @return mixed
+	 */
+	public static function __callStatic( $method_name, $arguments ) {
+		$camel_case_method_name = tve_dash_to_camel_case( $method_name );
+
+		return method_exists( __CLASS__, $camel_case_method_name ) ? call_user_func_array( [ static::class, $camel_case_method_name ], $arguments ) : null;
+	}
+
+	/**
+	 * Can be removed in 2-3 releases
+	 * @return String
+	 * @deprecated
+	 */
+	public static function getType() {
+		return static::get_type();
+	}
+
+	/**
+	 * Returns the connection type
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
+	}
+
+	/**
+	 * Can be removed in 2-3 releases
+	 * @return mixed
+	 * @deprecated
+	 */
+	public static function getEmailMergeTag() {
+		return static::get_email_merge_tag();
 	}
 
 	/**
@@ -76,72 +124,97 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '[email]';
 	}
 
 	/**
-	 * get the API Connection code to use in calls
-	 *
+	 * Called from TTW, do not delete.
 	 * @return mixed
+	 * @deprecated
 	 */
 	public function getApi() {
+		return $this->get_api();
+	}
+
+	/**
+	 * get the API Connection code to use in calls
+	 * @return mixed
+	 */
+	public function get_api() {
 		if ( ! isset( $this->_api ) ) {
-			$this->_api = $this->_apiInstance();
+			$this->_api = $this->get_api_instance();
 		}
 
 		return $this->_api;
 	}
 
 	/**
+	 * Can be removed in 2-3 releases
 	 * @return array
+	 * @deprecated
 	 */
 	public function getCredentials() {
+		return $this->get_credentials();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_credentials() {
 		return $this->_credentials;
 	}
 
 	/**
-	 * @param array $connectionDetails
+	 * @param array $connection_details
 	 *
 	 * @return Thrive_Dash_List_Connection_Abstract
 	 */
-	public function setCredentials( $connectionDetails ) {
-		$this->_credentials = $connectionDetails;
+	public function set_credentials( $connection_details ) {
+		$this->_credentials = $connection_details;
+
+		/* if we set new credentials, the previously saved API is no longer valid */
+		$this->_api = null;
 
 		return $this;
+	}
+
+	/**
+	 * Can be removed in 2-3 releases
+	 * @return string|null
+	 * @deprecated
+	 */
+	public function getKey() {
+		return $this->get_key();
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getKey() {
+	public function get_key() {
 		return $this->_key;
 	}
 
 	/**
-	 * @param string $key
-	 *
-	 * @return Thrive_Dash_List_Connection_Abstract
+	 * Can be deleted in 2-3 releases
+	 * @deprecated
 	 */
-	public function setKey( $key ) {
-		$this->_key = $key;
-
-		return $this;
+	public function isConnected() {
+		return $this->is_connected();
 	}
 
 	/**
-	 * whether or not this list is connected to the service (has been authenticated)
-	 *
+	 * Whether or not this list is connected to the service (has been authenticated)
 	 * @return bool
 	 */
-	public function isConnected() {
+	public function is_connected() {
 		return ! empty( $this->_credentials );
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function isRelated() {
+	public function is_related() {
 		return false;
 	}
 
@@ -158,6 +231,19 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	}
 
 	/**
+	 * Used in TTW, do not delete.
+	 *
+	 * @param $field
+	 * @param $value
+	 *
+	 * @return $this
+	 * @deprecated
+	 */
+	public function setParam( $field, $value ) {
+		return $this->set_param( $field, $value );
+	}
+
+	/**
 	 * set connection parameter
 	 *
 	 * @param string $field
@@ -165,7 +251,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return $this
 	 */
-	public function setParam( $field, $value ) {
+	public function set_param( $field, $value ) {
 		$this->_credentials[ $field ] = $value;
 
 		return $this;
@@ -183,7 +269,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 			return $message;
 		}
 
-		return $this->_message( 'error', $message );
+		return $this->message( 'error', $message );
 	}
 
 	/**
@@ -198,7 +284,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 			return true;
 		}
 
-		return $this->_message( 'success', $message );
+		return $this->message( 'success', $message );
 	}
 
 	/**
@@ -219,11 +305,11 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 */
 	public function disconnect() {
 
-		$disconnect = apply_filters( 'tve_dash_disconnect_' . $this->getKey(), true );
+		$disconnect = apply_filters( 'tve_dash_disconnect_' . $this->get_key(), true );
 
 		if ( true === $disconnect ) {
-			$this->beforeDisconnect();
-			$this->setCredentials( array() );
+			$this->before_disconnect();
+			$this->set_credentials( [] );
 			Thrive_Dash_List_Manager::save( $this );
 		}
 
@@ -235,7 +321,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return $this
 	 */
-	public function beforeDisconnect() {
+	public function before_disconnect() {
 
 		delete_transient( $this->_custom_fields_transient );
 
@@ -247,108 +333,145 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return string the error message
 	 */
-	public function getApiError() {
+	public function get_api_error() {
 		return $this->_error;
+	}
+
+	/**
+	 * Used in TTW, do not delete.
+	 * @return string
+	 * @deprecated
+	 */
+	public function getTitle() {
+		return $this->get_title();
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public abstract function getTitle();
+	public abstract function get_title();
+
+	/**
+	 * Can be deleted in 2-3 releases
+	 * @deprecated
+	 */
+	public function outputSetupForm() {
+		$this->output_setup_form();
+	}
 
 	/**
 	 * output the setup form html
 	 *
 	 * @return void
 	 */
-	public abstract function outputSetupForm();
+	public abstract function output_setup_form();
+
+	/**
+	 * Can be removed in 2-3 releases
+	 * @return mixed
+	 * @deprecated
+	 */
+	public function readCredentials() {
+		return $this->read_credentials();
+	}
 
 	/**
 	 * should handle: read data from post / get, test connection and save the details
-	 *
 	 * on error return the error message
-	 *
 	 * on success return true
 	 *
 	 * @return mixed
 	 */
-	public abstract function readCredentials();
+	public abstract function read_credentials();
+
+	/**
+	 * Used in TTW, do not delete.
+	 * @return bool|string
+	 * @deprecated
+	 */
+	public function testConnection() {
+		return $this->test_connection();
+	}
 
 	/**
 	 * test if a connection can be made to the service using the stored credentials
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public abstract function testConnection();
+	public abstract function test_connection();
 
 	/**
-	 * add a contact to a list
+	 * Can be removed in 2-3 releases
+	 *
+	 * @param $list_identifier
+	 * @param $arguments
+	 *
+	 * @deprecated
+	 */
+	public function addSubscriber( $list_identifier, $arguments ) {
+		$this->add_subscriber( $list_identifier, $arguments );
+	}
+
+	/**
 	 *
 	 * @param mixed $list_identifier
 	 * @param array $arguments
 	 *
 	 * @return mixed
 	 */
-	public abstract function addSubscriber( $list_identifier, $arguments );
+	public abstract function add_subscriber( $list_identifier, $arguments );
 
 	/**
 	 * delete a contact matching arguments
 	 *
 	 * @param string $email
-	 * @param array $arguments
+	 * @param array  $arguments
 	 *
 	 * @return mixed
 	 */
-	public function deleteSubscriber( $email, $arguments = array() ) {
+	public function delete_subscriber( $email, $arguments = [] ) {
 		return false;
 	}
 
 	/**
+	 * Can be deleted in 2-3 releases
+	 *
+	 * @param bool $use_cache
+	 *
+	 * @return array|bool
+	 * @deprecated
+	 */
+	public function getLists( $use_cache = true ) {
+		return $this->get_lists( $use_cache );
+	}
+
+	/**`
 	 * get all Subscriber Lists from this API service
 	 * it will first check a local cache for the existing lists
 	 *
 	 * @param bool $use_cache if true, it will read the lists from a local cache (wp options)
 	 *
 	 * @return array|bool for error
-	 * @see self::_getLists()
+	 * @see self::_get_lists()
 	 */
-	public function getLists( $use_cache = true ) {
-		if ( ! $this->isConnected() ) {
-			$this->_error = $this->getTitle() . ' ' . __( 'is not connected', TVE_DASH_TRANSLATE_DOMAIN );
+	public function get_lists( $use_cache = true ) {
+		if ( ! $this->is_connected() ) {
+			$this->_error = $this->get_title() . ' ' . __( 'is not connected', 'thrive-dash' );
 
 			return false;
 		}
-		$cache = get_option( 'thrive_auto_responder_lists', array() );
-		if ( ! $use_cache || ! isset( $cache[ $this->getKey() ] ) ) {
-			$lists = $this->_getLists();
+		$cache = get_option( 'thrive_auto_responder_lists', [] );
+		if ( ! $use_cache || ! isset( $cache[ $this->get_key() ] ) ) {
+			$lists = $this->_get_lists();
 			if ( $lists !== false ) {
-				$cache[ $this->getKey() ] = $lists;
+				$cache[ $this->get_key() ] = $lists;
 				update_option( 'thrive_auto_responder_lists', $cache );
 			}
 		} else {
-			$lists = $cache[ $this->getKey() ];
+			$lists = $cache[ $this->get_key() ];
 		}
 
 		return $lists;
-	}
-
-	/**
-	 * Check connection and get all groups for a specific list
-	 *
-	 * @param $list_id
-	 *
-	 * @return bool
-	 */
-	public function getGroups( $list_id ) {
-		if ( ! $this->isConnected() ) {
-			$this->_error = $this->getTitle() . ' ' . __( 'is not connected', TVE_DASH_TRANSLATE_DOMAIN );
-
-			return false;
-		}
-
-		$params['list_id'] = $list_id;
-
-		return $this->_getGroups( $params );
 	}
 
 	/**
@@ -357,38 +480,39 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return string
 	 */
-	public function getListSubtitle() {
+	public function get_list_sub_title() {
 		return '';
 	}
 
 	/**
-	 * get an array with field keys that are required for automator subscribe user action
+	 * Get fields mapping specific to an API for add to autoresponder action
 	 *
-	 * @return array
+	 * @return string[][]
 	 */
-	public function get_automator_autoresponder_fields() {
-		return array();
+	public function get_automator_add_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'mailing_list', 'api_fields' ) );
+	}
+
+	/**
+	 * Get fields mapping specific to an API for tag in autoresponder action
+	 *
+	 * @return string[][]
+	 */
+	public function get_automator_tag_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'tag_input' ) );
 	}
 
 	/**
 	 * Enable custom subfields based on api
+	 *
 	 * @param $fields
 	 * @param $field
 	 * @param $action_data
 	 *
 	 * @return mixed
 	 */
-	public function set_custom_autoresponder_fields( $fields, $field, $action_data ) {
+	public function set_custom_autoresponder_fields( $fields, $field, $action_id, $action_data ) {
 		return $fields;
-	}
-
-	/**
-	 * get an array with field keys required by automator tag user in autoresponder action
-	 *
-	 * @return array
-	 */
-	public function get_automator_autoresponder_tag_fields() {
-		return array( 'tag_input' );
 	}
 
 	/**
@@ -396,8 +520,8 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function getWarnings() {
-		return array();
+	public function get_warnings() {
+		return [];
 	}
 
 	/**
@@ -407,10 +531,21 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function get_extra_settings( $params = array() ) {
-		do_action( 'tvd_autoresponder_render_extra_editor_settings_' . $this->getKey() );
+	public function get_extra_settings( $params = [] ) {
+		do_action( 'tvd_autoresponder_render_extra_editor_settings_' . $this->get_key() );
 
-		return array();
+		return [];
+	}
+
+	/**
+	 * Can be removed in 2-3 releases
+	 *
+	 * @param array $params
+	 *
+	 * @deprecated
+	 */
+	public function renderExtraEditorSettings( $params = [] ) {
+		$this->render_extra_editor_settings( $params );
 	}
 
 	/**
@@ -418,35 +553,41 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @param array $params allow various different calls to this method
 	 */
-	public function renderExtraEditorSettings( $params = array() ) {
-		do_action( 'tvd_autoresponder_render_extra_editor_settings_' . $this->getKey() );
+	public function render_extra_editor_settings( $params = [] ) {
+		do_action( 'tvd_autoresponder_render_extra_editor_settings_' . $this->get_key() );
 
 		return;
 	}
 
-	public function renderBeforeListsSettings( $params = array() ) {
+	public function render_before_lists_settings( $params = [] ) {
 		return;
 	}
 
-	public function getLogoUrl() {
-		return TVE_DASH_URL . '/inc/auto-responder/views/images/' . $this->getKey() . '.png';
+	/**
+	 * @return string
+	 */
+	public function get_logo_url() {
+		return TVE_DASH_URL . '/inc/auto-responder/views/images/' . $this->get_key() . '.png';
 	}
 
-	public function prepareJSON() {
+	/**
+	 * @return array
+	 */
+	public function prepare_json() {
 		$properties = array(
-			'key'             => $this->getKey(),
-			'connected'       => $this->isConnected(),
-			'credentials'     => $this->getCredentials(),
-			'title'           => $this->getTitle(),
-			'type'            => $this->getType(),
-			'logoUrl'         => $this->getLogoUrl(),
-			'success_message' => $this->customSuccessMessage(),
-			'can_test'        => $this->canTest(),
-			'can_delete'      => $this->canDelete(),
-			'can_edit'        => $this->canEdit(),
+			'key'             => $this->get_key(),
+			'connected'       => $this->is_connected(),
+			'credentials'     => $this->get_credentials(),
+			'title'           => $this->get_title(),
+			'type'            => $this->get_type(),
+			'logoUrl'         => $this->get_logo_url(),
+			'success_message' => $this->custom_success_message(),
+			'can_test'        => $this->can_test(),
+			'can_delete'      => $this->can_delete(),
+			'can_edit'        => $this->can_edit(),
 		);
 
-		$properties['notification'] = TVE_Dash_InboxManager::instance()->get_by_slug( $this->getKey() );
+		$properties['notification'] = TVE_Dash_InboxManager::instance()->get_by_slug( $this->get_key() );
 
 		return $properties;
 	}
@@ -456,7 +597,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return string
 	 */
-	public function customSuccessMessage() {
+	public function custom_success_message() {
 		return '';
 	}
 
@@ -470,10 +611,9 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * @return array|mixed
 	 */
 	public function get_api_custom_fields( $params, $force = false, $get_all = false ) {
-
 		$cache_data = get_transient( $this->_custom_fields_transient );
 
-		return $cache_data ? $cache_data : array();
+		return $cache_data ? $cache_data : [];
 	}
 
 	/**
@@ -485,17 +625,16 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * @return mixed
 	 */
 	public function get_api_extra( $func, $params ) {
-
-		$extra = array();
+		$extra = [];
 
 		if ( method_exists( $this, $func ) ) {
 			$extra = call_user_func_array( array( $this, $func ), array( $params ) );
 		}
 
-		return array(
+		return [
 			'extra'             => $extra,
 			'api_custom_fields' => $this->get_api_custom_fields( $params ),
-		);
+		];
 	}
 
 	/**
@@ -506,12 +645,12 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function get_api_data( $params = array(), $force = false ) {
+	public function get_api_data( $params = [], $force = false ) {
 		if ( empty( $params ) ) {           //in case it comes out empty string
-			$params = array();
+			$params = [];
 		}
 
-		$transient = 'tve_api_data_' . $this->getKey();
+		$transient = 'tve_api_data_' . $this->get_key();
 		$data      = get_transient( $transient );
 
 		if ( false === $force && tve_dash_is_debug_on() ) {
@@ -520,7 +659,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 		if ( true === $force || false === $data ) {
 			$data = array(
-				'lists'          => $this->getLists( false ),
+				'lists'          => $this->get_lists( false ),
 				'extra_settings' => $this->get_extra_settings( $params ),
 				'custom_fields'  => $this->get_custom_fields( $params ),
 			);
@@ -540,11 +679,11 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function get_custom_fields( $params = array() ) {
-		return array(
-			array( 'id' => 'name', 'placeholder' => __( 'Name', TVE_DASH_TRANSLATE_DOMAIN ) ),
-			array( 'id' => 'phone', 'placeholder' => __( 'Phone', TVE_DASH_TRANSLATE_DOMAIN ) ),
-		);
+	public function get_custom_fields( $params = [] ) {
+		return [
+			[ 'id' => 'name', 'placeholder' => __( 'Name', 'thrive-dash' ) ],
+			[ 'id' => 'phone', 'placeholder' => __( 'Phone', 'thrive-dash' ) ],
+		];
 	}
 
 	/**
@@ -553,7 +692,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 * @param string $filename
 	 * @param array  $data allows passing variables to the view file
 	 */
-	protected function _directFormHtml( $filename, $data = array() ) {
+	protected function output_controls_html( $filename, $data = [] ) {
 		include dirname( dirname( dirname( __FILE__ ) ) ) . '/views/setup/' . $filename . '.php';
 	}
 
@@ -563,7 +702,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return Thrive_Dash_List_Connection_Abstract
 	 */
-	protected function _message( $type, $message ) {
+	protected function message( $type, $message ) {
 		Thrive_Dash_List_Manager::message( $type, $message );
 
 		return $this;
@@ -576,7 +715,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	protected function _getNameParts( $full_name ) {
+	protected function get_name_parts( $full_name ) {
 		if ( empty( $full_name ) ) {
 			return array( '', '' );
 		}
@@ -604,7 +743,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	protected function _getNameFromEmail( $email ) {
+	protected function get_name_from_email( $email ) {
 
 		if ( empty( $email ) || ! is_string( $email ) || false === strpos( $email, '@' ) ) {
 			return array( '', '' );
@@ -612,7 +751,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 		$email_name = str_replace( array( '.', '_', '-', '+', '=' ), ' ', strstr( $email, '@', true ) );
 
-		list( $first_name, $last_name ) = $this->_getNameParts( $email_name );
+		list( $first_name, $last_name ) = $this->get_name_parts( $email_name );
 
 		if ( empty( $first_name ) ) {
 			$first_name = $email_name;
@@ -622,10 +761,10 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 			$last_name = $first_name;
 		}
 
-		return array(
+		return [
 			$first_name,
 			$last_name,
-		);
+		];
 	}
 
 	/**
@@ -633,36 +772,42 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return mixed
 	 */
-	protected abstract function _apiInstance();
+	protected abstract function get_api_instance();
 
 	/**
 	 * get all Subscriber Lists from this API service
 	 *
 	 * @return array|bool for error
 	 */
-	protected abstract function _getLists();
+	protected abstract function _get_lists();
 
 	/**
 	 * Whether or not the integration supports forms
 	 *
 	 * @return bool
 	 */
-	public function hasForms() {
+	public function has_forms() {
 		return false;
 	}
 
-	protected function _getForms() {
-		return array();
+	/**
+	 * @return array
+	 */
+	protected function _get_forms() {
+		return [];
 	}
 
-	public function getForms() {
-		if ( ! $this->isConnected() ) {
-			$this->_error = $this->getTitle() . ' ' . __( 'is not connected', TVE_DASH_TRANSLATE_DOMAIN );
+	/**
+	 * @return array|bool
+	 */
+	public function get_forms() {
+		if ( ! $this->is_connected() ) {
+			$this->_error = $this->get_title() . ' ' . __( 'is not connected', 'thrive-dash' );
 
 			return false;
 		}
 
-		return $this->_getForms();
+		return $this->_get_forms();
 	}
 
 	/**
@@ -670,9 +815,8 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function apiVideosUrls() {
-
-		$return    = array();
+	public function get_api_video_urls() {
+		$return    = [];
 		$transient = get_transient( 'ttw_api_urls' );
 
 		if ( ! empty( $transient ) && is_array( $transient ) ) {
@@ -689,8 +833,8 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 */
 	public function display_video_link() {
 
-		$api_slug   = strtolower( str_replace( array( ' ', '-' ), '', $this->getKey() ) );
-		$video_urls = $this->apiVideosUrls();
+		$api_slug   = strtolower( str_replace( array( ' ', '-' ), '', $this->get_key() ) );
+		$video_urls = $this->get_api_video_urls();
 		if ( ! array_key_exists( $api_slug, $video_urls ) ) {
 			return '';
 		}
@@ -705,7 +849,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 */
 	public function get_version() {
 
-		$credentials = (array) $this->getCredentials();
+		$credentials = (array) $this->get_credentials();
 
 		if ( ! empty( $credentials['version'] ) ) {
 			return $credentials['version'];
@@ -723,12 +867,12 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 */
 	protected function normalize_custom_field( $data ) {
 
-		return array(
+		return [
 			'id'    => $data['id'], //unique identifier
 			'name'  => $data['name'], //should be name="" attribute for an input
 			'type'  => $data['type'], //type for e.g. [url, text]
 			'label' => $data['label'], //label to display for users
-		);
+		];
 	}
 
 	/**
@@ -766,7 +910,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 				'date'          => date( 'Y-m-d H:i:s' ),
 				'error_message' => tve_sanitize_data_recursive( $error ),
 				'api_data'      => serialize( tve_sanitize_data_recursive( $data ) ),
-				'connection'    => $this->getKey(),
+				'connection'    => $this->get_key(),
 				'list_id'       => maybe_serialize( tve_sanitize_data_recursive( $list_identifier ) ),
 			);
 
@@ -779,42 +923,41 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Mapped custom fields setter
 	 */
-	protected function _setMappingCustomFields() {
-
+	protected function set_custom_fields_mapping() {
 		$this->_mapped_custom_fields = apply_filters(
 			'tve_dash_mapped_custom_fields',
 			array(
 				array(
 					'id'          => 'mapping_text',
-					'placeholder' => __( 'Text', TVE_DASH_TRANSLATE_DOMAIN ),
+					'placeholder' => __( 'Text', 'thrive-dash' ),
 				),
 				array(
 					'id'          => 'mapping_url',
-					'placeholder' => __( 'URL', TVE_DASH_TRANSLATE_DOMAIN ),
+					'placeholder' => __( 'URL', 'thrive-dash' ),
 				),
 				array(
 					'id'          => 'mapping_radio',
-					'placeholder' => __( 'Radio', TVE_DASH_TRANSLATE_DOMAIN ),
+					'placeholder' => __( 'Radio', 'thrive-dash' ),
 				),
 				array(
 					'id'          => 'mapping_select',
-					'placeholder' => __( 'Dropdown', TVE_DASH_TRANSLATE_DOMAIN ),
+					'placeholder' => __( 'Dropdown', 'thrive-dash' ),
 				),
 				array(
 					'id'          => 'mapping_checkbox',
-					'placeholder' => __( 'Checkbox', TVE_DASH_TRANSLATE_DOMAIN ),
+					'placeholder' => __( 'Checkbox', 'thrive-dash' ),
 				),
 				array(
 					'id'          => 'mapping_textarea',
-					'placeholder' => __( 'Textarea', TVE_DASH_TRANSLATE_DOMAIN ),
+					'placeholder' => __( 'Textarea', 'thrive-dash' ),
 				),
 				array(
 					'id'          => 'mapping_file',
-					'placeholder' => __( 'File upload', TVE_DASH_TRANSLATE_DOMAIN ),
+					'placeholder' => __( 'File upload', 'thrive-dash' ),
 				),
 				array(
 					'id'          => 'mapping_hidden',
-					'placeholder' => __( 'Hidden', TVE_DASH_TRANSLATE_DOMAIN ),
+					'placeholder' => __( 'Hidden', 'thrive-dash' ),
 				),
 			)
 		);
@@ -825,8 +968,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function getMappedCustomFields() {
-
+	public function get_custom_fields_mapping() {
 		return $this->_mapped_custom_fields;
 	}
 
@@ -835,8 +977,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return mixed
 	 */
-	protected function _get_cached_custom_fields() {
-
+	protected function get_cached_custom_fields() {
 		return get_transient( $this->_custom_fields_transient );
 	}
 
@@ -847,7 +988,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return bool
 	 */
-	protected function _save_custom_fields( $custom_fields = array() ) {
+	protected function _save_custom_fields( $custom_fields = [] ) {
 
 		if ( empty( $custom_fields ) ) {
 			return false;
@@ -858,7 +999,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 		return set_transient( $this->_custom_fields_transient, $custom_fields, WEEK_IN_SECONDS );
 	}
 
-	public function processField( $field ) {
+	public function process_field( $field ) {
 		if ( is_array( $field ) ) {
 			$field = join( ", ", $field );
 		}
@@ -871,27 +1012,46 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function hasTags() {
-
+	public function has_tags() {
 		return false;
 	}
 
 	/**
-	 * Get tags key for the api
+	 * Whether or not the current integration can provide custom fields
 	 *
+	 * @return false
+	 */
+	public function has_custom_fields() {
+		return false;
+	}
+
+	/**
+	 * Whether or not the current integration has multiple opt-in types
+	 *
+	 * @return false
+	 */
+	public function has_optin() {
+		return false;
+	}
+
+	/**
 	 * @return string
 	 */
-	public function getTagsKey() {
-
+	public function get_tags_key() {
 		return $this->_key . '_tags';
 	}
 
-	public function getFormsKey() {
+	/**
+	 * @return string
+	 */
+	public function get_forms_key() {
 		return $this->_key . '_form';
 	}
 
-	public function getOptinKey() {
-
+	/**
+	 * @return string
+	 */
+	public function get_optin_key() {
 		return $this->_key . '_optin';
 	}
 
@@ -900,7 +1060,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	protected function getMappedFieldsIDs() {
+	protected function get_mapped_field_ids() {
 
 		$mapped_fields = array_map(
 			function ( $field ) {
@@ -922,27 +1082,26 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function pushTags( $tags, $data = array() ) {
-
-		if ( ! $this->hasTags() && ( ! is_array( $tags ) || ! is_string( $tags ) ) ) {
+	public function push_tags( $tags, $data = [] ) {
+		if ( empty( $tags ) || ! $this->has_tags() ) {
 			return $data;
-		}
-
-		$_key = $this->getTagsKey();
-
-		if ( ! isset( $data[ $_key ] ) ) {
-			$data[ $_key ] = '';
 		}
 
 		if ( is_array( $tags ) ) {
 			$tags = implode( ', ', $tags );
+		} else if ( ! is_string( $tags ) ) {
+			$tags = '';
 		}
 
-		$data[ $_key ] = empty( $data[ $_key ] )
-			? $tags
-			: $data[ $_key ] . ', ' . $tags;
+		$tag_key = $this->get_tags_key();
 
-		$data[ $_key ] = trim( $data[ $_key ] );
+		if ( empty( $data[ $tag_key ] ) ) {
+			$tag_data = $tags;
+		} else {
+			$tag_data = $data[ $tag_key ] . ( empty( $tags ) ? '' : ', ' . $tags );
+		}
+
+		$data[ $tag_key ] = trim( $tag_data );
 
 		return $data;
 	}
@@ -952,7 +1111,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function canEdit() {
+	public function can_edit() {
 		return true;
 	}
 
@@ -961,7 +1120,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function canDelete() {
+	public function can_delete() {
 		return true;
 	}
 
@@ -970,8 +1129,17 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function canTest() {
+	public function can_test() {
 		return true;
+	}
+
+	/**
+	 * Can be removed in 2-3 releases
+	 * @return array
+	 * @deprecated
+	 */
+	public function getDataForSetup(  ) {
+		return $this->get_data_for_setup();
 	}
 
 	/**
@@ -979,8 +1147,8 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function getDataForSetup() {
-		return array();
+	public function get_data_for_setup() {
+		return [];
 	}
 
 	/**
@@ -990,25 +1158,24 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function getWebhookdata( $request ) {
-		return array();
+	public function get_webhook_data( $request ) {
+		return [];
 	}
 
 	/**
-	 * @param       $email
-	 * @param array $tags
-	 * @param array $extra
+	 * @param string $email
+	 * @param array  $tags
+	 * @param array  $extra
 	 *
 	 * @return int
 	 */
-	public function updateTags( $email, $tags = '', $extra = array() ) {
-
-		$args            = $this->getArgsForTagsUpdate( $email, $tags, $extra );
+	public function update_tags( $email, $tags = '', $extra = [] ) {
+		$args            = $this->get_args_for_tags_update( $email, $tags, $extra );
 		$list_identifier = ! empty( $args['list_identifier'] ) ? $args['list_identifier'] : null;
 
 		unset( $args['list_identifier'] );
 
-		return $this->addSubscriber( $list_identifier, $args );
+		return $this->add_subscriber( $list_identifier, $args );
 	}
 
 	/**
@@ -1020,14 +1187,13 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function getArgsForTagsUpdate( $email, $tags = '', $extra = array() ) {
+	public function get_args_for_tags_update( $email, $tags = '', $extra = [] ) {
+		$tags_key = $this->get_tags_key();
 
-		$tags_key = $this->getTagsKey();
-
-		$return = array(
+		$return = [
 			'email'   => $email,
 			$tags_key => $tags,
-		);
+		];
 
 		foreach ( $extra as $key => $value ) {
 			$return[ $key ] = $value;
@@ -1047,8 +1213,7 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return int
 	 */
-	public function addCustomFields( $email, $custom_fields = array(), $extra = array() ) {
-
+	public function add_custom_fields( $email, $custom_fields = [], $extra = [] ) {
 		return 0;
 	}
 
@@ -1062,9 +1227,8 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	protected function _prepareCustomFieldsForApi( $custom_fields = array(), $list_identifier = null ) {
-
-		return array();
+	protected function prepare_custom_fields_for_api( $custom_fields = [], $list_identifier = null ) {
+		return [];
 	}
 
 	/**
@@ -1074,9 +1238,22 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @return array
 	 */
-	public function getAvailableCustomFields( $data = array() ) {
+	public function get_available_custom_fields( $data = [] ) {
+		return method_exists( $this, 'get_all_custom_fields' ) ? $this->get_all_custom_fields( true ) : [];
+	}
 
-		return method_exists( $this, 'getAllCustomFields' ) ? $this->getAllCustomFields( true ) : array();
+	/**
+	 * @param null $list
+	 *
+	 * @return array|mixed
+	 */
+	public function get_custom_fields_by_list( $list = null ) {
+		$fields = $this->get_available_custom_fields();
+		if ( $list && isset( $fields[ $list ] ) ) {
+			$fields = $fields[ $list ];
+		}
+
+		return $fields;
 	}
 
 	/**
@@ -1084,6 +1261,8 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 	 *
 	 * @param string $key
 	 * @param mixed  $default
+	 *
+	 * @return array|mixed|null
 	 */
 	protected function post( $key, $default = null ) {
 		if ( ! isset( $_POST[ $key ] ) ) {
@@ -1092,5 +1271,15 @@ abstract class Thrive_Dash_List_Connection_Abstract {
 
 		return map_deep( $_POST[ $key ], 'sanitize_text_field' );
 	}
-}
 
+	/**
+	 * Build custom fields mapping for automations
+	 *
+	 * @param $automation_data
+	 *
+	 * @return array
+	 */
+	public function build_automation_custom_fields( $automation_data ) {
+		return [];
+	}
+}

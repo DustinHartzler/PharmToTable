@@ -31,6 +31,14 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 		$has_external_access = true;
 		if ( $post_id ) {
 			$has_external_access = current_user_can( 'edit_post', $post_id );
+
+			if ( $has_external_access && isset( $_REQUEST['tar_editor_page'] ) && (int) $_REQUEST['tar_editor_page'] === 1 ) {
+				/* other plugins ( TL, TA, TU ) check post-related info on the 'tcb_user_has_plugin_edit_cap' hook, so we should setup the global post for them */
+				global $post;
+
+				$post = get_post( $post_id );
+				setup_postdata( $post );
+			}
 		}
 
 		/**
@@ -97,6 +105,8 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 					TCB_CT_POST_TYPE,
 					TCB_Symbols_Post_Type::SYMBOL_POST_TYPE,
 					\TCB\inc\helpers\FormSettings::POST_TYPE,
+					\TCB\UserTemplates\Template::get_post_type_name(),
+					\TCB\SavedLandingPages\Saved_Lp::get_post_type_name(),
 				),
 				'fields'         => 'ids',
 				'posts_per_page' => '-1',
@@ -114,7 +124,7 @@ class TCB_Product extends TVE_Dash_Product_Abstract {
 			'tve_comments_disqus_shortname',
 			'tve_comments_facebook_admins',
 			'tve_fa_kit',
-			'tve_user_templates',
+			TCB\UserTemplates\Template::OPTION_KEY,
 		);
 
 		foreach ( $options as $option ) {

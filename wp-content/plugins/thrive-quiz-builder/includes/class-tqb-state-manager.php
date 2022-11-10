@@ -368,7 +368,7 @@ class TQB_State_Manager extends TQB_Request_Handler {
 	/**
 	 * Import state content from other states
 	 *
-	 * @return bool
+	 * @return array
 	 */
 	public function api_import() {
 		$import_to   = $this->param( 'import_to' );
@@ -389,7 +389,7 @@ class TQB_State_Manager extends TQB_Request_Handler {
 			'content'   => $from_variation['content'],
 		) );
 
-		return $from_variation['content'];
+		return $from_variation;
 	}
 
 	/**

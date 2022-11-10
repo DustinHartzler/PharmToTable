@@ -232,7 +232,7 @@ final class TD_Inbox {
 		switch ( $type ) {
 			case 'gtw_warn_default':
 				$message = array(
-					'title' => __( 'Your GoToWebinar Connection will Expire', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'Your GoToWebinar Connection will Expire', 'thrive-dash' ),
 					'info'  => __(
 						'Your GoToWebinar API connection will no longer work after 1st of October, 2019 because GoToWebinar are deactivating their service for this type of connection.<br /><br />  
 						 
@@ -241,7 +241,7 @@ final class TD_Inbox {
 						<a href="https://thrivethemes.com/tkb_item/how-to-upgrade-gotowebinar-and-what-does-this-upgrade-involve/" target="_blank">Click here</a> to learn more about this upgrade and if you have any further questions, get in touch with our <a href="https://thrivethemes.com/forums/forum/general-discussion/" target="_blank">support team</a> and we\'ll help you out.<br /><br />
 						 
 						From your team at Thrive Themes',
-						TVE_DASH_TRANSLATE_DOMAIN
+                        'thrive-dash'
 					),
 					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
 				);
@@ -249,7 +249,7 @@ final class TD_Inbox {
 				break;
 			case 'gtw_warn_before':
 				$message = array(
-					'title' => __( 'You have one Month to Update your GoToWebinar Connection', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'You have one Month to Update your GoToWebinar Connection', 'thrive-dash' ),
 					'info'  => __(
 						'This is just a quick reminder of the message we sent a few months ago.  You only have one month left to connect through their new API.<br /><br />
 
@@ -260,31 +260,31 @@ final class TD_Inbox {
 						<a href="https://thrivethemes.com/tkb_item/how-to-upgrade-gotowebinar-and-what-does-this-upgrade-involve/" target="_blank">Click here</a> to learn more about this upgrade and if you have any further questions, get in touch with our <a href="https://thrivethemes.com/forums/forum/general-discussion/" target="_blank">support team</a> and we\'ll help you out.<br /><br />
 						 
 						From your team at Thrive Themes',
-						TVE_DASH_TRANSLATE_DOMAIN
+                        'thrive-dash'
 					),
 					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
 				);
 				break;
 			case 'gtw_warn_last':
 				$message = array(
-					'title' => __( 'Urgent: Your GoToWebinar forms will stop working', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'Urgent: Your GoToWebinar forms will stop working', 'thrive-dash' ),
 					'info'  => __(
 						'Just to remind you that your GoToWebinar forms will no longer work if you don’t upgrade to their new API connection.<br /><br />
  
 						You solve this by going to your <a href="' . esc_url( add_query_arg( 'page', 'tve_dash_api_connect', admin_url( 'admin.php' ) ) ) . '" target="_self">API dashboard</a> and re-connecting your existing GoToWebinar account.  
 						After you\'ve connected, your existing forms will carry on working as they are now.',
-						TVE_DASH_TRANSLATE_DOMAIN
+                        'thrive-dash'
 					),
 					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
 				);
 				break;
 			case 'gtw_warn_connection':
 				$message = array(
-					'title' => __( 'Your GoToWebinar Connection will Expire!', TVE_DASH_TRANSLATE_DOMAIN ),
-					'info'  => '<span>' . __( 'Important Note:', TVE_DASH_TRANSLATE_DOMAIN ) . ' </span>' .
+					'title' => __( 'Your GoToWebinar Connection will Expire!', 'thrive-dash' ),
+					'info'  => '<span>' . __( 'Important Note:', 'thrive-dash' ) . ' </span>' .
 					           __( 'GoToWebinar are no longer supporting this type of connection. You have until October 1st 2019 to connect trough the new api. <a href="https://thrivethemes.com/tkb_item/how-to-upgrade-gotowebinar-and-what-does-this-upgrade-involve/" target="_blank">Learn more about this</a><br /><br />
 									<a class="tvd-api-edit tvd-inbox-btn">Connect to new API</a>',
-						           TVE_DASH_TRANSLATE_DOMAIN
+                                   'thrive-dash'
 					           ),
 					'type'  => TD_Inbox_Message::TYPE_API, // to be shown on API connection list
 					'slug'  => 'gotowebinar',
@@ -292,33 +292,33 @@ final class TD_Inbox {
 				break;
 			case'ontraport_updated':
 				$message = array(
-					'title' => __( 'Your Ontraport connection has been updated in order for it to work with the latest Ontraport release.', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'Your Ontraport connection has been updated in order for it to work with the latest Ontraport release.', 'thrive-dash' ),
 					'info'  => __(
 						'We have updated the API connection you have previously made between Ontraport and your Thrive product(s), in order to make sure it works with the latest Ontraport release.<br /><br />
 							Due to these changes, now, whenever you connect a "Lead Generation" element to Ontraport, you can choose between sequences and campaigns you have previously added in Ontraport. <br />
 							This way, your users will be able to subscribe to these when using the "Lead Generation" element.<br />
 							For more information about the Ontraport release, please visit their website <a href="https://ontraport.com/service-status" target="_blank">here</a> .<br/><br/>
 							We highly recommend that you sign up through one of your opt-in forms to make sure that everything is working as expected.',
-						TVE_DASH_TRANSLATE_DOMAIN
+                        'thrive-dash'
 					),
 					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
 				);
 				break;
 			case'webinarjamstudio_updated':
 				$message = array(
-					'title' => __( 'Urgent: Your WebinarJam forms will stop working', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'Urgent: Your WebinarJam forms will stop working', 'thrive-dash' ),
 					'info'  => __(
 						'The 3.0 Version of the WebinarJam platform is closing on March 31st. On this date, the systems will be wiped and any replays or information you have will be permanently deleted.<br /><br />
 							This is why it is crucial for you to migrate all your content to the 4.0 Version before then. It is critical that you go to your WebinarJam account today and upgrade to the new version. This way, you will give yourself ample time to move your content over. <br /><br />
 							After upgrading your WebinarJam account, please make sure to delete and re-add the WebinarJam connection, within your Thrive Dashboard, using the v4 option. Then, you will have to update the connection for all forms on your website that you have previously connected to WebinarJam. <br/>',
-						TVE_DASH_TRANSLATE_DOMAIN
+                        'thrive-dash'
 					),
 					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
 				);
 				break;
 			case'zoom_temporary_disabled':
 				$message = array(
-					'title' => __( 'The Zoom integration was temporarily removed, we are sorry for any inconvenience!', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'The Zoom integration was temporarily removed, we are sorry for any inconvenience!', 'thrive-dash' ),
 					'info'  => '',
 					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
 				);
@@ -326,7 +326,7 @@ final class TD_Inbox {
 
 			case'sendinblue_outdated':
 				$message = array(
-					'title' => __( 'Starting with 25th June SendinBlue API v2 will be deprecated. In order to switch to v3, please navigate to Thrive Dashboard, API connections and under SendInBlue, click on "I want to use API v3".', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'Starting with 25th June SendinBlue API v2 will be deprecated. In order to switch to v3, please navigate to Thrive Dashboard, API connections and under SendInBlue, click on "I want to use API v3".', 'thrive-dash' ),
 					'info'  => '',
 					'type'  => TD_Inbox_Message::TYPE_INBOX, // to be shown on API list
 				);
@@ -449,14 +449,7 @@ final class TD_Inbox {
 	 * @return bool
 	 */
 	public function allowed_on_screen() {
-
-		$current_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-
-		if ( ! empty( $current_screen ) && in_array( $current_screen->id, $this->_allowed_screens, true ) ) {
-			return true;
-		}
-
-		return false;
+		return in_array( tve_get_current_screen_key(), $this->_allowed_screens, true );
 	}
 
 	/**

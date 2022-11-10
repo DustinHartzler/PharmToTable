@@ -1,10 +1,10 @@
 <div id="thrive-api-groups">
 	<?php if ( ! empty( $data['groups'] ) ) : ?>
 		<div class="tve-sp"></div>
-		<h6><?php echo esc_html__( 'Choose your grouping:', TVE_DASH_TRANSLATE_DOMAIN ) ?></h6>
+		<h6><?php echo esc_html__( 'Choose your grouping:', 'thrive-dash' ) ?></h6>
 		<div class="tve_lightbox_select_holder tve_lightbox_input_inline tve_lightbox_select_inline">
 			<select class="tve-api-extra" id="thrive-api-groupin-select" name="mailchimp_groupin">
-				<option <?php echo ! isset( $data['groupin'] ) ? 'selected="selected"' : ''; ?> value="0"><?php echo esc_html__( 'No Group', TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
+				<option <?php echo ! isset( $data['groupin'] ) ? 'selected="selected"' : ''; ?> value="0"><?php echo esc_html__( 'No Group', 'thrive-dash' ) ?></option>
 				<?php foreach ( $data['groups'] as $groups ) : ?>
 					<option <?php echo isset( $data['groupin'] ) && $data['groupin'] == $groups->id ? 'selected="selected"' : ''; ?> value="<?php echo esc_attr( $groups->id ) ?>"><?php echo esc_html( $groups->title ) ?></option>
 				<?php endforeach; ?>
@@ -13,7 +13,7 @@
 		<?php foreach ( $data['groups'] as $groups ) : ?>
 			<div class="tve-groups-wrapper tve-groups-select-<?php echo esc_attr( $groups->id ) ?>" <?php echo isset( $data['groupin'] ) && $data['groupin'] == $groups->id ? '' : 'style="display:none"'; ?>>
 				<div class="tve-sp"></div>
-				<h6><?php echo esc_html__( 'Choose your group:', TVE_DASH_TRANSLATE_DOMAIN ) ?></h6>
+				<h6><?php echo esc_html__( 'Choose your group:', 'thrive-dash' ) ?></h6>
 				<?php if ( $groups->type == 'dropdown' || $groups->type == 'hidden' ) : ?>
 					<div class="tve_lightbox_select_holder tve_lightbox_input_inline tve_lightbox_select_inline">
 						<select class="thrive-api-group-select <?php echo isset( $data['groupin'] ) && $data['groupin'] == $groups->id ? 'tve-api-extra' : ''; ?>" name="mailchimp_group">

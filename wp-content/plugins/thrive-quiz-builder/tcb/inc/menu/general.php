@@ -319,7 +319,7 @@
 				<div class="tve-control" data-key="global_style" data-initializer="global_style_control"></div>
 			</div>
 
-			<div class="shared-styles-actions" data-state="1">
+			<div class="shared-styles-actions tcb-hide" data-state="1">
 				<a href="javascript:void(0)" class="click" data-fn="edit_style" data-side="top" data-tooltip="<?php echo esc_attr__( 'Edit Global Style', 'thrive-cb' ); ?>">
 					<?php tcb_icon( 'edit' ); ?>
 				</a>
@@ -333,7 +333,7 @@
 				</a>
 			</div>
 
-			<div class="control-grid no-space shared-styles-actions" data-state="2">
+			<div class="control-grid no-space shared-styles-actions tcb-hide" data-state="2">
 				<span class="global-edit-warning">
 					<span><?php echo esc_html__( 'You are editing the Global Style', 'thrive-cb' ); ?>: </span>
 					<strong><span class="shared-styles-name"></span></strong>.
@@ -356,7 +356,7 @@
 		</div>
 	</div>
 
-	<div class="control-grid pt-5 no-space shared-styles-actions" data-state="1">
+	<div class="control-grid pt-5 no-space shared-styles-actions tcb-hide" data-state="1">
 		<span class="global-edit-warning">
 			<?php echo esc_html__( 'This element has a Global Style applied: some of its properties are not editable at the instance level (e.g. Typography, Background, Borders etc). You can modify these by clicking on the pencil icon above.', 'thrive-cb' ); ?>
 		</span>

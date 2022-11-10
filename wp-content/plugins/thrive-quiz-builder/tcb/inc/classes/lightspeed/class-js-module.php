@@ -33,7 +33,7 @@ class JSModule {
 		return self::$instances[ $key ];
 	}
 
-	public function __construct( $key, $libraries ) {
+	public function __construct( $key = '', $libraries = [] ) {
 		$this->key       = $key;
 		$this->libraries = $libraries;
 	}

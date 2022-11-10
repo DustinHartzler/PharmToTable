@@ -21,14 +21,14 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'ArpReach';
 	}
 
@@ -37,8 +37,8 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'arpreach' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'arpreach' );
 	}
 
 	/**
@@ -46,32 +46,33 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 *
 	 * on error, it should register an error message (and redirect?)
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$url     = ! empty( $_POST['connection']['url'] ) ? sanitize_text_field( $_POST['connection']['url'] ) : '';
 		$app_key = ! empty( $_POST['connection']['api_key'] ) ? sanitize_text_field( $_POST['connection']['api_key'] ) : '';
-		$lists   = ! empty( $_POST['connection']['lists'] ) ? map_deep( $_POST['connection']['lists'], 'sanitize_text_field' ) : array();
+
+		if ( empty( $url ) || empty( $app_key ) ) {
+			return $this->error( __( "Invalid URL or API key", 'thrive-dash' ) );
+		}
+
+		$lists = ! empty( $_POST['connection']['lists'] ) ? map_deep( $_POST['connection']['lists'], 'sanitize_text_field' ) : array();
 
 		$lists = array_filter( $lists );
 
-		if ( empty( $url ) || empty( $app_key ) ) {
-			return $this->error( __( "Invalid URL or API key", TVE_DASH_TRANSLATE_DOMAIN ) );
-		}
-
 		if ( empty( $lists ) ) {
-			return $this->error( __( 'Please provide at least one list for your subscribers', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Please provide at least one list for your subscribers', 'thrive-dash' ) );
 		}
 
 		$credentials = array( 'lists' => $lists, 'api_key' => $app_key, 'url' => $url );
 
-		$this->setCredentials( $credentials );
+		$this->set_credentials( $credentials );
 
-		if ( $this->testConnection() !== true ) {
-			return $this->error( __( "Invalid URL or API key", TVE_DASH_TRANSLATE_DOMAIN ) );
+		if ( $this->test_connection() !== true ) {
+			return $this->error( __( "Invalid URL or API key", 'thrive-dash' ) );
 		}
 
 		$this->save();
 
-		return $this->success( __( 'ArpReach connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'ArpReach connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -79,12 +80,12 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		try {
 			/** @var Thrive_Dash_Api_ArpReach $api */
-			$api = $this->getApi();
+			$api = $this->get_api();
 
-			return strtolower( $api->testConnection()->status ) === 'ok';
+			return strtolower( $api->test_connection()->status ) === 'ok';
 
 		} catch ( Exception $e ) {
 			$this->error( $e->getMessage() );
@@ -98,10 +99,8 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
-		$api = new Thrive_Dash_Api_ArpReach( $this->param( 'url' ), $this->param( 'api_key' ) );
-
-		return $api;
+	protected function get_api_instance() {
+		return new Thrive_Dash_Api_ArpReach( $this->param( 'url' ), $this->param( 'api_key' ) );
 	}
 
 	/**
@@ -109,7 +108,7 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		try {
 			$lists = array();
 
@@ -137,7 +136,7 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		try {
 
 			list( $first_name, $last_name ) = explode( " ", ! empty( $arguments['name'] ) ? $arguments['name'] : ' ' );
@@ -157,7 +156,7 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 			);
 
 			/** @var Thrive_Dash_Api_ArpReach $api */
-			$api = $this->getApi();
+			$api = $this->get_api();
 
 			//add contact
 			$api->addContact( $params );
@@ -181,11 +180,7 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '{EMAIL_ADDRESS}';
-	}
-
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
 	}
 }

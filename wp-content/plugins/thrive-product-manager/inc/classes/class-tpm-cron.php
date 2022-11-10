@@ -130,7 +130,7 @@ final class TPM_Cron {
 
 	/**
 	 * Unschedule current event
-	 * - if it doesn't exists true is returned
+	 * - if it doesn't exist true is returned
 	 *
 	 * @return bool
 	 */

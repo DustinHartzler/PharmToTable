@@ -106,6 +106,25 @@ class TCB_Contact_Form {
 		$this->config = base64_decode( $data['config'] );
 		if ( false !== $this->config ) {
 			$this->config = thrive_safe_unserialize( $this->config );
+
+			if ( is_array( $this->config ) ) {
+				/**
+				 * Filter if a specific string can be found in content edited with thrive architect
+				 *
+				 * @param boolean $has_string
+				 * @param string  $string
+				 * @param int     $post_id
+				 *
+				 * @return boolean
+				 */
+				$valid_config = apply_filters( 'tcb_architect_content_has_string', false, $data['config'], (int) $data['post_id'] );
+
+				if ( ! $valid_config ) {
+					$this->config_parsing_error = __( 'ERROR: Invalid Config', 'thrive-cb' );
+
+					return false;
+				}
+			}
 		}
 
 		if ( empty( $this->config['to_email'] ) || empty( $this->config['submit'] ) ) {

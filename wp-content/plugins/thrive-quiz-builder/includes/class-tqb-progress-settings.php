@@ -96,7 +96,7 @@ class TQB_Progress_Settings {
 
 		$settings = TQB_Post_meta::get_quiz_progress_general_settings( $this->_quiz_id );
 		$defaults = array(
-			'label_text'        => __( 'COMPLETED', Thrive_Quiz_Builder::T ),
+			'label_text'        => __( 'COMPLETED', 'thrive-quiz-builder' ),
 			'display_progress'  => 0,
 			'percent_type'      => 'percentage_completed',
 			'progress_position' => 'position_top',

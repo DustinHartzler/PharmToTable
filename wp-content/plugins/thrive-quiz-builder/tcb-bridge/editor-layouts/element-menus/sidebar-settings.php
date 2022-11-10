@@ -11,16 +11,16 @@ $page_type_name = tqb()->get_style_page_name( $variation['post_type'] );
 ?>
 <a href="javascript:void(0)" class="click s-setting" data-fn="tqb_save_template">
 	<span
-		class="s-name"><?php echo sprintf( esc_html__( 'Save %s Template', Thrive_Quiz_Builder::T ), esc_html( $page_type_name ) ); ?></span>
+		class="s-name"><?php echo sprintf( esc_html__( 'Save %s Template', 'thrive-quiz-builder' ), esc_html( $page_type_name ) ); ?></span>
 </a>
 
 <a href="javascript:void(0)" class="click s-setting" data-fn="tqb_reset_template">
 	<span
-		class="s-name"><?php echo sprintf( esc_html__( 'Reset %s Template', Thrive_Quiz_Builder::T ), esc_html( $page_type_name ) ); ?></span>
+		class="s-name"><?php echo sprintf( esc_html__( 'Reset %s Template', 'thrive-quiz-builder' ), esc_html( $page_type_name ) ); ?></span>
 </a>
 
 <a href="javascript:void(0)" class="click s-setting" data-fn="select_element" data-el="#tve_editor > .thrv_wrapper"
    style="order: -1">
 	<span
-		class="s-name"><?php echo sprintf( esc_html__( '%s Settings', Thrive_Quiz_Builder::T ), esc_html( $page_type_name ) ); ?></span>
+		class="s-name"><?php echo sprintf( esc_html__( '%s Settings', 'thrive-quiz-builder' ), esc_html( $page_type_name ) ); ?></span>
 </a>

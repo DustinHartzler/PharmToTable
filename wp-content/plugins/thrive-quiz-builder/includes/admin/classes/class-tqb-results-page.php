@@ -122,11 +122,11 @@ class TQB_Results_Page extends TQB_Structure_Page {
 
 		return array(
 			'page' => array(
-				'label' => __( 'Results Page', Thrive_Quiz_Builder::T ),
+				'label' => __( 'Results Page', 'thrive-quiz-builder' ),
 				'value' => 'page',
 			),
 			'url'  => array(
-				'label' => __( 'URL Redirect', Thrive_Quiz_Builder::T ),
+				'label' => __( 'URL Redirect', 'thrive-quiz-builder' ),
 				'value' => 'url',
 			),
 		);
@@ -201,6 +201,40 @@ class TQB_Results_Page extends TQB_Structure_Page {
 		return $item;
 	}
 
+	/**
+	 * This was added because other plugins may insert stuff into our ajax request in which case we cannot save what we get from the browser as it is
+	 * Ex: SUPP-14484
+	 *
+	 * Maintenance: This needs to be up to date with the tqb_results_links table columns
+	 *
+	 * @param $model
+	 *
+	 * @return array
+	 */
+	protected function prepare_link_for_db( $model ) {
+		if ( ! empty( $model['id'] ) ) {
+			$link['id'] = (int) $model['id'];
+		}
+		if ( ! empty( $model['quiz_id'] ) ) {
+			$link['quiz_id'] = (int) $model['quiz_id'];
+		}
+		if ( ! empty( $model['page_id'] ) ) {
+			$link['page_id'] = (int) $model['page_id'];
+		}
+
+		$link['status']        = $model['status'] ?: 'valid';
+		$link['lower_bound']   = (int) $model['lower_bound'] ?: 0;
+		$link['upper_bound']   = (int) $model['upper_bound'] ?: 0;
+		$link['type']          = $model['type'] ?: 'local';
+		$link['post_id']       = (int) $model['post_id'] ?: null;
+		$link['link']          = $model['link'] ?: null;
+		$link['result_id']     = (int) $model['result_id'] ?: null;
+		$link['date_added']    = $model['date_added'] ?: '0000-00-00 00:00:00';
+		$link['date_modified'] = $model['date_modified'] ?: '0000-00-00 00:00:00';
+
+		return $link;
+	}
+
 	public function save_link( $link ) {
 
 		/** @var $wpdb wpdb */
@@ -216,8 +250,7 @@ class TQB_Results_Page extends TQB_Structure_Page {
 			$link['link'] = wp_sanitize_redirect( $link['link'] );
 		}
 
-		unset( $link['post_title'] );
-		unset( $link['result_name'] );
+		$link = $this->prepare_link_for_db( $link );
 
 		if ( ! empty( $link['id'] ) ) {
 			$link['date_modified'] = date( 'Y-m-d H:i:s' );
@@ -235,7 +268,7 @@ class TQB_Results_Page extends TQB_Structure_Page {
 		}
 
 		if ( false === $result ) {
-			$link = new WP_Error( 404, __( 'Redirect Link could not be saved into database: ' . $wpdb->last_error, Thrive_Quiz_Builder::T ) );
+			$link = new WP_Error( 404, __( 'Redirect Link could not be saved into database: ' . $wpdb->last_error, 'thrive-quiz-builder' ) );
 		} else {
 			$link = $this->get_link_by_id( $wpdb->insert_id ? $wpdb->insert_id : $link['id'] );
 		}

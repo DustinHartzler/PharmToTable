@@ -2,7 +2,7 @@
 
 class TCB_TQB_Progress_Bar extends TCB_Element_Abstract {
 	public function name() {
-		return __( 'Quiz Progress bar', Thrive_Quiz_Builder::T );
+		return __( 'Quiz Progress bar', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {
@@ -25,16 +25,16 @@ class TCB_TQB_Progress_Bar extends TCB_Element_Abstract {
 					'ProgressBarPosition' => array(
 						'config'     => array(
 							'name'    => '',
-							'label'   => __( 'Progress Bar Position', Thrive_Quiz_Builder::T ),
+							'label'   => __( 'Progress Bar Position', 'thrive-quiz-builder' ),
 							'default' => true,
 							'options' => array(
 								array(
 									'name'  => 'Above question',
-									'value' => __( 'position_top', Thrive_Quiz_Builder::T ),
+									'value' => __( 'position_top', 'thrive-quiz-builder' ),
 								),
 								array(
 									'name'  => 'Below question',
-									'value' => __( 'position_bottom', Thrive_Quiz_Builder::T ),
+									'value' => __( 'position_bottom', 'thrive-quiz-builder' ),
 								),
 							),
 						),
@@ -45,16 +45,16 @@ class TCB_TQB_Progress_Bar extends TCB_Element_Abstract {
 					'ProgressBarType'     => array(
 						'config'     => array(
 							'name'    => '',
-							'label'   => __( 'Progress Type', Thrive_Quiz_Builder::T ),
+							'label'   => __( 'Progress Type', 'thrive-quiz-builder' ),
 							'default' => true,
 							'options' => array(
 								array(
 									'name'  => 'Percent completed',
-									'value' => __( 'percentage_completed', Thrive_Quiz_Builder::T ),
+									'value' => __( 'percentage_completed', 'thrive-quiz-builder' ),
 								),
 								array(
 									'name'  => 'Percentage remaining',
-									'value' => __( 'percentage_remaining', Thrive_Quiz_Builder::T ),
+									'value' => __( 'percentage_remaining', 'thrive-quiz-builder' ),
 								),
 							),
 						),
@@ -65,7 +65,7 @@ class TCB_TQB_Progress_Bar extends TCB_Element_Abstract {
 					'ProgressBarLabel'    => array(
 						'config'     => array(
 							'name'    => '',
-							'label'   => __( 'Progress bar Label', Thrive_Quiz_Builder::T ),
+							'label'   => __( 'Progress bar Label', 'thrive-quiz-builder' ),
 							'default' => true,
 						),
 						'css_suffix' => '',

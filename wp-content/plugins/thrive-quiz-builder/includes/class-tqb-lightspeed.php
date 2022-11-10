@@ -220,6 +220,14 @@ class TQB_Lightspeed {
 			// Enqueue html2canvas script
 			if ( $variation['post_type'] === Thrive_Quiz_Builder::QUIZ_STRUCTURE_ITEM_RESULTS ) {
 				$js .= '<script id="tve_frontend_html2canvas" type="text/javascript" src="' . tqb()->plugin_url( 'assets/js/dist/tqb-html2canvas.min.js' ) . '" ></script>';
+
+				if ( $variation_id !== $variation['id'] ) {
+					$js .= JS::get_instance( $variation['page_id'], '_' . $variation['id'] )->load_modules( true );
+					/* also include the js and css from the parent variation because it has everything except the dynamic content */
+					if ( ! empty( $style ) ) {
+						$style .= $lightspeed_css->get_inline_css( 'base_' . $variation['id'] );
+					}
+				}
 			}
 
 		}

@@ -61,7 +61,7 @@ class TVD_Groups_Controller extends TVD_REST_Controller {
 			return new WP_REST_Response( $model, 200 );
 		}
 
-		return new WP_Error( 'no-results', __( 'The group was not added, please try again !', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return new WP_Error( 'no-results', __( 'The group was not added, please try again !', 'thrive-dash' ) );
 	}
 
 	/**
@@ -81,7 +81,7 @@ class TVD_Groups_Controller extends TVD_REST_Controller {
 			return new WP_REST_Response( true, 200 );
 		}
 
-		return new WP_Error( 'no-results', __( 'No group was deleted!', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return new WP_Error( 'no-results', __( 'No group was deleted!', 'thrive-dash' ) );
 	}
 
 	/**
@@ -100,7 +100,7 @@ class TVD_Groups_Controller extends TVD_REST_Controller {
 			return new WP_REST_Response( $model, 200 );
 		}
 
-		return new WP_Error( 'no-results', __( 'No group was updated!', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return new WP_Error( 'no-results', __( 'No group was updated!', 'thrive-dash' ) );
 	}
 
 	/**

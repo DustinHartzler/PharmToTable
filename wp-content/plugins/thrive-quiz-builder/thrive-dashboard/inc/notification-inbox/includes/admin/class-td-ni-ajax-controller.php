@@ -49,7 +49,7 @@ class TD_NI_Ajax_Controller {
 	public function handle() {
 
 		if ( ! check_ajax_referer( 'td_ni_admin_ajax_request', '_nonce', false ) ) {
-			$this->error( sprintf( __( 'Invalid request', TVE_DASH_TRANSLATE_DOMAIN ) ) );
+			$this->error( sprintf( __( 'Invalid request', 'thrive-dash' ) ) );
 		}
 
 		$route       = $this->param( 'action' );
@@ -57,7 +57,7 @@ class TD_NI_Ajax_Controller {
 		$method_name = $route . '_action';
 
 		if ( ! method_exists( $this, $method_name ) ) {
-			$this->error( sprintf( __( 'Method %s not implemented', TVE_DASH_TRANSLATE_DOMAIN ), $method_name ) );
+			$this->error( sprintf( __( 'Method %s not implemented', 'thrive-dash' ), $method_name ) );
 		}
 
 		$model = json_decode( file_get_contents( 'php://input' ), true );
@@ -75,7 +75,7 @@ class TD_NI_Ajax_Controller {
 		$this->_verify_nonce();
 
 		if ( empty( $_REQUEST['notification_id'] ) ) {
-			$this->error( __( 'Missing parameter [notification_id] in ajax request', TVE_DASH_TRANSLATE_DOMAIN ) );
+			$this->error( __( 'Missing parameter [notification_id] in ajax request', 'thrive-dash' ) );
 		}
 
 		try {
@@ -88,7 +88,7 @@ class TD_NI_Ajax_Controller {
 			$this->error( $e->getMessage() );
 		}
 
-		return $this->error( __( 'An error ocurred on updating notification', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->error( __( 'An error ocurred on updating notification', 'thrive-dash' ) );
 	}
 
 	/**
@@ -146,7 +146,7 @@ class TD_NI_Ajax_Controller {
 	private function _verify_nonce() {
 
 		if ( ! check_ajax_referer( 'td_ni_admin_ajax_request', '_nonce', false ) ) {
-			$this->error( sprintf( __( 'Invalid request', TVE_DASH_TRANSLATE_DOMAIN ) ) );
+			$this->error( sprintf( __( 'Invalid request', 'thrive-dash' ) ) );
 		}
 	}
 }

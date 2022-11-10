@@ -18,6 +18,6 @@ $settings['fonts'] = array(
 );
 
 return array(
-	'name'     => __( 'Dynamic', Thrive_Image_Editor::T ),
+	'name'     => __( 'Dynamic', 'thrive-image-editor' ),
 	'settings' => $settings
 );

@@ -32,6 +32,22 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 		add_filter( "rest_insert_{$this->post_type}", array( $this, 'rest_insert_symbol' ), 10, 2 );
 		add_action( "rest_after_insert_{$this->post_type}", array( $this, 'rest_after_insert' ), 10, 2 );
 		add_action( 'rest_delete_' . TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY, array( $this, 'rest_delete_category' ), 10, 1 );
+		add_action( "rest_{$this->post_type}_query", array( $this, 'override_per_page' ), 10, 1 );
+	}
+
+	/**
+	 * Override the per page limit for the rest api in case there are people with over 100 symbols
+	 *
+	 * @param $args
+	 *
+	 * @return mixed
+	 */
+	public function override_per_page( $params ) {
+		if ( isset( $params['posts_per_page'] ) ) {
+			$params['posts_per_page'] = '300';
+		}
+
+		return $params;
 	}
 
 	/**
@@ -254,7 +270,8 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 		}
 
 		/* add the thumbnail data */
-		$response->data['thumb'] = TCB_Utils::get_thumb_data( $post->ID, TCB_Symbols_Post_Type::SYMBOL_THUMBS_FOLDER, static::get_default_thumb_placeholder() );
+		$default_thumb_data      = TCB_Utils::get_placeholder_data();
+		$response->data['thumb'] = TCB_Utils::get_thumb_data( $post->ID, TCB_Symbols_Post_Type::SYMBOL_THUMBS_FOLDER, $default_thumb_data );
 
 		$response->data['edit_url'] = tcb_get_editor_url( $post->ID );
 
@@ -340,7 +357,7 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 		/* add the new thumbnail data to the post meta */
 		TCB_Utils::save_thumbnail_data( $post_id, $thumb );
 
-		return copy( $path, $new_path );
+		return @copy( $path, $new_path );
 	}
 
 	/**
@@ -414,6 +431,14 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 	 * @return bool|int
 	 */
 	public function update_symbol_html( $meta_value, $post_obj, $meta_key ) {
+		/**
+		 * Update the symbol html(form meta value) for a specific meta key
+		 *
+		 * @param string $meta_key
+		 * @param string $meta_value
+		 */
+		$meta_value = apply_filters( 'tve_update_symbol_html', $meta_key, $meta_value );
+
 		return update_post_meta( $post_obj->ID, $meta_key, $meta_value );
 	}
 
@@ -459,7 +484,7 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 	 */
 	public function move_symbol( $new_term_id, $post_obj ) {
 
-		if ( intval( $new_term_id ) === 0 ) {
+		if ( (int) $new_term_id === 0 ) {
 			//if the new category is the uncategorized one, we just have to delete the existing ones
 			return $this->remove_current_terms( $post_obj );
 		}
@@ -510,20 +535,6 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 		register_rest_field( $this->get_object_type(), 'move_symbol', array(
 			'update_callback' => array( $this, 'move_symbol' ),
 		) );
-	}
-
-	/**
-	 * Return the symbol admin preview placeholder data
-	 *
-	 * @return array
-	 */
-	public static function get_default_thumb_placeholder() {
-		return array(
-			'url' => tve_editor_url( 'admin/assets/images/no-template-preview.jpg' ),
-			/* hardcoded sizes taken from 'no-template-preview.jpg' */
-			'h'   => '248',
-			'w'   => '520',
-		);
 	}
 
 	/**

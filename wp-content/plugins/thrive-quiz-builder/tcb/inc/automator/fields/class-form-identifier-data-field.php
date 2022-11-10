@@ -17,7 +17,7 @@ class Form_Identifier_Data_Field extends \Thrive\Automator\Items\Data_Field {
 	 * Field name
 	 */
 	public static function get_name() {
-		return 'Specific form';
+		return 'Specific forms';
 	}
 
 	/**

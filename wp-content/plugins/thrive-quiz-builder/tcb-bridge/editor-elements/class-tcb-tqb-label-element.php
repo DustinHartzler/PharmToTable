@@ -3,7 +3,7 @@
 class TCB_TQB_Label_Element extends TCB_Element_Abstract{
 
 	public function name() {
-		return __( 'Thrive Label', Thrive_Quiz_Builder::T );
+		return __( 'Thrive Label', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {

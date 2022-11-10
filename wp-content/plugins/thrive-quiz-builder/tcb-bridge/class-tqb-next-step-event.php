@@ -9,7 +9,7 @@ class TQB_Thrive_Next_Step extends TCB_Event_Action_Abstract {
 	 * @return string
 	 */
 	public function getName() {
-		return __( 'Next Step in Quiz', Thrive_Quiz_Builder::T );
+		return __( 'Next Step in Quiz', 'thrive-quiz-builder' );
 	}
 
 	/**

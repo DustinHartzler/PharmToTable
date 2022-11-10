@@ -49,7 +49,7 @@ class TCB_Post_List_Featured_Image {
 
 		if ( has_post_thumbnail( $post_id ) ) {
 			$post_thumbnail_id = get_post_thumbnail_id( $post_id );
-			$sizes             = self::get_image_sizes( $post_thumbnail_id );
+			$sizes             = static::get_image_sizes( $post_thumbnail_id );
 		}
 
 		return $sizes;
@@ -65,7 +65,7 @@ class TCB_Post_List_Featured_Image {
 	 */
 	public static function get_image_sizes( $thumb_id ) {
 		$sizes        = array();
-		$filter_sizes = self::filter_available_sizes();
+		$filter_sizes = static::filter_available_sizes();
 
 		$post_thumbnail        = get_post( $thumb_id );
 		$data['media_details'] = wp_get_attachment_metadata( $thumb_id );

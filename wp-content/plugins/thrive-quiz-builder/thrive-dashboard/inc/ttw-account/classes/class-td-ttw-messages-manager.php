@@ -25,7 +25,7 @@ class TD_TTW_Messages_Manager {
 		/**  @var TD_TTW_User_Licenses $licenses */
 		$licenses = TD_TTW_User_Licenses::get_instance();
 
-		if ( $licenses->has_membership() && ! $licenses->get_membership()->can_update() ) {
+		if ( $licenses->get_membership() && ! $licenses->get_membership()->can_update() ) {
 			add_action( 'admin_notices', array( __CLASS__, 'inactive_membership' ) );
 		}
 	}
@@ -77,7 +77,12 @@ class TD_TTW_Messages_Manager {
 	 */
 	public static function inactive_membership() {
 		/**  @var TD_TTW_User_Licenses $licenses */
-		$licenses = TD_TTW_User_Licenses::get_instance();
+		$licenses   = TD_TTW_User_Licenses::get_instance();
+		$membership = $licenses->get_membership();
+
+		if ( ! $membership ) {
+			return;
+		}
 
 		if ( TD_TTW_Connection::get_instance()->is_connected() ) {
 			$tpl = 'expired-connected';
@@ -88,9 +93,9 @@ class TD_TTW_Messages_Manager {
 		self::render(
 			$tpl,
 			false,
-			[
-				'membership_name' => $licenses->get_membership()->get_name(),
-			]
+			array(
+				'membership_name' => $membership->get_name(),
+			)
 		);
 	}
 
@@ -100,38 +105,63 @@ class TD_TTW_Messages_Manager {
 	 * @param stdClass $state
 	 * @param array    $plugin_data
 	 *
-	 * @return string
+	 * @return string|null
+	 *      - `` empty string means: no custom message is returned so let the UpdateChecker do its logic
+	 *      - `null` means that no license was fond for the plugin and no update should be provided by the UpdateChecker
 	 */
 	public static function get_update_message( $state, $plugin_data ) {
 
-		/**  @var $licenses TD_TTW_User_Licenses */
-		$licenses = TD_TTW_User_Licenses::get_instance();
+		$message       = '';
+		$template      = null;
+		$template_data = array(
+			'state'       => $state,
+			'plugin_data' => $plugin_data,
+			'recheck_url' => TD_TTW_User_Licenses::get_instance()->get_recheck_url(),
+		);
 
-		if ( TD_TTW_Connection::get_instance()->is_connected() && $licenses->has_active_membership() ) {
-			return '';
+		$plugin_tag = TVE_Dash_Product_LicenseManager::get_product_tag( $plugin_data['TextDomain'] );
+		if ( TVE_Dash_Product_LicenseManager::TPM_TAG === $plugin_tag ) {
+			return $message;
 		}
 
-		$return = '';
-		$tpl    = '';
+		$is_connected = TD_TTW_Connection::get_instance()->is_connected();
 
-		if ( ! TD_TTW_Connection::get_instance()->is_connected() && empty( $licenses->get_licenses_details() ) ) {
-			$tpl = 'disconnected';
-		} elseif ( $licenses->has_membership() && ! $licenses->get_membership()->can_update() ) {
-			$tpl = 'expired';
+		if ( false === $is_connected ) {
+			$template = 'plugin/disconnected';
+		} else {
+			/** @var TD_TTW_User_Licenses $licenses */
+			$licenses   = TD_TTW_User_Licenses::get_instance();
+			$membership = $licenses->get_membership();
+			$license    = $licenses->get_license( $plugin_tag );
+
+			if ( ( $membership && $membership->can_update() ) || ( $license && $license->can_update() ) ) {
+				return $message;
+			}
+
+			if ( $membership && false === $membership->can_update() ) {
+				$template = 'plugin/membership-expired';
+			} elseif ( null === $license && null === $membership ) {
+				$template = 'plugin/no-license-found';
+			} elseif ( $license && false === $license->can_update() ) {
+				$template = 'plugin/license-expired';
+			}
 		}
 
-		if ( ! empty( $tpl ) ) {
-			$return .= self::render(
-				$tpl,
+		$error = thrive_get_transient( 'td_ttw_connection_error' );
+		if ( ! empty( $error ) ) {
+			$template                       = 'error';
+			$template_data['error_message'] = $error;
+		}
+
+		if ( $template ) {
+			$message = static::render(
+				$template,
 				true,
-				array(
-					'state'       => $state,
-					'plugin_data' => $plugin_data,
-				)
+				$template_data
 			);
 		}
 
-		return $return;
+		return $message;
 	}
 }
 

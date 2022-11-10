@@ -4,7 +4,7 @@
  */
 
 $quiz_id = ! empty( $_REQUEST['quiz_id'] ) ? sanitize_text_field( $_REQUEST['quiz_id'] ) : null;
-$data    = array( 'id' => $quiz_id );
+$data    = array( 'quiz_id' => $quiz_id );
 ?>
 
 <!DOCTYPE html>

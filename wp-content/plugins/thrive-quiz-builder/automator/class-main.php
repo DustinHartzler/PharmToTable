@@ -25,7 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Main {
 
 	public static function init() {
-		self::add_hooks();
+		if ( defined( 'THRIVE_AUTOMATOR_RUNNING' )
+		     && ( ( defined( 'TVE_DEBUG' ) && TVE_DEBUG )
+		          || ( defined( 'TAP_VERSION' ) && version_compare( TAP_VERSION, '1.0', '>=' ) ) ) ) {
+			static::add_hooks();
+		}
 	}
 
 	/**
@@ -40,10 +44,17 @@ class Main {
 	public static function add_hooks() {
 		add_action( 'tap_output_extra_svg', array( 'TQB\Automator\Main', 'display_icons' ) );
 		add_filter( 'tvd_automator_api_data_sets', array( 'TQB\Automator\Main', 'dashboard_sets' ), 10, 1 );
-		self::load_data_objects();
-		self::load_fields();
-		self::load_triggers();
+		static::load_apps();
+		static::load_data_objects();
+		static::load_fields();
+		static::load_triggers();
 
+	}
+
+	public static function load_apps() {
+		foreach ( static::load_files( 'apps' ) as $app ) {
+			thrive_automator_register_app( new $app() );
+		}
 	}
 
 	public static function load_triggers() {
@@ -84,7 +95,7 @@ class Main {
 		foreach ( glob( $integration_path . '/*.php' ) as $file ) {
 			require_once $file;
 
-			$class = 'TQB\Automator\\' . self::get_class_name_from_filename( $file );
+			$class = 'TQB\Automator\\' . static::get_class_name_from_filename( $file );
 
 			if ( class_exists( $class ) ) {
 				$local_classes[] = $class;

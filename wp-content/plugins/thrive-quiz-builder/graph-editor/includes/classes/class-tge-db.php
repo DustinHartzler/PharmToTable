@@ -198,7 +198,9 @@ class TGE_Database {
 
 		$models = $this->wpdb->get_results( $this->prepare( $sql, $params ), $return_type );
 		foreach ( $models as &$answer ) {
-			$answer['image'] = json_decode( $answer['image'] ) ? json_decode( $answer['image'] ) : $answer['image'];
+			if ( ! empty( $answer['image'] ) ) {
+				$answer['image'] = json_decode( $answer['image'] ) ? json_decode( $answer['image'] ) : $answer['image'];
+			}
 		}
 
 		return $models;

@@ -9,7 +9,7 @@
 
 $has_data = array(
 	'styles' => ! empty( $data['styles']['button'] ) || ! empty( $data['styles']['section'] ) || ! empty( $data['styles']['contentbox'] ),
-	'vars'   => ! empty( $data['vars']['colours'] ) || ! empty( $data['vars']['gradients'] ),
+	'vars'   => ! empty( $data['vars']['colours'] ) || ! empty( $data['vars']['gradients'] ) || ! empty( $data['skin_palettes'] ),
 );
 
 ?>

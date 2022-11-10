@@ -18,16 +18,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Mautic';
 	}
 
@@ -36,8 +37,8 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'mautic' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'mautic' );
 	}
 
 	/**
@@ -45,9 +46,9 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed|void
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		/** @var Thrive_Dash_Api_Mautic_OAuth $mautic */
-		$mautic = $this->getApi();
+		$mautic = $this->get_api();
 
 		try {
 			$mautic->validateAccessToken();
@@ -60,13 +61,13 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 			$accessTokenData = $mautic->getAccessTokenData();
 			$credentials     = array_merge( $accessTokenData, $data );
 
-			$this->setCredentials( $credentials );
+			$this->set_credentials( $credentials );
 		}
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not test Mautic connection: %s', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not test Mautic connection: %s', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -91,20 +92,20 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 
 
 		if ( empty( $url ) ) {
-			return $this->error( __( 'You must provide a valid Mautic api url', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mautic api url', 'thrive-dash' ) );
 		}
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Mautic Public Key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mautic Public Key', 'thrive-dash' ) );
 		}
 
 		if ( empty( $secret ) ) {
-			return $this->error( __( 'You must provide a valid Mautic Secret Key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mautic Secret Key', 'thrive-dash' ) );
 		}
 
 
 		/** @var Thrive_Dash_Api_Mautic_OAuth $mautic */
-		$mautic = $this->getApi();
+		$mautic = $this->get_api();
 		/**
 		 * check for trailing slash and remove it
 		 */
@@ -133,11 +134,11 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/** @var Thrive_Dash_Api_Mautic_OAuth $mautic */
-		$mautic = $this->getApi();
+		$mautic = $this->get_api();
 
-		$mautic->setAccessTokenDetails( $this->getCredentials() );
+		$mautic->setAccessTokenDetails( $this->get_credentials() );
 
 		$this->checkResetCredentials();
 
@@ -162,7 +163,7 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return Thrive_Dash_Api_Mautic_ApiAuth::initiate( array(
 			'baseUrl'      => $this->param( 'baseUrl' ),
 			'version'      => $this->param( 'version' ),
@@ -177,10 +178,10 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return array
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		/** @var Thrive_Dash_Api_Mautic_OAuth $api */
-		$api = $this->getApi();
-		$api->setAccessTokenDetails( $this->getCredentials() );
+		$api = $this->get_api();
+		$api->setAccessTokenDetails( $this->get_credentials() );
 
 		$this->checkResetCredentials();
 
@@ -193,7 +194,7 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 
 			return $lists;
 		} catch ( Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', 'thrive-dash' );
 
 			return false;
 		}
@@ -207,18 +208,18 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return bool|string true for success or string error message for failure
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		$args = array();
 
 		if ( ! empty( $arguments['name'] ) ) {
-			list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+			list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 			$args['firstname'] = $first_name;
 			$args['lastname']  = $last_name;
 		}
 
 		/** @var Thrive_Dash_Api_Mautic_OAuth $api */
-		$api = $this->getApi();
-		$api->setAccessTokenDetails( $this->getCredentials() );
+		$api = $this->get_api();
+		$api->setAccessTokenDetails( $this->get_credentials() );
 
 		$this->checkResetCredentials();
 
@@ -245,16 +246,17 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 
 			return true;
 		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', 'thrive-dash' );
 		}
 
 	}
 
 	/**
 	 * Return the connection email merge tag
+	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '{leadfield=email}';
 	}
 
@@ -264,8 +266,8 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	private function checkResetCredentials() {
 
 		/** @var Thrive_Dash_Api_Mautic_OAuth $api */
-		$api = $this->getApi();
-		$api->setAccessTokenDetails( $this->getCredentials() );
+		$api = $this->get_api();
+		$api->setAccessTokenDetails( $this->get_credentials() );
 
 		$api->validateAccessToken();
 
@@ -277,7 +279,7 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 			$data            = get_option( 'tvd_mautic_credentials' );
 			$credentials     = array_merge( $accessTokenData, $data );
 
-			$this->setCredentials( $credentials );
+			$this->set_credentials( $credentials );
 
 			/**
 			 * re-save the connection details
@@ -291,21 +293,17 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 	 *
 	 * @return mixed
 	 */
-	public function getApi() {
+	public function get_api() {
 		if ( isset( $_REQUEST['oauth_token'] ) || isset( $_REQUEST['state'] ) ) {
 
 			$data = get_option( 'tvd_mautic_credentials' );
 
 			return Thrive_Dash_Api_Mautic_ApiAuth::initiate( $data );
 		} elseif ( ! isset( $this->_api ) ) {
-			$this->_api = $this->_apiInstance();
+			$this->_api = $this->get_api_instance();
 		}
 
 		return $this->_api;
-	}
-
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
 	}
 
 }

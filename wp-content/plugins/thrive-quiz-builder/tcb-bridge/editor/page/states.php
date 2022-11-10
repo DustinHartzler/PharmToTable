@@ -27,14 +27,14 @@ if ( empty( $intervals ) || ! is_array( $intervals ) ) {
 		<?php if ( $quiz_type['type'] == Thrive_Quiz_Builder::QUIZ_TYPE_PERSONALITY ) : ?>
 			<div class="tqb-interval-info">
 				<?php tcb_icon( 'help_outline' ); ?>
-				<?php echo esc_html__( 'Results:', Thrive_Quiz_Builder::T ); ?>
+				<?php echo esc_html__( 'Results:', 'thrive-quiz-builder' ); ?>
 			</div>
 			<div class="tqb-tcb-row-container tqb-tcb-row-container-personality">
 				<?php $personality_intervals = count( $intervals ); ?>
 				<?php foreach ( $intervals as $interval ) : ?>
 					<?php
 					$interval['post_title'] = str_replace( array( "'", '"' ), '', $interval['post_title'] );
-					$html                   = "<input type='hidden' id='tqb-child-id' value='" . $interval['id'] . "' /><div class='tqb-personality-results-popover'><div class='tqb-personality-results-dark-holder'><span class='icon-download'></span><a class='click' data-fn='import_content' href='javascript:void(0);'>" . __( 'Import Content', Thrive_Quiz_Builder::T ) . '</a></div>' . "<div class='tqb-personality-results-purple-holder'>" . $interval['post_title'] . '</div>' . '</div>';
+					$html                   = "<input type='hidden' id='tqb-child-id' value='" . $interval['id'] . "' /><div class='tqb-personality-results-popover'><div class='tqb-personality-results-dark-holder'><span class='icon-download'></span><a class='click' data-fn='import_content' href='javascript:void(0);'>" . __( 'Import Content', 'thrive-quiz-builder' ) . '</a></div>' . "<div class='tqb-personality-results-purple-holder'>" . $interval['post_title'] . '</div>' . '</div>';
 					?>
 					<div class="click tqb-tcb-intervals-item tqb-tcb-intervals-item-personality"
 						 style="max-width: <?php echo number_format( ( 100 / $personality_intervals ), 2 ); ?>%"
@@ -62,7 +62,7 @@ if ( empty( $intervals ) || ! is_array( $intervals ) ) {
 			?>
 			<div class="tqb-interval-info">
 				<?php tcb_icon( 'help_outline' ); ?>
-				<?php echo esc_html__( 'Results Intervals:', Thrive_Quiz_Builder::T ); ?>
+				<?php echo esc_html__( 'Results Intervals:', 'thrive-quiz-builder' ); ?>
 			</div>
 			<div class="tqb-tcb-row-container tqb-intervals">
 				<?php foreach ( $intervals as $key => $interval ) : ?>
@@ -104,7 +104,7 @@ if ( empty( $intervals ) || ! is_array( $intervals ) ) {
 								<input type='text' class='tqb-input-range' id='tqb-range-min' value='" . esc_attr( $interval['tcb_fields']['min'] ) . "'/>
 								<input type='text' class='tqb-input-range' id='tqb-range-max' value='" . esc_attr( $interval['tcb_fields']['max'] ) . "'/>
 							</div>
-							<a data-fn='update_intervals' class='click tqb-apply-intervals' href='javascript:void(0);'>" . esc_html__( 'Apply', Thrive_Quiz_Builder::T ) . '</a>
+							<a data-fn='update_intervals' class='click tqb-apply-intervals' href='javascript:void(0);'>" . esc_html__( 'Apply', 'thrive-quiz-builder' ) . '</a>
 						</div>';
 					?>
 					<div class="click tqb-tcb-intervals-item"
@@ -140,12 +140,12 @@ if ( empty( $intervals ) || ! is_array( $intervals ) ) {
 				<div class="click" data-fn="equalize">
 					<?php tcb_icon( 'view_column' ); ?>
 					<span
-						class="tqb-interval-actions-button"><?php echo esc_html__( 'Equalize sizes', Thrive_Quiz_Builder::T ); ?></span>
+						class="tqb-interval-actions-button"><?php echo esc_html__( 'Equalize sizes', 'thrive-quiz-builder' ); ?></span>
 				</div>
 				<div class="click" data-fn="reset">
 					<?php tcb_icon( 'rotate' ); ?>
 					<span
-						class="tqb-interval-actions-button"><?php echo esc_html__( 'Reset all', Thrive_Quiz_Builder::T ); ?></span>
+						class="tqb-interval-actions-button"><?php echo esc_html__( 'Reset all', 'thrive-quiz-builder' ); ?></span>
 				</div>
 			</div>
 		<?php endif; ?>

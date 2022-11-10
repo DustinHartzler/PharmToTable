@@ -474,7 +474,7 @@ function tqb_render_shortcode( $arguments = array() ) {
 		$quiz         = $quiz_manager->get_quiz();
 
 		if ( $quiz === false ) {
-			$error_msg = tqb_create_frontend_error_message( array( __( 'The quiz is no longer available!', Thrive_Quiz_Builder::T ) ) );
+			$error_msg = tqb_create_frontend_error_message( array( __( 'The quiz is no longer available!', 'thrive-quiz-builder' ) ) );
 
 			return '<div class="thrive-shortcode-html"><div>' . $error_msg . '</div></div>';
 		}
@@ -495,9 +495,7 @@ function tqb_render_shortcode( $arguments = array() ) {
 			return $html;
 		}
 
-		return TQB_Shortcodes::render_quiz_shortcode( array(
-			'id' => $arguments['quiz_id'],
-		) );
+		return TQB_Shortcodes::render_quiz_shortcode( $arguments );
 	}
 
 	return '';

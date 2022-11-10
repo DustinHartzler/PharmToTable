@@ -96,7 +96,7 @@ class TD_DB_Migration {
 	 *
 	 * @param string $table_name
 	 * @param string $spec             full table spec, excluding brackets
-	 * @param bool   $add_collate_spec whether or not to add collate specification
+	 * @param bool   $add_collate_spec whether to add collate specification
 	 *
 	 * @return TD_DB_Migration allows fluent interface$this
 	 */

@@ -51,7 +51,7 @@ abstract class Field {
 	public static function filter_options( $id, $label, $selected_values = [], $searched_keyword = '' ) {
 		return
 			( empty( $selected_values ) || in_array( $id, $selected_values ) ) && /* if there are pre-selected values, only return the options for those */
-			( empty( $searched_keyword ) || strpos( $label, $searched_keyword ) !== false ); /* if there is a searched keyword, only return the options that match it */
+			( empty( $searched_keyword ) || stripos( $label, $searched_keyword ) !== false ); /* if there is a searched keyword, only return the options that match it */
 	}
 
 	/**

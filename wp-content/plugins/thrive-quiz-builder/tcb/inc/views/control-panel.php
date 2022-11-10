@@ -47,11 +47,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<?php $data->elements->output_components(); ?>
 			</div>
 
-			<div id="migrate-element" class="sidebar-block" style="display: none">
-				<span><?php echo esc_html__( 'You can migrate this element to Thrive Architect. Click the following button to migrate the element', 'thrive-cb' ); ?></span>
-				<button class="click tve-btn tve-button grey" data-fn="migrate_element"><?php echo esc_html__( 'Migrate element', 'thrive-cb' ); ?></button>
-			</div>
-
 			<div id="multiple-select-elements" class="sidebar-block" style="display: none;">
 				<div class="row pt-15">
 					<div class="col-xs-12">

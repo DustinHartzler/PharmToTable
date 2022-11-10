@@ -61,14 +61,14 @@ abstract class TQB_Export_Step_Abstract implements TQB_Export_Step {
 	public function execute() {
 
 		if ( empty( $this->quiz ) ) {
-			throw new Exception( sprintf( __( 'No quiz has been provided to step %s be exported.', Thrive_Quiz_Builder::T ), $this->_name ) );
+			throw new Exception( sprintf( __( 'No quiz has been provided to step %s be exported.', 'thrive-quiz-builder' ), $this->_name ) );
 		}
 
 		$this->_prepare_data();
 		$saved = $this->write_data_to_file( $this->data, $this->_name . '.json' );
 
 		if ( ! $saved ) {
-			throw new Exception( sprintf( __( 'Step %s data could not be written to file.', Thrive_Quiz_Builder::T ), $this->_name ) );
+			throw new Exception( sprintf( __( 'Step %s data could not be written to file.', 'thrive-quiz-builder' ), $this->_name ) );
 		}
 
 		return true;
@@ -147,7 +147,7 @@ abstract class TQB_Export_Step_Abstract implements TQB_Export_Step {
 		}
 
 		if ( $type ) {
-			return isset( $this->wp_upload_dir[ $type ] ) ? $this->wp_upload_dir[ $type ] : new WP_Error( 400, __( 'Undefined type for upload dir', Thrive_Quiz_Builder::T ) );
+			return isset( $this->wp_upload_dir[ $type ] ) ? $this->wp_upload_dir[ $type ] : new WP_Error( 400, __( 'Undefined type for upload dir', 'thrive-quiz-builder' ) );
 		}
 
 		return $this->wp_upload_dir;

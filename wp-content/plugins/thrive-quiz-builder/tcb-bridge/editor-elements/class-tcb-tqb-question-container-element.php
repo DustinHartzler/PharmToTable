@@ -2,7 +2,7 @@
 
 class TCB_TQB_Question_Container_Element extends TCB_Element_Abstract {
 	public function name() {
-		return __( 'Question Container', Thrive_Quiz_Builder::T );
+		return __( 'Question Container', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {

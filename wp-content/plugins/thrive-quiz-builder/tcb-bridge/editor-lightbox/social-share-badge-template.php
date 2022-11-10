@@ -5,9 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 $style_templates = tqb()->get_tcb_social_share_badge_templates();
 ?>
 
-<span class="tcb-modal-title ml-0 mt-0"><?php echo esc_html__( 'Social share badge template', Thrive_Quiz_Builder::T ); ?></span>
+<span class="tcb-modal-title ml-0 mt-0"><?php echo esc_html__( 'Social share badge template', 'thrive-quiz-builder' ); ?></span>
 <div class="tcb-modal-description mb-10">
-	<?php echo esc_html__( 'Select the display template for the social share badge.', Thrive_Quiz_Builder::T ) ?>
+	<?php echo esc_html__( 'Select the display template for the social share badge.', 'thrive-quiz-builder' ) ?>
 </div>
 <div class="tve-templates-wrapper">
 	<div class="tve-default-templates-list expanded-set">
@@ -26,6 +26,6 @@ $style_templates = tqb()->get_tcb_social_share_badge_templates();
 </div>
 <div class="tcb-modal-footer flex-end pr-0">
 	<button type="button" class="tcb-right tve-button medium white-text green click" data-fn="choose_template">
-		<?php echo esc_html__( 'Choose Template', Thrive_Quiz_Builder::T ) ?>
+		<?php echo esc_html__( 'Choose Template', 'thrive-quiz-builder' ) ?>
 	</button>
 </div>

@@ -17,6 +17,11 @@ class TQB_Structure_Manager {
 	protected $quiz_id;
 
 	/**
+	 * @var array|null
+	 */
+	private $structure;
+
+	/**
 	 * TQB_Structure_Manager constructor.
 	 *
 	 * @param int $quiz_id
@@ -27,13 +32,16 @@ class TQB_Structure_Manager {
 
 	/**
 	 * Get quiz structure meta
+	 * Added cache level to quiz structure
 	 *
 	 * @return mixed
 	 */
 	public function get_quiz_structure_meta() {
-		$structure = get_post_meta( $this->quiz_id, TQB_Post_meta::META_NAME_FOR_QUIZ_STRUCTURE, true );
+		if ( empty( $this->structure ) ) {
+			$this->structure = get_post_meta( $this->quiz_id, TQB_Post_meta::META_NAME_FOR_QUIZ_STRUCTURE, true );
+		}
 
-		return $structure;
+		return $this->structure;
 	}
 
 	/**
@@ -73,6 +81,7 @@ class TQB_Structure_Manager {
 
 	/**
 	 * Updates the quiz structure meta
+	 * On Update quiz structure, we invalidate cache
 	 *
 	 * @param $model
 	 *
@@ -82,7 +91,8 @@ class TQB_Structure_Manager {
 		if ( isset( $model['running_tests'] ) ) {
 			unset( $model['running_tests'] );
 		}
-		$result = update_post_meta( $this->quiz_id, TQB_Post_meta::META_NAME_FOR_QUIZ_STRUCTURE, $model );
+		$this->structure = null;
+		$result          = update_post_meta( $this->quiz_id, TQB_Post_meta::META_NAME_FOR_QUIZ_STRUCTURE, $model );
 
 		return $result;
 	}
@@ -136,7 +146,7 @@ class TQB_Structure_Manager {
 			 */
 			$post_type_name      = tqb()->get_structure_post_type_name( $type );
 			$structure_page_name = tqb()->get_style_page_name( $post_type_name );
-			$post_title          = sprintf( __( 'First %s', Thrive_Quiz_Builder::T ), $structure_page_name );
+			$post_title          = sprintf( __( 'First %s', 'thrive-quiz-builder' ), $structure_page_name );
 
 			$data = $this->generate_first_variation( array(
 				'type'       => $type,
@@ -161,7 +171,7 @@ class TQB_Structure_Manager {
 	public function generate_first_variation( $model ) {
 		$variation = new TQB_Variation_Manager( $this->quiz_id, $model['page_id'] );
 		if ( empty( $model['post_title'] ) ) {
-			$model['post_title'] = __( 'Control', Thrive_Quiz_Builder::T );
+			$model['post_title'] = __( 'Control', 'thrive-quiz-builder' );
 		}
 		if ( $model['page_id'] == 'false' ) {
 			$model['page_id'] = null;
@@ -361,7 +371,7 @@ class TQB_Structure_Manager {
 					if ( ! empty( $structure[ $page ] ) ) {
 
 						if ( ! is_numeric( $structure[ $page ] ) ) {
-							$result['error'][ $page ] = __( 'Your Splash Page is empty! Make sure you have at least one variation for it.', Thrive_Quiz_Builder::T );
+							$result['error'][ $page ] = __( 'Your Splash Page is empty! Make sure you have at least one variation for it.', 'thrive-quiz-builder' );
 							$result['notice']         = true;
 						} else {
 							$data = $this->get_page_content( $page, null, 0, false, false );
@@ -381,7 +391,7 @@ class TQB_Structure_Manager {
 				case 'optin': //not mandatory
 					if ( isset( $structure[ $page ] ) && $structure[ $page ] ) {
 						if ( ! is_numeric( $structure[ $page ] ) ) {
-							$result['error'][ $page ] = __( 'Your Opt-in Page is empty! Make sure you have at least one variation.', Thrive_Quiz_Builder::T );
+							$result['error'][ $page ] = __( 'Your Opt-in Page is empty! Make sure you have at least one variation.', 'thrive-quiz-builder' );
 							$result['notice']         = true;
 						} else {
 							$data = $this->get_page_content( $page, null, 0, false, false );
@@ -414,7 +424,7 @@ class TQB_Structure_Manager {
 					}
 
 					if ( ! isset( $structure[ $page ] ) || ! is_numeric( $structure[ $page ] ) ) {
-						$result['error'][ $page ] = __( 'Your Results Page has not been set!', Thrive_Quiz_Builder::T );
+						$result['error'][ $page ] = __( 'Your Results Page has not been set!', 'thrive-quiz-builder' );
 						$result['valid']          = false;
 					} else {
 						$data = $this->get_page_content( $page, null, 0, false, false );
@@ -466,46 +476,46 @@ class TQB_Structure_Manager {
 	 */
 	public function get_error( $slug ) {
 
-		$domain            = Thrive_Quiz_Builder::T;
+		$domain            = 'thrive-quiz-builder';
 		$tqb_dashboard_url = admin_url( 'admin.php?page=tqb_admin_dashboard' );
-		$error_message     = __( 'Something when wrong!', Thrive_Quiz_Builder::T );
+		$error_message     = __( 'Something when wrong!', 'thrive-quiz-builder' );
 
 		switch ( $slug ) {
 			case 'no_splash_design':
-				$splash_editor_t      = __( 'splash editor', $domain );
+				$splash_editor_t      = __( 'splash editor', 'thrive-quiz-builder' );
 				$splash_editor_url    = $tqb_dashboard_url . '#dashboard/page/' . $this->get_splash_page_id();
 				$splash_editor_target = TQB_Product::has_access() ? '<a href="' . $splash_editor_url . '" target="_blank">' . $splash_editor_t . '</a>' : $splash_editor_t;
-				$error_message        = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Splash Page", $domain ), sprintf( 'Please create a design for your splash page in the %s.', $splash_editor_target ) );
+				$error_message        = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Splash Page", 'thrive-quiz-builder' ), sprintf( __( 'Please create a design for your splash page in the %s.', 'thrive-quiz-builder' ), $splash_editor_target ) );
 				break;
 			case 'no_optin_design':
 				$optin_gate_editor_url    = $tqb_dashboard_url . '#dashboard/page/' . $this->get_optin_gate_page_id();
-				$optin_gate_editor_t      = __( 'optin gate editor', $domain );
+				$optin_gate_editor_t      = __( 'optin gate editor', 'thrive-quiz-builder' );
 				$optin_gate_editor_target = TQB_Product::has_access() ? '<a href="' . $optin_gate_editor_url . '" target="_blank">' . $optin_gate_editor_t . '</a>' : $optin_gate_editor_t;
-				$error_message            = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have an Optin Gate", $domain ), sprintf( 'Please create a design for your optin gate in the %s.', $optin_gate_editor_target ) );
+				$error_message            = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have an Optin Gate", 'thrive-quiz-builder' ), sprintf( __( 'Please create a design for your optin gate in the %s.', 'thrive-quiz-builder' ), $optin_gate_editor_target ) );
 				break;
 			case 'no_start_question':
 				$tge_editor_url    = add_query_arg( array( 'tge' => 'true' ), get_permalink( $this->quiz_id ) );
-				$tge_editor_t      = __( 'questions editor', $domain );
+				$tge_editor_t      = __( 'questions editor', 'thrive-quiz-builder' );
 				$tge_editor_target = TQB_Product::has_access() ? '<a href="' . $tge_editor_url . '" target="_blank">' . $tge_editor_t . '</a>' : $tge_editor_t;
-				$error_message     = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Start Question", $domain ), sprintf( 'Please add a start question in the %s.', $tge_editor_target ) );
+				$error_message     = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Start Question", 'thrive-quiz-builder' ), sprintf( __( 'Please add a start question in the %s.', 'thrive-quiz-builder' ), $tge_editor_target ) );
 				break;
 			case 'no_result_url':
 				$redirect_manager_url = $tqb_dashboard_url . '#dashboard/page/' . $this->get_results_page_id() . '/redirect-settings';
-				$redirect_manager_t   = __( 'redirect manager', $domain );
+				$redirect_manager_t   = __( 'redirect manager', 'thrive-quiz-builder' );
 				$redirect_manager     = TQB_Product::has_access() ? '<a href="' . $redirect_manager_url . '" target="_blank">' . $redirect_manager_t . '</a>' : $redirect_manager_t;
-				$error_message        = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Redirect", $domain ), sprintf( 'Please ensure your redirects are setup for each possible result in the %s.', $redirect_manager ) );
+				$error_message        = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Redirect", 'thrive-quiz-builder' ), sprintf( __( 'Please ensure your redirects are setup for each possible result in the %s.', 'thrive-quiz-builder' ), $redirect_manager ) );
 				break;
 			case 'no_results_design':
 				$results_editor_url    = $tqb_dashboard_url . '#dashboard/page/' . $this->get_results_page_id();
-				$results_editor_t      = __( 'results page editor', $domain );
+				$results_editor_t      = __( 'results page editor', 'thrive-quiz-builder' );
 				$results_editor_target = TQB_Product::has_access() ? '<a href="' . $results_editor_url . '" target="_blank">' . $results_editor_t . '</a>' : $results_editor_t;
-				$error_message         = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Results Page", $domain ), sprintf( 'Please create a design for your results page in the %s.', $results_editor_target ) );
+				$error_message         = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a Results Page", 'thrive-quiz-builder' ), sprintf( __( 'Please create a design for your results page in the %s.', 'thrive-quiz-builder' ), $results_editor_target ) );
 				break;
 			case 'no_quiz_type':
-				$splash_editor_t      = __( 'quiz type', $domain );
+				$splash_editor_t      = __( 'quiz type', 'thrive-quiz-builder' );
 				$splash_editor_url    = $tqb_dashboard_url . '#dashboard/quiz/' . $this->quiz_id;
 				$splash_editor_target = TQB_Product::has_access() ? '<a href="' . $splash_editor_url . '" target="_blank">' . $splash_editor_t . '</a>' : $splash_editor_t;
-				$error_message        = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a type set.", $domain ), sprintf( 'Please choose %s.', $splash_editor_target ) );
+				$error_message        = sprintf( '<strong>%s</strong> - %s', __( "This Quiz doesn't have a type set.", 'thrive-quiz-builder' ), sprintf( __( 'Please choose %s.', 'thrive-quiz-builder' ), $splash_editor_target ) );
 
 				break;
 		}
@@ -552,5 +562,19 @@ class TQB_Structure_Manager {
 	public function get_results_page_id() {
 
 		return $this->get_structure_page_id( 'results' );
+	}
+
+	/**
+	 * Returns TRUE if the system should show the option page in the front-end
+	 *
+	 * @return bool
+	 */
+	public function should_show_optin_gate_page() {
+
+		if ( ! is_user_logged_in() ) {
+			return true;
+		}
+
+		return empty( TQB_Post_meta::get_quiz_page_skip_optin( $this->get_optin_gate_page_id() ) );
 	}
 }

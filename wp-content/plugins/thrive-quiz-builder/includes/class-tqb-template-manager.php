@@ -324,7 +324,7 @@ class TQB_Template_Manager extends TQB_Request_Handler {
 		update_option( self::OPTION_TPL_META, $templates_meta );
 
 		return array(
-			'message' => __( 'Template saved.', Thrive_Quiz_Builder::T ),
+			'message' => __( 'Template saved.', 'thrive-quiz-builder' ),
 			'list'    => $this->api_get_saved( true ),
 		);
 	}
@@ -406,7 +406,7 @@ class TQB_Template_Manager extends TQB_Request_Handler {
 			}
 		}
 
-		$html = $html ? $html : __( 'No saved templates found', Thrive_Quiz_Builder::T );
+		$html = $html ? $html : __( 'No saved templates found', 'thrive-quiz-builder' );
 
 		if ( $return ) {
 			return $html;

@@ -178,17 +178,17 @@ if ( ! class_exists( 'TD_NM' ) ) :
 			$actions = array(
 				array(
 					'key'   => 'send_email_notification',
-					'label' => __( 'Send Email Notification', TVE_DASH_TRANSLATE_DOMAIN ),
+					'label' => __( 'Send Email Notification', 'thrive-dash' ),
 					'icon'  => 'tvd-nm-icon-envelope-o'
 				),
 				array(
 					'key'   => 'custom_script',
-					'label' => __( 'Call a Custom Script', TVE_DASH_TRANSLATE_DOMAIN ),
+					'label' => __( 'Call a Custom Script', 'thrive-dash' ),
 					'icon'  => 'tvd-nm-icon-code'
 				),
 				array(
 					'key'   => 'wordpress_notification',
-					'label' => __( 'WordPress Notification', TVE_DASH_TRANSLATE_DOMAIN ),
+					'label' => __( 'WordPress Notification', 'thrive-dash' ),
 					'icon'  => 'tvd-nm-icon-wordpress'
 				),
 			);
@@ -207,17 +207,17 @@ if ( ! class_exists( 'TD_NM' ) ) :
 					'send_email_notification' => array(
 						array(
 							'shortcode' => '[lead_details]',
-							'label'     => __( 'Displays the name of your opt-in offer', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Displays the name of your opt-in offer', 'thrive-dash' ),
 						),
 						array(
 							'shortcode' => '[lead_email]',
-							'label'     => __( 'Displays the email address of the new lead', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Displays the email address of the new lead', 'thrive-dash' ),
 						)
 					),
 					'wordpress_notification'  => array(
 						array(
 							'shortcode' => '[link]Lead Form[/link]',
-							'label'     => __( 'Hyperlink that links to the lead reporting screen.', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Hyperlink that links to the lead reporting screen.', 'thrive-dash' ),
 						),
 					)
 				),
@@ -225,13 +225,13 @@ if ( ! class_exists( 'TD_NM' ) ) :
 					'send_email_notification' => array(
 						array(
 							'shortcode' => '[test_link]Test Reports[/test_link]',
-							'label'     => __( 'Hyperlink that links to the A/B test screen', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Hyperlink that links to the A/B test screen', 'thrive-dash' ),
 						)
 					),
 					'wordpress_notification'  => array(
 						array(
 							'shortcode' => '[link]Test Reports[/link]',
-							'label'     => __( 'Hyperlink that links to the A/B test screen', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Hyperlink that links to the A/B test screen', 'thrive-dash' ),
 						),
 					),
 				),
@@ -239,13 +239,13 @@ if ( ! class_exists( 'TD_NM' ) ) :
 					'send_email_notification' => array(
 						array(
 							'shortcode' => '[testimonial_details]',
-							'label'     => __( 'Displays the testimonial details.', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Displays the testimonial details.', 'thrive-dash' ),
 						),
 					),
 					'wordpress_notification'  => array(
 						array(
 							'shortcode' => '[link]Testimonial Page[/link]',
-							'label'     => __( 'Hyperlink that links to the testimonial page.', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Hyperlink that links to the testimonial page.', 'thrive-dash' ),
 						),
 					)
 				),
@@ -253,13 +253,13 @@ if ( ! class_exists( 'TD_NM' ) ) :
 					'send_email_notification' => array(
 						array(
 							'shortcode' => '[quiz_details]',
-							'label'     => __( 'Displays quiz details.', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Displays quiz details.', 'thrive-dash' ),
 						),
 					),
 					'wordpress_notification'  => array(
 						array(
 							'shortcode' => '[link]Quiz Dashboard[/link]',
-							'label'     => __( 'Hyperlink that links to Quiz Dashboard.', TVE_DASH_TRANSLATE_DOMAIN ),
+							'label'     => __( 'Hyperlink that links to Quiz Dashboard.', 'thrive-dash' ),
 						),
 					)
 				),

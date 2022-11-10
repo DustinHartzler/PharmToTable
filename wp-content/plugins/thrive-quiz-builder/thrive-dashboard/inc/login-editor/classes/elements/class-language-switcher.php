@@ -23,7 +23,7 @@ class Language_Switcher extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Language switcher', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Language switcher', 'thrive-dash' );
 	}
 
 	/**

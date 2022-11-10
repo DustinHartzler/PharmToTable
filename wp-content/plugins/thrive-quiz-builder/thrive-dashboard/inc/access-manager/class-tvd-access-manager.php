@@ -102,11 +102,7 @@ class Main {
 	 * Hook based on the current screen
 	 */
 	public static function conditional_hooks() {
-		if ( ! $screen = get_current_screen() ) {
-			return;
-		}
-
-		if ( $screen->id === 'admin_page_tve_dash_access_manager' ) {
+		if ( tve_get_current_screen_key() === 'admin_page_tve_dash_access_manager' ) {
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'tve_dash_access_manager_include_scripts' ) );
 			add_action( 'admin_print_footer_scripts', array( __CLASS__, 'render_backbone_templates' ) );
 		}

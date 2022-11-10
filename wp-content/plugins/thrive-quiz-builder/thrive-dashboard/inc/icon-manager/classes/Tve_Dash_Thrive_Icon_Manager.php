@@ -112,7 +112,7 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 					$new_icon_pack['attachment_id']   = absint( $_POST['attachment_id'] );
 					$new_icon_pack['attachment_name'] = basename( $maybe_zip_file );
 
-					$success = __( 'New IcoMoon Font Pack installed. ', TVE_DASH_TRANSLATE_DOMAIN );
+					$success = __( 'New IcoMoon Font Pack installed. ', 'thrive-dash' );
 
 				} catch ( Exception $e ) {
 					$this->messages['error'] = $e->getMessage();
@@ -126,14 +126,14 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 					$old_handler->removeIcoMoonFolder( $icon_pack['folder'], $font_family );
 				}
 
-				$success = __( 'IcoMoon Font Pack has been removed. ', TVE_DASH_TRANSLATE_DOMAIN );
+				$success = __( 'IcoMoon Font Pack has been removed. ', 'thrive-dash' );
 			}
 
 			if ( isset( $success ) ) {
 
 				update_option( 'thrive_icon_pack', $new_icon_pack );
 
-				$this->messages['success']  = $success . 'You will be redirected to the previous page in <span id="tve-redirect-count">2</span> seconds.';
+				$this->messages['success']  = $success . 'You will be redirected to the previous page in %s seconds.';
 				$this->messages['redirect'] = admin_url( 'admin.php?page=tve_dash_icon_manager' );
 			}
 		}

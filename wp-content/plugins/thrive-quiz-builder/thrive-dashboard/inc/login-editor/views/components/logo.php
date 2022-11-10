@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-tvd-login-logo-component" class="tve-component" data-view="LoginLogo">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo esc_html__( 'Logo', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+		<?php echo esc_html__( 'Logo', 'thrive-dash' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<div class="col-xs-12 mb-10 mt-10 center-lg reset-logo">
 			<button class="tve-button blue click" data-fn="resetLogo">
-				<?php echo esc_html__( 'Reset Logo', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+				<?php echo esc_html__( 'Reset Logo', 'thrive-dash' ); ?>
 			</button>
 		</div>
 

@@ -17,6 +17,6 @@ $settings['fonts'] = array(
 	'Roboto' => '//fonts.googleapis.com/css?family=Roboto',
 );
 return array(
-	'name'     => __( 'Influential', Thrive_Image_Editor::T ),
+	'name'     => __( 'Influential', 'thrive-image-editor' ),
 	'settings' => $settings,
 );

@@ -22,7 +22,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return bool
 	 */
-	public function isRelated() {
+	public function is_related() {
 		return true;
 	}
 
@@ -31,14 +31,14 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'email';
 	}
 
 	/**
 	 * @return string the API connection title
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Mandrill';
 	}
 
@@ -47,13 +47,13 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mailchimp' );
-		if ( $related_api->isConnected() ) {
-			$credentials = $related_api->getCredentials();
-			$this->setParam( 'mailchimp_key', $credentials['key'] );
+	public function output_setup_form() {
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'mailchimp' );
+		if ( $related_api->is_connected() ) {
+			$credentials = $related_api->get_credentials();
+			$this->set_param( 'mailchimp_key', $credentials['key'] );
 		}
-		$this->_directFormHtml( 'mandrill' );
+		$this->output_controls_html( 'mandrill' );
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 * on error, it should register an error message (and redirect?)
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 
 		$mailchimp_key = ! empty( $_POST['connection']['mailchimp_key'] ) ? sanitize_text_field( $_POST['connection']['mailchimp_key'] ) : '';
 		$email         = ! empty( $_POST['connection']['email'] ) ? sanitize_text_field( $_POST['connection']['email'] ) : '';
@@ -72,16 +72,16 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		}
 
 		if ( empty( $_POST['connection']['key'] ) ) {
-			return $this->error( __( 'You must provide a valid Mandrill key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mandrill key', 'thrive-dash' ) );
 		}
 
 		if ( empty( $email ) ) {
-			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Email field must not be empty', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 		if ( $result !== true ) {
 			/**
 			 * Doing this because Mandrill devs are retarded and because it's unprofessional for the end user to read 'gibberish'
@@ -94,14 +94,14 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 					foreach ( $level1 as $level2 ) {
 						if ( ! $message ) {
 							$message = $level2;
-						};
+						}
 					}
 				}
 			} else {
 				$message = $result;
 			}
 
-			return $this->error( sprintf( __( 'Could not connect to Mandrill using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $message ? $message : '' ) );
+			return $this->error( sprintf( __( 'Could not connect to Mandrill using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $message ? $message : '' ) );
 		}
 
 		/**
@@ -114,10 +114,10 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 			 * Try to connect to the email service too
 			 */
 			/** @var Thrive_Dash_List_Connection_Mandrill $related_api */
-			$related_api = Thrive_Dash_List_Manager::connectionInstance( 'mailchimp' );
+			$related_api = Thrive_Dash_List_Manager::connection_instance( 'mailchimp' );
 			$r_result    = true;
-			if ( ! $related_api->isConnected() ) {
-				$r_result = $related_api->readCredentials();
+			if ( ! $related_api->is_connected() ) {
+				$r_result = $related_api->read_credentials();
 			}
 
 			if ( $r_result !== true ) {
@@ -127,7 +127,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 			}
 		}
 
-		return $this->success( __( 'Mandrill connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Mandrill connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -135,8 +135,8 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
-		$mandrill = $this->getApi();
+	public function test_connection() {
+		$mandrill = $this->get_api();
 
 		if ( isset( $_POST['connection']['email'] ) ) {
 			$from_email = sanitize_text_field( $_POST['connection']['email'] );
@@ -184,10 +184,10 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 				$body = $body[0];
 				if ( $body->status == 'rejected' ) {
 					if ( $body->reject_reason == 'unsigned' ) {
-						return $this->error( __( "The email filled in was not verified by Mandrill", TVE_DASH_TRANSLATE_DOMAIN ) );
+						return $this->error( __( "The email filled in was not verified by Mandrill", 'thrive-dash' ) );
 					}
 
-					return $this->error( __( "Mandrill couldn't connect", TVE_DASH_TRANSLATE_DOMAIN ) );
+					return $this->error( __( "Mandrill couldn't connect", 'thrive-dash' ) );
 				}
 			}
 		} catch ( Thrive_Dash_Api_Mandrill_Exceptions $e ) {
@@ -214,7 +214,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 * @return bool|string true for success or error message for failure
 	 */
 	public function sendCustomEmail( $data ) {
-		$mandrill = $this->getApi();
+		$mandrill = $this->get_api();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'mandrill' );
 
@@ -264,7 +264,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 * @return bool|string
 	 */
 	public function sendMultipleEmails( $data ) {
-		$mandrill = $this->getApi();
+		$mandrill = $this->get_api();
 
 		$credentials = Thrive_Dash_List_Manager::credentials( 'mandrill' );
 
@@ -377,12 +377,12 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 */
 	public function sendEmail( $post_data ) {
-		$mandrill = $this->getApi();
+		$mandrill = $this->get_api();
 
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );
@@ -461,7 +461,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_Mandrill( $this->param( 'key' ) );
 	}
 
@@ -470,7 +470,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return array|bool for error
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 	}
 
@@ -482,7 +482,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 	 *
 	 * @return mixed
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 
 	}
 }

@@ -12,16 +12,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
+	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'autoresponder';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'SG Autorepondeur';
 	}
 
@@ -30,8 +31,8 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'sg-autorepondeur' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'sg-autorepondeur' );
 	}
 
 	/**
@@ -39,22 +40,22 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 	 *
 	 * @return mixed|void
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 
 		if ( empty( $_POST['connection']['memberid'] ) ) {
-			return $this->error( __( 'You must provide a valid SG-Autorepondeur Member ID', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid SG-Autorepondeur Member ID', 'thrive-dash' ) );
 		}
 
 		if ( empty( $_POST['connection']['key'] ) ) {
-			return $this->error( __( 'You must provide a valid SG-Autorepondeur key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid SG-Autorepondeur key', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( $this->post( 'connection' ) );
+		$this->set_credentials( $this->post( 'connection' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to SG-Autorepondeur using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to SG-Autorepondeur using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -62,7 +63,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 		 */
 		$this->save();
 
-		return $this->success( __( 'SG Autorepondeur connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SG Autorepondeur connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -70,14 +71,14 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		/**
 		 * just try getting a list as a connection test
 		 */
 
 		try {
 			/** @var Thrive_Dash_Api_SGAutorepondeur $sg */
-			$sg = $this->getApi();
+			$sg = $this->get_api();
 			$sg->call( 'get_list' );
 
 		} catch ( Exception $e ) {
@@ -92,7 +93,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_SGAutorepondeur( $this->param( 'memberid' ), $this->param( 'key' ) );
 	}
 
@@ -101,11 +102,11 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 	 *
 	 * @return array|bool
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 
 		try {
 			/** @var Thrive_Dash_Api_SGAutorepondeur $sg */
-			$sg = $this->getApi();
+			$sg = $this->get_api();
 
 			$sg->set( 'limite', array( 0, 9999 ) );
 			$raw = $sg->call( 'get_list' );
@@ -124,7 +125,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 
 			return $lists;
 		} catch ( Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( "Please re-check your API connection details.", TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( "Please re-check your API connection details.", 'thrive-dash' );
 
 			return false;
 		}
@@ -138,11 +139,11 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 	 *
 	 * @return bool|string true for success or string error message for failure
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
-		list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+	public function add_subscriber( $list_identifier, $arguments ) {
+		list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 
 		/** @var Thrive_Dash_Api_SGAutorepondeur $api */
-		$api = $this->getApi();
+		$api = $this->get_api();
 
 		$email = strtolower( $arguments['email'] );
 
@@ -169,16 +170,17 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 
 			return true;
 		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown SG-Autorepondeur Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ? $e->getMessage() : __( 'Unknown SG-Autorepondeur Error', 'thrive-dash' );
 		}
 
 	}
 
 	/**
 	 * Return the connection email merge tag
+	 *
 	 * @return String
 	 */
-	public static function getEmailMergeTag() {
+	public static function get_email_merge_tag() {
 		return '++email++';
 	}
 
@@ -187,14 +189,11 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 	 */
 	public function disconnect() {
 
-		$this->setCredentials( array() );
+		$this->set_credentials( array() );
 		Thrive_Dash_List_Manager::save( $this );
 
 		return $this;
 	}
 
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
-	}
 
 }

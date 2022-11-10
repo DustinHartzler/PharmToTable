@@ -34,6 +34,7 @@ class FormSettings {
 		'extra'           => array(),
 		'custom_tags'     => array(),
 		'form_identifier' => '',
+		'inputs'          => array(),
 	);
 
 	public function __construct( $config ) {

@@ -228,7 +228,7 @@ class FileUploadConfig extends FormSettings {
 			return new \WP_Error( 'Missing file upload service. Please contact site owner' );
 		}
 
-		return \Thrive_Dash_List_Manager::connectionInstance( $api_connection );
+		return \Thrive_Dash_List_Manager::connection_instance( $api_connection );
 	}
 
 	/**
@@ -494,7 +494,9 @@ function process_form_data( $data ) {
 		return $data;
 	}
 
-	$file_data = array();
+	$file_data = [];
+	$file_urls = [];
+	$file_ids  = [];
 	/* transform storage file IDs into URLs */
 	if ( ! empty( $data['_tcb_files'] ) ) {
 		/* if email has been submitted, and the filenames should include the email, we need to trigger a file rename for each submitted file */
@@ -509,20 +511,21 @@ function process_form_data( $data ) {
 			}
 		}
 
-		$file_urls = array();
 		foreach ( $data['_tcb_files'] as $index => $file_id ) {
 			/* filedata gets populated if the file needs to be renamed. Using it to avoid extra API calls  */
 			$data['_tcb_files'][ $index ] = isset( $file_data[ $file_id ] ) ? $file_data[ $file_id ] : $api->get_file_data( $file_id );
 			$file_urls[]                  = $data['_tcb_files'][ $index ]['url'];
-		}
-
-		/**
-		 * Mapped field: needs the file URL to be sent to the autoresponder
-		 */
-		if ( ! empty( $data['tcb_file_field'] ) ) {
-			$data[ $data['tcb_file_field'] ] = $file_urls;
+			$file_ids[ $index ]           = $file_id;
 		}
 	}
+	/**
+	 * Mapped field: needs the file URL to be sent to the autoresponder
+	 */
+	$data[ $data['tcb_file_field'] ] = $file_urls;
+	/**
+	 * Preserve the file IDs in the form data so that they can be used later on
+	 */
+	$data['_tcb_files_upload_ids'] = $file_ids;
 
 	return $data;
 }
@@ -584,6 +587,6 @@ add_action( 'wp_ajax_tcb_file_upload', 'TCB\inc\helpers\handle_upload' );
 add_action( 'wp_ajax_nopriv_tcb_file_remove', 'TCB\inc\helpers\handle_remove' );
 add_action( 'wp_ajax_tcb_file_remove', 'TCB\inc\helpers\handle_remove' );
 
-add_filter( 'tcb_api_subscribe_data', 'TCB\inc\helpers\process_form_data' );
+add_filter( 'tcb_before_api_subscribe_data', 'TCB\inc\helpers\process_form_data' );
 add_filter( 'thrive_api_email_message', 'TCB\inc\helpers\process_email_message', 10, 2 );
 add_filter( 'thrive_email_message_field', 'TCB\inc\helpers\process_email_field', 10, 3 );

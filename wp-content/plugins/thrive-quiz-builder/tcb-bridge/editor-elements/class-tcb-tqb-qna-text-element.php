@@ -8,7 +8,7 @@
 class TCB_TQB_QNA_Text extends TCB_Element_Abstract {
 
 	public function name() {
-		return __( 'QNA Text', Thrive_Quiz_Builder::T );
+		return __( 'QNA Text', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {

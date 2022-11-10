@@ -235,6 +235,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	/**
 	 *
 	 * Checks if an element has been unlocked from group editing ( is edited separately )
+	 * If item ID can't be retrieved, it is assumed to be linked
 	 * Spec can be any of the self::UNLINKED_* constants
 	 *
 	 * @param WP_Post|string $item
@@ -245,7 +246,15 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 	 *
 	 */
 	public function is_out_of_group_editing( $item, $spec ) {
-		$item_id = is_numeric( $item ) ? $item : $item->ID;
+
+		if ( is_numeric( $item ) ) {
+			$item_id = $item;
+		} elseif ( ! empty( $item->ID ) ) {
+			$item_id = $item->ID;
+		} else {
+			return false;
+		}
+
 		if ( $this->positional_selectors && $spec === self::UNLINKED_LI && isset( $item->_tcb_pos_selector ) ) {
 			return $this->get_config( "unlinked/{$item->_tcb_pos_selector}" );
 		}

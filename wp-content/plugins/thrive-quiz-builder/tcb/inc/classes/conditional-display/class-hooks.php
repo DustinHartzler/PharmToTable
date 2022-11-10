@@ -23,6 +23,8 @@ class Hooks {
 		add_filter( 'tve_frontend_options_data', array( __CLASS__, 'tve_frontend_data' ) );
 
 		add_filter( 'tve_dash_frontend_ajax_response', [ __CLASS__, 'lazy_load_response' ] );
+
+		add_filter( 'tve_update_symbol_html', [ __CLASS__, 'tve_update_symbol_html' ], 10, 2 );
 	}
 
 	public static function add_actions() {
@@ -35,10 +37,11 @@ class Hooks {
 		add_action( 'wp_ajax_tcb_conditional_display', [ __CLASS__, 'lazy_load_display_groups' ] );
 		add_action( 'wp_ajax_dismiss_conditional_tooltip', [ __CLASS__, 'dismiss_conditional_tooltip' ] );
 
-
 		add_action( 'wp_print_footer_scripts', [ __CLASS__, 'wp_print_footer_scripts' ] );
 
 		add_action( 'admin_bar_menu', [ __CLASS__, 'admin_bar_menu' ], 1000 );
+
+		add_action( 'after_thrive_clone_item', [ __CLASS__, 'after_thrive_clone_item' ], 10, 3 );
 	}
 
 	/**
@@ -140,10 +143,10 @@ class Hooks {
 		$footer_scripts = ob_get_clean();
 
 		wp_send_json( [
-				'groups'             => $groups,
-				'footer_scripts'     => $footer_scripts,
-				'external_resources' => $external_resources,
-			]
+			'groups'             => $groups,
+			'footer_scripts'     => $footer_scripts,
+			'external_resources' => $external_resources,
+		]
 		);
 	}
 
@@ -215,14 +218,14 @@ class Hooks {
 		$wp_admin_bar->add_node( [
 			'id'     => 'tve-conditions-title',
 			'title'  => '<span class="tve-preview-conditions-icon"></span>' .
-			            '<span class="tve-preview-conditions-title">Preview conditions</span>' .
-			            '<div class="tve-preview-conditions-info">
+						'<span class="tve-preview-conditions-title">Preview conditions</span>' .
+						'<div class="tve-preview-conditions-info">
 							<div class="tve-preview-conditions-tooltip">
 							           This page contains conditional displays on some content . You can preview how the page looks for users that match different conditions by selecting them below.
 							<a class="tve-preview-conditions-tooltip-link" target="_blank" href="https://help.thrivethemes.com/en/articles/5814058-how-to-use-the-conditional-display-option">Learn more </a>
 							</div>
 						</div> ' .
-			            '<button class="tve-preview-conditions-close"></button> ',
+						'<button class="tve-preview-conditions-close"></button> ',
 			'parent' => 'tve-preview-conditions',
 		] );
 
@@ -231,5 +234,37 @@ class Hooks {
 			'title'  => '<div class="tve-preview-conditions-tooltip-text">This page contains conditional displays.</div><div class="tve-preview-conditions-tooltip-text">Click here to change your preview settings.</div> ',
 			'parent' => 'tve-preview-conditions',
 		] );
+	}
+
+	/**
+	 * Replace conditional display groups inside the cloned item
+	 *
+	 * @param int   $new_post_id
+	 * @param int   $original_post_id
+	 * @param array $css_id_map
+	 *
+	 * @return void
+	 */
+	public static function after_thrive_clone_item( $new_post_id, $original_post_id, $css_id_map ) {
+		$content = tve_get_post_meta( $new_post_id, 'tve_updated_post' );
+
+		$content = Conditional_Display_Group::clone_conditional_groups_in_content( $content, $css_id_map );
+
+		tve_update_post_meta( $new_post_id, 'tve_updated_post', $content );
+	}
+
+	/**
+	 * Conditionals ids for duplicated symbols needs to be regenerated
+	 *
+	 * @param $meta_key
+	 * @param $meta_value
+	 */
+	public static function tve_update_symbol_html( $meta_key, $meta_value ) {
+		/* For the Conditional Display we need to regenerate the ids of the added conditions */
+		if ( $meta_key === 'tve_updated_post' ) {
+			$meta_value = Conditional_Display_Group::clone_conditional_groups_in_content( $meta_value );
+		}
+
+		return $meta_value;
 	}
 }

@@ -59,8 +59,7 @@ class Thrive_Dash_Api_HubSpot {
 		 */
 		do {
 
-			/* Removed static so we fetch all lists(static + dynamic)  not just the static ones */
-			$result = $this->_call( '/contacts/v1/lists', $params, 'GET' );
+			$result = $this->_call( '/contacts/v1/lists/static', $params, 'GET' );
 
 			if ( is_array( $result ) && ! empty( $result['lists'] ) ) {
 				$data = array_merge( $data, (array) $result['lists'] );

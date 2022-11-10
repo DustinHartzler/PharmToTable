@@ -77,26 +77,29 @@ class TQB_Shortcodes {
 		return $result;
 	}
 
-	public static function render_quiz_shortcode( $attributes ) {
-
+	public static function render_quiz_shortcode( $attributes = array() ) {
+		$quiz_id = ! empty( $attributes['id'] ) ? $attributes['id'] : $attributes['quiz_id'];
 		/**
 		 * Make sure we enqueue only once the frontend scripts
 		 * - in this way we dont overwrite the TQB_Front localization
 		 */
 		if ( ! defined( 'TQB_IN_SHORTCODE' ) ) {
-			Thrive_Quiz_Builder::enqueue_frontend_scripts( $attributes['id'] );
+			Thrive_Quiz_Builder::enqueue_frontend_scripts( $quiz_id );
 		}
 
 		defined( 'TQB_IN_SHORTCODE' ) || define( 'TQB_IN_SHORTCODE', true );
 
-		$quiz_id   = $attributes['id'];
-		$unique_id = 'tqb-' . uniqid();
+		if ( ! empty( $attributes['save_user_progress'] ) && (int) $attributes['save_user_progress'] === 1 && is_user_logged_in() ) {
+			$unique_id = tqb_customer()->get_user_unique_id( $quiz_id, get_the_ID() );
+		}
+
+		$unique_id = empty( $unique_id ) ? ( 'tqb-' . uniqid() ) : $unique_id;
 
 		$placeholder_style = TQB_Lightspeed::get_quiz_placeholder_style( $quiz_id );
 
 		$style = TQB_Post_meta::get_quiz_style_meta( $quiz_id );
 		$html  = '<div class="tve_flt" id="tve_editor">
-			<div class="tqb-shortcode-wrapper" id="tqb-shortcode-wrapper-' . $quiz_id . '-' . $unique_id . '" ' . $placeholder_style . ' data-quiz-id="' . $quiz_id . '" data-unique="' . $unique_id . '" >
+			<div class="tqb-shortcode-wrapper" id="tqb-shortcode-wrapper-' . $quiz_id . '-' . $unique_id . '" ' . $placeholder_style . static::compute_shortcode_attributes( $attributes ) . ' data-unique="' . $unique_id . '" >
 				<div class="tqb-loading-overlay tqb-template-overlay-style-' . $style . '">
 					<div class="tqb-loading-bullets"></div>
 				</div>
@@ -128,6 +131,35 @@ class TQB_Shortcodes {
 		$templates = apply_filters( 'tqb_backbone_frontend_templates', $templates );
 
 		tve_dash_output_backbone_templates( $templates );
+	}
+
+	/**
+	 * Computes shortcode attributes
+	 *
+	 * @param array $attributes
+	 *
+	 * @return string
+	 */
+	public static function compute_shortcode_attributes( $attributes ) {
+		$attributes_string = '';
+		if ( is_array( $attributes ) ) {
+
+			if ( ! empty( $attributes['id'] ) ) {
+				$attributes['quiz_id'] = $attributes['id'];
+				unset( $attributes['id'] );
+			}
+
+			$attributes_string = implode( ' ', array_map( static function ( $key ) use ( $attributes ) {
+				$value = $attributes[ $key ];
+				if ( is_array( $value ) ) {
+					$value = implode( ',', $value );
+				}
+
+				return 'data-' . str_replace( '_', '-', $key ) . '="' . esc_attr( $value ) . '"';
+			}, array_keys( $attributes ) ) );
+		}
+
+		return $attributes_string;
 	}
 }
 

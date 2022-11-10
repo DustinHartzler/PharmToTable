@@ -17,7 +17,7 @@ class TCB_TQB_Page_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Thrive Quiz Builder Page', Thrive_Quiz_Builder::T );
+		return __( 'Thrive Quiz Builder Page', 'thrive-quiz-builder' );
 	}
 
 	/**

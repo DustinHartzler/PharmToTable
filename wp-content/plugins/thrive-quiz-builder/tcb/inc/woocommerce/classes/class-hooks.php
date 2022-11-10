@@ -7,6 +7,8 @@
 
 namespace TCB\Integrations\WooCommerce;
 
+use TCB\Lightspeed\Woocommerce;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -36,6 +38,8 @@ class Hooks {
 		add_action( 'tcb_editor_enqueue_scripts', array( 'TCB\Integrations\WooCommerce\Main', 'enqueue_scripts' ) );
 
 		add_action( 'tve_frontend_extra_scripts', array( 'TCB\Integrations\WooCommerce\Main', 'enqueue_scripts' ) );
+
+		add_action( 'tve_lightspeed_enqueue_module_scripts', [ __CLASS__, 'check_woo_modules_to_enqueue' ], 10, 2 );
 	}
 
 	public static function add_filters() {
@@ -50,6 +54,8 @@ class Hooks {
 		add_filter( 'tcb_filter_rest_products', [ __CLASS__, 'tcb_filter_products' ], 10, 2 );
 
 		add_filter( 'tcb_main_frame_localize', [ __CLASS__, 'localize_woo_modules' ], 10, 1 );
+
+		add_filter( 'pre_get_posts', [ __CLASS__, 'pre_get_posts' ] );
 	}
 
 	/**
@@ -243,5 +249,60 @@ class Hooks {
 		$data['lightspeed']['woo_modules'] = \TCB\Lightspeed\Woocommerce::get_woocommerce_assets( null, 'identifier' );
 
 		return $data;
+	}
+
+	/**
+	 * Check if posts has woo modules to include
+	 *
+	 * @param $post_id
+	 * @param $modules
+	 *
+	 * @return void
+	 */
+	public static function check_woo_modules_to_enqueue( $post_id, $modules ) {
+		$woo_modules = get_post_meta( $post_id, Woocommerce::WOO_MODULE_META_NAME, true );
+
+		if ( ! empty( $woo_modules ) ) {
+			add_filter( 'tcb_lightspeed_optimize_woo', '__return_true' );
+
+			static::enqueue_scripts();
+
+			Main::enqueue_scripts();
+
+			foreach ( Woocommerce::get_woo_styles() as $handle => $src ) {
+				$media = strpos( $handle, 'smallscreen' ) === false ? 'all' : 'only screen and (max-width: 768px)';
+
+				wp_enqueue_style( $handle, $src, [], false, $media );
+			}
+		}
+	}
+
+	/**
+	 * Do not display the hidden products when searching
+	 *
+	 * @param \WP_Query $query
+	 */
+	public static function pre_get_posts( $query ) {
+		if ( $query->is_main_query() && $query->is_search() && isset( $_GET['tcb_sf_post_type'] ) && is_array( $_GET['tcb_sf_post_type'] ) && in_array( 'product', $_GET['tcb_sf_post_type'] ) ) {
+			$tax_query = $query->get( 'tax_query', [] );
+
+			$tax_query[] = [
+				'relation' => 'OR',
+				[
+					'taxonomy' => 'product_visibility',
+					'field'    => 'name',
+					'terms'    => 'exclude-from-catalog',
+					'operator' => 'NOT IN',
+				],
+				[
+					'taxonomy' => 'product_visibility',
+					'field'    => 'name',
+					'terms'    => 'exclude-from-catalog',
+					'operator' => '!=',
+				],
+			];
+
+			$query->set( 'tax_query', $tax_query );
+		}
 	}
 }

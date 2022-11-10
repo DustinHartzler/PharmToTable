@@ -45,7 +45,7 @@ class Login_Redirect extends Functionality {
 				'tag'  => 'custom',
 			],
 		);
-		if ( is_plugin_active( 'thrive-apprentice/thrive-apprentice.php' ) ) {
+		if ( tve_dash_is_plugin_active( 'thrive-apprentice' ) ) {
 			$options[] = [
 				'name' => 'Apprentice Homepage',
 				'tag'  => 'apphomepage',
@@ -66,7 +66,7 @@ class Login_Redirect extends Functionality {
 	public static function get_option_value( $user_role ) {
 		$option = get_option( static::get_option_name( $user_role ) );
 
-		if ( $option === 'apphomepage' && ! is_plugin_active( 'thrive-apprentice/thrive-apprentice.php' ) ) {
+		if ( $option === 'apphomepage' && ! tve_dash_is_plugin_active( 'thrive-apprentice' ) ) {
 			$option = 'inherit';
 		}
 
@@ -89,7 +89,7 @@ class Login_Redirect extends Functionality {
 						$redirect = get_home_url();
 						break;
 					case 'apphomepage':
-						if ( is_plugin_active( 'thrive-apprentice/thrive-apprentice.php' ) ) {
+						if ( tve_dash_is_plugin_active( 'thrive-apprentice' ) ) {
 							$redirect = get_permalink( tva_get_settings_manager()->factory( 'index_page' )->get_value() );
 						}
 						break;

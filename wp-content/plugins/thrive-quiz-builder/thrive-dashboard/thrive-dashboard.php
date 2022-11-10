@@ -18,7 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * CONSTANTS
  */
 defined( 'TVE_DASH_PATH' ) || define( 'TVE_DASH_PATH', $GLOBALS['tve_dash_loaded_from'] === 'plugins' ? rtrim( plugin_dir_path( __FILE__ ), "/\\" ) : rtrim( get_template_directory(), "/\\" ) . "/thrive-dashboard" );
-defined( 'TVE_DASH_TRANSLATE_DOMAIN' ) || define( 'TVE_DASH_TRANSLATE_DOMAIN', 'thrive-dash' );
 defined( 'TVE_DASH_CAPABILITY' ) || define( 'TVE_DASH_CAPABILITY', 'tve-use-td' );
 defined( 'TVE_DASH_EDIT_CPT_CAPABILITY' ) || define( 'TVE_DASH_EDIT_CPT_CAPABILITY', 'tve-edit-cpt' );
 
@@ -28,7 +27,7 @@ defined( 'TVE_SECRET' ) || define( 'TVE_SECRET', 'tve_secret' );
 /**
  * Dashboard Database Version
  */
-defined( 'TVE_DASH_DB_VERSION' ) || define( 'TVE_DASH_DB_VERSION', '1.0.1' );
+defined( 'TVE_DASH_DB_VERSION' ) || define( 'TVE_DASH_DB_VERSION', '1.0.2' );
 
 /**
  * REQUIRED FILES
@@ -58,11 +57,14 @@ require_once TVE_DASH_PATH . '/inc/access-manager/class-tvd-access-manager.php';
 require_once TVE_DASH_PATH . '/inc/marketing/functions.php';
 require_once TVE_DASH_PATH . '/inc/ttw-account/classes/class-td-ttw-update-manager.php';
 require_once TVE_DASH_PATH . '/inc/automator/class-main.php';
+require_once TVE_DASH_PATH . '/inc/design-packs/class-main.php';
 require_once TVE_DASH_PATH . '/inc/smart-site/classes/class-tvd-content-sets.php';
 require_once TVE_DASH_PATH . '/inc/cache/meta-cache.php';
 require_once TVE_DASH_PATH . '/inc/access-manager/class-tvd-am-functionality.php';
 require_once TVE_DASH_PATH . '/inc/access-manager/class-tvd-am-admin-bar-visibility.php';
 require_once TVE_DASH_PATH . '/inc/access-manager/class-tvd-am-login-redirect.php';
+
+require_once TVE_DASH_PATH . '/inc/reporting-dashboard/functions.php';
 
 /**
  * AUTO-LOADERS
@@ -111,6 +113,7 @@ add_action( 'init',
 		TVD\Dashboard\Access_Manager\Main::init();
 		TVD\Dashboard\Access_Manager\Admin_Bar_Visibility::init();
 		TVD\Dashboard\Access_Manager\Login_Redirect::init();
+		TVE\Dashboard\Design_Packs\Main::init();
 	}, - 1 );
 if ( defined( 'WPSEO_FILE' ) ) {
 	/* Yoast SEO plugin installed -> use a hook provided by the plugin for configuring meta "robots" */

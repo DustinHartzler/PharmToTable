@@ -206,9 +206,9 @@ class Thrive_Quiz_Builder_Database_Manager {
 
 		echo '<div class="notice notice-error is-dismissible"><p>' .
 		     sprintf(
-			     esc_html__( 'There was an error while updating the database tables needed by Thrive Quiz Builder. Detailed error message: %s. If you continue seeing this message, please contact %s', Thrive_Quiz_Builder::T ),
+			     esc_html__( 'There was an error while updating the database tables needed by Thrive Quiz Builder. Detailed error message: %s. If you continue seeing this message, please contact %s', 'thrive-quiz-builder' ),
 			     '<strong>' . esc_html( self::$last_db_error ) . '</strong>',
-			     '<a target="_blank" href="https://thrivethemes.com/forums/">' . esc_html__( 'Thrive Themes Support', Thrive_Quiz_Builder::T ) . '</a>'
+			     '<a target="_blank" href="https://thrivethemes.com/forums/">' . esc_html__( 'Thrive Themes Support', 'thrive-quiz-builder' ) . '</a>'
 		     ) .
 		     '</p></div>';
 	}

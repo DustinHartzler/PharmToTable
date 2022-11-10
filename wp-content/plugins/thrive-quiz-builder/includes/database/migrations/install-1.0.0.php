@@ -107,7 +107,7 @@ $this->create_table( 'users', "
 
 $this->create_table( 'results', '
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`quiz_id` INT UNSIGNED NOT NULL,
+	`quiz_id` BIGINT(20) NOT NULL,
 	`text` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (`id`)
 	', true );

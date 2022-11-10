@@ -9,6 +9,7 @@ class TPM_Product_Skin extends TPM_Product_Theme {
 
 	/**
 	 * The default skin which will be installed together with the theme
+	 * This is also used in TTB
 	 */
 	const DEFAULT_TAG = 'q1qj01';
 

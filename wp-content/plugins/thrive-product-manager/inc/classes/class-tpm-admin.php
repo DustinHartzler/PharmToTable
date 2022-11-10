@@ -40,7 +40,7 @@ class TPM_Admin {
 					WP_PLUGIN_DIR . '/thrive-product-manager/thrive-product-manager.php',
 					array(
 						TPM_Admin::get_instance(),
-						'delete_tpm_version',
+						'deactivation_callback',
 					)
 				);
 			}
@@ -84,11 +84,23 @@ class TPM_Admin {
 	}
 
 	/**
-	 * Deletes tpm_version option from DB when TPM is deactivate
+	 * Deletes tpm_version option from DB
 	 */
 	public function delete_tpm_version() {
 
 		delete_option( 'tpm_version' );
+	}
+
+	/**
+	 * Callback when TPM is deactivated
+	 * @see register_deactivation_hook()
+	 */
+	public function deactivation_callback() {
+		TPM_Product_List::get_instance()->clear_cache();
+		TPM_License_Manager::get_instance()->clear_cache();
+		TPM_License_Manager::get_instance()->deactivate_all_licenses();
+		$this->delete_tpm_version();
+		delete_option( 'tpm_bk_connection' );
 	}
 }
 

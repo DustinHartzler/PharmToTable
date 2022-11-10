@@ -126,7 +126,7 @@ class TPM_License_Manager {
 			return array();
 		}
 
-		$licenses = get_transient( self::NAME );
+		$licenses = tpm_get_transient( self::NAME );
 
 		if ( Thrive_Product_Manager::CACHE_ENABLED && $licenses !== false ) {
 
@@ -147,37 +147,37 @@ class TPM_License_Manager {
 		$body = wp_remote_retrieve_body( $response );
 		$body = json_decode( $body, true );
 
-		if ( ! is_array( $body ) || ! isset( $body['success'] ) || $body['success'] === false ) {
+		if ( ! is_array( $body ) || empty( $body['success'] ) ) {
 
-			set_transient( self::NAME, array(), self::CACHE_LIFE_TIME );
+			tpm_set_transient( self::NAME, array(), self::CACHE_LIFE_TIME );
 
 			return array();
 		}
 
 		$licenses = $body['data'];
 
-		//sort licenses so that the ones with 'all' tags to be 1st in list
-		//so they have priority to use 1st
-		uasort( $licenses, array( $this, '_membership_first' ) );
+		//sort licenses so that the ones with 'all' tags will be 1st in list
+		//so they have priority on usage
+		uasort( $licenses, static function ( $license_a, $license_b ) {
 
-		set_transient( self::NAME, $licenses, self::CACHE_LIFE_TIME );
+			$a_tags = is_array( $license_a ) && ! empty( $license_a['tags'] ) && is_array( $license_a['tags'] ) ? $license_a['tags'] : array();
+			$b_tags = is_array( $license_b ) && ! empty( $license_b['tags'] ) && is_array( $license_b['tags'] ) ? $license_b['tags'] : array();
+
+
+			if ( in_array( 'all', $a_tags, true ) && in_array( 'all', $b_tags, true ) ) {
+				return 0;
+			}
+
+			if ( false === in_array( 'all', $a_tags, true ) && in_array( 'all', $b_tags, true ) ) {
+				return 1;
+			}
+
+			return - 1;
+		} );
+
+		tpm_set_transient( self::NAME, $licenses, self::CACHE_LIFE_TIME );
 
 		return $licenses;
-	}
-
-	/**
-	 * Callback for a sorting method
-	 *
-	 * @param $a array with licence details
-	 * @param $b array with licence details to compare with
-	 *
-	 * @return bool
-	 */
-	public function _membership_first( $a, $b ) {
-
-		$b_tags = is_array( $b ) && ! empty( $b['tags'] ) && is_array( $b['tags'] ) ? $b['tags'] : array();
-
-		return in_array( 'all', $b_tags );
 	}
 
 	/**
@@ -261,7 +261,7 @@ class TPM_License_Manager {
 
 		foreach ( $result['data'] as $license_id => $activated ) {
 
-			if ( ! in_array( $license_id, array_keys( $ttw_licenses ) ) ) {
+			if ( ! array_key_exists( $license_id, $ttw_licenses ) ) {
 				continue;
 			}
 
@@ -364,11 +364,48 @@ class TPM_License_Manager {
 			$response['message'] = "Couldn't not deactivate license " . $request->get_param( 'id' );
 		}
 
+		TPM_Product_List::get_instance()->clear_cache();
+		self::get_instance()->clear_cache();
+
 		return $response;
 	}
 
 	public function clear_cache() {
 
-		return delete_transient( self::NAME );
+		return tpm_delete_transient( self::NAME );
+	}
+
+	/**
+	 * Deletes the local saved licenses
+	 * - increments the usages for licenses by doing a request to TTW
+	 */
+	public function deactivate_all_licenses() {
+
+		$licenses = TPM_License::get_saved_licenses();
+
+		if ( empty( $licenses ) ) {
+			return;
+		}
+
+		$connection = TPM_Connection::get_instance();
+
+		//if user has disconnected TPM then try to use the backup connection saved at disconnecting
+		if ( false === $connection->is_connected() ) {
+			$connection->set_data( get_option( 'tpm_bk_connection', array() ) );
+		}
+
+		$params  = array(
+			'user_id'       => $connection->ttw_id,
+			'user_site_url' => get_site_url(),
+			'direction'     => 'down',
+			'data'          => array_keys( $licenses ),
+		);
+		$request = new TPM_Request( '/api/v1/public/license_uses', $params );
+		$request->set_header( 'Authorization', $connection->ttw_salt );
+
+		$proxy_request = new TPM_Proxy_Request( $request );
+		$response      = $proxy_request->execute( '/tpm/proxy' );
+		TPM_Log_Manager::get_instance()->set_message( var_export( $response, true ) )->log();
+		delete_option( TPM_License::NAME );
 	}
 }

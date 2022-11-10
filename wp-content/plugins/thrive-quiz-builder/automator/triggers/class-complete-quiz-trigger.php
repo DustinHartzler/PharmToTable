@@ -47,12 +47,12 @@ class Complete_Quiz extends Trigger {
 	}
 
 	/**
-	 * Get the name of the app to which the hook belongs
+	 * Get the id of the app to which the hook belongs
 	 *
 	 * @return string
 	 */
-	public static function get_app_name() {
-		return 'Thrive Quiz Builder';
+	public static function get_app_id() {
+		return Quiz_App::get_id();
 	}
 
 	/**

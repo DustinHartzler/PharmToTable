@@ -52,7 +52,30 @@ class TQB_Export_Structure_Item {
 			$this->post = get_post( $this->page_id );
 		}
 
+		$type        = str_replace( 'tqb_', '', $this->post->post_type );
+		$method_name = "alter_{$type}_post";
+
+		if ( method_exists( $this, $method_name ) ) {
+			$this->$method_name();
+		}
+
 		return $this->post;
+	}
+
+	/**
+	 * Dynamic method called from get_post method
+	 *
+	 * Modify the post object before export
+	 *
+	 * @return void
+	 */
+	public function alter_optin_post() {
+		/**
+		 * Adds meta for skip optin
+		 */
+		$this->post->meta = array(
+			TQB_Post_meta::META_NAME_FOR_SKIP_OPTIN => TQB_Post_meta::get_quiz_page_skip_optin( $this->page_id ),
+		);
 	}
 
 	/**

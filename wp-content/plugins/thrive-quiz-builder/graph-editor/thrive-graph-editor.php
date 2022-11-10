@@ -2,7 +2,7 @@
 /**
  * Thrive Themes - https://thrivethemes.com
  *
- * @package thrive-quiz-builder
+ * @package thrive-graph-editor
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -13,11 +13,6 @@ if ( ! class_exists( 'Thrive_Graph_editor' ) ) {
 	final class Thrive_Graph_Editor {
 
 		const EDITOR_FLAG = 'tge';
-
-		/**
-		 * Translation Domain
-		 */
-		const T = 'thrive_graph_editor';
 
 		/**
 		 * Graph Editor Database Version
@@ -60,6 +55,7 @@ if ( ! class_exists( 'Thrive_Graph_editor' ) ) {
 			add_action( 'template_redirect', array( $this, 'init_editor' ) );
 			add_action( 'tqb-quiz-results-modified', array( $this, 'on_results_updated' ), 10, 3 );
 			$this->fix_conflicts();
+			$this->load_plugin_textdomain();
 		}
 
 		public function fix_conflicts() {
@@ -126,6 +122,13 @@ if ( ! class_exists( 'Thrive_Graph_editor' ) ) {
 
 			require_once( 'includes/classes/class-tge-editor.php' );
 			$this->editor = TGE_Editor::instance();
+		}
+
+		public function load_plugin_textdomain() {
+			$locale = apply_filters( 'plugin_locale', get_locale(), 'thrive-graph-editor' );
+
+			load_textdomain( 'thrive-graph-editor', WP_LANG_DIR . '/thrive/thrive-graph-editor-' . $locale . '.mo' );
+			load_plugin_textdomain( 'thrive-graph-editor', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 		}
 
 		public function url( $file = '' ) {

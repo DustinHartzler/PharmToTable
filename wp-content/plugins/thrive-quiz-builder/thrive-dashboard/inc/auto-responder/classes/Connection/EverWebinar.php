@@ -16,14 +16,14 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'webinar';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'EverWebinar';
 	}
 
@@ -32,27 +32,27 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
-		$this->_directFormHtml( 'everwebinar' );
+	public function output_setup_form() {
+		$this->output_controls_html( 'everwebinar' );
 	}
 
 	/**
 	 * @return mixed|Thrive_Dash_List_Connection_Abstract
 	 *
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid EverWebinar key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid EverWebinar key', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( array( 'key' => $key ) );
+		$this->set_credentials( array( 'key' => $key ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to EverWebinar using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to EverWebinar using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -60,7 +60,7 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 		 */
 		$this->save();
 
-		return $this->success( __( 'EverWebinar connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'EverWebinar connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -68,9 +68,9 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 	 *
 	 * @return bool|string
 	 */
-	public function testConnection() {
+	public function test_connection() {
 		try {
-			$webinars = $this->getApi()->get_webinars();
+			$webinars = $this->get_api()->get_webinars();
 			if ( ! $webinars ) {
 				return false;
 			}
@@ -108,7 +108,7 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 	 *
 	 * @return bool|mixed|Thrive_Dash_List_Connection_Abstract
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		$args = array( 'schedule' => 0 );
 		if ( is_array( $arguments ) ) {
 
@@ -121,7 +121,7 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 			}
 
 			if ( isset( $arguments['name'] ) && ! empty( $arguments['name'] ) ) {
-				list( $first_name, $last_name ) = $this->_getNameParts( $arguments['name'] );
+				list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 
 				$args['first_name'] = $first_name;
 				$args['last_name']  = $last_name;
@@ -139,7 +139,7 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 
 		try {
 
-			$api    = $this->getApi();
+			$api    = $this->get_api();
 			$webnar = $api->get_webinar_schedules( array( 'webinar_id' => $list_identifier ) );
 
 			if ( isset( $webnar['schedules'] ) ) {
@@ -168,13 +168,13 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 			if ( isset( $params['webinar_id'] ) ) {
 				$webinar_id = $params['webinar_id'];
 			} else {
-				$webinars = $this->getApi()->get_webinars();
+				$webinars = $this->get_api()->get_webinars();
 				if ( is_array( $webinars ) && isset( $webinars[0]['id'] ) ) {
 					$webinar_id = $webinars[0]['id'];
 				}
 			}
 
-			$params = $this->getApi()->get_webinar_schedules( array( 'webinar_id' => $webinar_id ) );
+			$params = $this->get_api()->get_webinar_schedules( array( 'webinar_id' => $webinar_id ) );
 		} catch ( Thrive_Dash_Api_EverWebinar_Exception $e ) {
 		}
 
@@ -185,7 +185,7 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 	 * @return mixed|Thrive_Dash_Api_EverWebinar
 	 * @throws Thrive_Dash_Api_EverWebinar_Exception
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_EverWebinar( array(
 				'apiKey' => $this->param( 'key' ),
 			)
@@ -197,22 +197,16 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 	 *
 	 * @return array|bool
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		/** @var Thrive_Dash_Api_EverWebinar $ever_webinar */
-		$ever_webinar = $this->getApi();
+		$ever_webinar = $this->get_api();
 
 		try {
-			$list = $ever_webinar->get_webinars();
-
-			return $list;
+			return $ever_webinar->get_webinars();
 		} catch ( Exception $e ) {
 			$this->_error = $e->getMessage();
 
 			return false;
 		}
-	}
-
-	public function get_automator_autoresponder_fields() {
-		 return array( 'mailing_list' );
 	}
 }

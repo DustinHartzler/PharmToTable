@@ -19,7 +19,7 @@ class TCB_Question_Element extends TCB_Element_Abstract {
 	}
 
 	public function name() {
-		return __( 'Quiz Builder Questions', Thrive_Quiz_Builder::T );
+		return __( 'Quiz Builder Questions', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {
@@ -74,7 +74,7 @@ class TCB_Question_Element extends TCB_Element_Abstract {
 					'ProgressBar' => array(
 						'config'     => array(
 							'name'    => '',
-							'label'   => __( 'Progress Bar', Thrive_Quiz_Builder::T ),
+							'label'   => __( 'Progress Bar', 'thrive-quiz-builder' ),
 							'default' => true,
 						),
 						'css_suffix' => '',
@@ -105,14 +105,14 @@ class TCB_Question_Element extends TCB_Element_Abstract {
 				array(
 					'value'    => 'all_answers',
 					'selector' => '.tqb-answer-inner-wrapper',
-					'name'     => __( 'Grouped Answer Items', Thrive_Quiz_Builder::T ),
-					'singular' => __( '-- Answer Item %s', Thrive_Quiz_Builder::T ),
+					'name'     => __( 'Grouped Answer Items', 'thrive-quiz-builder' ),
+					'singular' => __( '-- Answer Item %s', 'thrive-quiz-builder' ),
 				),
 				array(
 					'value'    => 'all_answers_text',
 					'selector' => '.tqb-answer-inner-wrapper .tqb-answer-text ',
-					'name'     => __( 'Grouped Answer Text', Thrive_Quiz_Builder::T ),
-					'singular' => __( '-- Answer Text %s', Thrive_Quiz_Builder::T ),
+					'name'     => __( 'Grouped Answer Text', 'thrive-quiz-builder' ),
+					'singular' => __( '-- Answer Text %s', 'thrive-quiz-builder' ),
 				),
 			),
 		);

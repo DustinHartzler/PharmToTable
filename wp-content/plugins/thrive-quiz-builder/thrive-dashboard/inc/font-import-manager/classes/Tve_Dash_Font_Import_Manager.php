@@ -65,7 +65,7 @@ class Tve_Dash_Font_Import_Manager {
 
 				update_option( self::OPTION_NAME, $new_font_pack );
 
-				$this->messages['success'][] = __( "Font pack saved !", TVE_DASH_TRANSLATE_DOMAIN );
+				$this->messages['success'][] = __( "Font pack saved !", 'thrive-dash' );
 
 			} catch ( Exception $e ) {
 				$this->messages['error'][] = $e->getMessage();
@@ -78,7 +78,7 @@ class Tve_Dash_Font_Import_Manager {
 					$handler->deleteDir( $font_pack['folder'] );
 					delete_option( self::OPTION_NAME );
 				}
-				$this->messages['success'][] = __( "Font pack removed", TVE_DASH_TRANSLATE_DOMAIN );
+				$this->messages['success'][] = __( "Font pack removed", 'thrive-dash' );
 			} catch ( Exception $e ) {
 				$this->messages['error'][] = $e;
 			}

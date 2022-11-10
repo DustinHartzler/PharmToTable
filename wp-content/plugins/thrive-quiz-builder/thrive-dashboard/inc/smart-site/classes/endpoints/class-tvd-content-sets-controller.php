@@ -176,11 +176,16 @@ class TVD_Content_Sets_Controller extends WP_REST_Controller {
 
 		$new_set_id = $set->create();
 
+		$cache_plugin = tve_dash_detect_cache_plugin();
+		if ( $cache_plugin ) {
+			tve_dash_cache_plugin_clear( $cache_plugin );
+		}
+
 		if ( ! empty( $new_set_id ) ) {
 			return new WP_REST_Response( \TVD\Content_Sets\Set::get_items(), 200 );
 		}
 
-		return new WP_Error( 'cant-create', __( 'The request contains invalid rules', TVE_DASH_TRANSLATE_DOMAIN ), array( 'status' => 422 ) );
+		return new WP_Error( 'cant-create', __( 'The request contains invalid rules', 'thrive-dash' ), array( 'status' => 422 ) );
 	}
 
 	/**
@@ -205,11 +210,16 @@ class TVD_Content_Sets_Controller extends WP_REST_Controller {
 
 		$set_id = $set->update();
 
+		$cache_plugin = tve_dash_detect_cache_plugin();
+		if ( $cache_plugin ) {
+			tve_dash_cache_plugin_clear( $cache_plugin );
+		}
+
 		if ( ! empty( $set_id ) ) {
 			return new WP_REST_Response( ! empty( $request->get_param( 'return_one' ) ) ? $set->jsonSerialize() : \TVD\Content_Sets\Set::get_items(), 200 );
 		}
 
-		return new WP_Error( 'cant-update', __( 'The request contains invalid rules', TVE_DASH_TRANSLATE_DOMAIN ), array( 'status' => 422 ) );
+		return new WP_Error( 'cant-update', __( 'The request contains invalid rules', 'thrive-dash' ), array( 'status' => 422 ) );
 	}
 
 	/**

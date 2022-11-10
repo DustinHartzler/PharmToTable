@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property int    ttw_id
  * @property string ttw_salt
  * @property string ttw_email
- * @property bool   status
+ * @property string status
  * @property string ttw_expiration datetime until the current connection is known by TTW; ttw_salt has to be refreshed after this date;
  */
 class TPM_Connection {
@@ -89,6 +89,10 @@ class TPM_Connection {
 	public function is_connected() {
 
 		return $this->status === self::CONNECTED;
+	}
+
+	public function set_data( $data ) {
+		$this->_data = $data;
 	}
 
 	public function get_login_url() {
@@ -251,6 +255,7 @@ class TPM_Connection {
 		$data['status'] = self::CONNECTED;
 		$this->_data    = $data;
 		update_option( self::NAME, $data );
+		delete_option( 'tpm_bk_connection' );
 
 		tpm_cron()->log( '_save_connection()' );
 
@@ -307,6 +312,9 @@ class TPM_Connection {
 		TPM_License_Manager::get_instance()->clear_cache();
 
 		tpm_cron()->unschedule();
+
+		//save the connection data to be used at TPM deactivation plugin
+		update_option( 'tpm_bk_connection', $this->_data );
 
 		return delete_option( self::NAME );
 	}

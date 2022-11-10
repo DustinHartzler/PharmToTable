@@ -36,7 +36,7 @@ class Tve_Dash_Font_Import_Manager_View {
 		}
 
 		if ( ! is_file( $this->path . '/' . $file ) ) {
-			echo sprintf( esc_html__( "No template found for %s", TVE_DASH_TRANSLATE_DOMAIN ), esc_html( $file ) );
+			echo sprintf( esc_html__( "No template found for %s", 'thrive-dash' ), esc_html( $file ) );
 
 			return;
 		}

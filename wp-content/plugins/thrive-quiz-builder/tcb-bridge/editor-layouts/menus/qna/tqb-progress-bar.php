@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="ProgressBarType"></div>
 		<div class="tve-progress-bar-label">
 				<span>
-					<?php echo esc_html__( 'Progress bar Label', Thrive_Quiz_Builder::T ); ?>
+					<?php echo esc_html__( 'Progress bar Label', 'thrive-quiz-builder' ); ?>
 				</span>
 			<div class="mt-10">
 				<input type="text" class="change" data-fn="changePgLabel" value=""/>

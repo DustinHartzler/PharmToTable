@@ -17,28 +17,29 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class TVE_Dash_Product_LicenseManager {
 	const LICENSE_OPTION_NAME = 'thrive_license';
-	const TCB_TAG = 'tcb';
-	const TL_TAG = 'tl';
-	const TCW_TAG = 'tcw';
-	const ALL_TAG = 'all';
-	const TU_TAG = 'tu';
-	const THO_TAG = 'tho';
-	const TVO_TAG = 'tvo';
-	const TQB_TAG = 'tqb';
-	const TCM_TAG = 'tcm';
-	const TVA_TAG = 'tva';
-	const TAB_TAG = 'tab';
+	const TCB_TAG             = 'tcb';
+	const TL_TAG              = 'tl';
+	const TCW_TAG             = 'tcw';
+	const ALL_TAG             = 'all';
+	const TU_TAG              = 'tu';
+	const THO_TAG             = 'tho';
+	const TVO_TAG             = 'tvo';
+	const TQB_TAG             = 'tqb';
+	const TCM_TAG             = 'tcm';
+	const TVA_TAG             = 'tva';
+	const TAB_TAG             = 'tab';
+	const TPM_TAG             = 'tpm';
 
-	const TAG_FOCUS = 'focusblog';
-	const TAG_LUXE = 'luxe';
-	const TAG_IGNITION = 'ignition';
-	const TAG_MINUS = 'minus';
-	const TAG_SQUARED = 'squared';
-	const TAG_VOICE = 'voice';
+	const TAG_FOCUS     = 'focusblog';
+	const TAG_LUXE      = 'luxe';
+	const TAG_IGNITION  = 'ignition';
+	const TAG_MINUS     = 'minus';
+	const TAG_SQUARED   = 'squared';
+	const TAG_VOICE     = 'voice';
 	const TAG_PERFORMAG = 'performag';
-	const TAG_PRESSIVE = 'pressive';
-	const TAG_STORIED = 'storied';
-	const TAG_RISE = 'rise';
+	const TAG_PRESSIVE  = 'pressive';
+	const TAG_STORIED   = 'storied';
+	const TAG_RISE      = 'rise';
 
 	protected $secret_key = '@#$()%*%$^&*(#@$%@#$%93827456MASDFJIK3245';
 
@@ -197,7 +198,7 @@ class TVE_Dash_Product_LicenseManager {
 			/** @var WP_Error $licenseValid */
 			/** Couldn't connect to the API URL - possible because wp_remote_get failed for whatever reason.  Maybe CURL not activated on server, for instance */
 			$response['success'] = 0;
-			$response['reason']  = sprintf( __( "An error occurred while connecting to the license server. Error: %s. Please login to thrivethemes.com, report this error message on the forums and we'll get this sorted for you", TVE_DASH_TRANSLATE_DOMAIN ), $licenseValid->get_error_message() );
+			$response['reason']  = sprintf( __( "An error occurred while connecting to the license server. Error: %s. Please login to thrivethemes.com, report this error message on the forums and we'll get this sorted for you", 'thrive-dash' ), $licenseValid->get_error_message() );
 
 			return $response;
 		}
@@ -207,7 +208,7 @@ class TVE_Dash_Product_LicenseManager {
 		if ( empty( $response ) ) {
 			$response            = new stdClass();
 			$response['success'] = 0;
-			$response['reason']  = sprintf( __( "An error occurred while receiving the license status. The response was: %s. Please login to thrivethemes.com, report this error message on the forums and we'll get this sorted for you.", TVE_DASH_TRANSLATE_DOMAIN ), $licenseValid['body'] );
+			$response['reason']  = sprintf( __( "An error occurred while receiving the license status. The response was: %s. Please login to thrivethemes.com, report this error message on the forums and we'll get this sorted for you.", 'thrive-dash' ), $licenseValid['body'] );
 
 			return $response;
 		}
@@ -223,7 +224,7 @@ class TVE_Dash_Product_LicenseManager {
 		//check success flag
 		if ( empty( $response['success'] ) ) {
 			$response['success'] = 0;
-			$response['reason']  = __( 'Invalid response!', TVE_DASH_TRANSLATE_DOMAIN );
+			$response['reason']  = __( 'Invalid response!', 'thrive-dash' );
 
 			return null;
 		}
@@ -231,7 +232,7 @@ class TVE_Dash_Product_LicenseManager {
 		//check if products is not empty and is array
 		if ( empty( $response['products'] ) || ! is_array( $response['products'] ) ) {
 			$response['success'] = 0;
-			$response['reason']  = __( 'Invalid products returned from server!', TVE_DASH_TRANSLATE_DOMAIN );
+			$response['reason']  = __( 'Invalid products returned from server!', 'thrive-dash' );
 
 			return null;
 		}
@@ -239,7 +240,7 @@ class TVE_Dash_Product_LicenseManager {
 		foreach ( $response['products'] as $product_tag ) {
 			if ( ! in_array( $product_tag, $this->accepted_tags ) ) {
 				$response['success'] = 0;
-				$response['reason']  = __( 'Products returned from server are not accepted for licensing!', TVE_DASH_TRANSLATE_DOMAIN );
+				$response['reason']  = __( 'Products returned from server are not accepted for licensing!', 'thrive-dash' );
 
 				return null;
 			}
@@ -254,5 +255,30 @@ class TVE_Dash_Product_LicenseManager {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Based on $text_domain returns a tag associated
+	 *
+	 * @param string $text_domain
+	 *
+	 * @return string
+	 */
+	public static function get_product_tag( $text_domain ) {
+		$mapping = array(
+			'thrive-cb'              => self::TCB_TAG,
+			'thrive-leads'           => self::TL_TAG,
+			'thrive-clever-widgets'  => self::TCW_TAG,
+			'thrive-ult'             => self::TU_TAG,
+			'thrive-headline'        => self::THO_TAG,
+			'thrive-ovation'         => self::TVO_TAG,
+			'thrive-quiz-builder'    => self::TQB_TAG,
+			'thrive-comments'        => self::TCM_TAG,
+			'thrive-apprentice'      => self::TVA_TAG,
+			'thrive-optimize'        => self::TAB_TAG,
+			'thrive-product-manager' => self::TPM_TAG,
+		);
+
+		return isset( $mapping[ $text_domain ] ) ? $mapping[ $text_domain ] : '';
 	}
 }

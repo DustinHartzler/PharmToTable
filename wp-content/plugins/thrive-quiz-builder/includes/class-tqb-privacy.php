@@ -54,7 +54,7 @@ class TQB_Privacy {
 	public static function register_privacy_exporter( $exporters = array() ) {
 
 		$exporters[] = array(
-			'exporter_friendly_name' => __( 'Thrive Quiz Builder', Thrive_Quiz_Builder::T ),
+			'exporter_friendly_name' => __( 'Thrive Quiz Builder', 'thrive-quiz-builder' ),
 			'callback'               => array( __CLASS__, 'privacy_exporter' ),
 		);
 
@@ -70,7 +70,7 @@ class TQB_Privacy {
 	 */
 	public static function register_privacy_eraser( $erasers = array() ) {
 		$erasers[] = array(
-			'eraser_friendly_name' => __( 'Thrive Quiz Builder', Thrive_Quiz_Builder::T ),
+			'eraser_friendly_name' => __( 'Thrive Quiz Builder', 'thrive-quiz-builder' ),
 			'callback'             => array( __CLASS__, 'privacy_eraser' ),
 		);
 
@@ -94,7 +94,7 @@ class TQB_Privacy {
 		if ( ! empty( $users ) ) {
 
 			$group_id      = 'tqb-user-privacy';
-			$group_label   = __( 'Quiz Builder', Thrive_Quiz_Builder::T );
+			$group_label   = __( 'Quiz Builder', 'thrive-quiz-builder' );
 			$timezone_diff = current_time( 'timestamp' ) - time();
 
 			foreach ( $users as $user ) {
@@ -105,27 +105,27 @@ class TQB_Privacy {
 
 				$data = array(
 					array(
-						'name'  => __( 'Email', Thrive_Quiz_Builder::T ),
+						'name'  => __( 'Email', 'thrive-quiz-builder' ),
 						'value' => $user['email'],
 					),
 					array(
-						'name'  => __( 'Date and Start Time', Thrive_Quiz_Builder::T ),
+						'name'  => __( 'Date and Start Time', 'thrive-quiz-builder' ),
 						'value' => date( 'Y-m-d H:i:s', strtotime( $user['date_started'] ) + $timezone_diff ),
 					),
 					array(
-						'name'  => __( 'Result', Thrive_Quiz_Builder::T ),
+						'name'  => __( 'Result', 'thrive-quiz-builder' ),
 						'value' => $user['points'],
 					),
 					array(
-						'name'  => __( 'Generated Social Badge', Thrive_Quiz_Builder::T ),
+						'name'  => __( 'Generated Social Badge', 'thrive-quiz-builder' ),
 						'value' => ! empty( $user['social_badge_link'] ) ? sprintf( '<a href="%s" target="_blank">%s</a>', $user['social_badge_link'], $user['social_badge_link'] ) : '-',
 					),
 				);
 				foreach ( $user_answers as $key => $user_answer_data ) {
-					$html = __( 'Question', Thrive_Quiz_Builder::T ) . ': ' . $user_answer_data['text'];
+					$html = __( 'Question', 'thrive-quiz-builder' ) . ': ' . $user_answer_data['text'];
 					foreach ( $user_answer_data['answers'] as $answer ) {
 						if ( ! empty( $answer['chosen'] ) && true === $answer['chosen'] ) {
-							$html .= '<br>' . __( 'Answer', Thrive_Quiz_Builder::T ) . ': ';
+							$html .= '<br>' . __( 'Answer', 'thrive-quiz-builder' ) . ': ';
 							if ( ! empty( $answer['image'] ) ) {
 								$html .= sprintf( '<a href="%s" target="_blank">%s</a>', $answer['image']->sizes->full->url, $answer['image']->sizes->full->url );
 							} else {
@@ -134,7 +134,7 @@ class TQB_Privacy {
 						}
 					}
 					$data[] = array(
-						'name'  => __( 'Question', Thrive_Quiz_Builder::T ) . ' #' . ++ $key,
+						'name'  => __( 'Question', 'thrive-quiz-builder' ) . ' #' . ++ $key,
 						'value' => $html,
 					);
 				}

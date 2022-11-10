@@ -152,18 +152,10 @@ class TQB_Page_Manager {
 			$this->page->tqb_page_description = tqb()->get_style_page_description( $this->page->post_type );
 			$this->page->quiz_name            = html_entity_decode( get_the_title( $this->page->post_parent ) );
 			$this->page->gdpr_user_consent    = $this->get_user_consent();
+			$this->page->skip_optin           = TQB_Post_meta::get_quiz_page_skip_optin( $this->page->ID );
 		}
 
 		return $this->page;
-	}
-
-	/**
-	 * Update User Consent for a page
-	 *
-	 * @param $status
-	 */
-	public function update_user_consent( $status ) {
-		TQB_Post_meta::update_quiz_page_gdpr_user_consent( $this->page->ID, $status );
 	}
 
 	/**

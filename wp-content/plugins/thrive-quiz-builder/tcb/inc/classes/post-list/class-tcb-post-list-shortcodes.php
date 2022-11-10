@@ -333,6 +333,8 @@ class TCB_Post_List_Shortcodes {
 			), $attr );
 		}
 
+		$content = nl2br( $content );
+
 		return $content;
 	}
 
@@ -753,7 +755,7 @@ class TCB_Post_List_Shortcodes {
 	public static function tcb_post_list_dynamic_style( $attr = array(), $dynamic_style = '' ) {
 		$style_css = do_shortcode( $dynamic_style );
 
-		$style_css .= self::tcb_get_article_dynamic_variables( get_the_ID() );
+		$style_css .= static::tcb_get_article_dynamic_variables( get_the_ID() );
 
 		return TCB_Utils::wrap_content( $style_css, 'style', '', 'tcb-post-list-dynamic-style', array( 'type' => 'text/css' ) );
 	}
@@ -994,7 +996,8 @@ class TCB_Post_List_Shortcodes {
 			$link = empty( $key ) ? '#' : "[$tag id='$key']";
 		} else {
 			global $post;
-			$links = (array) get_the_author_meta( 'thrive_social_urls', $post->post_author );
+
+			$links = (array) get_the_author_meta( 'thrive_social_urls', tve_get_post_author( $post ) );
 
 			$link = empty( $links[ $key ] ) ? '' : $links[ $key ];
 		}

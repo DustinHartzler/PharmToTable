@@ -36,7 +36,7 @@ class TCB_Contact_Form_Element extends TCB_Cloud_Template_Element_Abstract {
 	 */
 	public function name() {
 
-		return __( 'Contact Form', 'thrive-cb' );
+		return __( 'Contact Form (Old)', 'thrive-cb' );
 	}
 
 	/**

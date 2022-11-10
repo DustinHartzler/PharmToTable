@@ -3,7 +3,7 @@
 /*
 Plugin Name: Thrive Quiz Builder
 Plugin URI: https://thrivethemes.com
-Version: 3.5
+Version: 3.12
 Author: <a href="https://thrivethemes.com">Thrive Themes</a>
 Description: The plugin is built to deliver the following benefits to users: engage visitors with fun and interesting quizzes, lower bounce rate, generate more leads and gain visitor insights to find out about their interests.
 Text Domain: thrive-quiz-builder
@@ -17,19 +17,14 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 	final class Thrive_Quiz_Builder {
 
 		/**
-		 * Plugin text domain
-		 */
-		const T = 'thrive-quiz-builder';
-
-		/**
 		 * Plugin version
 		 */
-		const V = '3.5';
+		const V = '3.12';
 
 		/**
 		 * Quiz Builder Database Version
 		 */
-		const DB = '1.0.6';
+		const DB = '1.0.10';
 
 		/**
 		 * Quiz Builder database prefix
@@ -290,6 +285,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				'TQB_Quiz_Manager',
 				'tqb_register_social_media_conversion',
 			) );
+			add_action( 'thrive_core_lead_signup', array( 'TQB_Quiz_Manager', 'tqb_lead_signup' ), 10, 2 );
 
 			/**
 			 * Load Thrive Dashboard Ajax Load
@@ -406,7 +402,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				if ( empty( $tag_id ) ) {
 					$tag_id = $connection->create_tag( $tag_name );
 				}
-				$connection->getApi()->contact( 'addToGroup', $contact['Id'], $tag_id );
+				$connection->get_api()->contact( 'addToGroup', $contact['Id'], $tag_id );
 			}
 		}
 
@@ -424,7 +420,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				return $data;
 			}
 
-			if ( ! $connection->hasTags() ) {
+			if ( ! $connection->has_tags() ) {
 				return $data;
 			}
 
@@ -447,7 +443,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				return $data;
 			}
 
-			return $connection->pushTags( $tags, $data );
+			return $connection->push_tags( $tags, $data );
 		}
 
 		public function display_infusion_soft_tags_text() {
@@ -461,7 +457,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			}
 
 			if ( isset( $_REQUEST['tqb_key'], $display_tags, $display_tags ) ) {
-				echo '<br/><p>' . esc_html__( $this->tvd_tags_text, self::T ) . '</p>';
+				echo '<br/><p>' . esc_html__( $this->tvd_tags_text, 'thrive-quiz-builder' ) . '</p>';
 			}
 		}
 
@@ -483,7 +479,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			}
 
 			if ( isset( $_REQUEST['tqb_key'], $display_tags, $display_tags ) ) {
-				$text .= '. <br/> ' . esc_html__( $this->tvd_tags_text, self::T );
+				$text .= '. <br/> ' . esc_html__( $this->tvd_tags_text, 'thrive-quiz-builder' );
 			}
 
 			return $text;
@@ -492,11 +488,11 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		public function filter_nm_trigger_types( $trigger_types ) {
 
 			if ( ! array_key_exists( 'quiz_completion', $trigger_types ) ) {
-				$trigger_types['quiz_completion'] = __( 'Quiz Completion', self::T );
+				$trigger_types['quiz_completion'] = __( 'Quiz Completion', 'thrive-quiz-builder' );
 			}
 
 			if ( ! array_key_exists( 'split_test_ends', $trigger_types ) ) {
-				$trigger_types['split_test_ends'] = __( 'A/B Test Ends', self::T );
+				$trigger_types['split_test_ends'] = __( 'A/B Test Ends', 'thrive-quiz-builder' );
 			}
 
 			return $trigger_types;
@@ -509,9 +505,20 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 			$quiz_ids     = ! empty( $_REQUEST['quiz_ids'] ) ? array_map( 'absint', $_REQUEST['quiz_ids'] ) : [];
 			$restart_quiz = ! empty( $_POST['restart_quiz'] ) && (int) $_POST['restart_quiz'] === 1;
+			$post_id      = (int) $_POST['post_id'];
 			$data         = array();
 			foreach ( $quiz_ids as $key => $id ) {
 				if ( $restart_quiz ) {
+
+					if ( is_user_logged_in() ) {
+						/**
+						 * Generate a new User Try in when restart quiz button is pressed
+						 */
+						TQB_Quiz_Manager::get_quiz_user( uniqid( 'tqb-user-', true ), $id, false, array(
+							'object_id' => $post_id,
+						) );
+					}
+
 					/**
 					 * The hook is triggered when a user restarts the same quiz. It can be fired multiple times, if the user chooses to restart the quiz multiple times
 					 * </br></br>
@@ -528,8 +535,31 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				$question_manager = new TGE_Question_Manager( $id );
 				$questions        = $question_manager->get_quiz_questions( array( 'with_answers' => true ) );
 
-				$quiz_type                     = TQB_Post_meta::get_quiz_type_meta( $id, true );
-				$data[ $key ]                  = TQB_Quiz_Manager::get_shortcode_content( $id );
+				$quiz_type = TQB_Post_meta::get_quiz_type_meta( $id, true );
+				$progress  = tqb_progress_settings_instance( (int) $id )->get();
+
+				if ( is_user_logged_in() ) {
+					$user_unique = (string) tqb_customer()->get_user_unique_id( $id, $post_id );
+					if ( $user_unique === $key ) {
+						$page      = tqb_customer()->get_resume_quiz_page( $id, $post_id );
+						$answer_id = tqb_customer()->get_resume_quiz_last_answer_id( $id, $post_id );
+
+						$data[ $key ] = TQB_Quiz_Manager::get_shortcode_content( $id, $page, $answer_id, $key );
+
+						if ( $page === 'splash' && is_array( $progress ) && ! empty( $progress['display_progress'] ) ) {
+							$data[ $key ]['resume_flow'] = tqb_customer()->get_resume_quiz_user_answers( $id, $post_id );
+						}
+
+						$data[ $key ]['resume'] = 1;
+					} elseif ( $restart_quiz ) {
+						$data[ $key ] = TQB_Quiz_Manager::get_shortcode_content( $id, null, null, $user_unique );
+					}
+				}
+
+				if ( empty( $data[ $key ] ) ) {
+					$data[ $key ] = TQB_Quiz_Manager::get_shortcode_content( $id );
+				}
+
 				$data[ $key ]['all_questions'] = $questions;
 				$data[ $key ]['quiz_id']       = $id;
 				$data[ $key ]['quiz_url']      = str_replace( array( '?p=', '&p=' ), array( '?tqb_quiz_id=', '&tqb_quiz_id=' ), get_permalink( $id ) );
@@ -551,7 +581,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 				$data[ $key ]['feedback_settings']  = TQB_Post_meta::get_feedback_settings_meta( $id );
 				$data[ $key ]['highlight_settings'] = TQB_Post_meta::get_highlight_settings_meta( $id );
-				$data[ $key ]['progress_settings']  = tqb_progress_settings_instance( (int) $id )->get();
+				$data[ $key ]['progress_settings']  = $progress;
 				$data[ $key ]['scroll_settings']    = TQB_Post_meta::get_quiz_scroll_settings_meta( $id );
 				$data[ $key ]['quiz_style']         = TQB_Post_meta::get_quiz_style_meta( $id );
 				$data[ $key ]['tve_qna_templates']  = get_post_meta( $id, 'tve_qna_templates', true );
@@ -671,6 +701,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			require_once( 'includes/class-tqb-privacy.php' );
 			require_once( 'includes/database/class-tqb-database-manager.php' );
 			require_once( 'includes/class-tqb-db.php' );
+			require_once( 'includes/class-tqb-customer.php' );
+			require_once( 'includes/class-tqb-quiz.php' );
 			require_once( 'includes/class-tqb-lightspeed.php' );
 			require_once( 'includes/managers/class-tqb-structure-manager.php' );
 			require_once( 'includes/managers/class-tqb-variation-manager.php' );
@@ -705,6 +737,11 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			 *  Include automator and its files
 			 */
 			require_once( 'automator/class-main.php' );
+
+			/**
+			 * Include the Thrive Apprentice integration entrypoint
+			 */
+			require_once( 'tva-bridge/class-main.php' );
 
 			$this->resolve_tqb_conflicts();
 		}
@@ -766,10 +803,10 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		 */
 		public function load_plugin_textdomain() {
 
-			$locale = apply_filters( 'plugin_locale', get_locale(), self::T );
+			$locale = apply_filters( 'plugin_locale', get_locale(), 'thrive-quiz-builder' );
 
-			load_textdomain( self::T, WP_LANG_DIR . '/thrive/' . self::T . '-' . $locale . '.mo' );
-			load_plugin_textdomain( self::T, false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
+			load_textdomain( 'thrive-quiz-builder', WP_LANG_DIR . '/thrive/thrive-quiz-builder-' . $locale . '.mo' );
+			load_plugin_textdomain( 'thrive-quiz-builder', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' );
 		}
 
 		/**
@@ -828,8 +865,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			$templates[] = array(
 				'id'                     => '1',
 				'is_empty'               => true, //build from scratch
-				'name'                   => __( 'Build from scratch', self::T ),
-				'description'            => __( 'Build a quiz from scratch with no predefined settings.', self::T ),
+				'name'                   => __( 'Build from scratch', 'thrive-quiz-builder' ),
+				'description'            => __( 'Build a quiz from scratch with no predefined settings.', 'thrive-quiz-builder' ),
 				'learn_more'             => '<a href=\'' . self::VIDEO_QUIZ_TEMPLATE_SCRATCH . '\' class=\'wistia-popover[height=450,playerColor=2bb914,width=800]\'><span class=\'tvd-icon-play tqb-purple-icon\'></span></a>',
 				'image'                  => $this->plugin_url( 'assets/images/tqb-quiz-template1.png' ),
 				'splash'                 => false,
@@ -846,8 +883,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			$templates[] = array(
 				'id'                     => '2',
 				'is_empty'               => false,
-				'name'                   => __( 'List building', self::T ),
-				'description'            => __( 'Quiz optimized for building an email list. The Results Page is visible only if the user signs up.', self::T ),
+				'name'                   => __( 'List building', 'thrive-quiz-builder' ),
+				'description'            => __( 'Quiz optimized for building an email list. The Results Page is visible only if the user signs up.', 'thrive-quiz-builder' ),
 				'learn_more'             => '<a href=\'' . self::VIDEO_QUIZ_TEMPLATE_LIST . '\' class=\'wistia-popover[height=450,playerColor=2bb914,width=800]\'><span class=\'tvd-icon-play tqb-purple-icon\'></span></a>',
 				'image'                  => $this->plugin_url( 'assets/images/tqb-quiz-template2.png' ),
 				'splash'                 => true,
@@ -864,8 +901,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			$templates[] = array(
 				'id'                     => '3',
 				'is_empty'               => false,
-				'name'                   => __( 'Social shares', self::T ),
-				'description'            => __( 'Quiz optimized for social sharing. The Results Page contains a Social Share Badge that your visitors can share with their friends to increase the popularity of the quiz.', self::T ),
+				'name'                   => __( 'Social shares', 'thrive-quiz-builder' ),
+				'description'            => __( 'Quiz optimized for social sharing. The Results Page contains a Social Share Badge that your visitors can share with their friends to increase the popularity of the quiz.', 'thrive-quiz-builder' ),
 				'learn_more'             => '<a href=\'' . self::VIDEO_QUIZ_TEMPLATE_SOCIAL . '\' class=\'wistia-popover[height=450,playerColor=2bb914,width=800]\'><span class=\'tvd-icon-play tqb-purple-icon\'></span></a>',
 				'image'                  => $this->plugin_url( 'assets/images/tqb-quiz-template3.png' ),
 				'splash'                 => true,
@@ -882,8 +919,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			$templates[] = array(
 				'id'                     => '4',
 				'is_empty'               => false,
-				'name'                   => __( 'Gain customer insights', self::T ),
-				'description'            => __( 'Quiz optimized for getting customer insights.', self::T ),
+				'name'                   => __( 'Gain customer insights', 'thrive-quiz-builder' ),
+				'description'            => __( 'Quiz optimized for getting customer insights.', 'thrive-quiz-builder' ),
 				'learn_more'             => "<a href='" . self::VIDEO_QUIZ_TEMPLATE_SURVEY . "' class='wistia-popover[height=450,playerColor=2bb914,width=800]'><span class='tvd-icon-play tqb-purple-icon'></span></a>",
 				'image'                  => $this->plugin_url( 'assets/images/tqb-quiz-template4.png' ),
 				'splash'                 => false,
@@ -951,7 +988,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 			$styles[] = array(
 				'id'                                  => '5',
-				'name'                                => __( 'Lush', self::T ),
+				'name'                                => __( 'Lush', 'thrive-quiz-builder' ),
 				'cover'                               => $this->plugin_url( 'assets/images/style-5-cover.png' ),
 				self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE => array(
 					'name'   => $this->get_style_page_name( self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE ),
@@ -985,7 +1022,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 			$styles[] = array(
 				'id'                                  => '4',
-				'name'                                => __( 'Minimalist', self::T ),
+				'name'                                => __( 'Minimalist', 'thrive-quiz-builder' ),
 				'cover'                               => $this->plugin_url( 'assets/images/style-4-cover.png' ),
 				self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE => array(
 					'name'   => $this->get_style_page_name( self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE ),
@@ -1019,7 +1056,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 			$styles[] = array(
 				'id'                                  => '3',
-				'name'                                => __( 'Deep Ocean Blue', self::T ),
+				'name'                                => __( 'Deep Ocean Blue', 'thrive-quiz-builder' ),
 				'cover'                               => $this->plugin_url( 'assets/images/style-3-cover.png' ),
 				self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE => array(
 					'name'   => $this->get_style_page_name( self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE ),
@@ -1053,7 +1090,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 			$styles[] = array(
 				'id'                                  => '2',
-				'name'                                => __( 'Gray Orange', self::T ),
+				'name'                                => __( 'Gray Orange', 'thrive-quiz-builder' ),
 				'cover'                               => $this->plugin_url( 'assets/images/style-2-cover.png' ),
 				self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE => array(
 					'name'   => $this->get_style_page_name( self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE ),
@@ -1087,7 +1124,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 			$styles[] = array(
 				'id'                                  => '1',
-				'name'                                => __( 'Dark', self::T ),
+				'name'                                => __( 'Dark', 'thrive-quiz-builder' ),
 				'cover'                               => $this->plugin_url( 'assets/images/style-1-cover.png' ),
 				self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE => array(
 					'name'   => $this->get_style_page_name( self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE ),
@@ -1121,7 +1158,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 			$styles[] = array(
 				'id'                                  => '0',
-				'name'                                => __( 'Light Blue', self::T ),
+				'name'                                => __( 'Light Blue', 'thrive-quiz-builder' ),
 				'cover'                               => $this->plugin_url( 'assets/images/style-0-cover.jpg' ),
 				self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE => array(
 					'name'   => $this->get_style_page_name( self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE ),
@@ -1200,16 +1237,16 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			$label = '';
 			switch ( $type ) {
 				case self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE:
-					$label = __( 'Splash Page', self::T );
+					$label = __( 'Splash Page', 'thrive-quiz-builder' );
 					break;
 				case self::QUIZ_STRUCTURE_ITEM_OPTIN:
-					$label = __( 'Opt-in Gate', self::T );
+					$label = __( 'Opt-in Gate', 'thrive-quiz-builder' );
 					break;
 				case self::QUIZ_STRUCTURE_ITEM_QNA:
-					$label = __( 'Q&A', self::T );
+					$label = __( 'Q&A', 'thrive-quiz-builder' );
 					break;
 				case self::QUIZ_STRUCTURE_ITEM_RESULTS:
-					$label = __( 'Results Page', self::T );
+					$label = __( 'Results Page', 'thrive-quiz-builder' );
 					break;
 				default:
 					break;
@@ -1286,16 +1323,16 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			$description = '';
 			switch ( $type ) {
 				case self::QUIZ_STRUCTURE_ITEM_SPLASH_PAGE:
-					$description = __( 'The variation marked with (control) will be displayed as your splash page. If you want to improve your conversion rate, add more variations and start an A/B Test.', self::T );
+					$description = __( 'The variation marked with (control) will be displayed as your splash page. If you want to improve your conversion rate, add more variations and start an A/B Test.', 'thrive-quiz-builder' );
 					break;
 				case self::QUIZ_STRUCTURE_ITEM_OPTIN:
-					$description = __( 'The variation marked with (control) will be displayed as your opt-in gate. If you want to improve your conversion rate, add more variations and start an A/B Test.', self::T );
+					$description = __( 'The variation marked with (control) will be displayed as your opt-in gate. If you want to improve your conversion rate, add more variations and start an A/B Test.', 'thrive-quiz-builder' );
 					break;
 				case self::QUIZ_STRUCTURE_ITEM_QNA:
 					$description = '';
 					break;
 				case self::QUIZ_STRUCTURE_ITEM_RESULTS:
-					$description = __( 'The variation marked with (control) will be displayed as your results page. If you want to improve your conversion rate, add more variations and start an A/B Test.', self::T );
+					$description = __( 'The variation marked with (control) will be displayed as your results page. If you want to improve your conversion rate, add more variations and start an A/B Test.', 'thrive-quiz-builder' );
 					break;
 				default:
 					break;
@@ -1315,41 +1352,41 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 
 			$types[] = array(
 				'key'           => self::QUIZ_TYPE_NUMBER,
-				'label'         => __( 'Number', self::T ),
+				'label'         => __( 'Number', 'thrive-quiz-builder' ),
 				'image'         => $this->plugin_url( 'assets/images/logo-score-lg.png' ),
-				'tooltip'       => __( 'Use this quiz type if you want to display the final result of the quiz as a number.', self::T ),
+				'tooltip'       => __( 'Use this quiz type if you want to display the final result of the quiz as a number.', 'thrive-quiz-builder' ),
 				'learn_more'    => '<a href=\'' . self::VIDEO_QUIZ_TYPE_NUMBER . '\' class=\'wistia-popover[height=450,playerColor=2bb914,width=800]\'><span class=\'tvd-icon-play tqb-purple-icon\'></span></a>',
 				'has_next_step' => true,
 			);
 			$types[] = array(
 				'key'           => self::QUIZ_TYPE_PERCENTAGE,
-				'label'         => __( 'Percentage', self::T ),
+				'label'         => __( 'Percentage', 'thrive-quiz-builder' ),
 				'image'         => $this->plugin_url( 'assets/images/logo-percentage.png' ),
-				'tooltip'       => __( 'Use this quiz type if you want to display the final result of the quiz as a percentage.', self::T ),
+				'tooltip'       => __( 'Use this quiz type if you want to display the final result of the quiz as a percentage.', 'thrive-quiz-builder' ),
 				'learn_more'    => '<a href=\'' . self::VIDEO_QUIZ_TYPE_PERCENTAGE . '\' class=\'wistia-popover[height=450,playerColor=2bb914,width=800]\'><span class=\'tvd-icon-play tqb-purple-icon\'></span></a>',
 				'has_next_step' => true,
 			);
 			$types[] = array(
 				'key'           => self::QUIZ_TYPE_PERSONALITY,
-				'label'         => __( 'Category', self::T ),
+				'label'         => __( 'Category', 'thrive-quiz-builder' ),
 				'image'         => $this->plugin_url( 'assets/images/logo-personality.png' ),
-				'tooltip'       => __( 'In this quiz you set up a number of possible result categories. An example of this would be a personality type quiz.', self::T ),
+				'tooltip'       => __( 'In this quiz you set up a number of possible result categories. An example of this would be a personality type quiz.', 'thrive-quiz-builder' ),
 				'learn_more'    => '<a href=\'' . self::VIDEO_QUIZ_TYPE_PERSONALITY . '\' class=\'wistia-popover[height=450,playerColor=2bb914,width=800]\'><span class=\'tvd-icon-play tqb-purple-icon\'></span></a>',
 				'has_next_step' => true,
 			);
 			$types[] = array(
 				'key'           => self::QUIZ_TYPE_RIGHT_WRONG,
-				'label'         => __( 'Right/Wrong', self::T ),
+				'label'         => __( 'Right/Wrong', 'thrive-quiz-builder' ),
 				'image'         => $this->plugin_url( 'assets/images/right-wrong.png' ),
-				'tooltip'       => __( 'With the help of this quiz type, you can have one or more correct answers to each question. The correct answer(s) can be highlighted to let the visitors know whether the answers they have selected are the correct ones or not.', self::T ),
+				'tooltip'       => __( 'With the help of this quiz type, you can have one or more correct answers to each question. The correct answer(s) can be highlighted to let the visitors know whether the answers they have selected are the correct ones or not.', 'thrive-quiz-builder' ),
 				'learn_more'    => '<a href=\'' . self::VIDEO_QUIZ_TYPE_RIGHT_WRONG . '\' class=\'wistia-popover[height=450,playerColor=2bb914,width=800]\'><span class=\'tvd-icon-play tqb-purple-icon\'></span></a>',
 				'has_next_step' => true,
 			);
 			$types[] = array(
 				'key'           => self::QUIZ_TYPE_SURVEY,
-				'label'         => __( 'Survey', self::T ),
+				'label'         => __( 'Survey', 'thrive-quiz-builder' ),
 				'image'         => $this->plugin_url( 'assets/images/survey.png' ),
-				'tooltip'       => __( "The survey quiz allows you to gain valuable insights about your existing customers. The participant in this quiz type doesn't receive a specific result. Instead the results page contains the same content for everyone. This type of quiz is especially useful for learning more about your visitors and segmenting your existing customer base.", self::T ),
+				'tooltip'       => __( "The survey quiz allows you to gain valuable insights about your existing customers. The participant in this quiz type doesn't receive a specific result. Instead the results page contains the same content for everyone. This type of quiz is especially useful for learning more about your visitors and segmenting your existing customer base.", 'thrive-quiz-builder' ),
 				'learn_more'    => "<a href='" . self::VIDEO_QUIZ_TEMPLATE_SURVEY . "' class='wistia-popover[height=450,playerColor=2bb914,width=800]'><span class='tvd-icon-play tqb-purple-icon'></span></a>",
 				'has_next_step' => true,
 			);
@@ -1828,7 +1865,6 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 					tqb()->plugin_url( 'assets/js/dist/tqb-frontend.min.js' ),
 					$deps
 				);
-
 				wp_localize_script(
 					'tqb-frontend',
 					defined( 'DOING_AJAX' ) && DOING_AJAX ? 'TQB_Front_Ajax' : 'TQB_Front',
@@ -1924,11 +1960,4 @@ function tqb() {
 	return Thrive_Quiz_Builder::instance();
 }
 
-/**
- * This helps to display the errors on ajax requests too
- */
-if ( defined( 'TVE_DEBUG' ) && TVE_DEBUG === true ) {
-	ini_set( 'display_errors', 1 );
-	error_reporting( E_ALL );
-}
 tqb();

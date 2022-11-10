@@ -121,9 +121,13 @@ class TQB_Quiz_Manager {
 		$post->social_shares = TQB_Quiz_Manager::get_quiz_social_shares_count( $post->ID );
 		$structure           = new TQB_Structure_Manager( $post->ID );
 		$post->validation    = $structure->get_display_availability();
+		$post->is_valid      = $post->validation['valid'];
 
 		$structure_data    = $structure->get_quiz_structure_meta();
 		$post->subscribers = TQB_Quiz_Manager::get_quiz_subscribers( $structure_data );
+
+		$quiz          = new TQB_Quiz( $post->ID );
+		$post->results = $quiz->get_results();
 
 		return $post;
 	}
@@ -402,7 +406,7 @@ class TQB_Quiz_Manager {
 
 		$quiz = get_post( $quiz_id );
 		if ( empty( $quiz ) ) {
-			return array( 'error' => tqb_create_frontend_error_message( array( __( 'The shortcode is broken', Thrive_Quiz_Builder::T ) ) ) );
+			return array( 'error' => tqb_create_frontend_error_message( array( __( 'The shortcode is broken', 'thrive-quiz-builder' ) ) ) );
 		}
 
 		$structure  = new TQB_Structure_Manager( $quiz_id );
@@ -412,6 +416,7 @@ class TQB_Quiz_Manager {
 
 			return array( 'error' => $errors );
 		}
+		$post_id = $post_id ? $post_id : get_the_ID();
 
 		/**
 		 * The TQB User should be created only for frontend, so not editor page
@@ -432,11 +437,20 @@ class TQB_Quiz_Manager {
 //				do_action( 'thrive_quizbuilder_quiz_started', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique ), tvd_get_current_user_details() );
 
 			} else {
-				$user_id = TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id );
+				$user_id = TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id, false, array(
+					'object_id' => $post_id,
+				) );
 			}
 		}
+		$current_user_id          = get_current_user_id();
+		$quiz_completed_triggered = $current_user_id ? get_user_meta( $current_user_id, 'tqb_quiz_completed_triggered', true ) : array();
 
-		$shortcode_content['page']        = null;
+		/**
+		 * Store the quiz user unique to the customer class to make queries on it in case the user is not logged in
+		 */
+		tqb_customer()->set_random_identifier( $user_unique );
+
+		$shortcode_content['page']        = false;
 		$shortcode_content['question']    = null;
 		$shortcode_content['user_unique'] = $user_unique;
 		$shortcode_content['user_id']     = ( ! empty( $user_id ) ) ? $user_id : null;
@@ -473,6 +487,12 @@ class TQB_Quiz_Manager {
 						do_action( 'tqb_register_conversion', $variation, $user_unique );
 					}
 
+					if ( is_user_logged_in() ) {
+						$quiz_completed_triggered                         = is_array( $quiz_completed_triggered ) ? $quiz_completed_triggered : array();
+						$quiz_completed_triggered[ $quiz_id ][ $post_id ] = false;
+						update_user_meta( $current_user_id, 'tqb_quiz_completed_triggered', $quiz_completed_triggered );
+					}
+
 					do_action( 'tqb_register_impression', $shortcode_content['question'], $user_unique );
 
 					break;
@@ -484,7 +504,7 @@ class TQB_Quiz_Manager {
 				$points                    = TQB_Quiz_Manager::save_user_points( $user_unique, $quiz_id );
 				$shortcode_content['page'] = $structure->get_page_content( 'optin', $points, $post_id );
 				do_action( 'tqb_register_conversion', array( 'quiz_id' => $quiz_id, 'page_id' => $quiz_id, 'id' => null ), $user_unique );
-				if ( ! empty( $shortcode_content['page'] ) ) {
+				if ( ! empty( $shortcode_content['page'] ) && $structure->should_show_optin_gate_page() ) {
 					TQB_Quiz_Manager::tqb_register_quiz_completion( $user_unique, $shortcode_content['page']['page_id'] );
 					$shortcode_content['page_type'] = 'optin';
 					do_action( 'tqb_register_impression', $shortcode_content['page'], $user_unique );
@@ -496,7 +516,11 @@ class TQB_Quiz_Manager {
 				$shortcode_content['points'] = $points;
 				$shortcode_content['page']   = $structure->get_page_content( 'results', $points, $post_id );
 				do_action( 'tqb_register_impression', $shortcode_content['page'], $user_unique );
-				TQB_Quiz_Manager::tqb_register_quiz_completion( $user_unique, $shortcode_content['page']['page_id'], true );
+
+				$quiz_completed_triggered = is_array( $quiz_completed_triggered ) ? $quiz_completed_triggered : array();
+				$do_action                = empty( $quiz_completed_triggered ) || empty ( $quiz_completed_triggered[ $quiz_id ][ $post_id ] );
+
+				TQB_Quiz_Manager::tqb_register_quiz_completion( $user_unique, $shortcode_content['page']['page_id'], $do_action );
 				if ( isset( $variation['id'] ) && $variation['id'] ) {
 					$variation['quiz_id'] = $quiz_id;
 					do_action( 'tqb_register_skip_optin', $variation, $user_unique );
@@ -562,23 +586,31 @@ class TQB_Quiz_Manager {
 					$email = $user_data['email'];
 				}
 
-				/**
-				 * The hook is triggered when a quiz result is loaded. The hook can be fired multiple times, if the user completes the same quiz multiple times.
-				 * </br>
-				 * Example use case:-  Send an email based on the quiz result.  Start the quiz result to a CRM / Autoresponder.  Start an evergreen campaign based on the quiz result.
-				 *
-				 * @param array Quiz Details
-				 * @param array User Details
-				 * @param array Lead Data
-				 *
-				 * @api
-				 */
-				do_action( 'thrive_quizbuilder_quiz_completed', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique, $points['explicit'], $email ), $user_data, $form_data );
 
+				if ( $do_action ) {
+					/**
+					 * The hook is triggered when a quiz result is loaded. The hook can be fired multiple times, if the user completes the same quiz multiple times,
+					 * but it won't trigger on page refresh without completing it again
+					 * </br>
+					 * Example use case:-  Send an email based on the quiz result.  Start the quiz result to a CRM / Autoresponder.  Start an evergreen campaign based on the quiz result.
+					 *
+					 * @param array Quiz Details
+					 * @param array User Details
+					 * @param array Lead Data
+					 *
+					 * @api
+					 */
+					do_action( 'thrive_quizbuilder_quiz_completed', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique, $points['explicit'], $email ), $user_data, $form_data );
+
+					if ( ! empty( $current_user_id ) ) {
+						$quiz_completed_triggered[ $quiz_id ][ $post_id ] = true;
+						update_user_meta( $current_user_id, 'tqb_quiz_completed_triggered', $quiz_completed_triggered );
+					}
+				}
 				break;
 		}
 		if ( ! empty( $validation['error'] ) ) {
-			$shortcode_content['error'] = tqb_create_frontend_error_message( array( __( 'There is an error in the quiz structure', Thrive_Quiz_Builder::T ) ) );
+			$shortcode_content['error'] = tqb_create_frontend_error_message( array( __( 'There is an error in the quiz structure', 'thrive-quiz-builder' ) ) );
 		}
 
 		return $shortcode_content;
@@ -620,6 +652,13 @@ class TQB_Quiz_Manager {
 			'answer_id'   => $answer['id'],
 			'question_id' => $answer['question_id'],
 		);
+
+		//Check if the answer is already registered
+		//Used when a quiz is resumed
+		$answer_exists = $tqbdb->get_user_answers( array_merge( $user_answer, array( 'limit' => 1 ) ) );
+		if ( $answer_exists ) {
+			return false;
+		}
 
 		if ( false === empty( $answer_text ) ) {
 			$user_answer['answer_text'] = $answer_text;
@@ -675,6 +714,7 @@ class TQB_Quiz_Manager {
 		$data['variation_id'] = isset( $variation['variation_id'] ) ? $variation['variation_id'] : null;
 		$data['user_unique']  = $user_unique;
 		$data['page_id']      = $variation['page_id'];
+		$data['post_id']      = get_the_ID();
 
 		$page_manager = new TQB_Page_Manager( $variation['page_id'] );
 		$active_test  = $page_manager->get_tests_for_page( array(
@@ -756,6 +796,40 @@ class TQB_Quiz_Manager {
 
 		setcookie( 'tqb-conversion-' . $variation['page_id'] . '-' . str_replace( '.', '_', $user_unique ), 1, time() + ( 30 * 24 * 3600 ), '/' );
 		$_COOKIE[ 'tqb-conversion-' . $variation['page_id'] . '-' . str_replace( '.', '_', $user_unique ) ] = true;
+	}
+
+	/**
+	 * Update the tqb_users table with the user's id if a new wp account was created after the opt-in-gate submission
+	 *
+	 * @param array              $data
+	 * @param WP_User|array|null $current_user
+	 *
+	 */
+	public static function tqb_lead_signup( $data, $current_user ) {
+		if ( ! empty( $data['form_data']['tqb-variation-page_id'] ) && empty( $current_user ) ) {
+			$page = get_post( $data['form_data']['tqb-variation-page_id'] );
+			if ( empty( $page ) ) {
+				return;
+			}
+
+			global $tqbdb;
+			$variation = $tqbdb->get_variation( $data['form_data']['tqb-variation-variation_id'] );
+			if ( empty( $variation ) ) {
+				return;
+			}
+
+			$page_manager = new TQB_Page_Manager( $variation['page_id'] );
+
+			$email   = ( $page_manager->get_user_consent() === 1 ) ? $data['form_data']['email'] : ( ( function_exists( 'wp_privacy_anonymize_data' ) ) ? wp_privacy_anonymize_data( 'email', $data['form_data']['email'] ) : '' );
+			$wp_user = get_user_by( 'email', $email );
+			if ( $wp_user !== false ) {
+				$user_id                    = TQB_Quiz_Manager::get_quiz_user( $data['form_data']['tqb-variation-user_unique'], $page->post_parent );
+				$user_details               = array( 'id' => $user_id, 'email' => $email );
+				$user_details['wp_user_id'] = $wp_user->ID;
+
+				$tqbdb->save_quiz_user( $user_details );
+			}
+		}
 	}
 
 	/**
@@ -946,6 +1020,14 @@ class TQB_Quiz_Manager {
 				$data              = $reporting_manager->get_users_answers( $user['id'] );
 				$user['flow']      = $data;
 
+				if ( empty( $user['email'] ) && is_user_logged_in() ) {
+					/**
+					 * Fix for sending notifications from Notification Manager
+					 * If user is logged in and there is no email from the lead gen form -> we send the user logged in email
+					 */
+					$user['email'] = tqb_customer()->get_email();
+				}
+
 				do_action( 'tqb_quiz_completed', $quiz, $user );
 			}
 		}
@@ -989,16 +1071,17 @@ class TQB_Quiz_Manager {
 	/**
 	 * Get quiz user using unique identifier and quiz id
 	 *
-	 * @param null $user_unique
-	 * @param null $quiz_id
-	 * @param bool $full_data
+	 * @param null  $user_unique
+	 * @param null  $quiz_id
+	 * @param bool  $full_data
+	 * @param array $filters
 	 *
 	 * @return array|int
 	 */
-	public static function get_quiz_user( $user_unique = null, $quiz_id = null, $full_data = false ) {
+	public static function get_quiz_user( $user_unique = null, $quiz_id = null, $full_data = false, $filters = array() ) {
 
 		$ignore_user = null;
-		if ( current_user_can( 'manage_options' ) || TQB_Product::has_access() || tve_dash_is_crawler() ) {
+		if ( tve_dash_is_crawler() ) {
 			$ignore_user = 1;
 		}
 
@@ -1006,11 +1089,11 @@ class TQB_Quiz_Manager {
 		$user = $tqbdb->get_quiz_user( $user_unique, $quiz_id );
 
 		if ( empty( $user ) ) {
-			return $tqbdb->save_quiz_user( array(
+			return $tqbdb->save_quiz_user( array_merge( array(
 				'random_identifier' => $user_unique,
 				'quiz_id'           => $quiz_id,
 				'ignore_user'       => $ignore_user,
-			) );
+			), $filters ) );
 		}
 
 		return $full_data ? $user : $user['id'];
@@ -1247,7 +1330,12 @@ class TQB_Quiz_Manager {
 
 				$anonymize_email = ( function_exists( 'wp_privacy_anonymize_data' ) ) ? wp_privacy_anonymize_data( 'email', $user['email'] ) : '';
 
-				$this->tqbdb->save_quiz_user( array( 'id' => $user['id'], 'quiz_id' => $this->quiz->ID, 'email' => $anonymize_email ) );
+				$this->tqbdb->save_quiz_user( array(
+					'id'         => $user['id'],
+					'quiz_id'    => $this->quiz->ID,
+					'email'      => $anonymize_email,
+					'wp_user_id' => 0,
+				) );
 			}
 		}
 	}
@@ -1261,7 +1349,7 @@ class TQB_Quiz_Manager {
 
 		$post = get_post( $this->quiz->ID );
 		unset( $post->ID );
-		$post->post_title = '[' . __( 'Copy', Thrive_Quiz_Builder::T ) . '] ' . $post->post_title;
+		$post->post_title = '[' . __( 'Copy', 'thrive-quiz-builder' ) . '] ' . $post->post_title;
 
 		$new_id = wp_insert_post( $post );
 		tqb_copy_meta( $this->quiz->ID, $new_id );

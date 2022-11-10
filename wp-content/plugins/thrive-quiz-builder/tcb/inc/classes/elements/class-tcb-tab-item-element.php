@@ -192,10 +192,12 @@ class TCB_Tab_Item_Element extends TCB_Element_Abstract {
 			'borders'    => array(
 				'config' => array(
 					'Borders' => array(
-						'important' => true,
+						'important'  => true,
+						'css_prefix' => $prefix_config,
 					),
 					'Corners' => array(
-						'important' => true,
+						'important'  => true,
+						'css_prefix' => $prefix_config,
 					),
 				),
 			),

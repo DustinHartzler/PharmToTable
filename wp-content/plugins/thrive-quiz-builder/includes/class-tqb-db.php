@@ -917,6 +917,7 @@ class TQB_Database {
 			'event_type',
 			'variation_id',
 			'page_id',
+			'post_id',
 			'user_unique',
 			'optin',
 			'social_share',
@@ -973,6 +974,8 @@ class TQB_Database {
 			'quiz_id',
 			'completed_quiz',
 			'ignore_user',
+			'wp_user_id',
+			'object_id',
 		);
 		$data     = array();
 		foreach ( $_columns as $key ) {
@@ -980,7 +983,14 @@ class TQB_Database {
 				$data[ $key ] = $model[ $key ];
 			}
 		}
-		unset( $model );
+
+		if ( ! isset( $data['wp_user_id'] ) && is_user_logged_in() ) {
+			$data['wp_user_id'] = get_current_user_id();
+		}
+
+		if ( ! empty( $data['completed_quiz'] ) ) {
+			$data['date_finished'] = date( 'Y-m-d H:i:s' );
+		}
 
 		if ( ! empty( $data['id'] ) ) {
 			$update_rows = $this->wpdb->update( tqb_table_name( 'users' ), $data, array( 'id' => $data['id'] ) );
@@ -1236,7 +1246,7 @@ class TQB_Database {
 			if ( ! $range ) {
 				$result_percent = 100;
 			} else {
-				$result_percent = ( intval( $points['user_points'] ) - $points['min_points'] ) * 100 / $range;
+				$result_percent = max( ( (int) $points['user_points'] - $points['min_points'] ), 0 ) * 100 / $range;
 			}
 
 			if ( isset( $points['quiz_completed'] ) && ! $points['quiz_completed'] ) {
@@ -1258,15 +1268,20 @@ class TQB_Database {
 	/**
 	 * Get completed quiz count from DB
 	 *
-	 * @param $quiz_id
+	 * @param       $quiz_id
+	 * @param array $filters
 	 *
-	 * @return array|null
+	 * @return string|null
 	 */
-	public function get_completed_quiz_count( $quiz_id, $last_modified = null ) {
+	public function get_completed_quiz_count( $quiz_id, $filters = [] ) {
 		$where = ' WHERE quiz_id = %d AND completed_quiz = 1 AND ignore_user IS NULL ';
 
-		if ( isset( $last_modified ) ) {
-			$where .= " AND date_started > '" . $this->wordpress_to_server_date( $last_modified ) . "'";
+		if ( isset( $filters['since']['date'] ) ) {
+			$where .= " AND date_started > '" . $this->wordpress_to_server_date( $filters['since']['date'] ) . "'";
+		}
+
+		if ( ! empty( $filters['location'] ) ) {
+			$where .= ' AND object_id = ' . esc_sql( $filters['location'] );
 		}
 
 		$params['quiz_id'] = $quiz_id;
@@ -1285,24 +1300,51 @@ class TQB_Database {
 	}
 
 	/**
-	 * Get flow data from DB
+	 * Build the sql for selecting data for the flow report based on the filters
 	 *
-	 * @param $page_id
+	 * @param        $page_id
+	 * @param array  $filters
+	 * @param string $where
 	 *
-	 * @return array|null
+	 * @return false|string|null
 	 */
-	public function get_flow_data( $page_id, $last_modified = null ) {
-		$where = ' WHERE page_id = %d ';
+	private function build_sql_for_flow_related_data( $page_id, $filters, $where ) {
+		$join = '';
 
-		if ( isset( $last_modified ) ) {
-			$where .= " AND date > '" . $this->wordpress_to_server_date( $last_modified ) . "'";
+		if ( isset( $filters['since']['date'] ) ) {
+			$where .= " AND date > '" . $this->wordpress_to_server_date( $filters['since']['date'] ) . "'";
+		}
+
+		if ( ! empty( $filters['location'] ) && empty ( $filters['no_splash'] ) ) {
+			$join  = ' INNER JOIN ' . tqb_table_name( 'users' ) . ' AS users ON event_log.user_unique = users.random_identifier';
+			$where .= ' AND users.object_id = ' . esc_sql( $filters['location'] );
+		} else if ( ! empty( $filters['location'] ) && ! empty ( $filters['no_splash'] ) ) {
+			/**
+			 * if there is no splash page we have to count all the impressions on a qna page and display it for each location
+			 */
+			$where .= ' AND event_log.post_id = ' . esc_sql( $filters['location'] );
 		}
 
 		$where .= ' GROUP BY event_type';
 
 		$params['page_id'] = $page_id;
-		$sql               = 'SELECT IFNULL(COUNT(*), 0) as count, event_type FROM ' . tqb_table_name( 'event_log' ) . $where;
-		$sql               = $this->prepare( $sql, $params );
+		$sql               = 'SELECT IFNULL(COUNT(*), 0) as count, event_type FROM ' . tqb_table_name( 'event_log' ) . ' AS event_log' . $join . $where;
+
+		return $this->prepare( $sql, $params );
+	}
+
+	/**
+	 * Get flow data from DB
+	 *
+	 * @param $page_id
+	 * @param $filters
+	 *
+	 * @return array|null
+	 */
+	public function get_flow_data( $page_id, $filters ) {
+		$where = ' WHERE page_id = %d ';
+
+		$sql = $this->build_sql_for_flow_related_data( $page_id, $filters, $where );
 
 		$result = $this->wpdb->get_results( $sql );
 
@@ -1325,49 +1367,68 @@ class TQB_Database {
 	}
 
 	/**
-	 * Get page subscribers
+	 * Get flow data from DB
 	 *
 	 * @param $page_id
+	 * @param $filters
 	 *
 	 * @return array|null
 	 */
-	public function get_page_subscribers( $page_id, $last_modified = null ) {
-		$where = ' WHERE page_id = %d AND event_type = 2 AND optin = 1 ';
+	public function get_flow_splash_impressions( $page_id, $filters ) {
+		$where = ' WHERE page_id = %d ';
 
-		if ( isset( $last_modified ) ) {
-			$where .= " AND date > '" . $this->wordpress_to_server_date( $last_modified ) . "'";
+		if ( isset( $filters['since']['date'] ) ) {
+			$where .= " AND date > '" . $this->wordpress_to_server_date( $filters['since']['date'] ) . "'";
 		}
 
+		if ( ! empty( $filters['location'] ) ) {
+			$where .= ' AND post_id = ' . esc_sql( $filters['location'] );
+		}
+
+		$where .= ' AND event_type = 1';
+
 		$params['page_id'] = $page_id;
-		$sql               = 'SELECT IFNULL(COUNT(*), 0) as count, event_type FROM ' . tqb_table_name( 'event_log' ) . $where;
-		$sql               = $this->prepare( $sql, $params );
+		$sql               = 'SELECT IFNULL(COUNT(*), 0) as count, event_type FROM ' . tqb_table_name( 'event_log' ) . ' AS event_log' . $where;
 
-		$result = $this->wpdb->get_var( $sql );
+		$sql = $this->prepare( $sql, $params );
 
-		return $result;
+		$result                                      = $this->wpdb->get_results( $sql );
+		$data                                        = array();
+		$data[ Thrive_Quiz_Builder::TQB_IMPRESSION ] = $result[0]->count;
+
+		return $data;
+	}
+
+	/**
+	 * Get page subscribers
+	 *
+	 * @param       $page_id
+	 * @param array $filters
+	 *
+	 * @return array|null
+	 */
+	public function get_page_subscribers( $page_id, $filters = [] ) {
+		$where = ' WHERE page_id = %d AND event_type = 2 AND optin = 1 ';
+
+		$sql = $this->build_sql_for_flow_related_data( $page_id, $filters, $where );
+
+		return $this->wpdb->get_var( $sql );
 	}
 
 	/**
 	 * Get social shares for results page
 	 *
 	 * @param $page_id
+	 * @param $filters
 	 *
 	 * @return array|null
 	 */
-	public function get_page_social_shares( $page_id, $last_modified = null ) {
+	public function get_page_social_shares( $page_id, $filters ) {
 		$where = ' WHERE page_id = %d AND event_type = 2 AND social_share = 1 ';
 
-		if ( isset( $last_modified ) ) {
-			$where .= " AND date > '" . $this->wordpress_to_server_date( $last_modified ) . "'";
-		}
+		$sql = $this->build_sql_for_flow_related_data( $page_id, $filters, $where );
 
-		$params['page_id'] = $page_id;
-		$sql               = 'SELECT IFNULL(COUNT(*), 0) as count, event_type FROM ' . tqb_table_name( 'event_log' ) . $where;
-		$sql               = $this->prepare( $sql, $params );
-
-		$result = $this->wpdb->get_var( $sql );
-
-		return $result;
+		return $this->wpdb->get_var( $sql );
 	}
 
 	/**
@@ -1417,7 +1478,31 @@ class TQB_Database {
 	}
 
 	/**
-	 * Get all quiz users from DB
+	 * Get filtered quiz users count from DB
+	 *
+	 * @param int   $quiz_id
+	 * @param array $completed_quiz
+	 *
+	 * @return array|null
+	 */
+	public function get_filtered_users_count( $quiz_id, $params = array() ) {
+		$select_users = $this->get_sql_for_quiz_users( $quiz_id, $params );
+
+		$order = ' ORDER BY id DESC ';
+		if ( ! empty( $params['per_page'] ) && is_numeric( $params['per_page'] ) ) {
+			$order .= ' LIMIT ' . $params['per_page'];
+			if ( ! empty( $params['offset'] ) && is_numeric( $params['offset'] ) ) {
+				$order .= ' OFFSET ' . $params['offset'];
+			}
+		}
+
+		$sql = 'SELECT COUNT(users.id) AS total_items FROM (' . $select_users . ') AS users' . $order;
+
+		return $this->wpdb->get_results( $sql );
+	}
+
+	/**
+	 * Get quiz users from DB based on the filters set
 	 *
 	 * @param $quiz_id
 	 * @param $params
@@ -1425,24 +1510,122 @@ class TQB_Database {
 	 * @return array|null
 	 */
 	public function get_quiz_users( $quiz_id, $params = array() ) {
-		$where = ' WHERE quiz_id = %d AND ignore_user IS NULL ';
+		$select_users = $this->get_sql_for_quiz_users( $quiz_id, $params );
 
-		if ( ! empty( $params['completed_quiz'] ) ) {
-			$where .= 'AND completed_quiz=1 ';
-		}
-		$where .= ' ORDER BY id DESC ';
+		$order = ' ORDER BY id DESC ';
 		if ( ! empty( $params['per_page'] ) && is_numeric( $params['per_page'] ) ) {
-			$where .= ' LIMIT ' . $params['per_page'];
+			$order .= ' LIMIT ' . $params['per_page'];
 			if ( ! empty( $params['offset'] ) && is_numeric( $params['offset'] ) ) {
-				$where .= ' OFFSET ' . $params['offset'];
+				$order .= ' OFFSET ' . $params['offset'];
 			}
 		}
 
-		$data['quiz_id'] = $quiz_id;
-		$sql             = 'SELECT * FROM ' . tqb_table_name( 'users' ) . $where;
-		$sql             = $this->prepare( $sql, $data );
+		$sql = $select_users . $order;
 
 		return $this->wpdb->get_results( $sql );
+	}
+
+	/**
+	 * Returns sql for filtering users
+	 *
+	 * @param int   $quiz_id
+	 * @param array $params
+	 *
+	 * @return string
+	 */
+	protected function get_sql_for_quiz_users( $quiz_id, $params = array() ) {
+		$where_guest = ' WHERE quiz_id = ' . $quiz_id . ' AND ignore_user IS NULL AND wp_user_id = 0 ';
+		$where_user  = ' WHERE quiz_id = ' . $quiz_id . ' AND ignore_user IS NULL AND wp_user_id != 0 ';
+
+		$where = '';
+
+		if ( ! empty( $params['progress'] ) ) {
+			switch ( $params['progress'] ) {
+				case 'in_progress':
+					$where .= 'AND completed_quiz IS NULL ';
+					break;
+				case 'completed':
+					$where .= 'AND completed_quiz=1 ' . $this->get_sql_for_results_filtering( $params );
+					break;
+				case 'all':
+				default:
+					break;
+			}
+		}
+
+		if ( ! empty( $params['date_started'] ) ) {
+			$where .= 'AND date_started >= "' . esc_sql( $params['date_started'] ) . '" ';
+		}
+
+		if ( ! empty( $params['date_finished'] ) ) {
+			$where .= 'AND DATE(date_started) <= "' . esc_sql( $params['date_finished'] ) . '" ';
+		}
+
+		if ( ! empty( $params['location'] ) ) {
+			$where .= 'AND object_id = "' . esc_sql( $params['location'] ) . '" ';
+		}
+
+		$select_guest_users        = 'SELECT *, 1 as nb_of_tries FROM ' . tqb_table_name( 'users' ) . $where_guest . $where;
+		$select_latest_start_dates = 'SELECT wp_user_id, COUNT(id) as nb_of_tries, MAX(date_started) as date_started FROM ' . tqb_table_name( 'users' )
+		                             . $where_user . $where . ' GROUP BY wp_user_id';
+		$select_users              = 'SELECT ' . tqb_table_name( 'users' ) . '.*, latest_completions.nb_of_tries FROM ' . tqb_table_name( 'users' )
+		                             . ' INNER JOIN ( ' . $select_latest_start_dates . ' ) latest_completions ON '
+		                             . tqb_table_name( 'users' ) . '.wp_user_id = latest_completions.wp_user_id AND '
+		                             . tqb_table_name( 'users' ) . '.date_started = latest_completions.date_started';
+
+		return $select_guest_users . ' UNION ' . $select_users;
+	}
+
+	/**
+	 * Returns sql for a WHERE clause used for filtering quiz users based on points
+	 *
+	 * @param array $params
+	 *
+	 * @return string
+	 */
+	protected function get_sql_for_results_filtering( $params ) {
+		$where = '';
+
+		switch ( $params['quiz_type'] ) {
+			case 'number':
+				if ( ! empty( $params['result_min'] ) ) {
+					$where .= 'AND points >=' . esc_sql( $params['result_min'] ) . ' ';
+				}
+				if ( ! empty( $params['result_max'] ) ) {
+					$where .= 'AND points <=' . esc_sql( $params['result_max'] ) . ' ';
+				}
+				break;
+			case 'percentage':
+				if ( ! empty( $params['result_min'] ) ) {
+					$where .= 'AND SUBSTRING_INDEX(points, "%", 1) >=' . esc_sql( $params['result_min'] ) . ' ';
+				}
+				if ( ! empty( $params['result_max'] ) ) {
+					$where .= 'AND SUBSTRING_INDEX(points, "%", 1) <=' . esc_sql( $params['result_max'] ) . ' ';
+				}
+				break;
+			case 'right_wrong':
+				if ( ! empty( $params['result_min'] ) ) {
+					$where .= 'AND SUBSTRING_INDEX(points, "/", 1) >=' . esc_sql( $params['result_min'] ) . ' ';
+				}
+				if ( ! empty( $params['result_max'] ) ) {
+					$where .= 'AND SUBSTRING_INDEX(points, "/", 1) <=' . esc_sql( $params['result_max'] ) . ' ';
+				}
+				break;
+			case 'personality':
+				if ( ! empty( $params['categories'] ) ) {
+					$numCat = count( $params['categories'] ) - 1;
+					$where  .= 'AND ( ';
+					foreach ( $params['categories'] as $key => $category ) {
+						$where .= 'points="' . esc_sql( $category ) . '"';
+						$where .= $key === $numCat ? ' ) ' : ' OR ';
+					}
+				}
+				break;
+			default:
+				break;
+		}
+
+		return $where;
 	}
 
 	/**
@@ -1476,10 +1659,41 @@ class TQB_Database {
 			$params [] = $filters['quiz_id'];
 		}
 
-		$sql    = $this->prepare( $sql, $params );
-		$return = $this->wpdb->get_results( $sql, $return_type );
+		if ( isset( $filters['completed_quiz'] ) && is_numeric( $filters['completed_quiz'] ) ) {
+			if ( $filters['completed_quiz'] ) {
+				$sql .= ' AND completed_quiz = 1';
+			} else {
+				$sql .= ' AND completed_quiz IS NULL';
+			}
+		}
 
-		return $return;
+		if ( ! empty( $filters['wp_user_id'] ) ) {
+			$sql       .= ' AND wp_user_id = %d';
+			$params [] = $filters['wp_user_id'];
+		}
+
+		if ( ! empty( $filters['random_identifier'] ) ) {
+			$sql       .= ' AND random_identifier = %s';
+			$params [] = $filters['random_identifier'];
+		}
+
+		if ( ! empty( $filters['object_id'] ) ) {
+			$sql       .= ' AND object_id = %d';
+			$params [] = $filters['object_id'];
+		}
+
+		if ( ! empty( $filters['order_by'] ) && ! empty( $filters['order_direction'] ) ) {
+			$sql .= ' ORDER BY ' . $this->wpdb->_escape( $filters['order_by'] ) . ' ' . $this->wpdb->_escape( $filters['order_direction'] );
+		}
+
+		if ( ! empty( $filters['limit'] ) && is_numeric( $filters['limit'] ) ) {
+			$sql       .= ' LIMIT %d ';
+			$params [] = $filters['limit'];
+		}
+
+		$sql = $this->prepare( $sql, $params );
+
+		return $this->wpdb->get_results( $sql, $return_type );
 	}
 
 	/**
@@ -1497,10 +1711,22 @@ class TQB_Database {
 
 		$data['quiz_id'] = $params['quiz_id'];
 		$data['user_id'] = $params['user_id'];
-		$sql             = 'SELECT * FROM ' . tqb_table_name( 'user_answers' ) . $where;
-		$sql             = $this->prepare( $sql, $data );
+		if ( ! empty( $params['question_id'] ) ) {
+			$where               .= ' AND question_id=%d';
+			$data['question_id'] = $params['question_id'];
+		}
+		if ( ! empty( $params['answer_id'] ) ) {
+			$where             .= ' AND answer_id=%d';
+			$data['answer_id'] = $params['answer_id'];
+		}
+		if ( ! empty( $params['limit'] ) ) {
+			$where         .= ' LIMIT %d';
+			$data['limit'] = $params['limit'];
+		}
+		$sql = 'SELECT * FROM ' . tqb_table_name( 'user_answers' ) . $where;
+		$sql = $this->prepare( $sql, $data );
 
-		return $this->wpdb->get_results( $sql );
+		return ! empty( $params['limit'] ) && $params['limit'] === 1 ? $this->wpdb->get_row( $sql, ARRAY_A ) : $this->wpdb->get_results( $sql, ARRAY_A );
 	}
 
 	/**
@@ -1682,7 +1908,7 @@ class TQB_Database {
 	public function clone_variation( $id ) {
 
 		$query = 'INSERT INTO ' . tqb_table_name( 'variations' ) . ' (quiz_id, date_added, date_modified, page_id, parent_id, post_title,tcb_fields, content) 
-		SELECT quiz_id, NOW(), NOW(), page_id, parent_id, CONCAT("' . __( 'Copy of ', Thrive_Quiz_Builder::T ) . '",post_title),tcb_fields, content FROM ' . tqb_table_name( 'variations' ) . ' WHERE id = %d';
+		SELECT quiz_id, NOW(), NOW(), page_id, parent_id, CONCAT("' . __( 'Copy of ', 'thrive-quiz-builder' ) . '",post_title),tcb_fields, content FROM ' . tqb_table_name( 'variations' ) . ' WHERE id = %d';
 
 		$query = $this->prepare( $query, array( 'id' => $id ) );
 		$this->wpdb->query( $query );
@@ -1739,6 +1965,12 @@ class TQB_Database {
 				break;
 		}
 
+		if ( empty( $filters['location'] ) || $filters['location'] === 'all' ) {
+			$quiz_location = '';
+		} else {
+			$quiz_location = ' AND object_id=' . $filters['location'];
+		}
+
 		$sql = 'SELECT IFNULL(COUNT( user.id ), 0) AS user_count, quiz_id, ' . $date_interval;
 
 		$sql .= ' FROM ' . tqb_table_name( 'users' ) . ' AS `user` ';
@@ -1758,6 +1990,8 @@ class TQB_Database {
 			$sql       .= ' AND quiz_id = %d';
 			$params [] = $quiz_id;
 		}
+
+		$sql .= $quiz_location;
 		$sql .= ' GROUP BY quiz_id, date_interval ORDER BY date_interval ';
 
 		$data  = $this->wpdb->get_results( $this->prepare( $sql, $params ), ARRAY_A );
@@ -1811,6 +2045,47 @@ class TQB_Database {
 		}
 
 		return array( 'graph_quiz' => $quizzes, 'intervals' => $dates, 'table_quizzes' => $data );
+	}
+
+	public function get_quiz_locations( $quiz_id ) {
+		$sql = 'SELECT GROUP_CONCAT( DISTINCT object_id ) AS locations, quiz_id FROM ' . tqb_table_name( 'users' ) . ' AS `user` ';
+		$sql .= '  WHERE 1 AND completed_quiz=1 AND ignore_user IS NULL';
+
+		$params = array();
+
+		if ( ! empty( $quiz_id ) ) {
+			$sql       .= ' AND quiz_id = %d';
+			$params [] = $quiz_id;
+		}
+
+		$sql .= ' GROUP BY quiz_id ';
+
+		$data = $this->wpdb->get_results( $this->prepare( $sql, $params ), ARRAY_A );
+
+		$locations = array();
+
+		if ( ! empty( $data ) ) {
+			$post_ids = array_map( 'intval', explode( ",", $data[0]['locations'] ) );
+
+			foreach ( $post_ids as $post_id ) {
+				if ( $post_id ) {
+					$post = get_post( $post_id );
+
+					if ( ! empty( $post ) ) {
+						$details = array( 'post_id' => $post_id, 'post_title' => $post->post_title );
+
+						/**
+						 * Gets the course name that the course overview post belongs to
+						 */
+						$details = apply_filters( 'tqb_get_course_overview_details', $details, $post );
+
+						$locations[ $post->post_type ] [] = $details;
+					}
+				}
+			}
+		}
+
+		return $locations;
 	}
 
 	public function get_report_date_interval( $filter ) {
@@ -1867,11 +2142,12 @@ class TQB_Database {
 	/**
 	 * Get quiz data for questions report
 	 *
-	 * @param $quiz_id
+	 * @param       $quiz_id
+	 * @param array $params
 	 *
 	 * @return false|array
 	 */
-	public function get_questions_report_data( $quiz_id ) {
+	public function get_questions_report_data( $quiz_id, $params ) {
 		$sql = 'SELECT
 		IFNULL(COUNT( user_answer.id ), 0) AS answer_count,
 		answer.question_id,
@@ -1891,6 +2167,10 @@ class TQB_Database {
 		$sql .= ' LEFT JOIN ' . tge_table_name( 'questions' ) . ' AS question ON question.id = answer.question_id ';
 
 		$sql .= '  WHERE answer.quiz_id = ' . $quiz_id . ' AND user.ignore_user IS NULL';// ' AND user.completed_quiz = 1';
+
+		if ( ! empty( $params['location'] ) ) {
+			$sql .= ' AND user.object_id = ' . esc_sql( $params['location'] );
+		}
 
 		$sql .= ' GROUP BY answer.question_id, answer.id ';
 
@@ -2142,6 +2422,73 @@ class TQB_Database {
 		);
 
 		return $data;
+	}
+
+	/**
+	 * @param $user_id
+	 *
+	 * @return array|null
+	 */
+	public function get_last_user_answer( $user_id ) {
+		$user_answers = tqb_table_name( 'user_answers' );
+		$answers      = tge_table_name( 'answers' );
+
+		$sql = "SELECT * from {$answers} WHERE id = (SELECT answer_id from {$user_answers} WHERE user_id = %d ORDER BY id DESC LIMIT 1)";
+
+		return $this->wpdb->get_row( $this->prepare( $sql, array( 'user_id' => $user_id ) ), ARRAY_A );
+	}
+
+	/**
+	 * Check if we have a design variation containing the specific string
+	 *
+	 * @param $string
+	 *
+	 * @return boolean
+	 */
+	public function search_string_in_designs( $string ) {
+		$sql = 'SELECT `id` FROM ' . tqb_table_name( 'variations' ) . ' WHERE content LIKE %s';
+
+		$this->wpdb->query( $this->prepare( $sql, [ "%$string%" ] ) );
+
+		return $this->wpdb->num_rows > 0;
+	}
+
+	/**
+	 * @param array $filters
+	 *
+	 * @return array|null
+	 */
+	public function get_log_by_filters( $filters = array() ) {
+		$params = array();
+		$where  = '';
+
+		if ( ! empty( $filters['user_unique'] ) ) {
+			$params[] = $filters['user_unique'];
+			$where    .= ' AND  user_unique=%s';
+		}
+
+		if ( ! empty( $filters['event_type'] ) ) {
+			if ( is_array( $filters['event_type'] ) ) {
+				$where .= ' AND event_type IN (' . implode( ',', array_map( 'absint', $filters['event_type'] ) ) . ')';
+			} else {
+				$params[] = $filters['event_type'];
+				$where    .= ' AND event_type=%d';
+			}
+		}
+
+		if ( ! empty( $filters['page_id'] ) ) {
+			$params[] = $filters['page_id'];
+			$where    .= ' AND page_id=%d';
+		}
+
+		if ( ! empty( $filters['limit'] ) ) {
+			$params[] = $filters['limit'];
+			$where    .= ' LIMIT %d';
+		}
+
+		$sql = $this->prepare( 'SELECT * FROM ' . tqb_table_name( 'event_log' ) . " WHERE 1 {$where}", $params );
+
+		return ! empty( $filters['limit'] ) && $filters['limit'] === 1 ? $this->wpdb->get_row( $sql, ARRAY_A ) : $this->wpdb->get_results( $sql, ARRAY_A );
 	}
 }
 

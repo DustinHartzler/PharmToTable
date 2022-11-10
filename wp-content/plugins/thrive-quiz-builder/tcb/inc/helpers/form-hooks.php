@@ -86,11 +86,11 @@ add_action( 'tve_leads_delete_post', 'tve_delete_post_form_settings', 10, 1 );
  * On frontend contexts, always remove form settings from content
  */
 add_filter( 'tve_thrive_shortcodes', static function ( $content, $is_editor_page ) {
-	if ( $is_editor_page || strpos( $content, FormSettings::SEP ) === false ) {
-		return $content;
+	if ( ! $is_editor_page && strpos( $content, FormSettings::SEP ) !== false ) {
+		$content = preg_replace( FormSettings::pattern( true ), '', $content );
 	}
 
-	return preg_replace( FormSettings::pattern( true ), '', $content );
+	return $content;
 }, 10, 2 );
 
 /**

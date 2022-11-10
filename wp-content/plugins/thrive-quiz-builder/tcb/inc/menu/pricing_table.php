@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<i></i>
 	</div>
 	<div class="dropdown-content">
+		<div class="tve-control" data-view="PricingPalette"></div>
 		<div class="tve-control" data-key="PriceInstances" data-initializer="preview_toggle_list_control"></div>
 		<div class="tve-button click whitey dashed" data-fn-click="add_instance">
 			<?php echo esc_html__( 'Add new instance', 'thrive-cb' ); ?>

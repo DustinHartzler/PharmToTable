@@ -255,9 +255,9 @@ class Hooks {
 		$features['login-editor'] = array(
 			'icon'        => 'tvd-login-editor',
 			'title'       => Main::title(),
-			'description' => __( 'Visually design your WordPress login screen.', TVE_DASH_TRANSLATE_DOMAIN ),
+			'description' => __( 'Visually design your WordPress login screen.', 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', Main::MENU_SLUG, admin_url( 'admin.php' ) ),
-			'btn_text'    => __( 'Manage Login Screen', TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( 'Manage Login Screen', 'thrive-dash' ),
 		);
 
 		return $features;

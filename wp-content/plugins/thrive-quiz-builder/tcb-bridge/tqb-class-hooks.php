@@ -15,8 +15,8 @@ class TCB_Hooks {
 	/**
 	 * Actions
 	 */
-	const ACTION_TEMPLATE = 'tqb_tpl';
-	const ACTION_STATE = 'tqb_state';
+	const ACTION_TEMPLATE               = 'tqb_tpl';
+	const ACTION_STATE                  = 'tqb_state';
 	const ACTION_SAVE_VARIATION_CONTENT = 'tqb_save_variation_content';
 
 	/**
@@ -148,6 +148,8 @@ class TCB_Hooks {
 		 */
 		add_action( 'tcb_main_frame_enqueue', array( __CLASS__, 'tqb_add_script_to_main_frame' ), 10, 0 );
 
+		add_filter( 'tve_main_js_dependencies', array( __CLASS__, 'tqb_main_js_dependencies' ) );
+
 		/**
 		 * Adds extra SVG icons to editor page
 		 */
@@ -270,6 +272,11 @@ class TCB_Hooks {
 		add_filter( 'tcb_main_frame_localize', array( __CLASS__, 'tcb_localize' ) );
 
 		/**
+		 * Search thrive quiz builder variations if they have a specific string in their architect content
+		 */
+		add_filter( 'tcb_architect_content_has_string', array( __CLASS__, 'search_string_in_design_content' ), 13, 3 );
+
+		/**
 		 * Add custom post types to post visibility options blacklist
 		 */
 		add_filter( 'tcb_post_visibility_options_availability', array( __CLASS__, 'tve_tqb_post_visibility_options' ) );
@@ -303,6 +310,16 @@ class TCB_Hooks {
 		return $post_types;
 	}
 
+	public static function search_string_in_design_content( $has_string, $string, $post_id ) {
+		if ( ! $has_string ) {
+			global $tqbdb;
+			if ( $tqbdb->search_string_in_designs( $string ) ) {
+				$has_string = true;
+			}
+		}
+
+		return $has_string;
+	}
 
 	public static function dequeue_mm() {
 		wp_dequeue_script( 'mm-common-core.js' );
@@ -355,7 +372,7 @@ class TCB_Hooks {
 
 		$fields[] = array(
 			'id'          => 'mapping_quiz_result',
-			'placeholder' => __( 'Result of quiz', Thrive_Quiz_Builder::T ),
+			'placeholder' => __( 'Result of quiz', 'thrive-quiz-builder' ),
 		);
 
 		return $fields;
@@ -491,13 +508,13 @@ class TCB_Hooks {
 				'security'             => wp_create_nonce( self::SECURITY_NONCE ),
 				'kb_next_step_article' => Thrive_Quiz_Builder::KB_NEXT_STEP_ARTICLE,
 				'L'                    => array(
-					'alert_choose_tpl'                    => __( 'Please choose a template', Thrive_Quiz_Builder::T ),
-					'tpl_name_required'                   => __( 'Please enter a template name, it will be easier to reload it after.', Thrive_Quiz_Builder::T ),
-					'fetching_saved_templates'            => __( 'Fetching saved templates...', Thrive_Quiz_Builder::T ),
-					'intervals_min_val_cannot_be_changed' => __( 'The minimum value cannot be changed!', Thrive_Quiz_Builder::T ),
-					'intervals_max_val_cannot_be_changed' => __( 'The maximum value cannot be changed!', Thrive_Quiz_Builder::T ),
-					'min_value_limit'                     => __( 'The minimum value cannot be less than ', Thrive_Quiz_Builder::T ),
-					'max_value_limit'                     => __( 'The maximum value cannot be greater than ', Thrive_Quiz_Builder::T ),
+					'alert_choose_tpl'                    => __( 'Please choose a template', 'thrive-quiz-builder' ),
+					'tpl_name_required'                   => __( 'Please enter a template name, it will be easier to reload it after.', 'thrive-quiz-builder' ),
+					'fetching_saved_templates'            => __( 'Fetching saved templates...', 'thrive-quiz-builder' ),
+					'intervals_min_val_cannot_be_changed' => __( 'The minimum value cannot be changed!', 'thrive-quiz-builder' ),
+					'intervals_max_val_cannot_be_changed' => __( 'The maximum value cannot be changed!', 'thrive-quiz-builder' ),
+					'min_value_limit'                     => __( 'The minimum value cannot be less than ', 'thrive-quiz-builder' ),
+					'max_value_limit'                     => __( 'The maximum value cannot be greater than ', 'thrive-quiz-builder' ),
 				),
 			);
 			tqb_enqueue_script( 'tqb-internal-editor', tqb()->plugin_url( 'tcb-bridge/assets/js/tqb-tcb-internal.min.js' ), array( 'tve-main' ) );
@@ -505,27 +522,30 @@ class TCB_Hooks {
 
 			tqb_enqueue_style( 'tqb-main-frame-css', tqb()->plugin_url( 'tcb-bridge/assets/css/main-frame.css' ) );
 		} else {
-			$quizzes      = array();
-			$temp_quizzes = TQB_Quiz_Manager::get_quizzes();
-			foreach ( $temp_quizzes as $quiz ) {
-				if ( false === $quiz->validation['valid'] ) {
-					continue;
-				}
-
-				$quizzes[] = array(
-					'id'    => $quiz->ID,
-					'label' => $quiz->post_title,
-				);
-			}
-
-			tqb_enqueue_script( 'tqb-external-editor', tqb()->plugin_url( 'tcb-bridge/assets/js/tqb-tcb-external.min.js' ), array( 'tve-main' ) );
-			wp_localize_script( 'tqb-external-editor', 'tqb_page_data', array(
+			tqb_enqueue_script( 'tqb-external-editor', tqb()->plugin_url( 'tcb-bridge/assets/js/tqb-tcb-external.min.js' ) );
+			wp_localize_script( 'tqb-external-editor', 'TQB', array(
 				'action'   => 'tcb-tqb-quiz-action',
 				'ajaxurl'  => admin_url( 'admin-ajax.php' ),
 				'security' => wp_create_nonce( 'tqb_frontend_ajax_request' ),
-				'quizzes'  => $quizzes,
+				'quizzes'  => TQB_Quiz::get_items_for_architect_integration(),
 			) );
 		}
+	}
+
+	/**
+	 * Inject the editor js file as a dependency over the tve-main file
+	 * For now we do this only for tqb-external-editor.js
+	 *
+	 * @param array $dependencies
+	 *
+	 * @return array
+	 */
+	public static function tqb_main_js_dependencies( $dependencies = array() ) {
+		if ( ! static::is_editable( get_post_type() ) ) {
+			$dependencies[] = 'tqb-external-editor';
+		}
+
+		return $dependencies;
 	}
 
 	/**
@@ -1184,7 +1204,7 @@ class TCB_Hooks {
 		if ( empty( $_POST['post_id'] ) || ! TQB_Product::has_access() || ! current_user_can( 'edit_post', absint( $_POST['post_id'] ) ) || empty( $_POST[ Thrive_Quiz_Builder::VARIATION_QUERY_KEY_NAME ] ) ) {
 			$response = array(
 				'success' => false,
-				'message' => __( 'Invalid Parameters', Thrive_Quiz_Builder::T ),
+				'message' => __( 'Invalid Parameters', 'thrive-quiz-builder' ),
 			);
 
 			return $response;
@@ -1198,7 +1218,7 @@ class TCB_Hooks {
 		if ( empty( $variation ) ) {
 			$response = array(
 				'success' => false,
-				'message' => __( 'Could not find the variation you are editing... Is it possible that someone deleted it from the admin panel?', Thrive_Quiz_Builder::T ),
+				'message' => __( 'Could not find the variation you are editing... Is it possible that someone deleted it from the admin panel?', 'thrive-quiz-builder' ),
 			);
 
 			return $response;
@@ -1399,7 +1419,7 @@ class TCB_Hooks {
 	public static function tqb_editor_custom_content( $variation, $is_editor_or_preview = true ) {
 
 		if ( empty( $variation ) ) {
-			return __( 'Variation cannot be empty', Thrive_Quiz_Builder::T );
+			return __( 'Variation cannot be empty', 'thrive-quiz-builder' );
 		}
 
 		$tve_saved_content = $variation[ Thrive_Quiz_Builder::FIELD_CONTENT ];
@@ -1622,8 +1642,8 @@ class TCB_Hooks {
 	public static function tcb_js_translate( $data ) {
 
 		$data['tqb'] = array(
-			'send_quiz_result'      => __( 'Send quiz result as tag', Thrive_Quiz_Builder::T ),
-			'scroll_settings_saved' => __( 'Scroll settings saved for the quiz', Thrive_Quiz_Builder::T ),
+			'send_quiz_result'      => __( 'Send quiz result as tag', 'thrive-quiz-builder' ),
+			'scroll_settings_saved' => __( 'Scroll settings saved for the quiz', 'thrive-quiz-builder' ),
 		);
 
 		return $data;

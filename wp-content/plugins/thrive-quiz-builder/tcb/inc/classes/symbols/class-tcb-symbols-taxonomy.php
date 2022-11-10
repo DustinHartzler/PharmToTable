@@ -65,7 +65,8 @@ class TCB_Symbols_Taxonomy {
 	}
 
 	public function get_default_terms() {
-		return $this->_default_terms;
+		//take only h&f because others can be deleted in time
+		return array_splice( $this->_default_terms, 0, 2 );
 	}
 
 	public function add_default_term( $term_id ) {

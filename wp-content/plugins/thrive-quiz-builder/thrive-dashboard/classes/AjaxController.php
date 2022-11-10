@@ -280,7 +280,7 @@ class TVE_Dash_AjaxController {
 		$generated_token = get_option( 'tve_dash_generated_token' );
 		if ( empty( $generated_token['token'] ) || empty( $generated_token['referer'] ) ) {
 			return array(
-				'error' => __( 'Invalid request', TVE_DASH_TRANSLATE_DOMAIN ),
+				'error' => __( 'Invalid request', 'thrive-dash' ),
 				'next'  => false,
 			);
 		}
@@ -305,7 +305,7 @@ class TVE_Dash_AjaxController {
 
 		if ( is_wp_error( $response ) ) {
 			return array(
-				'error' => __( 'Error in communication with Thrive Themes', TVE_DASH_TRANSLATE_DOMAIN ),
+				'error' => __( 'Error in communication with Thrive Themes', 'thrive-dash' ),
 				'next'  => true,
 			);
 		}
@@ -362,7 +362,7 @@ class TVE_Dash_AjaxController {
 				}
 
 				return array(
-					'error' => __( 'An error occurred, please try again', TVE_DASH_TRANSLATE_DOMAIN ),
+					'error' => __( 'An error occurred, please try again', 'thrive-dash' ),
 					'next'  => true,
 				);
 			}
@@ -403,10 +403,10 @@ class TVE_Dash_AjaxController {
 				wp_delete_user( $user->ID );
 			}
 
-			return delete_option( 'thrive_token_support' ) && delete_option( 'tve_dash_generated_token' ) ? array( 'success' => isset( $ttw_data->success ) ? $ttw_data->success : __( 'Token has been deleted', TVE_DASH_TRANSLATE_DOMAIN ) ) : array( 'error' => __( 'Token is not deleted', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return delete_option( 'thrive_token_support' ) && delete_option( 'tve_dash_generated_token' ) ? array( 'success' => isset( $ttw_data->success ) ? $ttw_data->success : __( 'Token has been deleted', 'thrive-dash' ) ) : array( 'error' => __( 'Token is not deleted', 'thrive-dash' ) );
 		}
 
-		return array( 'error' => __( 'There is no token to delete', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return array( 'error' => __( 'There is no token to delete', 'thrive-dash' ) );
 	}
 
 	public function activeStateAction() {
@@ -487,7 +487,7 @@ class TVE_Dash_AjaxController {
 					if ( $role === 'administrator' && $capability === TVE_DASH_CAPABILITY ) {
 						$response = array(
 							'success' => false,
-							'message' => __( 'You are not allowed to remove this capability!', TVE_DASH_TRANSLATE_DOMAIN ),
+							'message' => __( 'You are not allowed to remove this capability!', 'thrive-dash' ),
 						);
 					} else {
 						/**
@@ -507,20 +507,20 @@ class TVE_Dash_AjaxController {
 						$success  = $action === 'add' ? $wp_role->has_cap( $capability ) : ! $wp_role->has_cap( $capability );
 						$response = array(
 							'success' => $success,
-							'message' => $success ? __( 'Capability changed successfully', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Changing capability failed', TVE_DASH_TRANSLATE_DOMAIN ),
+							'message' => $success ? __( 'Capability changed successfully', 'thrive-dash' ) : __( 'Changing capability failed', 'thrive-dash' ),
 						);
 					}
 				} else {
 					$response = array(
 						'success' => false,
-						'message' => __( 'This role does not exist anymore', TVE_DASH_TRANSLATE_DOMAIN ),
+						'message' => __( 'This role does not exist anymore', 'thrive-dash' ),
 					);
 				}
 
 			} else {
 				$response = array(
 					'success' => false,
-					'message' => __( 'You do not have this capability', TVE_DASH_TRANSLATE_DOMAIN ),
+					'message' => __( 'You do not have this capability', 'thrive-dash' ),
 				);
 			}
 		}
@@ -547,7 +547,7 @@ class TVE_Dash_AjaxController {
 
 			$response = array(
 				'success' => $success,
-				'message' => $success ? __( 'Functionality changed successfully', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Changing functionality failed', TVE_DASH_TRANSLATE_DOMAIN ),
+				'message' => $success ? __( 'Functionality changed successfully', 'thrive-dash' ) : __( 'Changing functionality failed', 'thrive-dash' ),
 			);
 		}
 
@@ -595,7 +595,7 @@ class TVE_Dash_AjaxController {
 
 			$response = array(
 				'success'                 => $success,
-				'message'                 => $success ? __( 'Default values were set successfully', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Changing functionality failed', TVE_DASH_TRANSLATE_DOMAIN ),
+				'message'                 => $success ? __( 'Default values were set successfully', 'thrive-dash' ) : __( 'Changing functionality failed', 'thrive-dash' ),
 				'updated_products'        => $updated_products,
 				'updated_functionalities' => $updated_functionalities,
 			);

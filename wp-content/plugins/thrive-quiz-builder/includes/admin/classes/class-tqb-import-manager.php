@@ -88,14 +88,14 @@ class TQB_Import_Manager {
 
 		if ( $result instanceof WP_Error ) {
 			umask( $old_umask );
-			throw new Exception( __( 'Could not extract the archive file', Thrive_Quiz_Builder::T ) );
+			throw new Exception( __( 'Could not extract the archive file', 'thrive-quiz-builder' ) );
 		}
 
 		$structure = trailingslashit( $this->_get_imports_path() ) . 'structure.json';
 		$questions = trailingslashit( $this->_get_imports_path() ) . 'questions.json';
 
 		if ( ! $wp_filesystem->is_file( $questions ) || ! $wp_filesystem->is_file( $structure ) ) {
-			throw new Exception( __( 'Invalid zip file', Thrive_Quiz_Builder::T ) );
+			throw new Exception( __( 'Invalid zip file', 'thrive-quiz-builder' ) );
 		}
 	}
 
@@ -114,7 +114,7 @@ class TQB_Import_Manager {
 		}
 
 		if ( ! empty( $this->wp_upload_dir['error'] ) ) {
-			throw new Exception( sprintf( __( 'Could not determine uploads folder (%s)', Thrive_Quiz_Builder::T ), $this->wp_upload_dir['error'] ) );
+			throw new Exception( sprintf( __( 'Could not determine uploads folder (%s)', 'thrive-quiz-builder' ), $this->wp_upload_dir['error'] ) );
 		}
 
 		return $this->wp_upload_dir;
@@ -151,7 +151,7 @@ class TQB_Import_Manager {
 		}
 
 		if ( ! $is_valid ) {
-			throw new Exception( __( 'Invalid File', Thrive_Quiz_Builder::T ) );
+			throw new Exception( __( 'Invalid File', 'thrive-quiz-builder' ) );
 		}
 	}
 
@@ -185,7 +185,7 @@ class TQB_Import_Manager {
 		$file_content = $this->_get_file_content( 'questions.json' );
 
 		if ( ! $file_content ) {
-			throw new Exception( 'Could not read quiz questions', Thrive_Quiz_Builder::T );
+			throw new Exception( 'Could not read quiz questions', 'thrive-quiz-builder' );
 		}
 
 		$questions = json_decode( $file_content, true );
@@ -227,7 +227,7 @@ class TQB_Import_Manager {
 		$file_content = $this->_get_file_content( 'details.json' );
 
 		if ( ! $file_content ) {
-			throw new Exception( 'Could not read quiz details', Thrive_Quiz_Builder::T );
+			throw new Exception( 'Could not read quiz details', 'thrive-quiz-builder' );
 		}
 
 		$quiz_details = json_decode( $file_content, true );
@@ -241,7 +241,7 @@ class TQB_Import_Manager {
 
 
 		if ( ! $quiz_id ) {
-			throw new Exception( __( 'Could not import quiz details', Thrive_Quiz_Builder::T ) );
+			throw new Exception( __( 'Could not import quiz details', 'thrive-quiz-builder' ) );
 		}
 
 		TQB_Post_meta::update_quiz_type_meta(

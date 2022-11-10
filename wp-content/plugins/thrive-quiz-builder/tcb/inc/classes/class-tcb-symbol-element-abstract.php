@@ -37,7 +37,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 * @return array
 	 */
 	public function own_components() {
-		return array();
+		return [];
 	}
 
 	/**
@@ -105,8 +105,8 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	/**
 	 * Get all symbols
 	 */
-	public function get_all( $args ) {
-		$result   = array();
+	public function get_all( $args, $is_localize = false ) {
+		$result   = [];
 		$defaults = array(
 			'post_type'      => TCB_Symbols_Post_Type::SYMBOL_POST_TYPE,
 			'posts_per_page' => - 1,
@@ -156,7 +156,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 
 		ob_start(); // some plugins echo output through shortcodes causing the ajax request to be misshaped
 		foreach ( $symbols as $symbol ) {
-			$result['local'][ $symbol->ID ] = $this->prepare_symbol( $symbol ) + array( 'is_local' => 1 );
+			$result['local'][ $symbol->ID ] = $this->prepare_symbol( $symbol, $is_localize ) + array( 'is_local' => 1 );
 		}
 		ob_end_clean();
 
@@ -188,29 +188,37 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 * Prepare symbol before listing in TAR
 	 *
 	 * @param WP_Post $symbol
+	 * @param bool $is_localize
 	 *
 	 * @return array
 	 */
-	public function prepare_symbol( $symbol ) {
-
-		$symbol_data = array();
+	public function prepare_symbol( $symbol, $is_localize = false ) {
+		$symbol_data = [];
 
 		if ( $symbol instanceof WP_Post && $symbol->post_status === 'publish' ) {
-			$content = TCB_Symbol_Template::render_content( array( 'id' => $symbol->ID ) );
 			$globals = get_post_meta( $symbol->ID, 'tve_globals', true );
+
 			if ( empty( $globals ) ) {
-				$globals = array();
+				$globals = [];
 			}
 
-			$symbol_data = array(
+			$symbol_data = [
 				'id'          => $symbol->ID,
-				'content'     => $content,
 				'post_title'  => $symbol->post_title,
 				'config'      => $this->_get_symbol_config( $symbol ),
-				'css'         => $this->get_symbol_css( $symbol->ID ),
-				'thumb'       => TCB_Utils::get_thumb_data( $symbol->ID, TCB_Symbols_Post_Type::SYMBOL_THUMBS_FOLDER, static::get_default_thumb_placeholder() ),
+				'thumb'       => TCB_Utils::get_thumb_data( $symbol->ID, TCB_Symbols_Post_Type::SYMBOL_THUMBS_FOLDER, TCB_Utils::get_placeholder_data() ),
 				'tve_globals' => $globals,
-			);
+			];
+
+			if ( ! $is_localize ) {
+				$symbol_data = array_merge(
+					$symbol_data,
+					[
+						'content' => TCB_Symbol_Template::render_content( [ 'id' => $symbol->ID ] ),
+						'css'     => $this->get_symbol_css( $symbol->ID ),
+					]
+				);
+			}
 		}
 
 		/**
@@ -219,20 +227,6 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		 * @param array $symbol_data
 		 */
 		return apply_filters( 'tcb_symbol_data_before_return', $symbol_data );
-	}
-
-	/**
-	 * Return the default symbol preview placeholder data
-	 *
-	 * @return array
-	 */
-	public static function get_default_thumb_placeholder() {
-		return array(
-			'url' => tve_editor_url( 'admin/assets/images/no-template-preview.jpg' ),
-			/* hardcoded sizes taken from 'no-template-preview.jpg' */
-			'h'   => '248',
-			'w'   => '520',
-		);
 	}
 
 	/**
@@ -282,6 +276,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		 */
 		$symbol_data = array_merge( array(
 			'has_icons' => 0,
+			'class'     => '',
 		), $symbol_data );
 
 		/**
@@ -293,6 +288,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		update_post_meta( $symbol_data['id'], 'tve_custom_css', $symbol_data['css'] );
 		update_post_meta( $symbol_data['id'], 'tve_globals', $symbol_data['tve_globals'] );
 		update_post_meta( $symbol_data['id'], 'thrive_icon_pack', $symbol_data['has_icons'] );
+		update_post_meta( $symbol_data['id'], 'tve_extra_class', $symbol_data['class'] );
 
 		$symbol = get_post( $symbol_data['id'] );
 
@@ -363,7 +359,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		), $symbol_data );
 
 		//if we are sending the category than assign the symbol to it
-		$terms = isset( $symbol_data['term_id'] ) ? array( $symbol_data['term_id'] ) : array();
+		$terms = isset( $symbol_data['term_id'] ) ? array( $symbol_data['term_id'] ) : [];
 		wp_set_post_terms( $post_id, $terms, TCB_Symbols_Taxonomy::SYMBOLS_TAXONOMY );
 
 		/**
@@ -417,6 +413,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		update_post_meta( $post_id, 'tve_custom_css', $symbol_data['css'] );
 		update_post_meta( $post_id, 'tve_globals', $symbol_data['tve_globals'] );
 		update_post_meta( $post_id, 'thrive_icon_pack', $symbol_data['has_icons'] );
+		update_post_meta( $post_id, 'tve_extra_class', $symbol_data['class'] );
 
 		\TCB\Lightspeed\Main::handle_optimize_saves( $post_id, $symbol_data );
 	}
@@ -453,7 +450,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	public function generate_preview( $post_id, $element_type = 'symbol' ) {
 
 		add_filter( 'upload_dir', array( $this, 'upload_dir' ) );
-		$preview_file = ! empty( $_FILES['preview_file'] ) ? $_FILES['preview_file'] : array(); // phpcs:ignore
+		$preview_file = ! empty( $_FILES['preview_file'] ) ? $_FILES['preview_file'] : []; // phpcs:ignore
 		$moved_file   = wp_handle_upload( $preview_file, array(
 			'action'                   => TCB_Editor_Ajax::ACTION,
 			'unique_filename_callback' => array( $this, 'get_preview_filename' ),
@@ -525,15 +522,15 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_cloud_templates( $args = array() ) {
-		$result          = array();
+	public function get_cloud_templates( $args = [] ) {
+		$result          = [];
 		$cloud_templates = parent::get_cloud_templates( $args );
 
 		if ( is_wp_error( $cloud_templates ) ) {
 			return $cloud_templates;
 		}
 
-		$included_cloud_fields = isset( $args['included_cloud_fields'] ) ? $args['included_cloud_fields'] : array();
+		$included_cloud_fields = isset( $args['included_cloud_fields'] ) ? $args['included_cloud_fields'] : [];
 
 		//see how the cloud templates are returned when you have elements of that type or when you don't
 		if ( ! empty( $cloud_templates ) ) {

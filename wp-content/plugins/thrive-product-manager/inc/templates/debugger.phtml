@@ -1,20 +1,10 @@
 <?php if ( Thrive_Product_Manager::is_debug_mode() ) : ?>
-	<?php
-	$urls = array(
-		'local'    => 'http://local.thrivethemes.com',
-		'live'     => 'https://thrivethemes.com',
-		'staging1' => 'https://staging.thrivethemes.com',
-		'staging2' => 'https://staging2.thrivethemes.com',
-		'staging3' => 'https://staging3.thrivethemes.com',
-		'hetzner'  => 'https://staging-hetz.thrivethemes.com',
-	);
-	?>
 	<h2>Debug mode: ON</h2>
 	<ul>
 		<li>
 			<label for="tpm-debug-server">Hit server</label>:
 			<select id="tpm-debug-server">
-				<?php foreach ( $urls as $name => $url ) : ?>
+				<?php foreach ( Thrive_Product_Manager::$ttw_urls as $name => $url ) : ?>
 					<option <?php echo $url === Thrive_Product_Manager::get_ttw_url() ? 'selected="selected"' : '' ?>
 							value="<?php echo $url ?>"><?php echo $name ?></option>
 				<?php endforeach; ?>
@@ -67,13 +57,9 @@
 	( function ( $ ) {
 
 		$( function () {
-
-			var $list = $( '#tpm-debug-server' );
-
-			$list.change( function () {
+			$( '#tpm-debug-server' ).change( function () {
 				window.location = TPM.tpm_url + '&tpm_action=set_url&url=' + this.value;
 			} );
-
 		} );
 
 

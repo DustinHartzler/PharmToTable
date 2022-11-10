@@ -16,7 +16,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 *
 	 * @return bool
 	 */
-	public function isRelated() {
+	public function is_related() {
 		return true;
 	}
 
@@ -25,14 +25,14 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 *
 	 * @return String
 	 */
-	public static function getType() {
+	public static function get_type() {
 		return 'email';
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function get_title() {
 		return 'Campaign Monitor';
 	}
 
@@ -41,9 +41,9 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 *
 	 * @return void
 	 */
-	public function outputSetupForm() {
+	public function output_setup_form() {
 
-		$this->_directFormHtml( 'campaignmonitoremail' );
+		$this->output_controls_html( 'campaignmonitoremail' );
 	}
 
 	/**
@@ -52,21 +52,21 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 * @return mixed|Thrive_Dash_List_Connection_Abstract
 	 * @throws Exception
 	 */
-	public function readCredentials() {
+	public function read_credentials() {
 
 		$key   = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_email( $_POST['connection']['email'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Campaign Monitor key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Campaign Monitor key', 'thrive-dash' ) );
 		}
 
-		$this->setCredentials( compact( 'key', 'email' ) );
+		$this->set_credentials( compact( 'key', 'email' ) );
 
-		$result = $this->testConnection();
+		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Campaign Monitor using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Campaign Monitor using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -78,13 +78,13 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 		 * Try to connect to the autoresponder too
 		 */
 		/** @var Thrive_Dash_List_Connection_CampaignMonitor $related_api */
-		$related_api = Thrive_Dash_List_Manager::connectionInstance( 'campaignmonitor' );
+		$related_api = Thrive_Dash_List_Manager::connection_instance( 'campaignmonitor' );
 
 		$r_result = true;
-		if ( ! $related_api->isConnected() ) {
+		if ( ! $related_api->is_connected() ) {
 			$_POST['connection']['new_connection'] = isset( $_POST['connection']['new_connection'] ) ? sanitize_text_field( $_POST['connection']['new_connection'] ) : 1;
 
-			$r_result = $related_api->readCredentials();
+			$r_result = $related_api->read_credentials();
 		}
 
 		if ( $r_result !== true ) {
@@ -93,7 +93,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 			return $this->error( $r_result );
 		}
 
-		return $this->success( __( 'Campaign Monitor connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Campaign Monitor connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -102,10 +102,10 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 * @return bool|string true for success or error message for failure
 	 * @throws Exception
 	 */
-	public function testConnection() {
+	public function test_connection() {
 
 		/** @var Thrive_Dash_Api_CampaignMonitor $cm */
-		$cm         = $this->getApi();
+		$cm         = $this->get_api();
 		$from_email = '';
 		$to         = '';
 
@@ -166,17 +166,17 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 */
 	public function sendEmail( $post_data ) {
 
-		$cm = $this->getApi();
+		$cm = $this->get_api();
 
 		$asset = get_post( $post_data['_asset_group'] );
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );
 		$subject = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_subject', true );
 
-		if ( $subject == '' ) {
+		if ( $subject === '' ) {
 			$subject = get_option( 'tve_leads_asset_mail_subject' );
 		}
 
@@ -190,7 +190,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 
 		$html_content = $asset->post_content;
 
-		if ( $html_content == '' ) {
+		if ( $html_content === '' ) {
 			$html_content = get_option( 'tve_leads_asset_mail_body' );
 		}
 
@@ -253,7 +253,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 *
 	 * @return mixed
 	 */
-	protected function _apiInstance() {
+	protected function get_api_instance() {
 		return new Thrive_Dash_Api_CampaignMonitor( $this->param( 'key' ) );
 	}
 
@@ -262,7 +262,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 *
 	 * @return array
 	 */
-	protected function _getLists() {
+	protected function _get_lists() {
 		return array();
 	}
 
@@ -274,7 +274,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 *
 	 * @return bool|string true for success or string error message for failure
 	 */
-	public function addSubscriber( $list_identifier, $arguments ) {
+	public function add_subscriber( $list_identifier, $arguments ) {
 		return true;
 	}
 
@@ -286,7 +286,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 	 * @return bool|string
 	 */
 	public function sendMultipleEmails( $data ) {
-		$cm = $this->getApi();
+		$cm = $this->get_api();
 
 		$message = array(
 			'Subject' => $data['subject'],

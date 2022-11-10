@@ -449,14 +449,16 @@ class TVD_Smart_DB {
 			                    '!' .
 			                    '</span>' .
 			                    $unavailable_name .
-			                    '</span>' .
-			                    '<span class="thrive-tooltip-wrapper">' .
-			                    '<span class="thrive-shortcode-tooltip">' .
-			                    __( 'This global variable hasn\'t been set.  Define your global variables in the', TVE_DASH_TRANSLATE_DOMAIN ) .
-			                    '<br>' .
-			                    '<a><span onClick=window.open("' . add_query_arg( 'page', 'tve_dash_smart_site', admin_url( 'admin.php' ) ) . '","_blank") >' . ' ' . __( ' Global Fields dashboard', TVE_DASH_TRANSLATE_DOMAIN ) . '</span></a>' .
-			                    '</span>' .
 			                    '</span>';
+			if ( empty( $args['hide-tooltip'] ) ) {
+				$unavailable .= '<span class="thrive-tooltip-wrapper">' .
+				                '<span class="thrive-shortcode-tooltip">' .
+				                __( 'This global variable hasn\'t been set.  Define your global variables in the', 'thrive-dash' ) .
+				                '<br>' .
+				                '<a><span onClick=window.open("' . add_query_arg( 'page', 'tve_dash_smart_site', admin_url( 'admin.php' ) ) . '","_blank") >' . ' ' . __( ' Global Fields dashboard', 'thrive-dash' ) . '</span></a>' .
+				                '</span>' .
+				                '</span>';
+			}
 		}
 
 		switch ( (int) $field['type'] ) {
@@ -469,7 +471,9 @@ class TVD_Smart_DB {
 				if ( empty( $field_data['address1'] ) ) {
 					$data = $unavailable;
 				} else {
-					$data = implode( empty( $args['multiline'] ) ? ', ' : '<br>', array_filter( $field_data ) );
+					$address_fields = [ 'address1', 'address2', 'city', 'state', 'zip', 'country' ];
+					$field_data     = array_replace( array_fill_keys( $address_fields, null ), $field_data );
+					$data           = implode( empty( $args['multiline'] ) ? ', ' : '<br>', array_filter( $field_data ) );
 				}
 				break;
 			// phone field
@@ -482,7 +486,18 @@ class TVD_Smart_DB {
 				break;
 			//link field
 			case TVD_Smart_DB::$types['link']:
-				$data = empty( $field_data['url'] ) ? $unavailable : '<a ' . ( ! empty( $args['link-css-attr'] ) ? 'data-css="' . $args['link-css-attr'] . '"' : '' ) . ' href="' . $field_data['url'] . '" target="_blank">' . $field_data['text'] . '</a>';
+				if ( empty( $field_data['url'] ) ) {
+					$data = $unavailable;
+				} else {
+					if ( empty( $args['prevent-link'] ) ) {
+						$link_attr = TVD_Smart_Shortcodes::tvd_decode_link_attributes( $args );
+
+						$field_value = '<a ' . ( ! empty( $args['link-css-attr'] ) ? 'data-css="' . $args['link-css-attr'] . '"' : '' ) . ' href="' . $field_data['url'] . '" target="' . ( ! empty( $link_attr['target'] ) ? $link_attr['target']  : '' ) .'">' . $field_data['text'] . '</a>';
+					} else {
+						$field_value = $field_data['text'];
+					}
+					$data = $field_value;
+				}
 				break;
 			// location field
 			case TVD_Smart_DB::$types['location']:

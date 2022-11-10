@@ -51,7 +51,7 @@ class TCB_Megamenu_Item_Element extends TCB_Menu_Item_Element {
 		return array(
 			'megamenu_item' => array(
 				'config' => array(
-					'HasIconImage'     => array(
+					'HasIconImage' => array(
 						'config'  => array(
 							'name'    => __( 'Display', 'thrive-cb' ),
 							'options' => array(
@@ -64,16 +64,17 @@ class TCB_Megamenu_Item_Element extends TCB_Menu_Item_Element {
 						),
 						'extends' => 'Select',
 					),
-					'ImageSide'   => array(
+					'ImageSide'    => array(
 						'extends' => 'ButtonGroup',
 					),
-					'ColorPicker' => array(
+					'ColorPicker'  => array(
 						'css_suffix' => ' .m-icon',
 						'config'     => array(
-							'label' => __( 'Icon Color', 'thrive-cb' ),
+							'label'     => __( 'Icon Color', 'thrive-cb' ),
+							'important' => true,
 						),
 					),
-					'Slider'      => array(
+					'Slider'       => array(
 						'css_suffix' => ' .m-icon',
 						'config'     => array(
 							'default' => 30,

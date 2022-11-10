@@ -31,14 +31,14 @@ class Thrive_Dash_Api_Html_Renderer {
 				'display'  => 1,
 				'type'     => 'text',
 				'name'     => 'name',
-				'label'    => __( 'Name', TVE_DASH_TRANSLATE_DOMAIN ),
+				'label'    => __( 'Name', 'thrive-dash' ),
 				'required' => false,
 			),
 			'email' => array(
 				'display'    => 1,
 				'type'       => 'email',
 				'name'       => 'email',
-				'label'      => __( 'Email', TVE_DASH_TRANSLATE_DOMAIN ),
+				'label'      => __( 'Email', 'thrive-dash' ),
 				'validation' => 'email',
 				'required'   => true,
 			),
@@ -46,7 +46,7 @@ class Thrive_Dash_Api_Html_Renderer {
 				'display'    => 1,
 				'type'       => 'text',
 				'name'       => 'phone',
-				'label'      => __( 'Phone Number', TVE_DASH_TRANSLATE_DOMAIN ),
+				'label'      => __( 'Phone Number', 'thrive-dash' ),
 				'validation' => 'phone',
 			),
 		);
@@ -56,7 +56,7 @@ class Thrive_Dash_Api_Html_Renderer {
 				'display'    => 0,
 				'type'       => 'password',
 				'name'       => 'password',
-				'label'      => __( 'Password', TVE_DASH_TRANSLATE_DOMAIN ),
+				'label'      => __( 'Password', 'thrive-dash' ),
 				'validation' => 'password',
 				'required'   => false,
 			);
@@ -64,7 +64,7 @@ class Thrive_Dash_Api_Html_Renderer {
 				'display'    => 0,
 				'type'       => 'password',
 				'name'       => 'confirm_password',
-				'label'      => __( 'Confirm Password', TVE_DASH_TRANSLATE_DOMAIN ),
+				'label'      => __( 'Confirm Password', 'thrive-dash' ),
 				'validation' => 'password',
 				'required'   => false,
 			);
@@ -178,12 +178,12 @@ class Thrive_Dash_Api_Html_Renderer {
 	<tr>
 		<?php if ( $this->show_order ) : ?>
 			<th style="width: 1%;">&nbsp;</th><?php endif ?>
-		<th style="width: 10%; text-align: center"><?php echo $this->show_display_options ? esc_html__( 'Display', TVE_DASH_TRANSLATE_DOMAIN ) : esc_html__( 'Field Number', TVE_DASH_TRANSLATE_DOMAIN ); ?></th>
-		<th style="width: 17%;"><?php echo esc_html__( "Field Properties", TVE_DASH_TRANSLATE_DOMAIN ); ?></th>
-		<th style="width: 23%;"><?php echo esc_html__( "Field Label / Description", TVE_DASH_TRANSLATE_DOMAIN ); ?></th>
-		<th style="width: 16%;"><?php echo esc_html__( "Validation", TVE_DASH_TRANSLATE_DOMAIN ) ?></th>
-		<th style="width: 10%;"><?php echo esc_html__( "Required Field", TVE_DASH_TRANSLATE_DOMAIN ); ?></th>
-		<th><?php echo esc_html__( 'Show Icon', TVE_DASH_TRANSLATE_DOMAIN ) ?></th>
+		<th style="width: 10%; text-align: center"><?php echo $this->show_display_options ? esc_html__( 'Display', 'thrive-dash' ) : esc_html__( 'Field Number', 'thrive-dash' ); ?></th>
+		<th style="width: 17%;"><?php echo esc_html__( "Field Properties", 'thrive-dash' ); ?></th>
+		<th style="width: 23%;"><?php echo esc_html__( "Field Label / Description", 'thrive-dash' ); ?></th>
+		<th style="width: 16%;"><?php echo esc_html__( "Validation", 'thrive-dash' ) ?></th>
+		<th style="width: 10%;"><?php echo esc_html__( "Required Field", 'thrive-dash' ); ?></th>
+		<th><?php echo esc_html__( 'Show Icon', 'thrive-dash' ) ?></th>
 	</tr></thead><?php
 		$head = ob_get_contents();
 		ob_end_clean();
@@ -247,7 +247,7 @@ class Thrive_Dash_Api_Html_Renderer {
 			</div>
 			<button class="tve_editor_button tve_editor_button_default tve_lightbox_input_inline tve_click tve_editor_small_button"
 				data-ctrl="function:auto_responder.open_icon_picker"
-				data-field="<?php echo esc_attr( $field ); ?>"><?php echo esc_html__( 'Add icon', TVE_DASH_TRANSLATE_DOMAIN ) ?></button>
+				data-field="<?php echo esc_attr( $field ); ?>"><?php echo esc_html__( 'Add icon', 'thrive-dash' ) ?></button>
 		</td></tr><?php
 		$row = ob_get_contents();
 		ob_end_clean();
@@ -412,11 +412,11 @@ class Thrive_Dash_Api_Html_Renderer {
 		$account  = isset( $this->connection_config['wordpress'] );
 
 		?><select id="validation_<?php echo esc_attr( $field ); ?>:" class="tve_lg_validation_options" data-elem-field="validation">
-		<option value="none"><?php echo esc_html__( "None", TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
-		<option value="email"<?php echo $selected == 'email' ? ' selected="selected"' : '' ?>><?php echo esc_html__( 'Email', TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
-		<option value="phone"<?php echo $selected == 'phone' ? ' selected="selected"' : '' ?>><?php echo esc_html__( 'Phone number', TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
+		<option value="none"><?php echo esc_html__( "None", 'thrive-dash' ) ?></option>
+		<option value="email"<?php echo $selected == 'email' ? ' selected="selected"' : '' ?>><?php echo esc_html__( 'Email', 'thrive-dash' ) ?></option>
+		<option value="phone"<?php echo $selected == 'phone' ? ' selected="selected"' : '' ?>><?php echo esc_html__( 'Phone number', 'thrive-dash' ) ?></option>
 		<?php if ( $account ) : ?>
-			<option value="password"<?php echo $selected == 'password' ? ' selected="selected"' : '' ?>><?php echo esc_html__( 'Password', TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
+			<option value="password"<?php echo $selected == 'password' ? ' selected="selected"' : '' ?>><?php echo esc_html__( 'Password', 'thrive-dash' ) ?></option>
 		<?php endif; ?>
 		</select><?php	}
 

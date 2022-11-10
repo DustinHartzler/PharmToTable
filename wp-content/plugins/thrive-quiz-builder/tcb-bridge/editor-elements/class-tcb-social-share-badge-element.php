@@ -18,7 +18,7 @@ class TCB_Social_Share_Badge_Element extends TCB_Social_Element {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Social Share Badge', Thrive_Quiz_Builder::T );
+		return __( 'Social Share Badge', 'thrive-quiz-builder' );
 	}
 
 	/**
@@ -102,6 +102,6 @@ class TCB_Social_Share_Badge_Element extends TCB_Social_Element {
 	 * @return string
 	 */
 	public function category() {
-		return __( 'Thrive Quiz Builder', Thrive_Quiz_Builder::T );
+		return __( 'Thrive Quiz Builder', 'thrive-quiz-builder' );
 	}
 }

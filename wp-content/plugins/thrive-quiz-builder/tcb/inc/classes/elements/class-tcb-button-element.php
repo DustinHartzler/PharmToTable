@@ -60,6 +60,17 @@ class TCB_Button_Element extends TCB_Cloud_Template_Element_Abstract {
 	}
 
 	/**
+	 * Allow this element to be also styled for active state
+	 *
+	 * The active state class is .tcb-active-state
+	 *
+	 * @return string
+	 */
+	public function active_state_config() {
+		return apply_filters( 'tcb_button_active_state', false );
+	}
+
+	/**
 	 * HTML layout of the element for when it's dragged in the canvas
 	 *
 	 * @return string

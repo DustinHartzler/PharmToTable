@@ -22,7 +22,7 @@ class TCB_Post_List_REST {
 	}
 
 	public function register_routes() {
-		register_rest_route( self::$namespace, self::$route, array(
+		register_rest_route( static::$namespace, static::$route, array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_posts' ),
@@ -30,7 +30,7 @@ class TCB_Post_List_REST {
 			),
 		) );
 
-		register_rest_route( self::$namespace, self::$route . '/html', array(
+		register_rest_route( static::$namespace, static::$route . '/html', array(
 			array(
 				/* This should be READABLE, but a lot of data is sent through this request, and it is appended in the request URL string.
 				 * Because of the really long URL string, there were 414 errors for some users because the server can block requests like these.
@@ -41,7 +41,7 @@ class TCB_Post_List_REST {
 			),
 		) );
 
-		register_rest_route( self::$namespace, self::$route . '/terms', array(
+		register_rest_route( static::$namespace, static::$route . '/terms', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_terms' ),
@@ -49,7 +49,7 @@ class TCB_Post_List_REST {
 			),
 		) );
 
-		register_rest_route( self::$namespace, self::$route . '/authors', array(
+		register_rest_route( static::$namespace, static::$route . '/authors', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_authors' ),
@@ -57,7 +57,7 @@ class TCB_Post_List_REST {
 			),
 		) );
 
-		register_rest_route( self::$namespace, self::$route . '/taxonomies', array(
+		register_rest_route( static::$namespace, static::$route . '/taxonomies', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_taxonomies' ),
@@ -106,7 +106,7 @@ class TCB_Post_List_REST {
 		$taxonomy = $request->get_param( 'taxonomy' );
 		$search   = $request->get_param( 'search' );
 
-		$terms = array();
+		$terms = [];
 
 		if ( ! empty( $taxonomy ) ) {
 
@@ -178,7 +178,7 @@ class TCB_Post_List_REST {
 
 		$all = get_posts( $args );
 
-		$all = apply_filters( 'tcb_filter_rest_products', $all, $request);
+		$all = apply_filters( 'tcb_filter_rest_products', $all, $request );
 
 		$posts = array_map( function ( $item ) {
 			return array(
@@ -244,7 +244,7 @@ class TCB_Post_List_REST {
 		$post_type = $request->get_param( 'post_type' );
 
 		if ( empty( $post_type ) ) {
-			$taxonomies = array();
+			$taxonomies = [];
 		} else {
 			$all = get_object_taxonomies( $post_type, 'object' );
 
@@ -282,25 +282,31 @@ class TCB_Post_List_REST {
 	public function get_html( $request ) {
 		/* if we send a template parameter, we're going to print the post list after that one */
 		$content = $request->get_param( 'content' );
-		$content = str_replace( array( '{({', '})}' ), array( '[', ']' ), $content );
-		$args    = $request->get_param( 'args' );
+
+		if ( ! empty( $content ) ) {
+			$content = str_replace( [ '{({', '})}' ], [ '[', ']' ], $content );
+		}
+
+		$args = $request->get_param( 'args' );
 
 		$args = array_merge(
 			array(
 				'attr'       => array(
 					'total_sticky_count' => 0,
 				),
-				'query'      => array(),
+				'query'      => [],
 				'identifier' => '',
 			),
-			empty( $args ) ? array() : $args
+			empty( $args ) ? [] : $args
 		);
+
+		$total_posts = ! empty( $args['query']['posts_per_page'] ) ? $args['query']['posts_per_page'] : 10;
 
 		/* if the 'get_initial_posts' flag is not active, get the posts normally */
 		if ( empty( $args['query']['get_initial_posts'] ) ) {
 
 			if ( ! isset( $args['query']['rules'] ) ) {
-				$args['query']['rules'] = array();
+				$args['query']['rules'] = [];
 			}
 
 			$posts_per_page = (int) $args['query']['posts_per_page'];
@@ -323,7 +329,7 @@ class TCB_Post_List_REST {
 					}
 				}
 			} else {
-				$sticky_posts           = array();
+				$sticky_posts           = [];
 				$number_of_sticky_posts = 0;
 			}
 
@@ -331,15 +337,20 @@ class TCB_Post_List_REST {
 			if ( $posts_per_page !== $number_of_sticky_posts ) {
 				$query_args = TCB_Post_List::prepare_wp_query_args( $args['query'] );
 
-				$query = new WP_Query( $query_args );
-				$posts = $query->posts;
-				$posts = array_merge( $sticky_posts, $posts );
+				$filters = ! empty( $args['filters'] ) ? $args['filters'] : [];
+
+				$query_args = TCB_Post_List_Filter::filter( $query_args, $filters );
+
+				$query       = new WP_Query( $query_args );
+				$posts       = $query->posts;
+				$total_posts = $query->found_posts;
+				$posts       = array_merge( $sticky_posts, $posts );
 			} else {
 				$posts = $sticky_posts;
 			}
 		} else {
 			/* if the flag is active, use the default query to get the post info we need */
-			$post_ids = empty( $args['query']['post_ids'] ) ? array() : $args['query']['post_ids'];
+			$post_ids = empty( $args['query']['post_ids'] ) ? [] : $args['query']['post_ids'];
 			$posts    = $this->get_existing_posts( $post_ids );
 		}
 
@@ -349,7 +360,7 @@ class TCB_Post_List_REST {
 
 		$post_list = new TCB_Post_List( $args['attr'], $content );
 
-		$results = array();
+		$results = [];
 
 		foreach ( $posts as $key => $post ) {
 			if ( empty( $content ) ) {
@@ -363,8 +374,9 @@ class TCB_Post_List_REST {
 		TCB_Post_List::exit_post_list_render();
 
 		return new WP_REST_Response( array(
-			'posts' => $results,
-			'count' => count( $results ),
+			'total_post_count' => $total_posts,
+			'posts'            => $results,
+			'count'            => count( $results ),
 		) );
 	}
 

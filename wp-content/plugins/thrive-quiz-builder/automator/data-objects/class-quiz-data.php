@@ -40,7 +40,7 @@ class Quiz_Data extends Data_Object {
 		if ( ! empty( $param['quiz_id'] ) ) {
 			return array(
 				'quiz_id'                => $param['quiz_id'],
-				'quiz_title'             => $param['quiz_name'],
+				'quiz_title'             => \html_entity_decode( $param['quiz_name'] ),
 				'quiz_type'              => \TQB_Post_meta::get_quiz_type_meta( $param['quiz_id'], true ),
 				'quiz_number_result'     => (float) str_replace( '%', '', $param['result'] ),
 				'quiz_text_result'       => $param['result'],

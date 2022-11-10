@@ -265,6 +265,8 @@ class Main {
 			'tvo_capture',
 			'tvo_display',
 			'tcb_content_template',
+			'shortcodesultimate', /* 'Shortcodes Ultimate' plugin */
+			'tm_global_cp', /* 'Extra Checkout Options for WooCommerce TM Extra Product Options' plugin */
 		] );
 	}
 

@@ -24,7 +24,7 @@ class Body_Wrapper extends \TCB_Cloud_Template_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'WordPress Login Page', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'WordPress Login Page', 'thrive-dash' );
 	}
 
 	/**

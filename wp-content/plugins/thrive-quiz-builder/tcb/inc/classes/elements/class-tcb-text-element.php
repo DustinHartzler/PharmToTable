@@ -244,7 +244,7 @@ class TCB_Text_Element extends TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function category() {
-		return self::get_thrive_basic_label();
+		return static::get_thrive_basic_label();
 	}
 
 	/**

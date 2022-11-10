@@ -80,7 +80,7 @@ class TPM_Product_List {
 			return array();
 		}
 
-		if ( Thrive_Product_Manager::CACHE_ENABLED && ( $products = get_transient( self::NAME ) ) !== false ) {
+		if ( Thrive_Product_Manager::CACHE_ENABLED && ( $products = tpm_get_transient( self::NAME ) ) !== false ) {
 
 			return $products;
 		}
@@ -112,7 +112,7 @@ class TPM_Product_List {
 		}
 
 		if ( ! empty( $products ) ) {
-			set_transient( self::NAME, $products, self::CACHE_LIFE_TIME );
+			tpm_set_transient( self::NAME, $products, self::CACHE_LIFE_TIME );
 		}
 
 		return $products;
@@ -183,6 +183,6 @@ class TPM_Product_List {
 	 */
 	public function clear_cache() {
 
-		delete_transient( self::NAME );
+		tpm_delete_transient( self::NAME );
 	}
 }

@@ -52,20 +52,41 @@ class Gutenberg {
 	}
 
 	public static function needs_gutenberg_assets() {
-		$id                 = get_the_ID();
-		$is_lp              = tve_post_is_landing_page( $id );
-		$gutenberg_disabled = static::is_gutenberg_disabled( $is_lp );
-		$gutenberg_key      = $is_lp ? static::DISABLE_GUTENBERG_LP : static::DISABLE_GUTENBERG;
-		$has_gutenberg      = get_post_meta( $id, $gutenberg_key, true );
+		$id = get_the_ID();
 
-		return
-			( empty( get_post_meta( $id, 'tcb2_ready', true ) ) ||
-			  ! isset( $has_gutenberg ) ||
-			  ! empty( $has_gutenberg ) ||
-			  ! $gutenberg_disabled ||
-			  ! empty( $_GET['force-all-js'] ) ||
-			  is_editor_page_raw() || /* never optimize editor JS */
-			  ! empty( get_post_meta( $id, static::HAS_GUTENBERG, true ) ) ); /* make sure the meta is set */
+		if ( ! empty( $_GET['force-all-js'] ) || is_editor_page_raw() || empty( get_post_meta( $id, 'tcb2_ready', true ) ) ) {
+			return true;
+		}
+
+		$has_gutenberg = static::process_gutenberg_meta( $id );
+
+		return ! empty( get_post_meta( $id, static::HAS_GUTENBERG, true ) ) && $has_gutenberg;
+	}
+
+	/**
+	 * Process the gutenberg meta at the post level
+	 *
+	 * @param $id
+	 *
+	 * @return bool
+	 */
+	public static function process_gutenberg_meta( $id ) {
+		$gutenberg_meta = get_post_meta( $id, static::DISABLE_GUTENBERG, true );
+		/* for enabled */
+		$has_gutenberg  = true;
+
+		if ( $gutenberg_meta === '' ) {
+			/* for inherit */
+			$is_lp              = tve_post_is_landing_page( $id );
+			$gutenberg_disabled = static::is_gutenberg_disabled( $is_lp );
+
+			$has_gutenberg = ! $gutenberg_disabled;
+		} else if ( $gutenberg_meta === '0' ) {
+			/* for disabled */
+			$has_gutenberg = false;
+		}
+
+		return $has_gutenberg;
 	}
 
 	/**
@@ -82,7 +103,7 @@ class Gutenberg {
 
 		$post_content = $post->post_content;
 
-		$data = $post_content && strpos( $post_content, 'wp-block' ) !== false ? [ 'gutenberg' ] : [];
+		$data = $post_content && (strpos( $post_content, 'wp-block' ) !== false || strpos( $post_content, '/wp:' ) !== false) ? [ 'gutenberg' ] : [];
 
 		update_post_meta( $post_id, static::HAS_GUTENBERG, $data );
 	}

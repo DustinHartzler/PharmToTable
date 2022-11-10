@@ -27,7 +27,7 @@ class Woocommerce {
 	public static function get_woocommerce_assets( $module = '', $key = '' ) {
 		$data = [
 			'woo'      => [
-				'identifier' => '.woocommerce, .products, .tcb-woo-mini-cart, .thrive-shop, [data-block-name^="woocommerce"]',
+				'identifier' => '.woocommerce, .products, .product, .tcb-woo-mini-cart, .thrive-shop, [data-block-name^="woocommerce"]',
 			],
 			'woo-cart' => [
 				'identifier' => '.add_to_cart_button, .woocommerce-cart, .tcb-woo-mini-cart',

@@ -49,6 +49,11 @@ class TQB_Post_meta {
 	const META_NAME_FOR_GDPR_USER_CONSENT = 'tqb_quiz_page_gdpr_user_consent';
 
 	/**
+	 * Skip Optin Meta Key
+	 */
+	const META_NAME_FOR_SKIP_OPTIN = 'tqb_quiz_page_skip_optin';
+
+	/**
 	 * Updates the quiz type meta
 	 *
 	 * @param $post_id
@@ -244,6 +249,7 @@ class TQB_Post_meta {
 
 	/**
 	 * Updates Quiz Page Meta with the user consent action
+	 * Dynamic Function. Called from class-tqb-admin-ajax-controller.php => page_action
 	 *
 	 * @param $post_id
 	 * @param $consent - can be 1 or 0
@@ -264,6 +270,31 @@ class TQB_Post_meta {
 	 */
 	public static function get_quiz_page_gdpr_user_consent( $post_id ) {
 		return get_post_meta( $post_id, self::META_NAME_FOR_GDPR_USER_CONSENT, true );
+	}
+
+	/**
+	 * Update Quiz Optin Page meta
+	 * Dynamic Function. Called from class-tqb-admin-ajax-controller.php => page_action
+	 *
+	 * @param int $post_id
+	 * @param int $value
+	 *
+	 * @return bool|int
+	 */
+	public static function update_quiz_page_skip_optin( $post_id, $value ) {
+		return update_post_meta( $post_id, static::META_NAME_FOR_SKIP_OPTIN, $value );
+	}
+
+	/**
+	 * Returns the quiz option page meta
+	 * Returns 1 if the option page should be skipped for logged in users
+	 *
+	 * @param int $post_id
+	 *
+	 * @return int
+	 */
+	public static function get_quiz_page_skip_optin( $post_id ) {
+		return (int) get_post_meta( $post_id, static::META_NAME_FOR_SKIP_OPTIN, true );
 	}
 
 }

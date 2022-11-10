@@ -129,7 +129,7 @@ class Thrive_Dash_Api_ConstantContact {
 
 
 		if ( $type === 'put' ) {
-			$args['method'] = 'put';
+			$args['method'] = 'PUT';
 		}
 
 		$response = $fn( $url, $args );

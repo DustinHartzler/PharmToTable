@@ -90,9 +90,31 @@ class TPM_Product_Theme_Builder extends TPM_Product_Theme {
 		if ( $installed && ! $this->previously_installed && ! is_wp_error( $installed ) ) {
 			$skin      = TPM_Product_List::get_instance()->get_product_instance( TPM_Product_Skin::DEFAULT_TAG );
 			$installed = $skin->install( $credentials );
+
+			if ( ! is_wp_error( $installed ) ) {
+				static::set_fresh_install_flag( 1 );
+			}
 		}
 
 		return $installed;
+	}
+
+	/**
+	 * Set a flag to let the theme know if the user installed TTB for the first time
+	 * Also called from TTB
+	 *
+	 * @param $value
+	 */
+	public static function set_fresh_install_flag( $value ) {
+		update_option( 'thrive_theme_is_fresh_install', $value );
+	}
+
+	/**
+	 * Check if the fresh install flag is set, defaulting to 0. Also called from TTB
+	 * @return bool
+	 */
+	public static function is_fresh_install() {
+		return (int) get_option( 'thrive_theme_is_fresh_install', 0 ) === 1;
 	}
 
 	/**

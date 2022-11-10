@@ -88,6 +88,14 @@ class TCB_Logo_Element extends TCB_Image_Element {
 					),
 					'extends' => 'ButtonGroup',
 				),
+				'ImageLoading'          => array(
+					'config'  => array(
+						'name'    => '',
+						'label'   => __( 'Lazy-load image', 'thrive-cb' ),
+						'default' => true,
+					),
+					'extends' => 'Switch',
+				),
 				'ImageAltText'          => array(
 					'config'  => array(
 						'label' => __( 'Alt Text', 'thrive-cb' ),

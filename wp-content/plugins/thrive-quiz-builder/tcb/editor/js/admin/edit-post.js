@@ -1,77 +1,27 @@
 ( $ => {
 
-	class TCBYoastPlugin {
-		static register() {
-			YoastSEO.app.registerPlugin( 'tcbYoastPlugin', {status: 'loading'} );
+	const TCBYoastPlugin = require( './classes/tcb-yoast-plugin' ),
+		TCBRankMathPlugin = require( './classes/tcb-rankmath-plugin' ),
+		RankMathInstance = new TCBRankMathPlugin(),
+		YoastInstance = new TCBYoastPlugin();
 
-			TCBYoastPlugin.fetchData()
-		}
-
-		static fetchData() {
-			$.ajax( {
-				url: ajaxurl,
-				type: 'post',
-				dataType: 'json',
-				data: {
-					post_id: TCB_Post_Edit_Data.post_id,
-					action: 'get_tcb_content'
-				}
-			} ).done( response => {
-				YoastSEO.app.pluginReady( 'tcbYoastPlugin' );
-
-				/**
-				 * @param modification    {string}    The name of the filter
-				 * @param callable        {function}  The callable
-				 * @param pluginName      {string}    The plugin that is registering the modification.
-				 * @param priority        {number}    (optional) Used to specify the order in which the callables
-				 *                                    associated with a particular filter are called. Lower numbers
-				 *                                    correspond with earlier execution.
-				 */
-				YoastSEO.app.registerModification( 'content', content => TCBYoastPlugin.parseTCBContent( content, response.content ), 'tcbYoastPlugin', 5 );
-			} );
-		}
-
-		static parseTCBContent( content, architectContent ) {
-			//remove empty tags because yoast kind fails on parse here
-			if ( architectContent ) {
-				const contentSelector = '.tcb-style-wrap',
-					$content = $( '<div>' ).append( $( architectContent ).find( contentSelector ).addBack( contentSelector ) );
-
-				$content.find( '*:empty:not(img,input,br)' ).remove();
-
-				architectContent = $content[ 0 ].innerHTML;
-			}
-
-			return architectContent ? architectContent : content;
-		}
-	}
+	window.TCBYoastPlugin = TCBYoastPlugin;
 
 	/**
 	 * YoastSEO content analysis integration
 	 */
-	$( window ).on( 'YoastSEO:ready', TCBYoastPlugin.register );
+	$( window ).on( 'YoastSEO:ready', () => {
+		YoastInstance.init();
+	} );
 
 	/**
-	 * this is not been used anymore, I don't think we managed to identify whether or not the post has been saved as draft
-	 *
-	 * @param element
+	 * RankMath content analysis integration
 	 */
-	function tve_page_not_ready_notification( element ) {
-		jQuery( element ).pointer( {
-			content: "<h3>You can't edit the post yet!</h3>" +
-			         "<p>In order to edit the post with the Content Builder you have to have:-</p>" +
-			         "<ol><li>Saved the post before (using the 'Save Draft' button)</li>" +
-			         "<li>Set a title for the post / page</li></ol>" +
-			         "<p>Make these changes, and you'll be able to click this button and edit the page!",
-			position: {
-				edge: 'left',
-				align: 'center'
-			},
-			close: function () {
-				// Once the close button is hit
-			}
-		} ).pointer( 'open' );
-	}
+	$( document ).ready( function () {
+		if ( typeof window.rankMath !== 'undefined' ) {
+			RankMathInstance.init();
+		}
+	} );
 
 	function show_loader() {
 		$( '#tcb-admin-page-loader' ).show();

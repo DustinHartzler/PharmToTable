@@ -41,17 +41,9 @@ if ( is_admin() ) {
  * Build transient from TTW API with videos URLs
  */
 function tve_api_video_urls() {
+	if ( tve_get_current_screen_key() === 'admin_page_tve_dash_api_connect' ) {
 
-	$allowed_screens = array(
-		'admin_page_tve_dash_api_connect',
-	);
-
-	$current_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-
-	// On allowed screens
-	if ( ! empty( $current_screen ) && in_array( $current_screen->id, $allowed_screens, true ) ) {
-
-		require_once dirname( __FILE__ ) . '/classes/ApiVideos.php';
+		require_once __DIR__ . '/classes/ApiVideos.php';
 
 		$api_videos = new ApiVideos();
 	}
@@ -67,28 +59,28 @@ add_filter( 'tve_dash_include_ui', 'tve_dash_api_filter_ui_hooks' );
 function tve_dash_api_admin_menu() {
 	remove_submenu_page( 'thrive_admin_options', 'thrive_font_manager' );
 
-	add_submenu_page( null, __( 'API Connections', TVE_DASH_TRANSLATE_DOMAIN ), __( 'API Connections', TVE_DASH_TRANSLATE_DOMAIN ), TVE_DASH_CAPABILITY, 'tve_dash_api_connect', 'tve_dash_api_connect' );
-	add_submenu_page( null, __( 'API Connections Error Log', TVE_DASH_TRANSLATE_DOMAIN ), __( 'API Connections Error Log', TVE_DASH_TRANSLATE_DOMAIN ), TVE_DASH_CAPABILITY, 'tve_dash_api_error_log', 'tve_dash_api_error_log' );
+	add_submenu_page( null, __( 'API Connections', 'thrive-dash' ), __( 'API Connections', 'thrive-dash' ), TVE_DASH_CAPABILITY, 'tve_dash_api_connect', 'tve_dash_api_connect' );
+	add_submenu_page( null, __( 'API Connections Error Log', 'thrive-dash' ), __( 'API Connections Error Log', 'thrive-dash' ), TVE_DASH_CAPABILITY, 'tve_dash_api_error_log', 'tve_dash_api_error_log' );
 }
 
 /**
  * check for any expired connections (expired access tokens), or tokens that are about to expire and display global warnings / error messages
  */
 function tve_dash_api_admin_notices() {
-	$screen = get_current_screen();
-	if ( $screen && $screen->base == 'admin_page_tve_dash_api_connect' ) {
+	if ( tve_get_current_screen_key( 'base' ) === 'admin_page_tve_dash_api_connect' ) {
 		return;
 	}
 
-	require_once dirname( __FILE__ ) . '/misc.php';
-	$connected_apis = Thrive_Dash_List_Manager::getAvailableAPIs( true );
+	require_once __DIR__ . '/misc.php';
+	$connected_apis = Thrive_Dash_List_Manager::get_available_apis( true );
 	$warnings       = array();
 
-	foreach ( $connected_apis as $instance ) {
-		if ( $instance->param( '_nd' ) ) {
+	foreach ( $connected_apis as $api_instance ) {
+		if ( ! $api_instance instanceof Thrive_Dash_List_Connection_Abstract || $api_instance->param( '_nd' ) ) {
 			continue;
 		}
-		$warnings = array_merge( $warnings, $instance->getWarnings() );
+
+		$warnings = array_merge( $warnings, $api_instance->get_warnings() );
 	}
 
 	$nonce = sprintf( '<span class="nonce" style="display:none">%s</span>', wp_create_nonce( 'tve_api_dismiss' ) );
@@ -108,19 +100,19 @@ function tve_dash_api_admin_notices() {
  * main entry point
  */
 function tve_dash_api_connect() {
-	require_once dirname( __FILE__ ) . '/misc.php';
+	require_once __DIR__ . '/misc.php';
 
-	$available_apis = Thrive_Dash_List_Manager::getAvailableAPIs();
+	$available_apis = Thrive_Dash_List_Manager::get_available_apis();
 	foreach ( $available_apis as $key => $api ) {
 		/** @var Thrive_Dash_List_Connection_Abstract $api */
-		if ( $api->isConnected() || $api->isRelated() ) {
+		if ( $api->is_connected() || $api->is_related() ) {
 			unset( $available_apis[ $key ] );
 		}
 	}
-	$connected_apis = Thrive_Dash_List_Manager::getAvailableAPIs( true );
+	$connected_apis = Thrive_Dash_List_Manager::get_available_apis( true );
 
 	foreach ( $connected_apis as $key => $api ) {
-		if ( $api->isRelated() ) {
+		if ( ! $api instanceof Thrive_Dash_List_Connection_Abstract || $api->is_related() ) {
 			unset( $connected_apis[ $key ] );
 		}
 	}
@@ -139,9 +131,9 @@ function tve_dash_api_connect() {
 
 	$current_key = ! empty( $_REQUEST['api'] ) ? sanitize_text_field( $_REQUEST['api'] ) : '';
 
-	Thrive_Dash_List_Manager::flashMessages();
+	Thrive_Dash_List_Manager::flash_messages();
 
-	include dirname( __FILE__ ) . '/views/admin-list.php';
+	include __DIR__ . '/views/admin-list.php';
 }
 
 /**
@@ -171,7 +163,7 @@ function tve_dash_api_handle_save() {
 	}
 
 	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
-	$connection = Thrive_Dash_List_Manager::connectionInstance( $api );
+	$connection = Thrive_Dash_List_Manager::connection_instance( $api );
 
 	if ( is_null( $connection ) ) {
 		return;
@@ -179,10 +171,10 @@ function tve_dash_api_handle_save() {
 
 	$response = array(
 		'success' => false,
-		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN ),
+		'message' => __( 'Unknown error occurred', 'thrive-dash' ),
 	);
 	if ( ! empty( $_REQUEST['disconnect'] ) ) {
-		$connection->disconnect()->success( $connection->getTitle() . ' ' . __( 'is now disconnected', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$connection->disconnect()->success( $connection->get_title() . ' ' . __( 'is now disconnected', 'thrive-dash' ) );
 		//delete active conection for thrive ovation
 		$active_connection = get_option( 'tvo_api_delivery_service', false );
 		if ( $active_connection && $active_connection == $api ) {
@@ -190,19 +182,19 @@ function tve_dash_api_handle_save() {
 		}
 		tve_dash_remove_api_from_one_click_signups( $api );
 		$response['success'] = true;
-		$response['message'] = __( 'Service disconnected', TVE_DASH_TRANSLATE_DOMAIN );
+		$response['message'] = __( 'Service disconnected', 'thrive-dash' );
 	} elseif ( ! empty( $_REQUEST['test'] ) ) {
-		$result = $connection->testConnection();
+		$result = $connection->test_connection();
 		if ( is_array( $result ) && isset( $result['success'] ) && ! empty( $result['message'] ) ) {
 			$response = $result;
 		} else {
 			$response['success'] = is_string( $result ) ? false : $result;
-			$response['message'] = $response['success'] ? __( 'Connection works', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Connection Error', TVE_DASH_TRANSLATE_DOMAIN );
+			$response['message'] = $response['success'] ? __( 'Connection works', 'thrive-dash' ) : __( 'Connection Error', 'thrive-dash' );
 		}
 	} else {
-		$saved               = $connection->readCredentials();
+		$saved               = $connection->read_credentials();
 		$response['success'] = $saved === true ? true : false;
-		$response['message'] = $saved === true ? __( 'Connection established', TVE_DASH_TRANSLATE_DOMAIN ) : $saved;
+		$response['message'] = $saved === true ? __( 'Connection established', 'thrive-dash' ) : $saved;
 	}
 	/* Check if we need to upgrade an api */
 	if ( ! empty( $_REQUEST['api'] ) ) {
@@ -241,7 +233,7 @@ function tve_dash_api_api_handle_redirect() {
 	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 
 	require_once dirname( __FILE__ ) . '/misc.php';
-	$connection = Thrive_Dash_List_Manager::connectionInstance( sanitize_text_field( $_REQUEST['api'] ) );
+	$connection = Thrive_Dash_List_Manager::connection_instance( sanitize_text_field( $_REQUEST['api'] ) );
 
 	if ( is_null( $connection ) ) {
 		return;
@@ -249,10 +241,10 @@ function tve_dash_api_api_handle_redirect() {
 
 	$response    = array(
 		'success' => false,
-		'message' => __( 'Unknown error occurred', TVE_DASH_TRANSLATE_DOMAIN ),
+		'message' => __( 'Unknown error occurred', 'thrive-dash' ),
 	);
 	$credentials = ! empty( $_POST['connection'] ) ? map_deep( $_POST['connection'], 'sanitize_text_field' ) : array();
-	$connection->setCredentials( $credentials );
+	$connection->set_credentials( $credentials );
 	$result = $connection->getAuthorizeUrl();
 
 	$response['success'] = ( filter_var( $result, FILTER_VALIDATE_URL ) ) === false ? false : true;
@@ -330,8 +322,8 @@ function tve_dash_api_hide_notice() {
 
 	require_once dirname( __FILE__ ) . '/misc.php';
 
-	$connection = Thrive_Dash_List_Manager::connectionInstance( $key );
-	$connection->setParam( '_nd', 1 )->save();
+	$connection = Thrive_Dash_List_Manager::connection_instance( $key );
+	$connection->set_param( '_nd', 1 )->save();
 
 	exit( '1' );
 }

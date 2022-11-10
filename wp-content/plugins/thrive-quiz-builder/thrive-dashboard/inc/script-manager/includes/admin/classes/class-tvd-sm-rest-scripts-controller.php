@@ -107,7 +107,7 @@ class TVD_SM_REST_Scripts_Controller {
 		if ( tah()->tvd_sm_update_option( 'global_lp_scripts', $scripts ) ) {
 			return new WP_REST_Response( $scripts, 200 );
 		} else {
-			return new WP_Error( 'cant-update-order', __( "Couldn't add/update the 'order' field in the database.", TVE_DASH_TRANSLATE_DOMAIN ), array( 'status' => 500 ) );
+			return new WP_Error( 'cant-update-order', __( "Couldn't add/update the 'order' field in the database.", 'thrive-dash' ), array( 'status' => 500 ) );
 		}
 	}
 
@@ -146,7 +146,7 @@ class TVD_SM_REST_Scripts_Controller {
 		if ( tah()->tvd_sm_update_option( 'global_lp_scripts', $scripts ) ) {
 			return new WP_REST_Response( $array_to_add_edit, 200 );
 		} else {
-			return new WP_Error( 'cant-update', __( "Couldn't add/update the fields in the database.", TVE_DASH_TRANSLATE_DOMAIN ), array( 'status' => 500 ) );
+			return new WP_Error( 'cant-update', __( "Couldn't add/update the fields in the database.", 'thrive-dash' ), array( 'status' => 500 ) );
 		}
 	}
 
@@ -165,7 +165,7 @@ class TVD_SM_REST_Scripts_Controller {
 		if ( update_option( 'global_lp_scripts', $scripts ) ) {
 			return new WP_REST_Response( $script_id, 200 );
 		} else {
-			return new WP_Error( 'cant-delete', __( "Couldn't delete the field from the database.", TVE_DASH_TRANSLATE_DOMAIN ), array( 'status' => 500 ) );
+			return new WP_Error( 'cant-delete', __( "Couldn't delete the field from the database.", 'thrive-dash' ), array( 'status' => 500 ) );
 		}
 	}
 

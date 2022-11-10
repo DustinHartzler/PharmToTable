@@ -48,7 +48,7 @@ class Main {
 			$item_path = $path . '/' . $item;
 
 			/* if the item is a file, include it */
-			if ( is_file( $item_path ) ) {
+			if ( is_file( $item_path ) && substr( $item_path, - 3 ) === 'php' ) {
 				$element = include $item_path;
 				if ( ! empty( $element ) ) {
 					static::$elements[ $element->tag() ] = $element;

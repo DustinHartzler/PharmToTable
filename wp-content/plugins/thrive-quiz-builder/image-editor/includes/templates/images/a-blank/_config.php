@@ -16,6 +16,6 @@ $settings['fonts'] = array(
 );
 
 return array(
-	'name'     => __( 'Blank Template', Thrive_Image_Editor::T ),
+	'name'     => __( 'Blank Template', 'thrive-image-editor' ),
 	'settings' => $settings,
 );

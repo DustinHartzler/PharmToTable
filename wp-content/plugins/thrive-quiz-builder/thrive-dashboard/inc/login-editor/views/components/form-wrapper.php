@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-tvd-login-form-wrapper-component" class="tve-component" data-view="FormWrapper">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo esc_html__( 'Form Wrapper', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+		<?php echo esc_html__( 'Form Wrapper', 'thrive-dash' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">

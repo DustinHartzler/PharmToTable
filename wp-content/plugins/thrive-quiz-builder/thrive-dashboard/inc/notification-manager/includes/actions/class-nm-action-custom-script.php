@@ -104,7 +104,7 @@ class TD_NM_Action_Custom_Script extends TD_NM_Action_Abstract {
 			),
 			'quiz_user'     => array(
 				'result'       => $user['points'],
-				'email'        => ! empty( $user['email'] ) ? $user['email'] : __( 'unknown', TVE_DASH_TRANSLATE_DOMAIN ),
+				'email'        => ! empty( $user['email'] ) ? $user['email'] : __( 'unknown', 'thrive-dash' ),
 				'date_started' => $user['date_started'],
 			),
 			'original_data' => $data,

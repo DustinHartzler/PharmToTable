@@ -3,7 +3,7 @@
 class TCB_TQB_Answer_Feedback_Text extends TCB_TQB_QNA_Text {
 
 	public function name() {
-		return __( 'Answer Text', Thrive_Quiz_Builder::T );
+		return __( 'Answer Text', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {

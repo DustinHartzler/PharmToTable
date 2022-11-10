@@ -2,7 +2,7 @@
 /**
  * Thrive Themes - https://thrivethemes.com
  *
- * @package thrive-quiz-builder
+ * @package thrive-graph-editor
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

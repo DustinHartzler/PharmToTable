@@ -54,8 +54,8 @@ class Woo_Refund_Order extends Action {
 	 *
 	 * @return string
 	 */
-	public static function get_app_name() {
-		return 'WooCommerce';
+	public static function get_app_id() {
+		return Woo_App::get_id();
 	}
 
 	/**
@@ -83,12 +83,12 @@ class Woo_Refund_Order extends Action {
 			return false;
 		}
 
-		$order = wc_get_order( $order_data->get_value( 'order_id' ) );
+		$order = wc_get_order( $order_data->get_value( Woo_Order_Id::get_id() ) );
 
 		if ( empty( $order ) ) {
 			return false;
 		}
-		wc_create_refund( array( 'order_id' => $order_data->get_value( 'order_id' ) ) );
+		wc_create_refund( array( 'order_id' => $order_data->get_value( Woo_Order_Id::get_id() ) ) );
 	}
 
 }

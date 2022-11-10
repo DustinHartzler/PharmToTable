@@ -34,6 +34,13 @@ class TQB_Import_Structure_Item {
 	);
 
 	/**
+	 * An array with the allowed meta keys that a structure post can have
+	 *
+	 * @var array
+	 */
+	private $_allowed_post_meta = array( TQB_Post_meta::META_NAME_FOR_SKIP_OPTIN );
+
+	/**
 	 * Map for quiz results/categories
 	 * - key is the old id
 	 * - value is the new id
@@ -106,6 +113,18 @@ class TQB_Import_Structure_Item {
 		);
 
 		$id = wp_insert_post( $args );
+
+		/**
+		 * Search for meta keys inside the post.json and update the new post with the specified metas
+		 */
+		if ( ! empty( $data['meta'] ) && is_array( $data['meta'] ) ) {
+
+			foreach ( $data['meta'] as $meta_key => $meta_value ) {
+				if ( in_array( $meta_key, $this->_allowed_post_meta, true ) ) {
+					update_post_meta( $id, $meta_key, $meta_value );
+				}
+			}
+		}
 
 		$this->page = get_post( $id );
 

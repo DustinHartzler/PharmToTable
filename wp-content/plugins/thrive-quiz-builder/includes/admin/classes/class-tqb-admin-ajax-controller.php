@@ -88,11 +88,11 @@ class TQB_Admin_Ajax_Controller {
 		 * User needs to have TQB capability to use it
 		 */
 		if ( ! TQB_Product::has_access() ) {
-			$this->error( __( 'You do not have this capability', Thrive_Quiz_Builder::T ) );
+			$this->error( __( 'You do not have this capability', 'thrive-quiz-builder' ) );
 		}
 
 		if ( wp_verify_nonce( $this->param( '_nonce' ), Thrive_Quiz_Builder_Admin::NONCE_KEY_AJAX ) === false ) {
-			$this->error( __( 'This page has expired. Please reload and try again', Thrive_Quiz_Builder::T ), 403 );
+			$this->error( __( 'This page has expired. Please reload and try again', 'thrive-quiz-builder' ), 403 );
 		}
 
 		$route = $this->param( 'route' );
@@ -101,7 +101,7 @@ class TQB_Admin_Ajax_Controller {
 		$method_name = $route . '_action';
 
 		if ( ! method_exists( $this, $method_name ) ) {
-			$this->error( sprintf( __( 'Method %s not implemented', Thrive_Quiz_Builder::T ), $method_name ) );
+			$this->error( sprintf( __( 'Method %s not implemented', 'thrive-quiz-builder' ), $method_name ) );
 		}
 
 		return $this->{$method_name}();
@@ -151,7 +151,7 @@ class TQB_Admin_Ajax_Controller {
 					$stats_reset  = $quiz_manager->reset_stats();
 
 					if ( ! $stats_reset ) {
-						$this->error( __( 'Could not reset quiz statistics', Thrive_Quiz_Builder::T ) );
+						$this->error( __( 'Could not reset quiz statistics', 'thrive-quiz-builder' ) );
 					}
 					break;
 				case 'anonymize_results':
@@ -170,7 +170,7 @@ class TQB_Admin_Ajax_Controller {
 				$model        = json_decode( file_get_contents( 'php://input' ), true );
 				$quiz_manager = new TQB_Quiz_Manager();
 				if ( ! ( $quiz_id = $quiz_manager->save_quiz( $model ) ) ) {
-					$this->error( __( 'Could not save', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Could not save', 'thrive-quiz-builder' ) );
 				}
 
 				$images = tie_get_images( $quiz_id );
@@ -193,7 +193,7 @@ class TQB_Admin_Ajax_Controller {
 				$quiz_manager = new TQB_Quiz_Manager( $this->param( 'ID', true ) );
 				$deleted      = $quiz_manager->delete_quiz();
 				if ( ! $deleted ) {
-					$this->error( __( 'Could not delete', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Could not delete', 'thrive-quiz-builder' ) );
 				}
 
 				return $deleted;
@@ -203,7 +203,7 @@ class TQB_Admin_Ajax_Controller {
 				$quiz         = $quiz_manager->get_quiz();
 
 				if ( $quiz === false ) {
-					$this->error( __( 'Quiz not found', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Quiz not found', 'thrive-quiz-builder' ) );
 				}
 
 				return $quiz;
@@ -231,7 +231,7 @@ class TQB_Admin_Ajax_Controller {
 						TQB_Post_meta::update_quiz_style_meta( $model['quiz_id'], $model );
 					}
 				} else {
-					$this->error( __( 'Style could not be saved', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Style could not be saved', 'thrive-quiz-builder' ) );
 				}
 
 				return array( 'style' => $model['style'] );
@@ -315,10 +315,11 @@ class TQB_Admin_Ajax_Controller {
 					$filter['interval']   = empty( $model['interval'] ) ? false : $model['interval'];
 					$filter['start_date'] = empty( $model['start_date'] ) ? null : $model['start_date'];
 					$filter['end_date']   = empty( $model['end_date'] ) ? null : $model['end_date'];
+					$filter['location']   = empty( $model['location'] ) ? null : $model['location'];
 					$reporting_manager    = new TQB_Reporting_Manager( $model['quiz_id'], $model['report_type'] );
 					$data                 = $reporting_manager->get_report( $filter );
 				} else {
-					$this->error( __( 'Something went wrong', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Something went wrong', 'thrive-quiz-builder' ) );
 				}
 
 				return $data;
@@ -346,7 +347,7 @@ class TQB_Admin_Ajax_Controller {
 					$reporting_manager = new TQB_Reporting_Manager( $model['quiz_id'], 'users' );
 					$data              = $reporting_manager->get_users_report( $model );
 				} else {
-					$this->error( __( 'Something went wrong', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Something went wrong', 'thrive-quiz-builder' ) );
 				}
 
 				return $data;
@@ -374,7 +375,7 @@ class TQB_Admin_Ajax_Controller {
 					$reporting_manager = new TQB_Reporting_Manager( $quiz_id, 'users' );
 					$data              = $reporting_manager->get_users_answers( $user_id );
 				} else {
-					$this->error( __( 'Something went wrong', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Something went wrong', 'thrive-quiz-builder' ) );
 				}
 
 				return $data;
@@ -409,7 +410,7 @@ class TQB_Admin_Ajax_Controller {
 					}
 
 				} else {
-					$this->error( __( 'Structure could not be saved', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Structure could not be saved', 'thrive-quiz-builder' ) );
 				}
 
 				return $model;
@@ -471,15 +472,15 @@ class TQB_Admin_Ajax_Controller {
 
 					if ( $quiz_results_modified ) {
 						do_action( 'tqb-quiz-results-modified', $model['ID'], $prev_quiz_results, $return['returned_results'] );
-						$return['responseText'] = __( 'The list of results has changed. Your questions flow and results page might be affected by this change.', Thrive_Quiz_Builder::T );
+						$return['responseText'] = __( 'The list of results has changed. Your questions flow and results page might be affected by this change.', 'thrive-quiz-builder' );
 					} else {
-						$return['responseText'] = __( 'Changes were saved!', Thrive_Quiz_Builder::T );
+						$return['responseText'] = __( 'Changes were saved!', 'thrive-quiz-builder' );
 					}
 
 					$return['model_id'] = $model['ID'];
 
 				} else {
-					$this->error( __( 'Type could not be saved. There was an error while saving the quiz type. Please contact the support team.', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Type could not be saved. There was an error while saving the quiz type. Please contact the support team.', 'thrive-quiz-builder' ) );
 				}
 
 				return $return;
@@ -518,21 +519,24 @@ class TQB_Admin_Ajax_Controller {
 					return $return;
 					break;
 				case 'gdpr_user_consent':
+				case 'skip_optin':
 					$page_id = $this->param( 'ID', 0 );
 					$checked = isset( $_POST['checked'] ) ? (int) $_POST['checked'] : 0;
 
 					$return = array(
 						'ok'  => 0,
-						'msg' => __( 'An error occurred. The page id provided was invalid! Please contact Thrive Support!', Thrive_Quiz_Builder::T ),
+						'msg' => __( 'An error occurred. The page id provided was invalid! Please contact Thrive Support!', 'thrive-quiz-builder' ),
 					);
 
-					if ( ! empty( $page_id ) ) {
-						$page_manager = new TQB_Page_Manager( $page_id );
-						$page_manager->update_user_consent( $checked );
+
+					$func = 'update_quiz_page_' . $this->param( 'custom_action' );
+					if ( ! empty( $page_id ) && method_exists( 'TQB_Post_meta', $func ) ) {
+
+						TQB_Post_meta::$func( $page_id, $checked );
 
 						$return = array(
 							'ok'  => 1,
-							'msg' => __( 'The setting was saved for this quiz page!', Thrive_Quiz_Builder::T ),
+							'msg' => __( 'The setting was saved for this quiz page!', 'thrive-quiz-builder' ),
 						);
 					}
 
@@ -557,10 +561,10 @@ class TQB_Admin_Ajax_Controller {
 					$page_manager = new TQB_Page_Manager( $id );
 					$page         = $page_manager->get_page( false, $viewed );
 					if ( ! $page ) {
-						$this->error( __( 'Item not found', Thrive_Quiz_Builder::T ) );
+						$this->error( __( 'Item not found', 'thrive-quiz-builder' ) );
 					}
 				} else {
-					$this->error( __( 'Item not found', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Item not found', 'thrive-quiz-builder' ) );
 				}
 
 				return $page;
@@ -669,7 +673,7 @@ class TQB_Admin_Ajax_Controller {
 						}
 					}
 				} else {
-					$this->error( __( 'Error while inserting a new variation', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Error while inserting a new variation', 'thrive-quiz-builder' ) );
 				}
 
 				return $model;
@@ -677,7 +681,7 @@ class TQB_Admin_Ajax_Controller {
 			case 'DELETE':
 				$return = TQB_Variation_Manager::delete_variation( array( 'id' => $this->param( 'id', 0 ) ) );
 				if ( empty( $return ) ) {
-					$this->error( __( 'Error while deleting the variation', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Error while deleting the variation', 'thrive-quiz-builder' ) );
 
 					return false;
 				}
@@ -762,7 +766,7 @@ class TQB_Admin_Ajax_Controller {
 				$test  = new TQB_Test_Manager( $this->param( 'id', 0 ) );
 				$model = $test->get_test( array( 'id' => $this->param( 'id', 0 ) ) );
 				if ( ! $model ) {
-					$this->error( __( 'Test not found', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Test not found', 'thrive-quiz-builder' ) );
 				}
 
 				return $model;
@@ -944,11 +948,16 @@ class TQB_Admin_Ajax_Controller {
 			return $results;
 		}
 
-		$args = array(
+		/**
+		 * Filters demo content from the searched posts arguments
+		 */
+		$args = apply_filters( 'tqb_filter_get_posts_args', array(
 			'post_type'      => array( 'post', 'page', 'tva_lesson', 'tva_module' ),
 			's'              => $s,
 			'posts_per_page' => - 1,
-		);
+			'meta_query'     => array(),
+			'exclude'        => array(),
+		) );
 
 		$posts = get_posts( $args );
 		foreach ( $posts as $post ) {
@@ -1044,7 +1053,7 @@ class TQB_Admin_Ajax_Controller {
 			}
 
 			if ( $success ) {
-				$response['message'] = __( 'Step executed with success', Thrive_Quiz_Builder::T );
+				$response['message'] = __( 'Step executed with success', 'thrive-quiz-builder' );
 				$status              = 200;
 			}
 		} catch ( Exception $e ) {
@@ -1052,7 +1061,7 @@ class TQB_Admin_Ajax_Controller {
 		}
 
 		wp_send_json( array_merge( array(
-			'message' => __( 'Something went wrong', Thrive_Quiz_Builder::T ),
+			'message' => __( 'Something went wrong', 'thrive-quiz-builder' ),
 		), $response ), $status );
 		die;
 	}
@@ -1071,7 +1080,7 @@ class TQB_Admin_Ajax_Controller {
 			$import_manager = new TQB_Import_Manager( $file );
 			$quiz_id        = $import_manager->execute();
 
-			$response['message'] = __( 'Quiz Imported Successfully', Thrive_Quiz_Builder::T );
+			$response['message'] = __( 'Quiz Imported Successfully', 'thrive-quiz-builder' );
 			$response['quiz_id'] = $quiz_id;
 			$status              = 200;
 		} catch ( Exception $e ) {
@@ -1079,7 +1088,7 @@ class TQB_Admin_Ajax_Controller {
 		}
 
 		wp_send_json( array_merge( array(
-			'message' => __( 'Something went wrong', Thrive_Quiz_Builder::T ),
+			'message' => __( 'Something went wrong', 'thrive-quiz-builder' ),
 		), $response ), $status );
 		die;
 	}

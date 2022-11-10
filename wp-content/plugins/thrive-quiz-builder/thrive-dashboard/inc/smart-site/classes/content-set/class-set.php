@@ -341,10 +341,11 @@ class Set implements \JsonSerializable {
 	 * @return array
 	 */
 	public static function identify_from_object( $post_or_term, $return_type = 'objects' ) {
-		if ( ! $post_or_term instanceof \WP_Post && ! $post_or_term instanceof \WP_Term ) {
-			return array();
-		}
 		$sets = array();
+
+		if ( ! $post_or_term instanceof \WP_Post && ! $post_or_term instanceof \WP_Term ) {
+			return $sets;
+		}
 
 		/**
 		 * @var Set $set
@@ -470,7 +471,30 @@ class Set implements \JsonSerializable {
 
 		foreach ( $this->rules as $rule ) {
 			if ( true === $rule instanceof Term_Rule && $rule->get_content() === 'tva_courses' ) {
-				$entries = $rule->get_value();
+				if ( $rule->field === Rule::FIELD_TITLE ) {
+					$entries = $rule->get_value();
+				} else {
+					//Dynamic stuff
+					//Fetching courses based on dynamic properties -> such as difficulty, label, topic or author
+					$course_terms = get_terms( [
+						'taxonomy'   => 'tva_courses',
+						'hide_empty' => false,
+						'meta_query' => [
+							'tva_status' => [
+								'key'     => 'tva_status',
+								'value'   => 'private',
+								'compare' => '!=',
+							],
+						],
+					] );
+					$entries      = [];
+					foreach ( $course_terms as $course_term ) {
+						if ( $rule->matches( $course_term ) ) {
+							$entries[] = [ 'id' => $course_term->term_id ];
+						}
+					}
+				}
+
 				if ( ! empty( $entries ) && is_array( $entries[0] ) && array_key_exists( 'id', $entries[0] ) ) {
 					$entries = array_column( $entries, 'id' );
 				}
@@ -489,6 +513,7 @@ class Set implements \JsonSerializable {
 	/**
 	 * @return array
 	 */
+	#[\ReturnTypeWillChange]
 	public function jsonSerialize() {
 		return array(
 			'ID'           => $this->ID,

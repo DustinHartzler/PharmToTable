@@ -90,7 +90,7 @@ class Main {
 			}
 
 			/* if the item is a file, include it */
-			if ( is_file( $item_path ) ) {
+			if ( is_file( $item_path ) && substr( $item_path, - 3 ) === 'php' ) {
 				require_once $item_path;
 
 				/* for each file, dynamically call the init function of the class */

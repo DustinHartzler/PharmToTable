@@ -98,6 +98,7 @@ function tve_hooked_in_template_redirect() {
 		'ultimate-member/index.php',
 		'woocommerce/woocommerce.php',
 		'maintenance/maintenance.php',
+		'simply-schedule-appointments/simply-schedule-appointments.php',
 	);
 
 	foreach ( $hooked_in_template_redirect as $plugin ) {
@@ -727,7 +728,9 @@ add_action( 'wp_head', function () {
 }, PHP_INT_MAX );
 
 /**
- * Compatibility with Oliver POS - A WooCommerce Point of Sale (POS)
+ * Compatibility with:
+ *  -> Oliver POS - A WooCommerce Point of Sale (POS)
+ *  -> Quiz and Survey Master
  *
  * We don't need their styles inside the editor
  * Added in admin_enqueue_scripts because there is the place where they register their styles
@@ -736,6 +739,22 @@ add_action( 'admin_enqueue_scripts', function () {
 	if ( is_editor_page_raw() ) {
 		wp_deregister_style( 'oliver-pos-feedback-css' );
 		wp_dequeue_style( 'oliver-pos-feedback-css' );
+
+		wp_deregister_style( 'qsm_admin_style' );
+		wp_dequeue_style( 'qsm_admin_style' );
+	}
+}, PHP_INT_MAX );
+
+/**
+ * Compatibility with Rank Math
+ *
+ * We don't need their scripts inside the editor
+ * Added in wp_enqueue_scripts because there is the place where they register their scripts
+ */
+add_action( 'wp_enqueue_scripts', function () {
+	if ( is_editor_page_raw() ) {
+		wp_deregister_script( 'rank-math-analytics-stats' );
+		wp_dequeue_script( 'rank-math-analytics-stats' );
 	}
 }, PHP_INT_MAX );
 

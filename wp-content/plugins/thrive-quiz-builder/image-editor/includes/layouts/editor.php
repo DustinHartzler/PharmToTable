@@ -85,7 +85,7 @@ nocache_headers();
 	<div class="tie-modal-content">
 		<div class="tie-modal-title">
 			<h3>
-				<?php echo __( 'Social Share Badge Template you would like to use', Thrive_Image_Editor::T ) ?>
+				<?php echo __( 'Social Share Badge Template you would like to use', 'thrive-image-editor' ) ?>
 				<a href="<?php echo Thrive_Image_Editor::VIDEO_URL; ?>" class="wistia-popover[height=450,playerColor=2bb914,width=800]">
 					<span class="tie-icon-play"></span>
 				</a>
@@ -98,13 +98,13 @@ nocache_headers();
 		<div class="tie-row">
 			<div class="tie-col tie-s6">&nbsp;
 				<a href="javascript:void(0)" class="tie-waves-effect tie-waves-light tie-btn tie-btn-gray tie-modal-close">
-					<?php echo __( 'Cancel', Thrive_Image_Editor::T ) ?>
+					<?php echo __( 'Cancel', 'thrive-image-editor' ) ?>
 				</a>
 			</div>
 			<div class="tie-col tie-s6">
 				<a href="javascript:void(0)"
 				   class="tie-waves-effect tie-waves-light tie-btn tie-btn-green tie-right tie-modal-submit">
-					<?php echo __( 'Choose Template', Thrive_Image_Editor::T ) ?>
+					<?php echo __( 'Choose Template', 'thrive-image-editor' ) ?>
 				</a>
 			</div>
 		</div>
@@ -119,11 +119,11 @@ nocache_headers();
 		<div class="tie-row">
 			<div class="tie-col tie-s12 tie-m6">
 				<a href="javascript:void(0)"
-				   class="tie-btn-flat tie-btn-flat-primary tie-btn-flat-light tie-modal-close tie-waves-effect"><?php echo __( 'Cancel', Thrive_Quiz_Builder::T ) ?></a>
+				   class="tie-btn-flat tie-btn-flat-primary tie-btn-flat-light tie-modal-close tie-waves-effect"><?php echo __( 'Cancel', 'thrive-image-editor' ) ?></a>
 			</div>
 			<div class="tie-col tie-s12 tie-m6">
 				<a href="javascript:void(0)"
-				   class="tie-waves-effect tie-waves-light tie-btn-flat tie-btn-flat-primary tie-btn-flat-light tie-right tve-confirm-delete-action"><?php echo __( 'Delete', Thrive_Quiz_Builder::T ) ?></a>
+				   class="tie-waves-effect tie-waves-light tie-btn-flat tie-btn-flat-primary tie-btn-flat-light tie-right tve-confirm-delete-action"><?php echo __( 'Delete', 'thrive-image-editor' ) ?></a>
 			</div>
 		</div>
 	</div>
@@ -147,13 +147,13 @@ nocache_headers();
 		<div class="tie-row">
 			<div class="tie-col tie-s3">
 				<a href="javascript:void(0)" class="tie-waves-effect tie-waves-light tie-btn tie-btn-green tie-generate-result">
-					<?php echo __( 'Generate Random Result', Thrive_Image_Editor::T ); ?>
+					<?php echo __( 'Generate Random Result', 'thrive-image-editor' ); ?>
 				</a>
 			</div>
 			<div class="tie-col tie-s9">
 				<?php $upload_dir = wp_upload_dir(); ?>
 				<?php if ( is_ssl() && strpos( $upload_dir['url'], 'https://' ) === false ) : ?>
-					<div class="tie-fig-notice"><?php echo __( 'Please make sure that your website is set as HTTPS (Wordpress Address - URL & Site Address -URL) from Wordpress - General Settings', Thrive_Image_Editor::T ); ?></div>
+					<div class="tie-fig-notice"><?php echo __( 'Please make sure that your website is set as HTTPS (Wordpress Address - URL & Site Address -URL) from Wordpress - General Settings', 'thrive-image-editor' ); ?></div>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -166,21 +166,21 @@ nocache_headers();
 <script type="text/template" id="tie-modal-canvas-size">
 	<div class="tie-modal-content">
 		<h3 class="tie-modal-title">
-			<?php echo __( 'Resize', Thrive_Image_Editor::T ); ?>
+			<?php echo __( 'Resize', 'thrive-image-editor' ); ?>
 		</h3>
 		<div class="tie-v-spacer"></div>
 		<div class="tie-row">
 			<div class="tie-col tie-s5">
 				<div class="tie-input-field">
 					<input name="width" type="number" min="0" value="<#= size.get('width') #>">
-					<label for="tie-ar-install-url" class="tie-active"><?php echo __( 'Width', Thrive_Image_Editor::T ) ?></label>
+					<label for="tie-ar-install-url" class="tie-active"><?php echo __( 'Width', 'thrive-image-editor' ) ?></label>
 				</div>
 			</div>
 			<div class="tie-col tie-s2 tie-center">X</div>
 			<div class="tie-col tie-s5">
 				<div class="tie-input-field">
 					<input name="height" type="number" min="0" value="<#= size.get('height') #>">
-					<label for="tie-ar-install-url" class="tie-active"><?php echo __( 'Height', Thrive_Image_Editor::T ) ?></label>
+					<label for="tie-ar-install-url" class="tie-active"><?php echo __( 'Height', 'thrive-image-editor' ) ?></label>
 				</div>
 			</div>
 		</div>
@@ -191,13 +191,13 @@ nocache_headers();
 			<div class="tie-col tie-s6">
 				<a href="javascript:void(0)"
 				   class="tie-waves-effect tie-waves-light tie-btn tie-btn-gray tie-modal-close">
-					<?php echo __( 'Close', Thrive_Image_Editor::T ) ?>
+					<?php echo __( 'Close', 'thrive-image-editor' ) ?>
 				</a>
 			</div>
 			<div class="tie-col tie-s6">
 				<a href="javascript:void(0)"
 				   class="tie-waves-effect tie-waves-light tie-btn tie-btn-green tie-right tie-modal-submit" id="tie-set-new-dimensions">
-					<?php echo __( 'Save', Thrive_Image_Editor::T ) ?>
+					<?php echo __( 'Save', 'thrive-image-editor' ) ?>
 				</a>
 			</div>
 		</div>
@@ -207,22 +207,22 @@ nocache_headers();
 <script type="text/template" id="tie-modal-image-position">
 	<img id="tie-img-loader" style="display: none"/>
 	<div class="tie-modal-content">
-		<h3 class="tie-modal-title"><?php echo __( 'Background image crop position', Thrive_Image_Editor::T ) ?></h3>
+		<h3 class="tie-modal-title"><?php echo __( 'Background image crop position', 'thrive-image-editor' ) ?></h3>
 		<hr>
 		<div class="tie-row tie-collapse tie-modal-subtitle">
 			<div class="tie-col tie-s10">
-				<?php echo __( 'Drag the image to place it on your canvas. Use the corners handlers to resize your image.' ) ?>
+				<?php echo __( 'Drag the image to place it on your canvas. Use the corners handlers to resize your image.', 'thrive-image-editor' ) ?>
 			</div>
 			<div class="tie-col tie-s2 tie-text-right">
 				<a class="tie-bg-toggle-help" href="javascript:void(0)">
-					<span><?php echo __( 'Help', Thrive_Image_Editor::T ) ?></span>
+					<span><?php echo __( 'Help', 'thrive-image-editor' ) ?></span>
 					<i class="tie-icons tie-icon-question"></i>
 				</a>
 			</div>
 		</div>
 		<div id="tie-image-option-bar" class="tie-collapse tie-no-margin tie-gray tie-lighten-3">
 			<div class="tie-floating-containers">
-				<p class="tie-background-action-details"><?php echo __( 'Align Image to Canvas', Thrive_Image_Editor::T ) ?></p>
+				<p class="tie-background-action-details"><?php echo __( 'Align Image to Canvas', 'thrive-image-editor' ) ?></p>
 				<div class="tie-position-canvas">
 					<div id="top">
 						<a class="tie-btn tie-click tie-icon-arrow-top-left" data-fn="position" data-params="nw" href="javascript:void(0)"></a>
@@ -243,7 +243,7 @@ nocache_headers();
 				</div>
 			</div>
 			<div class="tie-floating-containers">
-				<p class="tie-background-action-details tie-image-size"><?php echo __( 'Image Size', Thrive_Image_Editor::T ) ?></p>
+				<p class="tie-background-action-details tie-image-size"><?php echo __( 'Image Size', 'thrive-image-editor' ) ?></p>
 				<div class="tie-size-slider tie-row">
 					<div class="tie-col tie-s7" id="tie-image-size" data-connect-to="#tie-image-zoom"></div>
 					<input class="tie-col tie-s3" id="tie-image-zoom" type="number">
@@ -258,20 +258,20 @@ nocache_headers();
 					<div class="tie-centered-helper">
 						<div class="tie-col tie-s6 tie-bordered-box">
 							<div class="tie-help-image" id="tie-help-drag"></div>
-							<p class="tie-gray-text tie-text-lighten-4"><?php echo __( 'Start Dragging to move your image on the canvas', Thrive_Image_Editor::T ) ?></p>
+							<p class="tie-gray-text tie-text-lighten-4"><?php echo __( 'Start Dragging to move your image on the canvas', 'thrive-image-editor' ) ?></p>
 						</div>
 						<div class="tie-col tie-s6">
 							<div class="tie-help-image" id="tie-help-resize"></div>
-							<p class="tie-gray-text tie-text-lighten-4"><?php echo __( 'Resize the image by dragging the corners', Thrive_Image_Editor::T ) ?></p>
+							<p class="tie-gray-text tie-text-lighten-4"><?php echo __( 'Resize the image by dragging the corners', 'thrive-image-editor' ) ?></p>
 						</div>
 						<div class="tie-col tie-s12 tie-align-center">
 							<a class="tie-bg-toggle-help tie-btn tie-btn-blue"
-							   href="javascript:void(0)"><?php echo __( "Got it, let's go", Thrive_Image_Editor::T ) ?></a>
+							   href="javascript:void(0)"><?php echo __( "Got it, let's go", 'thrive-image-editor' ) ?></a>
 						</div>
 					</div>
 				</div>
 				<div id="tie-canvas-dimensions">
-					<?php echo sprintf( __( 'Canvas size: %s X %s', Thrive_Image_Editor::T ), $image->get_settings()->get_data( 'size/width' ), $image->get_settings()->get_data( 'size/height' ) ) ?>
+					<?php echo sprintf( __( 'Canvas size: %s X %s', 'thrive-image-editor' ), $image->get_settings()->get_data( 'size/width' ), $image->get_settings()->get_data( 'size/height' ) ) ?>
 				</div>
 
 				<div id="top" class="tie-frame-item"></div>
@@ -292,13 +292,13 @@ nocache_headers();
 		<div class="tie-row">
 			<div class="tie-col tie-s6">
 				<a href="javascript:void(0)" class="tie-modal-close">
-					<?php echo __( 'Cancel', Thrive_Image_Editor::T ) ?>
+					<?php echo __( 'Cancel', 'thrive-image-editor' ) ?>
 				</a>
 			</div>
 			<div class="tie-col tie-s6">
 				<a href="javascript:void(0)"
 				   class="tie-waves-effect tie-waves-light tie-btn tie-btn-green tie-right tie-modal-submit">
-					<?php echo __( 'Save', Thrive_Image_Editor::T ) ?>
+					<?php echo __( 'Save', 'thrive-image-editor' ) ?>
 				</a>
 			</div>
 		</div>
@@ -324,11 +324,11 @@ nocache_headers();
 </script>
 
 <script type="text/template" id="text-element-panel">
-	<h4 class="tie-bold tie-panel-subtitle"><?php echo __( 'Text formatting', Thrive_Image_Editor::T ) ?></h4>
+	<h4 class="tie-bold tie-panel-subtitle"><?php echo __( 'Text formatting', 'thrive-image-editor' ) ?></h4>
 	<div class="tie-card tie-text-formatting-holder">
 		<div class="tie-card-content">
 			<div id="tie-text-styling">
-				<p class="tie-text-style-title"><?php echo __( 'Text style', Thrive_Image_Editor::T ) ?></p>
+				<p class="tie-text-style-title"><?php echo __( 'Text style', 'thrive-image-editor' ) ?></p>
 				<ul class="tie-buttons-list">
 					<li>
 						<a data-click-callback="Bold" id="tie-bold" class="tie-click tie-waves-effect"><b>B</b></a>
@@ -356,7 +356,7 @@ nocache_headers();
 					</li>
 				</ul>
 
-				<p class="tie-text-style-title"><?php echo __( 'Text align', Thrive_Image_Editor::T ) ?></p>
+				<p class="tie-text-style-title"><?php echo __( 'Text align', 'thrive-image-editor' ) ?></p>
 				<ul class="tie-buttons-list">
 					<li>
 						<a data-click-callback="JustifyLeft" class="tie-click tie-waves-effect"><i class="tie-icons tie-icon-align-left2"></i></a>
@@ -375,26 +375,26 @@ nocache_headers();
 			<hr>
 			<div id="text-color" class="clearfix">
 				<div class="left">
-					<p class="tie-text-style-title"><?php echo __( 'Text color', Thrive_Image_Editor::T ) ?></p>
+					<p class="tie-text-style-title"><?php echo __( 'Text color', 'thrive-image-editor' ) ?></p>
 					<input type="text" class="tie-color-picker-forecolor" value="">
 					<input type="text" class="tie-color-code" id="tie-text-element-forecolor">
 				</div>
 				<div class="right">
-					<p class="tie-text-style-title"><?php echo __( 'Background color', Thrive_Image_Editor::T ) ?></p>
+					<p class="tie-text-style-title"><?php echo __( 'Background color', 'thrive-image-editor' ) ?></p>
 					<input type="text" class="tie-color-picker-hilitecolor" value="">
 					<input type="text" class="tie-color-code" id="tie-text-element-hilitecolor">
 				</div>
 			</div>
 			<hr>
 			<div id="font-family">
-				<p class="tie-text-style-title"><?php echo __( 'Font face', Thrive_Image_Editor::T ) ?></p>
+				<p class="tie-text-style-title"><?php echo __( 'Font face', 'thrive-image-editor' ) ?></p>
 				<select id="tie-fonts">
-					<option value=""><?php echo __( '- Select Font -', Thrive_Image_Editor::T ) ?></option>
+					<option value=""><?php echo __( '- Select Font -', 'thrive-image-editor' ) ?></option>
 				</select>
 			</div>
 			<hr>
 			<div id="font-size">
-				<p class="tie-text-style-title"><?php echo __( 'Font size', Thrive_Image_Editor::T ) ?></p>
+				<p class="tie-text-style-title"><?php echo __( 'Font size', 'thrive-image-editor' ) ?></p>
 				<div class="slider-holder">
 					<div id="tie-font-size-slider"
 					     data-min="1"
@@ -413,7 +413,7 @@ nocache_headers();
 				</div>
 			</div>
 			<div id="font-height">
-				<p class="tie-text-style-title"><?php echo __( 'Line height', Thrive_Image_Editor::T ) ?></p>
+				<p class="tie-text-style-title"><?php echo __( 'Line height', 'thrive-image-editor' ) ?></p>
 				<div class="slider-holder">
 					<div id="tie-line-height-slider"
 					     data-min="1"

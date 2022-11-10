@@ -23,7 +23,7 @@ class Form_Label extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Form label', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Form label', 'thrive-dash' );
 	}
 
 	/**

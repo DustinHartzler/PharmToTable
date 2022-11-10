@@ -38,10 +38,7 @@ class TD_NM_Admin {
 	}
 
 	public function enqueue_scripts() {
-		$screen    = get_current_screen();
-		$screen_id = $screen ? $screen->id : '';
-
-		if ( $screen_id === 'admin_page_tve_dash_notification_manager' ) {
+		if ( tve_get_current_screen_key() === 'admin_page_tve_dash_notification_manager' ) {
 
 			$current_user = wp_get_current_user();
 
@@ -103,22 +100,19 @@ class TD_NM_Admin {
 	 * Hook into based on current screen
 	 */
 	public function conditional_hooks() {
-		if ( ! $screen = get_current_screen() ) {
-			return;
-		}
+		$screen = tve_get_current_screen_key();
 
 		/**
 		 * Main Dashboard section
 		 */
-		if ( $screen->id === 'toplevel_page_tve_dash_section' ) {
+		if ( $screen === 'toplevel_page_tve_dash_section' ) {
 			add_filter( 'tve_dash_filter_features', array( $this, 'admin_notification_feature' ) );
-			add_filter( 'tve_dash_features', array( $this, 'admin_enable_feature' ) );
 		}
 
 		/**
 		 * NM Dashboard
 		 */
-		if ( $screen->id === 'admin_page_tve_dash_notification_manager' ) {
+		if ( $screen === 'admin_page_tve_dash_notification_manager' ) {
 			add_action( 'admin_print_footer_scripts', array( $this, 'admin_backbone_templates' ) );
 		}
 	}
@@ -134,24 +128,10 @@ class TD_NM_Admin {
 		$features['notification_manager'] = array(
 			'icon'        => 'tvd-icon-notification',
 			'title'       => 'Notification Manager',
-			'description' => __( 'Receive notifications when certain events occur on your site', TVE_DASH_TRANSLATE_DOMAIN ),
+			'description' => __( 'Receive notifications when certain events occur on your site', 'thrive-dash' ),
 			'btn_link'    => add_query_arg( 'page', $this->_dashboard_page, admin_url( 'admin.php' ) ),
-			'btn_text'    => __( "Manage Notifications", TVE_DASH_TRANSLATE_DOMAIN ),
+			'btn_text'    => __( "Manage Notifications", 'thrive-dash' ),
 		);
-
-		return $features;
-	}
-
-	/**
-	 * Enable the NM feature to be displayed on Thrive Features Section
-	 *
-	 * @param $features
-	 *
-	 * @return mixed
-	 */
-	public function admin_enable_feature( $features ) {
-
-		$features['notification_manager'] = true;
 
 		return $features;
 	}
@@ -160,7 +140,7 @@ class TD_NM_Admin {
 	 * Add page to admin menu so the page could be accessed
 	 */
 	public function admin_menu() {
-		add_submenu_page( null, __( 'Notification Manager', TVE_DASH_TRANSLATE_DOMAIN ), __( 'Notification Manager', TVE_DASH_TRANSLATE_DOMAIN ), TVE_DASH_CAPABILITY, $this->_dashboard_page, array(
+		add_submenu_page( null, __( 'Notification Manager', 'thrive-dash' ), __( 'Notification Manager', 'thrive-dash' ), TVE_DASH_CAPABILITY, $this->_dashboard_page, array(
 			$this,
 			'admin_dashboard',
 		) );
@@ -317,8 +297,8 @@ class TD_NM_Admin {
 	}
 
 	public function get_email_services() {
-		$email_services     = Thrive_Dash_List_Manager::getAvailableAPIsByType( false, array( 'email' ) );
-		$connected_services = Thrive_Dash_List_Manager::getAvailableAPIsByType( true, array( 'email' ) );
+		$email_services     = Thrive_Dash_List_Manager::get_available_apis( false, [ 'include_types' => [ 'email' ] ] );
+		$connected_services = Thrive_Dash_List_Manager::get_available_apis( true, [ 'include_types' => [ 'email' ] ] );
 		$connected_keys     = array_keys( $connected_services );
 
 		$active_connection = get_option( 'tvd-nm-email-service' );
@@ -332,10 +312,10 @@ class TD_NM_Admin {
 		foreach ( $email_services as $key => $instance ) {
 			$item = array(
 				'key'       => $key,
-				'title'     => $instance->getTitle(),
+				'title'     => $instance->get_title(),
 				'connected' => in_array( $key, $connected_keys ),
 				'active'    => $key === $active_connection,
-				'status'    => in_array( $key, $connected_keys ) ? __( 'connected', TVE_DASH_TRANSLATE_DOMAIN ) : __( 'Unset', TVE_DASH_TRANSLATE_DOMAIN ),
+				'status'    => in_array( $key, $connected_keys ) ? __( 'connected', 'thrive-dash' ) : __( 'Unset', 'thrive-dash' ),
 			);
 
 			$items[] = $item;

@@ -86,7 +86,7 @@ class TIE_Ajax_Controller {
 		$function = $route . '_action';
 
 		if ( ! method_exists( $this, $function ) ) {
-			$this->error( sprintf( __( 'Method %s not implemented', Thrive_Quiz_Builder::T ), $function ) );
+			$this->error( sprintf( __( 'Method %s not implemented', 'thrive-image-editor' ), $function ) );
 		}
 
 		$method = empty( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ) ? 'GET' : sanitize_text_field( $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] );
@@ -102,7 +102,7 @@ class TIE_Ajax_Controller {
 			case 'PUT':
 			case 'PATCH':
 				if ( ! ( $id = tie_save_image( $model ) ) ) {
-					$this->error( __( 'Image Post could not be saved', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Image Post could not be saved', 'thrive-image-editor' ) );
 				}
 
 				if ( isset( $model['template'] ) ) {
@@ -115,7 +115,7 @@ class TIE_Ajax_Controller {
 				$id = $this->param( 'ID', 0 );
 
 				if ( empty( $id ) ) {
-					$this->error( __( 'Invalid parameter', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Invalid parameter', 'thrive-image-editor' ) );
 				}
 
 				$image       = new TIE_Image( $id );
@@ -126,13 +126,13 @@ class TIE_Ajax_Controller {
 				do_action( 'tqb_update_social_share_badge_url', $image->get_post_parent_id(), $default_url, $image_url );
 
 				if ( ! ( $deleted = tie_delete_image( $id ) ) ) {
-					$this->error( __( 'Image Post could not be deleted', Thrive_Quiz_Builder::T ) );
+					$this->error( __( 'Image Post could not be deleted', 'thrive-image-editor' ) );
 				}
 
 				return $deleted;
 				break;
 		}
 
-		$this->error( __( 'Bad request', Thrive_Quiz_Builder::T ) );
+		$this->error( __( 'Bad request', 'thrive-image-editor' ) );
 	}
 }

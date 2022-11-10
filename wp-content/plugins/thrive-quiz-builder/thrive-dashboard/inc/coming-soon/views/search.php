@@ -1,6 +1,6 @@
 <div class="search-page-wrapper">
 	<p>
-		<?php echo __( 'Please keep in mind that activating the feature is not enough for the "Coming Soon" page to be visible. You will first have to set it up, using the field below.', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+		<?php echo __( 'Please keep in mind that activating the feature is not enough for the "Coming Soon" page to be visible. You will first have to set it up, using the field below.', 'thrive-dash' ); ?>
 	</p>
 	<div class="page-source-wrapper">
 		<div class="page-source-search-wrapper">
@@ -11,7 +11,7 @@
 		<div class="create-new-page-wrapper">
 			<button id="create-new-page" class="enable-state" data-enable="create">
 				<span class="tvd-icon-plus-circle enable-state" data-enable="create"></span>
-				<?php echo __( 'Create new page', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+				<?php echo __( 'Create new page', 'thrive-dash' ); ?>
 			</button>
 		</div>
 	</div>

@@ -7,6 +7,8 @@
  * Time: 10:15
  */
 
+use TCB\SavedLandingPages\Post_Type;
+
 if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 
 	class TCB_Landing_Page extends TCB_Post {
@@ -128,6 +130,15 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 		private static $instances = array();
 
 		/**
+		 * Instance of LP Palettes
+		 *
+		 * @var bool | TCB_LP_Palettes instance
+		 */
+		private $lp_palette_instance;
+
+		public $skin_typography;
+
+		/**
 		 * sent all necessary parameters to avoid extra calls to get_post_meta
 		 *
 		 * @param int    $landing_page_id
@@ -178,6 +189,18 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				 * @param TCB_Landing_Page class instance
 				 */
 				$this->palettes = apply_filters( 'tcb_get_page_palettes', $this->get_template_palettes(), $this );
+
+				/* We only want to do this when the theme is not active */
+				if ( ! tve_dash_is_ttb_active() ) {
+					if ( empty( $this->palettes ) && ! empty( $this->config['skin_palettes'] ) && ! empty( $this->config['skin_palettes_config'] ) && ! empty( $this->config['skin_typography'] ) ) {
+						$this->palettes            = $this->config['skin_palettes'];
+						$this->has_template_data   = true;
+						$this->lp_palette_instance = $this->get_palette_instance();
+					}
+					if ( ! empty( $this->config['skin_typography'] ) ) {
+						$this->skin_typography = $this->config['skin_typography'];
+					}
+				}
 
 				foreach ( $this->template_styles as $key => $value ) {
 					$this->template_styles[ $key ] = $this->get_template_styles( $key );
@@ -409,6 +432,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 
 		/**
 		 * Outputs Landing Page template global variables
+		 * TODO change this function to be on the LP instance, we already use the id there
 		 *
 		 * This variables comes from
 		 */
@@ -447,6 +471,21 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 					$master_variable = reset( $master_variables );
 
 					echo tve_prepare_master_variable( $master_variable ); //phpcs:ignore
+				}
+				/* We only print the variables when TTB is not active */
+				if ( ! tve_dash_is_ttb_active() ) {
+					/* We need LP config to get the palettes configs from it */
+					$config = ! empty( tcb_landing_page( $post_id )->config ) ? tcb_landing_page( $post_id )->config : tve_get_landing_page_config( tve_post_is_landing_page( $post_id ) );
+
+					if ( isset( $config['skin_palettes'], $config['skin_palettes_config'] ) ) {
+						$lp_palettes_instance = new TCB_LP_Palettes( $post_id, $config['skin_palettes'], $config['skin_palettes_config'] );
+						$skin_palettes        = $lp_palettes_instance->get_variables_for_css();
+
+						/* Print the css on the page */
+						if ( ! empty( $skin_palettes ) ) {
+							echo $skin_palettes;
+						}
+					}
 				}
 			}
 		}
@@ -755,6 +794,111 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 		}
 
 		/**
+		 * Returns the Palettes instance specific to this LP
+		 *
+		 * @return bool|TCB_LP_Palettes
+		 */
+		public function get_palette_instance() {
+			if ( $this->lp_palette_instance === null && ! empty( $this->config['skin_palettes'] ) && ! empty( $this->config['skin_palettes_config'] ) ) {
+				$this->lp_palette_instance = new TCB_LP_Palettes( $this->id, $this->config['skin_palettes'], $this->config['skin_palettes_config'] );
+			}
+
+			return $this->lp_palette_instance;
+		}
+
+		/**
+		 * Updates the auxiliary variable from the Palette instance
+		 *
+		 * @param $color_id
+		 * @param $color
+		 */
+		public function update_auxiliary_variable( $color_id, $color ) {
+			$this->get_palette_instance()->update_auxiliary_variable( $color_id, $color );
+		}
+
+
+		/**
+		 * Checks if a variable is auxiliary it's not the master variable)
+		 *
+		 * @param $id
+		 *
+		 * @return bool
+		 */
+		public function is_auxiliary_variable( $id ) {
+			return $this->get_palette_instance()->is_auxiliary_variable( $id );
+		}
+
+		/**
+		 * Updates the Master variable from the Palette instance
+		 *
+		 * @param array $master_variables
+		 * @param       $active_id
+		 */
+		public function update_master_hsl( $master_variables = [], $active_id = 0 ) {
+			$this->get_palette_instance()->update_master_hsl( $master_variables, $active_id );
+		}
+
+		/**
+		 * Updates the colors in the Palettes config
+		 *
+		 * @param $hsl
+		 */
+		public function update_variables_in_config( $hsl ) {
+			$this->get_palette_instance()->update_variables_in_config( $hsl );
+		}
+
+		/**
+		 * Function that allows the central style panel to be displayed on a content edited with TAR
+		 *
+		 * @param bool $return
+		 *
+		 * @return bool
+		 */
+		public static function tcb_skin_allow_central_style_panel( $return = false ) {
+			$lp_id        = get_the_ID();
+			$landing_page = tcb_landing_page( $lp_id );
+
+			if ( $landing_page->is_landing_page() && ! tve_dash_is_ttb_active() && $landing_page->has_skin_style_panel() ) {
+				$return = true;
+			}
+
+			return $return;
+		}
+
+		/**
+		 * Prints the skin typography on a page, this will be called only when we have TTB LPs but no TTB active
+		 *
+		 * @param $post_id
+		 */
+		public static function print_skin_typography( $post_id ) {
+			$lp_typography = tcb_landing_page( $post_id )->skin_typography;
+
+			if ( ! empty( $lp_typography ) ) {
+				/* Replace the variable to match the colors from config */
+				$lp_typography = str_replace( '--tcb-color-', TCB_LP_Palettes::SKIN_COLOR_VARIABLE_PREFIX, $lp_typography );
+
+				$lp_typography = tcb_custom_css( $lp_typography );
+
+				echo '<style type="text/css" class="tcb_skin_lp_typography">' . $lp_typography . '</style>';
+			}
+		}
+
+		/**
+		 * Checks if an LP has a Central Style panel from a skin
+		 *
+		 * @return bool
+		 */
+		public function has_skin_style_panel() {
+			$lp_palettes_instance = $this->get_palette_instance();
+
+			if ( ! $lp_palettes_instance ) {
+				return false;
+			}
+
+			return ! empty( $lp_palettes_instance->get_smart_lp_palettes_v2() ) && $lp_palettes_instance->get_smart_lp_palettes_config_v2();
+		}
+
+		/**
 		 * outputs <link>s for each font used by the page
 		 * fonts come from the configuration array
 		 *
@@ -800,6 +944,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				'thrive-default-styles',
 				'tve_user_custom_style',
 				'tve_custom_style',
+				'tcb_skin_lp_typography',
 				'tve_global_style',
 				'tve_global_variables',
 				'optm_lazyload',
@@ -949,6 +1094,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				$lp_data['class'] .= ' ' . ( is_array( $this->globals['body_class'] ) ? implode( ' ', $this->globals['body_class'] ) : $this->globals['body_class'] );
 			}
 			$lp_data['class'] = apply_filters( 'tcb_lp_body_class', $lp_data['class'] );
+
 			return $lp_data;
 		}
 
@@ -1428,6 +1574,10 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				$this->check_lightbox( false );
 			}
 
+			if ( empty( $this->cloud_template_data['sections'] ) ) {
+				$this->meta( 'sections', '' );
+			}
+
 			tve_update_post_custom_fonts( $this->post->ID, array() );
 		}
 
@@ -1518,6 +1668,14 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 			$this->is_cloud_template   = true;
 			$this->cloud_template_data = $this->config = $config;
 
+			if ( ! tve_dash_is_ttb_active() && ! empty( $config['skin_typography'] ) ) {
+				/**
+				 * Compatibility with landingpages.thrivethemes.com
+				 * Allows skin typography to be inserted from external config
+				 */
+				$this->skin_typography = $config['skin_typography'];
+			}
+
 			$this->meta( 'tve_landing_page', $this->template );
 			$this->meta( 'tve_landing_set', $this->set );
 			$this->reset( true );
@@ -1526,6 +1684,22 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 			$this->update_template_css_variables();
 			$this->update_template_global_styles();
 			$this->update_template_palettes();
+
+			$this->lp_palette_instance = $this->get_palette_instance();
+
+			if ( ! empty( $config ) ) {
+				if ( ! empty( $config['skin_palettes'] ) ) {
+					$this->lp_palette_instance->update_lp_palettes_v2( $config['skin_palettes'] );
+				}
+
+				if ( ! empty( $config['skin_palettes_config'] ) ) {
+					$this->lp_palette_instance->update_lp_palettes_config_v2( $config['skin_palettes_config'] );
+				}
+
+				if ( ! empty( $config['skin_palettes'] ) && ! empty( $config['skin_palettes_config'] ) ) {
+					$this->has_template_data = true;
+				}
+			}
 
 			return $this;
 		}
@@ -1565,7 +1739,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 		 *
 		 * @return TCB_Landing_Page
 		 */
-		public function change_template( $landing_page_template ) {
+		public function change_template( $landing_page_template, $lp_id ) {
 			/**
 			 * Delete Template Colors, Template Gradients and Template Palettes meta in case the page is not a cloud page
 			 */
@@ -1586,6 +1760,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				$this->meta_delete( 'tve_landing_page' );
 				//Delete Also The Setting To Disable Theme CSS
 				$this->meta_delete( 'tve_disable_theme_dependency' );
+				tve_clean_up_meta_leftovers( $this->post->ID );
 
 				return $this;
 			}
@@ -1604,55 +1779,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				$this->reset( false );
 
 			} else {
-				/* at this point, the template is one of the previously saved templates (saved by the user) - it holds the index from the tve_saved_landing_pages_content which needs to be loaded */
-				$contents       = get_option( 'tve_saved_landing_pages_content' );
-				$meta           = get_option( 'tve_saved_landing_pages_meta' );
-				$template_index = (int) str_replace( 'user-saved-template-', '', $landing_page_template );
-
-				/* make sure we don't mess anything up */
-				if ( empty( $contents ) || empty( $meta ) || ! isset( $contents[ $template_index ] ) ) {
-					return $this;
-				}
-				$content        = $contents[ $template_index ];
-				$this->template = $landing_page_template = $meta[ $template_index ]['template'];
-
-				if ( empty( $content['more_found'] ) ) {
-					$content['more_found']  = false;
-					$content['before_more'] = $content['content'];
-				}
-
-				$key = '_' . $landing_page_template;
-
-				if ( empty( $meta[ $template_index ]['theme_dependency'] ) ) {
-					$meta[ $template_index ]['theme_dependency'] = 0;
-				}
-
-				$saved_template_meta_data = array(
-					'tpl_colours'    => 'thrv_lp_template_colours',
-					'tpl_gradients'  => 'thrv_lp_template_gradients',
-					'tpl_button'     => 'thrv_lp_template_button',
-					'tpl_section'    => 'thrv_lp_template_section',
-					'tpl_contentbox' => 'thrv_lp_template_contentbox',
-					'tpl_palettes'   => 'thrv_lp_template_palettes',
-				);
-
-				/**
-				 * Page Saved lp meta if present
-				 */
-				foreach ( $saved_template_meta_data as $meta_data_key => $meta_name ) {
-					if ( ! empty( $meta[ $template_index ][ $meta_data_key ] ) ) {
-						$this->meta( $meta_name, $meta[ $template_index ][ $meta_data_key ] );
-					}
-				}
-				$this->meta( 'theme_skin_tag', empty( $meta['tpl_skin_tag'] ) ? '' : $meta['tpl_skin_tag'] );
-				$this->meta( 'tve_disable_theme_dependency', $meta[ $template_index ]['theme_dependency'] );
-				$this->meta( "tve_content_before_more{$key}", $content['before_more'] );
-				$this->meta( "tve_content_more_found{$key}", $content['more_found'] );
-				$this->meta( "tve_custom_css{$key}", $content['inline_css'] );
-				$this->meta( "tve_user_custom_css{$key}", $content['custom_css'] );
-				$this->meta( "tve_updated_post{$key}", $content['content'] );
-				$this->meta( "tve_globals{$key}", ! empty( $content['tve_globals'] ) ? $content['tve_globals'] : array() );
-				$this->meta( 'tve_global_scripts', ! empty( $content['tve_global_scripts'] ) ? $content['tve_global_scripts'] : array() );
+				$this->load_saved_lp( $landing_page_template, $lp_id );
 			}
 
 			$this->meta( 'tve_landing_page', $this->template );
@@ -1830,6 +1957,93 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 
 			return $landing_page->set_cloud_template( $cloud_template_key );
 		}
+
+		/**
+		 * Loads a saved Landing page
+		 *
+		 * @param $landing_page_template
+		 * @param $lp_id
+		 *
+		 * @return $this
+		 */
+		public function load_saved_lp( $landing_page_template, $lp_id ) {
+			$template_index = (int) str_replace( 'user-saved-template-', '', $landing_page_template );
+
+			/* in this case we are on a migrated saved template, and all the date will be read from de LP Custom Post Type */
+			if ( strpos( $lp_id, TCB\SavedLandingPages\Saved_Lp::OLD_ID_PREFIX ) === false ) {
+				$meta[ $template_index ] = [
+					'is_migrated' => get_post_meta( $lp_id, 'is_migrated', true ),
+				];
+
+				foreach ( TCB\SavedLandingPages\Saved_Lp::get_meta_keys() as $meta_key ) {
+					$meta[ $template_index ][ $meta_key ] = get_post_meta( $lp_id, TCB\SavedLandingPages\Saved_Lp::get_post_type_prefix() . $meta_key, true );
+				}
+
+				foreach ( TCB\SavedLandingPages\Saved_Lp::get_content_keys() as $meta_key ) {
+					$contents[ $template_index ][ $meta_key ] = get_post_meta( $lp_id, TCB\SavedLandingPages\Saved_Lp::get_post_type_prefix() . $meta_key, true );
+				}
+
+			} else {
+				$template_index = TCB\SavedLandingPages\Saved_Lp::normalize_old_id( $lp_id );
+				/* at this point, the template is one of the previously saved templates (saved by the user) - it holds the index from the tve_saved_landing_pages_content which needs to be loaded */
+				$contents = get_option( 'tve_saved_landing_pages_content' );
+				$meta     = get_option( 'tve_saved_landing_pages_meta' );
+			}
+			/* make sure we don't mess anything up */
+			if ( empty( $contents ) || empty( $meta ) || ! isset( $contents[ $template_index ] ) ) {
+				return $this;
+			}
+			$content        = $contents[ $template_index ];
+			$this->template = $landing_page_template = $meta[ $template_index ]['template'];
+
+			/* replace old ids just in case */
+			$content = json_encode( $content );
+			$content = preg_replace( '/page-id-\d*/m', "page-id-{$this->post->ID}", $content );
+			$content = json_decode( $content, true );
+
+			if ( empty( $content['more_found'] ) ) {
+				$content['more_found']  = false;
+				$content['before_more'] = $content['content'];
+			}
+
+			$key = '_' . $landing_page_template;
+
+			if ( empty( $meta[ $template_index ]['theme_dependency'] ) ) {
+				$meta[ $template_index ]['theme_dependency'] = 0;
+			}
+
+			$saved_template_meta_data = array(
+				'tpl_colours'    => 'thrv_lp_template_colours',
+				'tpl_gradients'  => 'thrv_lp_template_gradients',
+				'tpl_button'     => 'thrv_lp_template_button',
+				'tpl_section'    => 'thrv_lp_template_section',
+				'tpl_contentbox' => 'thrv_lp_template_contentbox',
+				'tpl_palettes'   => 'thrv_lp_template_palettes',
+			);
+
+			/**
+			 * Page Saved lp meta if present
+			 */
+			foreach ( $saved_template_meta_data as $meta_data_key => $meta_name ) {
+				if ( ! empty( $meta[ $template_index ][ $meta_data_key ] ) ) {
+					$this->meta( $meta_name, $meta[ $template_index ][ $meta_data_key ] );
+				}
+			}
+
+			$this->meta( 'theme_skin_tag', empty( $meta[ $template_index ]['tpl_skin_tag'] ) ? '' : $meta[ $template_index ]['tpl_skin_tag'] );
+			$this->meta( 'tve_disable_theme_dependency', $meta[ $template_index ]['theme_dependency'] );
+			$this->meta( "tve_content_before_more{$key}", $content['before_more'] );
+			$this->meta( "tve_content_more_found{$key}", $content['more_found'] );
+			$this->meta( "tve_custom_css{$key}", $content['inline_css'] );
+			$this->meta( "tve_user_custom_css{$key}", $content['custom_css'] );
+			$this->meta( "tve_updated_post{$key}", $content['content'] );
+			$this->meta( "tve_globals{$key}", ! empty( $content['tve_globals'] ) ? $content['tve_globals'] : array() );
+			$this->meta( 'tve_global_scripts', ! empty( $content['tve_global_scripts'] ) ? $content['tve_global_scripts'] : array() );
+			$this->meta( 'sections', isset( $content['sections'] ) ? $content['sections'] : [] );
+			$this->meta( '_tve_header', isset( $content['sections']['header']['ID'] ) ? $content['sections']['header']['ID'] : 0 );
+			$this->meta( '_tve_footer', isset( $content['sections']['footer']['ID'] ) ? $content['sections']['footer']['ID'] : 0 );
+
+		}
 	}
 
 	function tcb_landing_page( $post_id, $landing_page_template = null ) {
@@ -1890,6 +2104,8 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 		return apply_filters( 'tcb_landing_page_default_content', $content, $is_lightbox, $file_suffix );
 	}
 
+	//TODO let's move the filters in another file, and check what functions shoul not be static
+
 	add_action( 'tcb_get_extra_global_variables', array( 'TCB_Landing_Page', 'output_landing_page_variables' ), PHP_INT_MAX );
 
 	add_filter( 'tcb_get_extra_global_styles', array( 'TCB_Landing_Page', 'add_landing_page_styles' ) );
@@ -1897,4 +2113,10 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 	add_filter( 'tcb_prepare_global_variables_for_front', array( 'TCB_Landing_Page', 'prepare_landing_page_variables_for_front' ), 10, 2 );
 
 	add_filter( 'tcb_get_special_blocks_set', array( 'TCB_Landing_Page', 'get_lp_set' ) );
+
+	add_filter( 'tcb_allow_central_style_panel', array( 'TCB_Landing_Page', 'tcb_skin_allow_central_style_panel' ) );
+
+	add_filter( 'tcb_has_central_style_panel', array( 'TCB_Landing_Page', 'tcb_skin_allow_central_style_panel' ) );
+
+	add_action( 'tcb_print_custom_style', array( 'TCB_Landing_Page', 'print_skin_typography' ) );
 }

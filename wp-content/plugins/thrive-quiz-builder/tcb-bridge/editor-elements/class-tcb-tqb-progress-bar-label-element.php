@@ -3,7 +3,7 @@
 class TCB_TQB_Progress_Bar_Text extends TCB_TQB_QNA_Text {
 
 	public function name() {
-		return __( 'Progress bar label', Thrive_Quiz_Builder::T );
+		return __( 'Progress bar label', 'thrive-quiz-builder' );
 	}
 
 	public function identifier() {

@@ -69,8 +69,8 @@ class Thrive_Quiz_Builder_Admin {
 
 		$menus['tqb'] = array(
 			'parent_slug' => 'tve_dash_section',
-			'page_title'  => __( 'Thrive Quiz Builder', Thrive_Quiz_Builder::T ),
-			'menu_title'  => __( 'Thrive Quiz Builder', Thrive_Quiz_Builder::T ),
+			'page_title'  => __( 'Thrive Quiz Builder', 'thrive-quiz-builder' ),
+			'menu_title'  => __( 'Thrive Quiz Builder', 'thrive-quiz-builder' ),
 			'capability'  => TQB_Product::cap(),
 			'menu_slug'   => 'tqb_admin_dashboard',
 			'function'    => array( $this, 'dashboard' ),

@@ -17,6 +17,6 @@ $settings['fonts'] = array(
 );
 
 return array(
-	'name' => __( 'Green Style', Thrive_Image_Editor::T ),
+	'name' => __( 'Green Style', 'thrive-image-editor' ),
 	'settings' => $settings,
 );

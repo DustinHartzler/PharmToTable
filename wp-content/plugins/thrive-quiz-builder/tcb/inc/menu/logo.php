@@ -33,6 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="tve-control" data-view="MenuSplitLogoPosition"></div>
 		<div class="tve-control" data-view="ImageAltText"></div>
 		<hr>
+		<div class="tve-control no-space mb-5" data-view="ImageLoading"></div>
 		<div class="tve-control no-space" data-key="ToggleURL" data-extends="Switch" data-label="<?php echo esc_html__( 'Add link to Logo', 'thrive-cb' ); ?>"></div>
 		<div class="logo-link mt-10"></div>
 	</div>
