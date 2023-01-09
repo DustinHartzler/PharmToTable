@@ -1,0 +1,1 @@
+/******/document.querySelectorAll(".wp-block-sensei-lms-course-list-filter select").forEach((function(e){e.onchange=function(e){var t=new URL(window.location.href);t.searchParams.set(e.target.dataset.paramKey,e.target.value),window.location.href=t}}));

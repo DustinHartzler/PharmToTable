@@ -1,0 +1,590 @@
+/******/(()=>{// webpackBootstrap
+/******/var e={
+/***/54582:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=n.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M12 24c6.628 0 12-5.372 12-12 0-6.627-5.372-12-12-12C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12Zm-1.536-5.924 8.647-11.629-1.204-.895-8.2 11.027-4.411-3.28-.895 1.204 5.014 3.728.602.447.447-.602Z",fill:"currentColor"})))};
+/***/},
+/***/37855:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=n.createElement("path",{d:"m14 7-5 5.5 5 5.5",stroke:"currentColor",strokeWidth:1.5})))};
+/***/},
+/***/46418:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=n.createElement("path",{d:"m10 7 5 5.5-5 5.5",stroke:"currentColor",strokeWidth:1.5})))};
+/***/},
+/***/62540:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({viewBox:"0 0 24 24",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=n.createElement("path",{d:"M6.5 12.4 12 8l5.5 4.4-.9 1.2L12 10l-4.5 3.6-1-1.2z",fill:"currentColor"})))};
+/***/},
+/***/73007:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=n.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M12 1.5C6.201 1.5 1.5 6.201 1.5 12S6.201 22.5 12 22.5 22.5 17.799 22.5 12 17.799 1.5 12 1.5ZM0 12C0 5.373 5.373 0 12 0s12 5.373 12 12-5.373 12-12 12S0 18.627 0 12Z",fill:"currentColor"})))};
+/***/},
+/***/55875:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>a
+/* harmony export */});
+/* harmony import */var r,n,i=s(99196);
+/* harmony import */function o(){return o=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},o.apply(this,arguments)}
+/* harmony default export */const a=function(e){
+return i.createElement("svg",o({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=i.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M13.148 23.875 24 11.938 13.148 0 10.94 2.006l9.029 9.932-9.03 9.931 2.208 2.006Z",fill:"currentColor"})),n||(n=i.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"m3.207 23.875 10.852-11.937L3.207 0 1 2.006l9.029 9.932L1 21.869l2.207 2.006Z",fill:"currentColor"})))};
+/***/},
+/***/89145:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=n.createElement("path",{fillRule:"evenodd",d:"M0 12.5c1.887-5.268 6.546-9 12-9s10.113 3.732 12 9c-1.887 5.268-6.546 9-12 9s-10.113-3.732-12-9zm21.623 0c-1.8-4.044-5.487-6.6-9.622-6.6s-7.822 2.556-9.622 6.6c1.8 4.044 5.487 6.6 9.623 6.6s7.823-2.556 9.622-6.6zM12 9.5c1.506 0 2.727 1.344 2.727 3s-1.223 3-2.727 3-2.727-1.344-2.727-3 1.223-3 2.727-3zm-4.909 3c0-2.976 2.204-5.4 4.91-5.4s4.91 2.424 4.91 5.4-2.204 5.4-4.91 5.4-4.909-2.424-4.909-5.4z",fill:"currentColor"})))};
+/***/},
+/***/34350:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>a
+/* harmony export */});
+/* harmony import */var r,n,i=s(99196);
+/* harmony import */function o(){return o=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},o.apply(this,arguments)}
+/* harmony default export */const a=function(e){
+return i.createElement("svg",o({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=i.createElement("path",{fillRule:"evenodd",d:"M12 1.5C6.201 1.5 1.5 6.201 1.5 12S6.201 22.5 12 22.5 22.5 17.799 22.5 12 17.799 1.5 12 1.5zM0 12C0 5.373 5.373 0 12 0s12 5.373 12 12-5.373 12-12 12S0 18.627 0 12z",fill:"currentColor"})),n||(n=i.createElement("path",{d:"M0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12",fill:"currentColor"})))};
+/***/},
+/***/25365:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>a
+/* harmony export */});
+/* harmony import */var r,n,i=s(99196);
+/* harmony import */function o(){return o=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},o.apply(this,arguments)}
+/* harmony default export */const a=function(e){
+return i.createElement("svg",o({xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24"},e),r||(r=i.createElement("path",{d:"M16.181 17.381a7.61 7.61 0 0 1-2.13.133L15.778 20H18l-1.819-2.619zm-5.479-.953a7.712 7.712 0 0 1-2.12-1.928H5.5v-9h2.759A7.793 7.793 0 0 1 9.523 4H4v12h4.778L6 20h2.222l2.48-3.572zM15.541 8.944h-1.5v3.997h1.5V8.944zm0-1h-1.5V6.55h1.5v1.395z"})),n||(n=i.createElement("path",{d:"M20.79 9.768c0 3.425-2.714 6.269-6.145 6.269-3.43 0-6.145-2.844-6.145-6.269 0-3.424 2.714-6.268 6.145-6.268 3.43 0 6.145 2.844 6.145 6.268zm-6.145 4.769c2.565 0 4.645-2.135 4.645-4.769C19.29 7.135 17.21 5 14.645 5 12.08 5 10 7.135 10 9.768c0 2.634 2.08 4.769 4.645 4.769z"})))};
+/***/},
+/***/19972:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=n.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M19.125 8h-1.188V5.714C17.938 2.56 15.277 0 12 0S6.062 2.56 6.062 5.714V8H4.875C3.569 8 2.5 9.029 2.5 10.286v11.428C2.5 22.971 3.569 24 4.875 24h14.25c1.306 0 2.375-1.029 2.375-2.286V10.286C21.5 9.029 20.431 8 19.125 8ZM8.438 5.714c0-1.897 1.59-3.428 3.562-3.428 1.971 0 3.563 1.531 3.563 3.428V8H8.438V5.714Zm-3.563 16h14.25V10.286H4.875v11.428Z",fill:"currentColor"})))};
+/***/},
+/***/72193:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24"},e),r||(r=n.createElement("path",{d:"M5 5v1.5h14V5H5zm0 7.8h14v-1.5H5v1.5zM5 19h14v-1.5H5V19z",fill:"currentColor"})))};
+/***/},
+/***/8930:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var r,n=s(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const o=function(e){
+return n.createElement("svg",i({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=n.createElement("path",{d:"M12 24a12 12 0 1 0 0-24 12 12 0 0 0 0 24Zm-.1-4.723c-2.849 0-4.517-1.072-4.575-3.011 0-.203 0-.405.029-.608 1.208 1.013 2.733 1.65 4.603 1.65 1.64 0 2.733-.695 2.733-1.708 0-.608-.978-.897-2.244-1.274-2.33-.752-5.553-1.736-5.553-5.181 0-2.721 1.957-4.458 5.323-4.458 2.905 0 4.66 1.042 4.689 3.242v.376c-1.496-1.187-3.107-1.794-4.862-1.794-1.64 0-2.848.636-2.848 1.592 0 .55.978.868 2.244 1.273 2.33.753 5.667 1.824 5.667 5.24 0 2.808-2.186 4.66-5.207 4.66Z",fill:"currentColor"})))};
+/***/},
+/***/36414:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>n
+/* harmony export */});
+/* harmony import */var r=s(69307);
+/* harmony import */
+/* harmony default export */const n=
+/**
+ * WordPress dependencies
+ */
+/** @typedef {{icon: JSX.Element, size?: number} & import('@wordpress/primitives').SVGProps} IconProps */
+/**
+ * Return an SVG icon.
+ *
+ * @param {IconProps} props icon is the SVG component to render
+ *                          size is a number specifiying the icon size in pixels
+ *                          Other props will be passed to wrapped SVG component
+ *
+ * @return {JSX.Element}  Icon component
+ */
+function({icon:e,size:t=24,...s}){return(0,r.cloneElement)(e,{width:t,height:t,...s})};
+//# sourceMappingURL=index.js.map
+/***/},
+/***/47730:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>i
+/* harmony export */});
+/* harmony import */var r=s(69307),n=s(70444);
+/* harmony import */
+/**
+ * WordPress dependencies
+ */
+const i=(0,r.createElement)(n.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24"},(0,r.createElement)(n.Path,{d:"M4 20h8v-1.5H4V20zM18.9 3.5c-.6-.6-1.5-.6-2.1 0l-7.2 7.2c-.4-.1-.7 0-1.1.1-.5.2-1.5.7-1.9 2.2-.4 1.7-.8 2.2-1.1 2.7-.1.1-.2.3-.3.4l-.6 1.1H6c2 0 3.4-.4 4.7-1.4.8-.6 1.2-1.4 1.3-2.3 0-.3 0-.5-.1-.7L19 5.7c.5-.6.5-1.6-.1-2.2zM9.7 14.7c-.7.5-1.5.8-2.4 1 .2-.5.5-1.2.8-2.3.2-.6.4-1 .8-1.1.5-.1 1 .1 1.3.3.2.2.3.5.2.8 0 .3-.1.9-.7 1.3z"}));
+/* harmony default export */}
+//# sourceMappingURL=brush.js.map
+/***/,
+/***/17087:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>i
+/* harmony export */});
+/* harmony import */var r=s(69307),n=s(70444);
+/* harmony import */
+/**
+ * WordPress dependencies
+ */
+const i=(0,r.createElement)(n.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24"},(0,r.createElement)(n.Path,{d:"M18 5.5H6a.5.5 0 00-.5.5v3h13V6a.5.5 0 00-.5-.5zm.5 5H10v8h8a.5.5 0 00.5-.5v-7.5zm-10 0h-3V18a.5.5 0 00.5.5h2.5v-8zM6 4h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z"}));
+/* harmony default export */}
+//# sourceMappingURL=layout.js.map
+/***/,
+/***/80820:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>i
+/* harmony export */});
+/* harmony import */var r=s(69307),n=s(70444);
+/* harmony import */
+/**
+ * WordPress dependencies
+ */
+const i=(0,r.createElement)(n.SVG,{viewBox:"0 0 24 24",xmlns:"http://www.w3.org/2000/svg"},(0,r.createElement)(n.Path,{d:"M12.5 4.2v1.6h4.7L5.8 17.2V12H4.2v7.8H12v-1.6H6.8L18.2 6.8v4.7h1.6V4.2z"}));
+/* harmony default export */}
+//# sourceMappingURL=resize-corner-n-e.js.map
+/***/,
+/***/60042:
+/***/(e,t)=>{var s;
+/*!
+  Copyright (c) 2018 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */!function(){"use strict";var r={}.hasOwnProperty;function n(){for(var e=[],t=0;t<arguments.length;t++){var s=arguments[t];if(s){var i=typeof s;if("string"===i||"number"===i)e.push(s);else if(Array.isArray(s)){if(s.length){var o=n.apply(null,s);o&&e.push(o)}}else if("object"===i)if(s.toString===Object.prototype.toString)for(var a in s)r.call(s,a)&&s[a]&&e.push(a);else e.push(s.toString())}}return e.join(" ")}e.exports?(n.default=n,e.exports=n):void 0===(s=function(){return n}.apply(t,[]))||(e.exports=s)}()}
+/***/,
+/***/80768:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>m
+/* harmony export */});
+/* harmony import */var r=s(25773),n=s(53782),i=s(69307),o=s(60042),a=s.n(o),l=s(55609),c=s(65736),u=["className","id","label","value","help","allowReset","resetLabel","onChange","suffix","hideLabelFromVision"],__=c.__;
+/* harmony import */
+/* harmony default export */const m=function(e){var t=e.className,s=e.id,o=e.label,c=e.value,m=e.help,p=e.allowReset,d=void 0!==p&&p,g=e.resetLabel,f=e.onChange,v=e.suffix,h=e.hideLabelFromVision,y=(0,n/* ["default"] */.Z)(e,u);return(0,i.createElement)(l.BaseControl,{id:s,label:o,help:m,hideLabelFromVision:h},(0,i.createElement)("div",{className:"sensei-number-control"},(0,i.createElement)("div",{className:"sensei-number-control__input-container"},(0,i.createElement)("input",(0,r/* ["default"] */.Z)({className:a()("sensei-number-control__input components-text-control__input",t),type:"number",id:s,onChange:function(e){f(parseInt(e.target.value,10)||y.min||0)},value:null===c?"":c},y)),v&&(0,i.createElement)("span",{className:"sensei-number-control__input-suffix"},v)),d&&(0,i.createElement)(l.Button,{className:"sensei-number-control__button",isSmall:!0,isSecondary:!0,onClick:function(){return f(null)}},g||__("Reset","sensei-lms"))))};
+/***/},
+/***/83456:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */D:()=>/* binding */i
+/* harmony export */});
+/* harmony import */var r=s(92694),n=s(65736),__=n.__,i=(0,r.applyFilters)("sensei-lms.Lesson.difficulties",[{label:__("None","sensei-lms"),value:""},{label:__("Easy","sensei-lms"),value:"easy"},{label:__("Standard","sensei-lms"),value:"std"},{label:__("Hard","sensei-lms"),value:"hard"}]);
+/* harmony import */}
+/***/,
+/***/45824:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>a
+/* harmony export */});
+/* harmony import */var r=s(50189),n=s(25365),i=s(95826),o=s(9757);
+/* harmony import */
+/**
+ * Internal dependencies
+ */
+/* harmony default export */const a=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i),{},{metadata:i,icon:n/* ["default"] */.Z,example:{attributes:{difficulty:"easy",length:10}},edit:o/* ["default"] */.Z,save:function(){return null}});
+/***/},
+/***/9757:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>f
+/* harmony export */});
+/* harmony import */var r=s(64649),n=s(50189),i=s(66886),o=s(69307),a=s(60042),l=s.n(a),c=s(37798),u=s(52175),m=s(55609),p=s(65736),d=s(80768),g=s(83456),__=p.__,_n=p._n;
+/* harmony import */
+/* harmony default export */const f=function(e){var t,s=e.className,a=(0,c.useEntityProp)("postType","lesson","meta"),p=(0,i/* ["default"] */.Z)(a,2),f=p[0],v=p[1],h=f||{},y=h._lesson_complexity,_=void 0===y?"":y,b=h._lesson_length,Z=void 0===b?10:b,x=!f,w=(0,o.useCallback)((function(e,t){v((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},f),{},(0,r/* ["default"] */.Z)({},e,t)))}),[f,v]);return(0,o.createElement)(o.Fragment,null,!x&&(0,o.createElement)(u.InspectorControls,null,(0,o.createElement)(m.PanelBody,{title:__("Properties","sensei-lms")},(0,o.createElement)(d/* ["default"] */.Z,{id:"sensei-lesson-length",label:__("Length","sensei-lms"),min:0,step:1,value:Z,onChange:function(e){return w("_lesson_length",e)},suffix:_n("minute","minutes",Z,"sensei-lms")}),(0,o.createElement)(m.SelectControl,{label:__("Difficulty","sensei-lms"),options:g/* .DIFFICULTIES.map */.D.map((function(e){return{label:e.label,value:e.value}})),value:_,onChange:function(e){return w("_lesson_complexity",e)}}))),(0,o.createElement)("div",{className:s},(0,o.createElement)("span",{className:l()("wp-block-sensei-lms-lesson-properties__length",{disabled:!Z})},__("Length","sensei-lms")+": "+Z+" "+_n("minute","minutes",Z,"sensei-lms")),(0,o.createElement)("span",{className:l()("wp-block-sensei-lms-lesson-properties__separator",{disabled:!Z||!_})},"|"),(0,o.createElement)("span",{className:l()("wp-block-sensei-lms-lesson-properties__difficulty",{disabled:!_})},__("Difficulty","sensei-lms")+": "+(null===(t=g/* .DIFFICULTIES.find */.D.find((function(e){return _===e.value})))||void 0===t?void 0:t.label))))};
+/***/},
+/***/29095:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>b
+/* harmony export */});
+/* harmony import */var r=s(50189),n=s(25773),i=s(69307),o=s(65736),a=s(62540),l=s(73007),c=s(34350),u=s(54582),m=s(19972),p=s(89145),d=s(2662),g=s(8930),f=s(52175),__=o.__,v={"not-started":l/* ["default"] */.Z,"in-progress":c/* ["default"] */.Z,ungraded:c/* ["default"] */.Z,completed:u/* ["default"] */.Z,failed:c/* ["default"] */.Z,locked:m/* ["default"] */.Z,preview:p/* ["default"] */.Z},h=[{title:__("Module A","sensei-lms"),lessons:[{title:__("First Lesson","sensei-lms"),status:"preview"},{title:__("Second Lesson","sensei-lms"),status:"completed",quiz:!0},{title:__("Third Lesson","sensei-lms"),status:"in-progress",quiz:!0},{title:__("Fourth Lesson","sensei-lms"),status:"not-started",quiz:!0}]},{title:__("Module B","sensei-lms"),lessons:[{title:__("Fifth Lesson","sensei-lms"),status:"not-started",quiz:!0},{title:__("Sixth Lesson","sensei-lms"),status:"locked"},{title:__("Seventh Lesson","sensei-lms"),status:"locked"}]}],y=function(e){var t=e.title,s=e.lessons;return(0,i.createElement)("section",{className:"sensei-lms-course-navigation-module sensei-collapsible"},(0,i.createElement)("header",{className:"sensei-lms-course-navigation-module__header"},(0,i.createElement)("div",{className:"sensei-collapsible__toggle"},(0,i.createElement)("div",{className:"sensei-lms-course-navigation-module__title"},t),(0,i.createElement)(a/* ["default"] */.Z,{className:"sensei-lms-course-navigation-module__collapsible-icon"}))),(0,i.createElement)("ol",{className:"sensei-lms-course-navigation-module__lessons sensei-collapsible__content"},s.map((function(e){return(0,i.createElement)(_,(0,n/* ["default"] */.Z)({},e,{key:e.title}))}))),(0,i.createElement)("div",{className:"sensei-lms-course-navigation-module__summary"},__("2 lessons, 0 quizzes","sensei-lms")))},_=function(e){var t=e.title,s=e.quiz,r=e.status,n=v[r];return(0,i.createElement)("li",{className:"sensei-lms-course-navigation-lesson status-".concat(r)},(0,i.createElement)("span",{className:"sensei-lms-course-navigation-lesson__link"},(0,i.createElement)(n,{className:"sensei-lms-course-navigation-lesson__status"}),(0,i.createElement)("span",{className:"sensei-lms-href sensei-lms-course-navigation-lesson__title"},t)),s&&(0,i.createElement)("span",{className:"sensei-lms-href sensei-lms-course-navigation-lesson__extra"},__("Quiz","sensei-lms")))};
+/* harmony import */
+/**
+ * Course Navigation block.
+ */
+/* harmony default export */const b=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},d),{},{icon:{src:(0,i.createElement)(g/* ["default"] */.Z,{width:"20",height:"20"}),foreground:"#43AF99"},attributes:{},title:__("Course Navigation","sensei-lms"),edit:function(){var e=(0,f.useBlockProps)({className:"sensei-lms-course-navigation"});return(0,i.createElement)("div",e,(0,i.createElement)("div",{className:"sensei-lms-course-navigation__modules"},h.map((function(e){return(0,i.createElement)(y,(0,n/* ["default"] */.Z)({},e,{key:e.title}))}))))}});
+/***/},
+/***/76445:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>C
+/* harmony export */});
+/* harmony import */var r=s(25773),n=s(50189),i=s(69307),o=s(65736),a=s(52175),l=s(37855),c=s(46418),u=s(55875),m=s(72193),p=s(8930),d=s(45824),g=s(79376),f=s(21312),v=s(26846),h=s(62864),y=s(85921),_=s(95694),b=s(36110),Z=s(33632),x=s(69027),w=s(11927),E=s(97989),N=s(65192),k=s(9113),S=s(2300),O=s(29199),__=o.__,z={category:"theme",attributes:{},icon:{src:(0,i.createElement)(p/* ["default"] */.Z,{width:"20",height:"20"}),foreground:"#43AF99"}};
+/* harmony import */
+/* harmony default export */const C=[(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},w),z),{},{title:__("Course Title","sensei-lms"),description:__("Display title of the course the current lesson or quiz belongs to.","sensei-lms"),edit:function(){var e=(0,a.useBlockProps)();return(0,i.createElement)("span",e,__("Course Title","sensei-lms"))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},v),z),{},{title:__("Course Progress","sensei-lms"),description:__("Display number of completed and total lessons in the course.","sensei-lms"),edit:function(){var e=(0,a.useBlockProps)({className:"sensei-course-theme-course-progress"});return(0,i.createElement)("div",e,__("2 of 10 lessons complete (20%)","sensei-lms"))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},Z),z),{},{title:__("Previous & Next Lesson","sensei-lms"),description:__("Link to the previous and next lessons.","sensei-lms"),edit:function(){return(0,i.createElement)("div",{className:"sensei-course-theme-prev-next-lesson-container"},(0,i.createElement)("div",{className:"sensei-course-theme-prev-next-lesson-a sensei-course-theme-prev-next-lesson-a__prev"},(0,i.createElement)(l/* ["default"] */.Z,null)),(0,i.createElement)("div",{className:"sensei-course-theme-prev-next-lesson-a sensei-course-theme-prev-next-lesson-a__next"},(0,i.createElement)(c/* ["default"] */.Z,null)))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},S),z),{},{title:__("Sidebar Menu Toggle","sensei-lms"),description:__("Turn the Sidebar block into an overlay menu on mobile screens.","sensei-lms"),edit:function(){return(0,i.createElement)("div",{className:"sensei-course-theme__sidebar-toggle"},(0,i.createElement)(m/* ["default"] */.Z,null))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},h),z),{},{title:__("Lesson Actions (Learning Mode)","sensei-lms"),description:__("Display buttons for actions the learner can take for the current lesson.","sensei-lms"),edit:function(){return(0,i.createElement)("div",{className:"sensei-course-theme-lesson-actions"},(0,i.createElement)("div",{className:"sensei-course-theme__button is-primary"},__("Take Quiz","sensei-lms")),(0,i.createElement)("div",{className:"sensei-course-theme__button is-secondary"},__("Complete Course","sensei-lms")))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},f),z),{},{title:__("Course Progress Bar","sensei-lms"),description:__("Display course progress.","sensei-lms"),edit:function(){var e=(0,a.useBlockProps)({className:"sensei-course-theme-course-progress-bar"});return(0,i.createElement)("div",e,(0,i.createElement)("div",{className:"sensei-course-theme-course-progress-bar-inner",style:{width:"20%"}}))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},N),z),{},{title:__("Focus Mode Toggle","sensei-lms"),description:__("Toggle a minimalized view of Learning Mode.","sensei-lms"),edit:function(){return(0,i.createElement)("div",{className:"sensei-course-theme__focus-mode-toggle"},(0,i.createElement)(u/* ["default"] */.Z,{className:"sensei-course-theme__focus-mode-toggle-icon"}))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},E),z),{},{title:__("Exit Course","sensei-lms"),description:__("Exit Learning Mode and return to the course page.","sensei-lms"),edit:function(){var e=(0,a.useBlockProps)({className:"sensei-lms-href"});return(0,i.createElement)("span",e,__("Exit Course","sensei-lms"))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},y),z),{},{title:__("Module Title","sensei-lms"),description:__("Display title of the module the current lesson belongs to.","sensei-lms"),edit:function(){var e=(0,a.useBlockProps)();return(0,i.createElement)("span",e,__("MODULE","sensei-lms"))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},b),z),{},{title:__("Post Title","sensei-lms"),description:__("Display title of the current lesson or quiz.","sensei-lms"),edit:function(){return(0,i.createElement)("h1",null,__("Lesson Title","sensei-lms"))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},g),z),{},{title:__("Course Content","sensei-lms"),description:__("Display lesson or quiz content, if the learner has access to it.","sensei-lms"),edit:function(){return(0,i.createElement)("p",null,__("Course Content.","sensei-lms"))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},_),z),{},{title:__("Notices","sensei-lms"),description:__("Display Sensei notices about the current lesson or quiz.","sensei-lms"),edit:function(){return(0,i.createElement)("div",{className:"sensei-course-theme__frame sensei-lms-notice sensei-course-theme-lesson-quiz-notice"},(0,i.createElement)("div",{className:"sensei-course-theme-lesson-quiz-notice__content"},__("Notice","sensei-lms")))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},k),z),{},{title:__("Page Actions","sensei-lms"),description:__("Display pagination and related actions for the current page.","sensei-lms"),apiVersion:2,edit:function(){var e=(0,a.useBlockProps)({className:"sensei-quiz-pagination"});return(0,i.createElement)("div",e,(0,i.createElement)("div",{className:"sensei-course-theme__post-pagination"},(0,i.createElement)("span",{className:"post-page-numbers current"},"1"),(0,i.createElement)("span",{className:"post-page-numbers"},"2")))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},O),z),{},{title:__("Lesson Video","sensei-lms"),description:__("Displays the featured video if there is one for the lesson.","sensei-lms"),apiVersion:2,edit:function(){var e=(0,a.useBlockProps)({className:"sensei-course-theme-lesson-video"});return(0,i.createElement)("div",(0,r/* ["default"] */.Z)({},e,{style:{backgroundColor:"#000",color:"#fff",display:"flex",justifyContent:"center",alignItems:"center",height:"500px"}}),(0,i.createElement)("p",{className:"has-text-align-center",style:{fontSize:"100px"}},"▶"))}}),(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},d/* ["default"] */.Z),x),z),{},{description:__("Displays the lesson properties such as length and difficulty.","sensei-lms"),edit:function(){var e=(0,a.useBlockProps)({className:"wp-block-sensei-lms-lesson-properties"});return(0,i.createElement)("div",e,(0,i.createElement)("span",{className:"wp-block-sensei-lms-lesson-properties__difficulty"},__("The Learning Mode Lesson Properties block will display the lesson complexity and length. To set these properties, you need to add a Lesson Properties block to each individual lesson.","sensei-lms")))}})];
+/***/},
+/***/16186:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>p
+/* harmony export */});
+/* harmony import */var r=s(50189),n=s(69307),i=s(65736),o=s(52175),a=s(8930),l=s(24192),c=s(39843),u=s(95554),__=i.__,m={attributes:{},icon:{src:(0,n.createElement)(a/* ["default"] */.Z,{width:"20",height:"20"}),foreground:"#43AF99"}};
+/* harmony import */
+/* harmony default export */const p=[(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},u),m),{},{title:__("Quiz Progress Bar","sensei-lms"),description:__("Display progress of questions answered in a quiz.","sensei-lms"),edit:function(){return(0,n.createElement)("div",{className:"sensei-progress-bar"},(0,n.createElement)("div",{className:"sensei-progress-bar__label"},__("2 of 10 questions complete (20%)","sensei-lms")),(0,n.createElement)("div",{role:"progressbar",className:"sensei-progress-bar__bar"},(0,n.createElement)("div",{className:"sensei-progress-bar__progress",style:{width:"20%",backgroundColor:"var(--wp--preset--color--primary)"}})))}}),(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},c),m),{},{title:__("Back to lesson","sensei-lms"),description:__("Return to the lesson the quiz belongs to.","sensei-lms"),edit:function(){return(0,n.createElement)("span",{className:"sensei-lms-href sensei-lms-quiz-back-to-lesson"},"< ",__("Back to lesson","sensei-lms"))}}),(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},l),m),{},{title:__("Quiz Actions and Pagination","sensei-lms"),description:__("Display pagination and actions the learner can take for the current quiz page.","sensei-lms"),apiVersion:2,edit:function(){var e=(0,o.useBlockProps)({className:"sensei-quiz-pagination"});return(0,n.createElement)("div",e,(0,n.createElement)("div",{className:"sensei-quiz-pagination__list"},(0,n.createElement)("ul",{className:"page-numbers"},(0,n.createElement)("li",null,(0,n.createElement)("span",{className:"page-numbers current"},"1")),(0,n.createElement)("li",null,(0,n.createElement)("span",{className:"page-numbers"},"2")),(0,n.createElement)("li",null,(0,n.createElement)("span",{className:"page-numbers dots"},"…")),(0,n.createElement)("li",null,(0,n.createElement)("span",{className:"page-numbers"},"10")))),(0,n.createElement)("div",{className:"sensei-quiz-actions"},(0,n.createElement)("div",{className:"sensei-quiz-actions-secondary"},(0,n.createElement)("div",{className:"sensei-quiz-action"},(0,n.createElement)("div",{className:"button"},__("Next","sensei-lms"))),(0,n.createElement)("div",{className:"sensei-quiz-action"},(0,n.createElement)("div",{className:"button quiz-submit save"},__("Save","sensei-lms")))),(0,n.createElement)("div",{className:"sensei-quiz-actions-primary wp-block-buttons"},(0,n.createElement)("div",{className:"sensei-quiz-action wp-block-button sensei-course-button"},(0,n.createElement)("div",{className:"wp-block-button__link button quiz-submit complete"},__("Complete","sensei-lms"))))))}})];
+/***/},
+/***/86882:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */N:()=>/* binding */a
+/* harmony export */});
+/* harmony import */var r=s(53782),n=s(4981),i=s(9818),o=["name"];
+/* harmony import */
+/**
+ * WordPress dependencies
+ */
+/**
+ * Makes sure the template blocks are only registered when in the site or widget editor, or editing the template from
+ * the lesson page.
+ *
+ * @param {Array} blocks
+ */
+function a(e){var t=!1,s=function(s){if(s!==t){t=s;var i=s?n.registerBlockType:n.unregisterBlockType;e.forEach((function(e){var t=e.name,s=(0,r/* ["default"] */.Z)(e,o);i(t,s)}))}};s(!0),// TODO Only subscribe when in the post editor.
+(0,i.subscribe)((function(){var e,t=null===(e=(0,i.select)("core/editor"))||void 0===e?void 0:e.getCurrentPostType(),r=(0,i.select)("core/edit-post");if(t&&r){var n="lesson"===t&&r.isEditingTemplate();s(n)}}))}
+/***/},
+/***/62152:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */P:()=>/* reexport safe */r.P
+/* harmony export */});
+/* harmony import */var r=s(23782);
+/***/},
+/***/23782:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */P:()=>/* binding */u
+/* harmony export */});
+/* harmony import */var r=s(50189),n=s(69307),i=s(65736),o=s(55609),a=s(47730),l=s(57531),__=i.__,c=function(e){var t=e.attributes;return(0,n.createElement)("style",{dangerouslySetInnerHTML:{__html:t.content}})},u=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},l),{},{title:__("Template Style","sensei-lms"),icon:{src:(0,n.createElement)(o.Icon,{icon:a/* ["default"] */.Z}),foreground:"#43AF99"},edit:c,save:c});
+/* harmony import */}
+/***/,
+/***/28284:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>n
+/* harmony export */});
+/* harmony import */var r=s(47200);
+/* harmony import */
+/**
+ * Internal dependencies
+ */
+/* harmony default export */const n=[s(25332).Z,r/* ["default"] */.Z];
+/***/},
+/***/47200:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>m
+/* harmony export */});
+/* harmony import */var r=s(50189),n=s(69307),i=s(52175),o=s(65736),a=s(36414),l=s(80820),c=s(8896),__=o.__,u=function(e){return function(){return(0,n.createElement)("div",e({className:"sensei-course-theme__spacer-flex"}))}};
+/* harmony import */
+/**
+ * Spacer block that fills available space in flex containers.
+ */
+/* harmony default export */const m=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},c),{},{title:__("Spacer (Auto)","sensei-lms"),scope:["inserter"],icon:{src:(0,n.createElement)(a/* ["default"] */.Z,{icon:l/* ["default"] */.Z}),foreground:"#43AF99"},description:__("Automatically fill space between blocks.","sensei-lms"),attributes:{},edit:u(i.useBlockProps),save:u(i.useBlockProps.save)});
+/***/},
+/***/25332:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>_
+/* harmony export */});
+/* harmony import */var r=s(50189),n=s(53782),i=s(69307),o=s(52175),a=s(36414),l=s(17087),c=s(65736),u=s(60042),m=s.n(u),p=s(30942),d=s(77684),g=["className","elementClass"],__=c.__,f={Edit:function(e,t){return(0,o.useInnerBlocksProps)((0,o.useBlockProps)(e),t)},Save:function(e){return o.useInnerBlocksProps.save(o.useBlockProps.save(e))}},v=function(e){return d/* ["default"].find */.ZP.find((function(t){return e===t.attributes.elementClass}))},h=function(e,t){var s,i,o=t.className,a=t.elementClass,l=(0,n/* ["default"] */.Z)(t,g),c=null===(s=null==e||null===(i=e.meta)||void 0===i?void 0:i.isFrame)||void 0===s||s?"sensei-course-theme__frame":"";return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},l),{},{className:m()(c,o,a)})},y=function(e,t){var s,r,n=t.attributes,o=n.tagName,a=n.className,l=n.elementClass,c=null!==(s=v(l))&&void 0!==s?s:{};return(0,i.createElement)(o,e(h(c,{className:a,elementClass:l}),null==c||null===(r=c.meta)||void 0===r?void 0:r.innerBlocksProps))};
+/* harmony import */y.Edit=y.bind(null,f.Edit),y.Save=y.bind(null,f.Save);
+/* harmony default export */const _=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},p),{},{title:__("Interface Element","sensei-lms"),icon:{src:(0,i.createElement)(a/* ["default"] */.Z,{icon:l/* ["default"] */.Z}),foreground:"#43AF99"},edit:y.Edit,save:y.Save,variations:d/* ["default"] */.ZP});
+/***/},
+/***/77684:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */ZP:()=>p
+/* harmony export */});
+/* unused harmony exports FixedHeaderBlock, SidebarBlock, MainContentBlock, TwoColumnLayoutBlock, VideoContainerBlock, ContentFooterBlock */
+/* harmony import */var r=s(50189),n=s(65736),i=s(30942),__=n.__,o={scope:["inserter"],isActive:["elementClass"]},a=["core/group",{style:{spacing:{padding:{right:"24px",left:"24px"},margin:{top:"0px",bottom:"0px"}}},layout:{type:"flex",flexWrap:"nowrap",justifyContent:"space-between"}}],l=function(e,t){return[i.name,(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},e.attributes),t)]},c=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},o),{},{name:"sensei-lms/learning-mode-header",title:__("Fixed Header","sensei-lms"),description:__("Header area that stays fixed on top of the screen.","sensei-lms"),isDefault:!0,attributes:{elementClass:"sensei-course-theme__header"},innerBlocks:[a],meta:{isFrame:!0}}),u=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},o),{},{name:"sensei-lms/sidebar",title:__("Sidebar Menu","sensei-lms"),description:__('A sidebar displayed as an overlay menu on mobile screens. Add the "Sidebar Toggle" block to a header to allow opening and closing.',"sensei-lms"),attributes:{elementClass:"sensei-course-theme__sidebar"},meta:{isFrame:!0}}),m=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},o),{},{name:"sensei-lms/main-content",title:__("Main Content","sensei-lms"),description:__("Content Area.","sensei-lms"),attributes:{elementClass:"sensei-course-theme__main-content"},meta:{isFrame:!1}});
+/* harmony import */
+/* harmony default export */const p=[c,(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},o),{},{name:"sensei-lms/main-columns",title:__("Two-column Layout","sensei-lms"),description:__("Layout with a fixed left or right sidebar.","sensei-lms"),attributes:{elementClass:"sensei-course-theme__columns"},innerBlocks:[l(m,{lock:{remove:!0,move:!1}}),l(u,{lock:{remove:!0,move:!1}})],meta:{innerBlocksProps:{orientation:"horizontal",allowedBlocks:[],renderAppender:!1},isFrame:!1}}),m,u,(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},o),{},{name:"sensei-lms/video-container",title:__("Video Container","sensei-lms"),description:__("Container for a video with a sidebar.","sensei-lms"),attributes:{elementClass:"sensei-course-theme__video-container"},innerBlocks:[["core/video",[]],l(u,{lock:{remove:!0,move:!1}})],meta:{innerBlocksProps:{orientation:"horizontal"},isFrame:!1}}),(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},o),{},{name:"sensei-lms/content-footer",title:__("Content Footer","sensei-lms"),description:__("Navigation area below the content.","sensei-lms"),attributes:{elementClass:"sensei-course-theme__content-footer"},innerBlocks:[a],meta:{isFrame:!0}})];
+/***/},
+/***/99196:
+/***/e=>{"use strict";e.exports=window.React}
+/***/,
+/***/52175:
+/***/e=>{"use strict";e.exports=window.wp.blockEditor}
+/***/,
+/***/4981:
+/***/e=>{"use strict";e.exports=window.wp.blocks}
+/***/,
+/***/55609:
+/***/e=>{"use strict";e.exports=window.wp.components}
+/***/,
+/***/37798:
+/***/e=>{"use strict";e.exports=window.wp.coreData}
+/***/,
+/***/9818:
+/***/e=>{"use strict";e.exports=window.wp.data}
+/***/,
+/***/69307:
+/***/e=>{"use strict";e.exports=window.wp.element}
+/***/,
+/***/92694:
+/***/e=>{"use strict";e.exports=window.wp.hooks}
+/***/,
+/***/65736:
+/***/e=>{"use strict";e.exports=window.wp.i18n}
+/***/,
+/***/70444:
+/***/e=>{"use strict";e.exports=window.wp.primitives}
+/***/,
+/***/1793:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(e,t){(null==t||t>e.length)&&(t=e.length);for(var s=0,r=new Array(t);s<t;s++)r[s]=e[s];return r}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/66470:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(e){if(Array.isArray(e))return e}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/58138:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>/* binding */n
+/* harmony export */});
+/* harmony import */var r=s(1793);function n(e){if(Array.isArray(e))return(0,r/* ["default"] */.Z)(e)}
+/***/},
+/***/64649:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(e,t,s){return t in e?Object.defineProperty(e,t,{value:s,enumerable:!0,configurable:!0,writable:!0}):e[t]=s,e}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/25773:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(){return r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},r.apply(this,arguments)}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/55181:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(e){if("undefined"!=typeof Symbol&&null!=e[Symbol.iterator]||null!=e["@@iterator"])return Array.from(e)}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/22446:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(e,t){var s=null==e?null:"undefined"!=typeof Symbol&&e[Symbol.iterator]||e["@@iterator"];if(null!=s){var r,n,i=[],_n=!0,o=!1;try{for(s=s.call(e);!(_n=(r=s.next()).done)&&(i.push(r.value),!t||i.length!==t);_n=!0);}catch(e){o=!0,n=e}finally{try{_n||null==s.return||s.return()}finally{if(o)throw n}}return i}}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/53764:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/83314:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/50189:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>/* binding */i
+/* harmony export */});
+/* harmony import */var r=s(64649);function n(e,t){var s=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);t&&(r=r.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),s.push.apply(s,r)}return s}function i(e){for(var t=1;t<arguments.length;t++){var s=null!=arguments[t]?arguments[t]:{};t%2?n(Object(s),!0).forEach((function(t){(0,r/* ["default"] */.Z)(e,t,s[t])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(s)):n(Object(s)).forEach((function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(s,t))}))}return e}
+/***/},
+/***/53782:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>/* binding */n
+/* harmony export */});
+/* harmony import */var r=s(30808);function n(e,t){if(null==e)return{};var s,n,i=(0,r/* ["default"] */.Z)(e,t);if(Object.getOwnPropertySymbols){var o=Object.getOwnPropertySymbols(e);for(n=0;n<o.length;n++)s=o[n],t.indexOf(s)>=0||Object.prototype.propertyIsEnumerable.call(e,s)&&(i[s]=e[s])}return i}
+/***/},
+/***/30808:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */function r(e,t){if(null==e)return{};var s,r,n={},i=Object.keys(e);for(r=0;r<i.length;r++)s=i[r],t.indexOf(s)>=0||(n[s]=e[s]);return n}
+/***/s.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
+/***/66886:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>/* binding */a
+/* harmony export */});
+/* harmony import */var r=s(66470),n=s(22446),i=s(64013),o=s(53764);
+/* harmony import */function a(e,t){return(0,r/* ["default"] */.Z)(e)||(0,n/* ["default"] */.Z)(e,t)||(0,i/* ["default"] */.Z)(e,t)||(0,o/* ["default"] */.Z)()}
+/***/},
+/***/90228:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>/* binding */a
+/* harmony export */});
+/* harmony import */var r=s(58138),n=s(55181),i=s(64013),o=s(83314);
+/* harmony import */function a(e){return(0,r/* ["default"] */.Z)(e)||(0,n/* ["default"] */.Z)(e)||(0,i/* ["default"] */.Z)(e)||(0,o/* ["default"] */.Z)()}
+/***/},
+/***/64013:
+/***/(e,t,s)=>{"use strict";
+/* harmony export */s.d(t,{
+/* harmony export */Z:()=>/* binding */n
+/* harmony export */});
+/* harmony import */var r=s(1793);function n(e,t){if(e){if("string"==typeof e)return(0,r/* ["default"] */.Z)(e,t);var s=Object.prototype.toString.call(e).slice(8,-1);return"Object"===s&&e.constructor&&(s=e.constructor.name),"Map"===s||"Set"===s?Array.from(e):"Arguments"===s||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(s)?(0,r/* ["default"] */.Z)(e,t):void 0}}
+/***/},
+/***/95826:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/lesson-properties","title":"Lesson Properties","description":"Add lesson properties such as length and difficulty.","category":"sensei-lms","textdomain":"sensei-lms","keywords":["metadata","length","complexity","difficulty","lesson information","lesson properties"]}')}
+/***/,
+/***/2662:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-navigation","apiVersion":2,"category":"theme","supports":{"align":true,"color":{"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true}}}')}
+/***/,
+/***/79376:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-content","category":"theme","supports":{"align":true,"color":{"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true}}}')}
+/***/,
+/***/21312:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-theme-course-progress-bar","apiVersion":2,"category":"theme","supports":{"align":true,"color":true}}')}
+/***/,
+/***/26846:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-theme-course-progress-counter","category":"theme","apiVersion":2,"supports":{"align":true,"color":{"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}}}}')}
+/***/,
+/***/62864:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-theme-lesson-actions","category":"theme","supports":{"align":true,"color":{"gradients":true,"link":true,"background":false},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true}},"attributes":{"options":{"type":"object","default":{}}}}')}
+/***/,
+/***/85921:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-theme-lesson-module","category":"theme","apiVersion":2,"supports":{"align":true,"color":{"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}}}}')}
+/***/,
+/***/29199:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-theme-lesson-video","category":"theme","supports":{"align":true,"alignWide":true,"color":{"gradients":true,"link":true,"background":false},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true}}}')}
+/***/,
+/***/95694:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-theme-notices","category":"theme","supports":{"align":true,"color":{"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true}}}')}
+/***/,
+/***/36110:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-theme-post-title","category":"theme","supports":{"align":true,"color":true,"spacing":{"margin":true,"padding":true,"blockGap":true}}}')}
+/***/,
+/***/33632:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-theme-prev-next-lesson","category":"theme","supports":{"align":true,"color":{"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true}}}')}
+/***/,
+/***/11927:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/course-title","category":"theme","apiVersion":2,"supports":{"align":true,"color":true,"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}}}}')}
+/***/,
+/***/97989:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/exit-course","category":"theme","apiVersion":2,"supports":{"align":true,"color":{"gradients":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true,"__experimentalDefaultControls":{"fontSize":true}},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true}}}')}
+/***/,
+/***/65192:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/focus-mode-toggle","category":"theme","supports":{"align":true,"color":true}}')}
+/***/,
+/***/69027:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/learning-mode-lesson-properties","category":"theme","supports":{"align":true,"color":true,"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true}}}')}
+/***/,
+/***/9113:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/page-actions","category":"theme","apiVersion":2,"supports":{"align":true,"color":{"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true},"typography":{"fontSize":true,"__experimentalFontFamily":true,"__experimentalFontWeight":true,"__experimentalFontStyle":true,"__experimentalTextTransform":true,"__experimentalTextDecoration":true,"__experimentalLetterSpacing":true}}}')}
+/***/,
+/***/2300:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/sidebar-toggle-button","category":"theme","supports":{"align":true,"spacing":{"margin":true,"padding":true,"blockGap":true}}}')}
+/***/,
+/***/24192:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/quiz-actions","category":"theme","supports":{}}')}
+/***/,
+/***/39843:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/quiz-back-to-lesson","category":"theme","supports":{"align":true,"color":{"gradients":true,"link":true},"spacing":{"margin":true,"padding":true,"blockGap":true},"typography":{"fontSize":true,"lineHeight":true}}}')}
+/***/,
+/***/95554:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/quiz-progress","category":"theme","supports":{"align":true,"color":true,"spacing":{"margin":true,"padding":true,"blockGap":true},"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true}}}')}
+/***/,
+/***/57531:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/template-style","category":"theme","parent":[],"apiVersion":2,"attributes":{"content":{"source":"text","type":"string","selector":"style"}}}')}
+/***/,
+/***/8896:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/spacer-flex","category":"theme","apiVersion":2,"supports":{}}')}
+/***/,
+/***/30942:
+/***/e=>{"use strict";e.exports=JSON.parse('{"name":"sensei-lms/ui","category":"theme","apiVersion":2,"supports":{"align":true,"alignWide":true,"color":{"gradients":true,"link":true,"__experimentalDefaultControls":{"background":true,"text":true,"link":true}},"spacing":{"margin":true,"padding":true,"blockGap":true},"__experimentalLayout":true,"__experimentalBorder":{"color":true,"radius":true,"style":true,"width":true},"typography":{"fontSize":true,"lineHeight":true}},"attributes":{"tagName":{"type":"string","default":"div"},"elementClass":{"type":"string","default":""}}}')}
+/***/
+/******/},t={};
+/************************************************************************/
+/******/ // The module cache
+/******/
+/******/
+/******/ // The require function
+/******/function s(r){
+/******/ // Check if module is in cache
+/******/var n=t[r];
+/******/if(void 0!==n)
+/******/return n.exports;
+/******/
+/******/ // Create a new module (and put it into the cache)
+/******/var i=t[r]={
+/******/ // no module.id needed
+/******/ // no module.loaded needed
+/******/exports:{}
+/******/};
+/******/
+/******/ // Execute the module function
+/******/
+/******/
+/******/ // Return the exports of the module
+/******/return e[r](i,i.exports,s),i.exports;
+/******/}
+/******/
+/************************************************************************/
+/******/ /* webpack/runtime/compat get default export */
+/******/
+/******/ // getDefaultExport function for compatibility with non-harmony modules
+/******/s.n=e=>{
+/******/var t=e&&e.__esModule?
+/******/()=>e.default
+/******/:()=>e
+/******/;
+/******/return s.d(t,{a:t}),t;
+/******/},
+/******/ // define getter functions for harmony exports
+/******/s.d=(e,t)=>{
+/******/for(var r in t)
+/******/s.o(t,r)&&!s.o(e,r)&&
+/******/Object.defineProperty(e,r,{enumerable:!0,get:t[r]})
+/******/;
+/******/},
+/******/s.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t)
+/******/,
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(()=>{"use strict";
+/* harmony import */var e=s(90228),t=s(86882),r=s(29095),n=s(28284),i=s(76445),o=s(16186),a=s(62152),l=[].concat((0,e/* ["default"] */.Z)(i/* ["default"] */.Z),(0,e/* ["default"] */.Z)(o/* ["default"] */.Z),(0,e/* ["default"] */.Z)(n/* ["default"] */.Z),[r/* ["default"] */.Z,a/* .templateStyleBlock */.P]);
+/* harmony import */(0,t/* .registerTemplateBlocks */.N)(l)})()})
+/******/();

@@ -1,0 +1,65 @@
+# Copyright (C) 2018 WooThemes
+# This file is distributed under the same license as the Sensei Course Progress package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Sensei Course Progress 1.0.7\n"
+"Report-Msgid-Bugs-To: https://github.com/woocommerce/sensei-course-"
+"progress/issues\n"
+"POT-Creation-Date: 2018-04-04 13:12:23+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-08-26 20:04+0500\n"
+"Language-Team: Airat Halitov <translate@airat.biz>\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;"
+"_n_noop:1,2;_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;"
+"esc_attr_x:1,2c;esc_html_x:1,2c\n"
+"X-Poedit-Basepath: ..\n"
+"X-Textdomain-Support: yes\n"
+"Last-Translator: Airat Halitov <translate@airat.biz>\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: includes/class-sensei-course-progress-widget.php:28
+msgid ""
+"Displays the current learners progress within the current course/module "
+"(only displays on single lesson page)."
+msgstr ""
+"Отображает текущий прогресс учеников в текущем курсе/модуле "
+"(отображается только на странице урока)"
+
+#: includes/class-sensei-course-progress-widget.php:30
+msgid "Sensei - Course Progress"
+msgstr "Sensei - Course Progress"
+
+#: includes/class-sensei-course-progress-widget.php:161
+msgid "Previous"
+msgstr "Предыдущий"
+
+#: includes/class-sensei-course-progress-widget.php:162
+msgid "Next"
+msgstr "Следующий"
+
+#: includes/class-sensei-course-progress-widget.php:256
+msgid "Display all Modules"
+msgstr "Отображать все модули"
+
+#: includes/class-sensei-course-progress-widget.php:259
+msgid "There are no options for this widget."
+msgstr "Этот виджет не имеет настроек."
+
+#: includes/class-sensei-course-progress.php:170
+#: includes/class-sensei-course-progress.php:179
+msgid "Cheatin&#8217; huh?"
+msgstr "Барахлит, да?"
+
+#. Description of the plugin/theme
+msgid ""
+"Sensei extension that displays the learner's progress in the current "
+"course/module in a widget on lesson pages."
+msgstr ""
+"Расширение для Sensei, которое отображает в виджете на странице урока "
+"прогресс учеников в текущем курсе/модуле"
