@@ -304,7 +304,7 @@ function custom_storefront_credit() {
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>&copy; Copyright <?php echo get_the_date( 'Y' ); ?>. All Rights Reserved by <a href="https://pharmtotable.life">PharmToTable</a></p>
+                        <p>&copy; Copyright <?php echo date( 'Y' ); ?>. All Rights Reserved by <a href="https://pharmtotable.life">PharmToTable</a></p>
                     </div>
                     <div class="col-md-6 text-right link">
                         <ul>
