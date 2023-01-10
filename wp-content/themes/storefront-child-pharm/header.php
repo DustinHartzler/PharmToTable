@@ -113,7 +113,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             ?>
                 </div><!-- /.navbar-collapse -->
             </div>
-
+<?php 
+			echo '<link rel="icon" href="' . esc_url( get_stylesheet_directory_uri() . '/assets/img/favicon.png' ) . '" >';
+?>
 	<?php wp_head(); ?>
 </head>
 
