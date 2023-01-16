@@ -13,11 +13,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="PharmtoTable - Your Journey To Wellness Through Natural Methods">
-    <meta property="og:title" content="Functional Medicine Discovery Class" />
-    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/discovery-class/discovery-class.jpeg" />
+    <meta property="og:title" content="Constipation Guide" />
+    <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/gut-health/unhealthy-gut.jpg" />
 
     <!-- ========== Page Title ========== -->
-    <title>PharmToTable | <?php wp_title(''); ?></title>
+    <title>PharmToTable | <?php wp_title( '' ); ?></title>
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -110,7 +110,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <i class="fa fa-bars"></i>
                     </button>
                     <a class="navbar-brand" href="index.html">
-                        <h2 class="header">Guide to a Healthy Gut</h2>
+                        <h2 class="header">Constipation Guide</h2>
                     </a>
                 </div>
                 <!-- End Header Navigation -->
@@ -169,37 +169,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="row">
 
                 <div class="col-md-12 info">
-                    <div class="heading">
-                        <h3>What You Get When You Sign Up:</h3>
-                    </div>
-                    <div class="col-md-6 info">
+					<div class="col-md-6 info">
+						<div class="heading">
+							<h3>It this guide you'll find:</h3>
+						</div>
                         <ul>
                             <li>
                                 <div class="info">
-                                    <p>Download a 1-hour on-demand class led by our founder, Melody Hartzler, PharmD, PharmToTable Functional Medicine Pharmacist</p>
+                                    <p>What it means to be "regular"</p>
                                 </div>
                             </li>
                             <li>
                                 <div class="info">
-                                    <p>Answers to all of your questions about the Functional Medicine approach</p>
+                                    <p>Tips to help alleviate constipation</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="info">
+                                    <p>Why having a bowel movement every day is so important</p>
                                 </div>
                             </li>
                         </ul>
                         </div>
                         <div class="col-md-6 info">
-                        <ul>
-                        <li>
-                                <div class="info">
-                                    <p>Explanation of various treatment options available</p>
-                                </div>
-                            </li>
-                        <li>
-                            <div class="info">
-                                <p>Cost of the Discovery Class will be applied to your first visit!</p>
-                            </div>
-                        </li>
-
-                    </ul>
+						<div class="heading">
+							<h3>We want you to Thrive:</h3>
+						</div>
+							<div class="info">
+								<p>Being well is not just the absence of disease, being well is thriving. At PharmToTable, we strive to help you transform your life for optimal living. We are a group of pharmacists located across the country that provide personalized, convenient health care that addresses the underlying causes of chronic disease. You and your journey are unique, and your health care should be too.</p>
+							</div>
                 </div>
             </div>
         </div>

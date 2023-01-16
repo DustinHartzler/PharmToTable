@@ -3140,6 +3140,7 @@ body,
 .chose-us-area .info ul {
     margin-top: 30px;
     overflow: hidden;
+	margin-bottom: 50px;
 }
 
 .chose-us-area .info li p:last-child {
