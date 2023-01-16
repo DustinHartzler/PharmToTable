@@ -12,8 +12,9 @@
 		</div><!-- .col-full -->
 	</div><!-- #content -->
 
-	<?php do_action( 'storefront_before_footer' ); ?>
-	<?php if ( is_page_template( 'page-14-day-reset.php' ) || is_page_template( 'page-discovery.php' ) ) {
+	<?php
+	do_action( 'storefront_before_footer' ); 
+	if ( is_page_template( 'page-14-day-reset.php' ) || is_page_template( 'page-discovery.php' ) || is_page_template( 'page-gut-pdf-download.php' ) ) {
 } else {?>
     <!-- Start Newsletter
 ============================================= -->
@@ -21,7 +22,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <?php if (is_page_template('page-landing.php')) { ?>
+                <?php if ( is_page_template( 'page-landing.php' ) ) { ?>
                     <h2>Ready to Start Your Journey?</h2>
                     <form action="#">
                     <button type="submit">
