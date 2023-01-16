@@ -16,6 +16,8 @@
     <meta property="og:title" content="Constipation Guide" />
     <meta property="og:image" content="<?php echo get_theme_root_uri(); ?>/storefront-child-pharm/assets/img/landing/gut-health/unhealthy-gut.jpg" />
 
+	<script async data-uid="68f2caa60a" src="https://witty-producer-4283.ck.page/68f2caa60a/index.js"></script>
+
     <!-- ========== Page Title ========== -->
     <title>PharmToTable | <?php wp_title( '' ); ?></title>
 
@@ -110,7 +112,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <i class="fa fa-bars"></i>
                     </button>
                     <a class="navbar-brand" href="index.html">
-                        <h2 class="header">Constipation Guide</h2>
+                        <h2 class="header">Constipation Quick Guide</h2>
                     </a>
                 </div>
                 <!-- End Header Navigation -->
@@ -138,7 +140,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                         <div class="content">
                                             <h1 data-animation="animated fadeInUp">Gut Health is <span style="font-family: 'silver_south_scriptregular'; color: #71CABC">So</span> Important</h1>
                                             <h2 data-animation="animated fadeInDown" style="color:black;">Even if you don't suffer from constipation, chances are you may still need some gut support.</h2>
-											<script async data-uid="68f2caa60a" src="https://witty-producer-4283.ck.page/68f2caa60a/index.js"></script>
 											<a data-animation="animated slideInUp"  data-formkit-toggle="68f2caa60a" class="btn btn-theme effect btn-md" href="https://witty-producer-4283.ck.page/68f2caa60a">Free PDF Download</a>
                                         </div>
                                     </div>
@@ -157,7 +158,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Start Details
     ============================================= -->
-    <div id="departments" class="department-tabs default-padding chose-us-area">
+    <div id="departments" class="department-tabs default-padding chose-us-area" style="z-index:-1">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
