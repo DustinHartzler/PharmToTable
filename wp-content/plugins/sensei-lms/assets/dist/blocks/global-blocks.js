@@ -30,6 +30,16 @@ return n.createElement("svg",o({width:24,height:24,fill:"none",xmlns:"http://www
 /* harmony default export */const l=function(e){
 return n.createElement("svg",o({width:24,height:24,fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),s||(s=n.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M9 9.5H6a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5ZM6 11h3a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2Zm12-1.5h-3a.5.5 0 0 1-.5-.5V6a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5ZM15 11h3a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2ZM4 14.5h7V16H4v-1.5Zm16 0h-7V16h7v-1.5Zm-16 4h5V20H4v-1.5Zm14 0h-5V20h5v-1.5Z",fill:"#1E1E1E"})))};
 /***/},
+/***/33731:
+/***/(e,t,r)=>{"use strict";
+/* harmony export */r.d(t,{
+/* harmony export */Z:()=>a
+/* harmony export */});
+/* harmony import */var s,n,o=r(99196);
+/* harmony import */function l(){return l=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var s in r)Object.prototype.hasOwnProperty.call(r,s)&&(e[s]=r[s])}return e},l.apply(this,arguments)}
+/* harmony default export */const a=function(e){
+return o.createElement("svg",l({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),s||(s=o.createElement("circle",{cx:12,cy:12,r:12,fill:"currentColor"})),n||(n=o.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M9.835 15.38c.3-.23.179-.474.6-.563-.02.194.146.391.251.563-.109-.367-.002-.536.08-.72.347-.785-.662-1.293-1.35-1.418.235-.164.399-.327.694-.355a2.377 2.377 0 0 0-1.058.23c-1.112.531-1.993-.523-1.41-1.48.31-.51.664-.519.982-.865.077.178.103.372.075.564a.919.919 0 0 0 .049-.664c-.104-.336-.4-.338-.456-.821-.012-.101-.105.056-.263-.077-.038-.032-.113-.09-.163-.064-.085.044-.18.008-.232.034-.083.041-.109-.045-.2.016-.16.107-.178-.013-.332.005-.193.023-.32.261-.43.144-.102-.108-.206.075-.28.075-.05 0-.311.317-.426.028-.086-.216-.28.206-.382.063-.033-.046-.123.108-.18-.044-.014-.035 0-.078-.108-.027-.215.099-.138-.06-.207-.144-.083-.103-.113-.103-.068-.27.036-.133-.019-.33.2-.364.055-.008.107-.005.184-.148.096-.18.231-.093.207-.175-.036-.119.143-.28.226-.355.11-.103.254-.252.306-.396a.63.63 0 0 1 .102-.141c.081-.084.105-.003.227-.045.088-.03.02.053.106-.07.028-.038.105-.001.19-.039.259-.112.283-.11.347-.371.012-.05.025-.088.08-.083.109.01.134-.052.2-.05.061.001.083-.03.115-.068.18-.216.277-.055.357-.072.06-.012.022-.142.184-.102.23.057.155-.05.303-.015.174.041.186.19.306.225.143.042.211.198.307.196.337-.005.235.23.448.323-.16-.161.012-.421-.352-.455-.08-.007-.11-.127-.23-.183-.146-.067-.13-.21-.394-.27.068-.04.089.005.13-.073.058-.11.09-.046.113-.113.02-.063.006-.099.165-.155.165-.06.325-.195.472-.188.13.006.185-.08.177-.19-.008-.112-.033-.267.222-.22.153.029.15.003.15-.1-.002-.102.04-.165.174-.16.098.002.194-.003.231-.117.03-.091.207-.114.302-.148.317-.114.361.05.447-.095.07-.117.196-.317.337-.175.028.029.054.05.15-.056.08-.088.27-.2.337-.048.027.06.086.121.138.044a.08.08 0 0 1 .053-.039c.05-.01.079-.024.104-.036.218-.101.314-.095.213.125-.142.316.792-.192.532.151-.095.126.538.197.63.254.05.032.048.059.144.077.271.05.267.026.284.243.007.098.107.043.107.168 0 .535.472.266.549.399.012.022.032.042.079.042.149 0 .157-.03.224.089.027.047.05.072.127.096.12.037.112.05.068.138-.054.104.03.102.138.112.1.01.148.062.216.138.11.122.284.156.43.227.084.04.002.14.143.243.104.077.156.066.016.165-.59.418.22.305.446.694.051.087.118.195.216.295.225.23.1.293.221.437.07.083.015.063.13.137.272.175-.105.292-.319.212-.097-.035-.166-.085-.147-.025.016.049-.01.083-.052.12-.125.112.123.068.181.06.181-.025.664-.076.66.093-.005.22.136.27.25.284.185.024.238.057.34.226.092.152.145.07.288.205.097.093.217.258.02.282-.047.005-.099 0-.12.017a.411.411 0 0 1-.14.066c-.295.09.14.136.246.113.093-.02.209-.05.3-.027.057.015.062.08.244.107.06.01.036.099.006.16-.104.214.191.1.16.263-.017.093.11.245-.067.248-.057.001-.117-.015-.115.034.004.105-.165-.03-.317.115-.056.054-.19.092-.272-.009-.032-.038-.07-.069-.218-.023-.144.046-.242.204-.306-.04-.017-.064-.05-.065-.142-.097-.125-.043-.114-.258-.297-.12a.24.24 0 0 1-.214.039c-.144-.037-.303.012-.317-.096-.021-.179-.191-.305-.377-.296-.147.008-.278.034-.355-.137.057.195.207.208.382.208.144 0 .23.075.255.225.045.265.204.099.406.223.1.06.17.159.21.273.042.118.37-.024.282.258-.037.122-.107.168-.242.266-.4.294-.5.004-.618.239-.062.121-.063.031-.196.09-.22.098-.36-.128-.522-.045-.182.094-.168-.08-.352.037-.152.097-.308-.074-.38.192-.063.227-.322.232-.44.11-.189-.194-.132.229-.362.054-.123-.091-.213.043-.392.045-.33.005-.489-.282-.65-.107-.192.206-.331-.032-.334-.242-.003-.216-.777-.144-1.185-.256-.225-.062-.932.013-.702-.35-.372.39.456.366.682.455.136.053.245.095.377.114.13.296.214.617.227 1.007.043-.214.053-.433.028-.649-.043-.383.242.19.276.272.184.45-.022 1.278-.488 1.526a2.957 2.957 0 0 0-.562-.99c.256.392.616 1.192.327 1.65a1.023 1.023 0 0 1-.55-.483c.077.333.413.702.818.58.707-.213.704.233 1.641.307.682.111 1.654 0 2.118.037.254.02 1.32.197 1.315.465-.02 1.105-.438 1.164-1.539 1.268-.64.06-1.134.085-1.823.11-1.54.058-3.391.06-4.868 0-.724-.03-1.072-.036-1.841-.137-.769-.1-1.19-.363-1.178-1.187.005-.304.905-.594 1.2-.628.347-.039.901.005 1.405-.116.527-.127.747-.21 1.135-.508Zm5.347-6.052c-.167-.042-.051-.138-.339-.014-.17.073-.194-.13-.365-.094-.172.036-.242-.125-.499-.166-.318-.05-.088-.133-.592-.032-.097.02-.179-.09-.481-.052-.355.046-.23.084-.445-.115-.272-.251-.488-.082-.767-.184.216.166.368.019.622.221-.242.138-.523.802-.962.844.478.107.709.354 1.148.413.504.068.882.118 1.151.531.301.463.44.196.874.168.275-.017.282-.185.328-.362.063-.245.126-.256.31-.289.213-.037.163-.092.107-.156-.15-.172.019-.207.146-.244.222-.064.042-.075.042-.166-.278-.09-.063-.217.092-.273.169.105.242.087.317.073.109-.021.181.03.273-.028-.135.014-.163-.037-.278-.02-.051.007-.112.01-.219-.054-.18-.107-.27.048-.463 0Zm-2.28 1.64-1.09-.545c-1.316-.657-1.915.313-2.337 1.376l-.766.73c.549-.338.996-.714 1.574-.71.092 0 1.516.484 1.286-.092-.04-.104.09-.052.125-.201.04-.17.055-.141.195-.033.089.069.211.113.174-.048-.017-.072-.04-.137.28-.004.15.062.095-.064.303-.09.29-.034.228-.31.364-.349.076-.022.152.058.295-.077.05-.046.11-.089.232-.057-.143-.073-.22-.014-.292.03-.146.089-.204-.037-.343.07Zm-2.23-1.923c.16-.02.32-.036.482-.046a.13.13 0 0 0 .074-.06.111.111 0 0 0 .007-.09.268.268 0 0 1 .147-.206l-.002-.003c-.258.001-.466.1-.73.211-.052.022-.024.111-.118.213a.26.26 0 0 1-.201.235.136.136 0 0 0-.09.046.113.113 0 0 0-.026.092.252.252 0 0 1-.277.061c-.2-.077-.35-.065-.448.036a.39.39 0 0 1 .398.014c.134.066.3.031.39-.082a.132.132 0 0 1 .126-.098.421.421 0 0 0 .268-.323Z",fill:"#fff"})))};
+/***/},
 /***/92070:
 /***/(e,t,r)=>{"use strict";
 /* harmony export */r.d(t,{
@@ -39,16 +49,6 @@ return n.createElement("svg",o({width:24,height:24,fill:"none",xmlns:"http://www
 /* harmony import */function l(){return l=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var s in r)Object.prototype.hasOwnProperty.call(r,s)&&(e[s]=r[s])}return e},l.apply(this,arguments)}
 /* harmony default export */const a=function(e){
 return o.createElement("svg",l({viewBox:"0 0 24 24",xmlns:"http://www.w3.org/2000/svg"},e),s||(s=o.createElement("rect",{x:2.75,y:7.75,width:18.5,height:6.5,rx:3.25,stroke:"currentColor",strokeWidth:1.5,fill:"none"})),n||(n=o.createElement("path",{d:"M6 7.75h10.7l-6.5 6.5H6c-1.8 0-3.25-1.45-3.25-3.25S4.2 7.75 6 7.75Z"})))};
-/***/},
-/***/8930:
-/***/(e,t,r)=>{"use strict";
-/* harmony export */r.d(t,{
-/* harmony export */Z:()=>l
-/* harmony export */});
-/* harmony import */var s,n=r(99196);
-/* harmony import */function o(){return o=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var s in r)Object.prototype.hasOwnProperty.call(r,s)&&(e[s]=r[s])}return e},o.apply(this,arguments)}
-/* harmony default export */const l=function(e){
-return n.createElement("svg",o({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),s||(s=n.createElement("path",{d:"M12 24a12 12 0 1 0 0-24 12 12 0 0 0 0 24Zm-.1-4.723c-2.849 0-4.517-1.072-4.575-3.011 0-.203 0-.405.029-.608 1.208 1.013 2.733 1.65 4.603 1.65 1.64 0 2.733-.695 2.733-1.708 0-.608-.978-.897-2.244-1.274-2.33-.752-5.553-1.736-5.553-5.181 0-2.721 1.957-4.458 5.323-4.458 2.905 0 4.66 1.042 4.689 3.242v.376c-1.496-1.187-3.107-1.794-4.862-1.794-1.64 0-2.848.636-2.848 1.592 0 .55.978.868 2.244 1.273 2.33.753 5.667 1.824 5.667 5.24 0 2.808-2.186 4.66-5.207 4.66Z",fill:"currentColor"})))};
 /***/},
 /***/49839:
 /***/(e,t,r)=>{"use strict";
@@ -77,6 +77,20 @@ const o=(0,s.createElement)(n.SVG,{viewBox:"0 0 24 24",xmlns:"http://www.w3.org/
 const o=(0,s.createElement)(n.SVG,{viewBox:"0 0 24 24",xmlns:"http://www.w3.org/2000/svg"},(0,s.createElement)(n.Path,{d:"M6 5.5h3a.5.5 0 01.5.5v3a.5.5 0 01-.5.5H6a.5.5 0 01-.5-.5V6a.5.5 0 01.5-.5zM4 6a2 2 0 012-2h3a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm11-.5h3a.5.5 0 01.5.5v3a.5.5 0 01-.5.5h-3a.5.5 0 01-.5-.5V6a.5.5 0 01.5-.5zM13 6a2 2 0 012-2h3a2 2 0 012 2v3a2 2 0 01-2 2h-3a2 2 0 01-2-2V6zm5 8.5h-3a.5.5 0 00-.5.5v3a.5.5 0 00.5.5h3a.5.5 0 00.5-.5v-3a.5.5 0 00-.5-.5zM15 13a2 2 0 00-2 2v3a2 2 0 002 2h3a2 2 0 002-2v-3a2 2 0 00-2-2h-3zm-9 1.5h3a.5.5 0 01.5.5v3a.5.5 0 01-.5.5H6a.5.5 0 01-.5-.5v-3a.5.5 0 01.5-.5zM4 15a2 2 0 012-2h3a2 2 0 012 2v3a2 2 0 01-2 2H6a2 2 0 01-2-2v-3z",fillRule:"evenodd",clipRule:"evenodd"}));
 /* harmony default export */}
 //# sourceMappingURL=category.js.map
+/***/,
+/***/80454:
+/***/(e,t,r)=>{"use strict";
+/* harmony export */r.d(t,{
+/* harmony export */Z:()=>o
+/* harmony export */});
+/* harmony import */var s=r(69307),n=r(70444);
+/* harmony import */
+/**
+ * WordPress dependencies
+ */
+const o=(0,s.createElement)(n.SVG,{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24"},(0,s.createElement)(n.Path,{d:"M18.3 5.6L9.9 16.9l-4.6-3.4-.9 1.2 5.8 4.3 9.3-12.6z"}));
+/* harmony default export */}
+//# sourceMappingURL=check.js.map
 /***/,
 /***/87230:
 /***/(e,t,r)=>{"use strict";
@@ -150,7 +164,7 @@ function a(e){var t,r,n=c(e),a=(0,l/* .getColorAndStyleProps */.Y)(e),i={classNa
 /* harmony export */});
 /* harmony import */var s=r(64649),n=r(25773),o=r(69307),l=r(60042),a=r.n(l),i=r(52175),c=r(4981),u=r(4760);
 /* harmony import */
-/* harmony default export */const d=function(e){var t=e.attributes,r=e.className,l=e.tagName,d=e.blockName,m=t.text,p=t.inContainer,v=t.align,g=l;l||(g=(0,u/* .isLinkStyle */.xc)({attributes:t})?"a":"button");var b=(0,o.createElement)("div",(0,u/* .getButtonWrapperProps */.St)({className:r,attributes:t}),(0,o.createElement)(i.RichText.Content,(0,n/* ["default"] */.Z)({},(0,u/* .getButtonProps */._m)({attributes:t}),{tagName:g,value:m})));return p?(0,o.createElement)("div",{className:a()(r,"sensei-buttons-container__button-block",(0,c.getBlockDefaultClassName)(d)+"__wrapper",(0,s/* ["default"] */.Z)({},"sensei-buttons-container__button-align-".concat(v),v))},b):b};
+/* harmony default export */const d=function(e){var t=e.attributes,r=e.className,l=e.tagName,d=e.blockName,m=t.text,p=t.inContainer,v=t.align,g=l;l||(g=(0,u/* .isLinkStyle */.xc)({attributes:t})?"a":"button");var f=(0,o.createElement)("div",(0,u/* .getButtonWrapperProps */.St)({className:r,attributes:t}),(0,o.createElement)(i.RichText.Content,(0,n/* ["default"] */.Z)({},(0,u/* .getButtonProps */._m)({attributes:t}),{tagName:g,value:m})));return p?(0,o.createElement)("div",{className:a()(r,"sensei-buttons-container__button-block",(0,c.getBlockDefaultClassName)(d)+"__wrapper",(0,s/* ["default"] */.Z)({},"sensei-buttons-container__button-align-".concat(v),v))},f):f};
 /***/},
 /***/30924:
 /***/(e,t,r)=>{"use strict";
@@ -173,40 +187,43 @@ function a(e){var t,r,n=c(e),a=(0,l/* .getColorAndStyleProps */.Y)(e),i={classNa
 /* harmony export */Y:()=>/* binding */a
 /* harmony export */});
 /* unused harmony export getGradientClass */
-/* harmony import */var s=r(64649),n=r(60042),o=r.n(n),l=r(52175),a=function(e){var t,r,n,a,i,c,u,d,m,p,v,g=e.attributes,b=e.colors,f=g.backgroundColor,y=g.customBackgroundColor,h=g.textColor,k=g.customTextColor,C=g.gradient,Z=g.style,w=void 0===Z?{}:Z,E=(0,l.getColorClassName)("background-color",f);w.color||(w.color={}),y&&(w.color.background=y),k&&(w.color.text=k);var x=function(e){if(e)return"has-".concat(e,"-gradient-background")}(C),_=(0,l.getColorClassName)("color",h),S=o()(_,x,(i={},(0,s/* ["default"] */.Z)(i,E,!(null!=w&&null!==(t=w.color)&&void 0!==t&&t.gradient||!E)),(0,s/* ["default"] */.Z)(i,"has-text-color",h||(null==w||null===(r=w.color)||void 0===r?void 0:r.text)),(0,s/* ["default"] */.Z)(i,"has-background",f||(null==w||null===(n=w.color)||void 0===n?void 0:n.background)||C||(null==w||null===(a=w.color)||void 0===a?void 0:a.gradient)),i)),O=null!=w&&null!==(c=w.color)&&void 0!==c&&c.background||null!=w&&null!==(u=w.color)&&void 0!==u&&u.text||null!=w&&null!==(d=w.color)&&void 0!==d&&d.gradient?{background:null!=w&&null!==(m=w.color)&&void 0!==m&&m.gradient?w.color.gradient:void 0,backgroundColor:null!=w&&null!==(p=w.color)&&void 0!==p&&p.background?w.color.background:void 0,color:null!=w&&null!==(v=w.color)&&void 0!==v&&v.text?w.color.text:void 0}:{};// This is needed only for themes that don't load their color stylesheets in the editor
+/* harmony import */var s=r(64649),n=r(60042),o=r.n(n),l=r(52175),a=function(e){var t,r,n,a,i,c,u,d,m,p,v,g=e.attributes,f=e.colors,b=g.backgroundColor,y=g.customBackgroundColor,h=g.textColor,C=g.customTextColor,Z=g.gradient,k=g.style,E=void 0===k?{}:k,w=(0,l.getColorClassName)("background-color",b);E.color||(E.color={}),y&&(E.color.background=y),C&&(E.color.text=C);var x=function(e){if(e)return"has-".concat(e,"-gradient-background")}(Z),_=(0,l.getColorClassName)("color",h),S=o()(_,x,(i={},(0,s/* ["default"] */.Z)(i,w,!(null!=E&&null!==(t=E.color)&&void 0!==t&&t.gradient||!w)),(0,s/* ["default"] */.Z)(i,"has-text-color",h||(null==E||null===(r=E.color)||void 0===r?void 0:r.text)),(0,s/* ["default"] */.Z)(i,"has-background",b||(null==E||null===(n=E.color)||void 0===n?void 0:n.background)||Z||(null==E||null===(a=E.color)||void 0===a?void 0:a.gradient)),i)),O=null!=E&&null!==(c=E.color)&&void 0!==c&&c.background||null!=E&&null!==(u=E.color)&&void 0!==u&&u.text||null!=E&&null!==(d=E.color)&&void 0!==d&&d.gradient?{background:null!=E&&null!==(m=E.color)&&void 0!==m&&m.gradient?E.color.gradient:void 0,backgroundColor:null!=E&&null!==(p=E.color)&&void 0!==p&&p.background?E.color.background:void 0,color:null!=E&&null!==(v=E.color)&&void 0!==v&&v.text?E.color.text:void 0}:{};// This is needed only for themes that don't load their color stylesheets in the editor
 // We force an inline style to apply the color.
-if(b){if(f){var T=(0,l.getColorObjectByAttributeValues)(b,f);O.backgroundColor=T.color}if(h){var N=(0,l.getColorObjectByAttributeValues)(b,h);O.color=N.color}}return{className:S||void 0,style:O}};
+if(f){if(b){var T=(0,l.getColorObjectByAttributeValues)(f,b);O.backgroundColor=T.color}if(h){var N=(0,l.getColorObjectByAttributeValues)(f,h);O.color=N.color}}return{className:S||void 0,style:O}};
 /* harmony import */}
 /***/,
 /***/26877:
 /***/(e,t,r)=>{"use strict";
 /* harmony export */r.d(t,{
 /* harmony export */i:()=>/* binding */h
-/* harmony export */,M:()=>/* binding */k
+/* harmony export */,M:()=>/* binding */C
 /* harmony export */});
-/* harmony import */var s=r(64649),n=r(25773),o=r(50189),l=r(53782),a=r(69307),i=r(92819),c=r(60042),u=r.n(c),d=r(65736),m=r(4981),p=r(49839),v=(r(23490),r(3731)),g=r(27889),b=r(49702),f=r(53112),y=["settings","invalidUsage","EditWrapper"],__=d.__,h={Fill:{name:"default",label:__("Fill","sensei-lms")},Outline:{name:"outline",label:__("Outline","sensei-lms")},Link:{name:"link",label:__("Link","sensei-lms")}},k=function(e){var t,r=e.settings,c=e.invalidUsage,d=e.EditWrapper,k=(0,l/* ["default"] */.Z)(e,y);k=(0,o/* ["default"] */.Z)({alignmentOptions:{controls:["left","center","right","full"],default:"left"}},k);var C=r.styles?r.styles:[(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},h.Fill),{},{isDefault:!0}),h.Outline],Z=null===(t=(0,i.find)(C,"isDefault"))||void 0===t?void 0:t.name,w=(0,f/* .withDefaultBlockStyle */.WJ)(Z)(v/* ["default"] */.Z),E=(0,f/* .withDefaultBlockStyle */.WJ)(Z)(g/* ["default"] */.Z);return(0,i.merge)({name:"sensei-lms/button",title:"Sensei Button",category:"sensei-lms",attributes:{text:{type:"string",source:"html",selector:"a,button"},align:{type:"string"},borderRadius:{type:"number"},style:{type:"object"},isPreview:{type:"boolean",default:!1},inContainer:{type:"boolean",default:!1},buttonClassName:{type:"array",default:[]}},usesContext:["postType"],supports:{color:{gradients:!0,link:!0,__experimentalDefaultControls:{background:!0,text:!0,link:!0}},__experimentalColor:{gradients:!0},align:!1,html:!1},icon:p/* ["default"] */.Z,styles:C,edit:function(e){var t=e.context.postType,r=(0,a.createElement)(w,(0,n/* ["default"] */.Z)({},e,k));if(null!=c&&c.validPostTypes&&!c.validPostTypes.includes(t)){var s=(null==c?void 0:c.message)||__("This block can only be used inside the Course List block.","sensei-lms");return(0,a.createElement)(b/* ["default"] */.Z,{message:s})}return d?(0,a.createElement)(d,e,r):r},save:function(e){return(0,a.createElement)(E,(0,n/* ["default"] */.Z)({},e,k,{blockName:r.name}))},getEditWrapperProps:function(e){var t=e.inContainer,n=e.align;return t?{className:u()("sensei-buttons-container__button-block",(0,m.getBlockDefaultClassName)(r.name)+"__wrapper",(0,s/* ["default"] */.Z)({},"sensei-buttons-container__button-align-".concat(n),n))}:{}},example:{attributes:{align:"center",isPreview:!0}}},r)};
+/* harmony import */var s=r(64649),n=r(25773),o=r(50189),l=r(53782),a=r(69307),i=r(92819),c=r(60042),u=r.n(c),d=r(65736),m=r(4981),p=r(49839),v=(r(23490),r(3731)),g=r(27889),f=r(49702),b=r(53112),y=["settings","invalidUsage","EditWrapper"],__=d.__,h={Fill:{name:"default",label:__("Fill","sensei-lms")},Outline:{name:"outline",label:__("Outline","sensei-lms")},Link:{name:"link",label:__("Link","sensei-lms")}},C=function(e){var t,r=e.settings,c=e.invalidUsage,d=e.EditWrapper,C=(0,l/* ["default"] */.Z)(e,y);C=(0,o/* ["default"] */.Z)({alignmentOptions:{controls:["left","center","right","full"],default:"left"}},C);var Z=r.styles?r.styles:[(0,o/* ["default"] */.Z)((0,o/* ["default"] */.Z)({},h.Fill),{},{isDefault:!0}),h.Outline],k=null===(t=(0,i.find)(Z,"isDefault"))||void 0===t?void 0:t.name,E=(0,b/* .withDefaultBlockStyle */.WJ)(k)(v/* ["default"] */.Z),w=(0,b/* .withDefaultBlockStyle */.WJ)(k)(g/* ["default"] */.Z);return(0,i.merge)({name:"sensei-lms/button",title:"Sensei Button",category:"sensei-lms",attributes:{text:{type:"string",source:"html",selector:"a,button"},align:{type:"string"},borderRadius:{type:"number"},style:{type:"object"},isPreview:{type:"boolean",default:!1},inContainer:{type:"boolean",default:!1},buttonClassName:{type:"array",default:[]}},usesContext:["postType"],supports:{color:{gradients:!0,link:!0,__experimentalDefaultControls:{background:!0,text:!0,link:!0}},__experimentalColor:{gradients:!0},align:!1,html:!1},icon:p/* ["default"] */.Z,styles:Z,edit:function(e){var t=e.context.postType,r=(0,a.createElement)(E,(0,n/* ["default"] */.Z)({},e,C));if(null!=c&&c.validPostTypes&&!c.validPostTypes.includes(t)){var s=(null==c?void 0:c.message)||__("This block can only be used inside the Course List block.","sensei-lms");return(0,a.createElement)(f/* ["default"] */.Z,{message:s})}return d?(0,a.createElement)(d,e,r):r},save:function(e){return(0,a.createElement)(w,(0,n/* ["default"] */.Z)({},e,C,{blockName:r.name}))},getEditWrapperProps:function(e){var t=e.inContainer,n=e.align;return t?{className:u()("sensei-buttons-container__button-block",(0,m.getBlockDefaultClassName)(r.name)+"__wrapper",(0,s/* ["default"] */.Z)({},"sensei-buttons-container__button-align-".concat(n),n))}:{}},example:{attributes:{align:"center",isPreview:!0}}},r)};
 /* harmony import */}
 /***/,
 /***/77959:
 /***/(e,t,r)=>{"use strict";
 /* harmony export */r.d(t,{
-/* harmony export */Z:()=>l
+/* harmony export */Z:()=>c
 /* harmony export */});
-/* harmony import */var s=r(50189),n=r(65736),o=r(26877),__=n.__;
+/* harmony import */var s=r(50189),n=r(69307),o=r(65736),l=r(52175),a=r(26877),i=r(53081),__=o.__;
 /* harmony import */
+/**
+ * Internal dependencies
+ */
 /**
  * Continue Course block.
  */
-/* harmony default export */const l=(0,o/* .createButtonBlockType */.M)({tagName:"a",settings:{name:"sensei-lms/button-continue-course",parent:["sensei-lms/course-actions"],title:__("Continue Course","sensei-lms"),description:__("Enable a student to pick up where they left off in a course.","sensei-lms"),keywords:[__("Button","sensei-lms"),__("Continue","sensei-lms"),__("Course","sensei-lms")],attributes:{text:{default:__("Continue","sensei-lms")}},styles:[(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},o/* .BlockStyles.Fill */.i.Fill),{},{isDefault:!0}),o/* .BlockStyles.Outline */.i.Outline,o/* .BlockStyles.Link */.i.Link]}});
+/* harmony default export */const c=(0,a/* .createButtonBlockType */.M)({tagName:"a",settings:{name:"sensei-lms/button-continue-course",parent:["sensei-lms/course-actions"],title:__("Continue Course","sensei-lms"),description:__("Enable a student to pick up where they left off in a course.","sensei-lms"),keywords:[__("Button","sensei-lms"),__("Continue","sensei-lms"),__("Course","sensei-lms")],attributes:{text:{default:__("Continue","sensei-lms")}},styles:[(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},a/* .BlockStyles.Fill */.i.Fill),{},{isDefault:!0}),a/* .BlockStyles.Outline */.i.Outline,a/* .BlockStyles.Link */.i.Link]},EditWrapper:function(e){var t=e.children;return(0,n.createElement)(n.Fragment,null,(0,n.createElement)(l.BlockControls,null,(0,n.createElement)(i/* ["default"] */.Z,{useCourseStatusContext:!0})),t)}});
 /***/},
 /***/81192:
 /***/(e,t,r)=>{"use strict";
 /* harmony export */r.d(t,{
-/* harmony export */Z:()=>i
+/* harmony export */Z:()=>g
 /* harmony export */});
-/* harmony import */var s=r(69307),n=r(65736),o=r(52175),l=r(49702),__=n.__,a=[["sensei-lms/button-take-course",{text:__("Start Course","sensei-lms")}],["sensei-lms/button-continue-course"],["sensei-lms/button-view-results",{className:"is-style-default",text:__("Visit Results","sensei-lms")}]];
+/* harmony import */var s=r(66886),n=r(69307),o=r(65736),l=r(52175),a=r(9818),i=r(49702),c=r(53081),u=r(2275),d=r(91434),m=r(60042),p=r.n(m),__=o.__,v=[["sensei-lms/button-take-course",{text:__("Start Course","sensei-lms")}],["sensei-lms/button-continue-course"],["sensei-lms/button-view-results",{className:"is-style-default",text:__("Visit Results","sensei-lms")}]];
 /* harmony import */
-/* harmony default export */const i=function(e){var t=e.className;return"course"!==e.context.postType?(0,s.createElement)(l/* ["default"] */.Z,{message:__("The Course Actions block can only be used inside the Course List block.","sensei-lms")}):(0,s.createElement)("div",{className:t},(0,s.createElement)(o.InnerBlocks,{allowedBlocks:["sensei-lms/button-take-course","sensei-lms/button-continue-course","sensei-lms/button-view-results"],template:a,templateLock:"all"}))};
+/* harmony default export */const g=function(e){var t=e.className,r=e.context.postType,o=e.clientId,m=(0,n.useState)(u/* ["default"][0].value */.Z[0].value),g=(0,s/* ["default"] */.Z)(m,2),f=g[0],b=g[1],y=function(e){var t=(0,a.useSelect)((function(t){return t(l.store).getBlock(e).innerBlocks}),[e]),r=(0,a.useDispatch)(l.store).selectBlock;return(0,n.useCallback)((function(e){var s=t.find((function(t){return t.name===e}));s&&r(s.clientId)}),[t,r])}(o),h=(0,n.useCallback)((function(e){var t;b(e);var r=null===(t=u/* ["default"].find */.Z.find((function(t){return t.value===e})))||void 0===t?void 0:t.showBlock;r&&y(r)}),[b,y]),C=(0,n.useMemo)((function(){return{courseStatus:f,setCourseStatus:h}}),[f,h]);return"course"!==r?(0,n.createElement)(i/* ["default"] */.Z,{message:__("The Course Actions block can only be used inside the Course List block.","sensei-lms")}):(0,n.createElement)(d/* ["default"].Provider */.Z.Provider,{value:C},(0,n.createElement)("div",{className:p()(t,"is-status-".concat(f))},(0,n.createElement)(l.InnerBlocks,{allowedBlocks:["sensei-lms/button-take-course","sensei-lms/button-continue-course","sensei-lms/button-view-results"],template:v,templateLock:"all"})),(0,n.createElement)(l.BlockControls,null,(0,n.createElement)(c/* ["default"] */.Z,{courseStatus:f,setCourseStatus:b})))};
 /***/},
 /***/81469:
 /***/(e,t,r)=>{"use strict";
@@ -228,6 +245,34 @@ function o(){return(0,s.createElement)(n.InnerBlocks.Content,null)}
 /* harmony import */var s=r(50189),n=r(65736),o=r(57915),l=r(81192),a=r(81469),i=r(18770),__=n.__;
 /* harmony import */
 /* harmony default export */const c=(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},o),{},{metadata:o,example:{innerBlocks:[{name:"sensei-lms/button-take-course",attributes:{text:__("Start Course","sensei-lms")}}]},icon:i/* ["default"] */.Z,edit:l/* ["default"] */.Z,save:a/* ["default"] */.Z});
+/***/},
+/***/91434:
+/***/(e,t,r)=>{"use strict";
+/* harmony export */r.d(t,{
+/* harmony export */Z:()=>n
+/* harmony export */});
+/* harmony import */var s=r(69307);
+/* harmony import */
+/* harmony default export */const n=(0,s.createContext)();
+/***/},
+/***/2275:
+/***/(e,t,r)=>{"use strict";
+/* harmony export */r.d(t,{
+/* harmony export */Z:()=>n
+/* harmony export */});
+/* harmony import */var s=r(65736),__=s.__;
+/* harmony import */
+/* harmony default export */const n=[{label:__("Not Started","sensei-lms"),value:"not-started",showBlock:"sensei-lms/button-take-course"},{label:__("In Progress","sensei-lms"),value:"in-progress",showBlock:"sensei-lms/button-continue-course"},{label:__("Completed","sensei-lms"),value:"completed",showBlock:"sensei-lms/button-view-results"}];
+/***/},
+/***/53081:
+/***/(e,t,r)=>{"use strict";
+/* harmony export */r.d(t,{
+/* harmony export */Z:()=>i
+/* harmony export */});
+/* harmony import */var s=r(69307),n=r(55609),o=r(2275),l=r(91434),a=r(81042);
+/* harmony import */
+/* harmony default export */const i=function(e){var t=e.courseStatus,r=e.setCourseStatus,i=e.useCourseStatusContext,c=void 0!==i&&i,u=(0,s.useContext)(l/* ["default"] */.Z);// Render nothing if we should use the context but it is not available.
+if(c&&(null==u||!u.courseStatus))return null;var d=c?u.courseStatus:t,m=c?u.setCourseStatus:r;return(0,s.createElement)(n.Toolbar,null,(0,s.createElement)(a/* ["default"] */.Z,{options:o/* ["default"] */.Z,optionsLabel:"Course Status",value:d,onChange:m}))};
 /***/},
 /***/69895:
 /***/(e,t,r)=>{"use strict";
@@ -253,10 +298,10 @@ function o(){return(0,s.createElement)(n.InnerBlocks.Content,null)}
 /**
  * Internal dependencies
  */
-function(e){var t=e.attributes,r=e.backgroundColor,a=e.context,i=e.textColor,d=e.setAttributes,v=e.setBackgroundColor,g=e.setTextColor,b=t.textAlign,f=t.previewCategories,y=t.options,h=a.postId,k=a.postType,C=(0,c/* ["default"] */.Z)(h),Z=C.postTerms,w=C.isLoading,E=(0,m.useDispatch)(o.store).__unstableMarkNextChangeAsNotPersistent,x=void 0===E?n.noop:E;(0,s.useEffect)((function(){y&&(v(y.backgroundColor),g(y.textColor))}),[]),// We need to store the colors inside the option attribute because
+function(e){var t=e.attributes,r=e.backgroundColor,a=e.context,i=e.textColor,d=e.setAttributes,v=e.setBackgroundColor,g=e.setTextColor,f=t.textAlign,b=t.previewCategories,y=t.options,h=a.postId,C=a.postType,Z=(0,c/* ["default"] */.Z)(h),k=Z.postTerms,E=Z.isLoading,w=(0,m.useDispatch)(o.store).__unstableMarkNextChangeAsNotPersistent,x=void 0===w?n.noop:w;(0,s.useEffect)((function(){y&&(v(y.backgroundColor),g(y.textColor))}),[]),// We need to store the colors inside the option attribute because
 // by default the root backgroundColor and textColor are overwritten by
 // Gutenberg withColors HOC.
-(0,s.useEffect)((function(){x(),d({options:{backgroundColor:null==r?void 0:r.color,textColor:null==i?void 0:i.color}})}),[r,i,d,x]);var _=(0,o.useBlockProps)((0,p/* .getStyleAndClassesFromAttributes */.I)(t)),S=function(e){return null==e?void 0:e.map((function(e){return(0,s.createElement)("a",{key:e.id,href:e.link,onClick:function(e){return e.preventDefault()}},(0,n.unescape)(e.name))}))};return f?(0,s.createElement)("div",_,S(f)):"course"!==k?(0,s.createElement)(u/* ["default"] */.Z,{message:__("The Course Categories block can only be used inside the Course List block.","sensei-lms")}):(0,s.createElement)(s.Fragment,null,(0,s.createElement)(o.BlockControls,null,(0,s.createElement)(o.AlignmentToolbar,{value:b,onChange:function(e){d({textAlign:e})}})),(0,s.createElement)("div",_,w&&(0,s.createElement)(l.Spinner,null),!w&&S(Z)))}));
+(0,s.useEffect)((function(){x(),d({options:{backgroundColor:null==r?void 0:r.color,textColor:null==i?void 0:i.color}})}),[r,i,d,x]);var _=(0,o.useBlockProps)((0,p/* .getStyleAndClassesFromAttributes */.I)(t)),S=function(e){return null==e?void 0:e.map((function(e){return(0,s.createElement)("a",{key:e.id,href:e.link,onClick:function(e){return e.preventDefault()}},(0,n.unescape)(e.name))}))};return b?(0,s.createElement)("div",_,S(b)):"course"!==C?(0,s.createElement)(u/* ["default"] */.Z,{message:__("The Course Categories block can only be used inside the Course List block.","sensei-lms")}):(0,s.createElement)(s.Fragment,null,(0,s.createElement)(o.BlockControls,null,(0,s.createElement)(o.AlignmentToolbar,{value:f,onChange:function(e){d({textAlign:e})}})),(0,s.createElement)("div",_,E&&(0,s.createElement)(l.Spinner,null),!E&&S(k)))}));
 /***/},
 /***/38333:
 /***/(e,t,r)=>{"use strict";
@@ -320,7 +365,7 @@ t.forEach((function(e){e.style.display="none"}))})),document.querySelectorAll(""
 /* harmony export */MX:()=>/* binding */d
 /* harmony export */});
 /* unused harmony exports addWrapperAroundFeaturedImageBlock, addWrapperAroundCourseCategoriesBlock */
-/* harmony import */var s=r(50189),n=r(69307),o=r(65736),l=r(4981),a=r(9818),i=(r(71126),r(16968)),c=r(7314),u=r(92694),__=o.__,d=function(){(0,l.registerBlockVariation)("core/query",{name:"sensei-lms/course-list",title:__("Course List","sensei-lms"),description:__("Show a list of courses.","sensei-lms"),icon:i/* ["default"] */.Z,category:"sensei-lms",keywords:[__("Course","sensei-lms"),__("List","sensei-lms"),__("Courses","sensei-lms")],attributes:(0,s/* ["default"] */.Z)({},{className:"wp-block-sensei-lms-course-list",query:{perPage:3,pages:0,offset:0,postType:"course",order:"desc",orderBy:"date",author:"",search:"",exclude:[],sticky:"",inherit:!1}}),isActive:function(e,t){var r;
+/* harmony import */var s=r(50189),n=r(69307),o=r(65736),l=r(4981),a=r(9818),i=r(92694),c=(r(71126),r(16968)),u=r(7314),__=o.__,d=function(){(0,l.registerBlockVariation)("core/query",{name:"sensei-lms/course-list",title:__("Course List","sensei-lms"),description:__("Show a list of courses.","sensei-lms"),icon:c/* ["default"] */.Z,category:"sensei-lms",keywords:[__("Course","sensei-lms"),__("List","sensei-lms"),__("Courses","sensei-lms")],attributes:(0,s/* ["default"] */.Z)({},{className:"wp-block-sensei-lms-course-list",query:{perPage:3,pages:0,offset:0,postType:"course",order:"desc",orderBy:"date",author:"",search:"",exclude:[],sticky:"",inherit:!1}}),isActive:function(e,t){var r;
 // Using className instead of postType because otherwise a normal Query Loop block
 // will turn into a Course List block if the post type 'course' is selected. As we're planning
 // to hide the Post Type dropdown for Course List block, so after changing the type to course,
@@ -332,21 +377,21 @@ new MutationObserver((function(){var e,t,r=(0,a.select)("core/block-editor").get
 __("Post type").toLowerCase(),
 /* eslint-disable-next-line @wordpress/i18n-text-domain */
 __("Inherit query from template").toLowerCase()].includes(e.textContent.toLowerCase())&&(e.closest(".components-base-control").style.display="none")}))};
-/* harmony import */(0,u.addFilter)("blocks.registerBlockType","sensei-lms/course-list-block",(
+/* harmony import */(0,i.addFilter)("blocks.registerBlockType","sensei-lms/course-list-block",(
 /**
  * Add a HOC to a featured image block.
  *
  * @param {Object} settings Block settings.
  * @param {string} name     Block name.
  */
-function(e,t){if("core/post-featured-image"!==t)return e;var r=e.edit;return e=(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},e),{},{edit:function(e){var t,s;return"course"===(null===(t=e.context)||void 0===t?void 0:t.postType)&&!(null===(s=e.context)||void 0===s||!s.queryId)?(0,n.createElement)(c/* ["default"] */.Z,{postId:e.context.postId,isFeaturedImage:!0},(0,n.createElement)(r,e)):(0,n.createElement)(r,e)}})})),(0,u.addFilter)("blocks.registerBlockType","sensei-lms/course-categories",(
+function(e,t){if("core/post-featured-image"!==t)return e;var r=e.edit;return e=(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},e),{},{edit:function(e){var t,s;return"course"===(null===(t=e.context)||void 0===t?void 0:t.postType)&&!(null===(s=e.context)||void 0===s||!s.queryId)?(0,n.createElement)(u/* ["default"] */.Z,{postId:e.context.postId,isFeaturedImage:!0},(0,n.createElement)(r,e)):(0,n.createElement)(r,e)}})})),(0,i.addFilter)("blocks.registerBlockType","sensei-lms/course-categories",(
 /**
  * Add a HOC to a featured course categories block.
  *
  * @param {Object} settings Block settings.
  * @param {string} name     Block name.
  */
-function(e,t){if("sensei-lms/course-categories"!==t)return e;var r=e.edit;return e.attributes.align=!1,e=(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},e),{},{edit:function(e){var t,s;return"course"===(null===(t=e.context)||void 0===t?void 0:t.postType)&&!(null===(s=e.context)||void 0===s||!s.queryId)?(0,n.createElement)(c/* ["default"] */.Z,{postId:e.context.postId,isFeaturedImage:!1},(0,n.createElement)(r,e)):(0,n.createElement)(r,e)}})}))}
+function(e,t){if("sensei-lms/course-categories"!==t)return e;var r=e.edit;return e.attributes.align=!1,e=(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},e),{},{edit:function(e){var t,s;return"course"===(null===(t=e.context)||void 0===t?void 0:t.postType)&&!(null===(s=e.context)||void 0===s||!s.queryId)?(0,n.createElement)(u/* ["default"] */.Z,{postId:e.context.postId,isFeaturedImage:!1},(0,n.createElement)(r,e)):(0,n.createElement)(r,e)}})}))}
 /***/,
 /***/33759:
 /***/(e,t,r)=>{"use strict";
@@ -355,7 +400,11 @@ function(e,t){if("sensei-lms/course-categories"!==t)return e;var r=e.edit;return
 /* harmony export */});
 /* harmony import */var s=r(90228),n=r(69307),o=r(65736),l=r(9818),a=r(55609),i=r(52175),c=r(49702),__=o.__;
 /* harmony import */function u(e){var t=e.filters,r=e.types;return!r||r.length<1?null:Object.keys(t).map((function(e){var s=t[e];return r.includes(e)?(0,n.createElement)(a.SelectControl,{key:s.label,options:s.options,onChange:function(){},value:s.defaultOption}):null}))}
-/* harmony default export */const d=function(e){var t,r=e.attributes.types,o=e.context.query,d=e.setAttributes,m=(t=(0,l.useSelect)((function(e){var t=e("core").getEntityRecords("taxonomy","course-category",{per_page:-1});return null!=t?t:[]}),[]).map((function(e){return{label:e.name,value:e.id}})),{categories:{label:__("Categories","sensei-lms"),options:[{label:__("All Categories","sensei-lms"),value:-1}].concat((0,s/* ["default"] */.Z)(t)),defaultOption:-1},featured:{label:__("Featured","sensei-lms"),options:[{label:__("All Courses","sensei-lms"),value:"all"},{label:__("Featured","sensei-lms"),value:"featured"}],defaultOption:"all"},student_course:{label:__("Student Courses","sensei-lms"),options:[{label:__("All Courses","sensei-lms"),value:"all"},{label:__("Active","sensei-lms"),value:"active"},{label:__("Completed","sensei-lms"),value:"completed"}],defaultOption:"all"}}),p=(0,i.useBlockProps)();return"course"!==(null==o?void 0:o.postType)?(d({align:!1,className:"wp-block-sensei-lms-course-list-filter__warning"}),(0,n.createElement)(c/* ["default"] */.Z,{message:__("The Course List Filter block can only be used inside the Course List block.","sensei-lms")})):(0,n.createElement)("div",p,(0,n.createElement)(i.InspectorControls,null,(0,n.createElement)(a.PanelBody,{title:__("Filter Type","sensei-lms")},Object.keys(m).map((function(e){return(0,n.createElement)(a.ToggleControl,{key:e,label:m[e].label,checked:r.includes(e),onChange:function(t){return function(e,t,r,n){r({types:e?[].concat((0,s/* ["default"] */.Z)(t),[n]):t.filter((function(e){return e!==n}))})}(t,r,d,e)}})})))),(0,n.createElement)(u,{filters:m,types:r}))};
+/* harmony default export */const d=function(e){var t=e.attributes,r=t.types,o=t.defaultOptions,d=e.context.query,m=e.setAttributes,p=
+/**
+ * Internal dependencies
+ */
+function(e){var t,r,n,o=(0,l.useSelect)((function(e){var t=e("core").getEntityRecords("taxonomy","course-category",{per_page:-1});return null!=t?t:[]}),[]).map((function(e){return{label:e.name,value:e.id}}));return{categories:{label:__("Categories","sensei-lms"),options:[{label:__("All Categories","sensei-lms"),value:-1}].concat((0,s/* ["default"] */.Z)(o)),defaultOption:null!==(t=null==e?void 0:e.categories)&&void 0!==t?t:-1},featured:{label:__("Featured","sensei-lms"),options:[{label:__("All Courses","sensei-lms"),value:"all"},{label:__("Featured","sensei-lms"),value:"featured"}],defaultOption:null!==(r=null==e?void 0:e.featured)&&void 0!==r?r:"all"},student_course:{label:__("Student Courses","sensei-lms"),options:[{label:__("All Courses","sensei-lms"),value:"all"},{label:__("Active","sensei-lms"),value:"active"},{label:__("Completed","sensei-lms"),value:"completed"}],defaultOption:null!==(n=null==e?void 0:e.student_course)&&void 0!==n?n:"all"}}}(o),v=(0,i.useBlockProps)();return"course"!==(null==d?void 0:d.postType)?(m({align:!1,className:"wp-block-sensei-lms-course-list-filter__warning"}),(0,n.createElement)(c/* ["default"] */.Z,{message:__("The Course List Filter block can only be used inside the Course List block.","sensei-lms")})):(0,n.createElement)("div",v,(0,n.createElement)(i.InspectorControls,null,(0,n.createElement)(a.PanelBody,{title:__("Filter Type","sensei-lms")},Object.keys(p).map((function(e){return(0,n.createElement)(a.ToggleControl,{key:e,label:p[e].label,checked:r.includes(e),onChange:function(t){return function(e,t,r,n){r({types:e?[].concat((0,s/* ["default"] */.Z)(t),[n]):t.filter((function(e){return e!==n}))})}(t,r,m,e)}})})))),(0,n.createElement)(u,{filters:p,types:r}))};
 /***/},
 /***/16003:
 /***/(e,t,r)=>{"use strict";
@@ -543,7 +592,7 @@ TRACK_LESSON:function(e,t){var r=e.lessonId,o=(0,n/* ["default"] */.Z)(t.tracked
 /* unused harmony export CourseProgressEdit */
 /* harmony import */var s=r(69307),n=r(60042),o=r.n(n),l=r(94333),a=r(65736),i=r(9818),c=r(53112),u=r(62993),d=r(42484),m=r(49702),__=a.__;
 /* harmony import */
-/* harmony default export */const p=(0,l.compose)((0,c/* .withColorSettings */.ku)({barColor:{style:"background-color",label:__("Progress bar color","sensei-lms")},barBackgroundColor:{style:"background-color",label:__("Progress bar background color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")}}),(0,c/* .withDefaultColor */.vD)({defaultBarColor:{style:"background-color",probeKey:"primaryColor"}}))((function(e){var t=e.className,r=e.barColor,n=e.defaultBarColor,l=e.barBackgroundColor,a=e.textColor,c=e.context.postType,p=e.attributes,v=p.height,g=p.borderRadius,b=e.setAttributes,f=(0,i.useSelect)((function(e){return e(u/* .COURSE_STATUS_STORE */.o).getLessonCounts()}),[]),y=f.totalLessonsCount,h=f.completedLessonsCount,k={className:o()(t,null==a?void 0:a.class),style:{color:null==a?void 0:a.color}},C={className:(null==r?void 0:r.class)||(null==n?void 0:n.className),style:{backgroundColor:(null==r?void 0:r.color)||(null==n?void 0:n.color),borderRadius:g}},Z={className:o()("wp-block-sensei-lms-course-progress",null==l?void 0:l.class),style:{backgroundColor:null==l?void 0:l.color,height:v,borderRadius:g}};return"course"!==c?(0,s.createElement)(m/* ["default"] */.Z,{message:__("The Course Progress block can only be used inside the Course List block.","sensei-lms")}):(0,s.createElement)(s.Fragment,null,(0,s.createElement)(d/* ["default"] */.Z,{totalCount:y,completedCount:h,wrapperAttributes:k,barWrapperAttributes:Z,barAttributes:C,countersClassName:"wp-block-sensei-lms-progress-heading",label:__("lessons","sensei-lms"),completedCountClassName:"wp-block-sensei-lms-progress-heading__completed"}),(0,s.createElement)(d/* .ProgressBarSettings */.y,{borderRadius:g,setBorderRadius:function(e){return b({borderRadius:e})},height:v,setHeight:function(e){return b({height:e})}}))}));
+/* harmony default export */const p=(0,l.compose)((0,c/* .withColorSettings */.ku)({barColor:{style:"background-color",label:__("Progress bar color","sensei-lms")},barBackgroundColor:{style:"background-color",label:__("Progress bar background color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")}}),(0,c/* .withDefaultColor */.vD)({defaultBarColor:{style:"background-color",probeKey:"primaryColor"}}))((function(e){var t=e.className,r=e.barColor,n=e.defaultBarColor,l=e.barBackgroundColor,a=e.textColor,c=e.context.postType,p=e.attributes,v=p.height,g=p.borderRadius,f=e.setAttributes,b=(0,i.useSelect)((function(e){return e(u/* .COURSE_STATUS_STORE */.o).getLessonCounts()}),[]),y=b.totalLessonsCount,h=b.completedLessonsCount,C={className:o()(t,null==a?void 0:a.class),style:{color:null==a?void 0:a.color}},Z={className:(null==r?void 0:r.class)||(null==n?void 0:n.className),style:{backgroundColor:(null==r?void 0:r.color)||(null==n?void 0:n.color),borderRadius:g}},k={className:o()("wp-block-sensei-lms-course-progress",null==l?void 0:l.class),style:{backgroundColor:null==l?void 0:l.color,height:v,borderRadius:g}};return"course"!==c?(0,s.createElement)(m/* ["default"] */.Z,{message:__("The Course Progress block can only be used inside the Course List block.","sensei-lms")}):(0,s.createElement)(s.Fragment,null,(0,s.createElement)(d/* ["default"] */.Z,{totalCount:y,completedCount:h,wrapperAttributes:C,barWrapperAttributes:k,barAttributes:Z,countersClassName:"wp-block-sensei-lms-progress-heading",label:__("lessons","sensei-lms"),completedCountClassName:"wp-block-sensei-lms-progress-heading__completed"}),(0,s.createElement)(d/* .ProgressBarSettings */.y,{borderRadius:g,setBorderRadius:function(e){return f({borderRadius:e})},height:v,setHeight:function(e){return f({height:e})}}))}));
 /***/},
 /***/68015:
 /***/(e,t,r)=>{"use strict";
@@ -557,12 +606,21 @@ TRACK_LESSON:function(e,t){var r=e.lessonId,o=(0,n/* ["default"] */.Z)(t.tracked
  */
 /* harmony default export */const a=(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},l),{},{metadata:l,icon:n/* ["default"] */.Z,edit:o/* ["default"] */.Z});
 /***/},
+/***/81042:
+/***/(e,t,r)=>{"use strict";
+/* harmony export */r.d(t,{
+/* harmony export */Z:()=>m
+/* harmony export */});
+/* harmony import */var s=r(25773),n=r(50189),o=r(53782),l=r(69307),a=r(60042),i=r.n(a),c=r(55609),u=r(80454),d=["options","optionsLabel","icon","value","onChange","toggleProps","getMenuItemProps","popoverProps"];
+/* harmony import */
+/* harmony default export */const m=function(e){var t=e.options,r=e.optionsLabel,a=e.icon,m=e.value,p=e.onChange,v=e.toggleProps,g=e.getMenuItemProps,f=e.popoverProps,b=(0,o/* ["default"] */.Z)(e,d),y=t.find((function(e){return m===e.value}));return(0,l.createElement)(c.Dropdown,(0,s/* ["default"] */.Z)({className:"sensei-toolbar-dropdown",popoverProps:(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({isAlternate:!0,position:"bottom right left",focusOnMount:!0},f),{},{className:i()(null==f?void 0:f.className,"sensei-toolbar-dropdown__popover")}),renderToggle:function(e){var t=e.isOpen,r=e.onToggle;return(0,l.createElement)(c.Button,(0,s/* ["default"] */.Z)({onClick:r,icon:a,"aria-expanded":t,"aria-haspopup":"true"},v,{children:null!=v&&v.children?v.children(y):null==y?void 0:y.label}))},renderContent:function(e){var n=e.onClose;return(0,l.createElement)(c.NavigableMenu,{role:"menu",stopNavigationEvents:!0},(0,l.createElement)(c.MenuGroup,{label:r},t.map((function(e){var t=e.value===(null==y?void 0:y.value),r=null==g?void 0:g(e);return(0,l.createElement)(c.MenuItem,(0,s/* ["default"] */.Z)({key:e.value,role:"menuitemradio",isSelected:t,icon:t?u/* ["default"] */.Z:null,className:i()("sensei-toolbar-dropdown__option",{"is-selected":t},null==r?void 0:r.className),onClick:function(){p(e.value),n()},children:e.label},r))}))))}},b))};
+/***/},
 /***/53227:
 /***/(e,t,r)=>{"use strict";
 /* harmony export */r.d(t,{
 /* harmony export */Z:()=>c
 /* harmony export */});
-/* harmony import */var s=r(53782),n=r(69307),o=r(92819),l=r(4981),a=r(8930),i=["metadata","name"];
+/* harmony import */var s=r(53782),n=r(69307),o=r(92819),l=r(4981),a=r(33731),i=["metadata","name"];
 /* harmony import */
 /* harmony default export */const c=function(e){(0,l.updateCategory)("sensei-lms",{icon:(0,n.createElement)(a/* ["default"] */.Z,{width:"20",height:"20"})}),e.forEach((function(e){var t=e.metadata,r=e.name,n=(0,s/* ["default"] */.Z)(e,i);t&&(
 // Remove the overlapping metadata keys from the settings object to make localization work.
@@ -574,26 +632,32 @@ n=(0,o.omit)(n,Object.keys(t))),// The metadata object should be used for the `b
 /***/29750:
 /***/(e,t,r)=>{"use strict";
 /* harmony export */r.d(t,{
-/* harmony export */Z:()=>o
+/* harmony export */Z:()=>i
 /* harmony export */});
-/* harmony import */var s=r(65736),n=r(26877),__=s.__;
+/* harmony import */var s=r(69307),n=r(65736),o=r(52175),l=r(26877),a=r(53081),__=n.__;
 /* harmony import */
+/**
+ * Internal dependencies
+ */
 /**
  * Take course button block.
  */
-/* harmony default export */const o=(0,n/* .createButtonBlockType */.M)({settings:{name:"sensei-lms/button-take-course",title:__("Course Signup","sensei-lms"),description:__("Enable a registered user to start the course. This block is only displayed if the user is not already enrolled.","sensei-lms"),keywords:[__("Start","sensei-lms"),__("Sign up","sensei-lms"),__("Signup","sensei-lms"),__("Enrol","sensei-lms"),__("Enroll","sensei-lms"),__("Course","sensei-lms"),__("Take course","sensei-lms")],attributes:{text:{default:__("Take Course","sensei-lms")}}},invalidUsage:{message:__("The Course Signup block can only be used inside the Course List block.","sensei-lms"),validPostTypes:["course"]}});
+/* harmony default export */const i=(0,l/* .createButtonBlockType */.M)({settings:{name:"sensei-lms/button-take-course",title:__("Course Signup","sensei-lms"),description:__("Enable a registered user to start the course. This block is only displayed if the user is not already enrolled.","sensei-lms"),keywords:[__("Start","sensei-lms"),__("Sign up","sensei-lms"),__("Signup","sensei-lms"),__("Enrol","sensei-lms"),__("Enroll","sensei-lms"),__("Course","sensei-lms"),__("Take course","sensei-lms")],attributes:{text:{default:__("Take Course","sensei-lms")}}},invalidUsage:{message:__("The Course Signup block can only be used inside the Course List block.","sensei-lms"),validPostTypes:["course"]},EditWrapper:function(e){var t=e.children;return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(o.BlockControls,null,(0,s.createElement)(a/* ["default"] */.Z,{useCourseStatusContext:!0})),t)}});
 /***/},
 /***/12207:
 /***/(e,t,r)=>{"use strict";
 /* harmony export */r.d(t,{
-/* harmony export */Z:()=>l
+/* harmony export */Z:()=>c
 /* harmony export */});
-/* harmony import */var s=r(50189),n=r(65736),o=r(26877),__=n.__;
+/* harmony import */var s=r(50189),n=r(69307),o=r(65736),l=r(52175),a=r(26877),i=r(53081),__=o.__;
 /* harmony import */
+/**
+ * Internal dependencies
+ */
 /**
  * View results button block.
  */
-/* harmony default export */const l=(0,o/* .createButtonBlockType */.M)({tagName:"a",settings:{name:"sensei-lms/button-view-results",description:__("Enable a student to view their course results.","sensei-lms"),title:__("View Results","sensei-lms"),attributes:{text:{default:__("View Results","sensei-lms")}},styles:[o/* .BlockStyles.Fill */.i.Fill,(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},o/* .BlockStyles.Outline */.i.Outline),{},{isDefault:!0}),o/* .BlockStyles.Link */.i.Link]},invalidUsage:{message:__("The View Results block can only be used inside the Course List block.","sensei-lms"),validPostTypes:["course"]}});
+/* harmony default export */const c=(0,a/* .createButtonBlockType */.M)({tagName:"a",settings:{name:"sensei-lms/button-view-results",description:__("Enable a student to view their course results.","sensei-lms"),title:__("View Results","sensei-lms"),attributes:{text:{default:__("View Results","sensei-lms")}},styles:[a/* .BlockStyles.Fill */.i.Fill,(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},a/* .BlockStyles.Outline */.i.Outline),{},{isDefault:!0}),a/* .BlockStyles.Link */.i.Link]},invalidUsage:{message:__("The View Results block can only be used inside the Course List block.","sensei-lms"),validPostTypes:["course"]},EditWrapper:function(e){var t=e.children;return(0,n.createElement)(n.Fragment,null,(0,n.createElement)(l.BlockControls,null,(0,n.createElement)(i/* ["default"] */.Z,{useCourseStatusContext:!0})),t)}});
 /***/},
 /***/39359:
 /***/(e,t,r)=>{"use strict";
@@ -635,8 +699,8 @@ return document.body.removeChild(e),s}));
 /* harmony export */});
 /* harmony import */var s=r(25773),n=r(50189),o=r(69307),l=r(60042),a=r.n(l),i=r(65736),c=r(52175),__=i.__;
 /* harmony import */
-/* harmony default export */const u=function(e){var t=e.totalCount,r=e.completedCount,l=e.hidePercentage,u=e.wrapperAttributes,d=e.barWrapperAttributes,m=e.barAttributes,p=e.countersClassName,v=e.completedCountClassName,g=e.hideDefault,b=e.label,f=Math.round(r/t*100)||0,y=Math.max(g?0:3,f),h=(0,c.useBlockProps)(u);return(0,o.createElement)("div",h,(0,o.createElement)("section",{className:a()("sensei-progress-bar__heading",p)},(0,o.createElement)("div",{className:a()("sensei-progress-bar__label",v)},(0,i.sprintf)(// translators: Placeholder %1$d is the completed progress count, %2$d is the total count and %3$s is the label for progress bar.
-__("%1$d of %2$d %3$s completed","sensei-lms"),r,t,b||""),!l&&" (".concat(f,"%)"))),(0,o.createElement)("div",(0,s/* ["default"] */.Z)({role:"progressbar","aria-valuenow":f,"aria-valuemin":"0","aria-valuemax":"100"},(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},d),{},{className:a()("sensei-progress-bar__bar",null==d?void 0:d.className)})),(0,o.createElement)("div",(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},m),{},{className:a()("sensei-progress-bar__progress",null==m?void 0:m.className),style:(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},(null==m?void 0:m.style)&&m.style),{},{width:"".concat(y,"%")})}))))};
+/* harmony default export */const u=function(e){var t=e.totalCount,r=e.completedCount,l=e.hidePercentage,u=e.wrapperAttributes,d=e.barWrapperAttributes,m=e.barAttributes,p=e.countersClassName,v=e.completedCountClassName,g=e.hideDefault,f=e.label,b=Math.round(r/t*100)||0,y=Math.max(g?0:3,b),h=(0,c.useBlockProps)(u);return(0,o.createElement)("div",h,(0,o.createElement)("section",{className:a()("sensei-progress-bar__heading",p)},(0,o.createElement)("div",{className:a()("sensei-progress-bar__label",v)},(0,i.sprintf)(// translators: Placeholder %1$d is the completed progress count, %2$d is the total count and %3$s is the label for progress bar.
+__("%1$d of %2$d %3$s completed","sensei-lms"),r,t,f||""),!l&&" (".concat(b,"%)"))),(0,o.createElement)("div",(0,s/* ["default"] */.Z)({role:"progressbar","aria-valuenow":b,"aria-valuemin":"0","aria-valuemax":"100"},(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},d),{},{className:a()("sensei-progress-bar__bar",null==d?void 0:d.className)})),(0,o.createElement)("div",(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},m),{},{className:a()("sensei-progress-bar__progress",null==m?void 0:m.className),style:(0,n/* ["default"] */.Z)((0,n/* ["default"] */.Z)({},(null==m?void 0:m.style)&&m.style),{},{width:"".concat(y,"%")})}))))};
 /***/},
 /***/53112:
 /***/(e,t,r)=>{"use strict";
@@ -646,8 +710,8 @@ __("%1$d of %2$d %3$s completed","sensei-lms"),r,t,b||""),!l&&" (".concat(f,"%)"
 /* harmony export */,vD:()=>/* binding */g
 /* harmony export */});
 /* unused harmony export ColorSettings */
-/* harmony import */var s=r(90228),n=r(66886),o=r(25773),l=r(50189),a=r(69307),i=r(92819),c=r(52175),u=r(65736),d=r(39359),__=u.__,m=function(e){return function(t){var r=(0,i.mapValues)(e,(function(e){return e.style}));return(0,c.withColors)(r)((function(r){return(0,a.createElement)(a.Fragment,null,(0,a.createElement)(t,r),(0,a.createElement)(p,{colorSettings:e,props:r}))}))}},p=function(e){var t,r,s,n,o=e.colorSettings,u=e.props,d=Object.keys(o).map((function(e){return{value:u[e].color,label:o[e].label,onChange:function(t){u["set".concat((0,i.upperFirst)(e))](t),o[e].onChange&&o[e].onChange((0,l/* ["default"] */.Z)((0,l/* ["default"] */.Z)({},u),{},{colorValue:t}))}}})),m=(null===(t=u.backgroundColor)||void 0===t||null===(r=t.color)||void 0===r?void 0:r.includes("var"))||(null===(s=u.textColor)||void 0===s||null===(n=s.color)||void 0===n?void 0:n.includes("var")),p=u.backgroundColor&&u.textColor&&!m;return(0,a.createElement)(c.InspectorControls,null,(0,a.createElement)(c.PanelColorSettings,{title:__("Color settings","sensei-lms"),initialOpen:!1,colorSettings:d},p&&(0,a.createElement)(c.ContrastChecker,{textColor:u.textColor.color,backgroundColor:u.backgroundColor.color,isLargeText:!1})))},v=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"default";return function(t){return function(r){var s=r.className,n={};s&&s.includes("is-style-")||(s=n.className=[s,"is-style-".concat(e)].join(" "));var l=s.match(/is-style-(\w+)/);return l&&(n.blockStyle=l[1]),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},r,n))}}},g=function(e){return function(t){return function(r){var i=r.setAttributes,u=r.attributes,m=(0,d/* .useColorsByProbe */.o)(),p=(0,a.useState)({}),v=(0,n/* ["default"] */.Z)(p,2),g=v[0],b=v[1],f=Object.keys(e).map((function(e){return u[e]}));return(0,a.useEffect)((function(){var t={};Object.entries(e).forEach((function(e){var r=(0,n/* ["default"] */.Z)(e,2),s=r[0],o=r[1],a=o.style,d=o.probeKey,p=m[d]||{},v=p.slug;if(v&&(t[s]=(0,l/* ["default"] */.Z)((0,l/* ["default"] */.Z)({},p),{},{className:(0,c.getColorClassName)(a,v)})),u[s]!==v){var g={};g[s]=v,// Border color is not compatible with all themes as className, so the color value is needed.
-"border-color"===a&&(g["".concat(s,"Value")]=p.color),i(g)}})),b(t)}),[m,i].concat((0,s/* ["default"] */.Z)(f))),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},r,g))}}};
+/* harmony import */var s=r(90228),n=r(66886),o=r(25773),l=r(50189),a=r(69307),i=r(92819),c=r(52175),u=r(65736),d=r(39359),__=u.__,m=function(e){return function(t){var r=(0,i.mapValues)(e,(function(e){return e.style}));return(0,c.withColors)(r)((function(r){return(0,a.createElement)(a.Fragment,null,(0,a.createElement)(t,r),(0,a.createElement)(p,{colorSettings:e,props:r}))}))}},p=function(e){var t,r,s,n,o=e.colorSettings,u=e.props,d=Object.keys(o).map((function(e){return{value:u[e].color,label:o[e].label,onChange:function(t){u["set".concat((0,i.upperFirst)(e))](t),o[e].onChange&&o[e].onChange((0,l/* ["default"] */.Z)((0,l/* ["default"] */.Z)({},u),{},{colorValue:t}))}}})),m=(null===(t=u.backgroundColor)||void 0===t||null===(r=t.color)||void 0===r?void 0:r.includes("var"))||(null===(s=u.textColor)||void 0===s||null===(n=s.color)||void 0===n?void 0:n.includes("var")),p=u.backgroundColor&&u.textColor&&!m;return(0,a.createElement)(c.InspectorControls,null,(0,a.createElement)(c.PanelColorSettings,{title:__("Color settings","sensei-lms"),initialOpen:!1,colorSettings:d},p&&(0,a.createElement)(c.ContrastChecker,{textColor:u.textColor.color,backgroundColor:u.backgroundColor.color,isLargeText:!1})))},v=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"default";return function(t){return function(r){var s=r.className,n={};s&&s.includes("is-style-")||(s=n.className=[s,"is-style-".concat(e)].join(" "));var l=s.match(/is-style-(\w+)/);return l&&(n.blockStyle=l[1]),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},r,n))}}},g=function(e){return function(t){return function(r){var i=r.setAttributes,u=r.attributes,m=(0,d/* .useColorsByProbe */.o)(),p=(0,a.useState)({}),v=(0,n/* ["default"] */.Z)(p,2),g=v[0],f=v[1],b=Object.keys(e).map((function(e){return u[e]}));return(0,a.useEffect)((function(){var t={};Object.entries(e).forEach((function(e){var r=(0,n/* ["default"] */.Z)(e,2),s=r[0],o=r[1],a=o.style,d=o.probeKey,p=m[d]||{},v=p.slug;if(v&&(t[s]=(0,l/* ["default"] */.Z)((0,l/* ["default"] */.Z)({},p),{},{className:(0,c.getColorClassName)(a,v)})),u[s]!==v){var g={};g[s]=v,// Border color is not compatible with all themes as className, so the color value is needed.
+"border-color"===a&&(g["".concat(s,"Value")]=p.color),i(g)}})),f(t)}),[m,i].concat((0,s/* ["default"] */.Z)(b))),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},r,g))}}};
 /* harmony import */}
 /***/,
 /***/49702:
@@ -832,7 +896,7 @@ if(!e||null===e.match("#"))return e;var t=0,r=0,s=0,n=4===e.length?"#".concat(e[
 /***/e=>{"use strict";e.exports=JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"sensei-lms/course-categories","title":"Course Categories","description":"Show the course categories","category":"sensei-lms","textdomain":"sensei-lms","keywords":["course","lessons","categories"],"attributes":{"previewCategories":{"type":"array"},"textAlign":{"type":"string"},"options":{"type":"object"}},"usesContext":["postId","postType","queryId"],"supports":{"html":false,"spacing":{"margin":true,"padding":true,"blockGap":true},"align":false,"alignWide":false,"className":true,"typography":{"lineHeight":true,"fontSize":true,"__experimentalFontFamily":true,"__experimentalFontStyle":true,"__experimentalFontWeight":true,"__experimentalLetterSpacing":true,"__experimentalTextTransform":true,"__experimentalDefaultControls":{"fontSize":true}}}}')}
 /***/,
 /***/26669:
-/***/e=>{"use strict";e.exports=JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"sensei-lms/course-list-filter","title":"Course List Filter","description":"Filter courses in Course List block","category":"sensei-lms","textdomain":"sensei-lms","keywords":["course","categories","lessons","featured","filter"],"attributes":{"align":{"type":"string","default":"left"},"types":{"type":"array","default":["categories","featured","student_course"]}},"usesContext":["queryId","query"],"supports":{"align":["left","right"],"html":false}}')}
+/***/e=>{"use strict";e.exports=JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"sensei-lms/course-list-filter","title":"Course List Filter","description":"Filter courses in Course List block","category":"sensei-lms","textdomain":"sensei-lms","keywords":["course","categories","lessons","featured","filter"],"attributes":{"align":{"type":"string","default":"left"},"types":{"type":"array","default":["categories","featured","student_course"]},"defaultOptions":{"type":"object","default":{"categories":-1,"featured":"all","student_course":"all"}}},"usesContext":["queryId","query"],"supports":{"align":["left","right"],"html":false}}')}
 /***/,
 /***/21609:
 /***/e=>{"use strict";e.exports=JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":2,"name":"sensei-lms/course-overview","title":"Course Overview","category":"sensei-lms","description":"Displays a link to the course.","textdomain":"sensei-lms","usesContext":["postType"],"example":{}}')}

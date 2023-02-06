@@ -20,6 +20,16 @@ return o.createElement("svg",i({viewBox:"0 0 24 24",xmlns:"http://www.w3.org/200
 /* harmony default export */const i=function(e){
 return s.createElement("svg",o({viewBox:"0 0 24 24",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=s.createElement("path",{d:"M4 4v12h4.777L6 20h2.223L11 16h2l2.777 4H18l-2.777-4H20V4zm1.5 1.5h13v9h-13zM9 8v1.5h6V8zm0 3v1.5h6V11z",clipRule:"evenodd",fillRule:"evenodd"})))};
 /***/},
+/***/33731:
+/***/(e,t,n)=>{"use strict";
+/* harmony export */n.d(t,{
+/* harmony export */Z:()=>a
+/* harmony export */});
+/* harmony import */var r,s,o=n(99196);
+/* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},i.apply(this,arguments)}
+/* harmony default export */const a=function(e){
+return o.createElement("svg",i({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=o.createElement("circle",{cx:12,cy:12,r:12,fill:"currentColor"})),s||(s=o.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M9.835 15.38c.3-.23.179-.474.6-.563-.02.194.146.391.251.563-.109-.367-.002-.536.08-.72.347-.785-.662-1.293-1.35-1.418.235-.164.399-.327.694-.355a2.377 2.377 0 0 0-1.058.23c-1.112.531-1.993-.523-1.41-1.48.31-.51.664-.519.982-.865.077.178.103.372.075.564a.919.919 0 0 0 .049-.664c-.104-.336-.4-.338-.456-.821-.012-.101-.105.056-.263-.077-.038-.032-.113-.09-.163-.064-.085.044-.18.008-.232.034-.083.041-.109-.045-.2.016-.16.107-.178-.013-.332.005-.193.023-.32.261-.43.144-.102-.108-.206.075-.28.075-.05 0-.311.317-.426.028-.086-.216-.28.206-.382.063-.033-.046-.123.108-.18-.044-.014-.035 0-.078-.108-.027-.215.099-.138-.06-.207-.144-.083-.103-.113-.103-.068-.27.036-.133-.019-.33.2-.364.055-.008.107-.005.184-.148.096-.18.231-.093.207-.175-.036-.119.143-.28.226-.355.11-.103.254-.252.306-.396a.63.63 0 0 1 .102-.141c.081-.084.105-.003.227-.045.088-.03.02.053.106-.07.028-.038.105-.001.19-.039.259-.112.283-.11.347-.371.012-.05.025-.088.08-.083.109.01.134-.052.2-.05.061.001.083-.03.115-.068.18-.216.277-.055.357-.072.06-.012.022-.142.184-.102.23.057.155-.05.303-.015.174.041.186.19.306.225.143.042.211.198.307.196.337-.005.235.23.448.323-.16-.161.012-.421-.352-.455-.08-.007-.11-.127-.23-.183-.146-.067-.13-.21-.394-.27.068-.04.089.005.13-.073.058-.11.09-.046.113-.113.02-.063.006-.099.165-.155.165-.06.325-.195.472-.188.13.006.185-.08.177-.19-.008-.112-.033-.267.222-.22.153.029.15.003.15-.1-.002-.102.04-.165.174-.16.098.002.194-.003.231-.117.03-.091.207-.114.302-.148.317-.114.361.05.447-.095.07-.117.196-.317.337-.175.028.029.054.05.15-.056.08-.088.27-.2.337-.048.027.06.086.121.138.044a.08.08 0 0 1 .053-.039c.05-.01.079-.024.104-.036.218-.101.314-.095.213.125-.142.316.792-.192.532.151-.095.126.538.197.63.254.05.032.048.059.144.077.271.05.267.026.284.243.007.098.107.043.107.168 0 .535.472.266.549.399.012.022.032.042.079.042.149 0 .157-.03.224.089.027.047.05.072.127.096.12.037.112.05.068.138-.054.104.03.102.138.112.1.01.148.062.216.138.11.122.284.156.43.227.084.04.002.14.143.243.104.077.156.066.016.165-.59.418.22.305.446.694.051.087.118.195.216.295.225.23.1.293.221.437.07.083.015.063.13.137.272.175-.105.292-.319.212-.097-.035-.166-.085-.147-.025.016.049-.01.083-.052.12-.125.112.123.068.181.06.181-.025.664-.076.66.093-.005.22.136.27.25.284.185.024.238.057.34.226.092.152.145.07.288.205.097.093.217.258.02.282-.047.005-.099 0-.12.017a.411.411 0 0 1-.14.066c-.295.09.14.136.246.113.093-.02.209-.05.3-.027.057.015.062.08.244.107.06.01.036.099.006.16-.104.214.191.1.16.263-.017.093.11.245-.067.248-.057.001-.117-.015-.115.034.004.105-.165-.03-.317.115-.056.054-.19.092-.272-.009-.032-.038-.07-.069-.218-.023-.144.046-.242.204-.306-.04-.017-.064-.05-.065-.142-.097-.125-.043-.114-.258-.297-.12a.24.24 0 0 1-.214.039c-.144-.037-.303.012-.317-.096-.021-.179-.191-.305-.377-.296-.147.008-.278.034-.355-.137.057.195.207.208.382.208.144 0 .23.075.255.225.045.265.204.099.406.223.1.06.17.159.21.273.042.118.37-.024.282.258-.037.122-.107.168-.242.266-.4.294-.5.004-.618.239-.062.121-.063.031-.196.09-.22.098-.36-.128-.522-.045-.182.094-.168-.08-.352.037-.152.097-.308-.074-.38.192-.063.227-.322.232-.44.11-.189-.194-.132.229-.362.054-.123-.091-.213.043-.392.045-.33.005-.489-.282-.65-.107-.192.206-.331-.032-.334-.242-.003-.216-.777-.144-1.185-.256-.225-.062-.932.013-.702-.35-.372.39.456.366.682.455.136.053.245.095.377.114.13.296.214.617.227 1.007.043-.214.053-.433.028-.649-.043-.383.242.19.276.272.184.45-.022 1.278-.488 1.526a2.957 2.957 0 0 0-.562-.99c.256.392.616 1.192.327 1.65a1.023 1.023 0 0 1-.55-.483c.077.333.413.702.818.58.707-.213.704.233 1.641.307.682.111 1.654 0 2.118.037.254.02 1.32.197 1.315.465-.02 1.105-.438 1.164-1.539 1.268-.64.06-1.134.085-1.823.11-1.54.058-3.391.06-4.868 0-.724-.03-1.072-.036-1.841-.137-.769-.1-1.19-.363-1.178-1.187.005-.304.905-.594 1.2-.628.347-.039.901.005 1.405-.116.527-.127.747-.21 1.135-.508Zm5.347-6.052c-.167-.042-.051-.138-.339-.014-.17.073-.194-.13-.365-.094-.172.036-.242-.125-.499-.166-.318-.05-.088-.133-.592-.032-.097.02-.179-.09-.481-.052-.355.046-.23.084-.445-.115-.272-.251-.488-.082-.767-.184.216.166.368.019.622.221-.242.138-.523.802-.962.844.478.107.709.354 1.148.413.504.068.882.118 1.151.531.301.463.44.196.874.168.275-.017.282-.185.328-.362.063-.245.126-.256.31-.289.213-.037.163-.092.107-.156-.15-.172.019-.207.146-.244.222-.064.042-.075.042-.166-.278-.09-.063-.217.092-.273.169.105.242.087.317.073.109-.021.181.03.273-.028-.135.014-.163-.037-.278-.02-.051.007-.112.01-.219-.054-.18-.107-.27.048-.463 0Zm-2.28 1.64-1.09-.545c-1.316-.657-1.915.313-2.337 1.376l-.766.73c.549-.338.996-.714 1.574-.71.092 0 1.516.484 1.286-.092-.04-.104.09-.052.125-.201.04-.17.055-.141.195-.033.089.069.211.113.174-.048-.017-.072-.04-.137.28-.004.15.062.095-.064.303-.09.29-.034.228-.31.364-.349.076-.022.152.058.295-.077.05-.046.11-.089.232-.057-.143-.073-.22-.014-.292.03-.146.089-.204-.037-.343.07Zm-2.23-1.923c.16-.02.32-.036.482-.046a.13.13 0 0 0 .074-.06.111.111 0 0 0 .007-.09.268.268 0 0 1 .147-.206l-.002-.003c-.258.001-.466.1-.73.211-.052.022-.024.111-.118.213a.26.26 0 0 1-.201.235.136.136 0 0 0-.09.046.113.113 0 0 0-.026.092.252.252 0 0 1-.277.061c-.2-.077-.35-.065-.448.036a.39.39 0 0 1 .398.014c.134.066.3.031.39-.082a.132.132 0 0 1 .126-.098.421.421 0 0 0 .268-.323Z",fill:"#fff"})))};
+/***/},
 /***/90180:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
@@ -29,16 +39,6 @@ return s.createElement("svg",o({viewBox:"0 0 24 24",xmlns:"http://www.w3.org/200
 /* harmony import */function i(){return i=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},i.apply(this,arguments)}
 /* harmony default export */const a=function(e){
 return o.createElement("svg",i({viewBox:"0 0 24 24",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=o.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M18.5 5.5v9h-13v-9h13zM20 16H4V4h16v12z"})),s||(s=o.createElement("path",{fillRule:"evenodd",clipRule:"evenodd",d:"M9 12h6V8H9v4zm-3 8h2.222L11 16H8.778L6 20zm12 0h-2.222L13 16h2.222L18 20z"})))};
-/***/},
-/***/8930:
-/***/(e,t,n)=>{"use strict";
-/* harmony export */n.d(t,{
-/* harmony export */Z:()=>i
-/* harmony export */});
-/* harmony import */var r,s=n(99196);
-/* harmony import */function o(){return o=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},o.apply(this,arguments)}
-/* harmony default export */const i=function(e){
-return s.createElement("svg",o({viewBox:"0 0 24 24",fill:"none",xmlns:"http://www.w3.org/2000/svg"},e),r||(r=s.createElement("path",{d:"M12 24a12 12 0 1 0 0-24 12 12 0 0 0 0 24Zm-.1-4.723c-2.849 0-4.517-1.072-4.575-3.011 0-.203 0-.405.029-.608 1.208 1.013 2.733 1.65 4.603 1.65 1.64 0 2.733-.695 2.733-1.708 0-.608-.978-.897-2.244-1.274-2.33-.752-5.553-1.736-5.553-5.181 0-2.721 1.957-4.458 5.323-4.458 2.905 0 4.66 1.042 4.689 3.242v.376c-1.496-1.187-3.107-1.794-4.862-1.794-1.64 0-2.848.636-2.848 1.592 0 .55.978.868 2.244 1.273 2.33.753 5.667 1.824 5.667 5.24 0 2.808-2.186 4.66-5.207 4.66Z",fill:"currentColor"})))};
 /***/},
 /***/36414:
 /***/(e,t,n)=>{"use strict";
@@ -157,7 +157,7 @@ e.exports=n(58772)()}
  */e.exports="SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED"}
 /***/,
 /***/98286:
-/***/(e,t,n)=>{"use strict";var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},s=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},o=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),i=u(n(99196)),a=u(n(23615)),l=u(n(60042));function u(e){return e&&e.__esModule?e:{default:e}}function c(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}var d={animating:"rah-animating",animatingUp:"rah-animating--up",animatingDown:"rah-animating--down",animatingToHeightZero:"rah-animating--to-height-zero",animatingToHeightAuto:"rah-animating--to-height-auto",animatingToHeightSpecific:"rah-animating--to-height-specific",static:"rah-static",staticHeightZero:"rah-static--height-zero",staticHeightAuto:"rah-static--height-auto",staticHeightSpecific:"rah-static--height-specific"},m=["animateOpacity","animationStateClasses","applyInlineTransitions","children","contentClassName","delay","duration","easing","height","onAnimationEnd","onAnimationStart"];function p(e){for(var t=arguments.length,n=Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];if(!n.length)return e;for(var s={},o=Object.keys(e),i=0;i<o.length;i++){var a=o[i];-1===n.indexOf(a)&&(s[a]=e[a])}return s}
+/***/(e,t,n)=>{"use strict";var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},s=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},o=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),i=c(n(99196)),a=c(n(23615)),l=c(n(60042));function c(e){return e&&e.__esModule?e:{default:e}}function u(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}var d={animating:"rah-animating",animatingUp:"rah-animating--up",animatingDown:"rah-animating--down",animatingToHeightZero:"rah-animating--to-height-zero",animatingToHeightAuto:"rah-animating--to-height-auto",animatingToHeightSpecific:"rah-animating--to-height-specific",static:"rah-static",staticHeightZero:"rah-static--height-zero",staticHeightAuto:"rah-static--height-auto",staticHeightSpecific:"rah-static--height-specific"},m=["animateOpacity","animationStateClasses","applyInlineTransitions","children","contentClassName","delay","duration","easing","height","onAnimationEnd","onAnimationStart"];function p(e){for(var t=arguments.length,n=Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];if(!n.length)return e;for(var s={},o=Object.keys(e),i=0;i<o.length;i++){var a=o[i];-1===n.indexOf(a)&&(s[a]=e[a])}return s}
 // Start animation helper using nested requestAnimationFrames
 function f(e){e.forEach((function(e){return cancelAnimationFrame(e)}))}function h(e){return!isNaN(parseFloat(e))&&isFinite(e)}function v(e){
 // Percentage height
@@ -169,9 +169,9 @@ r="0%"===e.height?0:e.height,o="hidden"),n.animationStateClasses=s({},d,e.animat
 // Hide content if height is 0 (to prevent tabbing into it)
 // Check for contentElement is added cause this would fail in tests (react-test-renderer)
 // Read more here: https://github.com/Stanko/react-animate-height/issues/17
-this.contentElement&&this.contentElement.style&&this.hideContent(e)}},{key:"componentDidUpdate",value:function(e,t){var n,r,s=this,o=this.props,i=o.delay,a=o.duration,u=o.height,d=o.onAnimationEnd,m=o.onAnimationStart;
+this.contentElement&&this.contentElement.style&&this.hideContent(e)}},{key:"componentDidUpdate",value:function(e,t){var n,r,s=this,o=this.props,i=o.delay,a=o.duration,c=o.height,d=o.onAnimationEnd,m=o.onAnimationStart;
 // Check if 'height' prop has changed
-if(this.contentElement&&u!==e.height){var p;
+if(this.contentElement&&c!==e.height){var p;
 // Remove display: none from the content div
 // if it was hidden to prevent tabbing into it
 this.showContent(t.height),
@@ -179,11 +179,11 @@ this.showContent(t.height),
 this.contentElement.style.overflow="hidden";var b=this.contentElement.offsetHeight;this.contentElement.style.overflow="";
 // set total animation time
 var y=a+i,E=null,S={height:null,// it will be always set to either 'auto' or specific number
-overflow:"hidden"},w="auto"===t.height;h(u)?(
+overflow:"hidden"},w="auto"===t.height;h(c)?(
 // If value is string "0" make sure we convert it to number 0
-E=u<0||"0"===u?0:u,S.height=E):v(u)?(
+E=c<0||"0"===c?0:c,S.height=E):v(c)?(
 // If value is string "0%" make sure we convert it to number 0
-E="0%"===u?0:u,S.height=E):(
+E="0%"===c?0:c,S.height=E):(
 // If not, animate to content height
 // and then reset to auto
 E=b,// TODO solve contentHeight = 0
@@ -194,7 +194,7 @@ S.height=E,
 // set starting height explicitly to be able to use transition
 E=b);
 // Animation classes
-var k=(0,l.default)((c(p={},this.animationStateClasses.animating,!0),c(p,this.animationStateClasses.animatingUp,"auto"===e.height||u<e.height),c(p,this.animationStateClasses.animatingDown,"auto"===u||u>e.height),c(p,this.animationStateClasses.animatingToHeightZero,0===S.height),c(p,this.animationStateClasses.animatingToHeightAuto,"auto"===S.height),c(p,this.animationStateClasses.animatingToHeightSpecific,S.height>0),p)),C=this.getStaticStateClasses(S.height);
+var k=(0,l.default)((u(p={},this.animationStateClasses.animating,!0),u(p,this.animationStateClasses.animatingUp,"auto"===e.height||c<e.height),u(p,this.animationStateClasses.animatingDown,"auto"===c||c>e.height),u(p,this.animationStateClasses.animatingToHeightZero,0===S.height),u(p,this.animationStateClasses.animatingToHeightAuto,"auto"===S.height),u(p,this.animationStateClasses.animatingToHeightSpecific,S.height>0),p)),C=this.getStaticStateClasses(S.height);
 // Animation classes to be put after animation is complete
 // Set starting height and animating classes
 // We are safe to call set state as it will not trigger infinite loop
@@ -225,17 +225,17 @@ this.timeoutID=setTimeout((function(){S.animationStateClasses=C,S.shouldUseTrans
 // ANIMATION ENDS
 // If height is auto, don't hide the content
 // (case when element is empty, therefore height is 0)
-"auto"!==u&&
+"auto"!==c&&
 // Hide content if height is 0 (to prevent tabbing into it)
 s.hideContent(E),
 // Run a callback if it exists
-g(d,{newHeight:E})}),y))}}},{key:"componentWillUnmount",value:function(){f(this.animationFrameIDs),clearTimeout(this.timeoutID),clearTimeout(this.animationClassesTimeoutID),this.timeoutID=null,this.animationClassesTimeoutID=null,this.animationStateClasses=null}},{key:"showContent",value:function(e){0===e&&(this.contentElement.style.display="")}},{key:"hideContent",value:function(e){0===e&&(this.contentElement.style.display="none")}},{key:"getStaticStateClasses",value:function(e){var t;return(0,l.default)((c(t={},this.animationStateClasses.static,!0),c(t,this.animationStateClasses.staticHeightZero,0===e),c(t,this.animationStateClasses.staticHeightSpecific,e>0),c(t,this.animationStateClasses.staticHeightAuto,"auto"===e),t))}},{key:"render",value:function(){var e,t=this,n=this.props,r=n.animateOpacity,o=n.applyInlineTransitions,a=n.children,u=n.className,d=n.contentClassName,f=n.delay,h=n.duration,v=n.easing,g=n.id,b=n.style,y=this.state,E=y.height,S=y.overflow,w=y.animationStateClasses,k=y.shouldUseTransitions,C=s({},b,{height:E,overflow:S||b.overflow});k&&o&&(C.transition="height "+h+"ms "+v+" "+f+"ms",
+g(d,{newHeight:E})}),y))}}},{key:"componentWillUnmount",value:function(){f(this.animationFrameIDs),clearTimeout(this.timeoutID),clearTimeout(this.animationClassesTimeoutID),this.timeoutID=null,this.animationClassesTimeoutID=null,this.animationStateClasses=null}},{key:"showContent",value:function(e){0===e&&(this.contentElement.style.display="")}},{key:"hideContent",value:function(e){0===e&&(this.contentElement.style.display="none")}},{key:"getStaticStateClasses",value:function(e){var t;return(0,l.default)((u(t={},this.animationStateClasses.static,!0),u(t,this.animationStateClasses.staticHeightZero,0===e),u(t,this.animationStateClasses.staticHeightSpecific,e>0),u(t,this.animationStateClasses.staticHeightAuto,"auto"===e),t))}},{key:"render",value:function(){var e,t=this,n=this.props,r=n.animateOpacity,o=n.applyInlineTransitions,a=n.children,c=n.className,d=n.contentClassName,f=n.delay,h=n.duration,v=n.easing,g=n.id,b=n.style,y=this.state,E=y.height,S=y.overflow,w=y.animationStateClasses,k=y.shouldUseTransitions,C=s({},b,{height:E,overflow:S||b.overflow});k&&o&&(C.transition="height "+h+"ms "+v+" "+f+"ms",
 // Include transition passed through styles
 b.transition&&(C.transition=b.transition+", "+C.transition),
 // Add webkit vendor prefix still used by opera, blackberry...
 C.WebkitTransition=C.transition);var Z={};r&&(Z.transition="opacity "+h+"ms "+v+" "+f+"ms",
 // Add webkit vendor prefix still used by opera, blackberry...
-Z.WebkitTransition=Z.transition,0===E&&(Z.opacity=0));var T=(0,l.default)((c(e={},w,!0),c(e,u,u),e)),x=void 0!==this.props["aria-hidden"]?this.props["aria-hidden"]:0===E;
+Z.WebkitTransition=Z.transition,0===E&&(Z.opacity=0));var T=(0,l.default)((u(e={},w,!0),u(e,c,c),e)),x=void 0!==this.props["aria-hidden"]?this.props["aria-hidden"]:0===E;
 // Check if user passed aria-hidden prop
 return i.default.createElement("div",s({},p.apply(void 0,[this.props].concat(m)),{"aria-hidden":x,className:T,id:g,style:C}),i.default.createElement("div",{className:d,style:Z,ref:function(e){return t.contentElement=e}},a))}}]),t}(i.default.Component);b.propTypes={"aria-hidden":a.default.bool,animateOpacity:a.default.bool,animationStateClasses:a.default.object,applyInlineTransitions:a.default.bool,children:a.default.any.isRequired,className:a.default.string,contentClassName:a.default.string,delay:a.default.number,duration:a.default.number,easing:a.default.string,height:function(e,t,n){var s=e[t];return"number"==typeof s&&s>=0||v(s)||"auto"===s?null:new TypeError('value "'+s+'" of type "'+(void 0===s?"undefined":r(s))+'" is invalid type for '+t+" in "+n+'. It needs to be a positive number, string "auto" or percentage string (e.g. "15%").')},id:a.default.string,onAnimationEnd:a.default.func,onAnimationStart:a.default.func,style:a.default.object},b.defaultProps={animateOpacity:!1,animationStateClasses:d,applyInlineTransitions:!0,duration:250,delay:0,easing:"ease",style:{}},t.Z=b}
 /***/,
@@ -245,7 +245,7 @@ return i.default.createElement("div",s({},p.apply(void 0,[this.props].concat(m))
 /* harmony export */h:()=>/* binding */a
 /* harmony export */,z:()=>/* binding */l
 /* harmony export */});
-/* harmony import */var r=n(92819),s=n(9818),o=n(29512),i=n.n(o),a=function(e,t){if(t){var n=t.match(/is-style-\w+/);if(n)return n[0]}var s=(0,r.find)(e,"isDefault");return s?"is-style-"+s.name:null},l=function(e,t){var n=(0,s.select)("core/block-editor").getBlock(e),r=n.attributes.className,o=n.name,l=(0,s.select)("core/blocks").getBlockStyles(o);if(function(e,t){return e&&e.some((function(e){return"is-style-"+e.name===t}))}(l,t)){var u=new(i())(r),c=a(l,r);c&&u.remove(c),u.add(t),(0,s.dispatch)("core/block-editor").updateBlockAttributes(e,{className:u.value})}};
+/* harmony import */var r=n(92819),s=n(9818),o=n(29512),i=n.n(o),a=function(e,t){if(t){var n=t.match(/is-style-\w+/);if(n)return n[0]}var s=(0,r.find)(e,"isDefault");return s?"is-style-"+s.name:null},l=function(e,t){var n=(0,s.select)("core/block-editor").getBlock(e),r=n.attributes.className,o=n.name,l=(0,s.select)("core/blocks").getBlockStyles(o);if(function(e,t){return e&&e.some((function(e){return"is-style-"+e.name===t}))}(l,t)){var c=new(i())(r),u=a(l,r);u&&c.remove(u),c.add(t),(0,s.dispatch)("core/block-editor").updateBlockAttributes(e,{className:c.value})}};
 /* harmony import */}
 /***/,
 /***/1849:
@@ -277,7 +277,7 @@ setServerStructure:function(e){return e?{structure:e}:{}}})}
 /* harmony export */,tf:()=>/* binding */g
 /* harmony export */});
 /* unused harmony exports blockNames, blockTypes */
-/* harmony import */var r=n(90228),s=n(50189),o=n(53782),i=n(4981),a=n(9818),l=n(92819),u=["type","lessons"],c={module:"sensei-lms/course-outline-module",lesson:"sensei-lms/course-outline-lesson"},d=(0,l.invert)(c),m=function e(t,n){return(t||[]).map((function(t){var r=t.type,a=t.lessons,l=(0,o/* ["default"] */.Z)(t,u),d=f(n,t);return t.id&&(l=(0,s/* ["default"] */.Z)({},l)),d?d.attributes=(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},d.attributes),l):d=(0,i.createBlock)(c[r],l),"module"===r&&(d.innerBlocks=e(a,d.innerBlocks)),d}))},p=(0,l.curry)((function(e,t){var n=t.name,r=t.attributes;return!!Object.keys(d).includes(n)&&[!!r.id&&e.id===r.id,r.title===e.title,r.title===e.lastTitle].includes(!0)})),f=function(e,t){var n=e.find(p(t));return n||"lesson"!==t.type?n:function(e,t){return e.reduce((function(e,n){return e||n.innerBlocks.find(t)}),!1)}(e,p(t))},h=function e(t){var n={module:function(t){return{description:t.attributes.description,lessons:e(t.innerBlocks),teacher:t.attributes.teacher,teacherId:t.attributes.teacherId,lastTitle:t.attributes.lastTitle,slug:t.attributes.slug}},lesson:function(e){return{draft:e.attributes.draft,preview:e.attributes.preview}}};return t.map((function(e){var t=d[e.name];return(0,s/* ["default"] */.Z)({type:t,id:e.attributes.id,title:e.attributes.title},n[t](e))})).filter((function(e){return"module"===e.type||!!e.title}))},v=function e(t,n){for(var r=0;r<n.length;r++){var s=n[r];if(t===s.name)return s;if(s.innerBlocks&&s.innerBlocks.length>0){var o=e(t,s.innerBlocks);if(o)return o}}return!1},g=function(e,t){var n=(0,a.select)("core/block-editor").getBlocks(e);return(n=n.reduce((function(e,t){return[].concat((0,r/* ["default"] */.Z)(e),(0,r/* ["default"] */.Z)(t.innerBlocks))}),n)).filter((function(e){var n=e.name;return t===n}))};
+/* harmony import */var r=n(90228),s=n(50189),o=n(53782),i=n(4981),a=n(9818),l=n(92819),c=["type","lessons"],u={module:"sensei-lms/course-outline-module",lesson:"sensei-lms/course-outline-lesson"},d=(0,l.invert)(u),m=function e(t,n){return(t||[]).map((function(t){var r=t.type,a=t.lessons,l=(0,o/* ["default"] */.Z)(t,c),d=f(n,t);return t.id&&(l=(0,s/* ["default"] */.Z)({},l)),d?d.attributes=(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},d.attributes),l):d=(0,i.createBlock)(u[r],l),"module"===r&&(d.innerBlocks=e(a,d.innerBlocks)),d}))},p=(0,l.curry)((function(e,t){var n=t.name,r=t.attributes;return!!Object.keys(d).includes(n)&&[!!r.id&&e.id===r.id,r.title===e.title,r.title===e.lastTitle].includes(!0)})),f=function(e,t){var n=e.find(p(t));return n||"lesson"!==t.type?n:function(e,t){return e.reduce((function(e,n){return e||n.innerBlocks.find(t)}),!1)}(e,p(t))},h=function e(t){var n={module:function(t){return{description:t.attributes.description,lessons:e(t.innerBlocks),teacher:t.attributes.teacher,teacherId:t.attributes.teacherId,lastTitle:t.attributes.lastTitle,slug:t.attributes.slug}},lesson:function(e){return{draft:e.attributes.draft,preview:e.attributes.preview}}};return t.map((function(e){var t=d[e.name];return(0,s/* ["default"] */.Z)({type:t,id:e.attributes.id,title:e.attributes.title},n[t](e))})).filter((function(e){return"module"===e.type||!!e.title}))},v=function e(t,n){for(var r=0;r<n.length;r++){var s=n[r];if(t===s.name)return s;if(s.innerBlocks&&s.innerBlocks.length>0){var o=e(t,s.innerBlocks);if(o)return o}}return!1},g=function(e,t){var n=(0,a.select)("core/block-editor").getBlocks(e);return(n=n.reduce((function(e,t){return[].concat((0,r/* ["default"] */.Z)(e),(0,r/* ["default"] */.Z)(t.innerBlocks))}),n)).filter((function(e){var n=e.name;return t===n}))};
 /* harmony import */}
 /***/,
 /***/75913:
@@ -308,14 +308,14 @@ setServerStructure:function(e){return e?{structure:e}:{}}})}
 /* harmony export */Z:()=>/* binding */d
 /* harmony export */,C:()=>m
 /* harmony export */});
-/* harmony import */var r=n(69307),s=n(55609),o=n(9818),i=n(72067),a=n(12238),l=n(65736),u=n(1849),__=l.__,c=function(e){return"post.php?post=".concat(e,"&action=edit")},d=function(e){var t=e.lessonId;return(0,r.createElement)(s.ExternalLink,{href:c(t),target:"lesson",className:"wp-block-sensei-lms-course-outline-lesson__edit"},__("Edit lesson","sensei-lms"))};
+/* harmony import */var r=n(69307),s=n(55609),o=n(9818),i=n(72067),a=n(12238),l=n(65736),c=n(1849),__=l.__,u=function(e){return"post.php?post=".concat(e,"&action=edit")},d=function(e){var t=e.lessonId;return(0,r.createElement)(s.ExternalLink,{href:u(t),target:"lesson",className:"wp-block-sensei-lms-course-outline-lesson__edit"},__("Edit lesson","sensei-lms"))};
 /* harmony import */
-/* harmony default export */const m=function(e){var t=e.lessonId,n=e.lessonTitle,l=(0,o.useSelect)((function(e){return{isSavingPost:e(a.store).isSavingPost(),isSavingMetaBoxes:e(i.store).isSavingMetaBoxes(),isSavingStructure:e(u/* .COURSE_STORE */.v).getIsSavingStructure()}})),c=l.isSavingPost,m=l.isSavingMetaBoxes,p=l.isSavingStructure,f=(0,o.useDispatch)(a.store).savePost;
+/* harmony default export */const m=function(e){var t=e.lessonId,n=e.lessonTitle,l=(0,o.useSelect)((function(e){return{isSavingPost:e(a.store).isSavingPost(),isSavingMetaBoxes:e(i.store).isSavingMetaBoxes(),isSavingStructure:e(c/* .COURSE_STORE */.v).getIsSavingStructure()}})),u=l.isSavingPost,m=l.isSavingMetaBoxes,p=l.isSavingStructure,f=(0,o.useDispatch)(a.store).savePost;
 // Determine whether we are currently saving.
 // If we don't have an ID or a title yet, don't render anything.
 if(!t&&!n)return null;// Component for the "Save and edit lesson" button.
 var h=(0,r.createElement)(s.ToolbarItem,{as:s.Button,onClick:f},__("Save to edit lesson","sensei-lms")),v=(0,r.createElement)(s.ToolbarItem,{as:s.Spinner}),g=h;// Spinner.
-return t?g=(0,r.createElement)(d,{lessonId:t}):(c||p||m)&&(g=v),(0,r.createElement)(s.Toolbar,{className:"components-button"},g)};
+return t?g=(0,r.createElement)(d,{lessonId:t}):(u||p||m)&&(g=v),(0,r.createElement)(s.Toolbar,{className:"components-button"},g)};
 /***/},
 /***/28880:
 /***/(e,t,n)=>{"use strict";
@@ -323,31 +323,31 @@ return t?g=(0,r.createElement)(d,{lessonId:t}):(c||p||m)&&(g=v),(0,r.createEleme
 /* harmony export */Z:()=>g
 /* harmony export */});
 /* unused harmony export LessonEdit */
-/* harmony import */var r=n(25773),s=n(69307),o=n(60042),i=n.n(o),a=n(36414),l=n(80454),u=n(23455),c=n(65736),d=n(53112),m=n(26622),p=n(3295),f=n(72469),h=n(95598),v=n(76515),__=c.__;
+/* harmony import */var r=n(25773),s=n(69307),o=n(60042),i=n.n(o),a=n(36414),l=n(80454),c=n(23455),u=n(65736),d=n(53112),m=n(26622),p=n(3295),f=n(72469),h=n(95598),v=n(76515),__=u.__;
 /* harmony import */
-/* harmony default export */const g=(0,d/* .withColorSettings */.ku)({backgroundColor:{style:"background-color",label:__("Background color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")}})((function(e){var t=e.className,n=e.attributes,o=n.title,c=n.id,d=n.fontSize,g=n.draft,b=n.preview,y=n.placeholder,E=e.backgroundColor,S=e.textColor,w=e.setAttributes,k=(0,m/* .useKeydownInserter */.V)(e).onKeyDown,C=(0,v/* .useLessonPreviewStatus */.z)(e),Z="";
+/* harmony default export */const g=(0,d/* .withColorSettings */.ku)({backgroundColor:{style:"background-color",label:__("Background color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")}})((function(e){var t=e.className,n=e.attributes,o=n.title,u=n.id,d=n.fontSize,g=n.draft,b=n.preview,y=n.placeholder,E=e.backgroundColor,S=e.textColor,w=e.setAttributes,k=(0,m/* .useKeydownInserter */.V)(e).onKeyDown,C=(0,v/* .useLessonPreviewStatus */.z)(e),Z="";
 /**
    * Update lesson title.
    *
    * @param {string} value Lesson title.
-   */!c&&o.length?Z=__("Unsaved","sensei-lms"):c&&g&&(Z=__("Draft","sensei-lms"));var T={className:i()(t,null==E?void 0:E.class,null==S?void 0:S.class,{completed:C.previewStatus===f/* .Status.COMPLETED */.q.COMPLETED,"is-auto-draft":!c&&!o}),style:{backgroundColor:null==E?void 0:E.color,color:null==S?void 0:S.color}};return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(h/* ["default"] */.Z,(0,r/* ["default"] */.Z)({},e,C)),(0,s.createElement)("div",T,(0,s.createElement)(a/* ["default"] */.Z,{icon:l/* ["default"] */.Z,className:"wp-block-sensei-lms-course-outline-lesson__status"}),(0,s.createElement)(p/* ["default"] */.Z,{className:"wp-block-sensei-lms-course-outline-lesson__input",placeholder:y||__("Add Lesson","sensei-lms"),value:o,onChange:function(e){w({title:e})},onKeyDown:k,style:{fontSize:d}}),b&&(0,s.createElement)("span",{className:"wp-block-sensei-lms-course-outline-lesson__badge"},__("Preview","sensei-lms")),Z&&(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-lesson__post-status"},Z),(0,s.createElement)(a/* ["default"] */.Z,{icon:u/* ["default"] */.Z,className:"wp-block-sensei-lms-course-outline-lesson__chevron"})))}));
+   */!u&&o.length?Z=__("Unsaved","sensei-lms"):u&&g&&(Z=__("Draft","sensei-lms"));var T={className:i()(t,null==E?void 0:E.class,null==S?void 0:S.class,{completed:C.previewStatus===f/* .Status.COMPLETED */.q.COMPLETED,"is-auto-draft":!u&&!o}),style:{backgroundColor:null==E?void 0:E.color,color:null==S?void 0:S.color}};return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(h/* ["default"] */.Z,(0,r/* ["default"] */.Z)({},e,C)),(0,s.createElement)("div",T,(0,s.createElement)(a/* ["default"] */.Z,{icon:l/* ["default"] */.Z,className:"wp-block-sensei-lms-course-outline-lesson__status"}),(0,s.createElement)(p/* ["default"] */.Z,{className:"wp-block-sensei-lms-course-outline-lesson__input",placeholder:y||__("Add Lesson","sensei-lms"),value:o,onChange:function(e){w({title:e})},onKeyDown:k,style:{fontSize:d}}),b&&(0,s.createElement)("span",{className:"wp-block-sensei-lms-course-outline-lesson__badge"},__("Preview","sensei-lms")),Z&&(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-lesson__post-status"},Z),(0,s.createElement)(a/* ["default"] */.Z,{icon:c/* ["default"] */.Z,className:"wp-block-sensei-lms-course-outline-lesson__chevron"})))}));
 /***/},
 /***/95598:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
 /* harmony export */Z:()=>d
 /* harmony export */});
-/* harmony import */var r=n(69307),s=n(52175),o=n(55609),i=n(9818),a=n(65736),l=n(72469),u=n(63500),c=n(63028),__=a.__;
+/* harmony import */var r=n(69307),s=n(52175),o=n(55609),i=n(9818),a=n(65736),l=n(72469),c=n(63500),u=n(63028),__=a.__;
 /* harmony import */
-/* harmony default export */const d=function(e){var t=e.previewStatus,n=e.setPreviewStatus,a=e.setAttributes,d=e.attributes,m=d.id,p=d.fontSize,f=d.title,h=(0,i.useSelect)((function(e){return e("core/block-editor").getSettings()})).fontSizes;return(0,r.createElement)(r.Fragment,null,(0,r.createElement)(s.InspectorControls,null,m&&(0,r.createElement)(o.PanelBody,{title:__("Lesson","sensei-lms")},(0,r.createElement)("h2",null,(0,r.createElement)(c/* .EditLessonLink */.Z,{lessonId:m})),(0,r.createElement)("p",null,__("Edit details such as lesson content, prerequisite, quiz settings and more.","sensei-lms"))),(0,r.createElement)(o.PanelBody,{title:__("Typography","sensei-lms")},(0,r.createElement)(o.FontSizePicker,{fontSizes:h,value:p,onChange:function(e){a({fontSize:e})}})),(0,r.createElement)(o.PanelBody,{title:__("Status","sensei-lms"),initialOpen:!1},(0,r.createElement)(u/* .StatusControl */.I,{status:t,setStatus:n,options:[l/* .Status.NOT_STARTED */.q.NOT_STARTED,l/* .Status.COMPLETED */.q.COMPLETED],disabled:!f}))),(0,r.createElement)(s.BlockControls,null,(0,r.createElement)(c/* ["default"] */.C,{lessonId:m,lessonTitle:f})))};
+/* harmony default export */const d=function(e){var t=e.previewStatus,n=e.setPreviewStatus,a=e.setAttributes,d=e.attributes,m=d.id,p=d.fontSize,f=d.title,h=(0,i.useSelect)((function(e){return e("core/block-editor").getSettings()})).fontSizes;return(0,r.createElement)(r.Fragment,null,(0,r.createElement)(s.InspectorControls,null,m&&(0,r.createElement)(o.PanelBody,{title:__("Lesson","sensei-lms")},(0,r.createElement)("h2",null,(0,r.createElement)(u/* .EditLessonLink */.Z,{lessonId:m})),(0,r.createElement)("p",null,__("Edit details such as lesson content, prerequisite, quiz settings and more.","sensei-lms"))),(0,r.createElement)(o.PanelBody,{title:__("Typography","sensei-lms")},(0,r.createElement)(o.FontSizePicker,{fontSizes:h,value:p,onChange:function(e){a({fontSize:e})}})),(0,r.createElement)(o.PanelBody,{title:__("Status","sensei-lms"),initialOpen:!1},(0,r.createElement)(c/* .StatusControl */.I,{status:t,setStatus:n,options:[l/* .Status.NOT_STARTED */.q.NOT_STARTED,l/* .Status.COMPLETED */.q.COMPLETED],disabled:!f}))),(0,r.createElement)(s.BlockControls,null,(0,r.createElement)(u/* ["default"] */.C,{lessonId:m,lessonTitle:f})))};
 /***/},
 /***/76515:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
 /* harmony export */z:()=>/* binding */i
 /* harmony export */});
-/* harmony import */var r=n(9818),s=n(69307),o=n(62993),i=function(e){var t=e.attributes,n=t.isExample,i=t.title,a=e.clientId,l=(0,r.useDispatch)(o/* .COURSE_STATUS_STORE */.o),u=l.setLessonStatus,c=l.trackLesson,d=l.ignoreLesson;// If the lesson has a title and it isn't an example, add it to the tracked lessons in the status store.
-return(0,s.useEffect)((function(){n||(i.length>0?c(a):d(a))}),[a,c,d,i,n]),{setPreviewStatus:function(e){return u(a,e)},previewStatus:(0,r.useSelect)((function(e){return e(o/* .COURSE_STATUS_STORE */.o).getLessonStatus(a)}),[a])}};
+/* harmony import */var r=n(9818),s=n(69307),o=n(62993),i=function(e){var t=e.attributes,n=t.isExample,i=t.title,a=e.clientId,l=(0,r.useDispatch)(o/* .COURSE_STATUS_STORE */.o),c=l.setLessonStatus,u=l.trackLesson,d=l.ignoreLesson;// If the lesson has a title and it isn't an example, add it to the tracked lessons in the status store.
+return(0,s.useEffect)((function(){n||(i.length>0?u(a):d(a))}),[a,u,d,i,n]),{setPreviewStatus:function(e){return c(a,e)},previewStatus:(0,r.useSelect)((function(e){return e(o/* .COURSE_STATUS_STORE */.o).getLessonStatus(a)}),[a])}};
 /* harmony import */}
 /***/,
 /***/90086:
@@ -355,30 +355,30 @@ return(0,s.useEffect)((function(){n||(i.length>0?c(a):d(a))}),[a,c,d,i,n]),{setP
 /* harmony export */n.d(t,{
 /* harmony export */Z:()=>d
 /* harmony export */});
-/* harmony import */var r=n(50189),s=n(69307),o=n(52175),i=n(65736),a=n(90180),l=n(16811),u=n(5077),c=n(86057),__=i.__;
+/* harmony import */var r=n(50189),s=n(69307),o=n(52175),i=n(65736),a=n(90180),l=n(16811),c=n(5077),u=n(86057),__=i.__;
 /* harmony import */
-/* harmony default export */const d=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},c),{},{metadata:c,icon:a/* ["default"] */.Z,example:{attributes:{title:__("Module","sensei-lms"),description:__("About Module","sensei-lms")},innerBlocks:[{name:"sensei-lms/course-outline-lesson",attributes:{title:__("Lesson","sensei-lms"),id:1,draft:!1,isExample:!0}}]},styles:[{name:"default",label:__("Filled","sensei-lms"),isDefault:!0},{name:"minimal",label:__("Minimal","sensei-lms")}],transforms:u/* ["default"] */.Z,edit:l/* ["default"] */.Z,save:function(){return(0,s.createElement)(o.InnerBlocks.Content,null)}});
+/* harmony default export */const d=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},u),{},{metadata:u,icon:a/* ["default"] */.Z,example:{attributes:{title:__("Module","sensei-lms"),description:__("About Module","sensei-lms")},innerBlocks:[{name:"sensei-lms/course-outline-lesson",attributes:{title:__("Lesson","sensei-lms"),id:1,draft:!1,isExample:!0}}]},styles:[{name:"default",label:__("Filled","sensei-lms"),isDefault:!0},{name:"minimal",label:__("Minimal","sensei-lms")}],transforms:c/* ["default"] */.Z,edit:l/* ["default"] */.Z,save:function(){return(0,s.createElement)(o.InnerBlocks.Content,null)}});
 /***/},
 /***/16811:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>S
+/* harmony export */Z:()=>w
 /* harmony export */});
 /* unused harmony export ModuleEdit */
-/* harmony import */var r=n(66886),s=n(69307),o=n(60042),i=n.n(o),a=n(98286),l=n(52175),u=n(36414),c=n(12585),d=n(94333),m=n(9818),p=n(65736),f=n(53112),h=n(75245),v=n(51836),g=n(3295),b=n(76774),y=n(36081),__=p.__,E=["sensei-lms/course-outline-lesson"];
+/* harmony import */var r=n(66886),s=n(69307),o=n(60042),i=n.n(o),a=n(98286),l=n(52175),c=n(36414),u=n(12585),d=n(94333),m=n(9818),p=n(65736),f=n(22629),h=n(53112),v=n(75245),g=n(51836),b=n(3295),y=n(76774),E=n(36081),__=p.__,S=["sensei-lms/course-outline-lesson"];
 /* harmony import */
-/* harmony default export */const S=(0,d.compose)((0,f/* .withColorSettings */.ku)({mainColor:{style:"background-color",label:__("Main color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")},borderColor:{style:"border-color",label:__("Border color","sensei-lms"),onChange:function(e){var t=e.clientId,n=e.colorValue;return(0,m.dispatch)("core/block-editor").updateBlockAttributes(t,{borderColorValue:n})}}}),(0,f/* .withDefaultColor */.vD)({defaultMainColor:{style:"background-color",probeKey:"primaryColor"},defaultTextColor:{style:"color",probeKey:"primaryContrastColor"},defaultBorderColor:{style:"border-color",probeKey:"primaryColor"}}))((function(e){var t,n,o=e.clientId,d=e.className,m=e.attributes,p=m.title,f=m.description,S=m.borderedSelected,w=m.borderColorValue,k=m.teacher,C=m.slug,Z=e.mainColor,T=e.defaultMainColor,x=e.textColor,_=e.defaultTextColor,O=e.defaultBorderColor,B=e.setAttributes,I=(0,s.useContext)(v/* .OutlineAttributesContext */.G)||{outlineAttributes:{},outlineClassName:""},L=I.outlineAttributes,N=L.collapsibleModules,P=L.moduleBorder,R=I.outlineClassName;(0,h/* .useAutoInserter */.l)({name:"sensei-lms/course-outline-lesson",isEmptyBlock:function(e){return!e.title}},e);
+/* harmony default export */const w=(0,d.compose)((0,h/* .withColorSettings */.ku)({mainColor:{style:"background-color",label:__("Main color","sensei-lms")},textColor:{style:"color",label:__("Text color","sensei-lms")},borderColor:{style:"border-color",label:__("Border color","sensei-lms"),onChange:function(e){var t=e.clientId,n=e.colorValue;return(0,m.dispatch)("core/block-editor").updateBlockAttributes(t,{borderColorValue:n})}}}),(0,h/* .withDefaultColor */.vD)({defaultMainColor:{style:"background-color",probeKey:"primaryColor"},defaultTextColor:{style:"color",probeKey:"primaryContrastColor"},defaultBorderColor:{style:"border-color",probeKey:"primaryColor"}}))((function(e){var t,n,o=e.clientId,d=e.className,m=e.attributes,p=m.title,h=m.description,w=m.borderedSelected,k=m.borderColorValue,C=m.teacher,Z=m.slug,T=e.mainColor,x=e.defaultMainColor,_=e.textColor,O=e.defaultTextColor,B=e.defaultBorderColor,I=e.setAttributes,L=(0,s.useContext)(g/* .OutlineAttributesContext */.G)||{outlineAttributes:{},outlineClassName:""},N=L.outlineAttributes,P=N.collapsibleModules,R=N.moduleBorder,A=L.outlineClassName;(0,v/* .useAutoInserter */.l)({name:"sensei-lms/course-outline-lesson",isEmptyBlock:function(e){return!e.title}},e);
 /**
    * Handle update name.
    *
    * @param {string} value Name value.
    */
-var A,D=(0,s.useState)(!0),M=(0,r/* ["default"] */.Z)(D,2),j=M[0],U=M[1],V=/is-style-(\w+)/,q=(null===(t=d.match(V))||void 0===t?void 0:t[1])||(null===(n=R.match(V))||void 0===n?void 0:n[1]),z={default:{background:(null==Z?void 0:Z.color)||(null==T?void 0:T.color),color:(null==x?void 0:x.color)||(null==_?void 0:_.color)},minimal:{color:null==x?void 0:x.color}}[q];
+var D,M=(0,s.useState)(!0),j=(0,r/* ["default"] */.Z)(M,2),U=j[0],V=j[1],q=/is-style-(\w+)/,z=(null===(t=d.match(q))||void 0===t?void 0:t[1])||(null===(n=A.match(q))||void 0===n?void 0:n[1]),H={default:{background:(null==T?void 0:T.color)||(null==x?void 0:x.color),color:(null==_?void 0:_.color)||(null==O?void 0:O.color)},minimal:{color:null==_?void 0:_.color}}[z];
 /**
    * Handle update name.
    *
    * @param {string} value Name value.
-   */"minimal"===q&&(A=(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-module__name__minimal-border",style:{background:(null==Z?void 0:Z.color)||(null==T?void 0:T.color)}})),(0,s.useEffect)((function(){var e=document.querySelector('select[name="sensei-course-teacher-author"]');e&&e.addEventListener("change",(function(e){B({teacherId:e.target.value})}))}),[]);var H=void 0!==S?S:P;return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(y/* ["default"] */.Z,{bordered:H,setBordered:function(e){return B({borderedSelected:e})},customSlug:C,setCustomSlug:function(e){B({slug:e})}}),(0,s.createElement)("section",{className:i()(d,{"wp-block-sensei-lms-course-outline-module-bordered":H}),style:{borderColor:w||(null==O?void 0:O.color)}},(0,s.createElement)("header",{className:"wp-block-sensei-lms-course-outline-module__header",style:z},(0,s.createElement)("h2",{className:"wp-block-sensei-lms-course-outline-module__title"},(0,s.createElement)(g/* ["default"] */.Z,{className:"wp-block-sensei-lms-course-outline-module__title-input",placeholder:__("Module name","sensei-lms"),value:p,onChange:function(e){B({title:e})}}),C&&(0,s.createElement)(s.Fragment,null,(0,s.createElement)("br",null),(0,s.createElement)("span",{className:"custom-slug"},"(",C,")"))),k&&(0,s.createElement)("span",{className:"teacher-name"},"(",k,")"),(0,s.createElement)(b/* .ModuleStatus */.n,{clientId:o}),N&&(0,s.createElement)("button",{type:"button",className:i()("wp-block-sensei-lms-course-outline__arrow",{collapsed:!j}),onClick:function(){return U(!j)}},(0,s.createElement)(u/* ["default"] */.Z,{icon:c/* ["default"] */.Z}),(0,s.createElement)("span",{className:"screen-reader-text"},__("Toggle module content","sensei-lms")))),A,(0,s.createElement)(a/* ["default"] */.Z,{className:"wp-block-sensei-lms-collapsible",duration:500,animateOpacity:!0,height:!N||j?"auto":0},(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-module__description"},(0,s.createElement)(l.RichText,{className:"wp-block-sensei-lms-course-outline-module__description-input",placeholder:__("Module description","sensei-lms"),value:f,onChange:function(e){B({description:e})}})),(0,s.createElement)("h3",{className:"wp-block-sensei-lms-course-outline-module__lessons-title"},__("Lessons","sensei-lms")),(0,s.createElement)(l.InnerBlocks,{allowedBlocks:E,templateInsertUpdatesSelection:!1,renderAppender:function(){return null}}))))}));
+   */"minimal"===z&&(D=(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-module__name__minimal-border",style:{background:(null==T?void 0:T.color)||(null==x?void 0:x.color)}})),(0,s.useEffect)((function(){var e=document.querySelector('select[name="sensei-course-teacher-author"]');e&&e.addEventListener("change",(function(e){I({teacherId:e.target.value})}))}),[]);var F=void 0!==w?w:R;return(0,s.createElement)(s.Fragment,null,(0,s.createElement)(E/* ["default"] */.Z,{bordered:F,setBordered:function(e){return I({borderedSelected:e})},customSlug:Z,setCustomSlug:function(e){I({slug:e})}}),(0,s.createElement)("section",{className:i()(d,{"wp-block-sensei-lms-course-outline-module-bordered":F}),style:{borderColor:k||(null==B?void 0:B.color)}},(0,s.createElement)("header",{className:"wp-block-sensei-lms-course-outline-module__header",style:H},(0,s.createElement)("h2",{className:"wp-block-sensei-lms-course-outline-module__title"},(0,s.createElement)(b/* ["default"] */.Z,{className:"wp-block-sensei-lms-course-outline-module__title-input",placeholder:__("Module name","sensei-lms"),value:(0,f.decodeEntities)(p),onChange:function(e){I({title:e})}}),Z&&(0,s.createElement)(s.Fragment,null,(0,s.createElement)("br",null),(0,s.createElement)("span",{className:"custom-slug"},"(",Z,")"))),C&&(0,s.createElement)("span",{className:"teacher-name"},"(",C,")"),(0,s.createElement)(y/* .ModuleStatus */.n,{clientId:o}),P&&(0,s.createElement)("button",{type:"button",className:i()("wp-block-sensei-lms-course-outline__arrow",{collapsed:!U}),onClick:function(){return V(!U)}},(0,s.createElement)(c/* ["default"] */.Z,{icon:u/* ["default"] */.Z}),(0,s.createElement)("span",{className:"screen-reader-text"},__("Toggle module content","sensei-lms")))),D,(0,s.createElement)(a/* ["default"] */.Z,{className:"wp-block-sensei-lms-collapsible",duration:500,animateOpacity:!0,height:!P||U?"auto":0},(0,s.createElement)("div",{className:"wp-block-sensei-lms-course-outline-module__description"},(0,s.createElement)(l.RichText,{className:"wp-block-sensei-lms-course-outline-module__description-input",placeholder:__("Module description","sensei-lms"),value:h,onChange:function(e){I({description:e})}})),(0,s.createElement)("h3",{className:"wp-block-sensei-lms-course-outline-module__lessons-title"},__("Lessons","sensei-lms")),(0,s.createElement)(l.InnerBlocks,{allowedBlocks:S,templateInsertUpdatesSelection:!1,renderAppender:function(){return null}}))))}));
 /***/},
 /***/36081:
 /***/(e,t,n)=>{"use strict";
@@ -394,7 +394,7 @@ var A,D=(0,s.useState)(!0),M=(0,r/* ["default"] */.Z)(D,2),j=M[0],U=M[1],V=/is-s
 /* harmony export */n.d(t,{
 /* harmony export */n:()=>/* binding */p
 /* harmony export */});
-/* harmony import */var r=n(69307),s=n(60042),o=n.n(s),i=n(9818),a=n(52175),l=n(55609),u=n(65736),c=n(72469),d=n(63500),m=n(62993),__=u.__,p=function(e){var t=e.clientId,n=(0,i.useDispatch)(m/* .COURSE_STATUS_STORE */.o).setModuleStatus,s=(0,i.useSelect)((function(e){return e(m/* .COURSE_STATUS_STORE */.o).getModuleLessonCounts(t)}),[t]),u=c/* .Status.IN_PROGRESS */.q.IN_PROGRESS;0===s.completedLessonsCount?u=c/* .Status.NOT_STARTED */.q.NOT_STARTED:s.totalLessonsCount===s.completedLessonsCount&&s.totalLessonsCount>0&&(u=c/* .Status.COMPLETED */.q.COMPLETED);var p=s.totalLessonsCount>1?[c/* .Status.NOT_STARTED */.q.NOT_STARTED,c/* .Status.IN_PROGRESS */.q.IN_PROGRESS,c/* .Status.COMPLETED */.q.COMPLETED]:[c/* .Status.NOT_STARTED */.q.NOT_STARTED,c/* .Status.COMPLETED */.q.COMPLETED],f=c/* .Status.NOT_STARTED */.q.NOT_STARTED!==u,h=(0,r.createElement)("div",{className:o()("wp-block-sensei-lms-course-outline-module__progress-indicator",u)},(0,r.createElement)("span",{className:"wp-block-sensei-lms-course-outline-module__progress-indicator__text"},d/* .StatusLabels */.C[u]));return(0,r.createElement)(r.Fragment,null,f&&h,(0,r.createElement)(a.InspectorControls,null,(0,r.createElement)(l.PanelBody,{title:__("Status","sensei-lms"),initialOpen:!1},(0,r.createElement)(d/* .StatusControl */.I,{options:p,status:u,disabled:0===s.totalLessonsCount,setStatus:function(e){n(t,e)}}))))};
+/* harmony import */var r=n(69307),s=n(60042),o=n.n(s),i=n(9818),a=n(52175),l=n(55609),c=n(65736),u=n(72469),d=n(63500),m=n(62993),__=c.__,p=function(e){var t=e.clientId,n=(0,i.useDispatch)(m/* .COURSE_STATUS_STORE */.o).setModuleStatus,s=(0,i.useSelect)((function(e){return e(m/* .COURSE_STATUS_STORE */.o).getModuleLessonCounts(t)}),[t]),c=u/* .Status.IN_PROGRESS */.q.IN_PROGRESS;0===s.completedLessonsCount?c=u/* .Status.NOT_STARTED */.q.NOT_STARTED:s.totalLessonsCount===s.completedLessonsCount&&s.totalLessonsCount>0&&(c=u/* .Status.COMPLETED */.q.COMPLETED);var p=s.totalLessonsCount>1?[u/* .Status.NOT_STARTED */.q.NOT_STARTED,u/* .Status.IN_PROGRESS */.q.IN_PROGRESS,u/* .Status.COMPLETED */.q.COMPLETED]:[u/* .Status.NOT_STARTED */.q.NOT_STARTED,u/* .Status.COMPLETED */.q.COMPLETED],f=u/* .Status.NOT_STARTED */.q.NOT_STARTED!==c,h=(0,r.createElement)("div",{className:o()("wp-block-sensei-lms-course-outline-module__progress-indicator",c)},(0,r.createElement)("span",{className:"wp-block-sensei-lms-course-outline-module__progress-indicator__text"},d/* .StatusLabels */.C[c]));return(0,r.createElement)(r.Fragment,null,f&&h,(0,r.createElement)(a.InspectorControls,null,(0,r.createElement)(l.PanelBody,{title:__("Status","sensei-lms"),initialOpen:!1},(0,r.createElement)(d/* .StatusControl */.I,{options:p,status:c,disabled:0===s.totalLessonsCount,setStatus:function(e){n(t,e)}}))))};
 /* harmony import */}
 /***/,
 /***/5077:
@@ -421,20 +421,20 @@ transform:function(e){var t=e.map((function(e){return(0,r.createBlock)("sensei-l
 /***/46173:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>u
+/* harmony export */Z:()=>c
 /* harmony export */});
 /* harmony import */var r=n(50189),s=n(65736),o=n(29375),i=n(9200),a=n(51836),l=n(30553),__=s.__;
 /* harmony import */
-/* harmony default export */const u=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i),{},{metadata:i,styles:[{name:"default",label:__("Filled","sensei-lms"),isDefault:!0},{name:"minimal",label:__("Minimal","sensei-lms")}],example:{attributes:{isPreview:!0},innerBlocks:[{name:"sensei-lms/course-outline-module",attributes:{title:__("Module","sensei-lms"),description:__("About Module","sensei-lms")},innerBlocks:[{name:"sensei-lms/course-outline-lesson",attributes:{title:__("Lesson","sensei-lms"),id:1,draft:!1,isExample:!0}}]},{name:"sensei-lms/course-outline-lesson",attributes:{title:__("First Lesson","sensei-lms"),id:2,draft:!1,isExample:!0}},{name:"sensei-lms/course-outline-lesson",attributes:{title:__("Second Lesson","sensei-lms"),id:3,draft:!1,isExample:!0}}]},icon:o/* ["default"] */.Z,edit:a/* ["default"] */.Z,save:l/* ["default"] */.Z});
+/* harmony default export */const c=(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i),{},{metadata:i,styles:[{name:"default",label:__("Filled","sensei-lms"),isDefault:!0},{name:"minimal",label:__("Minimal","sensei-lms")}],example:{attributes:{isPreview:!0},innerBlocks:[{name:"sensei-lms/course-outline-module",attributes:{title:__("Module","sensei-lms"),description:__("About Module","sensei-lms")},innerBlocks:[{name:"sensei-lms/course-outline-lesson",attributes:{title:__("Lesson","sensei-lms"),id:1,draft:!1,isExample:!0}}]},{name:"sensei-lms/course-outline-lesson",attributes:{title:__("First Lesson","sensei-lms"),id:2,draft:!1,isExample:!0}},{name:"sensei-lms/course-outline-lesson",attributes:{title:__("Second Lesson","sensei-lms"),id:3,draft:!1,isExample:!0}}]},icon:o/* ["default"] */.Z,edit:a/* ["default"] */.Z,save:l/* ["default"] */.Z});
 /***/},
 /***/91333:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>c
+/* harmony export */Z:()=>u
 /* harmony export */});
-/* harmony import */var r=n(69307),s=n(4981),o=n(9818),i=n(65736),a=n(73362),l=n(90180),u=n(92239),__=i.__;
+/* harmony import */var r=n(69307),s=n(4981),o=n(9818),i=n(65736),a=n(73362),l=n(90180),c=n(92239),__=i.__;
 /* harmony import */
-/* harmony default export */const c=function(e){var t=e.clientId,n=(0,o.useDispatch)("core/block-editor").insertBlock,i=(0,o.useSelect)((function(e){return e("core/block-editor").getBlockCount(t)}),[]),c=[{title:__("Lesson","sensei-lms"),icon:a/* ["default"] */.Z,onClick:function(){return n((0,s.createBlock)("sensei-lms/course-outline-lesson",{placeholder:__("Lesson name","sensei-lms")}),i,t,!0)}},{title:__("Module","sensei-lms"),icon:l/* ["default"] */.Z,onClick:function(){return n((0,s.createBlock)("sensei-lms/course-outline-module"),i,t,!0)}}],d=__("Add Module or Lesson","sensei-lms");return(0,r.createElement)(u/* ["default"] */.Z,{controls:c,text:d,label:d})};
+/* harmony default export */const u=function(e){var t=e.clientId,n=(0,o.useDispatch)("core/block-editor").insertBlock,i=(0,o.useSelect)((function(e){return e("core/block-editor").getBlockCount(t)}),[]),u=[{title:__("Lesson","sensei-lms"),icon:a/* ["default"] */.Z,onClick:function(){return n((0,s.createBlock)("sensei-lms/course-outline-lesson",{placeholder:__("Lesson name","sensei-lms")}),i,t,!0)}},{title:__("Module","sensei-lms"),icon:l/* ["default"] */.Z,onClick:function(){return n((0,s.createBlock)("sensei-lms/course-outline-module"),i,t,!0)}}],d=__("Add Module or Lesson","sensei-lms");return(0,r.createElement)(c/* ["default"] */.Z,{controls:u,text:d,label:d})};
 /***/},
 /***/51836:
 /***/(e,t,n)=>{"use strict";
@@ -442,9 +442,9 @@ transform:function(e){var t=e.map((function(e){return(0,r.createBlock)("sensei-l
 /* harmony export */G:()=>/* binding */h
 /* harmony export */,Z:()=>v
 /* harmony export */});
-/* harmony import */var r=n(69307),s=n(52175),o=n(94333),i=n(9818),a=n(69384),l=n(53112),u=n(31884),c=n(1849),d=n(31529),m=n(91333),p=n(49650),f=["sensei-lms/course-outline-module","sensei-lms/course-outline-lesson"],h=(0,r.createContext)();
+/* harmony import */var r=n(69307),s=n(52175),o=n(94333),i=n(9818),a=n(69384),l=n(53112),c=n(31884),u=n(1849),d=n(31529),m=n(91333),p=n(49650),f=["sensei-lms/course-outline-module","sensei-lms/course-outline-lesson"],h=(0,r.createContext)();
 /* harmony import */
-/* harmony default export */const v=(0,o.compose)((0,l/* .withDefaultBlockStyle */.WJ)())((function(e){var t=e.clientId,n=e.className,o=e.attributes,l=e.setAttributes,v=(0,i.useDispatch)(c/* .COURSE_STORE */.v).loadStructure;(0,r.useEffect)((function(){o.isPreview||v()}),[o.isPreview,v]);var g=(0,d/* .useBlocksCreator */.g)(t).setBlocks,b=(0,i.useSelect)((function(e){return{isEmpty:!e(s.store).getBlocks(t).length}}),[t]).isEmpty;(0,u/* .useCourseLessonsStatusSync */.X)(t,o.isPreview);var y=(0,r.useCallback)((function(){return(0,r.createElement)(m/* ["default"] */.Z,{clientId:t})}),[t]);return b?(0,r.createElement)(p/* ["default"] */.Z,{addBlock:function(e){return g([{type:e}],!0)}}):(0,r.createElement)(h.Provider,{value:{outlineAttributes:o,outlineSetAttributes:l,outlineClassName:n}},(0,r.createElement)(a/* ["default"] */.Z,e),(0,r.createElement)("section",{className:n},(0,r.createElement)(s.InnerBlocks,{allowedBlocks:f,renderAppender:y})))}));
+/* harmony default export */const v=(0,o.compose)((0,l/* .withDefaultBlockStyle */.WJ)())((function(e){var t=e.clientId,n=e.className,o=e.attributes,l=e.setAttributes,v=(0,i.useDispatch)(u/* .COURSE_STORE */.v).loadStructure;(0,r.useEffect)((function(){o.isPreview||v()}),[o.isPreview,v]);var g=(0,d/* .useBlocksCreator */.g)(t).setBlocks,b=(0,i.useSelect)((function(e){return{isEmpty:!e(s.store).getBlocks(t).length}}),[t]).isEmpty;(0,c/* .useCourseLessonsStatusSync */.X)(t,o.isPreview);var y=(0,r.useCallback)((function(){return(0,r.createElement)(m/* ["default"] */.Z,{clientId:t})}),[t]);return b?(0,r.createElement)(p/* ["default"] */.Z,{addBlock:function(e){return g([{type:e}],!0)}}):(0,r.createElement)(h.Provider,{value:{outlineAttributes:o,outlineSetAttributes:l,outlineClassName:n}},(0,r.createElement)(a/* ["default"] */.Z,e),(0,r.createElement)("section",{className:n},(0,r.createElement)(s.InnerBlocks,{allowedBlocks:f,renderAppender:y})))}));
 /***/},
 /***/49650:
 /***/(e,t,n)=>{"use strict";
@@ -471,14 +471,14 @@ transform:function(e){var t=e.map((function(e){return(0,r.createBlock)("sensei-l
 /* harmony export */});
 /* harmony import */var r=n(69307),s=n(65736),o=n(52175),i=n(55609),a=n(90799),__=s.__;
 /* harmony import */
-/* harmony default export */const l=function(e){var t=e.attributes,n=e.setAttributes,s=(0,a/* .useSharedModuleStyles */.j)(e),l=s.moduleBorder,u=s.setModuleBorder;return(0,r.createElement)(o.InspectorControls,null,(0,r.createElement)(i.PanelBody,{title:__("Modules","sensei-lms"),initialOpen:!1},(0,r.createElement)(i.ToggleControl,{checked:t.collapsibleModules,onChange:function(e){return n({collapsibleModules:e})},label:__("Collapsible modules","sensei-lms"),help:__("Modules can be collapsed or expanded.","sensei-lms")}),(0,r.createElement)(i.ToggleControl,{checked:l,onChange:u,label:__("Border","sensei-lms"),help:__("Toggle the border for all modules.","sensei-lms")})))};
+/* harmony default export */const l=function(e){var t=e.attributes,n=e.setAttributes,s=(0,a/* .useSharedModuleStyles */.j)(e),l=s.moduleBorder,c=s.setModuleBorder;return(0,r.createElement)(o.InspectorControls,null,(0,r.createElement)(i.PanelBody,{title:__("Modules","sensei-lms"),initialOpen:!1},(0,r.createElement)(i.ToggleControl,{checked:t.collapsibleModules,onChange:function(e){return n({collapsibleModules:e})},label:__("Collapsible modules","sensei-lms"),help:__("Modules can be collapsed or expanded.","sensei-lms")}),(0,r.createElement)(i.ToggleControl,{checked:l,onChange:c,label:__("Border","sensei-lms"),help:__("Toggle the border for all modules.","sensei-lms")})))};
 /***/},
 /***/90799:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
 /* harmony export */j:()=>/* binding */a
 /* harmony export */});
-/* harmony import */var r=n(9818),s=n(69307),o=n(67260),i=n(69973),a=function(e){var t=e.clientId,n=e.className,a=e.isPreview,l=e.attributes.moduleBorder,u=e.setAttributes,c=(0,s.useRef)(null),d=(0,r.useSelect)((function(e){return e("core/blocks").getBlockStyles("sensei-lms/course-outline")}),[]),m=(0,r.useDispatch)("core/block-editor").updateBlockAttributes,p=(0,o/* .getActiveStyleClass */.h)(d,n);(0,s.useEffect)((function(){if(!a&&p&&c.current!==p){if(!c.current)return void(c.current=p);c.current=p,(0,i/* .getCourseInnerBlocks */.tf)(t,"sensei-lms/course-outline-module").forEach((function(e){return(0,o/* .applyStyleClass */.z)(e.clientId,p)}))}}),[t,a,p,c]);return{moduleBorder:l,setModuleBorder:function(e){(0,i/* .getCourseInnerBlocks */.tf)(t,"sensei-lms/course-outline-module").forEach((function(t){m(t.clientId,{borderedSelected:e})})),u({moduleBorder:e})}}};
+/* harmony import */var r=n(9818),s=n(69307),o=n(67260),i=n(69973),a=function(e){var t=e.clientId,n=e.className,a=e.isPreview,l=e.attributes.moduleBorder,c=e.setAttributes,u=(0,s.useRef)(null),d=(0,r.useSelect)((function(e){return e("core/blocks").getBlockStyles("sensei-lms/course-outline")}),[]),m=(0,r.useDispatch)("core/block-editor").updateBlockAttributes,p=(0,o/* .getActiveStyleClass */.h)(d,n);(0,s.useEffect)((function(){if(!a&&p&&u.current!==p){if(!u.current)return void(u.current=p);u.current=p,(0,i/* .getCourseInnerBlocks */.tf)(t,"sensei-lms/course-outline-module").forEach((function(e){return(0,o/* .applyStyleClass */.z)(e.clientId,p)}))}}),[t,a,p,u]);return{moduleBorder:l,setModuleBorder:function(e){(0,i/* .getCourseInnerBlocks */.tf)(t,"sensei-lms/course-outline-module").forEach((function(t){m(t.clientId,{borderedSelected:e})})),c({moduleBorder:e})}}};
 /* harmony import */}
 /***/,
 /***/72469:
@@ -497,7 +497,7 @@ var r={NOT_STARTED:"not-started",IN_PROGRESS:"in-progress",COMPLETED:"completed"
 /* harmony export */C:()=>/* binding */m
 /* harmony export */,I:()=>/* binding */p
 /* harmony export */});
-/* harmony import */var r,s=n(25773),o=n(53782),i=n(64649),a=n(69307),l=n(55609),u=n(65736),c=n(72469),d=["options","status","setStatus","disabled"],__=u.__,m=(r={},(0,i/* ["default"] */.Z)(r,c/* .Status.NOT_STARTED */.q.NOT_STARTED,__("Not Started","sensei-lms")),(0,i/* ["default"] */.Z)(r,c/* .Status.IN_PROGRESS */.q.IN_PROGRESS,__("In Progress","sensei-lms")),(0,i/* ["default"] */.Z)(r,c/* .Status.COMPLETED */.q.COMPLETED,__("Completed","sensei-lms")),r),p=function(e){var t=e.options,n=void 0===t?[c/* .Status.IN_PROGRESS */.q.IN_PROGRESS,c/* .Status.COMPLETED */.q.COMPLETED]:t,r=e.status,i=e.setStatus,u=e.disabled,p=(0,o/* ["default"] */.Z)(e,d),f=n.map((function(e){return{label:m[e],value:e}})),h=(0,a.createElement)(l.RadioControl,(0,s/* ["default"] */.Z)({className:"wp-block-sensei-lms-course-outline-status-control",help:__("Preview a status. The actual status that the student sees is determined by their progress in the course.","sensei-lms")},p,{options:f,selected:r,onChange:function(e){return i(e)}}));return u&&(h=(0,a.createElement)(l.Disabled,null,h)),h};
+/* harmony import */var r,s=n(25773),o=n(53782),i=n(64649),a=n(69307),l=n(55609),c=n(65736),u=n(72469),d=["options","status","setStatus","disabled"],__=c.__,m=(r={},(0,i/* ["default"] */.Z)(r,u/* .Status.NOT_STARTED */.q.NOT_STARTED,__("Not Started","sensei-lms")),(0,i/* ["default"] */.Z)(r,u/* .Status.IN_PROGRESS */.q.IN_PROGRESS,__("In Progress","sensei-lms")),(0,i/* ["default"] */.Z)(r,u/* .Status.COMPLETED */.q.COMPLETED,__("Completed","sensei-lms")),r),p=function(e){var t=e.options,n=void 0===t?[u/* .Status.IN_PROGRESS */.q.IN_PROGRESS,u/* .Status.COMPLETED */.q.COMPLETED]:t,r=e.status,i=e.setStatus,c=e.disabled,p=(0,o/* ["default"] */.Z)(e,d),f=n.map((function(e){return{label:m[e],value:e}})),h=(0,a.createElement)(l.RadioControl,(0,s/* ["default"] */.Z)({className:"wp-block-sensei-lms-course-outline-status-control",help:__("Preview a status. The actual status that the student sees is determined by their progress in the course.","sensei-lms")},p,{options:f,selected:r,onChange:function(e){return i(e)}}));return c&&(h=(0,a.createElement)(l.Disabled,null,h)),h};
 /* harmony import */}
 /***/,
 /***/62993:
@@ -505,7 +505,7 @@ var r={NOT_STARTED:"not-started",IN_PROGRESS:"in-progress",COMPLETED:"completed"
 /* harmony export */n.d(t,{
 /* harmony export */o:()=>/* binding */m
 /* harmony export */});
-/* harmony import */var r=n(50189),s=n(90228),o=n(9818),i=n(72469),a=n(23418),l=n(20832),u={
+/* harmony import */var r=n(50189),s=n(90228),o=n(9818),i=n(72469),a=n(23418),l=n(20832),c={
 /**
    * Sets thecreateReducerFromActionMap status of a lesson.
    *
@@ -523,7 +523,7 @@ setLessonStatus:function(e,t){return{type:"SET_LESSON_STATUS",lessonId:e,status:
    *
    * @return {Object} Yields the lesson update actions.
    */
-setModuleStatus:regeneratorRuntime.mark((function e(t,n){var r,s,o;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,a.select)(m,"getTrackedLessons");case 2:return r=e.sent,e.next=5,(0,a.select)("core/block-editor","getClientIdsOfDescendants",[t]);case 5:if(s=e.sent,0!==(o=s.filter((function(e){return r.includes(e)}))).length){e.next=9;break}return e.abrupt("return");case 9:if(i/* .Status.COMPLETED */.q.COMPLETED!==n&&i/* .Status.NOT_STARTED */.q.NOT_STARTED!==n){e.next=13;break}return e.delegateYield(o.map((function(e){return u.setLessonStatus(e,n)})),"t0",11);case 11:e.next=15;break;case 13:return e.delegateYield(o.slice(1).map((function(e){return u.setLessonStatus(e,i/* .Status.NOT_STARTED */.q.NOT_STARTED)})),"t1",14);case 14:return e.abrupt("return",u.setLessonStatus(o[0],i/* .Status.COMPLETED */.q.COMPLETED));case 15:case"end":return e.stop()}}),e)})),
+setModuleStatus:regeneratorRuntime.mark((function e(t,n){var r,s,o;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,a.select)(m,"getTrackedLessons");case 2:return r=e.sent,e.next=5,(0,a.select)("core/block-editor","getClientIdsOfDescendants",[t]);case 5:if(s=e.sent,0!==(o=s.filter((function(e){return r.includes(e)}))).length){e.next=9;break}return e.abrupt("return");case 9:if(i/* .Status.COMPLETED */.q.COMPLETED!==n&&i/* .Status.NOT_STARTED */.q.NOT_STARTED!==n){e.next=13;break}return e.delegateYield(o.map((function(e){return c.setLessonStatus(e,n)})),"t0",11);case 11:e.next=15;break;case 13:return e.delegateYield(o.slice(1).map((function(e){return c.setLessonStatus(e,i/* .Status.NOT_STARTED */.q.NOT_STARTED)})),"t1",14);case 14:return e.abrupt("return",c.setLessonStatus(o[0],i/* .Status.COMPLETED */.q.COMPLETED));case 15:case"end":return e.stop()}}),e)})),
 /**
    * Creates the action to update state after a possible removal of a lesson.
    *
@@ -547,7 +547,7 @@ trackLesson:function(e){return{type:"TRACK_LESSON",lessonId:e}},
    *
    * @return {Object} The action.
    */
-ignoreLesson:function(e){return{type:"IGNORE_LESSON",lessonId:e}}},c={
+ignoreLesson:function(e){return{type:"IGNORE_LESSON",lessonId:e}}},u={
 /**
    * Get all the lessons that are tracked by the store.
    *
@@ -630,7 +630,7 @@ IGNORE_LESSON:function(e,t){var n=e.lessonId,s=t.completedLessons.filter((functi
    * @return {Object} The new state.
    */
 TRACK_LESSON:function(e,t){var n=e.lessonId,o=(0,s/* ["default"] */.Z)(t.trackedLessons);return o.includes(n)?t:(o.push(n),(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{trackedLessons:o}))},DEFAULT:function(e,t){return t}},m="sensei/course-status";
-/* harmony import */(0,o.registerStore)(m,{reducer:(0,l/* .createReducerFromActionMap */.lA)(d,{completedLessons:[],trackedLessons:[]}),actions:u,selectors:c,controls:a.controls})}
+/* harmony import */(0,o.registerStore)(m,{reducer:(0,l/* .createReducerFromActionMap */.lA)(d,{completedLessons:[],trackedLessons:[]}),actions:c,selectors:u,controls:a.controls})}
 /***/,
 /***/31884:
 /***/(e,t,n)=>{"use strict";
@@ -651,11 +651,11 @@ TRACK_LESSON:function(e,t){var n=e.lessonId,o=(0,s/* ["default"] */.Z)(t.tracked
 /***/53227:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>u
+/* harmony export */Z:()=>c
 /* harmony export */});
-/* harmony import */var r=n(53782),s=n(69307),o=n(92819),i=n(4981),a=n(8930),l=["metadata","name"];
+/* harmony import */var r=n(53782),s=n(69307),o=n(92819),i=n(4981),a=n(33731),l=["metadata","name"];
 /* harmony import */
-/* harmony default export */const u=function(e){(0,i.updateCategory)("sensei-lms",{icon:(0,s.createElement)(a/* ["default"] */.Z,{width:"20",height:"20"})}),e.forEach((function(e){var t=e.metadata,n=e.name,s=(0,r/* ["default"] */.Z)(e,l);t&&(
+/* harmony default export */const c=function(e){(0,i.updateCategory)("sensei-lms",{icon:(0,s.createElement)(a/* ["default"] */.Z,{width:"20",height:"20"})}),e.forEach((function(e){var t=e.metadata,n=e.name,s=(0,r/* ["default"] */.Z)(e,l);t&&(
 // Remove the overlapping metadata keys from the settings object to make localization work.
 // This is needed because only the metadata object is localized, but the overlapping keys will be overwritten by the settings object and the localization is lost.
 s=(0,o.omit)(s,Object.keys(t))),// The metadata object should be used for the `block.json` strings to be localized.
@@ -665,10 +665,10 @@ s=(0,o.omit)(s,Object.keys(t))),// The metadata object should be used for the `b
 /***/39359:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */o:()=>/* binding */u
+/* harmony export */o:()=>/* binding */c
 /* harmony export */});
 /* unused harmony export getProbeStyles */
-/* harmony import */var r=n(66886),s=n(92819),o=n(69307),i=n(9818),a=n(67227),l=window.getComputedStyle,u=function(){var e=(0,i.useSelect)((function(e){return e("core/editor").getEditorSettings().colors}),[]),t=(0,o.useState)({}),n=(0,r/* ["default"] */.Z)(t,2),l=n[0],u=n[1];return(0,o.useEffect)((function(){var t=c(),n={},o=(0,s.mapValues)((0,s.keyBy)(e,(function(e){return(0,a/* .hexToRGB */.$)(e.color)})),"slug");Object.entries(t).forEach((function(e){var t=(0,r/* ["default"] */.Z)(e,2),s=t[0],i=t[1],l=o[(0,a/* .hexToRGB */.$)(i)];l&&(n[s]={slug:l,color:i})})),u(n)}),[e]),l},c=(0,s.memoize)((function(){
+/* harmony import */var r=n(66886),s=n(92819),o=n(69307),i=n(9818),a=n(67227),l=window.getComputedStyle,c=function(){var e=(0,i.useSelect)((function(e){return e("core/editor").getEditorSettings().colors}),[]),t=(0,o.useState)({}),n=(0,r/* ["default"] */.Z)(t,2),l=n[0],c=n[1];return(0,o.useEffect)((function(){var t=u(),n={},o=(0,s.mapValues)((0,s.keyBy)(e,(function(e){return(0,a/* .hexToRGB */.$)(e.color)})),"slug");Object.entries(t).forEach((function(e){var t=(0,r/* ["default"] */.Z)(e,2),s=t[0],i=t[1],l=o[(0,a/* .hexToRGB */.$)(i)];l&&(n[s]={slug:l,color:i})})),c(n)}),[e]),l},u=(0,s.memoize)((function(){
 // Create temporary probe elements.
 var e=document.createElement("div");e.className="editor-styles-wrapper sensei-probe-element";var t=document.createElement("div");t.className="wp-block-button";var n=document.createElement("div");n.className="wp-block-button__link",n.textContent="Probe",// Set probe position outside the screen to be hidden.
 e.style.position="fixed",e.style.top="-100vh",// Add probe to the screen.
@@ -685,7 +685,7 @@ return document.body.removeChild(e),r}));
 /* harmony export */,vD:()=>/* binding */h
 /* harmony export */});
 /* unused harmony export ColorSettings */
-/* harmony import */var r=n(90228),s=n(66886),o=n(25773),i=n(50189),a=n(69307),l=n(92819),u=n(52175),c=n(65736),d=n(39359),__=c.__,m=function(e){return function(t){var n=(0,l.mapValues)(e,(function(e){return e.style}));return(0,u.withColors)(n)((function(n){return(0,a.createElement)(a.Fragment,null,(0,a.createElement)(t,n),(0,a.createElement)(p,{colorSettings:e,props:n}))}))}},p=function(e){var t,n,r,s,o=e.colorSettings,c=e.props,d=Object.keys(o).map((function(e){return{value:c[e].color,label:o[e].label,onChange:function(t){c["set".concat((0,l.upperFirst)(e))](t),o[e].onChange&&o[e].onChange((0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},c),{},{colorValue:t}))}}})),m=(null===(t=c.backgroundColor)||void 0===t||null===(n=t.color)||void 0===n?void 0:n.includes("var"))||(null===(r=c.textColor)||void 0===r||null===(s=r.color)||void 0===s?void 0:s.includes("var")),p=c.backgroundColor&&c.textColor&&!m;return(0,a.createElement)(u.InspectorControls,null,(0,a.createElement)(u.PanelColorSettings,{title:__("Color settings","sensei-lms"),initialOpen:!1,colorSettings:d},p&&(0,a.createElement)(u.ContrastChecker,{textColor:c.textColor.color,backgroundColor:c.backgroundColor.color,isLargeText:!1})))},f=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"default";return function(t){return function(n){var r=n.className,s={};r&&r.includes("is-style-")||(r=s.className=[r,"is-style-".concat(e)].join(" "));var i=r.match(/is-style-(\w+)/);return i&&(s.blockStyle=i[1]),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},n,s))}}},h=function(e){return function(t){return function(n){var l=n.setAttributes,c=n.attributes,m=(0,d/* .useColorsByProbe */.o)(),p=(0,a.useState)({}),f=(0,s/* ["default"] */.Z)(p,2),h=f[0],v=f[1],g=Object.keys(e).map((function(e){return c[e]}));return(0,a.useEffect)((function(){var t={};Object.entries(e).forEach((function(e){var n=(0,s/* ["default"] */.Z)(e,2),r=n[0],o=n[1],a=o.style,d=o.probeKey,p=m[d]||{},f=p.slug;if(f&&(t[r]=(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},p),{},{className:(0,u.getColorClassName)(a,f)})),c[r]!==f){var h={};h[r]=f,// Border color is not compatible with all themes as className, so the color value is needed.
+/* harmony import */var r=n(90228),s=n(66886),o=n(25773),i=n(50189),a=n(69307),l=n(92819),c=n(52175),u=n(65736),d=n(39359),__=u.__,m=function(e){return function(t){var n=(0,l.mapValues)(e,(function(e){return e.style}));return(0,c.withColors)(n)((function(n){return(0,a.createElement)(a.Fragment,null,(0,a.createElement)(t,n),(0,a.createElement)(p,{colorSettings:e,props:n}))}))}},p=function(e){var t,n,r,s,o=e.colorSettings,u=e.props,d=Object.keys(o).map((function(e){return{value:u[e].color,label:o[e].label,onChange:function(t){u["set".concat((0,l.upperFirst)(e))](t),o[e].onChange&&o[e].onChange((0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},u),{},{colorValue:t}))}}})),m=(null===(t=u.backgroundColor)||void 0===t||null===(n=t.color)||void 0===n?void 0:n.includes("var"))||(null===(r=u.textColor)||void 0===r||null===(s=r.color)||void 0===s?void 0:s.includes("var")),p=u.backgroundColor&&u.textColor&&!m;return(0,a.createElement)(c.InspectorControls,null,(0,a.createElement)(c.PanelColorSettings,{title:__("Color settings","sensei-lms"),initialOpen:!1,colorSettings:d},p&&(0,a.createElement)(c.ContrastChecker,{textColor:u.textColor.color,backgroundColor:u.backgroundColor.color,isLargeText:!1})))},f=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"default";return function(t){return function(n){var r=n.className,s={};r&&r.includes("is-style-")||(r=s.className=[r,"is-style-".concat(e)].join(" "));var i=r.match(/is-style-(\w+)/);return i&&(s.blockStyle=i[1]),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},n,s))}}},h=function(e){return function(t){return function(n){var l=n.setAttributes,u=n.attributes,m=(0,d/* .useColorsByProbe */.o)(),p=(0,a.useState)({}),f=(0,s/* ["default"] */.Z)(p,2),h=f[0],v=f[1],g=Object.keys(e).map((function(e){return u[e]}));return(0,a.useEffect)((function(){var t={};Object.entries(e).forEach((function(e){var n=(0,s/* ["default"] */.Z)(e,2),r=n[0],o=n[1],a=o.style,d=o.probeKey,p=m[d]||{},f=p.slug;if(f&&(t[r]=(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},p),{},{className:(0,c.getColorClassName)(a,f)})),u[r]!==f){var h={};h[r]=f,// Border color is not compatible with all themes as className, so the color value is needed.
 "border-color"===a&&(h["".concat(r,"Value")]=p.color),l(h)}})),v(t)}),[m,l].concat((0,r/* ["default"] */.Z)(g))),(0,a.createElement)(t,(0,o/* ["default"] */.Z)({},n,h))}}};
 /* harmony import */}
 /***/,
@@ -704,21 +704,21 @@ return document.body.removeChild(e),r}));
 /* harmony export */n.d(t,{
 /* harmony export */Z:()=>d
 /* harmony export */});
-/* harmony import */var r=n(25773),s=n(53782),o=n(69307),i=n(60042),a=n.n(i),l=n(52175),u=n(39630),c=["onChange","onKeyDown","value","onEnter","onRemove"];
+/* harmony import */var r=n(25773),s=n(53782),o=n(69307),i=n(60042),a=n.n(i),l=n(52175),c=n(39630),u=["onChange","onKeyDown","value","onEnter","onRemove"];
 /* harmony import */
-/* harmony default export */const d=(0,o.forwardRef)((function(e,t){var n=e.onChange,i=e.onKeyDown,d=e.value,m=e.onEnter,p=e.onRemove,f=(0,s/* ["default"] */.Z)(e,c);
+/* harmony default export */const d=(0,o.forwardRef)((function(e,t){var n=e.onChange,i=e.onKeyDown,d=e.value,m=e.onEnter,p=e.onRemove,f=(0,s/* ["default"] */.Z)(e,u);
 /**
    * Handle change.
    *
    * @param {string} nextValue Change value.
-   */return(0,o.createElement)(l.PlainText,(0,r/* ["default"] */.Z)({ref:t,value:d,onChange:function(e){n(e.replace(/\n/g,""))},onKeyDown:function(e){switch(i&&i(e),e.keyCode){case u.ENTER:e.preventDefault(),m&&m(e);break;case u.BACKSPACE:!p||null!=d&&d.length||(e.preventDefault(),p())}}},f,{className:a()("sensei-lms-single-line-input",f.className)}))}));
+   */return(0,o.createElement)(l.PlainText,(0,r/* ["default"] */.Z)({ref:t,value:d,onChange:function(e){n(e.replace(/\n/g,""))},onKeyDown:function(e){switch(i&&i(e),e.keyCode){case c.ENTER:e.preventDefault(),m&&m(e);break;case c.BACKSPACE:!p||null!=d&&d.length||(e.preventDefault(),p())}}},f,{className:a()("sensei-lms-single-line-input",f.className)}))}));
 /***/},
 /***/75245:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
 /* harmony export */l:()=>/* binding */a
 /* harmony export */});
-/* harmony import */var r=n(4981),s=n(9818),o=n(69307),i=n(92819),a=function(e,t){var n=e.name,a=e.attributes,l=void 0===a?{}:a,u=e.selectFirstBlock,c=void 0!==u&&u,d=e.isEmptyBlock,m=t.clientId,p=(0,s.useDispatch)("core/block-editor"),f=p.__unstableMarkNextChangeAsNotPersistent,h=void 0===f?i.noop:f,v=p.insertBlock,g=(0,s.useSelect)((function(e){return e("core/block-editor").getBlocks(m)})),b=0===g.length,y=(0,o.useCallback)((function(){var e=(0,r.createBlock)(n,l),t=b&&c;h(),v(e,void 0,m,t)}),[h,v,m,n,l,b,c]),E=g.length&&g[g.length-1],S=E&&d(E.attributes);(0,o.useEffect)((function(){S||y()}),[S,y])};
+/* harmony import */var r=n(4981),s=n(9818),o=n(69307),i=n(92819),a=function(e,t){var n=e.name,a=e.attributes,l=void 0===a?{}:a,c=e.selectFirstBlock,u=void 0!==c&&c,d=e.isEmptyBlock,m=t.clientId,p=(0,s.useDispatch)("core/block-editor"),f=p.__unstableMarkNextChangeAsNotPersistent,h=void 0===f?i.noop:f,v=p.insertBlock,g=(0,s.useSelect)((function(e){return e("core/block-editor").getBlocks(m)})),b=0===g.length,y=(0,o.useCallback)((function(){var e=(0,r.createBlock)(n,l),t=b&&u;h(),v(e,void 0,m,t)}),[h,v,m,n,l,b,u]),E=g.length&&g[g.length-1],S=E&&d(E.attributes);(0,o.useEffect)((function(){S||y()}),[S,y])};
 /* harmony import */}
 /***/,
 /***/26622:
@@ -726,7 +726,7 @@ return document.body.removeChild(e),r}));
 /* harmony export */n.d(t,{
 /* harmony export */V:()=>/* binding */i
 /* harmony export */});
-/* harmony import */var r=n(4981),s=n(9818),o=n(39630),i=function(e){var t=e.insertBlocksAfter,n=e.name,i=e.clientId,a=e.attributes.title,l=(0,s.useDispatch)("core/block-editor"),u=l.selectNextBlock,c=l.removeBlock;return{onKeyDown:function(e){switch(e.keyCode){case o.ENTER:l=(0,s.select)("core/block-editor"),!(d=l.getBlock(l.getNextBlockClientId()))||d.attributes.title?t([(0,r.createBlock)(n)]):u(i);break;case o.BACKSPACE:!function(e){0===a.length&&(e.preventDefault(),c(i))}(e)}var l,d}}};
+/* harmony import */var r=n(4981),s=n(9818),o=n(39630),i=function(e){var t=e.insertBlocksAfter,n=e.name,i=e.clientId,a=e.attributes.title,l=(0,s.useDispatch)("core/block-editor"),c=l.selectNextBlock,u=l.removeBlock;return{onKeyDown:function(e){switch(e.keyCode){case o.ENTER:l=(0,s.select)("core/block-editor"),!(d=l.getBlock(l.getNextBlockClientId()))||d.attributes.title?t([(0,r.createBlock)(n)]):c(i);break;case o.BACKSPACE:!function(e){0===a.length&&(e.preventDefault(),u(i))}(e)}var l,d}}};
 /* harmony import */}
 /***/,
 /***/92239:
@@ -772,9 +772,9 @@ if(!e||null===e.match("#"))return e;var t=0,n=0,r=0,s=4===e.length?"#".concat(e[
 /***/23728:
 /***/(e,t,n)=>{"use strict";
 /* harmony export */n.d(t,{
-/* harmony export */x:()=>/* binding */c
+/* harmony export */x:()=>/* binding */u
 /* harmony export */});
-/* harmony import */var r=n(50189),s=n(53782),o=n(92819),i=n(23418),a=n(9818),l=n(20832),u=(n(16400),["storeName","getEndpoint","saveError","fetchError","clearError","updateBlock","blockExists","readBlock","setServerStructure"]);
+/* harmony import */var r=n(50189),s=n(53782),o=n(92819),i=n(23418),a=n(9818),l=n(20832),c=(n(16400),["storeName","getEndpoint","saveError","fetchError","clearError","updateBlock","blockExists","readBlock","setServerStructure"]);
 /* harmony import */
 /**
  * External dependencies
@@ -799,7 +799,7 @@ if(!e||null===e.match("#"))return e;var t=0,n=0,r=0,s=4===e.length?"#".concat(e[
  * @param {Function} opts.readBlock          Extract structure from block.
  * @param {Function} opts.setServerStructure Set the server structure which is used to track differences.
  */
-function c(e){var t,n,c,d=e.storeName,m=e.getEndpoint,p=e.saveError,f=e.fetchError,h=e.clearError,v=e.updateBlock,g=e.blockExists,b=e.readBlock,y=e.setServerStructure,E=(0,s/* ["default"] */.Z)(e,u),S={
+function u(e){var t,n,u,d=e.storeName,m=e.getEndpoint,p=e.saveError,f=e.fetchError,h=e.clearError,v=e.updateBlock,g=e.blockExists,b=e.readBlock,y=e.setServerStructure,E=(0,s/* ["default"] */.Z)(e,c),S={
 /**
      * Fetch structure data from REST API.
      */
@@ -844,12 +844,12 @@ finishPostSave:regeneratorRuntime.mark((function e(){var t;return regeneratorRun
      *
      * @param {string} clientId Block ID.
      */
-setBlock:regeneratorRuntime.mark((function e(t){return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"SET_BLOCK",clientId:t};case 2:case"end":return e.stop()}}),e)}))},w={SET_SERVER_STRUCTURE:function(e,t){var n=e.serverStructure,s=!t.editorStructure,i=y?y(n):n,a=!s&&!(0,o.isEqual)(i,t.editorStructure);return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{serverStructure:i,hasUnsavedServerUpdates:a,hasUnsavedEditorChanges:!1})},SET_EDITOR_STRUCTURE:function(e,t){var n=e.editorStructure,s=!(0,o.isEqual)(t.serverStructure,n);return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{editorStructure:n,hasUnsavedEditorChanges:s&&!!n})},START_SAVE:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{isSavingStructure:!0})},FINISH_SAVE:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{isSavingStructure:!1})},SAVE_POST:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{hasUnsavedServerUpdates:!1})},SET_BLOCK:function(e,t){var n=e.clientId;return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{clientId:n})},DEFAULT:function(e,t){return t}};return{unsubscribe:(t=!1,n=!1,c=!1,(0,a.subscribe)((function(){var e=(0,a.select)("core/editor"),r=(0,a.select)("core/edit-post");if(e&&r&&g())// Check if the block exists.
-{var s=e.isSavingPost()&&!e.isAutosavingPost(),o=(0,a.select)(d).getIsSavingStructure();s&&(n=!0,c=!1),n&&!c&&(c=r.isSavingMetaBoxes()),t||s||!n||!c||r.isSavingMetaBoxes()?t&&!o&&(
+setBlock:regeneratorRuntime.mark((function e(t){return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,{type:"SET_BLOCK",clientId:t};case 2:case"end":return e.stop()}}),e)}))},w={SET_SERVER_STRUCTURE:function(e,t){var n=e.serverStructure,s=!t.editorStructure,i=y?y(n):n,a=!s&&!(0,o.isEqual)(i,t.editorStructure);return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{serverStructure:i,hasUnsavedServerUpdates:a,hasUnsavedEditorChanges:!1})},SET_EDITOR_STRUCTURE:function(e,t){var n=e.editorStructure,s=!(0,o.isEqual)(t.serverStructure,n);return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{editorStructure:n,hasUnsavedEditorChanges:s&&!!n})},START_SAVE:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{isSavingStructure:!0})},FINISH_SAVE:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{isSavingStructure:!1})},SAVE_POST:function(e,t){return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{hasUnsavedServerUpdates:!1})},SET_BLOCK:function(e,t){var n=e.clientId;return(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},t),{},{clientId:n})},DEFAULT:function(e,t){return t}};return{unsubscribe:(t=!1,n=!1,u=!1,(0,a.subscribe)((function(){var e=(0,a.select)("core/editor"),r=(0,a.select)("core/edit-post");if(e&&r&&g())// Check if the block exists.
+{var s=e.isSavingPost()&&!e.isAutosavingPost(),o=(0,a.select)(d).getIsSavingStructure();s&&(n=!0,u=!1),n&&!u&&(u=r.isSavingMetaBoxes()),t||s||!n||!u||r.isSavingMetaBoxes()?t&&!o&&(
 // Call finishPostSave when structure has finished saving.
 t=!1,(0,a.dispatch)(d).finishPostSave()):(
 // Start saving structure when post has finished saving.
-t=!0,n=!1,c=!1,(0,a.dispatch)(d).startPostSave())}}))),store:(0,a.registerStore)(d,{reducer:(0,l/* .createReducerFromActionMap */.lA)((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},w),null==E?void 0:E.reducers),{serverStructure:null,editorStructure:null,isSavingStructure:!1,hasUnsavedServerUpdates:!1,hasUnsavedEditorChanges:!1,clientId:null}),actions:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},S),null==E?void 0:E.actions),selectors:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},{hasUnsavedServerUpdates:function(e){return e.hasUnsavedServerUpdates},hasUnsavedEditorChanges:function(e){return e.hasUnsavedEditorChanges},getIsSavingStructure:function(e){return e.isSavingStructure},getServerStructure:function(e){return e.serverStructure},getEditorStructure:function(e){return e.editorStructure},getBlock:function(e){return e.clientId}}),null==E?void 0:E.selectors),controls:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i.controls),null==E?void 0:E.controls)})}}
+t=!0,n=!1,u=!1,(0,a.dispatch)(d).startPostSave())}}))),store:(0,a.registerStore)(d,{reducer:(0,l/* .createReducerFromActionMap */.lA)((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},w),null==E?void 0:E.reducers),{serverStructure:null,editorStructure:null,isSavingStructure:!1,hasUnsavedServerUpdates:!1,hasUnsavedEditorChanges:!1,clientId:null}),actions:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},S),null==E?void 0:E.actions),selectors:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},{hasUnsavedServerUpdates:function(e){return e.hasUnsavedServerUpdates},hasUnsavedEditorChanges:function(e){return e.hasUnsavedEditorChanges},getIsSavingStructure:function(e){return e.isSavingStructure},getServerStructure:function(e){return e.serverStructure},getEditorStructure:function(e){return e.editorStructure},getBlock:function(e){return e.clientId}}),null==E?void 0:E.selectors),controls:(0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i.controls),null==E?void 0:E.controls)})}}
 /***/},
 /***/99196:
 /***/e=>{"use strict";e.exports=window.React}
@@ -886,6 +886,9 @@ t=!0,n=!1,c=!1,(0,a.dispatch)(d).startPostSave())}}))),store:(0,a.registerStore)
 /***/,
 /***/69307:
 /***/e=>{"use strict";e.exports=window.wp.element}
+/***/,
+/***/22629:
+/***/e=>{"use strict";e.exports=window.wp.htmlEntities}
 /***/,
 /***/65736:
 /***/e=>{"use strict";e.exports=window.wp.i18n}
