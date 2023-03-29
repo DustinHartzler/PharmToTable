@@ -168,3 +168,8 @@ h2 span {
 .banner-area .content span {
     color: var(--primary);
 }
+
+.department-tabs .container,
+.testimonials-area .container {
+	padding-bottom: 80px;
+}

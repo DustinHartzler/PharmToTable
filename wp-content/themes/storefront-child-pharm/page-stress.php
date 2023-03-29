@@ -246,7 +246,7 @@
 				<div class="col-md-6 info">
 					<div class="heading">
 						<h3>Finding solutions to chronic health and wellness challenges should not be hard.</h3>
-						<h4>By the time you finish this course, you’ll walk away with the knowledge to:</h4>
+						<h4>By the time you finish this course, you'll walk away with the knowledge to:</h4>
 					</div>
 					<ul>
 						<li>
@@ -261,7 +261,7 @@
 						</li>
 						<li>
 							<div class="info">
-								<p>Understand how stress is disrupting your blood sugar, thryoid, and sex hormones</p>
+								<p>Understand how stress is disrupting your blood sugar, thyroid, and sex hormones</p>
 							</div>
 						</li>
 						<li>
@@ -303,12 +303,12 @@
 						<ul>
 							<li>
 								<div class="info">
-									<p>Replays from a full day’s training from functional medicine pharmacists</p>
+									<p>A full day's training from functional medicine pharmacists</p>
 								</div>
 							</li>
 							<li>
 								<div class="info">
-									<p>PDFs copies of speaker’s slides</p>
+									<p>PDFs copies of speaker's slides</p>
 								</div>
 							</li>
 						</ul>
@@ -322,7 +322,7 @@
 							</li>
 							<li>
 								<div class="info">
-									<p>Access to the pharmacist’s favorite products</p>
+									<p>Access to the pharmacist's favorite products</p>
 								</div>
 							</li>
 						</ul>
@@ -389,9 +389,63 @@
 		</div>
 		<!-- End Departments -->
 
+		<!-- Start Testimonials
+    ============================================= -->
+	<div class="testimonials-area carousel-shadow default-padding bg-gray">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<div class="site-heading text-center">
+							<h2><span>The Stress Solution</span></h2>
+							<h4>The Well World Mobile App, Nutrition Plan, and accountability from our team at your fingertips, makes it easier to achieve a balanced new you in just 2 weeks!</h4>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="">
+							<!-- Single Item -->
+							<div class="item">
+								<img src="https://images.leadconnectorhq.com/img/f_webp/q_90/r_1200/u_https://assets.cdn.msgsndr.com/b673jIFyEKZBQFHQ1rCO/media/cea6766b-b6d4-45a0-964e-6ad692655a71.jpeg">
+								<div class="info">
+									<h4 style="padding-top: 15px">Well World App</h4>
+									<p>Easy-to-use mobile tracker to help you keep a close eye on your nutrition, exercise, mindset, and goals.</p>
+								</div>
+							</div>
+							<!-- End Single Item -->
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="item">
+							<!-- Single Item -->
+							<img src="https://m2-admin.dfh.dev/media/catalog/product/cache/35077f04da6cd087b54ead4f95693464/c/a/catecholacalm_90_capsules-1.png">
+							<div class="item">
+								<h4 style="padding-top: 15px">Optional Supplement Support</h4>
+								<p>A easy supplement protocol designed to support normal moods and promote calmness and relaxation. Optional tools for your de-stress tool kit!</p>
+							</div>
+							<!-- End Single Item -->
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="item">
+							<!-- Single Item -->
+							<img src="https://images.leadconnectorhq.com/img/f_webp/q_90/r_1200/u_https://assets.cdn.msgsndr.com/b673jIFyEKZBQFHQ1rCO/media/0bbbfdba-8be5-42ca-9022-ce119c1a9c27.jpg">
+							<div class="item">
+								<h4 style="padding-top: 15px">The Accountability You Need</h4>
+								<p>Get a complete nutrition plan, recipe ideas, shopping lists, lifestyle tips, exercises, guided breathing videos, automated reminders and more!</p>
+							</div>
+							<!-- End Single Item -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Testimonials -->
+		</div>
+	</div>
+
 		<!-- Start Doctors
     ============================================= -->
-		<div id="doctors" class="doctor-area bg-gray default-padding bottom-less">
+		<div id="doctors" class="doctor-area default-padding bottom-less">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-8 col-md-offset-2">
@@ -469,7 +523,7 @@
 										</ul>
 									</div>
 								</div>
-								<div class="info">
+								<div class="info bg-gray">
 									<div class="cards">
 										<div class="card"
 											data-description="Dr. Hartzler found herself with daily abdominal pain, bloating, and hives 9 months after her first child. Her journey to functional medicine was found because traditional medicine didn’t have the answers. As she worked with several practitioners to heal her gut, she researched and learned how to and address root causes of chronic conditions, which she now incorporates into her clinical practice. She founded and leads the PharmToTable Team, a group of functional medicine pharmacists across the country.">
@@ -602,7 +656,7 @@
 		<!-- End Doctors -->
 		<!-- Start Testimonials
     ============================================= -->
-		<div class="testimonials-area carousel-shadow default-padding">
+		<div class="testimonials-area bg-gray carousel-shadow default-padding">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-8 col-md-offset-2">
@@ -672,7 +726,7 @@
 
 	<!-- Start About
 ============================================= -->
-	<div id="about" class="about-area bg-gray default-padding">
+	<div id="about" class="about-area default-padding">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2">
