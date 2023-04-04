@@ -80,7 +80,21 @@
     <!-- Header
     ============================================= -->
     <header id="home">
-
+		<div class="upper-menu-container" style="">
+			<div class="upper-menu">
+				<div class="filler"></div>
+				<div class="store-link">
+						<a href="https://store.pharmtotable.life" target="_blank"><i aria-hidden="true" class="fas fa-prescription-bottle-alt"></i>			
+							<span class="button-text">Shop Our Store</span>
+						</a>
+				</div>
+				<div class="patient-login">
+						<a href="https://pharmtotable.azova.com/auth/login" target="_blank"><i aria-hidden="true" class="fas fa-sign-in-alt"></i>			
+							<span class="button-text">Patient Login</span>
+						</a>
+				</div>
+			</div>
+		</div>
         <!-- Start Navigation -->
         <nav class="navbar navbar-default attr-border navbar-sticky bootsnav">
 
@@ -103,6 +117,7 @@
             <!-- End Top Search -->
 
             <div class="container">
+
 
                 <!-- Start Atribute Navigation -->
                 <div class="attr-nav">
