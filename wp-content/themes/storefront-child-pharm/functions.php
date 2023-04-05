@@ -418,3 +418,9 @@ function wc_subscriptions_custom_price_string( $pricestring ) {
     return $pricestring;
 }
 add_filter( 'woocommerce_subscriptions_product_price_string', 'wc_subscriptions_custom_price_string' );
+
+add_filter( 'woocommerce_add_to_cart_redirect', 'ptt_redirect_checkout_add_cart' );
+ 
+function ptt_redirect_checkout_add_cart() {
+   return wc_get_checkout_url();
+}
