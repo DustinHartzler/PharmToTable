@@ -38,7 +38,6 @@ class SchemaController {
 				Schemas\V1\BillingAddressSchema::IDENTIFIER => Schemas\V1\BillingAddressSchema::class,
 				Schemas\V1\ShippingAddressSchema::IDENTIFIER => Schemas\V1\ShippingAddressSchema::class,
 				Schemas\V1\CartShippingRateSchema::IDENTIFIER => Schemas\V1\CartShippingRateSchema::class,
-				Schemas\V1\CartShippingRateSchema::IDENTIFIER => Schemas\V1\CartShippingRateSchema::class,
 				Schemas\V1\CartCouponSchema::IDENTIFIER    => Schemas\V1\CartCouponSchema::class,
 				Schemas\V1\CartFeeSchema::IDENTIFIER       => Schemas\V1\CartFeeSchema::class,
 				Schemas\V1\CartItemSchema::IDENTIFIER      => Schemas\V1\CartItemSchema::class,
@@ -64,10 +63,10 @@ class SchemaController {
 	 * @return Schemas\V1\AbstractSchema A new instance of the requested schema.
 	 */
 	public function get( $name, $version = 1 ) {
-		$schema = $this->schemas[ "v${version}" ][ $name ] ?? false;
+		$schema = $this->schemas[ "v{$version}" ][ $name ] ?? false;
 
 		if ( ! $schema ) {
-			throw new \Exception( "${name} v{$version} schema does not exist" );
+			throw new \Exception( "{$name} v{$version} schema does not exist" );
 		}
 
 		return new $schema( $this->extend, $this );

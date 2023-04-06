@@ -6,6 +6,14 @@ import { formatPrice } from '@woocommerce/price-format';
 import { RemovableChip } from '@woocommerce/base-components/chip';
 import Label from '@woocommerce/base-components/label';
 import { getQueryArgs, addQueryArgs, removeQueryArgs } from '@wordpress/url';
+import { changeUrl } from '@woocommerce/utils';
+import { Icon, closeSmall } from '@wordpress/icons';
+import { isString } from '@woocommerce/types';
+
+/**
+ * Internal dependencies
+ */
+import metadata from './block.json';
 
 /**
  * Format a min/max price range to display.
@@ -43,6 +51,7 @@ interface RemovableListItemProps {
 	name: string;
 	prefix?: string | JSX.Element;
 	showLabel?: boolean;
+	isLoading?: boolean;
 	displayStyle: string;
 	removeCallback?: () => void;
 }
@@ -102,47 +111,18 @@ export const renderRemovableListItem = ( {
 				/>
 			) : (
 				<span className="wc-block-active-filters__list-item-name">
-					{ prefixedName }
 					<button
 						className="wc-block-active-filters__list-item-remove"
 						onClick={ removeCallback }
 					>
-						<svg
-							width="16"
-							height="16"
-							viewBox="0 0 16 16"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<ellipse
-								cx="8"
-								cy="8"
-								rx="8"
-								ry="8"
-								transform="rotate(-180 8 8)"
-								fill="currentColor"
-								fillOpacity="0.7"
-							/>
-							<rect
-								x="10.636"
-								y="3.94983"
-								width="2"
-								height="9.9466"
-								transform="rotate(45 10.636 3.94983)"
-								fill="white"
-							/>
-							<rect
-								x="12.0503"
-								y="11.0209"
-								width="2"
-								height="9.9466"
-								transform="rotate(135 12.0503 11.0209)"
-								fill="white"
-							/>
-						</svg>
-
+						<Icon
+							className="wc-block-components-chip__remove-icon"
+							icon={ closeSmall }
+							size={ 16 }
+						/>
 						<Label screenReaderLabel={ removeText } />
 					</button>
+					{ prefixedName }
 				</span>
 			) }
 		</li>
@@ -158,6 +138,10 @@ export const renderRemovableListItem = ( {
 export const removeArgsFromFilterUrl = (
 	...args: ( string | Record< string, string > )[]
 ) => {
+	if ( ! window ) {
+		return;
+	}
+
 	const url = window.location.href;
 	const currentQuery = getQueryArgs( url );
 	const cleanUrl = removeQueryArgs( url, ...Object.keys( currentQuery ) );
@@ -181,26 +165,55 @@ export const removeArgsFromFilterUrl = (
 		Object.entries( currentQuery ).filter( ( [ , value ] ) => value )
 	);
 
-	window.location.href = addQueryArgs( cleanUrl, filteredQuery );
+	const newUrl = addQueryArgs( cleanUrl, filteredQuery );
+
+	changeUrl( newUrl );
+};
+
+/**
+ * Prefixes typically expected before filters in the URL.
+ */
+const FILTER_QUERY_VALUES = [
+	'min_price',
+	'max_price',
+	'rating_filter',
+	'filter_',
+	'query_type_',
+];
+
+/**
+ * Check if the URL contains arguments that could be Woo filter keys.
+ */
+const keyIsAFilter = ( key: string ): boolean => {
+	let keyIsFilter = false;
+
+	for ( let i = 0; FILTER_QUERY_VALUES.length > i; i++ ) {
+		const keyToMatch = FILTER_QUERY_VALUES[ i ];
+		const trimmedKey = key.substring( 0, keyToMatch.length );
+		if ( keyToMatch === trimmedKey ) {
+			keyIsFilter = true;
+			break;
+		}
+	}
+
+	return keyIsFilter;
 };
 
 /**
  * Clean the filter URL.
  */
 export const cleanFilterUrl = () => {
+	if ( ! window ) {
+		return;
+	}
+
 	const url = window.location.href;
 	const args = getQueryArgs( url );
 	const cleanUrl = removeQueryArgs( url, ...Object.keys( args ) );
 	const remainingArgs = Object.fromEntries(
 		Object.keys( args )
 			.filter( ( arg ) => {
-				if (
-					arg.includes( 'min_price' ) ||
-					arg.includes( 'max_price' ) ||
-					arg.includes( 'rating_filter' ) ||
-					arg.includes( 'filter_' ) ||
-					arg.includes( 'query_type_' )
-				) {
+				if ( keyIsAFilter( arg ) ) {
 					return false;
 				}
 
@@ -209,5 +222,77 @@ export const cleanFilterUrl = () => {
 			.map( ( key ) => [ key, args[ key ] ] )
 	);
 
-	window.location.href = addQueryArgs( cleanUrl, remainingArgs );
+	const newUrl = addQueryArgs( cleanUrl, remainingArgs );
+
+	changeUrl( newUrl );
+};
+
+export const maybeUrlContainsFilters = (): boolean => {
+	if ( ! window ) {
+		return false;
+	}
+
+	const url = window.location.href;
+	const args = getQueryArgs( url );
+	const filterKeys = Object.keys( args );
+	let maybeHasFilter = false;
+
+	for ( let i = 0; filterKeys.length > i; i++ ) {
+		const key = filterKeys[ i ];
+		if ( keyIsAFilter( key ) ) {
+			maybeHasFilter = true;
+			break;
+		}
+	}
+
+	return maybeHasFilter;
+};
+
+interface StoreAttributes {
+	attribute_id: string;
+	attribute_label: string;
+	attribute_name: string;
+	attribute_orderby: string;
+	attribute_public: number;
+	attribute_type: string;
+}
+
+export const urlContainsAttributeFilter = (
+	attributes: StoreAttributes[]
+): boolean => {
+	if ( ! window ) {
+		return false;
+	}
+
+	const storeAttributeKeys = attributes.map(
+		( attr ) => `filter_${ attr.attribute_name }`
+	);
+
+	const url = window.location.href;
+	const args = getQueryArgs( url );
+	const urlFilterKeys = Object.keys( args );
+	let filterIsInUrl = false;
+
+	for ( let i = 0; urlFilterKeys.length > i; i++ ) {
+		const urlKey = urlFilterKeys[ i ];
+		if ( storeAttributeKeys.includes( urlKey ) ) {
+			filterIsInUrl = true;
+			break;
+		}
+	}
+
+	return filterIsInUrl;
+};
+
+export const parseAttributes = ( data: Record< string, unknown > ) => {
+	return {
+		heading: isString( data?.heading ) ? data.heading : '',
+		headingLevel:
+			( isString( data?.headingLevel ) &&
+				parseInt( data.headingLevel, 10 ) ) ||
+			metadata.attributes.headingLevel.default,
+		displayStyle:
+			( isString( data?.displayStyle ) && data.displayStyle ) ||
+			metadata.attributes.displayStyle.default,
+	};
 };

@@ -6,6 +6,8 @@ use Automattic\WooCommerce\Blocks\Package;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
 use Automattic\WooCommerce\Blocks\Assets\Api as AssetApi;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
+use Automattic\WooCommerce\Blocks\BlockTypes\Cart;
+use Automattic\WooCommerce\Blocks\BlockTypes\Checkout;
 
 /**
  * BlockTypesController class.
@@ -146,7 +148,8 @@ final class BlockTypesController {
 			'woocommerce_product_tag_cloud',
 			'woocommerce_price_filter',
 			'woocommerce_layered_nav',
-			'woocommerce_layered_nav_filters'
+			'woocommerce_layered_nav_filters',
+			'woocommerce_rating_filter'
 		);
 
 		return $widget_types;
@@ -161,47 +164,53 @@ final class BlockTypesController {
 		global $pagenow;
 
 		$block_types = [
+			'ActiveFilters',
+			'AllProducts',
 			'AllReviews',
+			'AttributeFilter',
+			'Breadcrumbs',
+			'CatalogSorting',
+			'ClassicTemplate',
+			'CustomerAccount',
 			'FeaturedCategory',
 			'FeaturedProduct',
+			'FilterWrapper',
 			'HandpickedProducts',
+			'MiniCart',
+			'MiniCartContents',
+			'StoreNotices',
+			'PriceFilter',
+			'ProductAddToCart',
 			'ProductBestSellers',
+			'ProductButton',
 			'ProductCategories',
 			'ProductCategory',
-			'ProductNew',
-			'ProductOnSale',
-			'ProductsByAttribute',
-			'ProductTopRated',
-			'ReviewsByProduct',
-			'ReviewsByCategory',
-			'ProductSearch',
-			'ProductTag',
-			'AllProducts',
-			'PriceFilter',
-			'AttributeFilter',
-			'StockFilter',
-			'ActiveFilters',
-			'ClassicTemplate',
-			'ProductAddToCart',
-			'ProductButton',
 			'ProductCategoryList',
 			'ProductImage',
+			'ProductImageGallery',
+			'ProductNew',
+			'ProductOnSale',
 			'ProductPrice',
+			'ProductQuery',
 			'ProductRating',
+			'ProductResultsCount',
 			'ProductSaleBadge',
+			'ProductSearch',
 			'ProductSKU',
 			'ProductStockIndicator',
 			'ProductSummary',
+			'ProductTag',
 			'ProductTagList',
 			'ProductTitle',
-			'MiniCart',
-			'MiniCartContents',
+			'ProductTopRated',
+			'ProductsByAttribute',
+			'RatingFilter',
+			'ReviewsByCategory',
+			'ReviewsByProduct',
+			'StockFilter',
 		];
 
-		if ( Package::feature()->is_feature_plugin_build() ) {
-			$block_types[] = 'Checkout';
-			$block_types[] = 'Cart';
-		}
+		$block_types = array_merge( $block_types, Cart::get_cart_block_types(), Checkout::get_checkout_block_types() );
 
 		if ( Package::feature()->is_experimental_build() ) {
 			$block_types[] = 'SingleProduct';
@@ -242,7 +251,11 @@ final class BlockTypesController {
 			$block_types = array_diff(
 				$block_types,
 				[
+					'Breadcrumbs',
+					'CatalogSorting',
 					'ClassicTemplate',
+					'ProductResultsCount',
+					'StoreNotices',
 				]
 			);
 		}

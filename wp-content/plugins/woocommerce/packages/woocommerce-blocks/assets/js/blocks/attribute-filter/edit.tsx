@@ -12,7 +12,6 @@ import { Icon, category, external } from '@wordpress/icons';
 import { SearchListControl } from '@woocommerce/editor-components/search-list-control';
 import { sortBy } from 'lodash';
 import { getAdminLink, getSetting } from '@woocommerce/settings';
-import HeadingToolbar from '@woocommerce/editor-components/heading-toolbar';
 import BlockTitle from '@woocommerce/editor-components/block-title';
 import classnames from 'classnames';
 import { SearchListItemsType } from '@woocommerce/editor-components/search-list-control/types';
@@ -37,10 +36,16 @@ import {
 import Block from './block';
 import './editor.scss';
 import type { EditProps } from './types';
+import { UpgradeNotice } from '../filter-wrapper/upgrade';
 
 const ATTRIBUTES = getSetting< AttributeSetting[] >( 'attributes', [] );
 
-const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
+const Edit = ( {
+	attributes,
+	setAttributes,
+	debouncedSpeak,
+	clientId,
+}: EditProps ) => {
 	const {
 		attributeId,
 		className,
@@ -51,6 +56,7 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 		queryType,
 		showCounts,
 		showFilterButton,
+		selectType,
 	} = attributes;
 
 	const [ isEditing, setIsEditing ] = useState(
@@ -90,15 +96,8 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 			return;
 		}
 
-		const attributeName = productAttribute.attribute_label;
-
 		setAttributes( {
 			attributeId: selectedId as number,
-			heading: sprintf(
-				/* translators: %s attribute name. */
-				__( 'Filter by %s', 'woo-gutenberg-products-block' ),
-				attributeName
-			),
 		} );
 	};
 
@@ -165,24 +164,16 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 		return (
 			<InspectorControls key="inspector">
 				<PanelBody
-					title={ __( 'Content', 'woo-gutenberg-products-block' ) }
+					title={ __(
+						'Display Settings',
+						'woo-gutenberg-products-block'
+					) }
 				>
 					<ToggleControl
 						label={ __(
-							'Product count',
+							'Display product count',
 							'woo-gutenberg-products-block'
 						) }
-						help={
-							showCounts
-								? __(
-										'Product count is visible.',
-										'woo-gutenberg-products-block'
-								  )
-								: __(
-										'Product count is hidden.',
-										'woo-gutenberg-products-block'
-								  )
-						}
 						checked={ showCounts }
 						onChange={ () =>
 							setAttributes( {
@@ -190,63 +181,75 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 							} )
 						}
 					/>
-					<p>
-						{ __(
-							'Heading Level',
-							'woo-gutenberg-products-block'
-						) }
-					</p>
-					<HeadingToolbar
-						isCollapsed={ false }
-						minLevel={ 2 }
-						maxLevel={ 7 }
-						selectedLevel={ headingLevel }
-						onChange={ ( newLevel: number ) =>
-							setAttributes( { headingLevel: newLevel } )
-						}
-					/>
-				</PanelBody>
-				<PanelBody
-					title={ __(
-						'Block Settings',
-						'woo-gutenberg-products-block'
-					) }
-				>
 					<ToggleGroupControl
 						label={ __(
-							'Query Type',
+							'Allow selecting multiple options?',
 							'woo-gutenberg-products-block'
 						) }
-						help={
-							queryType === 'and'
-								? __(
-										'Products that have all of the selected attributes will be shown.',
-										'woo-gutenberg-products-block'
-								  )
-								: __(
-										'Products that have any of the selected attributes will be shown.',
-										'woo-gutenberg-products-block'
-								  )
-						}
-						value={ queryType }
+						value={ selectType || 'multiple' }
 						onChange={ ( value: string ) =>
 							setAttributes( {
-								queryType: value,
+								selectType: value,
 							} )
 						}
+						className="wc-block-attribute-filter__multiple-toggle"
 					>
 						<ToggleGroupControlOption
-							value="and"
+							value="multiple"
 							label={ __(
-								'And',
+								'Multiple',
 								'woo-gutenberg-products-block'
 							) }
 						/>
 						<ToggleGroupControlOption
-							value="or"
-							label={ __( 'Or', 'woo-gutenberg-products-block' ) }
+							value="single"
+							label={ __(
+								'Single',
+								'woo-gutenberg-products-block'
+							) }
 						/>
 					</ToggleGroupControl>
+					{ selectType === 'multiple' && (
+						<ToggleGroupControl
+							label={ __(
+								'Filter Conditions',
+								'woo-gutenberg-products-block'
+							) }
+							help={
+								queryType === 'and'
+									? __(
+											'Choose to return filter results for all of the attributes selected.',
+											'woo-gutenberg-products-block'
+									  )
+									: __(
+											'Choose to return filter results for any of the attributes selected.',
+											'woo-gutenberg-products-block'
+									  )
+							}
+							value={ queryType }
+							onChange={ ( value: string ) =>
+								setAttributes( {
+									queryType: value,
+								} )
+							}
+							className="wc-block-attribute-filter__conditions-toggle"
+						>
+							<ToggleGroupControlOption
+								value="and"
+								label={ __(
+									'All',
+									'woo-gutenberg-products-block'
+								) }
+							/>
+							<ToggleGroupControlOption
+								value="or"
+								label={ __(
+									'Any',
+									'woo-gutenberg-products-block'
+								) }
+							/>
+						</ToggleGroupControl>
+					) }
 					<ToggleGroupControl
 						label={ __(
 							'Display Style',
@@ -258,6 +261,7 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 								displayStyle: value,
 							} )
 						}
+						className="wc-block-attribute-filter__display-toggle"
 					>
 						<ToggleGroupControlOption
 							value="list"
@@ -276,20 +280,13 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 					</ToggleGroupControl>
 					<ToggleControl
 						label={ __(
-							'Filter button',
+							"Show 'Apply filters' button",
 							'woo-gutenberg-products-block'
 						) }
-						help={
-							showFilterButton
-								? __(
-										'Products will only update when the button is pressed.',
-										'woo-gutenberg-products-block'
-								  )
-								: __(
-										'Products will update as options are selected.',
-										'woo-gutenberg-products-block'
-								  )
-						}
+						help={ __(
+							'Products will update when the button is clicked.',
+							'woo-gutenberg-products-block'
+						) }
 						checked={ showFilterButton }
 						onChange={ ( value ) =>
 							setAttributes( {
@@ -300,7 +297,7 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 				</PanelBody>
 				<PanelBody
 					title={ __(
-						'Filter Products by Attribute',
+						'Content Settings',
 						'woo-gutenberg-products-block'
 					) }
 					initialOpen={ false }
@@ -316,11 +313,11 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 			className="wc-block-attribute-filter"
 			icon={ <Icon icon={ category } /> }
 			label={ __(
-				'Filter Products by Attribute',
+				'Filter by Attribute',
 				'woo-gutenberg-products-block'
 			) }
 			instructions={ __(
-				'Display a list of filters based on a chosen attribute.',
+				'Display a list of filters based on the selected attributes.',
 				'woo-gutenberg-products-block'
 			) }
 		>
@@ -355,7 +352,7 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 		setIsEditing( false );
 		debouncedSpeak(
 			__(
-				'Showing Filter Products by Attribute block preview.',
+				'Now displaying a preview of the Filter Products by Attribute block.',
 				'woo-gutenberg-products-block'
 			)
 		);
@@ -367,14 +364,16 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 				className="wc-block-attribute-filter"
 				icon={ <Icon icon={ category } /> }
 				label={ __(
-					'Filter Products by Attribute',
-					'woo-gutenberg-products-block'
-				) }
-				instructions={ __(
-					'Display a list of filters based on a chosen attribute.',
+					'Filter by Attribute',
 					'woo-gutenberg-products-block'
 				) }
 			>
+				<div className="wc-block-attribute-filter__instructions">
+					{ __(
+						'Display a list of filters based on the selected attributes.',
+						'woo-gutenberg-products-block'
+					) }
+				</div>
 				<div className="wc-block-attribute-filter__selection">
 					{ renderAttributeControl( { isCompact: false } ) }
 					<Button isPrimary onClick={ onDone }>
@@ -391,6 +390,12 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 		<div { ...blockProps }>
 			{ getBlockControls() }
 			{ getInspectorControls() }
+			<UpgradeNotice
+				clientId={ clientId }
+				attributes={ attributes }
+				setAttributes={ setAttributes }
+				filterType="attribute-filter"
+			/>
 			{ isEditing ? (
 				renderEditMode()
 			) : (
@@ -400,16 +405,18 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak }: EditProps ) => {
 						'wc-block-attribute-filter'
 					) }
 				>
-					<BlockTitle
-						className="wc-block-attribute-filter__title"
-						headingLevel={ headingLevel }
-						heading={ heading }
-						onChange={ ( value: string ) =>
-							setAttributes( { heading: value } )
-						}
-					/>
+					{ heading && (
+						<BlockTitle
+							className="wc-block-attribute-filter__title"
+							headingLevel={ headingLevel }
+							heading={ heading }
+							onChange={ ( value: string ) =>
+								setAttributes( { heading: value } )
+							}
+						/>
+					) }
 					<Disabled>
-						<Block attributes={ attributes } isEditor />
+						<Block attributes={ attributes } isEditor={ true } />
 					</Disabled>
 				</div>
 			) }

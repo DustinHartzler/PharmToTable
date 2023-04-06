@@ -10,6 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Automattic\WooCommerce\Internal\WCCom\ConnectionHelper;
 /**
  * System status controller class.
  *
@@ -42,6 +43,8 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 	public static function register_cache_clean() {
 		// Clear the theme cache if we switch themes or our theme is upgraded.
 		add_action( 'switch_theme', array( __CLASS__, 'clean_theme_cache' ) );
+		add_action( 'activate_plugin', array( __CLASS__, 'clean_plugin_cache' ) );
+		add_action( 'deactivate_plugin', array( __CLASS__, 'clean_plugin_cache' ) );
 		add_action(
 			'upgrader_process_complete',
 			function( $upgrader, $extra ) {
@@ -52,6 +55,7 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 				// Clear the cache if woocommerce is updated.
 				if ( 'plugin' === $extra['type'] ) {
 					\WC_REST_System_Status_V2_Controller::clean_theme_cache();
+					\WC_REST_System_Status_V2_Controller::clean_plugin_cache();
 					return;
 				}
 
@@ -739,7 +743,7 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 					'https://www.paypal.com/cgi-bin/webscr',
 					array(
 						'timeout'     => 10,
-						'user-agent'  => 'WooCommerce/' . WC()->version,
+						'user-agent'  => 'WooCommerce/' . WC()->version . '; ' . get_bloginfo( 'url' ),
 						'httpversion' => '1.1',
 						'body'        => array(
 							'cmd' => '_notify-validate',
@@ -762,7 +766,12 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 			$get_response_code = get_transient( 'woocommerce_test_remote_get' );
 
 			if ( false === $get_response_code || is_wp_error( $get_response_code ) ) {
-				$response = wp_safe_remote_get( 'https://woocommerce.com/wc-api/product-key-api?request=ping&network=' . ( is_multisite() ? '1' : '0' ) );
+				$response = wp_safe_remote_get(
+					'https://woocommerce.com/wc-api/product-key-api?request=ping&network=' . ( is_multisite() ? '1' : '0' ),
+					array(
+						'user-agent' => 'WooCommerce/' . WC()->version . '; ' . get_bloginfo( 'url' ),
+					)
+				);
 				if ( ! is_wp_error( $response ) ) {
 					$get_response_code = $response['response']['code'];
 				}
@@ -942,23 +951,29 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_active_plugins() {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		$active_plugins_data = get_transient( 'wc_system_status_active_plugins' );
 
-		if ( ! function_exists( 'get_plugin_data' ) ) {
-			return array();
-		}
+		if ( false === $active_plugins_data ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-		$active_plugins = (array) get_option( 'active_plugins', array() );
-		if ( is_multisite() ) {
-			$network_activated_plugins = array_keys( get_site_option( 'active_sitewide_plugins', array() ) );
-			$active_plugins            = array_merge( $active_plugins, $network_activated_plugins );
-		}
+			if ( ! function_exists( 'get_plugin_data' ) ) {
+				return array();
+			}
 
-		$active_plugins_data = array();
+			$active_plugins = (array) get_option( 'active_plugins', array() );
+			if ( is_multisite() ) {
+				$network_activated_plugins = array_keys( get_site_option( 'active_sitewide_plugins', array() ) );
+				$active_plugins            = array_merge( $active_plugins, $network_activated_plugins );
+			}
 
-		foreach ( $active_plugins as $plugin ) {
-			$data                  = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
-			$active_plugins_data[] = $this->format_plugin_data( $plugin, $data );
+			$active_plugins_data = array();
+
+			foreach ( $active_plugins as $plugin ) {
+				$data                  = get_plugin_data( WP_PLUGIN_DIR . '/' . $plugin );
+				$active_plugins_data[] = $this->format_plugin_data( $plugin, $data );
+			}
+
+			set_transient( 'wc_system_status_active_plugins', $active_plugins_data, HOUR_IN_SECONDS );
 		}
 
 		return $active_plugins_data;
@@ -970,27 +985,33 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_inactive_plugins() {
-		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		$plugins_data = get_transient( 'wc_system_status_inactive_plugins' );
 
-		if ( ! function_exists( 'get_plugins' ) ) {
-			return array();
-		}
+		if ( false === $plugins_data ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-		$plugins        = get_plugins();
-		$active_plugins = (array) get_option( 'active_plugins', array() );
-
-		if ( is_multisite() ) {
-			$network_activated_plugins = array_keys( get_site_option( 'active_sitewide_plugins', array() ) );
-			$active_plugins            = array_merge( $active_plugins, $network_activated_plugins );
-		}
-
-		$plugins_data = array();
-
-		foreach ( $plugins as $plugin => $data ) {
-			if ( in_array( $plugin, $active_plugins, true ) ) {
-				continue;
+			if ( ! function_exists( 'get_plugins' ) ) {
+				return array();
 			}
-			$plugins_data[] = $this->format_plugin_data( $plugin, $data );
+
+			$plugins        = get_plugins();
+			$active_plugins = (array) get_option( 'active_plugins', array() );
+
+			if ( is_multisite() ) {
+				$network_activated_plugins = array_keys( get_site_option( 'active_sitewide_plugins', array() ) );
+				$active_plugins            = array_merge( $active_plugins, $network_activated_plugins );
+			}
+
+			$plugins_data = array();
+
+			foreach ( $plugins as $plugin => $data ) {
+				if ( in_array( $plugin, $active_plugins, true ) ) {
+					continue;
+				}
+				$plugins_data[] = $this->format_plugin_data( $plugin, $data );
+			}
+
+			set_transient( 'wc_system_status_inactive_plugins', $plugins_data, HOUR_IN_SECONDS );
 		}
 
 		return $plugins_data;
@@ -1042,29 +1063,36 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 	 * @return array
 	 */
 	public function get_dropins_mu_plugins() {
-		$dropins = get_dropins();
-		$plugins = array(
-			'dropins'    => array(),
-			'mu_plugins' => array(),
-		);
-		foreach ( $dropins as $key => $dropin ) {
-			$plugins['dropins'][] = array(
-				'plugin' => $key,
-				'name'   => $dropin['Name'],
+		$plugins = get_transient( 'wc_system_status_dropins_mu_plugins' );
+
+		if ( false === $plugins ) {
+			$dropins = get_dropins();
+			$plugins = array(
+				'dropins'    => array(),
+				'mu_plugins' => array(),
 			);
+			foreach ( $dropins as $key => $dropin ) {
+				$plugins['dropins'][] = array(
+					'plugin' => $key,
+					'name'   => $dropin['Name'],
+				);
+			}
+
+			$mu_plugins = get_mu_plugins();
+			foreach ( $mu_plugins as $plugin => $mu_plugin ) {
+				$plugins['mu_plugins'][] = array(
+					'plugin'      => $plugin,
+					'name'        => $mu_plugin['Name'],
+					'version'     => $mu_plugin['Version'],
+					'url'         => $mu_plugin['PluginURI'],
+					'author_name' => $mu_plugin['AuthorName'],
+					'author_url'  => esc_url_raw( $mu_plugin['AuthorURI'] ),
+				);
+			}
+
+			set_transient( 'wc_system_status_dropins_mu_plugins', $plugins, HOUR_IN_SECONDS );
 		}
 
-		$mu_plugins = get_mu_plugins();
-		foreach ( $mu_plugins as $plugin => $mu_plugin ) {
-			$plugins['mu_plugins'][] = array(
-				'plugin'      => $plugin,
-				'name'        => $mu_plugin['Name'],
-				'version'     => $mu_plugin['Version'],
-				'url'         => $mu_plugin['PluginURI'],
-				'author_name' => $mu_plugin['AuthorName'],
-				'author_url'  => esc_url_raw( $mu_plugin['AuthorURI'] ),
-			);
-		}
 		return $plugins;
 	}
 
@@ -1179,6 +1207,15 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 	}
 
 	/**
+	 * Clear the system status plugin caches
+	 */
+	public static function clean_plugin_cache() {
+		delete_transient( 'wc_system_status_active_plugins' );
+		delete_transient( 'wc_system_status_inactive_plugins' );
+		delete_transient( 'wc_system_status_dropins_mu_plugins' );
+	}
+
+	/**
 	 * Get some setting values for the site that are useful for debugging
 	 * purposes. For full settings access, use the settings api.
 	 *
@@ -1199,13 +1236,6 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 			$product_visibility_terms[ $term->slug ] = strtolower( $term->name );
 		}
 
-		// Check if WooCommerce.com account is connected.
-		$woo_com_connected = 'no';
-		$helper_options    = get_option( 'woocommerce_helper_data', array() );
-		if ( array_key_exists( 'auth', $helper_options ) && ! empty( $helper_options['auth'] ) ) {
-			$woo_com_connected = 'yes';
-		}
-
 		// Return array of useful settings for debugging.
 		return array(
 			'api_enabled'               => 'yes' === get_option( 'woocommerce_api_enabled' ),
@@ -1219,7 +1249,7 @@ class WC_REST_System_Status_V2_Controller extends WC_REST_Controller {
 			'geolocation_enabled'       => in_array( get_option( 'woocommerce_default_customer_address' ), array( 'geolocation_ajax', 'geolocation' ), true ),
 			'taxonomies'                => $term_response,
 			'product_visibility_terms'  => $product_visibility_terms,
-			'woocommerce_com_connected' => $woo_com_connected,
+			'woocommerce_com_connected' => ConnectionHelper::is_connected() ? 'yes' : 'no',
 		);
 	}
 

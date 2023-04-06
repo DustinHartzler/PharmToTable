@@ -9,11 +9,13 @@ import {
 } from '@woocommerce/base-context/hooks';
 import { useCallback, useState, useEffect } from '@wordpress/element';
 import PriceSlider from '@woocommerce/base-components/price-slider';
+import FilterTitlePlaceholder from '@woocommerce/base-components/filter-placeholder';
 import { useDebouncedCallback } from 'use-debounce';
 import PropTypes from 'prop-types';
 import { getCurrencyFromPriceResponse } from '@woocommerce/price-format';
 import { getSettingWithCoercion } from '@woocommerce/settings';
 import { addQueryArgs, removeQueryArgs } from '@wordpress/url';
+import { changeUrl, getUrlParameter } from '@woocommerce/utils';
 import {
 	CurrencyResponse,
 	isBoolean,
@@ -25,9 +27,9 @@ import {
  * Internal dependencies
  */
 import usePriceConstraints from './use-price-constraints';
-import { getUrlParameter } from '../../utils/filters';
 import './style.scss';
 import { Attributes } from './types';
+import { useSetWraperVisibility } from '../filter-wrapper/context';
 
 /**
  * Formats filter values into a string for the URL parameters needed for filtering PHP templates.
@@ -75,7 +77,7 @@ function formatPrice( value: unknown, minorUnit: number ) {
  *
  * @param {Object}  props            Component props.
  * @param {Object}  props.attributes Incoming block attributes.
- * @param {boolean} props.isEditor   Whether in editor context or not.
+ * @param {boolean} props.isEditor   Whether the component is being rendered in the editor.
  */
 const PriceFilterBlock = ( {
 	attributes,
@@ -84,6 +86,7 @@ const PriceFilterBlock = ( {
 	attributes: Attributes;
 	isEditor: boolean;
 } ) => {
+	const setWrapperVisibility = useSetWraperVisibility();
 	const hasFilterableProducts = getSettingWithCoercion(
 		'has_filterable_products',
 		false,
@@ -96,11 +99,11 @@ const PriceFilterBlock = ( {
 		isBoolean
 	);
 
-	/**
-	 * Important: Only used on the PHP rendered Block pages to track
-	 * the price filter defaults coming from the URL
-	 */
-	const [ hasSetPhpFilterDefaults, setHasSetPhpFilterDefaults ] =
+	const productIds = isEditor
+		? []
+		: getSettingWithCoercion( 'product_ids', [], Array.isArray );
+
+	const [ hasSetFilterDefaultsFromUrl, setHasSetFilterDefaultsFromUrl ] =
 		useState( false );
 
 	const minPriceParam = getUrlParameter( 'min_price' );
@@ -109,6 +112,8 @@ const PriceFilterBlock = ( {
 	const { results, isLoading } = useCollectionData( {
 		queryPrices: true,
 		queryState,
+		productIds,
+		isEditor,
 	} );
 
 	const currency = getCurrencyFromPriceResponse(
@@ -117,14 +122,10 @@ const PriceFilterBlock = ( {
 			: undefined
 	);
 
-	const [ minPriceQuery, setMinPriceQuery ] = useQueryStateByKey(
-		'min_price',
-		formatPrice( minPriceParam, currency.minorUnit ) || null
-	);
-	const [ maxPriceQuery, setMaxPriceQuery ] = useQueryStateByKey(
-		'max_price',
-		formatPrice( maxPriceParam, currency.minorUnit ) || null
-	);
+	const [ minPriceQuery, setMinPriceQuery ] =
+		useQueryStateByKey( 'min_price' );
+	const [ maxPriceQuery, setMaxPriceQuery ] =
+		useQueryStateByKey( 'max_price' );
 
 	const [ minPrice, setMinPrice ] = useState(
 		formatPrice( minPriceParam, currency.minorUnit ) || null
@@ -150,14 +151,10 @@ const PriceFilterBlock = ( {
 	} );
 
 	/**
-	 * Important: For PHP rendered block templates only.
-	 *
-	 * When we render the PHP block template (e.g. Classic Block) we need
-	 * to set the default min_price and max_price values from the URL
-	 * for the filter to work alongside the Active Filters block.
+	 * Try get the min and/or max price from the URL.
 	 */
 	useEffect( () => {
-		if ( ! hasSetPhpFilterDefaults && filteringForPhpTemplate ) {
+		if ( ! hasSetFilterDefaultsFromUrl ) {
 			setMinPriceQuery(
 				formatPrice( minPriceParam, currency.minorUnit )
 			);
@@ -165,17 +162,18 @@ const PriceFilterBlock = ( {
 				formatPrice( maxPriceParam, currency.minorUnit )
 			);
 
-			setHasSetPhpFilterDefaults( true );
+			setHasSetFilterDefaultsFromUrl( true );
 		}
 	}, [
 		currency.minorUnit,
-		filteringForPhpTemplate,
-		hasSetPhpFilterDefaults,
+		hasSetFilterDefaultsFromUrl,
 		maxPriceParam,
 		minPriceParam,
 		setMaxPriceQuery,
 		setMinPriceQuery,
 	] );
+
+	const [ isUpdating, setIsUpdating ] = useState( isLoading );
 
 	// Updates the query based on slider values.
 	const onSubmit = useCallback(
@@ -189,27 +187,26 @@ const PriceFilterBlock = ( {
 					? undefined
 					: newMinPrice;
 
-			// For block templates that render the PHP Classic Template block we need to add the filters as params and reload the page.
-			if ( filteringForPhpTemplate && window ) {
+			if ( window ) {
 				const newUrl = formatParams( window.location.href, {
 					min_price: finalMinPrice / 10 ** currency.minorUnit,
 					max_price: finalMaxPrice / 10 ** currency.minorUnit,
 				} );
-				// If the params have changed, lets reload the page.
+
+				// If the params have changed, lets update the filter URL.
 				if ( window.location.href !== newUrl ) {
-					window.location.href = newUrl;
+					changeUrl( newUrl );
 				}
-			} else {
-				setMinPriceQuery( finalMinPrice );
-				setMaxPriceQuery( finalMaxPrice );
 			}
+
+			setMinPriceQuery( finalMinPrice );
+			setMaxPriceQuery( finalMaxPrice );
 		},
 		[
 			minConstraint,
 			maxConstraint,
 			setMinPriceQuery,
 			setMaxPriceQuery,
-			filteringForPhpTemplate,
 			currency.minorUnit,
 		]
 	);
@@ -220,6 +217,7 @@ const PriceFilterBlock = ( {
 	// Callback when slider or input fields are changed.
 	const onChange = useCallback(
 		( prices ) => {
+			setIsUpdating( true );
 			if ( prices[ 0 ] !== minPrice ) {
 				setMinPrice( prices[ 0 ] );
 			}
@@ -229,7 +227,7 @@ const PriceFilterBlock = ( {
 
 			if (
 				filteringForPhpTemplate &&
-				hasSetPhpFilterDefaults &&
+				hasSetFilterDefaultsFromUrl &&
 				! attributes.showFilterButton
 			) {
 				debouncedUpdateQuery( prices[ 0 ], prices[ 1 ] );
@@ -241,7 +239,7 @@ const PriceFilterBlock = ( {
 			setMinPrice,
 			setMaxPrice,
 			filteringForPhpTemplate,
-			hasSetPhpFilterDefaults,
+			hasSetFilterDefaultsFromUrl,
 			debouncedUpdateQuery,
 			attributes.showFilterButton,
 		]
@@ -302,6 +300,7 @@ const PriceFilterBlock = ( {
 	] );
 
 	if ( ! hasFilterableProducts ) {
+		setWrapperVisibility( false );
 		return null;
 	}
 
@@ -311,19 +310,35 @@ const PriceFilterBlock = ( {
 			maxConstraint === null ||
 			minConstraint === maxConstraint )
 	) {
+		setWrapperVisibility( false );
 		return null;
 	}
 
 	const TagName =
 		`h${ attributes.headingLevel }` as keyof JSX.IntrinsicElements;
 
+	setWrapperVisibility( true );
+
+	if ( ! isLoading && isUpdating ) {
+		setIsUpdating( false );
+	}
+
+	const heading = (
+		<TagName className="wc-block-price-filter__title">
+			{ attributes.heading }
+		</TagName>
+	);
+
+	const filterHeading =
+		isLoading && isUpdating ? (
+			<FilterTitlePlaceholder>{ heading }</FilterTitlePlaceholder>
+		) : (
+			heading
+		);
+
 	return (
 		<>
-			{ ! isEditor && attributes.heading && (
-				<TagName className="wc-block-price-filter__title">
-					{ attributes.heading }
-				</TagName>
-			) }
+			{ ! isEditor && attributes.heading && filterHeading }
 			<div className="wc-block-price-slider">
 				<PriceSlider
 					minConstraint={ minConstraint }
@@ -332,10 +347,13 @@ const PriceFilterBlock = ( {
 					maxPrice={ maxPrice }
 					currency={ currency }
 					showInputFields={ attributes.showInputFields }
+					inlineInput={ attributes.inlineInput }
 					showFilterButton={ attributes.showFilterButton }
 					onChange={ onChange }
 					onSubmit={ () => onSubmit( minPrice, maxPrice ) }
 					isLoading={ isLoading }
+					isUpdating={ isUpdating }
+					isEditor={ isEditor }
 				/>
 			</div>
 		</>

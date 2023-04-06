@@ -1,8 +1,7 @@
 /**
  * External dependencies
  */
-import { __ } from '@wordpress/i18n';
-import { createBlock, registerBlockType } from '@wordpress/blocks';
+import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps } from '@wordpress/block-editor';
 import { isFeaturePluginBuild } from '@woocommerce/block-settings';
 import { Icon, category } from '@wordpress/icons';
@@ -17,11 +16,6 @@ import { blockAttributes } from './attributes';
 import metadata from './block.json';
 
 registerBlockType( metadata, {
-	title: __( 'Filter Products by Attribute', 'woo-gutenberg-products-block' ),
-	description: __(
-		'Allow customers to filter the grid by product attribute, such as color. Works in combination with the All Products block.',
-		'woo-gutenberg-products-block'
-	),
 	icon: {
 		src: (
 			<Icon
@@ -34,7 +28,7 @@ registerBlockType( metadata, {
 		...metadata.supports,
 		...( isFeaturePluginBuild() && {
 			__experimentalBorder: {
-				radius: true,
+				radius: false,
 				color: true,
 				width: false,
 			},
@@ -43,33 +37,6 @@ registerBlockType( metadata, {
 	attributes: {
 		...metadata.attributes,
 		...blockAttributes,
-	},
-	transforms: {
-		from: [
-			{
-				type: 'block',
-				blocks: [ 'core/legacy-widget' ],
-				// We can't transform if raw instance isn't shown in the REST API.
-				isMatch: ( { idBase, instance } ) =>
-					idBase === 'woocommerce_layered_nav' && !! instance?.raw,
-				transform: ( { instance } ) =>
-					createBlock( 'woocommerce/attribute-filter', {
-						attributeId: 0,
-						showCounts: true,
-						queryType: instance?.raw?.query_type || 'or',
-						heading:
-							instance?.raw?.title ||
-							__(
-								'Filter by attribute',
-								'woo-gutenberg-products-block'
-							),
-						headingLevel: 3,
-						displayStyle: instance?.raw?.display_type || 'list',
-						showFilterButton: false,
-						isPreview: false,
-					} ),
-			},
-		],
 	},
 	edit,
 	// Save the props to post content.
@@ -83,6 +50,7 @@ registerBlockType( metadata, {
 			headingLevel,
 			displayStyle,
 			showFilterButton,
+			selectType,
 		} = attributes;
 		const data: Record< string, unknown > = {
 			'data-attribute-id': attributeId,
@@ -96,6 +64,9 @@ registerBlockType( metadata, {
 		}
 		if ( showFilterButton ) {
 			data[ 'data-show-filter-button' ] = showFilterButton;
+		}
+		if ( selectType === 'single' ) {
+			data[ 'data-select-type' ] = selectType;
 		}
 		return (
 			<div

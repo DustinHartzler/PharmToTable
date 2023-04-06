@@ -4,15 +4,18 @@
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import BlockTitle from '@woocommerce/editor-components/block-title';
+import type { BlockEditProps } from '@wordpress/blocks';
 import {
 	Disabled,
 	PanelBody,
 	ToggleControl,
 	withSpokenMessages,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
-import HeadingToolbar from '@woocommerce/editor-components/heading-toolbar';
-import BlockTitle from '@woocommerce/editor-components/block-title';
-import type { BlockEditProps } from '@wordpress/blocks';
 
 /**
  * Internal dependencies
@@ -20,13 +23,22 @@ import type { BlockEditProps } from '@wordpress/blocks';
 import Block from './block';
 import './editor.scss';
 import { Attributes } from './types';
+import { UpgradeNotice } from '../filter-wrapper/upgrade';
 
 const Edit = ( {
+	clientId,
 	attributes,
 	setAttributes,
 }: BlockEditProps< Attributes > ) => {
-	const { className, heading, headingLevel, showCounts, showFilterButton } =
-		attributes;
+	const {
+		className,
+		heading,
+		headingLevel,
+		showCounts,
+		showFilterButton,
+		selectType,
+		displayStyle,
+	} = attributes;
 
 	const blockProps = useBlockProps( {
 		className: classnames( 'wc-block-stock-filter', className ),
@@ -36,24 +48,16 @@ const Edit = ( {
 		return (
 			<InspectorControls key="inspector">
 				<PanelBody
-					title={ __( 'Content', 'woo-gutenberg-products-block' ) }
+					title={ __(
+						'Display Settings',
+						'woo-gutenberg-products-block'
+					) }
 				>
 					<ToggleControl
 						label={ __(
-							'Product count',
+							'Display product count',
 							'woo-gutenberg-products-block'
 						) }
-						help={
-							showCounts
-								? __(
-										'Product count is visible.',
-										'woo-gutenberg-products-block'
-								  )
-								: __(
-										'Product count is hidden.',
-										'woo-gutenberg-products-block'
-								  )
-						}
 						checked={ showCounts }
 						onChange={ () =>
 							setAttributes( {
@@ -61,44 +65,71 @@ const Edit = ( {
 							} )
 						}
 					/>
-					<p>
-						{ __(
-							'Heading Level',
+					<ToggleGroupControl
+						label={ __(
+							'Allow selecting multiple options?',
 							'woo-gutenberg-products-block'
 						) }
-					</p>
-					<HeadingToolbar
-						isCollapsed={ false }
-						minLevel={ 2 }
-						maxLevel={ 7 }
-						selectedLevel={ headingLevel }
-						onChange={ ( newLevel: number ) =>
-							setAttributes( { headingLevel: newLevel } )
+						value={ selectType || 'multiple' }
+						onChange={ ( value: string ) =>
+							setAttributes( {
+								selectType: value,
+							} )
 						}
-					/>
-				</PanelBody>
-				<PanelBody
-					title={ __(
-						'Block Settings',
-						'woo-gutenberg-products-block'
-					) }
-				>
+						className="wc-block-attribute-filter__multiple-toggle"
+					>
+						<ToggleGroupControlOption
+							value="multiple"
+							label={ __(
+								'Multiple',
+								'woo-gutenberg-products-block'
+							) }
+						/>
+						<ToggleGroupControlOption
+							value="single"
+							label={ __(
+								'Single',
+								'woo-gutenberg-products-block'
+							) }
+						/>
+					</ToggleGroupControl>
+					<ToggleGroupControl
+						label={ __(
+							'Display Style',
+							'woo-gutenberg-products-block'
+						) }
+						value={ displayStyle }
+						onChange={ ( value ) =>
+							setAttributes( {
+								displayStyle: value,
+							} )
+						}
+						className="wc-block-attribute-filter__display-toggle"
+					>
+						<ToggleGroupControlOption
+							value="list"
+							label={ __(
+								'List',
+								'woo-gutenberg-products-block'
+							) }
+						/>
+						<ToggleGroupControlOption
+							value="dropdown"
+							label={ __(
+								'Dropdown',
+								'woo-gutenberg-products-block'
+							) }
+						/>
+					</ToggleGroupControl>
 					<ToggleControl
 						label={ __(
-							'Filter button',
+							"Show 'Apply filters' button",
 							'woo-gutenberg-products-block'
 						) }
-						help={
-							showFilterButton
-								? __(
-										'Products will only update when the button is pressed.',
-										'woo-gutenberg-products-block'
-								  )
-								: __(
-										'Products will update as options are selected.',
-										'woo-gutenberg-products-block'
-								  )
-						}
+						help={ __(
+							'Products will update when the button is clicked.',
+							'woo-gutenberg-products-block'
+						) }
 						checked={ showFilterButton }
 						onChange={ ( value ) =>
 							setAttributes( {
@@ -114,16 +145,24 @@ const Edit = ( {
 	return (
 		<>
 			{ getInspectorControls() }
+			<UpgradeNotice
+				clientId={ clientId }
+				attributes={ attributes }
+				setAttributes={ setAttributes }
+				filterType="stock-filter"
+			/>
 			{
 				<div { ...blockProps }>
-					<BlockTitle
-						className="wc-block-stock-filter__title"
-						headingLevel={ headingLevel }
-						heading={ heading }
-						onChange={ ( value: string ) =>
-							setAttributes( { heading: value } )
-						}
-					/>
+					{ heading && (
+						<BlockTitle
+							className="wc-block-stock-filter__title"
+							headingLevel={ headingLevel }
+							heading={ heading }
+							onChange={ ( value: string ) =>
+								setAttributes( { heading: value } )
+							}
+						/>
+					) }
 					<Disabled>
 						<Block attributes={ attributes } isEditor={ true } />
 					</Disabled>

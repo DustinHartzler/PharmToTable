@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { cart } from '@woocommerce/icons';
+import { miniCartAlt } from '@woocommerce/icons';
 import { Icon } from '@wordpress/icons';
 import { registerBlockType } from '@wordpress/blocks';
 import type { BlockConfiguration } from '@wordpress/blocks';
@@ -19,7 +19,7 @@ const settings: BlockConfiguration = {
 	icon: {
 		src: (
 			<Icon
-				icon={ cart }
+				icon={ miniCartAlt }
 				className="wc-block-editor-components-block-icon"
 			/>
 		),
@@ -38,6 +38,7 @@ const settings: BlockConfiguration = {
 			fontSize: true,
 			...( isFeaturePluginBuild() && {
 				__experimentalFontFamily: true,
+				__experimentalFontWeight: true,
 			} ),
 		},
 	},
@@ -50,11 +51,14 @@ const settings: BlockConfiguration = {
 		isPreview: {
 			type: 'boolean',
 			default: false,
-			save: false,
 		},
 		addToCartBehaviour: {
 			type: 'string',
 			default: 'none',
+		},
+		hasHiddenPrice: {
+			type: 'boolean',
+			default: false,
 		},
 	},
 

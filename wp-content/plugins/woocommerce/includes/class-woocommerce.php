@@ -9,8 +9,10 @@
 defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Internal\AssignDefaultCategory;
+use Automattic\WooCommerce\Internal\BatchProcessing\BatchProcessingController;
 use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 use Automattic\WooCommerce\Internal\DownloadPermissionsAdjuster;
+use Automattic\WooCommerce\Internal\Features\FeaturesController;
 use Automattic\WooCommerce\Internal\ProductAttributesLookup\DataRegenerator;
 use Automattic\WooCommerce\Internal\ProductAttributesLookup\LookupDataStore;
 use Automattic\WooCommerce\Internal\ProductDownloads\ApprovedDirectories\Register as ProductDownloadDirectories;
@@ -30,7 +32,7 @@ final class WooCommerce {
 	 *
 	 * @var string
 	 */
-	public $version = '6.8.0';
+	public $version = '7.5.1';
 
 	/**
 	 * WooCommerce Schema version.
@@ -62,6 +64,13 @@ final class WooCommerce {
 	 * @var WC_Query
 	 */
 	public $query = null;
+
+	/**
+	 * API instance
+	 *
+	 * @var WC_API
+	 */
+	public $api;
 
 	/**
 	 * Product factory instance.
@@ -219,14 +228,17 @@ final class WooCommerce {
 		add_action( 'woocommerce_updated', array( $this, 'add_woocommerce_inbox_variant' ) );
 
 		// These classes set up hooks on instantiation.
-		wc_get_container()->get( ProductDownloadDirectories::class );
-		wc_get_container()->get( DownloadPermissionsAdjuster::class );
-		wc_get_container()->get( AssignDefaultCategory::class );
-		wc_get_container()->get( DataRegenerator::class );
-		wc_get_container()->get( LookupDataStore::class );
-		wc_get_container()->get( RestockRefundedItemsAdjuster::class );
-		wc_get_container()->get( CustomOrdersTableController::class );
-		wc_get_container()->get( OptionSanitizer::class );
+		$container = wc_get_container();
+		$container->get( ProductDownloadDirectories::class );
+		$container->get( DownloadPermissionsAdjuster::class );
+		$container->get( AssignDefaultCategory::class );
+		$container->get( DataRegenerator::class );
+		$container->get( LookupDataStore::class );
+		$container->get( RestockRefundedItemsAdjuster::class );
+		$container->get( CustomOrdersTableController::class );
+		$container->get( OptionSanitizer::class );
+		$container->get( BatchProcessingController::class );
+		$container->get( FeaturesController::class );
 	}
 
 	/**
@@ -351,9 +363,11 @@ final class WooCommerce {
 		$is_rest_api_request = ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_prefix ) ); // phpcs:disable WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		/**
-		 * Filter to specify if the current request is a REST API request.
+		 * Whether this is a REST API request.
+		 *
+		 * @since 3.6.0
 		 */
-		return apply_filters( 'woocommerce_is_rest_api_request', $is_rest_api_request ); // phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingSinceComment
+		return apply_filters( 'woocommerce_is_rest_api_request', $is_rest_api_request );
 	}
 
 	/**
@@ -593,6 +607,9 @@ final class WooCommerce {
 					break;
 				case 'twentytwentytwo':
 					include_once WC_ABSPATH . 'includes/theme-support/class-wc-twenty-twenty-two.php';
+					break;
+				case 'twentytwentythree':
+					include_once WC_ABSPATH . 'includes/theme-support/class-wc-twenty-twenty-three.php';
 					break;
 			}
 		}
@@ -962,7 +979,7 @@ final class WooCommerce {
 			return;
 		}
 
-		$message_one = __( 'You have installed a development version of WooCommerce which requires files to be built and minified. From the plugin directory, run <code>pnpm install</code> and then <code>pnpm -- turbo run build --filter=woocommerce</code> to build and minify assets.', 'woocommerce' );
+		$message_one = __( 'You have installed a development version of WooCommerce which requires files to be built and minified. From the plugin directory, run <code>pnpm install</code> and then <code>pnpm run build --filter=woocommerce</code> to build and minify assets.', 'woocommerce' );
 		$message_two = sprintf(
 			/* translators: 1: URL of WordPress.org Repository 2: URL of the GitHub Repository release page */
 			__( 'Or you can download a pre-built version of the plugin from the <a href="%1$s">WordPress.org repository</a> or by visiting <a href="%2$s">the releases page in the GitHub repository</a>.', 'woocommerce' ),
