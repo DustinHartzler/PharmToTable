@@ -103,12 +103,17 @@ function my_taxonomies_providers() {
  * Set order to random on Provider page.
  */
 function set_order_post_type( $query ) {
-	if ( $query->get( 'post_type' ) === 'provider' ) {
-		$query->set( 'orderby', 'rand' );
+	if ( $query->is_admin ) {
+		// if ( $query->get( 'post_type' ) === 'provider' || ! is_admin() ) {
+		// 	$query->set( 'orderby', 'rand' );
+		// }
+		if ( is_admin() || ! $query->is_main_query() ) {
+			return;
+		}
 	}
 	return $query;
 }
-add_filter('pre_get_posts', 'set_order_post_type');
+add_filter( 'pre_get_posts', 'set_order_post_type' );
 
 
 function provider_metaboxes(){
