@@ -213,42 +213,42 @@ input.#wcopc_product_ids {
 <form id="wcopc_settings">
 	<?php do_action( 'wcopc_shortcode_iframe_before' ); ?>
 	<fieldset id="wcopc_product_ids_fields">
-		<label for="wcopc_product_ids"><strong><?php _e( 'Products:', 'wcopc' ); ?></strong></label>
+		<label for="wcopc_product_ids"><strong><?php esc_html_e( 'Products:', 'woocommerce-one-page-checkout' ); ?></strong></label>
 		<?php if ( PP_One_Page_Checkout::is_woocommerce_pre( '3.0' ) ) { ?>
-			<input type="hidden" id="wcopc_product_ids" name="wcopc_product_ids[]" data-multiple="true" class="wc-product-search" data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'wcopc' ); ?>"/>
+			<input type="hidden" id="wcopc_product_ids" name="wcopc_product_ids[]" data-multiple="true" class="wc-product-search" data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woocommerce-one-page-checkout' ); ?>"/>
 		<?php } else { ?>
-			<select id="wcopc_product_ids" name="wcopc_product_ids[]" class="wc-product-search" multiple="multiple" data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'wcopc' ); ?>"></select>
+			<select id="wcopc_product_ids" name="wcopc_product_ids[]" class="wc-product-search" multiple="multiple" data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woocommerce-one-page-checkout' ); ?>"></select>
 		<?php } ?>
 	</fieldset>
 	<?php if ( $display_category_ids ) :?>
 		<fieldset id="wcopc_category_ids_fields">
 			<label for="wcopc_category_ids">
-				<strong><?php _e( 'Categories:', 'wcopc' ); ?></strong>
+				<strong><?php esc_html_e( 'Categories:', 'woocommerce-one-page-checkout' ); ?></strong>
 			</label>
 			<select id="wcopc_category_ids"
 					name="wcopc_category_ids[]"
 					class="wc-category-search wcopc-category-search"
 					multiple="multiple"
-					data-placeholder="<?php esc_attr_e( 'Search for a category&hellip;', 'wcopc' ); ?>"></select>
+					data-placeholder="<?php esc_attr_e( 'Search for a category&hellip;', 'woocommerce-one-page-checkout' ); ?>"></select>
 		</fieldset>
 	<?php endif; ?>
 	<fieldset id="wcopc_template_fields">
-		<div style="font-weight: bold;"><?php _e( 'Template:', 'wcopc' ); ?></div>
+		<div style="font-weight: bold;"><?php esc_html_e( 'Template:', 'woocommerce-one-page-checkout' ); ?></div>
 		<?php $first = true; ?>
 		<?php foreach( PP_One_Page_Checkout::$templates as $id => $template_details ) : ?>
 		<label for="<?php echo esc_attr( $id ); ?>">
-			<input id="<?php echo esc_attr( $id ); ?>" name="wcopc_template" type="radio" value="<?php echo $id; ?>" style="width: 16px; height: 16px;" <?php checked( $first ); $first = false; ?>>
+			<input id="<?php echo esc_attr( $id ); ?>" name="wcopc_template" type="radio" value="<?php echo esc_attr( $id ); ?>" style="width: 16px; height: 16px;" <?php checked( $first ); $first = false; ?>>
 			<?php echo esc_html( $template_details['label'] ); ?>
 			<?php if ( ! empty( $template_details['description'] ) ) : ?>
-			<img data-tip="<?php echo wc_sanitize_tooltip( $template_details['description'] ); ?>" class="help_tip" src="<?php echo WC()->plugin_url() . '/assets/images/help.png'; ?>" height="16" width="16">
+				<img data-tip="<?php echo wc_sanitize_tooltip( $template_details['description'] ); ?>" class="help_tip" src="<?php echo esc_url( WC()->plugin_url() ) . '/assets/images/help.png'; ?>" height="16" width="16">
 			<?php endif; ?>
 		</label>
 		<?php endforeach; ?>
 	</fieldset>
 	<?php do_action( 'wcopc_shortcode_iframe_after' ); ?>
 	<fieldset>
-		<input id="wcopc_submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Create Shortcode', 'wcopc' ); ?>" />
-		<input id="wcopc_cancel" type="button" class="button" value="<?php esc_attr_e( 'Cancel', 'wcopc' ); ?>" />
+		<input id="wcopc_submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Create Shortcode', 'woocommerce-one-page-checkout' ); ?>" />
+		<input id="wcopc_cancel" type="button" class="button" value="<?php esc_attr_e( 'Cancel', 'woocommerce-one-page-checkout' ); ?>" />
 	</fieldset>
 </form>
 </div>

@@ -1,5 +1,33 @@
 *** WooCommerce One Page Checkout Changelog ***
 
+2023-02-08 - version 2.2.0
+* Fix - Enter a summary of all changes on this Pull Request. This will appear in the changelog if accepted.
+* Fix - Fix an issue when determining whether the currently displayed page is a One Page Checkout.
+* Tweak - WC 6.4 compatibility.
+* Tweak - WP 6.0 compatibility.
+
+2023-01-31 - version 2.1.0
+* Fix - Prevent ajax call if the add to cart ID cannot be found.
+* Tweak - WC 7.3.0 compatibility.
+
+2023-01-25 - version 2.0.0
+* Fix - Escape and sanitizing bugfixes.
+
+2023-01-18 - version 1.9.9
+* Fix - Bug fixes.
+
+2022-11-22 - version 1.9.8
+* Fix - Fix: Ensure that the Storefront mini-cart can be expended and no console error is thrown when looking up an OPC product.
+
+2022-10-28 - version 1.9.7
+* Tweak - WC 7.0.0 compatibility.
+* Tweak - WP 6.1 compatibility.
+
+2022-10-13 - version 1.9.6
+* Fix - Declare compatibility with HPOS.
+* Fix - Define Node version.
+* Fix - Fix localization to use the 'woocommerce-one-page-checkout' domain.
+
 2022-07-26 - version 1.9.5
 * Fix - Prevent errors showing up when the global $post variable is not available.
 
