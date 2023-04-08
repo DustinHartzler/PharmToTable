@@ -1,15 +1,15 @@
-# Copyright (C) 2021 Pretty Links
+# Copyright (C) 2023 Pretty Links
 # This file is distributed under the same license as the Pretty Links plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Links 3.2.4\n"
+"Project-Id-Version: Pretty Links 3.4.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-10-28T15:47:49+00:00\n"
+"POT-Creation-Date: 2023-03-22T10:03:12-05:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: pretty-link\n"
@@ -17,7 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #. Author of the plugin
 #: app/controllers/PrliLinksController.php:58
-#: app/controllers/PrliLinksController.php:506
+#: app/controllers/PrliLinksController.php:507
 #: pro/app/views/links/prettybar.php:68
 msgid "Pretty Links"
 msgstr ""
@@ -34,60 +34,173 @@ msgstr ""
 msgid "http://prettylinks.com"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:84
+#: app/controllers/PrliAddonsController.php:28
+#: app/views/admin/addons/addon-page-pro.php:37
+msgid "Active"
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:29
+#: app/views/admin/addons/addon-page-lite.php:27
+#: app/views/admin/addons/addon-page-pro.php:43
+msgid "Inactive"
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:30
+#: app/controllers/PrliAppController.php:188
+#: app/controllers/PrliAppController.php:191
+#: app/controllers/PrliAppController.php:334
+#: app/views/admin/addons/addon-page-lite.php:32
+#: app/views/admin/addons/addon-page-pro.php:90
+msgid "Activate"
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:31
+#: app/views/admin/addons/addon-page-pro.php:86
+msgid "Deactivate"
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:32
+#: app/controllers/PrliAddonsController.php:140
+msgid "Could not install add-on."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:33
+#: app/controllers/PrliAddonsController.php:138
+msgid "Could not install plugin."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:49
+#: app/controllers/PrliAppController.php:202
+msgid "Add-ons"
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:58
+#: app/controllers/PrliAddonsController.php:101
+#: app/controllers/PrliAddonsController.php:124
+#: app/controllers/PrliUpdateController.php:66
+#: app/controllers/PrliUpdateController.php:80
+#: app/controllers/PrliUpdateController.php:161
+msgid "Bad request."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:62
+#: app/controllers/PrliAddonsController.php:105
+#: app/controllers/PrliAddonsController.php:128
+#: app/controllers/PrliUpdateController.php:70
+#: app/controllers/PrliUpdateController.php:165
+#: app/controllers/PrliUpdateController.php:202
+msgid "Sorry, you don't have permission to do this."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:66
+#: app/controllers/PrliAddonsController.php:109
+#: app/controllers/PrliAddonsController.php:132
+#: app/controllers/PrliUpdateController.php:74
+#: app/controllers/PrliUpdateController.php:169
+#: app/controllers/PrliUpdateController.php:206
+msgid "Security check failed."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:74
+msgid "Could not activate plugin. Please activate from the Plugins page manually."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:76
+msgid "Could not activate add-on. Please activate from the Plugins page manually."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:81
+msgid "Plugin activated."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:83
+msgid "Add-on activated."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:116
+msgid "Plugin deactivated."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:118
+msgid "Add-on deactivated."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:191
+msgid "Plugin installed & activated."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:191
+msgid "Add-on installed & activated."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:199
+msgid "Plugin installed."
+msgstr ""
+
+#: app/controllers/PrliAddonsController.php:199
+msgid "Add-on installed."
+msgstr ""
+
+#: app/controllers/PrliAppController.php:85
 msgid "You're using Pretty Links Lite. To unlock more features, consider <a href=\"https://prettylinks.com/pl/main-menu/upgrade?plugin-upgrade-header\">upgrading to Pro.</a>"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:134
+#: app/controllers/PrliAppController.php:135
 #: app/controllers/PrliLinksController.php:166
-#: app/controllers/PrliUpdateController.php:492
+#: app/controllers/PrliUpdateController.php:736
 msgid "Link Categories"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:135
-#: app/controllers/PrliLinksController.php:465
+#: app/controllers/PrliAppController.php:136
+#: app/controllers/PrliLinksController.php:466
 #: pro/app/controllers/PlpLinkCategoriesController.php:25
 msgid "Categories"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:142
+#: app/controllers/PrliAppController.php:143
 #: app/controllers/PrliLinksController.php:167
-#: app/controllers/PrliUpdateController.php:498
+#: app/controllers/PrliUpdateController.php:742
 msgid "Link Tags"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:143
-#: app/controllers/PrliLinksController.php:466
+#: app/controllers/PrliAppController.php:144
+#: app/controllers/PrliLinksController.php:467
 #: pro/app/controllers/PlpLinkTagsController.php:29
 msgid "Tags"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:150
-#: app/controllers/PrliUpdateController.php:504
+#: app/controllers/PrliAppController.php:151
+#: app/controllers/PrliUpdateController.php:748
 #: pro/app/views/reports/list.php:4
 #: pro/app/views/reports/reports.php:7
 msgid "Link Reports"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:151
+#: app/controllers/PrliAppController.php:152
 #: pro/app/controllers/PlpReportsController.php:15
 #: pro/app/views/reports/reports.php:4
 msgid "Reports"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:158
 #: app/controllers/PrliAppController.php:159
-#: app/controllers/PrliUpdateController.php:510
+#: app/controllers/PrliAppController.php:160
+#: app/controllers/PrliUpdateController.php:754
+msgid "Display Groups"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:167
+#: app/controllers/PrliAppController.php:168
+#: app/controllers/PrliUpdateController.php:760
 #: pro/app/controllers/PlpImportExportController.php:15
 msgid "Import / Export"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:168
+#: app/controllers/PrliAppController.php:177
 msgid "Pretty Links | Clicks"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:168
-#: app/controllers/PrliLinksController.php:504
+#: app/controllers/PrliAppController.php:177
+#: app/controllers/PrliLinksController.php:505
 #: app/models/PrliClick.php:256
 #: app/views/clicks/list.php:4
 #: app/views/groups/list.php:81
@@ -101,114 +214,121 @@ msgstr ""
 msgid "Clicks"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:172
+#: app/controllers/PrliAppController.php:181
 msgid "Pretty Links | Tools"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:172
+#: app/controllers/PrliAppController.php:181
 #: app/views/tools/form.php:3
 msgid "Tools"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:175
+#: app/controllers/PrliAppController.php:184
 msgid "Pretty Links | Options"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:175
+#: app/controllers/PrliAppController.php:184
 #: app/views/options/form.php:3
 msgid "Options"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:179
-#: app/controllers/PrliAppController.php:182
-#: app/controllers/PrliAppController.php:319
-msgid "Activate"
-msgstr ""
-
-#: app/controllers/PrliAppController.php:185
+#: app/controllers/PrliAppController.php:194
 msgid "Upgrade"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:190
+#: app/controllers/PrliAppController.php:199
 msgid "Welcome"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:318
-#: app/controllers/PrliAppController.php:324
-#: app/controllers/PrliAppController.php:329
+#: app/controllers/PrliAppController.php:333
+#: app/controllers/PrliAppController.php:339
+#: app/controllers/PrliAppController.php:344
+#: app/controllers/PrliAppController.php:820
 msgid "Docs"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:322
-#: app/controllers/PrliAppController.php:328
+#: app/controllers/PrliAppController.php:337
+#: app/controllers/PrliAppController.php:343
 msgid "Activate Pro License"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:323
+#: app/controllers/PrliAppController.php:338
 msgid "Buy"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:327
-#: app/views/admin/update/license.php:39
+#: app/controllers/PrliAppController.php:342
+#: app/views/admin/update/inactive_license.php:28
 #: app/views/shared/nav.php:9
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:429
+#: app/controllers/PrliAppController.php:452
 #: app/views/groups/edit.php:72
-#: app/views/options/form.php:1082
+#: app/views/options/form.php:1189
 #: pro/app/views/reports/edit.php:66
 msgid "Update"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:431
+#: app/controllers/PrliAppController.php:454
 msgid "Copy to Clipboard"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:432
+#: app/controllers/PrliAppController.php:455
 msgid "Copied!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:433
+#: app/controllers/PrliAppController.php:456
 msgid "Oops, Copy Failed!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:457
+#: app/controllers/PrliAppController.php:480
 msgid "Are you sure you want to reset your Pretty Link? This will delete all of the statistical data about this Pretty Link in your database."
 msgstr ""
 
+#: app/controllers/PrliAppController.php:483
+msgid "To access Link Health, upgrade to <a href=\"%s\">Pretty Links Pro.</a>"
+msgstr ""
+
 #. translators: %1$s: br tag, %2$s: open link tag, %3$s: close link tag
-#: app/controllers/PrliAppController.php:562
+#: app/controllers/PrliAppController.php:591
 msgid "You're almost done!%1$s%2$sFinish your Re-Install of Pretty Links Pro%3$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:577
+#: app/controllers/PrliAppController.php:606
 msgid "Pretty Links Pro Successfully Uninstalled."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:626
+#: app/controllers/PrliAppController.php:655
 msgid "Invalid server response"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:627
+#: app/controllers/PrliAppController.php:656
 msgid "Ajax error"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:644
+#: app/controllers/PrliAppController.php:673
 msgid "Pretty Link Quick Add"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:683
+#: app/controllers/PrliAppController.php:712
 msgid "Your Pretty Links Pro installation isn't quite complete yet. %1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:704
+#: app/controllers/PrliAppController.php:733
 msgid "Your Pretty Links Pro installation isn't quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
 #. translators: $1$s - Pretty Links plugin name; $2$s - WP.org review link; $3$s - WP.org review link.
-#: app/controllers/PrliAppController.php:752
+#: app/controllers/PrliAppController.php:781
 msgid "Enjoying %1$s? Please rate <a href=\"%2$s\" target=\"_blank\" rel=\"noopener noreferrer\">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href=\"%3$s\" target=\"_blank\" rel=\"noopener\">WordPress.org</a> to help us spread the word. Thanks from the Pretty Links team!"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:815
+msgid "Support"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:825
+msgid "Made with ♥ by the Pretty Links Team"
 msgstr ""
 
 #: app/controllers/PrliClicksController.php:90
@@ -223,21 +343,25 @@ msgstr ""
 msgid "All Links"
 msgstr ""
 
-#: app/controllers/PrliFlyoutMenuController.php:34
+#: app/controllers/PrliFlyoutMenuController.php:38
 msgid "See Quick Links"
 msgstr ""
 
-#: app/controllers/PrliFlyoutMenuController.php:79
+#: app/controllers/PrliFlyoutMenuController.php:89
 #: app/views/admin/popups/upgrade.php:23
 msgid "Upgrade to Pretty Links Pro"
 msgstr ""
 
-#: app/controllers/PrliFlyoutMenuController.php:86
+#: app/controllers/PrliFlyoutMenuController.php:96
 msgid "Support & Docs"
 msgstr ""
 
-#: app/controllers/PrliFlyoutMenuController.php:91
+#: app/controllers/PrliFlyoutMenuController.php:101
 msgid "Suggest a Feature"
+msgstr ""
+
+#: app/controllers/PrliFlyoutMenuController.php:107
+msgid "Notifications "
 msgstr ""
 
 #: app/controllers/PrliLinksController.php:59
@@ -258,7 +382,7 @@ msgstr ""
 
 #: app/controllers/PrliLinksController.php:62
 #: js/editor.js:12
-#: js/editor/components/link-editor/index.js:379
+#: js/editor/components/link-editor/index.js:400
 msgid "New Pretty Link"
 msgstr ""
 
@@ -315,171 +439,178 @@ msgstr ""
 msgid "Tell Me More"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:350
+#: app/controllers/PrliLinksController.php:351
 msgid "Pretty Link updated."
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:352
+#: app/controllers/PrliLinksController.php:353
 msgid "Pretty Link created."
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:420
+#: app/controllers/PrliLinksController.php:421
 msgid "Pretty Link Cleanup Visitor Locks"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:432
-#: app/controllers/PrliLinksController.php:774
+#: app/controllers/PrliLinksController.php:433
+#: app/controllers/PrliLinksController.php:775
 #: app/controllers/PrliPopupController.php:95
 msgid "Forbidden"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:441
+#: app/controllers/PrliLinksController.php:442
 msgid "Success!"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:443
+#: app/controllers/PrliLinksController.php:444
 msgid "Fix the following errors:"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:467
+#: app/controllers/PrliLinksController.php:468
 #: app/views/links/form_pro.php:32
 #: pro/app/views/links/form.php:133
 msgid "Keywords"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:477
+#: app/controllers/PrliLinksController.php:478
 msgid "Upgrade to a Pretty Links premium plan to get Link Categories"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:479
-#: app/controllers/PrliLinksController.php:485
-#: app/controllers/PrliLinksController.php:491
+#: app/controllers/PrliLinksController.php:480
+#: app/controllers/PrliLinksController.php:486
+#: app/controllers/PrliLinksController.php:492
 #: app/helpers/PrliAppHelper.php:20
-#: app/views/links/form.php:30
+#: app/views/links/form.php:32
 msgid "Pro"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:483
+#: app/controllers/PrliLinksController.php:484
 msgid "Upgrade to a Pretty Links premium plan to get Link Tags"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:489
+#: app/controllers/PrliLinksController.php:490
 msgid "Upgrade to a Pretty Links premium plan to get Keyword Replacements"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:497
+#: app/controllers/PrliLinksController.php:498
 msgid "Settings"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:498
+#: app/controllers/PrliLinksController.php:499
 msgid "Link Title"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:500
+#: app/controllers/PrliLinksController.php:501
 msgid "Target"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:505
+#: app/controllers/PrliLinksController.php:506
 #: app/models/PrliClick.php:256
+#: app/views/admin/upgrade/groups.php:13
+#: app/views/admin/upgrade/groups.php:35
 #: pro/app/views/links/form.php:38
 #: pro/app/views/links/form.php:73
 msgid "Date"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:607
+#: app/controllers/PrliLinksController.php:608
 #: app/views/links/form_advanced.php:6
 msgid "No Follow"
-msgstr ""
-
-#: app/controllers/PrliLinksController.php:609
-#: app/controllers/PrliLinksController.php:616
-#: app/controllers/PrliLinksController.php:623
-msgid "No Change"
 msgstr ""
 
 #: app/controllers/PrliLinksController.php:610
 #: app/controllers/PrliLinksController.php:617
 #: app/controllers/PrliLinksController.php:624
+msgid "No Change"
+msgstr ""
+
+#: app/controllers/PrliLinksController.php:611
+#: app/controllers/PrliLinksController.php:618
+#: app/controllers/PrliLinksController.php:625
 #: app/views/shared/tinymce_form_popup.php:49
 #: app/views/shared/tinymce_form_popup.php:57
 #: app/views/shared/tinymce_form_popup.php:65
 msgid "Enabled"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:611
-#: app/controllers/PrliLinksController.php:618
-#: app/controllers/PrliLinksController.php:625
+#: app/controllers/PrliLinksController.php:612
+#: app/controllers/PrliLinksController.php:619
+#: app/controllers/PrliLinksController.php:626
 #: app/views/shared/tinymce_form_popup.php:50
 #: app/views/shared/tinymce_form_popup.php:58
 #: app/views/shared/tinymce_form_popup.php:66
 msgid "Disabled"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:614
+#: app/controllers/PrliLinksController.php:615
 #: app/views/links/form_advanced.php:19
 #: app/views/shared/tinymce_form_popup.php:54
 msgid "Sponsored"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:621
+#: app/controllers/PrliLinksController.php:622
 #: app/views/links/form_advanced.php:58
 #: app/views/links/form_advanced.php:61
 #: app/views/shared/tinymce_form_popup.php:62
 msgid "Tracking"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:727
+#: app/controllers/PrliLinksController.php:728
 #: app/views/clicks/list.php:64
 #: app/views/groups/list.php:24
 #: pro/app/views/reports/list.php:20
 msgid "Reset"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:730
+#: app/controllers/PrliLinksController.php:731
 msgid "Tweet"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:731
-#: pro/app/models/PlpOptions.php:156
+#: app/controllers/PrliLinksController.php:732
+#: pro/app/models/PlpOptions.php:163
 msgid "Email"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:732
+#: app/controllers/PrliLinksController.php:733
 msgid "Target &raquo;"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:733
+#: app/controllers/PrliLinksController.php:734
 msgid "Pretty Link &raquo;"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:755
 #: app/controllers/PrliLinksController.php:756
+#: app/controllers/PrliLinksController.php:757
 msgid "View Split Test Report"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:780
+#: app/controllers/PrliLinksController.php:781
 msgid "Your Pretty Link was Successfully Reset"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:788
+#: app/controllers/PrliLinksController.php:789
+#: app/controllers/PrliUpdateController.php:198
 msgid "Bad request"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:792
+#: app/controllers/PrliLinksController.php:793
 msgid "Insufficient permissions"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:796
+#: app/controllers/PrliLinksController.php:797
 #: pro/app/controllers/PlpPublicLinksController.php:37
 msgid "Security check failed"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:825
+#: app/controllers/PrliLinksController.php:826
 msgid "An error occurred creating the link"
 msgstr ""
 
-#: app/controllers/PrliLinksController.php:862
+#: app/controllers/PrliLinksController.php:863
 msgid "All Groups (Legacy)"
+msgstr ""
+
+#: app/controllers/PrliLinksController.php:969
+msgid "<a href=\"#\" id=\"prli-broken-links\"><span class=\"prli-broken-link-indicator\"></span> Broken Links</a>"
 msgstr ""
 
 #: app/controllers/PrliLocalApiController.php:103
@@ -568,28 +699,90 @@ msgstr ""
 msgid "No clicks older than %1$d days were found, so nothing was deleted"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:74
-msgid "Why you creepin'?"
+#: app/controllers/PrliUpdateController.php:108
+msgid "The license information is not available, try refreshing the page."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:318
+#. translators: %1$s: the product name, %2$s: open link tag, %3$s: close link tag
+#: app/controllers/PrliUpdateController.php:140
+msgid "This License Key has expired, but you have an active license for %1$s, %2$sclick here%3$s to activate using this license instead."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:190
+msgid "Failed to get filesystem access"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:219
+msgid "The correct edition of Pretty Links has been installed successfully."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:222
+msgid "Failed to install the correct edition of Pretty Links, please download it from prettylinks.com and install it manually."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:226
+msgid "License data not found"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:400
+msgid "License key deactivated"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:544
 msgid "Check for Update"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:387
+#: app/controllers/PrliUpdateController.php:613
 msgid "You had an HTTP error connecting to Caseproof's Mothership API"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:399
+#: app/controllers/PrliUpdateController.php:625
 msgid "Your License Key was invalid"
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:425
+#: app/controllers/PrliUpdateController.php:642
+#: app/views/admin/update/active_license.php:19
+#: app/views/admin/update/edge_updates.php:4
+#: app/views/widgets/widget.php:22
+msgid "Loading..."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:643
+msgid "An error occurred during activation: %s"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:644
+msgid "Invalid response."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:645
+msgid "Ajax error."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:646
+msgid "Are you sure? Pretty Links will not be functional on %s if this License Key is deactivated."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:648
+msgid "An error occurred during deactivation: %s"
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:650
+msgid "An error occurred while installing the correct edition."
+msgstr ""
+
+#: app/controllers/PrliUpdateController.php:664
 msgid "You do not have access."
 msgstr ""
 
-#: app/controllers/PrliUpdateController.php:429
+#: app/controllers/PrliUpdateController.php:668
 msgid "Edge updates couldn't be updated."
+msgstr ""
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/controllers/PrliUpdateController.php:769
+#: app/lib/PrliAddonUpdates.php:216
+msgid "To restore automatic updates, %1$sinstall the correct edition%2$s of Pretty Links."
 msgstr ""
 
 #: app/controllers/PrliXmlRpcController.php:36
@@ -794,6 +987,61 @@ msgstr ""
 msgid "Target URL:"
 msgstr ""
 
+#: app/lib/PrliAddonUpdates.php:206
+msgid "You can access in-depth information about Pretty Links at %1$sthe Pretty Links User Manual%2$s."
+msgstr ""
+
+#. Translators: Readable time to display
+#: app/lib/PrliNotifications.php:315
+msgid "%1$s ago"
+msgstr ""
+
+#: app/lib/PrliNotifications.php:449
+msgid "%s unread message"
+msgid_plural "%s unread messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/lib/PrliNotifications.php:497
+#: app/lib/PrliNotifications.php:562
+msgid "Dismiss"
+msgstr ""
+
+#: app/lib/PrliNotifications.php:504
+#: app/lib/PrliNotifications.php:569
+msgid "%s second ago"
+msgid_plural "%s seconds ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: app/lib/PrliNotifications.php:540
+msgid "You're all caught up!"
+msgstr ""
+
+#: app/lib/PrliNotifications.php:615
+msgid "Inbox"
+msgstr ""
+
+#: app/lib/PrliNotifications.php:618
+msgid "View Dismissed"
+msgstr ""
+
+#: app/lib/PrliNotifications.php:619
+msgid "View Active"
+msgstr ""
+
+#: app/lib/PrliNotifications.php:620
+msgid "Close"
+msgstr ""
+
+#: app/lib/PrliNotifications.php:633
+msgid "Notifications"
+msgstr ""
+
+#: app/lib/PrliNotifications.php:636
+msgid "Dismiss All"
+msgstr ""
+
 #: app/models/PrliClick.php:237
 msgid "all links"
 msgstr ""
@@ -865,6 +1113,68 @@ msgstr ""
 #. translators: %1$s: open link tag, %2$s: close link tag, %3$s: br tag
 #: app/models/PrliUtils.php:1082
 msgid "Get started by %1$sadding a URL%2$s that you want to turn into a pretty link.%3$sCome back to see how many times it was clicked."
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:5
+#: app/views/admin/addons/addon-page-pro.php:5
+msgid "Pretty Links Add-ons"
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:5
+#: app/views/admin/addons/addon-page-pro.php:5
+msgid "Refresh Add-ons"
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:5
+#: app/views/admin/addons/addon-page-pro.php:5
+msgid "Search add-ons"
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:10
+msgid "Improve your links with our premium add-ons. Missing an add-on that you think you should be able to see? Click the <a href=\"#\">Refresh Add-ons</a> button above."
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:15
+#: app/views/admin/addons/addon-page-pro.php:18
+msgid "Available Add-ons"
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:21
+msgid "Pretty Links Product Displays"
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:22
+msgid "Product Displays"
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:23
+msgid "Add beautifully styled product displays to your site."
+msgstr ""
+
+#: app/views/admin/addons/addon-page-lite.php:27
+msgid "Status: "
+msgstr ""
+
+#. translators: %1$s: open link tag, %2$s: close link tag
+#: app/views/admin/addons/addon-page-pro.php:11
+msgid "Improve your links with our premium add-ons. Missing an add-on that you think you should be able to see? Click the %1$sRefresh Add-ons%2$s button above."
+msgstr ""
+
+#: app/views/admin/addons/addon-page-pro.php:40
+msgid "Not Installed"
+msgstr ""
+
+#. translators: %s: add-on status label
+#: app/views/admin/addons/addon-page-pro.php:66
+msgid "Status: %s"
+msgstr ""
+
+#: app/views/admin/addons/addon-page-pro.php:94
+msgid "Install Add-on"
+msgstr ""
+
+#: app/views/admin/addons/addon-page-pro.php:115
+msgid "There were no Add-ons found for your license or lack thereof..."
 msgstr ""
 
 #: app/views/admin/errors.php:7
@@ -1077,7 +1387,7 @@ msgid "Split-test your Pretty Links"
 msgstr ""
 
 #: app/views/admin/popups/upgrade.php:14
-#: app/views/admin/update/license.php:60
+#: app/views/admin/update/inactive_license.php:49
 msgid "And much, much more!"
 msgstr ""
 
@@ -1086,7 +1396,7 @@ msgid "Plus, upgrading is fast, easy and won't disrupt any of your existing link
 msgstr ""
 
 #: app/views/admin/popups/upgrade.php:18
-#: app/views/admin/update/license.php:66
+#: app/views/admin/update/inactive_license.php:55
 msgid "We think you'll love it!"
 msgstr ""
 
@@ -1127,178 +1437,100 @@ msgstr ""
 msgid "After you paste your license key on the %1$s\"Pretty Links\" -> \"Activate Pro\" admin page,%2$s you'll start getting automatic updates."
 msgstr ""
 
-#: app/views/admin/update/addons.php:3
-msgid "Pretty Link Add-ons"
+#. translators: %1$s: the license edition, %2$s: the installed edition, %3$s: open link tag, %4$s: close link tag
+#: app/views/admin/update/active_license.php:12
+msgid "This License Key is for %1$s, but %2$s is installed. %3$sClick here%4$s to install the correct edition for the license (%1$s)."
 msgstr ""
 
-#: app/views/admin/update/addons.php:8
-msgid "There were no Add-ons found for your license or lack thereof..."
+#: app/views/admin/update/active_license.php:24
+msgid "Active License Key Information:"
 msgstr ""
 
-#: app/views/admin/update/addons.php:14
-msgid "Add-on"
+#: app/views/admin/update/active_license.php:27
+msgid "License Key:"
 msgstr ""
 
-#: app/views/admin/update/addons.php:15
-msgid "Description"
+#: app/views/admin/update/active_license.php:31
+msgid "Status:"
 msgstr ""
 
-#: app/views/admin/update/addons.php:16
-#: app/views/admin/update/addons.php:54
-msgid "Install"
+#: app/views/admin/update/active_license.php:32
+msgid "Active on %s"
 msgstr ""
 
-#: app/views/admin/update/addons.php:42
-msgid "(Update Available)"
+#: app/views/admin/update/active_license.php:35
+msgid "Product:"
 msgstr ""
 
-#: app/views/admin/update/addons.php:50
-msgid "Installed & Active"
+#: app/views/admin/update/active_license.php:39
+msgid "Activations:"
 msgstr ""
 
-#: app/views/admin/update/addons.php:52
-msgid "Installed & Inactive"
+#. translators: %1$s: open b tag, %2$s: close b tag, %3$d: current activation count, %4$s: max activations
+#: app/views/admin/update/active_license.php:44
+msgid "%1$s%3$d of %4$s%2$s sites have been activated with this license key"
 msgstr ""
 
-#: app/views/admin/update/addon_popup.php:4
-msgid "ACTION REQUIRED"
+#: app/views/admin/update/active_license.php:55
+msgid "Deactivate License Key on %s"
 msgstr ""
 
-#: app/views/admin/update/addon_popup.php:5
-msgid "The %s features in your Pretty Link options have been moved from Pretty Link into a separate plugin."
+#: app/views/admin/update/active_license.php:59
+msgid "Upgrade plugin to Pro"
 msgstr ""
 
-#: app/views/admin/update/addon_popup.php:6
-msgid "Why you ask? Well, it's to streamline and increase the performance of Pretty Link for you."
-msgstr ""
-
-#: app/views/admin/update/addon_popup.php:9
-msgid "And good for you, it looks like you've already got the %1$s Add-on installed. Just click the \"Activate %2$s Add-on\" button below and you'll get all these features back now."
-msgstr ""
-
-#: app/views/admin/update/addon_popup.php:11
-msgid "Luckily it's easy to get these features back now. Just click the \"Install %s Add-on\" button below."
-msgstr ""
-
-#. translators: %1$s: open link tag, %2$s: close link tag
-#: app/views/admin/update/addon_popup.php:16
-msgid "If you have problems with the auto-install please refer to %1$sthe user manual%2$s for manual install instructions."
-msgstr ""
-
-#: app/views/admin/update/addon_popup.php:27
-msgid "Activate %s Add-on"
-msgstr ""
-
-#: app/views/admin/update/addon_popup.php:29
-msgid "Install %s Add-on"
-msgstr ""
-
-#: app/views/admin/update/addon_popup.php:31
-msgid "Don't Show This Message Again"
+#: app/views/admin/update/active_license.php:64
+msgid "You're currently running version %s of Pretty Links Pro"
 msgstr ""
 
 #: app/views/admin/update/edge_updates.php:4
 msgid "Include Pretty Links Pro edge (development) releases in automatic updates (not recommended for production websites)"
 msgstr ""
 
-#: app/views/admin/update/edge_updates.php:4
-#: app/views/widgets/widget.php:22
-msgid "Loading..."
-msgstr ""
-
-#: app/views/admin/update/license.php:7
-msgid "Pretty Links Pro License"
-msgstr ""
-
 #. translators: %1$s: link to pro site, %2$s: link to pro site login page
-#: app/views/admin/update/license.php:14
+#: app/views/admin/update/inactive_license.php:6
 msgid "You must have a License Key to enable automatic updates for Pretty Links Pro. If you don't have a License please go to %1$s to get one. If you do have a license you can login at %2$s to manage your licenses and site activations."
 msgstr ""
 
-#: app/views/admin/update/license.php:25
+#: app/views/admin/update/inactive_license.php:15
 msgid "Enter Your Pretty Links Pro License Key:"
 msgstr ""
 
-#: app/views/admin/update/license.php:32
+#: app/views/admin/update/inactive_license.php:22
 msgid "Activate License Key on %s"
 msgstr ""
 
 #. translators: %1$s: open link tag, %2$s: close link tag
-#: app/views/admin/update/license.php:45
+#: app/views/admin/update/inactive_license.php:34
 msgid "It looks like you haven't %1$supgraded to Pretty Links Pro%2$s yet. Here are just a few things you could be doing with pro:"
 msgstr ""
 
-#: app/views/admin/update/license.php:55
+#: app/views/admin/update/inactive_license.php:44
 msgid "Auto-replace keywords throughout your site with Pretty Links"
 msgstr ""
 
-#: app/views/admin/update/license.php:56
+#: app/views/admin/update/inactive_license.php:45
 msgid "Protect your affiliate links by using Cloaked Redirects"
 msgstr ""
 
-#: app/views/admin/update/license.php:57
+#: app/views/admin/update/inactive_license.php:46
 msgid "Redirect based on a visitor's location"
 msgstr ""
 
-#: app/views/admin/update/license.php:58
+#: app/views/admin/update/inactive_license.php:47
 msgid "Auto-prettylink your Pages &amp; Posts"
 msgstr ""
 
-#: app/views/admin/update/license.php:59
+#: app/views/admin/update/inactive_license.php:48
 msgid "Find out what works and what doesn't by split testing your links"
 msgstr ""
 
-#: app/views/admin/update/license.php:64
+#: app/views/admin/update/inactive_license.php:53
 msgid "Plus, upgrading is fast, easy and won't disrupt any of your existing links or data. And there's even a 14 day money back guarantee."
 msgstr ""
 
-#: app/views/admin/update/license.php:68
+#: app/views/admin/update/inactive_license.php:57
 msgid "Upgrade to Pro today!"
-msgstr ""
-
-#: app/views/admin/update/license.php:72
-msgid "Active License Key Information:"
-msgstr ""
-
-#: app/views/admin/update/license.php:75
-msgid "License Key:"
-msgstr ""
-
-#: app/views/admin/update/license.php:79
-msgid "Status:"
-msgstr ""
-
-#: app/views/admin/update/license.php:80
-msgid "Active on %s"
-msgstr ""
-
-#: app/views/admin/update/license.php:83
-msgid "Product:"
-msgstr ""
-
-#: app/views/admin/update/license.php:87
-msgid "Activations:"
-msgstr ""
-
-#. translators: %1$s: open b tag, %2$s: close b tag, %3$d: current activation count, %4$s: max activations
-#: app/views/admin/update/license.php:92
-msgid "%1$s%3$d of %4$s%2$s sites have been activated with this license key"
-msgstr ""
-
-#: app/views/admin/update/license.php:102
-msgid "Are you sure? Pretty Links Pro will not be functional on %s if this License Key is deactivated."
-msgstr ""
-
-#: app/views/admin/update/license.php:102
-msgid "Deactivate License Key on %s"
-msgstr ""
-
-#: app/views/admin/update/license.php:105
-msgid "Upgrade plugin to Pro"
-msgstr ""
-
-#: app/views/admin/update/license.php:110
-msgid "You're currently running version %s of Pretty Links Pro"
 msgstr ""
 
 #: app/views/admin/update/ui.php:3
@@ -1309,8 +1541,30 @@ msgstr ""
 msgid "License"
 msgstr ""
 
-#: app/views/admin/update/ui.php:17
-msgid "Add-Ons"
+#: app/views/admin/update/ui.php:22
+msgid "Pretty Links Pro License"
+msgstr ""
+
+#: app/views/admin/upgrade/groups.php:8
+#: app/views/admin/upgrade/groups.php:30
+msgid "Title"
+msgstr ""
+
+#: app/views/admin/upgrade/groups.php:17
+#: app/views/admin/upgrade/groups.php:39
+#: app/views/admin/upgrade/reports.php:18
+#: app/views/admin/upgrade/reports.php:37
+#: app/views/groups/list.php:46
+#: app/views/groups/list.php:80
+#: app/views/groups/list.php:94
+#: app/views/options/form.php:51
+#: pro/app/views/reports/list.php:42
+#: pro/app/views/reports/list.php:88
+msgid "Links"
+msgstr ""
+
+#: app/views/admin/upgrade/groups.php:23
+msgid "No Display Groups found"
 msgstr ""
 
 #: app/views/admin/upgrade/reports.php:8
@@ -1332,17 +1586,6 @@ msgstr ""
 #: pro/app/views/reports/list.php:37
 #: pro/app/views/reports/list.php:87
 msgid "Goal Link"
-msgstr ""
-
-#: app/views/admin/upgrade/reports.php:18
-#: app/views/admin/upgrade/reports.php:37
-#: app/views/groups/list.php:46
-#: app/views/groups/list.php:80
-#: app/views/groups/list.php:94
-#: app/views/options/form.php:51
-#: pro/app/views/reports/list.php:42
-#: pro/app/views/reports/list.php:88
-msgid "Links"
 msgstr ""
 
 #: app/views/admin/upgrade/reports.php:23
@@ -1603,12 +1846,19 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: app/views/links/form.php:28
+#: app/views/links/form.php:30
+#: app/views/links/form_product_display.php:33
 msgid "Basic"
 msgstr ""
 
-#: app/views/links/form.php:29
+#: app/views/links/form.php:31
 msgid "Advanced"
+msgstr ""
+
+#: app/views/links/form.php:34
+#: app/views/links/form_product_display.php:17
+#: app/views/options/form.php:59
+msgid "Product Display"
 msgstr ""
 
 #: app/views/links/form_advanced.php:9
@@ -1672,7 +1922,7 @@ msgid "Redirection*"
 msgstr ""
 
 #: app/views/links/form_basic.php:9
-#: app/views/options/form.php:77
+#: app/views/options/form.php:80
 msgid "Redirection Type"
 msgstr ""
 
@@ -1681,7 +1931,7 @@ msgid "This is the method of redirection for your link."
 msgstr ""
 
 #: app/views/links/form_basic.php:24
-#: app/views/options/form.php:87
+#: app/views/options/form.php:90
 msgid "Get cloaked redirects, Javascript redirects and more when you %1$sUpgrade to PRO%2$s"
 msgstr ""
 
@@ -1785,7 +2035,7 @@ msgid "These powerful options are available to give you dynamic control over red
 msgstr ""
 
 #: app/views/links/form_pro.php:96
-#: app/views/options/form.php:1015
+#: app/views/options/form.php:1035
 #: app/views/shared/tinymce_form_popup.php:83
 #: app/views/shared/tinymce_form_popup.php:87
 #: pro/app/views/links/form.php:198
@@ -1816,6 +2066,94 @@ msgstr ""
 #: app/views/links/form_pro.php:100
 #: pro/app/views/links/form.php:202
 msgid "Time"
+msgstr ""
+
+#: app/views/links/form_product_display.php:18
+msgid "Copy Shortcode"
+msgstr ""
+
+#: app/views/links/form_product_display.php:24
+#: app/views/links/form_product_display.php:27
+msgid "Theme"
+msgstr ""
+
+#: app/views/links/form_product_display.php:28
+msgid "Theme to use for the display."
+msgstr ""
+
+#: app/views/links/form_product_display.php:34
+msgid "Boxed"
+msgstr ""
+
+#: app/views/links/form_product_display.php:35
+msgid "Sharp"
+msgstr ""
+
+#: app/views/links/form_product_display.php:41
+#: app/views/links/form_product_display.php:44
+msgid "Product Image"
+msgstr ""
+
+#: app/views/links/form_product_display.php:45
+msgid "Upload an image associated with this product."
+msgstr ""
+
+#: app/views/links/form_product_display.php:50
+msgid "Update Image"
+msgstr ""
+
+#: app/views/links/form_product_display.php:56
+#: app/views/links/form_product_display.php:59
+msgid "Description"
+msgstr ""
+
+#: app/views/links/form_product_display.php:60
+msgid "Enter a short description for this product."
+msgstr ""
+
+#: app/views/links/form_product_display.php:77
+#: app/views/links/form_product_display.php:80
+msgid "Price"
+msgstr ""
+
+#: app/views/links/form_product_display.php:81
+msgid "Enter the price for this product."
+msgstr ""
+
+#: app/views/links/form_product_display.php:90
+#: app/views/links/form_product_display.php:93
+msgid "Badge Text"
+msgstr ""
+
+#: app/views/links/form_product_display.php:94
+msgid "Text shown as a badge at the top of the display."
+msgstr ""
+
+#: app/views/links/form_product_display.php:103
+#: app/views/links/form_product_display.php:106
+msgid "Primary Button Text"
+msgstr ""
+
+#: app/views/links/form_product_display.php:107
+msgid "Used to change the button text displayed for the target URL set up for the Pretty Link."
+msgstr ""
+
+#: app/views/links/form_product_display.php:116
+#: app/views/links/form_product_display.php:119
+msgid "Review URL"
+msgstr ""
+
+#: app/views/links/form_product_display.php:120
+msgid "URL for the product review."
+msgstr ""
+
+#: app/views/links/form_product_display.php:129
+#: app/views/links/form_product_display.php:132
+msgid "Review Button Text"
+msgstr ""
+
+#: app/views/links/form_product_display.php:133
+msgid "Used to change the button text displayed for the review URL."
 msgstr ""
 
 #: app/views/options/form.php:4
@@ -1849,8 +2187,8 @@ msgstr ""
 
 #: app/views/options/form.php:55
 #: app/views/shared/tinymce_form_popup.php:37
-#: pro/app/controllers/PlpLinksController.php:623
-#: pro/app/controllers/PlpLinksController.php:669
+#: pro/app/controllers/PlpLinksController.php:659
+#: pro/app/controllers/PlpLinksController.php:705
 msgid "Pretty Bar"
 msgstr ""
 
@@ -1862,778 +2200,840 @@ msgstr ""
 msgid "Public"
 msgstr ""
 
-#: app/views/options/form.php:64
+#: app/views/options/form.php:67
 msgid "General Options"
 msgstr ""
 
-#: app/views/options/form.php:70
+#: app/views/options/form.php:73
 msgid "Default Link Options"
 msgstr ""
 
-#: app/views/options/form.php:75
+#: app/views/options/form.php:78
 msgid "Redirection"
 msgstr ""
 
-#: app/views/options/form.php:78
+#: app/views/options/form.php:81
 msgid "Select the type of redirection you want your newly created links to have."
 msgstr ""
 
-#: app/views/options/form.php:95
-#: app/views/options/form.php:97
+#: app/views/options/form.php:98
+#: app/views/options/form.php:100
 msgid "Enable Tracking"
 msgstr ""
 
-#: app/views/options/form.php:98
+#: app/views/options/form.php:101
 msgid "Default all new links to be tracked."
 msgstr ""
 
-#: app/views/options/form.php:107
+#: app/views/options/form.php:110
 msgid "Enable No Follow"
 msgstr ""
 
-#: app/views/options/form.php:109
+#: app/views/options/form.php:112
 msgid "Add No Follow"
 msgstr ""
 
-#: app/views/options/form.php:110
-msgid "Add the 'nofollow' attribute by default to new links. This will add nofollow and noindex in the HTTP Response headers when enabled."
+#: app/views/options/form.php:113
+msgid "Defaults 'No Follow' to be enabled on new links. This will add the nofollow and noindex in the HTTP Reponse headers when enabled on the link."
 msgstr ""
 
-#: app/views/options/form.php:119
+#: app/views/options/form.php:122
 msgid "Enable Sponsored"
 msgstr ""
 
-#: app/views/options/form.php:121
-#: app/views/options/form.php:415
+#: app/views/options/form.php:124
+#: app/views/options/form.php:435
 #: pro/app/views/options/form.php:127
 msgid "Add Sponsored"
 msgstr ""
 
-#: app/views/options/form.php:122
+#: app/views/options/form.php:125
 msgid "Add the 'sponsored' attribute by default to new links. This will add sponsored in the HTTP Response headers when enabled."
 msgstr ""
 
-#: app/views/options/form.php:131
+#: app/views/options/form.php:134
 msgid "Enable Permalink Fix"
 msgstr ""
 
-#: app/views/options/form.php:133
+#: app/views/options/form.php:136
 msgid "Use fix for index.php Permalink Structure"
 msgstr ""
 
-#: app/views/options/form.php:134
+#: app/views/options/form.php:137
 msgid "This option should ONLY be checked if you have elements in your permalink structure that must be present in any link on your site. For example, some WordPress installs don't have the benefit of full rewrite capabilities and in this case you'd need an index.php included in each link (http://example.com/index.php/mycoolslug instead of http://example.com/mycoolslug). If this is the case for you then check this option but the vast majority of users will want to keep this unchecked."
 msgstr ""
 
-#: app/views/options/form.php:147
-#: app/views/options/form.php:149
+#: app/views/options/form.php:150
+#: app/views/options/form.php:152
 #: pro/app/views/links/link-options.php:3
 #: pro/app/views/links/link-options.php:5
 msgid "Base Slug Prefix"
 msgstr ""
 
 #. translators: %1$s: open b tag, %2$s close b tag
-#: app/views/options/form.php:152
+#: app/views/options/form.php:155
 #: pro/app/views/links/link-options.php:8
 msgid "Use this to prefix all newly generated pretty links with a directory of your choice. For example set to %1$sout%2$s to make your pretty links look like http://site.com/%1$sout%2$s/xyz. Changing this option will NOT affect existing pretty links. If you do not wish to use a directory prefix, leave this text field blank. Whatever you type here will be sanitized and modified to ensure it is URL-safe. So %1$sHello World%2$s might get changed to something like %1$shello-world%2$s instead. Lowercase letters, numbers, dashes, and underscores are allowed."
 msgstr ""
 
-#: app/views/options/form.php:166
-#: app/views/options/form.php:168
+#: app/views/options/form.php:169
+#: app/views/options/form.php:171
 #: pro/app/views/links/link-options.php:21
 #: pro/app/views/links/link-options.php:23
 msgid "Slug Character Count"
 msgstr ""
 
-#: app/views/options/form.php:169
+#: app/views/options/form.php:172
 #: pro/app/views/links/link-options.php:24
 msgid "The number of characters to use when auto-generating a random slug for pretty links. The default is 4. You cannot use less than 2."
 msgstr ""
 
-#: app/views/options/form.php:180
-#: app/views/options/form.php:181
+#: app/views/options/form.php:183
+#: app/views/options/form.php:184
 #: pro/app/views/links/link-options.php:34
 #: pro/app/views/links/link-options.php:35
 msgid "Enable Google Analytics"
 msgstr ""
 
-#: app/views/options/form.php:182
+#: app/views/options/form.php:185
 msgid "Requires the Google Analyticator plugin be installed. If you rely on MonsterInsights plugin for Google Analytics, leave this setting disabled as it has no affect."
 msgstr ""
 
-#: app/views/options/form.php:193
+#: app/views/options/form.php:196
 msgid "Enable %sQR Codes%s"
 msgstr ""
 
-#: app/views/options/form.php:195
+#: app/views/options/form.php:198
 #: pro/app/views/links/link-options.php:57
 msgid "Generate QR Codes"
 msgstr ""
 
-#: app/views/options/form.php:196
+#: app/views/options/form.php:199
 #: pro/app/views/links/link-options.php:58
 msgid "This will enable a link in your pretty link admin that will allow you to automatically download a QR Code for each individual Pretty Link."
 msgstr ""
 
-#: app/views/options/form.php:207
-#: app/views/options/form.php:209
+#: app/views/options/form.php:211
+#: app/views/options/form.php:214
 #: pro/app/views/links/link-options.php:68
 #: pro/app/views/links/link-options.php:70
+msgid "Enable Link Health"
+msgstr ""
+
+#: app/views/options/form.php:215
+#: pro/app/views/links/link-options.php:71
+msgid "Enable this option to be notified when your links are broken."
+msgstr ""
+
+#: app/views/options/form.php:227
+#: app/views/options/form.php:229
+#: pro/app/views/links/link-options.php:123
+#: pro/app/views/links/link-options.php:125
 msgid "Global Head Scripts"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s: open b tag, %3$s close b tag
-#: app/views/options/form.php:212
-#: pro/app/views/links/link-options.php:73
+#: app/views/options/form.php:232
+#: pro/app/views/links/link-options.php:128
 msgid "Useful for adding Google Analytics tracking, Facebook retargeting pixels, or any other kind of tracking script to the HTML head.%1$s%1$sWhat you enter in this box will be applied to all supported pretty links.%1$s%1$s%2$sNOTE:%3$s This does NOT work with 301, 302 and 307 type redirects."
 msgstr ""
 
-#: app/views/options/form.php:239
+#: app/views/options/form.php:259
 msgid "Reporting Options"
 msgstr ""
 
-#: app/views/options/form.php:244
-#: app/views/options/form.php:246
+#: app/views/options/form.php:264
+#: app/views/options/form.php:266
 msgid "Tracking Style"
 msgstr ""
 
-#: app/views/options/form.php:247
+#: app/views/options/form.php:267
 msgid "Changing your tracking style can affect the accuracy of your existing statistics. Extended mode must be used for Conversion reporting."
 msgstr ""
 
-#: app/views/options/form.php:251
+#: app/views/options/form.php:271
 msgid "Normal Tracking"
 msgstr ""
 
-#: app/views/options/form.php:252
+#: app/views/options/form.php:272
 msgid "Extended Tracking (more stats / slower performance)"
 msgstr ""
 
-#: app/views/options/form.php:253
+#: app/views/options/form.php:273
 msgid "Simple Click Count Tracking (less stats / faster performance)"
 msgstr ""
 
-#: app/views/options/form.php:259
+#: app/views/options/form.php:279
 msgid "Excluded IP Addresses:"
 msgstr ""
 
-#: app/views/options/form.php:261
+#: app/views/options/form.php:281
 msgid "Excluded IP Addresses"
 msgstr ""
 
-#: app/views/options/form.php:262
+#: app/views/options/form.php:282
 msgid "Enter IP Addresses or IP Ranges you want to exclude from your Click data and Stats. Each IP Address should be separated by commas. Example: 192.168.0.1, 192.168.2.1, 192.168.3.4 or 192.168.*.*"
 msgstr ""
 
-#: app/views/options/form.php:265
+#: app/views/options/form.php:285
 msgid "FYI, your current IP address is %s."
 msgstr ""
 
-#: app/views/options/form.php:276
+#: app/views/options/form.php:296
 msgid "Auto-Trim Clicks"
 msgstr ""
 
-#: app/views/options/form.php:278
+#: app/views/options/form.php:298
 msgid "Automatically Trim Clicks"
 msgstr ""
 
-#: app/views/options/form.php:279
+#: app/views/options/form.php:299
 msgid "Will automatically delete all hits older than 90 days. We strongly recommend doing this to keep your database performance up. This will permanently delete this click data, and is not undo-able. "
 msgstr ""
 
-#: app/views/options/form.php:288
-#: app/views/options/form.php:290
+#: app/views/options/form.php:308
+#: app/views/options/form.php:310
 msgid "Filter Robots"
 msgstr ""
 
-#: app/views/options/form.php:291
+#: app/views/options/form.php:311
 msgid "Filter known Robots and unidentifiable browser clients from your click data, stats and reports. Works best if Tracking Style above is set to 'Extended Tracking'."
 msgstr ""
 
-#: app/views/options/form.php:307
-#: app/views/options/form.php:309
+#: app/views/options/form.php:327
+#: app/views/options/form.php:329
 msgid "Whitelist IP Addresses"
 msgstr ""
 
-#: app/views/options/form.php:310
+#: app/views/options/form.php:330
 msgid "Enter IP Addresses or IP Ranges you want to always include in your Click data and Stats even if they are flagged as robots. Each IP Address should be separated by commas. Example: 192.168.0.1, 192.168.2.1, 192.168.3.4 or 192.168.*.*"
 msgstr ""
 
-#: app/views/options/form.php:324
+#: app/views/options/form.php:344
 #: pro/app/views/options/form.php:4
 msgid "Keyword &amp; URL Auto Replacements Options"
 msgstr ""
 
-#: app/views/options/form.php:332
+#: app/views/options/form.php:352
 #: pro/app/views/options/form.php:13
 msgid "Enable Replacements"
 msgstr ""
 
-#: app/views/options/form.php:334
+#: app/views/options/form.php:354
 #: pro/app/views/options/form.php:15
 msgid "Enable Keyword and URL Auto Replacement"
 msgstr ""
 
-#: app/views/options/form.php:335
+#: app/views/options/form.php:355
 #: pro/app/views/options/form.php:16
 msgid "If checked, this will enable you to automatically replace keywords and/or URLs on your blog with pretty links. You will specify the specific keywords and urls from your Pretty Link edit page."
 msgstr ""
 
-#: app/views/options/form.php:354
+#: app/views/options/form.php:374
 #: pro/app/views/options/form.php:34
 msgid "Thresholds"
 msgstr ""
 
-#: app/views/options/form.php:356
+#: app/views/options/form.php:376
 #: pro/app/views/options/form.php:36
 msgid "Set Keyword Replacement Thresholds"
 msgstr ""
 
-#: app/views/options/form.php:357
+#: app/views/options/form.php:377
 #: pro/app/views/options/form.php:37
 msgid "Don't want to have too many keyword replacements per page? Select to set some reasonable keyword replacement thresholds."
 msgstr ""
 
-#: app/views/options/form.php:373
+#: app/views/options/form.php:393
 #: pro/app/views/options/form.php:87
 msgid "Open in New Window"
 msgstr ""
 
-#: app/views/options/form.php:375
+#: app/views/options/form.php:395
 #: pro/app/views/options/form.php:89
 msgid "Open Keyword Replacement Links in New Window"
 msgstr ""
 
 #. translators: %1$s: open strong tag, %2$s: close strong tag
-#: app/views/options/form.php:378
+#: app/views/options/form.php:398
 #: pro/app/views/options/form.php:92
 msgid "Ensure that these keyword replacement links are opened in a separate window. %1$sNote:%2$s This does not apply to url replacements--only keyword replacements."
 msgstr ""
 
-#: app/views/options/form.php:393
+#: app/views/options/form.php:413
 #: pro/app/views/options/form.php:106
 msgid "Add No Follows"
 msgstr ""
 
-#: app/views/options/form.php:395
+#: app/views/options/form.php:415
 #: pro/app/views/options/form.php:108
 msgid "Add 'nofollow' attribute to all Keyword Pretty Links"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag, %3$s: open strong tag, %4$s close strong tag
-#: app/views/options/form.php:398
+#: app/views/options/form.php:418
 #: pro/app/views/options/form.php:111
 msgid "This adds the html %1$sNOFOLLOW%2$s attribute to all keyword replacement links. %3$sNote:%4$s This does not apply to url replacements--only keyword replacements."
 msgstr ""
 
-#: app/views/options/form.php:417
+#: app/views/options/form.php:437
 #: pro/app/views/options/form.php:129
 msgid "Add 'sponsored' attribute to all Keyword Pretty Links"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag, %3$s: open strong tag, %4$s close strong tag
-#: app/views/options/form.php:420
+#: app/views/options/form.php:440
 #: pro/app/views/options/form.php:132
 msgid "This adds the html %1$sSPONSORED%2$s attribute to all keyword replacement links. %3$sNote:%4$s This does not apply to url replacements--only keyword replacements."
 msgstr ""
 
-#: app/views/options/form.php:437
+#: app/views/options/form.php:457
 #: pro/app/views/options/form.php:148
 msgid "Custom CSS"
 msgstr ""
 
-#: app/views/options/form.php:439
+#: app/views/options/form.php:459
 #: pro/app/views/options/form.php:150
 msgid "Add custom CSS to your keyword replacement links"
 msgstr ""
 
 #. translators: %1$s: open strong tag, %2$s: close strong tag
-#: app/views/options/form.php:442
+#: app/views/options/form.php:462
 #: pro/app/views/options/form.php:153
 msgid "Add some custom formatting to your keyword pretty link replacements. %1$sNote:%2$s This does not apply to url replacements--only keyword replacements."
 msgstr ""
 
-#: app/views/options/form.php:457
+#: app/views/options/form.php:477
 #: pro/app/views/options/form.php:167
 msgid "Custom Hover CSS"
 msgstr ""
 
-#: app/views/options/form.php:459
+#: app/views/options/form.php:479
 #: pro/app/views/options/form.php:169
 msgid "Add custom hover CSS to your keyword replacement links"
 msgstr ""
 
 #. translators: %1$s: open strong tag, %2$s: close strong tag
-#: app/views/options/form.php:462
+#: app/views/options/form.php:482
 #: pro/app/views/options/form.php:172
 msgid "Add some custom formatting to the hover attribute of your keyword pretty links. %1$sNote%2$s: This does not apply to url replacements--only keyword replacements."
 msgstr ""
 
-#: app/views/options/form.php:477
+#: app/views/options/form.php:497
 #: pro/app/views/options/form.php:186
 msgid "Link to Disclosures"
 msgstr ""
 
-#: app/views/options/form.php:480
+#: app/views/options/form.php:500
 #: pro/app/views/options/form.php:189
 msgid "Automatically Add a Link to Disclosures"
 msgstr ""
 
-#: app/views/options/form.php:481
+#: app/views/options/form.php:501
 #: pro/app/views/options/form.php:190
 msgid "When enabled, this will add a link to your official affiliate link disclosure page to any page, post or custom post type that have any keyword or URL replacements. You'll also be able to customize the URL and position of the disclosure link."
 msgstr ""
 
-#: app/views/options/form.php:494
+#: app/views/options/form.php:514
 #: pro/app/views/options/form.php:262
 msgid "Keyword Disclosures"
 msgstr ""
 
-#: app/views/options/form.php:497
+#: app/views/options/form.php:517
 #: pro/app/views/options/form.php:265
 msgid "Automatically Add Affiliate Link Disclosures to Keyword Replacements"
 msgstr ""
 
 #. translators: %1$s: open b tag, %2$s close b tag
-#: app/views/options/form.php:500
+#: app/views/options/form.php:520
 #: pro/app/views/options/form.php:268
 msgid "When enabled, this will add an affiliate link disclosure next to each one of your keyword replacements. %1$sNote:%2$s This does not apply to url replacements--only keyword replacements."
 msgstr ""
 
-#: app/views/options/form.php:516
+#: app/views/options/form.php:536
 #: pro/app/views/options/form.php:309
 msgid "Replace All URLs"
 msgstr ""
 
-#: app/views/options/form.php:518
+#: app/views/options/form.php:538
 #: pro/app/views/options/form.php:311
 msgid "Replace All non-Pretty Link URLs With Pretty Link URLs"
 msgstr ""
 
-#: app/views/options/form.php:519
+#: app/views/options/form.php:539
 #: pro/app/views/options/form.php:312
 msgid "This feature will take each url it finds and create or use an existing pretty link pointing to the url and replace it with the pretty link."
 msgstr ""
 
-#: app/views/options/form.php:531
+#: app/views/options/form.php:551
 #: pro/app/views/options/form.php:354
 msgid "Replace in Comments"
 msgstr ""
 
-#: app/views/options/form.php:533
+#: app/views/options/form.php:553
 #: pro/app/views/options/form.php:356
 msgid "Replace Keywords and URLs in Comments"
 msgstr ""
 
-#: app/views/options/form.php:534
+#: app/views/options/form.php:554
 #: pro/app/views/options/form.php:357
 msgid "This option will enable the keyword / URL replacement routine to run in Comments."
 msgstr ""
 
-#: app/views/options/form.php:546
+#: app/views/options/form.php:566
 #: pro/app/views/options/form.php:368
 msgid "Replace in Feeds"
 msgstr ""
 
-#: app/views/options/form.php:548
+#: app/views/options/form.php:568
 #: pro/app/views/options/form.php:370
 msgid "Replace Keywords and URLs in Feeds"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s open strong tag, %3$s: close strong tag
-#: app/views/options/form.php:551
+#: app/views/options/form.php:571
 #: pro/app/views/options/form.php:373
 msgid "This option will enable the keyword / URL replacement routine to run in RSS Feeds.%1$s%2$sNote:%3$s This option can slow the load speed of your RSS feed -- unless used in conjunction with a caching plugin like W3 Total Cache or WP Super Cache.%1$s%2$sNote #2%3$s This option will only work if you have \"Full Text\" selected in your General WordPress Reading settings.%1$s%2$sNote #3:%3$s If this option is used along with \"Replace Keywords and URLs in Comments\" then your post comment feeds will have keywords replaced in them as well."
 msgstr ""
 
-#: app/views/options/form.php:567
-#: app/views/options/form.php:569
+#: app/views/options/form.php:587
+#: app/views/options/form.php:589
 #: pro/app/views/options/form.php:388
 #: pro/app/views/options/form.php:390
 msgid "Index Replacements"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s open strong tag, %3$s: close strong tag
-#: app/views/options/form.php:572
+#: app/views/options/form.php:592
 #: pro/app/views/options/form.php:393
 msgid "This feature will index all of your keyword & URL replacements to dramatically improve performance.%1$s%1$sIf your site has a large number of replacements and/or posts then this feature may increase the load on your server temporarily and your replacements may not show up on your posts for a day or two initially (until all posts are indexed).%1$s%1$s%2$sNote:%3$s this feature requires the use of wp-cron."
 msgstr ""
 
-#: app/views/options/form.php:591
+#: app/views/options/form.php:611
 msgid "Keywork &amp; URL Options"
 msgstr ""
 
-#: app/views/options/form.php:598
-#: app/views/options/form.php:642
+#: app/views/options/form.php:618
+#: app/views/options/form.php:662
 #: pro/app/views/options/form.php:468
 msgid "Auto-Create Shortlink Options"
 msgstr ""
 
-#: app/views/options/form.php:606
+#: app/views/options/form.php:626
 msgid "Post Shortlinks"
 msgstr ""
 
-#: app/views/options/form.php:609
+#: app/views/options/form.php:629
 msgid "Create Pretty Links for Posts"
 msgstr ""
 
-#: app/views/options/form.php:610
+#: app/views/options/form.php:630
 msgid "Automatically Create a Pretty Link for each of your published Posts"
 msgstr ""
 
-#: app/views/options/form.php:623
+#: app/views/options/form.php:643
 msgid "Page Shortlinks"
 msgstr ""
 
-#: app/views/options/form.php:626
+#: app/views/options/form.php:646
 msgid "Create Pretty Links for Pages"
 msgstr ""
 
-#: app/views/options/form.php:627
+#: app/views/options/form.php:647
 msgid "Automatically Create a Pretty Link for each of your published Pages"
 msgstr ""
 
-#: app/views/options/form.php:649
-#: app/views/options/form.php:959
+#: app/views/options/form.php:669
+#: app/views/options/form.php:979
 #: pro/app/views/options/form.php:489
 msgid "Pretty Bar Options"
 msgstr ""
 
-#: app/views/options/form.php:657
+#: app/views/options/form.php:677
 #: pro/app/views/options/form.php:495
 msgid "Image URL"
 msgstr ""
 
-#: app/views/options/form.php:659
+#: app/views/options/form.php:679
 #: pro/app/views/options/form.php:497
 msgid "Pretty Bar Image URL"
 msgstr ""
 
-#: app/views/options/form.php:660
+#: app/views/options/form.php:680
 #: pro/app/views/options/form.php:498
 msgid "If set, this will replace the logo image on the Pretty Bar. The image that this URL references should be 48x48 Pixels to fit."
 msgstr ""
 
-#: app/views/options/form.php:672
+#: app/views/options/form.php:692
 #: pro/app/views/options/form.php:509
 msgid "Background Image URL"
 msgstr ""
 
-#: app/views/options/form.php:674
+#: app/views/options/form.php:694
 #: pro/app/views/options/form.php:511
 msgid "Pretty Bar Background Image URL"
 msgstr ""
 
-#: app/views/options/form.php:675
+#: app/views/options/form.php:695
 #: pro/app/views/options/form.php:512
 msgid "If set, this will replace the background image on Pretty Bar. The image that this URL references should be 65px tall - this image will be repeated horizontally across the bar."
 msgstr ""
 
-#: app/views/options/form.php:687
+#: app/views/options/form.php:707
 #: pro/app/views/options/form.php:523
 msgid "Background Color"
 msgstr ""
 
-#: app/views/options/form.php:689
+#: app/views/options/form.php:709
 #: pro/app/views/options/form.php:525
 msgid "Pretty Bar Background Color"
 msgstr ""
 
-#: app/views/options/form.php:690
+#: app/views/options/form.php:710
 #: pro/app/views/options/form.php:526
 msgid "This will alter the background color of the Pretty Bar if you haven't specified a Pretty Bar background image."
 msgstr ""
 
-#: app/views/options/form.php:702
+#: app/views/options/form.php:722
 #: pro/app/views/options/form.php:537
 msgid "Text Color"
 msgstr ""
 
-#: app/views/options/form.php:704
+#: app/views/options/form.php:724
 #: pro/app/views/options/form.php:539
 msgid "Pretty Bar Text Color"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag
-#: app/views/options/form.php:707
+#: app/views/options/form.php:727
 #: pro/app/views/options/form.php:542
 msgid "If not set, this defaults to black (RGB value %1$s#000000%2$s) but you can change it to whatever color you like."
 msgstr ""
 
-#: app/views/options/form.php:722
+#: app/views/options/form.php:742
 #: pro/app/views/options/form.php:556
 msgid "Link Color"
 msgstr ""
 
-#: app/views/options/form.php:724
+#: app/views/options/form.php:744
 #: pro/app/views/options/form.php:558
 msgid "Pretty Bar Link Color"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag
-#: app/views/options/form.php:727
+#: app/views/options/form.php:747
 #: pro/app/views/options/form.php:561
 msgid "If not set, this defaults to blue (RGB value %1$s#0000ee%2$s) but you can change it to whatever color you like."
 msgstr ""
 
-#: app/views/options/form.php:742
+#: app/views/options/form.php:762
 #: pro/app/views/options/form.php:575
 msgid "Link Hover Color"
 msgstr ""
 
-#: app/views/options/form.php:744
+#: app/views/options/form.php:764
 #: pro/app/views/options/form.php:577
 msgid "Pretty Bar Link Hover Color"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag
-#: app/views/options/form.php:747
+#: app/views/options/form.php:767
 #: pro/app/views/options/form.php:580
 msgid "If not set, this defaults to RGB value %1$s#ababab%2$s but you can change it to whatever color you like."
 msgstr ""
 
-#: app/views/options/form.php:762
+#: app/views/options/form.php:782
 #: pro/app/views/options/form.php:594
 msgid "Visited Link Color"
 msgstr ""
 
-#: app/views/options/form.php:764
+#: app/views/options/form.php:784
 #: pro/app/views/options/form.php:596
 msgid "Pretty Bar Visited Link Color"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag
-#: app/views/options/form.php:767
+#: app/views/options/form.php:787
 #: pro/app/views/options/form.php:599
 msgid "If not set, this defaults to RGB value %1$s#551a8b%2$s but you can change it to whatever color you like."
 msgstr ""
 
-#: app/views/options/form.php:782
+#: app/views/options/form.php:802
 #: pro/app/views/options/form.php:613
 msgid "Title Char Limit"
 msgstr ""
 
-#: app/views/options/form.php:784
+#: app/views/options/form.php:804
 #: pro/app/views/options/form.php:615
 msgid "Pretty Bar Title Char Limit"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag
-#: app/views/options/form.php:787
+#: app/views/options/form.php:807
 #: pro/app/views/options/form.php:618
 msgid "If your Website has a long title then you may need to adjust this value so that it will all fit on the Pretty Bar. It is recommended that you keep this value to %1$s30%2$s characters or less so the Pretty Bar's format looks good across different browsers and screen resolutions."
 msgstr ""
 
-#: app/views/options/form.php:802
+#: app/views/options/form.php:822
 #: pro/app/views/options/form.php:632
 msgid "Description Char Limit"
 msgstr ""
 
-#: app/views/options/form.php:804
+#: app/views/options/form.php:824
 #: pro/app/views/options/form.php:634
 msgid "Pretty Bar Description Char Limit"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag
-#: app/views/options/form.php:807
+#: app/views/options/form.php:827
 #: pro/app/views/options/form.php:637
 msgid "If your Website has a long Description (tagline) then you may need to adjust this value so that it will all fit on the Pretty Bar. It is recommended that you keep this value to %1$s40%2$s characters or less so the Pretty Bar's format looks good across different browsers and screen resolutions."
 msgstr ""
 
-#: app/views/options/form.php:822
+#: app/views/options/form.php:842
 #: pro/app/views/options/form.php:651
 msgid "Target URL Char Limit"
 msgstr ""
 
-#: app/views/options/form.php:824
+#: app/views/options/form.php:844
 #: pro/app/views/options/form.php:653
 msgid "Pretty Bar Target URL Char Limit"
 msgstr ""
 
 #. translators: %1$s: open code tag, %2$s: close code tag
-#: app/views/options/form.php:827
+#: app/views/options/form.php:847
 #: pro/app/views/options/form.php:656
 msgid "If you link to a lot of large Target URLs you may want to adjust this value. It is recommended that you keep this value to %1$s40%2$s or below so the Pretty Bar's format looks good across different browsers and URL sizes"
 msgstr ""
 
-#: app/views/options/form.php:842
+#: app/views/options/form.php:862
 #: pro/app/views/options/form.php:670
 msgid "Show Title"
 msgstr ""
 
-#: app/views/options/form.php:844
+#: app/views/options/form.php:864
 #: pro/app/views/options/form.php:672
 msgid "Pretty Bar Show Title"
 msgstr ""
 
-#: app/views/options/form.php:845
+#: app/views/options/form.php:865
 #: pro/app/views/options/form.php:673
 msgid "Make sure this is checked if you want the title of your blog (and link) to show up on the Pretty Bar."
 msgstr ""
 
-#: app/views/options/form.php:857
+#: app/views/options/form.php:877
 #: pro/app/views/options/form.php:684
 msgid "Show Description"
 msgstr ""
 
-#: app/views/options/form.php:859
+#: app/views/options/form.php:879
 #: pro/app/views/options/form.php:686
 msgid "Pretty Bar Show Description"
 msgstr ""
 
-#: app/views/options/form.php:860
+#: app/views/options/form.php:880
 #: pro/app/views/options/form.php:687
 msgid "Make sure this is checked if you want your site description to show up on the Pretty Bar."
 msgstr ""
 
-#: app/views/options/form.php:872
+#: app/views/options/form.php:892
 #: pro/app/views/options/form.php:698
 msgid "Show Share Links"
 msgstr ""
 
-#: app/views/options/form.php:874
+#: app/views/options/form.php:894
 #: pro/app/views/options/form.php:700
 msgid "Pretty Bar Show Share Links"
 msgstr ""
 
-#: app/views/options/form.php:875
+#: app/views/options/form.php:895
 #: pro/app/views/options/form.php:701
 msgid "Make sure this is checked if you want \"share links\" to show up on the Pretty Bar."
 msgstr ""
 
-#: app/views/options/form.php:887
+#: app/views/options/form.php:907
 #: pro/app/views/options/form.php:712
 msgid "Show Target URL"
 msgstr ""
 
-#: app/views/options/form.php:889
+#: app/views/options/form.php:909
 #: pro/app/views/options/form.php:714
 msgid "Pretty Bar Show Target URL Links"
 msgstr ""
 
-#: app/views/options/form.php:890
+#: app/views/options/form.php:910
 #: pro/app/views/options/form.php:715
 msgid "Make sure this is checked if you want a link displaying the Target URL to show up on the Pretty Bar."
 msgstr ""
 
-#: app/views/options/form.php:902
-#: app/views/options/form.php:904
+#: app/views/options/form.php:922
+#: app/views/options/form.php:924
 #: pro/app/views/options/form.php:726
 #: pro/app/views/options/form.php:728
 msgid "Hide Attribution Link"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s: open strong tag, %3$s close strong tag, %4$s open em tag, %5$s close em tag, %6$s open link tag, %7$s close link tag
-#: app/views/options/form.php:907
+#: app/views/options/form.php:927
 #: pro/app/views/options/form.php:731
 msgid "Check this to hide the pretty link attribution link on the pretty bar.%1$s%1$s%2$sWait, before you do this, you might want to leave this un-checked and set the alternate URL of this link to your %4$sPretty Links Pro%5$s %6$sAffiliate URL%7$s to earn a few bucks while you are at it.%3$s"
 msgstr ""
 
-#: app/views/options/form.php:934
+#: app/views/options/form.php:954
 #: pro/app/views/options/form.php:757
 msgid "Attribution URL"
 msgstr ""
 
-#: app/views/options/form.php:936
+#: app/views/options/form.php:956
 #: pro/app/views/options/form.php:759
 msgid "Alternate Pretty Bar Attribution URL"
 msgstr ""
 
 #. translators: %1$s open em tag, %2$s close em tag, %3$s open link tag, %4$s close link tag
-#: app/views/options/form.php:939
+#: app/views/options/form.php:959
 #: pro/app/views/options/form.php:762
 msgid "If set, this will replace the Pretty Bars attribution URL. This is a very good place to put your %1$sPretty Links Pro%2$s %3$sAffiliate Link%4$s."
 msgstr ""
 
-#: app/views/options/form.php:966
-#: app/views/options/form.php:1032
+#: app/views/options/form.php:986
+#: app/views/options/form.php:1052
 #: pro/app/views/options/form.php:781
 msgid "Social Buttons Options"
 msgstr ""
 
-#: app/views/options/form.php:970
+#: app/views/options/form.php:990
 #: pro/app/views/options/form.php:784
 msgid "Buttons"
 msgstr ""
 
-#: app/views/options/form.php:972
+#: app/views/options/form.php:992
 #: pro/app/views/options/form.php:786
 msgid "Social Buttons"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s open code tag, %3$s close code tag
-#: app/views/options/form.php:975
+#: app/views/options/form.php:995
 #: pro/app/views/options/form.php:789
 msgid "Select which buttons you want to be visible on the Social Buttons Bar.%1$s%1$s%2$sNote:%3$s In order for the Social Buttons Bar to be visible on Pages and or Posts, you must first enable it in the \"Page &amp; Post Options\" section above."
 msgstr ""
 
-#: app/views/options/form.php:997
+#: app/views/options/form.php:1017
 #: pro/app/views/options/form.php:816
 msgid "Buttons Placement"
 msgstr ""
 
-#: app/views/options/form.php:999
+#: app/views/options/form.php:1019
 #: pro/app/views/options/form.php:818
 msgid "Social Buttons Placement"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s open code tag, %3$s close code tag
-#: app/views/options/form.php:1002
+#: app/views/options/form.php:1022
 #: pro/app/views/options/form.php:821
 msgid "This determines where your Social Buttons Placement should appear in relation to content on Pages and/or Posts.%1$s%1$s%2$sNote:%3$s If you want this bar to appear then you must enable it in the \"Auto-Create Links\" section above."
 msgstr ""
 
-#: app/views/options/form.php:1012
+#: app/views/options/form.php:1032
 #: pro/app/views/options/form.php:249
 #: pro/app/views/options/form.php:830
 msgid "Top"
 msgstr ""
 
-#: app/views/options/form.php:1013
+#: app/views/options/form.php:1033
 #: pro/app/views/options/form.php:248
 #: pro/app/views/options/form.php:831
 msgid "Bottom"
 msgstr ""
 
-#: app/views/options/form.php:1014
+#: app/views/options/form.php:1034
 #: pro/app/views/options/form.php:250
 #: pro/app/views/options/form.php:832
 msgid "Top and Bottom"
 msgstr ""
 
-#: app/views/options/form.php:1017
+#: app/views/options/form.php:1037
 #: pro/app/views/options/form.php:835
 msgid "Social Buttons Manual Placement"
 msgstr ""
 
 #. translators: %1$s: example shortcode, %2$s: example template tag
-#: app/views/options/form.php:1020
+#: app/views/options/form.php:1040
 #: pro/app/views/options/form.php:838
 msgid "If you select none, you can still show your Social Buttons by manually adding the %1$s shortcode to your blog posts or %2$s template tag to your WordPress Theme."
 msgstr ""
 
-#: app/views/options/form.php:1040
+#: app/views/options/form.php:1060
 #: pro/app/views/options/form.php:866
 msgid "Public Links Creation Options"
 msgstr ""
 
-#: app/views/options/form.php:1048
+#: app/views/options/form.php:1068
 #: pro/app/views/options/form.php:872
 msgid "Enable Public Links"
 msgstr ""
 
-#: app/views/options/form.php:1050
+#: app/views/options/form.php:1070
 #: pro/app/views/options/form.php:874
 msgid "Enable Public Link Creation on this Site"
 msgstr ""
 
-#: app/views/options/form.php:1052
+#: app/views/options/form.php:1072
 #: pro/app/views/options/form.php:876
 msgid "This option will give you the ability to turn your website into a link shortening service for your users. Once selected, you can enable the Pretty Links Pro Sidebar Widget or just display the link creation form with the %s shortcode in any post or page on your website."
 msgstr ""
 
-#: app/views/options/form.php:1068
+#: app/views/options/form.php:1088
 msgid "Public Link Options"
+msgstr ""
+
+#: app/views/options/form.php:1095
+#: app/views/options/form.php:1175
+msgid "Product Display Options"
+msgstr ""
+
+#: app/views/options/form.php:1103
+#: app/views/options/form.php:1105
+msgid "Button Background Color"
+msgstr ""
+
+#: app/views/options/form.php:1106
+msgid "Background color for the two buttons used in the displays."
+msgstr ""
+
+#: app/views/options/form.php:1117
+#: app/views/options/form.php:1119
+msgid "Button Text Color"
+msgstr ""
+
+#: app/views/options/form.php:1120
+msgid "Text color for the two buttons used in the displays."
+msgstr ""
+
+#: app/views/options/form.php:1131
+#: app/views/options/form.php:1133
+msgid "Button Hover Background Color"
+msgstr ""
+
+#: app/views/options/form.php:1134
+msgid "Background color for the two buttons used in the displays when hovered over."
+msgstr ""
+
+#: app/views/options/form.php:1145
+#: app/views/options/form.php:1147
+msgid "Button Hover Text Color"
+msgstr ""
+
+#: app/views/options/form.php:1148
+msgid "Text color for the two buttons used in the displays when hovered over."
+msgstr ""
+
+#: app/views/options/form.php:1159
+#: app/views/options/form.php:1161
+msgid "Affiliate Disclosure"
+msgstr ""
+
+#: app/views/options/form.php:1162
+msgid "Disclosure to show for the display."
 msgstr ""
 
 #: app/views/shared/link-table-nav.php:16
@@ -2680,7 +3080,7 @@ msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:10
 #: js/editor.js:12
-#: js/editor/components/link-editor/index.js:432
+#: js/editor/components/link-editor/index.js:453
 msgid "Create New Pretty Link"
 msgstr ""
 
@@ -2717,25 +3117,25 @@ msgid "Default"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:38
-#: pro/app/controllers/PlpLinksController.php:624
+#: pro/app/controllers/PlpLinksController.php:660
 msgid "Cloaked"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:39
-#: pro/app/controllers/PlpLinksController.php:625
-#: pro/app/controllers/PlpLinksController.php:671
+#: pro/app/controllers/PlpLinksController.php:661
+#: pro/app/controllers/PlpLinksController.php:707
 msgid "Pixel"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:40
-#: pro/app/controllers/PlpLinksController.php:626
-#: pro/app/controllers/PlpLinksController.php:672
+#: pro/app/controllers/PlpLinksController.php:662
+#: pro/app/controllers/PlpLinksController.php:708
 msgid "Meta Refresh"
 msgstr ""
 
 #: app/views/shared/tinymce_form_popup.php:41
-#: pro/app/controllers/PlpLinksController.php:627
-#: pro/app/controllers/PlpLinksController.php:673
+#: pro/app/controllers/PlpLinksController.php:663
+#: pro/app/controllers/PlpLinksController.php:709
 msgid "Javascript"
 msgstr ""
 
@@ -2883,11 +3283,15 @@ msgstr ""
 msgid "Seriously, only click this link if you want to delete all the Click data in your database."
 msgstr ""
 
-#: pro/app/controllers/PlpAppController.php:169
+#: pro/app/controllers/PlpAppController.php:73
+msgid "This link has been flagged as broken. Edit the link and update the Target URL to fix it."
+msgstr ""
+
+#: pro/app/controllers/PlpAppController.php:180
 msgid "ERROR: Your Pretty Link was unable to be created"
 msgstr ""
 
-#: pro/app/controllers/PlpAppController.php:173
+#: pro/app/controllers/PlpAppController.php:184
 msgid "Unauthorized"
 msgstr ""
 
@@ -2949,142 +3353,162 @@ msgstr ""
 msgid "New Link Category Name"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:195
+#: pro/app/controllers/PlpLinksController.php:209
 msgid "Your URL Replacements must be formatted as a comma separated list of properly formatted URLs (http[s]://example.com/whatever)"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:206
+#: pro/app/controllers/PlpLinksController.php:220
 msgid "Date must be valid and formatted YYYY-MM-DD."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:218
+#: pro/app/controllers/PlpLinksController.php:232
 msgid "Expire Clicks must be a number greater than zero."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:225
+#: pro/app/controllers/PlpLinksController.php:239
 msgid "Expired URL must be a valid URL."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:237
+#: pro/app/controllers/PlpLinksController.php:251
 msgid "Your URL Rotations must all be properly formatted URLs."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:246
+#: pro/app/controllers/PlpLinksController.php:260
 msgid "Your Link Rotation Weights must add up to 100%."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:256
+#: pro/app/controllers/PlpLinksController.php:270
 msgid "Your Geographic Redirect URLs must all be properly formatted."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:260
+#: pro/app/controllers/PlpLinksController.php:274
 msgid "Your Geographic Redirects URLs must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:264
+#: pro/app/controllers/PlpLinksController.php:278
 msgid "Your Geographic Redirect Countries must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:275
+#: pro/app/controllers/PlpLinksController.php:289
 msgid "Your Technology Redirect URLs must all be properly formatted."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:279
+#: pro/app/controllers/PlpLinksController.php:293
 msgid "Your Technology Redirects URLs must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:290
+#: pro/app/controllers/PlpLinksController.php:304
 msgid "Your Time Period Redirect URLs must all be properly formatted."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:294
+#: pro/app/controllers/PlpLinksController.php:308
 msgid "Your Time Period Redirects URLs must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:299
+#: pro/app/controllers/PlpLinksController.php:313
 msgid "Your Time Period Redirect start time must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:302
+#: pro/app/controllers/PlpLinksController.php:316
 msgid "Your Time Period Redirect start time must be a properly formatted date."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:308
+#: pro/app/controllers/PlpLinksController.php:322
 msgid "Your Time Period Redirect end time must not be empty."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:311
+#: pro/app/controllers/PlpLinksController.php:325
 msgid "Your Time Period Redirect end time must be a properly formatted date."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:319
+#: pro/app/controllers/PlpLinksController.php:333
 msgid "Your Time Period Redirect start time must come before the end time."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:327
+#: pro/app/controllers/PlpLinksController.php:341
 msgid "Delay Redirect must be a number"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:670
+#: pro/app/controllers/PlpLinksController.php:706
 #: pro/app/widgets/PlpPublicLinksWidget.php:75
 msgid "Cloak"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:735
+#: pro/app/controllers/PlpLinksController.php:752
+msgid "The Link Health Email Addresses field must contain 1 or more valid email addresses."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:790
 msgid "View QR Code for this link: %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:735
-#: pro/app/controllers/PlpLinksController.php:739
+#: pro/app/controllers/PlpLinksController.php:790
+#: pro/app/controllers/PlpLinksController.php:794
 msgid "QR Code"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:739
+#: pro/app/controllers/PlpLinksController.php:794
 msgid "Download QR Code for this link: %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:812
+#: pro/app/controllers/PlpLinksController.php:867
 msgid "This link expired on %1$s and will now cause a 404 error when visited"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:815
+#: pro/app/controllers/PlpLinksController.php:870
 msgid "This link expired on %1$s and now redirects to %2$s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:819
+#: pro/app/controllers/PlpLinksController.php:874
 msgid "This link is set to expire after the date %s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:830
+#: pro/app/controllers/PlpLinksController.php:885
 msgid "This link expired after %d clicks and will now cause a 404 error when visited"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:833
+#: pro/app/controllers/PlpLinksController.php:888
 msgid "This link expired after %1$d clicks and now redirects to %2$s"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:837
+#: pro/app/controllers/PlpLinksController.php:892
 msgid "This link is set to expire after %d clicks"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:845
+#: pro/app/controllers/PlpLinksController.php:900
 msgid "This link has additional Target URL rotations"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:848
+#: pro/app/controllers/PlpLinksController.php:903
 msgid "This link has additional Geographic Target URLs"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:851
+#: pro/app/controllers/PlpLinksController.php:906
 msgid "This link has additional Technology Dependent Conditional Target URLs"
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:856
+#: pro/app/controllers/PlpLinksController.php:911
 msgid "A Time Period Redirect is currently active for this link. When visited it will currently redirect to %s rather than the Target URL unless the link is expired."
 msgstr ""
 
-#: pro/app/controllers/PlpLinksController.php:860
+#: pro/app/controllers/PlpLinksController.php:915
 msgid "Time Period Redirects have been setup for this link but the current time is not within any of them currently."
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:958
+msgid "<a href=\"%1$s\" class=\"%2$s\"><span class=\"prli-broken-link-indicator\"></span> Broken Links <span class=\"count\">(%3$d)</span></a>"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:1069
+msgid "[Pretty Links] Broken Links Weekly Report"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:1124
+msgid "Every 15 Minutes"
+msgstr ""
+
+#: pro/app/controllers/PlpLinksController.php:1130
+msgid "Weekly"
 msgstr ""
 
 #: pro/app/controllers/PlpLinkTagsController.php:15
@@ -3296,43 +3720,43 @@ msgstr ""
 msgid "A Pretty Link hasn't been generated for this entry yet. Click \"Update Post\" to generate."
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:100
+#: pro/app/models/PlpOptions.php:107
 msgid "Facebook"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:107
+#: pro/app/models/PlpOptions.php:114
 msgid "Twitter"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:114
+#: pro/app/models/PlpOptions.php:121
 msgid "Google+"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:121
+#: pro/app/models/PlpOptions.php:128
 msgid "Pinterest"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:128
+#: pro/app/models/PlpOptions.php:135
 msgid "LinkedIn"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:135
+#: pro/app/models/PlpOptions.php:142
 msgid "Reddit"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:142
+#: pro/app/models/PlpOptions.php:149
 msgid "StumbleUpon"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:149
+#: pro/app/models/PlpOptions.php:156
 msgid "Digg"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:242
+#: pro/app/models/PlpOptions.php:249
 msgid "Affiliate Link Disclosures"
 msgstr ""
 
-#: pro/app/models/PlpOptions.php:251
+#: pro/app/models/PlpOptions.php:258
 msgid "(aff)"
 msgstr ""
 
@@ -3367,6 +3791,22 @@ msgstr ""
 
 #: pro/app/models/PlpUtils.php:36
 msgid "Google Analyticator"
+msgstr ""
+
+#: pro/app/views/emails/broken-links.php:3
+msgid "Howdy! Here's your weekly broken links report:"
+msgstr ""
+
+#: pro/app/views/emails/broken-links.php:6
+msgid "Pretty Links has detected %s broken link(s) on your site."
+msgstr ""
+
+#: pro/app/views/emails/broken-links.php:8
+msgid "To fix them, visit the <a href=\"%s\">Broken Links</a> page and edit the link's target URL."
+msgstr ""
+
+#: pro/app/views/emails/broken-links.php:10
+msgid "No broken links have been detected at this time."
 msgstr ""
 
 #: pro/app/views/import-export/form.php:4
@@ -3647,6 +4087,24 @@ msgstr ""
 #. translators: %1s: open link tag, %2$s: close link tag
 #: pro/app/views/links/link-options.php:50
 msgid "Enable %1sQR Codes%2$s"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:86
+#: pro/app/views/links/link-options.php:88
+msgid "Enable Link Health Emails"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:89
+msgid "Enable this option to be notified of broken links through email."
+msgstr ""
+
+#: pro/app/views/links/link-options.php:105
+#: pro/app/views/links/link-options.php:107
+msgid "Link Health Email Addresses"
+msgstr ""
+
+#: pro/app/views/links/link-options.php:108
+msgid "Comma separated list of email addresses that will receive notifications for broken links. This defaults to your admin email set in \"Settings\" -> \"General\" -> \"Administration Email Address\""
 msgstr ""
 
 #: pro/app/views/links/prettybar.php:46

@@ -186,13 +186,14 @@ class PrliPostsController extends PrliBaseController {
         $pretty_link = prli_get_pretty_link_url($result['id']);
 
         $return[] = array(
+          'id'         => $result['id'],
           'pretty_url' => (empty($pretty_link) ? home_url() : $pretty_link),
           'value'      => (empty($result['name']))?$result['slug']:$alt_name,
           'slug'       => $result['slug'],
           'target'     => $result['url'],
           'title'      => $result['name'], //Not used currently, but we may want this at some point
           'nofollow'   => (int)$result['nofollow'],
-          'sponsored'   => (int)$result['sponsored']
+          'sponsored'  => (int)$result['sponsored']
         );
       }
 

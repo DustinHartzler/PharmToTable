@@ -55,6 +55,9 @@
             <li><a data-id="prettybar"><?php esc_html_e('Pretty Bar', 'pretty-link'); ?></a></li>
             <li><a data-id="social"><?php esc_html_e('Social', 'pretty-link'); ?></a></li>
             <li><a data-id="public-links"><?php esc_html_e('Public', 'pretty-link'); ?></a></li>
+            <?php if(!$plp_update->is_installed() || $plp_update->is_installed() && is_plugin_active('pretty-link-product-displays/pretty-link-product-displays.php')): ?>
+              <li><a data-id="product-display"><?php esc_html_e('Product Display', 'pretty-link'); ?></a></li>
+            <?php endif; ?>
             <?php do_action('prli_admin_options_nav'); ?>
           </ul>
         </td>
@@ -107,7 +110,7 @@
                     <label for="<?php echo esc_attr($link_nofollow); ?>"><?php esc_html_e('Enable No Follow', 'pretty-link'); ?></label>
                     <?php PrliAppHelper::info_tooltip('prli-options-add-nofollow',
                                                       esc_html__('Add No Follow', 'pretty-link'),
-                                                      esc_html__('Add the \'nofollow\' attribute by default to new links. This will add nofollow and noindex in the HTTP Response headers when enabled.', 'pretty-link'));
+                                                      esc_html__('Defaults \'No Follow\' to be enabled on new links. This will add the nofollow and noindex in the HTTP Reponse headers when enabled on the link.', 'pretty-link'));
                     ?>
                   </th>
                   <td>
@@ -199,6 +202,23 @@
                       </th>
                       <td>
                         <input type="checkbox" disabled />
+                      </td>
+                    </tr>
+
+                    <tr valign="top" class="prli-pro-only pretty-link-blur">
+                      <th scope="row">
+                        <label>
+                          <?php esc_html_e('Enable Link Health', 'pretty-link'); ?>
+                          <?php
+                          PrliAppHelper::info_tooltip("prli-options-enable-link-health",
+                            esc_html__('Enable Link Health', 'pretty-link'),
+                            esc_html__('Enable this option to be notified when your links are broken.', 'pretty-link')
+                          );
+                          ?>
+                        </label>
+                      </th>
+                      <td>
+                        <input class="prli-toggle-checkbox" type="checkbox" disabled />
                       </td>
                     </tr>
 
@@ -1071,6 +1091,93 @@
               </div>
             </div>
 
+            <div class="prli-page" id="product-display">
+              <div class="prli-page-title"><?php esc_html_e('Product Display Options', 'pretty-link'); ?></div>
+              <div class="pretty-link-blur-wrap">
+                <div class="pretty-link-blur">
+                  <table class="form-table">
+                    <tbody>
+                    <tr valign="top">
+                      <th scope="row">
+                        <label>
+                          <?php esc_html_e('Button Background Color', 'pretty-link'); ?>
+                          <?php PrliAppHelper::info_tooltip('prli-pd-button-bg-color',
+                                              esc_html__('Button Background Color', 'pretty-link'),
+                                              esc_html__('Background color for the two buttons used in the displays.', 'pretty-link'));
+                          ?>
+                        </label>
+                      </th>
+                      <td>
+                        <input type="text" class="prli-color-picker" value="#115e8c" disabled />
+                      </td>
+                    </tr>
+                    <tr valign="top">
+                      <th scope="row">
+                        <label>
+                          <?php esc_html_e('Button Text Color', 'pretty-link'); ?>
+                          <?php PrliAppHelper::info_tooltip('prli-pd-button-text-color',
+                                              esc_html__('Button Text Color', 'pretty-link'),
+                                              esc_html__('Text color for the two buttons used in the displays.', 'pretty-link'));
+                          ?>
+                        </label>
+                      </th>
+                      <td>
+                        <input type="text" class="prli-color-picker" value="#fff" disabled />
+                      </td>
+                    </tr>
+                    <tr valign="top">
+                      <th scope="row">
+                        <label>
+                          <?php esc_html_e('Button Hover Background Color', 'pretty-link'); ?>
+                          <?php PrliAppHelper::info_tooltip('prli-pd-button-hover-bg-color',
+                                              esc_html__('Button Hover Background Color', 'pretty-link'),
+                                              esc_html__('Background color for the two buttons used in the displays when hovered over.', 'pretty-link'));
+                          ?>
+                        </label>
+                      </th>
+                      <td>
+                        <input type="text" class="prli-color-picker" value="#6b98bf" disabled />
+                      </td>
+                    </tr>
+                    <tr valign="top">
+                      <th scope="row">
+                        <label>
+                          <?php esc_html_e('Button Hover Text Color', 'pretty-link'); ?>
+                          <?php PrliAppHelper::info_tooltip('prli-pd-button-hover-text-color',
+                                              esc_html__('Button Hover Text Color', 'pretty-link'),
+                                              esc_html__('Text color for the two buttons used in the displays when hovered over.', 'pretty-link'));
+                          ?>
+                        </label>
+                      </th>
+                      <td>
+                        <input type="text" class="prli-color-picker" value="#fff" disabled />
+                      </td>
+                    </tr>
+                    <tr valign="top">
+                      <th scope="row">
+                        <label>
+                          <?php esc_html_e('Affiliate Disclosure', 'pretty-link'); ?>
+                          <?php PrliAppHelper::info_tooltip('prli-pd-affiliate-disclosure',
+                                            esc_html__('Affiliate Disclosure', 'pretty-link'),
+                                            esc_html__('Disclosure to show for the display.', 'pretty-link'));
+                          ?>
+                        </label>
+                      </th>
+                      <td>
+                        <textarea rows="5" disabled></textarea>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <?php
+                  $upgrade_link = 'https://prettylinks.com/pl/pro-feature-indicator/upgrade?product-displays';
+                  $section_title = esc_html__( 'Product Display Options', 'pretty-link' );
+                  include PRLI_VIEWS_PATH . "/admin/upgrade/dialog.php";
+                ?>
+              </div>
+            </div>
+
           <?php endif; ?>
 
           <?php do_action('prli_admin_options_pages'); ?>
@@ -1092,7 +1199,7 @@
       var dialog = row.find('.pretty-link-upgrade');
       if ( dialog.data('offset') ) {
         dialog.css('top', '-' + dialog.data('offset') + 'px');
-      } else {
+      } else if(row.is(':visible')) {
         var moveUp = row.offset().top - wrap.offset().top;
         dialog.data('offset', moveUp);
         dialog.css('top', '-' + moveUp + 'px');

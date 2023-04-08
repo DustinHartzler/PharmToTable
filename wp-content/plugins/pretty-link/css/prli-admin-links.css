@@ -179,3 +179,58 @@ span#prli_bulk_edit_spinner img {
   display:none;
   padding-top:10px;
 }
+
+tr.type-pretty-link td.page-title strong {
+  display: flex;
+  align-items: center;
+}
+
+tr.type-pretty-link td.page-title span.prli-broken-link-indicator {
+  margin-right: 15px;
+}
+
+span.prli-broken-link-indicator:after {
+  cursor: pointer;
+  content: '⚠️';
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.prli_broken_links a,
+.post-type-pretty-link .subsubsub {
+  display: flex;
+  align-items: center;
+}
+
+.prli_broken_links a span {
+  margin: 0 5px;
+}
+
+div.prli-pd-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+div.prli-pd-head h2 {
+  font-size: 32px !important;
+}
+
+#prli-pd-clipboard-btn {
+  font-size: 16px !important;
+  background-color: #ff9000;
+  cursor: pointer;
+  padding: 12px 24px;
+  border-color: transparent;
+  border-radius: 4px;
+  color: #fff;
+}
+
+#prli-pd-clipboard-btn:hover {
+  background-color: #e67700;
+  border-color: transparent;
+}
+
+#product-display .form-table th {
+  width: 250px;
+}

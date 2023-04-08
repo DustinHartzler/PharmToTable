@@ -3,7 +3,7 @@
 Plugin Name: Pretty Links
 Plugin URI: https://prettylinks.com/pl/plugin-uri
 Description: Shrink, track and share any URL using your website and brand!
-Version: 3.2.4
+Version: 3.4.0
 Author: Pretty Links
 Author URI: http://prettylinks.com
 Text Domain: pretty-link
@@ -56,12 +56,6 @@ define('PRLI_BROWSER_URL','https://d14715w921jdje.cloudfront.net/browser');
 define('PRLI_OS_URL','https://d14715w921jdje.cloudfront.net/os');
 
 define('PRLI_EDITION', 'pretty-link-pro');
-
-// Let's give pretty link plenty of room to work with
-$mem = abs(intval(@ini_get('memory_limit')));
-if($mem && $mem > 1 && $mem < 128) { //$mem = 1 is probably abs(-1), -1 means "unlimited"
-  @ini_set('memory_limit', '128M');
-}
 
 /**
  * Returns current plugin version.
@@ -176,6 +170,22 @@ function prli_load_textdomain() {
   load_plugin_textdomain('pretty-link', false, $plugin_dir.'/i18n/');
 }
 
+register_activation_hook( __FILE__, 'prli_activation' );
+function prli_activation() {
+  add_option( 'prli_just_activated', true );
+}
+
+add_action( 'plugins_loaded', 'prli_run_activation' );
+function prli_run_activation() {
+  if ( empty( get_option( 'prli_just_activated' ) ) ) {
+    return;
+  }
+  $pl_options = PrliOptions::get_options();
+  $pl_options->activated_timestamp = time();
+  $pl_options->store();
+  delete_option( 'prli_just_activated' );
+}
+
 global $prli_link, $prli_link_meta, $prli_click, $prli_group, $prli_utils, $plp_update;
 
 $prli_link      = new PrliLink();
@@ -212,3 +222,4 @@ if($plp_update->is_installed()) {
   require_once(PRLI_PATH.'/pro/pretty-link-pro.php');
 }
 
+require_once(PRLI_PATH.'/app/lib/PrliNotifications.php');

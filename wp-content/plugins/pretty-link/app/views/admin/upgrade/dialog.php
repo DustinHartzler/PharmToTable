@@ -18,6 +18,8 @@
         <li>Link Tags</li>
         <li>Detailed Click Reporting</li>
         <li>Import and Export Links</li>
+        <li>Link Health</li>
+        <li>Product Displays</li>
       </ul>
     </div>
     <div class="pretty-link-upgrade-cta">

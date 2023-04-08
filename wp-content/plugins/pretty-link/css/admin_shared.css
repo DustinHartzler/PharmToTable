@@ -1,5 +1,6 @@
 #pretty-link-advanced-features.postbox .handle-actions,
-#pretty-link-settings.postbox .handle-actions {
+#pretty-link-settings.postbox .handle-actions,
+#pretty-link-group-options.postbox .handle-actions {
   display: none;
 }
 
@@ -731,3 +732,50 @@ img.prli_loader {
   padding: 10px 20px;
 }
 
+#wpbody-content {
+  padding-bottom: 200px;
+}
+
+.prli-footer-promotion {
+  text-align: center;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  color: #787c82;
+  padding: 20px 0 30px 0;
+  margin-bottom: 20px;
+}
+
+.prli-footer-promotion p {
+  font-weight: 600;
+}
+
+.prli-footer-promotion-links,
+.prli-footer-promotion-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.prli-footer-promotion-links {
+  margin: 9px 0 0;
+}
+
+.prli-footer-promotion-links span {
+  color: #c3c4c7;
+  padding: 0 7px;
+}
+
+.prli-footer-promotion-social {
+  margin: 10px 0 0 0;
+  gap: 10px;
+}
+
+.prli-footer-promotion-social li {
+  margin-bottom: 0;
+}
+
+.prli-footer-promotion-social a {
+  display: block;
+  height: 16px;
+}

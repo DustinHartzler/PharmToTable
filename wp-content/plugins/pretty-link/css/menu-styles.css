@@ -2,7 +2,7 @@
 
 .icon-pretty-link-logo:before {
   /* content: "\e843"; */
-  content: "\e844";
+  content: "\e847";
 }
 
 .menu-icon-pretty-link div.wp-menu-image img {
@@ -11,7 +11,7 @@
 
 .menu-icon-pretty-link div.wp-menu-image:before {
   /* content: "\e843"; */
-  content: "\e844";
+  content: "\e847";
   font-family: "pretty-link";
 }
 

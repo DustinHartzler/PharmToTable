@@ -66,8 +66,8 @@ jQuery(document).ready(function($) {
     var bulk_row = $('#bulk-edit');
     var post_ids = [];
 
-    bulk_row.find('#bulk-titles').children().each(function() {
-      post_ids.push($(this).attr('id').replace(/^(ttle)/i, ''));
+    bulk_row.find('#bulk-titles-list li button').each(function() {
+      post_ids.push($(this).attr('id').replace('_', ''));
     });
 
     var nofollow = bulk_row.find('select[name="prli_quick_edit_nofollow"]').val();
@@ -86,5 +86,20 @@ jQuery(document).ready(function($) {
         tracking: tracking
       }
     });
+  });
+
+  var $prli_broken_links = $('#prli-broken-links');
+
+  $prli_broken_links.on('click', function(e) {
+    e.preventDefault();
+  });
+
+  $prli_broken_links.tooltipster({
+    maxWidth: 350,
+    position: 'right',
+    interactive: true,
+    trigger: 'click',
+    contentAsHTML: true,
+    content: PrliLinkList.broken_link_text
   });
 });

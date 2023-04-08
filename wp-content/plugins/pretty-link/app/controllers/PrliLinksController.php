@@ -220,7 +220,7 @@ class PrliLinksController extends PrliBaseController {
     global $prli_link, $prli_link_meta;
 
     $values = array();
-    $values['link_id'] = $record->id;
+    $values['link_id'] = isset($record->id) ? $record->id : null;
     $values['url'] =  ((isset($_REQUEST['url']) and $record == null)?esc_url_raw(trim(stripslashes($_REQUEST['url']))):stripslashes($record->url));
     $values['slug'] = ((isset($_REQUEST['slug']) and $record == null)?sanitize_text_field(stripslashes($_REQUEST['slug'])):stripslashes($record->slug));
     $values['name'] = ((isset($_REQUEST['name']) and $record == null)?sanitize_text_field(stripslashes($_REQUEST['name'])):stripslashes($record->name));
@@ -291,6 +291,7 @@ class PrliLinksController extends PrliBaseController {
     $_POST['link_cpt_id'] = $post->ID;
 
     if($link_id) {
+      do_action('prli_before_update_link', $link_id);
       $link_id = $prli_link->update( $link_id, $_POST );
     }
     else {
@@ -462,9 +463,9 @@ class PrliLinksController extends PrliBaseController {
 
     global $plp_update;
 
-    $categories_label = esc_html__('Categories', 'pretty-link');
-    $tags_label       = esc_html__('Tags', 'pretty-link');
-    $keywords_label   = esc_html__('Keywords', 'pretty-link');
+    $categories_label  = esc_html__('Categories', 'pretty-link');
+    $tags_label        = esc_html__('Tags', 'pretty-link');
+    $keywords_label    = esc_html__('Keywords', 'pretty-link');
 
     if ($plp_update->is_installed()) {
       $category_key = 'taxonomy-pretty-link-category';
@@ -949,6 +950,8 @@ class PrliLinksController extends PrliBaseController {
 
   // Only keep the All & Trash quick links
   public function modify_quick_links($views) {
+    global $plp_update;
+
     $view_keys = array_keys($views);
     $keep_keys = array('all','trash');
 
@@ -958,7 +961,15 @@ class PrliLinksController extends PrliBaseController {
       }
     }
 
-    return $views;
+    if(!PrliUtils::is_authorized()) {
+      return $views;
+    }
+
+    if(!$plp_update->is_installed()) {
+      $views['prli_broken_links'] = __('<a href="#" id="prli-broken-links"><span class="prli-broken-link-indicator"></span> Broken Links</a>', 'pretty-link');
+    }
+
+    return apply_filters('prli_quick_links', $views);
   }
 
   // Add custom sort orderbys
@@ -1001,4 +1012,3 @@ class PrliLinksController extends PrliBaseController {
   }
 
 }
-
