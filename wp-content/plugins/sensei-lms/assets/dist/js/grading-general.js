@@ -70,8 +70,10 @@ jQuery.fn.calculateTotalGrade=function(){var e,r,a=0,n=0;jQuery(".question_box.u
    * Automatically grades questions where possible
    * @return void
    */
-e.fn.autoGrade=function(){e(".question_box").each((function(){var r,a,n=e(this),t=!1;// Only grade questions that haven't already been graded.
-if(n.hasClass("user_right")||n.hasClass("user_wrong")||n.hasClass("zero-graded"))jQuery(this).hasClass("zero-graded")&&(n.find(".grading-mark.icon_wrong input").attr("checked",!1),n.find(".grading-mark.icon_right input").attr("checked",!1),n.find("input.question-grade").val(0));else// Auto-grading
+e.fn.autoGrade=function(){e(".question_box").each((function(){var r,a,n=e(this),t=!1;
+// Only grade questions that haven't already been graded.
+if(n.hasClass("user_right")||n.hasClass("user_wrong")||n.hasClass("zero-graded"))jQuery(this).hasClass("zero-graded")&&(n.find(".grading-mark.icon_wrong input").attr("checked",!1),n.find(".grading-mark.icon_right input").attr("checked",!1),n.find("input.question-grade").val(0));else
+// Auto-grading
 if(n.addClass("ungraded"),n.hasClass("gap-fill")?(r=n.find(".user-answer .highlight").html(),a=n.find(".correct-answer .highlight").html()):(r=n.find(".user-answer").html(),a=n.find(".correct-answer").html()),r=r.trim(),a=a.trim(),n.hasClass("auto-grade")){
 // Split answers to multiple choice questions into an array since there may be
 // multiple correct answers.
@@ -81,8 +83,10 @@ n.addClass("user_right").removeClass("user_wrong").removeClass("ungraded"),n.fin
 // Wrong answer
 n.addClass("user_wrong").removeClass("user_right").removeClass("ungraded"),n.find(".grading-mark.icon_wrong input").attr("checked",!0),n.find(".grading-mark.icon_right input").attr("checked",!1),n.find("input.question-grade").val(0))}else
 // Manual grading
-n.find(".grading-mark.icon_wrong input").attr("checked",!1),n.find(".grading-mark.icon_right input").attr("checked",!1),n.removeClass("user_wrong").removeClass("user_right");// Question with a grade value of 0.
-})),e.fn.calculateTotalGrade(),e.fn.updateFeedback()},// Calculate total grade on page load to make sure everything is set up correctly
+n.find(".grading-mark.icon_wrong input").attr("checked",!1),n.find(".grading-mark.icon_right input").attr("checked",!1),n.removeClass("user_wrong").removeClass("user_right");
+// Question with a grade value of 0.
+})),e.fn.calculateTotalGrade(),e.fn.updateFeedback()},
+// Calculate total grade on page load to make sure everything is set up correctly
 jQuery.fn.autoGrade(),
 /**
    * Resets all graded questions.
@@ -103,8 +107,10 @@ var e=jQuery(this).val();return jQuery.get(ajaxurl,{action:"get_lessons_dropdown
 // Check for a response
 ""!=e&&(
 // Empty the results div's
-jQuery("#learners-to-grade").empty(),jQuery("#learners-graded").empty(),// Populate the Lessons drop down
-jQuery("#grading-lesson-options").empty().append(e),// Add Chosen to the drop down
+jQuery("#learners-to-grade").empty(),jQuery("#learners-graded").empty(),
+// Populate the Lessons drop down
+jQuery("#grading-lesson-options").empty().append(e),
+// Add Chosen to the drop down
 jQuery("#grading-lesson-options").exists()&&(
 // Show the Lessons label
 jQuery("#grading-lesson-options-label").show(),jQuery("#grading-lesson-options").trigger("change")))})),!1})),
@@ -116,7 +122,8 @@ jQuery("#grading-lesson-options-label").show(),jQuery("#grading-lesson-options")
    */
 jQuery("#grading-lesson-options").on("change","",(function(){
 // Populate the Lessons select box
-var e=jQuery(this).val(),r=jQuery("#grading-course-options").val(),a=jQuery.fn.getQueryVariable("view");// Perform the AJAX call to get the select box.
+var e=jQuery(this).val(),r=jQuery("#grading-course-options").val(),a=jQuery.fn.getQueryVariable("view");
+// Perform the AJAX call to get the select box.
 return jQuery.get(ajaxurl,{action:"get_redirect_url",course_id:r,lesson_id:e,view:a},(function(e){
 // Check for a response
 ""!=e&&(window.location=e)})),!1})),

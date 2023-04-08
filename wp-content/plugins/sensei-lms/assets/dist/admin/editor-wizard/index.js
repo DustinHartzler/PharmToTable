@@ -28,22 +28,24 @@ return i.createElement("svg",o({viewBox:"0 0 24 24",fill:"none",xmlns:"http://ww
 /* harmony export */});
 /* harmony import */var r=n(66886),s=n(69307),i=n(9818),o=n(55609),a=n(12238),l=n(4812),c=n(86277),u=n(91839);
 /* harmony import */n(16400);
-/* harmony default export */const d=function(){var e=(0,s.useState)({}),t=e[0],n=(0,i.useDispatch)(a.store),d=n.editPost,m=n.savePost,p=(0,u/* .useLogEvent */.an)(),f=(0,u/* .useWizardOpenState */.lk)(),_=(0,r/* ["default"] */.Z)(f,2),v=_[0],w=_[1],E=(0,c/* ["default"] */.Z)(),g=(0,u/* .useSetDefaultPattern */.dm)({"sensei-content-description":t.description}),y=function(){w(!0),d({meta:{_new_post:!1}}),m()},h=function(){g(),y()};return v&&(0,s.createElement)(o.Modal,{className:"sensei-editor-wizard-modal",onRequestClose:function(){h(),p("editor_wizard_close_modal")}},(0,s.createElement)(l/* ["default"] */.Z,{steps:E,wizardDataState:e,onCompletion:y,skipWizard:h}))};
+/* harmony default export */const d=function(){var e=(0,s.useState)({}),t=e[0],n=(0,i.useDispatch)(a.store),d=n.editPost,p=n.savePost,m=(0,u/* .useLogEvent */.an)(),f=(0,u/* .useWizardOpenState */.lk)(),v=(0,r/* ["default"] */.Z)(f,2),h=v[0],y=v[1],w=(0,c/* ["default"] */.Z)(),g=(0,u/* .useSetDefaultPattern */.dm)({"sensei-content-description":t.description}),_=function(){y(!0),d({meta:{_new_post:!1}}),p()},E=function(){g(),_()};return h&&(0,s.createElement)(o.Modal,{className:"sensei-editor-wizard-modal",onRequestClose:function(){E(),m("editor_wizard_close_modal")}},(0,s.createElement)(l/* ["default"] */.Z,{steps:w,wizardDataState:e,onCompletion:_,skipWizard:E}))};
 /***/},
 /***/91839:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{
 /* harmony export */wT:()=>/* binding */d
-/* harmony export */,lk:()=>/* binding */m
-/* harmony export */,dm:()=>/* binding */p
+/* harmony export */,lk:()=>/* binding */p
+/* harmony export */,dm:()=>/* binding */m
 /* harmony export */,an:()=>/* binding */f
-/* harmony export */,zH:()=>/* binding */_
+/* harmony export */,zH:()=>/* binding */v
 /* harmony export */});
-/* harmony import */var r=n(50189),s=n(66886),i=n(9818),o=n(69307),a=n(52175),l=n(12238),c=n(92694),u=n(45647),d=function e(t,n){return t.map((function(t){var r=t.attributes.className,i=void 0===r?"":r;return Object.entries(n).forEach((function(e){var n=(0,s/* ["default"] */.Z)(e,2),r=n[0],o=n[1];i.includes(r)&&(t.attributes.content=o)})),t.innerBlocks&&(t.innerBlocks=e(t.innerBlocks,n)),t}))},m=function(){var e=(0,o.useState)(!1),t=(0,s/* ["default"] */.Z)(e,2),n=t[0],r=t[1],i=(0,o.useState)(!1),a=(0,s/* ["default"] */.Z)(i,2),l=a[0],c=a[1],u=function(e){var t=(0,o.useState)(),n=(0,s/* ["default"] */.Z)(t,2),r=n[0],i=n[1];return(0,o.useEffect)((function(){if(e){// Initialize state after modals are open or not.
+/* harmony import */var r=n(50189),s=n(66886),i=n(9818),o=n(69307),a=n(52175),l=n(12238),c=n(92694),u=n(45647),d=function e(t,n){return t.map((function(t){var r=t.attributes.className,i=void 0===r?"":r;return Object.entries(n).forEach((function(e){var n=(0,s/* ["default"] */.Z)(e,2),r=n[0],o=n[1];i.includes(r)&&(t.attributes.content=o)})),t.innerBlocks&&(t.innerBlocks=e(t.innerBlocks,n)),t}))},p=function(){var e=(0,o.useState)(!1),t=(0,s/* ["default"] */.Z)(e,2),n=t[0],r=t[1],i=(0,o.useState)(!1),a=(0,s/* ["default"] */.Z)(i,2),l=a[0],c=a[1],u=function(e){var t=(0,o.useState)(),n=(0,s/* ["default"] */.Z)(t,2),r=n[0],i=n[1];return(0,o.useEffect)((function(){if(e){
+// Initialize state after modals are open or not.
 setTimeout((function(){i(document.body.classList.contains("modal-open"))}),1);var t=new window.MutationObserver((function(){i(document.body.classList.contains("modal-open"))}));return t.observe(document.body,{attributes:!0,attributeFilter:["class"]}),function(){t.disconnect()}}}),[e]),r}(!l);return(0,o.useLayoutEffect)((function(){l?r(!1):!1===u&&
 // If no modal is open, it's time to open.
-r(!0)}),[l,u]),[n,c]},p=function(e){var t=(0,i.useSelect)((function(e){return{patterns:e(a.store).__experimentalGetPatternsByBlockTypes("sensei-lms/post-content")}})).patterns,n=(0,i.useSelect)((function(e){return{template:e(a.store).getTemplate()}})).template,r=(0,i.useDispatch)(a.store).resetBlocks,s=t.find((function(e){var t,r;return e.name===(null==n||null===(t=n[0])||void 0===t||null===(r=t[1])||void 0===r?void 0:r.slug)}));// Set default pattern with replaced content.
-return function(){if(s){var t=d(s.blocks,e);r(t)}}},f=function(){var e=(0,i.useSelect)((function(e){return{postType:e(l.store).getCurrentPostType()}}),[]).postType;return function(t,n){window.sensei_log_event(t,(0,r/* ["default"] */.Z)({post_type:e},n))}},_=function(){var e=(0,i.useSelect)((function(e){return{senseiProExtension:e(u/* .EXTENSIONS_STORE */.h).getSenseiProExtension()}}),[]).senseiProExtension;
+r(!0)}),[l,u]),[n,c]},m=function(e){var t=(0,i.useSelect)((function(e){return{patterns:e(a.store).__experimentalGetPatternsByBlockTypes("sensei-lms/post-content")}})).patterns,n=(0,i.useSelect)((function(e){return{template:e(a.store).getTemplate()}})).template,r=(0,i.useDispatch)(a.store).resetBlocks,s=t.find((function(e){var t,r;return e.name===(null==n||null===(t=n[0])||void 0===t||null===(r=t[1])||void 0===r?void 0:r.slug)}));
+// Set default pattern with replaced content.
+return function(){if(s){var t=d(s.blocks,e);r(t)}}},f=function(){var e=(0,i.useSelect)((function(e){return{postType:e(l.store).getCurrentPostType()}}),[]).postType;return function(t,n){window.sensei_log_event(t,(0,r/* ["default"] */.Z)({post_type:e},n))}},v=function(){var e=(0,i.useSelect)((function(e){return{senseiProExtension:e(u/* .EXTENSIONS_STORE */.h).getSenseiProExtension()}}),[]).senseiProExtension;
 /**
    * Filters if the editor wizard upsells should show or not
    *
@@ -57,21 +59,22 @@ return function(){if(s){var t=d(s.blocks,e);r(t)}}},f=function(){var e=(0,i.useS
 /***/386:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>p
+/* harmony export */Z:()=>m
 /* harmony export */});
-/* harmony import */var r=n(25773),s=n(50189),i=n(69307),o=n(52175),a=n(9818),l=n(65736),c=n(39630),u=n(4981),__=l.__,d=function(e){var t,n=null===(t=(0,u.getBlockType)(e.name))||void 0===t?void 0:t.example,r=n&&"core/group"!==e.name?n.innerBlocks:e.innerBlocks;return n?(0,u.getBlockFromExample)(e.name,{attributes:(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},n.attributes),e.attributes),innerBlocks:r}):e},m=function(e){return"sensei-lms/lesson-actions"!==e.name};
+/* harmony import */var r=n(25773),s=n(50189),i=n(69307),o=n(52175),a=n(9818),l=n(65736),c=n(39630),u=n(4981),__=l.__,d=function(e){var t,n=null===(t=(0,u.getBlockType)(e.name))||void 0===t?void 0:t.example,r=n&&"core/group"!==e.name?n.innerBlocks:e.innerBlocks;return n?(0,u.getBlockFromExample)(e.name,{attributes:(0,s/* ["default"] */.Z)((0,s/* ["default"] */.Z)({},n.attributes),e.attributes),innerBlocks:r}):e},p=function(e){return"sensei-lms/lesson-actions"!==e.name};
 /* harmony import */
-/* harmony default export */const p=function(e){var t=e.onChoose,n=(0,a.useSelect)((function(e){return{patterns:e(o.store).__experimentalGetPatternsByBlockTypes("sensei-lms/post-content")}})).patterns;return(0,i.createElement)("div",{className:"sensei-patterns-list",role:"listbox","aria-label":__("Sensei block patterns","sensei-lms")},n.filter((function(e){var t=e.categories;return t&&t.includes("sensei-lms")})).map((function(e){var n,s=e.name,a=e.title,l=e.description,u=e.blocks,p=e.viewportWidth,f=e.template;// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-return(0,i.createElement)("div",(0,r/* ["default"] */.Z)({key:s,className:"sensei-patterns-list__item",title:l,role:"option",tabIndex:0},{onClick:n=function(){t(u,s,f)},onKeyUp:function(e){[c.ENTER,c.SPACE].includes(e.keyCode)&&n(e)}}),(0,i.createElement)("div",{className:"sensei-patterns-list__item-preview"},(0,i.createElement)(o.BlockPreview,{__experimentalPadding:10,blocks:u.filter(m).map(d),viewportWidth:null!=p?p:800})),(0,i.createElement)("div",{className:"sensei-patterns-list__item-title"},a))})))};
+/* harmony default export */const m=function(e){var t=e.onChoose,n=(0,a.useSelect)((function(e){return{patterns:e(o.store).__experimentalGetPatternsByBlockTypes("sensei-lms/post-content")}})).patterns;return(0,i.createElement)("div",{className:"sensei-patterns-list",role:"listbox","aria-label":__("Sensei block patterns","sensei-lms")},n.filter((function(e){var t=e.categories;return t&&t.includes("sensei-lms")})).map((function(e){var n,s=e.name,a=e.title,l=e.description,u=e.blocks,m=e.viewportWidth,f=e.template;
+// eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+return(0,i.createElement)("div",(0,r/* ["default"] */.Z)({key:s,className:"sensei-patterns-list__item",title:l,role:"option",tabIndex:0},{onClick:n=function(){t(u,s,f)},onKeyUp:function(e){[c.ENTER,c.SPACE].includes(e.keyCode)&&n(e)}}),(0,i.createElement)("div",{className:"sensei-patterns-list__item-preview"},(0,i.createElement)(o.BlockPreview,{__experimentalPadding:10,blocks:u.filter(p).map(d),viewportWidth:null!=m?m:800})),(0,i.createElement)("div",{className:"sensei-patterns-list__item-title"},a))})))};
 /***/},
 /***/63895:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>m
+/* harmony export */Z:()=>p
 /* harmony export */});
 /* harmony import */var r=n(50189),s=n(69307),i=n(65736),o=n(55609),a=n(12238),l=n(9818),c=n(60698),u=n(24239),__=i.__,d=function(e){var t,n,i=e.wizardData,o=e.setWizardData,d=(0,l.useDispatch)(a.store).editPost;return(0,s.createElement)("div",{className:"sensei-editor-wizard-modal__columns"},(0,s.createElement)("div",{className:"sensei-editor-wizard-modal__content"},(0,s.createElement)("h1",{className:"sensei-editor-wizard-step__title"},__("Create your course","sensei-lms")),(0,s.createElement)("p",{className:"sensei-editor-wizard-step__description"},__("Keep your Course Title short as it will get displayed in different places around your website. You can easily change both later.","sensei-lms")),(0,s.createElement)("div",{className:"sensei-editor-wizard-step__form"},(0,s.createElement)(c/* ["default"] */.Z,{className:"sensei-editor-wizard-step__form-control",label:__("Course Title","sensei-lms"),value:null!==(t=i.title)&&void 0!==t?t:"",onChange:function(e){o((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i),{},{title:e})),d({title:e})},maxLength:40}),(0,s.createElement)(c/* ["default"] */.Z,{className:"sensei-editor-wizard-step__form-control",label:__("Course Description","sensei-lms"),value:null!==(n=i.description)&&void 0!==n?n:"",onChange:function(e){o((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},i),{},{description:e})),d({excerpt:e})},maxLength:350,multiline:!0}))),(0,s.createElement)("div",{className:"sensei-editor-wizard-modal__illustration"},(0,s.createElement)("img",{src:window.sensei.pluginUrl+u,alt:__("Illustration of course sample with some placeholders.","sensei-lms"),className:"sensei-editor-wizard-modal__illustration-image"})))};
 /* harmony import */d.Actions=function(e){var t=e.goToNextStep;return(0,s.createElement)(o.Button,{isPrimary:!0,onClick:t},__("Continue","sensei-lms"))};
-/* harmony default export */const m=d;
+/* harmony default export */const p=d;
 /***/},
 /***/98007:
 /***/(e,t,n)=>{
@@ -85,57 +88,59 @@ return(0,i.createElement)("div",(0,r/* ["default"] */.Z)({key:s,className:"sense
 /***/26755:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>m
+/* harmony export */Z:()=>p
 /* harmony export */});
-/* harmony import */var r=n(69307),s=n(55609),i=n(65736),o=n(9818),a=n(45647),l=n(5023),c=n(20436),__=i.__,u=function(){var e=(0,o.useSelect)((function(e){return{senseiProExtension:e(a/* .EXTENSIONS_STORE */.h).getSenseiProExtension()}}),[]).senseiProExtension;return(0,r.createElement)("div",{className:"sensei-editor-wizard-modal__columns"},(0,r.createElement)("div",{className:"sensei-editor-wizard-modal__content"},(0,r.createElement)("h1",{className:"sensei-editor-wizard-step__title"},__("Sell with Sensei Pro","sensei-lms")),(0,r.createElement)("p",{className:"sensei-editor-wizard-step__description"},__("Do you want to sell this course? This requires Sensei Pro which also unlocks many useful features.","sensei-lms")),(0,r.createElement)("strong",{className:"sensei-editor-wizard-modal-upsell__price"},(0,i.sprintf)(// translators: placeholder is the price.
+/* harmony import */var r=n(69307),s=n(55609),i=n(65736),o=n(9818),a=n(45647),l=n(5023),c=n(20436),__=i.__,u=function(){var e=(0,o.useSelect)((function(e){return{senseiProExtension:e(a/* .EXTENSIONS_STORE */.h).getSenseiProExtension()}}),[]).senseiProExtension;return(0,r.createElement)("div",{className:"sensei-editor-wizard-modal__columns"},(0,r.createElement)("div",{className:"sensei-editor-wizard-modal__content"},(0,r.createElement)("h1",{className:"sensei-editor-wizard-step__title"},__("Sell with Sensei Pro","sensei-lms")),(0,r.createElement)("p",{className:"sensei-editor-wizard-step__description"},__("Do you want to sell this course? This requires Sensei Pro which also unlocks many useful features.","sensei-lms")),(0,r.createElement)("strong",{className:"sensei-editor-wizard-modal-upsell__price"},(0,i.sprintf)(
+// translators: placeholder is the price.
 __("%s USD","sensei-lms"),e.price.replace(".00",""))),(0,r.createElement)("span",{className:"sensei-editor-wizard-modal-upsell__price-detail"},__("per year, 1 site","sensei-lms")),(0,r.createElement)("ul",{className:"sensei-editor-wizard-modal-upsell__features"},(0,r.createElement)(d,null,__("WooCommerce integration","sensei-lms")),(0,r.createElement)(d,null,__("Schedule 'drip' content","sensei-lms")),(0,r.createElement)(d,null,__("Set expiration date of courses","sensei-lms")),(0,r.createElement)(d,null,__("Quiz timer","sensei-lms")),(0,r.createElement)(d,null,__("Flashcards, Image Hotspots, and Checklists","sensei-lms")),(0,r.createElement)(d,null,__("1 year of updates & support","sensei-lms")))),(0,r.createElement)("div",{className:"sensei-editor-wizard-modal__illustration"},(0,r.createElement)("img",{src:window.sensei.pluginUrl+l,alt:__('Illustration of a course listing with the pricing defined and with the button "Purchase Button"',"sensei-lms"),className:"sensei-editor-wizard-modal__illustration-image"})))},d=function(e){var t=e.children;return(0,r.createElement)("li",{className:"sensei-editor-wizard-modal-upsell__feature-item"},(0,r.createElement)(c/* ["default"] */.Z,{className:"sensei-editor-wizard-modal-upsell__feature-item-icon"}),t)};
 /* harmony import */u.Actions=function(e){var t=e.goToNextStep;return(0,r.createElement)(r.Fragment,null,(0,r.createElement)(s.Button,{isTertiary:!0,onClick:t,className:"sensei-editor-wizard-modal-upsell__button"},__("Continue with Sensei Free","sensei-lms")),(0,r.createElement)(s.Button,{isPrimary:!0,onClick:function(){window.open("https://senseilms.com/sensei-pro/?utm_source=plugin_sensei&utm_medium=upsell&utm_campaign=course_editor_wizard","sensei-pricing","noreferrer"),t()},target:"_blank",className:"sensei-editor-wizard-modal-upsell__button"},__("Get Sensei Pro","sensei-lms")))};
-/* harmony default export */const m=u;
+/* harmony default export */const p=u;
 /***/},
 /***/20210:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{
 /* harmony export */Z:()=>f
 /* harmony export */});
-/* harmony import */var r=n(50189),s=n(66886),i=n(69307),o=n(65736),a=n(9818),l=n(12238),c=n(55609),u=n(60698),d=n(24239),__=o.__,m=function(e){var t=e.wizardData,n=e.setWizardData,r=p(t,n),o=(0,s/* ["default"] */.Z)(r,2),a=o[0],l=o[1];return(0,i.createElement)("div",{className:"sensei-editor-wizard-modal__columns"},(0,i.createElement)("div",{className:"sensei-editor-wizard-modal__content"},(0,i.createElement)("h1",{className:"sensei-editor-wizard-step__title"},__("Create your lesson","sensei-lms")),(0,i.createElement)("p",{className:"sensei-editor-wizard-step__description"},__("It is best to keep your Lesson Title short because it will show in your course outline and navigation. You can easily change both later.","sensei-lms")),(0,i.createElement)("div",{className:"sensei-editor-wizard-step__form"},(0,i.createElement)(u/* ["default"] */.Z,{className:"sensei-editor-wizard-step__form-control",label:__("Lesson Title","sensei-lms"),value:a,onChange:l,maxLength:40}))),(0,i.createElement)("div",{className:"sensei-editor-wizard-modal__illustration"},(0,i.createElement)("img",{src:window.sensei.pluginUrl+d,className:"sensei-editor-wizard-modal__illustration-image",alt:__("Illustration of lesson sample with some placeholders.","sensei-lms")})))};
+/* harmony import */var r=n(50189),s=n(66886),i=n(69307),o=n(65736),a=n(9818),l=n(12238),c=n(55609),u=n(60698),d=n(24239),__=o.__,p=function(e){var t=e.wizardData,n=e.setWizardData,r=m(t,n),o=(0,s/* ["default"] */.Z)(r,2),a=o[0],l=o[1];return(0,i.createElement)("div",{className:"sensei-editor-wizard-modal__columns"},(0,i.createElement)("div",{className:"sensei-editor-wizard-modal__content"},(0,i.createElement)("h1",{className:"sensei-editor-wizard-step__title"},__("Create your lesson","sensei-lms")),(0,i.createElement)("p",{className:"sensei-editor-wizard-step__description"},__("It is best to keep your Lesson Title short because it will show in your course outline and navigation. You can easily change both later.","sensei-lms")),(0,i.createElement)("div",{className:"sensei-editor-wizard-step__form"},(0,i.createElement)(u/* ["default"] */.Z,{className:"sensei-editor-wizard-step__form-control",label:__("Lesson Title","sensei-lms"),value:a,onChange:l,maxLength:40}))),(0,i.createElement)("div",{className:"sensei-editor-wizard-modal__illustration"},(0,i.createElement)("img",{src:window.sensei.pluginUrl+d,className:"sensei-editor-wizard-modal__illustration-image",alt:__("Illustration of lesson sample with some placeholders.","sensei-lms")})))};
 /* harmony import */
 /**
  * Actions for the LessonDetailsStep.
  *
  * @param {Function} goToNextStep Invoke to go to the next step.
  */
-m.Actions=function(e){var t=e.goToNextStep;return(0,i.createElement)(c.Button,{isPrimary:!0,onClick:t},__("Continue","sensei-lms"))};
+p.Actions=function(e){var t=e.goToNextStep;return(0,i.createElement)(c.Button,{isPrimary:!0,onClick:t},__("Continue","sensei-lms"))};
 /**
  * Load the post title from the Editor Store.
  *
  * @param {Object}   wizardData    The wizard data.
  * @param {Function} setWizardData Function to update the wizard data.
  */
-var p=function(e,t){var n,s=(0,a.useDispatch)(l.store).editPost,i=(0,a.useSelect)((function(e){var t;return{postTitle:null===(t=e(l.store))||void 0===t?void 0:t.getEditedPostAttribute("title")}})).postTitle;return[null!==(n=e.title)&&void 0!==n?n:i,function(n){t((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},e),{},{title:n})),s({title:n})}]};
-/* harmony default export */const f=m;
+var m=function(e,t){var n,s=(0,a.useDispatch)(l.store).editPost,i=(0,a.useSelect)((function(e){var t;return{postTitle:null===(t=e(l.store))||void 0===t?void 0:t.getEditedPostAttribute("title")}})).postTitle;return[null!==(n=e.title)&&void 0!==n?n:i,function(n){t((0,r/* ["default"] */.Z)((0,r/* ["default"] */.Z)({},e),{},{title:n})),s({title:n})}]};
+/* harmony default export */const f=p;
 /***/},
 /***/27028:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{
-/* harmony export */Z:()=>p
+/* harmony export */Z:()=>m
 /* harmony export */});
-/* harmony import */var r=n(25773),s=n(53782),i=n(69307),o=n(65736),a=n(22541),l=n(33731),c=n(91839),u=["wizardData"],__=o.__,d=function(e){var t=e.wizardData,n=(0,s/* ["default"] */.Z)(e,u),o={};t.title&&(o["sensei-content-title"]=t.title);var l=(0,c/* .useHideEditorWizardUpsell */.zH)();return(0,i.createElement)(i.Fragment,null,(0,i.createElement)(a/* ["default"] */.Z,(0,r/* ["default"] */.Z)({title:__("Lesson Type","sensei-lms"),replaces:o},n)),(0,i.createElement)(a/* ["default"].UpsellFill */.Z.UpsellFill,null,l?null:(0,i.createElement)(m,null)))},m=function(){return(0,i.createElement)("div",{className:"sensei-editor-wizard-patterns-upsell"},(0,i.createElement)(l/* ["default"] */.Z,{className:"sensei-editor-wizard-patterns-upsell__logo"}),(0,i.createElement)("div",{className:"sensei-editor-wizard-patterns-upsell__text"},(0,i.createElement)("b",{className:"sensei-editor-wizard-patterns-upsell__title"},__("Want More Lesson Types?","sensei-lms")),(0,i.createElement)("br",null),__("Get flashcards, timed quizzes, image hotspots, and more with Sensei Pro.","sensei-lms")," ",(0,i.createElement)("a",{className:"sensei-editor-wizard-patterns-upsell__link",href:"https://senseilms.com/sensei-pro/?utm_source=plugin_sensei&utm_medium=upsell&utm_campaign=lesson_patterns_editor_wizard",rel:"noreferrer external",target:"blank"},__("Learn more.","sensei-lms"))))};
+/* harmony import */var r=n(25773),s=n(53782),i=n(69307),o=n(65736),a=n(22541),l=n(33731),c=n(91839),u=["wizardData"],__=o.__,d=function(e){var t=e.wizardData,n=(0,s/* ["default"] */.Z)(e,u),o={};t.title&&(o["sensei-content-title"]=t.title);var l=(0,c/* .useHideEditorWizardUpsell */.zH)();return(0,i.createElement)(i.Fragment,null,(0,i.createElement)(a/* ["default"] */.Z,(0,r/* ["default"] */.Z)({title:__("Lesson Type","sensei-lms"),replaces:o},n)),(0,i.createElement)(a/* ["default"].UpsellFill */.Z.UpsellFill,null,l?null:(0,i.createElement)(p,null)))},p=function(){return(0,i.createElement)("div",{className:"sensei-editor-wizard-patterns-upsell"},(0,i.createElement)(l/* ["default"] */.Z,{className:"sensei-editor-wizard-patterns-upsell__logo"}),(0,i.createElement)("div",{className:"sensei-editor-wizard-patterns-upsell__text"},(0,i.createElement)("b",{className:"sensei-editor-wizard-patterns-upsell__title"},__("Want More Lesson Types?","sensei-lms")),(0,i.createElement)("br",null),__("Get flashcards, timed quizzes, image hotspots, and more with Sensei Pro.","sensei-lms")," ",(0,i.createElement)("a",{className:"sensei-editor-wizard-patterns-upsell__link",href:"https://senseilms.com/sensei-pro/?utm_source=plugin_sensei&utm_medium=upsell&utm_campaign=lesson_patterns_editor_wizard",rel:"noreferrer external",target:"blank"},__("Learn more.","sensei-lms"))))};
 /* harmony import */d.Actions=a/* ["default"].Actions */.Z.Actions;
-/* harmony default export */const p=d;
+/* harmony default export */const m=d;
 /***/},
 /***/22541:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{
 /* harmony export */Z:()=>f
 /* harmony export */});
-/* harmony import */var r=n(69307),s=n(55609),i=n(12238),o=n(9818),a=n(65736),l=n(386),c=n(91839),__=a.__,u=(0,s.createSlotFill)("Patterns Upsell"),d=u.Fill,m=u.Slot,p=function(e){var t=e.title,n=e.replaces,s=e.onCompletion,a=(0,o.useDispatch)(i.store),u=a.resetEditorBlocks,d=a.editPost,p=(0,c/* .useLogEvent */.an)(),f=(0,o.useSelect)((function(e){return e(i.store).getEditorSettings()})).availableTemplates;return(0,r.createElement)("div",{className:"sensei-editor-wizard-modal__content"},(0,r.createElement)("h1",{className:"sensei-editor-wizard-step__sticky-title"},t),(0,r.createElement)(m,null),(0,r.createElement)(l/* ["default"] */.Z,{onChoose:function(e,t,r){var i=n?(0,c/* .replacePlaceholders */.wT)(e,n):e;u(i),s(),//Auto select a template if the pattern specifies an available one.
-r&&Object.keys(f).includes(r)&&d({template:r}),p("editor_wizard_choose_pattern",{name:t})}}))};
-/* harmony import */p.Actions=function(e){var t=e.skipWizard,n=(0,c/* .useLogEvent */.an)();return(0,r.createElement)(s.Button,{isTertiary:!0,onClick:function(){t(),n("editor_wizard_start_with_default_layout")}},__("Start with default layout","sensei-lms"))},
+/* harmony import */var r=n(69307),s=n(55609),i=n(12238),o=n(9818),a=n(65736),l=n(386),c=n(91839),__=a.__,u=(0,s.createSlotFill)("Patterns Upsell"),d=u.Fill,p=u.Slot,m=function(e){var t=e.title,n=e.replaces,s=e.onCompletion,a=(0,o.useDispatch)(i.store),u=a.resetEditorBlocks,d=a.editPost,m=(0,c/* .useLogEvent */.an)(),f=(0,o.useSelect)((function(e){return e(i.store).getEditorSettings()})).availableTemplates;return(0,r.createElement)("div",{className:"sensei-editor-wizard-modal__content"},(0,r.createElement)("h1",{className:"sensei-editor-wizard-step__sticky-title"},t),(0,r.createElement)(p,null),(0,r.createElement)(l/* ["default"] */.Z,{onChoose:function(e,t,r){var i=n?(0,c/* .replacePlaceholders */.wT)(e,n):e;u(i),s(),
+//Auto select a template if the pattern specifies an available one.
+r&&Object.keys(f).includes(r)&&d({template:r}),m("editor_wizard_choose_pattern",{name:t})}}))};
+/* harmony import */m.Actions=function(e){var t=e.skipWizard,n=(0,c/* .useLogEvent */.an)();return(0,r.createElement)(s.Button,{isTertiary:!0,onClick:function(){t(),n("editor_wizard_start_with_default_layout")}},__("Start with default layout","sensei-lms"))},
 /**
  * Component to fill the Patterns Upsell section
  */
-p.UpsellFill=d;
-/* harmony default export */const f=p;
+m.UpsellFill=d;
+/* harmony default export */const f=m;
 /***/},
 /***/86277:
 /***/(e,t,n)=>{
@@ -153,8 +158,9 @@ p.UpsellFill=d;
 /* harmony export */});
 /* harmony import */var r=n(66886),s=n(69307),i=n(65736),o=n(91839),__=i.__;
 /* harmony import */
-/* harmony default export */const a=function(e){var t=e.steps,n=e.wizardDataState,a=e.onCompletion,l=e.skipWizard,c=(0,s.useState)(0),u=(0,r/* ["default"] */.Z)(c,2),d=u[0],m=u[1],p=(0,r/* ["default"] */.Z)(n,2),f=p[0],_=p[1],v=(0,o/* .useLogEvent */.an)(),w=t[d];return(0,s.createElement)("div",{className:"sensei-editor-wizard"},(0,s.createElement)(w,{wizardData:f,setWizardData:_,onCompletion:a}),(0,s.createElement)("div",{className:"sensei-editor-wizard__footer"},(0,s.createElement)("div",{className:"sensei-editor-wizard__progress"},(0,i.sprintf)(// translators: %1$d Current step number, %2$d Number of steps.
-__("Step %1$d of %2$d","sensei-lms"),d+1,t.length)),w.Actions&&(0,s.createElement)("div",{className:"sensei-editor-wizard__actions"},(0,s.createElement)(w.Actions,{goToNextStep:function(){var e=d+1;e<t.length?(m(e),v("editor_wizard_navigate_to_next_step",{navigated_to:t[e].name})):a(f)},skipWizard:l}))))};
+/* harmony default export */const a=function(e){var t=e.steps,n=e.wizardDataState,a=e.onCompletion,l=e.skipWizard,c=(0,s.useState)(0),u=(0,r/* ["default"] */.Z)(c,2),d=u[0],p=u[1],m=(0,r/* ["default"] */.Z)(n,2),f=m[0],v=m[1],h=(0,o/* .useLogEvent */.an)(),y=t[d];return(0,s.createElement)("div",{className:"sensei-editor-wizard"},(0,s.createElement)(y,{wizardData:f,setWizardData:v,onCompletion:a}),(0,s.createElement)("div",{className:"sensei-editor-wizard__footer"},(0,s.createElement)("div",{className:"sensei-editor-wizard__progress"},(0,i.sprintf)(
+// translators: %1$d Current step number, %2$d Number of steps.
+__("Step %1$d of %2$d","sensei-lms"),d+1,t.length)),y.Actions&&(0,s.createElement)("div",{className:"sensei-editor-wizard__actions"},(0,s.createElement)(y.Actions,{goToNextStep:function(){var e=d+1;e<t.length?(p(e),h("editor_wizard_navigate_to_next_step",{navigated_to:t[e].name})):a(f)},skipWizard:l}))))};
 /***/},
 /***/60698:
 /***/(e,t,n)=>{
@@ -163,7 +169,8 @@ __("Step %1$d of %2$d","sensei-lms"),d+1,t.length)),w.Actions&&(0,s.createElemen
 /* harmony export */});
 /* harmony import */var r=n(25773),s=n(53782),i=n(69307),o=n(55609),a=n(65736),l=["value","maxLength","multiline"],__=a.__;
 /* harmony import */
-/* harmony default export */const c=function(e){var t=e.value,n=e.maxLength,c=e.multiline,u=void 0!==c&&c,d=(0,s/* ["default"] */.Z)(e,l),m=u?o.TextareaControl:o.TextControl;return(0,i.createElement)(m,(0,r/* ["default"] */.Z)({help:(0,a.sprintf)(// translators: %1$d number of characters introduced, %2$d number of total characters allowed.
+/* harmony default export */const c=function(e){var t=e.value,n=e.maxLength,c=e.multiline,u=void 0!==c&&c,d=(0,s/* ["default"] */.Z)(e,l),p=u?o.TextareaControl:o.TextControl;return(0,i.createElement)(p,(0,r/* ["default"] */.Z)({help:(0,a.sprintf)(
+// translators: %1$d number of characters introduced, %2$d number of total characters allowed.
 __("Characters: %1$d/%2$d","sensei-lms"),t.length,n),value:t,maxLength:n},d))};
 /***/},
 /***/45647:
@@ -172,7 +179,7 @@ __("Characters: %1$d/%2$d","sensei-lms"),t.length,n),value:t,maxLength:n},d))};
 /* harmony export */h:()=>/* binding */w
 /* harmony export */});
 /* unused harmony export isLoadingStatus */
-/* harmony import */var r=n(90228),s=n(64649),i=n(50189),o=n(92819),a=n(9818),l=n(23418),c=n(65736),u=n(20832),d=n(67959),__=(n(16400),c.__),m={IN_PROGRESS:"in-progress",IN_QUEUE:"in-queue"},p={
+/* harmony import */var r=n(90228),s=n(64649),i=n(50189),o=n(11092),a=n(92819),l=n(9818),c=n(23418),u=n(65736),d=n(20832),p=n(67959),__=(n(16400),u.__),m={IN_PROGRESS:"in-progress",IN_QUEUE:"in-queue"},f={
 /**
    * Sets the extensions list.
    *
@@ -190,13 +197,13 @@ setEntities:function(e){return{type:"SET_ENTITIES",entities:e}},
    *
    * @param {string} slug The extension slug to install.
    */
-installExtension:regeneratorRuntime.mark((function e(t){return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return(0,d/* .logEvent */.K)("extensions_install",{slug:t}),e.next=3,p.runProcess({slugs:[t],actionType:"install"});case 3:case"end":return e.stop()}}),e)})),
+installExtension:(0,o/* ["default"] */.Z)().mark((function e(t){return(0,o/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return(0,p/* .logEvent */.K)("extensions_install",{slug:t}),e.next=3,f.runProcess({slugs:[t],actionType:"install"});case 3:case"end":return e.stop()}}),e)})),
 /**
    * Updates the provided extensions.
    *
    * @param {string[]} slugs The extension slugs to update.
    */
-updateExtensions:regeneratorRuntime.mark((function e(t){return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return t.map((function(e){return(0,d/* .logEvent */.K)("extensions_update",{slug:e})})),e.next=3,p.runProcess({slugs:t,actionType:"update"});case 3:case"end":return e.stop()}}),e)})),
+updateExtensions:(0,o/* ["default"] */.Z)().mark((function e(t){return(0,o/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return t.map((function(e){return(0,p/* .logEvent */.K)("extensions_update",{slug:e})})),e.next=3,f.runProcess({slugs:t,actionType:"update"});case 3:case"end":return e.stop()}}),e)})),
 /**
    * Run extension process (install or update).
    *
@@ -204,9 +211,11 @@ updateExtensions:regeneratorRuntime.mark((function e(t){return regeneratorRuntim
    * @param {string[]} process.slugs      Extension slugs.
    * @param {string}   process.actionType Action type (`install` or `update`).
    */
-runProcess:regeneratorRuntime.mark((function e(t){var n,r,s,i,u,d,f;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return n=t.slugs,r=t.actionType,e.next=3,(0,a.select)(w).getExtensionsByStatus(m.IN_PROGRESS);case 3:if(!(e.sent.length>0)){e.next=8;break}return e.next=7,p.addToQueue(t);case 7:return e.abrupt("return");case 8:return e.next=10,p.setExtensionsStatus(n,m.IN_PROGRESS);case 10:return"update"===r?(s={plugins:n},i=__("Update completed successfully!","sensei-lms"),// translators: Placeholder is the underlying error message.
-u=__("There was an error while updating the plugin: %1$s","sensei-lms")):(s={plugin:n[0]},i=__("Installation completed successfully!","sensei-lms"),// translators: Placeholder is the underlying error message.
-u=__("There was an error while installing the plugin: %1$s","sensei-lms")),e.prev=11,e.next=14,(0,l.apiFetch)({path:"/sensei-internal/v1/sensei-extensions/".concat(r),method:"POST",data:s});case 14:return d=e.sent,e.next=17,p.setError(null);case 17:return e.next=19,p.setEntities({extensions:(0,o.keyBy)(d.completed,"product_slug")});case 19:return e.next=21,(0,a.dispatch)("core/notices").createNotice("success",i,{type:"snackbar"});case 21:e.next=27;break;case 23:return e.prev=23,e.t0=e.catch(11),e.next=27,p.setError((0,c.sprintf)(u,e.t0.message));case 27:return e.prev=27,e.next=30,p.setExtensionsStatus(n,"");case 30:return e.next=32,p.removeFromQueue(t);case 32:return e.next=34,(0,a.select)(w).getNextProcess();case 34:if(!(f=e.sent)){e.next=38;break}return e.next=38,p.runProcess(f);case 38:return e.finish(27);case 39:case"end":return e.stop()}}),e,null,[[11,23,27,39]])})),
+runProcess:(0,o/* ["default"] */.Z)().mark((function e(t){var n,r,s,i,d,p,v;return(0,o/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return n=t.slugs,r=t.actionType,e.next=3,(0,l.select)(w).getExtensionsByStatus(m.IN_PROGRESS);case 3:if(!(e.sent.length>0)){e.next=8;break}return e.next=7,f.addToQueue(t);case 7:return e.abrupt("return");case 8:return e.next=10,f.setExtensionsStatus(n,m.IN_PROGRESS);case 10:return"update"===r?(s={plugins:n},i=__("Update completed successfully!","sensei-lms"),
+// translators: Placeholder is the underlying error message.
+d=__("There was an error while updating the plugin: %1$s","sensei-lms")):(s={plugin:n[0]},i=__("Installation completed successfully!","sensei-lms"),
+// translators: Placeholder is the underlying error message.
+d=__("There was an error while installing the plugin: %1$s","sensei-lms")),e.prev=11,e.next=14,(0,c.apiFetch)({path:"/sensei-internal/v1/sensei-extensions/".concat(r),method:"POST",data:s});case 14:return p=e.sent,e.next=17,f.setError(null);case 17:return e.next=19,f.setEntities({extensions:(0,a.keyBy)(p.completed,"product_slug")});case 19:return e.next=21,(0,l.dispatch)("core/notices").createNotice("success",i,{type:"snackbar"});case 21:e.next=27;break;case 23:return e.prev=23,e.t0=e.catch(11),e.next=27,f.setError((0,u.sprintf)(d,e.t0.message));case 27:return e.prev=27,e.next=30,f.setExtensionsStatus(n,"");case 30:return e.next=32,f.removeFromQueue(t);case 32:return e.next=34,(0,l.select)(w).getNextProcess();case 34:if(!(v=e.sent)){e.next=38;break}return e.next=38,f.runProcess(v);case 38:return e.finish(27);case 39:case"end":return e.stop()}}),e,null,[[11,23,27,39]])})),
 /**
    * Set extensions in progress.
    *
@@ -227,7 +236,7 @@ setLayout:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0
    * @param {string}   process.actionType Action type.
    * @param {string[]} process.slugs      Extension slugs.
    */
-addToQueue:regeneratorRuntime.mark((function e(t){return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,p.setExtensionsStatus(t.slugs,m.IN_QUEUE);case 2:return e.abrupt("return",{type:"ADD_TO_QUEUE",process:t});case 3:case"end":return e.stop()}}),e)})),
+addToQueue:(0,o/* ["default"] */.Z)().mark((function e(t){return(0,o/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,f.setExtensionsStatus(t.slugs,m.IN_QUEUE);case 2:return e.abrupt("return",{type:"ADD_TO_QUEUE",process:t});case 3:case"end":return e.stop()}}),e)})),
 /**
    * Add process (update/install) to queue.
    *
@@ -241,11 +250,11 @@ removeFromQueue:function(e){return{type:"REMOVE_FROM_QUEUE",process:e}},
    *
    * @param {string} error The error.
    */
-setError:function(e){return{type:"SET_ERROR",error:e}}},f={getExtensions:function(e){var t=e.extensionSlugs,n=e.entities;return t.map((function(e){return n.extensions[e]}))},getExtensionsByStatus:function(e,t){return f.getExtensions(e).filter((function(e){return t===e.status}))},getSenseiProExtension:(0,a.createRegistrySelector)((function(e){return function(){return e(w).getExtensions().find((function(e){return"sensei-pro"===e.product_slug}))}})),getEntities:function(e,t){return e.entities[t]},getConnectionStatus:function(e){return e.connected},getLayout:function(e){return e.layout},getNextProcess:function(e){return e.queue[0]||null},getError:function(e){return e.error}},_={
+setError:function(e){return{type:"SET_ERROR",error:e}}},v={getExtensions:function(e){var t=e.extensionSlugs,n=e.entities;return t.map((function(e){return n.extensions[e]}))},getExtensionsByStatus:function(e,t){return v.getExtensions(e).filter((function(e){return t===e.status}))},getSenseiProExtension:(0,l.createRegistrySelector)((function(e){return function(){return e(w).getExtensions().find((function(e){return"sensei-pro"===e.product_slug}))}})),getEntities:function(e,t){return e.entities[t]},getConnectionStatus:function(e){return e.connected},getLayout:function(e){return e.layout},getNextProcess:function(e){return e.queue[0]||null},getError:function(e){return e.error}},h={
 /**
    * Loads the extensions during initialization.
    */
-getExtensions:regeneratorRuntime.mark((function e(){var t;return regeneratorRuntime.wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,l.apiFetch)({path:"/sensei-internal/v1/sensei-extensions?type=plugin"});case 2:return t=e.sent,e.next=5,p.setLayout(t.layout);case 5:return e.next=7,p.setEntities({extensions:(0,o.keyBy)(t.extensions,"product_slug")});case 7:return e.next=9,p.setExtensions(t.extensions.map((function(e){return e.product_slug})));case 9:case"end":return e.stop()}}),e)}))},v={SET_EXTENSIONS:function(e,t){var n=e.extensionSlugs;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{extensionSlugs:n})},SET_EXTENSIONS_STATUS:function(e,t){var n=e.slugs,r=e.status;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{entities:(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t.entities),{},{extensions:Object.keys(t.entities.extensions).reduce((function(e,o){return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},e),{},(0,s/* ["default"] */.Z)({},o,(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t.entities.extensions[o]),{},{status:n.includes(o)?r:t.entities.extensions[o].status})))}),{})})})},SET_CONNECTION_STATUS:function(e,t){var n=e.connected;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{connected:n})},SET_LAYOUT:function(e,t){var n=e.layout;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{layout:n})},SET_ENTITIES:function(e,t){var n=e.entities;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{entities:(0,o.merge)({},t.entities,n)})},ADD_TO_QUEUE:function(e,t){var n=e.process;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{queue:[].concat((0,r/* ["default"] */.Z)(t.queue),[n])})},REMOVE_FROM_QUEUE:function(e,t){var n=e.process;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{queue:t.queue.filter((function(e){return!(0,o.isEqual)(e,n)}))})},SET_ERROR:function(e,t){var n=e.error;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{error:n})},DEFAULT:function(e,t){return t}},w=(0,a.createReduxStore)("sensei/extensions",{reducer:(0,u/* .createReducerFromActionMap */.lA)(v,{
+getExtensions:(0,o/* ["default"] */.Z)().mark((function e(){var t;return(0,o/* ["default"] */.Z)().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return e.next=2,(0,c.apiFetch)({path:"/sensei-internal/v1/sensei-extensions?type=plugin"});case 2:return t=e.sent,e.next=5,f.setLayout(t.layout);case 5:return e.next=7,f.setEntities({extensions:(0,a.keyBy)(t.extensions,"product_slug")});case 7:return e.next=9,f.setExtensions(t.extensions.map((function(e){return e.product_slug})));case 9:case"end":return e.stop()}}),e)}))},y={SET_EXTENSIONS:function(e,t){var n=e.extensionSlugs;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{extensionSlugs:n})},SET_EXTENSIONS_STATUS:function(e,t){var n=e.slugs,r=e.status;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{entities:(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t.entities),{},{extensions:Object.keys(t.entities.extensions).reduce((function(e,o){return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},e),{},(0,s/* ["default"] */.Z)({},o,(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t.entities.extensions[o]),{},{status:n.includes(o)?r:t.entities.extensions[o].status})))}),{})})})},SET_CONNECTION_STATUS:function(e,t){var n=e.connected;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{connected:n})},SET_LAYOUT:function(e,t){var n=e.layout;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{layout:n})},SET_ENTITIES:function(e,t){var n=e.entities;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{entities:(0,a.merge)({},t.entities,n)})},ADD_TO_QUEUE:function(e,t){var n=e.process;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{queue:[].concat((0,r/* ["default"] */.Z)(t.queue),[n])})},REMOVE_FROM_QUEUE:function(e,t){var n=e.process;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{queue:t.queue.filter((function(e){return!(0,a.isEqual)(e,n)}))})},SET_ERROR:function(e,t){var n=e.error;return(0,i/* ["default"] */.Z)((0,i/* ["default"] */.Z)({},t),{},{error:n})},DEFAULT:function(e,t){return t}},w=(0,l.createReduxStore)("sensei/extensions",{reducer:(0,d/* .createReducerFromActionMap */.lA)(y,{
 /**
    * Extensions list. It is mapped with the entities and served through the selectors.
    */
@@ -254,8 +263,8 @@ extensionSlugs:[],
    * Store entities to be used based on the entities key (it can be accessed directly,
    * or mapped based in a key list).
    */
-entities:{extensions:{}},connected:!1,layout:[],queue:[],error:null}),actions:p,selectors:f,resolvers:_,controls:l.controls});
-/* harmony import */(0,a.register)(w)}
+entities:{extensions:{}},connected:!1,layout:[],queue:[],error:null}),actions:f,selectors:v,resolvers:h,controls:c.controls});
+/* harmony import */(0,l.register)(w)}
 /***/,
 /***/16400:
 /***/(e,t,n)=>{
@@ -368,7 +377,7 @@ var r=function(e,t){window.sensei_log_event(e,t)};
 /* harmony export */Z:()=>/* binding */r
 /* harmony export */})},
 /***/25773:
-/***/(e,t,n)=>{function r(){return r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},r.apply(this,arguments)}
+/***/(e,t,n)=>{function r(){return r=Object.assign?Object.assign.bind():function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},r.apply(this,arguments)}
 /***/
 /* harmony export */n.d(t,{
 /* harmony export */Z:()=>/* binding */r
@@ -417,6 +426,14 @@ var r=function(e,t){window.sensei_log_event(e,t)};
 /* harmony export */n.d(t,{
 /* harmony export */Z:()=>/* binding */r
 /* harmony export */})},
+/***/11092:
+/***/(e,t,n)=>{
+/* harmony export */n.d(t,{
+/* harmony export */Z:()=>/* binding */s
+/* harmony export */});
+/* harmony import */var r=n(33940);function s(){/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+s=function(){return e};var e={},t=Object.prototype,n=t.hasOwnProperty,i=Object.defineProperty||function(e,t,n){e[t]=n.value},o="function"==typeof Symbol?Symbol:{},a=o.iterator||"@@iterator",l=o.asyncIterator||"@@asyncIterator",c=o.toStringTag||"@@toStringTag";function u(e,t,n){return Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}),e[t]}try{u({},"")}catch(e){u=function(e,t,n){return e[t]=n}}function d(e,t,n,r){var s=t&&t.prototype instanceof f?t:f,o=Object.create(s.prototype),a=new T(r||[]);return i(o,"_invoke",{value:b(e,n,a)}),o}function p(e,t,n){try{return{type:"normal",arg:e.call(t,n)}}catch(e){return{type:"throw",arg:e}}}e.wrap=d;var m={};function f(){}function v(){}function h(){}var y={};u(y,a,(function(){return this}));var w=Object.getPrototypeOf,g=w&&w(w(O([])));g&&g!==t&&n.call(g,a)&&(y=g);var _=h.prototype=f.prototype=Object.create(y);function E(e){["next","throw","return"].forEach((function(t){u(e,t,(function(e){return this._invoke(t,e)}))}))}function x(e,t){function s(i,o,a,l){var c=p(e[i],e,o);if("throw"!==c.type){var u=c.arg,d=u.value;return d&&"object"==(0,r/* ["default"] */.Z)(d)&&n.call(d,"__await")?t.resolve(d.__await).then((function(e){s("next",e,a,l)}),(function(e){s("throw",e,a,l)})):t.resolve(d).then((function(e){u.value=e,a(u)}),(function(e){return s("throw",e,a,l)}))}l(c.arg)}var o;i(this,"_invoke",{value:function(e,n){function r(){return new t((function(t,r){s(e,n,t,r)}))}return o=o?o.then(r,r):r()}})}function b(e,t,n){var r="suspendedStart";return function(s,i){if("executing"===r)throw new Error("Generator is already running");if("completed"===r){if("throw"===s)throw i;return z()}for(n.method=s,n.arg=i;;){var o=n.delegate;if(o){var a=Z(o,n);if(a){if(a===m)continue;return a}}if("next"===n.method)n.sent=n._sent=n.arg;else if("throw"===n.method){if("suspendedStart"===r)throw r="completed",n.arg;n.dispatchException(n.arg)}else"return"===n.method&&n.abrupt("return",n.arg);r="executing";var l=p(e,t,n);if("normal"===l.type){if(r=n.done?"completed":"suspendedYield",l.arg===m)continue;return{value:l.arg,done:n.done}}"throw"===l.type&&(r="completed",n.method="throw",n.arg=l.arg)}}}function Z(e,t){var n=e.iterator[t.method];if(void 0===n){if(t.delegate=null,"throw"===t.method){if(e.iterator.return&&(t.method="return",t.arg=void 0,Z(e,t),"throw"===t.method))return m;t.method="throw",t.arg=new TypeError("The iterator does not provide a 'throw' method")}return m}var r=p(n,e.iterator,t.arg);if("throw"===r.type)return t.method="throw",t.arg=r.arg,t.delegate=null,m;var s=r.arg;return s?s.done?(t[e.resultName]=s.value,t.next=e.nextLoc,"return"!==t.method&&(t.method="next",t.arg=void 0),t.delegate=null,m):s:(t.method="throw",t.arg=new TypeError("iterator result is not an object"),t.delegate=null,m)}function S(e){var t={tryLoc:e[0]};1 in e&&(t.catchLoc=e[1]),2 in e&&(t.finallyLoc=e[2],t.afterLoc=e[3]),this.tryEntries.push(t)}function N(e){var t=e.completion||{};t.type="normal",delete t.arg,e.completion=t}function T(e){this.tryEntries=[{tryLoc:"root"}],e.forEach(S,this),this.reset(!0)}function O(e){if(e){var t=e[a];if(t)return t.call(e);if("function"==typeof e.next)return e;if(!isNaN(e.length)){var r=-1,s=function t(){for(;++r<e.length;)if(n.call(e,r))return t.value=e[r],t.done=!1,t;return t.value=void 0,t.done=!0,t};return s.next=s}}return{next:z}}function z(){return{value:void 0,done:!0}}return v.prototype=h,i(_,"constructor",{value:h,configurable:!0}),i(h,"constructor",{value:v,configurable:!0}),v.displayName=u(h,c,"GeneratorFunction"),e.isGeneratorFunction=function(e){var t="function"==typeof e&&e.constructor;return!!t&&(t===v||"GeneratorFunction"===(t.displayName||t.name))},e.mark=function(e){return Object.setPrototypeOf?Object.setPrototypeOf(e,h):(e.__proto__=h,u(e,c,"GeneratorFunction")),e.prototype=Object.create(_),e},e.awrap=function(e){return{__await:e}},E(x.prototype),u(x.prototype,l,(function(){return this})),e.AsyncIterator=x,e.async=function(t,n,r,s,i){void 0===i&&(i=Promise);var o=new x(d(t,n,r,s),i);return e.isGeneratorFunction(n)?o:o.next().then((function(e){return e.done?e.value:o.next()}))},E(_),u(_,c,"Generator"),u(_,a,(function(){return this})),u(_,"toString",(function(){return"[object Generator]"})),e.keys=function(e){var t=Object(e),n=[];for(var r in t)n.push(r);return n.reverse(),function e(){for(;n.length;){var r=n.pop();if(r in t)return e.value=r,e.done=!1,e}return e.done=!0,e}},e.values=O,T.prototype={constructor:T,reset:function(e){if(this.prev=0,this.next=0,this.sent=this._sent=void 0,this.done=!1,this.delegate=null,this.method="next",this.arg=void 0,this.tryEntries.forEach(N),!e)for(var t in this)"t"===t.charAt(0)&&n.call(this,t)&&!isNaN(+t.slice(1))&&(this[t]=void 0)},stop:function(){this.done=!0;var e=this.tryEntries[0].completion;if("throw"===e.type)throw e.arg;return this.rval},dispatchException:function(e){if(this.done)throw e;var t=this;function r(n,r){return o.type="throw",o.arg=e,t.next=n,r&&(t.method="next",t.arg=void 0),!!r}for(var s=this.tryEntries.length-1;s>=0;--s){var i=this.tryEntries[s],o=i.completion;if("root"===i.tryLoc)return r("end");if(i.tryLoc<=this.prev){var a=n.call(i,"catchLoc"),l=n.call(i,"finallyLoc");if(a&&l){if(this.prev<i.catchLoc)return r(i.catchLoc,!0);if(this.prev<i.finallyLoc)return r(i.finallyLoc)}else if(a){if(this.prev<i.catchLoc)return r(i.catchLoc,!0)}else{if(!l)throw new Error("try statement without catch or finally");if(this.prev<i.finallyLoc)return r(i.finallyLoc)}}}},abrupt:function(e,t){for(var r=this.tryEntries.length-1;r>=0;--r){var s=this.tryEntries[r];if(s.tryLoc<=this.prev&&n.call(s,"finallyLoc")&&this.prev<s.finallyLoc){var i=s;break}}i&&("break"===e||"continue"===e)&&i.tryLoc<=t&&t<=i.finallyLoc&&(i=null);var o=i?i.completion:{};return o.type=e,o.arg=t,i?(this.method="next",this.next=i.finallyLoc,m):this.complete(o)},complete:function(e,t){if("throw"===e.type)throw e.arg;return"break"===e.type||"continue"===e.type?this.next=e.arg:"return"===e.type?(this.rval=this.arg=e.arg,this.method="return",this.next="end"):"normal"===e.type&&t&&(this.next=t),m},finish:function(e){for(var t=this.tryEntries.length-1;t>=0;--t){var n=this.tryEntries[t];if(n.finallyLoc===e)return this.complete(n.completion,n.afterLoc),N(n),m}},catch:function(e){for(var t=this.tryEntries.length-1;t>=0;--t){var n=this.tryEntries[t];if(n.tryLoc===e){var r=n.completion;if("throw"===r.type){var s=r.arg;N(n)}return s}}throw new Error("illegal catch attempt")},delegateYield:function(e,t,n){return this.delegate={iterator:O(e),resultName:t,nextLoc:n},"next"===this.method&&(this.arg=void 0),m}},e
+/***/}},
 /***/66886:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{
@@ -433,6 +450,12 @@ var r=function(e,t){window.sensei_log_event(e,t)};
 /* harmony import */var r=n(58138),s=n(55181),i=n(64013),o=n(83314);
 /* harmony import */function a(e){return(0,r/* ["default"] */.Z)(e)||(0,s/* ["default"] */.Z)(e)||(0,i/* ["default"] */.Z)(e)||(0,o/* ["default"] */.Z)()}
 /***/},
+/***/33940:
+/***/(e,t,n)=>{function r(e){return r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},r(e)
+/***/}
+/* harmony export */n.d(t,{
+/* harmony export */Z:()=>/* binding */r
+/* harmony export */})},
 /***/64013:
 /***/(e,t,n)=>{
 /* harmony export */n.d(t,{

@@ -3,11 +3,13 @@
 /******/var e={
 /***/80503:
 /***/(e,t,n)=>{
-/* harmony import */var o=n(7705),i=document.activeElement,a=function(e){null==e||e.preventDefault();var t=(0,o/* .querySelectorAncestor */.Z)(e.target,"[data-sensei-modal]");if(t){// Put element's copy at the end of the body element.
-var n=t.cloneNode(!0);n.setAttribute("data-sensei-modal-clone",""),document.body.appendChild(n),["overlay","close"].forEach((function(e){n.querySelectorAll("[data-sensei-modal-".concat(e,"]")).forEach((function(e){e.addEventListener("click",l)}))})),// Open the modal.
+/* harmony import */var o=n(7705),i=document.activeElement,s=function(e){null==e||e.preventDefault();var t=(0,o/* .querySelectorAncestor */.Z)(e.target,"[data-sensei-modal]");if(t){
+// Put element's copy at the end of the body element.
+var n=t.cloneNode(!0);n.setAttribute("data-sensei-modal-clone",""),document.body.appendChild(n),["overlay","close"].forEach((function(e){n.querySelectorAll("[data-sensei-modal-".concat(e,"]")).forEach((function(e){e.addEventListener("click",a)}))})),
+// Open the modal.
 // Make sure the elements are opened only after they are painted by
 // the browser first. Otherwise the transition effects do not work.
-window.requestAnimationFrame((function(){return window.requestAnimationFrame((function(){n.setAttribute("data-sensei-modal-is-open",""),document.body.dispatchEvent(new CustomEvent("sensei-modal-open",{detail:n})),i=document.activeElement;var e=n.querySelector("[data-sensei-modal-content]");e&&(e.tabIndex=0,e.focus())}))}))}},l=function(e){null==e||e.preventDefault(),document.querySelectorAll("[data-sensei-modal-clone]").forEach((function(e){var t;e.remove(),document.body.dispatchEvent(new CustomEvent("sensei-modal-close",{detail:e})),null===(t=i)||void 0===t||t.focus()}))};
+window.requestAnimationFrame((function(){return window.requestAnimationFrame((function(){n.setAttribute("data-sensei-modal-is-open",""),document.body.dispatchEvent(new CustomEvent("sensei-modal-open",{detail:n})),i=document.activeElement;var e=n.querySelector("[data-sensei-modal-content]");e&&(e.tabIndex=0,e.focus())}))}))}},a=function(e){null==e||e.preventDefault(),document.querySelectorAll("[data-sensei-modal-clone]").forEach((function(e){var t;e.remove(),document.body.dispatchEvent(new CustomEvent("sensei-modal-close",{detail:e})),null===(t=i)||void 0===t||t.focus()}))};
 /* eslint @wordpress/no-global-active-element: 0 -- Not relevant out of React.  */
 /**
  * Internal dependencies
@@ -39,7 +41,8 @@ window.requestAnimationFrame((function(){return window.requestAnimationFrame((fu
  * The last focused element in the document.
  *
  * @type {Element}
- */ // Init modal when the DOM is fully ready.
+ */
+// Init modal when the DOM is fully ready.
 // eslint-disable-next-line @wordpress/no-global-event-listener
 window.addEventListener("load",(
 /**
@@ -47,14 +50,15 @@ window.addEventListener("load",(
  */
 function(){
 // Attach open events.
-document.querySelectorAll("[data-sensei-modal-open]").forEach((function(e){e.addEventListener("click",a)})),// Attach close event on Escape key.
+document.querySelectorAll("[data-sensei-modal-open]").forEach((function(e){e.addEventListener("click",s)})),
+// Attach close event on Escape key.
 // eslint-disable-next-line @wordpress/no-global-event-listener
-document.addEventListener("keydown",(function(e){"Escape"===e.key&&l(e)}))})),
+document.addEventListener("keydown",(function(e){"Escape"===e.key&&a(e)}))})),
 /**
  * Support for closing the Modal on Esc key.
  */
 // eslint-disable-next-line @wordpress/no-global-event-listener
-document.addEventListener("keydown",(function(e){["Esc","Escape"].includes(e.key)&&l()}))}
+document.addEventListener("keydown",(function(e){["Esc","Escape"].includes(e.key)&&a()}))}
 /***/,
 /***/7705:
 /***/(e,t,n)=>{
@@ -83,7 +87,7 @@ var o=function e(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]
 /******/return i.exports;
 /******/
 /******/ // Create a new module (and put it into the cache)
-/******/var a=t[o]={
+/******/var s=t[o]={
 /******/ // no module.id needed
 /******/ // no module.loaded needed
 /******/exports:{}
@@ -93,7 +97,7 @@ var o=function e(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]
 /******/
 /******/
 /******/ // Return the exports of the module
-/******/return e[o](a,a.exports,n),a.exports;
+/******/return e[o](s,s.exports,n),s.exports;
 /******/}
 /******/
 /************************************************************************/
@@ -115,5 +119,5 @@ var o=function e(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]
  * Internal dependencies
  */
 // eslint-disable-next-line @wordpress/no-global-event-listener
-window.addEventListener("load",(function(){0!==document.querySelectorAll(".sensei-collapsible__toggle").length&&document.querySelectorAll(".sensei-collapsible").forEach((function(e){var t=e.querySelector(".sensei-collapsible__content"),n=e.querySelector(".sensei-collapsible__toggle");if(t&&n){var o=t.offsetHeight+"px";if(t.classList.contains("collapsed")){var i=t.style.transition;t.style.transition="unset",t.style.maxHeight="unset",o=t.offsetHeight+"px",t.style.visibility="hidden",t.style.maxHeight=0,t.style.transition=i}else t.style.maxHeight=o;n.addEventListener("click",(function(e){e.preventDefault();var i=t.classList.toggle("collapsed");n.classList.toggle("collapsed",i),n.setAttribute("aria-expanded",!i),i?t.style.maxHeight="0px":(t.style.visibility="",t.style.maxHeight=o)})),t.addEventListener("transitionend",(function(e){"max-height"===e.propertyName&&t.classList.contains("collapsed")&&(t.style.visibility="hidden")}))}}))}))})()})
+window.addEventListener("load",(function(){0!==document.querySelectorAll(".sensei-collapsible__toggle").length&&document.querySelectorAll(".sensei-collapsible").forEach((function(e){var t=e.querySelector(".sensei-collapsible__content"),n=e.querySelector(".sensei-collapsible__toggle");if(t&&n){var o=t.offsetHeight+"px";if(t.classList.contains("sensei-collapsed")){var i=t.style.transition;t.style.transition="unset",t.style.maxHeight="unset",o=t.offsetHeight+"px",t.style.visibility="hidden",t.style.maxHeight=0,t.style.transition=i}else t.style.maxHeight=o;n.addEventListener("click",(function(e){e.preventDefault();var i=t.classList.toggle("sensei-collapsed");n.classList.toggle("sensei-collapsed",i),n.setAttribute("aria-expanded",!i),i?t.style.maxHeight="0px":(t.style.visibility="",t.style.maxHeight=o)})),t.addEventListener("transitionend",(function(e){"max-height"===e.propertyName&&t.classList.contains("sensei-collapsed")&&(t.style.visibility="hidden")}))}}))}))})()})
 /******/();

@@ -279,7 +279,8 @@ const i=(0,r.createElement)(n.SVG,{viewBox:"0 0 24 24",xmlns:"http://www.w3.org/
  *
  * @param {Array} blocks
  */
-function a(e){var t=!1,s=function(s){if(s!==t){t=s;var i=s?n.registerBlockType:n.unregisterBlockType;e.forEach((function(e){var t=e.name,s=(0,r/* ["default"] */.Z)(e,o);i(t,s)}))}};s(!0),// TODO Only subscribe when in the post editor.
+function a(e){var t=!1,s=function(s){if(s!==t){t=s;var i=s?n.registerBlockType:n.unregisterBlockType;e.forEach((function(e){var t=e.name,s=(0,r/* ["default"] */.Z)(e,o);i(t,s)}))}};s(!0),
+// TODO Only subscribe when in the post editor.
 (0,i.subscribe)((function(){var e,t=null===(e=(0,i.select)("core/editor"))||void 0===e?void 0:e.getCurrentPostType(),r=(0,i.select)("core/edit-post");if(t&&r){var n="lesson"===t&&r.isEditingTemplate();s(n)}}))}
 /***/},
 /***/62152:
@@ -397,7 +398,7 @@ function a(e){var t=!1,s=function(s){if(s!==t){t=s;var i=s?n.registerBlockType:n
 /* harmony export */})},
 /***/25773:
 /***/(e,t,s)=>{"use strict";
-/* harmony export */function r(){return r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},r.apply(this,arguments)}
+/* harmony export */function r(){return r=Object.assign?Object.assign.bind():function(e){for(var t=1;t<arguments.length;t++){var s=arguments[t];for(var r in s)Object.prototype.hasOwnProperty.call(s,r)&&(e[r]=s[r])}return e},r.apply(this,arguments)}
 /***/s.d(t,{
 /* harmony export */Z:()=>/* binding */r
 /* harmony export */})},

@@ -1,5 +1,6 @@
 <?php
 
+use Sensei\Internal\Emails\Email_Customization;
 use Sensei\Internal\Quiz_Submission\Answer\Repositories\Answer_Repository_Factory;
 use Sensei\Internal\Quiz_Submission\Answer\Repositories\Answer_Repository_Interface;
 use Sensei\Internal\Quiz_Submission\Grade\Repositories\Grade_Repository_Factory;
@@ -313,9 +314,7 @@ class Sensei_Main {
 		$this->init();
 
 		// Installation
-		if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
-			$this->install();
-		}
+		$this->install();
 
 		// Run this on deactivation.
 		register_deactivation_hook( $this->main_plugin_file_name, array( $this, 'deactivation' ) );
@@ -568,6 +567,28 @@ class Sensei_Main {
 
 		// Cron for periodically cleaning guest user related data.
 		Sensei_Temporary_User_Cleaner::instance()->init();
+
+		$email_customization_enabled = $this->feature_flags->is_enabled( 'email_customization' );
+		if ( $email_customization_enabled ) {
+			Email_Customization::instance( $this->settings, $this->assets, $this->lesson_progress_repository )->init();
+		}
+		// MailPoet integration.
+		/**
+		 * Integrate MailPoet by adding lists for courses and groups.
+		 *
+		 * @hook  sensei_email_mailpoet_feature
+		 * @since 4.13.0
+		 *
+		 * @param {bool} $enable Enable feature. Default true.
+		 *
+		 * @return {bool} Whether to enable feature.
+		 */
+		if ( apply_filters( 'sensei_email_mailpoet_feature', true ) ) {
+			if ( class_exists( \MailPoet\API\API::class ) ) {
+				$mailpoet_api = \MailPoet\API\API::MP( 'v1' );
+				new Sensei\Emails\MailPoet\Main( $mailpoet_api );
+			}
+		}
 	}
 
 	/**
@@ -826,13 +847,21 @@ class Sensei_Main {
 	public function activate_sensei() {
 
 		if ( false === get_option( 'sensei_installed', false ) ) {
-			set_transient( 'sensei_activation_redirect', 1, 30 );
 
-			update_option( Sensei_Setup_Wizard::SUGGEST_SETUP_WIZARD_OPTION, 1 );
+			// Do not enable the wizard for sites that are created with the onboarding flow.
+			if ( 'sensei' !== get_option( 'site_intent' ) ) {
+
+				set_transient( 'sensei_activation_redirect', 1, 30 );
+				update_option( Sensei_Setup_Wizard::SUGGEST_SETUP_WIZARD_OPTION, 1 );
+
+			} else {
+				Sensei_Setup_Wizard::instance()->finish_setup_wizard();
+			}
+		} else {
+			return;
 		}
 
 		update_option( 'sensei_installed', 1 );
-
 	}
 
 	/**

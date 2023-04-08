@@ -33,9 +33,11 @@ url:window.ajaxurl,dataType:"json",cache:!0,id:function(e){return e._id},data:fu
 // page is the one-based page number tracked by Select2
 return{term:e.term,
 //search term
-page:e.page||1,action:"sensei_json_search_users",security:window.woo_learners_general_data.search_users_nonce,default:""}},processResults:function(e,t){var r=[];// wrap the users inside results for select 2 usage
+page:e.page||1,action:"sensei_json_search_users",security:window.woo_learners_general_data.search_users_nonce,default:""}},processResults:function(e,t){var r=[];
+// wrap the users inside results for select 2 usage
 return jQuery.each(e,(function(e,t){jQuery.isEmptyObject(t)||r.push({id:e,text:t})})),{results:r,page:t}}}}),// end select2
-t.on("change.select2",(function(){var e=t.select2("data").length<1;r.prop("disabled",e),e?a.addClass("student-search-empty"):a.removeClass("student-search-empty")}));// For mobile devices (below 783px) put the filters and bulk actions below the table, else keep above.
+t.on("change.select2",(function(){var e=t.select2("data").length<1;r.prop("disabled",e),e?a.addClass("student-search-empty"):a.removeClass("student-search-empty")}));
+// For mobile devices (below 783px) put the filters and bulk actions below the table, else keep above.
 var n=e(".tablenav.top > .sensei-student-bulk-actions__wrapper").first(),o=e(".tablenav.bottom > .tablenav-pages"),s=e(".tablenav.top > .tablenav-pages"),i=e("#woothemes-sensei"),d=function(){var t=e(window).width(),r=t<783?o:s,a=t<783?"inherit":"";r.has(n).length||(r.before(n),i.css({position:a}))};d(),e(window).resize(d),
 /***************************************************************************************************
    * 	3 - Load Select2 Dropdowns.
