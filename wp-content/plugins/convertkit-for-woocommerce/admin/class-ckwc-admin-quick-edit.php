@@ -90,7 +90,7 @@ class CKWC_Admin_Quick_Edit {
 		}
 
 		// Output Quick Edit fields in the footer of the Administration screen.
-		add_action( 'in_admin_footer', array( $this, 'quick_edit_fields' ), 10, 2 );
+		add_action( 'in_admin_footer', array( $this, 'quick_edit_fields' ), 10 );
 
 	}
 
@@ -126,7 +126,7 @@ class CKWC_Admin_Quick_Edit {
 		);
 
 		// Output view.
-		require_once CKWC_PLUGIN_PATH . '/views/backend/product/quick-edit.php';
+		require_once CKWC_PLUGIN_PATH . '/views/backend/post-type/quick-edit.php';
 
 	}
 

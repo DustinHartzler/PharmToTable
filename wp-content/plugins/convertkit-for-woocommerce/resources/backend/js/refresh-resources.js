@@ -42,6 +42,20 @@ jQuery( document ).ready(
 								console.log( response );
 							}
 
+							// Remove any existing error notices that might be displayed.
+							ckwcRefreshResourcesRemoveNotices();
+
+							// Show an error if the request wasn't successful.
+							if ( ! response.success ) {
+								// Show error notice.
+								ckwcRefreshResourcesOutputErrorNotice( response.data );
+
+								// Enable button.
+								$( button ).prop( 'disabled', false );
+
+								return;
+							}
+
 							// Get currently selected option.
 							var selectedOption = $( field ).val();
 
@@ -79,8 +93,8 @@ jQuery( document ).ready(
 								);
 							}
 
-							// Trigger a change event on the select field, to allow Select2 instances to repopulate their options.
-							$( field ).trigger( 'change' );
+							// Reload Select2 instances, so that they reflect the changes made.
+							$( '.ckwc-select2' ).select2();
 
 							// Enable button.
 							$( button ).prop( 'disabled', false );
@@ -92,6 +106,15 @@ jQuery( document ).ready(
 						if ( ckwc_admin_refresh_resources.debug ) {
 							console.log( response );
 						}
+
+						// Remove any existing error notices that might be displayed.
+						ckwcRefreshResourcesRemoveNotices();
+
+						// Show error notice.
+						ckwcRefreshResourcesOutputErrorNotice( 'ConvertKit for WooCommerce: ' + response.status + ' ' + response.statusText );
+
+						// Enable button.
+						$( button ).prop( 'disabled', false );
 					}
 				);
 
@@ -100,3 +123,42 @@ jQuery( document ).ready(
 
 	}
 );
+
+/**
+ * Removes any existing ConvertKit WordPress style error notices.
+ *
+ * @since 	1.4.9
+ */
+function ckwcRefreshResourcesRemoveNotices() {
+
+	( function( $ ) {
+
+		$( 'div.ckwc-error' ).remove();
+
+	} )( jQuery );
+
+}
+
+/**
+ * Removes any existing ConvertKit WordPress style error notices, before outputting
+ * an error notice.
+ *
+ * @since 	1.4.9
+ *
+ * @param 	string 	message 	Error message to display.
+ */
+function ckwcRefreshResourcesOutputErrorNotice( message ) {
+
+	( function( $ ) {
+
+		// Show a WordPress style error notice.
+		$( 'hr.wp-header-end' ).after( '<div id="message" class="error ckwc-error notice is-dismissible"><p>' + message + '</p></div>' );
+
+		// Notify WordPress that a new dismissible notification exists, triggering WordPress' makeNoticesDismissible() function,
+		// which adds a dismiss button and binds necessary events to hide the notification.
+		// We can't directly call makeNoticesDismissible(), as its minified function name will be different.
+		$( document ).trigger( 'wp-updates-notice-added' );
+
+	} )( jQuery );
+
+}

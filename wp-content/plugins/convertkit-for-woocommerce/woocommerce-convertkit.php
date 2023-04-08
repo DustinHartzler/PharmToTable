@@ -9,13 +9,13 @@
  * Plugin Name: ConvertKit for WooCommerce
  * Plugin URI:  https://www.convertkit.com
  * Description: Integrates WooCommerce with ConvertKit, allowing customers to be automatically sent to your ConvertKit account.
- * Version: 1.4.8
+ * Version: 1.6.1
  * Author: ConvertKit
  * Author URI: https://www.convertkit.com
  * Text Domain: woocommerce-convertkit
  *
  * WC requires at least: 3.0
- * WC tested up to: 6.7.0
+ * WC tested up to: 7.5.1
  */
 
 // Bail if Plugin is already loaded.
@@ -28,17 +28,17 @@ define( 'CKWC_PLUGIN_NAME', 'ConvertKitWooCommerce' ); // Used for user-agent in
 define( 'CKWC_PLUGIN_FILE', plugin_basename( __FILE__ ) );
 define( 'CKWC_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CKWC_PLUGIN_PATH', __DIR__ );
-define( 'CKWC_PLUGIN_VERSION', '1.4.8' );
+define( 'CKWC_PLUGIN_VERSION', '1.6.1' );
 
 // Load shared classes, if they have not been included by another ConvertKit Plugin.
 if ( ! class_exists( 'ConvertKit_API' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-api.php';
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-api.php';
 }
 if ( ! class_exists( 'ConvertKit_Resource' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-resource.php';
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-resource.php';
 }
 if ( ! class_exists( 'ConvertKit_Review_Request' ) ) {
-	require_once CKWC_PLUGIN_PATH . '/lib/class-convertkit-review-request.php';
+	require_once CKWC_PLUGIN_PATH . '/vendor/convertkit/convertkit-wordpress-libraries/src/class-convertkit-review-request.php';
 }
 
 // Load plugin files that are always required.
@@ -55,14 +55,14 @@ require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-resource-tags.php';
 require_once CKWC_PLUGIN_PATH . '/includes/class-ckwc-wc-subscriptions.php';
 
 // Load files that are only used in the WordPress Administration interface.
-if ( is_admin() ) {
-	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-ajax.php';
-	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-bulk-edit.php';
-	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
-	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
-	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';
-	require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-refresh-resources.php';
-}
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-post-type.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-ajax.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-bulk-edit.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-coupon.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-plugin.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-product.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-quick-edit.php';
+require_once CKWC_PLUGIN_PATH . '/admin/class-ckwc-admin-refresh-resources.php';
 
 /**
  * Main function to return Plugin instance.

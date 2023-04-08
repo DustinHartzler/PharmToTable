@@ -3,9 +3,9 @@ Contributors: nathanbarry, growdev, travisnorthcutt, convertkit
 Donate link: https://convertkit.com
 Tags: email, marketing, embed form, convertkit, capture, woocommerce
 Requires at least: 5.0
-Tested up to: 6.0.1
+Tested up to: 6.2
 Requires PHP: 5.6.20
-Stable tag: trunk
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,48 @@ No. You must first have an account on ConvertKit.com, but you do not have to use
 2. Checkout page with added checkbox
 
 == Changelog ==
+
+### 1.6.1 2023-04-06
+* Updated: ConvertKit WordPress Libraries to 1.3.4
+
+### 1.6.0 2023-03-30
+* Updated: Tested with WordPress 6.2
+* Updated: Tested with WooCommerce 7.5.1
+
+### 1.5.9 2023-02-23
+* Added: WooCommerce Coupons: Option to specify Form, Tag or Sequence to subscribe customer to if a specific coupon is applied at checkout
+
+### 1.5.8 2023-02-14
+* Fix: WooCommerce Products: Refresh Sequences, Forms and Tags when refresh button clicked
+
+### 1.5.7 2023-02-02
+* Fix: Settings: Subscription: List ConvertKit Sequences, Forms and Tags in alphabetical order
+* Fix: WooCommerce Products: List ConvertKit Sequences, Forms and Tags in alphabetical order
+
+### 1.5.6 2023-01-16
+* Updated: ConvertKit WordPress Libraries to 1.3.0
+
+### 1.5.5 2023-01-05
+* Fix: PHP Warning: Trying to access array offset on value of type null
+
+### 1.5.4 2022-12-12
+* Fix: iThemes Sync: Error when attempting to update WordPress Plugins or Themes using iThemes Sync when ConvertKit for WooCommerce active.
+
+### 1.5.3 2022-12-07
+* Fix: Bulk & Quick Edit: Improve layout of ConvertKit settings on desktop and mobile
+* Fix: Products: Improve layout of ConvertKit settings on desktop and mobile
+
+### 1.5.2 2022-11-21
+* Fix: Remove unused `admin_init` call
+
+### 1.5.1 2022-10-25
+* Updated: ConvertKit WordPress Libraries to 1.2.1
+
+### 1.5.0 2022-09-07
+* Development: Moved /lib folder to managed repository
+
+### 1.4.9 2022-08-15
+* Added: Refresh button: Show error notification when refreshing fails
 
 ### 1.4.8 2022-08-04
 * Added: Bulk and Quick Edit Subscription when viewing list of WooCommerce Products

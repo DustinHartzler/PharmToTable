@@ -10,7 +10,7 @@
  * Abstract class defining variables and functions for a ConvertKit API Resource
  * (forms, landing pages, tags), which is stored in the WordPress option table.
  *
- * @since   1.9.6
+ * @since   1.0.0
  */
 class ConvertKit_Resource {
 
@@ -48,7 +48,7 @@ class ConvertKit_Resource {
 	 * If false, won't be refreshed through WordPress' Cron
 	 * If a string, must be a value from wp_get_schedules().
 	 *
-	 * @since   1.9.7.4
+	 * @since   1.0.0
 	 *
 	 * @var     bool|string
 	 */
@@ -57,15 +57,33 @@ class ConvertKit_Resource {
 	/**
 	 * Holds the resources from the ConvertKit API
 	 *
-	 * @var     WP_Error|array
+	 * @var     WP_Error|array|bool|null
 	 */
 	public $resources = array();
+
+	/**
+	 * The key to use when alphabetically sorting resources.
+	 *
+	 * @since   1.3.1
+	 *
+	 * @var     string
+	 */
+	public $order_by = 'name';
+
+	/**
+	 * The order to return resources.
+	 *
+	 * @since   1.3.1
+	 *
+	 * @var     string
+	 */
+	public $order = 'asc';
 
 	/**
 	 * Timestamp for when the resources stored in the option database table
 	 * were last queried from the API.
 	 *
-	 * @since   1.9.7.4
+	 * @since   1.0.0
 	 *
 	 * @var     int
 	 */
@@ -74,19 +92,9 @@ class ConvertKit_Resource {
 	/**
 	 * Constructor.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 */
 	public function __construct() {
-
-		// Initialize the API if the API Key and Secret have been defined in the Plugin Settings.
-		$settings = new ConvertKit_Settings();
-		if ( $settings->has_api_key_and_secret() ) {
-			$this->api = new ConvertKit_API(
-				$settings->get_api_key(),
-				$settings->get_api_secret(),
-				$settings->debug_enabled()
-			);
-		}
 
 		$this->init();
 
@@ -96,7 +104,7 @@ class ConvertKit_Resource {
 	 * Initialization routine. Populate the resources array of e.g. forms, landing pages or tags,
 	 * depending on whether resources are already cached, if the resources have expired etc.
 	 *
-	 * @since   1.9.7.4
+	 * @since   1.0.0
 	 */
 	public function init() {
 
@@ -121,22 +129,50 @@ class ConvertKit_Resource {
 	}
 
 	/**
-	 * Returns all resources.
+	 * Returns all resources based on the sort order.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  array
 	 */
 	public function get() {
 
-		return $this->resources;
+		// Don't mutate the underlying resources, so multiple calls to get()
+		// with different order_by and order properties are supported.
+		$resources = $this->resources;
+
+		// Don't attempt sorting if no resources exist.
+		if ( ! $this->exist() ) {
+			return $resources;
+		}
+
+		// Don't attempt sorting if the order_by property doesn't exist as a key
+		// in the API response.
+		if ( ! array_key_exists( $this->order_by, reset( $resources ) ) ) {
+			return $resources;
+		}
+
+		// Sort resources ascending by the order_by property.
+		uasort(
+			$resources,
+			function( $a, $b ) {
+				return strcmp( $a[ $this->order_by ], $b[ $this->order_by ] );
+			}
+		);
+
+		// Reverse the array if the results should be returned in descending order.
+		if ( $this->order === 'desc' ) {
+			$resources = array_reverse( $resources, true );
+		}
+
+		return $resources;
 
 	}
 
 	/**
 	 * Returns an individual resource by its ID.
 	 *
-	 * @since   1.9.7.7
+	 * @since   1.0.0
 	 *
 	 * @param   int $id     Resource ID (Form, Tag, Sequence).
 	 * @return  mixed           bool | array
@@ -145,7 +181,7 @@ class ConvertKit_Resource {
 
 		foreach ( $this->get() as $resource ) {
 			// If this resource's ID matches the ID we're looking for, return it.
-			if ( $resource['id'] === $id ) {
+			if ( (int) $resource['id'] === $id ) {
 				return $resource;
 			}
 		}
@@ -159,7 +195,7 @@ class ConvertKit_Resource {
 	 * Returns a paginated subset of resources, including whether
 	 * previous and next resources in the array exist.
 	 *
-	 * @since   1.9.7.6
+	 * @since   1.0.0
 	 *
 	 * @param   int $page   Current Page.
 	 * @param   int $per_page   Number of resources to return per page.
@@ -182,7 +218,7 @@ class ConvertKit_Resource {
 
 		return array(
 			// The subset of items based on the pagination.
-			'items'         => array_slice( $this->resources, ( $page * $per_page ) - $per_page, $per_page ),
+			'items'         => array_slice( $this->get(), ( $page * $per_page ) - $per_page, $per_page ),
 
 			// Sanitized inputs.
 			'page'          => $page,
@@ -203,7 +239,7 @@ class ConvertKit_Resource {
 	/**
 	 * Returns the number of resources.
 	 *
-	 * @since   1.9.7.6
+	 * @since   1.0.0
 	 *
 	 * @return  int
 	 */
@@ -216,13 +252,13 @@ class ConvertKit_Resource {
 	/**
 	 * Returns whether any resources exist in the options table.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  bool
 	 */
 	public function exist() {
 
-		if ( $this->resources === false ) { // @phpstan-ignore-line.
+		if ( $this->resources === false ) {
 			return false;
 		}
 
@@ -242,7 +278,7 @@ class ConvertKit_Resource {
 	 * Fetches resources (forms, landing pages or tags) from the API, storing them in the options table
 	 * with a last queried timestamp.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  bool|WP_Error|array
 	 */
@@ -279,6 +315,10 @@ class ConvertKit_Resource {
 				$results = $this->api->get_all_posts();
 				break;
 
+			case 'products':
+				$results = $this->api->get_products();
+				break;
+
 			default:
 				$results = new WP_Error(
 					'convertkit_resource_refresh_error',
@@ -290,15 +330,17 @@ class ConvertKit_Resource {
 				break;
 		}
 
-		// Bail if an error occured.
+		// Define and store the last query time now.
+		// This prevents multiple calls to refresh() when the above returns a 401 error.
+		$this->last_queried = time();
+		update_option( $this->settings_name . '_last_queried', $this->last_queried );
+
+		// Bail if an error occured, as we don't want to cache errors.
 		if ( is_wp_error( $results ) ) {
 			return $results;
 		}
 
-		// Define last query time now.
-		$last_queried = time();
-
-		// Store resources and their last query timestamp in the options table.
+		// Store resources in the options table.
 		// We don't use WordPress' Transients API (i.e. auto expiring options), because they're prone to being
 		// flushed by some third party "optimization" Plugins. They're also not guaranteed to remain in the options
 		// table for the amount of time specified; any expiry is a maximum, not a minimum.
@@ -306,14 +348,21 @@ class ConvertKit_Resource {
 		// a result of transients not being honored, so storing them as options with a separate, persistent expiry
 		// value is more reliable here.
 		update_option( $this->settings_name, $results );
-		update_option( $this->settings_name . '_last_queried', $last_queried );
 
-		// Store resources and last queried time in class variables.
-		$this->resources    = $results;
-		$this->last_queried = $last_queried;
+		// Store resources in class variable.
+		$this->resources = $results;
 
-		// Return resources.
-		return $results;
+		/**
+		 * Perform any actions immediately after the resource has been refreshed.
+		 *
+		 * @since   1.2.1
+		 *
+		 * @param   array   $results    Resources
+		 */
+		do_action( 'convertkit_resource_refreshed_' . $this->type, $results );
+
+		// Return resources, honoring the order_by and order properties.
+		return $this->get();
 
 	}
 
@@ -321,7 +370,7 @@ class ConvertKit_Resource {
 	 * Schedules a WordPress Cron event to refresh this resource based on
 	 * the resource's $wp_cron_schedule.
 	 *
-	 * @since   1.9.7.4
+	 * @since   1.0.0
 	 */
 	public function schedule_cron_event() {
 
@@ -347,7 +396,7 @@ class ConvertKit_Resource {
 	/**
 	 * Unschedules a WordPress Cron event to refresh this resource.
 	 *
-	 * @since   1.9.7.4
+	 * @since   1.0.0
 	 */
 	public function unschedule_cron_event() {
 
@@ -361,7 +410,7 @@ class ConvertKit_Resource {
 	 * Returns false if no schedule exists i.e. wp_schedule_event() has not been
 	 * called or failed to register a scheduled event.
 	 *
-	 * @since   1.9.7.4
+	 * @since   1.0.0
 	 *
 	 * @return  bool|string
 	 */
@@ -374,7 +423,7 @@ class ConvertKit_Resource {
 	/**
 	 * Deletes resources (forms, landing pages or tags) from the options table.
 	 *
-	 * @since   1.9.7.8
+	 * @since   1.0.0
 	 */
 	public function delete() {
 

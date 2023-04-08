@@ -29,6 +29,13 @@ class ConvertKit_API {
 	protected $api_secret = false;
 
 	/**
+	 * Optional context of the request.
+	 *
+	 * @var     bool|string
+	 */
+	protected $context = false;
+
+	/**
 	 * Save debug data to log
 	 *
 	 * @var  bool
@@ -78,6 +85,22 @@ class ConvertKit_API {
 	protected $api_url_base = 'https://api.convertkit.com/';
 
 	/**
+	 * ConvertKit API endpoints that use the /wordpress/ namespace
+	 * i.e. https://api.convertkit.com/wordpress/endpoint
+	 *
+	 * @since   1.3.0
+	 *
+	 * @var     array
+	 */
+	protected $api_endpoints_wordpress = array(
+		'posts',
+		'products',
+		'profile',
+		'subscriber_authentication/send_code',
+		'subscriber_authentication/verify',
+	);
+
+	/**
 	 * Holds the log class for writing to the log file
 	 *
 	 * @var bool|ConvertKit_Log
@@ -95,18 +118,20 @@ class ConvertKit_API {
 	/**
 	 * Sets up the API with the required credentials.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   bool|string $api_key        ConvertKit API Key.
 	 * @param   bool|string $api_secret     ConvertKit API Secret.
 	 * @param   bool|object $debug          Save data to log.
+	 * @param   bool|string $context        Context of originating request.
 	 */
-	public function __construct( $api_key = false, $api_secret = false, $debug = false ) {
+	public function __construct( $api_key = false, $api_secret = false, $debug = false, $context = false ) {
 
 		// Set API credentials, debugging and logging class.
 		$this->api_key        = $api_key;
 		$this->api_secret     = $api_secret;
 		$this->debug          = $debug;
+		$this->context        = $context;
 		$this->plugin_name    = ( defined( 'CONVERTKIT_PLUGIN_NAME' ) ? CONVERTKIT_PLUGIN_NAME : false );
 		$this->plugin_path    = ( defined( 'CONVERTKIT_PLUGIN_PATH' ) ? CONVERTKIT_PLUGIN_PATH : false );
 		$this->plugin_url     = ( defined( 'CONVERTKIT_PLUGIN_URL' ) ? CONVERTKIT_PLUGIN_URL : false );
@@ -157,11 +182,27 @@ class ConvertKit_API {
 			'get_posts_per_page_parameter_bound_too_low'  => __( 'get_posts(): the per_page parameter must be equal to or greater than 1.', 'convertkit' ),
 			'get_posts_per_page_parameter_bound_too_high' => __( 'get_posts(): the per_page parameter must be equal to or less than 50.', 'convertkit' ),
 
+			// subscriber_authentication_send_code().
+			'subscriber_authentication_send_code_email_empty'			=> __( 'subscriber_authentication_send_code(): the email parameter is empty.', 'convertkit' ),
+			'subscriber_authentication_send_code_redirect_url_empty'	=> __( 'subscriber_authentication_send_code(): the redirect_url parameter is empty.', 'convertkit' ),
+			'subscriber_authentication_send_code_redirect_url_invalid' 	=> __( 'subscriber_authentication_send_code(): the redirect_url parameter is not a valid URL.', 'convertkit' ),
+			'subscriber_authentication_send_code_response_token_missing'=> __( 'subscriber_authentication_send_code(): the token parameter is missing from the API response.', 'convertkit' ),
+			
+			// subscriber_authentication_verify().
+			'subscriber_authentication_verify_token_empty'					  => __( 'subscriber_authentication_verify(): the token parameter is empty.', 'convertkit' ),
+			'subscriber_authentication_verify_subscriber_code_empty'		  => __( 'subscriber_authentication_verify(): the subscriber_code parameter is empty.', 'convertkit' ),
+			'subscriber_authentication_verify_response_error' 				  => __( 'The entered code is invalid. Please try again, or click the link sent in the email.', 'convertkit' ),
+
+			// profile().
+			'profiles_signed_subscriber_id_empty' 		  => __( 'profiles(): the signed_subscriber_id parameter is empty.', 'convertkit' ),
+
 			// request().
 			/* translators: HTTP method */
 			'request_method_unsupported'                  => __( 'API request method %s is not supported in ConvertKit_API class.', 'convertkit' ),
-			'request_rate_limit_exceeded'                 => __( 'Rate limit hit.', 'convertkit' ),
-			'response_type_unexpected' 					  => __( 'The response from the API is not of the expected type array.', 'convertkit' ),
+			'request_rate_limit_exceeded'                 => __( 'ConvertKit API Error: Rate limit hit.', 'convertkit' ),
+			'request_internal_server_error'               => __( 'ConvertKit API Error: Internal server error.', 'convertkit' ),
+			'request_bad_gateway'                 		  => __( 'ConvertKit API Error: Bad gateway.', 'convertkit' ),
+			'response_type_unexpected' 					  => __( 'ConvertKit API Error: The response is not of the expected type array.', 'convertkit' ),
 		);
 		// phpcs:enable
 
@@ -170,7 +211,7 @@ class ConvertKit_API {
 	/**
 	 * Gets account information from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  WP_Error|array
 	 */
@@ -190,7 +231,7 @@ class ConvertKit_API {
 	/**
 	 * Gets all subscription forms from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  WP_Error|array
 	 */
@@ -211,7 +252,7 @@ class ConvertKit_API {
 	/**
 	 * Gets all forms from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  WP_Error|array
 	 */
@@ -235,7 +276,7 @@ class ConvertKit_API {
 	/**
 	 * Subscribes an email address to a form.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   int    $form_id       Form ID.
 	 * @param   string $email      Email Address.
@@ -311,7 +352,7 @@ class ConvertKit_API {
 	/**
 	 * Gets all landing pages from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  WP_Error|array
 	 */
@@ -335,7 +376,7 @@ class ConvertKit_API {
 	/**
 	 * Fetches all sequences from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  WP_Error|array
 	 */
@@ -372,7 +413,7 @@ class ConvertKit_API {
 		}
 
 		foreach ( $response['courses'] as $sequence ) {
-			$sequences[] = $sequence;
+			$sequences[ $sequence['id'] ] = $sequence;
 		}
 
 		return $sequences;
@@ -382,7 +423,7 @@ class ConvertKit_API {
 	/**
 	 * Subscribes an email address to a sequence.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   int    $sequence_id Sequence ID.
 	 * @param   string $email       Email Address.
@@ -429,7 +470,7 @@ class ConvertKit_API {
 		/**
 		 * Runs actions immediately after the email address was successfully subscribed to the sequence.
 		 *
-		 * @since   1.9.6
+		 * @since   1.0.0
 		 *
 		 * @param   array   $response       API Response
 		 * @param   int     $sequence_id    Sequence ID
@@ -445,7 +486,7 @@ class ConvertKit_API {
 	/**
 	 * Fetches all tags from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  WP_Error|array
 	 */
@@ -482,7 +523,7 @@ class ConvertKit_API {
 		}
 
 		foreach ( $response['tags'] as $tag ) {
-			$tags[] = $tag;
+			$tags[ $tag['id'] ] = $tag;
 		}
 
 		return $tags;
@@ -492,7 +533,7 @@ class ConvertKit_API {
 	/**
 	 * Subscribes an email address to a tag.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   int    $tag_id     Tag ID.
 	 * @param   string $email      Email Address.
@@ -539,7 +580,7 @@ class ConvertKit_API {
 		/**
 		 * Runs actions immediately after the email address was successfully subscribed to the tag.
 		 *
-		 * @since   1.9.6
+		 * @since   1.0.0
 		 *
 		 * @param   array   $response   API Response
 		 * @param   int     $tag_id     Tag ID
@@ -555,7 +596,7 @@ class ConvertKit_API {
 	/**
 	 * Gets a subscriber by their email address.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   string $email  Email Address.
 	 * @return  WP_Error|array
@@ -609,7 +650,7 @@ class ConvertKit_API {
 	/**
 	 * Gets a subscriber by their ConvertKit subscriber ID.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   int $subscriber_id  Subscriber ID.
 	 * @return  WP_Error|array
@@ -647,7 +688,7 @@ class ConvertKit_API {
 	/**
 	 * Gets a list of tags for the given ConvertKit subscriber ID.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   int $subscriber_id  Subscriber ID.
 	 * @return  WP_Error|array
@@ -685,7 +726,7 @@ class ConvertKit_API {
 	/**
 	 * Returns the subscriber's ID by their email address.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   string $email_address  Email Address.
 	 * @return  WP_Error|int
@@ -708,7 +749,7 @@ class ConvertKit_API {
 	/**
 	 * Unsubscribes an email address.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   string $email      Email Address.
 	 * @return  WP_Error|array
@@ -743,7 +784,7 @@ class ConvertKit_API {
 		/**
 		 * Runs actions immediately after the email address was successfully unsubscribed.
 		 *
-		 * @since   1.9.6
+		 * @since   1.0.0
 		 *
 		 * @param   array   $response   API Response
 		 * @param   string  $email      Email Address
@@ -757,7 +798,7 @@ class ConvertKit_API {
 	/**
 	 * Gets all custom fields from the API.
 	 *
-	 * @since   1.9.6.9
+	 * @since   1.0.0
 	 *
 	 * @return  WP_Error|array
 	 */
@@ -794,7 +835,7 @@ class ConvertKit_API {
 		}
 
 		foreach ( $response['custom_fields'] as $custom_field ) {
-			$custom_fields[] = $custom_field;
+			$custom_fields[ $custom_field['id'] ] = $custom_field;
 		}
 
 		return $custom_fields;
@@ -804,7 +845,7 @@ class ConvertKit_API {
 	/**
 	 * Gets all posts from the API.
 	 *
-	 * @since   1.9.7.6
+	 * @since   1.0.0
 	 *
 	 * @param   int $posts_per_request   Number of Posts to fetch in each request.
 	 * @return  WP_Error|array
@@ -850,7 +891,7 @@ class ConvertKit_API {
 
 			// Append posts to array.
 			foreach ( $response['posts'] as $post ) {
-				$posts[] = $post;
+				$posts[ $post['id'] ] = $post;
 			}
 		}
 
@@ -867,7 +908,7 @@ class ConvertKit_API {
 	/**
 	 * Gets posts from the API.
 	 *
-	 * @since   1.9.7.4
+	 * @since   1.0.0
 	 *
 	 * @param   int $page       Page number.
 	 * @param   int $per_page   Number of Posts to return.
@@ -928,6 +969,224 @@ class ConvertKit_API {
 	}
 
 	/**
+	 * Fetches all products from the API.
+	 *
+	 * @since   1.1.0
+	 *
+	 * @return  WP_Error|array
+	 */
+	public function get_products() {
+
+		$this->log( 'API: get_products()' );
+
+		$products = array();
+
+		// Send request.
+		$response = $this->get(
+			'products',
+			array(
+				'api_key'    => $this->api_key,
+				'api_secret' => $this->api_secret,
+			)
+		);
+
+		// If an error occured, log and return it now.
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: get_products(): Error: ' . $response->get_error_message() );
+			return $response;
+		}
+
+		// If the response isn't an array as we expect, log that no products exist and return a blank array.
+		if ( ! is_array( $response['products'] ) ) {
+			$this->log( 'API: get_products(): Error: No products exist in ConvertKit.' );
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'response_type_unexpected' ) );
+		}
+
+		// If no products exist, log that no products exist and return a blank array.
+		if ( ! count( $response['products'] ) ) {
+			$this->log( 'API: get_products(): Error: No products exist in ConvertKit.' );
+			return $products;
+		}
+
+		foreach ( $response['products'] as $product ) {
+			$products[ $product['id'] ] = $product;
+		}
+
+		return $products;
+
+	}
+
+	/**
+	 * Sends an email to the given email address, which will contain a ConvertKit link
+	 * which the subscriber can click to authenticate themselves.
+	 *
+	 * Upon successful authentication, the subscriber will be redirected from the ConvertKit
+	 * link to the given redirect URL.
+	 *
+	 * @since   1.3.0
+	 *
+	 * @param   string $email          Email Address.
+	 * @param   string $redirect_url   Redirect URL.
+	 * @return  WP_Error|string
+	 */
+	public function subscriber_authentication_send_code( $email, $redirect_url ) {
+
+		$this->log( 'API: subscriber_authentication_send_code(): [ email: ' . $email . ', redirect_url: ' . $redirect_url . ']' );
+
+		// Sanitize some parameters.
+		$email        = trim( $email );
+		$redirect_url = trim( $redirect_url );
+
+		// Return error if no email address or redirect URL is specified.
+		if ( empty( $email ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'subscriber_authentication_send_code_email_empty' ) );
+		}
+		if ( empty( $redirect_url ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'subscriber_authentication_send_code_redirect_url_empty' ) );
+		}
+
+		// Return error if an invalid redirect URL is specified.
+		if ( ! filter_var( $redirect_url, FILTER_VALIDATE_URL ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'subscriber_authentication_send_code_redirect_url_invalid' ) );
+		}
+
+		// Send request.
+		$response = $this->post(
+			'subscriber_authentication/send_code',
+			array(
+				'api_key'       => $this->api_key,
+				'api_secret'    => $this->api_secret,
+				'email_address' => $email,
+				'redirect_url'  => $redirect_url,
+			)
+		);
+
+		// If an error occured, log and return it now.
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: subscriber_authentication_send_code(): Error: ' . $response->get_error_message() );
+			return $response;
+		}
+
+		// Confirm that a token was supplied in the response.
+		if ( ! isset( $response['token'] ) ) {
+			$this->log( 'API: ' . $this->get_error_message( 'subscriber_authentication_send_code_response_token_missing' ) );
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'subscriber_authentication_send_code_response_token_missing' ) );
+		}
+
+		// Return token, which is used with the subscriber code (sent by email) when subsequently calling subscriber_authentication_verify().
+		return $response['token'];
+
+	}
+
+	/**
+	 * Verifies the given token and subscriber code, which are included in the link
+	 * sent by email in the subscriber_authentication_send_code() step.
+	 *
+	 * @since   1.3.0
+	 *
+	 * @param   string $token              Token.
+	 * @param   string $subscriber_code    Subscriber Code.
+	 * @return  WP_Error|string
+	 */
+	public function subscriber_authentication_verify( $token, $subscriber_code ) {
+
+		$this->log( 'API: subscriber_authentication_verify(): [ token: ' . $token . ', subscriber_code: ' . $subscriber_code . ']' );
+
+		// Sanitize some parameters.
+		$token           = trim( $token );
+		$subscriber_code = trim( $subscriber_code );
+
+		// Return error if no email address or redirect URL is specified.
+		if ( empty( $token ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'subscriber_authentication_verify_token_empty' ) );
+		}
+		if ( empty( $subscriber_code ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'subscriber_authentication_verify_subscriber_code_empty' ) );
+		}
+
+		// Send request.
+		$response = $this->post(
+			'subscriber_authentication/verify',
+			array(
+				'api_key'         => $this->api_key,
+				'api_secret'      => $this->api_secret,
+				'token'           => $token,
+				'subscriber_code' => $subscriber_code,
+			)
+		);
+
+		// If an error occured, log and return it now.
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: subscriber_authentication_verify(): Error: ' . $response->get_error_message() );
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'subscriber_authentication_verify_response_error' ) );
+		}
+
+		// Confirm that a subscriber ID was supplied in the response.
+		if ( ! isset( $response['subscriber_id'] ) ) {
+			$this->log( 'API: ' . $this->get_error_message( 'subscriber_authentication_verify_response_error' ) );
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'subscriber_authentication_verify_response_error' ) );
+		}
+
+		// Return subscriber ID.  This is a signed ID valid for 90 days, instead of the subscriber ID integer.
+		// This can be used when calling profile().
+		return $response['subscriber_id'];
+
+	}
+
+	/**
+	 * Returns the subscriber's ID and products they are subscribed to for the given
+	 * signed subscriber ID.
+	 *
+	 * @since   1.3.0
+	 *
+	 * @param   string $signed_subscriber_id   Signed Subscriber ID (i.e. from subscriber_authentication_verify()).
+	 * @return  WP_Error|array
+	 */
+	public function profile( $signed_subscriber_id ) {
+
+		$this->log( 'API: profile(): [ signed_subscriber_id: ' . $signed_subscriber_id . ' ]' );
+
+		// Trim some parameters.
+		$signed_subscriber_id = trim( $signed_subscriber_id );
+
+		// Return error if no signed subscribed id is specified.
+		if ( empty( $signed_subscriber_id ) ) {
+			return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'profiles_signed_subscriber_id_empty' ) );
+		}
+
+		// Send request.
+		$response = $this->get(
+			'profile/' . $signed_subscriber_id,
+			array(
+				'api_key'    => $this->api_key,
+				'api_secret' => $this->api_secret,
+			)
+		);
+
+		// If an error occured, log and return it now.
+		if ( is_wp_error( $response ) ) {
+			$this->log( 'API: profile(): Error: ' . $response->get_error_message() );
+			return $response;
+		}
+
+		// If the response contains a message, an error occured.
+		// Log and return it now.
+		if ( array_key_exists( 'message', $response ) ) {
+			$error = new WP_Error(
+				'convertkit_api_error',
+				$response['message']
+			);
+
+			$this->log( 'API: profile(): Error: ' . $error->get_error_message() );
+			return $error;
+		}
+
+		// Return profile data (subscriber ID, subscribed products).
+		return $response;
+
+	}
+
+	/**
 	 * Get HTML from ConvertKit for the given Legacy Form ID.
 	 *
 	 * This isn't specifically an API function, but for now it's best suited here.
@@ -936,6 +1195,8 @@ class ConvertKit_API {
 	 * @return  WP_Error|string     HTML
 	 */
 	public function get_form_html( $id ) {
+
+		$this->log( 'API: get_form_html(): [ id: ' . $id . ']' );
 
 		// Define Legacy Form URL.
 		$url = add_query_arg(
@@ -949,6 +1210,11 @@ class ConvertKit_API {
 		// Get HTML.
 		$body = $this->get_html( $url );
 
+		// Log if an error occured.
+		if ( is_wp_error( $body ) ) {
+			$this->log( 'API: get_form_html(): Error: ' . $body->get_error_message() );
+		}
+
 		return $body;
 
 	}
@@ -958,15 +1224,24 @@ class ConvertKit_API {
 	 *
 	 * This isn't specifically an API function, but for now it's best suited here.
 	 *
-	 * @param   string $url    URL of Landing Page.
-	 * @return  string          HTML
+	 * @param   string $url     URL of Landing Page.
+	 * @return  WP_Error|string HTML
 	 */
 	public function get_landing_page_html( $url ) {
+
+		$this->log( 'API: get_landing_page_html(): [ url: ' . $url . ']' );
 
 		// Get HTML.
 		$body = $this->get_html( $url, false );
 
+		// Log and return WP_Error if an error occured.
+		if ( is_wp_error( $body ) ) {
+			$this->log( 'API: get_landing_page_html(): Error: ' . $body->get_error_message() );
+			return $body;
+		}
+
 		// Inject JS for subscriber forms to work.
+		// wp_enqueue_script() isn't called when we load a Landing Page, so we can't use it.
 		// phpcs:disable WordPress.WP.EnqueuedResources
 		$scripts = new WP_Scripts();
 		$script  = "<script type='text/javascript' src='" . trailingslashit( $scripts->base_url ) . "wp-includes/js/jquery/jquery.js?ver=1.4.0'></script>";
@@ -983,7 +1258,7 @@ class ConvertKit_API {
 	/**
 	 * Create a Purchase.
 	 *
-	 * @since   1.9.6.9
+	 * @since   1.0.0
 	 *
 	 * @param   array $purchase   Purchase Data.
 	 * @return  WP_Error|array
@@ -1007,7 +1282,7 @@ class ConvertKit_API {
 		/**
 		 * Runs actions immediately after the purchase data address was successfully created.
 		 *
-		 * @since   1.9.6.9
+		 * @since   1.0.0
 		 *
 		 * @param   array   $response   API Response
 		 * @param   array   $purchase   Purchase Data
@@ -1021,7 +1296,7 @@ class ConvertKit_API {
 	/**
 	 * Backward compat. function for getting a ConvertKit subscriber by their ID.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   int $id     Subscriber ID.
 	 * @return  WP_Error|array
@@ -1029,7 +1304,7 @@ class ConvertKit_API {
 	public function get_subscriber( $id ) {
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'get_subscriber_by_id()' );
+		_deprecated_function( __FUNCTION__, '1.0.0', 'get_subscriber_by_id()' );
 
 		// Pass request to new function.
 		return $this->get_subscriber_by_id( $id );
@@ -1039,7 +1314,7 @@ class ConvertKit_API {
 	/**
 	 * Backward compat. function for subscribing a ConvertKit subscriber to the given Tag.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   int   $tag    Tag ID.
 	 * @param   array $args   Arguments.
@@ -1048,7 +1323,7 @@ class ConvertKit_API {
 	public function add_tag( $tag, $args ) {
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'tag_subscribe( $tag_id, $email_address )' );
+		_deprecated_function( __FUNCTION__, '1.0.0', 'tag_subscribe( $tag_id, $email_address )' );
 
 		// Pass request to new function.
 		return $this->tag_subscribe( $tag, $args['email'] );
@@ -1058,7 +1333,7 @@ class ConvertKit_API {
 	/**
 	 * Backward compat. function for fetching Legacy Form or Landing Page markup for the given URL.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   string $url    URL.
 	 * @return  WP_Error|string
@@ -1066,7 +1341,7 @@ class ConvertKit_API {
 	public function get_resource( $url ) {
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'get_form_html( $form_id ) or get_landing_page_html( $url )' );
+		_deprecated_function( __FUNCTION__, '1.0.0', 'get_form_html( $form_id ) or get_landing_page_html( $url )' );
 
 		// Pass request to new function.
 		return $this->get_landing_page_html( $url );
@@ -1076,7 +1351,7 @@ class ConvertKit_API {
 	/**
 	 * Backward compat. function for fetching Legacy Form or Landing Page markup for the given URL.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   array $args   Arguments (single email key).
 	 * @return  WP_Error|array
@@ -1084,7 +1359,7 @@ class ConvertKit_API {
 	public function form_unsubscribe( $args ) {
 
 		// Warn the developer that they shouldn't use this function.
-		_deprecated_function( __FUNCTION__, '1.9.6', 'unsubscribe( $email_address )' );
+		_deprecated_function( __FUNCTION__, '1.0.0', 'unsubscribe( $email_address )' );
 
 		// Pass request to new function.
 		return $this->unsubscribe( $args['email'] );
@@ -1094,7 +1369,7 @@ class ConvertKit_API {
 	/**
 	 * Adds the given entry to the log file, if debugging is enabled.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   string $entry  Log Entry.
 	 */
@@ -1158,19 +1433,31 @@ class ConvertKit_API {
 			);
 		}
 
+		// If the HTML is missing the <html> tag, it's likely to be a legacy form.
+		// Wrap it in <html>, <head> and <body> tags now, so we can inject the UTF-8 Content-Type meta tag.
+		if ( strpos( $body, '<html>' ) === false ) {
+			$body = '<html><head></head><body>' . $body . '</body></html>';
+		}
+
+		// Forcibly tell DOMDocument that this HTML uses the UTF-8 charset.
+		// <meta charset="utf-8"> isn't enough, as DOMDocument still interprets the HTML as ISO-8859, which breaks character encoding
+		// Use of mb_convert_encoding() with HTML-ENTITIES is deprecated in PHP 8.2, so we have to use this method.
+		// If we don't, special characters render incorrectly.
+		$body = str_replace( '<head>', '<head>' . "\n" . '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', $body );
+
 		// Get just the scheme and host from the URL.
 		$url_scheme           = wp_parse_url( $url );
 		$url_scheme_host_only = $url_scheme['scheme'] . '://' . $url_scheme['host'];
 
-		// Load the landing page HTML into a DOMDocument.
+		// Load the HTML into a DOMDocument.
 		libxml_use_internal_errors( true );
 		$html = new DOMDocument();
 		if ( $body_only ) {
 			// Prevent DOMDocument from including a doctype on saveHTML().
 			// We don't use LIBXML_HTML_NOIMPLIED, as it requires a single root element, which Legacy Forms don't have.
-			$html->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ), LIBXML_HTML_NODEFDTD );
+			$html->loadHTML( $body, LIBXML_HTML_NODEFDTD );
 		} else {
-			$html->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
+			$html->loadHTML( $body );
 		}
 
 		// Convert any relative URLs to absolute URLs in the HTML DOM.
@@ -1195,7 +1482,7 @@ class ConvertKit_API {
 	/**
 	 * Determines if the given string is JSON.
 	 *
-	 * @since   1.9.6.4
+	 * @since   1.0.0
 	 *
 	 * @param   string $string     Possible JSON String.
 	 * @return  bool                Is JSON String.
@@ -1211,7 +1498,7 @@ class ConvertKit_API {
 	 * Converts any relative URls to absolute, fully qualified HTTP(s) URLs for the given
 	 * DOM Elements.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   DOMNodeList<DOMElement> $elements   Elements.
 	 * @param   string                  $attribute  HTML Attribute.
@@ -1244,9 +1531,10 @@ class ConvertKit_API {
 	}
 
 	/**
-	 * Strips <html>, <head> and <body> opening and closing tags from the given markup.
+	 * Strips <html>, <head> and <body> opening and closing tags from the given markup,
+	 * as well as the Content-Type meta tag we might have added in get_html().
 	 *
-	 * @since   1.9.6.5
+	 * @since   1.0.0
 	 *
 	 * @param   string $markup     HTML Markup.
 	 * @return  string              HTML Markup
@@ -1259,6 +1547,7 @@ class ConvertKit_API {
 		$markup = str_replace( '</head>', '', $markup );
 		$markup = str_replace( '<body>', '', $markup );
 		$markup = str_replace( '</body>', '', $markup );
+		$markup = str_replace( '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">', '', $markup );
 
 		return $markup;
 
@@ -1267,7 +1556,7 @@ class ConvertKit_API {
 	/**
 	 * Gets all forms and landing pages from the API.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  WP_Error|array
 	 */
@@ -1316,7 +1605,7 @@ class ConvertKit_API {
 	/**
 	 * Performs a GET request.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   string $endpoint       API Endpoint.
 	 * @param   array  $params         Params.
@@ -1331,7 +1620,7 @@ class ConvertKit_API {
 	/**
 	 * Performs a POST request.
 	 *
-	 * @since  1.9.6
+	 * @since  1.0.0
 	 *
 	 * @param   string $endpoint       API Endpoint.
 	 * @param   array  $params         Params.
@@ -1346,7 +1635,7 @@ class ConvertKit_API {
 	/**
 	 * Performs a PUT request.
 	 *
-	 * @since  1.9.7.8
+	 * @since  1.0.0
 	 *
 	 * @param   string $endpoint       API Endpoint.
 	 * @param   array  $params         Params.
@@ -1361,7 +1650,7 @@ class ConvertKit_API {
 	/**
 	 * Main function which handles sending requests to the API using WordPress functions.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   string $endpoint                API Endpoint (required).
 	 * @param   string $method                  HTTP Method (optional).
@@ -1437,22 +1726,59 @@ class ConvertKit_API {
 		$body               = wp_remote_retrieve_body( $result );
 		$response           = json_decode( $body, true );
 
-		// If the HTTP response code is 429, we've hit the API's rate limit of 120 requests over 60 seconds.
-		if ( $http_response_code === 429 ) {
-			// If retry on rate limit hit is disabled, return a WP_Error.
-			if ( ! $retry_if_rate_limit_hit ) {
-				return new WP_Error( 'convertkit_api_error', $this->get_error_message( 'request_rate_limit_exceeded' ) );
-			}
+		// Depending on the response code from the API, try again or return an error.
+		// We don't handle 422 errors here, as the response object for 422 will provide a more verbose reason why the request failed.
+		switch ( $http_response_code ) {
+			// Rate limit hit.
+			case 429:
+				// If retry on rate limit hit is disabled, return a WP_Error.
+				if ( ! $retry_if_rate_limit_hit ) {
+					return new WP_Error(
+						'convertkit_api_error',
+						$this->get_error_message( 'request_rate_limit_exceeded' ),
+						$http_response_code
+					);
+				}
 
-			// Retry the request a final time, waiting 2 seconds before.
-			sleep( 2 );
-			return $this->request( $endpoint, $method, $params, false );
+				// Retry the request a final time, waiting 2 seconds before.
+				sleep( 2 );
+				return $this->request( $endpoint, $method, $params, false );
+
+			// Internal server error.
+			case 500:
+				return new WP_Error(
+					'convertkit_api_error',
+					$this->get_error_message( 'request_internal_server_error' ),
+					$http_response_code
+				);
+
+			// Bad gateway.
+			case 502:
+				return new WP_Error(
+					'convertkit_api_error',
+					$this->get_error_message( 'request_bad_gateway' ),
+					$http_response_code
+				);
+		}
+
+		// If the response is null, json_decode() failed as the body could not be decoded.
+		if ( is_null( $response ) ) {
+			$this->log( 'API: Error: ' . sprintf( $this->get_error_message( 'response_type_unexpected' ), $body ) );
+			return new WP_Error(
+				'convertkit_api_error',
+				sprintf( $this->get_error_message( 'response_type_unexpected' ), $body ),
+				$http_response_code
+			);
 		}
 
 		// If an error message or code exists in the response, return a WP_Error.
 		if ( isset( $response['error'] ) ) {
 			$this->log( 'API: Error: ' . $response['error'] . ': ' . $response['message'] );
-			return new WP_Error( 'convertkit_api_error', $response['error'] . ': ' . $response['message'] );
+			return new WP_Error(
+				'convertkit_api_error',
+				$response['error'] . ': ' . $response['message'],
+				$http_response_code
+			);
 		}
 
 		return $response;
@@ -1463,7 +1789,7 @@ class ConvertKit_API {
 	 * Returns the maximum amount of time to wait for
 	 * a response to the request before exiting.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return  int     Timeout, in seconds.
 	 */
@@ -1474,7 +1800,7 @@ class ConvertKit_API {
 		/**
 		 * Defines the maximum time to allow the API request to run.
 		 *
-		 * @since   2.2.9
+		 * @since   1.0.0
 		 *
 		 * @param   int     $timeout    Timeout, in seconds.
 		 */
@@ -1487,7 +1813,7 @@ class ConvertKit_API {
 	/**
 	 * Gets a customized version of the WordPress default user agent; includes WP Version, PHP version, and ConvertKit plugin version.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @return string User Agent
 	 */
@@ -1497,6 +1823,19 @@ class ConvertKit_API {
 
 		// Include an unmodified $wp_version.
 		require ABSPATH . WPINC . '/version.php';
+
+		// If a context is specified, include it now.
+		if ( $this->context !== false ) {
+			return sprintf(
+				'WordPress/%1$s;PHP/%2$s;%3$s/%4$s;%5$s;context/%6$s',
+				$wp_version,
+				phpversion(),
+				$this->plugin_name,
+				$this->plugin_version,
+				home_url( '/' ),
+				$this->context
+			);
+		}
 
 		return sprintf(
 			'WordPress/%1$s;PHP/%2$s;%3$s/%4$s;%5$s',
@@ -1512,16 +1851,21 @@ class ConvertKit_API {
 	/**
 	 * Returns the full API URL for the given endpoint.
 	 *
-	 * @since   1.9.6
+	 * @since   1.0.0
 	 *
 	 * @param   string $endpoint   Endpoint.
 	 * @return  string              API URL
 	 */
 	private function get_api_url( $endpoint ) {
 
-		// For the /posts endpoint, the API base is https://api.convertkit.com/api/v3/$endpoint.
-		if ( $endpoint === 'posts' ) {
-			return path_join( $this->api_url_base . 'api/' . $this->api_version, $endpoint );
+		// For some specific API endpoints created primarily for the WordPress Plugin, the API base is
+		// https://api.convertkit.com/wordpress/$endpoint.
+		// We perform a string search instead of in_array(), because the $endpoint might be e.g.
+		// profile/{subscriber_id} or subscriber_authentication/send_code.
+		foreach ( $this->api_endpoints_wordpress as $wordpress_endpoint ) {
+			if ( strpos( $endpoint, $wordpress_endpoint ) !== false ) {
+				return path_join( $this->api_url_base . 'wordpress', $endpoint ); // phpcs:ignore WordPress.WP.CapitalPDangit
+			}
 		}
 
 		// For all other endpoints, it's https://api.convertkit.com/v3/$endpoint.
@@ -1532,7 +1876,7 @@ class ConvertKit_API {
 	/**
 	 * Adds the supplied array of parameters as query arguments to the URL.
 	 *
-	 * @since   1.9.6.9
+	 * @since   1.0.0
 	 *
 	 * @param   string $url        URL.
 	 * @param   array  $params     Parameters for request.
@@ -1547,7 +1891,7 @@ class ConvertKit_API {
 	/**
 	 * Returns the localized/translated error message for the given error key.
 	 *
-	 * @since   1.9.7.8
+	 * @since   1.0.0
 	 *
 	 * @param   string $key    Key.
 	 * @return  string          Error message
