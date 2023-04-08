@@ -46,6 +46,29 @@ class WpMenuCart_Settings {
 			)
 		);			
 
+		if ( WPO_Menu_Cart()->is_block_theme() ) {
+			add_settings_field(
+				'block_theme_enabled',
+				__( 'Current theme is block type', 'wp-menu-cart' ),
+				array( &$this, 'checkbox_element_callback' ),
+				$option,
+				'plugin_settings',
+				array(
+					'menu'        => $option,
+					'id'          => 'block_theme_enabled',
+					'disabled'    => true,
+					'pro'         => false,
+					'default'     => 1,
+					'description' => sprintf(
+						/* translators: 1. theme name, 2. here docs link */
+						__( 'Your current theme, %1$s, is a block theme, therefore, you need to configure the cart menu using the navigation block. Please follow the instructions to do it %2$s.', 'wp-menu-cart' ),
+						'<strong>'.WPO_Menu_Cart()->get_current_theme_name().'</strong>',
+						'<a href="https://docs.wpovernight.com/wp-menu-cart/cart-block/" target="_blank">'.__( 'here', 'wp-menu-cart' ).'</a>'
+					),
+				)
+			);
+		}
+
 		if( $parent_theme = wp_get_theme(get_template()) ) {
 			if (in_array($parent_theme->get('Name'), array('Storefront','Divi'))) {
 				add_settings_field(
@@ -126,6 +149,7 @@ class WpMenuCart_Settings {
 				'menu'			=> $option,
 				'id'			=> 'flyout_display',
 				'disabled'		=> true,
+				'pro'           => true,
 			)
 		);
 		
@@ -152,6 +176,7 @@ class WpMenuCart_Settings {
 						'10'		=> '10',
 				),
 				'disabled'		=> true,
+				'pro'           => true,
 			)
 		);			
 
@@ -248,6 +273,7 @@ class WpMenuCart_Settings {
 				'menu'			=> $option,
 				'id'			=> 'custom_class',
 				'disabled'		=> true,
+				'pro'           => true,
 			)
 		);
 		
@@ -265,7 +291,7 @@ class WpMenuCart_Settings {
 			);
 		}
 
-		if ( apply_filters( 'wpo_wpmenucart_enable_builtin_ajax_setting', ( class_exists( 'WooCommerce' ) && isset( $option_values['builtin_ajax'] ) ) || defined('JIGOSHOP_VERSION') || class_exists( 'Easy_Digital_Downloads' ) ) ) {
+		if ( apply_filters( 'wpo_wpmenucart_enable_builtin_ajax_setting', ( class_exists( 'WooCommerce' ) && isset( $option_values['builtin_ajax'] ) ) || class_exists( 'Easy_Digital_Downloads' ) ) ) {
 
 			add_settings_field(
 				'builtin_ajax',
@@ -329,9 +355,8 @@ class WpMenuCart_Settings {
 	 * Styles for settings page
 	 */
 	public function wpmenucart_admin_styles() {
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_enqueue_style( 'wpmenucart-admin', plugins_url( '/assets/css/wpmenucart-icons'.$suffix.'.css', dirname(__FILE__) ), array(), WPMENUCART_VERSION, 'all' );
-		wp_enqueue_style( 'wpmenucart-font', plugins_url( '/assets/css/wpmenucart-font'.$suffix.'.css',  dirname(__FILE__) ), array(), WPMENUCART_VERSION, 'all' );
+		wp_enqueue_style( 'wpmenucart-admin', WPO_Menu_Cart()->plugin_url() . '/assets/css/wpmenucart-icons' . WPO_Menu_Cart()->asset_suffix . '.css', array(), WPMENUCART_VERSION, 'all' );
+		wp_enqueue_style( 'wpmenucart-font', WPO_Menu_Cart()->plugin_url() . '/assets/css/wpmenucart-font' . WPO_Menu_Cart()->asset_suffix . '.css', array(), WPMENUCART_VERSION, 'all' );
 	}
 	 
 	/**
@@ -404,7 +429,7 @@ class WpMenuCart_Settings {
 		if ( ! $this->get_menu_array() && ! WPO_Menu_Cart()->is_block_theme() ) {
 			?>
 			<div class="notice notice-error">
-				<?php _e( 'You need to create a menu before you can use Menu Cart. Go to <strong>Appearence > Menus</strong> and create menu to add the cart to.', 'wp-menu-cart' ); ?>
+				<p><?php _e( 'You need to create a menu before you can use Menu Cart. Go to <strong>Appearence > Menus</strong> and create menu to add the cart to.', 'wp-menu-cart' ); ?></p>
 			</div>
 			<?php
 		}
@@ -423,7 +448,7 @@ class WpMenuCart_Settings {
 			</ul>
 		</div>
 		<div class="menucart-pro-ad menucart-pro-ad-big"> 
-			<img src="<?php echo plugins_url( 'assets/images/', dirname(__FILE__) ) . 'wpo-helper.png'; ?>" class="wpo-helper">
+			<img src="<?php echo WPO_Menu_Cart()->plugin_url() . '/assets/images/wpo-helper.png'; ?>" class="wpo-helper">
 			<h2><?php _e('Sell In Style With Menu Cart Pro!', 'wp-menu-cart' ) ?></h2>
 			<br>
 			<?php _e('Go Pro with Menu Cart Pro. Includes all the great standard features found in this free version plus:', 'wp-menu-cart' ) ?>
@@ -489,8 +514,9 @@ class WpMenuCart_Settings {
 	 */
 	public function text_element_callback( $args ) {
 		$menu = $args['menu'];
-		$id = $args['id'];
+		$id   = $args['id'];
 		$size = isset( $args['size'] ) ? $args['size'] : '25';
+		$pro  = isset( $args['pro'] ) ? $args['pro'] : false;
 	
 		$options = get_option( $menu );
 	
@@ -500,16 +526,16 @@ class WpMenuCart_Settings {
 			$current = isset( $args['default'] ) ? $args['default'] : '';
 		}
 
-		$disabled = (isset( $args['disabled'] )) ? ' disabled' : '';
-		$html = sprintf( '<input type="text" id="%1$s" name="%2$s[%1$s]" value="%3$s" size="%4$s"%5$s/>', $id, $menu, $current, $size, $disabled );
+		$disabled = ( isset( $args['disabled'] ) ) ? ' disabled' : '';
+		$html     = sprintf( '<input type="text" id="%1$s" name="%2$s[%1$s]" value="%3$s" size="%4$s"%5$s/>', esc_attr( $id ), esc_attr( $menu ), esc_attr( $current ), esc_attr( $size ), esc_attr( $disabled ) );
 	
 		// Displays option description.
 		if ( isset( $args['description'] ) ) {
-			$html .= sprintf( '<p class="description">%s</p>', $args['description'] );
+			$html .= sprintf( '<p class="description">%s</p>', wp_kses_post( $args['description'] ) );
 		}
 	
-		if (isset( $args['disabled'] )) {
-			$html .= ' <span style="display:none;" class="pro-feature"><i>'. __('This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartcustomclass">Menu Cart Pro</a></i></span>';
+		if ( isset( $args['disabled'] ) && $pro ) {
+			$html .= ' <span style="display:none;" class="pro-feature"><i>'. __( 'This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartcustomclass">Menu Cart Pro</a></i></span>';
 			$html .= '<div style="position:absolute; left:0; right:0; top:0; bottom:0; background-color:white; -moz-opacity: 0; opacity:0;filter: alpha(opacity=0);" class="hidden-input"></div>';
 			$html = '<div style="display:inline-block; position:relative;">'.$html.'</div>';
 		}
@@ -524,7 +550,8 @@ class WpMenuCart_Settings {
 	 */
 	public function select_element_callback( $args ) {
 		$menu = $args['menu'];
-		$id = $args['id'];
+		$id   = $args['id'];
+		$pro  = isset( $args['pro'] ) ? $args['pro'] : false;
 		
 		$options = get_option( $menu );
 		
@@ -536,20 +563,20 @@ class WpMenuCart_Settings {
 
 		$disabled = (isset( $args['disabled'] )) ? ' disabled' : '';
 		
-		$html = sprintf( '<select name="%1$s[%2$s]" id="%1$s[%2$s]"%3$s>', $menu, $id, $disabled );
+		$html  = sprintf( '<select name="%1$s[%2$s]" id="%1$s[%2$s]"%3$s>', esc_attr( $menu ), esc_attr( $id ), esc_attr( $disabled ) );
 		$html .= sprintf( '<option value="%s"%s>%s</option>', '0', selected( $current, '0', false ), '' );
 		
 		foreach ( $args['options'] as $key => $label ) {
-			$html .= sprintf( '<option value="%s"%s>%s</option>', $key, selected( $current, $key, false ), $label );
+			$html .= sprintf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $current , $key, false ), esc_attr( $label ) );
 		}
 		$html .= sprintf( '</select>' );
 
 		if ( isset( $args['description'] ) ) {
-			$html .= sprintf( '<p class="description">%s</p>', $args['description'] );
+			$html .= sprintf( '<p class="description">%s</p>', wp_kses_post( $args['description'] ) );
 		}
 		
-		if (isset( $args['disabled'] )) {
-			$html .= ' <span style="display:none;" class="pro-feature"><i>'. __('This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartflyout">Menu Cart Pro</a></i></span>';
+		if ( isset( $args['disabled'] ) && $pro ) {
+			$html .= ' <span style="display:none;" class="pro-feature"><i>'. __( 'This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartflyout">Menu Cart Pro</a></i></span>';
 			$html .= '<div style="position:absolute; left:0; right:0; top:0; bottom:0; background-color:white; -moz-opacity: 0; opacity:0;filter: alpha(opacity=0);" class="hidden-input"></div>';
 			$html = '<div style="display:inline-block; position:relative;">'.$html.'</div>';
 		}
@@ -579,19 +606,19 @@ class WpMenuCart_Settings {
 			
 			$disabled = ($x == 1) ? '' : ' disabled';
 			
-			$html .= sprintf( '<select name="%1$s[%2$s][%3$s]" id="%1$s[%2$s][%3$s]"%4$s>', $menu, $id, $x, $disabled);
+			$html .= sprintf( '<select name="%1$s[%2$s][%3$s]" id="%1$s[%2$s][%3$s]"%4$s>', esc_attr( $menu ), esc_attr( $id ), esc_attr( $x ), esc_attr( $disabled ) );
 			$html .= sprintf( '<option value="%s"%s>%s</option>', '0', selected( $current, '0', false ), '' );
 			
 			foreach ( (array) $args['options'] as $key => $label ) {
-				$html .= sprintf( '<option value="%s"%s>%s</option>', $key, selected( $current, $key, false ), $label );
+				$html .= sprintf( '<option value="%s"%s>%s</option>', $key, selected( $current, $key, false ), esc_attr( $label ) );
 			}
 			$html .= '</select>';
 	
 			if ( isset( $args['description'] ) ) {
-				$html .= sprintf( '<p class="description">%s</p>', $args['description'] );
+				$html .= sprintf( '<p class="description">%s</p>', wp_kses_post( $args['description'] ) );
 			}
 			if ( $x > 1 ) {
-				$html .= ' <span style="display:none;" class="pro-feature"><i>'. __('This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartmultiplemenus">Menu Cart Pro</a></i></span>';
+				$html .= ' <span style="display:none;" class="pro-feature"><i>'. __( 'This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartmultiplemenus">Menu Cart Pro</a></i></span>';
 				$html .= '<div style="position:absolute; left:0; right:0; top:0; bottom:0; background-color:white; -moz-opacity: 0; opacity:0;filter: alpha(opacity=0);" class="hidden-input"></div>';
 				$html = '<div style="display:inline-block; position:relative;">'.$html.'</div>';
 			}
@@ -611,7 +638,8 @@ class WpMenuCart_Settings {
 	 */
 	public function checkbox_element_callback( $args ) {
 		$menu = $args['menu'];
-		$id = $args['id'];
+		$id   = $args['id'];
+		$pro  = isset( $args['pro'] ) ? $args['pro'] : false;
 	
 		$options = get_option( $menu );
 	
@@ -622,15 +650,15 @@ class WpMenuCart_Settings {
 		}
 	
 		$disabled = (isset( $args['disabled'] )) ? ' disabled' : '';
-		$html = sprintf( '<input type="checkbox" id="%1$s" name="%2$s[%1$s]" value="1"%3$s %4$s/>', $id, $menu, checked( 1, $current, false ), $disabled );
+		$html = sprintf( '<input type="checkbox" id="%1$s" name="%2$s[%1$s]" value="1"%3$s %4$s/>', esc_attr( $id ), esc_attr( $menu ), checked( 1, esc_attr( $current ), false ), esc_attr( $disabled ) );
 	
 		// Displays option description.
 		if ( isset( $args['description'] ) ) {
-			$html .= sprintf( '<p class="description">%s</p>', $args['description'] );
+			$html .= sprintf( '<p class="description">%s</p>', wp_kses_post( $args['description'] ) );
 		}
 	
-		if (isset( $args['disabled'] )) {
-			$html .= ' <span style="display:none;" class="pro-feature"><i>'. __('This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartflyout">Menu Cart Pro</a></i></span>';
+		if ( isset( $args['disabled'] ) && $pro ) {
+			$html .= ' <span style="display:none;" class="pro-feature"><i>'. __( 'This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartflyout">Menu Cart Pro</a></i></span>';
 			$html .= '<div style="position:absolute; left:0; right:0; top:0; bottom:0; background-color:white; -moz-opacity: 0; opacity:0;filter: alpha(opacity=0);" class="hidden-input"></div>';
 			$html = '<div style="display:inline-block; position:relative;">'.$html.'</div>';
 		}
@@ -645,7 +673,8 @@ class WpMenuCart_Settings {
 	 */
 	public function radio_element_callback( $args ) {
 		$menu = $args['menu'];
-		$id = $args['id'];
+		$id   = $args['id'];
+		$pro  = isset( $args['pro'] ) ? $args['pro'] : false;
 	
 		$options = get_option( $menu );
 	
@@ -657,17 +686,17 @@ class WpMenuCart_Settings {
 
 		$html = '';
 		foreach ( $args['options'] as $key => $label ) {
-			$html .= sprintf( '<input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s"%4$s />', $menu, $id, $key, checked( $current, $key, false ) );
-			$html .= sprintf( '<label for="%1$s[%2$s][%3$s]"> %4$s</label><br>', $menu, $id, $key, $label);
+			$html .= sprintf( '<input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s"%4$s />', esc_attr( $menu ), esc_attr( $id ), esc_attr( $key ), checked( esc_attr( $current ), esc_attr( $key ), false ) );
+			$html .= sprintf( '<label for="%1$s[%2$s][%3$s]"> %4$s</label><br>', esc_attr( $menu ), esc_attr( $id ), esc_attr( $key ), esc_attr( $label ) );
 		}
 		
 		// Displays option description.
 		if ( isset( $args['description'] ) ) {
-			$html .= sprintf( '<p class="description">%s</p>', $args['description'] );
+			$html .= sprintf( '<p class="description">%s</p>', wp_kses_post( $args['description'] ) );
 		}
 
-		if (isset( $args['disabled'] )) {
-			$html .= ' <span style="display:none;" class="pro-feature"><i>'. __('This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartflyout">Menu Cart Pro</a></i></span>';
+		if ( isset( $args['disabled'] ) && $pro ) {
+			$html .= ' <span style="display:none;" class="pro-feature"><i>'. __( 'This feature only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucartflyout">Menu Cart Pro</a></i></span>';
 			$html .= '<div style="position:absolute; left:0; right:0; top:0; bottom:0; background-color:white; -moz-opacity: 0; opacity:0;filter: alpha(opacity=0);" class="hidden-input"></div>';
 			$html = '<div style="display:inline-block; position:relative;">'.$html.'</div>';
 		}
@@ -697,11 +726,11 @@ class WpMenuCart_Settings {
 		
 		foreach ( $args['options'] as $key => $iconnumber ) {
 			if ($key == 0) {
-				$icons .= sprintf( '<td style="padding-bottom:0;font-size:16pt;" align="center"><label for="%1$s[%2$s][%3$s]"><i class="wpmenucart-icon-shopping-cart-%4$s"></i></label></td>', $menu, $id, $key, $iconnumber);
-				$radios .= sprintf( '<td style="padding-top:0" align="center"><input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s"%4$s /></td>', $menu, $id, $key, checked( $current, $key, false ) );
+				$icons .= sprintf( '<td style="padding-bottom:0;font-size:16pt;" align="center"><label for="%1$s[%2$s][%3$s]"><i class="wpmenucart-icon-shopping-cart-%4$s"></i></label></td>', esc_attr( $menu ), esc_attr( $id ), esc_attr( $key ), esc_attr( $iconnumber ) );
+				$radios .= sprintf( '<td style="padding-top:0" align="center"><input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s"%4$s /></td>', esc_attr( $menu ), esc_attr( $id ), esc_attr( $key ), checked( esc_attr( $current ), esc_attr( $key ), false ) );
 			} else {
-				$icons .= sprintf( '<td style="padding-bottom:0;font-size:16pt;" align="center"><label for="%1$s[%2$s][%3$s]"><img src="%4$scart-icon-%5$s.png" /></label></td>', $menu, $id, $key, plugins_url( 'assets/images/', dirname(__FILE__) ), $iconnumber);
-				$radio = sprintf( '<input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s" disabled />', $menu, $id, $key);
+				$icons .= sprintf( '<td style="padding-bottom:0;font-size:16pt;" align="center"><label for="%1$s[%2$s][%3$s]"><img src="%4$scart-icon-%5$s.png" /></label></td>', esc_attr( $menu ), esc_attr( $id ), esc_attr( $key ), WPO_Menu_Cart()->plugin_url() . '/assets/images/', esc_attr( $iconnumber ) );
+				$radio = sprintf( '<input type="radio" class="radio" id="%1$s[%2$s][%3$s]" name="%1$s[%2$s]" value="%3$s" disabled />', esc_attr( $menu ), esc_attr( $id ), esc_attr( $key ) );
 				$radio .= '<div style="position:absolute; left:0; right:0; top:0; bottom:0; background-color:white; -moz-opacity: 0; opacity:0;filter: alpha(opacity=0);" class="hidden-input-icon"></div>';
 				$radio = '<div style="display:inline-block; position:relative;">'.$radio.'</div>';
 				
@@ -709,7 +738,7 @@ class WpMenuCart_Settings {
 			}
 		}
 
-		$profeature = '<span style="display:none;" class="pro-icon"><i>'. __('Additional icons are only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucarticons">Menu Cart Pro</a></i></span>';
+		$profeature = '<span style="display:none;" class="pro-icon"><i>'. __( 'Additional icons are only available in', 'wp-menu-cart' ) .' <a href="https://wpovernight.com/downloads/menu-cart-pro?utm_source=wordpress&utm_medium=menucartfree&utm_campaign=menucarticons">Menu Cart Pro</a></i></span>';
 
 		$html = '<table><tr>'.$icons.'</tr><tr>'.$radios.'</tr></table>'.$profeature;
 		
@@ -770,9 +799,9 @@ class WpMenuCart_Settings {
 
 		?>
 		<p>
-			<input value="custom" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" type="text" />
-			<input id="custom-menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" type="text" value="" />
-			<input id="custom-menu-item-name" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" type="text" title="<?php esc_attr_e('Menu Item', 'wp-menu-cart'); ?>" />
+			<input value="custom" name="menu-item[<?php echo esc_attr( $_nav_menu_placeholder ); ?>][menu-item-type]" type="text" />
+			<input id="custom-menu-item-url" name="menu-item[<?php echo esc_attr( $_nav_menu_placeholder ); ?>][menu-item-url]" type="text" value="" />
+			<input id="custom-menu-item-name" name="menu-item[<?php echo esc_attr( $_nav_menu_placeholder ); ?>][menu-item-title]" type="text" title="<?php esc_attr_e('Menu Item', 'wp-menu-cart'); ?>" />
 		</p>
 
 		<p class="wpmenucart-meta-box" id="wpmenucart-meta-box">

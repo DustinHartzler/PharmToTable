@@ -1,17 +1,17 @@
-=== WooCommerce Menu Cart ===
+=== Menu Cart for WooCommerce ===
 Contributors: pomegranate, jprummer, alexmigf, yordansoares, kluver, dpeyou
 Donate link: https://wpovernight.com/downloads/menu-cart-pro/
-Tags: woocommerce, menu, bar, cart, basket, header, shopping cart, navigation, edd, ecommerce, eshop, wp-ecommerce, jigoshop, wpec
+Tags: woocommerce, menu, bar, cart, basket, header, shopping cart, navigation, edd, ecommerce
 Requires at least: 3.4
-Tested up to: 6.0
+Tested up to: 6.2
 Requires PHP: 5.3
-Stable tag: 2.12.0
+Stable tag: 2.14.0
 
-Automatically displays a shopping cart in your menu bar. Works with WooCommerce, WP-Ecommerce, EDD, Eshop and Jigoshop
+Automatically displays a shopping cart in your menu bar. Works with WooCommerce and Easy Digital Downloads (EDD)
 
 == Description ==
 
-**Works with WooCommerce, WP-Ecommerce, EDD, Eshop and Jigoshop**
+** Works with WooCommerce and Easy Digital Downloads (EDD) **
 
 This plugin installs a shopping cart button in the navigation bar. The plugin takes less than a minute to setup, 
 and includes the following options:
@@ -40,9 +40,7 @@ Compatibility:
 
 * WooCommerce
 * Easy Digital Downloads
-* Eshop
-* WP-Ecommerce
-* Jigoshop
+* Easy Digital Downloads Pro
 
 Translations:
 
@@ -84,6 +82,29 @@ Once the plugin is activated navigate to Settings > Menu Cart Setup. Select your
 == Frequently Asked Questions ==
 
 == Changelog ==
+
+= 2.14.0 (2023-03-28) =
+* New: EDD Pro compatibility
+* Tested up to WooCommerce 7.5 & WP 6.2
+
+= 2.13.1 (2023-02-02) =
+* New: WooCommerce HPOS compatibility (beta)
+* Tested up to WooCommerce 7.3
+
+= 2.13.0 (2022-12-06) =
+* Tweak: bumps WooCommerce minimum version to 3.0
+* Tested up to WooCommerce 7.1 & WP 6.1
+
+= 2.12.1 (2022-10-04) =
+* Renames plugin to comply with trademark rules 
+* New: adds disabled setting for block themes, including documentation link
+* Fix: moves hide woocommerce notice code to the function
+* Fix: removes references to Jigoshop, WP Ecommerce and Eshop
+* Fix: loads ajax-assist script when 'Always display cart' is disabled
+* Fix: escapes HTML properly before echoing
+* Fix: deprecate usage of globals
+* Fix: missing menu notice style
+* Tested up to WooCommerce 6.9
 
 = 2.12.0 =
 * Security: escape URL in admin notice
