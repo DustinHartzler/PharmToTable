@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Handles order status transitions and keeps bookings in sync
  */
@@ -26,7 +25,6 @@ class WC_Booking_Order_Manager {
 		add_filter( 'the_title', array( $this, 'endpoint_title' ) );
 		add_filter( 'woocommerce_account_menu_items', array( $this, 'my_account_menu_item' ) );
 		add_action( 'woocommerce_account_' . $this->get_endpoint() . '_endpoint', array( $this, 'endpoint_content' ) );
-		add_action( 'woocommerce_after_my_account', array( $this, 'legacy_account_page_content' ) );
 
 		// Complete booking orders if virtual
 		add_filter( 'woocommerce_payment_complete_order_status', array( $this, 'complete_order' ), 20, 2 );
@@ -48,6 +46,12 @@ class WC_Booking_Order_Manager {
 		add_action( 'before_delete_post', array( $this, 'delete_post' ) );
 		add_action( 'wp_trash_post', array( $this, 'trash_post' ) );
 		add_action( 'untrash_post', array( $this, 'untrash_post' ) );
+
+		// Handle HPOS order trash and delete.
+		add_action( 'woocommerce_before_delete_order', array( $this, 'delete_post' ) );
+		add_action( 'woocommerce_before_trash_order', array( $this, 'trash_post' ) );
+		add_action( 'woocommerce_untrash_order', array( $this, 'untrash_post' ) );
+
 		add_action( 'woocommerce_booking_cancelled', array( $this, 'maybe_cancel_order' ) );
 		add_action( 'woocommerce_booking_paid', array( $this, 'maybe_process_order' ) );
 		add_action( 'woocommerce_booking_unpaid', array( $this, 'maybe_pending_order' ) );
@@ -62,12 +66,8 @@ class WC_Booking_Order_Manager {
 		add_action( 'woocommerce_booking_in-cart_to_unpaid', array( $this, 'attach_new_user' ), 10, 2 );
 		add_action( 'woocommerce_booking_in-cart_to_pending-confirmation', array( $this, 'attach_new_user' ), 10, 2 );
 
-		if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
-			add_action( 'updated_post_meta', array( $this, 'updated_post_meta' ), 10, 4 );
-			add_action( 'added_post_meta', array( $this, 'updated_post_meta' ), 10, 4 );
-		} else {
-			add_action( 'woocommerce_order_object_updated_props', array( $this, 'sync_booking_customer_id' ), 10, 2 );
-		}
+		add_action( 'woocommerce_order_object_updated_props', array( $this, 'sync_booking_customer_id' ), 10, 2 );
+
 		// Failed Order Management.
 		add_action( 'woocommerce_order_status_failed', array( $this, 'schedule_failed_order_event' ) );
 		add_action( 'woocommerce_bookings_failed_order_expired', array( $this, 'handle_failed_order_scheduled_event' ), 20, 2 );
@@ -234,17 +234,6 @@ class WC_Booking_Order_Manager {
 	}
 
 	/**
-	 * Display the account page content for WooCommerce versions before 2.6
-	 *
-	 * @since 1.9.11
-	 */
-	public function legacy_account_page_content() {
-		if ( version_compare( WC()->version, '2.6', '<' ) ) {
-			$this->my_bookings();
-		}
-	}
-
-	/**
 	 * Show a users bookings in My Account > Bookings.
 	 *
 	 * @param int $current_page
@@ -256,69 +245,61 @@ class WC_Booking_Order_Manager {
 		$user_id      = get_current_user_id();
 		$current_page = empty( $current_page ) ? 1 : absint( $current_page );
 
-		if ( version_compare( WC()->version, '2.6.0', '>=' ) ) {
-			$bookings_per_page = apply_filters( 'woocommerce_bookings_my_bookings_per_page', 10 );
+		$bookings_per_page = apply_filters( 'woocommerce_bookings_my_bookings_per_page', 10 );
 
-			$today_bookings = WC_Booking_Data_Store::get_bookings_for_user( $user_id, apply_filters( 'woocommerce_bookings_my_bookings_today_query_args', array(
-				'order_by'       => apply_filters( 'woocommerce_bookings_my_bookings_today_order_by', 'start_date' ),
-				'order'          => 'ASC',
-				'date_after'     => current_time( 'timestamp' ),
-				'date_before'    => strtotime( 'tomorrow', current_time( 'timestamp' ) ),
-				'offset'         => ( $current_page - 1 ) * $bookings_per_page,
-				'limit'          => $bookings_per_page + 1, // Increment to detect pagination.
-			) ) );
+		$today_bookings = WC_Booking_Data_Store::get_bookings_for_user( $user_id, apply_filters( 'woocommerce_bookings_my_bookings_today_query_args', array(
+			'order_by'    => apply_filters( 'woocommerce_bookings_my_bookings_today_order_by', 'start_date' ),
+			'order'       => 'ASC',
+			'date_after'  => current_time( 'timestamp' ),
+			'date_before' => strtotime( 'tomorrow', current_time( 'timestamp' ) ),
+			'offset'      => ( $current_page - 1 ) * $bookings_per_page,
+			'limit'       => $bookings_per_page + 1, // Increment to detect pagination.
+		) ) );
 
-			$past_bookings = WC_Booking_Data_Store::get_bookings_for_user( $user_id, apply_filters( 'woocommerce_bookings_my_bookings_past_query_args', array(
-				'order_by'       => apply_filters( 'woocommerce_bookings_my_bookings_past_order_by', 'start_date' ),
-				'order'          => 'DESC',
-				'date_before'    => current_time( 'timestamp' ),
-				'offset'         => ( $current_page - 1 ) * $bookings_per_page,
-				'limit'          => $bookings_per_page + 1, // Increment to detect pagination.
-			) ) );
+		$past_bookings = WC_Booking_Data_Store::get_bookings_for_user( $user_id, apply_filters( 'woocommerce_bookings_my_bookings_past_query_args', array(
+			'order_by'    => apply_filters( 'woocommerce_bookings_my_bookings_past_order_by', 'start_date' ),
+			'order'       => 'DESC',
+			'date_before' => current_time( 'timestamp' ),
+			'offset'      => ( $current_page - 1 ) * $bookings_per_page,
+			'limit'       => $bookings_per_page + 1, // Increment to detect pagination.
+		) ) );
 
-			$upcoming_bookings = WC_Booking_Data_Store::get_bookings_for_user( $user_id, apply_filters( 'woocommerce_bookings_my_bookings_upcoming_query_args', array(
-				'order_by'       => apply_filters( 'woocommerce_bookings_my_bookings_upcoming_order_by', 'start_date' ),
-				'order'          => 'ASC',
-				'date_after'     => strtotime( 'tomorrow', current_time( 'timestamp' ) ),
-				'offset'         => ( $current_page - 1 ) * $bookings_per_page,
-				'limit'          => $bookings_per_page + 1, // Increment to detect pagination.
-			) ) );
+		$upcoming_bookings = WC_Booking_Data_Store::get_bookings_for_user( $user_id, apply_filters( 'woocommerce_bookings_my_bookings_upcoming_query_args', array(
+			'order_by'   => apply_filters( 'woocommerce_bookings_my_bookings_upcoming_order_by', 'start_date' ),
+			'order'      => 'ASC',
+			'date_after' => strtotime( 'tomorrow', current_time( 'timestamp' ) ),
+			'offset'     => ( $current_page - 1 ) * $bookings_per_page,
+			'limit'      => $bookings_per_page + 1, // Increment to detect pagination.
+		) ) );
 
-			$tables = array();
-			if ( ! empty( $today_bookings ) ) {
-				$tables['today'] = array(
-					'header'   => __( 'Today\'s Bookings', 'woocommerce-bookings' ),
-					'bookings' => $today_bookings,
-				);
-			}
-			if ( ! empty( $upcoming_bookings ) ) {
-				$tables['upcoming'] = array(
-					'header'   => __( 'Upcoming Bookings', 'woocommerce-bookings' ),
-					'bookings' => $upcoming_bookings,
-				);
-			}
-			if ( ! empty( $past_bookings ) ) {
-				$tables['past'] = array(
-					'header'   => __( 'Past Bookings', 'woocommerce-bookings' ),
-					'bookings' => $past_bookings,
-				);
-			}
-
-			wc_get_template(
-				'myaccount/bookings.php',
-				apply_filters( 'woocommerce_bookings_my_bookings_template_args', array(
-					'tables'            => apply_filters( 'woocommerce_bookings_account_tables', $tables ),
-					'page'              => $current_page,
-					'bookings_per_page' => $bookings_per_page,
-				) ),
-			'woocommerce-bookings/', WC_BOOKINGS_TEMPLATE_PATH );
-		} else {
-			$all_bookings = WC_Booking_Data_Store::get_bookings_for_user( $user_id );
-
-			if ( ! empty( $all_bookings ) ) {
-				wc_get_template( 'myaccount/my-bookings.php', array( 'bookings' => $all_bookings ), 'woocommerce-bookings/', WC_BOOKINGS_TEMPLATE_PATH );
-			}
+		$tables = array();
+		if ( ! empty( $today_bookings ) ) {
+			$tables['today'] = array(
+				'header'   => __( 'Today\'s Bookings', 'woocommerce-bookings' ),
+				'bookings' => $today_bookings,
+			);
 		}
+		if ( ! empty( $upcoming_bookings ) ) {
+			$tables['upcoming'] = array(
+				'header'   => __( 'Upcoming Bookings', 'woocommerce-bookings' ),
+				'bookings' => $upcoming_bookings,
+			);
+		}
+		if ( ! empty( $past_bookings ) ) {
+			$tables['past'] = array(
+				'header'   => __( 'Past Bookings', 'woocommerce-bookings' ),
+				'bookings' => $past_bookings,
+			);
+		}
+
+		wc_get_template(
+			'myaccount/bookings.php',
+			apply_filters( 'woocommerce_bookings_my_bookings_template_args', array(
+				'tables'            => apply_filters( 'woocommerce_bookings_account_tables', $tables ),
+				'page'              => $current_page,
+				'bookings_per_page' => $bookings_per_page,
+			) ),
+			'woocommerce-bookings/', WC_BOOKINGS_TEMPLATE_PATH );
 	}
 
 	/**
@@ -390,16 +371,9 @@ class WC_Booking_Order_Manager {
 			}
 
 			foreach ( $order->get_items() as $item ) {
-				if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
-					if ( 'line_item' === $item['type'] ) {
-						$product               = $order->get_product_from_item( $item );
-						$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'booking' );
-					}
-				} else {
-					if ( $item->is_type( 'line_item' ) ) {
-						$product               = $item->get_product();
-						$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'booking' );
-					}
+				if ( $item->is_type( 'line_item' ) ) {
+					$product               = $item->get_product();
+					$virtual_booking_order = $product && $product->is_virtual() && $product->is_type( 'booking' );
 				}
 				if ( ! $virtual_booking_order ) {
 					break;
@@ -452,7 +426,8 @@ class WC_Booking_Order_Manager {
 		$cancelled_bookings = array();
 
 		// Prevents infinite loop during synch.
-		update_post_meta( $order_id, '_booking_status_sync', true );
+		$order->update_meta_data( '_booking_status_sync', true );
+		$order->save_meta_data();
 
 		// Collect booking IDs where refunded qty matches with its order item
 		// being refunded.
@@ -483,7 +458,8 @@ class WC_Booking_Order_Manager {
 		}
 
 		WC_Cache_Helper::get_transient_version( 'bookings', true );
-		delete_post_meta( $order_id, '_booking_status_sync' );
+		$order->delete_meta_data( '_booking_status_sync' );
+		$order->save_meta_data();
 	}
 
 	/**
@@ -504,7 +480,7 @@ class WC_Booking_Order_Manager {
 			$item_count = is_a( $order, 'WC_Order' ) ? count( $order->get_items() ) : 0;
 
 			if ( 1 === $item_count && $order_id && ! self::is_syncing( $order_id ) ) {
-				wp_delete_post( $order_id, true );
+				$order->delete( true );
 			}
 
 			$this->clear_cron_hooks( (int) $post_id );
@@ -512,7 +488,7 @@ class WC_Booking_Order_Manager {
 			self::syncing_stop( $post_id );
 		}
 
-		if ( 'shop_order' === get_post_type( $post_id ) ) {
+		if ( WC_Booking_Order_Compat::is_shop_order( $post_id ) ) {
 			self::syncing_start( $post_id );
 
 			$bookings = WC_Booking_Data_Store::get_booking_ids_from_order_id( $post_id );
@@ -547,13 +523,13 @@ class WC_Booking_Order_Manager {
 
 			// only delete this order if this booking is the only item in it
 			if ( 1 === $item_count && $order_id && ! self::is_syncing( $order_id ) ) {
-				wp_trash_post( $order_id );
+				$order->delete();
 			}
 
 			self::syncing_stop( $post_id );
 		}
 
-		if ( 'shop_order' === get_post_type( $post_id ) ) {
+		if ( WC_Booking_Order_Compat::is_shop_order( $post_id ) ) {
 			self::syncing_start( $post_id );
 
 			$bookings = WC_Booking_Data_Store::get_booking_ids_from_order_id( $post_id );
@@ -585,13 +561,13 @@ class WC_Booking_Order_Manager {
 			$order_id = WC_Booking_Data_Store::get_booking_order_id( $post_id );
 
 			if ( $order_id && ! self::is_syncing( $order_id ) ) {
-				wp_untrash_post( $order_id );
+				WC_Booking_Order_Compat::untrash_post( $order_id );
 			}
 
 			self::syncing_stop( $post_id );
 		}
 
-		if ( 'shop_order' === get_post_type( $post_id ) ) {
+		if ( WC_Booking_Order_Compat::is_shop_order( $post_id ) ) {
 			self::syncing_start( $post_id );
 
 			$bookings = WC_Booking_Data_Store::get_booking_ids_from_order_id( $post_id );
@@ -691,28 +667,6 @@ class WC_Booking_Order_Manager {
 			}
 		}
 
-	}
-
-	/**
-	 * Sync customer between order + booking. 2.6 and below.
-	 */
-	public function updated_post_meta( $meta_id, $object_id, $meta_key, $_meta_value ) {
-		if ( '_customer_user' === $meta_key && 'shop_order' === get_post_type( $object_id ) ) {
-			global $wpdb;
-
-			$order    = wc_get_order( $object_id );
-			$bookings = array();
-
-			foreach ( $order->get_items() as $order_item_id => $item ) {
-				if ( 'line_item' == $item['type'] ) {
-					$bookings = array_merge( $bookings, $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_booking_order_item_id' AND meta_value = %d", $order_item_id ) ) );
-				}
-			}
-
-			foreach ( $bookings as $booking_id ) {
-				update_post_meta( $booking_id, '_booking_customer_id', $_meta_value );
-			}
-		}
 	}
 
 	/**

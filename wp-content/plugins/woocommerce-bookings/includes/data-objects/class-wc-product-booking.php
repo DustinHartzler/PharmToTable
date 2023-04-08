@@ -1,10 +1,6 @@
 <?php
 
-if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
-	class WC_Product_Booking_Compatibility extends Legacy_WC_Product_Booking {}
-} else {
-	class WC_Product_Booking_Compatibility extends WC_Product {}
-}
+class WC_Product_Booking_Compatibility extends WC_Product {}
 
 /**
  * Class for the booking product type.
@@ -65,6 +61,29 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	 * @var array
 	 */
 	public $availability_rules = array();
+
+	/**
+	 * Flag to toggle inclusion and exclusion of in-cart booking when checking booking slot availability.
+	 *
+	 * @used-by WC_Booking_Cart_Manager::validate_booking_order()
+	 *
+	 * @since x.x.x
+	 *
+	 * @var bool TRUE will include in-cart booking and FALSE will exclude in-car booking. Default: TRUE
+	 */
+	public $check_in_cart = true;
+
+	/**
+	 * Stores in cart confirmed/valid bookings.
+	 * Used in conjunction with $check_in_cart to check availability.
+	 *
+	 * @used-by WC_Booking_Cart_Manager::validate_booking_order()
+	 *
+	 * @since   x.x.x
+	 *
+	 * @var WC_Booking[].
+	 */
+	public $confirmed_order_bookings = [];
 
 	/**
 	 * Merges booking product data into the parent object.
@@ -1273,7 +1292,7 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	/**
 	 * Get Min date.
 	 *
-	 * @return array|bool
+	 * @return array
 	 */
 	public function get_min_date() {
 		$min_date['value'] = apply_filters( 'woocommerce_bookings_min_date_value', $this->get_min_date_value(), $this->get_id() );
@@ -1513,11 +1532,16 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	/**
 	 * Check the resources availability against all the blocks.
 	 *
-	 * @param  string $start_date
-	 * @param  string $end_date
-	 * @param  int    $qty
-	 * @param  WC_Product_Booking_Resource|null $booking_resource
-	 * @param  array  $intervals
+	 * @since x.x.x Pass check_in_cart booking product property value.
+	 *              Include checkout bookings in the query, if $confirmed_checkout_order_item set.
+	 *              This help to check if the booking is available for the same time slot.
+	 *
+	 * @param string                           $start_date
+	 * @param string                           $end_date
+	 * @param int                              $qty
+	 * @param WC_Product_Booking_Resource|null $booking_resource
+	 * @param array                            $intervals
+	 *
 	 * @return string|WP_Error
 	 */
 	public function get_blocks_availability( $start_date, $end_date, $qty, $booking_resource = null, $intervals = array() ) {
@@ -1534,8 +1558,19 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 			$bookings_end_date += $this->get_buffer_period_minutes() * 60;
 		}
 
-		$existing_bookings = WC_Booking_Data_Store::get_bookings_in_date_range( $start_date + 1, $bookings_end_date, $this->has_resources() && $resource_id ? $resource_id : $this->get_id() );
-		$blocks            = $this->get_blocks_in_range( $start_date, $end_date, $intervals, $resource_id );
+		$existing_bookings = WC_Booking_Data_Store::get_bookings_in_date_range(
+			$start_date + 1,
+			$bookings_end_date,
+			$this->has_resources() && $resource_id ? $resource_id : $this->get_id(),
+			$this->check_in_cart
+		);
+
+		// In case of processing checkout/order, we need to include the pending bookings to calculate the availability.
+		$existing_bookings = $this->confirmed_order_bookings ?
+			array_merge( $existing_bookings, $this->confirmed_order_bookings ) :
+			$existing_bookings;
+
+		$blocks = $this->get_blocks_in_range( $start_date, $end_date, $intervals, $resource_id );
 
 		if ( empty( $blocks ) || ! in_array( $start_date, $blocks ) ) {
 			return false;
@@ -1628,6 +1663,12 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	 */
 	public function get_blocks_in_range( $start_date, $end_date, $intervals = array(), $resource_id = 0, $booked = array(), $get_past_times = false ) {
 
+		// Instead of adding this as a seventh argument, we are doing this to avoid issues with overridden methods.
+		$include_unavailable = false;
+		if ( 7 === func_num_args() && func_get_arg( 6 ) ) {
+			$include_unavailable = (bool) func_get_arg( 6 );
+		}
+
 		$default_interval = 'hour' === $this->get_duration_unit() ? $this->get_duration() * 60 : $this->get_duration();
 
 		if ( empty( $intervals ) ) {
@@ -1643,12 +1684,16 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 		if ( 'day' === $this->get_duration_unit() ) {
 			$blocks_in_range = $this->get_blocks_in_range_for_day( $start_date, $end_date, $resource_id, $booked );
 		} elseif ( 'month' === $this->get_duration_unit() ) {
-			$blocks_in_range = $this->get_blocks_in_range_for_month( $start_date, $end_date, $resource_id );
+			$blocks_in_range = $this->get_blocks_in_range_for_month( $start_date, $end_date, $resource_id, $include_unavailable );
 		} else {
 			$blocks_in_range = $this->get_blocks_in_range_for_hour_or_minutes( $start_date, $end_date, $intervals, $resource_id, $booked, $get_past_times );
 		}
 
-		return array_unique( $blocks_in_range );
+		if ( ! $include_unavailable ) {
+			$blocks_in_range = array_unique( $blocks_in_range );
+		}
+
+		return $blocks_in_range;
 	}
 
 	/**
@@ -1716,9 +1761,9 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	 *
 	 * @return array
 	 */
-	public function get_blocks_in_range_for_month( $start_date, $end_date, $resource_id ) {
+	public function get_blocks_in_range_for_month( $start_date, $end_date, $resource_id, $include_unavailable = false ) {
 
-		$blocks = array();
+		$blocks = $unavailable_blocks = array();
 
 		if ( 'month' !== $this->get_duration_unit() ) {
 			return $blocks;
@@ -1742,11 +1787,26 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 			$month = date( 'n', ( $i ? strtotime( "+ {$i} month", $from ) : $from ) );
 
 			if ( ! WC_Product_Booking_Rule_Manager::check_availability_rules_against_date( $this, $resource_id, strtotime( "{$year}-{$month}-01" ) ) ) {
+
+				if ( $include_unavailable ) {
+					$unavailable_blocks[] = strtotime( "+ {$i} month", $from );
+				}
+
 				continue;
 			}
 
 			$blocks[] = strtotime( "+ {$i} month", $from );
 		}
+
+		// Include unavailable to later show as white/not-selectable monthly blocks.
+		if ( $include_unavailable ) {
+			$blocks = array_flip( $blocks );
+			foreach ( $unavailable_blocks as $unavailable_block ) {
+				$blocks[ $unavailable_block ] = 'unavailable';
+			}
+			ksort( $blocks );
+		}
+
 		return $blocks;
 	}
 
@@ -1973,7 +2033,7 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 
 				// Break if start time is after the end date being calculated.
 				if ( $start_time > $end_date ) {
-					break 2;
+					break;
 				}
 
 				// Must be in the future
@@ -2059,12 +2119,17 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	/**
 	 * Returns available blocks from a range of blocks by looking at existing bookings.
 	 *
-	 * @param  array $args
-	 *     @option  array   $blocks      The blocks we'll be checking availability for.
-	 *     @option  array   $intervals   Array containing 2 items; the interval of the block (maybe user set), and the base interval for the block/product.
-	 *     @option  integer $resource_id Resource we're getting blocks for. Falls backs to product as a whole if 0.
-	 *     @option  integer $from        The starting date for the set of blocks
-	 *     @option  integer $to          Ending date for the set of blocks
+	 * @since   x.x.x Pass check_in_cart booking product property value.
+	 *              Include checkout bookings in the query, if $confirmed_checkout_order_item set.
+	 *              This help to check if the booking is available for the same time slot.
+	 *
+	 * @param array $args
+	 *
+	 * @option  array   $blocks      The blocks we'll be checking availability for.
+	 * @option  array   $intervals   Array containing 2 items; the interval of the block (maybe user set), and the base interval for the block/product.
+	 * @option  integer $resource_id Resource we're getting blocks for. Falls backs to product as a whole if 0.
+	 * @option  integer $from        The starting date for the set of blocks
+	 * @option  integer $to          Ending date for the set of blocks
 	 *
 	 * @return array The available blocks array
 	 */
@@ -2107,9 +2172,18 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 			/**
 			 * Grab all existing bookings for the date range.
 			 * Extend end_date to end of last block. Note: base_interval is in minutes.
-			 * @var array
 			 */
-			$existing_bookings = WC_Booking_Data_Store::get_bookings_in_date_range( $start_date, $end_date + ( $base_interval * 60 ), $this->has_resources() && $resource_id ? $resource_id : $this->get_id() );
+			$existing_bookings = WC_Booking_Data_Store::get_bookings_in_date_range(
+				$start_date,
+				$end_date + ( $base_interval * 60 ),
+				$this->has_resources() && $resource_id ? $resource_id : $this->get_id(),
+				$this->check_in_cart
+			);
+
+			// In case of processing checkout/order, we need to include the pending bookings to calculate the availability.
+			$existing_bookings = $this->confirmed_order_bookings ?
+				array_merge( $existing_bookings, $this->confirmed_order_bookings ) :
+				$existing_bookings;
 
 			// Resources booked array. Resource can be a "resource" but also just a booking if it has no resources
 			$resources_booked = array( 0 => array() );
@@ -2248,13 +2322,28 @@ class WC_Product_Booking extends WC_Product_Booking_Compatibility {
 	/**
 	 * Get existing bookings in a given date range
 	 *
+	 * @since x.x.x Pass check_in_cart booking product property value.
+	 *              Include checkout bookings in the query, if $confirmed_checkout_order_item set.
+	 *              This help to check if the booking is available for the same time slot.
+	 *
 	 * @param integer $start_date
 	 * @param integer $end_date
-	 * @param int    $resource_id
+	 * @param int     $resource_id
+	 *
 	 * @return array
 	 */
 	public function get_bookings_in_date_range( $start_date, $end_date, $resource_id = null ) {
-		return WC_Booking_Data_Store::get_bookings_in_date_range( $start_date, $end_date, $this->has_resources() && $resource_id ? $resource_id : $this->get_id() );
+		$existing_bookings = WC_Booking_Data_Store::get_bookings_in_date_range(
+			$start_date,
+			$end_date,
+			$this->has_resources() && $resource_id ? $resource_id : $this->get_id(),
+			$this->check_in_cart
+		);
+
+		// In case of processing checkout/order, we need to include the pending bookings to calculate the availability.
+		return $this->confirmed_order_bookings ?
+			array_merge( $existing_bookings, $this->confirmed_order_bookings ) :
+			$existing_bookings;
 	}
 
 	/**

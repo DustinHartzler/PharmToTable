@@ -34,13 +34,6 @@ class WC_Bookings_Cost_Calculation {
 		$person_block_costs       = 0;
 		$total_person_block_costs = 0;
 
-		// Get resource cost.
-		if ( isset( $data['_resource_id'] ) ) {
-			$resource         = $product->get_resource( $data['_resource_id'] );
-			$base_block_cost += $resource->get_block_cost();
-			$base_cost       += $resource->get_base_cost();
-		}
-
 		// Potentially increase costs if dealing with persons.
 		if ( ! empty( $data['_persons'] ) && $product->has_person_types() ) {
 			foreach ( $data['_persons'] as $person_id => $person_count ) {
@@ -107,7 +100,6 @@ class WC_Bookings_Cost_Calculation {
 			}
 		}
 
-		$override_blocks = array();
 		// Evaluate costs for each booked block
 		for ( $block = 0; $block < $blocks_booked; $block ++ ) {
 			// If there are person types with costs and person multiplier, separate person costs.
@@ -215,9 +207,6 @@ class WC_Bookings_Cost_Calculation {
 									$block_cost   = self::apply_cost( $block_cost, $rule['block'][0], $rule['block'][1] );
 									$base_cost    = self::apply_base_cost( $base_cost, $rule['base'][0], $rule['base'][1], $rule_key );
 									$rule_applied = true;
-									if ( $rule['override'] && empty( $override_blocks[ $check_date ] ) ) {
-										$override_blocks[ $check_date ] = $rule['override'];
-									}
 								}
 								$check_date = strtotime( "+1 {$type}", $check_date );
 							}
@@ -233,9 +222,6 @@ class WC_Bookings_Cost_Calculation {
 									$base_cost    = self::apply_base_cost( $base_cost, $rule['base'][0], $rule['base'][1], $rule_key );
 									$rule_applied = true;
 
-									if ( $rule['override'] && empty( $override_blocks[ $check_date ] ) ) {
-										$override_blocks[ $check_date ] = $rule['override'];
-									}
 									/*
 									 * Why do we break?
 									 * See: Applying a cost rule to a booking block
@@ -279,13 +265,21 @@ class WC_Bookings_Cost_Calculation {
 					break;
 				}
 			}
+
+			// Add resource block cost.
+			if ( isset( $data['_resource_id'] ) ) {
+				$resource    = $product->get_resource( $data['_resource_id'] );
+				$block_cost += $resource->get_block_cost();
+			}
+
 			$total_block_cost         += $block_cost;
 			$total_person_block_costs += $person_block_costs;
 		}
 
-		foreach ( $override_blocks as $over_cost ) {
-			$total_block_cost = $total_block_cost - $base_block_cost;
-			$total_block_cost += $over_cost;
+		// Add resource base cost.
+		if ( isset( $data['_resource_id'] ) ) {
+			$resource   = $product->get_resource( $data['_resource_id'] );
+			$base_cost += $resource->get_base_cost();
 		}
 
 		$booking_cost = max( 0, $total_block_cost + $base_cost );

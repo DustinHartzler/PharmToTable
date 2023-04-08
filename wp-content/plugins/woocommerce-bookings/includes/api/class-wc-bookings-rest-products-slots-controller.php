@@ -219,14 +219,25 @@ class WC_Bookings_REST_Products_Slots_Controller extends WC_REST_Controller {
 				$max_date = $max_bookable_date;
 			}
 
-			$product_resources = $bookable_product->get_resource_ids() ?: array();
-			$duration          = $bookable_product->get_duration();
-			$duration_unit     = $bookable_product->get_duration_unit();
-			$availability      = array();
+			$product_resources  = $bookable_product->get_resource_ids() ?: array();
+			$catalog_visibility = $bookable_product->get_catalog_visibility();
+			$duration           = $bookable_product->get_duration();
+			$duration_unit      = $bookable_product->get_duration_unit();
+			$availability       = array();
 
 			$resources = empty( $product_resources ) ? array( 0 ) : $product_resources;
 			if ( ! empty( $resource_ids ) ) {
 				$resources = array_intersect( $resources, $resource_ids );
+			}
+
+			if ( 'day' === $duration_unit ) {
+				// For days, reset the timestamps to midnight, so it properly intersects
+				// with the booked day blocks and availability can be checked.
+				$min_date = strtotime( 'midnight', $min_date );
+			} else {
+				// Remove the seconds from timestamps, so it properly intersects
+				// with the booked block minutes and availability can be checked.
+				$min_date = $min_date - ( $min_date % 60 );
 			}
 
 			// Get slots for days before and after, which accounts for timezone differences.
@@ -244,7 +255,7 @@ class WC_Bookings_REST_Products_Slots_Controller extends WC_REST_Controller {
 					}
 
 					unset( $data['resources'] );
-					if ( ! $hide_unavailable || 1 <= $data['available'] ) {
+					if ( ( ! $hide_unavailable || 1 <= $data['available'] ) && 'hidden' !== $catalog_visibility ) {
 
 						/**
 						 * For the day duration, check if the required duration is available in the following days or not
@@ -289,9 +300,12 @@ class WC_Bookings_REST_Products_Slots_Controller extends WC_REST_Controller {
 		}, $booked_data ) );
 
 		// Sort by date.
-		usort( $cached_availabilities, function( $a, $b ) {
-			return $a[self::DATE] > $b[self::DATE];
-		} );
+		usort(
+			$cached_availabilities,
+			function( $a, $b ) {
+				return $a[ self::DATE ] <=> $b[ self::DATE ];
+			}
+		);
 
 		// This transient should be cleared when booking or products are added or updated but keep it short just in case.
 		WC_Bookings_Cache::set( $transient_name, $cached_availabilities, HOUR_IN_SECONDS );

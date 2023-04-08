@@ -4,7 +4,10 @@
  *
  * @package Woocommerce/Bookings
  * @var $availability WC_Global_Availability
+ * @var boolean $show_google_event
  */
+
+use Automattic\WooCommerce\Bookings\Vendor\RRule\RSet;
 
 $intervals = array();
 
@@ -53,7 +56,10 @@ $is_rrule           = 'rrule' === $availability['type'];
 
 ?>
 <tr data-id="<?php echo esc_attr( $availability_id ); ?>" <?php echo $is_google ? 'class="google-event"' : ''; ?> >
-	<td class="sort">&nbsp;</td>
+	<?php if ( empty( $show_google_event ) ) : ?>
+		<td class="sort">&nbsp;</td>
+	<?php endif; ?>
+
 	<td><input type="hidden" name="wc_booking_availability_id[]" value="<?php echo esc_attr( $availability_id ); ?>"/>
 		<div class="select wc_booking_availability_type">
 
@@ -121,7 +127,7 @@ $is_rrule           = 'rrule' === $availability['type'];
 					}
 
 					try {
-						$rset = new \RRule\RSet( $availability['rrule'], $is_all_day ? $from_date->format( $date_format ) : $from_date );
+						$rset = new RSet( $availability['rrule'], $is_all_day ? $from_date->format( $date_format ) : $from_date );
 						?>
 						<strong>
 							<?php echo esc_html( $from_date->format( $date_format ) ); ?>

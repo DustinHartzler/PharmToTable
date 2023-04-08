@@ -1,5 +1,102 @@
 *** WooCommerce Bookings Changelog ***
 
+2023-03-27 - version 1.15.78
+* Fix - Update availability rule helper text.
+
+2023-03-21 - version 1.15.77
+* Fix - Product-level Quantities are ignored when a Resource is removed after a Booking.
+* Tweak - WC 7.5.0 compatibility.
+
+2023-03-15 - version 1.15.76
+* Add - Check booking availability on checkout validation to reduce over-booking.
+* Dev - Added a 'state' parameter to the custom Google Calendar connection.
+* Dev - Migrate end-to-end tests to Playwright.
+* Dev - Prefix composer `google/apiclient` package with `brianhenryie/strauss`.
+* Dev - Resolve PHP deprecated warning `usort(): Returning bool from comparison function`.
+* Dev - Update PHP dependency to 7.2.
+* Fix - "Confirm Booking" link not working from email and shows "The link you followed has expired.".
+* Fix - Ensures that labels on Bookings page in My Account are able to be translated.
+* Tweak - WC 7.5.0 compatibility.
+
+2023-02-01 - version 1.15.75
+* Fix - Display booking calendar on Add Booking page.
+* Fix - The availability check for Min-Max days is fixed for products without resources.
+
+2023-01-27 - version 1.15.74
+* Fix - Resolves a packaging problem with our Google API library.
+
+2023-01-25 - version 1.15.73
+* Fix - Calendars show correct availability when multiple bookable products are on the same page.
+* Fix - Namespacing of Google API package classes.
+* Tweak - Bump WooCommerce "tested up to" from 7.2.2 to 7.3.
+* Tweak - Bump tested up to WordPress version 6.1.
+
+2023-01-17 - version 1.15.72
+* Fix - Validate that manually entered dates are actually bookable.
+* Tweak - Improved performance by moving availability slots' cache creation via Action Scheduler.
+
+2023-01-17 - version 1.15.71
+* Fix - Validate that manually entered dates are actually bookable.
+* Tweak - Improved performance by moving availability slots' cache creation via Action Scheduler.
+
+2023-01-06 - version 1.15.70
+* Add - Filter to add meta attributes to booking calendar popup.
+* Fix - Correctly validate undefined variables.
+* Fix - Improve display in admin calendar to prevent overlapping text.
+* Fix - Incorrect availability shown when resources are shared across products.
+* Fix - Prevent fatal error on PHP 8+ when loading the booking calendar.
+* Tweak - WC 7.2.2 compatibility.
+
+2022-12-13 - version 1.15.69
+* Fix - All products shown as available in Bookings Calendar block.
+* Fix - Google Calendar connection issues.
+* Fix - Inconsistent availability view (months vs days).
+* Fix - JavaScript coding standards (ESLint).
+* Fix - Remote code injection vulnerability in the `Person_types` column while importing bookable products.
+* Fix - Show First and Last days as unavailable if there are no available slots.
+* Tweak - Improve save and rendering performance of Google Calendar event rules via a new, separate page.
+* set minDate based on from_date.
+
+2022-11-24 - version 1.15.68
+* Fix - All time ranges should be checked before marking any block unbookable.
+* Fix - Ensure maximum number of person type not allowed to exceed Max Persons setting.
+* Fix - Hide products from the `/slot` endpoint if their catalog visibility is set to `hidden`.
+* Fix - Make calendar popup and booking details popup WP 6.1 compatible.
+* Fix - Show booking details on the booking details admin page if it does not have an order.
+
+2022-11-09 - version 1.15.66
+* Add - Declare compatibility with High-Performance Order Storage ("HPOS").
+* Fix - Admin access for bulk action requests.
+
+2022-11-01 - version 1.15.65
+* Fix - Prevent bookings and display end-times in unavailable times on another day.
+* Fix - Resource cost not included in booking cost when `=` used in booking cost ranges.
+* Tweak - Bump minimum WooCommerce version from 2.6 to 6.0.
+* Tweak - Prevent unneeded ajax calls to wc_bookings_calculate_costs to improve performance.
+* Tweak - Set minimum PHP version to 7.0.
+* Tweak - Set minimum WordPress version to 5.6.
+
+2022-10-26 - version 1.15.64
+* Add - Provision to apply 'Booking Person Discount' from admin dashboard.
+* Fix - "Min persons" setting is not working when Booking is added manually from admin.
+* Fix - Booking availability for bookable products with resources.
+* Fix - Changing booking status or date/time moves the booking to the last line item in the order.
+* Fix - Improvements to admin side calendar view.
+* Fix - Slot range checked to be inside the rule range for an hour and minute durations.
+* Tweak - Skip array value booking metadata during sync booking with GCal.
+* Update - Change keypress event to keyup.
+* Update - Lock the `google/apiclient-services` to v0.181.0.
+
+2022-09-26 - version 1.15.63
+* Add - Bookings Helper integration (Export button on a product page).
+
+2022-09-13 - version 1.15.62
+* Tweak - Removed unwanted legacy code related to overriding block cost.
+
+2022-08-24 - version 1.15.61
+* Tweak - Deprecated "woocommerce_bookings_process_cost_rules_override_block" filter hook.
+* Tweak - WC 6.8.0 compatibility.
+
 2022-08-10 - version 1.15.60
 * Fix - The View booking link does not exist on the edit order page.
 

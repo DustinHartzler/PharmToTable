@@ -34,6 +34,10 @@ if ( $booking_ids ) {
 		$booking    = new WC_Booking( $booking_id );
 		$order      = $booking->get_order();
 		$plain_text = false;
+
+		if ( ! $order ) {
+			continue;
+		}
 		?>
 		<div class="wc-booking-summary">
 			<?php
@@ -76,7 +80,7 @@ if ( $booking_ids ) {
 			?>
 			<div class="wc-booking-summary-actions">
 				<?php if ( in_array( $booking->get_status(), array( 'pending-confirmation' ) ) ) : ?>
-					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-ajax.php?action=wc-booking-confirm&booking_id=' . $booking_id ), 'wc-booking-confirm' ) ); ?>"><?php esc_html_e( 'Confirm booking', 'woocommerce-bookings' ); ?></a>
+					<a href="<?php echo esc_url( admin_url( 'post.php?post=' . absint( $booking_id ) . '&action=edit&confirm=true' ) ); ?>"><?php esc_html_e( 'Confirm booking', 'woocommerce-bookings' ); ?></a>
 				<?php endif; ?>
 
 				<?php if ( $booking_id && ( ! $show_title || ( $sent_to_admin || $order->get_customer_id() ) ) ) : ?>

@@ -44,7 +44,7 @@ class WC_Bookings_Create {
 
 					$booking_order = $order_id;
 
-					if ( ! $booking_order || get_post_type( $booking_order ) !== 'shop_order' ) {
+					if ( ! $booking_order || ! WC_Booking_Order_Compat::is_shop_order( $booking_order ) ) {
 						throw new Exception( __( 'Invalid order ID provided', 'woocommerce-bookings' ) );
 					}
 				}
@@ -69,10 +69,6 @@ class WC_Bookings_Create {
 					$base_tax_rates = WC_Tax::get_base_tax_rates( $product->get_tax_class() );
 					$base_taxes     = WC_Tax::calc_tax( $booking_cost, $base_tax_rates, true );
 					$booking_cost   = $booking_cost - array_sum( $base_taxes );
-
-					if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
-						$booking_cost = round( $booking_cost, absint( get_option( 'woocommerce_price_num_decimals' ) ) );
-					}
 				}
 
 				$props = array(
@@ -96,18 +92,14 @@ class WC_Bookings_Create {
 				} elseif ( $booking_order > 0 ) {
 					$order_id = absint( $booking_order );
 
-					if ( ! $order_id || get_post_type( $order_id ) !== 'shop_order' ) {
+					if ( ! $order_id || ! WC_Booking_Order_Compat::is_shop_order( $order_id ) ) {
 						throw new Exception( __( 'Invalid order ID provided', 'woocommerce-bookings' ) );
 					}
 
 					$order = new WC_Order( $order_id );
 
-					if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
-						update_post_meta( $order_id, '_order_total', $order->get_total() + $booking_cost );
-					} else {
-						$order->set_total( $order->get_total( 'edit' ) + $booking_cost );
-						$order->save();
-					}
+					$order->set_total( $order->get_total( 'edit' ) + $booking_cost );
+					$order->save();
 
 					do_action( 'woocommerce_bookings_create_booking_page_add_order_item', $order_id );
 				}
@@ -134,17 +126,17 @@ class WC_Bookings_Create {
 							'state',
 							'postcode',
 							'country',
+							'phone',
 						);
 						$types = array( 'shipping', 'billing' );
 
 						foreach ( $types as $type ) {
-							$address = array();
-
 							foreach ( $keys as $key ) {
-								$address[ $key ] = (string) get_user_meta( $customer_id, $type . '_' . $key, true );
+								$value = (string) get_user_meta( $customer_id, $type . '_' . $key, true );
+								$order->update_meta_data( '_' . $type . '_' . $key, $value );
 							}
-							$order->set_address( $address, $type );
 						}
+						$order->save();
 					}
 
 					// Add line item meta
@@ -174,7 +166,11 @@ class WC_Bookings_Create {
 
 				do_action( 'woocommerce_bookings_created_manual_booking', $new_booking );
 
-				wp_safe_redirect( admin_url( 'post.php?post=' . ( $create_order ? $order_id : $new_booking->get_id() ) . '&action=edit' ) );
+				$redirect_url = $create_order
+					? $order->get_edit_order_url()
+					: admin_url( 'post.php?post=' . $new_booking->get_id() . '&action=edit' );
+
+				wp_safe_redirect( $redirect_url );
 				exit;
 
 			}
@@ -202,20 +198,11 @@ class WC_Bookings_Create {
 	 * @return int
 	 */
 	public function create_order( $total, $customer_id ) {
-		if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
-			$order = wc_create_order( array(
-				'customer_id' => absint( $customer_id ),
-			) );
-			$order_id = $order->id;
-			$order->set_total( $total );
-			update_post_meta( $order->id, '_created_via', 'bookings' );
-		} else {
-			$order = new WC_Order();
-			$order->set_customer_id( $customer_id );
-			$order->set_total( $total );
-			$order->set_created_via( 'bookings' );
-			$order_id = $order->save();
-		}
+		$order = new WC_Order();
+		$order->set_customer_id( $customer_id );
+		$order->set_total( $total );
+		$order->set_created_via( 'bookings' );
+		$order_id = $order->save();
 
 		do_action( 'woocommerce_new_booking_order', $order_id );
 

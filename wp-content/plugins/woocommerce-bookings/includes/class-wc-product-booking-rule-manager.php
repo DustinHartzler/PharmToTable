@@ -1,5 +1,7 @@
 <?php
 
+use Automattic\WooCommerce\Bookings\Vendor\RRule\RSet;
+
 /**
  * Class that parses and returns rules for bookable products.
  */
@@ -301,20 +303,18 @@ class WC_Product_Booking_Rule_Manager {
 		$index = 1;
 		// Go through rules
 		foreach ( $rules as $key => $fields ) {
-			if ( empty( $fields['cost'] ) && empty( $fields['base_cost'] ) && empty( $fields['override_block'] ) ) {
+			if ( empty( $fields['cost'] ) && empty( $fields['base_cost'] ) ) {
 				continue;
 			}
 
-			$cost           = apply_filters( 'woocommerce_bookings_process_cost_rules_cost', $fields['cost'], $fields, $key );
-			$modifier       = $fields['modifier'];
-			$base_cost      = apply_filters( 'woocommerce_bookings_process_cost_rules_base_cost', $fields['base_cost'], $fields, $key );
-			$base_modifier  = $fields['base_modifier'];
-			$override_block = apply_filters( 'woocommerce_bookings_process_cost_rules_override_block', ( isset( $fields['override_block'] ) ? $fields['override_block'] : '' ), $fields, $key );
+			$cost          = apply_filters( 'woocommerce_bookings_process_cost_rules_cost', $fields['cost'], $fields, $key );
+			$modifier      = $fields['modifier'];
+			$base_cost     = apply_filters( 'woocommerce_bookings_process_cost_rules_base_cost', $fields['base_cost'], $fields, $key );
+			$base_modifier = $fields['base_modifier'];
 
 			$cost_array = array(
-				'base'     => array( $base_modifier, $base_cost ),
-				'block'    => array( $modifier, $cost ),
-				'override' => $override_block,
+				'base'  => array( $base_modifier, $base_cost ),
+				'block' => array( $modifier, $cost ),
 			);
 
 			// Updating end time 00:00 to 24:00, so that user can book slots till next midnight.
@@ -808,7 +808,7 @@ class WC_Product_Booking_Rule_Manager {
 		);
 
 		try {
-			$rset = new \RRule\RSet( $rule['range']['rrule'], $is_all_day ? $start->format( $date_format ) : $start );
+			$rset = new RSet( $rule['range']['rrule'], $is_all_day ? $start->format( $date_format ) : $start );
 		} catch ( Exception $e ) {
 			return $minutes;
 		}
@@ -834,6 +834,18 @@ class WC_Product_Booking_Rule_Manager {
 			$to   = $occurrence->add( $duration )->format( 'H:i' );
 
 			$minute_range = self::calculate_minute_range( $from, $to );
+
+			/*
+			 * Remove 1 min from start and 1 min from end of the unbookable range to keep those minutes bookable.
+			 * Detailed information on this can be found in `get_rule_minutes_for_time` method.
+			 * @see https://github.com/woocommerce/woocommerce-bookings/issues/3409
+			 */
+			$minutes['overlapping_start_time'] = false;
+			$minutes['overlapping_end_time']   = false;
+			if ( ! $minutes['is_bookable'] ) {
+				$minutes['overlapping_start_time'] = array_shift( $minute_range );
+				$minutes['overlapping_end_time']   = array_pop( $minute_range );
+			}
 
 			$minutes['minutes'] = array_merge( $minutes['minutes'], $minute_range );
 
@@ -1120,7 +1132,7 @@ class WC_Product_Booking_Rule_Manager {
 			} elseif ( false !== strpos( $type, 'time' ) ) {
 				// if the day doesn't match and the day is not zero skip the rule
 				// zero means all days. SO rule only apply for zero or a matching day.
-				if ( ! empty( $range['day'] ) && $slot_day_no !== $range['day'] ) {
+				if ( ! empty( $range['day'] ) && $slot_day_no !== intval( $range['day'] ) ) {
 					continue;
 				}
 
@@ -1161,12 +1173,17 @@ class WC_Product_Booking_Rule_Manager {
 				// Normal rule.
 				if ( $slot_start_time < $rule_end_time && $slot_end_time > $rule_start_time ) {
 					if ( 'hour' === $bookable_product->get_duration_unit() || 'minute' === $bookable_product->get_duration_unit() ) {
-						// If the product is not available by default and the rule makes the product available,
-						// slot_end_time has to be also inside of the rule_end_time for products with duration of hours or minutes.
-						$check_in_range = $rule_val && ! $bookable_product->get_default_availability() && ! $bookable_product->get_check_start_block_only();
+						// If the rule makes the product available, check if slot range is inside the rule range.
+						if ( $apply_rule_times && $rule_val ) {
+							if ( $slot_start_time < $rule_start_time ) {
+								continue;
+							}
 
-						if ( $apply_rule_times && $check_in_range && ( $slot_start_time < $rule_start_time || $slot_end_time > $rule_end_time ) ) {
-							continue;
+							// When availability setting is set to check against "The starting block only",
+							// Only then, check if slot_end_time is inside the rule_end_time.
+							if ( ! $bookable_product->get_check_start_block_only() && $slot_end_time > $rule_end_time ) {
+								continue;
+							}
 						}
 					}
 					$bookable = $rule_val;
@@ -1186,6 +1203,32 @@ class WC_Product_Booking_Rule_Manager {
 			}
 		}
 
+		/**
+		 * `check_availability_rules_against_time` function checks rules against day of $slot_start_time only.
+		 * So, for multi-day availability check, we have to recursively call function for each in-between days.
+		 *
+		 * Example:
+		 * Rule check against (11:00 PM - 20/04/2022) to (03:00 AM - 22/04/2022)
+		 * will requires availability check against below times to consider rules of each in-between days.
+		 *
+		 * 1. 11:00 PM (20/04/2022) - 03:00 AM (22/04/2022)
+		 * 2. 12:00 AM (21/04/2022) - 03:00 AM (22/04/2022)
+		 * 3. 12:00 AM (22/04/2022) - 03:00 AM (22/04/2022)
+		 *
+		 * Check if $slot_end_time is in next or upcoming day and multi-day availability check is required.
+		 * (For customer defined blocks & minutes/hours block durations only).
+		 *
+		 * @see https://github.com/woocommerce/woocommerce-bookings/issues/2878
+		 */
+		$next_day = strtotime( 'midnight + 1 day', $slot_start_time );
+		if (
+			$bookable &&
+			'customer' === $bookable_product->get_duration_type() &&
+			in_array( $bookable_product->get_duration_unit(), array( 'minute', 'hour' ), true ) &&
+			$slot_end_time > $next_day
+		) {
+			return self::check_availability_rules_against_time( $next_day, $slot_end_time, $resource_id, $bookable_product, $bookable );
+		}
 		return $bookable;
 	}
 
@@ -1411,7 +1454,7 @@ class WC_Product_Booking_Rule_Manager {
 
 				$duration = $start->diff( $end, true );
 
-				$rrule = new \RRule\RSet( $range['rrule'], $is_all_day ? $start->format( 'Y-m-d' ) : $start );
+				$rrule = new RSet( $range['rrule'], $is_all_day ? $start->format( 'Y-m-d' ) : $start );
 
 				$rrule_cache[ $rrule_cache_key ] = array(
 					'rrule_object' => $rrule,

@@ -31,7 +31,6 @@ class WC_Bookings_Admin {
 		add_action( 'woocommerce_debug_tools', array( $this, 'bookings_debug_tools' ) );
 
 		// Saving data.
-		add_action( 'woocommerce_process_product_meta', array( $this, 'save_product_data' ), 20 );
 		add_action( 'woocommerce_admin_process_product_object', array( $this, 'set_props' ), 20 );
 
 		add_filter( 'woocommerce_product_type_query', array( $this, 'maybe_override_product_type' ), 10, 2 );
@@ -41,11 +40,7 @@ class WC_Bookings_Admin {
 	}
 
 	public function init() {
-		if ( version_compare( WC_VERSION, '3.0', '<' ) ) {
-			add_action( 'woocommerce_duplicate_product', array( $this, 'woocommerce_duplicate_product_pre_wc30' ), 10, 2 );
-		} else {
-			add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
-		}
+		add_action( 'woocommerce_product_duplicate', array( $this, 'woocommerce_duplicate_product' ), 10, 2 );
 	}
 
 	/**
@@ -70,20 +65,6 @@ class WC_Bookings_Admin {
 		);
 
 		return array_merge( $tools, $bookings_tools );
-	}
-
-	/**
-	 * Save Booking data for the product in 2.6.x.
-	 *
-	 * @param int $post_id
-	 */
-	public function save_product_data( $post_id ) {
-		if ( version_compare( WC_VERSION, '3.0', '>=' ) || 'booking' !== sanitize_title( stripslashes( $_POST['product-type'] ) ) ) {
-			return;
-		}
-		$product = get_wc_product_booking( $post_id );
-		$this->set_props( $product );
-		$product->save();
 	}
 
 	/**
@@ -339,13 +320,8 @@ class WC_Bookings_Admin {
 	 * Init product edit tabs.
 	 */
 	public function init_tabs() {
-		if ( version_compare( WC_VERSION, '2.6', '<' ) ) {
-			add_action( 'woocommerce_product_write_panel_tabs', array( $this, 'add_tab' ), 5 );
-			add_action( 'woocommerce_product_write_panels', array( $this, 'booking_panels' ) );
-		} else {
-			add_filter( 'woocommerce_product_data_tabs', array( $this, 'register_tab' ) );
-			add_action( 'woocommerce_product_data_panels', array( $this, 'booking_panels' ) );
-		}
+		add_filter( 'woocommerce_product_data_tabs', array( $this, 'register_tab' ) );
+		add_action( 'woocommerce_product_data_panels', array( $this, 'booking_panels' ) );
 	}
 
 	/**
@@ -379,6 +355,13 @@ class WC_Bookings_Admin {
 		$tabs['bookings_persons'] = array(
 			'label'  => __( 'Persons', 'woocommerce-bookings' ),
 			'target' => 'bookings_persons',
+			'class'  => array(
+				'show_if_booking',
+			),
+		);
+		$tabs['bookings_export'] = array(
+			'label'  => __( 'Export', 'woocommerce-bookings' ),
+			'target' => 'bookings_export',
 			'class'  => array(
 				'show_if_booking',
 			),
@@ -603,6 +586,7 @@ class WC_Bookings_Admin {
 		include 'views/html-booking-availability.php';
 		include 'views/html-booking-pricing.php';
 		include 'views/html-booking-persons.php';
+		include 'views/html-booking-export.php';
 	}
 
 	/**
@@ -694,12 +678,12 @@ class WC_Bookings_Admin {
 		);
 
 		wp_localize_script( 'wc_bookings_admin_edit_booking_js', 'wc_bookings_admin_edit_booking_params', $params );
-		
+
 		$params = array(
 			'wc_bookings_invalid_min_duration'  => esc_html__( 'Minimum duration needs to be less than or equal to maximum duration.', 'woocommerce-bookings' ),
 			'wc_bookings_invalid_max_duration'  => esc_html__( 'Maximum duration needs to be greater than or equal to the minimum duration.', 'woocommerce-bookings' ),
 		);
-		
+
 		wp_localize_script( 'wc_bookings_admin_edit_bookable_product_js', 'wc_bookings_admin_edit_booking_params', $params );
 	}
 
