@@ -88,7 +88,7 @@ class Report_Conversions_List extends Admin_List_Table {
 
 		switch( $column_name ) {
 			case 'order':
-				return '<a href="' . get_edit_post_link( $order->get_id() ) . '"><strong>#' . $order->get_order_number() . '</strong></a>';
+				return '<a href="' . $order->get_edit_order_url() . '"><strong>#' . $order->get_order_number() . '</strong></a>';
 
 				break;
 

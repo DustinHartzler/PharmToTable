@@ -229,6 +229,10 @@ class Format {
 			$places = wc_get_price_decimals();
 		}
 
+		if ( null === $number ) {
+			$number = (float) 0;
+		}
+
 		return wc_format_decimal( $number, $places, $trim_zeros );
 	}
 
@@ -297,4 +301,25 @@ class Format {
 		return (float) Format::decimal( $number, $places );
 	}
 
+	/**
+	 * Format a HTML link for an ID number.
+	 *
+	 * @param string  $url
+	 * @param integer $id
+	 * @return string Formatted link.
+	 */
+	public static function html_id_link( string $url, int $id ) {
+		return self::html_link( $url, '#' . $id );
+	}
+
+	/**
+	 * Format a HTML link.
+	 *
+	 * @param string $url
+	 * @param string $text
+	 * @return string Formatted link.
+	 */
+	public static function html_link( string $url, string $text ) {
+		return sprintf( '<a href="%s">%s</a>', $url, $text );
+	}
 }

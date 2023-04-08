@@ -3,8 +3,10 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Admin\Analytics;
 use AutomateWoo\Admin\AssetData;
 use AutomateWoo\Admin\WCAdminConnectPages;
+use AutomateWoo\HPOS_Helper;
 use Automattic\WooCommerce\Admin\Features\Navigation\Menu;
 use Automattic\WooCommerce\Admin\Features\Navigation\Screen;
 use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
@@ -21,6 +23,7 @@ class Admin {
 		Admin_Ajax::init();
 		AdminNotices::init();
 		( new WCAdminConnectPages )->init();
+		Analytics::init();
 
 		add_action( 'current_screen', [ $self, 'includes' ] );
 		add_action( 'admin_enqueue_scripts', [ $self, 'register_scripts' ] );
@@ -121,8 +124,8 @@ class Admin {
 		$sub_menu = [];
 		$position = '55.6324'; // fix for rare position clash bug
 		$workflows_group = 'automatewoo-workflows-group';
-
-		add_menu_page( __( 'AutomateWoo', 'automatewoo' ), __( 'AutomateWoo', 'automatewoo' ), 'manage_woocommerce', 'automatewoo', [ 'AutomateWoo\Admin', 'load_controller' ], 'none', $position );
+		$icon = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGc+PHBvbHlnb24gZmlsbD0iIzlFQTNBOCIgcG9pbnRzPSIxMTcuNiwyNzIuNyAxNjYuOSwyNzIuNyAxNDIuMywyMDUuNCAiLz48cGF0aCBmaWxsPSIjOUVBM0E4IiBkPSJNNDY0LDU0LjRINDhDMjUuMSw1NC40LDYuNCw3My4xLDYuNCw5NnYzMjBjMCwyMi45LDE4LjcsNDEuNiw0MS42LDQxLjZoNDE2YzIyLjksMCw0MS42LTE4LjcsNDEuNi00MS42Vjk2QzUwNS42LDczLjEsNDg2LjksNTQuNCw0NjQsNTQuNHogTTE5My4zLDM0NS4xbC0xNC45LTQwLjdIMTA2bC0xNC44LDQwLjdINTQuNkwxMjMsMTY2LjloNDAuMkwyMzEsMzQ1LjFIMTkzLjN6IE00MDguMSwzNDUuMWgtMzUuN2wtNDAuNy0xMjYuOUwyOTEsMzQ1LjFoLTM2LjJsLTQ5LjUtMTc4LjJIMjQybDMyLjcsMTIyLjZsMzkuNS0xMjIuNmgzNS45TDM4OS45LDI5MEw0MjIsMTY2LjloMzUuNEw0MDguMSwzNDUuMXoiLz48L2c+PC9zdmc+';
+		add_menu_page( __( 'AutomateWoo', 'automatewoo' ), __( 'AutomateWoo', 'automatewoo' ), 'manage_woocommerce', 'automatewoo', [ 'AutomateWoo\Admin', 'load_controller' ], $icon, $position );
 
 		if ( class_exists( Menu::class ) ) {
 			Menu::add_plugin_category(
@@ -215,7 +218,8 @@ class Admin {
 		$sub_menu['reports'] = [
 			'title' => __( 'Reports', 'automatewoo' ),
 			'function' => [ __CLASS__, 'load_controller' ],
-			'order' => 5,
+			'order'  => 5,
+			'enabled' => ! HPOS_Helper::is_HPOS_enabled()
 		];
 
 		$sub_menu['tools'] = [
@@ -253,15 +257,18 @@ class Admin {
 			if ( empty( $item['capability'] ) ) $item['capability'] = 'manage_woocommerce';
 			if ( empty( $item['slug'] ) ) $item['slug'] = 'automatewoo-'.$key;
 			if ( empty( $item['page_title'] ) ) $item['page_title'] = $item['title'];
+			if ( ! isset( $item['parent'] ) ) $item['parent'] = 'automatewoo';
 
-			add_submenu_page( 'automatewoo', $item['page_title'], $item['title'], $item['capability'], $item['slug'], $item['function'] );
+			$is_enabled = $item['enabled'] ?? true;
+
+			add_submenu_page( $is_enabled ? 'automatewoo' : 'automatewoo_disabled', $item['page_title'], $item['title'], $item['capability'], $item['slug'], $item['function'] );
 
 			if ( class_exists( Menu::class ) ) {
 				if ( ! isset( $item['display'] ) || WCAdminConnectPages::PAGE_DISPLAY_FULL === $item['display'] ) {
 					Menu::add_plugin_item(
 						array(
 							'id'         => 'automatewoo-' . $key,
-							'parent'     => isset( $item['parent'] ) ? $item['parent'] : 'automatewoo',
+							'parent'     => $item['parent'],
 							'title'      => $item['title'],
 							'capability' => $item['capability'],
 							'url'        => $item['slug'],
@@ -347,9 +354,11 @@ class Admin {
 				'ajax'  => admin_url( 'admin-ajax.php' )
 			],
 			'locale'        => [
-				'month_abbrev'      => array_values( $wp_locale->month_abbrev ),
-				'currency_symbol'   => get_woocommerce_currency_symbol(),
-				'currency_position' => get_option( 'woocommerce_currency_pos' )
+				'month_abbrev'                => array_values( $wp_locale->month_abbrev ),
+				'currency_symbol'             => get_woocommerce_currency_symbol(),
+				'currency_decimal_separator'  => wc_get_price_decimal_separator(),
+				'currency_thousand_separator' => wc_get_price_thousand_separator(),
+				'currency_position'           => get_option( 'woocommerce_currency_pos' )
 			],
 			'nonces'        => [
 				'remove_notice' => wp_create_nonce( 'aw-remove-notice' ),
@@ -591,9 +600,6 @@ class Admin {
 			case 'conversions':
 				return admin_url( 'admin.php?page=automatewoo-reports&tab=conversions' );
 
-			case 'conversions-list':
-				return admin_url( 'admin.php?page=automatewoo-reports&tab=conversions-list' );
-
 			case 'workflows-report':
 				return admin_url( 'admin.php?page=automatewoo-reports&tab=runs-by-date' );
 
@@ -608,6 +614,9 @@ class Admin {
 				if ( $id ) {
 					return add_query_arg( 'workflowId', $id, $url );
 				}
+				return $url;
+			case 'analytics':
+				$url = admin_url( 'admin.php?page=wc-admin&path=/analytics/automatewoo-' . $id );
 				return $url;
 		}
 
@@ -653,6 +662,9 @@ class Admin {
 	 */
 	static function get_screen_id() {
 		$screen_id = self::get_current_screen_id();
+
+		// Replace hidden screen ID's without AutomateWoo as parent.
+		$screen_id = str_replace( 'admin_page_automatewoo-', '', $screen_id );
 
 		if ( ! $screen_id ) {
 			return false;

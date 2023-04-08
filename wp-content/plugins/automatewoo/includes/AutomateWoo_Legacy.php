@@ -12,27 +12,11 @@ abstract class AutomateWoo_Legacy {
 	 */
 	public $admin;
 
-	/** @var AutomateWoo\Database_Tables */
-	protected $database_tables;
-
 	/**
 	 * @var AutomateWoo\Session_Tracker
 	 * @deprecated
 	 */
 	public $session_tracker;
-
-	/**
-	 * @deprecated since 3.8
-	 * @return AutomateWoo\Database_Tables
-	 */
-	function database_tables() {
-		wc_deprecated_function( __METHOD__, '3.8.0' );
-
-		if ( ! isset( $this->database_tables ) ) {
-			$this->database_tables = new AutomateWoo\Database_Tables();
-		}
-		return $this->database_tables;
-	}
 
 
 	/**

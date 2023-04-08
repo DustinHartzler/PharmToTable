@@ -1,5 +1,138 @@
 *** AutomateWoo Changelog ***
 
+2023-04-04 - version 5.7.1
+* Dev - Add PHP Code coverage report as GitHub action.
+* Fix - Missed import references.
+* Fix - Remove undesired margin top in WP Admin when AutomateWoo is installed.
+
+2023-03-28 - version 5.7.0
+* Add - Endpoint for unmarking conversions.
+* Add - In case AW user is unsubscribed. Update AW user to subscribed when MailPoet user is subscribed.
+* Add - Migrate Report pages to React-based WooCommerce Analytics. And REST endpoints. Prepare for HPOS.
+* Add - Unsubscribe from MailPoet lists when user opted-out in AutomateWoo.
+* Add - conversion list table.
+* Add - dashboard widgets that use Analytics REST API.
+* Add-  empty class param preventing PHP NOTICE undefined index.
+* Dev - Allow selective externalizing from otherwise opted-out packages.
+* Dev - Drop PHP Unit tests support for PHP 7.4.
+* Dev - Fix a flaky unit test where the students list has a different sort order by default.
+* Fix - AW menu issues.
+* Fix - Email preview critical error when calling `custom_styles` action.
+* Fix - Hotfix/revert php unit test matrix.
+* Fix - Plugin icon not showing in some pages.
+* Fix - Required status of Time fields.
+* Fix - Tooltip styling.
+* Tweak - Activate MailPoet integration automatically when MailPoet is available.
+* Tweak - Hide legacy Reports menu entry when HPOS is enabled, declare HPOS-compat.
+* Tweak - Invalidate store, reload components after unmarking conversions.
+* Tweak - Show deprecation warning pointing to new Analytics.
+* Tweak - Use CSS instead of JS to center modals.
+* Tweak - WC 7.6 compatibility.
+* Tweak - WP 6.2 compatibility.
+
+2023-03-14 - version 5.6.10
+* Add - Added "Student Added To the Group" trigger.
+* Add - Added "Student Removed From the Group" trigger.
+* Add - Added `group.id` & `group.title` variables.
+* Add - Composite Products, Product Bundles compatibility with abandoned carts (updated versions of both Extensions required).
+* Add - MailPoet Integration (Add and Remove Subscribers from lists).
+* Add - Sensei LMS Integration.
+* Dev - Unit testing for MailPoet Integration.
+* Tweak - PHP 8.1 compatibility detected during unit test runs.
+
+2023-03-07 - version 5.6.9
+* Add - conversions stats endpoint, use it for Conversion Analytics.
+* Dev - Fix issues in some Customer Order Rules tests.
+* Fix - Fatal error in {{ cart.items }} caused by deleted products.
+* Tweak - WC 7.5 compatibility.
+* Tweak - WP 6.2 compatibility.
+
+2023-02-15 - version 5.6.8
+* Dev - Update phpunit to allow testing with PHP 8.0.
+* Fix - prevent Order Created trigger to run on Subscription Orders.
+
+2023-02-07 - version 5.6.7
+* Fix - Replace direct WP query for Subscriptions for HPOS compatibility.
+* Tweak - WC 7.4 compatibility.
+
+2023-01-31 - version 5.6.6
+* Add - **Downloadable Product Purchased** trigger.
+* Add - **File Downloaded** trigger.
+* Add - **File Not Yet Downloaded** trigger.
+* Add - `download.file_name` and `download.url` variables.
+* Dev - Use the latest released versions of dependent plugins for unit testing.
+
+2023-01-24 - version 5.6.5
+* Fix - Prevent critical error when an invalid time is set in Fixed time workflows.
+
+2023-01-17 - version 5.6.4
+* Compat - Compatibility with MailPoet email customizer
+* Compat - Quickfilter Compatibility for Subscriptions with HPOS.
+* Dev - Reuse HPOS Toggle trait from WooCommerce core to prevent temporary tables from being created during unit tests.
+* Dev - Unit testing for delete order hooks with HPOS.
+* Dev - Unit testing for order and subscription status changes.
+* Fix - Escape Term Slug inside admin_url function in the users tags column.
+* Fix - Use get_edit_order_url for admin Subscription links.
+
+2023-01-10 - version 5.6.3
+* Tweak - Compat - Remove deprecated from before the 5.0.0 release.
+* Tweak - WC 7.3 compatibility.
+
+2022-12-20 - version 5.6.2
+* Add - **Order Refunded Manually** trigger.
+* Add - `refund.amount` and `refund.reason` refund workflow variables.
+* Tweak - Updated **Order Refunded** trigger to run on partial and full refunds.
+
+2022-12-14 - version 5.6.1
+* Dev - Add eslinting to `/admin/assets/js/*.js`.
+* Dev - Build scripts without gulp.
+* Dev - Fix the Subscription unit tests.
+* Dev - Update comments for supported WP/WC versions in GH workflows.
+* Fix - Add workflow filters to analytic pages.
+* Fix - Register mocked AW Analytics under WC Analytics.
+* Tweak - WC 7.2 compatibility.
+* Update - Drop support for WordPress 5.8.
+
+2022-11-15 - version 5.6.0
+* Update - Improve Marketing Opt-in validation.
+
+2022-11-09 - version 5.5.23
+* Add - Declare incompatibility for High Performance Order Storage.
+* Fix - Tracker conversion queries compatibility with custom order tables.
+* Fix - Use order status changes to detect new order created from draft status.
+* Tweak - Remove deprecated order compatibility classes.
+* Update - Handle order deleted actions when HPOS is enabled.
+* Update - Make Order Query rules compatible with HPOS.
+* Update - Refactor customer order queries to support customer order tables.
+* Update - Use order functions for admin edit order URL.
+* Update - Use wc_get_orders to retrieve conversions.
+
+2022-11-03 - version 5.5.22
+* Dev - Add JS & CSS linting to GitHub workflows.
+* Dev - Update Node to 16.
+* Dev - Update Webpack-related dependencies.
+* Dev - Update bundled `@wordpress/` & `@woo…` packages to wp-5.8 & WC 6.7 .
+* Dev -Externalize `@woocommerce/tracks`.
+* Fix - Error logging when workflow run or search fails.
+* Tweak - WC 7.1 compatibility.
+* Tweak - WP 6.1 compatibility.
+* Update - Drop WordPress < 5.8 & WooCommerce < 6.7 support.
+
+2022-10-04 - version 5.5.21
+* Tweak - WC 7.0 compatibility.
+
+2022-09-20 - version 5.5.20
+* Add - Show notice for to be dropped WP<5.8 & WC<6.7 versions.
+* Dev - Add bundlewatch to monitor the size of bundles.
+* Dev - Fix tests in WC 6.9.
+* Dev - Updated `sass@^1.54.9` & gulp related packages.
+
+2022-09-02 - version 5.5.19
+* Fix - Dev - Add branch-labels GH workflow.
+* Fix - Dev - Fixed missed `changelog: doc`.
+* Fix - Fix version string in package files.
+* Tweak - WC 6.9 compatibility.
+
 2022-08-03 - version 5.5.18
 * Tweak - WC 6.8 compatibility.
 

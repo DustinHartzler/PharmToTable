@@ -137,12 +137,47 @@ abstract class Query_Data_Layer_Abstract extends Query_Abstract {
 
 
 	/**
-	 * @param int $product_id
-	 * @param $compare bool|string
+	 * @param int         $product_id
+	 * @param bool|string $compare
 	 * @return $this
 	 */
 	function where_product( $product_id, $compare = false ) {
 		return $this->where_data_layer( 'product', $product_id, $compare );
 	}
 
+	/**
+	 * @param int         $lesson_id
+	 * @param bool|string $compare
+	 * @return $this
+	 */
+	public function where_lesson( $lesson_id, $compare = false ) {
+		return $this->where_data_layer( 'lesson', $lesson_id, $compare );
+	}
+
+	/**
+	 * @param int         $quiz_id
+	 * @param bool|string $compare
+	 * @return $this
+	 */
+	public function where_quiz( $quiz_id, $compare = false ) {
+		return $this->where_data_layer( 'quiz', $quiz_id, $compare );
+	}
+
+	/**
+	 * @param int         $course_id
+	 * @param bool|string $compare
+	 * @return $this
+	 */
+	public function where_course( $course_id, $compare = false ) {
+		return $this->where_data_layer( 'course', $course_id, $compare );
+	}
+
+	/**
+	 * @param string      $download_id
+	 * @param bool|string $compare
+	 * @return $this
+	 */
+	function where_download( $download_id, $compare = false ) {
+		return $this->where_data_layer( 'download', $download_id, $compare );
+	}
 }

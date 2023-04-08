@@ -107,11 +107,11 @@ class Workflow_Location {
 			switch ( $this->get_target_object_type() ) {
 
 				case 'order':
-					$this->country = $this->based_on === 'billing' ? Compat\Order::get_billing_country( $object ) : Compat\Order::get_shipping_country( $object );
+					$this->country = $this->based_on === 'billing' ? $object->get_billing_country() : $object->get_shipping_country();
 					break;
 
 				case 'subscription':
-					$this->country = $this->based_on === 'billing' ? Compat\Subscription::get_billing_country( $object ) : Compat\Subscription::get_shipping_country( $object );
+					$this->country = $this->based_on === 'billing' ? $object->get_billing_country() : $object->get_shipping_country();
 					break;
 
 				case 'user':
@@ -144,11 +144,11 @@ class Workflow_Location {
 			switch ( $this->get_target_object_type() ) {
 
 				case 'order':
-					$this->state = $this->based_on === 'billing' ? Compat\Order::get_billing_state( $object ) : Compat\Order::get_shipping_state( $object );
+					$this->state = $this->based_on === 'billing' ? $object->get_billing_state() : $object->get_shipping_state();
 					break;
 
 				case 'subscription':
-					$this->state = $this->based_on === 'billing' ? Compat\Subscription::get_billing_state( $object ) : Compat\Subscription::get_shipping_state( $object );
+					$this->state = $this->based_on === 'billing' ? $object->get_billing_state() : $object->get_shipping_state();
 					break;
 
 				case 'user':
@@ -181,11 +181,11 @@ class Workflow_Location {
 			switch ( $this->get_target_object_type() ) {
 
 				case 'order':
-					$this->postcode = $this->based_on === 'billing' ? Compat\Order::get_billing_postcode( $object ) : Compat\Order::get_shipping_postcode( $object );
+					$this->postcode = $this->based_on === 'billing' ? $object->get_billing_postcode() : $object->get_shipping_postcode();
 					break;
 
 				case 'subscription':
-					$this->postcode = $this->based_on === 'billing' ? Compat\Subscription::get_billing_postcode( $object ) : Compat\Subscription::get_shipping_postcode( $object );
+					$this->postcode = $this->based_on === 'billing' ? $object->get_billing_postcode() : $object->get_shipping_postcode();
 					break;
 
 				case 'user':
@@ -218,11 +218,11 @@ class Workflow_Location {
 			switch ( $this->get_target_object_type() ) {
 
 				case 'order':
-					$this->city = $this->based_on === 'billing' ? Compat\Order::get_billing_city( $object ) : Compat\Order::get_shipping_city( $object );
+					$this->city = $this->based_on === 'billing' ? $object->get_billing_city() : $object->get_shipping_city();
 					break;
 
 				case 'subscription':
-					$this->city = $this->based_on === 'billing' ? Compat\Subscription::get_billing_city( $object ) : Compat\Subscription::get_shipping_city( $object );
+					$this->city = $this->based_on === 'billing' ? $object->get_billing_city() : $object->get_shipping_city();
 					break;
 
 				case 'user':

@@ -3,18 +3,23 @@
 
 namespace AutomateWoo;
 
+use MailPoet\API\API;
+
 /**
  * @class Integrations
  */
 class Integrations {
 
-	const REQUIRED_SUBSCRIPTIONS_VERSION = '2.5';
-	const REQUIRED_BOOKINGS_VERSION = '1.15.35';
-	const REQUIRED_MEMBERSHIPS_VERSION = '1.7';
-	const REQUIRED_POINTS_AND_REWARDS_VERSION = '1.6.15';
-	const REQUIRED_WOOCOMMERCE_BLOCKS_VERSION = '6.3.0';
-	const REQUIRED_DEPOSITS_VERSION = '1.4';
-	const REQUIRED_FREE_GIFT_COUPONS_VERSION = '2.0.0';
+	const REQUIRED_SUBSCRIPTIONS_VERSION       = '2.5';
+	const REQUIRED_BOOKINGS_VERSION            = '1.15.35';
+	const REQUIRED_MEMBERSHIPS_VERSION         = '1.7';
+	const REQUIRED_POINTS_AND_REWARDS_VERSION  = '1.6.15';
+	const REQUIRED_WOOCOMMERCE_BLOCKS_VERSION  = '6.3.0';
+	const REQUIRED_DEPOSITS_VERSION            = '1.4';
+	const REQUIRED_FREE_GIFT_COUPONS_VERSION   = '2.0.0';
+	const REQUIRED_SENSEI_LMS_VERSION          = '4.8.0';
+	const REQUIRED_SENSEI_CERTIFICATES_VERSION = '2.3.0';
+	const REQUIRED_SENSEI_PRO_VERSION          = '1.8.0';
 
 	/** @var Integration_Mailchimp */
 	private static $mailchimp;
@@ -30,6 +35,9 @@ class Integrations {
 
 	/** @var Integration_Bitly */
 	private static $bitly;
+
+	/** @var Integration_Mailpoet */
+	private static $mailpoet;
 
 
 	/**
@@ -54,6 +62,63 @@ class Integrations {
 		return version_compare( $version, $min_version, '>=' );
 	}
 
+	/**
+	 * Check if MailPoet is active
+	 *
+	 * @since 5.6.4
+	 *
+	 * @return bool
+	 */
+	public static function is_mailpoet_active() {
+		return defined( 'MAILPOET_VERSION' );
+	}
+
+	/**
+	 * Check if the MailPoet customizer for WooCommerce emails is enabled
+	 *
+	 * @since 5.6.4
+	 *
+	 * @return bool
+	 */
+	public static function is_mailpoet_overriding_styles() {
+		if ( ! self::is_mailpoet_active() || ! class_exists( '\MailPoet\Settings\SettingsController' ) ) {
+			return false;
+		}
+
+		return '1' === \MailPoet\Settings\SettingsController::getInstance()->get( 'woocommerce.use_mailpoet_editor' );
+	}
+
+	/**
+	 * Check if MailPoet API is active
+	 *
+	 * @since 5.6.10
+	 *
+	 * @return bool
+	 */
+	public static function is_mailpoet_api_active() {
+		return self::is_mailpoet_active() && class_exists( '\MailPoet\API\API' );
+	}
+
+	/**
+	 * Get the Mailpoet integration single instance.
+	 *
+	 * @since 5.6.10
+	 *
+	 * @return Integration_Mailpoet|false
+	 * @throws \Exception If API version is invalid.
+	 */
+	static function mailpoet() {
+		if ( ! isset( self::$mailpoet ) ) {
+
+			if ( ! self::is_mailpoet_api_active() ) {
+				return false;
+			}
+
+			self::$mailpoet = new Integration_Mailpoet( API::MP( 'v1' ) );
+		}
+
+		return self::$mailpoet;
+	}
 
 	/**
 	 * @return bool
@@ -257,4 +322,51 @@ class Integrations {
 		return self::is_subscriptions_active();
 	}
 
+	/**
+	 * Is the Sensei LMS plugin active?
+	 *
+	 * @since 5.6.10
+	 *
+	 * @param string $min_version
+	 *
+	 * @return bool
+	 */
+	public static function is_sensei_lms_active( $min_version = self::REQUIRED_SENSEI_LMS_VERSION ) {
+		if ( ! defined( 'SENSEI_LMS_VERSION' ) ) {
+			return false;
+		}
+		return version_compare( SENSEI_LMS_VERSION, $min_version, '>=' );
+	}
+
+	/**
+	 * Is the Sensei Certificates plugin active?
+	 *
+	 * @since 5.6.10
+	 *
+	 * @param string $min_version
+	 *
+	 * @return bool
+	 */
+	public static function is_sensei_certificates_active( $min_version = self::REQUIRED_SENSEI_CERTIFICATES_VERSION ) {
+		if ( ! defined( 'SENSEI_CERTIFICATES_VERSION' ) ) {
+			return false;
+		}
+		return version_compare( SENSEI_CERTIFICATES_VERSION, $min_version, '>=' );
+	}
+
+	/**
+	 * Is the Sensei Pro plugin active?
+	 *
+	 * @since 5.6.10
+	 *
+	 * @param string $min_version
+	 *
+	 * @return bool
+	 */
+	public static function is_sensei_pro_active( $min_version = self::REQUIRED_SENSEI_PRO_VERSION ) {
+		if ( ! defined( 'SENSEI_PRO_VERSION' ) ) {
+			return false;
+		}
+		return version_compare( SENSEI_PRO_VERSION, $min_version, '>=' );
+	}
 }

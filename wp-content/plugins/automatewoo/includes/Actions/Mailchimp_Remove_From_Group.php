@@ -1,9 +1,10 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * @class Action_Mailchimp_Remove_From_Group
@@ -11,22 +12,35 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Action_Mailchimp_Remove_From_Group extends Action_Mailchimp_Add_To_Group {
 
-	function load_admin_details() {
+	/**
+	 * Implements Action load_admin_details abstract method
+	 *
+	 * @see Action::load_admin_details()
+	 */
+	protected function load_admin_details() {
 		parent::load_admin_details();
 		$this->title = __( 'Remove Contact From Group', 'automatewoo' );
 	}
 
-
-	function load_fields() {
+	/**
+	 * Implements Action load_fields abstract method
+	 *
+	 * @see Action::load_fields()
+	 */
+	public function load_fields() {
 		parent::load_fields();
 		$this->remove_field( 'allow_add_to_list' );
 	}
 
+	/**
+	 * Implements run abstract method.
+	 *
+	 * @see ActionInterface::run()
+	 */
+	public function run() {
 
-	function run() {
-
-		$list_id = $this->get_option( 'list' );
-		$email = $this->get_contact_email_option();
+		$list_id   = $this->get_option( 'list' );
+		$email     = $this->get_contact_email_option();
 		$interests = $this->get_option( 'groups' );
 
 		if ( ! $list_id || ! $interests || ! $email ) {
@@ -39,7 +53,7 @@ class Action_Mailchimp_Remove_From_Group extends Action_Mailchimp_Add_To_Group {
 
 		$group_updates = [];
 
-		foreach( $interests as $interest_id ) {
+		foreach ( $interests as $interest_id ) {
 			$group_updates[ $interest_id ] = false;
 		}
 

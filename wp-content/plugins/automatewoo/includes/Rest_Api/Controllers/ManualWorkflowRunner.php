@@ -11,6 +11,7 @@ use AutomateWoo\Rest_Api\Utilities\RestException;
 use AutomateWoo\RuleQuickFilters\QueryLoader;
 use AutomateWoo\Triggers\ManualInterface;
 use AutomateWoo\Workflow;
+use WC_Order;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -183,10 +184,16 @@ class ManualWorkflowRunner extends AbstractController {
 				$workflow->setup( $trigger->get_data_layer( $item ) );
 
 				if ( $workflow->validate_workflow() ) {
+					if ( $item instanceof WC_Order ) {
+						$url = $item->get_edit_order_url();
+					} else {
+						$url = get_edit_post_link( $item->get_id(), 'raw' );
+					}
+
 					$results[] = [
 						'id'           => $item->get_id(),
 						'singularName' => $data_type_singular_name,
-						'url'          => get_edit_post_link( $item->get_id(), 'raw' ),
+						'url'          => $url,
 					];
 				}
 

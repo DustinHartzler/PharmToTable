@@ -1,9 +1,8 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * @class Trigger_Subscription_Status_Changed
@@ -26,36 +25,36 @@ class Trigger_Subscription_Status_Changed extends Trigger {
 	protected $required_async_events = 'subscription_status_changed';
 
 
-	function load_admin_details() {
-		$this->title = __( 'Subscription Status Changed', 'automatewoo' );
-		$this->description = __(
-			'This trigger fires when a subscription status changes with one exception. When an automatic subscription ' .
-			'payment is processed the subscription status is changed to "On-hold" and then immediately back to ' .
-			'"Active" if the payment is successful. When this happens this trigger deliberately doesn\'t fire because ' .
-			'the status was only changed momentarily while the subscription has essentially remained "Active".',
-			'automatewoo'
-		);
-		$this->group = Subscription_Workflow_Helper::get_group_name();
+	/**
+	 * Method to set title, group, description and other admin props.
+	 */
+	public function load_admin_details() {
+		$this->title       = __( 'Subscription Status Changed', 'automatewoo' );
+		$this->description = __( 'This trigger fires when a subscription status changes with one exception. When an automatic subscription payment is processed the subscription status is changed to "On-hold" and then immediately back to "Active" if the payment is successful. When this happens this trigger deliberately doesn\'t fire because the status was only changed momentarily while the subscription has essentially remained "Active".', 'automatewoo' );
+		$this->group       = Subscription_Workflow_Helper::get_group_name();
 	}
 
 
-	function load_fields() {
+	/**
+	 * Registers fields used for this trigger.
+	 */
+	public function load_fields() {
 
 		$from = ( new Fields\Subscription_Status() )
-			->set_title( __( 'Status changes from', 'automatewoo'  ) )
+			->set_title( __( 'Status changes from', 'automatewoo' ) )
 			->set_name( 'subscription_status_from' )
 			->set_description( __( 'Select which subscription status changes will trigger this workflow. Leave blank for any subscription status.', 'automatewoo' ) )
 			->set_multiple();
 
 		$to = clone $from;
 
-		$to->set_title( __( 'Status changes to', 'automatewoo'  ) )
+		$to->set_title( __( 'Status changes to', 'automatewoo' ) )
 			->set_name( 'subscription_status_to' );
 
 		$recheck_status = ( new Fields\Checkbox() )
-			->set_name('validate_order_status_before_queued_run')
+			->set_name( 'validate_order_status_before_queued_run' )
 			->set_title( __( 'Recheck status before run', 'automatewoo' ) )
-			->set_description( __( "This is useful for workflows that are not run immediately as it ensures the status of the subscription hasn't changed since initial trigger." , 'automatewoo' ) )
+			->set_description( __( "This is useful for workflows that are not run immediately as it ensures the status of the subscription hasn't changed since initial trigger.", 'automatewoo' ) )
 			->set_default_to_checked();
 
 		$this->add_field( $from );
@@ -65,7 +64,10 @@ class Trigger_Subscription_Status_Changed extends Trigger {
 	}
 
 
-	function register_hooks() {
+	/**
+	 * Register trigger hooks.
+	 */
+	public function register_hooks() {
 		add_action( $this->get_hook_subscription_status_changed(), [ $this, 'handle_status_changed' ], 10, 3 );
 	}
 
@@ -75,7 +77,7 @@ class Trigger_Subscription_Status_Changed extends Trigger {
 	 * @param string $new_status
 	 * @param string $old_status
 	 */
-	function handle_status_changed( $subscription_id, $new_status, $old_status ) {
+	public function handle_status_changed( $subscription_id, $new_status, $old_status ) {
 		// use temp data to store the real status changed, status of sub may have already changed if using async
 		Temporary_Data::set( 'subscription_old_status', $subscription_id, $old_status );
 		Temporary_Data::set( 'subscription_new_status', $subscription_id, $new_status );
@@ -88,7 +90,7 @@ class Trigger_Subscription_Status_Changed extends Trigger {
 	 *
 	 * @return bool
 	 */
-	function validate_workflow( $workflow ) {
+	public function validate_workflow( $workflow ) {
 		$subscription = $workflow->data_layer()->get_subscription();
 		$status_from  = $workflow->get_trigger_option( 'subscription_status_from' );
 		$status_to    = $workflow->get_trigger_option( 'subscription_status_to' );
@@ -123,7 +125,7 @@ class Trigger_Subscription_Status_Changed extends Trigger {
 	 *
 	 * @return bool
 	 */
-	function validate_before_queued_event( $workflow ) {
+	public function validate_before_queued_event( $workflow ) {
 		$subscription = $workflow->data_layer()->get_subscription();
 
 		if ( ! $subscription ) {
@@ -131,9 +133,9 @@ class Trigger_Subscription_Status_Changed extends Trigger {
 		}
 
 		// Option to validate order status
-		if ( $workflow->get_trigger_option('validate_order_status_before_queued_run') ) {
+		if ( $workflow->get_trigger_option( 'validate_order_status_before_queued_run' ) ) {
 
-			$status_to = $workflow->get_trigger_option('subscription_status_to');
+			$status_to = $workflow->get_trigger_option( 'subscription_status_to' );
 
 			if ( ! $this->validate_status_field( $status_to, $subscription->get_status() ) ) {
 				return false;

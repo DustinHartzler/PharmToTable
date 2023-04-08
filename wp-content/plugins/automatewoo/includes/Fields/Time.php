@@ -64,6 +64,7 @@ class Time extends Field {
 			 ->set_max( $this->max_hours )
 			 ->set_multiple()
 			 ->set_placeholder( _x( 'HH', 'time field', 'automatewoo' ) )
+			 ->set_required( $this->get_required() )
 			 ->render( $value[0] );
 
 		 echo '<div class="automatewoo-time-field-group__sep">:</div>';
@@ -76,6 +77,7 @@ class Time extends Field {
 			 ->set_max(59)
 			 ->set_multiple()
 			 ->set_placeholder( _x( 'MM', 'time field', 'automatewoo' ) )
+			 ->set_required( $this->get_required() )
 			 ->render( $value[1] );
 
 		 ?>

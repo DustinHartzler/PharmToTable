@@ -407,19 +407,6 @@ function aw_str_ends_with( $haystack, $needle ) {
 	return substr( $haystack, -$length ) === $needle;
 }
 
-/**
- * Get user agent string.
-
- * @deprecated
- *
- * @since  3.3.1
- * @return string
- */
-function aw_get_user_agent() {
-	wc_deprecated_function( __FUNCTION__, '4.8.1', 'wc_get_user_agent' );
-	return wc_get_user_agent();
-}
-
 
 /**
  * Define cache blocking constants if not already defined
@@ -721,7 +708,18 @@ function aw_string_to_wc_datetime( $time_string ) {
  * @return array
  */
 function aw_get_draft_post_statuses() {
-	return [ 'auto-draft', 'new', 'wc-auto-draft', 'wc-checkout-draft' ];
+	return [ 'auto-draft', 'new', 'wc-auto-draft' ];
+}
+
+/**
+ * Get an array of draft order statuses (with or without prefix).
+ *
+ * @since 5.5.23
+ *
+ * @return array
+ */
+function aw_get_draft_order_statuses() {
+	return [ 'auto-draft', 'new', 'checkout-draft', 'wc-auto-draft', 'wc-checkout-draft' ];
 }
 
 /**
@@ -777,4 +775,18 @@ function aw_deprecated_class( string $class_name, string $version, $replacement 
 	}
 
 	trigger_error( esc_html( $message ), E_USER_DEPRECATED );
+}
+
+/**
+ * Get full name of the given user.
+ *
+ * @param \WP_User $user
+ * @return string Full name.
+ */
+function aw_get_full_name( $user ) {
+	if ( ! $user ) {
+		return '';
+	}
+
+	return trim( sprintf( _x( '%1$s %2$s', 'full name', 'automatewoo' ), $user->first_name, $user->last_name ) );
 }

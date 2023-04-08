@@ -3,7 +3,6 @@
 namespace AutomateWoo\RuleQuickFilters\Queries;
 
 use AutomateWoo\Exception;
-use AutomateWoo\RuleQuickFilters\Clauses\ClauseInterface;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,6 +17,15 @@ defined( 'ABSPATH' ) || exit;
 abstract class AbstractQuery implements QueryInterface {
 
 	/**
+	 * Datastore type to query from.
+	 *
+	 * @var DatastoreTypeInterface
+	 *
+	 * @since 5.5.23
+	 */
+	protected $datastore;
+
+	/**
 	 * Quick filter clauses.
 	 *
 	 * Clauses are nested by rule group.
@@ -27,35 +35,23 @@ abstract class AbstractQuery implements QueryInterface {
 	protected $clauses;
 
 	/**
-	 * Get quick filter results by clauses.
+	 * Get the datastore type to use for queries.
 	 *
-	 * @param ClauseInterface[] $clauses A group of clauses.
-	 * @param int               $number  The number of results to get.
-	 * @param int               $offset  The query offset.
+	 * @return DatastoreTypeInterface
 	 *
-	 * @return array of IDs
-	 * @throws Exception When there is an error getting results.
+	 * @since 5.5.23
 	 */
-	abstract protected function get_results_by_clauses( $clauses, $number, $offset = 0 );
+	abstract protected function get_datastore_type();
 
 	/**
-	 * Get quick filter results count by clauses.
-	 *
-	 * @param ClauseInterface[] $clauses A group of clauses.
-	 *
-	 * @return int
-	 * @throws Exception When there is an error counting results.
-	 */
-	abstract protected function get_results_count_by_clauses( $clauses );
-
-	/**
-	 * AbstractQuickFilter constructor.
+	 * AbstractQuery constructor.
 	 *
 	 * @param array $clauses An array containing arrays of clauses.
 	 *                       See \AutomateWoo\RuleQuickFilters\ClauseGenerator::generate().
 	 */
 	public function __construct( $clauses ) {
-		$this->clauses = $clauses;
+		$this->clauses   = $clauses;
+		$this->datastore = $this->get_datastore_type();
 	}
 
 	/**
@@ -85,7 +81,7 @@ abstract class AbstractQuery implements QueryInterface {
 	 */
 	public function get_results_by_rule_group( $rule_group, $number = 10, $offset = 0, $return = 'objects' ) {
 		$clauses = $this->get_clauses_by_rule_group( $rule_group );
-		$results = $this->get_results_by_clauses( $clauses, $number, $offset );
+		$results = $this->datastore->get_results_by_clauses( $clauses, $number, $offset );
 
 		if ( $return === 'objects' ) {
 			$results = array_filter( array_map( [ $this, 'get_result_object' ], $results ) );
@@ -105,7 +101,7 @@ abstract class AbstractQuery implements QueryInterface {
 	public function get_results_count_by_rule_group( $rule_group ) {
 		$clauses = $this->get_clauses_by_rule_group( $rule_group );
 
-		return $this->get_results_count_by_clauses( $clauses );
+		return $this->datastore->get_results_count_by_clauses( $clauses );
 	}
 
 	/**
@@ -134,7 +130,7 @@ abstract class AbstractQuery implements QueryInterface {
 
 		if ( ! $rule_group_count ) {
 			// There are no rules and therefore no clauses
-			$counts[1] = $this->get_results_count_by_clauses( [] );
+			$counts[1] = $this->datastore->get_results_count_by_clauses( [] );
 		}
 
 		for ( $i = 1; $i <= $rule_group_count; $i++ ) {

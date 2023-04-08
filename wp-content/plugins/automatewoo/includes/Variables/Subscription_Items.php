@@ -33,7 +33,7 @@ class Variable_Subscription_Items extends Variable_Abstract_Product_Display {
 		$products = [];
 
 		foreach ( $items as $item ) {
-			$products[] = Compat\Subscription::get_product_from_item( $subscription, $item );
+			$products[] = $item->get_product();
 		}
 
 		$args = array_merge( $this->get_default_product_template_args( $workflow, $parameters ), [

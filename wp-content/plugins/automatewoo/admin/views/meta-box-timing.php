@@ -176,9 +176,8 @@ $fixed_time->set_name_base( $option_base )
 					<?php esc_html_e( 'Date', 'automatewoo' ); ?>
 					<span class="automatewoo-label__extra"><?php esc_html_e( '(24 hour time)', 'automatewoo' ); ?></span>
 				</label>
-
 				<div class="col-1">
-					<?php $fixed_date->render( $workflow ? $workflow->get_option( 'fixed_date' ) : '' ); ?>
+					<?php $fixed_date->render( $workflow ? $workflow->get_option( 'fixed_date' ) : gmdate( 'Y-m-d' ) ); ?>
 				</div>
 
 				<div class="col-2">
@@ -186,7 +185,7 @@ $fixed_time->set_name_base( $option_base )
 					if ( $workflow && $workflow->get_option( 'fixed_time' ) ) {
 						$value = Clean::recursive( (array) $workflow->get_option( 'fixed_time' ) );
 					} else {
-						$value = [ '', '' ];
+						$value = [ gmdate( 'H' ), gmdate( 'i' ) ];
 					}
 
 					$fixed_time->render( $value );

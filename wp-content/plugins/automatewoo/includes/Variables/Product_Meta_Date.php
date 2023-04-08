@@ -1,9 +1,10 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+use WC_Product;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * @class Variable_Product_Meta_Date
@@ -11,16 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Variable_Product_Meta_Date extends Variable_Order_Meta_Date {
 
 	/**
-	 * @param \WC_Product $product
-	 * @param $parameters array
+	 * @param WC_Product $product
+	 * @param array      $parameters
 	 * @return string|bool
 	 */
-	function get_value( $product, $parameters ) {
+	public function get_value( $product, $parameters ) {
 		if ( ! $parameters['key'] ) {
 			return false;
 		}
 
-		$value = Clean::string( Compat\Product::get_meta( $product, $parameters['key'] ) );
+		$value = Clean::string( $product->get_meta( $parameters['key'] ) );
 		return $this->format_datetime( $value, $parameters, true );
 	}
 }

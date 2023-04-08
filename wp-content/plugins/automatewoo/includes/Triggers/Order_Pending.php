@@ -1,19 +1,26 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * @class Trigger_Order_Pending
  */
 class Trigger_Order_Pending extends Trigger_Abstract_Order_Status_Base {
 
-	public $_target_status = 'pending';
+	/**
+	 * Target transition status.
+	 *
+	 * @var string|false
+	 */
+	public $target_status = 'pending';
 
 
-	function load_admin_details() {
+	/**
+	 * Method to set title, group, description and other admin props.
+	 */
+	public function load_admin_details() {
 		parent::load_admin_details();
 		$this->title = __( 'Order Pending Payment', 'automatewoo' );
 	}

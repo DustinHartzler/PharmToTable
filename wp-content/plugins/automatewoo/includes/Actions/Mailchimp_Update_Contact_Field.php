@@ -1,9 +1,10 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * @class Action_Mailchimp_Update_Contact_Field
@@ -11,14 +12,23 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Action_Mailchimp_Update_Contact_Field extends Action_Mailchimp_Abstract {
 
-	function load_admin_details() {
+	/**
+	 * Implements Action load_admin_details abstract method
+	 *
+	 * @see Action::load_admin_details()
+	 */
+	protected function load_admin_details() {
 		parent::load_admin_details();
-		$this->title = __( 'Update List Contact Field', 'automatewoo' );
+		$this->title       = __( 'Update List Contact Field', 'automatewoo' );
 		$this->description = __( 'The contact must have been added to the list before updating any fields.', 'automatewoo' );
 	}
 
-
-	function load_fields() {
+	/**
+	 * Implements Action load_fields abstract method
+	 *
+	 * @see Action::load_fields()
+	 */
+	public function load_fields() {
 
 		$field = ( new Fields\Select() )
 			->set_name( 'field' )
@@ -40,11 +50,13 @@ class Action_Mailchimp_Update_Contact_Field extends Action_Mailchimp_Abstract {
 
 
 	/**
-	 * @param $field_name
-	 * @param $reference_field_value
+	 * TODO: Remove duplication in MailChimp_Add_To_Group::get_dynamic_field_options
+	 *
+	 * @param string $field_name The field name to get the options for
+	 * @param bool   $reference_field_value If reference value is false, then load the last saved value, used when initially loading an action page
 	 * @return array
 	 */
-	function get_dynamic_field_options( $field_name, $reference_field_value = false ) {
+	public function get_dynamic_field_options( $field_name, $reference_field_value = false ) {
 
 		$options = [];
 		/** @var Fields\Select $field */
@@ -54,13 +66,12 @@ class Action_Mailchimp_Update_Contact_Field extends Action_Mailchimp_Abstract {
 			return [];
 		}
 
-		// if reference value is not set load the last saved value, used when initially loading an action page
 		if ( ! $reference_field_value ) {
 			$reference_field_value = $this->get_option( $field->dynamic_options_reference_field_name );
 		}
 
 		foreach ( Integrations::mailchimp()->get_list_fields( $reference_field_value ) as $field ) {
-			$options[ $field['tag'] ] = "{$field['name']} - {$field['tag']}" ;
+			$options[ $field['tag'] ] = "{$field['name']} - {$field['tag']}";
 		}
 
 		return $options;
@@ -68,14 +79,16 @@ class Action_Mailchimp_Update_Contact_Field extends Action_Mailchimp_Abstract {
 
 
 	/**
-	 * @throws \Exception
+	 * Implements run abstract method.
+	 *
+	 * @see ActionInterface::run()
 	 */
-	function run() {
+	public function run() {
 
 		$list_id = $this->get_option( 'list' );
-		$email = $this->get_contact_email_option();
-		$field = $this->get_option( 'field' );
-		$value = $this->get_option( 'value', true );
+		$email   = $this->get_contact_email_option();
+		$field   = $this->get_option( 'field' );
+		$value   = $this->get_option( 'value', true );
 
 		if ( ! $list_id || ! $field || ! $email ) {
 			return;
@@ -87,7 +100,7 @@ class Action_Mailchimp_Update_Contact_Field extends Action_Mailchimp_Abstract {
 
 		$args = [
 			'email_address' => $email,
-			'merge_fields' => []
+			'merge_fields'  => [],
 		];
 
 		$args['merge_fields'][ $field ] = $value;

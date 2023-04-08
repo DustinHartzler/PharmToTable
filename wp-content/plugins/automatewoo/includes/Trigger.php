@@ -628,4 +628,16 @@ abstract class Trigger {
 		return 'automatewoo/order/paid_async';
 	}
 
+	/**
+	 * Used to dynamically load option values for a trigger field.
+	 *
+	 * @param string       $field_name
+	 * @param string|false $reference_field_value
+	 *
+	 * @return array
+	 * @since 5.6.6
+	 */
+	public function get_dynamic_field_options( $field_name, $reference_field_value = false ) {
+		return [];
+	}
 }

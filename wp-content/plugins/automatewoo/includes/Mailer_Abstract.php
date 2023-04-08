@@ -307,17 +307,4 @@ abstract class Mailer_Abstract {
 		return '';
 	}
 
-	/**
-	 * Get email html.
-	 *
-	 * @deprecated since 4.4.0
-	 *
-	 * @return string
-	 */
-	public function get_html() {
-		wc_deprecated_function( __METHOD__, '4.4.0', 'get_email_body' );
-
-		return $this->get_email_body();
-	}
-
 }

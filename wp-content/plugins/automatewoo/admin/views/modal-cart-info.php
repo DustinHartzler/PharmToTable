@@ -34,21 +34,19 @@ $tax_display = get_option( 'woocommerce_tax_display_cart' );
 
 					<?php
 					foreach ( $cart->get_items() as $item ) :
-
-						$product = $item->get_product();
-
-						if ( ! $product ) {
-							continue;
-						}
-
+						$product    = $item->get_product();
 						$line_total = $tax_display === 'excl' ? $item->get_line_subtotal() : $item->get_line_subtotal() + $item->get_line_subtotal_tax();
 
 						?>
 
 						<tr>
 							<td>
-								<a href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo wp_kses_post( $item->get_name() ); ?></a>
-								<br><?php echo $item->get_item_data_html( true ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+								<?php if ( is_a( $product, 'WC_Product' ) && $product->is_purchasable() ) : ?>
+									<a href="<?php echo esc_url( $product->get_permalink() ); ?>"><?php echo wp_kses_post( $item->get_name() ); ?></a>
+									<br><?php echo $item->get_item_data_html( true ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+								<?php else : ?>
+									<?php echo wp_kses_post( $item->get_cart_item_name() ); ?> [<?php esc_html_e( 'deleted', 'automatewoo' ); ?>]
+								<?php endif; ?>
 							</td>
 							<td><?php echo wp_kses_post( $item->get_quantity() ); ?></td>
 							<td><?php echo wp_kses_post( $cart->price( $line_total ) ); ?></td>

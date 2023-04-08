@@ -9,6 +9,7 @@ use AutomateWoo\Time_Helper;
 use AutomateWoo\Dashboard_Widget;
 use AutomateWoo\Clean;
 use AutomateWoo\DateTime;
+use AutomateWoo\Admin\Analytics\Rest_API;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -88,9 +89,15 @@ class Dashboard extends Base {
 
 			$includes = [];
 
-			$includes[] = $path . 'chart-workflows-run.php';
-			$includes[] = $path . 'chart-conversions.php';
-			$includes[] = $path . 'chart-email.php';
+			if ( Rest_API::is_enabled() ) {
+				$includes[] = $path . 'analytics-workflows-run.php';
+				$includes[] = $path . 'analytics-conversions.php';
+				$includes[] = $path . 'analytics-email.php';
+			} else {
+				$includes[] = $path . 'chart-workflows-run.php';
+				$includes[] = $path . 'chart-conversions.php';
+				$includes[] = $path . 'chart-email.php';
+			}
 
 			$includes = apply_filters( 'automatewoo/dashboard/chart_widgets', $includes );
 
@@ -300,34 +307,16 @@ class Dashboard extends Base {
 
 			$date = $this->get_date_range();
 
-			Time_Helper::convert_from_gmt( $date['from'] );
-			Time_Helper::convert_from_gmt( $date['to'] );
-
-			$query = new \WP_Query([
-				'post_type' => 'shop_order',
-				'post_status' => array_map( 'aw_add_order_status_prefix', wc_get_is_paid_statuses() ),
-				'posts_per_page' => -1,
-				'fields' => 'ids',
-				'no_found_rows' => true,
-				'meta_query' => [
-					[
-						'key' => '_aw_conversion',
-						'compare' => 'EXISTS',
-					]
-				],
-				'date_query' => [
-					[
-						'column' => 'post_date',
-						'after' => $date['from']->format('Y-m-d H:i:s')
-					],
-					[
-						'column' => 'post_date',
-						'before' => $date['to']->format('Y-m-d H:i:s')
-					]
+			$this->conversions = wc_get_orders(
+				[
+					'type'         => 'shop_order',
+					'status'       => wc_get_is_paid_statuses(),
+					'limit'        => -1,
+					'meta_key'     => '_aw_conversion',
+					'meta_compare' => 'EXISTS',
+					'date_created' => $date['from']->getTimestamp() . '...' . $date['to']->getTimestamp(),
 				]
-			]);
-
-			$this->conversions = array_map( 'wc_get_order', $query->posts );
+			);
 		}
 
 		return $this->conversions;

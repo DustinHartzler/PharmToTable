@@ -72,6 +72,8 @@ abstract class Searchable_Select_Abstract extends Field {
 		<select class="<?php echo esc_attr( $this->get_classes() ); ?>"
 				<?php echo $this->is_multiple() ? 'multiple="multiple"' : ''; ?>
 				name="<?php echo esc_attr( $this->get_full_name() ); ?><?php echo $this->is_multiple() ? '[]' : ''; ?>"
+				data-name="<?php echo esc_attr( $this->get_name() ); ?>"
+				data-allow_clear="true"
 				data-placeholder="<?php esc_attr_e( 'Search&hellip;', 'automatewoo' ); ?>"
 				data-action="<?php echo esc_attr( $this->get_search_ajax_action() ); ?>">
 			<?php

@@ -253,6 +253,33 @@ class Data_Layer {
 		return $this->get_item( 'tag' );
 	}
 
+	/**
+	 * @return \WP_Post|false
+	 */
+	public function get_course() {
+		return $this->get_item( 'course' );
+	}
+
+	/**
+	 * @return \WP_Post|false
+	 */
+	public function get_lesson() {
+		return $this->get_item( 'lesson' );
+	}
+
+	/**
+	 * @return \WP_Post|false
+	 */
+	public function get_quiz() {
+		return $this->get_item( 'quiz' );
+	}
+
+	/**
+	 * @return \WP_User|false
+	 */
+	public function get_teacher() {
+		return $this->get_item( 'teacher' );
+	}
 
 	/**
 	 * This should return the language of the customer in the data layer.

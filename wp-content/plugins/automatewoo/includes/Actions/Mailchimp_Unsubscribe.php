@@ -1,24 +1,34 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * @class Action_Mailchimp_Unsubscribe
  */
 class Action_Mailchimp_Unsubscribe extends Action_Mailchimp_Abstract {
 
-	function load_admin_details() {
+	/**
+	 * Implements Action load_admin_details abstract method
+	 *
+	 * @see Action::load_admin_details()
+	 */
+	protected function load_admin_details() {
 		parent::load_admin_details();
 		$this->title = __( 'Remove Contact From List', 'automatewoo' );
 	}
 
-
-	function load_fields() {
+	/**
+	 * Implements Action load_fields abstract method
+	 *
+	 * @see Action::load_fields()
+	 */
+	public function load_fields() {
 		$unsubscribe_only = new Fields\Checkbox();
-		$unsubscribe_only->set_name('unsubscribe_only');
+		$unsubscribe_only->set_name( 'unsubscribe_only' );
 		$unsubscribe_only->set_title( __( 'Unsubscribe only', 'automatewoo' ) );
 		$unsubscribe_only->set_description( __( 'If checked the user will be unsubscribed instead of deleted.', 'automatewoo' ) );
 
@@ -27,10 +37,14 @@ class Action_Mailchimp_Unsubscribe extends Action_Mailchimp_Abstract {
 		$this->add_field( $unsubscribe_only );
 	}
 
-
-	function run() {
+	/**
+	 * Implements run abstract method.
+	 *
+	 * @see ActionInterface::run()
+	 */
+	public function run() {
 		$list_id = $this->get_option( 'list' );
-		$email = $this->get_contact_email_option();
+		$email   = $this->get_contact_email_option();
 
 		if ( ! $list_id ) {
 			return;
@@ -38,12 +52,15 @@ class Action_Mailchimp_Unsubscribe extends Action_Mailchimp_Abstract {
 
 		$subscriber = md5( $email );
 
-		if ( $this->get_option('unsubscribe_only') ) {
-			Integrations::mailchimp()->request( 'PATCH', "/lists/$list_id/members/$subscriber", [
-				'status' => 'unsubscribed',
-			]);
-		}
-		else {
+		if ( $this->get_option( 'unsubscribe_only' ) ) {
+			Integrations::mailchimp()->request(
+				'PATCH',
+				"/lists/$list_id/members/$subscriber",
+				[
+					'status' => 'unsubscribed',
+				]
+			);
+		} else {
 			Integrations::mailchimp()->request( 'DELETE', "/lists/$list_id/members/$subscriber" );
 		}
 	}

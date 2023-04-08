@@ -2,10 +2,12 @@
 
 namespace AutomateWoo;
 
+use AutomateWoo\Rest_Api\Controllers\ConversionsController;
 use AutomateWoo\Rest_Api\Controllers\WorkflowPresets as WorkflowPresetsController;
 use AutomateWoo\Rest_Api\Controllers\Workflows as WorkflowsController;
 use AutomateWoo\Rest_Api\Controllers\ManualWorkflowRunner as ManualWorkflowRunnerController;
 use AutomateWoo\Rest_Api\Utilities\Controller_Namespace;
+use AutomateWoo\Admin\Analytics\Rest_API as Analytics_Rest_API;
 use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -25,6 +27,7 @@ final class Rest_Api {
 	public function init() {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ], 15 );
 		add_filter( 'rest_namespace_index', [ $this, 'filter_namespace_index' ], 10, 2 );
+		Analytics_Rest_API::init();
 	}
 
 	/**
@@ -47,6 +50,7 @@ final class Rest_Api {
 			WorkflowsController::class,
 			ManualWorkflowRunnerController::class,
 			WorkflowPresetsController::class,
+			ConversionsController::class,
 		];
 
 		$controllers = [];

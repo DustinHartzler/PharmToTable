@@ -58,7 +58,7 @@ class ArrayPreset implements PresetInterface, \ArrayAccess {
 	 *
 	 * @return bool
 	 */
-	public function offsetExists( $offset ) {
+	public function offsetExists( $offset ): bool {
 		return isset( $this->data[ $offset ] );
 	}
 
@@ -67,6 +67,7 @@ class ArrayPreset implements PresetInterface, \ArrayAccess {
 	 *
 	 * @return mixed
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		return $this->data[ $offset ];
 	}
@@ -75,14 +76,14 @@ class ArrayPreset implements PresetInterface, \ArrayAccess {
 	 * @param string $offset
 	 * @param mixed  $value
 	 */
-	public function offsetSet( $offset, $value ) {
+	public function offsetSet( $offset, $value ): void {
 		$this->data[ $offset ] = $value;
 	}
 
 	/**
 	 * @param string $offset
 	 */
-	public function offsetUnset( $offset ) {
+	public function offsetUnset( $offset ): void {
 		unset( $this->data[ $offset ] );
 	}
 

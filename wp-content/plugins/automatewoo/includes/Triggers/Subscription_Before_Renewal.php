@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
@@ -8,7 +7,7 @@ use AutomateWoo\Traits\IntegerValidator;
 use AutomateWoo\Triggers\AbstractBatchedDailyTrigger;
 use WP_Query;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * @class Trigger_Subscription_Before_Renewal
@@ -25,23 +24,29 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 	 */
 	public $supplied_data_items = [ 'customer', 'subscription' ];
 
-
-	function load_admin_details() {
+	/**
+	 * Method to set the action's admin props.
+	 *
+	 * Admin props include: title, group and description.
+	 */
+	public function load_admin_details() {
 		$this->title        = __( 'Subscription Before Renewal', 'automatewoo' );
 		$this->description  = __( "This trigger runs once per day for any subscriptions that are due for renewal on the workflow's target date. For example, if set to run 7 days before renewal, it would look for subscriptions that are due for renewal on the date exactly 7 days from now.", 'automatewoo' );
 		$this->description .= ' ' . $this->get_description_text_workflow_not_immediate();
 		$this->group        = Subscription_Workflow_Helper::get_group_name();
 	}
 
-
-	function load_fields() {
+	/**
+	 * Load fields.
+	 */
+	public function load_fields() {
 
 		$days_before_renewal = ( new Fields\Positive_Number() )
 			->set_name( 'days_before_renewal' )
 			->set_title( __( 'Days before renewal', 'automatewoo' ) )
 			->set_required();
 
-		$this->add_field($days_before_renewal);
+		$this->add_field( $days_before_renewal );
 		$this->add_field( $this->get_field_time_of_day() );
 		$this->add_field( Subscription_Workflow_Helper::get_products_field() );
 	}
@@ -62,7 +67,7 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 
 		foreach ( $this->get_subscriptions_for_workflow( $workflow, $offset, $limit ) as $subscription_id ) {
 			$items[] = [
-				'subscription' => $subscription_id
+				'subscription' => $subscription_id,
 			];
 		}
 
@@ -129,6 +134,27 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 		$day_start->convert_to_utc_time();
 		$day_end->convert_to_utc_time();
 
+		if ( function_exists( 'wcs_get_orders_with_meta_query' ) ) {
+			return wcs_get_orders_with_meta_query(
+				[
+					'type'          => 'shop_subscription',
+					'status'        => $statuses,
+					'return'        => 'ids',
+					'limit'         => $limit,
+					'offset'        => $offset,
+					'no_found_rows' => true,
+					'meta_query'    => [
+						[
+							'key'     => $date_meta_key,
+							'compare' => 'BETWEEN',
+							'value'   => [ $day_start->to_mysql_string(), $day_end->to_mysql_string() ],
+						],
+					],
+				]
+			);
+		}
+
+		// Fallback for querying subscriptions before HPOS compatibility was added.
 		$query = new WP_Query(
 			[
 				'post_type'      => 'shop_subscription',
@@ -147,8 +173,8 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 						'key'     => $date_meta_key,
 						'compare' => '<=',
 						'value'   => $day_end->to_mysql_string(),
-					]
-				]
+					],
+				],
 			]
 		);
 
@@ -157,10 +183,12 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 
 
 	/**
-	 * @param $workflow Workflow
+	 * Handle workflow validation.
+	 *
+	 * @param Workflow $workflow
 	 * @return bool
 	 */
-	function validate_workflow( $workflow ) {
+	public function validate_workflow( $workflow ) {
 
 		$subscription = $workflow->data_layer()->get_subscription();
 
@@ -174,7 +202,7 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 
 		// ensure that the workflow has not triggered for this subscription in the last 24  hours
 		// this avoids duplication that could arise from timezone/DST changes
-		if ( $workflow->has_run_for_data_item( 'subscription', DAY_IN_SECONDS  ) ) {
+		if ( $workflow->has_run_for_data_item( 'subscription', DAY_IN_SECONDS ) ) {
 			return false;
 		}
 
@@ -183,10 +211,12 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 
 
 	/**
+	 * Validate before a queued workflow event.
+	 *
 	 * @param Workflow $workflow
 	 * @return bool
 	 */
-	function validate_before_queued_event( $workflow ) {
+	public function validate_before_queued_event( $workflow ) {
 		$subscription = $workflow->data_layer()->get_subscription();
 
 		if ( ! $subscription ) {
@@ -194,7 +224,7 @@ class Trigger_Subscription_Before_Renewal extends AbstractBatchedDailyTrigger {
 		}
 
 		// only trigger for active subscriptions
-		if ( ! $subscription->has_status('active') ) {
+		if ( ! $subscription->has_status( 'active' ) ) {
 			return false;
 		}
 

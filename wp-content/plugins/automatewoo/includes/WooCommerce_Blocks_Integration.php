@@ -44,7 +44,11 @@ class WooCommerce_Blocks_Integration {
 	 * @param IntegrationRegistry $integration_registry
 	 */
 	public function register_checkout_frontend_blocks( $integration_registry ) {
-		$integration_registry->register( new Marketing_Optin_Block() );
+		$marketing_optin_block = new Marketing_Optin_Block();
+
+		if ( ! $integration_registry->is_registered( $marketing_optin_block->get_name() ) ) {
+			$integration_registry->register( $marketing_optin_block );
+		}
 	}
 
 	/**
@@ -69,14 +73,23 @@ class WooCommerce_Blocks_Integration {
 				return array(
 					'optin' => array(
 						'description' => __( 'Subscribe to marketing opt-in.', 'automatewoo' ),
-						'type'        => 'boolean',
+						'type'        => array( 'boolean', 'null' ),
 						'context'     => array(),
 						'arg_options' => array(
 							'validate_callback' => function( $value ) {
-								if ( ! is_bool( $value ) ) {
+								if ( ! is_null( $value ) && ! is_bool( $value ) ) {
 									return new \WP_Error( 'api-error', 'value of type ' . gettype( $value ) . ' was posted to the automatewoo optin callback' );
 								}
 								return true;
+							},
+							'sanitize_callback' => function ( $value ) {
+								if ( is_bool( $value ) ) {
+										return $value;
+								}
+
+								// Return a boolean when "null" is passed,
+								// which is the only non-boolean value allowed.
+								return false;
 							},
 						),
 					),

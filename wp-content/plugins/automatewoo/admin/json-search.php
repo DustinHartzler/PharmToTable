@@ -214,5 +214,34 @@ final class JSON_Search {
 		wp_send_json( $results );
 	}
 
+	/**
+	 * Search for Sensei data (Courses, Lessons, Quizzes, Questions) and send JSON.
+	 *
+	 * @param string $term      The search term.
+	 * @param string $post_type The post type to search for
+	 *
+	 * @since x.x.x
+	 */
+	public static function sensei_data( $term, $post_type ) {
+		if ( empty( $term ) ) {
+			wp_die();
+		}
 
+		$args = [
+			'post_type'      => $post_type,
+			'post_status'    => 'publish',
+			'posts_per_page' => 50,
+			'no_found_rows'  => true,
+			's'              => $term,
+		];
+
+		$query   = new \WP_Query( $args );
+		$results = [];
+
+		foreach ( $query->posts as $data ) {
+			$results[ $data->ID ] = $data->post_title;
+		}
+
+		wp_send_json( $results );
+	}
 }

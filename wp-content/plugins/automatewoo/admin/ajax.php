@@ -27,6 +27,11 @@ class Admin_Ajax {
 			'json_search_customers',
 			'json_search_products_and_variations_not_variable',
 			'json_search_products_not_variations_not_variable',
+			'json_search_sensei_courses',
+			'json_search_sensei_lessons',
+			'json_search_sensei_quizzes',
+			'json_search_sensei_questions',
+			'json_search_sensei_groups',
 			'activate',
 			'deactivate',
 			'email_preview_iframe',
@@ -43,6 +48,7 @@ class Admin_Ajax {
 			'modal_variable_info',
 			'modal_cart_info',
 			'update_dynamic_action_select',
+			'update_dynamic_trigger_options_select',
 		];
 
 		foreach ( $ajax_events as $ajax_event ) {
@@ -271,6 +277,76 @@ class Admin_Ajax {
 
 		$term = Clean::string( wp_unslash( aw_get_url_var( 'term' ) ) );
 		JSON_Search::coupons( $term, true );
+	}
+
+	/**
+	 * Search for sensei courses and echo JSON.
+	 *
+	 * @since x.x.x
+	 */
+	public static function json_search_sensei_courses() {
+		if ( ! current_user_can( 'manage_sensei' ) ) {
+			die;
+		}
+
+		$term = Clean::string( wp_unslash( aw_get_url_var( 'term' ) ) );
+		JSON_Search::sensei_data( $term, 'course' );
+	}
+
+	/**
+	 * Search for sensei lessons and echo JSON.
+	 *
+	 * @since x.x.x
+	 */
+	public static function json_search_sensei_lessons() {
+		if ( ! current_user_can( 'manage_sensei' ) ) {
+			die;
+		}
+
+		$term = Clean::string( wp_unslash( aw_get_url_var( 'term' ) ) );
+		JSON_Search::sensei_data( $term, 'lesson' );
+	}
+
+	/**
+	 * Search for sensei quizzes and echo JSON.
+	 *
+	 * @since x.x.x
+	 */
+	public static function json_search_sensei_quizzes() {
+		if ( ! current_user_can( 'manage_sensei' ) ) {
+			die;
+		}
+
+		$term = Clean::string( wp_unslash( aw_get_url_var( 'term' ) ) );
+		JSON_Search::sensei_data( $term, 'quiz' );
+	}
+
+	/**
+	 * Search for sensei questions and echo JSON.
+	 *
+	 * @since x.x.x
+	 */
+	public static function json_search_sensei_questions() {
+		if ( ! current_user_can( 'manage_sensei' ) ) {
+			die;
+		}
+
+		$term = Clean::string( wp_unslash( aw_get_url_var( 'term' ) ) );
+		JSON_Search::sensei_data( $term, 'question' );
+	}
+
+	/**
+	 * Search for sensei groups and echo JSON.
+	 *
+	 * @since x.x.x
+	 */
+	public static function json_search_sensei_groups() {
+		if ( ! current_user_can( 'manage_sensei' ) ) {
+			die;
+		}
+
+		$term = Clean::string( wp_unslash( aw_get_url_var( 'term' ) ) );
+		JSON_Search::sensei_data( $term, 'group' );
 	}
 
 	static function email_preview_iframe() {
@@ -602,7 +678,7 @@ class Admin_Ajax {
 
 		wp_send_json_success();
 	}
-	
+
 
 	static function update_dynamic_action_select() {
 
@@ -618,6 +694,30 @@ class Admin_Ajax {
 		if ( $reference_field_value ) {
 			$action = Actions::get( $action_name );
 			$options = $action->get_dynamic_field_options( $target_field_name, $reference_field_value );
+		}
+
+		wp_send_json_success( $options );
+	}
+
+	/**
+	 * Respond dynamic field options for a given trigger field.
+	 *
+	 * @since x.x.x
+	 */
+	static function update_dynamic_trigger_options_select() {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			die;
+		}
+
+		$trigger_name          = Clean::string( aw_request( 'trigger_name' ) );
+		$target_field_name     = Clean::string( aw_request( 'target_field_name' ) );
+		$reference_field_value = Clean::string( aw_request( 'reference_field_value' ) );
+
+		$options = [];
+
+		if ( $reference_field_value ) {
+			$trigger = Triggers::get( $trigger_name );
+			$options = $trigger->get_dynamic_field_options( $target_field_name, $reference_field_value );
 		}
 
 		wp_send_json_success( $options );

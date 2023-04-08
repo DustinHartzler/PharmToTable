@@ -3,16 +3,17 @@
  * Plugin Name: AutomateWoo
  * Plugin URI: https://automatewoo.com
  * Description: Powerful marketing automation for your WooCommerce store.
- * Version: 5.5.18
+ * Version: 5.7.1
  * Author: WooCommerce
  * Author URI: https://woocommerce.com
  * License: GPLv3
  * License URI: http://www.gnu.org/licenses/gpl-3.0
  * Text Domain: automatewoo
  * Domain Path: /languages
+ * Tested up to: 6.2
  *
- * WC requires at least: 5.0
- * WC tested up to: 6.8
+ * WC requires at least: 6.7
+ * WC tested up to: 7.6
  * Woo: 4652610:f6f1f8a56a16a3715b30b21fb557e78f
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,15 +32,19 @@
  * @package AutomateWoo
  */
 
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
+
 defined( 'ABSPATH' ) || exit;
 
 define( 'AUTOMATEWOO_SLUG', 'automatewoo' );
-define( 'AUTOMATEWOO_VERSION', '5.5.18' ); // WRCS: DEFINED_VERSION.
+define( 'AUTOMATEWOO_VERSION', '5.7.1' ); // WRCS: DEFINED_VERSION.
 define( 'AUTOMATEWOO_FILE', __FILE__ );
 define( 'AUTOMATEWOO_PATH', dirname( __FILE__ ) );
 define( 'AUTOMATEWOO_MIN_PHP_VER', '7.2.0' );
-define( 'AUTOMATEWOO_MIN_WP_VER', '5.4' );
-define( 'AUTOMATEWOO_MIN_WC_VER', '5.0.0' );
+define( 'AUTOMATEWOO_MIN_WP_VER', '5.9' );
+// IMPORTANT: If AUTOMATEWOO_MIN_WC_VER is updated, AW Refer a friend (PHP Unit Tests) should be updated accordingly
+// See https://github.com/woocommerce/automatewoo-referrals/blob/684a6d7f1e33359553b3b681b32cb4bad8d53089/.github/workflows/php-unit-tests.yml#L34-L40
+define( 'AUTOMATEWOO_MIN_WC_VER', '6.7.0' );
 
 /**
  * AutomateWoo loader.
@@ -69,6 +74,9 @@ class AutomateWoo_Loader {
 
 		// Subscribe to automated translations.
 		add_action( 'woocommerce_translations_updates_for_automatewoo', '__return_true' );
+
+		// Declare compatibility for WooCommerce features.
+		add_action( 'before_woocommerce_init', [ __CLASS__, 'declare_feature_compatibility' ] );
 	}
 
 	/**
@@ -152,6 +160,16 @@ class AutomateWoo_Loader {
 		echo '</p></div>';
 	}
 
+	/**
+	 * Declare compatibility for WooCommerce features.
+	 *
+	 * @since 5.5.23
+	 */
+	public static function declare_feature_compatibility() {
+		if ( class_exists( FeaturesUtil::class ) ) {
+			FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
+	}
 }
 
 AutomateWoo_Loader::init();

@@ -191,7 +191,7 @@ class User_Tags {
 	function set_user_column_values( $display, $column, $term_id ) {
 		if ( 'users' === $column && isset( $_GET['taxonomy'] ) ) {
 			$term = get_term( $term_id, $_GET['taxonomy'] );
-			echo '<a href="'.admin_url( 'users.php?user_tag='.$term->slug ).'">'.$term->count.'</a>';
+			echo '<a href="' . esc_url( admin_url( 'users.php?user_tag=' . $term->slug ) ) . '">' . esc_html( $term->count ) . '</a>';
 		} elseif ( 'export' === $column ) {
 			$url = wp_nonce_url( add_query_arg( [
 				'eut_export_csv' => '1',
@@ -309,7 +309,7 @@ class User_Tags {
 		} else {
 			$termlist = array();
 			foreach ( $tags as $tag ) {
-				$termlist[] = '<a href="'.admin_url( 'users.php?user_tag='.$tag->slug ).' ">'.$tag->name.'</a>';
+				$termlist[] = '<a href="' . esc_url( admin_url( 'users.php?user_tag=' . $tag->slug ) ) . ' ">' . esc_html( $tag->name ) . '</a>';
 			}
 
 			return implode( ', ', $termlist );

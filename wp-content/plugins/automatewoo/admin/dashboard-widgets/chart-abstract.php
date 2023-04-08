@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Dashboard_Widget_Chart class.
  */
-abstract class Dashboard_Widget_Chart extends Dashboard_Widget {
+abstract class Dashboard_Widget_Chart extends Dashboard_Widget_Analytics {
 
 	/**
 	 * Define whether a chart widget represents monetary data or some other type of metric.
@@ -142,15 +142,6 @@ abstract class Dashboard_Widget_Chart extends Dashboard_Widget {
 	}
 
 	/**
-	 * Get the current date range interval.
-	 *
-	 * @return int
-	 */
-	protected function get_interval() {
-		return absint( ceil( max( 0, ( $this->date_to->getTimestamp() - $this->date_from->getTimestamp() ) / ( 60 * 60 * 24 ) ) ) );
-	}
-
-	/**
 	 * Get the URL for the full report.
 	 *
 	 * @param string $page_id
@@ -166,21 +157,6 @@ abstract class Dashboard_Widget_Chart extends Dashboard_Widget {
 			],
 			Admin::page_url( $page_id )
 		);
-	}
-
-	/**
-	 * Output arrow link to the full report.
-	 *
-	 * @since 4.9.0
-	 *
-	 * @param string $report_page_id
-	 */
-	protected function output_report_arrow_link( $report_page_id ) {
-		?>
-		<a href="<?php echo esc_url( $this->get_report_url( $report_page_id ) ); ?>" class="automatewoo-arrow-link">
-			<span class="screen-reader-text"><?php esc_html_e( 'View report', 'automatewoo' ); ?></span>
-		</a>
-		<?php
 	}
 
 }

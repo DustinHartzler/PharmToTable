@@ -37,6 +37,7 @@ class Triggers extends Registry {
 			'order_cancelled' => 'AutomateWoo\Trigger_Order_Cancelled',
 			'order_on_hold' => 'AutomateWoo\Trigger_Order_On_Hold',
 			'order_refunded' => 'AutomateWoo\Trigger_Order_Refunded',
+			'order_refunded_manual' => 'AutomateWoo\Trigger_Order_Refunded_Manual',
 			'order_pending' => 'AutomateWoo\Trigger_Order_Pending',
 			'order_note_added' => 'AutomateWoo\Trigger_Order_Note_Added',
 			'order_note_added_each_line_item' => Triggers\OrderNoteAddedEachLineItem::class,
@@ -103,9 +104,32 @@ class Triggers extends Registry {
 			}
 		}
 
+		// Sensei LMS triggers.
+		if ( Integrations::is_sensei_lms_active() ) {
+			$includes['sensei_course_signed_up']                 = 'AutomateWoo\Trigger_Sensei_Course_Signed_Up';
+			$includes['sensei_course_completed']                 = 'AutomateWoo\Trigger_Sensei_Course_Completed';
+			$includes['sensei_lesson_started']                   = 'AutomateWoo\Trigger_Sensei_Lesson_Started';
+			$includes['sensei_lesson_completed']                 = 'AutomateWoo\Trigger_Sensei_Lesson_Completed';
+			$includes['sensei_quiz_completed']                   = 'AutomateWoo\Trigger_Sensei_Quiz_Completed';
+			$includes['sensei_quiz_passed']                      = 'AutomateWoo\Trigger_Sensei_Quiz_Passed';
+			$includes['sensei_quiz_failed']                      = 'AutomateWoo\Trigger_Sensei_Quiz_Failed';
+			$includes['sensei_quiz_specific_answer_selected']    = 'AutomateWoo\Trigger_Sensei_Specific_Answer_Selected';
+			$includes['sensei_course_completed_by_all_students'] = 'AutomateWoo\Trigger_Sensei_Course_Completed_By_All_Students';
+			$includes['sensei_course_not_yet_completed']         = 'AutomateWoo\Trigger_Sensei_Course_Not_Yet_Completed';
+			if ( Integrations::is_sensei_pro_active() ) {
+				$includes['sensei_student_added_to_group']     = 'AutomateWoo\Trigger_Sensei_Student_Added_To_Group';
+				$includes['sensei_student_removed_from_group'] = 'AutomateWoo\Trigger_Sensei_Student_Removed_From_Group';
+			}
+		}
+
 		$includes[ 'workflow_times_run_reaches' ] = 'AutomateWoo\Trigger_Workflow_Times_Run_Reaches';
 		$includes[ 'guest_created' ] = 'AutomateWoo\Trigger_Guest_Created';
 		$includes[ 'order_manual' ] = Triggers\OrderManual::class;
+
+		// Downloadable content triggers.
+		$includes[ 'file_downloaded' ] = 'AutomateWoo\Trigger_File_Downloaded';
+		$includes[ 'file_not_yet_downloaded' ] = 'AutomateWoo\Trigger_File_Not_Yet_Downloaded';
+		$includes[ 'downloadable_product_purchased' ] = 'AutomateWoo\Trigger_Downloadable_Product_Purchased';
 
 		return apply_filters( 'automatewoo/triggers', $includes );
 	}

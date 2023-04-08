@@ -79,6 +79,15 @@ class Cart_Item {
 		return '';
 	}
 
+	/**
+	 * Return the product_title if it's stored in the cart item data.
+	 *
+	 * @return string
+	 */
+	public function get_cart_item_name() {
+		return isset( $this->data['product_title'] ) ? $this->data['product_title'] : '';
+	}
+
 
 	/**
 	 * @return int

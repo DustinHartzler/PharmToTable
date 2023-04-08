@@ -62,6 +62,14 @@ class Workflow_Query {
 		}
 	}
 
+	/**
+	 * Set included ids array to query.
+	 *
+	 * @param string|array $ids
+	 */
+	function set_include( $ids ) {
+		$this->args['post__in'] = wp_parse_list( $ids );
+	}
 
 	/**
 	 * Set per page limit query param.
@@ -177,7 +185,6 @@ class Workflow_Query {
 		if ( $this->return == 'ids' ) {
 			$this->args['fields'] = 'ids';
 		}
-
 		$query = new WP_Query( $this->args );
 		$posts = $query->posts;
 

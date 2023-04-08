@@ -7,6 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * @class Report_Conversions
+ *
+ * @deprecated since x.x.x Migrated to Analytics.
+ * @see AutomateWoo\Admin\Analytics
+ * @see AutomateWoo\Admin\Analytics\Rest_API\Conversions\Stats
  */
 class Report_Conversions extends \AW_Report_Abstract_Graph {
 

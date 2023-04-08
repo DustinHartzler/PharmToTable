@@ -210,6 +210,71 @@ class Preview_Data {
 		}
 
 		/**
+		 * Sensei Integration
+		 */
+		if ( Integrations::is_sensei_lms_active() ) {
+			if ( in_array( 'course', $required_items, true ) ) {
+				$data_layer['course'] = self::get_preview_course();
+			}
+
+			if ( in_array( 'lesson', $required_items, true ) ) {
+				$lessons = get_posts(
+					[
+						'post_type'      => 'lesson',
+						'posts_per_page' => 1,
+					]
+				);
+
+				if ( empty( $lessons ) ) {
+					throw InvalidPreviewData::data_item_needed( 'lesson' );
+				}
+
+				$data_layer['lesson'] = current( $lessons );
+			}
+
+			if ( in_array( 'quiz', $required_items, true ) ) {
+				$quizzes = get_posts(
+					[
+						'post_type'      => 'quiz',
+						'post_status'    => 'publish',
+						'posts_per_page' => 1,
+					]
+				);
+
+				if ( empty( $quizzes ) ) {
+					throw InvalidPreviewData::data_item_needed( 'quiz' );
+				}
+
+				$data_layer['quiz'] = get_post( current( $quizzes ) );
+			}
+
+			if ( in_array( 'teacher', $required_items, true ) ) {
+				$course  = self::get_preview_course();
+				$teacher = get_user_by( 'id', $course->post_author );
+				if ( $teacher ) {
+					$data_layer['teacher'] = $teacher;
+				} else {
+					$data_layer['teacher'] = wp_get_current_user();
+				}
+			}
+
+			if ( in_array( 'group', $required_items, true ) ) {
+				$groups = get_posts(
+					[
+						'post_type'      => 'group',
+						'posts_per_page' => 1,
+					]
+				);
+
+				if ( empty( $groups ) ) {
+					throw InvalidPreviewData::data_item_needed( 'group' );
+				}
+
+				$data_layer['group'] = current( $groups );
+			}
+		}
+
+		/**
 		 * Card
 		 */
 		if ( in_array( 'card', $required_items ) ) {
@@ -221,6 +286,23 @@ class Preview_Data {
 			$token->set_last4( 1234 );
 
 			$data_layer['card'] = $token;
+		}
+
+		/**
+		 * Download
+		 */
+		if ( in_array( 'download', $required_items, true ) ) {
+			$data_store = \WC_Data_Store::load( 'customer-download' );
+			$downloads  = $data_store->get_downloads(
+				array(
+					'limit' => 1,
+					'order' => 'DESC',
+				)
+			);
+			if ( ! empty( $downloads ) ) {
+				$download               = current( $downloads );
+				$data_layer['download'] = new Download( $download->get_download_id(), $download->get_product_id(), $download->get_order_id() );
+			}
 		}
 
 		return apply_filters( 'automatewoo/preview_data_layer', $data_layer, $required_items );
@@ -394,6 +476,27 @@ class Preview_Data {
 		}
 
 		return $products;
+	}
+
+	/**
+	 * Get a course for preview.
+	 *
+	 * @return \WP_Post
+	 * @throws InvalidPreviewData When no preview course is found.
+	 */
+	protected static function get_preview_course() {
+		$courses = get_posts(
+			[
+				'post_type'      => 'course',
+				'posts_per_page' => 1,
+			]
+		);
+
+		if ( empty( $courses ) ) {
+			throw InvalidPreviewData::data_item_needed( 'course' );
+		}
+
+		return current( $courses );
 	}
 
 }

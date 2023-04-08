@@ -9,6 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * @class Report_Email_Tracking
+ *
+ * @deprecated since x.x.x Migrated to Analytics.
+ * @see AutomateWoo\Admin\Analytics
+ * @see AutomateWoo\Admin\Analytics\Rest_API\Email_Tracking
  */
 class Report_Email_Tracking extends \AW_Report_Abstract_Graph {
 
@@ -68,6 +72,7 @@ class Report_Email_Tracking extends \AW_Report_Abstract_Graph {
 
 		$logs_query->where_date_between( $start_date, $end_date );
 		$logs_query->where( 'tracking_enabled', true );
+		$logs_query->where( 'has_blocked_emails', false );
 
 		$logs = $logs_query->get_results();
 

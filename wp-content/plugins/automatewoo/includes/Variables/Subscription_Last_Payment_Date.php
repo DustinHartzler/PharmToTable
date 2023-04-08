@@ -24,6 +24,6 @@ class Variable_Subscription_Last_Payment_Date extends Variable_Abstract_Datetime
 	 * @return string
 	 */
 	function get_value( $subscription, $parameters ) {
-		return $this->format_datetime( Compat\Subscription::get_date_last_order_created( $subscription ), $parameters );
+		return $this->format_datetime( $subscription->get_date( 'last_payment', 'site' ), $parameters );
 	}
 }

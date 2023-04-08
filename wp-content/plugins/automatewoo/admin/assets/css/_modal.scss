@@ -4,16 +4,36 @@ body.automatewoo-modal-open {
 	overflow: hidden;
 }
 
-.automatewoo-modal {
-	z-index: 100000;
-	width: 560px;
+.automatewoo-modal-container {
 	position: fixed;
-	top: 50%;
-	left: 50%;
-	max-width: 93%;
-	max-height: 93%;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 100000;
+	// Center it vertically and horizontally.
+	display: grid;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+	justify-items: center;
+}
+
+.automatewoo-modal {
+	position: relative;
+	max-height: 100%;
+	width: min(560px, 93vw);
+	display: grid;
+	grid-template:
+		[content-start x-start] #{$modal-header-height}
+		[x-end] auto
+		[content-end] /
+		[content-start] 1fr [x-start] #{$modal-header-height} [x-end content-end];
+	// Prevent overflowing children's box-shadow.
+	overflow: hidden;
 
 	body.automatewoo-modal-loading & {
+
 		@include loader();
 
 		.automatewoo-modal__body {
@@ -21,20 +41,15 @@ body.automatewoo-modal-open {
 		}
 	}
 
-
 	.automatewoo-icon-close {
 		text-align: center;
-		line-height: 29px;
-		width: $modal-header-height;
-		height: $modal-header-height;
-		position: absolute;
-		top: 0;
-		right: 0;
+		// Place it at the top right corner within the grid.
+		grid-area: x;
 		color: #666;
 		cursor: pointer;
-		border-left: 1px solid $grey-light-border;
+		box-shadow: -1px 1px $grey-light-border;
 
-		&:before {
+		&::before {
 			font-size: 23px;
 			font-family: dashicons;
 			line-height: $modal-header-height;
@@ -59,40 +74,43 @@ body.automatewoo-modal-open {
 	}
 }
 
-
 .automatewoo-modal--size-lg {
-	width: 680px;
+	width: min(680px, 93vw);
 }
-
 
 .automatewoo-modal__contents {
 	background-color: $grey-very-light;
-	min-height: 230px;
+	// Make it scroll the content except for the header.
+	display: grid;
+	grid-template-rows: auto 1fr;
+	// Make the content span all grid areas.
+	grid-area: content;
+	max-height: 93vh;
 }
 
 .automatewoo-modal-overlay {
-	background: #000;
-	opacity: 0.7;
-	filter: alpha(opacity=70);
+	background: rgba(#000, 0.35);
 	position: fixed;
 	top: 0;
 	right: 0;
 	bottom: 0;
 	left: 0;
-	z-index: 100000;
 }
 
 
 .automatewoo-modal__header {
-	height: $modal-header-height;
+	display: flex;
+	align-items: center;
+	min-height: $modal-header-height;
+	padding-right: $modal-header-height;
 	background: $white;
 	border-bottom: 1px solid $grey-light-border;
-	box-shadow: 0 4px 4px -4px rgba(0,0,0,.1);
+	box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.1);
 
 	h1 {
 		padding: 0 18px;
 		font-size: 19px;
-		line-height: $modal-header-height;
+		line-height: 1.2;
 		margin: 0;
 	}
 }
@@ -102,7 +120,7 @@ body.automatewoo-modal-open {
 	box-sizing: border-box;
 	background: $white;
 	border-top: 1px solid $grey-light-border;
-	box-shadow: 0 -4px 4px -4px rgba(0,0,0,.1);
+	box-shadow: 0 -4px 4px -4px rgba(0, 0, 0, 0.1);
 	padding: 14px 18px;
 	text-align: right;
 
@@ -135,5 +153,4 @@ body.automatewoo-modal-open {
 .automatewoo-modal__body-inner {
 	margin: 17px 18px 22px;
 }
-
 

@@ -1,68 +1,64 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+use AutomateWoo\Actions\ActionInterface;
+use AutomateWoo\Traits\MailServiceAction;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * @class Action_Mailchimp_Subscribe
  */
 class Action_Mailchimp_Subscribe extends Action_Mailchimp_Abstract {
 
-	function load_admin_details() {
+	/**
+	 * Implements Action load_admin_details abstract method
+	 *
+	 * @see Action::load_admin_details()
+	 */
+	protected function load_admin_details() {
 		parent::load_admin_details();
 		$this->title = __( 'Add Contact To List', 'automatewoo' );
 	}
 
-
-	function load_fields() {
-
-		$first_name = ( new Fields\Text() )
-			->set_name( 'first_name' )
-			->set_title( __( 'First name', 'automatewoo' ) )
-			->set_description( __( 'This field is optional.', 'automatewoo' ) )
-			->set_variable_validation();
-
-		$last_name = ( new Fields\Text() )
-			->set_name( 'last_name' )
-			->set_title( __( 'Last name', 'automatewoo' ) )
-			->set_description( __( 'This field is optional.', 'automatewoo' ) )
-			->set_variable_validation();
-
-		$double_optin = ( new Fields\Checkbox() )
-			->set_name('double_optin')
-			->set_title( __( 'Double optin', 'automatewoo' ) )
-			->set_description( __( 'Users will receive an email asking them to confirm their subscription.', 'automatewoo' ) );
-
-		$this->add_list_field();
-		$this->add_field( $this->get_contact_email_field() );
-		$this->add_field( $double_optin );
-		$this->add_field( $first_name );
-		$this->add_field( $last_name );
+	/**
+	 * Implements Action load_fields abstract method
+	 *
+	 * @see Action::load_fields()
+	 * @see MailServiceAction::load_subscribe_action_fields()
+	 */
+	public function load_fields() {
+		$this->load_subscribe_action_fields( Integrations::mailchimp()->get_lists() );
 	}
 
-
-	function run() {
-		$list_id = $this->get_option( 'list' );
-		$email = $this->get_contact_email_option();
+	/**
+	 * Implements Action run abstract method
+	 *
+	 * @see ActionInterface::run()
+	 */
+	public function run() {
+		$list_id    = $this->get_option( 'list' );
+		$email      = $this->get_contact_email_option();
 		$first_name = $this->get_option( 'first_name', true );
-		$last_name = $this->get_option( 'last_name', true );
+		$last_name  = $this->get_option( 'last_name', true );
 
 		if ( ! $list_id ) {
 			return;
 		}
 
-		$args = [];
+		$args            = [];
 		$subscriber_hash = md5( $email );
 
 		$args['email_address'] = $email;
-		$args['status'] = $this->get_option('double_optin') ? 'pending' : 'subscribed';
+		$args['status']        = $this->get_option( 'double_optin' ) ? 'pending' : 'subscribed';
 
 		if ( $first_name || $last_name ) {
 			$args['merge_fields'] = [
 				'FNAME' => $first_name,
-				'LNAME' => $last_name
+				'LNAME' => $last_name,
 			];
 		}
 

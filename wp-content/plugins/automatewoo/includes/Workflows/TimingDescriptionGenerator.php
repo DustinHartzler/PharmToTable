@@ -136,6 +136,8 @@ class TimingDescriptionGenerator {
 		if ( $date ) {
 			return sprintf( _x( 'Fixed at %s', 'timing option', 'automatewoo' ), Format::datetime( $date ) );
 		}
+
+		return __( 'Invalid time', 'automatewoo' );
 	}
 
 	/**

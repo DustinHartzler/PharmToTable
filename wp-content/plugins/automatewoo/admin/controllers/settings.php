@@ -73,7 +73,7 @@ class Settings extends Base {
 				$path . 'campaign-monitor.php',
 				$path . 'active-campaign.php',
 				$path . 'twilio.php',
-				$path . 'bitly.php'
+				$path . 'bitly.php',
 			]);
 
 			$settings_includes[] = $path . 'status.php';

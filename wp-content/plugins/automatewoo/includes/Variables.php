@@ -80,6 +80,10 @@ class Variables {
 			'meta_date'               => Variable_Order_Meta_Date::class,
 			'admin_url'               => Variable_Order_Admin_Url::class,
 		],
+		'refund'			=> [
+			'amount' => Variable_Refund_Amount::class,
+			'reason' => Variable_Refund_Reason::class,
+		],
 		'order_item'        => [
 			'attribute' => Variable_Order_Item_Attribute::class,
 			'meta'      => Variable_Order_Item_Meta::class,
@@ -195,6 +199,10 @@ class Variables {
 			'products'         => Variable_Shop_Products::class,
 			'shop_url'         => Variables\Shop\ShopUrl::class,
 		],
+		'download'          => [
+			'file_name' => Variable_Download_File_Name::class,
+			'url'       => Variable_Download_URL::class,
+		],
 	];
 
 
@@ -229,6 +237,57 @@ class Variables {
 		     && \WCS_Early_Renewal_Manager::is_early_renewal_enabled()
 		) {
 			$variables['subscription']['early_renewal_url'] = Variable_Subscription_Early_Renewal_Url::class;
+		}
+
+		/*
+		 * Sensei LMS variables.
+		 *
+		 * @since 5.6.10
+		 */
+		if ( Integrations::is_sensei_lms_active() ) {
+			$variables['course'] = [
+				'id'                 => Variable_Sensei_Course_ID::class,
+				'title'              => Variable_Sensei_Course_Title::class,
+				'url'                => Variable_Sensei_Course_URL::class,
+				'results_url'        => Variable_Sensei_Course_Results_URL::class,
+				'start_date'         => Variable_Sensei_Course_Start_Date::class,
+				'students'           => Variable_Sensei_Course_Students::class,
+				'students_admin_url' => Variable_Sensei_Course_Students_Admin_URL::class,
+			];
+
+			if ( Integrations::is_sensei_certificates_active() ) {
+				$variables['course']['certificate_url'] = Variable_Sensei_Course_Certificate_URL::class;
+			}
+
+			$variables['teacher'] = [
+				'email'      => Variable_Sensei_Teacher_Email::class,
+				'first_name' => Variable_Sensei_Teacher_First_Name::class,
+				'last_name'  => Variable_Sensei_Teacher_Last_Name::class,
+				'full_name'  => Variable_Sensei_Teacher_Full_Name::class,
+				'user_id'    => Variable_Sensei_Teacher_User_ID::class,
+				'username'   => Variable_Sensei_Teacher_Username::class,
+			];
+
+			$variables['lesson'] = [
+				'id'    => Variable_Sensei_Lesson_ID::class,
+				'title' => Variable_Sensei_Lesson_Title::class,
+				'url'   => Variable_Sensei_Lesson_URL::class,
+			];
+
+			$variables['quiz'] = [
+				'id'       => Variable_Sensei_Quiz_ID::class,
+				'title'    => Variable_Sensei_Quiz_Title::class,
+				'grade'    => Variable_Sensei_Quiz_Grade::class,
+				'passmark' => Variable_Sensei_Quiz_Passmark::class,
+				'url'      => Variable_Sensei_Quiz_URL::class,
+			];
+
+			if ( Integrations::is_sensei_pro_active() ) {
+				$variables['group'] = [
+					'id'    => Variable_Sensei_Group_ID::class,
+					'title' => Variable_Sensei_Group_Title::class,
+				];
+			}
 		}
 
 		self::$variables_list = apply_filters( 'automatewoo/variables', $variables );

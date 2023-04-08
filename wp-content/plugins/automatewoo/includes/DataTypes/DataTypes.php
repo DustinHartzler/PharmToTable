@@ -22,14 +22,21 @@ class DataTypes extends Registry {
 	const CATEGORY          = 'category';
 	const COMMENT           = 'comment';
 	const CUSTOMER          = 'customer';
+	const DOWNLOAD          = 'download';
 	const GUEST             = 'guest';
 	const MEMBERSHIP        = 'membership';
 	const ORDER             = 'order';
+	const REFUND            = 'refund';
 	const ORDER_ITEM        = 'order_item';
 	const ORDER_NOTE        = 'order_note';
 	const POST              = 'post';
 	const PRODUCT           = 'product';
 	const REVIEW            = 'review';
+	const SENSEI_COURSE     = 'course';
+	const SENSEI_TEACHER    = 'teacher';
+	const SENSEI_LESSON     = 'lesson';
+	const SENSEI_QUIZ       = 'quiz';
+	const SENSEI_GROUP      = 'group';
 	const SHOP              = 'shop';
 	const SUBSCRIPTION      = 'subscription';
 	const SUBSCRIPTION_ITEM = 'subscription_item';
@@ -49,6 +56,8 @@ class DataTypes extends Registry {
 	 */
 	public static function load_includes() {
 		$is_subscriptions_active = Integrations::is_subscriptions_active();
+		$is_sensei_lms_active    = Integrations::is_sensei_lms_active();
+		$is_sensei_pro_active    = Integrations::is_sensei_pro_active();
 
 		return apply_filters(
 			'automatewoo/data_types/includes',
@@ -59,14 +68,21 @@ class DataTypes extends Registry {
 				self::CATEGORY          => ProductCategory::class,
 				self::COMMENT           => Comment::class,
 				self::CUSTOMER          => Customer::class,
+				self::DOWNLOAD          => Download::class,
 				self::GUEST             => Guest::class,
 				self::MEMBERSHIP        => Integrations::is_memberships_enabled() ? Membership::class : null,
 				self::ORDER_ITEM        => OrderItem::class,
 				self::ORDER_NOTE        => OrderNote::class,
 				self::ORDER             => Order::class,
+				self::REFUND            => Refund::class,
 				self::POST              => Post::class,
 				self::PRODUCT           => Product::class,
 				self::REVIEW            => Review::class,
+				self::SENSEI_COURSE     => $is_sensei_lms_active ? SenseiCourse::class : null,
+				self::SENSEI_TEACHER    => $is_sensei_lms_active ? SenseiTeacher::class : null,
+				self::SENSEI_LESSON     => $is_sensei_lms_active ? SenseiLesson::class : null,
+				self::SENSEI_QUIZ       => $is_sensei_lms_active ? SenseiQuiz::class : null,
+				self::SENSEI_GROUP      => $is_sensei_lms_active && $is_sensei_pro_active ? SenseiGroup::class : null,
 				self::SHOP              => Shop::class,
 				self::SUBSCRIPTION_ITEM => $is_subscriptions_active ? SubscriptionItem::class : null,
 				self::SUBSCRIPTION      => $is_subscriptions_active ? Subscription::class : null,

@@ -279,4 +279,19 @@ class Subscription_Workflow_Helper {
 		return wcs_order_contains_subscription( $order, $valid_order_types );
 	}
 
+	/**
+	 * Check if an order is a Subscription
+	 *
+	 * @param int $order_id The order ID
+	 * @return bool True if the order is a subscription
+	 * @since 5.6.7
+	 */
+	public static function is_subscription( int $order_id ) {
+		if ( Integrations::is_subscriptions_active() && wcs_is_subscription( $order_id ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 }

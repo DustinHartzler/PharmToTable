@@ -1270,6 +1270,17 @@ class Workflow {
 	}
 
 	/**
+	 * @param \WP_Post $course
+	 * @return int
+	 */
+	public function get_run_count_for_course( $course ) {
+		$query = new Log_Query();
+		$query->where_workflow( $this->get_id() );
+		$query->where_course( $course->ID );
+		return $query->get_count();
+	}
+
+	/**
 	 * Get times this workflow has run for a given subscription.
 	 *
 	 * @since 5.0.0

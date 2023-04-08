@@ -464,9 +464,8 @@ class Cart extends Model {
 	 * Updates the stored cart with the current time and cart items
 	 */
 	function sync() {
-
 		$this->set_date_last_modified( new DateTime() );
-		$this->set_items( WC()->cart->get_cart_for_session() );
+		$this->set_items( $this->get_cart_for_sync() );
 
 		$coupon_data = [];
 
@@ -496,6 +495,27 @@ class Cart extends Model {
 		}
 	}
 
+	/**
+	 * Returns the contents of the cart in an array with the product title but without the 'data' element.
+	 * Based on WC core WC()->session->get_cart_for_session()
+	 *
+	 * @since 5.6.9
+	 *
+	 * @return array Contents of the cart
+	 */
+	public function get_cart_for_sync(): array {
+		$cart         = WC()->cart->get_cart();
+		$cart_session = array();
+
+		foreach ( $cart as $key => $values ) {
+			$cart_session[ $key ]                  = $values;
+			$cart_session[ $key ]['product_title'] = $cart_session[ $key ]['data']->get_title();
+
+			unset( $cart_session[ $key ]['data'] ); // Unset product object.
+		}
+
+		return $cart_session;
+	}
 
 	function calculate_totals() {
 
@@ -548,22 +568,6 @@ class Cart extends Model {
 		parent::save();
 	}
 
-
-
-	/**
-	 * Adjust the cart items so are match the language of the cart.
-	 *
-	 * @deprecated in 4.6.0
-	 *
-	 * @param Cart_Item[] $items
-	 *
-	 * @return Cart_Item[]
-	 */
-	public function get_language_adjusted_items( $items ) {
-		wc_deprecated_function( __METHOD__, '4.6.0', 'translate_items' );
-
-		return $this->translate_items( $items, $this->get_language() );
-	}
 
 }
 

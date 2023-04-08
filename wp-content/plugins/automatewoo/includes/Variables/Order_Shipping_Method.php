@@ -35,7 +35,7 @@ class Variable_Order_Shipping_Method extends Variable {
 				// get id of first method
 				$methods = $order->get_shipping_methods();
 				$method = current( $methods );
-				return Compat\Order_Item::get_shipping_method_id( $method, true );
+				return $method->get_method_id();
 				break;
 			case 'title':
 				return $order->get_shipping_method();

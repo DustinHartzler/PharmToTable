@@ -158,6 +158,15 @@ class Rules extends Registry {
 			$includes['customer_is_mailchimp_subscriber'] = 'AutomateWoo\Rules\Customer_Is_Mailchimp_Subscriber';
 		}
 
+		if ( Integrations::is_sensei_lms_active() ) {
+			$includes['sensei_have_not_started_first_lesson'] = 'AutomateWoo\Rules\Sensei_Have_Not_Started_First_Lesson';
+			$includes['sensei_have_not_completed_lesson']     = 'AutomateWoo\Rules\Sensei_Have_Not_Completed_Lesson';
+			$includes['sensei_have_not_completed_course']     = 'AutomateWoo\Rules\Sensei_Have_Not_Completed_Course';
+			$includes['sensei_have_not_yet_taken_quiz']       = 'AutomateWoo\Rules\Sensei_Have_Not_Yet_Taken_Quiz';
+			$includes['sensei_have_failed_quiz']              = 'AutomateWoo\Rules\Sensei_Have_Failed_Quiz';
+			$includes['sensei_have_passed_quiz']              = 'AutomateWoo\Rules\Sensei_Have_Passed_Quiz';
+		}
+
 		return apply_filters( 'automatewoo/rules/includes', $includes );
 	}
 

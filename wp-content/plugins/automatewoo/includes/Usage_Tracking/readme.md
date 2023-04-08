@@ -51,6 +51,7 @@ $data['extensions']['automatewoo'] = [
 		'account_optin_enabled'                    => (bool) "enabled",
 		'communication_account_tab_enabled'        => (bool) "enabled",
 		'mailchimp_integration_enabled'            => (bool) "enabled",
+		'mailpoet_integration_enabled'             => (bool) "enabled",
 		'campaign_monitor_integration_enabled'     => (bool) "enabled",
 		'active_campaign_integration_enabled'      => (bool) "enabled",
 		'twilio_integration_enabled'               => (bool) "enabled",

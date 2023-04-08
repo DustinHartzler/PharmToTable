@@ -3,10 +3,10 @@
 namespace AutomateWoo\Usage_Tracking;
 
 use AutomateWoo\Clean;
+use AutomateWoo\HPOS_Helper;
 use AutomateWoo\Log_Query;
 use AutomateWoo\Workflow_Query;
-use WC_Order;
-use WP_Query;
+use Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore;
 use wpdb;
 
 /**
@@ -207,27 +207,42 @@ class Tracker {
 	 * @return array
 	 */
 	private function get_conversion_data() {
-		// Get paid statuses, and generate placeholders for query.
-		$statuses    = array_map( 'aw_add_order_status_prefix', wc_get_is_paid_statuses() );
-		$placeholder = join( ',', array_fill( 1, count( $statuses ), '%s' ) );
+		$statuses = array_map( 'aw_add_order_status_prefix', wc_get_is_paid_statuses() );
+		$statuses = array_map( 'esc_sql', $statuses );
 
 		// Build the query to get the results we need.
-		$sql = "
-			SELECT SUM(order_total) AS total, COUNT(order_id) AS count FROM (
-				SELECT posts.ID AS order_id, meta2.meta_value AS order_total 
+		if ( HPOS_Helper::is_HPOS_enabled() ) {
+			$orders_table = OrdersTableDataStore::get_orders_table_name();
+			$meta_table   = OrdersTableDataStore::get_meta_table_name();
+
+			$sql = "
+				SELECT orders.id AS order_id, orders.total_amount AS order_total
+				FROM $orders_table AS orders
+				LEFT JOIN $meta_table AS meta ON orders.id = meta.order_id
+				WHERE orders.type = 'shop_order'
+				AND orders.status IN ( '" . implode( "','", $statuses ) . "' )
+				AND meta.meta_key = '_aw_conversion'
+				GROUP BY order_id
+			";
+		} else {
+			$sql = "
+				SELECT posts.ID AS order_id, meta2.meta_value AS order_total
 				FROM {$this->wpdb->posts} AS posts
 				LEFT JOIN {$this->wpdb->postmeta} AS meta1 ON posts.ID = meta1.post_id
 				LEFT JOIN {$this->wpdb->postmeta} AS meta2 ON posts.ID = meta2.post_id
 				WHERE posts.post_type = 'shop_order'
-				AND posts.post_status IN ({$placeholder})
+				AND posts.post_status IN ( '" . implode( "','", $statuses ) . "' )
 				AND meta1.meta_key = '_aw_conversion'
 				AND meta2.meta_key = '_order_total'
 				GROUP BY order_id
-			) AS orders_table";
+			";
+		}
 
-		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared
-		return $this->wpdb->get_row( $this->wpdb->prepare( $sql, ...$statuses ), ARRAY_A );
-		// phpcs:enable
+		// Get totals from temporary table
+		$sql = "SELECT SUM(order_total) AS total, COUNT(order_id) AS count FROM ({$sql}) AS orders_table";
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		return $this->wpdb->get_row( $sql, ARRAY_A );
 	}
 
 	/**

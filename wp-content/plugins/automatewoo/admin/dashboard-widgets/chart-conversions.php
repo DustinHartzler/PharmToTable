@@ -17,6 +17,13 @@ class Dashboard_Widget_Chart_Conversions extends Dashboard_Widget_Chart {
 	public $id = 'chart-conversions';
 
 	/**
+	 * Report page id to be used for "view report" link.
+	 *
+	 * @var string
+	 */
+	protected $report_page_id = 'conversions';
+
+	/**
 	 * Define whether a chart widget represents monetary data or some other type of metric.
 	 *
 	 * @var bool
@@ -87,7 +94,7 @@ class Dashboard_Widget_Chart_Conversions extends Dashboard_Widget_Chart {
 					<div class="automatewoo-dashboard-chart__header-text"><?php esc_html_e( 'conversions', 'automatewoo' ); ?></div>
 				</div>
 
-				<?php $this->output_report_arrow_link( 'conversions' ); ?>
+				<?php $this->output_report_arrow_link(); ?>
 			</div>
 
 			<div class="automatewoo-dashboard-chart__tooltip"></div>

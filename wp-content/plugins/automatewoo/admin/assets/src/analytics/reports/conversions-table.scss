@@ -1,0 +1,4 @@
+// Override header sizing, as we don't have the search field here to squeeze.
+.aw-conversions-table.woocommerce-report-table .components-card__header {
+	grid-template-columns: auto minmax(min-content, 1fr) auto;
+}

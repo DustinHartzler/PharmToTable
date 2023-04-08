@@ -17,6 +17,13 @@ class Dashboard_Widget_Chart_Workflows_Run extends Dashboard_Widget_Chart {
 	public $id = 'chart-workflows-run';
 
 	/**
+	 * Report page id to be used for "view report" link.
+	 *
+	 * @var string
+	 */
+	protected $report_page_id = 'runs-by-date';
+
+	/**
 	 * Load the chart's data.
 	 *
 	 * @return array
@@ -63,7 +70,7 @@ class Dashboard_Widget_Chart_Workflows_Run extends Dashboard_Widget_Chart {
 					</div>
 				</div>
 
-				<?php $this->output_report_arrow_link( 'workflows-report' ); ?>
+				<?php $this->output_report_arrow_link(); ?>
 			</div>
 
 			<div class="automatewoo-dashboard-chart__tooltip"></div>

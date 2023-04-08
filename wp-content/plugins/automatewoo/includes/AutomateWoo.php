@@ -185,6 +185,10 @@ final class AutomateWoo extends AutomateWoo_Legacy {
 			AutomateWoo\Event_Helpers\Subscription_Status_Changed::init();
 		}
 
+		if ( AutomateWoo\Integrations::is_mailpoet_api_active() ) {
+			AutomateWoo\Integrations::mailpoet()->init_hooks();
+		}
+
 		AutomateWoo\Active_Triggers_Cache::init();
 		AutomateWoo\Async_Events::init_required_events();
 

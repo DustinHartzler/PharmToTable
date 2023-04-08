@@ -244,6 +244,5 @@ class Options extends Options_API {
 	static function mailchimp_api_key() {
 		return trim( Clean::string( Options::get( 'mailchimp_api_key' ) ) );
 	}
-
 }
 

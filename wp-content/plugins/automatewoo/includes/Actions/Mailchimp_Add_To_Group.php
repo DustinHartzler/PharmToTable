@@ -1,9 +1,10 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * @class Action_Mailchimp_Add_To_Group
@@ -11,13 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Action_Mailchimp_Add_To_Group extends Action_Mailchimp_Abstract {
 
-	function load_admin_details() {
+	/**
+	 * Implements Action load_admin_details abstract method
+	 *
+	 * @see Action::load_admin_details()
+	 */
+	protected function load_admin_details() {
 		parent::load_admin_details();
 		$this->title = __( 'Add Contact To Group', 'automatewoo' );
 	}
 
-
-	function load_fields() {
+	/**
+	 * Implements Action load_fields abstract method
+	 *
+	 * @see Action::load_fields()
+	 */
+	public function load_fields() {
 
 		$groups = ( new Fields\Select() )
 			->set_name( 'groups' )
@@ -28,23 +38,23 @@ class Action_Mailchimp_Add_To_Group extends Action_Mailchimp_Abstract {
 
 		$allow_add_to_list = ( new Fields\Checkbox() )
 			->set_name( 'allow_add_to_list' )
-			->set_title( __( "Add contact to list if missing?", 'automatewoo' ) )
+			->set_title( __( 'Add contact to list if missing?', 'automatewoo' ) )
 			->set_default_to_checked();
 
 		$this->add_list_field();
 		$this->add_field( $this->get_contact_email_field() );
 		$this->add_field( $groups );
 		$this->add_field( $allow_add_to_list );
-
 	}
 
-
 	/**
-	 * @param $field_name
-	 * @param $reference_field_value
+	 * TODO: Remove duplication in MailChimp_Update_Contact_Field::get_dynamic_field_options
+	 *
+	 * @param string $field_name The field name to get the options for
+	 * @param bool   $reference_field_value If reference value is false, then load the last saved value, used when initially loading an action page
 	 * @return array
 	 */
-	function get_dynamic_field_options( $field_name, $reference_field_value = false ) {
+	public function get_dynamic_field_options( $field_name, $reference_field_value = false ) {
 
 		$options = [];
 		/** @var Fields\Select $field */
@@ -54,26 +64,28 @@ class Action_Mailchimp_Add_To_Group extends Action_Mailchimp_Abstract {
 			return [];
 		}
 
-		// if reference value is not set load the last saved value, used when initially loading an action page
 		if ( ! $reference_field_value ) {
 			$reference_field_value = $this->get_option( $field->dynamic_options_reference_field_name );
 		}
 
 		foreach ( Integrations::mailchimp()->get_list_interest_categories( $reference_field_value ) as $interest_category ) {
-			foreach( $interest_category['interests'] as $interest_id => $interest_name ) {
-				$options[ $interest_id ] = "{$interest_category['title']} - {$interest_name}" ;
+			foreach ( $interest_category['interests'] as $interest_id => $interest_name ) {
+				$options[ $interest_id ] = "{$interest_category['title']} - {$interest_name}";
 			}
 		}
 
 		return $options;
 	}
 
-
-	function run() {
-
-		$list_id = $this->get_option( 'list' );
-		$email = $this->get_contact_email_option();
-		$interests = $this->get_option( 'groups' );
+	/**
+	 * Implements run abstract method.
+	 *
+	 * @see ActionInterface::run()
+	 */
+	public function run() {
+		$list_id           = $this->get_option( 'list' );
+		$email             = $this->get_contact_email_option();
+		$interests         = $this->get_option( 'groups' );
 		$allow_add_to_list = $this->get_option( 'allow_add_to_list' );
 
 		if ( ! $list_id || ! $interests || ! $email ) {
@@ -86,7 +98,7 @@ class Action_Mailchimp_Add_To_Group extends Action_Mailchimp_Abstract {
 
 		$group_updates = [];
 
-		foreach( $interests as $interest_id ) {
+		foreach ( $interests as $interest_id ) {
 			$group_updates[ $interest_id ] = true;
 		}
 

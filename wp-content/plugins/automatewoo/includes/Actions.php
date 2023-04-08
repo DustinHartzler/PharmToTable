@@ -83,6 +83,11 @@ class Actions extends Registry {
 			$includes[ 'mailchimp_update_tags' ] = 'AutomateWoo\Actions\Mailchimp_Update_Tags';
 		}
 
+		if ( Integrations::is_mailpoet_api_active() ) {
+			$includes[ 'mailpoet_subscribe' ] = 'AutomateWoo\Action_Mailpoet_Subscribe';
+			$includes[ 'mailpoet_unsubscribe' ] = 'AutomateWoo\Action_Mailpoet_Unsubscribe';
+		}
+
 		if ( AW()->options()->campaign_monitor_enabled ) {
 			$includes[ 'campaign_monitor_add_subscriber' ] = 'AutomateWoo\Action_Campaign_Monitor_Add_Subscriber';
 			$includes[ 'campaign_monitor_remove_subscriber' ] = 'AutomateWoo\Action_Campaign_Monitor_Remove_Subscriber';

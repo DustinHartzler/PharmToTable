@@ -3,10 +3,16 @@
 
 namespace AutomateWoo;
 
+use Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * @class Customer
+ *
+ * This class uses direct DB queries to fetch order data for performance reason.
+ * The usage of WC_Order_Query is limited and won't return a set of totals.
+ *
  * @since 3.0.0
  */
 class Customer extends Abstract_Model_With_Meta_Table {
@@ -142,12 +148,14 @@ class Customer extends Abstract_Model_With_Meta_Table {
 	/**
 	 * Takes into account the global optin_mode option.
 	 *
-	 * If the customer is unsubd then all workflows will still run but any emails sending to
+	 * If the customer is unsubscribed then all workflows will still run but any emails sending to
 	 * this customer will be rejected and marked in the logs.
 	 *
 	 * @return string
 	 */
 	function is_unsubscribed() {
+		do_action( 'automatewoo/customer/before_is_unsubscribed', $this );
+
 		if ( Options::optin_enabled() ) {
 			$is_unsubscribed = ! $this->get_is_subscribed();
 		}
@@ -503,7 +511,7 @@ class Customer extends Abstract_Model_With_Meta_Table {
 	 *
 	 * @return int
 	 */
-	function get_order_count() {
+	public function get_order_count() {
 		$count = $this->get_meta( 'order_count' );
 
 		if ( '' !== $count ) {
@@ -512,18 +520,30 @@ class Customer extends Abstract_Model_With_Meta_Table {
 
 		global $wpdb;
 
-		$statuses = array_map( 'esc_sql', aw_get_counted_order_statuses( true ) );
+		$statuses = array_map( 'esc_sql', aw_get_counted_order_statuses() );
 
-		$query = "
-			SELECT COUNT(DISTINCT ID)
-			FROM $wpdb->posts as posts
-			LEFT JOIN {$wpdb->postmeta} AS meta ON posts.ID = meta.post_id
-			WHERE posts.post_type = 'shop_order'
-			AND posts.post_status IN ('" . implode( "','", $statuses ) . "')
-			AND {$this->get_customer_order_meta_sql()}
-		";
+		if ( HPOS_Helper::is_HPOS_enabled() ) {
+			$table = OrdersTableDataStore::get_orders_table_name();
+			$query = "
+				SELECT COUNT(DISTINCT id)
+				FROM $table as orders
+				WHERE orders.type = 'shop_order'
+				AND orders.status IN ('" . implode( "','", $statuses ) . "')
+				AND {$this->get_customer_order_sql()}
+			";
+		} else {
+			$query = "
+				SELECT COUNT(DISTINCT ID)
+				FROM $wpdb->posts as posts
+				LEFT JOIN {$wpdb->postmeta} AS meta ON posts.ID = meta.post_id
+				WHERE posts.post_type = 'shop_order'
+				AND posts.post_status IN ('" . implode( "','", $statuses ) . "')
+				AND {$this->get_customer_order_sql()}
+			";
+		}
 
-		$count = (int) $wpdb->get_var( $wpdb->prepare( $query, $this->get_customer_order_meta_sql_args() ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$count = (int) $wpdb->get_var( $wpdb->prepare( $query, $this->get_customer_order_sql_args() ) );
 
 		$this->update_meta( 'order_count', $count );
 
@@ -537,7 +557,7 @@ class Customer extends Abstract_Model_With_Meta_Table {
 	 *
 	 * @return float
 	 */
-	function get_total_spent() {
+	public function get_total_spent() {
 		$total = $this->get_meta( 'total_spent' );
 
 		if ( '' !== $total ) {
@@ -549,22 +569,34 @@ class Customer extends Abstract_Model_With_Meta_Table {
 		$statuses = array_map( 'aw_add_order_status_prefix', wc_get_is_paid_statuses() );
 		$statuses = array_map( 'esc_sql', $statuses );
 
-		$query = "
-			SELECT SUM(order_total) FROM (
-				SELECT posts.ID as order_id, meta2.meta_value as order_total 
-				FROM $wpdb->posts as posts
-				LEFT JOIN {$wpdb->postmeta} AS meta ON posts.ID = meta.post_id
-				LEFT JOIN {$wpdb->postmeta} AS meta2 ON posts.ID = meta2.post_id
-				WHERE posts.post_type = 'shop_order'
-				AND posts.post_status IN ('" . implode( "','", $statuses ) . "')
-				AND {$this->get_customer_order_meta_sql()}
-				AND meta2.meta_key = '_order_total'
-				GROUP BY order_id
-			) AS orders_table
-		";
+		if ( HPOS_Helper::is_HPOS_enabled() ) {
+			$table = OrdersTableDataStore::get_orders_table_name();
+			$query = "
+				SELECT SUM(total_amount)
+				FROM $table as orders
+				WHERE orders.type = 'shop_order'
+				AND orders.status IN ('" . implode( "','", $statuses ) . "')
+				AND {$this->get_customer_order_sql()}
+			";
+		} else {
+			$query = "
+				SELECT SUM(order_total) FROM (
+					SELECT posts.ID as order_id, meta2.meta_value as order_total
+					FROM $wpdb->posts as posts
+					LEFT JOIN {$wpdb->postmeta} AS meta ON posts.ID = meta.post_id
+					LEFT JOIN {$wpdb->postmeta} AS meta2 ON posts.ID = meta2.post_id
+					WHERE posts.post_type = 'shop_order'
+					AND posts.post_status IN ('" . implode( "','", $statuses ) . "')
+					AND {$this->get_customer_order_sql()}
+					AND meta2.meta_key = '_order_total'
+					GROUP BY order_id
+				) AS orders_table
+			";
+		}
 
 		// Use formatting function to round the total
-		$total = (float) Format::decimal( $wpdb->get_var( $wpdb->prepare( $query, $this->get_customer_order_meta_sql_args() ) ) );
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$total = (float) Format::decimal( $wpdb->get_var( $wpdb->prepare( $query, $this->get_customer_order_sql_args() ) ) );
 
 		$this->update_meta( 'total_spent', $total );
 
@@ -572,7 +604,7 @@ class Customer extends Abstract_Model_With_Meta_Table {
 	}
 
 	/**
-	 * Get SQL used for customer order meta queries.
+	 * Get SQL used for customer order queries.
 	 *
 	 * Used to get orders that match user ID OR email.
 	 *
@@ -580,37 +612,37 @@ class Customer extends Abstract_Model_With_Meta_Table {
 	 *
 	 * @return string
 	 */
-	protected function get_customer_order_meta_sql() {
-		$sql = '';
+	protected function get_customer_order_sql() {
+		if ( HPOS_Helper::is_HPOS_enabled() ) {
+			$sql = '( orders.billing_email = %s )';
 
-		if ( $this->is_registered() ) {
-			$sql .= '((';
+			if ( $this->is_registered() ) {
+				$sql .= 'OR ( orders.customer_id = %s )';
+			}
+		} else {
+			$sql = "( meta.meta_key = '_billing_email' AND meta.meta_value = %s )";
+
+			if ( $this->is_registered() ) {
+				$sql .= "OR ( meta.meta_key = '_customer_user' AND meta.meta_value = %s )";
+			}
 		}
 
-		$sql .= "( meta.meta_key = '_billing_email' AND meta.meta_value = %s )";
-
 		if ( $this->is_registered() ) {
-			$sql .= "OR ( meta.meta_key = '_customer_user' AND meta.meta_value = %s )";
-		}
-
-		if ( $this->is_registered() ) {
-			$sql .= '))';
+			return "(( {$sql} ))";
 		}
 
 		return $sql;
 	}
 
 	/**
-	 * Get SQL query args used for customer order meta queries.
+	 * Get SQL query args used for customer order queries.
 	 *
 	 * @since 4.6.0
 	 *
 	 * @return array
 	 */
-	protected function get_customer_order_meta_sql_args() {
-		$args = [
-			$this->get_email()
-		];
+	protected function get_customer_order_sql_args() {
+		$args = [ $this->get_email() ];
 
 		if ( $this->is_registered() ) {
 			$args[] = $this->get_user_id();
@@ -618,7 +650,6 @@ class Customer extends Abstract_Model_With_Meta_Table {
 
 		return $args;
 	}
-
 
 	/**
 	 * @return string
@@ -635,7 +666,7 @@ class Customer extends Abstract_Model_With_Meta_Table {
 
 	/**
 	 * Get the customer's language if site is multilingual.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_language() {
@@ -701,40 +732,51 @@ class Customer extends Abstract_Model_With_Meta_Table {
 
 	/**
 	 * Get product and variation ids of all the customers purchased products
+	 *
 	 * @return array
 	 */
-	function get_purchased_products() {
+	public function get_purchased_products() {
 		global $wpdb;
 
 		$transient_name = 'aw_cpp_' . md5( $this->get_id() . \WC_Cache_Helper::get_transient_version( 'orders' ) );
-		$products = get_transient( $transient_name );
+		$products       = get_transient( $transient_name );
 
 		if ( $products === false ) {
 
-			$customer_data = [ $this->get_email() ];
-
-			if ( $this->is_registered() ) {
-				$customer_data[] = $this->get_user_id();
-			}
-
-			$customer_data = array_map( 'esc_sql', array_filter( $customer_data ) );
 			$statuses = array_map( 'esc_sql', aw_get_counted_order_statuses( true ) );
 
-			$result = $wpdb->get_col( "
-				SELECT im.meta_value FROM {$wpdb->posts} AS p
-				INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
-				INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
-				INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
-				WHERE p.post_status IN ( '" . implode( "','", $statuses ) . "' )
-				AND pm.meta_key IN ( '_billing_email', '_customer_user' )
-				AND im.meta_key IN ( '_product_id', '_variation_id' )
-				AND im.meta_value != 0
-				AND pm.meta_value IN ( '" . implode( "','", $customer_data ) . "' )
-			" );
+			if ( HPOS_Helper::is_HPOS_enabled() ) {
+				$orders_table = OrdersTableDataStore::get_orders_table_name();
+
+				$query = "
+					SELECT im.meta_value FROM {$orders_table} as orders
+					INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON orders.id = i.order_id
+					INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+					WHERE orders.type = 'shop_order'
+					AND orders.status IN ('" . implode( "','", $statuses ) . "')
+					AND im.meta_key IN ( '_product_id', '_variation_id' )
+					AND im.meta_value != 0
+					AND {$this->get_customer_order_sql()}
+				";
+			} else {
+				$query = "
+					SELECT im.meta_value FROM {$wpdb->posts} AS p
+					INNER JOIN {$wpdb->postmeta} AS meta ON p.ID = meta.post_id
+					INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+					INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+					WHERE p.post_status IN ( '" . implode( "','", $statuses ) . "' )
+					AND im.meta_key IN ( '_product_id', '_variation_id' )
+					AND im.meta_value != 0
+					AND {$this->get_customer_order_sql()}
+				";
+			}
+
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$result = $wpdb->get_col( $wpdb->prepare( $query, $this->get_customer_order_sql_args() ) );
 
 			$products = array_unique( array_map( 'absint', $result ) );
 
-			set_transient( $transient_name, $result, DAY_IN_SECONDS * 30 );
+			set_transient( $transient_name, $products, DAY_IN_SECONDS * 30 );
 		}
 
 		return $products;
@@ -869,7 +911,7 @@ class Customer extends Abstract_Model_With_Meta_Table {
 	 */
 	function calculate_unique_product_review_count() {
 		global $wpdb;
-		$sql = "SELECT COUNT(DISTINCT comment_post_ID) FROM {$wpdb->comments} 
+		$sql = "SELECT COUNT(DISTINCT comment_post_ID) FROM {$wpdb->comments}
 				WHERE comment_parent = 0
 				AND comment_approved = 1
 				AND comment_type = 'review'

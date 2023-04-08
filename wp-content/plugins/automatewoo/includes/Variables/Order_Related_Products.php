@@ -1,9 +1,11 @@
 <?php
-// phpcs:ignoreFile
 
 namespace AutomateWoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
+
+use WC_Order;
+use WC_Order_Item_Product;
 
 /**
  * @class Variable_Order_Related_Products
@@ -11,35 +13,43 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Variable_Order_Related_Products extends Variable_Abstract_Product_Display {
 
 
+	/**
+	 * Declare limit field support.
+	 *
+	 * @var boolean
+	 */
 	public $support_limit_field = true;
 
 
-	function load_admin_details() {
+	/**
+	 * Method to set title, group, description and other admin props
+	 */
+	public function load_admin_details() {
 		parent::load_admin_details();
-		$this->description = __( "Displays a listing of products related to the items in an order.", 'automatewoo');
+		$this->description = __( 'Displays a listing of products related to the items in an order.', 'automatewoo' );
 	}
 
 
 	/**
-	 * @param $order \WC_Order
-	 * @param $parameters array
-	 * @param $workflow
+	 * @param WC_Order $order
+	 * @param array    $parameters
+	 * @param Workflow $workflow
 	 * @return mixed
 	 */
-	function get_value( $order, $parameters, $workflow ) {
+	public function get_value( $order, $parameters, $workflow ) {
 
-		$related = [];
+		$related  = [];
 		$in_order = [];
 		$template = isset( $parameters['template'] ) ? $parameters['template'] : false;
-		$limit = isset( $parameters['limit'] ) ? absint( $parameters['limit'] ) : 8;
+		$limit    = isset( $parameters['limit'] ) ? absint( $parameters['limit'] ) : 8;
 
-		/** @var \WC_Order_Item_Product[] $items */
+		/** @var WC_Order_Item_Product[] $items */
 		$items = $order->get_items();
 
 		foreach ( $items as $item ) {
 			// Product variations are not considered when getting related products.
 			$in_order[] = $item->get_product_id();
-			$related = array_merge( wc_get_related_products( $item->get_product_id(), $limit ), $related );
+			$related    = array_merge( wc_get_related_products( $item->get_product_id(), $limit ), $related );
 		}
 
 		$related = array_diff( $related, $in_order );
@@ -58,9 +68,10 @@ class Variable_Order_Related_Products extends Variable_Abstract_Product_Display 
 
 		$products = aw_get_products( $query_args );
 
-		$args = array_merge( $this->get_default_product_template_args( $workflow, $parameters ), [
-			'products' => $products,
-		]);
+		$args = array_merge(
+			$this->get_default_product_template_args( $workflow, $parameters ),
+			[ 'products' => $products ]
+		);
 
 		return $this->get_product_display_html( $template, $args );
 	}

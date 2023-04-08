@@ -2,6 +2,7 @@
 // phpcs:ignoreFile
 
 namespace AutomateWoo\Admin\Controllers;
+use AutomateWoo\HPOS_Helper;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -15,8 +16,31 @@ class Reports extends Base {
 
 
 	function handle() {
+
+		if ( HPOS_Helper::is_HPOS_enabled() ) {
+			wp_safe_redirect( $this->get_corresponding_analytics_url() );
+			return;
+		}
+
 		$this->handle_actions();
 		$this->output_list_table();
+	}
+
+	/**
+	 * Show deprecation warning above other success and error messages.
+	 */
+	function output_messages() {
+		$analytics_link = '<a href="' . esc_url( $this->get_corresponding_analytics_url() ) . '">' . __( 'Analytics', 'automatewoo' ) . '</a>';
+
+		// Show the warning.
+		echo $this->format_notice( [
+			'main' => __( 'This reports page is deprecated.', 'automatewoo' ),
+			'extra' => sprintf( __( 'All reports were migrated to %1s. This page will be removed once High Performance Order Storage is enabled in WooCommerce.', 'automatewoo' ), $analytics_link ),
+			'class' => '',
+		], 'warning' );
+
+		// Show other messages.
+		parent::output_messages();
 	}
 
 
@@ -74,6 +98,22 @@ class Reports extends Base {
 		}
 
 		return $this->reports;
+	}
+
+	/**
+	 * Return an URL for the Analytics page with the same reports.
+	 */
+	function get_corresponding_analytics_url() {
+		// Point to current tab's equivalent.
+		$path = $this->get_current_tab()->id;
+		if ( $path === 'conversions-list' ) {
+			$path = 'conversions';
+		}
+		// Construct the AnchorElement.
+		return add_query_arg( array(
+			'page' => 'wc-admin',
+			'path' => '/analytics/automatewoo-' . $path,
+		), admin_url( 'admin.php' ) );
 	}
 
 }

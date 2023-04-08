@@ -45,10 +45,7 @@ class Customer_Purchased_Products extends Product_Select_Rule_Abstract {
 			return false;
 		}
 
-		// phpcs:disable WordPress.PHP.StrictInArray.MissingTrueStrict
-		// Using strict here cause tests to incorrectly fail
-		$includes = in_array( $product_id, $customer->get_purchased_products() );
-		// phpcs:enable
+		$includes = in_array( $product_id, $customer->get_purchased_products(), true );
 
 		switch ( $compare ) {
 			case 'includes':

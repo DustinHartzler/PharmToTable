@@ -7,6 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * @class Report_Runs_By_Date
+ *
+ * @deprecated since x.x.x Migrated to Analytics.
+ * @see AutomateWoo\Admin\Analytics
+ * @see AutomateWoo\Admin\Analytics\Rest_API\Workflow_Runs
  */
 class Report_Runs_By_Date extends \AW_Report_Abstract_Graph {
 

@@ -176,6 +176,7 @@ class Mailer extends Mailer_Abstract {
 	 * - Maybe convert URLs to trackable URLs
 	 * - Replaces unsupported HTML tags
 	 * - Runs wptexturize() to convert quotes
+	 * - Fix container ID for MailPoet compatibility if required
 	 * - HTML encodes emojis
 	 * - Injects tracking pixel
 	 * - Inlines CSS
@@ -195,6 +196,11 @@ class Mailer extends Mailer_Abstract {
 		$html = $this->replace_urls_in_content( $html );
 		$html = wptexturize( $html );
 
+		// If MailPoet is active and customizing WooCommerce emails then the container ID needs to be updated for compatibility
+		if ( Integrations::is_mailpoet_overriding_styles() ) {
+			$html = $this->fix_wrapper_for_mailpoet( $html );
+		}
+
 		$html = $this->style_inline( $html );
 		$html = Clean::encode_emoji( $html ); // encoding emojis before CSS inline seems to decode them again
 
@@ -203,6 +209,16 @@ class Mailer extends Mailer_Abstract {
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Replace default email wrapper ID with one required for MailPoet inline styling
+	 *
+	 * @param string $html The contents of the email
+	 * @return string
+	 */
+	function fix_wrapper_for_mailpoet( $html ) {
+		return str_replace( 'id="wrapper"', 'id="mailpoet_woocommerce_container"', $html );
 	}
 
 
@@ -235,7 +251,7 @@ class Mailer extends Mailer_Abstract {
 		}
 
 		$this->get_template_part( 'email-styles.php' );
-		$css = apply_filters( 'woocommerce_email_styles', ob_get_clean() );
+		$css = apply_filters( 'woocommerce_email_styles', ob_get_clean(), new \WC_Email() );
 		$css = apply_filters( 'automatewoo/mailer/styles', $css, $this );
 
 		return $this->emogrify( $content, $css );

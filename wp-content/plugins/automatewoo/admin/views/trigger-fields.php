@@ -36,6 +36,17 @@ $fields = $trigger->get_fields();
 
 		<?php
 		if ( $fill_fields ) {
+			// load dynamic options before value is set and field is rendered
+			if ( $field->get_type() === 'select' ) {
+
+				/** @var $field AutomateWoo\Fields\Select */
+				if ( $field->has_dynamic_options() ) {
+					$reference_field_value = $workflow->get_trigger_option( $field->dynamic_options_reference_field_name );
+					$options               = $trigger->get_dynamic_field_options( $field->get_name(), $reference_field_value );
+					$field->set_options( $options );
+				}
+			}
+
 			$value = $workflow->get_trigger_option( $field->get_name() );
 		} else {
 			$value = null;
@@ -58,7 +69,7 @@ $fields = $trigger->get_fields();
 
 			</td>
 
-			<td class="automatewoo-table__col automatewoo-table__col--field">
+			<td class="automatewoo-table__col automatewoo-table__col--field automatewoo-field-wrap">
 				<?php $field->render( $value ); ?>
 			</td>
 		</tr>

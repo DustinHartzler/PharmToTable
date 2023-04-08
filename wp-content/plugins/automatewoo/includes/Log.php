@@ -481,32 +481,22 @@ class Log extends Abstract_Model_With_Meta_Table {
 	 */
 	function delete() {
 
-		// delete conversion records for the log
-		$query = new \WP_Query([
-			'post_type' => 'shop_order',
-			'post_status' => 'any',
-			'posts_per_page' => -1,
-			'no_found_rows' => true,
-			'fields' => 'ids',
-			'meta_query' => [
-				[
-					'key' => '_aw_conversion_log',
-					'value' => $this->get_id()
-				]
+		// Get orders with conversion data.
+		$converted_orders = wc_get_orders(
+			[
+				'type'       => 'shop_order',
+				'status'     => 'any',
+				'limit'      => -1,
+				'meta_key'   => '_aw_conversion_log',
+				'meta_value' => $this->get_id(),
 			]
-		]);
-
-		$converted_orders = $query->posts;
+		);
 
 		if ( $converted_orders ) {
-			foreach ( $converted_orders as $order_id ) {
-				$order = wc_get_order( $order_id );
-
-				if ( $order ) {
-					$order->delete_meta_data( '_aw_conversion' );
-					$order->delete_meta_data( '_aw_conversion_log' );
-					$order->save();
-				}
+			foreach ( $converted_orders as $order ) {
+				$order->delete_meta_data( '_aw_conversion' );
+				$order->delete_meta_data( '_aw_conversion_log' );
+				$order->save();
 			}
 		}
 

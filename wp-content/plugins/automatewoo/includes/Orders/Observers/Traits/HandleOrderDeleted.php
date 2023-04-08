@@ -22,12 +22,17 @@ trait HandleOrderDeleted {
 	 * Add hooks.
 	 */
 	protected function add_handle_order_deleted_hooks() {
-		add_action( 'delete_post', [ $this, 'handle_post_trashed_or_deleted' ] );
+		add_action( 'before_delete_post', [ $this, 'handle_post_trashed_or_deleted' ], 8 );
 		add_action( 'wp_trash_post', [ $this, 'handle_post_trashed_or_deleted' ] );
+
+		// These hooks are only triggered when HPOS is enabled.
+		add_action( 'woocommerce_before_delete_order', [ $this, 'handle_order_trashed_or_deleted' ], 10, 2 );
+		add_action( 'woocommerce_before_trash_order', [ $this, 'handle_order_trashed_or_deleted' ], 10, 2 );
 	}
 
 	/**
 	 * Handle initial post trash and deletion.
+	 * Triggered when the posts table is used for orders.
 	 *
 	 * @param int $post_id
 	 */
@@ -40,6 +45,21 @@ trait HandleOrderDeleted {
 		if ( ! $order instanceof WC_Order ) {
 			return;
 		}
+
+		$this->handle_order_deleted( $order );
+	}
+
+	/**
+	 * Handle initial order trash and deletion.
+	 * Triggered when HPOS is enabled.
+	 *
+	 * @param int      $order_id
+	 * @param WC_Order $order
+	 */
+	public function handle_order_trashed_or_deleted( int $order_id, WC_Order $order ) {
+		// Don't trigger the old hooks when not storing orders in the posts table.
+		remove_action( 'before_delete_post', [ $this, 'handle_post_trashed_or_deleted' ], 8 );
+		remove_action( 'wp_trash_post', [ $this, 'handle_post_trashed_or_deleted' ] );
 
 		$this->handle_order_deleted( $order );
 	}

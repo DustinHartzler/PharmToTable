@@ -92,6 +92,9 @@ class Workflows extends AbstractController {
 		if ( $request->has_param( 'search' ) ) {
 			$query->set_search( $request->get_param( 'search' ) );
 		}
+		if ( $request->has_param( 'include' ) ) {
+			$query->set_include( $request->get_param( 'include' ) );
+		}
 
 		$items = $query->get_results();
 		$data  = [];

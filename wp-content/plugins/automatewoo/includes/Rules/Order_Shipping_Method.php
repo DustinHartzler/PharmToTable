@@ -3,8 +3,6 @@
 
 namespace AutomateWoo\Rules;
 
-use AutomateWoo\Compat;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -49,7 +47,7 @@ class Order_Shipping_Method extends Preloaded_Select_Rule_Abstract {
 		$methods = [];
 
 		foreach( $order->get_shipping_methods() as $shipping_line_item ) {
-			$methods[] = Compat\Order_Item::get_shipping_method_id( $shipping_line_item, true );
+			$methods[] = $shipping_line_item->get_method_id();
 		}
 
 		return $this->validate_select( $methods, $compare, $value );
