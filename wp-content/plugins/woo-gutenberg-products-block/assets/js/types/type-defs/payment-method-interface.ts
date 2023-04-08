@@ -5,6 +5,7 @@
 import type PaymentMethodLabel from '@woocommerce/base-components/cart-checkout/payment-method-label';
 import type PaymentMethodIcons from '@woocommerce/base-components/cart-checkout/payment-method-icons';
 import type LoadingMask from '@woocommerce/base-components/loading-mask';
+import type { ValidationInputError } from '@woocommerce/blocks-checkout';
 
 /**
  * Internal dependencies
@@ -12,11 +13,10 @@ import type LoadingMask from '@woocommerce/base-components/loading-mask';
 import type { Currency } from './currency';
 import type { CartBillingAddress, CartShippingRate } from './cart';
 import type {
+	emitterCallback,
 	responseTypes,
 	noticeContexts,
-} from '../../base/context/hooks/use-emit-response';
-import type { emitterCallback } from '../../base/context/event-emit';
-import type { PaymentMethodCurrentStatusType } from '../../base/context/providers/cart-checkout/payment-methods/types';
+} from '../../base/context/event-emit';
 import type {
 	CartResponseShippingAddress,
 	CartResponseCouponItem,
@@ -76,7 +76,7 @@ export interface ComponentProps {
 	// A component used for displaying payment method labels, including an icon.
 	PaymentMethodLabel: typeof PaymentMethodLabel;
 	// A container for holding validation errors
-	ValidationInputError: () => JSX.Element | null;
+	ValidationInputError: typeof ValidationInputError;
 }
 
 export interface EmitResponseProps {
@@ -87,16 +87,24 @@ export interface EmitResponseProps {
 }
 
 export interface EventRegistrationProps {
-	// Used to subscribe callbacks firing when checkout has completed processing with an error.
+	// Deprecated in favour of onCheckoutFail.
 	onCheckoutAfterProcessingWithError: ReturnType< typeof emitterCallback >;
-	// Used to subscribe callbacks firing when checkout has completed processing successfully.
+	// Deprecated in favour of onCheckoutSuccess.
 	onCheckoutAfterProcessingWithSuccess: ReturnType< typeof emitterCallback >;
 	// Used to subscribe callbacks firing before checkout begins processing.
 	onCheckoutBeforeProcessing: ReturnType< typeof emitterCallback >;
-	// Used to subscribe callbacks firing when validation of the submitted checkout data happens, before it's sent off to the server.
+	// Used to register a callback that will fire if the api call to /checkout is successful
+	onCheckoutSuccess: ReturnType< typeof emitterCallback >;
+	// Used to register a callback that will fire if the api call to /checkout fails
+	onCheckoutFail: ReturnType< typeof emitterCallback >;
+	// Used to register a callback that will fire when the checkout performs validation on the form
+	onCheckoutValidation: ReturnType< typeof emitterCallback >;
+	// Deprecated in favour of onCheckoutValidation.
 	onCheckoutValidationBeforeProcessing: ReturnType< typeof emitterCallback >;
-	// Event registration callback for registering observers for the payment processing event.
+	// Deprecated in favour of onPaymentSetup
 	onPaymentProcessing: ReturnType< typeof emitterCallback >;
+	// Event registration callback for registering observers for the payment setup event.
+	onPaymentSetup: ReturnType< typeof emitterCallback >;
 	// Used to subscribe callbacks that will fire when retrieving shipping rates failed.
 	onShippingRateFail: ReturnType< typeof emitterCallback >;
 	// Used to subscribe callbacks that will fire after selecting a shipping rate unsuccessfully.
@@ -164,7 +172,17 @@ export type PaymentMethodInterface = {
 	// Used to trigger checkout processing.
 	onSubmit: () => void;
 	// Various payment status helpers.
-	paymentStatus: PaymentMethodCurrentStatusType;
+	paymentStatus: {
+		isPristine: boolean;
+		isIdle: boolean;
+		isStarted: boolean;
+		isProcessing: boolean;
+		isFinished: boolean;
+		hasError: boolean;
+		hasFailed: boolean;
+		isSuccessful: boolean;
+		isDoingExpressPayment: boolean;
+	};
 	// Deprecated. For setting an error (error message string) for express payment methods. Does not change payment status.
 	setExpressPaymentError: ( errorMessage?: string ) => void;
 	// Various data related to shipping.

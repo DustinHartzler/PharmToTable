@@ -82,6 +82,8 @@ class Api {
 	public function add_payment_method_script_data() {
 		// Enqueue the order of enabled gateways as `paymentGatewaySortOrder`.
 		if ( ! $this->asset_registry->exists( 'paymentGatewaySortOrder' ) ) {
+			// We use payment_gateways() here to get the sort order of all enabled gateways. Some may be
+			// programmatically disabled later on, but we still need to know where the enabled ones are in the list.
 			$payment_gateways = WC()->payment_gateways->payment_gateways();
 			$enabled_gateways = array_filter( $payment_gateways, array( $this, 'is_payment_gateway_enabled' ) );
 			$this->asset_registry->add( 'paymentGatewaySortOrder', array_keys( $enabled_gateways ) );
@@ -123,6 +125,11 @@ class Api {
 	 * an error in the admin.
 	 */
 	public function verify_payment_methods_dependencies() {
+		// Check that the wc-blocks script is registered before continuing. Some extensions may cause this function to run
+		// before the payment method scripts' dependencies are registered.
+		if ( ! wp_script_is( 'wc-blocks', 'registered' ) ) {
+			return;
+		}
 		$wp_scripts             = wp_scripts();
 		$payment_method_scripts = $this->payment_method_registry->get_all_active_payment_method_script_dependencies();
 
@@ -138,7 +145,7 @@ class Api {
 				if ( ! wp_script_is( $dep, 'registered' ) ) {
 					$error_handle  = $dep . '-dependency-error';
 					$error_message = sprintf(
-						'Payment gateway with handle \'%1$s\' has been deactivated in Cart and Checkout blocks because its dependency \'%2$s\' is not registered. Read the docs about registering assets for payment methods: https://github.com/woocommerce/woocommerce-gutenberg-products-block/blob/trunk/docs/extensibility/payment-method-integration.md#registering-assets',
+						'Payment gateway with handle \'%1$s\' has been deactivated in Cart and Checkout blocks because its dependency \'%2$s\' is not registered. Read the docs about registering assets for payment methods: https://github.com/woocommerce/woocommerce-blocks/blob/060f63c04f0f34f645200b5d4da9212125c49177/docs/third-party-developers/extensibility/checkout-payment-methods/payment-method-integration.md#registering-assets',
 						esc_html( $payment_method_script ),
 						esc_html( $dep )
 					);

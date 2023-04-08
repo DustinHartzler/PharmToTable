@@ -12,6 +12,7 @@ use Automattic\WooCommerce\StoreApi\Utilities\ArrayUtils;
 use Automattic\WooCommerce\StoreApi\Utilities\DraftOrderTrait;
 use Automattic\WooCommerce\StoreApi\Utilities\NoticeHandler;
 use Automattic\WooCommerce\StoreApi\Utilities\QuantityLimits;
+use Automattic\WooCommerce\Blocks\Package;
 use WP_Error;
 
 /**
@@ -32,6 +33,17 @@ class CartController {
 	}
 
 	/**
+	 * Recalculates the cart totals.
+	 */
+	public function calculate_totals() {
+		$cart = $this->get_cart_instance();
+		$cart->get_cart();
+		$cart->calculate_fees();
+		$cart->calculate_shipping();
+		$cart->calculate_totals();
+	}
+
+	/**
 	 * Based on the core cart class but returns errors rather than rendering notices directly.
 	 *
 	 * @todo Overriding the core add_to_cart method was necessary because core outputs notices when an item is added to
@@ -41,7 +53,7 @@ class CartController {
 	 * @throws RouteException Exception if invalid data is detected.
 	 *
 	 * @param array $request Add to cart request params.
-	 * @return string|Error
+	 * @return string
 	 */
 	public function add_to_cart( $request ) {
 		$cart    = $this->get_cart_instance();
@@ -96,6 +108,8 @@ class CartController {
 		/**
 		 * Filters the item being added to the cart.
 		 *
+		 * @since 2.5.0
+		 *
 		 * @internal Matches filter name in WooCommerce core.
 		 *
 		 * @param array $cart_item_data Array of cart item data being added to the cart.
@@ -122,6 +136,8 @@ class CartController {
 		/**
 		 * Filters the entire cart contents when the cart changes.
 		 *
+		 * @since 2.5.0
+		 *
 		 * @internal Matches filter name in WooCommerce core.
 		 *
 		 * @param array $cart_contents Array of all cart items.
@@ -134,6 +150,8 @@ class CartController {
 		 *
 		 * This hook fires when an item is added to the cart. This is triggered from the Store API in this context, but
 		 * WooCommerce core add to cart events trigger the same hook.
+		 *
+		 * @since 2.5.0
 		 *
 		 * @internal Matches action name in WooCommerce core.
 		 *
@@ -170,7 +188,7 @@ class CartController {
 		$cart_item = $this->get_cart_item( $item_id );
 
 		if ( empty( $cart_item ) ) {
-			throw new RouteException( 'woocommerce_rest_cart_invalid_key', __( 'Cart item does not exist.', 'woo-gutenberg-products-block' ), 404 );
+			throw new RouteException( 'woocommerce_rest_cart_invalid_key', __( 'Cart item does not exist.', 'woo-gutenberg-products-block' ), 409 );
 		}
 
 		$product = $cart_item['data'];
@@ -239,6 +257,8 @@ class CartController {
 		 * This filter will be deprecated because it encourages usage of wc_add_notice. For the API we need to capture
 		 * notices and convert to exceptions instead.
 		 *
+		 * @since 7.2.0
+		 *
 		 * @deprecated
 		 * @param boolean $passed_validation True if the item passed validation.
 		 * @param integer $product_id Product ID being validated.
@@ -287,6 +307,8 @@ class CartController {
 		 *
 		 * Fire action to validate add to cart. Functions hooking into this should throw an \Exception to prevent
 		 * add to cart from happening.
+		 *
+		 * @since 7.1.0
 		 *
 		 * @param \WC_Product $product Product object being added to the cart.
 		 * @param array       $request Add to cart request params including id, quantity, and variation attributes.
@@ -399,6 +421,8 @@ class CartController {
 		 *
 		 * Functions hooking into this should add custom errors using the provided WP_Error instance.
 		 *
+		 * @since 7.2.0
+		 *
 		 * @example See docs/examples/validate-cart.md
 		 *
 		 * @param \WP_Error $errors  WP_Error object.
@@ -424,6 +448,8 @@ class CartController {
 		 * Allow 3rd parties to validate cart items. This is a legacy hook from Woo core.
 		 * This filter will be deprecated because it encourages usage of wc_add_notice. For the API we need to capture
 		 * notices and convert to wp errors instead.
+		 *
+		 * @since 7.2.0
 		 *
 		 * @deprecated
 		 * @internal Matches action name in WooCommerce core.
@@ -627,6 +653,8 @@ class CartController {
 		 * Fire action to validate add to cart. Functions hooking into this should throw an \Exception to prevent
 		 * add to cart from occurring.
 		 *
+		 * @since 7.1.0
+		 *
 		 * @param \WC_Product $product Product object being added to the cart.
 		 * @param array       $cart_item Cart item array.
 		 */
@@ -803,7 +831,9 @@ class CartController {
 			);
 		}
 
-		return $calculate_rates ? wc()->shipping()->calculate_shipping( $packages ) : $packages;
+		$packages = $calculate_rates ? wc()->shipping()->calculate_shipping( $packages ) : $packages;
+
+		return $packages;
 	}
 
 	/**
@@ -817,6 +847,8 @@ class CartController {
 		/**
 		 * Filters the shipping package name.
 		 *
+		 * @since 4.3.0
+		 *
 		 * @internal Matches filter name in WooCommerce core.
 		 *
 		 * @param string $shipping_package_name Shipping package name.
@@ -829,10 +861,10 @@ class CartController {
 			$index > 1 ?
 				sprintf(
 					/* translators: %d: shipping package number */
-					_x( 'Shipping method %d', 'shipping packages', 'woo-gutenberg-products-block' ),
+					_x( 'Shipment %d', 'shipping packages', 'woo-gutenberg-products-block' ),
 					$index
 				) :
-				_x( 'Shipping method', 'shipping packages', 'woo-gutenberg-products-block' ),
+				_x( 'Shipment 1', 'shipping packages', 'woo-gutenberg-products-block' ),
 			$package['package_id'],
 			$package
 		);
@@ -914,6 +946,8 @@ class CartController {
 			/**
 			 * Filters if a coupon can be applied alongside other individual use coupons.
 			 *
+			 * @since 2.6.0
+			 *
 			 * @internal Matches filter name in WooCommerce core.
 			 *
 			 * @param boolean $apply_with_individual_use_coupon Defaults to false.
@@ -939,6 +973,8 @@ class CartController {
 			/**
 			 * Filter coupons to remove when applying an individual use coupon.
 			 *
+			 * @since 2.6.0
+			 *
 			 * @internal Matches filter name in WooCommerce core.
 			 *
 			 * @param array $coupons Array of coupons to remove from the cart.
@@ -960,6 +996,8 @@ class CartController {
 
 		/**
 		 * Fires after a coupon has been applied to the cart.
+		 *
+		 * @since 2.6.0
 		 *
 		 * @internal Matches action name in WooCommerce core.
 		 *
@@ -1100,6 +1138,8 @@ class CartController {
 		/**
 		 * Filter cart item data for add to cart requests.
 		 *
+		 * @since 2.5.0
+		 *
 		 * @internal Matches filter name in WooCommerce core.
 		 *
 		 * @param array $cart_item_data Array of other cart item data.
@@ -1119,6 +1159,8 @@ class CartController {
 		if ( $product->is_sold_individually() ) {
 			/**
 			 * Filter sold individually quantity for add to cart requests.
+			 *
+			 * @since 2.5.0
 			 *
 			 * @internal Matches filter name in WooCommerce core.
 			 *
@@ -1194,6 +1236,11 @@ class CartController {
 				);
 			}
 
+			// Fills request array with unspecified attributes that have default values. This ensures the variation always has full data.
+			if ( '' !== $expected_value && ! isset( $request['variation'][ wc_variation_attribute_name( $attribute['name'] ) ] ) ) {
+				$request['variation'][ wc_variation_attribute_name( $attribute['name'] ) ] = $expected_value;
+			}
+
 			// If no attribute was posted, only error if the variation has an 'any' attribute which requires a value.
 			if ( '' === $expected_value ) {
 				$missing_attributes[] = $attribute_label;
@@ -1208,6 +1255,8 @@ class CartController {
 				400
 			);
 		}
+
+		ksort( $request['variation'] );
 
 		return $request;
 	}

@@ -64,11 +64,15 @@ class Cart extends AbstractBlock {
 	protected function enqueue_assets( array $attributes ) {
 		/**
 		 * Fires before cart block scripts are enqueued.
+		 *
+		 * @since 2.6.0
 		 */
 		do_action( 'woocommerce_blocks_enqueue_cart_block_scripts_before' );
 		parent::enqueue_assets( $attributes );
 		/**
 		 * Fires after cart block scripts are enqueued.
+		 *
+		 * @since 2.6.0
 		 */
 		do_action( 'woocommerce_blocks_enqueue_cart_block_scripts_after' );
 	}
@@ -76,11 +80,12 @@ class Cart extends AbstractBlock {
 	/**
 	 * Append frontend scripts when rendering the Cart block.
 	 *
-	 * @param array  $attributes Block attributes.
-	 * @param string $content    Block content.
+	 * @param array    $attributes Block attributes.
+	 * @param string   $content    Block content.
+	 * @param WP_Block $block      Block instance.
 	 * @return string Rendered block type output.
 	 */
-	protected function render( $attributes, $content ) {
+	protected function render( $attributes, $content, $block ) {
 		// Deregister core cart scripts and styles.
 		wp_dequeue_script( 'wc-cart' );
 		wp_dequeue_script( 'wc-password-strength-meter' );
@@ -93,7 +98,7 @@ class Cart extends AbstractBlock {
 		 * The blocks used for testing should be always available in the block (not removable by the user).
 		 */
 
-		$regex_for_filled_cart_block = '/<div[\n\r\s\ta-zA-Z0-9_\-=\'"]*data-block-name="woocommerce\/filled-cart-block"[\n\r\s\ta-zA-Z0-9_\-=\'"]*>/mi';
+		$regex_for_filled_cart_block = '/<div[^<]*?data-block-name="woocommerce\/filled-cart-block"[^>]*?>/mi';
 		// Filled Cart block was added in i2, so we search for it to see if we have a Cart i1 template.
 		$has_i1_template = ! preg_match( $regex_for_filled_cart_block, $content );
 
@@ -135,8 +140,8 @@ class Cart extends AbstractBlock {
 			<div data-block-name="woocommerce/cart-order-summary-taxes-block" class="wp-block-woocommerce-cart-order-summary-taxes-block"></div>
 		';
 		// Order summary subtotal block was added in i3, so we search for it to see if we have a Cart i2 template.
-		$regex_for_order_summary_subtotal = '/<div[\n\r\s\ta-zA-Z0-9_\-=\'"]*data-block-name="woocommerce\/cart-order-summary-subtotal-block"[\n\r\s\ta-zA-Z0-9_\-=\'"]*>/mi';
-		$regex_for_order_summary          = '/<div[\n\r\s\ta-zA-Z0-9_\-=\'"]*data-block-name="woocommerce\/cart-order-summary-block"[\n\r\s\ta-zA-Z0-9_\-=\'"]*>/mi';
+		$regex_for_order_summary_subtotal = '/<div[^<]*?data-block-name="woocommerce\/cart-order-summary-subtotal-block"[^>]*?>/mi';
+		$regex_for_order_summary          = '/<div[^<]*?data-block-name="woocommerce\/cart-order-summary-block"[^>]*?>/mi';
 		$has_i2_template                  = ! preg_match( $regex_for_order_summary_subtotal, $content );
 
 		if ( $has_i2_template ) {
@@ -155,21 +160,23 @@ class Cart extends AbstractBlock {
 	 */
 	protected function enqueue_data( array $attributes = [] ) {
 		parent::enqueue_data( $attributes );
+		if ( wc_shipping_enabled() ) {
+			$this->asset_data_registry->add(
+				'shippingCountries',
+				function() {
+					return $this->deep_sort_with_accents( WC()->countries->get_shipping_countries() );
+				},
+				true
+			);
+			$this->asset_data_registry->add(
+				'shippingStates',
+				function() {
+					return $this->deep_sort_with_accents( WC()->countries->get_shipping_country_states() );
+				},
+				true
+			);
+		}
 
-		$this->asset_data_registry->add(
-			'shippingCountries',
-			function() {
-				return $this->deep_sort_with_accents( WC()->countries->get_shipping_countries() );
-			},
-			true
-		);
-		$this->asset_data_registry->add(
-			'shippingStates',
-			function() {
-				return $this->deep_sort_with_accents( WC()->countries->get_shipping_country_states() );
-			},
-			true
-		);
 		$this->asset_data_registry->add(
 			'countryLocale',
 			function() {
@@ -204,6 +211,8 @@ class Cart extends AbstractBlock {
 
 		/**
 		 * Fires after cart block data is registered.
+		 *
+		 * @since 2.6.0
 		 */
 		do_action( 'woocommerce_blocks_cart_enqueue_data' );
 	}
@@ -219,11 +228,15 @@ class Cart extends AbstractBlock {
 			return $array;
 		}
 
-		if ( is_array( reset( $array ) ) ) {
-			return array_map( [ $this, 'deep_sort_with_accents' ], $array );
-		}
+		$array_without_accents = array_map(
+			function( $value ) {
+				return is_array( $value )
+					? $this->deep_sort_with_accents( $value )
+					: remove_accents( wc_strtolower( html_entity_decode( $value ) ) );
+			},
+			$array
+		);
 
-		$array_without_accents = array_map( 'remove_accents', array_map( 'wc_strtolower', array_map( 'html_entity_decode', $array ) ) );
 		asort( $array_without_accents );
 		return array_replace( $array_without_accents, $array );
 	}
@@ -243,8 +256,8 @@ class Cart extends AbstractBlock {
 		parent::register_block_type_assets();
 		$chunks        = $this->get_chunks_paths( $this->chunks_folder );
 		$vendor_chunks = $this->get_chunks_paths( 'vendors--cart-blocks' );
-
-		$this->register_chunk_translations( array_merge( $chunks, $vendor_chunks ) );
+		$shared_chunks = [];
+		$this->register_chunk_translations( array_merge( $chunks, $vendor_chunks, $shared_chunks ) );
 	}
 
 	/**
@@ -253,28 +266,26 @@ class Cart extends AbstractBlock {
 	 * @return array;
 	 */
 	public static function get_cart_block_types() {
-		$block_types = [];
-
-		if ( Package::feature()->is_feature_plugin_build() ) {
-			$block_types[] = 'Cart';
-			$block_types[] = 'CartOrderSummaryTaxesBlock';
-			$block_types[] = 'CartOrderSummarySubtotalBlock';
-			$block_types[] = 'FilledCartBlock';
-			$block_types[] = 'EmptyCartBlock';
-			$block_types[] = 'CartTotalsBlock';
-			$block_types[] = 'CartItemsBlock';
-			$block_types[] = 'CartLineItemsBlock';
-			$block_types[] = 'CartOrderSummaryBlock';
-			$block_types[] = 'CartExpressPaymentBlock';
-			$block_types[] = 'ProceedToCheckoutBlock';
-			$block_types[] = 'CartAcceptedPaymentMethodsBlock';
-			$block_types[] = 'CartOrderSummaryCouponFormBlock';
-			$block_types[] = 'CartOrderSummaryDiscountBlock';
-			$block_types[] = 'CartOrderSummaryFeeBlock';
-			$block_types[] = 'CartOrderSummaryHeadingBlock';
-			$block_types[] = 'CartOrderSummaryShippingBlock';
-		}
-
-		return $block_types;
+		return [
+			'Cart',
+			'CartOrderSummaryTaxesBlock',
+			'CartOrderSummarySubtotalBlock',
+			'FilledCartBlock',
+			'EmptyCartBlock',
+			'CartTotalsBlock',
+			'CartItemsBlock',
+			'CartLineItemsBlock',
+			'CartOrderSummaryBlock',
+			'CartExpressPaymentBlock',
+			'ProceedToCheckoutBlock',
+			'CartAcceptedPaymentMethodsBlock',
+			'CartOrderSummaryCouponFormBlock',
+			'CartOrderSummaryDiscountBlock',
+			'CartOrderSummaryFeeBlock',
+			'CartOrderSummaryHeadingBlock',
+			'CartOrderSummaryShippingBlock',
+			'CartCrossSellsBlock',
+			'CartCrossSellsProductsBlock',
+		];
 	}
 }

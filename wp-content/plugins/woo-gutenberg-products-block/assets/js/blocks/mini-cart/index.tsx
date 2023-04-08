@@ -38,28 +38,35 @@ const settings: BlockConfiguration = {
 			fontSize: true,
 			...( isFeaturePluginBuild() && {
 				__experimentalFontFamily: true,
+				__experimentalFontWeight: true,
 			} ),
 		},
 	},
 	example: {
 		attributes: {
 			isPreview: true,
+			className: 'wc-block-mini-cart--preview',
 		},
 	},
 	attributes: {
 		isPreview: {
 			type: 'boolean',
 			default: false,
-			save: false,
 		},
 		addToCartBehaviour: {
 			type: 'string',
 			default: 'none',
 		},
+		hasHiddenPrice: {
+			type: 'boolean',
+			default: false,
+		},
+		cartAndCheckoutRenderStyle: {
+			type: 'string',
+			default: 'hidden',
+		},
 	},
-
 	edit,
-
 	save() {
 		return null;
 	},

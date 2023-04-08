@@ -3,7 +3,6 @@
 /**
  * External dependencies
  */
-import { ComponentType } from 'react';
 import { WP_REST_API_Category } from 'wp-types';
 import { __ } from '@wordpress/i18n';
 import {
@@ -22,6 +21,7 @@ import {
 	ExternalLink,
 } from '@wordpress/components';
 import { LooselyMustHave, ProductResponseItem } from '@woocommerce/types';
+import type { ComponentType } from 'react';
 
 /**
  * Internal dependencies
@@ -162,13 +162,13 @@ export const InspectorControls = ( {
 												} }
 											>
 												{ __(
-													'Choose “Cover” if you want the image to scale automatically to always fit its container.',
+													'Select “Cover” to have the image automatically fit its container.',
 													'woo-gutenberg-products-block'
 												) }
 											</span>
 											<span>
 												{ __(
-													'Note: by choosing “Cover” you will lose the ability to freely move the focal point precisely.',
+													'This may affect your ability to freely move the focal point of the image.',
 													'woo-gutenberg-products-block'
 												) }
 											</span>

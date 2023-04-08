@@ -2,20 +2,18 @@
  * External dependencies
  */
 import {
-	Block,
-	BlockEditProps,
-	createBlock,
 	getBlockType,
 	registerBlockType,
 	unregisterBlockType,
 } from '@wordpress/blocks';
+import type { BlockEditProps } from '@wordpress/blocks';
 import {
 	isExperimentalBuild,
 	WC_BLOCKS_IMAGE_URL,
 } from '@woocommerce/block-settings';
 import { useBlockProps } from '@wordpress/block-editor';
 import { Button, Placeholder } from '@wordpress/components';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { box, Icon } from '@wordpress/icons';
 import { select, useDispatch, subscribe } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
@@ -25,11 +23,38 @@ import { useEffect } from '@wordpress/element';
  */
 import './editor.scss';
 import './style.scss';
-import { BLOCK_SLUG, TEMPLATES } from './constants';
+import { BLOCK_SLUG, TEMPLATES, TYPES } from './constants';
+import {
+	isClassicTemplateBlockRegisteredWithAnotherTitle,
+	hasTemplateSupportForClassicTemplateBlock,
+	getTemplateDetailsBySlug,
+} from './utils';
+import {
+	blockifiedProductCatalogConfig,
+	blockifiedProductTaxonomyConfig,
+} from './archive-product';
+import * as blockifiedSingleProduct from './single-product';
+import * as blockifiedProductSearchResults from './product-search-results';
+import type { BlockifiedTemplateConfig } from './types';
 
 type Attributes = {
 	template: string;
 	align: string;
+};
+
+const blockifiedFallbackConfig = {
+	isConversionPossible: () => false,
+	getBlockifiedTemplate: () => [],
+	getDescription: () => '',
+	getButtonLabel: () => '',
+};
+
+const conversionConfig: { [ key: string ]: BlockifiedTemplateConfig } = {
+	[ TYPES.productCatalog ]: blockifiedProductCatalogConfig,
+	[ TYPES.productTaxonomy ]: blockifiedProductTaxonomyConfig,
+	[ TYPES.singleProduct ]: blockifiedSingleProduct,
+	[ TYPES.productSearchResults ]: blockifiedProductSearchResults,
+	fallback: blockifiedFallbackConfig,
 };
 
 const Edit = ( {
@@ -40,10 +65,13 @@ const Edit = ( {
 	const { replaceBlock } = useDispatch( 'core/block-editor' );
 
 	const blockProps = useBlockProps();
-	const templateTitle =
-		TEMPLATES[ attributes.template ]?.title ?? attributes.template;
-	const templatePlaceholder =
-		TEMPLATES[ attributes.template ]?.placeholder ?? 'fallback';
+	const templateDetails = getTemplateDetailsBySlug(
+		attributes.template,
+		TEMPLATES
+	);
+	const templateTitle = templateDetails?.title ?? attributes.template;
+	const templatePlaceholder = templateDetails?.placeholder ?? 'fallback';
+	const templateType = templateDetails?.type ?? 'fallback';
 
 	useEffect(
 		() =>
@@ -54,6 +82,16 @@ const Edit = ( {
 		[ attributes.align, attributes.template, setAttributes ]
 	);
 
+	const {
+		getBlockifiedTemplate,
+		isConversionPossible,
+		getDescription,
+		getButtonLabel,
+	} = conversionConfig[ templateType ];
+
+	const canConvert = isConversionPossible();
+	const placeholderDescription = getDescription( templateTitle, canConvert );
+
 	return (
 		<div { ...blockProps }>
 			<Placeholder
@@ -62,48 +100,20 @@ const Edit = ( {
 				className="wp-block-woocommerce-classic-template__placeholder"
 			>
 				<div className="wp-block-woocommerce-classic-template__placeholder-copy">
-					<p className="wp-block-woocommerce-classic-template__placeholder-warning">
-						<strong>
-							{ __(
-								'Attention: Do not remove this block!',
-								'woo-gutenberg-products-block'
-							) }
-						</strong>{ ' ' }
-						{ __(
-							'Removal will cause unintended effects on your store.',
-							'woo-gutenberg-products-block'
-						) }
-					</p>
-					<p>
-						{ sprintf(
-							/* translators: %s is the template title */
-							__(
-								'This is an editor placeholder for the %s. On your store this will be replaced by the template and display with your product image(s), title, price, etc. You can move this placeholder around and add further blocks around it to extend the template.',
-								'woo-gutenberg-products-block'
-							),
-							templateTitle
-						) }
-					</p>
+					<p>{ placeholderDescription }</p>
 				</div>
 				<div className="wp-block-woocommerce-classic-template__placeholder-wireframe">
-					{ isExperimentalBuild() && (
+					{ canConvert && (
 						<div className="wp-block-woocommerce-classic-template__placeholder-migration-button-container">
 							<Button
 								isPrimary
 								onClick={ () => {
 									replaceBlock(
 										clientId,
-										// TODO: Replace with the blockified version of the Product Grid Block when it will be available.
-										createBlock( 'core/paragraph', {
-											content:
-												'Instead of this block, the new Product Grid Block will be rendered',
-										} )
+										getBlockifiedTemplate( attributes )
 									);
 								} }
-								text={ __(
-									'Use the blockified Product Grid Block',
-									'woo-gutenberg-products-block'
-								) }
+								text={ getButtonLabel() }
 							/>
 						</div>
 					) }
@@ -117,8 +127,6 @@ const Edit = ( {
 		</div>
 	);
 };
-
-const templates = Object.keys( TEMPLATES );
 
 const registerClassicTemplateBlock = ( {
 	template,
@@ -136,12 +144,13 @@ const registerClassicTemplateBlock = ( {
 	 * See https://github.com/woocommerce/woocommerce-gutenberg-products-block/issues/5861 for more context
 	 */
 	registerBlockType( BLOCK_SLUG, {
-		title: template
-			? TEMPLATES[ template ].title
-			: __(
-					'WooCommerce Classic Template',
-					'woo-gutenberg-products-block'
-			  ),
+		title:
+			template && TEMPLATES[ template ]
+				? TEMPLATES[ template ].title
+				: __(
+						'WooCommerce Classic Template',
+						'woo-gutenberg-products-block'
+				  ),
 		icon: (
 			<Icon
 				icon={ box }
@@ -161,11 +170,6 @@ const registerClassicTemplateBlock = ( {
 			multiple: false,
 			reusable: false,
 			inserter,
-		},
-		example: {
-			attributes: {
-				isPreview: true,
-			},
 		},
 		attributes: {
 			/**
@@ -202,15 +206,6 @@ const registerClassicTemplateBlock = ( {
 	} );
 };
 
-const isClassicTemplateBlockRegisteredWithAnotherTitle = (
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	block: Block< any > | undefined,
-	parsedTemplate: string
-) => block?.title !== TEMPLATES[ parsedTemplate ].title;
-
-const hasTemplateSupportForClassicTemplateBlock = ( parsedTemplate: string ) =>
-	templates.includes( parsedTemplate );
-
 // @todo Refactor when there will be possible to show a block according on a template/post with a Gutenberg API. https://github.com/WordPress/gutenberg/pull/41718
 
 let currentTemplateId: string | undefined;
@@ -235,7 +230,10 @@ if ( isExperimentalBuild() ) {
 
 		if (
 			block !== undefined &&
-			( ! hasTemplateSupportForClassicTemplateBlock( parsedTemplate ) ||
+			( ! hasTemplateSupportForClassicTemplateBlock(
+				parsedTemplate,
+				TEMPLATES
+			) ||
 				isClassicTemplateBlockRegisteredWithAnotherTitle(
 					block,
 					parsedTemplate
@@ -248,7 +246,10 @@ if ( isExperimentalBuild() ) {
 
 		if (
 			block === undefined &&
-			hasTemplateSupportForClassicTemplateBlock( parsedTemplate )
+			hasTemplateSupportForClassicTemplateBlock(
+				parsedTemplate,
+				TEMPLATES
+			)
 		) {
 			registerClassicTemplateBlock( {
 				template: parsedTemplate,

@@ -2,7 +2,11 @@
  * External dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import { usePrevious, useShallowEqual } from '@woocommerce/base-hooks';
+import {
+	usePrevious,
+	useShallowEqual,
+	useBorderProps,
+} from '@woocommerce/base-hooks';
 import {
 	useCollection,
 	useQueryStateByKey,
@@ -10,12 +14,11 @@ import {
 	useCollectionData,
 } from '@woocommerce/base-context/hooks';
 import { useCallback, useEffect, useState, useMemo } from '@wordpress/element';
-import CheckboxList from '@woocommerce/base-components/checkbox-list';
 import Label from '@woocommerce/base-components/filter-element-label';
+import FilterResetButton from '@woocommerce/base-components/filter-reset-button';
 import FilterSubmitButton from '@woocommerce/base-components/filter-submit-button';
 import isShallowEqual from '@wordpress/is-shallow-equal';
 import { decodeEntities } from '@wordpress/html-entities';
-import { Notice } from 'wordpress-components';
 import { getSettingWithCoercion } from '@woocommerce/settings';
 import { getQueryArgs, removeQueryArgs } from '@wordpress/url';
 import {
@@ -25,6 +28,7 @@ import {
 	isString,
 	objectHasProp,
 } from '@woocommerce/types';
+import { Icon, chevronDown } from '@wordpress/icons';
 import {
 	changeUrl,
 	PREFIX_QUERY_ARG_FILTER_TYPE,
@@ -32,7 +36,8 @@ import {
 } from '@woocommerce/utils';
 import { difference } from 'lodash';
 import FormTokenField from '@woocommerce/base-components/form-token-field';
-import classNames from 'classnames';
+import FilterTitlePlaceholder from '@woocommerce/base-components/filter-placeholder';
+import classnames from 'classnames';
 
 /**
  * Internal dependencies
@@ -40,7 +45,6 @@ import classNames from 'classnames';
 import { getAttributeFromID } from '../../utils/attributes';
 import { updateAttributeFilter } from '../../utils/attributes-query';
 import { previewAttributeObject, previewOptions } from './preview';
-import { useBorderProps } from '../../hooks/style-attributes';
 import './style.scss';
 import {
 	formatParams,
@@ -49,31 +53,28 @@ import {
 	isQueryArgsEqual,
 	parseTaxonomyToGenerateURL,
 	formatSlug,
+	generateUniqueId,
 } from './utils';
-import { BlockAttributes, DisplayOption } from './types';
-
-/**
- * Formats filter values into a string for the URL parameters needed for filtering PHP templates.
- *
- * @param {string} url    Current page URL.
- * @param {Array}  params Parameters and their constraints.
- *
- * @return {string}       New URL with query parameters in it.
- */
+import { BlockAttributes, DisplayOption, GetNotice } from './types';
+import CheckboxFilter from './checkbox-filter';
+import { useSetWraperVisibility } from '../filter-wrapper/context';
 
 /**
  * Component displaying an attribute filter.
  *
  * @param {Object}  props            Incoming props for the component.
  * @param {Object}  props.attributes Incoming block attributes.
- * @param {boolean} props.isEditor
+ * @param {boolean} props.isEditor   Whether the component is being rendered in the editor.
+ * @param {boolean} props.getNotice  Get notice content if in editor.
  */
 const AttributeFilterBlock = ( {
 	attributes: blockAttributes,
 	isEditor = false,
+	getNotice = () => null,
 }: {
 	attributes: BlockAttributes;
 	isEditor?: boolean;
+	getNotice?: GetNotice;
 } ) => {
 	const hasFilterableProducts = getSettingWithCoercion(
 		'has_filterable_products',
@@ -93,6 +94,10 @@ const AttributeFilterBlock = ( {
 		isString
 	);
 
+	const productIds = isEditor
+		? []
+		: getSettingWithCoercion( 'product_ids', [], Array.isArray );
+
 	const [ hasSetFilterDefaultsFromUrl, setHasSetFilterDefaultsFromUrl ] =
 		useState( false );
 
@@ -107,6 +112,13 @@ const AttributeFilterBlock = ( {
 	);
 
 	const [ checked, setChecked ] = useState( initialFilters );
+
+	/*
+		FormTokenField forces the dropdown to reopen on reset, so we create a unique ID to use as the components key.
+		This will force the component to remount on reset when we change this value.
+		More info: https://github.com/woocommerce/woocommerce-blocks/pull/6920#issuecomment-1222402482
+	 */
+	const [ remountKey, setRemountKey ] = useState( generateUniqueId() );
 
 	const [ displayedOptions, setDisplayedOptions ] = useState<
 		DisplayOption[]
@@ -143,6 +155,8 @@ const AttributeFilterBlock = ( {
 				...queryState,
 				attributes: filterAvailableTerms ? queryState.attributes : null,
 			},
+			productIds,
+			isEditor,
 		} );
 
 	/**
@@ -224,6 +238,7 @@ const AttributeFilterBlock = ( {
 			.filter( ( option ): option is DisplayOption => !! option );
 
 		setDisplayedOptions( newOptions );
+		setRemountKey( generateUniqueId() );
 	}, [
 		attributeObject?.taxonomy,
 		attributeTerms,
@@ -261,6 +276,13 @@ const AttributeFilterBlock = ( {
 	 */
 	const updateFilterUrl = useCallback(
 		( query, allFiltersRemoved = false ) => {
+			query = query.map( ( item: AttributeQuery ) => ( {
+				...item,
+				slug: item.slug.map( ( slug: string ) =>
+					decodeURIComponent( slug )
+				),
+			} ) );
+
 			if ( allFiltersRemoved ) {
 				if ( ! attributeObject?.taxonomy ) {
 					return;
@@ -428,7 +450,7 @@ const AttributeFilterBlock = ( {
 	] );
 
 	/**
-	 * Try get the current attribute filter from the URl.
+	 * Try to get the current attribute filter from the URl.
 	 */
 	useEffect( () => {
 		if ( hasSetFilterDefaultsFromUrl || attributeTermsLoading ) {
@@ -453,164 +475,220 @@ const AttributeFilterBlock = ( {
 		filteringForPhpTemplate,
 	] );
 
+	const setWrapperVisibility = useSetWraperVisibility();
+
 	if ( ! hasFilterableProducts ) {
+		setWrapperVisibility( false );
 		return null;
 	}
 
 	// Short-circuit if no attribute is selected.
 	if ( ! attributeObject ) {
 		if ( isEditor ) {
-			return (
-				<Notice status="warning" isDismissible={ false }>
-					<p>
-						{ __(
-							'Please select an attribute to use this filter!',
-							'woo-gutenberg-products-block'
-						) }
-					</p>
-				</Notice>
-			);
+			return getNotice( 'noAttributes' );
 		}
+		setWrapperVisibility( false );
 		return null;
 	}
 
 	if ( displayedOptions.length === 0 && ! attributeTermsLoading ) {
 		if ( isEditor ) {
-			return (
-				<Notice status="warning" isDismissible={ false }>
-					<p>
-						{ __(
-							'The selected attribute does not have any term assigned to products.',
-							'woo-gutenberg-products-block'
-						) }
-					</p>
-				</Notice>
-			);
+			return getNotice( 'noProducts' );
 		}
-		return null;
 	}
 
 	const TagName =
 		`h${ blockAttributes.headingLevel }` as keyof JSX.IntrinsicElements;
-	const isLoading = ! blockAttributes.isPreview && attributeTermsLoading;
-	const isDisabled = ! blockAttributes.isPreview && filteredCountsLoading;
+	const termsLoading = ! blockAttributes.isPreview && attributeTermsLoading;
+	const countsLoading = ! blockAttributes.isPreview && filteredCountsLoading;
+
+	const isLoading =
+		( termsLoading || countsLoading ) && displayedOptions.length === 0;
+
+	if ( ! isLoading && displayedOptions.length === 0 ) {
+		setWrapperVisibility( false );
+		return null;
+	}
+
+	const showChevron = multiple
+		? ! isLoading && checked.length < displayedOptions.length
+		: ! isLoading && checked.length === 0;
+
+	const heading = (
+		<TagName className="wc-block-attribute-filter__title">
+			{ blockAttributes.heading }
+		</TagName>
+	);
+
+	const filterHeading = isLoading ? (
+		<FilterTitlePlaceholder>{ heading }</FilterTitlePlaceholder>
+	) : (
+		heading
+	);
+
+	setWrapperVisibility( true );
+
+	const getIsApplyButtonDisabled = () => {
+		if ( termsLoading || countsLoading ) {
+			return true;
+		}
+
+		const activeFilters = getActiveFilters( attributeObject );
+		if ( activeFilters.length === checked.length ) {
+			return checked.every( ( value ) =>
+				activeFilters.includes( value )
+			);
+		}
+
+		return false;
+	};
 
 	return (
 		<>
-			{ ! isEditor &&
-				blockAttributes.heading &&
-				displayedOptions.length > 0 && (
-					<TagName className="wc-block-attribute-filter__title">
-						{ blockAttributes.heading }
-					</TagName>
-				) }
+			{ ! isEditor && blockAttributes.heading && filterHeading }
 			<div
-				className={ `wc-block-attribute-filter style-${ blockAttributes.displayStyle }` }
+				className={ classnames(
+					'wc-block-attribute-filter',
+					`style-${ blockAttributes.displayStyle }`
+				) }
 			>
 				{ blockAttributes.displayStyle === 'dropdown' ? (
-					<FormTokenField
-						className={ classNames( borderProps.className, {
-							'single-selection': ! multiple,
-						} ) }
-						style={ { ...borderProps.style, borderStyle: 'none' } }
-						suggestions={ displayedOptions
-							.filter(
-								( option ) => ! checked.includes( option.value )
-							)
-							.map( ( option ) => option.formattedValue ) }
-						disabled={ isDisabled }
-						placeholder={ sprintf(
-							/* translators: %s attribute name. */
-							__( 'Any %s', 'woo-gutenberg-products-block' ),
-							attributeObject.label
-						) }
-						onChange={ ( tokens: string[] ) => {
-							if ( ! multiple && tokens.length > 1 ) {
-								tokens = [ tokens[ tokens.length - 1 ] ];
-							}
-
-							tokens = tokens.map( ( token ) => {
-								const displayOption = displayedOptions.find(
+					<>
+						<FormTokenField
+							key={ remountKey }
+							className={ classnames( borderProps.className, {
+								'single-selection': ! multiple,
+								'is-loading': isLoading,
+							} ) }
+							style={ {
+								...borderProps.style,
+								borderStyle: 'none',
+							} }
+							suggestions={ displayedOptions
+								.filter(
 									( option ) =>
-										option.formattedValue === token
+										! checked.includes( option.value )
+								)
+								.map( ( option ) => option.formattedValue ) }
+							disabled={ isLoading }
+							placeholder={ sprintf(
+								/* translators: %s attribute name. */
+								__(
+									'Select %s',
+									'woo-gutenberg-products-block'
+								),
+								attributeObject.label
+							) }
+							onChange={ ( tokens: string[] ) => {
+								if ( ! multiple && tokens.length > 1 ) {
+									tokens = [ tokens[ tokens.length - 1 ] ];
+								}
+
+								tokens = tokens.map( ( token ) => {
+									const displayOption = displayedOptions.find(
+										( option ) =>
+											option.formattedValue === token
+									);
+
+									return displayOption
+										? displayOption.value
+										: token;
+								} );
+
+								const added = difference( tokens, checked );
+
+								if ( added.length === 1 ) {
+									return onChange( added[ 0 ] );
+								}
+
+								const removed = difference( checked, tokens );
+								if ( removed.length === 1 ) {
+									onChange( removed[ 0 ] );
+								}
+							} }
+							value={ checked }
+							displayTransform={ ( value: string ) => {
+								const result = displayedOptions.find(
+									( option ) =>
+										[
+											option.value,
+											option.formattedValue,
+										].includes( value )
 								);
-
-								return displayOption
-									? displayOption.value
-									: token;
-							} );
-
-							const added = difference( tokens, checked );
-
-							if ( added.length === 1 ) {
-								return onChange( added[ 0 ] );
-							}
-
-							const removed = difference( checked, tokens );
-							if ( removed.length === 1 ) {
-								onChange( removed[ 0 ] );
-							}
-						} }
-						value={ checked }
-						displayTransform={ ( value: string ) => {
-							const result = displayedOptions.find( ( option ) =>
-								[
-									option.value,
-									option.formattedValue,
-								].includes( value )
-							);
-							return result ? result.textLabel : value;
-						} }
-						saveTransform={ formatSlug }
-						messages={ {
-							added: sprintf(
-								/* translators: %s is the attribute label. */
-								__(
-									'%s filter added.',
-									'woo-gutenberg-products-block'
+								return result ? result.textLabel : value;
+							} }
+							saveTransform={ formatSlug }
+							messages={ {
+								added: sprintf(
+									/* translators: %s is the attribute label. */
+									__(
+										'%s filter added.',
+										'woo-gutenberg-products-block'
+									),
+									attributeObject.label
 								),
-								attributeObject.label
-							),
-							removed: sprintf(
-								/* translators: %s is the attribute label. */
-								__(
-									'%s filter removed.',
-									'woo-gutenberg-products-block'
+								removed: sprintf(
+									/* translators: %s is the attribute label. */
+									__(
+										'%s filter removed.',
+										'woo-gutenberg-products-block'
+									),
+									attributeObject.label
 								),
-								attributeObject.label
-							),
-							remove: sprintf(
-								/* translators: %s is the attribute label. */
-								__(
-									'Remove %s filter.',
-									'woo-gutenberg-products-block'
+								remove: sprintf(
+									/* translators: %s is the attribute label. */
+									__(
+										'Remove %s filter.',
+										'woo-gutenberg-products-block'
+									),
+									attributeObject.label.toLocaleLowerCase()
 								),
-								attributeObject.label.toLocaleLowerCase()
-							),
-							__experimentalInvalid: sprintf(
-								/* translators: %s is the attribute label. */
-								__(
-									'Invalid %s filter.',
-									'woo-gutenberg-products-block'
+								__experimentalInvalid: sprintf(
+									/* translators: %s is the attribute label. */
+									__(
+										'Invalid %s filter.',
+										'woo-gutenberg-products-block'
+									),
+									attributeObject.label.toLocaleLowerCase()
 								),
-								attributeObject.label.toLocaleLowerCase()
-							),
-						} }
-					/>
+							} }
+						/>
+						{ showChevron && (
+							<Icon icon={ chevronDown } size={ 30 } />
+						) }
+					</>
 				) : (
-					<CheckboxList
-						className={ 'wc-block-attribute-filter-list' }
+					<CheckboxFilter
 						options={ displayedOptions }
 						checked={ checked }
 						onChange={ onChange }
 						isLoading={ isLoading }
-						isDisabled={ isDisabled }
+						isDisabled={ isLoading }
+					/>
+				) }
+			</div>
+
+			<div className="wc-block-attribute-filter__actions">
+				{ ( checked.length > 0 || isEditor ) && ! isLoading && (
+					<FilterResetButton
+						onClick={ () => {
+							setChecked( [] );
+							setRemountKey( generateUniqueId() );
+							if ( hasSetFilterDefaultsFromUrl ) {
+								onSubmit( [] );
+							}
+						} }
+						screenReaderLabel={ __(
+							'Reset attribute filter',
+							'woo-gutenberg-products-block'
+						) }
 					/>
 				) }
 				{ blockAttributes.showFilterButton && (
 					<FilterSubmitButton
 						className="wc-block-attribute-filter__button"
-						disabled={ isLoading || isDisabled }
+						isLoading={ isLoading }
+						disabled={ getIsApplyButtonDisabled() }
 						onClick={ () => onSubmit( checked ) }
 					/>
 				) }

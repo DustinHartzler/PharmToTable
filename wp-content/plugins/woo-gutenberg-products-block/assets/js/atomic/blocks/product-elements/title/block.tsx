@@ -2,7 +2,6 @@
  * External dependencies
  */
 import classnames from 'classnames';
-import { HTMLAttributes } from 'react';
 import {
 	useInnerBlockLayoutContext,
 	useProductDataContext,
@@ -11,17 +10,18 @@ import { isFeaturePluginBuild } from '@woocommerce/block-settings';
 import { withProductDataContext } from '@woocommerce/shared-hocs';
 import ProductName from '@woocommerce/base-components/product-name';
 import { useStoreEvents } from '@woocommerce/base-context/hooks';
+import {
+	useSpacingProps,
+	useTypographyProps,
+	useColorProps,
+} from '@woocommerce/base-hooks';
+import type { HTMLAttributes } from 'react';
 
 /**
  * Internal dependencies
  */
 import './style.scss';
 import { Attributes } from './types';
-import {
-	useSpacingProps,
-	useTypographyProps,
-	useColorProps,
-} from '../../../../hooks/style-attributes';
 
 type Props = Attributes & HTMLAttributes< HTMLDivElement >;
 

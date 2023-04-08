@@ -60,17 +60,6 @@ const Edit = ( {
 							'Show search field label',
 							'woo-gutenberg-products-block'
 						) }
-						help={
-							hasLabel
-								? __(
-										'Label is visible.',
-										'woo-gutenberg-products-block'
-								  )
-								: __(
-										'Label is hidden.',
-										'woo-gutenberg-products-block'
-								  )
-						}
 						checked={ hasLabel }
 						onChange={ () =>
 							setAttributes( { hasLabel: ! hasLabel } )
@@ -97,6 +86,7 @@ const Edit = ( {
 							onChange={ ( value ) =>
 								setAttributes( { label: value } )
 							}
+							style={ { backgroundColor: 'transparent' } }
 						/>
 					</>
 				) }
