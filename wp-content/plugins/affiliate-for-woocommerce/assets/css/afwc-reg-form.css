@@ -28,6 +28,9 @@
 .afwc_reg_loader, .afwc_reg_message {
 	display: none;
 }
+.afwc_reg_message.error {
+	color: #e2401c;
+}
 .afwc_reg_loader {
 	padding-left: 0.5em;
 	vertical-align: middle;

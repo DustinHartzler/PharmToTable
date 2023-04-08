@@ -1,5 +1,195 @@
 *** Affiliate For WooCommerce Changelog ***
 
+2023-04-07 - version 6.6.1
+* Update: Show/hide Lifetime commission exclude affiliates setting when enabling Lifetime commissions setting
+* Update: Add confirmation alert when linking same affiliate as lifetime customer [Admin]
+* Update: PayPal Payout migration notice link text [Admin]
+* Update: Placeholder for 'Search' input to 'Search & Filter' [Admin]
+* Update: Code improvements
+* Update: POT file
+
+2023-04-04 - version 6.6.0
+* New: Lifetime Commissions
+* New: Setting to credit first/last affiliate to set cookie
+* Fix: Coupon codes not showing if the discount amount is 0 in coupon under My Account > Affiliate > Profile [User]
+* Update: Code improvements
+* Update: POT file
+
+2023-03-24 - version 6.5.0
+* New: Declare Affiliate for WooCommerce compatible with High-Performance Order Storage (HPOS)
+* New: WooCommerce 7.1.1, 7.2.3, 7.3.0, 7.4.1, 7.5.1 compatible
+* New: WooCommerce Subscriptions 5.0.0 compatible
+* New: WooCommerce Subscriptions Core 5.5.0 compatible
+* New: Live update campaign URL when changing the Destination Link or Slug under Campaigns [Admin]
+* Fix: Dual slash added in Destination Link under Campaigns when "Pretty affiliate links" is enabled [Admin]
+* Fix: Forward slash not adding to the Referral URL generator when "Pretty affiliate links" is enabled [User]
+* Fix: Incorrect check for WooCommerce Subscriptions core version
+* Update: Design for an in-app review mechanism
+* Update: Remove support for WooCommerce version 3.6.7, 3.7.3, 3.8.3, 3.9.5
+* Update: Code improvements
+* Update: POT file
+
+2023-03-14 - version 6.4.0
+* New: Send a notification email to the affiliate after the registration form is submitted and their request to join the affiliate program is pending
+* Fix: Gross commissions, Net commissions, and Sales/Revenue KPI showing 0 in some cases
+* Update: Allow setting 100% for commission amount in percentage commission type [Admin]
+* Update: POT file
+
+2023-02-17 - version 6.3.1
+* New: Option 'afwc_show_registration_form_in_account' to show or hide the 'Register as an affiliate' tab from WooCommerce My Account
+* New: Show active plugin version in the footer for Affiliate pages [Admin]
+* Fix: Payout with incorrect currency if the selected currency is not matching with store currency [Admin]
+* Fix: Gross commission amount is not consistent between the Admin dashboard and My Account
+* Fix: Net commission amount is not consistent between the Admin dashboard and My Account
+* Update: POT file
+
+2023-02-06 - version 6.3.0
+* Fix: Storewide commission plan ID not saving in the order meta in some cases
+* Fix: Remaining products not calculating correctly for multi-tier if the plan is set to calculate with default commission for the remaining products
+* Fix: Switching subscription not assigning the order to the affiliate with WooCommerce Subscriptions
+* Developer: Filter 'afwc_id_for_order' to assign affiliate ID to an order
+* Update: Code improvements on commission calculation
+* Update: POT file
+
+2023-01-18 - version 6.2.0
+* New: 'Orders' tab is now 'Referrals' in the Affiliate Dashboard [Admin]
+* Fix: Multiple referrals of the same order incorrectly marked when paying commission or updating commission status for an affiliate [Admin]
+* Fix: Multiple referrals of the same order not showing after the commission payout of an affiliate [Admin]
+* Fix: KPIs showing 0 in some cases
+* Fix: Referral URL generator incorrectly generating URL if page URL has query strings and when "Pretty affiliate links" is enabled under My Account > Affiliate > Profile [User]
+* Update: Affiliate - Commission Paid email
+* Update: Remove usage of AFWC_OPTION_NAME_COLLATION constant
+* Update: Replace usage of deprecated substr
+* Update: Code improvements
+* Update: POT file
+
+2023-01-05 - version 6.1.1
+* Fix: PHP Fatal error: Maximum execution time exceeded in some cases when the Pretty affiliate links setting is enabled
+* Update: POT file
+
+2022-12-29 - version 6.1.0
+* New: Subscriptions from WooCommerce Payments compatibility (https://woocommerce.com/document/payments/subscriptions-basics/)
+* New: WooCommerce Subscriptions 4.0.0+ compatible
+* Fix: Commission amount in flat rate commission not multiplying for tier > 1 if an order has multiple products quantity [Multi-tier]
+* Fix: 'use default commission' under 'AND THEN, FOR REMAINING PRODUCTS IN THE ORDER...' not respecting storewide commission's plan type
+* Update: Remove support for WooCommerce Subscriptions version lower than 2.0.0
+* Update: POT file
+
+2022-12-17 - version 6.0.0
+* New: Pretty affiliate links
+* Fix: Tracking param name - if changed to something other than ref - not showing correct slug in Campaigns [Admin]
+* Fix: Alert not showing when changing tracking param name in settings in some cases
+* Update: Link label on My account > Affiliate > Campaigns [User]
+* Update: Remove usage of AFWC_PNAME constant
+* Update: Code improvements
+* Update: POT file
+
+2022-12-14 - version 5.11.0
+* Fix: Commission status automatically becomes paid when the order total is 0 and commission is present for the order
+* Fix: Negative amount in the affiliate revenue and total revenue for all refunded orders [Admin]
+* Developer: Action 'afwc_affiliate_approved' after an affiliate is approved
+* Developer: Filter 'afwc_commission_status_for_paid_orders' when order status changes to WooCommerce paid order statuses
+* Update: POT file
+
+2022-12-06 - version 5.10.0
+* New: WordPress 6.1.1 compatible
+* Fix: Commission plans not validating correctly if the product rule has parent variable product
+* Fix: Commission status not updating if the dashboard is translated [Admin]
+* Fix: HTML tags showing in the name in the commission plan's product rule [Admin]
+* Update: Translation for a few HTML attributes
+* Update: POT file
+
+2022-11-11 - version 5.9.0
+* Fix: Pages not found/Shop page not loading since the last update in some cases
+* Fix: WooCommerce Subscriptions renewal order assigned to parent affiliate instead of parent order's affiliate [Multi-tier]
+* Fix: Display breaking in case of multiple children in multi-tier tab [Admin]
+* Update: Search affiliate tags with a minimum of one character [Admin]
+* Update: Create affiliate tags with a minimum of one character from the user profile [Admin]
+* Update: Log entire PayPal request during failed payouts [Admin]
+* Update: POT file
+
+2022-11-04 - version 5.8.0
+* New: WordPress 6.1.0 compatible
+* New: Loader for commission actions bar in the orders tab in the affiliate dashboard [Admin]
+* Fix: Insert/edit link pop-up not showing in the campaigns visual editor [Admin]
+* Fix: Console error for logged-in users when Contact Form 7 is activated
+* Fix: Affiliate my account page link broken in Affiliate - Welcome Email when my account page is not set under WooCommerce > Settings > Advanced > Page setup > My account page
+* Update: Support for affiliate my account link if my account page is set as the home page
+* Update: Fallback affiliate my account to home page in Affiliate - Welcome Email if not set
+* Update: Visibility of commission actions bar in the orders tab in the affiliate dashboard [Admin]
+* Update: Loader for the tree in multi-tier tab in affiliate dashboard [Admin]
+* Update: Text updates for number of selected orders for payout in the orders tab in the affiliate dashboard [Admin]
+* Update: Text updates when no children are present in the multi-tier tab in the affiliate dashboard [Admin]
+* Update: Code improvements
+* Update: POT file
+* Developer: Filter 'afwc_myaccount_dashboard_url' in Affiliate - Welcome Email
+
+2022-10-18 - version 5.7.0
+* New: WooCommerce 7.0.0 compatible
+* New: Template for My Account > Affiliate > Profile [User]
+* Update: Replace store admin reference with affiliate manager in My Account > Affiliate > Profile [User]
+* Update: Code improvements
+* Update: POT file
+
+2022-10-11 - version 5.6.0
+* Fix: Shop page link broken in Affiliate - Welcome Email when shop page is not set under WooCommerce > Settings > Products > General > Shop page
+* Fix: Commission amount overwrites to commission type on plans in some cases [Admin]
+* Update: Hide a few fields for the logged-in user in Elementor and Contact Form 7 forms [User]
+* Update: Remove hidden fields value for the logged-in user in the affiliate registration form [User]
+* Update: POT file
+* Developer: Filter 'afwc_shop_url' in Affiliate - Welcome Email
+
+2022-09-30 - version 5.5.0
+* New: WooCommerce 6.9.4 compatible
+* New: Show campaign ID and status on campaigns dashboard [Admin]
+* New: Show plan ID and status on plans dashboard [Admin]
+* New: Loader for all tabs under affiliate dashboard [Admin]
+* Fix: Referral link, coupons and tags not aligned correctly if an affiliate has high number of coupons/tags in Profile tab [Admin]
+* Fix: fpassthru is disabled on some hosting (Flywheel) causing errors with export [Admin]
+* Fix: Only 5 coupons show if more than 5 coupons are assigned to the affiliate
+* Fix: Fatal error on the Affiliate - Commission Paid when previewing with Preview E-mails for WooCommerce (https://wordpress.org/plugins/woo-preview-emails/) plugin [Admin]
+* Fix: Fatal error on the Affiliate - New Conversion Received Email when previewing with Preview E-mails for WooCommerce (https://wordpress.org/plugins/woo-preview-emails/) plugin [Admin]
+* Fix: Fatal error on the Affiliate - Welcome Email when previewing with Preview E-mails for WooCommerce (https://wordpress.org/plugins/woo-preview-emails/) plugin [Admin]
+* Fix: Fatal error when showing the default storewide commission plan in Affiliate settings [PHP 8.1] [Admin]
+* Update: POT file
+
+2022-09-22 - version 5.4.0
+* New: WooCommerce 6.9.3 compatible
+* New: Create affiliate registration form with Contact Form 7 (https://wordpress.org/plugins/contact-form-7/)
+* New: Support for Elementor form builder's file upload field
+* New: Show affiliate's children chain in Multi-tier tab [Admin]
+* Fix: Website URL not updating when a previously rejected user tries signing up again for affiliate
+* Fix: Empty user fields showing with no values in additional data
+* Update: Website field label on registration received email
+* Update: New Affiliate Registration email
+* Update: POT file
+
+2022-09-17 - version 5.3.0
+* Fix: Date picker and load more not working in My Account > Affiliate > Reports if jQuery is loaded in the footer [User]
+* Update: POT file
+* Developer: Actions 'afwc_before_registration_form' and 'afwc_after_registration_form' on My Account > Register as an affiliate [User]
+
+2022-09-06 - version 5.2.0
+* New: WooCommerce 6.8.2 compatible
+* New: Tested up to WordPress 6.0.2
+* New: Create affiliate registration form with Elementor Form (https://elementor.com/features/form-builder/)
+* Fix: Skype ID not showing under user profile [Admin]
+* Update: Email address field validation for affiliate registration form
+* Update: Error message CSS for affiliate registration form
+* Update: New Affiliate Registration email
+* Update: Code improvements
+* Update: POT file
+
+2022-08-20 - version 5.1.0
+* New: WooCommerce 6.8.1 compatible
+* New: Strengthen security [Thanks to: Patchstack & Gennady Kovshenin]
+* Fix: Comma as decimal separator breaking Total Revenue KPI [Admin]
+* Fix: PHP notice: Undefined variable if PayPal payout fails [Admin]
+* Fix: Special characters in affiliate identifier breaking referral tracking [User]
+* Update: Remove usage of AFWC_AJAX_SECURITY constant
+* Update: Code improvements
+* Update: POT file
+
 2022-08-03 - version 5.0.0
 * New: WooCommerce 6.7.0 compatible
 * New: Performance optimization for affiliate dashboard [Admin]
@@ -17,7 +207,7 @@
 * Developer: Constant AFWC_PLUGIN_BASENAME
 
 2022-07-21 - version 4.12.0
-* New: [Smart Coupons](https://woocommerce.com/products/smart-coupons/) compatibility to bulk generate, import, export coupons for affiliates
+* New: Smart Coupons (https://woocommerce.com/products/smart-coupons/) compatibility to bulk generate, import, export coupons for affiliates
 * Update: Idea board link to feature request link
 * Update: Check user instance before calling user functions
 * Update: Code improvements
@@ -701,7 +891,7 @@
 
 2019-10-17 - version 1.1.0
 * New: Date filter under My Account > Affiliate area
-* New: [WooCommerce Subscriptions](https://woocommerce.com/products/woocommerce-subscriptions/?aff=5475) compatibility
+* New: WooCommerce Subscriptions (https://woocommerce.com/products/woocommerce-subscriptions/?aff=5475) compatibility
 * New: Setting to customize affiliate cookie length
 * New: [GDPR] Privacy Policy Content
 * New: [GDPR] Personal Data Export & Erase (WordPress 4.9.6+)

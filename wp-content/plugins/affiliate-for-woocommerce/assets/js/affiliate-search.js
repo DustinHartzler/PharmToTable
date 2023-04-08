@@ -53,14 +53,14 @@ jQuery(function( $ ){
 					return m;
 				},
 				ajax: {
-					url:         affiliate_params.ajaxurl,
+					url:         affiliateParams.ajaxurl,
 					dataType:    'json',
 					delay:       1000,
 					data:        function( params ) {
 						return {
 							term:     params.term || '',
 							action:   'afwc_json_search_affiliates',
-							security: affiliate_params.afwcSecurity || '',
+							security: affiliateParams.security || '',
 							exclude:  $( elem ).data( 'exclude' ) || []
 						};
 					},
@@ -86,7 +86,7 @@ jQuery(function( $ ){
 			return $( '#customer_user' ).length > 0 ? $( '#customer_user' ).val() : 0;
 		},
 		affiliateConfirmationAlert( e, customerId = 0, affiliateId = 0  ) {
-			if( ! customerId || ! affiliateId || ( true === Boolean( affiliate_params.allowSelfRefer) ) ) {
+			if( ! customerId || ! affiliateId || ( true === Boolean( affiliateParams.allowSelfRefer) ) ) {
 				return;
 			}
 			if( ( parseInt( customerId ) === parseInt( affiliateId ) ) && ( false === confirm( _x( 'Are you sure you want to set the affiliate same as the customer? This overrides the setting Affiliate self-refer.', 'self refer alert', 'affiliate-for-woocommerce' ) ) ) ) {

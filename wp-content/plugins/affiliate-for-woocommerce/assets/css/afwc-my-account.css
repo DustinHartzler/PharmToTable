@@ -386,48 +386,6 @@ thead, tbody tr {
 	color: white;
 	font-weight: 600;
 }
-/* Resources Tab */
-#afwc_referral_url_container{
-	margin-top: 1em;
-}
-#afwc_custom_referral_url_container {
-	margin-top: 2em;
-}
-#afwc_resources_wrapper,
-#afwc_payment_wrapper {
-	display: inline-block;
-	margin: 1em 0.5em;
-	width: 100%;
-}
-#afwc_resources_wrapper p,
-#afwc_payment_wrapper p {
-	position: relative;
-	width: 100%;
-	display: inline-block;
-}
-#afwc_resources_wrapper p input,
-#afwc_payment_wrapper p input {
-	width: 96%;
-}
-input#afwc_affiliate_link {
-	width: 12em !important;
-	height: 1.8em !important;
-	background: white !important;
-	box-shadow: none !important;
-}
-#afwc_resources_wrapper p #afwc_copy_affiliate_link {
-	z-index: 100;
-	position: absolute;
-	margin-left: -10.5%;
-}
-#afwc_resources_wrapper code {
-	cursor: pointer;
-	font-size: 0.8em;
-	display: initial !important;
-}
-#afwc_contact_admin_container {
-	margin-top: 1em;
-}
 /* Scrollbar */
 #afwc_dashboard_wrapper ::-webkit-scrollbar {
 	width: 0.7em;

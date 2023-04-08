@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.3.0
- * @version     1.2.0
+ * @version     1.2.2
  */
 
 // Exit if accessed directly.
@@ -42,12 +42,13 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 			// Email template location.
 			$this->template_html  = 'afwc-new-conversion.php';
 			$this->template_plain = 'plain/afwc-new-conversion.php';
+
 			// Use our plugin templates directory as the template base.
 			$this->template_base = AFWC_PLUGIN_DIRPATH . '/templates/';
 
 			$this->placeholders = array();
 
-			// Trigger on new conversion.
+			// Trigger this email on new conversion.
 			add_action( 'afwc_email_new_conversion_received', array( $this, 'trigger' ), 10, 1 );
 
 			// Call parent constructor to load any other defaults not explicity defined here.
@@ -75,20 +76,19 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 			// Set the locale to the store locale for customer emails to make sure emails are in the store language.
 			$this->setup_locale();
 
-			$affiliate_id = $this->email_args['affiliate_id'];
-			$user         = get_user_by( 'id', $affiliate_id );
-			if ( $user ) {
+			$affiliate_id = ! empty( $this->email_args['affiliate_id'] ) ? intval( $this->email_args['affiliate_id'] ) : 0;
+			$user         = ! empty( $affiliate_id ) ? get_user_by( 'id', $affiliate_id ) : null;
+			if ( $user instanceof WP_User && ! empty( $user->user_email ) ) {
 				$this->recipient = $user->user_email;
 			}
 
-			$user_info = get_userdata( $affiliate_id );
 			// TODO-MS: write a fallback logic if first name not found.
-			$this->email_args['user_name'] = $user_info->first_name;
+			$this->email_args['user_name'] = ( $user instanceof WP_User && ! empty( $user->first_name ) ) ? $user->first_name : '';
 
-			$order_id                                     = isset( $this->email_args['order_id'] ) ? $this->email_args['order_id'] : 0;
-			$order                                        = wc_get_order( $order_id );
-			$this->email_args['order_total']              = is_callable( array( $order, 'get_total' ) ) ? $order->get_total() : 0;
-			$this->email_args['order_customer_full_name'] = $order->get_formatted_billing_full_name();
+			$this->email_args['order_id']                 = ! empty( $this->email_args['order_id'] ) ? intval( $this->email_args['order_id'] ) : 0;
+			$order                                        = ! empty( $this->email_args['order_id'] ) ? wc_get_order( $this->email_args['order_id'] ) : null;
+			$this->email_args['order_total']              = ( $order instanceof WC_Order && is_callable( array( $order, 'get_total' ) ) ) ? $order->get_total() : 0;
+			$this->email_args['order_customer_full_name'] = ( $order instanceof WC_Order && is_callable( array( $order, 'get_formatted_billing_full_name' ) ) ) ? $order->get_formatted_billing_full_name() : '';
 			$this->email_args['order_commission_amount']  = ! empty( $this->email_args['order_commission_amount'] ) ? wc_format_decimal( $this->email_args['order_commission_amount'], wc_get_price_decimals() ) : 0.00;
 			$this->email_args['order_currency_symbol']    = ! empty( $this->email_args['currency_id'] ) ? get_woocommerce_currency_symbol( $this->email_args['currency_id'] ) : get_woocommerce_currency_symbol();
 			$this->email_args['affiliate_name']           = ! empty( $this->email_args['user_name'] ) ? $this->email_args['user_name'] : __( 'there', 'affiliate-for-woocommerce' );
@@ -97,7 +97,8 @@ if ( ! class_exists( 'AFWC_Email_New_Conversion_Received' ) ) {
 				'',
 				wc_get_page_permalink( 'myaccount' )
 			);
-			$this->email_args['order_customer_full_name'] = ! empty( $this->email_args['order_customer_full_name'] ) ? $this->email_args['order_customer_full_name'] : __( 'Guest', 'affiliate-for-woocommerce' );
+
+			$this->email_args['order_customer_full_name'] = ! empty( $this->email_args['order_customer_full_name'] ) ? $this->email_args['order_customer_full_name'] : _x( 'Guest', 'Guest user name', 'affiliate-for-woocommerce' );
 
 			// For any email placeholders.
 			$this->set_placeholders();

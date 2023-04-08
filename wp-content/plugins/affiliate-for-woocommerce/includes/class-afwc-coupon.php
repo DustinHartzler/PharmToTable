@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.7.0
- * @version     1.0.7
+ * @version     1.1.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 	class AFWC_Coupon {
 
 		/**
-		 * Variable to hold instance of AFWC_Admin_Notifications
+		 * Variable to hold instance of AFWC_Coupon
 		 *
 		 * @var $instance
 		 */
@@ -35,7 +35,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 			if ( is_admin() && 'yes' === $use_referral_coupons ) {
 				add_action( 'woocommerce_coupon_options', array( $this, 'affiliate_restriction' ), 10, 2 );
 			}
-			add_action( 'save_post', array( $this, 'handle_affiliate_coupon' ), 10, 2 );
+			add_action( 'woocommerce_coupon_options_save', array( $this, 'save_affiliate_coupon_fields' ), 10, 2 );
 
 			add_action( 'woocommerce_applied_coupon', array( $this, 'coupon_applied' ) );
 
@@ -46,7 +46,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		/**
 		 * Get single instance of this class
 		 *
-		 * @return AFWC_Admin_Affiliate_Users Singleton object of this class
+		 * @return AFWC_Coupon Singleton object of this class
 		 */
 		public static function get_instance() {
 			// Check if instance is already exists.
@@ -89,7 +89,7 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		 * @param int    $coupon_id The Coupon ID.
 		 * @param object $coupon The Coupon Object.
 		 */
-		public function affiliate_restriction( $coupon_id = 0, $coupon = null ) {
+		public function affiliate_restriction( $coupon_id = 0, $coupon ) {
 
 			if ( empty( $coupon_id ) ) {
 				return;
@@ -99,14 +99,23 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 			wp_register_script( 'affiliate-user-search', AFWC_PLUGIN_URL . '/assets/js/affiliate-search.js', array(), $plugin_data['Version'], true );
 			wp_enqueue_script( 'affiliate-user-search' );
 
-			$affiliate_params = array(
-				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
-				'afwcSecurity' => wp_create_nonce( 'afwc-search-affiliate-users' ),
+			wp_localize_script(
+				'affiliate-user-search',
+				'affiliateParams',
+				array(
+					'ajaxurl'  => admin_url( 'admin-ajax.php' ),
+					'security' => wp_create_nonce( 'afwc-search-affiliate-users' ),
+				)
 			);
-			wp_localize_script( 'affiliate-user-search', 'affiliate_params', $affiliate_params );
 
 			$user_string = '';
-			$user_id     = get_post_meta( $coupon_id, 'afwc_referral_coupon_of', true );
+
+			if ( ! empty( $coupon_id ) && ( empty( $coupon ) || ! is_object( $coupon ) || ! $coupon instanceof WC_Coupon ) ) {
+				$coupon = new WC_Coupon( $coupon_id );
+			}
+
+			$user_id = $coupon->get_meta( 'afwc_referral_coupon_of', true );
+
 			if ( ! empty( $user_id ) ) {
 				$user = get_user_by( 'id', $user_id );
 				if ( is_object( $user ) && $user instanceof WP_User ) {
@@ -141,83 +150,84 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 		}
 
 		/**
-		 * Function to handle affiliate coupon changes
+		 * Saves our custom coupon fields.
 		 *
-		 * @param int    $post_id The post id.
-		 * @param object $post The post object.
+		 * @param int    $coupon_id The coupon's ID.
+		 * @param object $coupon    The coupon's object.
 		 */
-		public function handle_affiliate_coupon( $post_id, $post ) {
-			if ( empty( $post_id ) || empty( $post ) || empty( $_POST ) ) {
-				return;
-			}
-			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-				return;
-			}
-			if ( is_int( wp_is_post_revision( $post ) ) ) {
-				return;
-			}
-			if ( is_int( wp_is_post_autosave( $post ) ) ) {
-				return;
-			}
+		public function save_affiliate_coupon_fields( $coupon_id = 0, $coupon ) {
+			// Verify the nonce.
 			if ( empty( $_POST['woocommerce_meta_nonce'] ) || ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['woocommerce_meta_nonce'] ) ), 'woocommerce_save_data' ) ) { // phpcs:ignore
 				return;
 			}
-			if ( ! current_user_can( 'edit_post', $post_id ) ) {
-				return;
-			}
-			if ( 'shop_coupon' !== $post->post_type ) {
+
+			if ( empty( $coupon_id ) ) {
 				return;
 			}
 
-			$affiliate_id = ( ! empty( $_POST['afwc_referral_coupon_of'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_referral_coupon_of'] ) ) : ''; // phpcs:ignore
-			if ( ! empty( $affiliate_id ) ) {
-				update_post_meta( $post_id, 'afwc_referral_coupon_of', $affiliate_id );
-			} else {
-				delete_post_meta( $post_id, 'afwc_referral_coupon_of' );
+			if ( empty( $coupon ) ) {
+				$coupon = new WC_Coupon( $coupon_id );
 			}
+			if ( ! $coupon instanceof WC_Coupon ) {
+				return;
+			}
+
+			$affiliate_id = ( ! empty( $_POST['afwc_referral_coupon_of'] ) ) ? wc_clean( wp_unslash( $_POST['afwc_referral_coupon_of'] ) ) : 0; // phpcs:ignore
+			if ( ! empty( $affiliate_id ) ) {
+				$coupon->update_meta_data( 'afwc_referral_coupon_of', $affiliate_id );
+			} else {
+				$coupon->delete_meta_data( 'afwc_referral_coupon_of' );
+			}
+			$coupon->save();
 		}
 
 		/**
-		 * Get referral coupon
+		 * Get referral coupon.
 		 *
 		 * @param  array $args The data.
-		 * @return array/string
+		 * @return array|string Return the array of referral coupons if user_id provided or return the coupon code if coupon id is provided.
 		 */
 		public function get_referral_coupon( $args = array() ) {
 
 			if ( empty( $args ) ) {
-				return false;
+				return array();
 			}
 
 			if ( ! empty( $args['user_id'] ) ) {
-				$params  = array(
-							'meta_key'    => 'afwc_referral_coupon_of', // phpcs:ignore
-							'meta_value'  => $args['user_id'], // phpcs:ignore
-							'post_type'   => 'shop_coupon',
-							'post_status' => 'publish',
-							'order'       => 'ASC',
+				$coupons = get_posts(
+					array(
+						'meta_key'    => 'afwc_referral_coupon_of', // phpcs:ignore
+						'meta_value'  => $args['user_id'], // phpcs:ignore
+						'post_type'   => 'shop_coupon',
+						'post_status' => 'publish',
+						'order'       => 'ASC',
+						'numberposts' => -1,
+					)
 				);
-				$coupons = get_posts( $params );
+
+				if ( empty( $coupons ) ) {
+					return array();
+				}
 
 				$coupons_list = array();
-				if ( ! empty( $coupons ) ) {
-					foreach ( $coupons as $coupon ) {
+
+				foreach ( $coupons as $coupon ) {
+					if ( ! empty( $coupon->ID ) && ! empty( $coupon->post_title ) ) {
 						$coupons_list[ $coupon->ID ] = $coupon->post_title;
 					}
 				}
+
 				return $coupons_list;
 			} elseif ( ! empty( $args['coupon_id'] ) ) {
-				$coupon      = new WC_Coupon( $args['coupon_id'] );
-				$coupon_code = ( is_object( $coupon ) && is_callable( array( $coupon, 'get_code' ) ) ) ? $coupon->get_code() : '';
-				return $coupon_code;
+				$coupon = new WC_Coupon( $args['coupon_id'] );
+				return ( is_object( $coupon ) && is_callable( array( $coupon, 'get_code' ) ) ) ? $coupon->get_code() : '';
 			}
 
-			return false;
-
+			return array();
 		}
 
 		/**
-		 * Handle hit if the referral coupon is applied
+		 * Handle hit if the referral coupon is applied.
 		 *
 		 * @param string $coupon_code The coupon code.
 		 */
@@ -227,13 +237,18 @@ if ( ! class_exists( 'AFWC_Coupon' ) ) {
 				return;
 			}
 
-			$coupon    = new WC_Coupon( $coupon_code );
-			$coupon_id = ( is_object( $coupon ) && is_callable( array( $coupon, 'get_id' ) ) ) ? $coupon->get_id() : 0;
-			if ( ! empty( $coupon_id ) ) {
-				$affiliate_id = get_post_meta( $coupon_id, 'afwc_referral_coupon_of', true );
-				$afwc         = Affiliate_For_WooCommerce::get_instance();
-				$afwc->handle_hit( $affiliate_id );
+			$coupon = new WC_Coupon( $coupon_code );
+			if ( ! $coupon instanceof WC_Coupon ) {
+				return;
 			}
+
+			$affiliate_id = $coupon->get_meta( 'afwc_referral_coupon_of', true );
+			if ( empty( $affiliate_id ) ) {
+				return;
+			}
+
+			$afwc = Affiliate_For_WooCommerce::get_instance();
+			$afwc->handle_hit( $affiliate_id );
 
 		}
 

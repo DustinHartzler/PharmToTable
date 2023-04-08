@@ -3,7 +3,7 @@
  * Main class for Affiliates Dashboard
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.8.1
+ * @version     1.10.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,6 +18,31 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 	class AFWC_Admin_Dashboard {
 
 		/**
+		 * The Ajax events.
+		 *
+		 * @var array $ajax_events
+		 */
+		private $ajax_events = array(
+			'update_commission_status',
+			'process_payout',
+			'dashboard_data',
+			'export_affiliates',
+			'order_details',
+			'payout_details',
+			'affiliate_details',
+			'update_feedback',
+			'update_payout_method',
+			'dashboard_kpi_data',
+			'affiliate_kpi_details',
+			'top_products',
+			'profile_data',
+			'affiliate_chain_data',
+			'link_ltc_customers',
+			'unlink_ltc_customers',
+			'search_ltc_customers',
+		);
+
+		/**
 		 * Constructor
 		 */
 		public function __construct() {
@@ -28,7 +53,6 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			add_action( 'admin_print_scripts', array( $this, 'remove_admin_notices' ) );
 
 			add_action( 'wp_ajax_afwc_update_payout_method', array( $this, 'update_payout_method' ) );
-
 		}
 
 		/**
@@ -174,7 +198,40 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 				'afwc-admin-dashboard',
 				'afwcDashboardParams',
 				array(
-					'security'                       => wp_create_nonce( AFWC_AJAX_SECURITY ),
+					'security'                       => array(
+						'dashboard'   => array(
+							'updateCommissionStatus' => wp_create_nonce( 'afwc-admin-update-commission-status' ),
+							'processPayout'          => wp_create_nonce( 'afwc-admin-process-payout' ),
+							'fetchData'              => wp_create_nonce( 'afwc-admin-dashboard-data' ),
+							'exportAffiliates'       => wp_create_nonce( 'afwc-admin-export-affiliates' ),
+							'orderDetails'           => wp_create_nonce( 'afwc-admin-order-details' ),
+							'payoutDetails'          => wp_create_nonce( 'afwc-admin-payout-details' ),
+							'affiliateDetails'       => wp_create_nonce( 'afwc-admin-affiliate-details' ),
+							'updatePayoutMethod'     => wp_create_nonce( 'afwc-admin-update-payout-method' ),
+							'updateFeedback'         => wp_create_nonce( 'afwc-admin-update-feedback' ),
+							'kpiData'                => wp_create_nonce( 'afwc-admin-dashboard-kpi-data' ),
+							'affiliateKPIData'       => wp_create_nonce( 'afwc-admin-affiliate-kpi-data' ),
+							'topProducts'            => wp_create_nonce( 'afwc-admin-top-products' ),
+							'profileData'            => wp_create_nonce( 'afwc-admin-profile-data' ),
+							'multiTierData'          => wp_create_nonce( 'afwc-admin-multi-tier-data' ),
+							'linkLTCCustomers'       => wp_create_nonce( 'afwc-admin-link-ltc-customers' ),
+							'unlinkLTCCustomers'     => wp_create_nonce( 'afwc-admin-unlink-ltc-customers' ),
+							'searchLTCCustomers'     => wp_create_nonce( 'afwc-admin-search-ltc-customers' ),
+						),
+						'campaign'    => array(
+							'save'      => wp_create_nonce( 'afwc-admin-save-campaign' ),
+							'delete'    => wp_create_nonce( 'afwc-admin-delete-campaign' ),
+							'fetchData' => wp_create_nonce( 'afwc-admin-campaign-dashboard-data' ),
+						),
+						'commissions' => array(
+							'save'          => wp_create_nonce( 'afwc-admin-save-commissions' ),
+							'delete'        => wp_create_nonce( 'afwc-admin-delete-commissions' ),
+							'fetchData'     => wp_create_nonce( 'afwc-admin-commissions-dashboard-data' ),
+							'savePlanOrder' => wp_create_nonce( 'afwc-admin-save-commission-order' ),
+							'extraData'     => wp_create_nonce( 'afwc-admin-extra-data' ),
+							'searchPlan'    => wp_create_nonce( 'afwc-admin-search-commission-plans' ),
+						),
+					),
 					'settingsLink'                   => $settings_link,
 					'currencySymbol'                 => AFWC_CURRENCY,
 					'ajaxurl'                        => admin_url( 'admin-ajax.php' ),
@@ -193,10 +250,14 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					'thousandSeperator'              => afwc_get_price_thousand_separator(),
 					'decimal'                        => afwc_get_price_decimal_separator(),
 					'commissionStatuses'             => afwc_get_commission_statuses(),
+					'campaignStatuses'               => is_callable( array( 'AFWC_Campaign_Dashboard', 'get_statuses' ) ) ? AFWC_Campaign_Dashboard::get_statuses() : array(),
+					'commissionPlanStatuses'         => is_callable( array( 'AFWC_Commission_Dashboard', 'get_statuses' ) ) ? AFWC_Commission_Dashboard::get_statuses() : array(),
 					'show_masspay_deprecated_notice' => 'paypal_masspay' === get_option( 'afwc_commission_payout_method' ),
 					'dashboard_data_batch_limit'     => is_callable( array( $afwc_admin_affiliates, 'get_batch_limit' ) ) ? $afwc_admin_affiliates->get_batch_limit() : AFWC_ADMIN_DASHBOARD_DEFAULT_BATCH_LIMIT,
 					'payoutMethods'                  => afwc_get_payout_methods(),
 					'storeCurrencyCode'              => get_woocommerce_currency(),
+					'pname'                          => afwc_get_pname(),
+					'isPrettyReferralEnabled'        => get_option( 'afwc_use_pretty_referral_links', 'no' ),
 				)
 			);
 
@@ -232,26 +293,27 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * Function to handle all ajax request
 		 */
 		public function request_handler() {
-			if ( empty( $_REQUEST ) || empty( $_REQUEST['cmd'] ) ) {
+			if ( ! current_user_can( 'manage_woocommerce' ) || empty( $_REQUEST ) || empty( wc_clean( wp_unslash( $_REQUEST['cmd'] ) ) ) ) { // phpcs:ignore
 				return;
 			}
-
-			check_ajax_referer( AFWC_AJAX_SECURITY, 'security' );
 
 			$params = array_map(
 				function ( $request_param ) {
 					return trim( wc_clean( wp_unslash( $request_param ) ) );
 				},
-				$_REQUEST
+				$_REQUEST // phpcs:ignore
 			);
 
-			$func_nm = $params['cmd'];
+			$func_nm = ! empty( $params['cmd'] ) ? $params['cmd'] : '';
+			if ( empty( $func_nm ) || ! in_array( $func_nm, $this->ajax_events, true ) ) {
+				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
+			}
 
 			$params['from'] = get_gmt_from_date( ( ( ! empty( $params['from_date'] ) ) ? $params['from_date'] : '' ), 'Y-m-d' );
 			$params['to']   = get_gmt_from_date( ( ( ! empty( $params['to_date'] ) ) ? $params['to_date'] : '' ), 'Y-m-d' );
 
-			$params['affiliate_id'] = isset( $params['affiliate_id'] ) ? $params['affiliate_id'] : ''; // phpcs:ignore
-			$params['page'] = isset( $params['page'] ) ? $params['page'] : 1; // phpcs:ignore
+			$params['affiliate_id'] = ! empty( $params['affiliate_id'] ) ? $params['affiliate_id'] : 0;
+			$params['page']         = ! empty( $params['page'] ) ? $params['page'] : 1;
 
 			if ( is_callable( array( $this, $func_nm ) ) ) {
 				$this->$func_nm( $params );
@@ -265,7 +327,43 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 */
 		public function update_commission_status( $params = array() ) {
 
-			if ( empty( $params['order_ids'] ) || empty( $params['status'] ) || empty( $params['affiliate_id'] ) ) {
+			check_admin_referer( 'afwc-admin-update-commission-status', 'security' );
+
+			if ( empty( $params['status'] ) ) {
+				wp_send_json(
+					array(
+						'ACK'   => 'Error',
+						'error' => _x( 'Status missing', 'error message for requested parameter missing', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$records = false;
+
+			if ( ! empty( $params['referral_ids'] ) ) {
+
+				$referral_ids = json_decode( $params['referral_ids'], true );
+
+				$records = $this->set_commission_status(
+					array(
+						'status'       => $params['status'],
+						'referral_ids' => ( is_array( $referral_ids ) && ! empty( $referral_ids ) ) ? array_map( 'intval', $referral_ids ) : array(),
+					)
+				);
+
+			} elseif ( ! empty( $params['order_ids'] ) && ! empty( $params['affiliate_id'] ) ) {
+
+				$order_ids = json_decode( $params['order_ids'], true );
+				// set commission status.
+				$records = $this->set_commission_status(
+					array(
+						'status'       => $params['status'],
+						'order_ids'    => ( is_array( $order_ids ) && ! empty( $order_ids ) ) ? array_map( 'intval', $order_ids ) : array(),
+						'affiliate_id' => intval( $params['affiliate_id'] ),
+					)
+				);
+
+			} else {
 				wp_send_json(
 					array(
 						'ACK'   => 'Error',
@@ -273,15 +371,6 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					)
 				);
 			}
-			$order_ids = json_decode( $params['order_ids'], true );
-			// set commission status.
-			$records = $this->set_commission_status(
-				array(
-					'status'       => $params['status'],
-					'order_ids'    => ( is_array( $order_ids ) && ! empty( $order_ids ) ) ? array_map( 'intval', $order_ids ) : array(),
-					'affiliate_id' => intval( $params['affiliate_id'] ),
-				)
-			);
 
 			if ( false === $records ) {
 				// Return if query execution is failed.
@@ -314,7 +403,9 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 */
 		public function process_payout( $params = array() ) {
 
-			if ( empty( $params['affiliate'] ) || empty( $params['selected_orders'] ) || empty( $params['method'] ) ) {
+			check_admin_referer( 'afwc-admin-process-payout', 'security' );
+
+			if ( empty( $params['affiliate'] ) || empty( $params['selected_referrals'] ) || empty( $params['method'] ) ) {
 				wp_send_json(
 					array(
 						'ACK'   => 'Error',
@@ -325,12 +416,12 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 			global $wpdb;
 
-			$affiliate       = ( ! empty( $params['affiliate'] ) ) ? json_decode( $params['affiliate'], true ) : array();
-			$affiliate_id    = ( ! empty( $affiliate['id'] ) ) ? intval( $affiliate['id'] ) : '';
-			$selected_orders = ( ! empty( $params['selected_orders'] ) ) ? json_decode( $params['selected_orders'], true ) : array();
-			$note            = ( ! empty( $params['note'] ) ) ? $params['note'] : '';
-			$woo_currencies  = get_woocommerce_currencies();
-			$currency        = ( ! empty( $params['currency'] ) && ! empty( $woo_currencies ) && in_array( $params['currency'], array_keys( $woo_currencies ), true ) ) ? $params['currency'] : get_woocommerce_currency();
+			$affiliate          = ( ! empty( $params['affiliate'] ) ) ? json_decode( $params['affiliate'], true ) : array();
+			$affiliate_id       = ( ! empty( $affiliate['id'] ) ) ? intval( $affiliate['id'] ) : '';
+			$selected_referrals = ( ! empty( $params['selected_referrals'] ) ) ? json_decode( $params['selected_referrals'], true ) : array();
+			$note               = ( ! empty( $params['note'] ) ) ? $params['note'] : '';
+			$woo_currencies     = get_woocommerce_currencies();
+			$currency           = ( ! empty( $params['currency'] ) && ! empty( $woo_currencies ) && in_array( $params['currency'], array_keys( $woo_currencies ), true ) ) ? $params['currency'] : get_woocommerce_currency();
 
 			$payout_result = array();
 
@@ -354,7 +445,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 				if ( is_wp_error( $payout_result ) || 'Success' !== $payout_result['ACK'] ) {
 					/* translators: PayPal response message */
-					Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( _x( 'PayPal payout failed. Message: %1$s Response: %2$s.', 'payout failed debug message', 'affiliate-for-woocommerce' ), is_wp_error( $result ) && is_callable( array( $result, 'get_error_message' ) ) ? $result->get_error_message() : '', print_r( $result, true ) ) ); // phpcs:ignore
+					Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( _x( 'PayPal payout failed. Message: %1$s Response: %2$s.', 'payout failed debug message', 'affiliate-for-woocommerce' ), is_wp_error( $payout_result ) && is_callable( array( $payout_result, 'get_error_message' ) ) ? $payout_result->get_error_message() : '', print_r( $payout_result, true ) ) ); // phpcs:ignore
 
 					wp_send_json(
 						array(
@@ -366,21 +457,20 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			}
 
 			// Get all order ids.
-			$order_ids = array_map(
+			$referral_ids = array_map(
 				function( $obj ) {
-					if ( ! empty( $obj['order_id'] ) ) {
-						return intval( $obj['order_id'] );
+					if ( ! empty( $obj['referral_id'] ) ) {
+						return intval( $obj['referral_id'] );
 					}
 				},
-				$selected_orders
+				$selected_referrals
 			);
 
 			// set commission status.
 			$result = $this->set_commission_status(
 				array(
 					'status'       => AFWC_REFERRAL_STATUS_PAID,
-					'order_ids'    => $order_ids,
-					'affiliate_id' => $affiliate_id,
+					'referral_ids' => $referral_ids,
 				)
 			);
 
@@ -417,7 +507,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 					);
 
 					$payout_orders_table = afwc_get_tablename( 'payout_orders' );
-					foreach ( $selected_orders as $order ) {
+					foreach ( $selected_referrals as $order ) {
 						if ( empty( $selected_order_dates['from'] ) ) {
 							$selected_order_dates['from'] = $order['date'];
 						} elseif ( strtotime( $selected_order_dates['from'] ) > strtotime( $order['date'] ) ) {
@@ -451,7 +541,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 								'currency_id'           => $currency,
 								'from_date'             => $selected_order_dates['from'],
 								'to_date'               => $selected_order_dates['to'],
-								'total_orders'          => count( array_column( $selected_orders, 'order_id' ) ),
+								'total_referrals'       => count( array_column( $selected_referrals, 'order_id' ) ),
 								'payout_notes'          => $note,
 								'payment_gateway'       => ( ! empty( $payout_details['payment_gateway'] ) ) ? $payout_details['payment_gateway'] : 'other',
 								'paypal_receiver_email' => ( ! empty( $payout_details['receiver'] ) ) ? $payout_details['receiver'] : '', // For PayPal mass payout else empty.
@@ -464,15 +554,15 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 							'ACK'                    => 'Success',
 							'last_added_payout_id'   => $inserted_payout_id,
 							'last_added_payout_data' => array(
-								'amount'       => ( ! empty( $payout_details['amount'] ) ) ? floatval( $payout_details['amount'] ) : 0.00,
-								'currency'     => ( ! empty( $payout_details['currency'] ) ) ? $payout_details['currency'] : '',
-								'datetime'     => gmdate( 'd-M-Y', strtotime( $payout_details['datetime'] ) ),
-								'from_date'    => $selected_order_dates['from'],
-								'to_date'      => $selected_order_dates['to'],
-								'method'       => ( ! empty( $payout_details['payment_gateway'] ) ) ? $payout_details['payment_gateway'] : 'other',
-								'order_count'  => count( $selected_orders ),
-								'payout_id'    => $inserted_payout_id,
-								'payout_notes' => ! empty( $payout_details['payout_notes'] ) ? $payout_details['payout_notes'] : '',
+								'amount'         => ( ! empty( $payout_details['amount'] ) ) ? floatval( $payout_details['amount'] ) : 0.00,
+								'currency'       => ( ! empty( $payout_details['currency'] ) ) ? $payout_details['currency'] : '',
+								'datetime'       => gmdate( 'd-M-Y', strtotime( $payout_details['datetime'] ) ),
+								'from_date'      => $selected_order_dates['from'],
+								'to_date'        => $selected_order_dates['to'],
+								'method'         => ( ! empty( $payout_details['payment_gateway'] ) ) ? $payout_details['payment_gateway'] : 'other',
+								'referral_count' => count( $selected_referrals ),
+								'payout_id'      => $inserted_payout_id,
+								'payout_notes'   => ! empty( $payout_details['payout_notes'] ) ? $payout_details['payout_notes'] : '',
 							),
 						)
 					);
@@ -486,6 +576,8 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function dashboard_kpi_data( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-dashboard-kpi-data', 'security' );
 
 			$affiliates              = $this->affiliates_list( $params );
 			$affiliate_ids           = array_map(
@@ -509,6 +601,9 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function dashboard_data( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-dashboard-data', 'security' );
+
 			wp_send_json(
 				array(
 					'affiliateList' => $this->affiliates_list( $params ),
@@ -854,7 +949,8 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 *
 		 * @param array $params Params from the AJAX request.
 		 */
-		public function export_affiliates( $params ) {
+		public function export_affiliates( $params = array() ) {
+			check_admin_referer( 'afwc-admin-export-affiliates', 'security' );
 			global $wpdb;
 
 			$affiliates_data     = array();
@@ -908,8 +1004,10 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			header( 'Content-Disposition: attachment; filename="' . $filename . '";' );
 			header( 'Pragma: no-cache' );
 			header( 'Expires: 0' );
+
 			// make php send the generated csv lines to the browser.
-			fpassthru( $f );
+			function_exists( 'fpassthru' ) ? fpassthru( $f ) : readfile( $file ); // phpcs:ignore
+
 			// Delete file from uploads.
 			unlink( $file );
 			exit();
@@ -922,6 +1020,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function order_details( $params = array() ) {
+			check_admin_referer( 'afwc-admin-order-details', 'security' );
 			$current_data = new AFWC_Admin_Affiliates(
 				! empty( $params['affiliate_id'] ) ? $params['affiliate_id'] : 0,
 				! empty( $params['from'] ) ? $params['from'] : '',
@@ -937,6 +1036,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function payout_details( $params = array() ) {
+			check_admin_referer( 'afwc-admin-payout-details', 'security' );
 			$current_data = new AFWC_Admin_Affiliates(
 				! empty( $params['affiliate_id'] ) ? $params['affiliate_id'] : 0,
 				! empty( $params['from'] ) ? $params['from'] : '',
@@ -952,7 +1052,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function top_products( $params = array() ) {
-
+			check_admin_referer( 'afwc-admin-top-products', 'security' );
 			if ( empty( $params['affiliate_id'] ) ) {
 				wp_send_json(
 					array(
@@ -982,7 +1082,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function profile_data( $params = array() ) {
-
+			check_admin_referer( 'afwc-admin-profile-data', 'security' );
 			if ( empty( $params['affiliate_id'] ) ) {
 				wp_send_json(
 					array(
@@ -993,14 +1093,48 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			}
 
 			$affiliate_data = new AFWC_Admin_Affiliates( $params['affiliate_id'] );
+			$is_ltc_enabled = get_option( 'afwc_enable_lifetime_commissions', 'no' );
+
+			$affiliate_obj = new AFWC_Affiliate( $params['affiliate_id'] );
 
 			wp_send_json(
 				array(
 					'ACK'  => 'Success',
 					'data' => array(
-						'tags'                       => is_callable( array( $affiliate_data, 'get_affiliates_tags' ) ) ? $affiliate_data->get_affiliates_tags() : array(),
-						'coupons'                    => is_callable( array( $affiliate_data, 'get_affiliates_coupons' ) ) ? $affiliate_data->get_affiliates_coupons() : array(),
-						'is_referral_coupon_enabled' => get_option( 'afwc_use_referral_coupons', 'yes' ),
+						'tags'                         => is_callable( array( $affiliate_data, 'get_affiliates_tags' ) ) ? $affiliate_data->get_affiliates_tags() : array(),
+						'coupons'                      => is_callable( array( $affiliate_data, 'get_affiliates_coupons' ) ) ? $affiliate_data->get_affiliates_coupons() : array(),
+						'is_referral_coupon_enabled'   => get_option( 'afwc_use_referral_coupons', 'yes' ),
+						'is_ltc_enabled'               => $is_ltc_enabled,
+						'is_ltc_enabled_for_affiliate' => is_callable( array( $affiliate_obj, 'is_ltc_enabled' ) ) && $affiliate_obj->is_ltc_enabled(),
+						'ltc_customers'                => ( 'yes' === $is_ltc_enabled && is_callable( array( $affiliate_data, 'get_ltc_customers' ) ) ) ? $affiliate_data->get_ltc_customers() : array(),
+					),
+				)
+			);
+
+		}
+
+		/**
+		 * Function to get affiliate children chain data.
+		 *
+		 * @param array $params Params from the AJAX request.
+		 */
+		public function affiliate_chain_data( $params = array() ) {
+			check_admin_referer( 'afwc-admin-multi-tier-data', 'security' );
+			if ( empty( $params['affiliate_id'] ) ) {
+				wp_send_json(
+					array(
+						'ACK'   => 'Error',
+						'error' => _x( 'Required params missing', 'error message when missing necessary parameters', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$affiliate_multi_tier = new AFWC_Multi_Tier();
+			wp_send_json(
+				array(
+					'ACK'  => 'Success',
+					'data' => array(
+						'multiTierChain' => ( $affiliate_multi_tier instanceof AFWC_Multi_Tier && is_callable( array( $affiliate_multi_tier, 'get_children_data' ) ) ) ? $affiliate_multi_tier->get_children_data( array( 'affiliate_id' => intval( $params['affiliate_id'] ) ) ) : array(),
 					),
 				)
 			);
@@ -1013,6 +1147,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function affiliate_kpi_details( $params = array() ) {
+			check_admin_referer( 'afwc-admin-affiliate-kpi-data', 'security' );
 			if ( empty( $params['affiliate_id'] ) ) {
 				wp_send_json(
 					array(
@@ -1075,7 +1210,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 * @param array $params Params from the AJAX request.
 		 */
 		public function affiliate_details( $params = array() ) {
-
+			check_admin_referer( 'afwc-admin-affiliate-details', 'security' );
 			$affiliate_id = ! empty( $params['affiliate_id'] ) ? $params['affiliate_id'] : 0;
 			$is_affiliate = '';
 
@@ -1097,8 +1232,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 				wp_send_json( $affiliate_details );
 			}
 
-			$pname = get_option( 'afwc_pname' );
-			$pname = ( ! empty( $pname ) ) ? $pname : 'ref';
+			$pname = afwc_get_pname();
 
 			$paypal     = AFWC_PayPal_API::get_instance();
 			$status     = $paypal->get_api_setting_status();
@@ -1129,14 +1263,14 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 			$afwc_ref_url_id = get_user_meta( $affiliate_id, 'afwc_ref_url_id', true );
 			$afwc_ref_url_id = ( 'yes' === $afwc_allow_custom_affiliate_identifier && ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
-			$referral_url    = add_query_arg( $pname, $afwc_ref_url_id, trailingslashit( home_url() ) );
+
 			wp_send_json(
 				array(
 					'name'                    => ! empty( $current_data->affiliates_details[ $affiliate_id ]['name'] ) ? $current_data->affiliates_details[ $affiliate_id ]['name'] : '',
 					'affiliate_id'            => $affiliate_id,
 					'email'                   => ! empty( $current_data->affiliates_details[ $affiliate_id ]['email'] ) ? $current_data->affiliates_details[ $affiliate_id ]['email'] : '',
 					'edit_url'                => admin_url( 'user-edit.php?user_id=' . $affiliate_id ) . '#afwc-settings',
-					'referral_url'            => $referral_url,
+					'referral_url'            => afwc_get_affiliate_url( trailingslashit( home_url() ), $pname, $afwc_ref_url_id ),
 					'paypal_email'            => ( true === $is_payable && ! empty( $afwc_paypal_email ) ) ? $afwc_paypal_email : '',
 					'avatar_url'              => $this->get_avatar_url( get_avatar( $affiliate_id, 32 ) ),
 					'formatted_join_duration' => $current_data->get_formatted_join_duration(),
@@ -1160,9 +1294,10 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		/**
 		 * Update feedback option
 		 *
-		 * @param string $params mixed.
+		 * @param array $params The Params.
 		 */
-		public function update_feedback( $params ) {
+		public function update_feedback( $params = array() ) {
+			check_admin_referer( 'afwc-admin-update-feedback', 'security' );
 			$update_action = ! empty( $params['update_action'] ) ? $params['update_action'] : '';
 			if ( ! empty( $update_action ) ) {
 				if ( 'close' === $update_action ) {
@@ -1183,14 +1318,14 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		/**
 		 * Set/Update Commission Status.
 		 *
-		 * @param array $args The arguments ( Required args : order_ids, status, affiliate_id ).
+		 * @param array $args The arguments.
 		 *
 		 * @return int|bool Number of rows affected or boolean false on error.
 		 */
 		public function set_commission_status( $args = array() ) {
 
-			// Return if order_ids and status are not provided.
-			if ( empty( $args['order_ids'] ) || empty( $args['status'] ) || empty( $args['affiliate_id'] ) ) {
+			// Return if status is not provided.
+			if ( empty( $args['status'] ) ) {
 				return false;
 			}
 
@@ -1203,29 +1338,57 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 
 			global $wpdb;
 
-			// Create temporary key to save order ids.
-			// TODO: check why current_user_id is used instead of uniqid.
-			$temp_order_ids_db_key = 'afwc_change_commission_status_order_ids_' . $current_user_id;
+			if ( ! empty( $args['referral_ids'] ) ) {
+				// Create temporary key to save referral ids.
+				// TODO: check why current_user_id is used instead of uniqid.
+				$temp_referral_ids_db_key = 'afwc_change_commission_status_referrals_' . $current_user_id;
 
-			// Store order ids temporarily in option.
-			update_option( $temp_order_ids_db_key, implode( ',', $args['order_ids'] ), 'no' );
+				// Store referrals ids temporarily in option.
+				update_option( $temp_referral_ids_db_key, implode( ',', $args['referral_ids'] ), 'no' );
 
-			$result = $wpdb->query( // phpcs:ignore
-				$wpdb->prepare(
-					"UPDATE {$wpdb->prefix}afwc_referrals
-						SET status = %s
-						WHERE affiliate_id = %d
-						AND FIND_IN_SET ( post_id, ( SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = %s ) )", // phpcs:ignore
-					$args['status'],
-					intval( $args['affiliate_id'] ),
-					$temp_order_ids_db_key
-				)
-			);
+				$result = $wpdb->query( // phpcs:ignore
+					$wpdb->prepare(
+						"UPDATE {$wpdb->prefix}afwc_referrals
+							SET status = %s
+							WHERE FIND_IN_SET ( referral_id, ( SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = %s ) )", // phpcs:ignore
+						$args['status'],
+						$temp_referral_ids_db_key
+					)
+				);
 
-			// Delete the temporary option.
-			delete_option( $temp_order_ids_db_key );
+				// Delete the temporary option.
+				delete_option( $temp_referral_ids_db_key );
 
-			return $result;
+				return $result;
+			} elseif ( ! empty( $args['order_ids'] ) && ! empty( $args['affiliate_id'] ) ) {
+				// Create temporary key to save order ids.
+				// TODO: check why current_user_id is used instead of uniqid.
+				$temp_order_ids_db_key = 'afwc_change_commission_status_order_ids_' . $current_user_id;
+
+				// Store order ids temporarily in option.
+				update_option( $temp_order_ids_db_key, implode( ',', $args['order_ids'] ), 'no' );
+
+				$result = $wpdb->query( // phpcs:ignore
+					$wpdb->prepare(
+						"UPDATE {$wpdb->prefix}afwc_referrals
+							SET status = %s
+							WHERE affiliate_id = %d
+							AND FIND_IN_SET ( post_id, ( SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = %s ) )", // phpcs:ignore
+						$args['status'],
+						intval( $args['affiliate_id'] ),
+						$temp_order_ids_db_key
+					)
+				);
+
+				// Delete the temporary option.
+				delete_option( $temp_order_ids_db_key );
+
+				return $result;
+
+			}
+
+			return false;
+
 		}
 
 		/**
@@ -1271,7 +1434,7 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 		 */
 		public function update_payout_method() {
 
-			check_ajax_referer( AFWC_AJAX_SECURITY, 'security' );
+			check_admin_referer( 'afwc-admin-update-payout-method', 'security' );
 
 			$afwc_paypal = is_callable( array( 'AFWC_PayPal_API', 'get_instance' ) ) ? AFWC_PayPal_API::get_instance() : null;
 
@@ -1282,6 +1445,112 @@ if ( ! class_exists( 'AFWC_Admin_Dashboard' ) ) {
 			wp_send_json(
 				array(
 					'ACK' => true,
+				)
+			);
+
+		}
+
+		/**
+		 * Link the Lifetime commission customer.
+		 *
+		 * @param array $params Params from the AJAX request.
+		 *
+		 * @return void
+		 */
+		public function link_ltc_customers( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-link-ltc-customers', 'security' );
+
+			if ( empty( $params['customer'] ) || empty( $params['affiliate_id'] ) ) {
+				wp_send_json(
+					array(
+						'ACK' => 'Error',
+						'msg' => _x( 'Customer or affiliate ID missing', 'error message for missing of required parameter for linking the lifetime customer', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$linked_affiliate = afwc_get_ltc_affiliate_by_customer( $params['customer'] );
+
+			if ( ! empty( $linked_affiliate ) ) {
+				wp_send_json(
+					array(
+						'ACK' => 'Error',
+						'msg' => intval( $linked_affiliate ) === intval( $params['affiliate_id'] )
+								? _x( 'Customer is already linked to this affiliate', 'error message on linking the customer due to the customer is already linked with the same affiliate', 'affiliate-for-woocommerce' )
+								: _x( 'Customer is already linked with another affiliate', 'error message on linking the customer due to the customer is already linked with another affiliate', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$affiliate = new AFWC_Admin_Affiliates( $params['affiliate_id'] );
+
+			wp_send_json(
+				array(
+					'ACK' => is_callable( array( $affiliate, 'add_ltc_customers' ) ) && $affiliate->add_ltc_customers( $params['customer'] ) ? 'Success' : 'Error',
+				)
+			);
+
+		}
+
+		/**
+		 * Unlink the Lifetime commission customer.
+		 *
+		 * @param array $params Params from the AJAX request.
+		 *
+		 * @return void
+		 */
+		public function unlink_ltc_customers( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-unlink-ltc-customers', 'security' );
+
+			if ( empty( $params['customer'] ) || empty( $params['affiliate_id'] ) ) {
+				wp_send_json(
+					array(
+						'ACK' => 'Error',
+						'msg' => _x( 'Customer or affiliate ID missing', 'error message for missing of required parameter for unlinking the lifetime customer', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$affiliate = new AFWC_Admin_Affiliates( $params['affiliate_id'] );
+
+			wp_send_json(
+				array(
+					'ACK' => ( is_callable( array( $affiliate, 'remove_ltc_customers' ) ) && $affiliate->remove_ltc_customers( $params['customer'] ) ) ? 'Success' : 'Error',
+				)
+			);
+
+		}
+
+
+		/**
+		 * Search the customers.
+		 *
+		 * @param array $params Params from the AJAX request.
+		 *
+		 * @return void
+		 */
+		public function search_ltc_customers( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-search-ltc-customers', 'security' );
+
+			if ( empty( $params['term'] ) ) {
+				wp_send_json(
+					array(
+						'ACK' => 'Error',
+						'msg' => _x( 'Search term is missing', 'error message for missing of search term of linking lifetime customer', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$affiliate   = new AFWC_Admin_Affiliates();
+			$search_list = is_callable( array( $affiliate, 'search_ltc_customers' ) ) ? $affiliate->search_ltc_customers( $params['term'] ) : array();
+
+			wp_send_json(
+				array(
+					'ACK'  => 'Success',
+					'data' => $search_list,
 				)
 			);
 

@@ -3,7 +3,7 @@
  * Main class for Campaigns Dashboard
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.0.2
+ * @version     1.1.3
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -18,6 +18,17 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 	class AFWC_Campaign_Dashboard {
 
 		/**
+		 * The Ajax events.
+		 *
+		 * @var array $ajax_events
+		 */
+		private $ajax_events = array(
+			'save_campaign',
+			'delete_campaign',
+			'fetch_dashboard_data',
+		);
+
+		/**
 		 * Constructor
 		 */
 		public function __construct() {
@@ -29,19 +40,24 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 		 */
 		public function request_handler() {
 
-			if ( empty( $_REQUEST ) || empty( $_REQUEST['cmd'] ) ) {
+			if ( empty( $_REQUEST ) || empty( wc_clean( wp_unslash( $_REQUEST['cmd'] ) ) ) ) { // phpcs:ignore
 				return;
 			}
 
-			check_ajax_referer( AFWC_AJAX_SECURITY, 'security' );
-			foreach ( $_REQUEST as $key => $value ) {
+			$params = array();
+
+			foreach ( $_REQUEST as $key => $value ) { // phpcs:ignore
 				if ( 'campaign' === $key ) {
 					$params[ $key ] = wp_unslash( $value );
 				} else {
 					$params[ $key ] = trim( wc_clean( wp_unslash( $value ) ) );
 				}
 			}
-			$func_nm = $params['cmd'];
+			$func_nm = ! empty( $params['cmd'] ) ? $params['cmd'] : '';
+
+			if ( empty( $func_nm ) || ! in_array( $func_nm, $this->ajax_events, true ) ) {
+				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
+			}
 
 			if ( is_callable( array( $this, $func_nm ) ) ) {
 				$this->$func_nm( $params );
@@ -54,7 +70,13 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 		 * @throws RuntimeException Data Exception.
 		 * @param array $params save campaign params.
 		 */
-		public function save_campaign( $params ) {
+		public function save_campaign( $params = array() ) {
+			check_admin_referer( 'afwc-admin-save-campaign', 'security' );
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
+			}
+
 			global $wpdb;
 
 			$response = array( 'ACK' => 'Failed' );
@@ -90,7 +112,7 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 				}
 
 				if ( false === $result ) {
-					throw new RuntimeException( __( 'Unable to save campaign. Database error.', 'affiliate-for-woocommerce' ) );
+					throw new RuntimeException( _x( 'Unable to save campaign. Database error.', 'campaign data save error message', 'affiliate-for-woocommerce' ) );
 				}
 
 				$response                     = array( 'ACK' => 'Success' );
@@ -105,7 +127,13 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 		 *
 		 * @param array $params delete campaign params.
 		 */
-		public function delete_campaign( $params ) {
+		public function delete_campaign( $params = array() ) {
+			check_admin_referer( 'afwc-admin-delete-campaign', 'security' );
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
+			}
+
 			global $wpdb;
 
 			$response = array( 'ACK' => 'Failed' );
@@ -120,14 +148,14 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 					wp_send_json(
 						array(
 							'ACK' => 'Error',
-							'msg' => __( 'Failed to delete campaign', 'affiliate-for-woocommerce' ),
+							'msg' => _x( 'Failed to delete campaign', 'campaign delete error message', 'affiliate-for-woocommerce' ),
 						)
 					);
 				} else {
 					wp_send_json(
 						array(
 							'ACK' => 'Success',
-							'msg' => __( 'Campaign deleted successfully', 'affiliate-for-woocommerce' ),
+							'msg' => _x( 'Campaign deleted successfully', 'campaign deleted success message', 'affiliate-for-woocommerce' ),
 						)
 					);
 				}
@@ -141,23 +169,39 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 		 */
 		public function fetch_dashboard_data( $params ) {
 
-			$result['kpi']       = $this->fetch_kpi( $params );
-			$result['campaigns'] = $this->fetch_camapigns( $params );
-			if ( ! empty( $result ) ) {
-				wp_send_json(
-					array(
-						'ACK'    => 'Success',
-						'result' => $result,
-					)
-				);
-			} else {
-				wp_send_json(
-					array(
-						'ACK' => 'Success',
-						'msg' => __( 'No campaigns found', 'affiliate-for-woocommerce' ),
-					)
-				);
+			if ( empty( $_POST['security'] ) ) { // phpcs:ignore
+				return;
 			}
+
+			$security = wc_clean( wp_unslash( $_POST['security'] ) ); // phpcs:ignore 
+
+			if ( ( wp_verify_nonce( $security, 'afwc-admin-campaign-dashboard-data' ) && current_user_can( 'manage_woocommerce' ) ) || wp_verify_nonce( $security, 'afwc-fetch-campaign' ) ) {
+
+				$result['kpi']       = $this->fetch_kpi( $params );
+				$result['campaigns'] = $this->fetch_camapigns( $params );
+				if ( ! empty( $result ) ) {
+					wp_send_json(
+						array(
+							'ACK'    => 'Success',
+							'result' => $result,
+						)
+					);
+				} else {
+					wp_send_json(
+						array(
+							'ACK' => 'Success',
+							'msg' => _x( 'No campaigns found', 'campaigns not found message', 'affiliate-for-woocommerce' ),
+						)
+					);
+				}
+			}
+
+			wp_send_json(
+				array(
+					'ACK' => 'Failed',
+					'msg' => _x( 'You do not have permission to fetch the campaigns', 'campaign fetching error message', 'affiliate-for-woocommerce' ),
+				)
+			);
 
 		}
 
@@ -222,6 +266,22 @@ if ( ! class_exists( 'AFWC_Campaign_Dashboard' ) ) {
 			$kpi['conversion'] = ( $kpi['total_hits'] > 0 ) ? round( ( ( $kpi['total_orders'] * 100 ) / $kpi['total_hits'] ), 2 ) : 0;
 
 			return $kpi;
+		}
+
+		/**
+		 * Get campaign statuses.
+		 *
+		 * @param string $status Campaign Status.
+		 *
+		 * @return array|string Return the status title if the status is provided otherwise return array of all statuses.
+		 */
+		public static function get_statuses( $status = '' ) {
+			$statuses = array(
+				'Active' => _x( 'Active', 'active campaign status', 'affiliate-for-woocommerce' ),
+				'Draft'  => _x( 'Draft', 'draft campaign status', 'affiliate-for-woocommerce' ),
+			);
+
+			return empty( $status ) ? $statuses : ( ! empty( $statuses[ $status ] ) ? $statuses[ $status ] : '' );
 		}
 
 	}

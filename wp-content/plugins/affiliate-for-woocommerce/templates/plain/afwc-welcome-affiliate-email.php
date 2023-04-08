@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/plain/
  * @since       2.4.0
- * @version     1.1.0
+ * @version     1.1.1
  */
 
 // Exit if accessed directly.
@@ -26,14 +26,18 @@ echo esc_html__( 'Your affiliate ID:', 'affiliate-for-woocommerce' ) . "\t" . es
 
 echo esc_html__( 'Your personal affiliated link:', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $affiliate_link ) . "\n\n";
 
-echo esc_html__( 'Your affiliate dashboard', 'affiliate-for-woocommerce' ) . "\n";
+echo esc_html_x( 'Your affiliate dashboard', 'affiliate dashboard page text', 'affiliate-for-woocommerce' ) . "\n";
 /* translators: %s: Affiliate my account link */
-echo sprintf( esc_html__( 'Log in to your affiliate dashboard regularly. You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there. You can fully manage your account from the dashboard: %s.', 'affiliate-for-woocommerce' ), esc_url( $my_account_afwc_url ) ) . "\n\n";
+echo sprintf( esc_html_x( 'Log in to your affiliate dashboard regularly. You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there. You can fully manage your account from the dashboard: %s.', 'Message to view the affiliate dashboard', 'affiliate-for-woocommerce' ), esc_url( $my_account_afwc_url ) ) . "\n\n";
 
 echo esc_html__( 'Our Products', 'affiliate-for-woocommerce' ) . "\n";
 echo esc_html__( 'You can refer people using your affiliate link. You can also promote individual products if you like.', 'affiliate-for-woocommerce' ) . "\n";
-/* translators: %s: Shop page link */
-echo sprintf( esc_html__( 'Here is our complete product catalog: %s.', 'affiliate-for-woocommerce' ), esc_url( $shop_page ) ) . "\n\n";
+if ( ! empty( $shop_page ) ) {
+	/* translators: %s: Shop page link */
+	echo sprintf( esc_html__( 'Here is our complete product catalog: %s.', 'affiliate-for-woocommerce' ), esc_url( $shop_page ) ) . "\n\n";
+} else {
+	echo "\n";
+}
 
 echo esc_html__( 'Partnership and communication are important to us', 'affiliate-for-woocommerce' ) . "\n";
 echo esc_html__( 'We value our partners, so we are happy to assist any time. We would also love to discuss any novel promotion ideas you may have. Feel free to reach out to us anytime.', 'affiliate-for-woocommerce' ) . "\n\n";

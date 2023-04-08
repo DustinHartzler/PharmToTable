@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.4.0
- * @version     1.4.0
+ * @version     1.4.5
  */
 
 // Exit if accessed directly.
@@ -48,7 +48,7 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 
 			$this->placeholders = array();
 
-			// Trigger on new conversion.
+			// Trigger this email as a welcome email to an affiliate.
 			add_action( 'afwc_email_welcome_affiliate', array( $this, 'trigger' ), 10, 1 );
 
 			// Call parent constructor to load any other defaults not explicity defined here.
@@ -76,25 +76,27 @@ if ( ! class_exists( 'AFWC_Email_Welcome_Affiliate' ) ) {
 			// Set the locale to the store locale for customer emails to make sure emails are in the store language.
 			$this->setup_locale();
 
-			$affiliate_id = $this->email_args['affiliate_id'];
-			$user         = get_user_by( 'id', $affiliate_id );
-			if ( $user ) {
+			$affiliate_id = ! empty( $this->email_args['affiliate_id'] ) ? intval( $this->email_args['affiliate_id'] ) : 0;
+			$user         = ! empty( $affiliate_id ) ? get_user_by( 'id', $affiliate_id ) : null;
+			if ( $user instanceof WP_User && ! empty( $user->user_email ) ) {
 				$this->recipient = $user->user_email;
 			}
 
 			$user_info                     = get_userdata( $affiliate_id );
 			$this->email_args['user_name'] = ! empty( $user_info->first_name ) ? $user_info->first_name : __( 'there', 'affiliate-for-woocommerce' );
 
-			$pname                                   = get_option( 'afwc_pname', 'ref' );
-			$pname                                   = ( ! empty( $pname ) ) ? $pname : 'ref';
+			$pname                                   = afwc_get_pname();
 			$afwc_ref_url_id                         = get_user_meta( $affiliate_id, 'afwc_ref_url_id', true );
 			$affiliate_id                            = afwc_get_affiliate_id_based_on_user_id( $affiliate_id );
 			$affiliate_identifier                    = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
 			$endpoint                                = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
-			$my_account_afwc_url                     = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
-			$this->email_args['affiliate_link']      = add_query_arg( $pname, $affiliate_identifier, trailingslashit( home_url() ) );
-			$this->email_args['shop_page']           = get_permalink( wc_get_page_id( 'shop' ) );
-			$this->email_args['my_account_afwc_url'] = $my_account_afwc_url;
+			$my_account_page_id                      = wc_get_page_id( 'myaccount' );
+			$my_account_page                         = ( ! empty( $my_account_page_id ) && ( intval( $my_account_page_id ) > 0 ) ) ? wc_get_page_permalink( 'myaccount' ) : '';
+			$this->email_args['my_account_afwc_url'] = apply_filters( 'afwc_myaccount_dashboard_url', ( ! empty( $my_account_page ) ? wc_get_endpoint_url( $endpoint, '', $my_account_page ) : get_home_url() ), array( 'source' => $this ) );
+			$this->email_args['affiliate_link']      = afwc_get_affiliate_url( trailingslashit( home_url() ), $pname, $affiliate_identifier );
+			$shop_page_id                            = wc_get_page_id( 'shop' );
+			$shop_page                               = ( ! empty( $shop_page_id ) && ( intval( $shop_page_id ) > 0 ) ) ? wc_get_page_permalink( 'shop' ) : '';
+			$this->email_args['shop_page']           = apply_filters( 'afwc_shop_url', $shop_page, array( 'source' => $this ) );
 			$this->email_args['affiliate_id']        = $affiliate_identifier;
 			$this->email_args['is_auto_approved']    = ! empty( $this->email_args['is_auto_approved'] ) ? $this->email_args['is_auto_approved'] : get_option( 'afwc_auto_add_affiliate', 'no' );
 

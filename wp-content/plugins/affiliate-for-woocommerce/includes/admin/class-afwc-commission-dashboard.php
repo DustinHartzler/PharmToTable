@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       2.5.0
- * @version     1.2.2
+ * @version     1.3.4
  */
 
 // Exit if accessed directly.
@@ -18,6 +18,19 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 	 * Main class for Commission Dashboard
 	 */
 	class AFWC_Commission_Dashboard {
+
+		/**
+		 * The Ajax events.
+		 *
+		 * @var array $ajax_events
+		 */
+		private $ajax_events = array(
+			'save_commission',
+			'delete_commission',
+			'fetch_dashboard_data',
+			'save_plan_order',
+			'fetch_extra_data',
+		);
 
 		/**
 		 * Variable to hold instance of AFWC_Commission_Dashboard
@@ -52,19 +65,23 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 * Function to handle all ajax request
 		 */
 		public function request_handler() {
-			if ( empty( $_REQUEST ) || empty( $_REQUEST['cmd'] ) ) {
+			if ( ! current_user_can( 'manage_woocommerce' ) || empty( $_REQUEST ) || empty( wc_clean( wp_unslash( $_REQUEST['cmd'] ) ) ) ) { // phpcs:ignore
 				return;
 			}
 
-			check_ajax_referer( AFWC_AJAX_SECURITY, 'security' );
-			foreach ( $_REQUEST as $key => $value ) {
+			foreach ( $_REQUEST as $key => $value ) { // phpcs:ignore
 				if ( 'commission' === $key ) {
 					$params[ $key ] = wp_unslash( $value );
 				} else {
 					$params[ $key ] = trim( wc_clean( wp_unslash( $value ) ) );
 				}
 			}
-			$func_nm = $params['cmd'];
+
+			$func_nm = ! empty( $params['cmd'] ) ? $params['cmd'] : '';
+
+			if ( empty( $func_nm ) || ! in_array( $func_nm, $this->ajax_events, true ) ) {
+				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
+			}
 
 			if ( is_callable( array( $this, $func_nm ) ) ) {
 				$this->$func_nm( $params );
@@ -77,7 +94,10 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 * @throws RuntimeException Data Exception.
 		 * @param array $params save commission params.
 		 */
-		public function save_commission( $params ) {
+		public function save_commission( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-save-commissions', 'security' );
+
 			global $wpdb;
 
 			$response                  = array( 'ACK' => 'Failed' );
@@ -124,7 +144,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 				}
 
 				if ( false === $result ) {
-					throw new RuntimeException( __( 'Unable to save commission plan. Database error.', 'affiliate-for-woocommerce' ) );
+					throw new RuntimeException( _x( 'Unable to save commission plan. Database error.', 'commission plan save error message', 'affiliate-for-woocommerce' ) );
 				}
 
 				$response                     = array( 'ACK' => 'Success' );
@@ -138,7 +158,10 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 *
 		 * @param array $params delete commission params.
 		 */
-		public function delete_commission( $params ) {
+		public function delete_commission( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-delete-commissions', 'security' );
+
 			global $wpdb;
 
 			$response = array( 'ACK' => 'Failed' );
@@ -150,7 +173,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					return wp_send_json(
 						array(
 							'ACK' => 'Error',
-							'msg' => __( 'Default plan can not be deleted', 'affiliate-for-woocommerce' ),
+							'msg' => _x( 'Default plan can not be deleted', 'commission default plan delete error message', 'affiliate-for-woocommerce' ),
 						)
 					);
 				}
@@ -165,7 +188,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					wp_send_json(
 						array(
 							'ACK' => 'Error',
-							'msg' => __( 'Failed to delete commission plan', 'affiliate-for-woocommerce' ),
+							'msg' => _x( 'Failed to delete commission plan', 'commission plan delete error message', 'affiliate-for-woocommerce' ),
 						)
 					);
 				} else {
@@ -186,7 +209,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					wp_send_json(
 						array(
 							'ACK' => 'Success',
-							'msg' => __( 'Commission plan deleted successfully', 'affiliate-for-woocommerce' ),
+							'msg' => _x( 'Commission plan deleted successfully', 'commission plan delete success message', 'affiliate-for-woocommerce' ),
 						)
 					);
 				}
@@ -199,6 +222,8 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 * @param array $params fetch commission dashboard data params.
 		 */
 		public function fetch_dashboard_data( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-commissions-dashboard-data', 'security' );
 
 			$commission_plans = self::fetch_commission_plans( $params );
 
@@ -217,7 +242,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 			wp_send_json(
 				array(
 					'ACK' => 'Failed',
-					'msg' => __( 'No commission plans found', 'affiliate-for-woocommerce' ),
+					'msg' => _x( 'No commission plans found', 'commission plans not found message', 'affiliate-for-woocommerce' ),
 				)
 			);
 
@@ -269,7 +294,10 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 *
 		 * @param array $params save plan order params.
 		 */
-		public static function save_plan_order( $params ) {
+		public static function save_plan_order( $params = array() ) {
+
+			check_admin_referer( 'afwc-admin-save-commission-order', 'security' );
+
 			$default_plan_id = afwc_get_default_commission_plan_id();
 			if ( ! empty( $params['plan_order'] ) ) {
 				$plan_order = (array) json_decode( $params['plan_order'], true );
@@ -292,7 +320,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 			} else {
 				wp_send_json(
 					array(
-						'msg' => __( 'No plan order to save', 'affiliate-for-woocomerce' ),
+						'msg' => _x( 'No commission plan order to save', 'no commission plan order save message', 'affiliate-for-woocomerce' ),
 					)
 				);
 			}
@@ -307,12 +335,17 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 */
 		public function afwc_json_search_rule_values( $x = '', $attribute = '' ) {
 
-			check_ajax_referer( AFWC_AJAX_SECURITY, 'security' );
-			$term = ( ! empty( $_GET['term'] ) ) ? (string) urldecode( stripslashes( wp_strip_all_tags( $_GET ['term'] ) ) ) : ''; // phpcs:ignore
-			$type = ( ! empty( $_GET['type'] ) ) ? (string) urldecode( stripslashes( wp_strip_all_tags( $_GET ['type'] ) ) ) : ''; // phpcs:ignore
-			$type = ! empty( $type ) ? $type : 'affiliate';
+			check_admin_referer( 'afwc-admin-search-commission-plans', 'security' );
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				wp_die( esc_html_x( 'You are not allowed to use this action', 'authorization failure message', 'affiliate-for-woocommerce' ) );
+			}
+
+			$term = ( ! empty( $_GET['term'] ) ) ? (string) urldecode( wp_strip_all_tags( wp_unslash( $_GET ['term'] ) ) ) : '';
+			$type = ( ! empty( $_GET['type'] ) ) ? (string) urldecode( wp_strip_all_tags( wp_unslash( $_GET ['type'] ) ) ) : 'affiliate';
+
 			if ( empty( $term ) ) {
-				die();
+				wp_die();
 			}
 
 			$rule_values = array();
@@ -323,8 +356,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 			}
 
 			echo wp_json_encode( $rule_values );
-			die();
-
+			wp_die();
 		}
 
 		/**
@@ -399,7 +431,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 					$product = wc_get_product( $id );
 
 					if ( $product instanceof WC_Product && is_callable( array( $product, 'get_formatted_name' ) ) ) {
-						$rule_values[ $id ] = $product->get_formatted_name();
+						$rule_values[ $id ] = wp_strip_all_tags( $product->get_formatted_name() );
 					}
 				}
 			}
@@ -498,6 +530,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 		 * @param string $params mixed.
 		 */
 		public function fetch_extra_data( $params ) {
+			check_admin_referer( 'afwc-admin-extra-data', 'security' );
 			$data = json_decode( $params['data'], true );
 			foreach ( $data as $type => $ids ) {
 				$function             = 'get_' . $type . '_id_name_map';
@@ -515,25 +548,7 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 				wp_send_json(
 					array(
 						'ACK' => 'Success',
-						'msg' => __( 'No commissions found', 'affiliate-for-woocommerce' ),
-					)
-				);
-			}
-		}
-
-		/**
-		 * Fetch data call
-		 *
-		 * @param string $params mixed.
-		 */
-		public function update_feedback( $params ) {
-			$update_action = ! empty( $params['update_action'] ) ? $params['update_action'] : '';
-			if ( ! empty( $update_action ) ) {
-				update_option( 'afwc_feedback_option_' . $update_action, true, 'no' );
-				wp_send_json(
-					array(
-						'ACK' => 'Success',
-						'msg' => __( 'Feedback option updated', 'affiliate-for-woocommerce' ),
+						'msg' => _x( 'No commission plans found', 'commission plans not found message', 'affiliate-for-woocommerce' ),
 					)
 				);
 			}
@@ -587,6 +602,22 @@ if ( ! class_exists( 'AFWC_Commission_Dashboard' ) ) {
 			 * @param array
 			 */
 			return apply_filters( 'afwc_get_commission_plans_order', $plan_order, array( 'source' => $this ) );
+		}
+
+		/**
+		 * Get commission plan statuses.
+		 *
+		 * @param string $status Plan Status.
+		 *
+		 * @return array|string Return the status title if the status is provided otherwise return array of all statuses.
+		 */
+		public static function get_statuses( $status = '' ) {
+			$statuses = array(
+				'Active' => _x( 'Active', 'active commission plan status', 'affiliate-for-woocommerce' ),
+				'Draft'  => _x( 'Draft', 'draft commission plan status', 'affiliate-for-woocommerce' ),
+			);
+
+			return empty( $status ) ? $statuses : ( ! empty( $statuses[ $status ] ) ? $statuses[ $status ] : '' );
 		}
 
 	}

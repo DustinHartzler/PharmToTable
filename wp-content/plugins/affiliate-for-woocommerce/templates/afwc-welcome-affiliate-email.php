@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/
  * @since       2.4.0
- * @version     1.1.0
+ * @version     1.1.1
  */
 
 // Exit if accessed directly.
@@ -27,19 +27,22 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <p><strong><?php echo esc_html__( 'Your personal affiliated link: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_attr( $affiliate_link ); ?></p>
 
-<p><strong><?php echo esc_html__( 'Your affiliate dashboard', 'affiliate-for-woocommerce' ); ?></strong></p>
+<p><strong><?php echo esc_html_x( 'Your affiliate dashboard', 'affiliate dashboard page text', 'affiliate-for-woocommerce' ); ?></strong></p>
 <p>
 	<?php
 		/* translators: %1$s: Opening a tag for affiliate my account link %2$s: closing a tag for affiliate my account link */
-		echo sprintf( esc_html__( 'Log in to %1$syour affiliate dashboard%2$s regularly. You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there. You can fully manage your account from the dashboard.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '">', '</a>' );
+		echo sprintf( esc_html_x( 'Log in to %1$syour affiliate dashboard%2$s regularly. You will find our current promotion campaigns, marketing assets, complete record of your referrals and payouts there. You can fully manage your account from the dashboard.', 'Message to view the affiliate dashboard', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $my_account_afwc_url ) . '">', '</a>' );
 	?>
 </p>
 
 <p><strong><?php echo esc_html__( 'Our products', 'affiliate-for-woocommerce' ); ?></strong></p>
 <p>
 	<?php
+		echo sprintf( esc_html__( 'You can refer people using your affiliate link. You can also promote individual products if you like.', 'affiliate-for-woocommerce' ) );
+	if ( ! empty( $shop_page ) ) {
 		/* translators: %1$s: Opening a tag for shop page link %2$s: closing a tag for shop page link */
-		echo sprintf( esc_html__( 'You can refer people using your affiliate link. You can also promote individual products if you like. %1$sHere is our complete product catalog%2$s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $shop_page ) . '">', '</a>' );
+		echo sprintf( esc_html__( ' %1$sHere is our complete product catalog%2$s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( $shop_page ) . '">', '</a>' );
+	}
 	?>
 </p>
 

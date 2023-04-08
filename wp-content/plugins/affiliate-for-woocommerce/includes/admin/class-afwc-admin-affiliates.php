@@ -3,9 +3,10 @@
  * Main class for Affiliates Admin
  *
  * @package     affiliate-for-woocommerce/includes/admin/
- * @version     1.3.5
+ * @version     1.6.1
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -216,38 +217,83 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			if ( ! empty( $this->sales_post_types ) ) {
 				if ( 1 === count( $this->sales_post_types ) ) {
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						$post_ids = $wpdb->get_col( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT DISTINCT ID
-																	FROM {$wpdb->posts}
-																	WHERE post_type = %s
-																		AND FIND_IN_SET ( post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )
-																		AND post_date BETWEEN %s AND %s",
-														current( $this->sales_post_types ),
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_order_status,
-														$this->from . ' 00:00:00',
-														$this->to . ' 23:59:59'
-													)
-						);
-					} else {
-						$post_ids = $wpdb->get_col( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore 
-														"SELECT DISTINCT ID 
-																		FROM {$wpdb->posts} 
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$post_ids = $wpdb->get_col( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT DISTINCT id
+																		FROM {$wpdb->prefix}wc_orders
+																		WHERE type = %s
+																			AND FIND_IN_SET ( CONVERT( status using %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+																			AND date_created_gmt BETWEEN %s AND %s",
+															current( $this->sales_post_types ),
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status,
+															$this->from . ' 00:00:00',
+															$this->to . ' 23:59:59'
+														)
+							);
+						} else {
+							$post_ids = $wpdb->get_col( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT DISTINCT ID
+																		FROM {$wpdb->posts}
 																		WHERE post_type = %s
-																		AND FIND_IN_SET ( post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )",
-														current( $this->sales_post_types ),
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_order_status
-													)
-						);
+																			AND FIND_IN_SET ( CONVERT(post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+																			AND post_date BETWEEN %s AND %s",
+															current( $this->sales_post_types ),
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status,
+															$this->from . ' 00:00:00',
+															$this->to . ' 23:59:59'
+														)
+							);
+						}
+					} else {
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$post_ids = $wpdb->get_col( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore 
+															"SELECT DISTINCT id 
+																			FROM {$wpdb->prefix}wc_orders
+																			WHERE type = %s
+																			AND FIND_IN_SET ( CONVERT( status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )",
+															current( $this->sales_post_types ),
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status
+														)
+							);
+						} else {
+							$post_ids = $wpdb->get_col( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore 
+															"SELECT DISTINCT ID 
+																			FROM {$wpdb->posts} 
+																			WHERE post_type = %s
+																			AND FIND_IN_SET ( CONVERT(post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )",
+															current( $this->sales_post_types ),
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status
+														)
+							);
+						}
 					}
 				} else {
 
@@ -255,25 +301,164 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					update_option( $option_nm, implode( ',', $this->sales_post_types ), 'no' );
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						$post_ids = $wpdb->get_col(  // phpcs:ignore
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$post_ids = $wpdb->get_col(  // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT DISTINCT id 
+																		FROM {$wpdb->prefix}wc_orders
+																		WHERE FIND_IN_SET ( CONVERT( status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+																			AND date_created_gmt BETWEEN %s AND %s
+																			AND FIND_IN_SET ( CONVERT( type USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																								FROM {$wpdb->prefix}options
+																								WHERE option_name = %s ) )",
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status,
+															$this->from . ' 00:00:00',
+															$this->to . ' 23:59:59',
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_nm
+														)
+							);
+						} else {
+							$post_ids = $wpdb->get_col(  // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT DISTINCT ID 
+																		FROM {$wpdb->posts}
+																		WHERE FIND_IN_SET ( CONVERT(post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+																			AND post_date BETWEEN %s AND %s
+																			AND FIND_IN_SET ( CONVERT(post_type USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																								FROM {$wpdb->prefix}options
+																								WHERE option_name = %s ) )",
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status,
+															$this->from . ' 00:00:00',
+															$this->to . ' 23:59:59',
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_nm
+														)
+							);
+						}
+					} else {
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$post_ids = $wpdb->get_col( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT DISTINCT id 
+																		FROM {$wpdb->prefix}wc_orders 
+																		WHERE FIND_IN_SET ( CONVERT( status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+																			AND FIND_IN_SET ( CONVERT( type USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																								FROM {$wpdb->prefix}options
+																								WHERE option_name = %s ) )",
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_nm
+														)
+							);
+						} else {
+							$post_ids = $wpdb->get_col( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT DISTINCT ID 
+																		FROM {$wpdb->posts} 
+																		WHERE FIND_IN_SET ( CONVERT(post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+																			AND FIND_IN_SET ( CONVERT(post_type USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																								FROM {$wpdb->prefix}options
+																								WHERE option_name = %s ) )",
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_nm
+														)
+							);
+						}
+					}
+
+					delete_option( $option_nm );
+				}
+			} else {
+				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
+					if ( AFWC_IS_HPOS_ENABLED ) {
+						$post_ids = $wpdb->get_col( // phpcs:ignore
 													$wpdb->prepare( // phpcs:ignore
-														"SELECT DISTINCT ID 
-																	FROM {$wpdb->posts}
-																	WHERE FIND_IN_SET ( post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )
-																		AND post_date BETWEEN %s AND %s
-																		AND FIND_IN_SET ( post_type COLLATE %s, ( SELECT option_value COLLATE %s
-																							FROM {$wpdb->prefix}options
-																							WHERE option_name = %s ) )",
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
+														"SELECT DISTINCT id 
+																	FROM {$wpdb->prefix}wc_orders 
+																	WHERE FIND_IN_SET ( CONVERT( status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+																		AND date_created_gmt BETWEEN %s AND %s",
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
 														$option_order_status,
 														$this->from . ' 00:00:00',
-														$this->to . ' 23:59:59',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_nm
+														$this->to . ' 23:59:59'
+													)
+						); // phpcs:ignore
+					} else {
+						$post_ids = $wpdb->get_col( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT DISTINCT ID 
+																	FROM {$wpdb->posts} 
+																	WHERE FIND_IN_SET ( CONVERT(post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+																		AND post_date BETWEEN %s AND %s",
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														$option_order_status,
+														$this->from . ' 00:00:00',
+														$this->to . ' 23:59:59'
+													)
+						); // phpcs:ignore
+					}
+				} else {
+					if ( AFWC_IS_HPOS_ENABLED ) {
+						$post_ids = $wpdb->get_col( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT DISTINCT id 
+																	FROM {$wpdb->prefix}wc_orders 
+																	WHERE FIND_IN_SET ( CONVERT( status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )",
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														$option_order_status
 													)
 						);
 					} else {
@@ -281,54 +466,17 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 													$wpdb->prepare( // phpcs:ignore
 														"SELECT DISTINCT ID 
 																	FROM {$wpdb->posts} 
-																	WHERE FIND_IN_SET ( post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )
-																		AND FIND_IN_SET ( post_type COLLATE %s, ( SELECT option_value COLLATE %s
-																							FROM {$wpdb->prefix}options
-																							WHERE option_name = %s ) )",
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_order_status,
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_nm
+																	WHERE FIND_IN_SET ( CONVERT(post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )",
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														AFWC_SQL_CHARSET,
+														AFWC_SQL_COLLATION,
+														$option_order_status
 													)
 						);
 					}
-
-					delete_option( $option_nm );
-				}
-			} else {
-				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-					$post_ids = $wpdb->get_col( // phpcs:ignore
-												$wpdb->prepare( // phpcs:ignore
-													"SELECT DISTINCT ID 
-																FROM {$wpdb->posts} 
-																WHERE FIND_IN_SET ( post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )
-																	AND post_date BETWEEN %s AND %s",
-													AFWC_OPTION_NAME_COLLATION,
-													AFWC_OPTION_NAME_COLLATION,
-													$option_order_status,
-													$this->from . ' 00:00:00',
-													$this->to . ' 23:59:59'
-												)
-					); // phpcs:ignore
-				} else {
-					$post_ids = $wpdb->get_col( // phpcs:ignore
-												$wpdb->prepare( // phpcs:ignore
-													"SELECT DISTINCT ID 
-																FROM {$wpdb->posts} 
-																WHERE FIND_IN_SET ( post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )",
-													AFWC_OPTION_NAME_COLLATION,
-													AFWC_OPTION_NAME_COLLATION,
-													$option_order_status
-												)
-					);
 				}
 			}
 
@@ -336,9 +484,8 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 
 			$storewide_sales = 0;
 			if ( ! empty( $post_ids ) ) {
-
-				// is this line needed?
-				$storewide_post_id_query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE 1"; // phpcs:ignore
+				// is this block of code needed?
+				$storewide_post_id_query = AFWC_IS_HPOS_ENABLED ? "SELECT DISTINCT id FROM {$wpdb->prefix}wc_orders WHERE 1" : "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE 1"; // phpcs:ignore
 
 				// Let 3rd party plugin developers to calculate storewide sales for their custom post type.
 				// Remember to add sales to $storewide_sales.
@@ -364,9 +511,11 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 
 			$prefixed_statuses = afwc_get_prefixed_order_statuses();
 
-			foreach ( $this->affiliates_orders as $key => $order_id ) {
-				if ( ! empty( $this->affiliates_referrals[ $order_id ] ) && in_array( $this->affiliates_referrals[ $order_id ], $prefixed_statuses, true ) && ! in_array( $order_id, $post_ids, true ) ) {
-					$post_ids[] = $order_id;
+			if ( ! empty( $prefixed_statuses ) && ! empty( $this->affiliates_referrals ) ) {
+				foreach ( $this->affiliates_orders as $key => $order_id ) {
+					if ( ! empty( $this->affiliates_referrals[ $order_id ] ) && in_array( $this->affiliates_referrals[ $order_id ], $prefixed_statuses, true ) && ! in_array( $order_id, $post_ids, true ) ) {
+						$post_ids[] = $order_id;
+					}
 				}
 			}
 
@@ -374,14 +523,13 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			$completed_affiliates_sales = 0;
 
 			if ( ! empty( $post_ids ) ) {
-
 				// Let 3rd party plugin developers to calculate affiliates sales for their custom post type.
 				$completed_affiliates_sales = apply_filters( 'afwc_completed_affiliates_sales', $completed_affiliates_sales, $post_ids );
-
-				$refunded_affiliates_sales = ! empty( $this->affiliates_refund ) ? $this->affiliates_refund : 0;
-
-				$affiliates_sales = floatval( $completed_affiliates_sales ) + floatval( $refunded_affiliates_sales );
 			}
+
+			$refunded_affiliates_sales = ! empty( $this->affiliates_refund ) ? $this->affiliates_refund : 0;
+
+			$affiliates_sales = floatval( $completed_affiliates_sales ) + floatval( $refunded_affiliates_sales );
 
 			return floatval( $affiliates_sales );
 		}
@@ -535,6 +683,7 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			update_option( $temp_option_key, implode( ',', $paid_order_statuses ), 'no' );
 
 			if ( ! empty( $this->affiliate_ids ) ) {
+
 				if ( 1 === count( $this->affiliate_ids ) ) {
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
@@ -542,21 +691,25 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 															$wpdb->prepare( // phpcs:ignore
 																"SELECT IFNULL(SUM( amount ), 0) as gross_commissions,
 																					IFNULL(SUM( CASE WHEN status = 'paid' THEN amount END ), 0) as paid_commissions,
-																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND  FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
+																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND  FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s )  ) THEN amount END ), 0) as unpaid_commissions,
-																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
+																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s )  ) THEN affiliate_id END) ), 0) as unpaid_affiliates,
 																					IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE affiliate_id = %d
 																				AND datetime BETWEEN %s AND %s AND status != %s",
-																AFWC_OPTION_NAME_COLLATION,
-																AFWC_OPTION_NAME_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
 																$temp_option_key,
-																AFWC_OPTION_NAME_COLLATION,
-																AFWC_OPTION_NAME_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
 																$temp_option_key,
 																current( $this->affiliate_ids ),
 																$this->from . ' 00:00:00',
@@ -570,20 +723,24 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 															$wpdb->prepare( // phpcs:ignore
 																"SELECT IFNULL(SUM( amount ), 0) as gross_commissions,
 																					IFNULL(SUM( CASE WHEN status = 'paid' THEN amount END ), 0) as paid_commissions,
-																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
+																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s )  ) THEN amount END ), 0) as unpaid_commissions,
-																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
+																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s )  ) THEN affiliate_id END) ), 0) as unpaid_affiliates,
 																					IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
 																			FROM {$wpdb->prefix}afwc_referrals
 																			WHERE affiliate_id = %d  AND status != %s",
-																AFWC_OPTION_NAME_COLLATION,
-																AFWC_OPTION_NAME_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
 																$temp_option_key,
-																AFWC_OPTION_NAME_COLLATION,
-																AFWC_OPTION_NAME_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
 																$temp_option_key,
 																current( $this->affiliate_ids ),
 																'draft'
@@ -601,10 +758,10 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 															$wpdb->prepare( // phpcs:ignore
 																"SELECT IFNULL(SUM( amount ), 0) as gross_commissions,
 																					IFNULL(SUM( CASE WHEN status = 'paid' THEN amount END ), 0) as paid_commissions,
-																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
+																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s )  ) THEN amount END ), 0) as unpaid_commissions,
-																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
+																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s )  ) THEN affiliate_id END) ), 0) as unpaid_affiliates,
 																					IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
@@ -613,11 +770,15 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																											FROM {$wpdb->prefix}options
 																											WHERE option_name = %s ) )
 																				AND datetime BETWEEN %s AND %s AND status != %s",
-																AFWC_OPTION_NAME_COLLATION,
-																AFWC_OPTION_NAME_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
 																$temp_option_key,
-																AFWC_OPTION_NAME_COLLATION,
-																AFWC_OPTION_NAME_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
 																$temp_option_key,
 																$option_nm,
 																$this->from . ' 00:00:00',
@@ -631,10 +792,10 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 															$wpdb->prepare( // phpcs:ignore
 																"SELECT IFNULL(SUM( amount ), 0) as gross_commissions,
 																					IFNULL(SUM( CASE WHEN status = 'paid' THEN amount END ), 0) as paid_commissions,
-																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
+																					IFNULL(SUM( CASE WHEN status = 'unpaid' AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s )  ) THEN amount END ), 0) as unpaid_commissions,
-																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
+																					IFNULL(COUNT( DISTINCT(CASE WHEN status = 'unpaid' AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
 																										FROM {$wpdb->prefix}options
 																										WHERE option_name = %s )  ) THEN affiliate_id END) ), 0) as unpaid_affiliates,
 																					IFNULL(COUNT( DISTINCT IF( user_id > 0, user_id, CONCAT_WS( ':', ip, user_id ) ) ), 0) as customers_count
@@ -642,11 +803,15 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																			WHERE FIND_IN_SET ( affiliate_id, ( SELECT option_value
 																											FROM {$wpdb->prefix}options
 																											WHERE option_name = %s ) )  AND status != %s",
-																AFWC_OPTION_NAME_COLLATION,
-																AFWC_OPTION_NAME_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
 																$temp_option_key,
-																AFWC_OPTION_NAME_COLLATION,
-																AFWC_OPTION_NAME_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
+																AFWC_SQL_CHARSET,
+																AFWC_SQL_COLLATION,
 																$temp_option_key,
 																$option_nm,
 																'draft'
@@ -872,126 +1037,252 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				if ( 1 === count( $order_ids ) ) {
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
 
-						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
-																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
-																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
-											                                                            IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
-											                                                            IFNULL( referrals.amount, 0.00 ) AS commission,
-								                                                           				referrals.status,
-											                                                            referrals.type AS referral_type
-																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
-																									LEFT JOIN {$wpdb->postmeta} AS postmeta
-																										ON ( postmeta.post_id = referrals.post_id 
-																											AND postmeta.meta_key = '_order_total' )
-																								WHERE referrals.post_id = %d
-																									AND referrals.datetime BETWEEN %s AND %s
-																									AND referrals.affiliate_id = %d
-																								ORDER BY referrals.datetime DESC
-																								LIMIT %d,%d",
-																					AFWC_TIMEZONE_STR,
-																					'%d-%b-%Y',
-																					current( $order_ids ),
-																					$this->from . ' 00:00:00',
-																					$this->to . ' 23:59:59',
-																					current( $this->affiliate_ids ),
-																					$this->start_limit,
-																					$this->batch_limit
-																				),
-							'ARRAY_A'
-						);
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id,
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+												                                                            IFNULL( wco.total_amount, 0.00 ) AS order_total,
+												                                                            IFNULL( referrals.amount, 0.00 ) AS commission,
+									                                                           				referrals.status,
+												                                                            referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																											ON ( wco.id = referrals.post_id )
+																									WHERE referrals.post_id = %d
+																										AND referrals.datetime BETWEEN %s AND %s
+																										AND referrals.affiliate_id = %d
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						current( $order_ids ),
+																						$this->from . ' 00:00:00',
+																						$this->to . ' 23:59:59',
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						} else {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id,
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+												                                                            IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+												                                                            IFNULL( referrals.amount, 0.00 ) AS commission,
+									                                                           				referrals.status,
+												                                                            referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->postmeta} AS postmeta
+																											ON ( postmeta.post_id = referrals.post_id 
+																												AND postmeta.meta_key = '_order_total' )
+																									WHERE referrals.post_id = %d
+																										AND referrals.datetime BETWEEN %s AND %s
+																										AND referrals.affiliate_id = %d
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						current( $order_ids ),
+																						$this->from . ' 00:00:00',
+																						$this->to . ' 23:59:59',
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						}
 					} else {
 
-						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
-																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
-																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
-																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
-																										IFNULL( referrals.amount, 0.00 ) AS commission,
-																										referrals.status,
-																										referrals.type AS referral_type
-																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
-																									LEFT JOIN {$wpdb->postmeta} AS postmeta
-																										ON ( postmeta.post_id = referrals.post_id 
-																											AND postmeta.meta_key = '_order_total' )
-																								WHERE referrals.post_id = %d
-																								AND referrals.affiliate_id = %d
-																								ORDER BY referrals.datetime DESC
-																								LIMIT %d,%d",
-																					AFWC_TIMEZONE_STR,
-																					'%d-%b-%Y',
-																					current( $order_ids ),
-																					current( $this->affiliate_ids ),
-																					$this->start_limit,
-																					$this->batch_limit
-																				),
-							'ARRAY_A'
-						);
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id,
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( wco.total_amount, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																											ON ( wco.id = referrals.post_id )
+																									WHERE referrals.post_id = %d
+																									AND referrals.affiliate_id = %d
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						current( $order_ids ),
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						} else {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+											$wpdb->prepare( // phpcs:ignore
+												"SELECT referrals.post_id AS order_id,
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->postmeta} AS postmeta
+																											ON ( postmeta.post_id = referrals.post_id 
+																												AND postmeta.meta_key = '_order_total' )
+																									WHERE referrals.post_id = %d
+																									AND referrals.affiliate_id = %d
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+												AFWC_TIMEZONE_STR,
+												'%d-%b-%Y',
+												current( $order_ids ),
+												current( $this->affiliate_ids ),
+												$this->start_limit,
+												$this->batch_limit
+											),
+								'ARRAY_A'
+							);
+						}
 					}
 				} else {
 					$option_nm = 'afwc_orders_details_order_ids_' . uniqid();
 					update_option( $option_nm, implode( ',', $order_ids ), 'no' );
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
-																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
-																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
-																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
-																										IFNULL( referrals.amount, 0.00 ) AS commission,
-																										referrals.status,
-																										referrals.type AS referral_type
-																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
-																									LEFT JOIN {$wpdb->postmeta} AS postmeta
-																										ON ( postmeta.post_id = referrals.post_id 
-																											AND postmeta.meta_key = '_order_total' )
-																								WHERE FIND_IN_SET ( referrals.post_id, ( SELECT option_value
-																																FROM {$wpdb->prefix}options
-																																WHERE option_name = %s ) )
-																									AND referrals.datetime BETWEEN %s AND %s
-																									AND referrals.affiliate_id = %d
-																								ORDER BY referrals.datetime DESC
-																								LIMIT %d,%d",
-																					AFWC_TIMEZONE_STR,
-																					'%d-%b-%Y',
-																					$option_nm,
-																					$this->from . ' 00:00:00',
-																					$this->to . ' 23:59:59',
-																					current( $this->affiliate_ids ),
-																					$this->start_limit,
-																					$this->batch_limit
-																				),
-							'ARRAY_A'
-						);
-
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id,
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( wco.total_amount, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																											ON ( wco.id = referrals.post_id )
+																									WHERE FIND_IN_SET ( referrals.post_id, ( SELECT option_value
+																																	FROM {$wpdb->prefix}options
+																																	WHERE option_name = %s ) )
+																										AND referrals.datetime BETWEEN %s AND %s
+																										AND referrals.affiliate_id = %d
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						$option_nm,
+																						$this->from . ' 00:00:00',
+																						$this->to . ' 23:59:59',
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						} else {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id,
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->postmeta} AS postmeta
+																											ON ( postmeta.post_id = referrals.post_id 
+																												AND postmeta.meta_key = '_order_total' )
+																									WHERE FIND_IN_SET ( referrals.post_id, ( SELECT option_value
+																																	FROM {$wpdb->prefix}options
+																																	WHERE option_name = %s ) )
+																										AND referrals.datetime BETWEEN %s AND %s
+																										AND referrals.affiliate_id = %d
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						$option_nm,
+																						$this->from . ' 00:00:00',
+																						$this->to . ' 23:59:59',
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						}
 					} else {
-						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
-																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
-																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
-																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
-																										IFNULL( referrals.amount, 0.00 ) AS commission,
-																										referrals.status,
-																										referrals.type AS referral_type
-																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
-																									LEFT JOIN {$wpdb->postmeta} AS postmeta
-																										ON ( postmeta.post_id = referrals.post_id 
-																											AND postmeta.meta_key = '_order_total' )
-																								WHERE FIND_IN_SET ( referrals.post_id, ( SELECT option_value
-																																FROM {$wpdb->prefix}options
-																																WHERE option_name = %s ) )
-																							    AND referrals.affiliate_id = %d
-																								ORDER BY referrals.datetime DESC
-																								LIMIT %d,%d",
-																					AFWC_TIMEZONE_STR,
-																					'%d-%b-%Y',
-																					$option_nm,
-																					current( $this->affiliate_ids ),
-																					$this->start_limit,
-																					$this->batch_limit
-																				),
-							'ARRAY_A'
-						);
+
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( wco.total_amount, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																											ON ( wco.id = referrals.post_id )
+																									WHERE FIND_IN_SET ( referrals.post_id, ( SELECT option_value
+																																	FROM {$wpdb->prefix}options
+																																	WHERE option_name = %s ) )
+																								    AND referrals.affiliate_id = %d
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						$option_nm,
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						} else {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																								DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																								IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+																								IFNULL( referrals.amount, 0.00 ) AS commission,
+																								referrals.status,
+																								referrals.type AS referral_type,
+																								referrals.referral_id
+																	  					FROM {$wpdb->prefix}afwc_referrals AS referrals
+																							LEFT JOIN {$wpdb->postmeta} AS postmeta
+																								ON ( postmeta.post_id = referrals.post_id 
+																									AND postmeta.meta_key = '_order_total' )
+																						WHERE FIND_IN_SET ( referrals.post_id, ( SELECT option_value
+																														FROM {$wpdb->prefix}options
+																														WHERE option_name = %s ) )
+																					    AND referrals.affiliate_id = %d
+																						ORDER BY referrals.datetime DESC
+																						LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						$option_nm,
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						}
 					}
 
 					delete_option( $option_nm );
@@ -1001,55 +1292,116 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
 
-						$affiliates_order_details_results  = $wpdb->get_results( // phpcs:ignore
-																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
-																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
-																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
-																										IFNULL( referrals.amount, 0.00 ) AS commission,
-																										referrals.status,
-																										referrals.type AS referral_type
-																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
-																									LEFT JOIN {$wpdb->postmeta} AS postmeta
-																										ON ( postmeta.post_id = referrals.post_id 
-																											AND postmeta.meta_key = '_order_total' )
-																								WHERE referrals.affiliate_id = %d
-																									AND referrals.datetime BETWEEN %s AND %s
-																								ORDER BY referrals.datetime DESC
-																								LIMIT %d,%d",
-																					AFWC_TIMEZONE_STR,
-																					'%d-%b-%Y',
-																					current( $this->affiliate_ids ),
-																					$this->from . ' 00:00:00',
-																					$this->to . ' 23:59:59',
-																					$this->start_limit,
-																					$this->batch_limit
-																				),
-						'ARRAY_A'); // phpcs:ignore
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$affiliates_order_details_results  = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( wco.total_amount, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																											ON ( wco.id = referrals.post_id )
+																									WHERE referrals.affiliate_id = %d
+																										AND referrals.datetime BETWEEN %s AND %s
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						current( $this->affiliate_ids ),
+																						$this->from . ' 00:00:00',
+																						$this->to . ' 23:59:59',
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							); // phpcs:ignore
+						} else {
+							$affiliates_order_details_results  = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->postmeta} AS postmeta
+																											ON ( postmeta.post_id = referrals.post_id 
+																												AND postmeta.meta_key = '_order_total' )
+																									WHERE referrals.affiliate_id = %d
+																										AND referrals.datetime BETWEEN %s AND %s
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						current( $this->affiliate_ids ),
+																						$this->from . ' 00:00:00',
+																						$this->to . ' 23:59:59',
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							); // phpcs:ignore
 
+						}
 					} else {
-						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
-																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
-																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
-																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
-																										IFNULL( referrals.amount, 0.00 ) AS commission,
-																										referrals.status,
-																										referrals.type AS referral_type
-																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
-																									LEFT JOIN {$wpdb->postmeta} AS postmeta
-																										ON ( postmeta.post_id = referrals.post_id 
-																											AND postmeta.meta_key = '_order_total' )
-																								WHERE referrals.affiliate_id = %d
-																								ORDER BY referrals.datetime DESC
-																								LIMIT %d,%d",
-																					AFWC_TIMEZONE_STR,
-																					'%d-%b-%Y',
-																					current( $this->affiliate_ids ),
-																					$this->start_limit,
-																					$this->batch_limit
-																				),
-						'ARRAY_A'); // phpcs:ignore
+
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( wco.total_amount, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																											ON ( postmeta.post_id = referrals.post_id )
+																									WHERE referrals.affiliate_id = %d
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							); // phpcs:ignore
+						} else {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																									DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																									IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+																									IFNULL( referrals.amount, 0.00 ) AS commission,
+																									referrals.status,
+																									referrals.type AS referral_type,
+																									referrals.referral_id
+																	  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																								LEFT JOIN {$wpdb->postmeta} AS postmeta
+																									ON ( postmeta.post_id = referrals.post_id 
+																										AND postmeta.meta_key = '_order_total' )
+																							WHERE referrals.affiliate_id = %d
+																							ORDER BY referrals.datetime DESC
+																							LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						current( $this->affiliate_ids ),
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							); // phpcs:ignore
+
+						}
 					}
 				} else {
 
@@ -1057,27 +1409,149 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 					update_option( $option_nm, implode( ',', $this->affiliate_ids ), 'no' );
 
 					if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
+
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( wco.total_amount, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																											ON ( wco.id = referrals.post_id )
+																									WHERE FIND_IN_SET ( referrals.affiliate_id, ( SELECT option_value
+																																	FROM {$wpdb->prefix}options
+																																	WHERE option_name = %s ) )
+																										AND referrals.datetime BETWEEN %s AND %s
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						$option_nm,
+																						$this->from . ' 00:00:00',
+																						$this->to . ' 23:59:59',
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						} else {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->postmeta} AS postmeta
+																											ON ( postmeta.post_id = referrals.post_id 
+																												AND postmeta.meta_key = '_order_total' )
+																									WHERE FIND_IN_SET ( referrals.affiliate_id, ( SELECT option_value
+																																	FROM {$wpdb->prefix}options
+																																	WHERE option_name = %s ) )
+																										AND referrals.datetime BETWEEN %s AND %s
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						$option_nm,
+																						$this->from . ' 00:00:00',
+																						$this->to . ' 23:59:59',
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						}
+					} else {
+
+						if ( AFWC_IS_HPOS_ENABLED ) {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( wco.total_amount, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																											ON ( wco.id = referrals.post_id )
+																									WHERE FIND_IN_SET ( referrals.affiliate_id, ( SELECT option_value
+																																	FROM {$wpdb->prefix}options
+																																	WHERE option_name = %s ) )
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						$option_nm,
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						} else {
+							$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																					$wpdb->prepare( // phpcs:ignore
+																						"SELECT referrals.post_id AS order_id, 
+																											DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																											IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+																											IFNULL( referrals.amount, 0.00 ) AS commission,
+																											referrals.status,
+																											referrals.type AS referral_type,
+																											referrals.referral_id
+																			  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																										LEFT JOIN {$wpdb->postmeta} AS postmeta
+																											ON ( postmeta.post_id = referrals.post_id 
+																												AND postmeta.meta_key = '_order_total' )
+																									WHERE FIND_IN_SET ( referrals.affiliate_id, ( SELECT option_value
+																																	FROM {$wpdb->prefix}options
+																																	WHERE option_name = %s ) )
+																									ORDER BY referrals.datetime DESC
+																									LIMIT %d,%d",
+																						AFWC_TIMEZONE_STR,
+																						'%d-%b-%Y',
+																						$option_nm,
+																						$this->start_limit,
+																						$this->batch_limit
+																					),
+								'ARRAY_A'
+							);
+						}
+					}
+
+					delete_option( $option_nm );
+				}
+			} else {
+				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
+					if ( AFWC_IS_HPOS_ENABLED ) {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
+																					"SELECT referrals.post_id AS order_id, 
 																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
-																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
+																										IFNULL( wco.total_amount, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
 																										referrals.status,
-																										referrals.type AS referral_type
+																										referrals.type AS referral_type,
+																										referrals.referral_id
 																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
-																									LEFT JOIN {$wpdb->postmeta} AS postmeta
-																										ON ( postmeta.post_id = referrals.post_id 
-																											AND postmeta.meta_key = '_order_total' )
-																								WHERE FIND_IN_SET ( referrals.affiliate_id, ( SELECT option_value
-																																FROM {$wpdb->prefix}options
-																																WHERE option_name = %s ) )
+																									LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																										ON ( wco.id = referrals.post_id )
+																								WHERE referrals.affiliate_id != %d
 																									AND referrals.datetime BETWEEN %s AND %s
 																								ORDER BY referrals.datetime DESC
 																								LIMIT %d,%d",
 																					AFWC_TIMEZONE_STR,
 																					'%d-%b-%Y',
-																					$option_nm,
+																					0,
 																					$this->from . ' 00:00:00',
 																					$this->to . ' 23:59:59',
 																					$this->start_limit,
@@ -1086,46 +1560,15 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 							'ARRAY_A'
 						);
 					} else {
-
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
+																					"SELECT referrals.post_id AS order_id, 
 																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
 																										referrals.status,
-																										referrals.type AS referral_type
-																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
-																									LEFT JOIN {$wpdb->postmeta} AS postmeta
-																										ON ( postmeta.post_id = referrals.post_id 
-																											AND postmeta.meta_key = '_order_total' )
-																								WHERE FIND_IN_SET ( referrals.affiliate_id, ( SELECT option_value
-																																FROM {$wpdb->prefix}options
-																																WHERE option_name = %s ) )
-																								ORDER BY referrals.datetime DESC
-																								LIMIT %d,%d",
-																					AFWC_TIMEZONE_STR,
-																					'%d-%b-%Y',
-																					$option_nm,
-																					$this->start_limit,
-																					$this->batch_limit
-																				),
-							'ARRAY_A'
-						);
-					}
-
-					delete_option( $option_nm );
-				}
-			} else {
-				if ( ! empty( $this->from ) && ! empty( $this->to ) ) {
-						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
-																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
-																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
-																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
-																										IFNULL( referrals.amount, 0.00 ) AS commission,
-																										referrals.status,
-																										referrals.type AS referral_type
+																										referrals.type AS referral_type,
+																										referrals.referral_id
 																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
 																									LEFT JOIN {$wpdb->postmeta} AS postmeta
 																										ON ( postmeta.post_id = referrals.post_id 
@@ -1144,15 +1587,42 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																				),
 							'ARRAY_A'
 						);
+					}
 				} else {
+					if ( AFWC_IS_HPOS_ENABLED ) {
 						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
 																				$wpdb->prepare( // phpcs:ignore
-																					"SELECT DISTINCT referrals.post_id AS order_id, 
+																					"SELECT referrals.post_id AS order_id, 
+																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
+																										IFNULL( wco.total_amount, 0.00 ) AS order_total,
+																										IFNULL( referrals.amount, 0.00 ) AS commission,
+																										referrals.status,
+																										referrals.type AS referral_type,
+																										referrals.referral_id
+																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
+																									LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+																										ON ( wco.id = referrals.post_id )
+																								WHERE referrals.affiliate_id != %d
+																								ORDER BY referrals.datetime DESC
+																								LIMIT %d,%d",
+																					AFWC_TIMEZONE_STR,
+																					'%d-%b-%Y',
+																					0,
+																					$this->start_limit,
+																					$this->batch_limit
+																				),
+							'ARRAY_A'
+						);
+					} else {
+						$affiliates_order_details_results = $wpdb->get_results( // phpcs:ignore
+																				$wpdb->prepare( // phpcs:ignore
+																					"SELECT referrals.post_id AS order_id, 
 																										DATE_FORMAT( CONVERT_TZ( datetime, '+00:00', %s ), %s ) AS datetime,
 																										IFNULL( postmeta.meta_value, 0.00 ) AS order_total,
 																										IFNULL( referrals.amount, 0.00 ) AS commission,
 																										referrals.status,
-																										referrals.type AS referral_type
+																										referrals.type AS referral_type,
+																										referrals.referral_id
 																		  						FROM {$wpdb->prefix}afwc_referrals AS referrals
 																									LEFT JOIN {$wpdb->postmeta} AS postmeta
 																										ON ( postmeta.post_id = referrals.post_id 
@@ -1168,8 +1638,10 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 																				),
 							'ARRAY_A'
 						);
+					}
 				}
 			}
+
 			if ( ! empty( $affiliates_order_details_results ) ) {
 				foreach ( $affiliates_order_details_results as $result ) {
 					$order_ids[]                = $result['order_id'];
@@ -1183,31 +1655,63 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 				$option_nm = 'afwc_orders_details_affiliate_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', array_unique( $order_ids ) ), 'no' );
 
-				$results = $wpdb->get_results( // phpcs:ignore
-												$wpdb->prepare( // phpcs:ignore
-													"SELECT post_id AS order_id,
-																		GROUP_CONCAT(CASE WHEN meta_key IN ('_billing_first_name', '_billing_last_name') THEN meta_value END SEPARATOR ' ') AS billing_name,
-																		GROUP_CONCAT(CASE WHEN meta_key = '_billing_email' THEN meta_value END) as billing_email,
-																		GROUP_CONCAT(CASE WHEN meta_key = '_customer_user' THEN meta_value END) as customer_user,
-																		GROUP_CONCAT(CASE WHEN meta_key = '_order_currency' THEN meta_value END) as currency
-																FROM {$wpdb->postmeta} AS postmeta
-																WHERE meta_key IN ('_billing_first_name', '_billing_last_name', '_billing_email', '_customer_user', '_order_currency')
-																	AND FIND_IN_SET ( post_id, ( SELECT option_value
-																								FROM {$wpdb->prefix}options
-																								WHERE option_name = %s ) )
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$results = $wpdb->get_results( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT wco.id AS order_id,
+																	CONCAT_WS( ' ', wcoa.first_name, wcoa.last_name ) AS billing_name,
+																	wco.billing_email AS billing_email,
+																	wco.customer_id AS customer_user,
+																	wco.currency AS currency
+																FROM {$wpdb->prefix}wc_orders AS wco
+																	LEFT JOIN {$wpdb->prefix}wc_order_addresses AS wcoa
+																		ON( wco.id = wcoa.order_id )
+																		WHERE wco.type = %s
+																				AND wcoa.address_type = %s
+																				AND FIND_IN_SET ( wco.id, ( SELECT option_value
+																									FROM {$wpdb->prefix}options
+																									WHERE option_name = %s ) )
 																GROUP BY order_id",
-													$option_nm
-												),
-					'ARRAY_A'
-				);
+														'shop_order',
+														'billing',
+														$option_nm
+													),
+						'ARRAY_A'
+					);
+				} else {
+					$results = $wpdb->get_results( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT post_id AS order_id,
+																			GROUP_CONCAT(CASE WHEN meta_key IN ('_billing_first_name', '_billing_last_name') THEN meta_value END SEPARATOR ' ') AS billing_name,
+																			GROUP_CONCAT(CASE WHEN meta_key = '_billing_email' THEN meta_value END) as billing_email,
+																			GROUP_CONCAT(CASE WHEN meta_key = '_customer_user' THEN meta_value END) as customer_user,
+																			GROUP_CONCAT(CASE WHEN meta_key = '_order_currency' THEN meta_value END) as currency
+																	FROM {$wpdb->postmeta} AS postmeta
+																	WHERE meta_key IN ('_billing_first_name', '_billing_last_name', '_billing_email', '_customer_user', '_order_currency')
+																		AND FIND_IN_SET ( post_id, ( SELECT option_value
+																									FROM {$wpdb->prefix}options
+																									WHERE option_name = %s ) )
+																	GROUP BY order_id",
+														$option_nm
+													),
+						'ARRAY_A'
+					);
+				}
 
 				if ( ! empty( $results ) ) {
 					foreach ( $results as $detail ) {
 						$order_filters = ! empty( $detail['customer_user'] ) ? array( '_customer_user' => $detail['customer_user'] ) : ( ( ! empty( $detail['billing_email'] ) ) ? array( 's' => $detail['billing_email'] ) : array() );
 
 						$orders_billing_name[ $detail['order_id'] ]['customer_orders_url'] = ! empty( $order_filters ) ? add_query_arg( $order_filters, admin_url( 'edit.php?post_type=shop_order' ) ) : '';
-						$orders_billing_name[ $detail['order_id'] ]['billing_name']        = ! empty( $detail['billing_name'] ) ? $detail['billing_name'] : ( ( ! empty( $detail['billing_email'] ) ) ? $detail['billing_email'] : __( 'Guest', 'affiliate-for-woocommerce' ) );
-						$orders_billing_name[ $detail['order_id'] ]['currency']            = html_entity_decode( get_woocommerce_currency_symbol( $detail['currency'] ) );
+
+						// New table will return billing_name column with an extra space, so setting it to NULL.
+						$detail['billing_name'] = ctype_space( $detail['billing_name'] ) ? null : $detail['billing_name'];
+
+						// Use billing_name if found, else billing_email if found, else guest.
+						$orders_billing_name[ $detail['order_id'] ]['billing_name'] = ! empty( $detail['billing_name'] ) ? $detail['billing_name'] : ( ( ! empty( $detail['billing_email'] ) ) ? $detail['billing_email'] : __( 'Guest', 'affiliate-for-woocommerce' ) );
+
+						$orders_billing_name[ $detail['order_id'] ]['currency']     = ! empty( $detail['currency'] ) ? html_entity_decode( get_woocommerce_currency_symbol( $detail['currency'] ) ) : '';
+						$orders_billing_name[ $detail['order_id'] ]['currencyCode'] = ! empty( $detail['currency'] ) ? esc_html( $detail['currency'] ) : '';
 					}
 
 					foreach ( $affiliates_order_details as $key => $detail ) {
@@ -1485,6 +1989,158 @@ if ( ! class_exists( 'AFWC_Admin_Affiliates' ) ) {
 			return $products;
 		}
 
+		/**
+		 * Get the linked lifetime customers by the affiliate ID for showing the list in Affiliate Dashboard.
+		 *
+		 * @return array Return the array of customers.
+		 */
+		public function get_ltc_customers() {
+
+			$affiliate_id = ( ! empty( $this->affiliate_ids ) && is_array( $this->affiliate_ids ) ) ? intval( current( $this->affiliate_ids ) ) : 0;
+
+			// Return empty data if the affiliate is empty.
+			if ( empty( $affiliate_id ) ) {
+				return array();
+			}
+
+			$affiliate_obj = new AFWC_Affiliate( $affiliate_id );
+			$customers     = is_callable( array( $affiliate_obj, 'get_ltc_customers' ) ) ? $affiliate_obj->get_ltc_customers() : array();
+
+			// Return empty data if the customer is empty.
+			if ( empty( $customers ) ) {
+				return array();
+			}
+
+			$customer_list = array();
+
+			foreach ( $customers as $customer ) {
+				if ( is_numeric( $customer ) ) {
+					$user_data                  = new WP_User( intval( $customer ) );
+					$customer_list[ $customer ] = array(
+						'name'  => ! empty( $user_data->display_name ) ? $user_data->display_name : '',
+						'email' => ! empty( $user_data->user_email ) ? $user_data->user_email : '',
+						'id'    => intval( $customer ),
+					);
+				} elseif ( is_email( $customer ) ) {
+					$customer_list[ $customer ] = array(
+						'email' => sanitize_email( $customer ),
+					);
+				}
+			}
+
+			return $customer_list;
+		}
+
+		/**
+		 * Search the customers.
+		 *
+		 * @param string $term The terms.
+		 *
+		 * @return array Return the array of customers.
+		 */
+		public function search_ltc_customers( $term = '' ) {
+
+			// Return empty data if search term is missing.
+			if ( empty( $term ) ) {
+				return array();
+			}
+
+			$search = array(
+				'search'         => '*' . $term . '*',
+				'search_columns' => array( 'ID', 'user_nicename', 'user_login', 'user_email' ),
+			);
+
+			$users = get_users( $search );
+
+			$customers = array();
+			if ( ! empty( $users ) ) {
+				foreach ( $users as $user ) {
+					$user_data = ! empty( $user->data ) ? $user->data : null;
+					if ( ! empty( $user_data ) && ! empty( $user_data->ID ) && ! empty( $user_data->user_email ) ) {
+						$customers[] = array(
+							'email' => $user_data->user_email,
+							'name'  => ! empty( $user_data->display_name ) ? $user_data->display_name : '',
+							'id'    => intval( $user_data->ID ),
+							'text'  => sprintf(
+								'%1$s (#%2$d &ndash; %3$s)',
+								! empty( $user_data->display_name ) ? $user_data->display_name : '',
+								absint( $user_data->ID ),
+								$user_data->user_email
+							),
+						);
+					}
+				}
+			}
+
+			$emails = ! empty( $customers ) ? array_column( $customers, 'email' ) : array();
+
+			// Add the message for addition of new customer if the customer is not exists.
+			if ( is_email( $term ) && ! in_array( $term, $emails, true ) ) {
+				array_push(
+					$customers,
+					array(
+						'email' => sanitize_email( $term ),
+						/* translators: Email address */
+						'text'  => esc_html( sprintf( _x( '%s - Would you like to link this customer?', 'Confirmation message for adding the new customer as lifetime commission customer', 'affiliate-for-woocommerce' ), sanitize_email( $term ) ) ),
+					)
+				);
+			}
+
+			return $customers;
+
+		}
+
+		/**
+		 * Remove the customer from the affiliate.
+		 *
+		 * @param string|int $customer The customer.
+		 *
+		 * @return bool.
+		 */
+		public function remove_ltc_customers( $customer = '' ) {
+
+			// Return false if the customer is missing.
+			if ( empty( $customer ) ) {
+				return false;
+			}
+
+			$affiliate_id = ( ! empty( $this->affiliate_ids ) && is_array( $this->affiliate_ids ) ) ? intval( current( $this->affiliate_ids ) ) : 0;
+
+			// Return false if the affiliate is empty.
+			if ( empty( $affiliate_id ) ) {
+				return false;
+			}
+
+			$affiliate_obj = new AFWC_Affiliate( $affiliate_id );
+
+			return is_callable( array( $affiliate_obj, 'remove_ltc_customer' ) ) ? $affiliate_obj->remove_ltc_customer( $customer ) : false;
+		}
+
+		/**
+		 * Add the customer to the affiliate for Lifetime commissions.
+		 *
+		 * @param string|int $customer The customer.
+		 *
+		 * @return bool.
+		 */
+		public function add_ltc_customers( $customer = '' ) {
+
+			// Return false if the customer is missing.
+			if ( empty( $customer ) ) {
+				return false;
+			}
+
+			$affiliate_id = ( ! empty( $this->affiliate_ids ) && is_array( $this->affiliate_ids ) ) ? intval( current( $this->affiliate_ids ) ) : 0;
+
+			// Return false if the affiliate is empty.
+			if ( empty( $affiliate_id ) ) {
+				return false;
+			}
+
+			$affiliate_obj = new AFWC_Affiliate( $affiliate_id );
+
+			return is_callable( array( $affiliate_obj, 'add_ltc_customer' ) ) ? $affiliate_obj->add_ltc_customer( $customer ) : false;
+		}
 
 	}
 

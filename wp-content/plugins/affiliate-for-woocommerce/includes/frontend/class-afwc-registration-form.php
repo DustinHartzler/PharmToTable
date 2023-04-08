@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/frontend/
  * @since       1.8.0
- * @version     1.3.2
+ * @version     1.4.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,20 +26,6 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 		private static $instance = null;
 
 		/**
-		 * Hide fields
-		 *
-		 * @var $hide_fields
-		 */
-		public $hide_fields;
-
-		/**
-		 * Read only fields
-		 *
-		 * @var $read_only_fields
-		 */
-		public $read_only_fields;
-
-		/**
 		 * Form fields
 		 *
 		 * @var $form_fields
@@ -51,12 +37,8 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 		 */
 		private function __construct() {
 			add_shortcode( 'afwc_registration_form', array( $this, 'render_registration_form' ) );
-			add_action( 'wp_ajax_afwc_register_user', array( $this, 'request_handler' ) );
-			add_action( 'wp_ajax_nopriv_afwc_register_user', array( $this, 'request_handler' ) );
-
-			$this->hide_fields      = array( 'afwc_reg_first_name', 'afwc_reg_last_name', 'afwc_reg_password', 'afwc_reg_confirm_password' );
-			$this->read_only_fields = array( 'afwc_reg_email' );
-
+			add_action( 'wp_ajax_afwc_register_user', array( $this, 'register_user' ) );
+			add_action( 'wp_ajax_nopriv_afwc_register_user', array( $this, 'register_user' ) );
 			add_filter( 'wp_ajax_afwc_modify_form_fields', array( $this, 'afwc_modify_form_fields' ) );
 		}
 
@@ -105,12 +87,8 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 
 			$user = wp_get_current_user();
 			if ( is_object( $user ) && ! empty( $user->ID ) ) {
-				$afwc_user_values['afwc_reg_email']            = ! empty( $user->user_email ) ? $user->user_email : '';
-				$afwc_user_values['afwc_reg_first_name']       = ! empty( $user->first_name ) ? $user->first_name : '';
-				$afwc_user_values['afwc_reg_last_name']        = ! empty( $user->last_name ) ? $user->last_name : '';
-				$afwc_user_values['afwc_reg_password']         = ! empty( $user->user_pass ) ? $user->user_pass : '';
-				$afwc_user_values['afwc_reg_confirm_password'] = ! empty( $user->user_pass ) ? $user->user_pass : '';
-				$is_affiliate                                  = afwc_is_user_affiliate( $user );
+				$afwc_user_values['afwc_reg_email'] = ! empty( $user->user_email ) ? $user->user_email : '';
+				$is_affiliate                       = afwc_is_user_affiliate( $user );
 			}
 			if ( 'yes' === $is_affiliate ) {
 				$endpoint            = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
@@ -152,7 +130,7 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 				}
 
 				// nonce for security.
-				$nonce               = wp_create_nonce( AFWC_AJAX_SECURITY );
+				$nonce               = wp_create_nonce( 'afwc-register-affiliate' );
 				$afwc_reg_form_html .= '<input type="hidden" name="afwc_registration" id="afwc_registration" value="' . $nonce . '"/>';
 				// honyepot field.
 				$hp_style            = 'position:absolute;top:-99999px;' . ( is_rtl() ? 'right' : 'left' ) . ':-99999px;z-index:-99;';
@@ -182,13 +160,20 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 			$required   = ! empty( $field['required'] ) ? $field['required'] : '';
 			$class      = ! empty( $field['class'] ) ? $field['class'] : '';
 			$show       = ! empty( $field['show'] ) ? $field['show'] : '';
-			$read_only  = '';
+			$readonly   = '';
 			$value      = '';
 			$user       = wp_get_current_user();
-			if ( is_object( $user ) && ! empty( $user->ID ) ) {
-				$read_only = in_array( $id, $this->read_only_fields, true ) ? 'readonly' : '';
-				$class    .= ( ( in_array( $id, $this->hide_fields, true ) ) || ( ! $show && empty( $required ) ) ) ? ' afwc_hide_form_field' : '';
-				$value     = ! empty( $field['value'] ) ? $field['value'] : '';
+			if ( $user instanceof WP_User && ! empty( $user->ID ) ) {
+				$affiliate_registration = AFWC_Registration_Submissions::get_instance();
+
+				$field_key = str_replace( 'reg_', '', $id ); // TODO: code can be removed after DB migration to update the field id.
+
+				$readonly = ! empty( $affiliate_registration->readonly_fields ) && is_array( $affiliate_registration->readonly_fields ) && in_array( $field_key, $affiliate_registration->readonly_fields, true ) ? 'readonly' : '';
+				$value    = ! empty( $field['value'] ) ? $field['value'] : '';
+				if ( ! empty( $affiliate_registration->hide_fields ) && is_array( $affiliate_registration->hide_fields ) && in_array( $field_key, $affiliate_registration->hide_fields, true ) ) {
+					$class   .= ' afwc_hide_form_field';
+					$required = '';
+				}
 			}
 
 			$class .= ( ! $show && empty( $required ) && ! strpos( $class, 'afwc_hide_form_field' ) ) ? ' afwc_hide_form_field' : '';
@@ -198,7 +183,7 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 				case 'password':
 				case 'tel':
 				case 'checkbox':
-					$field_html = sprintf( '<input type="%1$s" id="%2$s" name="%2$s" %3$s class="afwc_reg_form_field" %4$s value="%5$s"/>', $field['type'], $id, $required, $read_only, $value );
+					$field_html = sprintf( '<input type="%1$s" id="%2$s" name="%2$s" %3$s class="afwc_reg_form_field" %4$s value="%5$s"/>', $field['type'], $id, $required, $readonly, $value );
 					break;
 				case 'textarea':
 					$field_html = sprintf( '<textarea name="%1$s" id="%1$s" %2$s size="100" rows="5" cols="58" class="afwc_reg_form_field"></textarea>', $id, $required );
@@ -217,14 +202,14 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 		}
 
 		/**
-		 * Function to handle all ajax request
+		 * Function to register affiliate user.
 		 */
-		public function request_handler() {
+		public function register_user() {
+
+			check_ajax_referer( 'afwc-register-affiliate', 'security' );
 
 			$response = array();
 			$userdata = array();
-
-			check_ajax_referer( AFWC_AJAX_SECURITY, 'security' );
 
 			$params = array_map(
 				function ( $request_param ) {
@@ -236,140 +221,45 @@ if ( ! class_exists( 'AFWC_Registration_Form' ) ) {
 			// Honeypot validation.
 			$hp_key = 'afwc_hp_email';
 			if ( ! isset( $params[ $hp_key ] ) || ! empty( $params[ $hp_key ] ) ) {
-				$response['status']  = 'success';
-				$response['message'] = __( 'You are successfully registered.', 'affiliate-for-woocommerce' );
-			} else {
-				$user = wp_get_current_user();
-
-				$userdata['user_email'] = $params['afwc_reg_email'];
-				$userdata['user_pass']  = $params['afwc_reg_password'];
-				$userdata['first_name'] = $params['afwc_reg_first_name'];
-				$userdata['last_name']  = $params['afwc_reg_last_name'];
-				$userdata['user_url']   = $params['afwc_reg_website'];
-				if ( is_object( $user ) && ! empty( $user->ID ) ) {
-					$user_id = $user->ID;
-				} else {
-					// check if user exists with email then return with message else register user.
-					if ( email_exists( $params['afwc_reg_email'] ) > 0 ) {
-						$user               = get_user_by( 'email', $params['afwc_reg_email'] );
-						$is_affiliate       = afwc_is_user_affiliate( $user );
-						$response['status'] = 'error';
-						if ( 'not_registered' !== $is_affiliate ) {
-							if ( 'pending' === $is_affiliate ) {
-								$response['message'] = __( 'We have already received your request and will get in touch soon.', 'affiliate-for-woocommerce' );
-							} elseif ( 'no' === $is_affiliate ) {
-								$afwc_admin_contact_email = get_option( 'afwc_contact_admin_email_address', '' );
-								if ( ! empty( $afwc_admin_contact_email ) ) {
-									$msg = sprintf(
-										/* translators: Link for mailto affiliate manager*/
-										esc_html__( 'Your previous request to join our affiliate program has been declined. Please contact the %s for more details.', 'affiliate-for-woocommerce' ),
-										'<a target="_blank" href="mailto:' . esc_attr( $afwc_admin_contact_email ) . '">' . esc_html__( 'store admin', 'affiliate-for-woocommerce' ) . '</a>'
-									);
-								} else {
-									$msg = esc_html__( 'Your previous request to join our affiliate program has been declined. Please contact the store admin for more details.', 'affiliate-for-woocommerce' );
-
-								}
-								$response['message'] = $msg;
-							} elseif ( 'yes' === $is_affiliate ) {
-								$response['message'] = __( 'You are already registered with us as an affiliate.', 'affiliate-for-woocommerce' );
-							}
-							echo wp_json_encode( $response );
-							exit;
-						}
-					}
-
-					$user_id = ! empty( $user->ID ) ? $user->ID : '';
-
-					if ( empty( $user_id ) ) {
-						$afwc = Affiliate_For_WooCommerce::get_instance();
-						if ( $afwc->is_wc_gte_36() ) {
-							$username = wc_create_new_customer_username(
-								$params['afwc_reg_email'],
-								array(
-									'first_name' => $params['afwc_reg_first_name'],
-									'last_name'  => $params['afwc_reg_last_name'],
-								)
-							);
-						}
-						$userdata['user_login'] = ( ! empty( $username ) ) ? $username : $params['afwc_reg_email'];
-						$user_id                = wp_insert_user( $userdata );
-					}
-				}
-
-				// On success.
-				if ( ! is_wp_error( $user_id ) ) {
-					// add meta data phone, skype, description.
-					$auto_add_affiliate = get_option( 'afwc_auto_add_affiliate', 'no' );
-					$affiliate_status   = ( 'yes' === $auto_add_affiliate ) ? 'yes' : 'pending';
-					update_user_meta( $user_id, 'afwc_is_affiliate', $affiliate_status );
-					if ( ! empty( $params['afwc_reg_contact'] ) ) {
-						update_user_meta( $user_id, 'afwc_affiliate_contact', $params['afwc_reg_contact'] );
-					}
-					update_user_meta( $user_id, 'afwc_affiliate_desc', $params['afwc_reg_desc'] );
-
-					$userdata['user_login'] = ! empty( $userdata['user_login'] ) ? $userdata['user_login'] : ( ! empty( $user ) ? $user->user_login : '' );
-
-					// notify affiliate manager for new affiliate registration.
-					if ( true === AFWC_Emails::is_afwc_mailer_enabled( 'afwc_email_new_registration_received' ) ) {
-						// Trigger email.
-						do_action(
-							'afwc_email_new_registration_received',
-							array(
-								'user_id'          => $user_id,
-								'userdata'         => $userdata,
-								'user_contact'     => ! empty( $params['afwc_reg_contact'] ) ? $params['afwc_reg_contact'] : '',
-								'user_desc'        => ! empty( $params['afwc_reg_desc'] ) ? $params['afwc_reg_desc'] : '',
-								'is_auto_approved' => $auto_add_affiliate,
-							)
-						);
-					}
-
-					// Send welcome email to the user if user successfully registered as affiliate.
-					if ( 'yes' === $affiliate_status ) {
-						if ( true === AFWC_Emails::is_afwc_mailer_enabled( 'afwc_email_welcome_affiliate' ) ) {
-							// Trigger email.
-							do_action(
-								'afwc_email_welcome_affiliate',
-								array(
-									'affiliate_id'     => $user_id,
-									'is_auto_approved' => $auto_add_affiliate,
-								)
-							);
-						}
-					}
-					$response['status'] = 'success';
-					// save parent child relation if parent cookie present.
-					$parent_affiliate_id = afwc_get_referrer_id();
-					if ( ! empty( $parent_affiliate_id ) ) {
-						// check if parent affiliate is valid.
-						$is_parent_affiliate = afwc_is_user_affiliate( absint( $parent_affiliate_id ) );
-						if ( 'yes' === $is_parent_affiliate ) {
-							$parent_chain     = get_user_meta( $parent_affiliate_id, 'afwc_parent_chain', true );
-							$new_parent_chain = ( ! empty( $parent_chain ) ) ? $parent_affiliate_id . '|' . $parent_chain : $parent_affiliate_id . '|';
-							update_user_meta( $user_id, 'afwc_parent_chain', $new_parent_chain );
-						}
-					}
-					if ( 'yes' === $affiliate_status ) {
-						$endpoint            = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
-						$my_account_afwc_url = wc_get_endpoint_url( $endpoint, 'resources', wc_get_page_permalink( 'myaccount' ) );
-						$msg                 = sprintf(
-							/* translators: Link to the my account page */
-							esc_html__( 'Congratulations, you are successfully registered as our affiliate. %s to find more details about affiliate program.', 'affiliate-for-woocommerce' ),
-							'<a target="_blank" href="' . esc_url(
-								$my_account_afwc_url
-							) . '">' . esc_html__( 'Visit here', 'affiliate-for-woocommerce' ) . '</a>'
-						);
-					} else {
-						$msg = __( 'We have received your request to join our affiliate program. We will review it and will get in touch with you soon!', 'affiliate-for-woocommerce' );
-					}
-					$response['message'] = $msg;
-				} else {
-					$response['status']  = 'error';
-					$response['message'] = $user_id->get_error_message();
-				}
+				wp_send_json(
+					array(
+						'status'  => 'success',
+						'message' => _x( 'You are successfully registered.', 'affiliate registration message', 'affiliate-for-woocommerce' ),
+					)
+				);
 			}
-			echo wp_json_encode( $response );
-			exit;
+
+			$saving_fields = array( 'afwc_reg_email', 'afwc_reg_first_name', 'afwc_reg_last_name', 'afwc_reg_contact', 'afwc_reg_website', 'afwc_reg_password', 'afwc_reg_desc' );
+
+			$additional_fields_title = array(
+				'afwc_reg_contact' => esc_html_x( 'Way to contact', 'label for registration contact field', 'affiliate-for-woocommerce' ),
+				'afwc_reg_desc'    => esc_html_x( 'About affiliate', 'label for registration description field', 'affiliate-for-woocommerce' ),
+			);
+			// Normalize form data.
+			$fields = array();
+			foreach ( $params as $id => $field ) {
+
+				if ( ! in_array( $id, $saving_fields, true ) ) {
+					continue;
+				}
+
+				$fields[] = array(
+					'key'   => str_replace( 'reg_', '', $id ),
+					'value' => $field,
+					'label' => ! empty( $additional_fields_title[ $id ] ) ? $additional_fields_title[ $id ] : '',
+				);
+			}
+
+			$affiliate_registration = AFWC_Registration_Submissions::get_instance();
+			$response               = is_callable( array( $affiliate_registration, 'register_user' ) ) ? $affiliate_registration->register_user( $fields ) : array();
+
+			wp_send_json(
+				array(
+					'status'         => ! empty( $response['status'] ) ? $response['status'] : 'error',
+					'invalidFieldId' => ! empty( $response['invalid_field_id'] ) ? $response['invalid_field_id'] : '',
+					'message'        => ! empty( $response['message'] ) ? $response['message'] : _x( 'Something went wrong.', 'affiliate registration message', 'affiliate-for-woocommerce' ),
+				)
+			);
 
 		}
 

@@ -2,12 +2,12 @@
 /**
  * Main class for Affiliate For WooCommerce Integration
  *
- * @since       1.0.0
- * @version     1.2.4
- *
  * @package     affiliate-for-woocommerce/includes/integration/woocommerce/
+ * @since       1.0.0
+ * @version     1.4.0
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -47,37 +47,63 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 				$option_nm = 'afwc_woo_storewise_sales_post_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', $post_ids ), 'no' );
 
-				$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(SUM( meta_value ), 0) AS order_total 
-											                        FROM {$wpdb->posts} AS posts 
-											                       JOIN {$wpdb->postmeta} AS postmeta 
-											                            ON ( posts.ID = postmeta.post_id 
-											                            	AND postmeta.meta_key = %s 
-																			AND posts.post_type = %s) 
-											                        WHERE FIND_IN_SET ( post_id, ( SELECT option_value
-																									FROM {$wpdb->prefix}options
-																									WHERE option_name = %s ) )",
-														'_order_total',
-														'shop_order',
-														$option_nm
-													)
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
+												                        FROM {$wpdb->prefix}wc_orders
+												                        WHERE type = %s
+												                        AND FIND_IN_SET ( id, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s ) )",
+															'shop_order',
+															$option_nm
+														)
+					);
+				} else {
+					$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM( meta_value ), 0) AS order_total 
+												                        FROM {$wpdb->posts} AS posts
+												                       JOIN {$wpdb->postmeta} AS postmeta
+												                            ON ( posts.ID = postmeta.post_id 
+												                            	AND postmeta.meta_key = %s 
+																				AND posts.post_type = %s) 
+												                        WHERE FIND_IN_SET ( post_id, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s ) )",
+															'_order_total',
+															'shop_order',
+															$option_nm
+														)
+					);
+				}
 
 				delete_option( $option_nm );
 			} else {
-				$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(SUM( postmeta.meta_value ), 0) AS order_total 
-											                        FROM {$wpdb->posts} AS posts 
-											                        JOIN {$wpdb->postmeta} AS postmeta 
-											                            ON ( posts.ID = postmeta.post_id 
-											                            	AND postmeta.meta_key = %s 
-																			posts.post_type = %s )",
-														'_order_total',
-														'shop_order'
-													)
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
+												                        FROM {$wpdb->prefix}wc_orders
+												                        WHERE type = %s",
+															'shop_order'
+														)
+					);
+				} else {
+					$woocommerce_sales = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM( postmeta.meta_value ), 0) AS order_total 
+												                        FROM {$wpdb->posts} AS posts 
+												                        JOIN {$wpdb->postmeta} AS postmeta 
+												                            ON ( posts.ID = postmeta.post_id 
+												                            	AND postmeta.meta_key = %s 
+																				posts.post_type = %s )",
+															'_order_total',
+															'shop_order'
+														)
+					);
+				}
 			}
 
 			if ( ! empty( $woocommerce_sales ) ) {
@@ -116,41 +142,71 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 				$option_nm = 'afwc_woo_storewise_refunds_post_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', $post_ids ), 'no' );
 
-				$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT SUM( postmeta.meta_value ) AS order_total 
-			                                                    FROM {$wpdb->posts} AS posts 
-			                                                    	LEFT JOIN {$wpdb->postmeta} AS postmeta 
-											                            ON ( posts.ID = postmeta.post_id 
-											                            	AND postmeta.meta_key = %s ) 
-											                        WHERE posts.post_type = %s 
-											                        	AND posts.post_status = %s
-											                        	AND FIND_IN_SET ( posts.ID, ( SELECT option_value
-																									FROM {$wpdb->prefix}options
-																									WHERE option_name = %s ) )",
-														'_order_total',
-														'shop_order',
-														'wc-refunded',
-														$option_nm
-													)
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
+				                                                    FROM {$wpdb->prefix}wc_orders AS wco
+												                        WHERE wco.type = %s
+												                        	AND wco.status = %s
+												                        	AND FIND_IN_SET ( wco.id, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s ) )",
+															'shop_order',
+															'wc-refunded',
+															$option_nm
+														)
+					);
+				} else {
+					$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM( postmeta.meta_value ), 0) AS order_total 
+				                                                    FROM {$wpdb->posts} AS posts 
+				                                                    	LEFT JOIN {$wpdb->postmeta} AS postmeta 
+												                            ON ( posts.ID = postmeta.post_id 
+												                            	AND postmeta.meta_key = %s ) 
+												                        WHERE posts.post_type = %s 
+												                        	AND posts.post_status = %s
+												                        	AND FIND_IN_SET ( posts.ID, ( SELECT option_value
+																										FROM {$wpdb->prefix}options
+																										WHERE option_name = %s ) )",
+															'_order_total',
+															'shop_order',
+															'wc-refunded',
+															$option_nm
+														)
+					);
+				}
 
 				delete_option( $option_nm );
 			} else {
-				$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT SUM( postmeta.meta_value ) AS order_total 
-											                        FROM {$wpdb->posts} AS posts 
-											                        LEFT JOIN {$wpdb->postmeta} AS postmeta 
-											                            ON ( posts.ID = postmeta.post_id 
-											                            	AND postmeta.meta_key = %s ) 
-											                        WHERE posts.post_type = %s 
-											                        	AND posts.post_status = %s",
-														'_order_total',
-														'shop_order',
-														'wc-refunded'
-													)
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM( total_amount ), 0) AS order_total 
+												                        FROM {$wpdb->prefix}wc_orders AS wco
+												                        WHERE wco.type = %s 
+												                        	AND wco.status = %s",
+															'shop_order',
+															'wc-refunded'
+														)
+					);
+				} else {
+					$woocommerce_refunds = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM( postmeta.meta_value ), 0) AS order_total 
+												                        FROM {$wpdb->posts} AS posts 
+												                        LEFT JOIN {$wpdb->postmeta} AS postmeta 
+												                            ON ( posts.ID = postmeta.post_id 
+												                            	AND postmeta.meta_key = %s ) 
+												                        WHERE posts.post_type = %s 
+												                        	AND posts.post_status = %s",
+															'_order_total',
+															'shop_order',
+															'wc-refunded'
+														)
+					);
+				}
 			}
 
 			if ( ! empty( $woocommerce_refunds ) ) {
@@ -178,48 +234,95 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 			update_option( $option_order_status, implode( ',', $prefixed_statuses ), 'no' );
 
 			if ( ! empty( $from ) && ! empty( $to ) ) {
-				$all_customer_ids = $wpdb->get_var( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(COUNT( DISTINCT postmeta.meta_value ), 0) AS customer_ids 
-												                        FROM {$wpdb->postmeta} AS postmeta
-												                        	JOIN {$wpdb->posts} AS posts 
-												                        		ON ( posts.ID = postmeta.post_id 
-												                        			AND postmeta.meta_key = %s 
-												                        			AND postmeta.meta_value > 0) 
-												                        WHERE posts.post_type = %s 
-												                        	AND FIND_IN_SET ( posts.post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )
-												                        	AND posts.post_date BETWEEN %s AND %s",
-														'_customer_user',
-														'shop_order',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_order_status,
-														$from . ' 00:00:00',
-														$to . ' 23:59:59'
-													)
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$all_customer_ids = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(COUNT( DISTINCT customer_id ), 0) AS customer_ids 
+													                        FROM {$wpdb->prefix}wc_orders
+													                        WHERE ( type = %s
+													                        		AND customer_id > 0
+													                        		AND FIND_IN_SET ( CONVERT( status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+													                        		AND date_created_gmt BETWEEN %s AND %s )",
+															'shop_order',
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status,
+															$from . ' 00:00:00',
+															$to . ' 23:59:59'
+														)
+					);
+				} else {
+					$all_customer_ids = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(COUNT( DISTINCT postmeta.meta_value ), 0) AS customer_ids 
+													                        FROM {$wpdb->postmeta} AS postmeta
+													                        	JOIN {$wpdb->posts} AS posts 
+													                        		ON ( posts.ID = postmeta.post_id 
+													                        			AND postmeta.meta_key = %s 
+													                        			AND postmeta.meta_value > 0) 
+													                        WHERE posts.post_type = %s 
+													                        	AND FIND_IN_SET ( CONVERT(posts.post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )
+													                        	AND posts.post_date BETWEEN %s AND %s",
+															'_customer_user',
+															'shop_order',
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status,
+															$from . ' 00:00:00',
+															$to . ' 23:59:59'
+														)
+					);
+				}
 			} else {
-				$all_customer_ids = $wpdb->get_var( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(COUNT( DISTINCT postmeta.meta_value ), 0) AS customer_ids 
-												                        FROM {$wpdb->postmeta} AS postmeta
-												                        	JOIN {$wpdb->posts} AS posts 
-												                        		ON ( posts.ID = postmeta.post_id 
-												                        			AND postmeta.meta_key = %s
-												                        			AND postmeta.meta_value > 0 ) 
-												                        WHERE posts.post_type = %s 
-												                        	AND FIND_IN_SET ( posts.post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s ) )",
-														'_customer_user',
-														'shop_order',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$option_order_status
-													)
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$all_customer_ids = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(COUNT( DISTINCT customer_id ), 0) AS customer_ids 
+													                        FROM {$wpdb->prefix}wc_orders AS wco
+													                        WHERE ( type = %s
+													                        		AND customer_id > 0
+													                        		AND FIND_IN_SET ( CONVERT ( status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) ) )",
+															'shop_order',
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status
+														)
+					);
+				} else {
+					$all_customer_ids = $wpdb->get_var( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(COUNT( DISTINCT postmeta.meta_value ), 0) AS customer_ids 
+													                        FROM {$wpdb->postmeta} AS postmeta
+													                        	JOIN {$wpdb->posts} AS posts 
+													                        		ON ( posts.ID = postmeta.post_id 
+													                        			AND postmeta.meta_key = %s
+													                        			AND postmeta.meta_value > 0 ) 
+													                        WHERE posts.post_type = %s 
+													                        	AND FIND_IN_SET ( CONVERT(posts.post_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s ) )",
+															'_customer_user',
+															'shop_order',
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$option_order_status
+														)
+					);
+				}
 			}
 
 			delete_option( $option_order_status );
@@ -242,17 +345,31 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 					$option_nm = 'afwc_woo_order_details_order_ids_' . uniqid();
 					update_option( $option_nm, implode( ',', $order_ids ), 'no' );
 
-					$orders = $wpdb->get_results( // phpcs:ignore
-												$wpdb->prepare( // phpcs:ignore
-													"SELECT ID, post_status 
-																FROM {$wpdb->posts}
-																WHERE FIND_IN_SET ( ID, ( SELECT option_value
-																						FROM {$wpdb->prefix}options
-																						WHERE option_name = %s ) )",
-													$option_nm
-												),
-						'ARRAY_A'
-					);
+					if ( AFWC_IS_HPOS_ENABLED ) {
+						$orders = $wpdb->get_results( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT id as ID, status as post_status
+																FROM {$wpdb->prefix}wc_orders
+																WHERE FIND_IN_SET ( id, ( SELECT option_value
+																							FROM {$wpdb->prefix}options
+																							WHERE option_name = %s ) )",
+														$option_nm
+													),
+							'ARRAY_A'
+						);
+					} else {
+						$orders = $wpdb->get_results( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT ID, post_status 
+																	FROM {$wpdb->posts}
+																	WHERE FIND_IN_SET ( ID, ( SELECT option_value
+																							FROM {$wpdb->prefix}options
+																							WHERE option_name = %s ) )",
+														$option_nm
+													),
+							'ARRAY_A'
+						);
+					}
 
 					delete_option( $option_nm );
 
@@ -261,7 +378,7 @@ if ( ! class_exists( 'AFWC_Integration_WooCommerce' ) ) {
 					}
 
 					$order_id_to_status = array();
-					foreach ( $orders  as $order ) {
+					foreach ( $orders as $order ) {
 						$order_id_to_status[ $order['ID'] ] = ( ! empty( $order_statuses[ $order['post_status'] ] ) ) ? $order_statuses[ $order['post_status'] ] : $order['post_status'];
 					}
 				}

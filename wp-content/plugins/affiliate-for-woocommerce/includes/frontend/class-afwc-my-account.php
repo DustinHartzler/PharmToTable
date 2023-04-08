@@ -4,9 +4,10 @@
  *
  * @package     affiliate-for-woocommerce/includes/frontend/
  * @since       1.0.0
- * @version     1.5.4
+ * @version     1.8.0
  */
 
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -70,9 +71,11 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 
 		/**
 		 * Function to add affiliates endpoint to My Account.
+		 *
+		 * @see https://developer.woocommerce.com/2016/04/21/tabbed-my-account-pages-in-2-6/
 		 */
 		public function endpoint() {
-			add_rewrite_endpoint( $this->endpoint, EP_PAGES );
+			add_rewrite_endpoint( $this->endpoint, EP_ROOT | EP_PAGES );
 			$this->check_if_flushed_rules();
 		}
 
@@ -82,6 +85,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		public function check_if_flushed_rules() {
 			$check_flushed_rules = get_option( 'afwc_flushed_rules', 'notfound' );
 			if ( 'notfound' === $check_flushed_rules ) {
+				// Flush rewrite rules.
 				flush_rewrite_rules();
 				update_option( 'afwc_flushed_rules', 'found', 'no' );
 			}
@@ -183,7 +187,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			if ( is_object( $user ) && $user instanceof WP_User && ! empty( $user->ID ) ) {
 				$is_affiliate              = afwc_is_user_affiliate( $user );
 				$insert_at_index           = array_search( 'edit-account', array_keys( $menu_items ), true );
-				$afwc_is_registration_open = apply_filters( 'afwc_is_registration_open', 'yes', array( 'source' => $this ) );
+				$afwc_is_registration_open = apply_filters( 'afwc_is_registration_open', get_option( 'afwc_show_registration_form_in_account', 'yes' ), array( 'source' => $this ) );
 
 				// WooCommerce uses the same on the admin side to get list of WooCommerce Endpoints under Appearance > Menus.
 				// So return main endpoint name irrespective of admin's affiliate status.
@@ -277,8 +281,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 					if ( ! wp_script_is( 'afwc-campaigns-dashboard' ) ) {
 						wp_enqueue_script( 'afwc-campaigns-dashboard' );
 					}
-					$pname           = get_option( 'afwc_pname', 'ref' );
-					$pname           = ( ! empty( $pname ) ) ? $pname : 'ref';
+
 					$affiliate_id    = afwc_get_affiliate_id_based_on_user_id( $user->ID );
 					$afwc_ref_url_id = get_user_meta( $user->ID, 'afwc_ref_url_id', true );
 					$affiliate_id    = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
@@ -287,14 +290,19 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 						'afwc-campaigns-dashboard',
 						'afwcDashboardParams',
 						array(
-							'security'           => wp_create_nonce( AFWC_AJAX_SECURITY ),
-							'currencySymbol'     => AFWC_CURRENCY,
-							'pname'              => $pname,
-							'afwc_ref_url_id'    => $afwc_ref_url_id,
-							'affiliate_id'       => $affiliate_id,
-							'ajaxurl'            => admin_url( 'admin-ajax.php' ),
-							'campaign_status'    => 'Active',
-							'no_campaign_string' => __( 'No Campaign yet', 'affiliate-for-woocommerce' ),
+							'security'                => array(
+								'campaign' => array(
+									'fetchData' => wp_create_nonce( 'afwc-fetch-campaign' ),
+								),
+							),
+							'currencySymbol'          => AFWC_CURRENCY,
+							'pname'                   => afwc_get_pname(),
+							'afwc_ref_url_id'         => $afwc_ref_url_id,
+							'affiliate_id'            => $affiliate_id,
+							'ajaxurl'                 => admin_url( 'admin-ajax.php' ),
+							'campaign_status'         => 'Active',
+							'no_campaign_string'      => __( 'No Campaign yet', 'affiliate-for-woocommerce' ),
+							'isPrettyReferralEnabled' => get_option( 'afwc_use_pretty_referral_links', 'no' ),
 						)
 					);
 					$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -305,11 +313,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 					}
 				}
 
-				?>
-				<!-- Affiliate For WooCommerce JavaScript Start -->
-				<script type="text/javascript">
-					jQuery(function(){
-						let afwcDashboardWrapper = jQuery('#afwc_dashboard_wrapper');
+				$js = "let afwcDashboardWrapper = jQuery('#afwc_dashboard_wrapper');
 						if( window.innerWidth < 760 ) {
 							jQuery('.afwc_products, .afwc_referrals, .afwc_payout_history').addClass('woocommerce-table shop_table shop_table_responsive order_details');
 						} else {
@@ -321,23 +325,23 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 							let dateRange = afwcGetFormattedDateRange()
 							the_table.addClass( 'afwc-loading' );
 							jQuery.ajax({
-								url: '<?php echo esc_url_raw( WC_AJAX::get_endpoint( 'afwc_load_more_products' ) ); ?>',
+								url: '" . esc_url_raw( WC_AJAX::get_endpoint( 'afwc_load_more_products' ) ) . "',
 								type: 'post',
 								dataType: 'html',
 								data: {
-									security: '<?php echo esc_js( wp_create_nonce( 'afwc-load-more-products' ) ); ?>',
+									security: '" . esc_js( wp_create_nonce( 'afwc-load-more-products' ) ) . "',
 									from: dateRange.from || '',
 									to: dateRange.to || '',
 									search: afwcDashboardWrapper.find('#afwc_search').val(),
 									offset: the_table.find('tbody tr').length,
-									affiliate: '<?php echo esc_attr( $affiliate_id ); ?>'
+									affiliate: '" . esc_attr( $affiliate_id ) . "'
 								},
 								success: function( response ) {
 									if ( response ) {
 										the_table.find('tbody').append( response );
 										let max_record = jQuery('#afwc_load_more_products').data('max_record');
 										if ( the_table.find('tbody tr').length >= max_record ) {
-											jQuery('#afwc_load_more_products').addClass('disabled').text('<?php echo esc_html__( 'No more data to load', 'affiliate-for-woocommerce' ); ?>');
+											jQuery('#afwc_load_more_products').addClass('disabled').text('" . esc_html__( 'No more data to load', 'affiliate-for-woocommerce' ) . "');
 										}
 										the_table.removeClass( 'afwc-loading' );
 									}
@@ -349,23 +353,23 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 							let dateRange = afwcGetFormattedDateRange()
 							the_table.addClass( 'afwc-loading' );
 							jQuery.ajax({
-								url: '<?php echo esc_url_raw( WC_AJAX::get_endpoint( 'afwc_load_more_referrals' ) ); ?>',
+								url: '" . esc_url_raw( WC_AJAX::get_endpoint( 'afwc_load_more_referrals' ) ) . "',
 								type: 'post',
 								dataType: 'html',
 								data: {
-									security: '<?php echo esc_js( wp_create_nonce( 'afwc-load-more-referrals' ) ); ?>',
+									security: '" . esc_js( wp_create_nonce( 'afwc-load-more-referrals' ) ) . "',
 									from: dateRange.from || '',
 									to: dateRange.to || '',
 									search: afwcDashboardWrapper.find('#afwc_search').val(),
 									offset: the_table.find('tbody tr').length,
-									affiliate: '<?php echo esc_attr( $affiliate_id ); ?>'
+									affiliate: '" . esc_attr( $affiliate_id ) . "'
 								},
 								success: function( response ) {
 									if ( response ) {
 										the_table.find('tbody').append( response );
 										let max_record = jQuery('#afwc_load_more_referrals').data('max_record');
 										if ( the_table.find('tbody tr').length >= max_record ) {
-											jQuery('#afwc_load_more_referrals').addClass('disabled').text('<?php echo esc_html__( 'No more data to load', 'affiliate-for-woocommerce' ); ?>');
+											jQuery('#afwc_load_more_referrals').addClass('disabled').text('" . esc_html__( 'No more data to load', 'affiliate-for-woocommerce' ) . "');
 										}
 										the_table.removeClass( 'afwc-loading' );
 									}
@@ -378,23 +382,23 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 							let dateRange = afwcGetFormattedDateRange();
 							the_table.addClass( 'afwc-loading' );
 							jQuery.ajax({
-								url: '<?php echo esc_url_raw( WC_AJAX::get_endpoint( 'afwc_load_more_payouts' ) ); ?>',
+								url: '" . esc_url_raw( WC_AJAX::get_endpoint( 'afwc_load_more_payouts' ) ) . "',
 								type: 'post',
 								dataType: 'html',
 								data: {
-									security: '<?php echo esc_js( wp_create_nonce( 'afwc-load-more-payouts' ) ); ?>',
+									security: '" . esc_js( wp_create_nonce( 'afwc-load-more-payouts' ) ) . "',
 									from: dateRange.from || '',
 									to: dateRange.to || '',
 									search: afwcDashboardWrapper.find('#afwc_search').val(),
 									offset: the_table.find('tbody tr').length,
-									affiliate: '<?php echo esc_attr( $affiliate_id ); ?>'
+									affiliate: '" . esc_attr( $affiliate_id ) . "'
 								},
 								success: function( response ) {
 									if ( response ) {
 										the_table.find('tbody').append( response );
 										let max_record = jQuery('#afwc_load_more_payouts').data('max_record');
 										if ( the_table.find('tbody tr').length >= max_record ) {
-											jQuery('#afwc_load_more_payouts').addClass('disabled').text('<?php echo esc_html__( 'No more data to load', 'affiliate-for-woocommerce' ); ?>');
+											jQuery('#afwc_load_more_payouts').addClass('disabled').text('" . esc_html__( 'No more data to load', 'affiliate-for-woocommerce' ) . "');
 										}
 										the_table.removeClass( 'afwc-loading' );
 									}
@@ -407,7 +411,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 						function load_datepicker( element ) {
 							if ( ! element.hasClass('hasDatepicker') ) {
 								element.datepicker({
-									dateFormat: "dd-M-yy",
+									dateFormat: 'dd-M-yy',
 									beforeShowDay: date_range,
 									onSelect: dr_on_select
 								});
@@ -418,39 +422,39 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 							var hr = new Date().getHours();
 							var min = new Date().getMinutes();
 							var sec = new Date().getSeconds();
-							dateStr = dateStr + " " + hr + ":" + min +":" + sec;
+							dateStr = dateStr + ' ' + hr + ':' + min +':' + sec;
 							return dateStr;
 						}
 						function date_range(date){
-							let from        = jQuery.datepicker.parseDate("dd-M-yy", jQuery("#afwc_from").val());
-							let to          = jQuery.datepicker.parseDate("dd-M-yy", jQuery("#afwc_to").val());
+							let from        = jQuery.datepicker.parseDate('dd-M-yy', jQuery('#afwc_from').val());
+							let to          = jQuery.datepicker.parseDate('dd-M-yy', jQuery('#afwc_to').val());
 							let is_highlight = ( from && ( ( date.getTime() == from.getTime() ) || ( to && date >= from && date <= to ) ) );
-							return [true, is_highlight ? "dp-highlight" : ""];
+							return [true, is_highlight ? 'dp-highlight' : ''];
 						}
 						function dr_on_select(date_text, inst) {
-							let from = jQuery.datepicker.parseDate("dd-M-yy", jQuery("#afwc_from").val());
-							let to   = jQuery.datepicker.parseDate("dd-M-yy", jQuery("#afwc_to").val());
+							let from = jQuery.datepicker.parseDate('dd-M-yy', jQuery('#afwc_from').val());
+							let to   = jQuery.datepicker.parseDate('dd-M-yy', jQuery('#afwc_to').val());
 							if ( ! from && ! to ) {
-								jQuery("#afwc_from").val("");
-								jQuery("#afwc_to").val("");
+								jQuery('#afwc_from').val('');
+								jQuery('#afwc_to').val('');
 								setTimeout(function(){
 									load_datepicker( jQuery('#afwc_from') );
 								}, 1);
 							} else if ( ! from && to ) {
-								jQuery("#afwc_from").val(date_text);
-								jQuery("#afwc_to").val("");
+								jQuery('#afwc_from').val(date_text);
+								jQuery('#afwc_to').val('');
 								setTimeout(function(){
 									load_datepicker( jQuery('#afwc_to') );
 								}, 1);
 							} else if ( from && ! to ) {
-								jQuery("#afwc_to").val("");
+								jQuery('#afwc_to').val('');
 								setTimeout(function(){
 									load_datepicker( jQuery('#afwc_to') );
 								}, 1);
 							} else if ( from && to ) {
 								if ( 'afwc_to' !== inst.id || from >= to ) {
-									jQuery("#afwc_from").val(date_text);
-									jQuery("#afwc_to").val("");
+									jQuery('#afwc_from').val(date_text);
+									jQuery('#afwc_to').val('');
 									setTimeout(function(){
 										load_datepicker( jQuery('#afwc_to') );
 									}, 1);
@@ -469,8 +473,8 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 							let dateRange = afwcGetDatesFromDateRange();
 							let tzoffset = (new Date()).getTimezoneOffset() * 60000;
 							return {
-								from: dateRange.from ? getDateTime((new Date(jQuery.datepicker.parseDate("dd-M-yy", dateRange.from).getTime() - tzoffset)).toISOString().slice(0,10)) : '',
-								to: dateRange.to ? getDateTime((new Date(jQuery.datepicker.parseDate("dd-M-yy", dateRange.to).getTime()- tzoffset)).toISOString().slice(0,10)) : ''
+								from: dateRange.from ? getDateTime((new Date(jQuery.datepicker.parseDate('dd-M-yy', dateRange.from).getTime() - tzoffset)).toISOString().slice(0,10)) : '',
+								to: dateRange.to ? getDateTime((new Date(jQuery.datepicker.parseDate('dd-M-yy', dateRange.to).getTime()- tzoffset)).toISOString().slice(0,10)) : ''
 							}
 						}
 						jQuery('body').on('change', '#afwc_from, #afwc_to, #afwc_search', function(){
@@ -479,17 +483,17 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 							afwcDashboardWrapper.css( 'opacity', 0.5 );
 							if ( ( dateRange.from && dateRange.to ) || search ) {
 								jQuery.ajax({
-									url: '<?php echo esc_url_raw( WC_AJAX::get_endpoint( 'afwc_reload_dashboard' ) ); ?>',
+									url: '" . esc_url_raw( WC_AJAX::get_endpoint( 'afwc_reload_dashboard' ) ) . "',
 									type: 'post',
 									dataType: 'html',
 									data: {
-										security: '<?php echo esc_js( wp_create_nonce( 'afwc-reload-dashboard' ) ); ?>',
+										security: '" . esc_js( wp_create_nonce( 'afwc-reload-dashboard' ) ) . "',
 										afwc_from: afwcGetDatesFromDateRange().from || '',
 										afwc_to: afwcGetDatesFromDateRange().to || '',
 										afwc_format_from: dateRange.from || '',
 										afwc_format_to: dateRange.to || '',
 										afwc_search: search || '',
-										user_id: '<?php echo esc_attr( $user->ID ); ?>'
+										user_id: '" . esc_attr( $user->ID ) . "'
 									},
 									success: function( response ) {
 										if ( response ) {
@@ -500,11 +504,8 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 									}
 								});
 							}
-						});
-					});
-				</script>
-				<!-- Affiliate For WooCommerce JavaScript End -->
-				<?php
+						});";
+						wc_enqueue_js( $js );
 			}
 		}
 
@@ -609,7 +610,6 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			die();
 		}
 
-
 		/**
 		 * Function to retrieve more payouts.
 		 */
@@ -670,7 +670,21 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				$this->tab_content( $user );
 			}
 			if ( 'not_registered' === $is_affiliate ) {
+				do_action(
+					'afwc_before_registration_form',
+					array(
+						'user_id' => $user->ID,
+						'source'  => $this,
+					)
+				);
 				echo do_shortcode( '[afwc_registration_form]' );
+				do_action(
+					'afwc_after_registration_form',
+					array(
+						'user_id' => $user->ID,
+						'source'  => $this,
+					)
+				);
 			}
 		}
 
@@ -727,7 +741,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 			if ( isset( $wp->query_vars[ $this->endpoint ] ) && empty( $wp->query_vars[ $this->endpoint ] ) ) {
 				$this->dashboard_content( $user );
 			} elseif ( ! empty( $wp->query_vars[ $this->endpoint ] ) && 'resources' === $wp->query_vars[ $this->endpoint ] ) {
-				$this->resources_content( $user );
+				$this->profile_resources_content( $user );
 			} elseif ( ! empty( $wp->query_vars[ $this->endpoint ] ) && 'campaigns' === $wp->query_vars[ $this->endpoint ] && afwc_is_campaign_active() ) {
 				$this->campaigns_content( $user );
 			}
@@ -780,7 +794,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 
 			$products_total   = ( ! empty( $products ) && ! empty( $products['total_count'] ) ) ? $products['total_count'] : 0;
 			$products_rows    = ( ! empty( $products ) && ! empty( $products['rows'] ) ) ? $products['rows'] : array();
-			$gross_commission = $kpis['paid_commission'] + $kpis['unpaid_commission'] + $kpis['rejected_commission'];
+			$gross_commission = ( ! empty( $kpis['gross_commission'] ) ) ? floatval( $kpis['gross_commission'] ) : 0;
 			$net_commission   = $kpis['paid_commission'] + $kpis['unpaid_commission'];
 
 			$paid_commission_percentage = ( ( ! empty( $kpis['paid_commission'] ) && ! empty( $net_commission ) ) ? ( $kpis['paid_commission'] / $net_commission ) * 100 : 0 );
@@ -983,7 +997,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 								<?php if ( true === $is_show_customer_column ) { ?>
 								<td data-title="<?php echo esc_html__( 'Customer', 'affiliate-for-woocommerce' ); ?>" title="<?php echo ( ! empty( $referral['display_name'] ) ) ? esc_html( $referral['display_name'] ) : ''; ?>"><?php echo esc_html( $customer_name ); ?></td>
 							<?php } ?>
-								<td data-title="<?php echo esc_html__( 'Commission', 'affiliate-for-woocommerce' ); ?>"><?php echo wp_kses_post( wc_price( $referral['amount'] ) ); // phpcs:ignore ?></td>
+								<td data-title="<?php echo esc_html__( 'Commission', 'affiliate-for-woocommerce' ); ?>"><?php echo wp_kses_post( wc_price( $referral['amount'], array( 'currency' => ! empty( $referral['currency_id'] ) ? $referral['currency_id'] : '' ) ) ); // phpcs:ignore ?></td>
 								<td data-title="<?php echo esc_html__( 'Payout status', 'affiliate-for-woocommerce' ); ?>" title="<?php echo esc_html( ( ! empty( $referral_status ) ) ? afwc_get_commission_statuses( $referral_status ) : '' ); ?>"><div class="afwc_circle <?php echo esc_attr( 'fill_' . ( ! empty( $referral_status ) ? afwc_get_commission_status_colors( $referral_status ) : '' ) ); ?>"></div></td>
 							</tr>
 							<?php } ?>
@@ -1187,153 +1201,321 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 
 			if ( ! empty( $from ) && ! empty( $to ) ) {
 				// Need to consider all order_statuses to get correct rejected_commission and hence not passing order_statuses.
-				$kpis_result = $wpdb->get_results( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(count(DISTINCT pm.post_id), 0) AS number_of_orders,
-																	IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS paid_commission,
-																	IFNULL(SUM(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s )  ) THEN afwcr.amount END), 0) AS unpaid_commission,
-																	IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS rejected_commission,
-																	IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS paid_count,
-																	IFNULL(COUNT(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s )  )  THEN 1 END), 0) AS unpaid_count,
-																	IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS rejected_count
-																FROM {$wpdb->prefix}afwc_referrals AS afwcr
-																	JOIN {$wpdb->postmeta} AS pm
-																		ON (afwcr.post_id = pm.post_id
-																				AND pm.meta_key = %s
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$kpis_result = $wpdb->get_results( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(count(DISTINCT wco.id), 0) AS number_of_orders,
+																		IFNULL(SUM( afwcr.amount ), 0) AS gross_commissions,
+																		IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS paid_commission,
+																		IFNULL(SUM(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( CONVERT( afwcr.order_status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s )  ) THEN afwcr.amount END), 0) AS unpaid_commission,
+																		IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS rejected_commission,
+																		IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS paid_count,
+																		IFNULL(COUNT(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( CONVERT( afwcr.order_status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s )  )  THEN 1 END), 0) AS unpaid_count,
+																		IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS rejected_count
+																	FROM {$wpdb->prefix}afwc_referrals AS afwcr
+																		JOIN {$wpdb->prefix}wc_orders AS wco
+																			ON (afwcr.post_id = wco.id
+																				AND wco.type = %s
 																				AND afwcr.affiliate_id = %d)
-																WHERE afwcr.status != 'draft' AND (afwcr.datetime BETWEEN %s AND %s)",
-														'paid',
-														'unpaid',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$temp_option_key,
-														'rejected',
-														'paid',
-														'unpaid',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$temp_option_key,
-														'rejected',
-														'_order_total',
-														$affiliate_id,
-														$from,
-														$to
-													),
-					'ARRAY_A'
-				);
+																	WHERE afwcr.status != %s AND (afwcr.datetime BETWEEN %s AND %s)",
+															AFWC_REFERRAL_STATUS_PAID,
+															AFWC_REFERRAL_STATUS_UNPAID,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$temp_option_key,
+															AFWC_REFERRAL_STATUS_REJECTED,
+															AFWC_REFERRAL_STATUS_PAID,
+															AFWC_REFERRAL_STATUS_UNPAID,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$temp_option_key,
+															AFWC_REFERRAL_STATUS_REJECTED,
+															'shop_order',
+															$affiliate_id,
+															AFWC_REFERRAL_STATUS_DRAFT,
+															$from,
+															$to
+														),
+						'ARRAY_A'
+					);
 
-				$order_total =  $wpdb->get_results( // phpcs:ignore
-									$wpdb->prepare( // phpcs:ignore
-										"SELECT IFNULL(SUM(pm.meta_value), 0) AS order_total
-												FROM {$wpdb->prefix}afwc_referrals AS afwcr
-												JOIN {$wpdb->postmeta} AS pm
-												ON (afwcr.post_id = pm.post_id
-													AND pm.meta_key = %s
-													AND afwcr.affiliate_id = %d)
-												JOIN {$wpdb->posts} AS posts
-													ON (posts.ID = afwcr.post_id
-													AND posts.post_type = %s 
-												   	AND FIND_IN_SET ( post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																						FROM {$wpdb->prefix}options
-																						WHERE option_name = %s ) ) )
-													WHERE afwcr.status != 'draft' AND (afwcr.datetime BETWEEN %s AND %s)",
-										'_order_total',
-										$affiliate_id,
-										'shop_order',
-										AFWC_OPTION_NAME_COLLATION,
-										AFWC_OPTION_NAME_COLLATION,
-										$option_order_status,
-										$from,
-										$to
-									),
-					'ARRAY_A'
-				);
-			} else {
-				$kpis_result = $wpdb->get_results( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(count(DISTINCT pm.post_id), 0) AS number_of_orders,
-																			IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS paid_commission,
-																			IFNULL(SUM(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s )  ) THEN afwcr.amount END), 0) AS unpaid_commission,
-																			IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS rejected_commission,
-																			IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS paid_count,
-																			IFNULL(COUNT(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( order_status COLLATE %s, ( SELECT option_value COLLATE %s
-																										FROM {$wpdb->prefix}options
-																										WHERE option_name = %s )  ) THEN 1 END), 0) AS unpaid_count,
-																			IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS rejected_count
+					$order_total = $wpdb->get_results( // phpcs:ignore
+										$wpdb->prepare( // phpcs:ignore
+											"SELECT IFNULL(SUM(wco.total_amount), 0) AS order_total
+													FROM {$wpdb->prefix}afwc_referrals AS afwcr
+													JOIN {$wpdb->prefix}wc_orders AS wco
+													ON (afwcr.post_id = wco.id
+														AND wco.type = %s
+														AND afwcr.affiliate_id = %d)
+													WHERE afwcr.status != %s
+													   	AND FIND_IN_SET ( CONVERT( afwcr.order_status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value using %s ) COLLATE %s
+																							FROM {$wpdb->prefix}options
+																							WHERE option_name = %s ) )
+														AND (afwcr.datetime BETWEEN %s AND %s)",
+											'shop_order',
+											$affiliate_id,
+											AFWC_REFERRAL_STATUS_DRAFT,
+											AFWC_SQL_CHARSET,
+											AFWC_SQL_COLLATION,
+											AFWC_SQL_CHARSET,
+											AFWC_SQL_COLLATION,
+											$option_order_status,
+											$from,
+											$to
+										),
+						'ARRAY_A'
+					);
+
+				} else {
+					$kpis_result = $wpdb->get_results( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(count(DISTINCT pm.post_id), 0) AS number_of_orders,
+																		IFNULL(SUM( afwcr.amount ), 0) as gross_commissions,
+																		IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS paid_commission,
+																		IFNULL(SUM(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s )  ) THEN afwcr.amount END), 0) AS unpaid_commission,
+																		IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS rejected_commission,
+																		IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS paid_count,
+																		IFNULL(COUNT(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s )  )  THEN 1 END), 0) AS unpaid_count,
+																		IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS rejected_count
 																	FROM {$wpdb->prefix}afwc_referrals AS afwcr
 																		JOIN {$wpdb->postmeta} AS pm
 																			ON (afwcr.post_id = pm.post_id
 																					AND pm.meta_key = %s
 																					AND afwcr.affiliate_id = %d)
-																					WHERE afwcr.status != 'draft'",
-														'paid',
-														'unpaid',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$temp_option_key,
-														'rejected',
-														'paid',
-														'unpaid',
-														AFWC_OPTION_NAME_COLLATION,
-														AFWC_OPTION_NAME_COLLATION,
-														$temp_option_key,
-														'rejected',
-														'_order_total',
-														$affiliate_id
-													),
-					'ARRAY_A'
-				);
+																	WHERE afwcr.status != %s AND (afwcr.datetime BETWEEN %s AND %s)",
+															AFWC_REFERRAL_STATUS_PAID,
+															AFWC_REFERRAL_STATUS_UNPAID,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$temp_option_key,
+															AFWC_REFERRAL_STATUS_REJECTED,
+															AFWC_REFERRAL_STATUS_PAID,
+															AFWC_REFERRAL_STATUS_UNPAID,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$temp_option_key,
+															AFWC_REFERRAL_STATUS_REJECTED,
+															'_order_total',
+															$affiliate_id,
+															AFWC_REFERRAL_STATUS_DRAFT,
+															$from,
+															$to
+														),
+						'ARRAY_A'
+					);
 
-				$order_total =  $wpdb->get_results( // phpcs:ignore
-									$wpdb->prepare( // phpcs:ignore
-										"SELECT IFNULL(SUM(pm.meta_value), 0) AS order_total
-												FROM {$wpdb->prefix}afwc_referrals AS afwcr
-												JOIN {$wpdb->postmeta} AS pm
-												ON (afwcr.post_id = pm.post_id
-													AND pm.meta_key = %s
-													AND afwcr.affiliate_id = %d)
-												JOIN {$wpdb->posts} AS posts
-													ON (posts.ID = afwcr.post_id
-													AND posts.post_type = %s 
-												   	AND FIND_IN_SET ( post_status COLLATE %s, ( SELECT option_value COLLATE %s
-																						FROM {$wpdb->prefix}options
-																						WHERE option_name = %s ) ) )
-										           WHERE afwcr.status != 'draft'",
-										'_order_total',
-										$affiliate_id,
-										'shop_order',
-										AFWC_OPTION_NAME_COLLATION,
-										AFWC_OPTION_NAME_COLLATION,
-										$option_order_status
-									),
-					'ARRAY_A'
-				);
+					$order_total =  $wpdb->get_results( // phpcs:ignore
+										$wpdb->prepare( // phpcs:ignore
+											"SELECT IFNULL(SUM(pm.meta_value), 0) AS order_total
+													FROM {$wpdb->prefix}afwc_referrals AS afwcr
+													JOIN {$wpdb->postmeta} AS pm
+													ON (afwcr.post_id = pm.post_id
+														AND pm.meta_key = %s
+														AND afwcr.affiliate_id = %d)
+													JOIN {$wpdb->posts} AS posts
+														ON (posts.ID = afwcr.post_id
+														AND posts.post_type = %s) 
+													WHERE afwcr.status != %s
+	                                                    AND FIND_IN_SET ( CONVERT(afwcr.order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																							FROM {$wpdb->prefix}options
+																							WHERE option_name = %s ) )
+	                                                    AND (afwcr.datetime BETWEEN %s AND %s)",
+											'_order_total',
+											$affiliate_id,
+											'shop_order',
+											AFWC_REFERRAL_STATUS_DRAFT,
+											AFWC_SQL_CHARSET,
+											AFWC_SQL_COLLATION,
+											AFWC_SQL_CHARSET,
+											AFWC_SQL_COLLATION,
+											$option_order_status,
+											$from,
+											$to
+										),
+						'ARRAY_A'
+					);
+
+				}
+			} else {
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$kpis_result = $wpdb->get_results( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(count(DISTINCT wco.id), 0) AS number_of_orders,
+																				IFNULL(SUM( afwcr.amount ), 0) as gross_commissions,
+																				IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS paid_commission,
+																				IFNULL(SUM(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( CONVERT( order_status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s )  ) THEN afwcr.amount END), 0) AS unpaid_commission,
+																				IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS rejected_commission,
+																				IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS paid_count,
+																				IFNULL(COUNT(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( CONVERT( order_status USING %s ) COLLATE %s, ( SELECT CONVERT( option_value USING %s ) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s )  ) THEN 1 END), 0) AS unpaid_count,
+																				IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS rejected_count
+																		FROM {$wpdb->prefix}afwc_referrals AS afwcr
+																			JOIN {$wpdb->prefix}wc_orders AS wco
+																				ON (afwcr.post_id = wco.id
+																						AND wco.type = %s
+																						AND afwcr.affiliate_id = %d)
+																						WHERE afwcr.status != %s",
+															AFWC_REFERRAL_STATUS_PAID,
+															AFWC_REFERRAL_STATUS_UNPAID,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$temp_option_key,
+															AFWC_REFERRAL_STATUS_REJECTED,
+															AFWC_REFERRAL_STATUS_PAID,
+															AFWC_REFERRAL_STATUS_UNPAID,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$temp_option_key,
+															AFWC_REFERRAL_STATUS_REJECTED,
+															'shop_order',
+															$affiliate_id,
+															AFWC_REFERRAL_STATUS_DRAFT
+														),
+						'ARRAY_A'
+					);
+
+					$order_total = $wpdb->get_results( // phpcs:ignore
+										$wpdb->prepare( // phpcs:ignore
+											"SELECT IFNULL(SUM(wco.total_amount), 0) AS order_total
+													FROM {$wpdb->prefix}afwc_referrals AS afwcr
+													JOIN {$wpdb->prefix}wc_orders AS wco
+													ON (afwcr.post_id = wco.id
+														AND wco.type = %s
+														AND afwcr.affiliate_id = %d)
+													WHERE afwcr.status != %s
+													   	AND FIND_IN_SET ( CONVERT( afwcr.order_status using %s ) COLLATE %s, ( SELECT CONVERT( option_value using %s ) COLLATE %s
+																							FROM {$wpdb->prefix}options
+																							WHERE option_name = %s ) )",
+											'shop_order',
+											$affiliate_id,
+											AFWC_REFERRAL_STATUS_DRAFT,
+											AFWC_SQL_CHARSET,
+											AFWC_SQL_COLLATION,
+											AFWC_SQL_CHARSET,
+											AFWC_SQL_COLLATION,
+											$option_order_status
+										),
+						'ARRAY_A'
+					);
+				} else {
+					$kpis_result = $wpdb->get_results( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(count(DISTINCT pm.post_id), 0) AS number_of_orders,
+																				IFNULL(SUM( afwcr.amount ), 0) as gross_commissions,
+																				IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS paid_commission,
+																				IFNULL(SUM(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s )  ) THEN afwcr.amount END), 0) AS unpaid_commission,
+																				IFNULL(SUM(CASE WHEN afwcr.status = %s THEN afwcr.amount END), 0) AS rejected_commission,
+																				IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS paid_count,
+																				IFNULL(COUNT(CASE WHEN afwcr.status = %s AND FIND_IN_SET ( CONVERT(order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																											FROM {$wpdb->prefix}options
+																											WHERE option_name = %s )  ) THEN 1 END), 0) AS unpaid_count,
+																				IFNULL(COUNT(CASE WHEN afwcr.status = %s THEN 1 END), 0) AS rejected_count
+																		FROM {$wpdb->prefix}afwc_referrals AS afwcr
+																			JOIN {$wpdb->postmeta} AS pm
+																				ON (afwcr.post_id = pm.post_id
+																						AND pm.meta_key = %s
+																						AND afwcr.affiliate_id = %d)
+																						WHERE afwcr.status != %s",
+															AFWC_REFERRAL_STATUS_PAID,
+															AFWC_REFERRAL_STATUS_UNPAID,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$temp_option_key,
+															AFWC_REFERRAL_STATUS_REJECTED,
+															AFWC_REFERRAL_STATUS_PAID,
+															AFWC_REFERRAL_STATUS_UNPAID,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															$temp_option_key,
+															AFWC_REFERRAL_STATUS_REJECTED,
+															'_order_total',
+															$affiliate_id,
+															AFWC_REFERRAL_STATUS_DRAFT
+														),
+						'ARRAY_A'
+					);
+
+					$order_total =  $wpdb->get_results( // phpcs:ignore
+										$wpdb->prepare( // phpcs:ignore
+											"SELECT IFNULL(SUM(pm.meta_value), 0) AS order_total
+													FROM {$wpdb->prefix}afwc_referrals AS afwcr
+													JOIN {$wpdb->postmeta} AS pm
+													ON (afwcr.post_id = pm.post_id
+														AND pm.meta_key = %s
+														AND afwcr.affiliate_id = %d)
+													JOIN {$wpdb->posts} AS posts
+														ON (posts.ID = afwcr.post_id
+														AND posts.post_type = %s) 
+													WHERE afwcr.status != %s
+	                                                    AND FIND_IN_SET ( CONVERT(afwcr.order_status USING %s) COLLATE %s, ( SELECT CONVERT(option_value USING %s) COLLATE %s
+																							FROM {$wpdb->prefix}options
+																							WHERE option_name = %s ) )",
+											'_order_total',
+											$affiliate_id,
+											'shop_order',
+											AFWC_REFERRAL_STATUS_DRAFT,
+											AFWC_SQL_CHARSET,
+											AFWC_SQL_COLLATION,
+											AFWC_SQL_CHARSET,
+											AFWC_SQL_COLLATION,
+											$option_order_status
+										),
+						'ARRAY_A'
+					);
+				}
 			}
 			delete_option( $option_order_status );
 			delete_option( $temp_option_key );
 
-			$kpis_result[0]['order_total'] = ( isset( $order_total[0]['order_total'] ) ) ? $order_total[0]['order_total'] : 0;
+			$kpis_result[0]['order_total'] = ( ! empty( $order_total[0]['order_total'] ) ) ? $order_total[0]['order_total'] : 0;
 
-			$args['kpis_result'] = $kpis_result;
-
-			$kpis = array(
-				'sales'               => ( isset( $kpis_result[0]['order_total'] ) ) ? $kpis_result[0]['order_total'] : 0,
-				'number_of_orders'    => ( isset( $kpis_result[0]['number_of_orders'] ) ) ? $kpis_result[0]['number_of_orders'] : 0,
-				'paid_commission'     => ( isset( $kpis_result[0]['paid_commission'] ) ) ? $kpis_result[0]['paid_commission'] : 0,
-				'unpaid_commission'   => ( isset( $kpis_result[0]['unpaid_commission'] ) ) ? $kpis_result[0]['unpaid_commission'] : 0,
-				'rejected_commission' => ( isset( $kpis_result[0]['rejected_commission'] ) ) ? $kpis_result[0]['rejected_commission'] : 0,
-				'paid_count'          => ( isset( $kpis_result[0]['paid_count'] ) ) ? $kpis_result[0]['paid_count'] : 0,
-				'unpaid_count'        => ( isset( $kpis_result[0]['unpaid_count'] ) ) ? $kpis_result[0]['unpaid_count'] : 0,
-				'rejected_count'      => ( isset( $kpis_result[0]['rejected_count'] ) ) ? $kpis_result[0]['rejected_count'] : 0,
+			return apply_filters(
+				'afwc_my_account_kpis_result',
+				array(
+					'sales'               => ( ! empty( $kpis_result[0]['order_total'] ) ) ? $kpis_result[0]['order_total'] : 0,
+					'number_of_orders'    => ( ! empty( $kpis_result[0]['number_of_orders'] ) ) ? $kpis_result[0]['number_of_orders'] : 0,
+					'paid_commission'     => ( ! empty( $kpis_result[0]['paid_commission'] ) ) ? $kpis_result[0]['paid_commission'] : 0,
+					'unpaid_commission'   => ( ! empty( $kpis_result[0]['unpaid_commission'] ) ) ? $kpis_result[0]['unpaid_commission'] : 0,
+					'rejected_commission' => ( ! empty( $kpis_result[0]['rejected_commission'] ) ) ? $kpis_result[0]['rejected_commission'] : 0,
+					'paid_count'          => ( ! empty( $kpis_result[0]['paid_count'] ) ) ? $kpis_result[0]['paid_count'] : 0,
+					'unpaid_count'        => ( ! empty( $kpis_result[0]['unpaid_count'] ) ) ? $kpis_result[0]['unpaid_count'] : 0,
+					'rejected_count'      => ( ! empty( $kpis_result[0]['rejected_count'] ) ) ? $kpis_result[0]['rejected_count'] : 0,
+					'gross_commission'    => ( ! empty( $kpis_result[0]['gross_commissions'] ) ) ? $kpis_result[0]['gross_commissions'] : 0,
+				),
+				array(
+					'source'      => $this,
+					'kpis_result' => $kpis_result,
+				)
 			);
-
-			return apply_filters( 'afwc_my_account_kpis_result', $kpis, $args );
 
 		}
 
@@ -1352,46 +1534,83 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 
 			if ( ! empty( $from ) && ! empty( $to ) ) {
 
-				$refunds_result = $wpdb->get_results( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(SUM(pm.meta_value), 0) AS refund_amount,
-																			IFNULL(COUNT(DISTINCT p.post_parent), 0) AS refund_order_count
-																	FROM {$wpdb->posts} AS p
-																		JOIN {$wpdb->postmeta} AS pm
-																			ON (pm.post_id = p.ID
-																					AND pm.meta_key = %s
-																					AND p.post_type = %s)
-																		JOIN {$wpdb->prefix}afwc_referrals AS afwcr
-																			ON (afwcr.post_id = p.post_parent)
-																	WHERE afwcr.affiliate_id = %d
-																		AND (afwcr.datetime BETWEEN %s AND %s) ",
-														'_refund_amount',
-														'shop_order_refund',
-														$affiliate_id,
-														$from,
-														$to
-													),
-					'ARRAY_A'
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$refunds_result = $wpdb->get_results( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM(ABS(wco.total_amount)), 0) AS refund_amount,
+																				IFNULL(COUNT(DISTINCT wco.parent_order_id), 0) AS refund_order_count
+																		FROM {$wpdb->prefix}wc_orders AS wco
+																			JOIN {$wpdb->prefix}afwc_referrals AS afwcr
+																				ON (afwcr.post_id = wco.parent_order_id
+																					AND wco.type = %s
+																					AND afwcr.affiliate_id = %d)
+																			WHERE afwcr.datetime BETWEEN %s AND %s",
+															'shop_order_refund',
+															$affiliate_id,
+															$from,
+															$to
+														),
+						'ARRAY_A'
+					);
+				} else {
+					$refunds_result = $wpdb->get_results( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM(pm.meta_value), 0) AS refund_amount,
+																				IFNULL(COUNT(DISTINCT p.post_parent), 0) AS refund_order_count
+																		FROM {$wpdb->posts} AS p
+																			JOIN {$wpdb->postmeta} AS pm
+																				ON (pm.post_id = p.ID
+																						AND pm.meta_key = %s
+																						AND p.post_type = %s)
+																			JOIN {$wpdb->prefix}afwc_referrals AS afwcr
+																				ON (afwcr.post_id = p.post_parent)
+																		WHERE afwcr.affiliate_id = %d
+																			AND (afwcr.datetime BETWEEN %s AND %s) ",
+															'_refund_amount',
+															'shop_order_refund',
+															$affiliate_id,
+															$from,
+															$to
+														),
+						'ARRAY_A'
+					);
+				}
 			} else {
-				$refunds_result = $wpdb->get_results( // phpcs:ignore
-													$wpdb->prepare( // phpcs:ignore
-														"SELECT IFNULL(SUM(pm.meta_value), 0) AS refund_amount,
-																			IFNULL(COUNT(DISTINCT p.post_parent), 0) AS refund_order_count
-																	FROM {$wpdb->posts} AS p
-																		JOIN {$wpdb->postmeta} AS pm
-																			ON (pm.post_id = p.ID
-																					AND pm.meta_key = %s
-																					AND p.post_type = %s)
-																		JOIN {$wpdb->prefix}afwc_referrals AS afwcr
-																			ON (afwcr.post_id = p.post_parent)
-																	WHERE afwcr.affiliate_id = %d",
-														'_refund_amount',
-														'shop_order_refund',
-														$affiliate_id
-													),
-					'ARRAY_A'
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$refunds_result = $wpdb->get_results( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM(ABS(wco.total_amount)), 0) AS refund_amount,
+																				IFNULL(COUNT(DISTINCT wco.parent_order_id), 0) AS refund_order_count
+																		FROM {$wpdb->prefix}wc_orders AS wco
+																			JOIN {$wpdb->prefix}afwc_referrals AS afwcr
+																				ON (afwcr.post_id = wco.parent_order_id
+																					AND wco.type = %s
+																					AND afwcr.affiliate_id = %d)",
+															'shop_order_refund',
+															$affiliate_id
+														),
+						'ARRAY_A'
+					);
+				} else {
+					$refunds_result = $wpdb->get_results( // phpcs:ignore
+														$wpdb->prepare( // phpcs:ignore
+															"SELECT IFNULL(SUM(pm.meta_value), 0) AS refund_amount,
+																				IFNULL(COUNT(DISTINCT p.post_parent), 0) AS refund_order_count
+																		FROM {$wpdb->posts} AS p
+																			JOIN {$wpdb->postmeta} AS pm
+																				ON (pm.post_id = p.ID
+																						AND pm.meta_key = %s
+																						AND p.post_type = %s)
+																			JOIN {$wpdb->prefix}afwc_referrals AS afwcr
+																				ON (afwcr.post_id = p.post_parent)
+																		WHERE afwcr.affiliate_id = %d",
+															'_refund_amount',
+															'shop_order_refund',
+															$affiliate_id
+														),
+						'ARRAY_A'
+					);
+				}
 			}
 			$refunds = array(
 				'refund_amount'      => ( isset( $refunds_result[0]['refund_amount'] ) ) ? $refunds_result[0]['refund_amount'] : 0,
@@ -1453,20 +1672,37 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				$option_nm = 'afwc_order_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', array_unique( $order_ids ) ), 'no' );
 
-				$referrals_details = $wpdb->get_results( // phpcs:ignore
-												$wpdb->prepare( // phpcs:ignore
-													"SELECT post_id AS order_id,
-																		GROUP_CONCAT(CASE WHEN meta_key IN ('_billing_first_name', '_billing_last_name') THEN meta_value END SEPARATOR ' ') AS display_name
-																FROM {$wpdb->postmeta} AS postmeta
-																WHERE meta_key IN ( '_billing_first_name', '_billing_last_name' )
-																	AND FIND_IN_SET ( post_id, ( SELECT option_value
-																								FROM {$wpdb->prefix}options
-																								WHERE option_name = %s ) )
-																						GROUP BY order_id",
-													$option_nm
-												),
-					'ARRAY_A'
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$referrals_details = $wpdb->get_results( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT order_id,
+																CONCAT_WS( ' ', first_name, last_name ) AS display_name
+															FROM {$wpdb->prefix}wc_order_addresses
+															WHERE address_type = %s
+															AND FIND_IN_SET ( order_id, ( SELECT option_value
+																									FROM {$wpdb->prefix}options
+																									WHERE option_name = %s ) )",
+														'billing',
+														$option_nm
+													),
+						'ARRAY_A'
+					);
+				} else {
+					$referrals_details = $wpdb->get_results( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT post_id AS order_id,
+																	GROUP_CONCAT(CASE WHEN meta_key IN ('_billing_first_name', '_billing_last_name') THEN meta_value END SEPARATOR ' ') AS display_name
+																	FROM {$wpdb->postmeta} AS postmeta
+																	WHERE meta_key IN ( '_billing_first_name', '_billing_last_name' )
+																		AND FIND_IN_SET ( post_id, ( SELECT option_value
+																									FROM {$wpdb->prefix}options
+																									WHERE option_name = %s ) )
+																							GROUP BY order_id",
+														$option_nm
+													),
+						'ARRAY_A'
+					);
+				}
 
 				delete_option( $option_nm );
 
@@ -1514,20 +1750,37 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				$option_nm = 'afwc_order_ids_' . uniqid();
 				update_option( $option_nm, implode( ',', array_unique( $order_ids ) ), 'no' );
 
-				$referrals_details = $wpdb->get_results( // phpcs:ignore
-												$wpdb->prepare( // phpcs:ignore
-													"SELECT post_id AS order_id,
-																		GROUP_CONCAT(CASE WHEN meta_key IN ('_billing_first_name', '_billing_last_name') THEN meta_value END SEPARATOR ' ') AS display_name
-																FROM {$wpdb->postmeta} AS postmeta
-																WHERE meta_key IN ( '_billing_first_name', '_billing_last_name' )
-																	AND FIND_IN_SET ( post_id, ( SELECT option_value
-																								FROM {$wpdb->prefix}options
-																								WHERE option_name = %s ) )
-																						GROUP BY order_id",
-													$option_nm
-												),
-					'ARRAY_A'
-				);
+				if ( AFWC_IS_HPOS_ENABLED ) {
+					$referrals_details = $wpdb->get_results( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT order_id,
+																CONCAT_WS( ' ', first_name, last_name ) AS display_name
+															FROM {$wpdb->prefix}wc_order_addresses
+															WHERE address_type = %s
+															AND FIND_IN_SET ( order_id, ( SELECT option_value
+																									FROM {$wpdb->prefix}options
+																									WHERE option_name = %s ) )",
+														'billing',
+														$option_nm
+													),
+						'ARRAY_A'
+					);
+				} else {
+					$referrals_details = $wpdb->get_results( // phpcs:ignore
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT post_id AS order_id,
+																			GROUP_CONCAT(CASE WHEN meta_key IN ('_billing_first_name', '_billing_last_name') THEN meta_value END SEPARATOR ' ') AS display_name
+																	FROM {$wpdb->postmeta} AS postmeta
+																	WHERE meta_key IN ( '_billing_first_name', '_billing_last_name' )
+																		AND FIND_IN_SET ( post_id, ( SELECT option_value
+																									FROM {$wpdb->prefix}options
+																									WHERE option_name = %s ) )
+																							GROUP BY order_id",
+														$option_nm
+													),
+						'ARRAY_A'
+					);
+				}
 
 				delete_option( $option_nm );
 
@@ -1566,7 +1819,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		 *
 		 * @param WP_User $user The user object.
 		 */
-		public function resources_content( $user = null ) {
+		public function profile_resources_content( $user = null ) {
 
 			if ( ! is_object( $user ) || empty( $user->ID ) ) {
 				return;
@@ -1580,210 +1833,72 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				include_once WP_PLUGIN_DIR . '/woocommerce/includes/class-wc-ajax.php';
 			}
 
+			global $affiliate_for_woocommerce;
+
 			// Data.
-			$pname                = get_option( 'afwc_pname', 'ref' );
-			$pname                = ( ! empty( $pname ) ) ? $pname : 'ref';
-			$date_format          = get_option( 'date_format' ); // TODO: not used so remove?.
-			$affiliate_id         = afwc_get_affiliate_id_based_on_user_id( $user->ID );
-			$afwc_ref_url_id      = get_user_meta( $user->ID, 'afwc_ref_url_id', true );
-			$affiliate_identifier = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
-
-			$use_referral_coupons = get_option( 'afwc_use_referral_coupons', 'yes' );
-			$afwc_coupon          = AFWC_Coupon::get_instance();
-			$referral_coupon_code = $afwc_coupon->get_referral_coupon( array( 'user_id' => $user->ID ) );
-
-			$afwc_admin_contact_email               = get_option( 'afwc_contact_admin_email_address', '' );
+			$user_id                                = intval( $user->ID );
+			$pname                                  = afwc_get_pname();
+			$affiliate_id                           = afwc_get_affiliate_id_based_on_user_id( $user_id );
+			$afwc_ref_url_id                        = get_user_meta( $user_id, 'afwc_ref_url_id', true );
+			$affiliate_identifier                   = ( ! empty( $afwc_ref_url_id ) ) ? $afwc_ref_url_id : $affiliate_id;
 			$afwc_allow_custom_affiliate_identifier = get_option( 'afwc_allow_custom_affiliate_identifier', 'yes' );
+			$afwc_use_pretty_referral_links         = get_option( 'afwc_use_pretty_referral_links', 'no' );
+			$plugin_data                            = $affiliate_for_woocommerce->get_plugin_data();
 
-			$plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
-
-			if ( ! wp_script_is( 'afwc-resource' ) ) {
-				wp_register_script( 'afwc-resource', AFWC_PLUGIN_URL . '/assets/js/afwc-resource.js', array( 'jquery', 'wp-i18n' ), $plugin_data['Version'], true );
+			if ( ! wp_script_is( 'afwc-profile-js' ) ) {
+				wp_register_script( 'afwc-profile-js', AFWC_PLUGIN_URL . '/assets/js/my-account/affiliate-profile.js', array( 'jquery', 'wp-i18n' ), $plugin_data['Version'], true );
 				if ( function_exists( 'wp_set_script_translations' ) ) {
-					wp_set_script_translations( 'afwc-resource', 'affiliate-for-woocommerce', AFWC_PLUGIN_DIR_PATH . 'languages' );
+					wp_set_script_translations( 'afwc-profile-js', 'affiliate-for-woocommerce', AFWC_PLUGIN_DIR_PATH . 'languages' );
 				}
 			}
-			wp_enqueue_script( 'afwc-resource' );
-			wp_localize_script(
-				'afwc-resource',
-				'afwcResourceParams',
-				array(
-					'pname'                        => $pname,
-					'homeurl'                      => esc_url( trailingslashit( home_url() ) ),
-					'afwc_save_account_details'    => esc_url_raw( WC_AJAX::get_endpoint( 'afwc_save_account_details' ) ),
-					'save_account_security'        => wp_create_nonce( 'afwc-save-account-details' ),
-					'userid'                       => esc_attr( $user->ID ),
-					'afwc_save_ref_url_identifier' => esc_url_raw( WC_AJAX::get_endpoint( 'afwc_save_ref_url_identifier' ) ),
-					'save_id_security'             => wp_create_nonce( 'afwc-save-ref-url-identifier' ),
-				)
+			wp_enqueue_script( 'afwc-profile-js' );
+
+			$localize_params = array(
+				'pName'                   => $pname,
+				'homeURL'                 => esc_url( trailingslashit( home_url() ) ),
+				'saveAccountDetailsURL'   => esc_url_raw( WC_AJAX::get_endpoint( 'afwc_save_account_details' ) ),
+				'saveAccountSecurity'     => wp_create_nonce( 'afwc-save-account-details' ),
+				'isPrettyReferralEnabled' => $afwc_use_pretty_referral_links,
 			);
 
-			?>
-			<style type="text/css" media="screen">
-				.afwc_save_account_status {
-					display: inline-block;
-					visibility: visible;
-					vertical-align: middle;
-					width: 2em;
-					height: 2em;
-					background-size: 2em;
-				}
-				.afwc_status_spinner {
-					background: url(<?php echo esc_url( admin_url( 'images/spinner.gif' ) ); ?>) no-repeat center;
-				}
-				.afwc_status_yes {
-					background: url(<?php echo esc_url( admin_url( 'images/yes.png' ) ); ?>) no-repeat center;
-				}
-				.afwc_status_no {
-					background: url(<?php echo esc_url( admin_url( 'images/no.png' ) ); ?>) no-repeat center;
-				}
-				#afwc_id_msg.afwc_sucess {
-					color: green;
-				}
-				#afwc_id_msg.afwc_error {
-					color: #e2401c;
-				}
-				#afwc_id_save_wrap input {
-					width: 30% !important;
-					margin-right: 0.5em;
-				}
-			</style>
-			<div id="afwc_resources_wrapper">
-				<div id="afwc_referral_url_container">
-					<p id="afwc_id_change_wrap">
-						<?php echo esc_html_x( 'Your affiliate identifier is: ', 'label for affiliate identifier', 'affiliate-for-woocommerce' ) . '<code>' . esc_html( $affiliate_identifier ) . '</code>'; ?>
-						<?php
-						if ( 'yes' === $afwc_allow_custom_affiliate_identifier ) {
-							?>
-							<a href="#" id="afwc_change_identifier" title="<?php echo esc_attr__( 'Click to change', 'affiliate-for-woocommerce' ); ?>"><i class="fa fa-pencil-alt"></i></a>
-							<?php
-						}
-						?>
-					</p>
-					<?php
-					if ( 'yes' === $afwc_allow_custom_affiliate_identifier ) {
-						?>
-					<p id="afwc_id_save_wrap" style="display: none" ><?php echo esc_html__( 'Change affiliate identifier: ', 'affiliate-for-woocommerce' ); ?>
-						<input type="text" id="afwc_ref_url_id" value="<?php echo esc_attr( $affiliate_identifier ); ?>"/>
-						<button type="button" id="afwc_save_identifier" name="afwc_save_identifier"><?php echo esc_html__( 'Save', 'affiliate-for-woocommerce' ); ?></button>
-					</p>
-					<p id="afwc_id_msg" style="display: none"></p>
-					<p id="afwc_save_id_loader" style="display: none"><img src=" <?php echo esc_url( WC()->plugin_url() . '/assets/images/wpspin-2x.gif' ); ?>" ></p>
-					<p><?php echo esc_html__( 'You can change above identifier to anything like your name, brand name.', 'affiliate-for-woocommerce' ); ?></p>
-						<?php
-					}
-					?>
-					<p><?php echo esc_html__( 'Your referral URL is: ', 'affiliate-for-woocommerce' ); ?>
-						<code id="afwc_affiliate_link_label" title="<?php echo esc_attr__( 'Click to copy', 'affiliate-for-woocommerce' ); ?>" onclick="afwc_copy_affiliate_link(this)"><?php echo esc_url( trailingslashit( apply_filters( 'afwc_referral_redirection_url', home_url(), $affiliate_id, array( 'source' => $this ) ) ) . '?' . $pname . '=' ); ?><span class="afwc_ref_id_span"><?php echo esc_attr( $affiliate_identifier ); ?></code>
-					</p>
-					<?php if ( 'yes' === $use_referral_coupons ) { ?>
-							<?php
-							if ( empty( $referral_coupon_code ) ) {
-								if ( ( ! empty( $afwc_admin_contact_email ) ) ) {
-									?>
-									<p>
-										<?php echo esc_html__( 'Want an exclusive coupon to promote?', 'affiliate-for-woocommerce' ); ?>
-										<a href="mailto:<?php echo esc_attr( $afwc_admin_contact_email ); ?>?subject=[Affiliate Partner] Send me an exclusive coupon&body=Hi%20there%0D%0A%0D%0APlease%20send%20me%20a%20affiliate%20coupon%20for%20running%20a%20promotion.%0D%0A%0D%0AThanks%0D%0A%0D%0A">
-											<?php echo esc_html__( 'Request store admin for a coupon', 'affiliate-for-woocommerce' ); ?>
-										</a>
-									</p>
-									<?php
-								}
-							} else {
-								?>
-								<p>
-									<?php echo esc_html__( 'Your referral coupon details: ', 'affiliate-for-woocommerce' ); ?>
-									<table class="woocommerce-table shop_table afwc_coupons">
-										<thead>
-											<tr>
-												<th>
-													<?php echo esc_html__( 'Coupon code', 'affiliate-for-woocommerce' ); ?>
-												</th>
-												<th>
-													<?php echo esc_html__( 'Amount', 'affiliate-for-woocommerce' ); ?>
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php foreach ( $referral_coupon_code as $coupon_id => $coupon_code ) { ?>
-												<tr>
-													<td>
-														<code id="afwc_referral_coupon" title="<?php echo esc_attr__( 'Click to copy', 'affiliate-for-woocommerce' ); ?>" onclick="afwc_copy_affiliate_link(this)"><?php echo esc_html( $coupon_code ); ?></code>
-													</td>
-													<td>
-														<span>
-															<?php
-																$coupon_params = $afwc_coupon->get_coupon_params( $coupon_code );
-															if ( ! empty( $coupon_params ) ) {
-																$coupon_discount_amount = $coupon_params['discount_amount'];
-																$coupon_discount_type   = $coupon_params['discount_type'];
-																if ( in_array( $coupon_discount_type, array( 'percent', 'sign_up_fee_percent', 'recurring_percent' ), true ) ) {
-																	$coupon_with_discount = wp_kses_post( $coupon_discount_amount ) . '%';
-																} else {
-																	$coupon_with_discount = wp_kses_post( AFWC_CURRENCY ) . wc_format_decimal( $coupon_discount_amount, wc_get_price_decimals() );
-																}
-																echo esc_attr__( $coupon_with_discount ); // phpcs:ignore
-															}
-															?>
-														</span>
-													</td>
-												</tr>
-											<?php } ?>
-										</tbody>
-									</table>
-								</p>
-								<?php
-							}
-					}
-					?>
-				</div>
-				<div id="afwc_custom_referral_url_container">
-					<p><strong><?php echo esc_html__( 'Referral URL generator', 'affiliate-for-woocommerce' ); ?></strong></p>
-					<p><?php echo esc_html__( 'Page URL', 'affiliate-for-woocommerce' ); ?>:
-						<span id="afwc_custom_referral_url">
-							<?php echo esc_url( trailingslashit( home_url() ) ); ?>
-							<input type="text" id="afwc_affiliate_link" name="afwc_affiliate_link" placeholder="<?php echo esc_html__( 'Enter target path here...', 'affiliate-for-woocommerce' ); ?>">
-							<?php echo esc_url( '?' . $pname . '=' ); ?><span class="afwc_ref_id_span"><?php echo esc_attr( $affiliate_identifier ); ?></span>
-						</span>
-					</p>
-					<p><?php echo esc_html__( 'Referral URL: ', 'affiliate-for-woocommerce' ); ?>
-						<code id="afwc_generated_affiliate_link" title="<?php echo esc_attr__( 'Click to copy', 'affiliate-for-woocommerce' ); ?>" onclick="afwc_copy_affiliate_link(this)"><?php echo esc_url( trailingslashit( home_url() ) . '?' . $pname . '=' ); ?><span class="afwc_ref_id_span"><?php echo esc_attr( $affiliate_identifier ); ?></span></code>
-					</p>
-				</div>
-				<?php
-				if ( 'yes' === get_option( 'afwc_allow_paypal_email', 'no' ) ) {
-					$afwc_paypal_email = get_user_meta( $user->ID, 'afwc_paypal_email', true );
-					?>
-						<hr>
-						<form id="afwc_account_form" action="" method="post">
-							<h4><?php echo esc_html__( 'Payment setting', 'affiliate-for-woocommerce' ); ?></h4>
-							<div id="afwc_payment_wrapper">
-								<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
-									<label for="afwc_affiliate_paypal_email"><?php esc_html_e( 'PayPal email address', 'affiliate-for-woocommerce' ); ?></label>
-									<input type="email" class="woocommerce-Input woocommerce-Input--text input-text" name="afwc_affiliate_paypal_email" id="afwc_affiliate_paypal_email" value="<?php echo esc_attr( $afwc_paypal_email ); ?>" /><br>
-									<em><?php esc_html_e( 'You will receive your affiliate commission on the above PayPal email address.', 'affiliate-for-woocommerce' ); ?></em>
-								</p>
-								<p>
-									<button type="submit" id="afwc_save_account_button" name="afwc_save_account_button"><?php echo esc_html__( 'Save', 'affiliate-for-woocommerce' ); ?></button>
-									<span class="afwc_save_account_status"></span>
-								</p>
-							</div>
-						</form>
-						<?php
-				}
-				if ( ! empty( $afwc_admin_contact_email ) ) {
-					?>
-					<div id="afwc_contact_admin_container">
-						<?php echo esc_html__( 'Have any queries?', 'affiliate-for-woocommerce' ); ?>
-						<a href="mailto:<?php echo esc_attr( $afwc_admin_contact_email ); ?>">
-							<?php echo esc_html__( 'Contact store admin', 'affiliate-for-woocommerce' ); ?>
-						</a>
-					</div>
-					<?php
-				}
-				?>
-			</div>
-			<?php
+			if ( 'yes' === $afwc_allow_custom_affiliate_identifier ) {
+				$localize_params['identifierRegexPattern']    = afwc_referral_params_regex_pattern();
+				$localize_params['saveReferralURLIdentifier'] = esc_url_raw( WC_AJAX::get_endpoint( 'afwc_save_ref_url_identifier' ) );
+				$localize_params['saveIdentifierSecurity']    = wp_create_nonce( 'afwc-save-ref-url-identifier' );
+			}
+
+			wp_localize_script( 'afwc-profile-js', 'afwcProfileParams', $localize_params );
+
+			wp_register_style( 'afwc-profile-css', AFWC_PLUGIN_URL . '/assets/css/my-account/affiliate-profile.css', array(), $plugin_data['Version'], 'all' );
+			if ( ! wp_style_is( 'afwc-profile-css', 'enqueued' ) ) {
+				wp_enqueue_style( 'afwc-profile-css' );
+			}
+
+			// Template name.
+			$template = 'my-account/affiliate-profile.php';
+			// Default path of above template.
+			$default_path = AFWC_PLUGIN_DIRPATH . '/templates/';
+			// Pick from another location if found.
+			$template_path = $affiliate_for_woocommerce->get_template_base_dir( $template );
+
+			wc_get_template(
+				$template,
+				array(
+					'user'                            => $user,
+					'user_id'                         => $user_id,
+					'pname'                           => $pname,
+					'affiliate_id'                    => $affiliate_id,
+					'affiliate_referral_url_id'       => $afwc_ref_url_id,
+					'affiliate_identifier'            => $affiliate_identifier,
+					'affiliate_manager_contact_email' => get_option( 'afwc_contact_admin_email_address', '' ),
+					'afwc_use_referral_coupons'       => get_option( 'afwc_use_referral_coupons', 'yes' ),
+					'afwc_allow_custom_affiliate_identifier' => $afwc_allow_custom_affiliate_identifier,
+					'afwc_use_pretty_referral_links'  => $afwc_use_pretty_referral_links,
+
+				),
+				$template_path,
+				$default_path
+			);
 
 		}
 
@@ -1793,15 +1908,24 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		public function afwc_save_account_details() {
 			check_ajax_referer( 'afwc-save-account-details', 'security' );
 
-			$form_data = ( ! empty( $_POST['form_data'] ) ) ? sanitize_text_field( wp_unslash( $_POST['form_data'] ) ) : '';
-			$user_id   = ( ! empty( $_POST['user_id'] ) ) ? absint( $_POST['user_id'] ) : 0;
-
-			if ( empty( $form_data ) || empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+			if ( empty( $user_id ) ) {
 				wp_send_json(
 					array(
 						'success' => 'no',
-						'message' => __(
+						'message' => _x( 'Invalid user', 'account details updating error message', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$form_data = ( ! empty( $_POST['form_data'] ) ) ? sanitize_text_field( wp_unslash( $_POST['form_data'] ) ) : '';
+			if ( empty( $form_data ) ) {
+				wp_send_json(
+					array(
+						'success' => 'no',
+						'message' => _x(
 							'Missing data',
+							'account details updating error message',
 							'affiliate-for-woocommerce'
 						),
 					)
@@ -1814,6 +1938,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 
 			$paypal_email = ! empty( $data['afwc_affiliate_paypal_email'] ) ? $data['afwc_affiliate_paypal_email'] : '';
 
+			// Send success and delete the user meta if PayPal email is empty.
 			if ( empty( $paypal_email ) ) {
 				delete_user_meta( $user_id, 'afwc_paypal_email' );
 				wp_send_json( array( 'success' => 'yes' ) );
@@ -1829,7 +1954,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				);
 			}
 
-			// Update the PayPal email.
+			// Send success and update the PayPal email.
 			update_user_meta( $user_id, 'afwc_paypal_email', sanitize_email( $paypal_email ) );
 			wp_send_json( array( 'success' => 'yes' ) );
 		}
@@ -1840,14 +1965,24 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		public function afwc_save_ref_url_identifier() {
 			check_ajax_referer( 'afwc-save-ref-url-identifier', 'security' );
 
-			$user_id    = ( ! empty( $_POST['user_id'] ) ) ? absint( $_POST['user_id'] ) : 0;
-			$ref_url_id = ( ! empty( $_POST['ref_url_id'] ) ) ? wc_clean( wp_unslash( $_POST['ref_url_id'] ) ) : ''; // phpcs:ignore
-			if ( empty( $ref_url_id ) || empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+			if ( empty( $user_id ) ) {
 				wp_send_json(
 					array(
 						'success' => 'no',
-						'message' => __(
+						'message' => _x( 'Invalid user', 'referral url identifier updating error message', 'affiliate-for-woocommerce' ),
+					)
+				);
+			}
+
+			$ref_url_id = ( ! empty( $_POST['ref_url_id'] ) ) ? wc_clean( wp_unslash( $_POST['ref_url_id'] ) ) : ''; // phpcs:ignore
+			if ( empty( $ref_url_id ) ) {
+				wp_send_json(
+					array(
+						'success' => 'no',
+						'message' => _x(
 							'Missing data',
+							'referral url identifier updating error message',
 							'affiliate-for-woocommerce'
 						),
 					)
@@ -1858,8 +1993,9 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				wp_send_json(
 					array(
 						'success' => 'no',
-						'message' => __(
+						'message' => _x(
 							'Numeric values are not allowed.',
+							'referral url identifier updating error message',
 							'affiliate-for-woocommerce'
 						),
 					)
@@ -1880,8 +2016,9 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				wp_send_json(
 					array(
 						'success' => 'no',
-						'message' => __(
+						'message' => _x(
 							'This URL identifier already exists. Please choose a different identifier',
+							'referral url identifier updating error message',
 							'affiliate-for-woocommerce'
 						),
 					)
@@ -1891,8 +2028,9 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 				wp_send_json(
 					array(
 						'success' => 'yes',
-						'message' => __(
+						'message' => _x(
 							'Identifier saved successfully.',
+							'referral url identifier updated message',
 							'affiliate-for-woocommerce'
 						),
 					)
@@ -1945,7 +2083,7 @@ if ( ! class_exists( 'AFWC_My_Account' ) ) {
 		}
 
 		/**
-		 * Function to show content resources
+		 * Function to show campaigns content resources
 		 *
 		 * @param WP_User $user The user object.
 		 */

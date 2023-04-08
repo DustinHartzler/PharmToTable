@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.5.0
+ * @version     1.9.0
  */
 
 // Exit if accessed directly.
@@ -95,8 +95,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 */
 		public function constants() {
 
-			global $wpdb;
-
 			if ( ! defined( 'AFWC_AFFILIATES_COOKIE_NAME' ) ) {
 				define( 'AFWC_AFFILIATES_COOKIE_NAME', 'affiliate_for_woocommerce' );
 			}
@@ -121,9 +119,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			if ( ! defined( 'AFWC_CURRENCY' ) ) {
 				define( 'AFWC_CURRENCY', get_woocommerce_currency_symbol() );
 			}
-			if ( ! defined( 'AFWC_PNAME' ) ) {
-				define( 'AFWC_PNAME', get_option( 'afwc_pname', 'ref' ) );
-			}
 			if ( ! defined( 'AFWC_COOKIE_TIMEOUT_BASE' ) ) {
 				define( 'AFWC_COOKIE_TIMEOUT_BASE', 86400 );
 			}
@@ -132,9 +127,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 			if ( ! defined( 'AFWC_DEFAULT_COMMISSION_STATUS' ) ) {
 				define( 'AFWC_DEFAULT_COMMISSION_STATUS', get_option( 'afwc_default_commission_status' ) );
-			}
-			if ( ! defined( 'AFWC_AJAX_SECURITY' ) ) {
-				define( 'AFWC_AJAX_SECURITY', 'affiliate_for_woocommerce_ajax_call' );
 			}
 			if ( ! defined( 'AFWC_REFERRAL_STATUS_PENDING' ) ) {
 				define( 'AFWC_REFERRAL_STATUS_PENDING', 'pending' );
@@ -168,18 +160,24 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				define( 'AFWC_TIMEZONE_STR', $timezone_str );
 			}
 
-			if ( ! defined( 'AFWC_OPTION_NAME_COLLATION' ) ) {
-					// Code to get the 'option_name' collation.
-				$results = $wpdb->get_row( // phpcs:ignore
-					$wpdb->prepare(
-						"SHOW FULL COLUMNS FROM {$wpdb->prefix}options LIKE %s",
-						'option_name'
-					),
-					ARRAY_A
-				);
+			// Set the charset for SQL Queries.
+			if ( ! defined( 'AFWC_SQL_CHARSET' ) ) {
+				define( 'AFWC_SQL_CHARSET', 'utf32' );
+			}
 
-				$collation = ( ! empty( $results['Collation'] ) ) ? $results['Collation'] : $wpdb->collate;
-				define( 'AFWC_OPTION_NAME_COLLATION', $collation );
+			// Set the collation for SQL Queries.
+			if ( ! defined( 'AFWC_SQL_COLLATION' ) ) {
+				define( 'AFWC_SQL_COLLATION', 'utf32_general_ci' );
+			}
+
+			// Check if WC HPOS is enabled.
+			if ( ! defined( 'AFWC_IS_HPOS_ENABLED' ) ) {
+				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) && is_callable( array( '\Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) ) {
+					$enabled = Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+					define( 'AFWC_IS_HPOS_ENABLED', $enabled );
+				} else {
+					define( 'AFWC_IS_HPOS_ENABLED', false );
+				}
 			}
 
 		}
@@ -282,16 +280,25 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				include_once 'admin/class-afwc-admin-notifications.php';
 				include_once 'admin/class-afwc-admin-affiliate-users.php';
 				include_once 'admin/class-afwc-admin-link-unlink-in-order.php';
+				include_once 'admin/class-afwc-multi-tier.php';
 			}
 
 			include_once 'class-afwc-db-background-process.php';
 
-			if ( afwc_is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' ) ) {
-				include_once 'integration/woocommerce/compat/class-wcs-afwc-compatibility.php';
+			if ( class_exists( 'WC_Subscriptions_Core_Plugin' ) || class_exists( 'WC_Subscriptions' ) ) {
+				include_once 'integration/woocommerce-subscriptions/class-wcs-afwc-compatibility.php';
 			}
 			if ( afwc_is_plugin_active( 'woocommerce-smart-coupons/woocommerce-smart-coupons.php' ) && 'yes' === get_option( 'afwc_use_referral_coupons', 'yes' ) ) {
 				include_once 'integration/woocommerce-smart-coupons/class-wsc-afwc-compatibility.php';
 			}
+			if ( afwc_is_plugin_active( 'elementor/elementor.php' ) && afwc_is_plugin_active( 'elementor-pro/elementor-pro.php' ) ) {
+				include_once 'integration/elementor/class-afwc-elementor-form-actions.php';
+				include_once 'integration/elementor/class-afwc-elementor-dynamic-tags.php';
+			}
+			if ( afwc_is_plugin_active( 'contact-form-7/wp-contact-form-7.php' ) ) {
+				include_once 'integration/contact-form-7/class-cf7-afwc-compatibility.php';
+			}
+
 			include_once 'gateway/paypal/class-afwc-paypal-api.php'; // TODO: remove usage from my account and then move this file to include under only admin.
 			include_once 'integration/woocommerce/class-afwc-integration-woocommerce.php';
 			include_once 'class-afwc-affiliate.php';
@@ -310,6 +317,13 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			include_once 'class-afwc-db-upgrade.php';
 
 			include_once 'class-afwc-emails.php';
+
+			include_once 'class-afwc-registration-submissions.php';
+
+			if ( 'yes' === get_option( 'afwc_use_pretty_referral_links', 'no' ) ) {
+				update_option( 'afwc_flushed_rules_pretty_referral_links', '1', 'no' );
+				include_once 'class-afwc-rewrite-rules.php';
+			}
 		}
 
 		/**
@@ -369,8 +383,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 * @return mixed
 		 */
 		public function afwc_query_vars( $query_vars ) {
-			$afwc_pname = ( defined( 'AFWC_PNAME' ) ) ? AFWC_PNAME : 'ref';
-			$pname      = get_option( 'afwc_pname', $afwc_pname );
+			$pname = afwc_get_pname();
 
 			$affiliates_pname = ( defined( 'AFFILIATES_PNAME' ) ) ? AFFILIATES_PNAME : 'affiliates';
 			$migrated_pname   = get_option( 'afwc_migrated_pname', $affiliates_pname );
@@ -380,6 +393,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				$query_vars[] = 'ref';
 			}
 			$query_vars[] = $migrated_pname;
+
 			return $query_vars;
 		}
 
@@ -389,27 +403,70 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 * @param object $wp The WP object.
 		 */
 		public function afwc_parse_request( &$wp ) {
-			$afwc_pname       = ( defined( 'AFWC_PNAME' ) ) ? AFWC_PNAME : 'ref';
-			$pname            = get_option( 'afwc_pname', $afwc_pname );
-			$affiliates_pname = ( defined( 'AFFILIATES_PNAME' ) ) ? AFFILIATES_PNAME : 'affiliates';
-			$migrated_pname   = get_option( 'afwc_migrated_pname', $affiliates_pname );
+			$pname        = afwc_get_pname();
+			$pname        = ( empty( $wp->query_vars[ $pname ] ) && ! empty( $wp->query_vars['ref'] ) ) ? 'ref' : $pname;
+			$affiliate_id = 0;
 
-			$pname = ( empty( $wp->query_vars[ $pname ] ) && ! empty( $wp->query_vars['ref'] ) ) ? 'ref' : $pname;
+			if ( 'yes' === get_option( 'afwc_use_pretty_referral_links', 'no' ) ) {
+				if ( wp_doing_ajax() ) {
+					return;
+				}
 
-			if ( empty( $wp->query_vars[ $pname ] ) ) {
-				return;
-			}
+				$server_scheme      = ( ! empty( $_SERVER['HTTPS'] ) ) ? wc_clean( wp_unslash( $_SERVER['HTTPS'] ) ) : ''; // phpcs:ignore
+				$server_http_host   = ( ! empty( $_SERVER['HTTP_HOST'] ) ) ? wc_clean( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : ''; // phpcs:ignore
+				$server_request_uri = ( ! empty( $_SERVER['REQUEST_URI'] ) ) ? wc_clean( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : ''; // phpcs:ignore
+				$base_url           = ( ( ! empty( $server_scheme ) && 'on' === $server_scheme ) ? 'https' : 'http' ) . '://' . $server_http_host;
+				$url                = $base_url . $server_request_uri;
+				if ( strpos( $url, $pname ) === false ) {
+					return;
+				}
 
-			// Handle Older affiliates link through migrated pname.
-			if ( isset( $wp->query_vars[ $migrated_pname ] ) ) {
-				$id           = trim( $wp->query_vars[ $migrated_pname ] );
-				$affiliate_id = afwc_get_user_id_based_on_affiliate_id( $id );
-			} elseif ( isset( $wp->query_vars[ $pname ] ) ) {
-				$affiliate_id = trim( $wp->query_vars[ $pname ] );
-			} elseif ( isset( $wp->query_vars['ref'] ) ) {
-				$affiliate_id = trim( $wp->query_vars['ref'] );
+				$values       = wp_parse_url( $url );
+				$parsed       = explode( '/', $values['path'] );
+				$parsed_count = count( $parsed );
+				for ( $i = 0; $i < $parsed_count; $i++ ) {
+					if ( ! empty( $parsed[ $i ] ) && $parsed[ $i ] === $pname ) {
+						$affiliate_id = ( ! empty( $parsed[ $i + 1 ] ) ) ? $parsed[ $i + 1 ] : 0;
+
+						// unset affiliate tracking param (pname) & affiliate identifier.
+						if ( isset( $parsed[ $i ] ) ) {
+							unset( $parsed[ $i ] );
+						}
+						if ( isset( $parsed[ $i + 1 ] ) ) {
+							unset( $parsed[ $i + 1 ] );
+						}
+						break;
+					}
+				}
+				// remove empty array values.
+				$parsed       = array_filter( $parsed, 'strlen' );
+				$query_string = implode( '/', $parsed );
+				$current_url  = $values['scheme'] . '://' . $values['host'] . '/' . $query_string . ( ! empty( $values['query'] ) ? '/?' . $values['query'] : '' );
 			} else {
-				$affiliate_id = 0;
+				if ( empty( $wp->query_vars[ $pname ] ) ) {
+					return;
+				}
+
+				$affiliates_pname = ( defined( 'AFFILIATES_PNAME' ) ) ? AFFILIATES_PNAME : 'affiliates';
+				$migrated_pname   = get_option( 'afwc_migrated_pname', $affiliates_pname );
+
+				// Handle older affiliates link through migrated pname.
+				if ( isset( $wp->query_vars[ $migrated_pname ] ) ) {
+					$id           = trim( $wp->query_vars[ $migrated_pname ] );
+					$affiliate_id = afwc_get_user_id_based_on_affiliate_id( $id );
+				} elseif ( isset( $wp->query_vars[ $pname ] ) ) {
+					$affiliate_id = trim( $wp->query_vars[ $pname ] );
+				} elseif ( isset( $wp->query_vars['ref'] ) ) {
+					$affiliate_id = trim( $wp->query_vars['ref'] );
+				}
+
+				unset( $wp->query_vars[ $pname ] ); // we use this to avoid ending up on the blog listing page.
+				if ( isset( $_GET ) && isset( $_GET[ $pname ] ) ) { // phpcs:ignore
+					$current_url = add_query_arg( $_GET, home_url( $wp->request ) ); // phpcs:ignore
+					$current_url = remove_query_arg( $pname, $current_url );
+					// note that we must use delimiters other than / as these are used in AFFILIATES_REGEX_PATTERN.
+					$current_url = preg_replace( '#' . str_replace( get_option( 'afwc_pname', 'ref' ), $pname, AFWC_REGEX_PATTERN ) . '#', '', $current_url );
+				}
 			}
 
 			// check if affiliate id is non-numeric and if so get the value from user meta.
@@ -429,14 +486,9 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			if ( 0 !== $affiliate_id ) {
 				$this->handle_hit( $affiliate_id );
 
-				unset( $wp->query_vars[ $pname ] ); // we use this to avoid ending up on the blog listing page.
-				if ( isset( $_GET ) && isset( $_GET[ $pname ] ) ) { // phpcs:ignore
-					$current_url = add_query_arg( $_GET, home_url( $wp->request ) ); // phpcs:ignore
-					$current_url = remove_query_arg( $pname, $current_url );
-					// note that we must use delimiters other than / as these are used in AFFILIATES_REGEX_PATTERN.
-					$current_url = preg_replace( '#' . str_replace( AFWC_PNAME, $pname, AFWC_REGEX_PATTERN ) . '#', '', $current_url );
-					$status      = apply_filters( 'affiliates_redirect_status_code', 302 );
-					$status      = intval( $status );
+				if ( ! empty( $current_url ) ) {
+					$status = apply_filters( 'affiliates_redirect_status_code', 302 );
+					$status = intval( $status );
 					switch ( $status ) {
 						case 300:
 						case 301:
@@ -450,6 +502,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						default:
 							$status = 302;
 					}
+
 					wp_safe_redirect( $current_url, $status );
 					exit;
 				}
@@ -463,41 +516,51 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 */
 		public function handle_hit( $affiliate_id = 0 ) {
 
-			if ( ! empty( $affiliate_id ) ) {
-				$affiliate = new AFWC_Affiliate( $affiliate_id );
-				if ( $affiliate instanceof AFWC_Affiliate && 0 !== $affiliate->ID ) {
-					$is_valid_affiliate = $affiliate->is_valid();
+			// Prevent the hit tracking if the affiliate id is missing or referral determination is set for first referrer when an affiliate id is present in the cookies.
+			if ( empty( $affiliate_id ) || ( ! empty( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) && 'first' === get_option( 'afwc_credit_affiliate', 'last' ) ) ) {
+				return;
+			}
 
-					if ( $is_valid_affiliate ) {
-						$encoded_id = afwc_encode_affiliate_id( $affiliate_id );
-						$days       = get_option( 'afwc_cookie_expiration', 30 );
-						if ( $days > 0 ) {
-							$expire = time() + AFWC_COOKIE_TIMEOUT_BASE * $days;
-						} else {
-							$expire = 0;
-						}
-						setcookie(
-							AFWC_AFFILIATES_COOKIE_NAME,
-							$encoded_id,
-							$expire,
-							COOKIEPATH ? COOKIEPATH : '/',
-							COOKIE_DOMAIN
-						);
-						// check for campaign.
-						$utm_campaign = ( ! empty( $_REQUEST ) && ! empty( $_REQUEST['utm_campaign'] ) ) ? wc_clean( wp_unslash( $_REQUEST['utm_campaign'] ) ) : '';// phpcs:ignore
-						$campaign_id  = ( ! empty( $utm_campaign ) ) ? afwc_get_campaign_id_by_slug( $utm_campaign ) : 0;
-						setcookie(
-							AFWC_CAMPAIGN_COOKIE_NAME,
-							$campaign_id,
-							$expire,
-							COOKIEPATH ? COOKIEPATH : '/',
-							COOKIE_DOMAIN
-						);
-						$affiliate_api         = AFWC_API::get_instance();
-						$params['campaign_id'] = $campaign_id;
-						$affiliate_api->track_visitor( $affiliate_id, 0, 'link', $params );
-					}
-				}
+			$affiliate = new AFWC_Affiliate( $affiliate_id );
+
+			if ( ! $affiliate instanceof AFWC_Affiliate || empty( $affiliate->ID ) || ! is_callable( array( $affiliate, 'is_valid' ) ) || ! $affiliate->is_valid() ) {
+				return;
+			}
+
+			$encoded_affiliate_id = afwc_encode_affiliate_id( $affiliate_id );
+			$days                 = get_option( 'afwc_cookie_expiration', 30 );
+			$expire               = ( $days > 0 ) ? ( time() + AFWC_COOKIE_TIMEOUT_BASE * $days ) : 0;
+			$params               = array();
+
+			if ( ! empty( $encoded_affiliate_id ) ) {
+				// Set affiliate ID in cookie.
+				setcookie(
+					AFWC_AFFILIATES_COOKIE_NAME,
+					$encoded_affiliate_id,
+					$expire,
+					COOKIEPATH ? COOKIEPATH : '/',
+					COOKIE_DOMAIN
+				);
+			}
+
+			// check for campaign.
+			$utm_campaign = ( ! empty( $_REQUEST ) && ! empty( $_REQUEST['utm_campaign'] ) ) ? wc_clean( wp_unslash( $_REQUEST['utm_campaign'] ) ) : '';// phpcs:ignore
+			$campaign_id  = ( ! empty( $utm_campaign ) ) ? afwc_get_campaign_id_by_slug( $utm_campaign ) : 0;
+
+			// Set campaign ID in cookie.
+			setcookie(
+				AFWC_CAMPAIGN_COOKIE_NAME,
+				$campaign_id,
+				$expire,
+				COOKIEPATH ? COOKIEPATH : '/',
+				COOKIE_DOMAIN
+			);
+
+			$params['campaign_id'] = $campaign_id;
+
+			$affiliate_api = AFWC_API::get_instance();
+			if ( is_callable( array( $affiliate_api, 'track_visitor' ) ) ) {
+				$affiliate_api->track_visitor( $affiliate_id, 0, 'link', $params );
 			}
 
 		}
@@ -735,7 +798,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																	JOIN {$wpdb->prefix}woocommerce_order_itemmeta as woim
 																		ON(woim.order_item_id = woi.order_item_id
 																			AND woim.meta_key IN ('_product_id', '_variation_id', '_line_total', '_qty'))
-																WHERE (afwcr.datetime BETWEEN %s AND %s ) AND FIND_IN_SET( afwcr.order_status COLLATE %s, (SELECT option_value COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
+																WHERE (afwcr.datetime BETWEEN %s AND %s ) AND FIND_IN_SET( CONVERT(afwcr.order_status USING %s) COLLATE %s, (SELECT CONVERT(option_value USING %s) COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
 														) as temp,
 														(SELECT @order_item_id := 0,
 																@pid := 0,
@@ -752,11 +815,13 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 														ORDER BY tot_sales DESC, tot_qty DESC
 														LIMIT %d OFFSET %d",
 															$affiliate_id,
-															'draft',
+															AFWC_REFERRAL_STATUS_DRAFT,
 															$from,
 															$to,
-															AFWC_OPTION_NAME_COLLATION,
-															AFWC_OPTION_NAME_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
 															$option_order_status,
 															$args['limit'],
 															$args['offset']
@@ -791,7 +856,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 																	JOIN {$wpdb->prefix}woocommerce_order_itemmeta as woim
 																		ON(woim.order_item_id = woi.order_item_id
 																			AND woim.meta_key IN ('_product_id', '_variation_id', '_line_total', '_qty'))
-																WHERE (afwcr.datetime BETWEEN %s AND %s ) AND FIND_IN_SET( afwcr.order_status COLLATE %s, (SELECT option_value COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
+																WHERE (afwcr.datetime BETWEEN %s AND %s ) AND FIND_IN_SET( CONVERT(afwcr.order_status USING %s) COLLATE %s, (SELECT CONVERT(option_value USING %s) COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
 														) as temp,
 														(SELECT @order_item_id := 0,
 																@pid := 0,
@@ -805,11 +870,13 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 															AND fqty > -1
 															AND ftot > -1",
 															$affiliate_id,
-															'draft',
+															AFWC_REFERRAL_STATUS_DRAFT,
 															$from,
 															$to,
-															AFWC_OPTION_NAME_COLLATION,
-															AFWC_OPTION_NAME_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
+															AFWC_SQL_CHARSET,
+															AFWC_SQL_COLLATION,
 															$option_order_status
 														)
 				);
@@ -846,7 +913,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 								JOIN {$wpdb->prefix}woocommerce_order_itemmeta as woim
 									ON(woim.order_item_id = woi.order_item_id
 										AND woim.meta_key IN ('_product_id', '_variation_id', '_line_total', '_qty'))
-							WHERE FIND_IN_SET( afwcr.order_status COLLATE %s, (SELECT option_value COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
+							WHERE FIND_IN_SET( CONVERT(afwcr.order_status USING %s) COLLATE %s, (SELECT CONVERT(option_value USING %s) COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
 					) as temp,
 					(SELECT @order_item_id := 0,
 							@pid := 0,
@@ -863,9 +930,11 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 					ORDER BY tot_sales DESC, tot_qty DESC
 					LIMIT %d OFFSET %d",
 						$affiliate_id,
-						'draft',
-						AFWC_OPTION_NAME_COLLATION,
-						AFWC_OPTION_NAME_COLLATION,
+						AFWC_REFERRAL_STATUS_DRAFT,
+						AFWC_SQL_CHARSET,
+						AFWC_SQL_COLLATION,
+						AFWC_SQL_CHARSET,
+						AFWC_SQL_COLLATION,
 						$option_order_status,
 						$args['limit'],
 						$args['offset']
@@ -901,7 +970,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 									JOIN {$wpdb->prefix}woocommerce_order_itemmeta as woim
 										ON(woim.order_item_id = woi.order_item_id
 											AND woim.meta_key IN ('_product_id', '_variation_id', '_line_total', '_qty'))
-								WHERE FIND_IN_SET( afwcr.order_status COLLATE %s, (SELECT option_value COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
+								WHERE FIND_IN_SET( CONVERT(afwcr.order_status USING %s) COLLATE %s, (SELECT CONVERT(option_value USING %s) COLLATE %s FROM {$wpdb->prefix}options WHERE option_name = %s ))
 						) as temp,
 						(SELECT @order_item_id := 0,
 								@pid := 0,
@@ -915,13 +984,16 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 							AND fqty > -1
 							AND ftot > -1",
 						$affiliate_id,
-						'draft',
-						AFWC_OPTION_NAME_COLLATION,
-						AFWC_OPTION_NAME_COLLATION,
+						AFWC_REFERRAL_STATUS_DRAFT,
+						AFWC_SQL_CHARSET,
+						AFWC_SQL_COLLATION,
+						AFWC_SQL_CHARSET,
+						AFWC_SQL_COLLATION,
 						$option_order_status
 					)
 				);
 			}
+
 			$products    = array();
 			$product_ids = array();
 			if ( ! empty( $products_result ) ) {
@@ -937,10 +1009,14 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				$option_prod_ids = 'afwc_prod_ids_' . uniqid();
 				update_option( $option_prod_ids, implode( ',', $product_ids ), 'no' );
 				$prod_res = $wpdb->get_results(// phpcs:ignore
-						$wpdb->prepare( // phpcs:ignore
-							"SELECT ID, post_title FROM {$wpdb->prefix}posts WHERE FIND_IN_SET( ID, (SELECT option_value FROM {$wpdb->prefix}options WHERE option_name = %s ))",
-							$option_prod_ids
-						),
+								$wpdb->prepare( // phpcs:ignore
+									"SELECT ID, post_title
+										FROM {$wpdb->prefix}posts
+										WHERE FIND_IN_SET( ID, ( SELECT option_value 
+																	FROM {$wpdb->prefix}options
+																	WHERE option_name = %s ) )",
+									$option_prod_ids
+								),
 					'ARRAY_A'
 				);
 				foreach ( $prod_res as $res ) {
@@ -976,6 +1052,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 		 */
 		public static function get_affiliates_payout_history( $args = array() ) {
 			global $wpdb;
+
 			$affiliate_ids = ! empty( $args['affiliate_ids'] ) ? $args['affiliate_ids'] : '';
 			$affiliate_ids = ! empty( $args['affiliate_id'] ) ? array( $args['affiliate_id'] ) : $args['affiliate_ids'];
 			$from          = ! empty( $args['from'] ) ? $args['from'] : '';
@@ -1149,7 +1226,6 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			if ( ! empty( $affiliates_payout_history_results ) ) {
 
 				if ( $with_total ) {
-
 					if ( ! empty( $from ) && ! empty( $to ) ) {
 						$payout_total_count = $wpdb->get_var( // phpcs:ignore
 															$wpdb->prepare( // phpcs:ignore
@@ -1173,6 +1249,7 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 						);
 					}
 				}
+
 				foreach ( $affiliates_payout_history_results as $result ) {
 					$result['amount']            = $result['amount'];
 					$affiliates_payout_history[] = $result;
@@ -1180,29 +1257,48 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 				}
 
 				if ( ! empty( $payout_ids ) ) {
-					$results = $wpdb->get_results( // phpcs:ignore 
-												$wpdb->prepare( // phpcs:ignore
-													"SELECT po.payout_id,
-																		IFNULL( COUNT( po.post_id ), 0 ) AS order_count,
-																		DATE_FORMAT( MIN( p.post_date ), '%%d-%%b-%%Y' ) AS from_date,
-																		DATE_FORMAT( MAX( p.post_date ), '%%d-%%b-%%Y' ) AS to_date
-																FROM {$wpdb->prefix}afwc_payout_orders AS po
-																	JOIN {$wpdb->prefix}posts AS p
-																		ON(p.ID = po.post_id
-																			AND p.post_type = 'shop_order')
-																WHERE po.payout_id IN (" . implode( ',', array_fill( 0, count( $payout_ids ), '%d' ) ) . ') 
-																GROUP BY po.payout_id',
-													$payout_ids
-												),
-						'ARRAY_A'
-					);
+					if ( AFWC_IS_HPOS_ENABLED ) {
+						$results = $wpdb->get_results( // phpcs:ignore 
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT po.payout_id,
+																			IFNULL( COUNT( po.post_id ), 0 ) AS order_count,
+																			DATE_FORMAT( CONVERT_TZ( MIN( wco.date_created_gmt ), '+00:00', %s ), %s ) AS from_date,
+																			DATE_FORMAT( CONVERT_TZ( MAX( wco.date_created_gmt ), '+00:00', %s ), %s ) AS to_date
+																	FROM {$wpdb->prefix}afwc_payout_orders AS po
+																		JOIN {$wpdb->prefix}wc_orders AS wco
+																			ON(wco.id = po.post_id
+																				AND wco.type = 'shop_order')
+																	WHERE po.payout_id IN (" . implode( ',', array_fill( 0, count( $payout_ids ), '%d' ) ) . ') 
+																	GROUP BY po.payout_id',
+														array_merge( array( AFWC_TIMEZONE_STR, '%d-%b-%Y', AFWC_TIMEZONE_STR, '%d-%b-%Y' ), $payout_ids )
+													),
+							'ARRAY_A'
+						);
+					} else {
+						$results = $wpdb->get_results( // phpcs:ignore 
+													$wpdb->prepare( // phpcs:ignore
+														"SELECT po.payout_id,
+																			IFNULL( COUNT( po.post_id ), 0 ) AS order_count,
+																			DATE_FORMAT( MIN( p.post_date ), '%%d-%%b-%%Y' ) AS from_date,
+																			DATE_FORMAT( MAX( p.post_date ), '%%d-%%b-%%Y' ) AS to_date
+																	FROM {$wpdb->prefix}afwc_payout_orders AS po
+																		JOIN {$wpdb->prefix}posts AS p
+																			ON(p.ID = po.post_id
+																				AND p.post_type = 'shop_order')
+																	WHERE po.payout_id IN (" . implode( ',', array_fill( 0, count( $payout_ids ), '%d' ) ) . ')
+																	GROUP BY po.payout_id',
+														$payout_ids
+													),
+							'ARRAY_A'
+						);
+					}
 
 					if ( ! empty( $results ) ) {
 						foreach ( $results as $detail ) {
 							$payout_order_details[ $detail['payout_id'] ] = array(
-								'order_count' => $detail['order_count'],
-								'from_date'   => $detail['from_date'],
-								'to_date'     => $detail['to_date'],
+								'referral_count' => $detail['order_count'],
+								'from_date'      => $detail['from_date'],
+								'to_date'        => $detail['to_date'],
 							);
 						}
 					}
@@ -1224,39 +1320,42 @@ if ( ! class_exists( 'Affiliate_For_WooCommerce' ) ) {
 			}
 		}
 
-
 		/**
 		 * Function to update referral entry when order is trashed/untrashed/deleted.
 		 *
 		 * @param int $trashed_order_id Order ID being trashed/untrashed/deleted.
+		 * may need to change action for this function as it post dependent.
 		 */
-		public function afwc_update_referral_on_trash_delete_untrash( $trashed_order_id ) {
-			global $wpdb;
+		public function afwc_update_referral_on_trash_delete_untrash( $trashed_order_id = 0 ) {
 
 			if ( empty( $trashed_order_id ) ) {
 				return;
 			}
+
 			$order = wc_get_order( $trashed_order_id );
 			if ( ! $order instanceof WC_Order ) {
 				return;
 			}
 
+			global $wpdb;
+
 			$current_action = current_action();
 			if ( 'delete_post' === $current_action ) {
 				$affected_row = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}afwc_referrals WHERE post_id = %d", $trashed_order_id ));// phpcs:ignore
 				if ( 1 === $affected_row ) {
-					delete_post_meta( $trashed_order_id, 'is_commission_recorded' );
+					$order->delete_meta_data( 'is_commission_recorded' );
+					$order->save();
 				}
 			} elseif ( 'untrashed_post' === $current_action || 'trashed_post' === $current_action ) {
 				$afwc_status = ( 'trashed_post' === $current_action ) ? 'deleted' : $order->get_status();
 				$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->prefix}afwc_referrals SET order_status = %s WHERE post_id = %d", $afwc_status, $trashed_order_id ) ); // phpcs:ignore
 				if ( 'untrashed_post' === $current_action ) {
-					update_post_meta( $trashed_order_id, 'is_commission_recorded', 'yes' );
+					$order->update_meta_data( 'is_commission_recorded', 'yes' );
+					$order->save();
 				}
 			}
 
 		}
-
 
 		/**
 		 * Get registration for settings

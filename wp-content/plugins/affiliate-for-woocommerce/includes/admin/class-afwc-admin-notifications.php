@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       1.3.4
- * @version     1.0.9
+ * @version     1.0.10
  */
 
 // Exit if accessed directly.
@@ -96,22 +96,24 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 
 			global $pagenow;
 
-			if ( ! empty( $pagenow ) ) {
-				$get_page  = ( ! empty( $_GET['page'] ) ) ? wc_clean( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore
-				$get_tab   = ( ! empty( $_GET['tab'] ) ) ? wc_clean( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore
-				$afw_pages = array( 'affiliate-for-woocommerce-documentation', 'affiliate-for-woocommerce' );
+			if ( empty( $pagenow ) ) {
+				return $afw_rating_text;
+			}
 
-				if ( in_array( $get_page, $afw_pages, true ) || 'affiliate-for-woocommerce-settings' === $get_tab ) {
-					?>
-					<style type="text/css">
-						#wpfooter {
-							display: block !important;
-						}
-					</style>
-					<?php
-					/* translators: %s: link to review Affiliate For WooCommerce */
-					$afw_rating_text = wp_kses_post( sprintf( __( 'If you like %1$sAffiliate For WooCommerce%2$s, please give us %3$s. A huge thanks from WooCommerce & StoreApps in advance!', 'affiliate-for-woocommerce' ), '<strong>', '</strong>', '<a target="_blank" href="' . esc_url( 'https://woocommerce.com/products/affiliate-for-woocommerce/?review' ) . '" style="color: #5850EC;">5-star rating</a>' ) );
-				}
+			$get_page  = ( ! empty( $_GET['page'] ) ) ? wc_clean( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore
+			$get_tab   = ( ! empty( $_GET['tab'] ) ) ? wc_clean( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore
+			$afw_pages = array( 'affiliate-for-woocommerce-documentation', 'affiliate-for-woocommerce' );
+
+			if ( in_array( $get_page, $afw_pages, true ) || 'affiliate-for-woocommerce-settings' === $get_tab ) {
+				?>
+				<style type="text/css">
+					#wpfooter {
+						display: block !important;
+					}
+				</style>
+				<?php
+				/* translators: %1$s: Opening strong tag for plugin title %2$s: Closing strong tag for plugin title %3$s: link to review Affiliate For WooCommerce */
+				$afw_rating_text = wp_kses_post( sprintf( _x( 'If you like %1$sAffiliate For WooCommerce%2$s, please give us %3$s. A huge thanks from WooCommerce & StoreApps in advance!', 'text for review request', 'affiliate-for-woocommerce' ), '<strong>', '</strong>', '<a target="_blank" href="' . esc_url( 'https://woocommerce.com/products/affiliate-for-woocommerce/?review' ) . '" style="color: #5850EC;">5-star rating</a>' ) );
 			}
 
 			return $afw_rating_text;
@@ -128,22 +130,25 @@ if ( ! class_exists( 'AFWC_Admin_Notifications' ) ) {
 
 			global $pagenow;
 
-			if ( ! empty( $pagenow ) ) {
-				$get_page  = ( ! empty( $_GET['page'] ) ) ? wc_clean( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore
-				$get_tab   = ( ! empty( $_GET['tab'] ) ) ? wc_clean( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore
-				$afw_pages = array( 'affiliate-for-woocommerce-documentation', 'affiliate-for-woocommerce' );
+			if ( empty( $pagenow ) ) {
+				return $afw_text;
+			}
 
-				if ( in_array( $get_page, $afw_pages, true ) || 'affiliate-for-woocommerce-settings' === $get_tab ) {
-					?>
-					<style type="text/css">
-						#wpfooter {
-							display: block !important;
-						}
-					</style>
-					<?php
-					/* translators: %s: link to submit idea for Affiliate For WooCommerce on WooCommerce idea board */
-					$afw_text = sprintf( __( 'Have a feature request? Want to suggest an enhancement? Submit it from %s.', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( 'https://woocommerce.com/feature-requests/affiliate-for-woocommerce/' ) . '" target="_blank" style="color: #5850EC;">here</a>' );
-				}
+			$get_page  = ( ! empty( $_GET['page'] ) ) ? wc_clean( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore
+			$get_tab   = ( ! empty( $_GET['tab'] ) ) ? wc_clean( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore
+			$afw_pages = array( 'affiliate-for-woocommerce-documentation', 'affiliate-for-woocommerce' );
+
+			if ( in_array( $get_page, $afw_pages, true ) || 'affiliate-for-woocommerce-settings' === $get_tab ) {
+				?>
+				<style type="text/css">
+					#wpfooter {
+						display: block !important;
+					}
+				</style>
+				<?php
+				$plugin_data = Affiliate_For_WooCommerce::get_plugin_data();
+				/* translators: %1$s: Plugin version number %2$s: link to submit idea for Affiliate For WooCommerce on WooCommerce idea board */
+				$afw_text = sprintf( _x( 'v%1$s | Suggest a feature request or an enhancement from  %2$s.', 'text for feature request submission on WooCommerce idea board', 'affiliate-for-woocommerce' ), $plugin_data['Version'], '<a href="' . esc_url( 'https://woocommerce.com/feature-requests/affiliate-for-woocommerce/' ) . '" target="_blank" style="color: #5850EC;">here</a>' );
 			}
 
 			return $afw_text;

@@ -4,13 +4,15 @@
  *
  * @package     affiliate-for-woocommerce/templates/
  * @since       2.4.0
- * @version     1.2.0
+ * @version     1.2.2
  */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$text_align = is_rtl() ? 'right' : 'left';
 
 /*
  * @hooked WC_Emails::email_header() Output the email header
@@ -26,17 +28,44 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <p><strong><?php echo esc_html__( 'Name: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_attr( $user_name ) . ' (' . esc_attr( $user_email ) . ')'; ?></p>
 
-<?php if ( ! empty( $user_contact ) ) { ?>
-	<?php /* translators: %s: contact information */ ?>
-<p><strong><?php echo sprintf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_contact_label ) ); ?></strong><?php echo esc_attr( $user_contact ); ?></p>
-<?php } ?>
-
 <?php if ( ! empty( $user_url ) ) { ?>
 	<?php /* translators: %s: website URL */ ?>
 <p><strong><?php echo sprintf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_website_label ) ); ?></strong><?php echo esc_url( $user_url ); ?></p>
 <?php } ?>
 
-<p><strong><?php echo esc_html__( 'Additional Information: ', 'affiliate-for-woocommerce' ); ?></strong><?php echo esc_html( $user_desc ); ?></p>
+<?php if ( ! empty( $additional_information ) ) { ?>
+<p><strong><?php echo ! empty( $additional_information_label ) ? sprintf( '%s: ', esc_html( $additional_information_label ) ) : ''; ?></strong></p>
+<div style="margin-bottom: 20px;">
+	<table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
+		<?php
+		foreach ( $additional_information as $data ) {
+			if ( ! isset( $data['value'] ) ) {
+				continue;
+			}
+			$value = '';
+			if ( ! empty( $data['type'] ) && ( 'file' === $data['type'] || 'url' === $data['type'] ) ) {
+				$data_urls = ! empty( $data['value'] ) ? explode( ',', $data['value'] ) : array();
+				if ( ! empty( $data_urls ) ) {
+					$separator = '';
+					foreach ( $data_urls as $url ) {
+						$value    .= wp_kses_post( sprintf( '%1$s<a href="%2$s"> %2$s </a>', $separator, $url ) );
+						$separator = ', ';
+					}
+				}
+			} else {
+				$value = $data['value'];
+			}
+			?>
+			<tr>
+				<th class="td" scope="row" style="text-align:<?php echo esc_attr( $text_align ); ?>; "> <?php echo ! empty( $data['label'] ) ? esc_html( $data['label'] ) : ''; ?> </th>
+				<td class="td" style="text-align:<?php echo esc_attr( $text_align ); ?>; "> <?php echo wp_kses_post( $value ); ?> </td>
+			</tr>
+			<?php
+		}
+		?>
+	</table>
+</div>
+<?php } ?>
 
 <p><strong><?php echo esc_html__( 'Next Actions', 'affiliate-for-woocommerce' ); ?></strong>
 <ul>

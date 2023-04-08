@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/templates/plain/
  * @since       2.4.0
- * @version     1.2.0
+ * @version     1.2.2
  */
 
 // Exit if accessed directly.
@@ -23,19 +23,27 @@ echo 'yes' === $is_auto_approved ? esc_html__( 'Congratulations! You got a new a
 
 echo esc_html__( 'Name: ', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $user_name ) . ' (' . esc_attr( $user_email ) . ')' . "\n\n";
 
-if ( ! empty( $user_contact ) ) {
-	/* translators: %s: user contact label */
-	printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_contact_label ) );
-	echo "\t" . esc_attr( $user_contact ) . "\n\n";
-}
-
 if ( ! empty( $user_url ) ) {
 	/* translators: %s: user website label */
 	printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $user_website_label ) );
 	echo "\t" . esc_attr( $user_url ) . "\n\n";
 }
 
-echo esc_html__( 'Additional Information: ', 'affiliate-for-woocommerce' ) . "\t" . esc_attr( $user_desc ) . "\n\n";
+if ( ! empty( $additional_information ) ) {
+	if ( ! empty( $additional_information_label ) ) {
+		/* translators: %s: user contact label */
+		printf( esc_html__( '%s: ', 'affiliate-for-woocommerce' ), esc_attr( $additional_information_label ) );
+	}
+
+	foreach ( $additional_information as $data ) {
+		if ( ! isset( $data['value'] ) ) {
+			continue;
+		}
+		echo "\n" . ( ! empty( $data['label'] ) ? esc_html( $data['label'] ) . ': ' : '' ) . wp_kses_post( $data['value'] );
+	}
+
+	echo "\n\n";
+}
 
 echo esc_html__( 'Next Actions', 'affiliate-for-woocommerce' ) . "\n\n";
 /* translators: %s: user's profile link */

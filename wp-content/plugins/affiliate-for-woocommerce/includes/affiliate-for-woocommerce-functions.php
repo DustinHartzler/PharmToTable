@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       1.0.0
- * @version     1.2.7
+ * @version     1.5.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -109,13 +109,28 @@ function afwc_get_tablename( $name ) {
 }
 
 /**
- * Get referrer id from cookie
+ * Get referrer id
  *
- * @return integer Return the affiliate id if exists in the cookie otherwise 0.
+ * @param string|int $customer The customer email address or customer's user ID.
  *
- * Credit: [itthinx]
+ * @return integer Return the affiliate ID, either from current customer's lifetime affiliate or cookie.
  */
-function afwc_get_referrer_id() {
+function afwc_get_referrer_id( $customer = '' ) {
+
+	// If the lifetime commission is enabled, check for a lifetime affiliate for the current customer.
+	if ( 'yes' === get_option( 'afwc_enable_lifetime_commissions', 'no' ) ) {
+		$customer = ! empty( $customer ) ? $customer : get_current_user_id();
+		if ( ! empty( $customer ) ) {
+			$ltc_affiliate = afwc_get_ltc_affiliate_by_customer( $customer );
+			$affiliate_obj = ! empty( $ltc_affiliate ) ? new AFWC_Affiliate( $ltc_affiliate ) : null;
+
+			if ( is_object( $affiliate_obj ) && is_callable( array( $affiliate_obj, 'is_ltc_enabled' ) ) && $affiliate_obj->is_ltc_enabled() ) {
+				return intval( $ltc_affiliate );
+			}
+		}
+	}
+
+	// If there is an affiliate cookie set, return the ID of the affiliate in the cookie.
 	return ! empty( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ? intval( trim( wc_clean( wp_unslash( $_COOKIE[ AFWC_AFFILIATES_COOKIE_NAME ] ) ) ) ) : 0; // phpcs:ignore
 }
 
@@ -487,7 +502,6 @@ function afwc_get_commission_plans( $status ) {
 	);
 
 	return $afwc_rules;
-
 }
 
 /**
@@ -520,26 +534,27 @@ function afwc_get_reject_order_status() {
 }
 
 /**
- * Get default plan details
+ * Get default plan details.
  *
- * @return array $storewide_default_plan
+ * @return array Return default plan details.
  */
 function afwc_get_default_plan_details() {
 	global $wpdb;
-	$default_plan_details = array();
-	$default_plan_id      = afwc_get_default_commission_plan_id();
-	if ( ! empty( $default_plan_id ) ) {
-		$default_plan_details = $wpdb->get_results( // phpcs:ignore
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}afwc_commission_plans WHERE id = %d",
-				$default_plan_id
-			),
-			ARRAY_A
-		);
-		$default_plan_details = $default_plan_details[0];
+
+	$default_plan_id = afwc_get_default_commission_plan_id();
+
+	if ( empty( $default_plan_id ) ) {
+		return array();
 	}
 
-	return $default_plan_details;
+	$default_plan_details = $wpdb->get_results( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT * FROM {$wpdb->prefix}afwc_commission_plans WHERE id = %d",
+			intval( $default_plan_id )
+		),
+		ARRAY_A
+	);
+	return ( ! empty( $default_plan_details ) && is_array( $default_plan_details ) ) ? reset( $default_plan_details ) : array();
 }
 
 /**
@@ -561,6 +576,7 @@ function afwc_get_parent_chain( $user_id = 0 ) {
  *
  * @param int|string $user_id User id.
  * @param bool       $is_tree If return value should be with children's parent tree or only child ids.
+ *
  * @return array
  */
 function afwc_get_children( $user_id = 0, $is_tree = false ) {
@@ -585,9 +601,9 @@ function afwc_get_children( $user_id = 0, $is_tree = false ) {
 	if ( ! empty( $children ) ) {
 		foreach ( $children as $child ) {
 			$parent_chain = afwc_get_parent_chain( $child );
-			// Check if parent chain is exist.
+			// Check if parent chain exists.
 			if ( ! empty( $parent_chain ) ) {
-				// Double verify if current user id is exists in the parent chain.
+				// Double verify if current user_id exists in the parent chain.
 				if ( in_array( strval( $user_id ), $parent_chain, true ) ) {
 					if ( $is_tree ) {
 						// Assign the parent chain of each child.
@@ -609,7 +625,6 @@ function afwc_get_children( $user_id = 0, $is_tree = false ) {
  * @return int
  */
 function afwc_get_default_commission_plan_id() {
-
 	return apply_filters(
 		'afwc_default_commission_plan_id',
 		intval( get_option( 'afwc_default_commission_plan_id', 0 ) )
@@ -623,4 +638,93 @@ function afwc_get_default_commission_plan_id() {
  */
 function afwc_allow_self_refer() {
 	return boolval( 'yes' === get_option( 'afwc_allow_self_refer', 'yes' ) );
+}
+
+/**
+ * Get regex pattern for referral params.
+ * Restrict the params for referral URL.
+ *
+ * @return string Return the regex pattern for referral url params. Allows only the alphabets and numbers and the pattern should start from the alphabets.
+ */
+function afwc_referral_params_regex_pattern() {
+	return '^[a-zA-Z]\w*$';
+}
+
+/**
+ * Get affiliate tracking param name.
+ *
+ * @return string Affiliate tracking param name.
+ */
+function afwc_get_pname() {
+	$pname = get_option( 'afwc_pname', 'ref' );
+	$pname = ( ! empty( $pname ) ) ? $pname : 'ref';
+	return $pname;
+}
+
+/**
+ * Function to get affiliate URL based on pretty referral setting.
+ *
+ * @param string $affiliate_url         The affiliate URL.
+ * @param string $pname                 Affiliate tracking param name.
+ * @param string $affiliate_identifier  Affiliate's unique ID.
+ *
+ * @return string Updated affiliate URL
+ */
+function afwc_get_affiliate_url( $affiliate_url = '', $pname = '', $affiliate_identifier = '' ) {
+	if ( empty( $affiliate_url ) ) {
+		return '';
+	}
+
+	if ( empty( $pname ) ) {
+		$pname = afwc_get_pname();
+	}
+
+	if ( 'yes' === get_option( 'afwc_use_pretty_referral_links', 'no' ) ) {
+		$affiliate_url .= $pname . '/' . $affiliate_identifier;
+	} else {
+		$affiliate_url = add_query_arg( $pname, $affiliate_identifier, trailingslashit( $affiliate_url ) );
+	}
+
+	return $affiliate_url;
+}
+
+/**
+ * Function to check if HPOS is enabled.
+ *
+ * @return boolean
+ */
+function afwc_is_hpos_enabled() {
+	if ( class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' ) && is_callable( array( '\Automattic\WooCommerce\Utilities\OrderUtil', 'custom_orders_table_usage_is_enabled' ) ) ) {
+		return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+	}
+
+	return false;
+}
+
+/**
+ * Get the lifetime affiliate by customer.
+ *
+ * @param string|int $customer The customer email address or customer ID.
+ *
+ * @return int Return the affiliate Id if the customer is linked with any affiliate otherwise 0.
+ */
+function afwc_get_ltc_affiliate_by_customer( $customer = '' ) {
+
+	if ( 'no' === get_option( 'afwc_enable_lifetime_commissions', 'no' ) ) {
+		return 0;
+	}
+
+	global $wpdb;
+
+	$affiliate_id = $wpdb->get_var( // phpcs:ignore
+		$wpdb->prepare(
+			"SELECT DISTINCT um.user_id
+		   FROM {$wpdb->prefix}usermeta as um
+		   WHERE ( um.meta_key = %s AND FIND_IN_SET(%s, um.meta_value) > 0 )",
+			esc_sql( 'afwc_ltc_customers' ),
+			esc_sql( $customer )
+		)
+	);
+
+	return ! empty( $affiliate_id ) ? intval( $affiliate_id ) : 0;
 }

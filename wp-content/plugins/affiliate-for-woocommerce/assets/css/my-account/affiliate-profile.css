@@ -1,0 +1,63 @@
+/* phpcs:ignoreFile */
+.afwc_save_account_status {
+	display: inline-block;
+	visibility: visible;
+	vertical-align: middle;
+	width: 2em;
+	height: 2em;
+	background-size: 2em;
+}
+.afwc_status_spinner {
+	background: url(../../../../../../wp-admin/images/spinner.gif) no-repeat center;
+}
+.afwc_status_yes {
+	background: url(../../../../../../wp-admin/images/yes.png) no-repeat center;
+}
+.afwc_status_no {
+	background: url(../../../../../../wp-admin/images/no.png) no-repeat center;
+}
+#afwc_id_msg.afwc_success {
+	color: green;
+}
+#afwc_id_msg.afwc_error {
+	color: #e2401c;
+}
+#afwc_id_save_wrap input {
+	width: 30% !important;
+	margin-right: 0.5em;
+}
+#afwc_custom_referral_url_container {
+	margin-top: 2em;
+}
+#afwc_resources_wrapper,
+#afwc_payment_wrapper {
+	display: inline-block;
+	margin: 1em 0.5em;
+	width: 100%;
+}
+#afwc_resources_wrapper p,
+#afwc_payment_wrapper p {
+	position: relative;
+	width: 100%;
+	display: inline-block;
+}
+#afwc_resources_wrapper p input,
+#afwc_payment_wrapper p input {
+	width: 96%;
+}
+input#afwc_affiliate_link {
+	width: 12em !important;
+	height: 1.8em !important;
+	background: white !important;
+	box-shadow: none !important;
+}
+#afwc_resources_wrapper code {
+	cursor: pointer;
+	font-size: 0.8em;
+	display: initial !important;
+}
+#afwc_referral_url_container,
+#afwc_referral_coupon_container,
+#afwc_contact_admin_container {
+	margin-top: 1em;
+}

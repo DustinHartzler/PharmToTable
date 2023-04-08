@@ -3,7 +3,7 @@
  * Class for Rule_Boolean
  *
  * @since       2.5.0
- * @version     1.0.2
+ * @version     1.0.3
  *
  * @package     affiliate-for-woocommerce/includes/commission_rules
  */
@@ -56,15 +56,29 @@ if ( ! class_exists( 'AFWC_Rule_Number_Commission' ) ) {
 		/**
 		 * Function to validate rule
 		 *
-		 * @param array $context_obj context_obj.
-		 * @return true/false
+		 * @param object $context_obj The context Object.
+		 *
+		 * @return bool Return true if validated, otherwise false.
 		 */
-		public function validate( $context_obj ) {
-			$res     = false;
-			$context = $context_obj->get_base_context();
-			$current = $context[ $this->get_context_key() ];
-			$value   = ! empty( $value ) ? $value : $this->value;
-			if ( is_array( $current ) ) {
+		public function validate( $context_obj = null ) {
+			$res = false;
+
+			if ( empty( $context_obj ) ) {
+				return $res;
+			}
+
+			$context     = is_callable( array( $context_obj, 'get_base_context' ) ) ? $context_obj->get_base_context() : array();
+			$context_key = is_callable( array( $this, 'get_context_key' ) ) ? $this->get_context_key() : '';
+			$current     = ( ! empty( $context_key ) && ! empty( $context[ $context_key ] ) ) ? $context[ $context_key ] : '';
+
+			$value = $this->value;
+
+			if ( ! empty( $value ) && is_callable( array( $this, 'filter_values' ) ) ) {
+				// Filter the values for comparison.
+				$value = $this->filter_values( $value );
+			}
+
+			if ( ! empty( $current ) && is_array( $current ) ) {
 				$current = array_map(
 					function( $c ) {
 						return ( '' !== $c ) ? intval( $c ) : 0;
@@ -75,7 +89,7 @@ if ( ! class_exists( 'AFWC_Rule_Number_Commission' ) ) {
 				$current = ( '' !== $current ) ? intval( $current ) : 0;
 			}
 
-			if ( is_array( $value ) ) {
+			if ( ! empty( $value ) && is_array( $value ) ) {
 				$value = array_map(
 					function( $v ) {
 						return ( '' !== $v ) ? intval( $v ) : 0;
@@ -127,7 +141,9 @@ if ( ! class_exists( 'AFWC_Rule_Number_Commission' ) ) {
 
 			if ( $res ) {
 				$valid_ids = (array) $current;
-				$context_obj->add_valid_ids( $this->get_context_key(), $valid_ids );
+				if ( is_callable( array( $context_obj, 'add_valid_ids' ) ) ) {
+					$context_obj->add_valid_ids( $context_key, $valid_ids );
+				}
 			}
 			return $res;
 		}

@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/gateway/paypal/
  * @since       4.0.0
- * @version     1.1.0
+ * @version     1.1.1
  */
 
 // Exit if accessed directly.
@@ -139,6 +139,9 @@ if ( ! class_exists( 'AFWC_PayPal_Payout' ) ) {
 				$message = wp_remote_retrieve_response_message( $request );
 				/* translators: 1: Error code 2: Error message */
 				Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( _x( 'Payment request failed with error code: %1$s - %2$s', 'payout error message', 'affiliate-for-woocommerce' ), $code, $message ) );
+
+				/* translators: 1: Error log */
+				Affiliate_For_WooCommerce::get_instance()->log( 'error', sprintf( _x( 'PayPal request logs : %1$s', 'payout error logs', 'affiliate-for-woocommerce' ), print_r( $request, true ) ) ); // phpcs:ignore
 
 				return new WP_Error( $code, $message );
 

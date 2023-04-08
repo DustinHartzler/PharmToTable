@@ -4,13 +4,15 @@
  *
  * @package     affiliate-for-woocommerce/includes/admin/
  * @since       2.1.1
- * @version     1.2.3
+ * @version     1.3.0
  */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+use Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController;
 
 if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 
@@ -45,29 +47,40 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 		 */
 		public function __construct() {
 			add_action( 'add_meta_boxes', array( $this, 'add_afwc_custom_box' ) );
-			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'link_unlink_affiliate_in_order' ) );
+			add_action( 'woocommerce_process_shop_order_meta', array( $this, 'link_unlink_affiliate_in_order' ), 10, 2 );
 		}
 
 		/**
 		 * Function to add custom meta box in order add/edit screen.
 		 */
 		public function add_afwc_custom_box() {
-			global $pagenow, $typenow;
 
-			if ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) && 'shop_order' !== $typenow ) {
+			$screen = wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+					? wc_get_page_screen_id( 'shop-order' )
+					: 'shop_order';
+
+			if ( ! in_array( $screen, array( 'woocommerce_page_wc-orders', 'shop_order' ), true ) ) {
 				return;
 			}
 
-			add_meta_box( 'afwc_order', __( 'Affiliate details', 'affiliate-for-woocommerce' ), array( $this, 'affiliate_in_order' ), 'shop_order', 'side', 'low' );
+			add_meta_box( 'afwc_order', _x( 'Affiliate details', 'Affiliate\'s order meta box title', 'affiliate-for-woocommerce' ), array( $this, 'affiliate_in_order' ), $screen, 'side', 'low' );
+
 		}
 
 		/**
 		 * Function to add/remove affiliate from an order.
+		 *
+		 * @param objec $post_or_order_object The Post/Order object.
 		 */
-		public function affiliate_in_order() {
-			global $post;
+		public function affiliate_in_order( $post_or_order_object ) {
+			$order = ( $post_or_order_object instanceof WP_Post ) ? wc_get_order( $post_or_order_object->ID ) : $post_or_order_object;
+			// $post_or_order_object should not be used directly below this point.
 
-			$order_id = $post->ID;
+			if ( ! $order instanceof WC_Order ) {
+				return;
+			}
+
+			$order_id = is_callable( array( $order, 'get_id' ) ) ? $order->get_id() : 0;
 			if ( empty( $order_id ) ) {
 				return;
 			}
@@ -79,15 +92,20 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			}
 			wp_enqueue_script( 'affiliate-user-search' );
 
-			$affiliate_params = array(
-				'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-				'afwcSecurity'   => wp_create_nonce( 'afwc-search-affiliate-users' ),
-				'allowSelfRefer' => afwc_allow_self_refer(),
+			wp_localize_script(
+				'affiliate-user-search',
+				'affiliateParams',
+				array(
+					'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+					'security'       => wp_create_nonce( 'afwc-search-affiliate-users' ),
+					'allowSelfRefer' => afwc_allow_self_refer(),
+				)
 			);
-			wp_localize_script( 'affiliate-user-search', 'affiliate_params', $affiliate_params );
 
-			$is_commission_recorded = get_post_meta( $order_id, 'is_commission_recorded', true );
-			$affiliate_data         = $this->get_order_affiliate_data( $order_id );
+			$is_commission_recorded = $order->get_meta( 'is_commission_recorded', true );
+
+			$afwc_api       = new AFWC_API();
+			$affiliate_data = is_callable( array( $afwc_api, 'get_affiliate_by_order' ) ) ? $afwc_api->get_affiliate_by_order( $order_id ) : array();
 
 			$user_string = '';
 			if ( 'yes' === $is_commission_recorded && ! empty( $affiliate_data ) ) {
@@ -129,41 +147,19 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			<?php
 		}
 
+
 		/**
-		 * Function to get affiliate data based on order_id.
+		 * Function to do database updates when linking/unlinking affiliate from the order.
 		 *
-		 * @param int $order_id The Order ID.
-		 * @return array Affiliate Data.
+		 * @param int    $order_id The Order ID.
+		 * @param object $order    The Order Object.
 		 */
-		public function get_order_affiliate_data( $order_id = '' ) {
-			if ( empty( $order_id ) ) {
-				return;
-			}
+		public function link_unlink_affiliate_in_order( $order_id = 0, $order ) {
 
-			global $wpdb;
-
-			$get_affiliate_data_from_order_id = $wpdb->get_results( // phpcs:ignore
-				$wpdb->prepare(
-					"SELECT affiliate_id, status
-														FROM {$wpdb->prefix}afwc_referrals
-														WHERE post_id = %d AND reference = ''",
-					$order_id
-				),
-				'ARRAY_A'
-			);
-
-			return ( ! empty( $get_affiliate_data_from_order_id[0] ) ? $get_affiliate_data_from_order_id[0] : array() );
-		}
-
-		/**
-		 * Function to do DB updates when linking/unlinking affiliate from the order.
-		 */
-		public function link_unlink_affiliate_in_order() {
 			if ( empty( $_POST['woocommerce_meta_nonce'] ) || ! wp_verify_nonce( wc_clean( wp_unslash( $_POST['woocommerce_meta_nonce'] ) ), 'woocommerce_save_data' ) ) { // phpcs:ignore
 				return;
 			}
 
-			$order_id = isset( $_POST['post_ID'] ) ? wc_clean( wp_unslash( $_POST['post_ID'] ) ) : ''; // phpcs:ignore
 			if ( empty( $order_id ) ) {
 				return;
 			}
@@ -231,18 +227,42 @@ if ( ! class_exists( 'AFWC_Admin_Link_Unlink_In_Order' ) ) {
 			);
 
 			if ( true === $delete_referral ) {
-				// Delete the affiliate meta data related to order id.
-				return boolval(
-					$wpdb->query( // phpcs:ignore
-						$wpdb->prepare(
-							"DELETE FROM {$wpdb->prefix}postmeta
-								WHERE post_id = %d
-								AND meta_key IN ('is_commission_recorded','afwc_order_valid_plans','afwc_set_commission','afwc_parent_commissions')",
-							$order_id
-						)
-					)
-				);
+				$order = wc_get_order( $order_id );
+				if ( ! $order instanceof WC_Order ) {
+					return false;
+				}
 
+				// Delete the affiliate meta data related to order id.
+				$order->delete_meta_data( 'is_commission_recorded' );
+				$order->delete_meta_data( 'afwc_order_valid_plans' );
+				$order->delete_meta_data( 'afwc_set_commission' );
+				$order->delete_meta_data( 'afwc_parent_commissions' );
+				$updated_order_id = $order->save();
+
+				// Delete the affiliate meta data related to order id in postmeta table.
+				// Additionally firing due to delay in deleting via delete_meta_data causing issues of re-meta insertion from orders screen.
+				if ( 'yes' === get_option( 'woocommerce_custom_orders_table_data_sync_enabled', 'no' ) ) {
+					$result = boolval(
+						$wpdb->query( // phpcs:ignore
+							$wpdb->prepare(
+								"DELETE FROM {$wpdb->prefix}postmeta
+									WHERE post_id = %d
+									AND meta_key IN ('is_commission_recorded','afwc_order_valid_plans','afwc_set_commission','afwc_parent_commissions')",
+								$order_id
+							)
+						)
+					);
+				}
+
+				/**
+				 * Here we don't know if meta is actually deleted since WooCommerce does not send any confirmation.
+				 * So we are doing additional sanity checks.
+				 */
+				if ( empty( $updated_order_id ) || $updated_order_id !== $order_id || is_wp_error( $updated_order_id ) ) {
+					return false;
+				}
+
+				return true;
 			}
 
 			return false;

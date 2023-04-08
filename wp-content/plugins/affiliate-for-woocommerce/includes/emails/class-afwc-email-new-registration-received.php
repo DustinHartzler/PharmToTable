@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.4.0
- * @version     1.4.0
+ * @version     1.4.3
  */
 
 // Exit if accessed directly.
@@ -48,7 +48,7 @@ if ( ! class_exists( 'AFWC_Email_New_Registration_Received' ) ) {
 
 			$this->placeholders = array();
 
-			// Trigger on new conversion.
+			// Trigger this email when a new affiliate registration is received.
 			add_action( 'afwc_email_new_registration_received', array( $this, 'trigger' ), 10, 1 );
 
 			// Call parent constructor to load any other defaults not explicity defined here.
@@ -73,28 +73,21 @@ if ( ! class_exists( 'AFWC_Email_New_Registration_Received' ) ) {
 				return;
 			}
 
-			$this->email_args     = '';
-			$this->email_args     = wp_parse_args( $args, $this->email_args );
-			$form_fields_settings = get_option( 'afwc_form_fields', true );
-			$user_contact_label   = ! empty( $form_fields_settings['afwc_reg_contact']['label'] ) ? $form_fields_settings['afwc_reg_contact']['label'] : 'Contact Information';
-			$user_website_label   = ! empty( $form_fields_settings['afwc_reg_website']['label'] ) ? $form_fields_settings['afwc_reg_website']['label'] : 'Website';
+			$this->email_args = array();
+			$this->email_args = wp_parse_args( $args, $this->email_args );
 
-			$admin      = get_user_by( 'email', $this->recipient );
-			$admin_name = ! empty( $admin->user_login ) ? $admin->user_login : __( 'there', 'affiliate-for-woocommerce' );
-			$user_email = $this->email_args['userdata']['user_email'];
-			$manage_url = admin_url( 'user-edit.php?user_id=' . $this->email_args['user_id'] . '#afwc-settings' );
-			$user_name  = ! empty( $this->email_args['userdata']['first_name'] ) ? $this->email_args['userdata']['first_name'] . ' ' . $this->email_args['userdata']['last_name'] : $this->email_args['userdata']['user_login'];
+			$admin = get_user_by( 'email', $this->recipient );
 
-			$this->email_args['admin_name']         = $admin_name;
-			$this->email_args['dashboard_url']      = admin_url( 'admin.php?page=affiliate-for-woocommerce' );
-			$this->email_args['manage_url']         = $manage_url;
-			$this->email_args['user_name']          = $user_name;
-			$this->email_args['user_email']         = $user_email;
-			$this->email_args['user_contact']       = ! empty( $this->email_args['user_contact'] ) ? $this->email_args['user_contact'] : '';
-			$this->email_args['user_url']           = ! empty( $this->email_args['userdata']['user_url'] ) ? $this->email_args['userdata']['user_url'] : '';
-			$this->email_args['user_contact_label'] = $user_contact_label;
-			$this->email_args['user_website_label'] = $user_website_label;
-			$this->email_args['is_auto_approved']   = ! empty( $this->email_args['is_auto_approved'] ) ? $this->email_args['is_auto_approved'] : get_option( 'afwc_auto_add_affiliate', 'no' );
+			$this->email_args['admin_name']                   = ! empty( $admin->user_login ) ? $admin->user_login : _x( 'there', 'Greeting for admin', 'affiliate-for-woocommerce' );
+			$this->email_args['dashboard_url']                = admin_url( 'admin.php?page=affiliate-for-woocommerce' );
+			$this->email_args['manage_url']                   = ! empty( $this->email_args['user_id'] ) ? admin_url( 'user-edit.php?user_id=' . $this->email_args['user_id'] . '#afwc-settings' ) : admin_url();
+			$this->email_args['user_name']                    = ! empty( $this->email_args['userdata']['afwc_first_name'] ) ? $this->email_args['userdata']['afwc_first_name'] . ' ' . ( ! empty( $this->email_args['userdata']['afwc_last_name'] ) ? $this->email_args['userdata']['afwc_last_name'] : '' ) : ( ! empty( $this->email_args['userdata']['user_login'] ) ? $this->email_args['userdata']['user_login'] : '' );
+			$this->email_args['user_email']                   = ! empty( $this->email_args['userdata']['afwc_email'] ) ? $this->email_args['userdata']['afwc_email'] : '';
+			$this->email_args['additional_information']       = ! empty( $this->email_args['userdata']['afwc_additional_fields'] ) ? $this->email_args['userdata']['afwc_additional_fields'] : '';
+			$this->email_args['additional_information_label'] = esc_html_x( 'Additional information', 'Label for additional information', 'affiliate-for-woocommerce' );
+			$this->email_args['user_url']                     = ! empty( $this->email_args['userdata']['afwc_website'] ) ? $this->email_args['userdata']['afwc_website'] : '';
+			$this->email_args['user_website_label']           = esc_html_x( 'Website', 'Label for affiliate user website link', 'affiliate-for-woocommerce' );
+			$this->email_args['is_auto_approved']             = ! empty( $this->email_args['is_auto_approved'] ) ? $this->email_args['is_auto_approved'] : get_option( 'afwc_auto_add_affiliate', 'no' );
 
 			// Set the locale to the store locale for customer emails to make sure emails are in the store language.
 			$this->setup_locale();
@@ -185,20 +178,19 @@ if ( ! class_exists( 'AFWC_Email_New_Registration_Received' ) ) {
 		 */
 		public function get_template_args() {
 			return array(
-				'email'              => $this,
-				'email_heading'      => is_callable( array( $this, 'get_heading' ) ) ? $this->get_heading() : '',
-				'admin_name'         => $this->email_args['admin_name'],
-				'user_email'         => $this->email_args['user_email'],
-				'user_name'          => $this->email_args['user_name'],
-				'dashboard_url'      => esc_url( $this->email_args['dashboard_url'] ),
-				'manage_url'         => esc_url( $this->email_args['manage_url'] ),
-				'user_contact'       => $this->email_args['user_contact'],
-				'user_contact_label' => $this->email_args['user_contact_label'],
-				'user_desc'          => $this->email_args['user_desc'],
-				'user_url'           => esc_url( $this->email_args['user_url'] ),
-				'user_website_label' => $this->email_args['user_website_label'],
-				'is_auto_approved'   => $this->email_args['is_auto_approved'],
-				'additional_content' => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
+				'email'                        => $this,
+				'email_heading'                => is_callable( array( $this, 'get_heading' ) ) ? $this->get_heading() : '',
+				'admin_name'                   => $this->email_args['admin_name'],
+				'user_email'                   => $this->email_args['user_email'],
+				'user_name'                    => $this->email_args['user_name'],
+				'dashboard_url'                => esc_url( $this->email_args['dashboard_url'] ),
+				'manage_url'                   => esc_url( $this->email_args['manage_url'] ),
+				'additional_information'       => $this->email_args['additional_information'],
+				'additional_information_label' => $this->email_args['additional_information_label'],
+				'user_url'                     => esc_url( $this->email_args['user_url'] ),
+				'user_website_label'           => $this->email_args['user_website_label'],
+				'is_auto_approved'             => $this->email_args['is_auto_approved'],
+				'additional_content'           => is_callable( array( $this, 'get_additional_content' ) ) ? $this->get_additional_content() : '',
 			);
 		}
 

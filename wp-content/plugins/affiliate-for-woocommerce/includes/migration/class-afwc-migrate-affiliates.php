@@ -2,10 +2,9 @@
 /**
  * Main class for Affiliate For WooCommerce Migration
  *
- * @since       1.0.0
- * @version     1.2.1
- *
  * @package     affiliate-for-woocommerce/includes/migration/
+ * @since       1.0.0
+ * @version     1.2.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,7 +45,7 @@ if ( ! class_exists( 'AFWC_Migrate_Affiliates' ) ) {
 					if ( 'affiliates' === $request_migrate ) {
 						if ( ! function_exists( '_affiliates_get_tablename' ) ) {
 							if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
-								/* translators: Link to back */
+								/* translators: Link to go back */
 								wp_die( sprintf( esc_html__( 'Could not locate Affiliates plugin. Make sure that it is installed & activated. %s', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( wc_clean( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) ) . '">' . esc_html__( 'Back', 'affiliate-for-woocommerce' ) . '</a>' ) ); // phpcs:ignore
 							}
 						}
@@ -193,7 +192,7 @@ if ( ! class_exists( 'AFWC_Migrate_Affiliates' ) ) {
 
 			if ( ! function_exists( '_affiliates_get_tablename' ) ) {
 				if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
-					/* translators: Link to back */
+					/* translators: Link to go back */
 					wp_die( sprintf( esc_html__( 'Could not locate Affiliates plugin. Make sure that it is installed & activated. %s', 'affiliate-for-woocommerce' ), '<a href="' . esc_url( wc_clean( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) ) . '">' . esc_html__( 'Back', 'affiliate-for-woocommerce' ) . '</a>' ) ); // phpcs:ignore
 				}
 			}

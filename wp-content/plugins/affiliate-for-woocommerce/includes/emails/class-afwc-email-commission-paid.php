@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/emails/
  * @since       2.4.2
- * @version     1.3.0
+ * @version     1.3.3
  */
 
 // Exit if accessed directly.
@@ -42,12 +42,13 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 			// Email template location.
 			$this->template_html  = 'afwc-commission-paid.php';
 			$this->template_plain = 'plain/afwc-commission-paid.php';
+
 			// Use our plugin templates directory as the template base.
 			$this->template_base = AFWC_PLUGIN_DIRPATH . '/templates/';
 
 			$this->placeholders = array();
 
-			// Trigger on new conversion.
+			// Trigger this email when commission is paid to an affiliate.
 			add_action( 'afwc_email_commission_paid', array( $this, 'trigger' ), 10, 1 );
 
 			// Call parent constructor to load any other defaults not explicity defined here.
@@ -76,9 +77,9 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 			$this->setup_locale();
 
 			// Whom to send email.
-			$affiliate_id = $this->email_args['affiliate_id'];
-			$user         = get_user_by( 'id', $affiliate_id );
-			if ( $user ) {
+			$affiliate_id = ! empty( $this->email_args['affiliate_id'] ) ? intval( $this->email_args['affiliate_id'] ) : 0;
+			$user         = ! empty( $affiliate_id ) ? get_user_by( 'id', $affiliate_id ) : null;
+			if ( $user instanceof WP_User && ! empty( $user->user_email ) ) {
 				$this->recipient = $user->user_email;
 			}
 
@@ -90,10 +91,10 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 
 			$this->email_args['start_date']            = isset( $this->email_args['from_date'] ) ? $this->email_args['from_date'] : '';
 			$this->email_args['end_date']              = isset( $this->email_args['to_date'] ) ? $this->email_args['to_date'] : '';
-			$this->email_args['total_orders']          = isset( $this->email_args['total_orders'] ) ? $this->email_args['total_orders'] : '';
+			$this->email_args['total_referrals']       = isset( $this->email_args['total_referrals'] ) ? $this->email_args['total_referrals'] : '';
 			$this->email_args['payout_notes']          = isset( $this->email_args['payout_notes'] ) ? $this->email_args['payout_notes'] : '';
-			$this->email_args['payment_gateway']       = $this->email_args['payment_gateway'];
-			$this->email_args['paypal_receiver_email'] = $this->email_args['paypal_receiver_email'];
+			$this->email_args['payment_gateway']       = ! empty( $this->email_args['payment_gateway'] ) ? $this->email_args['payment_gateway'] : '';
+			$this->email_args['paypal_receiver_email'] = ! empty( $this->email_args['paypal_receiver_email'] ) ? $this->email_args['paypal_receiver_email'] : '';
 
 			$endpoint                                = get_option( 'woocommerce_myaccount_afwc_dashboard_endpoint', 'afwc-dashboard' );
 			$this->email_args['my_account_afwc_url'] = wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
@@ -191,7 +192,7 @@ if ( ! class_exists( 'AFWC_Email_Commission_Paid' ) ) {
 				'currency_symbol'       => $this->email_args['currency_symbol'],
 				'start_date'            => $this->email_args['start_date'],
 				'end_date'              => $this->email_args['end_date'],
-				'total_orders'          => $this->email_args['total_orders'],
+				'total_referrals'       => $this->email_args['total_referrals'],
 				'payout_notes'          => $this->email_args['payout_notes'],
 				'payment_gateway'       => $this->email_args['payment_gateway'],
 				'paypal_receiver_email' => $this->email_args['paypal_receiver_email'],

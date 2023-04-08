@@ -29,27 +29,26 @@ jQuery(function(){
 		}
 	});
 
-	var tagsSelect2Args = {
+	let tagsSelect2Args = {
 		placeholder: jQuery( this ).data( 'placeholder' ),
-		minimumInputLength: 3,
+		minimumInputLength: 1,
 		escapeMarkup: function( m ) {
 			return m;
 		},
 		tags:true,
 		ajax: {
-			url:         ajaxurl,
+			url:         afwcProfileParams.ajaxurl || '',
 			dataType:    'json',
 			delay:       1000,
 			data:        function( params ) {
 				return {
 					term:     params.term || '',
 					action:   'afwc_json_search_tags',
-					security: profile_js_params.afwc_security,
-					exclude:  jQuery( this ).data( 'exclude' )
+					security: afwcProfileParams.searchTagsSecurity || ''
 				};
 			},
 			processResults: function( data ) {
-				var terms = [];
+				let terms = [];
 				if ( data ) {
 					jQuery.each( data, function( id, text ) {
 						terms.push({ id, text});
@@ -64,26 +63,26 @@ jQuery(function(){
 	};
 	jQuery('#afwc_user_tags').selectWoo(tagsSelect2Args);
 
-	var affiliateSelect2Args = {
+	let affiliateSelect2Args = {
 		placeholder: jQuery( this ).data( 'placeholder' ) || '',
 		minimumInputLength: 3,
 		escapeMarkup: function( m ) {
 			return m;
 		},
 		ajax: {
-			url:         ajaxurl,
+			url:         afwcProfileParams.ajaxurl || '',
 			dataType:    'json',
 			delay:       1000,
 			data:        function( params ) {
 				return {
 					term:     params.term,
 					action:   'afwc_json_search_parent_affiliates',
-					security: profile_js_params.afwc_security,
+					security: afwcProfileParams.searchParentSecurity || '',
 					user_id:  jQuery( this ).data( 'user' )
 				};
 			},
 			processResults: function( data ) {
-				var terms = [];
+				let terms = [];
 				if ( data ) {
 					jQuery.each( data, function( id, text ) {
 						terms.push({ id, text });

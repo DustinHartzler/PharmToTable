@@ -30,7 +30,7 @@ jQuery(function(){
 			formData[this.name] = this.value;
 		});
 		if ('' !== formData['afwc_hp_email']) {
-			form.find('.afwc_reg_message').addClass('success').html( _x( 'User registered successfully.', 'Registration form success message for user register', 'affiliate-for-woocommerce' ) ).show();
+			form.find('.afwc_reg_message').addClass('success').removeClass('error').html( _x( 'User registered successfully.', 'Registration form success message for user register', 'affiliate-for-woocommerce' ) ).show();
 			form[0].reset();
 			return;
 		}
@@ -44,13 +44,16 @@ jQuery(function(){
 			dataType: 'json',
 			success: function (response) {
 				if ( response.status && 'success' == response.status ) {
-					form.find('.afwc_reg_message').addClass('success');
+					form.find('.afwc_reg_message').addClass('success').removeClass('error');
 				} else {
-					form.find('.afwc_reg_message').addClass('error');
+					form.find('.afwc_reg_message').addClass('error').removeClass('success');
 				}
-				form[0].reset();
+				if( ! response.invalidFieldId ) {
+					form[0].reset();
+				}
 				if(response.message){
-					form.find('.afwc_reg_message').html( response.message ).show();
+					let msgPrefix = response.invalidFieldId ? _x( 'Error: ', 'Prefix for affiliate registration error message', 'affiliate-for-woocommerce' ) : '';
+					form.find('.afwc_reg_message').html( msgPrefix + response.message ).show();
 				}
 			},
 			error: function (err) {

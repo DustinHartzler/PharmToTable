@@ -4,7 +4,7 @@
  *
  * @package     affiliate-for-woocommerce/includes/
  * @since       3.0.0
- * @version     1.0.0
+ * @version     1.1.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -109,20 +109,40 @@ if ( ! class_exists( 'AFWC_DB_Background_Process' ) ) {
 			global $wpdb;
 			$batch_size = 50;
 
-			$result = $wpdb->query( // phpcs:ignore
-				$wpdb->prepare( // phpcs:ignore
-					"UPDATE {$wpdb->prefix}afwc_referrals as ar 
-					JOIN (
-					 SELECT {$wpdb->prefix}afwc_referrals.post_id, {$wpdb->prefix}posts.post_status FROM {$wpdb->prefix}afwc_referrals LEFT JOIN
-						{$wpdb->prefix}posts ON {$wpdb->prefix}afwc_referrals.post_id = {$wpdb->prefix}posts.ID 
-						WHERE order_status IS NULL LIMIT %d 
-					) t
-					 ON ar.post_id = t.post_id
-					SET order_status = IFNULL( t.post_status, 'deleted' ) 
-							",
-					$batch_size
-				)
-			);
+			if ( AFWC_IS_HPOS_ENABLED ) {
+				$result = $wpdb->query( // phpcs:ignore
+							$wpdb->prepare( // phpcs:ignore
+								"UPDATE {$wpdb->prefix}afwc_referrals as ar 
+									JOIN (
+										SELECT afwcr.post_id AS post_id,
+												wco.status AS status
+									 		FROM {$wpdb->prefix}afwc_referrals AS afwcr
+									 			LEFT JOIN {$wpdb->prefix}wc_orders AS wco
+									 				ON ( afwcr.post_id = wco.id
+									 					AND wco.type = 'shop_order' )
+											WHERE afwcr.order_status IS NULL LIMIT %d 
+									) t
+									ON ar.post_id = t.post_id
+									SET order_status = IFNULL( t.status, 'deleted' )",
+								$batch_size
+							)
+				);
+			} else {
+				$result = $wpdb->query( // phpcs:ignore
+					$wpdb->prepare( // phpcs:ignore
+						"UPDATE {$wpdb->prefix}afwc_referrals as ar 
+						JOIN (
+						 SELECT {$wpdb->prefix}afwc_referrals.post_id, {$wpdb->prefix}posts.post_status FROM {$wpdb->prefix}afwc_referrals LEFT JOIN
+							{$wpdb->prefix}posts ON {$wpdb->prefix}afwc_referrals.post_id = {$wpdb->prefix}posts.ID 
+							WHERE order_status IS NULL LIMIT %d 
+						) t
+						 ON ar.post_id = t.post_id
+						SET order_status = IFNULL( t.post_status, 'deleted' ) 
+								",
+						$batch_size
+					)
+				);
+			}
 
 			$total_order_count    = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}afwc_referrals WHERE order_status IS NULL" );// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$total_order_option   = get_option( 'afwc_total_order_to_migrate', false );
