@@ -11,7 +11,7 @@ class WC_Product_Addons_Field_List extends WC_Product_Addons_Field {
 	 */
 	public function validate() {
 		if ( ! empty( $this->addon['required'] ) ) {
-			if ( ! $this->value || sizeof( $this->value ) == 0 ) {
+			if ( ! $this->value || count( $this->value ) == 0 ) {
 				return new WP_Error( 'error', esc_html( sprintf( __( '"%s" is a required field.', 'woocommerce-product-addons' ), $this->addon['name'] ) ) );
 			}
 		}
@@ -48,6 +48,7 @@ class WC_Product_Addons_Field_List extends WC_Product_Addons_Field {
 					'price'      => floatval( sanitize_text_field( $this->get_option_price( $option ) ) ),
 					'field_name' => $this->addon['field_name'],
 					'field_type' => $this->addon['type'],
+					'id'         => isset( $this->addon[ 'id' ] ) ? $this->addon[ 'id' ] : 0,
 					'price_type' => $option['price_type'],
 				);
 			}

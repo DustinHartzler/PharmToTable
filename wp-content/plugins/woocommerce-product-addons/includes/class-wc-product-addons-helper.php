@@ -191,8 +191,7 @@ class WC_Product_Addons_Helper {
 				continue;
 			}
 			if ( empty( $addons[ $addon_key ]['field_name'] ) ) {
-				$addon_name                         = substr( $addon['name'], 0, $max_addon_name_length );
-				$addons[ $addon_key ]['field_name'] = sanitize_title( $prefix . $addon_name . '-' . $addon_field_counter );
+				$addons[ $addon_key ]['field_name'] = $prefix . $addon_field_counter;
 				$addon_field_counter++;
 			}
 		}
@@ -330,6 +329,42 @@ class WC_Product_Addons_Helper {
 
 		// True if description enabled and there is a description.
 		return ( ( ! empty( $addon['description'] ) && $addon['description_enable'] ) ? true : false );
+	}
+
+	/**
+	 * Get addon restriction data
+	 *
+	 * @param array $addon Add-on field data.
+	 */
+	public static function get_restriction_data( $addon ) {
+
+		$restriction_data = array();
+
+		if ( isset( $addon[ 'required' ] ) && 1 === $addon[ 'required' ] ) {
+			$restriction_data[ 'required' ] = 'yes';
+		}
+
+		if ( isset( $addon[ 'restrictions_type' ] ) && 'any_text' !== $addon[ 'restrictions_type' ] ) {
+			$restriction_data[ 'content' ] = $addon[ 'restrictions_type' ];
+		}
+
+		if (  isset( $addon[ 'min' ] ) && '' !== $addon[ 'min' ] && $addon[ 'min' ] >= 0 ) {
+			$restriction_data[ 'min' ] = $addon[ 'min' ];
+		}
+
+		if (  isset( $addon[ 'max' ] ) && '' !== $addon[ 'max' ] && $addon[ 'max' ] > 0 ) {
+			$restriction_data[ 'max' ] = $addon[ 'max' ];
+		}
+
+		/**
+		 * Use this filter to modify the addon restriction data.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param  array  $restriction_data
+		 * @param  array  $addon
+		 */
+		return apply_filters( 'wc_pao_restriction_data', $restriction_data, $addon );
 	}
 
 	/**

@@ -1,5 +1,56 @@
 *** Product Addons Changelog ***
 
+2023-04-04 - version 6.1.3
+* Fix - Fixed an issue that prevented addons totals from showing up if required Addons were selected before variations.
+* Tweak - Introduced basic telemetry to collect data on extension usage when tracking is enabled.
+
+2023-03-13 - version 6.1.2
+* Update - Improved performance when calculating addons totals between validation runs.
+
+2023-03-02 - version 6.1.1
+* Fix - Fixed an issue that prevented addon totals from showing up when at least one checkbox or radio button was selected.
+* Fix - Display a notice when users fill in a negative value in quantity addons.
+
+2023-02-22 - version 6.1.0
+* New - Important: Updated addons templates and removed addons titles from element attributes.
+* Fix - Fixed an issue that disabled addons validation when an addon had non-Latin characters in its title. 
+
+2023-02-17 - version 6.0.4
+* Fix - Fixed an issue that set 'None' as the default option for required multiple choice addons.
+
+2023-02-16 - version 6.0.3
+* Fix - Fixed an issue that hid the product form when a custom tax suffix was used.
+
+2023-02-16 - version 6.0.2
+* Fix - Fixed an issue that made users select all options in required checkboxes. 
+
+2023-02-15 - version 6.0.1
+* Fix - Fixed an issue that prevented addon totals from being updated when the product quantity changed.
+
+2023-02-14 - version 6.0.0
+* Update - Important: Updated the single product form validation for required and restricted addons.
+* Update - Important: Updated all frontend addon templates.
+* New - Product Add-Ons is now compatible with Product Bundles 6.18.0+.
+* New - Product Add-Ons is now compatible with Composite Products 8.7.0+.
+* Fix - Fixed an issue that required users to click away from the addons form in order for addon totals to show up.
+* Fix - Fixed an issue that prevented importing addons with descriptions that contained HTML.
+* Fix - Added image swatch labels in mobile views.
+* Fix - Resolved an issue that cleared the add-ons form when validation failed for multiple image add-ons.
+* Fix - Resolved an issue that changed the position of the Add to Cart button when a long text add-on was configured.
+
+2023-01-04 - version 5.0.3
+* Feature - Added compatibility with the core WooCommerce Importer/Exporter for importing/exporting product-level addons.
+
+2022-11-08 - version 5.0.2
+* Tweak - Introduced compatibility with the new High-Performance Order Storage.
+* Fix - Removed unnecessary meta boxes sanitization.
+* Fix - Resolved an issue that made addons with identical titles show up multiple times in the cart when re-ordering.
+
+2022-11-01 - version 5.0.1
+* Fix - Resolved PHPCS security issues.
+* Tweak - Updated numeric addons to be compatible with mobile browsers.
+* Tweak - Declared incompatibility with the new High-Performance Order Storage.
+
 2022-05-25 - version 5.0.0
 * Fix - Add renovate bot configuration.
 * Tweak - WC 6.5 compatibility.
