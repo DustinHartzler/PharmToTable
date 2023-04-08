@@ -2,7 +2,7 @@
 
 
 use NinjaForms\Includes\Factories\SubmissionAggregateFactory;
-use NinjaForms\Includes\Entities\SubmissionFilter;
+use NinjaForms\Includes\Factories\SubmissionFilterFactory;
 
 /**
  * Class NF_Abstracts_Batch_Process
@@ -87,7 +87,7 @@ class NF_Admin_Processes_ExportSubmissions extends NF_Abstracts_BatchProcess
         $this->terminator = apply_filters('nf_sub_csv_terminator', $this->terminator);
 
         // Construct a new submission aggregate.
-        $params = (new SubmissionFilter())->setNfFormIds([$this->form]);
+        $params = (new SubmissionFilterFactory())->maybeLimitByLoggedInUser()->setNfFormIds([$this->form]);
         $params->setEndDate(time());
         $params->setStartDate(0);
         $params->setStatus(["active", "publish"]);
@@ -184,10 +184,21 @@ class NF_Admin_Processes_ExportSubmissions extends NF_Abstracts_BatchProcess
             $aggregatedKey = $this->indexedLookup[$this->currentPosition];
             $row = $this->csvObject->constructRow($aggregatedKey);
 
-            $constructed = $this->enclosure . implode($glue, $row) . $this->enclosure . $this->terminator;
-            fwrite($file, $constructed);
+            //Catch reference to an array or repeated fieldsets of repeater field to display each entry as a row
+            if( array_key_exists('repeater', $row) && is_array($row['repeater']) ){
+                foreach($row['repeater'] as $eachRow){
+                    $constructed = $this->enclosure . implode($glue, $eachRow) . $this->enclosure . $this->terminator;
+                    fwrite($file, $constructed);        
+                }
+                $this->currentPosition++;
+            } else {
+                $constructed = $this->enclosure . implode($glue, $row) . $this->enclosure . $this->terminator;
+                fwrite($file, $constructed);
 
-            $this->currentPosition++;
+                $this->currentPosition++;
+            }
+
+            
         }
     }
     /**

@@ -2,10 +2,11 @@
 
 use NinjaForms\Includes\Admin\Processes\DeleteBatchFile;
 use NinjaForms\Includes\Contracts\SubmissionHandler;
-use NinjaForms\Includes\Entities\SubmissionFilter;
+
 use NinjaForms\Includes\Entities\SingleSubmission;
 use NinjaForms\Includes\Entities\SubmissionExtraHandlerResponse;
 use NinjaForms\Includes\Factories\SubmissionAggregateFactory;
+use NinjaForms\Includes\Factories\SubmissionFilterFactory;
 
 
 /**
@@ -401,7 +402,7 @@ final class NF_Routes_Submissions extends NF_Abstracts_Routes
         if ('filterByDates' === $requestType) {
 
             foreach ($form_ids as $formId) {
-                $params = (new SubmissionFilter())
+                $params = (new SubmissionFilterFactory())->maybeLimitByLoggedInUser()
                     ->setStartDate($start_date)
                     ->setEndDate($end_date)
                     ->setNfFormIds([$formId])
@@ -426,7 +427,7 @@ final class NF_Routes_Submissions extends NF_Abstracts_Routes
 
             $csv[$formId] = $csvObject->handle();
         } elseif ('getSubmissions' === $requestType) {
-            $params = (new SubmissionFilter())
+            $params = (new SubmissionFilterFactory())->maybeLimitByLoggedInUser()
                 ->setNfFormIds($form_ids)
                 ->setStartDate(0)
                 ->setEndDate(time())
@@ -525,12 +526,33 @@ final class NF_Routes_Submissions extends NF_Abstracts_Routes
         if( !isset($data) || empty($form) || empty($sub) ) {
             return new WP_Error( 'malformed_request', __('This request is missing data', 'ninja-forms') );
         }
+
+        $data_send = [
+            'fields'    => [],
+            'fields_by_key' => []
+        ];
+        foreach($field_values as $index => $field_value){   
+            $id = str_replace('_field_', '', $index);
+            $model = Ninja_Forms()->form($data->formID)->get_field( $id );
+            $settings = $model->get_settings();
+            if($id === $index){
+                $data_send['fields_by_key'][$id] = $settings;
+                $data_send['fields_by_key'][$id]['settings'] = $settings;
+                $data_send['fields_by_key'][$id]['value'] = $field_value;
+                $data_send['fields_by_key'][$id]['settings']['value'] = $field_value;
+            } else {
+                $data_send['fields'][$id] = $settings;
+                $data_send['fields'][$id]['settings'] = $settings;
+                $data_send['fields'][$id]['value'] = $field_value;
+                $data_send['fields'][$id]['settings']['value'] = $field_value;
+            }
+        }
         
         //Process Merge tags       
         $action_settings = $this->process_merge_tags( $data->action_settings, $data->formID, $sub );
         //Process Email Action
         $email_action = new NF_Actions_Email();
-        $result = $email_action->process( (array) $action_settings, $data->formID, (array) $field_values );
+        $result = $email_action->process( (array) $action_settings, $data->formID, $data_send );
 
         //Return true if wp_mail returned true or the submission ID if it failed.
         $return = !empty($result['actions']['email']['sent']) && true === $result['actions']['email']['sent'] ? $result['actions']['email']['sent'] : $sub->get_seq_num();
@@ -556,13 +578,13 @@ final class NF_Routes_Submissions extends NF_Abstracts_Routes
         //Process Fields Merge Tags
         $fields = Ninja_Forms()->form( $form_id )->get_fields();
         $fields = new NF_Adapters_SubmissionsSubmission( $fields, $form_id, $sub );
-        foreach( $fields as $field_id => $field){
+        foreach( $fields as $field ){
             $fields_merge_tag_object->add_field( $field );
         }
         //Add All Fields merge tags
         $fields_merge_tag_object->include_all_fields_merge_tags();
         //include fields to the {all_fields_table} and {fields_table} mrerge tags
-        foreach( $fields as $field_id => $field){
+        foreach( $fields as $field ){
             $fields_merge_tag_object->add_field( $field );
         }
         //Loop through Action settings and apply merge tags
@@ -607,7 +629,8 @@ final class NF_Routes_Submissions extends NF_Abstracts_Routes
         }
 
         //Get aggregated submissions
-        $params = (new SubmissionFilter())->setNfFormIds([$form_ids]);
+        $params = (new SubmissionFilterFactory())->maybeLimitByLoggedInUser()->setNfFormIds([$form_ids]);
+
         if(!empty($start_date) && !empty($end_date)){
             $params->setStartDate($start_date);
             $params->setEndDate($end_date);
@@ -655,10 +678,9 @@ final class NF_Routes_Submissions extends NF_Abstracts_Routes
         $setting = $data['settingName'];
         $new_data = $data['data'];
         $form_id = $data['formID'];
-        //Get data stored and create the new vamue for the correct setting
+        //Get data stored and create the new value for the correct setting
         $option = get_option( 'ninja_forms_submissions_settings' );
-        $current_form_option = $current_form_option[$form_id];
-        $current_setting_value = $current_form_option[$setting];
+        $current_setting_value = $option[$form_id][$setting];
         $updated_option = $option;
         $updated_option[$form_id][$setting] = $new_data;
 
