@@ -3,13 +3,13 @@
 Plugin Name: Printful Integration for WooCommerce
 Plugin URI: https://wordpress.org/plugins/printful-shipping-for-woocommerce/
 Description: Connects your Printful account with WooCommerce.
-Version: 2.1.35
+Version: 2.1.36
 Author: Printful
 Author URI: http://www.printful.com
 License: GPL3 https://www.gnu.org/licenses/gpl-3.0.en.html
 Text Domain: printful
 WC requires at least: 3.0.0
-WC tested up to: 6.7
+WC tested up to: 7.5.1
 */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -20,7 +20,7 @@ if ( ! defined( 'PF_PLUGIN_FILE' ) ) {
 
 class Printful_Base {
 
-    const VERSION = '2.1.35';
+    const VERSION = '2.1.36';
 	const PF_HOST = 'https://www.printful.com/';
 	const PF_API_HOST = 'https://api.printful.com/';
 
