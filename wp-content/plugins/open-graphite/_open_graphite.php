@@ -3,7 +3,7 @@
 Plugin Name: 	Open Graphite
 Plugin URI: 	https://wordpress.org/plugins/open-graphite/
 Description: 	Control how your content is viewed when shared on social media.
-Version: 		1.5.1
+Version: 		1.6.1
 Author: 		Rocket Apps
 Author URI: 	https://rocketapps.com.au
 License:        GPLv2
@@ -316,8 +316,37 @@ class open_graphite_otmeta {
 			});
 		</script>
 		<!--/ End Metabox /-->
-	
-<?php  }
+
+		<?php function save_data($post_id) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+			return;
+        if(isset($_POST['_open_graph_title'])) {
+            update_post_meta($post_id, '_open_graph_title', $_POST['_open_graph_title']);
+        }
+		if(isset($_POST['_open_graph_description'])) {
+			update_post_meta($post_id, '_open_graph_description', sanitize_text_field($_POST['_open_graph_description']));
+		}
+        if(isset($_POST['_open_graph_post_type'])) {
+			update_post_meta($post_id, '_open_graph_post_type', sanitize_text_field($_POST['_open_graph_post_type']));
+		}
+        if(isset($_POST['open_graphite_title_default'])) {
+			update_post_meta($post_id, 'open_graphite_title_default', sanitize_text_field($_POST['open_graphite_title_default']));
+		}
+        if(isset($_POST['open_graphite_description_default'])) {
+			update_post_meta($post_id, 'open_graphite_description_default', sanitize_text_field($_POST['open_graphite_description_default']));
+		}
+        if(isset($_POST['open_graphite_title_char_limit'])) {
+			update_post_meta($post_id, 'open_graphite_title_char_limit', sanitize_text_field($_POST['open_graphite_title_char_limit']));
+		}
+        if(isset($_POST['open_graphite_description_char_limit'])) {
+			update_post_meta($post_id, 'open_graphite_description_char_limit', sanitize_text_field($_POST['open_graphite_description_char_limit']));
+		}
+        if(isset($_POST['open_graphite_open_type_post_default'])) {
+			update_post_meta($post_id, 'open_graphite_open_type_post_default', sanitize_text_field($_POST['open_graphite_open_type_post_default']));
+		}
+        
+	}
+}
 	
 
 function save_data($post_id) {
@@ -403,20 +432,19 @@ function openg_settings_page() {
 	require_once('inc/settings-ui.php');	
 }
 
-
 /* Sanitize and validate */
 function open_graphite_options_validate( $input ) {
-    global $args, $select_options, $radio_options;
-    if ( !isset( $input['openg_settings'] ) )
-        $input['openg_settings'] = null;
-    	$input['openg_settings'] = ( $input['openg_settings'] == 1 ? 1 : 0 );
-    	$input['openg_settings'] = wp_filter_nohtml_kses( $input['openg_settings'] );
-    if ( !isset( $input['openg_settings'] ) )
-        $input['openg_settings'] = null;
-    if ( is_array($args) && (!array_key_exists( $input['openg_settings'], $radio_options ) )) 
-        $input['openg_settings'] = null;
-    	$input['openg_settings'] = wp_filter_post_kses( $input['openg_settings'] );
-	return $input;
+    $output = array();
+    foreach ( $input as $key => $value ) {
+        if ( isset( $input[$key] ) ) {
+            if ( is_array( $input[$key] ) ) {
+                $output[$key] = array_map( 'sanitize_text_field', $input[$key] );
+            } else {
+                $output[$key] = sanitize_text_field( $input[$key] );
+            }
+        }
+    }
+    return $output;
 	wp_verify_nonce($_POST['og-stuff'], 'save-og-settings');
 }
 
@@ -481,28 +509,28 @@ function openghead() {
 
 		$open_graphite_head = '
 <!--/ Open Graphite Start /-->
-<meta property="og:locale" content="' . get_locale() . '" />
-<meta property="og:type" content="' . $ot . '" />
-<meta property="og:url" content="' . $home_url . '" />
-<meta property="og:title" content="' . esc_html($default_title) . '" />
-<meta property="og:description" content="' . esc_html($default_description) . '" />
-<meta property="og:site_name" content="' . esc_html($default_title) . '" />
-<meta property="og:image" content="' . $default_image . '" />
-<meta property="og:image:width" content="' . $full_image_width . '" />
-<meta property="og:image:height" content="' . $full_image_height . '" />' 
+<meta property="og:locale" content="' . esc_attr(wp_strip_all_tags(get_locale())) . '" />
+<meta property="og:type" content="' . esc_attr(wp_strip_all_tags($ot)) . '" />
+<meta property="og:url" content="' . esc_url(wp_strip_all_tags($home_url)). '" />
+<meta property="og:title" content="' . esc_attr(wp_strip_all_tags($default_title)) . '" />
+<meta property="og:description" content="' . esc_attr(wp_strip_all_tags($default_description)) . '" />
+<meta property="og:site_name" content="' . esc_attr(wp_strip_all_tags($default_title)) . '" />
+<meta property="og:image" content="' .esc_url(wp_strip_all_tags($default_image)) . '" />
+<meta property="og:image:width" content="' . esc_attr(wp_strip_all_tags($full_image_width)) . '" />
+<meta property="og:image:height" content="' . esc_attr(wp_strip_all_tags($full_image_height)) . '" />' 
 . $fb_app_ID . '
 
-<meta itemtype="'. $ot . '" />
-<meta itemprop="description" content="' . esc_html($default_description) . '" />
-<meta itemprop="image" content="' . $default_image . '" />
+<meta itemtype="'. esc_attr(wp_strip_all_tags($ot)) . '" />
+<meta itemprop="description" content="' . esc_attr(wp_strip_all_tags($default_description)) . '" />
+<meta itemprop="image" content="' . esc_attr(wp_strip_all_tags($default_image)) . '" />
 
-<meta name="twitter:card" content="' . $twitter_card . '" />
-<meta name="twitter:url" content="' . $home_url . '" />
-<meta name="twitter:title" content="' . esc_html($default_title) . '" />
-<meta name="twitter:description" content="' . esc_html($default_description) . '" />
-<meta name="twitter:image" content="' . $default_image . '" />'
+<meta name="twitter:card" content="' . esc_attr(wp_strip_all_tags($twitter_card)) . '" />
+<meta name="twitter:url" content="' . esc_attr(wp_strip_all_tags($home_url)) . '" />
+<meta name="twitter:title" content="' . esc_attr(wp_strip_all_tags($default_title)) . '" />
+<meta name="twitter:description" content="' . esc_attr(wp_strip_all_tags($default_description)) . '" />
+<meta name="twitter:image" content="' . esc_attr(wp_strip_all_tags($default_image)) . '" />'
 . $twitter_username . '
-<meta name="twitter:site" content="' . esc_html($default_title) . '" />
+<meta name="twitter:site" content="' . esc_attr(wp_strip_all_tags($default_title)) . '" />
 <!--/ Open Graphite End /-->' . "\n\n";
 	
 	/* Other pages, posts and custom post types */
@@ -564,27 +592,27 @@ function openghead() {
 			
 			$open_graphite_head = '
 <!--/ Open Graphite /-->
-<meta property="og:locale" content="' . get_locale() . '" />
-<meta property="og:type" content="' . $ot . '" />
-<meta property="og:url" content="' . $open_graphite_url . '" />
-<meta property="og:title" content="' . esc_html($open_graphite_title) . '" />
-<meta property="og:description" content="' . esc_html($open_graphite_description) . '" />
-<meta property="og:site_name" content="' . esc_html($default_title) . '" />
-<meta property="og:image" content="' . $open_graphite_image . '" />
-<meta property="og:image:width" content="' . $full_image_width . '" />
-<meta property="og:image:height" content="' . $full_image_height . '" />'
+<meta property="og:locale" content="' . esc_attr(wp_strip_all_tags(get_locale())) . '" />
+<meta property="og:type" content="' . esc_attr(wp_strip_all_tags($ot)) . '" />
+<meta property="og:url" content="' . esc_url(wp_strip_all_tags($open_graphite_url)) . '" />
+<meta property="og:title" content="' . esc_attr(wp_strip_all_tags($open_graphite_title)) . '" />
+<meta property="og:description" content="' . esc_attr(wp_strip_all_tags($open_graphite_description)) . '" />
+<meta property="og:site_name" content="' . esc_attr(wp_strip_all_tags($default_title)) . '" />
+<meta property="og:image" content="' . esc_attr(wp_strip_all_tags($open_graphite_image)) . '" />
+<meta property="og:image:width" content="' . esc_attr(wp_strip_all_tags($full_image_width)) . '" />
+<meta property="og:image:height" content="' . esc_attr(wp_strip_all_tags($full_image_height)) . '" />'
 . $fb_app_ID . '
 
-<meta itemprop="description" content="' . esc_html($open_graphite_description) . '" />
-<meta itemprop="image" content="' . $open_graphite_image . '" />
+<meta itemprop="description" content="' . esc_attr(wp_strip_all_tags($open_graphite_description)) . '" />
+<meta itemprop="image" content="' . esc_url(wp_strip_all_tags($open_graphite_image)) . '" />
 
-<meta name="twitter:card" content="' . $twitter_card . '" />
-<meta name="twitter:url" content="' . $open_graphite_url . '" />
-<meta name="twitter:title" content="' . esc_html($open_graphite_title) . '" />
-<meta name="twitter:description" content="' . esc_html($open_graphite_description) . '" />
-<meta name="twitter:image" content="' . $open_graphite_image . '" />'
+<meta name="twitter:card" content="' . esc_attr(wp_strip_all_tags($twitter_card)) . '" />
+<meta name="twitter:url" content="' . esc_url(wp_strip_all_tags($open_graphite_url)) . '" />
+<meta name="twitter:title" content="' . esc_attr(wp_strip_all_tags($open_graphite_title)) . '" />
+<meta name="twitter:description" content="' . esc_attr(wp_strip_all_tags($open_graphite_description)) . '" />
+<meta name="twitter:image" content="' . esc_url(wp_strip_all_tags($open_graphite_image)) . '" />'
 . $twitter_username . '
-<meta name="twitter:site" content="' . esc_html($default_title) . '" />
+<meta name="twitter:site" content="' . esc_attr(wp_strip_all_tags($default_title)) . '" />
 <!--/ Open Graphite End /-->' . "\n\n";
 		}
 	}

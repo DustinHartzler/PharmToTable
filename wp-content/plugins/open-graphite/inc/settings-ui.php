@@ -591,7 +591,7 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 <!--/ End Wrap /-->
 
 <!--/ Start Promo /-->
-<div class="promo">
+<div class="og-promo">
 
 	<div class="testimonial">
 		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
@@ -599,7 +599,7 @@ $disable_jetpack_og	= isset($ogoptions['disable_jetpack_og']) ? $ogoptions['disa
 		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
 		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
 		<img src="<?php echo plugins_url('../images/star.svg', __FILE__ );?>" class="star" />
-		<p><strong>"The best plugin of its kind"</strong></p>
+		<p><strong><?php _e( '"The best plugin of its kind"', 'open-graphite' ); ?></strong></p>
 
 		<img src="<?php echo plugins_url('../images/matt.jpg', __FILE__ );?>" class="matt" />
 

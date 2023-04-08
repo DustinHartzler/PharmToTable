@@ -5,7 +5,7 @@ Author URI:         https://rocketapps.com.au/
 Plugin URI:         https://wordpress.org/plugins/open-graphite/
 Tags:               open graph, social, facebook, twitter, thumbnail
 Requires at least:  4.7
-Tested up to:       5.9
+Tested up to:       6.1
 Stable tag:         trunk
 License:            GPLv3 or later
 License URI:        https://www.gnu.org/licenses/gpl-3.0.html
@@ -68,6 +68,14 @@ While the free version of Open Graphite is supported in the <a href="https://wor
 * Priority support
 
 == Changelog ==
+
+= 1.6.1 =
+
+Fixed reported security issue with the help page.
+
+= 1.6.0 =
+
+General maintenance.
 
 = 1.5.1 =
 
