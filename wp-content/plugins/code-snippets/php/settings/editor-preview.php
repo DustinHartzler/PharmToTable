@@ -21,7 +21,7 @@ function enqueue_editor_preview_assets() {
 	enqueue_code_editor( 'php' );
 
 	// Enqueue all editor themes.
-	$themes = get_editor_themes( false );
+	$themes = get_editor_themes();
 
 	foreach ( $themes as $theme ) {
 		wp_enqueue_style(
@@ -66,10 +66,12 @@ function enqueue_editor_preview_assets() {
 /**
  * Retrieve the list of code editor themes.
  *
- * @return array List of editor themes.
+ * @return array<string, string> List of editor themes.
  */
 function get_editor_theme_list() {
-	$themes = [];
+	$themes = [
+		'default' => __( 'Default', 'code-snippets' ),
+	];
 
 	foreach ( get_editor_themes() as $theme ) {
 

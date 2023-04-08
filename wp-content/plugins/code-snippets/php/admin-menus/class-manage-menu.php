@@ -60,7 +60,7 @@ class Manage_Menu extends Admin_Menu {
 			code_snippets()->get_menu_slug(),
 			array( $this, 'render' ),
 			"data:image/svg+xml;base64,$encoded_icon",
-			is_network_admin() ? 21 : 67
+			apply_filters( 'code_snippets/admin/menu_position', is_network_admin() ? 21 : 67 )
 		);
 
 		// Register the sub-menu.
@@ -86,12 +86,8 @@ class Manage_Menu extends Admin_Menu {
 			'snippets-settings'    => 'settings',
 		);
 
-		if ( isset( $classmap[ $sub ], code_snippets()->admin->menus[ $classmap[ $sub ] ] ) ) {
-			/** Menu class @var Admin_Menu $class */
-			$class = code_snippets()->admin->menus[ $classmap[ $sub ] ];
-		} else {
-			$class = $this;
-		}
+		$menus = code_snippets()->admin->menus;
+		$class = isset( $classmap[ $sub ], $menus[ $classmap[ $sub ] ] ) ? $menus[ $classmap[ $sub ] ] : $this;
 
 		/* Add a submenu to the Tools menu */
 		$hook = add_submenu_page(
@@ -168,16 +164,19 @@ class Manage_Menu extends Admin_Menu {
 		}
 
 		$this->print_result_message(
-			array(
-				'executed'          => __( 'Snippet <strong>executed</strong>.', 'code-snippets' ),
-				'activated'         => __( 'Snippet <strong>activated</strong>.', 'code-snippets' ),
-				'activated-multi'   => __( 'Selected snippets <strong>activated</strong>.', 'code-snippets' ),
-				'deactivated'       => __( 'Snippet <strong>deactivated</strong>.', 'code-snippets' ),
-				'deactivated-multi' => __( 'Selected snippets <strong>deactivated</strong>.', 'code-snippets' ),
-				'deleted'           => __( 'Snippet <strong>deleted</strong>.', 'code-snippets' ),
-				'deleted-multi'     => __( 'Selected snippets <strong>deleted</strong>.', 'code-snippets' ),
-				'cloned'            => __( 'Snippet <strong>cloned</strong>.', 'code-snippets' ),
-				'cloned-multi'      => __( 'Selected snippets <strong>cloned</strong>.', 'code-snippets' ),
+			apply_filters(
+				'code_snippets/manage/result_messages',
+				array(
+					'executed'          => __( 'Snippet <strong>executed</strong>.', 'code-snippets' ),
+					'activated'         => __( 'Snippet <strong>activated</strong>.', 'code-snippets' ),
+					'activated-multi'   => __( 'Selected snippets <strong>activated</strong>.', 'code-snippets' ),
+					'deactivated'       => __( 'Snippet <strong>deactivated</strong>.', 'code-snippets' ),
+					'deactivated-multi' => __( 'Selected snippets <strong>deactivated</strong>.', 'code-snippets' ),
+					'deleted'           => __( 'Snippet <strong>deleted</strong>.', 'code-snippets' ),
+					'deleted-multi'     => __( 'Selected snippets <strong>deleted</strong>.', 'code-snippets' ),
+					'cloned'            => __( 'Snippet <strong>cloned</strong>.', 'code-snippets' ),
+					'cloned-multi'      => __( 'Selected snippets <strong>cloned</strong>.', 'code-snippets' ),
+				)
 			)
 		);
 	}
@@ -282,11 +281,11 @@ class Manage_Menu extends Admin_Menu {
 
 				if ( $snippet->active ) {
 					$result = activate_snippet( $snippet->id, $snippet->network );
-					if ( ! $result ) {
+					if ( is_string( $result ) ) {
 						wp_send_json_error(
 							array(
 								'type'    => 'action_error',
-								'message' => 'error activating snippet',
+								'message' => $result,
 							)
 						);
 					}

@@ -2,6 +2,8 @@
 
 namespace Code_Snippets;
 
+use WP_Post;
+
 /**
  * This class manages the shortcodes included with the plugin
  *
@@ -33,6 +35,8 @@ class Frontend {
 
 		add_shortcode( self::CONTENT_SHORTCODE, [ $this, 'render_content_shortcode' ] );
 		add_shortcode( self::SOURCE_SHORTCODE, [ $this, 'render_source_shortcode' ] );
+
+		add_filter( 'code_snippets/render_content_shortcode', 'trim' );
 	}
 
 	/**
@@ -74,9 +78,9 @@ class Frontend {
 	/**
 	 * Enqueue the syntax highlighting assets if they are required for the current posts
 	 *
-	 * @param array $posts List of currently visible posts.
+	 * @param array<WP_Post> $posts List of currently visible posts.
 	 *
-	 * @return array Unchanged list of posts.
+	 * @return array<WP_Post> Unchanged list of posts.
 	 */
 	public function enqueue_highlighting( $posts ) {
 
@@ -147,7 +151,7 @@ class Frontend {
 	/**
 	 * Render the value of a content shortcode
 	 *
-	 * @param array $atts Shortcode attributes.
+	 * @param array<string, mixed> $atts Shortcode attributes.
 	 *
 	 * @return string Shortcode content.
 	 */
@@ -225,7 +229,7 @@ class Frontend {
 			add_shortcode( self::CONTENT_SHORTCODE, [ $this, 'render_content_shortcode' ] );
 		}
 
-		return $content;
+		return apply_filters( 'code_snippets/content_shortcode', $content, $snippet, $atts );
 	}
 
 	/**
@@ -243,8 +247,8 @@ class Frontend {
 	/**
 	 * Render the source code of a given snippet
 	 *
-	 * @param Snippet $snippet Snippet object.
-	 * @param array   $atts    Shortcode attributes.
+	 * @param Snippet              $snippet Snippet object.
+	 * @param array<string, mixed> $atts    Shortcode attributes.
 	 *
 	 * @return string Shortcode content.
 	 */
@@ -285,18 +289,20 @@ class Frontend {
 
 		$code = 'php' === $snippet->type ? "<?php\n\n$snippet->code" : $snippet->code;
 
-		return sprintf(
+		$output = sprintf(
 			'<pre %s><code %s>%s</code></pre>',
 			implode( ' ', $pre_attributes ),
 			implode( ' ', $code_attributes ),
 			esc_html( $code )
 		);
+
+		return apply_filters( 'code_snippets/render_source_shortcode', $output, $snippet, $atts );
 	}
 
 	/**
 	 * Render the value of a source shortcode
 	 *
-	 * @param array $atts Shortcode attributes.
+	 * @param array<string, mixed> $atts Shortcode attributes.
 	 *
 	 * @return string Shortcode content.
 	 */

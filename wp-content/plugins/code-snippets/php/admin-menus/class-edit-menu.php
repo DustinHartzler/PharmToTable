@@ -72,7 +72,8 @@ class Edit_Menu extends Admin_Menu {
 		}
 
 		// Disallow visiting the edit snippet page without a valid ID.
-		if ( $screen->base === $edit_hook && ( empty( $_REQUEST['id'] ) || 0 === $this->snippet->id || null === $this->snippet->id ) ) {
+		if ( $screen->base === $edit_hook && ( empty( $_REQUEST['id'] ) || 0 === $this->snippet->id || null === $this->snippet->id ) &&
+		     ! isset( $_REQUEST['preview'] ) ) {
 			wp_safe_redirect( code_snippets()->get_menu_url( 'add' ) );
 			exit;
 		}
@@ -93,7 +94,8 @@ class Edit_Menu extends Admin_Menu {
 			add_action( 'code_snippets_edit_snippet', array( $this, 'render_tags_editor' ) );
 		}
 
-		add_action( 'code_snippets_below_editor', array( $this, 'render_priority_setting' ), 0 );
+		add_action( 'code_snippets_below_editor', array( $this, 'render_scope_setting' ), 5, 0 );
+		add_action( 'code_snippets_below_editor', array( $this, 'render_priority_setting' ), 11 );
 
 		if ( is_network_admin() ) {
 			add_action( 'code_snippets_edit_snippet', array( $this, 'render_multisite_sharing_setting' ), 1 );
@@ -130,6 +132,8 @@ class Edit_Menu extends Admin_Menu {
 				$snippet->scope = 'site-head-js';
 			}
 		}
+
+		$this->snippet = apply_filters( 'code_snippets/admin/load_snippet_data', $snippet );
 	}
 
 	/**
@@ -159,15 +163,17 @@ class Edit_Menu extends Admin_Menu {
 
 			/* Export the snippet if the button was clicked */
 			if ( isset( $_POST['export_snippet'] ) ) {
-				$export = new Export( $snippet_id );
-				$export->export_snippets();
+				$export = new Export_Attachment( $snippet_id );
+				$export->download_snippets_json();
 			}
 
 			/* Download the snippet if the button was clicked */
 			if ( isset( $_POST['download_snippet'] ) ) {
-				$export = new Export( $snippet_id );
-				$export->download_snippets();
+				$export = new Export_Attachment( $snippet_id );
+				$export->download_snippets_code();
 			}
+
+			do_action( 'code_snippets/admin/process_actions', $snippet_id );
 		}
 	}
 
@@ -270,6 +276,8 @@ class Edit_Menu extends Admin_Menu {
 			}
 		}
 
+		$snippet = apply_filters( 'code_snippets/save/post_set_fields', $snippet );
+
 		if ( isset( $_POST['save_snippet_execute'] ) && 'single-use' !== $snippet->scope ) {
 			unset( $_POST['save_snippet_execute'] );
 			$_POST['save_snippet'] = 'yes';
@@ -316,7 +324,6 @@ class Edit_Menu extends Admin_Menu {
 
 		/* Update the shared network snippets if necessary */
 		if ( $snippet_id && is_network_admin() ) {
-
 			if ( isset( $_POST['snippet_sharing'] ) && 'on' === $_POST['snippet_sharing'] ) {
 				$shared_snippets = get_site_option( 'shared_network_snippets', array() );
 
@@ -446,22 +453,31 @@ class Edit_Menu extends Admin_Menu {
 	}
 
 	/**
+	 * Render the snippet scope options.
+	 *
+	 * @return void
+	 */
+	public function render_scope_setting() {
+		$this->render_view( 'partials/edit-scopes' );
+	}
+
+	/**
 	 * Render the setting for shared network snippets
 	 *
 	 * @param Snippet $snippet The snippet currently being edited.
 	 */
-	public function render_multisite_sharing_setting( $snippet ) {
+	public function render_multisite_sharing_setting( Snippet $snippet ) {
 		$shared_snippets = get_site_option( 'shared_network_snippets', array() );
 		?>
 
-		<div class="snippet-sharing-setting">
-			<h2 class="screen-reader-text"><?php esc_html_e( 'Sharing Settings', 'code-snippets' ); ?></h2>
+		<h2 class="screen-reader-text"><?php esc_html_e( 'Sharing Settings', 'code-snippets' ); ?></h2>
+		<p class="snippet-sharing-setting">
 			<label for="snippet_sharing">
 				<input type="checkbox" name="snippet_sharing"
 					<?php checked( in_array( $snippet->id, $shared_snippets, true ) ); ?>>
 				<?php esc_html_e( 'Allow this snippet to be activated on individual sites on the network', 'code-snippets' ); ?>
 			</label>
-		</div>
+		</p>
 
 		<?php
 	}
@@ -532,7 +548,7 @@ class Edit_Menu extends Admin_Menu {
 	 *
 	 * @param int $snippet_id Snippet ID.
 	 *
-	 * @return array|bool Error if execution failed, otherwise false.
+	 * @return array<string, mixed>|bool Error if execution failed, otherwise false.
 	 */
 	private function get_snippet_error( $snippet_id ) {
 
@@ -713,10 +729,10 @@ class Edit_Menu extends Admin_Menu {
 	/**
 	 * Retrieve a list of submit actions for a given snippet
 	 *
-	 * @param Snippet $snippet       The snippet currently being edited.
+	 * @param Snippet $snippet       Snippet currently being edited.
 	 * @param bool    $extra_actions Whether to include additional actions alongside save actions.
 	 *
-	 * @return array Two-dimensional array with action name keyed to description.
+	 * @return array<string, string> Action name keyed to description.
 	 */
 	public function get_actions_list( $snippet, $extra_actions = true ) {
 		$actions = [ 'save_snippet' => __( 'Save Changes', 'code-snippets' ) ];
@@ -792,7 +808,7 @@ class Edit_Menu extends Admin_Menu {
 	/**
 	 * Render a list of scopes as ratio controls
 	 *
-	 * @param array $scopes List of scopes to render, with scope name keyed to label.
+	 * @param array<string, string> $scopes List of scopes to render, with scope name keyed to label.
 	 */
 	public function print_scopes_list( $scopes ) {
 		$scope_icons = Snippet::get_scope_icons();
@@ -802,48 +818,5 @@ class Edit_Menu extends Admin_Menu {
 			checked( $scope, $this->snippet->scope );
 			printf( '> <span class="dashicons dashicons-%s"></span> %s</label>', esc_attr( $scope_icons[ $scope ] ), esc_html( $label ) );
 		}
-	}
-
-	/**
-	 * Render a keyboard shortcut as HTML.
-	 *
-	 * @param array|string $modifiers Modifier keys. Can be 'Cmd', 'Ctrl', 'Shift', 'Option', 'Alt'.
-	 * @param string       $key       Keyboard key.
-	 *
-	 * @return void
-	 */
-	protected function render_keyboard_shortcut( $modifiers, $key ) {
-		static $keys = null;
-
-		if ( is_null( $keys ) ) {
-			$keys = array(
-				'Cmd'    => _x( 'Cmd', 'keyboard key', 'code-snippets' ),
-				'Ctrl'   => _x( 'Ctrl', 'keyboard key', 'code-snippets' ),
-				'Shift'  => _x( 'Shift', 'keyboard key', 'code-snippets' ),
-				'Option' => _x( 'Option', 'keyboard key', 'code-snippets' ),
-				'Alt'    => _x( 'Alt', 'keyboard key', 'code-snippets' ),
-				'F'      => _x( 'F', 'keyboard key', 'code-snippets' ),
-				'G'      => _x( 'G', 'keyboard key', 'code-snippets' ),
-				'R'      => _x( 'R', 'keyboard key', 'code-snippets' ),
-				'S'      => _x( 'S', 'keyboard key', 'code-snippets' ),
-			);
-		}
-
-		if ( ! is_array( $modifiers ) ) {
-			$modifiers = array( $modifiers );
-		}
-
-		foreach ( $modifiers as $modifier ) {
-			if ( 'Ctrl' === $modifier || 'Cmd' === $modifier ) {
-				echo '<kbd class="pc-key">', esc_html( $keys['Ctrl'] ), '</kbd>';
-				echo '<kbd class="mac-key">', esc_html( $keys['Cmd'] ), '</kbd>&hyphen;';
-			} elseif ( 'Option' === $modifier ) {
-				echo '<span class="mac-key"><kbd class="mac-key">', esc_html( $keys['Option'] ), '</kbd>&hyphen;</span>';
-			} else {
-				echo '<kbd>', esc_html( $keys[ $modifier ] ), '</kbd>&hyphen;';
-			}
-		}
-
-		echo '<kbd>', esc_html( $keys[ $key ] ), '</kbd>';
 	}
 }

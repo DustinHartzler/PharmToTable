@@ -83,7 +83,7 @@ class Settings_Menu extends Admin_Menu {
 	/**
 	 * Retrieve the list of settings sections.
 	 *
-	 * @return array
+	 * @return array<string, array<string, mixed>>
 	 */
 	private function get_sections() {
 		global $wp_settings_sections;
@@ -121,7 +121,7 @@ class Settings_Menu extends Admin_Menu {
 		$current_section = $this->get_current_section();
 
 		?>
-		<div class="wrap" data-active-tab="<?php echo esc_attr( $current_section ); ?>">
+		<div class="code-snippets-settings wrap" data-active-tab="<?php echo esc_attr( $current_section ); ?>">
 			<h1>
 				<?php
 				esc_html_e( 'Settings', 'code-snippets' );

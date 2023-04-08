@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1ffd5c3c5ebc59c9193e93ae5336da2f
+class ComposerStaticInit59c4372c29034b13b29467a8519f8b6f
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -27,9 +27,10 @@ class ComposerStaticInit1ffd5c3c5ebc59c9193e93ae5336da2f
         'Code_Snippets\\Contextual_Help' => __DIR__ . '/../..' . '/php/class-contextual-help.php',
         'Code_Snippets\\DB' => __DIR__ . '/../..' . '/php/class-db.php',
         'Code_Snippets\\Edit_Menu' => __DIR__ . '/../..' . '/php/admin-menus/class-edit-menu.php',
-        'Code_Snippets\\Export' => __DIR__ . '/../..' . '/php/class-export.php',
+        'Code_Snippets\\Export' => __DIR__ . '/../..' . '/php/export/class-export.php',
+        'Code_Snippets\\Export_Attachment' => __DIR__ . '/../..' . '/php/export/class-export-attachment.php',
         'Code_Snippets\\Frontend' => __DIR__ . '/../..' . '/php/front-end/class-frontend.php',
-        'Code_Snippets\\Import' => __DIR__ . '/../..' . '/php/class-import.php',
+        'Code_Snippets\\Import' => __DIR__ . '/../..' . '/php/export/class-import.php',
         'Code_Snippets\\Import_Menu' => __DIR__ . '/../..' . '/php/admin-menus/class-import-menu.php',
         'Code_Snippets\\List_Table' => __DIR__ . '/../..' . '/php/class-list-table.php',
         'Code_Snippets\\Manage_Menu' => __DIR__ . '/../..' . '/php/admin-menus/class-manage-menu.php',
@@ -46,9 +47,9 @@ class ComposerStaticInit1ffd5c3c5ebc59c9193e93ae5336da2f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1ffd5c3c5ebc59c9193e93ae5336da2f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1ffd5c3c5ebc59c9193e93ae5336da2f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit1ffd5c3c5ebc59c9193e93ae5336da2f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit59c4372c29034b13b29467a8519f8b6f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit59c4372c29034b13b29467a8519f8b6f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit59c4372c29034b13b29467a8519f8b6f::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -15,7 +15,7 @@ use DateTimeZone;
  * @property string        $name                    The snippet title.
  * @property string        $desc                    The formatted description.
  * @property string        $code                    The executable code.
- * @property array         $tags                    An array of the tags.
+ * @property array<string> $tags                    An array of the tags.
  * @property string        $scope                   The scope name.
  * @property int           $priority                Execution priority.
  * @property bool          $active                  The active status.
@@ -49,7 +49,7 @@ class Snippet {
 	 * The snippet metadata fields.
 	 * Initialized with default values.
 	 *
-	 * @var array Two-dimensional array of field names keyed to current values.
+	 * @var array<string, mixed> Field names keyed to current values.
 	 */
 	private $fields = array(
 		'id'             => 0,
@@ -68,7 +68,7 @@ class Snippet {
 	/**
 	 * List of field aliases
 	 *
-	 * @var array Two-dimensional array of field alias names keyed to actual field names.
+	 * @var array<string, string> Field alias names keyed to actual field names.
 	 */
 	private static $field_aliases = array(
 		'description' => 'desc',
@@ -78,7 +78,7 @@ class Snippet {
 	/**
 	 * Constructor function
 	 *
-	 * @param array|object $fields Initial snippet fields.
+	 * @param array<string, mixed>|object $fields Initial snippet fields.
 	 */
 	public function __construct( $fields = null ) {
 
@@ -94,21 +94,21 @@ class Snippet {
 	 * Set all snippet fields from an array or object.
 	 * Invalid fields will be ignored.
 	 *
-	 * @param array|object $fields List of fields.
+	 * @param array<string, mixed>|object $fields List of fields.
 	 */
 	public function set_fields( $fields ) {
 
-		/* Only accept arrays or objects */
+		// Only accept arrays or objects.
 		if ( ! $fields || is_string( $fields ) ) {
 			return;
 		}
 
-		/* Convert objects into arrays */
+		// Convert objects into arrays.
 		if ( is_object( $fields ) ) {
 			$fields = get_object_vars( $fields );
 		}
 
-		/* Loop through the passed fields and set them */
+		// Loop through the passed fields and set them.
 		foreach ( $fields as $field => $value ) {
 			$this->set_field( $field, $value );
 		}
@@ -117,7 +117,7 @@ class Snippet {
 	/**
 	 * Retrieve all snippet fields
 	 *
-	 * @return array Two-dimensional array of field names keyed to current values
+	 * @return array<string, mixed> Field names keyed to current values.
 	 */
 	public function get_fields() {
 		return $this->fields;
@@ -132,7 +132,7 @@ class Snippet {
 	 */
 	private function validate_field_name( $field ) {
 
-		/* If a field alias is set, remap it to the valid field name */
+		// If a field alias is set, remap it to the valid field name.
 		if ( isset( self::$field_aliases[ $field ] ) ) {
 			return self::$field_aliases[ $field ];
 		}
@@ -197,7 +197,7 @@ class Snippet {
 			return;
 		}
 
-		/* Check if the field value should be filtered */
+		// Check if the field value should be filtered.
 		if ( method_exists( $this, 'prepare_' . $field ) ) {
 			$value = call_user_func( array( $this, 'prepare_' . $field ), $value );
 		}
@@ -208,7 +208,7 @@ class Snippet {
 	/**
 	 * Retrieve the list of fields allowed to be written to
 	 *
-	 * @return array Single-dimensional array of field names.
+	 * @return array<string> List of field names.
 	 */
 	public function get_allowed_fields() {
 		return array_keys( $this->fields ) + array_keys( self::$field_aliases );
@@ -288,9 +288,9 @@ class Snippet {
 	/**
 	 * Prepare the snippet tags by ensuring they are in the correct format
 	 *
-	 * @param string|array $tags The field as provided.
+	 * @param string|array<string> $tags The field as provided.
 	 *
-	 * @return array The field in the correct format.
+	 * @return array<string> The field in the correct format.
 	 */
 	private function prepare_tags( $tags ) {
 		return code_snippets_build_tags_array( $tags );
@@ -403,22 +403,22 @@ class Snippet {
 	 */
 	private function prepare_modified( $modified ) {
 
-		/* if the supplied value is a DateTime object, convert it to string representation */
+		// If the supplied value is a DateTime object, convert it to string representation.
 		if ( $modified instanceof DateTime ) {
 			return $modified->format( self::DATE_FORMAT );
 		}
 
-		/* if the supplied value is probably a timestamp, attempt to convert it to a string */
+		// If the supplied value is probably a timestamp, attempt to convert it to a string.
 		if ( is_numeric( $modified ) ) {
 			return gmdate( self::DATE_FORMAT, $modified );
 		}
 
-		/* if the supplied value is a string, check it is not just the default value */
+		// If the supplied value is a string, check it is not just the default value.
 		if ( is_string( $modified ) && self::DEFAULT_DATE !== $modified ) {
 			return $modified;
 		}
 
-		/* otherwise, discard the supplied value */
+		// Otherwise, discard the supplied value.
 
 		return null;
 	}
@@ -436,7 +436,7 @@ class Snippet {
 	 * @return string
 	 */
 	private function get_display_name() {
-		/* translators: %d: snippet ID */
+		// translators: %d: snippet ID.
 		return empty( $this->name ) ? sprintf( esc_html__( 'Untitled #%d', 'code-snippets' ), $this->id ) : $this->name;
 	}
 
@@ -452,7 +452,7 @@ class Snippet {
 	/**
 	 * Retrieve a list of all available scopes
 	 *
-	 * @return array Single-dimensional array of scope names.
+	 * @return array<string> List of scope names.
 	 *
 	 * @phpcs:disable WordPress.Arrays.ArrayDeclarationSpacing.ArrayItemNoNewLine
 	 */
@@ -468,7 +468,7 @@ class Snippet {
 	/**
 	 * Retrieve a list of all scope icons
 	 *
-	 * @return array Two-dimensional array with scope name keyed to the class name of a dashicon.
+	 * @return array<string, string> Scope name keyed to the class name of a dashicon.
 	 */
 	public static function get_scope_icons() {
 		return array(
@@ -575,7 +575,7 @@ class Snippet {
 		} else {
 			$timezone = get_option( 'timezone_string' );
 
-			/* calculate the timezone manually if it is not available */
+			// Calculate the timezone manually if it is not available.
 			if ( ! $timezone ) {
 				$offset = (float) get_option( 'gmt_offset' );
 				$hours = (int) $offset;
@@ -611,7 +611,7 @@ class Snippet {
 		$local_time = $this->modified_local;
 
 		if ( $time_diff >= 0 && $time_diff < YEAR_IN_SECONDS ) {
-			/* translators: %s: Human-readable time difference. */
+			// translators: %s: Human-readable time difference.
 			$human_time = sprintf( __( '%s ago', 'code-snippets' ), human_time_diff( $timestamp ) );
 		} else {
 			$human_time = $local_time->format( __( 'Y/m/d', 'code-snippets' ) );
@@ -621,7 +621,7 @@ class Snippet {
 			return $human_time;
 		}
 
-		/* translators: 1: date format, 2: time format */
+		// translators: 1: date format, 2: time format.
 		$date_format = _x( '%1$s \a\t %2$s', 'date and time format', 'code-snippets' );
 		$date_format = sprintf( $date_format, get_option( 'date_format' ), get_option( 'time_format' ) );
 

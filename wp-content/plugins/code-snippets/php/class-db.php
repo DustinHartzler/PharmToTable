@@ -106,13 +106,20 @@ class DB {
 	/**
 	 * Determine whether a database table exists.
 	 *
-	 * @param string $table_name Name of database table to check.
+	 * @param string  $table_name Name of database table to check.
+	 * @param boolean $refresh    Rerun the query, instead of using a cached value.
 	 *
 	 * @return bool Whether the database table exists.
 	 */
-	public static function table_exists( $table_name ) {
+	public static function table_exists( $table_name, $refresh = false ) {
 		global $wpdb;
-		return $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name; // cache pass, db call ok.
+		static $checked = array();
+
+		if ( $refresh || ! isset( $checked[ $table_name ] ) ) {
+			$checked[ $table_name ] = $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name; // cache pass, db call ok.
+		}
+
+		return $checked[ $table_name ];
 	}
 
 	/**
@@ -198,25 +205,13 @@ class DB {
 	}
 
 	/**
-	 * Build a list of formatting placeholders for an array of data.
-	 *
-	 * @param int    $count       Length of data.
-	 * @param string $placeholder Placeholder to use. Defaults to string placeholder.
-	 *
-	 * @return string List of placeholders, ready for inclusion in query.
-	 */
-	private static function build_format_list( $count, $placeholder = '%s' ) {
-		return implode( ',', array_fill( 0, $count, $placeholder ) );
-	}
-
-	/**
 	 * Fetch a list of active snippets from a database table.
 	 *
-	 * @param string $table_name  Name of table to fetch snippets from.
-	 * @param array  $scopes      List of scopes to include in query.
-	 * @param array  $active_only Whether to only fetch active snippets from the table.
+	 * @param string        $table_name  Name of table to fetch snippets from.
+	 * @param array<string> $scopes      List of scopes to include in query.
+	 * @param boolean       $active_only Whether to only fetch active snippets from the table.
 	 *
-	 * @return array|false List of active snippets, if any could be retrieved.
+	 * @return array<string, array<string, mixed>>|false List of active snippets, if any could be retrieved.
 	 *
 	 * @phpcs:disable WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 	 */
@@ -234,7 +229,7 @@ class DB {
 			return false;
 		}
 
-		$scopes_format = self::build_format_list( count( $scopes ) );
+		$scopes_format = implode( ',', array_fill( 0, count( $scopes ), '%s' ) );
 		$extra_where = $active_only ? 'AND active=1' : '';
 
 		$snippets = $wpdb->get_results(
@@ -261,9 +256,9 @@ class DB {
 	/**
 	 * Generate the SQL for fetching active snippets from the database.
 	 *
-	 * @param array|string $scopes List of scopes to retrieve in.
+	 * @param array<string>|string $scopes List of scopes to retrieve in.
 	 *
-	 * @return array List of active snippets, indexed by table.
+	 * @return array<string, array<string, mixed>> List of active snippets, indexed by table.
 	 */
 	public function fetch_active_snippets( $scopes ) {
 		$active_snippets = array();
