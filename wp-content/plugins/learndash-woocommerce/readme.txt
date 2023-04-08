@@ -6,9 +6,9 @@ LD Requires at least: 3.0
 Slug: learndash-woocommerce
 Tags: integration, woocommerce,
 Requires at least: 5.0
-Tested up to: 5.8
+Tested up to: 6.1.1
 Requires PHP: 7.0
-Stable tag: 1.9.3.3
+Stable tag: 1.9.6
 
 Integrate LearnDash LMS with WooCommerce.
 
@@ -40,6 +40,36 @@ Alternatively, you always have the option to update manually. Please note, a ful
 1. Activate the add-on plugin via the PLUGINS menu.
 
 == Changelog ==
+
+= 1.9.6 =
+
+* Fixed fatal error on checkout with WooCommerce subscriptions plugin
+
+= 1.9.5 =
+
+* Added handle order/subscription item addition and removal
+* Added add support for partial order refund
+* Updated POT file
+* Fixed group field selector returns empty result for shop manager
+* Fixed update select2 version to full version to fix conflict issue
+* Fixed conflict with other plugin because we didn't check if array index exists
+* Fixed remove user login notice and change the logic by always enable registration setting if user cart contains LD course/group
+* Fixed login notice always appear on cartflows checkout
+
+= 1.9.4.1 =
+
+* Fixed require login notice always appear on some themes that don't pass createaccount input data
+
+= 1.9.4 =
+
+* Added course/group access support for restore/delete/trash subscription customer charge updates
+* Added customer charge handler to handle course/group enrollment logic based on customer charge and subscriptio status
+* Updated re-enroll users to course/group if order is marked as processing (payment received) or completed
+* Updated select2 field styles
+* Updated move scripts and styles to dedicated folder and rename the filename plus add select2 lib files
+* Updated: add scripts registration and deregistration methods and add logic to load scripts conditionally
+* Fixed simultaneous simple and subscription product order doesn't enroll user to simple product course
+* Fixed allowing guest checkout with course products preventing enrollment in associated course
 
 = 1.9.3.3 =
 
