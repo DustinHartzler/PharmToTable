@@ -7,72 +7,7 @@ jQuery( function( $ ) {
 	}
 
 	var $document = $( document ),
-	    $body     = $( document.body );
-
-	// Reload cart elements when (de-)selecting a cart subscription option.
-	$document.on( 'change', '.wcsatt-options-cart [name^=convert_to_sub]', function() {
-
-		var $scheme_input        = $( this ),
-			$cart_totals         = $( 'div.cart_totals' ),
-			$cart_table          = $( 'table.shop_table.cart' ),
-			$options             = $scheme_input.closest( '.wcsatt-options-cart' ),
-			$cart_wrapper        = $cart_table.closest( '.woocommerce' ),
-			$add_to_subscription = $cart_totals.find( 'input.wcsatt-add-cart-to-subscription-action-input' ),
-			selected_scheme      = $scheme_input.val(),
-			cart_referrer        = $cart_table.find( 'input[name="_wp_http_referer"]' ).val();
-
-		$cart_wrapper.block( {
-			message: null,
-			overlayCSS: {
-				background: '#fff',
-				opacity: 0.6
-			}
-		} );
-
-		var data = {
-			security:                    wcsatt_cart_params.update_cart_option_nonce,
-			subscription_scheme:         selected_scheme,
-			add_to_subscription_checked: $add_to_subscription.is( ':checked' ) ? 'yes' : 'no',
-			action:                      'wcsatt_update_cart_option'
-		};
-
-		$.post( wcsatt_cart_params.wc_ajax_url.toString().replace( '%%endpoint%%', data.action ), data, function( response ) {
-
-			if ( 'success' === response.result ) {
-
-				var $html        = $( $.parseHTML( response.html ) ),
-					$html_totals = $html.find( 'div.cart_totals' ),
-					$html_table  = $html.find( 'table.shop_table.cart' );
-
-				if ( cart_referrer ) {
-					$html_table.find( 'input[name="_wp_http_referer"]' ).val( cart_referrer );
-				}
-
-				$html_table.find( 'input[name="update_cart"]' ).prop( 'disabled', true );
-
-				$cart_totals.replaceWith( $html_totals );
-				$cart_table.replaceWith( $html_table );
-
-				$cart_wrapper.trigger( 'wcsatt_updated_cart' );
-				$body.trigger( 'updated_cart_totals' );
-
-			} else {
-
-				window.alert( wcsatt_cart_params.i18n_update_cart_sub_error );
-
-				if ( response.reset_to_scheme ) {
-					if ( $scheme_input.is( ':radio' ) ) {
-						$options.find( 'input[value="' + response.reset_to_scheme + '"]' ).prop( 'checked', true );
-					} else {
-						$scheme_input.val( response.reset_to_scheme );
-					}
-				}
-			}
-
-			$cart_wrapper.unblock();
-
-		} );
-	} );
+		$body     = $( document.body );
 
 	// Load matching subscription schemes when checking the "Add to subscription" box.
 	$document.on( 'change', '.wcsatt-add-cart-to-subscription-action-input', function() {
@@ -81,9 +16,7 @@ jQuery( function( $ ) {
 			$add_to_subscription         = $( this ),
 			$add_to_subscription_wrapper = $add_to_subscription.closest( '.wcsatt-add-cart-to-subscription-wrapper' ),
 			$add_to_subscription_options = $add_to_subscription_wrapper.find( '.wcsatt-add-cart-to-subscription-options' ),
-			$scheme_input                = $cart_totals.find( '.wcsatt-options-cart [name^=convert_to_sub]' ),
-			is_checked                   = $add_to_subscription.is( ':checked' ),
-			selected_scheme              = $scheme_input.val();
+			is_checked                   = $add_to_subscription.is( ':checked' );
 
 		if ( is_checked ) {
 
@@ -96,7 +29,6 @@ jQuery( function( $ ) {
 			} );
 
 			var data = {
-				subscription_scheme:         selected_scheme,
 				add_to_subscription_checked: $add_to_subscription.is( ':checked' ) ? 'yes' : 'no',
 				action:                      'wcsatt_load_subscriptions_matching_cart'
 			};
@@ -126,6 +58,59 @@ jQuery( function( $ ) {
 			$add_to_subscription_options.slideUp( 200 );
 		}
 
+	} );
+
+	// AJAX handler for the add-cart-to-subscription form in the checkout page.
+	$document.on( 'click', '.woocommerce-checkout .wcsatt-add-to-subscription-button', function( event ) {
+
+		// Prevent submitting the form, as this leads to a new order and subscription.
+		event.preventDefault();
+
+		var $add_to_subscription_button  = $( this ),
+			$add_to_subscription_wrapper = $add_to_subscription_button.closest( '.wcsatt-add-cart-to-subscription-options' ),
+			$checkout_form               = $( '.woocommerce-checkout form' );
+
+		$checkout_form.block( {
+			message: null,
+			overlayCSS: {
+				background: '#fff',
+				opacity: 0.6
+			}
+		} );
+
+		var data = {
+			'add-cart-to-subscription': parseInt( $add_to_subscription_button.val(), 10 ),
+			'add-to-subscription-checked': 'yes',
+			action:                      'wcsatt_add_cart_to_subscription_from_checkout',
+			wcsatt_nonce: $add_to_subscription_wrapper.find( '#wcsatt_nonce' ).val()
+		};
+
+		$.post( wcsatt_cart_params.wc_ajax_url.toString().replace( '%%endpoint%%', data.action ), data, function( response ) {
+
+			if ( 'success' === response.result ) {
+
+				if ( isValidUrl( response.url ) ) {
+					// For a successful request, redirect customer to the subscription page under "My Account".
+					location.href = response.url;
+				}
+
+			} else {
+				// For failed requests, refresh the checkout page for error notices to be displayed.
+				$body.trigger("update_checkout");
+			}
+
+			$checkout_form.unblock();
+
+		} );
+
+		var isValidUrl = function( string ) {
+			try {
+				new URL( string );
+				return true;
+			} catch ( err ) {
+				return false;
+			}
+		};
 	} );
 
 } );

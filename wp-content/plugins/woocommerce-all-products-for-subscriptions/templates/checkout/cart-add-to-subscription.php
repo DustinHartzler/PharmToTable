@@ -1,8 +1,8 @@
 <?php
 /**
- * Add-Cart-to-Subscription Template.
+ * Add-Cart-to-Subscription via the Chechout page Template.
  *
- * Override this template by copying it to 'yourtheme/woocommerce/cart/cart-add-to-subscription.php'.
+ * Override this template by copying it to 'yourtheme/woocommerce/checkout/cart-add-to-subscription.php'.
  *
  * On occasion, this template file may need to be updated and you (the theme developer) will need to copy the new files to your theme to maintain compatibility.
  * We try to do this as little as possible, but it does happen.
@@ -18,14 +18,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <div class="wcsatt-add-cart-to-subscription-wrapper <?php echo $is_checked ? 'open' : 'closed'; ?>" <?php echo $is_visible ? '' : 'style="display:none;"'; ?>>
-	<form class="wcsatt-add-cart-to-subscription-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
+	<div class="wcsatt-add-cart-to-subscription-form">
 		<h4 class="wcsatt-add-cart-to-subscription-intro"><?php _e( '&mdash; or &mdash;', 'woocommerce-all-products-for-subscriptions' ); ?></h4>
 		<p class="wcsatt-add-cart-to-subscription-action-wrapper">
 			<label class="wcsatt-add-cart-to-subscription-action-label">
 				<input class="wcsatt-add-cart-to-subscription-action-input" type="checkbox" name="add-to-subscription-checked" value="yes" <?php checked( $is_checked, true ); ?> />
 				<span class="wcsatt-add-cart-to-subscription-action">
 					<?php
-						esc_html_e( 'Add this cart to an existing subscription?', 'woocommerce-all-products-for-subscriptions' );
+						esc_html_e( 'Add your cart to an existing subscription?', 'woocommerce-all-products-for-subscriptions' );
 					?>
 				</span>
 			</label>
@@ -45,5 +45,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 				}
 			?>
 		</div>
-	</form>
+	</div>
 </div>

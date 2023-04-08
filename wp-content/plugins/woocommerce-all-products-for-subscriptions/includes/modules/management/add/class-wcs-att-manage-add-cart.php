@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Add stuff to existing subscriptions.
  *
  * @class    WCS_ATT_Manage_Add_Cart
- * @version  3.1.33
+ * @version  4.0.5
  */
 class WCS_ATT_Manage_Add_Cart extends WCS_ATT_Abstract_Module {
 
@@ -67,6 +67,9 @@ class WCS_ATT_Manage_Add_Cart extends WCS_ATT_Abstract_Module {
 
 		// Fetch subscriptions matching cart scheme via ajax.
 		add_action( 'wc_ajax_wcsatt_load_subscriptions_matching_cart', array( __CLASS__, 'load_matching_subscriptions' ) );
+
+		// Adds a cart to a subscription via the checkout page.
+		add_action( 'wc_ajax_wcsatt_add_cart_to_subscription_from_checkout', array( __CLASS__, 'add_cart_to_subscription_from_checkout' ) );
 	}
 
 	/**
@@ -116,14 +119,20 @@ class WCS_ATT_Manage_Add_Cart extends WCS_ATT_Abstract_Module {
 		}
 
 		$posted_data = WCS_ATT_Manage_Add::get_posted_data( 'update-cart' );
-		$context     = is_checkout() ? 'checkout-display' : 'cart-display';
 
-		wc_get_template( 'cart/cart-add-to-subscription.php', array(
-			'is_visible'       => self::is_feature_supported( $context ),
-			'is_checked'       => $posted_data[ 'add_to_subscription_checked' ],
-			'force_responsive' => apply_filters( 'wcsatt_add_cart_to_subscription_table_force_responsive', true ),
-			'context'          => $context
-		), false, WCS_ATT()->plugin_path() . '/templates/' );
+		if ( is_checkout() ) {
+			wc_get_template( 'checkout/cart-add-to-subscription.php', array(
+				'is_visible'       => self::is_feature_supported( 'checkout-display' ),
+				'is_checked'       => $posted_data[ 'add_to_subscription_checked' ],
+				'force_responsive' => apply_filters( 'wcsatt_add_cart_to_subscription_table_force_responsive', true ),
+			), false, WCS_ATT()->plugin_path() . '/templates/' );
+		} else {
+			wc_get_template( 'cart/cart-add-to-subscription.php', array(
+				'is_visible'       => self::is_feature_supported( 'cart-display' ),
+				'is_checked'       => $posted_data[ 'add_to_subscription_checked' ],
+				'force_responsive' => apply_filters( 'wcsatt_add_cart_to_subscription_table_force_responsive', true ),
+			), false, WCS_ATT()->plugin_path() . '/templates/' );
+		}
 	}
 
 	/**
@@ -216,6 +225,50 @@ class WCS_ATT_Manage_Add_Cart extends WCS_ATT_Abstract_Module {
 		wp_send_json( $result );
 	}
 
+	/**
+	 * Adds a cart to a subscription via the checkout page.
+	 *
+	 * @return void
+	 */
+	public static function add_cart_to_subscription_from_checkout() {
+
+		$failure = array(
+			'result' => 'failure'
+		);
+
+		// If the subscription ID is not posted by the AJAX request, exit early.
+		if ( ! isset( $_POST[ 'add-cart-to-subscription' ] ) ) {
+			wp_send_json( $failure );
+		}
+
+		// Store the subscription ID to use it to generate the subscription URL.
+		$subscription_id = absint( $_POST[ 'add-cart-to-subscription' ] );
+
+		// A successful addition of the cart to an existing subscription means that the
+		// 'wcsatt_add_cart_to_subscription' action has ran and the cart has been emptied.
+		//
+		// See: WCS_ATT_Manage_Add_Cart::form_handler() and WCS_ATT_Manage_Add::add_cart_to_subscription().
+		$added = did_action( 'wcsatt_add_cart_to_subscription' ) && 0 === WC()->cart->get_cart_contents_count();
+
+		if ( ! $added ) {
+
+			$result = $failure;
+
+		} else {
+
+			$subscription     = wcs_get_subscription( $subscription_id );
+			$subscription_url = $subscription->get_view_order_url();
+			$redirect_url     = apply_filters( 'wcsatt_add_cart_to_subscription_redirect_url', $subscription_url, $subscription );
+
+			$result = array(
+				'result' => 'success',
+				'url'    => $redirect_url
+			);
+		}
+
+		wp_send_json( $result );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Form Handlers
@@ -249,32 +302,34 @@ class WCS_ATT_Manage_Add_Cart extends WCS_ATT_Abstract_Module {
 			return;
 		}
 
+		// Extract the scheme details from the subscription and create a dummy scheme.
+		$subscription_scheme_obj = new WCS_ATT_Scheme( array(
+			'context' => 'product',
+			'data'    => array(
+				'subscription_period'          => $subscription->get_billing_period(),
+				'subscription_period_interval' => $subscription->get_billing_interval()
+			)
+		) );
+
+		$subscription_scheme_key = $subscription_scheme_obj->get_key();
 		$available_schemes       = WCS_ATT_Manage_Add::get_schemes_matching_cart();
-		$subscription_scheme_key = $posted_data[ 'subscription_scheme' ];
-		$subscription_scheme_obj = isset( $available_schemes[ $subscription_scheme_key ] ) ? $available_schemes[ $subscription_scheme_key ] : false;
 
-		if ( empty( $subscription_scheme_obj ) ) {
+		foreach ( WC()->cart->cart_contents as $cart_item_key => $cart_item ) {
 
-			// Extract the scheme details from the subscription and create a dummy scheme.
-			$subscription_scheme_obj = new WCS_ATT_Scheme( array(
-				'context' => 'product',
-				'data'    => array(
-					'subscription_period'          => $subscription->get_billing_period(),
-					'subscription_period_interval' => $subscription->get_billing_interval()
-				)
-			) );
+			// If we are adding a product with subscription plans to an existing subscription, use existing scheme to benefit from the discount!
+			if ( ! is_null( $available_schemes ) && isset ( $available_schemes[ $subscription_scheme_key ] ) ) {
+				$subscription_scheme = array( $subscription_scheme_key => $available_schemes[ $subscription_scheme_key ] );
 
-			$subscription_scheme_key = $subscription_scheme_obj->get_key();
-
-			// Apply the dummy scheme to all cart items.
-			foreach ( WC()->cart->cart_contents as $cart_item_key => $cart_item ) {
-
-				WCS_ATT_Product_Schemes::set_subscription_schemes( WC()->cart->cart_contents[ $cart_item_key ][ 'data' ], array( $subscription_scheme_key => $subscription_scheme_obj ) );
-				WCS_ATT_Product_Schemes::set_subscription_scheme( WC()->cart->cart_contents[ $cart_item_key ][ 'data' ], $subscription_scheme_key );
+			// Otherwise, if we are adding a one-time product to a subscription, apply dummy subscription scheme.
+			} else {
+				$subscription_scheme = array( $subscription_scheme_key => $subscription_scheme_obj );
 			}
+
+			WCS_ATT_Product_Schemes::set_subscription_schemes( WC()->cart->cart_contents[ $cart_item_key ][ 'data' ], $subscription_scheme );
+			WCS_ATT_Product_Schemes::set_subscription_scheme( WC()->cart->cart_contents[ $cart_item_key ][ 'data' ], $subscription_scheme_key );
 		}
 
-		if ( ! $subscription_scheme_obj || ! WC_Subscriptions_Cart::cart_contains_subscription() || ! $subscription_scheme_obj->matches_subscription( $subscription ) ) {
+		if ( ! is_null( $available_schemes ) && ( ! isset( $available_schemes[ $subscription_scheme_key ] ) || ! WC_Subscriptions_Cart::cart_contains_subscription() || ! $subscription_scheme_obj->matches_subscription( $subscription ) ) ) {
 			wc_add_notice( sprintf( __( 'Your cart cannot be added to subscription #%d. Please get in touch with us for assistance.', 'woocommerce-all-products-for-subscriptions' ), $subscription_id ), 'error' );
 			return;
 		}
