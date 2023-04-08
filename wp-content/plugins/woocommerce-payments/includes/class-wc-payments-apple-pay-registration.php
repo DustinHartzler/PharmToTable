@@ -246,19 +246,22 @@ class WC_Payments_Apple_Pay_Registration {
 	 * @return string A string representation of the current mode.
 	 */
 	private function get_gateway_mode_string() {
-		if ( $this->gateway->is_in_dev_mode() ) {
+		if ( WC_Payments::mode()->is_dev() ) {
 			return 'dev';
-		} elseif ( $this->gateway->is_in_test_mode() ) {
+		} elseif ( WC_Payments::mode()->is_test() ) {
 			return 'test';
 		}
 		return 'live';
 	}
+
+
 
 	/**
 	 * Processes the Apple Pay domain verification.
 	 */
 	public function register_domain_with_apple() {
 		$error = null;
+
 		try {
 			$registration_response = $this->payments_api_client->register_domain_with_apple( $this->domain_name );
 
@@ -282,7 +285,6 @@ class WC_Payments_Apple_Pay_Registration {
 		} catch ( API_Exception $e ) {
 			$error = $e->getMessage();
 		}
-
 		// Display error message in notice.
 		$this->apple_pay_verify_notice = $error;
 
@@ -403,7 +405,7 @@ class WC_Payments_Apple_Pay_Registration {
 		$learn_more_text = WC_Payments_Utils::esc_interpolated_html(
 			__( '<a>Learn more</a>.', 'woocommerce-payments' ),
 			[
-				'a' => '<a href="https://woocommerce.com/document/payments/apple-pay/#triggering-domain-registration" target="_blank">',
+				'a' => '<a href="https://woocommerce.com/document/woocommerce-payments/payment-methods/apple-pay/#domain-registration" target="_blank">',
 			]
 		);
 

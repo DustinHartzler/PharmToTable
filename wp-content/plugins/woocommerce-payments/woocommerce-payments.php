@@ -8,11 +8,11 @@
  * Woo: 5278104:bf3cf30871604e15eec560c962593c1f
  * Text Domain: woocommerce-payments
  * Domain Path: /languages
- * WC requires at least: 6.0
- * WC tested up to: 6.7.0
- * Requires at least: 5.8
+ * WC requires at least: 7.3
+ * WC tested up to: 7.5.1
+ * Requires at least: 5.9
  * Requires PHP: 7.0
- * Version: 4.5.1
+ * Version: 5.7.0
  *
  * @package WooCommerce\Payments
  */
@@ -26,6 +26,7 @@ define( 'WCPAY_SUBSCRIPTIONS_ABSPATH', __DIR__ . '/vendor/woocommerce/subscripti
 
 require_once __DIR__ . '/vendor/autoload_packages.php';
 require_once __DIR__ . '/includes/class-wc-payments-features.php';
+require_once __DIR__ . '/includes/platform-checkout-user/class-platform-checkout-extension.php';
 
 /**
  * Plugin activation hook.
@@ -58,7 +59,7 @@ register_activation_hook( __FILE__, 'wcpay_activated' );
 register_deactivation_hook( __FILE__, 'wcpay_deactivated' );
 
 // The JetPack autoloader might not catch up yet when activating the plugin. If so, we'll stop here to avoid JetPack connection failures.
-$is_autoloading_ready = class_exists( Automattic\Jetpack\Connection\Rest_Authentication::class ) && class_exists( MyCLabs\Enum\Enum::class );
+$is_autoloading_ready = class_exists( Automattic\Jetpack\Connection\Rest_Authentication::class );
 if ( ! $is_autoloading_ready ) {
 	return;
 }
@@ -160,14 +161,24 @@ if ( ! function_exists( 'wcpay_init_subscriptions_core' ) ) {
 		$is_plugin_active = function( $plugin_name ) {
 			$plugin_slug = "$plugin_name/$plugin_name.php";
 
+			// Check if specified $plugin_name is in the process of being activated via the Admin > Plugins screen.
 			if ( isset( $_GET['action'], $_GET['plugin'] ) && 'activate' === $_GET['action'] && $plugin_slug === $_GET['plugin'] ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return true;
 			}
 
-			if ( defined( 'WP_CLI' ) && WP_CLI && isset( $GLOBALS['argv'] ) && 4 >= count( $GLOBALS['argv'] ) && 'plugin' === $GLOBALS['argv'][1] && 'activate' === $GLOBALS['argv'][2] && $plugin_name === $GLOBALS['argv'][3] ) {
-				return true;
+			// Check if specified $plugin_name is in the process of being activated via the WP CLI.
+			if ( defined( 'WP_CLI' ) && WP_CLI && isset( $GLOBALS['argv'] ) ) {
+				$expected_arguments = [
+					'plugin',
+					'activate',
+					$plugin_name,
+				];
+				if ( array_intersect( $expected_arguments, $GLOBALS['argv'] ) === $expected_arguments ) {
+					return true;
+				}
 			}
 
+			// Check if specified $plugin_name is active on a multisite installation via site wide plugins.
 			if ( is_multisite() ) {
 				$plugins = get_site_option( 'active_sitewide_plugins' );
 				if ( isset( $plugins[ $plugin_slug ] ) ) {
@@ -175,6 +186,7 @@ if ( ! function_exists( 'wcpay_init_subscriptions_core' ) ) {
 				}
 			}
 
+			// Finally check if specified $plugin_name is active.
 			if ( class_exists( 'Automattic\WooCommerce\Admin\PluginsHelper' ) ) {
 				return Automattic\WooCommerce\Admin\PluginsHelper::is_plugin_active( $plugin_slug );
 			} else {
@@ -303,3 +315,26 @@ function wcpay_tasks_init() {
 }
 
 add_action( 'plugins_loaded', 'wcpay_tasks_init' );
+
+/**
+ * Register blocks extension for platform checkout.
+ */
+function register_platform_checkout_extension() {
+	( new Platform_Checkout_Extension() )->register_extend_rest_api_update_callback();
+}
+
+add_action( 'woocommerce_blocks_loaded', 'register_platform_checkout_extension' );
+
+/**
+ * As the class is defined in later versions of WC, Psalm infers error.
+ *
+ * @psalm-suppress UndefinedClass
+ */
+add_action(
+	'before_woocommerce_init',
+	function() {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'woocommerce-payments/woocommerce-payments.php', true );
+		}
+	}
+);

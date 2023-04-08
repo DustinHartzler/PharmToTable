@@ -197,14 +197,16 @@ class MultiCurrency {
 	 * @param WC_Payments_Account              $payments_account     Payments Account instance.
 	 * @param WC_Payments_Localization_Service $localization_service Localization Service instance.
 	 * @param Database_Cache                   $database_cache       Database Cache instance.
+	 * @param Utils                            $utils                Optional Utils instance.
 	 */
-	public function __construct( WC_Payments_API_Client $payments_api_client, WC_Payments_Account $payments_account, WC_Payments_Localization_Service $localization_service, Database_Cache $database_cache ) {
-		$this->payments_api_client     = $payments_api_client;
-		$this->payments_account        = $payments_account;
-		$this->localization_service    = $localization_service;
-		$this->database_cache          = $database_cache;
+	public function __construct( WC_Payments_API_Client $payments_api_client, WC_Payments_Account $payments_account, WC_Payments_Localization_Service $localization_service, Database_Cache $database_cache, Utils $utils = null ) {
+		$this->payments_api_client  = $payments_api_client;
+		$this->payments_account     = $payments_account;
+		$this->localization_service = $localization_service;
+		$this->database_cache       = $database_cache;
+		// If a Utils instance is not passed as argument, initialize it. This allows to mock it in tests.
+		$this->utils                   = $utils ?? new Utils();
 		$this->geolocation             = new Geolocation( $this->localization_service );
-		$this->utils                   = new Utils();
 		$this->compatibility           = new Compatibility( $this, $this->utils );
 		$this->currency_switcher_block = new CurrencySwitcherBlock( $this, $this->compatibility );
 
@@ -367,7 +369,7 @@ class MultiCurrency {
 			Database_Cache::CURRENCIES_KEY,
 			function() {
 				try {
-					$currency_data = $this->payments_api_client->get_currency_rates( get_woocommerce_currency() );
+					$currency_data = $this->payments_api_client->get_currency_rates( strtolower( get_woocommerce_currency() ) );
 					return [
 						'currencies' => $currency_data,
 						'updated'    => time(),
@@ -620,10 +622,11 @@ class MultiCurrency {
 	 * Update the selected currency from a currency code.
 	 *
 	 * @param string $currency_code Three letter currency code.
+	 * @param bool   $persist_change Set true to store the change in the session cookie if it doesn't exist yet.
 	 *
 	 * @return void
 	 */
-	public function update_selected_currency( string $currency_code ) {
+	public function update_selected_currency( string $currency_code, bool $persist_change = true ) {
 		$code     = strtoupper( $currency_code );
 		$user_id  = get_current_user_id();
 		$currency = $this->get_enabled_currencies()[ $code ] ?? null;
@@ -638,8 +641,8 @@ class MultiCurrency {
 		if ( 0 === $user_id && WC()->session ) {
 			WC()->session->set( self::CURRENCY_SESSION_KEY, $currency->get_code() );
 			// Set the session cookie if is not yet to persist the selected currency.
-			if ( ! WC()->session->has_session() && ! headers_sent() ) {
-				WC()->session->set_customer_session_cookie( true );
+			if ( ! WC()->session->has_session() && ! headers_sent() && $persist_change ) {
+				$this->utils->set_customer_session_cookie( true );
 			}
 		} elseif ( $user_id ) {
 			update_user_meta( $user_id, self::CURRENCY_META_KEY, $currency->get_code() );
@@ -693,7 +696,7 @@ class MultiCurrency {
 			return;
 		}
 
-		$this->update_selected_currency( $currency );
+		$this->update_selected_currency( $currency, false );
 	}
 
 	/**
@@ -1130,16 +1133,7 @@ class MultiCurrency {
 	 * @return void
 	 */
 	private function register_admin_scripts() {
-		$script_src_url    = plugins_url( 'dist/multi-currency.js', WCPAY_PLUGIN_FILE );
-		$script_asset_path = WCPAY_ABSPATH . 'dist/multi-currency.asset.php';
-		$script_asset      = file_exists( $script_asset_path ) ? require_once $script_asset_path : [ 'dependencies' => [] ];
-		wp_register_script(
-			'WCPAY_MULTI_CURRENCY_SETTINGS',
-			$script_src_url,
-			$script_asset['dependencies'],
-			\WC_Payments::get_file_version( 'dist/multi-currency.js' ),
-			true
-		);
+		WC_Payments::register_script_with_dependencies( 'WCPAY_MULTI_CURRENCY_SETTINGS', 'dist/multi-currency' );
 
 		wp_register_style(
 			'WCPAY_MULTI_CURRENCY_SETTINGS',
@@ -1351,14 +1345,12 @@ class MultiCurrency {
 			Database_Cache::CUSTOMER_CURRENCIES_KEY,
 			function() {
 				global $wpdb;
-
-				$currencies = $wpdb->get_col(
-					"SELECT
-						DISTINCT(meta_value)
-					FROM
-						{$wpdb->postmeta}
-					WHERE meta_key = '_order_currency'"
-				);
+				if ( class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) &&
+						\Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+					$currencies = $wpdb->get_col( "SELECT DISTINCT(currency) FROM {$wpdb->prefix}wc_orders" );
+				} else {
+					$currencies = $wpdb->get_col( "SELECT DISTINCT(meta_value) FROM {$wpdb->postmeta} WHERE meta_key = '_order_currency'" );
+				}
 
 				return [
 					'currencies' => $currencies,

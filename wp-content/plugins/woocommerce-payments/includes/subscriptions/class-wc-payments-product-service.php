@@ -110,7 +110,7 @@ class WC_Payments_Product_Service {
 	public function get_wcpay_product_id( WC_Product $product, $test_mode = null ) : string {
 		// If the subscription product doesn't have a WC Pay product ID, create one.
 		if ( ! self::has_wcpay_product_id( $product, $test_mode ) ) {
-			$is_current_environment = null === $test_mode || WC_Payments::get_gateway()->is_in_test_mode() === $test_mode;
+			$is_current_environment = null === $test_mode || WC_Payments::mode()->is_test() === $test_mode;
 
 			// Only create a new wcpay product if we're trying to fetch a wcpay product ID in the current environment.
 			if ( $is_current_environment ) {
@@ -125,14 +125,25 @@ class WC_Payments_Product_Service {
 	 * Gets the WC Pay product ID associated with a WC product.
 	 *
 	 * @param string $type The item type to create a product for.
-	 * return string       The item's WCPay product id.
+	 * @return string       The item's WCPay product id.
 	 */
 	public function get_wcpay_product_id_for_item( string $type ) : string {
-		if ( ! get_option( self::get_wcpay_product_id_option() . '_' . $type ) ) {
-			$this->create_product_for_item_type( $type );
+		$sanitized_type  = self::sanitize_option_key( $type );
+		$option_key_name = self::get_wcpay_product_id_option() . '_' . $sanitized_type;
+		if ( ! get_option( $option_key_name ) ) {
+			$this->create_product_for_item_type( $sanitized_type );
 		}
+		return get_option( $option_key_name );
+	}
 
-		return get_option( self::get_wcpay_product_id_option() . '_' . $type );
+	/**
+	 * Sanitize option key string to replace space with underscore, and remove special characters.
+	 *
+	 * @param string $type Non sanitized input.
+	 * @return string       Sanitized output.
+	 */
+	public static function sanitize_option_key( string $type ) {
+		return sanitize_key( str_replace( ' ', '_', trim( $type ) ) );
 	}
 
 	/**
@@ -272,7 +283,7 @@ class WC_Payments_Product_Service {
 		}
 
 		$wcpay_product_ids = $this->get_all_wcpay_product_ids( $product );
-		$test_mode         = WC_Payments::get_gateway()->is_in_test_mode();
+		$test_mode         = WC_Payments::mode()->is_test();
 
 		// If the current environment doesn't have a product ID, make sure we create one.
 		if ( ! isset( $wcpay_product_ids[ $test_mode ? 'test' : 'live' ] ) ) {
@@ -604,7 +615,7 @@ class WC_Payments_Product_Service {
 	 * @return string The WCPay product ID meta key/option name.
 	 */
 	public static function get_wcpay_product_id_option( $test_mode = null ) : string {
-		$test_mode = null === $test_mode ? WC_Payments::get_gateway()->is_in_test_mode() : $test_mode;
+		$test_mode = null === $test_mode ? WC_Payments::mode()->is_test() : $test_mode;
 		return $test_mode ? self::TEST_PRODUCT_ID_KEY : self::LIVE_PRODUCT_ID_KEY;
 	}
 
@@ -616,7 +627,7 @@ class WC_Payments_Product_Service {
 	 * @return string The price hash option name.
 	 */
 	public static function get_wcpay_price_id_option( $test_mode = null ) : string {
-		$test_mode = null === $test_mode ? WC_Payments::get_gateway()->is_in_test_mode() : $test_mode;
+		$test_mode = null === $test_mode ? WC_Payments::mode()->is_test() : $test_mode;
 		return $test_mode ? self::TEST_PRICE_ID_KEY : self::LIVE_PRICE_ID_KEY;
 	}
 
@@ -758,7 +769,7 @@ class WC_Payments_Product_Service {
 
 		// If the subscription product doesn't have a WC Pay price ID, create one now.
 		if ( empty( $price_id ) && WC_Subscriptions_Product::is_subscription( $product ) ) {
-			$is_current_environment = null === $test_mode || WC_Payments::get_gateway()->is_in_test_mode() === $test_mode;
+			$is_current_environment = null === $test_mode || WC_Payments::mode()->is_test() === $test_mode;
 
 			// Only create WCPay Price object if we're trying to getch a wcpay price ID in the current environment.
 			if ( $is_current_environment ) {
