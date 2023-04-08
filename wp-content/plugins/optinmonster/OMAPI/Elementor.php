@@ -48,6 +48,15 @@ class OMAPI_Elementor {
 	public $base;
 
 	/**
+	 * The minimum Elementor version required.
+	 *
+	 * @since 2.11.2
+	 *
+	 * @var string
+	 */
+	const MINIMUM_VERSION = '3.1.0';
+
+	/**
 	 * Primary class constructor.
 	 *
 	 * @since 1.7.0
@@ -59,6 +68,11 @@ class OMAPI_Elementor {
 
 		// Skip if Elementor is not available.
 		if ( ! class_exists( '\Elementor\Plugin' ) ) {
+			return;
+		}
+
+		// Check if Elementor is the minimum version.
+		if ( ! self::is_minimum_version() ) {
 			return;
 		}
 
@@ -132,6 +146,47 @@ class OMAPI_Elementor {
 			$this->base->asset_version(),
 			$ui_theme_media_queries
 		);
+	}
+
+	/**
+	 * Return the Elementor versions string.
+	 *
+	 * @since 2.11.2
+	 *
+	 * @return string
+	 */
+	public static function version() {
+		return defined( 'ELEMENTOR_VERSION' ) ? ELEMENTOR_VERSION : '0.0.0';
+	}
+
+	/**
+	 * Determines if the passed version string passes the operator compare
+	 * against the currently installed version of Elementor.
+	 *
+	 * Defaults to checking if the current Elementor version is greater than
+	 * the passed version.
+	 *
+	 * @since 2.11.2
+	 *
+	 * @param string $version  The version to check.
+	 * @param string $operator The operator to use for comparison.
+	 *
+	 * @return string
+	 */
+	public static function version_compare( $version = '', $operator = '>=' ) {
+		return version_compare( self::version(), $version, $operator );
+	}
+
+	/**
+	 * Determines if the current Elementor version meets the minimum version
+	 * requirement.
+	 *
+	 * @since 2.11.2
+	 *
+	 * @return boolean
+	 */
+	public static function is_minimum_version() {
+		return self::version_compare( self::MINIMUM_VERSION );
 	}
 
 	/**

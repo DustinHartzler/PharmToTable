@@ -27,8 +27,8 @@ class OMAPI_Elementor_ButtonWidget extends Widget_Button {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function _register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-		parent::_register_controls();
+	protected function register_controls() {
+		parent::register_controls();
 
 		$campaigns = OMAPI::get_instance()->blocks->get_campaign_options( true );
 		$campaigns = ! empty( $campaigns['other'] )

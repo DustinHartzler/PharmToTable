@@ -18,28 +18,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.9.0
  */
-class OMAPI_WPForms {
+class OMAPI_WPForms extends OMAPI_Integrations_Base {
 
 	/**
-	 * Holds the class object.
+	 * The OMAPI_WPForms_RestApi instance.
 	 *
-	 * @since 2.9.0
+	 * @since 2.13.0
 	 *
-	 * @var object
+	 * @var null|OMAPI_WPForms_RestApi
 	 */
-	public static $instance;
+	public $rest = null;
 
 	/**
-	 * Holds the forms object.
+	 * Primary class constructor.
 	 *
 	 * @since 2.9.0
-	 *
-	 * @var object
 	 */
-	public $forms;
-
 	public function __construct() {
+		parent::__construct();
 		$this->save = new OMAPI_WPForms_Save();
+
+		add_action( 'optin_monster_api_rest_register_routes', array( $this, 'maybe_init_rest_routes' ) );
 
 		// When WPForms is activated, connect it.
 		add_action( 'activate_wpforms-lite/wpforms.php', array( $this->save, 'connect' ) );
@@ -48,21 +47,6 @@ class OMAPI_WPForms {
 		// When WPForms is deactivated, disconnect.
 		add_action( 'deactivate_wpforms-lite/wpforms.php', array( $this->save, 'disconnect' ) );
 		add_action( 'deactivate_wpforms/wpforms.php', array( $this->save, 'disconnect' ) );
-	}
-
-	/**
-	 * Returns the singleton instance of the class.
-	 *
-	 * @since 2.9.0
-	 *
-	 * @return OMAPI_WPForms
-	 */
-	public static function get_instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof OMAPI_WPForms ) ) {
-			self::$instance = new OMAPI_WPForms();
-		}
-
-		return self::$instance;
 	}
 
 	/**
@@ -121,16 +105,29 @@ class OMAPI_WPForms {
 	 *
 	 * @since 2.9.0
 	 *
-	 * @return int The WPForms version.
+	 * @return string The WPForms version.
 	 */
-	public function get_version() {
+	public static function version() {
 		if ( ! function_exists( 'wpforms' ) ) {
-			return 0;
+			return '0.0.0';
 		}
 
 		$version = wpforms()->version;
 
-		return $version ? $version : 0;
+		return $version ?: '0.0.0';
+	}
+
+	/**
+	 * Initiate our REST routes for EDD if EDD active.
+	 *
+	 * @since 2.13.0
+	 *
+	 * @return void
+	 */
+	public function maybe_init_rest_routes() {
+		if ( self::is_active() ) {
+			$this->rest = new OMAPI_WPForms_RestApi( $this );
+		}
 	}
 
 }

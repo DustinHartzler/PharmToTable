@@ -177,15 +177,20 @@ abstract class OMAPI_BaseRestApi {
 			return $e->getWpError();
 		}
 
+		$code = $e->getCode();
+		if ( empty( $code ) || $code < 400 ) {
+			$code = 400;
+		}
+
 		$data = ! empty( $e->data ) ? $e->data : array();
 		$data = wp_parse_args(
 			$data,
 			array(
-				'status' => $e->getCode(),
+				'status' => $code,
 			)
 		);
 
-		$error_code = rest_authorization_required_code() === $e->getCode()
+		$error_code = rest_authorization_required_code() === $code
 			? 'omapp_rest_forbidden'
 			: 'omapp_rest_error';
 

@@ -2,20 +2,22 @@
 Contributors: optinmonster, griffinjt, smub
 Tags: popup, popups, optin, conversion, marketing, newsletter, popup builder, popup maker, email marketing, exit popup, ecommerce, woocommerce, lightbox
 Requires at least: 4.7.0
-Tested up to: 6.0
+Tested up to: 6.2
 Requires PHP: 5.3
-Stable tag: 2.9.0
+Stable tag: 2.13.1
 License: GNU General Public License v2.0 or later
 
 🤩 Make popups & optin forms to get more email newsletter subscribers, leads, and sales - #1 most popular popup builder plugin! 🚀
 
 == Description ==
 
-= The Best WordPress Popup Builder and Email Newsletter Popup Plugin =
+=== The Best WordPress Popup Builder and Email Newsletter Popup Plugin ===
 
 <a href="https://optinmonster.com/wp/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend" title="OptinMonster - WordPress Popup Builder and Email Newsletter Popup Plugin">OptinMonster</a> is the best popup builder and marketing plugin that helps you get more email subscribers, increase sales, and grow your business.
 
 With the OptinMonster popup builder and conversion toolkit, you can turn abandoning website visitors into subscribers and customers.
+
+https://www.youtube.com/watch?v=qVrgFndEQIY&rel=0
 
 OptinMonster's easy to use popup maker allows you to create beautiful popup campaigns, email subscription forms, sticky announcement bars like hello bar, gamified spin-a-wheel opt-n forms, and other types of interactive popups for your site in minutes, not hours!
 
@@ -27,15 +29,17 @@ And we understand the importance of speed when it comes SEO, marketing, and conv
 
 On top of offering the absolute best WordPress popup plugin, our Customer Success team is here to ensure you WIN, and win MORE OFTEN.
 
+> **The best optin plugin!**
+> "Truly amazing. The number of options is great and allows to make campaigns that have the right balance between efficiency and not being too annoying. OptinMonster is constantly evolving and adding useful features, really well integrated with a lot of tools (especially a lot of autoresponders and Google Analytics to measure conversions), and customer support is great. What more to ask ?" ~[@giantjack](https://wordpress.org/support/topic/the-best-optin-plugin/)
 
-> <strong>OptinMonster App</strong><br />
-> OptinMonster is a SaaS service. You will need to create an OptinMonster account to use our popup builder and to gain newsletter subscribers using OptinMonster. We recommend <a href="https://optinmonster.com/wp/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend" title="OptinMonster">getting started with OptinMonster Pro!</a>
+<strong>OptinMonster App</strong><br />
+OptinMonster is a SaaS service and requires an OptinMonster account. When you install this plugin, you'll have the opportunity to register for a free account that includes 3 campaigns and up to 500 campaign impressions. Those 500 pageview credits will NEVER expire, and you’ll only be upgraded if you use all of those credits during the lifetime of your account. It's perfect for getting started and learning your way around! Or, if you already have an OptinMonster subscription, you can simply connect this plugin to it.
+
+When you're ready to truly explode your email list growth, we recommend <a href="https://optinmonster.com/wp/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend" title="OptinMonster">getting started with OptinMonster Pro</a> to access more advanced solutions like Exit-Intent, Campaign Scheduling, Countdown Timers and more.
 
 We took the pain out of creating highly personalized marketing campaigns with our easy to use popup maker. Here's why smart business owners, designers, and developers love OptinMonster marketing toolkit, and you will too!
 
-https://www.youtube.com/watch?v=qVrgFndEQIY&rel=0
-
-= Easy Popup Builder From OptinMonster Increase Conversions =
+=== Easy Popup Builder From OptinMonster Increase Conversions ===
 
 * <a href="https://optinmonster.com/features/lightbox-popups/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Lightbox Popups</a> - Easily create custom popups to grow your email list, show coupons, make a WooCommerce cross-sell or WooCommerce upsell campaign, and more using our popup maker.
 * <a href="https://optinmonster.com/features/floating-bar/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Floating Bar Popups</a> - Create sticky header bars (also known as hello bar or floating footer bar) to show free shipping notices, website announcement alert, sale countdown timer, and more using our popup builder.
@@ -50,7 +54,7 @@ https://www.youtube.com/watch?v=qVrgFndEQIY&rel=0
 * <a href="https://optinmonster.com/features/mobile-friendly-popups/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Mobile Popups</a> - Unlike the other WordPress popup maker plugins, OptinMonster also lets you create mobile-specific popups that are only shown to users on smart phones and tablets. Great for mobile app downloads or making specific offers to your mobile visitors.
 * <a href="https://optinmonster.com/features/canvas/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Canvas Custom Popup</a> - Our blank Canvas popup template allows you to create completely custom campaigns using our drag & drop popup builder for any use case.
 
-= Our Drag and Drop Popup Maker Makes It Easy =
+=== Our Drag and Drop Popup Maker Makes It Easy ===
 
 We were tired of the bloated and slow popup builder plugins. That's why we built OptinMonster to adapt to your marketing workflow and allow you to create custom popups, newsletter opt-in forms, slide-ins, announcement bars, and other high converting lead generation forms within minutes.
 
@@ -61,14 +65,14 @@ But don't just take our word. See what Joost De Valk from Yoast SEO is saying:
 > I was once a disbeliever myself. I didn't like popups at all. But we doubled our email signups, so the results speak for themselves, it just works. OptinMonster makes it super easy and is well worth the money.<br>
 > Joost de Valk, Founder of Yoast SEO (<a href="https://optinmonster.com/case-study-how-yoast-doubled-his-email-signups-and-added-10000-email-subscribers-in-a-month/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">See Case Study</a>)
 
-= Pre-built Popup Templates using our Popup Builder =
+=== Pre-built Popup Templates using our Popup Builder ===
 
 OptinMonster comes with hundreds of popup templates to help you save time. See our <a href="https://optinmonster.com/exit-intent-popup-examples/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">exit popup template gallery</a>.
 
 > I have never before seen such effectiveness and efficiency in an optin tool than I have with OptinMonster. In under 2 hours of work, I doubled my daily optin rates thanks to OptinMonster’s incredible options.<br>
 > Dave Chesson, Owner of Kindlepreneur (<a href="https://optinmonster.com/how-kindlepreneur-increased-customer-retention-using-content-upgrades/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">See Case Study</a>)
 
-= Exit Intent Popups and OnSite Retargeting =
+=== Exit Intent Popups and OnSite Retargeting ===
 
 Did you know that over 70% of visitors abandoning your website will never return?
 
@@ -85,7 +89,7 @@ These advanced popup triggers are highly effective in growing your email list, r
 > In only 7 months, we added more than 95,000 names to our email list using OptinMonster's Exit Intent™ technology. We strongly recommend it!<br>
 > Michael Stelzner, Founder of Social Media Examiner (<a href="https://optinmonster.com/how-social-media-examiner-250000-subscribers-using-optinmonster-split-testing/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">See Case Study</a>)
 
-= Smart Page Targeting and Behavior Based Personalization =
+=== Smart Page Targeting and Behavior Based Personalization ===
 
 All OptinMonster popups comes with advanced page targeting and behavior based personalization.
 
@@ -99,7 +103,7 @@ These personalization features of OptinMonster popups make them highly effective
 > Cole Joseph, Owner of Cole's Classroom (<a href="https://optinmonster.com/coles-classroom-added-55494-sales?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">See Case Study</a>)
 
 
-= Popup A/B Testing, Email Marketing Integrations, and Popup Analytics =
+=== Popup A/B Testing, Email Marketing Integrations, and Popup Analytics ===
 
 Unlike other WordPress lead generation plugins, OptinMonster comes with reliable A/B split testing and accurate analytics without slowing down your site.
 
@@ -160,7 +164,7 @@ Other Powerful Popup Features:
 > Within 1 month of setting up OptinMonster, our conversion rate of visitors to email subscribers shot up from 2.1% to 6.5% - I just wish we had signed up sooner!<br>
 > Ben Philbaum, Founder Biddyco (<a href="https://optinmonster.com/case-study-how-biddyco-tripled-their-conversions-with-optinmonster/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">See Case Study</a>)
 
-= Email Marketing and CRM Integrations =
+=== Email Marketing and CRM Integrations ===
 
 * <a href="https://optinmonster.com/integrations/constant-contact/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Constant Contact</a> - Create Constant Contact popups and newsletter sign up forms.
 * <a href="https://optinmonster.com/integrations/mailchimp/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Mailchimp</a> - Easily create Mailchimp popup and email opt-in forms.
@@ -188,7 +192,6 @@ Other Powerful Popup Features:
 * <a href="https://optinmonster.com/integrations/sendpulse/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">SendPulse</a> - Create subscription forms and popups for SendPulse to boost your marketing conversions.
 * <a href="https://optinmonster.com/integrations/sharp-spring/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">SharpSpring</a> - Improve your marketing automation with powerful popups for SharpSpring.
 * <a href="https://optinmonster.com/integrations/totalsend/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">TotalSend</a> - Reduce bounce rate and generate more leads with TotalSend popups for WordPress.
-* <a href="https://optinmonster.com/docs/how-to-connect-optinmonster-with-bronto/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Bronto (Oracle)</a> - Create email popups for Bronto (Oracle) to improve lead generation and conversions.
 * <a href="https://optinmonster.com/integrations/ipost/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">iPost</a> - Grow your email list faster with iPost popups and newlsetter forms.
 * <a href="https://optinmonster.com/integrations/customer-io/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Customer.io</a> - Easily create smart popups and opt-in forms for customer.io.
 * EmailOctopus Subsription Popup - Add EmailOctopus popup subscription forms to WordPress.
@@ -198,7 +201,7 @@ Other Powerful Popup Features:
 * <a href="https://optinmonster.com/integrations/webhooks/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Webhooks</a> - connect your popup with any custom CRM, email marketing service, or third-party application.
 * <a href="https://optinmonster.com/docs/connect-optinmonster-with-zapier/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">Zapier</a> - connect your WordPress popups with over 2000+ marketing apps. Route your popup form data to your favorite CRM, email marketing, etc.
 
-= Additional Marketing Integrations =
+=== Additional Marketing Integrations ===
 
 * <a href="https://optinmonster.com/integrations/woocommerce/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">WooCommerce Popups</a> - Add upsell and cross-sell popups, free shipping bars, announcement bars, coupon wheels, and more.
 * <a href="https://optinmonster.com/integrations/bigcommerce/?utm_source=orgplugin&utm_medium=link&utm_campaign=wpreadme" rel="friend">BigCommerce Popups</a> - Coupon popups, gamified coupon wheels, exit popups, and more to reduce cart abandonment and increase conversions.
@@ -412,7 +415,7 @@ Using the HTML field, you can add tons of custom elements through iFrame embeds 
 
 ... and a whole lot more. If another WordPress plugin or third-party apps provide a shortcode or iFrame, then you can embed that inside OptinMonster campaigns.
 
-= Do popups really work? Show me the results =
+= Do popups really work? Show me the results. =
 
 Here are just a few success stories from OptinMonster customers:
 
@@ -458,34 +461,63 @@ Syed Balkhi
 
 **Most Recent Changes:**
 
-= Popup Builder 2.9.0 =
-* Introduce integration support with WPForms! Now WPForms forms will be able to be embedded within campaigns, and conversions/success tracked.
-* Minification to our frontend JS helper file.
+= Popup Builder 2.13.1 =
+* Added announcements/product education widgets to the Dashboard page.
+* Fixed an issue where initiating a campaign search failed to reset pagination.
+* Fixed the incorrect number of campaigns listed in "Lite vs Pro" comparison table.
+* Updated the support link to point to WordPress.org support for free users.
+* Maintenance updates for an npm package, Babel configuration.
 
-= Popup Builder 2.8.1 =
-* Fix issue with Ecommerce Output rules being applied even when the Ecommerce was not connected anymore.
-* Fix issue with `optin-monster-inline` shortcode not working in many cases.
-* Fix issue in built JS files which caused them to be falsely-flagged in virus software.
-* Updated build script to keep file-names consistent when possible.
+= Popup Builder 2.13.0 =
+* Introduce integration support with MemberPress!
+* Improve compatability with LearnPress LMS plugin
+* Fixed issue where errors could appear on the campaign output settings page preventing output settings from being edited.
+* Fixed an issue where campaign output settings could disappear making if difficult to edit the output settings.
+* Various npm package updates used for generating our JavaScript code.
 
-= Popup Builder 2.8.0 =
-* Introduce integration support with Easy Digital Downloads!
-* Fix issue with the OptinMonster "Disable All" setting in block editor when custom fields not supported for the post-type.
-* Fix issue where "This account does not have any campaigns to retrieve" error would show incorrectly.
-* Fix issue with output settings link having an incorrect trailing slash sometimes causing 404s.
-* Code refactor and function/method deprecations.
+= Popup Builder 2.12.2 =
+* Security update to ensure OptinMonster shortcodes can only load from the campaign post-type.
 
-= Popup Builder 2.7.0 =
-* Introduce revenue attribution support for EDD and WooCommerce, and add revenue attribution settings
-* Format dates for subscriber information according to the WordPress site timezone
-* Fixed some broken template image icon urls
-* Fix broken utm_medium query args for some urls
-* Javascript package updates
+= Popup Builder 2.12.1 =
+* Fixed Template preview button text stuck on "Loading Preview".
 
-= Popup Builder v2.6.12 =
-* Improved support for ecommerce display rule targeting.
-* Improved goal support during onboarding.
-* Added new links to quickly create campaigns from the dashboard.
-* Improve display of new campaigns by prioritizing Featured templates.
+= Popup Builder 2.12.0 =
+* Fixed wp_enqueue_script error on widgets page.
+* Addresses issues with page caching by fetching rules data for Easy Digital Downloads and WooCommerce via ajax.
+* Small improvements to onbaording
+* Updated bundled version of Vue and related dependencies to address some security scanners.
+* Introduced Playbooks to the plugin
+
+= Popup Builder 2.11.2 =
+* Fixed issue where plain-text shortcode output could be parsed by search engines.
+* Set minimum Elementor support to 3.1.0, and fix deprecated function warnings.
+* Update code initialization logic to allow just-in-time loading and preventing some errors.
+* Various npm packages updates used for generating our JavaScript code.
+* Remove references to Bronto, as Bronto shutdown as a service.
+* Fix issue where inline campaigns would be could show excerpts.
+
+= Popup Builder 2.11.1 =
+* Fix occasional undefined variable warning in logs
+* Maintenance updates to some JS packages
+* Removed some unused development files
+* Improve date-oriented rules
+* Improved performance on notifications
+* Improved some of the Output Settings labels to be more accurate.
+
+= Popup Builder 2.11.0 =
+* Added new `optinmonster_prevent_all_campaigns` filter to allow preventing campaigns in custom conditions.
+* Updated the schedule link to actually display the campaign schedule feature.
+* Fix issue with WP Forms event listener when our api script loaded later.
+* Fix issue where a conversion was registered despite WP Forms recaptcha error.
+* Fix issue where plugin admin page requests may fail for accounts with large numbers of campaigns.
+* Various npm package updates.
+* Added new menu item.
+
+= Popup Builder 2.10.0 =
+* Update/improve the campaign auto-insertion (after X words/paragraphs) feature.
+* Fix issue where WP Forms datepicker could sometimes be hidden behind the campaign.
+* Fix display of the Quick Links widget for RTL viewers.
+* Added filter for defining the post types that will work with the auto-insertion feature.
+* Introduced some tools to improve compatibility with WordFence.
 
 **[View entire popup builder changelog](https://plugins.svn.wordpress.org/optinmonster/trunk/CHANGELOG.md)**

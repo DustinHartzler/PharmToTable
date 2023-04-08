@@ -109,14 +109,21 @@ class OMAPI_Rules {
 	 *
 	 * @var OMAPI_WooCommerce_Rules
 	 */
-	protected $woocommerce_rules = null;
+	protected static $woocommerce = null;
 
 	/**
 	 * The OMAPI_EasyDigitalDownloads_Rules instance.
 	 *
 	 * @var OMAPI_EasyDigitalDownloads_Rules
 	 */
-	protected $edd_rules = null;
+	protected static $edd = null;
+
+	/**
+	 * The OMAPI_MemberPress_Rules instance.
+	 *
+	 * @var OMAPI_MemberPress_Rules
+	 */
+	protected static $mp = null;
 
 	/**
 	 * The last instance called of this class.
@@ -158,18 +165,32 @@ class OMAPI_Rules {
 	 * @since 2.8.0
 	 */
 	public function set() {
-		$this->woocommerce_rules = new OMAPI_WooCommerce_Rules( $this );
-		$this->edd_rules         = new OMAPI_EasyDigitalDownloads_Rules( $this );
-
-		$fields = array_merge(
-			$this->fields,
-			$this->woocommerce_rules->get_fields(),
-			$this->edd_rules->get_fields()
-		);
-
-		$this->fields = apply_filters( 'optin_monster_api_output_fields', $fields );
-
 		self::$last_instance = $this;
+
+		self::init_extensions();
+
+		$this->fields = apply_filters( 'optin_monster_api_output_fields', $this->fields );
+	}
+
+	/**
+	 * Initiates the 3rd party extension rules.
+	 *
+	 * @since 2.13.0
+	 *
+	 * @return void
+	 */
+	public static function init_extensions() {
+		if ( self::$woocommerce ) {
+			return;
+		}
+
+		self::$woocommerce = new OMAPI_WooCommerce_Rules();
+		self::$edd         = new OMAPI_EasyDigitalDownloads_Rules();
+		self::$mp          = new OMAPI_MemberPress_Rules();
+
+		self::$woocommerce->init_hooks();
+		self::$edd->init_hooks();
+		self::$mp->init_hooks();
 	}
 
 	/**
@@ -251,7 +272,11 @@ class OMAPI_Rules {
 	 * @return bool
 	 */
 	public function is_inline_post_type() {
-		return $this->is_inline_check && 'shortcode' !== $this->is_inline_check && is_singular( 'post' );
+		return $this->is_inline_check
+			&& 'shortcode' !== $this->is_inline_check
+			&& is_singular(
+				apply_filters( 'optinmonster_automatic_inline_post_types', 'post', $this )
+			);
 	}
 
 	/**
@@ -418,7 +443,7 @@ class OMAPI_Rules {
 
 		// Check for global disable.
 		if ( get_post_meta( $this->post_id, 'om_disable_all_campaigns', true ) ) {
-			$this->global_override = false;
+			$this->set_global_override( false );
 			throw new OMAPI_Rules_False( "all campaigns disabled for this post ($this->post_id)" );
 		}
 
@@ -426,8 +451,8 @@ class OMAPI_Rules {
 
 		// Set flag for possibly not loading globally.
 		if ( $this->field_not_empty_array( 'only' ) ) {
-			$this->global_override           = false;
-			$this->advanced_settings['show'] = $this->get_field_value( 'only' );
+			$this->set_global_override( false );
+			$this->set_advanced_settings_field( 'show', $this->get_field_value( 'only' ) );
 
 			// If the optin is only to be shown on specific post IDs...
 			if ( $this->item_in_field( $this->post_id, 'only' ) ) {
@@ -463,8 +488,8 @@ class OMAPI_Rules {
 
 		if ( $this->field_not_empty_array( 'show' ) ) {
 			// Set flag for not loading globally.
-			$this->global_override           = false;
-			$this->advanced_settings['show'] = $this->get_field_value( 'show' );
+			$this->set_global_override( false );
+			$this->set_advanced_settings_field( 'show', $this->get_field_value( 'show' ) );
 		}
 
 		if (
@@ -501,8 +526,7 @@ class OMAPI_Rules {
 	 * @return void
 	 */
 	public function plugin_checks() {
-		$this->woocommerce_rules->run_checks();
-		$this->edd_rules->run_checks();
+		do_action( 'optinmonster_campaign_should_output_plugin_checks', $this );
 	}
 
 	/**
@@ -581,8 +605,8 @@ class OMAPI_Rules {
 
 		if ( $this->field_not_empty_array( 'categories' ) ) {
 			// Set flag for possibly not loading globally.
-			$this->global_override                 = false;
-			$this->advanced_settings['categories'] = $categories;
+			$this->set_global_override( false );
+			$this->set_advanced_settings_field( 'categories', $categories );
 		}
 
 		// If this is the home page, check to see if they have decided to load on certain archive pages.
@@ -656,8 +680,8 @@ class OMAPI_Rules {
 		if ( $values ) {
 			foreach ( $values as $i => $value ) {
 				if ( OMAPI_Utils::field_not_empty_array( $values, $i ) ) {
-					$this->global_override                 = false;
-					$this->advanced_settings['taxonomies'] = $taxonomies;
+					$this->set_global_override( false );
+					$this->set_advanced_settings_field( 'taxonomies', $taxonomies );
 					break;
 				}
 			}
@@ -756,6 +780,10 @@ class OMAPI_Rules {
 			case 'global_override':
 			case 'advanced_settings':
 				return $this->$property;
+			case 'woocommerce':
+			case 'edd':
+			case 'mp':
+				return self::$$property;
 			default:
 				break;
 		}

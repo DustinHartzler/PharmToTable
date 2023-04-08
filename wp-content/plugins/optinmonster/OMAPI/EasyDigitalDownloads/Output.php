@@ -21,42 +21,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 class OMAPI_EasyDigitalDownloads_Output {
 
 	/**
-	 * Holds the class object.
+	 * The OMAPI_EasyDigitalDownloads instance.
 	 *
 	 * @since 2.8.0
 	 *
-	 * @var OMAPI_EasyDigitalDownloads_Output
+	 * @var OMAPI_EasyDigitalDownloads
 	 */
-	public static $instance;
+	public $edd;
 
 	/**
-	 * Holds the base class object.
+	 * Constructor
 	 *
-	 * @since 2.8.0
+	 * @since 2.13.0
 	 *
-	 * @var OMAPI
+	 * @param OMAPI_EasyDigitalDownloads $edd
 	 */
-	public $base;
-
-	/**
-	 * Primary class constructor.
-	 *
-	 * @since 2.8.0
-	 */
-	public function __construct() {
-
-		// Set our object.
-		$this->set();
-	}
-
-	/**
-	 * Sets our object instance and base class instance.
-	 *
-	 * @since 2.8.0
-	 */
-	public function set() {
-		self::$instance = $this;
-		$this->base     = OMAPI::get_instance();
+	public function __construct( OMAPI_EasyDigitalDownloads $edd ) {
+		$this->edd = $edd;
 	}
 
 	/**
@@ -67,13 +48,10 @@ class OMAPI_EasyDigitalDownloads_Output {
 	 * @return array The
 	 */
 	public function display_rules_data() {
-		$output = array(
-			'cart' => $this->get_cart(),
-		);
-
-		$user_id = get_current_user_id();
-
+		$cart               = $this->get_cart();
+		$user_id            = get_current_user_id();
 		$purchased_products = edd_get_users_purchased_products( $user_id );
+		$cart['customer']   = null;
 
 		if ( ! empty( $purchased_products ) ) {
 			$customer_products = array_map(
@@ -83,13 +61,13 @@ class OMAPI_EasyDigitalDownloads_Output {
 				$purchased_products
 			);
 
-			$output['customer'] = array(
+			$cart['customer'] = array(
 				'products' => $customer_products,
 				'stats'    => edd_get_purchase_stats_by_user( $user_id ),
 			);
 		}
 
-		return $output;
+		return $cart;
 	}
 
 	/**
@@ -101,12 +79,12 @@ class OMAPI_EasyDigitalDownloads_Output {
 	 */
 	public function get_cart() {
 		// Bail if EDD isn't currently active.
-		if ( ! OMAPI_EasyDigitalDownloads::is_active() ) {
+		if ( ! $this->edd->is_active() ) {
 			return array();
 		}
 
 		// Check if EDD is the minimum version.
-		if ( ! OMAPI_EasyDigitalDownloads::is_minimum_version() ) {
+		if ( ! $this->edd->is_minimum_version() ) {
 			return array();
 		}
 

@@ -153,24 +153,25 @@ class OMAPI_Support {
 		$api_ping = wp_remote_request( OPTINMONSTER_APP_URL . '/v1/ping' );
 
 		$array = array(
-			'Plugin Version'     => esc_html( $this->base->version ),
+			'Plugin Version'      => esc_html( $this->base->version ),
 			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-			'Server Info'        => esc_html( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ),
-			'PHP Version'        => function_exists( 'phpversion' ) ? esc_html( phpversion() ) : 'Unable to check.',
-			'Error Log Location' => function_exists( 'ini_get' ) ? ini_get( 'error_log' ) : 'Unable to locate.',
-			'Default Timezone'   => date_default_timezone_get(),
-			'Site Timezone'      => wp_timezone_string(),
-			'Site Name'          => esc_html( get_option( 'blogname' ) ),
-			'Admin Email'        => esc_html( get_site_option( 'admin_email' ) ),
-			'WordPress Home URL' => esc_url_raw( get_home_url() ),
-			'WordPress Site URL' => esc_url_raw( get_site_url() ),
-			'WordPress REST URL' => esc_url_raw( get_rest_url() ),
-			'WordPress Version'  => $GLOBALS['wp_version'],
-			'Multisite'          => is_multisite(),
-			'Language'           => get_locale(),
-			'API Ping Response'  => wp_remote_retrieve_response_code( $api_ping ),
-			'Active Theme'       => $theme,
-			'Active Plugins'     => $plugins,
+			'Server Info'         => esc_html( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ),
+			'PHP Version'         => function_exists( 'phpversion' ) ? esc_html( phpversion() ) : 'Unable to check.',
+			'Error Log Location'  => function_exists( 'ini_get' ) ? ini_get( 'error_log' ) : 'Unable to locate.',
+			'Default Timezone'    => date_default_timezone_get(),
+			'Site Timezone'       => wp_timezone_string(),
+			'Site Name'           => esc_html( get_option( 'blogname' ) ),
+			'Admin Email'         => esc_html( get_site_option( 'admin_email' ) ),
+			'WordPress Home URL'  => esc_url_raw( get_home_url() ),
+			'WordPress Site URL'  => esc_url_raw( get_site_url() ),
+			'WordPress REST URL'  => esc_url_raw( get_rest_url() ),
+			'WordPress Admin URL' => esc_url_raw( OMAPI_Urls::admin() ),
+			'WordPress Version'   => $GLOBALS['wp_version'],
+			'Multisite'           => is_multisite(),
+			'Language'            => get_locale(),
+			'API Ping Response'   => wp_remote_retrieve_response_code( $api_ping ),
+			'Active Theme'        => $theme,
+			'Active Plugins'      => $plugins,
 		);
 
 		if ( 'raw' !== $format ) {

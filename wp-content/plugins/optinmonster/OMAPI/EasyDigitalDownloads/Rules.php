@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.8.0
  */
-class OMAPI_EasyDigitalDownloads_Rules {
+class OMAPI_EasyDigitalDownloads_Rules extends OMAPI_Rules_Base {
 
 	/**
 	 * Holds the meta fields used for checking output statuses.
@@ -37,59 +37,6 @@ class OMAPI_EasyDigitalDownloads_Rules {
 		'is_edd_download_category',
 		'is_edd_download_tag',
 	);
-
-	/**
-	 * Holds the base class object.
-	 *
-	 * @since 2.8.0
-	 *
-	 * @var OMAPI
-	 */
-	public $base;
-
-	/**
-	 * Holds the base Rules class instance.
-	 *
-	 * @since 2.8.0
-	 *
-	 * @var OMAPI_Rules
-	 */
-	public $rules;
-
-	/**
-	 * Primary class constructor.
-	 *
-	 * @param OMAPI_Rules $rules Base rules instance.
-	 *
-	 * @since 2.8.0
-	 */
-	public function __construct( $rules ) {
-
-		// Set our object.
-		$this->set();
-
-		$this->rules = $rules;
-	}
-
-	/**
-	 * Sets our object instance and base class instance.
-	 *
-	 * @since 2.8.0
-	 */
-	public function set() {
-		$this->base = OMAPI::get_instance();
-	}
-
-	/**
-	 * Getter for fields property.
-	 *
-	 * @since 2.8.0
-	 *
-	 * @return array
-	 */
-	public function get_fields() {
-		return $this->fields;
-	}
 
 	/**
 	 * Check for edd rules.

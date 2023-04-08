@@ -102,9 +102,52 @@ class OMAPI_Notifications {
 	 * @since 2.0.0
 	 */
 	public function hooks() {
+		add_action( 'optin_monster_api_rest_loaded', array( $this, 'schedule_next_update' ) );
+		add_action( 'optin_monster_api_admin_loaded', array( $this, 'schedule_next_update' ) );
+
 		add_action( 'optin_monster_api_admin_notifications_update', array( $this, 'update' ) );
 		add_filter( 'optin_monster_api_notifications_count', array( $this, 'get_count' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+	}
+
+	/**
+	 * Schedule the next notifications fetch.
+	 *
+	 * @since 2.11.1
+	 *
+	 * @return void
+	 */
+	public function schedule_next_update() {
+		$hook      = 'optin_monster_api_admin_notifications_update';
+		$args      = array( 'wpcron' );
+		$scheduled = wp_next_scheduled( $hook, $args );
+
+		if ( $scheduled ) {
+
+			// Nothing to do here.
+			return;
+		}
+
+		$timezone = new DateTimeZone( 'America/New_York' );
+		$now      = new DateTime( 'now', $timezone );
+		$todayAm  = DateTime::createFromFormat( 'H:iA', '10:10am', $timezone );
+		$date     = $todayAm;
+
+		// If past 10am already...
+		if ( $now > $todayAm ) {
+
+			// Try to schedule for 10pm instead.
+			$date = DateTime::createFromFormat( 'H:iA', '10:10pm', $timezone );
+
+			// If past 10pm already...
+			if ( $now > $date ) {
+
+				// Schedule for 10am tomorrow.
+				$date = $todayAm->modify( '+1 day' );
+			}
+		}
+
+		wp_schedule_single_event( $date->getTimestamp(), $hook, $args );
 	}
 
 	/**
@@ -555,10 +598,16 @@ class OMAPI_Notifications {
 	/**
 	 * Update notification data from feed.
 	 *
+	 * @param string $context The context for this update. Used by cron event.
+	 *
 	 * @since 2.0.0
 	 */
-	public function update() {
+	public function update( $context = 'default' ) {
 		$feed = $this->fetch_feed();
+
+		if ( 'wpcron' === $context ) {
+			$this->schedule_next_update();
+		}
 
 		// If there was an error with the fetch, do not update the option.
 		if ( is_wp_error( $feed ) ) {
@@ -584,7 +633,7 @@ class OMAPI_Notifications {
 	 *
 	 * @since  2.0.0
 	 *
-	 * @param  array|string|int $ids Arrray of ids or single id.
+	 * @param  array|string|int $ids Array of ids or single id.
 	 *
 	 * @return bool Whether dismiss update occurred.
 	 */

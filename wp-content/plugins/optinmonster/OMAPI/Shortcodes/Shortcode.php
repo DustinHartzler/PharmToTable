@@ -260,7 +260,7 @@ class OMAPI_Shortcodes_Shortcode {
 		// Try to grab the stored HTML.
 		$html = $this->base->output->prepare_campaign( $this->campaign );
 		if ( ! $html ) {
-			throw new OMAPI_Shortcodes_Exception( 'Optin opbject missing campaign html in post_content' );
+			throw new OMAPI_Shortcodes_Exception( 'Optin object missing campaign html in post_content' );
 		}
 
 		// Make sure to apply shortcode filtering.

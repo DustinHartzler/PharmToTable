@@ -2,14 +2,7 @@
 	<h1 class="tp-heading">Boost Your Sales and Conversions with Social Proof Notifications</h1>
 	<div class="tp-admin-box">
 		<p>TrustPulse helps you leverage the true power of social proof to instantly increase trust, conversions and sales by up to 15%</p>
-		<div class="notice notice-error" style="display:none;margin-bottom: 15px;" id="om-plugin-alerts"></div>
-		<form class="install-plugin-form" action="<?php echo esc_url( $data['plugin_search_url'] ); ?>" method="post">
-			<?php if ( $data['has_plugin'] ) : ?>
-				<button type="submit" id="activateButton" class="button button-primary button-activate">Activate the TrustPulse Plugin</button>
-			<?php else : ?>
-				<button type="submit" id="installButton" class="button button-primary button-install">Install & Activate the TrustPulse Plugin</button>
-			<?php endif; ?>
-		</form>
+		<?php $this->output_view( 'install-plugin-form.php', $data ); ?>
 	</div>
 	<h2 class="tp-heading">Top 4 Reasons Why People Love TrustPulse</h2>
 	<p class="tp-subheading">Here's why smart business owners love TrustPulse, and you will too!</p>

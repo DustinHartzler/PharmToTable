@@ -184,15 +184,13 @@ class OMAPI_Sites {
 	 * @return mixed         Site-created response or WP_Error.
 	 */
 	public function attempt_create_site( $creds ) {
+		$settings              = OMAPI_Api::getUrlArgs();
+		$settings['wordpress'] = 1;
+
 		$site_args = array(
 			'domain'   => esc_url_raw( site_url() ),
 			'name'     => esc_attr( get_option( 'blogname' ) ),
-			'settings' => array(
-				'wordpress' => 1,
-				'homeUrl'   => esc_url_raw( home_url() ),
-				'restUrl'   => esc_url_raw( get_rest_url() ),
-				'adminUrl'  => esc_url_raw( get_admin_url() ),
-			),
+			'settings' => $settings,
 		);
 
 		// Create/update the site for this WordPress site.

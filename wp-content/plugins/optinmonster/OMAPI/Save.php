@@ -229,7 +229,7 @@ class OMAPI_Save {
 				'post_excerpt' => $optin->id,
 				'post_content' => $optin->output,
 				'post_status'  => $status,
-				'post_type'    => 'omapi',
+				'post_type'    => OMAPI_Type::SLUG,
 			)
 		);
 

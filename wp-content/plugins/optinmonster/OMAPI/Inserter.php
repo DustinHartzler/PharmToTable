@@ -47,7 +47,7 @@ class OMAPI_Inserter {
 	 *
 	 * @var string
 	 */
-	const INSERT_AFTER_TAGS = 'address,abbr,acronym,area,audio,a,bdo,big,button,b,caption,cite,code,col,colgroup,del,dfn,dl,dt,em,figure,figcaption,font,h1,h2,h3,h4,h5,h6,hgroup,ins,i,kbd,label,legend,map,mark,menu,pre,samp,small,strike,strong,sub,sup,s,table,tbody,textarea,tfoot,thead,title,track,tt,tr,ul,u,ol,var,video';
+	const INSERT_AFTER_TAGS = 'address,abbr,acronym,area,audio,a,bdo,big,blockquote,button,b,caption,cite,code,col,colgroup,del,dfn,dl,dt,em,figure,figcaption,font,h1,h2,h3,h4,h5,h6,hgroup,ins,i,kbd,label,legend,map,mark,menu,pre,samp,small,strike,strong,sub,sup,s,table,tbody,textarea,tfoot,thead,title,track,tt,tr,ul,u,ol,var,video';
 
 	/**
 	 * Constructor.
@@ -110,6 +110,10 @@ class OMAPI_Inserter {
 			return $this->append();
 		}
 
+		$valid_paragraphs = 0;
+		$invalid_tag      = '';
+		$appended         = false;
+
 		foreach ( $paragraphs as $index => $paragraph ) {
 
 			// Only add closing tag to non-empty paragraphs.
@@ -120,15 +124,48 @@ class OMAPI_Inserter {
 				$paragraphs[ $index ] .= $closing_p;
 			}
 
-			// + 1 allows for considering the first paragraph as #1, not #0.
-			if ( ( $index + 1 ) === $paragraph_number ) {
+			// If it has already appended, it doesn't need to keep checking.
+			// It needs to keep the loop to close the paragraph tag.
+			if ( $appended ) {
+				continue;
+			}
 
-				// We found our paragraph, so append after it.
+			// If it has an invalid tag from the last index,
+			// search if this index has the closing tag.
+			// If it doesn't have, it need to continue to the next index.
+			if ( ! empty( $invalid_tag ) && self::find_tag( $invalid_tag, $paragraphs[ $index ] ) ) {
+				// Found it, let's clean it.
+				$invalid_tag = '';
+			}
+
+			// Check if it has any after_tags inside this block.
+			$invalid_tag = self::find_invalid_word_tag( $paragraphs[ $index ] );
+			if ( ! empty( $invalid_tag ) ) {
+				// If so, then it must continue counting to the next paragraph.
+				continue;
+			}
+
+			// This is a valid paragraph.
+			$valid_paragraphs++;
+
+			// If it has enough valid paragraphs, it can continue
+			if ( $valid_paragraphs === $paragraph_number ) {
+
+				// If it doesn't have an invalid tag inside this paragraph,
+				// it can append after this paragraph.
 				$paragraphs[ $index ] .= $this->to_insert;
+				$appended              = true;
 			}
 		}
 
-		return implode( '', $paragraphs );
+		// If it appended, it can output all paragraphs.
+		if ( $appended ) {
+			return implode( '', $paragraphs );
+		}
+
+		// If it didn't append, then it didn't have enough valid paragraphs,
+		// so we'll append it to the end.
+		return $this->append();
 	}
 
 	/**
@@ -222,34 +259,178 @@ class OMAPI_Inserter {
 	 * @return string           Updated content.
 	 */
 	protected static function after_tags( $content ) {
-		$before = $content;
 		foreach ( explode( ',', self::INSERT_AFTER_TAGS ) as $tag ) {
-			$opening_tag = '<' . $tag;
-			$closing_tag = '</' . $tag;
-
-			$closing_pos = strpos( $content, $closing_tag );
-
-			// If no closing tag found, nothing to do with this tag.
-			if ( false === $closing_pos ) {
-				continue;
-			}
-
-			$opening_pos = strpos( $content, $opening_tag );
-
-			// If closing tag found _after_ opening tag, nothing to do with this tag.
-			if ( false !== $opening_pos && $opening_pos < $closing_pos ) {
+			$positions = self::find_tag( $tag, $content );
+			if ( ! $positions ) {
 				continue;
 			}
 
 			// Ok... we found a tag that we should scoot behind.
-			$split   = substr( $content, $closing_pos + strlen( $closing_tag ) );
-			$content = substr( $split, strpos( $split, '>' ) + 1 );
+			return substr( $content, $positions['closing'] + strlen( $positions['closing_tag'] ) );
 		}
 
-		return $before !== $content
-			// Recursive checks until we've gotten them all.
-			? self::after_tags( $content )
-			: $content;
+		return $content;
 	}
 
+	/**
+	 * Get the opening/closing positions of given tag.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  string $tag     The html tag.
+	 * @param  string $content The html content to search.
+	 *
+	 * @return array            Array of tag position data.
+	 */
+	public static function get_tag_positions( $tag, $content ) {
+		if ( self::is_void_element_tag( $tag ) ) {
+			$result = self::find_void_element_tag( $tag, $content );
+			return array(
+				'opening'     => $result['position'],
+				'closing'     => $result['position'],
+				'opening_tag' => $result['tag'],
+				'closing_tag' => $result['tag'],
+			);
+		}
+
+		$opening_tag = '<' . $tag . '>';
+		$opening_pos = stripos( $content, $opening_tag );
+		if ( false === $opening_pos ) {
+			$opening_tag = '<' . $tag . ' ';
+			$opening_pos = stripos( $content, $opening_tag );
+		}
+
+		$closing_tag = '</' . $tag . '>';
+		$closing_pos = stripos( $content, $closing_tag );
+
+		return array(
+			'opening'     => $opening_pos,
+			'closing'     => $closing_pos,
+			'opening_tag' => $opening_tag,
+			'closing_tag' => $closing_tag,
+		);
+	}
+
+	/**
+	 * Find the opening/closing positions of given tag, if found.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  string $tag     The html tag.
+	 * @param  string $content The html content to search.
+	 *
+	 * @return array|bool       Array of tag position data, if found.
+	 */
+	public static function find_tag( $tag, $content ) {
+		$positions = self::get_tag_positions( $tag, $content );
+
+		// Not found, move along.
+		if ( false === $positions['closing'] ) {
+			return false;
+		}
+
+		// If we found an opening tag but it comes before the closing,
+		// then this is not the one we were looking at.
+		if (
+			false !== $positions['opening']
+			&& $positions['opening'] < $positions['closing']
+		) {
+			return false;
+		}
+
+		return $positions;
+	}
+
+	/**
+	 * Search for invalid tags within given content.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  string $content html content to search.
+	 *
+	 * @return string           Invalid tag, if found.
+	 */
+	public static function find_invalid_word_tag( $content ) {
+		// Check if it has any after_tags inside this block.
+		// If so, then it must continue counting to the next paragraph.
+		foreach ( explode( ',', self::INSERT_AFTER_TAGS ) as $tag ) {
+			$positions = self::get_tag_positions( $tag, $content );
+
+			// Not found, continue to the next
+			if ( false === $positions['opening'] ) {
+				continue;
+			}
+
+			// It has it, so it can ignore since it opens and closes inside the paragraph.
+			// It also needs to check if the closing comes after the opening.
+			if ( false !== $positions['closing'] && $positions['opening'] < $positions['closing'] ) {
+				continue;
+			}
+
+			// It doesn't have a closing tag, so this paragraph lives inside an invalid tag.
+			return $tag;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Find the given void element tag position/occurrence.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  string $tag     The void element tag name.
+	 * @param  string $content html content to search.
+	 *
+	 * @return array Array of found element occurrence and string position.
+	 */
+	public static function find_void_element_tag( $tag, $content ) {
+		preg_match_all( '~<' . $tag . '.*?\/?>~i', $content, $matches );
+		if ( ! empty( $matches[0][0] ) ) {
+			return array(
+				'tag'      => $matches[0][0],
+				'position' => strpos( $content, $matches[0][0] ),
+			);
+		}
+
+		return array(
+			'tag'      => '<' . $tag . '/>',
+			'position' => false,
+		);
+	}
+
+	/**
+	 * Check if given tag is a void element tag.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  string $tag HTML tag name.
+	 *
+	 * @return boolean
+	 */
+	public static function is_void_element_tag( $tag ) {
+		return in_array(
+			strtolower( $tag ),
+			array(
+				'area',
+				'base',
+				'br',
+				'col',
+				'embed',
+				'hr',
+				'img',
+				'input',
+				'link',
+				'meta',
+				'param',
+				'source',
+				'track',
+				'wbr',
+				'command',
+				'keygen',
+				'menuitem',
+			),
+			true
+		);
+	}
 }

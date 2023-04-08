@@ -18,33 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.6.13
  */
-class OMAPI_EasyDigitalDownloads {
-	/**
-	 * Holds the class object.
-	 *
-	 * @since 2.6.13
-	 *
-	 * @var object
-	 */
-	public static $instance;
-
-	/**
-	 * Path to the file.
-	 *
-	 * @since 2.6.13
-	 *
-	 * @var string
-	 */
-	public $file = __FILE__;
-
-	/**
-	 * Holds the base class object.
-	 *
-	 * @since 2.6.13
-	 *
-	 * @var OMAPI
-	 */
-	public $base;
+class OMAPI_EasyDigitalDownloads extends OMAPI_Integrations_Base {
 
 	/**
 	 * The minimum EDD version required.
@@ -65,13 +39,27 @@ class OMAPI_EasyDigitalDownloads {
 	public $save;
 
 	/**
+	 * The OMAPI_EasyDigitalDownloads_RestApi instance.
+	 *
+	 * @since 2.13.0
+	 *
+	 * @var null|OMAPI_EasyDigitalDownloads_RestApi
+	 */
+	public $rest = null;
+
+	/**
 	 * Primary class constructor.
 	 *
 	 * @since 2.6.13
 	 */
 	public function __construct() {
+		parent::__construct();
+
 		// Set our object.
-		$this->set();
+		$this->save = new OMAPI_EasyDigitalDownloads_Save( $this );
+
+		add_action( 'optin_monster_api_rest_register_routes', array( $this, 'maybe_init_rest_routes' ) );
+		add_filter( 'optin_monster_display_rules_data_output', array( $this, 'maybe_add_edd_data' ) );
 
 		// Revenue attribution support. We load on shutdown because we need access
 		// to the $_COOKIE data, which will not be available for any action triggered
@@ -79,17 +67,6 @@ class OMAPI_EasyDigitalDownloads {
 		// with anything else happening with the payment.
 		add_action( 'shutdown', array( $this, 'maybe_store_revenue_attribution' ) );
 		add_action( 'edd_update_payment_status', array( $this, 'maybe_store_revenue_attribution_on_payment_status_update' ), 10, 2 );
-	}
-
-	/**
-	 * Sets our object instance and base class instance.
-	 *
-	 * @since 2.6.13
-	 */
-	public function set() {
-		self::$instance = $this;
-		$this->base     = OMAPI::get_instance();
-		$this->save     = new OMAPI_EasyDigitalDownloads_Save();
 	}
 
 	/**
@@ -218,14 +195,14 @@ class OMAPI_EasyDigitalDownloads {
 		}
 
 		// Setup the request payload.
-		$payload = array(
-			'key'      => $data['public_key'],
-			'token'    => $data['token'],
-			'shop'     => $data['url'],
-			'name'     => esc_html( get_bloginfo( 'name' ) ),
-			'restUrl'  => esc_url_raw( get_rest_url() ),
-			'homeUrl'  => esc_url_raw( home_url() ),
-			'adminUrl' => esc_url_raw( get_admin_url() ),
+		$payload = array_merge(
+			array(
+				'key'   => $data['public_key'],
+				'token' => $data['token'],
+				'shop'  => $data['url'],
+				'name'  => esc_html( get_bloginfo( 'name' ) ),
+			),
+			OMAPI_Api::getUrlArgs()
 		);
 
 		// Get the OptinMonster API credentials.
@@ -356,32 +333,33 @@ class OMAPI_EasyDigitalDownloads {
 	}
 
 	/**
-	 * Determines if the passed version string passes the operator compare
-	 * against the currently installed version of EDD.
+	 * Initiate our REST routes for EDD if EDD active.
 	 *
-	 * Defaults to checking if the current EDD version is greater than
-	 * the passed version.
+	 * @since 2.13.0
 	 *
-	 * @since 2.8.0
-	 *
-	 * @param string $version  The version to check.
-	 * @param string $operator The operator to use for comparison.
-	 *
-	 * @return string
+	 * @return void
 	 */
-	public static function version_compare( $version = '', $operator = '>=' ) {
-		return version_compare( self::version(), $version, $operator );
+	public function maybe_init_rest_routes() {
+		if ( self::is_active() ) {
+			$this->rest = new OMAPI_EasyDigitalDownloads_RestApi( $this );
+		}
 	}
 
 	/**
-	 * Determines if the current EDD version meets the minimum version
-	 * requirement.
+	 * If EDD active, add our EDD cart data for use in Display Rules.
 	 *
-	 * @since 2.8.0
+	 * @since 2.13.0
 	 *
-	 * @return boolean
+	 * @param  array $output Array of data for use in Display Rules.
+	 *
+	 * @return array Array of data for use in Display Rules.
 	 */
-	public static function is_minimum_version() {
-		return self::version_compare( self::MINIMUM_VERSION );
+	public function maybe_add_edd_data( $output = array() ) {
+		if ( self::is_active() ) {
+			$edd           = new OMAPI_EasyDigitalDownloads_Output( $this );
+			$output['edd'] = $edd->display_rules_data();
+		}
+
+		return $output;
 	}
 }

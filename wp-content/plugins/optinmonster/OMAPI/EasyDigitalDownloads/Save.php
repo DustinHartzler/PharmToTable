@@ -39,24 +39,25 @@ class OMAPI_EasyDigitalDownloads_Save {
 	public $base;
 
 	/**
-	 * Primary class constructor.
+	 * The OMAPI_EasyDigitalDownloads instance.
 	 *
 	 * @since 2.8.0
+	 *
+	 * @var OMAPI_EasyDigitalDownloads
 	 */
-	public function __construct() {
-
-		// Set our object.
-		$this->set();
-	}
+	public $edd;
 
 	/**
-	 * Sets our object instance and base class instance.
+	 * Constructor
 	 *
 	 * @since 2.8.0
+	 *
+	 * @param OMAPI_EasyDigitalDownloads $edd
 	 */
-	public function set() {
-		self::$instance = $this;
+	public function __construct( OMAPI_EasyDigitalDownloads $edd ) {
+		$this->edd      = $edd;
 		$this->base     = OMAPI::get_instance();
+		self::$instance = $this;
 	}
 
 	/**
@@ -67,7 +68,7 @@ class OMAPI_EasyDigitalDownloads_Save {
 	 * @return WP_Error|array Array with public_key, private_key and token, or WP_Error if something happened.
 	 */
 	public function autogenerate() {
-		if ( ! $this->base->edd->can_manage_shop() ) {
+		if ( ! $this->edd->can_manage_shop() ) {
 			return new WP_Error(
 				'omapi-error-user-permission',
 				esc_html__( 'You don\'t have the required permissions to retrieve or generate API Keys for EDD.', 'optin-monster-api' )
@@ -96,7 +97,7 @@ class OMAPI_EasyDigitalDownloads_Save {
 
 		$token = EDD()->api->get_token( $user_id );
 
-		return $this->connect( $public_key, $token );
+		return $this->connect( $public_key, $token, $user_id );
 	}
 
 	/**
@@ -106,10 +107,11 @@ class OMAPI_EasyDigitalDownloads_Save {
 	 *
 	 * @param string $public_key The user public key
 	 * @param string $token      The user token
+	 * @param string $user_id    The user ID
 	 *
 	 * @return WP_Error|array Array with public_key, private_key and token, or WP_Error if something happened.
 	 */
-	public function connect( $public_key, $token ) {
+	public function connect( $public_key, $token, $user_id = 0 ) {
 		$url = esc_url_raw( site_url() );
 
 		$payload = array(
@@ -118,7 +120,7 @@ class OMAPI_EasyDigitalDownloads_Save {
 			'url'        => $url,
 		);
 
-		$response = $this->base->edd->connect( $payload );
+		$response = $this->edd->connect( $payload );
 
 		if ( is_wp_error( $response ) ) {
 			return $response;
@@ -132,6 +134,7 @@ class OMAPI_EasyDigitalDownloads_Save {
 			'key'   => $public_key,
 			'token' => $token,
 			'shop'  => $response->id,
+			'user'  => $user_id,
 		);
 
 		// Save the option.
@@ -148,7 +151,7 @@ class OMAPI_EasyDigitalDownloads_Save {
 	 * @return WP_Error|bool True if successful, or WP_Error if something happened.
 	 */
 	public function disconnect() {
-		$response = $this->base->edd->disconnect();
+		$response = $this->edd->disconnect();
 
 		// Output an error or register a successful disconnection.
 		if ( is_wp_error( $response ) ) {

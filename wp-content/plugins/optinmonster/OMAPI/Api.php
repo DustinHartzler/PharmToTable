@@ -534,4 +534,20 @@ class OMAPI_Api {
 
 		return $option;
 	}
+
+	/**
+	 * Get the home/rest/admin url args.
+	 *
+	 * @since 2.13.0
+	 *
+	 * @return array
+	 */
+	public static function getUrlArgs() {
+		return array(
+			'homeUrl'  => esc_url_raw( home_url() ),
+			'restUrl'  => esc_url_raw( get_rest_url() ),
+			'adminUrl' => esc_url_raw( get_admin_url() ),
+		);
+	}
+
 }

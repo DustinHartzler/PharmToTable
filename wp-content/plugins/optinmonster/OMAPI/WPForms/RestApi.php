@@ -18,6 +18,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 2.9.0
  */
 class OMAPI_WPForms_RestApi extends OMAPI_BaseRestApi {
+
+	/**
+	 * The OMAPI_WPForms instance.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @var OMAPI_WPForms
+	 */
+	public $wpforms;
+
+	/**
+	 * Constructor
+	 *
+	 * @since 2.13.0
+	 *
+	 * @param OMAPI_WPForms $wpforms
+	 */
+	public function __construct( OMAPI_WPForms $wpforms ) {
+		$this->wpforms = $wpforms;
+		parent::__construct();
+	}
+
 	/**
 	 * Registers the Rest API routes for WPForms
 	 *
@@ -30,7 +52,7 @@ class OMAPI_WPForms_RestApi extends OMAPI_BaseRestApi {
 			$this->namespace,
 			'wpforms/forms',
 			array(
-				'methods'             => 'GET',
+				'methods'             => WP_REST_Server::READABLE,
 				'permission_callback' => array( $this, 'logged_in_or_has_api_key' ),
 				'callback'            => array( $this, 'forms' ),
 			)
@@ -52,7 +74,7 @@ class OMAPI_WPForms_RestApi extends OMAPI_BaseRestApi {
 	public function forms() {
 		try {
 			return new WP_REST_Response(
-				OMAPI_WPForms::get_instance()->get_forms_array(),
+				$this->wpforms->get_forms_array(),
 				200
 			);
 		} catch ( Exception $e ) {

@@ -187,4 +187,15 @@ class OMAPI_Partners {
 		return $id;
 	}
 
+	/**
+	 * Get the referrer, if stored.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @return string  Referrer
+	 */
+	public static function referred_by() {
+		return sanitize_text_field( get_option( 'optinmonster_referred_by', '' ) );
+	}
+
 }

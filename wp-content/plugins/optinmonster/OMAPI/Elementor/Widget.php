@@ -181,7 +181,7 @@ class OMAPI_Elementor_Widget extends Widget_Base {
 	 *
 	 * @since 2.2.0
 	 */
-	protected function _register_controls() { // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+	protected function register_controls() {
 		$this->start_controls_section(
 			'section_om_campaign',
 			array(

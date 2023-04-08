@@ -93,15 +93,6 @@ class OMAPI_Output {
 	public $shortcodes = array();
 
 	/**
-	 * The OMAPI_EasyDigitalDownloads_Output instance.
-	 *
-	 * @since 2.8.0
-	 *
-	 * @var null|OMAPI_EasyDigitalDownloads_Output
-	 */
-	public $edd_output = null;
-
-	/**
 	 * Whether we are in a live campaign preview.
 	 *
 	 * @since 2.2.0
@@ -168,10 +159,6 @@ class OMAPI_Output {
 
 		// Keep these around for back-compat.
 		$this->fields = $rules->fields;
-
-		if ( OMAPI_EasyDigitalDownloads::is_active() ) {
-			$this->edd_output = new OMAPI_EasyDigitalDownloads_Output();
-		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		self::$live_preview       = ! empty( $_GET['om-live-preview'] )
@@ -330,7 +317,10 @@ class OMAPI_Output {
 		// Don't do anything for excerpts.
 		// This prevents the optin accidentally being output when get_the_excerpt() or wp_trim_excerpt() is
 		// called by a theme or plugin, and there is no excerpt, meaning they call the_content and break us.
-		if ( in_array( current_filter(), array( 'get_the_excerpt', 'wp_trim_excerpt' ), true ) ) {
+		if (
+			doing_filter( 'get_the_excerpt' ) ||
+			doing_filter( 'wp_trim_excerpt' )
+		) {
 			return $content;
 		}
 
@@ -387,8 +377,10 @@ class OMAPI_Output {
 	 * @since 1.0.0
 	 */
 	public function load_optinmonster() {
-		$post_id   = self::current_id();
+		$post_id = self::current_id();
+
 		$prevented = is_singular() && $post_id && get_post_meta( $post_id, 'om_disable_all_campaigns', true );
+		$prevented = apply_filters( 'optinmonster_prevent_all_campaigns', $prevented, $post_id );
 		if ( $prevented ) {
 			add_action( 'wp_footer', array( $this, 'prevent_all_campaigns' ), 11 );
 		}
@@ -589,12 +581,10 @@ class OMAPI_Output {
 					continue;
 				}
 
-				echo '<div style="position:absolute;overflow:hidden;clip:rect(0 0 0 0);height:1px;width:1px;margin:-1px;padding:0;border:0">';
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo '<div class="omapi-shortcode-helper">' . html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) . '</div>';
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo '<div class="omapi-shortcode-parsed omapi-encoded">' . htmlentities( do_shortcode( html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) ), ENT_COMPAT, 'UTF-8' ) . '</div>';
-				echo '</div>';
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<script type="text/template" class="omapi-shortcode-helper">' . html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) . '</script>';
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<script type="text/template" class="omapi-shortcode-parsed omapi-encoded">' . htmlentities( do_shortcode( html_entity_decode( $shortcode, ENT_COMPAT, 'UTF-8' ) ), ENT_COMPAT, 'UTF-8' ) . '</script>';
 			}
 		}
 
@@ -774,17 +764,15 @@ class OMAPI_Output {
 		}
 
 		$output = array(
-			'wc_cart'     => $this->base->woocommerce->get_cart(),
 			'object_id'   => $object_id,
 			'object_key'  => $object_key,
 			'object_type' => $object_type,
 			'term_ids'    => $tax_terms,
 			'wp_json'     => untrailingslashit( get_rest_url() ),
+			'wc_active'   => OMAPI_WooCommerce::is_active(),
+			'edd_active'  => OMAPI_EasyDigitalDownloads::is_active(),
+			'nonce'       => wp_create_nonce( 'wp_rest' ),
 		);
-
-		if ( OMAPI_EasyDigitalDownloads::is_active() ) {
-			$output['edd'] = $this->edd_output->display_rules_data();
-		}
 
 		$output = apply_filters( 'optin_monster_display_rules_data_output', $output );
 
@@ -804,6 +792,7 @@ class OMAPI_Output {
 	 * @return string         The optin campaign html.
 	 */
 	public function prepare_campaign( $optin ) {
+		$optin          = $this->base->validate_is_campaign_type( $optin );
 		$campaign_embed = ! empty( $optin->post_content )
 			? trim( html_entity_decode( stripslashes( $optin->post_content ), ENT_QUOTES, 'UTF-8' ), '\'' )
 			: '';

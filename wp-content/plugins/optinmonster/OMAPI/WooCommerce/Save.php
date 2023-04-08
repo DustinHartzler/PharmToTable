@@ -48,24 +48,25 @@ class OMAPI_WooCommerce_Save {
 	public $base;
 
 	/**
+	 * The OMAPI_WooCommerce instance.
+	 *
+	 * @since 2.13.0
+	 *
+	 * @var OMAPI_WooCommerce
+	 */
+	public $woo;
+
+	/**
 	 * Primary class constructor.
 	 *
 	 * @since 2.8.0
-	 */
-	public function __construct() {
-
-		// Set our object.
-		$this->set();
-	}
-
-	/**
-	 * Sets our object instance and base class instance.
 	 *
-	 * @since 2.8.0
+	 * @param OMAPI_WooCommerce $woo
 	 */
-	public function set() {
-		self::$instance = $this;
+	public function __construct( OMAPI_WooCommerce $woo ) {
+		$this->woo      = $woo;
 		$this->base     = OMAPI::get_instance();
+		self::$instance = $this;
 	}
 
 	/**
@@ -130,7 +131,7 @@ class OMAPI_WooCommerce_Save {
 	 * @return void
 	 */
 	public function connect( $data ) {
-		$keys = $this->base->woocommerce->validate_keys( $data );
+		$keys = $this->woo->validate_keys( $data );
 
 		if ( isset( $keys['error'] ) ) {
 			$this->error = $keys['error'];
@@ -138,7 +139,7 @@ class OMAPI_WooCommerce_Save {
 
 			// Get the version of the REST API we should use. The
 			// `v3` route wasn't added until WooCommerce 3.5.0.
-			$api_version = OMAPI_WooCommerce::version_compare( '3.5.0' )
+			$api_version = $this->woo->version_compare( '3.5.0' )
 				? 'v3'
 				: 'v2';
 
@@ -146,7 +147,7 @@ class OMAPI_WooCommerce_Save {
 			$url = esc_url_raw( site_url() );
 
 			// Make a connection request.
-			$response = $this->base->woocommerce->connect(
+			$response = $this->woo->connect(
 				array(
 					'consumerKey'    => $keys['consumer_key'],
 					'consumerSecret' => $keys['consumer_secret'],
@@ -192,7 +193,7 @@ class OMAPI_WooCommerce_Save {
 	 * @return void
 	 */
 	public function disconnect( $data ) {
-		$response = $this->base->woocommerce->disconnect();
+		$response = $this->woo->disconnect();
 
 		// Output an error or register a successful disconnection.
 		if ( is_wp_error( $response ) ) {

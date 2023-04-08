@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.8.0
  */
-class OMAPI_WooCommerce_Rules {
+class OMAPI_WooCommerce_Rules extends OMAPI_Rules_Base {
 
 	/**
 	 * Holds the meta fields used for checking output statuses.
@@ -46,59 +46,6 @@ class OMAPI_WooCommerce_Rules {
 		'is_wc_product_category',
 		'is_wc_product_tag',
 	);
-
-	/**
-	 * Holds the base class object.
-	 *
-	 * @since 2.8.0
-	 *
-	 * @var OMAPI
-	 */
-	public $base;
-
-	/**
-	 * Holds the base Rules class instance.
-	 *
-	 * @since 2.8.0
-	 *
-	 * @var OMAPI_Rules
-	 */
-	public $rules;
-
-	/**
-	 * Primary class constructor.
-	 *
-	 * @param OMAPI_Rules $rules Base rules instance
-	 *
-	 * @since 2.8.0
-	 */
-	public function __construct( $rules ) {
-
-		// Set our object.
-		$this->set();
-
-		$this->rules = $rules;
-	}
-
-	/**
-	 * Sets our object instance and base class instance.
-	 *
-	 * @since 2.8.0
-	 */
-	public function set() {
-		$this->base = OMAPI::get_instance();
-	}
-
-	/**
-	 * Getter for fields property
-	 *
-	 * @since 2.8.0
-	 *
-	 * @return array
-	 */
-	public function get_fields() {
-		return $this->fields;
-	}
 
 	/**
 	 * Check for woocommerce rules.
@@ -166,18 +113,33 @@ class OMAPI_WooCommerce_Rules {
 		);
 
 		foreach ( $wc_checks as $field => $callback ) {
-			if ( $this->rules->field_empty( $field ) ) {
-				continue;
-			}
+			$this->check_field( $field, $callback );
+		}
+	}
 
-			$this->rules
-				->set_global_override( false )
-				->set_advanced_settings_field( $field, $this->rules->get_field_value( $field ) );
+	/**
+	 * Check for woocommerce rule field.
+	 *
+	 * @since 2.10.0
+	 *
+	 * @param  string $field    The field to check.
+	 * @param  array  $callback The callback to check.
+	 *
+	 * @return void
+	 * @throws OMAPI_Rules_True
+	 */
+	protected function check_field( $field, $callback ) {
+		if ( $this->rules->field_empty( $field ) ) {
+			return;
+		}
 
-			if ( call_user_func_array( array_shift( $callback ), $callback ) ) {
-				// If it passes, send it back.
-				throw new OMAPI_Rules_True( $field );
-			}
+		$this->rules
+			->set_global_override( false )
+			->set_advanced_settings_field( $field, $this->rules->get_field_value( $field ) );
+
+		if ( call_user_func_array( array_shift( $callback ), $callback ) ) {
+			// If it passes, send it back.
+			throw new OMAPI_Rules_True( $field );
 		}
 	}
 }

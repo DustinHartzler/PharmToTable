@@ -21,6 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class OMAPI_Type {
 
 	/**
+	 * The Post-type slug.
+	 */
+	const SLUG = 'omapi';
+
+	/**
 	 * Holds the class object.
 	 *
 	 * @since 1.0.0
@@ -79,7 +84,7 @@ class OMAPI_Type {
 	public function type() {
 
 		register_post_type(
-			'omapi',
+			self::SLUG,
 			array(
 				'labels'          => apply_filters(
 					'optin_monster_api_post_type_labels',

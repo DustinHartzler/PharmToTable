@@ -166,4 +166,36 @@ class OMAPI_Utils {
 			: json_encode( $data ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
 	}
 
+	/**
+	 * Check if given date is before provided start date.
+	 *
+	 * @since 2.11.1
+	 *
+	 * @param  DateTime $compare The date to compare against the start date.
+	 * @param  string   $start   The start date to compare against, in 'Y-m-d H:i:s' format.
+	 *
+	 * @return bool Whether the given date is before provided start date.
+	 */
+	public static function date_before( DateTime $compare, $start ) {
+		$start = DateTime::createFromFormat( 'Y-m-d H:i:s', $start, $compare->getTimezone() );
+
+		return $compare < $start;
+	}
+
+	/**
+	 * Check if given date is between provided start/end date.
+	 *
+	 * @since 2.11.1
+	 *
+	 * @param  DateTime $compare The date to compare against the start/end date.
+	 * @param  string   $start   The start date to compare against, in 'Y-m-d H:i:s' format.
+	 * @param  string   $end     The end date to compare against, in 'Y-m-d H:i:s' format.
+	 *
+	 * @return bool Whether the given date is between provided start/end date.
+	 */
+	public static function date_within( DateTime $compare, $start, $end ) {
+		return ! self::date_before( $compare, $start )
+			&& $compare < DateTime::createFromFormat( 'Y-m-d H:i:s', $end, $compare->getTimezone() );
+	}
+
 }

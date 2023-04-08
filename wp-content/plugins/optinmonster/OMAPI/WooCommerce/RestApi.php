@@ -20,6 +20,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 
 	/**
+	 * The OMAPI_WooCommerce_Save instance.
+	 *
+	 * @since 2.13.0
+	 *
+	 * @var OMAPI_WooCommerce_Save
+	 */
+	public $save;
+
+	/**
+	 * Constructor
+	 *
+	 * @since 2.13.0
+	 *
+	 * @param OMAPI_WooCommerce_Save $save
+	 */
+	public function __construct( OMAPI_WooCommerce_Save $save ) {
+		$this->save = $save;
+		parent::__construct();
+	}
+
+	/**
 	 * Registers the Rest API routes for WooCommerce
 	 *
 	 * @since 2.8.0
@@ -31,7 +52,7 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 			$this->namespace,
 			'woocommerce/autogenerate',
 			array(
-				'methods'             => 'POST',
+				'methods'             => WP_REST_Server::CREATABLE,
 				'permission_callback' => array( $this, 'can_update_settings' ),
 				'callback'            => array( $this, 'autogenerate' ),
 			)
@@ -41,7 +62,7 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 			$this->namespace,
 			'woocommerce/save',
 			array(
-				'methods'             => 'POST',
+				'methods'             => WP_REST_Server::CREATABLE,
 				'permission_callback' => array( $this, 'can_update_settings' ),
 				'callback'            => array( $this, 'save' ),
 			)
@@ -51,7 +72,7 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 			$this->namespace,
 			'woocommerce/disconnect',
 			array(
-				'methods'             => 'POST',
+				'methods'             => WP_REST_Server::CREATABLE,
 				'permission_callback' => array( $this, 'can_update_settings' ),
 				'callback'            => array( $this, 'disconnect' ),
 			)
@@ -61,9 +82,19 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 			$this->namespace,
 			'woocommerce/key',
 			array(
-				'methods'             => 'GET',
+				'methods'             => WP_REST_Server::READABLE,
 				'permission_callback' => array( $this, 'logged_in_and_can_access_route' ),
 				'callback'            => array( $this, 'get_key' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'woocommerce/display-rules',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'permission_callback' => '__return_true',
+				'callback'            => array( $this, 'get_display_rules_info' ),
 			)
 		);
 	}
@@ -84,7 +115,7 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 	public function autogenerate( $request ) {
 		try {
 
-			$auto_generated_keys = $this->base->woocommerce->save->autogenerate();
+			$auto_generated_keys = $this->save->autogenerate();
 			if ( is_wp_error( $auto_generated_keys ) ) {
 				$e = new OMAPI_WpErrorException();
 				throw $e->setWpError( $auto_generated_keys );
@@ -99,10 +130,10 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 			// Merge data array, with auto-generated keys array.
 			$data = array_merge( $data, $auto_generated_keys );
 
-			$this->base->woocommerce->save->connect( $data );
+			$this->save->connect( $data );
 
-			if ( ! empty( $this->base->woocommerce->save->error ) ) {
-				throw new Exception( $this->base->woocommerce->save->error, 400 );
+			if ( ! empty( $this->save->error ) ) {
+				throw new Exception( $this->save->error, 400 );
 			}
 
 			return $this->get_key( $request );
@@ -143,10 +174,10 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 				'consumer_secret' => $woo_secret,
 			);
 
-			$this->base->woocommerce->save->connect( $data );
+			$this->save->connect( $data );
 
-			if ( ! empty( $this->base->woocommerce->save->error ) ) {
-				throw new Exception( $this->base->woocommerce->save->error, 400 );
+			if ( ! empty( $this->save->error ) ) {
+				throw new Exception( $this->save->error, 400 );
 			}
 
 			return $this->get_key( $request );
@@ -172,10 +203,10 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 	public function disconnect( $request ) {
 		try {
 
-			$this->base->woocommerce->save->disconnect( array() );
+			$this->save->disconnect( array() );
 
-			if ( ! empty( $this->base->woocommerce->save->error ) ) {
-				throw new Exception( $this->base->woocommerce->save->error, 400 );
+			if ( ! empty( $this->save->error ) ) {
+				throw new Exception( $this->save->error, 400 );
 			}
 
 			return new WP_REST_Response(
@@ -248,5 +279,23 @@ class OMAPI_WooCommerce_RestApi extends OMAPI_BaseRestApi {
 		} catch ( Exception $e ) {
 			return $this->exception_to_response( $e );
 		}
+	}
+
+	/**
+	 * Retrieves the WooCommerce cart data for display rules.
+	 *
+	 * Route: GET omapp/v1/woocommerce/display-rules
+	 *
+	 * @since 2.12.0
+	 *
+	 * @param WP_REST_Request $request The REST Request.
+	 *
+	 * @return WP_REST_Response The API Response
+	 */
+	public function get_display_rules_info( $request ) {
+		return new WP_REST_Response(
+			$this->base->woocommerce->get_cart(),
+			200
+		);
 	}
 }

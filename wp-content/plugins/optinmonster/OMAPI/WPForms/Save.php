@@ -21,15 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class OMAPI_WPForms_Save {
 
 	/**
-	 * Holds the class object.
-	 *
-	 * @since 2.9.0
-	 *
-	 * @var OMAPI_WPForms_Save
-	 */
-	public static $instance;
-
-	/**
 	 * Holds save error.
 	 *
 	 * @since 2.9.0
@@ -96,12 +87,7 @@ class OMAPI_WPForms_Save {
 		$action = $connect ? 'connect' : 'disconnect';
 		$api    = new OMAPI_Api( 'wpforms/' . $action, $creds, 'POST', 'v2' );
 
-		$data = array(
-			'homeUrl'  => esc_url_raw( home_url() ),
-			'adminUrl' => esc_url_raw( get_admin_url() ),
-		);
-
-		$response = $api->request( $data );
+		$response = $api->request( OMAPI_Api::getUrlArgs() );
 
 		if ( is_wp_error( $response ) ) {
 			$message = $connect

@@ -135,6 +135,8 @@ class OMAPI_Blocks {
 	 * @since 1.9.10
 	 */
 	public function enqueue_block_editor_assets() {
+		global $pagenow;
+
 		$version    = $this->base->asset_version();
 		$css_handle = $this->base->plugin_slug . '-blocks-admin';
 		wp_enqueue_style( $css_handle, $this->base->url . 'assets/dist/css/blocks-admin.min.css', array(), $version );
@@ -159,18 +161,30 @@ class OMAPI_Blocks {
 
 		OMAPI_Utils::add_inline_script( $campaign_selector_handle, 'OMAPI', $this->get_data_for_js() );
 
-		wp_enqueue_script(
-			$this->base->plugin_slug . '-gutenberg-sidebar-settings',
-			$this->base->url . 'assets/dist/js/om-settings.min.js',
-			array( $campaign_selector_handle, 'wp-plugins', 'wp-edit-post', 'wp-element' ),
-			$version
-		);
+		$is_widgets_page = $pagenow === 'widgets.php';
 
-		if ( version_compare( get_bloginfo( 'version' ), '5.3', '>=' ) ) {
+		// Prevent enqueueing sidebar settings on widgets screen...
+		if ( ! $is_widgets_page ) {
+			wp_enqueue_script(
+				$this->base->plugin_slug . '-gutenberg-sidebar-settings',
+				$this->base->url . 'assets/dist/js/om-settings.min.js',
+				array( $campaign_selector_handle, 'wp-plugins', 'wp-edit-post', 'wp-element' ),
+				$version
+			);
+		}
+
+		if ( version_compare( $GLOBALS['wp_version'], '5.3', '>=' ) ) {
 			wp_enqueue_script(
 				$this->base->plugin_slug . '-gutenberg-format-button',
 				$this->base->url . 'assets/dist/js/om-format.min.js',
-				array( $campaign_selector_handle, 'wp-rich-text', 'wp-element', 'wp-editor' ),
+				array(
+					$campaign_selector_handle,
+					'wp-rich-text',
+					'wp-element',
+					$is_widgets_page && version_compare( $GLOBALS['wp_version'], '5.8.0', '>=' )
+						? 'wp-edit-widgets'
+						: 'wp-editor',
+				),
 				$version
 			);
 		}
@@ -240,6 +254,7 @@ class OMAPI_Blocks {
 				'omEnv'                 => defined( 'OPTINMONSTER_ENV' ) ? OPTINMONSTER_ENV : '',
 				'canMonsterlink'        => $this->base->has_rule_type( 'monster-link' ),
 				'templatesUri'          => OMAPI_Urls::templates(),
+				'playbooksUri'          => OMAPI_Urls::playbooks(),
 				'campaignsUri'          => OMAPI_Urls::campaigns(),
 				'settingsUri'           => OMAPI_Urls::settings(),
 				'wizardUri'             => OMAPI_Urls::wizard(),
