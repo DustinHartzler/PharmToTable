@@ -47,9 +47,18 @@ abstract class ConvertKit_Settings_Base {
 	 *
 	 * @since   1.9.6
 	 *
-	 * @var     false|ConvertKit_Settings|ConvertKit_ContactForm7_Settings|ConvertKit_Wishlist_Settings
+	 * @var     false|ConvertKit_Settings|ConvertKit_ContactForm7_Settings|ConvertKit_Wishlist_Settings|ConvertKit_Settings_Restrict_Content
 	 */
 	public $settings;
+
+	/**
+	 * Holds whether this settings section is for beta functionality.
+	 *
+	 * @since   2.1.0
+	 *
+	 * @var     bool
+	 */
+	public $is_beta = false;
 
 	/**
 	 * Constructor
@@ -99,16 +108,23 @@ abstract class ConvertKit_Settings_Base {
 	abstract public function print_section_info();
 
 	/**
+	 * Returns the URL for the ConvertKit documentation for this setting section.
+	 */
+	abstract public function documentation_url();
+
+	/**
 	 * Renders the section
 	 */
 	public function render() {
 
 		/**
-		 *  Performs actions prior to rendering the settings form.
+		 * Performs actions prior to rendering the settings form.
 		 *
 		 * @since   1.9.6
 		 */
 		do_action( 'convertkit_settings_base_render_before' );
+
+		$this->render_container_start();
 
 		do_settings_sections( $this->settings_key );
 
@@ -116,12 +132,63 @@ abstract class ConvertKit_Settings_Base {
 
 		submit_button();
 
+		$this->render_container_end();
+
 		/**
 		 *  Performs actions after rendering of the settings form.
 		 *
 		 * @since   1.9.6
 		 */
 		do_action( 'convertkit_settings_base_render_after' );
+
+	}
+
+	/**
+	 * Outputs .metabox-holder and .postbox container div elements,
+	 * used before beginning a setting screen's output.
+	 *
+	 * @since   2.0.0
+	 */
+	public function render_container_start() {
+
+		?>
+		<div class="metabox-holder">
+			<div class="postbox <?php echo sanitize_html_class( $this->is_beta ? 'convertkit-beta' : '' ); ?>">
+		<?php
+
+	}
+
+	/**
+	 * Outputs closing .metabox-holder and .postbox container div elements,
+	 * used after finishing a setting screen's output.
+	 *
+	 * @since   2.0.0
+	 */
+	public function render_container_end() {
+
+		?>
+			</div>
+		</div>
+		<?php
+
+	}
+
+	/**
+	 * Outputs the given success message in an inline notice.
+	 *
+	 * @since   2.0.0
+	 *
+	 * @param   string $success_message  Success Message.
+	 */
+	public function output_success( $success_message ) {
+
+		?>
+		<div class="notice notice-success is-dismissible">
+			<p>
+				<?php echo esc_attr( $success_message ); ?>
+			</p>
+		</div>
+		<?php
 
 	}
 
@@ -135,7 +202,7 @@ abstract class ConvertKit_Settings_Base {
 	public function output_error( $error_message ) {
 
 		?>
-		<div class="inline notice notice-error">
+		<div class="notice notice-error is-dismissible">
 			<p>
 				<?php echo esc_attr( $error_message ); ?>
 			</p>
@@ -149,9 +216,9 @@ abstract class ConvertKit_Settings_Base {
 	 *
 	 * @since   1.9.6
 	 *
-	 * @param   string $value          Value.
-	 * @param   mixed  $description    Description (false|string).
-	 * @return  string                  Masked Value
+	 * @param   string      $value          Value.
+	 * @param   bool|string $description    Description.
+	 * @return  string                      Masked Value
 	 */
 	public function get_masked_value( $value, $description = false ) {
 
@@ -173,15 +240,17 @@ abstract class ConvertKit_Settings_Base {
 	 *
 	 * @since   1.9.6
 	 *
-	 * @param   string $name           Name.
-	 * @param   string $value          Value.
-	 * @param   mixed  $description    Description (false|string|array).
-	 * @return  string                  HTML Field
+	 * @param   string            $name           Name.
+	 * @param   string            $value          Value.
+	 * @param   bool|string|array $description    Description (false|string|array).
+	 * @param   bool|array        $css_classes    CSS Classes (false|array).
+	 * @return  string                              HTML Field
 	 */
-	public function get_text_field( $name, $value = '', $description = false ) {
+	public function get_text_field( $name, $value = '', $description = false, $css_classes = false ) {
 
 		$html = sprintf(
-			'<input type="text" class="regular-text code" id="%s" name="%s[%s]" value="%s" />',
+			'<input type="text" class="%s" id="%s" name="%s[%s]" value="%s" />',
+			( is_array( $css_classes ) ? implode( ' ', $css_classes ) : 'regular-text' ),
 			$name,
 			$this->settings_key,
 			$name,
@@ -197,22 +266,24 @@ abstract class ConvertKit_Settings_Base {
 	 *
 	 * @since   1.9.6
 	 *
-	 * @param   string $name            Name.
-	 * @param   string $value           Value.
-	 * @param   array  $options         Options / Choices.
-	 * @param   mixed  $description     Description (false|string).
-	 * @param   mixed  $css_classes     <select> CSS class(es) (false|array).
-	 * @return  string                  HTML Select Field
+	 * @param   string      $name            Name.
+	 * @param   string      $value           Value.
+	 * @param   array       $options         Options / Choices.
+	 * @param   bool|string $description     Description.
+	 * @param   bool|array  $css_classes     <select> CSS class(es).
+	 * @param   bool|array  $attributes      <select> attributes.
+	 * @return  string                           HTML Select Field
 	 */
-	public function get_select_field( $name, $value = '', $options = array(), $description = false, $css_classes = false ) {
+	public function get_select_field( $name, $value = '', $options = array(), $description = false, $css_classes = false, $attributes = false ) {
 
 		// Build opening <select> tag.
 		$html = sprintf(
-			'<select id="%s" name="%s[%s]" class="%s" size="1">',
+			'<select id="%s" name="%s[%s]" class="%s" size="1" %s>',
 			$this->settings_key . '_' . $name,
 			$this->settings_key,
 			$name,
-			( is_array( $css_classes ) ? implode( ' ', $css_classes ) : '' )
+			( is_array( $css_classes ) ? implode( ' ', $css_classes ) : '' ),
+			( is_array( $attributes ) ? $this->array_to_attributes( $attributes ) : '' )
 		);
 
 		// Build <option> tags.
@@ -243,12 +314,12 @@ abstract class ConvertKit_Settings_Base {
 	 *
 	 * @since   1.9.6
 	 *
-	 * @param   string $name           Name.
-	 * @param   string $value          Value.
-	 * @param   bool   $checked        Should checkbox be checked/ticked.
-	 * @param   mixed  $label          Label (false|string).
-	 * @param   mixed  $description    Description (false|string).
-	 * @return  string                  HTML Checkbox
+	 * @param   string      $name           Name.
+	 * @param   string      $value          Value.
+	 * @param   bool        $checked        Should checkbox be checked/ticked.
+	 * @param   bool|string $label          Label.
+	 * @param   bool|string $description    Description.
+	 * @return  string                      HTML Checkbox
 	 */
 	public function get_checkbox_field( $name, $value, $checked = false, $label = '', $description = '' ) {
 
@@ -286,8 +357,8 @@ abstract class ConvertKit_Settings_Base {
 	 *
 	 * @since   1.9.6
 	 *
-	 * @param   mixed $description    Description (false|string|array).
-	 * @return  string                  HTML Description
+	 * @param   bool|string|array $description    Description.
+	 * @return  string                              HTML Description
 	 */
 	private function get_description( $description ) {
 
@@ -303,6 +374,25 @@ abstract class ConvertKit_Settings_Base {
 
 		// Return description lines in a paragraph, using breaklines for each description entry in the array.
 		return '<p class="description">' . implode( '<br />', $description );
+
+	}
+
+	/**
+	 * Converts the given key/value array pairs into a HTML attribute="value" string.
+	 *
+	 * @since   1.9.8.5
+	 *
+	 * @param   array $array  Attributes.
+	 * @return  string          HTML attributes string
+	 */
+	private function array_to_attributes( $array ) {
+
+		$attributes = '';
+		foreach ( $array as $key => $value ) {
+			$attributes .= esc_attr( $key ) . '="' . esc_attr( $value ) . '" ';
+		}
+
+		return trim( $attributes );
 
 	}
 

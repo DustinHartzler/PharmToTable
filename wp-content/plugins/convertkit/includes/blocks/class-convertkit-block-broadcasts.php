@@ -27,6 +27,9 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 		// Register this as a Gutenberg block in the ConvertKit Plugin.
 		add_filter( 'convertkit_blocks', array( $this, 'register' ) );
 
+		// Enqueue scripts and styles for this Gutenberg Block in the editor view.
+		add_action( 'convertkit_gutenberg_enqueue_scripts', array( $this, 'enqueue_scripts_editor' ) );
+
 		// Enqueue scripts and styles for this Gutenberg Block in the editor and frontend views.
 		add_action( 'convertkit_gutenberg_enqueue_scripts_editor_and_frontend', array( $this, 'enqueue_scripts' ) );
 		add_action( 'convertkit_gutenberg_enqueue_styles_editor_and_frontend', array( $this, 'enqueue_styles' ) );
@@ -39,6 +42,17 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 
 	/**
 	 * Enqueues scripts for this Gutenberg Block in the editor view.
+	 *
+	 * @since   2.0.1
+	 */
+	public function enqueue_scripts_editor() {
+
+		wp_enqueue_script( 'convertkit-gutenberg-block-broadcasts', CONVERTKIT_PLUGIN_URL . 'resources/backend/js/gutenberg-block-broadcasts.js', array( 'convertkit-gutenberg' ), CONVERTKIT_PLUGIN_VERSION, true );
+
+	}
+
+	/**
+	 * Enqueues scripts for this Gutenberg Block in the editor and frontend views.
 	 *
 	 * @since   1.9.7.6
 	 */
@@ -98,37 +112,47 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 	 */
 	public function get_overview() {
 
+		// Fetch Posts.
+		$posts = new ConvertKit_Resource_Posts( 'output_broadcasts' );
+
 		return array(
-			'title'                         => __( 'ConvertKit Broadcasts', 'convertkit' ),
-			'description'                   => __( 'Displays a list of your ConvertKit broadcasts.', 'convertkit' ),
-			'icon'                          => 'resources/backend/images/block-icon-broadcasts.png',
-			'category'                      => 'convertkit',
-			'keywords'                      => array(
+			'title'                             => __( 'ConvertKit Broadcasts', 'convertkit' ),
+			'description'                       => __( 'Displays a list of your ConvertKit broadcasts.', 'convertkit' ),
+			'icon'                              => 'resources/backend/images/block-icon-broadcasts.png',
+			'category'                          => 'convertkit',
+			'keywords'                          => array(
 				__( 'ConvertKit', 'convertkit' ),
 				__( 'Broadcasts', 'convertkit' ),
 				__( 'Posts', 'convertkit' ),
 			),
 
 			// Function to call when rendering as a block or a shortcode on the frontend web site.
-			'render_callback'               => array( $this, 'render' ),
+			'render_callback'                   => array( $this, 'render' ),
 
 			// Shortcode: TinyMCE / QuickTags Modal Width and Height.
-			'modal'                         => array(
+			'modal'                             => array(
 				'width'  => 500,
-				'height' => 405,
+				'height' => 580,
 			),
 
 			// Shortcode: Include a closing [/shortcode] tag when using TinyMCE or QuickTag Modals.
-			'shortcode_include_closing_tag' => false,
+			'shortcode_include_closing_tag'     => false,
 
 			// Gutenberg: Block Icon in Editor.
-			'gutenberg_icon'                    => file_get_contents( CONVERTKIT_PLUGIN_PATH . '/resources/backend/images/block-icon-broadcasts.svg' ), /* phpcs:ignore */
+			'gutenberg_icon'                		=> file_get_contents( CONVERTKIT_PLUGIN_PATH . '/resources/backend/images/block-icon-broadcasts.svg' ), /* phpcs:ignore */
 
 			// Gutenberg: Example image showing how this block looks when choosing it in Gutenberg.
-			'gutenberg_example_image'       => CONVERTKIT_PLUGIN_URL . 'resources/backend/images/block-example-broadcasts.png',
+			'gutenberg_example_image'           => CONVERTKIT_PLUGIN_URL . 'resources/backend/images/block-example-broadcasts.png',
 
-			// Gutenberg: Help description, displayed when no settings defined for a newly added Block.
-			'gutenberg_help_description'    => __( 'Define this Block\'s settings in the Gutenberg sidebar to display a list of your broadcasts.', 'convertkit' ),
+			// Gutenberg: Help description, displayed when no Posts exist.
+			'gutenberg_help_description'        => __( 'No Broadcasts exist in ConvertKit. Send your first Broadcast in ConvertKit to see the link to it here.', 'convertkit' ),
+
+			// Gutenberg: JS function to call when rendering the block preview in the Gutenberg editor.
+			// If not defined, render_callback above will be used.
+			'gutenberg_preview_render_callback' => 'convertKitGutenbergBroadcastsBlockRenderPreview',
+
+			// Flag to determine if Broadcasts exist.
+			'has_posts'                         => $posts->exist(),
 		);
 
 	}
@@ -254,6 +278,21 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 				'type'        => 'text',
 				'description' => __( 'The label to display for the link to older broadcasts.', 'convertkit' ),
 			),
+
+			// These fields will only display on the shortcode, and are deliberately not registered in get_attributes(),
+			// because Gutenberg will register its own color pickers for link, background and text.
+			'link_color'          => array(
+				'label' => __( 'Link color', 'convertkit' ),
+				'type'  => 'color',
+			),
+			'background_color'    => array(
+				'label' => __( 'Background color', 'convertkit' ),
+				'type'  => 'color',
+			),
+			'text_color'          => array(
+				'label' => __( 'Text color', 'convertkit' ),
+				'type'  => 'color',
+			),
 		);
 
 	}
@@ -281,6 +320,9 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 					'paginate',
 					'paginate_label_prev',
 					'paginate_label_next',
+					'link_color',
+					'background_color',
+					'text_color',
 				),
 			),
 		);
@@ -302,6 +344,9 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 			'paginate'            => false,
 			'paginate_label_prev' => __( 'Previous', 'convertkit' ),
 			'paginate_label_next' => __( 'Next', 'convertkit' ),
+			'link_color'          => '',
+			'background_color'    => '',
+			'text_color'          => '',
 
 			// Built-in Gutenberg block attributes.
 			'style'               => '',
@@ -332,7 +377,7 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 		$settings = new ConvertKit_Settings();
 
 		// Fetch Posts.
-		$posts = new ConvertKit_Resource_Posts();
+		$posts = new ConvertKit_Resource_Posts( 'output_broadcasts' );
 
 		// If this is an admin request, refresh the Posts resource now from the API,
 		// as it's an inexpensive query of ~ 0.5 seconds when we're editing a Page
@@ -380,12 +425,13 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 
 		// Build attributes array.
 		$atts = array(
-			'date_format'         => sanitize_text_field( $_REQUEST['date_format'] ),
-			'limit'               => sanitize_text_field( $_REQUEST['limit'] ),
+			'date_format'         => stripslashes( sanitize_text_field( $_REQUEST['date_format'] ) ),
+			'limit'               => stripslashes( sanitize_text_field( $_REQUEST['limit'] ) ),
 			'page'                => absint( $_REQUEST['page'] ),
 			'paginate'            => absint( $_REQUEST['paginate'] ),
-			'paginate_label_next' => sanitize_text_field( $_REQUEST['paginate_label_next'] ),
-			'paginate_label_prev' => sanitize_text_field( $_REQUEST['paginate_label_prev'] ),
+			'paginate_label_next' => stripslashes( sanitize_text_field( $_REQUEST['paginate_label_next'] ) ),
+			'paginate_label_prev' => stripslashes( sanitize_text_field( $_REQUEST['paginate_label_prev'] ) ),
+			'link_color'          => stripslashes( sanitize_text_field( $_REQUEST['link_color'] ) ),
 		);
 
 		// Parse attributes, defining fallback defaults if required
@@ -393,7 +439,7 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 		$atts = $this->sanitize_and_declare_atts( $atts );
 
 		// Fetch Posts.
-		$posts = new ConvertKit_Resource_Posts();
+		$posts = new ConvertKit_Resource_Posts( 'output_broadcasts' );
 
 		// Build HTML.
 		$html = $this->build_html( $posts, $atts, false );
@@ -438,7 +484,7 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 
 		// Include container, if required.
 		if ( $include_container ) {
-			$html = '<div class="' . esc_attr( implode( ' ', $atts['_css_classes'] ) ) . '" style="' . implode( ';', $atts['_css_styles'] ) . '" ' . $this->get_atts_as_html_data_attributes( $atts ) . '>';
+			$html = '<div class="' . implode( ' ', map_deep( $atts['_css_classes'], 'sanitize_html_class' ) ) . '" style="' . implode( ';', map_deep( $atts['_css_styles'], 'esc_attr' ) ) . '" ' . $this->get_atts_as_html_data_attributes( $atts ) . '>';
 		}
 
 		// Start list.
@@ -460,8 +506,8 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 
 			// Add broadcast as list item.
 			$html .= '<li class="convertkit-broadcast">
-				<time datetime="' . date_i18n( 'Y-m-d', $date_timestamp ) . '">' . date_i18n( $atts['date_format'], $date_timestamp ) . '</time>
-				<a href="' . $url . '" target="_blank" rel="nofollow noopener">' . $broadcast['title'] . '</a>
+				<time datetime="' . esc_attr( date_i18n( 'Y-m-d', $date_timestamp ) ) . '">' . esc_html( date_i18n( $atts['date_format'], $date_timestamp ) ) . '</time>
+				<a href="' . esc_attr( $url ) . '" target="_blank" rel="nofollow noopener"' . $this->get_link_style_tag( $atts ) . '>' . esc_html( $broadcast['title'] ) . '</a>
 			</li>';
 		}
 
@@ -516,8 +562,8 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 	 */
 	private function get_pagination_link_prev_html( $atts, $nonce ) {
 
-		return '<a href="' . esc_attr( $this->get_pagination_link( $atts['page'] - 1, $nonce ) ) . '" title="' . esc_attr( $atts['paginate_label_prev'] ) . '" data-page="' . esc_attr( (string) ( $atts['page'] - 1 ) ) . '" data-nonce="' . esc_attr( $nonce ) . '">
-			' . esc_attr( $atts['paginate_label_prev'] ) . '
+		return '<a href="' . esc_attr( $this->get_pagination_link( $atts['page'] - 1, $nonce ) ) . '" title="' . esc_attr( $atts['paginate_label_prev'] ) . '" data-page="' . esc_attr( (string) ( $atts['page'] - 1 ) ) . '" data-nonce="' . esc_attr( $nonce ) . '"' . $this->get_link_style_tag( $atts ) . '>
+			' . esc_html( $atts['paginate_label_prev'] ) . '
 		</a>';
 
 	}
@@ -534,8 +580,8 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 	 */
 	private function get_pagination_link_next_html( $atts, $nonce ) {
 
-		return '<a href="' . esc_attr( $this->get_pagination_link( $atts['page'] + 1, $nonce ) ) . '" title="' . esc_attr( $atts['paginate_label_next'] ) . '" data-page="' . esc_attr( (string) ( $atts['page'] + 1 ) ) . '" data-nonce="' . esc_attr( $nonce ) . '">
-			' . esc_attr( $atts['paginate_label_next'] ) . '
+		return '<a href="' . esc_attr( $this->get_pagination_link( $atts['page'] + 1, $nonce ) ) . '" title="' . esc_attr( $atts['paginate_label_next'] ) . '" data-page="' . esc_attr( (string) ( $atts['page'] + 1 ) ) . '" data-nonce="' . esc_attr( $nonce ) . '"' . $this->get_link_style_tag( $atts ) . '>
+			' . esc_html( $atts['paginate_label_next'] ) . '
 		</a>';
 
 	}
@@ -551,14 +597,23 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 	 */
 	private function get_pagination_link( $page, $nonce ) {
 
-		global $post;
+		global $post, $wp;
+
+		// Determine the base Permalink, depending on whether we're viewing an individual Page/Post or not.
+		if ( ! is_null( $post ) ) {
+			$permalink = get_permalink( $post->ID );
+		} else {
+			// Fallback to WordPress' request object to identify the current slug, as we are not viewing
+			// an individual Page or Post e.g. we're on the Home Page and this block is in a footer widget.
+			$permalink = home_url( $wp->request );
+		}
 
 		return add_query_arg(
 			array(
 				'convertkit-broadcasts-page'  => absint( $page ),
 				'convertkit-broadcasts-nonce' => $nonce,
 			),
-			get_permalink( $post->ID )
+			$permalink
 		);
 
 	}
@@ -592,6 +647,31 @@ class ConvertKit_Block_Broadcasts extends ConvertKit_Block {
 
 		// Return requested page number.
 		return absint( $_REQUEST['convertkit-broadcasts-page'] );
+
+	}
+
+	/**
+	 * If a link_color attribute exists in the given array of attributes, we're rendering a shortcode, and therefore
+	 * need to include inline styling for links.
+	 *
+	 * The Gutenberg block doesn't need this, because WordPress generates its own inline styles when a link color is selected.
+	 *
+	 * @since   1.9.8.5
+	 *
+	 * @param   array $atts   Block attributes.
+	 * @return  string          style attribute (blank string if no styles need to be applied)
+	 */
+	private function get_link_style_tag( $atts ) {
+
+		if ( ! isset( $atts['link_color'] ) ) {
+			return '';
+		}
+
+		if ( empty( $atts['link_color'] ) ) {
+			return '';
+		}
+
+		return ' style="color:' . esc_attr( $atts['link_color'] ) . '"';
 
 	}
 

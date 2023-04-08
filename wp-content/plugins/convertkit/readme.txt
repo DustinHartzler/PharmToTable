@@ -1,31 +1,32 @@
-=== ConvertKit ===
+=== ConvertKit - Email Marketing, Email Newsletter and Landing Pages ===
 Contributors: nathanbarry, growdev, travisnorthcutt, ggwicz
 Donate link: https://convertkit.com
-Tags: email, marketing, newsletter, convertkit
+Tags: email marketing, email newsletter, newsletter, subscribers, convertkit
 Requires at least: 5.0
-Tested up to: 6.0.1
+Tested up to: 6.2
 Requires PHP: 5.6.20
-Stable tag: trunk
+Stable tag: 2.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-ConvertKit is an email marketing platform for capturing leads from your WordPress blog.
+ConvertKit is an email marketing and email newsletter platform for capturing email subscribers and leads from your WordPress blog.
 
 == Description ==
 
-[ConvertKit](https://convertkit.com) makes it easy to capture more leads, sell more products and send targeted email marketing by easily embedding email capture forms anywhere on your WordPress web site.
+[ConvertKit](https://convertkit.com?utm_source=wordpress&utm_content=readme) makes it easy to grow your email subscribers lists, sell more products and send targeted email newsletters - all by easily embedding email marketing / email subscriber forms anywhere on your WordPress web site.
 
-= Main Features =
+= Email Marketing and Email Newsletter Features =
 
-- Design [subscription forms](https://convertkit.com/features/forms) in ConvertKit, automatically appending them to any WordPress post or page, or displaying forms within your WordPress content using the supplied Gutenberg block and shortcode options 
-- Build [landing pages](https://convertkit.com/features/landing-pages) in ConvertKit, and display them on a WordPress page
-- List past [email broadcasts](https://convertkit.com/features/email-marketing) on your WordPress site
+- Design [subscription forms](https://convertkit.com/features/forms?utm_source=wordpress&utm_content=readme) in ConvertKit, automatically appending them to any WordPress post or page, or displaying forms within your WordPress content using the supplied Gutenberg block and shortcode options. Perfect for building your email subscriber lists.
+- Build [landing pages](https://convertkit.com/features/landing-pages?utm_source=wordpress&utm_content=readme) in ConvertKit, and display them on a WordPress page to capture email subscribers
+- List past [email newsletters](https://convertkit.com/features/email-marketing?utm_source=wordpress&utm_content=readme) on your WordPress site
 
 = Forms =
 
-Design [forms](https://convertkit.com/features/forms) in ConvertKit, choosing from a variety of designs, customisable to your branding.
+Design [forms](https://convertkit.com/features/forms?utm_source=wordpress&utm_content=readme) in ConvertKit, choosing from a variety of designs, customisable to your branding.
 
 Sign up forms can be configured to:
+
 - Send free content, such as a PDF
 - Display when the user is about to leave the page
 - Subscribe to an email newsletter, with powerful tagging and segmentation options
@@ -33,45 +34,65 @@ Sign up forms can be configured to:
 Embedding ConvertKit forms on your WordPress web site with the ConvertKit Plugin is quick and simple:
 
 - Choose a default form to be displayed below each individual Post Type (Pages, Posts and other public Post Types, such as WooCommerce Products)
-- Choose a specific form to be dispalyed below a specific Page, Post or custom post type
+- Choose a specific email marketing form to be displayed below a specific Page, Post or custom post type
 - Turn off form embedding at both site wide and/or individual Page/Post level
 
-For greater control, ConvertKit forms can be displayed in specific sections of your WordPress site's content, sidebars and footers by:
+For greater control, ConvertKit's email marketing subscription forms can be displayed in specific sections of your WordPress site's content, sidebars and footers by:
 
 - Using the ConvertKit Forms block in Gutenberg
 - Using the `[convertkit]` shortcode in the Classic Editor
 
+Start collecting email subscribers today!
+
 = Landing Pages =
 
-Embed [landing pages](https://convertkit.com/features/landing-pages) designed in ConvertKit on your WordPress web site, choosing from a variety of designs, customisable to your branding.
+Embed [landing pages](https://convertkit.com/features/landing-pages?utm_source=wordpress&utm_content=readme), designed in ConvertKit, on your WordPress web site, choosing from a variety of designs, customisable to your branding and ideal for building your email marketing list or selling a product.
 
-Create or edit a WordPress Page, choose the ConvertKit landing page from the ConvertKit meta box settings to display, and you're set.
+Create or edit a WordPress Page, choose the ConvertKit landing page from the ConvertKit meta box settings to display, and you're all set to begin growing your email subscribers list.
 
-= Broadcasts =
+= Email Newsletter Broadcasts =
 
-Use ConvertKit's [email marketing](https://convertkit.com/features/email-marketing) feature to send newsletters to subscribers and leads.
+Use ConvertKit's [email marketing](https://convertkit.com/features/email-marketing?utm_source=wordpress&utm_content=readme) feature to send email newsletters to your subscribers and leads.
 
-Embed existing email marketing newsletters on your WordPress web site, ensuring visitors never miss newsletter content, by:
+Embed existing email newsletters on your WordPress web site, ensuring visitors never miss your email marketing content, by:
 
 - Using the ConvertKit Broadcasts block in Gutenberg
 - Using the `[convertkit_broadcasts]` shortcode in the Classic Editor
 
+= Sell Products =
+
+Embed buttons (or link text) to sell your ConvertKit Products in seconds - whether that's digital goods, paid newsletters, music, coaching and more.
+
+Already have content on your site that you want to sell? Use the Member's Content functionality on Pages to require email subscribers purchase a ConvertKit Product to access your content - whether that's a course or digital download.
+
 = Plugin Integrations =
 
-With the ConvertKit for WordPress Plugin, you also get:
+With the ConvertKit for WordPress Plugin, you also get integrations with:
 
 - Elementor: Form and Broadcast widgets natively integrated with Elementor, to embed ConvertKit forms and broadcast lists
-- Contact Form 7: Send Contact Form 7 form submissions to ConvertKit
-- WishList Member: Subscribe, unsubscribe and tag users based on their membership level
+- Contact Form 7: Automatically add email subscribers to ConvertKit when they submit a Contact Form 7 form
+- WishList Member: Automatically subscribe, unsubscribe and tag users based on their membership level
 
-Our other WordPress Plugins provide further integrations between WordPress Plugins and ConvertKit:
+Our other WordPress Plugins provide further integrations between WordPress and ConvertKit:
 
 - [ConvertKit for WooCommerce](https://wordpress.org/plugins/convertkit-for-woocommerce/): Subscribe, tag and assign sequences to customers at checkout, and send order data to ConvertKit
-- [ConvertKit for Gravity Forms](https://wordpress.org/plugins/convertkit-gravity-forms/): Send Gravity Form submissions to ConvertKit
+- [ConvertKit for Gravity Forms](https://wordpress.org/plugins/convertkit-gravity-forms/): Automatically add email subscribers to ConvertKit when they submit a Gravity Form, with tagging options
+
+= What is ConvertKit? =
+
+ConvertKit is the go-to marketing hub for creators that helps you grow and monetize your audience with ease.
+
+**Grow your audience:** Increase subscribers with beautiful landing pages, sign up forms, and link pages that make your work stand out.
+
+**Automate your marketing:** Create lasting connections and promote like a pro with our intuitive email editor, powerful sales funnels and subscriber list segmentation using tags.
+
+**Sell your digital products:** Market and sell your digital products and subscriptions with ConvertKit to drive higher conversions and save big on fees.
+
+If you are not yet using ConvertKit, [creating an account](https://app.convertkit.com/users/signup?plan=1k&utm_source=wordpress&utm_content=readme) is 100% free and only takes you about 30 seconds.
 
 = Documentation =
 
-Full Plugin documentation can be found [here](https://help.convertkit.com/en/articles/2502591-the-convertkit-wordpress-plugin).
+Full Plugin documentation can be found [here](https://help.convertkit.com/en/articles/2502591-the-convertkit-wordpress-plugin?utm_source=wordpress&utm_content=readme).
 
 == Installation ==
 
@@ -80,7 +101,7 @@ Full Plugin documentation can be found [here](https://help.convertkit.com/en/art
 
 == Configuration ==
 
-1. Configure the plugin by navigating to Settings > ConvertKit in the WordPress Administration Menu, entering your [API Key](https://app.convertkit.com/account_settings/advanced_settings) and defining the default forms to display on Pages, Posts and/or Custom Post Types
+1. Configure the plugin by navigating to Settings > ConvertKit in the WordPress Administration Menu, entering your [API Key](https://app.convertkit.com/account_settings/advanced_settings?utm_source=wordpress&utm_content=readme) and defining the default forms to display on Pages, Posts and/or Custom Post Types
 2. (Optional) choose a specific Form to display when editing a Page, Post or Custom Post Type in the Page/Post/Custom Post Type's ConvertKit settings
 3. (Optional) use the ConvertKit Form Shortcode or Block to insert Forms into your Page, Post or Custom Post Type content
 
@@ -88,15 +109,18 @@ Full Plugin documentation can be found [here](https://help.convertkit.com/en/art
 
 = Does this plugin require a paid service? =
 
-No. You must first have an account on ConvertKit.com, but you do not have to use a paid plan!
+No. You must first have an account on [convertkit.com](https://convertkit.com?utm_source=wordpress&utm_content=readme), but you do not have to use a paid plan!
 
 = How do I refresh my available Forms, Landing Pages and Tags? =
 
-Navigate to the Plugin's Settings at Settings > ConvertKit.
+Either:
+
+- Navigate to the Plugin's Settings at `Settings > ConvertKit`
+- Click the refresh button displayed next to the Form, Landing Page or Tag fields when creating/editing Pages or Posts
 
 = Where can I find the Plugin's Documentation? =
 
-Full Plugin documentation can be found [here](https://help.convertkit.com/en/articles/2502591-the-convertkit-wordpress-plugin).
+Full Plugin documentation can be found [here](https://help.convertkit.com/en/articles/2502591-the-convertkit-wordpress-plugin?utm_source=wordpress&utm_content=readme).
 
 == Screenshots ==
 
@@ -109,6 +133,94 @@ Full Plugin documentation can be found [here](https://help.convertkit.com/en/art
 7. Track subscriber growth
 
 == Changelog ==
+
+### 2.1.3 2023-04-06
+* Fix: Improve UI compatibility for buttons in WordPress 5.x, using `button-hero` CSS class instead of custom padding 
+* Updated: ConvertKit WordPress Libraries to 1.3.4
+
+### 2.1.2 2023-03-30
+* Added: Link to Setup Wizard on Plugins screen
+* Added: Improved ConvertKit Icons in Classic Editor and block editor for Broadcasts, Forms, Products and Custom Content
+
+### 2.1.1 2023-02-23
+* Fix: Post: Settings: PHP notices when settings are not an array
+* Fix: Landing Pages and Legacy Forms: Deprecated `mb_convert_encoding()` message in PHP 8.2
+
+### 2.1.0 2023-02-15
+* Added: Member's Content (Beta): Require subscribers to purchase a ConvertKit Product to access specific Pages on your WordPress site. Head over to `Settings > ConvertKit > Member's Content` to get started.
+* Fix: Product: Block and Shortcode: Set stylesheet ID to `convertkit-product-css`, to match other blocks
+* Fix: Blocks: Use wp.serverSideRender instead of soon to be deprecated wp.components.ServerSideRender
+* Fix: Forms: Preview: Support for previewing and editing Legacy Forms
+* Fix: Improved performance in WordPress Admin when invalid API credentials specified on new installation
+* Fix: Display notice in WordPress Admin with link to settings screen when invalid API credentials specified
+
+### 2.0.8 2023-02-02
+* Added: Settings: ConvertKit: Documentation tab
+* Added: Forms: Link to edit form in ConvertKit when previewing a Page, Post or Custom Post containing a ConvertKit form
+* Fix: Display Forms, Landing Pages, Products and Tags in alphabetical order when listed in a `<select>` dropdown
+* Fix: Form: Block and Shortcode: Check Forms exist in ConvertKit before outputting Block / Shortcode options
+* Fix: Form: Shortcode: Remove unused API Key output
+* Fix: Product: Block: Preview: Improved performance when previewing the Product block to determine if a ConvertKit Product was specified in the Block's settings
+* Fix: Product: Shortcode: Remove unused API Key and data-attributes output
+
+### 2.0.7 2023-01-16
+* Fix: Elementor 3.9.0+ compatibility
+* Updated: ConvertKit WordPress Libraries to 1.3.0
+
+### 2.0.6 2023-01-05
+* Fix: Honor "Add a tag" setting when enabled on a Page/Post
+* Fix: PHP Warning: Cannot modify header information - headers already sent, when ?ck_subscriber_id included in request URI in some Page Builders (e.g. Elementor)
+* Fix: PHP Warning: Trying to access array offset on value of type null
+
+### 2.0.5 2022-12-15
+* Fix: Broadcasts: Strip slashes on output when pagination clicked and Broadcasts are reloaded
+* Fix: Broadcasts: Sanitize and escape HTML attributes on output
+* Fix: Forms: Escape HTML attributes on output
+* Fix: Products: Sanitize and escape HTML attributes on output
+
+### 2.0.4 2022-12-13
+* Fix: Products: PHP warning when attempting to parse an invalid Product URL
+* Fix: Landing Pages: Catch and log when an error occurs fetching a Landing Page
+* Fix: Remove double forwardslash on product.css
+
+### 2.0.3 2022-12-08
+* Added: Categories: Option to specify ConvertKit Form to display when adding a new Post Category
+* Fix: Bulk & Quick Edit: Improve layout of ConvertKit settings on desktop and mobile
+* Fix: Post: Improve layout of ConvertKit settings on desktop and mobile
+* Fix: Categories: Improve layout of ConvertKit settings on desktop and mobile
+* Fix: Products: Block: Display preview when adding new block
+
+### 2.0.2 2022-11-21
+* Fixed: Removed argument count on `in_admin_footer` action calls
+
+### 2.0.1 2022-11-01
+* Added: Broadcasts: Block: Display message in editor when no Broadcasts exist in ConvertKit
+* Fixed: Settings: Contact Form 7: Render screen correctly when no Forms in ConvertKit
+* Fixed: Settings: WishList Member: Render screen correctly when no Forms in ConvertKit
+
+### 2.0.0 2022-10-24
+* Added: ConvertKit Products Block, to output a button linking to a ConvertKit Product or Tip Jar
+* Added: ConvertKit Products Shortcode, to output a button linking to a ConvertKit Product or Tip Jar
+* Added: Gutenberg: Option to link text or button to a ConvertKit Product or Tip Jar
+* Added: Classic Editor: Option to link text or button to a ConvertKit Product or Tip Jar
+* Added: Settings: Improved UI
+
+### 1.9.8.5 2022-10-03
+* Added: Broadcasts: Shortcode: Options to specify background, text and link colors
+* Added: Broadcasts: Elementor: Options to specify background, text and link colors
+* Added: Settings: General: Links added to preview Default Form for each Post Type
+
+### 1.9.8.4 2022-09-08
+* Added: Setup Wizard for new installations
+* Fix: Text Editor: Quicktag Buttons: Position and size modal window correctly to avoid scrollbars and whitespace
+* Fix: Widgets: Legacy Forms Widget: "The convertkit_form block was affected by errors and may not function properly" when attempting to add legacy form widget
+* Development: Moved /lib folder to managed repository
+
+### 1.9.8.3 2022-08-19
+* Added: Settings: Tools: Use WordPress' Site Info to populate System Info section
+* Added: Refresh button: Show error notification when refreshing fails
+* Fix: Widgets: Broadcasts Block: JSON response error when attempting to save Broadcasts Block in a Widget area
+* Fix: Classic (Visual) and Text Editor: Insert shortcode into correct editor when multiple editor instances exist (e.g. WooCommerce Products)
 
 ### 1.9.8.2 2022-08-04
 * Fix: API: Show error notification when API returns HTTP 500 and 502 errors, instead of showing PHP warnings

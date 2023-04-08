@@ -28,6 +28,9 @@ class ConvertKit_Settings_Tools extends ConvertKit_Settings_Base {
 		$this->title        = __( 'Tools', 'convertkit' );
 		$this->tab_text     = __( 'Tools', 'convertkit' );
 
+		// Output notices.
+		add_action( 'convertkit_settings_base_render_before', array( $this, 'maybe_output_notices' ) );
+
 		parent::__construct();
 
 		$this->maybe_perform_actions();
@@ -122,14 +125,14 @@ class ConvertKit_Settings_Tools extends ConvertKit_Settings_Base {
 		}
 
 		// Get System Info.
-		$system_info = new ConvertKit_System_Info();
+		$system_info = $this->get_system_info();
 
 		// Write contents to temporary file.
 		$tmpfile  = tmpfile();
 		$filename = stream_get_meta_data( $tmpfile )['uri'];
 		$wp_filesystem->put_contents(
 			$filename,
-			$system_info->get()
+			esc_attr( $system_info )
 		);
 
 		// Download.
@@ -284,15 +287,11 @@ class ConvertKit_Settings_Tools extends ConvertKit_Settings_Base {
 	}
 
 	/**
-	 * Outputs the Debug Log and System Info view.
+	 * Outputs success and/or error notices if required.
 	 *
-	 * @since   1.9.6
+	 * @since   2.0.0
 	 */
-	public function render() {
-
-		// Get Log and System Info.
-		$log         = new ConvertKit_Log( CONVERTKIT_PLUGIN_PATH );
-		$system_info = new ConvertKit_System_Info();
+	public function maybe_output_notices() {
 
 		// Define messages that might be displayed as a notification.
 		$messages = array(
@@ -301,18 +300,46 @@ class ConvertKit_Settings_Tools extends ConvertKit_Settings_Base {
 			'import_configuration_empty'             => __( 'The uploaded configuration file contains no settings.', 'convertkit' ),
 			'import_configuration_success'           => __( 'Configuration imported successfully.', 'convertkit' ),
 		);
-		$error    = false;
+
+		// Output error notification if defined.
 		if ( isset( $_REQUEST['error'] ) && array_key_exists( sanitize_text_field( $_REQUEST['error'] ), $messages ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$error = $messages[ sanitize_text_field( $_REQUEST['error'] ) ]; // phpcs:ignore WordPress.Security.NonceVerification
+			$this->output_error( $messages[ sanitize_text_field( $_REQUEST['error'] ) ] ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
-		$success = false;
+		// Output success notification if defined.
 		if ( isset( $_REQUEST['success'] ) && array_key_exists( sanitize_text_field( $_REQUEST['success'] ), $messages ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$success = $messages[ sanitize_text_field( $_REQUEST['success'] ) ]; // phpcs:ignore WordPress.Security.NonceVerification
+			$this->output_success( $messages[ sanitize_text_field( $_REQUEST['success'] ) ] ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
+
+	}
+
+	/**
+	 * Outputs the Debug Log and System Info view.
+	 *
+	 * @since   1.9.6
+	 */
+	public function render() {
+
+		/**
+		 * Performs actions prior to rendering the settings form.
+		 *
+		 * @since   2.0.0
+		 */
+		do_action( 'convertkit_settings_base_render_before' );
+
+		// Get Log and System Info.
+		$log         = new ConvertKit_Log( CONVERTKIT_PLUGIN_PATH );
+		$system_info = $this->get_system_info();
 
 		// Output view.
 		require_once CONVERTKIT_PLUGIN_PATH . '/views/backend/settings/tools.php';
+
+		/**
+		 * Performs actions after rendering of the settings form.
+		 *
+		 * @since   2.0.0
+		 */
+		do_action( 'convertkit_settings_base_render_after' );
 
 	}
 
@@ -320,9 +347,46 @@ class ConvertKit_Settings_Tools extends ConvertKit_Settings_Base {
 	 * Prints help info for this section
 	 */
 	public function print_section_info() {
+
 		?>
 		<p><?php esc_html_e( 'Tools to help you manage ConvertKit on your site.', 'convertkit' ); ?></p>
 		<?php
+
+	}
+
+	/**
+	 * Returns the URL for the ConvertKit documentation for this setting section.
+	 *
+	 * @since   2.0.8
+	 *
+	 * @return  string  Documentation URL.
+	 */
+	public function documentation_url() {
+
+		return 'https://help.convertkit.com/en/articles/2502591-the-convertkit-wordpress-plugin';
+
+	}
+
+	/**
+	 * Returns a string comprising of the WordPress system information, with Plugin information
+	 * prepended.
+	 *
+	 * @since   1.9.8.3
+	 */
+	private function get_system_info() {
+
+		// If we're using WordPress < 5.2, there's no WP_Debug_Data class to fetch system information from.
+		if ( version_compare( get_bloginfo( 'version' ), '5.2', '<' ) ) {
+			return __( 'WordPress 5.2 or higher is required for system information report.', 'convertkit' );
+		}
+
+		// Use WordPress' debug_data() function to get system info, matching how Tools > Site Health > Info works.
+		if ( ! class_exists( 'WP_Debug_Data' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/class-wp-debug-data.php';
+		}
+
+		return str_replace( '`', '', WP_Debug_Data::format( WP_Debug_Data::debug_data(), 'debug' ) );
+
 	}
 
 }

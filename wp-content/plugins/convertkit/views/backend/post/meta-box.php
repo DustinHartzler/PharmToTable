@@ -15,8 +15,8 @@
 				<label for="wp-convertkit-form"><?php esc_html_e( 'Form', 'convertkit' ); ?></label>
 			</th>
 			<td>
-				<div class="convertkit-select2-container">
-					<select name="wp-convertkit[form]" id="wp-convertkit-form" class="convertkit-select2">
+				<div class="convertkit-select2-container convertkit-select2-container-grid">
+					<select name="wp-convertkit[form]" id="wp-convertkit-form" class="convertkit-select2 widefat">
 						<option value="-1"<?php selected( - 1, $convertkit_post->get_form() ); ?> data-preserve-on-refresh="1">
 							<?php esc_html_e( 'Default', 'convertkit' ); ?>
 						</option>
@@ -50,18 +50,16 @@
 						<?php _e( '<code>None</code>: do not display a form.', 'convertkit' ); /* phpcs:ignore */ ?>
 						<br />
 						<?php esc_html_e( 'Any other option will display that form after the main content.', 'convertkit' ); ?>
+						<br />
+						<?php
+						echo sprintf(
+							/* translators: Link to sign in to ConvertKit */
+							esc_html__( 'To make changes to your forms, %s', 'convertkit' ),
+							'<a href="' . esc_url( convertkit_get_sign_in_url() ) . '" target="_blank">' . esc_html__( 'sign in to ConvertKit', 'convertkit' ) . '</a>'
+						);
+						?>
 					</p>
 				</div>
-
-				<p class="description">
-					<?php
-					echo sprintf(
-						/* translators: Link to sign in to ConvertKit */
-						esc_html__( 'To make changes to your forms, %s', 'convertkit' ),
-						'<a href="' . esc_url( convertkit_get_sign_in_url() ) . '" target="_blank">' . esc_html__( 'sign in to ConvertKit', 'convertkit' ) . '</a>'
-					);
-					?>
-				</p>
 			</td>
 		</tr>
 
@@ -74,7 +72,7 @@
 					<label for="wp-convertkit-landing_page"><?php esc_html_e( 'Landing Page', 'convertkit' ); ?></label>
 				</th>
 				<td>
-					<div class="convertkit-select2-container">
+					<div class="convertkit-select2-container convertkit-select2-container-grid">
 						<select name="wp-convertkit[landing_page]" id="wp-convertkit-landing_page" class="convertkit-select2">
 							<option <?php selected( '', $convertkit_post->get_landing_page() ); ?> value="0" data-preserve-on-refresh="1">
 								<?php esc_html_e( 'None', 'convertkit' ); ?>
@@ -104,18 +102,16 @@
 						</button>
 						<p class="description">
 							<?php esc_html_e( 'Select a landing page to make it appear in place of this page.', 'convertkit' ); ?>
+							<br />
+							<?php
+							echo sprintf(
+								/* translators: Link to sign in to ConvertKit */
+								esc_html__( 'To make changes to your landing pages, %s', 'convertkit' ),
+								'<a href="' . esc_url( convertkit_get_sign_in_url() ) . '" target="_blank">' . esc_html__( 'sign in to ConvertKit', 'convertkit' ) . '</a>'
+							);
+							?>
 						</p>
 					</div>
-
-					<p class="description">
-						<?php
-						echo sprintf(
-							/* translators: Link to sign in to ConvertKit */
-							esc_html__( 'To make changes to your landing pages, %s', 'convertkit' ),
-							'<a href="' . esc_url( convertkit_get_sign_in_url() ) . '" target="_blank">' . esc_html__( 'sign in to ConvertKit', 'convertkit' ) . '</a>'
-						);
-						?>
-					</p>
 				</td>
 			</tr>
 			<?php
@@ -128,7 +124,7 @@
 				<label for="wp-convertkit-tag"><?php esc_html_e( 'Add a Tag', 'convertkit' ); ?></label>
 			</th>
 			<td>
-				<div class="convertkit-select2-container">
+				<div class="convertkit-select2-container convertkit-select2-container-grid">
 					<select name="wp-convertkit[tag]" id="wp-convertkit-tag" class="convertkit-select2">
 						<option value="0"<?php selected( '', $convertkit_post->get_tag() ); ?> data-preserve-on-refresh="1">
 							<?php esc_html_e( 'None', 'convertkit' ); ?>
@@ -156,6 +152,51 @@
 				</div>
 			</td>
 		</tr>
+
+		<?php
+		if ( $restrict_content_settings->enabled() ) {
+			?>
+			<tr valign="top">
+				<th scope="row">
+					<label for="wp-convertkit-restrict_content"><?php esc_html_e( 'Member Content', 'convertkit' ); ?></label>
+				</th>
+				<td>
+					<div class="convertkit-select2-container convertkit-select2-container-grid">
+						<select name="wp-convertkit[restrict_content]" id="wp-convertkit-restrict_content" class="convertkit-select2">
+							<option value="0"<?php selected( '', $convertkit_post->get_restrict_content() ); ?> data-preserve-on-refresh="1">
+								<?php esc_html_e( 'Don\'t restrict content to members only.', 'convertkit' ); ?>
+							</option>
+
+							<?php
+							if ( $convertkit_products->exist() ) {
+								?>
+								<optgroup label="<?php esc_attr_e( 'Products', 'convertkit' ); ?>">
+									<?php
+									foreach ( $convertkit_products->get() as $product ) {
+										?>
+										<option value="product_<?php echo esc_attr( $product['id'] ); ?>"<?php selected( 'product_' . $product['id'], $convertkit_post->get_restrict_content() ); ?>>
+											<?php echo esc_attr( $product['name'] ); ?>
+										</option>
+										<?php
+									}
+									?>
+								</optgroup>
+								<?php
+							}
+							?>
+						</select>
+						<button class="wp-convertkit-refresh-resources" class="button button-secondary hide-if-no-js" title="<?php esc_attr_e( 'Refresh Products Pages from ConvertKit account', 'convertkit' ); ?>" data-resource="products" data-field="#wp-convertkit-restrict_content">
+							<span class="dashicons dashicons-update"></span>
+						</button>
+						<p class="description">
+							<?php esc_html_e( 'Select the ConvertKit product that the visitor must be subscribed to, permitting them access to view this members only content.', 'convertkit' ); ?>
+						</p>
+					</div>
+				</td>
+			</tr>
+			<?php
+		}
+		?>
 	</tbody>
 </table>
 

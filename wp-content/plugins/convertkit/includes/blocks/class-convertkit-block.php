@@ -208,6 +208,15 @@ class ConvertKit_Block {
 				case 'boolean':
 					$atts[ $att ] = (bool) $value;
 					break;
+
+				case 'string':
+					// If the attribute's value is empty, check if the default attribute has a value.
+					// If so, apply it now.
+					// shortcode_atts() will only do this if the attribute key isn't specified.
+					if ( empty( $value ) && ! empty( $this->get_default_value( $att ) ) ) {
+						$atts[ $att ] = $this->get_default_value( $att );
+					}
+					break;
 			}
 		}
 
@@ -229,6 +238,13 @@ class ConvertKit_Block {
 			$atts['_css_styles']['color'] = 'color:' . $atts['style']['color']['text'];
 		}
 
+		// If the shortcode supports a text color, and a custom hex color was selected, add it to the
+		// array of CSS inline styles.
+		if ( isset( $atts['text_color'] ) && ! empty( $atts['text_color'] ) ) {
+			$atts['_css_classes'][]       = 'has-text-color';
+			$atts['_css_styles']['color'] = 'color:' . $atts['text_color'];
+		}
+
 		// If the block supports a background color, and a preset color was selected, add it to the
 		// array of CSS classes.
 		if ( $atts['backgroundColor'] ) {
@@ -241,6 +257,28 @@ class ConvertKit_Block {
 		if ( isset( $atts['style']['color'] ) && isset( $atts['style']['color']['background'] ) ) {
 			$atts['_css_classes'][]            = 'has-background';
 			$atts['_css_styles']['background'] = 'background-color:' . $atts['style']['color']['background'];
+		}
+
+		// If the block supports a font size, and a preset font size was selected, add it to the
+		// array of CSS classes.
+		if ( isset( $atts['fontSize'] ) && ! empty( $atts['fontSize'] ) ) {
+			$atts['_css_classes'][] = 'has-custom-font-size';
+			$atts['_css_classes'][] = 'has-' . $atts['fontSize'] . '-font-size';
+		}
+
+		// If the block supports padding, and padding is set, add it to the
+		// array of CSS inline styles.
+		if ( isset( $atts['style']['spacing'] ) && isset( $atts['style']['spacing']['padding'] ) ) {
+			foreach ( $atts['style']['spacing']['padding'] as $position => $value ) {
+				$atts['_css_styles'][ 'padding-' . $position ] = 'padding-' . $position . ':' . $value;
+			}
+		}
+
+		// If the shortcode supports a background color, and a custom hex color was selected, add it to the
+		// array of CSS inline styles.
+		if ( isset( $atts['background_color'] ) && ! empty( $atts['background_color'] ) ) {
+			$atts['_css_classes'][]            = 'has-background';
+			$atts['_css_styles']['background'] = 'background-color:' . $atts['background_color'];
 		}
 
 		// Remove some unused attributes, now they're declared above.
@@ -311,6 +349,33 @@ class ConvertKit_Block {
 		}
 
 		return trim( $data );
+
+	}
+
+	/**
+	 * Determines if the request for the block is from the block editor or the frontend site.
+	 *
+	 * @since   1.9.8.5
+	 *
+	 * @return  bool
+	 */
+	public function is_block_editor_request() {
+
+		// Return false if not a WordPress REST API request, which Gutenberg uses.
+		if ( ! defined( 'REST_REQUEST' ) ) {
+			return false;
+		}
+		if ( REST_REQUEST !== true ) {
+			return false;
+		}
+
+		// Return false if the context parameter isn't edit.
+		if ( filter_input( INPUT_GET, 'context', FILTER_SANITIZE_STRING ) !== 'edit' ) {
+			return false;
+		}
+
+		// Request is for the block editor.
+		return true;
 
 	}
 

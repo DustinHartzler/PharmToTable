@@ -270,11 +270,24 @@ class ConvertKit_Settings {
 		 *
 		 * @since   1.9.6
 		 *
-		 * @param   array   $defaults
+		 * @param   array   $defaults   Default Settings.
 		 */
 		$defaults = apply_filters( 'convertkit_settings_get_defaults', $defaults );
 
 		return $defaults;
+
+	}
+
+	/**
+	 * Saves the given array of settings to the WordPress options table.
+	 *
+	 * @since   1.9.8.4
+	 *
+	 * @param   array $settings   Settings.
+	 */
+	public function save( $settings ) {
+
+		update_option( self::SETTINGS_NAME, array_merge( $this->get(), $settings ) );
 
 	}
 

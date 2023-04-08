@@ -64,14 +64,18 @@ class WP_ConvertKit {
 			return;
 		}
 
-		$this->classes['admin_bulk_edit']         = new ConvertKit_Admin_Bulk_Edit();
-		$this->classes['admin_category']          = new ConvertKit_Admin_Category();
-		$this->classes['admin_post']              = new ConvertKit_Admin_Post();
-		$this->classes['admin_quick_edit']        = new ConvertKit_Admin_Quick_Edit();
-		$this->classes['admin_refresh_resources'] = new ConvertKit_Admin_Refresh_Resources();
-		$this->classes['admin_settings']          = new ConvertKit_Admin_Settings();
-		$this->classes['admin_tinymce']           = new ConvertKit_Admin_TinyMCE();
-		$this->classes['admin_user']              = new ConvertKit_Admin_User();
+		$this->classes['admin_bulk_edit']                     = new ConvertKit_Admin_Bulk_Edit();
+		$this->classes['admin_category']                      = new ConvertKit_Admin_Category();
+		$this->classes['admin_notices']                       = new ConvertKit_Admin_Notices();
+		$this->classes['admin_post']                          = new ConvertKit_Admin_Post();
+		$this->classes['admin_quick_edit']                    = new ConvertKit_Admin_Quick_Edit();
+		$this->classes['admin_refresh_resources']             = new ConvertKit_Admin_Refresh_Resources();
+		$this->classes['admin_restrict_content']              = new ConvertKit_Admin_Restrict_Content();
+		$this->classes['admin_settings']                      = new ConvertKit_Admin_Settings();
+		$this->classes['admin_setup_wizard_plugin']           = new ConvertKit_Admin_Setup_Wizard_Plugin();
+		$this->classes['admin_setup_wizard_restrict_content'] = new ConvertKit_Admin_Setup_Wizard_Restrict_Content();
+		$this->classes['admin_tinymce']                       = new ConvertKit_Admin_TinyMCE();
+		$this->classes['admin_user']                          = new ConvertKit_Admin_User();
 
 		/**
 		 * Initialize integration classes for the WordPress Administration interface.
@@ -136,7 +140,8 @@ class WP_ConvertKit {
 			return;
 		}
 
-		$this->classes['output'] = new ConvertKit_Output();
+		$this->classes['output']                  = new ConvertKit_Output();
+		$this->classes['output_restrict_content'] = new ConvertKit_Output_Restrict_Content();
 
 		/**
 		 * Initialize integration classes for the frontend web site.
@@ -159,9 +164,12 @@ class WP_ConvertKit {
 		$this->classes['blocks_convertkit_broadcasts'] = new ConvertKit_Block_Broadcasts();
 		$this->classes['blocks_convertkit_content']    = new ConvertKit_Block_Content();
 		$this->classes['blocks_convertkit_form']       = new ConvertKit_Block_Form();
+		$this->classes['blocks_convertkit_product']    = new ConvertKit_Block_Product();
 		$this->classes['elementor']                    = new ConvertKit_Elementor();
 		$this->classes['gutenberg']                    = new ConvertKit_Gutenberg();
+		$this->classes['post_type_product']            = new ConvertKit_Post_Type_Product();
 		$this->classes['review_request']               = new ConvertKit_Review_Request( 'ConvertKit', 'convertkit', CONVERTKIT_PLUGIN_PATH );
+		$this->classes['preview_output']               = new ConvertKit_Preview_Output();
 		$this->classes['setup']                        = new ConvertKit_Setup();
 		$this->classes['shortcodes']                   = new ConvertKit_Shortcodes();
 		$this->classes['widgets']                      = new ConvertKit_Widgets();
@@ -224,62 +232,63 @@ class WP_ConvertKit {
 		// If the request global exists, check for specific request keys which tell us
 		// that we're using a frontend editor.
 		// Avada Live.
-		if ( array_key_exists( 'fb-edit', $_REQUEST ) ) { // phpcs:ignore
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( array_key_exists( 'fb-edit', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Beaver Builder.
-		if ( array_key_exists( 'fl_builder', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( 'fl_builder', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Brizy.
-		if ( array_key_exists( 'brizy-edit', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( 'brizy-edit', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Cornerstone (AJAX).
-		if ( array_key_exists( '_cs_nonce', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( '_cs_nonce', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Divi.
-		if ( array_key_exists( 'et_fb', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( 'et_fb', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Elementor.
-		if ( array_key_exists( 'action', $_REQUEST ) && sanitize_text_field( $_REQUEST['action'] ) === 'elementor' ) { // phpcs:ignore
+		if ( array_key_exists( 'action', $_REQUEST ) && sanitize_text_field( $_REQUEST['action'] ) === 'elementor' ) {
 			return true;
 		}
 
 		// Kallyas.
-		if ( array_key_exists( 'zn_pb_edit', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( 'zn_pb_edit', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Oxygen.
-		if ( array_key_exists( 'ct_builder', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( 'ct_builder', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Thrive Architect.
-		if ( array_key_exists( 'tve', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( 'tve', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Visual Composer.
-		if ( array_key_exists( 'vcv-editable', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( 'vcv-editable', $_REQUEST ) ) {
 			return true;
 		}
 
 		// WPBakery Page Builder.
-		if ( array_key_exists( 'vc_editable', $_REQUEST ) ) { // phpcs:ignore
+		if ( array_key_exists( 'vc_editable', $_REQUEST ) ) {
 			return true;
 		}
 
 		// Zion Builder.
-		if ( array_key_exists( 'action', $_REQUEST ) && sanitize_text_field( $_REQUEST['action'] ) === 'zion_builder_active' ) { // phpcs:ignore
+		if ( array_key_exists( 'action', $_REQUEST ) && sanitize_text_field( $_REQUEST['action'] ) === 'zion_builder_active' ) {
 			return true;
 		}
 
@@ -295,7 +304,9 @@ class WP_ConvertKit {
 		 *
 		 * @param   bool    $is_admin_or_frontend_editor    Is WordPress Administration / Frontend Editor request.
 		 */
-		$is_admin_or_frontend_editor = apply_filters( 'convertkit_is_admin_or_frontend_editor', $is_admin_or_frontend_editor );  // phpcs:ignore
+		$is_admin_or_frontend_editor = apply_filters( 'convertkit_is_admin_or_frontend_editor', $is_admin_or_frontend_editor );
+
+		// phpcs:enable
 
 		// Return filtered result.
 		return $is_admin_or_frontend_editor;

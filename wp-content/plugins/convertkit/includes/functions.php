@@ -22,6 +22,9 @@ function convertkit_plugin_activate( $network_wide ) {
 	if ( ! is_multisite() || ! $network_wide ) {
 		// Single Site activation.
 		$convertkit->get_class( 'setup' )->activate();
+
+		// Set a transient for 30 seconds to redirect to the setup screen on activation.
+		set_transient( 'convertkit-setup', true, 30 );
 	} else {
 		// Multisite network wide activation.
 		$sites = get_sites(
@@ -30,7 +33,7 @@ function convertkit_plugin_activate( $network_wide ) {
 			)
 		);
 		foreach ( $sites as $site ) {
-			switch_to_blog( $site->blog_id );
+			switch_to_blog( (int) $site->blog_id );
 			$convertkit->get_class( 'setup' )->activate();
 			restore_current_blog();
 		}
@@ -44,7 +47,7 @@ function convertkit_plugin_activate( $network_wide ) {
  *
  * @since   1.9.7.4
  *
- * @param   mixed $site_or_blog_id    WP_Site or Blog ID.
+ * @param   WP_Site|int $site_or_blog_id    WP_Site or Blog ID.
  */
 function convertkit_plugin_activate_new_site( $site_or_blog_id ) {
 
@@ -87,7 +90,7 @@ function convertkit_plugin_deactivate( $network_wide ) {
 			)
 		);
 		foreach ( $sites as $site ) {
-			switch_to_blog( $site->blog_id );
+			switch_to_blog( (int) $site->blog_id );
 			$convertkit->get_class( 'setup' )->deactivate();
 			restore_current_blog();
 		}
@@ -117,6 +120,32 @@ function convertkit_get_supported_post_types() {
 	 * @param   array   $post_types     Post Types
 	 */
 	$post_types = apply_filters( 'convertkit_get_supported_post_types', $post_types );
+
+	return $post_types;
+
+}
+
+/**
+ * Helper method to get supported Post Types for Restricted Content (Member's Content)
+ *
+ * @since   2.1.0
+ *
+ * @return  array   Post Types
+ */
+function convertkit_get_supported_restrict_content_post_types() {
+
+	$post_types = array(
+		'page',
+	);
+
+	/**
+	 * Defines the Post Types that support Restricted Content / Members Content functionality.
+	 *
+	 * @since   2.0.0
+	 *
+	 * @param   array   $post_types     Post Types
+	 */
+	$post_types = apply_filters( 'convertkit_get_supported_restrict_content_post_types', $post_types );
 
 	return $post_types;
 
@@ -188,6 +217,19 @@ function convertkit_get_settings_link( $query_args = array() ) {
 	);
 
 	return add_query_arg( $query_args, admin_url( 'options-general.php' ) );
+
+}
+
+/**
+ * Helper method to return the URL the user needs to visit to register a ConvertKit account.
+ *
+ * @since   1.9.8.4
+ *
+ * @return  string  ConvertKit Registration URL.
+ */
+function convertkit_get_registration_url() {
+
+	return 'https://app.convertkit.com/users/signup?utm_source=wordpress&utm_content=convertkit';
 
 }
 

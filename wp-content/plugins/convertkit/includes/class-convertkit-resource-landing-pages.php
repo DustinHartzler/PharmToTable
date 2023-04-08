@@ -29,17 +29,42 @@ class ConvertKit_Resource_Landing_Pages extends ConvertKit_Resource {
 	public $type = 'landing_pages';
 
 	/**
+	 * Constructor.
+	 *
+	 * @since   1.9.8.4
+	 *
+	 * @param   bool|string $context    Context.
+	 */
+	public function __construct( $context = false ) {
+
+		// Initialize the API if the API Key and Secret have been defined in the Plugin Settings.
+		$settings = new ConvertKit_Settings();
+		if ( $settings->has_api_key_and_secret() ) {
+			$this->api = new ConvertKit_API(
+				$settings->get_api_key(),
+				$settings->get_api_secret(),
+				$settings->debug_enabled(),
+				$context
+			);
+		}
+
+		// Call parent initialization function.
+		parent::init();
+
+	}
+
+	/**
 	 * Returns the HTML/JS markup for the given Landing Page ID
 	 *
 	 * @since   1.9.6
 	 *
-	 * @param   mixed $id     Landing Page ID | Legacy Landing Page URL.
+	 * @param   int|string $id     Landing Page ID or Legacy Landing Page URL.
 	 * @return  WP_Error|string
 	 */
 	public function get_html( $id ) {
 
 		// Setup API.
-		$api = new ConvertKit_API();
+		$api = new ConvertKit_API( false, false, true, 'output_landing_page' );
 
 		// If the ID is a URL, this is a Legacy Landing Page defined for use on this Page
 		// in a Plugin version < 1.9.6.

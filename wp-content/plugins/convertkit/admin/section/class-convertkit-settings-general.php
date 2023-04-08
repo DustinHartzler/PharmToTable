@@ -57,6 +57,7 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 		$this->title    = __( 'General Settings', 'convertkit' );
 		$this->tab_text = __( 'General', 'convertkit' );
 
+		// Render container element.
 		add_action( 'convertkit_settings_base_render_before', array( $this, 'render_before' ) );
 
 		parent::__construct();
@@ -119,8 +120,9 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 				$this->settings_key,
 				$this->name,
 				array(
-					'label_for' => '_wp_convertkit_settings_' . $supported_post_type . '_form',
-					'post_type' => $supported_post_type,
+					'label_for'        => '_wp_convertkit_settings_' . $supported_post_type . '_form',
+					'post_type'        => $supported_post_type,
+					'post_type_object' => $post_type,
 				)
 			);
 		}
@@ -182,7 +184,21 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 	}
 
 	/**
-	 * Performs actions prior to rendering the settings form.
+	 * Returns the URL for the ConvertKit documentation for this setting section.
+	 *
+	 * @since   2.0.8
+	 *
+	 * @return  string  Documentation URL.
+	 */
+	public function documentation_url() {
+
+		return 'https://help.convertkit.com/en/articles/2502591-the-convertkit-wordpress-plugin';
+
+	}
+
+	/**
+	 * Renders container divs for styling, and attempts to fetch the ConvertKit Account
+	 * details if API credentials have been specified.
 	 *
 	 * @since 1.9.6
 	 */
@@ -196,7 +212,8 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 		$this->api = new ConvertKit_API(
 			$this->settings->get_api_key(),
 			$this->settings->get_api_secret(),
-			$this->settings->debug_enabled()
+			$this->settings->debug_enabled(),
+			'settings'
 		);
 
 		// Get Account Details, which we'll use in account_name_callback(), but also lets us test
@@ -205,7 +222,19 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 
 		// Show an error message if Account Details could not be fetched e.g. API credentials supplied are invalid.
 		if ( is_wp_error( $this->account ) ) {
+			// Depending on the error code, maybe persist a notice in the WordPress Administration until the user
+			// fixes the problem.
+			switch ( $this->account->get_error_data( $this->account->get_error_code() ) ) {
+				case 401:
+					// API credentials are invalid.
+					WP_ConvertKit()->get_class( 'admin_notices' )->add( 'authorization_failed' );
+					break;
+			}
+
 			$this->output_error( $this->account->get_error_message() );
+		} else {
+			// Remove any existing persistent notice.
+			WP_ConvertKit()->get_class( 'admin_notices' )->delete( 'authorization_failed' );
 		}
 
 	}
@@ -266,7 +295,8 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 					'<code>wp-config.php</code>',
 					'<code>define(\'CONVERTKIT_API_KEY\', \'your-api-key\');</code>'
 				),
-			)
+			),
+			array( 'regular-text', 'code' )
 		);
 
 	}
@@ -303,7 +333,8 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 					'<code>wp-config.php</code>',
 					'<code>define(\'CONVERTKIT_API_SECRET\', \'your-api-secret\');</code>'
 				),
-			)
+			),
+			array( 'regular-text', 'code' )
 		);
 
 	}
@@ -319,18 +350,21 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 
 		// Refresh Forms.
 		if ( ! $this->forms ) {
-			$this->forms = new ConvertKit_Resource_Forms();
+			$this->forms = new ConvertKit_Resource_Forms( 'settings' );
 			$this->forms->refresh();
 
 			// Also refresh Landing Pages, Tags and Posts. Whilst not displayed in the Plugin Settings, this ensures up to date
 			// lists are stored for when editing e.g. Pages.
-			$landing_pages = new ConvertKit_Resource_Landing_Pages();
+			$landing_pages = new ConvertKit_Resource_Landing_Pages( 'settings' );
 			$landing_pages->refresh();
 
-			$posts = new ConvertKit_Resource_Posts();
+			$posts = new ConvertKit_Resource_Posts( 'settings' );
 			$posts->refresh();
 
-			$tags = new ConvertKit_Resource_Tags();
+			$products = new ConvertKit_Resource_Products( 'settings' );
+			$products->refresh();
+
+			$tags = new ConvertKit_Resource_Tags( 'settings' );
 			$tags->refresh();
 		}
 
@@ -353,13 +387,44 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 			$options[ esc_attr( $form['id'] ) ] = esc_html( $form['name'] );
 		}
 
+		// Build description with preview link.
+		$description = false;
+		$preview_url = WP_ConvertKit()->get_class( 'preview_output' )->get_preview_form_url( $args['post_type'] );
+		if ( $preview_url ) {
+			// Include a preview link in the description.
+			$description = sprintf(
+				'%s %s %s',
+				sprintf(
+					/* translators: Post Type name, plural */
+					esc_html__( 'Select a form above to automatically output below all %s.', 'convertkit' ),
+					$args['post_type_object']->label
+				),
+				'<a href="' . esc_attr( $preview_url ) . '" id="convertkit-preview-form-' . esc_attr( $args['post_type'] ) . '" target="_blank">' . esc_html__( 'Click here', 'convertkit' ) . '</a>',
+				esc_html__( 'to preview how this will display.', 'convertkit' )
+			);
+		} else {
+			// Just output the field's description.
+			$description = sprintf(
+				/* translators: Post Type name, plural */
+				esc_html__( 'Select a form above to automatically output below all %s.', 'convertkit' ),
+				$args['post_type_object']->label
+			);
+		}
+
 		// Build field.
 		$select_field = $this->get_select_field(
 			$args['post_type'] . '_form',
 			$this->settings->get_default_form( $args['post_type'] ),
 			$options,
-			false,
-			array( 'convertkit-select2' )
+			$description,
+			array(
+				'convertkit-select2',
+				'convertkit-preview-output-link',
+			),
+			array(
+				'data-target' => '#convertkit-preview-form-' . esc_attr( $args['post_type'] ),
+				'data-link'   => esc_attr( $preview_url ) . '&convertkit_form_id=',
+			)
 		);
 
 		// Output field.
@@ -414,7 +479,7 @@ class ConvertKit_Settings_General extends ConvertKit_Settings_Base {
 			'no_css',
 			'on',
 			$this->settings->css_disabled(), // phpcs:ignore WordPress.Security.EscapeOutput
-			esc_html__( 'Prevent plugin from loading CSS files. This will disable styling on the broadcasts shortcode and block. Use with caution!', 'convertkit' )
+			esc_html__( 'Prevent plugin from loading CSS files. This will disable styling on broadcasts, product buttons and member\'s content. Use with caution!', 'convertkit' )
 		);
 
 	}

@@ -15,6 +15,15 @@
 class ConvertKit_Output {
 
 	/**
+	 * Holds the ConvertKit Subscriber ID.
+	 *
+	 * @since   2.0.6
+	 *
+	 * @var     int|string
+	 */
+	private $subscriber_id = 0;
+
+	/**
 	 * Holds the ConvertKit Plugin Settings class
 	 *
 	 * @since   1.9.6
@@ -58,6 +67,7 @@ class ConvertKit_Output {
 	 */
 	public function __construct() {
 
+		add_action( 'init', array( $this, 'get_subscriber_id_from_request' ), 1 );
 		add_action( 'template_redirect', array( $this, 'output_form' ) );
 		add_action( 'template_redirect', array( $this, 'page_takeover' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -126,7 +136,7 @@ class ConvertKit_Output {
 		 * @param   int     $landing_page_id    Landing Page ID
 		 * @param   int     $post_id            Post ID
 		 */
-		$landing_page_id = apply_filters( 'convertkit_output_append_form_to_content_form_id', $landing_page_id, $post_id );
+		$landing_page_id = apply_filters( 'convertkit_output_page_takeover_landing_page_id', $landing_page_id, $post_id );
 
 		// Bail if no Landing Page is configured to be output.
 		if ( empty( $landing_page_id ) ) {
@@ -135,7 +145,7 @@ class ConvertKit_Output {
 
 		// Get available ConvertKit Landing Pages, if they have not yet been loaded.
 		if ( ! $this->landing_pages ) {
-			$this->landing_pages = new ConvertKit_Resource_Landing_Pages();
+			$this->landing_pages = new ConvertKit_Resource_Landing_Pages( 'output_landing_page' );
 		}
 
 		// Get Landing Page.
@@ -190,7 +200,7 @@ class ConvertKit_Output {
 
 		// Get available ConvertKit Forms, if they have not yet been loaded.
 		if ( ! $this->forms ) {
-			$this->forms = new ConvertKit_Resource_Forms();
+			$this->forms = new ConvertKit_Resource_Forms( 'output_form' );
 		}
 
 		// Get Form HTML.
@@ -360,7 +370,7 @@ class ConvertKit_Output {
 				'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 				'debug'         => $settings->debug_enabled(),
 				'nonce'         => wp_create_nonce( 'convertkit' ),
-				'subscriber_id' => $this->get_subscriber_id_from_request(),
+				'subscriber_id' => $this->subscriber_id,
 				'tag'           => ( ( is_singular() && $convertkit_post->has_tag() ) ? $convertkit_post->get_tag() : false ),
 				'post_id'       => $post->ID,
 			)
@@ -380,25 +390,19 @@ class ConvertKit_Output {
 	 * Gets the subscriber ID from the request (either the cookie or the URL).
 	 *
 	 * @since   1.9.6
-	 *
-	 * @return  int   Subscriber ID
 	 */
 	public function get_subscriber_id_from_request() {
 
-		// If the subscriber ID is included in the URL as a query parameter
-		// (i.e. 'Add subscriber_id parameter in email links' is enabled at https://app.convertkit.com/account_settings/advanced_settings,
-		// return it as the subscriber ID.
-		if ( isset( $_GET['ck_subscriber_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			return (int) sanitize_text_field( $_GET['ck_subscriber_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		// Use ConvertKit_Subscriber class to fetch and validate the subscriber ID.
+		$subscriber    = new ConvertKit_Subscriber();
+		$subscriber_id = $subscriber->get_subscriber_id();
+
+		// If an error occured, the subscriber ID in the request/cookie is not a valid subscriber.
+		if ( is_wp_error( $subscriber_id ) ) {
+			return;
 		}
 
-		// If the subscriber ID is stored as a cookie (i.e. the user subscribed via a form
-		// from this Plugin on this site, which sets this cookie), return it as the subscriber ID.
-		if ( isset( $_COOKIE['ck_subscriber_id'] ) ) {
-			return (int) sanitize_text_field( $_COOKIE['ck_subscriber_id'] );
-		}
-
-		return 0;
+		$this->subscriber_id = $subscriber_id;
 
 	}
 

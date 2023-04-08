@@ -32,7 +32,7 @@ class CK_Widget_Form extends WP_Widget {
 
 		parent::__construct(
 			'convertkit_form',
-			__( 'ConvertKit Form', 'convertkit' ),
+			__( 'ConvertKit Form (Legacy Widget)', 'convertkit' ),
 			array(
 				'classname'                   => 'convertkit widget_convertkit_form',
 				'description'                 => __( 'Display a ConvertKit form.', 'convertkit' ),
@@ -52,7 +52,7 @@ class CK_Widget_Form extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		$forms = new ConvertKit_Resource_Forms();
+		$forms = new ConvertKit_Resource_Forms( 'output_form' );
 
 		// Bail if no Forms exist.
 		if ( ! $forms->exist() ) {
@@ -61,6 +61,14 @@ class CK_Widget_Form extends WP_Widget {
 				<?php esc_html_e( 'To display a ConvertKit Form, at least one form must be defined in your ConvertKit Account.', 'convertkit' ); ?>
 			</p>
 			<?php
+		}
+
+		// If the widget's settings are not defined, set them now to avoid undefined index errors.
+		if ( ! array_key_exists( 'title', $instance ) ) {
+			$instance['title'] = '';
+		}
+		if ( ! array_key_exists( 'form', $instance ) ) {
+			$instance['form'] = '';
 		}
 		?>
 		<p>
@@ -103,7 +111,7 @@ class CK_Widget_Form extends WP_Widget {
 		}
 
 		// Get Form.
-		$forms = new ConvertKit_Resource_Forms();
+		$forms = new ConvertKit_Resource_Forms( 'output_form' );
 		$form  = $forms->get_html( $instance['form'] );
 
 		// Bail if the Form has an error.

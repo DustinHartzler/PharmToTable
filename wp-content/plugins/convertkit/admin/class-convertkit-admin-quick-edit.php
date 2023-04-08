@@ -54,7 +54,7 @@ class ConvertKit_Admin_Quick_Edit {
 		wp_enqueue_script( 'convertkit-admin-quick-edit', CONVERTKIT_PLUGIN_URL . 'resources/backend/js/quick-edit.js', array( 'jquery' ), CONVERTKIT_PLUGIN_VERSION, true );
 
 		// Enqueue CSS.
-		wp_enqueue_style( 'convertkit-admin-quick-edit', CONVERTKIT_PLUGIN_URL . 'resources/backend/css/quick-edit.css', array(), CONVERTKIT_PLUGIN_VERSION );
+		wp_enqueue_style( 'convertkit-admin-bulk-quick-edit', CONVERTKIT_PLUGIN_URL . 'resources/backend/css/bulk-quick-edit.css', array(), CONVERTKIT_PLUGIN_VERSION );
 
 	}
 
@@ -90,7 +90,7 @@ class ConvertKit_Admin_Quick_Edit {
 		}
 
 		// Output Quick Edit fields in the footer of the Administration screen.
-		add_action( 'in_admin_footer', array( $this, 'quick_edit_fields' ), 10, 2 );
+		add_action( 'in_admin_footer', array( $this, 'quick_edit_fields' ), 10 );
 
 	}
 
@@ -110,9 +110,13 @@ class ConvertKit_Admin_Quick_Edit {
 			return;
 		}
 
-		// Fetch Forms, Landing Pages and Tags.
+		// Initialize Restrict Content Settings class.
+		$restrict_content_settings = new ConvertKit_Settings_Restrict_Content();
+
+		// Fetch Forms, Landing Pages, Products and Tags.
 		$convertkit_forms         = new ConvertKit_Resource_Forms();
 		$convertkit_landing_pages = new ConvertKit_Resource_Landing_Pages();
+		$convertkit_products      = new ConvertKit_Resource_Products();
 		$convertkit_tags          = new ConvertKit_Resource_Tags();
 
 		// Output view.

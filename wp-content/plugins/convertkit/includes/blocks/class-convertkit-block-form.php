@@ -53,7 +53,7 @@ class ConvertKit_Block_Form extends ConvertKit_Block {
 	 */
 	public function enqueue_styles_editor() {
 
-		wp_enqueue_style( 'convertkit-gutenberg-block-form', CONVERTKIT_PLUGIN_URL . 'resources/backend/css/gutenberg-block-form.css', array( 'wp-edit-blocks' ), CONVERTKIT_PLUGIN_VERSION );
+		wp_enqueue_style( 'convertkit-gutenberg', CONVERTKIT_PLUGIN_URL . 'resources/backend/css/gutenberg.css', array( 'wp-edit-blocks' ), CONVERTKIT_PLUGIN_VERSION );
 
 	}
 
@@ -163,7 +163,7 @@ class ConvertKit_Block_Form extends ConvertKit_Block {
 	 *
 	 * @since   1.9.6
 	 *
-	 * @return  mixed   bool | array
+	 * @return  bool|array
 	 */
 	public function get_fields() {
 
@@ -174,15 +174,12 @@ class ConvertKit_Block_Form extends ConvertKit_Block {
 
 		// Get ConvertKit Forms.
 		$forms            = array();
-		$convertkit_forms = new ConvertKit_Resource_Forms();
+		$convertkit_forms = new ConvertKit_Resource_Forms( 'block_edit' );
 		if ( $convertkit_forms->exist() ) {
 			foreach ( $convertkit_forms->get() as $form ) {
 				$forms[ absint( $form['id'] ) ] = sanitize_text_field( $form['name'] );
 			}
 		}
-
-		// Get Settings.
-		$settings = new ConvertKit_Settings();
 
 		return array(
 			'form' => array(
@@ -190,8 +187,10 @@ class ConvertKit_Block_Form extends ConvertKit_Block {
 				'type'   => 'select',
 				'values' => $forms,
 				'data'   => array(
-					'forms'   => $convertkit_forms->get(),
-					'api_key' => $settings->get_api_key(),
+					// Used by resources/backend/js/gutenberg-block-form.js to determine the selected form's format
+					// (modal, slide in, sticky bar) and output a message in the block editor for the preview to explain
+					// why some formats cannot be previewed.
+					'forms' => ( $convertkit_forms->exist() ? $convertkit_forms->get() : array() ),
 				),
 			),
 		);
@@ -203,7 +202,7 @@ class ConvertKit_Block_Form extends ConvertKit_Block {
 	 *
 	 * @since   1.9.6
 	 *
-	 * @return  mixed   bool | array
+	 * @return  bool|array
 	 */
 	public function get_panels() {
 
@@ -278,7 +277,7 @@ class ConvertKit_Block_Form extends ConvertKit_Block {
 		}
 
 		// Get Form HTML.
-		$forms = new ConvertKit_Resource_Forms();
+		$forms = new ConvertKit_Resource_Forms( 'output_form' );
 		$form  = $forms->get_html( $form_id );
 
 		// If an error occured, it might be that we're requesting a Form ID that exists in ConvertKit
@@ -299,7 +298,7 @@ class ConvertKit_Block_Form extends ConvertKit_Block {
 		// In this instance, fetch the Form HTML without checking that the Form ID exists in the Form Resources.
 		if ( is_wp_error( $form ) ) {
 			// Initialize the API.
-			$api = new ConvertKit_API( $settings->get_api_key(), $settings->get_api_secret(), $settings->debug_enabled() );
+			$api = new ConvertKit_API( $settings->get_api_key(), $settings->get_api_secret(), $settings->debug_enabled(), 'output_form' );
 
 			// Return Legacy Form HTML from the API, which bypasses any internal Plugin check to see if the Form ID exists.
 			$form = $api->get_form_html( $form_id );
@@ -319,10 +318,11 @@ class ConvertKit_Block_Form extends ConvertKit_Block {
 		 *
 		 * @since   1.9.6
 		 *
-		 * @param   string  $form   ConvertKit Form HTML.
-		 * @param   array   $atts   Block Attributes.
+		 * @param   string  $form       ConvertKit Form HTML.
+		 * @param   array   $atts       Block Attributes.
+		 * @param   int     $form_id    Form ID.
 		 */
-		$form = apply_filters( 'convertkit_block_form_render', $form, $atts );
+		$form = apply_filters( 'convertkit_block_form_render', $form, $atts, $form_id );
 
 		/**
 		 * Backward compat. filter for < 1.9.6. Filter the block's content immediately before it is output.

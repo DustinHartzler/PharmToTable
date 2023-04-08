@@ -49,6 +49,7 @@ class ConvertKit_Admin_TinyMCE {
 
 		// Get requested shortcode name.
 		$shortcode_name = sanitize_text_field( $_REQUEST['shortcode'] );
+		$editor_type    = sanitize_text_field( $_REQUEST['editor_type'] );
 
 		// If the shortcode is not registered, return a view in the modal to tell the user.
 		if ( ! isset( $shortcodes[ $shortcode_name ] ) ) {
@@ -82,7 +83,6 @@ class ConvertKit_Admin_TinyMCE {
 
 		// Enqueue Quicktag JS.
 		wp_enqueue_script( 'convertkit-admin-quicktags', CONVERTKIT_PLUGIN_URL . 'resources/backend/js/quicktags.js', array( 'jquery', 'quicktags' ), CONVERTKIT_PLUGIN_VERSION, true );
-		wp_enqueue_script( 'convertkit-admin-modal', CONVERTKIT_PLUGIN_URL . 'resources/backend/js/modal.js', array( 'jquery' ), CONVERTKIT_PLUGIN_VERSION, true );
 
 		// Make shortcodes available as convertkit_quicktags JS variable.
 		wp_localize_script( 'convertkit-admin-quicktags', 'convertkit_quicktags', $shortcodes );
@@ -98,6 +98,10 @@ class ConvertKit_Admin_TinyMCE {
 
 		// Enqueue Quicktag CSS.
 		wp_enqueue_style( 'convertkit-admin-quicktags', CONVERTKIT_PLUGIN_URL . 'resources/backend/css/quicktags.css', array(), CONVERTKIT_PLUGIN_VERSION );
+
+		// Enqueue WordPress JS and CSS.
+		wp_enqueue_script( 'wp-color-picker' );
+		wp_enqueue_style( 'wp-color-picker' );
 
 		// Output Backbone View Template.
 		add_action( 'wp_print_footer_scripts', array( $this, 'output_quicktags_modal' ) );

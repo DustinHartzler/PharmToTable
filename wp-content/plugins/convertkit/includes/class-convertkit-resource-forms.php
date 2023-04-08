@@ -29,6 +29,31 @@ class ConvertKit_Resource_Forms extends ConvertKit_Resource {
 	public $type = 'forms';
 
 	/**
+	 * Constructor.
+	 *
+	 * @since   1.9.8.4
+	 *
+	 * @param   bool|string $context    Context.
+	 */
+	public function __construct( $context = false ) {
+
+		// Initialize the API if the API Key and Secret have been defined in the Plugin Settings.
+		$settings = new ConvertKit_Settings();
+		if ( $settings->has_api_key_and_secret() ) {
+			$this->api = new ConvertKit_API(
+				$settings->get_api_key(),
+				$settings->get_api_secret(),
+				$settings->debug_enabled(),
+				$context
+			);
+		}
+
+		// Call parent initialization function.
+		parent::init();
+
+	}
+
+	/**
 	 * Returns the HTML/JS markup for the given Form ID.
 	 *
 	 * Legacy Forms will return HTML.
@@ -76,14 +101,14 @@ class ConvertKit_Resource_Forms extends ConvertKit_Resource {
 			}
 
 			// Initialize the API.
-			$api = new ConvertKit_API( $settings->get_api_key(), $settings->get_api_secret(), $settings->debug_enabled() );
+			$api = new ConvertKit_API( $settings->get_api_key(), $settings->get_api_secret(), $settings->debug_enabled(), 'output_form' );
 
 			// Return Legacy Form HTML.
 			return $api->get_form_html( $id );
 		}
 
 		// If here, return Form <script> embed.
-		return '<script async data-uid="' . $this->resources[ $id ]['uid'] . '" src="' . $this->resources[ $id ]['embed_js'] . '"></script>';
+		return '<script async data-uid="' . esc_attr( $this->resources[ $id ]['uid'] ) . '" src="' . esc_attr( $this->resources[ $id ]['embed_js'] ) . '"></script>';
 
 	}
 

@@ -56,12 +56,16 @@ function convertKitTinyMCERegisterPlugin( block ) {
 							{
 								'action': 		'convertkit_admin_tinymce_output_modal',
 								'nonce':  		convertkit_admin_tinymce.nonce,
+								'editor_type':  'tinymce',
 								'shortcode': 	block.name
 							},
 							function( response ) {
 
 								// Inject HTML into modal.
 								$( '#convertkit-modal-body-body' ).html( response );
+
+								// Initialize color pickers.
+								$( '.convertkit-color-picker' ).wpColorPicker();
 
 							}
 						);

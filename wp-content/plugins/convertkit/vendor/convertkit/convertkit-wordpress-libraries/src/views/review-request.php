@@ -11,29 +11,15 @@
 <div class="notice notice-info is-dismissible review-<?php echo esc_attr( $this->plugin_slug ); ?>">
 	<p>
 		<?php
-		echo esc_html(
-			sprintf(
-				/* translators: Plugin Name */
-				__( 'We\'d be super grateful if you could spread the word about %s and give it a 5 star rating on WordPress?', 'convertkit' ),
-				$this->plugin_name
-			)
-		);
+		echo esc_html( $this->get_message_text() );
 		?>
 	</p>
 	<p>
 		<a href="<?php echo esc_attr( $this->get_review_url() ); ?>" class="button button-primary" rel="noopener" target="_blank">
-			<?php esc_html_e( 'Yes, leave review', 'convertkit' ); ?>
+			<?php echo esc_html( $this->get_leave_review_text() ); ?>
 		</a>
 		<a href="<?php echo esc_attr( $this->get_support_url() ); ?>" class="button" rel="noopener" target="_blank">
-			<?php
-			echo esc_html(
-				sprintf(
-					/* translators: Plugin Name */
-					__( 'No, I\'m having issues with %s', 'convertkit' ),
-					$this->plugin_name
-				)
-			);
-			?>
+			<?php echo esc_html( $this->get_having_issues_text() ); ?>
 		</a>
 	</p>
 
@@ -42,7 +28,7 @@
 			// Dismiss Review Notification.
 			$( 'div.review-<?php echo esc_attr( $this->plugin_slug ); ?>' ).on( 'click', 'a, button.notice-dismiss', function( e ) {
 
-				// Do request
+				// Do request.
 				$.post( 
 					ajaxurl, 
 					{
@@ -52,7 +38,7 @@
 					}
 				);
 
-				// Hide notice
+				// Hide notice.
 				$( 'div.review-<?php echo esc_attr( $this->plugin_slug ); ?>' ).hide();
 
 			} );

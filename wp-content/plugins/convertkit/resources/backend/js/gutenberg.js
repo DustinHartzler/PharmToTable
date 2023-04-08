@@ -49,8 +49,7 @@ function convertKitGutenbergRegisterBlock( block ) {
 			Panel,
 			PanelBody,
 			PanelRow,
-			SandBox,
-			ServerSideRender
+			SandBox
 		}                                     = components;
 
 		// Build Icon, if it's an object.
@@ -115,6 +114,13 @@ function convertKitGutenbergRegisterBlock( block ) {
 						for ( var i in block.panels[ panel ].fields ) {
 							const attribute = block.panels[ panel ].fields[ i ], // e.g. 'term'.
 									field   = block.fields[ attribute ]; // field array.
+
+							// If this field doesn't exist as an attribute in the block's get_attributes(),
+							// this is a non-Gutenberg field (such as a color picker for shortcodes),
+							// which should be ignored.
+							if ( typeof block.attributes[ attribute ] === 'undefined' ) {
+								continue;
+							}
 
 							var fieldElement; // Holds the field element (select, textarea, text etc).
 
@@ -259,16 +265,6 @@ function convertKitGutenbergRegisterBlock( block ) {
 						// This doesn't affect the output for this block on the frontend site, which will always
 						// use the block's PHP's render() function.
 						preview = window[ block.gutenberg_preview_render_callback ]( block, props );
-					} else {
-						// Use the block's PHP's render() function by calling the ServerSideRender component.
-						preview = el(
-							ServerSideRender,
-							{
-								block: 'convertkit/' + block.name,
-								attributes: props.attributes,
-								className: 'convertkit-' + block.name,
-							}
-						);
 					}
 
 					// Return.
