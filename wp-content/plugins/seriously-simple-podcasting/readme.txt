@@ -2,16 +2,16 @@
 Contributors: PodcastMotor, psykro, zahardoc, simondowdles, hlashbrooke, whyisjake
 Tags: podcast, audio, video, vodcast, rss, mp3, mp4, feed, itunes, podcasting, media, stitcher, google play, playlist
 Requires at least: 4.4
-Tested up to: 6.0
+Tested up to: 6.2
 Requires PHP: 5.6
-Stable tag: 2.15.2
+Stable tag: 2.20.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Podcasting the way it's meant to be. No mess, no fuss - just you and your content taking over the world.
 
 == Description ==
-Seriously Simple Podcasting is a top-rated podcasting plugin for WordPress for beginners and power-users built by [Castos](http://castos.com/podcast-hosting-wordpress). Using our straight-forward set up instructions, advanced features, and plenty of customization options, Seriously Simple Podcasting powers over 20K+ podcasts.
+Seriously Simple Podcasting is a top-rated podcasting plugin for WordPress for beginners and power-users built by [Castos](http://castos.com/podcast-hosting-wordpress). Using our straight-forward set up instructions, advanced features, and plenty of customization options, Seriously Simple Podcasting powers over 30K+ podcasts.
 
 https://vimeo.com/560129506
 
@@ -160,6 +160,101 @@ You can find complete user and developer documentation (along with the FAQs) on 
 15. View podcast episodes in the At A Glance widget on the main WordPress dashboard.
 
 == Changelog ==
+
+= 2.20.3 =
+* 2023-03-30
+* UPDATE SUMMARY: Updated the supported WordPress version, minor improvements
+* [UPDATE] Updated the supported WordPress version
+* [UPDATE] Feed: removed deprecated keywords tag
+* [UPDATE] Updated plugin description
+* [UPDATE] Renamed Podcast to Episode when creating new episodes
+* [UPDATE] Removed redundant index.scss file
+* [UPDATE] Use local fonts for Onboarding Wizzard
+* [UPDATE] Possibility for custom actions on save episode image event
+
+= 2.20.2 =
+* 2023-03-15
+* UPDATE SUMMARY: Fix for uncaught PHP error in the dashboard
+* [FIX] Fix for uncaught PHP error in the dashboard
+
+= 2.20.1 =
+* 2023-03-10
+* UPDATE SUMMARY: Audio file not redirecting fix
+* [FIX] Audio file not redirecting fix
+
+= 2.20.0 =
+* 2023-03-06
+* UPDATE SUMMARY: Migration for legacy file URLs, improvements and fixes
+* [UPDATE] Migration for legacy file URLs
+* [UPDATE] Post Duplicator plugin compatibility
+* [UPDATE] Do not carry over the media prefix to subsequent podcasts
+* [UPDATE] Added Dynamo Link to Episode Creation page
+* [UPDATE] Improved podcasts listing page (added publishing dates, removed redundant columns)
+* [UPDATE] Identify that NGINX may be an issue and surface instructions
+* [FIX] Fixed duplicating prefix in RSS feed
+* [FIX] Fixed some PHP warnings
+
+= 2.19.0 =
+* 2022-12-06
+* UPDATE SUMMARY: Player and RSS feed improvements
+* [UPDATE] Use Media File Prefix in player links
+* [UPDATE] Dynamo: prefill podcast and author name
+* [UPDATE] Player: possibility to slow down the episode speed
+* [UPDATE] RSS feed: do not show podcast:locked tag if it's off
+* [UPDATE] RSS feed: allow h2, h3, h4, h5, label tags
+* [FIX] Player: speed button style fix
+
+= 2.18.0 =
+* 2022-11-09
+* UPDATE SUMMARY: WooCommerce Memberships integration, Value 4 Value, minor improvements and fixes
+* [UPDATE] WooCommerce Memberships integration
+* [UPDATE] Feed: Value 4 Value settings
+* [UPDATE] Feed settings: added link to Dynamo tool
+* [UPDATE] Feed speed improvements and cache improvements
+* [UPDATE] Podcast list block: option to show player below excerpt
+* [UPDATE] Feed: updated plugin links
+* [FIX] Fixed possible plugin translation issue
+* [FIX] Fixed mixed up podcast funding values
+* [FIX] Fixed fatal error when $response_object->message is not a string
+* [FIX] Added audible image to Elementor subscribe links block
+
+= 2.17.0 =
+* 2022-10-11
+* UPDATE SUMMARY: Sync and import improvements
+* [UPDATE] Sync to Castos improvements
+* [UPDATE] Feed import improvements
+* [UPDATE] Possibility to import podcast data (cover art, title, description etc) when importing an RSS
+* [FIX] Fixed file upload problem on Posts Post Type Episodes
+* [FIX] Fixed duplicated player meta fields in shortcode [podcast_episode]
+* [FIX] Fixed updating file metadata when locally hosted file is updated
+
+= 2.16.2 =
+* 2022-09-06
+* UPDATE SUMMARY: Compatibility improvements and fixes
+* [UPDATE] Updated Elementor compatibility
+* [UPDATE] Podcast List block: added featured image size option
+* [UPDATE] Disabled wrong podcast feed URL meta tag
+* [FIX] Fixed duplicated player meta for Podcast List block
+
+= 2.16.1 =
+* 2022-09-02
+* UPDATE SUMMARY: Fixed Thrive Apprentice conflict, security improvements
+* [UPDATE] Security improvements
+* [FIX] Fixed Thrive Apprentice conflict
+
+= 2.16.0 =
+* 2022-08-25
+* UPDATE SUMMARY: MemberPress Integration, player screen readers accessibility, fixes
+* [UPDATE] MemberPress Integration
+* [UPDATE] Improved player screen readers accessibility
+* [UPDATE] Improved Paid Memberships Pro integration
+* [UPDATE] Improved Lifter LMS integration
+* [UPDATE] Do not import locked RSS feeds
+* [UPDATE] Import episode images when importing RSS feed
+* [FIX] Fixed compact player meta fields
+* [FIX] Fixed duplicated player block in Elementor
+* [FIX] Fixed PHP warnings
+* [FIX] Removed redundant special characters escaping in RSS feed
 
 = 2.15.2 =
 * 2022-08-04

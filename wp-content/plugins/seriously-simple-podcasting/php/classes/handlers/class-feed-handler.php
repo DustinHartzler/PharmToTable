@@ -452,9 +452,7 @@ class Feed_Handler implements Service {
 		}
 
 		// Here we'll sanitize the image, if it's not valid - it will be just empty string.
-		$image = apply_filters( 'ssp_feed_image', $image, $series_id );
-
-		return $image;
+		return apply_filters( 'ssp_feed_image', $image, $series_id );
 	}
 
 	/**
@@ -482,17 +480,11 @@ class Feed_Handler implements Service {
 	 * @param int $series_id
 	 *
 	 * @return string
+	 *
+	 * @since 2.20.0 Do not carry over the media prefix to subsequent podcasts
 	 */
 	public function get_media_prefix( $series_id ) {
-		if ( $series_id ) {
-			$media_prefix = get_option( 'ss_podcasting_media_prefix_' . $series_id );
-		}
-
-		if ( empty( $media_prefix ) ) {
-			$media_prefix = get_option( 'ss_podcasting_media_prefix', '' );
-		}
-
-		return $media_prefix;
+		return ssp_get_media_prefix( $series_id );
 	}
 
 	/**
@@ -548,6 +540,7 @@ class Feed_Handler implements Service {
 
 	/**
 	 * Gets funding settings
+	 * @see https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#funding
 	 *
 	 * @param int $series_id
 	 *
@@ -560,6 +553,26 @@ class Feed_Handler implements Service {
 
 		if ( ! isset( $funding ) ) {
 			$funding = get_option( 'ss_podcasting_funding', null );
+		}
+
+		return $funding;
+	}
+
+	/**
+	 * Gets podcast value settings ( recipient wallet address )
+	 * @see https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#value
+	 *
+	 * @param int $series_id
+	 *
+	 * @return array|null
+	 */
+	public function get_podcast_value( $series_id ) {
+		if ( $series_id ) {
+			$funding = get_option( 'ss_podcasting_podcast_value_' . $series_id, null );
+		}
+
+		if ( ! isset( $funding ) ) {
+			$funding = get_option( 'ss_podcasting_podcast_value', null );
 		}
 
 		return $funding;
@@ -656,6 +669,8 @@ class Feed_Handler implements Service {
 	public function get_feed_item_description( $post_id, $is_excerpt_mode, $turbo_post_count = 0 ) {
 		if ( $is_excerpt_mode ) {
 			$output  = get_the_excerpt( $post_id );
+			// Remove filter convert_chars, because our feed is already escaped with CDATA.
+			remove_filter( 'the_excerpt_rss', 'convert_chars' );
 			$content = apply_filters( 'the_excerpt_rss', $output );
 		} else {
 			$content = ssp_get_the_feed_item_content( $post_id );

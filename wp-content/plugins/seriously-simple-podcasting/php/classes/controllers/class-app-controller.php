@@ -8,6 +8,9 @@ use SeriouslySimplePodcasting\Handlers\Feed_Handler;
 use SeriouslySimplePodcasting\Handlers\Options_Handler;
 use SeriouslySimplePodcasting\Handlers\Podping_Handler;
 use SeriouslySimplePodcasting\Handlers\Roles_Handler;
+use SeriouslySimplePodcasting\Handlers\Series_Handler;
+use SeriouslySimplePodcasting\Integrations\Memberpress\Memberpress_Integrator;
+use SeriouslySimplePodcasting\Integrations\Woocommerce\WC_Memberships_Integrator;
 use SeriouslySimplePodcasting\Interfaces\Service;
 use SeriouslySimplePodcasting\Handlers\Settings_Handler;
 use SeriouslySimplePodcasting\Handlers\Upgrade_Handler;
@@ -177,7 +180,6 @@ class App_Controller {
 	 */
 	public function __construct() {
 
-
 		if ( ! ssp_is_php_version_ok() ) {
 			return;
 		}
@@ -217,7 +219,6 @@ class App_Controller {
 
 		$this->feed_controller = new Feed_Controller( $this->feed_handler, $this->renderer );
 
-		// Todo: dependency injection for other controllers as well
 		$this->onboarding_controller = new Onboarding_Controller( $this->renderer, $this->settings_handler );
 
 		$this->db_migration_controller = DB_Migration_Controller::instance()->init();
@@ -254,7 +255,8 @@ class App_Controller {
 			$this->cpt_podcast_handler,
 			$this->castos_handler,
 			$this->admin_notices_handler,
-			$this->podping_handler
+			$this->podping_handler,
+			$this->episode_repository
 		);
 
 		$this->review_controller = new Review_Controller( $this->admin_notices_handler, $this->renderer );
@@ -294,17 +296,23 @@ class App_Controller {
 
 		// Lifter LMS integration
 		LifterLMS_Integrator::instance()->init( $this->feed_handler, $this->castos_handler, $this->logger );
+
+		// Paid Memberships Pro integration
+		Memberpress_Integrator::instance()->init( $this->feed_handler, $this->castos_handler, $this->logger, $this->admin_notices_handler );
+
+		// Woocommerce Memberships integration
+		WC_Memberships_Integrator::instance()->init( $this->feed_handler, $this->castos_handler, $this->logger, $this->admin_notices_handler );
 	}
 
 	/**
 	 * Get any registered here services (handlers, helpers)
 	 *
-	 * @return Service
+	 * @return Service|null
 	 * */
 	public function get_service( $id ) {
 		$services = $this->get_available_services();
 
-		return $services[ $id ];
+		return isset( $services[ $id ] ) ? $services[ $id ] : null;
 	}
 
 	/**
@@ -357,7 +365,7 @@ class App_Controller {
 		add_action( 'init', array( $this, 'setup_permastruct' ), 10 );
 
 		// Run any updates required
-		add_action( 'init', array( $this, 'update' ), 11 );
+		add_action( 'init', array( $this, 'maybe_run_plugin_updates' ), 11 );
 
 		// Dismiss the categories update screen
 		add_action( 'init', array( $this, 'dismiss_categories_update' ) ); //todo: can we move it to 'admin_init'?
@@ -369,10 +377,6 @@ class App_Controller {
 		add_filter( 'wpseo_include_rss_footer', array( $this, 'hide_wp_seo_rss_footer' ) );
 
 		if ( is_admin() ) {
-
-			// todo: remove?
-			add_action( 'admin_init', array( $this, 'update_enclosures' ) );
-
 			// process the import form submission
 			add_action( 'admin_init', array( $this, 'submit_import_form' ) );
 
@@ -846,6 +850,9 @@ HTML;
 	 * @return void
 	 */
 	public function enqueue_admin_styles( $hook ) {
+		if ( ! $this->need_admin_scripts( $hook ) ) {
+			return;
+		}
 
 		wp_register_style( 'ssp-admin', esc_url( $this->assets_url . 'admin/css/admin.css' ), array(), $this->version );
 		wp_enqueue_style( 'ssp-admin' );
@@ -884,11 +891,32 @@ HTML;
 		}
 	}
 
+	protected function need_admin_scripts( $hook ) {
+		return 'post.php' === $hook ||
+			   'post-new.php' === $hook ||
+			   strpos( $hook, 'ssp-onboarding' ) ||
+			   $this->is_ssp_admin_page() ||
+			   ( 'term.php' === $hook && Series_Handler::TAXONOMY === filter_input( INPUT_GET, 'taxonomy' ) );
+	}
+
+	/**
+	 * Checks if it's an SSP admin page or not
+	 *
+	 * @return bool
+	 */
+	protected function is_ssp_admin_page() {
+		return SSP_CPT_PODCAST === filter_input( INPUT_GET, 'post_type' );
+	}
+
 	/**
 	 * Load admin JS
 	 * @return void
 	 */
 	public function enqueue_admin_scripts( $hook ) {
+
+		if ( ! $this->need_admin_scripts( $hook ) ) {
+			return;
+		}
 
 		wp_register_script( 'ssp-admin', esc_url( $this->assets_url . 'js/admin' . $this->script_suffix . '.js' ), array(
 			'jquery',
@@ -1013,7 +1041,7 @@ HTML;
 	 * Run functions on plugin update/activation
 	 * @return void
 	 */
-	public function update() {
+	public function maybe_run_plugin_updates() {
 
 		$previous_version = get_option( 'ssp_version', '1.0' );
 
@@ -1024,68 +1052,6 @@ HTML;
 
 		update_option( 'ssp_version', $this->version );
 
-	}
-
-	/**
-	 * Update 'enclosure' meta field to 'audio_file' meta field
-	 * Todo: I don't see any place where 'ssp_update_enclosures' query is generated. Is this function obsolete?
-	 *
-	 * @return void
-	 */
-	public function update_enclosures() {
-
-		if ( ! current_user_can( 'manage_podcast' ) ) {
-			return;
-		}
-
-		// Allow forced re-run of update if necessary
-		if ( isset( $_GET['ssp_update_enclosures'] ) ) {
-			delete_option( 'ssp_update_enclosures' );
-		}
-
-		// Check if update has been run
-		$update_run = get_option( 'ssp_update_enclosures', false );
-
-		if ( $update_run ) {
-			return;
-		}
-
-		// Get IDs of all posts with enclosures
-		$args = array(
-			'post_type'      => 'any',
-			'post_status'    => 'any',
-			'posts_per_page' => - 1,
-			'meta_query'     => array(
-				array(
-					'key'     => 'enclosure',
-					'compare' => '!=',
-					'value'   => '',
-				),
-			),
-			'fields'         => 'ids',
-		);
-
-		$posts_with_enclosures = get_posts( $args );
-
-		if ( 0 == count( $posts_with_enclosures ) ) {
-			return;
-		}
-
-		// Add `audio_file` meta field to all posts with enclosures
-		foreach ( (array) $posts_with_enclosures as $post_id ) {
-
-			// Get existing enclosure
-			$enclosure = get_post_meta( $post_id, 'enclosure', true );
-
-			// Add audio_file field
-			if ( $enclosure ) {
-				update_post_meta( $post_id, 'audio_file', $enclosure );
-			}
-
-		}
-
-		// Mark update as having been run
-		update_option( 'ssp_update_enclosures', 'run' );
 	}
 
 	/**
@@ -1111,7 +1077,7 @@ HTML;
 					})})(jQuery);
 				</script>", wp_create_nonce( 'ssp_rated' ) );
 			} else {
-				$footer_text = sprintf( __( '%1$sThank you for publishing with %2$sSeriously Simple Podcasting%3$s.%4$s', 'seriously-simple-podcasting' ), '<span id="footer-thankyou">', '<a href="http://www.seriouslysimplepodcasting.com/" target="_blank">', '</a>', '</span>' );
+				$footer_text = sprintf( __( '%1$sThank you for publishing with %2$sSeriously Simple Podcasting%3$s.%4$s', 'seriously-simple-podcasting' ), '<span id="footer-thankyou">', '<a href="https://castos.com/seriously-simple-podcasting/" target="_blank">', '</a>', '</span>' );
 			}
 
 		}
@@ -1167,7 +1133,7 @@ HTML;
 		}
 
 		// The user has submitted the Import your podcast setting
-		$trigger_import_submit = __( 'Trigger import', 'seriously-simple-podcasting' );
+		$trigger_import_submit = __( 'Trigger sync', 'seriously-simple-podcasting' );
 		if ( $trigger_import_submit === $submit ) {
 			$import = sanitize_text_field( $_POST['ss_podcasting_podmotor_import'] );
 			if ( 'on' === $import ) {
@@ -1201,10 +1167,15 @@ HTML;
 				if ( isset( $_POST['import_series'] ) ) {
 					$import_series = sanitize_text_field( $_POST['import_series'] );
 				}
+				$import_podcast_data = false;
+				if ( isset( $_POST['import_podcast_data'] ) ) {
+					$import_podcast_data = filter_var( $_POST['import_podcast_data'], FILTER_VALIDATE_BOOLEAN );
+				}
 				$ssp_external_rss = array(
-					'import_rss_feed'  => $external_rss,
-					'import_post_type' => $import_post_type,
-					'import_series'    => $import_series,
+					'import_rss_feed'     => $external_rss,
+					'import_post_type'    => $import_post_type,
+					'import_series'       => $import_series,
+					'import_podcast_data' => $import_podcast_data,
 				);
 				update_option( 'ssp_external_rss', $ssp_external_rss );
 				add_action( 'admin_notices', array( $this, 'import_form_success' ) );

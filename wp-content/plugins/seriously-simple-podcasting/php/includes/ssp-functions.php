@@ -8,6 +8,7 @@ use SeriouslySimplePodcasting\Handlers\Castos_Handler;
 use SeriouslySimplePodcasting\Handlers\CPT_Podcast_Handler;
 use SeriouslySimplePodcasting\Handlers\Images_Handler;
 use SeriouslySimplePodcasting\Interfaces\Service;
+use SeriouslySimplePodcasting\Renderers\Renderer;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -204,9 +205,7 @@ if ( ! function_exists( 'ss_get_podcast' ) ) {
 	 * @since  1.0.0
 	 */
 	function ss_get_podcast( $args = '' ) {
-		global $ss_podcasting;
-
-		return $ss_podcasting->get_podcast( $args );
+		return ssp_frontend_controller()->get_podcast( $args );
 	}
 }
 
@@ -390,13 +389,13 @@ if ( ! function_exists( 'ssp_episode_ids' ) ) {
 		// If nothing in cache then fetch episodes again and store in cache
 		if ( false === $podcast_episodes ) {
 			$podcast_episodes = get_posts( $args );
-			wp_cache_set( $key, $podcast_episodes, $group, HOUR_IN_SECONDS * 12 );
+			wp_cache_set( $key, $podcast_episodes, $group, HOUR_IN_SECONDS );
 		}
 
 		// Reinstate action for future queries
 		add_action( 'pre_get_posts', array( $ss_podcasting, 'add_all_post_types' ) );
 
-		return $podcast_episodes;
+		return (array) $podcast_episodes;
 	}
 }
 
@@ -429,7 +428,7 @@ if ( ! function_exists( 'ssp_episodes' ) ) {
 		}
 
 		// Get all valid podcast post types
-		$podcast_post_types = ssp_post_types( true );
+		$podcast_post_types = ssp_post_types();
 
 		if ( empty( $podcast_post_types ) ) {
 			return array();
@@ -471,6 +470,9 @@ if ( ! function_exists( 'ssp_episodes' ) ) {
 			return $args;
 		}
 
+		// Todo: investigate if cache works correctly. For example, for different $n
+		// Todo: Also, can it lead to the fatal errors if there are too many $posts?
+		// Todo: Should we remove or improve the cache here?
 		// Do we have anything in the cache here?
 		$key   = 'episodes_' . $series;
 		$group = 'ssp';
@@ -675,17 +677,17 @@ if ( ! function_exists( 'ssp_is_connected_to_castos' ) ) {
 	}
 }
 
-if ( ! function_exists( 'ssp_get_existing_podcasts' ) ) {
+if ( ! function_exists( 'ssp_get_not_synced_episodes' ) ) {
 	/**
-	 * Get all available posts that are registered as podcasts
+	 * Get all available posts that are registered as podcasts and not synced to Castos
 	 *
 	 * @return WP_Query
 	 */
-	function ssp_get_existing_podcasts() {
-		$podcast_post_types = ssp_post_types( true );
+	function ssp_get_not_synced_episodes( $posts_per_page = -1 ) {
+		$podcast_post_types = ssp_post_types();
 		$args               = array(
 			'post_type'      => $podcast_post_types,
-			'posts_per_page' => - 1,
+			'posts_per_page' => $posts_per_page,
 			'post_status'    => 'any',
 			'orderby'        => 'ID',
 			'meta_query'     => array(
@@ -707,9 +709,8 @@ if ( ! function_exists( 'ssp_get_existing_podcasts' ) ) {
 				),
 			),
 		);
-		$podcasts           = new WP_Query( $args );
 
-		return $podcasts;
+		return new WP_Query( $args );
 	}
 } // End if().
 
@@ -719,7 +720,7 @@ if ( ! function_exists( 'ssp_build_podcast_data' ) ) {
 	 *
 	 * @param $podcast_query
 	 *
-	 * @return $podcast_data array
+	 * @return array $podcast_data
 	 */
 	function ssp_build_podcast_data( $podcast_query ) {
 		$podcasts = $podcast_query->get_posts();
@@ -798,7 +799,7 @@ if ( ! function_exists( 'ssp_import_existing_podcasts' ) ) {
 		 * Only if we should be importing posts
 		 */
 		if ( 'true' === $podmotor_import_podcasts ) {
-			$podcast_query = ssp_get_existing_podcasts();
+			$podcast_query = ssp_get_not_synced_episodes();
 
 			/**
 			 * Only if there are posts to import
@@ -984,7 +985,7 @@ if ( ! function_exists( 'ssp_check_if_podcast_has_shortcode' ) ) {
 	}
 }
 
-if ( ! function_exists( 'ssp_check_if_podcast_has_player' ) ) {
+if ( ! function_exists( 'ssp_check_if_podcast_has_elementor_player' ) ) {
 	/**
 	 * Checks to see if the episode has the new player WIP
 	 *
@@ -1073,9 +1074,18 @@ if ( ! function_exists( 'parse_episode_url_with_media_prefix' ) ) {
 		if ( empty( $audio_file_url ) ) {
 			return $audio_file_url;
 		}
+		// Prevent redundant media prefixes.
+		if ( false !== strpos( $audio_file_url, $media_prefix ) ) {
+			return $audio_file_url;
+		}
 		$url_parts = wp_parse_url( $audio_file_url );
 
-		return $media_prefix . $url_parts['host'] . $url_parts['path'];
+		$new_url = $media_prefix . $url_parts['host'] . $url_parts['path'];
+		if ( isset( $url_parts['query'] ) ) {
+			$new_url .= '?' . $url_parts['query'];
+		}
+
+		return $new_url;
 	}
 }
 
@@ -1244,7 +1254,7 @@ if ( ! function_exists( 'ssp_get_the_feed_item_content' ) ) {
 		$content = strip_shortcodes( $content );
 		$content = preg_replace( '/<\/?iframe(.|\s)*?>/', '', $content );
 		$content = str_replace( '<br>', PHP_EOL, $content );
-		$content = strip_tags( $content, '<p>,<a>,<ul>,<ol>,<li>' );
+		$content = strip_tags( $content, '<p>,<a>,<ul>,<ol>,<li>,<strong>,<em>,<h2>,<h3>,<h4>,<h5>,<label>' );
 
 		// Remove empty paragraphs as well.
 		$content = trim( str_replace( '<p></p>', '', $content ) );
@@ -1528,5 +1538,105 @@ if ( ! function_exists( 'ssp_get_service' ) ) {
 	 */
 	function ssp_get_service( $service_id ) {
 		return ssp_app()->get_service( $service_id );
+	}
+}
+
+
+/**
+ * Get SSP Player.
+ */
+if ( ! function_exists( 'ssp_player' ) ) {
+	function ssp_player( $post_id = 0 ) {
+		global $post;
+		if ( ! $post_id ) {
+			$post_id = $post->ID;
+		}
+
+		return ssp_frontend_controller()->audio_player( '', $post_id );
+	}
+}
+
+/**
+ * Get SSP episode image.
+ */
+if ( ! function_exists( 'ssp_episode_image' ) ) {
+	function ssp_episode_image( $episode_id, $size = 'full' ) {
+		return ssp_frontend_controller()->get_image( $episode_id, $size );
+	}
+}
+
+/**
+ * Gets media prefix
+ */
+if ( ! function_exists( 'ssp_get_media_prefix' ) ) {
+	/**
+	 * @param int $series_id
+	 *
+	 * @return string
+	 * @since 2.20.0 Do not carry over the media prefix to subsequent podcasts
+	 */
+	function ssp_get_media_prefix( $series_id ) {
+		return ssp_get_option( 'media_prefix', '', $series_id );
+	}
+}
+
+/**
+ * Gets renderer service.
+ */
+if ( ! function_exists( 'ssp_renderer' ) ) {
+	/**
+	 * @return Renderer|Service
+	 */
+	function ssp_renderer() {
+		return ssp_get_service( 'renderer' );
+	}
+}
+
+/**
+ * Gets dynamo button ( in the feed and episode settings ).
+ */
+if ( ! function_exists( 'ssp_dynamo_btn' ) ) {
+	/**
+	 * Gets media prefix
+	 *
+	 * @param string $title
+	 * @param string $subtitle
+	 * @param string $description
+	 *
+	 * @return string
+	 * @since 2.20.0
+	 */
+	function ssp_dynamo_btn( $title, $subtitle, $description ) {
+		$default_podcast_title = ssp_get_option( 'data_title' );
+		if ( ! $title ) {
+			$title = __( 'My new episode', 'seriously-simple-podcasting' );
+		}
+		if ( ! $subtitle ) {
+			$title = __( "My Podcast Title", 'seriously-simple-podcasting' );
+		}
+
+		return ssp_renderer()->fetch( 'settings/dynamo-btn', compact( 'title', 'subtitle', 'description', 'default_podcast_title' ) );
+	}
+}
+
+/**
+ * Gets array of episode podcast terms.
+ */
+if ( ! function_exists( 'ssp_get_episode_podcasts' ) ) {
+	/**
+	 * Gets array of episode podcast terms.
+	 *
+	 * @param $post_id
+	 *
+	 * @return WP_Term[]
+	 */
+	function ssp_get_episode_podcasts( $post_id ) {
+		$series = wp_get_post_terms( $post_id, 'series' );
+
+		if ( is_wp_error( $series ) ) {
+			return [];
+		}
+
+		return $series;
 	}
 }

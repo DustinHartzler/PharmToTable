@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit45b1355e5d3c01ef39185f536a425b82
+class ComposerStaticInitc0eb777f300ca8823fe97b9c12199d5b
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
@@ -32,13 +32,13 @@ class ComposerStaticInit45b1355e5d3c01ef39185f536a425b82
         'SeriouslySimplePodcasting\\Handlers\\Images_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-images-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Options_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-options-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Podping_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-podping-handler.php',
+        'SeriouslySimplePodcasting\\Handlers\\RSS_Import_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-rss-import-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Roles_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-roles-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Series_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-series-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Settings_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-settings-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\UUID_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-uuid-handler.php',
         'SeriouslySimplePodcasting\\Handlers\\Upgrade_Handler' => __DIR__ . '/../..' . '/php/classes/handlers/class-upgrade-handler.php',
         'SeriouslySimplePodcasting\\Helpers\\Log_Helper' => __DIR__ . '/../..' . '/php/classes/helpers/class-log-helper.php',
-        'SeriouslySimplePodcasting\\Importers\\Rss_Importer' => __DIR__ . '/../..' . '/php/classes/importers/class-rss-importer.php',
         'SeriouslySimplePodcasting\\Integrations\\Abstract_Integrator' => __DIR__ . '/../..' . '/php/classes/integrations/class-abstract-integrator.php',
         'SeriouslySimplePodcasting\\Integrations\\Blocks\\Castos_Blocks' => __DIR__ . '/../..' . '/php/classes/integrations/blocks/class-castos-blocks.php',
         'SeriouslySimplePodcasting\\Integrations\\Elementor\\Elementor_Template_Importer' => __DIR__ . '/../..' . '/php/classes/integrations/elementor/class-elementor-template-importer.php',
@@ -50,7 +50,9 @@ class ComposerStaticInit45b1355e5d3c01ef39185f536a425b82
         'SeriouslySimplePodcasting\\Integrations\\Elementor\\Widgets\\Elementor_Recent_Episodes_Widget' => __DIR__ . '/../..' . '/php/classes/integrations/elementor/widgets/elementor-recent-episodes-widget.php',
         'SeriouslySimplePodcasting\\Integrations\\Elementor\\Widgets\\Elementor_Subscribe_Buttons_Widget' => __DIR__ . '/../..' . '/php/classes/integrations/elementor/widgets/elementor-subscribe-buttons-widget.php',
         'SeriouslySimplePodcasting\\Integrations\\LifterLMS\\LifterLMS_Integrator' => __DIR__ . '/../..' . '/php/classes/integrations/lifterlms/class-lifterlms-integrator.php',
+        'SeriouslySimplePodcasting\\Integrations\\Memberpress\\Memberpress_Integrator' => __DIR__ . '/../..' . '/php/classes/integrations/memberpress/class-memberpress-integrator.php',
         'SeriouslySimplePodcasting\\Integrations\\Paid_Memberships_Pro\\Paid_Memberships_Pro_Integrator' => __DIR__ . '/../..' . '/php/classes/integrations/paid-memberships-pro/class-paid-memberships-pro-integrator.php',
+        'SeriouslySimplePodcasting\\Integrations\\Woocommerce\\WC_Memberships_Integrator' => __DIR__ . '/../..' . '/php/classes/integrations/woocommerce/class-wc-memberships-integrator.php',
         'SeriouslySimplePodcasting\\Integrations\\Yoast\\Schema\\PodcastEpisode' => __DIR__ . '/../..' . '/php/classes/integrations/yoast/schema/class-podcast-episode.php',
         'SeriouslySimplePodcasting\\Integrations\\Yoast\\Schema\\PodcastSeries' => __DIR__ . '/../..' . '/php/classes/integrations/yoast/schema/class-podcast-series.php',
         'SeriouslySimplePodcasting\\Interfaces\\Service' => __DIR__ . '/../..' . '/php/classes/interfaces/interface-handler.php',
@@ -77,7 +79,7 @@ class ComposerStaticInit45b1355e5d3c01ef39185f536a425b82
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit45b1355e5d3c01ef39185f536a425b82::$classMap;
+            $loader->classMap = ComposerStaticInitc0eb777f300ca8823fe97b9c12199d5b::$classMap;
 
         }, null, ClassLoader::class);
     }

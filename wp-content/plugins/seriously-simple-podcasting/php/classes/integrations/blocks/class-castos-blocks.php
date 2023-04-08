@@ -47,9 +47,7 @@ class Castos_Blocks extends Controller {
 	 * @return string
 	 */
 	public function podcast_list_render_callback( $attributes ) {
-		global $ss_podcasting;
-
-		return $ss_podcasting->render_podcast_list_dynamic_block( $attributes );
+		return ssp_frontend_controller()->render_podcast_list_dynamic_block( $attributes );
 	}
 
 	/**
@@ -127,7 +125,29 @@ class Castos_Blocks extends Controller {
 			'seriously-simple-podcasting/podcast-list',
 			array(
 				'editor_script'   => 'ssp-block-script',
-				'editor_style'  => 'ssp-block-style',
+				'editor_style'    => 'ssp-block-style',
+				'attributes'      => array(
+					'featuredImage' => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'featuredImageSize' => array(
+						'type'    => 'string',
+						'default' => 'full',
+					),
+					'excerpt' => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'player' => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+					'playerBelowExcerpt' => array(
+						'type'    => 'boolean',
+						'default' => false,
+					),
+				),
 				'render_callback' => array(
 					$this,
 					'podcast_list_render_callback',

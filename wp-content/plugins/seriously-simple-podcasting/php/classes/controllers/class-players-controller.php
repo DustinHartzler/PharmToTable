@@ -144,8 +144,15 @@ class Players_Controller {
 
 		$meta = '';
 
+		// For podcast_episode shortcode, we only show meta when explicitly specified with details parameter.
+		// Example: [podcast_episode episode="123" content="player,details"].
+		$no_meta_contexts = array( 'podcast_episode' );
+
+		$show_meta = ! in_array( $context, $no_meta_contexts );
+		$show_meta = apply_filters( 'ssp_show_episode_details', $show_meta, $template_data['episode_id'], $context );
+
 		// Adding 'block' context here for future, to distinguish that request is not from the content filter
-		if ( apply_filters( 'ssp_show_episode_details', true, $template_data['episode_id'], $context ) ) {
+		if ( $show_meta ) {
 			$meta = $this->episode_meta_details( $template_data['episode_id'], $context );
 		}
 
@@ -177,7 +184,7 @@ class Players_Controller {
 		$size = get_post_meta( $episode_id , 'filesize' , true );
 		if ( ! $size ) {
 			$size_data = $this->episode_repository->get_file_size( $file );
-			$size = $size_data['formatted'];
+			$size = isset( $size_data['formatted'] ) ? $size_data['formatted'] : 0;
 			if ( $size ) {
 				if ( isset( $size_data['formatted'] ) ) {
 					update_post_meta( $episode_id, 'filesize', $size_data['formatted'] );
@@ -226,7 +233,7 @@ class Players_Controller {
 
 		$podcast_display   = $this->get_podcast_display( $meta, $meta_sep );
 		$subscribe_display = $this->get_subscribe_display( $episode_id, $context, $meta_sep );
-		$meta_display      = $this->get_meta_display( $podcast_display, $subscribe_display );
+		$meta_display      = $this->get_meta_display( $podcast_display, $subscribe_display, $context );
 
 		return apply_filters('ssp_include_player_meta', $meta_display );
 	}
@@ -262,7 +269,9 @@ class Players_Controller {
 		$template_data['current_url'] = home_url( $wp->request );
 		$template_data['player_id']   = $player_id;
 
-		$template_data['player_mode'] = $atts['style'];
+		if ( in_array( $atts['style'], array( 'light', 'dark' ) ) ) {
+			$template_data['player_mode'] = $atts['style'];
+		}
 
 		foreach ( $episodes as $episode ) {
 			$template_data['playlist'][] = $this->episode_repository->get_player_data( $episode->ID );
@@ -412,10 +421,28 @@ class Players_Controller {
 	 *
 	 * @return string
 	 */
-	public function render_media_player( $id ) {
+	public function render_media_player( $id, $context = 'block' ) {
 		$template_data = $this->media_player( $id );
 
-		return $this->renderer->render_deprecated( $template_data, 'players/media-player' );
+		$player = $this->renderer->fetch( 'players/media-player', $template_data );
+
+		$meta = '';
+
+		$episode_id = isset( $template_data['episode']->ID ) ? $template_data['episode']->ID : 0;
+
+		// For podcast_episode shortcode, we only show meta when explicitly specified with details parameter.
+		// Example: [podcast_episode episode="123" content="player,details"].
+		$no_meta_contexts = array( 'podcast_episode' );
+
+		$show_meta = ! in_array( $context, $no_meta_contexts );
+		$show_meta = apply_filters( 'ssp_show_episode_details', $show_meta, $episode_id, $context );
+
+		// Adding 'block' context here for future, to distinguish that request is not from the content filter
+		if ( $show_meta ) {
+			$meta = $this->episode_meta_details( $episode_id, $context );
+		}
+
+		return $player . $meta;
 	}
 
 	/**
@@ -559,7 +586,7 @@ class Players_Controller {
 	 *
 	 * @return string
 	 */
-	public function get_meta_display( $podcast_display, $subscribe_display ) {
+	public function get_meta_display( $podcast_display, $subscribe_display, $context = '' ) {
 		$meta_display = '';
 
 		if ( ! $podcast_display && ! $subscribe_display ) {
@@ -572,7 +599,7 @@ class Players_Controller {
 
 			$ss_podcasting_player_meta_data_enabled = get_option( 'ss_podcasting_player_meta_data_enabled', 'on' );
 
-			if ( $ss_podcasting_player_meta_data_enabled && $ss_podcasting_player_meta_data_enabled == 'on' ) {
+			if ( 'on' === $ss_podcasting_player_meta_data_enabled || 'shortcode' === $context ) {
 				if ( ! empty( $podcast_display ) ) {
 					$podcast_display = '<p>' . $podcast_display . '</p>';
 					$podcast_display = apply_filters( 'ssp_include_episode_meta_data', $podcast_display );

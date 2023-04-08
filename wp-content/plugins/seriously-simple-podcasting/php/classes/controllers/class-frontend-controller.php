@@ -100,6 +100,9 @@ class Frontend_Controller {
 		// Add RSS meta tag to site header
 		add_action( 'wp_head', array( $this, 'rss_meta_tag' ) );
 
+		// Disable default RSS feed link for podcast archive page (/podcast)
+		add_filter( 'post_type_archive_feed_link', array( $this, 'disable_default_podcast_rss_feed_link' ) );
+
 		// Add podcast episode to main query loop if setting is activated
 		add_action( 'pre_get_posts', array( $this, 'add_to_home_query' ) );
 
@@ -155,6 +158,21 @@ class Frontend_Controller {
 		foreach ( $this->removed_filters as $filter ) {
 			add_filter( $filter['filter_name'], array( $this, $filter['function_name'] ), $filter['priority'] );
 		}
+	}
+
+	/**
+	 * Disable default podcast RSS feed link. We add the correct feed link manually @see rss_meta_tag()
+	 *
+	 * @param string $link
+	 *
+	 * @return string|null
+	 */
+	public function disable_default_podcast_rss_feed_link( $link ) {
+		if ( is_post_type_archive( SSP_CPT_PODCAST ) && strpos( $link, SSP_CPT_PODCAST . '/feed' ) ) {
+			return null;
+		}
+
+		return $link;
 	}
 
 	/**
@@ -258,12 +276,21 @@ class Frontend_Controller {
 	}
 
 	/**
-	 * @Todo Rename to insert_player()
+	 * Add episode meta data to the full content
+	 * @param  string $content Existing content
+	 * @return string          Modified content
+	 * @deprecated Use embed_player_in_content() instead
+	 */
+	public function content_meta_data( $content = '' ) {
+		return $this->embed_player_in_content( $content );
+	}
+
+	/**
 	 * Add episode meta data to the full content
 	 * @param  string $content Existing content
 	 * @return string          Modified content
 	 */
-	public function content_meta_data( $content = '' ) {
+	public function embed_player_in_content( $content = '' ) {
 
 		global $post, $wp_current_filter, $episode_context;
 
@@ -274,6 +301,11 @@ class Frontend_Controller {
 
 		// Don't output unformatted data on excerpts
 		if ( in_array( 'get_the_excerpt', (array) $wp_current_filter, true ) ) {
+			return $content;
+		}
+
+		// Don't output player if Elementor Player widget was embedded manually
+		if ( false !== strpos( $content, 'data-widget_type="Castos Player.default"' ) ) {
 			return $content;
 		}
 
@@ -408,7 +440,7 @@ class Frontend_Controller {
 			$show_player = apply_filters( 'ssp_show_media_player', $show_player, $context );
 
 			if ( $show_player ) {
-				$player .= '<div class="podcast_player">' . $this->load_media_player( $file, $episode_id, $player_style ) . '</div>';
+				$player .= '<div class="podcast_player">' . $this->load_media_player( $file, $episode_id, $player_style, $context ) . '</div>';
 			}
 		}
 
@@ -443,22 +475,24 @@ class Frontend_Controller {
 	 * @param string $src_file
 	 * @param int $episode_id
 	 * @param string $player_size
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function media_player( $src_file = '', $episode_id = 0, $player_size = 'large' ) {
+	public function media_player( $src_file = '', $episode_id = 0, $player_size = 'large', $context = 'block' ) {
 		$media_player = '';
 		$show_player  = $this->validate_media_player( $episode_id );
 		if ( $show_player ) {
-			$media_player = $this->load_media_player( $src_file, $episode_id, $player_size );
+			$media_player = $this->load_media_player( $src_file, $episode_id, $player_size, $context );
 		}
 		return $media_player;
 	}
 
 	/**
-	 * @param $src_file
-	 * @param $episode_id
-	 * @param $player_size
+	 * @param string $src_file
+	 * @param int $episode_id
+	 * @param string $player_size
+	 * @param string $context
 	 *
 	 * @return mixed|void
 	 */
@@ -503,7 +537,7 @@ class Frontend_Controller {
 
 
 		if ( 'standard' === $player_size ) {
-			$player = $this->players_controller->render_media_player( $episode_id );
+			$player = $this->players_controller->render_media_player( $episode_id, $context );
 		} else {
 			$player = $this->players_controller->render_html_player( $episode_id, true, $context );
 		}
@@ -573,6 +607,10 @@ class Frontend_Controller {
 	public function excerpt_meta_data( $excerpt = '', $content = 'excerpt' ) {
 
 		global $post;
+
+		if( ! apply_filters( 'ssp_show_excerpt_player', true, $post, $excerpt, $content ) ){
+			return $excerpt;
+		}
 
 		if ( ! is_a( $post, 'WP_Post' ) ) {
 			return $excerpt;
@@ -687,7 +725,7 @@ class Frontend_Controller {
 		$post_types             = $query->get( 'post_type' ) ?: array();
 		$tag_archive_post_types = apply_filters( 'ssp_tag_archive_post_types', array( 'post', SSP_CPT_PODCAST ) );
 
-		$query->set( 'post_type', array_merge( $post_types, $tag_archive_post_types ) );
+		$query->set( 'post_type', array_merge( (array) $post_types, (array) $tag_archive_post_types ) );
 	}
 
 	/**
@@ -696,47 +734,7 @@ class Frontend_Controller {
 	 * @return mixed        File duration on success, boolean false on failure
 	 */
 	public function get_file_duration( $file ) {
-
-		/**
-		 * ssp_enable_get_file_duration filter to allow this functionality to be disabled programmatically
-		 */
-		$enabled = apply_filters( 'ssp_enable_get_file_duration', true );
-		if ( ! $enabled ) {
-			return false;
-		}
-
-		if ( $file ) {
-
-			// Include media functions if necessary
-			if ( ! function_exists( 'wp_read_audio_metadata' ) ) {
-				require_once( ABSPATH . 'wp-admin/includes/media.php' );
-			}
-
-			// translate file URL to local file path if possible
-			$file = $this->get_local_file_path( $file );
-
-			// Get file data (will only work for local files)
-			$data = wp_read_audio_metadata( $file );
-
-			$duration = false;
-
-			if ( $data ) {
-				if ( isset( $data['length_formatted'] ) && strlen( $data['length_formatted'] ) > 0 ) {
-					$duration = $data['length_formatted'];
-				} else {
-					if ( isset( $data['length'] ) && strlen( $data['length'] ) > 0 ) {
-						$duration = gmdate( 'H:i:s', $data['length'] );
-					}
-				}
-			}
-
-			if ( $data ) {
-				return apply_filters( 'ssp_file_duration', $duration, $file );
-			}
-
-		}
-
-		return false;
+		return $this->episode_repository->get_file_duration( $file );
 	}
 
 	/**
@@ -988,8 +986,10 @@ class Frontend_Controller {
 				}
 			}
 
-			// Allow other actions - functions hooked on here must not output any data
-			do_action( 'ssp_file_download', $file, $episode, $referrer );
+			if ( 'test-nginx' !== $referrer ) {
+				// Allow other actions - functions hooked on here must not output any data
+				do_action( 'ssp_file_download', $file, $episode, $referrer );
+			}
 
 			// Set necessary headers
 			header( "Pragma: no-cache" );
@@ -1041,6 +1041,7 @@ class Frontend_Controller {
 
 				// Encode spaces in file names until this is fixed in core (https://core.trac.wordpress.org/ticket/36998)
 				$file = str_replace( ' ', '%20', $file );
+				$file = str_replace( PHP_EOL, '', $file );
 
 				// Use ssp_readfile_chunked() if allowed on the server or simply access file directly
 				@ssp_readfile_chunked( $file ) or header( 'Location: ' . $file );
@@ -1147,27 +1148,22 @@ class Frontend_Controller {
 	 *
 	 * @param  string $attachment URL of resource
 	 *
-	 * @return mixed MIME type on success, false on failure
+	 * @return string|false MIME type on success, false on failure
 	 */
 	public function get_attachment_mimetype( $attachment = '' ) {
-		// Let's hash the URL to ensure that we don't get any illegal chars that might break the cache.
 		$key = md5( $attachment );
-		if ( $attachment ) {
-			// Do we have anything in the cache for this?
-			$mime = wp_cache_get( $key, 'mime-type' );
-			if ( $mime === false ) {
-				// Get the ID
-				$id = $this->get_attachment_id_from_url( $attachment );
-				// Get the MIME type
-				$mime = get_post_mime_type( $id );
-				// Set the cache
-				wp_cache_set( $key, $mime, 'mime-type', DAY_IN_SECONDS );
-			}
-
-			return $mime;
+		if ( ! $attachment ) {
+			return false;
 		}
 
-		return false;
+		$mime = wp_cache_get( $key, 'mime-type' );
+		if ( ! $mime ) {
+			$filetype = wp_check_filetype( $attachment );
+			$mime     = isset( $filetype['type'] ) ? $filetype['type'] : false;
+			wp_cache_set( $key, $mime, 'mime-type', DAY_IN_SECONDS );
+		}
+
+		return $mime;
 	}
 
 	/**
@@ -1295,79 +1291,40 @@ class Frontend_Controller {
 
 		$episode_context = $context;
 
-		if ( 'larger' == $style ) {
+		foreach ( $content_items as $item ) {
 
-			foreach ( $content_items as $item ) {
+			switch ( $item ) {
 
-				switch ( $item ) {
+				case 'title':
+					$html .= '<h3 class="episode-title">' . get_the_title() . '</h3>' . "\n";
+					break;
 
-					case 'title':
-						$html .= '<h3 class="episode-title">' . get_the_title() . '</h3>' . "\n";
-						break;
+				case 'excerpt':
+					$html .= '<p class="episode-excerpt">' . get_the_excerpt() . '</p>' . "\n";
+					break;
 
-					case 'excerpt':
-						$html .= '<p class="episode-excerpt">' . get_the_excerpt() . '</p>' . "\n";
-						break;
+				case 'content':
+					$html .= '<div class="episode-content">' . apply_filters( 'the_content', get_the_content() ) . '</div>' . "\n";
+					break;
 
-					case 'content':
-						$html .= '<div class="episode-content">' . apply_filters( 'the_content', get_the_content() ) . '</div>' . "\n";
-						break;
+				case 'player':
+					$file = $this->get_enclosure( $episode_id );
+					if ( get_option( 'permalink_structure' ) ) {
+						$file = $this->get_episode_download_link( $episode_id );
+					}
 
-					case 'player':
-						$file = $this->get_enclosure( $episode_id );
-						if ( get_option( 'permalink_structure' ) ) {
-							$file = $this->get_episode_download_link( $episode_id );
-						}
-						$html .= '<div id="podcast_player_' . $episode_id . '" class="podcast_player">' . $this->media_player( $file, $episode_id, "large" ) . '</div>' . "\n";
-						break;
+					$html .= '<div id="podcast_player_' . $episode_id . '" class="podcast_player">' . $this->media_player( $file, $episode_id, $style, 'podcast_episode' ) . '</div>' . "\n";
+					break;
 
-					case 'details':
-						$html .= $this->episode_meta_details( $episode_id, $episode_context );
-						break;
+				case 'details':
+				case 'meta':
+					$html .= $this->episode_meta_details( $episode_id, $episode_context );
+					break;
 
-					case 'image':
-						$html .= get_the_post_thumbnail( $episode_id, apply_filters( 'ssp_frontend_context_thumbnail_size', 'thumbnail' ) );
-						break;
+				case 'image':
+					$html .= get_the_post_thumbnail( $episode_id, apply_filters( 'ssp_frontend_context_thumbnail_size', 'thumbnail' ) );
+					break;
 
-				}
-			}
-		}
-
-		if ( 'standard' === $style ) {
-			// Display specified content items in the order supplied
-			foreach ( $content_items as $item ) {
-
-				switch ( $item ) {
-
-					case 'title':
-						$html .= '<h3 class="episode-title">' . get_the_title() . '</h3>' . "\n";
-						break;
-
-					case 'excerpt':
-						$html .= '<p class="episode-excerpt">' . get_the_excerpt() . '</p>' . "\n";
-						break;
-
-					case 'content':
-						$html .= '<div class="episode-content">' . apply_filters( 'the_content', get_the_content() ) . '</div>' . "\n";
-						break;
-
-					case 'player':
-						$file = $this->get_enclosure( $episode_id );
-						if ( get_option( 'permalink_structure' ) ) {
-							$file = $this->get_episode_download_link( $episode_id );
-						}
-						$html .= '<div class="podcast_player">' . $this->media_player( $file, $episode_id, $style ) . '</div>' . "\n";
-						break;
-
-					case 'details':
-						$html .= $this->episode_meta_details( $episode_id, $episode_context );
-						break;
-
-					case 'image':
-						$html .= get_the_post_thumbnail( $episode_id, apply_filters( 'ssp_frontend_context_thumbnail_size', 'thumbnail' ) );
-						break;
-
-				}
 			}
 		}
 
@@ -1414,13 +1371,12 @@ class Frontend_Controller {
 				$episode = get_post();
 
 				$player = '';
-				if ( isset( $attributes['player'] ) ) {
+				if ( !empty( $attributes['player'] ) ) {
 					$file = $this->get_enclosure( $episode->ID );
 					if ( get_option( 'permalink_structure' ) ) {
 						$file = $this->get_episode_download_link( $episode->ID );
 					}
 					$player = $this->load_media_player( $file, $episode->ID, $player_style );
-					$player .= $this->episode_meta_details( $episode->ID, 'content' );
 				}
 				?>
 				<article class="podcast-<?php echo $episode->ID ?> podcast type-podcast">
@@ -1430,17 +1386,20 @@ class Frontend_Controller {
 						</a>
 					</h2>
 					<div class="podcast-content">
-						<?php if ( isset( $attributes['featuredImage'] ) ) { ?>
+						<?php if ( !empty( $attributes['featuredImage'] ) ) { ?>
 							<a class="podcast-image-link" href="<?php echo esc_url( get_permalink() ) ?>"
 							   aria-hidden="true" tabindex="-1">
-								<?php the_post_thumbnail( 'full' ); ?>
+								<?php echo ssp_episode_image( $episode->ID, $attributes['featuredImageSize']); ?>
 							</a>
 						<?php } ?>
-						<?php if ( ! empty( $player ) ) { ?>
+						<?php if ( $player && empty( $attributes['playerBelowExcerpt'] ) ) { ?>
 							<p><?php echo $player; ?></p>
 						<?php } ?>
-						<?php if ( isset( $attributes['excerpt'] ) ) { ?>
+						<?php if ( !empty( $attributes['excerpt'] ) ) { ?>
 							<p><?php echo get_the_excerpt(); ?></p>
+						<?php } ?>
+						<?php if ( $player && ! empty( $attributes['playerBelowExcerpt'] ) ) { ?>
+							<p><?php echo $player; ?></p>
 						<?php } ?>
 					</div>
 				</article>

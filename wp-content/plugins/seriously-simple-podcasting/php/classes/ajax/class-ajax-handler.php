@@ -3,7 +3,7 @@
 namespace SeriouslySimplePodcasting\Ajax;
 
 use SeriouslySimplePodcasting\Handlers\Castos_Handler;
-use SeriouslySimplePodcasting\Importers\Rss_Importer;
+use SeriouslySimplePodcasting\Handlers\RSS_Import_Handler;
 use SeriouslySimplePodcasting\Handlers\Options_Handler;
 
 class Ajax_Handler {
@@ -44,7 +44,7 @@ class Ajax_Handler {
 		add_action( 'wp_ajax_get_external_rss_feed_progress', array( $this, 'get_external_rss_feed_progress' ) );
 
 		// Add ajax action to reset external feed options
-		add_action( 'wp_ajax_reset_external_rss_feed_progress', array( $this, 'reset_external_rss_feed_progress' ) );
+		add_action( 'wp_ajax_reset_rss_feed_data', array( $this, 'reset_rss_feed_data' ) );
 	}
 
 	/**
@@ -151,21 +151,24 @@ class Ajax_Handler {
 	}
 
 
-
 	/**
 	 * Import an external RSS feed via ajax
 	 */
 	public function import_external_rss_feed() {
 		$this->import_security_check();
 
-		update_option( 'ssp_rss_import', 0 );
-
 		$ssp_external_rss = get_option( 'ssp_external_rss', '' );
 		if ( empty( $ssp_external_rss ) ) {
-			$this->send_json_error( 'No feed to process' );
+			wp_send_json(
+				[
+					'status'        => 'error',
+					'message'       => __( 'No feed to process', 'seriously-simple-podcasting' ),
+					'can_try_again' => false,
+				]
+			);
 		}
 
-		$rss_importer = new Rss_Importer( $ssp_external_rss );
+		$rss_importer = new RSS_Import_Handler( $ssp_external_rss );
 		$response     = $rss_importer->import_rss_feed();
 
 		wp_send_json( $response );
@@ -176,18 +179,18 @@ class Ajax_Handler {
 	 */
 	public function get_external_rss_feed_progress() {
 		$this->import_security_check();
-		$progress = (int) get_option( 'ssp_rss_import', 0 );
-		wp_send_json( $progress );
+		$progress = RSS_Import_Handler::get_import_data( 'import_progress', 0 );
+		$episodes = RSS_Import_Handler::get_import_data( 'episodes_imported', array() );
+		wp_send_json( compact('progress', 'episodes') );
 	}
 
 	/**
 	 * Reset external RSS feed import
 	 */
-	public function reset_external_rss_feed_progress() {
+	public function reset_rss_feed_data() {
 		$this->import_security_check();
 
-		delete_option( 'ssp_external_rss' );
-		delete_option( 'ssp_rss_import' );
+		RSS_Import_Handler::reset_import_data();
 		wp_send_json( 'success' );
 	}
 

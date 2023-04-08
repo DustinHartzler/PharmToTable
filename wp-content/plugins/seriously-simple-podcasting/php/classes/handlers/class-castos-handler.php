@@ -315,15 +315,14 @@ class Castos_Handler implements Service {
 
 		if ( ! isset( $response_object->status ) || ! $response_object->status || empty( $response_object->success ) ) {
 			$this->logger->log( 'An error occurred uploading the episode data to Castos', $response_object );
-			$this->logger->log( sprintf( 'Response: %s', $response_object->message ) );
 			$this->update_response( 'message', 'An error occurred uploading the episode data to Castos' );
 
 			return $this->response;
 		}
 
-		$this->logger->log( 'Pocast episode successfully uploaded to Castos with episode id ' . $response_object->episode->id );
+		$this->logger->log( 'Podcast episode successfully uploaded to Castos with episode id ' . $response_object->episode->id );
 		$this->update_response( 'status', 'success' );
-		$this->update_response( 'message', 'Pocast episode successfully uploaded to Castos' );
+		$this->update_response( 'message', 'Podcast episode successfully uploaded to Castos' );
 		$this->update_response( 'episode_id', $response_object->episode->id );
 
 		return $this->response;
@@ -497,7 +496,7 @@ class Castos_Handler implements Service {
 		}
 
 		$this->update_response( 'status', 'success' );
-		$this->update_response( 'message', 'Pocast episode data successfully uploaded to Castos' );
+		$this->update_response( 'message', 'Podcast episode data successfully uploaded to Castos' );
 
 		return $this->response;
 	}
@@ -659,6 +658,34 @@ class Castos_Handler implements Service {
 		$res = $this->send_request( 'api/v2/private-subscribers', [ 'podcast_id' => $podcast_id ] );
 
 		return ! empty( $res['subscribers'] ) ? $res['subscribers'] : array();
+	}
+
+
+	/**
+	 * Gets subscriber subscriptions by email.
+	 *
+	 * @param string $email
+	 *
+	 * @return array
+	 */
+	public function get_subscriptions_by_email( $email ) {
+		$this->logger->log( __METHOD__ );
+
+		$cache_key = 'ssp_castos_api_subscriptions_' . $email;
+
+		$subscriptions = wp_cache_get( $cache_key );
+
+		if ( $subscriptions && is_array( $subscriptions ) ) {
+			return $subscriptions;
+		}
+
+		$res = $this->send_request( "api/v2/private-subscribers/email/$email" );
+
+		if ( isset( $res['subscriptions'] ) ) {
+			wp_cache_add( $cache_key, $res['subscriptions'] );
+		}
+
+		return ! empty( $res['subscriptions'] ) ? $res['subscriptions'] : array();
 	}
 
 

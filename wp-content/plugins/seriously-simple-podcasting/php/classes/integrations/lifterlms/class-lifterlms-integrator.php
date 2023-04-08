@@ -19,11 +19,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Lifter LMS integrator.
  *
- * @author Sergey Zakharchenko
+ * @author Sergiy Zakharchenko
  * @package SeriouslySimplePodcasting
  * @since 2.12.0
  */
 class LifterLMS_Integrator extends Abstract_Integrator {
+
+	const SINGLE_SYNC_EVENT = 'ssp_lifterlms_single_sync';
+
+	const SINGLE_SYNC_DATA_OPTION = 'ssp_lifterlms_single_sync_data';
 
 	use Singleton;
 
@@ -92,11 +96,12 @@ class LifterLMS_Integrator extends Abstract_Integrator {
 			'sync_subscriber_on_user_enrolled_in_course'
 		), 10, 2 );
 
-
 		add_filter( 'llms_user_removed_from_course', array(
 			$this,
 			'sync_subscriber_on_user_removed_from_course'
 		), 10, 2 );
+
+		add_action( self::SINGLE_SYNC_EVENT, array( $this, 'process_single_sync_events' ) );
 
 
 		// Schedule the bulk sync when Series -> Membership Level association is changed.
@@ -118,6 +123,17 @@ class LifterLMS_Integrator extends Abstract_Integrator {
 		add_action( 'ssp_bulk_sync_lifterlms_subscribers', array( $this, 'bulk_sync_subscribers' ) );
 	}
 
+	public function process_single_sync_events(){
+		$single_sync_events = get_option( self::SINGLE_SYNC_DATA_OPTION, array() );
+
+		foreach ( $single_sync_events as $event ) {
+			$user_id           = $event['user_id'];
+			$add_series_ids    = $this->get_series_ids_by_course( $event['add_course_id'] );
+			$revoke_series_ids = $this->get_series_ids_by_course( $event['revoke_course_id'] );
+
+			$this->sync_user( $user_id, $revoke_series_ids, $add_series_ids );
+		}
+	}
 
 	/**
 	 * @param int $user_id
@@ -126,13 +142,19 @@ class LifterLMS_Integrator extends Abstract_Integrator {
 	 * @return void
 	 */
 	public function sync_subscriber_on_user_enrolled_in_course( $user_id, $course_id ) {
-		$revoke_series_ids = array();
+		$single_sync_events = get_option( self::SINGLE_SYNC_DATA_OPTION, array() );
 
-		$add_series_ids = $this->get_series_ids_by_course( $course_id );
+		// Make sure that if there are multiple events, we don't miss any.
+		$single_sync_events[] = array(
+			'user_id'          => $user_id,
+			'add_course_id'    => $course_id,
+			'revoke_course_id' => '',
+		);
 
-		$this->sync_user( $user_id, $revoke_series_ids, $add_series_ids );
+		update_option( self::SINGLE_SYNC_DATA_OPTION, $single_sync_events );
+
+		$this->schedule_single_sync( 0 );
 	}
-
 
 	/**
 	 * @param int $user_id
@@ -141,11 +163,31 @@ class LifterLMS_Integrator extends Abstract_Integrator {
 	 * @return void
 	 */
 	public function sync_subscriber_on_user_removed_from_course( $user_id, $course_id ) {
-		$add_series_ids = array();
+		$single_sync_events = get_option( self::SINGLE_SYNC_DATA_OPTION, array() );
 
-		$revoke_series_ids = $this->get_series_ids_by_course( $course_id );
+		// Make sure that if there are multiple events, we don't miss any.
+		$single_sync_events[] = array(
+			'user_id'          => $user_id,
+			'add_course_id'    => '',
+			'revoke_course_id' => $course_id,
+		);
 
-		$this->sync_user( $user_id, $revoke_series_ids, $add_series_ids );
+		update_option( self::SINGLE_SYNC_DATA_OPTION, $single_sync_events );
+
+		$this->schedule_single_sync( 0 );
+	}
+
+	/**
+	 * Schedule single sync.
+	 *
+	 * @param int $delay Schedule delay in minutes.
+	 *
+	 * @return void
+	 */
+	protected function schedule_single_sync( $delay = 5 ){
+		if ( ! wp_next_scheduled( self::SINGLE_SYNC_EVENT ) ) {
+			wp_schedule_single_event( time() + $delay * MINUTE_IN_SECONDS, self::SINGLE_SYNC_EVENT );
+		}
 	}
 
 
@@ -211,85 +253,6 @@ class LifterLMS_Integrator extends Abstract_Integrator {
 		}
 	}
 
-	/**
-	 * @param int $user_id
-	 * @param int[] $revoke_series_ids
-	 * @param int[] $add_series_ids
-	 */
-	protected function sync_user( $user_id, $revoke_series_ids, $add_series_ids ) {
-		$user = get_user_by( 'id', $user_id );
-
-		if ( ! $user ) {
-			return;
-		}
-
-		if ( $revoke_series_ids ) {
-			$this->logger->log( __METHOD__ . sprintf( ': Revoke user %s from series %s', $user->user_email, json_encode( $revoke_series_ids ) ) );
-			$res = $this->revoke_subscriber_from_podcasts( $user, $revoke_series_ids );
-			$this->logger->log( __METHOD__ . ': Revoke result', $res );
-		}
-
-		if ( $add_series_ids ) {
-			$this->logger->log( __METHOD__ . sprintf( ': Add user %s to series %s', $user->user_email, json_encode( $add_series_ids ) ) );
-			$res = $this->add_subscriber_to_podcasts( $user, $add_series_ids );
-			$this->logger->log( __METHOD__ . ': Add result', $res );
-		}
-	}
-
-
-	/**
-	 * Revokes subscriber from multiple Castos podcasts.
-	 *
-	 * @param \WP_User $user
-	 * @param int[] $series_ids
-	 *
-	 * @return array
-	 */
-	protected function revoke_subscriber_from_podcasts( $user, $series_ids ) {
-		$podcast_ids = $this->convert_series_ids_to_podcast_ids( $series_ids );
-
-		return $this->castos_handler->revoke_subscriber_from_podcasts( $podcast_ids, $user->user_email );
-	}
-
-
-	/**
-	 * Adds subscriber to multiple Castos podcasts.
-	 *
-	 * @param \WP_User $user
-	 * @param int[] $series_ids
-	 *
-	 * @return array
-	 */
-	protected function add_subscriber_to_podcasts( $user, $series_ids ) {
-		$podcast_ids = $this->convert_series_ids_to_podcast_ids( $series_ids );
-
-		return $this->castos_handler->add_subscriber_to_podcasts(
-			$podcast_ids,
-			$user->user_email,
-			$user->display_name
-		);
-	}
-
-
-	/**
-	 * Converts series IDs to the Castos podcast IDs.
-	 *
-	 * @param int[] $series_ids
-	 *
-	 * @return array
-	 */
-	protected function convert_series_ids_to_podcast_ids( $series_ids ) {
-		$series_podcasts_map = $this->get_series_podcasts_map();
-
-		$podcast_ids = array();
-
-		foreach ( $series_ids as $series_id ) {
-			$podcast_ids[] = $series_podcasts_map[ $series_id ];
-		}
-
-		return $podcast_ids;
-	}
-
 
 	/**
 	 * Gets IDs of the series attached to the Membership Level.
@@ -317,30 +280,6 @@ class LifterLMS_Integrator extends Abstract_Integrator {
 		}
 
 		return $series_ids;
-	}
-
-
-	/**
-	 * Gets the map between series and podcasts.
-	 *
-	 * @return array
-	 */
-	protected function get_series_podcasts_map() {
-		$podcasts = $this->castos_handler->get_podcasts();
-
-		$map = array();
-
-		if ( empty( $podcasts['data']['podcast_list'] ) ) {
-			$this->logger->log( __METHOD__ . ': Error: empty podcasts!' );
-
-			return $map;
-		}
-
-		foreach ( $podcasts['data']['podcast_list'] as $podcast ) {
-			$map[ $podcast['series_id'] ] = $podcast['id'];
-		}
-
-		return $map;
 	}
 
 
@@ -436,27 +375,6 @@ class LifterLMS_Integrator extends Abstract_Integrator {
 		return $template;
 	}
 
-	/**
-	 * @return WP_Term[]
-	 */
-	protected function get_current_page_related_series() {
-		// First, lets check if it's series page
-		$queried = get_queried_object();
-
-		if ( isset( $queried->taxonomy ) && 'series' === $queried->taxonomy ) {
-			return array( $queried );
-		}
-
-		// If it's episode page, get related series
-		global $post;
-
-		if( isset( $post->post_type ) && SSP_CPT_PODCAST === $post->post_type ){
-			return $this->get_episode_series( $post->ID );
-		}
-
-		return array();
-	}
-
 
 	/**
 	 * Protects access to private feeds.
@@ -475,7 +393,7 @@ class LifterLMS_Integrator extends Abstract_Integrator {
 		}
 
 		// Series is protected, does user have access?
-		$has_access = false;
+		$has_access = true;
 		$related_course_ids = $this->get_series_course_ids( array( $series ) );
 
 		if ( $related_course_ids ) {

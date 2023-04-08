@@ -2,6 +2,7 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
+use SeriouslySimplePodcasting\Handlers\RSS_Import_Handler;
 use SeriouslySimplePodcasting\Handlers\Settings_Handler;
 use SeriouslySimplePodcasting\Handlers\Series_Handler;
 use SeriouslySimplePodcasting\Renderers\Renderer;
@@ -263,6 +264,10 @@ class Settings_Controller extends Controller {
 	 * @return void
 	 */
 	public function register_settings() {
+		if ( 'podcast_settings' !== filter_input( INPUT_GET, 'page' ) &&
+			 'ss_podcasting' !== filter_input( INPUT_POST, 'option_page' ) ) {
+			return;
+		}
 
 		$section = $this->get_settings_section();
 		$data    = $this->get_settings_data( $section );
@@ -709,17 +714,18 @@ class Settings_Controller extends Controller {
 		}
 
 		if ( 'import' === $tab ) {
-			// Custom submits for Imports
-			if ( ssp_is_connected_to_castos() ) {
-				$html .= '<p class="submit">' . "\n";
-				$html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
-				$html .= '<input id="ssp-settings-submit" name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Trigger import', 'seriously-simple-podcasting' ) ) . '" />' . "\n";
-				$html .= '</p>' . "\n";
-			}
-
 			if ( ssp_get_external_rss_being_imported() ) {
-				$html .= $this->render_external_import_process();
+				$progress = RSS_Import_Handler::get_import_data( 'import_progress', 0 );
+				$html     .= $this->render_external_import_process( $progress );
 			} else {
+				// Custom submits for Imports
+				if ( ssp_is_connected_to_castos() ) {
+					$html .= '<p class="submit">' . "\n";
+					$html .= '<input type="hidden" name="tab" value="' . esc_attr( $tab ) . '" />' . "\n";
+					$html .= '<input id="ssp-settings-submit" name="Submit" type="submit" class="button-primary" value="' . esc_attr( __( 'Trigger sync', 'seriously-simple-podcasting' ) ) . '" />' . "\n";
+					$html .= '</p>' . "\n";
+				}
+
 				$html .= $this->render_external_import_form();
 			}
 		}
@@ -745,7 +751,7 @@ class Settings_Controller extends Controller {
 			if ( strpos( $sapi_type, 'fcgi' ) !== false ) {
 				$html .= '<br/><div class="update-nag">';
 				$html .= '<p>' . sprintf( __( 'It looks like your server has FastCGI enabled, which will prevent the feed password protection feature from working. You can fix this by following %1$sthis quick guide%2$s.', 'seriously-simple-podcasting' ),
-						'<a href="http://www.seriouslysimplepodcasting.com/documentation/why-does-the-feed-password-protection-feature-not-work/" target="_blank">', '</a>' ) . '</p>';
+						'<a href="https://support.castos.com/article/147-why-wont-the-password-i-set-for-my-rss-feed-in-wordpress-save" target="_blank">', '</a>' ) . '</p>';
 				$html .= '</div>';
 			}
 		}
@@ -1053,72 +1059,21 @@ class Settings_Controller extends Controller {
 	/**
 	 * Render the progress bar to show the importing RSS feed progress
 	 *
-	 * @return false|string
+	 * @return string
 	 */
-	public function render_external_import_process() {
-		ob_start();
-		?>
-		<h3 class="ssp-ssp-external-feed-message">Your external RSS feed is being imported. Please leave this window open until it completes</h3>
-		<div id="ssp-external-feed-progress"></div>
-		<div id="ssp-external-feed-status"><p>Commencing feed import</p></div>
-		<?php
-		$html = ob_get_clean();
-
-		return $html;
+	public function render_external_import_process( $progress ) {
+		return $this->renderer->fetch( 'settings/import-rss-info', compact( 'progress' ) );
 	}
 
 	/**
 	 * Render the form to enable importing an external RSS feed
 	 *
-	 * @return false|string
+	 * @return string
 	 */
 	public function render_external_import_form() {
 		$post_types = ssp_post_types( true );
-		$series = get_terms( 'series', array( 'hide_empty' => false ) );
-		ob_start();
-		?>
-		<p>If you have a podcast hosted on an external service (like Libsyn, Soundcloud or Simplecast) enter the url to
-			the RSS Feed in the form below and the plugin will import the episodes for you.</p>
-		<table class="form-table">
-			<tbody>
-			<tr>
-				<th scope="row">RSS feed</th>
-				<td>
-					<input id="external_rss" name="external_rss" type="text" placeholder="https://externalservice.com/rss" value="" class="regular-text">
-				</td>
-			</tr>
-			<?php if ( count( $post_types ) > 1 ) { ?>
-				<tr>
-					<th scope="row">Post Type</th>
-					<td>
-						<select id="import_post_type" name="import_post_type">
-							<?php foreach ( $post_types as $post_type ) { ?>
-								<option value="<?php echo $post_type; ?>"><?php echo ucfirst( $post_type ); ?></option>
-							<?php } ?>
-						</select>
-					</td>
-				</tr>
-			<?php } ?>
-			<?php if ( count( $series ) > 1 ) { ?>
-				<tr>
-					<th scope="row">Podcast</th>
-					<td>
-						<select id="import_series" name="import_series">
-							<?php foreach ( $series as $series_item ) { ?>
-								<option value="<?php echo $series_item->term_id; ?>"><?php echo $series_item->name; ?></option>
-							<?php } ?>
-						</select>
-					</td>
-				</tr>
-			<?php } ?>
-			</tbody>
-		</table>
-		<p class="submit">
-			<input id="ssp-settings-submit" name="Submit" type="submit" class="button-primary" value="<?php echo esc_attr( __( 'Begin Import Now', 'seriously-simple-podcasting' ) ) ?>"/>
-		</p>
-		<?php
-		$html = ob_get_clean();
+		$series     = get_terms( 'series', array( 'hide_empty' => false ) );
 
-		return $html;
+		return $this->renderer->fetch( 'settings/import-rss-form', compact( 'post_types', 'series' ) );
 	}
 }

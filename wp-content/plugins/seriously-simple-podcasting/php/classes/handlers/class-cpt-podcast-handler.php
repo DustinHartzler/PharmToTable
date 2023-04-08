@@ -100,8 +100,8 @@ class CPT_Podcast_Handler implements Service {
 
 	protected function get_podcast_args() {
 		$labels = array(
-			'name'                  => _x( 'Podcast', 'post type general name', 'seriously-simple-podcasting' ),
-			'singular_name'         => _x( 'Podcast', 'post type singular name', 'seriously-simple-podcasting' ),
+			'name'                  => _x( 'Episode', 'post type general name', 'seriously-simple-podcasting' ),
+			'singular_name'         => _x( 'Episode', 'post type singular name', 'seriously-simple-podcasting' ),
 			'add_new'               => _x( 'Add New Episode', SSP_CPT_PODCAST, 'seriously-simple-podcasting' ),
 			'add_new_item'          => sprintf( __( 'Add New %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
 			'edit_item'             => sprintf( __( 'Edit %s', 'seriously-simple-podcasting' ), __( 'Episode', 'seriously-simple-podcasting' ) ),
@@ -296,9 +296,23 @@ class CPT_Podcast_Handler implements Service {
 			);
 		}
 
+		$post = get_post();
+		$post_title = $post ? $post->post_title : '';
+		if ( $post ) {
+			$podcasts = ssp_get_episode_podcasts( $post->ID );
+			if ( isset( $podcasts[0] ) && $podcasts[0] instanceof \WP_Term ) {
+				$podcast_title = $podcasts[0]->name;
+			}
+		}
+
+		if ( empty( $podcast_title ) ) {
+			$podcast_title = ssp_get_option( 'data_title' );
+		}
+
 		$fields['cover_image'] = array(
 			'name'             => __( 'Episode Image:', 'seriously-simple-podcasting' ),
-			'description'      => __( 'The episode image should be square to display properly in podcasting apps and directories, and should be at least 300x300px in size.', 'seriously-simple-podcasting' ),
+			'description'      => __( 'The episode image should be square to display properly in podcasting apps and directories, and should be at least 300x300px in size.', 'seriously-simple-podcasting' ) .
+			'<br>' . ssp_dynamo_btn( $post_title, $podcast_title, 'Create an episode image with our free tool %s' ),
 			'type'             => 'image',
 			'default'          => '',
 			'section'          => 'info',

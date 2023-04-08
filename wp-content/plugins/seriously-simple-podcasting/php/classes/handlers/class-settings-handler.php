@@ -217,27 +217,28 @@ class Settings_Handler implements Service {
 			}
 		}
 
-		$fields = array();
+		$settings['import'] = array(
+			'title'       => __( 'Import', 'seriously-simple-podcasting' ),
+			'description' => '',
+			'fields'      => array(),
+		);
+
 		if ( ssp_is_connected_to_castos() ) {
 			if ( ! ssp_get_external_rss_being_imported() ) {
-				$fields = array(
+				$settings['import']['fields']      = array(
 					array(
 						'id'          => 'podmotor_import',
-						'label'       => __( 'Import your podcast', 'seriously-simple-podcasting' ),
-						'description' => __( 'Import your podcast to your Castos hosting account.', 'seriously-simple-podcasting' ),
+						'label'       => __( 'Sync to Castos', 'seriously-simple-podcasting' ),
+						'description' => __( 'Sync your podcast to your Castos hosting account.', 'seriously-simple-podcasting' ),
 						'type'        => 'checkbox',
 						'default'     => '',
 						'callback'    => 'wp_strip_all_tags',
 						'class'       => 'import-castos',
 					),
 				);
+				$settings['import']['description'] = sprintf( __( 'Use this option for a one time sync of your existing WordPress podcast to your Castos account. If you encounter any problems with it, please contact support at hello@castos.com.', 'seriously-simple-podcasting' ), '<a href="' . SSP_CASTOS_APP_URL . '">Castos</a>' );
 			}
 		}
-		$settings['import'] = array(
-			'title'       => __( 'Import', 'seriously-simple-podcasting' ),
-			'description' => sprintf( __( 'Use this option for a one time import of your existing WordPress podcast to your Castos account. If you encounter any problems with this import, please contact support at hello@castos.com.', 'seriously-simple-podcasting' ), '<a href="' . SSP_CASTOS_APP_URL . '">Castos</a>' ),
-			'fields'      => $fields,
-		);
 
 		$settings['extensions'] = array(
 			'title'               => __( 'Extensions', 'seriously-simple-podcasting' ),
@@ -916,6 +917,7 @@ class Settings_Handler implements Service {
 			),
 		);
 
+
 		$feed_details_fields = array(
 			array(
 				'id'          => 'data_title',
@@ -1027,7 +1029,8 @@ class Settings_Handler implements Service {
 				'id'          => 'data_image',
 				'label'       => __( 'Cover Image', 'seriously-simple-podcasting' ),
 				'description' => __( 'The podcast cover image must be between 1400x1400px and 3000x3000px in size and either .jpg or .png file format', 'seriously-simple-podcasting' ) .
-				                 '. ' . __( 'Your image should be perfectly square in order for it to display properly in podcasting directories and mobile apps.', 'seriously-simple-podcasting' ),
+				                 '. ' . __( 'Your image should be perfectly square in order for it to display properly in podcasting directories and mobile apps.', 'seriously-simple-podcasting' ) . '<br />' .
+				                 ssp_dynamo_btn( $this->get_current_feed_option( 'data_title' ), 'With ' . $this->get_current_feed_option( 'data_author' ), 'Create a custom cover with our free tool %s' ),
 				'type'        => 'image',
 				'default'     => '',
 				'placeholder' => '',
@@ -1081,7 +1084,7 @@ class Settings_Handler implements Service {
 				'class'       => 'large-text',
 				'fields'      => array(
 					array(
-						'id'          => 'url',
+						'id'          => 'title',
 						'type'        => 'text',
 						'placeholder' => __( 'e.g. Donate to the show', 'seriously-simple-podcasting' ),
 						'class'       => 'large-text',
@@ -1092,10 +1095,24 @@ class Settings_Handler implements Service {
 						),
 					),
 					array(
-						'id'          => 'title',
+						'id'          => 'url',
 						'type'        => 'text',
 						'placeholder' => __( 'e.g. https://buymeacoffee.com', 'seriously-simple-podcasting' ),
 						'class'       => 'large-text',
+					),
+				),
+			),
+			array(
+				'id'          => 'podcast_value',
+				'label'       => __( 'Value4Value', 'seriously-simple-podcasting' ),
+				'type'        => 'text_multi',
+				'class'       => 'large-text',
+				'fields'      => array(
+					array(
+						'id'          => 'recipient',
+						'type'        => 'text',
+						'placeholder' => __( 'e.g. 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', 'seriously-simple-podcasting' ),
+						'description' => __( 'Enter your wallet address to accept crypto payment from your listeners.', 'seriously-simple-podcasting' ),
 					),
 				),
 			),
@@ -1139,7 +1156,7 @@ class Settings_Handler implements Service {
 				'id'          => 'consume_order',
 				'label'       => __( 'Show Type', 'seriously-simple-podcasting' ),
 				// translators: placeholders are for help document link
-				'description' => sprintf( __( 'The order your podcast episodes will be listed. %1$sMore details here.%2$s', 'seriously-simple-podcasting' ), '<a href="' . esc_url( 'https://www.seriouslysimplepodcasting.com/ios-11-podcast-tags/' ) . '" target="' . wp_strip_all_tags( '_blank' ) . '">', '</a>' ),
+				'description' => sprintf( __( 'The order your podcast episodes will be listed. %1$sMore details here.%2$s', 'seriously-simple-podcasting' ), '<a href="' . esc_url( 'https://castos.com/ios-11-podcast-tags/' ) . '" target="' . wp_strip_all_tags( '_blank' ) . '">', '</a>' ),
 				'type'        => 'select',
 				'options'     => array(
 					''         => __( 'Please Select', 'seriously-simple-podcasting' ),
@@ -1233,6 +1250,8 @@ class Settings_Handler implements Service {
 			$private_unavailable_descr = __( 'Looks like you\'re already using Paid Membership Pro to make your podcast private.', 'seriously-simple-podcasting' );
 		} elseif ( class_exists( 'LifterLMS' ) && ssp_get_option( 'enable_lifterlms_integration' ) ) {
 			$private_unavailable_descr = __( 'Looks like you\'re already using LifterLMS to make your podcast private.', 'seriously-simple-podcasting' );
+		} elseif ( class_exists( 'MeprUser' ) && ssp_get_option( 'enable_memberpress_integration' ) ) {
+			$private_unavailable_descr = __( 'Looks like you\'re already using MemberPress to make your podcast private.', 'seriously-simple-podcasting' );
 		}
 
 		if ( ! empty( $private_unavailable_descr ) ) {
@@ -1247,6 +1266,35 @@ class Settings_Handler implements Service {
 		$subscribe_options_array            = $this->get_subscribe_field_options();
 
 		return array_merge( $feed_details_fields, $subscribe_options_array );
+	}
+
+	/**
+	 * This function gets option value for the feed details page ( Podcasting -> Settings -> Feed Details )
+	 *
+	 * @param string $option
+	 *
+	 * @return string
+	 */
+	protected function get_current_feed_option( $option ) {
+		$podcast_id = $this->get_current_feed_settings_podcast_id();
+
+		return ssp_get_option( $option, '', $podcast_id );
+	}
+
+	/**
+	 * This function gets current podcast ID for the feed details page ( Podcasting -> Settings -> Feed Details )
+	 *
+	 * @return int
+	 */
+	protected function get_current_feed_settings_podcast_id() {
+		$podcast_slug = filter_input( INPUT_GET, 'feed-series' );
+		if ( ! $podcast_slug ) {
+			return 0;
+		}
+
+		$podcast = get_term_by( 'slug', $podcast_slug, 'series' );
+
+		return isset( $podcast->term_id ) ? $podcast->term_id : 0;
 	}
 
 	/**

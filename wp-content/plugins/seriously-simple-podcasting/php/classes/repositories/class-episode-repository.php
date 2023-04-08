@@ -4,6 +4,7 @@ namespace SeriouslySimplePodcasting\Repositories;
 
 use SeriouslySimplePodcasting\Handlers\CPT_Podcast_Handler;
 use SeriouslySimplePodcasting\Handlers\Options_Handler;
+use SeriouslySimplePodcasting\Interfaces\Service;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
 use WP_Query;
 
@@ -18,7 +19,7 @@ use WP_Query;
  * @package Seriously Simple Podcasting
  * @since 2.4.3
  */
-class Episode_Repository {
+class Episode_Repository implements Service {
 
 	use Useful_Variables;
 
@@ -354,6 +355,13 @@ class Episode_Repository {
 			$link = add_query_arg( array( 'ref' => $referrer ), $link );
 		}
 
+		// If there is a media file prefix, lets add it
+		$series_id = ssp_get_episode_series_id( $episode_id );
+		$media_prefix = ssp_get_media_prefix( $series_id );
+		if ( $media_prefix ) {
+			$link = parse_episode_url_with_media_prefix( $link, $media_prefix );
+		}
+
 		return apply_filters( 'ssp_episode_download_link', esc_url( $link ), $episode_id, $file );
 	}
 
@@ -371,6 +379,19 @@ class Episode_Repository {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Set episode enclosure
+	 *
+	 * @param integer $episode_id ID of episode.
+	 *
+	 * @return int|bool  Meta ID if the key didn't exist, true on successful update, false on failure
+	 */
+	public function set_enclosure( $episode_id, $enclosure ) {
+		$meta_key = apply_filters( 'ssp_audio_file_meta_key', 'audio_file' );
+
+		return update_post_meta( $episode_id, $meta_key, $enclosure );
 	}
 
 
@@ -603,6 +624,54 @@ class Episode_Repository {
 	}
 
 	/**
+	 * Get duration of audio file
+	 * @param  string $file File name & path
+	 * @return mixed        File duration on success, boolean false on failure
+	 */
+	public function get_file_duration( $file ) {
+		/**
+		 * ssp_enable_get_file_duration filter to allow this functionality to be disabled programmatically
+		 */
+		$enabled = apply_filters( 'ssp_enable_get_file_duration', true );
+		if ( ! $enabled ) {
+			return false;
+		}
+
+		if ( $file ) {
+
+			// Include media functions if necessary
+			if ( ! function_exists( 'wp_read_audio_metadata' ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/media.php' );
+			}
+
+			// translate file URL to local file path if possible
+			$file = $this->get_local_file_path( $file );
+
+			// Get file data (will only work for local files)
+			$data = wp_read_audio_metadata( $file );
+
+			$duration = false;
+
+			if ( $data ) {
+				if ( isset( $data['length_formatted'] ) && strlen( $data['length_formatted'] ) > 0 ) {
+					$duration = $data['length_formatted'];
+				} else {
+					if ( isset( $data['length'] ) && strlen( $data['length'] ) > 0 ) {
+						$duration = gmdate( 'H:i:s', $data['length'] );
+					}
+				}
+			}
+
+			if ( $data ) {
+				return apply_filters( 'ssp_file_duration', $duration, $file );
+			}
+
+		}
+
+		return false;
+	}
+
+	/**
 	 * Format filesize for display
 	 * @param  int $size      Raw file size
 	 * @param  int $precision Level of precision for formatting
@@ -629,7 +698,7 @@ class Episode_Repository {
 	 * @param    string    file
 	 * @return   string    file or local file path
 	 */
-	public function get_local_file_path( $file ) {
+	public function get_local_file_path( $url ) {
 
 		// Identify file by root path and not URL (required for getID3 class)
 		$site_root = trailingslashit( ABSPATH );
@@ -651,7 +720,12 @@ class Episode_Repository {
 		$site_root = implode('/', $root_chunks);
 		$site_url  = implode('/', $url_chunks);
 
-		$file = str_replace( $site_url, $site_root, $file );
+		// Make sure that $site_url and $url both use https
+		if ( 'https:' === $url_chunks[0] ) {
+			$url = str_replace( 'http:', 'https:', $url );
+		}
+
+		$file = str_replace( $site_url, $site_root, $url );
 
 		return $file;
 	}

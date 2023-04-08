@@ -6,18 +6,29 @@ jQuery(document).ready(function ($) {
 	 */
 	var progressbar = $('#ssp-external-feed-progress'),
 		$nonce = $('#podcast_settings_tab_nonce'),
-		timer;
+		timer,
+		isProgressBarActive = true;
 
 	/**
 	 * If the progress bar appears on the page, trigger the import
 	 */
 	if (progressbar.length > 0) {
-		var response = confirm('You are about to import an external RSS feed.');
+		let progress = progressbar.data('progress'),
+			response;
+		hide_other_settings();
+
+		response = confirm(
+			progress ?
+				'Would you like to restore the previous import?' :
+				'You are about to import an external RSS feed.'
+		);
+
 		if (true === response) {
-			update_progress_bar(0);
 			ssp_import_external_feed();
+			update_progress_bar(progress);
 		} else {
 			ssp_reset_external_feed();
+			show_cancelled_message();
 		}
 	}
 
@@ -33,35 +44,23 @@ jQuery(document).ready(function ($) {
 		progressbar.removeClass(remove_class).addClass(colour);
 	}
 
+	function hide_other_settings(){
+		$('.form-table').hide().prev('p').hide();
+	}
+
 	/**
 	 * Update the progressbar value
 	 * @param progress
 	 * @param colour
 	 */
 	function update_progress_bar(progress, colour) {
-		/**
-		 * First run
-		 */
-		if (0 === progress) {
-			progressbar.progressbar({
-				value: 0
-			});
-			return;
-		}
-
-		/**
-		 * Subsequent runs
-		 */
-		if ('' === colour) {
+		if (!colour) {
 			colour = 'blue';
 		}
-		var current_value = progressbar.progressbar('value');
-		if (current_value < 100) {
-			progressbar.progressbar({
-				value: progress
-			});
-			change_progress_colour(colour);
-		}
+		progressbar.progressbar({
+			value: progress
+		});
+		change_progress_colour(colour);
 	}
 
 	/**
@@ -69,39 +68,65 @@ jQuery(document).ready(function ($) {
 	 * @param episodes
 	 */
 	function update_progress_log(episodes) {
-		$('.ssp-ssp-external-feed-message').html('Import completed successfully !').css('color', 'green');
 		var ssp_external_feed_status = $('#ssp-external-feed-status');
-		var status_html = ssp_external_feed_status.html();
 		var log_html = '';
 		for (var i = 0; i < episodes.length; i++) {
 			log_html = '<p>Imported ' + episodes[i] + '</p>' + log_html;
 		}
-		status_html = log_html + status_html;
-		ssp_external_feed_status.html(status_html);
+		ssp_external_feed_status.html(log_html);
+	}
+
+	function show_success_message() {
+		$('.ssp-ssp-external-feed-message').html('Import completed successfully !').css('color', 'green');
 	}
 
 	/**
 	 * Import the external RSS feed
 	 */
 	function ssp_import_external_feed() {
-		timer = setInterval(update_external_feed_progress_bar, 250);
+		import_feed();
+		handle_progress_bar();
+	}
+
+	function handle_progress_bar() {
+		isProgressBarActive = true;
+		timer = setInterval(update_external_feed_progress_bar, 2000);
+	}
+
+	function stop_handling_progress_bar() {
+		isProgressBarActive = false;
+		clearInterval(timer);
+	}
+
+	function import_feed() {
 		$.ajax({
 			url: ajaxurl,
 			type: 'get',
 			data: {
 				'action': 'import_external_rss_feed',
-				'nonce': $nonce.val()
+				'nonce': $nonce.val(),
 			},
+			timeout: 0,
 		}).done(function (response) {
-			clearInterval(timer);
 			if ('error' === response['status']) {
-				alert_error();
+				let msg = response.hasOwnProperty('message') ? response.message : '';
+				alert_error(msg);
 				return;
 			}
-			update_progress_log(response.episodes);
-			update_progress_bar(100, 'green');
+
+			// Import 10 items per request.
+			if (response['is_finished']) {
+				stop_handling_progress_bar();
+				update_progress_log(response.episodes);
+				update_progress_bar(100, 'green');
+				show_success_message();
+				ssp_reset_external_feed();
+			} else {
+				import_feed();
+			}
 		}).fail(function (response) {
-			alert_error();
+			let msg = response.hasOwnProperty('message') ? response.message : '';
+			alert_error(msg);
 		});
 	}
 
@@ -117,11 +142,11 @@ jQuery(document).ready(function ($) {
 				'nonce': $nonce.val()
 			},
 		}).done(function (response) {
-			if ('error' === response['status']) {
-				alert_error()
-				clearInterval(timer);
+			if (!isProgressBarActive) {
+				return;
 			}
-			update_progress_bar(response, 'blue');
+			update_progress_bar(response.progress, 'blue');
+			update_progress_log(response.episodes);
 		});
 	}
 
@@ -133,24 +158,28 @@ jQuery(document).ready(function ($) {
 			url: ajaxurl,
 			type: 'get',
 			data: {
-				'action': 'reset_external_rss_feed_progress',
+				'action': 'reset_rss_feed_data',
 				'nonce': $nonce.val()
 			},
 		}).done(function (response) {
 			if ('error' === response['status']) {
 				alert('Could not reset current feed import, please refresh this page to try again');
-				return;
 			}
-
-			$('.ssp-ssp-external-feed-message').html('Import cancelled !').css('color', 'red');
-			$('#ssp-external-feed-status').html('');
 		});
+	}
+
+	function show_cancelled_message() {
+		$('.ssp-ssp-external-feed-message').html('Import cancelled !').css('color', 'red');
 	}
 
 	/**
 	 * Shows an error to user
 	 */
-	function alert_error() {
-		alert('An error occurred importing the RSS feed, please refresh this page to try again');
+	function alert_error($msg = '') {
+		$msg = $msg ? $msg : "An error occurred importing the RSS feed. \n\n We'll try to proceed importing after the page refresh.";
+
+		if (!alert($msg)) {
+			window.location.reload();
+		}
 	}
 });

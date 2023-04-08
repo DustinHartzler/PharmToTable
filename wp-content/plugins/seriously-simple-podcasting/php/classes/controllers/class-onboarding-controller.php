@@ -91,7 +91,7 @@ class Onboarding_Controller {
 	 * @param callable $callable
 	 */
 	protected function register_page( $title, $slug, $callable ) {
-		add_submenu_page( '', __( $title, SSP_DOMAIN ), __( $title, SSP_DOMAIN ), Roles_Handler::MANAGE_PODCAST, $slug, $callable );
+		add_submenu_page( '', __( $title, 'seriously-simple-podcasting' ), __( $title, 'seriously-simple-podcasting' ), Roles_Handler::MANAGE_PODCAST, $slug, $callable );
 	}
 
 	public function step_1() {
@@ -204,6 +204,10 @@ class Onboarding_Controller {
 	 * @param int $step_number
 	 */
 	protected function save_step( $step_number ) {
+		$nonce = filter_input( INPUT_POST, 'nonce' );
+		if ( ! wp_verify_nonce( $nonce, 'ssp_onboarding_' . $step_number ) ) {
+			return false;
+		}
 		foreach ( $this->get_step_fields( $step_number ) as $field_id ) {
 			$val = filter_input( INPUT_POST, $field_id );
 			if ( $val ) {
