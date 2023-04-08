@@ -192,8 +192,6 @@ class Co_Teachers_Permissions {
 	 * @return mixed
 	 */
 	public function grant_access_to_coteachers( $allcaps, $caps, $args ) {
-		// TODO Early exit if $caps does not contain any of ours: edit_courses, edit_others_courses,... can be obtained from get_post_type_object($post_type)->cap->edit_post/edit_others_posts.
-		$cap     = $args[0];
 		$user_id = $args[1] ?? 0;
 		$post_id = $args[2] ?? 0;
 
@@ -207,6 +205,15 @@ class Co_Teachers_Permissions {
 
 		// Ignore unsupported post types.
 		if ( ! $this->is_post_type_supported( $post_type ) ) {
+			return $allcaps;
+		}
+
+		$handled_caps = [
+			$obj->cap->edit_post,
+			$obj->cap->edit_others_posts,
+		];
+
+		if ( 0 === count( array_intersect( $handled_caps, $caps ) ) ) {
 			return $allcaps;
 		}
 

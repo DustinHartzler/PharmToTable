@@ -41,6 +41,13 @@ class Co_Teachers {
 	private static $instance;
 
 	/**
+	 * Cache of course user IDs.
+	 *
+	 * @var int[][]
+	 */
+	private $course_user_id_cache = [];
+
+	/**
 	 * Retrieve the Co_Teachers instance.
 	 */
 	public static function instance(): Co_Teachers {
@@ -91,7 +98,11 @@ class Co_Teachers {
 	 * @return int[]
 	 */
 	public function get_course_coteachers_ids( $course_id ) {
-		return array_map(
+		if ( isset( $this->course_user_id_cache[ $course_id ] ) ) {
+			return $this->course_user_id_cache[ $course_id ];
+		}
+
+		$user_ids = array_map(
 			'intval',
 			get_users(
 				[
@@ -101,6 +112,10 @@ class Co_Teachers {
 				]
 			)
 		);
+
+		$this->course_user_id_cache[ $course_id ] = $user_ids;
+
+		return $user_ids;
 	}
 
 	/**
@@ -194,6 +209,8 @@ class Co_Teachers {
 		foreach ( $new_coteachers as $new_coteacher_id ) {
 			$this->add_coteacher( $course_id, $new_coteacher_id );
 		}
+
+		unset( $this->course_user_id_cache[ $course_id ] );
 	}
 
 	/**
@@ -204,6 +221,8 @@ class Co_Teachers {
 	 */
 	private function add_coteacher( $course_id, $user_id ) {
 		add_user_meta( $user_id, self::COTEACHER_META_KEY, intval( $course_id ) );
+
+		unset( $this->course_user_id_cache[ $course_id ] );
 	}
 
 	/**
@@ -214,6 +233,8 @@ class Co_Teachers {
 	 */
 	private function delete_coteacher( $course_id, $user_id ) {
 		delete_user_meta( $user_id, self::COTEACHER_META_KEY, $course_id );
+
+		unset( $this->course_user_id_cache[ $course_id ] );
 	}
 
 	/**
@@ -258,5 +279,7 @@ class Co_Teachers {
 		if ( $was_old_supported && ! $is_new_supported ) {
 			delete_user_meta( $user_id, self::COTEACHER_META_KEY );
 		}
+
+		$this->course_user_id_cache = [];
 	}
 }

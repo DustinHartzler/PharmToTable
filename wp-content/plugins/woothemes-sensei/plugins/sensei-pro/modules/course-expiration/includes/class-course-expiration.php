@@ -14,6 +14,7 @@ use Sensei_Pro_Course_Expiration\Background_Jobs\Course_Expiration_Job;
 use Sensei_Pro_Course_Expiration\Background_Jobs\Course_Expiration_Recurring_Job;
 use Sensei_Pro_Course_Expiration\Background_Jobs\Course_Expiration_Notification_Job;
 use Sensei_Pro_Course_Expiration\Background_Jobs\Course_Expiration_Notification_Recurring_Job;
+use Sensei_Pro_Course_Expiration\Emails\Setup_Emails;
 use Sensei_WC_Paid_Courses\Sensei_WC_Paid_Courses;
 use DateInterval;
 use DateTimeImmutable;
@@ -141,6 +142,7 @@ class Course_Expiration {
 		Course_Expiration_Recurring_Job::init();
 		Course_Expiration_Notification_Job::init();
 		Course_Expiration_Notification_Recurring_Job::init();
+		Setup_Emails::instance()->init();
 	}
 
 	/**
@@ -150,7 +152,11 @@ class Course_Expiration {
 	 */
 	private function include_dependencies() {
 		// Emails.
+		if ( class_exists( 'Sensei\Internal\Emails\Generators\Email_Generators_Abstract' ) ) {
+			include_once $this->module_dir . '/includes/emails/generators/class-course-expiration-email-generator.php';
+		}
 		include_once $this->module_dir . '/includes/emails/class-course-expiration-email.php';
+		include_once $this->module_dir . '/includes/emails/class-setup-emails.php';
 
 		// Background jobs.
 		include_once $this->module_dir . '/includes/background-jobs/class-course-expiration-job.php';

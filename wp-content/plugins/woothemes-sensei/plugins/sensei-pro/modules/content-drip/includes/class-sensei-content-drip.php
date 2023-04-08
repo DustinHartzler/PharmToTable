@@ -159,6 +159,10 @@ class Sensei_Content_Drip {
 
 		// Load and initialize classes.
 		add_action( 'init', [ $instance, 'initialize_classes' ], 0 );
+
+		if ( class_exists( 'Sensei\Internal\Emails\Generators\Email_Generators_Abstract' ) ) {
+			require_once $instance->dir . '/includes/generators/class-lesson-available-email-generator.php';
+		}
 	}
 
 	/**

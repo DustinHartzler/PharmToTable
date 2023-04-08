@@ -1,5 +1,14 @@
 .sensei-course-theme {
 
+	/* Modern Template */
+	&.sensei-modern {
+		.sensei-course-theme__header,
+		.sensei-course-theme__sidebar {
+			background-color: #0d0d0d;
+			color: #fdfdfd;
+		}
+	}
+
 	.wp-block-sensei-pro-timeline {
 		border: none;
 		padding: 0;

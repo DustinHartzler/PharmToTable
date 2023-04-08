@@ -90,6 +90,7 @@ final class Sensei_Pro {
 	private function modules() {
 		return [
 			'shared-module', // Shared module must be loaded first since other modules may depend on it.
+			'tracking',
 			'senseilms-licensing',
 			'wc-paid-courses',
 			'content-drip',
@@ -102,6 +103,8 @@ final class Sensei_Pro {
 			'block-visibility',
 			'premium-templates',
 			'sensei-pro-home',
+			'glossary',
+			'course-showcase',
 		];
 	}
 

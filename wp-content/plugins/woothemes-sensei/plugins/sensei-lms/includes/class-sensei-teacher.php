@@ -110,6 +110,7 @@ class Sensei_Teacher {
 		// If slug changed to custom, try to extract and save teacher id.
 		add_action( 'edit_module', [ $this, 'extract_and_save_teacher_to_meta_from_slug' ] );
 
+		add_action( 'sensei_course_new_teacher_assigned', [ $this, 'teacher_course_assigned_notification' ], 10, 2 );
 	}
 
 	/**
@@ -425,8 +426,17 @@ class Sensei_Teacher {
 		// ensure the modules are update so that then new teacher has access to them.
 		self::update_course_modules_author( $course_id, $new_teacher );
 
-		// notify the new teacher
-		$this->teacher_course_assigned_notification( $new_teacher, $course_id );
+		/**
+		 * Fires when a new teacher is assigned to a course.
+		 *
+		 * @since 4.12.0
+		 *
+		 * @hook sensei_course_new_teacher_assigned
+		 *
+		 * @param {int} $new_teacher The ID of the new teacher.
+		 * @param {int} $course_id   The ID of the course.
+		 */
+		do_action( 'sensei_course_new_teacher_assigned', $new_teacher, $course_id );
 	}
 
 	/**
@@ -834,8 +844,8 @@ class Sensei_Teacher {
 			 * @hook   sensei_grading_allowed_user_ids
 			 * @since  4.9.0
 			 *
-			 * @param int[] The list of user IDs with access granted. By default the course author.
-			 * @param int The course ID.
+			 * @param {int[]} $user_ids The list of user IDs with access granted. By default the course author.
+			 * @param {int} $course_id The course ID.
 			 */
 			$allowed_user_ids = apply_filters( 'sensei_grading_allowed_user_ids', [ intval( $course->post_author ) ], $course_id );
 			if ( ! isset( $course->post_author ) || ! in_array( intval( get_current_user_id() ), $allowed_user_ids, true ) ) {

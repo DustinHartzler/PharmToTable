@@ -1,8 +1,71 @@
 *** Sensei Pro (WC Paid Courses) ***
 
+2023-04-03 - version 4.13.0.1.13.0
+* Sensei LMS: Version bump to 4.13.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.13.0/changelog.txt
+* Sensei Pro: Version bump to 1.13.0
+	* Fix type error caused by some third-party integrations
+	* Pro email becoming unavailable after disabling
+
+2023-03-29 - version 4.12.0.1.12.0
+* Sensei LMS: Version bump to 4.12.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.12.0/changelog.txt
+* Sensei Pro: Version bump to 1.12.0
+	* Added email to be sent to student when a lesson becomes available via content drip
+	* Add No Progress background jobs and email generator
+	* Add usage tracking for content drip and course expiration emails
+	* Email for notifying student before course expires
+	* Enabling pro emails
+	* Add Course Showcase feature to allow promotion of eligible courses to SenseiLMS.com's Showcase.
+
+2023-03-07 - version 4.11.2.1.11.2
+* Sensei LMS: Version bump to 4.11.2 https://raw.githubusercontent.com/Automattic/sensei/version/4.11.2/changelog.txt
+* Sensei Pro: Version bump to 1.11.2
+	* Ensure Sell your course task is only shown when WooCommerce is active.
+	* Set product to be downloadable when created
+	* Add missing "Search Courses" translation.
+	* Fix display of Group Students for users on Calypso
+	* Fixing CI build
+	* Fix issue where Interactive Video Block caused the gutenberg editor to crash in some situations.
+	* Move hardcoded colors from Learning Mode templates to CSS
+	* Stop standalone question from crashing
+
+2023-02-03 - version 4.11.1.1.11.1
+* Sensei LMS: Version bump to 4.11.1 https://raw.githubusercontent.com/Automattic/sensei/version/4.11.1/changelog.txt
+* Sensei Pro: Version bump to 1.11.1
+	* Fix course list button style on Blockbase theme.
+	* Fix type error when `the_content` is not a string.
+
+2023-02-02 - version 4.11.0.1.11.0
+* Sensei LMS: Version bump to 4.11.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.11.0/changelog.txt
+* Sensei Pro: Version bump to 1.11.0
+	* Add a Glossary.
+	* Add an accordion block integrate with the lessons
+	* Add a translator comment to "Flip Card" text.
+	* Add bulk actions to add or remove studens in groups
+	* Add filter to disable open access for paid courses
+	* Apply sticky style to Sidebars on Modern and Video Full templates.
+	* Show the correct support link when using Sensei Pro on WPCOM.
+	* Remove a filter that forced the status of WooCommerce orders that include virtual products to be "completed" when it would be "processing".
+	* Co-teacher performance enhancements
+	* Comment: Fix course ID check
+	* Fix class list alignment in Groups page
+	* Fixed add to cart notice not appearing if course is not on first page of Course List block.
+	* Fix issue that caused the quiz page to be blank given a combination of settings of the Quiz Timer.
+	* Fix issue while saving quiz settings
+
+2023-01-12 - version 4.10.0.1.10.0
+* Sensei LMS: Version bump to 4.10.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.10.0/changelog.txt
+* Sensei Pro: Version bump to 1.10.0
+	* Add Block Visibility feature to Site Editor.
+	* Support for multisites.
+	* Improve the course access period selection.
+	* Course outline cannot be hidden.
+	* Fix flash card block breaking after changing site language.
+	* Fix issue where the Co-Teachers feature blocked courses from being removed in WP 5.9.
+	* Fix issue with Sensei blocks inside other Sensei blocks not being rendered in some situations.
+
 2022-12-19 - version 4.9.1.1.9.1
 * Sensei Pro: Version bump to 1.9.1
-	* Fix Co-teachers are lost from dropdown on refresh
+	* Fix Co-teachers are lost from dropdown on refresh.
 
 2022-12-09 - version 4.9.1.1.9.0
 * Sensei LMS: Version bump to 4.9.1 https://raw.githubusercontent.com/Automattic/sensei/version/4.9.1/changelog.txt
@@ -12,32 +75,32 @@
 * Sensei Pro: Version bump to 1.9.0
 	* Add support for Co-Teachers.
 	* Give Teachers the ability to edit Questions for Courses on which they are a Co-Teacher.
-	* Fix error when removing partial refund of a course order
+	* Fix error when removing partial refund of a course order.
 	* Add access period and course pricing slot fills for Sensei Course Settings.
-	* Fix ordering question removing classic editor support
+	* Fix ordering question removing classic editor support.
 	* Support wp.com purchase plans on Sensei Pro (Paid Courses) plugin.
-	* Fixes issue of email not being sent for content drip at scheduled time
+	* Fixes issue of email not being sent for content drip at scheduled time.
 
 2022-11-10 - version 4.8.1.1.8.1
 * Sensei LMS: Version bump to 4.8.1 https://raw.githubusercontent.com/Automattic/sensei/version/4.8.1/changelog.txt
 * Sensei Pro: Version bump to 1.8.1
-	* Improve compatibility with alternative translation file locations
-	* Improve plugin update details changelog, icon, and banner
-	* Fix error when removing partial refund of a course order
+	* Improve compatibility with alternative translation file locations.
+	* Improve plugin update details changelog, icon, and banner.
+	* Fix error when removing partial refund of a course order.
 
 2022-10-27 - version 4.8.0.1.8.0
 * Sensei LMS: Version bump to 4.8.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.8.0/changelog.txt
 * Sensei Pro: Version bump to 1.8.0
-	* Added task "Sell your Course with WooCommerce" to the Sensei Home tasks
-	* Change admin menu references to be compatible with the latest changes in Sensei LMS
+	* Added task "Sell your Course with WooCommerce" to the Sensei Home tasks.
+	* Change admin menu references to be compatible with the latest changes in Sensei LMS.
 
 2022-10-24 - version 4.7.2.1.7.1
 * Sensei LMS: Version bump to 4.7.2 https://raw.githubusercontent.com/Automattic/sensei/version/4.7.2/changelog.txt
 * Sensei Pro: Version bump to 1.7.1
-	* Fix issue with WooCommerce partial refunds
-	* Fix alignment in Modern template
-	* Fix block visibility settings panel
-	* Fix cron scheduling performance issue
+	* Fix issue with WooCommerce partial refunds.
+	* Fix alignment in Modern template.
+	* Fix block visibility settings panel.
+	* Fix cron scheduling performance issue.
 
 2022-10-11 - version 4.7.1.1.7.0
 * Sensei LMS: Version bump to 4.7.1 https://raw.githubusercontent.com/Automattic/sensei/version/4.7.1/changelog.txt
@@ -45,7 +108,7 @@
 2022-10-11 - version 4.7.0.1.7.0
 * Sensei LMS: Version bump to 4.7.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.7.0/changelog.txt
 * Sensei Pro: Version bump to 1.7.0
-	* Adjust learning mode templates
+	* Adjust learning mode templates.
 	* Introduce premium-templates module.
 	* Make block visibility panel closed by default.
 
@@ -93,15 +156,15 @@
 * Sensei LMS: Version bump to 4.6.0 https://raw.githubusercontent.com/Automattic/sensei/version/4.6.0/changelog.txt
 * Sensei Pro: Version bump to 1.5.0
 	* "Logged out users", "Completed lesson" and "Not completed lesson" options.
-	* Add block visibility labels to list view
+	* Add block visibility labels to list view.
 	* Add block visibility option descriptions.
 	* Add block visibility sidebar options.
 	* Add extra description text when lesson post type to enrolment options.
-	* Add group filter to students report
+	* Add group filter to students report.
 	* Add support for groups select paging.
 	* Add support for relative scheduling for block visibility option.
 	* Add visibility borders to blocks when hidden.
-	* Comment: Add a pre-publish notice about hidden content
+	* Comment: Add a pre-publish notice about hidden content.
 	* Hide blocks on the frontend for groups visibility type.
 	* Hide content based on blocks' scheduled visibility settings.
 	* Implement block visiblity schedule option.
@@ -112,44 +175,44 @@
 2022-07-14 - version 4.5.2.1.4.1
 * Sensei LMS: Version bump to 4.5.2 https://raw.githubusercontent.com/Automattic/sensei/version/4.5.2/changelog.txt
 * Sensei Pro: Version bump to 1.4.1
-	* Enable to optionally remove enrollments when a student is removed from a group
-	* Enable to optionally remove enrollments when a course is removed from a group
-	* Enable to restore the removed course on the group's settings
-	* Enable moving a group to the trash instead of instant deletion
-	* Show detailed errors when there is an error to add a student to a group
+	* Enable to optionally remove enrollments when a student is removed from a group.
+	* Enable to optionally remove enrollments when a course is removed from a group.
+	* Enable to restore the removed course on the group's settings.
+	* Enable moving a group to the trash instead of instant deletion.
+	* Show detailed errors when there is an error to add a student to a group.
 
 
 2022-07-11 - version 4.5.1.1.4.0
 * Sensei Pro: Version bump to 1.4.0
-	* New! Create groups and cohorts of students
-	* Action menu with generic modal with action item to remove a student from a group
-	* Track usage of Student Groups functionality
-	* Add an endpoint to add students to a group
-	* Add a group courses column in the group list table to show the number of courses in the group
-	* Add a last activity column in group students table with ability to sort
-	* Add a modal to create new student group
-	* Add a students column in the group list table to show number of assigned students
-	* Add endpoint to edit the access period of a course in a group
-	* Add endpoint to get courses by group ID
-	* Add endpoint to remove a student from a group
-	* Add endpoint to remove students in batch from a group
-	* Add endpoint to update group name
-	* Add endpoint to remove group and all related data
-	* Add enrolled courses column in group students table
-	* Add filter by course functionality in group students page
-	* Add group list page action to remove group and a modal for confirming
-	* Add modal to update the name of a group in the action menu
-	* Add rest endpoint for adding student group
-	* Add enrolment provider and enroll students into courses
-	* Add group settings page
+	* New! Create groups and cohorts of students.
+	* Action menu with generic modal with action item to remove a student from a group.
+	* Track usage of Student Groups functionality.
+	* Add an endpoint to add students to a group.
+	* Add a group courses column in the group list table to show the number of courses in the group.
+	* Add a last activity column in group students table with ability to sort.
+	* Add a modal to create new student group.
+	* Add a students column in the group list table to show number of assigned students.
+	* Add endpoint to edit the access period of a course in a group.
+	* Add endpoint to get courses by group ID.
+	* Add endpoint to remove a student from a group.
+	* Add endpoint to remove students in batch from a group.
+	* Add endpoint to update group name.
+	* Add endpoint to remove group and all related data.
+	* Add enrolled courses column in group students table.
+	* Add filter by course functionality in group students page.
+	* Add group list page action to remove group and a modal for confirming.
+	* Add modal to update the name of a group in the action menu.
+	* Add rest endpoint for adding student group.
+	* Add enrolment provider and enroll students into courses.
+	* Add group settings page.
 	* Add modal to assign students to the selected group.
-	* Add endpoint to add a course to a group
-	* Enable to remove multiple students from the selected group
-	* Enable to update access periods
+	* Add endpoint to add a course to a group.
+	* Enable to remove multiple students from the selected group.
+	* Enable to update access periods.
 	* Improve the groups access period interface.
-	* Redirect user to group students page when students are added via action menu
-	* Use action hook to render groups menu item on proper place in the sensei lms menu
-	* Increased PHP requirement from 7.0 to 7.2
+	* Redirect user to group students page when students are added via action menu.
+	* Use action hook to render groups menu item on proper place in the sensei lms menu.
+	* Increased PHP requirement from 7.0 to 7.2.
 
 2022-06-20 - version 4.5.1.1.3.1
 * Sensei LMS: Version bump to 4.5.1 https://raw.githubusercontent.com/Automattic/sensei/version/4.5.1/changelog.txt
@@ -159,7 +222,7 @@
 2022-06-15 - version 4.4.3.1.3.0
 * Sensei Pro: Version bump to 1.3.0
 	* Add premium patterns for Lessons and Courses.
-	* Fix flashcard styles on some themes
+	* Fix flashcard styles on some themes.
 	* Fix incompatibility with Gutenberg breaking the popovers in the editor.
 
 2022-05-31 - version 4.4.3.1.2.0
@@ -169,7 +232,7 @@
 	* New: Add a new sensei notice for version checks.
 	* Tweak: Bump minimum PHP version supported to 7.2
 	* Fix: Task List block autofocus fix.
-	* Fix: The styles enqueue that was causing a conflict with Setup Wizard style
+	* Fix: The styles enqueue that was causing a conflict with Setup Wizard style.
 	* Fix: Translations for sidebar color settings in task list block.
 
 2022.05.23 - version 4.4.2.1.1.1

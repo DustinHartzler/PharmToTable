@@ -107,14 +107,19 @@ class Co_Teachers_Quiz_Handler {
 	 * Hooks into `wp_insert_post_data` and prevents the author of a question
 	 * from changing if we are editing as a co-teacher.
 	 *
-	 * @param array $data                The data for the update.
-	 * @param array $postarr             The data for the update.
-	 * @param array $unsanitized_postarr The data for the update.
-	 * @param bool  $update              The data for the update.
+	 * @param array     $data                The data to be saved.
+	 * @param array     $postarr             The post data.
+	 * @param array     $unsanitized_postarr Unsanitized post data.
+	 * @param bool|null $update              Whether the action is for an existing post being updated or not.
 	 *
 	 * @return array The post data with the correct author.
 	 */
-	public function do_not_change_question_author_on_update_for_coteachers( $data, $postarr, $unsanitized_postarr, $update ) {
+	public function do_not_change_question_author_on_update_for_coteachers( $data, $postarr, $unsanitized_postarr, $update = null ) {
+		// Compatibility for WP < 6.0.
+		if ( null === $update ) {
+			$update = ! empty( $postarr['ID'] );
+		}
+
 		// Only continue if we are updating a question and we are not already the author.
 		if ( ! $update ) {
 			return $data;

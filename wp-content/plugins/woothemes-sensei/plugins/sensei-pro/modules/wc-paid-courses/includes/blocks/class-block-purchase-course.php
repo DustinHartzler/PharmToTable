@@ -178,7 +178,7 @@ class Block_Purchase_Course {
 		}
 
 		if ( Sensei_WC::is_course_in_cart( $this->course_id ) ) {
-			return $this->course_in_cart();
+			return $this->wrap_in_sensei_wrapper( $this->course_in_cart() );
 		}
 
 		if ( empty( $this->products[0] ) ) {
@@ -191,7 +191,19 @@ class Block_Purchase_Course {
 			return '';
 		}
 
-		return $this->render_form();
+		return $this->wrap_in_sensei_wrapper( $this->render_form() );
+	}
+
+	/**
+	 * Wrap the html content in a sensei block wrapper div.
+	 *
+	 * @param string $content The html content.
+	 *
+	 * @return string Wrapped content.
+	 */
+	private function wrap_in_sensei_wrapper( $content ) {
+		$wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'sensei-block-wrapper sensei-cta' ] );
+		return '<div ' . $wrapper_attributes . '>' . $content . '</div>';
 	}
 
 	/**
@@ -247,9 +259,19 @@ class Block_Purchase_Course {
 		$button_text = esc_html__( 'Buy', 'sensei-pro' ) . ' - ' . $price;
 		$button_text = apply_filters( 'sensei_wc_paid_courses_add_to_cart_button_text', $button_text );
 		$button      = $this->render_button( $button_text );
+		$cart_url    = add_query_arg(
+			array_filter(
+				$_GET, // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				function( $key ) {
+					return 'add-to-cart' !== $key;
+				},
+				ARRAY_FILTER_USE_KEY
+			),
+			$product->add_to_cart_url()
+		);
 
 		return '
-			<form action="' . esc_url( $product->add_to_cart_url() ) . '" method="post" enctype="multipart/form-data">
+			<form action="' . esc_url( $cart_url ) . '" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="product_id" value="' . esc_attr( Sensei_WC_Utils::get_product_id( $product ) ) . '" />
 				<input type="hidden" name="quantity" value="1" />
 				' . $this->product_variation_fields( $product, true ) . '
