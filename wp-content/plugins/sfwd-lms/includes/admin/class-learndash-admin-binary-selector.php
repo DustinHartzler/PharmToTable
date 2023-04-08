@@ -36,9 +36,9 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 		/**
 		 * Stores the class as a var. This is so when we send the class back over AJAX we know how to recreate it.
 		 *
-		 * @var Class $selector_class Class reference to selector.
+		 * @var string $selector_class Class reference to selector.
 		 */
-		protected $selector_class;
+		protected $selector_class = '';
 
 		/**
 		 * Nonce for the AJAX calls.
@@ -173,7 +173,7 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 				}
 			}
 
-			// Aware of the PHP post number vars limit we convert the inlcude and exclude arrays to json so they are sent back as strings.
+			// Aware of the PHP post number vars limit we convert the include and exclude arrays to json so they are sent back as strings.
 			if ( ( isset( $element_data['query_vars']['include'] ) ) && ( ! empty( $element_data['query_vars']['include'] ) ) ) {
 				$element_data['query_vars']['include'] = wp_json_encode( $element_data['query_vars']['include'], JSON_FORCE_OBJECT );
 			}
@@ -239,7 +239,7 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 
 		/**
 		 * Show Selector Controls.
-		 * Shows the Add/Remove buttons which lives betweeen the left/right side selectors.
+		 * Shows the Add/Remove buttons which lives between the left/right side selectors.
 		 *
 		 * @since 2.2.1
 		 */
@@ -475,14 +475,14 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 		}
 
 		/**
-		 * Utility function to check and validate the $postition
+		 * Utility function to check and validate the $position
 		 * variable. It should be only 'left' or 'right'.
 		 *
 		 * @since 2.6.0
 		 *
 		 * @param string $position Should have value 'left' or 'right'.
 		 *
-		 * @return true if valid.
+		 * @return bool true if valid.
 		 */
 		public function is_valid_position( $position = '' ) {
 			if ( ! empty( $position ) ) {
@@ -538,11 +538,11 @@ function learndash_binary_selector_pager_ajax() {
 
 	$reply_data = array( 'status' => false );
 
-	if ( ( is_user_logged_in() ) && ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( $_POST['nonce'], 'learndash-binary-selector-' . get_current_user_id() ) ) ) {
+	if ( ( is_user_logged_in() ) && ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'learndash-binary-selector-' . get_current_user_id() ) ) ) {
 		if ( ( isset( $_POST['query_data'] ) ) && ( ! empty( $_POST['query_data'] ) ) ) {
 			if ( ( isset( $_POST['query_data']['query_vars'] ) ) && ( ! empty( $_POST['query_data']['query_vars'] ) ) ) {
 
-				$args = $_POST['query_data']['query_vars'];
+				$args = $_POST['query_data']['query_vars']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 				if ( ( isset( $args['include'] ) ) && ( ! empty( $args['include'] ) ) ) {
 					if ( learndash_is_valid_JSON( stripslashes( $args['include'] ) ) ) {
@@ -557,25 +557,25 @@ function learndash_binary_selector_pager_ajax() {
 				}
 
 				if ( ( isset( $_POST['query_data']['selected_ids'] ) ) && ( ! empty( $_POST['query_data']['selected_ids'] ) ) ) {
-					$args['selected_ids'] = (array) json_decode( stripslashes( $_POST['query_data']['selected_ids'] ) );
+					$args['selected_ids'] = (array) json_decode( wp_unslash( $_POST['query_data']['selected_ids'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				}
 
 				// Set our reference flag so other functions know we are running pager.
 				$args['is_pager'] = true;
 
 				if ( isset( $_POST['query_data']['selector_class'] ) ) {
-					$bs_class = esc_attr( $_POST['query_data']['selector_class'] );
+					$bs_class = sanitize_text_field( wp_unslash( $_POST['query_data']['selector_class'] ) );
 					if ( ( Learndash_Binary_Selector::check_class( $bs_class ) ) && ( is_subclass_of( $bs_class, 'Learndash_Binary_Selector' ) ) ) {
 
 						$selector = new $bs_class( $args );
 
 						if ( ( isset( $_POST['query_data']['selector_nonce'] ) ) && ( ! empty( $_POST['query_data']['selector_nonce'] ) ) ) {
-							if ( $selector->validate_nonce_data( $_POST['query_data']['selector_nonce'] ) ) {
+							if ( $selector->validate_nonce_data( sanitize_text_field( wp_unslash( $_POST['query_data']['selector_nonce'] ) ) ) ) {
 								if ( ( isset( $_POST['query_data']['position'] ) ) && ( ! empty( $_POST['query_data']['position'] ) ) ) {
 									if ( ( isset( $_POST['query_data']['query_vars']['search'] ) ) && ( ! empty( $_POST['query_data']['query_vars']['search'] ) ) ) {
-										$reply_data = $selector->load_search_ajax( esc_attr( $_POST['query_data']['position'] ) );
+										$reply_data = $selector->load_search_ajax( sanitize_text_field( wp_unslash( $_POST['query_data']['position'] ) ) );
 									} else {
-										$reply_data = $selector->load_pager_ajax( esc_attr( $_POST['query_data']['position'] ) );
+										$reply_data = $selector->load_pager_ajax( sanitize_text_field( wp_unslash( $_POST['query_data']['position'] ) ) );
 									}
 								}
 							}

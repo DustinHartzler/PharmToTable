@@ -77,19 +77,15 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			);
 
 			if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
-				if ( isset( $this->columns['course'] ) ) {
-					unset( $this->columns['course'] );
-				}
+				unset( $this->columns['course'] );
 			}
 
 			// If Group Leader remove the selector empty option.
 			if ( learndash_is_group_leader_user() ) {
 				$gl_manage_courses_capabilities = learndash_get_group_leader_manage_courses();
 				if ( 'advanced' !== $gl_manage_courses_capabilities ) {
-					if ( isset( $this->selectors['course_id'] ) ) {
-						unset( $this->selectors['course_id']['show_empty_value'] );
-						unset( $this->selectors['course_id']['show_empty_label'] );
-					}
+					unset( $this->selectors['course_id']['show_empty_value'] );
+					unset( $this->selectors['course_id']['show_empty_label'] );
 				}
 			}
 

@@ -25,7 +25,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exis
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Courses_Steps_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Courses_Steps_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Supported Collection Parameters.
@@ -205,7 +205,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exis
 		}
 
 		/**
-		 * Permissions check for getting coure steps.
+		 * Permissions check for getting course steps.
 		 *
 		 * @since 3.3.0
 		 *
@@ -267,7 +267,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V2' ) ) && ( class_exis
 		 * @return true|WP_Error True if the request has access to update the item, WP_Error object otherwise.
 		 */
 		public function update_course_steps_permissions_check( $request ) {
-			if ( ! current_user_can( 'edit_courses' ) ) {
+			if ( current_user_can( 'edit_courses' ) ) {
 				return true;
 			} else {
 				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );

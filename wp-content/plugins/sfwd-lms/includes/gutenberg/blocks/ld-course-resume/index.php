@@ -67,7 +67,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @since 3.1.4
 		 *
-		 * @param array    $block_attributes The block attrbutes.
+		 * @param array    $block_attributes The block attributes.
 		 * @param string   $block_content    The block content.
 		 * @param WP_block $block            The block object.
 		 *
@@ -102,14 +102,17 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				}
 
 				if ( empty( $block_attributes['course_id'] ) ) {
-					return $this->render_block_wrap(
-						'<span class="learndash-block-error-message">' . sprintf(
-						// translators: placeholder: Course, Course.
-							_x( '%1$s ID is required when not used within a %2$s.', 'placeholder: Course, Course', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'course' ),
-							LearnDash_Custom_Label::get_label( 'course' )
-						) . '</span>'
-					);
+					$edit_post_type = $this->block_attributes_get_editing_post_type( $block_attributes );
+					if ( ! in_array( $edit_post_type, learndash_get_post_types( 'course' ), true ) ) {
+						return $this->render_block_wrap(
+							'<span class="learndash-block-error-message">' . sprintf(
+							// translators: placeholder: Course, Course.
+								_x( '%1$s ID is required when not used within a %2$s.', 'placeholder: Course, Course', 'learndash' ),
+								LearnDash_Custom_Label::get_label( 'course' ),
+								LearnDash_Custom_Label::get_label( 'course' )
+							) . '</span>'
+						);
+					}
 				}
 			}
 

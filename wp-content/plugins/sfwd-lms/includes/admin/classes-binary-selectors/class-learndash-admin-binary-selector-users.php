@@ -29,7 +29,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Users' ) ) && ( class_exists( 
 		 */
 		public function __construct( $args = array() ) {
 
-			// Set up the defaut query args for the Users.
+			// Set up the default query args for the Users.
 			$defaults = array(
 				'paged'   => 1,
 				'number'  => LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ),
@@ -176,7 +176,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Users' ) ) && ( class_exists( 
 					}
 				} elseif ( 'right' === $position ) {
 					if ( ( isset( $this->args['selected_meta_query'] ) ) && ( ! empty( $this->args['selected_meta_query'] ) ) ) {
-						$this->args['meta_query'] = $this->args['selected_meta_query'];
+						$this->args['meta_query'] = $this->args['selected_meta_query']; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					} elseif ( ! empty( $this->args['selected_ids'] ) ) {
 						$this->args['include'] = $this->args['selected_ids'];
 					} else {
@@ -193,15 +193,15 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Users' ) ) && ( class_exists( 
 				 *
 				 * @since 3.2.3
 				 *
-				 * @param bool true Boolean to exclude no_role users.
-				 * @param array $query_args Array of current query args.
-				 * @param string $position Potision (left/right) for queried items.
+				 * @param bool   $true           Boolean to exclude no_role users.
+				 * @param array  $query_args     Array of current query args.
+				 * @param string $position       Position (left/right) for queried items.
 				 * @param string $selector_class Class for Binary selector.
 				 */
 				if ( apply_filters( 'learndash_exclude_user_no_role', true, $this->args, $position, $this->selector_class ) ) {
 					$blog_prefix = $wpdb->get_blog_prefix( $wpdb->blogid );
 					if ( ! isset( $this->args['meta_query'] ) ) {
-						$this->args['meta_query'] = array();
+						$this->args['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 					$this->args['meta_query'][] = array(
 						'key'     => "{$blog_prefix}capabilities",

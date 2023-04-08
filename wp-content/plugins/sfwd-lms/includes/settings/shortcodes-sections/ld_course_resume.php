@@ -16,7 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 3.1.4
 	 */
-	class LearnDash_Shortcodes_Section_ld_course_resume extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_ld_course_resume extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -69,6 +69,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					),
 					'value'     => '',
 					'class'     => 'small-text',
+					'required'  => 'required',
 				),
 				'user_id'    => array(
 					'id'        => $this->shortcodes_section_key . '_user_id',
@@ -80,12 +81,17 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'class'     => 'small-text',
 				),
 				'label'      => array(
-					'id'        => $this->shortcodes_section_key . '_label',
-					'name'      => 'label',
-					'type'      => 'text',
-					'label'     => esc_html__( 'Label', 'learndash' ),
-					'help_text' => esc_html__( 'Label for link shown to user', 'learndash' ),
-					'value'     => '',
+					'id'          => $this->shortcodes_section_key . '_label',
+					'name'        => 'label',
+					'type'        => 'text',
+					'label'       => esc_html__( 'Label', 'learndash' ),
+					'help_text'   => esc_html__( 'Label for link shown to user', 'learndash' ),
+					'placeholder' => sprintf(
+						// translators: placeholder: Course.
+						esc_html_x( 'Resume %s', 'placeholder: Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					'value'       => '',
 				),
 				'button'     => array(
 					'id'        => $this->shortcodes_section_key . '_button',
@@ -108,6 +114,10 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'value'     => '',
 				),
 			);
+
+			if ( ( isset( $this->fields_args['post_type'] ) ) && ( in_array( $this->fields_args['post_type'], learndash_get_post_types( 'course' ), true ) ) ) {
+				unset( $this->shortcodes_option_fields['course_id']['required'] );
+			}
 
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
 			$this->shortcodes_option_fields = apply_filters( 'learndash_settings_fields', $this->shortcodes_option_fields, $this->shortcodes_section_key );

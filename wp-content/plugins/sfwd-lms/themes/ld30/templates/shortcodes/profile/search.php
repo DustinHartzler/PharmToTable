@@ -20,7 +20,7 @@ $learndash_profile_search_query = (
 );
 
 $learndash_search_is_expanded = ( false !== (bool) $learndash_profile_search_query ? 'ld-expanded' : '' ); ?>
-<div class="ld-item-search ld-expandable <?php echo esc_attr( $learndash_search_is_expanded ); ?>" id="ld-course-search">
+<div class="ld-item-search ld-expandable <?php echo esc_attr( $learndash_search_is_expanded ); ?>" id="ld-course-search" data-ld-expand-id="ld-course-search">
 <div class="ld-item-search-wrapper">
 
 	<div class="ld-closer"><?php echo esc_html_e( 'close', 'learndash' ); ?></div>

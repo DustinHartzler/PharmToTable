@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract class to extend LDLMS_Model to LDLMD_Model_Post.
+ * Abstract class to extend LDLMS_Model to LDLMS_Model_Post.
  *
  * @since 2.5.0
  * @package LearnDash
@@ -85,7 +85,7 @@ if ( ( ! class_exists( 'LDLMS_Model_Post' ) ) && ( class_exists( 'LDLMS_Model' )
 		 * @return boolean Status of settings loaded class var.
 		 */
 		public function load_settings( $force = false ) {
-			if ( ( ! empty( $this->post ) ) && ( ( true !== $this->settings_loaded ) || ( true === $force ) ) ) {
+			if ( ( is_a( $this->post, 'WP_Post' ) ) && ( ( true !== $this->settings_loaded ) || ( true === $force ) ) ) {
 				$this->settings_loaded = true;
 				$this->settings        = array();
 
@@ -128,7 +128,7 @@ if ( ( ! class_exists( 'LDLMS_Model_Post' ) ) && ( class_exists( 'LDLMS_Model' )
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param string $setting_key           Setting key to retreive. Blank to retreive all settings.
+		 * @param string $setting_key           Setting key to retrieve. Blank to retrieve all settings.
 		 * @param string $setting_default_value Setting default value if setting_key is not set.
 		 * @param bool   $force                 Control reloading of settings.
 		 *
@@ -155,9 +155,9 @@ if ( ( ! class_exists( 'LDLMS_Model_Post' ) ) && ( class_exists( 'LDLMS_Model' )
 		 *
 		 * @since 3.4.0
 		 *
-		 * @param string $setting_key           Setting key to retreive. Blank to retreive all settings.
+		 * @param string $setting_key           Setting key to retrieve. Blank to retrieve all settings.
 		 * @param string $setting_value         Setting default value if setting_key is not set.
-		 * @param string $force                 Control saving postmeta after of settings change.
+		 * @param bool   $force                 Control saving postmeta after of settings change.
 		 *
 		 * @return mixed Setting value.
 		 */

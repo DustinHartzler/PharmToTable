@@ -99,34 +99,13 @@ function ld_certificate_shortcode( $atts = array(), $content = '', $shortcode_sl
 
 	if ( ! empty( $atts['group_id'] ) ) {
 		$shown_content_key = $atts['group_id'] . '_' . $atts['user_id'];
-		/*
-		if ( isset( $shown_content[ $shown_content_key ] ) ) {
-			if ( ( absint( $atts['group_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['group_id'] ) === learndash_get_post_type_slug( 'group' ) ) ) {
-				return $content;
-			}
-		}
-		*/
 	} elseif ( ! empty( $atts['course_id'] ) ) {
 		$shown_content_key = $atts['course_id'] . '_' . $atts['user_id'];
-		/*
-		if ( isset( $shown_content[ $shown_content_key ] ) ) {
-			if ( ( absint( $atts['course_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['course_id'] ) === learndash_get_post_type_slug( 'course' ) ) ) {
-				return $content;
-			}
-		}
-		*/
 	} elseif ( ! empty( $atts['quiz_id'] ) ) {
 		$shown_content_key = $atts['quiz_id'] . '_' . $atts['user_id'];
-		/*
-		if ( isset( $shown_content[ $shown_content_key ] ) ) {
-			if ( ( ! empty( $atts['quiz_id'] ) ) && ( absint( $atts['quiz_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['quiz_id'] ) === learndash_get_post_type_slug( 'quiz' ) ) ) {
-				return $content;
-			}
-		}
-		*/
 	}
 
-	if ( ( ! isset( $shown_content_key ) ) || ( empty( $shown_content_key ) ) ) {
+	if ( empty( $shown_content_key ) ) {
 		return $content;
 	}
 
@@ -148,11 +127,29 @@ function ld_certificate_shortcode( $atts = array(), $content = '', $shortcode_sl
 			$learndash_shortcode_used = true;
 			$cert_button_html         = '';
 			if ( ! empty( $atts['quiz_id'] ) ) {
-				// Ensure the user passed the Quiz.
-				if ( learndash_is_quiz_complete( $atts['user_id'], $atts['quiz_id'], $atts['course_id'] ) ) {
-					$cert_details = learndash_certificate_details( $atts['quiz_id'], $atts['user_id'] );
-					if ( ( isset( $cert_details['certificateLink'] ) ) && ( ! empty( $cert_details['certificateLink'] ) ) ) {
-						$atts['cert_url'] = $cert_details['certificateLink'];
+				$cert_details = learndash_certificate_details( $atts['quiz_id'], $atts['user_id'] );
+				if ( isset( $cert_details['certificateLink'] ) && ! empty( $cert_details['certificateLink'] ) ) {
+					if ( ! isset( $cert_details['certificate_threshold'] ) ) {
+						$cert_details['certificate_threshold'] = floatval( 0.0 );
+					} else {
+						$cert_details['certificate_threshold'] = floatval( $cert_details['certificate_threshold'] ) * 100;
+					}
+
+					$user_quiz_progress = learndash_user_get_quiz_progress( $atts['user_id'], $atts['quiz_id'], $atts['course_id'] );
+					if ( ( is_array( $user_quiz_progress ) ) && ( count( $user_quiz_progress ) ) ) {
+						ksort( $user_quiz_progress );
+
+						foreach ( $user_quiz_progress as $quiz_attempt ) {
+							if ( $cert_details['certificate_threshold'] > '0.0' ) {
+								if ( $quiz_attempt['percentage'] >= $cert_details['certificate_threshold'] ) {
+									$atts['cert_url'] = add_query_arg( 'time', $quiz_attempt['time'], $cert_details['certificateLink'] );
+									break;
+								}
+							} else {
+								$atts['cert_url'] = add_query_arg( 'time', $quiz_attempt['time'], $cert_details['certificateLink'] );
+								break;
+							}
+						}
 					}
 				}
 			} elseif ( ! empty( $atts['course_id'] ) ) {
@@ -224,13 +221,13 @@ function ld_certificate_shortcode( $atts = array(), $content = '', $shortcode_sl
 			 * @since 3.1.4
 			 *
 			 * @param string $cert_button_html The HTML output of generated button element.
-			 * @param array  $atts             An array of shortcode attributes used to generate $cert_button_html element.
-			 * @param string $content          Shortcode additional content passed into handler function.
+			 * @param array  $atts             Optional. An array of shortcode attributes used to generate $cert_button_html element.
+			 * @param string $content          Optional. Shortcode additional content passed into handler function.
 			 */
 			$cert_button_html = apply_filters( 'learndash_certificate_html', $cert_button_html, $atts, $content );
 
 			if ( ! empty( $cert_button_html ) ) {
-				$cert_button_html                    = '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap learndash-shortcode-wrap-'  . $shortcode_slug . '-' . $shown_content_key . '">' . $cert_button_html . '</div>';
+				$cert_button_html                    = '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap learndash-shortcode-wrap-' . $shortcode_slug . '-' . $shown_content_key . '">' . $cert_button_html . '</div>';
 				$shown_content[ $shown_content_key ] = $cert_button_html;
 				$content                            .= $cert_button_html;
 			}
@@ -239,4 +236,4 @@ function ld_certificate_shortcode( $atts = array(), $content = '', $shortcode_sl
 
 	return $content;
 }
-add_shortcode( 'ld_certificate', 'ld_certificate_shortcode', 10, 3 );
+add_shortcode( 'ld_certificate', 'ld_certificate_shortcode' );

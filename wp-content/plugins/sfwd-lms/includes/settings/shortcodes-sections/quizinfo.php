@@ -85,7 +85,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'type'        => 'text',
 					'label'       => esc_html__( 'Format', 'learndash' ),
 					'placeholder' => esc_html__( 'F j, Y, g:i a shown as March 10, 2001, 5:16 pm', 'learndash' ),
-					'help_text'   => wp_kses_post( __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formating strings  here.</a>', 'learndash' ) ),
+					'help_text'   => wp_kses_post( __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formatting strings  here.</a>', 'learndash' ) ),
 					'value'       => '',
 				),
 			);

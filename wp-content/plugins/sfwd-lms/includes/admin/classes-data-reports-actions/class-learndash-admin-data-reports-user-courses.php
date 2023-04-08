@@ -37,7 +37,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		/**
 		 * Data headers
 		 *
-		 * @var string $data_headers
+		 * @var array $data_headers
 		 */
 		private $data_headers = array();
 
@@ -86,7 +86,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		 * @since 2.3.0
 		 */
 		public static function getInstance() {
-			if ( ! isset( self::$instance ) ) {
+			if ( ! is_object( self::$instance ) ) {
 				self::$instance = new self();
 			}
 			return self::$instance;
@@ -102,7 +102,7 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 		 * @return array
 		 */
 		public function register_report_action( $report_actions = array() ) {
-			// Add ourselved to the upgrade actions.
+			// Add ourselves to the upgrade actions.
 			$report_actions[ $this->data_slug ] = array(
 				'class'    => get_class( $this ),
 				'instance' => $this,
@@ -263,8 +263,6 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 							foreach ( $this->transient_data['users_ids'] as $user_id_idx => $user_id ) {
 
 								unset( $this->transient_data['users_ids'][ $user_id_idx ] );
-
-								// $this->set_option_cache( $this->transient_key, $this->transient_data );
 
 								$report_user = get_user_by( 'id', $user_id );
 								if ( false !== $report_user ) {
@@ -455,7 +453,8 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 			 *
 			 * @since 2.3.0
 			 *
-			 * @param array $data_headers An array of data report header details.
+			 * @param array  $data_headers An array of data report header details.
+			 * @param string $data_slug    The slug of the data in the CSV.
 			 */
 			$this->data_headers = apply_filters( 'learndash_data_reports_headers', $this->data_headers, $this->data_slug );
 		}
@@ -497,11 +496,24 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 			$ld_file_part = '/learndash/reports/learndash_reports_' . str_replace( array( 'ld_data_reports_', '-' ), array( '', '_' ), $this->transient_key ) . '.csv';
 
 			$ld_wp_upload_filename = $wp_upload_dir['basedir'] . $ld_file_part;
-			if ( wp_mkdir_p( dirname( $ld_wp_upload_filename ) ) === false ) {
-				$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . $ld_wp_upload_filename;
-				return $data;
+
+			if ( ! file_exists( dirname( $ld_wp_upload_filename ) ) ) {
+				if ( wp_mkdir_p( dirname( $ld_wp_upload_filename ) ) === false ) {
+					$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . $ld_wp_upload_filename;
+					return $data;
+				}
 			}
+
 			learndash_put_directory_index_file( trailingslashit( dirname( $ld_wp_upload_filename ) ) . 'index.php' );
+
+			Learndash_Admin_File_Download_Handler::register_file_path(
+				'learndash-reports',
+				dirname( $ld_wp_upload_filename )
+			);
+
+			Learndash_Admin_File_Download_Handler::try_to_protect_file_path(
+				dirname( $ld_wp_upload_filename )
+			);
 
 			/**
 			 * Filters data report file path.
@@ -580,7 +592,6 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 
 					if ( ! empty( $course_id ) ) {
 						if ( isset( $this->transient_data['course_step_totals'][ $course_id ] ) ) {
-							// error_log( 'found course_id[' . $course_id . ']' );
 							$column_value = $this->transient_data['course_step_totals'][ $course_id ];
 						} else {
 							$column_value = learndash_get_course_steps_count( $course_id );
@@ -607,7 +618,6 @@ if ( ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) && ( class_exi
 						if ( true === $user_completed_course ) {
 							// IF the user completed the course we set the user's completed steps to the number of steps in the course.
 							if ( isset( $this->transient_data['course_step_totals'][ $course_id ] ) ) {
-								// error_log( 'found course_id[' . $course_id . ']' );
 								$column_value = $this->transient_data['course_step_totals'][ $course_id ];
 							} else {
 								$column_value = learndash_get_course_steps_count( $course_id );

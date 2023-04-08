@@ -4,8 +4,7 @@
  *
  * This file contains functions to handle import of the LearnDash Quiz CPT
  *
- * @package LearnDash
- * @subpackage LearnDash
+ * @package LearnDash\Import
  * @since 1.0.0
  */
 
@@ -30,7 +29,7 @@ if ( ( ! class_exists( 'LearnDash_Import_Quiz' ) ) && ( class_exists( 'LearnDash
 		 *
 		 * @var string $dest_post_type
 		 */
-		protected $dest_post_type   = 'sfwd-quiz';
+		protected $dest_post_type = 'sfwd-quiz';
 
 		/**
 		 * Source Post Type

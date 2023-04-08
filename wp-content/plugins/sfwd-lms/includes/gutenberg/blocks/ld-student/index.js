@@ -200,8 +200,20 @@ registerBlockType(block_key, {
 			</InspectorControls>
 		);
 
+		let preview_display_type = display_type;
+		if (preview_display_type === "") {
+			let editing_post_meta = ldlms_get_post_edit_meta();
+			if ("undefined" !== typeof editing_post_meta.post_type) {
+				if (editing_post_meta.post_type === "sfwd-courses") {
+					preview_display_type = "sfwd-courses";
+				} else if (editing_post_meta.post_type === "groups") {
+					preview_display_type = "groups";
+				}
+			}
+		}
+
 		let ld_block_error_message = "";
-		if ("sfwd-courses" === display_type) {
+		if ("sfwd-courses" === preview_display_type) {
 			let preview_course_id = ldlms_get_integer_value(course_id);
 
 			if (preview_course_id === 0) {
@@ -221,7 +233,7 @@ registerBlockType(block_key, {
 					);
 				}
 			}
-		} else if ("groups" === display_type) {
+		} else if ("groups" === preview_display_type) {
 			let preview_group_id = ldlms_get_integer_value(group_id);
 
 			if (preview_group_id === 0) {
@@ -241,17 +253,6 @@ registerBlockType(block_key, {
 					);
 				}
 			}
-		} else {
-			ld_block_error_message = sprintf(
-				// translators: placeholders: Course, Group.
-				_x(
-					"Select %1$s or %2$s display type.",
-					"placeholders: Course, Group",
-					"learndash"
-				),
-				ldlms_get_custom_label("course"),
-				ldlms_get_custom_label("group")
-			);
 		}
 
 		if (ld_block_error_message.length) {

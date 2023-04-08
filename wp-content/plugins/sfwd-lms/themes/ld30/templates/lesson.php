@@ -77,24 +77,23 @@ add_filter( 'comments_array', 'learndash_remove_comments', 1, 2 ); ?>
 	/**
 	 * If the user needs to complete the previous lesson display an alert
 	 */
-	if ( ( ! learndash_is_sample( $post ) ) && ( @$lesson_progression_enabled && ! @$previous_lesson_completed ) ) :
-
-		// $previous_item = learndash_get_previous( $post );
-		$previous_item_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
-		if ( ! empty( $previous_item_id ) ) {
-			learndash_get_template_part(
-				'modules/messages/lesson-progression.php',
-				array(
-					'previous_item' => get_post( $previous_item_id ),
-					'course_id'     => $course_id,
-					'context'       => 'topic',
-					'user_id'       => $user_id,
-				),
-				true
-			);
+	if ( ( isset( $lesson_progression_enabled ) ) && ( true === (bool) $lesson_progression_enabled ) && ( isset( $previous_lesson_completed ) ) && ( true !== $previous_lesson_completed ) ) {
+		if ( ( ! learndash_is_sample( $post ) ) || ( learndash_is_sample( $post ) && true === ( bool) $has_access ) ) {
+			$previous_item_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
+			if ( ! empty( $previous_item_id ) ) {
+				learndash_get_template_part(
+					'modules/messages/lesson-progression.php',
+					array(
+						'previous_item' => get_post( $previous_item_id ),
+						'course_id'     => $course_id,
+						'context'       => 'lesson',
+						'user_id'       => $user_id,
+					),
+					true
+				);
+			}
 		}
-	endif;
-
+	}
 	if ( $show_content ) :
 
 		/**
@@ -125,7 +124,7 @@ add_filter( 'comments_array', 'learndash_remove_comments', 1, 2 ); ?>
 			/**
 			 * Display Lesson Assignments
 			 */
-			if ( learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
+			if ( learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) : // cspell:disable-line.
 				$bypass_course_limits_admin_users = learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' );
 				$course_children_steps_completed  = learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID );
 

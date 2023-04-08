@@ -75,8 +75,8 @@ function learndash_filter_mce_css( $mce_css = '' ) {
  * @return array The tinymce editor settings.
  */
 function learndash_wp_tiny_mce_before_init( $init_array ) {
-	if ( isset( $_GET['post'] ) ) {
-		$post_id = $_GET['post'];
+	if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$post_id = absint( $_GET['post'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	} else {
 		$post_id = get_the_id();
 	}

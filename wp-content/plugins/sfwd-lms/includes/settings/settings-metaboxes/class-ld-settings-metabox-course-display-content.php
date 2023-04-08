@@ -194,9 +194,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$select_exam_challenge_query_data_json = $this->build_settings_select2_lib_ajax_fetch_json(
 						array(
 							'query_args'       => array(
-								'post_type' => learndash_get_post_type_slug( 'exam' ),
+								'post_type'           => learndash_get_post_type_slug( 'exam' ),
 								'ld_include_selected' => absint( $this->setting_option_values['exam_challenge'] ),
-								'meta_query'     => array(
+								'meta_query'          => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 									array(
 										'key'     => 'exam_challenge_course_show',
 										'compare' => 'NOT EXISTS',
@@ -225,7 +225,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'exam' )
 					),
 				);
-				$select_cert_options         = $sfwd_lms->select_a_certificate();
+				$select_cert_options                   = $sfwd_lms->select_a_certificate();
 				if ( ( is_array( $select_cert_options ) ) && ( ! empty( $select_cert_options ) ) ) {
 					$select_cert_options = $select_cert_options_default + $select_cert_options;
 				} else {
@@ -265,7 +265,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'rest_args'    => array(
 							'schema' => array(
 								'field_key'   => 'materials_enabled',
-								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
+								'description' => esc_html__( 'Materials Enabled', 'learndash' ),
 								'type'        => 'boolean',
 								'default'     => false,
 							),
@@ -303,6 +303,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 										'readonly'    => true,
 									),
 								),
+								'arg_options' => array(
+									'sanitize_callback' => null, // Note: sanitization performed in rest_pre_insert_filter().
+									'validate_callback' => null,
+								),
 							),
 						),
 					),
@@ -332,7 +336,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 				),
-				'exam_challenge'                   => array(
+				'exam_challenge'                => array(
 					'name'        => 'exam_challenge',
 					'type'        => 'select',
 					'label'       => sprintf(
@@ -441,7 +445,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								// translators: placeholder: Lessons per page.
 								'description' => sprintf( esc_html_x( '%s per page', 'placeholder: Lessons per page', 'learndash' ), learndash_get_custom_label( 'lessons' ) ),
 								'type'        => 'integer',
-								'default'     => '',
+								'default'     => (int) $this->setting_option_values['course_lesson_per_page_custom'],
 							),
 						),
 					),
@@ -467,7 +471,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								// translators: placeholder: Topics per page.
 								'description' => sprintf( esc_html_x( '%s per page', 'placeholder: Topics per page', 'learndash' ), learndash_get_custom_label( 'topics' ) ),
 								'type'        => 'integer',
-								'default'     => '',
+								'default'     => (int) $this->setting_option_values['course_topic_per_page_custom'],
 							),
 						),
 					),

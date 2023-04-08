@@ -29,7 +29,7 @@ if ( ! class_exists( 'LDLMS_User_Quiz_Resume' ) ) {
 		 * @since 3.5.0
 		 *
 		 * @param int  $user_id      User ID.
-		 * @param int  $Quiz_id      Quiz ID.
+		 * @param int  $quiz_id      Quiz ID.
 		 * @param int  $course_id    Course ID.
 		 * @param int  $quiz_started Quiz started timestamp.
 		 * @param bool $create       If true will create the activity record if does not exist.
@@ -43,8 +43,7 @@ if ( ! class_exists( 'LDLMS_User_Quiz_Resume' ) ) {
 			$activity = null;
 
 			if ( ( ! empty( $user_id ) ) && ( ! empty( $quiz_id ) ) ) {
-
-				$args     = array(
+				$args = array(
 					'activity_id'        => 0,
 					'course_id'          => $course_id,
 					'user_id'            => $user_id,
@@ -80,7 +79,7 @@ if ( ! class_exists( 'LDLMS_User_Quiz_Resume' ) ) {
 		 * @since 3.5.0
 		 *
 		 * @param int   $user_id      User ID.
-		 * @param int   $Quiz_id      Quiz ID.
+		 * @param int   $quiz_id      Quiz ID.
 		 * @param int   $course_id    Course ID.
 		 * @param int   $quiz_started Quiz started timestamp.
 		 * @param array $results      Quiz question results array.
@@ -91,19 +90,26 @@ if ( ! class_exists( 'LDLMS_User_Quiz_Resume' ) ) {
 			$course_id    = absint( $course_id );
 			$quiz_started = absint( $quiz_started );
 
+			if ( empty( $user_id ) || empty( $quiz_id ) || empty( $results ) ) {
+				return false;
+			}
+
 			$changes_made = false;
-			if ( ( ! empty( $user_id ) ) && ( ! empty( $quiz_id ) ) && ( ! empty( $results ) ) ) {
 
-				$activity = self::get_user_quiz_resume_activity( $user_id, $quiz_id, $course_id, $quiz_started, true );
-				if ( ( is_a( $activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $activity, 'activity_id' ) ) && ( ! empty( $activity->activity_id ) ) ) {
-					$changes_made = true;
+			$activity = self::get_user_quiz_resume_activity( $user_id, $quiz_id, $course_id, $quiz_started, true );
 
-					foreach ( $results as $result_key => $result_data ) {
-						$activity->activity_meta[ $result_key ] = $result_data;
-					}
+			if (
+				is_a( $activity, 'LDLMS_Model_Activity' ) &&
+				property_exists( $activity, 'activity_id' ) &&
+				! empty( $activity->activity_id )
+			) {
+				$changes_made = true;
 
-					learndash_update_user_activity_meta( $activity->activity_id, self::$meta_key, $activity->activity_meta );
+				foreach ( $results as $result_key => $result_data ) {
+					$activity->activity_meta[ $result_key ] = $result_data;
 				}
+
+				learndash_update_user_activity_meta( $activity->activity_id, self::$meta_key, $activity->activity_meta );
 			}
 
 			return $changes_made;
@@ -115,7 +121,7 @@ if ( ! class_exists( 'LDLMS_User_Quiz_Resume' ) ) {
 		 * @since 3.5.0
 		 *
 		 * @param int $user_id      User ID.
-		 * @param int $Quiz_id      Quiz ID.
+		 * @param int $quiz_id      Quiz ID.
 		 * @param int $course_id    Course ID.
 		 * @param int $quiz_started Quiz started timestamp.
 		 */
@@ -124,10 +130,9 @@ if ( ! class_exists( 'LDLMS_User_Quiz_Resume' ) ) {
 			$quiz_id   = absint( $quiz_id );
 			$course_id = absint( $course_id );
 
-			$changes_made = false;
 			if ( ( ! empty( $user_id ) ) && ( ! empty( $quiz_id ) ) ) {
-
 				$activity = self::get_user_quiz_resume_activity( $user_id, $quiz_id, $course_id, $quiz_started );
+
 				if ( ( is_a( $activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $activity, 'activity_id' ) ) && ( ! empty( $activity->activity_id ) ) ) {
 					if ( ( property_exists( $activity, 'activity_meta' ) ) && ( ! empty( $activity->activity_meta ) ) ) {
 						return learndash_delete_user_activity_meta( $activity->activity_id, self::$meta_key );

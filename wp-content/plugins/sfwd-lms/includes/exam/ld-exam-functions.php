@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! defined( 'LEARNDASH_EXAM_CHALLENDGE_POST_META_KEY' ) ) {
-	define( 'LEARNDASH_EXAM_CHALLENDGE_POST_META_KEY', '_ld_exam_challenge' );
+if ( ! defined( 'LEARNDASH_EXAM_CHALLENGE_POST_META_KEY' ) ) {
+	define( 'LEARNDASH_EXAM_CHALLENGE_POST_META_KEY', '_ld_exam_challenge' );
 }
 
 /**
@@ -41,7 +41,7 @@ function learndash_course_exam_challenge_redirect( $course_id = 0 ) {
 	if ( empty( $user_id ) ) {
 		return;
 	}
-	
+
 	// Ensure the user is enrolled in the course.
 	$course_access = sfwd_lms_has_access( $course_id, $user_id );
 	if ( true !== $course_access ) {
@@ -50,7 +50,15 @@ function learndash_course_exam_challenge_redirect( $course_id = 0 ) {
 
 	// If the user completed the course we can't trigger the exam challenge.
 	$course_status = learndash_course_status( $course_id, $user_id, true );
-	if ( 'completed' === $course_status) {
+	if ( 'completed' === $course_status ) {
+		return;
+	}
+
+	if ( ! learndash_is_course_prerequities_completed( $course_id, $user_id ) ) { // cspell:disable-line -- prerequities are prerequisites...
+		return;
+	}
+
+	if ( ! learndash_check_user_course_points_access( $course_id, $user_id ) ) {
 		return;
 	}
 
@@ -61,7 +69,16 @@ function learndash_course_exam_challenge_redirect( $course_id = 0 ) {
 			return;
 		}
 
-		if ( true === learndash_can_user_bypass( $user_id, 'learndash_course_exam_challenge_redirect', array( 'user_id' => $user_id, 'course_id' => $course_id, 'exam_id'   => $exam_id, 'course_status' => $course_status ) ) ) {
+		if ( true === learndash_can_user_bypass(
+			$user_id,
+			'learndash_course_exam_challenge_redirect',
+			array(
+				'user_id'       => $user_id,
+				'course_id'     => $course_id,
+				'exam_id'       => $exam_id,
+				'course_status' => $course_status,
+			)
+		) ) {
 			return;
 		}
 
@@ -81,8 +98,8 @@ function learndash_course_exam_challenge_redirect( $course_id = 0 ) {
 			 * @param string $exam_link The Exam URL.
 			 * @param int    $course_id Course Post ID.
 			 * @param int    $exam_id   Exam Post ID.
- 			 * @param int    $user_id   User ID.
- 			 */
+			 * @param int    $user_id   User ID.
+			 */
 			$exam_link = apply_filters( 'learndash_course_to_exam_challenge_redirect', $exam_link, $course_id, $exam_id, $user_id );
 			if ( ! empty( $exam_link ) ) {
 				learndash_safe_redirect( $exam_link );
@@ -93,20 +110,26 @@ function learndash_course_exam_challenge_redirect( $course_id = 0 ) {
 
 /**
  * Check user access to Exam posts.
- * 
+ *
  * This function will check if the user has access to the Exam post.
  *
  * @since 4.0.0
  *
  * @param int $exam_id Exam Post ID.
- *
  */
 function learndash_exam_challenge_view_permission( $exam_id = 0 ) {
 	$user_id = get_current_user_id();
 	if ( ( ! empty( $user_id ) ) && ( ! empty( $exam_id ) ) ) {
 
 		// Allow Admin to bypass redirect and view exam.
-		if ( true === learndash_can_user_bypass( $user_id, 'learndash_exam_challenge_view_permission', array( 'user_id' => $user_id, 'exam_id' => $exam_id ) ) ) {
+		if ( true === learndash_can_user_bypass(
+			$user_id,
+			'learndash_exam_challenge_view_permission',
+			array(
+				'user_id' => $user_id,
+				'exam_id' => $exam_id,
+			)
+		) ) {
 			return;
 		}
 
@@ -116,7 +139,7 @@ function learndash_exam_challenge_view_permission( $exam_id = 0 ) {
 			$exam_status = learndash_get_user_course_exam_challenge_status( $user_id, $course_id_show );
 			// If the user has not taken the exam we pass them one to it.
 			if ( 'not_taken' === $exam_status ) {
-				return;	
+				return;
 			} elseif ( 'passed' === $exam_status ) {
 				$course_id_passed = (int) learndash_get_setting( $exam_id, 'exam_challenge_course_passed' );
 				if ( ( ! empty( $course_id_passed ) ) && ( $course_id_passed !== $course_id_show ) && ( is_post_publicly_viewable( $course_id_passed ) ) ) {
@@ -184,7 +207,7 @@ function learndash_exam_challenge_view_permission( $exam_id = 0 ) {
 		}
 	}
 
-	// If not returned via any of the above logic, we redirect the user to the course archive or home URL. 
+	// If not returned via any of the above logic, we redirect the user to the course archive or home URL.
 	$course_archive_link = get_post_type_archive_link( learndash_get_post_type_slug( 'course' ) );
 	if ( ! empty( $course_archive_link ) ) {
 		learndash_safe_redirect( $course_archive_link );
@@ -197,12 +220,12 @@ function learndash_exam_challenge_view_permission( $exam_id = 0 ) {
  *
  * @since 4.0.0
  *
- * @param int     $exam_id          Optional. Exam ID. Default 0.
+ * @param int $exam_id Optional. Exam ID. Default 0.
  *
  * @return array An array of course IDs.
  */
 function learndash_get_exam_challenge_courses( $exam_id = 0 ) {
-	$courses_ids = array();
+	$course_ids = array();
 
 	$exam_id = absint( $exam_id );
 	if ( ! empty( $exam_id ) ) {
@@ -213,7 +236,7 @@ function learndash_get_exam_challenge_courses( $exam_id = 0 ) {
 			'posts_per_page' => -1,
 			'meta_query'     => array(
 				array(
-					'key'     => LEARNDASH_EXAM_CHALLENDGE_POST_META_KEY,
+					'key'     => LEARNDASH_EXAM_CHALLENGE_POST_META_KEY,
 					'value'   => $exam_id,
 					'compare' => '=',
 				),
@@ -237,31 +260,24 @@ function learndash_get_exam_challenge_courses( $exam_id = 0 ) {
  *
  * @since 4.0.0
  *
- * @param boolean $bypass_transient Optional. Whether to bypass transient cache or not. Default false.
- *
  * @return array An array of course IDs.
  */
 function learndash_get_exam_challenge_available_courses() {
-	$courses_ids = array();
-
 	$query_args = array(
 		'post_type'      => learndash_get_post_type_slug( 'course' ),
 		'fields'         => 'ids',
 		'posts_per_page' => -1,
 		'meta_query'     => array(
 			array(
-				'key'     => LEARNDASH_EXAM_CHALLENDGE_POST_META_KEY,
+				'key'     => LEARNDASH_EXAM_CHALLENGE_POST_META_KEY,
 				'compare' => 'NOT EXISTS',
 			),
 		),
 	);
 
 	$query = new WP_Query( $query_args );
-	if ( ( is_a( $query, 'WP_Query' ) ) && ( property_exists( $query, 'posts' ) ) ) {
-		$course_ids = $query->posts;
-	}
 
-	return $course_ids;
+	return $query->posts;
 }
 
 /**
@@ -302,7 +318,7 @@ function learndash_set_exam_challenge_courses( $exam_id = 0, $exam_courses_new =
  *
  * @since 4.0.0
  *
- * @param int     $course_id Course ID.
+ * @param int $course_id Course ID.
  *
  * @return int The Exam ID if found, zero if not.
  */
@@ -312,8 +328,8 @@ function learndash_get_course_exam_challenge( $course_id = 0 ) {
 	$exam_id   = 0;
 
 	if ( ! empty( $course_id ) ) {
-		$exam_id = get_post_meta( $course_id, LEARNDASH_EXAM_CHALLENDGE_POST_META_KEY, true );
-		$exam_id = absint( $exam_id );
+		$exam_id        = get_post_meta( $course_id, LEARNDASH_EXAM_CHALLENGE_POST_META_KEY, true );
+		$exam_id        = absint( $exam_id );
 		$exam_post_type = get_post_type( $exam_id );
 
 		if ( learndash_get_post_type_slug( 'exam' ) !== get_post_type( $exam_id ) ) {
@@ -349,7 +365,7 @@ function learndash_update_course_exam_challenge( $course_id = 0, $exam_id = 0, $
 		$exam_enrolled = learndash_get_course_exam_challenge( $course_id );
 		$exam_enrolled = absint( $exam_enrolled );
 		if ( ! empty( $exam_enrolled ) ) {
-			$action_success = (bool) delete_post_meta( $course_id, LEARNDASH_EXAM_CHALLENDGE_POST_META_KEY );
+			$action_success = (bool) delete_post_meta( $course_id, LEARNDASH_EXAM_CHALLENGE_POST_META_KEY );
 			if ( true === $action_success ) {
 				/**
 				 * Fires after the exam challenge is removed from the course meta.
@@ -362,8 +378,8 @@ function learndash_update_course_exam_challenge( $course_id = 0, $exam_id = 0, $
 				do_action( 'learndash_removed_course_exam_challenge', $course_id, $exam_enrolled );
 			}
 		}
-	} elseif ( ( true !== $remove ) && ( ! empty( $course_id ) ) && ( ! empty( $exam_id ) ) )  {
-		$action_success = (bool) update_post_meta( $course_id, LEARNDASH_EXAM_CHALLENDGE_POST_META_KEY, $exam_id );
+	} elseif ( ( true !== $remove ) && ( ! empty( $course_id ) ) && ( ! empty( $exam_id ) ) ) {
+		$action_success = (bool) update_post_meta( $course_id, LEARNDASH_EXAM_CHALLENGE_POST_META_KEY, $exam_id );
 		if ( true === $action_success ) {
 			/**
 			 * Fires after the course is added to the exam challenge meta.
@@ -402,14 +418,14 @@ function learndash_course_exam_challenge_status_label( $status_slug = '' ) {
  *
  * @since 4.0.0
  *
- * @param int  $user_id      User ID.
- * @param int  $course_id    Course ID.
+ * @param int $user_id      User ID.
+ * @param int $course_id    Course ID.
  *
  * @return string key from $learndash_exam_challenge_statuses or empty.
  */
 function learndash_get_user_course_exam_challenge_status( $user_id = 0, $course_id = 0 ) {
-	$user_id      = absint( $user_id );
-	$course_id    = absint( $course_id );
+	$user_id   = absint( $user_id );
+	$course_id = absint( $course_id );
 
 	if ( ( empty( $user_id ) ) || ( empty( $course_id ) ) ) {
 		return '';
@@ -444,30 +460,30 @@ function learndash_grade_user_course_exam_activity( $exam_activity ) {
 }
 
 /**
- * Get the User Course Exam Challnge Activity and Meta record.
+ * Get the User Course Exam Challenge Activity and Meta record.
  *
  * @since 4.0.0
  *
- * @param int  $user_id      User ID.
- * @param int  $course_id    Course ID.
- * @param int  $exam_id      Exam ID.
+ * @param int $user_id      User ID.
+ * @param int $course_id    Course ID.
+ * @param int $exam_id      Exam ID.
  *
  * return object|null The activity object (LDLMS_Model_Activity) or null if not found.
  */
 function learndash_get_user_course_exam_activity( $user_id = 0, $course_id = 0, $exam_id = 0 ) {
-	$user_id      = absint( $user_id );
-	$course_id    = absint( $course_id );
-	$exam_id      = absint( $exam_id );
+	$user_id   = absint( $user_id );
+	$course_id = absint( $course_id );
+	$exam_id   = absint( $exam_id );
 
 	$activity = null;
 
 	if ( ( ! empty( $user_id ) ) && ( ! empty( $exam_id ) ) ) {
 
-		$args     = array(
-			'course_id'          => $course_id,
-			'user_id'            => $user_id,
-			'post_id'            => $exam_id,
-			'activity_type'      => 'exam',
+		$args = array(
+			'course_id'     => $course_id,
+			'user_id'       => $user_id,
+			'post_id'       => $exam_id,
+			'activity_type' => 'exam',
 		);
 
 		$activity = learndash_get_user_activity( $args );
@@ -485,7 +501,7 @@ function learndash_get_user_course_exam_activity( $user_id = 0, $course_id = 0, 
 /**
  * Removes blocks from showing on Exam post type
  *
- * @since 4.0
+ * @since 4.0.0
  **/
 function learndash_exam_deregister_post_type_blocks() {
 	$post_type = get_post_type( get_the_ID() );
@@ -493,7 +509,9 @@ function learndash_exam_deregister_post_type_blocks() {
 		wp_enqueue_script(
 			'learndash-deregister-post-type-blocks',
 			plugins_url( 'gutenberg/blocks/deregister-exam-question-block.js', dirname( __FILE__ ) ),
-			array( 'wp-blocks', 'wp-dom-ready', 'wp-edit-post' )
+			array( 'wp-blocks', 'wp-dom-ready', 'wp-edit-post' ),
+			LEARNDASH_SCRIPT_VERSION_TOKEN,
+			false
 		);
 	}
 }
@@ -561,7 +579,6 @@ function learndash_exam_process_ajax() {
 	}
 
 	if ( ! wp_verify_nonce( esc_attr( $_POST['exam_nonce'] ), 'learndash-exam_nonce-' . $user_id . '-' . $exam_id . '-' . $course_id ) ) {
-		error_log( 'nonce failed' );
 		return;
 	}
 
@@ -586,16 +603,16 @@ function learndash_exam_process_ajax() {
 	}
 
 	$exam_activity_args = array(
-		'course_id'          => $course_id,
-		'user_id'            => $user_id,
-		'post_id'            => $exam_id,
-		'activity_type'      => 'exam',
+		'course_id'     => $course_id,
+		'user_id'       => $user_id,
+		'post_id'       => $exam_id,
+		'activity_type' => 'exam',
 	);
 
 	$json_data = array();
 
-	switch( $exam_action ) {
-		case 'learndash_exam_process_reset' :
+	switch ( $exam_action ) {
+		case 'learndash_exam_process_reset':
 			$exam_activity = learndash_get_user_activity( $exam_activity_args );
 			if ( ( is_a( $exam_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $exam_activity, 'activity_id' ) ) && ( ! empty( $exam_activity->activity_id ) ) ) {
 				learndash_delete_user_activity( $exam_activity->activity_id );
@@ -605,7 +622,7 @@ function learndash_exam_process_ajax() {
 			}
 
 			break;
-		
+
 		case 'learndash_exam_process_complete':
 			$exam_activity = learndash_get_user_activity( $exam_activity_args, true );
 			if ( ( is_a( $exam_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $exam_activity, 'activity_id' ) ) && ( ! empty( $exam_activity->activity_id ) ) ) {
@@ -641,7 +658,7 @@ function learndash_exam_process_ajax() {
 			}
 
 			break;
-		
+
 		default:
 			break;
 	}

@@ -17,7 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 	 *
 	 * @since 2.5.8
 	 */
-	class LD_REST_Lessons_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Lessons_Controller_V1 extends LD_REST_Posts_Controller_V1 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * LearnDash course steps object
@@ -182,7 +182,7 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 				$course_id = (int) $request['course'];
 
 				// If we don't have a course parameter we need to get all the courses the user has access to and all
-				// the courses the lesson is avaiable in and compare.
+				// the courses the lesson is available in and compare.
 				if ( empty( $course_id ) ) {
 					$user_enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
 					if ( empty( $user_enrolled_courses ) ) {
@@ -311,7 +311,7 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 					$args['post__in'] = $args['post__in'] ? array_intersect( $step_ids, $args['post__in'] ) : $step_ids;
 
 					$course_lessons_args = learndash_get_course_lessons_order( $this->course_post->ID );
-					if ( ! isset( $_GET['orderby'] ) ) {
+					if ( ! isset( $_GET['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						if ( isset( $course_lessons_args['orderby'] ) ) {
 							$args['orderby'] = $course_lessons_args['orderby'];
 						} else {
@@ -319,7 +319,7 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 						}
 					}
 
-					if ( ! isset( $_GET['order'] ) ) {
+					if ( ! isset( $_GET['order'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						if ( isset( $course_lessons_args['order'] ) ) {
 							$args['order'] = $course_lessons_args['order'];
 						} else {

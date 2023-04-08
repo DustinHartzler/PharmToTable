@@ -19,6 +19,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 	 * @uses Learndash_Admin_Posts_Listing
 	 */
 	class Learndash_Admin_Essays_Listing extends Learndash_Admin_Posts_Listing {
+		const VIEW_AJAX_ACTION = 'learndash_essay_load_modal_content';
 
 		/**
 		 * Public constructor for class
@@ -196,7 +197,12 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			$this->listing_init_done = true;
 
-			add_filter( 'learndash_listing_selector_user_selector_query_args', array( $this, 'learndash_listing_selector_user_query_args_essays' ), 30, 3 );
+			add_filter(
+				'learndash_listing_selector_user_selector_query_args',
+				array( $this, 'learndash_listing_selector_user_query_args_essays' ),
+				30,
+				2
+			);
 		}
 
 		/**
@@ -210,8 +216,11 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				parent::on_load_listing();
 
 				add_action( 'admin_footer', array( $this, 'essay_bulk_actions' ), 30 );
-				add_filter( 'post_row_actions', array( $this, 'essay_inline_actions' ), 30, 2 );
+				add_filter( 'learndash_admin_settings_data', array( $this, 'add_learndash_admin_settings_data' ) );
+				add_filter( 'post_row_actions', array( $this, 'add_inline_actions' ), 30, 2 );
 				add_filter( 'learndash_listing_table_query_vars_filter', array( $this, 'listing_table_query_vars_filter_essays' ), 30, 3 );
+				add_filter( 'default_hidden_columns', array( $this, 'hide_not_needed_columns_by_default' ) );
+				add_action( 'admin_footer', array( $this, 'add_view_modal' ) );
 
 				$this->essay_bulk_actions_approve();
 			}
@@ -230,7 +239,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			if ( $post_type === $this->post_type ) {
 
 				// If we are viewing the "All" items then exclude the "draft" items.
-				if ( ( ! isset( $_GET['post_status'] ) ) && ( ! isset( $_GET['author'] ) ) ) {
+				if ( ( ! isset( $_GET['post_status'] ) ) && ( ! isset( $_GET['author'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$q_vars['post_status'] = array( 'graded', 'not_graded' );
 				}
 
@@ -339,7 +348,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( ! empty( $selector['selected'] ) ) {
 
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 
 					$q_vars['meta_query'][] = array(
@@ -351,7 +360,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$gl_course_ids = learndash_get_groups_administrators_courses( get_current_user_id() );
 				$gl_course_ids = array_map( 'absint', $gl_course_ids );
 				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array();
+					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				}
 
 				if ( ! empty( $gl_course_ids ) ) {
@@ -386,7 +395,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 					$q_vars['meta_query'][] = array(
 						'relation' => 'OR',
@@ -402,7 +411,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					);
 				} else {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 
 					$lesson_ids = array( absint( $selector['selected'] ) );
@@ -446,7 +455,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				} else {
 
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					} else {
 						$lesson_item_found = false;
 						foreach ( $q_vars['meta_query'] as $meta_idx => &$meta_item ) {
@@ -510,26 +519,73 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		}
 
 		/**
+		 * Add a download label to the script.
+		 *
+		 * @param array $script_data Existing script data.
+		 *
+		 * @return array
+		 */
+		public function add_learndash_admin_settings_data( array $script_data ): array {
+			$script_data['labels']['download'] = esc_html__( 'Download', 'learndash' );
+
+			return $script_data;
+		}
+
+		/**
 		 * Adds inline actions to Essay on post listing hover in the admin.
 		 *
 		 * Fires on `post_row_actions` hook.
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param array   $actions An array of post actions.
-		 * @param WP_Post $post    The `WP_Post` object.
+		 * @param array   $row_actions An array of post actions.
+		 * @param WP_Post $post The `WP_Post` object.
 		 *
-		 * @return array $actions An array of post actions.
+		 * @return array $row_actions An array of post actions.
 		 */
-		public function essay_inline_actions( $actions, $post ) {
-			if ( learndash_get_post_type_slug( 'essay' ) === $post->post_type ) {
-				$upload = get_post_meta( $post->ID, 'upload', true );
-				if ( ! empty( $upload ) ) {
-					$actions['download_essay'] = '<a href="' . esc_url( $upload ) . '" target="_blank">' . esc_html__( 'Download', 'learndash' ) . '</a>';
-				}
+		public function add_inline_actions( array $row_actions, WP_Post $post ): array {
+			$row_actions = parent::post_row_actions( $row_actions, $post );
+
+			$file_url = get_post_meta( $post->ID, 'upload', true );
+
+			$file_is_image = in_array(
+				strtolower( pathinfo( $file_url, PATHINFO_EXTENSION ) ),
+				array( 'jpg', 'jpeg', 'png', 'gif' ),
+				true
+			);
+
+			// Quick view.
+
+			if ( empty( $file_url ) || $file_is_image ) {
+				$view_label = __( 'Quick View', 'learndash' );
+				$view_url   = admin_url(
+					sprintf(
+						'admin-ajax.php?action=%s&post=%d&ld-listing-nonce=%s',
+						self::VIEW_AJAX_ACTION,
+						$post->ID,
+						$this->listing_nonce
+					)
+				);
+
+				$row_actions['quick_view'] = sprintf(
+					'<a class="view-learndash-essay" href="%s" aria-label="%s">%s</a>',
+					esc_url( $view_url ),
+					esc_attr( $view_label ),
+					esc_html( $view_label )
+				);
 			}
 
-			return $actions;
+			// Download.
+
+			if ( ! empty( $file_url ) ) {
+				$row_actions['download'] = sprintf(
+					'<a download href="%s" target="_blank">%s</a>',
+					esc_url( $file_url ),
+					esc_html__( 'Download', 'learndash' )
+				);
+			}
+
+			return $row_actions;
 		}
 
 		/**
@@ -540,7 +596,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @since 3.2.3
 		 */
 		protected function essay_bulk_actions_approve() {
-			if ( ( ! isset( $_REQUEST['ld-listing-nonce'] ) ) || ( empty( $_REQUEST['ld-listing-nonce'] ) ) || ( ! wp_verify_nonce( $_REQUEST['ld-listing-nonce'], get_called_class() ) ) ) {
+			if ( ( ! isset( $_REQUEST['ld-listing-nonce'] ) ) || ( empty( $_REQUEST['ld-listing-nonce'] ) ) || ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['ld-listing-nonce'] ) ), get_called_class() ) ) ) {
 				return;
 			}
 
@@ -554,10 +610,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			$action = '';
 			if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
-				$action = esc_attr( $_REQUEST['action'] );
+				$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 
 			} elseif ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] ) {
-				$action = esc_attr( $_REQUEST['action2'] );
+				$action = sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) );
 
 			} elseif ( ( isset( $_REQUEST['ld_action'] ) ) && ( 'approve_essay' === $_REQUEST['ld_action'] ) ) {
 				$action = 'approve_essay';
@@ -565,12 +621,12 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			if ( 'approve_essay' === $action ) {
 
-				if ( ( isset( $_REQUEST['post'] ) ) && ( ! empty( $_REQUEST['post'] ) ) ) {
+				if ( ( isset( $_REQUEST['post'] ) ) && ( ! empty( $_REQUEST['post'] ) ) ) { // @phpstan-ignore-line
 
 					if ( ! is_array( $_REQUEST['post'] ) ) {
-						$essays = array( $_REQUEST['post'] );
+						$essays = array( $_REQUEST['post'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					} else {
-						$essays = $_REQUEST['post'];
+						$essays = $_REQUEST['post']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					}
 
 					foreach ( $essays as $essay_id ) {
@@ -587,9 +643,11 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 							if ( 'graded' !== $essay_post->post_status ) {
 								$quiz_score_difference = 1;
+							} else {
+								$quiz_score_difference = 0;
 							}
 
-							// First we update the essat post with the new post_status.
+							// First we update the essay post with the new post_status.
 							$essay_post->post_status = 'graded';
 							wp_update_post( $essay_post );
 
@@ -621,7 +679,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							$submitted_essay_data = apply_filters( 'learndash_essay_status_data', $submitted_essay_data );
 							learndash_update_submitted_essay_data( $quiz_id, $question_id, $essay_post, $submitted_essay_data );
 
-							if ( ! is_null( $original_points_awarded ) && ! is_null( $submitted_essay_data['points_awarded'] ) ) {
+							if ( ! is_null( $submitted_essay_data['points_awarded'] ) ) {
 								if ( $submitted_essay_data['points_awarded'] > $original_points_awarded ) {
 									$points_awarded_difference = intval( $submitted_essay_data['points_awarded'] ) - intval( $original_points_awarded );
 								} else {
@@ -934,7 +992,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array();
+					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				}
 
 				if ( 'approved' === $selector['selected'] ) {
@@ -968,7 +1026,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$quiz_pro_id = get_post_meta( absint( $selector['selected'] ), 'quiz_pro_id', true );
 				if ( ! empty( $quiz_pro_id ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 
 					$q_vars['meta_query'][] = array(
@@ -986,10 +1044,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing.
-		 * @param  array  $selector Array of attributes used to display the filter selector.
+		 * @param  array $q_vars   Query vars used for the table listing.
+		 * @param  array $selector Array of attributes used to display the filter selector.
 		 *
-		 * @return object $q_vars.
+		 * @return array $q_vars.
 		 */
 		protected function filter_by_essay_question( $q_vars = array(), $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
@@ -997,7 +1055,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$question_pro_id = absint( $question_pro_id );
 				if ( ! empty( $question_pro_id ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 
 					$q_vars['meta_query'][] = array(
@@ -1015,10 +1073,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing.
-		 * @param  array  $selector Array of attributes used to display the filter selector.
+		 * @param  array $q_vars   Query vars used for the table listing.
+		 * @param  array $selector Array of attributes used to display the filter selector.
 		 *
-		 * @return object $q_vars.
+		 * @return array $q_vars.
 		 */
 		protected function selector_filter_for_essay_quiz( $q_vars = array(), $selector = array() ) {
 			global $sfwd_lms;
@@ -1054,10 +1112,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing.
-		 * @param  array  $selector Array of attributes used to display the filter selector.
+		 * @param  array $q_vars   Query vars used for the table listing.
+		 * @param  array $selector Array of attributes used to display the filter selector.
 		 *
-		 * @return object $q_vars.
+		 * @return array $q_vars.
 		 */
 		protected function selector_filter_for_essay_question( $q_vars = array(), $selector = array() ) {
 			$quiz_id = (int) $this->get_selector( 'quiz_id', 'selected' );
@@ -1131,7 +1189,87 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			return $views;
 		}
+
+		/**
+		 * Hide some columns by default.
+		 *
+		 * @param array $hidden Hidden columns by default.
+		 *
+		 * @return array
+		 * @since 4.1.0
+		 */
+		public function hide_not_needed_columns_by_default( array $hidden ): array {
+			$hidden[] = 'question';
+			$hidden[] = 'course';
+			$hidden[] = 'lesson_topic';
+			$hidden[] = 'comments';
+			$hidden[] = 'date';
+
+			return $hidden;
+		}
+
+		/**
+		 * Add modal for a view action.
+		 *
+		 * @since 4.1.0
+		 */
+		public function add_view_modal() {
+			?>
+			<div id='learndash-admin-table-modal' style="display: none"></div>
+			<?php
+		}
+
+		/**
+		 * Ajax handler for a view modal content.
+		 */
+		public static function load_modal_content(): void {
+			if (
+				empty( $_REQUEST['ld-listing-nonce'] ) ||
+				! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['ld-listing-nonce'] ) ), get_called_class() )
+			) {
+				return;
+			}
+
+			if ( empty( $_REQUEST['action'] ) || self::VIEW_AJAX_ACTION !== $_REQUEST['action'] ) {
+				return;
+			}
+
+			if ( empty( $_REQUEST['post'] ) ) {
+				return;
+			}
+
+			$essay = get_post( intval( $_REQUEST['post'] ) );
+
+			if (
+				empty( $essay ) ||
+				! ( $essay instanceof WP_Post ) ||
+				learndash_get_post_type_slug( 'essay' ) !== $essay->post_type
+			) {
+				return;
+			}
+
+			$file_url = get_post_meta( $essay->ID, 'upload', true );
+
+			if ( empty( $file_url ) ) {
+				$content = nl2br( $essay->post_content );
+			} else {
+				$content = sprintf( '<img src="%s" />', $file_url );
+			}
+
+			wp_send_json_success(
+				array(
+					'title'   => $essay->post_title,
+					'content' => $content,
+				)
+			);
+
+			wp_die(); // @phpstan-ignore-line
+		}
+
 		// End of functions.
 	}
+
+	add_action( 'wp_ajax_' . Learndash_Admin_Essays_Listing::VIEW_AJAX_ACTION, array( Learndash_Admin_Essays_Listing::class, 'load_modal_content' ) );
 }
+
 new Learndash_Admin_Essays_Listing();

@@ -227,7 +227,7 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 				</label></p>
 				<?php
 					global $wpdb;
-					$proquiz_ids = $wpdb->get_col(
+					$proquiz_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$wpdb->prepare(
 							'SELECT quiz_id as proquiz_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_lock' ) ) . ' WHERE user_id = %d',
 							$user->ID
@@ -258,7 +258,7 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 								<p><label for="">
 								<?php
 								wp_kses_post(
-									printf(
+									sprintf(
 										// translators: placeholder: quiz.
 										esc_html_x( 'Remove the %s lock(s) for this user.', 'placeholder: quiz', 'learndash' ),
 										esc_html( learndash_get_custom_label_lower( 'quiz' ) )
@@ -271,7 +271,7 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 								<?php
 								foreach ( $quiz_query->posts as $quiz_post ) {
 									?>
-											<option value="<?php echo esc_attr( (int) $quiz_post->ID ); ?>"><?php echo wp_kses_post( $quiz_post->post_title ); ?></option>
+											<option value="<?php echo absint( $quiz_post->ID ); ?>"><?php echo wp_kses_post( $quiz_post->post_title ); ?></option>
 											<?php
 								}
 								?>
@@ -305,8 +305,8 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 			if ( ( isset( $_POST['learndash_user_courses'] ) ) && ( isset( $_POST['learndash_user_courses'][ $user_id ] ) ) && ( ! empty( $_POST['learndash_user_courses'][ $user_id ] ) ) ) {
 				if ( ( isset( $_POST[ 'learndash_user_courses-' . $user_id . '-changed' ] ) ) && ( '1' === $_POST[ 'learndash_user_courses-' . $user_id . '-changed' ] ) ) {
 					if ( ( isset( $_POST[ 'learndash_user_courses-' . $user_id . '-nonce' ] ) ) && ( ! empty( $_POST[ 'learndash_user_courses-' . $user_id . '-nonce' ] ) ) ) {
-						if ( wp_verify_nonce( $_POST[ 'learndash_user_courses-' . $user_id . '-nonce' ], 'learndash_user_courses-' . $user_id ) ) {
-							$user_courses = (array) json_decode( stripslashes( $_POST['learndash_user_courses'][ $user_id ] ) );
+						if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ 'learndash_user_courses-' . $user_id . '-nonce' ] ) ), 'learndash_user_courses-' . $user_id ) ) {
+							$user_courses = (array) json_decode( wp_unslash( $_POST['learndash_user_courses'][ $user_id ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							learndash_user_set_enrolled_courses( $user_id, $user_courses );
 						}
 					}
@@ -316,8 +316,8 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 			if ( ( isset( $_POST['learndash_user_groups'] ) ) && ( isset( $_POST['learndash_user_groups'][ $user_id ] ) ) && ( ! empty( $_POST['learndash_user_groups'][ $user_id ] ) ) ) {
 				if ( ( isset( $_POST[ 'learndash_user_groups-' . $user_id . '-changed' ] ) ) && ( ! empty( $_POST[ 'learndash_user_groups-' . $user_id . '-changed' ] ) ) ) {
 					if ( ( isset( $_POST[ 'learndash_user_groups-' . $user_id . '-nonce' ] ) ) && ( ! empty( $_POST[ 'learndash_user_groups-' . $user_id . '-nonce' ] ) ) ) {
-						if ( wp_verify_nonce( $_POST[ 'learndash_user_groups-' . $user_id . '-nonce' ], 'learndash_user_groups-' . $user_id ) ) {
-							$user_groups = (array) json_decode( stripslashes( $_POST['learndash_user_groups'][ $user_id ] ) );
+						if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ 'learndash_user_groups-' . $user_id . '-nonce' ] ) ), 'learndash_user_groups-' . $user_id ) ) {
+							$user_groups = (array) json_decode( wp_unslash( $_POST['learndash_user_groups'][ $user_id ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							learndash_set_users_group_ids( $user_id, $user_groups );
 						}
 					}
@@ -327,8 +327,8 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 			if ( ( isset( $_POST['learndash_leader_groups'] ) ) && ( isset( $_POST['learndash_leader_groups'][ $user_id ] ) ) && ( ! empty( $_POST['learndash_leader_groups'][ $user_id ] ) ) ) {
 				if ( ( isset( $_POST[ 'learndash_leader_groups-' . $user_id . '-changed' ] ) ) && ( ! empty( $_POST[ 'learndash_leader_groups-' . $user_id . '-changed' ] ) ) ) {
 					if ( ( isset( $_POST[ 'learndash_leader_groups-' . $user_id . '-nonce' ] ) ) && ( ! empty( $_POST[ 'learndash_leader_groups-' . $user_id . '-nonce' ] ) ) ) {
-						if ( wp_verify_nonce( $_POST[ 'learndash_leader_groups-' . $user_id . '-nonce' ], 'learndash_leader_groups-' . $user_id ) ) {
-							$user_groups = (array) json_decode( stripslashes( $_POST['learndash_leader_groups'][ $user_id ] ) );
+						if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ 'learndash_leader_groups-' . $user_id . '-nonce' ] ) ), 'learndash_leader_groups-' . $user_id ) ) {
+							$user_groups = (array) json_decode( wp_unslash( $_POST['learndash_leader_groups'][ $user_id ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							learndash_set_administrators_group_ids( $user_id, $user_groups );
 						}
 					}
@@ -341,42 +341,43 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 			 * @since 2.6.0
 			 */
 			if ( ( isset( $_POST['learndash-user-courses-access-changed'][ $user_id ] ) ) && ( ! empty( $_POST['learndash-user-courses-access-changed'][ $user_id ] ) ) && ( is_array( $_POST['learndash-user-courses-access-changed'][ $user_id ] ) ) ) {
-				foreach ( $_POST['learndash-user-courses-access-changed'][ $user_id ] as $course_id ) {
+				foreach ( wp_unslash( $_POST['learndash-user-courses-access-changed'][ $user_id ] ) as $course_id ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					if ( ( isset( $_POST['learndash-user-courses-access'][ $user_id ][ $course_id ] ) ) && ( ! empty( $_POST['learndash-user-courses-access'][ $user_id ][ $course_id ] ) ) ) {
-						$course_date_set = $_POST['learndash-user-courses-access'][ $user_id ][ $course_id ];
-						if ( isset( $course_date_set['aa'] ) ) {
+						$course_date_set = (array) wp_unslash( $_POST['learndash-user-courses-access'][ $user_id ][ $course_id ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+						if ( isset( $course_date_set['aa'] ) ) { // @phpstan-ignore-line
 							$course_date_set['aa'] = intval( $course_date_set['aa'] );
 						} else {
 							$date['aa'] = 0;
 						}
 
-						if ( isset( $course_date_set['mm'] ) ) {
+						if ( isset( $course_date_set['mm'] ) ) { // @phpstan-ignore-line
 							$course_date_set['mm'] = intval( $course_date_set['mm'] );
 						} else {
 							$date['mm'] = 0;
 						}
 
-						if ( isset( $course_date_set['jj'] ) ) {
+						if ( isset( $course_date_set['jj'] ) ) { // @phpstan-ignore-line
 							$course_date_set['jj'] = intval( $course_date_set['jj'] );
 						} else {
 							$course_date_set['jj'] = 0;
 						}
 
-						if ( isset( $course_date_set['hh'] ) ) {
+						if ( isset( $course_date_set['hh'] ) ) { // @phpstan-ignore-line
 							$course_date_set['hh'] = intval( $course_date_set['hh'] );
 						} else {
 							$course_date_set['hh'] = 0;
 						}
 
-						if ( isset( $course_date_set['mn'] ) ) {
+						if ( isset( $course_date_set['mn'] ) ) { // @phpstan-ignore-line
 							$course_date_set['mn'] = intval( $course_date_set['mn'] );
 						} else {
 							$course_date_set['mn'] = 0;
 						}
 
-						if ( ( ! empty( $course_date_set['aa'] ) ) && ( ! empty( $course_date_set['mm'] ) ) && ( ! empty( $course_date_set['jj'] ) ) ) {
+						if ( ( ! empty( $course_date_set['aa'] ) ) && ( ! empty( $course_date_set['mm'] ) ) && ( ! empty( $course_date_set['jj'] ) ) ) { // @phpstan-ignore-line
 							$date_string = sprintf( '%04d-%02d-%02d %02d:%02d:00', $course_date_set['aa'], $course_date_set['mm'], $course_date_set['jj'], $course_date_set['hh'], $course_date_set['mn'] );
-							$ret         = ld_course_access_from_update( $course_id, $user_id, $date_string, false );
+							$ret         = ld_course_access_from_update( (int) $course_id, (int) $user_id, $date_string, false );
 						}
 					}
 				}
@@ -384,14 +385,14 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 
 			if ( ( isset( $_POST['learndash_delete_quiz_user_lock_data'] ) ) && ( ! empty( $_POST['learndash_delete_quiz_user_lock_data'] ) ) ) {
 				if ( ( isset( $_POST['learndash_delete_quiz_user_lock_data-nonce'] ) ) && ( ! empty( $_POST['learndash_delete_quiz_user_lock_data-nonce'] ) ) ) {
-					if ( wp_verify_nonce( $_POST['learndash_delete_quiz_user_lock_data-nonce'], 'learndash_delete_quiz_user_lock_data-' . $user_id ) ) {
-						learndash_remove_user_quiz_locks( $user_id, $_POST['learndash_delete_quiz_user_lock_data'] );
+					if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['learndash_delete_quiz_user_lock_data-nonce'] ) ), 'learndash_delete_quiz_user_lock_data-' . $user_id ) ) {
+						learndash_remove_user_quiz_locks( $user_id, $_POST['learndash_delete_quiz_user_lock_data'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					}
 				}
 			}
 
 			if ( isset( $_POST['learndash_course_points'] ) ) {
-				update_user_meta( $user_id, 'course_points', learndash_format_course_points( $_POST['learndash_course_points'] ) );
+				update_user_meta( $user_id, 'course_points', learndash_format_course_points( $_POST['learndash_course_points'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			}
 
 			if ( ( isset( $_POST['learndash_delete_user_data'] ) ) && ( ! empty( $_POST['learndash_delete_user_data'] ) ) && ( intval( $_POST['learndash_delete_user_data'] ) === intval( $user_id ) ) ) {
@@ -466,218 +467,48 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 		 *
 		 * @since 2.2.1
 		 *
-		 * @param WP_User $user wp_user object.
+		 * @param WP_User $user A user whose profile we are editing.
 		 */
-		private function show_leader_groups( WP_User $user ) {
-			if ( current_user_can( 'edit_users' ) ) {
-				if ( learndash_is_group_leader_user( $user->ID ) ) {
-					$ld_binary_selector_leader_groups = new Learndash_Binary_Selector_Leader_Groups(
-						array(
-							'user_id'      => $user->ID,
-							'selected_ids' => learndash_get_administrators_group_ids( $user->ID, true ),
-						)
-					);
-					$ld_binary_selector_leader_groups->show();
-				}
+		private function show_leader_groups( WP_User $user ): void {
+			if (
+				! current_user_can( 'edit_users' )
+				|| ! learndash_is_group_leader_user( $user->ID )
+			) {
+				return;
 			}
-		}
 
-		/**
-		 * Show User Courses Progress.
-		 * called by show_user_profile().
-		 *
-		 * @since 2.5.0
-		 *
-		 * @param WP_User $user wp_user object.
-		 */
-		private function show_user_course_progress( WP_User $user ) {
-			if ( current_user_can( 'edit_users' ) ) {
-				$user_courses_registered = ld_get_mycourses( $user->ID );
-				$user_courses_registered = ! empty( $user_courses_registered ) ? $user_courses_registered : array();
-
-				$user_course_progress = get_user_meta( $user->ID, '_sfwd-course_progress', true );
-				$user_course_progress = ! empty( $user_course_progress ) ? $user_course_progress : array();
-
-				$courses_ids = array_merge( $user_courses_registered, array_keys( $user_course_progress ) );
-
-				if ( ! empty( $courses_ids ) ) {
-					$course_query_args = array(
-						'post_type'   => 'sfwd-courses',
-						'post_status' => 'publish',
-						'fields'      => 'ids',
-						'nopaging'    => true,
-						'orderby'     => 'title',
-						'order'       => 'ASC',
-						'post__in'    => $courses_ids,
-					);
-
-					$course_query = new WP_Query( $course_query_args );
-
-					if ( ( isset( $course_query->posts ) ) && ( ! empty( $course_query->posts ) ) ) {
-						?>
-						<h2>Course Progress</h2>
-						<table id="learndash-admin-user-courses" class="learndash-admin-user-courses">
-						<thead>
-							<tr>
-								<th class="col-title"><?php esc_html_e( 'Title', 'learndash' ); ?></th>
-								<th class="col-status"><?php esc_html_e( 'Status', 'learndash' ); ?></th>
-								<th class="col-steps"><?php esc_html_e( 'Steps', 'learndash' ); ?></th>
-								<th class="col-steps"><?php esc_html_e( 'Started / Completed', 'learndash' ); ?></th>
-							</tr>
-						</thead>
-						<tbody>
-						<?php
-						foreach ( $course_query->posts as $course_id ) {
-							$course = get_post( $course_id );
-
-							$course_edit_permalink = '';
-							if ( current_user_can( 'edit_courses', $course->ID ) ) {
-								$course_edit_permalink = get_permalink( $course->ID );
-							}
-							?>
-								<tr>
-									<td class="col=title">
-									<?php if ( ! empty( $course_edit_permalink ) ) { ?>
-											<a href="<?php echo esc_url( $course_edit_permalink ); ?>">
-										<?php } ?>
-									<?php echo wp_kses_post( get_the_title( $course->ID ) ); ?>
-									<?php if ( ! empty( $course_edit_permalink ) ) { ?>
-											</a>
-										<?php } ?>
-										<br />
-
-										<div class="row-actions">
-										<?php if ( ! empty( $course_edit_permalink ) ) { ?>
-												<span class="edit">
-													<a href="<?php esc_url( $course_edit_permalink ); ?>" aria-label="Edit">edit</a>
-													|
-												</span>
-											<?php } ?>
-											<span class="view">
-												<a href="<?php echo esc_url( get_permalink( $course->ID ) ); ?>" aria-label="View"><?php esc_html_e( 'view', 'learndash' ); ?></a>
-												|
-											</span>
-										</div>
-								</td>
-								<?php
-									$course_status = learndash_course_status( $course_id, $user->ID );
-								?>
-									<td class="col-status"><span class="leardash-course-status leardash-course-status-<?php echo esc_attr( sanitize_title_with_dashes( $course_status ) ); ?>"><?php echo esc_html( $course_status ); ?></span></td>
-
-									<?php
-
-									$coursep['completed'] = '     ';
-									$coursep['total']     = '     ';
-
-									if ( isset( $user_course_progress[ $course_id ] ) ) {
-										$coursep = $user_course_progress[ $course_id ];
-
-										$course_steps_count     = learndash_get_course_steps_count( $course_id );
-										$course_steps_completed = learndash_course_get_completed_steps( $user->ID, $course_id, $coursep );
-
-										$completed_on = get_user_meta( $user->ID, 'course_completed_' . $course_id, true );
-										if ( ! empty( $completed_on ) ) {
-
-											$coursep['completed'] = $course_steps_count;
-											$coursep['total']     = $course_steps_count;
-
-										} else {
-											$coursep['total']     = $course_steps_count;
-											$coursep['completed'] = $course_steps_completed;
-
-											if ( $coursep['completed'] > $coursep['total'] ) {
-												$coursep['completed'] = $coursep['total'];
-											}
-										}
-									}
-									?>
-									<td class="col-steps">
-									<?php
-									echo sprintf(
-										'%-5s / %5s',
-										esc_html( $coursep['completed'] ),
-										esc_html( $coursep['total'] )
-									);
-									?>
-									</td><td class="col-dates">
-									<?php
-									$output_str = '';
-
-									$since = ld_course_access_from( $course->ID, $user->ID );
-									if ( ! empty( $since ) ) {
-										if ( ! empty( $output_str ) ) {
-											$output_str .= '<br />';
-										}
-
-										$output_str .= sprintf(
-										// translators: placeholder: Started Date.
-											esc_html_x( 'Started: %s', 'placeholder: Started date', 'learndash' ),
-											learndash_adjust_date_time_display( $since )
-										);
-									} else {
-										$since = learndash_user_group_enrolled_to_course_from( $user->ID, $course->ID );
-										if ( ! empty( $since ) ) {
-											if ( ! empty( $output_str ) ) {
-												$output_str .= '<br />';
-											}
-											$output_str .= sprintf(
-												// translators: placeholder: Started Group Date, Group.
-												esc_html_x( 'Started: %1$s (%2$s Access)', 'placeholder: Started Group date, Group', 'learndash' ),
-												learndash_adjust_date_time_display( $since ),
-												LearnDash_Custom_Label::get_label( 'group' )
-											);
-										}
-									}
-
-									// Display the Course Access if expired or expiring.
-									$expire_access = learndash_get_setting( $course_id, 'expire_access' );
-									if ( ! empty( $expire_access ) ) {
-										$expired = ld_course_access_expired( $course_id, $user->ID );
-										if ( $expired ) {
-											if ( ! empty( $output_str ) ) {
-												$output_str .= '<br />';
-											}
-											$output_str .= esc_html__( '(access expired)', 'learndash' );
-										} else {
-												$expired_on = ld_course_access_expires_on( $course_id, $user->ID );
-											if ( ! empty( $expired_on ) ) {
-												if ( ! empty( $output_str ) ) {
-													$output_str .= '<br />';
-												}
-												$output_str .= sprintf(
-													// translators: placeholder: Course Expires Date.
-													esc_html_x( 'Expires: %s', 'Course Expires on date', 'learndash' ),
-													learndash_adjust_date_time_display( $expired_on )
-												);
-											}
-										}
-									}
-
-									$completed = get_user_meta( $user->ID, 'course_completed_' . $course->ID, true );
-									if ( ! empty( $completed ) ) {
-										if ( ! empty( $output_str ) ) {
-											$output_str .= '<br />';
-										}
-										$output_str .= sprintf(
-										// translators: placeholder: Course Completed Data.
-											esc_html_x( 'Completed: %s', 'placeholder: Completed date', 'learndash' ),
-											learndash_adjust_date_time_display( $completed )
-										);
-									}
-
-									echo $output_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
-									?>
-									</td>
-								</tr>
-								<?php
-						}
-						?>
-						<tbody>
-						</table>
-						<?php
-					}
-				}
+			if ( learndash_is_admin_user() ) {
+				$current_user_can_edit = true;
+			} else {
+				/**
+				 * Filters an ability of a group leader to edit the groups list they lead or other group leaders lead.
+				 *
+				 * @since 4.5.0
+				 *
+				 * @param bool    $can_edit     A flag indicating if a user can edit group leaders. Default false.
+				 * @param WP_User $group_leader A group leader user object.
+				 *
+				 * @return bool True if a group leader is allowed to edit group leaders.
+				 */
+				$current_user_can_edit = apply_filters(
+					'learndash_group_leader_can_edit_group_leaders',
+					false,
+					$user
+				);
 			}
+
+			if ( ! $current_user_can_edit ) {
+				return;
+			}
+
+			$ld_binary_selector_leader_groups = new Learndash_Binary_Selector_Leader_Groups(
+				array(
+					'user_id'      => $user->ID,
+					'selected_ids' => learndash_get_administrators_group_ids( $user->ID, true ),
+				)
+			);
+
+			$ld_binary_selector_leader_groups->show();
 		}
 
 		/**
@@ -690,12 +521,12 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 
 			$quiz_time = 0;
 			if ( isset( $_POST['quiz_time'] ) ) {
-				$quiz_time = esc_attr( $_POST['quiz_time'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verify_nonce is called below
+				$quiz_time = sanitize_text_field( wp_unslash( $_POST['quiz_time'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verify_nonce is called below
 			}
 
 			$quiz_nonce = 0;
 			if ( isset( $_POST['quiz_nonce'] ) ) {
-				$quiz_nonce = esc_attr( $_POST['quiz_nonce'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verify_nonce is called below
+				$quiz_nonce = sanitize_text_field( wp_unslash( $_POST['quiz_nonce'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verify_nonce is called below
 			}
 
 			$user_id = 0;

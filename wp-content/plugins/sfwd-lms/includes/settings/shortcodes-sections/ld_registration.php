@@ -12,12 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_ld_registration' ) ) ) {
 	/**
-	 * Class LearnDash Shortcode Section for Regisration form [ld_registration].
+	 * Class LearnDash Shortcode Section for Registration form [ld_registration].
 	 *
 	 * @since 2.4.0
 	 */
-	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
-	class LearnDash_Shortcodes_Section_ld_registration extends LearnDash_Shortcodes_Section {
+	class LearnDash_Shortcodes_Section_ld_registration extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.

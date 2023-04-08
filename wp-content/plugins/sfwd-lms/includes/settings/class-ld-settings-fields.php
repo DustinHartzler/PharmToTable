@@ -318,7 +318,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 							<?php
 							if ( ( isset( $field['args']['label_description'] ) ) && ( ! empty( $field['args']['label_description'] ) ) ) {
 								?>
-								<span class="descripton"><?php echo wp_kses_post( $field['args']['label_description'] ); ?></span>
+								<span class="descripton"><?php echo wp_kses_post( $field['args']['label_description'] ); // cspell:disable-line. ?></span>
 								<?php
 							}
 
@@ -487,7 +487,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 * @since 3.4.0.5
 		 *
 		 * @param array   $field_args main field args array. should contain element for 'attrs'.
-		 * @param boolean $wrap Flag to wrap field atrribute in normal output or just return value.
+		 * @param boolean $wrap Flag to wrap field attribute in normal output or just return value.
 		 *
 		 * @return string of HTML representation of the attrs array attributes.
 		 */
@@ -568,7 +568,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 * @since 3.0.0
 		 *
 		 * @param array   $field_args main field args array. should contain element for 'attrs'.
-		 * @param boolean $wrap Flag to wrap field atrribute in normal output or just return value.
+		 * @param boolean $wrap Flag to wrap field attribute in normal output or just return value.
 		 *
 		 * @return string of HTML representation of the attrs array attributes.
 		 */
@@ -581,7 +581,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 					$field_multiple = '[]';
 				}
 
-				if ( ! empty( $field_args['setting_option_key'] ) ) {
+				if ( ! empty( $field_args['setting_option_key'] ) && ( ! isset( $field_args['use_raw_name'] ) || ( isset( $field_args['use_raw_name'] ) && false === $field_args['use_raw_name'] ) ) ) {
 					if ( true === $wrap ) {
 						if ( ( isset( $field_args['name_wrap'] ) ) && ( true === $field_args['name_wrap'] ) ) {
 							$field_attribute .= ' name="' . $field_args['setting_option_key'] . '[' . $field_args['name'] . ']' . $field_multiple . '" ';
@@ -623,7 +623,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 				if ( is_string( $field_args['placeholder'] ) ) {
 					$field_attribute .= ' placeholder="' . esc_html( $field_args['placeholder'] ) . '" ';
 				} elseif ( is_array( $field_args['placeholder'] ) ) {
-					foreach( $field_args['placeholder'] as $placeholder_key => $placeholder_value ) {
+					foreach ( $field_args['placeholder'] as $placeholder_key => $placeholder_value ) {
 						$field_attribute .= ' placeholder="' . esc_html( $placeholder_value ) . '" ';
 						break;
 					}
@@ -639,7 +639,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 * @since 3.0.0
 		 *
 		 * @param array   $field_args main field args array. should contain element for 'attrs'.
-		 * @param boolean $wrap Flag to wrap field atrribute in normal output or just return value.
+		 * @param boolean $wrap Flag to wrap field attribute in normal output or just return value.
 		 * @return string of HTML representation of the attrs array attributes.
 		 */
 		public function get_field_attribute_value( $field_args = array(), $wrap = true ) {
@@ -793,7 +793,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 			$field_attribute = '';
 
 			if ( ( isset( $field_args['input_description'] ) ) && ( ! empty( $field_args['input_description'] ) ) ) {
-				$field_attribute .= '<span class="descripton">' . $field_args['input_description'] . '</span>';
+				$field_attribute .= '<span class="descripton">' . $field_args['input_description'] . '</span>'; // cspell:disable-line.
 			}
 
 			return $field_attribute;
@@ -835,7 +835,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 
 
 		/**
-		 * Default validation function. Should be overriden in Field subclass.
+		 * Default validation function. Should be overridden in Field subclass.
 		 *
 		 * @since 3.0.0
 		 *

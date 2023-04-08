@@ -31,11 +31,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Function to crete the settiings field.
+		 * Function to crete the settings field.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the ouput.
+		 * @param array $field_args An array of field arguments used to process the output.
 		 * @return void
 		 */
 		public function create_section_field( $field_args = array() ) {
@@ -81,6 +81,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				if ( ( isset( $field_args['buttons'] ) ) && ( ! empty( $field_args['buttons'] ) ) ) {
 					$html .= '<div class="ld-setting-field-sub">';
 					foreach ( $field_args['buttons'] as $button_key => $button_label ) {
+						// cspell:disable-next-line.
 						$html .= '<input type="button" disabled="disabled" value="' . esc_attr( $button_label ) . '" class="button-secondary ld-settings-fiels-button" data-action="' . esc_attr( $button_key ) . '" />';
 					}
 

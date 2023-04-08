@@ -91,7 +91,7 @@ function learndash_register_essay_post_type() {
 		'map_meta_cap'        => true,
 	);
 	/** This filter is documented in includes/ld-assignment-uploads.php */
-	$args = apply_filters( 'learndash-cpt-options', $args, 'sfwd-essays' );
+	$args = apply_filters( 'learndash-cpt-options', $args, 'sfwd-essays' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Better to keep it this way for now.
 
 	register_post_type( 'sfwd-essays', $args );
 }
@@ -263,6 +263,7 @@ add_action( 'init', 'learndash_register_essay_post_status' );
  * @since 2.2.1
  */
 function learndash_essay_permissions() {
+
 	if ( is_singular( learndash_get_post_type_slug( 'essay' ) ) ) {
 		$can_view_file = false;
 
@@ -291,12 +292,32 @@ function learndash_essay_permissions() {
 		if ( true === $can_view_file ) {
 			$uploaded_file = get_post_meta( $post->ID, 'upload', true );
 			if ( ( ! empty( $uploaded_file ) ) && ( ! strstr( $post->post_content, $uploaded_file ) ) ) {
+				$quiz_essay_upload_link = '<p><a target="_blank" href="' . esc_url( $uploaded_file ) . '">' . esc_html__( 'View uploaded file', 'learndash' ) . '</a></p>';
+
 				/**
 				 * Filters quiz essay upload link HTML output.
 				 *
+				 * @deprecated 4.5.0
+				 *
 				 * @param string $upload_link Essay upload link HTML output.
 				 */
-				$post->post_content .= apply_filters( 'learndash-quiz-essay-upload-link', '<p><a target="_blank" href="' . esc_url( $uploaded_file ) . '">' . esc_html__( 'View uploaded file', 'learndash' ) . '</a></p>' );
+				$quiz_essay_upload_link = apply_filters_deprecated(
+					'learndash-quiz-essay-upload-link',
+					array( $quiz_essay_upload_link ),
+					'4.5.0',
+					'learndash_quiz_essay_upload_link'
+				);
+
+				/**
+				 * Filters quiz essay upload link HTML output.
+				 *
+				 * @since 4.5.0
+				 *
+				 * @param string $upload_link Essay upload link HTML output.
+				 */
+				$quiz_essay_upload_link = apply_filters( 'learndash_quiz_essay_upload_link', $quiz_essay_upload_link );
+
+				$post->post_content .= $quiz_essay_upload_link;
 			}
 			return;
 		} else {
@@ -312,6 +333,22 @@ function learndash_essay_permissions() {
 			 * @param string $redirect_url Redirect URL.
 			 */
 			$redirect_to_url = apply_filters( 'learndash_essay_permissions_redirect_url', $redirect_to_url );
+			if ( ! empty( $redirect_to_url ) ) {
+				learndash_safe_redirect( $redirect_to_url );
+			}
+		}
+	} elseif ( ( is_home() ) || ( is_front_page() ) ) {
+		/**
+		 * Prevents the user from forcing the query on the home page
+		 * with http://www.site.com?post_type=sfwd-essays to access an archive.
+		 *
+		 * It would be nice if this is controllable via WP register_post_type() settings.
+		 *
+		 *  See LEARNDASH-6389 for more details.
+		 */
+		if ( get_query_var( 'post_type', '' ) === learndash_get_post_type_slug( 'essay' ) ) {
+			// If this is an attempt we redirect them to the hme URL without the post_type query arg.
+			$redirect_to_url = get_bloginfo( 'url' );
 			if ( ! empty( $redirect_to_url ) ) {
 				learndash_safe_redirect( $redirect_to_url );
 			}
@@ -378,7 +415,7 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 				/**
 				 * Filters list of allowed html tags in essay content.
 				 *
-				 * Used in allowed_html paramter of wp_kses function.
+				 * Used in allowed_html parameter of `wp_kses` function.
 				 *
 				 * @param array $allowed_tags An array of allowed HTML tags in essay content.
 				 */
@@ -847,10 +884,10 @@ add_action( 'wp_ajax_nopriv_learndash_upload_essay', 'learndash_upload_essay' );
 function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 	if ( is_array( $uploadfiles ) ) {
 
-		// look only for uploded files.
+		// look only for uploaded files.
 		if ( 0 == $uploadfiles['error'] ) {
 
-			$filetmp = $uploadfiles['tmp_name'];
+			$file_tmp = $uploadfiles['tmp_name'];
 
 			// clean filename.
 			$filename = learndash_clean_filename( $uploadfiles['name'] );
@@ -879,12 +916,12 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 
 			$filetype['ext'] = strtolower( $filetype['ext'] );
 
-			$filetitle = pathinfo( $filename, PATHINFO_FILENAME );
-			$file_time = microtime( true ) * 100;
+			$file_title = pathinfo( $filename, PATHINFO_FILENAME );
+			$file_time  = microtime( true ) * 100;
 
-			$filename = sprintf( 'question_%d_%d_%s.%s', $question_id, $file_time, $filetitle, $filetype['ext'] );
+			$filename = sprintf( 'question_%d_%d_%s.%s', $question_id, $file_time, $file_title, $filetype['ext'] );
 			/** This filter is documented in includes/import/class-ld-import-quiz-statistics.php */
-			$filename        = apply_filters( 'learndash_essay_upload_filename', $filename, $question_id, $filetitle, $filetype['ext'] );
+			$filename        = apply_filters( 'learndash_essay_upload_filename', $filename, $question_id, $file_title, $filetype['ext'] );
 			$upload_dir      = wp_upload_dir();
 			$upload_dir_base = str_replace( '\\', '/', $upload_dir['basedir'] );
 			$upload_url_base = $upload_dir['baseurl'];
@@ -906,10 +943,10 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 				}
 			}
 
-			// Add an index.php file to prevent directory browesing.
+			// Add an index.php file to prevent directory browsing.
 			$_index = trailingslashit( $upload_dir_path ) . 'index.php';
 			if ( ! file_exists( $_index ) ) {
-				file_put_contents( $_index, '//LearnDash is THE Best LMS' );
+				file_put_contents( $_index, '//LearnDash is THE Best LMS' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents -- It's okay here.
 			}
 
 			$file_title = pathinfo( basename( $filename ), PATHINFO_FILENAME );
@@ -923,13 +960,10 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 
 			while ( file_exists( $upload_dir_path . '/' . $filename ) ) {
 				$i++;
-				// $filename = sprintf( 'question_%d_%s_%d.%s', $question_id, $filetitle, $i, $filetype['ext'] );
-				/** This filter is documented in includes/import/class-ld-import-quiz-statistics.php */
-				// $filename = apply_filters( 'learndash_essay_upload_filename_dup', $filename, $question_id, $filetitle, $i, $filetype['ext'] );
 				$filename = $file_title . '_' . $i . '.' . $file_ext;
 			}
 
-			$filedest    = $upload_dir_path . '/' . $filename;
+			$file_dest   = $upload_dir_path . '/' . $filename;
 			$destination = $upload_url_path . $filename;
 
 			/**
@@ -947,7 +981,7 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 			/**
 			 * Save temporary file to uploads dir
 			 */
-			if ( ! @move_uploaded_file( $filetmp, $filedest ) ) {
+			if ( ! @move_uploaded_file( $file_tmp, $file_dest ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Better not to touch it for now.
 				wp_send_json_error(
 					array(
 						'message' => esc_html__( 'The uploaded file could not be move to the destination directory.', 'learndash' ),

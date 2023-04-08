@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return string The `ld_lesson_list` shortcode output.
  */
-function ld_lesson_list( $attr = array(), $content = '', $shortcode_slug = 'ld_lesson_list' ) {
+function ld_lesson_list( $attr = array(), $content = '', $shortcode_slug = 'ld_lesson_list' ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 

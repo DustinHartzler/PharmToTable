@@ -72,6 +72,24 @@ function learndash_load_resources() {
 		$learndash_assets_loaded['styles']['learndash_template_style_css'] = __FUNCTION__;
 	}
 
+	$filepath = LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-payments' . learndash_min_asset() . '.js';
+	if ( ! empty( $filepath ) ) {
+		wp_register_script( 'learndash-payments', $filepath, array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
+		$learndash_assets_loaded['scripts']['learndash-payments'] = __FUNCTION__;
+		wp_localize_script(
+			'learndash-payments',
+			'learndash_payments',
+			array(
+				'ajaxurl'  => admin_url( 'admin-ajax.php' ),
+				'messages' => array(
+					'successful_transaction' => is_user_logged_in()
+						? esc_html__( 'Your transaction was successful.', 'learndash' )
+						: esc_html__( 'Your transaction was successful. Please log in to access your content.', 'learndash' ),
+				),
+			)
+		);
+	}
+
 	$filepath = LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-password-strength-meter.js';
 	if ( ! empty( $filepath ) ) {
 		wp_register_script( 'learndash-password-strength-meter', $filepath, array( 'jquery', 'password-strength-meter' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );

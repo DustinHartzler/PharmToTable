@@ -53,3 +53,5 @@ require plugin_dir_path( __FILE__ ) . 'blocks/ld-user-status/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-navigation/index.php';
 
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-exam/index.php';
+
+require plugin_dir_path( __FILE__ ) . 'blocks/ld-reset-password/index.php';

@@ -52,6 +52,8 @@ if ( ! empty( $lessons ) || ! empty( $quizzes ) ) :
 	 */
 	$table_class = apply_filters( 'learndash_course_table_class', 'ld-item-list-items ' . ( isset( $lesson_progression_enabled ) && $lesson_progression_enabled ? 'ld-lesson-progression' : '' ) );
 
+	$table_class .= ' ld-item-list-' . absint( $course_id );
+
 	/**
 	 * Display the expand button if lesson has topics
 	 *
@@ -60,7 +62,7 @@ if ( ! empty( $lessons ) || ! empty( $quizzes ) ) :
 	 */
 	?>
 
-	<div class="<?php echo esc_attr( $table_class ); ?>" id="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>" data-ld-expand-list="true">
+	<div class="<?php echo esc_attr( $table_class ); ?>" id="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>" data-ld-expand-id="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>" data-ld-expand-list="true">
 		<?php
 		/**
 		 * Fires before the course listing.

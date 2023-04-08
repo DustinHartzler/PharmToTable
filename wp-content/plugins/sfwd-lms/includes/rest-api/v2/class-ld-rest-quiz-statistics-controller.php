@@ -18,8 +18,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 	 * @since 3.3.0
 	 * @uses WP_REST_Controller
 	 */
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
-	class LD_REST_Quiz_Statistics_Controller_V2 extends WP_REST_Controller implements Iterator {
+	class LD_REST_Quiz_Statistics_Controller_V2 extends WP_REST_Controller implements Iterator /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 		/**
 		 * API version.
 		 *
@@ -291,7 +290,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 
 			$response = rest_ensure_response( $stats_list );
 
-			// Add the paginiation links to response header.
+			// Add the pagination links to response header.
 			$total_items = $this->stat_refs_count;
 			$max_pages   = ceil( $total_items / (int) $this->per_page );
 
@@ -396,7 +395,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 
 					$question_response = new stdClass();
 
-					$question_response->id            = $stat_ref_id . '_' . $question->getId(); // Need to have a unique ID
+					$question_response->id            = $stat_ref_id . '_' . $question->getId(); // Need to have a unique ID.
 					$question_response->statistic     = (int) $stat_ref_id;
 					$question_response->quiz          = $this->getQuizId();
 					$question_response->question      = learndash_get_question_post_by_pro_id( $question->getId() ) ? learndash_get_question_post_by_pro_id( $question->getId() ) : null;
@@ -413,7 +412,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 					 *
 					 * @since 3.3.0
 					 *
-					 * @param stdClass                          $question_response Response object for question.
+					 * @param array                             $question_response Response array for question.
 					 * @param WpProQuiz_Model_Question          $question          Question object.
 					 * @param string                            $student_answers   Submitted answer data by student.
 					 * @param WpProQuiz_Model_StatisticRefModel $stat_ref_model    Statistics ref model.
@@ -431,7 +430,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 
 				$response = rest_ensure_response( $stat_questions );
 
-				// Add the paginiation links to response header.
+				// Add the pagination links to response header.
 				$total_items = $questions_count;
 				$max_pages   = ceil( $total_items / (int) $this->per_page );
 
@@ -465,13 +464,13 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 				return $response;
 
 			} catch ( Throwable $throwable ) { // phpcs:ignore PHPCompatibility.Interfaces.NewInterfaces.throwableFound
-				// Executed only in PHP 7+, will not match in PHP 5.x
+				// Executed only in PHP 7+, will not match in PHP 5.x.
 				$code = $throwable->getCode() > 0 ? $throwable->getCode() : 400;
 
 				return new WP_Error( $code, $throwable->getMessage() );
 			} catch ( Exception $exception ) {
-				// Executed only in PHP 5.x. Will not be reached in PHP 7+
-				$code = $exception->getCode() > 0 ? $excpetion->getCode() : 400;
+				// Executed only in PHP 5.x. Will not be reached in PHP 7+.
+				$code = $exception->getCode() > 0 ? $exception->getCode() : 400;
 
 				return new WP_Error( $code, $exception->getMessage() );
 			}
@@ -605,7 +604,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 				if ( ( $user ) && ( is_a( $user, 'WP_User' ) ) ) {
 					$response['_links']['user'] = array(
 						array(
-							// I hate that WP doesn't have some defined vars to know the namspace and version.
+							// I hate that WP doesn't have some defined vars to know the namespace and version.
 							'href'       => rest_url( 'wp/v2/users/' . $response['user'] ),
 							'embeddable' => true,
 						),
@@ -683,7 +682,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 
 				$response['_links']['question'] = array(
 					array(
-						// I hate that WP doesn't have some defined vars to know the namspace and version.
+						// I hate that WP doesn't have some defined vars to know the namespace and version.
 						'href'       => rest_url( $question_rest_base ),
 						'embeddable' => true,
 					),
@@ -695,7 +694,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 				if ( ( $user ) && ( is_a( $user, 'WP_User' ) ) ) {
 					$response['_links']['user'] = array(
 						array(
-							// I hate that WP doesn't have some defined vars to know the namspace and version.
+							// I hate that WP doesn't have some defined vars to know the namespace and version.
 							'href'       => rest_url( 'wp/v2/users/' . $response['user'] ),
 							'embeddable' => true,
 						),
@@ -1152,7 +1151,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 		}
 
 		/**
-		 * Get correct/incorrect count for a partiular statistics_ref_id.
+		 * Get correct/incorrect count for a particular statistics_ref_id.
 		 *
 		 * @since 3.3.0
 		 *
@@ -1185,7 +1184,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 			$stat_response->quiz = $this->getQuizId();
 			$stat_response->user = $this->current()->getUserId();
 			$stat_response->date = $this->prepare_date_response( gmdate( 'Y-m-d H:i:s', $this->current()->getCreateTime() ) );
-			//$stat_response->date              = mysql_to_rfc3339( wp_date( 'Y-m-d H:i:s', $this->current()->getCreateTime() ) ); //phpcs:ignore PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
+
 			$stat_response->answers_correct   = $this->get_count( $stats, 'getCorrectCount' );
 			$stat_response->answers_incorrect = $this->get_count( $stats, 'getIncorrectCount' );
 			$stat_response->points_scored     = $this->get_count( $stats, 'getPoints' );
@@ -1210,8 +1209,8 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 			$user_quizzes       = (array) get_user_meta( $this->current()->getUserId(), '_sfwd-quizzes', true );
 			$user_quizzes_stats = array();
 			/**
-			 * We want to rebuild/reindex the quizzes listing to be by
-			 * the statatistics ref ID.
+			 * We want to rebuild/re-index the quizzes listing to be by
+			 * the statistics ref ID.
 			 */
 			if ( ! empty( $user_quizzes ) ) {
 				foreach ( $user_quizzes as $user_quiz ) {
@@ -1290,7 +1289,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 					return $object->newInstanceArgs( $args );
 
 				default:
-					// translators: placeholder: question
+					// translators: placeholder: question.
 					throw new Exception( sprintf( esc_html_x( 'Invalid %s type supplied', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) ), 404 );
 			}
 		}
@@ -1686,10 +1685,10 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 			}
 
 			if ( isset( $date ) ) {
-				return mysql_to_rfc3339( $date );
+				return mysql_to_rfc3339( $date ); // phpcs:ignore PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 			}
 
-			return mysql_to_rfc3339( $date_gmt );
+			return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 		}
 
 		// End of functions.

@@ -56,12 +56,12 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values = array();
 			}
 
-			// Fields orders
+			// Fields orders.
 			if ( ( ! isset( $this->setting_option_values['fields_order'] ) ) || ( empty( $this->setting_option_values['fields_order'] ) ) ) {
 				$this->setting_option_values['fields_order'] = array( 'username', 'email', 'first_name', 'last_name', 'password' );
 			}
 
-			// Username
+			// Username.
 			if ( ! isset( $this->setting_option_values['username_enabled'] ) ) {
 				if ( true === $new_settings ) {
 					$this->setting_option_values['username_enabled'] = 'yes';
@@ -81,7 +81,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['username_label'] = $this->setting_option_values['username_placeholder'];
 			}
 
-			// Email
+			// Email.
 			if ( ! isset( $this->setting_option_values['email_enabled'] ) ) {
 				if ( true === $new_settings ) {
 					$this->setting_option_values['email_enabled'] = 'yes';
@@ -101,7 +101,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['email_label'] = $this->setting_option_values['email_placeholder'];
 			}
 
-			// First Name
+			// First Name.
 			if ( ! isset( $this->setting_option_values['first_name_enabled'] ) ) {
 				if ( true === $new_settings ) {
 					$this->setting_option_values['first_name_enabled'] = 'yes';
@@ -121,7 +121,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['first_name_label'] = $this->setting_option_values['first_name_placeholder'];
 			}
 
-			// Last Name
+			// Last Name.
 			if ( ! isset( $this->setting_option_values['last_name_enabled'] ) ) {
 				if ( true === $new_settings ) {
 					$this->setting_option_values['last_name_enabled'] = 'yes';
@@ -141,7 +141,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['last_name_label'] = $this->setting_option_values['last_name_placeholder'];
 			}
 
-			// Passwords Set
+			// Passwords Set.
 			if ( ! isset( $this->setting_option_values['password_enabled'] ) ) {
 				if ( true === $new_settings ) {
 					$this->setting_option_values['password_enabled'] = 'yes';
@@ -191,13 +191,13 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					),
 				);
 				$this->setting_option_fields[ $field_prefix . '_label' ]    = array(
-					'name'  => $field_prefix . '_label',
-					'type'  => 'text',
-					'label' => '',
-					'value' => $this->setting_option_values[ $field_prefix . '_label' ],
-					'class' => 'regular-text',
+					'name'        => $field_prefix . '_label',
+					'type'        => 'text',
+					'label'       => '',
+					'value'       => $this->setting_option_values[ $field_prefix . '_label' ],
+					'class'       => 'regular-text',
 					'placeholder' => $this->setting_option_values[ $field_prefix . '_placeholder' ],
-					'attrs' => array(
+					'attrs'       => array(
 						'required' => 'required',
 					),
 				);
@@ -269,7 +269,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							$current_values[ $field_prefix . '_label' ] = $this->setting_option_values[ $field_prefix . '_placeholder' ];
 						}
 					}
-				}				
+				}
 			}
 
 			return $current_values;

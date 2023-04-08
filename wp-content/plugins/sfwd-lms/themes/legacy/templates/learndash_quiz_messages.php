@@ -8,7 +8,7 @@
  * $message : This is the message to be displayed. THIS MUST BE RETURNED
  * $placeholders : Array of placeholder values used in message. If used by $message. $placeholders[0] is first placeholder value, $placeholders[1] second etc.
  *
- * @since 2.4
+ * @since 2.4.0
  *
  * @package LearnDash\Templates\Legacy\Quiz
  */

@@ -21,13 +21,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 	class Learndash_Admin_Course_Edit extends Learndash_Admin_Post_Edit {
 
 		/**
-		 * Object level variable for current Course ID being edited.
-		 *
-		 * @var integer $course_id
-		 */
-		private $course_id = 0;
-
-		/**
 		 * Object level flag to contain setting is Course Builder
 		 * is to be used.
 		 *
@@ -36,7 +29,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		private $use_course_builder = false;
 
 		/**
-		 * Instance of Course Builder Metabox object userd
+		 * Instance of Course Builder Metabox object used
 		 * throughout this class.
 		 *
 		 * @var object $course_builder Instance of Learndash_Admin_Metabox_Course_Builder
@@ -97,7 +90,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					 * @param boolean $show_course_builder Whether to show course builder or not.
 					 */
 					if ( apply_filters( 'learndash_show_course_builder', $this->use_course_builder ) === true ) {
-						$this->course_builder = Learndash_Admin_Metabox_Course_Builder::add_instance( 'Learndash_Admin_Metabox_Course_Builder' );
+						$this->course_builder = Learndash_Admin_Metabox_Course_Builder::add_instance();
 						$this->course_builder->builder_on_load();
 					}
 				}

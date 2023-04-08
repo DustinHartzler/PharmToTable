@@ -17,7 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Groups_Users_Controller_V1' ) ) && ( class_exist
 	 *
 	 * @since 2.5.8
 	 */
-	class LD_REST_Groups_Users_Controller_V1 extends LD_REST_Users_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Groups_Users_Controller_V1 extends LD_REST_Users_Controller_V1 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Supported Collection Parameters.

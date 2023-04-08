@@ -2,15 +2,12 @@
 /**
  * LearnDash Settings Metabox Abstract Class.
  *
- * @package LearnDash
- * @subpackage Settings
+ * @package LearnDash\Settings
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-// require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-section-fields.php';
 
 if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 	/**
@@ -154,7 +151,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		/**
 		 * Current Post being edited.
 		 *
-		 * @var object $_post WP_Post object.
+		 * @var WP_Post|null $_post WP_Post object.
 		 */
 		protected $_post = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
@@ -222,6 +219,10 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 				return false;
 			}
 
+			if ( ( ! is_a( $this->_post, 'WP_Post' ) ) || ( absint( $this->_post->ID ) !== absint( $post->ID ) ) ) {
+				$force = true;
+			}
+
 			$this->_post = $post;
 
 			if ( true === $force ) {
@@ -245,7 +246,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 
 			if ( ( is_admin() ) && ( function_exists( 'get_current_screen' ) ) ) {
 				$screen = get_current_screen();
-				if ( $screen->id !== $this->settings_screen_id ) {
+				if ( ! $screen || $screen->id !== $this->settings_screen_id ) {
 					return false;
 				}
 			}
@@ -515,7 +516,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 * Verify Metabox nonce field POST value.
 		 */
 		public function verify_metabox_nonce_field() {
-			if ( ( isset( $_POST[ $this->settings_metabox_key ]['nonce'] ) ) && ( ! empty( $_POST[ $this->settings_metabox_key ]['nonce'] ) ) && ( wp_verify_nonce( esc_attr( $_POST[ $this->settings_metabox_key ]['nonce'] ), $this->settings_metabox_key ) ) ) {
+			if ( ( isset( $_POST[ $this->settings_metabox_key ]['nonce'] ) ) && ( ! empty( $_POST[ $this->settings_metabox_key ]['nonce'] ) ) && ( wp_verify_nonce( esc_attr( $_POST[ $this->settings_metabox_key ]['nonce'] ), $this->settings_metabox_key ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				return true;
 			}
 		}
@@ -540,6 +541,16 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		}
 
 		/**
+		 * Save fields to post
+		 *
+		 * @param object $pro_quiz_edit   WpProQuiz_Controller_Quiz instance (not used).
+		 * @param array  $settings_values Settings values.
+		 *
+		 * @return void;
+		 */
+		public function save_fields_to_post( $pro_quiz_edit, $settings_values = array() ) {}
+
+		/**
 		 * Get Settings Metabox post updates.
 		 *
 		 * @since 3.4.0
@@ -557,8 +568,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 				// nonce verify performed in the parent::verify_metabox_nonce_field() function.
 				// phpcs:ignore WordPress.Security.NonceVerification.Missing
 				if ( ( true === $this->verify_metabox_nonce_field() ) && ( isset( $_POST[ $this->settings_metabox_key ] ) ) ) {
-					// phpcs:ignore WordPress.Security.NonceVerification.Missing
-					$post_values = $_POST[ $this->settings_metabox_key ];
+					$post_values = $_POST[ $this->settings_metabox_key ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					$this->init( $saved_post );
 					$settings_field_updates = $this->validate_metabox_settings_post_updates( $post_values );
@@ -583,9 +593,10 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			$settings_field_updates = array();
 
 			$settings_fields_map = $this->get_save_settings_fields_map_form_post_values( $post_values );
+
 			if ( ! empty( $settings_fields_map ) ) {
 
-				// This valiadate_args array will be passed to the validation function for context.
+				// This validate_args array will be passed to the validation function for context.
 				$validate_args = array(
 					'settings_page_id'   => $this->settings_screen_id,
 					'setting_option_key' => $this->settings_metabox_key,
@@ -907,7 +918,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 									$data['quiz']->setId( $pro_quiz_edit[ $pro_quiz_id ]['quiz']->getId() );
 									$data['quiz']->setPostId( $post->ID );
 									$data['quiz']->setName( $pro_quiz_edit[ $pro_quiz_id ]['quiz']->getName() );
-									$data['quiz']->setText( 'AAZZAAZZ' );
+									$data['quiz']->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 								} else {
 									$data['quiz'] = $quiz_mapper->fetch( 0 );
 								}
@@ -989,8 +1000,11 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		/**
 		 * Generate the JSON data attribute for select2 AJAX.
 		 *
-		 * @since 3.2.3.
-		 * @param array $field_settings Field Settings array.
+		 * @since 3.2.3
+		 *
+		 * @param array $field_settings Field Settings encoded array.
+		 *
+		 * @return string HTML output.
 		 */
 		protected function build_settings_select2_lib_ajax_fetch_json( $field_settings = array() ) {
 			$settings_element_json   = wp_json_encode( $field_settings['settings_element'], JSON_FORCE_OBJECT );

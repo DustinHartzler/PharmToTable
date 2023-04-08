@@ -58,8 +58,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param string $settings_screen_id Screen ID
-		 * @param string $settings_page_id   Page ID
+		 * @param string $settings_screen_id Screen ID.
+		 * @param string $settings_page_id   Page ID.
 		 */
 		public function on_settings_page_load( $settings_screen_id = '', $settings_page_id = '' ) {
 			global $sfwd_lms;
@@ -67,9 +67,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			if ( $settings_page_id === $this->settings_page_id ) {
 				if ( learndash_is_admin_user() ) {
 
-					if ( ( isset( $_POST['ld_data_remove_nonce'] ) ) && ( ! empty( $_POST['ld_data_remove_nonce'] ) ) && ( wp_verify_nonce( $_POST['ld_data_remove_nonce'], 'ld_data_remove_' . get_current_user_id() ) ) ) {
+					if ( ( isset( $_POST['ld_data_remove_nonce'] ) ) && ( ! empty( $_POST['ld_data_remove_nonce'] ) ) && ( wp_verify_nonce( $_POST['ld_data_remove_nonce'], 'ld_data_remove_' . get_current_user_id() ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-						if ( ( isset( $_POST['ld_data_remove_verify'] ) ) && ( ! empty( $_POST['ld_data_remove_verify'] ) ) && ( wp_verify_nonce( $_POST['ld_data_remove_verify'], 'ld_data_remove_' . get_current_user_id() ) ) ) {
+						if ( ( isset( $_POST['ld_data_remove_verify'] ) ) && ( ! empty( $_POST['ld_data_remove_verify'] ) ) && ( wp_verify_nonce( $_POST['ld_data_remove_verify'], 'ld_data_remove_' . get_current_user_id() ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 							learndash_delete_all_data();
 
 							$active_plugins = (array) get_option( 'active_plugins', array() );
@@ -78,7 +78,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 								update_option( 'active_plugins', $active_plugins );
 
 								// Hook into our own deactivate function.
-								$sfwd_lms->deactivate();
+								learndash_deactivated();
 
 								// finally redirect the admin to the plugins listing.
 								learndash_safe_redirect( admin_url( 'plugins.php' ) );
@@ -94,8 +94,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param string $settings_section_key Section Key
-		 * @param string $settings_screen_id   Screen ID
+		 * @param string $settings_section_key Section Key.
+		 * @param string $settings_screen_id   Screen ID.
 		 */
 		public function show_support_section( $settings_section_key = '', $settings_screen_id = '' ) {
 			if ( $settings_section_key === $this->settings_section_key ) {

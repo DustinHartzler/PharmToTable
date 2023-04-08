@@ -114,7 +114,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				'post_type'    => learndash_get_post_type_slug( 'course' ),
 				'fields'       => 'ids',
 				'nopaging'     => true,
-				'meta_key'     => '_ld_certificate',
+				'meta_key'     => '_ld_certificate', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 				'meta_compare' => 'EXISTS',
 			);
 

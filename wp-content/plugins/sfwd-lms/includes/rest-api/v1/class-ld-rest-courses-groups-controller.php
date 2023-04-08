@@ -17,7 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 	 *
 	 * @since 2.5.8
 	 */
-	class LD_REST_Courses_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Courses_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Supported Collection Parameters.
@@ -157,7 +157,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 					),
 					'group_ids' => array(
 						'description' => sprintf(
-							// translators: placholder: group.
+							// translators: placeholder: group.
 							esc_html_x(
 								'The %s IDs.',
 								'placeholder: group',

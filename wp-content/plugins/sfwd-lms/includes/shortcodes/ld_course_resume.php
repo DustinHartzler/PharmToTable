@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return string The `ld_course_resume` shortcode output.
  */
-function ld_course_resume_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_course_resume' ) {
+function ld_course_resume_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_course_resume' ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 	global $learndash_shortcode_used;
 
 	if ( ! is_array( $atts ) ) {
@@ -99,7 +99,8 @@ function ld_course_resume_shortcode( $atts = array(), $content = '', $shortcode_
 			if ( 'completed' !== $course_status ) {
 				$user_course_last_step_id = learndash_user_progress_get_first_incomplete_step( $atts['user_id'], $atts['course_id'] );
 				if ( ! empty( $user_course_last_step_id ) ) {
-					$course_permalink = learndash_get_step_permalink( $user_course_last_step_id, $atts['course_id'] );
+					$user_course_last_step_id = learndash_user_progress_get_parent_incomplete_step( $atts['user_id'], $atts['course_id'], $user_course_last_step_id );
+					$course_permalink         = learndash_get_step_permalink( $user_course_last_step_id, $atts['course_id'] );
 					if ( ! empty( $course_permalink ) ) {
 						$learndash_shortcode_used = true;
 

@@ -31,7 +31,7 @@ $learndash_input_disabled = '';
 $learndash_input_checked  = '';
 
 if ( true === $learndash_exam_model->is_graded ) {
-	if ( ( isset( $learndash_question_answer['student_answer_value'] ) ) && ( $learndash_question_answer['student_answer_value'] ) ) {
+	if ( ( isset( $learndash_question_answer['student_answer_value'] ) ) && ( '' !== $learndash_question_answer['student_answer_value'] ) ) {
 		$learndash_input_checked = ' checked="checked" ';
 	}
 }

@@ -59,7 +59,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 		 *
 		 * @var array
 		 */
-		protected static $_instances = array();
+		protected static $_instances = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * LearnDash course steps object.
@@ -95,10 +95,12 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 		 * Add instance to static tracking array
 		 *
 		 * @since 2.6.0
+		 *
+		 * @return object|null instance object or null.
 		 */
 		final public static function add_instance() {
 			$called_class = get_called_class();
-			if ( is_subclass_of( $called_class, __CLASS__ ) ) {
+			if ( is_subclass_of( $called_class, __CLASS__ ) ) { // @phpstan-ignore-line
 				if ( ! isset( self::$_instances[ $called_class ] ) ) {
 					self::$_instances[ $called_class ] = new $called_class();
 					if ( is_a( self::$_instances[ $called_class ], $called_class ) ) {
@@ -108,6 +110,8 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 					return self::$_instances[ $called_class ];
 				}
 			}
+
+			return null;
 		}
 
 		/**
@@ -117,7 +121,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 		 *
 		 * @param string $called_class Class for instance.
 		 *
-		 * @return object instance of class.
+		 * @return object|null instance of class or null.
 		 */
 		final public static function get_instance( $called_class = '' ) {
 			if ( ! empty( $called_class ) ) {
@@ -125,7 +129,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 					return self::$_instances[ $called_class ];
 				} else {
 					self::add_instance();
-					if ( ( isset( self::$_instances[ $called_class ] ) ) && ( is_a( self::$_instances[ $called_class ], $called_class ) ) ) {
+					if ( ( array_key_exists( $called_class, self::$_instances ) ) && ( is_a( self::$_instances[ $called_class ], $called_class ) ) ) {
 						return self::$_instances[ $called_class ];
 					}
 				}
@@ -360,7 +364,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 						$selector_post_type_steps = htmlspecialchars( wp_json_encode( $selector_post_type_steps ) );
 						?>
 						<div class="learndash-selector-container learndash-selector-container-<?php echo esc_attr( $selector_post_type ); ?>" data-ld-type="<?php echo esc_attr( $selector_post_type ); ?>" data-ld-selected="<?php echo esc_attr( $selector_post_type_steps ); ?>">
-							<h3 class="learndash-selector-header"><span class="learndash-selector-title"><?php echo learndash_get_custom_label( $this->get_label_for_post_type( $selector_post_type, false ) ); ?></span><span class="ld-course-builder-action ld-course-builder-action-show-hide ld-course-builder-action-show dashicons" title="<?php esc_html_e( 'Expand/Collape Section', 'learndash' ); ?>"></span><span class="ld-course-builder-action ld-course-builder-action-add dashicons" title="<?php esc_html_e( 'New', 'learndash' ); ?>"><img src="<?php echo esc_url( admin_url( 'images/wpspin_light-2x.gif' ) ); ?>" alt="" /></span></h3> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output ?>
+							<h3 class="learndash-selector-header"><span class="learndash-selector-title"><?php echo learndash_get_custom_label( $this->get_label_for_post_type( $selector_post_type, false ) ); ?></span><span class="ld-course-builder-action ld-course-builder-action-show-hide ld-course-builder-action-show dashicons" title="<?php esc_html_e( 'Expand/Collapse Section', 'learndash' ); ?>"></span><span class="ld-course-builder-action ld-course-builder-action-add dashicons" title="<?php esc_html_e( 'New', 'learndash' ); ?>"><img src="<?php echo esc_url( admin_url( 'images/wpspin_light-2x.gif' ) ); ?>" alt="" /></span></h3> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output ?>
 							<div class="learndash-selector-post-listing">
 								<?php
 									$row_single = $this->build_selector_row_single( null, $selector_post_type );
@@ -376,7 +380,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 									</p>
 								</div>
 								<div class="learndash-selector-search"><input type="text" placeholder="<?php esc_html_e( 'Search...', 'learndash' ); ?>" /></div>
-								<ul id="learndash-selector-post-listing-<?php echo esc_attr( $selector_post_type ); ?>" class="learndash-selector-post-listing dropfalse">
+								<ul id="learndash-selector-post-listing-<?php echo esc_attr( $selector_post_type ); ?>" class="learndash-selector-post-listing dropfalse"> <?php // cspell:disable-line. ?>
 									<?php
 									if ( $post_type_query->have_posts() ) {
 										echo $this->build_selector_rows( $post_type_query ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
@@ -497,19 +501,17 @@ add_action(
 			wp_die();
 		}
 
-		// @codingStandardsIgnoreStart
-		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) {
+		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			echo wp_json_encode( array() );
 			wp_die();
 		}
-		$builder_data = $_POST['builder_data'];
+		$builder_data = $_POST['builder_data']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) {
+		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			echo wp_json_encode( array() );
 			wp_die();
 		}
-		$builder_query_args = $_POST['builder_query_args'];
-		// @codingStandardsIgnoreEnd
+		$builder_query_args = $_POST['builder_query_args']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$builder_data = learndash_verify_builder_data( $builder_data );
 
@@ -531,19 +533,17 @@ add_action(
 			wp_die();
 		}
 
-		// @codingStandardsIgnoreStart
-		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) {
+		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			echo wp_json_encode( array() );
 			wp_die();
 		}
-		$builder_data = $_POST['builder_data'];
+		$builder_data = $_POST['builder_data']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) {
+		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			echo wp_json_encode( array() );
 			wp_die();
 		}
-		$builder_query_args = $_POST['builder_query_args'];
-		// @codingStandardsIgnoreEnd
+		$builder_query_args = $_POST['builder_query_args']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$builder_data = learndash_verify_builder_data( $builder_data );
 
@@ -566,19 +566,17 @@ add_action(
 			wp_die();
 		}
 
-		// @codingStandardsIgnoreStart
-		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) {
+		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			echo wp_json_encode( array() );
 			wp_die();
 		}
-		$builder_data = $_POST['builder_data'];
+		$builder_data = $_POST['builder_data']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) {
+		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			echo wp_json_encode( array() );
 			wp_die();
 		}
-		$builder_query_args = $_POST['builder_query_args'];
-		// @codingStandardsIgnoreEnd
+		$builder_query_args = $_POST['builder_query_args']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$builder_data = learndash_verify_builder_data( $builder_data );
 
@@ -601,19 +599,17 @@ add_action(
 			wp_die();
 		}
 
-		// @codingStandardsIgnoreStart
-		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) {
+		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			echo wp_json_encode( array() );
 			wp_die();
 		}
-		$builder_data = $_POST['builder_data'];
+		$builder_data = $_POST['builder_data'];// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) {
+		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			echo wp_json_encode( array() );
 			wp_die();
 		}
-		$builder_query_args = $_POST['builder_query_args'];
-		// @codingStandardsIgnoreEnd
+		$builder_query_args = $_POST['builder_query_args'];// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$builder_data = learndash_verify_builder_data( $builder_data );
 
@@ -635,19 +631,17 @@ add_action(
 			wp_die();
 		}
 
-		// @codingStandardsIgnoreStart
-		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) {
-		echo wp_json_encode( array() );
-		wp_die();
+		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			echo wp_json_encode( array() );
+			wp_die();
 		}
-		$builder_data = $_POST['builder_data'];
+		$builder_data = $_POST['builder_data']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) {
-		echo wp_json_encode( array() );
-		wp_die();
+		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+			echo wp_json_encode( array() );
+			wp_die();
 		}
-		$builder_query_args = $_POST['builder_query_args'];
-		// @codingStandardsIgnoreEnd
+		$builder_query_args = $_POST['builder_query_args']; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$builder_data = learndash_verify_builder_data( $builder_data );
 
@@ -698,8 +692,6 @@ function learndash_verify_builder_data( $builder_data = array() ) {
 		wp_die();
 	}
 
-	// See nonce field build out in show_builder_box() of this file.
-	// wp_nonce_field( $this->builder_prefix . '_' . $this->builder_post_type . '_' . $this->builder_post_id . '_nonce', $this->builder_prefix . '_nonce' );
 	$nonce_field_value = 'learndash_builder_' . $builder_data['builder_post_type'] . '_' . $builder_data['builder_post_id'] . '_nonce';
 	if ( ( ! isset( $builder_data['builder_nonce'] ) ) || ( ! wp_verify_nonce( $builder_data['builder_nonce'], $nonce_field_value ) ) ) {
 		echo wp_json_encode( array() );

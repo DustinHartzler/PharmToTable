@@ -16,7 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	class LearnDash_Shortcodes_Section_visitor extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_visitor extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -44,7 +44,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
-				'message'   => array(
+				'message'      => array(
 					'id'        => $this->shortcodes_section_key . '_message',
 					'name'      => 'message',
 					'type'      => 'textarea',
@@ -54,22 +54,21 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'required'  => 'required',
 				),
 				'display_type' => array(
-					'id'       => $this->shortcodes_section_key . '_display_type',
-					'name'     => 'display_type',
-					'type'     => 'select',
-					'label'    => esc_html__( 'Display Type', 'learndash' ),
-					'value'    => '',
-					'options'  => array(
+					'id'      => $this->shortcodes_section_key . '_display_type',
+					'name'    => 'display_type',
+					'type'    => 'select',
+					'label'   => esc_html__( 'Display Type', 'learndash' ),
+					'value'   => '',
+					'options' => array(
 						'' => esc_html__( 'Select a Display Type', 'learndash' ),
 						learndash_get_post_type_slug( 'course' ) => learndash_get_custom_label( 'course' ),
 						learndash_get_post_type_slug( 'group' ) => learndash_get_custom_label( 'group' ),
 					),
-					'attrs'    => array(
+					'attrs'   => array(
 						'data-shortcode-exclude' => '1',
 					),
-					'required' => 'required',
 				),
-				'course_id' => array(
+				'course_id'    => array(
 					'id'        => $this->shortcodes_section_key . '_course_id',
 					'name'      => 'course_id',
 					'type'      => 'number',
@@ -88,7 +87,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'class'     => 'small-text',
 					'required'  => 'required',
 				),
-				'group_id' => array(
+				'group_id'     => array(
 					'id'        => $this->shortcodes_section_key . '_group_id',
 					'name'      => 'group_id',
 					'type'      => 'number',
@@ -107,12 +106,21 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'class'     => 'small-text',
 					'required'  => 'required',
 				),
-				'autop'     => array(
+				'user_id'      => array(
+					'id'        => $this->shortcodes_section_key . '_user_id',
+					'name'      => 'user_id',
+					'type'      => 'number',
+					'label'     => esc_html__( 'User ID', 'learndash' ),
+					'help_text' => esc_html__( 'Enter specific User ID. Leave blank for current User.', 'learndash' ),
+					'value'     => '',
+					'class'     => 'small-text',
+				),
+				'autop'        => array(
 					'id'        => $this->shortcodes_section_key . 'autop',
 					'name'      => 'autop',
 					'type'      => 'select',
 					'label'     => esc_html__( 'Auto Paragraph', 'learndash' ),
-					'help_text' => esc_html__( 'Format shortcode content into proper pararaphs.', 'learndash' ),
+					'help_text' => esc_html__( 'Format shortcode content into proper paragraphs.', 'learndash' ),
 					'value'     => 'true',
 					'options'   => array(
 						''      => esc_html__( 'Yes (default)', 'learndash' ),
@@ -120,14 +128,6 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					),
 				),
 			);
-
-			if ( ( isset( $this->fields_args['post_type'] ) ) && ( in_array( $this->fields_args['post_type'], learndash_get_post_types( 'course' ), true ) ) ) {
-				unset( $this->shortcodes_option_fields['display_type']['required'] );
-				unset( $this->shortcodes_option_fields['course_id']['required'] );
-			} elseif ( ( isset( $this->fields_args['post_type'] ) ) && ( learndash_get_post_type_slug( 'group' ) === $this->fields_args['post_type'] ) ) {
-				unset( $this->shortcodes_option_fields['display_type']['required'] );
-				unset( $this->shortcodes_option_fields['group_id']['required'] );
-			}
 
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
 			$this->shortcodes_option_fields = apply_filters( 'learndash_settings_fields', $this->shortcodes_option_fields, $this->shortcodes_section_key );
@@ -147,42 +147,31 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					if ( jQuery( 'form#learndash_shortcodes_form_visitor select#visitor_display_type' ).length) {
 						jQuery( 'form#learndash_shortcodes_form_visitor select#visitor_display_type').on( 'change', function() {
 							var selected = jQuery(this).val();
+							console.log( 'selected['+selected+']' );
 							if ( selected == 'sfwd-courses' ) {
 								jQuery( 'form#learndash_shortcodes_form_visitor #visitor_group_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_group_id').val('');
-								if ( jQuery( 'form#learndash_shortcodes_form_visitor #visitor_group_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_group_id').attr('required', false);
-								}
+								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_group_id').attr('required', false);
 
 								jQuery( 'form#learndash_shortcodes_form_visitor #visitor_course_id_field').slideDown();
-								if ( jQuery( 'form#learndash_shortcodes_form_visitor #visitor_course_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_course_id').attr('required', 'required');
-								}
+								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_course_id').attr('required', 'required');
 
 							} else if ( selected == 'groups' ) {
 								jQuery( 'form#learndash_shortcodes_form_visitor #visitor_course_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_course_id').val('');
-								if ( jQuery( 'form#learndash_shortcodes_form_visitor #visitor_course_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_course_id').attr('required', false);
-								}
+								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_course_id').attr('required', false);
 
 								jQuery( 'form#learndash_shortcodes_form_visitor #visitor_group_id_field').slideDown();
-								if ( jQuery( 'form#learndash_shortcodes_form_visitor #visitor_group_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_group_id').attr('required', 'required');
-								}
+								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_group_id').attr('required', 'required');
 
 							} else {
 								jQuery( 'form#learndash_shortcodes_form_visitor #visitor_course_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_course_id').val('');
-								if ( jQuery( 'form#learndash_shortcodes_form_visitor #visitor_course_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_course_id').attr('required', false);
-								}
+								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_course_id').attr('required', false);
 
 								jQuery( 'form#learndash_shortcodes_form_visitor #visitor_group_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_group_id').val('');
-								if ( jQuery( 'form#learndash_shortcodes_form_visitor #visitor_group_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_group_id').attr('required', false);
-								}
+								jQuery( 'form#learndash_shortcodes_form_visitor input#visitor_group_id').attr('required', false);
 							}
 						});
 						jQuery( 'form#learndash_shortcodes_form_visitor select#visitor_display_type').change();

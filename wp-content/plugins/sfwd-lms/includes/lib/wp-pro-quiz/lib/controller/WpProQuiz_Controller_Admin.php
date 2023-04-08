@@ -224,6 +224,10 @@ class WpProQuiz_Controller_Admin {
 				$quiz_started = absint( $_POST['quiz_started'] / 1000 );
 			}
 
+			//error_log( __FUNCTION__ . ': quiz_post_id[' . $quiz_post_id . '] quiz_started[' . $quiz_started . '] results<pre>' . print_r( $results, true ) . '</pre>' );
+
+			//error_log( __FUNCTION__ . ': _COOKIE<pre>' . print_r( $_COOKIE, true ) . '</pre>' );
+
 			if ( ( ! empty( $quiz_post_id ) ) && ( ! empty( $quiz_started ) ) ) {
 				$success = LDLMS_User_Quiz_Resume::update_user_quiz_resume_metadata( $user_id, $quiz_post_id, $course_id, $quiz_started, $results );
 			} else {
@@ -237,7 +241,7 @@ class WpProQuiz_Controller_Admin {
 		} else {
 			wp_send_json_error(
 				array(
-					'message' => printf(
+					'message' => sprintf(
 						// translators: placeholder: Quiz.
 						esc_html_x( '%s data could not be saved to the server. Please reload the page and try again. If this error persists, please contact support.', 'placeholder: Quiz', 'learndash' ),
 						esc_html( LearnDash_Custom_Label::get_label( 'quiz' ) )
@@ -324,51 +328,92 @@ class WpProQuiz_Controller_Admin {
 			learndash_quiz_debug_log_message( '[' . $r_idx . '] result<pre>' . print_r( $result, true ) . '</pre>' );
 
 			if ( $r_idx !== 'comp' ) {
+				$question_mapper = new WpProQuiz_Model_QuestionMapper();
+				$question        = $question_mapper->fetchById( intval( $r_idx ), null );
+				if ( ! is_a( $question, 'WpProQuiz_Model_Question' ) ) {
+					continue;
+				}
 
 				// Validate the Points items.
-				$points_array = array(
-					'points'         => intval( $result['points'] ),
-					'correct'        => intval( $result['correct'] ),
-					'possiblePoints' => intval( $result['possiblePoints'] ),
-				);
-				if ( $points_array['correct'] === false ) {
-					$points_array['correct'] = 0;
-				} elseif ( $points_array['correct'] === true ) {
-					$points_array['correct'] = 1;
-				}
-				$points_str = maybe_serialize( $points_array );
+				if ( ( isset( $result['p_nonce'] ) ) && ( ! empty( $result['p_nonce'] ) ) ) {
+					$points_array = array(
+						'points'         => intval( $result['points'] ),
+						'correct'        => intval( $result['correct'] ),
+						'possiblePoints' => intval( $result['possiblePoints'] ),
+					);
+					if ( $points_array['correct'] === false ) {
+						$points_array['correct'] = 0;
+					} elseif ( $points_array['correct'] === true ) {
+						$points_array['correct'] = 1;
+					}
+					$points_str = maybe_serialize( $points_array );
 
-				$points_nonce = 'ld_quiz_pnonce' . $user_id . '_' . $id . '_' . $quiz_post_id . '_' . $r_idx . '_' . $points_str;
-				if ( ! wp_verify_nonce( $result['p_nonce'], $points_nonce ) ) {
-					learndash_quiz_debug_log_message( 'invalid points nonce (p_nonce). Clearing points values.' );
+					$points_nonce = 'ld_quiz_pnonce' . $user_id . '_' . $id . '_' . $quiz_post_id . '_' . $r_idx . '_' . $points_str;
+					if ( ! wp_verify_nonce( $result['p_nonce'], $points_nonce ) ) {
+						learndash_quiz_debug_log_message( 'invalid points nonce (p_nonce). Clearing points values.' );
+						learndash_quiz_debug_log_message( 'p_nonce[' . $result['a_nonce'] . ' points_nonce[' . $points_nonce . ']' );
 
+						$_POST['results'][ $r_idx ]['points']         = 0;
+						$_POST['results'][ $r_idx ]['correct']        = 0;
+						$_POST['results'][ $r_idx ]['possiblePoints'] = 0;
+
+						// Set the possible points from the question.
+						if ( is_a( $question, 'WpProQuiz_Model_Question' ) ) {
+							$_POST['results'][ $r_idx ]['possiblePoints'] = $question->getPoints();
+						}
+					}
+				} else {
+					learndash_quiz_debug_log_message( 'missing/empty answer p_nonce. Clearing points values.' );
 					$_POST['results'][ $r_idx ]['points']         = 0;
 					$_POST['results'][ $r_idx ]['correct']        = 0;
 					$_POST['results'][ $r_idx ]['possiblePoints'] = 0;
+
+					// Set the possible points from the question.
+					$question_mapper = new WpProQuiz_Model_QuestionMapper();
+					$question        = $question_mapper->fetchById( intval( $r_idx ), null );
+					if ( is_a( $question, 'WpProQuiz_Model_Question' ) ) {
+						$_POST['results'][ $r_idx ]['possiblePoints'] = $question->getPoints();
+					}
 				}
+
 				$total_awarded_points  += intval( $_POST['results'][ $r_idx ]['points'] );
 				$total_possible_points += intval( $_POST['results'][ $r_idx ]['possiblePoints'] );
 				$total_correct         += $_POST['results'][ $r_idx ]['correct'];
 
 				// Validate the Answer items.
-				$response_str = maybe_serialize(
-					array_map(
-						function ( $array_item ) {
-							if ( is_string( $array_item ) ) {
-								  return trim( $array_item );
-							}
-							return $array_item;
-						},
-						$result['data']
-					)
-				);
+				if ( ( isset( $result['a_nonce'] ) ) && ( ! empty( $result['a_nonce'] ) ) ) {
+					global $learndash_completed_question;
+					$learndash_completed_question = $question;
+					
+					$response_str = maybe_serialize(
+						array_map(
+							function ( $array_item ) {
+								global $learndash_completed_question;
+								if ( is_string( $array_item ) ) {
+									/** This filter is documented in includes/quiz/ld-quiz-pro.php */
+									$question_legacy_sanitize_scheme = apply_filters( 'learndash_quiz_question_legacy_sanitize_scheme', false, $array_item, $learndash_completed_question );
 
-				learndash_quiz_debug_log_message( 'response_str [' . $response_str . ']' );
+									if ( ! $question_legacy_sanitize_scheme ) {
+										$array_item = esc_attr( wp_unslash( trim( $array_item ) ) );
+									} else {
+										$array_item = trim( $array_item );
+									}
+								}
+								return $array_item;
+							},
+							$result['data']
+						)
+					);
+					unset( $learndash_completed_question );
 
-				$repsonse_nonce = 'ld_quiz_anonce' . $user_id . '_' . $id . '_' . $quiz_post_id . '_' . $r_idx . '_' . $response_str;
-				if ( ! wp_verify_nonce( $result['a_nonce'], $repsonse_nonce ) ) {
-					learndash_quiz_debug_log_message( 'invalid answer nonce (a_nonce). Clearing answer/response values.' );
-
+					$answers_nonce = 'ld_quiz_anonce' . $user_id . '_' . $id . '_' . $quiz_post_id . '_' . $r_idx . '_' . $response_str;
+					if ( ! wp_verify_nonce( $result['a_nonce'], $answers_nonce ) ) {
+						learndash_quiz_debug_log_message( 'invalid answer a_nonce. Clearing answer/response values.' );
+						learndash_quiz_debug_log_message( 'a_nonce[' . $result['a_nonce'] . ' answers_nonce[' . $answers_nonce . ']' );
+						$_POST['results'][ $r_idx ]['data'] = array();
+					}
+				} else {
+					learndash_quiz_debug_log_message( 'missing/empty answer a_nonce. Clearing answer/response values.' );
 					$_POST['results'][ $r_idx ]['data'] = array();
 				}
 			}

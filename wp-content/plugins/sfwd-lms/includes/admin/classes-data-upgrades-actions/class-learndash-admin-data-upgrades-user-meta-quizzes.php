@@ -69,7 +69,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					<p class="description"><?php echo esc_html( $this->get_last_run_info() ); ?></p>
 
 					<?php
-						$show_progess         = false;
+						$show_progress        = false;
 						$this->transient_key  = $this->data_slug;
 						$this->transient_data = $this->get_transient( $this->transient_key );
 					if ( ! empty( $this->transient_data ) ) {
@@ -87,7 +87,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 						if ( ( ! empty( $this->transient_data['result_count'] ) ) && ( ! empty( $this->transient_data['total_count'] ) ) && ( $this->transient_data['result_count'] != $this->transient_data['total_count'] ) ) {
 
-							$show_progess = true;
+							$show_progress = true;
 							?>
 								<p id="learndash-data-upgrades-continue-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
 								<?php
@@ -99,7 +99,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						$progress_label       = '';
 						$progress_slug        = '';
 
-					if ( true === $show_progess ) {
+					if ( true === $show_progress ) {
 						$progress_style = '';
 						$data           = $this->transient_data;
 						$data           = $this->build_progress_output( $data );
@@ -316,7 +316,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			global $wpdb;
 
 			if ( ( empty( $user_id ) ) || ( ! isset( $this->transient_data['current_user']['user_id'] ) ) || ( $user_id !== $this->transient_data['current_user']['user_id'] ) ) {
-				return;
+				return false;
 			}
 
 			delete_user_meta( $user_id, $this->meta_key );
@@ -341,7 +341,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					$this->transient_data['current_user']['item_idx'] = $idx;
 
 					if ( $this->out_of_timer() ) {
-						return;
+						return false;
 					}
 
 					$quiz_post = get_post( intval( $quiz_data['quiz'] ) );
@@ -354,11 +354,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						$user_meta_quizzes_progress[ $idx ]['course'] = $quiz_data['course'];
 						$user_meta_quizzes_progress_changed           = true;
 					}
-
-					// LEARNDASH-2744 : Not sure why these lines are here. We shoul be use the original started/completed dates
-					// ----------------
-					// unset( $quiz_data['started'] );
-					// unset( $quiz_data['completed'] );
 
 					if ( ( ! isset( $quiz_data['completed'] ) ) || ( empty( $quiz_data['completed'] ) ) ) {
 						if ( ( isset( $quiz_data['time'] ) ) && ( ! empty( $quiz_data['time'] ) ) ) {

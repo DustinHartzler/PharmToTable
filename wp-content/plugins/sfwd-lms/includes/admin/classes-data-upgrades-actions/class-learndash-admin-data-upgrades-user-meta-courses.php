@@ -64,7 +64,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					<p class="description"><?php echo esc_html( $this->get_last_run_info() ); ?></p>
 
 					<?php
-					$show_progess         = false;
+					$show_progress        = false;
 					$this->transient_key  = $this->data_slug;
 					$this->transient_data = $this->get_transient( $this->transient_key );
 					if ( ! empty( $this->transient_data ) ) {
@@ -81,7 +81,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 						if ( ( ! empty( $this->transient_data['result_count'] ) ) && ( ! empty( $this->transient_data['total_count'] ) ) && ( $this->transient_data['result_count'] != $this->transient_data['total_count'] ) ) {
 
-							$show_progess = true;
+							$show_progress = true;
 							?>
 							<p id="learndash-data-upgrades-continue-
 							<?php
@@ -97,7 +97,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					$progress_label       = '';
 					$progress_slug        = '';
 
-					if ( true === $show_progess ) {
+					if ( true === $show_progress ) {
 						$progress_style = '';
 						$data           = $this->transient_data;
 						$data           = $this->build_progress_output( $data );
@@ -300,13 +300,14 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 * Convert single user quiz attempts to Activity DB entries.
 		 *
 		 * @param int $user_id User ID of user to convert.
+		 *
 		 * @return boolean true if complete, false if not.
 		 */
 		private function convert_user_meta_courses_progress_to_activity( $user_id = 0 ) {
 			global $wpdb;
 
 			if ( ( empty( $user_id ) ) || ( ! isset( $this->transient_data['current_user']['user_id'] ) ) || ( $user_id !== $this->transient_data['current_user']['user_id'] ) ) {
-				return;
+				return false;
 			}
 
 			delete_user_meta( $user_id, $this->meta_key );
@@ -337,7 +338,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			if ( ( ! empty( $user_meta_courses_progress ) ) && ( is_array( $user_meta_courses_progress ) ) ) {
 				/**
 				 * We sort the course progress array because we may need to save our place and
-				 * need to knowwhere we left off.
+				 * need to know where we left off.
 				 */
 				ksort( $user_meta_courses_progress );
 
@@ -352,8 +353,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					if ( ( $course_post ) && is_a( $course_post, 'WP_Post' ) ) {
 
 						$total_activity_items    = 0;
-						$user_course_access_from = 0;
-						$user_course_completed   = 0;
+						$user_course_completed   = (int) get_user_meta( $user_id, 'course_completed_' . $course_id, true );
+						$user_course_access_from = (int) get_user_meta( $user_id, 'course_' . $course_id . '_access_from', true );
 
 						// We replace the $course_data with the newer logic.
 						$course_data = learndash_user_get_course_progress( $user_id, $course_id, 'legacy' );
@@ -372,10 +373,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 										'data_upgrade'  => true,
 										'activity_meta' => array(),
 									);
-
-									// if ( ! empty( $user_course_access_from ) ) {
-									// $lesson_args['activity_started'] = $user_course_access_from;
-									// }
 
 									if ( true == $lesson_complete ) {
 										$lesson_args['activity_status'] = true;
@@ -410,10 +407,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 												'activity_meta' => array(),
 											);
 
-											// if ( ! empty( $user_course_access_from ) ) {
-											// $topic_args['activity_started'] = $user_course_access_from;
-											// }
-
 											if ( true == $topic_complete ) {
 												$topic_args['activity_status'] = true;
 												if ( ! empty( $user_course_completed ) ) {
@@ -431,9 +424,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 								}
 							}
 						}
-
-						$user_course_completed   = (int) get_user_meta( $user_id, 'course_completed_' . $course_id, true );
-						$user_course_access_from = (int) get_user_meta( $user_id, 'course_' . $course_id . '_access_from', true );
 
 						if ( ! empty( $user_course_access_from ) ) {
 							$activity_id = learndash_update_user_activity(
@@ -460,10 +450,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 							)
 						);
 
-						if ( ! empty( $course_activity ) ) {
+						if ( $course_activity ) {
 							if ( is_object( $course_activity ) ) {
 								$course_args = json_decode( wp_json_encode( $course_activity ), true );
-							} elseif( is_array( $course_activity ) ) {
+							} elseif ( is_array( $course_activity ) ) {
 								$course_args = $course_activity;
 							}
 						} else {
@@ -516,7 +506,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 									$course_data['last_id'] = 0;
 								}
 							}
-							
+
 							if ( ! empty( $course_data['last_id'] ) ) {
 								$course_args['activity_meta']['steps_last_id'] = intval( $course_data['last_id'] );
 							}
@@ -544,7 +534,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					$this->transient_data['current_user']['activity_ids'] = $activity_ids;
 
 					if ( $this->out_of_timer() ) {
-						return;
+						return false;
 					}
 				}
 			}
@@ -553,7 +543,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			 * Finally we go through the user's meta again to grab the random course access items. These
 			 * would be there If the user was granted access but didn't actually start a lesson/quiz etc.
 			 */
-			$user_courses_access = $wpdb->get_results(
+			$user_courses_access = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->prepare(
 					"SELECT user_id, meta_key, meta_value as course_access_from FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key LIKE %s",
 					$user_id,
@@ -565,7 +555,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				foreach ( $user_courses_access as $user_course_access ) {
 
 					if ( ( property_exists( $user_course_access, 'meta_key' ) ) && ( ! empty( $user_course_access->meta_key ) ) ) {
-						$user_course_access->course_id = str_replace( 'course_', '', $user_course_access->meta_key );
+						$user_course_access->course_id = str_replace( 'course_', '', $user_course_access->meta_key );  // @phpstan-ignore-line
 						$user_course_access->course_id = str_replace( '_access_from', '', $user_course_access->course_id );
 
 						if ( ! isset( $activity_ids['course_ids_used'][ $user_course_access->course_id ] ) ) {

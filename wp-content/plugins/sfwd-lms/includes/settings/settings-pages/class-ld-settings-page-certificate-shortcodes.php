@@ -52,7 +52,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 									esc_html_x( 'The documentation for Certificate Shortcodes has moved online (only available in English). %s', 'placeholder: URL to online documentation', 'learndash' ),
 									'<a href="https://www.learndash.com/support/docs/core/certificates/certificate-shortcodes/" target="_blank" rel="noopener noreferrer" aria-label="' . esc_html__( 'External link to Certificate online documentation', 'learndash' )
 								) . '">' . esc_html__( 'Click here', 'learndash' ) . sprintf(
-									'<span class="screen-reader-text">%s</span><span aria-hidden="true" style="text-decodarion: none !important;" class="dashicons dashicons-external"></span>',
+									'<span class="screen-reader-text">%s</span><span aria-hidden="true" style="text-decoration: none !important;" class="dashicons dashicons-external"></span>',
 									/* translators: Accessibility text. */
 									esc_html__( '(opens in a new tab)', 'learndash' )
 								) . '</a>'

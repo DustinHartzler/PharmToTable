@@ -73,7 +73,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					<p class="description"><?php echo esc_html( $this->get_last_run_info() ); ?></p>
 
 					<?php
-						$show_progess         = false;
+						$show_progress        = false;
 						$data_settings        = $this->get_data_settings( $this->data_slug );
 						$this->transient_key  = $this->data_slug;
 						$this->transient_data = $this->get_transient( $this->transient_key );
@@ -91,7 +91,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						}
 
 						if ( ( ! empty( $this->transient_data['result_count'] ) ) && ( ! empty( $this->transient_data['total_count'] ) ) && ( $this->transient_data['result_count'] != $this->transient_data['total_count'] ) ) {
-							$show_progess = true;
+							$show_progress = true;
 						}
 
 						if ( isset( $this->transient_data['skipped'] ) ) {
@@ -105,7 +105,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					$progress_slug        = '';
 
 					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					if ( ( true === $show_progess ) && ( ! isset( $_GET['quiz_id'] ) ) ) {
+					if ( ( true === $show_progress ) && ( ! isset( $_GET['quiz_id'] ) ) ) {
 						?>
 						<p id="learndash-data-upgrades-continue-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
 							<?php
@@ -130,7 +130,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 							// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 							if ( ( isset( $_GET['quiz_id'] ) ) && ( ! empty( $_GET['quiz_id'] ) ) ) {
 								// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-								if ( learndash_get_post_type_slug( 'quiz' ) === get_post_type( $_GET['quiz_id'] ) ) {
+								if ( learndash_get_post_type_slug( 'quiz' ) === get_post_type( absint( $_GET['quiz_id'] ) ) ) {
 									// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 									$process_quiz_id = absint( $_GET['quiz_id'] );
 								} else {
@@ -163,7 +163,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 									esc_html_x( 'Reprocess %1$s for %2$s: "%3$s"', 'placeholders: Questions, Quiz, Quiz Title', 'learndash' ),
 									LearnDash_Custom_Label::get_label( 'Questions' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 									LearnDash_Custom_Label::get_label( 'Quiz' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
-									wp_kses_post( get_the_title( $_GET['quiz_id'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+									wp_kses_post( get_the_title( absint( $_GET['quiz_id'] ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 								)
 								?>
 									<?php // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
@@ -345,13 +345,13 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			if ( ( isset( $this->transient_data['quiz_id'] ) ) && ( ! empty( $this->transient_data['quiz_id'] ) ) ) {
 				$pro_quiz_id = get_post_meta( $this->transient_data['quiz_id'], 'quiz_pro_id', true );
 				if ( empty( $pro_quiz_id ) ) {
-					$pro_quiz_id = learndash_get_setting( $this->transient_data['quiz_id'], 'quiz_pro', true );
+					$pro_quiz_id = learndash_get_setting( $this->transient_data['quiz_id'], 'quiz_pro' );
 					if ( ! empty( $pro_quiz_id ) ) {
 						update_post_meta( $this->transient_data['quiz_id'], 'quiz_pro_id', $pro_quiz_id );
 					}
 				}
 				if ( ! empty( $pro_quiz_id ) ) {
-					$quiz_questions = $wpdb->get_col(
+					$quiz_questions = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$wpdb->prepare(
 							// phpcs:ignore
 							'SELECT id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE online = %d AND quiz_id = %d',
@@ -373,7 +373,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			} else {
 
 				if ( ! isset( $this->transient_data['total_count'] ) ) {
-					$total_rows_count = $wpdb->get_var(
+					$total_rows_count = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$wpdb->prepare(
 							// phpcs:ignore
 							'SELECT COUNT(*) FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE online = %d',
@@ -395,7 +395,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						}
 					}
 
-					$rows = $wpdb->get_col(
+					$rows = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$wpdb->prepare(
 							// phpcs:ignore
 							'SELECT id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE online = %d ORDER BY quiz_id ASC, id ASC LIMIT %d OFFSET %d',
@@ -424,7 +424,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			$question_pro_ids = array();
 			$pro_ids_paged    = 0;
 			while ( true ) {
-				$pro_ids = $wpdb->get_col(
+				$pro_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$wpdb->prepare(
 						// phpcs:ignore
 						'SELECT id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE online = %d ORDER BY quiz_id, sort ASC LIMIT %d OFFSET %d',
@@ -446,7 +446,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			if ( ! empty( $question_pro_ids ) ) {
 				$post_ids_paged = 0;
 				while ( true ) {
-					$post_ids = $wpdb->get_col(
+					$post_ids = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						$wpdb->prepare(
 							"SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s LIMIT %d OFFSET %d",
 							'question_pro_id',
@@ -570,7 +570,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					$question_pro_id,
 					learndash_get_custom_label_lower( 'question' )
 				);
-				return;
+				return false;
 			}
 
 			$question_pro_mapper = new WpProQuiz_Model_QuestionMapper();
@@ -649,10 +649,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				wp_update_post( $update_post );
 			}
 
-			if ( ( $question_insert_post_id ) && ( ! is_wp_error( $question_insert_post_id ) ) ) {
+			if ( ! empty( $question_insert_post_id ) ) {
 				learndash_proquiz_sync_question_fields( $question_insert_post_id, $question_pro );
 
-				if ( ( $question_pro ) && ( is_a( $question_pro, 'WpProQuiz_Model_Question' ) ) ) {
+				if ( is_a( $question_pro, 'WpProQuiz_Model_Question' ) ) {
 					// Create the association between the question post and the quiz post(s).
 					if ( ( ! empty( $quiz_pro_id ) ) && ( ! empty( $quiz_post_ids ) ) ) {
 						foreach ( $quiz_post_ids as $idx => $quiz_post_id ) {

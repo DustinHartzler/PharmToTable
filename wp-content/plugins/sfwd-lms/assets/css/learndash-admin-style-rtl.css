@@ -75,8 +75,8 @@ table#learndash-data-upgrades .learndash-skipped {
 }
 
 table#learndash-data-upgrades .learndash-skipped ol {
-	color: red; 
-	max-height: 100px; 
+	color: red;
+	max-height: 100px;
 	overflow: auto;
 	margin: 5px 0;
 	list-style-position: inside;
@@ -89,13 +89,13 @@ table#learndash-data-upgrades .learndash-skipped ol li {
 .wpProQuiz_quizEdit .learndash-quiz-prerequisite-list-left,
 .wpProQuiz_quizEdit .learndash-quiz-prerequisite-list-right {
 	width: 45%;
-	min-width: 200px; 
+	min-width: 200px;
 }
 
 .wpProQuiz_quizEdit .learndash-quiz-prerequisite-list-center {
 	width: 100px;
-	min-width: 100px; 
-	max-width: 100px; 
+	min-width: 100px;
+	max-width: 100px;
 }
 
 .wpProQuiz_quizEdit td.learndash-quiz-prerequisite-list-left select.learndash-quiz-prerequisite-list,
@@ -195,3 +195,36 @@ table#learndash-data-upgrades .learndash-skipped ol li {
 	display: none;
 }
 */
+
+
+/* A modal shown on Essays and Assignments admin tables. */
+body.edit-php.post-type-sfwd-essays .ui-dialog-titlebar,
+body.edit-php.post-type-sfwd-assignment .ui-dialog-titlebar {
+	font-size: .9rem;
+	line-height: 2.2rem;
+	text-transform: capitalize;
+}
+
+body.edit-php.post-type-sfwd-essays .ui-dialog-titlebar-close,
+body.edit-php.post-type-sfwd-assignment .ui-dialog-titlebar-close {
+	background: #FFF;
+}
+
+body.edit-php.post-type-sfwd-essays .ui-dialog-content .learndash-modal-download-link-wrapper,
+body.edit-php.post-type-sfwd-assignment .ui-dialog-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+body.edit-php.post-type-sfwd-essays .ui-dialog-content .learndash-modal-download-link-wrapper {
+	position: absolute;
+	width: 100%;
+	height: 50%;
+}
+
+body.edit-php.post-type-sfwd-essays .ui-dialog-content img,
+body.edit-php.post-type-sfwd-assignment .ui-dialog-content img {
+	max-width: 100%;
+}

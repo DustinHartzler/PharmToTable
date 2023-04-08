@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return string The `ld_topic_list` shortcode output.
  */
-function ld_group_list( $attr = array(), $content = '', $shortcode_slug = 'ld_group_list' ) {
+function ld_group_list( $attr = array(), $content = '', $shortcode_slug = 'ld_group_list' ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 

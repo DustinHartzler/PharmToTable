@@ -26,14 +26,31 @@ $topic_class   = 'ld-table-list-item-preview ld-primary-color-hover ld-topic-row
 $topic_class = apply_filters( 'learndash-topic-row-class', $topic_class, $topic );
 
 /** This filter is documented in themes/ld30/templates/topic/partials/row.php */
-$topic_status = apply_filters( 'learndash-topic-status', ( $topic->completed ? 'completed' : 'not-completed' ) ); ?>
+$topic_status = apply_filters( 'learndash-topic-status', ( $topic->completed ? 'completed' : 'not-completed' ) );
 
+$attributes = learndash_get_course_step_attributes( $topic->ID, $course_id, $user_id );
+
+$learndash_available_date = learndash_course_step_available_date( $topic->ID, $course_id, $user_id, true );
+if ( ! empty( $learndash_available_date ) ) {
+	$wrapper_class .= ' learndash-not-available';
+}
+?>
 <div class="<?php echo esc_attr( $wrapper_class ); ?>">
 	<a class="<?php echo esc_attr( $topic_class ); ?>" href="<?php echo esc_url( learndash_get_step_permalink( $topic->ID, $course_id ) ); ?>">
 
 		<?php learndash_status_icon( $topic_status, 'sfwd-topic', null, true ); ?>
 
-		<div class="ld-topic-title"><?php echo wp_kses_post( get_the_title( $topic->ID ) ); ?></div>
+		<div class="ld-topic-title">
+		<?php
+		echo wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) );
+		if ( ! empty( $attributes ) ) :
+			foreach ( $attributes as $attribute ) :
+				?>
+			<span class="ld-status-icon <?php echo esc_attr( $attribute['class'] ); ?>" data-ld-tooltip="<?php echo esc_attr( $attribute['label'] ); ?>"><span class="ld-icon <?php echo esc_attr( $attribute['icon'] ); ?>"></span></span>
+				<?php
+			endforeach;
+		endif;
+		?></div>
 
 	</a>
 </div>

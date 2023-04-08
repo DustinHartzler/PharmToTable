@@ -147,10 +147,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value_html' => $learndash_version_value_html,
 				);
 
-				$ld_license_valid = get_option( 'nss_plugin_remote_license_sfwd_lms' );
-				$ld_license_check = get_option( 'nss_plugin_check_sfwd_lms' );
+				$ld_license_valid = learndash_is_learndash_license_valid();
+				$ld_license_check = learndash_get_last_license_check_time();
 
-				if ( ( isset( $ld_license_valid['value'] ) ) && ( '1' === $ld_license_valid['value'] ) ) {
+				if ( $ld_license_valid ) {
 					$license_value_html = '<span style="color: green">' . esc_html__( 'Yes', 'learndash' ) . '</span>';
 					$license_value      = 'Yes';
 					if ( ! empty( $ld_license_check ) ) {
@@ -954,7 +954,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		/**
 		 * Determine count of post_type posts by post_status.
 		 *
-		 * @since 3.3
+		 * @since 3.3.0
 		 *
 		 * @param string $post_type Post Type to get counts for.
 		 *

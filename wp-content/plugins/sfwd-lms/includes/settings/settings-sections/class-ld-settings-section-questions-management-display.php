@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Settings Section Question Mangement and Display.
+ * LearnDash Settings Section Question Management and Display.
  *
  * @since 3.0.0
  * @package LearnDash\Settings\Sections
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'LearnDash_Settings_Questions_Management_Display' ) ) ) {
 	/**
-	 * Class LearnDash Settings Section Question Mangement and Display.
+	 * Class LearnDash Settings Section Question Management and Display.
 	 *
 	 * @since 3.0.0
 	 */
@@ -138,13 +138,13 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$reply_data = array( 'status' => false );
 
 			if ( current_user_can( 'wpProQuiz_edit_quiz' ) ) {
-				if ( ( isset( $_POST['field_nonce'] ) ) && ( ! empty( $_POST['field_nonce'] ) ) && ( isset( $_POST['field_key'] ) ) && ( ! empty( $_POST['field_key'] ) ) && ( wp_verify_nonce( esc_attr( $_POST['field_nonce'] ), $_POST['field_key'] ) ) ) {
+				if ( ( isset( $_POST['field_nonce'] ) ) && ( ! empty( $_POST['field_nonce'] ) ) && ( isset( $_POST['field_key'] ) ) && ( ! empty( $_POST['field_key'] ) ) && ( wp_verify_nonce( esc_attr( $_POST['field_nonce'] ), $_POST['field_key'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					if ( isset( $_POST['field_action'] ) ) {
 						if ( 'update' === $_POST['field_action'] ) {
 							if ( ( isset( $_POST['field_value'] ) ) && ( ! empty( $_POST['field_value'] ) ) && ( isset( $_POST['field_text'] ) ) && ( ! empty( $_POST['field_text'] ) ) ) {
 								$template_id       = intval( $_POST['field_value'] );
-								$template_new_name = esc_attr( $_POST['field_text'] );
+								$template_new_name = esc_attr( $_POST['field_text'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 								$template_mapper = new WpProQuiz_Model_TemplateMapper();
 								$template        = $template_mapper->fetchById( $template_id );

@@ -47,7 +47,6 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
 
-			// global $post;
 			$post = get_post( get_the_id() );
 
 			if ( ( ! is_a( $post, 'WP_Post' ) ) || ( empty( $post->ID ) ) || ( ! is_single() ) ) {
@@ -81,7 +80,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 							$course_lessons_paged = array_chunk( $course_lesson_ids, $course_lessons_per_page, true );
 							$lessons_paged        = 0;
 							foreach ( $course_lessons_paged as $paged => $paged_set ) {
-								if ( in_array( $instance['current_lesson_id'], $paged_set ) ) {
+								if ( in_array( $instance['current_lesson_id'], $paged_set ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 									$lessons_paged = $paged + 1;
 									break;
 								}
@@ -113,7 +112,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 				}
 			}
 
-			extract( $args );
+			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 			/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
 			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance );

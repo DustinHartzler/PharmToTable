@@ -23,7 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Users_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Users_Courses_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Public constructor for class
@@ -143,6 +143,12 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V2' ) ) && ( class_exis
 			return $schema;
 		}
 
+		/**
+		 * Get user courses.
+		 *
+		 * @since 3.3.0
+		 * @param WP_REST_Request $request Full details about the request.
+		 */
 		public function get_user_courses( $request ) {
 			$user_id = $request['id'];
 			if ( empty( $user_id ) ) {

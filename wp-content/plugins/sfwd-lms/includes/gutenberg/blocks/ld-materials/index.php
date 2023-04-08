@@ -4,7 +4,7 @@
  * as the ld_materials shortcode used within LearnDash.
  *
  * @package LearnDash
- * @since 4.0
+ * @since 4.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -49,9 +49,9 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 * the block rendered content. In the case of this function the rendered output will be for the
 		 * [ld_materials] shortcode.
 		 *
-		 * @since 4.0
+		 * @since 4.0.0
 		 *
-		 * @param array    $block_attributes The block attrbutes.
+		 * @param array    $block_attributes The block attributes.
 		 * @param string   $block_content    The block content.
 		 * @param WP_block $block            The block object.
 		 * @return none The output is echoed.

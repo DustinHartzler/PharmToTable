@@ -120,7 +120,7 @@ if ( typeof learndash_video_data !== 'undefined' ) {
 			var ld_video_player = LearnDash_get_player_from_target( event.target );
 
 			var player_state = event.target.getPlayerState();
-			if ( player_state == YT.PlayerState.UNSTARTED ) {
+			if ( player_state == YT.PlayerState.UNSTARTED ) { // cspell:disable-line
 				//if (learndash_video_data.video_debug === '1') {
 				//	console.log('YOUTUBE: Video has not started[%o]', player_state);
 				//}
@@ -390,13 +390,12 @@ if ( typeof learndash_video_data !== 'undefined' ) {
 		jQuery( function() {
 			if ( document.querySelectorAll( '.ld-video[data-video-progression="true"][data-video-provider="' + learndash_video_data.videos_found_provider + '"] iframe, .ld-video[data-video-progression="true"][data-video-provider="' + learndash_video_data.videos_found_provider + '"] video' ).length ) {
 				if ( learndash_video_data.video_debug === '1' ) {
-					console.log( 'LOCAL: calling LearnDash_disable_assets(true)' );
+					console.log("VOOPLAYER: calling LearnDash_disable_assets(true)");
 				}
 				LearnDash_disable_assets( true );
 				LearnDash_watchPlayers();
 
 				document.querySelectorAll( '.ld-video[data-video-progression="true"][data-video-provider="' + learndash_video_data.videos_found_provider + '"] iframe, .ld-video[data-video-progression="true"][data-video-provider="' + learndash_video_data.videos_found_provider + '"] video' ).forEach( function( element, index ) {
-					console.log( 'element[%o] index[%o]', element, index );
 
 					var element_key = 'ld-video-player-' + index;
 					var element_id = element.getAttribute( 'id' );
@@ -422,7 +421,10 @@ if ( typeof learndash_video_data !== 'undefined' ) {
 					ld_video_players[element_key].player = element;
 
 					var vooPlayerID = element.getAttribute( 'data-playerid' );
-					console.log( 'vooPlayerID[%o]', vooPlayerID );
+					if (learndash_video_data.video_debug === "1") {
+						console.log('VOOPLAYER: vooPlayerID[%o]', vooPlayerID);
+					}
+
 					if ( typeof vooPlayerID !== 'undefined' ) {
 						ld_video_players[element_key].vooPlayerID = vooPlayerID;
 
@@ -435,9 +437,60 @@ if ( typeof learndash_video_data !== 'undefined' ) {
 							// See https://app.vooplayer.com/docs/api/#vooPlayerReady for event examples.
 
 							if ( ( typeof event.detail.video !== 'undefined' ) && ( event.detail.video.length > 0 ) ) {
-								//vooAPI(event.detail.video, 'volume', [0]);
-								//vooAPI(event.detail.video, 'play');
-								vooAPI( vooPlayerID, 'onEnded', null, vooPlayer_onEnded );
+
+								if (learndash_video_data.video_track_time === "1") {
+									let user_minutes = LearnDash_Video_Progress_getSetting(
+										ld_video_players[element_key],
+										"video_time"
+									);
+									if (typeof user_minutes === "undefined") {
+										user_minutes = 0;
+									}
+
+									if (learndash_video_data.video_debug === "1") {
+										console.log(
+											"VOOPLAYER: start user_minutes: [%o]",
+											user_minutes
+										);
+									}
+
+									let user_minutes_array = [];
+									user_minutes_array.push(user_minutes);
+
+									// Set start position in video.
+									vooAPI(
+										event.detail.video,
+										"currentTime",
+										user_minutes_array
+									);
+								}
+
+								if ( learndash_video_data.videos_auto_start == true ) {
+									if ( learndash_video_data.video_debug === '1' ) {
+										console.log( 'VOOPLAYER: auto-start enabled' );
+									}
+									vooAPI(event.detail.video, "play");
+								}
+
+								if (learndash_video_data.videos_show_controls == true) {
+									if (learndash_video_data.video_debug === "1") {
+										console.log(
+											"VOOPLAYER: videos_show_controls enabled"
+										);
+									}
+									vooAPI(event.detail.video, "showControls");
+								} else {
+									if (learndash_video_data.video_debug === "1") {
+										console.log(
+											"VOOPLAYER: videos_show_controls disabled"
+										);
+									}
+									vooAPI(event.detail.video, "hideControls");
+								}
+
+								vooAPI(event.detail.video, "onEnded", null, vooPlayer_onEnded);
+								vooAPI(event.detail.video, "onPlay", null, vooPlayer_onPlay);
+								vooAPI(event.detail.video, "onPause", null, vooPlayer_onPause);
 							}
 						}
 
@@ -454,6 +507,34 @@ if ( typeof learndash_video_data !== 'undefined' ) {
 
 							// Stop watching players.
 							LearnDash_watchPlayersEnd();
+						}
+
+						function vooPlayer_onPlay() {
+							if ( learndash_video_data.video_debug === '1' ) {
+								console.log( "VOOPLAYER: onPlay" );
+							}
+							if (learndash_video_data.video_debug === "1") {
+								console.log("VOOPLAYER: setting 'video_state' to 'play'");
+							}
+							LearnDash_Video_Progress_setSetting(
+								ld_video_players[element_key],
+								"video_state",
+								"play"
+							);
+						}
+
+						function vooPlayer_onPause() {
+							if ( learndash_video_data.video_debug === '1' ) {
+								console.log("VOOPLAYER: onPause");
+							}
+							if (learndash_video_data.video_debug === "1") {
+								console.log("VOOPLAYER: setting 'video_state' to 'pause'");
+							}
+							LearnDash_Video_Progress_setSetting(
+								ld_video_players[element_key],
+								"video_state",
+								"pause"
+							);
 						}
 					}
 				} );
@@ -577,6 +658,7 @@ function LearnDash_watchPlayers() {
 			for ( var ld_video_key in ld_video_players ) {
 				if ( ld_video_players.hasOwnProperty( ld_video_key ) ) {
 					ld_video_player = ld_video_players[ld_video_key];
+
 					if ( typeof ld_video_player.player !== 'undefined' ) {
 						// Track User video time.
 						//if (learndash_video_data.video_track_time === '1') {
@@ -637,9 +719,29 @@ function LearnDash_watchPlayers() {
 							}
 							LearnDash_Video_Progress_setSetting( ld_video_player, 'video_time', video_user_time );
 						} else if ( ld_video_player.player_type === 'vooplayer' ) {
-							//if (learndash_video_data.video_debug === '1') {
-							//	console.log('VOOPLAYER: here');
-							//}
+
+							if ( ld_video_player.vooPlayerID !== 'undefined' ) {
+
+								function getCurrentTimeCallback(event) {
+									if (learndash_video_data.video_debug === "1") {
+										console.log(
+											"VOOPLAYER: video user_time: [%o]",
+											event.returnValue
+										);
+									}
+									LearnDash_Video_Progress_setSetting(
+										ld_video_player,
+										"video_time",
+										event.returnValue
+									);
+								}
+								vooAPI(
+									ld_video_player.vooPlayerID,
+									"getCurrentTime",
+									[],
+									getCurrentTimeCallback
+								);
+							}
 
 						} else if ( ld_video_player.player_type === 'local' ) {
 							var has_ended = ld_video_player.player.ended;
@@ -707,31 +809,47 @@ function LearnDash_watchPlayers() {
 									}
 									ld_video_player.player.pause();
 								}
-							} else if ( ld_video_player.player_type === 'wistia' ) {
-								if ( ld_video_state === 'focus' ) {
-									if ( learndash_video_data.videos_show_controls != true ) {
+							} else if (ld_video_player.player_type === "wistia") {
+								if (ld_video_state === "focus") {
+									if (learndash_video_data.videos_show_controls != true) {
 										//if (learndash_video_data.video_debug === '1') {
 										//	console.log('WISTIA: Blur: calling play()');
 										//}
 										//ld_video_player['player'].play();
 									}
-								} else if ( ld_video_state === 'blur' ) {
-									if ( learndash_video_data.video_debug === '1' ) {
-										console.log( 'WISTIA: Blur: calling pause()' );
+								} else if (ld_video_state === "blur") {
+									if (learndash_video_data.video_debug === "1") {
+										console.log("WISTIA: Blur: calling pause()");
 									}
 									ld_video_player.player.pause();
 								}
-							} else if ( ld_video_player.player_type === 'local' ) {
-								if ( ld_video_state === 'focus' ) {
-									if ( learndash_video_data.videos_show_controls != true ) {
-										if ( learndash_video_data.video_debug === '1' ) {
-											console.log( 'LOCAL: Focus: calling playVideo()' );
+							} else if (ld_video_player.player_type === "vooplayer") {
+								if ( ld_video_player.vooPlayerID !== 'undefined' ) {
+									if (ld_video_state === "focus") {
+										if (learndash_video_data.videos_show_controls != true) {
+											if (learndash_video_data.video_debug === '1') {
+												console.log('VOOPLAYER: Blur: calling play()');
+											}
+											vooAPI(ld_video_player.vooPlayerID, "play");
+										}
+									} else if (ld_video_state === "blur") {
+										if (learndash_video_data.video_debug === "1") {
+											console.log("VOOPLAYER: Blur: calling pause()");
+										}
+										vooAPI(ld_video_player.vooPlayerID, "pause");
+									}
+								}
+							} else if (ld_video_player.player_type === "local") {
+								if (ld_video_state === "focus") {
+									if (learndash_video_data.videos_show_controls != true) {
+										if (learndash_video_data.video_debug === "1") {
+											console.log("LOCAL: Focus: calling playVideo()");
 										}
 										ld_video_player.player.play();
 									}
-								} else if ( ld_video_state === 'blur' ) {
-									if ( learndash_video_data.video_debug === '1' ) {
-										console.log( 'LOCAL: Blur: calling pauseVideo()' );
+								} else if (ld_video_state === "blur") {
+									if (learndash_video_data.video_debug === "1") {
+										console.log("LOCAL: Blur: calling pauseVideo()");
 									}
 									ld_video_player.player.pause();
 								}

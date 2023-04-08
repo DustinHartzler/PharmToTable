@@ -1,5 +1,16 @@
 <?php
 /**
+ * LearnDash Widget Alert Message.
+ *
+ * @since 4.0.0
+ * @package LearnDash\Widgets
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
  * Displays alert message for LearnDash related Appearance->Widgets
  *
  * @since 4.0.0

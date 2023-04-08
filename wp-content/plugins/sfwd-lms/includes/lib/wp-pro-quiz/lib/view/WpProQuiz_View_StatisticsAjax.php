@@ -205,7 +205,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 						if ( ! $this->avg && null !== $q['statistcAnswerData'] ) {
 							/**
 							 * Changed above logic which removes all shortcodes and HTML tags. This is better served as a filter.
-							 * @since 2.4
+							 * @since 2.4.0
 							*/
 
 							/**
@@ -510,9 +510,9 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 					<?php
 					if ( ( isset( $questionData['correct'] ) ) && ( ! empty( $questionData['correct'] ) ) ) {
 						foreach ( $questionData['correct'] as $idx => $t_ans ) {
-							$questionData['correct'][ $idx ] = do_shortcode( $t_ans );
+							$questionData['correct'][ $idx ] = esc_attr( $t_ans );
 						}
-						echo implode( ', ', $questionData['correct'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+						echo implode( ', ', $questionData['correct'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					}
 					?>
 				</li>
@@ -773,7 +773,7 @@ class WpProQuiz_View_StatisticsAjax extends WpProQuiz_View_View {
 			}
 
 			$a  = '<span class="wpProQuiz_cloze ' . $correct_class . '">' . esc_html( $correct_value ) . '</span> ';
-			$a .= '<span>(' . $answers_row_text . ')</span>';
+			$a .= '<span class="wpProQuiz_answers wpProQuiz_answers_cloze">(' . $answers_row_text . ')</span>';
 
 			$replace_key = '@@wpProQuizCloze-' . $correct_key . '@@';
 

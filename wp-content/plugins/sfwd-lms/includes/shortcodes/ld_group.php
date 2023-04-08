@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type int     $group_id Course ID.
  *    @type int     $user_id  User ID.
  *    @type string  $content  The shortcode content.
- *    @type boolean $autop    Whether to replace linebreaks with paragraph elements.
+ *    @type boolean $autop    Whether to replace line breaks with paragraph elements.
  * }
  * @param string $content The shortcode content. Default empty.
  * @param string $shortcode_slug The shortcode slug. Default 'ld_group'.

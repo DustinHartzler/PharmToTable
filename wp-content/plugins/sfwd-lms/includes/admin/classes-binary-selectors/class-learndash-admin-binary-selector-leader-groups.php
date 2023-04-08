@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Binary Selector Leader Grups.
+ * LearnDash Binary Selector Leader Groups.
  *
  * @since 2.2.1
  * @package LearnDash\Settings
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ( ! class_exists( 'Learndash_Binary_Selector_Leader_Groups' ) ) && ( class_exists( 'Learndash_Binary_Selector_Posts' ) ) ) {
 	/**
-	 * Class LearnDash Binary Selector Leader Grups.
+	 * Class LearnDash Binary Selector Leader Groups.
 	 *
 	 * @since 2.2.1
 	 * @uses Learndash_Binary_Selector_Posts

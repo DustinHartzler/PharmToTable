@@ -1,7 +1,7 @@
 <?php
 /**
  * LearnDash Factory Post Class.
- * This is a factory class used to instansiate course and quiz related data.
+ * This is a factory class used to instantiate LD custom post type related data.
  *
  * @since 2.5.0
  * @package LearnDash
@@ -23,10 +23,10 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		/**
 		 * Get a Course.
 		 *
-		 * @param integer $course Either course_id integer or WP_Post instance.
-		 * @param boolean $reload To force reload of instance.
+		 * @param int|object $course Either course_id integer or WP_Post instance.
+		 * @param bool       $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course or null
+		 * @return object|null Instance of `LDLMS_Model_Course` or null
 		 */
 		public static function course( $course = null, $reload = false ) {
 			if ( ! empty( $course ) ) {
@@ -53,10 +53,10 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		/**
 		 * Get a Lesson.
 		 *
-		 * @param integer $lesson Either lesson_id integer or WP_Post instance.
-		 * @param boolean $reload To force reload of instance.
+		 * @param int|object $lesson Either lesson_id integer or WP_Post instance.
+		 * @param bool       $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Lesson or null
+		 * @return object|null Instance of `LDLMS_Model_Lesson` or null
 		 */
 		public static function lesson( $lesson = null, $reload = false ) {
 			if ( ! empty( $lesson ) ) {
@@ -83,17 +83,17 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		/**
 		 * Get Course.
 		 *
-		 * @param mixed $course Either course_id integer or WP_Post instance.
+		 * @param int|object $course Either course_id integer or WP_Post instance.
 		 */
 		public static function get_course( $course ) {}
 
 		/**
 		 * Get Course Lessons.
 		 *
-		 * @param mixed $course Either course_id integer or WP_Post instance.
-		 * @param mixed $lesson Either lesson_id integer or WP_Post instance.
+		 * @param int|object $course Either course_id integer or WP_Post instance.
+		 * @param int|object $lesson Either lesson_id integer or WP_Post instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course or null
+		 * @return array An array of course lessons
 		 */
 		public static function get_course_lessons( $course = null, $lesson = null ) {
 			if ( ! empty( $course ) ) {
@@ -113,16 +113,16 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 				}
 			}
 
-			return null;
+			return array();
 		}
 
 		/**
 		 * Get a Quiz Questions.
 		 *
-		 * @param mixed   $quiz Either quiz_id integer or WP_Post instance.
-		 * @param boolean $reload To force reload of instance.
+		 * @param int|object $quiz Either quiz_id integer or WP_Post instance.
+		 * @param bool       $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Quiz_Questions or null
+		 * @return object|null Instance of `LDLMS_Quiz_Questions` or null
 		 */
 		public static function quiz_questions( $quiz = null, $reload = false ) {
 			if ( ! empty( $quiz ) ) {
@@ -150,10 +150,10 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		/**
 		 * Get a Course Steps.
 		 *
-		 * @param mixed   $course Either course_id integer or WP_Post instance.
-		 * @param boolean $reload To force reload of instance.
+		 * @param int|object $course Either course_id integer or WP_Post instance.
+		 * @param bool       $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Course_Steps or null
+		 * @return object|null Instance of `LDLMS_Course_Steps` or null
 		 */
 		public static function course_steps( $course = null, $reload = false ) {
 			if ( ! empty( $course ) ) {
@@ -183,11 +183,11 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 *
 		 * @since 4.0.0
 		 *
-		 * @param integer $exam   Either exam_id integer or WP_Post instance.
-		 * @param array   $atts   Array of attributes (course_id, user_id).
-		 * @param boolean $reload To force reload of instance.
+		 * @param int|object $exam   Either exam_id integer or WP_Post instance.
+		 * @param array      $atts   Array of attributes (course_id, user_id).
+		 * @param bool       $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Exam or null
+		 * @return object|null Instance of `LDLMS_Model_Exam` or null
 		 */
 		public static function exam( $exam = null, $atts = array(), $reload = false ) {
 			if ( ! empty( $exam ) ) {
@@ -204,7 +204,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 					$model_key = $exam_id;
 					if ( ( is_array( $atts ) ) && ( ! empty( $atts ) ) ) {
 						ksort( $atts );
-						$model_key = $exam_id . '-' . md5( serialize( $atts ) );
+						$model_key = $exam_id . '-' . md5( serialize( $atts ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 					}
 
 					if ( true === $reload ) {
@@ -225,7 +225,7 @@ if ( ( ! class_exists( 'LDLMS_Factory_Post' ) ) && ( class_exists( 'LDLMS_Factor
 		 * @param array   $exam_question_block Array of question attributes.
 		 * @param boolean $reload              To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Exam_Question or null
+		 * @return object|null Instance of `LDLMS_Model_Exam_Question` or null
 		 */
 		public static function exam_question( $exam_question_block = array(), $reload = false ) {
 			if ( ! empty( $exam_question_block ) ) {

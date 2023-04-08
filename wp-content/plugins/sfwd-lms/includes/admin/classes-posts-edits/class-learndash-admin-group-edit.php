@@ -19,14 +19,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 	 * @uses Learndash_Admin_Post_Edit
 	 */
 	class Learndash_Admin_Group_Edit extends Learndash_Admin_Post_Edit {
-
-		/**
-		 * Object level variable for current Group ID being edited.
-		 *
-		 * @var integer $group_id
-		 */
-		private $group_id = 0;
-
 		/**
 		 * Public constructor for class.
 		 *
@@ -168,7 +160,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				'menu_order'  => $post->menu_order,
 			);
 
-			if ( ( isset( $_POST['ld-group-attributes-metabox-nonce'] ) ) && ( ! empty( $_POST['ld-group-attributes-metabox-nonce'] ) ) && wp_verify_nonce( $_POST['ld-group-attributes-metabox-nonce'], 'ld-group-attributes-metabox-nonce' ) ) {
+			if ( ( isset( $_POST['ld-group-attributes-metabox-nonce'] ) ) && ( ! empty( $_POST['ld-group-attributes-metabox-nonce'] ) ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ld-group-attributes-metabox-nonce'] ) ), 'ld-group-attributes-metabox-nonce' ) ) {
 
 				$updated_post = false;
 
@@ -187,9 +179,9 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				}
 			}
 
-			$group_leaders = [];
-			$group_users   = [];
-			$group_courses = [];
+			$group_leaders = array();
+			$group_users   = array();
+			$group_courses = array();
 
 			/**
 			 * Fires after the group post data is updated.
@@ -202,7 +194,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			 * @param array   $group_users   An array of group users.
 			 * @param array   $group_courses An array of group courses.
 			 */
-			do_action_deprecated( 'ld_group_postdata_updated', [ $post_id, $group_leaders, $group_users, $group_courses ], '3.1.7' );
+			do_action_deprecated( 'ld_group_postdata_updated', array( $post_id, $group_leaders, $group_users, $group_courses ), '3.1.7' );
 		}
 
 		// End of functions.

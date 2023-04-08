@@ -29,7 +29,10 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				'course_id' => array(
 					'type' => 'string',
 				),
-				'group_id' => array(
+				'group_id'  => array(
+					'type' => 'string',
+				),
+				'user_id'   => array(
 					'type' => 'string',
 				),
 				'autop'     => array(
@@ -45,17 +48,17 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * This function is called per the register_block_type() function above. This function will output
 		 * the block rendered content. In the case of this function the rendered output will be for the
-		 * [ld_profile] shortcode.
+		 * [visitor] shortcode.
 		 *
 		 * @since 4.0.0
 		 *
-		 * @param array    $block_attributes The block attrbutes.
+		 * @param array    $block_attributes The block attributes.
 		 * @param string   $block_content    The block content.
-		 * @param WP_block $block            The block object.
+		 * @param WP_Block $block            The block object.
 		 *
-		 * @return none The output is echoed.
+		 * @return string The rendered output HTML.
 		 */
-		public function render_block( $block_attributes = array(), $block_content = '', WP_block $block = null ) {
+		public function render_block( $block_attributes = array(), $block_content = '', WP_Block $block = null ) {
 			$block_attributes = $this->preprocess_block_attributes( $block_attributes );
 
 			/** This filter is documented in includes/gutenberg/blocks/ld-course-list/index.php */

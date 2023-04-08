@@ -43,11 +43,7 @@ do_action( 'learndash-focus-sidebar-before', $course_id, $user_id ); ?>
 			 */
 			do_action( 'learndash-focus-sidebar-trigger-before', $course_id, $user_id );
 			?>
-			<?php if ( is_rtl() ) { ?>
-			<span class="ld-icon ld-icon-arrow-right"></span>
-			<?php } else { ?>
-			<span class="ld-icon ld-icon-arrow-left"></span>
-			<?php } ?>
+			<span class="ld-icon <?php echo esc_attr( learndash_30_get_focus_mode_sidebar_arrow_class() ); ?>"></span>
 			<?php
 			/**
 			 * Fires after the sidebar trigger in the focus template.

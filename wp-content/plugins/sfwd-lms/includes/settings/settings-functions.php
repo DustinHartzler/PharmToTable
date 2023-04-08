@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param int|WP_Post $post    The `WP_Post` object or Post ID.
  * @param string|null $setting Optional. The slug of the setting to get. Default null.
  *
- * @return string|void The value for requested setting.
+ * @return mixed The value for requested setting.
  */
 function learndash_get_setting( $post, $setting = null ) {
 
@@ -123,8 +123,8 @@ function learndash_get_setting( $post, $setting = null ) {
 						return $meta[ $post->post_type . '_' . $setting ];
 					} else {
 						if ( ( isset( $meta[ $post->post_type . '_quiz_pro' ] ) ) && ( ! empty( $meta[ $post->post_type . '_quiz_pro' ] ) ) ) {
-							$quizMapper = new WpProQuiz_Model_QuizMapper();
-							$quiz       = $quizMapper->fetch( $meta[ $post->post_type . '_quiz_pro' ] );
+							$quizMapper = new WpProQuiz_Model_QuizMapper(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+							$quiz       = $quizMapper->fetch( $meta[ $post->post_type . '_quiz_pro' ] ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 							if ( ( $quiz ) && ( is_a( $quiz, 'WpProQuiz_Model_Quiz' ) ) ) {
 								return $quiz->isStatisticsOn();
 							}
@@ -157,16 +157,16 @@ function learndash_get_setting( $post, $setting = null ) {
  *
  * @param int|WP_Post $post    The `WP_Post` object or Post ID.
  * @param string      $setting The slug of the setting to update.
- * @param string      $value   The new value of setting to be updated.
+ * @param mixed       $value   The new value of setting to be updated.
  *
- * @return boolean Returns true if the update was successfull otherwise false.
+ * @return boolean Returns true if the update was successful, otherwise false.
  */
 function learndash_update_setting( $post, $setting, $value ) {
-	$return = false;
-
 	if ( empty( $setting ) ) {
-		return $return;
+		return false;
 	}
+
+	$return = false;
 
 	// Were we sent a post ID?
 	if ( is_numeric( $post ) ) {
@@ -295,7 +295,7 @@ function learndash_update_setting( $post, $setting, $value ) {
 				/**
 				 * If this quiz was the primary for all shared settings. We need to
 				 * delete the primary marker then move the primary marker to another
-				 * quiz using the same shared settngs.
+				 * quiz using the same shared settings.
 				 */
 				$quiz_id_primary_org = absint( learndash_get_quiz_primary_shared( $quiz_pro_id_org, false ) );
 				if ( $quiz_id_primary_org === $post->ID ) {
@@ -330,6 +330,8 @@ function learndash_update_setting( $post, $setting, $value ) {
 				}
 
 				global $wpdb;
+
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$quiz_query_results = $wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key LIKE %s",
@@ -345,6 +347,23 @@ function learndash_update_setting( $post, $setting, $value ) {
 			update_post_meta( $post->ID, '_viewProfileStatistics', $value );
 		} elseif ( 'timeLimitCookie' === $setting ) {
 			update_post_meta( $post->ID, '_timeLimitCookie', absint( $value ) );
+		} elseif (
+			// Coupon simple fields.
+			in_array(
+				$setting,
+				array(
+					LEARNDASH_COUPON_META_KEY_CODE,
+					LEARNDASH_COUPON_META_KEY_TYPE,
+					LEARNDASH_COUPON_META_KEY_REDEMPTIONS,
+					LEARNDASH_COUPON_META_KEY_START_DATE,
+					LEARNDASH_COUPON_META_KEY_END_DATE,
+					LEARNDASH_COUPON_META_KEY_PREFIX_APPLY_TO_ALL . 'courses',
+					LEARNDASH_COUPON_META_KEY_PREFIX_APPLY_TO_ALL . 'groups',
+				),
+				true
+			)
+		) {
+			update_post_meta( $post->ID, $setting, $value );
 		}
 
 		$meta[ $post->post_type . '_' . $setting ] = $value;

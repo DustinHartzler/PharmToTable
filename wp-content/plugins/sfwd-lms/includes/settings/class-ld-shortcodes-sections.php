@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Admin Shortcods Section Class.
+ * LearnDash Admin Shortcodes Section Class.
  *
  * @since 2.4.0
  * @package LearnDash\Settings\Shortcodes
@@ -164,7 +164,9 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		public function show_shortcodes_section_header() {
 			/**
 			 * Action shortcodes section header before form.
+			 *
 			 * @since 4.0.0
+			 *
 			 * @param string $shortcodes_section_key Shortcodes section key.
 			 */
 			do_action( 'learndash_shortcodes_section_header_before_form', $this->shortcodes_section_key );
@@ -173,7 +175,9 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 				<?php
 				/**
 				 * Action shortcodes section header before title output.
+				 *
 				 * @since 4.0.0
+				 *
 				 * @param string $shortcodes_section_key Shortcodes section key.
 				 */
 				do_action( 'learndash_shortcodes_section_header_before_title', $this->shortcodes_section_key );
@@ -182,16 +186,20 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 				<?php
 				/**
 				 * Action shortcodes section header before description output.
+				 *
 				 * @since 4.0.0
+				 *
 				 * @param string $shortcodes_section_key Shortcodes section key.
 				 */
 				do_action( 'learndash_shortcodes_section_header_before_description', $this->shortcodes_section_key );
 				?>
 				<?php $this->show_shortcodes_section_description(); ?>
-				<?php 
+				<?php
 				/**
 				 * Action shortcodes section before content output.
+				 *
 				 * @since 4.0.0
+				 *
 				 * @param string $shortcodes_section_key Shortcodes section key.
 				 */
 				do_action( 'learndash_shortcodes_section_before_content', $this->shortcodes_section_key );
@@ -208,10 +216,12 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		public function show_shortcodes_section_footer() {
 			?>
 				</div>
-				<?php 
+				<?php
 				/**
 				 * Action shortcodes section after content output.
+				 *
 				 * @since 4.0.0
+				 *
 				 * @param string $shortcodes_section_key Shortcodes section key.
 				 */
 				do_action( 'learndash_shortcodes_section_after_content', $this->shortcodes_section_key );
@@ -221,7 +231,9 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 				<?php
 				/**
 				 * Action shortcodes section before button output.
+				 *
 				 * @since 4.0.0
+				 *
 				 * @param string $shortcodes_section_key Shortcodes section key.
 				 */
 				do_action( 'learndash_shortcodes_section_before_button', $this->shortcodes_section_key );
@@ -230,7 +242,9 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 				<?php
 				/**
 				 * Action shortcodes section after button output.
+				 *
 				 * @since 4.0.0
+				 *
 				 * @param string $shortcodes_section_key Shortcodes section key.
 				 */
 				do_action( 'learndash_shortcodes_section_after_button', $this->shortcodes_section_key );
@@ -239,11 +253,12 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 			<?php
 			/**
 			 * Action shortcodes section header after form.
+			 *
 			 * @since 4.0.0
+			 *
 			 * @param string $shortcodes_section_key Shortcodes section key.
 			 */
 			do_action( 'learndash_shortcodes_section_header_after_form', $this->shortcodes_section_key );
-			
 		}
 
 		/**

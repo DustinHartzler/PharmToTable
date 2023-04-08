@@ -11,7 +11,7 @@
  *
  * $topics    :   An array of the associated topics
  *
- * @since 3.0
+ * @since 3.0.0
  *
  * @package LearnDash\Templates\LD30
  */
@@ -50,8 +50,7 @@ do_action( 'learndash-topic-list-before', $lesson['post']->ID, $course_id, $user
 			 * @param string $table_class Lesson table CSS class list.
 			 */
 			echo esc_attr( apply_filters( 'ld-lesson-table-class', $table_class ) );
-			?>
-			" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>">
+			?> <?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>">
 
 	<div class="ld-table-list-header ld-primary-background">
 
@@ -180,7 +179,7 @@ do_action( 'learndash-topic-list-before', $lesson['post']->ID, $course_id, $user
 
 	</div> <!--/.ld-table-list-header-->
 
-	<div class="ld-table-list-items" id="<?php echo esc_attr( 'ld-topic-list-' . $lesson['post']->ID ); ?>" data-ld-expand-list>
+	<div class="ld-table-list-items <?php echo esc_attr( 'ld-topic-list-' . $lesson['post']->ID ); ?>" id="<?php echo esc_attr( 'ld-topic-list-' . $lesson['post']->ID ); ?>" data-ld-expand-list>
 
 		<?php
 		if ( $topics && ! empty( $topics ) ) :

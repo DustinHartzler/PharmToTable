@@ -50,7 +50,8 @@ if ( ( ! class_exists( 'LearnDash_Course_Progress_Widget' ) ) && ( class_exists(
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
 
-			extract( $args );
+			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+
 			/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
 			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance );
 

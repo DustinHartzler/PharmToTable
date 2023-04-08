@@ -21,7 +21,7 @@ if ( ! class_exists( 'LDLMS_Model' ) ) {
 		/**
 		 * Private constructor for class.
 		 *
-		 * @since 3.3
+		 * @since 3.3.0
 		 */
 		private function __construct() {}
 	}

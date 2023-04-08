@@ -37,7 +37,8 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 		$atts = array();
 	}
 
-	$viewed_post_id = (int) get_the_ID();
+	$viewed_post_id   = (int) get_the_ID();
+	$viewed_post_type = get_post_type( $viewed_post_id );
 
 	$atts_defaults = array(
 		'course_id' => '',
@@ -52,7 +53,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
 	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
-	// This is not an offivial shortcode attribute so we add it after the filter as it will be used below.
+	// This is not an official shortcode attribute so we add it after the filter as it will be used below.
 	$atts['user_id'] = get_current_user_id();
 
 	if ( ! empty( $atts['course_id'] ) ) {
@@ -73,6 +74,19 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 		}
 	}
 
+	if ( ( '' === $atts['course_id'] ) && ( ! empty( $viewed_post_id ) ) && ( in_array( get_post_type( $viewed_post_id ), learndash_get_post_types( 'course' ), true ) ) ) {
+		$atts['course_id'] = learndash_get_course_id( $viewed_post_id );
+	}
+
+	/**
+	 * Support for legacy course_content logic. If the $atts['course_id'] is set, but not the same as
+	 * the viewed post ID. And the $atts['post_id'] is literally blank string. Then we will set the
+	 * $atts['post_id'] to 0 (int) to force the logic to run.
+	 */
+	if ( ( '' === $atts['post_id'] ) && ( ! empty( $atts['course_id'] ) ) && ( absint( $atts['course_id'] ) !== $viewed_post_id ) ) {
+		$atts['post_id'] = '0';
+	}
+
 	// If the 'post_id' is set to '0' it will trigger showing the course lessons listing.
 	if ( '0' === $atts['post_id'] ) {
 		if ( ! empty( $atts['course_id'] ) ) {
@@ -83,9 +97,6 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 			if ( ! empty( $viewed_post_id ) ) {
 				if ( in_array( get_post_type( $viewed_post_id ), learndash_get_post_types( 'course' ), true ) ) {
 					$atts['post_id'] = $viewed_post_id;
-					if ( empty( $atts['course_id'] ) ) {
-						$atts['course_id'] = learndash_get_course_id( $atts['post_id'] );
-					}
 				} elseif ( get_post_type( $viewed_post_id ) === learndash_get_post_type_slug( 'group' ) ) {
 					$atts['group_id']  = $viewed_post_id;
 					$atts['post_id']   = 0;
@@ -106,27 +117,16 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 	$atts['group_id']  = absint( $atts['group_id'] );
 	$atts['user_id']   = absint( $atts['user_id'] );
 	$atts['paged']     = absint( $atts['paged'] );
-	$atts['num']       = esc_attr( $atts['num'] );
 	$atts['wrapper']   = (bool) $atts['wrapper'];
+
+	if ( '' !== $atts['num'] ) {
+		$atts['num'] = absint( $atts['num'] );
+	}
 
 	if ( ! empty( $atts['group_id'] ) ) {
 		$shown_content_key = $atts['group_id'] . '_' . $atts['user_id'];
-		/*
-		if ( isset( $shown_content[ $shown_content_key ] ) ) {
-			if ( ( absint( $atts['group_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['group_id'] ) === learndash_get_post_type_slug( 'group' ) ) ) {
-				return $content;
-			}
-		}
-		*/
 	} elseif ( ! empty( $atts['course_id'] ) ) {
 		$shown_content_key = $atts['course_id'] . '_' . $atts['post_id'] . '_' . $atts['user_id'];
-		/*
-		if ( isset( $shown_content[ $shown_content_key ] ) ) {
-			if ( ( ! empty( $atts['post_id'] ) ) && ( absint( $atts['post_id'] ) === absint( get_the_ID() ) ) && ( in_array( get_post_type( $atts['post_id'] ), learndash_get_post_types( 'course' ), true ) ) ) {
-				return $content;
-			}
-		}
-		*/
 	}
 
 	if ( ( ! isset( $shown_content_key ) ) || ( empty( $shown_content_key ) ) ) {
@@ -198,7 +198,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 		}
 
 		if ( '' === $atts['num'] ) {
-			$lessons_per_page = learndash_get_course_lessons_per_page( $atts['post_id'] );
+			$lessons_per_page = learndash_get_course_lessons_per_page( $atts['course_id'] );
 			if ( ! empty( $lessons_per_page ) ) {
 				$atts['num'] = absint( $lessons_per_page );
 			} else {
@@ -249,9 +249,6 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 
 		$user_has_access = $has_access ? 'user_has_access' : 'user_has_no_access';
 
-		/** This filter is documented in includes/class-ld-cpt-instance.php */
-		$shortcode_out = apply_filters( 'learndash_content', $shortcode_out, $post_post );
-
 		if ( ! empty( $shortcode_out ) ) {
 			if ( $atts['wrapper'] ) {
 				$shortcode_out = '<div class="learndash ' . $user_has_access . '" id="learndash_post_' . $course_id . '">' . $shortcode_out . '</div>';
@@ -275,7 +272,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 			}
 		}
 
-		if ( learndash_lesson_hasassignments( $post_post ) && ! empty( $atts['user_id'] ) ) {
+		if ( learndash_lesson_hasassignments( $post_post ) && ! empty( $atts['user_id'] ) ) { // cspell:disable-line.
 			$bypass_course_limits_admin_users = learndash_can_user_bypass( $atts['user_id'], 'learndash_lesson_assignment' );
 			$course_children_steps_completed  = learndash_user_is_course_children_progress_complete( $atts['user_id'], $atts['course_id'], $atts['post_id'] );
 			if ( ( learndash_lesson_progression_enabled() && ( true === $course_children_steps_completed ) ) || ( ! learndash_lesson_progression_enabled() ) || ( true === $bypass_course_limits_admin_users ) ) {
@@ -289,6 +286,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 						'course_step_post' => $post_post,
 						'user_id'          => $atts['user_id'],
 						'course_id'        => $atts['course_id'],
+						'context'          => 'topic',
 					),
 					true
 				);
@@ -323,7 +321,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 		}
 	} elseif ( ( ! empty( $atts['post_id'] ) ) && ( ( learndash_get_post_type_slug( 'lesson' ) === get_post_type( $atts['post_id'] ) ) ) ) {
 		$post_post = get_post( $atts['post_id'] );
-		if ( learndash_lesson_hasassignments( $post_post ) && ! empty( $atts['user_id'] ) ) {
+		if ( learndash_lesson_hasassignments( $post_post ) && ! empty( $atts['user_id'] ) ) { // cspell:disable-line.
 			$bypass_course_limits_admin_users = learndash_can_user_bypass( $atts['user_id'], 'learndash_lesson_assignment' );
 			$course_children_steps_completed  = learndash_user_is_course_children_progress_complete( $atts['user_id'], $atts['course_id'], $atts['post_id'] );
 			if ( ( learndash_lesson_progression_enabled() && ( true === $course_children_steps_completed ) ) || ( ! learndash_lesson_progression_enabled() ) || ( true === $bypass_course_limits_admin_users ) ) {
@@ -337,6 +335,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 						'course_step_post' => $post_post,
 						'user_id'          => $atts['user_id'],
 						'course_id'        => $atts['course_id'],
+						'context'          => 'lesson',
 					),
 					true
 				);
@@ -348,7 +347,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 			}
 		}
 
-		if ( false === $atts['num'] ) {
+		if ( '' === $atts['num'] ) {
 			$topics_per_page = learndash_get_course_topics_per_page( $atts['course_id'], $atts['post_id'] );
 			if ( ! empty( $topics_per_page ) ) {
 				$atts['num'] = absint( $topics_per_page );
@@ -403,7 +402,7 @@ function learndash_course_content_shortcode( $atts = array(), $content = '', $sh
 	}
 
 	if ( ( isset( $shown_content[ $shown_content_key ] ) ) && ( ! empty( $shown_content[ $shown_content_key ] ) ) ) {
-		$content                 .= '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap learndash-shortcode-wrap-'  . $shortcode_slug . '-' . $shown_content_key . '">' . $shown_content[ $shown_content_key ] . '</div>';
+		$content                 .= '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap learndash-shortcode-wrap-' . $shortcode_slug . '-' . $shown_content_key . '">' . $shown_content[ $shown_content_key ] . '</div>';
 		$learndash_shortcode_used = true;
 	}
 

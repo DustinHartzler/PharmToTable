@@ -41,7 +41,8 @@ function learndash_quizinfo( $attr = array(), $content = '', $shortcode_slug = '
 
 	$shortcode_atts = shortcode_atts(
 		array(
-			'show'     => '', // [score], [count], [pass], [rank], [timestamp], [pro_quizid], [points], [total_points], [percentage], [timespent].
+			/** [score], [count], [pass], [rank], [timestamp], [pro_quizid], [points], [total_points], [percentage], [timespent]. */
+			'show'     => 'quiz_title',
 			'user_id'  => '',
 			'quiz'     => '',
 			'time'     => '',
@@ -61,14 +62,14 @@ function learndash_quizinfo( $attr = array(), $content = '', $shortcode_slug = '
 		$shortcode_atts['time'] = absint( $shortcode_atts['time'] );
 	}
 
-	extract( $shortcode_atts );
+	extract( $shortcode_atts ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
-	$time      = ( empty( $time ) && isset( $_REQUEST['time'] ) ) ? absint( $_REQUEST['time'] ) : $time;
-	$show      = ( empty( $show ) && isset( $_REQUEST['show'] ) ) ? esc_attr( $_REQUEST['show'] ) : $show;
-	$quiz      = ( empty( $quiz ) && isset( $_REQUEST['quiz'] ) ) ? absint( $_REQUEST['quiz'] ) : $quiz;
-	$user_id   = ( empty( $user_id ) && isset( $_REQUEST['user_id'] ) ) ? absint( $_REQUEST['user_id'] ) : $user_id;
-	$course_id = ( empty( $course_id ) && isset( $_REQUEST['course_id'] ) ) ? absint( $_REQUEST['course_id'] ) : null;
-	$field_id  = ( empty( $field_id ) && isset( $_REQUEST['field_id'] ) ) ? absint( $_REQUEST['field_id'] ) : $field_id;
+	$time      = ( empty( $time ) && isset( $_REQUEST['time'] ) ) ? absint( $_REQUEST['time'] ) : $time; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$show      = ( empty( $show ) && isset( $_REQUEST['show'] ) ) ? esc_attr( $_REQUEST['show'] ) : $show; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	$quiz      = ( empty( $quiz ) && isset( $_REQUEST['quiz'] ) ) ? absint( $_REQUEST['quiz'] ) : $quiz; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$user_id   = ( empty( $user_id ) && isset( $_REQUEST['user_id'] ) ) ? absint( $_REQUEST['user_id'] ) : $user_id; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$course_id = ( empty( $course_id ) && isset( $_REQUEST['course_id'] ) ) ? absint( $_REQUEST['course_id'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$field_id  = ( empty( $field_id ) && isset( $_REQUEST['field_id'] ) ) ? absint( $_REQUEST['field_id'] ) : $field_id; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 	if ( empty( $user_id ) ) {
 		$user_id = get_current_user_id();
@@ -76,7 +77,7 @@ function learndash_quizinfo( $attr = array(), $content = '', $shortcode_slug = '
 		/**
 		 * Added logic to allow admin and group_leader to view certificate from other users.
 		 *
-		 * @since 2.3
+		 * @since 2.3.0
 		 */
 		$post_type = '';
 		if ( get_query_var( 'post_type' ) ) {
@@ -84,8 +85,8 @@ function learndash_quizinfo( $attr = array(), $content = '', $shortcode_slug = '
 		}
 
 		if ( 'sfwd-certificates' === $post_type ) {
-			if ( ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( ( isset( $_GET['user'] ) ) && ( ! empty( $_GET['user'] ) ) ) ) {
-				$user_id = intval( $_GET['user'] );
+			if ( ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( ( isset( $_GET['user'] ) ) && ( ! empty( $_GET['user'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$user_id = intval( $_GET['user'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 	}
@@ -141,12 +142,9 @@ function learndash_quizinfo( $attr = array(), $content = '', $shortcode_slug = '
 			break;
 
 		case 'percentage':
-			if ( ( isset( $selected_quizinfo['count'] ) ) && ( isset( $selected_quizinfo['score'] ) ) && ( ! empty( $selected_quizinfo['count'] ) ) ) {
-				$selected_quizinfo['percentage'] = $selected_quizinfo['score'] * 100 / $selected_quizinfo['count'];
-			} else {
-				$selected_quizinfo['percentage'] = '';
+			if ( empty( $selected_quizinfo['percentage'] ) ) {
+				$selected_quizinfo['percentage'] = empty( $selected_quizinfo['count'] ) ? 0 : $selected_quizinfo['score'] * 100 / $selected_quizinfo['count'];
 			}
-
 			break;
 
 		case 'pass':

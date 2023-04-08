@@ -4,8 +4,7 @@
  *
  * @since 2.5.4
  *
- * @package LearnDash
- * @subpackage Add-on Updates
+ * @package LearnDash\Add-on
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -41,7 +40,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 
 		/**
 		 * Holds reference to BitBucket API object. This is how the updatero class
-		 * retreives the repositories and add-on updates.
+		 * retrieves the repositories and add-on updates.
 		 *
 		 * @var object $pp_api
 		 */
@@ -279,6 +278,13 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 
 			if ( isset( $this->data['plugins'][ $args->slug ] ) ) {
 				$data = json_decode( wp_json_encode( $this->data['plugins'][ $args->slug ] ), false );
+
+				if ( ( property_exists( $data, 'sections' ) ) && ( is_object( $data->sections ) ) ) {
+					$data->sections = (array) $data->sections;
+				}
+				if ( ( property_exists( $data, 'banners' ) ) && ( is_object( $data->banners ) ) ) {
+					$data->banners = (array) $data->banners;
+				}
 
 				// We already have the obj but we update the BB download URL just in case.
 				$data->download_link = $this->bb_api->get_bitbucket_repository_download_url( $data->slug );
@@ -627,7 +633,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 		}
 
 		/**
-		 * Update plugin readme. Retreives update via BB API.
+		 * Update plugin readme. Retrieves update via BB API.
 		 *
 		 * @param string  $plugin_slug Slug of plugin to update.
 		 * @param boolean $override_cache Flag to ignore cache.
@@ -713,7 +719,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 			$this->data['updates'] = array();
 			$all_plugins           = get_plugins();
 
-			// Then from the 'plugins' node. This lets us remove items we didn't retreive from 'repositories'.
+			// Then from the 'plugins' node. This lets us remove items we didn't retrieve from 'repositories'.
 			if ( ! empty( $this->data['plugins'] ) ) {
 				foreach ( $this->data['plugins'] as $plugin_slug => &$plugin_readme ) {
 

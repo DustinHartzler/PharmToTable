@@ -16,7 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	class LearnDash_Shortcodes_Section_course_notstarted extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_course_notstarted extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -60,13 +60,20 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'id'        => $this->shortcodes_section_key . '_course_id',
 					'name'      => 'course_id',
 					'type'      => 'number',
-					// translators: placeholder: Course.
-					'label'     => sprintf( esc_html_x( '%s ID', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
-
-					// translators: placeholders: Course, Course.
-					'help_text' => sprintf( esc_html_x( 'Enter single %1$s ID. Leave blank for current %2$s.', 'placeholders: Course, Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ), LearnDash_Custom_Label::get_label( 'course' ) ),
+					'label'     => sprintf(
+						// translators: placeholder: Course.
+						esc_html_x( '%s ID', 'placeholder: Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					'help_text' => sprintf(
+						// translators: placeholders: Course, Course.
+						esc_html_x( 'Enter single %1$s ID. Leave blank for current %2$s.', 'placeholders: Course, Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' ),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
 					'value'     => '',
 					'class'     => 'small-text',
+					'required'  => 'required',
 				),
 				'user_id'   => array(
 					'id'        => $this->shortcodes_section_key . '_user_id',
@@ -82,7 +89,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'name'      => 'autop',
 					'type'      => 'select',
 					'label'     => esc_html__( 'Auto Paragraph', 'learndash' ),
-					'help_text' => esc_html__( 'Format shortcode content into proper pararaphs.', 'learndash' ),
+					'help_text' => esc_html__( 'Format shortcode content into proper paragraphs.', 'learndash' ),
 					'value'     => 'true',
 					'options'   => array(
 						''      => esc_html__( 'Yes (default)', 'learndash' ),
@@ -91,12 +98,8 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 				),
 			);
 
-			if ( ( ! isset( $this->fields_args['post_type'] ) ) || ( ( 'sfwd-courses' !== $this->fields_args['post_type'] ) && ( 'sfwd-lessons' !== $this->fields_args['post_type'] ) && ( 'sfwd-topic' !== $this->fields_args['post_type'] ) ) ) {
-
-				$this->shortcodes_option_fields['course_id']['required'] = 'required';
-
-				// translators: placeholder: Course.
-				$this->shortcodes_option_fields['course_id']['help_text'] = sprintf( esc_html_x( 'Enter single %s ID.', 'placeholders: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
+			if ( ( isset( $this->fields_args['post_type'] ) ) && ( in_array( $this->fields_args['post_type'], learndash_get_post_types( 'course' ), true ) ) ) {
+				unset( $this->shortcodes_option_fields['course_id']['required'] );
 			}
 
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */

@@ -4,6 +4,7 @@
  * The functions will be removed in a later version.
  *
  * @package LearnDash\Deprecated
+ * @since 3.5.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -16,7 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	class LearnDash_Shortcodes_Section_ld_profile extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_ld_profile extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -50,10 +50,17 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'id'        => $this->shortcodes_section_key . '_per_page',
 					'name'      => 'per_page',
 					'type'      => 'number',
-					// translators: placeholder: Courses.
-					'label'     => sprintf( esc_html_x( '%s per page', 'placeholder: Courses', 'learndash' ), LearnDash_Custom_Label::get_label( 'Courses' ) ),
-					// translators: placeholder: placeholder: Courses, default per page.
-					'help_text' => sprintf( esc_html_x( '%1$s per page. Default is %2$d. Set to zero for all.', 'placeholder: Courses, default per page', 'learndash' ), LearnDash_Custom_Label::get_label( 'Courses' ), LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ) ),
+					'label'     => sprintf(
+						// translators: placeholder: Courses.
+						esc_html_x( '%s per page', 'placeholder: Courses', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'Courses' )
+					),
+					'help_text' => sprintf(
+						// translators: placeholder: placeholder: Courses, default per page.
+						esc_html_x( '%1$s per page. Default is %2$d. Set to zero for all.', 'placeholder: Courses, default per page', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'Courses' ),
+						LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' )
+					),
 					'value'     => false,
 					'class'     => 'small-text',
 				),
@@ -61,10 +68,19 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'id'        => $this->shortcodes_section_key . '_quiz_num',
 					'name'      => 'quiz_num',
 					'type'      => 'number',
-					// translators: placeholder: Quiz, Course.
-					'label'     => sprintf( esc_html_x( '%1$s attempts per %2$s', 'placeholder: Quiz, Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'Quiz' ), LearnDash_Custom_Label::get_label( 'Course') ),
-					// translators: placeholder: placeholder: Quiz, Course, default per page.
-					'help_text' => sprintf( esc_html_x( '%1$s attempts per %2$s. Default is %2$d. Set to zero for all.', 'placeholder: Quiz, default per page', 'learndash' ), LearnDash_Custom_Label::get_label( 'Quiz' ), LearnDash_Custom_Label::get_label( 'Course' ), LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ) ),
+					'label'     => sprintf(
+						// translators: placeholder: Quiz, Course.
+						esc_html_x( '%1$s attempts per %2$s', 'placeholder: Quiz, Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'Quiz' ),
+						LearnDash_Custom_Label::get_label( 'Course' )
+					),
+					'help_text' => sprintf(
+						// translators: placeholder: placeholder: Quiz, Course, default per page.
+						esc_html_x( '%1$s attempts per %2$s. Default is %2$d. Set to zero for all.', 'placeholder: Quiz, default per page', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'Quiz' ),
+						LearnDash_Custom_Label::get_label( 'Course' ),
+						LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' )
+					),
 					'value'     => false,
 					'class'     => 'small-text',
 				),

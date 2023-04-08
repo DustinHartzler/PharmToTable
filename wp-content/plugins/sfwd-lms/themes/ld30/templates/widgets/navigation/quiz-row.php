@@ -23,7 +23,14 @@ if ( isset( $context ) && 'lesson' === $context ) {
 	$classes['wrapper']   = 'ld-table-list-item-wrapper';
 	$classes['anchor']    = 'ld-table-list-item-preview ld-primary-color-hover' . ( get_the_ID() === absint( $quiz['post']->ID ) ? ' ld-is-current-item ' : '' );
 	$classes['title']     = 'ld-topic-title';
-} ?>
+}
+$attributes = learndash_get_course_step_attributes( $quiz['post']->ID, $course_id, $user_id );
+
+$learndash_quiz_available_date = learndash_course_step_available_date( $quiz['post']->ID, $course_id, $user_id, true );
+if ( ! empty( $learndash_quiz_available_date ) ) {
+	$classes['wrapper'] .= ' learndash-not-available';
+}
+?>
 
 <div class="<?php echo esc_attr( $classes['container'] ); ?>">
 	<div class="<?php echo esc_attr( $classes['wrapper'] ); ?>">
@@ -31,7 +38,16 @@ if ( isset( $context ) && 'lesson' === $context ) {
 
 			<?php learndash_status_icon( $quiz['status'], 'sfwd-quiz', null, true ); ?>
 
-			<div class="<?php echo esc_attr( $classes['title'] ); ?>"><?php echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) ); ?> </div> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
+			<div class="<?php echo esc_attr( $classes['title'] ); ?>"><?php
+			echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) ); 
+			if ( ! empty( $attributes ) ) :
+				foreach ( $attributes as $attribute ) :
+					?>
+				<span class="ld-status-icon <?php echo esc_attr( $attribute['class'] ); ?>" data-ld-tooltip="<?php echo esc_attr( $attribute['label'] ); ?>"><span class="ld-icon <?php echo esc_attr( $attribute['icon'] ); ?>"></span></span>
+					<?php
+				endforeach;
+			endif;
+			?> </div> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
 			<!--/.ld-lesson-title-->
 
 		</a> <!--/.ld-lesson-item-preview-heading-->

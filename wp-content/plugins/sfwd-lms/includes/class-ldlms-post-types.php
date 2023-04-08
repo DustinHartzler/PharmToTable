@@ -1,6 +1,6 @@
 <?php
 /**
- * Utility class to contain all the custom post typee used within LearnDash.
+ * Utility class to contain all the custom post types used within LearnDash.
  *
  * @since 2.6.0
  * @package LearnDash
@@ -15,23 +15,37 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 	 * Class to create the instance.
 	 */
 	class LDLMS_Post_Types {
+		const COURSE      = 'course';
+		const LESSON      = 'lesson';
+		const TOPIC       = 'topic';
+		const QUIZ        = 'quiz';
+		const QUESTION    = 'question';
+		const TRANSACTION = 'transaction';
+		const GROUP       = 'group';
+		const ASSIGNMENT  = 'assignment';
+		const ESSAY       = 'essay';
+		const CERTIFICATE = 'certificate';
+		const EXAM        = 'exam';
+		const COUPON      = 'coupon';
+
 		/**
 		 * Collection of all post types.
 		 *
 		 * @var array $post_types.
 		 */
 		private static $post_types = array(
-			'course'      => 'sfwd-courses',
-			'lesson'      => 'sfwd-lessons',
-			'topic'       => 'sfwd-topic',
-			'quiz'        => 'sfwd-quiz',
-			'question'    => 'sfwd-question',
-			'transaction' => 'sfwd-transactions',
-			'group'       => 'groups',
-			'assignment'  => 'sfwd-assignment',
-			'essay'       => 'sfwd-essays',
-			'certificate' => 'sfwd-certificates',
-			'exam'        => 'ld-exam',
+			self::COURSE      => 'sfwd-courses',
+			self::LESSON      => 'sfwd-lessons',
+			self::TOPIC       => 'sfwd-topic',
+			self::QUIZ        => 'sfwd-quiz',
+			self::QUESTION    => 'sfwd-question',
+			self::TRANSACTION => 'sfwd-transactions',
+			self::GROUP       => 'groups',
+			self::ASSIGNMENT  => 'sfwd-assignment',
+			self::ESSAY       => 'sfwd-essays',
+			self::CERTIFICATE => 'sfwd-certificates',
+			self::EXAM        => 'ld-exam',
+			self::COUPON      => 'ld-coupon',
 		);
 
 		/**
@@ -41,35 +55,36 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 		 */
 		private static $post_type_sections = array(
 			'all'            => array(
-				'course',
-				'lesson',
-				'topic',
-				'quiz',
-				'question',
-				'transaction',
-				'group',
-				'assignment',
-				'essay',
-				'certificate',
-				'exam',
+				self::COURSE,
+				self::LESSON,
+				self::TOPIC,
+				self::QUIZ,
+				self::QUESTION,
+				self::TRANSACTION,
+				self::GROUP,
+				self::ASSIGNMENT,
+				self::ESSAY,
+				self::CERTIFICATE,
+				self::EXAM,
+				self::COUPON,
 			),
-			'course'         => array(
-				'course',
-				'lesson',
-				'topic',
-				'quiz',
+			self::COURSE     => array(
+				self::COURSE,
+				self::LESSON,
+				self::TOPIC,
+				self::QUIZ,
 			),
 			'course_steps'   => array(
-				'lesson',
-				'topic',
-				'quiz',
+				self::LESSON,
+				self::TOPIC,
+				self::QUIZ,
 			),
-			'quiz'           => array(
-				'quiz',
-				'question',
+			self::QUIZ       => array(
+				self::QUIZ,
+				self::QUESTION,
 			),
 			'quiz_questions' => array(
-				'question',
+				self::QUESTION,
 			),
 		);
 
@@ -117,7 +132,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 		 * @param string $return_type       Used to designate the returned value. String or array.
 		 * @param string $quote_char        Wrap the return values in quote character. Only for return_type 'string'.
 		 *
-		 * @return array of post type slugs.
+		 * @return array|string Post type slugs array or string. See `$return_type` parameter.
 		 */
 		public static function get_post_types( $post_type_section = 'all', $return_type = 'array', $quote_char = '' ) {
 			$post_types_return = array();
@@ -167,7 +182,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 		 * @param string       $return_type   Used to designate the returned value. String or array.
 		 * @param string       $quote_char    Wrap the return values in quote character. Only for return_type 'string'.
 		 *
-		 * @return string|array post type slug if found.
+		 * @return ($post_type_key is string ? string : array). Return type can be changed. See `$return_type` parameter.
 		 */
 		public static function get_post_type_slug( $post_type_key = '', $return_type = '', $quote_char = '' ) {
 			if ( ! empty( $post_type_key ) ) {
@@ -181,7 +196,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 						$return_type = 'array';
 					}
 				} else {
-					return;
+					return '';
 				}
 
 				if ( is_array( $post_type_key ) ) {

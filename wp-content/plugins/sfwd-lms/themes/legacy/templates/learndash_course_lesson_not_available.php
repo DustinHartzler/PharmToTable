@@ -10,7 +10,7 @@
  * ld_lesson_access_from_date : (string) Formatted human readable date/time of ld_lesson_access_from_int
  * context : (string) The context will be set based on where this message is shown. course, lesson, loop, etc.
  *
- * @since 2.4
+ * @since 2.4.0
  *
  * @package LearnDash\Templates\Legacy\Course
  */

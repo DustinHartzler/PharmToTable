@@ -31,7 +31,7 @@ if ( ( ! class_exists( 'LearnDash_User_Status_Widget' ) ) && ( class_exists( 'WP
 					LearnDash_Custom_Label::get_label( 'courses' )
 				),
 			);
-			$control_ops = array(); // 'width' => 400, 'height' => 350);
+			$control_ops = array();
 			parent::__construct( 'lduserstatus', __( 'User Status', 'learndash' ), $widget_ops, $control_ops );
 		}
 
@@ -43,12 +43,12 @@ if ( ( ! class_exists( 'LearnDash_User_Status_Widget' ) ) && ( class_exists( 'WP
 		 * @param  array $args     Widget arguments.
 		 * @param  array $instance Widget instance.
 		 *
-		 * @return string          widget output
+		 * @return void
 		 */
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
 
-			extract( $args );
+			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 			/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
 			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance );
@@ -143,7 +143,9 @@ if ( ( ! class_exists( 'LearnDash_User_Status_Widget' ) ) && ( class_exists( 'WP
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param  array $instance Widget instance.
+		 * @param array $instance Widget instance.
+		 *
+		 * @return void
 		 */
 		public function form( $instance ) {
 			$instance = wp_parse_args(

@@ -51,14 +51,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			);
 
 			add_filter( 'learndash_metabox_save_fields_' . $this->settings_metabox_key, array( $this, 'filter_saved_fields' ), 30, 3 );
+			add_filter( 'learndash_settings_row_input_inside_before', array( $this, 'settings_row_input_inside_before' ), 30, 2 );
 
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
-				'course'                  => 'course',
-				'lesson'                  => 'lesson',
-				'startOnlyRegisteredUser' => 'startOnlyRegisteredUser',
-				'prerequisite'            => 'prerequisite',
-				'prerequisiteList'        => 'prerequisiteList',
+				'course'                      => 'course',
+				'lesson'                      => 'lesson',
+				'lesson_schedule'             => 'lesson_schedule',
+				'visible_after'               => 'visible_after',
+				'visible_after_specific_date' => 'visible_after_specific_date',
+				'startOnlyRegisteredUser'     => 'startOnlyRegisteredUser',
+				'prerequisite'                => 'prerequisite',
+				'prerequisiteList'            => 'prerequisiteList',
 			);
 
 			parent::__construct();
@@ -249,21 +253,79 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				);
 			}
 
-			$quiz_mapper                      = new WpProQuiz_Model_QuizMapper();
-			$prerequisite_quizzes             = $quiz_mapper->fetchAllAsArray( array( 'id', 'name' ), array() );
-			$select_quiz_prerequisite_options = array();
-			if ( ! empty( $prerequisite_quizzes ) ) {
-				foreach ( $prerequisite_quizzes as $quiz_set ) {
-					if ( ( isset( $this->quiz_edit['quiz'] ) ) && ( absint( $quiz_set['id'] ) !== absint( $this->quiz_edit['quiz']->getId() ) ) ) {
-						$select_quiz_prerequisite_options[ $quiz_set['id'] ] = $quiz_set['name'];
+			if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				$select_quiz_prerequisite_options = array();
+			} else {
+				$quiz_mapper                      = new WpProQuiz_Model_QuizMapper();
+				$prerequisite_quizzes             = $quiz_mapper->fetchAllAsArray( array( 'id', 'name' ), array() );
+				$select_quiz_prerequisite_options = array();
+				if ( ! empty( $prerequisite_quizzes ) ) {
+					foreach ( $prerequisite_quizzes as $quiz_set ) {
+						if ( ( isset( $this->quiz_edit['quiz'] ) ) && ( absint( $quiz_set['id'] ) !== absint( $this->quiz_edit['quiz']->getId() ) ) ) {
+							$select_quiz_prerequisite_options[ $quiz_set['id'] ] = $quiz_set['name'];
+						}
 					}
 				}
+				if ( ( is_array( $select_quiz_prerequisite_options ) ) && ( ! empty( $select_quiz_prerequisite_options ) ) ) {
+					$select_quiz_prerequisite_options = $select_quiz_prerequisite_options_default + $select_quiz_prerequisite_options;
+				} else {
+					$select_quiz_prerequisite_options = $select_quiz_prerequisite_options_default;
+				}
 			}
-			if ( ( is_array( $select_quiz_prerequisite_options ) ) && ( ! empty( $select_quiz_prerequisite_options ) ) ) {
-				$select_quiz_prerequisite_options = $select_quiz_prerequisite_options_default + $select_quiz_prerequisite_options;
-			} else {
-				$select_quiz_prerequisite_options = $select_quiz_prerequisite_options_default;
-			}
+
+			$this->setting_option_fields = array(
+				'visible_after' => array(
+					'name'        => 'visible_after',
+					'type'        => 'number',
+					'value'       => $this->setting_option_values['visible_after'],
+					'class'       => 'small-text',
+					'label_none'  => true,
+					'input_full'  => true,
+					'input_label' => esc_html__( 'day(s)', 'learndash' ),
+					'attrs'       => array(
+						'step' => 1,
+						'min'  => 0,
+					),
+					'default'     => 0,
+					'rest'        => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								// translators: placeholder: Lesson.
+								'description' => esc_html__( 'Visible After X day(s)', 'learndash' ),
+								'type'        => 'integer',
+								'default'     => 0,
+							),
+						),
+					),
+				),
+			);
+			parent::load_settings_fields();
+			$this->settings_sub_option_fields['lesson_schedule_visible_after_days_fields'] = $this->setting_option_fields;
+
+			$this->setting_option_fields = array(
+				'visible_after_specific_date' => array(
+					'name'       => 'visible_after_specific_date',
+					'value'      => $this->setting_option_values['visible_after_specific_date'],
+					'label_none' => true,
+					'input_full' => true,
+					'type'       => 'date-entry',
+					'class'      => 'learndash-datepicker-field',
+					'rest'       => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								// translators: placeholder: Lesson.
+								'description' => esc_html__( 'Visible After Specific Date (YYYY-MM-DD)', 'learndash' ),
+								'type'        => 'date',
+								'default'     => '',
+							),
+						),
+					),
+				),
+			);
+			parent::load_settings_fields();
+			$this->settings_sub_option_fields['visible_after_specific_date_fields'] = $this->setting_option_fields;
 
 			$this->setting_option_fields = array(
 				'course'                  => array(
@@ -319,7 +381,69 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 				),
-
+				'lesson_schedule'         => array(
+					'name'    => 'lesson_schedule',
+					'label'   => sprintf(
+						// Translators: placeholder: Quiz.
+						esc_html_x( '%s Release Schedule', 'placeholder: Quiz', 'learndash' ),
+						learndash_get_custom_label( 'quiz' )
+					),
+					'type'    => 'radio',
+					'value'   => $this->setting_option_values['lesson_schedule'],
+					'options' => array(
+						''                            => array(
+							'label'       => esc_html__( 'Immediately', 'learndash' ),
+							'description' => sprintf(
+								// translators: placeholder: quiz, course.
+								esc_html_x( 'The %1$s is made available on %2$s enrollment.', 'placeholder: quiz, course', 'learndash' ),
+								learndash_get_custom_label_lower( 'quiz' ),
+								learndash_get_custom_label_lower( 'course' )
+							),
+						),
+						'visible_after'               => array(
+							'label'               => esc_html__( 'Enrollment-based', 'learndash' ),
+							'description'         => sprintf(
+								// translators: placeholder: quiz, course.
+								esc_html_x( 'The %1$s will be available X days after %2$s enrollment.', 'placeholder: quiz, course.', 'learndash' ),
+								learndash_get_custom_label_lower( 'quiz' ),
+								learndash_get_custom_label_lower( 'course' )
+							),
+							'inline_fields'       => array(
+								'lesson_schedule_visible_after_days' => $this->settings_sub_option_fields['lesson_schedule_visible_after_days_fields'],
+							),
+							'inner_section_state' => ( 'visible_after' === $this->setting_option_values['lesson_schedule'] ) ? 'open' : 'closed',
+						),
+						'visible_after_specific_date' => array(
+							'label'               => esc_html__( 'Specific date', 'learndash' ),
+							'description'         => sprintf(
+								// translators: placeholder: quiz.
+								esc_html_x( 'The %s will be available on a specific date.', 'placeholder: quiz', 'learndash' ),
+								learndash_get_custom_label_lower( 'quiz' )
+							),
+							'inline_fields'       => array(
+								'visible_after_specific_date' => $this->settings_sub_option_fields['visible_after_specific_date_fields'],
+							),
+							'inner_section_state' => ( 'visible_after_specific_date' === $this->setting_option_values['lesson_schedule'] ) ? 'open' : 'closed',
+						),
+					),
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'visible_type',
+								'description' => esc_html__( 'Available Release Schedule', 'learndash' ),
+								'type'        => 'string',
+								'default'     => '',
+								'required'    => false,
+								'enum'        => array(
+									'',
+									'visible_after',
+									'visible_after_specific_date',
+								),
+							),
+						),
+					),
+				),
 				'prerequisiteList'        => array(
 					'name'      => 'prerequisiteList',
 					'type'      => 'multiselect',
@@ -329,8 +453,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'quiz' )
 					),
 					'help_text' => sprintf(
-						// translators: placeholderss: quizzes, quiz.
-						esc_html_x( 'Select one or more %1$s that must be completed prior to taking this %2$s.', 'placeholderss: Quizzes Quiz', 'learndash' ),
+						// translators: placeholders: quizzes, quiz.
+						esc_html_x( 'Select one or more %1$s that must be completed prior to taking this %2$s.', 'placeholders: Quizzes Quiz', 'learndash' ),
 						learndash_get_custom_label_lower( 'quizzes' ),
 						learndash_get_custom_label_lower( 'quiz' )
 					),
@@ -438,6 +562,24 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$settings_values['prerequisite'] = '';
 				}
 
+				if ( isset( $settings_values['lesson_schedule'] ) ) {
+					switch ( $settings_values['lesson_schedule'] ) {
+						case 'visible_after':
+							$settings_values['visible_after_specific_date'] = '';
+							break;
+
+						case 'visible_after_specific_date':
+							$settings_values['visible_after'] = '';
+							break;
+
+						case '':
+						default:
+							$settings_values['visible_after']               = '';
+							$settings_values['visible_after_specific_date'] = '';
+							break;
+					}
+				}
+
 				if ( learndash_is_course_shared_steps_enabled() ) {
 					unset( $settings_values['course'] );
 					unset( $settings_values['lesson'] );
@@ -445,6 +587,40 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			}
 
 			return $settings_values;
+		}
+
+		/**
+		 * Filter function for `learndash_settings_row_input_inside_before` to add a custom HTML before the input.
+		 *
+		 * @since 4.2.0
+		 *
+		 * @param string $input_before HTML to output.
+		 * @param array  $field_args   Array of field arguments.
+		 *
+		 * @return string HTML to output.
+		 */
+		public function settings_row_input_inside_before( $input_before = '', $field_args = array() ) {
+			if ( 'lesson_schedule' === $field_args['name'] ) {
+				if ( is_admin() ) {
+					$screen = get_current_screen();
+					if ( ( is_a( $screen, 'WP_Screen' ) ) && ( 'post' === $screen->base ) && ( 'edit' === $screen->parent_base ) ) {
+						if ( ( is_a( $this, __CLASS__ ) ) && ( ! empty( $this->setting_option_values['lesson'] ) ) && ( ( learndash_get_setting( $this->setting_option_values['lesson'], 'visible_after' ) ) || ( learndash_get_setting( $this->setting_option_values['lesson'], 'visible_after_specific_date' ) ) ) ) {
+							if ( ! learndash_is_course_shared_steps_enabled() ) {
+								$post_link_label = learndash_get_custom_label_lower( learndash_get_post_type_key( get_post_type( $this->setting_option_values['lesson'] ) ) );
+
+								$lesson_schedule_alert = sprintf(
+									// translators: placeholder: parent post edit link.
+									esc_html_x( 'The parent %s is setup for scheduled release. This step will be available after.', 'placeholder: parent post edit link.', 'learndash' ),
+									'<a href="' . get_edit_post_link( $this->setting_option_values['lesson'] ) . '">' . $post_link_label . '</a>'
+								);
+
+								$input_before .= '<div class="ld-settings-info-banner ld-settings-info-banner-alert">' . wpautop( $lesson_schedule_alert ) . '</div>';
+							}
+						}
+					}
+				}
+			}
+			return $input_before;
 		}
 
 		// End of functions.

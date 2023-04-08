@@ -128,8 +128,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			 *
 			 * @since 3.1.4
 			 *
-			 * @param boolean $show_upgades Whether to show upgrades section or not.
-			 * @param string  $data_slug    Data Slug used to itentify each instance.
+			 * @param boolean $show_upgrades Whether to show upgrades section or not.
+			 * @param string  $data_slug    Data Slug used to identify each instance.
 			 */
 			if ( true !== apply_filters( 'learndash_show_upgrade_section', $this->settings['show_upgrade'], $this->data_slug ) ) {
 				return;
@@ -249,8 +249,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 									?>
 									</td><td>=></td><td>
 									<?php
-									echo esc_html( $table_set_alt['name'] );
-									if ( true === $table_set_alt['exists'] ) {
+									echo esc_html( $table_set_alt['name'] ); // @phpstan-ignore-line
+									if ( true === $table_set_alt['exists'] ) { // @phpstan-ignore-line
 										echo ' <span style="color:red;">(exists)</span>';
 									}
 									?>
@@ -291,8 +291,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 									?>
 									</td><td>=></td><td>
 									<?php
-									echo esc_html( $table_set_alt['name'] );
-									if ( true === $table_set_alt['exists'] ) {
+									echo esc_html( $table_set_alt['name'] ); // @phpstan-ignore-line
+									if ( true === $table_set_alt['exists'] ) { // @phpstan-ignore-line
 										echo ' <span style="color:red;">(exists)</span>';
 									}
 									?>
@@ -370,7 +370,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			global $wpdb;
 
 			if ( ! empty( $table_name ) ) {
-				$db_table_name = $wpdb->get_var( "SHOW TABLES LIKE '" . esc_sql( $table_name ) . "'" );
+				$db_table_name = $wpdb->get_var( "SHOW TABLES LIKE '" . esc_sql( $table_name ) . "'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( $db_table_name == $table_name ) {
 					return true;
 				}
@@ -523,10 +523,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				$source_prefix = LEARNDASH_PROQUIZ_DATABASE_PREFIX_SUB_DEFAULT;
 			}
 
-			foreach ( $this->tables_lists[ $source_prefix ] as $source_table_key => $source_table_set ) {
+			foreach ( $this->tables_lists[ $source_prefix ] as $source_table_key => $source_table_set ) { // @phpstan-ignore-line
 				if ( ( isset( $source_table_set['exists'] ) ) && ( true === $source_table_set['exists'] ) ) {
-					if ( ( isset( $this->tables_lists[ $dest_prefix ][ $source_table_key ]['exists'] ) ) && ( true !== $this->tables_lists[ $dest_prefix ][ $source_table_key ]['exists'] ) ) {
-						$process_tables[ $source_table_set['name'] ] = $this->tables_lists[ $dest_prefix ][ $source_table_key ]['name'];
+					if ( ( isset( $this->tables_lists[ $dest_prefix ][ $source_table_key ]['exists'] ) ) && ( true !== $this->tables_lists[ $dest_prefix ][ $source_table_key ]['exists'] ) ) { // @phpstan-ignore-line
+						$process_tables[ $source_table_set['name'] ] = $this->tables_lists[ $dest_prefix ][ $source_table_key ]['name']; // @phpstan-ignore-line
 					}
 				}
 			}
@@ -600,8 +600,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		private function rename_wpproquiz_table( $old_table = '', $new_table = '' ) {
 			global $wpdb;
 
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			$ret_rename = $wpdb->query( sprintf( 'ALTER TABLE `%s` RENAME `%s`', esc_attr( $old_table ), esc_attr( $new_table ) ) );
+			$ret_rename = $wpdb->query( sprintf( 'ALTER TABLE `%s` RENAME `%s`', esc_attr( $old_table ), esc_attr( $new_table ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.SchemaChange
 
 			if ( ( $this->check_table_exists( $new_table ) ) && ( ! $this->check_table_exists( $old_table ) ) ) {
 				return true;

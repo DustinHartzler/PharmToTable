@@ -17,7 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) && ( class_exists( 'WP_
 	 *
 	 * @since 2.5.8
 	 */
-	abstract class LD_REST_Posts_Controller_V1 extends WP_REST_Posts_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	abstract class LD_REST_Posts_Controller_V1 extends WP_REST_Posts_Controller /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * REST API version.

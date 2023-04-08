@@ -55,7 +55,7 @@ if ( ! class_exists( 'LearnDash_Settings_Pages_Deprecated' ) ) {
 			if ( 'admin.php' === $pagenow ) {
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( ( isset( $_GET['page'] ) ) && ( ! empty( $_GET['page'] ) ) ) {
-					$requested_page_slug = strtolower( esc_attr( wp_unslash( $_GET['page'] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+					$requested_page_slug = strtolower( esc_attr( wp_unslash( $_GET['page'] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
 					if ( isset( self::$settings_page_slugs[ $requested_page_slug ] ) ) {
 						$settings_page_set = self::$settings_page_slugs[ $requested_page_slug ];
 
@@ -72,7 +72,7 @@ if ( ! class_exists( 'LearnDash_Settings_Pages_Deprecated' ) ) {
 		 *
 		 * @param string $page_slug        The original page slug as in 'page=<page_slug>'.
 		 * @param string $version          The version of LearnDash that deprecated the function.
-		 * @param array  $replacement_args Optional. An array of replacement page arge. Will be passed to
+		 * @param array  $replacement_args Optional. An array of replacement page args. Will be passed to
 		 * `add_query_arg()` to generate redirect URL.
 		 */
 		public static function register_deprecated_settings_page( $page_slug = '', $version = '', $replacement_args = array() ) {
@@ -106,9 +106,9 @@ if ( ! class_exists( 'LearnDash_Settings_Pages_Deprecated' ) ) {
 		 *
 		 * @since 3.6.0
 		 *
-		 * @param string $page_slug        The foriginal page slug as in 'page=<page_slug>'.
+		 * @param string $page_slug        The original page slug as in 'page=<page_slug>'.
 		 * @param string $version          The version of LearnDash that deprecated the function.
-		 * @param array  $replacement_args Optional. An array of replacement page arge. Will be passed to
+		 * @param array  $replacement_args Optional. An array of replacement page args. Will be passed to
 		 * `add_query_arg()` to generate redirect URL.
 		 */
 		public static function deprecated_settings_page( $page_slug = '', $version = '', $replacement_args = array() ) {
@@ -129,7 +129,7 @@ if ( ! class_exists( 'LearnDash_Settings_Pages_Deprecated' ) ) {
 				 * @since 3.6.0
 				 *
 				 * @param string $page_slug        The original page slug as in 'page=<$page_slug>'.
-				 * @param array  $replacement_args Optional. An array of replacement page arge. Will be passed to
+				 * @param array  $replacement_args Optional. An array of replacement page args. Will be passed to
 				 * `add_query_arg()` to generate redirect.
 				 * @param string $version          The version of LearnDash that deprecated the function.
 				 */
@@ -209,7 +209,7 @@ if ( ! class_exists( 'LearnDash_Settings_Pages_Deprecated' ) ) {
 				 * @since 3.6.0
 				 *
 				 * @param string $redirect_url     Redirect URL.
-				 * @param string $page_slug        The foriginal page slug as in 'page=<page_slug>'.
+				 * @param string $page_slug        The original page slug as in 'page=<page_slug>'.
 				 * @param string $version          The version of LearnDash that deprecated the function.
 				 * @param array  $replacement_args Optional. An array of replacement page args used to
 				 * generate the `$redirect_url`.

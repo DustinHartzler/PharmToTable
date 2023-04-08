@@ -18,7 +18,7 @@ if ( ( ! class_exists( 'LD_REST_Price_Types_Controller_V2' ) ) && ( class_exists
 	 * @since 3.3.0
 	 * @uses WP_REST_Controller
 	 */
-	class LD_REST_Price_Types_Controller_V2 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Price_Types_Controller_V2 extends WP_REST_Controller /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 		/**
 		 * Version
 		 *
@@ -310,7 +310,7 @@ if ( ( ! class_exists( 'LD_REST_Price_Types_Controller_V2' ) ) && ( class_exists
 		/**
 		 * Get the REST URL setting.
 		 *
-		 * @since 3.3
+		 * @since 3.3.0
 		 *
 		 * @param string $rest_slug Settings REST slug.
 		 * @param string $default_value Default value if rest_slug is not found.

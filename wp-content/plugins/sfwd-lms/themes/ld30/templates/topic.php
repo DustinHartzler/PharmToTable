@@ -89,32 +89,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 	}
 
-	if ( ( ! learndash_is_sample( $post ) ) && ( $lesson_progression_enabled ) && ( ! empty( $sub_context ) || ! $previous_topic_completed || ! $previous_lesson_completed ) ) :
+	if ( ( $lesson_progression_enabled ) && ( ! empty( $sub_context ) || ! $previous_topic_completed || ! $previous_lesson_completed ) && ! learndash_can_user_bypass() ) {
 
-		if ( 'video_progression' === $sub_context ) {
-			$previous_item = $lesson_post;
-		} else {
-			$previous_item_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
-			if ( ! empty( $previous_item_id ) ) {
-				$previous_item = get_post( $previous_item_id );
+		if ( ( ! learndash_is_sample( $post ) ) /* || ( learndash_is_sample( $post ) && true === (bool) $has_access ) */ ) {
+
+			if ( 'video_progression' === $sub_context ) {
+				$previous_item = $lesson_post;
+			} else {
+				$previous_item_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
+				if ( ( ! empty( $previous_item_id ) ) && ( $previous_item_id !== $post->ID ) ) {
+					$previous_item = get_post( $previous_item_id );
+				}
+			}
+
+			if ( ( isset( $previous_item ) ) && ( ! empty( $previous_item ) ) ) {
+				$show_content = false;
+				learndash_get_template_part(
+					'modules/messages/lesson-progression.php',
+					array(
+						'previous_item' => $previous_item,
+						'course_id'     => $course_id,
+						'context'       => 'topic',
+						'sub_context'   => $sub_context,
+					),
+					true
+				);
 			}
 		}
-
-		if ( ( isset( $previous_item ) ) && ( ! empty( $previous_item ) ) ) {
-			$show_content = false;
-			learndash_get_template_part(
-				'modules/messages/lesson-progression.php',
-				array(
-					'previous_item' => $previous_item,
-					'course_id'     => $course_id,
-					'context'       => 'topic',
-					'sub_context'   => $sub_context,
-				),
-				true
-			);
-		}
-
-	endif;
+	}
 
 	if ( $show_content ) :
 
@@ -144,7 +146,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			/**
 			 * Display Lesson Assignments
 			 */
-			if ( learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
+			if ( learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) : // cspell:disable-line.
 				$bypass_course_limits_admin_users = learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' );
 				$course_children_steps_completed  = learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID );
 				if ( ( learndash_lesson_progression_enabled() && $course_children_steps_completed ) || ! learndash_lesson_progression_enabled() || $bypass_course_limits_admin_users ) :

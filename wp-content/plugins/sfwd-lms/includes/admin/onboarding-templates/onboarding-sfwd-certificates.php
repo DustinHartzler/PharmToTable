@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p>
 		<?php
 				printf(
-					// translators: placeholder: %1$s: Quiz, %2$s: Course
+					// translators: placeholder: %1$s: Quiz, %2$s: Course.
 					esc_html_x( 'Certificates can be awarded based on %1$s performance or at the very end of a %2$s. Once earned, the Certificate is available for PDF download from the user’s LearnDash profile.', 'placeholder: %1$s: Quiz, %2$s: Course', 'learndash' ),
 					\LearnDash_Custom_Label::get_label( 'quiz' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					\LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output

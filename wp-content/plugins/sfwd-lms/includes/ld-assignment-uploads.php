@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// cspell:ignore hasassignments .
+
 /**
  * Handles the upload, delete, and mark as complete for the assignment.
  *
@@ -126,14 +128,16 @@ add_action( 'parse_request', 'learndash_assignment_process_init', 1 );
  * Gets a list of user's assignments.
  *
  * @since 2.1.0
+ * @since 4.5.0 Added optional param $fields.
  *
- * @param int $post_id   Lesson ID.
- * @param int $user_id   User ID.
- * @param int $course_id Optional. Course ID. Default 0.
+ * @param int    $post_id   Lesson ID.
+ * @param int    $user_id   User ID.
+ * @param int    $course_id Optional. Course ID. Default 0.
+ * @param string $fields    Optional. Return array of assignment post IDs if set to 'ids'. Default 'all'.
  *
  * @return array Array of post objects or post IDs.
  */
-function learndash_get_user_assignments( $post_id, $user_id, $course_id = 0 ) {
+function learndash_get_user_assignments( $post_id, $user_id, $course_id = 0, string $fields = 'all' ) {
 	if ( empty( $course_id ) ) {
 		$course_id = learndash_get_course_id( $post_id );
 	}
@@ -155,6 +159,7 @@ function learndash_get_user_assignments( $post_id, $user_id, $course_id = 0 ) {
 				'compare' => '=',
 			),
 		),
+		'fields' => $fields,
 	);
 	return get_posts( $opt );
 }
@@ -164,7 +169,7 @@ function learndash_get_user_assignments( $post_id, $user_id, $course_id = 0 ) {
  *
  * Takes post ID, filename as arguments(We don't want to store BLOB data there).
  *
- * @todo  How is this different from learndash_assignment_process_init() ?
+ * How is this different from learndash_assignment_process_init() ?
  *
  * @since 2.1.0
  *
@@ -179,16 +184,16 @@ function learndash_upload_assignment_init( $post_id, $fname ) {
 		include ABSPATH . 'wp-includes/pluggable.php';
 	}
 
-	$new_assignmnt_meta = array();
-	$current_user       = wp_get_current_user();
-	$username           = $current_user->user_login;
-	$dispname           = $current_user->display_name;
-	$userid             = $current_user->ID;
-	$url_link_arr       = wp_upload_dir();
-	$url_link           = $url_link_arr['baseurl'];
-	$dir_link           = $url_link_arr['basedir'];
-	$file_path          = $dir_link . '/assignments/';
-	$url_path           = $url_link . '/assignments/' . $fname;
+	$new_assignment_meta = array();
+	$current_user        = wp_get_current_user();
+	$username            = $current_user->user_login;
+	$display_name        = $current_user->display_name;
+	$userid              = $current_user->ID;
+	$url_link_arr        = wp_upload_dir();
+	$url_link            = $url_link_arr['baseurl'];
+	$dir_link            = $url_link_arr['basedir'];
+	$file_path           = $dir_link . '/assignments/';
+	$url_path            = $url_link . '/assignments/' . $fname;
 
 	if ( file_exists( $file_path . $fname ) ) {
 		$dest = $url_path;
@@ -196,7 +201,7 @@ function learndash_upload_assignment_init( $post_id, $fname ) {
 		return;
 	}
 
-	update_post_meta( $post_id, 'sfwd_lessons-assignment', $new_assignmnt_meta );
+	update_post_meta( $post_id, 'sfwd_lessons-assignment', $new_assignment_meta );
 	$post      = get_post( $post_id );
 	$course_id = learndash_get_course_id( $post->ID );
 
@@ -204,7 +209,7 @@ function learndash_upload_assignment_init( $post_id, $fname ) {
 		'file_name'    => $fname,
 		'file_link'    => $dest,
 		'user_name'    => $username,
-		'disp_name'    => $dispname,
+		'disp_name'    => $display_name, // cspell:disable-line.
 		'file_path'    => rawurlencode( $file_path . $fname ),
 		'user_id'      => $current_user->ID,
 		'lesson_id'    => $post->ID,
@@ -370,10 +375,10 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 	if ( is_array( $uploadfiles ) ) {
 
 		foreach ( $uploadfiles['name'] as $key => $value ) {
-			// look only for uploded files.
+			// look only for uploaded files.
 			if ( 0 == $uploadfiles['error'][ $key ] ) {
 
-				$filetmp = $uploadfiles['tmp_name'][ $key ];
+				$file_tmp = $uploadfiles['tmp_name'][ $key ];
 
 				// clean filename.
 				$filename = learndash_clean_filename( $uploadfiles['name'][ $key ] );
@@ -383,7 +388,7 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 					include ABSPATH . 'wp-includes/pluggable.php';
 				}
 
-				// Before this function we have already validated the file extention/type via the function learndash_check_upload
+				// Before this function we have already validated the file extension/type via the function learndash_check_upload
 				// @2.5.4.
 				$file_title = pathinfo( basename( $filename ), PATHINFO_FILENAME );
 				$file_ext   = pathinfo( basename( $filename ), PATHINFO_EXTENSION );
@@ -402,7 +407,7 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 					}
 				}
 
-				// Add an index.php file to prevent directory browesing.
+				// Add an index.php file to prevent directory browsing.
 				$_index = trailingslashit( $upload_dir_path ) . 'index.php';
 				if ( ! file_exists( $_index ) ) {
 					learndash_put_directory_index_file( $_index );
@@ -418,11 +423,18 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 				 *
 				 * @param string $filename   File name.
 				 * @param int    $post_id    Post ID.
-				 * @param string $file_time  Unix timestamp.
+				 * @param float  $file_time  Unix timestamp.
 				 * @param string $file_title Title of the file.
-				 * @param string $file_ext   File extention.
+				 * @param string $file_ext   File extension.
 				 */
-				$filename = apply_filters( 'learndash_assignment_upload_filename', $filename, $post_id, $file_time, $file_title, $file_ext );
+				$filename = apply_filters(
+					'learndash_assignment_upload_filename',
+					$filename,
+					$post_id,
+					$file_time,
+					$file_title,
+					$file_ext
+				);
 
 				/**
 				 * Check if the filename already exist in the directory and rename the
@@ -438,7 +450,7 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 					$filename = $file_title . '_' . $i . '.' . $file_ext;
 				}
 
-				$filedest    = $upload_dir_path . '/' . $filename;
+				$file_dest   = $upload_dir_path . '/' . $filename;
 				$destination = $upload_url_path . $filename;
 
 				/**
@@ -451,12 +463,12 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 				/**
 				 * Save temporary file to uploads dir
 				 */
-				if ( ! @move_uploaded_file( $filetmp, $filedest ) ) {
+				if ( ! @move_uploaded_file( $file_tmp, $file_dest ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- Better not to touch it for now.
 					echo sprintf(
 						// translators: placeholder: temporary file, file destination.
 						esc_html__( 'Error, the file %1$s could not be moved to: %2$s', 'learndash' ),
-						esc_html( $filetmp ),
-						esc_html( $filedest )
+						esc_html( $file_tmp ),
+						esc_html( $file_dest )
 					);
 					continue;
 				}
@@ -464,7 +476,7 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 				/**
 				 * Add upload meta to database
 				 */
-				learndash_upload_assignment_init( $post_id, $filename, $filedest );
+				learndash_upload_assignment_init( $post_id, $filename, $file_dest );
 				$file_desc             = array();
 				$file_desc['filename'] = $filename;
 				$file_desc['filelink'] = $destination;
@@ -521,7 +533,7 @@ function learndash_approve_assignment_by_id( $assignment_id ) {
 
 
 /**
- * Marks assignment approved by user ID annd lesson ID.
+ * Marks assignment approved by user ID and lesson ID.
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
@@ -551,7 +563,7 @@ function learndash_approve_assignment( $user_id, $lesson_id, $assignment_post_id
 		$assignment_course_id            = get_post_meta( $assignment_post_id, 'course_id', true );
 		$learndash_process_mark_complete = learndash_process_mark_complete( $user_id, $lesson_id, null, $assignment_course_id );
 		if ( $learndash_process_mark_complete ) {
-			// @TODO This query needs to be reworked to NOT query all posts with that meta_key. Better off using WP_Query.
+			// This query needs to be reworked to NOT query all posts with that meta_key. Better off using WP_Query.
 			global $wpdb;
 			$assignment_ids = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %d", 'lesson_id', $lesson_id ) );
 
@@ -602,34 +614,11 @@ function learndash_assignment_mark_approved( $assignment_id ) {
  *
  * @param int $assignment_id Assignment ID.
  *
- * @return int|false Status of assingment approval. Returns 1 if the assignment is approved.
+ * @return int|false Status of assignment approval. Returns 1 if the assignment is approved.
  */
 function learndash_is_assignment_approved_by_meta( $assignment_id ) {
 	return get_post_meta( $assignment_id, 'approval_status', true );
 }
-
-/**
- * Adds inline actions to assignments on post listing hover in the admin.
- *
- * Fires on `post_row_actions` hook.
- *
- * @since 2.1.0
- *
- * @param array   $actions An array post row action.
- * @param WP_Post $post    The assignment WP_Post object.
- *
- * @return array $actions Returns post row actions after adding inline assignment actions.
- */
-function learndash_assignment_inline_actions( $actions, $post ) {
-	if ( learndash_get_post_type_slug( 'assignment' ) === $post->post_type ) {
-		$download_link                  = get_post_meta( $post->ID, 'file_link', true );
-		$actions['download_assignment'] = "<a href='" . $download_link . "' target='_blank'>" . esc_html__( 'Download', 'learndash' ) . '</a>';
-	}
-
-	return $actions;
-}
-
-add_filter( 'post_row_actions', 'learndash_assignment_inline_actions', 10, 2 );
 
 /**
  * Checks if the assignment is approved or not.
@@ -673,10 +662,10 @@ function learndash_is_assignment_approved( $assignment_id ) {
  * @since 2.1.0
  */
 function learndash_assignment_permissions() {
-	global $post;
+	if ( is_singular( learndash_get_post_type_slug( 'assignment' ) ) ) {
 
-	if ( ! empty( $post->post_type ) && learndash_get_post_type_slug( 'assignment' ) === $post->post_type && is_singular() ) {
 		$user_id = get_current_user_id();
+		$post    = get_post();
 
 		if ( learndash_is_admin_user( $user_id ) ) {
 			return;
@@ -701,6 +690,22 @@ function learndash_assignment_permissions() {
 		 * @param string $redirect_url Redirect URL.
 		 */
 		learndash_safe_redirect( apply_filters( 'learndash_assignment_permissions_redirect_url', get_bloginfo( 'url' ) ) );
+	} elseif ( ( is_home() ) || ( is_front_page() ) ) {
+		/**
+		 * Prevents the user from forcing the query on the home page
+		 * with http://www.site.com?post_type=sfwd-assignment to access an archive.
+		 *
+		 * It would be nice if this is controllable via WP register_post_type() settings.
+		 *
+		 * See LEARNDASH-6390 for more details.
+		 */
+		if ( get_query_var( 'post_type', '' ) === learndash_get_post_type_slug( 'assignment' ) ) {
+			// If this is an attempt we redirect them to the hme URL without the post_type query arg.
+			$redirect_to_url = get_bloginfo( 'url' );
+			if ( ! empty( $redirect_to_url ) ) {
+				learndash_safe_redirect( $redirect_to_url );
+			}
+		}
 	}
 }
 
@@ -802,9 +807,10 @@ function learndash_register_assignment_upload_type() {
 	/**
 	 * Filters the custom post type arguments.
 	 *
-	 * @param array $cpt_args Custom post type arguments.
+	 * @param array  $cpt_args  Custom post type arguments.
+	 * @param string $post_type Post type.
 	 */
-	$args = apply_filters( 'learndash-cpt-options', $args, 'sfwd-assignment' );
+	$args = apply_filters( 'learndash-cpt-options', $args, 'sfwd-assignment' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Better to keep it this way for now.
 
 	register_post_type( 'sfwd-assignment', $args );
 }
@@ -817,38 +823,54 @@ add_action( 'init', 'learndash_register_assignment_upload_type' );
  * Fires on `admin_init` hook.
  *
  * @since 2.1.0
+ *
+ * @return void
  */
-function learndash_add_assignment_caps() {
+function learndash_init_assignments_capabilities(): void {
 	$admin_role = get_role( 'administrator' );
-	if ( ( $admin_role ) && ( $admin_role instanceof WP_Role ) ) {
-		$cap = $admin_role->has_cap( 'delete_others_assignments' );
 
-		if ( empty( $cap ) ) {
-			$admin_role->add_cap( 'edit_assignment' );
-			$admin_role->add_cap( 'edit_assignments' );
-			$admin_role->add_cap( 'edit_others_assignments' );
-			$admin_role->add_cap( 'publish_assignments' );
-			$admin_role->add_cap( 'read_assignment' );
-			$admin_role->add_cap( 'read_private_assignments' );
-			$admin_role->add_cap( 'delete_assignment' );
-			$admin_role->add_cap( 'edit_published_assignments' );
-			$admin_role->add_cap( 'delete_others_assignments' );
-			$admin_role->add_cap( 'delete_published_assignments' );
+	if ( $admin_role instanceof WP_Role ) {
+		$admin_role_capabilities = array(
+			'edit_assignment',
+			'edit_assignments',
+			'edit_others_assignments',
+			'publish_assignments',
+			'read_assignment',
+			'read_private_assignments',
+			'delete_assignment',
+			'edit_published_assignments',
+			'delete_others_assignments',
+			'delete_published_assignments',
+		);
+
+		foreach ( $admin_role_capabilities as $capability ) {
+			if ( ! $admin_role->has_cap( $capability ) ) {
+				$admin_role->add_cap( $capability );
+			}
 		}
 	}
 
 	$group_leader_role = get_role( 'group_leader' );
-	if ( ( $group_leader_role ) && ( $group_leader_role instanceof WP_Role ) ) {
-		$group_leader_role->add_cap( 'read_assignment' );
-		$group_leader_role->add_cap( 'edit_assignments' );
-		$group_leader_role->add_cap( 'edit_others_assignments' );
-		$group_leader_role->add_cap( 'edit_published_assignments' );
-		$group_leader_role->add_cap( 'delete_others_assignments' );
-		$group_leader_role->add_cap( 'delete_published_assignments' );
+
+	if ( $group_leader_role instanceof WP_Role ) {
+		$group_leader_role_capabilities = array(
+			'read_assignment',
+			'edit_assignments',
+			'edit_others_assignments',
+			'edit_published_assignments',
+			'delete_others_assignments',
+			'delete_published_assignments',
+		);
+
+		foreach ( $group_leader_role_capabilities as $capability ) {
+			if ( ! $group_leader_role->has_cap( $capability ) ) {
+				$group_leader_role->add_cap( $capability );
+			}
+		}
 	}
 }
 
-add_action( 'admin_init', 'learndash_add_assignment_caps' );
+add_action( 'admin_init', 'learndash_init_assignments_capabilities' );
 
 /**
  * Deletes assignment file when assignment post is deleted.
@@ -947,7 +969,7 @@ function learndash_get_assignment_points_awarded( $assignment_id ) {
 		 * @param string $output_format Output Format of awarded points.
 		 * @param string $current       Achieved points.
 		 * @param int    $max_points    Maximum points.
-		 * @param int    $percentage    Percentage of achieved points/maximum points.
+		 * @param float  $percentage    Percentage of achieved points/maximum points.
 		 */
 		return apply_filters(
 			'learndash_points_awarded_output_format',
@@ -1028,7 +1050,7 @@ function learndash_return_bytes_from_shorthand( $val = 0 ) {
 }
 
 /**
- * Checks whether the assignment upload is successfull or not.
+ * Checks whether the assignment upload is successful or not.
  *
  * @param array $uploadfiles An array of uploaded files data.
  * @param int   $post_id    Optional. The Assignment ID. Default 0.
@@ -1036,6 +1058,7 @@ function learndash_return_bytes_from_shorthand( $val = 0 ) {
  * @return boolean
  */
 function learndash_check_upload( $uploadfiles = array(), $post_id = 0 ) {
+	$post_settings = array();
 
 	if ( ( is_array( $uploadfiles ) ) && ( ! empty( $post_id ) ) ) {
 		$limit_file_exts = array();
@@ -1103,14 +1126,14 @@ function learndash_check_upload( $uploadfiles = array(), $post_id = 0 ) {
 	}
 
 	/**
-	 * Filter to allow exteral approval of Assignment upload.
+	 * Filter to allow external approval of Assignment upload.
 	 *
 	 * @since 3.4.0
 	 *
-	 * @param bool  true           True if Assignment has been approved.
-	 * @param array $uploadfiles   Array of uploaded files.
-	 * @param int   $post_id       Assignment Post ID.
-	 * @param array $post_settings Array of Assignment Post Settings.
+	 * @param bool  $assignment_approved If Assignment has been approved. Default true.
+	 * @param array $uploadfiles         Array of uploaded files.
+	 * @param int   $post_id             Assignment Post ID.
+	 * @param array $post_settings       Array of Assignment Post Settings.
 	 *
 	 * @return bool true if upload is approved. false if not.
 	 *
@@ -1130,4 +1153,40 @@ function learndash_check_upload( $uploadfiles = array(), $post_id = 0 ) {
 	 * );
 	 */
 	return (bool) apply_filters( 'learndash_assignment_check_upload', true, $uploadfiles, $post_id, $post_settings );
+}
+
+/**
+ * Checks whether all assignments for specified step and user are approved.
+ *
+ * @since 4.5.0
+ *
+ * @param array<int> $assignment_ids An array of assignment IDs.
+ * @param int        $step_id        The ID of the lesson or topic to get user assignments from.
+ * @param int        $user_id        Optional. The user ID, gets current user if not specified.
+ *
+ * @return boolean True if all user assignments for step are approved, otherwise false.
+ */
+function learndash_assignment_list_approved( array $assignment_ids, int $step_id, int $user_id ): bool {
+	if ( ! is_array( $assignment_ids ) ) {
+		return false;
+	}
+
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	if ( ! empty( $step_id ) ) {
+		$course_id      = absint( learndash_get_course_id( $step_id ) );
+		$assignment_ids = learndash_get_user_assignments( $step_id, $user_id, $course_id, 'ids' );
+	}
+
+	foreach ( $assignment_ids as $assignment ) {
+		$approval_status = learndash_is_assignment_approved_by_meta( $assignment );
+
+		if ( ! $approval_status ) {
+			return false;
+		}
+	}
+
+	return true;
 }

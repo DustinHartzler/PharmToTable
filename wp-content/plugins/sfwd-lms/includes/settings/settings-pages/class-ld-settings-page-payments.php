@@ -29,7 +29,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			$this->menu_page_capability = LEARNDASH_ADMIN_CAPABILITY_CHECK;
 			$this->settings_page_id     = 'learndash_lms_payments';
 
-			// translators: Course Shortcodes Label
+			// translators: Course Shortcodes Label.
 			$this->settings_page_title = esc_html_x( 'Payments', 'Payments Tab Label', 'learndash' );
 
 			$this->show_quick_links_meta = false;

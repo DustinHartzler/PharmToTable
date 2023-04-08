@@ -77,7 +77,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 		 * @since 2.4.5
 		 */
 		public function rest_api_init() {
-			if ( self::enabled() ) {
+			if ( ( self::enabled() ) && ( self::check_registered_post_type() ) ) {
 				include_once dirname( __FILE__ ) . '/v1/class-ld-rest-posts-controller.php';
 				include_once dirname( __FILE__ ) . '/v1/class-ld-rest-users-controller.php';
 
@@ -202,7 +202,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-progress-status-controller.php',
 					),
 
-					'LD_REST_Exams_Controller_V2' => array(
+					'LD_REST_Exams_Controller_V2'          => array(
 						'register_routes' => true,
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-exams-controller.php',
 					),
@@ -371,6 +371,32 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 				}
 			}
 			return $rest_controller;
+		}
+
+		/**
+		 * Check that the LearnDash custom post types are registered.
+		 *
+		 * This is to prevent some instances where the rest_init is called too early.
+		 *
+		 * @since 4.2.0
+		 *
+		 * @return bool true if all post types are registered. Otherwise false.
+		 */
+		public static function check_registered_post_type() : bool {
+			$args = array(
+				'public'   => true,
+				'_builtin' => false,
+			);
+
+			$output   = 'names';
+			$operator = 'and';
+
+			$post_types = get_post_types( $args, $output, $operator );
+			if ( ( is_array( $post_types ) ) && ( isset( $post_types[ learndash_get_post_type_slug( 'course' ) ] ) ) ) {
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

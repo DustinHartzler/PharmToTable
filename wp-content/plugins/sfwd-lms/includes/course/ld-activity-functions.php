@@ -64,13 +64,13 @@ function learndash_update_user_activity( $args = array() ) {
 		// true if the lesson, topic, course, quiz is complete. False if not complete. null if not started.
 		'activity_status'    => '',
 
-		// Should be the timstamp when the 'status' started.
+		// Should be the timestamp when the 'status' started.
 		'activity_started'   => '',
 
-		// Should be the timstamp when the 'status' completed.
+		// Should be the timestamp when the 'status' completed.
 		'activity_completed' => '',
 
-		// Should be the timstamp when the activity record was last updated. Used as a sort column for ProPanel and other queries.
+		// Should be the timestamp when the activity record was last updated. Used as a sort column for ProPanel and other queries.
 		'activity_updated'   => '',
 
 		// Flag to indicate what we are 'update', 'insert', 'delete'. The default action 'update' will cause this function
@@ -242,7 +242,7 @@ function learndash_update_user_activity( $args = array() ) {
  * }
  * @param bool  $activity_create It true will create to activity record.
  *
- * @return object Activity object.
+ * @return object|array|null Activity object (LDLMS_Activity) or null if not found.
  */
 function learndash_get_user_activity( $args = array(), $activity_create = false ) {
 	global $wpdb;
@@ -279,12 +279,12 @@ function learndash_get_user_activity( $args = array(), $activity_create = false 
 		}
 	}
 	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql_str prepared in previous lines
-	$activity = $wpdb->get_row( $sql_str );
+	$activity = $wpdb->get_row( $sql_str ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 	if ( ! $activity ) {
 		if ( true === $activity_create ) {
 			$activity_id = learndash_update_user_activity( $args );
 			if ( ! empty( $activity_id ) ) {
-				$activity = $wpdb->get_row(
+				$activity = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$wpdb->prepare(
 						'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_id=%d',
 						$activity_id
@@ -508,6 +508,8 @@ function learndash_activity_course_get_earliest_started( $user_id = 0, $course_i
 				unset( $user_activity[ learndash_get_post_type_slug( 'course' ) . ':' . $course_id ] );
 			}
 			$activity_started = wp_list_pluck( $user_activity, 'activity_started' );
+			$activity_started = array_map( 'absint', $activity_started ); // Give me only integers.
+			$activity_started = array_diff( $activity_started, array( 0 ) ); // Remove empty values.
 			if ( ! empty( $activity_started ) ) {
 				sort( $activity_started );
 				$default_started = (int) $activity_started[0];
@@ -523,24 +525,24 @@ function learndash_activity_course_get_earliest_started( $user_id = 0, $course_i
  *
  * @since 3.5.0
  *
- * @param int    $user_id   User ID.
- * @param int    $course_id Course ID.
- * @param int    $step_id   Course step ID.
- * @param string $type      Step type 'course', lesson', 'topic', 'quiz.
- * @param int    $starttime Activity start timestamp (GMT).
+ * @param int    $user_id    User ID.
+ * @param int    $course_id  Course ID.
+ * @param int    $step_id    Course step ID.
+ * @param string $type       Step type 'course', lesson', 'topic', 'quiz.
+ * @param int    $start_time Activity start timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_start_step( $user_id = 0, $course_id = 0, $step_id = 0, $type = '', $starttime = 0 ) {
-	if ( empty( $starttime ) ) {
-		$starttime = time();
+function learndash_activity_start_step( $user_id = 0, $course_id = 0, $step_id = 0, $type = '', $start_time = 0 ) {
+	if ( empty( $start_time ) ) {
+		$start_time = time();
 	}
 	$args = array(
 		'course_id'        => $course_id,
 		'user_id'          => $user_id,
 		'post_id'          => $step_id,
 		'activity_type'    => $type,
-		'activity_started' => $starttime,
+		'activity_started' => $start_time,
 	);
 	return learndash_get_user_activity( $args, true );
 }
@@ -550,17 +552,17 @@ function learndash_activity_start_step( $user_id = 0, $course_id = 0, $step_id =
  *
  * @since 3.5.0
  *
- * @param int    $user_id      User ID.
- * @param int    $course_id    Course ID.
- * @param int    $step_id      Course step ID.
- * @param string $type         Step type 'course', lesson', 'topic', 'quiz.
- * @param int    $completetime Activity complete timestamp (GMT).
+ * @param int    $user_id       User ID.
+ * @param int    $course_id     Course ID.
+ * @param int    $step_id       Course step ID.
+ * @param string $type          Step type 'course', lesson', 'topic', 'quiz.
+ * @param int    $complete_time Activity complete timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_complete_step( $user_id = 0, $course_id = 0, $step_id = 0, $type = '', $completetime = 0 ) {
-	if ( empty( $completetime ) ) {
-		$completetime = time();
+function learndash_activity_complete_step( $user_id = 0, $course_id = 0, $step_id = 0, $type = '', $complete_time = 0 ) {
+	if ( empty( $complete_time ) ) {
+		$complete_time = time();
 	}
 	$args     = array(
 		'course_id'     => $course_id,
@@ -575,11 +577,11 @@ function learndash_activity_complete_step( $user_id = 0, $course_id = 0, $step_i
 		$activity = $args;
 	}
 	$activity['activity_status']    = true;
-	$activity['activity_completed'] = $completetime;
-	$activity['activity_updated']   = $completetime;
+	$activity['activity_completed'] = $complete_time;
+	$activity['activity_updated']   = $complete_time;
 
 	if ( empty( $activity['activity_started'] ) ) {
-		$activity['activity_started'] = $completetime;
+		$activity['activity_started'] = $complete_time;
 	}
 
 	$activity_id = learndash_update_user_activity( $activity );
@@ -594,19 +596,19 @@ function learndash_activity_complete_step( $user_id = 0, $course_id = 0, $step_i
  *
  * @since 3.5.0
  *
- * @param int  $user_id         User ID.
- * @param int  $course_id       Course ID.
- * @param int  $starttime       Activity start timestamp (GMT).
- * @param bool $force_starttime Force update on start time.
+ * @param int  $user_id          User ID.
+ * @param int  $course_id        Course ID.
+ * @param int  $start_time       Activity start timestamp (GMT).
+ * @param bool $force_start_time Force update on start time.
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_start_course( $user_id = 0, $course_id = 0, $starttime = 0, $force_starttime = true ) {
-	$activity = learndash_activity_start_step( $user_id, $course_id, $course_id, 'course', $starttime );
+function learndash_activity_start_course( $user_id = 0, $course_id = 0, $start_time = 0, $force_start_time = true ) {
+	$activity = learndash_activity_start_step( $user_id, $course_id, $course_id, 'course', $start_time );
 	if ( $activity ) {
 
-		if ( ( ! empty( absint( $starttime ) ) ) && ( empty( absint( $activity->activity_started ) ) ) ) {
-			$activity->activity_started = absint( $starttime );
+		if ( ( ! empty( absint( $start_time ) ) ) && ( empty( absint( $activity->activity_started ) ) ) ) {
+			$activity->activity_started = absint( $start_time );
 			learndash_update_user_activity( $activity );
 		}
 	}
@@ -619,14 +621,14 @@ function learndash_activity_start_course( $user_id = 0, $course_id = 0, $startti
  *
  * @since 3.5.0
  *
- * @param int $user_id   User ID.
- * @param int $course_id Course ID.
- * @param int $completetime Activity complete timestamp (GMT).
+ * @param int $user_id       User ID.
+ * @param int $course_id     Course ID.
+ * @param int $complete_time Activity complete timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_complete_course( $user_id = 0, $course_id = 0, $completetime = 0 ) {
-	return learndash_activity_complete_step( $user_id, $course_id, $course_id, 'course', $completetime );
+function learndash_activity_complete_course( $user_id = 0, $course_id = 0, $complete_time = 0 ) {
+	return learndash_activity_complete_step( $user_id, $course_id, $course_id, 'course', $complete_time );
 }
 
 /**
@@ -634,15 +636,15 @@ function learndash_activity_complete_course( $user_id = 0, $course_id = 0, $comp
  *
  * @since 3.5.0
  *
- * @param int $user_id   User ID.
- * @param int $course_id Course ID.
- * @param int $lesson_id Lesson ID.
- * @param int $starttime Activity start timestamp (GMT).
+ * @param int $user_id    User ID.
+ * @param int $course_id  Course ID.
+ * @param int $lesson_id  Lesson ID.
+ * @param int $start_time Activity start timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_start_lesson( $user_id = 0, $course_id = 0, $lesson_id = 0, $starttime = 0 ) {
-	return learndash_activity_start_step( $user_id, $course_id, $lesson_id, 'lesson', $starttime );
+function learndash_activity_start_lesson( $user_id = 0, $course_id = 0, $lesson_id = 0, $start_time = 0 ) {
+	return learndash_activity_start_step( $user_id, $course_id, $lesson_id, 'lesson', $start_time );
 }
 
 /**
@@ -650,15 +652,15 @@ function learndash_activity_start_lesson( $user_id = 0, $course_id = 0, $lesson_
  *
  * @since 3.5.0
  *
- * @param int $user_id      User ID.
- * @param int $course_id    Course ID.
- * @param int $lesson_id    Lesson ID.
- * @param int $completetime Activity complete timestamp (GMT).
+ * @param int $user_id       User ID.
+ * @param int $course_id     Course ID.
+ * @param int $lesson_id     Lesson ID.
+ * @param int $complete_time Activity complete timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_complete_lesson( $user_id = 0, $course_id = 0, $lesson_id = 0, $completetime = 0 ) {
-	return learndash_activity_complete_step( $user_id, $course_id, $lesson_id, 'lesson', $completetime );
+function learndash_activity_complete_lesson( $user_id = 0, $course_id = 0, $lesson_id = 0, $complete_time = 0 ) {
+	return learndash_activity_complete_step( $user_id, $course_id, $lesson_id, 'lesson', $complete_time );
 }
 
 /**
@@ -666,15 +668,15 @@ function learndash_activity_complete_lesson( $user_id = 0, $course_id = 0, $less
  *
  * @since 3.5.0
  *
- * @param int $user_id   User ID.
- * @param int $course_id Course ID.
- * @param int $topic_id  Topic ID.
- * @param int $starttime Activity start timestamp (GMT).
+ * @param int $user_id    User ID.
+ * @param int $course_id  Course ID.
+ * @param int $topic_id   Topic ID.
+ * @param int $start_time Activity start timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_start_topic( $user_id = 0, $course_id = 0, $topic_id = 0, $starttime = 0 ) {
-	return learndash_activity_start_step( $user_id, $course_id, $topic_id, 'topic', $starttime );
+function learndash_activity_start_topic( $user_id = 0, $course_id = 0, $topic_id = 0, $start_time = 0 ) {
+	return learndash_activity_start_step( $user_id, $course_id, $topic_id, 'topic', $start_time );
 }
 
 /**
@@ -682,15 +684,15 @@ function learndash_activity_start_topic( $user_id = 0, $course_id = 0, $topic_id
  *
  * @since 3.5.0
  *
- * @param int $user_id   User ID.
- * @param int $course_id Course ID.
- * @param int $topic_id  Topic ID.
- * @param int $completetime Activity complete timestamp (GMT).
+ * @param int $user_id       User ID.
+ * @param int $course_id     Course ID.
+ * @param int $topic_id      Topic ID.
+ * @param int $complete_time Activity complete timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_complete_topic( $user_id = 0, $course_id = 0, $topic_id = 0, $completetime = 0 ) {
-	return learndash_activity_complete_step( $user_id, $course_id, $topic_id, 'topic', $completetime );
+function learndash_activity_complete_topic( $user_id = 0, $course_id = 0, $topic_id = 0, $complete_time = 0 ) {
+	return learndash_activity_complete_step( $user_id, $course_id, $topic_id, 'topic', $complete_time );
 }
 
 /**
@@ -698,15 +700,15 @@ function learndash_activity_complete_topic( $user_id = 0, $course_id = 0, $topic
  *
  * @since 3.5.0
  *
- * @param int $user_id   User ID.
- * @param int $course_id Course ID.
- * @param int $quiz_id   Quiz ID.
- * @param int $starttime Activity start timestamp (GMT).
+ * @param int $user_id    User ID.
+ * @param int $course_id  Course ID.
+ * @param int $quiz_id    Quiz ID.
+ * @param int $start_time Activity start timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_start_quiz( $user_id = 0, $course_id = 0, $quiz_id = 0, $starttime = 0 ) {
-	return learndash_activity_start_step( $user_id, $course_id, $quiz_id, 'quiz', $starttime );
+function learndash_activity_start_quiz( $user_id = 0, $course_id = 0, $quiz_id = 0, $start_time = 0 ) {
+	return learndash_activity_start_step( $user_id, $course_id, $quiz_id, 'quiz', $start_time );
 }
 
 /**
@@ -714,15 +716,15 @@ function learndash_activity_start_quiz( $user_id = 0, $course_id = 0, $quiz_id =
  *
  * @since 3.5.0
  *
- * @param int $user_id      User ID.
- * @param int $course_id    Course ID.
- * @param int $quiz_id      Quiz ID.
- * @param int $completetime Activity complete timestamp (GMT).
+ * @param int $user_id       User ID.
+ * @param int $course_id     Course ID.
+ * @param int $quiz_id       Quiz ID.
+ * @param int $complete_time Activity complete timestamp (GMT).
  *
  * @return object Instance of LDLMS_Model_Activity or null;
  */
-function learndash_activity_complete_quiz( $user_id = 0, $course_id = 0, $quiz_id = 0, $completetime = 0 ) {
-	return learndash_activity_complete_step( $user_id, $course_id, $quiz_id, 'quiz', $completetime );
+function learndash_activity_complete_quiz( $user_id = 0, $course_id = 0, $quiz_id = 0, $complete_time = 0 ) {
+	return learndash_activity_complete_step( $user_id, $course_id, $quiz_id, 'quiz', $complete_time );
 }
 
 /**

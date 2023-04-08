@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Settings Page Orderview.
+ * LearnDash Settings Page Overview.
  *
  * @since 3.0.0
  * @package LearnDash\Settings\Pages
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDash_Settings_Page_Overview' ) ) ) {
 	/**
-	 * Class LearnDash Settings Page Orderview.
+	 * Class LearnDash Settings Page Overview.
 	 *
 	 * @since 3.0.0
 	 */
@@ -60,8 +60,6 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			$this->settings_tab_title    = esc_html__( 'Overview', 'learndash' );
 			$this->settings_tab_priority = 0;
 
-			// Override action with custom plugins function for add-ons.
-			// add_action( 'install_plugins_pre_plugin-information', array( $this, 'shows_addon_plugin_information' ) );
 			add_filter( 'learndash_submenu', array( $this, 'submenu_item' ), 200 );
 
 			add_filter( 'learndash_admin_tab_sets', array( $this, 'learndash_admin_tab_sets' ), 10, 3 );
@@ -73,7 +71,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		}
 
 		/**
-		 * Control visibility of submenu items based on lisence status
+		 * Control visibility of submenu items based on license status
 		 *
 		 * @since 3.0.0
 		 *
@@ -196,7 +194,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			if ( isset( $_POST['action'], $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'learndash-bootcamp-toggle' ) &&
 				current_user_can( 'edit_posts' ) && 'save_bootcamp_toggle_state' === $_POST['action'] ) {
 				if ( ! empty( $_POST['state'] ) ) {
-					update_option( 'learndash_bootcamp_toggle_state', sanitize_text_field( $_POST['state'] ) );
+					update_option( 'learndash_bootcamp_toggle_state', sanitize_text_field( $_POST['state'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing
 				}
 			}
 		}
@@ -210,7 +208,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			if ( isset( $_POST['action'], $_POST['nonce'] ) && wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'learndash-bootcamp-mark-complete' ) &&
 				current_user_can( 'edit_posts' ) && 'save_bootcamp_mark_complete_state' === $_POST['action'] ) {
 				if ( ( ! empty( $_POST['state'] ) ) && ( ! empty( $_POST['id'] ) ) ) {
-					update_option( sanitize_text_field( $_POST['id'] ), sanitize_text_field( $_POST['state'] ) );
+					update_option( sanitize_text_field( $_POST['id'] ), sanitize_text_field( $_POST['state'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing
 				}
 			}
 		}
@@ -244,13 +242,14 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					update_option( 'nss_plugin_license_email_sfwd_lms', $email );
 
 					$updater->reset();
+					$updater->generate_update_path();
 					$updater->getRemote_license();
 					?>
 					<script>window.location.reload()</script>
 					<?php
 				} else {
 					/*
-					 * @TODO : All this logic needs to be encapsulated within the ld-qutoupdate.php
+					 * @TODO : All this logic needs to be encapsulated within the ld-autoupdate.php
 					 * code. We should not be exposing settings keys like 'nss_plugin_license_sfwd_lms'
 					 * and 'nss_plugin_license_email_sfwd_lms' spread all over the LD code.
 					 * There should be an interface function that simply returns the license
@@ -283,7 +282,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 								 */
 								update_option( 'nss_plugin_remote_license_sfwd_lms', array( 'value' => $license_status ) );
 
-								// Then re-update the licens using new utility function.
+								// Then re-update the license using new utility function.
 								// Plus this provides simpler true/false boolean.
 								$license_status = learndash_is_learndash_license_valid();
 							}
@@ -339,79 +338,81 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 							<div class="ld-bootcamp__widget--body">
 								<div class="ld-bootcamp__accordion" role="tablist">
-									<?php
-										$ld_license_completed = learndash_is_learndash_license_valid() ? '-completed' : '';
-									if ( ! learndash_updates_enabled() ) {
-										$ld_license_completed = '-completed';
-									}
-									?>
-									<div class="ld-bootcamp__accordion--single <?php echo esc_attr( $ld_license_completed ); ?>">
-										<h3>
-											<span class="ld-bootcamp__mark-complete--toggle-indicator" aria-hidden="true"></span>
-											<button class="ld-bootcamp__accordion--toggle" type="button" aria-selected="false" aria-expanded="false" aria-controls="ld-bootcamp__accordion--content-1" role="tab">
-											<?php echo esc_html_x( 'Enter Your License', 'Bootcamp headline', 'learndash' ); ?>
-											<span class="ld-bootcamp__accordion--toggle-indicator"></span>
-											</button>
-										</h3>
+									<?php if ( ( defined( 'LEARNDASH_LICENSE_PANEL_SHOW' ) ) && ( true === LEARNDASH_LICENSE_PANEL_SHOW ) ) { ?>
+										<?php
+											$ld_license_completed = learndash_is_learndash_license_valid() ? '-completed' : '';
+										if ( ! learndash_updates_enabled() ) {
+											$ld_license_completed = '-completed';
+										}
+										?>
+										<div class="ld-bootcamp__accordion--single <?php echo esc_attr( $ld_license_completed ); ?>">
+											<h3>
+												<span class="ld-bootcamp__mark-complete--toggle-indicator" aria-hidden="true"></span>
+												<button class="ld-bootcamp__accordion--toggle" type="button" aria-selected="false" aria-expanded="false" aria-controls="ld-bootcamp__accordion--content-1" role="tab">
+												<?php echo esc_html_x( 'Enter Your License', 'Bootcamp headline', 'learndash' ); ?>
+												<span class="ld-bootcamp__accordion--toggle-indicator"></span>
+												</button>
+											</h3>
 
-										<div id="ld-bootcamp__accordion--content-1" class="ld-bootcamp__accordion--content" aria-hidden="true" role="tabpanel">
-											<p><strong><?php esc_html_e( 'Welcome to LearnDash!', 'learndash' ); ?></strong><br/>
-											<?php esc_html_e( 'We know you are excited to get started, but before you do it is very important that you first add your license details below!', 'learndash' ); ?></p>
-											<ul>
-												<li><?php esc_html_e( 'Your active license gives you access to product support and updates that we push out.', 'learndash' ); ?></li>
-												<li><?php esc_html_e( 'Your license details were emailed to you after purchase.', 'learndash' ); ?></li>
-												<li>
-												<?php
-												echo sprintf(
-													// translators: placeholder: Link to the license page on the LearnDash website.
-													esc_html_x( 'You can also find them listed %1$s', 'Link to the license page on the LearnDash website', 'learndash' ),
-													"<a href='https://support.learndash.com/account/' target='_blank' rel='noreferrer noopener'>" . esc_html__( 'on your account.', 'learndash' ) . '</a>'
-												);
-												?>
-												</li>
-											</ul>
-
-											<?php
-											if ( learndash_is_admin_user() ) :
-												?>
-												<div class="ld-bootcamp__license">
-													<form method="post" action="">
+											<div id="ld-bootcamp__accordion--content-1" class="ld-bootcamp__accordion--content" aria-hidden="true" role="tabpanel">
+												<p><strong><?php esc_html_e( 'Welcome to LearnDash!', 'learndash' ); ?></strong><br/>
+												<?php esc_html_e( 'We know you are excited to get started, but before you do it is very important that you first add your license details below!', 'learndash' ); ?></p>
+												<ul>
+													<li><?php esc_html_e( 'Your active license gives you access to product support and updates that we push out.', 'learndash' ); ?></li>
+													<li><?php esc_html_e( 'Your license details were emailed to you after purchase.', 'learndash' ); ?></li>
+													<li>
 													<?php
-													if ( ! learndash_is_learndash_license_valid() ) :
-														if ( learndash_get_license_show_notice() ) {
-															?>
-															<p class="<?php echo esc_attr( learndash_get_license_class( 'notice notice-error is-dismissible learndash-license-is-dismissible' ) ); ?>" <?php echo learndash_get_license_data_attrs(); ?>> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Element hardcoded in function. ?>
-															<?php echo learndash_get_license_message(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Function escapes output ?>
-															</p>
-															<?php
-														}
-														?>
-													<?php else : ?>
-														<p class="notice notice-success is-dismissible"><?php esc_html_e( 'Your license is valid.', 'learndash' ); ?></p>
-														<?php
-													endif;
+													echo sprintf(
+														// translators: placeholder: Link to the license page on the LearnDash website.
+														esc_html_x( 'You can also find them listed %1$s', 'Link to the license page on the LearnDash website', 'learndash' ),
+														"<a href='https://support.learndash.com/account/' target='_blank' rel='noreferrer noopener'>" . esc_html__( 'on your account.', 'learndash' ) . '</a>'
+													);
 													?>
+													</li>
+												</ul>
 
-													<div class="ld-bootcamp__license--fields">
-															<label for="ld-bootcamp__email"><?php echo esc_html_x( 'Enter your Email here', 'License email', 'learndash' ); ?></label>
-															<input type="email" value="<?php echo empty( $this->license_info['email'] ) ? '' : esc_html( $this->license_info['email'] ); ?>" id="ld-bootcamp__email" name="nss_plugin_license_email_sfwd_lms" />
-														</div>
+												<?php
+												if ( learndash_is_admin_user() ) :
+													?>
+													<div class="ld-bootcamp__license">
+														<form method="post" action="">
+														<?php
+														if ( ! learndash_is_learndash_license_valid() ) :
+															if ( learndash_get_license_show_notice() ) {
+																?>
+																<p class="<?php echo esc_attr( learndash_get_license_class( 'notice notice-error is-dismissible learndash-license-is-dismissible' ) ); ?>" <?php echo learndash_get_license_data_attrs(); ?>> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Element hardcoded in function. ?>
+																<?php echo learndash_get_license_message(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Function escapes output ?>
+																</p>
+																<?php
+															}
+															?>
+														<?php else : ?>
+															<p class="notice notice-success is-dismissible"><?php esc_html_e( 'Your license is valid.', 'learndash' ); ?></p>
+															<?php
+														endif;
+														?>
+
 														<div class="ld-bootcamp__license--fields">
-															<label for="ld-bootcamp__license-key"><?php echo esc_html_x( 'Enter your license key here', 'License key', 'learndash' ); ?></label>
-															<input type="text" value="<?php echo empty( $this->license_info['license'] ) ? '' : esc_html( $this->license_info['license'] ); ?>" id="ld-bootcamp__license-key" name="nss_plugin_license_sfwd_lms" />
-														</div>
+																<label for="ld-bootcamp__email"><?php echo esc_html_x( 'Enter your Email here', 'License email', 'learndash' ); ?></label>
+																<input type="email" value="<?php echo empty( $this->license_info['email'] ) ? '' : esc_html( $this->license_info['email'] ); ?>" id="ld-bootcamp__email" name="nss_plugin_license_email_sfwd_lms" />
+															</div>
+															<div class="ld-bootcamp__license--fields">
+																<label for="ld-bootcamp__license-key"><?php echo esc_html_x( 'Enter your license key here', 'License key', 'learndash' ); ?></label>
+																<input type="text" value="<?php echo empty( $this->license_info['license'] ) ? '' : esc_html( $this->license_info['license'] ); ?>" id="ld-bootcamp__license-key" name="nss_plugin_license_sfwd_lms" />
+															</div>
 
-														<input type="submit" value="<?php esc_html_e( 'Save license', 'learndash' ); ?>" name="update_nss_plugin_license_sfwd_lms" class="button button-primary" />
-														<?php wp_nonce_field( 'ld_bootcamp_license_form_nonce', 'ld_bootcamp_license_form_nonce' ); ?>
-													</form>
-												</div>
-											<?php else : ?>
-												<p class="notice notice-error">
-													<?php esc_html_e( 'You do not have sufficient permissions to change the license information.', 'learndash' ); ?>
-												</p>
-											<?php endif; ?>
+															<input type="submit" value="<?php esc_html_e( 'Save license', 'learndash' ); ?>" name="update_nss_plugin_license_sfwd_lms" class="button button-primary" />
+															<?php wp_nonce_field( 'ld_bootcamp_license_form_nonce', 'ld_bootcamp_license_form_nonce' ); ?>
+														</form>
+													</div>
+												<?php else : ?>
+													<p class="notice notice-error">
+														<?php esc_html_e( 'You do not have sufficient permissions to change the license information.', 'learndash' ); ?>
+													</p>
+												<?php endif; ?>
+											</div>
 										</div>
-									</div>
+									<?php } ?>
 									<div class="ld-bootcamp__accordion--single <?php echo 'true' === get_option( 'learndash_bootcamp_mark_complete_section_2' ) ? '-completed' : ''; ?>">
 										<h3>
 											<button class="ld-bootcamp__mark-complete--toggle-indicator" aria-hidden="true" data-id="learndash_bootcamp_mark_complete_section_2" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-bootcamp-mark-complete' ) ); ?>"></button>
@@ -1046,7 +1047,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 												<li><a href="https://www.learndash.com/support/docs/users-groups/" target="_blank" rel="noopener noreferrer"> <?php printf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
 													// translators: placeholder: Groups.
 													esc_html_x( 'Users & %s', 'placeholder: Groups', 'learndash' ),
-													learndash_get_custom_label( 'groups' )
+													esc_html( learndash_get_custom_label( 'groups' ) )
 												); ?> </a></li> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd ?>
 												<li><a href="https://www.learndash.com/support/docs/add-ons/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Add-ons', 'learndash' ); ?></a></li>
 											</ul>

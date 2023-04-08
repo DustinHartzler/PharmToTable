@@ -242,8 +242,10 @@ function learndash_question_cloze_fetch_data( $answer_text, $convert_to_lower = 
 		$data['points'][]             = $points;
 		$data['data'][ $replace_key ] = $a;
 
-		$count           = 1;
-		$data['replace'] = str_replace( $v[0], $replace_key, $data['replace'], $count );
+		$pos = strpos( $data['replace'], $v[0] );
+		if ( false !== $pos ) {
+    		$data['replace'] = substr_replace( $data['replace'], $replace_key, $pos, strlen($v[0] ) );
+		}
 	}
 
 	/**

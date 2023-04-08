@@ -83,11 +83,11 @@ function learndash_should_load_admin_assets() {
 	// Get post type.
 	$post_type = get_post_type();
 	if ( ! $post_type ) {
-		$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : $post_type;
+		$post_type = isset( $_GET['post_type'] ) ? sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) : $post_type; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	$is_ld_page = false;
-	if ( ( isset( $_GET['page'] ) ) && ( in_array( $_GET['page'], $learndash_pages, true ) ) ) {
+	if ( ( isset( $_GET['page'] ) ) && ( in_array( $_GET['page'], $learndash_pages, true ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$is_ld_page = true;
 	}
 
@@ -222,10 +222,7 @@ function learndash_load_admin_resources() {
 		$learndash_assets_loaded['styles']['ld-datepicker-ui-css'] = __FUNCTION__;
 	}
 
-	if (
-		( ( 'admin.php' === $pagenow ) && ( isset( $_GET['page'] ) ) && ( 'ldAdvQuiz' === $_GET['page'] ) )
-		&& ( ( isset( $_GET['module'] ) ) && ( 'statistics' === $_GET['module'] ) )
-		) {
+	if ( ( ( 'admin.php' === $pagenow ) && ( isset( $_GET['page'] ) ) && ( 'ldAdvQuiz' === $_GET['page'] ) ) && ( ( isset( $_GET['module'] ) ) && ( 'statistics' === $_GET['module'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		wp_enqueue_style(
 			'ld-datepicker-ui-css',
 			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/jquery-ui' . learndash_min_asset() . '.css',
@@ -327,20 +324,20 @@ function learndash_element_lazy_loader() {
 	if ( current_user_can( 'read' ) ) {
 		if ( ( isset( $_POST['query_data']['nonce'] ) ) && ( ! empty( $_POST['query_data']['nonce'] ) ) ) {
 			if ( ( isset( $_POST['query_data']['query_vars']['post_type'] ) ) && ( ! empty( $_POST['query_data']['query_vars']['post_type'] ) ) ) {
-				if ( wp_verify_nonce( $_POST['query_data']['nonce'], esc_attr( $_POST['query_data']['query_vars']['post_type'] ) ) ) {
+				if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['query_data']['nonce'] ) ), sanitize_text_field( wp_unslash( $_POST['query_data']['query_vars']['post_type'] ) ) ) ) {
 
 					if ( ( isset( $_POST['query_data']['query_vars'] ) ) && ( ! empty( $_POST['query_data']['query_vars'] ) ) ) {
-						$reply_data['query_data'] = $_POST['query_data'];
+						$reply_data['query_data'] = $_POST['query_data']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 						if ( isset( $_POST['query_data']['query_type'] ) ) {
 							switch ( $_POST['query_data']['query_type'] ) {
 								case 'WP_Query':
-									$query = new WP_Query( $_POST['query_data']['query_vars'] );
+									$query = new WP_Query( $_POST['query_data']['query_vars'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 									if ( $query instanceof WP_Query ) {
 										if ( ! empty( $query->posts ) ) {
 											$reply_data['html_options'] = '';
 											foreach ( $query->posts as $p ) {
-												if ( intval( $p->ID ) == intval( $_POST['query_data']['value'] ) ) {
+												if ( intval( $p->ID ) == intval( $_POST['query_data']['value'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 													$selected = ' selected="selected" ';
 												} else {
 													$selected = '';
@@ -352,7 +349,7 @@ function learndash_element_lazy_loader() {
 									break;
 
 								case 'WP_User_Query':
-									$query = new WP_User_Query( $_POST['query_data']['query_vars'] );
+									$query = new WP_User_Query( $_POST['query_data']['query_vars'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 									break;
 
 								default:
@@ -408,8 +405,8 @@ add_filter( 'plugin_row_meta', 'learndash_plugin_row_meta', 10, 4 );
  * @return array An array of column headers.
  */
 function learndash_manage_edit_post_tag_columns( $columns = array() ) {
-	if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) {
-		if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) {
+	if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( isset( $columns['posts'] ) ) {
 				unset( $columns['posts'] );
 			}
@@ -437,10 +434,10 @@ add_filter( 'manage_edit-category_columns', 'learndash_manage_edit_post_tag_colu
  */
 function learndash_manage_post_tag_custom_column( $column_content, $column_name, $term_id ) {
 	if ( 'ld_posts' === $column_name ) {
-		if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) {
-			if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) {
+		if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$query_args = array(
-					'post_type'   => esc_attr( $_GET['post_type'] ),
+					'post_type'   => sanitize_text_field( wp_unslash( $_GET['post_type'] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					'post_status' => 'publish',
 					'tag_id'      => $term_id,
 					'fields'      => 'ids',
@@ -448,20 +445,22 @@ function learndash_manage_post_tag_custom_column( $column_content, $column_name,
 				);
 
 				$query_results = new WP_Query( $query_args );
-				if ( ! is_wp_error( $query_results ) ) {
+				if ( is_a( $query_results, 'WP_Query' ) ) {
 					$count = count( $query_results->posts );
 					if ( $count > 0 ) {
-						$term           = get_term_by( 'id', $term_id, 'category' );
-						$column_content = "<a href='" . esc_url(
-							add_query_arg(
-								array(
-									'post_type' => esc_attr( $_GET['post_type'] ),
-									'taxonomy'  => 'post_tag',
-									'post_tag'  => $term->slug,
-								),
-								'edit.php'
-							)
-						) . "'>" . count( $query_results->posts ) . '</a>';
+						$term = get_term_by( 'id', $term_id, 'category' );
+						if ( is_a( $term, 'WP_Term' ) ) {
+							$column_content = "<a href='" . esc_url(
+								add_query_arg(
+									array(
+										'post_type' => sanitize_text_field( wp_unslash( $_GET['post_type'] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+										'taxonomy'  => 'post_tag',
+										'post_tag'  => $term->slug,
+									),
+									'edit.php'
+								)
+							) . "'>" . count( $query_results->posts ) . '</a>';
+						}
 					} else {
 						$column_content = 0;
 					}
@@ -488,10 +487,10 @@ add_filter( 'manage_post_tag_custom_column', 'learndash_manage_post_tag_custom_c
  */
 function learndash_manage_category_custom_column( $column_content, $column_name, $term_id ) {
 	if ( 'ld_posts' === $column_name ) {
-		if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) {
-			if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) {
+		if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$query_args = array(
-					'post_type'   => esc_attr( $_GET['post_type'] ),
+					'post_type'   => sanitize_text_field( wp_unslash( $_GET['post_type'] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					'post_status' => 'publish',
 					'cat'         => $term_id,
 					'fields'      => 'ids',
@@ -499,13 +498,13 @@ function learndash_manage_category_custom_column( $column_content, $column_name,
 				);
 
 				$query_results = new WP_Query( $query_args );
-				if ( ! is_wp_error( $query_results ) ) {
+				if ( is_a( $query_results, 'WP_Query' ) ) {
 					$count = count( $query_results->posts );
 					if ( $count > 0 ) {
 						$column_content = "<a href='" . esc_url(
 							add_query_arg(
 								array(
-									'post_type' => esc_attr( $_GET['post_type'] ),
+									'post_type' => sanitize_text_field( wp_unslash( $_GET['post_type'] ) ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 									'taxonomy'  => 'category',
 									'cat'       => $term_id,
 								),
@@ -542,25 +541,25 @@ function learndash_delete_all_data() {
 	if ( ! is_multisite() ) {
 		// USER META SETTINGS.
 
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key='_sfwd-course_progress'" );
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key='_sfwd-quizzes'" );
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key='_sfwd-course_progress'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key='_sfwd-quizzes'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'completed_%'" );
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'course_%_access_from'" );
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'course_completed_%'" );
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'learndash_course_expired_%'" );
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'learndash_group_users_%'" );
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'learndash_group_leaders_%'" );
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'completed_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'course_%_access_from'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'course_completed_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'learndash_course_expired_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'learndash_group_users_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key LIKE 'learndash_group_leaders_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key = 'ld-upgraded-user-meta-courses'" );
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key = 'ld-upgraded-user-meta-quizzes'" );
-		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key = 'course_points'" );
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key = 'ld-upgraded-user-meta-courses'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key = 'ld-upgraded-user-meta-quizzes'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->query( 'DELETE FROM ' . $wpdb->usermeta . " WHERE meta_key = 'course_points'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 
 	// CUSTOM OPTIONS.
 
-	$wpdb->query( 'DELETE FROM ' . $wpdb->options . " WHERE option_name LIKE 'learndash_%'" );
-	$wpdb->query( 'DELETE FROM ' . $wpdb->options . " WHERE option_name LIKE 'wpProQuiz_%'" );
+	$wpdb->query( 'DELETE FROM ' . $wpdb->options . " WHERE option_name LIKE 'learndash_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+	$wpdb->query( 'DELETE FROM ' . $wpdb->options . " WHERE option_name LIKE 'wpProQuiz_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// CUSTOMER POST TYPES.
 
@@ -572,7 +571,7 @@ function learndash_delete_all_data() {
 		$ld_post_types .= "'" . $post_type . "'";
 	}
 
-	$post_ids = $wpdb->get_col( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type IN (' . $ld_post_types . ')' );
+	$post_ids = $wpdb->get_col( 'SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type IN (' . $ld_post_types . ')' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 	if ( ! empty( $post_ids ) ) {
 
 		$offset = 0;
@@ -582,9 +581,9 @@ function learndash_delete_all_data() {
 			if ( empty( $post_ids_part ) ) {
 				break;
 			} else {
-				$wpdb->query( 'DELETE FROM ' . $wpdb->postmeta . ' WHERE post_id IN (' . implode( ',', $post_ids ) . ')' );
-				$wpdb->query( 'DELETE FROM ' . $wpdb->posts . ' WHERE post_parent IN (' . implode( ',', $post_ids ) . ')' );
-				$wpdb->query( 'DELETE FROM ' . $wpdb->posts . ' WHERE ID IN (' . implode( ',', $post_ids ) . ')' );
+				$wpdb->query( 'DELETE FROM ' . $wpdb->postmeta . ' WHERE post_id IN (' . implode( ',', $post_ids ) . ')' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->query( 'DELETE FROM ' . $wpdb->posts . ' WHERE post_parent IN (' . implode( ',', $post_ids ) . ')' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+				$wpdb->query( 'DELETE FROM ' . $wpdb->posts . ' WHERE ID IN (' . implode( ',', $post_ids ) . ')' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared,
 
 				$offset += 1000;
 			}
@@ -594,19 +593,19 @@ function learndash_delete_all_data() {
 	// CUSTOM TAXONOMIES & TERMS.
 
 	foreach ( $learndash_taxonomies as $taxonomy ) {
-		// Prepare & excecute SQL.
-		$terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) );
+		// Prepare & execute SQL.
+		$terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
 
 			// Delete Terms.
 		if ( $terms ) {
 			foreach ( $terms as $term ) {
-				$wpdb->delete( $wpdb->term_taxonomy, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) );
-				$wpdb->delete( $wpdb->terms, array( 'term_id' => $term->term_id ) );
+				$wpdb->delete( $wpdb->term_taxonomy, array( 'term_taxonomy_id' => $term->term_taxonomy_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+				$wpdb->delete( $wpdb->terms, array( 'term_id' => $term->term_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			}
 		}
 
 		// Delete Taxonomy.
-		$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) );
+		$wpdb->delete( $wpdb->term_taxonomy, array( 'taxonomy' => $taxonomy ), array( '%s' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 
 	// CUSTOM DB TABLES.
@@ -614,8 +613,8 @@ function learndash_delete_all_data() {
 	$learndash_db_tables = LDLMS_DB::get_tables();
 	if ( ! empty( $learndash_db_tables ) ) {
 		foreach ( $learndash_db_tables as $table_name ) {
-			if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
-				$wpdb->query( 'DROP TABLE ' . $table_name );
+			if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->query( 'DROP TABLE ' . $table_name ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
 			}
 		}
 	}
@@ -706,14 +705,19 @@ function learndash_load_inline_script_locale_data() {
  *
  * @since 3.0.0
  *
+ * @param string $domain The textdomain.
+ *
  * @return array An array of translated strings.
  */
-function learndash_get_jed_locale_data() {
-	$translations = get_translations_for_domain( LEARNDASH_LMS_TEXT_DOMAIN );
+function learndash_get_jed_locale_data( $domain = '' ) {
+	if ( empty( $domain ) ) {
+		$domain = LEARNDASH_LMS_TEXT_DOMAIN;
+	}
+	$translations = get_translations_for_domain( $domain );
 
 	$locale = array(
 		'' => array(
-			'domain' => LEARNDASH_LMS_TEXT_DOMAIN,
+			'domain' => $domain,
 			'lang'   => is_admin() ? get_user_locale() : get_locale(),
 		),
 	);
@@ -731,6 +735,7 @@ function learndash_get_jed_locale_data() {
 
 $learndash_other_plugins_active_text = '';
 global $learndash_other_plugins_active_text;
+
 /**
  * Check for other LMS plugins
  *
@@ -759,8 +764,8 @@ function learndash_check_other_lms_plugins() {
 			'label'  => 'WP Courses LMS',
 			'plugin' => 'wp-courses/wp-courses.php',
 		),
-		'wp-courseware/wp-courseware.php' => array(
-			'label'    => 'WP Courseware',
+		'wp-courseware/wp-courseware.php' => array( // cspell:disable-line.
+			'label'    => 'WP Courseware', // cspell:disable-line.
 			'function' => 'WPCW_plugin_init',
 		),
 		'WPLMS'                           => array(
@@ -772,25 +777,25 @@ function learndash_check_other_lms_plugins() {
 	foreach ( $lms_plugins as $plugin_set ) {
 		$plugin_active = false;
 
-		if ( ( isset( $plugin_set['plugin'] ) ) && ( ! empty( $plugin_set['plugin'] ) ) ) {
+		if ( ( isset( $plugin_set['plugin'] ) ) && ( ! empty( $plugin_set['plugin'] ) ) ) { // @phpstan-ignore-line
 			if ( ( is_plugin_active( $plugin_set['plugin'] ) ) || ( ( is_multisite() ) && ( is_plugin_active_for_network( $plugin_set['plugin'] ) ) ) ) {
 				$plugin_active = true;
 			}
-		} elseif ( ( isset( $plugin_set['class'] ) ) && ( ! empty( $plugin_set['class'] ) ) ) {
+		} elseif ( ( isset( $plugin_set['class'] ) ) && ( ! empty( $plugin_set['class'] ) ) ) { // @phpstan-ignore-line
 			if ( class_exists( $plugin_set['class'] ) ) {
 				$plugin_active = true;
 			}
-		} elseif ( ( isset( $plugin_set['function'] ) ) && ( ! empty( $plugin_set['function'] ) ) ) {
-			if ( function_exists( $plugin_set['function'] ) ) {
+		} elseif ( ( isset( $plugin_set['function'] ) ) && ( ! empty( $plugin_set['function'] ) ) ) { // @phpstan-ignore-line
+			if ( function_exists( $plugin_set['function'] ) ) { // @phpstan-ignore-line
 				$plugin_active = true;
 			}
-		} elseif ( ( isset( $plugin_set['define'] ) ) && ( ! empty( $plugin_set['define'] ) ) ) {
+		} elseif ( ( isset( $plugin_set['define'] ) ) && ( ! empty( $plugin_set['define'] ) ) ) { // @phpstan-ignore-line
 			if ( defined( $plugin_set['define'] ) ) {
 				$plugin_active = true;
 			}
 		}
 
-		if ( ( $plugin_active ) && ( isset( $plugin_set['label'] ) ) && ( ! empty( $plugin_set['label'] ) ) ) {
+		if ( ( $plugin_active ) && ( isset( $plugin_set['label'] ) ) && ( ! empty( $plugin_set['label'] ) ) ) { // @phpstan-ignore-line
 			if ( ! empty( $learndash_other_plugins_active_text ) ) {
 				$learndash_other_plugins_active_text .= ', ';
 			}
@@ -847,7 +852,7 @@ function learndash_admin_other_plugins_notice_dismissed_ajax() {
 	$user_id = get_current_user_id();
 	if ( ! empty( $user_id ) ) {
 		if ( ( isset( $_POST['action'] ) ) && ( 'learndash_other_plugins_notice_dismissed' === $_POST['action'] ) ) {
-			if ( ( isset( $_POST['learndash_other_plugins_notice_dismissed_nonce'] ) ) && ( ! empty( $_POST['learndash_other_plugins_notice_dismissed_nonce'] ) ) && ( wp_verify_nonce( $_POST['learndash_other_plugins_notice_dismissed_nonce'], 'notice-dismiss-nonce-' . $user_id ) ) ) {
+			if ( ( isset( $_POST['learndash_other_plugins_notice_dismissed_nonce'] ) ) && ( ! empty( $_POST['learndash_other_plugins_notice_dismissed_nonce'] ) ) && ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['learndash_other_plugins_notice_dismissed_nonce'] ) ), 'notice-dismiss-nonce-' . $user_id ) ) ) {
 				update_user_meta( $user_id, 'learndash_other_plugins_notice_dismissed_nonce', time() );
 			}
 		}

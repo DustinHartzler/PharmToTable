@@ -32,11 +32,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Function to crete the settiings field.
+		 * Function to crete the settings field.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the ouput.
+		 * @param array $field_args An array of field arguments used to process the output.
 		 * @return void
 		 */
 		public function create_section_field( $field_args = array() ) {
@@ -97,7 +97,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			$html .= '<div class="ld_date_selector">' . sprintf(
 				// translators: placeholders: Month Name, Day number, Year number, Hour number, Minute number.
-				esc_html__( '%1$s %2$s, %3$s @ %4$s:%5$s', 'learndash' ),
+				esc_html__( '%1$s %2$s , %3$s @ %4$s : %5$s', 'learndash' ),
 				$month_field,
 				$day_field,
 				$year_field,

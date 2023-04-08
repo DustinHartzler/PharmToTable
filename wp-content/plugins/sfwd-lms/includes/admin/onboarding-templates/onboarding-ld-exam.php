@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 			printf(
 				// translators: placeholder: exams.
 				esc_html_x( 'You don\'t have any %s yet', 'placeholder: exams', 'learndash' ),
-				learndash_get_custom_label( 'exams' )
+				learndash_get_custom_label( 'exams' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			);
 			?>
 		</h2>
@@ -38,19 +38,19 @@ defined( 'ABSPATH' ) || exit;
 					'placeholder: Exams, Course, Courses.',
 					'learndash'
 				),
-				learndash_get_custom_label( 'exams' ),
-				learndash_get_custom_label( 'course' ),
-				learndash_get_custom_label( 'courses' )
+				learndash_get_custom_label( 'exams' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+				learndash_get_custom_label( 'course' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+				learndash_get_custom_label( 'courses' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			);
 			?>
 		</p>
-		<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=' . $screen_post_type ) ); ?>" class="button button-secondary">
+		<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=' . learndash_get_post_type_slug( 'exam' ) ) ); ?>" class="button button-secondary">
 			<span class="dashicons dashicons-plus-alt"></span>
 			<?php
 			printf(
 				// translators: placeholder: Exam.
 				esc_html_x( 'Add your first %s', 'placeholder: Exam', 'learndash' ),
-				learndash_get_custom_label( 'exam' )
+				learndash_get_custom_label( 'exam' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			);
 			?>
 		</a>

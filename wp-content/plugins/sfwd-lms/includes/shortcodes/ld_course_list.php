@@ -75,7 +75,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 	$attr_defaults = apply_filters(
 		'ld_course_list_shortcode_attr_defaults',
 		array(
-
 			'include_outer_wrapper' => 'true',
 
 			'num'                   => false,
@@ -93,9 +92,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 			'post__in'              => null,
 
 			'course_id'             => '',
-			// Not sure why these are here as there is not supported logic.
-			// 'lesson_id' => '',
-			// 'topic_id' => '',
 
 			'meta_key'              => '',
 			'meta_value'            => '',
@@ -218,7 +214,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		} else {
 			$atts['course_status'] = null;
 		}
-		// unset( $atts['status'] );
 	} elseif ( learndash_get_post_type_slug( 'group' ) === $atts['post_type'] ) {
 		if ( ( 'true' === $atts['mygroups'] ) || ( 'enrolled' === $atts['mygroups'] ) ) {
 			if ( is_user_logged_in() ) {
@@ -259,15 +254,11 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		} else {
 			$atts['group_status'] = null;
 		}
-		// unset( $atts['status'] );
 	}
 
 	if ( '' === $atts['post__in'] ) {
 		$atts['post__in'] = null;
 	}
-
-	// if ( isset( $atts['num'] ) )
-	// $atts['num'] = intval( $atts['num'] );
 
 	if ( false === $atts['num'] ) {
 		if ( ( isset( $atts['course_id'] ) ) && ( ! empty( $atts['course_id'] ) ) ) {
@@ -301,9 +292,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		if ( ( isset( $atts['user_id'] ) ) && ( false === $atts['user_id'] ) ) {
 			$atts['user_id'] = get_current_user_id();
 		} elseif ( ( isset( $atts['user_id'] ) ) && ( false !== $atts['user_id'] ) ) {
-			if ( learndash_is_admin_user() ) {
-				// Good leave the user_id in place.
-			} elseif ( learndash_is_group_leader_user( get_current_user_id() ) ) {
+			if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
 				$groups = learndash_get_administrators_group_ids( get_current_user_id() );
 				if ( ! empty( $groups ) ) {
 					$user_courses = array();
@@ -330,7 +319,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		$atts['mycourses'] = null;
 	}
 
-	extract( $atts );
+	extract( $atts ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
 
 	global $post;
 
@@ -353,43 +342,19 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		$filter['author__in'] = $author__in;
 	}
 
-	/*
-	if ( ! empty( $meta_key ) ) {
-		$filter['meta_key'] = $meta_key;
-	}
-
-	if ( ! empty( $meta_value ) ) {
-		$filter['meta_value'] = $meta_value;
-	}
-
-	if ( ! empty( $meta_compare ) ) {
-		if ( !empty( $filter['meta_key'] ) ) {
-			$filter['meta_compare'] = $meta_compare;
-		}
-	}
-	*/
-
 	if ( ( ! empty( $meta_key ) ) && ( ! empty( $meta_value ) ) ) {
-		// if ( $meta_key == 'course_id' ) {
-		// if ( empty( $course_id ) ) {
-		// $course_id = $meta_value;
-		// $atts['course_id'] = $meta_value;
-		// }
-		// } else {
+		$meta_query = array(
+			'key'   => $meta_key,
+			'value' => $meta_value,
+		);
 
-			$meta_query = array(
-				'key'   => $meta_key,
-				'value' => $meta_value,
-			);
+		if ( empty( $meta_compare ) ) {
+			$meta_compare = '=';
+		}
 
-			if ( empty( $meta_compare ) ) {
-				$meta_compare = '=';
-			}
+		$meta_query['compare'] = $meta_compare;
 
-			$meta_query['compare'] = $meta_compare;
-
-			$filter['meta_query'][] = $meta_query;
-			// }
+		$filter['meta_query'][] = $meta_query;
 	}
 
 	if ( ( ! empty( $course_id ) ) && ( is_null( $post__in ) ) ) {
@@ -411,8 +376,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 	if ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'wp_post_category' ) == 'yes' ) {
 
 		if ( ! empty( $cat ) ) {
-			// $filter['cat'] = $cat;
-
 			if ( ! isset( $filter['tax_query'] ) ) {
 				$filter['tax_query'] = array();
 			}
@@ -425,8 +388,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $category_name ) ) {
-			// $filter['category_name'] = $category_name;
-
 			if ( ! isset( $filter['tax_query'] ) ) {
 				$filter['tax_query'] = array();
 			}
@@ -439,8 +400,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $category__and ) ) {
-			// $filter['category__and'] = explode( ',', $category__and );
-
 			$category__and = array_map( 'intval', explode( ',', $category__and ) );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -456,8 +415,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $category__in ) ) {
-			// $filter['category__in'] = explode( ',', $category__in );
-
 			$category__in = array_map( 'intval', explode( ',', $category__in ) );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -473,8 +430,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $category__not_in ) ) {
-			// $filter['category__not_in'] = explode( ',', $category__not_in );
-
 			$category__not_in = array_map( 'intval', explode( ',', $category__not_in ) );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -493,8 +448,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 	if ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'wp_post_tag' ) == 'yes' ) {
 
 		if ( ! empty( $tag ) ) {
-			// $filter['tag'] = $tag;
-
 			if ( ! isset( $filter['tax_query'] ) ) {
 				$filter['tax_query'] = array();
 			}
@@ -508,8 +461,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $tag_id ) ) {
-			// $filter['tag_id'] = $tag;
-
 			if ( ! isset( $filter['tax_query'] ) ) {
 				$filter['tax_query'] = array();
 			}
@@ -523,8 +474,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $tag__and ) ) {
-			// $filter['tag__and'] = explode( ',', $tag__and );
-
 			$tag__and = array_map( 'intval', explode( ',', $tag__and ) );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -540,8 +489,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $tag__in ) ) {
-			// $filter['tag__in'] = explode( ',', $tag__in );
-
 			$tag__in = array_map( 'intval', explode( ',', $tag__in ) );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -558,8 +505,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $tag__not_in ) ) {
-			// $filter['tag__not_in'] = explode( ',', $tag__not_in );
-
 			$tag__not_in = array_map( 'intval', explode( ',', $tag__not_in ) );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -575,8 +520,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $tag_slug__and ) ) {
-			// $filter['tag_slug__and'] = explode( ',', $tag_slug__and );
-
 			$tag_slug__and = array_map( 'trim', explode( ',', $tag_slug__and ) );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -592,8 +535,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		if ( ! empty( $tag_slug__in ) ) {
-			// $filter['tag_slug__in'] = explode( ',', $tag_slug__in );
-
 			$tag_slug__in = array_map( 'trim', explode( ',', $tag_slug__in ) );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -610,8 +551,6 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 	}
 
 	if ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'ld_' . $post_type_slug . '_category' ) == 'yes' ) {
-
-		// course_cat="123"
 		if ( ( isset( $atts[ $post_type_slug . '_cat' ] ) ) && ( ! empty( $atts[ $post_type_slug . '_cat' ] ) ) ) {
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -626,7 +565,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		}
 
 		// course_category_name (string) - use category slug.
-		// course_category_name="course-category-one"
+		// course_category_name="course-category-one".
 		if ( ( isset( $atts[ $post_type_slug . '_category_name' ] ) ) && ( ! empty( $atts[ $post_type_slug . '_category_name' ] ) ) ) {
 
 			if ( ! isset( $filter['tax_query'] ) ) {
@@ -813,7 +752,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 
 	if ( ( isset( $filter['tax_query'] ) ) && ( count( $filter['tax_query'] ) > 1 ) ) {
 		// Due to a quick on WP_Query the 'compare' option needs to be in the first position.
-		// So we save off the current tax_query, add the 'relation', then merge in the original tax_query
+		// So we save off the current tax_query, add the 'relation', then merge in the original tax_query.
 		$tax_query           = $filter['tax_query'];
 		$filter['tax_query'] = array( 'relation' => $tax_compare );
 		$filter['tax_query'] = array_merge( $filter['tax_query'], $tax_query );
@@ -824,15 +763,15 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 
 	// Logic to determine the exact post ids to query. This will help drive the category selectors below and prevent extra queries.
 
-	$pricetype_posts = array();
+	$price_type_posts = array();
 	if ( isset( $atts['price_type'] ) && ! empty( $atts['price_type'] ) ) {
 		$price_type = explode( ',', $atts['price_type'] );
 		foreach ( $price_type as $list ) {
-			$cptslug         = ( learndash_get_post_type_slug( 'course' ) === $atts['post_type'] ) ? 'course' : 'group';
-			$pricetype_posts = array_merge( $pricetype_posts, learndash_get_posts_by_price_type( learndash_get_post_type_slug( $cptslug ), $list ) );
+			$cpt_slug         = ( learndash_get_post_type_slug( 'course' ) === $atts['post_type'] ) ? 'course' : 'group';
+			$price_type_posts = array_merge( $price_type_posts, learndash_get_posts_by_price_type( learndash_get_post_type_slug( $cpt_slug ), $list ) );
 		}
 		// If no posts we abort.
-		if ( empty( $pricetype_posts ) ) {
+		if ( empty( $price_type_posts ) ) {
 			return;
 		}
 	}
@@ -890,10 +829,10 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 				}
 			}
 
-			if ( ! empty( $pricetype_posts ) && ! empty( $courses_enrolled ) ) {
-				$filter['post__in'] = array_intersect( $pricetype_posts, $courses_enrolled );
-			} elseif ( ! empty( $pricetype_posts ) ) {
-				$filter['post__in'] = $pricetype_posts;
+			if ( ! empty( $price_type_posts ) && ! empty( $courses_enrolled ) ) {
+				$filter['post__in'] = array_intersect( $price_type_posts, $courses_enrolled );
+			} elseif ( ! empty( $price_type_posts ) ) {
+				$filter['post__in'] = $price_type_posts;
 			} elseif ( ! empty( $courses_enrolled ) ) {
 				$filter['post__in'] = $courses_enrolled;
 			}
@@ -904,21 +843,20 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		} elseif ( 'not-enrolled' == $mycourses ) {
 			$atts['status']   = '';
 			$courses_enrolled = learndash_user_get_enrolled_courses( $atts['user_id'] );
-			if ( ! empty( $pricetype_posts ) && ! empty( $courses_enrolled ) ) {
-				$filter_pricetype_enrolled = array_diff( $pricetype_posts, $courses_enrolled );
-				if ( ! empty( $filter_pricetype_enrolled ) ) {
-					$filter['post__in'] = $filter_pricetype_enrolled;
+			if ( ! empty( $price_type_posts ) && ! empty( $courses_enrolled ) ) {
+				$filter_price_type_enrolled = array_diff( $price_type_posts, $courses_enrolled );
+				if ( ! empty( $filter_price_type_enrolled ) ) {
+					$filter['post__in'] = $filter_price_type_enrolled;
 				} else {
 					return;
-					$filter['post__not_in'] = $courses_enrolled;
 				}
-			} elseif ( ! empty( $pricetype_posts ) ) {
-				$filter['post__in'] = $pricetype_posts;
+			} elseif ( ! empty( $price_type_posts ) ) {
+				$filter['post__in'] = $price_type_posts;
 			} elseif ( ! empty( $courses_enrolled ) ) {
 				$filter['post__not_in'] = $courses_enrolled;
 			}
-		} elseif ( ! empty( $pricetype_posts ) ) {
-			$filter['post__in'] = $pricetype_posts;
+		} elseif ( ! empty( $price_type_posts ) ) {
+			$filter['post__in'] = $price_type_posts;
 		}
 	} elseif ( ( learndash_get_post_type_slug( 'group' ) === $atts['post_type'] ) && ( is_null( $post__in ) ) ) {
 		if ( 'enrolled' == $mygroups ) {
@@ -948,10 +886,10 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 				return;
 			}
 
-			if ( ! empty( $pricetype_posts ) && ! empty( $groups_enrolled ) ) {
-				$filter['post__in'] = array_intersect( $pricetype_posts, $groups_enrolled );
-			} elseif ( ! empty( $pricetype_posts ) ) {
-				$filter['post__in'] = $pricetype_posts;
+			if ( ! empty( $price_type_posts ) && ! empty( $groups_enrolled ) ) {
+				$filter['post__in'] = array_intersect( $price_type_posts, $groups_enrolled );
+			} elseif ( ! empty( $price_type_posts ) ) {
+				$filter['post__in'] = $price_type_posts;
 			} elseif ( ! empty( $groups_enrolled ) ) {
 				$filter['post__in'] = $groups_enrolled;
 			}
@@ -962,21 +900,20 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		} elseif ( 'not-enrolled' == $mygroups ) {
 			$atts['status']  = '';
 			$groups_enrolled = learndash_get_users_group_ids( $atts['user_id'] );
-			if ( ! empty( $pricetype_posts ) && ! empty( $groups_enrolled ) ) {
-				$filter_pricetype_enrolled = array_diff( $pricetype_posts, $groups_enrolled );
-				if ( ! empty( $filter_pricetype_enrolled ) ) {
-					$filter['post__in'] = $filter_pricetype_enrolled;
+			if ( ! empty( $price_type_posts ) && ! empty( $groups_enrolled ) ) {
+				$filter_price_type_enrolled = array_diff( $price_type_posts, $groups_enrolled );
+				if ( ! empty( $filter_price_type_enrolled ) ) {
+					$filter['post__in'] = $filter_price_type_enrolled;
 				} else {
 					return;
-					$filter['post__not_in'] = $groups_enrolled;
 				}
-			} elseif ( ! empty( $pricetype_posts ) ) {
-				$filter['post__in'] = $pricetype_posts;
+			} elseif ( ! empty( $price_type_posts ) ) {
+				$filter['post__in'] = $price_type_posts;
 			} elseif ( ! empty( $groups_enrolled ) ) {
 				$filter['post__not_in'] = $groups_enrolled;
 			}
-		} elseif ( ! empty( $pricetype_posts ) ) {
-			$filter['post__in'] = $pricetype_posts;
+		} elseif ( ! empty( $price_type_posts ) ) {
+			$filter['post__in'] = $price_type_posts;
 		}
 	}
 
@@ -1010,15 +947,13 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 	$categories    = array();
 	$ld_categories = array();
 
-	// if ( $include_outer_wrapper == 'true' ) {
-
 	if ( ( trim( $categoryselector ) == 'true' ) && ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'wp_post_category' ) == 'yes' ) ) {
 		$cats = array();
 
-		if ( ( isset( $_GET['catid'] ) ) && ( ! empty( $_GET['catid'] ) ) ) {
-			$atts['cat'] = intval( $_GET['catid'] );
+		if ( ( isset( $_GET['catid'] ) ) && ( ! empty( $_GET['catid'] ) ) ) { // cspell:disable-line.
+			$atts['cat'] = intval( $_GET['catid'] ); // cspell:disable-line.
 			// Duplicated variable related to changes on LEARNDASH-5664 and LEARNDASH-5756.
-			$attr_org['cat'] = intval( $_GET['catid'] );
+			$attr_org['cat'] = intval( $_GET['catid'] ); // cspell:disable-line.
 
 			if ( ! isset( $filter['tax_query'] ) ) {
 				$filter['tax_query'] = array();
@@ -1027,18 +962,9 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 			$filter['tax_query'][] = array(
 				'taxonomy' => 'category',
 				'field'    => 'term_id',
-				'terms'    => intval( $_GET['catid'] ),
+				'terms'    => intval( $_GET['catid'] ), // cspell:disable-line.
 			);
 		}
-
-		// if ( isset( $filter_cat['post__in'] ) ) {
-			// $filter_cat['include'] = $filter_cat['post__in'];
-		// unset( $filter_cat['post__in'] );
-		// }
-		// if ( isset( $filter_cat['post__not_in'] ) ) {
-			// $filter_cat['include'] = $filter_cat['post__in'];
-		// unset( $filter_cat['post__not_in'] );
-		// }
 
 		$cat_posts = get_posts( $filter_cat );
 
@@ -1067,7 +993,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 				}
 			}
 
-			// Once we have these categories we need to requery the categories in order to get them into a proper ordering.
+			// Once we have these categories we need to re-query the categories in order to get them into a proper ordering.
 			if ( ! empty( $cats ) ) {
 
 				// And also let this query be filtered.
@@ -1102,11 +1028,11 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		&& ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'ld_' . $post_type_slug . '_category' ) == 'yes' ) ) {
 		$ld_cats = array();
 
-		if ( ( isset( $_GET[ $post_type_slug . '_catid' ] ) ) && ( ! empty( $_GET[ $post_type_slug . '_catid' ] ) ) ) {
+		if ( ( isset( $_GET[ $post_type_slug . '_catid' ] ) ) && ( ! empty( $_GET[ $post_type_slug . '_catid' ] ) ) ) { // cspell:disable-line.
 
-			$atts[ $post_type_slug . '_cat' ] = intval( $_GET[ $post_type_slug . '_catid' ] );
+			$atts[ $post_type_slug . '_cat' ] = intval( $_GET[ $post_type_slug . '_catid' ] ); // cspell:disable-line.
 			// Duplicated variable related to changes on LEARNDASH-5664 and LEARNDASH-5756.
-			$attr_org[ $post_type_slug . '_cat' ] = intval( $_GET[ $post_type_slug . '_catid' ] );
+			$attr_org[ $post_type_slug . '_cat' ] = intval( $_GET[ $post_type_slug . '_catid' ] ); // cspell:disable-line.
 
 			if ( ! isset( $filter['tax_query'] ) ) {
 				$filter['tax_query'] = array();
@@ -1115,7 +1041,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 			$filter['tax_query'][] = array(
 				'taxonomy' => 'ld_' . $post_type_slug . '_category',
 				'field'    => 'term_id',
-				'terms'    => intval( $_GET[ $post_type_slug . '_catid' ] ),
+				'terms'    => intval( $_GET[ $post_type_slug . '_catid' ] ), // cspell:disable-line.
 			);
 		}
 
@@ -1147,7 +1073,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 				}
 			}
 
-			// Once we have these categories we need to requery the categories in order to get them into a proper ordering.
+			// Once we have these categories we need to re-query the categories in order to get them into a proper ordering.
 			if ( ! empty( $ld_cats ) ) {
 
 				// And also let this query be filtered.
@@ -1194,14 +1120,14 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 			$categorydropdown  = '<div id="ld_categorydropdown">';
 			$categorydropdown .= '<form method="get">
 					<label for="ld_categorydropdown_select">' . esc_html__( 'Categories', 'learndash' ) . '</label>
-					<select id="ld_categorydropdown_select" name="catid" onChange="jQuery(\'#ld_categorydropdown form\').submit()">';
+					<select id="ld_categorydropdown_select" name="catid" onChange="jQuery(\'#ld_categorydropdown form\').submit()">'; // cspell:disable-line.
 			$categorydropdown .= '<option value="">' . esc_html__( 'Select category', 'learndash' ) . '</option>';
 
 			foreach ( $categories as $category ) {
 
 				if ( isset( $cats[ $category->term_id ] ) ) {
 					$cat               = $cats[ $category->term_id ];
-					$selected          = ( empty( $_GET['catid'] ) || $_GET['catid'] != $cat['id'] ) ? '' : 'selected="selected"';
+					$selected          = ( empty( $_GET['catid'] ) || $_GET['catid'] != $cat['id'] ) ? '' : 'selected="selected"'; // cspell:disable-line.
 					$categorydropdown .= "<option value='" . $cat['id'] . "' " . $selected . '>' . $cat['name'] . ' (' . $cat['count'] . ')</option>';
 				}
 			}
@@ -1225,7 +1151,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 			$ld_categorydropdown  = '<div id="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown">';
 			$ld_categorydropdown .= '<form method="get">
 					<label for="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown_select">' . esc_html( $tax_object->labels->name ) . '</label>
-					<select id="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown_select" name="' . esc_attr( $post_type_slug ) . '_catid" onChange="jQuery(\'#ld_' . esc_attr( $post_type_slug ) . '_categorydropdown form\').submit()">';
+					<select id="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown_select" name="' . esc_attr( $post_type_slug ) . '_catid" onChange="jQuery(\'#ld_' . esc_attr( $post_type_slug ) . '_categorydropdown form\').submit()">'; // cspell:disable-line.
 			$ld_categorydropdown .= '<option value="">' . sprintf(
 				// translators: placeholder: LD Category label.
 				esc_html_x( 'Select %s', 'placeholder: LD Category label', 'learndash' ),
@@ -1236,7 +1162,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 
 				if ( isset( $ld_cats[ $ld_category->term_id ] ) ) {
 					$ld_cat               = $ld_cats[ $ld_category->term_id ];
-					$selected             = ( empty( $_GET[ $post_type_slug . '_catid' ] ) || $_GET[ $post_type_slug . '_catid' ] != $ld_category->term_id ) ? '' : 'selected="selected"';
+					$selected             = ( empty( $_GET[ $post_type_slug . '_catid' ] ) || $_GET[ $post_type_slug . '_catid' ] != $ld_category->term_id ) ? '' : 'selected="selected"'; // cspell:disable-line.
 					$ld_categorydropdown .= "<option value='" . esc_attr( $ld_category->term_id ) . "' " . $selected . '>' . esc_html( $ld_cat['name'] ) . ' (' . esc_html( $ld_cat['count'] ) . ')</option>';
 				}
 			}
@@ -1298,7 +1224,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		while ( $loop->have_posts() ) {
 			$loop->the_post();
 			if ( empty( $atts['course_id'] ) ) {
-				$course_id = $course_id = learndash_get_course_id( get_the_ID() );
+				$course_id = learndash_get_course_id( get_the_ID() );
 			} else {
 				$course_id = $atts['course_id'];
 			}
@@ -1312,9 +1238,9 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 			);
 		}
 	} else {
-		foreach ( $loop->posts as $post ) {
+		foreach ( $loop->posts as $post ) { // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 			if ( empty( $atts['course_id'] ) ) {
-				$course_id = $course_id = learndash_get_course_id( get_the_ID() );
+				$course_id = learndash_get_course_id( get_the_ID() );
 			} else {
 				$course_id = $atts['course_id'];
 			}
@@ -1360,7 +1286,7 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 
 	$output = learndash_ob_get_clean( $level );
 
-	$post = $post_save;
+	$post = $post_save; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 
 	if ( apply_filters( 'learndash_shortcode_course_list_legacy_loop', false, $atts ) ) {
 		setup_postdata( $post_save );

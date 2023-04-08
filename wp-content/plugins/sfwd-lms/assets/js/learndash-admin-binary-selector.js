@@ -66,7 +66,7 @@ function learndash_binary_selector( selector_div ) {
 			// Hold reference to our interval loop for key press
 			var interval_ref;
 
-			// We setup a search values object which will hold the left and right side searcheds. This will allow
+			// We setup a search values object which will hold the left and right side searches. This will allow
 			// dual search on left and right without loosing our settings.
 			var search_values = {};
 
@@ -553,7 +553,7 @@ function learndash_binary_selector( selector_div ) {
 
 	this.sort_right_options = function() {
 
-		// For now no sorting. Jsut append to the bottom.
+		// For now no sorting. Just append to the bottom.
 		/*
 		var options = jQuery('.learndash-binary-selector-items-right li', self.selector_div);
 		var arr = options.map(function(_, o) { return { t: jQuery(o).text(), v: o.value }; }).get();

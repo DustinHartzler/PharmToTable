@@ -175,7 +175,16 @@ if ( ! empty( $header['logo'] ) ) {
 	 */
 	do_action( 'learndash-focus-header-nav-before', $course_id, $user_id );
 
-	$can_complete = learndash_30_focus_mode_can_complete();
+	$can_complete = false;
+	if ( ( ! learndash_lesson_progression_enabled( $course_id ) ) || ( true === learndash_can_user_bypass( $user_id, 'learndash_course_progression' ) ) ) {
+		if ( learndash_user_is_course_children_progress_complete( $user_id, $course_id, $post->ID ) ) {
+			$can_complete = true;
+		} else {
+			$can_complete = false;
+		}
+	} else {
+		$can_complete = learndash_can_complete_step( $user_id, $post->ID, $course_id, true );
+	}
 
 	learndash_get_template_part(
 		'modules/course-steps.php',

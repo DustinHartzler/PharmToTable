@@ -23,7 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Topics_Controller_V2' ) ) && ( class_exists( 'LD
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Topics_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Topics_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * LearnDash course steps object
@@ -160,7 +160,7 @@ if ( ( ! class_exists( 'LD_REST_Topics_Controller_V2' ) ) && ( class_exists( 'LD
 				}
 
 				// If we don't have a course parameter we need to get all the courses the user has access to and all
-				// the courses the lesson is avaiable in and compare.
+				// the courses the lesson is available in and compare.
 				if ( empty( $course_id ) ) {
 					$user_enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
 					if ( empty( $user_enrolled_courses ) ) {

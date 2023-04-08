@@ -36,7 +36,7 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 		private $progress_meta_key = '_sfwd-course_progress';
 
 		/**
-		 * Legacy User Course Progiress array.
+		 * Legacy User Course Progress array.
 		 *
 		 * This array structure is the current stored in user meta.
 		 *
@@ -51,7 +51,7 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 		 * of the data model. One nice 'co' will be the completion order of the
 		 * course steps.
 		 *
-		 * @var array $progeess Array of user course progress.
+		 * @var array $progress Array of user course progress.
 		 */
 		protected $progress = array();
 
@@ -199,6 +199,10 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 					$this->progress[ $course_id ]['co'] = $this->build_course_progress_completion_order( $course_id );
 				}
 
+				if ( ! isset( $this->progress[ $course_id ]['l'] ) ) {
+					$this->progress[ $course_id ]['l'] = $this->build_course_progress_linear_order( $course_id );
+				}
+
 				if ( ! isset( $this->progress[ $course_id ]['summary'] ) ) {
 					$this->progress[ $course_id ]['summary'] = $this->build_course_progress_summary( $course_id );
 
@@ -209,7 +213,7 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 		}
 
 		/**
-		 * Get the legacy user meta course progrsssion node for a specific course.
+		 * Get the legacy user meta course progression node for a specific course.
 		 *
 		 * @since 3.4.0
 		 *
@@ -373,6 +377,65 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 		}
 
 		/**
+		 * Build the Course Progress node for 'l' Linear order.
+		 *
+		 * This is a linear step order rather than the 'legacy' tree
+		 * and easier to determine if previous steps are not completed.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param integer $course_id Course ID to load progress for.
+		 */
+		protected function build_course_progress_linear_order( $course_id = 0 ) {
+			$progress_co = array();
+
+			$course_id = absint( $course_id );
+			if ( ! empty( $course_id ) ) {
+				$progress_legacy = $this->get_course_progress_legacy( $course_id );
+
+				$course_steps_co = learndash_course_get_steps_by_type( $course_id, 'l' );
+				if ( ! empty( $course_steps_co ) ) {
+					$lesson_slug = learndash_get_post_type_slug( 'lesson' );
+					$topic_slug  = learndash_get_post_type_slug( 'topic' );
+					$quiz_slug   = learndash_get_post_type_slug( 'quiz' );
+
+					foreach ( $course_steps_co as $course_step ) {
+						list( $s_post_type, $s_post_id ) = explode( ':', $course_step );
+						if ( in_array( $s_post_type, array( $lesson_slug, $topic_slug ), true ) ) {
+							$progress_co[ $course_step ] = 0;
+						} elseif ( in_array( $s_post_type, array( $quiz_slug ), true ) ) {
+							$has_completed_quiz = learndash_user_quiz_has_completed( $this->user_id, $s_post_id, $course_id );
+
+							$progress_co[ $course_step ] = (int) $has_completed_quiz;
+						}
+					}
+
+					if ( ( isset( $progress_legacy['lessons'] ) ) && ( ! empty( $progress_legacy['lessons'] ) ) ) {
+						foreach ( $progress_legacy['lessons'] as $lesson_id => $status ) {
+							if ( isset( $progress_co[ $lesson_slug . ':' . $lesson_id ] ) ) {
+								$progress_co[ $lesson_slug . ':' . $lesson_id ] = $status;
+							}
+						}
+					}
+
+					if ( ( isset( $progress_legacy['topics'] ) ) && ( ! empty( $progress_legacy['topics'] ) ) ) {
+						foreach ( $progress_legacy['topics'] as $lesson_id => $topics ) {
+							if ( ( is_array( $topics ) ) && ( ! empty( $topics ) ) ) {
+								foreach ( $topics as $topic_id => $status ) {
+									if ( isset( $progress_co[ $topic_slug . ':' . $topic_id ] ) ) {
+										$progress_co[ $topic_slug . ':' . $topic_id ] = $status;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			return $progress_co;
+		}
+
+
+		/**
 		 * Build the Course Progress Completes Steps Count.
 		 *
 		 * @since 3.4.0
@@ -465,6 +528,7 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 
 				$course_activity_remove_items = array();
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Only used for querying.
 				$activity_items = $wpdb->get_results(
 					$wpdb->prepare( 'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE course_id=%d AND user_id=%d', $course_id, $this->user_id ),
 					ARRAY_A
@@ -551,7 +615,7 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Course_Progress' ) ) && ( class_exists(
 		 *
 		 * @param integer $course_id Course ID of progress to update.
 		 * @param array   $progress Array of user progress. Array structure
-		 *                shold match the 'legacy' format.
+		 *                should match the 'legacy' format.
 		 */
 		public function set_progress( $course_id = 0, $progress = array() ) {
 			$course_id = absint( $course_id );
@@ -633,12 +697,14 @@ function learndash_user_set_course_progress( $user_id = 0, $course_id = 0, $prog
  * Utility function to get the previous incomplete course step for user.
  *
  * @since 3.4.0
+ * @since 4.0.2 Added $return_parent_id parameter.
  *
- * @param integer $user_id   User ID.
- * @param integer $course_id Course ID.
- * @param integer $step_id   Course Step ID.
+ * @param integer $user_id          User ID.
+ * @param integer $course_id        Course ID.
+ * @param integer $step_id          Course Step ID.
+ * @param bool    $return_parent_id Return the parent step id. Default true. See function code for details.
  */
-function learndash_user_progress_get_previous_incomplete_step( $user_id = 0, $course_id = 0, $step_id = 0 ) {
+function learndash_user_progress_get_previous_incomplete_step( $user_id = 0, $course_id = 0, $step_id = 0, $return_parent_id = true ) {
 	$user_id = absint( $user_id );
 	if ( empty( $user_id ) ) {
 		return false;
@@ -667,14 +733,79 @@ function learndash_user_progress_get_previous_incomplete_step( $user_id = 0, $co
 				return $step_id;
 			} elseif ( ! (bool) $progress_status ) {
 				list( $progress_step_post_type, $progress_step_post_id ) = explode( ':', $progress_step_key );
-				$parent_steps = learndash_course_get_all_parent_step_ids( $course_id, $progress_step_post_id );
-				$parent_steps = array_map( 'absint', $parent_steps );
-				if ( ( empty( $parent_steps ) ) || ( ! in_array( $step_id, $parent_steps, true ) ) ) {
-					return absint( $progress_step_post_id );
+
+				$progress_step_post_id = absint( $progress_step_post_id );
+				if ( true === $return_parent_id ) {
+					/**
+					 * The reason to use the '$return_parent_id' is true.
+					 * When this function is called from the main lesson.php template it needs to check
+					 * if previous lessons are completed. If we only returned the incomplete step id it
+					 * was cause the alert banner to show on the lesson instead of the lesson steps table.
+					 */
+					$parent_steps = learndash_course_get_all_parent_step_ids( $course_id, $progress_step_post_id );
+					$parent_steps = array_map( 'absint', $parent_steps );
+					if ( ( empty( $parent_steps ) ) || ( ! in_array( $step_id, $parent_steps, true ) ) ) {
+						return absint( $progress_step_post_id );
+					}
+				} elseif ( ! empty( $progress_step_post_id ) ) {
+					return $progress_step_post_id;
 				}
 			}
 		}
 	}
+}
+
+/**
+ * Utility function to get the next incomplete course step for user.
+ *
+ * @since 4.2.0
+ *
+ * @param int $user_id   User ID.
+ * @param int $course_id Course ID.
+ * @param int $step_id   Course Step ID.
+ *
+ * @return int The next incomplete step id or 0 if none found.
+ */
+function learndash_user_progress_get_next_incomplete_step( $user_id = 0, $course_id = 0, $step_id = 0 ) {
+	$user_id = absint( $user_id );
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	$course_id = absint( $course_id );
+	if ( empty( $course_id ) ) {
+		return false;
+	}
+
+	$step_id = absint( $step_id );
+	if ( empty( $step_id ) ) {
+		return false;
+	}
+
+	$course_progress_object = LDLMS_Factory_User::course_progress( $user_id );
+	if ( ! $course_progress_object ) {
+		return false;
+	}
+
+	$course_progress_steps = $course_progress_object->get_progress( $course_id, 'l' );
+	if ( empty( $course_progress_steps ) ) {
+		return false;
+	}
+	$step_key = get_post_type( $step_id ) . ':' . $step_id;
+
+	$found_key = false;
+	foreach ( $course_progress_steps as $progress_step_key => $progress_status ) {
+		if ( false === $found_key ) {
+			if ( $step_key === $progress_step_key ) {
+				$found_key = true;
+			}
+		} elseif ( ! (bool) $progress_status ) {
+			list( $progress_step_post_type, $progress_step_post_id ) = explode( ':', $progress_step_key );
+			return absint( $progress_step_post_id );
+		}
+	}
+
+	return 0;
 }
 
 /**
@@ -724,28 +855,93 @@ function learndash_user_progress_get_all_incomplete_steps( $user_id = 0, $course
  *
  * @since 3.4.0
  *
- * @param integer $user_id   User ID.
- * @param integer $course_id Course ID.
+ * @param int $user_id   User ID.
+ * @param int $course_id Course ID.
  *
- * @return array Array of incomplete course step IDs.
+ * @return int Incomplete course step ID.
  */
 function learndash_user_progress_get_first_incomplete_step( $user_id = 0, $course_id = 0 ) {
+	$step_id = 0;
+
 	$user_id = absint( $user_id );
 	if ( empty( $user_id ) ) {
-		return false;
+		return $step_id;
 	}
 
 	$course_id = absint( $course_id );
 	if ( empty( $course_id ) ) {
-		return false;
+		return $step_id;
 	}
 
 	$incomplete_steps = learndash_user_progress_get_all_incomplete_steps( $user_id, $course_id );
 	if ( ! empty( $incomplete_steps ) ) {
-		return $incomplete_steps[0];
+		$step_id = absint( $incomplete_steps[0] );
 	}
 
-	return array();
+	return $step_id;
+}
+
+/**
+ * Utility function to return incomplete course step within a parent step.
+ *
+ * @since 4.2.0
+ *
+ * @param integer $user_id   User ID.
+ * @param integer $course_id Course ID.
+ * @param integer $step_id   Course Step ID.
+ *
+ * @return array Array of incomplete step IDs.
+ */
+function learndash_user_progression_get_incomplete_child_steps( $user_id = 0, $course_id = 0, $step_id = 0 ) {
+
+	$incomplete_child_steps = array();
+
+	$user_id   = absint( $user_id );
+	$course_id = absint( $course_id );
+	$step_id   = absint( $step_id );
+
+	$child_steps = learndash_course_get_children_of_step( $course_id, $step_id, '', 'ids', true );
+	if ( ! empty( $child_steps ) ) {
+		foreach ( $child_steps as $child_step_id ) {
+			if ( true !== learndash_user_progress_is_step_complete( $user_id, $course_id, $child_step_id ) ) {
+				$incomplete_child_steps[] = absint( $child_step_id );
+			}
+		}
+	}
+
+	return $incomplete_child_steps;
+
+}
+
+/**
+ * Utility function to return completed course step within a parent step.
+ *
+ * @since 4.4.0
+ *
+ * @param integer $user_id   User ID.
+ * @param integer $course_id Course ID.
+ * @param integer $step_id   Course Step ID.
+ *
+ * @return array Array of completed step IDs.
+ */
+function learndash_user_progression_get_complete_child_steps( $user_id = 0, $course_id = 0, $step_id = 0 ) {
+
+	$complete_child_steps = array();
+
+	$user_id   = absint( $user_id );
+	$course_id = absint( $course_id );
+	$step_id   = absint( $step_id );
+
+	$child_steps = learndash_course_get_children_of_step( $course_id, $step_id, '', 'ids', true );
+	if ( ! empty( $child_steps ) ) {
+		foreach ( $child_steps as $child_step_id ) {
+			if ( true === learndash_user_progress_is_step_complete( $user_id, $course_id, $child_step_id ) ) {
+				$complete_child_steps[] = absint( $child_step_id );
+			}
+		}
+	}
+
+	return $complete_child_steps;
 }
 
 /**
@@ -757,7 +953,7 @@ function learndash_user_progress_get_first_incomplete_step( $user_id = 0, $cours
  * @param integer $course_id Course ID.
  * @param integer $step_id   Course Step ID.
  *
- * @return true if $step_id is complete.
+ * @return bool true if $step_id is complete.
  */
 function learndash_user_progress_is_step_complete( $user_id = 0, $course_id = 0, $step_id = 0 ) {
 	$user_id = absint( $user_id );
@@ -795,4 +991,63 @@ function learndash_user_progress_is_step_complete( $user_id = 0, $course_id = 0,
 	}
 
 	return false;
+}
+
+/**
+ * Get the parent incomplete step.
+ *
+ * This utility function will check parent steps status to ensure
+ * video progress or other requirements are met before allowing
+ * access to the step.
+ *
+ * @since 4.2.1
+ *
+ * @param int $user_id   User ID.
+ * @param int $course_id Course ID.
+ * @param int $step_id   Course Step ID.
+ *
+ * @return int Adjusted Course Step ID.
+ */
+function learndash_user_progress_get_parent_incomplete_step( $user_id = 0, $course_id = 0, $step_id = 0 ) {
+	$user_id = absint( $user_id );
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	$course_id = absint( $course_id );
+	if ( empty( $course_id ) ) {
+		return false;
+	}
+
+	$step_id = absint( $step_id );
+	if ( empty( $step_id ) ) {
+		return false;
+	}
+
+	$return_step_id = $step_id;
+
+	/**
+	 * Returns an array of parent steps in top-down order: Lesson, Topic, etc.
+	 */
+	$step_parent_ids = learndash_course_get_all_parent_step_ids( $course_id, $step_id );
+	if ( ( is_array( $step_parent_ids ) ) && ( ! empty( $step_parent_ids ) ) ) {
+		foreach ( $step_parent_ids as $step_parent_id ) {
+			if ( in_array( get_post_type( $step_parent_id ), learndash_get_post_type_slug( array( 'lesson', 'topic' ) ), true ) ) {
+				if ( ! learndash_user_progress_is_step_complete( $user_id, $course_id, $step_parent_id ) ) {
+					if ( 'on' === learndash_get_setting( $step_parent_id, 'lesson_video_enabled' ) ) {
+						if ( ! empty( learndash_get_setting( $step_parent_id, 'lesson_video_url' ) ) ) {
+							if ( 'BEFORE' === learndash_get_setting( $step_parent_id, 'lesson_video_shown' ) ) {
+								if ( ! learndash_video_complete_for_step( $step_parent_id, $course_id, $user_id ) ) {
+									$return_step_id = $step_parent_id;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return $return_step_id;
 }

@@ -3,7 +3,7 @@
  * LearnDash LD30 Displays a single lesson row that appears in the course content listing
  *
  * Available Variables:
- * TBD
+ * WIP
  *
  * @since 3.0.0
  *
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 $topics        = ! empty( $lesson_topics ) && ! empty( $lesson_topics[ $lesson['post']->ID ] ) ? $lesson_topics[ $lesson['post']->ID ] : '';
 $quizzes       = learndash_get_lesson_quiz_list( $lesson['post']->ID, $user_id, $course_id );
-$attributes    = learndash_get_lesson_attributes( $lesson );
+$attributes    = learndash_get_course_step_attributes( $lesson['post']->ID, $course_id, $user_id );
 $content_count = learndash_get_lesson_content_count( $lesson, $course_id );
 
 // Fallbacks.
@@ -86,7 +86,7 @@ if ( isset( $sections[ $lesson['post']->ID ] ) ) :
 
 endif; ?>
 
-<div class="<?php learndash_lesson_row_class( $lesson, $has_access, $topics, $quizzes ); ?>" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" <?php echo wp_kses_post( $atts ); ?>>
+<div class="<?php learndash_lesson_row_class( $lesson, $has_access, $topics, $quizzes ); ?>" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" data-ld-expand-id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>" <?php echo wp_kses_post( $atts ); ?>>
 	<div class="ld-item-list-item-preview">
 		<?php
 		/**
@@ -110,7 +110,7 @@ endif; ?>
 				$status = $lesson['status'];
 			}
 
-			learndash_status_icon( $status, get_post_type(), null, true );
+			learndash_status_icon( $status, $lesson['post']->post_type, null, true );
 			?>
 			<div class="ld-item-title">
 				<?php

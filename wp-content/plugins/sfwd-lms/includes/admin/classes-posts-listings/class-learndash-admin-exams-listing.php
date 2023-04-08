@@ -2,8 +2,7 @@
 /**
  * LearnDash Exams (ld-exam) Posts Listing Class.
  *
- * @package LearnDash
- * @subpackage admin
+ * @package LearnDash\Admin
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,49 +33,45 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			}
 
 			$this->selectors = array(
-				'exam_challenge_course_show' => array(
-					'type'                     => 'post_type',
-					'post_type'                => learndash_get_post_type_slug( 'course' ),
-					'show_all_value'           => '',
-					'show_all_label'           => sprintf(
+				'exam_challenge_course_show'   => array(
+					'type'                   => 'post_type',
+					'post_type'              => learndash_get_post_type_slug( 'course' ),
+					'show_all_value'         => '',
+					'show_all_label'         => sprintf(
 						// translators: placeholder: Courses.
 						esc_html_x( 'All %s Show', 'placeholder: Courses', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'courses' )
 					),
-					'show_empty_value'         => 'empty',
-					'show_empty_label'         => sprintf(
+					'show_empty_value'       => 'empty',
+					'show_empty_label'       => sprintf(
 						// translators: placeholder: Course.
 						esc_html_x( '-- No %s --', 'placeholder: Course', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
-					'listing_query_function'   => array( $this, 'listing_filter_by_course_show' ),
-					//'selector_filter_function' => array( $this, 'selector_filter_for_course_show' ),
-					//'selector_value_function'  => array( $this, 'selector_value_for_course_show' ),
+					'listing_query_function' => array( $this, 'listing_filter_by_course_show' ),
 				),
 
 				'exam_challenge_course_passed' => array(
-					'type'                     => 'post_type',
-					'post_type'                => learndash_get_post_type_slug( 'course' ),
-					'show_all_value'           => '',
-					'show_all_label'           => sprintf(
+					'type'                   => 'post_type',
+					'post_type'              => learndash_get_post_type_slug( 'course' ),
+					'show_all_value'         => '',
+					'show_all_label'         => sprintf(
 						// translators: placeholder: Courses.
 						esc_html_x( 'All %s Pass', 'placeholder: Courses', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'courses' )
 					),
-					'show_empty_value'         => 'empty',
-					'show_empty_label'         => sprintf(
+					'show_empty_value'       => 'empty',
+					'show_empty_label'       => sprintf(
 						// translators: placeholder: Course.
 						esc_html_x( '-- No %s --', 'placeholder: Course', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
-					'listing_query_function'   => array( $this, 'listing_filter_by_course_passed' ),
-					//'selector_filter_function' => array( $this, 'selector_filter_for_course_pass' ),
-					//'selector_value_function'  => array( $this, 'selector_value_for_course_pass' ),
+					'listing_query_function' => array( $this, 'listing_filter_by_course_passed' ),
 				),
 			);
 
 			$this->columns = array(
-				'exam_challenge_course_show' => array(
+				'exam_challenge_course_show'   => array(
 					'label'    => sprintf(
 						// translators: placeholder: Course.
 						esc_html_x( '%s Show', 'placeholder: Course', 'learndash' ),
@@ -195,7 +190,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 					$q_vars['meta_query'][] = array(
 						array(
@@ -208,7 +203,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					if ( ! empty( $selector['selected'] ) ) {
 
 						if ( ! isset( $q_vars['meta_query'] ) ) {
-							$q_vars['meta_query'] = array();
+							$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						}
 
 						$q_vars['meta_query'][] = array(
@@ -237,7 +232,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 					$q_vars['meta_query'][] = array(
 						array(
@@ -250,7 +245,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					if ( ! empty( $selector['selected'] ) ) {
 
 						if ( ! isset( $q_vars['meta_query'] ) ) {
-							$q_vars['meta_query'] = array();
+							$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						}
 
 						$q_vars['meta_query'][] = array(

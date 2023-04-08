@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $content The shortcode content. Default empty.
  * @param string $shortcode_slug The shortcode slug. Default 'ld_profile'.
  *
- * @return string The `ld_profile` shortcode ouput.
+ * @return string The `ld_profile` shortcode output.
  */
 function learndash_profile( $atts = array(), $content = '', $shortcode_slug = 'ld_profile' ) {
 	global $learndash_shortcode_used;
@@ -69,7 +69,7 @@ function learndash_profile( $atts = array(), $content = '', $shortcode_slug = 'l
 	/**
 	 * LEARNDASH-6274: Patch to ensure the user_id is valid.
 	 */
-	if ( ( (int) $atts['user_id'] !== (int) get_current_user_id() ) && ( ! learndash_is_admin_user( get_current_user_id() ) ) ) {
+	if ( ( (int) get_current_user_id() !== (int) $atts['user_id'] ) && ( ! learndash_is_admin_user( get_current_user_id() ) ) ) {
 		if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
 			// If group leader user we ensure the preview user_id is within their group(s).
 			if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $atts['user_id'] ) ) {
@@ -138,8 +138,8 @@ function learndash_profile( $atts = array(), $content = '', $shortcode_slug = 'l
 	}
 
 	if ( 'yes' === $atts['show_search'] ) {
-		if ( ( isset( $_GET['ld-profile-search'] ) ) && ( ! empty( $_GET['ld-profile-search'] ) ) ) {
-			$atts['search'] = esc_attr( $_GET['ld-profile-search'] );
+		if ( ( isset( $_GET['ld-profile-search'] ) ) && ( ! empty( $_GET['ld-profile-search'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$atts['search'] = esc_attr( $_GET['ld-profile-search'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 	} else {
 		$atts['search'] = '';
@@ -171,13 +171,13 @@ function learndash_profile( $atts = array(), $content = '', $shortcode_slug = 'l
 	if ( ( isset( $atts['per_page'] ) ) && ( intval( $atts['per_page'] ) > 0 ) ) {
 		$atts['per_page'] = intval( $atts['per_page'] );
 
-		if ( ( ( isset( $_GET['ld-profile-page'] ) ) && ( ! empty( $_GET['ld-profile-page'] ) ) ) ) {
-			$profile_pager['paged'] = intval( $_GET['ld-profile-page'] );
-			$quiz_attempts['quizzes-paged'] = ( isset( $_GET['profile-quizzes'] ) ? intval( $_GET['profile-quizzes'] ) : 1 );
-		} elseif ( ( ( isset( $_GET['profile-quizzes'] ) ) && ( ! empty( $_GET['profile-quizzes'] ) ) ) ) {
-			$quiz_attempts['quizzes-paged'] = intval( $_GET['profile-quizzes'] );
-			if ( ( ( isset( $_GET['ld-profile-page'] ) ) && ( ! empty( $_GET['ld-profile-page'] ) ) ) ) {
-				$profile_pager['paged'] = intval( $_GET['ld-profile-page'] );
+		if ( ( ( isset( $_GET['ld-profile-page'] ) ) && ( ! empty( $_GET['ld-profile-page'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$profile_pager['paged']         = intval( $_GET['ld-profile-page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$quiz_attempts['quizzes-paged'] = ( isset( $_GET['profile-quizzes'] ) ? intval( $_GET['profile-quizzes'] ) : 1 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		} elseif ( ( ( isset( $_GET['profile-quizzes'] ) ) && ( ! empty( $_GET['profile-quizzes'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$quiz_attempts['quizzes-paged'] = intval( $_GET['profile-quizzes'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( ( ( isset( $_GET['ld-profile-page'] ) ) && ( ! empty( $_GET['ld-profile-page'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$profile_pager['paged'] = intval( $_GET['ld-profile-page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			} else {
 				$profile_pager['paged'] = 1;
 			}

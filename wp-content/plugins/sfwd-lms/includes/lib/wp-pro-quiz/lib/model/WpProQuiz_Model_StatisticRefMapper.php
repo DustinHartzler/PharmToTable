@@ -80,6 +80,32 @@ class WpProQuiz_Model_StatisticRefMapper extends WpProQuiz_Model_Mapper {
 		}
 	}
 
+	/**
+	 * Fetches all statistics by a quiz post ID.
+	 *
+	 * @since 4.3.0
+	 *
+	 * @param int $quiz_post_id Quiz Post ID.
+	 *
+	 * @return WpProQuiz_Model_StatisticRefModel[]
+	 */
+	public function fetch_all_by_quiz_post_id( int $quiz_post_id ): array {
+		$sql = $this->_wpdb->prepare(
+			"SELECT * FROM {$this->_tableStatisticRef} WHERE quiz_post_id = %d ORDER BY create_time ASC",
+			$quiz_post_id
+		);
+
+		$rows = $this->_wpdb->get_results( $sql, ARRAY_A );
+
+		foreach ( $rows as &$row ) {
+			$row['form_data'] = $row['form_data'] === null ? null : @json_decode( $row['form_data'], true );
+
+			$row = new WpProQuiz_Model_StatisticRefModel( $row );
+		}
+
+		return $rows;
+	}
+
 	public function fetchAvg( $quizId, $userId ) {
 		$r = array();
 
@@ -269,7 +295,7 @@ class WpProQuiz_Model_StatisticRefMapper extends WpProQuiz_Model_Mapper {
 	/**
 	 *
 	 * @param WpProQuiz_Model_StatisticRefModel $statisticRefModel
-	 * @param WpProQuiz_Model_Statistic $statisticModel
+	 * @param WpProQuiz_Model_Statistic[] $statisticModel
 	 */
 	public function statisticSave( $statisticRefModel, $statisticModel ) {
 		$values = array();

@@ -1,6 +1,6 @@
-/* global wp, pwsL10n, password_strength_meter_params */
+/* global wp, pwsL10n, learndash_password_strength_meter_params */
 ( function( $ ) {
-    'use strict';
+	'use strict';
 	/**
 	 * Password Strength Meter class.
 	 */
@@ -22,11 +22,11 @@
 		 * Strength Meter.
 		 */
 		strengthMeter: function() {
-			var wrapper       = $( 'form.ldregister' ),
-				submit        = $( 'input[type="submit"]', wrapper ),
-				field         = $( '#password', wrapper ),
-				strength      = 1,
-				fieldValue    = field.val();
+			var wrapper = $( 'form.ldregister' ),
+				submit = $( 'input[type="submit"]', wrapper ),
+				field = $( '#password', wrapper ),
+				strength = 1,
+				fieldValue = field.val();
 
 			learndash_password_strength_meter.includeMeter( wrapper, field );
 
@@ -68,16 +68,17 @@
 		/**
 		 * Check password strength.
 		 *
+		 * @param          wrapper
 		 * @param {Object} field
 		 *
 		 * @return {Int}
 		 */
 		checkPasswordStrength: function( wrapper, field ) {
-			var meter     = wrapper.find( '.learndash-password-strength' ),
-				hint      = wrapper.find( '.learndash-password-hint' ),
+			var meter = wrapper.find( '.learndash-password-strength' ),
+				hint = wrapper.find( '.learndash-password-hint' ),
 				hint_html = '<small class="learndash-password-hint">' + learndash_password_strength_meter_params.i18n_password_hint + '</small>',
-				strength  = wp.passwordStrength.meter( field.val(), wp.passwordStrength.userInputDisallowedList() ),
-				error     = '';
+				strength = wp.passwordStrength.meter( field.val(), wp.passwordStrength.userInputDisallowedList() ),
+				error = '';
 
 			// Reset.
 			meter.removeClass( 'short bad good strong' );
@@ -94,7 +95,7 @@
 
 			switch ( strength ) {
 				case 0 :
-					meter.addClass( 'short' ).html( pwsL10n['short'] + error );
+					meter.addClass( 'short' ).html( pwsL10n.short + error );
 					meter.after( hint_html );
 					break;
 				case 1 :
@@ -117,8 +118,8 @@
 			}
 
 			return strength;
-		}
+		},
 	};
 
 	learndash_password_strength_meter.init();
-})( jQuery );
+}( jQuery ) );

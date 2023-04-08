@@ -129,8 +129,11 @@ switch ( $context ) {
 				);
 
 				$status = '';
-				if ( is_user_logged_in() ) {
-					$status = ( learndash_is_item_complete() ? 'complete' : 'incomplete' );
+				if ( ( is_user_logged_in() ) && ( true === $has_access ) ) {
+					$status = ( learndash_is_item_complete( $post->ID, $user_id, $course_id ) ? 'complete' : 'incomplete' );
+				} else {
+					$course_status = '';
+					$status        = '';
 				}
 
 				learndash_status_bubble( ( ! empty( $course_status ) ? $course_status : $status ) );
@@ -139,7 +142,7 @@ switch ( $context ) {
 			</div> <!--/.ld-breadcrumbs-->
 
 			<?php
-			if ( is_user_logged_in() ) {
+			if ( ( is_user_logged_in() ) && ( true === $has_access ) ) {
 				learndash_get_template_part(
 					'modules/progress.php',
 					array(
@@ -177,8 +180,11 @@ switch ( $context ) {
 				);
 
 				$status = '';
-				if ( is_user_logged_in() ) {
-					$status = ( learndash_is_item_complete() ? 'complete' : 'incomplete' );
+				if ( ( is_user_logged_in() ) && ( true === $has_access ) ) {
+					$status = ( learndash_is_item_complete( $post->ID, $user_id, $course_id ) ? 'complete' : 'incomplete' );
+				} else {
+					$course_status = '';
+					$status        = '';
 				}
 				learndash_status_bubble( ( ! empty( $course_status ) ? $course_status : $status ) );
 				?>
@@ -186,7 +192,7 @@ switch ( $context ) {
 			</div> <!--/.ld-breadcrumbs-->
 
 			<?php
-			if ( is_user_logged_in() ) {
+			if ( ( is_user_logged_in() ) && ( true === $has_access ) ) {
 				learndash_get_template_part(
 					'modules/progress.php',
 					array(

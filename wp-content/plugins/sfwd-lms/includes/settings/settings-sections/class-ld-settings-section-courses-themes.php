@@ -88,24 +88,22 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$active_theme_key = $this->setting_option_values['active_theme'];
 			if ( ( ! empty( $active_theme_key ) ) && ( isset( $this->themes_list[ $active_theme_key ] ) ) ) {
 				$themes_list_options['active'] = array(
-					'optgroup_label'   => esc_html( 'Active Theme', 'learndash' ),
-					'optgroup_options' => 	array(
+					'optgroup_label'   => esc_html__( 'Active Theme', 'learndash' ),
+					'optgroup_options' => array(
 						$active_theme_key => $this->themes_list[ $active_theme_key ],
-					)
+					),
 				);
 				unset( $this->themes_list[ $active_theme_key ] );
 			}
 
 			if ( ! empty( $this->themes_list ) ) {
 				$themes_list_options['available'] = array(
-					'optgroup_label'   => esc_html( 'Available Themes', 'learndash' ),
+					'optgroup_label'   => esc_html__( 'Available Themes', 'learndash' ),
 					'optgroup_options' => $this->themes_list,
 				);
 			}
 
 			$this->themes_list = $themes_list_options;
-
-
 		}
 
 		/**

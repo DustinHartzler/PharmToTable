@@ -22,7 +22,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 *
 		 * @var string
 		 */
-		private $ld_options_key = 'ld-translatation-message';
+		private $ld_options_key = 'ld-translatation-message'; // cspell:disable-line.
 
 		/**
 		 * Public constructor for class
@@ -67,19 +67,10 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			);
 			$learndash_assets_loaded['scripts']['learndash-admin-settings-page-translations-script'] = __FUNCTION__;
 
-			$this->handle_translation_message();
+			add_action( 'admin_notices', array( $this, 'handle_translation_message' ) );
 			$this->handle_translation_actions();
 
 			parent::load_settings_page();
-		}
-
-		/**
-		 * Show translation status message before title.
-		 *
-		 * @since 2.5.2
-		 */
-		public function settings_page_before_title() {
-			$this->handle_translation_message();
 		}
 
 		/**
@@ -142,23 +133,23 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 */
 		public function handle_translation_actions() {
 			if ( isset( $_GET['action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$action = esc_attr( $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$action = esc_attr( $_GET['action'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			}
 
 			if ( isset( $_GET['project'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$project = esc_attr( $_GET['project'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$project = esc_attr( $_GET['project'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			} else {
 				$project = '';
 			}
 
 			if ( isset( $_GET['locale'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$locale = esc_attr( $_GET['locale'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$locale = esc_attr( $_GET['locale'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			} else {
 				$locale = '';
 			}
 
 			if ( isset( $_GET['ld-translation-nonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$nonce = esc_attr( $_GET['ld-translation-nonce'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$nonce = esc_attr( $_GET['ld-translation-nonce'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 			} else {
 				$nonce = '';
 			}
@@ -168,9 +159,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					case 'pot_download':
 						if ( ( ! empty( $project ) ) && ( ! empty( $nonce ) ) ) {
 							if ( wp_verify_nonce( $nonce, 'ld-translation-' . $action . '-' . $project ) ) {
-								if ( learndash_updates_enabled() ) {
-									$reply = LearnDash_Translations::download_pot_file( $project );
-								}
+								$reply = LearnDash_Translations::download_pot_file( $project );
 							}
 						}
 						break;
@@ -186,9 +175,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					case 'install':
 						if ( ( ! empty( $project ) ) && ( ! empty( $locale ) ) && ( ! empty( $nonce ) ) ) {
 							if ( wp_verify_nonce( $nonce, 'ld-translation-' . $action . '-' . $project . '-' . $locale ) ) {
-								if ( learndash_updates_enabled() ) {
 									$reply = LearnDash_Translations::install_translation( $project, $locale );
-								}
 							}
 						}
 						break;
@@ -196,9 +183,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					case 'update':
 						if ( ( ! empty( $project ) ) && ( ! empty( $locale ) ) && ( ! empty( $nonce ) ) ) {
 							if ( wp_verify_nonce( $nonce, 'ld-translation-' . $action . '-' . $project . '-' . $locale ) ) {
-								if ( learndash_updates_enabled() ) {
-									$reply = LearnDash_Translations::update_translation( $project, $locale );
-								}
+								$reply = LearnDash_Translations::update_translation( $project, $locale );
 							}
 						}
 						break;
@@ -213,9 +198,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 					case 'refresh':
 						if ( wp_verify_nonce( $nonce, 'ld-translation-' . $action ) ) {
-							if ( learndash_updates_enabled() ) {
-								$reply = LearnDash_Translations::refresh_translations();
-							}
+							$reply = LearnDash_Translations::refresh_translations();
 						}
 						break;
 

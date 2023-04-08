@@ -155,7 +155,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 								$q_vars['post__in'] = $group_ids;
 							} else {
 								$q_vars['post__in'] = array_intersect( $q_vars['post__in'], $group_ids );
-								if ( empty( $group_ids ) ) {
+								if ( empty( $q_vars['post__in'] ) ) {
 									$q_vars['post__in'] = array( 0 );
 									return $q_vars;
 								}
@@ -176,7 +176,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							$q_vars['post__in'] = $group_ids;
 						} else {
 							$q_vars['post__in'] = array_intersect( $q_vars['post__in'], $group_ids );
-							if ( empty( $group_ids ) ) {
+							if ( empty( $q_vars['post__in'] ) ) {
 								$q_vars['post__in'] = array( 0 );
 								return $q_vars;
 							}
@@ -198,7 +198,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							$q_vars['post__in'] = $group_ids;
 						} else {
 							$q_vars['post__in'] = array_intersect( $q_vars['post__in'], $group_ids );
-							if ( empty( $group_ids ) ) {
+							if ( empty( $q_vars['post__in'] ) ) {
 								$q_vars['post__in'] = array( 0 );
 								return $q_vars;
 							}
@@ -248,7 +248,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				echo sprintf(
-					// translators: placeholder: Goup Courses Count.
+					// translators: placeholder: Group Courses Count.
 					esc_html_x( '%1$s: %2$d', 'placeholders: Courses, Group Courses Count', 'learndash' ),
 					learndash_get_custom_label( 'courses' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					count( $group_courses )
@@ -272,9 +272,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 *
 		 * @since 3.2.3
 		 *
-		 * @param  object $q_vars   Query vars used for the table listing.
-		 * @param  array  $selector Array of attributes used to display the filter selector.
-		 * @return object $q_vars.
+		 * @param  array $q_vars   Query vars used for the table listing.
+		 * @param  array $selector Array of attributes used to display the filter selector.
+		 * @return array $q_vars.
 		 */
 		protected function selector_filter_for_group_course( $q_vars = array(), $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
@@ -309,10 +309,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$this->show_selector_start( $selector );
 				$this->show_selector_all_option( $selector );
 
-				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				if ( ( isset( $_GET['price_type'] ) ) && ( ! empty( $_GET['price_type'] ) ) ) {
-					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					$selected_price_type = esc_attr( $_GET['price_type'] );
+				if ( ( isset( $_GET['price_type'] ) ) && ( ! empty( $_GET['price_type'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$selected_price_type = sanitize_text_field( wp_unslash( $_GET['price_type'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				} else {
 					$selected_price_type = '';
 				}
@@ -340,7 +338,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( learndash_post_meta_processed( $this->post_type ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 
 					$q_vars['meta_query'][] = array(
@@ -368,7 +366,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @param int    $post_id     The Step post ID shown.
 		 * @param string $column_name Column name/slug being processed.
 		 */
-		protected function show_column_price_type( $post_id = 0, $column_name = array() ) {
+		protected function show_column_price_type( $post_id = 0, $column_name = '' ) {
 			if ( ( ! empty( $post_id ) ) && ( 'price_type' === $column_name ) ) {
 				$price_type_key = learndash_get_setting( $post_id, 'group_price_type' );
 				if ( ! empty( $price_type_key ) ) {

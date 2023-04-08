@@ -284,7 +284,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'    => 'lesson_schedule',
 					'label'   => sprintf(
 						// Translators: placeholder: Lesson.
-						esc_html_x( '%s Release Schedule', 'placeholder: Lessons', 'learndash' ),
+						esc_html_x( '%s Release Schedule', 'placeholder: Lesson', 'learndash' ),
 						learndash_get_custom_label( 'lesson' )
 					),
 					'type'    => 'radio',
@@ -370,10 +370,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 */
 		public function filter_saved_fields( $settings_values = array(), $settings_metabox_key = '', $settings_screen_id = '' ) {
 			if ( ( $settings_screen_id === $this->settings_screen_id ) && ( $settings_metabox_key === $this->settings_metabox_key ) ) {
-				/**
-				 * Check the Course Materials set course_points_enabled/course_points/course_points_access. If 'course_points_enabled' setting is
-				 * 'on' then make sure 'course_points' and 'course_points_access' are not empty.
-				 */
 				if ( isset( $settings_values['lesson_schedule'] ) ) {
 					switch ( $settings_values['lesson_schedule'] ) {
 						case 'visible_after':

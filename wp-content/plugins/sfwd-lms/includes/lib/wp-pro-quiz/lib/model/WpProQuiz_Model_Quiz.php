@@ -806,7 +806,7 @@ class WpProQuiz_Model_Quiz extends WpProQuiz_Model_Model {
 
 	public function set_array_to_object( $array_vars = array() ) {
 
-		$array_vars['_text'] = 'AAZZAAZZ';
+		$array_vars['_text'] = 'AAZZAAZZ'; // cspell:disable-line
 
 		foreach ( $array_vars as $key => $value ) {
 			switch ( $key ) {
@@ -819,7 +819,7 @@ class WpProQuiz_Model_Quiz extends WpProQuiz_Model_Model {
 					break;
 
 				case '_text':
-					$this->setText( 'AAZZAAZZ' );
+					$this->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 					break;
 
 				case '_resultText':

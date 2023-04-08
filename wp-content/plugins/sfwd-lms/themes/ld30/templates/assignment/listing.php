@@ -6,7 +6,10 @@
  *
  * Available Variables:
  *
- * $course_step_post: WP_Post object for the Lesson/Topic being shown
+ * $course_id        : (int) ID of Course
+ * $user_id          : (int) ID of User
+ * $course_step_post : WP_Post object for the Lesson/Topic being shown
+ * $context		     : (string) Context of the usage. Either 'lesson' or 'topic'
  *
  * @since 3.0.0
  *

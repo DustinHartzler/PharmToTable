@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type int     $course_id Course ID. Default current course ID.
  *    @type int     $user_id   User ID. Default current user ID.
  *    @type string  $content   The shortcode content. Default null.
- *    @type boolean $autop     Whether to replace linebreaks with paragraph elements. Default true.
+ *    @type boolean $autop     Whether to replace line breaks with paragraph elements. Default true.
  * }
  * @param string $content The shortcode content. Default empty.
  * @param string $shortcode_slug The shortcode slug. Default 'student'.
@@ -37,9 +37,6 @@ function learndash_student_check_shortcode( $atts = array(), $content = '', $sho
 	global $learndash_shortcode_used;
 
 	if ( ( ! empty( $content ) ) && ( is_user_logged_in() ) ) {
-
-		$viewed_post_id = (int) get_the_ID();
-
 		if ( ! is_array( $atts ) ) {
 			if ( ! empty( $atts ) ) {
 				$atts = array( $atts );
@@ -66,7 +63,7 @@ function learndash_student_check_shortcode( $atts = array(), $content = '', $sho
 			$atts['autop'] = false;
 		}
 
-				if ( ! empty( $atts['course_id'] ) ) {
+		if ( ! empty( $atts['course_id'] ) ) {
 			if ( learndash_get_post_type_slug( 'course' ) !== get_post_type( $atts['course_id'] ) ) {
 				$atts['course_id'] = 0;
 			}
@@ -78,11 +75,15 @@ function learndash_student_check_shortcode( $atts = array(), $content = '', $sho
 			}
 		}
 
+		// If 'course_id' and 'group_id' are empty we check if we are showing a Course or Group related post type.
 		if ( ( empty( $atts['course_id'] ) ) && ( empty( $atts['group_id'] ) ) ) {
-			if ( in_array( get_post_type( $viewed_post_id ), learndash_get_post_types( 'course' ), true ) ) {
-				$atts['course_id'] = learndash_get_course_id( $viewed_post_id );
-			} elseif ( get_post_type( $viewed_post_id ) === learndash_get_post_type_slug( 'group' ) ) {
-				$atts['group_id'] = $viewed_post_id;
+			$viewed_post_id = (int) get_the_ID();
+			if ( ! empty( $viewed_post_id ) ) {
+				if ( in_array( get_post_type( $viewed_post_id ), learndash_get_post_types( 'course' ), true ) ) {
+					$atts['course_id'] = learndash_get_course_id( $viewed_post_id );
+				} elseif ( get_post_type( $viewed_post_id ) === learndash_get_post_type_slug( 'group' ) ) {
+					$atts['group_id'] = $viewed_post_id;
+				}
 			}
 		}
 
@@ -93,25 +94,46 @@ function learndash_student_check_shortcode( $atts = array(), $content = '', $sho
 		 */
 		$atts = apply_filters( 'learndash_student_shortcode_atts', $atts );
 
+		$atts['user_id']   = absint( $atts['user_id'] );
 		$atts['group_id']  = absint( $atts['group_id'] );
 		$atts['course_id'] = absint( $atts['course_id'] );
 
 		$view_content = false;
-		
-		if ( ! empty( $atts['course_id'] ) ) {
-			// The reason we are doing this check is because 'sfwd_lms_has_access' will return true if the course does not exist.
-			// This needs to be changed to return some other value because true signals the calling function that all is well.
-			$course_id = learndash_get_course_id( $atts['course_id'] );
-			if ( $course_id == $atts['course_id'] ) {
-				if ( sfwd_lms_has_access( $atts['course_id'], $atts['user_id'] ) ) {
+
+		if ( ( ! empty( $atts['user_id'] ) ) && ( get_current_user_id() === $atts['user_id'] ) ) {
+			if ( ! empty( $atts['course_id'] ) ) {
+				// The reason we are doing this check is because 'sfwd_lms_has_access' will return true if the course does not exist.
+				// This needs to be changed to return some other value because true signals the calling function that all is well.
+				$course_id = learndash_get_course_id( $atts['course_id'] );
+				if ( (int) $course_id === (int) $atts['course_id'] ) {
+					if ( sfwd_lms_has_access( $atts['course_id'], $atts['user_id'] ) ) {
+						$view_content = true;
+					}
+				}
+			} elseif ( ! empty( $atts['group_id'] ) ) {
+				if ( learndash_is_user_in_group( $atts['user_id'], $atts['group_id'] ) ) {
+					$view_content = true;
+				}
+			} else {
+				$user_enrolled_courses = learndash_user_get_enrolled_courses( $atts['user_id'], array() );
+				$user_enrolled_groups  = learndash_get_users_group_ids( $atts['user_id'] );
+
+				// If the user is enrolled in any courses or groups then we show the content.
+				if ( ( count( $user_enrolled_courses ) ) || ( count( $user_enrolled_groups ) ) ) {
 					$view_content = true;
 				}
 			}
-		} elseif ( ! empty( $atts['group_id'] ) ) {
-			if ( learndash_is_user_in_group( $atts['user_id'], $atts['group_id'] ) ) {
-				$view_content = true;
-			}
 		}
+
+		/**
+		 * Filters student shortcode if user can view content.
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param bool  $view_content Whether to view content.
+		 * @param array $atts         An array of shortcode attributes.
+		 */
+		$view_content = apply_filters( 'learndash_student_shortcode_view_content', $view_content, $atts );
 
 		if ( $view_content ) {
 			$learndash_shortcode_used = true;
@@ -132,6 +154,10 @@ function learndash_student_check_shortcode( $atts = array(), $content = '', $sho
 		}
 	}
 
+	if ( ! is_user_logged_in() ) {
+		$content = '';
+	}
+
 	return $content;
 }
-add_shortcode( 'student', 'learndash_student_check_shortcode', 10, 3 );
+add_shortcode( 'student', 'learndash_student_check_shortcode' );

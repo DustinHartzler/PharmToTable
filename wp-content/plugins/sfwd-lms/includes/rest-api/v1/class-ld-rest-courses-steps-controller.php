@@ -16,7 +16,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 	 *
 	 * @since 2.5.8
 	 */
-	class LD_REST_Courses_Steps_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Courses_Steps_Controller_V1 extends LD_REST_Posts_Controller_V1 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Enrolled courses
@@ -192,7 +192,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 					$course_id = $request['id'];
 					if ( ! empty( $course_id ) ) {
 						// And if that course ID is in their enrolled courses.
-						if ( in_array( $course_id, $this->enrolled_courses ) ) {
+						if ( in_array( $course_id, $this->enrolled_courses ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict
 							$this->enrolled_courses = array( $course_id );
 							return true;
 						}

@@ -78,6 +78,8 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 		public function learndash_group_admin_menu() {
 
 			$menu_user_cap = '';
+			$menu_parent   = '';
+			$position      = 0;
 
 			if ( current_user_can( 'edit_groups' ) ) {
 				$user_group_ids = learndash_get_administrators_group_ids( get_current_user_id(), true );
@@ -93,9 +95,9 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 					$menu_parent   = 'learndash-lms';
 
 					if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_courses_enabled' ) === 'yes' ) {
-						$position = 6; // Position to the topfor Group Leader.
+						$position = 6; // Position to the top for Group Leader.
 					} else {
-						$position = 0; // Position to the topfor Group Leader.
+						$position = 0; // Position to the top for Group Leader.
 					}
 				}
 			}
@@ -103,7 +105,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 			if ( ! empty( $menu_user_cap ) ) {
 				global $submenu;
 
-				$pagehook = add_submenu_page(
+				$page_hook = add_submenu_page(
 					$menu_parent,
 					LearnDash_Custom_Label::get_label( 'groups' ),
 					LearnDash_Custom_Label::get_label( 'groups' ),
@@ -112,7 +114,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 					array( $this, 'show_page' ),
 					$position
 				);
-				add_action( 'load-' . $pagehook, array( $this, 'on_load' ) );
+				add_action( 'load-' . $page_hook, array( $this, 'on_load' ) );
 
 				if ( ( isset( $submenu['learndash-lms'] ) ) && ( ! empty( $submenu['learndash-lms'] ) ) ) {
 					foreach ( $submenu['learndash-lms'] as $menu_idx => &$menu_item ) {
@@ -134,16 +136,16 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 		public function on_load() {
 			global $learndash_assets_loaded;
 
-			if ( ( isset( $_GET['action'] ) ) && ( ! empty( $_GET['action'] ) ) ) {
-				$this->current_action = esc_attr( $_GET['action'] );
+			if ( ( isset( $_GET['action'] ) ) && ( ! empty( $_GET['action'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$this->current_action = sanitize_text_field( wp_unslash( $_GET['action'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 
-			if ( ( isset( $_GET['group_id'] ) ) && ( ! empty( $_GET['group_id'] ) ) ) {
-				$this->group_id = intval( $_GET['group_id'] );
+			if ( ( isset( $_GET['group_id'] ) ) && ( ! empty( $_GET['group_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$this->group_id = intval( $_GET['group_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 
-			if ( ( isset( $_GET['user_id'] ) ) && ( ! empty( $_GET['user_id'] ) ) ) {
-				$this->user_id = intval( $_GET['user_id'] );
+			if ( ( isset( $_GET['user_id'] ) ) && ( ! empty( $_GET['user_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$this->user_id = intval( $_GET['user_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 
 			wp_enqueue_style(
@@ -165,10 +167,9 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 			$learndash_assets_loaded['scripts']['sfwd-module-script'] = __FUNCTION__;
 
 			// Because we need the ajaxurl for the pagination AJAX.
-			$data = array();
-			if ( ! isset( $data['ajaxurl'] ) ) {
-				$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
-			}
+			$data = array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			);
 
 			$data = array( 'json' => wp_json_encode( $data ) );
 			wp_localize_script( 'sfwd-module-script', 'sfwd_data', $data );
@@ -201,10 +202,10 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 
 				$screen_per_page_option = str_replace( '-', '_', $screen_key );
 
-				if ( isset( $_POST['wp_screen_options']['option'] ) ) {
+				if ( isset( $_POST['wp_screen_options']['option'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
-					if ( isset( $_POST['wp_screen_options']['value'] ) ) {
-						$per_page = intval( $_POST['wp_screen_options']['value'] );
+					if ( isset( $_POST['wp_screen_options']['value'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+						$per_page = intval( $_POST['wp_screen_options']['value'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 						if ( ( ! $per_page ) || ( $per_page < 1 ) ) {
 							$per_page = 20;
 						}
@@ -212,7 +213,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 					}
 				}
 				$per_page = get_user_meta( get_current_user_id(), $screen_per_page_option, true );
-				if ( ( ! $per_page ) || ( empty( $per_page ) ) || ( $per_page < 1 ) ) {
+				if ( ( ! $per_page ) || ( $per_page < 1 ) ) {
 					$per_page = 20;
 				}
 
@@ -289,7 +290,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 					if ( 'learndash-group-email' == $this->current_action ) {
 						?>
 						<input id="group_email_ajaxurl" type="hidden" name="group_email_ajaxurl" value="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" />
-						<input id="group_email_group_id" type="hidden" name="group_email_group_id" value="<?php echo esc_attr( $this->group_id ); ?>" />
+						<input id="group_email_group_id" type="hidden" name="group_email_group_id" value="<?php echo absint( $this->group_id ); ?>" />
 						<input id="group_email_nonce" type="hidden" name="group_email_nonce" value="<?php echo esc_attr( wp_create_nonce( 'group_email_nonce_' . $this->group_id . '_' . $current_user->ID ) ); ?>" />
 
 						<!-- Email Group feature below the Group Table (on the Group Leader page) -->
@@ -332,14 +333,14 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 							<?php
 							if ( empty( $this->user_id ) ) {
 								?>
-									<input type="hidden" name="user_id" value="<?php echo esc_attr( $this->user_id ); ?>" />
+									<input type="hidden" name="user_id" value="<?php echo absint( $this->user_id ); ?>" />
 									<?php
 									$this->list_table->check_table_filters();
 									$this->list_table->prepare_items();
 
 									if ( ! empty( $this->group_id ) ) {
 										?>
-										<input type="hidden" name="group_id" value="<?php echo esc_attr( $this->group_id ); ?>" />
+										<input type="hidden" name="group_id" value="<?php echo absint( $this->group_id ); ?>" />
 										<?php
 										$this->list_table->search_box( esc_html__( 'Search Users', 'learndash' ), 'users' );
 									} else {
@@ -370,7 +371,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 										);
 
 										/**
-										 * Filters group admininstration course info attributes.
+										 * Filters group administration course info attributes.
 										 *
 										 * @since 2.5.7
 										 *
@@ -401,6 +402,8 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 		 * Handle actions from table
 		 *
 		 * @since 2.3.0
+		 *
+		 * @return void
 		 */
 		public function on_process_actions_list() {
 			if ( ! empty( $this->user_id ) ) {
@@ -416,19 +419,19 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
  * Handle Groups Table AJAX for Reports.
  *
  * @since 2.3.0
+ *
+ * @return void
  */
 function learndash_data_group_reports_ajax() {
 	$reply_data = array( 'status' => false );
 
 	if ( ( is_user_logged_in() ) && ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) ) {
-		if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( $_POST['nonce'], 'ld-group-list-view-nonce-' . get_current_user_id() ) ) ) {
+		if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ld-group-list-view-nonce-' . get_current_user_id() ) ) ) {
 			if ( ( isset( $_POST['data'] ) ) && ( ! empty( $_POST['data'] ) ) ) {
 				$ld_admin_settings_data_reports = new Learndash_Admin_Settings_Data_Reports();
-				$reply_data['data']             = $ld_admin_settings_data_reports->do_data_reports( $_POST['data'], $reply_data );
+				$reply_data['data']             = $ld_admin_settings_data_reports->do_data_reports( $_POST['data'], $reply_data ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-				if ( ! empty( $reply_data ) ) {
-					echo wp_json_encode( $reply_data );
-				}
+				echo wp_json_encode( $reply_data );
 			}
 		}
 	}

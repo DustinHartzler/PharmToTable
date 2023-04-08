@@ -120,6 +120,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 * Used to associate a section with a parent section.
 		 *
 		 * @since 3.6.0
+		 *
+		 * @var string $settings_parent_section_key
 		 */
 		protected $settings_parent_section_key = '';
 
@@ -612,9 +614,9 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 
 		/**
 		 * Filter the section saved values.
-		 * 
+		 *
 		 * @since 3.6.0
-		 * 
+		 *
 		 * @param array  $value                An array of setting fields values.
 		 * @param array  $old_value            An array of setting fields old values.
 		 * @param string $settings_section_key Settings section key.
@@ -664,8 +666,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 			if ( true === $this->settings_bypass_nonce_check ) {
 				return true;
 			}
-			
-			if ( ( isset( $_POST[ $this->setting_option_key . '_nonce' ] ) ) && ( ! empty( $_POST[ $this->setting_option_key . '_nonce' ] ) ) && ( wp_verify_nonce( esc_attr( $_POST[ $this->setting_option_key . '_nonce' ] ), $this->setting_option_key ) ) ) {
+
+			if ( ( isset( $_POST[ $this->setting_option_key . '_nonce' ] ) ) && ( ! empty( $_POST[ $this->setting_option_key . '_nonce' ] ) ) && ( wp_verify_nonce( esc_attr( $_POST[ $this->setting_option_key . '_nonce' ] ), $this->setting_option_key ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				return true;
 			}
 
@@ -892,7 +894,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		public function settings_section_fields_validate( $post_fields = array() ) {
 			$setting_option_values = array();
 
-			// This valiadate_args array will be passed to the validation function for context.
+			// This validate_args array will be passed to the validation function for context.
 			$validate_args = array(
 				'settings_page_id'   => $this->settings_page_id,
 				'setting_option_key' => $this->setting_option_key,
@@ -930,8 +932,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 *
 		 * @since 4.0.0
 		 *
-		 * @param string $field_key Section field key.
-		 * @param mixed  $default_return Default value if field not found.
+		 * @param string $field_key   Section field key.
+		 * @param mixed  $field_value Section field value.
 		 */
 		public static function set_setting( $field_key = '', $field_value = '' ) {
 			return self::set_section_setting( get_called_class(), $field_key, $field_value );
@@ -1009,7 +1011,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 					$value_changed = false;
 					if ( isset( self::$_instances[ $section ]->setting_option_fields[ $field_key ] ) ) {
 						self::$_instances[ $section ]->setting_option_fields[ $field_key ]['value'] = $new_value;
-						
+
 						$value_changed = true;
 					}
 
@@ -1024,6 +1026,53 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 					}
 				}
 			}
+		}
+
+		/**
+		 * Static function to set Section Setting values.
+		 *
+		 * @since 4.3.0
+		 *
+		 * @param string $section Settings Section.
+		 * @param array  $fields  Settings Section fields.
+		 *
+		 * @return void
+		 */
+		public static function set_section_settings_all( string $section, array $fields ): void {
+			if ( empty( $section ) || empty( $fields ) ) {
+				return;
+			}
+
+			$section = self::check_deprecated_class( $section );
+
+			if ( ! isset( self::$_instances[ $section ] ) ) {
+				return;
+			}
+
+			self::$_instances[ $section ]->init();
+
+			if ( ! isset( self::$_instances[ $section ]->setting_option_values ) ) {
+				self::$_instances[ $section ]->setting_option_values = array();
+			}
+
+			$value_changed = false;
+
+			foreach ( $fields as $field_key => $new_value ) {
+				$field_key = self::check_deprecated_field_key( $field_key, $section );
+
+				if ( isset( self::$_instances[ $section ]->setting_option_fields[ $field_key ] ) ) {
+					self::$_instances[ $section ]->setting_option_fields[ $field_key ]['value'] = $new_value;
+					self::$_instances[ $section ]->setting_option_values[ $field_key ]          = $new_value;
+
+					$value_changed = true;
+				}
+			}
+
+			if ( ! $value_changed ) {
+				return;
+			}
+
+			self::$_instances[ $section ]->save_settings_values();
 		}
 
 		/**
@@ -1123,7 +1172,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		}
 
 		/**
-		 * Transition old Settiings Class to new one.
+		 * Transition old Settings Class to new one.
 		 *
 		 * @since 3.0.0
 		 *
@@ -1141,7 +1190,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		}
 
 		/**
-		 * Transition old Settiings Class field(s) to new one(s).
+		 * Transition old Settings Class field(s) to new one(s).
 		 *
 		 * @since 3.0.0
 		 *

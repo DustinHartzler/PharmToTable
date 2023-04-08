@@ -56,8 +56,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.1.0
 		 *
-		 * @param string $settings_section_key Section Key
-		 * @param string $settings_screen_id   Screen ID
+		 * @param string $settings_section_key Section Key.
+		 * @param string $settings_screen_id   Screen ID.
 		 */
 		public function show_support_section( $settings_section_key = '', $settings_screen_id = '' ) {
 			if ( $settings_section_key === $this->settings_section_key ) {

@@ -18,7 +18,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Form_Entries_Controller_V2' ) ) && ( class_
 	 * @since 3.5.0
 	 * @uses WP_REST_Controller
 	 */
-	class LD_REST_Quiz_Form_Entries_Controller_V2 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Quiz_Form_Entries_Controller_V2 extends WP_REST_Controller /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 		/**
 		 * Version
 		 *
@@ -68,38 +68,6 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Form_Entries_Controller_V2' ) ) && ( class_
 					'schema' => array( $this, 'get_public_item_schema' ),
 				)
 			);
-
-			/*
-			register_rest_route(
-				$this->namespace,
-				'/' . $forms_rest_base . '/(?P<id>[\w-]+)',
-				array(
-					'args'   => array(
-						'slug' => array(
-							'description' => sprintf(
-								// translators: placeholder: Quiz.
-								esc_html_x(
-									'Unique ID for %s form entry.',
-									'placeholder: Quiz',
-									'learndash'
-								),
-								LearnDash_Custom_Label::get_label( 'quiz' )
-							),
-							'type'        => 'string',
-						),
-					),
-					array(
-						'methods'             => WP_REST_Server::READABLE,
-						'callback'            => array( $this, 'get_item' ),
-						'permission_callback' => array( $this, 'get_item_permissions_check' ),
-						'args'                => array(
-							'context' => $this->get_context_param( array( 'default' => 'view' ) ),
-						),
-					),
-					'schema' => array( $this, 'get_public_item_schema' ),
-				)
-			);
-			*/
 		}
 
 		/**
@@ -440,10 +408,10 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Form_Entries_Controller_V2' ) ) && ( class_
 			}
 
 			if ( isset( $date ) ) {
-				return mysql_to_rfc3339( $date );
+				return mysql_to_rfc3339( $date ); // phpcs:ignore PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 			}
 
-			return mysql_to_rfc3339( $date_gmt );
+			return mysql_to_rfc3339( $date_gmt ); // phpcs:ignore PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 		}
 
 		// End of functions.

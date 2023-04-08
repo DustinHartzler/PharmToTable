@@ -52,7 +52,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				learndash_get_custom_label_lower( 'quiz' )
 			);
 
-			// Define the depreacted Class and Fields.
+			// Define the deprecated Class and Fields.
 			$this->settings_deprecated = array(
 				'LearnDash_Settings_Quizzes_Admin_Email' => array(
 					'option_key' => 'learndash_settings_quizzes_admin_email',

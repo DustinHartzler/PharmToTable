@@ -39,7 +39,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				 * @param bool false Wether to collapse Focus Mode sidebar. Default false.
 				 */
 			?>
-			<div class="ld-focus <?php echo esc_attr( apply_filters( 'learndash_focus_mode_collapse_sidebar', false ) ? 'ld-focus-sidebar-collapsed ld-focus-sidebar-filtered' : '' ); ?>">
+			<div class="ld-focus ld-focus-initial-transition <?php echo esc_attr( apply_filters( 'learndash_focus_mode_collapse_sidebar', false ) ? 'ld-focus-sidebar-collapsed ld-focus-sidebar-filtered' : '' ); ?> <?php echo esc_attr( learndash_30_get_focus_mode_sidebar_position() ); ?>">
 				<?php
 				/**
 				 * Fires at the start of the focus template.

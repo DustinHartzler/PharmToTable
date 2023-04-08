@@ -31,11 +31,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Function to crete the settiings field.
+		 * Function to crete the settings field.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the ouput.
+		 * @param array $field_args An array of field arguments used to process the output.
 		 * @return void
 		 */
 		public function create_section_field( $field_args = array() ) {
@@ -91,7 +91,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 							}
 							$html .= '>';
 
-							foreach( $option_label['optgroup_options'] as $optgroup_option_key => $optgroup_option_label ) {
+							foreach ( $option_label['optgroup_options'] as $optgroup_option_key => $optgroup_option_label ) {
 								$html .= '<option value="' . esc_attr( $optgroup_option_key ) . '" ' . $selected_item . '>' . wp_kses_post( $optgroup_option_label ) . '</option>';
 							}
 							$html .= '</optgroup>';

@@ -151,7 +151,12 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			$this->listing_init_done = true;
 
-			add_filter( 'learndash_listing_selector_user_selector_query_args', array( $this, 'learndash_listing_selector_user_query_args_assignments' ), 30, 3 );
+			add_filter(
+				'learndash_listing_selector_user_selector_query_args',
+				array( $this, 'learndash_listing_selector_user_query_args_assignments' ),
+				30,
+				2
+			);
 		}
 
 		/**
@@ -165,6 +170,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 				add_action( 'admin_footer', array( $this, 'assignment_bulk_actions' ), 30 );
 				add_filter( 'learndash_listing_table_query_vars_filter', array( $this, 'listing_table_query_vars_filter_assignments' ), 30, 3 );
+				add_action( 'admin_footer', array( $this, 'add_view_modal' ) );
+				add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 20, 2 );
 
 				$this->assignment_bulk_actions_approve();
 			}
@@ -264,7 +271,6 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			return $q_vars;
 		}
 
-
 		/**
 		 * Filter the main query listing by the course_id
 		 *
@@ -279,7 +285,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 					$q_vars['meta_query'][] = array(
 						'relation' => 'OR',
@@ -305,7 +311,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					if ( ! empty( $selector['selected'] ) ) {
 
 						if ( ! isset( $q_vars['meta_query'] ) ) {
-							$q_vars['meta_query'] = array();
+							$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						}
 
 						$q_vars['meta_query'][] = array(
@@ -318,7 +324,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$gl_course_ids = learndash_get_groups_administrators_courses( get_current_user_id() );
 				$gl_course_ids = array_map( 'absint', $gl_course_ids );
 				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array();
+					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				}
 
 				if ( ! empty( $gl_course_ids ) ) {
@@ -353,7 +359,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 					$q_vars['meta_query'][] = array(
 						'relation' => 'OR',
@@ -369,7 +375,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					);
 				} else {
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					}
 
 					$lesson_ids      = array( absint( $selector['selected'] ) );
@@ -413,7 +419,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				} else {
 
 					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+						$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					} else {
 						$lesson_item_found = false;
 						foreach ( $q_vars['meta_query'] as $meta_idx => &$meta_item ) {
@@ -503,7 +509,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					if ( 1 != $approval_status_flag ) {
 						?>
 						<div class="ld-approval-action">
-							<button id="assignment_approve_<?php echo esc_attr( $post_id ); ?>" class="small assignment_approve_single"><?php esc_html_e( 'approve', 'learndash' ); ?></button>
+							<button id="assignment_approve_<?php echo absint( $post_id ); ?>" class="small assignment_approve_single"><?php esc_html_e( 'approve', 'learndash' ); ?></button>
 						</div>
 						<?php
 					}
@@ -545,7 +551,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 */
 		protected function assignment_bulk_actions_approve() {
 
-			if ( ( ! isset( $_REQUEST['ld-listing-nonce'] ) ) || ( empty( $_REQUEST['ld-listing-nonce'] ) ) || ( ! wp_verify_nonce( $_REQUEST['ld-listing-nonce'], get_called_class() ) ) ) {
+			if ( ( ! isset( $_REQUEST['ld-listing-nonce'] ) ) || ( empty( $_REQUEST['ld-listing-nonce'] ) ) || ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['ld-listing-nonce'] ) ), get_called_class() ) ) ) {
 				return;
 			}
 
@@ -559,21 +565,21 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			$action = '';
 			if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
-				$action = esc_attr( $_REQUEST['action'] );
+				$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
 
 			} elseif ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] ) {
-				$action = esc_attr( $_REQUEST['action2'] );
+				$action = sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) );
 
 			} elseif ( ( isset( $_REQUEST['ld_action'] ) ) && ( 'approve_assignment' === $_REQUEST['ld_action'] ) ) {
 				$action = 'approve_assignment';
 			}
 
 			if ( 'approve_assignment' === $action ) {
-				if ( ( isset( $_REQUEST['post'] ) ) && ( ! empty( $_REQUEST['post'] ) ) ) {
+				if ( ( isset( $_REQUEST['post'] ) ) && ( ! empty( $_REQUEST['post'] ) ) ) { // @phpstan-ignore-line
 					if ( ! is_array( $_REQUEST['post'] ) ) {
-						$assignments = array( $_REQUEST['post'] );
+						$assignments = array( $_REQUEST['post'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					} else {
-						$assignments = $_REQUEST['post'];
+						$assignments = $_REQUEST['post']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					}
 
 					foreach ( $assignments as $assignment_id ) {
@@ -592,9 +598,11 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 									$assignment_settings_id = intval( get_post_meta( $assignment_id, 'lesson_id', true ) );
 									if ( ! empty( $assignment_settings_id ) ) {
 										$max_points = learndash_get_setting( $assignment_settings_id, 'lesson_assignment_points_amount' );
+									} else {
+										$max_points = 0;
 									}
 
-									// Double check the assiged points is NOT larger than max points.
+									// Double check the assigned points is NOT larger than max points.
 									if ( $assignment_points > $max_points ) {
 										$assignment_points = $max_points;
 									}
@@ -625,7 +633,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array();
+					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				}
 
 				if ( 'approved' === $selector['selected'] ) {
@@ -659,6 +667,65 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			}
 
 			return $views;
+		}
+
+		/**
+		 * Modify a view link, so it opens a modal window.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param array   $row_actions Existing Row actions for an assignment.
+		 * @param WP_Post $post Assignment post for the current row.
+		 *
+		 * @return array $row_actions
+		 */
+		public function post_row_actions( $row_actions = array(), $post = null ): array {
+			$row_actions = parent::post_row_actions( $row_actions, $post );
+
+			$file_url = get_post_meta( $post->ID, 'file_link', true );
+
+			// Quick view.
+
+			$file_is_image = in_array(
+				strtolower( pathinfo( $file_url, PATHINFO_EXTENSION ) ),
+				array( 'jpg', 'jpeg', 'png', 'gif' ),
+				true
+			);
+
+			if ( $file_is_image ) {
+				$view_label = __( 'Quick View', 'learndash' );
+
+				$row_actions['quick_view'] = sprintf(
+					'<a class="view-learndash-assignment" href="%s" data-title="%s" aria-label="%s">%s</a>',
+					esc_url( $file_url ),
+					esc_attr( get_post_meta( $post->ID, 'file_name', true ) ),
+					esc_attr( $view_label ),
+					esc_html( $view_label )
+				);
+			}
+
+			// Download.
+
+			if ( ! empty( $file_url ) ) {
+				$row_actions['download'] = sprintf(
+					'<a download href="%s" target="_blank">%s</a>',
+					esc_url( $file_url ),
+					esc_html__( 'Download', 'learndash' )
+				);
+			}
+
+			return $row_actions;
+		}
+
+		/**
+		 * Add modal for a view action.
+		 *
+		 * @since 4.1.0
+		 */
+		public function add_view_modal() {
+			?>
+			<div id='learndash-admin-table-modal' style="display: none"></div>
+			<?php
 		}
 
 		// End of functions.

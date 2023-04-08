@@ -106,10 +106,8 @@ class WpProQuiz_Model_StatisticRefModel extends WpProQuiz_Model_Model {
 		return $this->_maxCreateTime;
 	}
 
-
-	public function get_object_as_array() {
-
-		$object_vars = array(
+	public function get_object_as_array(): array {
+		return array(
 			'_statisticRefId' => $this->getStatisticRefId(),
 			'_quizId'         => $this->getQuizId(),
 			'_quizPostId'     => $this->getQuizPostId(),
@@ -121,8 +119,6 @@ class WpProQuiz_Model_StatisticRefModel extends WpProQuiz_Model_Model {
 			'_minCreateTime'  => $this->getMinCreateTime(),
 			'_maxCreateTime'  => $this->getMaxCreateTime(),
 		);
-
-		return $object_vars;
 	}
 
 	public function set_array_to_object( $array_vars = array() ) {

@@ -32,11 +32,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Function to crete the settiings field.
+		 * Function to crete the settings field.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the ouput.
+		 * @param array $field_args An array of field arguments used to process the output.
 		 * @return void
 		 */
 		public function create_section_field( $field_args = array() ) {
@@ -196,10 +196,22 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function rest_value_to_field_value( $val = '', $key = '', $field_args = array() ) {
 			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {
-				if ( true === $val ) {
-					$val = 'on';
-				} else {
-					$val = '';
+				if ( 'boolean' === $field_args['field']['rest']['rest_args']['schema']['type'] ) {
+					if ( true === $val ) {
+						$val = 'on';
+					} else {
+						$val = '';
+					}
+				} elseif ( 'string' === $field_args['field']['rest']['rest_args']['schema']['type'] ) {
+					if ( ( isset( $field_args['field']['rest']['rest_args']['schema']['enum'] ) ) && ( ! empty( $field_args['field']['rest']['rest_args']['schema']['enum'] ) ) ) {
+						if ( ! in_array( $val, $field_args['field']['rest']['rest_args']['schema']['enum'], true ) ) {
+							if ( isset( $field_args['field']['rest']['rest_args']['schema']['default'] ) ) {
+								$val = $field_args['field']['rest']['rest_args']['schema']['default'];
+							} elseif ( isset( $field_args['field']['default'] ) ) {
+								$val = $field_args['field']['default'];
+							}
+						}
+					}
 				}
 			}
 			return $val;

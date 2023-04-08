@@ -131,28 +131,17 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			}
 
 			if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'shared_questions' ) ) {
-				if ( isset( $this->columns['quiz'] ) ) {
-					unset( $this->columns['quiz'] );
-				}
-
-				if ( isset( $this->selectors['quiz_id'] ) ) {
-					if ( isset( $this->selectors['quiz_id']['show_empty_value'] ) ) {
-						unset( $this->selectors['quiz_id']['show_empty_value'] );
-					}
-					if ( isset( $this->selectors['quiz_id']['show_empty_label'] ) ) {
-						unset( $this->selectors['quiz_id']['show_empty_label'] );
-					}
-				}
+				unset( $this->columns['quiz'] );
+				unset( $this->selectors['quiz_id']['show_empty_value'] );
+				unset( $this->selectors['quiz_id']['show_empty_label'] );
 			}
 
 			// If Group Leader remove the selector empty option.
 			if ( learndash_is_group_leader_user() ) {
 				$gl_manage_courses_capabilities = learndash_get_group_leader_manage_courses();
 				if ( 'advanced' !== $gl_manage_courses_capabilities ) {
-					if ( isset( $this->selectors['quiz_id'] ) ) {
-						unset( $this->selectors['quiz_id']['show_empty_value'] );
-						unset( $this->selectors['quiz_id']['show_empty_label'] );
-					}
+					unset( $this->selectors['quiz_id']['show_empty_value'] );
+					unset( $this->selectors['quiz_id']['show_empty_label'] );
 				}
 			}
 			parent::listing_init();
@@ -175,7 +164,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		}
 
 		/**
-		 * Hook into the WP admin footer logic to add custom JavaScript to replce the default page title.
+		 * Hook into the WP admin footer logic to add custom JavaScript to replace the default page title.
 		 *
 		 * @since 2.6.0
 		 */
@@ -312,7 +301,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( ( isset( $_GET['question_type'] ) ) && ( ! empty( $_GET['question_type'] ) ) ) {
 					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					$selected_question_type = esc_attr( $_GET['question_type'] );
+					$selected_question_type = sanitize_text_field( wp_unslash( $_GET['question_type'] ) );
 				} else {
 					$selected_question_type = '';
 				}
@@ -367,7 +356,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		protected function filter_by_question_type( $q_vars, $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array();
+					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				}
 
 				$q_vars['meta_query'][] = array(
@@ -393,7 +382,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		protected function filter_by_question_pro_category( $q_vars, $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
 				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array();
+					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				}
 
 				$q_vars['meta_query'][] = array(
@@ -433,7 +422,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						'fields'         => 'ids',
 						'orderby'        => 'title',
 						'order'          => 'ASC',
-						'meta_query'     => array(
+						'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 							'relation' => 'OR',
 							array(
 								'key'     => 'quiz_id',
@@ -467,7 +456,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						'fields'         => 'ids',
 						'orderby'        => 'menu_order',
 						'order'          => 'ASC',
-						'meta_query'     => array(
+						'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 							array(
 								'key'     => 'quiz_id',
 								'value'   => absint( $quiz_selector['selected'] ),
@@ -569,7 +558,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			if ( ( ! empty( $post_id ) ) && ( current_user_can( 'delete_post', $post_id ) ) && ( isset( $this->posts_to_delete[ $post_id ] ) ) ) {
 				global $wpdb;
 
-				$wpdb->delete(
+				$wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					LDLMS_DB::get_table_name( 'quiz_question' ),
 					array(
 						'id' => $this->posts_to_delete[ $post_id ],

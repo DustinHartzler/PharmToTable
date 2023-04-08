@@ -61,13 +61,12 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_label = esc_html__( 'Payments', 'learndash' );
 
 			add_action( 'learndash_settings_page_init', array( $this, 'learndash_settings_page_init' ), 10, 1 );
-			add_filter( 'learndash_settings_show_section_submit', array( $this, 'show_section_submit' ), 10, 2 );
 
 			parent::__construct();
 		}
 
 		/**
-		 * Show the Email Placeholders side section if we are editing an email.
+		 * Show the Payments List section.
 		 *
 		 * @since 3.6.0
 		 *
@@ -81,26 +80,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					add_filter( 'learndash_show_section', array( $this, 'should_show_settings_section' ), 10, 3 );
 				}
 			}
-		}
-
-		/**
-		 * Check if we should show the submit section.
-		 *
-		 * We only show when showing a sub section.
-		 *
-		 * @since 3.6.0
-		 *
-		 * @param bool   $show_submit_meta show section submit.
-		 * @param string $settings_page_id Settings Page ID.
-		 */
-		public function show_section_submit( $show_submit_meta, $settings_page_id ) {
-			//if ( $settings_page_id === $this->settings_page_id ) {
-			//	if ( empty( $this->get_current_sub_section() ) ) {
-			//		$show_submit_meta = false;
-			//	}
-			//}
-
-			return $show_submit_meta;
 		}
 
 		/**
@@ -145,7 +124,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ( isset( $_GET[ self::$section_url_param ] ) ) && ( ! empty( $_GET[ self::$section_url_param ] ) ) ) {
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$this->current_sub_section = esc_attr( $_GET[ self::$section_url_param ] );
+				$this->current_sub_section = sanitize_text_field( wp_unslash( $_GET[ self::$section_url_param ] ) );
 				if ( ! $this->is_valid_sub_section( $this->current_sub_section ) ) {
 					$this->current_sub_section = '';
 				}
@@ -173,7 +152,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->show_settings_section_nonce_field();
 			?>
 			<div class="sfwd sfwd_options">
-				<table class="learndash-settings-table learndash-settings-table-emails widefat striped" cellspacing="0">
+				<table class="learndash-settings-table learndash-settings-table-payments widefat striped" cellspacing="0">
 				<thead>
 				<tr>
 					<th class="col-name-enabled"></th>
@@ -233,7 +212,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		}
 
 		/**
-		 * Utility function to return the sub sections in label (alph) order.
+		 * Utility function to return the sub sections in label (alpha) order.
 		 *
 		 * @since 3.6.0
 		 */

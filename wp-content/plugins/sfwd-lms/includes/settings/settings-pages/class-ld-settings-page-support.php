@@ -61,7 +61,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				$this->gather_system_details();
 
 				// download-system-info.
-				if ( ( isset( $_GET['ld_download_system_info_nonce'] ) ) && ( ! empty( $_GET['ld_download_system_info_nonce'] ) ) && ( wp_verify_nonce( $_GET['ld_download_system_info_nonce'], 'ld_download_system_info_' . get_current_user_id() ) ) ) {
+				if ( ( isset( $_GET['ld_download_system_info_nonce'] ) ) && ( ! empty( $_GET['ld_download_system_info_nonce'] ) ) && ( wp_verify_nonce( $_GET['ld_download_system_info_nonce'], 'ld_download_system_info_' . get_current_user_id() ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					header( 'Content-type: text/plain' );
 					header( 'Content-Disposition: attachment; filename=ld_system_info-' . gmdate( 'Ymd' ) . '.txt' );
 					$support_page_instance = LearnDash_Settings_Page::get_page_instance( 'LearnDash_Settings_Page_Support' );
@@ -95,7 +95,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			/**
 			 * Filters list of initial sections for admin settings support tab.
 			 *
-			 * @param array $systen_info An array of support sections.
+			 * @param array $system_info An array of support sections.
 			 */
 			$this->system_info = apply_filters( 'learndash_support_sections_init', $this->system_info );
 
@@ -103,7 +103,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			/**
 			 * Filters list of sections for admin settings support tab.
 			 *
-			 * @param array $systen_info An array of support sections.
+			 * @param array $system_info An array of support sections.
 			 */
 			$this->system_info = apply_filters( 'learndash_support_sections', $this->system_info );
 

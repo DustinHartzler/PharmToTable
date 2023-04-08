@@ -57,8 +57,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			$new_settings = false;
-
 			if ( false === $this->setting_option_values ) {
 				$sfwd_cpt_options = get_option( 'sfwd_cpt_options' );
 
@@ -80,7 +78,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			if ( ( isset( $_GET['action'] ) ) && ( 'ld_reset_settings' === $_GET['action'] ) && ( isset( $_GET['page'] ) ) && ( $_GET['page'] == $this->settings_page_id ) ) {
 				if ( ( isset( $_GET['ld_wpnonce'] ) ) && ( ! empty( $_GET['ld_wpnonce'] ) ) ) {
-					if ( wp_verify_nonce( $_GET['ld_wpnonce'], get_current_user_id() . '-' . $this->setting_option_key ) ) {
+					if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['ld_wpnonce'] ) ), get_current_user_id() . '-' . $this->setting_option_key ) ) {
 						if ( ! empty( $this->setting_option_values ) ) {
 							foreach ( $this->setting_option_values as $key => $val ) {
 								$this->setting_option_values[ $key ] = '';
@@ -109,14 +107,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 * @since 2.4.0
 		 */
 		public function load_settings_fields() {
-			global $wp_rewrite;
-
-			if ( ( isset( $wp_rewrite ) ) && ( $wp_rewrite->using_permalinks() ) ) {
-				$default_paypal_notifyurl = trailingslashit( get_home_url() ) . 'sfwd-lms/paypal';
-			} else {
-				$default_paypal_notifyurl = add_query_arg( 'sfwd-lms', 'paypal', get_home_url() );
-			}
-
 			$this->setting_option_fields = array(
 				'enabled'          => array(
 					'name'    => 'enabled',
@@ -129,6 +119,16 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						''   => '',
 					),
 				),
+				'paypal_sandbox'   => array(
+					'name'      => 'paypal_sandbox',
+					'type'      => 'checkbox',
+					'label'     => esc_html__( 'Test Mode', 'learndash' ),
+					'help_text' => esc_html__( 'Check to enable the PayPal sandbox.', 'learndash' ),
+					'value'     => isset( $this->setting_option_values['paypal_sandbox'] ) ? $this->setting_option_values['paypal_sandbox'] : 'no',
+					'options'   => array(
+						'yes' => esc_html__( 'Yes', 'learndash' ),
+					),
+				),
 				'paypal_email'     => array(
 					'name'              => 'paypal_email',
 					'type'              => 'text',
@@ -138,23 +138,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'class'             => 'regular-text',
 					'validate_callback' => array( $this, 'validate_section_paypal_email' ),
 				),
-				'paypal_currency'  => array(
-					'name'              => 'paypal_currency',
-					'type'              => 'text',
-					'label'             => esc_html__( 'PayPal Currency', 'learndash' ),
-					'help_text'         => sprintf(
-						// translators: placeholder: Link to PayPal.
-						esc_html_x( 'Enter the currency code for transactions. See PayPal %s Documentation', 'placeholder: URL to PayPal Currency Codes', 'learndash' ),
-						'<a href="https://developer.paypal.com/docs/api/reference/currency-codes/" target="_blank">' . esc_html__( 'Currency Codes', 'learndash' ) . '</a>'
-					),
-					'value'             => ( ( isset( $this->setting_option_values['paypal_currency'] ) ) && ( ! empty( $this->setting_option_values['paypal_currency'] ) ) ) ? $this->setting_option_values['paypal_currency'] : 'USD',
-					'class'             => 'regular-text',
-					'validate_callback' => array( $this, 'validate_section_paypal_currency' ),
-				),
 				'paypal_country'   => array(
 					'name'              => 'paypal_country',
 					'type'              => 'text',
-					'label'             => esc_html__( 'PayPal Country', 'learndash' ),
+					'label'             => esc_html__( 'Country Code', 'learndash' ),
 					'help_text'         => sprintf(
 						// translators: placeholder: Link to PayPal Country Codes.
 						esc_html_x( 'Enter your country code here. See PayPal %s Documentation', 'placeholder: URL to PayPal Country Codes.', 'learndash' ),
@@ -164,39 +151,37 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'class'             => 'regular-text',
 					'validate_callback' => array( $this, 'validate_section_paypal_country' ),
 				),
-				'paypal_cancelurl' => array(
-					'name'      => 'paypal_cancelurl',
-					'type'      => 'text',
-					'label'     => esc_html__( 'PayPal Cancel URL', 'learndash' ),
-					'help_text' => esc_html__( 'Enter the URL used for purchase cancellations.', 'learndash' ),
-					'value'     => ( ( isset( $this->setting_option_values['paypal_cancelurl'] ) ) && ( ! empty( $this->setting_option_values['paypal_cancelurl'] ) ) ) ? $this->setting_option_values['paypal_cancelurl'] : '',
-					'class'     => 'regular-text',
-				),
 				'paypal_returnurl' => array(
 					'name'      => 'paypal_returnurl',
 					'type'      => 'text',
-					'label'     => esc_html__( 'PayPal Return ', 'learndash' ),
+					'label'     => esc_html__( 'Return URL', 'learndash' ),
 					'help_text' => esc_html__( 'Enter the URL used for completed purchases (typically a thank you page).', 'learndash' ),
 					'value'     => ( ( isset( $this->setting_option_values['paypal_returnurl'] ) ) && ( ! empty( $this->setting_option_values['paypal_returnurl'] ) ) ) ? $this->setting_option_values['paypal_returnurl'] : '',
+					'class'     => 'regular-text',
+				),
+				'paypal_cancelurl' => array(
+					'name'      => 'paypal_cancelurl',
+					'type'      => 'text',
+					'label'     => esc_html__( 'Cancel URL', 'learndash' ),
+					'help_text' => esc_html__( 'Enter the URL used for purchase cancellations.', 'learndash' ),
+					'value'     => ( ( isset( $this->setting_option_values['paypal_cancelurl'] ) ) && ( ! empty( $this->setting_option_values['paypal_cancelurl'] ) ) ) ? $this->setting_option_values['paypal_cancelurl'] : '',
 					'class'     => 'regular-text',
 				),
 				'paypal_notifyurl' => array(
 					'name'      => 'paypal_notifyurl',
 					'type'      => 'text',
-					'label'     => esc_html__( 'PayPal Notify URL', 'learndash' ),
+					'label'     => esc_html__( 'Webhook URL', 'learndash' ),
 					'help_text' => esc_html__( 'Enter the URL used for IPN notifications.', 'learndash' ),
-					'value'     => ( ( isset( $this->setting_option_values['paypal_notifyurl'] ) ) && ( ! empty( $this->setting_option_values['paypal_notifyurl'] ) ) ) ? $this->setting_option_values['paypal_notifyurl'] : $default_paypal_notifyurl,
+					'value'     => ! empty( $this->setting_option_values['paypal_notifyurl'] )
+						? $this->setting_option_values['paypal_notifyurl']
+						: add_query_arg( array( 'learndash-integration' => 'paypal_ipn' ), esc_url_raw( get_site_url() ) ),
 					'class'     => 'regular-text',
-				),
-				'paypal_sandbox'   => array(
-					'name'      => 'paypal_sandbox',
-					'type'      => 'checkbox',
-					'label'     => esc_html__( 'Use PayPal Sandbox', 'learndash' ),
-					'help_text' => esc_html__( 'Check to enable the PayPal sandbox.', 'learndash' ),
-					'value'     => isset( $this->setting_option_values['paypal_sandbox'] ) ? $this->setting_option_values['paypal_sandbox'] : 'no',
-					'options'   => array(
-						'yes' => esc_html__( 'Yes', 'learndash' ),
-					),
+					'attrs'     => defined( 'LEARNDASH_DEBUG' ) && LEARNDASH_DEBUG // @phpstan-ignore-line -- Constant can be true/false.
+						? array()
+						: array(
+							'readonly' => 'readonly',
+							'disable'  => 'disable',
+						),
 				),
 			);
 
@@ -252,34 +237,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		}
 
 		/**
-		 * Validate Settings Currency field.
-		 *
-		 * @since 2.4.0
-		 *
-		 * @param string $val to be validated.
-		 * @param string $key Settings key.
-		 * @param array  $args Settings field args.
-		 *
-		 * @return string $val.
-		 */
-		public static function validate_section_paypal_currency( $val, $key, $args = array() ) {
-			if ( ( isset( $args['post_fields']['paypal_email'] ) ) && ( ! empty( $args['post_fields']['paypal_email'] ) ) ) {
-				$val = sanitize_text_field( $val );
-				if ( empty( $val ) ) {
-					add_settings_error( $args['setting_option_key'], $key, esc_html__( 'PayPal Currency Code cannot be empty.', 'learndash' ), 'error' );
-				} elseif ( strlen( $val ) > 3 ) {
-					add_settings_error( $args['setting_option_key'], $key, esc_html__( 'PayPal Currency Code should not be longer than 3 letters.', 'learndash' ), 'error' );
-				}
-			}
-
-			return $val;
-		}
-
-		/**
 		 * Filter the section saved values.
-		 * 
+		 *
 		 * @since 3.6.0
-		 * 
+		 *
 		 * @param array  $value                An array of setting fields values.
 		 * @param array  $old_value            An array of setting fields old values.
 		 * @param string $settings_section_key Settings section key.
@@ -291,16 +252,23 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$value['enabled'] = '';
 				}
 
-				if ( isset( $_POST['learndash_settings_payments_list_nonce'] ) ) {
+				if ( isset( $_POST['learndash_settings_payments_list_nonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 					if ( ! is_array( $old_value ) ) {
 						$old_value = array();
 					}
 
-					foreach( $value as $value_idx => $value_val ) {
+					foreach ( $value as $value_idx => $value_val ) {
 						$old_value[ $value_idx ] = $value_val;
 					}
 
 					$value = $old_value;
+				}
+
+				if (
+				isset( $value['paypal_notifyurl'] ) &&
+				( ! isset( $old_value['paypal_notifyurl'] ) || $value['paypal_notifyurl'] !== $old_value['paypal_notifyurl'] )
+				) {
+					learndash_setup_rewrite_flush();
 				}
 			}
 

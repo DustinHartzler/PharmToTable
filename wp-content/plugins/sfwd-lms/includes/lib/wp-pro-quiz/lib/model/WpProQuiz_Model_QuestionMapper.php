@@ -316,10 +316,10 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 					$category_mapper = new WpProQuiz_Model_CategoryMapper();
 
 					foreach ( $pro_questions as $pro_question ) {
-						$q_catId = $pro_question->getCategoryId();
-						$q_catId = absint( $q_catId );
-						if ( ! empty( $q_catId ) ) {
-							$q_cat = $category_mapper->fetchById( $q_catId );
+						$q_catId = $pro_question->getCategoryId(); // cspell:disable-line.
+						$q_catId = absint( $q_catId ); // cspell:disable-line.
+						if ( ! empty( $q_catId ) ) { // cspell:disable-line.
+							$q_cat = $category_mapper->fetchById( $q_catId ); // cspell:disable-line.
 							if ( ( $q_cat ) && ( is_a( $q_cat, 'WpProQuiz_Model_Category' ) ) ) {
 								$_catName = $q_cat->getCategoryName();
 								if ( ! empty( $_catName ) ) {

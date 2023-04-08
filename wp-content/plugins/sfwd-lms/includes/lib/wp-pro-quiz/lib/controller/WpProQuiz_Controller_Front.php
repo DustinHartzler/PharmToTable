@@ -310,6 +310,13 @@ class WpProQuiz_Controller_Front {
 			die();
 		}
 
+		if ( isset( $_POST['course_id'] ) ) {
+			$learndash_course_id = absint( $_POST['course_id'] );
+		} else {
+			$learndash_course_id = (int) learndash_get_course_id();
+		}
+
+
 		$view = new WpProQuiz_View_FrontQuiz();
 
 		$quizMapper     = new WpProQuiz_Model_QuizMapper();
@@ -327,7 +334,7 @@ class WpProQuiz_Controller_Front {
 			if ( ! empty( $quiz_post_id ) && $user_id ) {
 				$learndash_quiz_resume_enabled = learndash_get_setting( $quiz_post_id, 'quiz_resume' );
 				if ( true === $learndash_quiz_resume_enabled ) {
-					$learndash_course_id            = learndash_get_course_id();
+					//$learndash_course_id            = learndash_get_course_id();
 					$learndash_quiz_resume_activity = LDLMS_User_Quiz_Resume::get_user_quiz_resume_activity( $user_id, $quiz_post_id, $learndash_course_id );
 					if ( ( is_a( $learndash_quiz_resume_activity, 'LDLMS_Model_Activity' ) ) && ( property_exists( $learndash_quiz_resume_activity, 'activity_id' ) ) && ( ! empty( $learndash_quiz_resume_activity->activity_id ) ) ) {
 						$learndash_quiz_resume_id = $learndash_quiz_resume_activity->activity_id;

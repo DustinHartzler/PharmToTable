@@ -44,7 +44,7 @@ function learndash_get_quiz_id_by_pro_quiz_id( $quiz_pro_id = 0 ) {
 		global $learndash_shortcode_atts;
 		if ( ! empty( $learndash_shortcode_atts ) ) {
 			foreach ( array_reverse( $learndash_shortcode_atts ) as $shortcode_tag => $shortcode_atts ) {
-				if ( in_array( $shortcode_tag, array( 'LDAdvQuiz', 'ld_quiz' ) ) ) {
+				if ( in_array( $shortcode_tag, array( 'LDAdvQuiz', 'ld_quiz' ), true ) ) {
 					if ( ( isset( $shortcode_atts['quiz_post_id'] ) ) && ( ! empty( $shortcode_atts['quiz_post_id'] ) ) ) {
 						$quiz_post_ids[ $quiz_pro_id ] = absint( $shortcode_atts['quiz_post_id'] );
 						return $quiz_post_ids[ $quiz_pro_id ];
@@ -413,12 +413,13 @@ function learndash_get_quiz_id( $id = null ) {
 	}
 
 	if ( empty( $id ) ) {
-		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-			// return false;
-		} else {
+		if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
 			if ( is_admin() ) {
 				global $parent_file, $post_type, $pagenow;
-				if ( ( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) || ( ! in_array( $post_type, array( 'sfwd-question' ), true ) ) ) {
+				if (
+					( ! in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) )
+					|| ( ! in_array( $post_type, array( 'sfwd-question' ), true ) )
+				) {
 					return false;
 				}
 			} elseif ( ! is_single() || is_home() ) {
@@ -542,7 +543,7 @@ function learndash_get_quiz_questions( $quiz_id = 0 ) {
  *
  * @param int   $quiz_id             Optional. Quiz Post ID. Default 0.
  * @param array $instance            Optional. An array of widget instance settings. Default empty array.
- * @param array $question_query_args Optional. An array of query arguments for pagnination etc. Default empty array.
+ * @param array $question_query_args Optional. An array of query arguments for pagination etc. Default empty array.
  */
 function learndash_quiz_navigation_admin( $quiz_id = 0, $instance = array(), $question_query_args = array() ) {
 	if ( empty( $quiz_id ) ) {
@@ -665,12 +666,9 @@ function learndash_wp_ajax_ld_quiz_navigation_admin_pager() {
 
 		if ( ( ! empty( $quiz_id ) ) && ( ! empty( $widget_data ) ) ) {
 			if ( ( isset( $_POST['widget_data']['nonce'] ) ) && ( ! empty( $_POST['widget_data']['nonce'] ) ) && ( wp_verify_nonce( $_POST['widget_data']['nonce'], 'ld_quiz_navigation_admin_pager_nonce_' . $quiz_id . '_' . get_current_user_id() ) ) ) {
-				$questions_query_args = array();
-				// $course_lessons_per_page = learndash_get_course_lessons_per_page( $course_id );
-				// if ( $course_lessons_per_page > 0 ) {
-					$questions_query_args['pagination'] = 'true';
-					$questions_query_args['paged']      = $paged;
-				// }
+				$questions_query_args               = array();
+				$questions_query_args['pagination'] = 'true';
+				$questions_query_args['paged']      = $paged;
 				$widget_data['show_widget_wrapper'] = false;
 				$level                              = ob_get_level();
 				ob_start();
@@ -717,7 +715,7 @@ function learndash_proquiz_sync_question_fields( $question_post_id = 0, $questio
 }
 
 /**
- * Syncs the `WPProQuiz` question category with the LearnDadh question taxonomy.
+ * Syncs the `WPProQuiz` question category with the LearnDash question taxonomy.
  *
  * @since 2.6.0
  *
@@ -1245,7 +1243,7 @@ add_action( 'wp_ajax_learndash_quiz_statistics_users_select2', 'learndash_quiz_s
  */
 function learndash_prepare_quiz_resume_data_to_js( $quiz_resume_data = array() ) {
 	if ( ! empty( $quiz_resume_data ) ) {
-		foreach( $quiz_resume_data as $key => &$set ) {
+		foreach ( $quiz_resume_data as $key => &$set ) {
 			if ( 'formData' === substr( $key, 0, strlen( 'formData' ) ) ) { // Handle the form fields.
 				if ( ( isset( $set['type'] ) ) && ( in_array( $set['type'], array( WpProQuiz_Model_Form::FORM_TYPE_TEXT, WpProQuiz_Model_Form::FORM_TYPE_TEXTAREA ) ) ) ) {
 					if ( ( isset( $set['value'] ) ) && ( is_string( $set['value'] ) ) && ( ! empty( $set['value'] ) ) ) {
@@ -1261,9 +1259,15 @@ function learndash_prepare_quiz_resume_data_to_js( $quiz_resume_data = array() )
 							foreach ( $set['value'] as $set_value_idx => &$set_value_value ) {
 								if ( ( is_string( $set_value_value ) ) && ( ! empty( $set_value_value ) ) ) {
 									$set_value_value = esc_js( $set_value_value );
-								}		
+								}
 							}
 						}
+					}
+				}
+			} elseif ( 'checked' === substr( $key, 0, strlen( 'checked' ) ) ) {
+				if ( ( isset( $set['e']['AnswerMessage'] ) ) && ( ! empty( $set['e']['AnswerMessage'] ) ) ) {
+					if ( is_string( $set['e']['AnswerMessage'] ) ) {
+						$set['e']['AnswerMessage'] = esc_js( $set['e']['AnswerMessage'] );
 					}
 				}
 			}

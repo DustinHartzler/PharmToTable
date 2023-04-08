@@ -140,7 +140,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						'yes' => array(
 							'label'       => esc_html__( 'Yes', 'learndash' ),
 							'description' => '',
-							'tooltip' => sprintf(
+							'tooltip'     => sprintf(
 								// translators: placeholder: Question.
 								esc_html_x( '%s categories cannot be disabled.', 'placeholder: Question', 'learndash' ),
 								learndash_get_custom_label( 'question' )
@@ -182,20 +182,20 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$reply_data = array( 'status' => false );
 
 			if ( current_user_can( 'wpProQuiz_edit_quiz' ) ) {
-				if ( ( isset( $_POST['field_nonce'] ) ) && ( ! empty( $_POST['field_nonce'] ) ) && ( isset( $_POST['field_key'] ) ) && ( ! empty( $_POST['field_key'] ) ) && ( wp_verify_nonce( esc_attr( $_POST['field_nonce'] ), $_POST['field_key'] ) ) ) {
+				if ( ( isset( $_POST['field_nonce'] ) ) && ( ! empty( $_POST['field_nonce'] ) ) && ( isset( $_POST['field_key'] ) ) && ( ! empty( $_POST['field_key'] ) ) && ( wp_verify_nonce( esc_attr( $_POST['field_nonce'] ), $_POST['field_key'] ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					if ( isset( $_POST['field_action'] ) ) {
 						if ( 'update' === $_POST['field_action'] ) {
 							if ( ( isset( $_POST['field_value'] ) ) && ( ! empty( $_POST['field_value'] ) ) && ( isset( $_POST['field_text'] ) ) && ( ! empty( $_POST['field_text'] ) ) ) {
 								$category_id       = intval( $_POST['field_value'] );
-								$category_new_name = esc_attr( $_POST['field_text'] );
+								$category_new_name = esc_attr( $_POST['field_text'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 								$category_mapper = new WpProQuiz_Model_CategoryMapper();
 								$category        = $category_mapper->fetchById( $category_id );
 								if ( ( $category ) && ( is_a( $category, 'WpProQuiz_Model_Category' ) ) ) {
 									$category_current_name = $category->getCategoryName();
 									if ( $category_current_name !== $category_new_name ) {
-										$update_ret = $category_mapper->updateCatgoryName( $category_id, $category_new_name );
+										$update_ret = $category_mapper->updateCatgoryName( $category_id, $category_new_name ); // cspell:disable-line.
 										if ( $update_ret ) {
 											$reply_data['status']  = true;
 											$reply_data['message'] = '<span style="color: green" >' . __( 'Category updated.', 'learndash' ) . '</span>';

@@ -24,7 +24,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V2' ) ) && ( class_exi
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Courses_Groups_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Courses_Groups_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Public constructor for class
@@ -269,7 +269,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V2' ) ) && ( class_exi
 		}
 
 		/**
-		 * Permissions check for getting coure groups.
+		 * Permissions check for getting course groups.
 		 *
 		 * @since 3.3.0
 		 *
@@ -314,7 +314,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V2' ) ) && ( class_exi
 		public function delete_courses_groups_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
-			} else{
+			} else {
 				return new WP_Error( 'ld_rest_cannot_view', esc_html__( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 			}
 		}

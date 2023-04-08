@@ -24,12 +24,11 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 * @since 2.4.0
 		 */
 		public function __construct() {
-			$this->parent_menu_page_url  = 'admin.php?page=learndash_lms_settings';
-			$this->menu_page_capability  = LEARNDASH_ADMIN_CAPABILITY_CHECK;
-			$this->settings_page_id      = 'learndash_lms_settings_license';
-			$this->settings_page_title   = esc_html__( 'License Settings', 'learndash' );
-			$this->settings_tab_title    = esc_html__( 'LMS License XXX', 'learndash' );
-			//$this->settings_tab_priority = 90;
+			$this->parent_menu_page_url = 'admin.php?page=learndash_lms_settings';
+			$this->menu_page_capability = LEARNDASH_ADMIN_CAPABILITY_CHECK;
+			$this->settings_page_id     = 'learndash_lms_settings_license';
+			$this->settings_page_title  = esc_html__( 'License Settings', 'learndash' );
+			$this->settings_tab_title   = esc_html__( 'LMS License XXX', 'learndash' );
 
 			parent::__construct();
 		}

@@ -104,7 +104,9 @@ function learndash_login_shortcode( $atts = array(), $content = '' ) {
 	 */
 	$atts = apply_filters( 'learndash_login_shortcode_atts', $atts );
 
-	$filter_args = array();
+	$filter_args   = array();
+	$filter_action = '';
+
 	if ( 'logout' === $atts['action'] ) {
 		$filter_action = 'learndash-login-shortcode-logout';
 
@@ -250,15 +252,17 @@ function learndash_login_shortcode( $atts = array(), $content = '' ) {
 	 */
 	$filter_args['url'] = apply_filters( 'learndash_login_url', $filter_args['url'], $atts['action'], $atts );
 
-	/**
-	 * Filters the filter arguments depending on the action which is login and logout.
-	 *
-	 * The dynamic part depends on the action attribute it will be learndash-login-shortcode-login for the login action and learndash-login-shortcode-logout for the logout action.
-	 *
-	 * @param array  $filter_args An Array of filter arguments with identifiers like label, icon, placement, class.
-	 * @param array  $atts       Shortcode Attributes.
-	 */
-	$filter_args = apply_filters( $filter_action, $filter_args, $atts );
+	if ( ! empty( $filter_action ) ) {
+		/**
+		 * Filters the filter arguments depending on the action which is login and logout.
+		 *
+		 * The dynamic part depends on the action attribute it will be learndash-login-shortcode-login for the login action and learndash-login-shortcode-logout for the logout action.
+		 *
+		 * @param array $filter_args An Array of filter arguments with identifiers like label, icon, placement, class.
+		 * @param array $atts        Shortcode Attributes.
+		 */
+		$filter_args = apply_filters( $filter_action, $filter_args, $atts ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Let's keep it this way for now.
+	}
 
 	$filter_args['class'] .= ' ld-login-text ld-login-button ' . ( isset( $filter_args['button'] ) && 'true' == $filter_args['button'] ? 'ld-button' : '' );
 

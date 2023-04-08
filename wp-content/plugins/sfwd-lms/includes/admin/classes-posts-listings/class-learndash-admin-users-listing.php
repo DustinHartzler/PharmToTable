@@ -140,7 +140,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			$this->show_post_type_selectors();
 			$this->show_late_selectors();
 
-			$button_id = 'bottom' === $location ? 'ld_submit' : 'ld_submit_bottom';
+			$button_id = 'bottom' === $location ? 'ld_submit' : 'ld_submit_bottom'; // @phpstan-ignore-line
 			submit_button( esc_html__( 'Filter', 'learndash' ), 'learndash', $button_id, false );
 		}
 
@@ -182,7 +182,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @param array $q_vars   Query vars for table listing.
 		 * @param array $selector Array of attributes used to display the filter selector.
 		 *
-		 * @return object $q_vars.
+		 * @return array $q_vars Query vars for table listing.
 		 */
 		protected function listing_filter_by_user_group( $q_vars = array(), $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
@@ -197,8 +197,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				if ( ! empty( $selector['selected'] ) ) {
-					$q_vars['meta_key']     = 'learndash_group_users_' . $selector['selected'];
-					$q_vars['meta_value']   = $selector['selected'];
+					$q_vars['meta_key']     = 'learndash_group_users_' . $selector['selected']; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					$q_vars['meta_value']   = $selector['selected']; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 					$q_vars['meta_compare'] = '=';
 				}
 			}
@@ -258,7 +258,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 								$user_ids = wp_list_pluck( $admin_users, 'ID' );
 								if ( ! empty( $user_ids ) ) {
 									$user_ids = array_map( 'absint', $user_ids );
-									$user_ids = array_diff( $user_ids, [0] );
+									$user_ids = array_diff( $user_ids, array( 0 ) );
 								}
 								if ( ! empty( $user_ids ) ) {
 									$q_vars['include'] = array_merge( $q_vars['include'], $user_ids );

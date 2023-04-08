@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// cspell:ignore subbmitdiv .
+
 if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learndash_Admin_Essay_Edit' ) ) ) {
 
 	/**
@@ -43,7 +45,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 				parent::on_load();
 
-				$this->remove_subbmitdiv_metabox();
+				$this->remove_subbmitdiv_metabox(); // cspell:disable-line.
 
 				add_meta_box(
 					'learndash_essay_upload_div',
@@ -62,12 +64,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					'side',
 					'core'
 				);
-
-				/**
-				 * This is added here because we wanted the inline comments ability on the single edit post type form. But since
-				 * This post type uses custom post statuses the default logic in WP was failing.
-				 * add_meta_box( 'commentsdiv', esc_html__( 'Comments', 'learndash' ), 'post_comment_meta_box', null, 'normal', 'core' );
-				 */
 			}
 		}
 
@@ -86,6 +82,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			$can_publish      = current_user_can( $post_type_object->cap->publish_posts );
 			$quiz_id          = get_post_meta( $essay->ID, 'quiz_id', true );
 			$question_id      = get_post_meta( $essay->ID, 'question_id', true );
+			$question         = null;
 
 			if ( ! empty( $quiz_id ) ) {
 				$question_mapper = new WpProQuiz_Model_QuestionMapper();
@@ -172,8 +169,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 								$essay_quiz_query_args = array(
 									'post_type'    => 'sfwd-quiz',
 									'post_status'  => 'publish',
-									'meta_key'     => 'quiz_pro_id_' . intval( $quiz_id ),
-									'meta_value'   => intval( $quiz_id ),
+									'meta_key'     => 'quiz_pro_id_' . intval( $quiz_id ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+									'meta_value'   => intval( $quiz_id ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 									'meta_compare' => '=',
 									'fields'       => 'ids',
 									'orderby'      => 'title',
@@ -200,7 +197,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 											<?php
 											foreach ( $essay_quiz_query->posts as $quiz_post_id ) {
 												?>
-												<option value="<?php echo esc_attr( $quiz_post_id ); ?>"><?php echo wp_kses_post( get_the_title( $quiz_post_id ) ); ?></option>
+												<option value="<?php echo absint( $quiz_post_id ); ?>"><?php echo wp_kses_post( get_the_title( $quiz_post_id ) ); ?></option>
 												<?php
 											}
 											?>
@@ -263,19 +260,27 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 						</div>
 						<?php
 						// translators: Publish box date format, see https://secure.php.net/date.
-						$datef = esc_html__( 'M j, Y @ H:i', 'learndash' );
+						$date_format = esc_html__( 'M j, Y @ H:i', 'learndash' );
 						if ( 0 != $essay->ID ) {
-							$date = date_i18n( $datef, strtotime( $essay->post_date ) );
+							$date = date_i18n( $date_format, strtotime( $essay->post_date ) );
+						} else {
+							$date = '';
 						}
 
-						if ( $can_publish ) : // Contributors don't get to choose the date of publish.
+						if ( ( $can_publish ) && ( ! empty( $date ) ) ) : // Contributors don't get to choose the date of publish.
 							?>
 							<div class="misc-pub-section curtime misc-pub-curtime">
-								<span id="timestamp"><?php printf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
-									// translators: placeholder: Essay submit date.
-									wp_kses_post( 'Submitted on: <b>%s</b>', 'placeholder: Essay submit date', 'learndash' ),
-									esc_html( $date )
-								); ?> </span> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+								<span id="timestamp">
+									<?php
+									echo wp_kses_post(
+										sprintf(
+											// translators: placeholder: Essay submit date.
+											_x( 'Submitted on: <b>%s</b>', 'placeholder: Essay submit date', 'learndash' ),
+											esc_html( $date )
+										)
+									);
+									?>
+								</span>
 							</div>
 						<?php endif; ?>
 
@@ -384,7 +389,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function save_essay_status_metabox_data( $essay_id, $essay, $update ) {
 
-			if ( ( ! isset( $_POST['learndash-essay-grading-nonce'] ) ) || ( empty( $_POST['learndash-essay-grading-nonce'] ) ) || ( ! wp_verify_nonce( $_POST['learndash-essay-grading-nonce'], 'learndash-essay-grading-nonce-' . $essay_id ) ) ) {
+			if ( ( ! isset( $_POST['learndash-essay-grading-nonce'] ) ) || ( empty( $_POST['learndash-essay-grading-nonce'] ) ) || ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['learndash-essay-grading-nonce'] ) ), 'learndash-essay-grading-nonce-' . $essay_id ) ) ) {
 				return;
 			}
 
@@ -392,8 +397,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				return;
 			}
 
-			$quiz_id     = intval( $_POST['quiz_id'] );
-			$question_id = intval( $_POST['question_id'] );
+			$quiz_id     = absint( $_POST['quiz_id'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+			$question_id = absint( $_POST['question_id'] );  // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 
 			$submitted_essay = learndash_get_submitted_essay_data( $quiz_id, $question_id, $essay );
 
@@ -414,8 +419,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				}
 			}
 
-			$submitted_essay['status']         = esc_html( $_POST['post_status'] );
-			$submitted_essay['points_awarded'] = intval( $_POST['points_awarded'] );
+			$submitted_essay['status']         = sanitize_text_field( wp_unslash( $_POST['post_status'] ) );
+			$submitted_essay['points_awarded'] = intval( $_POST['points_awarded'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 
 			/**
 			 * Filters essay status data.
@@ -513,7 +518,7 @@ function learndash_group_leader_can_edit_essay_filter( $allcaps, $cap, $args, $u
 	$course_id = get_post_meta( $post_id, 'course_id', true );
 	$course_id = absint( $course_id );
 
-	if ( ! learndash_check_group_leader_course_user_intersect( $gl_user_id, $post->post_author, $course_id ) ) {
+	if ( ! learndash_check_group_leader_course_user_intersect( $gl_user_id, (int) $post->post_author, $course_id ) ) {
 		foreach ( $cap as $cap_slug ) {
 			$allcaps[ $cap_slug ] = false;
 		}

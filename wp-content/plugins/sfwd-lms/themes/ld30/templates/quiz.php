@@ -87,12 +87,19 @@ if ( ( ! isset( $quiz_post ) ) || ( ! is_a( $quiz_post, 'WP_Post' ) ) ) {
 					remove_filter( 'learndash_content', 'lesson_visible_after', 1, 2 );
 					$previous_lesson_completed = true;
 				} else {
-					$previous_step_post_id     = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $quiz_post->ID );
-					$previous_lesson_completed = true;
+					$previous_step_post_id = learndash_user_progress_get_parent_incomplete_step( $user_id, $course_id, $quiz_post->ID );
 					if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $quiz_post->ID ) ) {
 						$previous_lesson_completed = false;
 
 						$last_incomplete_step = get_post( $previous_step_post_id );
+					} else {
+						$previous_step_post_id     = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $quiz_post->ID );
+						$previous_lesson_completed = true;
+						if ( ( ! empty( $previous_step_post_id ) ) && ( $previous_step_post_id !== $quiz_post->ID ) ) {
+							$previous_lesson_completed = false;
+
+							$last_incomplete_step = get_post( $previous_step_post_id );
+						}						
 					}
 
 					/**
@@ -108,7 +115,7 @@ if ( ( ! isset( $quiz_post ) ) || ( ! is_a( $quiz_post, 'WP_Post' ) ) ) {
 				$show_content = $previous_lesson_completed;
 			}
 
-			if ( learndash_is_sample( $quiz_post ) ) {
+			if ( ( learndash_is_sample( $quiz_post ) ) /* && ( true !== (bool) $has_access ) */ ) {
 				$show_content = true;
 			} elseif ( ( $last_incomplete_step ) && ( is_a( $last_incomplete_step, 'WP_Post' ) ) ) {
 				$show_content = false;

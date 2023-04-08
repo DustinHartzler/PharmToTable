@@ -31,11 +31,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Function to crete the settiings field.
+		 * Function to crete the settings field.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the ouput.
+		 * @param array $field_args An array of field arguments used to process the output.
 		 * @return void
 		 */
 		public function create_section_field( $field_args = array() ) {

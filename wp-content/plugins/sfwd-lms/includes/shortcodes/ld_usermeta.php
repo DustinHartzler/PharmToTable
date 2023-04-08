@@ -39,7 +39,7 @@ function learndash_usermeta_shortcode( $attr = array(), $content = '', $shortcod
 
 	$attr = shortcode_atts(
 		array(
-			'field'   => '',
+			'field'   => 'user_login',
 			'user_id' => get_current_user_id(),
 		),
 		$attr
@@ -85,7 +85,7 @@ function learndash_usermeta_shortcode( $attr = array(), $content = '', $shortcod
 			 * @since 2.4.0
 			 *
 			 * @param string $value                    Usermeta field attribute value.
-			 * @param array  $attributes               An array of shortocode attributes.
+			 * @param array  $attributes               An array of shortcode attributes.
 			 * @param array  $usermeta_available_fields An array of available user meta fields.
 			 */
 			$content = apply_filters( 'learndash_usermeta_shortcode_field_value_display', $value, $attr, $usermeta_available_fields );

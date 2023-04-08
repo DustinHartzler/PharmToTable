@@ -25,7 +25,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 		 * @since 2.5.8
 		 * @param string $post_type Post type.
 		 */
-		public function __construct( $post_type = '' ) {
+		public function __construct( $post_type = '' ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found -- Not sure as it has a default value here.
 			parent::__construct( $post_type );
 		}
 
@@ -55,13 +55,11 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 						'methods'             => WP_REST_Server::READABLE,
 						'callback'            => array( $this, 'get_items' ),
 						'permission_callback' => array( $this, 'get_items_permissions_check' ),
-						//'args'                => $this->get_collection_params(),
 					),
 					array(
 						'methods'             => WP_REST_Server::CREATABLE,
 						'callback'            => array( $this, 'create_item' ),
 						'permission_callback' => array( $this, 'create_item_permissions_check' ),
-						//'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 					),
 					'schema' => array( $this, 'get_schema' ),
 				)
@@ -110,6 +108,10 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 		 * Function documented in endpoints/class-wp-rest-posts-controller.php
 		 *
 		 * @since 3.2.0
+		 *
+		 * @param WP_REST_Request $request Request object.
+		 *
+		 * @return bool|true|WP_Error|WP_Post
 		 */
 		public function get_item_permissions_check( $request ) {
 			/**
@@ -163,7 +165,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 		/**
 		 * Checks whether a given request has permission to read post type.
 		 *
-	 	 * @since 3.6.0
+		 * @since 3.6.0
 		 *
 		 * @param WP_REST_Request $request Full details about the request.
 		 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
@@ -178,7 +180,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 						array( 'status' => 404 )
 					);
 				}
-				
+
 				if ( ( ! property_exists( $post_type_object, 'show_in_rest' ) ) || ( true !== $post_type_object->show_in_rest ) ) {
 					return new WP_Error(
 						'rest_cannot_read_type',
@@ -190,7 +192,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 				$can_view_archive = false;
 				if ( learndash_post_type_has_archive( $this->post_type ) ) {
 					$can_view_archive = true;
-				} else if ( current_user_can( $post_type_object->cap->edit_posts ) ) {
+				} elseif ( current_user_can( $post_type_object->cap->edit_posts ) ) {
 					$can_view_archive = true;
 				}
 
@@ -199,7 +201,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 				 *
 				 * @since 3.6.0
 				 * @param bool            $can_view_archive true/false.
-				 * @param string          $post_type        The post type slug. 
+				 * @param string          $post_type        The post type slug.
 				 * @param WP_REST_Request $request          Full details about the request.
 				 *
 				 * @return bool true Return true to allow access.
@@ -234,12 +236,12 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 			 *
 			 * @since 3.6.0
 			 * @param object $data             WP_REST_Response.
-			 * @param string $post_type        The post type slug. 
+			 * @param string $post_type        The post type slug.
 			 * @param WP_REST_Request $request Full details about the request.
 			 *
 			 * @return object WP_REST_Response
 			 */
-			$data = apply_filters( 'learndash_rest_wp_archive_repsonse', $data, $this->post_type, $request );
+			$data = apply_filters( 'learndash_rest_wp_archive_repsonse', $data, $this->post_type, $request ); // cspell:disable-line.
 
 			return rest_ensure_response( $data );
 		}

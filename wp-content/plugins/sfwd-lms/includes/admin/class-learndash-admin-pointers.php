@@ -43,6 +43,10 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 				return;
 			}
 
+			if ( ! empty( $pointers ) ) {
+				$this->pointers = $pointers;
+			}
+
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 1000 );
 		}
 
@@ -53,7 +57,7 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 		 */
 		public function admin_enqueue_scripts() {
 			$this->register_pointers();
-			$this->check_user_dissmissed();
+			$this->check_user_dismissed();
 
 			if ( empty( $this->pointers ) ) {
 				return;
@@ -150,12 +154,12 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 		 *
 		 * @since 3.0.0
 		 */
-		protected function check_user_dissmissed() {
+		protected function check_user_dismissed() {
 			if ( ! $this->pointers || ! is_array( $this->pointers ) ) {
 				return;
 			}
 
-			if ( isset( $_GET['ld_reset_pointers'] ) ) {
+			if ( isset( $_GET['ld_reset_pointers'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				delete_user_meta( get_current_user_id(), 'dismissed_wp_pointers' );
 			}
 
@@ -165,7 +169,7 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 
 			// Check pointers and remove dismissed ones.
 			foreach ( $this->pointers as $pointer_id => $pointer ) {
-				if ( ( in_array( $pointer_id, $dismissed ) ) || ( empty( $pointer ) ) || ( empty( $pointer_id ) ) || ( empty( $pointer['target'] ) ) || ( empty( $pointer['options'] ) ) ) {
+				if ( ( in_array( $pointer_id, $dismissed, true ) ) || ( empty( $pointer ) ) || ( empty( $pointer_id ) ) || ( empty( $pointer['target'] ) ) || ( empty( $pointer['options'] ) ) ) {
 					unset( $this->pointers[ $pointer_id ] );
 				}
 			}
@@ -191,15 +195,22 @@ add_filter(
 		if ( learndash_is_admin_user() ) {
 			if ( 'new' === $ld_prior_version ) {
 				if ( ! isset( $pointers['learndash-new-install'] ) ) {
+
+					$setup_page_slug = LearnDash_Settings_Page_Setup::SETUP_SLUG;
+
+					if ( learndash_cloud_is_enabled() ) {
+						$setup_page_slug = LearnDash_Settings_Page_Setup::SETUP_SLUG_CLOUD;
+					}
+
 					$pointers['learndash-new-install'] = array(
 						'id'       => 'learndash-new-install',
 						'screen'   => '',
 						'target'   => '#toplevel_page_learndash-lms .wp-menu-name',
 						'title'    => '<span id="ld-pointer-title-learndash-new-install" class="ld-pointer-title">' . esc_html__( 'First time using LearnDash?', 'learndash' ) . '</span>',
 						'content'  => '<span class="ld-pointer-content">' . sprintf(
-							// translators: placeholder: Link to Bootcamp page.
-							esc_html_x( 'Go to the LearnDash %s', 'placeholder: Link to Bootcamp page', 'learndash' ),
-							'<a href="' . admin_url( 'admin.php?page=learndash_lms_overview' ) . '">' . esc_html__( 'mini-Bootcamp', 'learndash' ) . '</a>'
+							// translators: placeholder: Link to Setup page.
+							esc_html_x( 'Go to the LearnDash %s', 'placeholder: Link to Setup page', 'learndash' ),
+							'<a href="' . admin_url( 'admin.php?page=' ) . $setup_page_slug . '">' . esc_html__( 'setup', 'learndash' ) . '</a>'
 						) . '</span>',
 						'position' => array(
 							'edge'  => is_rtl() ? 'right' : 'left', // top, bottom, left, right.

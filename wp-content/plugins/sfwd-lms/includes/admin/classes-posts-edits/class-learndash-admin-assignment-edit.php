@@ -113,7 +113,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 								if ( ! empty( $query_courses->posts ) ) {
 									foreach ( $query_courses->posts as $p ) {
 										?>
-										<option value="<?php echo esc_attr( $p->ID ); ?>"><?php echo wp_kses_post( $p->post_title ); ?></option>
+										<option value="<?php echo absint( $p->ID ); ?>"><?php echo wp_kses_post( $p->post_title ); ?></option>
 										<?php
 									}
 								}
@@ -220,7 +220,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 							echo "<label for='assignment-points'>" .
 							// translators: placeholder: max points.
 							sprintf( esc_html_x( 'Awarded Points (Out of %d):', 'placeholder: max points', 'learndash' ), esc_attr( $max_points ) ) . '</label><br />';
-							echo '<input name="assignment-points" type="number" min="0" max="' . esc_attr( $max_points ) . '" value="' . esc_attr( $current_points ) . '">';
+							echo '<input name="assignment-points" type="number" min="0" max="' . absint( $max_points ) . '" value="' . absint( $current_points ) . '">';
 							echo '<p><input name="save" type="submit" class="button button-primary button-large" id="publish" value="' . esc_attr( $update_text ) . '"></p>';
 							echo '</p>';
 						} else {
@@ -270,7 +270,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				return false;
 			}
 
-			$this->assignment_save_metabox_content( $post_id, $post, $update );
+			$this->assignment_save_metabox_content( $post_id );
 		}
 
 		/**
@@ -287,7 +287,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				return;
 			}
 
-			if ( ! wp_verify_nonce( $_POST['ld-assignment-nonce'], 'ld-assignment-nonce-' . $assignment_id ) ) {
+			if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ld-assignment-nonce'] ) ), 'ld-assignment-nonce-' . $assignment_id ) ) {
 				return;
 			}
 
@@ -310,13 +310,13 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				// approve assignment.
 				$assignment_post = get_post( $assignment_id );
 				$lesson_id       = get_post_meta( $assignment_id, 'lesson_id', true );
-				learndash_approve_assignment( $assignment_post->post_author, $lesson_id, $assignment_post->ID );
+				learndash_approve_assignment( (int) $assignment_post->post_author, $lesson_id, $assignment_post->ID );
 			} elseif ( ( isset( $_POST['assignment-status'] ) ) && ( esc_html__( 'Approve', 'learndash' ) == $_POST['assignment-status'] ) ) {
 
 				// approve assignment.
 				$assignment_post = get_post( $assignment_id );
 				$lesson_id       = get_post_meta( $assignment_id, 'lesson_id', true );
-				learndash_approve_assignment( $assignment_post->post_author, $lesson_id, $assignment_post->ID );
+				learndash_approve_assignment( (int) $assignment_post->post_author, $lesson_id, $assignment_post->ID );
 			}
 		}
 
@@ -363,7 +363,7 @@ function learndash_group_leader_can_edit_assignment_filter( $allcaps, $cap, $arg
 	$course_id = get_post_meta( $post_id, 'course_id', true );
 	$course_id = absint( $course_id );
 
-	if ( ! learndash_check_group_leader_course_user_intersect( $gl_user_id, $post->post_author, $course_id ) ) {
+	if ( ! learndash_check_group_leader_course_user_intersect( $gl_user_id, (int) $post->post_author, $course_id ) ) {
 		foreach ( $cap as $cap_slug ) {
 			$allcaps[ $cap_slug ] = false;
 		}

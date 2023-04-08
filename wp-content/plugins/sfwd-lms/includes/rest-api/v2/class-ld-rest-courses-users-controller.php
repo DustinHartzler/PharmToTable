@@ -23,7 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 	 * @since 3.3.0
 	 * @uses LD_REST_Users_Controller_V2
 	 */
-	class LD_REST_Courses_Users_Controller_V2 extends LD_REST_Users_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Courses_Users_Controller_V2 extends LD_REST_Users_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Public constructor for class
@@ -179,7 +179,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 						}
 					} else {
 						if ( ! isset( $query_args['meta_query'] ) ) {
-							$query_args['meta_query'] = array();
+							$query_args['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						}
 
 						$query_args['meta_query'][] = array(

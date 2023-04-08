@@ -23,7 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Exams_Controller_V2' ) ) && ( class_exists( 'LD_
 	 * @since 4.0.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Exams_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Exams_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Public constructor for class
@@ -75,7 +75,6 @@ if ( ( ! class_exists( 'LD_REST_Exams_Controller_V2' ) ) && ( class_exists( 'LD_
 			return $schema;
 		}
 
-		
 		// End of functions.
 	}
 }

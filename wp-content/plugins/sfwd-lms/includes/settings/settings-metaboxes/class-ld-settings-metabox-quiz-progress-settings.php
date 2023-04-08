@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Settings Metabox for Quiz Progess Settings.
+ * LearnDash Settings Metabox for Quiz Progress Settings.
  *
  * @since 3.0.0
  * @package LearnDash\Settings\Metaboxes
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'LearnDash_Settings_Metabox_Quiz_Progress_Settings' ) ) ) {
 	/**
-	 * Class LearnDash Settings Metabox for Quiz Progess Settings.
+	 * Class LearnDash Settings Metabox for Quiz Progress Settings.
 	 *
 	 * @since 3.0.0
 	 */
@@ -114,7 +114,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['threshold'] = '80';
 				}
 
-				$this->setting_option_values['quiz_resume'] = learndash_get_setting( $this->_post->ID, 'quiz_resume' );
+				if ( ! isset( $_GET['templateLoadId'] ) ) {
+					$this->setting_option_values['quiz_resume'] = learndash_get_setting( $this->_post->ID, 'quiz_resume' );
+				}
 				if ( true === (bool) $this->setting_option_values['quiz_resume'] ) {
 					$this->setting_option_values['quiz_resume'] = 'on';
 				} else {
@@ -123,7 +125,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 				if ( ( isset( $this->setting_option_values['quiz_resume_cookie_send_timer'] ) ) && ( '' !== $this->setting_option_values['quiz_resume_cookie_send_timer'] ) ) {
 					$this->setting_option_values['quiz_resume_cookie_send_timer'] = absint( $this->setting_option_values['quiz_resume_cookie_send_timer'] );
-					if ( LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN < $this->setting_option_values['quiz_resume_cookie_send_timer'] ) {
+					if ( LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN > $this->setting_option_values['quiz_resume_cookie_send_timer'] ) {
 						$this->setting_option_values['quiz_resume_cookie_send_timer'] = LEARNDASH_QUIZ_RESUME_COOKIE_SEND_TIMER_MIN;
 					}
 				} else {
@@ -571,6 +573,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				if ( ! isset( $settings_values['certificate'] ) ) {
 					$settings_values['certificate'] = '';
 				}
+
+				if ( ! isset( $settings_values['passingpercentage'] ) ) {
+					$settings_values['passingpercentage'] = '';
+				}
+				$settings_values['passingpercentage'] = strval( $settings_values['passingpercentage'] );
 
 				if ( ! isset( $settings_values['threshold'] ) ) {
 					$settings_values['threshold'] = '';

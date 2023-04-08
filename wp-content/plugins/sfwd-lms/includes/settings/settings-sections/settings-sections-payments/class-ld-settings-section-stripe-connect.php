@@ -62,15 +62,18 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		/**
 		 * Initialize the metabox settings values.
 		 *
-		 * @since 4.0
+		 * @since 4.0.0
 		 */
 		public function load_settings_values() {
 			parent::load_settings_values();
 
+			if ( ! isset( $this->setting_option_values['payment_methods'] ) ) {
+				$this->setting_option_values['payment_methods'] = array( 'card' );
+			}
+
 			if ( ! isset( $this->setting_option_values['test_mode'] ) ) {
 				$this->setting_option_values['test_mode'] = '';
 			}
-
 		}
 
 		/**
@@ -80,7 +83,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 */
 		public static function get_default_stripe_webhook_url() {
 			return add_query_arg(
-				array( 'learndash-integration' => 'stripe-connect' ),
+				array( 'learndash-integration' => 'stripe_connect' ),
 				esc_url_raw( get_site_url() )
 			);
 		}
@@ -88,7 +91,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		/**
 		 * Get the stripe webhook URL.
 		 *
-		 * @since 4.0
+		 * @since 4.0.0
 		 */
 		private function get_stripe_webhook_url() {
 			if ( isset( $this->setting_option_values['webhook_url'] ) && ! empty( $this->setting_option_values['webhook_url'] ) ) {
@@ -96,26 +99,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			}
 
 			return self::get_default_stripe_webhook_url();
-		}
-
-		/**
-		 * Get currency advice for users if Paypal is enabled.
-		 *
-		 * @since 4.0
-		 */
-		private function get_currency_note() {
-			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'enabled' ) ) {
-				$paypal_currency = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'paypal_currency' );
-				return sprintf(
-					// translators: placeholders: currency, strong HTML tag.
-					__( 'Paypal payment is currently active and uses %1$s currency. You should set the %2$s same above %3$s once it will be overridden by Paypal currency on the course page.', 'learndash' ),
-					'<b>' . $paypal_currency . '</b>',
-					'<strong>',
-					'</strong>'
-				);
-			}
-
-			return null;
 		}
 
 		/**
@@ -188,51 +171,40 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'type'  => 'hidden',
 					'value' => $this->setting_option_values['account_id'] ?? '',
 				),
-				'currency'             => array(
-					'name'              => 'currency',
-					'label'             => __( 'Currency', 'learndash' ),
-					'input_note'        => $this->get_currency_note(),
-					'help_text'         => sprintf(
-						// Translators: Stripe currencies documentation URL, blank target.
-						__(
-							'3-letter ISO code for currency, <a href="%1$s" target="%2$s">click here</a> for more information.',
-							'learndash'
-						),
-						'https://support.stripe.com/questions/which-currencies-does-stripe-support',
-						'_blank'
-					),
-					'type'              => 'text',
-					'value'             => $this->setting_option_values['currency'] ?? '',
-					'validate_callback' => array( $this, 'validate_section_stripe_connect_currency' ),
-				),
 				'payment_methods'      => array(
 					'name'      => 'payment_methods',
 					'label'     => __( 'Payment Methods', 'learndash' ),
 					'help_text' => __( 'Stripe payment methods to be enabled on the site.', 'learndash' ),
-					'value'     => $this->setting_option_values['payment_methods'] ?? '',
+					'value'     => $this->setting_option_values['payment_methods'],
 					'type'      => 'checkbox',
 					'options'   => array(
 						'card'  => __( 'Credit Card', 'learndash' ),
 						'ideal' => __( 'Ideal', 'learndash' ),
 					),
 				),
-				'webhook_url'          => array(
-					'name'      => 'webhook_url',
-					'type'      => 'text',
-					'label'     => esc_html__( 'Stripe webhook URL', 'learndash' ),
-					'help_text' => esc_html__( 'Stripe webhook endpoint. You have to add this URL in the webhooks section of your Stripe Dashboard.', 'learndash' ),
-					'value'     => $this->get_stripe_webhook_url(),
-					'class'     => 'regular-text',
-				),
 				'return_url'           => array(
 					'name'      => 'return_url',
 					'label'     => __( 'Return URL ', 'learndash' ),
 					'help_text' => __(
-						'Redirect the user to a specific URL after the purchase. Leave blank to let user remain on the Course page',
+						'Redirect the user to a specific URL after the purchase. Leave blank to let user remain on the Course page.',
 						'learndash'
 					),
 					'type'      => 'text',
 					'value'     => $this->setting_option_values['return_url'] ?? '',
+				),
+				'webhook_url'          => array(
+					'name'      => 'webhook_url',
+					'type'      => 'text',
+					'label'     => esc_html__( 'Webhook URL', 'learndash' ),
+					'help_text' => esc_html__( 'Stripe webhook endpoint. You have to add this URL in the webhooks section of your Stripe Dashboard.', 'learndash' ),
+					'value'     => $this->get_stripe_webhook_url(),
+					'class'     => 'regular-text',
+					'attrs'     => defined( 'LEARNDASH_DEBUG' ) && LEARNDASH_DEBUG // @phpstan-ignore-line -- Constant can be true/false.
+						? array()
+						: array(
+							'readonly' => 'readonly',
+							'disable'  => 'disable',
+						),
 				),
 			);
 
@@ -240,30 +212,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->setting_option_fields = apply_filters( 'learndash_settings_fields', $this->setting_option_fields, $this->settings_section_key );
 
 			parent::load_settings_fields();
-		}
-
-			/**
-			 * Validate Settings Currency field.
-			 *
-			 * @since 4.0
-			 *
-			 * @param string $val to be validated.
-			 * @param string $key Settings key.
-			 * @param array  $args Settings field args.
-			 *
-			 * @return string $val.
-			 */
-		public static function validate_section_stripe_connect_currency( $val, $key, $args = array() ) {
-			if ( ( isset( $args['post_fields']['enabled'] ) ) && $args['post_fields']['enabled'] ) {
-				$val = sanitize_text_field( $val );
-				if ( empty( $val ) ) {
-					add_settings_error( $args['setting_option_key'], $key, esc_html__( 'Stripe Connect Currency Code cannot be empty.', 'learndash' ), 'error' );
-				} elseif ( strlen( $val ) > 3 ) {
-					add_settings_error( $args['setting_option_key'], $key, esc_html__( 'Stripe Connect Currency Code should not be longer than 3 letters.', 'learndash' ), 'error' );
-				}
-			}
-
-			return $val;
 		}
 
 		/**
@@ -286,7 +234,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$value['enabled'] = '';
 			}
 
-			if ( isset( $_POST['learndash_settings_payments_list_nonce'] ) ) { // phpcs:ignore
+			if ( ! isset( $value['payment_methods'] ) ) {
+				$value['payment_methods'] = array();
+			}
+
+			if ( isset( $_POST['learndash_settings_payments_list_nonce'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				if ( ! is_array( $old_value ) ) {
 					$old_value = array();
 				}
@@ -320,7 +272,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			}
 
 			// Show Stripe connection success and endpoint webhook requirement.
-			// TODO: Add webhook url via API.
+			// TODO: Add webhook url via API (it's not possible now due to Stripe limitations. Maybe in the future).
 			if (
 				isset( $_GET['ld_stripe_connected'] ) && self::STRIPE_RETURNED_AND_PROCESSED_SUCCESS === intval( $_GET['ld_stripe_connected'] ) && // phpcs:ignore
 				$this->account_is_connected()
@@ -509,7 +461,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->save_settings_values();
 
 				$reload_url = remove_query_arg(
-					array( 'ld_stripe_connected', 'ld_stripe_disconnected', 'stripe_user_id', 'stripe_access_token', 'stripe_access_token_test', 'stripe_publishable_key', 'stripe_publishable_key_test' )
+					array( 'ld_stripe_connected', 'ld_stripe_disconnected', 'stripe_user_id', 'stripe_access_token', 'stripe_access_token_test', 'stripe_publishable_key', 'stripe_publishable_key_test', 'ld_stripe_error', 'error_code', 'error_message' )
 				);
 				$reload_url = add_query_arg(
 					array( 'ld_stripe_connected' => self::STRIPE_RETURNED_AND_PROCESSED_SUCCESS ),
@@ -526,7 +478,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		private function handle_disconnection_request(): void {
 			if (
 				current_user_can( 'manage_options' ) &&
-				isset( $_GET['ld_stripe_disconnected'] ) && self::STRIPE_RETURNED_SUCCESS === intval( $_GET['ld_stripe_disconnected'] ) // phpcs:ignore
+				( isset( $_GET['ld_stripe_disconnected'] ) && self::STRIPE_RETURNED_SUCCESS === intval( $_GET['ld_stripe_disconnected'] ) ) ||
+				( current_user_can( 'manage_options' ) && isset( $_GET['ld_stripe_error'] ) && 1 === intval( $_GET['ld_stripe_error'] ) && ! isset( $_GET['ld_stripe_disconnected'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			) {
 				$this->load_settings_values();
 
@@ -567,6 +520,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public static function get_stripe_webhook_notice() {
 			$options     = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Section_Stripe_Connect' );
 			$webhook_url = isset( $options['webhook_url'] ) ? $options['webhook_url'] : self::get_default_stripe_webhook_url();
+
 			return sprintf(
 				'%1$s %2$s',
 				__(

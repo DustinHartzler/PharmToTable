@@ -17,7 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 	 *
 	 * @since 2.5.8
 	 */
-	class LD_REST_Questions_Controller_V1 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Questions_Controller_V1 extends WP_REST_Controller /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Registers the routes for the objects of the controller.

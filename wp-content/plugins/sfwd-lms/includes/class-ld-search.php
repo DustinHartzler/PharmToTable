@@ -2,8 +2,7 @@
 /**
  * LearnDash class to handle Search integration
  *
- * @package LearnDash
- * @subpackage Search
+ * @package LearnDash\Search
  * @since 3.1.7
  */
 

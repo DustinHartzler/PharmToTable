@@ -27,7 +27,7 @@ function learndash_get_course_data( $data ) {
 
 	$data['post_statuses'] = learndash_get_step_post_statuses();
 
-	if ( ( defined( 'LEARNDASH_COURSE_FUNCTIONS_LEGACY' ) ) && ( true === LEARNDASH_COURSE_FUNCTIONS_LEGACY ) ) {
+	if ( ( defined( 'LEARNDASH_COURSE_FUNCTIONS_LEGACY' ) ) && ( true === LEARNDASH_COURSE_FUNCTIONS_LEGACY ) ) { // @phpstan-ignore-line
 		return \learndash_get_course_data_legacy( $data );
 	}
 

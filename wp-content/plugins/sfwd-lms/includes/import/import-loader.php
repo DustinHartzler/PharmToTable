@@ -3,7 +3,7 @@
  * Import loader
  *
  * @since 1.0.0
- * @package LearnDash
+ * @package LearnDash\Import
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -16,7 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 3.2.0
 	 */
-	class LearnDash_Shortcodes_Section_ld_group_list extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_ld_group_list extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -91,9 +91,9 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'id'        => $this->shortcodes_section_key . '_price_type',
 					'name'      => 'price_type',
 					'type'      => 'multiselect',
-					// translators: placeholder: Group Access Modes
+					// translators: placeholder: Group Access Modes.
 					'label'     => sprintf( esc_html_x( '%s Access Mode(s)', 'placeholder: Group Access Modes', 'learndash' ), learndash_get_custom_label( 'groups' ) ),
-					// translators: placeholder: groups
+					// translators: placeholder: groups.
 					'help_text' => sprintf( esc_html_x( 'Filter %s by access mode(s), Ctrl+click to deselect selected items.', 'placeholder: groups', 'learndash' ), learndash_get_custom_label_lower( 'groups' ) ),
 					'value'     => '',
 					'options'   => array(

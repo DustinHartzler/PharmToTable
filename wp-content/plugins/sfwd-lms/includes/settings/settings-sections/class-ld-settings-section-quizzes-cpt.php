@@ -174,8 +174,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'type'                => 'checkbox-switch',
 					'label'               => esc_html__( 'Archive Page', 'learndash' ),
 					'help_text'           => sprintf(
-						// translators: placeholder: quizzes, link to WP Permalins page.
-						esc_html_x( 'Enables the front end archive page where all %1$s are listed. You must %2$s for the change to take effect.', 'placeholder: qizzes, link to WP Permalins page', 'learndash' ),
+						// translators: placeholder: quizzes, link to WP Permalinks page.
+						esc_html_x( 'Enables the front end archive page where all %1$s are listed. You must %2$s for the change to take effect.', 'placeholder: quizzes, link to WP Permalinks page', 'learndash' ),
 						learndash_get_custom_label_lower( 'quizzes' ),
 						'<a href="' . admin_url( 'options-permalink.php' ) . '">' . esc_html__( 're-save your permalinks', 'learndash' ) . '</a>'
 					),

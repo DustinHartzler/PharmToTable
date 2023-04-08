@@ -276,7 +276,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 						if ( isset( $data_settings['prefixes']['current'] ) ) {
 							$table_sub_prefix = $data_settings['prefixes']['current'];
 						} else {
-							if ( ( defined( 'LEARNDASH_PROQUIZ_DATABASE_PREFIX_SUB_DEFAULT' ) ) && ( LEARNDASH_PROQUIZ_DATABASE_PREFIX_SUB_DEFAULT ) ) {
+							if ( ( defined( 'LEARNDASH_PROQUIZ_DATABASE_PREFIX_SUB_DEFAULT' ) ) && ( LEARNDASH_PROQUIZ_DATABASE_PREFIX_SUB_DEFAULT ) ) { // @phpstan-ignore-line
 								$table_sub_prefix = esc_attr( LEARNDASH_PROQUIZ_DATABASE_PREFIX_SUB_DEFAULT );
 							} else {
 								$table_sub_prefix = 'wp_';
@@ -287,7 +287,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 					break;
 
 				case 'activity':
-					if ( ( defined( 'LEARNDASH_LMS_DATABASE_PREFIX_SUB' ) ) && ( LEARNDASH_LMS_DATABASE_PREFIX_SUB ) ) {
+					if ( ( defined( 'LEARNDASH_LMS_DATABASE_PREFIX_SUB' ) ) && ( LEARNDASH_LMS_DATABASE_PREFIX_SUB ) ) { // @phpstan-ignore-line
 						$table_sub_prefix = esc_attr( LEARNDASH_LMS_DATABASE_PREFIX_SUB );
 					} else {
 						$table_sub_prefix = 'learndash_';
@@ -351,7 +351,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 				 * @return boolean True to process. Anything else to abort.
 				 */
 				if ( true === apply_filters( 'learndash_support_db_tables_info', true ) ) {
-					if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name ) {
+					if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						/**
 						 * Filters whether to show tables rows in admin support section.
 						 *
@@ -362,7 +362,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 							$table_info['rows_count'] = absint( $table_rows );
 						}
 
-						$table_status = $wpdb->get_row( $wpdb->prepare( 'SHOW TABLE STATUS WHERE Name = %s', $table_name ), ARRAY_A );
+						$table_status = $wpdb->get_row( $wpdb->prepare( 'SHOW TABLE STATUS WHERE Name = %s', $table_name ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 						if ( $table_status ) {
 							if ( ( isset( $table_status['Name'] ) ) && ( $table_status['Name'] === $table_name ) ) {
 								if ( isset( $table_status['Engine'] ) ) {
@@ -388,7 +388,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		 * @since 3.1.8
 		 *
 		 * @param string $table_name Name of table to check.
-		 * @return boolean true if indexes are valid. False if not.
+		 *
+		 * @return bool|null true if indexes are valid. False if not.
 		 * Null is returned if no indexes or not a valid table.
 		 */
 		public static function check_table_primary_index( $table_name = '' ) {
@@ -397,10 +398,11 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			$table_index_set = self::get_table_primary_index_set( $table_name );
 			if ( ! empty( $table_index_set ) ) {
 				$table_name = self::get_table_name( $table_index_set['table_name'] );
-				$table      = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', esc_attr( $table_name ) ) );
+				$table      = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', esc_attr( $table_name ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				if ( ( $table === $table_name ) && ( ! empty( $wpdb->last_result ) ) ) {
-					$primary_column = $wpdb->get_var(
-						$wpdb->prepare(
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+					$primary_column = $wpdb->get_var( // @phpstan-ignore-line
+						$wpdb->prepare( // @phpstan-ignore-line
 							// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 							"SHOW FIELDS FROM {$table_name} WHERE Field = %s",
 							esc_attr( $table_index_set['primary_column'] )
@@ -436,7 +438,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			if ( ( ! empty( $table_name ) ) && ( isset( self::$tables_primary_indexes[ $table_name ] ) ) ) {
 				return self::$tables_primary_indexes[ $table_name ];
 			}
-			return [];
+			return array();
 		}
 
 		/**
@@ -450,12 +452,12 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 			$db_server_info = array(
 				'mysqldb_active'      => false,
 				'mysqldb_version_min' => LEARNDASH_MIN_MYSQL_VERSION,
-				'mariadb_actve'       => false,
+				'mariadb_active'      => false,
 				'mariadb_version_min' => LEARNDASH_MIN_MARIA_VERSION,
 				'db_version_found'    => '',
 			);
 
-			$db_server_version = $wpdb->get_results( "SHOW VARIABLES WHERE `Variable_name` IN ( 'version_comment', 'version' )", OBJECT_K );
+			$db_server_version = $wpdb->get_results( "SHOW VARIABLES WHERE `Variable_name` IN ( 'version_comment', 'version' )", OBJECT_K ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 			if ( ! empty( $db_server_version ) ) {
 				foreach ( $db_server_version as $field_key => $field_set ) {
@@ -464,7 +466,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 						case 'version_comment':
 							if ( ( is_object( $field_set ) ) && ( property_exists( $field_set, 'Value' ) ) ) {
 								if ( stristr( $field_set->Value, 'mariadb' ) ) { //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-									$db_server_info['mariadb_actve'] = true;
+									$db_server_info['mariadb_active'] = true;
 								} else {
 									$db_server_info['mysqldb_active'] = true;
 								}
@@ -558,7 +560,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		 * @param array  $items      Array of items to process.
 		 * @param string $force_type Optional type to enforce for all items.
 		 *
-		 * @return array Returns array.
+		 * @return string Returns string of placeholder markers.
 		 */
 		public static function escape_IN_clause_placeholders( $items = array(), $force_type = '' ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
 			$in_array = self::escape_IN_clause_array( $items, $force_type );
@@ -566,7 +568,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 				return $in_array['placeholders'];
 			}
 
-			return [];
+			return '';
 		}
 
 		/**
@@ -585,7 +587,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 				return $in_array['values'];
 			}
 
-			return [];
+			return array();
 		}
 
 		// End of functions.

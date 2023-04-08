@@ -136,29 +136,18 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			);
 
 			if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
-				if ( isset( $this->columns['course'] ) ) {
-					unset( $this->columns['course'] );
-				}
-				if ( isset( $this->columns['lesson_topic'] ) ) {
-					unset( $this->columns['lesson_topic'] );
-				}
-
-				if ( isset( $this->selectors['lesson_id']['show_empty_value'] ) ) {
-					unset( $this->selectors['lesson_id']['show_empty_value'] );
-				}
-				if ( isset( $this->selectors['lesson_id']['show_empty_label'] ) ) {
-					unset( $this->selectors['lesson_id']['show_empty_label'] );
-				}
+				unset( $this->columns['course'] );
+				unset( $this->columns['lesson_topic'] );
+				unset( $this->selectors['lesson_id']['show_empty_value'] );
+				unset( $this->selectors['lesson_id']['show_empty_label'] );
 			}
 
 			// If Group Leader remove the selector empty option.
 			if ( learndash_is_group_leader_user() ) {
 				$gl_manage_courses_capabilities = learndash_get_group_leader_manage_courses();
 				if ( 'advanced' !== $gl_manage_courses_capabilities ) {
-					if ( isset( $this->selectors['course_id'] ) ) {
-						unset( $this->selectors['course_id']['show_empty_value'] );
-						unset( $this->selectors['course_id']['show_empty_label'] );
-					}
+					unset( $this->selectors['course_id']['show_empty_value'] );
+					unset( $this->selectors['course_id']['show_empty_label'] );
 				}
 			}
 
@@ -215,7 +204,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		protected function show_column_shortcode( $post_id = 0, $selector = array() ) {
 			if ( ! empty( $post_id ) ) {
 				$valid_quiz  = false;
-				$quiz_pro_id = learndash_get_setting( $post_id, 'quiz_pro', true );
+				$quiz_pro_id = learndash_get_setting( $post_id, 'quiz_pro' );
 				$quiz_pro_id = absint( $quiz_pro_id );
 				if ( ! empty( $quiz_pro_id ) ) {
 					$quiz_mapper = new WpProQuiz_Model_QuizMapper();
@@ -282,7 +271,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					}
 				}
 
-				$pro_quiz_id = learndash_get_setting( $post, 'quiz_pro', true );
+				$pro_quiz_id = learndash_get_setting( $post, 'quiz_pro' );
 				if ( ! empty( $pro_quiz_id ) ) {
 					if ( ( ! isset( $row_actions['questions'] ) ) || ( empty( $row_actions['questions'] ) ) ) {
 						if ( ( true === learndash_is_data_upgrade_quiz_questions_updated() ) && ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) ) ) {

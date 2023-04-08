@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p>
 		<?php
 				printf(
-					// translators: placeholder: %1$s: Lessons, %2$s: Course, %3$s: Topics, %4$s: Topics, %5$s: Course, %6$s: Lesson
+					// translators: placeholder: %1$s: Lessons, %2$s: Course, %3$s: Topics, %4$s: Topics, %5$s: Course, %6$s: Lesson.
 					esc_html_x( 'When you have %1$s in your %2$s, you can break them up into separate %3$s. You can add %4$s using the %5$s Builder, or you can create them individually and assign them to a %6$s later.', 'placeholder: %1$s: Lessons, %2$s: Course, %3$s: Topics, %4$s: Topics, %5$s: Course, %6$s: Lesson', 'learndash' ),
 					\LearnDash_Custom_Label::get_label( 'lessons' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					\LearnDash_Custom_Label::get_label( 'course' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
@@ -56,7 +56,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<h3>
 				<?php
 				printf(
-					// translators: placeholder: Topics
+					// translators: placeholder: Topics.
 					esc_html_x( 'Creating %s', 'placeholder: Topics', 'learndash' ),
 					\LearnDash_Custom_Label::get_label( 'topics' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 				);

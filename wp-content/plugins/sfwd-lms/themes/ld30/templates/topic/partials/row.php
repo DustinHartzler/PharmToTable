@@ -26,6 +26,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 $topic_id = ( isset( $_GET['widget_instance']['widget_instance']['current_step_id'] ) ? intval( $_GET['widget_instance']['widget_instance']['current_step_id'] ) : $topic->ID );
 $post_id  = ( isset( $_GET['widget_instance']['widget_instance']['current_step_id'] ) ? $topic->ID : get_the_ID() );
 
+$attributes = learndash_get_course_step_attributes( $topic_id, $course_id, $user_id );
+
 /**
  * Filters topic row CSS class. Used while listing a topic row.
  *
@@ -53,6 +55,12 @@ $topic_class = apply_filters(
  */
 $topic_status = apply_filters( 'learndash-topic-status', ( $topic->completed ? 'completed' : 'not-completed' ), $topic, $course_id );
 
+$learndash_topic_class_visible_after = '';
+$learndash_topic_available_date = learndash_course_step_available_date( $topic->ID, $course_id, $user_id, true );
+if ( ! empty( $learndash_topic_available_date ) ) {
+	$learndash_topic_class_visible_after .= ' learndash-not-available';
+}
+
 /**
  * Fires before a topic row.
  *
@@ -63,7 +71,7 @@ $topic_status = apply_filters( 'learndash-topic-status', ( $topic->completed ? '
  * @param int $user_id   User ID.
  */
 do_action( 'learndash-topic-row-before', $topic->ID, $course_id, $user_id ); ?>
-<div class="ld-table-list-item" id="<?php echo esc_attr( 'ld-table-list-item-' . $topic->ID ); ?>">
+<div class="ld-table-list-item <?php echo esc_attr( 'ld-table-list-item-' . $topic->ID ); ?> <?php echo esc_attr( $learndash_topic_class_visible_after ); ?>" id="<?php echo esc_attr( 'ld-table-list-item-' . $topic->ID ); ?>">
 	<a class="<?php echo esc_attr( $topic_class ); ?>" href="<?php echo esc_url( learndash_get_step_permalink( $topic->ID, $course_id ) ); ?>">
 		<?php
 		/**
@@ -78,7 +86,7 @@ do_action( 'learndash-topic-row-before', $topic->ID, $course_id, $user_id ); ?>
 		do_action( 'learndash-topic-row-status-before', $topic->ID, $course_id, $user_id );
 		?>
 
-		<?php learndash_status_icon( $topic_status, get_post_type(), null, true ); ?>
+		<?php learndash_status_icon( $topic_status, $topic->post_type, null, true ); ?>
 
 		<?php
 		/**
@@ -92,8 +100,8 @@ do_action( 'learndash-topic-row-before', $topic->ID, $course_id, $user_id ); ?>
 		 */
 		do_action( 'learndash-topic-row-title-before', $topic->ID, $course_id, $user_id );
 		?>
-		<span class="ld-topic-title"><?php echo wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ); ?></span> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
-		<?php
+		<span class="ld-topic-title"><?php echo wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ); ?></span> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		
 		/**
 		 * Fires after the topic title.
 		 *
@@ -106,6 +114,19 @@ do_action( 'learndash-topic-row-before', $topic->ID, $course_id, $user_id ); ?>
 		do_action( 'learndash-topic-row-title-after', $topic->ID, $course_id, $user_id );
 		?>
 	</a>
+	<?php
+		if ( ! empty( $attributes ) ) :
+			foreach ( $attributes as $attribute ) :
+				?>
+			<span class="<?php echo esc_attr( 'ld-status ' . $attribute['class'] ); ?>">
+				<span class="<?php echo esc_attr( 'ld-icon ' . $attribute['icon'] ); ?>"></span>
+				<?php echo esc_html( $attribute['label'] ); ?>
+			</span>
+				<?php
+			endforeach;
+		endif;
+
+	?>
 </div> <!--/.ld-table-list-item-->
 <?php
 
@@ -157,4 +178,4 @@ do_action( 'learndash-topic-quiz-row-after', $topic->ID, $course_id, $user_id );
  * @param int $course_id Course ID.
  * @param int $user_id   User ID.
  */
-do_action( 'learndash-topic-row-after', $topic->ID, $course_id, $user_id ); ?>
+do_action( 'learndash-topic-row-after', $topic->ID, $course_id, $user_id );

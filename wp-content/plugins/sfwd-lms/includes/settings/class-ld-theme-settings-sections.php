@@ -44,9 +44,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.3.0
 		 *
-		 * @param boolean $show_metabox       True to show metabox.
-		 * @param string  $metabox_key        Metabox key.
-		 * @param string  $settings_screen_id Screen ID.
+		 * @param bool   $show_metabox       True to show metabox.
+		 * @param string $metabox_key        Metabox key.
+		 * @param string $settings_screen_id Screen ID.
 		 */
 		final public function learndash_show_metabox( $show_metabox = true, $metabox_key = '', $settings_screen_id = '' ) {
 			if ( $metabox_key === $this->metabox_key ) {

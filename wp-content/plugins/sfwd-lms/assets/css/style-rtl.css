@@ -195,7 +195,7 @@ list-style: initial;
 	font-size: 12px;
 }
 
-.leardash-course-status-completed {
+.leardash-course-status-completed { /* cspell:disable-line */
 	color: green;
 }
 
@@ -318,21 +318,24 @@ body.post-type-groups .column-price_type {
 }
 
 /* CSS style for the post type editor showing the drip date. Replaces date picker */
+
 .sfwd .ld_date_selector select {
-    padding: 0;
-	margin: 0;
-    vertical-align: top;
 	height: 35px;
+	padding-right: 10px;
+	width: 80px;
+	margin-bottom: 6px;
+	vertical-align: top;
 }
 
-.sfwd  .ld_date_selector input[type="number"] {
-	width: 50px;
+.sfwd .ld_date_selector input[type="number"] {
+	min-width: 75px;
 	text-align: center;
 	height: 35px;
+	margin-bottom: 6px;
 }
 
-.sfwd  .ld_date_selector input.ld_date_aa[type="number"] {
-	width: 65px;
+.sfwd .ld_date_selector input.ld_date_aa[type="number"] {
+	min-width: 90px;
 }
 
 .ld-error {

@@ -48,7 +48,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
-				// New fields
+				// New fields.
 				'course_access_list_enabled'              => 'course_access_list_enabled',
 
 				'course_trial_price'                      => 'course_trial_price',
@@ -56,7 +56,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'course_trial_duration_t1'                => 'course_trial_duration_t1',
 				'course_trial_duration_p1'                => 'course_trial_duration_p1',
 
-				// Legacy fields
+				// Legacy fields.
 				'course_price_type'                       => 'course_price_type',
 
 				'course_price_type_paynow_price'          => 'course_price',
@@ -345,7 +345,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'course_price_type_paynow_enrollment_url' => array(
 					'name'      => 'course_price_type_paynow_enrollment_url',
 					'label'     => sprintf(
-						// translators: placeholder: Course
+						// translators: placeholder: Course.
 						esc_html_x( '%s Enrollment URL', 'placeholder: Course', 'learndash' ),
 						learndash_get_custom_label( 'course' )
 					),
@@ -353,7 +353,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'     => 'full-text',
 					'value'     => $this->setting_option_values['course_price_type_paynow_enrollment_url'],
 					'help_text' => sprintf(
-						// translators: placeholder: course
+						// translators: placeholder: course.
 						esc_html_x( 'Enter the URL of the page you want to redirect your enrollees after signing up for this specific %s', 'placeholder: course', 'learndash' ),
 						learndash_get_custom_label_lower( 'course' )
 					),
@@ -404,7 +404,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'  => 'course_price_type_subscribe_billing_cycle',
 					'label' => esc_html__( 'Billing Cycle', 'learndash' ),
 					'type'  => 'custom',
-					'html'  => learndash_billing_cycle_setting_field_html(),
+					'html'  => learndash_billing_cycle_setting_field_html(
+						0,
+						learndash_get_post_type_slug( 'course' )
+					),
 				),
 				'course_price_type_subscribe_billing_recurring_times' => array(
 					'name'      => 'course_price_type_subscribe_billing_recurring_times',
@@ -418,7 +421,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'course_trial_price'                => array(
 					'name'      => 'course_trial_price',
 					'label'     => sprintf(
-						// translators: placeholder: Course
+						// translators: placeholder: Course.
 						esc_html_x( '%s Trial Price', 'placeholder: Course', 'learndash' ),
 						learndash_get_custom_label( 'course' )
 					),
@@ -426,7 +429,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'     => '-medium',
 					'value'     => $this->setting_option_values['course_trial_price'],
 					'help_text' => sprintf(
-						// translators: placeholder: course
+						// translators: placeholder: course.
 						esc_html_x( 'Enter the price for the trial period for this %s', 'placeholder: course', 'learndash' ),
 						learndash_get_custom_label( 'course' )
 					),
@@ -448,15 +451,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'      => 'course_trial_duration',
 					'label'     => esc_html__( 'Trial Duration', 'learndash' ),
 					'type'      => 'custom',
-					'html'      => learndash_trial_duration_setting_field_html(),
-					// translators: placeholder: course
+					'html'      => learndash_trial_duration_setting_field_html(
+						0,
+						learndash_get_post_type_slug( 'course' )
+					),
+					// translators: placeholder: course.
 					'help_text' => sprintf( esc_html_x( 'The length of the trial period, after the trial is over, the normal %s price billing goes into effect.', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 					'default'   => '',
 				),
 				'course_price_type_subscribe_enrollment_url' => array(
 					'name'      => 'course_price_type_subscribe_enrollment_url',
 					'label'     => sprintf(
-						// translators: placeholder: Course
+						// translators: placeholder: Course.
 						esc_html_x( '%s Enrollment URL', 'placeholder: Course', 'learndash' ),
 						learndash_get_custom_label( 'course' )
 					),
@@ -464,7 +470,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'     => 'full-text',
 					'value'     => $this->setting_option_values['course_price_type_subscribe_enrollment_url'],
 					'help_text' => sprintf(
-						// translators: placeholder: course
+						// translators: placeholder: course.
 						esc_html_x( 'Enter the URL of the page you want to redirect your enrollees after signing up for this specific %s', 'placeholder: course', 'learndash' ),
 						learndash_get_custom_label_lower( 'course' )
 					),
@@ -518,7 +524,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'     => 'full-text',
 					'value'     => $this->setting_option_values['course_price_type_closed_custom_button_url'],
 					'help_text' => sprintf(
-						// translators: placeholder: "Take this Course" button label
+						// translators: placeholder: "Take this Course" button label.
 						esc_html_x( 'Redirect the "%s" button to a specific URL.', 'placeholder: "Take this Course" button label', 'learndash' ),
 						learndash_get_custom_label( 'button_take_this_course' )
 					),
@@ -618,7 +624,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 									'open',
 									'closed',
 									'free',
-									'buynow',
+									'paynow',
 									'subscribe',
 								),
 							),
@@ -900,7 +906,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'course_access_list_enabled'    => array(
 					'name'                => 'course_access_list_enabled',
 					'label'               => sprintf(
-						// translators: placeholder: Course
+						// translators: placeholder: Course.
 						esc_html_x( 'Alter %s Access List', 'placeholder: Course', 'learndash' ),
 						learndash_get_custom_label( 'course' )
 					),
@@ -1094,23 +1100,23 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$settings_values['course_trial_duration_p1'] = '';
 				}
 
-				if ( isset( $_POST['course_price_billing_t3'] ) ) {
-					$settings_values['course_price_billing_t3'] = strtoupper( esc_attr( $_POST['course_price_billing_t3'] ) );
+				if ( isset( $_POST['course_price_billing_t3'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					$settings_values['course_price_billing_t3'] = strtoupper( esc_attr( $_POST['course_price_billing_t3'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					$settings_values['course_price_billing_t3'] = learndash_billing_cycle_field_frequency_validate( $settings_values['course_price_billing_t3'] );
 				}
 
-				if ( isset( $_POST['course_price_billing_p3'] ) ) {
-					$settings_values['course_price_billing_p3'] = absint( $_POST['course_price_billing_p3'] );
+				if ( isset( $_POST['course_price_billing_p3'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					$settings_values['course_price_billing_p3'] = absint( $_POST['course_price_billing_p3'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					$settings_values['course_price_billing_p3'] = learndash_billing_cycle_field_interval_validate( $settings_values['course_price_billing_p3'], $settings_values['course_price_billing_t3'] );
 				}
 
-				if ( isset( $_POST['course_trial_duration_t1'] ) ) {
-					$settings_values['course_trial_duration_t1'] = strtoupper( esc_attr( $_POST['course_trial_duration_t1'] ) );
+				if ( isset( $_POST['course_trial_duration_t1'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					$settings_values['course_trial_duration_t1'] = strtoupper( esc_attr( $_POST['course_trial_duration_t1'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					$settings_values['course_trial_duration_t1'] = learndash_billing_cycle_field_frequency_validate( $settings_values['course_trial_duration_t1'] );
 				}
 
-				if ( isset( $_POST['course_trial_duration_p1'] ) ) {
-					$settings_values['course_trial_duration_p1'] = absint( $_POST['course_trial_duration_p1'] );
+				if ( isset( $_POST['course_trial_duration_p1'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					$settings_values['course_trial_duration_p1'] = absint( $_POST['course_trial_duration_p1'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					$settings_values['course_trial_duration_p1'] = learndash_billing_cycle_field_interval_validate( $settings_values['course_trial_duration_p1'], $settings_values['course_trial_duration_t1'] );
 				}
 

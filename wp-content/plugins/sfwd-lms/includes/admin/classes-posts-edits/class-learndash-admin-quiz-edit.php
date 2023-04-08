@@ -49,14 +49,14 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 *
 		 * @var array $_get;
 		 */
-		private $_get = array();
+		private $_get = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Common array set within init_quiz_edit and used by other class functions.
 		 *
 		 * @var array $_post;
 		 */
-		private $_post = array();
+		private $_post = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Public constructor for class.
@@ -77,7 +77,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 * @param object $post WP_Post Question being edited.
 		 */
 		public function init_quiz_edit( $post ) {
-			if ( is_null( $this->pro_quiz_edit ) ) {
+			if ( ! is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
 				$quiz_pro_id = (int) learndash_get_setting( $post->ID, 'quiz_pro' );
 
 				$this->_post = array( '1' );
@@ -87,9 +87,9 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					'post_id' => $post->ID,
 				);
 
-				if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) {
+				if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$this->_get['templateLoad']   = 'yes';
-					$this->_get['templateLoadId'] = $_GET['templateLoadId'];
+					$this->_get['templateLoadId'] = absint( $_GET['templateLoadId'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				}
 
 				$pro_quiz            = new WpProQuiz_Controller_Quiz();
@@ -164,11 +164,11 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			}
 
 			// Check the Quiz custom fields to see if they need to be reformatted.
-			if ( ( isset( $_POST['ld-quiz-custom-fields-nonce'] ) ) && ( ! empty( $_POST['ld-quiz-custom-fields-nonce'] ) ) && wp_verify_nonce( $_POST['ld-quiz-custom-fields-nonce'], 'ld-quiz-custom-fields-nonce' ) ) {
+			if ( ( isset( $_POST['ld-quiz-custom-fields-nonce'] ) ) && ( ! empty( $_POST['ld-quiz-custom-fields-nonce'] ) ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ld-quiz-custom-fields-nonce'] ) ), 'ld-quiz-custom-fields-nonce' ) ) {
 
 				if ( isset( $_POST['form'] ) ) {
-					$form = $_POST['form'];
-					if ( 1 === count( $form[0] ) ) {
+					$form = $_POST['form']; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+					if ( ( is_array( $form ) ) && ( isset( $form[0] ) ) && ( 1 === count( $form[0] ) ) ) {
 						$form_items = array();
 						$form_item  = array();
 						foreach ( $form as $form_ele ) {
@@ -199,7 +199,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				$this->quiz_builder->save_course_builder( $post_id, $post, $update );
 			}
 
-			if ( ( isset( $_POST['ld-course-primary-set-nonce'] ) ) && ( ! empty( $_POST['ld-course-primary-set-nonce'] ) ) && wp_verify_nonce( $_POST['ld-course-primary-set-nonce'], 'ld-course-primary-set-nonce' ) ) {
+			if ( ( isset( $_POST['ld-course-primary-set-nonce'] ) ) && ( ! empty( $_POST['ld-course-primary-set-nonce'] ) ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ld-course-primary-set-nonce'] ) ), 'ld-course-primary-set-nonce' ) ) {
 				if ( isset( $_POST['ld-course-primary-set'] ) ) {
 					$course_primary = absint( $_POST['ld-course-primary-set'] );
 					if ( ! empty( $course_primary ) ) {
@@ -217,7 +217,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				}
 			}
 
-			$quiz_id  = absint( learndash_get_setting( $post_id, 'quiz_pro', true ) );
+			$quiz_id  = absint( learndash_get_setting( $post_id, 'quiz_pro' ) );
 			$pro_quiz = new WpProQuiz_Controller_Quiz();
 			$pro_quiz->route(
 				array(
@@ -294,7 +294,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Shows the Quiz Settings metabo.
+		 * Shows the Quiz Settings metabox.
 		 *
 		 * @since 3.0.0
 		 *
@@ -367,7 +367,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 			$this->quiz_advanced_hr();
 
-			// Result Text Setings.
+			// Result Text Settings.
 			$this->quiz_advanced_open_wrapper();
 
 			$this->quiz_advanced_section_header(
@@ -473,7 +473,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		public function quiz_advanced_page_box( $post ) {
 
 			$this->init_quiz_edit( $post );
-			if ( ( $this->pro_quiz_edit ) && is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
+			if ( is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
 				$this->pro_quiz_edit->show_advanced( $this->_get );
 			}
 		}
@@ -504,8 +504,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			$templates       = $template_mapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUIZ, false );
 
 			$template_loaded_id = '';
-			if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) {
-				$template_loaded_id = intval( $_GET['templateLoadId'] );
+			if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$template_loaded_id = intval( $_GET['templateLoadId'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 			?>
 			<div class="wrap wpProQuiz_quizEdit">
@@ -518,12 +518,12 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 							<td>
 								<select id="templateLoadId" name="templateLoadId">
 									<?php
-									if ( ( isset( $_GET['post'] ) ) && ( ! empty( $_GET['post'] ) ) && ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) {
+									if ( ( isset( $_GET['post'] ) ) && ( ! empty( $_GET['post'] ) ) && ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 										$template_url = remove_query_arg( 'templateLoadId' );
 										echo '<option value="' . esc_url( $template_url ) . '">' . sprintf(
 											// translators: Quiz Title.
 											esc_html_x( 'Revert: %s', 'placeholder: Quiz Title', 'learndash' ),
-											wp_kses_post( get_the_title( $_GET['post'] ) )
+											wp_kses_post( get_the_title( absint( $_GET['post'] ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 										) . '</option>';
 									} else {
 										echo '<option value="">' . esc_html__( 'Select a Template to load', 'learndash' ) . '</option>';
@@ -570,8 +570,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function quiz_question_options_page_box( $post ) {
 			$this->init_quiz_edit( $post );
-			if ( ( $this->pro_quiz_edit ) && is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
-				$this->pro_quiz_edit->questionOptions( $this->_get );
+			if ( is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
+				$this->pro_quiz_edit->questionOptions();
 			}
 		}
 
@@ -584,8 +584,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function quiz_result_options_page_box( $post ) {
 			$this->init_quiz_edit( $post );
-			if ( ( $this->pro_quiz_edit ) && is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
-				$this->pro_quiz_edit->resultOptions( $this->_get );
+			if ( is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
+				$this->pro_quiz_edit->resultOptions();
 			}
 		}
 
@@ -598,13 +598,13 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function quiz_mode_options_page_box( $post ) {
 			$this->init_quiz_edit( $post );
-			if ( ( $this->pro_quiz_edit ) && is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
-				$this->pro_quiz_edit->quizMode( $this->_get );
+			if ( is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
+				$this->pro_quiz_edit->quizMode();
 			}
 		}
 
 		/**
-		 * Shows the Quiz Leaderbord Options metabox.
+		 * Shows the Quiz Leaderboard Options metabox.
 		 *
 		 * @since 2.6.0
 		 *
@@ -612,8 +612,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function quiz_leaderboard_options_page_box( $post ) {
 			$this->init_quiz_edit( $post );
-			if ( ( $this->pro_quiz_edit ) && is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
-				$this->pro_quiz_edit->leaderboardOptions( $this->_get );
+			if ( is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
+				$this->pro_quiz_edit->leaderboardOptions();
 			}
 		}
 
@@ -626,8 +626,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function quiz_custom_fields_options_page_box( $post ) {
 			$this->init_quiz_edit( $post );
-			if ( ( $this->pro_quiz_edit ) && is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
-				$this->pro_quiz_edit->form( $this->_get );
+			if ( is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
+				$this->pro_quiz_edit->form();
 			}
 		}
 
@@ -640,8 +640,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function quiz_custom_result_text_page_box( $post ) {
 			$this->init_quiz_edit( $post );
-			if ( ( $this->pro_quiz_edit ) && is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
-				$this->pro_quiz_edit->resultText( $this->_get );
+			if ( is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
+				$this->pro_quiz_edit->resultText();
 			}
 		}
 

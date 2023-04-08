@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $content The shortcode content. Default empty.
  * @param string $shortcode_slug The shortcode slug. Default 'ld_course_info'.
  *
- * @return string The `ld_course_info` shortcode ouput.
+ * @return string The `ld_course_info` shortcode output.
  */
 function learndash_course_info_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_course_info' ) {
 
@@ -42,7 +42,7 @@ function learndash_course_info_shortcode( $atts = array(), $content = '', $short
 		$current_user = wp_get_current_user();
 
 		if ( empty( $current_user->ID ) ) {
-			return;
+			return '';
 		}
 
 		$user_id = $current_user->ID;

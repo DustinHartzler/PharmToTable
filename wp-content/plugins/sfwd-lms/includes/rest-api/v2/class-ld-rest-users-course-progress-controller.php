@@ -23,14 +23,14 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Users_Course_Progress_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Users_Course_Progress_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * User course activity
 		 *
 		 * @var array
 		 */
-		protected $user_course_activty = array();
+		protected $user_course_activity = array();
 
 		/**
 		 * Supported Collection Parameters.
@@ -511,7 +511,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 			$args['post__in']  = $user_course_ids;
 			$args['fields']    = 'ids';
 
-			/** This filter is documeted in includes/rest-api/v1/class-ld-rest-users-course-progress-controller.php */
+			/** This filter is documented in includes/rest-api/v1/class-ld-rest-users-course-progress-controller.php */
 			$args = apply_filters( 'learndash_rest_users_course_progress_query', $args, $request );
 
 			return $args;
@@ -634,8 +634,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 
 				$data = array();
 				foreach ( $posts_query->posts as $course_id ) {
-					$this->user_course_activty = $this->get_user_course_activity( $this->user_id, $course_id );
-					$data[]                    = $this->get_user_course_progress_header( $this->user_id, $course_id );
+					$this->user_course_activity = $this->get_user_course_activity( $this->user_id, $course_id );
+					$data[]                     = $this->get_user_course_progress_header( $this->user_id, $course_id );
 				}
 
 				$page        = (int) $query_args['paged'];
@@ -735,8 +735,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 
 				$data = array();
 				foreach ( $posts_query->posts as $course_id ) {
-					$this->user_course_activty = $this->get_user_course_activity( $this->user_id, $course_id );
-					$data[]                    = $this->get_user_course_progress_header( $this->user_id, $course_id );
+					$this->user_course_activity = $this->get_user_course_activity( $this->user_id, $course_id );
+					$data[]                     = $this->get_user_course_progress_header( $this->user_id, $course_id );
 				}
 
 				$page        = (int) $query_args['paged'];
@@ -836,7 +836,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 
 				$data = array();
 				foreach ( $posts_query->posts as $course_id ) {
-					$this->user_course_activty = $this->get_user_course_activity( $this->user_id, $course_id );
+					$this->user_course_activity = $this->get_user_course_activity( $this->user_id, $course_id );
 
 					$data[] = $this->get_user_course_progress_steps( $this->user_id, $course_id );
 				}
@@ -913,8 +913,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 				}
 			}
 
-			if ( ( isset( $this->user_course_activty[ $course_id ] ) ) && ( 'sfwd-courses' === $this->user_course_activty[ $course_id ]['post_type'] ) ) {
-				$step_item = $this->user_course_activty[ $course_id ];
+			if ( ( isset( $this->user_course_activity[ $course_id ] ) ) && ( 'sfwd-courses' === $this->user_course_activity[ $course_id ]['post_type'] ) ) {
+				$step_item = $this->user_course_activity[ $course_id ];
 			} else {
 				$step_item = array();
 			}
@@ -1027,8 +1027,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 					list( $step_type, $step_id ) = explode( ':', $step_key );
 
 					$step_item = array();
-					if ( ( isset( $this->user_course_activty[ $step_id ] ) ) && ( $step_type === $this->user_course_activty[ $step_id ]['post_type'] ) ) {
-						$step_item = $this->user_course_activty[ $step_id ];
+					if ( ( isset( $this->user_course_activity[ $step_id ] ) ) && ( $step_type === $this->user_course_activity[ $step_id ]['post_type'] ) ) {
+						$step_item = $this->user_course_activity[ $step_id ];
 					} else {
 						$step_item = array();
 					}
@@ -1088,7 +1088,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 		}
 
 		/**
-		 * Get user course activty from DB.
+		 * Get user course activity from DB.
 		 *
 		 * @since 3.3.0
 		 *

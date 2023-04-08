@@ -16,7 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	class LearnDash_Shortcodes_Section_courseinfo extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_courseinfo extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -126,7 +126,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'name'        => 'format',
 					'type'        => 'text',
 					'label'       => esc_html__( 'Format', 'learndash' ),
-					'help_text'   => wp_kses_post( __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formating strings here.</a>', 'learndash' ) ),
+					'help_text'   => wp_kses_post( __( 'This can be used to change the date format. Default: "F j, Y, g:i a" shows as <i>March 10, 2001, 5:16 pm</i>. See <a target="_blank" href="http://php.net/manual/en/function.date.php">the full list of available date formatting strings here.</a>', 'learndash' ) ),
 					'value'       => '',
 					'placeholder' => 'F j, Y, g:i a',
 				),
@@ -151,12 +151,17 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'id'        => $this->shortcodes_section_key . '_course_id',
 					'name'      => 'course_id',
 					'type'      => 'number',
-
-					// translators: placeholder: Course.
-					'label'     => sprintf( esc_html_x( '%s ID', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
-
-					// translators: placeholder: Course.
-					'help_text' => sprintf( esc_html_x( 'Enter single %s ID.', 'placeholders: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
+					'label'     => sprintf(
+						// translators: placeholder: Course.
+						esc_html_x( '%s ID', 'placeholder: Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					'help_text' => sprintf(
+						// translators: placeholders: Course, Course.
+						esc_html_x( 'Enter single %1$s ID. Leave blank for current %2$s.', 'placeholders: Course, Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' ),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
 					'value'     => '',
 					'class'     => 'small-text',
 					'required'  => 'required',

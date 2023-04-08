@@ -23,7 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Essays_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Essays_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * LearnDash course steps object
@@ -35,7 +35,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		/**
 		 * Essay Post data
 		 *
-		 * @var array $essat_post_data.
+		 * @var array $essay_post_data.
 		 */
 		private $essay_post_data = array();
 
@@ -74,9 +74,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 *
 		 * @see register_rest_route() in WordPress core.
 		 */
-		public function register_routes() {
-			// $args = $this->get_collection_params();
-
+		public function register_routes() { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 			parent::register_routes();
 		}
 
@@ -251,7 +249,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 				$course_id = (int) $request['course'];
 
 				// If we don't have a course parameter we need to get all the courses the user has access to and all
-				// the courses the lesson is avaiable in and compare.
+				// the courses the lesson is available in and compare.
 				if ( empty( $course_id ) ) {
 					$user_enrolled_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
 					if ( empty( $user_enrolled_courses ) ) {
@@ -456,7 +454,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 
 			if ( ! empty( $meta_query ) ) {
 				if ( ( ! isset( $query_args['meta_query'] ) ) || ( empty( $query_args['meta_query'] ) ) ) {
-					$query_args['meta_query']   = array();
+					$query_args['meta_query']   = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 					$query_args['meta_query'][] = array( 'relation' => 'AND' );
 				} else {
 					// Get the 'relation' and set to 'AND'.
@@ -468,7 +466,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 					}
 				}
 
-				$query_args['meta_query'] = array_merge( $query_args['meta_query'], $meta_query );
+				$query_args['meta_query'] = array_merge( $query_args['meta_query'], $meta_query ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			}
 
 			return $query_args;
@@ -485,9 +483,9 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 */
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 			if ( $this->post_type === $post->post_type ) {
-				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
+				$base          = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
 				$request_route = $request->get_route();
-				
+
 				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
 
 					$links = array();
@@ -496,7 +494,6 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 
 					list( $course_id, $lesson_id, $topic_id, $parent_id ) = $this->get_essay_post_data( $post->ID );
 
-					
 					if ( ( ! isset( $response->links['course'] ) ) && ( ! empty( $course_id ) ) ) {
 						$links['course'] = array(
 							'href'       => rest_url( trailingslashit( $this->namespace ) . $this->get_rest_base( 'courses' ) . '/' . $course_id ),
@@ -546,7 +543,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		/**
 		 * Add our collection parameters.
 		 *
-		 * This is added only for GET/OPIONS Requests.
+		 * This is added only for GET/OPTIONS Requests.
 		 *
 		 * @since 3.3.0
 		 *
@@ -560,7 +557,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 					$query_params['status']['items']['enum'] = array_intersect( array( 'graded', 'not_graded' ), $query_params['status']['items']['enum'] );
 				}
 
-				// We add 'course' to the filtering as an optiont to filter course steps by.
+				// We add 'course' to the filtering as an option to filter course steps by.
 				if ( ! isset( $query_params['course'] ) ) {
 					$query_params['course'] = array(
 						'description' => sprintf(
@@ -763,16 +760,6 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 		 */
 		public function update_rest_settings_field_value( $post_value, WP_Post $post, $field_name, WP_REST_Request $request, $post_type ) {
 			if ( ( is_a( $post, 'WP_Post' ) ) && ( $post->post_type == $this->post_type ) ) {
-
-				// $lesson_id = (int) get_post_meta( $post->ID, 'lesson_id', true );
-				// if ( empty( $lesson_id ) ) {
-				// return false;
-				// }
-
-				// $lesson_post = get_post( $lesson_id );
-				// if ( ( ! $lesson_post ) && ( ! is_a( $lesson_post, 'WP_Post' ) ) ) {
-				// return false;
-				// }
 
 				switch ( $field_name ) {
 					case 'points_awarded':

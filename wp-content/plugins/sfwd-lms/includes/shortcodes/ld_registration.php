@@ -18,13 +18,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.6.0
  *
  * @param array  $attr {
- *    @type string $width Width of the registration form. Default empty.
- * }
+ *    An array of shortcode attributes.
  *
+ *    @type string $width Width of the registration form. Default empty.
+ * }.
  * @param string $content The shortcode content. Default empty.
  * @param string $shortcode_slug The shortcode slug. Default 'ld_registration'.
  *
- * @return string The `ld_registration` shortcode ouput.
+ * @return string The `ld_registration` shortcode output.
  */
 function learndash_registration( $attr = array(), $content = '', $shortcode_slug = 'ld_registration' ) {
 

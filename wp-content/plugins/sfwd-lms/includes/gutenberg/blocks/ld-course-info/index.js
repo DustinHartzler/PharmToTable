@@ -54,7 +54,7 @@ registerBlockType(
 			},
 			registered_show: {
 				type: 'boolean',
-				default: true
+				//default: true
 			},
 			registered_show_thumbnail: {
 				type: 'boolean',
@@ -66,7 +66,7 @@ registerBlockType(
 			},
 			registered_orderby: {
 				type: 'string',
-				default: 'ID'
+				default: 'title'
 			},
 			registered_order: {
 				type: 'string',
@@ -74,7 +74,7 @@ registerBlockType(
 			},
 			progress_show: {
 				type: 'boolean',
-				default: true
+				//default: true
 			},
 			progress_num: {
 				type: 'string',
@@ -82,7 +82,7 @@ registerBlockType(
 			},
 			progress_orderby: {
 				type: 'string',
-				default: 'ID'
+				default: 'title'
 			},
 			progress_order: {
 				type: 'string',
@@ -90,7 +90,7 @@ registerBlockType(
 			},
 			quiz_show: {
 				type: 'boolean',
-				default: true
+				//default: true
 			},
 			quiz_num: {
 				type: 'string',
@@ -124,6 +124,21 @@ registerBlockType(
 			const { attributes: { user_id, registered_show, registered_show_thumbnail, registered_num, registered_orderby, registered_order, progress_show, progress_num, progress_orderby, progress_order, quiz_show, quiz_num, quiz_orderby, quiz_order, preview_user_id, preview_show },
 				setAttributes } = props;
 
+			if ( typeof registered_show === "undefined" ) {
+				setAttributes({ registered_show: true });
+			}
+			if ( typeof progress_show === "undefined" ) {
+				setAttributes({ progress_show: true });
+			}
+			if ( typeof quiz_show === "undefined" ) {
+				setAttributes({ quiz_show: true });
+			}
+
+			if ( ( registered_show === false ) && ( progress_show === false ) && ( quiz_show === false ) ) {
+				setAttributes({ registered_show: true });
+				setAttributes({ progress_show: true });
+				setAttributes({ quiz_show: true });
+			}
 
 			const panelbody_header = (
 				<PanelBody
@@ -202,12 +217,12 @@ registerBlockType(
 							value={registered_orderby}
 							options={[
 								{
-									label: __('ID - Order by post id. (default)', 'learndash'),
-									value: 'ID',
+									label: __('Title - Order by post title (default)', 'learndash'),
+									value: 'title',
 								},
 								{
-									label: __('Title - Order by post title', 'learndash'),
-									value: 'title',
+									label: __('ID - Order by post id', 'learndash'),
+									value: 'ID',
 								},
 								{
 									label: __('Date - Order by post date', 'learndash'),
@@ -226,12 +241,12 @@ registerBlockType(
 							value={registered_order}
 							options={[
 								{
-									label: __('DESC - highest to lowest values (default)', 'learndash'),
-									value: 'DESC',
+									label: __('ASC - lowest to highest values (default)', 'learndash'),
+									value: 'ASC',
 								},
 								{
-									label: __('ASC - lowest to highest values', 'learndash'),
-									value: 'ASC',
+									label: __('DESC - highest to lowest values', 'learndash'),
+									value: 'DESC',
 								},
 							]}
 							onChange={registered_order => setAttributes({ registered_order })}
@@ -271,12 +286,12 @@ registerBlockType(
 							value={progress_orderby}
 							options={[
 								{
-									label: __('ID - Order by post id. (default)', 'learndash'),
-									value: 'ID',
+									label: __('Title - Order by post title (default)', 'learndash'),
+									value: 'title',
 								},
 								{
-									label: __('Title - Order by post title', 'learndash'),
-									value: 'title',
+									label: __('ID - Order by post id', 'learndash'),
+									value: 'ID',
 								},
 								{
 									label: __('Date - Order by post date', 'learndash'),
@@ -295,12 +310,12 @@ registerBlockType(
 							value={progress_order}
 							options={[
 								{
-									label: __('DESC - highest to lowest values (default)', 'learndash'),
-									value: 'DESC',
+									label: __('ASC - lowest to highest values (default)', 'learndash'),
+									value: 'ASC',
 								},
 								{
-									label: __('ASC - lowest to highest values', 'learndash'),
-									value: 'ASC',
+									label: __('DESC - highest to lowest values', 'learndash'),
+									value: 'DESC',
 								},
 							]}
 							onChange={progress_order => setAttributes({ progress_order })}

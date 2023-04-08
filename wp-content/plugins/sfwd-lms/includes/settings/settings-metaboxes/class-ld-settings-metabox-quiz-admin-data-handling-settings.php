@@ -699,7 +699,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'show_in_rest' => LearnDash_REST_API::enabled(),
 						'rest_args'    => array(
 							'schema' => array(
-								'field_key' => 'toplist_data_showin_enabled',
+								'field_key' => 'toplist_data_showin_enabled', // cspell:disable-line.
 								'type'      => 'boolean',
 								'default'   => false,
 							),
@@ -947,7 +947,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			);
 
-			// If the Real Simple CAPTCHA is not installed thenclear and disable the checkbox.
+			// If the Real Simple CAPTCHA is not installed then clear and disable the checkbox.
 			if ( ! class_exists( 'ReallySimpleCaptcha' ) ) {
 				if ( isset( $this->setting_option_fields['toplistDataCaptcha'] ) ) {
 					$this->setting_option_fields['toplistDataCaptcha']['value'] = '';
@@ -1082,18 +1082,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				 */
 				if ( ( $this->verify_metabox_nonce_field() ) && ( isset( $settings_values['templates_enabled'] ) ) && ( 'on' === $settings_values['templates_enabled'] ) ) {
 
-					// phpcs:ignore WordPress.Security.NonceVerification.Missing
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 					if ( '-1' === $_POST['templateSaveList'] ) {
 						$_POST['templateSaveList'] = '';
 					}
 
-					// phpcs:ignore WordPress.Security.NonceVerification.Missing
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 					if ( '0' === $_POST['templateSaveList'] ) {
-						// phpcs:ignore WordPress.Security.NonceVerification.Missing
+						// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 						if ( empty( $_POST['templateName'] ) ) {
 							$_POST['templateSaveList'] = '';
 						}
-					} elseif ( '' !== $_POST['templateSaveList'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+					} elseif ( '' !== $_POST['templateSaveList'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
 						$_POST['templateName'] = '';
 					}
 				} else {

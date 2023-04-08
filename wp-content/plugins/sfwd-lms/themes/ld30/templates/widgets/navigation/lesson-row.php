@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$attributes = learndash_get_lesson_attributes( $lesson );
-$quizzes    = learndash_get_lesson_quiz_list( $lesson['post']->ID, get_current_user_id(), $course_id );
+$attributes = learndash_get_course_step_attributes( $lesson['post']->ID, $course_id, $user_id );
+$quizzes    = learndash_get_lesson_quiz_list( $lesson['post']->ID, $user_id, $course_id );
 
 /**
  * Should this lesson be expandable, false by default
@@ -122,9 +122,9 @@ endif; ?>
 			 * @since 3.0.0
 			 *
 			 * @param string $expand_class Value will be 'ld-expanded' if it is a current lesson or an empty string.
-			 * @param int    $lesson_id    Lesson Post ID. @since 3.1
-			 * @param int    $course_id    Course Post ID. @since 3.1
-			 * @param int    $user_id      User ID.        @since 3.1
+			 * @param int    $lesson_id    Lesson Post ID. @since 3.1.0
+			 * @param int    $course_id    Course Post ID. @since 3.1.0
+			 * @param int    $user_id      User ID.        @since 3.1.0
 			 */
 			$expand_class  = apply_filters( 'learndash-nav-widget-expand-class', ( $is_current_lesson ? 'ld-expanded' : '' ), $lesson['post']->ID, $course_id, $user_id );
 			$content_count = learndash_get_lesson_content_count( $lesson, $course_id );
@@ -181,7 +181,7 @@ endif; ?>
 
 	</div> <!--/.ld-lesson-item-preview-->
 	<?php if ( $expandable ) : ?>
-		<div class="ld-lesson-item-expanded ld-expandable <?php echo esc_attr( $expand_class ); ?>" id="<?php echo esc_attr( 'ld-nav-content-list-' . $lesson['post']->ID ); ?>">
+		<div class="ld-lesson-item-expanded ld-expandable <?php echo esc_attr( 'ld-nav-content-list-' . $lesson['post']->ID ); ?> <?php echo esc_attr( $expand_class ); ?>" id="<?php echo esc_attr( 'ld-nav-content-list-' . $lesson['post']->ID ); ?>" data-ld-expand-id="<?php echo esc_attr( 'ld-nav-content-list-' . $lesson['post']->ID ); ?>">
 			<div class="ld-table-list ld-topic-list">
 				<div class="ld-table-list-items">
 					<?php

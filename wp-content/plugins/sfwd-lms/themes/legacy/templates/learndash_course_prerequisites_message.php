@@ -60,7 +60,7 @@ if ( ! empty( $prerequisite_posts_all ) ) {
 				'learndash'
 			),
 			$content_type,
-			esc_html( _n( learndash_get_custom_label_lower( 'course' ), learndash_get_custom_label_lower( 'courses' ), $i, 'learndash' ) )
+			esc_html( _n( learndash_get_custom_label_lower( 'course' ), learndash_get_custom_label_lower( 'courses' ), $i, 'learndash' ) ) // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralSingle, WordPress.WP.I18n.NonSingularStringLiteralPlural
 		);
 
 	}

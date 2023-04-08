@@ -2,13 +2,14 @@
 /**
  * LearnDash LD30 Displays the breadcrumbs
  *
- * @since 3.0.0
- *
- * @package LearnDash\Templates\LD30
-
  * Available Variables:
  *
  * $post                  : (WP_Post) The post object.
+ *
+ * @since 3.0.0
+ *
+ * @package LearnDash\Templates\LD30
+ *
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -4,14 +4,15 @@
  * functions and look for the alternatives instead. The functions will be
  * removed in a later version.
  *
- * @package LearnDash
- * @subpackage Deprecated
+ * @package LearnDash\Deprecated
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/4.5.0/functions.php';
+require_once __DIR__ . '/4.1.0/functions.php';
 require_once __DIR__ . '/3.6.0/functions.php';
 require_once __DIR__ . '/3.5.1/functions.php';
 require_once __DIR__ . '/3.5.0/functions.php';

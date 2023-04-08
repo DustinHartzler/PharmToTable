@@ -17,7 +17,7 @@ if ( ( ! class_exists( 'LD_REST_Echo_Controller_V1' ) ) && ( class_exists( 'WP_R
 	 *
 	 * @since 3.0.7
 	 */
-	class LD_REST_Echo_Controller_V1 extends WP_REST_Controller { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Echo_Controller_V1 extends WP_REST_Controller /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 		/**
 		 * Version
 		 *
@@ -49,18 +49,18 @@ if ( ( ! class_exists( 'LD_REST_Echo_Controller_V1' ) ) && ( class_exists( 'WP_R
 				array(
 					array(
 						'methods'             => WP_REST_Server::READABLE,
-						'callback'            => array( $this, 'get_repsonse' ),
-						'permission_callback' => array( $this, 'get_repsonse_permissions_check' ),
+						'callback'            => array( $this, 'get_response' ),
+						'permission_callback' => array( $this, 'get_response_permissions_check' ),
 					),
 					array(
 						'methods'             => WP_REST_Server::EDITABLE,
-						'callback'            => array( $this, 'get_repsonse' ),
-						'permission_callback' => array( $this, 'get_repsonse_permissions_check' ),
+						'callback'            => array( $this, 'get_response' ),
+						'permission_callback' => array( $this, 'get_response_permissions_check' ),
 					),
 					array(
 						'methods'             => WP_REST_Server::DELETABLE,
-						'callback'            => array( $this, 'get_repsonse' ),
-						'permission_callback' => array( $this, 'get_repsonse_permissions_check' ),
+						'callback'            => array( $this, 'get_response' ),
+						'permission_callback' => array( $this, 'get_response_permissions_check' ),
 					),
 					'schema' => array( $this, 'get_item_schema' ),
 				)
@@ -76,7 +76,7 @@ if ( ( ! class_exists( 'LD_REST_Echo_Controller_V1' ) ) && ( class_exists( 'WP_R
 		 *
 		 * @return true|WP_Error True if the request has read access for the item, otherwise WP_Error object.
 		 */
-		public function get_repsonse_permissions_check( $request ) {
+		public function get_response_permissions_check( $request ) {
 			return true;
 		}
 
@@ -89,7 +89,7 @@ if ( ( ! class_exists( 'LD_REST_Echo_Controller_V1' ) ) && ( class_exists( 'WP_R
 		 *
 		 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 		 */
-		public function get_repsonse( $request ) {
+		public function get_response( $request ) {
 			$response_array                  = array();
 			$response_array['method']        = $request->get_method();
 			$response_array['route']         = $request->get_route();

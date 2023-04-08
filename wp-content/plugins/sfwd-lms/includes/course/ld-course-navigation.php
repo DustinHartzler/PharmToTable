@@ -16,19 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.1.0
  *
- * @param  string       $prevlink Default previous post link.
- * @param  boolean      $url      Whether to return URL instead of HTML output.
- * @param  WP_Post|null $post     The `WP_Post` object. Defaults to global post object.
+ * @param  string       $prev_link Default previous post link.
+ * @param  boolean      $url       Whether to return URL instead of HTML output.
+ * @param  WP_Post|null $post      The `WP_Post` object. Defaults to global post object.
  *
  * @return string Previous post link URL or HTML output.
  */
-function learndash_previous_post_link( $prevlink = '', $url = false, $post = null ) {
+function learndash_previous_post_link( $prev_link = '', $url = false, $post = null ) {
 	if ( empty( $post ) ) {
 		global $post;
 	}
 
 	if ( empty( $post ) ) {
-		return $prevlink;
+		return $prev_link;
 	}
 
 	if ( 'sfwd-lessons' === $post->post_type ) {
@@ -49,7 +49,7 @@ function learndash_previous_post_link( $prevlink = '', $url = false, $post = nul
 		}
 		$posts = learndash_course_get_topics( $course_id, $lesson_id, array( 'per_page' => 0 ) );
 	} else {
-		return $prevlink;
+		return $prev_link;
 	}
 
 	$prev_post = null;
@@ -90,7 +90,7 @@ function learndash_previous_post_link( $prevlink = '', $url = false, $post = nul
 			return apply_filters( 'learndash_previous_post_link', $link, $permalink, $link_name, $post );
 		}
 	} else {
-		return $prevlink;
+		return $prev_link;
 	}
 }
 
@@ -99,19 +99,19 @@ function learndash_previous_post_link( $prevlink = '', $url = false, $post = nul
  *
  * @since 2.1.0
  *
- * @param  string       $prevlink Default next post link.
- * @param  boolean      $url      Whether to return URL instead of HTML output.
- * @param  WP_Post|null $post     The `WP_Post` object. Defaults to global post object.
+ * @param  string       $prev_link Default next post link.
+ * @param  boolean      $url       Whether to return URL instead of HTML output.
+ * @param  WP_Post|null $post      The `WP_Post` object. Defaults to global post object.
  *
  * @return string Next post link URL or HTML output.
  */
-function learndash_next_post_link( $prevlink = '', $url = false, $post = null ) {
+function learndash_next_post_link( $prev_link = '', $url = false, $post = null ) {
 	if ( empty( $post ) ) {
 		global $post;
 	}
 
 	if ( empty( $post ) ) {
-		return $prevlink;
+		return $prev_link;
 	}
 
 	if ( 'sfwd-lessons' === $post->post_type ) {
@@ -130,7 +130,7 @@ function learndash_next_post_link( $prevlink = '', $url = false, $post = null ) 
 		}
 		$posts = learndash_course_get_topics( $course_id, $lesson_id, array( 'per_page' => 0 ) );
 	} else {
-		return $prevlink;
+		return $prev_link;
 	}
 
 	$found_at  = null;
@@ -175,7 +175,7 @@ function learndash_next_post_link( $prevlink = '', $url = false, $post = null ) 
 			return apply_filters( 'learndash_next_post_link', $link, $permalink, $link_name, $next_post );
 		}
 	} else {
-		return $prevlink;
+		return $prev_link;
 	}
 }
 
@@ -186,21 +186,21 @@ function learndash_next_post_link( $prevlink = '', $url = false, $post = null ) 
  *
  * @since 2.1.0
  *
- * @param string $prevlink The next/previous post link.
+ * @param string $prev_link The next/previous post link.
  *
  * @return string The next/previous post link.
  */
-function learndash_clear_prev_next_links( $prevlink = '' ) {
+function learndash_clear_prev_next_links( $prev_link = '' ) {
 	global $post;
 
-	if ( ! is_singular() || empty( $post->post_type ) || ! in_array( $post->post_type, [ 'sfwd-quiz', 'sfwd-courses', 'sfwd-topic', 'sfwd-assignment' ], true ) ) {
-		return $prevlink;
+	if ( ! is_singular() || empty( $post->post_type ) || ! in_array( $post->post_type, array( 'sfwd-quiz', 'sfwd-courses', 'sfwd-topic', 'sfwd-assignment' ), true ) ) {
+		return $prev_link;
 	} else {
 		return '';
 	}
 }
-add_filter( 'previous_post_link', 'learndash_clear_prev_next_links', 1, 2 );
-add_filter( 'next_post_link', 'learndash_clear_prev_next_links', 1, 2 );
+add_filter( 'previous_post_link', 'learndash_clear_prev_next_links', 1 );
+add_filter( 'next_post_link', 'learndash_clear_prev_next_links', 1 );
 
 /**
  * Outputs the quiz continue link.
@@ -210,8 +210,6 @@ add_filter( 'next_post_link', 'learndash_clear_prev_next_links', 1, 2 );
  * @return string The quiz continue link output.
  */
 function learndash_quiz_continue_link( $id ) {
-	global $status, $pageQuizzes;
-
 	$course_id = learndash_get_course_id( $id );
 	if ( ( ! empty( $course_id ) ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) ) {
 		$lesson_id = learndash_course_get_single_parent_step( $course_id, $id );
@@ -223,6 +221,7 @@ function learndash_quiz_continue_link( $id ) {
 					'quiz_redirect' => 1,
 					'course_id'     => $course_id,
 					'quiz_id'       => $id,
+					'next_step'     => '1',
 				),
 				$url
 			);
@@ -235,6 +234,7 @@ function learndash_quiz_continue_link( $id ) {
 					'quiz_redirect' => 1,
 					'lesson_id'     => $lesson_id,
 					'quiz_id'       => $id,
+					'next_step'     => '1',
 				),
 				$url
 			);
@@ -258,6 +258,7 @@ function learndash_quiz_continue_link( $id ) {
 					'quiz_redirect' => 1,
 					'course_id'     => $course_id,
 					'quiz_id'       => $id,
+					'next_step'     => '1',
 				),
 				get_permalink( $course_id )
 			);
@@ -270,6 +271,7 @@ function learndash_quiz_continue_link( $id ) {
 					'course_id'     => $course_id,
 					'lesson_id'     => $return_id,
 					'quiz_id'       => $id,
+					'next_step'     => '1',
 				),
 				get_permalink( $return_id )
 			);
@@ -366,10 +368,18 @@ function learndash_topic_dots( $lesson_id, $show_text = false, $type = 'dots', $
 				 *
 				 * @param string  $topic_dots  Topic dots output.
 				 * @param WP_Post $topic       Topic WP_Post object to be checked.
+				 * @param bool    $completed   A flag if a topic is completed or not.
 				 * @param string  $type        Type of dots. Value can dots or list.
 				 * @param mixed   $topic_count Count of topics.
 				 */
-				$html .= apply_filters( 'learndash_topic_dots_item', "<li><a class='" . esc_attr( $completed ) . "' href='" . esc_url( get_permalink( $topic->ID ) ) . "'  title='" . esc_html( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ) . "'><span>" . wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ) . '</span></a></li>', $topic, $completed, $type, $sn ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook
+				$html .= apply_filters(
+					'learndash_topic_dots_item',
+					"<li><a class='" . esc_attr( $completed ) . "' href='" . esc_url( get_permalink( $topic->ID ) ) . "'  title='" . esc_html( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ) . "'><span>" . wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ) . '</span></a></li>', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core hook.
+					$topic,
+					(bool) $topic->completed,
+					$type,
+					$sn
+				);
 			}
 
 			$html .= '</ul>';
@@ -472,7 +482,7 @@ function learndash_get_global_quiz_list( $id = null ) {
  * @param int|null         $user_id    Optional. User ID. Default null.
  * @param array            $query_args Optional. An array of query arguments to get lesson list. Default empty array.
  *
- * @return string The lesson list HTML output.
+ * @return array The lesson list array.
  */
 function learndash_get_course_lessons_list( $course_id = null, $user_id = null, $query_args = array() ) {
 	if ( ( defined( 'LEARNDASH_COURSE_FUNCTIONS_LEGACY' ) ) && ( true === LEARNDASH_COURSE_FUNCTIONS_LEGACY ) ) {
@@ -592,7 +602,7 @@ function learndash_get_course_lessons_list( $course_id = null, $user_id = null, 
 			/**
 			 * Support the legacy pagination data structure and hook.
 			 */
-			$query_posts   = new stdClass();
+			$query_posts   = new WP_Query();
 			$lessons_pager = $ld_course_object->get_pager( $course_id, learndash_get_post_type_slug( 'lesson' ) );
 			if ( is_array( $lessons_pager ) ) {
 				if ( isset( $lessons_pager['paged'] ) ) {
@@ -612,7 +622,11 @@ function learndash_get_course_lessons_list( $course_id = null, $user_id = null, 
 			 * @param WP_Query $query_posts   Course lesson list WP_Query object.
 			 * @param string   $pager_context The context where pagination is shown.
 			 */
-			do_action( 'learndash_course_lessons_list_pager', $query_posts, isset( $query_args['pager_context'] ) ? esc_attr( $query_args['pager_context'] ) : '' );
+			do_action(
+				'learndash_course_lessons_list_pager',
+				$query_posts,
+				isset( $query_args['pager_context'] ) ? esc_attr( $query_args['pager_context'] ) : ''
+			);
 		}
 	}
 

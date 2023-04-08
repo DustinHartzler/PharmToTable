@@ -16,8 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	class LearnDash_Shortcodes_Section_ld_course_expire_status extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
-
+	class LearnDash_Shortcodes_Section_ld_course_expire_status extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 		/**
 		 * Public constructor for class.
 		 *
@@ -93,7 +92,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'name'      => 'autop',
 					'type'      => 'select',
 					'label'     => esc_html__( 'Auto Paragraph', 'learndash' ),
-					'help_text' => esc_html__( 'Format shortcode content into proper pararaphs.', 'learndash' ),
+					'help_text' => esc_html__( 'Format shortcode content into proper paragraphs.', 'learndash' ),
 					'value'     => 'true',
 					'options'   => array(
 						''      => esc_html__( 'Yes (default)', 'learndash' ),

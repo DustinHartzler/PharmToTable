@@ -53,7 +53,7 @@ if ( post_password_required() ) {
 	}
 	?>
 
-	<div class="ld-focus-comments__comments ld-expanded" id="ld-comments">
+	<div class="ld-focus-comments__comments ld-expanded" id="ld-comments" data-ld-expand-id="ld-comments">
 		<div class="ld-focus-comments__comments-items" id="ld-comments-wrapper">
 			<?php
 			// If comments are open or we have at least one comment, load up the comment template.

@@ -8,7 +8,7 @@
  *
  * $course_step_post        : WP_Post object for the Lesson/Topic being shown
  *
- * @since 2.5
+ * @since 2.5.0
  *
  * @package LearnDash\Templates\Legacy\Assignment
  */

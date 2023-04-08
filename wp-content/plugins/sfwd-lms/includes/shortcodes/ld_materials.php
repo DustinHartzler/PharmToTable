@@ -2,7 +2,7 @@
 /**
  * LearnDash `[ld_materials]` shortcode processing.
  *
- * @since 4.0
+ * @since 4.0.0
  * @package LearnDash\Shortcodes
  */
 
@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @global boolean $learndash_shortcode_used
  *
- * @since 4.0
+ * @since 4.0.0
  *
  * @param array  $atts {
  *    An array of shortcode attributes.
  *
- *    @type int $post_id ID of the post for dislaying the materials.
+ *    @type int $post_id ID of the post for displaying the materials.
  *
  * @param string $content The shortcode content. Default empty.
  * @param string $shortcode_slug The shortcode slug. Default 'ld_materials'.

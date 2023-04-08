@@ -45,7 +45,6 @@ function get_quiz_data( $data ) {
 					}
 
 					// Get answers from question.
-					// $question_pro_id = (int) get_post_meta( $question_id, 'question_pro_id', true );
 					$question_mapper = new \WpProQuiz_Model_QuestionMapper();
 
 					if ( ! empty( $question_pro_id ) ) {

@@ -39,18 +39,18 @@ function learndash_user_course_points_shortcode( $atts = array(), $content = '',
 	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
 	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
-	if ( ! isset( $atts['user_id'] ) ) {
+	if ( empty( $atts['user_id'] ) ) {
 		return;
 	}
 
 	$learndash_shortcode_used = true;
 
-	$user_couse_points = learndash_get_user_course_points( $atts['user_id'] );
+	$user_course_points = learndash_get_user_course_points( $atts['user_id'] );
 
 	$content = SFWD_LMS::get_template(
 		'learndash_course_points_user_message',
 		array(
-			'user_course_points' => $user_couse_points,
+			'user_course_points' => $user_course_points,
 			'user_id'            => $atts['user_id'],
 			'shortcode_atts'     => $atts,
 		),

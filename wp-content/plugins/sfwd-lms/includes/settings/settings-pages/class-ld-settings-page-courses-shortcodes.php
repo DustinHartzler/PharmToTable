@@ -38,7 +38,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		}
 
 		/**
-		 * Show settiings page output.
+		 * Show settings page output.
 		 *
 		 * @since 2.4.0
 		 */

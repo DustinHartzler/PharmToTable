@@ -458,7 +458,7 @@ function learndash_course_get_children_of_step( $course_id = 0, $step_id = 0, $c
  * @param int     $step_id           Optional. The ID of the step to get course list. Default 0.
  * @param boolean $return_flat_array  Optional. Whether to return single dimensional array. Default false.
  *
- * @return array An array of course list for a step. Returns an multidimesional array
+ * @return array An array of course list for a step. Returns an multidimensional array
  *               of course list sorted in primary and secondary course list if the
  *               `$return_flat_array` parameter is false.
  */
@@ -493,6 +493,11 @@ function learndash_get_courses_for_step( $step_id = 0, $return_flat_array = fals
 					}
 				}
 			}
+		}
+
+		// LEARNDASH-6567 : If shared steps is not enabled then clear the array node.
+		if ( ! learndash_is_course_shared_steps_enabled() ) {
+			$course_ids['secondary'] = array();
 		}
 
 		// Ensure the primary course is also part of the secondary courses.
@@ -630,8 +635,7 @@ function learndash_check_course_step( $wp ) {
 		if ( ( in_array( $post->post_type, array( 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz' ), true ) === true ) && ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'nested_urls' ) ) ) {
 			$course_slug = get_query_var( 'sfwd-courses' );
 
-			// Check first if there is an existing course part of the URL. Maybe the student is trying to user a lesson URL part
-			// for a differen course.
+			// Check first if there is an existing course part of the URL. Maybe the student is trying to user a lesson URL part for a different course.
 			if ( ! empty( $course_slug ) ) {
 				$course_post = learndash_get_page_by_path( $course_slug, 'sfwd-courses' );
 				if ( ( ! empty( $course_post ) ) && ( is_a( $course_post, 'WP_Post' ) ) && ( 'sfwd-courses' === $course_post->post_type ) ) {
@@ -882,6 +886,7 @@ function learndash_get_step_post_status_label( $post ) {
  * Get the post title formatted with post status label.
  *
  * @since 4.0.0
+ *
  * @param object $post          WP_Post object.
  * @param array  $skip_statuses Optional. Array of post_stati to skip.
  * @param string $before_label  Optional. String to prepend to the status label.
@@ -892,7 +897,7 @@ function learndash_get_step_post_status_label( $post ) {
 function learndash_format_step_post_title_with_status_label( $post, $skip_statuses = array( 'publish' ), $before_label = '(', $after_label = ')' ) {
 	$post_title = '';
 
-	if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) ) {
+	if ( is_a( $post, 'WP_Post' ) ) {
 		$post_title = get_the_title( $post->ID );
 
 		if ( ! empty( $skip_statuses ) ) {
@@ -905,7 +910,6 @@ function learndash_format_step_post_title_with_status_label( $post, $skip_status
 		if ( ! in_array( $post_status_slug, $skip_statuses, true ) ) {
 			$post_statuses = learndash_get_step_post_statuses();
 
-			$post_status_label = '';
 			if ( isset( $post_statuses[ $post_status_slug ] ) ) {
 				$post_status_label = esc_html( $before_label ) . esc_html( $post_statuses[ $post->post_status ] ) . esc_html( $after_label );
 			} else {
@@ -913,7 +917,6 @@ function learndash_format_step_post_title_with_status_label( $post, $skip_status
 			}
 
 			if ( ! empty( $post_status_label ) ) {
-
 				$post_title = sprintf(
 					// translators: placeholder: post title, post status.
 					esc_html_x( '%1$s %2$s', 'placeholder: post title, post status', 'learndash' ),

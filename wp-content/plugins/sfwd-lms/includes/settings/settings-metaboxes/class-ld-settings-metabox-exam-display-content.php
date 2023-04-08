@@ -166,9 +166,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'query_args'       => array(
 								'post_type'           => 'sfwd-courses',
 								'ld_include_selected' => absint( $this->setting_option_values['exam_challenge_course_show'] ),
-								'meta_query'          => array(
+								'meta_query'          => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 									array(
-										'key'     => LEARNDASH_EXAM_CHALLENDGE_POST_META_KEY,
+										'key'     => LEARNDASH_EXAM_CHALLENGE_POST_META_KEY,
 										'compare' => 'NOT EXISTS',
 									),
 								),
@@ -251,7 +251,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						// translators: placeholder: Exam, Course.
 						esc_html_x( '%1$s %2$s Show', 'placeholder: Exam, Course', 'learndash' ),
 						learndash_get_custom_label( 'exam' ),
-						learndash_get_custom_label( 'course' ),
+						learndash_get_custom_label( 'course' )
 					),
 					'default'     => '',
 					'help_text'   => sprintf(
@@ -284,15 +284,15 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						// translators: placeholder: Exam, Course.
 						esc_html_x( '%1$s Passed %2$s', 'placeholder: Exam, Course', 'learndash' ),
 						learndash_get_custom_label( 'exam' ),
-						learndash_get_custom_label( 'course' ),
+						learndash_get_custom_label( 'course' )
 					),
 					'default'     => '',
 					'help_text'   => sprintf(
 						// translators: placeholder: Course, Exam, Course.
-						esc_html_x( 'Select the %1$s you want the user to complete when they succesfully complete this %2$s. If different from the above setting, the user must already be enrolled in the chosen %3$s.', 'placeholder: Course, Exam, Course', 'learndash' ),
+						esc_html_x( 'Select the %1$s you want the user to complete when they successfully complete this %2$s. If different from the above setting, the user must already be enrolled in the chosen %3$s.', 'placeholder: Course, Exam, Course', 'learndash' ),
 						learndash_get_custom_label_lower( 'course' ),
 						learndash_get_custom_label_lower( 'exam' ),
-						learndash_get_custom_label_lower( 'course' ),
+						learndash_get_custom_label_lower( 'course' )
 					),
 					'value'       => $this->setting_option_values['exam_challenge_course_passed'],
 					'options'     => $select_exam_challenge_course_passed_options,
@@ -317,7 +317,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'label'     => sprintf(
 						// translators: placeholder: Exam.
 						esc_html_x( '%s Passed Button Label', 'placeholder: Exam', 'learndash' ),
-						learndash_get_custom_label( 'exam' ),
+						learndash_get_custom_label( 'exam' )
 					),
 					'default'   => '',
 					'help_text' => sprintf(
@@ -343,7 +343,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'label'     => sprintf(
 						// translators: placeholder: Exam.
 						esc_html_x( '%s Passed Redirect URL', 'placeholder: Exam', 'learndash' ),
-						learndash_get_custom_label( 'exam' ),
+						learndash_get_custom_label( 'exam' )
 					),
 					'default'   => '',
 					'help_text' => sprintf(
@@ -416,13 +416,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'label'     => sprintf(
 						// translators: placeholder: Exam.
 						esc_html_x( '%s Failed Button Label', 'placeholder: Exam', 'learndash' ),
-						learndash_get_custom_label( 'exam' ),
+						learndash_get_custom_label( 'exam' )
 					),
 					'default'   => '',
 					'help_text' => sprintf(
 						// translators: placeholder: Exam.
 						esc_html_x( 'Label for button when a user fails a %s', 'placeholder: Exam', 'learndash' ),
-						learndash_get_custom_label_lower( 'exam' ),
+						learndash_get_custom_label_lower( 'exam' )
 					),
 					'value'     => $this->setting_option_values['exam_failed_button_label'],
 					'rest'      => array(
@@ -442,7 +442,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'label'     => sprintf(
 						// translators: placeholder: Exam, Course.
 						esc_html_x( '%s Failed Redirect URL', 'placeholder: Exam', 'learndash' ),
-						learndash_get_custom_label( 'exam' ),
+						learndash_get_custom_label( 'exam' )
 					),
 					'default'   => '',
 					'help_text' => sprintf(

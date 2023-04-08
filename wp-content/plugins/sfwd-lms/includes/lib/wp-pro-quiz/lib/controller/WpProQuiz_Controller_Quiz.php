@@ -98,7 +98,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 				$quiz = $data['quiz'];
 				$quiz->setId( $quizId );
 				$quiz->setName( $this->_post['name'] );
-				$quiz->setText( 'AAZZAAZZ' );
+				$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 				$quizMapper->save( $quiz );
 				if ( empty( $quizId ) && ! empty( $get['post_id'] ) ) {
 					learndash_update_setting( $get['post_id'], 'quiz_pro', $quiz->getId() );
@@ -125,7 +125,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 
 			if ( $this->checkValidit( $this->_post ) ) {
 
-				$quiz->setText( 'AAZZAAZZ' );
+				$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 
 				$quizMapper->save( $quiz );
 				if ( empty( $quizId ) && ! empty( $get['post_id'] ) ) {
@@ -143,7 +143,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 
 				if ( ! $this->formHandler( $quiz->getId(), $this->_post ) ) {
 					$quiz->setFormActivated( false );
-					$quiz->setText( 'AAZZAAZZ' );
+					$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 					$quizMapper->save( $quiz );
 				}
 
@@ -243,7 +243,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 			}
 
 			if ( $this->checkValidit( $this->_post ) ) {
-				$quiz->setText( 'AAZZAAZZ' );
+				$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 
 				$quiz2 = $quizMapper->save( $quiz );
 
@@ -267,7 +267,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 
 				if ( ! $this->formHandler( $quiz->getId(), $this->_post ) ) {
 					$quiz->setFormActivated( false );
-					$quiz->setText( ' AAZZAAZZ' );
+					$quiz->setText( ' AAZZAAZZ' ); // cspell:disable-line.
 					$quizMapper->save( $quiz );
 				}
 			} else {
@@ -325,7 +325,7 @@ class WpProQuiz_Controller_Quiz extends WpProQuiz_Controller_Controller {
 					$quiz = $data['quiz'];
 					$quiz->setId( $quizId );
 					$quiz->setName( $this->_post['name'] );
-					$quiz->setText( 'AAZZAAZZ' );
+					$quiz->setText( 'AAZZAAZZ' ); // cspell:disable-line.
 					$forms                = $data['forms'];
 					$prerequisiteQuizList = $data['prerequisiteQuizList'];
 				}

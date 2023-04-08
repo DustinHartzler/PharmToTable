@@ -19,6 +19,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 	 */
 	class LearnDash_Settings_Section_Emails_Sender_Settings extends LearnDash_Settings_Section {
 
+		/**
+		 * Current Section
+		 *
+		 * @var string $current_section
+		 */
 		private $current_section = '';
 
 		/**

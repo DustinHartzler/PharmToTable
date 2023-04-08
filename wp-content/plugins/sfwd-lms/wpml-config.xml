@@ -55,7 +55,6 @@
 		<key name="sfwd_cpt_options" >
 			<key name="modules" >
 				<key name="sfwd-courses_options" >
-					<key name="sfwd-courses_paypal_currency" />
 					<key name="sfwd-courses_paypal_country" />
 					<key name="sfwd-courses_paypal_cancelurl" />
 					<key name="sfwd-courses_paypal_returnurl" />
@@ -88,5 +87,5 @@
 			<key name="last_name_label" />
 			<key name="password_label" />
 		</key>
-	</admin-texts>	
+	</admin-texts>
 </wpml-config>

@@ -18,7 +18,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Users_Quiz_Progress_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Users_Quiz_Progress_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Supported Collection Parameters.
@@ -345,7 +345,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 			}
 			$user = get_user_by( 'ID', $user_id );
 			if ( ! is_a( $user, 'WP_User' ) ) {
-				return new WP_Error( 'rest_user_invalid_id', esc_html__( 'Invalid or unkown user.', 'learndash' ), array( 'status' => 404 ) );
+				return new WP_Error( 'rest_user_invalid_id', esc_html__( 'Invalid or unknown user.', 'learndash' ), array( 'status' => 404 ) );
 			}
 
 			if ( is_user_logged_in() ) {
@@ -636,7 +636,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( clas
 		/**
 		 * Retrieves the query params for the posts collection.
 		 *
-		 * @since 3.3
+		 * @since 3.3.0
 		 *
 		 * @return array Collection parameters.
 		 */

@@ -157,7 +157,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						$this->settings_set['settings']['db_version']['value_html'] .= ' - <a href="https://www.learndash.com/support/docs/getting-started/requirements/" target="_blank">' . esc_html__( 'LearnDash Minimum Requirements', 'learndash' ) . '</a>';
 						$this->settings_set['settings']['db_version']['value']      .= ' - (X)';
 					}
-				} elseif ( true == $db_server_info['mariadb_actve'] ) {
+				} elseif ( true == $db_server_info['mariadb_active'] ) {
 					$db_version = $db_server_info['db_version_found'];
 
 					$this->settings_set['settings']['db_version'] = array(
@@ -282,7 +282,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function show_support_section( $settings_section_key = '', $settings_screen_id = '' ) {
 			if ( $settings_section_key === $this->settings_section_key ) {
 				$support_page_instance = LearnDash_Settings_Page::get_page_instance( 'LearnDash_Settings_Page_Support' );
-				if ( $support_page_instance ) {
+				if ( is_a( $support_page_instance, 'LearnDash_Settings_Page_Support' ) ) {
 					$support_page_instance->show_support_section( $this->setting_option_key );
 				}
 			}

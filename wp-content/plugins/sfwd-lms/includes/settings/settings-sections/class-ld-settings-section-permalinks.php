@@ -96,23 +96,35 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				if ( ( isset( $custom_label_settings['courses'] ) ) && ( ! empty( $custom_label_settings['courses'] ) ) ) {
 					$this->setting_option_values['courses'] = learndash_get_custom_label_slug( 'courses' );
+				} else {
+					$this->setting_option_values['courses'] = 'courses';
 				}
 
 				if ( ( isset( $custom_label_settings['lessons'] ) ) && ( ! empty( $custom_label_settings['lessons'] ) ) ) {
 					$this->setting_option_values['lessons'] = learndash_get_custom_label_slug( 'lessons' );
+				} else {
+					$this->setting_option_values['lessons'] = 'lessons';
 				}
 
 				if ( ( isset( $custom_label_settings['topic'] ) ) && ( ! empty( $custom_label_settings['topic'] ) ) ) {
 					$this->setting_option_values['topics'] = learndash_get_custom_label_slug( 'topic' );
+				} else {
+					$this->setting_option_values['topics'] = 'topics';
 				}
 
 				if ( ( isset( $custom_label_settings['quizzes'] ) ) && ( ! empty( $custom_label_settings['quizzes'] ) ) ) {
 					$this->setting_option_values['quizzes'] = learndash_get_custom_label_slug( 'quizzes' );
+				} else {
+					$this->setting_option_values['quizzes'] = 'quizzes';
 				}
 
 				if ( ( isset( $custom_label_settings['groups'] ) ) && ( ! empty( $custom_label_settings['groups'] ) ) ) {
 					$this->setting_option_values['groups'] = learndash_get_custom_label_slug( 'groups' );
+				} else {
+					$this->setting_option_values['groups'] = 'groups';
 				}
+
+				$this->settings_bypass_nonce_check = true;
 
 				// As we don't have existing values we want to save here and force the flush rewrite.
 				update_option( $this->settings_section_key, $this->setting_option_values );
@@ -122,13 +134,20 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->setting_option_values = wp_parse_args(
 				$this->setting_option_values,
 				array(
-					'courses' => 'courses',
-					'lessons' => 'lessons',
-					'topics'  => 'topic',
-					'quizzes' => 'quizzes',
-					'groups'  => 'groups',
+					'courses'     => 'courses',
+					'lessons'     => 'lessons',
+					'topics'      => 'topic',
+					'quizzes'     => 'quizzes',
+					'groups'      => 'groups',
+					'nested_urls' => '',
 				)
 			);
+
+			if ( ( learndash_is_course_shared_steps_enabled() ) && ( 'yes' !== $this->setting_option_values['nested_urls'] ) ) {
+				$this->setting_option_values['nested_urls'] = 'yes';
+				update_option( $this->settings_section_key, $this->setting_option_values );
+				learndash_setup_rewrite_flush();
+			}
 		}
 
 		/**
@@ -239,9 +258,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 */
 		public function save_settings_fields() {
 
-			if ( isset( $_POST[ $this->setting_field_prefix ] ) ) {
+			if ( isset( $_POST[ $this->setting_field_prefix ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				if ( $this->verify_metabox_nonce_field() ) {
-					$post_fields = $_POST[ $this->setting_field_prefix ];
+					$post_fields = $_POST[ $this->setting_field_prefix ]; // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					if ( ( isset( $post_fields['courses'] ) ) && ( ! empty( $post_fields['courses'] ) ) ) {
 						$this->setting_option_values['courses'] = $this->esc_url( $post_fields['courses'] );
@@ -326,7 +345,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 * @since 3.6.0.1
 		 */
 		public function verify_metabox_nonce_field() {
-			if ( ( isset( $_POST[ $this->setting_field_prefix ]['nonce'] ) ) && ( wp_verify_nonce( $_POST[ $this->setting_field_prefix ]['nonce'], 'learndash_permalinks_nonce' ) ) ) {
+			if ( ( true === $this->settings_bypass_nonce_check ) || ( ( isset( $_POST[ $this->setting_field_prefix ]['nonce'] ) ) && ( wp_verify_nonce( $_POST[ $this->setting_field_prefix ]['nonce'], 'learndash_permalinks_nonce' ) ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 				return true;
 			}
 

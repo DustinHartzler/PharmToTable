@@ -2,7 +2,7 @@
 /**
  * LearnDash LD30 Displays the course progress widget.
  *
- * @since 3.0
+ * @since 3.0.0
  *
  * @package LearnDash\Templates\LD30
  */

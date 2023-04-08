@@ -23,7 +23,7 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Questions_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Questions_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Current Post Metaboxes Fields
@@ -692,7 +692,6 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 							break;
 
 						case 'answers':
-							// error_log( 'question_data<pre>' . print_r( $question_data, true ) . '</pre>' );
 							break;
 
 						default:
@@ -718,11 +717,11 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V2' ) ) && ( class_exists( 
 		public function rest_prepare_response_filter( WP_REST_Response $response, WP_Post $post, WP_REST_Request $request ) {
 
 			if ( $this->post_type === $post->post_type ) {
-				$base = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
+				$base          = sprintf( '/%s/%s', $this->namespace, $this->rest_base );
 				$request_route = $request->get_route();
-				
+
 				if ( ( ! empty( $request_route ) ) && ( strpos( $request_route, $base ) !== false ) ) {
-				
+
 					$links = array();
 
 					$current_links = $response->get_links();

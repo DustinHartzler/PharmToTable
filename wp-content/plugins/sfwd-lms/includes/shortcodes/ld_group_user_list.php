@@ -94,7 +94,7 @@ function learndash_group_user_list( $attr = array(), $content = '', $shortcode_s
 						);
 						?>
 						<tr>
-							<td><?php echo esc_html( $sn++ ); ?></td>
+							<td><?php echo absint( $sn++ ); ?></td>
 							<td><?php echo esc_html( $name ); ?></td>
 							<td><?php echo esc_html( $user->user_login ); ?></td>
 							<td><?php echo esc_html( $user->user_email ); ?></td>

@@ -438,7 +438,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'rest_args'    => array(
 							'schema' => array(
 								'field_key'   => 'materials_enabled',
-								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
+								'description' => esc_html__( 'Materials Enabled', 'learndash' ),
 								'type'        => 'boolean',
 								'default'     => false,
 							),
@@ -475,6 +475,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 										'context'     => array( 'view', 'edit' ),
 										'readonly'    => true,
 									),
+								),
+								'arg_options' => array(
+									'sanitize_callback' => null, // Note: sanitization performed in rest_pre_insert_filter().
+									'validate_callback' => null,
 								),
 							),
 						),
@@ -623,6 +627,12 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'showReviewQuestion',
+					'help_text'      => sprintf(
+						// translators: placeholders: question, question.
+						esc_html_x( 'Must use the "One %1$s at a time" and "Display results after each submitted answer" settings in the %2$s Display setting above.', 'placeholders: question, question', 'learndash' ),
+						learndash_get_custom_label_lower( 'question' ),
+						learndash_get_custom_label( 'question' )
+					),
 					'rest'           => array(
 						'show_in_rest' => LearnDash_REST_API::enabled(),
 						'rest_args'    => array(

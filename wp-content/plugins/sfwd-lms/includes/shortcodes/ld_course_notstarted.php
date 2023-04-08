@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type string  $content   The shortcode content. Default empty.
  *    @type int     $course_id Course ID. Default false.
  *    @type int     $user_id   User ID. Default false.
- *    @type boolean $autop     Whether to replace linebreaks with paragraph elements. Default true.
+ *    @type boolean $autop     Whether to replace line breaks with paragraph elements. Default true.
  * }
  * @param string $content The shortcode content. Default empty.
  * @param string $shortcode_slug The shortcode slug. Default 'course_notstarted'.

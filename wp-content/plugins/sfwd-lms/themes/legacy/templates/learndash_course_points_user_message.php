@@ -14,7 +14,7 @@
  * profile : Set when used within the user's WP Profile output
  * ld_profile : Set when used from the LearnDash [ld_profile] shortcode
  *
- * @since 2.4
+ * @since 2.4.0
  *
  * @package LearnDash\Templates\Legacy\Course
  */

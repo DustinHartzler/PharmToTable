@@ -1,3 +1,6 @@
+/*!**********************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/sass/builder.scss ***!
+  \**********************************************************************************************************************************************************/
 .ld__builder--app,
 .ld__builder-sidebar-widget {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -243,8 +246,7 @@
 #sfwd-course-quizzes h2.hndle.ui-sortable-handle,
 #sfwd-course-quizzes h2.hndle.ui-sortable-handle {
   pointer-events: none;
-  display: block;
-  /* Adjust positioning after WP 5.5 changes */
+  display: block; /* Adjust positioning after WP 5.5 changes */
 }
 
 .ld__builder-sidebar-widget {

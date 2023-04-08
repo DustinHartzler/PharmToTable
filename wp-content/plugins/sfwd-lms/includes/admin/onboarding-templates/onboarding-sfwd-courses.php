@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p>
 			<?php
 			printf(
-				// translators: placeholder: %1$s: Courses, %2$s: Course, %3$s: Lessons, %4$s: Topics, %5$s: Quizzes
+				// translators: placeholder: %1$s: Courses, %2$s: Course, %3$s: Lessons, %4$s: Topics, %5$s: Quizzes.
 				esc_html_x( '%1$s offer a convenient and organized way for you to deliver training content. Create a %2$s and include %3$s, %4$s, %5$s, Assignments, and more!', 'placeholder: %1$s: Courses, %2$s: Course, %3$s: Lessons, %4$s: Topics, %5$s: Quizzes', 'learndash' ),
 				\LearnDash_Custom_Label::get_label( 'courses' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 				\LearnDash_Custom_Label::get_label( 'course' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output

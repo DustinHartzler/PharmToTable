@@ -9,7 +9,7 @@
  * @var array  $shortcode_atts Array of shortcode attributes to create the Quiz.
  * @var int    $question_count Number of Question to display.
  *
- * @since 3.2
+ * @since 3.2.0
  *
  * @package LearnDash\Templates\Legacy\Quiz
  */
@@ -37,7 +37,7 @@ $cat_points    = array();
 			$json[ $question->getId() ]['type']             = $question->getAnswerType();
 			$json[ $question->getId() ]['id']               = (int) $question->getId();
 			$json[ $question->getId() ]['question_post_id'] = (int) $question->getQuestionPostId();
-			$json[ $question->getId() ]['catId']            = (int) $question->getCategoryId();
+			$json[ $question->getId() ]['catId']            = (int) $question->getCategoryId(); // cspell:disable-line.
 
 			if ( $question->isAnswerPointsActivated() && $question->isAnswerPointsDiffModusActivated() && $question->isDisableCorrect() ) {
 				$json[ $question->getId() ]['disCorrect'] = (int) $question->isDisableCorrect();

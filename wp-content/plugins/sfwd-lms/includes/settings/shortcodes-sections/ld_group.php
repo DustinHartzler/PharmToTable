@@ -14,7 +14,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	/**
 	 * Class LearnDash Shortcode Section for Group [ld_group].
 	 */
-	class LearnDash_Shortcodes_Section_ld_group extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_ld_group extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -24,8 +24,8 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
-			$this->shortcodes_section_key   = 'ld_group';
-			$this->shortcodes_section_title = learndash_get_custom_label( 'group' );
+			$this->shortcodes_section_key         = 'ld_group';
+			$this->shortcodes_section_title       = learndash_get_custom_label( 'group' );
 			$this->shortcodes_section_type        = 2;
 			$this->shortcodes_section_description = sprintf(
 				// translators: group.
@@ -79,7 +79,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'name'      => 'autop',
 					'type'      => 'select',
 					'label'     => esc_html__( 'Auto Paragraph', 'learndash' ),
-					'help_text' => esc_html__( 'Format shortcode content into proper pararaphs.', 'learndash' ),
+					'help_text' => esc_html__( 'Format shortcode content into proper paragraphs.', 'learndash' ),
 					'value'     => 'true',
 					'options'   => array(
 						''      => esc_html__( 'Yes (default)', 'learndash' ),

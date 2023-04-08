@@ -2,7 +2,7 @@
 /**
  * Learndash Reports functions
  *
- * @since 2.3
+ * @since 2.3.0
  *
  * @package LearnDash\Reports
  */
@@ -106,7 +106,7 @@ function learndash_get_report_user_ids( $user_id = 0, $query_args = array() ) {
 }
 
 /**
- * Gets the count of active/pubished courses.
+ * Gets the count of active/published courses.
  *
  * @since 2.3.0
  *
@@ -250,7 +250,7 @@ function learndash_get_assignments_pending_count( $query_args = array(), $return
 }
 
 /**
- * Gets the link to admin assingments(sfwd-assignment) posts listing.
+ * Gets the link to admin assignments(sfwd-assignment) posts listing.
  *
  * @param array $link_args Optional. The query arguments to get the link. Default empty array.
  *
@@ -289,7 +289,7 @@ function learndash_admin_get_assignments_listing_link( $link_args = array() ) {
 }
 
 /**
- * Gets the link to admin pending assingments(sfwd-assignment) posts listing.
+ * Gets the link to admin pending assignments(sfwd-assignment) posts listing.
  *
  * @since 2.3.0
  *
@@ -467,7 +467,10 @@ function learndash_students_enrolled_count( $user_query_args = array() ) {
 	 *
 	 * @param array $query_args An array of students enrolled count query arguments.
 	 */
-	$user_query_args = apply_filters( 'learndash_students_enrolled_count_qrgs', wp_parse_args( $user_query_args, $default_args ) );
+	$user_query_args = apply_filters(
+		'learndash_students_enrolled_count_qrgs', // cspell:disable-line.
+		wp_parse_args( $user_query_args, $default_args )
+	);
 
 	if ( ! empty( $user_query_args ) ) {
 		$user_query = new WP_User_Query( $user_query_args );
@@ -685,7 +688,7 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		'time_end_is_gmt'             => false,
 
 		// date values returned from the query will be a gmt timestamp int. If the 'date_format' value is provided
-		// a new field will be include 'activity_date_time_formatted' using the format specifyers provided in this field.
+		// a new field will be include 'activity_date_time_formatted' using the format specifiers provided in this field.
 		/** This filter is documented in includes/ld-misc-functions.php */
 		'date_format'                 => apply_filters( 'learndash_date_time_formats', get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
 
@@ -695,7 +698,7 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		// controls if the queries are actually executed. You can pass in true or 1 to have the logic tested without running the actual query.
 		'dry_run'                     => 0,
 
-		// Supress ALL filters. This include both the query_args and query_str filters.
+		// Suppress ALL filters. This include both the query_args and query_str filters.
 		'suppress_filters_all'        => 0,
 
 		// If the 'suppress_filters_all' is NOT set you can set this to control just filters for the final query_args.
@@ -950,19 +953,56 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		$sql_str_where .= ' AND ld_user_activity.course_id ' . $query_args['course_ids_action'] . ' (' . implode( ',', $query_args['course_ids'] ) . ') ';
 	}
 
-	if ( ( isset( $query_args['time_start_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_start_gmt_timestamp'] ) ) ) {
-		if ( true === $activity_status_has_null ) {
-			$sql_str_where .= ' AND (ld_user_activity.activity_started >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_completed >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_updated >= ' . $query_args['time_start_gmt_timestamp'] . ') ';
-		} elseif ( ( false !== array_search( '1', $query_args['activity_status'], true ) ) || ( false !== array_search( '0', $query_args['activity_status'], true ) ) ) {
-			$sql_str_where .= ' AND (ld_user_activity.activity_completed >= ' . $query_args['time_start_gmt_timestamp'] . ') ';
+	if ( ( isset( $query_args['time_start_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_start_gmt_timestamp'] ) ) && ( isset( $query_args['time_end_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_end_gmt_timestamp'] ) ) ) {
+		$sql_str_where .= ' AND ( ';
+
+		if ( array_intersect( array( 'NOT_STARTED', 'IN_PROGRESS' ), $query_args_org['activity_status'] ) || empty( $query_args_org['activity_status'] ) ) {
+			$sql_str_where .= '(ld_user_activity.activity_started BETWEEN ' . $query_args['time_start_gmt_timestamp'] . ' AND ' . $query_args['time_end_gmt_timestamp'] . ') ';
+			$sql_str_where .= ' OR ';
+			$sql_str_where .= '(ld_user_activity.activity_updated BETWEEN ' . $query_args['time_start_gmt_timestamp'] . ' AND ' . $query_args['time_end_gmt_timestamp'] . ') ';
 		}
-	}
-	if ( ( isset( $query_args['time_end_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_end_gmt_timestamp'] ) ) ) {
-		if ( true === $activity_status_has_null ) {
-			$sql_str_where .= ' AND (ld_user_activity.activity_started <= ' . $query_args['time_end_gmt_timestamp'] . ' OR ld_user_activity.activity_completed <= ' . $query_args['time_end_gmt_timestamp'] . ' OR ld_user_activity.activity_updated <= ' . $query_args['time_end_gmt_timestamp'] . ') ';
-		} elseif ( ( false !== array_search( '1', $query_args['activity_status'], true ) ) || ( false !== array_search( '0', $query_args['activity_status'], true ) ) ) {
-			$sql_str_where .= ' AND (ld_user_activity.activity_completed <= ' . $query_args['time_end_gmt_timestamp'] . ') ';
+
+		if ( in_array( 'COMPLETED', $query_args_org['activity_status'] ) || empty( $query_args_org['activity_status'] ) ) {
+			if ( count( $query_args_org['activity_status'] ) > 1 || empty( $query_args_org['activity_status'] ) ) {
+				$sql_str_where .= ' OR ';
+			}
+
+			$sql_str_where .= '(ld_user_activity.activity_completed BETWEEN ' . $query_args['time_start_gmt_timestamp'] . ' AND ' . $query_args['time_end_gmt_timestamp'] . ') ';
 		}
+
+		$sql_str_where .= ' ) ';
+	} elseif ( ( isset( $query_args['time_start_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_start_gmt_timestamp'] ) ) ) {
+		$sql_str_where .= ' AND ( ';
+
+		if ( array_intersect( array( 'NOT_STARTED', 'IN_PROGRESS' ), $query_args_org['activity_status'] ) || empty( $query_args_org['activity_status'] ) ) {
+			$sql_str_where .= 'ld_user_activity.activity_started >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_updated >= ' . $query_args['time_start_gmt_timestamp'];
+		}
+
+		if ( in_array( 'COMPLETED', $query_args_org['activity_status'] ) || empty( $query_args_org['activity_status'] ) ) {
+			if ( count( $query_args_org['activity_status'] ) > 1 || empty( $query_args_org['activity_status'] ) ) {
+				$sql_str_where .= ' OR ';
+			}
+
+			$sql_str_where .= 'ld_user_activity.activity_completed >= ' . $query_args['time_start_gmt_timestamp'];
+		}
+
+		$sql_str_where .= ' ) ';
+	} elseif ( ( isset( $query_args['time_end_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_end_gmt_timestamp'] ) ) ) {
+		$sql_str_where .= ' AND ( ';
+
+		if ( array_intersect( array( 'NOT_STARTED', 'IN_PROGRESS' ), $query_args_org['activity_status'] ) || empty( $query_args_org['activity_status'] ) ) {
+			$sql_str_where .= '(ld_user_activity.activity_started > 0 AND ld_user_activity.activity_started <= ' . $query_args['time_end_gmt_timestamp'] . ') OR ( ld_user_activity.activity_updated > 0 AND ld_user_activity.activity_updated <= ' . $query_args['time_end_gmt_timestamp'] . ')';
+		}
+
+		if ( in_array( 'COMPLETED', $query_args_org['activity_status'] ) || empty( $query_args_org['activity_status'] ) ) {
+			if ( count( $query_args_org['activity_status'] ) > 1 || empty( $query_args_org['activity_status'] ) ) {
+				$sql_str_where .= ' OR ';
+			}
+
+			$sql_str_where .= '( ld_user_activity.activity_completed > 0 AND ld_user_activity.activity_completed <= ' . $query_args['time_end_gmt_timestamp'] . ' )';
+		}
+
+		$sql_str_where .= ' ) ';
 	}
 
 	if ( ! empty( $query_args['s'] ) ) {
@@ -1172,7 +1212,7 @@ function learndash_report_course_users_progress( $course_id = 0, $user_query_arg
 }
 
 /**
- * Clears user actvity by user id and activity type for the report.
+ * Clears user activity by user id and activity type for the report.
  *
  * @since 2.5.0
  *
@@ -1188,7 +1228,7 @@ function learndash_report_clear_user_activity_by_types( $user_id = 0, $activity_
 }
 
 /**
- * Clears post actvity by post id and activity type for the report.
+ * Clears post activity by post id and activity type for the report.
  *
  * @since 2.5.0
  *
@@ -1289,7 +1329,7 @@ function learndash_activity_clear_mismatched_posts() {
  *
  * @since 2.5.0
  *
- * @param int          $user_id        Optional. The ID of the user to get activites. Default 0.
+ * @param int          $user_id        Optional. The ID of the user to get activities. Default 0.
  * @param array|string $activity_types Optional. The type of the activity to delete. Any combination of the
  *                                     following: 'access', 'course', 'lesson', 'topic', 'quiz'. Default empty.
  *
@@ -1330,7 +1370,7 @@ function learndash_report_get_activity_by_user_id( $user_id = 0, $activity_types
  *
  * @since 2.5.0
  *
- * @param int           $post_id        Optional. The ID of the post to get activites. Default 0.
+ * @param int           $post_id        Optional. The ID of the post to get activities. Default 0.
  * @param array|strings $activity_types Optional. The type of the activity to delete. Any combination of the
  *                                      following: 'access', 'course', 'lesson', 'topic', 'quiz'. Default empty.
  *
@@ -1374,7 +1414,7 @@ function learndash_report_get_activity_by_post_id( $post_id = 0, $activity_types
  * @param array $course_query_args   Optional. The query arguments to get the list of user enrolled courses. Default empty array.
  * @param array $activity_query_args Optional. The query arguments to get the the user activities. Default empty array.
  *
- * @return array If course query and activity query is successfull this should be a multi-dimensional array showing 'results', 'pager', 'query_args', 'query_str'
+ * @return array If course query and activity query is successful this should be a multi-dimensional array showing 'results', 'pager', 'query_args', 'query_str'
  */
 function learndash_report_user_courses_progress( $user_id = 0, $course_query_args = array(), $activity_query_args = array() ) {
 	$user_courses_progress_data = array();
@@ -1584,11 +1624,11 @@ function learndash_get_activity_meta_fields( $activity_id = 0, $activity_meta_ke
  *
  * @param int $activity_started   The start timestamp to compare. Default 0.
  * @param int $activity_completed The completed timestamp to compare. Default 0.
- * @param int $minumim_diff       Optional. The minumm difference between started and completed time. Default 60.
+ * @param int $minimum_diff       Optional. The minimum difference between started and completed time. Default 60.
  *
  * @return string The human readable time difference.
  */
-function learndash_get_activity_human_time_diff( $activity_started = 0, $activity_completed = 0, $minumim_diff = 60 ) {
+function learndash_get_activity_human_time_diff( $activity_started = 0, $activity_completed = 0, $minimum_diff = 60 ) {
 	if ( empty( $activity_started ) ) {
 		return;
 	}
@@ -1597,7 +1637,7 @@ function learndash_get_activity_human_time_diff( $activity_started = 0, $activit
 	}
 
 	$activity_diff = abs( $activity_completed - $activity_started );
-	if ( $activity_diff < $minumim_diff ) {
+	if ( $activity_diff < $minimum_diff ) {
 		return;
 	}
 

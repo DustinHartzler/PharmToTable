@@ -1,3 +1,6 @@
+/*!*********************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/sass/header.scss ***!
+  \*********************************************************************************************************************************************************/
 /* Gutenberg header styling */
 .block-editor-page #sfwd-header {
   position: fixed;
@@ -147,7 +150,7 @@ body:not(.block-editor-page) .learndash-settings-page-wrap #sfwd-header {
   text-decoration: underline;
 }
 
-/* Gutenberg screen options zindex */
+/* Gutenberg screen options z-index */
 .components-modal__screen-overlay {
   z-index: 159000;
 }
@@ -504,8 +507,7 @@ div#learndash_course_builder > .hndle {
 
 /* Action button */
 .ld-actions svg {
-  -ms-grid-row-align: center;
-      align-self: center;
+  align-self: center;
   margin-right: 10px;
 }
 

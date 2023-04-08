@@ -18,7 +18,7 @@ if ( ( ! class_exists( 'Course_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 	 * @since 2.1.0
 	 * @uses WP_Widget
 	 */
-	class Course_Widget extends WP_Widget { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class Course_Widget extends WP_Widget /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Post type
@@ -37,7 +37,7 @@ if ( ( ! class_exists( 'Course_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 		/**
 		 * Post arguments
 		 *
-		 * @var object $post_arga.
+		 * @var object $post_args.
 		 */
 		protected $post_args;
 
@@ -79,7 +79,7 @@ if ( ( ! class_exists( 'Course_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
 
-			extract( $args, EXTR_SKIP );
+			extract( $args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 			/* Before Widget content */
 			$buf = $before_widget;

@@ -65,7 +65,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				return false;
 			}
 
-			if ( ( isset( $_POST['ld-course-primary-set-nonce'] ) ) && ( ! empty( $_POST['ld-course-primary-set-nonce'] ) ) && wp_verify_nonce( $_POST['ld-course-primary-set-nonce'], 'ld-course-primary-set-nonce' ) ) {
+			if ( ( isset( $_POST['ld-course-primary-set-nonce'] ) ) && ( ! empty( $_POST['ld-course-primary-set-nonce'] ) ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ld-course-primary-set-nonce'] ) ), 'ld-course-primary-set-nonce' ) ) {
 				if ( isset( $_POST['ld-course-primary-set'] ) ) {
 					$course_primary = absint( $_POST['ld-course-primary-set'] );
 					if ( ! empty( $course_primary ) ) {

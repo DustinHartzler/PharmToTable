@@ -63,9 +63,9 @@ if ( ! class_exists( 'LDLMS_Factory' ) ) {
 		 *
 		 * @since 2.5.0
 		 *
-		 * @param string  $model    Class name to add.
-		 * @param integer $key      Unique ID for instance.
-		 * @param mixed   ...$args  Args passed to class constructor.
+		 * @param string     $model    Class name to add.
+		 * @param int|string $key      Unique key for instance.
+		 * @param mixed      ...$args  Args passed to class constructor.
 		 */
 		protected static function add_instance( $model = '', $key = null, ...$args ) {
 			$model = esc_attr( $model );
@@ -95,8 +95,8 @@ if ( ! class_exists( 'LDLMS_Factory' ) ) {
 		 *
 		 * @since 2.5.0
 		 *
-		 * @param string  $model Class name to add.
-		 * @param integer $key  Unique ID for instance.
+		 * @param string     $model Class name to add.
+		 * @param int|string $key   Unique ID for instance.
 		 */
 		protected static function remove_instance( $model = '', $key = null ) {
 			$model = esc_attr( $model );

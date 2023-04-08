@@ -10,15 +10,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'Learndash_Admin_Transactions_Listing' ) ) ) {
-
+if ( class_exists( 'Learndash_Admin_Posts_Listing' ) && ! class_exists( 'Learndash_Admin_Transactions_Listing' ) ) {
 	/**
 	 * Class LearnDash Transactions (sfwd-transactions) Posts Listing.
 	 *
 	 * @since 3.2.0
-	 * @uses Learndash_Admin_Posts_Listing
 	 */
 	class Learndash_Admin_Transactions_Listing extends Learndash_Admin_Posts_Listing {
+		private const ACTION_REMOVE_ACCESS = 'remove_access';
+		private const ACTION_ADD_ACCESS    = 'add_access';
 
 		/**
 		 * Public constructor for class
@@ -26,7 +26,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @since 3.2.0
 		 */
 		public function __construct() {
-			$this->post_type = learndash_get_post_type_slug( 'transaction' );
+			$this->post_type = LDLMS_Post_Types::get_post_type_slug( LDLMS_Post_Types::TRANSACTION );
 
 			parent::__construct();
 		}
@@ -46,11 +46,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					'type'                   => 'early',
 					'show_all_value'         => '',
 					'show_all_label'         => esc_html__( 'Show All Payment Processors', 'learndash' ),
-					'options'                => array(
-						'paypal' => esc_html__( 'PayPal', 'learndash' ),
-						'stripe' => esc_html__( 'Stripe', 'learndash' ),
-					),
-					'listing_query_function' => array( $this, 'listing_filter_by_payment_processor' ),
+					'options'                => Learndash_Payment_Gateway::get_select_list(),
+					'listing_query_function' => array( $this, 'filter_by_payment_gateway' ),
 					'select2'                => true,
 					'select2_fetch'          => false,
 				),
@@ -59,76 +56,74 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					'show_all_value'         => '',
 					'show_all_label'         => esc_html__( 'Show All Transactions Types', 'learndash' ),
 					'options'                => array(
-						'return-success'   => esc_html__( 'PayPal Purchase Pending', 'learndash' ),
-						'web_accept'       => esc_html__( 'PayPal Purchase Complete', 'learndash' ),
-						'subscr_cancel'    => esc_html__( 'PayPal Subscription Canceled', 'learndash' ),
-						'subscr_eot'       => esc_html__( 'PayPal Subscription Expired', 'learndash' ),
-						'subscr_failed'    => esc_html__( 'PayPal Subscription Payment Failed', 'learndash' ),
-						'subscr_payment'   => esc_html__( 'PayPal Subscription Payment Success', 'learndash' ),
-						'subscr_signup'    => esc_html__( 'PayPal Subscription Signup', 'learndash' ),
-						'stripe_paynow'    => esc_html__( 'Stripe Purchase', 'learndash' ),
-						'stripe_subscribe' => esc_html__( 'Stripe Subscribe', 'learndash' ),
+						'return-success'                => esc_html__( 'PayPal Purchase Pending', 'learndash' ),
+						'web_accept'                    => esc_html__( 'PayPal Purchase Complete', 'learndash' ),
+						'subscr_cancel'                 => esc_html__( 'PayPal Subscription Canceled', 'learndash' ),
+						'subscr_eot'                    => esc_html__( 'PayPal Subscription Expired', 'learndash' ),
+						'subscr_failed'                 => esc_html__( 'PayPal Subscription Payment Failed', 'learndash' ),
+						'subscr_payment'                => esc_html__( 'PayPal Subscription Payment Success', 'learndash' ),
+						'subscr_signup'                 => esc_html__( 'PayPal Subscription Signup', 'learndash' ),
+						'stripe_paynow'                 => esc_html__( 'Stripe Purchase', 'learndash' ),
+						'stripe_subscribe'              => esc_html__( 'Stripe Subscription', 'learndash' ),
+						'razorpay_paynow'               => esc_html__( 'Razorpay Purchase', 'learndash' ),
+						'razorpay_subscribe'            => esc_html__( 'Razorpay Subscription (no trial)', 'learndash' ),
+						'razorpay_subscribe_paid_trial' => esc_html__( 'Razorpay Subscription (paid trial)', 'learndash' ),
+						'razorpay_subscribe_free_trial' => esc_html__( 'Razorpay Subscription (free trial)', 'learndash' ),
 					),
-					'listing_query_function' => array( $this, 'listing_filter_by_transaction_type' ),
+					'listing_query_function' => array( $this, 'filter_by_transaction_type' ),
 					'select2'                => true,
 					'select2_fetch'          => false,
 				),
 				'course_id'          => array(
 					'type'                    => 'post_type',
-					'post_type'               => learndash_get_post_type_slug( 'course' ),
+					'post_type'               => LDLMS_Post_Types::get_post_type_slug( LDLMS_Post_Types::COURSE ),
 					'show_all_value'          => '',
 					'show_all_label'          => sprintf(
 						// translators: placeholder: Courses.
 						esc_html_x( 'All %s', 'placeholder: Courses', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'courses' )
 					),
-					'listing_query_function'  => array( $this, 'listing_filter_by_transaction_course_id' ),
+					'listing_query_function'  => array( $this, 'filter_by_product' ),
 					'selector_value_function' => array( $this, 'selector_value_for_course' ),
 				),
 				'group_id'           => array(
 					'type'                    => 'post_type',
-					'post_type'               => learndash_get_post_type_slug( 'group' ),
+					'post_type'               => LDLMS_Post_Types::get_post_type_slug( LDLMS_Post_Types::GROUP ),
 					'show_all_value'          => '',
 					'show_all_label'          => sprintf(
 						// translators: placeholder: Groups.
 						esc_html_x( 'All %s', 'placeholder: Groups', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'groups' )
 					),
-					'listing_query_function'  => array( $this, 'listing_filter_by_transaction_group_id' ),
+					'listing_query_function'  => array( $this, 'filter_by_product' ),
 					'selector_value_function' => array( $this, 'selector_value_for_group' ),
 				),
 			);
 
 			$this->columns = array(
-				'payment_processor' => array(
-					'label'   => esc_html__( 'Payment Processor', 'learndash' ),
-					'after'   => 'date',
-					'display' => array( $this, 'show_column_payment_processor' ),
+				'product' => array(
+					'label'   => esc_html__( 'Product', 'learndash' ),
+					'display' => array( $this, 'show_column_product' ),
 				),
-				'transaction_type'  => array(
-					'label'   => esc_html__( 'Transaction Type', 'learndash' ),
-					'after'   => 'payment_processor',
-					'display' => array( $this, 'show_column_transaction_type' ),
-				),
-				'access_status'     => array(
-					'label'   => esc_html__( 'Access Status', 'learndash' ),
-					'after'   => 'transaction_type',
-					'display' => array( $this, 'show_column_access_status' ),
-				),
-				'course_group_id'   => array(
-					'label'   => sprintf(
-						// translators: placeholder: Course, Group.
-						esc_html_x( 'Enrolled %1$s / %2$s', 'placeholder: Course, Group', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'course' ),
-						LearnDash_Custom_Label::get_label( 'group' )
-					),
-					'after'   => 'access_status',
-					'display' => array( $this, 'show_column_transaction_course_group_id' ),
-				),
-				'user_id'           => array(
+				'user'    => array(
 					'label'   => esc_html__( 'User', 'learndash' ),
-					'after'   => 'course_group_id',
-					'display' => array( $this, 'show_column_transaction_user_id' ),
+					'display' => array( $this, 'show_column_user' ),
+				),
+				'access'  => array(
+					'label'   => esc_html__( 'Access', 'learndash' ),
+					'display' => array( $this, 'show_column_access' ),
+				),
+				'gateway' => array(
+					'label'   => esc_html__( 'Gateway', 'learndash' ),
+					'display' => array( $this, 'show_column_gateway' ),
+				),
+				'info'    => array(
+					'label'   => esc_html__( 'Info', 'learndash' ),
+					'display' => array( $this, 'show_column_info' ),
+				),
+				'coupon'  => array(
+					'label'   => esc_html__( 'Coupon', 'learndash' ),
+					'display' => array( $this, 'show_column_coupon' ),
 				),
 			);
 
@@ -143,141 +138,69 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @since 3.6.0
 		 */
 		public function on_load_listing() {
-			if ( $this->post_type_check() ) {
-
-				parent::on_load_listing();
-
-				add_action( 'admin_footer', array( $this, 'transactions_bulk_actions' ), 30 );
-
-				$this->transactions_bulk_actions_remove_access();
+			if ( ! $this->post_type_check() ) {
+				return;
 			}
+
+			parent::on_load_listing();
+
+			add_action( 'admin_footer', array( $this, 'transactions_bulk_actions' ), 30 );
+
+			$this->transactions_bulk_actions_update_access();
 		}
 
 		/**
-		 * Filter the main query listing by the transaction_type
+		 * Filters by a payment gateway.
 		 *
 		 * @since 3.6.0
 		 *
-		 * @param object $q_vars   Query vars used for the table listing.
-		 * @param array  $selector Selector array.
+		 * @param array<string,mixed> $q_vars   Query vars used for the table listing.
+		 * @param array<string,mixed> $selector Selector array.
 		 *
-		 * @return object $q_vars.
+		 * @return array<string,mixed> Query vars.
 		 */
-		protected function listing_filter_by_payment_processor( $q_vars, $selector = array() ) {
-			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
-
-				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				}
-
-				if ( 'paypal' === $selector['selected'] ) {
-					$q_vars['meta_query']['relation'] = 'OR';
-					$q_vars['meta_query'][]           = array(
-						'key'     => 'ld_payment_processor',
-						'compare' => 'paypal',
-					);
-					$q_vars['meta_query'][]           = array(
-						'key'     => 'ipn_track_id',
-						'compare' => 'EXISTS',
-					);
-				} elseif ( 'stripe' === $selector['selected'] ) {
-					$q_vars['meta_query']['relation'] = 'OR';
-					$q_vars['meta_query'][]           = array(
-						'key'     => 'ld_payment_processor',
-						'compare' => 'stripe',
-					);
-					$q_vars['meta_query'][]           = array(
-						'key'     => 'stripe_session_id',
-						'compare' => 'EXISTS',
-					);
-				}
+		protected function filter_by_payment_gateway( array $q_vars, array $selector = array() ): array {
+			if ( empty( $selector['selected'] ) ) {
+				return $q_vars;
 			}
 
-			return $q_vars;
-		}
-
-		/**
-		 * Filter the main query listing by the transaction_type
-		 *
-		 * @since 3.6.0
-		 *
-		 * @param object $q_vars   Query vars used for the table listing.
-		 * @param array  $selector Selector array.
-		 *
-		 * @return object $q_vars.
-		 */
-		protected function listing_filter_by_transaction_type( $q_vars, $selector = array() ) {
-			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
-
-				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				}
-
-				if ( 'web_accept' === $selector['selected'] ) {
-					$q_vars['meta_query'][] = array(
-						'key'   => 'txn_type',
-						'value' => 'web_accept',
-					);
-				} elseif ( 'subscr_cancel' === $selector['selected'] ) {
-					$q_vars['meta_query'][] = array(
-						'key'   => 'txn_type',
-						'value' => 'subscr_cancel',
-					);
-				} elseif ( 'subscr_eot' === $selector['selected'] ) {
-					$q_vars['meta_query'][] = array(
-						'key'   => 'txn_type',
-						'value' => 'subscr_eot',
-					);
-				} elseif ( 'subscr_failed' === $selector['selected'] ) {
-					$q_vars['meta_query'][] = array(
-						'key'   => 'txn_type',
-						'value' => 'subscr_failed',
-					);
-				} elseif ( 'subscr_payment' === $selector['selected'] ) {
-					$q_vars['meta_query'][] = array(
-						'key'   => 'txn_type',
-						'value' => 'subscr_payment',
-					);
-				} elseif ( 'subscr_signup' === $selector['selected'] ) {
-					$q_vars['meta_query'][] = array(
-						'key'   => 'txn_type',
-						'value' => 'subscr_signup',
-					);
-				} elseif ( 'stripe_paynow' === $selector['selected'] ) {
-					$q_vars['meta_query'][] = array(
-						'key'   => 'stripe_price_type',
-						'value' => 'paynow',
-					);
-				} elseif ( 'stripe_subscribe' === $selector['selected'] ) {
-					$q_vars['meta_query'][] = array(
-						'key'   => 'stripe_price_type',
-						'value' => 'subscribe',
-					);
-				}
+			if ( ! isset( $q_vars['meta_query'] ) || ! is_array( $q_vars['meta_query'] ) ) {
+				$q_vars['meta_query'] = array();
 			}
 
-			return $q_vars;
-		}
-
-		/**
-		 * Filter the main query listing by the course_id
-		 *
-		 * @since 3.2.3
-		 *
-		 * @param object $q_vars   Query vars used for the table listing.
-		 * @param array  $selector Selector array.
-		 *
-		 * @return object $q_vars.
-		 */
-		protected function listing_filter_by_transaction_course_id( $q_vars, $selector = array() ) {
-			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
-				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				}
-
+			if ( Learndash_Paypal_IPN_Gateway::get_name() === $selector['selected'] ) {
+				$q_vars['meta_query']['relation'] = 'OR';
+				$q_vars['meta_query'][]           = array(
+					'key'     => Learndash_Transaction_Model::$meta_key_gateway_name,
+					'compare' => '=',
+					'value'   => $selector['selected'],
+				);
+				$q_vars['meta_query'][]           = array(
+					'key'     => Learndash_Transaction_Model::$meta_key_gateway_name,
+					'compare' => '=',
+					'value'   => 'paypal',
+				);
+				$q_vars['meta_query'][]           = array(
+					'key'     => 'ipn_track_id',
+					'compare' => 'EXISTS',
+				);
+			} elseif ( Learndash_Stripe_Gateway::get_name() === $selector['selected'] ) {
+				$q_vars['meta_query']['relation'] = 'OR';
+				$q_vars['meta_query'][]           = array(
+					'key'     => Learndash_Transaction_Model::$meta_key_gateway_name,
+					'compare' => '=',
+					'value'   => $selector['selected'],
+				);
+				// Legacy.
 				$q_vars['meta_query'][] = array(
-					'key'   => 'course_id',
-					'value' => absint( $selector['selected'] ),
+					'key'     => 'stripe_session_id',
+					'compare' => 'EXISTS',
+				);
+			} elseif ( Learndash_Razorpay_Gateway::get_name() === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					'key'     => Learndash_Transaction_Model::$meta_key_gateway_name,
+					'compare' => '=',
+					'value'   => $selector['selected'],
 				);
 			}
 
@@ -285,24 +208,116 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		}
 
 		/**
-		 * Filter the main query listing by the group_id
+		 * Filters by a transaction type.
 		 *
-		 * @since 3.2.3
+		 * @since 3.6.0
 		 *
-		 * @param object $q_vars   Query vars used for the table listing.
-		 * @param array  $selector Selector array.
+		 * @param array<string,mixed> $q_vars   Query vars used for the table listing.
+		 * @param array<string,mixed> $selector Selector array.
 		 *
-		 * @return object $q_vars
+		 * @return array<string,mixed> Query vars.
 		 */
-		protected function listing_filter_by_transaction_group_id( $q_vars, $selector = array() ) {
-			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
-				if ( ! isset( $q_vars['meta_query'] ) ) {
-					$q_vars['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				}
+		protected function filter_by_transaction_type( array $q_vars, array $selector = array() ): array {
+			if ( empty( $selector['selected'] ) ) {
+				return $q_vars;
+			}
 
+			if ( ! isset( $q_vars['meta_query'] ) || ! is_array( $q_vars['meta_query'] ) ) {
+				$q_vars['meta_query'] = array();
+			}
+
+			if ( 'web_accept' === $selector['selected'] ) {
 				$q_vars['meta_query'][] = array(
-					'key'   => 'group_id',
-					'value' => absint( $selector['selected'] ),
+					'key'   => 'txn_type',
+					'value' => 'web_accept',
+				);
+			} elseif ( 'subscr_cancel' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					'key'   => 'txn_type',
+					'value' => 'subscr_cancel',
+				);
+			} elseif ( 'subscr_eot' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					'key'   => 'txn_type',
+					'value' => 'subscr_eot',
+				);
+			} elseif ( 'subscr_failed' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					'key'   => 'txn_type',
+					'value' => 'subscr_failed',
+				);
+			} elseif ( 'subscr_payment' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					'key'   => 'txn_type',
+					'value' => 'subscr_payment',
+				);
+			} elseif ( 'subscr_signup' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					'key'   => 'txn_type',
+					'value' => 'subscr_signup',
+				);
+			} elseif ( 'stripe_paynow' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					'key'   => 'stripe_price_type',
+					'value' => LEARNDASH_PRICE_TYPE_PAYNOW,
+				);
+			} elseif ( 'stripe_subscribe' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					'key'   => 'stripe_price_type',
+					'value' => LEARNDASH_PRICE_TYPE_SUBSCRIBE,
+				);
+			} elseif ( 'razorpay_paynow' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					array(
+						'key'   => Learndash_Transaction_Model::$meta_key_gateway_name,
+						'value' => Learndash_Razorpay_Gateway::get_name(),
+					),
+					array(
+						'key'   => 'price_type',
+						'value' => LEARNDASH_PRICE_TYPE_PAYNOW,
+					),
+				);
+			} elseif ( 'razorpay_subscribe' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					array(
+						'key'   => Learndash_Transaction_Model::$meta_key_gateway_name,
+						'value' => Learndash_Razorpay_Gateway::get_name(),
+					),
+					array(
+						'key'   => Learndash_Transaction_Model::$meta_key_price_type,
+						'value' => LEARNDASH_PRICE_TYPE_SUBSCRIBE,
+					),
+					array(
+						'key'     => Learndash_Transaction_Model::$meta_key_has_trial,
+						'compare' => '!=',
+						'value'   => 1,
+					),
+				);
+			} elseif ( 'razorpay_subscribe_paid_trial' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					array(
+						'key'   => Learndash_Transaction_Model::$meta_key_gateway_name,
+						'value' => Learndash_Razorpay_Gateway::get_name(),
+					),
+					array(
+						'key'   => Learndash_Transaction_Model::$meta_key_has_trial,
+						'value' => 1,
+					),
+					array(
+						'key'   => Learndash_Transaction_Model::$meta_key_has_free_trial,
+						'value' => 0,
+					),
+				);
+			} elseif ( 'razorpay_subscribe_free_trial' === $selector['selected'] ) {
+				$q_vars['meta_query'][] = array(
+					array(
+						'key'   => Learndash_Transaction_Model::$meta_key_gateway_name,
+						'value' => Learndash_Razorpay_Gateway::get_name(),
+					),
+					array(
+						'key'   => Learndash_Transaction_Model::$meta_key_has_free_trial,
+						'value' => 1,
+					),
 				);
 			}
 
@@ -310,209 +325,456 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		}
 
 		/**
-		 * Output the Transaction Type column.
+		 * Filters by a product.
 		 *
-		 * @since 3.2.3
+		 * @since 4.5.0
 		 *
-		 * @param int $post_id Transaction Post ID.
+		 * @param array<string,mixed> $q_vars   Query vars used for the table listing.
+		 * @param array<string,mixed> $selector Selector array.
+		 *
+		 * @return array<string,mixed> Query vars.
 		 */
-		protected function show_column_payment_processor( $post_id = 0 ) {
-			$post_id = absint( $post_id );
-
-			$ld_payment_processor = $this->get_transaction_processor_type( $post_id );
-			if ( 'paypal' === $ld_payment_processor ) {
-				esc_html_e( 'PayPal', 'learndash' );
-			} elseif ( 'stripe' === $ld_payment_processor ) {
-				esc_html_e( 'Stripe', 'learndash' );
-			} else {
-				esc_html_e( 'Unknown', 'learndash' );
+		protected function filter_by_product( array $q_vars, array $selector = array() ): array {
+			if ( empty( $selector['selected'] ) ) {
+				return $q_vars;
 			}
+
+			if ( ! isset( $q_vars['meta_query'] ) || ! is_array( $q_vars['meta_query'] ) ) {
+				$q_vars['meta_query'] = array();
+			}
+
+			$q_vars['meta_query']['relation'] = 'OR';
+			foreach ( Learndash_Transaction_Model::$product_id_meta_keys as $meta_key ) {
+				$q_vars['meta_query'][] = array(
+					'key'   => $meta_key,
+					'value' => (int) $selector['selected'],
+				);
+			}
+
+			return $q_vars;
 		}
 
 		/**
-		 * Output the Transaction Type column.
+		 * Outputs a payment gateway label.
 		 *
 		 * @since 3.2.3
 		 *
 		 * @param int $post_id Transaction Post ID.
+		 *
+		 * @return void
 		 */
-		protected function show_column_transaction_type( $post_id = 0 ) {
-			$post_id = absint( $post_id );
+		protected function show_column_gateway( int $post_id ): void {
+			$transaction = Learndash_Transaction_Model::find( $post_id );
 
-			$ld_payment_processor = $this->get_transaction_processor_type( $post_id );
-
-			$payment_label    = '';
-			$payment_amount   = '';
-			$payment_currency = '';
-
-			if ( 'paypal' === $ld_payment_processor ) {
-				$ipn_transaction_type = get_post_meta( $post_id, 'txn_type', true );
-				if ( 'return-success' === $ipn_transaction_type ) {
-					$ipn_track_id = get_post_meta( $post_id, 'txn_type', true );
-					if ( ! empty( $ipn_track_id ) ) {
-						$ipn_transaction_type = 'web_accept';
-						update_post_meta( $post_id, 'txn_type', $ipn_transaction_type );
-						update_post_meta( $post_id, 'ld_ipn_action', $ipn_transaction_type );
-					}
-				}
-
-				if ( ! empty( $ipn_transaction_type ) ) {
-					if ( isset( $this->selectors['transaction_type']['options'][ $ipn_transaction_type ] ) ) {
-						$payment_label = $this->selectors['transaction_type']['options'][ $ipn_transaction_type ];
-						if ( in_array( $ipn_transaction_type, array( 'web_accept', 'subscr_payment' ), true ) ) {
-							$payment_amount = get_post_meta( $post_id, 'mc_gross', true );
-							if ( '' === $payment_amount ) {
-								$payment_amount = '0.00';
-							}
-							$payment_amount   = number_format_i18n( $payment_amount, 2 );
-							$payment_currency = get_post_meta( $post_id, 'mc_currency', true );
-						}
-					} else {
-						$payment_label = sprintf(
-							// translators: placeholder: PayPal txn_type value.
-							esc_html_x( 'PayPal %s', 'placeholder: PayPal txn_type value', 'learndash' ),
-							$ipn_transaction_type
-						);
-					}
-				}
-			} elseif ( 'stripe' === $ld_payment_processor ) {
-				$stripe_price_type = 'stripe_' . get_post_meta( $post_id, 'stripe_price_type', true );
-				if ( in_array( $stripe_price_type, array( 'stripe_paynow', 'stripe_subscribe' ), true ) ) {
-					$payment_label  = $this->selectors['transaction_type']['options'][ $stripe_price_type ];
-					$payment_amount = get_post_meta( $post_id, 'stripe_price', true );
-					if ( '' === $payment_amount ) {
-						$payment_amount = '0.00';
-					}
-					$payment_amount   = number_format_i18n( $payment_amount, 2 );
-					$payment_currency = get_post_meta( $post_id, 'stripe_currency', true );
-				} else {
-					$payment_label = sprintf(
-						// translators: placeholder: Stripe stripe_price_type value.
-						esc_html_x( 'stripe %s', 'Stripe stripe_price_type value', 'learndash' ),
-						$stripe_price_type
-					);
-				}
+			if ( ! $transaction ) {
+				return;
 			}
 
-			if ( ! empty( $payment_label ) ) {
-				if ( ! empty( $payment_amount ) ) {
-					echo sprintf(
-						// translators: placeholder: Payment Action Label, Payment price, Payment Currency.
-						esc_html_x( '%1$s: %2$s %3$s', 'placeholder: Payment Action Label, Payment price, Payment Currency', 'learndash' ),
-						esc_html( $payment_label ),
-						esc_attr( $payment_amount ),
-						esc_attr( strtoupper( $payment_currency ) )
-					);
-				} else {
-					echo esc_html( $payment_label );
-				}
+			$gateway_select = Learndash_Payment_Gateway::get_select_list();
+			$gateway_name   = $transaction->get_gateway_name();
+			$gateway_label  = $transaction->get_gateway_label();
+
+			echo esc_html( $gateway_label );
+
+			if ( empty( $gateway_name ) || ! array_key_exists( $gateway_name, $gateway_select ) ) {
+				return;
 			}
+
+			echo $this->list_table_row_actions( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+				array(
+					'ld-payment-processor-filter' => sprintf(
+						'<a href="%s">%s</a>',
+						esc_url(
+							add_query_arg( 'payment_processors', $gateway_name, $this->get_clean_filter_url() )
+						),
+						esc_html__( 'filter', 'learndash' )
+					),
+				)
+			);
 		}
 
 		/**
-		 * Output the Transaction Course or Group.
+		 * Outputs the Transaction Type column.
 		 *
 		 * @since 3.2.3
 		 *
 		 * @param int $post_id Transaction Post ID.
+		 *
+		 * @return void
 		 */
-		protected function show_column_transaction_course_group_id( $post_id = 0 ) {
-			$post_id = absint( $post_id );
+		protected function show_column_info( int $post_id ): void {
+			$transaction = Learndash_Transaction_Model::find( $post_id );
 
-			$filter_label = '';
-			$row_actions  = array();
-
-			$course_id = get_post_meta( $post_id, 'course_id', true );
-			$course_id = absint( $course_id );
-			if ( ! empty( $course_id ) ) {
-
-				$filter_label = LearnDash_Custom_Label::get_label( 'course' );
-				$filter_url   = add_query_arg( 'course_id', $course_id, $this->get_clean_filter_url() );
-
-				$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
-
-				if ( current_user_can( 'edit_post', $course_id ) ) {
-					$row_actions['ld-post-edit'] = '<a href="' . esc_url( get_edit_post_link( $course_id ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-				}
-
-				if ( is_post_type_viewable( get_post_type( $course_id ) ) ) {
-					$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $course_id ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
-				}
-			} else {
-				$group_id = get_post_meta( $post_id, 'group_id', true );
-				$group_id = absint( $group_id );
-				if ( ! empty( $group_id ) ) {
-					$filter_label = LearnDash_Custom_Label::get_label( 'group' );
-					$filter_url   = add_query_arg( 'group_id', $group_id, $this->get_clean_filter_url() );
-
-					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
-
-					if ( current_user_can( 'edit_post', $group_id ) ) {
-						$row_actions['ld-post-edit'] = '<a href="' . esc_url( get_edit_post_link( $group_id ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-					}
-
-					if ( is_post_type_viewable( get_post_type( $group_id ) ) ) {
-						$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $group_id ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
-					}
-				}
+			if ( ! $transaction ) {
+				return;
 			}
 
-			if ( ( ! empty( $filter_label ) ) && ( ! empty( $filter_url ) ) ) {
+			if ( $transaction->is_parent() ) {
+				return;
+			}
+
+			if ( $transaction->is_free() ) {
+				esc_html_e( 'Enrolled by a coupon with no payment', 'learndash' );
+				return;
+			}
+
+			try {
+				$pricing = $transaction->get_pricing();
+			} catch ( Learndash_DTO_Validation_Exception $e ) {
+				return;
+			}
+
+			echo sprintf(
+				// Translators: placeholder: Transaction price.
+				esc_html_x( 'Price: %s', 'placeholder: Transaction price', 'learndash' ),
+				esc_html(
+					learndash_get_price_formatted( $pricing->price, $pricing->currency )
+				)
+			);
+
+			if ( $pricing->discount > 0 ) {
+				echo '<br/>';
+
 				echo sprintf(
-					// translators: placeholder: Post type label (Course/Group), Link to Course/Group.
-					esc_html_x( '%1$s : %2$s', 'placeholder: Post type label (Course/Group), Link to Course/Group', 'learndash' ),
-					esc_html( $filter_label ),
-					'<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( ( ! empty( $course_id ) ? $course_id : $group_id ) ) ) . '</a>'
+					// Translators: placeholder: Transaction discount.
+					esc_html_x( 'Discount: %s', 'placeholder: Transaction discount', 'learndash' ),
+					esc_html(
+						learndash_get_price_formatted( $pricing->discount * -1, $pricing->currency )
+					)
+				);
+				echo '<br/>';
+
+				echo sprintf(
+					// Translators: placeholder: Transaction discounted price.
+					esc_html_x( 'Final price: %s', 'placeholder: Transaction final price', 'learndash' ),
+					esc_html(
+						learndash_get_price_formatted( $pricing->discounted_price, $pricing->currency )
+					)
+				);
+			}
+
+			if ( $transaction->is_subscription() ) {
+				echo '<br/>';
+				echo '<br/>';
+
+				echo sprintf(
+					// Translators: placeholder: Transaction recurring times.
+					esc_html_x( 'Recurring times: %s', 'placeholder: Transaction recurring times', 'learndash' ),
+					esc_html(
+						$pricing->recurring_times > 0
+							? (string) $pricing->recurring_times
+							: __( 'Unlimited', 'learndash' )
+					)
+				);
+				echo '<br/>';
+
+				echo sprintf(
+					// Translators: placeholder: Transaction billing cycle value, Transaction billing cycle length.
+					esc_html_x( 'Billing cycle: every %1$d %2$s', 'placeholder: Transaction billing cycle value, Transaction billing cycle length', 'learndash' ),
+					esc_attr( (string) $pricing->duration_value ),
+					esc_html(
+						learndash_get_grammatical_number_label_for_interval( $pricing->duration_value, $pricing->duration_length )
+					)
 				);
 
-				if ( ! empty( $row_actions ) ) {
-					echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+				if ( $pricing->trial_duration_value > 0 ) {
+					echo '<br/>';
+					echo '<br/>';
+
+					echo sprintf(
+						// Translators: placeholder: Transaction trial price.
+						esc_html_x( 'Trial price: %s', 'placeholder: Transaction trial price', 'learndash' ),
+						esc_html(
+							learndash_get_price_formatted( $pricing->trial_price, $pricing->currency )
+						)
+					);
+					echo '<br/>';
+
+					echo sprintf(
+						// Translators: placeholder: Transaction trial duration value, Transaction trial duration length.
+						esc_html_x( 'Trial duration: %1$d %2$s', 'placeholder: Transaction trial duration value, Transaction trial duration length', 'learndash' ),
+						esc_attr( (string) $pricing->trial_duration_value ),
+						esc_html(
+							learndash_get_grammatical_number_label_for_interval( $pricing->trial_duration_value, $pricing->trial_duration_length )
+						)
+					);
 				}
 			}
 		}
 
 		/**
-		 * Show Transaction User ID.
+		 * Outputs the Coupon column.
+		 *
+		 * @since 4.1.0
+		 *
+		 * @param int $post_id Transaction Post ID.
+		 *
+		 * @return void
+		 */
+		protected function show_column_coupon( int $post_id ): void {
+			$transaction = Learndash_Transaction_Model::find( $post_id );
+
+			if ( ! $transaction || $transaction->is_parent() ) {
+				return;
+			}
+
+			try {
+				$coupon_data = $transaction->get_coupon_data();
+			} catch ( Learndash_DTO_Validation_Exception $e ) {
+				return;
+			}
+
+			if ( ! empty( $coupon_data->code ) ) {
+				try {
+					$pricing = $transaction->get_pricing();
+				} catch ( Learndash_DTO_Validation_Exception $e ) {
+					return;
+				}
+
+				$formatted_amount = $coupon_data->type === LEARNDASH_COUPON_TYPE_FLAT
+					? learndash_get_price_formatted( $coupon_data->amount, $pricing->currency )
+					: $coupon_data->amount . '%';
+
+				echo sprintf(
+					// Translators: placeholder: Coupon code.
+					esc_html_x( 'Code: %s', 'placeholder: Coupon code', 'learndash' ),
+					esc_html( $coupon_data->code )
+				);
+				echo '<br/>';
+
+				echo sprintf(
+					// Translators: placeholder: Coupon type.
+					esc_html_x( 'Type: %s', 'placeholder: Coupon type', 'learndash' ),
+					esc_html( $coupon_data->type )
+				);
+				echo '<br/>';
+
+				echo sprintf(
+					// Translators: placeholder: Coupon amount.
+					esc_html_x( 'Amount: %s', 'placeholder: Coupon amount', 'learndash' ),
+					esc_html( $formatted_amount )
+				);
+			} elseif ( $transaction->is_free() ) { // Legacy free transactions will go here as they don't have coupon data attached.
+				echo esc_html__( 'Unknown', 'learndash' );
+			} else {
+				echo esc_html__( 'No', 'learndash' );
+			}
+		}
+
+		/**
+		 * Output a course/group.
 		 *
 		 * @since 3.2.3
 		 *
 		 * @param int $post_id Transaction Post ID.
+		 *
+		 * @return void
 		 */
-		protected function show_column_transaction_user_id( $post_id = 0 ) {
-			$post_id = absint( $post_id );
+		protected function show_column_product( int $post_id ): void {
+			$transaction = Learndash_Transaction_Model::find( $post_id );
 
-			$user = null;
-
-			$user_id = get_post_meta( $post_id, 'user_id', true );
-			if ( ! empty( $user_id ) ) {
-				$user = get_user_by( 'ID', $user_id );
+			if ( ! $transaction ) {
+				return;
 			}
 
-			if ( ! $user ) {
-				$ld_payment_processor = $this->get_transaction_processor_type( $post_id );
-				if ( 'paypal' === $ld_payment_processor ) {
-					$email = get_post_meta( $post_id, 'payer_email', true );
-					if ( ! empty( $email ) ) {
-						$user = get_user_by( 'email', $email );
-					}
-				} elseif ( 'stripe' === $ld_payment_processor ) {
-					$user_id = get_post_meta( $post_id, 'user_id', true );
-					if ( ! empty( $user_id ) ) {
-						$user = get_user_by( 'ID', $user_id );
-					}
-				}
+			if ( $transaction->is_parent() ) {
+				$children_count = count( $transaction->get_children() );
+
+				echo esc_html(
+					$children_count . ' ' . _n( 'product', 'products', $children_count, 'learndash' )
+				);
+
+				return;
 			}
 
-			if ( ( ! empty( $user ) ) && ( is_a( $user, 'WP_User' ) ) ) {
-				$display_name = $user->display_name . ' (' . $user->user_email . ')';
-				if ( current_user_can( 'edit_users' ) ) {
-					$edit_url = get_edit_user_link( $user->ID );
-					echo '<a href="' . esc_url( $edit_url ) . '">' . esc_html( $display_name ) . '</a>';
-					$row_actions['edit'] = '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
-				} else {
-					echo esc_html( $display_name );
+			$product = $transaction->get_product();
+
+			if ( ! $product ) {
+				$label = $transaction->get_product_type_label();
+				if ( ! empty( $label ) ) {
+					echo esc_html( $label . ': ' );
 				}
-				echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+
+				echo esc_html( $transaction->get_product_name() );
+
+				return;
+			}
+
+			$product_post = $product->get_post();
+
+			// Map filter url.
+			$filter_url = esc_url(
+				add_query_arg(
+					LDLMS_Post_Types::get_post_type_key( $product_post->post_type ) . '_id',
+					$product->get_id(),
+					$this->get_clean_filter_url()
+				)
+			);
+
+			// Map row actions.
+
+			$row_actions = array(
+				'ld-post-filter' => sprintf(
+					'<a href="%s">%s</a>',
+					$filter_url,
+					esc_html__( 'filter', 'learndash' )
+				),
+			);
+
+			if ( current_user_can( 'edit_post', $product->get_id() ) ) {
+				$row_actions['ld-post-edit'] = sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( get_edit_post_link( $product_post ) ),
+					esc_html__( 'edit', 'learndash' )
+				);
+			}
+
+			if ( is_post_type_viewable( $product_post->post_type ) ) {
+				$row_actions['ld-post-view'] = sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( get_permalink( $product_post ) ),
+					esc_html__( 'view', 'learndash' )
+				);
+			}
+
+			// Show HTML.
+			echo sprintf(
+				// translators: placeholder: Post type label (Course/Group), Link to Course/Group.
+				esc_html_x( '%1$s: %2$s', 'placeholder: Post type label (Course/Group), Link to Course/Group', 'learndash' ),
+				esc_html( $transaction->get_product_type_label() ),
+				wp_kses_post(
+					sprintf( '<a href="%s">%s</a>', $filter_url, esc_html( $transaction->get_product_name() ) )
+				)
+			);
+
+			// Show actions.
+			echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+		}
+
+		/**
+		 * Outputs product access status.
+		 *
+		 * @since 3.6.0
+		 *
+		 * @param int $post_id Transaction Post ID.
+		 *
+		 * @return void
+		 */
+		protected function show_column_access( int $post_id ): void {
+			$transaction = Learndash_Transaction_Model::find( $post_id );
+
+			if ( ! $transaction ) {
+				return;
+			}
+
+			if ( $transaction->is_parent() ) {
+				return;
+			}
+
+			$user    = $transaction->get_user();
+			$product = $transaction->get_product();
+
+			$user_has_access = $product && $product->user_has_access( $user );
+
+			$user_has_access
+				? esc_html_e( 'Yes', 'learndash' )
+				: esc_html_e( 'No', 'learndash' );
+
+			if ( ! $product || 0 === $user->ID ) {
+				return;
+			}
+
+			if ( $user_has_access ) {
+				$can_be_removed = true;
+
+				if ( Learndash_Paypal_IPN_Gateway::get_name() === $transaction->get_gateway_name() ) {
+					/**
+					 * Filters the PayPal Subscription removal statuses.
+					 *
+					 * @param string[] $removal_statuses Array of PayPal IPN subscription statuses.
+					 * @param WP_Post  $post             Course or Group.
+					 * @param WP_User  $user             User.
+					 *
+					 * @return string[] Array of PayPal IPN subscription statuses.
+					 */
+					$removal_statuses = apply_filters(
+						'learndash_paypal_subscription_removal_statuses',
+						array( 'return-success', 'subscr_failed', 'subscr_cancel', 'subscr_eot' ),
+						$product->get_post(),
+						$user
+					);
+
+					$can_be_removed = in_array(
+						get_post_meta( $transaction->get_id(), 'txn_type', true ),
+						$removal_statuses,
+						true
+					);
+				}
+
+				if ( $can_be_removed ) {
+					echo $this->list_table_row_actions( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+						array(
+							'ld-access-remove' => sprintf(
+								'<a href="#" class="small ld_remove_access_single" data-transaction-id="%d">%s</a>',
+								esc_attr( (string) $transaction->get_id() ),
+								esc_html__( 'remove', 'learndash' )
+							),
+						)
+					);
+				}
+			} else {
+				echo $this->list_table_row_actions( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+					array(
+						'ld-access-add' => sprintf(
+							'<a href="#" class="small ld_add_access_single" data-transaction-id="%d">%s</a>',
+							esc_attr( (string) $transaction->get_id() ),
+							esc_html__( 'add', 'learndash' )
+						),
+					)
+				);
+			}
+		}
+
+		/**
+		 * Shows a user.
+		 *
+		 * @since 3.2.3
+		 *
+		 * @param int $post_id Transaction Post ID.
+		 *
+		 * @return void
+		 */
+		protected function show_column_user( int $post_id ): void {
+			$transaction = Learndash_Transaction_Model::find( $post_id );
+
+			if ( ! $transaction ) {
+				return;
+			}
+
+			$user         = $transaction->get_user();
+			$display_name = $user->display_name;
+
+			if ( current_user_can( 'edit_users' ) && $user->ID > 0 ) {
+				if ( ! empty( $user->user_email ) && $user->user_email !== $user->display_name ) {
+					$display_name .= ' (' . $user->user_email . ')';
+				}
+
+				$edit_url = get_edit_user_link( $user->ID );
+
+				echo sprintf( '<a href="%s">%s</a>', esc_url( $edit_url ), esc_html( $display_name ) );
+
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
+				echo $this->list_table_row_actions(
+					array(
+						'edit' => sprintf(
+							'<a href="%s">%s</a>',
+							esc_url( $edit_url ),
+							esc_html__( 'edit', 'learndash' )
+						),
+					)
+				);
+			} else {
+				echo esc_html( $display_name );
 			}
 		}
 
@@ -524,199 +786,120 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @since 3.6.0
 		 *
 		 * @global WP_Post $post Post object.
+		 *
+		 * @return void
 		 */
-		public function transactions_bulk_actions() {
+		public function transactions_bulk_actions(): void {
 			global $post;
 
-			if ( ( ! empty( $post->post_type ) ) && ( learndash_get_post_type_slug( 'transaction' ) === $post->post_type ) ) {
-				$remove_access_text = esc_html__( 'Remove access', 'learndash' );
-				?>
-					<script type="text/javascript">
-						jQuery( function() {
-							jQuery('<option>').val('remove_access').text('<?php echo esc_attr( $remove_access_text ); ?>').appendTo("select[name='action']");
-							jQuery('<option>').val('remove_access').text('<?php echo esc_attr( $remove_access_text ); ?>').appendTo("select[name='action2']");
-						});
-					</script>
-				<?php
+			if ( empty( $post ) ) {
+				return;
 			}
+
+			if ( LDLMS_Post_Types::get_post_type_slug( LDLMS_Post_Types::TRANSACTION ) !== $post->post_type ) {
+				return;
+			}
+
+			$remove_access_action_label = esc_html__( 'Remove access', 'learndash' );
+			$add_access_action_label    = esc_html__( 'Add access', 'learndash' );
+			?>
+			<script type="text/javascript">
+				jQuery( function() {
+					jQuery('<option>').val('<?php echo esc_attr( self::ACTION_REMOVE_ACCESS ); ?>').text('<?php echo esc_attr( $remove_access_action_label ); ?>').appendTo("select[name='action']");
+					jQuery('<option>').val('<?php echo esc_attr( self::ACTION_REMOVE_ACCESS ); ?>').text('<?php echo esc_attr( $remove_access_action_label ); ?>').appendTo("select[name='action2']");
+					jQuery('<option>').val('<?php echo esc_attr( self::ACTION_ADD_ACCESS ); ?>').text('<?php echo esc_attr( $add_access_action_label ); ?>').appendTo("select[name='action']");
+					jQuery('<option>').val('<?php echo esc_attr( self::ACTION_ADD_ACCESS ); ?>').text('<?php echo esc_attr( $add_access_action_label ); ?>').appendTo("select[name='action2']");
+				});
+			</script>
+			<?php
 		}
 
 		/**
-		 * Handles the access removal of courses and groups in bulk.
+		 * Handles the access removal/adding in bulk.
 		 *
 		 * Fires on `load-edit.php` hook.
 		 *
 		 * @since 3.6.0
+		 *
+		 * @return void
 		 */
-		protected function transactions_bulk_actions_remove_access() {
-			if ( ( ! isset( $_REQUEST['ld-listing-nonce'] ) ) || ( empty( $_REQUEST['ld-listing-nonce'] ) ) || ( ! wp_verify_nonce( wp_unslash( $_REQUEST['ld-listing-nonce'], get_called_class() ) ) ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				return;
-			}
-
-			if ( ( ! isset( $_REQUEST['post'] ) ) || ( empty( $_REQUEST['post'] ) ) || ( ! is_array( $_REQUEST['post'] ) ) ) {
-				return;
-			}
-
-			if ( ( ! isset( $_REQUEST['post_type'] ) ) || ( learndash_get_post_type_slug( 'transaction' ) !== $_REQUEST['post_type'] ) ) {
+		protected function transactions_bulk_actions_update_access(): void {
+			if (
+				empty( $_REQUEST['ld-listing-nonce'] ) ||
+				! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['ld-listing-nonce'] ) ), get_called_class() ) ||
+				empty( $_REQUEST['post'] ) ||
+				! is_array( $_REQUEST['post'] ) ||
+				empty( $_REQUEST['post_type'] ) ||
+				LDLMS_Post_Types::get_post_type_slug( LDLMS_Post_Types::TRANSACTION ) !== $_REQUEST['post_type']
+			) {
 				return;
 			}
 
 			$action = '';
-			if ( isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ) {
-				$action = esc_attr( wp_unslash( $_REQUEST['action'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-			} elseif ( isset( $_REQUEST['action2'] ) && -1 != $_REQUEST['action2'] ) {
-				$action = esc_attr( wp_unslash( $_REQUEST['action2'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-
-			} elseif ( ( isset( $_REQUEST['ld_action'] ) ) && ( 'remove_access' === $_REQUEST['ld_action'] ) ) {
-				$action = 'remove_access';
+			if ( isset( $_REQUEST['action'] ) && -1 !== intval( $_REQUEST['action'] ) ) {
+				$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) );
+			} elseif ( isset( $_REQUEST['action2'] ) && -1 !== intval( $_REQUEST['action2'] ) ) {
+				$action = sanitize_text_field( wp_unslash( $_REQUEST['action2'] ) );
+			} elseif ( isset( $_REQUEST['ld_action'] ) && self::ACTION_REMOVE_ACCESS === $_REQUEST['ld_action'] ) {
+				$action = self::ACTION_REMOVE_ACCESS;
+			} elseif ( isset( $_REQUEST['ld_action'] ) && self::ACTION_ADD_ACCESS === $_REQUEST['ld_action'] ) {
+				$action = self::ACTION_ADD_ACCESS;
 			}
 
-			if ( 'remove_access' === $action ) {
-				if ( ( isset( $_REQUEST['post'] ) ) && ( ! empty( $_REQUEST['post'] ) ) ) {
+			if ( ! in_array( $action, array( self::ACTION_REMOVE_ACCESS, self::ACTION_ADD_ACCESS ), true ) ) {
+				return;
+			}
 
-					$transactions = array( wp_unslash( $_REQUEST['post'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$transactions = Learndash_Transaction_Model::find_many(
+				wp_parse_id_list( wp_unslash( $_REQUEST['post'] ) )
+			);
 
-					if ( ! is_array( $transactions ) ) {
-						$transactions = array( $transactions );
+			foreach ( $transactions as $transaction ) {
+				$product = $transaction->get_product();
+				$user    = $transaction->get_user();
+
+				if ( ! $product || 0 === $user->ID ) {
+					continue;
+				}
+
+				$user_has_access = $product->user_has_access( $user );
+
+				if ( self::ACTION_REMOVE_ACCESS === $action && $user_has_access ) {
+					$can_be_removed = true;
+
+					if ( Learndash_Paypal_IPN_Gateway::get_name() === $transaction->get_gateway_name() ) {
+						/**
+						 * Filter the PayPal Subscription removal statuses
+						 *
+						 * @param string[] $removal_statuses Array of PayPal IPN subscription statuses.
+						 * @param WP_Post  $product          Course or Group.
+						 * @param WP_User  $user             User.
+						 *
+						 * @return string[] Array of PayPal IPN subscription statuses.
+						 */
+						$removal_statuses = apply_filters(
+							'learndash_paypal_subscription_removal_statuses',
+							array( 'subscr_failed', 'subscr_cancel', 'subscr_eot' ),
+							$product->get_post(),
+							$user
+						);
+
+						$can_be_removed = in_array(
+							get_post_meta( $transaction->get_id(), 'txn_type', true ),
+							$removal_statuses,
+							true
+						);
 					}
-					$transactions = array_map( 'absint', $transactions );
 
-					foreach ( $transactions as $transaction_id ) {
-						$transaction_post = get_post( $transaction_id );
-						if ( ( ! empty( $transaction_post ) ) && ( is_a( $transaction_post, 'WP_Post' ) ) && ( learndash_get_post_type_slug( 'transaction' ) === $transaction_post->post_type ) ) {
-							$post_id = (int) get_post_meta( $transaction_id, 'post_id', true );
-							$user_id = (int) get_post_meta( $transaction_id, 'user_id', true );
-
-							if ( ( empty( $post_id ) ) || ( empty( $user_id ) ) ) {
-								return false;
-							}
-
-							$post = get_post( $post_id );
-							if ( empty( $post ) || ( ! is_a( $post, 'WP_Post' ) ) ) {
-								return false;
-							}
-
-							if ( ! in_array( $post->post_type, array( learndash_get_post_type_slug( 'course' ), learndash_get_post_type_slug( 'group' ) ), true ) ) {
-								return false;
-							}
-
-							$user = get_userdata( $user_id );
-							if ( empty( $user ) || ! is_a( $user, 'WP_User' ) ) {
-								return false;
-							}
-							$user_has_access  = sfwd_lms_has_access( $post_id, $user_id );
-							$txn_type         = get_post_meta( $transaction_id, 'txn_type', true );
-							$removal_statuses = array( 'subscr_failed', 'subscr_cancel', 'subscr_eot' );
-							/**
-							 * Filter the PayPal Subscription removal statuses
-							 *
-							 * @param array  $removal_statuses Array of PayPal IPN subscription statuses
-							 * @param object $post             Course or Group Object
-							 * @param object $user             WP_User
-							 */
-							$removal_statuses = apply_filters( 'learndash_paypal_subscription_removal_statuses', $removal_statuses, $post, $user );
-
-							if ( in_array( $txn_type, $removal_statuses, true ) && $user_has_access ) {
-								if ( learndash_get_post_type_slug( 'course' ) === $post->post_type ) {
-									ld_update_course_access( $user_id, $post->ID, true );
-								} elseif ( learndash_get_post_type_slug( 'group' ) === $post->post_type ) {
-									ld_update_group_access( $user_id, $post->ID, true );
-								}
-							}
-						}
+					if ( $can_be_removed ) {
+						$product->unenroll( $user );
 					}
+				} elseif ( self::ACTION_ADD_ACCESS === $action && ! $user_has_access ) {
+					$product->enroll( $user );
 				}
 			}
 		}
-
-		/**
-		 * Show the Course/Group Removal Status.
-		 *
-		 * @since 3.6.0
-		 *
-		 * @param int $transaction_id Transaction Post ID.
-		 */
-		protected function show_column_access_status( $transaction_id = 0 ) {
-			$transaction_id = absint( $transaction_id );
-			if ( ! empty( $transaction_id ) ) {
-				$post_id = (int) get_post_meta( $transaction_id, 'post_id', true );
-				$user_id = (int) get_post_meta( $transaction_id, 'user_id', true );
-
-				if ( ( empty( $post_id ) ) || ( empty( $user_id ) ) ) {
-					return false;
-				}
-
-				$post = get_post( $post_id );
-				if ( empty( $post ) || ( ! is_a( $post, 'WP_Post' ) ) ) {
-					return false;
-				}
-
-				if ( ! in_array( $post->post_type, array( learndash_get_post_type_slug( 'course' ), learndash_get_post_type_slug( 'group' ) ), true ) ) {
-					return false;
-				}
-
-				$user = get_userdata( $user_id );
-				if ( empty( $user ) || ! is_a( $user, 'WP_User' ) ) {
-					return false;
-				}
-
-				$user_has_access = sfwd_lms_has_access( $post_id, $user_id );
-				?>
-				<div class="ld-access-status"><?php $user_has_access ? esc_html_e( 'Access', 'learndash' ) : esc_html_e( 'No access', 'learndash' ); ?> </div>
-				<?php
-				$txn_type         = get_post_meta( $transaction_id, 'txn_type', true );
-				$removal_statuses = array( 'return-success', 'subscr_failed', 'subscr_cancel', 'subscr_eot' );
-				/**
-				 * Filter the PayPal Subscription removal statuses
-				 *
-				 * @param array  $removal_statuses Array of PayPal IPN subscription statuses
-				 * @param object $post             Course or Group Object
-				 * @param object $user             WP_User
-				 */
-				$removal_statuses = apply_filters( 'learndash_paypal_subscription_removal_statuses', $removal_statuses, $post, $user );
-
-				if ( in_array( $txn_type, $removal_statuses, true ) && $user_has_access ) {
-					?>
-				<div class="ld-removal-action">
-				<button id="ld_remove_access_<?php echo absint( $transaction_id ); ?>" class="small ld_remove_access_single"><?php esc_html_e( 'Remove access', 'learndash' ); ?></button>
-				</div>
-					<?php
-				}
-			}
-		}
-
-		/**
-		 * Get transaction processor type.
-		 *
-		 * @since 3.6.0
-		 *
-		 * @param int $post_id Transaction Post ID.
-		 */
-		protected function get_transaction_processor_type( $post_id = 0 ) {
-			$ld_payment_processor = '';
-
-			$post_id = absint( $post_id );
-			if ( ! empty( $post_id ) ) {
-				$ld_payment_processor = get_post_meta( $post_id, 'ld_payment_processor', true );
-				if ( empty( $ld_payment_processor ) ) {
-					$ipn_track_id = get_post_meta( $post_id, 'ipn_track_id', true );
-					if ( ! empty( $ipn_track_id ) ) {
-						$ld_payment_processor = 'paypal';
-						update_post_meta( $post_id, 'ld_payment_processor', $ld_payment_processor );
-					}
-					$stripe_session_id = get_post_meta( $post_id, 'stripe_session_id', true );
-					if ( ! empty( $stripe_session_id ) ) {
-						$ld_payment_processor = 'stripe';
-						update_post_meta( $post_id, 'ld_payment_processor', $ld_payment_processor );
-					}
-				}
-			}
-
-			return $ld_payment_processor;
-		}
-
-		// End of functions.
 	}
 }
+
 new Learndash_Admin_Transactions_Listing();

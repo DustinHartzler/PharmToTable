@@ -18,178 +18,12 @@ $learndash_30_defs = array(
 
 foreach ( $learndash_30_defs as $learndash_30_definition => $learndash_30_value ) {
 	if ( ! defined( $learndash_30_definition ) ) {
-		/**
-		 * @ignore
-		 */
 		define( $learndash_30_definition, $learndash_30_value ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound -- Used inside foreach loop
 	}
 }
 
 require 'shortcodes.php';
 require 'login-register-functions.php';
-
-/**
- * Gets the course price.
- *
- * Return an array of price type, amount and cycle.
- *
- * @since 3.0.0
- *
- * @global WP_Post $post Global post object.
- *
- * @param int|object|null $course Course `WP_Post` object or post ID. Default to global $post.
- *
- * @return array Course price details.
- */
-function learndash_get_course_price( $course = null ) {
-
-	if ( null === $course ) {
-		global $post;
-		$course = $post;
-	}
-
-	if ( is_numeric( $course ) ) {
-		$course = get_post( $course );
-	}
-
-	// Get the course price
-	$meta = get_post_meta( $course->ID, '_sfwd-courses', true );
-
-	$course_price = array(
-		'type'  => ! empty( $meta['sfwd-courses_course_price_type'] ) ? $meta['sfwd-courses_course_price_type'] : LEARNDASH_DEFAULT_COURSE_PRICE_TYPE,
-		'price' => ! empty( $meta['sfwd-courses_course_price'] ) ? $meta['sfwd-courses_course_price'] : '',
-	);
-
-	if ( 'subscribe' === $course_price['type'] ) {
-
-		$interval        = learndash_get_setting( $course->ID, 'course_price_billing_p3' );
-		$frequency       = learndash_get_setting( $course->ID, 'course_price_billing_t3' );
-		$repeats         = learndash_get_setting( $course->ID, 'course_no_of_cycles' );
-		$trial_interval  = learndash_get_setting( $course->ID, 'course_trial_duration_p1' );
-		$trial_frequency = learndash_get_setting( $course->ID, 'course_trial_duration_t1' );
-
-		$course_price['interval']  = $interval;
-		$course_price['frequency'] = learndash_get_grammatical_number_label_for_interval( $interval, $frequency );
-
-		if ( ! empty( $repeats ) ) {
-			$course_price['repeats']          = $repeats;
-			$course_price['repeat_frequency'] = learndash_get_grammatical_number_label_for_interval( $repeats, $frequency );
-		}
-
-		$course_price['trial_price'] = ! empty( learndash_get_setting( $course->ID, 'course_trial_price' ) ) ? learndash_get_setting( $course->ID, 'course_trial_price' ) : '';
-
-		if ( ! empty( $trial_interval ) ) {
-			$course_price['trial_interval']  = $trial_interval;
-			$course_price['trial_frequency'] = learndash_get_grammatical_number_label_for_interval( $trial_interval, $trial_frequency );
-		}
-	}
-
-	/**
-	 * Filters price details for a course.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $course_price Course price details.
-	 */
-	return apply_filters( 'learndash_get_course_price', $course_price );
-
-}
-
-/**
- * Get group price
- *
- * Return an array of price type, amount and cycle
- *
- * @since 3.2.0
- *
- * @param  int/object $group
- * @return array      price details
- */
-function learndash_get_group_price( $group = null ) {
-
-	if ( null === $group ) {
-		global $post;
-		$group = $post;
-	}
-
-	if ( is_numeric( $group ) ) {
-		$group = get_post( $group );
-	}
-	if ( ! is_a( $group, 'WP_Post' ) ) {
-		return false;
-	}
-
-	// Get the course price
-	$meta = get_post_meta( $group->ID, '_groups', true );
-
-	$group_price = array(
-		'type'  => ! empty( $meta['groups_group_price_type'] ) ? $meta['groups_group_price_type'] : LEARNDASH_DEFAULT_GROUP_PRICE_TYPE,
-		'price' => ! empty( $meta['groups_group_price'] ) ? $meta['groups_group_price'] : '',
-	);
-
-	if ( 'subscribe' === $group_price['type'] ) {
-
-		$frequency       = learndash_get_setting( $group->ID, 'group_price_billing_t3', true );
-		$interval        = learndash_get_setting( $group->ID, 'group_price_billing_p3', true );
-		$repeats         = learndash_get_setting( $group->ID, 'post_no_of_cycles' );
-		$trial_interval  = learndash_get_setting( $group->ID, 'group_trial_duration_p1' );
-		$trial_frequency = learndash_get_setting( $group->ID, 'group_trial_duration_t1' );
-
-		$group_price['interval']  = $interval;
-		$group_price['frequency'] = learndash_get_grammatical_number_label_for_interval( $interval, $frequency );
-
-		if ( ! empty( $repeats ) ) {
-			$group_price['repeats']          = $repeats;
-			$group_price['repeat_frequency'] = learndash_get_grammatical_number_label_for_interval( $repeats, $frequency );
-		}
-
-		$group_price['trial_price'] = ! empty( learndash_get_setting( $group->ID, 'group_trial_price' ) ) ? learndash_get_setting( $group->ID, 'group_trial_price' ) : '';
-
-		if ( ! empty( $trial_interval ) ) {
-			$group_price['trial_interval']  = $trial_interval;
-			$group_price['trial_frequency'] = learndash_get_grammatical_number_label_for_interval( $trial_interval, $trial_frequency );
-		}
-	}
-
-	/**
-	 * Filter Group Price details.
-	 *
-	 * @since 3.2.0
-	 *
-	 * @param array $group_price Group Price Details array.
-	 */
-	return apply_filters( 'learndash_get_group_price', $group_price );
-
-}
-
-/**
- * Get the singular or plural label for recurring payment intervals
- *
- * @since 3.6.0
- *
- * @param string $interval  Number of payment intervals.
- * @param string $frequency PayPal symbol for day, week, month or year.
- *
- * @return string
- */
-function learndash_get_grammatical_number_label_for_interval( $interval, $frequency ) {
-	switch ( $frequency ) {
-		case ( 'D' ):
-			return _n( 'day', 'days', $interval, 'learndash' );
-
-		case ( 'W' ):
-			return _n( 'week', 'weeks', $interval, 'learndash' );
-
-		case ( 'M' ):
-			return _n( 'month', 'months', $interval, 'learndash' );
-
-		case ( 'Y' ):
-			return _n( 'year', 'years', $interval, 'learndash' );
-
-		default:
-			return '';
-	}
-}
 
 /**
  * Prints breadcrumbs output.
@@ -209,7 +43,7 @@ function learndash_the_breadcrumbs( $post = null ) {
 	}
 
 	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
+		$post = get_post( $post ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 	}
 
 	echo wp_kses_post( learndash_get_breadcrumbs( $post ) );
@@ -237,14 +71,14 @@ function learndash_get_breadcrumbs( $post = null, $args = false ) {
 	}
 
 	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
+		$post = get_post( $post ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 	}
 
 	if ( $args ) {
-		extract( $args );
+		extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
 	}
 
-	// Get the course ID of the current element
+	// Get the course ID of the current element.
 	$course_id = learndash_get_course_id( $post->ID );
 	if ( empty( $course_id ) ) {
 		return array();
@@ -261,8 +95,8 @@ function learndash_get_breadcrumbs( $post = null, $args = false ) {
 		),
 	);
 
-	// If this is a topic or a quiz we might need a third hierarhcy
-	switch ( get_post_type() ) {
+	// If this is a topic or a quiz we might need a third hierarchy.
+	switch ( get_post_type( $post->ID ) ) {
 
 		case 'sfwd-topic':
 			$lesson_id             = learndash_course_get_single_parent_step( $course_id, $post->ID );
@@ -326,14 +160,14 @@ function learndash_get_breadcrumbs( $post = null, $args = false ) {
  */
 function learndash_get_essays_by_quiz_attempt( $attempt_id = null, $user_id = null ) {
 
-	// Fail gracefully
+	// Fail gracefully.
 	if ( null === $attempt_id ) {
 		return false;
 	}
 
 	if ( null === $user_id ) {
-		$cuser   = wp_get_current_user();
-		$user_id = $cuser->ID;
+		$user    = wp_get_current_user();
+		$user_id = $user->ID;
 	}
 
 	$quiz_attempts = get_user_meta( $user_id, '_sfwd-quizzes', true );
@@ -440,7 +274,7 @@ function learndash_get_lesson_progress( $topics = null ) {
 		)
 	);
 
-	// Fail gracefully, return zero's
+	// Fail gracefully, return zero's.
 	if ( null === $topics || empty( $topics ) ) {
 		return $progress;
 	}
@@ -494,7 +328,7 @@ function learndash_is_item_complete( $post = null, $user_id = null, $course_id =
 	}
 
 	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
+		$post = get_post( $post ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 	}
 
 	if ( null === $user_id ) {
@@ -546,7 +380,7 @@ function learndash_is_item_complete( $post = null, $user_id = null, $course_id =
 function learndash_get_content_label( $post_type = null, $args = null ) {
 
 	if ( $args ) {
-		extract( $args );
+		extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
 	}
 
 	$post_type = ( null === $post_type ? get_post_type() : $post_type );
@@ -650,7 +484,7 @@ function learndash_lesson_progress( $post = null, $course_id = null ) {
 	}
 
 	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
+		$post = get_post( $post ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 	}
 
 	if ( null === $course_id ) {
@@ -754,7 +588,7 @@ function learndash_get_lesson_content_count( $lesson, $course_id ) {
 }
 
 /**
- * Ouputs lesson row CSS class.
+ * Outputs lesson row CSS class.
  *
  * Filterable string of class names populated based on lesson status and attributes.
  *
@@ -762,8 +596,8 @@ function learndash_get_lesson_content_count( $lesson, $course_id ) {
  *
  * @param int|WP_Post $lesson     Lesson `WP_Post` object or post ID. Default to global $post.
  * @param int         $has_access Whether the lesson is accessible or not.
- * @param array       $topics     Topics within the Lesson
- * @param array       $quizzes    Quizzes within the lesson
+ * @param array       $topics     Topics within the Lesson.
+ * @param array       $quizzes    Quizzes within the lesson.
  *
  * @return string|void Lesson row CSS class names.
  */
@@ -774,14 +608,12 @@ function learndash_lesson_row_class( $lesson = null, $has_access = false, $topic
 	}
 
 	/**
-	 * Base classes
+	 * Base classes.
 	 *
-	 * ld-item-list-item   -- for styling
-	 * ld-item-lesson-item -- more specific
-	 * ld-lesson-item-{post_id}
-	 * is_sample (if sample)
-	 *
-	 * @var string $lesson_class
+	 * Class ld-item-list-item   -- for styling
+	 * Class ld-item-lesson-item -- more specific
+	 * Class ld-lesson-item-{post_id}
+	 * Class is_sample (if sample)
 	 */
 	$lesson_class = 'ld-item-list-item ld-item-lesson-item ld-lesson-item-' . $lesson['post']->ID . ' ' . $lesson['sample'];
 
@@ -789,10 +621,10 @@ function learndash_lesson_row_class( $lesson = null, $has_access = false, $topic
 	if ( true !== $bypass_course_limits_admin_users ) {
 		$lesson_class .= ( ! empty( $lesson['lesson_access_from'] ) || ! $has_access ? ' learndash-not-available' : '' );
 	}
-	// Complete or not complete
+	// Complete or not complete.
 	$lesson_class .= ' ' . ( 'completed' === $lesson['status'] ? 'learndash-complete' : 'learndash-incomplete' );
 
-	// If expandable or not
+	// If expandable or not.
 	if ( ! empty( $topics ) || ! empty( $quizzes ) ) {
 		$lesson_class .= ' ld-expandable';
 	}
@@ -801,17 +633,33 @@ function learndash_lesson_row_class( $lesson = null, $has_access = false, $topic
 		$lesson_class .= ' ld-current-lesson';
 	}
 
-	// Filter
 	/**
 	 * Filters lesson row CSS class names.
 	 *
 	 * @since 3.0.0
+	 * @deprecated 4.5.0
 	 *
 	 * @param string $lesson_class Lesson row CSS class names.
 	 * @param object $lesson       The lesson post object to evaluate
 	 */
-	echo esc_attr( apply_filters( 'learndash-lesson-row-class', $lesson_class, $lesson ) );
+	$lesson_class = apply_filters_deprecated(
+		'learndash-lesson-row-class',
+		array( $lesson_class, $lesson ),
+		'4.5.0',
+		'learndash_lesson_row_class'
+	);
 
+	/**
+	 * Filters lesson row CSS class names.
+	 *
+	 * @since 4.5.0
+	 *
+	 * @param string $lesson_class Lesson row CSS class names.
+	 * @param object $lesson       The lesson post object to evaluate
+	 */
+	$lesson_class = apply_filters( 'learndash_lesson_row_class', $lesson_class, $lesson );
+
+	echo esc_attr( $lesson_class );
 }
 
 /**
@@ -869,49 +717,123 @@ function learndash_quiz_row_classes( $quiz = null, $context = 'course' ) {
  * @return array Attributes including label, icon and class name.
  */
 function learndash_get_lesson_attributes( $lesson = null ) {
+	$attributes = array();
+
+	if ( ( isset( $lesson['post'] ) ) && ( is_a( $lesson['post'], 'WP_Post' ) ) && ( learndash_get_post_type_slug( 'lesson' ) === $lesson['post']->post_type ) ) {
+		$attributes = learndash_get_course_step_attributes( $lesson['post']->ID );
+
+		/**
+		 * Filters attributes of a lesson. Used to modify details about a lesson like label, icon and class name.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array   $attributes Array of lesson attributes.
+		 * @param WP_Post $lesson     The lesson post object.
+		 */
+		return apply_filters( 'learndash_lesson_attributes', $attributes, $lesson['post'] );
+	}
+
+	return $attributes;
+}
+
+/**
+ * Gets the course step attributes.
+ *
+ * Populates an array of attributes about the step, if it's a sample or if it isn't currently available
+ *
+ * @since 4.2.0
+ *
+ * @param int $step_id   Post ID.
+ * @param int $course_id Optional. Course ID.
+ * @param int $user_id   Optional. User ID.
+ *
+ * @return array Attributes including label, icon and class name.
+ */
+function learndash_get_course_step_attributes( $step_id = 0, $course_id = 0, $user_id = 0 ) {
 
 	$attributes = array();
 
-	// Fail silently
-	if ( null === $lesson ) {
-		return $attributes;
-	}
+	$step_id   = absint( $step_id );
+	$course_id = absint( $course_id );
+	$user_id   = absint( $user_id );
 
-	if ( 'is_sample' === $lesson['sample'] ) {
-		$attributes[] = array(
-			// translators: placeholder: Lesson.
-			'label' => sprintf( esc_html_x( 'Sample %s', 'placeholder: Lesson', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) ),
-			'icon'  => 'ld-icon-unlocked',
-			'class' => 'ld-status-unlocked ld-primary-color',
-		);
-	}
+	if ( ! empty( $step_id ) ) {
+		$step_post_type = get_post_type( $step_id );
+		if ( in_array( $step_post_type, learndash_get_post_types( 'course_steps' ), true ) ) {
 
-	$bypass_course_limits_admin_users = learndash_can_user_bypass( get_current_user_id(), 'learndash_course_lesson_not_available' );
-	if ( true !== $bypass_course_limits_admin_users ) {
+			if ( empty( $course_id ) ) {
+				$course_id = learndash_get_course_id( $step_id );
+			}
 
-		if ( ! empty( $lesson['lesson_access_from'] ) ) {
-			$attributes[] = array(
-				'label' => sprintf(
-					// translators: placeholder: Date when lesson will be available.
-					esc_html_x( 'Available on %s', 'placeholder: Date when lesson will be available', 'learndash' ),
-					learndash_adjust_date_time_display( $lesson['lesson_access_from'] )
-				),
-				'class' => 'ld-status-waiting ld-tertiary-background',
-				'icon'  => 'ld-icon-calendar',
-			);
+			if ( empty( $user_id ) ) {
+				$user_id = get_current_user_id();
+			}
+
+			if ( learndash_get_post_type_slug( 'lesson' ) === $step_post_type ) {
+
+				$show_sample = true;
+				$is_sample   = (bool) learndash_is_sample( $step_id );
+				if ( ( ! empty( $course_id ) ) && ( ! empty( $user_id ) ) ) {
+					$has_access = (bool) sfwd_lms_has_access( $course_id, $user_id );
+					if ( ( true === $has_access ) && ( true === $is_sample ) ) {
+						$show_sample = false;
+
+						/**
+						 * Filters attributes of the step. Used to modify details about a lesson like label, icon and class name
+						 *
+						 * @since 4.2.0
+						 *
+						 * @param bool $show_sample True to show sample attributes. Default is false.
+						 * @param int  $step_id     The step ID.
+						 * @param int  $course_id   The step course ID.
+						 * @param int  $user_id     The user ID.
+						 */
+						$show_sample = (bool) apply_filters( 'learndash_course_step_attributes_show_sample', $show_sample, $step_id, $course_id, $user_id );
+					}
+				}
+				if ( ( true === $is_sample ) && ( true === $show_sample ) ) {
+					$attributes[] = array(
+						// translators: placeholder: Lesson.
+						'label' => sprintf( esc_html_x( 'Sample %s', 'placeholder: Lesson', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) ),
+						'icon'  => 'ld-icon-unlocked',
+						'class' => 'ld-status-unlocked ld-primary-color',
+					);
+				}
+			}
+
+			$bypass_course_limits_admin_users = learndash_can_user_bypass( get_current_user_id(), 'learndash_course_lesson_not_available' );
+			if ( true !== $bypass_course_limits_admin_users ) {
+
+				$step_access_from = ld_lesson_access_from( $step_id, $user_id, $course_id );
+
+				if ( ! empty( $step_access_from ) ) {
+					$attributes[] = array(
+						'label' => sprintf(
+							// translators: placeholder: Date when lesson will be available.
+							esc_html_x( 'Available on %s', 'placeholder: Date when lesson will be available', 'learndash' ),
+							learndash_adjust_date_time_display( $step_access_from )
+						),
+						'class' => 'ld-status-waiting ld-tertiary-background',
+						'icon'  => 'ld-icon-calendar',
+					);
+				}
+			}
+
+			/**
+			 * Filters attributes of the step. Used to modify details about a lesson like label, icon and class name
+			 *
+			 * @since 3.0.0
+			 *
+			 * @param array $attributes Array of lesson attributes.
+			 * @param int   $step_id    The step ID.
+			 * @param int   $course_id  The step course ID.
+			 * @param int   $user_id    The user ID.
+			 */
+			$attributes = apply_filters( 'learndash_course_step_attributes', $attributes, $step_id, $course_id, $user_id );
 		}
 	}
 
-	/**
-	 * Filters attributes of a lesson. Used to modify details about a lesson like label, icon and class name
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array  $attributes Array of lesson attributes.
-	 * @param object $lesson     The lesson post object
-	 */
-	return apply_filters( 'learndash_lesson_attributes', $attributes, $lesson );
-
+	return $attributes;
 }
 
 /**
@@ -923,9 +845,9 @@ function learndash_get_lesson_attributes( $lesson = null ) {
  *
  * @param string  $filepath The path to the template file to include.
  * @param array   $args    Any variables to pass along to the template.
- * @param boolean $echo    Whether to print or return the template output.
+ * @param boolean $echo    Whether to print or return the template output. Default is false.
  *
- * @return string|void If the echo is false, string with markup returned.
+ * @return ($echo is false ? string : void )
  */
 function learndash_get_template_part( $filepath, $args = null, $echo = false ) {
 	// Keep this in the logic from LD core to allow the same overrides.
@@ -934,7 +856,7 @@ function learndash_get_template_part( $filepath, $args = null, $echo = false ) {
 	if ( ( ! empty( $filepath ) ) && ( file_exists( $filepath ) ) ) {
 
 		ob_start();
-		extract( $args );
+		extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
 		include $filepath;
 		$output = ob_get_clean();
 
@@ -966,7 +888,7 @@ function learndash_get_wrapper_class( $post = null ) {
 	}
 
 	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
+		$post = get_post( $post ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 	}
 
 	/**
@@ -997,7 +919,7 @@ function learndash_the_wrapper_class( $post = null ) {
 	}
 
 	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
+		$post = get_post( $post ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 	}
 
 	echo esc_attr( learndash_get_wrapper_class( $post ) );
@@ -1148,10 +1070,11 @@ function learndash_status_bubble( $status = 'incomplete', $context = null, $echo
 
 }
 
-// This is just for testing icon sizing and scaling
-// add_action( 'admin_footer', 'learndash_test_admin_icon' );
-function learndash_test_admin_icon() { ?>
-
+/**
+ * Looks like it was never used. Should be deprecated I guess.
+ */
+function learndash_test_admin_icon() {
+	?>
 	<style type="text/css">
 		#adminmenu #toplevel_page_learndash-lms div.wp-menu-image:before {
 			background: url('<?php echo esc_url( LEARNDASH_LMS_PLUGIN_URL . '/themes/ld30/assets/iconfont/admin-icons/browser-checkmark.svg' ); ?>') center center no-repeat;
@@ -1159,7 +1082,6 @@ function learndash_test_admin_icon() { ?>
 			opacity: 0.7;
 		}
 	</style>
-
 	<?php
 }
 
@@ -1182,8 +1104,8 @@ function learndash_get_course_assignments( $course_id = null, $user_id = null ) 
 	}
 
 	if ( null === $user_id ) {
-		$cuser   = wp_get_current_user();
-		$user_id = $cuser->ID;
+		$user    = wp_get_current_user();
+		$user_id = $user->ID;
 	}
 
 	$args = array(
@@ -1246,8 +1168,8 @@ function learndash_30_remove_legacy_css() {
 function learndash_get_user_stats( $user_id = null ) {
 
 	if ( null === $user_id ) {
-		$cuser   = wp_get_current_user();
-		$user_id = $cuser->ID;
+		$user    = wp_get_current_user();
+		$user_id = $user->ID;
 	} else {
 		$user_id = absint( $user_id );
 	}
@@ -1288,11 +1210,25 @@ function learndash_get_user_stats( $user_id = null ) {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $stats   User stats
+	 * @param array $stats   User statistics.
 	 * @param int   $user_id User ID.
 	 */
-	return apply_filters( 'learndash-get-user-stats', $stats, $user_id );
+	$stats = apply_filters_deprecated(
+		'learndash-get-user-stats',
+		array( $stats, $user_id ),
+		'4.5.0',
+		'learndash_user_statistics'
+	);
 
+	/**
+	 * Filters LearnDash user stats. Used to modify user details like courses, points, certificates.
+	 *
+	 * @since 4.5.0
+	 *
+	 * @param array $stats   User statistics.
+	 * @param int   $user_id User ID.
+	 */
+	return apply_filters( 'learndash_user_statistics', $stats, $user_id );
 }
 
 global $learndash_in_focus_mode;
@@ -1316,10 +1252,8 @@ function learndash_30_focus_mode( $template ) {
 	$focus_mode = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'focus_mode_enabled' );
 	if ( 'yes' !== $focus_mode ) {
 		/**
-		 * @todo: Not sure what setting this global to true controls. Why
-		 * set to true if FM is not enabled.
-		 *
 		 * Seems this is only used here and above this function.
+		 * Not sure what setting this global to true controls. Why set to true if FM is not enabled.
 		 */
 		global $learndash_in_focus_mode;
 		$learndash_in_focus_mode = true;
@@ -1358,7 +1292,6 @@ add_filter( 'learndash_template_filename', 'learndash_30_template_filename', 100
 
 /**
  * Gets the template file path by name.
- *
  * Fires on `learndash_template_filename` hook.
  *
  * @since 3.0.3
@@ -1377,13 +1310,13 @@ function learndash_30_template_filename( $filepath = '', $name = '', $args = arr
 	 * and the value is the alternate filename to be used.
 	 */
 	$transition_template_filenames = array(
-		// LD Core templates
+		// LD Core templates.
 		'course.php'                                  => 'course.php',
 		'lesson.php'                                  => 'lesson.php',
 		'topic.php'                                   => 'topic.php',
 		'quiz.php'                                    => 'quiz.php',
 
-		// LD Core Shortcode templates
+		// LD Core Shortcode templates.
 		'profile.php'                                 => 'shortcodes/profile.php',
 		'ld_course_list.php'                          => 'shortcodes/ld_course_list.php',
 		'course_list_template.php'                    => 'shortcodes/course_list_template.php',
@@ -1391,11 +1324,11 @@ function learndash_30_template_filename( $filepath = '', $name = '', $args = arr
 		'user_groups_shortcode.php'                   => 'shortcodes/user_groups_shortcode.php',
 		'course_content_shortcode.php'                => 'shortcodes/course_content_shortcode.php',
 
-		// LD Core Widgets
+		// LD Core Widgets.
 		'course_navigation_widget.php'                => 'widgets/course-navigation.php',
 		'course_progress_widget.php'                  => 'widgets/course-progress.php',
 
-		// LD Core Messages
+		// LD Core Messages.
 		'learndash_course_prerequisites_message.php'  => 'modules/messages/prerequisites.php',
 		'learndash_course_points_access_message.php'  => 'modules/messages/course-points.php',
 		'learndash_course_lesson_not_available.php'   => 'modules/messages/lesson-not-available.php',
@@ -1427,20 +1360,23 @@ function learndash_30_template_assets() {
 	// If this function is being called then we are the active theme.
 	$theme_template_url = LearnDash_Theme_Register::get_active_theme_base_url();
 
-	/**
-	 * @TODO : These assets really should be moved to the /templates directory since they are part of the theme.
-	 */
+	// These assets really should be moved to the /templates directory since they are part of the theme.
 	wp_register_style( 'learndash-front', $theme_template_url . '/assets/css/learndash' . learndash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
 	wp_register_script( 'learndash-front', $theme_template_url . '/assets/js/learndash.js', array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
 
-	wp_register_script( 'learndash-exam', $theme_template_url . '/assets/js/learndash-exam' . learndash_min_asset() . '.js', array(), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
+	if ( get_post_type() === learndash_get_post_type_slug( 'exam' ) ) {
+		wp_register_script( 'learndash-exam', $theme_template_url . '/assets/js/learndash-exam' . learndash_min_asset() . '.js', array(), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
+	}
 
 	wp_register_style( 'learndash-quiz-front', $theme_template_url . '/assets/css/learndash.quiz.front' . learndash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
 
 	wp_enqueue_style( 'learndash-front' );
 	wp_style_add_data( 'learndash-front', 'rtl', 'replace' );
 	wp_enqueue_script( 'learndash-front' );
-	wp_enqueue_script( 'learndash-exam' );
+
+	if ( get_post_type() === learndash_get_post_type_slug( 'exam' ) ) {
+		wp_enqueue_script( 'learndash-exam' );
+	}
 
 	wp_localize_script(
 		'learndash-front',
@@ -1509,6 +1445,48 @@ function learndash_30_nav_menus() {
 }
 
 /**
+ * Gets the ld30 theme position of the sidebar.
+ *
+ * @since 4.1.0
+ *
+ * @return string A string with the sidebar position.
+ */
+function learndash_30_get_focus_mode_sidebar_position() {
+
+	$sidebar_position = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'focus_mode_sidebar_position', 'default' );
+
+	if ( is_rtl() ) {
+		$sidebar_position = 'right' === $sidebar_position ? 'left' : $sidebar_position;
+		return 'ld-focus-position-rtl-' . $sidebar_position;
+	}
+
+	$sidebar_position = 'left' === $sidebar_position ? 'right' : $sidebar_position;
+	return 'ld-focus-position-' . $sidebar_position;
+
+}
+
+/**
+ * Gets the ld30 theme arrow class of the sidebar.
+ *
+ * @since 4.1.0
+ *
+ * @return string A string with the sidebar arrow class.
+ */
+function learndash_30_get_focus_mode_sidebar_arrow_class() {
+	$arrows = array(
+		'ld-focus-position-rtl-default' => 'ld-icon-arrow-right',
+		'ld-focus-position-rtl-left'    => 'ld-icon-arrow-left',
+		'ld-focus-position-default'     => 'ld-icon-arrow-left',
+		'ld-focus-position-right'       => 'ld-icon-arrow-right',
+	);
+
+	$sidebar_position = learndash_30_get_focus_mode_sidebar_position();
+
+	return isset( $arrows[ $sidebar_position ] ) ? $arrows[ $sidebar_position ] : 'ld-icon-arrow-left';
+
+}
+
+/**
  * Gets the ld30 theme custom focus menu items.
  *
  * @since 3.0.0
@@ -1565,7 +1543,7 @@ function learndash_30_custom_colors() {
 	 *
 	 * @since 3.0.1
 	 *
-	 * @param string|int $resonsive_video_setting Value is yes if enabled and empty string if disabled. Default is set to 0.
+	 * @param string|int $responsive_video_setting Value is yes if enabled and empty string if disabled. Default is set to 0.
 	 */
 	$responsive_video = apply_filters( 'learndash_30_responsive_video', LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'responsive_video_enabled' ) );
 
@@ -1580,11 +1558,10 @@ function learndash_30_custom_colors() {
 
 	ob_start();
 	if ( ( isset( $colors['primary'] ) ) && ( ! empty( $colors['primary'] ) ) && ( LD_30_COLOR_PRIMARY != $colors['primary'] ) ) {
+		// Convert HEX to RGB for use with rgba().
+		list( $r, $g, $b ) = sscanf( $colors['primary'], '#%02x%02x%02x' );
 
-		// Convert HEX to RGB for for use with rgba()
-		$primaryBuildRgb = list($r, $g, $b) = sscanf( $colors['primary'], '#%02x%02x%02x' );
-		$primaryRgb      = "$r, $g, $b";
-
+		$primary_rgb = "$r, $g, $b";
 		?>
 		.learndash-wrapper .ld-item-list .ld-item-list-item.ld-is-next,
 		.learndash-wrapper .wpProQuiz_content .wpProQuiz_questionListItem label:focus-within {
@@ -1620,7 +1597,7 @@ function learndash_30_custom_colors() {
 		.learndash-wrapper .ld-focus-comment.bypostauthor>.ld-comment-wrapper,
 		.learndash-wrapper .ld-focus-comment.role-group_leader>.ld-comment-wrapper,
 		.learndash-wrapper .ld-focus-comment.role-administrator>.ld-comment-wrapper {
-			background-color:rgba(<?php echo esc_attr( $primaryRgb ); ?>, 0.03) !important;
+			background-color:rgba(<?php echo esc_attr( $primary_rgb ); ?>, 0.03) !important;
 		}
 
 
@@ -1945,8 +1922,8 @@ function learndash_30_ajax_pager() {
 		$widget_instance['widget_instance']['show_course_quizzes'] = true;
 	}
 
-	$cuser   = wp_get_current_user();
-	$user_id = ( is_user_logged_in() ? $cuser->ID : false );
+	$user    = wp_get_current_user();
+	$user_id = ( is_user_logged_in() ? $user->ID : false );
 
 	global $course_pager_results;
 
@@ -1962,7 +1939,7 @@ function learndash_30_ajax_pager() {
 			array(
 				'success' => false,
 				'message' => sprintf(
-					// translators: placeholder: course
+					// translators: placeholder: course.
 					esc_html_x(
 						'No %s ID supplied',
 						'placeholder: course',
@@ -1976,7 +1953,6 @@ function learndash_30_ajax_pager() {
 
 	if ( 'group_courses' === $context ) {
 		if ( ! empty( $group_id ) ) {
-			//if ( isset( $_GET['ld-grouo-courses'] ) )
 			if ( learndash_is_user_in_group( $user_id, $group_id ) ) {
 				$has_access = true;
 			} else {
@@ -2008,7 +1984,7 @@ function learndash_30_ajax_pager() {
 		}
 	}
 
-	// We're paginating topics
+	// We're paginating topics.
 	if ( isset( $lesson_id ) && ! empty( $lesson_id ) ) {
 
 		$all_topics = learndash_topic_dots( $lesson_id, $course_id, 'array' );
@@ -2021,7 +1997,7 @@ function learndash_30_ajax_pager() {
 		 * @param array $pagination_arguments Topic pagination arguments
 		 */
 		$topic_pager_args = apply_filters(
-			'ld30_ajax_topic_pager_args',
+			'ld30_ajax_topic_pager_args', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy prefix.
 			array(
 				'course_id' => $course_id,
 				'lesson_id' => $lesson_id,
@@ -2035,7 +2011,7 @@ function learndash_30_ajax_pager() {
 				array(
 					'success' => false,
 					'message' => sprintf(
-					// translators: No topics for this lesson
+						// translators: No topics for this lesson.
 						esc_html_x( 'No %1$s for this $2$s', 'placeholder: topics, lesson', 'learndash' ),
 						learndash_get_custom_label_lower( 'topics' ),
 						learndash_get_custom_label_lower( 'lesson' )
@@ -2105,7 +2081,7 @@ function learndash_30_ajax_pager() {
 		 * @param int     $course_id           Course ID.
 		 * @param int     $user_id             User ID.
 		 */
-		$show_lesson_quizzes = apply_filters( 'learndash-show-lesson-quizzes', $show_lesson_quizzes, $lesson_id, $course_id, $user_id );
+		$show_lesson_quizzes = apply_filters( 'learndash-show-lesson-quizzes', $show_lesson_quizzes, $lesson_id, $course_id, $user_id ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Used in multiple places, better to keep it for now.
 
 		if ( $show_lesson_quizzes ) {
 
@@ -2209,7 +2185,7 @@ function learndash_30_ajax_pager() {
 
 				/** This filter is documented in themes/ld30/includes/helpers.php */
 				$topic_pager_args = apply_filters(
-					'ld30_ajax_topic_pager_args',
+					'ld30_ajax_topic_pager_args', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Legacy prefix.
 					array(
 						'course_id' => $course_id,
 						'lesson_id' => $lesson['post']->ID,
@@ -2245,7 +2221,7 @@ function learndash_30_ajax_pager() {
 
 		$lesson_list = ob_get_clean();
 
-		// Need to adjust based on widget settings
+		// Need to adjust based on widget settings.
 		$lessons = learndash_get_course_lessons_list( $course_id, $user_id, $lesson_query_args );
 
 		ob_start();
@@ -2410,7 +2386,6 @@ function learndash_30_ajax_pager() {
 					$paged = intval( $_GET['ld-user-status'] );
 				}
 
-				// Always return $paged
 				return $paged;
 			},
 			10,
@@ -2446,10 +2421,10 @@ function learndash_30_ajax_pager() {
 		If we are using the new LearnDash User Status block, set the right context, else the old User Status widget is being used
 		*/
 		if ( '1' === $instance['isblock'] ) {
-			$context = 'block';
+			$context         = 'block';
 			$args['isblock'] = 'block';
 		} else {
-			$context = 'widget';
+			$context         = 'widget';
 			$args['isblock'] = '';
 		}
 
@@ -2473,7 +2448,6 @@ function learndash_30_ajax_pager() {
 				'markup'  => ob_get_clean(),
 			)
 		);
-
 	}
 
 	wp_send_json_error(
@@ -2541,7 +2515,7 @@ function learndash_focus_mode_lesson_query_args( $course_id, $course_lessons_per
 					}
 				}
 			} elseif ( in_array( $post->post_type, array( 'sfwd-quiz' ), true ) ) {
-				// If here we have a global Quiz. So we set the pager to the max number
+				// If here we have a global Quiz. So we set the pager to the max number.
 				$course_lesson_ids = learndash_course_get_steps_by_type( $course_id, 'sfwd-lessons' );
 				if ( ! empty( $course_lesson_ids ) ) {
 					$course_lessons_paged       = array_chunk( $course_lesson_ids, $course_lessons_per_page, true );
@@ -2579,17 +2553,17 @@ function learndash_hex2rgb( $color, $opacity = false ) {
 
 	$default = 'rgb(0,0,0)';
 
-	// Return default if no color provided
+	// Return default if no color provided.
 	if ( empty( $color ) ) {
 		return $default;
 	}
 
-	// Sanitize $color if "#" is provided
+	// Sanitize $color if "#" is provided.
 	if ( '#' === $color[0] ) {
 		$color = substr( $color, 1 );
 	}
 
-		// Check if color has 6 or 3 characters and get values
+		// Check if color has 6 or 3 characters and get values.
 	if ( strlen( $color ) == 6 ) {
 			$hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
 	} elseif ( strlen( $color ) == 3 ) {
@@ -2598,10 +2572,10 @@ function learndash_hex2rgb( $color, $opacity = false ) {
 			return $default;
 	}
 
-		// Convert hexadec to rgb
+		// Convert hexadecimal to rgb.
 		$rgb = array_map( 'hexdec', $hex );
 
-		// Check if opacity is set(rgba or rgb)
+		// Check if opacity is set (rgba or rgb).
 	if ( $opacity ) {
 		if ( abs( $opacity ) > 1 ) {
 			$opacity = 1.0;
@@ -2611,8 +2585,8 @@ function learndash_hex2rgb( $color, $opacity = false ) {
 		$output = 'rgb(' . implode( ',', $rgb ) . ')';
 	}
 
-		// Return rgb(a) color string
-		return $output;
+	// Return rgb(a) color string.
+	return $output;
 }
 
 /**
@@ -2743,6 +2717,7 @@ function learndash_30_custom_body_classes( $classes ) {
  * Checks whether a post can be marked as complete or not in focus mode.
  *
  * @since 3.0.0
+ * @deprecated 4.0.3 Use `learndash_can_complete_step()` instead.
  *
  * @param int|WP_Post|null $post      `WP_Post` object or post ID. Default to global $post.
  * @param int|null         $course_id Course ID.
@@ -2756,44 +2731,49 @@ function learndash_30_focus_mode_can_complete( $post = null, $course_id = null )
 	}
 
 	if ( is_int( $post ) ) {
-		$post = get_post( $post );
+		$post = get_post( $post ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- I suppose it's what they wanted.
 	}
 
 	if ( ! $course_id ) {
 		$course_id = learndash_get_course_id( $course_id );
 	}
 
-	// Shouldn't appear regardless if this is a quiz
+	// Shouldn't appear regardless if this is a quiz.
 	if ( get_post_type( $post ) == 'sfwd-quiz' ) {
 		return false;
 	}
 
 	$complete_button = learndash_mark_complete( $post );
 
-	// If the complete button returns empty, also just return false
+	// If the complete button returns empty, also just return false.
 	if ( empty( $complete_button ) ) {
 		return false;
 	}
 
-	// Check if has any outstanding quizzes
+	// Check if has any outstanding quizzes.
 	$quizzes = learndash_get_lesson_quiz_list( $post->ID, get_current_user_id(), $course_id );
 
-	// If there is a quiz then the quiz is the mark complete
+	// If there is a quiz then the quiz is the mark complete.
 	if ( $quizzes ) {
 		return false;
 	}
 
 	return true;
-
 }
 
 /**
  * Deprecated
  *
  * @deprecated
+ *
+ * @param string $html    Html.
+ * @param string $url     Url.
+ * @param string $attr    Attr.
+ * @param int    $post_id Post ID.
+ *
+ * @return false|mixed|string
  */
 function learndash_30_responsive_videos( $html, $url, $attr, $post_id ) {
-
 	/** This filter is documented in themes/ld30/includes/helpers.php */
 	$responsive_video = apply_filters( 'learndash_30_responsive_video', LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'responsive_video_enabled' ) );
 
@@ -2843,7 +2823,6 @@ function learndash_30_responsive_videos( $html, $url, $attr, $post_id ) {
 	}
 
 	return $html;
-
 }
 
 /**
@@ -2902,7 +2881,7 @@ function learndash_get_certificate_count( $user = null ) {
  *
  * @since 3.0.0
  *
- * @param int|null $course_id Course ID. Defauls to current post ID in WordPress loop.
+ * @param int|null $course_id Course ID. Defaults to current post ID in WordPress loop.
  * @param int|null $lessons   An array of lesson `WP_Post` object.
  *
  * @return boolean Returns whether a lesson has quiz or not.
@@ -2942,7 +2921,6 @@ function learndash_30_has_lesson_quizzes( $course_id = null, $lessons = null ) {
  * @return false|array An array of points awarded for an assignment or false if the points are disabled.
  */
 function learndash_get_points_awarded_array( $assignment_id ) {
-
 	$points_enabled = learndash_assignment_is_points_enabled( $assignment_id );
 
 	if ( ! $points_enabled ) {
@@ -2979,9 +2957,9 @@ function learndash_get_points_awarded_array( $assignment_id ) {
 			),
 			$assignment_id
 		);
-
 	}
 
+	return false;
 }
 
 /**
@@ -2992,17 +2970,11 @@ function learndash_get_points_awarded_array( $assignment_id ) {
  * @param int|null   $course_id Course ID.
  * @param array|null $lessons   An array of lesson objects.
  *
- * @return boolean True if the lesson has topics otherwise false.
+ * @return bool True if the lesson has topics otherwise false.
  */
 function learndash_30_has_topics( $course_id = null, $lessons = null ) {
-
 	$course_id = ( null === $course_id ? learndash_get_course_id() : $course_id );
-
-	if ( is_user_logged_in() ) {
-		$user_id = get_current_user_id();
-	} else {
-		$user_id = 0;
-	}
+	$user_id   = get_current_user_id();
 
 	if ( ! empty( $lessons ) ) {
 		foreach ( $lessons as $lesson ) {
@@ -3013,68 +2985,16 @@ function learndash_30_has_topics( $course_id = null, $lessons = null ) {
 		}
 	}
 
-}
-
-/**
- * Outputs the currency symbol.
- *
- * @since 3.0.0
- */
-function learndash_30_the_currency_symbol() {
-	echo wp_kses_post( learndash_30_get_currency_symbol() );
-}
-
-/**
- * Gets the currency symbol.
- *
- * @since 3.0.0
- *
- * @return string|false Returns currency symbol.
- */
-function learndash_30_get_currency_symbol() {
-	$currency = '';
-
-	$options         = get_option( 'sfwd_cpt_options' );
-	$stripe_settings = get_option( 'learndash_stripe_settings' );
-
-	if ( class_exists( 'LearnDash_Settings_Section' ) ) {
-		$paypal_enabled          = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'enabled' );
-		$paypal_currency         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'paypal_currency' );
-		$stripe_connect_enabled  = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Stripe_Connect', 'enabled' );
-		$stripe_connect_currency = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Stripe_Connect', 'currency' );
-	}
-
-	if ( ! function_exists( 'is_plugin_active' ) ) {
-		include_once ABSPATH . 'wp-admin/includes/plugin.php';
-	}
-	if ( is_plugin_active( 'learndash-stripe/learndash-stripe.php' ) && ! empty( $stripe_settings ) && ! empty( $stripe_settings['currency'] ) ) {
-		$currency = $stripe_settings['currency'];
-	} elseif ( isset( $paypal_enabled ) && $paypal_enabled && ! empty( $paypal_currency ) ) {
-		$currency = $paypal_currency;
-	} elseif ( isset( $stripe_connect_enabled ) && $stripe_connect_enabled && ! empty( $stripe_connect_currency ) ) {
-		$currency = $stripe_connect_currency;
-	} elseif ( isset( $options['modules'] ) && isset( $options['modules']['sfwd-courses_options'] ) && isset( $options['modules']['sfwd-courses_options']['sfwd-courses_paypal_currency'] ) ) {
-		$currency = $options['modules']['sfwd-courses_options']['sfwd-courses_paypal_currency'];
-	}
-
-	if ( class_exists( 'NumberFormatter' ) ) {
-		$locale        = get_locale();
-		$number_format = new NumberFormatter( $locale . '@currency=' . $currency, NumberFormatter::CURRENCY );
-		$currency      = $number_format->getSymbol( NumberFormatter::CURRENCY_SYMBOL );
-	}
-
-	return $currency;
-
+	return false;
 }
 
 /**
  * Genesis doesn't use the normal wp_enqueue_scripts or wp_head so we need to call the enqueue function specifically for Genesis
  */
-add_action( 'learndash-focus-head', 'learndash_studiopress_compatibility' );
+add_action( 'learndash-focus-head', 'learndash_studiopress_compatibility' ); // cspell:disable-line.
 
 /**
  * Enqueues the genesis main stylesheet.
- *
  * Fires on `learndash-focus-head` hook.
  *
  * @since 3.0.1
@@ -3104,11 +3024,18 @@ add_filter(
 				 *
 				 * @since 3.2.0
 				 *
-				 * @param boolean $access  Access status true if the user can access $post_id.
-				 * @param integer $post_id Course step the user is trying to access.
-				 * @param integer $user_id User ID.
+				 * @param bool $access    Access status true if the user can access $post_id.
+				 * @param int  $lesson_id Lesson ID.
+				 * @param int  $post_id   Course step the user is trying to access.
+				 * @param int  $user_id   User ID.
 				 */
-				$access = apply_filters( 'learndash_lesson_sample_access', $access, $lesson_id, learndash_get_course_id(), $user_id );
+				$access = apply_filters(
+					'learndash_lesson_sample_access',
+					$access,
+					(int) $lesson_id,
+					learndash_get_course_id(),
+					$user_id
+				);
 			}
 		}
 

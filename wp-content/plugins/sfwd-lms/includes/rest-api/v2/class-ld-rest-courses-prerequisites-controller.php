@@ -24,7 +24,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Prerequisites_Controller_V2' ) ) && ( cl
 	 * @since 3.3.0
 	 * @uses LD_REST_Posts_Controller_V2
 	 */
-	class LD_REST_Courses_Prerequisites_Controller_V2 extends LD_REST_Posts_Controller_V2 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Courses_Prerequisites_Controller_V2 extends LD_REST_Posts_Controller_V2 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Public constructor for class
@@ -142,7 +142,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Prerequisites_Controller_V2' ) ) && ( cl
 		}
 
 		/**
-		 * Permissions check for getting coure groups.
+		 * Permissions check for getting course groups.
 		 *
 		 * @since 3.3.0
 		 *

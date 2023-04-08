@@ -54,7 +54,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				learndash_get_custom_label_lower( 'course' )
 			);
 
-			// Define the depreacted Class and Fields.
+			// Define the deprecated Class and Fields.
 			$this->settings_deprecated = array(
 				'LearnDash_Settings_Courses_Builder' => array(
 					'option_key' => 'learndash_settings_courses_builder',
@@ -151,6 +151,14 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['lesson_topic_order_enabled'] = '';
 			} else {
 				$this->setting_option_values['lesson_topic_order_enabled'] = 'yes';
+			}
+
+			if ( ! isset( $this->setting_option_values['course_mark_incomplete_enabled'] ) ) {
+				if ( defined( 'LEARNDASH_SHOW_MARK_INCOMPLETE' ) && true === LEARNDASH_SHOW_MARK_INCOMPLETE ) {
+					$this->setting_option_values['course_mark_incomplete_enabled'] = true;
+				} else {
+					$this->setting_option_values['course_mark_incomplete_enabled'] = false;
+				}
 			}
 		}
 
@@ -363,6 +371,29 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				);
 			}
 
+			$this->setting_option_fields = array_merge(
+				$this->setting_option_fields,
+				array(
+					'course_mark_incomplete_enabled' => array(
+						'name'      => 'course_mark_incomplete_enabled',
+						'type'      => 'checkbox-switch',
+						'label'     => sprintf(
+							esc_html__( 'Mark Incomplete Enabled', 'learndash' )
+						),
+						'help_text' => sprintf(
+							// translators: placeholders: Lesson, Topic.
+							esc_html_x( 'Allows to mark a %1$s / %2$s as incomplete', 'placeholders: Lesson, Topic', 'learndash' ),
+							learndash_get_custom_label_lower( 'lesson' ),
+							learndash_get_custom_label_lower( 'topic' )
+						),
+						'value'     => $this->setting_option_values['course_mark_incomplete_enabled'],
+						'options'   => array(
+							'yes' => '',
+						),
+					),
+				)
+			);
+
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
 			$this->setting_option_fields = apply_filters( 'learndash_settings_fields', $this->setting_option_fields, $this->settings_section_key );
 
@@ -387,7 +418,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			if ( $option === $this->setting_option_key ) {
 				$current_values = parent::section_pre_update_option( $current_values, $old_values, $option );
 				if ( $current_values !== $old_values ) {
-
 					// Manage Course Builder, Per Page, and Share Steps.
 					if ( ( isset( $current_values['course_builder_enabled'] ) ) && ( 'yes' === $current_values['course_builder_enabled'] ) ) {
 						$current_values['course_builder_per_page'] = absint( $current_values['course_builder_per_page'] );
@@ -413,7 +443,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						$current_values['course_pagination_topics']  = LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE;
 					}
 
-					// Lessonand Topic Order and Order By.
+					// Lesson and Topic Order and Order By.
 					if ( ( isset( $current_values['lesson_topic_order_enabled'] ) ) && ( 'yes' === $current_values['lesson_topic_order_enabled'] ) ) {
 						if ( ( ! isset( $current_values['lesson_topic_order'] ) ) || ( empty( $current_values['lesson_topic_order'] ) ) ) {
 							$current_values['lesson_topic_order'] = 'ASC';
@@ -432,19 +462,16 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				}
 
 				if ( ( isset( $current_values['course_builder_enabled'] ) ) && ( 'yes' === $current_values['course_builder_enabled'] ) && ( isset( $current_values['course_builder_shared_steps'] ) ) && ( 'yes' === $current_values['course_builder_shared_steps'] ) ) {
-
-					$ld_permalink_options = get_option( 'learndash_settings_permalinks', array() );
-					if ( ! isset( $ld_permalink_options['nested_urls'] ) ) {
-						$ld_permalink_options['nested_urls'] = 'no';
-					}
-
-					if ( 'yes' !== $ld_permalink_options['nested_urls'] ) {
-						$ld_permalink_options['nested_urls'] = 'yes';
-
-						update_option( 'learndash_settings_permalinks', $ld_permalink_options );
+					$ld_permalink_options = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'nested_urls', 'no' );
+					if ( 'yes' !== $ld_permalink_options ) {
+						LearnDash_Settings_Section::set_section_setting( 'LearnDash_Settings_Section_Permalinks', 'nested_urls', 'yes' );
 
 						learndash_setup_rewrite_flush();
 					}
+				}
+
+				if ( ! isset( $current_values['course_mark_incomplete_enabled'] ) ) {
+					$current_values['course_mark_incomplete_enabled'] = '';
 				}
 			}
 

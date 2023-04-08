@@ -16,7 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 2.4.0
 	 */
-	class LearnDash_Shortcodes_Section_ld_certificate extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_ld_certificate extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -60,7 +60,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					),
 					'required' => 'required',
 				),
-				'quiz_id'   => array(
+				'quiz_id'      => array(
 					'id'        => $this->shortcodes_section_key . '_quiz_id',
 					'name'      => 'quiz_id',
 					'type'      => 'number',
@@ -79,7 +79,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'class'     => 'small-text',
 					'required'  => 'required',
 				),
-				'course_id' => array(
+				'course_id'    => array(
 					'id'        => $this->shortcodes_section_key . '_course_id',
 					'name'      => 'course_id',
 					'type'      => 'number',
@@ -98,7 +98,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'class'     => 'small-text',
 					'required'  => 'required',
 				),
-				'group_id' => array(
+				'group_id'     => array(
 					'id'        => $this->shortcodes_section_key . '_group_id',
 					'name'      => 'group_id',
 					'type'      => 'number',
@@ -117,7 +117,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'class'     => 'small-text',
 					'required'  => 'required',
 				),
-				'user_id'   => array(
+				'user_id'      => array(
 					'id'        => $this->shortcodes_section_key . '_user_id',
 					'name'      => 'user_id',
 					'type'      => 'number',
@@ -126,13 +126,13 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'value'     => '',
 					'class'     => 'small-text',
 				),
-				'display_as' => array(
-					'id'       => $this->shortcodes_section_key . '_display_as',
-					'name'     => 'display_as',
-					'type'     => 'select',
-					'label'    => esc_html__( 'Display as', 'learndash' ),
-					'value'    => 'banner',
-					'options'  => array(
+				'display_as'   => array(
+					'id'      => $this->shortcodes_section_key . '_display_as',
+					'name'    => 'display_as',
+					'type'    => 'select',
+					'label'   => esc_html__( 'Display as', 'learndash' ),
+					'value'   => 'banner',
+					'options' => array(
 						'button' => esc_html__( 'Button', 'learndash' ),
 						'banner' => sprintf(
 							// translators: placeholders: Course, Group.
@@ -142,7 +142,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						),
 					),
 				),
-				'label'     => array(
+				'label'        => array(
 					'id'        => $this->shortcodes_section_key . '_label',
 					'name'      => 'label',
 					'type'      => 'text',
@@ -150,7 +150,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'help_text' => esc_html__( 'Label for link shown to user', 'learndash' ),
 					'value'     => '',
 				),
-				'class'     => array(
+				'class'        => array(
 					'id'        => $this->shortcodes_section_key . '_class',
 					'name'      => 'class',
 					'type'      => 'text',
@@ -158,7 +158,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'help_text' => esc_html__( 'HTML class for link element', 'learndash' ),
 					'value'     => '',
 				),
-				'context'   => array(
+				'context'      => array(
 					'id'        => $this->shortcodes_section_key . '_context',
 					'name'      => 'context',
 					'type'      => 'text',
@@ -166,7 +166,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'help_text' => esc_html__( 'User defined value to be passed into shortcode handler', 'learndash' ),
 					'value'     => '',
 				),
-				'callback'  => array(
+				'callback'     => array(
 					'id'        => $this->shortcodes_section_key . '_callback',
 					'name'      => 'callback',
 					'type'      => 'text',
@@ -253,7 +253,6 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 								jQuery( 'form#learndash_shortcodes_form_ld_certificate input#ld_certificate_course_id').attr('required', false);
 
 								jQuery( 'form#learndash_shortcodes_form_ld_certificate #ld_certificate_course_id_field span.learndash_required_field').hide();
-								
 
 								jQuery( 'form#learndash_shortcodes_form_ld_certificate #ld_certificate_quiz_id_field').slideDown();
 								if ( jQuery( 'form#learndash_shortcodes_form_ld_certificate #ld_certificate_quiz_id_field').hasClass('learndash-settings-input-required') ) {

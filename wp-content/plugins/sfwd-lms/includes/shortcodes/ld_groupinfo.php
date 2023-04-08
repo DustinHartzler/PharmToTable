@@ -52,8 +52,8 @@ function learndash_groupinfo_shortcode( $attr = array(), $content = '', $shortco
 
 	$shortcode_atts['group_id'] = ! empty( $shortcode_atts['group_id'] ) ? $shortcode_atts['group_id'] : '';
 	if ( '' === $shortcode_atts['group_id'] ) {
-		if ( ( isset( $_GET['group_id'] ) ) && ( ! empty( $_GET['group_id'] ) ) ) {
-			$shortcode_atts['group_id'] = intval( $_GET['group_id'] );
+		if ( ( isset( $_GET['group_id'] ) ) && ( ! empty( $_GET['group_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended 
+			$shortcode_atts['group_id'] = intval( $_GET['group_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		} else {
 			$post_id = get_the_id();
 			if ( learndash_get_post_type_slug( 'group' ) === get_post_type( $post_id ) ) {
@@ -64,8 +64,8 @@ function learndash_groupinfo_shortcode( $attr = array(), $content = '', $shortco
 
 	$shortcode_atts['user_id'] = ! empty( $shortcode_atts['user_id'] ) ? $shortcode_atts['user_id'] : '';
 	if ( '' === $shortcode_atts['user_id'] ) {
-		if ( ( isset( $_GET['user_id'] ) ) && ( ! empty( $_GET['user_id'] ) ) ) {
-			$shortcode_atts['user_id'] = intval( $_GET['user_id'] );
+		if ( ( isset( $_GET['user_id'] ) ) && ( ! empty( $_GET['user_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$shortcode_atts['user_id'] = intval( $_GET['user_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 	}
 
@@ -75,7 +75,7 @@ function learndash_groupinfo_shortcode( $attr = array(), $content = '', $shortco
 		/**
 		 * Added logic to allow admin and group_leader to view certificate from other users.
 		 *
-		 * @since 2.3
+		 * @since 2.3.0
 		 */
 		$post_type = '';
 		if ( get_query_var( 'post_type' ) ) {
@@ -83,8 +83,8 @@ function learndash_groupinfo_shortcode( $attr = array(), $content = '', $shortco
 		}
 
 		if ( 'sfwd-certificates' == $post_type ) {
-			if ( ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( ( isset( $_GET['user'] ) ) && ( ! empty( $_GET['user'] ) ) ) ) {
-				$shortcode_atts['user_id'] = intval( $_GET['user'] );
+			if ( ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( ( isset( $_GET['user'] ) ) && ( ! empty( $_GET['user'] ) ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$shortcode_atts['user_id'] = intval( $_GET['user'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			}
 		}
 	}

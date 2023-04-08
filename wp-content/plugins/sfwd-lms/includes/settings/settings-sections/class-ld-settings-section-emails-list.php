@@ -79,7 +79,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				if ( ! empty( $this->sub_sections ) ) {
 					add_filter( 'learndash_show_section', array( $this, 'should_show_settings_section' ), 10, 3 );
 
-					if ( ! empty( $this->get_current_sub_section() ) ) {
+					if ( ! empty( $this->get_current_sub_section() ) ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 						// Add extra section/metaboxes as needed.
 					}
 				}
@@ -126,7 +126,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ( isset( $_GET[ self::$section_url_param ] ) ) && ( ! empty( $_GET[ self::$section_url_param ] ) ) ) {
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$this->current_sub_section = esc_attr( $_GET[ self::$section_url_param ] );
+				$this->current_sub_section = esc_attr( $_GET[ self::$section_url_param ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
 				if ( ! $this->is_valid_sub_section( $this->current_sub_section ) ) {
 					$this->current_sub_section = '';
 				}
@@ -239,7 +239,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		}
 
 		/**
-		 * Utility function to return the sub sections in label (alph) order.
+		 * Utility function to return the sub sections in label (alpha) order.
 		 *
 		 * @since 3.6.0
 		 */

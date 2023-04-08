@@ -16,7 +16,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 	 *
 	 * @since 4.0.0
 	 */
-	class LearnDash_Shortcodes_Section_ld_infobar extends LearnDash_Shortcodes_Section { //phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
+	class LearnDash_Shortcodes_Section_ld_infobar extends LearnDash_Shortcodes_Section /* phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid */ {
 
 		/**
 		 * Public constructor for class.
@@ -71,8 +71,9 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
 					'help_text' => sprintf(
-						// translators: placeholder: Course.
-						esc_html_x( 'Enter single %s ID', 'placeholders: Course', 'learndash' ),
+						// translators: placeholders: Course, Course.
+						esc_html_x( 'Enter single %1$s ID. Leave blank for current %2$s.', 'placeholders: Course, Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' ),
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
 					'value'     => '',
@@ -102,15 +103,16 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						LearnDash_Custom_Label::get_label( 'group' )
 					),
 					'help_text' => sprintf(
-						// translators: placeholder: Group.
-						esc_html_x( 'Enter single %s ID', 'placeholders: Group', 'learndash' ),
+						// translators: placeholders: Group, Group.
+						esc_html_x( 'Enter single %1$s ID. Leave blank for current %2$s.', 'placeholders: Group, Group', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'group' ),
 						LearnDash_Custom_Label::get_label( 'group' )
 					),
 					'value'     => '',
 					'class'     => 'small-text',
 					'required'  => 'required',
 				),
-				'user_id' => array(
+				'user_id'      => array(
 					'id'        => $this->shortcodes_section_key . '_user_id',
 					'name'      => 'user_id',
 					'type'      => 'number',
@@ -147,7 +149,8 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			if ( $this->shortcodes_section_key === $shortcodes_section_key ) {
 				$message = learndash_get_legacy_not_supported_message();
 				if ( ! empty( $message ) ) {
-					?><p class="learndash-block-error-message"><?php echo $message; ?></p><?php
+					?><p class="learndash-block-error-message"><?php echo wp_kses_post( $message ); ?></p>
+					<?php
 				}
 			}
 		}
@@ -169,7 +172,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_group_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_group_id').val('');
 								if ( jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_group_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_group_id').attr('required', '');
+									jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_group_id').attr('required', false);
 								}
 
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_course_id_field').slideDown();
@@ -182,7 +185,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_course_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_course_id').val('');
 								if ( jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_course_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_course_id').attr('required', '');
+									jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_course_id').attr('required', false);
 								}
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_post_id_field').hide();
 
@@ -196,13 +199,13 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_course_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_course_id').val('');
 								if ( jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_course_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_course_id').attr('required', '');
+									jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_course_id').attr('required', false);
 								}
 
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_group_id_field').hide();
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_group_id').val('');
 								if ( jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_group_id_field').hasClass('learndash-settings-input-required') ) {
-									jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_group_id').attr('required', '');
+									jQuery( 'form#learndash_shortcodes_form_ld_infobar input#ld_infobar_group_id').attr('required', false);
 								}
 
 								jQuery( 'form#learndash_shortcodes_form_ld_infobar #ld_infobar_post_id_field').hide();

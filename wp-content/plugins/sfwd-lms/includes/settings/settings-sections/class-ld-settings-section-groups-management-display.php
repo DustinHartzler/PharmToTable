@@ -54,7 +54,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				learndash_get_custom_label_lower( 'group' )
 			);
 
-			// Define the depreacted Class and Fields.
+			// Define the deprecated Class and Fields.
 			$this->settings_deprecated = array();
 
 			parent::__construct();

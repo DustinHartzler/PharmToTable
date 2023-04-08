@@ -9,7 +9,7 @@
  * @var array  $shortcode_atts Array of shortcode attributes to create the Quiz.
  * @var int    $question_count Number of Question to display.
  *
- * @since 3.2
+ * @since 3.2.0
  *
  * @package LearnDash\Templates\Legacy\Quiz
  */

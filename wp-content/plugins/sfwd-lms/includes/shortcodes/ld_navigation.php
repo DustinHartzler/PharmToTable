@@ -76,20 +76,36 @@ function learndash_navigation_shortcode( $atts = array(), $content = '', $shortc
 		}
 	}
 
-	$shown_content_key = $atts['course_id'] . '_' . $atts['post_id'] . '_' . $atts['user_id'];
+	$atts['user_id']   = absint( $atts['user_id'] );
+	$atts['course_id'] = absint( $atts['course_id'] );
+	$atts['post_id']   = absint( $atts['post_id'] );
 
-	/*
-	if ( isset( $shown_content[ $shown_content_key ] ) ) {
-		if ( ( ! empty( $atts['post_id'] ) ) && ( absint( $atts['post_id'] ) === absint( get_the_ID() ) ) && ( in_array( get_post_type( $atts['post_id'] ), learndash_get_post_types( 'course' ), true ) ) ) {
+	// Only for Lessons or Topics. Use on Quiz or Course will not display anythings.
+	if ( ! empty( $atts['post_id'] ) ) {
+		$post_type = get_post_type( $atts['post_id'] );
+		if ( ( empty( $post_type ) ) || ( ! in_array( $post_type, learndash_get_post_type_slug( array( 'lesson', 'topic' ) ), true ) ) ) {
 			return $content;
 		}
 	}
-	*/
-	
+
+	$shown_content_key = $atts['course_id'] . '_' . $atts['post_id'] . '_' . $atts['user_id'];
+
 	$shown_content[ $shown_content_key ] = '';
 
-	if ( ( ! empty( $atts['course_id'] ) ) && ( ! empty( $atts['post_id'] ) ) && ( ! empty( $atts['user_id'] ) ) ) {
-		$can_complete = learndash_can_complete_step( $atts['user_id'], $atts['post_id'], $atts['course_id'] );
+	if ( ( ! empty( $atts['course_id'] ) ) && ( ! empty( $atts['post_id'] ) ) ) {
+		$can_complete = false;
+		if ( ! empty( $atts['user_id'] ) ) {
+			if ( ( true !== learndash_lesson_progression_enabled( $atts['course_id'] ) ) || ( true === learndash_can_user_bypass( $atts['user_id'], 'learndash_course_progression' ) ) ) {
+				$incomplete_child_steps = learndash_user_progression_get_incomplete_child_steps( $atts['user_id'], $atts['course_id'], $atts['post_id'] );
+				if ( empty( $incomplete_child_steps ) ) {
+					$can_complete = true;
+				} else {
+					$can_complete = false;
+				}
+			} else {
+				$can_complete = learndash_can_complete_step( $atts['user_id'], $atts['post_id'], $atts['course_id'], true );
+			}
+		}
 
 		/**
 		 * Filters whether a user can complete the lesson or not.
@@ -101,7 +117,9 @@ function learndash_navigation_shortcode( $atts = array(), $content = '', $shortc
 		 * @param int     $course_id    Course ID.
 		 * @param int     $user_id      User ID.
 		 */
-		$can_complete = apply_filters( 'learndash-lesson-can-complete', $can_complete, $atts['post_id'], $atts['course_id'], $atts['user_id'] );
+		$can_complete = apply_filters( 'learndash-lesson-can-complete', $can_complete, $atts['post_id'], $atts['course_id'], $atts['user_id'] ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+
+		$context = learndash_get_post_type_key( get_post_type( $atts['post_id'] ) );
 
 		$level = ob_get_level();
 		ob_start();
@@ -114,14 +132,14 @@ function learndash_navigation_shortcode( $atts = array(), $content = '', $shortc
 				'user_id'          => absint( $atts['user_id'] ),
 				'course_settings'  => learndash_get_setting( $atts['course_id'] ),
 				'can_complete'     => $can_complete,
-				'context'          => 'lesson',
+				'context'          => $context,
 			),
 			true
 		);
 
 		$shortcode_out = learndash_ob_get_clean( $level );
 		if ( ! empty( $shortcode_out ) ) {
-			$shown_content[ $shown_content_key ] .= '<div class="learndash-wrapper learndash-shortcode-wrap-'  . $shortcode_slug . '-' . $shown_content_key . '">' . $shortcode_out . '</div>';
+			$shown_content[ $shown_content_key ] .= '<div class="learndash-wrapper learndash-shortcode-wrap-' . esc_attr( $shortcode_slug ) . '-' . esc_attr( $shown_content_key ) . '">' . $shortcode_out . '</div>';
 		}
 	}
 

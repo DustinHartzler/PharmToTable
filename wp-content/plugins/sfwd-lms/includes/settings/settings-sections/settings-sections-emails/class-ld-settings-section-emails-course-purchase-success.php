@@ -111,7 +111,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'value' => $this->setting_option_values['recipients'],
 			);
 
-			$this->setting_option_fields['subject']      = array(
+			$this->setting_option_fields['subject'] = array(
 				'name'    => 'subject',
 				'label'   => esc_html__( 'Subject', 'learndash' ),
 				'type'    => 'text',
@@ -119,7 +119,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'value'   => $this->setting_option_values['subject'],
 				'default' => '',
 			);
-			$this->setting_option_fields['message']      = array(
+			$this->setting_option_fields['message'] = array(
 				'name'              => 'message',
 				'label'             => esc_html__( 'Message', 'learndash' ),
 				'type'              => 'wpeditor',

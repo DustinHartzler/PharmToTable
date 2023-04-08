@@ -29,7 +29,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 		 */
 		public function __construct( $args = array() ) {
 
-			// Set up the defaut query args for the Users.
+			// Set up the default query args for the Users.
 			$defaults = array(
 				'paged'               => 1,
 				'posts_per_page'      => (int) LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ),
@@ -100,7 +100,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 		protected function process_query( $query_args = array(), $position = '' ) {
 			if ( $this->is_valid_position( $position ) ) {
 				$query = new WP_Query( $query_args );
-				if ( ( isset( $query->posts ) ) && ( ! empty( $query->posts ) ) ) {
+				if ( ( $query->have_posts() ) ) {
 
 					$this->element_queries[ $position ] = $query;
 

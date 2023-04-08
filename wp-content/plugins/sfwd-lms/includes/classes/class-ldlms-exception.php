@@ -9,5 +9,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
+// phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound, Squiz.Commenting.ClassComment.Missing
 class LDLMS_Exception extends Exception {}
+
+// phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound, Squiz.Commenting.ClassComment.Missing
 class LDLMS_Exception_NotFound extends LDLMS_Exception {}

@@ -53,7 +53,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				LearnDash_Custom_Label::get_label( 'quiz' )
 			);
 
-			// Define the depreacted Class and Fields.
+			// Define the deprecated Class and Fields.
 			$this->settings_deprecated = array(
 				'LearnDash_Settings_Quizzes_Builder'      => array(
 					'option_key' => 'learndash_settings_quizzes_builder',
@@ -166,7 +166,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $field_args An array of field arguments used to process the ouput.
+		 * @param array $field_args An array of field arguments used to process the output.
 		 */
 		public function learndash_settings_field_filter( $field_args = array() ) {
 			if ( ( ! isset( $field_args['setting_option_key'] ) ) || ( $this->setting_option_key !== $field_args['setting_option_key'] ) ) {
@@ -220,7 +220,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						esc_html_x( 'The Data Upgrade %s must be run to enable the following settings.', 'placeholder: Link to Data Upgrade page', 'learndash' ),
 						'<strong><a href="' . add_query_arg(
 							array(
-								'page'    => 'learndash_lms_advanced',
+								'page'             => 'learndash_lms_advanced',
 								'section-advanced' => 'settings_data_upgrades',
 							),
 							'admin.php'
@@ -508,7 +508,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						if ( ( isset( $current_values['statistics_time_format'] ) ) && ( 'custom' === $current_values['statistics_time_format'] ) ) {
 							// phpcs:ignore WordPress.Security.NonceVerification.Missing -- POST nonce verification takes place in parent::verify_metabox_nonce_field().
 							if ( ( isset( $_POST['statistics_time_format_custom'] ) ) && ( ! empty( $_POST['statistics_time_format_custom'] ) ) ) {
-								// phpcs:ignore WordPress.Security.NonceVerification.Missing
+								// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 								$current_values['statistics_time_format'] = esc_attr( stripslashes( $_POST['statistics_time_format_custom'] ) );
 							} else {
 								$current_values['statistics_time_format'] = '';
@@ -522,7 +522,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						if ( ( isset( $current_values['toplist_time_format'] ) ) && ( 'custom' === $current_values['toplist_time_format'] ) ) {
 							// phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( ( isset( $_POST['toplist_date_format_custom'] ) ) && ( ! empty( $_POST['toplist_date_format_custom'] ) ) ) {
-								// phpcs:ignore WordPress.Security.NonceVerification.Missing
+								// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 								$current_values['toplist_time_format'] = esc_attr( stripslashes( $_POST['toplist_date_format_custom'] ) );
 							} else {
 								$current_values['toplist_time_format'] = '';
@@ -551,13 +551,13 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$reply_data = array( 'status' => false );
 
 			if ( current_user_can( 'wpProQuiz_edit_quiz' ) ) {
-				if ( ( isset( $_POST['field_nonce'] ) ) && ( ! empty( $_POST['field_nonce'] ) ) && ( isset( $_POST['field_key'] ) ) && ( ! empty( $_POST['field_key'] ) ) && ( wp_verify_nonce( esc_attr( $_POST['field_nonce'] ), $_POST['field_key'] ) ) ) {
+				if ( ( isset( $_POST['field_nonce'] ) ) && ( ! empty( $_POST['field_nonce'] ) ) && ( isset( $_POST['field_key'] ) ) && ( ! empty( $_POST['field_key'] ) ) && ( wp_verify_nonce( esc_attr( $_POST['field_nonce'] ), $_POST['field_key'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 					if ( isset( $_POST['field_action'] ) ) {
 						if ( 'update' === $_POST['field_action'] ) {
 							if ( ( isset( $_POST['field_value'] ) ) && ( ! empty( $_POST['field_value'] ) ) && ( isset( $_POST['field_text'] ) ) && ( ! empty( $_POST['field_text'] ) ) ) {
 								$template_id       = intval( $_POST['field_value'] );
-								$template_new_name = esc_attr( $_POST['field_text'] );
+								$template_new_name = esc_attr( $_POST['field_text'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 								$template_mapper = new WpProQuiz_Model_TemplateMapper();
 								$template        = $template_mapper->fetchById( $template_id );

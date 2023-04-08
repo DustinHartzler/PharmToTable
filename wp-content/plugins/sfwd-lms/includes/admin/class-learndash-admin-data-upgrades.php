@@ -3,7 +3,7 @@
  * LearnDash Data Upgrades Base.
  *
  * This class handles the data upgrade from the user meta arrays into a DB structure to
- * allow on the floy reporting. Plus to not bloat the user meta table.
+ * allow on the fly reporting. Plus to not bloat the user meta table.
  *
  * @since 2.6.0
  * @package LearnDash\Data_Upgrades
@@ -59,14 +59,14 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		protected $process_times = array();
 
 		/**
-		 * Data Slug used to itentify each instance.
+		 * Data Slug used to identify each instance.
 		 *
 		 * @var string $data_slug
 		 */
 		protected $data_slug;
 
 		/**
-		 * Meta Key used to itentify each instance.
+		 * Meta Key used to identify each instance.
 		 *
 		 * @var string $meta_key
 		 */
@@ -94,7 +94,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		protected $transient_data = array();
 
 		/**
-		 * Data Settings Loadded
+		 * Data Settings Loaded
 		 *
 		 * @var boolean $data_settings_loaded
 		 */
@@ -135,7 +135,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 				 *
 				 * @since 2.3.0
 				 *
-				 * @var int Default is 80 percent.
+				 * @var int $process_time_percent Default is 80 percent.
 				 */
 				define( 'LEARNDASH_PROCESS_TIME_PERCENT', $process_time_percent );
 			}
@@ -159,7 +159,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 				 *
 				 * @since 2.3.0
 				 *
-				 * @var int Default is 10 seconds.
+				 * @var int $process_time_seconds Default is 10 seconds.
 				 */
 				define( 'LEARNDASH_PROCESS_TIME_SECONDS', $process_time_seconds );
 			}
@@ -172,7 +172,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 *
 		 * @param string $instance_key Unique identifier for instance.
 		 *
-		 * @return object instance of class.
+		 * @return object|null instance of class or null.
 		 */
 		final public static function get_instance( $instance_key = '' ) {
 			if ( ! empty( $instance_key ) ) {
@@ -208,7 +208,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 * @since 2.6.0
 		 */
 		public function register_upgrade_action() {
-			// Add ourselved to the upgrade actions.
+			// Add ourselves to the upgrade actions.
 			if ( ! isset( self::$upgrade_actions[ $this->data_slug ] ) ) {
 				self::$upgrade_actions[ $this->data_slug ] = array(
 					'class'    => get_called_class(),
@@ -299,7 +299,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 *
 		 * @since 2.6.0
 		 *
-		 * @param string $key optional to return only specifc key value.
+		 * @param string $key optional to return only specific key value.
 		 *
 		 * @return mixed.
 		 */
@@ -321,7 +321,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 * @since 2.6.0
 		 *
 		 * @param string $key   Key to data upgrade instance.
-		 * @param string $value Value for key iinstance.
+		 * @param mixed  $value Value for key instance.
 		 */
 		public function set_data_settings( $key = '', $value = '' ) {
 			if ( empty( $key ) ) {
@@ -398,7 +398,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 			$banner_message = esc_html__( 'The Data Upgrades should only be run if prompted or advised by LearnDash Support. There is no need to re-run the Data Upgrades every time you update LearnDash core or one of the add-ons. Re-running the data upgrades when not needed can result in data corruption.', 'learndash' );
 
 			$banner_content = '<div class="ld-settings-info-banner ld-settings-info-banner-alert">' . wpautop( wptexturize( $banner_message ) ) . '</div>';
-			echo $banner_content;
+			echo wp_kses_post( $banner_content );
 
 			?>
 			<table id="learndash-data-upgrades" class="wc_status_table widefat" cellspacing="0">
@@ -415,7 +415,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		/**
 		 * Placeholder function. This function is called when displaying the admin page.
 		 *
-		 * @snce 2.6.0
+		 * @since 2.6.0
 		 */
 		public function show_upgrade_action() {
 			// Does nothing.
@@ -495,7 +495,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 *
 		 * @since 2.6.0
 		 *
-		 * @param array $post_data Array of post dats sent via AJAX.
+		 * @param array $post_data Array of post data sent via AJAX.
 		 * @param array $reply_data Array of return data returned to browser.
 		 *
 		 * @return array $reply_data.
@@ -579,25 +579,39 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 				$options_key = $this->transient_prefix . $transient_key;
 				$options_key = str_replace( '-', '_', $options_key );
 
-				if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
+				if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) { // @phpstan-ignore-line
 					$wp_upload_dir = wp_upload_dir();
 
 					$ld_file_part = '/learndash/cache/learndash_data_upgrade_' . $options_key . '.txt';
 
 					$ld_transient_filename = $wp_upload_dir['basedir'] . $ld_file_part;
-					if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {
-						$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . dirname( $ld_transient_filename );
-						return;
+
+					if ( ! file_exists( dirname( $ld_transient_filename ) ) ) {
+						if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {
+							$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . dirname( $ld_transient_filename );
+							return;
+						}
 					}
 
+					learndash_put_directory_index_file( trailingslashit( dirname( $ld_transient_filename ) ) . 'index.php' );
+
+					Learndash_Admin_File_Download_Handler::register_file_path(
+						'learndash-cache',
+						dirname( $ld_transient_filename )
+					);
+
+					Learndash_Admin_File_Download_Handler::try_to_protect_file_path(
+						dirname( $ld_transient_filename )
+					);
+
 					if ( file_exists( $ld_transient_filename ) ) {
-						$transient_fp = fopen( $ld_transient_filename, 'r' );
+						$transient_fp = fopen( $ld_transient_filename, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 						if ( $transient_fp ) {
 							$transient_data = '';
 							while ( ! feof( $transient_fp ) ) {
-								$transient_data .= fread( $transient_fp, 4096 );
+								$transient_data .= fread( $transient_fp, 4096 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fread
 							}
-							fclose( $transient_fp );
+							fclose( $transient_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 
 							$transient_data = maybe_unserialize( $transient_data );
 						}
@@ -617,29 +631,44 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 *
 		 * @param string $transient_key Transient key to identify transient.
 		 * @param array  $transient_data Array for transient data.
+		 *
+		 * @return void
 		 */
-		protected function set_option_cache( $transient_key = '', $transient_data = '' ) {
+		protected function set_option_cache( $transient_key = '', $transient_data = array() ) {
 			if ( ! empty( $transient_key ) ) {
 				$options_key = $this->transient_prefix . $transient_key;
 				$options_key = str_replace( '-', '_', $options_key );
 
 				if ( ! empty( $transient_data ) ) {
-					if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) {
+					if ( ( defined( 'LEARNDASH_TRANSIENT_CACHE_STORAGE' ) ) && ( 'file' === LEARNDASH_TRANSIENT_CACHE_STORAGE ) ) { // @phpstan-ignore-line
 						$wp_upload_dir = wp_upload_dir();
 
 						$ld_file_part = '/learndash/cache/learndash_data_upgrade_' . $options_key . '.txt';
 
 						$ld_transient_filename = $wp_upload_dir['basedir'] . $ld_file_part;
 
-						if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {
-							$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . dirname( $ld_transient_filename );
-							return;
+						if ( ! file_exists( dirname( $ld_transient_filename ) ) ) {
+							if ( wp_mkdir_p( dirname( $ld_transient_filename ) ) === false ) {
+								$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . dirname( $ld_transient_filename );
+								return;
+							}
 						}
 
-						$transient_fp = fopen( $ld_transient_filename, 'w' );
+						learndash_put_directory_index_file( trailingslashit( dirname( $ld_transient_filename ) ) . 'index.php' );
+
+						Learndash_Admin_File_Download_Handler::register_file_path(
+							'learndash-cache',
+							dirname( $ld_transient_filename )
+						);
+
+						Learndash_Admin_File_Download_Handler::try_to_protect_file_path(
+							dirname( $ld_transient_filename )
+						);
+
+						$transient_fp = fopen( $ld_transient_filename, 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 						if ( $transient_fp ) {
-							fwrite( $transient_fp, serialize( $transient_data ) );
-							fclose( $transient_fp );
+							fwrite( $transient_fp, serialize( $transient_data ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite, WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+							fclose( $transient_fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 						}
 					} else {
 						update_option( $options_key, $transient_data );
@@ -654,7 +683,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 	}
 }
 
-// Go ahead and inlcude out User Meta Courses upgrade class.
+// Go ahead and include out User Meta Courses upgrade class.
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-translations.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-group-leader-role.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-post-meta.php';
@@ -663,7 +692,6 @@ require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-ac
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-user-activity-db-table.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-user-meta-courses.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-user-meta-quizzes.php';
-// require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-access-list.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-quiz-questions.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-access-list-convert.php';
 require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-rename_wpproquiz-tables.php';
@@ -679,21 +707,21 @@ do_action( 'learndash_data_upgrades_init' );
  * AJAX function to handle calls from browser on Data Upgrade cycles.
  *
  * @since 2.3.0
+ *
+ * @return void
  */
 function learndash_data_upgrades_ajax() {
 
 	$reply_data = array( 'status' => false );
 
 	if ( ( is_user_logged_in() ) && ( learndash_is_admin_user() ) ) {
-		if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( $_POST['nonce'], 'learndash-data-upgrades-nonce-' . get_current_user_id() ) ) ) {
+		if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'learndash-data-upgrades-nonce-' . get_current_user_id() ) ) ) {
 
 			if ( ( isset( $_POST['data'] ) ) && ( ! empty( $_POST['data'] ) ) ) {
 				$ld_admin_data_upgrades = Learndash_Admin_Data_Upgrades::get_instance();
-				$reply_data['data']     = $ld_admin_data_upgrades->do_data_upgrades( $_POST['data'], $reply_data );
+				$reply_data['data']     = $ld_admin_data_upgrades->do_data_upgrades( $_POST['data'], $reply_data ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
-				if ( ! empty( $reply_data ) ) {
-					echo wp_json_encode( $reply_data );
-				}
+				echo wp_json_encode( $reply_data );
 			}
 		}
 	}

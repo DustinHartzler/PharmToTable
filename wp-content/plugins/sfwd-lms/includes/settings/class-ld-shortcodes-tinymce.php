@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Admin Shortcods TinyMCE Class.
+ * LearnDash Admin Shortcodes TinyMCE Class.
  *
  * @since 2.4.0
  * @package LearnDash\Settings\Shortcodes
@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 	/**
-	 * Class for LearnDash Admin Shortcods TinyMCE.
+	 * Class for LearnDash Admin Shortcodes TinyMCE.
 	 *
 	 * @since 2.4.0
 	 */
 	class LearnDash_Shortcodes_TinyMCE {
 
 		/**
-		 * Shortocde assets
+		 * Shortcode assets
 		 *
 		 * @var array learndash_admin_shortcodes_assets
 		 */
@@ -179,10 +179,8 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 			);
 			$learndash_assets_loaded['scripts']['sfwd-module-script'] = __FUNCTION__;
 
-			$data = array();
-			if ( ! isset( $data['ajaxurl'] ) ) {
-				$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
-			}
+			$data            = array();
+			$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
 
 			$data = array( 'json' => wp_json_encode( $data ) );
 			wp_localize_script( 'sfwd-module-script', 'sfwd_data', $data );
@@ -232,13 +230,13 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 			// The wp_verify_nonce() call is just a few lines below.
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$fields_args = shortcode_atts( $fields_args, $_POST['atts'] );
+			$fields_args = shortcode_atts( $fields_args, $_POST['atts'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Missing
 
 			if ( ( empty( $fields_args['nonce'] ) ) || ( empty( $fields_args['pagenow'] ) ) ) {
 				die();
 			}
 
-			if ( ( empty( $fields_args['post_type'] ) ) && ( ! empty( $fields_args['typenow'] ) ) ) {
+			if ( ( empty( $fields_args['post_type'] ) ) && ( ! empty( $fields_args['typenow'] ) ) ) { // @phpstan-ignore-line -- false positive of does not exist.
 				$fields_args['post_type'] = $fields_args['typenow'];
 			}
 

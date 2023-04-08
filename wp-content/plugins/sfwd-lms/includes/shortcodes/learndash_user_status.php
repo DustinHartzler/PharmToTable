@@ -1,8 +1,18 @@
 <?php
 /**
- * Builds the `learndash_user_status` shortcode output.
+ * LearnDash `[learndash_user_status]` shortcode processing.
  *
- * @since 3.0.0
+ * @since 2.1.0
+ *
+ * @package LearnDash\Shortcodes
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Builds the `learndash_user_status` shortcode output.
  *
  * @param array  $atts {
  *    An array of shortcode attributes.
@@ -32,7 +42,7 @@ function learndash_user_status_shortcode( $atts = array(), $content = '', $short
 		$current_user = wp_get_current_user();
 
 		if ( empty( $current_user->ID ) ) {
-			return;
+			return '';
 		}
 
 		$user_id = $current_user->ID;

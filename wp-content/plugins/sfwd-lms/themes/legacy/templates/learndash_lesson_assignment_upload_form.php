@@ -10,7 +10,7 @@
  * $user_id : Current user ID
  * $assignment_upload_error_message : string of previous upload error. Will be empty if no previous upload attempt
  *
- * @since 2.5
+ * @since 2.5.0
  *
  * @package LearnDash\Templates\Legacy\Assignment
  */

@@ -38,35 +38,43 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 			/**
 			 * Comment count and link to assignment
 			 */
-			if ( true === (bool) $assignment_post_type_object->publicly_queryable ) :
+
+			/** This action is documented in themes/ld30/templates/assignment/partials/row.php */
+			do_action( 'learndash-assignment-row-columns-before', $assignment, get_the_ID(), $course_id, $user_id );
+
+			/** This filter is documented in https://developer.wordpress.org/reference/hooks/comments_open/ */
+			if ( post_type_supports( 'sfwd-assignment', 'comments' ) && apply_filters( 'comments_open', $assignment->comment_status, $assignment->ID ) ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core hook
+
+				ob_start();
 
 				/** This action is documented in themes/ld30/templates/assignment/partials/row.php */
-				do_action( 'learndash-assignment-row-columns-before', $assignment, get_the_ID(), $course_id, $user_id );
+				do_action( 'learndash-assignment-row-comments-before', $assignment, get_the_ID(), $course_id, $user_id );
 
-				/** This filter is documented in https://developer.wordpress.org/reference/hooks/comments_open/ */
-				if ( post_type_supports( 'sfwd-assignment', 'comments' ) && apply_filters( 'comments_open', $assignment->comment_status, $assignment->ID ) ) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core hook
-
-					ob_start();
-
-					/** This action is documented in themes/ld30/templates/assignment/partials/row.php */
-					do_action( 'learndash-assignment-row-comments-before', $assignment, get_the_ID(), $course_id, $user_id );
+				if ( true === (bool) $assignment_post_type_object->publicly_queryable ) {
 					?>
-
 					<a href='<?php echo esc_url( get_comments_link( $assignment->ID ) ); ?>' data-ld-tooltip="<?php echo sprintf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentAfterOpen,Squiz.PHP.EmbeddedPhp.ContentBeforeOpen
 						// translators: placeholder: commentd count.
 						esc_html_x( '%d Comments', 'placeholder: commentd count', 'learndash' ),
 						esc_html( get_comments_number( $assignment->ID ) )
-					); ?> "><?php echo esc_html( get_comments_number( $assignment->ID ) ); ?><span class="ld-icon ld-icon-comments"></span></a> <?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Generic.WhiteSpace.ScopeIndent.Incorrect ?>
-
+					); ?> ">
 					<?php
-					// Add the markup to the array.
-					$row_columns['comments'] = ob_get_clean();
-					ob_flush();
+				}
+				?>
+				<?php echo esc_html( get_comments_number( $assignment->ID ) ); ?><span class="ld-icon ld-icon-comments"></span>
+				<?php
+				if ( true === (bool) $assignment_post_type_object->publicly_queryable ) {
 
-					/** This action is documented in themes/ld30/templates/assignment/partials/row.php */
-					do_action( 'learndash-assignment-row-comments-after', $assignment, get_the_ID(), $course_id, $user_id );
+					?></a> <?php
+				}
+				?>
+				<?php
+				// Add the markup to the array.
+				$row_columns['comments'] = ob_get_clean();
+				ob_flush();
 
-				endif;
+				/** This action is documented in themes/ld30/templates/assignment/partials/row.php */
+				do_action( 'learndash-assignment-row-comments-after', $assignment, get_the_ID(), $course_id, $user_id );
+
 			endif;
 
 			if ( ! learndash_is_assignment_approved_by_meta( $assignment->ID ) && ! $assignment_points ) :

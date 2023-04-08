@@ -98,10 +98,10 @@ foreach ( $tabs as $tab ) {
 				}
 
 				$tab_class = 'ld-tab ' . ( 0 === $i ? 'ld-active' : '' );
-				$attrs = ( 0 === $i ? 'aria-selected="true"' : '' );
+				$attrs     = ( 0 === $i ? 'aria-selected="true"' : '' );
 				?>
 
-				<button <?php echo esc_attr( $attrs ); ?> role="tab" aria-controls="<?php echo esc_attr( $tab['id'] . '-tab' ); ?>" id="<?php echo esc_attr( $tab['id'] ); ?>" class="<?php echo esc_attr( $tab_class ); ?>" data-ld-tab="<?php echo esc_attr( 'ld-tab-' . $tab['id'] . '-' . get_the_ID() ); ?>">
+				<button <?php echo esc_attr( $attrs ); ?> role="tab" aria-controls="<?php echo esc_attr( $tab['id'] . '-tab' ); ?>" id="<?php echo esc_attr( 'ld-' . $tab['id'] ) . '-tab-' . get_the_ID(); ?>" class="<?php echo esc_attr( $tab_class ); ?>" data-ld-tab="<?php echo esc_attr( 'ld-tab-' . $tab['id'] . '-' . get_the_ID() ); ?>">
 					<span class="<?php echo esc_attr( 'ld-icon ' . $tab['icon'] ); ?>"></span>
 					<span class="ld-text"><?php echo esc_attr( $tab['label'] ); ?></span>
 			</button>

@@ -74,7 +74,7 @@ class WpProQuiz_Model_QuizMapper extends WpProQuiz_Model_Mapper {
 
 		$text = $data->getText();
 		if ( empty( $text ) ) {
-			$text = 'AAZZAAZZ';
+			$text = 'AAZZAAZZ'; // cspell:disable-line.
 		}
 
 		$set = array(

@@ -3,7 +3,7 @@
  * LearnDash LD30 Displays a single lesson row that appears in the group course content listing
  *
  * Available Variables:
- * TBD
+ * WIP
  *
  * @since 3.2.0
  *

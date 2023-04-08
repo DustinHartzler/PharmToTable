@@ -139,7 +139,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 			// Do we show the video. In some cases we do. But in others like when the setting is to show AFTER completing other steps then we set to false.
 			$show_video = false;
 
-			// In the initial flow we do apply the video restiction logic. But then in other if the user is an admin or the student has completed the lesson
+			// In the initial flow we do apply the video restriction logic. But then in other if the user is an admin or the student has completed the lesson
 			// we don't apply the video logic.
 			$logic_video = false;
 
@@ -165,7 +165,14 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 					// For logged in users to allow an override filter.
 					/** This filter is documented in includes/course/ld-course-progress.php */
-					$bypass_course_limits_admin_users       = apply_filters( 'learndash_prerequities_bypass', $bypass_course_limits_admin_users, $this->user_id, $post->ID, $post );
+					$bypass_course_limits_admin_users = apply_filters(
+						'learndash_prerequities_bypass', // cspell:disable-line -- prerequities are prerequisites...
+						$bypass_course_limits_admin_users,
+						$this->user_id,
+						$post->ID,
+						$post
+					);
+
 					$this->video_data['video_admin_bypass'] = $bypass_course_limits_admin_users;
 
 					if ( ! $bypass_course_limits_admin_users ) {
@@ -179,44 +186,18 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 								$logic_video = false;
 							} else {
 								if ( 'BEFORE' === $this->step_settings['lesson_video_shown'] ) {
-									$show_video  = true;
-									$logic_video = true;
-
-									$topics = learndash_get_topic_list( $post->ID );
-									if ( ! empty( $topics ) ) {
-										$progress = learndash_get_course_progress( $this->user_id, $topics[0]->ID );
-										if ( ! empty( $progress ) ) {
-											$topics_completed = 0;
-											foreach ( $progress['posts'] as $topic ) {
-												if ( (int) 1 === (int) $topic->completed ) {
-													++$topics_completed;
-													break;
-												}
-											}
-
-											if ( ! empty( $topics_completed ) ) {
-												$logic_video = false;
-											}
-										}
+									$show_video           = true;
+									$logic_video          = true;
+									$complete_child_steps = learndash_user_progression_get_complete_child_steps( $this->user_id, $this->course_id, $post->ID );
+									if ( ! empty( $complete_child_steps ) ) {
+										$logic_video = false;
 									}
 								} elseif ( 'AFTER' === $this->step_settings['lesson_video_shown'] ) {
-									if ( learndash_lesson_topics_completed( $post->ID ) ) {
-										$quizzes_completed = true;
-
-										$lesson_quizzes_list = learndash_get_lesson_quiz_list( $post->ID );
-										if ( ! empty( $lesson_quizzes_list ) ) {
-											foreach ( $lesson_quizzes_list as $quiz ) {
-												if ( 'completed' !== $quiz['status'] ) {
-													$quizzes_completed = false;
-													break;
-												}
-											}
-										}
-
-										if ( true === $quizzes_completed ) {
-											$show_video  = true;
-											$logic_video = true;
-										}
+									// If we have any incomplete child steps. Abort.
+									$incomplete_child_steps = learndash_user_progression_get_incomplete_child_steps( $this->user_id, $this->course_id, $post->ID );
+									if ( empty( $incomplete_child_steps ) ) {
+										$show_video  = true;
+										$logic_video = true;
 									} else {
 										$show_video  = false;
 										$logic_video = false;
@@ -234,22 +215,20 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 								if ( 'BEFORE' === $this->step_settings['lesson_video_shown'] ) {
 									$show_video  = true;
 									$logic_video = true;
-								} elseif ( 'AFTER' === $this->step_settings['lesson_video_shown'] ) {
-									$quizzes_completed = true;
 
-									$lesson_quizzes_list = learndash_get_lesson_quiz_list( $post->ID );
-									if ( ! empty( $lesson_quizzes_list ) ) {
-										foreach ( $lesson_quizzes_list as $quiz ) {
-											if ( 'completed' !== $quiz['status'] ) {
-												$quizzes_completed = false;
-												break;
-											}
-										}
+									$complete_child_steps = learndash_user_progression_get_complete_child_steps( $this->user_id, $this->course_id, $post->ID );
+									if ( ! empty( $complete_child_steps ) ) {
+										$logic_video = false;
 									}
-
-									if ( true === $quizzes_completed ) {
+								} elseif ( 'AFTER' === $this->step_settings['lesson_video_shown'] ) {
+									// If we have any incomplete child steps. Abort.
+									$incomplete_child_steps = learndash_user_progression_get_incomplete_child_steps( $this->user_id, $this->course_id, $post->ID );
+									if ( empty( $incomplete_child_steps ) ) {
 										$show_video  = true;
 										$logic_video = true;
+									} else {
+										$show_video  = false;
+										$logic_video = false;
 									}
 								} else {
 									$show_video  = false;
@@ -267,12 +246,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 					}
 
 					if ( true === $show_video ) {
-
-						if ( ( isset( $this->step_settings['lesson_video_shown'] ) ) && ( ! empty( $this->step_settings['lesson_video_shown'] ) ) ) {
-							$this->video_data['videos_shown'] = $this->step_settings['lesson_video_shown'];
-						} else {
-							$this->video_data['videos_shown'] = 'AFTER';
-						}
+						$this->video_data['videos_shown'] = $this->step_settings['lesson_video_shown'];
 
 						if ( ( strpos( $this->step_settings['lesson_video_url'], 'youtu.be' ) !== false ) || ( strpos( $this->step_settings['lesson_video_url'], 'youtube.com' ) !== false ) ) {
 							$this->video_data['videos_found_provider'] = 'youtube';
@@ -298,7 +272,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 						}
 
 						/**
-						 * Filter to override unkown video provider.
+						 * Filter to override unknown video provider.
 						 *
 						 * @since 2.4.0
 						 *
@@ -340,10 +314,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 						if ( ( false !== $this->video_data['videos_found_provider'] ) && ( false !== $this->video_data['videos_found_type'] ) ) {
 							if ( 'local' === $this->video_data['videos_found_provider'] ) {
-								if ( 'video_url' === $this->video_data['videos_found_type'] ) {
-									// Nothing here.
-
-								} elseif ( 'embed_shortcode' === $this->video_data['videos_found_type'] ) {
+								if ( 'embed_shortcode' === $this->video_data['videos_found_type'] ) {
 									global $wp_embed;
 									$video_content       = $wp_embed->run_shortcode( $this->step_settings['lesson_video_url'] );
 									$this->video_content = do_shortcode( $video_content );
@@ -429,7 +400,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 												);
 
 												// Regardless of the filter we set this param because we need it!
-												$ld_video_params['enablejsapi'] = '1';
+												$ld_video_params['enablejsapi'] = '1'; // cspell:disable-line.
 
 												$matches_1_new       = add_query_arg( $ld_video_params, $matches[1] );
 												$this->video_content = str_replace( $matches[1], $matches_1_new, $this->video_content );
@@ -526,7 +497,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 									}
 
 									$this->video_data['videos_auto_complete'] = false;
-									if ( ( isset( $this->step_settings['lesson_video_shown'] ) ) && ( 'AFTER' === $this->step_settings['lesson_video_shown'] ) ) {
+									if ( 'AFTER' === $this->step_settings['lesson_video_shown'] ) {
 										if ( ( isset( $this->step_settings['lesson_video_auto_complete'] ) ) && ( 'on' === $this->step_settings['lesson_video_auto_complete'] ) ) {
 											$this->video_data['videos_auto_complete'] = true;
 
@@ -590,10 +561,6 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 						 */
 						$this->video_data = apply_filters( 'learndash_lesson_video_data', $this->video_data, $this->step_settings );
 
-						// if ( $this->is_video_cookie_complete( $this->video_data['video_cookie_key'] ) ) {
-						// $logic_video = false;
-						// }
-
 						if ( true === $logic_video ) {
 							$logic_video_str = 'true';
 						} else {
@@ -643,7 +610,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 				wp_enqueue_script(
 					'learndash_cookie_script_js',
-					LEARNDASH_LMS_PLUGIN_URL . 'assets/vendor/js-cookie/js.cookie' . learndash_min_asset() . '.js',
+					LEARNDASH_LMS_PLUGIN_URL . 'assets/vendor-libs/js-cookie/js.cookie' . learndash_min_asset() . '.js',
 					array(),
 					LEARNDASH_SCRIPT_VERSION_TOKEN,
 					true
@@ -675,8 +642,8 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 		 * @since 2.4.6
 		 *
 		 * @param bool   $process_complete Process complete.
-		 * @param Object $post             WP_Post object beiing marked complete.
-		 * @param Object $current_user     The User perforning the action.
+		 * @param Object $post             WP_Post object being marked complete.
+		 * @param Object $current_user     The User performing the action.
 		 */
 		public function process_mark_complete( $process_complete, $post, $current_user ) {
 			if ( ( isset( $_GET['quiz_redirect'] ) ) && ( ! empty( $_GET['quiz_redirect'] ) ) && ( isset( $_GET['quiz_type'] ) ) && ( 'lesson' === $_GET['quiz_type'] ) ) {
@@ -828,6 +795,20 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 			}
 
 			$this->step_settings = learndash_get_setting( $this->step_id );
+
+			// Check if any sub-step is complete.
+			if ( 'BEFORE' === $this->step_settings['lesson_video_shown'] ) {
+				$complete_child_steps = learndash_user_progression_get_complete_child_steps( $this->user_id, $this->course_id, $this->step_id );
+
+				/**
+				 * If the video progression is set to "BEFORE" and there are ANY completed steps then
+				 * let the user pass. This will handle scenarios where the user completed steps before
+				 * the parent video progress was setup.
+				 */
+				if ( ! empty( $complete_child_steps ) ) {
+					return true;
+				}
+			}
 
 			$cookie_key = $this->build_video_cookie_key();
 			if ( ! empty( $cookie_key ) ) {

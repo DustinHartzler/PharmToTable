@@ -9,7 +9,7 @@
  * user_course_points : (integer) the user's current total course points.
  * course_settings : (array) Settings specific to current course
  *
- * @since 2.4
+ * @since 2.4.0
  *
  * @package LearnDash\Templates\Legacy\Course
  */

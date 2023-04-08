@@ -326,7 +326,7 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 		<?php
 	}
 
-	public function singleMultiCoice( $data ) {
+	public function singleMultiCoice( $data ) { // cspell:disable-line
 		foreach ( $data as $d ) {
 			?>
 

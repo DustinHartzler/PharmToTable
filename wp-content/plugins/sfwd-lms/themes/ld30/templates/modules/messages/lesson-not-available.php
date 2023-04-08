@@ -5,7 +5,7 @@
  * Available Variables:
  * user_id                    : (integer) The user_id whose points to show
  * course_id                  : (integer) The ID of the couse shown
- * lesson_id                  : (integer) The Of of the lesson not available
+ * lesson_id                  : (integer) The ID of the lesson/topic/quiz not available
  * ld_lesson_access_from_int  : (integer) timestamp when lesson will become available
  * ld_lesson_access_from_date : (string) Formatted human readable date/time of ld_lesson_access_from_int
  * context                    : (string) The context will be set based on where this message is shown. course, lesson, loop, etc.
@@ -31,15 +31,19 @@ $message = sprintf(
 $button = false;
 
 // The figure out how to display it.
-if ( 'lesson' === $context ) {
+if ( ( 'lesson' === $context ) || ( 'topic' === $context ) || ( 'quiz' === $context ) ) {
 
-	$button = array(
-		'url'           => get_permalink( $course_id ),
-		'label'         => learndash_get_label_course_step_back( learndash_get_post_type_slug( 'course' ) ),
-		'icon'          => 'arrow-left',
-		'icon-location' => 'left',
-	); // On the lesson single we display additional information.
-
+	if ( ( ! isset( $course_id ) ) || ( empty( $course_id ) ) ) {
+		$course_id = learndash_get_course_id( $lesson_id );
+	}
+	if ( ! empty( $course_id ) ) {
+		$button = array(
+			'url'           => get_permalink( $course_id ),
+			'label'         => learndash_get_label_course_step_back( learndash_get_post_type_slug( 'course' ) ),
+			'icon'          => 'arrow-left',
+			'icon-location' => 'left',
+		);
+	}
 }
 ?>
 

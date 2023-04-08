@@ -198,7 +198,7 @@ endif; ?>
 			}
 			?>
 
-			<div class="ld-item-list-items" id="ld-main-course-list" data-ld-expand-list="true">
+			<div class="ld-item-list-items" id="ld-main-course-list" data-ld-expand-list="true" data-ld-expand-id="<?php echo esc_attr( 'ld-main-course-list' ); ?>">
 
 				<?php
 				if ( ! empty( $user_courses ) ) :

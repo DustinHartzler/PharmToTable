@@ -16,7 +16,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 	 *
 	 * @since 2.5.8
 	 */
-	class LD_REST_Users_Courses_Controller_V1 extends LD_REST_Posts_Controller_V1 { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
+	class LD_REST_Users_Courses_Controller_V1 extends LD_REST_Posts_Controller_V1 /* phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */ {
 
 		/**
 		 * Supported Collection Parameters.
@@ -385,7 +385,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 
 			$posts_query  = new WP_Query();
 			$query_result = $posts_query->query( $query_args );
-			// error_log('query_result<pre>'. print_r($query_result, true) .'</pre>');
 
 			// Allow access to all password protected posts if the context is edit.
 			if ( 'edit' === $request['context'] ) {
@@ -407,7 +406,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 				$response = rest_ensure_response( $posts );
 
 			} else {
-				// $data = $query_result;
 				$response = rest_ensure_response( $query_result );
 			}
 
@@ -467,7 +465,6 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 		 */
 		public function get_collection_params() {
 			$query_params_default = parent::get_collection_params();
-			// error_log('query_params_default<pre>'. print_r($query_params_default, true) .'</pre>');
 
 			$query_params_default['context']['default'] = 'view';
 

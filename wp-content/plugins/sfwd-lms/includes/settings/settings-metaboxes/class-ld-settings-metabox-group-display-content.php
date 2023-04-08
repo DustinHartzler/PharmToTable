@@ -180,7 +180,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'rest_args'    => array(
 							'schema' => array(
 								'field_key'   => 'materials_enabled',
-								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
+								'description' => esc_html__( 'Materials Enabled', 'learndash' ),
 								'type'        => 'boolean',
 								'default'     => false,
 							),
@@ -217,6 +217,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 										'context'     => array( 'view', 'edit' ),
 										'readonly'    => true,
 									),
+								),
+								'arg_options' => array(
+									'sanitize_callback' => null, // Note: sanitization performed in rest_pre_insert_filter().
+									'validate_callback' => null,
 								),
 							),
 						),
@@ -315,7 +319,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								// translators: placeholder: Courses per page.
 								'description' => sprintf( esc_html_x( '%s per page', 'placeholder: Courses per page', 'learndash' ), learndash_get_custom_label( 'courses' ) ),
 								'type'        => 'integer',
-								'default'     => '',
+								'default'     => (int) $this->setting_option_values['group_courses_per_page_custom'],
 							),
 						),
 					),

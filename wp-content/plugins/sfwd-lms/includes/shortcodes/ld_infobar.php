@@ -2,7 +2,7 @@
 /**
  * LearnDash `[ld_infobar]` shortcode processing.
  *
- * @since 2.1.0
+ * @since 4.0.0
  * @package LearnDash\Shortcodes
  */
 
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @global boolean $learndash_shortcode_used
  *
- * @since 4.0
+ * @since 4.0.0
  *
  * @param array  $atts {
  *    An array of shortcode attributes.
@@ -31,7 +31,7 @@ function learndash_infobar_shortcode( $atts = array(), $content = '', $shortcode
 	if ( learndash_is_active_theme( 'legacy' ) ) {
 		return $content;
 	}
-	
+
 	global $learndash_shortcode_used;
 
 	static $shown_content = array();
@@ -113,22 +113,8 @@ function learndash_infobar_shortcode( $atts = array(), $content = '', $shortcode
 
 	if ( ! empty( $atts['group_id'] ) ) {
 		$shown_content_key = $atts['group_id'] . '_' . $atts['user_id'];
-		/*
-		if ( isset( $shown_content[ $shown_content_key ] ) ) {
-			if ( ( absint( $atts['group_id'] ) === absint( get_the_ID() ) ) && ( get_post_type( $atts['group_id'] ) === learndash_get_post_type_slug( 'group' ) ) ) {
-				return $content;
-			}
-		}
-		*/
 	} elseif ( ! empty( $atts['course_id'] ) ) {
 		$shown_content_key = $atts['course_id'] . '_' . $atts['post_id'] . '_' . $atts['user_id'];
-		/*
-		if ( isset( $shown_content[ $shown_content_key ] ) ) {
-			if ( ( ! empty( $atts['post_id'] ) ) && ( absint( $atts['post_id'] ) === absint( get_the_ID() ) ) && ( in_array( get_post_type( $atts['post_id'] ), learndash_get_post_types( 'course' ), true ) ) ) {
-				//return $content;
-			}
-		}
-		*/
 	}
 
 	if ( ( ! isset( $shown_content_key ) ) || ( empty( $shown_content_key ) ) ) {
@@ -155,7 +141,7 @@ function learndash_infobar_shortcode( $atts = array(), $content = '', $shortcode
 
 		$has_access = sfwd_lms_has_access( $atts['course_id'], $atts['user_id'] );
 
-		$shortcode_ouput = SFWD_LMS::get_template(
+		$shortcode_output = SFWD_LMS::get_template(
 			'modules/infobar.php',
 			array(
 				'context'       => $context,
@@ -167,8 +153,8 @@ function learndash_infobar_shortcode( $atts = array(), $content = '', $shortcode
 			)
 		);
 
-		if ( ! empty( $shortcode_ouput ) ) {
-			$shown_content[ $shown_content_key ] .= $shortcode_ouput;
+		if ( ! empty( $shortcode_output ) ) {
+			$shown_content[ $shown_content_key ] .= $shortcode_output;
 		}
 	} elseif ( ! empty( $atts['group_id'] ) ) {
 
@@ -176,7 +162,7 @@ function learndash_infobar_shortcode( $atts = array(), $content = '', $shortcode
 		$has_access   = learndash_is_user_in_group( $atts['user_id'], $atts['group_id'] );
 		$group_status = learndash_get_user_group_status( $atts['group_id'], $atts['user_id'] );
 
-		$shortcode_ouput = SFWD_LMS::get_template(
+		$shortcode_output = SFWD_LMS::get_template(
 			'modules/infobar_group.php',
 			array(
 				'context'      => 'group',
@@ -188,13 +174,13 @@ function learndash_infobar_shortcode( $atts = array(), $content = '', $shortcode
 			)
 		);
 
-		if ( ! empty( $shortcode_ouput ) ) {
-			$shown_content[ $shown_content_key ] .= $shortcode_ouput;
+		if ( ! empty( $shortcode_output ) ) {
+			$shown_content[ $shown_content_key ] .= $shortcode_output;
 		}
 	}
 
 	if ( ( isset( $shown_content[ $shown_content_key ] ) ) && ( ! empty( $shown_content[ $shown_content_key ] ) ) ) {
-		$content                 .= '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap learndash-shortcode-wrap-'  . $shortcode_slug . '-' . $shown_content_key . '">' . $shown_content[ $shown_content_key ] . '</div>';
+		$content                 .= '<div class="learndash-wrapper learndash-wrap learndash-shortcode-wrap learndash-shortcode-wrap-' . $shortcode_slug . '-' . $shown_content_key . '">' . $shown_content[ $shown_content_key ] . '</div>';
 		$learndash_shortcode_used = true;
 	}
 	return $content;

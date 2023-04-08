@@ -75,7 +75,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					<p class="description"><?php echo esc_html( $this->get_last_run_info() ); ?></p>
 
 					<?php
-					$show_progess         = false;
+					$show_progress        = false;
 					$this->transient_key  = $this->data_slug;
 					$this->transient_data = $this->get_transient( $this->transient_key );
 					if ( ! empty( $this->transient_data ) ) {
@@ -92,7 +92,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 						if ( ( ! empty( $this->transient_data['result_count'] ) ) && ( ! empty( $this->transient_data['total_count'] ) ) && ( $this->transient_data['result_count'] != $this->transient_data['total_count'] ) ) {
 
-							$show_progess = true;
+							$show_progress = true;
 							?>
 							<p id="learndash-data-upgrades-continue-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
 							<?php
@@ -104,7 +104,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					$progress_label       = '';
 					$progress_slug        = '';
 
-					if ( true === $show_progess ) {
+					if ( true === $show_progress ) {
 						$progress_style = '';
 						$data           = $this->transient_data;
 						$data           = $this->build_progress_output( $data );
@@ -181,7 +181,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						if ( ( isset( $this->transient_data['process_courses'] ) ) && ( ! empty( $this->transient_data['process_courses'] ) ) ) {
 							foreach ( $this->transient_data['process_courses'] as $course_idx => $course_id ) {
 								$course_id = intval( $course_id );
-								if ( ( ! isset( $this->transient_data['current_course'][ $course_id] ) ) || ( empty( $this->transient_data['current_course'][ $course_id ] ) ) ) {
+								if ( ( ! isset( $this->transient_data['current_course'][ $course_id ] ) ) || ( empty( $this->transient_data['current_course'][ $course_id ] ) ) ) {
 									$this->transient_data['current_course'][ $course_id ] = array();
 								}
 
@@ -239,7 +239,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				'post_type'      => 'sfwd-courses',
 				'post_status'    => 'any',
 				'fields'         => 'ids',
-				'posts_per_page' => LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE,
+				'posts_per_page' => LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE, // phpcs:ignore WordPress.WP.PostsPerPage.posts_per_page_posts_per_page
 				'paged'          => $this->transient_data['paged'],
 			);
 
@@ -309,7 +309,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			);
 
 			if ( ( isset( $this->transient_data['current_course'] ) ) && ( ! empty( $this->transient_data['current_course'] ) ) ) {
-				foreach( $this->transient_data['current_course'] as $current_course_id => $current_course_data ) {
+				foreach ( $this->transient_data['current_course'] as $current_course_id => $current_course_data ) {
 					$course_total_users = 0;
 					if ( isset( $current_course_data['course_total_users'] ) ) {
 						$course_total_users = absint( $current_course_data['course_total_users'] );
@@ -323,12 +323,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					$data['progress_label'] .= ' - ' . sprintf(
 						// translators: placeholders: placeholders: Course title, users processed, users total.
 						esc_html_x( '%1$s: %2$d of %3$d users processed', 'placeholders: Course title, users processed, users total', 'learndash' ),
-							get_the_title( $current_course_id ),
-							$course_access_list_new,
-							$course_total_users
-						);
-
-
+						get_the_title( $current_course_id ),
+						$course_access_list_new,
+						$course_total_users
+					);
 				}
 			}
 			return $data;
@@ -360,7 +358,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			if ( ( ! empty( $this->transient_data['current_course'][ $course_id ]['course_access_list'] ) ) && ( ! empty( $this->transient_data['current_course'][ $course_id ]['course_access_list'] ) ) ) {
 				foreach ( $this->transient_data['current_course'][ $course_id ]['course_access_list'] as $idx => $user_id ) {
 					if ( $this->out_of_timer() ) {
-						return;
+						return false;
 					}
 
 					$user_id = absint( $user_id );
@@ -421,7 +419,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 								$course_activity['changed'] = true;
 							}
 						} else {
-							if ( ( ! empty( $user_meta_course_expire ) ) && ( $course_activity['activity_completed'] !== $user_meta_course_expire ) ) {
+							if ( $course_activity['activity_completed'] !== $user_meta_course_expire ) {
 								$course_activity['activity_completed'] = $user_meta_course_expire;
 								if ( empty( $course_activity['activity_updated'] ) ) {
 									$course_activity['activity_updated'] = $course_activity['activity_completed'];
@@ -440,7 +438,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 							learndash_update_user_activity( $course_activity );
 						}
 
-						// Ad the processeduser to our master list. This will update the 'course_access_list' meta when done.
+						// And the processed user to our master list. This will update the 'course_access_list' meta when done.
 						$this->transient_data['current_course'][ $course_id ]['course_access_list_new'][] = $user_id;
 					}
 					unset( $this->transient_data['current_course'][ $course_id ]['course_access_list'][ $idx ] );
@@ -504,7 +502,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				$sql_str = $wpdb->prepare( 'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_type=%s AND user_id = %d AND ( post_id = %d OR course_id = %d )', 'access', $user_id, $course_id, $course_id );
 
 				//phpcs:ignore: WordPress.DB.PreparedSQL.NotPrepared
-				$activity_row = $wpdb->get_row( $sql_str, ARRAY_A );
+				$activity_row = $wpdb->get_row( $sql_str, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 				return $activity_row;
 			}
 
@@ -526,18 +524,17 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				$user_ids = array_map( 'absint', $user_ids );
 				$sql_str  = $wpdb->prepare( 'SELECT activity_id, user_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_type=%s AND ( post_id = %d OR course_id = %d )', 'access', $course_id, $course_id );
 
-				//phpcs:ignore: WordPress.DB.PreparedSQL.NotPrepared
-				$activity = $wpdb->get_results( $sql_str );
+				$activity = $wpdb->get_results( $sql_str ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 				if ( ! empty( $activity ) ) {
 					$activity_ids = array();
-					foreach( $activity as $item ) {
+					foreach ( $activity as $item ) {
 						if ( in_array( absint( $item->user_id ), $user_ids, true ) !== false ) {
 							$activity_ids[] = $item->activity_id;
 						}
 					}
 					if ( ! empty( $activity_ids ) ) {
 						$activity_ids_chunks = array_chunk( $activity_ids, 100 );
-						foreach( $activity_ids_chunks as $activity_ids_chunk ) {
+						foreach ( $activity_ids_chunks as $activity_ids_chunk ) {
 							learndash_report_clear_by_activity_ids( $activity_ids_chunk );
 						}
 					}

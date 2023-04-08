@@ -59,7 +59,7 @@ function learndash_user_groups( $attr = array(), $content = '', $shortcode_slug 
 	if ( ! $has_admin_groups && ! $has_user_groups ) {
 		return '';
 	}
-	
+
 	return SFWD_LMS::get_template(
 		'user_groups_shortcode',
 		array(

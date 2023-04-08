@@ -1,7 +1,7 @@
 <?php
 /**
  * LearnDash Factory User Class.
- * This is a factory class used to instansiate user related data.
+ * This is a factory class used to instantiate user related data.
  *
  * @since 3.4.0
  * @package LearnDash
@@ -23,10 +23,10 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 		/**
 		 * Get a User Instance.
 		 *
-		 * @param integer $user   Either user_id integer or WP_User instance.
-		 * @param boolean $reload True to force reload of instance.
+		 * @param int|object $user   Either user_id integer or WP_User instance.
+		 * @param bool       $reload True to force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_User or null
+		 * @return object|null Instance of `LDLMS_Model_User` or null
 		 */
 		public static function user( $user = null, $reload = false ) {
 			$model = 'LDLMS_Model_User';
@@ -55,10 +55,10 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 		/**
 		 * Get a User Course Progress Instance.
 		 *
-		 * @param integer $user Either user_id integer or WP_User instance.
-		 * @param boolean $reload To force reload of instance.
+		 * @param int|object $user Either user_id integer or WP_User instance.
+		 * @param bool       $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course or null
+		 * @return object|null Instance of `LDLMS_Model_User_Course_Progress` or null
 		 */
 		public static function course_progress( $user = null, $reload = false ) {
 			$model = 'LDLMS_Model_User_Course_Progress';
@@ -84,10 +84,10 @@ if ( ( ! class_exists( 'LDLMS_Factory_User' ) ) && ( class_exists( 'LDLMS_Factor
 		/**
 		 * Get a User Course Progress Instance.
 		 *
-		 * @param integer $user Either user_id integer or WP_User instance.
-		 * @param boolean $reload To force reload of instance.
+		 * @param int|object $user Either user_id integer or WP_User instance.
+		 * @param bool       $reload To force reload of instance.
 		 *
-		 * @return new instance of LDLMS_Model_Course or null
+		 * @return object|null Instance of `LDLMS_Model_User_Quiz_Progress` or null
 		 */
 		public static function quiz_progress( $user = null, $reload = false ) {
 			$model = 'LDLMS_Model_User_Quiz_Progress';
