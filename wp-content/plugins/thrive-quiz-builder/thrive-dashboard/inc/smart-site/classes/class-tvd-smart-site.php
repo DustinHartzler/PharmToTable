@@ -39,6 +39,7 @@ if ( ! class_exists( 'TVD_Smart_Site' ) ) :
 		 * @var TVD_Smart_Shortcodes
 		 */
 		public $shortcodes;
+		public $global_shortcodes;
 
 		/**
 		 * TVD_Smart_Site constructor.
@@ -47,26 +48,9 @@ if ( ! class_exists( 'TVD_Smart_Site' ) ) :
 		 */
 		public function __construct() {
 			$this->db = new TVD_Smart_DB();
-			$this->do_db_migrations();
 			$this->action_filters();
 			$this->shortcodes        = new TVD_Smart_Shortcodes();
 			$this->global_shortcodes = new TVD_Global_Shortcodes();
-		}
-
-		/**
-		 * Prepare Migrations
-		 *
-		 * @throws Exception
-		 */
-		private function do_db_migrations() {
-			TD_DB_Manager::add_manager(
-				TVE_DASH_PATH . '/inc/smart-site/migrations',
-				'tve_td_db_version',
-				TVE_DASH_DB_VERSION,
-				'Thrive Dashboard',
-				'td_',
-				'tve_dash_reset'
-			);
 		}
 
 		/**
@@ -144,7 +128,7 @@ if ( ! class_exists( 'TVD_Smart_Site' ) ) :
 		 * Add to admin menu
 		 */
 		public function admin_menu() {
-			add_submenu_page( null, __( 'Smart Site', 'thrive-dash' ), __( 'Smart Site', 'thrive-dash' ), TVE_DASH_CAPABILITY, $this->_dashboard_page, array(
+			add_submenu_page( '', __( 'Smart Site', 'thrive-dash' ), __( 'Smart Site', 'thrive-dash' ), TVE_DASH_CAPABILITY, $this->_dashboard_page, array(
 				$this,
 				'admin_dashboard',
 			) );

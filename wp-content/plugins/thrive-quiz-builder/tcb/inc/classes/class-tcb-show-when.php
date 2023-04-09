@@ -20,7 +20,7 @@ class TCB_Show_When_Menu_Option {
 		add_filter( 'wp_nav_menu_objects', array( $this, 'remove_specific_menu_items' ), 9 ); //before TA and TL
 	}
 
-	function add_show_when_dropdown_to_menu_item( $item_id, $item ) {
+	public function add_show_when_dropdown_to_menu_item( $item_id, $item ) {
 		echo tcb_template( 'show-when-dropdown.phtml', array( 'item' => $item, 'item_id' => $item_id ), true ); //phpcs:ignore
 	}
 
@@ -50,11 +50,11 @@ class TCB_Show_When_Menu_Option {
 	 */
 	public static function get_instance() {
 
-		if ( ! self::$instance ) {
-			self::$instance = new self();
+		if ( ! static::$instance ) {
+			static::$instance = new static();
 		}
 
-		return self::$instance;
+		return static::$instance;
 	}
 
 	/**

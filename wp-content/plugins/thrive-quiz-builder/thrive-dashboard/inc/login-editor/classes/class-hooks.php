@@ -149,7 +149,7 @@ class Hooks {
 	 */
 	public static function admin_menu() {
 		add_submenu_page(
-			null,
+			'',
 			Main::title(),
 			Main::title(),
 			'manage_options',

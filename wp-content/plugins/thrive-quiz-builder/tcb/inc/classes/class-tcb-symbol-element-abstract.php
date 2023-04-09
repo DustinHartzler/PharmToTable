@@ -46,7 +46,7 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 	 * @return string
 	 */
 	public function category() {
-		return self::get_thrive_basic_label();
+		return static::get_thrive_basic_label();
 	}
 
 	/**
@@ -365,7 +365,8 @@ abstract class TCB_Symbol_Element_Abstract extends TCB_Cloud_Template_Element_Ab
 		/**
 		 * update CSS text to reflect new symbol id ( replace cloud id placeholder with local id in css text)
 		 */
-		$symbol_data['css'] = str_replace( '|TEMPLATE_ID|', $post_id, $symbol_data['css'] );
+
+		$symbol_data['css'] = isset( $symbol_data['css'] ) ? str_replace( '|TEMPLATE_ID|', $post_id, $symbol_data['css'] ) : '';
 
 		$upload_dir = wp_upload_dir();
 

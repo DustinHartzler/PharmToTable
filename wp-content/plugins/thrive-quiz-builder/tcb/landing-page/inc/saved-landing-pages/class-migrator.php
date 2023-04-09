@@ -40,7 +40,7 @@ class Migrator {
 			'content' => $saved_lp_contents,
 		];
 
-		if ( count( $saved_lp_metas ) === count( $saved_lp_contents ) ) {
+		if ( is_array( $saved_lp_metas ) && is_array( $saved_lp_contents ) && ( count( $saved_lp_metas ) === count( $saved_lp_contents ) ) ) {
 			/* make sure we have a backup */
 			if ( empty( get_option( $this->backup_option_meta_key ) ) ) {
 				update_option( $this->backup_option_meta_key, $saved_lp_metas, 'no' );

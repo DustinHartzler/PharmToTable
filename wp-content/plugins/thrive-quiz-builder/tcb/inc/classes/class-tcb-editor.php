@@ -527,6 +527,7 @@ class TCB_Editor {
 			}, Thrive_Dash_List_Manager::get_available_apis( true, [ 'include_types' => [ 'storage' ] ] ) ),
 			'connected_apis_custom_fields'  => Thrive_Dash_List_Manager::get_available_custom_fields(),
 			'apis_custom_fields_mapper'     => Thrive_Dash_List_Manager::get_custom_fields_mapper(),
+			'apis_default_form_fields'      => Thrive_Dash_List_Manager::get_custom_fields_mapper( true ),
 			'colors'                        => array(
 				'favorites'      => tve_convert_favorite_colors(),
 				'globals'        => array_reverse( tcb_color_manager()->get_list() ),
@@ -650,6 +651,20 @@ class TCB_Editor {
 					);
 				}
 
+			}
+
+			/* For TTB LPs we save the skin tag written in meta */
+			$skin_tag = $landing_page->meta( 'theme_skin_tag' );
+
+			if ( ! empty( $skin_tag ) ) {
+				$data['lp_skin_tag'] = $skin_tag;
+			}
+
+			/* For TTB LPs we save if it has inherited Typography */
+			$inherit_typography = $landing_page->meta( 'ttb_inherit_typography', null, true );
+
+			if ( ! empty( $inherit_typography ) ) {
+				$data['ttb_inherit_typography'] = (int) $inherit_typography;
 			}
 		}
 
@@ -914,7 +929,7 @@ class TCB_Editor {
 
 		$landing_page = tcb_landing_page( $this->post->ID );
 
-		return apply_filters( 'tcb_has_central_style_panel', $landing_page->has_template_data, $landing_page );
+		return apply_filters( 'tcb_has_central_style_panel', true, $landing_page );
 	}
 
 	/**
@@ -1201,7 +1216,7 @@ class TCB_Editor {
 	 * @return boolean
 	 */
 	public function has_save_template_button() {
-		return $this->post->post_type === 'post' || ( $this->is_page() && ! $this->is_landing_page() );
+		return apply_filters( 'tcb_has_save_template_button', $this->post->post_type === 'post' || ( $this->is_page() && ! $this->is_landing_page() ) );
 	}
 
 

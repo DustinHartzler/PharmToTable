@@ -149,7 +149,6 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 			if ( $contact->status === 'pending' ) {
 				$contact->sendDoubleOptinEmail();
 			}
-
 		} catch ( Exception $exception ) {
 			return $exception->getMessage();
 		}

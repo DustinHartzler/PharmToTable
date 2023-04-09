@@ -17,10 +17,11 @@ abstract class Event {
 
 	/**
 	 * Register event
+	 *
 	 * @return void
 	 */
 	final public static function register() {
-		Store::instance()->register_event( static::class );
+		Store::get_instance()->register_event( static::class );
 	}
 
 	/**
@@ -35,6 +36,7 @@ abstract class Event {
 			$db_col = static::get_field_table_col( $key );
 
 			if ( isset( $registered_fields[ $db_col ] ) ) {
+				/* in case we have defined a class for the field, save an instance */
 				$this->fields[ $db_col ] = new $registered_fields[ $db_col ]( $value );
 			} else {
 				$this->fields[ $key ] = $value;

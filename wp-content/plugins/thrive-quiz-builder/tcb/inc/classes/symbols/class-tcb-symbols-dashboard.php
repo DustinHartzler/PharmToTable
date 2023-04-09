@@ -97,7 +97,7 @@ class TCB_Symbols_Dashboard {
 	 * Create page for symbols dashboard
 	 */
 	public function admin_menu() {
-		add_submenu_page( null, __( 'Symbols', 'thrive-cb' ), __( 'Symbols', 'thrive-cb' ), tcb_has_external_cap( true ), $this->_symbols_dashboard_page, array(
+		add_submenu_page( '', __( 'Symbols', 'thrive-cb' ), __( 'Symbols', 'thrive-cb' ), tcb_has_external_cap( true ), $this->_symbols_dashboard_page, array(
 			$this,
 			'admin_symbols_dashboard',
 		) );

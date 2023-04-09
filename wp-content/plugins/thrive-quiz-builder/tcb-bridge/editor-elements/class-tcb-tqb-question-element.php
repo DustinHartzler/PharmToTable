@@ -49,6 +49,8 @@ class TCB_Question_Element extends TCB_Element_Abstract {
 		$hasQnaTemplate    = ! empty( $qna[ $quiz_style ] );
 		$quiz_type         = TQB_Post_meta::get_quiz_type_meta( $quiz_id, true );
 		$is_write_wrong    = 'right_wrong' === $quiz_type;
+		$feedback_settings  = TQB_Post_meta::get_feedback_settings_meta( $quiz_id );
+		$navigation_enabled = isset ( $feedback_settings['nav_buttons'] ) ? $feedback_settings['nav_buttons'] : false;
 
 		ob_start();
 		include tqb()->plugin_path( 'tcb-bridge/editor-layouts/elements/question.php' );

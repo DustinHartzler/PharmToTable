@@ -50,7 +50,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 	 */
 	public function pluginInstalled() {
 		$installed = array();
-		if ( defined( 'MAILPOET_VERSION' ) && (int) MAILPOET_VERSION <= 3 ) {
+		if ( class_exists( 'MailPoet\Config\Initializer', false ) ) {
 			$installed[] = 3;
 		}
 
@@ -203,7 +203,10 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 				return false;
 			}
 
-			$result = call_user_func( array( 'MailPoet\Models\Subscriber', 'subscribe' ), $user_data, array( $list_identifier ) );
+			$result = call_user_func( array(
+				'MailPoet\Models\Subscriber',
+				'subscribe'
+			), $user_data, array( $list_identifier ) );
 
 			if ( $result->getErrors() ) {
 				return implode( '<br><br>', $result->getErrors() );
@@ -273,7 +276,10 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 				return false;
 			}
 
-			$segments = call_user_func( array( 'MailPoet\Models\Segment', 'getSegmentsWithSubscriberCount' ), 'default' );
+			$segments = call_user_func( array(
+				'MailPoet\Models\Segment',
+				'getSegmentsWithSubscriberCount'
+			), 'default' );
 
 			if ( ! empty( $segments ) ) {
 				foreach ( $segments as $segment ) {

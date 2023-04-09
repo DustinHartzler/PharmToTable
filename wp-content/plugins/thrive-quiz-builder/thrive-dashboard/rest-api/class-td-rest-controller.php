@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: dan bilauca
- * Date: 17-Jul-19
- * Time: 04:15 PM
- */
 
 /**
  * Class TD_REST_Controller

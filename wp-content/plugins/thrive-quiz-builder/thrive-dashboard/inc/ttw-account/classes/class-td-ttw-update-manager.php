@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 
-require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-singleton.php';
 require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-magic-methods.php';
 require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-ttw-utils.php';
 
@@ -340,9 +339,9 @@ class TD_TTW_Update_Manager {
 		}
 
 		add_submenu_page(
-			null,
-			null,
-			null,
+			'',
+			'',
+			'',
 			'manage_options',
 			self::NAME,
 			array( $this, 'tve_dash_ttw_account' )

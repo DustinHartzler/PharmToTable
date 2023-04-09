@@ -30,14 +30,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		</div>
 
-		<div class="tve-control mt-10 hide-tablet hide-mobile" data-view="Type"></div>
+		<div class="tve-control mt-10 hide-tablet hide-mobile full-width" data-view="Type"></div>
 
 		<div class="tve-control sep-top sep-bottom no-space hide-tablet hide-mobile" data-view="Featured"></div>
 
 		<div class="tve-control mt-5" data-view="ColumnsNumber"></div>
-
 		<div class="tve-control sep-top" data-view="HorizontalSpace"></div>
-		<div class="tve-control mt-5 mb-5 no-space sep-bottom" data-view="VerticalSpace"></div>
+		<div class="tve-control mt-5 mb-5 no-space" data-view="VerticalSpace"></div>
 
 		<div class="tve-control hide-tablet hide-mobile" data-view="PaginationType"></div>
 

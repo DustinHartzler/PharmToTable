@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_Abstract {
 
 	protected $api_error_type = 'string';
-	private   $acf_identifier = 'tve_acf_';
+	private $acf_identifier = 'tve_acf_';
 
 	/**
 	 * Set current error type output
@@ -251,22 +251,20 @@ class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_
 		if ( empty( $arguments['$$trusted'] ) ) {
 			$list_identifier = 'subscriber';
 		}
-
+		$error = null;
 		if ( $this->isDisabled() ) {
-			return $this->build_field_error( __( 'Registration has been disabled', 'thrive-dash' ), '' );
+			$error = $this->build_field_error( __( 'Registration has been disabled', 'thrive-dash' ), '' );
+		} elseif ( is_user_logged_in() ) {
+			$error = $this->build_field_error( __( 'You are already logged in. Please Logout in order to create a new user.', 'thrive-dash' ), '' );
+		} elseif ( empty( $arguments['email'] ) ) {
+			/* Use the same error messages as WordPress */
+			$error = $this->build_field_error( __( '<strong>Error</strong>: Please type your email address.' ), 'email' );
+		} elseif ( ! is_email( $arguments['email'] ) ) {
+			$error = $this->build_field_error( __( '<strong>Error</strong>: The email address isn&#8217;t correct.' ), 'email' );
 		}
 
-		if ( is_user_logged_in() ) {
-			return $this->build_field_error( __( 'You are already logged in. Please Logout in order to create a new user.', 'thrive-dash' ), '' );
-		}
-
-		/* Use the same error messages as WordPress */
-		if ( empty( $arguments['email'] ) ) {
-			return $this->build_field_error( __( '<strong>Error</strong>: Please type your email address.' ), 'email' );
-		}
-
-		if ( ! is_email( $arguments['email'] ) ) {
-			return $this->build_field_error( __( '<strong>Error</strong>: The email address isn&#8217;t correct.' ), 'email' );
+		if ( $error !== null ) {
+			return $error;
 		}
 
 		/* get profile fields from mapping */

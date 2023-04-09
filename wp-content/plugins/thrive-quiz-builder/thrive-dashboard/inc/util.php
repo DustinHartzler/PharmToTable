@@ -278,6 +278,15 @@ function tve_dash_is_crawler( $apply_filter = false ) {
 }
 
 /**
+ * Whether the server software is Apache or something else
+ *
+ * @return bool
+ */
+function tve_dash_is_apache() {
+	return ( strpos( $_SERVER['SERVER_SOFTWARE'], 'Apache' ) !== false || strpos( $_SERVER['SERVER_SOFTWARE'], 'LiteSpeed' ) !== false );
+}
+
+/**
  * Defines the products order in the Thrive Dashboard Wordpress Menu
  *
  * @return array
@@ -446,6 +455,11 @@ function tve_get_debug_data() {
 	$info[] = array(
 		'name'  => 'MySQL Version',
 		'value' => $wpdb->db_version(),
+	);
+
+	$info[] = array(
+		'name'  => 'Server Software',
+		'value' => $_SERVER['SERVER_SOFTWARE'],
 	);
 
 	return $info;

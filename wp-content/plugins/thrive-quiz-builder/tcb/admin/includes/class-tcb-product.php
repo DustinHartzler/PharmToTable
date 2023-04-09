@@ -9,6 +9,10 @@
 class TCB_Product extends TVE_Dash_Product_Abstract {
 	protected $tag = 'tcb';
 
+	protected $version = TVE_VERSION;
+
+	protected $slug = 'thrive-visual-editor';
+
 	protected $title = 'Thrive Architect';
 
 	protected $productIds = array();

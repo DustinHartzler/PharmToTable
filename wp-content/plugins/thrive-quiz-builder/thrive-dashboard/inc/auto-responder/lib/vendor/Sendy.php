@@ -11,12 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once dirname( __FILE__ ) . '/Sendy/Exception.php';
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 7/30/2015
- * Time: 1:03 PM
- */
 class Thrive_Dash_Api_Sendy {
 
 	protected $url;

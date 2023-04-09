@@ -16,16 +16,16 @@ class Thrive_Dash_Api_MailerLite_Campaigns extends Thrive_Dash_Api_MailerLite_Ap
 	/**
 	 * Add custom html to campaign
 	 *
-	 * @param int $campaignId
-	 * @param array $contentData
+	 * @param int $campaign_id
+	 * @param array $content_data
 	 * @param array $params
 	 *
 	 * @return [type]
 	 */
-	public function addContent( $campaignId, $contentData = array(), $params = array() ) {
-		$endpoint = $this->endpoint . '/' . $campaignId . '/content';
+	public function addContent( $campaign_id, $content_data = array(), $params = array() ) {
+		$endpoint = $this->endpoint . '/' . $campaign_id . '/content';
 
-		$response = $this->restClient->put( $endpoint, $contentData );
+		$response = $this->rest_client->put( $endpoint, $content_data );
 
 		return $response['body'];
 	}
@@ -33,15 +33,15 @@ class Thrive_Dash_Api_MailerLite_Campaigns extends Thrive_Dash_Api_MailerLite_Ap
 	/**
 	 * Trigger action: send
 	 *
-	 * @param  int $campaignId
-	 * @param  array $settingsData
+	 * @param  int $campaign_id
+	 * @param  array $settings_data
 	 *
 	 * @return [type]
 	 */
-	public function send( $campaignId, $settingsData ) {
-		$endpoint = $this->endpoint . '/' . $campaignId . '/actions/send';
+	public function send( $campaign_id, $settings_data ) {
+		$endpoint = $this->endpoint . '/' . $campaign_id . '/actions/send';
 
-		$response = $this->restClient->post( $endpoint, $settingsData );
+		$response = $this->rest_client->post( $endpoint, $settings_data );
 
 		return $response['body'];
 	}
@@ -53,10 +53,10 @@ class Thrive_Dash_Api_MailerLite_Campaigns extends Thrive_Dash_Api_MailerLite_Ap
 	 *
 	 * @return [type]
 	 */
-	public function cancel( $campaignId ) {
-		$endpoint = $this->endpoint . '/' . $campaignId . '/actions/cancel';
+	public function cancel( $campaign_id ) {
+		$endpoint = $this->endpoint . '/' . $campaign_id . '/actions/cancel';
 
-		$response = $this->restClient->post( $endpoint );
+		$response = $this->rest_client->post( $endpoint );
 
 		return $response['body'];
 	}

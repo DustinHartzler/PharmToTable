@@ -24,7 +24,7 @@ class User_Wpfusion_Tags extends \TCB\ConditionalDisplay\Field {
 	}
 
 	public static function get_conditions() {
-		return [ 'autocomplete' ];
+		return [ 'autocomplete_hidden' ];
 	}
 
 	/**

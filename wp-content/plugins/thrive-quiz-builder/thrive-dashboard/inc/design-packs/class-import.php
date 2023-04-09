@@ -60,7 +60,7 @@ class Import {
 	 *
 	 * @return string
 	 */
-	public static function get_unzipped_name( $zip ): string {
+	public static function get_unzipped_name( $zip ) {
 		$wp_uploads_dir = Main::get_imported_dir_path();
 		defined( 'FS_METHOD' ) || define( 'FS_METHOD', 'direct' );
 		if ( FS_METHOD !== 'ssh2' ) {

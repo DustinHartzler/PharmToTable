@@ -86,7 +86,7 @@ class TCB_Admin {
 
 		if ( $cap ) {
 			$menus['tcb'] = array(
-				'parent_slug' => null, //null | tve_dash_section
+				'parent_slug' => '',
 				'page_title'  => __( 'Content Templates', 'thrive-cb' ),
 				'menu_title'  => __( 'Content Templates', 'thrive-cb' ),
 				'capability'  => $cap,

@@ -55,6 +55,32 @@
 	</div>
 </div>
 
+<div id="tve-carousel-component" class="tve-component" data-view="Carousel">
+	<div class="dropdown-header" data-prop="docked">
+		<div class="group-description">
+			<?php echo esc_html__( 'Carousel Options', 'thrive-cb' ) ?>
+		</div>
+		<i></i>
+	</div>
+	<div class="dropdown-content">
+		<div class="tve-control sep-bottom mb-10 pb-0" data-view="MovementSettings"></div>
+		<div class="tve-control" data-view="SlidesToScroll"></div>
+		<div class="tve-control" data-view="SlidesToShow"></div>
+		<div class="tve-control" data-view="Autoplay"></div>
+		<div class="tve-autoplay-controls sep-bottom">
+			<div class="tve-control" data-view="AutoplaySpeed"></div>
+			<div class="tve-control" data-view="PauseOn"></div>
+		</div>
+		<div class="tve-control" data-view="CenterMode"></div>
+		<div class="tve-control" data-view="CenterPadding"></div>
+		<div class="tve-control" data-view="AdaptiveHeight"></div>
+		<div class="tve-control" data-view="UniformSlidesHeight"></div>
+		<div class="tve-control" data-view="VerticalPosition"></div>
+		<div class="tve-control" data-view="Fade"></div>
+		<div class="tve-control" data-view="FadeImageWidth"></div>
+	</div>
+</div>
+
 <div id="tve-styles-templates-component" class="tve-component" data-view="StylesTemplates">
 	<div class="dropdown-header" data-prop="docked">
 		<?php echo esc_html__( 'HTML Attributes', 'thrive-cb' ); ?>

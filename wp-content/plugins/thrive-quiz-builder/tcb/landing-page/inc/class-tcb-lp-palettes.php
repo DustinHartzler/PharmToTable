@@ -109,9 +109,7 @@ class TCB_LP_Palettes {
 	 * @return array|mixed
 	 */
 	public function tcb_get_palettes_from_config() {
-		$palette_config = $this->get_smart_lp_palettes_config_v2();
-
-		return ! empty( $palette_config['palette'] ) ? $palette_config['palette'] : [];
+		return ! empty( $this->skin_palettes_config['palette'] ) ? $this->skin_palettes_config['palette'] : [];
 	}
 
 	/**
@@ -158,29 +156,14 @@ class TCB_LP_Palettes {
 	 * @param $hsl
 	 */
 	public function update_variables_in_config( $hsl ) {
-		$skin_palettes_config = $this->get_smart_lp_palettes_config_v2();
-
 		/* Update the config */
-		foreach ( $skin_palettes_config['palette'] as $color_id => $color_obj ) {
-			if ( is_numeric( $color_id ) && is_array( $color_obj ) && empty( $skin_palettes_config['palette'][ $color_id ] ) ) {
-				$skin_palettes_config['palette'][ $color_id ] = $color_obj;
-			} elseif ( ! empty( $skin_palettes_config['palette'][ $color_id ] ) && ! $this->is_auxiliary_variable( $color_id ) ) {
-				$code  = 'hsla(var(--tcb-theme-main-master-h,' . $hsl['h'] . '),var(--tcb-theme-main-master-s,' . (float) $hsl['s'] * 100 . '%),var(--tcb-theme-main-master-l,' . (float) $hsl['l'] * 100 . '%),var(--tcb-theme-main-master-a,' . $hsl['a'] . '))';
-				$vars  = array(
-					'h' => 'var(--tcb-theme-main-master-h,' . $hsl['h'] . ')',
-					's' => 'var(--tcb-theme-main-master-s,' . (float) $hsl['s'] * 100 . '%)',
-					'l' => 'var(--tcb-theme-main-master-l,' . (float) $hsl['l'] * 100 . '%)',
-					'a' => 'var(--tcb-theme-main-master-a,' . $hsl['a'] . ')',
-				);
-				$color = tve_hsl2rgb( (int) $hsl['h'], (float) $hsl['s'], (float) $hsl['l'], $hsl['a'], false );
-
-				$skin_palettes_config['palette'][ $color_id ]['hsla_code'] = $code;
-				$skin_palettes_config['palette'][ $color_id ]['hsla_vars'] = $vars;
-				$skin_palettes_config['palette'][ $color_id ]['color']     = $color;
+		foreach ( $this->skin_palettes_config['palette'] as $color_id => $color_obj ) {
+			if ( is_numeric( $color_id ) && is_array( $color_obj ) && empty( $this->skin_palettes_config ['palette'][ $color_id ] ) ) {
+				$this->skin_palettes_config ['palette'][ $color_id ] = $color_obj;
 			}
 		}
 
-		$this->update_lp_palettes_config_v2( $skin_palettes_config );
+		$this->update_lp_palettes_config_v2( $this->skin_palettes_config );
 	}
 
 	/**
@@ -189,13 +172,12 @@ class TCB_LP_Palettes {
 	 * @return string
 	 */
 	public function get_variables_for_css() {
-		$palette_config = $this->get_smart_lp_palettes_config_v2();
-		$data           = '';
+		$data = '';
 
-		if ( ! empty( $palette_config ) && is_array( $palette_config ) ) {
-			$palette = $palette_config['palette'];
+		if ( ! empty( $this->skin_palettes_config ) && is_array( $this->skin_palettes_config ) ) {
+			$palette = $this->skin_palettes_config ['palette'];
 
-			foreach ( $palette as $variable_id => $variable ) {
+			foreach ( $palette as $variable ) {
 
 				$color_name = static::SKIN_COLOR_VARIABLE_PREFIX . $variable['id'];
 
@@ -229,4 +211,4 @@ class TCB_LP_Palettes {
 	}
 }
 
-?>
+

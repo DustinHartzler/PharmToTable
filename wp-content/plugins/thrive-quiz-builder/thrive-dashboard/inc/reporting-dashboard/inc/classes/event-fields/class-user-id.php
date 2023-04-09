@@ -21,7 +21,7 @@ class User_Id extends Event_Field {
 		return $singular ? 'User' : 'Users';
 	}
 
-	public function format( $value ) {
+	public static function format_value( $value ) {
 		return (int) $value;
 	}
 
@@ -37,5 +37,30 @@ class User_Id extends Event_Field {
 		}
 
 		return $user_name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_image(): string {
+		return get_avatar_url( $this->value );
+	}
+
+	public static function get_filter_options(): array {
+		return array_map( static function ( $user ) {
+			return [
+				'id'    => $user->ID,
+				'label' => $user->data->display_name,
+			];
+		}, get_users() );
+	}
+
+	/**
+	 * Return true/false if this field contains an attached image.
+	 *
+	 * @return bool
+	 */
+	public static function has_image(): bool {
+		return true;
 	}
 }

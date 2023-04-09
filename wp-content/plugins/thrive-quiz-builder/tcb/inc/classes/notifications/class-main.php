@@ -139,7 +139,7 @@ class Main {
 
 		$post_content = do_shortcode( $post_content );
 
-		$css = static::get_notification_meta_style();
+		$css = static::get_notification_meta_style( true, $is_preview );
 
 		return $css . $post_content;
 	}
@@ -197,13 +197,15 @@ class Main {
 	/**
 	 * Get the styling of the notification
 	 */
-	public static function get_notification_meta_style( $return = true ) {
+	public static function get_notification_meta_style( $return = true, $is_preview = false ) {
 		$post_id = Post_Type::instance()->get_id();
 		$css     = '';
 		if ( get_the_ID() !== $post_id ) {
 			$lightspeed_css = \TCB\Lightspeed\Css::get_instance( $post_id );
 
-			$css .= $lightspeed_css->get_optimized_styles();
+			if ( $is_preview || $lightspeed_css->should_load_optimized_styles() ) {
+				$css .= $lightspeed_css->get_optimized_styles();
+			}
 
 			$css .= sprintf( '<style type="text/css" id="tve_notification_styles">%s</style>', get_post_meta( $post_id, 'tve_custom_css', true ) );
 		}

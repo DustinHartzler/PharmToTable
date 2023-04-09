@@ -112,10 +112,12 @@ class TCB_Post_List_Filter_Rest {
 				$terms            = get_terms( $attr );
 
 				foreach ( $terms as $term ) {
-					$categories[] = [
-						'value' => (string) $term->term_id,
-						'label' => $term->name,
-					];
+					if ( static::filter_options( $term->term_id, $term->name, $selected_values, $searched_keyword ) ) {
+						$categories[] = [
+							'value' => (string) $term->term_id,
+							'label' => $term->name,
+						];
+					}
 				}
 		}
 

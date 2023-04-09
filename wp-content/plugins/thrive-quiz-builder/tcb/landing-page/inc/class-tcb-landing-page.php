@@ -190,16 +190,13 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 				 */
 				$this->palettes = apply_filters( 'tcb_get_page_palettes', $this->get_template_palettes(), $this );
 
-				/* We only want to do this when the theme is not active */
-				if ( ! tve_dash_is_ttb_active() ) {
-					if ( empty( $this->palettes ) && ! empty( $this->config['skin_palettes'] ) && ! empty( $this->config['skin_palettes_config'] ) && ! empty( $this->config['skin_typography'] ) ) {
-						$this->palettes            = $this->config['skin_palettes'];
-						$this->has_template_data   = true;
-						$this->lp_palette_instance = $this->get_palette_instance();
-					}
-					if ( ! empty( $this->config['skin_typography'] ) ) {
-						$this->skin_typography = $this->config['skin_typography'];
-					}
+				if ( empty( $this->palettes ) && ! empty( $this->config['skin_palettes'] ) && ! empty( $this->config['skin_palettes_config'] ) && ! empty( $this->config['skin_typography'] ) ) {
+					$this->palettes            = $this->config['skin_palettes'];
+					$this->has_template_data   = true;
+					$this->lp_palette_instance = $this->get_palette_instance();
+				}
+				if ( ! empty( $this->config['skin_typography'] ) ) {
+					$this->skin_typography = $this->config['skin_typography'];
 				}
 
 				foreach ( $this->template_styles as $key => $value ) {
@@ -871,13 +868,22 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 		 * @param $post_id
 		 */
 		public static function print_skin_typography( $post_id ) {
-			$lp_typography = tcb_landing_page( $post_id )->skin_typography;
+			$lp            = tcb_landing_page( $post_id );
+			$lp_typography = $lp->skin_typography;
+			$lp_inherit    = $lp->meta( 'ttb_inherit_typography', null, true );
 
-			if ( ! empty( $lp_typography ) ) {
+			if ( ! empty( $lp_typography ) && ( ! tve_dash_is_ttb_active() || $lp_inherit === '0' ) ) {
 				/* Replace the variable to match the colors from config */
 				$lp_typography = str_replace( '--tcb-color-', TCB_LP_Palettes::SKIN_COLOR_VARIABLE_PREFIX, $lp_typography );
 
 				$lp_typography = tcb_custom_css( $lp_typography );
+
+				echo '<style type="text/css" class="tcb_skin_lp_typography">' . $lp_typography . '</style>';
+			}
+
+			/* If we have TTB active and the LP inherits the TTB typography we should print it on the page */
+			if ( tve_dash_is_ttb_active() && ! empty( $lp_inherit ) && ! empty( $lp->meta( 'theme_skin_tag' ) ) ) {
+				$lp_typography = tcb_default_style_provider()->get_processed_styles( thrive_typography()->style(), 'string' );
 
 				echo '<style type="text/css" class="tcb_skin_lp_typography">' . $lp_typography . '</style>';
 			}
@@ -1685,6 +1691,11 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 			$this->update_template_global_styles();
 			$this->update_template_palettes();
 
+			/* If TTB is active and we set the meta for typography inherit */
+			if ( tve_dash_is_ttb_active() ) {
+				$this->meta( 'ttb_inherit_typography', ! empty( $config['skin_tag'] ), true );
+			}
+
 			$this->lp_palette_instance = $this->get_palette_instance();
 
 			if ( ! empty( $config ) ) {
@@ -1993,6 +2004,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 			if ( empty( $contents ) || empty( $meta ) || ! isset( $contents[ $template_index ] ) ) {
 				return $this;
 			}
+
 			$content        = $contents[ $template_index ];
 			$this->template = $landing_page_template = $meta[ $template_index ]['template'];
 
@@ -2013,12 +2025,14 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 			}
 
 			$saved_template_meta_data = array(
-				'tpl_colours'    => 'thrv_lp_template_colours',
-				'tpl_gradients'  => 'thrv_lp_template_gradients',
-				'tpl_button'     => 'thrv_lp_template_button',
-				'tpl_section'    => 'thrv_lp_template_section',
-				'tpl_contentbox' => 'thrv_lp_template_contentbox',
-				'tpl_palettes'   => 'thrv_lp_template_palettes',
+				'tpl_colours'            => 'thrv_lp_template_colours',
+				'tpl_gradients'          => 'thrv_lp_template_gradients',
+				'tpl_button'             => 'thrv_lp_template_button',
+				'tpl_section'            => 'thrv_lp_template_section',
+				'tpl_contentbox'         => 'thrv_lp_template_contentbox',
+				'tpl_palettes'           => 'thrv_lp_template_palettes',
+				'tpl_palettes_v2'        => TCB_LP_Palettes::LP_PALETTES,
+				'tpl_palettes_config_v2' => TCB_LP_Palettes::LP_PALETTES_CONFIG,
 			);
 
 			/**
@@ -2043,6 +2057,27 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 			$this->meta( '_tve_header', isset( $content['sections']['header']['ID'] ) ? $content['sections']['header']['ID'] : 0 );
 			$this->meta( '_tve_footer', isset( $content['sections']['footer']['ID'] ) ? $content['sections']['footer']['ID'] : 0 );
 
+		}
+
+
+		/**
+		 * When the Typography is inherited from TTB, we need to update the selectors and make them strongger
+		 *
+		 * @param $defaults
+		 *
+		 * @return mixed
+		 */
+		public static function tcb_typography_inherit_selectors_update( $defaults ) {
+			$id      = get_the_ID();
+			$inherit = tve_get_post_meta( $id, 'ttb_inherit_typography' );
+
+			if ( ! empty( $inherit ) && ! empty( $id ) && tve_post_is_landing_page( $id ) && tve_dash_is_ttb_active() ) {
+				foreach ( $defaults as $key => &$selector_data ) {
+					$selector_data['selector'] = '#tcb_landing_page ' . $selector_data['selector'];
+				}
+			}
+
+			return $defaults;
 		}
 	}
 
@@ -2119,4 +2154,7 @@ if ( ! class_exists( 'TCB_Landing_Page' ) ) {
 	add_filter( 'tcb_has_central_style_panel', array( 'TCB_Landing_Page', 'tcb_skin_allow_central_style_panel' ) );
 
 	add_action( 'tcb_print_custom_style', array( 'TCB_Landing_Page', 'print_skin_typography' ) );
+
+	add_filter( 'tcb_typography_inherit', array( 'TCB_Landing_Page', 'tcb_typography_inherit_selectors_update' ) );
+
 }

@@ -11,20 +11,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 
-	protected $restClient;
+	/**
+	 * @var Thrive_Dash_Api_MailerLiteV2_RestClient
+	 */
+	protected $rest_client;
 
+	/**
+	 * Endpoint for each request
+	 */
 	protected $endpoint;
 
-	private $_limit = null;
+	/**
+	 * Limit in a query
+	 */
+	private $_limit;
 
-	private $_offset = null;
+	/**
+	 * Offset in a query
+	 */
+	private $_offset;
 
-	private $_order = null;
+	/**
+	 * Order in a query
+	 */
+	private $_orders;
+	/**
+	 * For the where conditions
+	 */
+	private $_where;
 
-	private $_where = null;
-
-	public function __construct( Thrive_Dash_Api_MailerLite_RestClient $restClient ) {
-		$this->restClient = $restClient;
+	public function __construct( Thrive_Dash_Api_MailerLite_RestClient $rest_client ) {
+		$this->rest_client = $rest_client;
 	}
 
 	/**
@@ -35,13 +52,13 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 	 * @return Thrive_Dash_Api_MailerLite_Collection
 	 */
 	public function get( $fields = array( '*' => '' ) ) {
-		$params = $this->prepareParams();
+		$params = $this->prepare_params();
 
 		if ( ! empty( $fields ) && is_array( $fields ) && $fields != $fields['*'] ) {
 			$params['fields'] = $fields;
 		}
 
-		$response = $this->restClient->get( $this->endpoint, $params );
+		$response = $this->rest_client->get( $this->endpoint, $params );
 
 		return $response;
 	}
@@ -59,7 +76,7 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 			throw new Exception( 'ID must be set' );
 		}
 
-		$response = $this->restClient->get( $this->endpoint . '/' . $id );
+		$response = $this->rest_client->get( $this->endpoint . '/' . $id );
 
 		return $response['body'];
 	}
@@ -67,12 +84,12 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 	/**
 	 * Create new item
 	 *
-	 * @param  array $data
+	 * @param $data
 	 *
-	 * @return [type]
+	 * @return mixed
 	 */
 	public function create( $data ) {
-		$response = $this->restClient->post( $this->endpoint, $data );
+		$response = $this->rest_client->post( $this->endpoint, $data );
 
 		return $response['body'];
 	}
@@ -80,13 +97,13 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 	/**
 	 * Update an item
 	 *
-	 * @param  int $id
-	 * @param  array $data
+	 * @param $id
+	 * @param $data
 	 *
-	 * @return [type]
+	 * @return mixed
 	 */
 	public function update( $id, $data ) {
-		$response = $this->restClient->put( $this->endpoint . '/' . $id, $data );
+		$response = $this->rest_client->put( $this->endpoint . '/' . $id, $data );
 
 		return $response['body'];
 	}
@@ -94,12 +111,12 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 	/**
 	 * Delete an item
 	 *
-	 * @param  int $id
+	 * @param $id
 	 *
-	 * @return [type]
+	 * @return mixed
 	 */
 	public function delete( $id ) {
-		$response = $this->restClient->delete( $this->endpoint . '/' . $id );
+		$response = $this->rest_client->delete( $this->endpoint . '/' . $id );
 
 		return $response['body'];
 	}
@@ -107,10 +124,10 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 	/**
 	 * Return only count of items
 	 *
-	 * @return [type]
+	 * @return mixed
 	 */
 	public function count() {
-		$response = $this->restClient->get( $this->endpoint . '/count' );
+		$response = $this->rest_client->get( $this->endpoint . '/count' );
 
 		return $response['body'];
 	}
@@ -144,7 +161,7 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 	/**
 	 * Set an order in of items in query
 	 *
-	 * @param $field
+	 * @param        $field
 	 * @param string $order
 	 *
 	 * @return $this
@@ -158,10 +175,10 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 	/**
 	 * Set where conditions
 	 *
-	 * @param  [type] $column
-	 * @param  [type] $operator
-	 * @param  [type] $value
-	 * @param  string $boolean
+	 * @param $column
+	 * @param $operator
+	 * @param $value
+	 * @param $boolean
 	 *
 	 * @return $this
 	 */
@@ -183,7 +200,7 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 	 *
 	 * @return array
 	 */
-	protected function prepareParams() {
+	protected function prepare_params() {
 		$params = array();
 
 		if ( ! empty( $this->_where ) && is_array( $this->_where ) ) {
@@ -205,6 +222,31 @@ abstract class Thrive_Dash_Api_MailerLite_ApiAbstract {
 		}
 
 		return $params;
+	}
+
+	/**
+	 * @return string[]
+	 */
+
+	public function get_allowed_types() {
+		return array(
+			'TEXT',
+		);
+	}
+
+	/**
+	 * @param $field
+	 *
+	 * @return array
+	 */
+	public function get_normalize_custom_field( $field ) {
+		return array(
+			'id'    => $field->id,
+			'name'  => $field->title,
+			'type'  => $field->type,
+			'label' => $field->title,
+			'key'   => $field->key,
+		);
 	}
 
 }

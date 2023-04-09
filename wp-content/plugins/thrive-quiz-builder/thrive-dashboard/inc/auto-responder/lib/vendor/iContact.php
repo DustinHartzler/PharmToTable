@@ -729,7 +729,7 @@ class Thrive_Dash_Api_iContact {
 		);
 
 		// Return the list
-		return $this->makeCall( "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/lists/{$iListId}", 'POST', $aList, 'list' );;
+		return $this->makeCall( "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/lists/{$iListId}", 'POST', $aList, 'list' );
 	}
 
 	/**

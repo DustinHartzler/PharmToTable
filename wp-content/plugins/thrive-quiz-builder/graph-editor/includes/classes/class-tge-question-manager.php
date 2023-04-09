@@ -27,6 +27,8 @@ class TGE_Question_Manager {
 
 	protected $costs = array();
 
+	protected $quiz_type = '';
+
 	/**
 	 * TGE_Question_Manager constructor.
 	 *
@@ -36,8 +38,9 @@ class TGE_Question_Manager {
 
 		global $tgedb;
 
-		$this->quiz_id = $quiz_id;
-		$this->tgedb   = $tgedb;
+		$this->quiz_id   = $quiz_id;
+		$this->tgedb     = $tgedb;
+		$this->quiz_type = TQB_Post_meta::get_quiz_type_meta( $this->quiz_id, true );
 	}
 
 	/**
@@ -73,13 +76,25 @@ class TGE_Question_Manager {
 	 * Gets the markup and the CSS for the first question of the quiz, as a preview
 	 *
 	 * @param array $question_data
+	 * @param int   $quiz_id
 	 *
 	 * @return string
 	 */
-	public function get_first_question_preview( $question_data = array() ) {
+	public function get_first_question_preview( $question_data = array(), $quiz_id = 0 ) {
 		$html      = '';
 		$questions = $this->get_quiz_questions( array( 'with_answers' => 1 ) );
+		$question  = $this->get_quiz_questions( array( 'id' => $question_data['data']['id'] ) )[0];
+		$settings  = json_decode( $question['settings'], true );
 		$media     = $this->tqb_build_media_display( $question_data );
+
+		if ( ! empty( $quiz_id ) ) {
+			$feedback_settings  = TQB_Post_meta::get_feedback_settings_meta( $quiz_id );
+			$navigation_enabled = isset ( $feedback_settings['nav_buttons'] ) && $feedback_settings['nav_buttons'];
+			$is_openended       = (int) $question['q_type'] === 3;
+			$has_next_button    = $navigation_enabled || $feedback_settings['press_next'] || $is_openended || ( $settings['allowed_answers'] > 1 );
+		} else {
+			$has_next_button = false;
+		}
 
 		foreach ( $question_data['css'] as $css ) {
 			$html .= '<link rel="stylesheet" type="text/css" href="' . $css . '" media="all">';
@@ -261,8 +276,9 @@ class TGE_Question_Manager {
 
 		foreach ( $questions as $question ) {
 			$this->questions[ $question['id'] ] = array(
-				'id'   => $question['id'],
-				'next' => ! empty( $question['next_question_id'] ) ? $question['next_question_id'] : null,
+				'id'              => $question['id'],
+				'next'            => ! empty( $question['next_question_id'] ) ? $question['next_question_id'] : null,
+				'allowed_answers' => ! empty( $question['settings'] ) && ! empty( $question['settings']->allowed_answers ) ? (int) $question['settings']->allowed_answers : 1,
 			);
 
 			$answers = array();
@@ -385,7 +401,7 @@ class TGE_Question_Manager {
 	 *
 	 * @param array $answer
 	 *
-	 * @return bool|false|null|string
+	 * @return array|false
 	 */
 	public function get_next_question( $answer ) {
 
@@ -580,6 +596,17 @@ class TGE_Question_Manager {
 			}
 		}
 
+		$question['allowed_answers'] = 1;
+		if ( ! empty( $question['settings'] ) ) {
+			if ( is_object( $question['settings'] ) && ! empty( $question['settings']->allowed_answers ) ) {
+				$question['allowed_answers'] = $question['settings']->allowed_answers;
+			} elseif ( is_array( $question['settings'] ) && ! empty( $question['settings']['allowed_answers'] ) ) {
+				$question['allowed_answers'] = $question['settings']['allowed_answers'];
+			}
+		} else {
+			$question['settings'] = [];
+		}
+
 		return $question;
 	}
 
@@ -671,7 +698,7 @@ class TGE_Question_Manager {
 		}
 		if ( $this->is_leaf( $q ) ) {
 			$points                          = array_map( array( $this, 'get_answer_points' ), $q['answers'] );
-			$this->cache_min_max[ $q['id'] ] = array( 'min' => min( $points ), 'max' => max( $points ) );
+			$this->cache_min_max[ $q['id'] ] = [ 'min' => min( $points ), 'max' => $this->get_max_points( $points, $q ) ];
 
 			return $this->cache_min_max[ $q['id'] ];
 		}
@@ -691,25 +718,55 @@ class TGE_Question_Manager {
 			);
 		}
 		$this->questions[ $q['id'] ]['visited'] = 1;
-
+		$answer_points                          = array_map( array( $this, 'get_answer_points' ), $q['answers'] );
+		$min_points                             = min( $answer_points );
+		$max_points                             = $this->get_max_points( $answer_points, $q );
 		foreach ( $q['answers'] as $answer ) {
 			if ( empty( $answer['next'] ) && empty( $q['next'] ) ) {
 				$min_max = array( 'min' => 0, 'max' => 0 );
 			} else {
-				$min_max = $this->get_min_max( $this->questions[ empty( $answer['next'] ) ? $q['next'] : $answer['next'] ] );
+				$next_q = $this->questions[ empty( $answer['next'] ) ? $q['next'] : $answer['next'] ];
+				if ( empty( $next_q ) ) {
+					$min_max = array( 'min' => 0, 'max' => 0 );
+				} else {
+					$min_max = $this->get_min_max( $next_q );
+				}
 			}
 
-			if ( $answer['points'] + $min_max['min'] < $min ) {
-				$min = $answer['points'] + $min_max['min'];
+			if ( $min_points + $min_max['min'] < $min ) {
+				$min = $min_points + $min_max['min'];
 			}
 
-			if ( $answer['points'] + $min_max['max'] > $max ) {
-				$max = $answer['points'] + $min_max['max'];
+			if ( $max_points + $min_max['max'] > $max ) {
+				$max = $max_points + $min_max['max'];
 			}
 		}
 		$this->cache_min_max[ $q['id'] ] = array( 'min' => $min, 'max' => $max );
 
 		return $this->cache_min_max[ $q['id'] ];
+	}
+
+	/**
+	 * Computes the maximum number of points for a question
+	 * Takes into consideration if the question has multiple allowed answers or not
+	 *
+	 * @param array $points
+	 * @param array $question
+	 *
+	 * @return numeric
+	 */
+	public function get_max_points( $points, $question ) {
+		// for right_wrong quiz type we don't take into consideration multiple answers
+		if ( $this->quiz_type !== Thrive_Quiz_Builder::QUIZ_TYPE_RIGHT_WRONG && ['allowed_answers'] > 1 && count( $points ) >= $question['allowed_answers'] ) {
+			//Sort the points array in descending order. From max to min
+			rsort( $points );
+
+			//We slice the ordered array. The new array will have the length of the allowed answers.
+			//Afterwards we add all the elements of the array
+			return array_sum( array_slice( $points, 0, $question['allowed_answers'] ) );
+		}
+
+		return max( $points );
 	}
 
 

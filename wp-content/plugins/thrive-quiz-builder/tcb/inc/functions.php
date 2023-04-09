@@ -134,7 +134,7 @@ function tcb_get_editor_url( $post_id = 0, $main_frame = true ) {
 		$editor_link              = apply_filters( 'tcb_frame_request_uri', $editor_link, $post_id );
 	}
 
-	$editor_link = add_query_arg( apply_filters( 'tcb_editor_edit_link_query_args', $params, $post_id ), $editor_link );
+	$editor_link = add_query_arg( apply_filters( 'tcb_editor_edit_link_query_args', $params, $post_id ), $editor_link ?: '' );
 
 	return $admin_ssl ? str_replace( 'http://', 'https://', $editor_link ) : $editor_link;
 }
@@ -1791,7 +1791,7 @@ function tve_add_custom_font( $font_data ) {
  * @return array
  */
 function tve_update_image_size( $image_path, $template, $image_source ) {
-	if ( is_file( $image_path ) ) {
+	if ( is_file( $image_path ) && ini_get( 'allow_url_fopen' ) ) {
 		list( $width, $height ) = getimagesize( $image_path );
 	} else {
 		$width  = 0;
@@ -2122,6 +2122,7 @@ function tve_enqueue_editor_scripts() {
 					'ajaxurl'          => admin_url( 'admin-ajax.php' ),
 					'social_fb_app_id' => tve_get_social_fb_app_id(),
 					'is_single'        => (string) ( (int) is_singular() ),
+					'nonce'            => TCB_Utils::create_nonce(),
 				);
 
 				/**
@@ -2151,6 +2152,9 @@ function tve_get_regular_post_types() {
 		'attachment',
 		'tcb_lightbox',
 		'tcb_symbol',
+		'mailpoet_page',
+		TCB\UserTemplates\Template::get_post_type_name(),
+		TCB\SavedLandingPages\Saved_Lp::get_post_type_name(),
 		TCB\Notifications\Post_Type::NAME,
 		TCB\ConditionalDisplay\PostTypes\Global_Conditional_Set::NAME,
 		TCB\ConditionalDisplay\PostTypes\Conditional_Display_Group::NAME,
@@ -3731,6 +3735,9 @@ function tve_get_used_meta_keys() {
 		'tve_has_typefocus',
 		'tve_updated_post',
 		'tve_has_wistia_popover',
+		'ttb_inherit_typography',
+		TCB_LP_Palettes::LP_PALETTES,
+		TCB_LP_Palettes::LP_PALETTES_CONFIG,
 	);
 }
 
@@ -3935,7 +3942,7 @@ function tve_json_utf8_unslashit( $value ) {
  * Loads dashboard's version file
  */
 function tve_load_dash_version() {
-	$tve_dash_path      = dirname( dirname( __FILE__ ) ) . '/thrive-dashboard';
+	$tve_dash_path      = dirname( __FILE__, 2 ) . '/thrive-dashboard';
 	$tve_dash_file_path = $tve_dash_path . '/version.php';
 
 	if ( is_file( $tve_dash_file_path ) ) {
@@ -4001,38 +4008,26 @@ function tve_api_form_submit( $output = true ) {
 	}
 
 	if ( ! empty( $data['_use_captcha'] ) ) {
-		$captcha_url = 'https://www.google.com/recaptcha/api/siteverify';
 		$captcha_api = Thrive_Dash_List_Manager::credentials( 'recaptcha' );
+		if ( ! empty( $captcha_api['secret_key'] ) ) {
+			$captcha_url = 'https://www.google.com/recaptcha/api/siteverify';
 
-		$_capthca_params = array(
-			'response' => $data['g-recaptcha-response'],
-			'secret'   => empty( $captcha_api['secret_key'] ) ? '' : $captcha_api['secret_key'],
-			'remoteip' => ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '',
-		);
+			$_capthca_params = array(
+				'response' => $data['g-recaptcha-response'],
+				'secret'   => empty( $captcha_api['secret_key'] ) ? '' : $captcha_api['secret_key'],
+				'remoteip' => ! empty( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '',
+			);
 
-		$request  = tve_dash_api_remote_post( $captcha_url, array( 'body' => $_capthca_params ) );
-		$response = json_decode( wp_remote_retrieve_body( $request ) );
+			$request  = tve_dash_api_remote_post( $captcha_url, array( 'body' => $_capthca_params ) );
+			$response = json_decode( wp_remote_retrieve_body( $request ) );
 
-		if ( empty( $response ) || $response->success === false || ( ! empty( $captcha_api['connection'] ) && $captcha_api['connection']['version'] === 'v3' && $response->score <= $captcha_api['connection']['threshold'] ) ) {
-			return TCB_Utils::maybe_send_json( array(
-				'field' => 'captcha',
-				'error' => __( 'We are detecting suspicious activity from your device. Please try in another browser or contact the website administrator.', 'thrive-cb' ),
-			), $output );
+			if ( empty( $response ) || $response->success === false || ( ! empty( $captcha_api['connection'] ) && $captcha_api['connection']['version'] === 'v3' && $response->score <= $captcha_api['connection']['threshold'] ) ) {
+				return TCB_Utils::maybe_send_json( array(
+					'field' => 'captcha',
+					'error' => __( 'We are detecting suspicious activity from your device. Please try in another browser or contact the website administrator.', 'thrive-cb' ),
+				), $output );
+			}
 		}
-	}
-
-	if ( empty( $data['email'] ) ) {
-		return TCB_Utils::maybe_send_json( array(
-			'field' => 'email',
-			'error' => __( 'The email address is required', 'thrive-cb' ),
-		), $output );
-	}
-
-	if ( ! is_email( $data['email'] ) ) {
-		return TCB_Utils::maybe_send_json( array(
-			'field' => 'email',
-			'error' => __( 'The email address is invalid', 'thrive-cb' ),
-		), $output );
 	}
 
 	/**
@@ -4078,7 +4073,7 @@ function tve_api_form_submit( $output = true ) {
 	/**
 	 * Validate user consent
 	 */
-	if ( ! empty( $consent_config['required'] ) && empty( $data['user_consent'] ) ) {
+	if ( ! empty( $consent_config['required'] ) && empty( $data['user_consent'] ) && empty( $data['gdpr'] ) ) {
 		return TCB_Utils::maybe_send_json( array(
 			'field' => 'consent',
 			'error' => __( 'User consent is required', 'thrive-cb' ),
@@ -4167,7 +4162,7 @@ function tve_api_form_submit( $output = true ) {
 		 */
 		if ( ! empty( $consent_config['enabled'] ) && ! in_array( $key, $consent_config['always_send'] ) ) {
 			/* only send to API if user gave consent */
-			if ( empty( $data['user_consent'] ) ) {
+			if ( empty( $data['user_consent'] ) && empty( $data['gdpr'] ) ) {
 				continue;
 			}
 		}
@@ -4739,7 +4734,11 @@ if ( ! function_exists( 'tve_frontend_enqueue_scripts' ) ) {
 				tve_page_events( $events );
 			}
 		}
-
+		/* if emoji are disabled remove the action from the scripts*/
+		if ( \TCB\Lightspeed\Emoji::is_emoji_disabled() ) {
+			remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+			remove_action( 'wp_print_styles', 'print_emoji_styles' );
+		}
 		/* params for the frontend script */
 		$frontend_options = array(
 			'ajaxurl'                         => admin_url( 'admin-ajax.php' ),
@@ -4770,6 +4769,9 @@ if ( ! function_exists( 'tve_frontend_enqueue_scripts' ) ) {
 			),
 			'nonce'                           => TCB_Utils::create_nonce(),
 			'allow_video_src'                 => tve_dash_allow_video_src(),
+			'google_client_id'                => tvd_get_google_api_client_id(),
+			'google_api_key'                  => tvd_get_google_api_key(),
+			'facebook_app_id'                 => tvd_get_facebook_app_id(),
 			'lead_generation_custom_tag_apis' => TCB_Utils::get_api_list_with_tag_support(),
 		);
 
@@ -4804,6 +4806,7 @@ if ( ! function_exists( 'tve_frontend_enqueue_scripts' ) ) {
 			wp_dequeue_style( 'wp-block-library' ); // WordPress core
 			wp_dequeue_style( 'wp-block-library-theme' ); // WordPress core
 		}
+
 
 	}
 }
@@ -5145,10 +5148,21 @@ function tar_is_post_type_allowed( $is_allowed, $post_type ) {
 		'td_nm_notification',
 		'tve_form_type',
 	);
-	$is_allowed             = ! in_array( $post_type, apply_filters( 'tcb_post_grid_banned_types', $blacklisted_post_types ) );
 
-	return $is_allowed;
+	return ! in_array( $post_type, apply_filters( 'tcb_post_grid_banned_types', $blacklisted_post_types ) );
 }
+
+add_filter( 'tve_dash_frontend_ajax_response', static function ( $data ) {
+	if ( ! empty( $_POST['tve_dash_data']['tcb-modals'] ) ) {
+		$data['tcb-modals'] = [];
+
+		foreach ( $_POST['tve_dash_data']['tcb-modals'] as $modal ) {
+			$data['tcb-modals'][ $modal ] = tcb_template( 'frontend/modals/' . $modal . '.phtml', [], true );
+		}
+	}
+
+	return $data;
+} );
 
 add_filter( 'wp_kses_allowed_html', 'tcb_allow_unfiltered_html', 20, 2 );
 

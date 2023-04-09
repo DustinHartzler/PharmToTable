@@ -267,7 +267,7 @@ class TD_DB_Manager {
 			/* do nothing for now. better safe than sorry. each plugin should catch errors */
 		}
 
-		foreach ( self::$_instances as $instance ) {
+		foreach ( static::$_instances as $instance ) {
 			$instance->check();
 		}
 	}
@@ -283,6 +283,6 @@ class TD_DB_Manager {
 	 * @throws Exception
 	 */
 	public static function add_manager( $path, $option_name, $required_version, $product_name = '', $table_prefix = '', $reset_option_param = '' ) {
-		self::$_instances [] = new self( $path, $option_name, $required_version, $product_name, $table_prefix, $reset_option_param );
+		static::$_instances [] = new static( $path, $option_name, $required_version, $product_name, $table_prefix, $reset_option_param );
 	}
 }

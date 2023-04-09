@@ -21,17 +21,19 @@ global $post;
 
 $quiz_id = $post->ID;
 
-$quiz_style        = TQB_Post_meta::get_quiz_style_meta( $quiz_id );
-$data              = TQB_Quiz_Manager::get_shortcode_content( $quiz_id );
-$question_manager  = new TGE_Question_Manager( $quiz_id );
-$content           = tcb_post( $quiz_id )->tcb_content;
-$progress_settings = tqb_progress_settings_instance( (int) $quiz_id )->get();
-$palettes          = new TQB_Quiz_Palettes( $quiz_style );
-$colors            = $palettes->get_palettes_as_string();
-$qna               = get_post_meta( $quiz_id, 'tve_qna_templates', true );
-$has_qna_templates = ! empty( $qna[ $quiz_style ] );
-$quiz_type         = TQB_Post_meta::get_quiz_type_meta( $quiz_id, true );
-$is_write_wrong    = 'right_wrong' === $quiz_type;
+$quiz_style         = TQB_Post_meta::get_quiz_style_meta( $quiz_id );
+$data               = TQB_Quiz_Manager::get_shortcode_content( $quiz_id );
+$question_manager   = new TGE_Question_Manager( $quiz_id );
+$content            = tcb_post( $quiz_id )->tcb_content;
+$progress_settings  = tqb_progress_settings_instance( (int) $quiz_id )->get();
+$palettes           = new TQB_Quiz_Palettes( $quiz_style );
+$colors             = $palettes->get_palettes_as_string();
+$qna                = get_post_meta( $quiz_id, 'tve_qna_templates', true );
+$has_qna_templates  = ! empty( $qna[ $quiz_style ] );
+$quiz_type          = TQB_Post_meta::get_quiz_type_meta( $quiz_id, true );
+$is_write_wrong     = 'right_wrong' === $quiz_type;
+$feedback_settings  = TQB_Post_meta::get_feedback_settings_meta( $quiz_id );
+$navigation_enabled = isset ( $feedback_settings['nav_buttons'] ) ? $feedback_settings['nav_buttons'] : false;
 ?>
 
 	<!DOCTYPE html>

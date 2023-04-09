@@ -524,7 +524,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 				$mega_description = json_decode( base64_decode( $mega_description ), true );
 				$mega_description = isset( $mega_description[ $item->ID ] ) ? $mega_description[ $item->ID ] : '';
 
-				$item_output .= ! empty( $mega_description ) ? sprintf( self::$mega_description_template, $mega_description ) : '';
+				$item_output .= ! empty( $mega_description ) ? sprintf( static::$mega_description_template, $mega_description ) : '';
 			}
 		}
 
@@ -655,7 +655,7 @@ class TCB_Menu_Walker extends Walker_Nav_Menu {
 		}
 
 		$menu_type        = $this->get_menu_type();
-		$template         = 'mega' === $menu_type && 1 === $depth ? self::$mega_image_template : self::$menu_item_image_template;
+		$template         = 'mega' === $menu_type && 1 === $depth ? static::$mega_image_template : static::$menu_item_image_template;
 		$containter_class = 'mega' === $menu_type && 1 === $depth ? 'tcb-mm-image' : 'tcb-menu-item-image';
 
 		$template = empty( $image['placeholder'] ) ? $template : $this->get_image_placeholder();

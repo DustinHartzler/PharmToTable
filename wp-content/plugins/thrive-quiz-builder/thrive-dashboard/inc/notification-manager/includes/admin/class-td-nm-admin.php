@@ -140,7 +140,7 @@ class TD_NM_Admin {
 	 * Add page to admin menu so the page could be accessed
 	 */
 	public function admin_menu() {
-		add_submenu_page( null, __( 'Notification Manager', 'thrive-dash' ), __( 'Notification Manager', 'thrive-dash' ), TVE_DASH_CAPABILITY, $this->_dashboard_page, array(
+		add_submenu_page( '', __( 'Notification Manager', 'thrive-dash' ), __( 'Notification Manager', 'thrive-dash' ), TVE_DASH_CAPABILITY, $this->_dashboard_page, array(
 			$this,
 			'admin_dashboard',
 		) );

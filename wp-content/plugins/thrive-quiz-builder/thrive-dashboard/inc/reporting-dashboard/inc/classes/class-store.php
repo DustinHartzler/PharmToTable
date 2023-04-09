@@ -7,11 +7,9 @@
 
 namespace TVE\Reporting;
 
-use TVE\Reporting\Traits\Singleton;
-
 class Store {
 
-	use Singleton;
+	use \TD_Singleton;
 
 	/**
 	 * @var array
@@ -69,7 +67,7 @@ class Store {
 	 * @return Report_App[]|Report_App
 	 */
 	public function get_registered_report_apps( $app_key = null ) {
-		return $app_key === null ? $this->registered_report_apps : $this->registered_report_apps[ $app_key ];
+		return $app_key === null ? $this->registered_report_apps : $this->registered_report_apps[ $app_key ] ?? null;
 	}
 
 	public function has_registered_report_app( $app_key ): bool {
@@ -86,12 +84,14 @@ class Store {
 		$report_type      = null;
 		$report_app_class = $this->get_registered_report_apps( $app_key );
 
-		$report_types = $report_app_class::get_report_types();
+		if ( $report_app_class ) {
+			$report_types = $report_app_class::get_report_types();
 
-		foreach ( $report_types as $report_type_class ) {
-			if ( $report_type_class::key() === $type_key ) {
-				$report_type = $report_type_class;
-				break;
+			foreach ( $report_types as $report_type_class ) {
+				if ( $report_type_class::key() === $type_key ) {
+					$report_type = $report_type_class;
+					break;
+				}
 			}
 		}
 

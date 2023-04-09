@@ -9,7 +9,7 @@ include tqb()->plugin_path( 'tcb-bridge/editor/page/head.php' ); ?>
 		</div>
 	</div>
 	<div style="opacity: .6; padding-top: 240px; text-align: center; position: relative; z-index: -1;">
-		<h4><?php echo esc_html__( 'This is a Variation type called "Q&A". It is displayed on posts that have its code in the content.', 'thrive-quiz-builder' ) ?></h4>
+		<h4><?php echo esc_html__( 'This is a Variation type called "Opt-in gate". It is displayed on posts that have its code in the content.', 'thrive-quiz-builder' ) ?></h4>
 	</div>
 </div>
 <?php if ( is_editor_page() ) : ?>

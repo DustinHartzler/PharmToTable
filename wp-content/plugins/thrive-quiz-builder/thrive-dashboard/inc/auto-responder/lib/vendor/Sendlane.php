@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 11/21/2018
- * Time: 13:49
- */
 
 class Thrive_Dash_Api_Sendlane {
 

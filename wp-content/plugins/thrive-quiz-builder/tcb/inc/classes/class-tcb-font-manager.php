@@ -44,12 +44,12 @@ class TCB_Font_Manager {
 		$fonts = array(
 			'google' => array(
 				'label'           => __( 'Google Fonts', 'thrive-cb' ),
-				'fonts'           => array(), // $this->google_fonts() - we'll get those from js
+				'fonts'           => array(),
 				'search_priority' => 99,
 			),
 			'safe'   => array(
 				'label'           => __( 'Web Safe Fonts', 'thrive-cb' ),
-				'fonts'           => self::safe_fonts(),
+				'fonts'           => static::safe_fonts(),
 				'search_priority' => 1,
 			),
 			'custom' => array(

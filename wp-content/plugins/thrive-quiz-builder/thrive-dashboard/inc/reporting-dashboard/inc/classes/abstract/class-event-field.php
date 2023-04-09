@@ -20,6 +20,7 @@ abstract class Event_Field {
 
 	/**
 	 * Return true/false if a report can be filtered by this field
+	 *
 	 * @return bool
 	 */
 	public static function can_filter_by(): bool {
@@ -57,6 +58,7 @@ abstract class Event_Field {
 
 	/**
 	 * Identifier for the field
+	 *
 	 * @return string
 	 */
 	abstract public static function key(): string;
@@ -66,27 +68,55 @@ abstract class Event_Field {
 	}
 
 	public function get_value( $format = true ) {
-		return $format ? $this->format( $this->value ) : $this->value;
+		return $format ? static::format_value( $this->value ) : $this->value;
 	}
 
 	/**
 	 * Most of the time we store ID's in the db so this method will convert the ID in the title of the field
+	 *
 	 * @return string
 	 */
 	public function get_title(): string {
 		return $this->value === null ? 'Item' : get_the_title( $this->value );
 	}
 
+	/**
+	 * @param $value
+	 *
+	 * @return mixed
+	 * @deprecated
+	 */
 	public function format( $value ) {
 		return $value;
 	}
 
 	/**
+	 * Format field value
+	 *
+	 * @param $value
+	 *
+	 * @return mixed
+	 */
+	public static function format_value( $value ) {
+		return $value;
+	}
+
+	/**
 	 * In case we can filter by this field, what type of filter we can use
+	 *
 	 * @return string
 	 */
 	public static function get_filter_type(): string {
 		return 'multiple-select';
+	}
+
+	/**
+	 * Get all filter options
+	 *
+	 * @return array
+	 */
+	public static function get_filter_options(): array {
+		return [];
 	}
 
 	/**
@@ -102,27 +132,35 @@ abstract class Event_Field {
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => static function ( $request ) use ( $report_type_class ): \WP_REST_Response {
-					$options            = [];
-					$field_key          = $request->get_param( 'field' );
-					$field_table_column = $report_type_class::get_field_table_col( $field_key );
+					$options        = [];
+					$ids            = $request->get_param( 'ids' );
+					$should_get_all = $request->get_param( 'all' );
 
-					$fields = Logs::instance()->get_fields( $report_type_class::key(), $field_table_column );
+					if ( $should_get_all ) {
+						$options = static::get_filter_options();
+					} else {
+						$field_table_column = $report_type_class::get_field_table_col( static::key() );
 
-					foreach ( $fields as $field ) {
-						$field_instance = new  static( $field['value'] );
+						$fields = Logs::get_instance()->get_fields( $report_type_class::key(), $field_table_column, empty( $ids ) ? [] : $ids );
 
-						$options[] = [
-							'id'    => $field['value'],
-							'label' => $field_instance->get_title(),
-						];
+						foreach ( $fields as $field ) {
+							$field_instance = new  static( $field['value'] );
+
+							$options[] = [
+								'id'    => $field['value'],
+								'label' => $field_instance->get_title(),
+							];
+						}
 					}
 
 					return new \WP_REST_Response( $options );
 				},
 				'args'                => [
-					'field' => [
-						'type'     => 'string',
-						'required' => true,
+					'ids' => [
+						'type' => 'object',
+					],
+					'all' => [
+						'type' => 'integer',
 					],
 				],
 				'permission_callback' => [ __CLASS__, 'permission_callback' ],
@@ -130,7 +168,36 @@ abstract class Event_Field {
 		] );
 	}
 
+	/**
+	 * Who can access rest routes for event fields
+	 *
+	 * @return bool
+	 */
 	public static function permission_callback(): bool {
 		return current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * Provides label information for the charts.
+	 *
+	 * @param array $values
+	 *
+	 * @return array
+	 */
+	public static function get_label_structure( array $values = [] ) {
+		return [
+			'key'    => static::key(),
+			'text'   => static::get_label(),
+			'values' => $values,
+		];
+	}
+
+	/**
+	 * Return true/false if this field contains an attached image.
+	 *
+	 * @return bool
+	 */
+	public static function has_image(): bool {
+		return false;
 	}
 }

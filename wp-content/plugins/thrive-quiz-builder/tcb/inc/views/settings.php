@@ -75,14 +75,6 @@ $has_zip_archive = class_exists( 'ZipArchive', false );
 		<div class="state-lp-settings state">
 			<span class="label tcb-hide"><?php echo esc_html__( 'Landing Page Settings', 'thrive-cb' ); ?></span>
 			<div class="list">
-				<a href="#" class="click s-setting" data-fn="toggleThemeCss" data-do="disable">
-					<span class="s-name"><?php echo esc_html__( 'Disable Theme CSS', 'thrive-cb' ); ?></span>
-					<?php echo tcb_icon( 'toggle-off-regular' ); ?>
-				</a>
-				<a href="#" class="click s-setting" data-fn="toggleThemeCss" data-do="enable">
-					<span class="s-name"><?php echo esc_html__( 'Enable Theme CSS', 'thrive-cb' ); ?></span>
-					<?php echo tcb_icon( 'toggle-on-regular' ); ?>
-				</a>
 				<a href="#" class="click s-setting" data-fn="lpRevert">
 					<span class="s-name"><?php echo esc_html__( 'Revert to Theme', 'thrive-cb' ); ?></span><?php tcb_icon( 'undo-regular' ); ?>
 				</a>
@@ -107,14 +99,6 @@ $has_zip_archive = class_exists( 'ZipArchive', false );
 		<div class="state-global state">
 			<span class="label tcb-hide"><?php echo esc_html__( 'Global settings', 'thrive-cb' ); ?></span>
 			<section>
-				<div class="field-section s-setting" id="p-texts">
-					<label class="s-name"><?php echo esc_html__( 'Fonts', 'thrive-cb' ); ?></label>
-					<a href="javascript:void(0)" class="style-input dots click" data-fn="landingPageFonts">
-						<span class="value tcb-truncate"
-							  data-default="<?php echo esc_html__( '[inherit]', 'thrive-cb' ); ?>"><?php echo esc_html__( '[inherit]', 'thrive-cb' ); ?></span>
-						<?php tcb_icon( 'pen-regular' ); ?>
-					</a>
-				</div>
 				<div class="field-section s-setting" id="p-header">
 					<label class="s-name"><?php echo esc_html__( 'Header', 'thrive-cb' ); ?></label>
 					<a href="javascript:void(0)" class="style-input dots click" data-fn="addSection" data-type="header">

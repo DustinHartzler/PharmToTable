@@ -183,8 +183,7 @@ class TIE_Image {
 			'unique_filename_callback' => array( $this, 'filter_filename' ),
 		);
 
-		$existing_url = $this->get_image_url();
-		$file_exists  = strlen( $existing_url ) > 0;
+		$file_exists = (bool) $this->get_image_url();
 
 		$moved_file = wp_handle_upload( $uploaded_file, $upload_overrides );
 

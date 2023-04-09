@@ -22,6 +22,10 @@ class Css {
 
 	private $styles_loaded = [];
 
+	private $ID;
+
+	private $post;
+
 	public static function get_instance( $post_id = 0 ) {
 		if ( empty( self::$instances[ $post_id ] ) ) {
 			self::$instances[ $post_id ] = new self( $post_id );

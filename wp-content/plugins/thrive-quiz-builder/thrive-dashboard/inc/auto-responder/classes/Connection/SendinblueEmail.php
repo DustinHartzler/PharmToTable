@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Aurelian Pop
- * Date: 06-Jan-16
- * Time: 1:19 PM
- */
 class Thrive_Dash_List_Connection_SendinblueEmail extends Thrive_Dash_List_Connection_Abstract {
 
 	/**

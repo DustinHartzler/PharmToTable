@@ -190,6 +190,9 @@ function tve_get_seo_content() {
 	global $post;
 	$post = get_post( $id );
 
+	global $wp_query;
+	$wp_query->query( [ 'p' => $id, 'post_type' => $post->post_type ] );
+
 	/* Make sure Architect content is parsed */
 	add_filter( 'the_content', 'tve_clean_wp_editor_content', - 100 );
 	add_filter( 'the_content', 'tve_editor_content', PHP_INT_MAX );
@@ -204,7 +207,7 @@ function tve_get_seo_content() {
 	}
 
 	wp_send_json( array(
-		'post_id' => $post->ID,
+		'post_id' => $id,
 		'content' => $content,
 	) );
 }

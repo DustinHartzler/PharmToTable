@@ -21,7 +21,7 @@ class Post_Id extends Event_Field {
 		return $singular ? 'Post' : 'Posts';
 	}
 
-	public function format( $value ) {
+	public static function format_value( $value ) {
 		return (int) $value;
 	}
 

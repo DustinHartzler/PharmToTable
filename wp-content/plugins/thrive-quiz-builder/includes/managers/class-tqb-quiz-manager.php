@@ -36,11 +36,12 @@ class TQB_Quiz_Manager {
 	/**
 	 * Get the list of quizzes based on filters param
 	 *
-	 * @param array $filters allows passing query values to the get_posts function, and some extra values.
+	 * @param array   $filters allows passing query values to the get_posts function, and some extra values.
+	 * @param boolean $include_details
 	 *
 	 * @return array $posts
 	 */
-	public static function get_quizzes( $filters = array() ) {
+	public static function get_quizzes( $filters = array(), $include_details = true ) {
 
 		$defaults = array(
 			'posts_per_page' => - 1,
@@ -51,9 +52,11 @@ class TQB_Quiz_Manager {
 		$filters  = array_merge( $defaults, $filters );
 		$posts    = get_posts( $filters );
 
-		foreach ( $posts as $index => $post ) {
-			$post            = TQB_Quiz_Manager::get_quiz_post_details( $post );
-			$posts[ $index ] = $post;
+		if ( $include_details ) {
+			foreach ( $posts as $index => $post ) {
+				$post            = TQB_Quiz_Manager::get_quiz_post_details( $post );
+				$posts[ $index ] = $post;
+			}
 		}
 
 		return $posts;
@@ -400,7 +403,7 @@ class TQB_Quiz_Manager {
 	/**
 	 * Main decision making regarding shortcode content
 	 */
-	public static function get_shortcode_content( $quiz_id, $page_type = null, $answer_id = null, $user_unique = null, $variation = null, $post_id = 0 ) {
+	public static function get_shortcode_content( $quiz_id, $page_type = null, $answers = null, $user_unique = null, $variation = null, $post_id = 0 ) {
 
 		global $tqbdb;
 
@@ -469,11 +472,23 @@ class TQB_Quiz_Manager {
 				$question_manager = new TGE_Question_Manager( $quiz_id );
 				$answer_text      = sanitize_textarea_field( ! empty( $_GET['answer_text'] ) ? $_GET['answer_text'] : null );
 				// register the answer
-				if ( ! empty( $answer_id ) ) {
-					TQB_Quiz_Manager::register_answer( $answer_id, $user_unique, $quiz_id, $answer_text );
+				if ( ! empty( $answers ) ) {
+
+					foreach ( $answers as $answer_id ) {
+						TQB_Quiz_Manager::register_answer( $answer_id, $user_unique, $quiz_id, $answer_text );
+					}
 				}
 
-				$shortcode_content['question'] = $question_manager->get_question_content( $answer_id );
+				/**
+				 * Computes the answer for the next question. Needed to register the impression for the next question
+				 * Handled the special case for question with multiple answers.
+				 */
+				if ( ! is_array( $answers ) ) {
+					$question_answer = $answers;
+				} else {
+					$question_answer = empty( $answers ) ? null : reset( $answers );
+				}
+				$shortcode_content['question'] = $question_manager->get_question_content( $question_answer );
 				if ( ! empty( $shortcode_content['question'] ) ) {
 					if ( ! empty( $shortcode_content['question']['data']['id'] ) ) {
 						$question_manager->register_question_view( $shortcode_content['question']['data']['id'] );
@@ -588,6 +603,10 @@ class TQB_Quiz_Manager {
 
 
 				if ( $do_action ) {
+
+					if ( is_user_logged_in() ) {
+						tqb_customer()->update_user_completed_quizzes( $quiz_id, $post_id );
+					}
 					/**
 					 * The hook is triggered when a quiz result is loaded. The hook can be fired multiple times, if the user completes the same quiz multiple times,
 					 * but it won't trigger on page refresh without completing it again
@@ -600,12 +619,7 @@ class TQB_Quiz_Manager {
 					 *
 					 * @api
 					 */
-					do_action( 'thrive_quizbuilder_quiz_completed', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique, $points['explicit'], $email ), $user_data, $form_data );
-
-					if ( ! empty( $current_user_id ) ) {
-						$quiz_completed_triggered[ $quiz_id ][ $post_id ] = true;
-						update_user_meta( $current_user_id, 'tqb_quiz_completed_triggered', $quiz_completed_triggered );
-					}
+					do_action( 'thrive_quizbuilder_quiz_completed', TQB_Quiz_Manager::get_quiz_details( $quiz_id, $user_unique, $points['explicit'], $email ), $user_data, $form_data, $post_id );
 				}
 				break;
 		}
@@ -1182,6 +1196,19 @@ class TQB_Quiz_Manager {
 	}
 
 	/**
+	 * Delete a certain user's answers on a quiz
+	 *
+	 * @param array $params
+	 *
+	 * @return bool|int
+	 */
+	public static function delete_user_answers( $params ) {
+		global $tqbdb;
+
+		return $tqbdb->delete_user_answers( $params );
+	}
+
+	/**
 	 * Save a certain user's points on a quiz
 	 */
 	public static function save_user_points( $user_unique, $quiz_id ) {
@@ -1600,4 +1627,246 @@ class TQB_Quiz_Manager {
 			)
 		);
 	}
+
+	/**
+	 * Check if it is a different answer to an already answered question and if so,
+	 * then delete the answers which are on a different branch of the quiz
+	 *
+	 * Otherwise, check for unneeded answers in db, for more info check function "handle_passive_branch_switch"
+	 *
+	 * @param array  $answer_ids
+	 * @param string $quiz_user_id
+	 * @param int    $quiz_id
+	 *
+	 * @return bool
+	 */
+	public static function handle_answer_already_saved( $answer_ids, $quiz_user_id, $quiz_id ) {
+		/** @var TGE_Database $tgedb */
+		global $tgedb;
+		$data['answer_ids']   = $answer_ids;
+		$data['quiz_id']      = $quiz_id;
+		$data['quiz_user_id'] = $quiz_user_id;
+
+		if ( $answer_ids[0] ) {
+
+			// get answer check if valid
+			$answer = $tgedb->get_answers( array( 'id' => $answer_ids[0] ), true );
+
+			if ( empty( $answer ) || ! isset( $answer['question_id'] ) || ! is_array( $answer ) ) {
+				return false;
+			}
+
+			$question_manager = new TGE_Question_Manager( $quiz_id );
+
+			$data['db_answers'] = static::get_user_answers( [ 'quiz_id' => $quiz_id, 'user_id' => $quiz_user_id, 'question_id' => $answer['question_id'] ] );
+
+			$data['question'] = $question_manager->get_quiz_questions( [ 'id' => $answer['question_id'] ], true );
+
+			if ( empty( $data['db_answers'] ) && empty ( $data['question']['next_question_id'] ) ) {
+
+				static::handle_passive_branch_switch( $question_manager, $answer, $quiz_id, $quiz_user_id );
+
+			} else if ( empty( $data['db_answers'] ) && ! empty ( $data['question']['next_question_id'] ) ) {
+				return false;
+			} else {
+				static::handle_answer_changed( $question_manager, $data );
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * The answer to a question was changed, update the db, and if a branch switch happened, delete the unneeded user answers
+	 *
+	 * @param TGE_Question_Manager $question_manager
+	 * @param array                $data
+	 */
+	protected static function handle_answer_changed( $question_manager, $data ) {
+		if ( empty( $data ) || empty( $data['db_answers'] ) || empty( $data['answer_ids'] ) || empty( $data['question'] )
+		     || empty( $data['quiz_id'] ) || empty( $data['quiz_user_id'] ) ) {
+			return false;
+		}
+
+		foreach ( $data['db_answers'] as $db_answer ) {
+
+			$is_new_answer = ! in_array( $db_answer['answer_id'], $data['answer_ids'], true );
+
+			if ( $is_new_answer && empty ( $data['question']['next_question_id'] ) ) {
+				/**
+				 * If the question has multiple branches we need to delete the answers from the previous branch
+				 */
+				$question_id           = $db_answer['question_id'];
+				$answer_options        = $question_manager->get_answers( [ 'question_id' => $question_id ] );
+				$current_answer_object = $question_manager->get_answers( [ 'id' => $data['answer_ids'][0] ], true );
+				foreach ( $answer_options as $answer_option ) {
+
+					if ( $answer_option['next_question_id'] !== $current_answer_object['next_question_id'] ) {
+						/**
+						 * only remove answers from branch if they lead to a different one and up until the branches join together
+						 *
+						 * @var TGE_Database $tgedb
+						 */
+						global $tgedb;
+
+						$join_points = $tgedb->get_question_ids_where_branches_meet( $data['quiz_id'] );
+
+						//If the previous answer leads to an intersection as well, we need to ignore that and remove it from the $join_points array
+						if ( ( $key = array_search( $answer_option['next_question_id'], $join_points ) ) !== false ) {
+							unset( $join_points[ $key ] );
+						}
+						static::remove_answers_from_branch( $question_manager, $question_id, $data['quiz_id'], $data['quiz_user_id'], $join_points );
+					}
+				}
+
+				break;
+			}
+
+			if ( ! empty ( $data['question']['next_question_id'] ) ) {
+				static::delete_user_answers( [ 'quiz_id' => $data['quiz_id'], 'user_id' => $data['quiz_user_id'], 'question_id' => $db_answer['question_id'] ] );
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Although there are no answers saved in db, a 'branch switch' might be happening if the quiz branches are interconnected in a specific way
+	 *
+	 * Longer case description:
+	 * A user might have gone through a branch, gave some answers and then changed the base branch
+	 * if the branches would meet but not fully join, than the answers after that are not yet deleted, because the user might arrive back to that branch.
+	 * In this case the user did not go that route so we must delete the remaining answers until the next join point
+	 *
+	 * @param TGE_Question_Manager $question_manager
+	 * @param array                $answer
+	 * @param int                  $quiz_id
+	 * @param string               $quiz_user_id
+	 */
+	protected static function handle_passive_branch_switch( $question_manager, $answer, $quiz_id, $quiz_user_id ) {
+		$question_id    = $answer['question_id'];
+		$answer_options = $question_manager->get_answers( [ 'question_id' => $question_id ] );
+
+		foreach ( $answer_options as $answer_option ) {
+			if ( $answer_option['next_question_id'] !== $answer['next_question_id'] ) {
+
+				$branching_question_db_answers = static::get_user_answers( [ 'quiz_id' => $quiz_id, 'user_id' => $quiz_user_id, 'question_id' => $answer_option['next_question_id'] ] );
+
+				if ( ! empty( $branching_question_db_answers ) ) {
+					/**
+					 * Means we have to delete the answers that we previously left still in the db, because the user chose a different path
+					 *
+					 * @var TGE_Database $tgedb
+					 */
+					global $tgedb;
+
+					$join_points = $tgedb->get_question_ids_where_branches_meet( $quiz_id );
+					static::remove_answers_from_branch( $question_manager, $answer_option['next_question_id'], $quiz_id, $quiz_user_id, $join_points, true );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Recursively delete every answer on this branch up until there is a question where branches intersect
+	 *
+	 * @param TGE_Question_Manager $question_manager
+	 * @param int                  $question_id
+	 * @param int                  $quiz_id
+	 * @param string               $quiz_user_id
+	 * @param array                $join_points  contains question_ids where branches intersect in the quiz
+	 * @param boolean              $delete_first if we need to delete the answers starting from a question where branches intersect this will be set to true
+	 */
+	public static function remove_answers_from_branch( $question_manager, $question_id, $quiz_id, $quiz_user_id, $join_points, $delete_first = false ) {
+		$db_branch_answers = static::get_user_answers( [ 'quiz_id' => $quiz_id, 'user_id' => $quiz_user_id, 'question_id' => $question_id ] );
+
+		if ( empty( $db_branch_answers ) || empty( $question_id ) ) {
+			return;
+		}
+
+		if ( ! $delete_first && in_array( (string) $question_id, $join_points, false ) ) {
+			return;
+		}
+
+		$question = $question_manager->get_quiz_questions( [ 'id' => $question_id ], true );
+
+		/**
+		 * If along this branch there was another branch...
+		 */
+		if ( empty( $question['next_question_id'] ) ) {
+			$answer_options = $question_manager->get_answers( [ 'question_id' => $question_id ] );
+
+			foreach ( $answer_options as $answer_option ) {
+				static::remove_answers_from_branch( $question_manager, $answer_option['next_question_id'], $quiz_id, $quiz_user_id, $join_points );
+			}
+		} else {
+			static::remove_answers_from_branch( $question_manager, $question['next_question_id'], $quiz_id, $quiz_user_id, $join_points );
+		}
+
+		static::delete_user_answers( [ 'quiz_id' => $quiz_id, 'user_id' => $quiz_user_id, 'question_id' => $question_id ] );
+	}
+
+	/**
+	 * Orders the user's answers and prepares them to be sent by email
+	 *
+	 * @param $quiz_id
+	 * @param $user_id
+	 *
+	 * @return array
+	 */
+	public static function get_user_answers_in_order( $quiz_id, $user_id ) {
+		global $tqbdb;
+
+		$user_answers = $tqbdb->get_user_answers( array( 'quiz_id' => $quiz_id, 'user_id' => $user_id ) );
+
+		//The first item in this array will contain the id of the first question
+		$quiz_map = $tqbdb->get_quiz_map( $quiz_id );
+		$answers  = [];
+
+		if ( ! empty( $quiz_map ) && ! empty( $quiz_map[0] ) && $quiz_map[0]['start'] === '1' ) {
+			$question_id = $quiz_map[0]['question_id'];
+
+			$question_answers = array_filter( $user_answers, static function ( $user_answer ) use ( $question_id ) {
+				return $user_answer['question_id'] === $question_id;
+			} );
+
+			while ( ! empty( $question_answers ) ) {
+				$answer_ids = [];
+				foreach ( $question_answers as $question_answer ) {
+					$answer_ids[] = $question_answer['answer_id'];
+				}
+
+				$question_answers = array_values( $question_answers );
+
+				$next_questions = array_filter( $quiz_map, static function ( $question ) use ( $question_id, $answer_ids ) {
+					return ( $question['question_id'] === $question_id && in_array( $question['answer_id'], $answer_ids ) );
+				} );
+
+				if ( ! empty( $next_questions ) ) {
+					$next_questions = array_values( $next_questions );
+					$next_question  = $next_questions[0];
+
+					//there can be multiple answers to a question
+					foreach ( $next_questions as $index => $next_q ) {
+						$user_answer           = $question_answers[ $index ];
+						$user_answer['a_text'] = $next_q['a_text'];
+						$user_answer['q_text'] = $next_q['q_text'];
+						$user_answer['q_type'] = $next_q['q_type'];
+
+						$answers[] = $user_answer;
+					}
+
+					$question_id = isset( $next_question['q_next_id'] ) ? $next_question['q_next_id'] : $next_question['a_next_id'];
+
+					$question_answers = array_filter( $user_answers, static function ( $user_answer ) use ( $question_id ) {
+						return $user_answer['question_id'] === $question_id;
+					} );
+				} else {
+					$question_answers = $next_questions;
+				}
+			}
+		}
+
+		return $answers;
+	}
+
 }

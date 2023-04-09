@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 
-require_once 'class-tcb-icon-element.php';
+require_once __DIR__ . '/class-tcb-icon-element.php';
 
 class TCB_Form_Icon_Element extends TCB_Icon_Element {
 

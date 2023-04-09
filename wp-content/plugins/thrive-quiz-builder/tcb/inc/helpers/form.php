@@ -254,4 +254,58 @@ class FormSettings {
 			}
 		}
 	}
+
+	/**
+	 * On duplicate we need to re save the form settings on a new entry
+	 */
+	public static function save_form_settings_from_duplicated_content( $content, $post_parent ) {
+		/* pattern used to find the settings id from the content */
+		$pattern = '/data-settings-id="(.+?)"/';
+
+		/* Find if we have in content a form by searching for it's form settings id */
+		preg_match_all( $pattern, $content, $matches );
+
+		/* If we find a match we need to generate another entry for post settings and replace the new id in the content */
+		if ( ! empty( $matches[1] ) ) {
+
+			$forms = [];
+
+			if ( is_array( $matches[1] ) ) {
+				foreach ( $matches[1] as $form_settings_id ) {
+					$form_settings_instance = self::get_one( $form_settings_id, $post_parent );
+					$forms[]                = $form_settings_instance->get_form_settings_array();
+				}
+			} else {
+				$form_settings_id       = $matches[1];
+				$form_settings_instance = self::get_one( $form_settings_id, $post_parent );
+				$forms[]                = $form_settings_instance->get_form_settings_array();
+			}
+
+			$replaced = tve_save_form_settings( $forms, $post_parent );
+
+			foreach ( $replaced as $old_id => $new_id ) {
+				$old_id = (int) $old_id;
+
+				$content = preg_replace( "/data-settings-id=\"$old_id\"/", "data-settings-id=\"$new_id\"", $content );
+			}
+
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Returns an array with the settings of a form, but without it's original ID so we can use this array to regenerate and save the settings for a cloned form
+	 *
+	 * @return array
+	 */
+	public function get_form_settings_array() {
+		/* We need to change the original ID so we won't find the initial instance of the settings, but to  create a new one */
+		$temporary_id = $this->ID . '_temporary';
+
+		return [
+			'id'       => $temporary_id,
+			'settings' => $this->get_config(),
+		];
+	}
 }

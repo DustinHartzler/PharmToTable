@@ -22,7 +22,14 @@ trait Has_Post_Type {
 	 * @return string
 	 */
 	public static function get_post_type_name() {
-		return 'tve_user_template';
+		/**
+		 * Allow other plugins to save templates under a different post type
+		 *
+		 * Used in ThriveApprentice when saving Certificate template
+		 *
+		 * @param string $post_type
+		 */
+		return apply_filters( 'tcb_user_templates_get_post_type_name', 'tve_user_template' );
 	}
 
 	/**

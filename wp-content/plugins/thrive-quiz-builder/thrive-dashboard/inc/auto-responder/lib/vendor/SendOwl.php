@@ -35,6 +35,11 @@ class Thrive_Dash_Api_SendOwl {
 	protected $domain = 'www.sendowl.com/';
 
 	/**
+	 * @var string
+	 */
+	private $baseUrl;
+
+	/**
 	 * Setup the Http Client
 	 *
 	 * Thrive_Dash_Api_SendOwl_Exception constructor.

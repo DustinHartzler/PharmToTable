@@ -55,6 +55,7 @@ class Rest_Api {
 								Gutenberg::DISABLE_GUTENBERG_LP,
 								Woocommerce::DISABLE_WOOCOMMERCE,
 								Woocommerce::DISABLE_WOOCOMMERCE_LP,
+								Emoji::DISABLE_EMOJI,
 							], true );
 						},
 					],

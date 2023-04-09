@@ -67,7 +67,7 @@ class Admin_Bar_Visibility extends Functionality {
 				case 'hidden':
 					$show_admin_bar = false;
 					break;
-				case 'inherit':
+				default:
 					break;
 			}
 		}

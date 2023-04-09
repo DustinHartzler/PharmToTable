@@ -82,7 +82,7 @@ class TVD_Global_Shortcodes {
 				}
 			} elseif ( extension_loaded( 'dom' ) && isset( $link_attr['className'] ) && function_exists( 'mb_convert_encoding' ) ) {
 				/**
-				 * For elements already containing an a link just add the old classes (e.g global styles)
+				 * For elements already containing a link just add the old classes (e.g. global styles)
 				 */
 				$dom = new DOMDocument;
 				@$dom->loadHTML( mb_convert_encoding( $shortcode_content, 'HTML-ENTITIES', 'UTF-8' ) );
@@ -94,6 +94,10 @@ class TVD_Global_Shortcodes {
 					$link = $items->item( $i );
 					if ( $link ) {
 						$link->setAttribute( 'class', $link_attr['className'] );
+
+						if ( isset( $link_attr['data-css'] ) ) {
+							$link->setAttribute( 'data-css', $link_attr['data-css'] );
+						}
 					}
 				}
 

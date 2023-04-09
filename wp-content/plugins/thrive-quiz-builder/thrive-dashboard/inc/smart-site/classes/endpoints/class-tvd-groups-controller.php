@@ -20,7 +20,7 @@ class TVD_Groups_Controller extends TVD_REST_Controller {
 	 * Register Routes
 	 */
 	public function register_routes() {
-		register_rest_route( self::$namespace . self::$version, '/' . $this->base, array(
+		register_rest_route( static::$namespace . static::$version, '/' . $this->base, array(
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'add_group' ),
@@ -29,7 +29,7 @@ class TVD_Groups_Controller extends TVD_REST_Controller {
 			),
 		) );
 
-		register_rest_route( self::$namespace . self::$version, '/' . $this->base . '/(?P<id>[\d]+)', array(
+		register_rest_route( static::$namespace . static::$version, '/' . $this->base . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'             => WP_REST_Server::DELETABLE,
 				'callback'            => array( $this, 'delete_group' ),

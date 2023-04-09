@@ -86,7 +86,13 @@ class TCB_Admin_Ajax {
 
 		switch ( $method ) {
 			case 'GET':
-				$templates = TCB\UserTemplates\Template::get_all();
+				$templates = TCB\UserTemplates\Template::localize();
+				$templates = array_map( static function ( $template ) {
+					$template['name'] = $template['label'];
+					unset( $template['label'] );
+
+					return $template;
+				}, $templates );
 				$templates = array_reverse( $templates );
 
 				if ( $search = $this->param( 'search' ) ) {

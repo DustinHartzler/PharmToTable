@@ -31,19 +31,23 @@ class TVD_Plugin_Upgrader extends Plugin_Upgrader {
 
 		$plugin_information = plugins_api( 'plugin_information', array( 'slug' => $this->skin->plugin ) );
 
+		if ( $plugin_information instanceof WP_Error ) {
+			return false;
+		}
+
 		return filter_var( $plugin_information->download_link, FILTER_VALIDATE_URL );
 	}
 
 	/**
 	 * Downloads the latest Thrive Plugin version.
 	 *
-	 * @param string $plugin             Path to the plugin file relative to the plugins directory.
-	 * @param array  $args               {
-	 *                                   Optional. Other arguments for upgrading a plugin package. Default empty array.
+	 * @param string $plugin              Path to the plugin file relative to the plugins directory.
+	 * @param array  $args                {
+	 *                                    Optional. Other arguments for upgrading a plugin package. Default empty array.
 	 *
-	 * @type bool    $clear_update_cache Whether to clear the plugin updates cache if successful.
+	 * @type bool    $clear_update_cache  Whether to clear the plugin updates cache if successful.
 	 *                                    Default true.
-	 * }
+	 *                                    }
 	 *
 	 * @return array|bool|\WP_Error
 	 */

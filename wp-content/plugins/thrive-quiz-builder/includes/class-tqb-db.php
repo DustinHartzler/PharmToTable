@@ -9,6 +9,8 @@
 
 global $tqbdb;
 
+use TCB\inc\helpers\FormSettings;
+
 /**
  * Encapsulates the global $wpdb object
  *
@@ -1134,6 +1136,14 @@ class TQB_Database {
 			$params ['quiz_id'] = $filters['quiz_id'];
 		}
 
+		if ( ! empty( $filters['user_id'] ) ) {
+			$params ['user_id'] = $filters['user_id'];
+		}
+
+		if ( ! empty( $filters['question_id'] ) ) {
+			$params ['question_id'] = $filters['question_id'];
+		}
+
 		if ( ! empty( $params ) ) {
 			return $this->wpdb->delete( tqb_table_name( 'user_answers' ), $params );
 		}
@@ -1257,7 +1267,7 @@ class TQB_Database {
 		}
 
 		if ( isset( $points['quiz_type'] ) && $points['quiz_type'] === Thrive_Quiz_Builder::QUIZ_TYPE_RIGHT_WRONG ) {
-			$processed = isset( $points['total_answers'] ) && isset( $points['total_right_answers'] ) ? $points['total_right_answers'] . '/' . $points['total_answers'] : '';
+			$processed = isset( $points['total_questions'] ) && isset( $points['total_valid_questions'] ) ? $points['total_valid_questions'] . '/' . $points['total_questions'] : '';
 
 			return ! empty( $processed ) ? $processed : $points['user_points'];
 		}
@@ -1637,14 +1647,6 @@ class TQB_Database {
 	 * @return array|null|object
 	 */
 	public function get_users( $filters = array(), $return_type = ARRAY_A ) {
-		if ( empty( $filters ) ) {
-			/**
-			 * This check was placed here to ensure that this method is called with some filters.
-			 * If there is the need to return all users from the database, with no filters, this check can be removed.
-			 */
-			return $filters;
-		}
-
 		$params = array();
 
 		$sql = 'SELECT * FROM ' . tqb_table_name( 'users' ) . ' WHERE 1 ';
@@ -1814,8 +1816,58 @@ class TQB_Database {
 			$end_result['max_points'] = intval( $min_max['max'] );
 			$end_result['min_points'] = intval( $min_max['min'] );
 		} else if ( Thrive_Quiz_Builder::QUIZ_TYPE_RIGHT_WRONG == $quiz_type['type'] ) {
-			$end_result['total_answers']       = $this->count_user_answers( $user['id'], $quiz_id );
-			$end_result['total_right_answers'] = $this->count_user_answers( $user['id'], $quiz_id, array( 'is_right' => 1 ) );
+			$end_result['total_questions']       = $this->count_user_answered_questions( $user['id'], $quiz_id );
+			$end_result['total_valid_questions'] = 0;
+			$question_manager                    = new TGE_Question_Manager( $quiz_id );
+			$questions                           = $question_manager->get_quiz_questions();
+			foreach ( $questions as $question ) {
+				if ( ! in_array( (int) $question['q_type'], [ 1, 2 ] ) ) {
+					continue;
+				}
+
+				$user_answer_for_question = $this->get_user_answers( [
+					'quiz_id'     => $quiz_id,
+					'user_id'     => $user['id'],
+					'question_id' => $question['id'],
+				] );
+
+				if ( empty( $user_answer_for_question ) ) {
+					continue;
+				}
+
+				$settings = json_decode( $question['settings'], true );
+
+				if ( ! isset( $settings['allowed_answers'] ) || (int) $settings['allowed_answers'] === 1 ) {
+					/**
+					 * Old way of calculating
+					 * We check if there is at least one correct answer to the question
+					 */
+					$query = 'SELECT count(ua.id) FROM ' . tqb_table_name( 'user_answers' ) . ' AS ua
+							INNER JOIN ' . tge_table_name( 'answers' ) . ' a ON ua.answer_id = a.id
+							INNER JOIN ' . tge_table_name( 'questions' ) . ' q ON ua.question_id = q.id
+							WHERE ua.quiz_id = %d AND ua.user_id = %d AND q.id = %d AND a.is_right = 1';
+					$query = $this->prepare( $query, [ $quiz_id, $user['id'], $question['id'] ] );
+					if ( (int) $this->wpdb->get_var( $query ) > 0 ) {
+						$end_result['total_valid_questions'] ++;
+					}
+				} else {
+					/**
+					 * New way of calculating
+					 * We check if the user answers has at least one wrong answer
+					 */
+					$query = 'SELECT COUNT(a.id) FROM ' . tge_table_name( 'answers' ) . ' a INNER JOIN ' . tge_table_name( 'questions' ) . ' q1 on q1.id = a.question_id 
+					 LEFT JOIN ' . tqb_table_name( 'user_answers' ) . ' ua  ON a.id = ua.answer_id AND ua.user_id = %d
+					 WHERE a.quiz_id = %d AND a.question_id = %d AND ( ( a.is_right = 1 AND ua.id IS NULL ) OR ( a.is_right = 0 AND ua.id IS NOT NULL))';
+					$query = $this->prepare( $query, [ $user['id'], $quiz_id, $question['id'] ] );
+
+					if ( (int) $this->wpdb->get_var( $query ) === 0 ) {
+						$end_result['total_valid_questions'] ++;
+					}
+				}
+			}
+
+			$end_result['user_points'] = $end_result['total_valid_questions'];
+
 		}
 
 		return $end_result;
@@ -1849,42 +1901,6 @@ class TQB_Database {
 	}
 
 	/**
-	 * Join the answers table with user_answers
-	 * where the answers are marked as right: is_right = 1
-	 *
-	 * @param $user_id int
-	 * @param $quiz_id int
-	 * @param $filters array
-	 *
-	 * @return int total right answers for specified user and quiz
-	 */
-	public function count_user_answers( $user_id, $quiz_id, $filters = array() ) {
-		$sql = 'SELECT count(ua.id)
-				FROM ' . tqb_table_name( 'user_answers' ) . ' AS ua
-				INNER JOIN ' . tge_table_name( 'answers' ) . ' a ON ua.answer_id = a.id
-				INNER JOIN ' . tge_table_name( 'questions' ) . ' q ON ua.question_id = q.id
-				WHERE 1=1';
-
-		$where = " AND ua.quiz_id = {$quiz_id} 
-		AND ua.user_id = {$user_id}
-		AND q.q_type != 3";
-
-		$params = array();
-
-		if ( ! empty( $filters['is_right'] ) ) {
-			$params['is_right'] = $filters['is_right'];
-			$where              .= ' AND a.is_right = %s';
-		}
-
-		$sql .= $where;
-
-		$sql    = $this->prepare( $sql, $params );
-		$result = $this->wpdb->get_var( $sql );
-
-		return (int) $result;
-	}
-
-	/**
 	 * Update the user's points from a quiz
 	 *
 	 * @param $answer
@@ -1912,9 +1928,12 @@ class TQB_Database {
 
 		$query = $this->prepare( $query, array( 'id' => $id ) );
 		$this->wpdb->query( $query );
-		$this->replace_variation_id( $id, $this->wpdb->insert_id );
+		/* Store the variation ID for the case when we perform another insert unrelated to variation */
+		$variation_id = $this->wpdb->insert_id;
 
-		return $this->wpdb->insert_id;
+		$this->replace_variation_id( $id, $variation_id );
+
+		return $variation_id;
 	}
 
 
@@ -1932,6 +1951,12 @@ class TQB_Database {
 		if ( empty( $variation ) ) {
 			return false;
 		}
+
+		/* We need to save the form settings from the clone */
+		if ( method_exists( FormSettings::class, 'save_form_settings_from_duplicated_content' ) ) {
+			$variation['content'] = FormSettings::save_form_settings_from_duplicated_content( $variation['content'], (int) $variation['page_id'] );
+		}
+
 		$content = str_replace( 'name="tqb-variation-variation_id" class="tqb-hidden-form-info" value="' . $initial . '"', 'name="tqb-variation-variation_id" class="tqb-hidden-form-info" value="' . $after . '"', $variation['content'] );
 
 		return $this->save_variation( array( 'id' => $after, 'content' => $content ) );
@@ -2183,6 +2208,10 @@ class TQB_Database {
 
 		$colors = tqb()->chart_colors();
 		foreach ( $data as $entry ) {
+			$image = json_decode( (string) $entry['answer_image'] );
+			if ( empty( $image ) ) {
+				$image = array( 'url' => $entry['answer_image'] );
+			}
 			if ( empty( $questions[ $entry['question_id'] ] ) ) {
 
 				$structure_manager = new TQB_Structure_Manager( $quiz_id );
@@ -2194,7 +2223,7 @@ class TQB_Database {
 						$entry['answer_id'] => array(
 							'text'  => $entry['answer_text'],
 							'count' => $entry['answer_count'],
-							'image' => json_decode( $entry['answer_image'] ) ? json_decode( $entry['answer_image'] ) : array( 'url' => $entry['answer_image'] ),
+							'image' => $image,
 						),
 					),
 					'total'         => $entry['answer_count'],
@@ -2207,7 +2236,7 @@ class TQB_Database {
 				$questions[ $entry['question_id'] ]['answers'][ $entry['answer_id'] ] = array(
 					'text'  => $entry['answer_text'],
 					'count' => $entry['answer_count'],
-					'image' => json_decode( $entry['answer_image'] ) ? json_decode( $entry['answer_image'] ) : array( 'url' => $entry['answer_image'] ),
+					'image' => $image,
 				);
 				$questions[ $entry['question_id'] ]['total']                          += $entry['answer_count'];
 			}
@@ -2425,6 +2454,28 @@ class TQB_Database {
 	}
 
 	/**
+	 * Get a rough map of the quiz's questions and answers with the next question ids
+	 * This array is oriented towards displaying the user's answers in the email sent at the end
+	 *
+	 * @param int $quiz_id
+	 *
+	 * @return array|object|null
+	 */
+	public function get_quiz_map( $quiz_id ) {
+		$params[]  = $quiz_id;
+		$questions = tge_table_name( 'questions' );
+		$answers   = tge_table_name( 'answers' );
+
+		$sql = 'SELECT q.id as question_id, a.id as answer_id, q.start,  q.next_question_id as q_next_id, a.next_question_id as a_next_id';
+		$sql .= ", a.text as a_text, q.text as q_text, q.q_type as q_type FROM {$questions} AS q ";
+		$sql .= " JOIN {$answers} as a on q.id = a.question_id ";
+		$sql .= 'WHERE q.quiz_id = %d ';
+		$sql .= 'ORDER BY q.start DESC ';
+
+		return $this->wpdb->get_results( $this->prepare( $sql, $params ), ARRAY_A );
+	}
+
+	/**
 	 * @param $user_id
 	 *
 	 * @return array|null
@@ -2489,6 +2540,27 @@ class TQB_Database {
 		$sql = $this->prepare( 'SELECT * FROM ' . tqb_table_name( 'event_log' ) . " WHERE 1 {$where}", $params );
 
 		return ! empty( $filters['limit'] ) && $filters['limit'] === 1 ? $this->wpdb->get_row( $sql, ARRAY_A ) : $this->wpdb->get_results( $sql, ARRAY_A );
+	}
+
+	/**
+	 * Returns the total number of answered questions from the database
+	 * This query counts DISTINCT questions in order to support the multiple answer feature
+	 * It is used to display the result for a R/W quiz
+	 * Example 0/3
+	 *
+	 * @param integer $user_id
+	 * @param integer $quiz_id
+	 *
+	 * @return int
+	 */
+	public function count_user_answered_questions( $user_id, $quiz_id ) {
+		$table_user_answers = tqb_table_name( 'user_answers' );
+		$table_answers      = tge_table_name( 'answers' );
+		$table_questions    = tge_table_name( 'questions' );
+
+		$sql = $this->wpdb->prepare( "SELECT COUNT(DISTINCT ua.question_id) FROM {$table_user_answers} AS ua INNER JOIN {$table_answers} AS a on ua.answer_id = a.id INNER JOIN {$table_questions} as q ON ua.question_id = q.id WHERE ua.quiz_id = %d AND ua.user_id = %d AND q.q_type != 3", [ $quiz_id, $user_id ] );
+
+		return (int) $this->wpdb->get_var( $sql );
 	}
 }
 

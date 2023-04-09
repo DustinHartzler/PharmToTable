@@ -52,11 +52,11 @@ class TVE_Dash_InboxManager {
 	 */
 	public static function instance() {
 
-		if ( empty( self::$_instance ) ) {
-			self::$_instance = new self();
+		if ( empty( static::$_instance ) ) {
+			static::$_instance = new self();
 		}
 
-		return self::$_instance;
+		return static::$_instance;
 	}
 
 	/**

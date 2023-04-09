@@ -153,7 +153,7 @@ class Woo_Product_Data extends Data_Object {
 
 		$options = [];
 
-		foreach ( wc_get_products( array( 'limit' => - 1 ) ) as $product ) {
+		foreach ( Woo::get_products() as $product ) {
 			$name           = $product->get_name();
 			$id             = $product->get_id();
 			$options[ $id ] = array(

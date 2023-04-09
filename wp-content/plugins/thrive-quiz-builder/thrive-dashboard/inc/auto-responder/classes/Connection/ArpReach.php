@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 9/10/2015
- * Time: 4:59 PM
- */
 class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type

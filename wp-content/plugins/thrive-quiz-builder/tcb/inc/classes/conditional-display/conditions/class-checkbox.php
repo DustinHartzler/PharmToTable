@@ -29,22 +29,25 @@ class Checkbox extends Condition {
 	}
 
 	public function apply( $data ) {
+
 		$field_values = $data['field_value'];
 		$haystack     = $this->get_value();
-
 		if ( is_array( $field_values ) ) {
 			$result = ! empty( array_intersect( $field_values, $haystack ) );
 		} else {
 			$result = in_array( $field_values, $haystack );
 		}
 
-		return $result;
+		return $this->get_operator() === 'contains' ? $result : ! $result;
 	}
 
 	public static function get_operators() {
 		return [
-			'contains' => [
+			'contains'     => [
 				'label' => esc_html__( 'is', 'thrive-cb' ),
+			],
+			'not_contains' => [
+				'label' => esc_html__( 'is not', 'thrive-cb' ),
 			],
 		];
 	}

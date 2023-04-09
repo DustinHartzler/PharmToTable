@@ -156,6 +156,12 @@ class TGE_Database {
 			$params [] = $filters['quiz_id'];
 		}
 
+		if ( ! empty( $filters['q_type'] ) && is_array( $filters['q_type'] ) ) {
+			$sql .= ' AND q_type IN (' . implode( ',', array_map( static function ( $type ) {
+					return (int) $type;
+				}, $filters['q_type'] ) ) . ')';
+		}
+
 		return $this->wpdb->get_var( $this->prepare( $sql, $params ) );
 	}
 
@@ -189,8 +195,11 @@ class TGE_Database {
 		$sql = 'SELECT * FROM ' . tge_table_name( 'answers' ) . ' WHERE ' . $where . ' ORDER BY `order` ASC';
 
 		if ( $single ) {
-			$model          = $this->wpdb->get_row( $this->prepare( $sql, $params ), $return_type );
-			$model['image'] = json_decode( $model['image'] ) ? json_decode( $model['image'] ) : $model['image'];
+			$model = $this->wpdb->get_row( $this->prepare( $sql, $params ), $return_type );
+
+			if ( ! empty( $model['image'] ) ) {
+				$model['image'] = json_decode( $model['image'] ) ? json_decode( $model['image'] ) : $model['image'];
+			}
 
 			return $model;
 
@@ -541,6 +550,26 @@ class TGE_Database {
 	public function reset_questions_views_by_quiz_id( $quiz_id ) {
 
 		return $this->wpdb->update( tge_table_name( 'questions' ), array( 'views' => 0 ), array( 'quiz_id' => $quiz_id ) );
+	}
+
+	/**
+	 * Get the question ids where there's a meeting point between two branches of the quiz
+	 *
+	 * @param $quiz_id
+	 *
+	 * @return array of question ids where multiple branches meet
+	 */
+	public function get_question_ids_where_branches_meet( $quiz_id ) {
+		$params = [];
+		array_push( $params, $quiz_id, $quiz_id );
+
+		$select_answers = 'SELECT * FROM ' . tge_table_name( 'answers' ) . ' WHERE quiz_id = %d GROUP by next_question_id, question_id';
+
+		$sql = "SELECT CONCAT_WS( '', a.next_question_id, q.next_question_id ) AS next_q_id FROM ";
+		$sql .= '(' . $select_answers . ')' . ' AS a JOIN ' . tge_table_name( 'questions' ) . ' AS q ON a.quiz_id = q.quiz_id AND q.id = a.question_id ';
+		$sql .= "WHERE a.quiz_id = %d GROUP BY next_q_id HAVING COUNT(a.id) > 1 AND TRIM(next_q_id) <> ''";
+
+		return $this->wpdb->get_col( $this->prepare( $sql, $params ) );
 	}
 }
 

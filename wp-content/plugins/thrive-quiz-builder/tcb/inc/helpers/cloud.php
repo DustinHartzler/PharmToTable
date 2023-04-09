@@ -83,6 +83,8 @@ function tve_get_cloud_template_data( $tag, $args = array() ) {
 	if ( isset( $args['id'] ) ) {
 		$id = $args['id'];
 		unset( $args['id'] );
+	} else {
+		return new WP_Error( 'tcb_download_err', __( 'Invalid template id.', 'thrive-cb' ) );
 	}
 
 	$args = wp_parse_args( $args, array(

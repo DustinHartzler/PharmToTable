@@ -80,7 +80,7 @@ class Set implements \JsonSerializable {
 	 */
 	public static function init() {
 
-		register_post_type( self::POST_TYPE, array(
+		register_post_type( static::POST_TYPE, array(
 			'labels'              => array(
 				'name' => 'Content Set',
 			),
@@ -106,7 +106,7 @@ class Set implements \JsonSerializable {
 	public static function get_items( $args = array() ) {
 		$posts = get_posts( array_merge( array(
 			'posts_per_page' => - 1,
-			'post_type'      => self::POST_TYPE,
+			'post_type'      => static::POST_TYPE,
 		), $args ) );
 
 		$sets = array();
@@ -171,7 +171,7 @@ class Set implements \JsonSerializable {
 			return;
 		}
 
-		$current_matches = self::get_items_that_static_match( $post_or_term, 'ids' );
+		$current_matches = static::get_items_that_static_match( $post_or_term, 'ids' );
 
 		sort( $current_matches );
 		sort( $sets_ids_for_object );
@@ -312,6 +312,38 @@ class Set implements \JsonSerializable {
 	 *
 	 * @return $this
 	 */
+	public function add_static_rule( $rule ) {
+		if ( ! $rule->is_valid() ) {
+			return $this;
+		}
+
+		$child_added = false;
+
+		/**
+		 * @var Rule $r
+		 */
+		foreach ( $this->rules as $r ) {
+			if ( $rule->get_content() === $r->get_content() && $rule->field === Rule::FIELD_TITLE && $r->field === Rule::FIELD_TITLE ) {
+				if ( is_array( $rule->value ) && is_array( $r->value ) ) {
+					$r->value    = array_merge( $rule->value, $r->value );
+					$child_added = true;
+					break;
+				}
+			}
+		}
+
+		if ( ! $child_added ) {
+			$this->rules[] = $rule;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param Rule $rule
+	 *
+	 * @return $this
+	 */
 	public function add_rule( $rule ) {
 
 		if ( ! $rule->is_valid() ) {
@@ -378,7 +410,7 @@ class Set implements \JsonSerializable {
 		return wp_insert_post( array(
 			'post_title'   => $this->post_title,
 			'post_content' => serialize( $rules ),
-			'post_type'    => self::POST_TYPE,
+			'post_type'    => static::POST_TYPE,
 			'post_status'  => 'publish',
 		), false, false );
 	}
@@ -406,7 +438,7 @@ class Set implements \JsonSerializable {
 		 *
 		 * @param Set $instance the content set instance
 		 */
-		do_action( 'tvd_content_set_before_update', $this );
+		do_action( 'tvd_content_set_before_update', new static( $this->ID ) );
 
 		$rules = $this->prepare_rules_for_db();
 		$valid = ! empty( $this->post_title ) && is_array( $rules );
@@ -495,7 +527,7 @@ class Set implements \JsonSerializable {
 					}
 				}
 
-				if ( ! empty( $entries ) && is_array( $entries[0] ) && array_key_exists( 'id', $entries[0] ) ) {
+				if ( ! empty( $entries ) && is_array( $entries ) && is_array( $entries[0] ) && array_key_exists( 'id', $entries[0] ) ) {
 					$entries = array_column( $entries, 'id' );
 				}
 
@@ -550,7 +582,7 @@ class Set implements \JsonSerializable {
 		if ( Utils::is_context_supported() ) {
 			$queried_object = get_queried_object();
 
-			static::$matched = empty( $queried_object ) ? self::get_for_non_object() : self::get_for_object( $queried_object );
+			static::$matched = empty( $queried_object ) ? static::get_for_non_object() : static::get_for_object( $queried_object );
 		}
 
 		return static::$matched;

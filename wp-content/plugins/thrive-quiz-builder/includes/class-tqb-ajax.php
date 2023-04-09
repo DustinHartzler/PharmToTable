@@ -46,7 +46,7 @@ class TQB_Ajax {
 	}
 
 	public static function tqb_admin_ajax_controller() {
-		require_once dirname( __FILE__ ) . '/admin/classes/class-tqb-admin-ajax-controller.php';
+		require_once __DIR__ . '/admin/classes/class-tqb-admin-ajax-controller.php';
 
 		$response = TQB_Admin_Ajax_Controller::instance()->handle();
 		self::clear_cache();
@@ -55,7 +55,7 @@ class TQB_Ajax {
 	}
 
 	public static function tqb_frontend_ajax_controller() {
-		require_once dirname( __FILE__ ) . '/class-tqb-frontend-ajax-controller.php';
+		require_once __DIR__ . '/class-tqb-frontend-ajax-controller.php';
 
 		$response = TQB_Frontend_Ajax_Controller::instance()->handle();
 		self::clear_cache();

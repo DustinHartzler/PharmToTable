@@ -197,6 +197,10 @@ class TGE_Editor {
 				'delete'    => tge()->url( 'assets/img/delete-qe.png' ),
 				'edit'      => tge()->url( 'assets/img/edit-qe.png' ),
 				'duplicate' => tge()->url( 'assets/img/duplicate-qe.png' ),
+				'multiple'  => tge()->url( 'assets/img/multiple-qe.png' ),
+				'text'      => tge()->url( 'assets/img/text-qe.png' ),
+				'video'     => tge()->url( 'assets/img/video-qe.png' ),
+				'audio'     => tge()->url( 'assets/img/audio-qe.png' ),
 			),
 			'questions'              => $question_manager->prepare_questions( $questions ),
 			't'                      => array(
@@ -232,6 +236,7 @@ class TGE_Editor {
 				'tags_switcher_off_toast'     => __( 'Attaching tags to answers is now disabled but the settings are saved for later use.', 'thrive-graph-editor' ),
 				'media'                       => array(
 					'question_title'          => __( 'Select image for your question', 'thrive-graph-editor' ),
+					'answer_title'            => __( 'Select image for your answer', 'thrive-graph-editor' ),
 					'video_title'             => __( 'Select a media file for your question', 'thrive-graph-editor' ),
 					'video_error'             => __( 'Only video types are supported.', 'thrive-graph-editor' ),
 					'invalid_youtube_url'     => __( 'Please add a valid Youtube URL', 'thrive-graph-editor' ),

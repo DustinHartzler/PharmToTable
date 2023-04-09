@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-element-abstract.php';
 require_once plugin_dir_path( __FILE__ ) . 'post-list/class-tcb-post-list-sub-element-abstract.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-cloud-template-element-abstract.php';
+require_once plugin_dir_path( __FILE__ ) . 'elements/class-tcb-lead-generation-element.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-tcb-symbol-element-abstract.php';
 
 /**
@@ -72,7 +73,7 @@ class TCB_Elements {
 			/* if the item is a file, include it */
 			if ( is_file( $item_path ) && substr( $item_path, - 3 ) === 'php' ) {
 				$element = str_replace( array( 'class-tcb-', '-element.php' ), '', $item );
-				$element = self::capitalize_class_name( $element );
+				$element = static::capitalize_class_name( $element );
 
 				$class = 'TCB_' . $element . '_Element';
 
@@ -518,7 +519,7 @@ class TCB_Elements {
 		/**
 		 * Internal TCB elements
 		 */
-		$class_name = 'TCB_' . self::capitalize_class_name( $element_type ) . '_Element';
+		$class_name = 'TCB_' . static::capitalize_class_name( $element_type ) . '_Element';
 		if ( ! class_exists( $class_name ) ) {
 			$file = plugin_dir_path( __FILE__ ) . 'elements/class-tcb-' . str_replace( '_', '-', $element_type ) . '-element.php';
 			if ( file_exists( $file ) ) {

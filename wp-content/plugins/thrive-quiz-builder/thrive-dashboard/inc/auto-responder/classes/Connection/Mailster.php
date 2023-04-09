@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Andrei L
- * Date: 6/5/2019
- * Time: 15:31
- */
 class Thrive_Dash_List_Connection_Mailster extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * @return string

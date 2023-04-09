@@ -115,7 +115,6 @@ class Add_User extends Action {
 			}
 		}
 
-
 		if ( empty( $email ) ) {
 			return false;
 		}
@@ -123,10 +122,11 @@ class Add_User extends Action {
 
 		$apis = Thrive_Dash_List_Manager::get_available_apis( true );
 
-		$api = $apis[ $this->autoresponder ];
-		if ( empty( $api ) ) {
+		if ( empty( $apis[ $this->autoresponder ] ) ) {
 			return false;
 		}
+
+		$api = $apis[ $this->autoresponder ];
 
 		if ( ! empty( $this->additional['tag_input'] ) && $api->has_tags() ) {
 			$tags = $this->additional['tag_input'];
@@ -232,18 +232,19 @@ class Add_User extends Action {
 		$available_data = array();
 		global $automation_data;
 		foreach ( Main::get_email_data_sets() as $key ) {
-			if ( ! empty( $automation_data->get( $key ) ) ) {
+			$data_set = $automation_data->get( $key );
+			if ( ! empty( $data_set ) && $data_set->can_provide_email() && ! empty( $data_set->get_provided_email() ) ) {
 				$available_data[] = $key;
 			}
 		}
 
 		if ( empty( $available_data ) ) {
 			$valid = false;
-			tap_logger()->register( [
+			tap_logger( $this->aut_id )->register( [
 				'key'         => static::get_id(),
 				'id'          => 'data-not-provided-to-action',
 				'message'     => 'Data object required by ' . static::class . ' action is not provided by trigger',
-				'class-label' => tap_logger()->get_nice_class_name( static::class ),
+				'class-label' => tap_logger( $this->aut_id )->get_nice_class_name( static::class ),
 			] );
 		}
 

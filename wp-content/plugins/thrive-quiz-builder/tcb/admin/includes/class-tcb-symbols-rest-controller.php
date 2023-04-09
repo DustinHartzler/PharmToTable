@@ -224,10 +224,13 @@ class TCB_REST_Symbols_Controller extends WP_REST_Posts_Controller {
 	 */
 	public function check_duplicate_title( $request ) {
 		$post_title = $this->get_post_title_from_request( $request );
-		$post       = get_page_by_title( $post_title, OBJECT, TCB_Symbols_Post_Type::SYMBOL_POST_TYPE );
 
-		if ( $post && $post->post_status !== 'trash' ) {
-			return new WP_Error( 'rest_cannot_create_post', __( 'Sorry, you are not allowed to create global elements with the same title', 'thrive-cb' ), array( 'status' => 409 ) );
+		if ( $post_title ) {
+			$post = get_page_by_title( $post_title, OBJECT, TCB_Symbols_Post_Type::SYMBOL_POST_TYPE );
+
+			if ( $post && $post->post_status !== 'trash' ) {
+				return new WP_Error( 'rest_cannot_create_post', __( 'Sorry, you are not allowed to create global elements with the same title', 'thrive-cb' ), array( 'status' => 409 ) );
+			}
 		}
 
 		return true;

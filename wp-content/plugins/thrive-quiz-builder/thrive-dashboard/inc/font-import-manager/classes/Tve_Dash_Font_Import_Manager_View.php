@@ -9,13 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 9/25/2015
- * Time: 10:29 AM
- */
-
 if ( class_exists( 'Tve_Dash_Font_Import_Manager_View' ) ) {
 	return;
 }

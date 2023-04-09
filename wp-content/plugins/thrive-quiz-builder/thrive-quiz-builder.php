@@ -3,7 +3,7 @@
 /*
 Plugin Name: Thrive Quiz Builder
 Plugin URI: https://thrivethemes.com
-Version: 3.12
+Version: 3.17.1
 Author: <a href="https://thrivethemes.com">Thrive Themes</a>
 Description: The plugin is built to deliver the following benefits to users: engage visitors with fun and interesting quizzes, lower bounce rate, generate more leads and gain visitor insights to find out about their interests.
 Text Domain: thrive-quiz-builder
@@ -19,7 +19,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 		/**
 		 * Plugin version
 		 */
-		const V = '3.12';
+		const V = '3.17.1';
 
 		/**
 		 * Quiz Builder Database Version
@@ -276,10 +276,15 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			 */
 			add_action( 'tqb_register_impression', array( 'TQB_Quiz_Manager', 'tqb_register_impression' ), 10, 2 );
 			add_action( 'tqb_register_conversion', array( 'TQB_Quiz_Manager', 'tqb_register_conversion' ), 10, 2 );
-			add_action( 'tqb_register_skip_optin', array(
-				'TQB_Quiz_Manager',
-				'tqb_register_skip_optin_event',
-			), 10, 2 );
+			add_action(
+				'tqb_register_skip_optin',
+				array(
+					'TQB_Quiz_Manager',
+					'tqb_register_skip_optin_event',
+				),
+				10,
+				2
+			);
 			add_action( 'tcb_api_form_submit', array( 'TQB_Quiz_Manager', 'tqb_register_optin_conversion' ) );
 			add_action( 'tqb_register_social_media_conversion', array(
 				'TQB_Quiz_Manager',
@@ -317,6 +322,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			 */
 			add_filter( 'tve_dash_installed_products', array( $this, 'add_to_dashboard_list' ) );
 
+			add_filter( 'tve_dash_metrics_should_enqueue', array( $this, 'should_enqueue_metrics' ) );
+
 			add_filter( 'tcb_symbol_content', array( $this, 'change_symbol_content' ) );
 
 			add_filter( 'tcb_dynamiclink_data', array( $this, 'tcb_dynamiclink_data' ) );
@@ -342,6 +349,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			add_action( 'wp_head', 'tve_load_custom_css', 100, 0 );
 
 			TQB_Lightspeed::init();
+
+			TQB\Reporting\Main::init();
 
 			add_action( 'thrive_automator_init', array( 'TQB\Automator\Main', 'init' ) );
 
@@ -550,9 +559,12 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 							$data[ $key ]['resume_flow'] = tqb_customer()->get_resume_quiz_user_answers( $id, $post_id );
 						}
 
+						$data[ $key ]['user_answers'] = tqb_customer()->get_resume_quiz_user_answers( $id, $post_id );
+
 						$data[ $key ]['resume'] = 1;
 					} elseif ( $restart_quiz ) {
-						$data[ $key ] = TQB_Quiz_Manager::get_shortcode_content( $id, null, null, $user_unique );
+						$data[ $key ]              = TQB_Quiz_Manager::get_shortcode_content( $id, null, null, $user_unique );
+						$data[ $key ]['restarted'] = true;
 					}
 				}
 
@@ -717,6 +729,8 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			if ( $this->is_request( 'admin' ) ) {
 				require_once( 'includes/admin/class-tqb-admin.php' );
 			}
+
+			require_once( 'includes/reporting/class-main.php' );
 
 			/**
 			 *  Include ajax controllers
@@ -1767,12 +1781,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 			$quiz_id     = $page->post_parent;
 			$quiz        = get_post( $quiz_id );
 			$points      = TQB_Quiz_Manager::get_user_points( $user_unique, $quiz_id );
-			$answers     = TQB_Quiz_Manager::get_user_answers_with_questions(
-				array(
-					'quiz_id' => $quiz_id,
-					'user_id' => TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id ),
-				)
-			);
+			$answers     = TQB_Quiz_Manager::get_user_answers_in_order( $quiz_id, TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id ) );
 
 			$html = '';
 			$last = count( $answers ) - 1;
@@ -1874,6 +1883,7 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 						'is_preview'   => TQB_Product::has_access(),
 						'post_id'      => get_the_ID(),
 						'settings'     => Thrive_Quiz_Builder::get_settings(),
+						'submit_icon'  => tqb_get_svg_icon( 'thumbs-up', 'tcb-icon', true ),
 						'quiz_options' => array(),
 						't'            => array(
 							'chars' => __( 'Characters', 'thrive-quiz-builder' ),
@@ -1946,6 +1956,18 @@ if ( ! class_exists( 'Thrive_Quiz_Builder' ) ) :
 				self::QUIZ_STRUCTURE_ITEM_OPTIN,
 				self::QUIZ_STRUCTURE_ITEM_RESULTS,
 			) );
+		}
+
+		/**
+		 * Don't display metrics ribbon if we don't have any license
+		 */
+		public function should_enqueue_metrics( $should_enqueue ) {
+			$screen = tve_get_current_screen_key();
+			if ( $screen === 'thrive-dashboard_page_tqb_admin_dashboard' && ! $this->license_activated() ) {
+				$should_enqueue = false;
+			}
+
+			return $should_enqueue;
 		}
 	}
 

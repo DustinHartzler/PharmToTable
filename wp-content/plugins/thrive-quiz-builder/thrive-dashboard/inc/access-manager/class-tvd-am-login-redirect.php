@@ -2,8 +2,6 @@
 
 namespace TVD\Dashboard\Access_Manager;
 
-use TVD\Dashboard\Access_Manager\Functionality;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -75,8 +73,12 @@ class Login_Redirect extends Functionality {
 
 	public static function login_redirect( $redirect, $requested_redirect_to, $logged_in_user ) {
 		if ( ! is_wp_error( $logged_in_user ) && $logged_in_user && $logged_in_user->ID ) {
-			$user_role = $logged_in_user->roles[0];
-			$url       = static::get_option_value( $user_role );
+			if ( ! empty( $logged_in_user->roles ) ) {
+				$user_role = $logged_in_user->roles[0];
+				$url       = static::get_option_value( $user_role );
+			} else {
+				$url = 'inherit';
+			}
 
 			if ( $url ) {
 				switch ( $url ) {

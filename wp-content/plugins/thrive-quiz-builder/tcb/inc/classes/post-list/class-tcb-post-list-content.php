@@ -31,6 +31,8 @@ class TCB_Post_List_Content {
 		'#{"menu_id"(.+)(true|false|null|"|\'|\d|]|})}#',
 		/* Custom menu - REST API version - encoded json */
 		'@{&#8220;menu_id&#8221;(.+)(true|false|null|&#8221;|\d|]|})}@',
+		/* the audio shortcode doesn't really behave well, so it's better to just remove it */
+		'#<audio(.*?)><\/audio>#',
 	);
 
 	/**

@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 02.04.2015
- * Time: 15:33
- */
 class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -47,13 +41,14 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 	 * @return mixed|void
 	 */
 	public function read_credentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$connection = $this->post( 'connection' );
+		$key        = ! empty( $connection['key'] ) ? ( $connection['key'] ) : '';
 
 		if ( empty( $key ) ) {
 			return $this->error( __( 'You must provide a valid MailerLite key', 'thrive-dash' ) );
 		}
 
-		$this->set_credentials( array( 'key' => $key ) );
+		$this->set_credentials( $connection );
 
 		$result = $this->test_connection();
 
@@ -75,15 +70,12 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 	 * @return bool|string true for success or error message for failure
 	 */
 	public function test_connection() {
-		/** @var Thrive_Dash_Api_MailerLite $mailer */
 		$mailer = $this->get_api();
-
 		/**
 		 * just try getting a list as a connection test
 		 */
 
 		try {
-			/** @var Thrive_Dash_Api_MailerLite_Groups $groupsApi */
 			$groupsApi = $mailer->groups();
 			$groupsApi->get();
 		} catch ( Thrive_Dash_Api_MailerLite_MailerLiteSdkException $e ) {
@@ -97,9 +89,17 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 	 * instantiate the API code required for this connection
 	 *
 	 * @return mixed
+	 * @throws Thrive_Dash_Api_MailerLite_MailerLiteSdkException
 	 */
 	protected function get_api_instance() {
-		return new Thrive_Dash_Api_MailerLite( $this->param( 'key' ) );
+		$key     = $this->param( 'key' );
+		$version = $this->param( 'version' );
+
+		if ( ! empty( $version ) && (int) $version === 2 ) {
+			return new Thrive_Dash_Api_MailerLiteV2( $key );
+		}
+
+		return new Thrive_Dash_Api_MailerLite( $key );
 	}
 
 	/**
@@ -108,11 +108,9 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 	 * @return array
 	 */
 	protected function _get_lists() {
-		/** @var Thrive_Dash_Api_MailerLite $api */
 		$api = $this->get_api();
 
 		try {
-			/** @var Thrive_Dash_Api_MailerLite_Groups $groups_api */
 			$groups_api = $api->groups();
 			$groups_api->limit( 10000 );
 			$lists_obj = $groups_api->get();
@@ -143,12 +141,13 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 	 * @return bool|string true for success or string error message for failure
 	 */
 	public function add_subscriber( $list_identifier, $arguments ) {
+		$api     = $this->get_api();
+		$version = (int) $this->param( 'version' );
+
 		if ( isset( $arguments['name'] ) ) {
 			list( $first_name, $last_name ) = $this->get_name_parts( $arguments['name'] );
 		}
 
-		/** @var Thrive_Dash_Api_MailerLite $api */
-		$api            = $this->get_api();
 		$args['fields'] = array();
 		$args['email']  = $arguments['email'];
 
@@ -166,8 +165,11 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 		}
 		$args['resubscribe'] = 1;
 
+		if ( $version === 2 ) {
+			unset( $args['resubscribe'], $args['name'] );
+		}
+
 		try {
-			/** @var Thrive_Dash_Api_MailerLite_Groups $groupsApi */
 			$groupsApi = $api->groups();
 			if ( empty( $arguments['automator_custom_fields'] ) ) {
 				$args['fields'] = array_merge( $args['fields'], $this->_generateCustomFields( $arguments ) );
@@ -211,18 +213,15 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 		}
 
 		$custom_data   = array();
-		$allowed_types = array(
-			'TEXT',
-		);
+		$allowed_types = $this->get_api()->fields()->get_allowed_types();
 
 		try {
-			/** @var Thrive_Dash_Api_MailerLite $api */
 			$custom_fields = $this->get_api()->fields()->get();
 
 			if ( is_array( $custom_fields ) ) {
 				foreach ( $custom_fields as $field ) {
 					if ( ! empty( $field->type ) && in_array( $field->type, $allowed_types, true ) ) {
-						$custom_data[] = $this->_normalize_custom_field( $field );
+						$custom_data[] = $this->get_api()->fields()->get_normalize_custom_field( $field );
 					}
 				}
 			}
@@ -232,21 +231,6 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 		$this->_save_custom_fields( $custom_data );
 
 		return $custom_data;
-	}
-
-	/**
-	 * @param stdClass $field
-	 *
-	 * @return array
-	 */
-	public function _normalize_custom_field( $field ) {
-		return array(
-			'id'    => $field->id,
-			'name'  => $field->title,
-			'type'  => $field->type,
-			'label' => $field->title,
-			'key'   => $field->key,
-		);
 	}
 
 	/**
@@ -372,13 +356,10 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 	public function add_custom_fields( $email, $custom_fields = array(), $extra = array() ) {
 
 		try {
-			/** @var Thrive_Dash_Api_MailerLite $api */
 			$api = $this->get_api();
 
-			/** @var Thrive_Dash_Api_MailerLite_Groups $groupsApi */
 			$groupsApi = $api->groups();
 
-			/** @var Thrive_Dash_Api_MailerLite_Subscribers $subscribersApi */
 			$subscribersApi = $api->subscribers();
 
 			$list_id = ! empty( $extra['list_identifier'] ) ? $extra['list_identifier'] : null;
@@ -458,3 +439,4 @@ class Thrive_Dash_List_Connection_MailerLite extends Thrive_Dash_List_Connection
 		return true;
 	}
 }
+

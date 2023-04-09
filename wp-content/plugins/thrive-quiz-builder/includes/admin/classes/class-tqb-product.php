@@ -12,6 +12,20 @@ class TQB_Product extends TVE_Dash_Product_Abstract {
 	protected $tag = 'tqb';
 
 	/**
+	 * Product version
+	 *
+	 * @var string
+	 */
+	protected $version = Thrive_Quiz_Builder::V;
+
+	/**
+	 * Product slug
+	 *
+	 * @var string
+	 */
+	protected $slug = 'thrive-quiz-builder';
+
+	/**
 	 * Name of the product displayed in Dashboard
 	 *
 	 * @var string title

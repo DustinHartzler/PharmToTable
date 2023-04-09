@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 9/16/2015
- * Time: 10:30 AM
- */
 class Thrive_Dash_Api_ConstantContact {
 	const URL = 'https://api.constantcontact.com/v2/';
 

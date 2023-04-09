@@ -47,7 +47,7 @@ class TD_DB_Migration {
 
 		$this->_wpdb         = $wpdb;
 		$this->_file_path    = $file_path;
-		$this->_table_prefix = $this->_wpdb->prefix . rtrim( $table_prefix, '_ ' ) . '_';
+		$this->_table_prefix = $this->_wpdb->prefix . ( empty( $table_prefix ) ? '' : rtrim( $table_prefix, '_ ' ) . '_' );
 	}
 
 	/**

@@ -702,25 +702,27 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 				if ( ! empty( $_POST['tve_landing_page_save'] ) ) {
 					/* In the new version we add all data in post meta */
 					$template_data = [
-						'before_more'        => $content_split['main'],
-						'more_found'         => $content_split['more_found'],
-						'content'            => $content,
-						'inline_css'         => $this->param( 'inline_rules', null, false ),
-						'custom_css'         => $this->param( 'tve_custom_css', null, false ),
-						'tve_globals'        => $this->param( 'tve_globals', [], false ),
-						'tve_global_scripts' => $this->param( 'tve_global_scripts', [], false ),
-						'name'               => $this->param( 'tve_landing_page_save' ),
-						'tags'               => $this->param( 'template_tags' ),
-						'template'           => $landing_page_template,
-						'theme_dependency'   => get_post_meta( $post_id, 'tve_disable_theme_dependency', true ),
-						'tpl_colours'        => get_post_meta( $post_id, 'thrv_lp_template_colours', true ),
-						'tpl_gradients'      => get_post_meta( $post_id, 'thrv_lp_template_gradients', true ),
-						'tpl_button'         => get_post_meta( $post_id, 'thrv_lp_template_button', true ),
-						'tpl_section'        => get_post_meta( $post_id, 'thrv_lp_template_section', true ),
-						'tpl_contentbox'     => get_post_meta( $post_id, 'thrv_lp_template_contentbox', true ),
-						'tpl_palettes'       => get_post_meta( $post_id, 'thrv_lp_template_palettes', true ),
-						'tpl_skin_tag'       => get_post_meta( $post_id, 'theme_skin_tag', true ),
-						'date'               => date( 'Y-m-d' ),
+						'before_more'            => $content_split['main'],
+						'more_found'             => $content_split['more_found'],
+						'content'                => $content,
+						'inline_css'             => $this->param( 'inline_rules', null, false ),
+						'custom_css'             => $this->param( 'tve_custom_css', null, false ),
+						'tve_globals'            => $this->param( 'tve_globals', [], false ),
+						'tve_global_scripts'     => $this->param( 'tve_global_scripts', [], false ),
+						'name'                   => $this->param( 'tve_landing_page_save' ),
+						'tags'                   => $this->param( 'template_tags' ),
+						'template'               => $landing_page_template,
+						'theme_dependency'       => get_post_meta( $post_id, 'tve_disable_theme_dependency', true ),
+						'tpl_colours'            => get_post_meta( $post_id, 'thrv_lp_template_colours', true ),
+						'tpl_gradients'          => get_post_meta( $post_id, 'thrv_lp_template_gradients', true ),
+						'tpl_button'             => get_post_meta( $post_id, 'thrv_lp_template_button', true ),
+						'tpl_section'            => get_post_meta( $post_id, 'thrv_lp_template_section', true ),
+						'tpl_contentbox'         => get_post_meta( $post_id, 'thrv_lp_template_contentbox', true ),
+						'tpl_palettes'           => get_post_meta( $post_id, 'thrv_lp_template_palettes', true ),
+						'tpl_palettes_v2'        => get_post_meta( $post_id, TCB_LP_Palettes::LP_PALETTES, true ),
+						'tpl_palettes_config_v2' => get_post_meta( $post_id, TCB_LP_Palettes::LP_PALETTES_CONFIG, true ),
+						'tpl_skin_tag'           => get_post_meta( $post_id, 'theme_skin_tag', true ),
+						'date'                   => date( 'Y-m-d' ),
 					];
 					/**
 					 * if this is a cloud template, we need to store the thumbnail separately, as it has a different location
@@ -2599,6 +2601,45 @@ if ( ! class_exists( 'TCB_Editor_Ajax' ) ) {
 			$color    = (string) $this->param( 'color' );
 
 			tcb_landing_page( $post_id )->update_auxiliary_variable( $color_id, $color );
+
+			return $response;
+		}
+
+		public function action_inherit_ttb_typography() {
+			$response = [
+				'success' => true,
+			];
+			$lp_id    = (int) $this->param( 'post_id' );
+			$inherit  = (int) $this->param( 'inherit' );
+
+			/* update post meta with the inherit value for this specific LP */
+
+			tve_update_post_meta( $lp_id, 'ttb_inherit_typography', $inherit );
+
+			global $post;
+			$post = get_post( $lp_id );
+
+			/* get the active skin typography and append it to the page, see print_skin_typography from LP class */
+			if ( tve_dash_is_ttb_active() ) {
+				$response['is_ttb_lp'] = tve_get_post_meta( $lp_id, 'theme_skin_tag' );
+
+				if ( $inherit ) {
+					$lp_typography = tcb_default_style_provider()->get_processed_styles( thrive_typography()->style(), 'string' );
+				} else {
+					$lp_typography = tcb_landing_page( $lp_id )->skin_typography;
+				}
+
+				if ( ! empty( $lp_typography ) ) {
+					/* Replace the variable to match the colors from config */
+					$lp_typography = str_replace( '--tcb-color-', TCB_LP_Palettes::SKIN_COLOR_VARIABLE_PREFIX, $lp_typography );
+
+					$lp_typography = tcb_custom_css( $lp_typography );
+
+					$response['style'] = '<style type="text/css" class="tcb_skin_lp_typography">' . $lp_typography . '</style>';
+				}
+
+				$response['thrive_default_styles'] = tcb_default_style_provider()->get_processed_styles( null, 'string', false );
+			}
 
 			return $response;
 		}

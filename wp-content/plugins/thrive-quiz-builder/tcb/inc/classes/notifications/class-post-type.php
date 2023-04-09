@@ -19,6 +19,14 @@ class Post_Type {
 	 * @var Post_Type
 	 */
 	private static $_instance;
+	/**
+	 * @var \WP_Post
+	 */
+	private $post;
+	/**
+	 * @var \WP_Post
+	 */
+	private $ID;
 
 	/**
 	 * Post_Type constructor.
@@ -210,6 +218,7 @@ class Post_Type {
 
 	/**
 	 * Check if we're on a notification post type
+	 *
 	 * @return bool
 	 */
 	public static function is_notification() {

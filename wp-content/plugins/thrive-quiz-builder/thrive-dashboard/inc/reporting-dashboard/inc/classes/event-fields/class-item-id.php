@@ -17,7 +17,7 @@ class Item_Id extends Event_Field {
 		return true;
 	}
 
-	public function format( $value ) {
+	public static function format_value( $value ) {
 		return (int) $value;
 	}
 }

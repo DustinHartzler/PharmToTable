@@ -206,7 +206,7 @@ function tve_dash_api_vendor_loader( $className ) {
 		return false;
 	}
 
-	$basedir = rtrim( dirname( __FILE__ ), '/\\' ) . '/lib/vendor/';
+	$basedir = rtrim( __DIR__, '/\\' ) . '/lib/vendor/';
 
 	/**
 	 * Get the API version info
@@ -236,14 +236,14 @@ function tve_dash_api_classes_loader( $className ) {
 	$connection_name = strtolower( array_pop( $parts ) );
 	$api_versioning  = tve_saved_api_version( $connection_name );
 
-	$basedir = rtrim( dirname( __FILE__ ), '/\\' ) . '/classes/';
+	$basedir = rtrim( __DIR__, '/\\' ) . '/classes/';
 
 	return _tve_dash_api__autoload( $basedir, str_replace( $namespace, '', $className ), $api_versioning );
 }
 
 spl_autoload_register( 'tve_dash_api_vendor_loader' );
 spl_autoload_register( 'tve_dash_api_classes_loader' );
-
+do_action( 'thrive_dashboard_autoresponders_loaded' );
 /**
  * AJAX call handler for API logs that are being retried
  * If the subscription is made with success the log is deleted from db
@@ -371,7 +371,9 @@ function tve_dash_api_delete_log() {
 			'status'  => 'error',
 			'message' => sprintf( __( "An error occurred: %s", 'thrive-dash' ), $wpdb->last_error ),
 		) ) );
-	} else if ( $delete_result === 0 ) {
+	}
+
+	if ( $delete_result === 0 ) {
 		exit( json_encode( array(
 			'status'  => 'error',
 			'message' => sprintf( __( "The log with ID: %s could not be found !", 'thrive-dash' ), $log_id ),

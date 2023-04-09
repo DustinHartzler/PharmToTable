@@ -85,6 +85,7 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 	 */
 	public function own_components() {
 		$components = array(
+			'carousel'      => array( 'hidden' => false ),
 			'image_gallery' => array(
 				'config' => array(
 					'GalleryType'            => array(
@@ -267,131 +268,6 @@ class TCB_Image_Gallery_Element extends TCB_Element_Abstract {
 							),
 						),
 						'extends' => 'Select',
-					),
-					'Autoplay'               => array(
-						'config'  => array(
-							'name'    => '',
-							'label'   => __( 'Autoplay', 'thrive-cb' ),
-							'default' => false,
-							'info'    => true,
-						),
-						'extends' => 'Switch',
-					),
-					'AutoplaySpeed'          => array(
-						'config'  => array(
-							'default' => '3000',
-							'min'     => '1',
-							'max'     => '10000',
-							'label'   => __( 'Speed', 'thrive-cb' ),
-							'um'      => array( 'ms' ),
-						),
-						'extends' => 'Input',
-					),
-					'PauseOn'                => array(
-						'config'  => array(
-							'name'     => __( 'Pause on', 'thrive-cb' ),
-							'checkbox' => true,
-							'buttons'  => array(
-								array(
-									'value'   => 'pauseOnFocus',
-									'text'    => 'Focus',
-									'default' => true,
-								),
-								array(
-									'value'   => 'pauseOnHover',
-									'text'    => 'Hover',
-									'default' => true,
-								),
-							),
-						),
-						'extends' => 'ButtonGroup',
-					),
-					'Arrows'                 => array(
-						'config'  => array(
-							'name'    => '',
-							'label'   => __( 'Show arrows', 'thrive-cb' ),
-							'default' => true,
-						),
-						'extends' => 'Switch',
-					),
-					'Dots'                   => array(
-						'config'  => array(
-							'name'    => '',
-							'label'   => __( 'Show dots', 'thrive-cb' ),
-							'default' => true,
-						),
-						'extends' => 'Switch',
-					),
-					'SlidesToShow'           => array(
-						'config'  => array(
-							'min'   => '1',
-							'max'   => '10',
-							'label' => __( 'Columns', 'thrive-cb' ),
-							'um'    => array(),
-						),
-						'extends' => 'Slider',
-					),
-					'SlidesToScroll'         => array(
-						'config'  => array(
-							'min'   => '1',
-							'max'   => '3',
-							'label' => __( 'Slides to scroll', 'thrive-cb' ),
-							'um'    => array(),
-						),
-						'extends' => 'Slider',
-					),
-					'CenterMode'             => array(
-						'config'  => array(
-							'name'    => '',
-							'label'   => __( 'Overlap end images', 'thrive-cb' ),
-							'default' => false,
-						),
-						'extends' => 'Switch',
-					),
-					'CenterPadding'          => array(
-						'config'  => array(
-							'min'   => '0',
-							'max'   => '160',
-							'label' => __( 'Distance', 'thrive-cb' ),
-							'um'    => array( 'px', '%' ),
-						),
-						'extends' => 'Slider',
-					),
-					'Draggable'              => array(
-						'config'  => array(
-							'name'    => '',
-							'label'   => __( 'Allow dragging images', 'thrive-cb' ),
-							'default' => true,
-						),
-						'extends' => 'Switch',
-					),
-					'Fade'                   => array(
-						'config'  => array(
-							'name'    => '',
-							'label'   => __( 'Single image fader', 'thrive-cb' ),
-							'default' => false,
-							'info'    => true,
-						),
-						'extends' => 'Switch',
-					),
-					'FadeImageWidth'         => array(
-						'config'  => array(
-							'default' => '0',
-							'min'     => '10',
-							'max'     => '1080',
-							'um'      => array( '%', 'px' ),
-							'label'   => __( 'Image width', 'thrive-cb' ),
-							'css'     => 'max-width',
-						),
-						'extends' => 'Slider',
-					),
-					'Infinite'               => array(
-						'config'  => array(
-							'name'    => '',
-							'label'   => __( 'Infinite sliding', 'thrive-cb' ),
-							'default' => true,
-						),
-						'extends' => 'Switch',
 					),
 				),
 			),

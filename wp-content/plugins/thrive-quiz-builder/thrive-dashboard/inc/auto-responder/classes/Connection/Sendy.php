@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 7/30/2015
- * Time: 11:47 AM
- */
 class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type

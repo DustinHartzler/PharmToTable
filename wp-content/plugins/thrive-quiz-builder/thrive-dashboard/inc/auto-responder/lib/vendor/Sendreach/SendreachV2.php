@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 7/22/2015
- * Time: 1:31 PM
- */
 class Thrive_Dash_Api_SendreachV2 {
 	protected $api_url = 'http://api.sendreach.com/index.php';
 	protected $key;

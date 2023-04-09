@@ -93,7 +93,7 @@ class TVD_SM_Admin {
 	 * Add page to admin menu so the page could be accessed
 	 */
 	public function admin_menu() {
-		add_submenu_page( null, __( 'Landing Pages Analytics & Scripts', 'thrive-dash' ), __( 'Landing Pages Analytics & Scripts', 'thrive-dash' ), 'manage_options', 'tve_dash_script_manager', array(
+		add_submenu_page( '', __( 'Landing Pages Analytics & Scripts', 'thrive-dash' ), __( 'Landing Pages Analytics & Scripts', 'thrive-dash' ), 'manage_options', 'tve_dash_script_manager', array(
 			$this,
 			'admin_dashboard',
 		) );

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TD_NM_Ajax {
 
 	public static function init() {
-		self::add_ajax_events();
+		static::add_ajax_events();
 	}
 
 	public static function add_ajax_events() {

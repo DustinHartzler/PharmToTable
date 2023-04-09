@@ -82,6 +82,8 @@ add_action( 'before_delete_post', static function ( $post_id, $post ) {
 
 add_action( 'tve_leads_delete_post', 'tve_delete_post_form_settings', 10, 1 );
 
+add_action( 'after_delete_post', 'tve_delete_post_form_settings' );
+
 /**
  * On frontend contexts, always remove form settings from content
  */

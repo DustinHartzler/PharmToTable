@@ -118,15 +118,13 @@ abstract class TCB_Cloud_Template_Element_Abstract extends TCB_Element_Abstract 
 			)
 		);
 
-		$data = tve_get_cloud_template_data(
+		return tve_get_cloud_template_data(
 			$this->get_template_tag(),
 			array(
 				'id'   => $id,
 				'type' => $args['type'],
 			)
 		);
-
-		return $data;
 	}
 
 	/**

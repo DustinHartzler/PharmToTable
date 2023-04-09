@@ -158,6 +158,8 @@ trait Has_Post_Type {
 			'tpl_section',
 			'tpl_contentbox',
 			'tpl_palettes',
+			'tpl_palettes_v2',
+			'tpl_palettes_config_v2',
 			'tpl_skin_tag',
 		];
 	}

@@ -452,7 +452,7 @@ function tqb_render_shortcode( $arguments = array() ) {
 					}
 				} elseif ( $data['question'] ) {
 					$question_manager = new TGE_Question_Manager( $arguments['quiz_id'] );
-					$html             .= $question_manager->get_first_question_preview( $data['question'] );
+					$html             .= $question_manager->get_first_question_preview( $data['question'], $arguments['quiz_id'] );
 				}
 			} else {
 				foreach ( $data['question']['css'] as $css ) {
@@ -479,7 +479,7 @@ function tqb_render_shortcode( $arguments = array() ) {
 			return '<div class="thrive-shortcode-html"><div>' . $error_msg . '</div></div>';
 		}
 
-		if ( is_editor_page() ) {
+		if ( is_editor_page_raw( true ) ) {
 			$part = '';
 
 			$html

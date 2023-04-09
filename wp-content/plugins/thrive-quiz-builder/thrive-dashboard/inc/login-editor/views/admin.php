@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="tvd-wrap">
 	<div class="tvd-login-preview">
-		<iframe scrolling="no" src="<?php echo esc_url( $design_enabled ? $preview_url : $default_url ); ?>" data-preview-url="<?php echo esc_url( $preview_url ) ?>" data-default-url="<?php echo esc_url( $default_url ); ?>"></iframe>
+		<iframe title="<?php echo esc_html__( 'Login preview', 'thrive-dash' ); ?>" src="<?php echo esc_url( $design_enabled ? $preview_url : $default_url ); ?>" data-preview-url="<?php echo esc_url( $preview_url ) ?>" data-default-url="<?php echo esc_url( $default_url ); ?>"></iframe>
 	</div>
 	<div class="tvd-actions">
 		<h2>

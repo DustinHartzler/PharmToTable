@@ -110,7 +110,7 @@ class TCB_Megamenu_Dropdown_Element extends TCB_Element_Abstract {
 						/* in order to set the default SpaceBetween, you actually have to set a new margin-bottom for the article */
 						'min'   => '0',
 						'max'   => '150',
-						'label' => __( 'Verical Spacing', 'thrive-cb' ),
+						'label' => __( 'Vertical Spacing', 'thrive-cb' ),
 						'um'    => array( 'px' ),
 					),
 					'extends' => 'Slider',

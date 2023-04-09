@@ -55,12 +55,13 @@ class Thrive_Dash_List_Connection_Google extends Thrive_Dash_List_Connection_Abs
 	public function read_credentials() {
 		$client_id     = ! empty( $_POST['client_id'] ) ? sanitize_text_field( $_POST['client_id'] ) : '';
 		$client_secret = ! empty( $_POST['client_secret'] ) ? sanitize_text_field( $_POST['client_secret'] ) : '';
+		$api_key       = ! empty( $_POST['api_key'] ) ? sanitize_text_field( $_POST['api_key'] ) : '';
 
 		if ( empty( $client_id ) || empty( $client_secret ) ) {
 			return $this->error( __( 'Both Client ID and Client Secret fields are required', 'thrive-dash' ) );
 		}
 
-		$this->set_credentials( array( 'client_id' => $client_id, 'client_secret' => $client_secret ) );
+		$this->set_credentials( array( 'client_id' => $client_id, 'client_secret' => $client_secret, 'api_key' => $api_key ) );
 
 		$result = $this->test_connection();
 
@@ -77,7 +78,7 @@ class Thrive_Dash_List_Connection_Google extends Thrive_Dash_List_Connection_Abs
 	}
 
 	/**
-	 * test if the secret key is correct and it exists.
+	 * test if the secret key is correct, and it exists.
 	 *
 	 * @return bool|string true for success or error message for failure
 	 */

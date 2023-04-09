@@ -174,11 +174,12 @@ if ( ! class_exists( 'Thrive_Graph_editor' ) ) {
 		/**
 		 * Global function for graph editor that counts the quiz questions
 		 *
-		 * @param int $post_id
+		 * @param int   $post_id
+		 * @param array $filters
 		 *
 		 * @return int|null
 		 */
-		public function count_questions( $post_id = 0 ) {
+		public function count_questions( $post_id = 0, $filters = [] ) {
 
 			if ( ! is_numeric( $post_id ) && ! ( $post_id instanceof WP_Post ) ) {
 				return null;
@@ -190,7 +191,7 @@ if ( ! class_exists( 'Thrive_Graph_editor' ) ) {
 
 			$question_manager = new TGE_Question_Manager( $post_id );
 
-			return $question_manager->count_questions();
+			return $question_manager->count_questions( $filters );
 		}
 
 		/**

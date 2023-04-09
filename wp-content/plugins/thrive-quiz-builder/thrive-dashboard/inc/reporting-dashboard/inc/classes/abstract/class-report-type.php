@@ -17,7 +17,13 @@ abstract class Report_Type {
 
 	abstract public static function label(): string;
 
-	abstract public static function get_data( $query );
+	public static function get_registered_fields(): array {
+		return [];
+	}
+
+	public static function get_registered_field() {
+		return null;
+	}
 
 	public static function get_filters(): array {
 		return [];

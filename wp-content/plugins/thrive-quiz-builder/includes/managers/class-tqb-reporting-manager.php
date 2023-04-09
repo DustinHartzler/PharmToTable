@@ -317,7 +317,7 @@ class TQB_Reporting_Manager {
 		if ( empty( $structure_meta['last_reset'] ) ) {
 			$quiz         = get_post( $this->quiz_id );
 			$data['text'] = __( 'Data collected since: ', 'thrive-quiz-builder' );
-			$data['date'] = $quiz->post_date;
+			$data['date'] = empty( $quiz ) ? '' : $quiz->post_date;
 		} else {
 			$data['text'] = __( 'Data collected since latest reset: ', 'thrive-quiz-builder' );
 			$data['date'] = date( 'Y-m-d H:i:s', $structure_meta['last_reset'] );

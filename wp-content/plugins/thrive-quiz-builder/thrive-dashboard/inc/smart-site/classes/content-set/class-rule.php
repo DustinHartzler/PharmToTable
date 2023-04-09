@@ -49,6 +49,27 @@ class Rule implements \JsonSerializable {
 	);
 
 	/**
+	 * @var mixed
+	 */
+	public $type;
+	/**
+	 * @var mixed
+	 */
+	public $value;
+	/**
+	 * @var mixed
+	 */
+	public $content;
+	/**
+	 * @var mixed
+	 */
+	public $field;
+	/**
+	 * @var mixed
+	 */
+	public $operator;
+
+	/**
 	 * Rule constructor.
 	 *
 	 * @param array $data
@@ -377,7 +398,7 @@ class Rule implements \JsonSerializable {
 	 */
 	protected function alter_frontend_title( $title, $status = 'publish' ) {
 		if ( $status !== 'publish' ) {
-			$title = $title . ' [' . $status . ']';
+			$title .= ' [' . $status . ']';
 		}
 
 		return $title;

@@ -22,6 +22,13 @@ abstract class TCB_Element_Abstract {
 	protected $_alternate = '';
 
 	/**
+	 * Set from TCB_Elements class get_for_front function
+	 *
+	 * @var boolean
+	 */
+	public $pinned;
+
+	/**
 	 * Get element alternate
 	 *
 	 * @return string
@@ -322,6 +329,183 @@ abstract class TCB_Element_Abstract {
 					'h3_spacing'           => $h3_spacing,
 				],
 			],
+			'carousel'   => [
+				'hidden' => true,
+				'order'  => 85,
+				'config' => [
+					'MovementSettings'    => array(
+						'config'  => array(
+							'name'               => '',
+							'large_buttons_text' => true,
+							'checkbox'           => true,
+							'default'            => 'arrows',
+							'buttons'            => array(
+								array(
+									'value'   => 'arrows',
+									'text'    => __( 'Show arrows', 'thrive-cb' ),
+									'icon'    => 'carousel-show-arrows',
+									'default' => true,
+								),
+								array(
+									'value'   => 'infinite',
+									'text'    => __( 'Infinite sliding', 'thrive-cb' ),
+									'icon'    => 'carousel-infinite-sliding',
+									'default' => false,
+								),
+								array(
+									'value'   => 'dots',
+									'text'    => __( 'Show dots', 'thrive-cb' ),
+									'icon'    => 'carousel-show-dots',
+									'default' => false,
+								),
+								array(
+									'value'   => 'draggable',
+									'text'    => __( 'Drag to scroll', 'thrive-cb' ),
+									'icon'    => 'carousel-drag-to-scroll',
+									'default' => false,
+								),
+							),
+						),
+						'extends' => 'ButtonGroup',
+					),
+					'SlidesToShow'        => array(
+						'config'  => array(
+							'min'   => '1',
+							'max'   => '10',
+							'label' => __( 'Columns', 'thrive-cb' ),
+							'um'    => array(),
+						),
+						'extends' => 'Slider',
+					),
+					'SlidesToScroll'      => array(
+						'config'  => array(
+							'min'   => '1',
+							'max'   => '3',
+							'label' => __( 'Slides to scroll', 'thrive-cb' ),
+							'type'  => 'number',
+						),
+						'extends' => 'Input',
+					),
+					'Autoplay'            => array(
+						'config'  => array(
+							'name'       => '',
+							'label'      => __( 'Autoplay', 'thrive-cb' ),
+							'default'    => false,
+							'info'       => true,
+							'info_hover' => true,
+						),
+						'extends' => 'Switch',
+					),
+					'AutoplaySpeed'       => array(
+						'config'  => array(
+							'default' => '3000',
+							'min'     => '1',
+							'max'     => '10000',
+							'label'   => __( 'Speed', 'thrive-cb' ),
+							'um'      => array( 'ms' ),
+						),
+						'extends' => 'Input',
+					),
+					'PauseOn'             => array(
+						'config'  => array(
+							'name'     => __( 'Pause on', 'thrive-cb' ),
+							'checkbox' => true,
+							'buttons'  => array(
+								array(
+									'value'   => 'pauseOnFocus',
+									'text'    => 'Focus',
+									'default' => true,
+								),
+								array(
+									'value'   => 'pauseOnHover',
+									'text'    => 'Hover',
+									'default' => true,
+								),
+							),
+						),
+						'extends' => 'ButtonGroup',
+					),
+					'CenterMode'          => array(
+						'config'  => array(
+							'name'       => '',
+							'label'      => __( 'Overlap end items', 'thrive-cb' ),
+							'default'    => false,
+							'info'       => true,
+							'info_hover' => true,
+						),
+						'extends' => 'Switch',
+					),
+					'CenterPadding'       => array(
+						'config'  => array(
+							'min'   => '0',
+							'max'   => '160',
+							'label' => __( 'Distance', 'thrive-cb' ),
+							'um'    => array( 'px', '%' ),
+						),
+						'extends' => 'Slider',
+					),
+					'AdaptiveHeight'      => array(
+						'config'  => array(
+							'name'       => '',
+							'label'      => __( 'Adaptive carousel height' ),
+							'info'       => true,
+							'info_hover' => true,
+						),
+						'extends' => 'Switch',
+					),
+					'UniformSlidesHeight' => array(
+						'config'  => array(
+							'name'       => '',
+							'label'      => __( 'Uniform slides height' ),
+							'info'       => true,
+							'info_hover' => true,
+						),
+						'extends' => 'Switch',
+					),
+					'VerticalPosition'    => array(
+						'config'  => array(
+							'name'    => __( 'Vertical Position', 'thrive-cb' ),
+							'buttons' => [
+								[
+									'icon'    => 'top',
+									'default' => true,
+									'value'   => 'top',
+								],
+								[
+									'icon'  => 'vertical',
+									'value' => 'center',
+								],
+								[
+									'icon'  => 'bot',
+									'value' => 'bottom',
+								],
+							],
+						),
+						'extends' => 'ButtonGroup',
+					),
+					'Fade'                => array(
+						'config'  => array(
+							'name'       => '',
+							'label'      => __( 'Single slide fader', 'thrive-cb' ),
+							'default'    => false,
+							'info'       => true,
+							'info_hover' => true,
+						),
+						'extends' => 'Switch',
+					),
+					'FadeImageWidth'      => array(
+						'config'  => array(
+							'default' => '0',
+							'min'     => '10',
+							'max'     => '1080',
+							'um'      => array( '%', 'px' ),
+							'label'   => __( 'Item resize', 'thrive-cb' ),
+							'css'     => 'max-width',
+						),
+						'extends' => 'Slider',
+					),
+				],
+			],
 			'layout'     => [
 				'order'             => 100,
 				'disabled_controls' => [
@@ -552,9 +736,7 @@ abstract class TCB_Element_Abstract {
 			$html = $this->html();
 		}
 
-		$html = apply_filters( 'tcb_' . $this->name() . '_element_layout', $html );
-
-		return $html;
+		return apply_filters( 'tcb_' . $this->tag() . '_element_layout', $html );
 	}
 
 	/**

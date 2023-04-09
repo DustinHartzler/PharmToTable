@@ -38,7 +38,7 @@ class Dashboard {
 
 	public static function admin_menu() {
 		add_submenu_page(
-			null,
+			'',
 			static::TITLE,
 			static::TITLE,
 			'manage_options',
@@ -100,6 +100,7 @@ class Dashboard {
 					Fonts::DISABLE_GOOGLE_FONTS      => Fonts::is_blocking_google_fonts(),
 					Gutenberg::DISABLE_GUTENBERG     => Gutenberg::is_gutenberg_disabled(),
 					Gutenberg::DISABLE_GUTENBERG_LP  => Gutenberg::is_gutenberg_disabled( true ),
+					Emoji::DISABLE_EMOJI     => Emoji::is_emoji_disabled()
 				],
 				'nonce'   => wp_create_nonce( 'wp_rest' ),
 				'route'   => get_rest_url( get_current_blog_id(), 'tcb/v1/lightspeed' ),

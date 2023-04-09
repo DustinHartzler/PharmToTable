@@ -25,7 +25,7 @@ trait Is_Singleton {
 	 *
 	 * @param int $id
 	 *
-	 * @return mixed
+	 * @return static
 	 */
 	public static function get_instance_with_id( $id = 0 ) {
 		/* if we don't have any instance or when we send an id that is not the same as the previous one, we create a new instance */
@@ -39,7 +39,7 @@ trait Is_Singleton {
 	/**
 	 * General singleton implementation for getting a class instance
 	 *
-	 * @return mixed
+	 * @return static
 	 */
 	public static function get_instance() {
 		if ( empty( static::$_instance ) ) {

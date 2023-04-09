@@ -77,7 +77,7 @@ class TCB_Post_List_Filter {
 			unset( $attr['dropdown_placeholder'] );
 		}
 
-		$content .= self::get_option_template( $filter_type, $filter_option, $filter_options_selection, $extra_attributes );
+		$content .= static::get_option_template( $filter_type, $filter_option, $filter_options_selection, $extra_attributes );
 
 		unset( $attr['icon'], $attr['search'], $attr['inner-classes'] );
 
@@ -158,12 +158,10 @@ class TCB_Post_List_Filter {
 
 				$content .= tcb_template( $filter_element_template, $template_attributes, true );
 			}
-		} else {
-			if ( ! empty( $extra_attributes['search'] ) ) {
-				$content = $extra_attributes['search'];
+		} else if ( ! empty( $extra_attributes['search'] ) ) {
+			$content = $extra_attributes['search'];
 
-				unset( $extra_attributes['search'] );
-			}
+			unset( $extra_attributes['search'] );
 		}
 
 		$wrapper_attr = [];
@@ -305,49 +303,48 @@ class TCB_Post_List_Filter {
 
 		if ( empty( $filters ) ) {
 			return $post_list_query;
-		} else {
-			$rules = [];
+		}
 
-			foreach ( $filters as $filter ) {
-				if ( ! empty( $filter['name'] ) || ( ! empty( $filter['id'] ) && ! in_array( $filter['id'], [ 'all', 'none' ] ) ) ) {
-					switch ( $filter['filter'] ) {
-						case 'author':
-							static::set_filter_query_for_author( $post_list_query, $filter );
-							break;
-						case 'search':
-							$post_list_query['s'] = $filter['name'];
-							break;
-						case 'category':
-						case 'tag':
-						default:
-							static::set_filter_for_terms( $filter, $rules );
-							break;
-					}
+		$rules      = [];
+
+		foreach ( $filters as $filter ) {
+			if ( ! empty( $filter['name'] ) || ( ! empty( $filter['id'] ) && ! in_array( $filter['id'], [ 'all', 'none' ] ) ) ) {
+				switch ( $filter['filter'] ) {
+					case 'author':
+						static::set_filter_query_for_author( $post_list_query, $filter );
+						break;
+					case 'search':
+						$post_list_query['s'] = $filter['name'];
+						break;
+					case 'category':
+					case 'tag':
+					default:
+						static::set_filter_for_terms( $filter, $rules );
+						break;
 				}
 			}
+		}
 
-			$rule_count = count( $rules );
+		$rule_count = count( $rules );
 
-			/* If we have rules, we update the Post List Query */
-			if ( $rule_count > 0 ) {
-				$rules = array_values( $rules );
+		/* If we have rules, we update the Post List Query */
+		if ( $rule_count > 0 ) {
+			$rules = array_values( $rules );
 
-				/* If we have more than 1 rule we need to add 'AND' relation */
-				if ( count( $rules ) > 1 ) {
-					$rules['relation'] = 'AND';
-				}
-
-				if ( empty( $post_list_query['tax_query'] ) ) {
-					$post_list_query['tax_query'] = $rules;
-				} else {
-					$post_list_query['tax_query'] = [
-						$post_list_query['tax_query'],
-						'relation' => 'AND',
-						$rules,
-					];
-				}
+			/* If we have more than 1 rule we need to add 'AND' relation */
+			if ( count( $rules ) > 1 ) {
+				$rules['relation'] = 'AND';
 			}
 
+			if ( empty( $post_list_query['tax_query'] ) ) {
+				$post_list_query['tax_query'] = $rules;
+			} else {
+				$post_list_query['tax_query'] = [
+					$post_list_query['tax_query'],
+					'relation' => 'AND',
+					$rules,
+				];
+			}
 		}
 
 		return $post_list_query;

@@ -34,6 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="tve-control" data-view="Highlight"></div>
 				<div class="tve-control" data-view="Indent"></div>
 				<div class="tve-control" data-view="Numbering"></div>
+				<div class="tve-control" data-view="ScrollAnimation"></div>
 				<div class="tve-control" data-view="Expandable"></div>
 				<div class="tve-expandable-toc mb-10">
 					<div class="tve-control" data-view="DefaultState"></div>

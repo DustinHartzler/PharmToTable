@@ -79,7 +79,7 @@ class TCB_Contact_Form {
 	 */
 	private function setup_posted_data( $data = array() ) {
 		$this->post_id = $data['post_id'];
-		$this->types   = self::get_types();
+		$this->types   = static::get_types();
 
 		foreach ( $data as $type => $value ) {
 			/**

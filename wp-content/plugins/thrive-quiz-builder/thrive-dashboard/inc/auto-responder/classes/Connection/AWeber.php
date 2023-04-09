@@ -10,15 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 03.04.2015
- * Time: 17:31
- */
 class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abstract {
-	const APP_ID = '10fd90de';
-	const CONSUMER_KEY = 'AkkjPM2epMfahWNUW92Mk2tl';
+	const APP_ID          = '10fd90de';
+	const CONSUMER_KEY    = 'AkkjPM2epMfahWNUW92Mk2tl';
 	const CONSUMER_SECRET = 'V9bzMop78pXTlPEAo30hxZF7dXYE6T6Ww2LAH95m';
 
 	/**
@@ -45,12 +39,12 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 */
 	public function getAuthorizeUrl() {
 		/** @var Thrive_Dash_Api_AWeber $aweber */
-		$aweber      = $this->get_api();
-		$callbackUrl = admin_url( 'admin.php?page=tve_dash_api_connect&api=aweber' );
+		$aweber       = $this->get_api();
+		$callback_url = admin_url( 'admin.php?page=tve_dash_api_connect&api=aweber' );
 
-		list ( $requestToken, $requestTokenSecret ) = $aweber->getRequestToken( $callbackUrl );
+		list ( $request_token, $request_token_secret ) = $aweber->getRequestToken( $callback_url );
 
-		update_option( 'thrive_aweber_rts', $requestTokenSecret );
+		update_option( 'thrive_aweber_rts', $request_token_secret );
 
 		return $aweber->getAuthorizeUrl();
 	}
@@ -133,7 +127,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 		$aweber = $this->get_api();
 
 		try {
-			$account = $aweber->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
+			$aweber->getAccount( $this->param( 'token' ), $this->param( 'secret' ) );
 
 			return true;
 		} catch ( Exception $e ) {
@@ -258,8 +252,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 			// Update custom fields
 			// Make another call to update custom mapped fields in order not to break the subscription call,
 			// if custom data doesn't pass API custom fields validation
-
-			$mapping = thrive_safe_unserialize( base64_decode( $arguments['tve_mapping'] ) );
+			$mapping = thrive_safe_unserialize( base64_decode( isset( $arguments['tve_mapping'] ) ? $arguments['tve_mapping'] : '' ) );
 			if ( ! empty( $mapping ) || ! empty( $arguments['automator_custom_fields'] ) ) {
 				$this->updateCustomFields( $list_identifier, $arguments, $params );
 			}
@@ -314,9 +307,9 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	}
 
 	/**
-	 * @param array $params which may contain `list_id`
-	 * @param bool $force make a call to API and invalidate cache
-	 * @param bool $get_all where to get lists with their custom fields
+	 * @param array $params  which may contain `list_id`
+	 * @param bool  $force   make a call to API and invalidate cache
+	 * @param bool  $get_all where to get lists with their custom fields
 	 *
 	 * @return array
 	 */
@@ -632,7 +625,7 @@ class Thrive_Dash_List_Connection_AWeber extends Thrive_Dash_List_Connection_Abs
 	 * Prepare custom fields for api call
 	 *
 	 * @param array $custom_fields
-	 * @param null $list_identifier
+	 * @param null  $list_identifier
 	 *
 	 * @return array
 	 */

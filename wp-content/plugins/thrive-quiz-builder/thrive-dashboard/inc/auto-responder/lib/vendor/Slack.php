@@ -27,7 +27,12 @@ class Thrive_Dash_Api_Slack {
 
 	public function get_channel_list( $token = false ) {
 		try {
-			$request = $this->make_request( 'https://slack.com/api/conversations.list', array( 'token' => $token ), 'get' );
+			$request = $this->make_request( 'https://slack.com/api/conversations.list',
+				array(
+					'token'            => $token,
+					'exclude_archived' => true,
+					'limit'            => 500,
+				), 'get' );
 		} catch ( Exception $e ) {
 			return $e->getMessage();
 		}

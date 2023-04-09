@@ -496,7 +496,7 @@ class TCB_Utils {
 
 		/* if the post meta is empty, look inside the file and get the data directly from the it */
 		if ( empty( $thumb_data['url'] ) ) {
-			if ( file_exists( $thumb_path ) ) {
+			if ( file_exists( $thumb_path ) && ini_get( 'allow_url_fopen' ) ) {
 				list( $width, $height ) = getimagesize( $thumb_path );
 
 				$thumb_data = array(

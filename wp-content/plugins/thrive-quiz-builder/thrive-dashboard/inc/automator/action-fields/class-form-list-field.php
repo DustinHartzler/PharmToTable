@@ -24,14 +24,14 @@ class Form_List_Field extends Action_Field {
 	 * Field description
 	 */
 	public static function get_description() {
-		return __( 'Choose the form you want to use', 'thrive-dash' );
+		return static::get_placeholder();
 	}
 
 	/**
 	 * Field input placeholder
 	 */
 	public static function get_placeholder() {
-		return __( 'Choose form', 'thrive-dash' );
+		return __( 'Choose the form you want to use', 'thrive-dash' );
 	}
 
 	/**

@@ -49,6 +49,7 @@ class Main {
 		require_once __DIR__ . '/class-js-module.php';
 		require_once __DIR__ . '/class-gutenberg.php';
 		require_once __DIR__ . '/class-woocommerce.php';
+		require_once __DIR__ . '/class-emoji.php';
 	}
 
 	public static function is_enabled() {

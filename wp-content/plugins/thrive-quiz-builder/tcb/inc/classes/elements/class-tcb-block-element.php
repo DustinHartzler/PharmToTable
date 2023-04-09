@@ -47,7 +47,7 @@ class TCB_Block_Element extends TCB_Section_Element {
 	 * @return string
 	 */
 	public function category() {
-		return self::get_thrive_advanced_label();
+		return static::get_thrive_advanced_label();
 	}
 
 	/**

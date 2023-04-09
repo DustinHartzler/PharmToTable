@@ -37,7 +37,7 @@ function tve_dash_section() {
 function tve_dash_license_manager_section() {
 	$products = tve_dash_get_products( false );
 
-	$returnUrl = esc_url( empty( $_REQUEST['return'] ) ? '' : sanitize_text_field( $_REQUEST['return'] ) );
+	$return_url = esc_url( empty( $_REQUEST['return'] ) ? '' : sanitize_text_field( $_REQUEST['return'] ) );
 
 	/**
 	 * Filter products to only active once
@@ -45,7 +45,7 @@ function tve_dash_license_manager_section() {
 	 * @var $product TVE_Dash_Product_Abstract
 	 */
 	foreach ( $products as $key => $product ) {
-		if ( ! $product->isActivated() ) {
+		if ( ! $product->is_activated() ) {
 			unset( $products[ $key ] );
 		}
 	}
@@ -115,9 +115,8 @@ function tve_dash_get_general_settings() {
 			'link'        => '//help.thrivethemes.com/en/articles/4777320-how-to-load-videos-in-order-for-them-to-be-compatible-with-lazy-loading-and-gdpr-compliance-plugins',
 		),
 	);
-	$settings = apply_filters( 'tve_dash_general_settings_filter', $settings );
 
-	return $settings;
+	return apply_filters( 'tve_dash_general_settings_filter', $settings );
 }
 
 /**
@@ -126,6 +125,7 @@ function tve_dash_get_general_settings() {
  * @includes general_settings.phtml template
  */
 function tve_dash_general_settings_section() {
+	tve_dash_enqueue();
 	$affiliate_links = tve_dash_get_affiliate_links();
 	$settings        = tve_dash_get_general_settings();
 	/* text, radio, checkbox, password */
@@ -193,10 +193,10 @@ function tve_dash_get_products( $check_rights = true ) {
 
 	foreach ( apply_filters( 'tve_dash_installed_products', array() ) as $_product ) {
 		/** @var $_product TVE_Dash_Product_Abstract */
-		if ( $check_rights && ! $_product->has_access() && $_product->getType() !== 'theme' ) {
+		if ( $check_rights && ! $_product->has_access() && $_product->get_type() !== 'theme' ) {
 			continue;
 		}
-		$return[ $_product->getTag() ] = $_product;
+		$return[ $_product->get_tag() ] = $_product;
 	}
 
 	return $return;
@@ -278,6 +278,10 @@ function tve_dash_get_features() {
 	$thrive_features = apply_filters( 'tve_dash_filter_features', $thrive_features );
 
 	/**
+	 * always available
+	 */
+	$enabled['general_settings'] = true;
+	/**
 	 * Thrive dashboard admin feature is only enabled for super admins
 	 */
 	if ( is_super_admin() ) {
@@ -315,19 +319,19 @@ function tve_dash_check_default_cap() {
 /**
  * SPL loader
  *
- * @param $className
+ * @param $class_name
  *
  * @return bool
  */
-function tve_dash_autoloader( $className ) {
+function tve_dash_autoloader( $class_name ) {
 	$namespace = 'TVE_Dash_';
-	if ( strpos( $className, $namespace ) !== 0 ) {
+	if ( strpos( $class_name, $namespace ) !== 0 ) {
 		return false;
 	}
 
 	$basedir = rtrim( dirname( dirname( __FILE__ ) ), '/\\' ) . '/classes/';
 
-	return tve_dash_autoload( $basedir, str_replace( $namespace, '', $className ) );
+	return tve_dash_autoload( $basedir, str_replace( $namespace, '', $class_name ) );
 }
 
 /**
@@ -804,10 +808,11 @@ function tve_dash_get_ip() {
  */
 function tve_current_user_data( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
-		$current_user = wp_get_current_user();
-	} else {
-		$current_user = get_user_by( 'id', $user_id );
+		$user_id = tve_get_current_user_id();
 	}
+
+	$current_user = get_user_by( 'id', $user_id );
+
 	$user_data = array();
 
 	if ( ! empty( $current_user ) && ! empty( $current_user->data ) && ! empty( $current_user->data->ID ) ) {
@@ -830,6 +835,21 @@ function tve_current_user_data( $user_id = 0 ) {
 	}
 
 	return $user_data;
+}
+
+/**
+ * Wrapper over get current user ID. Used to apply a filter over it
+ *
+ * @return mixed|null
+ */
+function tve_get_current_user_id() {
+	/**
+	 * Hooks into current user functionality and overrides it.
+	 * Used in ThriveApprentice - certification generation
+	 *
+	 * @param int $user_id
+	 */
+	return apply_filters( 'tve_get_current_user_id', get_current_user_id() );
 }
 
 /**
@@ -1099,6 +1119,24 @@ function tvd_get_webhook_route_url( $endpoint ) {
 	return get_rest_url() . $rest_controller->get_namespace() . $rest_controller->get_webhook_base() . '/' . $endpoint;
 }
 
+function tvd_get_google_api_client_id() {
+	$connection = Thrive_Dash_List_Manager::connection_instance( 'google' );
+
+	return $connection ? $connection->param( 'client_id' ) : '';
+}
+
+function tvd_get_google_api_key() {
+	$connection = Thrive_Dash_List_Manager::connection_instance( 'google' );
+
+	return $connection ? $connection->param( 'api_key' ) : '';
+}
+
+function tvd_get_facebook_app_id() {
+	$connection = Thrive_Dash_List_Manager::connection_instance( 'facebook' );
+
+	return $connection ? $connection->param( 'app_id' ) : '';
+}
+
 /**
  * Checks if we are during a theme/plugin update
  *
@@ -1151,6 +1189,21 @@ function thrive_safe_unserialize( $data ) {
  */
 function tvd_get_update_channel() {
 	return get_option( 'tve_update_option', 'stable' );
+}
+
+/**
+ * Returns the service API endpoint needed to run certain tasks.
+ * Used in certificate generation for ThriveApprentice
+ *
+ * @return string
+ */
+function tvd_get_service_endpoint() {
+	$endpoint = 'https://service-api.thrivethemes.com';
+	if ( defined( 'TVE_SERVICE_API_LOCAL' ) ) {
+		$endpoint = TVE_SERVICE_API_LOCAL;
+	}
+
+	return $endpoint;
 }
 
 /**
@@ -1272,4 +1325,22 @@ function thrive_get_transient( $transient ) {
 	}
 
 	return $value;
+}
+
+/**
+ * Delete any possible support user
+ *
+ * @return void
+ */
+function tve_dash_delete_support_user() {
+	foreach ( get_users( [ 'meta_key' => '_thrive_support_user', 'meta_value' => 1 ] ) as $user ) {
+		wp_delete_user( $user->ID );
+	}
+	/**
+	 * Make sure the previously saved user is also deleted in case nothing is found by meta query
+	 */
+	$user = get_user_by( 'email', 'support@thrivethemes.com' );
+	if ( isset( $user->ID ) && $user->ID ) {
+		wp_delete_user( $user->ID );
+	}
 }

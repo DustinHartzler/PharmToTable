@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Aurelian Pop
- * Date: 28-Dec-15
- * Time: 9:22 AM
- */
 class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -102,13 +96,8 @@ class Thrive_Dash_List_Connection_Mailgun extends Thrive_Dash_List_Connection_Ab
 		$from_email = get_option( 'admin_email' );
 		$to         = $from_email;
 
-		if ( ! empty( $data['from_name'] ) ) {
-			$from_email = $data['from_name'] . ' < ' . $from_email . ' >';
-		}
-
 		$subject      = 'API connection test';
-		$html_content = 'This is a test email from Thrive Leads Mailgun API.';
-		$text_content = 'This is a test email from Thrive Leads Mailgun API.';
+		$text_content = $html_content = 'This is a test email from Thrive Leads Mailgun API.';
 
 		try {
 			$mailgun->sendMessage( "$domain",

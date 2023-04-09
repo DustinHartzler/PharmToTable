@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 28.08.2014
- * Time: 09:51
- */
 
 require_once dirname( __FILE__ ) . '/Tve_Dash_Thrive_Icon_Manager_Data.php';
 require_once dirname( __FILE__ ) . '/Tve_Dash_Thrive_Icon_Manager_View.php';
@@ -48,11 +42,11 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 		 * @return Tve_Dash_Thrive_Icon_Manager
 		 */
 		public static function instance() {
-			if ( self::$instance === null ) {
-				self::$instance = new Tve_Dash_Thrive_Icon_Manager();
+			if ( static::$instance === null ) {
+				static::$instance = new Tve_Dash_Thrive_Icon_Manager();
 			}
 
-			return self::$instance;
+			return static::$instance;
 		}
 
 		/**

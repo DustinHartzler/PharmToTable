@@ -63,11 +63,11 @@ class Woo_Product_Id extends Data_Field {
 
 	public static function get_options_callback() {
 		$products = array();
-		foreach ( wc_get_products( array( 'limit' => - 1 ) ) as $key => $product ) {
+		foreach ( Woo::get_products() as $product ) {
 			$id              = $product->get_id();
 			$products[ $id ] = array(
-				'id' => $id,
-				'label'    => $product->get_name(),
+				'id'    => $id,
+				'label' => $product->get_name(),
 			);
 		}
 

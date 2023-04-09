@@ -237,8 +237,9 @@ class Template {
 			if ( ! empty( $template['thumb']['url'] ) ) {
 				$template_data['thumb'] = $template['thumb'];
 				//if the image sizes couldn't be retrieved before
-				if ( empty( $template['thumb']['h'] ) && ! empty( $template['thumb']['url'] ) ) {
+				if ( empty( $template['thumb']['h'] ) && ! empty( $template['thumb']['url'] ) && ini_get('allow_url_fopen') ) {
 					list( $width, $height ) = getimagesize( $template['thumb']['url'] );
+
 					$template_data['thumb']['h'] = $height;
 					$template_data['thumb']['w'] = $width;
 				}

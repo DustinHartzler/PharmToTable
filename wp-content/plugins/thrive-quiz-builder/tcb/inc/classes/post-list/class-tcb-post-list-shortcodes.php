@@ -206,6 +206,12 @@ class TCB_Post_List_Shortcodes {
 		);
 		/* extra classes that are sent through data attr */
 		$wrap_args['class'] .= ' ' . ( strpos( $wrap_args['class'], THRIVE_WRAPPER_CLASS ) === false ? THRIVE_WRAPPER_CLASS : '' ) . ( empty( $attr['class'] ) ? '' : ' ' . $attr['class'] );
+
+		if ( ! empty( $attr['style'] ) ) {
+			$wrap_args['attr']['style'] = $attr['style'];
+			unset( $attr['style'] );
+		}
+
 		/* attributes that come directly from the shortcode */
 		foreach ( $attr as $key => $value ) {
 			if (
@@ -807,7 +813,7 @@ class TCB_Post_List_Shortcodes {
 			$image_url = TCB_Post_List_Featured_Image::get_default_url();
 		}
 		/* if we're in the editor, append a dynamic flag at the end so we can recognize that the URL is dynamic in the editor */
-		if ( TCB_Utils::in_editor_render() ) {
+		if ( TCB_Utils::in_editor_render( true ) ) {
 			$image_url = add_query_arg( array(
 				'dynamic_featured' => 1,
 				'size'             => $size,

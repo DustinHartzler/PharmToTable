@@ -12,13 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once dirname( __FILE__ ) . '/AWeber/exceptions.php';
 
 /**
- * Created by PhpStorm.
- * User: radu
- * Date: 02.04.2015
- * Time: 17:59
- */
-
-/**
  * AWeberAPI
  *
  * Creates a connection to the AWeberAPI for a given consumer application.
@@ -53,18 +46,18 @@ class Thrive_Dash_Api_AWeber extends Thrive_Dash_Api_AWeber_Base {
 	 * @return array
 	 */
 	public static function getDataFromAweberID( $string ) {
-		list( $consumerKey, $consumerSecret, $requestToken, $tokenSecret, $verifier ) = self::_parseAweberID( $string );
+		list( $consumer_key, $consumer_secret, $request_token, $token_secret, $verifier ) = self::_parseAweberID( $string );
 
 		if ( ! $verifier ) {
 			return null;
 		}
-		$aweber                              = new Thrive_Dash_Api_AWeber( $consumerKey, $consumerSecret );
-		$aweber->adapter->user->requestToken = $requestToken;
-		$aweber->adapter->user->tokenSecret  = $tokenSecret;
+		$aweber                              = new Thrive_Dash_Api_AWeber( $consumer_key, $consumer_secret );
+		$aweber->adapter->user->requestToken = $request_token;
+		$aweber->adapter->user->tokenSecret  = $token_secret;
 		$aweber->adapter->user->verifier     = $verifier;
-		list( $accessToken, $accessSecret ) = $aweber->getAccessToken();
+		list( $access_token, $access_secret ) = $aweber->getAccessToken();
 
-		return array( $consumerKey, $consumerSecret, $accessToken, $accessSecret );
+		return array( $consumer_key, $consumer_secret, $access_token, $access_secret );
 	}
 
 	protected static function _parseAWeberID( $string ) {
@@ -100,9 +93,9 @@ class Thrive_Dash_Api_AWeber extends Thrive_Dash_Api_AWeber_Base {
 	 * @return string The Authorization URL
 	 */
 	public function getAuthorizeUrl() {
-		$requestToken = $this->user->requestToken;
+		$request_token = $this->user->requestToken;
 
-		return ( empty( $requestToken ) ) ?
+		return ( empty( $request_token ) ) ?
 			$this->adapter->app->getAuthorizeUrl()
 			:
 			$this->adapter->app->getAuthorizeUrl() . "?oauth_token={$this->user->requestToken}";
@@ -166,10 +159,10 @@ class Thrive_Dash_Api_AWeber extends Thrive_Dash_Api_AWeber_Base {
 	 * @return Array Contains the request token as the first item
 	 *     and the request token secret as the second item of the array
 	 */
-	public function getRequestToken( $callbackUrl ) {
-		$requestToken = $this->adapter->getRequestToken( $callbackUrl );
+	public function getRequestToken( $callback_url ) {
+		$request_token = $this->adapter->getRequestToken( $callback_url );
 
-		return array( $requestToken, $this->user->tokenSecret );
+		return array( $request_token, $this->user->tokenSecret );
 	}
 
 	/**

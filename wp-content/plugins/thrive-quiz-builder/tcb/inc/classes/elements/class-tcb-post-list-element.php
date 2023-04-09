@@ -115,6 +115,7 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 		}
 
 		$components = array(
+			'carousel'         => array( 'hidden' => false ),
 			'animation'        => array( 'hidden' => true ),
 			'styles-templates' => array( 'hidden' => true ),
 			'typography'       => array( 'hidden' => true ),
@@ -126,24 +127,45 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 				'config' => array(
 					'Type'            => array(
 						'config'  => array(
-							'default' => 'grid',
-							'name'    => __( 'Display type', 'thrive-cb' ),
-							'buttons' => array(
+							'default'       => 'grid',
+							'large_buttons' => true,
+							'name'          => __( 'Display type', 'thrive-cb' ),
+							'buttons'       => array(
 								array(
-									'icon'    => '',
-									'text'    => 'LIST',
-									'value'   => 'list',
+									'data'    => array(
+										'tooltip'  => __( 'Grid', 'thrive-cb' ),
+										'position' => 'top',
+									),
+									'icon'    => 'gallery-grid',
+									'value'   => 'grid',
 									'default' => true,
 								),
 								array(
-									'icon'  => '',
-									'text'  => 'GRID',
-									'value' => 'grid',
+									'data'  => array(
+										'tooltip'  => __( 'Masonry', 'thrive-cb' ),
+										'position' => 'top',
+										'width'    => '100%',
+									),
+									'icon'  => 'gallery-vertical-masonry',
+									'value' => 'masonry',
 								),
 								array(
-									'icon'  => '',
-									'text'  => 'MASONRY',
-									'value' => 'masonry',
+									'data'  => array(
+										'tooltip'  => __( 'List', 'thrive-cb' ),
+										'position' => 'top',
+										'width'    => '100%',
+									),
+									'icon'  => 'display-list',
+									'value' => 'list',
+								),
+								array(
+									'data'  => array(
+										'tooltip'  => __( 'Carousel', 'thrive-cb' ),
+										'position' => 'top',
+										'width'    => '100%',
+									),
+									'icon'  => 'gallery-carousel',
+									'value' => 'carousel',
 								),
 							),
 						),
@@ -256,6 +278,9 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 			),
 		);
 
+		/* Add group components for the Carousel Arrows */
+		$components = array_merge( $components, $this->group_component() );
+
 		return $components;
 	}
 
@@ -279,6 +304,24 @@ class TCB_Post_List_Element extends TCB_Cloud_Template_Element_Abstract {
 				'type' => 'help',
 				'url'  => 'post_list',
 				'link' => 'https://help.thrivethemes.com/en/articles/4425844-how-to-use-the-post-list-element-in-thrive-architect',
+			),
+		);
+	}
+
+	/**
+	 * Group Edit Properties
+	 *
+	 * @return array|bool
+	 */
+	public function has_group_editing() {
+		return array(
+			'select_values' => array(
+				array(
+					'value'    => 'arrows',
+					'selector' => '.tcb-carousel-arrow',
+					'name'     => __( 'Next/Previous buttons Icons', 'thrive-cb' ),
+					'singular' => __( '-- Next/Previous buttons Icon', 'thrive-cb' ),
+				),
 			),
 		);
 	}

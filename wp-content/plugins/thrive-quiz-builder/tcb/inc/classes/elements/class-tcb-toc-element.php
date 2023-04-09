@@ -59,12 +59,12 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 			array(
 				'toc'        => array(
 					'config' => array(
-						'TOCPalettes'  => array(
+						'TOCPalettes'     => array(
 							'config'  => array(),
 							'extends' => 'Palettes',
 						),
-						'Headings'     => array(
-							'config'  => array(
+						'Headings'        => array(
+							'config' => array(
 								'name'   => __( 'Headings', 'thrive-cb' ),
 								'inputs' => array(
 									array(
@@ -95,7 +95,7 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 							),
 							'extends' => 'MultipleCheckbox',
 						),
-						'Columns'      => array(
+						'Columns'         => array(
 							'config'  => array(
 								'size'    => 'medium',
 								'name'    => __( 'Columns', 'thrive-cb' ),
@@ -116,8 +116,8 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 							),
 							'extends' => 'Select',
 						),
-						'Highlight'    => array(
-							'config'  => array(
+						'Highlight'       => array(
+							'config' => array(
 								'name'    => __( 'Highlight', 'thrive-cb' ),
 								'options' => array(
 									array(
@@ -140,8 +140,8 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 							),
 							'extends' => 'Select',
 						),
-						'Numbering'    => array(
-							'config'  => array(
+						'Numbering'       => array(
+							'config' => array(
 								'name'    => __( 'List type', 'thrive-cb' ),
 								'options' => array(
 									array(
@@ -168,7 +168,7 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 							),
 							'extends' => 'Select',
 						),
-						'Evenly'       => array(
+						'Evenly'          => array(
 							'config'  => array(
 								'name'    => '',
 								'label'   => __( 'Distribute evenly', 'thrive-cb' ),
@@ -176,7 +176,7 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 							),
 							'extends' => 'Switch',
 						),
-						'Indent'       => array(
+						'Indent'          => array(
 							'config'  => array(
 								'default' => '30',
 								'min'     => '0',
@@ -187,7 +187,7 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 							),
 							'extends' => 'Input',
 						),
-						'TextSize'     => array(
+						'TextSize'        => array(
 							'to'      => '.tve-toc-heading',
 							'config'  => array(
 								'default' => '16',
@@ -199,18 +199,28 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 							),
 							'extends' => 'Slider',
 						),
-						'LineSpacing'  => array(
+						'LineSpacing'     => array(
 							'to'        => '.tve-toc-heading',
 							'important' => true,
 						),
-						'HeadingList'  => array(
+						'HeadingList'     => array(
 							'config' => array(
 								'sortable'   => false,
 								'max_levels' => 2,
 								'tpl'        => 'controls/toc/preview-inline-item',
 							),
 						),
-						'Expandable'   => array(
+						'ScrollAnimation' => array(
+							'config'  => array(
+								'name'         => '',
+								'label'        => __( 'Disable smooth scroll animation', 'thrive-cb' ),
+								'default'      => false,
+								'tooltip'      => __( 'Page will scroll to the selected heading without any animation, recommended for pages with lazy-loaded content', 'thrive-cb' ),
+								'tooltip_side' => 'top',
+							),
+							'extends' => 'Switch',
+						),
+						'Expandable'      => array(
 							'config'  => array(
 								'name'    => '',
 								'label'   => __( 'Allow table to be collapsed', 'thrive-cb' ),
@@ -218,7 +228,7 @@ class TCB_Toc_Element extends TCB_Cloud_Template_Element_Abstract {
 							),
 							'extends' => 'Switch',
 						),
-						'DefaultState' => array(
+						'DefaultState'    => array(
 							'config'  => array(
 								'name'    => __( 'Default State', 'thrive-cb' ),
 								'buttons' => array(

@@ -10,12 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 02.04.2015
- * Time: 15:33
- */
 class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -719,8 +713,6 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 		if ( ! $list_id || ! $tag_id || ! $email_address ) {
 			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', 'thrive-dash' ) );
-
-			return false;
 		}
 
 		$save_tag = $this->get_api()->request( 'lists/' . $list_id . '/segments/' . $tag_id . '/members', array( 'email_address' => $email_address ), 'POST' );

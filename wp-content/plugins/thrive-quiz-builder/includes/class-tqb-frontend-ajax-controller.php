@@ -127,28 +127,38 @@ class TQB_Frontend_Ajax_Controller {
 
 				return $url . '?r=' . rand();
 			} elseif ( $custom === 'register_question_answer' ) {
-				$answer_id   = $this->param( 'answer_id' );
+				$answer_ids  = $this->param( 'answer_ids' );
 				$user_unique = $this->param( 'user_unique' );
 				$quiz_id     = $this->param( 'quiz_id' );
 				$answer_text = $this->param( 'answer_text' );
 				$post_id     = $this->param( 'tqb-post-id' );
 				$answer_text = sanitize_textarea_field( $answer_text );
 
-				if ( empty( $answer_id ) || empty( $user_unique ) || empty( $quiz_id ) ) {
+				if ( empty( $answer_ids ) || empty( $user_unique ) || empty( $quiz_id ) ) {
 					return false;
 				}
 
 				//Store TQB User inside the DB, if it doesn't exist for computing the answers
-				$user_id = TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id, false, array(
-					'object_id'   => $post_id,
+				$quiz_user_id = TQB_Quiz_Manager::get_quiz_user( $user_unique, $quiz_id, false, array(
+					'object_id' => $post_id,
 				) );
 
-				TQB_Quiz_Manager::register_answer( $answer_id, $user_unique, $quiz_id, $answer_text );
+				$feedback_settings = get_post_meta( $quiz_id, 'tqb_quiz_feedback_settings', true );
+
+				//if quiz navigation was enabled then we might get the same or different answers to an already answered question
+				if ( $feedback_settings['nav_buttons'] ) {
+
+					TQB_Quiz_Manager::handle_answer_already_saved( $answer_ids, $quiz_user_id, $quiz_id );
+				}
+
+				foreach ( $answer_ids as $answer_id ) {
+					TQB_Quiz_Manager::register_answer( $answer_id, $user_unique, $quiz_id, $answer_text );
+				}
 
 				$shortcode_content = array();
 				$question_manager  = new TGE_Question_Manager( $quiz_id );
 
-				$shortcode_content['question']            = $question_manager->get_question_content( $answer_id );
+				$shortcode_content['question']            = $question_manager->get_question_content( reset( $answer_ids ) );
 				$shortcode_content['question']['page_id'] = $quiz_id;
 				$shortcode_content['question']['quiz_id'] = $quiz_id;
 
@@ -157,6 +167,10 @@ class TQB_Frontend_Ajax_Controller {
 				}
 
 				do_action( 'tqb_register_impression', $shortcode_content['question'], $user_unique );
+
+				if ( $feedback_settings['nav_buttons'] ) {
+					return ( new TQB_Customer( $quiz_user_id ) )->get_resume_quiz_user_answers( $quiz_id, $post_id );
+				}
 
 				return true;
 			}
@@ -173,12 +187,12 @@ class TQB_Frontend_Ajax_Controller {
 			case 'GET':
 				$quiz_id         = $this->param( 'quiz_id' );
 				$page_type       = $this->param( 'page_type' );
-				$answer_id       = $this->param( 'answer_id' );
+				$answers         = $this->param( 'answer_ids' );
 				$user_unique     = $this->param( 'user_unique' );
 				$variation       = $this->param( 'variation' );
 				$post_id         = $this->param( 'tqb-post-id' );
 				$in_tcb_editor   = $this->param( 'tqb_in_tcb_editor', null );
-				$data            = TQB_Quiz_Manager::get_shortcode_content( $quiz_id, $page_type, $answer_id, $user_unique, $variation, $post_id );
+				$data            = TQB_Quiz_Manager::get_shortcode_content( $quiz_id, $page_type, $answers, $user_unique, $variation, $post_id );
 				$data['quiz_id'] = $quiz_id;
 
 				$quiz_style = TQB_Post_meta::get_quiz_style_meta( $quiz_id );
@@ -265,7 +279,7 @@ class TQB_Frontend_Ajax_Controller {
 					$data['html'] .= '<link rel="stylesheet" type="text/css" href="' . $css . '" media="all">';
 				}
 			} elseif ( $data['question'] ) {
-				$part .= $question_manager->get_first_question_preview( $data['question'] );
+				$part .= $question_manager->get_first_question_preview( $data['question'], $id );
 
 				$data['html'] = $part;
 			}

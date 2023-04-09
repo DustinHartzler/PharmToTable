@@ -67,12 +67,13 @@ class Hooks {
 					continue;
 				}
 
-				$quiz = new \TQB_Quiz( (int) $params['quiz_id'] );
+				$customer = ! empty( $params['user_id'] ) ? new \TQB_Customer( (int) $params['user_id'] ) : tqb_customer();
+				$quiz     = new \TQB_Quiz( (int) $params['quiz_id'] );
 				/**
 				 * We need to be sure that the quiz hasn't been deleted and the post is actually a quiz post
 				 */
 				if ( $quiz->get_post() instanceof \WP_Post && $quiz->get_post()->post_type === \TQB_Post_types::QUIZ_POST_TYPE ) {
-					$is_completed = tqb_customer()->is_quiz_completed( $quiz, $post_id );
+					$is_completed = $customer->is_quiz_completed( $quiz, $post_id );
 
 					if ( ! $is_completed ) {
 						$allow = false;
@@ -106,10 +107,9 @@ class Hooks {
 								$allow = true; // If the passing point is not between min and max, this means that the quiz has been altered from the backend and we allow based on complete
 								continue;
 							}
-
 						}
 
-						$allow = $allow && tqb_customer()->is_quiz_passed( $quiz, $params['cond'], $post_id );
+						$allow = $allow && $customer->is_quiz_passed( $quiz, $params['cond'], $post_id );
 					}
 				}
 

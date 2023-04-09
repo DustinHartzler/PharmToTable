@@ -84,8 +84,7 @@ class Woo_Add_Product_To_Order extends Action {
 		if ( ! empty( $data['extra_data'] ) ) {
 			$data = $data['extra_data'];
 		}
-
-		$this->products = $data['products']['value'];
+		$this->products = $data['woo_products']['value'];
 	}
 
 	public function do_action( $data ) {
@@ -107,7 +106,6 @@ class Woo_Add_Product_To_Order extends Action {
 				$order->add_product( $product );
 			}
 		}
-
 	}
 
 }

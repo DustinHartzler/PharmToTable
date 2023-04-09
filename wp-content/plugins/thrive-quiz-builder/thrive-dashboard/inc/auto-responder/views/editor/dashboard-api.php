@@ -32,11 +32,12 @@ if ( function_exists( 'tve_leads_get_form_variation' ) ) {
 
 ?>
 <div class="tve_large_lightbox tve_lead_gen_lightbox_small">
-	<p><?php echo esc_html__( "Your sign up form is connected to service(s) using the following API connections:", 'thrive-dash' ) ?></p>
+	<p><?php echo esc_html__( 'Your sign up form is connected to service(s) using the following API connections:', 'thrive-dash' ) ?></p>
 	<table>
+        <caption><?php echo esc_html__( 'API connections', 'thrive-dash' ) ?></caption>
 		<thead>
 		<tr>
-			<th colspan="2">
+			<th scope="col" colspan="2">
 				<?php echo esc_html__( "Service Name", 'thrive-dash' ) ?>
 			</th>
 		</tr>

@@ -7,6 +7,8 @@
 
 namespace TVE\Reporting;
 
+use TVE\Reporting\EventFields\User_Id;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -41,15 +43,15 @@ class Privacy {
 		$user           = get_user_by( 'email', $email_address );
 
 		if ( $user && $user->ID ) {
-			$events = Logs::instance()->set_query( [
+			$events = Logs::get_instance()->set_query( [
 				'filters' => [
-					'user_id' => $user->ID,
+					User_Id::key() => $user->ID,
 				],
-			] )->get();
+			] )->get_results();
 
 			foreach ( $events as $event ) {
 				$event_data     = [];
-				$event_instance = Store::instance()->event_factory( $event );
+				$event_instance = Store::get_instance()->event_factory( $event );
 
 				foreach ( $event_instance::get_registered_fields() as $field_key => $field_class ) {
 					$event_data[] = [
@@ -106,14 +108,14 @@ class Privacy {
 
 		$user = get_user_by( 'email', $email_address );
 
-		$logs_instance = Logs::instance();
-		$logs_instance->remove_by( 'user_id', $user->ID );
+		$logs_instance = Logs::get_instance();
+		$logs_instance->remove_by( User_Id::key(), $user->ID );
 
 		$user_data = $logs_instance->set_query( [
 			'filters' => [
-				'user_id' => $user->ID,
+				User_Id::key() => $user->ID,
 			],
-		] )->get();
+		] )->get_results();
 
 		$response['items_removed'] = empty( $user_data );
 

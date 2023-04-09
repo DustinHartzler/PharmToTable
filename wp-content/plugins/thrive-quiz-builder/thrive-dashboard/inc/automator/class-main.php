@@ -55,8 +55,6 @@ class Main {
 		static::load_triggers();
 
 		add_action( 'tap_output_extra_svg', array( 'TVE\Dashboard\Automator\Main', 'display_icons' ) );
-
-
 	}
 
 	/**
@@ -70,6 +68,9 @@ class Main {
 
 		require_once TVE_DASH_PATH . '/inc/automator/class-tap-woo.php';
 		Woo::init();
+
+		require_once TVE_DASH_PATH . '/inc/automator/class-tap-facebook.php';
+		Facebook::init();
 	}
 
 	public static function load_triggers() {
@@ -171,6 +172,23 @@ class Main {
 		}
 
 		return $load;
+	}
+
+	/**
+	 * ['key','value'] => ['key' => 'value']
+	 *
+	 *
+	 * @param $data
+	 *
+	 * @return array
+	 */
+	public static function extract_mapping( $data ) {
+		$mapping = [];
+		foreach ( $data as $content ) {
+			$mapping[ $content['key'] ] = $content['value'];
+		}
+
+		return $mapping;
 	}
 
 	public static function slack_exists() {

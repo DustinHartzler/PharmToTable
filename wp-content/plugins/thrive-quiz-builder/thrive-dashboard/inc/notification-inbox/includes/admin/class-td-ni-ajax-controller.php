@@ -36,11 +36,11 @@ class TD_NI_Ajax_Controller {
 	 * @return TD_NI_Ajax_Controller
 	 */
 	public static function instance() {
-		if ( empty( self::$_instance ) ) {
-			self::$_instance = new self();
+		if ( empty( static::$_instance ) ) {
+			static::$_instance = new static();
 		}
 
-		return self::$_instance;
+		return static::$_instance;
 	}
 
 	/**
@@ -138,6 +138,8 @@ class TD_NI_Ajax_Controller {
 		wp_send_json( array(
 			'error' => $message,
 		) );
+		
+		return $message;
 	}
 
 	/**

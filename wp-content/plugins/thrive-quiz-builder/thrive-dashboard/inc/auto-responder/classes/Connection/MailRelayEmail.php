@@ -196,7 +196,8 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 			$extra_emails = array_merge( $extra_emails, $data['bcc'] );
 		}
 
-		foreach ( array_merge( $data['emails'], $extra_emails ) as $email ) {
+		$emails = is_array( $extra_emails ) ? array_merge( $data['emails'], $extra_emails ) : $data['emails'];
+		foreach ( $emails as $email ) {
 			$temp = array(
 				'email' => $email,
 				'name'  => '',

@@ -795,7 +795,7 @@ class TCB_Landing_Page_Transfer {
 	 */
 	protected function getTCBMeta( $post_id ) {
 		$config                = [];
-		$non_lp_dependent_keys = array( 'tve_landing_page', 'tve_disable_theme_dependency' );
+		$non_lp_dependent_keys = array( 'tve_landing_page', 'tve_disable_theme_dependency', TCB_LP_Palettes::LP_PALETTES, TCB_LP_Palettes::LP_PALETTES_CONFIG );
 
 		foreach ( tve_get_used_meta_keys() as $key ) {
 			$config[ $key ] = in_array( $key, $non_lp_dependent_keys ) ? get_post_meta( $post_id, $key, true ) : tve_get_post_meta( $post_id, $key );
@@ -1359,6 +1359,15 @@ class TCB_Landing_Page_Transfer {
 		if ( ! empty( $config['page_palettes'] ) ) {
 			$template_data['tpl_palettes'] = $config['page_palettes'];
 		}
+
+		if ( ! empty( $config[ TCB_LP_Palettes::LP_PALETTES ] ) ) {
+			$template_data['tpl_palettes_v2'] = $config[ TCB_LP_Palettes::LP_PALETTES ];
+		}
+
+		if ( ! empty( $config[ TCB_LP_Palettes::LP_PALETTES_CONFIG ] ) ) {
+			$template_data['tpl_palettes_config_v2'] = $config[ TCB_LP_Palettes::LP_PALETTES_CONFIG ];
+		}
+
 		$elements = [
 			'button',
 			'section',

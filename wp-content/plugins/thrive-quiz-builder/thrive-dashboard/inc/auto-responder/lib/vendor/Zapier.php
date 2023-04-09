@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: dan bilauca
- * Date: 24-Jul-19
- * Time: 01:58 PM
- */
 
 class Thrive_Dash_Api_Zapier {
 

@@ -102,9 +102,9 @@ class Shortcode {
 
 		$content = tve_thrive_shortcodes( $content, $is_editor_page );
 
-		if ( ! $is_editor_page ) {
-			$content = do_shortcode( $content );
+		$content = do_shortcode( $content );
 
+		if ( ! $is_editor_page ) {
 			$content = tve_restore_script_tags( $content );
 
 			tve_parse_events( $content );

@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: dan bilauca
- * Date: 23-Jul-19
- * Time: 04:27 PM
- */
 class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abstract {
 
 	/**

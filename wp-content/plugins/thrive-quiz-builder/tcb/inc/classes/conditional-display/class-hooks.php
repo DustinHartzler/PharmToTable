@@ -66,7 +66,9 @@ class Hooks {
 	 * @return mixed
 	 */
 	public static function allowed_shortcodes( $allowed_shortcodes ) {
-		$allowed_shortcodes[] = Shortcode::NAME;
+		if ( is_editor_page_raw( true ) ) {
+			$allowed_shortcodes[] = Shortcode::NAME;
+		}
 
 		return $allowed_shortcodes;
 	}
@@ -143,10 +145,10 @@ class Hooks {
 		$footer_scripts = ob_get_clean();
 
 		wp_send_json( [
-			'groups'             => $groups,
-			'footer_scripts'     => $footer_scripts,
-			'external_resources' => $external_resources,
-		]
+				'groups'             => $groups,
+				'footer_scripts'     => $footer_scripts,
+				'external_resources' => $external_resources,
+			]
 		);
 	}
 
@@ -218,14 +220,14 @@ class Hooks {
 		$wp_admin_bar->add_node( [
 			'id'     => 'tve-conditions-title',
 			'title'  => '<span class="tve-preview-conditions-icon"></span>' .
-						'<span class="tve-preview-conditions-title">Preview conditions</span>' .
-						'<div class="tve-preview-conditions-info">
+			            '<span class="tve-preview-conditions-title">Preview conditions</span>' .
+			            '<div class="tve-preview-conditions-info">
 							<div class="tve-preview-conditions-tooltip">
 							           This page contains conditional displays on some content . You can preview how the page looks for users that match different conditions by selecting them below.
 							<a class="tve-preview-conditions-tooltip-link" target="_blank" href="https://help.thrivethemes.com/en/articles/5814058-how-to-use-the-conditional-display-option">Learn more </a>
 							</div>
 						</div> ' .
-						'<button class="tve-preview-conditions-close"></button> ',
+			            '<button class="tve-preview-conditions-close"></button> ',
 			'parent' => 'tve-preview-conditions',
 		] );
 

@@ -462,4 +462,31 @@ class Thrive_Dash_List_Connection_Email extends Thrive_Dash_List_Connection_Abst
 	public static function get_email_merge_tag() {
 		return '[user_email]';
 	}
+
+	protected function set_custom_default_fields_mapping() {
+		$this->_default_form_fields = apply_filters(
+			'tve_dash_mapped_default_fields',
+			array(
+				array(
+					'id'          => 'email',
+					'placeholder' => __( 'Email', 'thrive-dash' ),
+					'unique'      => true,
+					'mandatory'   => false,
+				),
+				array(
+
+					'id'          => 'name',
+					'placeholder' => __( 'Name', 'thrive-dash' ),
+					'unique'      => true,
+					'mandatory'   => false,
+				),
+				array(
+					'id'          => 'phone',
+					'placeholder' => __( 'Phone', 'thrive-dash' ),
+					'unique'      => true,
+					'mandatory'   => false,
+				),
+			) );
+	}
+
 }

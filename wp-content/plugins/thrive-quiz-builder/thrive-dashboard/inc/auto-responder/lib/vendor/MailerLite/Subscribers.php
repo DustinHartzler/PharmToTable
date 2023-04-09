@@ -16,15 +16,15 @@ class Thrive_Dash_Api_MailerLite_Subscribers extends Thrive_Dash_Api_MailerLite_
 	/**
 	 * Get groups subscriber belongs to
 	 *
-	 * @param  int $subscriberId
+	 * @param  int $subscriber_id
 	 * @param  array $params
 	 *
 	 * @return [type]
 	 */
-	public function getGroups( $subscriberId, $params = array() ) {
-		$this->endpoint .= $subscriberId . '/groups';
+	public function getGroups( $subscriber_id, $params = array() ) {
+		$this->endpoint .= $subscriber_id . '/groups';
 
-		$response = $this->restClient->get( $this->endpoint, $params );
+		$response = $this->rest_client->get( $this->endpoint, $params );
 
 		return $response['body'];
 	}
@@ -32,20 +32,20 @@ class Thrive_Dash_Api_MailerLite_Subscribers extends Thrive_Dash_Api_MailerLite_
 	/**
 	 * Get activity of subscriber
 	 *
-	 * @param  int $subscriberId
+	 * @param  int $subscriber_id
 	 * @param  string $type
 	 * @param  array $params
 	 *
 	 * @return [type]
 	 */
-	public function getActivity( $subscriberId, $type = null, $params = array() ) {
-		$this->endpoint .= $subscriberId . '/activity';
+	public function getActivity( $subscriber_id, $type = null, $params = array() ) {
+		$this->endpoint .= $subscriber_id . '/activity';
 
 		if ( $type !== null ) {
 			$this->endpoint .= '/' . $type;
 		}
 
-		$response = $this->restClient->get( $this->endpoint, $params );
+		$response = $this->rest_client->get( $this->endpoint, $params );
 
 		return $response['body'];
 	}
@@ -60,7 +60,7 @@ class Thrive_Dash_Api_MailerLite_Subscribers extends Thrive_Dash_Api_MailerLite_
 	public function search( $query ) {
 		$this->endpoint .= '/search';
 
-		return $this->restClient->get( $this->endpoint, array( 'query' => $query ) );
+		return $this->rest_client->get( $this->endpoint, array( 'query' => $query ) );
 	}
 
 }

@@ -44,11 +44,11 @@ class TVD_SM_Frontend {
 	 * @return TVD_SM_Frontend
 	 */
 	public static function instance() {
-		if ( self::$_instance === null ) {
-			self::$_instance = new self();
+		if ( static::$_instance === null ) {
+			static::$_instance = new self();
 		}
 
-		return self::$_instance;
+		return static::$_instance;
 	}
 
 	public function init() {
@@ -56,9 +56,9 @@ class TVD_SM_Frontend {
 		$this->update_script_code();
 
 		/* hooks for adding scripts to specific sections of the landing pages or regular posts or pages */
-		add_action( self::LP_HOOK_HEAD, array( $this, 'head_scripts' ) );
-		add_action( self::LP_HOOK_BODY_OPEN, array( $this, 'body_open_scripts' ) );
-		add_action( self::LP_HOOK_BODY_CLOSE, array( $this, 'body_close_scripts' ) );
+		add_action( static::LP_HOOK_HEAD, array( $this, 'head_scripts' ) );
+		add_action( static::LP_HOOK_BODY_OPEN, array( $this, 'body_open_scripts' ) );
+		add_action( static::LP_HOOK_BODY_CLOSE, array( $this, 'body_close_scripts' ) );
 	}
 
 	public function update_script_code() {
@@ -79,22 +79,22 @@ class TVD_SM_Frontend {
 	}
 
 	public function theme_scripts( $placement ) {
-		return $this->frontend_scripts[ $placement ][ self::THEME_LOCATION ];
+		return $this->frontend_scripts[ $placement ][ static::THEME_LOCATION ];
 	}
 
 	public function head_scripts() {
 		/* add all the head scripts */
-		echo $this->frontend_scripts[ TVD_SM_Constants::HEAD_PLACEMENT ][ self::LP_LOCATION ]; // phpcs:ignore
+		echo $this->frontend_scripts[ TVD_SM_Constants::HEAD_PLACEMENT ][ static::LP_LOCATION ]; // phpcs:ignore
 	}
 
 	public function body_open_scripts() {
 		/* add all the body start scripts */
-		echo $this->frontend_scripts[ TVD_SM_Constants::BODY_OPEN_PLACEMENT ][ self::LP_LOCATION ]; // phpcs:ignore
+		echo $this->frontend_scripts[ TVD_SM_Constants::BODY_OPEN_PLACEMENT ][ static::LP_LOCATION ]; // phpcs:ignore
 	}
 
 	public function body_close_scripts() {
 		/* add all the body end scripts */
-		echo $this->frontend_scripts[ TVD_SM_Constants::BODY_CLOSE_PLACEMENT ][ self::LP_LOCATION ]; // phpcs:ignore
+		echo $this->frontend_scripts[ TVD_SM_Constants::BODY_CLOSE_PLACEMENT ][ static::LP_LOCATION ]; // phpcs:ignore
 	}
 }
 

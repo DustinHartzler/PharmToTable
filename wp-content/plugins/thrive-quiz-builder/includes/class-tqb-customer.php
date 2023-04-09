@@ -40,6 +40,11 @@ class TQB_Customer {
 	private $user_random_identifier;
 
 	/**
+	 * @var TQB_Database
+	 */
+	public $tqbdb;
+
+	/**
 	 * @param int|WP_User|null $data
 	 */
 	public function __construct( $data ) {
@@ -105,10 +110,6 @@ class TQB_Customer {
 	 * @return array
 	 */
 	public function get_completed_quiz_data( $quiz_id ) {
-		if ( isset( static::$COMPLETED_QUIZ_DATA_CACHE[ $quiz_id ] ) ) {
-			return static::$COMPLETED_QUIZ_DATA_CACHE[ $quiz_id ];
-		}
-
 		$args = array(
 			'quiz_id'        => $quiz_id,
 			'completed_quiz' => 1,
@@ -120,9 +121,15 @@ class TQB_Customer {
 			$args['random_identifier'] = empty( $this->get_random_identifier() ) ? 'tqb-user-unknown' : $this->get_random_identifier();
 		}
 
-		static::$COMPLETED_QUIZ_DATA_CACHE[ $quiz_id ] = $this->tqbdb->get_users( $args );
+		$key = json_encode( $args );
 
-		return static::$COMPLETED_QUIZ_DATA_CACHE[ $quiz_id ];
+		if ( isset( static::$COMPLETED_QUIZ_DATA_CACHE[ $key ] ) ) {
+			return static::$COMPLETED_QUIZ_DATA_CACHE[ $key ];
+		}
+
+		static::$COMPLETED_QUIZ_DATA_CACHE[ $key ] = $this->tqbdb->get_users( $args );
+
+		return static::$COMPLETED_QUIZ_DATA_CACHE[ $key ];
 	}
 
 	/**
@@ -312,10 +319,11 @@ class TQB_Customer {
 		$last_answer_id = null;
 
 		if ( $user_quiz_try ) {
-			$data = $this->tqbdb->get_last_user_answer( $user_quiz_try['id'] );
+			$user_answers = TQB_Quiz_Manager::get_user_answers_in_order( $quiz_id, $user_quiz_try['id'] );
+			$last_answer  = $user_answers[ array_key_last( $user_answers ) ];
 
-			if ( ! empty( $data ) ) {
-				$last_answer_id = (int) $data['id'];
+			if ( ! empty( $last_answer ) ) {
+				$last_answer_id = (int) $last_answer['answer_id'];
 			}
 		}
 
@@ -336,13 +344,51 @@ class TQB_Customer {
 		$return        = [];
 
 		if ( $user_quiz_try ) {
-			$return = $this->tqbdb->get_user_answers( [
-				'quiz_id' => $quiz_id,
-				'user_id' => $user_quiz_try['id'],
-			] );
+			$return = TQB_Quiz_Manager::get_user_answers_in_order( $quiz_id, $user_quiz_try['id'] );
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Returns the completed quizzes for the active user
+	 *
+	 * @return array
+	 */
+	public function get_user_completed_quizzes() {
+		$value = get_user_meta( $this->get_id(), 'tqb_quiz_completed_triggered', true );
+
+		if ( empty( $value ) ) {
+			$value = array();
+		}
+
+		return $value;
+	}
+
+
+	/**
+	 * Updates completed quizzes meta
+	 *
+	 * @param int $quiz_id
+	 * @param int $post_id
+	 * @param int $meta_value
+	 *
+	 * @return bool|int
+	 */
+	public function update_user_completed_quizzes( $quiz_id, $post_id, $meta_value = 1 ) {
+		if ( empty( $post_id ) ) {
+			return false;
+		}
+
+		$value = $this->get_user_completed_quizzes();
+
+		if ( empty( $value[ $quiz_id ] ) ) {
+			$value[ $quiz_id ] = array();
+		}
+
+		$value[ $quiz_id ][ $post_id ] = $meta_value;
+
+		return update_user_meta( $this->get_id(), 'tqb_quiz_completed_triggered', $value );
 	}
 
 	/**
@@ -396,6 +442,8 @@ class TQB_Customer {
 
 		return $page;
 	}
+
+
 }
 
 /**

@@ -74,7 +74,9 @@ class TCB_Post_List_REST {
 	 * @return WP_Error|bool
 	 */
 	public function route_permission( $request ) {
-		return TCB_Product::has_external_access();
+		$post_id = isset( $request['post_id'] ) ? $request['post_id'] : null;
+
+		return \TCB_Product::has_external_access( $post_id );
 	}
 
 	/**

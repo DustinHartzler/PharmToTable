@@ -800,6 +800,17 @@ add_filter( 'rank_math/researches/toc_plugins', function ( $toc_plugins ) {
 } );
 
 /**
+ * Don't load metrics files on the editor page
+ */
+add_filter( 'tve_dash_metrics_should_enqueue', function ( $should_enqueue ) {
+	if ( is_editor_page_raw( true ) || TCB_Editor()->is_main_frame() ) {
+		$should_enqueue = false;
+	}
+
+	return $should_enqueue;
+} );
+
+/**
  * Fixes a custom menu regression that added these classes to all saved menus
  */
 add_filter( 'tve_thrive_shortcodes', static function ( $content ) {
@@ -842,3 +853,16 @@ add_action( 'after_thrive_clone_item', static function ( $new_id, $old_id ) {
 add_filter( 'thrive_template_structure', 'tcb_dap_shortcode_in_content' );
 add_filter( 'thrive_template_header_content', 'tcb_dap_shortcode_in_content' );
 add_filter( 'thrive_template_footer_content', 'tcb_dap_shortcode_in_content' );
+
+add_action( 'current_screen', 'tcb_current_screen' );
+
+/**
+ * Some pages don't have a title, so we need to set it manually
+ */
+function tcb_current_screen() {
+	$screen = tve_get_current_screen_key();
+	global $title;
+	if ( $screen && empty( $title ) && ( strpos( $screen, 'tcb_' ) !== false || strpos( $screen, 'tve_' ) !== false ) ) {
+		$title = 'Thrive Architect';
+	}
+}

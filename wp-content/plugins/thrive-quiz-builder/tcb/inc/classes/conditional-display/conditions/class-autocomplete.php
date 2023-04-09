@@ -44,13 +44,16 @@ class Autocomplete extends Condition {
 			}
 		}
 
-		return $result;
+		return $this->get_operator() === 'autocomplete' ? $result : ! $result;
 	}
 
 	public static function get_operators() {
 		return [
-			'autocomplete' => [
-				'label' => 'is any of the following',
+			'autocomplete'         => [
+				'label' => 'is',
+			],
+			'autocomplete_exclude' => [
+				'label' => 'is not',
 			],
 		];
 	}
@@ -59,7 +62,4 @@ class Autocomplete extends Condition {
 		return static::get_key();
 	}
 
-	public static function is_hidden() {
-		return true;
-	}
 }
