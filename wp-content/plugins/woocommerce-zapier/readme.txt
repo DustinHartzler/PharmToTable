@@ -3,17 +3,17 @@
 Contributors: jamescollins, OM4
 Tags: woocommerce, zapier, webhook, integration, automation, zap, cloud, sync, integrate
 Requires at least: 5.3
-Tested up to: 5.9
+Tested up to: 6.1
 Requires PHP: 7.2.0
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-Integrate your WooCommerce store with 4000+ third-party web services via the Zapier web automation service.
+Integrate your WooCommerce store with 5000+ third-party web services via the Zapier web automation service.
 
-Send your WooCommerce order, customer, product, coupon, booking or subscription data to 4000+ Zapier-enabled apps.
+Send your WooCommerce order, customer, product, coupon, booking or subscription data to 5000+ Zapier-enabled apps.
 
 Or use Zapier to automatically create or update WooCommerce order, customer, product, coupon or subscription data from a Zap.
 

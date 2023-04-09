@@ -31,7 +31,6 @@ class UpgradedToVersion2Notice extends BaseNotice {
 	 */
 	protected function template_variables() {
 		return array(
-			'migration_deadline'  => ExistingUserUpgrade::get_migration_deadline(),
 			'migration_guide_url' => ExistingUserUpgrade::MIGRATION_GUIDE_URL,
 		);
 	}

@@ -1,5 +1,13 @@
 === WooCommerce Zapier Changelog ===
 
+2022-10-13 - version 2.3.1
+* Full details: https://om4.io/?p=20216
+* Change: Marked as compatible with WooCommerce 7.0. PR #557 PR #550, PR #549, PR #547
+* Change: Marked as compatible with WordPress 6.1. PR #557 PR #550, PR #547
+* Change: Marked as compatible with WooCommerce Bookings v1.15.63. PR #543
+* Change: Marked as compatible with WooCommerce Subscriptions v4.5.1.
+* Change: WooCommerce Zapier now integrates with 5000+ apps on Zapier.com.
+
 2022-01-24 - version 2.3.0
 * Full details: https://om4.io/?p=20152
 * New: Improved support for popular security plugins (such as Wordfence Security). Authentication is now possible whilst using Wordfence Security's Two Factor Authentication on your WordPress user account. Please see https://docs.om4.io/woocommerce-zapier/plugin-compatibility/#wordfence-security for details. PR #527

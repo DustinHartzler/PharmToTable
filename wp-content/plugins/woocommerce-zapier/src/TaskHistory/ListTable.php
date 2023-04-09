@@ -180,7 +180,7 @@ class ListTable extends WP_List_Table {
 	 * When in metabox mode, don't output the bulk actions form because
 	 * it outputs its own nonce, which interferes with WooCommerce's edit facilities.
 	 *
-	 * @param string $which Required by WordPress.
+	 * @param 'bottom'|'top' $which Required by WordPress.
 	 *
 	 * @return void
 	 */
