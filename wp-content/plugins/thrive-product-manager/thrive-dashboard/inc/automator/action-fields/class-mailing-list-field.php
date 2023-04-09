@@ -23,14 +23,14 @@ class Mailing_List_Field extends Action_Field {
 	 * Field description
 	 */
 	public static function get_description() {
-		return 'Select an autoresponder mailing list to add the user to';
+		return static::get_placeholder();
 	}
 
 	/**
 	 * Field input placeholder
 	 */
 	public static function get_placeholder() {
-		return 'Choose list';
+		return __( 'Select an autoresponder mailing list to add the user to', 'thrive-dash' );
 	}
 
 	/**

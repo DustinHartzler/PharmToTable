@@ -147,7 +147,13 @@ class Post_Rule extends Rule {
 			$post_types[ $key ] = tvd_get_post_type_label( $key );
 		}
 
-		return $post_types;
+		/**
+		 * Allow other functionality to be injected here
+		 * Used to inject the Protected File post_type in the list so it can be protected by an apprentice product
+		 *
+		 * @param array $post_types
+		 */
+		return apply_filters( 'tvd_content_sets_get_content_types', $post_types );
 	}
 
 	/**

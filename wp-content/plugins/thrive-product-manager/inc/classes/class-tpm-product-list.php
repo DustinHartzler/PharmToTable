@@ -150,6 +150,8 @@ class TPM_Product_List {
 
 		if ( $tag === 'ttb' ) {
 			$instance_name .= '_Builder';
+		} elseif ( $tag === 'tap' ) {
+			$instance_name .= '_Automator';
 		}
 
 		$instance = new $instance_name( $name, $description, $logo_url, $tag, $api_slug, $file );

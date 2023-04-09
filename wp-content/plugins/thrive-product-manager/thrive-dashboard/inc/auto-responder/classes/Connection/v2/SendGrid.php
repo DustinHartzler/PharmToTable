@@ -57,7 +57,7 @@ class Thrive_Dash_List_Connection_SendGrid extends Thrive_Dash_List_Connection_A
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid SendGrid key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid SendGrid key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( map_deep( $_POST['connection'], 'sanitize_text_field' ) );
@@ -65,7 +65,7 @@ class Thrive_Dash_List_Connection_SendGrid extends Thrive_Dash_List_Connection_A
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to SendGrid using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to SendGrid using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -98,7 +98,7 @@ class Thrive_Dash_List_Connection_SendGrid extends Thrive_Dash_List_Connection_A
 			Thrive_Dash_List_Manager::save( $related_api );
 		}
 
-		return $this->success( __( 'SendGrid connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SendGrid connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

@@ -17,21 +17,21 @@ class Form_List_Field extends Action_Field {
 	 * Field name
 	 */
 	public static function get_name() {
-		return __( 'Select the form', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Select the form', 'thrive-dash' );
 	}
 
 	/**
 	 * Field description
 	 */
 	public static function get_description() {
-		return __( 'Choose the form you want to use', TVE_DASH_TRANSLATE_DOMAIN );
+		return static::get_placeholder();
 	}
 
 	/**
 	 * Field input placeholder
 	 */
 	public static function get_placeholder() {
-		return __( 'Choose form', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Choose the form you want to use', 'thrive-dash' );
 	}
 
 	/**

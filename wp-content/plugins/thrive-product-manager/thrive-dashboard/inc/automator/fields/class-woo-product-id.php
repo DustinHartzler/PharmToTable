@@ -16,7 +16,7 @@ class Woo_Product_Id extends Data_Field {
 	 * Field name
 	 */
 	public static function get_name() {
-		return 'Product id';
+		return 'Product ID';
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Woo_Product_Id extends Data_Field {
 	}
 
 	public static function get_supported_filters() {
-		return array( 'number_comparison' );
+		return array( 'autocomplete' );
 	}
 
 	public static function get_validators() {
@@ -55,5 +55,22 @@ class Woo_Product_Id extends Data_Field {
 
 	public static function primary_key() {
 		return Woo_Product_Data::get_id();
+	}
+
+	public static function is_ajax_field() {
+		return true;
+	}
+
+	public static function get_options_callback() {
+		$products = array();
+		foreach ( Woo::get_products() as $product ) {
+			$id              = $product->get_id();
+			$products[ $id ] = array(
+				'id'    => $id,
+				'label' => $product->get_name(),
+			);
+		}
+
+		return $products;
 	}
 }

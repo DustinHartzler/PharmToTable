@@ -213,6 +213,12 @@ class TVD_Smart_DB {
 					'type'       => static::$types['link'],
 					'identifier' => 't',
 				),
+				array(
+					'name'       => 'TikTok',
+					'icon'       => 'tiktok-brands-new',
+					'type'       => static::$types['link'],
+					'identifier' => 'tiktok',
+				),
 			),
 		);
 	}
@@ -281,6 +287,25 @@ class TVD_Smart_DB {
 				$this->add_string_identifier_to_fields();
 			}
 		}
+	}
+
+	public function add_tiktok_field() {
+		$format = array(
+			'%s',
+			'%d',
+		);
+
+		$this->wpdb->insert(
+			$this->fields_table_name,
+			array(
+				'name'       => 'TikTok',
+				'type'       => static::$types['link'],
+				'identifier' => 'tiktok',
+				'is_default' => 1,
+				'group_id'   => 3,
+			),
+			$format
+		);
 	}
 
 	/**
@@ -453,9 +478,9 @@ class TVD_Smart_DB {
 			if ( empty( $args['hide-tooltip'] ) ) {
 				$unavailable .= '<span class="thrive-tooltip-wrapper">' .
 				                '<span class="thrive-shortcode-tooltip">' .
-				                __( 'This global variable hasn\'t been set.  Define your global variables in the', TVE_DASH_TRANSLATE_DOMAIN ) .
+				                __( 'This global variable hasn\'t been set.  Define your global variables in the', 'thrive-dash' ) .
 				                '<br>' .
-				                '<a><span onClick=window.open("' . add_query_arg( 'page', 'tve_dash_smart_site', admin_url( 'admin.php' ) ) . '","_blank") >' . ' ' . __( ' Global Fields dashboard', TVE_DASH_TRANSLATE_DOMAIN ) . '</span></a>' .
+				                '<a><span onClick=window.open("' . add_query_arg( 'page', 'tve_dash_smart_site', admin_url( 'admin.php' ) ) . '","_blank") >' . ' ' . __( ' Global Fields dashboard', 'thrive-dash' ) . '</span></a>' .
 				                '</span>' .
 				                '</span>';
 			}
@@ -490,7 +515,9 @@ class TVD_Smart_DB {
 					$data = $unavailable;
 				} else {
 					if ( empty( $args['prevent-link'] ) ) {
-						$field_value = '<a ' . ( ! empty( $args['link-css-attr'] ) ? 'data-css="' . $args['link-css-attr'] . '"' : '' ) . ' href="' . $field_data['url'] . '" target="_blank">' . $field_data['text'] . '</a>';
+						$link_attr = TVD_Smart_Shortcodes::tvd_decode_link_attributes( $args );
+
+						$field_value = '<a ' . ( ! empty( $args['link-css-attr'] ) ? 'data-css="' . $args['link-css-attr'] . '"' : '' ) . ' href="' . $field_data['url'] . '" target="' . ( ! empty( $link_attr['target'] ) ? $link_attr['target'] : '' ) . '">' . $field_data['text'] . '</a>';
 					} else {
 						$field_value = $field_data['text'];
 					}
@@ -501,7 +528,7 @@ class TVD_Smart_DB {
 			case TVD_Smart_DB::$types['location']:
 				$url = 'https://maps.google.com/maps?q=' . urlencode( empty( $field_data['location'] ) ? 'New York' : $field_data['location'] ) . '&t=m&z=10&output=embed&iwloc=near';
 
-				$data = '<iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="' . $url . '"></iframe>';
+				$data = '<iframe frameborder="0" marginheight="0" marginwidth="0" src="' . $url . '"></iframe>';
 				break;
 		}
 

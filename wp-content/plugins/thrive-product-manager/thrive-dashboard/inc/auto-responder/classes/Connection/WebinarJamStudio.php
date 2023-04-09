@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Laura
- * Date: 17.07.2015
- * Time: 11:15
- */
 class Thrive_Dash_List_Connection_WebinarJamStudio extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -61,14 +55,14 @@ class Thrive_Dash_List_Connection_WebinarJamStudio extends Thrive_Dash_List_Conn
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid WebinarJamStudio key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid WebinarJamStudio key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to WebinarJamStudio using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to WebinarJamStudio using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -76,7 +70,7 @@ class Thrive_Dash_List_Connection_WebinarJamStudio extends Thrive_Dash_List_Conn
 		 */
 		$this->save();
 
-		return $this->success( __( 'WebinarJamStudio connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'WebinarJamStudio connected successfully', 'thrive-dash' ) );
 
 	}
 

@@ -20,11 +20,11 @@ class User_Wpfusion_Tags extends \TCB\ConditionalDisplay\Field {
 	}
 
 	public static function get_label() {
-		return __( 'Has WP Fusion tags', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Has WP Fusion tags', 'thrive-dash' );
 	}
 
 	public static function get_conditions() {
-		return [ 'autocomplete' ];
+		return [ 'autocomplete_hidden' ];
 	}
 
 	/**
@@ -59,6 +59,6 @@ class User_Wpfusion_Tags extends \TCB\ConditionalDisplay\Field {
 	}
 
 	public static function get_autocomplete_placeholder() {
-		return __( 'Search tags', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Search tags', 'thrive-dash' );
 	}
 }

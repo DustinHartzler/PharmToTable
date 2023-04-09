@@ -1,5 +1,5 @@
 <div class="tve-sp"></div>
-<h6><?php echo esc_html__( 'Cycle day:', TVE_DASH_TRANSLATE_DOMAIN ) ?></h6>
+<h6><?php echo esc_html__( 'Cycle day:', 'thrive-dash' ) ?></h6>
 <div class="tvd-row tvd-collapse">
 	<div class="tvd-col tvd-s4">
 		<div class="tvd-input-field">
@@ -9,7 +9,7 @@
 				   name="get-response_cycleday"
 				   value="<?php echo ! empty( $data['cycleday'] ) ? esc_attr( $data['cycleday'] ) : '0' ?>"
 				   size="40"/>
-			<p><?php echo esc_html__( 'Number of the cycle day(between 0 and 103)', TVE_DASH_TRANSLATE_DOMAIN ) ?></p>
+			<p><?php echo esc_html__( 'Number of the cycle day(between 0 and 103)', 'thrive-dash' ) ?></p>
 		</div>
 	</div>
 </div>

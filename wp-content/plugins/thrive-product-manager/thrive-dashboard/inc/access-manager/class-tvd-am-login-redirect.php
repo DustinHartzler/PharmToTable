@@ -2,8 +2,6 @@
 
 namespace TVD\Dashboard\Access_Manager;
 
-use TVD\Dashboard\Access_Manager\Functionality;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
@@ -45,7 +43,7 @@ class Login_Redirect extends Functionality {
 				'tag'  => 'custom',
 			],
 		);
-		if ( is_plugin_active( 'thrive-apprentice/thrive-apprentice.php' ) ) {
+		if ( tve_dash_is_plugin_active( 'thrive-apprentice' ) ) {
 			$options[] = [
 				'name' => 'Apprentice Homepage',
 				'tag'  => 'apphomepage',
@@ -66,7 +64,7 @@ class Login_Redirect extends Functionality {
 	public static function get_option_value( $user_role ) {
 		$option = get_option( static::get_option_name( $user_role ) );
 
-		if ( $option === 'apphomepage' && ! is_plugin_active( 'thrive-apprentice/thrive-apprentice.php' ) ) {
+		if ( $option === 'apphomepage' && ! tve_dash_is_plugin_active( 'thrive-apprentice' ) ) {
 			$option = 'inherit';
 		}
 
@@ -75,8 +73,12 @@ class Login_Redirect extends Functionality {
 
 	public static function login_redirect( $redirect, $requested_redirect_to, $logged_in_user ) {
 		if ( ! is_wp_error( $logged_in_user ) && $logged_in_user && $logged_in_user->ID ) {
-			$user_role = $logged_in_user->roles[0];
-			$url       = static::get_option_value( $user_role );
+			if ( ! empty( $logged_in_user->roles ) ) {
+				$user_role = $logged_in_user->roles[0];
+				$url       = static::get_option_value( $user_role );
+			} else {
+				$url = 'inherit';
+			}
 
 			if ( $url ) {
 				switch ( $url ) {
@@ -89,7 +91,7 @@ class Login_Redirect extends Functionality {
 						$redirect = get_home_url();
 						break;
 					case 'apphomepage':
-						if ( is_plugin_active( 'thrive-apprentice/thrive-apprentice.php' ) ) {
+						if ( tve_dash_is_plugin_active( 'thrive-apprentice' ) ) {
 							$redirect = get_permalink( tva_get_settings_manager()->factory( 'index_page' )->get_value() );
 						}
 						break;

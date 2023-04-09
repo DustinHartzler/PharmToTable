@@ -52,7 +52,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 		if ( empty( $key ) ) {
 			$message = 'You must provide a valid SendinBlue V3 key';
 
-			return $ajax_call ? __( $message, TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( $message, TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( $message, 'thrive-dash' ) : $this->error( __( $message, 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $_POST['connection'] );
@@ -62,7 +62,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 		if ( $result !== true ) {
 			$message = 'Could not connect to SendinBlue V3 using the provided key (<strong>%s</strong>)';
 
-			return $ajax_call ? sprintf( __( $message, TVE_DASH_TRANSLATE_DOMAIN ), $result ) : $this->error( sprintf( __( $message, TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $ajax_call ? sprintf( __( $message, 'thrive-dash' ), $result ) : $this->error( sprintf( __( $message, 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -95,7 +95,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 			Thrive_Dash_List_Manager::save( $related_api );
 		}
 
-		$this->success( __( 'SendinBlue connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'SendinBlue connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -187,7 +187,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 
 			return $lists;
 		} catch ( Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', 'thrive-dash' );
 
 			return false;
 		}
@@ -258,7 +258,7 @@ class Thrive_Dash_List_Connection_SendinblueV3 extends Thrive_Dash_List_Connecti
 
 			return true;
 		} catch ( Exception $e ) {
-			return $e->getMessage() ?: __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ?: __( 'Unknown Error', 'thrive-dash' );
 		}
 	}
 

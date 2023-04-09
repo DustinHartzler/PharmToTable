@@ -5,7 +5,7 @@
 		<div class="tvd-input-field">
 			<input id="tvd-wj-api-key" type="text" name="connection[key]"
 				   value="<?php echo esc_attr( $this->param( 'key' ) ); ?>">
-			<label for="tvd-wj-api-key"><?php echo esc_html__( "API key", TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
+			<label for="tvd-wj-api-key"><?php echo esc_html__( "API key", 'thrive-dash' ) ?></label>
 		</div>
 		<?php $version = $this->param( 'version' ); ?>
 
@@ -14,7 +14,7 @@
 				<p>
 					<input class="tvd-version-1 tvd-api-show-extra-options" name="connection[version]" type="radio" value="1"
 						   id="tvd-version-1" <?php echo ! empty( $version ) && $version == 1 ? 'checked="checked"' : ''; ?> />
-					<label for="tvd-version-1"><?php echo esc_html__( 'New version', TVE_DASH_TRANSLATE_DOMAIN ); ?></label>
+					<label for="tvd-version-1"><?php echo esc_html__( 'New version', 'thrive-dash' ); ?></label>
 				</p>
 			</div>
 
@@ -22,7 +22,7 @@
 				<p>
 					<input class="tvd-version-0 tvd-api-hide-extra-options" name="connection[version]" type="radio" value="0"
 						   id="tvd-version-0" <?php echo empty( $version ) || $version == 0 ? 'checked="checked"' : ''; ?> />
-					<label for="tvd-version-0"><?php echo esc_html__( 'Old version', TVE_DASH_TRANSLATE_DOMAIN ); ?></label>
+					<label for="tvd-version-0"><?php echo esc_html__( 'Old version', 'thrive-dash' ); ?></label>
 				</p>
 			</div>
 		<?php endif; ?>
@@ -32,7 +32,7 @@
 				<input class="tvd-version-4 tvd-api-show-extra-options" name="connection[version]" type="radio" value="<?php echo esc_attr( TD_Inbox::WEBINARJAM_V4 ); ?>"
 					   id="tvd-version-4" <?php echo empty( $version ) || $version == TD_Inbox::WEBINARJAM_V4 ? 'checked="checked"' : ''; ?> />
 				<label for="tvd-version-4">
-					<?php echo sprintf( esc_html__( 'Version %s', TVE_DASH_TRANSLATE_DOMAIN ), esc_html( TD_Inbox::WEBINARJAM_V4 ) ); ?>
+					<?php echo sprintf( esc_html__( 'Version %s', 'thrive-dash' ), esc_html( TD_Inbox::WEBINARJAM_V4 ) ); ?>
 				</label>
 			</p>
 		</div>
@@ -48,10 +48,10 @@
 <div class="tvd-card-action">
 	<div class="tvd-row tvd-no-margin">
 		<div class="tvd-col tvd-s12 tvd-m6">
-			<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-dark tvd-full-btn tvd-waves-effect"><?php echo esc_html__( "Cancel", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+			<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-dark tvd-full-btn tvd-waves-effect"><?php echo esc_html__( "Cancel", 'thrive-dash' ) ?></a>
 		</div>
 		<div class="tvd-col tvd-s12 tvd-m6">
-			<a class="tvd-api-connect tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn"><?php echo esc_html__( "Connect", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+			<a class="tvd-api-connect tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn"><?php echo esc_html__( "Connect", 'thrive-dash' ) ?></a>
 		</div>
 	</div>
 </div>

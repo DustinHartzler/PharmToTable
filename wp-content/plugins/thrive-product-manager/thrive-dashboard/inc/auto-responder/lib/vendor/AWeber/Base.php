@@ -10,14 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Created by PhpStorm.
- * User: radu
- * Date: 02.04.2015
- * Time: 18:00
- */
-
-
-/**
  * AWeberAPIBase
  *
  * Base object that all AWeberAPI objects inherit from.  Allows specific pieces
@@ -93,4 +85,4 @@ class Thrive_Dash_Api_AWeber_Base {
 
 		return false;
 	}
-} 
+}

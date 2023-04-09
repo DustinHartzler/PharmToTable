@@ -46,7 +46,7 @@ class Woo_Product_Processing extends Trigger {
 	 * @return int
 	 */
 	public static function get_hook_params_number() {
-		return 2;
+		return 3;
 	}
 
 	/**
@@ -88,14 +88,15 @@ class Woo_Product_Processing extends Trigger {
 	public function process_params( $params = array() ) {
 		$data = array();
 
-		if ( ! empty( $params[1] ) ) {
+		if ( ! empty( $params[0] ) ) {
 
 			$data_object_classes = Data_Object::get();
 
-			list ( $product, $user ) = $params;
+			list ( $product, $user, $email ) = $params;
 
 			$data['woo_product_data'] = empty( $data_object_classes['woo_product_data'] ) ? $product : new $data_object_classes['woo_product_data']( $product );
 			$data['user_data']        = empty( $data_object_classes['user_data'] ) ? null : new $data_object_classes['user_data']( $user );
+			$data['email_data']       = empty( $data_object_classes['email_data'] ) ? null : new $data_object_classes['email_data']( $email );
 		}
 
 		return $data;

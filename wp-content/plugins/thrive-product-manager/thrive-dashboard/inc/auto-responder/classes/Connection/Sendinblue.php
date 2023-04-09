@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Aurelian Pop
- * Date: 06-Jan-16
- * Time: 1:19 PM
- */
 class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -56,7 +50,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $ajax_call ? __( 'You must provide a valid SendinBlue key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid SendinBlue key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'You must provide a valid SendinBlue key', 'thrive-dash' ) : $this->error( __( 'You must provide a valid SendinBlue key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -64,7 +58,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $ajax_call ? sprintf( __( 'Could not connect to SendinBlue using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) : $this->error( sprintf( __( 'Could not connect to SendinBlue using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $ajax_call ? sprintf( __( 'Could not connect to SendinBlue using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) : $this->error( sprintf( __( 'Could not connect to SendinBlue using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -98,7 +92,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 			Thrive_Dash_List_Manager::save( $related_api );
 		}
 
-		$this->success( __( 'SendinBlue connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'SendinBlue connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -170,7 +164,7 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 
 			return $lists;
 		} catch ( Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( "Please re-check your API connection details.", TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( "Please re-check your API connection details.", 'thrive-dash' );
 
 			return false;
 		}
@@ -225,9 +219,9 @@ class Thrive_Dash_List_Connection_Sendinblue extends Thrive_Dash_List_Connection
 
 			return true;
 		} catch ( Thrive_Dash_Api_SendinBlue_Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown SendinBlue Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ? $e->getMessage() : __( 'Unknown SendinBlue Error', 'thrive-dash' );
 		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', 'thrive-dash' );
 		}
 
 	}

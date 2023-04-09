@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 03.04.2015
- * Time: 16:59
- */
 class Thrive_Dash_Api_AWeber_Collection extends Thrive_Dash_Api_AWeber_Response implements ArrayAccess, Iterator, Countable {
 
 	protected $pageSize = 100;
@@ -245,6 +239,7 @@ class Thrive_Dash_Api_AWeber_Collection extends Thrive_Dash_Api_AWeber_Response 
 		}
 	}
 
+	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 
 		if ( ! $this->offsetExists( $offset ) ) {
@@ -272,22 +267,27 @@ class Thrive_Dash_Api_AWeber_Collection extends Thrive_Dash_Api_AWeber_Response 
 	 */
 	protected $_iterationKey = 0;
 
+	#[\ReturnTypeWillChange]
 	public function current() {
 		return $this->offsetGet( $this->_iterationKey );
 	}
 
+	#[\ReturnTypeWillChange]
 	public function key() {
 		return $this->_iterationKey;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function next() {
 		$this->_iterationKey ++;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function rewind() {
 		$this->_iterationKey = 0;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function valid() {
 		return $this->offsetExists( $this->key() );
 	}
@@ -297,7 +297,7 @@ class Thrive_Dash_Api_AWeber_Collection extends Thrive_Dash_Api_AWeber_Response 
 	 * Allows PHP's count() and sizeOf() functions to act on this object
 	 * http://www.php.net/manual/en/class.countable.php
 	 */
-
+	#[\ReturnTypeWillChange]
 	public function count() {
 		return $this->total_size;
 	}

@@ -24,14 +24,14 @@ class Autoresponder_Field extends Action_Field {
 	 * Field description
 	 */
 	public static function get_description() {
-		return 'Choose service from your list of registered APIs to use';
+		return static::get_placeholder();
 	}
 
 	/**
 	 * Field input placeholder
 	 */
 	public static function get_placeholder() {
-		return 'Choose autoresponder';
+		return __( 'Choose service from your list of registered APIs to use', 'thrive-dash' );
 	}
 
 	/**
@@ -61,6 +61,7 @@ class Autoresponder_Field extends Action_Field {
 				'sellings',
 				'integrations',
 				'storage',
+				'collaboration',
 			],
 		] );
 		$values = array();
@@ -71,7 +72,10 @@ class Autoresponder_Field extends Action_Field {
 				$allow_tags = $api->has_tags();
 			}
 			if ( $allow_tags && ! in_array( $api->get_key(), array( 'email', 'wordpress' ) ) ) {
-				$values[ $api->get_key() ] = array( 'id' => $api->get_key(), 'label' => $api->get_title() );
+				$values[ $api->get_key() ] = array(
+					'id'    => $api->get_key(),
+					'label' => $api->get_title(),
+				);
 			}
 		}
 

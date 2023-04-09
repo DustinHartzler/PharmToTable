@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 28.08.2014
- * Time: 09:51
- */
 
 require_once dirname( __FILE__ ) . '/Tve_Dash_Thrive_Icon_Manager_Data.php';
 require_once dirname( __FILE__ ) . '/Tve_Dash_Thrive_Icon_Manager_View.php';
@@ -48,11 +42,11 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 		 * @return Tve_Dash_Thrive_Icon_Manager
 		 */
 		public static function instance() {
-			if ( self::$instance === null ) {
-				self::$instance = new Tve_Dash_Thrive_Icon_Manager();
+			if ( static::$instance === null ) {
+				static::$instance = new Tve_Dash_Thrive_Icon_Manager();
 			}
 
-			return self::$instance;
+			return static::$instance;
 		}
 
 		/**
@@ -112,7 +106,7 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 					$new_icon_pack['attachment_id']   = absint( $_POST['attachment_id'] );
 					$new_icon_pack['attachment_name'] = basename( $maybe_zip_file );
 
-					$success = __( 'New IcoMoon Font Pack installed. ', TVE_DASH_TRANSLATE_DOMAIN );
+					$success = __( 'New IcoMoon Font Pack installed. ', 'thrive-dash' );
 
 				} catch ( Exception $e ) {
 					$this->messages['error'] = $e->getMessage();
@@ -126,7 +120,7 @@ if ( ! class_exists( 'Tve_Dash_Thrive_Icon_Manager' ) ) {
 					$old_handler->removeIcoMoonFolder( $icon_pack['folder'], $font_family );
 				}
 
-				$success = __( 'IcoMoon Font Pack has been removed. ', TVE_DASH_TRANSLATE_DOMAIN );
+				$success = __( 'IcoMoon Font Pack has been removed. ', 'thrive-dash' );
 			}
 
 			if ( isset( $success ) ) {

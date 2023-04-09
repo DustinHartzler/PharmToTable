@@ -126,7 +126,7 @@ class Thrive_Dash_Api_Zoho {
 	protected function handleResponse( $response ) {
 
 		if ( $response instanceof WP_Error ) {
-			throw new Exception( sprintf( __( 'Failed connecting: %s', TVE_DASH_TRANSLATE_DOMAIN ), $response->get_error_message() ) );
+			throw new Exception( sprintf( __( 'Failed connecting: %s', 'thrive-dash' ), $response->get_error_message() ) );
 		}
 
 		if ( isset( $response['response']['code'] ) ) {
@@ -137,13 +137,13 @@ class Thrive_Dash_Api_Zoho {
 					return $result;
 					break;
 				case 400:
-					throw new Exception( __( 'Missing a required parameter or calling invalid method', TVE_DASH_TRANSLATE_DOMAIN ) );
+					throw new Exception( __( 'Missing a required parameter or calling invalid method', 'thrive-dash' ) );
 					break;
 				case 401:
-					throw new Exception( __( 'Invalid API key provided!', TVE_DASH_TRANSLATE_DOMAIN ) );
+					throw new Exception( __( 'Invalid API key provided!', 'thrive-dash' ) );
 					break;
 				case 404:
-					throw new Exception( __( "Can't find requested items", TVE_DASH_TRANSLATE_DOMAIN ) );
+					throw new Exception( __( "Can't find requested items", 'thrive-dash' ) );
 					break;
 			}
 		}

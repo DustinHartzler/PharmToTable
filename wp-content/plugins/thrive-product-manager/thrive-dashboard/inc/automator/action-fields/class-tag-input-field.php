@@ -60,4 +60,15 @@ class Tag_Input_Field extends Action_Field {
 	public static function allow_dynamic_data() {
 		return true;
 	}
+
+	/**
+	 * An array of extra options to be passed to the field which can affect the display of the field
+	 *
+	 * @return array
+	 */
+	public static function get_extra_options() {
+		return [
+			'message' => 'Type a tag and press Enter. Use a comma to add multiple tags',
+		];
+	}
 }

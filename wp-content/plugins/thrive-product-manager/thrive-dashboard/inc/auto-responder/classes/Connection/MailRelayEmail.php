@@ -55,7 +55,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 		$key        = ! empty( $connection['key'] ) ? $connection['key'] : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid MailRelay key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid MailRelay key', 'thrive-dash' ) );
 		}
 
 		$connection['domain'] = isset( $connection['url'] ) ? $connection['url'] : $connection['domain'];
@@ -63,7 +63,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 		$url = ! empty( $connection['domain'] ) ? $connection['domain'] : '';
 
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false || empty( $url ) ) {
-			return $this->error( __( 'You must provide a valid MailRelay URL', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid MailRelay URL', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $connection );
@@ -71,7 +71,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to MailRelay using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to MailRelay using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -99,7 +99,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 			return $this->error( $r_result );
 		}
 
-		return $this->success( __( 'MailRelay connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'MailRelay connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -196,7 +196,8 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 			$extra_emails = array_merge( $extra_emails, $data['bcc'] );
 		}
 
-		foreach ( array_merge( $data['emails'], $extra_emails ) as $email ) {
+		$emails = is_array( $extra_emails ) ? array_merge( $data['emails'], $extra_emails ) : $data['emails'];
+		foreach ( $emails as $email ) {
 			$temp = array(
 				'email' => $email,
 				'name'  => '',
@@ -258,7 +259,7 @@ class Thrive_Dash_List_Connection_MailRelayEmail extends Thrive_Dash_List_Connec
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );

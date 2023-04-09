@@ -50,7 +50,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 	 */
 	public function pluginInstalled() {
 		$installed = array();
-		if ( defined( 'MAILPOET_VERSION' ) && (int) MAILPOET_VERSION <= 3 ) {
+		if ( class_exists( 'MailPoet\Config\Initializer', false ) ) {
 			$installed[] = 3;
 		}
 
@@ -77,7 +77,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 	 */
 	public function read_credentials() {
 		if ( ! $this->pluginInstalled() ) {
-			return $this->error( __( 'MailPoet plugin must be installed and activated.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'MailPoet plugin must be installed and activated.', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -102,7 +102,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 	 */
 	public function test_connection() {
 		if ( ! $this->pluginInstalled() ) {
-			return __( 'At least one MailPoet plugin must be installed and activated.', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'At least one MailPoet plugin must be installed and activated.', 'thrive-dash' );
 		}
 
 		return true;
@@ -118,7 +118,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 	 */
 	public function add_subscriber( $list_identifier, $arguments ) {
 		if ( ! $this->pluginInstalled() ) {
-			return __( 'MailPoet plugin is not installed / activated', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'MailPoet plugin is not installed / activated', 'thrive-dash' );
 		}
 
 		list( $firstname, $lastname ) = $this->get_name_parts( $arguments['name'] );
@@ -139,7 +139,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 
 			/** @var WYSIJA_help_user $user_helper */
 			$user_helper = WYSIJA::get( 'user', 'helper' );
-			$result      = $user_helper->add_subscriber( $data_subscriber );
+			$result      = $user_helper->addSubscriber( $data_subscriber );
 			if ( $result === false ) {
 				$messages = $user_helper->getMsgs();
 				if ( isset( $messages['xdetailed-errors'] ) ) {
@@ -148,7 +148,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 					return implode( '<br><br>', $messages['error'] );
 				}
 
-				return __( 'Subscriber could not be saved', TVE_DASH_TRANSLATE_DOMAIN );
+				return __( 'Subscriber could not be saved', 'thrive-dash' );
 			}
 		} else {
 			$user_data = array(
@@ -173,7 +173,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 				// Create subscriber if not exists
 				if ( is_array( $subscriber ) && empty( $subscriber['id'] ) ) {
 					try {
-						$subscriber = $mailpoet::MP( 'v1' )->add_subscriber( $user_data, array(), array() );
+						$subscriber = $mailpoet::MP( 'v1' )->addSubscriber( $user_data, array(), array() );
 					} catch ( Exception $exception ) {
 						$errors[] = $exception->getMessage();
 					}
@@ -198,12 +198,15 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 			}
 
 			if ( ! class_exists( 'MailPoet\Models\Subscriber' ) ) {
-				$this->_error = __( 'No MailPoet plugin could be found.', TVE_DASH_TRANSLATE_DOMAIN );
+				$this->_error = __( 'No MailPoet plugin could be found.', 'thrive-dash' );
 
 				return false;
 			}
 
-			$result = call_user_func( array( 'MailPoet\Models\Subscriber', 'subscribe' ), $user_data, array( $list_identifier ) );
+			$result = call_user_func( array(
+				'MailPoet\Models\Subscriber',
+				'subscribe'
+			), $user_data, array( $list_identifier ) );
 
 			if ( $result->getErrors() ) {
 				return implode( '<br><br>', $result->getErrors() );
@@ -231,7 +234,7 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 	 */
 	protected function _get_lists() {
 		if ( ! $this->pluginInstalled() ) {
-			$this->_error = __( 'No MailPoet plugin could be found.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = __( 'No MailPoet plugin could be found.', 'thrive-dash' );
 
 			return false;
 		}
@@ -268,12 +271,15 @@ class Thrive_Dash_List_Connection_MailPoet extends Thrive_Dash_List_Connection_A
 			}
 
 			if ( ! class_exists( 'MailPoet\Models\Segment' ) ) {
-				$this->_error = __( 'No MailPoet plugin could be found.', TVE_DASH_TRANSLATE_DOMAIN );
+				$this->_error = __( 'No MailPoet plugin could be found.', 'thrive-dash' );
 
 				return false;
 			}
 
-			$segments = call_user_func( array( 'MailPoet\Models\Segment', 'getSegmentsWithSubscriberCount' ), 'default' );
+			$segments = call_user_func( array(
+				'MailPoet\Models\Segment',
+				'getSegmentsWithSubscriberCount'
+			), 'default' );
 
 			if ( ! empty( $segments ) ) {
 				foreach ( $segments as $segment ) {

@@ -84,8 +84,7 @@ class Woo_Add_Product_To_Order extends Action {
 		if ( ! empty( $data['extra_data'] ) ) {
 			$data = $data['extra_data'];
 		}
-
-		$this->products = $data['products']['value'];
+		$this->products = $data['woo_products']['value'];
 	}
 
 	public function do_action( $data ) {
@@ -95,7 +94,7 @@ class Woo_Add_Product_To_Order extends Action {
 			return false;
 		}
 
-		$order = wc_get_order( $order_data->get_value( 'order_id' ) );
+		$order = wc_get_order( $order_data->get_value( Woo_Order_Id::get_id() ) );
 
 		if ( empty( $order ) ) {
 			return false;
@@ -107,7 +106,6 @@ class Woo_Add_Product_To_Order extends Action {
 				$order->add_product( $product );
 			}
 		}
-
 	}
 
 }

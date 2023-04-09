@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 9/25/2015
- * Time: 10:24 AM
- */
 
 require_once dirname( __FILE__ ) . "/Tve_Dash_Font_Import_Manager_View.php";
 require_once dirname( __FILE__ ) . "/Tve_Dash_Font_Import_Manager_Data.php";
@@ -40,7 +34,7 @@ class Tve_Dash_Font_Import_Manager {
 			$this->handlePost();
 		}
 
-		$font_pack = get_option( self::OPTION_NAME, array() );
+		$font_pack = get_option( static::OPTION_NAME, array() );
 
 		if ( ! empty( $font_pack['css_file'] ) ) {
 			wp_enqueue_style( 'thrive_custom_fonts_manager', $font_pack['css_file'] );
@@ -63,9 +57,9 @@ class Tve_Dash_Font_Import_Manager {
 				$new_font_pack                  = $handler->processZip( $maybe_zip_file, $maybe_zip_url );
 				$new_font_pack['attachment_id'] = absint( $_POST['attachment_id'] );
 
-				update_option( self::OPTION_NAME, $new_font_pack );
+				update_option( static::OPTION_NAME, $new_font_pack );
 
-				$this->messages['success'][] = __( "Font pack saved !", TVE_DASH_TRANSLATE_DOMAIN );
+				$this->messages['success'][] = __( "Font pack saved !", 'thrive-dash' );
 
 			} catch ( Exception $e ) {
 				$this->messages['error'][] = $e->getMessage();
@@ -73,12 +67,12 @@ class Tve_Dash_Font_Import_Manager {
 		} else {
 
 			try {
-				$font_pack = get_option( self::OPTION_NAME, array() );
+				$font_pack = get_option( static::OPTION_NAME, array() );
 				if ( ! empty( $font_pack['attachment_id'] ) && is_file( $font_pack['zip_path'] ) ) {
 					$handler->deleteDir( $font_pack['folder'] );
-					delete_option( self::OPTION_NAME );
+					delete_option( static::OPTION_NAME );
 				}
-				$this->messages['success'][] = __( "Font pack removed", TVE_DASH_TRANSLATE_DOMAIN );
+				$this->messages['success'][] = __( "Font pack removed", 'thrive-dash' );
 			} catch ( Exception $e ) {
 				$this->messages['error'][] = $e;
 			}
@@ -86,15 +80,15 @@ class Tve_Dash_Font_Import_Manager {
 	}
 
 	public static function getInstance() {
-		if ( empty( self::$instance ) ) {
-			self::$instance = new Tve_Dash_Font_Import_Manager();
+		if ( empty( static::$instance ) ) {
+			static::$instance = new Tve_Dash_Font_Import_Manager();
 		}
 
-		return self::$instance;
+		return static::$instance;
 	}
 
 	public static function getImportedFonts() {
-		$font_pack = get_option( self::OPTION_NAME, array() );
+		$font_pack = get_option( static::OPTION_NAME, array() );
 		if ( empty( $font_pack ) ) {
 			return array();
 		}
@@ -116,7 +110,7 @@ class Tve_Dash_Font_Import_Manager {
 	}
 
 	public static function getCssFile() {
-		$font_pack = get_option( self::OPTION_NAME, array() );
+		$font_pack = get_option( static::OPTION_NAME, array() );
 		if ( empty( $font_pack ) ) {
 			return null;
 		}
@@ -132,7 +126,7 @@ class Tve_Dash_Font_Import_Manager {
 	 * @return bool
 	 */
 	public static function isImportedFont( $font ) {
-		$font_pack = get_option( self::OPTION_NAME, array() );
+		$font_pack = get_option( static::OPTION_NAME, array() );
 		if ( empty( $font_pack ) ) {
 			return false;
 		}

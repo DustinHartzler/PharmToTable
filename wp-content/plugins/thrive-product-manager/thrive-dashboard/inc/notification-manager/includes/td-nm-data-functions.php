@@ -107,7 +107,7 @@ function td_nm_get_notifications( $filters = array() ) {
 
 		if ( $applicable = $trigger_instance->is_notification_applicable() ) {
 			$post->trigger = $trigger;
-			$post->actions = td_nm_get_actions( $post->ID );;
+			$post->actions = td_nm_get_actions( $post->ID );
 			$notifications[] = $post;
 		}
 	}

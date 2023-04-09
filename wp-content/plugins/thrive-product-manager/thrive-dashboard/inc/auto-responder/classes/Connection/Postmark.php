@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Aurelian
- * Date: 14/10/2015
- * Time: 4:59 PM
- */
 class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -51,11 +45,11 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_text_field( $_POST['connection']['email'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Postmark key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Postmark key', 'thrive-dash' ) );
 		}
 
 		if ( empty( $email ) ) {
-			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Email field must not be empty', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -64,7 +58,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Postmark using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Postmark using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -72,7 +66,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 		 */
 		$this->save();
 
-		return $this->success( __( 'Postmark connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Postmark connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -213,7 +207,7 @@ class Thrive_Dash_List_Connection_Postmark extends Thrive_Dash_List_Connection_A
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );

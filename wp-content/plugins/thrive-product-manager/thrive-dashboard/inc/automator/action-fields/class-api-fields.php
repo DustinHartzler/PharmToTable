@@ -47,11 +47,11 @@ class Api_Fields extends Action_Field {
 		$values = array(
 			0 => array(
 				'id'    => 'name',
-				'label' => __( 'Name', TVE_DASH_TRANSLATE_DOMAIN ),
+				'label' => __( 'Name', 'thrive-dash' ),
 			),
 			1 => array(
 				'id'    => 'phone',
-				'label' => __( 'Phone', TVE_DASH_TRANSLATE_DOMAIN ),
+				'label' => __( 'Phone', 'thrive-dash' ),
 			),
 		);
 

@@ -65,7 +65,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 */
 	public function read_credentials() {
 		if ( ! $this->pluginInstalled() ) {
-			return $this->error( __( 'FluentCRM plugin must be installed and activated.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'FluentCRM plugin must be installed and activated.', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection', array() ) );
@@ -90,7 +90,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 */
 	public function test_connection() {
 		if ( ! $this->pluginInstalled() ) {
-			return __( 'FluentCRM plugin must be installed and activated.', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'FluentCRM plugin must be installed and activated.', 'thrive-dash' );
 		}
 
 		return true;
@@ -106,7 +106,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	 */
 	public function add_subscriber( $list_identifier, $arguments ) {
 		if ( ! $this->pluginInstalled() ) {
-			return __( 'FluentCRM plugin is not installed / activated', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'FluentCRM plugin is not installed / activated', 'thrive-dash' );
 		}
 
 		$name_array = array();
@@ -149,7 +149,6 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 			if ( $contact->status === 'pending' ) {
 				$contact->sendDoubleOptinEmail();
 			}
-
 		} catch ( Exception $exception ) {
 			return $exception->getMessage();
 		}
@@ -253,7 +252,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	protected function _get_lists() {
 
 		if ( ! $this->pluginInstalled() ) {
-			$this->_error = __( 'FluentCRM plugin could be found.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = __( 'FluentCRM plugin could be found.', 'thrive-dash' );
 
 			return false;
 		}
@@ -278,7 +277,7 @@ class Thrive_Dash_List_Connection_FluentCRM extends Thrive_Dash_List_Connection_
 	public function get_tags() {
 
 		if ( ! $this->pluginInstalled() ) {
-			$this->_error = __( 'FluentCRM plugin could be found.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = __( 'FluentCRM plugin could be found.', 'thrive-dash' );
 
 			return array();
 		}

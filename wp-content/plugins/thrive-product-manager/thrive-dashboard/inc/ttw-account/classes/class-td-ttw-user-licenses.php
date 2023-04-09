@@ -62,16 +62,6 @@ class TD_TTW_User_Licenses {
 	}
 
 	/**
-	 * Check if there is an active membership
-	 *
-	 * @return bool
-	 */
-	public function has_active_membership() {
-
-		return $this->has_membership() && $this->is_membership_active();
-	}
-
-	/**
 	 * Check if the membership license is active
 	 *
 	 * @return bool
@@ -193,12 +183,12 @@ class TD_TTW_User_Licenses {
 	 *
 	 * @return string
 	 */
-	public function get_recheck_url() {
+	public function get_recheck_url( $file = 'plugins.php' ) {
 
 		if ( isset( $_REQUEST['page'] ) && sanitize_text_field( $_REQUEST['page'] ) === TD_TTW_Update_Manager::NAME ) {
 			$url = ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( $_SERVER['REQUEST_URI'] ) : '';
 		} else {
-			$url = admin_url( 'plugins.php' );
+			$url = admin_url( $file );
 		}
 
 		return add_query_arg(
@@ -271,6 +261,12 @@ class TD_TTW_User_Licenses {
 		$body = wp_remote_retrieve_body( $response );
 		$body = json_decode( $body, true );
 
+		$response_status_code = wp_remote_retrieve_response_code( $response );
+		if ( 200 !== $response_status_code ) {
+			$error_message = isset( $body['message'] ) ? $body['message'] : 'It looks like there has been an error while fetching your ThriveThemes license details.';
+			thrive_set_transient( 'td_ttw_connection_error', $error_message, self::CACHE_LIFE_TIME );
+		}
+
 		if ( ! is_array( $body ) || empty( $body['success'] ) ) {
 			thrive_set_transient( self::NAME, array(), self::CACHE_LIFE_TIME );
 
@@ -280,6 +276,7 @@ class TD_TTW_User_Licenses {
 		$licenses_details = $body['data'];
 
 		thrive_set_transient( self::NAME, $licenses_details, self::CACHE_LIFE_TIME );
+		thrive_delete_transient( 'td_ttw_connection_error' );
 
 		return $licenses_details;
 	}

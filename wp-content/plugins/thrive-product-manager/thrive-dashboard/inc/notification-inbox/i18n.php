@@ -10,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return array(
-	'Notifications' => __( 'Notifications', TVE_DASH_TRANSLATE_DOMAIN ),
-	'more_10'       => __( 'Load more 10', TVE_DASH_TRANSLATE_DOMAIN ),
-	'no_data'       => __( 'There are no notifications', TVE_DASH_TRANSLATE_DOMAIN ),
-	'no_more_data'  => __( 'No more notifications', TVE_DASH_TRANSLATE_DOMAIN ),
+	'Notifications' => __( 'Notifications', 'thrive-dash' ),
+	'more_10'       => __( 'Load more 10', 'thrive-dash' ),
+	'no_data'       => __( 'There are no notifications', 'thrive-dash' ),
+	'no_more_data'  => __( 'No more notifications', 'thrive-dash' ),
 );

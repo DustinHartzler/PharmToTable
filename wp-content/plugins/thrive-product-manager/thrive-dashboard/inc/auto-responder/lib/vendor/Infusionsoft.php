@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 5/11/2015
- * Time: 5:59 PM
- */
 
 // Include WordPress libraries to handle XML-RPC
 require_once ABSPATH . '/wp-includes/class-IXR.php';
@@ -40,7 +34,7 @@ class Thrive_Dash_Api_Infusionsoft {
 
 		// Make sure no error already exists
 		if ( $this->error ) {
-			throw new Thrive_Dash_Api_Infusionsoft_InfusionsoftException( __( 'You must provide a subdomain and API key for your Keap (Infusionsoft) application.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Thrive_Dash_Api_Infusionsoft_InfusionsoftException( __( 'You must provide a subdomain and API key for your Keap (Infusionsoft) application.', 'thrive-dash' ) );
 		}
 
 		// Get the full method name with the service and method

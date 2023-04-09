@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 11/21/2018
- * Time: 13:37
- */
 class Thrive_Dash_List_Connection_Sendlane extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -57,14 +51,14 @@ class Thrive_Dash_List_Connection_Sendlane extends Thrive_Dash_List_Connection_A
 		$connection = $this->post( 'connection', array() );
 
 		if ( empty( $connection['api_url'] ) || empty( $connection['api_key'] ) || empty( $connection['hash_key'] ) ) {
-			return $this->error( __( 'All fields are required!', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'All fields are required!', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $connection );
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( __( 'Could not connect to SendLane using the provided details', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Could not connect to SendLane using the provided details', 'thrive-dash' ) );
 		}
 
 		/**
@@ -72,7 +66,7 @@ class Thrive_Dash_List_Connection_Sendlane extends Thrive_Dash_List_Connection_A
 		 */
 		$this->save();
 
-		return $this->success( __( 'SendLane connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SendLane connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

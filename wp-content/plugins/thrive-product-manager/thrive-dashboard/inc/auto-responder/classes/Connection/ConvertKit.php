@@ -55,7 +55,7 @@ class Thrive_Dash_List_Connection_ConvertKit extends Thrive_Dash_List_Connection
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid ConvertKit API Key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid ConvertKit API Key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( array( 'key' => $key ) );
@@ -63,7 +63,7 @@ class Thrive_Dash_List_Connection_ConvertKit extends Thrive_Dash_List_Connection
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to ConvertKit: %s', TVE_DASH_TRANSLATE_DOMAIN ), $this->_error ) );
+			return $this->error( sprintf( __( 'Could not connect to ConvertKit: %s', 'thrive-dash' ), $this->_error ) );
 		}
 
 		/**
@@ -71,7 +71,7 @@ class Thrive_Dash_List_Connection_ConvertKit extends Thrive_Dash_List_Connection
 		 */
 		$this->save();
 
-		return $this->success( __( 'ConvertKit connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'ConvertKit connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

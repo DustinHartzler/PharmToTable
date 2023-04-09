@@ -50,7 +50,7 @@ class Thrive_Dash_List_Connection_MailRelay extends Thrive_Dash_List_Connection_
 		$key        = ! empty( $connection['key'] ) ? $connection['key'] : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid MailRelay key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid MailRelay key', 'thrive-dash' ) );
 		}
 
 		$connection['url'] = isset( $connection['domain'] ) ? $connection['domain'] : $connection['url'];
@@ -58,7 +58,7 @@ class Thrive_Dash_List_Connection_MailRelay extends Thrive_Dash_List_Connection_
 		$url = ! empty( $connection['url'] ) ? $connection['url'] : '';
 
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) === false || empty( $url ) ) {
-			return $this->error( __( 'You must provide a valid MailRelay URL', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid MailRelay URL', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $connection );
@@ -66,7 +66,7 @@ class Thrive_Dash_List_Connection_MailRelay extends Thrive_Dash_List_Connection_
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to MailRelay using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to MailRelay using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -99,7 +99,7 @@ class Thrive_Dash_List_Connection_MailRelay extends Thrive_Dash_List_Connection_
 			Thrive_Dash_List_Manager::save( $related_api );
 		}
 
-		return $this->success( __( 'MailRelay connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'MailRelay connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

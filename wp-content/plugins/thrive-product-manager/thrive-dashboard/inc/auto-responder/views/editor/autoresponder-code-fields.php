@@ -9,14 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
  if ( isset( $show_textarea ) ) : ?>
-	<textarea name="tve_lead_generation_code" placeholder="<?php echo esc_html__( "Insert your code here", TVE_DASH_TRANSLATE_DOMAIN ) ?>"
+	<textarea name="tve_lead_generation_code" placeholder="<?php echo esc_html__( "Insert your code here", 'thrive-dash' ) ?>"
 	          class="tve_lightbox_textarea"></textarea>
 	<div class="tve_clearfix">
 		<a href="javascript:void(0)" class="tve_editor_button tve_editor_button_default tve_right tve_button_margin tve_click "
-		   data-ctrl="function:auto_responder.dashboard"><?php echo esc_html__( "Cancel", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+		   data-ctrl="function:auto_responder.dashboard"><?php echo esc_html__( "Cancel", 'thrive-dash' ) ?></a>
 		<a href="javascript:void(0)"
 		   class="tve_editor_button tve_editor_button_success tve_right tve_lead_generate_fields tve_click"
-		   data-ctrl="function:auto_responder.generate_fields"><?php echo esc_html__( "Generate Fields", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+		   data-ctrl="function:auto_responder.generate_fields"><?php echo esc_html__( "Generate Fields", 'thrive-dash' ) ?></a>
 	</div>
 <?php endif ?>
 <div class="tve_large_lightbox tve_lead_gen_lightbox_small">
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<table>
 			<tfoot>
 			<tr>
-				<td style="width: 10%;"><?php echo esc_html__( 'Choose an icon', TVE_DASH_TRANSLATE_DOMAIN ) ?></td>
+				<td style="width: 10%;"><?php echo esc_html__( 'Choose an icon', 'thrive-dash' ) ?></td>
 				<td>
 					<?php $icon_click = 'function:auto_responder.choose_icon';
 					$icon_hide_header = true;

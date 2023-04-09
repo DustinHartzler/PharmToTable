@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_Abstract {
 
 	protected $api_error_type = 'string';
-	private   $acf_identifier = 'tve_acf_';
+	private $acf_identifier = 'tve_acf_';
 
 	/**
 	 * Set current error type output
@@ -251,22 +251,20 @@ class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_
 		if ( empty( $arguments['$$trusted'] ) ) {
 			$list_identifier = 'subscriber';
 		}
-
+		$error = null;
 		if ( $this->isDisabled() ) {
-			return $this->build_field_error( __( 'Registration has been disabled', TVE_DASH_TRANSLATE_DOMAIN ), '' );
+			$error = $this->build_field_error( __( 'Registration has been disabled', 'thrive-dash' ), '' );
+		} elseif ( is_user_logged_in() ) {
+			$error = $this->build_field_error( __( 'You are already logged in. Please Logout in order to create a new user.', 'thrive-dash' ), '' );
+		} elseif ( empty( $arguments['email'] ) ) {
+			/* Use the same error messages as WordPress */
+			$error = $this->build_field_error( __( '<strong>Error</strong>: Please type your email address.' ), 'email' );
+		} elseif ( ! is_email( $arguments['email'] ) ) {
+			$error = $this->build_field_error( __( '<strong>Error</strong>: The email address isn&#8217;t correct.' ), 'email' );
 		}
 
-		if ( is_user_logged_in() ) {
-			return $this->build_field_error( __( 'You are already logged in. Please Logout in order to create a new user.', TVE_DASH_TRANSLATE_DOMAIN ), '' );
-		}
-
-		/* Use the same error messages as WordPress */
-		if ( empty( $arguments['email'] ) ) {
-			return $this->build_field_error( __( '<strong>Error</strong>: Please type your email address.' ), 'email' );
-		}
-
-		if ( ! is_email( $arguments['email'] ) ) {
-			return $this->build_field_error( __( '<strong>Error</strong>: The email address isn&#8217;t correct.' ), 'email' );
+		if ( $error !== null ) {
+			return $error;
 		}
 
 		/* get profile fields from mapping */
@@ -301,22 +299,36 @@ class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_
 			$arguments['username'] = $username;
 		}
 
+		if ( ! empty( $arguments['name'] ) ) {
+			list( $arguments['first_name'], $arguments['last_name'] ) = $this->get_name_parts( $arguments['name'] );
+		}
+
 		/**
 		 * check if passwords parameters exist and if they are the same in case they're two
 		 */
 		if ( isset( $arguments['password'] ) ) {
 			if ( isset( $arguments['confirm_password'] ) && $arguments['password'] !== $arguments['confirm_password'] ) {
-				return $this->error( __( 'Passwords do not match', TVE_DASH_TRANSLATE_DOMAIN ) );
+				return $this->error( __( 'Passwords do not match', 'thrive-dash' ) );
 			}
 
 			if ( ! $user_id && email_exists( $arguments['email'] ) === false ) {
-				$user_data = apply_filters( 'tvd_create_user_data', array(
+				$user_data = array(
 					'user_login' => $username,
 					'user_pass'  => $arguments['password'],
 					'user_email' => $arguments['email'],
-				) );
+				);
 
+				foreach ( $profile_fields as $profile_field ) {
+					if ( ! empty( $arguments[ $profile_field ] ) ) {
+						$user_data[ $profile_field ] = $arguments[ $profile_field ];
+					}
+				}
+				/**
+				 * Filter user data before creating a new user
+				 */
+				$user_data = apply_filters( 'tvd_create_user_data', $user_data );
 				$user_id = wp_insert_user( $user_data );
+
 				if ( $user_id ) {
 					$data = $arguments;
 					unset( $data['password'], $data['confirm_password'] );
@@ -338,10 +350,6 @@ class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_
 
 		if ( $user_id instanceof WP_Error ) {
 			return $user_id->get_error_message();
-		}
-
-		if ( ! empty( $arguments['name'] ) ) {
-			list( $arguments['first_name'], $arguments['last_name'] ) = $this->get_name_parts( $arguments['name'] );
 		}
 
 		$userdata = array( 'ID' => $user_id );
@@ -447,7 +455,7 @@ class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_
 	}
 
 	public function prepare_json() {
-		$message = $this->isDisabled() ? esc_attr__( 'Connection disabled', TVE_DASH_TRANSLATE_DOMAIN ) : esc_attr__( 'Connection enabled', TVE_DASH_TRANSLATE_DOMAIN );
+		$message = $this->isDisabled() ? esc_attr__( 'Connection disabled', 'thrive-dash' ) : esc_attr__( 'Connection enabled', 'thrive-dash' );
 
 		return parent::prepare_json() + array(
 				'status_icon' => '<span data-tooltip="' . $message . '" class="tvd-api-status-icon tvd-tooltipped status-' . ( $this->isDisabled() ? 'red' : 'green' ) . '"></span>',
@@ -462,7 +470,7 @@ class Thrive_Dash_List_Connection_Wordpress extends Thrive_Dash_List_Connection_
 	public function get_data_for_setup() {
 		/* build an error message */
 		$error_message = sprintf(
-			__( 'Your connection with WordPress is currently disabled and will not accept registrations. Enable your WordPress connection from the %sAPI dashboard %shere%s', TVE_DASH_TRANSLATE_DOMAIN ),
+			__( 'Your connection with WordPress is currently disabled and will not accept registrations. Enable your WordPress connection from the %sAPI dashboard %shere%s', 'thrive-dash' ),
 			'<strong>',
 			'<a href="' . admin_url( 'admin.php?page=tve_dash_api_connect#edit/wordpress/autoclose' ) . '" target="_blank">',
 			'</a></strong>'

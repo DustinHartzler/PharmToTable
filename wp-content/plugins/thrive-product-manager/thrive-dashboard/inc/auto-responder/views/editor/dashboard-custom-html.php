@@ -9,19 +9,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
  if ( empty( $_POST['edit_custom_html'] ) ) : ?>
-	<h4><?php echo esc_html__( "Connect with Service", TVE_DASH_TRANSLATE_DOMAIN ) ?></h4>
+	<h4><?php echo esc_html__( "Connect with Service", 'thrive-dash' ) ?></h4>
 	<hr class="tve_lightbox_line"/>
-	<p><?php echo esc_html__( "Your sign up form is connected to a service using custom HTML form code.", TVE_DASH_TRANSLATE_DOMAIN ) ?></p>
+	<p><?php echo esc_html__( "Your sign up form is connected to a service using custom HTML form code.", 'thrive-dash' ) ?></p>
 	<div class="tve-sp"></div>
 	<div class="tve_clearfix">
 		<a href="javascript:void(0)" class="tve_click tve_editor_button tve_editor_button_cancel tve_right tve_button_margin"
 		   data-ctrl="function:auto_responder.remove_custom_html">
-			<span><?php echo esc_html__( "Delete Connection", TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
+			<span><?php echo esc_html__( "Delete Connection", 'thrive-dash' ) ?></span>
 		</a>
 		&nbsp;
 		<a href="javascript:void(0)" class="tve_click tve_editor_button tve_editor_button_success tve_right"
 		   data-ctrl="function:auto_responder.dashboard" data-edit-custom="1">
-			<span><?php echo esc_html__( "Edit HTML form code", TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
+			<span><?php echo esc_html__( "Edit HTML form code", 'thrive-dash' ) ?></span>
 		</a>
 	</div>
 <?php else : ?>

@@ -41,7 +41,7 @@ class Thrive_Dash_List_Connection_Sendfox extends Thrive_Dash_List_Connection_Ab
 	public function read_credentials() {
 
 		if ( empty( $_POST['connection']['api_key'] ) ) {
-			return $this->error( __( 'Api key is required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Api key is required', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -49,7 +49,7 @@ class Thrive_Dash_List_Connection_Sendfox extends Thrive_Dash_List_Connection_Ab
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( __( 'Could not connect to Sendfox using provided api key.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Could not connect to Sendfox using provided api key.', 'thrive-dash' ) );
 		}
 
 		/**
@@ -57,7 +57,7 @@ class Thrive_Dash_List_Connection_Sendfox extends Thrive_Dash_List_Connection_Ab
 		 */
 		$this->save();
 
-		return $this->success( __( 'Sendfox connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Sendfox connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Aurelian Pop
- * Date: 04-Jan-16
- * Time: 5:38 PM
- */
 class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -51,19 +45,19 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 		if ( empty( $key ) ) {
-			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service key', 'thrive-dash' ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service key', 'thrive-dash' ) );
 		}
 
 		$secretkey = ! empty( $_POST['connection']['secretkey'] ) ? sanitize_text_field( $_POST['connection']['secretkey'] ) : '';
 
 		if ( empty( $secretkey ) ) {
-			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service secret key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service secret key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'You must provide a valid Amazon Web Services Simple Email Service secret key', 'thrive-dash' ) : $this->error( __( 'You must provide a valid Amazon Web Services Simple Email Service secret key', 'thrive-dash' ) );
 		}
 
 		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_email( $_POST['connection']['email'] ) : '';
 
 		if ( empty( $email ) ) {
-			return $ajax_call ? __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'Email field must not be empty', 'thrive-dash' ) : $this->error( __( 'Email field must not be empty', 'thrive-dash' ) );
 		}
 		$country = ! empty( $_POST['connection']['country'] ) ? sanitize_text_field( $_POST['connection']['country'] ) : '';
 
@@ -77,14 +71,14 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 
 		$result = $this->test_connection();
 		if ( $result !== true ) {
-			return $ajax_call ? sprintf( __( 'Could not connect to Amazon Web Services Simple Email Service using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) : $this->error( sprintf( __( 'Could not connect to Amazon Web Services Simple Email Service using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $ajax_call ? sprintf( __( 'Could not connect to Amazon Web Services Simple Email Service using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) : $this->error( sprintf( __( 'Could not connect to Amazon Web Services Simple Email Service using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
 		 * finally, save the connection details
 		 */
 		$this->save();
-		$this->success( __( 'Amazon Web Services Simple Email Service connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'Amazon Web Services Simple Email Service connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -254,7 +248,7 @@ class Thrive_Dash_List_Connection_Awsses extends Thrive_Dash_List_Connection_Abs
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );

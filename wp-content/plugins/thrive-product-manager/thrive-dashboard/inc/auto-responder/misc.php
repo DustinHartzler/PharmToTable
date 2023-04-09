@@ -23,6 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return int
  */
 function tve_dash_request_timeout( $request_method = 'get' ) {
+	/* SUPP-14901 - we couldn't find the root cause of the long download time, so we increased the timeout */
+	$default_timeout = defined('THRIVE_REQ_TIMEOUT') ? THRIVE_REQ_TIMEOUT : 30;
 	/* SUPP-988, SUPP-3317, SUPP-8988 increased timeout to 30, it seems some hosts have some issues, not being able to resolve API URLs in 5 seconds */
 	/**
 	 * Filter the default request timeout used throughout Thrive products.
@@ -36,7 +38,7 @@ function tve_dash_request_timeout( $request_method = 'get' ) {
 	 * @return int
 	 *
 	 */
-	return apply_filters( 'thrive_request_timeout', 30, $request_method );
+	return apply_filters( 'thrive_request_timeout', $default_timeout, $request_method );
 }
 
 /**
@@ -204,7 +206,7 @@ function tve_dash_api_vendor_loader( $className ) {
 		return false;
 	}
 
-	$basedir = rtrim( dirname( __FILE__ ), '/\\' ) . '/lib/vendor/';
+	$basedir = rtrim( __DIR__, '/\\' ) . '/lib/vendor/';
 
 	/**
 	 * Get the API version info
@@ -234,14 +236,14 @@ function tve_dash_api_classes_loader( $className ) {
 	$connection_name = strtolower( array_pop( $parts ) );
 	$api_versioning  = tve_saved_api_version( $connection_name );
 
-	$basedir = rtrim( dirname( __FILE__ ), '/\\' ) . '/classes/';
+	$basedir = rtrim( __DIR__, '/\\' ) . '/classes/';
 
 	return _tve_dash_api__autoload( $basedir, str_replace( $namespace, '', $className ), $api_versioning );
 }
 
 spl_autoload_register( 'tve_dash_api_vendor_loader' );
 spl_autoload_register( 'tve_dash_api_classes_loader' );
-
+do_action( 'thrive_dashboard_autoresponders_loaded' );
 /**
  * AJAX call handler for API logs that are being retried
  * If the subscription is made with success the log is deleted from db
@@ -263,21 +265,21 @@ function tve_dash_api_form_retry() {
 	if ( empty( $connection_name ) ) {
 		exit( json_encode( array(
 			'status'  => 'error',
-			'message' => __( 'Connection is not specified !', TVE_DASH_TRANSLATE_DOMAIN ),
+			'message' => __( 'Connection is not specified !', 'thrive-dash' ),
 		) ) );
 	}
 
 	if ( empty( $list_id ) ) {
 		exit( json_encode( array(
 			'status'  => 'error',
-			'message' => __( 'Where should I subscribe this user? List is not specified !', TVE_DASH_TRANSLATE_DOMAIN ),
+			'message' => __( 'Where should I subscribe this user? List is not specified !', 'thrive-dash' ),
 		) ) );
 	}
 
 	if ( empty( $email ) ) {
 		exit( json_encode( array(
 			'status'  => 'error',
-			'message' => __( 'Email is not specified !', TVE_DASH_TRANSLATE_DOMAIN ),
+			'message' => __( 'Email is not specified !', 'thrive-dash' ),
 		) ) );
 	}
 
@@ -292,7 +294,7 @@ function tve_dash_api_form_retry() {
 
 		$api = Thrive_Dash_List_Manager::connection_instance( $connection_name );
 		if ( ! $api ) {
-			$response = __( 'Cannot establish API connection', TVE_DASH_TRANSLATE_DOMAIN );
+			$response = __( 'Cannot establish API connection', 'thrive-dash' );
 		} else {
 
 			$post_data['_asset_group'] = ! empty( $_POST['_asset_group'] ) ? sanitize_text_field( $_POST['_asset_group'] ) : '';
@@ -331,14 +333,14 @@ function tve_dash_api_form_retry() {
 		if ( $delete_result === false ) {
 			exit( json_encode( array(
 				'status'  => 'error',
-				'message' => __( "Subscription was made with success but we could not delete the log from database !", TVE_DASH_TRANSLATE_DOMAIN ),
+				'message' => __( "Subscription was made with success but we could not delete the log from database !", 'thrive-dash' ),
 			) ) );
 		}
 	}
 
 	exit( json_encode( array(
 		'status'  => 'success',
-		'message' => __( 'Subscription was made with success !', TVE_DASH_TRANSLATE_DOMAIN ),
+		'message' => __( 'Subscription was made with success !', 'thrive-dash' ),
 	) ) );
 }
 
@@ -357,7 +359,7 @@ function tve_dash_api_delete_log() {
 	if ( empty( $log_id ) ) {
 		exit( json_encode( array(
 			'status'  => 'error',
-			'message' => __( "Log ID is not valid !", TVE_DASH_TRANSLATE_DOMAIN ),
+			'message' => __( "Log ID is not valid !", 'thrive-dash' ),
 		) ) );
 	}
 
@@ -367,18 +369,20 @@ function tve_dash_api_delete_log() {
 	if ( $delete_result === false ) {
 		exit( json_encode( array(
 			'status'  => 'error',
-			'message' => sprintf( __( "An error occurred: %s", TVE_DASH_TRANSLATE_DOMAIN ), $wpdb->last_error ),
+			'message' => sprintf( __( "An error occurred: %s", 'thrive-dash' ), $wpdb->last_error ),
 		) ) );
-	} else if ( $delete_result === 0 ) {
+	}
+
+	if ( $delete_result === 0 ) {
 		exit( json_encode( array(
 			'status'  => 'error',
-			'message' => sprintf( __( "The log with ID: %s could not be found !", TVE_DASH_TRANSLATE_DOMAIN ), $log_id ),
+			'message' => sprintf( __( "The log with ID: %s could not be found !", 'thrive-dash' ), $log_id ),
 		) ) );
 	}
 
 	exit( json_encode( array(
 		'status'  => 'success',
-		'message' => sprintf( __( "API Log with ID: %s has been deleted with success !", TVE_DASH_TRANSLATE_DOMAIN ), $log_id ),
+		'message' => sprintf( __( "API Log with ID: %s has been deleted with success !", 'thrive-dash' ), $log_id ),
 	) ) );
 }
 

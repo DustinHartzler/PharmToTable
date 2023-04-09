@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 4/10/2015
- * Time: 3:16 PM
- */
 class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -54,7 +48,7 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 		$apiPassword = ! empty( $_POST['connection']['apiPassword'] ) ? sanitize_text_field( $_POST['connection']['apiPassword'] ) : '';
 
 		if ( empty( $apiId ) || empty( $apiUsername ) || empty( $apiPassword ) ) {
-			return $this->error( __( 'You must provide a valid iContact AppID/Username/Password', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid iContact AppID/Username/Password', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -62,7 +56,7 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to iContact: %s', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to iContact: %s', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -70,7 +64,7 @@ class Thrive_Dash_List_Connection_iContact extends Thrive_Dash_List_Connection_A
 		 */
 		$this->save();
 
-		return $this->success( __( 'iContact connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'iContact connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

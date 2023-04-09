@@ -72,7 +72,7 @@ class TVD_Content_Sets {
 	public function add_meta_boxes() {
 		add_meta_box(
 			'tvd_content_sets',
-			esc_html__( 'Thrive Content Sets', TVE_DASH_TRANSLATE_DOMAIN ),
+			esc_html__( 'Thrive Content Sets', 'thrive-dash' ),
 			array( $this, 'content_sets_meta_box' ),
 			null,
 			'advanced',
@@ -107,10 +107,7 @@ class TVD_Content_Sets {
 	 * Enqueue Content Sets scripts & styles
 	 */
 	public function enqueue_scripts() {
-		$screen    = get_current_screen();
-		$screen_id = $screen ? $screen->id : '';
-
-		if ( $this->allow_enqueue_scripts( $screen_id ) ) {
+		if ( $this->allow_enqueue_scripts( tve_get_current_screen_key() ) ) {
 
 			tve_dash_enqueue_style( 'tvd-content-sets-admin', TVD_Smart_Const::url( 'assets/admin/css/styles-content-sets.css' ) );
 
@@ -152,97 +149,102 @@ class TVD_Content_Sets {
 							array(
 								'value'    => '',
 								'disabled' => true,
-								'label'    => __( 'Select your field or taxonomy', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label'    => __( 'Select your field or taxonomy', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_ALL,
-								'label' => __( 'All', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'All', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_TITLE,
-								'label' => __( 'Title', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Title', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_TAG,
-								'label' => __( 'Tag', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Tag', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_CATEGORY,
-								'label' => __( 'Category', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Category', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_PUBLISHED_DATE,
-								'label' => __( 'Published', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Published', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_AUTHOR,
-								'label' => __( 'Author', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Author', 'thrive-dash' ),
 							),
 						),
 						'operator' => array(
 							array(
 								'value'    => '',
 								'disabled' => true,
-								'label'    => __( 'Choose your condition', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label'    => __( 'Choose your condition', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::OPERATOR_IS,
-								'label' => __( 'Is', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Is', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::OPERATOR_NOT_IS,
-								'label' => __( 'Is not', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Is not', 'thrive-dash' ),
 							),
 						),
 					),
-					'exceptions' => array(
+					/**
+					 * Allow Protected files to hook here and modify the exceptions list
+					 *
+					 * @param array $exceptions
+					 */
+					'exceptions' => apply_filters( 'tvd_content_sets_get_content_types_exceptions', array(
 						'tva_courses'    => array(
 							array(
 								'value'    => '',
 								'disabled' => true,
-								'label'    => __( 'Select your field or taxonomy', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label'    => __( 'Select your field or taxonomy', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_ALL,
-								'label' => __( 'All', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'All', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_TITLE,
-								'label' => __( 'Title', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Title', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_TOPIC,
-								'label' => __( 'Topic', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Topic', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_DIFFICULTY,
-								'label' => __( 'Difficulty', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Difficulty', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::FIELD_LABEL,
-								'label' => __( 'Label', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Label', 'thrive-dash' ),
 							),
 						),
 						'published_date' => array(
 							array(
 								'value'    => '',
 								'disabled' => true,
-								'label'    => __( 'Choose your condition', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label'    => __( 'Choose your condition', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::OPERATOR_LOWER_EQUAL,
-								'label' => __( 'On or before', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'On or before', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::OPERATOR_GRATER_EQUAL,
-								'label' => __( 'On or after', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'On or after', 'thrive-dash' ),
 							),
 							array(
 								'value' => \TVD\Content_Sets\Rule::OPERATOR_WITHIN_LAST,
-								'label' => __( 'Within the last', TVE_DASH_TRANSLATE_DOMAIN ),
+								'label' => __( 'Within the last', 'thrive-dash' ),
 							),
 						),
-					),
+					) ),
 				),
 				'sets'       => \TVD\Content_Sets\Set::get_items(),
 			) );
@@ -253,10 +255,7 @@ class TVD_Content_Sets {
 	 * Add backbone templates
 	 */
 	public function backbone_templates() {
-		$screen    = get_current_screen();
-		$screen_id = $screen ? $screen->id : '';
-
-		if ( $this->allow_enqueue_scripts( $screen_id ) ) {
+		if ( $this->allow_enqueue_scripts( tve_get_current_screen_key() ) ) {
 			$templates = tve_dash_get_backbone_templates( TVD_Smart_Const::path( 'views/admin/content-sets-templates' ), 'content-sets-templates' );
 			tve_dash_output_backbone_templates( $templates );
 		}
@@ -282,7 +281,7 @@ class TVD_Content_Sets {
 			array(
 				'value'    => '',
 				'disabled' => true,
-				'label'    => __( 'Choose content type', TVE_DASH_TRANSLATE_DOMAIN ),
+				'label'    => __( 'Choose content type', 'thrive-dash' ),
 			),
 		);
 
@@ -295,22 +294,22 @@ class TVD_Content_Sets {
 
 		$values[] = array(
 			'value' => 'tva_courses',
-			'label' => __( 'Apprentice Course', TVE_DASH_TRANSLATE_DOMAIN ),
+			'label' => __( 'Apprentice Course', 'thrive-dash' ),
 		);
 
 		$values[] = array(
 			'value' => \TVD\Content_Sets\Rule::HIDDEN_POST_TYPE_BLOG,
-			'label' => __( 'Blog Page', TVE_DASH_TRANSLATE_DOMAIN ),
+			'label' => __( 'Blog Page', 'thrive-dash' ),
 		);
 
 		$values[] = array(
 			'value' => \TVD\Content_Sets\Rule::HIDDEN_POST_TYPE_SEARCH_RESULTS,
-			'label' => __( 'Search Results Page', TVE_DASH_TRANSLATE_DOMAIN ),
+			'label' => __( 'Search Results Page', 'thrive-dash' ),
 		);
 
 		$values[] = array(
 			'value' => 'archive',
-			'label' => __( 'Archive', TVE_DASH_TRANSLATE_DOMAIN ),
+			'label' => __( 'Archive', 'thrive-dash' ),
 		);
 
 		return $values;

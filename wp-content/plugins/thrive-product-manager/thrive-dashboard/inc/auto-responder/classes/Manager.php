@@ -28,6 +28,7 @@ class Thrive_Dash_List_Manager {
 		'integrations'  => 'Integration Services',
 		'email'         => 'Email Delivery',
 		'storage'       => 'File Storage',
+		'collaboration' => 'Collaboration',
 	];
 
 	/**
@@ -92,6 +93,10 @@ class Thrive_Dash_List_Manager {
 		/* File Storage */
 		'google_drive'         => 'Thrive_Dash_List_Connection_FileUpload_GoogleDrive',
 		'dropbox'              => 'Thrive_Dash_List_Connection_FileUpload_Dropbox',
+
+		/* Collaboration */
+		'slack'                => 'Thrive_Dash_List_Connection_Slack',
+//		'facebookpixel'        => 'Thrive_Dash_List_Connection_FacebookPixel',
 	];
 
 	private static $_available      = [];
@@ -115,7 +120,7 @@ class Thrive_Dash_List_Manager {
 
 		return method_exists( __CLASS__, $camel_case_method_name ) ? call_user_func_array( [
 			static::class,
-			$camel_case_method_name
+			$camel_case_method_name,
 		], $arguments ) : null;
 	}
 
@@ -132,9 +137,9 @@ class Thrive_Dash_List_Manager {
 	 * This has to stay because we changed the parameters of the function and this is called from the other plugins ( as long as they're not updated ).
 	 * This is also called from TTW, so it can't be deleted for now.
 	 *
-	 * @param bool  $only_connected
+	 * @param bool $only_connected
 	 * @param array $exclude_types
-	 * @param bool  $only_names
+	 * @param bool $only_names
 	 *
 	 * @return array
 	 * @deprecated
@@ -150,7 +155,7 @@ class Thrive_Dash_List_Manager {
 	}
 
 	/**
-	 * @param bool  $only_connected
+	 * @param bool $only_connected
 	 * @param array $api_filter
 	 *
 	 * @return array
@@ -181,7 +186,7 @@ class Thrive_Dash_List_Manager {
 	}
 
 	/**
-	 * @param string                               $key
+	 * @param string $key
 	 * @param Thrive_Dash_List_Connection_Abstract $instance
 	 *
 	 * @return bool
@@ -192,7 +197,7 @@ class Thrive_Dash_List_Manager {
 
 	/**
 	 * @param Thrive_Dash_List_Connection_Abstract $instance
-	 * @param array                                $api_filter
+	 * @param array $api_filter
 	 *
 	 * @return bool
 	 */
@@ -229,6 +234,7 @@ class Thrive_Dash_List_Manager {
 	/**
 	 * Build custom fields for all available connections
 	 * Can be renamed to get_available_custom_fields in 2-3 releases
+	 *
 	 * @return array
 	 */
 	public static function getAvailableCustomFields() {
@@ -236,7 +242,7 @@ class Thrive_Dash_List_Manager {
 		$apis          = static::get_available_apis( true, [ 'exclude_types' => [ 'email', 'social' ] ] );
 
 		/**
-		 * @var string                               $api_name
+		 * @var string $api_name
 		 * @var Thrive_Dash_List_Connection_Abstract $api
 		 */
 		foreach ( $apis as $api_name => $api ) {
@@ -252,21 +258,16 @@ class Thrive_Dash_List_Manager {
 	 *
 	 * @return array
 	 */
-	public static function getCustomFieldsMapper() {
+	public static function getCustomFieldsMapper( $default = false ) {
 
 		$mapper = [];
-		$apis   = static::get_available_apis( true, [ 'exclude_types' => [ 'email', 'social' ] ] );
+		$apis   = static::get_available_apis( true, [ 'exclude_types' => [ 'email', 'social', 'collaboration' ] ] );
 
 		/**
 		 * @var Thrive_Dash_List_Connection_Abstract $api
 		 */
 		foreach ( $apis as $api ) {
-
-			if ( ! empty( $mapper ) ) {
-				break;
-			}
-
-			$mapper = $api->get_custom_fields_mapping();
+			$mapper[ $api->get_key() ] = $default ? $api->get_default_fields_mapper() : $api->get_custom_fields_mapping();
 		}
 
 		return $mapper;
@@ -277,7 +278,7 @@ class Thrive_Dash_List_Manager {
 	 * get a list of all available APIs by type
 	 * todo: this is deprecated ( moved to get_available_apis() ), get rid of it after 2-3 releases
 	 *
-	 * @param bool         $onlyConnected if true, it will return only APIs that are already connected
+	 * @param bool $onlyConnected if true, it will return only APIs that are already connected
 	 * @param string|array $include_types exclude connection by their type
 	 *
 	 * @return array Thrive_Dash_List_Connection_Abstract[]
@@ -289,11 +290,11 @@ class Thrive_Dash_List_Manager {
 		}
 		$lists = array();
 
-		$credentials = self::credentials();
+		$credentials = static::credentials();
 
-		foreach ( self::available() as $key => $api ) {
+		foreach ( static::available() as $key => $api ) {
 			/** @var Thrive_Dash_List_Connection_Abstract $instance */
-			$instance = self::connectionInstance( $key, isset( $credentials[ $key ] ) ? $credentials[ $key ] : array() );
+			$instance = static::connectionInstance( $key, isset( $credentials[ $key ] ) ? $credentials[ $key ] : array() );
 			if ( ( $onlyConnected && empty( $credentials[ $key ] ) ) || ! in_array( $instance::get_type(), $include_types, true ) ) {
 				continue;
 			}
@@ -328,7 +329,7 @@ class Thrive_Dash_List_Manager {
 				$all_credentials['wordpress'] = [ 'connected' => true ];
 			}
 
-			static::$all_credentials = $all_credentials;
+			static::$all_credentials = apply_filters( 'tve_filter_all_api_credentials', $all_credentials );
 		}
 
 		if ( empty( $key ) ) {
@@ -414,7 +415,7 @@ class Thrive_Dash_List_Manager {
 	 */
 	public static function message( $type, $message ) {
 		if ( $type === 'error' ) {
-			self::$ADMIN_HAS_ERROR = true;
+			static::$ADMIN_HAS_ERROR = true;
 		}
 		$messages          = get_option( 'tve_api_admin_notices', [] );
 		$messages[ $type ] = $message;

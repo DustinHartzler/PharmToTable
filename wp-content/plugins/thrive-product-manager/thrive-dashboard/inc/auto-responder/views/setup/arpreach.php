@@ -19,25 +19,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="tvd-input-field">
 				<input id="tvd-arp-api-url" type="text" name="connection[url]"
 					   value="<?php echo esc_attr( $this->param( 'url' ) ) ?>">
-				<label for="tvd-arp-api-url"><?php echo esc_html__( "Installation URL", TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
+				<label for="tvd-arp-api-url"><?php echo esc_html__( "Installation URL", 'thrive-dash' ) ?></label>
 			</div>
 		</div>
 		<div class="tvd-col tvd-s10">
 			<div class="tvd-input-field">
 				<input id="tvd-arp-api-key" type="text" name="connection[api_key]"
 					   value="<?php echo esc_attr( $this->param( 'api_key' ) ) ?>">
-				<label for="tvd-arp-api-key"><?php echo esc_html__( "API key", TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
+				<label for="tvd-arp-api-key"><?php echo esc_html__( "API key", 'thrive-dash' ) ?></label>
 			</div>
 		</div>
 		<div class="tvd-col tvd-s10">
 			<div class="tvd-input-field">
 				<input class="tvd-api-add-chip" id="tvd-arp-api-lists" type="text" data-name="connection[lists][]"/>
-				<label for="tvd-arp-api-lists"><?php echo esc_html__( "List ID", TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
+				<label for="tvd-arp-api-lists"><?php echo esc_html__( "List ID", 'thrive-dash' ) ?></label>
 			</div>
 		</div>
 		<div class="tvd-col tvd-s2">
 			<i class="tvd-icon-question-circle tvd-tooltipped" data-position="top"
-			   data-tooltip="<?php echo esc_html__( "Write the list ID and press the enter key", TVE_DASH_TRANSLATE_DOMAIN ) ?>"></i>
+			   data-tooltip="<?php echo esc_html__( "Write the list ID and press the enter key", 'thrive-dash' ) ?>"></i>
 		</div>
 		<div class="tvd-api-chip-wrapper tvd-col tvd-s12">
 			<?php $lists = $this->param( 'lists' ); ?>
@@ -55,10 +55,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="tvd-card-action">
 	<div class="tvd-row tvd-no-margin">
 		<div class="tvd-col tvd-s12 tvd-m6">
-			<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-dark tvd-full-btn tvd-waves-effect"><?php echo esc_html__( "Cancel", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+			<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-dark tvd-full-btn tvd-waves-effect"><?php echo esc_html__( "Cancel", 'thrive-dash' ) ?></a>
 		</div>
 		<div class="tvd-col tvd-s12 tvd-m6">
-			<a class="tvd-api-connect tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn"><?php echo esc_html__( "Connect", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+			<a class="tvd-api-connect tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn"><?php echo esc_html__( "Connect", 'thrive-dash' ) ?></a>
 		</div>
 	</div>
 </div>

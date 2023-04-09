@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 07.05.2015
- * Time: 18:23
- */
 class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -66,7 +60,7 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		$api_key = ! empty( $_POST['connection']['api_key'] ) ? sanitize_text_field( $_POST['connection']['api_key'] ) : '';
 
 		if ( empty( $api_key ) || empty( $api_url ) || empty( $_POST['connection'] ) ) {
-			return $this->error( __( 'Both API URL and API Key fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Both API URL and API Key fields are required', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( compact( 'api_url', 'api_key' ) );
@@ -74,7 +68,7 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to ActiveCampaign using the provided details. Response was: <strong>%s</strong>', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to ActiveCampaign using the provided details. Response was: <strong>%s</strong>', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -88,7 +82,7 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 		 */
 		$this->get_api_custom_fields( array(), true, true );
 
-		return $this->success( __( 'ActiveCampaign connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'ActiveCampaign connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -171,7 +165,7 @@ class Thrive_Dash_List_Connection_ActiveCampaign extends Thrive_Dash_List_Connec
 			foreach ( $lists as $list ) {
 				$forms[ $list['id'] ][0] = array(
 					'id'   => 0,
-					'name' => __( 'none', TVE_DASH_TRANSLATE_DOMAIN ),
+					'name' => __( 'none', 'thrive-dash' ),
 				);
 			}
 

@@ -66,7 +66,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 	 * @return string
 	 */
 	public function get_list_sub_title() {
-		return __( 'Choose from the following upcoming webinars', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Choose from the following upcoming webinars', 'thrive-dash' );
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 	 */
 	public function read_credentials() {
 		if ( empty( $_POST['gtw_email'] ) || empty( $_POST['gtw_password'] ) ) {
-			return $this->error( __( 'Email and password are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Email and password are required', 'thrive-dash' ) );
 		}
 
 		$email    = $this->post( 'gtw_email' );
@@ -124,10 +124,10 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 			// Save the connection details
 			$this->save();
 
-			return $this->success( __( 'GoToWebinar connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->success( __( 'GoToWebinar connected successfully', 'thrive-dash' ) );
 
 		} catch ( Thrive_Dash_Api_GoToWebinar_Exception $e ) {
-			return $this->error( sprintf( __( 'Could not connect to GoToWebinar using the provided data (%s)', TVE_DASH_TRANSLATE_DOMAIN ), $e->getMessage() ) );
+			return $this->error( sprintf( __( 'Could not connect to GoToWebinar using the provided data (%s)', 'thrive-dash' ), $e->getMessage() ) );
 		}
 	}
 
@@ -148,7 +148,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 		switch ( $type ) {
 			case 'added_v2':
 				$message = array(
-					'title' => __( 'Your GoToWebinar Connection has been Updated!', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'Your GoToWebinar Connection has been Updated!', 'thrive-dash' ),
 					'info'  => __(
 						'Good job - you’ve just upgraded your GoToWebinar connection to 2.0. <br /><br />
 
@@ -159,7 +159,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 							If you experience any issues, let our <a href="https://thrivethemes.com/forums/forum/general-discussion/" target="_blank">support team</a> know and we’ll get to the bottom of this for you. <br /><br />
 							
 							From your team at Thrive Themes ',
-						TVE_DASH_TRANSLATE_DOMAIN
+                        'thrive-dash'
 					),
 					'type'  => TD_Inbox_Message::TYPE_INBOX,
 				);

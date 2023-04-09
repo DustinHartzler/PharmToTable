@@ -24,14 +24,14 @@ class Woo_Order_Status_Field extends Action_Field {
 	 * Field description
 	 */
 	public static function get_description() {
-		return 'Select a status to set on the order';
+		return static::get_placeholder();
 	}
 
 	/**
 	 * Field input placeholder
 	 */
 	public static function get_placeholder() {
-		return '';
+		return __( 'Select a status to set on the order', 'thrive-dash' );
 	}
 
 	/**

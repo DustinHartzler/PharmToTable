@@ -11,14 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class TPM_Product {
 
-	const AVAILABLE = 'available';
-	const PURCHASED = 'purchased';
-	const INSTALLED = 'installed';
-	const ACTIVATED = 'activated';
-	const READY = 'ready';
-	const TO_INSTALL = 'to_install';
-	const TO_ACTIVATE = 'to_activate';
-	const TO_LICENSE = 'to_license';
+	const AVAILABLE   = 'available'; //product has been purchased by the user and there is a license for it
+	const INSTALLED   = 'installed'; //product is downloaded in its folder
+	const ACTIVATED   = 'activated'; //product is downloaded in its folder and WP knows it as activated
+	const READY       = 'ready'; //product is installed/activated/licensed and ready to be used
+	const TO_INSTALL  = 'to_install'; //product is not downloaded in its folder
+	const TO_ACTIVATE = 'to_activate'; //product is downloaded in its folder but not activated
+	const TO_LICENSE  = 'to_license'; //product has to be licensed
 
 	protected $name;
 	protected $description;

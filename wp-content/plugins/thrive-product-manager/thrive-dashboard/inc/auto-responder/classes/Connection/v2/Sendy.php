@@ -60,7 +60,7 @@ class Thrive_Dash_List_Connection_Sendy extends Thrive_Dash_List_Connection_Abst
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( __( 'Could not connect to Sendy', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Could not connect to Sendy', 'thrive-dash' ) );
 		}
 
 		$this->save();

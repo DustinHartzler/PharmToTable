@@ -58,7 +58,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_email( $_POST['connection']['email'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Campaign Monitor key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Campaign Monitor key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( compact( 'key', 'email' ) );
@@ -66,7 +66,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Campaign Monitor using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Campaign Monitor using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -93,7 +93,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 			return $this->error( $r_result );
 		}
 
-		return $this->success( __( 'Campaign Monitor connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Campaign Monitor connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -170,7 +170,7 @@ class Thrive_Dash_List_Connection_CampaignMonitorEmail extends Thrive_Dash_List_
 
 		$asset = get_post( $post_data['_asset_group'] );
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );

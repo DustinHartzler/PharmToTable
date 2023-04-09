@@ -56,7 +56,7 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $ajax_call ? __( 'You must provide a valid SendGrid key', TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( 'You must provide a valid SendGrid key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( 'You must provide a valid SendGrid key', 'thrive-dash' ) : $this->error( __( 'You must provide a valid SendGrid key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -64,7 +64,7 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $ajax_call ? sprintf( __( 'Could not connect to SendGrid using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) : $this->error( sprintf( __( 'Could not connect to SendGrid using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $ajax_call ? sprintf( __( 'Could not connect to SendGrid using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) : $this->error( sprintf( __( 'Could not connect to SendGrid using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -91,7 +91,7 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 			return $this->error( $r_result );
 		}
 
-		$this->success( __( 'SendGrid connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'SendGrid connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -259,7 +259,7 @@ class Thrive_Dash_List_Connection_SendGridEmail extends Thrive_Dash_List_Connect
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );

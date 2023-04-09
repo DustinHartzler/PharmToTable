@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div id="tve-tvd-login-password-button-component" class="tve-component" data-view="PasswordButton">
 	<div class="dropdown-header" data-prop="docked">
-		<?php echo esc_html__( 'Password Button', TVE_DASH_TRANSLATE_DOMAIN ); ?>
+		<?php echo esc_html__( 'Password Button', 'thrive-dash' ); ?>
 		<i></i>
 	</div>
 	<div class="dropdown-content">

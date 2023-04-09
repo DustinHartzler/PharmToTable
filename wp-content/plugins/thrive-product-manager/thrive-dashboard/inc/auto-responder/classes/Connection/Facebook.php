@@ -61,7 +61,7 @@ class Thrive_Dash_List_Connection_Facebook extends Thrive_Dash_List_Connection_A
 		$app_secret = ! empty( $_REQUEST['app_secret'] ) ? sanitize_text_field( $_REQUEST['app_secret'] ) : '';
 
 		if ( empty( $app_id ) || empty( $app_secret ) ) {
-			return $this->error( __( 'Both Client ID and Client Secret fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Both Client ID and Client Secret fields are required', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( array(
@@ -82,7 +82,7 @@ class Thrive_Dash_List_Connection_Facebook extends Thrive_Dash_List_Connection_A
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( __( 'You must give access to Facebook <a target="_blank" href="' . $this->getAuthorizeUrl() . '">here</a>.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must give access to Facebook <a target="_blank" href="' . $this->getAuthorizeUrl() . '">here</a>.', 'thrive-dash' ) );
 		}
 
 		/**
@@ -90,7 +90,7 @@ class Thrive_Dash_List_Connection_Facebook extends Thrive_Dash_List_Connection_A
 		 */
 		$this->save();
 
-		return $this->success( __( 'Facebook connected successfully!', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Facebook connected successfully!', 'thrive-dash' ) );
 	}
 
 	/**
@@ -116,14 +116,14 @@ class Thrive_Dash_List_Connection_Facebook extends Thrive_Dash_List_Connection_A
 			} catch ( Tve_Facebook_Api_Exception $e ) {
 				$ready = array(
 					'success' => false,
-					'message' => __( 'You must give access to Facebook <a target="_blank" href="' . $this->getAuthorizeUrl() . '">here</a>.', TVE_DASH_TRANSLATE_DOMAIN ),
+					'message' => __( 'You must give access to Facebook <a target="_blank" href="' . $this->getAuthorizeUrl() . '">here</a>.', 'thrive-dash' ),
 				);
 			}
 		} else {
 
 			$ready = array(
 				'success' => false,
-				'message' => __( 'You must give access to Facebook <a target="_blank" href="' . $this->getAuthorizeUrl() . '">here</a>.', TVE_DASH_TRANSLATE_DOMAIN ),
+				'message' => __( 'You must give access to Facebook <a target="_blank" href="' . $this->getAuthorizeUrl() . '">here</a>.', 'thrive-dash' ),
 			);
 		}
 
@@ -191,10 +191,10 @@ class Thrive_Dash_List_Connection_Facebook extends Thrive_Dash_List_Connection_A
 					);
 				}
 			} catch ( Tve_Facebook_Api_Exception $e ) {
-				$comment = __( 'Error! The Facebook link provided is invalid', TVE_DASH_TRANSLATE_DOMAIN );
+				$comment = __( 'Error! The Facebook link provided is invalid', 'thrive-dash' );
 			}
 		} else {
-			$comment = __( 'Your Facebook connection expired. Go to API Connections to reactivate it!', TVE_DASH_TRANSLATE_DOMAIN );
+			$comment = __( 'Your Facebook connection expired. Go to API Connections to reactivate it!', 'thrive-dash' );
 		}
 
 		return $comment;

@@ -44,7 +44,7 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid EverWebinar key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid EverWebinar key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( array( 'key' => $key ) );
@@ -52,7 +52,7 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to EverWebinar using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to EverWebinar using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -60,7 +60,7 @@ class Thrive_Dash_List_Connection_EverWebinar extends Thrive_Dash_List_Connectio
 		 */
 		$this->save();
 
-		return $this->success( __( 'EverWebinar connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'EverWebinar connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

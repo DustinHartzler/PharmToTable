@@ -73,26 +73,31 @@ class Thrive_Dash_Api_Postmark_CaseInsensitiveArray implements ArrayAccess, Iter
 			$this->_container[ $offset ] : null;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function current() {
 		// use "offsetGet" instead of indexes
 		// so that subclasses can override behavior if needed.
 		return $this->offsetGet( $this->key() );
 	}
 
+	#[\ReturnTypeWillChange]
 	public function key() {
 		$keys = array_keys( $this->_container );
 
 		return $keys[ $this->_pointer ];
 	}
 
+	#[\ReturnTypeWillChange]
 	public function next() {
 		$this->_pointer ++;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function rewind() {
 		$this->_pointer = 0;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function valid() {
 		return count( array_keys( $this->_container ) ) > $this->_pointer;
 	}

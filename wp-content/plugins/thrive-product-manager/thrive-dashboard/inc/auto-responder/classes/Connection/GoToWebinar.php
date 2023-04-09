@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 06.05.2015
- * Time: 17:29
- */
 class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -72,7 +66,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 	 * @return string
 	 */
 	public function get_list_sub_title() {
-		return __( 'Choose from the following upcoming webinars', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Choose from the following upcoming webinars', 'thrive-dash' );
 	}
 
 
@@ -94,7 +88,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 	 */
 	public function read_credentials() {
 		if ( empty( $_POST['gtw_email'] ) || empty( $_POST['gtw_password'] ) ) {
-			return $this->error( __( 'Email and password are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Email and password are required', 'thrive-dash' ) );
 		}
 
 		$email    = sanitize_text_field( $_POST['gtw_email'] );
@@ -132,7 +126,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 			return $this->success( 'GoToWebinar connected successfully' );
 
 		} catch ( Thrive_Dash_Api_GoToWebinar_Exception $e ) {
-			return $this->error( sprintf( __( 'Could not connect to GoToWebinar using the provided data (%s)', TVE_DASH_TRANSLATE_DOMAIN ), $e->getMessage() ) );
+			return $this->error( sprintf( __( 'Could not connect to GoToWebinar using the provided data (%s)', 'thrive-dash' ), $e->getMessage() ) );
 		}
 	}
 
@@ -153,7 +147,7 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 		switch ( $type ) {
 			case 'added_v2':
 				$message = array(
-					'title' => __( 'Your GoToWebinar Connection has been Updated!', TVE_DASH_TRANSLATE_DOMAIN ),
+					'title' => __( 'Your GoToWebinar Connection has been Updated!', 'thrive-dash' ),
 					'info'  => 'Good job - you\'ve just upgraded your GoToWebinar connection to 2.0.<br /><br />
 							You don\'t need to make any changes to your existing forms - they will carry on working as before. <br /><br /> 
 							However, we highly recommend that you sign up through one of your webinar forms to make sure that everything is working as expected.<br /><br />
@@ -262,12 +256,12 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 			return array();
 		}
 
-		$fix = '<a href="' . admin_url( 'admin.php?page=tve_dash_api_connect' ) . '#edit/' . $this->get_key() . '">' . __( 'Click here to renew the token', TVE_DASH_TRANSLATE_DOMAIN ) . '</a>';
+		$fix = '<a href="' . admin_url( 'admin.php?page=tve_dash_api_connect' ) . '#edit/' . $this->get_key() . '">' . __( 'Click here to renew the token', 'thrive-dash' ) . '</a>';
 
 		if ( $this->isExpired() ) {
 
 			return array(
-				sprintf( __( 'Thrive API Connections: The access token for %s has expired on %s.', TVE_DASH_TRANSLATE_DOMAIN ), '<strong>' . $this->get_title() . '</strong>', '<strong>' .
+				sprintf( __( 'Thrive API Connections: The access token for %s has expired on %s.', 'thrive-dash' ), '<strong>' . $this->get_title() . '</strong>', '<strong>' .
 				                                                                                                                                                               $this->getExpiryDate() . '</strong>' ) . ' ' . $fix . '.',
 			);
 		}
@@ -280,13 +274,13 @@ class Thrive_Dash_List_Connection_GoToWebinar extends Thrive_Dash_List_Connectio
 
 		$message = $diff == 0
 			?
-			__( 'Thrive API Connections: The access token for %s will expire today.', TVE_DASH_TRANSLATE_DOMAIN )
+			__( 'Thrive API Connections: The access token for %s will expire today.', 'thrive-dash' )
 			:
 			( $diff == 1
 				?
-				__( 'Thrive API Connections: The access token for %s will expire tomorrow.', TVE_DASH_TRANSLATE_DOMAIN )
+				__( 'Thrive API Connections: The access token for %s will expire tomorrow.', 'thrive-dash' )
 				:
-				__( 'Thrive API Connections: The access token for %s will expire in %s days.', TVE_DASH_TRANSLATE_DOMAIN ) );
+				__( 'Thrive API Connections: The access token for %s will expire in %s days.', 'thrive-dash' ) );
 
 		return array(
 			sprintf( $message, '<strong>' . $this->get_title() . '</strong>', '<strong>' . $diff . '</strong>' ) . ' ' . $fix . '.',

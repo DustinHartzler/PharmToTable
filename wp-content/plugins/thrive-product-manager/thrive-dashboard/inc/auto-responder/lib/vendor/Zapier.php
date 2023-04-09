@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: dan bilauca
- * Date: 24-Jul-19
- * Time: 01:58 PM
- */
 
 class Thrive_Dash_Api_Zapier {
 
@@ -57,7 +51,7 @@ class Thrive_Dash_Api_Zapier {
 
 		$body    = wp_remote_retrieve_body( $response );
 		$params  = json_decode( $body );
-		$success = new WP_Error( 'authentication_failed', __( 'Authentication failed', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$success = new WP_Error( 'authentication_failed', __( 'Authentication failed', 'thrive-dash' ) );
 
 		if ( $params instanceof stdClass ) {
 			$success = $params->connected;

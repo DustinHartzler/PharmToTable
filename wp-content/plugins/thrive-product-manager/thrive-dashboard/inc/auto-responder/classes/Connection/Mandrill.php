@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Aurelian
- * Date: 14/10/2015
- * Time: 4:59 PM
- */
 class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -72,11 +66,11 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		}
 
 		if ( empty( $_POST['connection']['key'] ) ) {
-			return $this->error( __( 'You must provide a valid Mandrill key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mandrill key', 'thrive-dash' ) );
 		}
 
 		if ( empty( $email ) ) {
-			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Email field must not be empty', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -101,7 +95,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 				$message = $result;
 			}
 
-			return $this->error( sprintf( __( 'Could not connect to Mandrill using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $message ? $message : '' ) );
+			return $this->error( sprintf( __( 'Could not connect to Mandrill using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $message ? $message : '' ) );
 		}
 
 		/**
@@ -127,7 +121,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 			}
 		}
 
-		return $this->success( __( 'Mandrill connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Mandrill connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -184,10 +178,10 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 				$body = $body[0];
 				if ( $body->status == 'rejected' ) {
 					if ( $body->reject_reason == 'unsigned' ) {
-						return $this->error( __( "The email filled in was not verified by Mandrill", TVE_DASH_TRANSLATE_DOMAIN ) );
+						return $this->error( __( "The email filled in was not verified by Mandrill", 'thrive-dash' ) );
 					}
 
-					return $this->error( __( "Mandrill couldn't connect", TVE_DASH_TRANSLATE_DOMAIN ) );
+					return $this->error( __( "Mandrill couldn't connect", 'thrive-dash' ) );
 				}
 			}
 		} catch ( Thrive_Dash_Api_Mandrill_Exceptions $e ) {
@@ -382,7 +376,7 @@ class Thrive_Dash_List_Connection_Mandrill extends Thrive_Dash_List_Connection_A
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );

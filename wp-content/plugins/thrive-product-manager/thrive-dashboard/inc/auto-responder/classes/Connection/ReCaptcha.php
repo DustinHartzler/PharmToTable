@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 07.05.2015
- * Time: 18:23
- */
 class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -53,7 +47,7 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 		$secret = ! empty( $_POST['secret_key'] ) ? sanitize_text_field( $_POST['secret_key'] ) : '';
 
 		if ( empty( $site ) || empty( $secret ) ) {
-			return $this->error( __( 'Both Site Key and Secret Key fields are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Both Site Key and Secret Key fields are required', 'thrive-dash' ) );
 		}
 
 		//recreate credential object
@@ -68,7 +62,7 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Incorrect Secret Key.', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Incorrect Secret Key.', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -76,7 +70,7 @@ class Thrive_Dash_List_Connection_ReCaptcha extends Thrive_Dash_List_Connection_
 		 */
 		$this->save();
 
-		return $this->success( __( 'ReCaptcha connected successfully!', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'ReCaptcha connected successfully!', 'thrive-dash' ) );
 	}
 
 	/**

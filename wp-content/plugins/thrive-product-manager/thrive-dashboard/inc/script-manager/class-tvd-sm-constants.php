@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class TVD_SM_Constants {
 
-	const HEAD_PLACEMENT = 'head';
-	const BODY_OPEN_PLACEMENT = 'body_open';
+	const HEAD_PLACEMENT       = 'head';
+	const BODY_OPEN_PLACEMENT  = 'body_open';
 	const BODY_CLOSE_PLACEMENT = 'body_close';
 
 	public static function is_ttb_active() {
@@ -69,7 +69,8 @@ class TVD_SM_Constants {
 			'Intercom'                   => array( 'Intercom', 'intercomSettings' ),
 			'Mixpanel'                   => array( 'mixpanel' ),
 			'Optimizely'                 => array( 'optimizely' ),
-			'Piwik Analytics'            => array( '_paq', 'piwik.php', 'piwik.js' ),
+			'Piwik Analytics'            => array( 'piwik.php', 'piwik.js' ),
+			'Matamo'                     => array( 'matomo', '_paq', 'matomo.js', 'matomo.php' ),
 			'Twitter Website Tag'        => array( 'twq', 'twitter' ),
 			'Visual Website Optimizer'   => array( 'vwo', 'Visual' ),
 		);
@@ -97,6 +98,7 @@ class TVD_SM_Constants {
 			'Mixpanel'                   => array( 'placement' => 'head', 'icon' => 'mixpanel' ),
 			'Optimizely'                 => array( 'placement' => 'head', 'icon' => 'optimizely' ),
 			'Piwik Analytics'            => array( 'placement' => 'body_open', 'icon' => 'piwik-analytics' ),
+			'Matamo'                     => array( 'placement' => 'body_open', 'icon' => 'matomo' ),
 			'Twitter Website Tag'        => array( 'placement' => 'head', 'icon' => 'twitter-website-tag' ),
 			'Visual Website Optimizer'   => array( 'placement' => 'head', 'icon' => 'visual-website-optimizer' ),
 		);

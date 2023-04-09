@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 9/16/2015
- * Time: 10:16 AM
- */
 class Thrive_Dash_List_Connection_ConstantContact extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -62,7 +56,7 @@ class Thrive_Dash_List_Connection_ConstantContact extends Thrive_Dash_List_Conne
 		$api_token = ! empty( $_POST['connection']['api_token'] ) ? sanitize_text_field( $_POST['connection']['api_token'] ) : '';
 
 		if ( empty( $api_key ) || empty( $api_token ) ) {
-			return $this->error( __( 'You must provide a valid Constant Contact API Key and API token', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Constant Contact API Key and API token', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( array( 'api_key' => $api_key, 'api_token' => $api_token ) );
@@ -70,7 +64,7 @@ class Thrive_Dash_List_Connection_ConstantContact extends Thrive_Dash_List_Conne
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Constant Contact using the provided API Key and API Token (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Constant Contact using the provided API Key and API Token (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -78,7 +72,7 @@ class Thrive_Dash_List_Connection_ConstantContact extends Thrive_Dash_List_Conne
 		 */
 		$this->save();
 
-		return $this->success( __( 'Constant Contact connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Constant Contact connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

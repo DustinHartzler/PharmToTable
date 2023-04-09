@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 7/22/2015
- * Time: 12:55 PM
- */
 class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -61,12 +55,12 @@ class Thrive_Dash_List_Connection_Sendreach extends Thrive_Dash_List_Connection_
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to SendReach (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to SendReach (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		$this->save();
 
-		return $this->success( __( 'SendReach connection established', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SendReach connection established', 'thrive-dash' ) );
 	}
 
 	/**

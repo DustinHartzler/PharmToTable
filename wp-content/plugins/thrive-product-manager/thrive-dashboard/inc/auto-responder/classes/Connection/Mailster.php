@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Andrei L
- * Date: 6/5/2019
- * Time: 15:31
- */
 class Thrive_Dash_List_Connection_Mailster extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * @return string
@@ -33,7 +27,7 @@ class Thrive_Dash_List_Connection_Mailster extends Thrive_Dash_List_Connection_A
 	public function read_credentials() {
 
 		if ( false === $this->pluginInstalled() ) {
-			return __( 'Mailster plugin not installed or activated', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'Mailster plugin not installed or activated', 'thrive-dash' );
 		}
 
 		$this->set_credentials( array( 'connected' => true ) );
@@ -55,7 +49,7 @@ class Thrive_Dash_List_Connection_Mailster extends Thrive_Dash_List_Connection_A
 	public function test_connection() {
 
 		if ( false === $this->pluginInstalled() ) {
-			return __( 'Mailster plugin not installed or activated', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'Mailster plugin not installed or activated', 'thrive-dash' );
 		}
 
 		return true;
@@ -72,7 +66,7 @@ class Thrive_Dash_List_Connection_Mailster extends Thrive_Dash_List_Connection_A
 	public function add_subscriber( $list_identifier, $arguments ) {
 
 		if ( false === $this->pluginInstalled() ) {
-			return __( 'Mailster plugin not installed or activated', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'Mailster plugin not installed or activated', 'thrive-dash' );
 		}
 
 		$mailster_instance = mailster( 'subscribers' );
@@ -101,7 +95,7 @@ class Thrive_Dash_List_Connection_Mailster extends Thrive_Dash_List_Connection_A
 			return true;
 		}
 
-		return __( 'Mailster failed to add the subscriber', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Mailster failed to add the subscriber', 'thrive-dash' );
 	}
 
 	/**
@@ -131,7 +125,7 @@ class Thrive_Dash_List_Connection_Mailster extends Thrive_Dash_List_Connection_A
 	 */
 	protected function _get_lists() {
 		if ( false === $this->pluginInstalled() ) {
-			return __( 'Mailster plugin not installed or activated', TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'Mailster plugin not installed or activated', 'thrive-dash' );
 		}
 
 		$lists = array();

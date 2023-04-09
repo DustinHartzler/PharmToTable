@@ -26,11 +26,11 @@ class TD_NM_Admin_Ajax_Controller {
 	 * @return TD_NM_Admin_Ajax_Controller
 	 */
 	public static function instance() {
-		if ( empty( self::$_instance ) ) {
-			self::$_instance = new self();
+		if ( empty( static::$_instance ) ) {
+			static::$_instance = new static();
 		}
 
-		return self::$_instance;
+		return static::$_instance;
 	}
 
 	/**
@@ -45,6 +45,8 @@ class TD_NM_Admin_Ajax_Controller {
 		wp_send_json( array(
 			'error' => $message,
 		) );
+
+		return $message;
 	}
 
 	/**
@@ -61,7 +63,7 @@ class TD_NM_Admin_Ajax_Controller {
 
 	public function handle() {
 		if ( ! check_ajax_referer( 'td_nm_admin_ajax_request', '_nonce', false ) ) {
-			$this->error( sprintf( __( 'Invalid request', TVE_DASH_TRANSLATE_DOMAIN ) ) );
+			$this->error( sprintf( __( 'Invalid request', 'thrive-dash' ) ) );
 		}
 
 		$route = $this->param( 'route' );
@@ -70,7 +72,7 @@ class TD_NM_Admin_Ajax_Controller {
 		$method_name = $route . '_action';
 
 		if ( ! method_exists( $this, $method_name ) ) {
-			$this->error( sprintf( __( 'Method %s not implemented', TVE_DASH_TRANSLATE_DOMAIN ), $method_name ) );
+			$this->error( sprintf( __( 'Method %s not implemented', 'thrive-dash' ), $method_name ) );
 		}
 
 		return $this->{$method_name}();
@@ -85,7 +87,7 @@ class TD_NM_Admin_Ajax_Controller {
 			case 'PUT':
 			case 'PATCH':
 				if ( ! ( $item = td_nm_save_notification( $model ) ) ) {
-					$this->error( __( 'Notification could not be saved', TVE_DASH_TRANSLATE_DOMAIN ) );
+					$this->error( __( 'Notification could not be saved', 'thrive-dash' ) );
 				}
 
 				return $item;
@@ -93,11 +95,11 @@ class TD_NM_Admin_Ajax_Controller {
 			case 'DELETE':
 				$id = $this->param( 'ID' );
 				if ( empty( $id ) ) {
-					$this->error( __( 'Invalid parameters in delete', TVE_DASH_TRANSLATE_DOMAIN ) );
+					$this->error( __( 'Invalid parameters in delete', 'thrive-dash' ) );
 				}
 
 				if ( ( $deleted = td_nm_delete_notification( $id ) ) === false ) {
-					$this->error( __( 'Notification could not be deleted', TVE_DASH_TRANSLATE_DOMAIN ) );
+					$this->error( __( 'Notification could not be deleted', 'thrive-dash' ) );
 				}
 
 				return $deleted;
@@ -132,7 +134,7 @@ class TD_NM_Admin_Ajax_Controller {
 				}
 
 				if ( td_nm_save_actions( $update_actions, $model['notification_id'] ) === false ) {
-					$this->error( __( 'Action could not be saved', TVE_DASH_TRANSLATE_DOMAIN ) );
+					$this->error( __( 'Action could not be saved', 'thrive-dash' ) );
 				}
 
 				return $id;
@@ -140,7 +142,7 @@ class TD_NM_Admin_Ajax_Controller {
 			case 'DELETE':
 				$saved = false;
 				if ( ! is_numeric( $this->param( 'ID' ) ) || ! is_numeric( $this->param( 'notification_id' ) ) ) {
-					$this->error( __( 'Invalid parameters in delete', TVE_DASH_TRANSLATE_DOMAIN ) );
+					$this->error( __( 'Invalid parameters in delete', 'thrive-dash' ) );
 				}
 
 				$actions = td_nm_get_actions( $this->param( 'notification_id' ) );
@@ -152,7 +154,7 @@ class TD_NM_Admin_Ajax_Controller {
 					}
 
 					if ( ( $saved = td_nm_save_actions( $actions, $this->param( 'notification_id' ) ) ) === false ) {
-						$this->error( __( 'Action could not be deleted', TVE_DASH_TRANSLATE_DOMAIN ) );
+						$this->error( __( 'Action could not be deleted', 'thrive-dash' ) );
 					}
 				}
 
@@ -170,7 +172,7 @@ class TD_NM_Admin_Ajax_Controller {
 			case 'PUT':
 			case 'PATCH':
 				if ( ( $saved = td_nm_save_trigger( $model, $model['ID'] ) ) === false ) {
-					$this->error( __( 'Trigger could not be saved', TVE_DASH_TRANSLATE_DOMAIN ) );
+					$this->error( __( 'Trigger could not be saved', 'thrive-dash' ) );
 				}
 
 				return $saved;
@@ -224,7 +226,7 @@ class TD_NM_Admin_Ajax_Controller {
 	public function connectiontest_action() {
 		$connection = Thrive_Dash_List_Manager::connection_instance( $this->param( 'service' ) );
 
-		return is_string( $tested = $connection->test_connection() ) ? $this->error( $tested ) : array( 'success' => __( 'Connection OK', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return is_string( $tested = $connection->test_connection() ) ? $this->error( $tested ) : array( 'success' => __( 'Connection OK', 'thrive-dash' ) );
 	}
 
 	/**
@@ -245,7 +247,7 @@ class TD_NM_Admin_Ajax_Controller {
 			wp_send_json( $return );
 
 		} else {
-			$this->error( __( 'Invalid parameter type', TVE_DASH_TRANSLATE_DOMAIN ) );
+			$this->error( __( 'Invalid parameter type', 'thrive-dash' ) );
 		}
 
 		return false;

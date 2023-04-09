@@ -43,11 +43,11 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 	public function read_credentials() {
 
 		if ( empty( $_POST['connection']['memberid'] ) ) {
-			return $this->error( __( 'You must provide a valid SG-Autorepondeur Member ID', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid SG-Autorepondeur Member ID', 'thrive-dash' ) );
 		}
 
 		if ( empty( $_POST['connection']['key'] ) ) {
-			return $this->error( __( 'You must provide a valid SG-Autorepondeur key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid SG-Autorepondeur key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -55,7 +55,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to SG-Autorepondeur using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to SG-Autorepondeur using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -63,7 +63,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 		 */
 		$this->save();
 
-		return $this->success( __( 'SG Autorepondeur connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SG Autorepondeur connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 
 			return $lists;
 		} catch ( Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( "Please re-check your API connection details.", TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( "Please re-check your API connection details.", 'thrive-dash' );
 
 			return false;
 		}
@@ -170,7 +170,7 @@ class Thrive_Dash_List_Connection_SGAutorepondeur extends Thrive_Dash_List_Conne
 
 			return true;
 		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown SG-Autorepondeur Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ? $e->getMessage() : __( 'Unknown SG-Autorepondeur Error', 'thrive-dash' );
 		}
 
 	}

@@ -116,6 +116,7 @@ class TD_TTW_Messages_Manager {
 		$template_data = array(
 			'state'       => $state,
 			'plugin_data' => $plugin_data,
+			'recheck_url' => TD_TTW_User_Licenses::get_instance()->get_recheck_url(),
 		);
 
 		$plugin_tag = TVE_Dash_Product_LicenseManager::get_product_tag( $plugin_data['TextDomain'] );
@@ -144,6 +145,12 @@ class TD_TTW_Messages_Manager {
 			} elseif ( $license && false === $license->can_update() ) {
 				$template = 'plugin/license-expired';
 			}
+		}
+
+		$error = thrive_get_transient( 'td_ttw_connection_error' );
+		if ( ! empty( $error ) ) {
+			$template                       = 'error';
+			$template_data['error_message'] = $error;
 		}
 
 		if ( $template ) {

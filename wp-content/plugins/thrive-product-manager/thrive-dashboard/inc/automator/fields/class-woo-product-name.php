@@ -3,7 +3,6 @@
 namespace TVE\Dashboard\Automator;
 
 use Thrive\Automator\Items\Data_Field;
-use function wc_get_products;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
@@ -55,9 +54,9 @@ class Woo_Product_Name extends Data_Field {
 	 */
 	public static function get_options_callback() {
 		$products = array();
-		foreach ( wc_get_products( array( 'limit' => - 1 ) ) as $key => $product ) {
-			$name             = $product->get_name();
-			$products[ $key ] = array(
+		foreach ( Woo::get_products() as $product ) {
+			$name       = $product->get_name();
+			$products[] = array(
 				'label' => $name,
 				'id'    => $name,
 			);

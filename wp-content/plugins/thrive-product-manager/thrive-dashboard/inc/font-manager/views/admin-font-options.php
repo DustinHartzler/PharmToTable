@@ -52,24 +52,24 @@ if ( isset( $_GET['font_action'] ) && sanitize_text_field( $_GET['font_action'] 
 	<div>
 		<div>
 			<input type="radio" name="display_fonts" id="ttfm_google_fonts" value="google_fonts"/>
-			<label for="ttfm_google_fonts"> <?php echo esc_html__( "Show all fonts", TVE_DASH_TRANSLATE_DOMAIN ); ?></label>
+			<label for="ttfm_google_fonts"> <?php echo esc_html__( "Show all fonts", 'thrive-dash' ); ?></label>
 		</div>
 		<div>
 			<input type="radio" name="display_fonts" id="ttfm_prefered_fonts" value="prefered_fonts" checked/>
 			<label
-					for="ttfm_prefered_fonts"><?php echo esc_html__( "Recommended Fonts Only", TVE_DASH_TRANSLATE_DOMAIN ); ?></label>
+					for="ttfm_prefered_fonts"><?php echo esc_html__( "Recommended Fonts Only", 'thrive-dash' ); ?></label>
 		</div>
 		<div>
 			<input type="radio" name="display_fonts" id="ttfm_safe_fonts" value="safe_fonts"/>
-			<label for="ttfm_safe_fonts"><?php echo esc_html__( "Web Safe Fonts", TVE_DASH_TRANSLATE_DOMAIN ); ?></label>
+			<label for="ttfm_safe_fonts"><?php echo esc_html__( "Web Safe Fonts", 'thrive-dash' ); ?></label>
 		</div>
 		<div>
 			<input type="radio" name="display_fonts" id="ttfm_imported_fonts" value="imported_fonts"/>
-			<label for="ttfm_imported_fonts"><?php echo esc_html__( "Imported Fonts", TVE_DASH_TRANSLATE_DOMAIN ); ?></label>
+			<label for="ttfm_imported_fonts"><?php echo esc_html__( "Imported Fonts", 'thrive-dash' ); ?></label>
 		</div>
 		<div class="tvd-row">
 			<a target="_blank" href="//www.google.com/fonts" class="tvd-right">
-				<?php echo esc_html__( "View All Google Font Previews", TVE_DASH_TRANSLATE_DOMAIN ); ?>
+				<?php echo esc_html__( "View All Google Font Previews", 'thrive-dash' ); ?>
 			</a>
 		</div>
 	</div>
@@ -77,7 +77,7 @@ if ( isset( $_GET['font_action'] ) && sanitize_text_field( $_GET['font_action'] 
 	<div class="tvd-row input-field">
 		<select id="ttfm_fonts">
 			<option value="none" disabled
-					selected><?php echo esc_html__( "- Select Font -", TVE_DASH_TRANSLATE_DOMAIN ); ?></option>
+					selected><?php echo esc_html__( "- Select Font -", 'thrive-dash' ); ?></option>
 			<?php foreach ( $prefered_fonts as $name => $f ): ?>
 				<option data-url='<?php echo esc_url( json_encode( $f['files'] ) ); ?>'
 					<?php if ( isset( $f['font_name'] ) && $f['family'] == $f['font_name'] ) {
@@ -99,14 +99,14 @@ if ( isset( $_GET['font_action'] ) && sanitize_text_field( $_GET['font_action'] 
 	<hr>
 	<div>
 		<div class="tvd-row">
-			<div class="tvd-col tvd-m4"><?php echo esc_html__( "Class", TVE_DASH_TRANSLATE_DOMAIN ); ?></div>
+			<div class="tvd-col tvd-m4"><?php echo esc_html__( "Class", 'thrive-dash' ); ?></div>
 			<div class="tvd-col tvd-m8">
 				<input id="ttfm-font-class" type="text" readonly value="ttfm<?php echo esc_attr( $font_id ); ?>">
 			</div>
 		</div>
 
 		<div id="ttfm-font-size" class="tvd-row">
-			<div class="tvd-col tvd-m4 tvd-s12"><?php echo esc_html__( "Size", TVE_DASH_TRANSLATE_DOMAIN ); ?></div>
+			<div class="tvd-col tvd-m4 tvd-s12"><?php echo esc_html__( "Size", 'thrive-dash' ); ?></div>
 			<div class="tvd-col tvd-m4 tvd-s12">
 				<input min="0"
 						type="number" <?php if ( ! empty( $font['font_size'] ) && $font['font_size'] != (int) $font['font_size'] ): ?> step="0.1" <?php endif; ?>
@@ -134,7 +134,7 @@ if ( isset( $_GET['font_action'] ) && sanitize_text_field( $_GET['font_action'] 
 		</div>
 
 		<div id="ttfm-font-height" class="tvd-row">
-			<div class="tvd-col tvd-m4 tvd-s12"><?php echo esc_html__( "Line Height", TVE_DASH_TRANSLATE_DOMAIN ); ?></div>
+			<div class="tvd-col tvd-m4 tvd-s12"><?php echo esc_html__( "Line Height", 'thrive-dash' ); ?></div>
 			<div class="tvd-col tvd-m4 tvd-s12">
 				<input min="0"
 						type="number" <?php if ( ! empty( $font['font_height'] ) && $font['font_height'] != (int) $font['font_height'] ): ?> step="0.1" <?php endif; ?>
@@ -161,7 +161,7 @@ if ( isset( $_GET['font_action'] ) && sanitize_text_field( $_GET['font_action'] 
 			</div>
 		</div>
 		<div class="tvd-row">
-			<div class="tvd-col tvd-m4"><?php echo esc_html__( "Color", TVE_DASH_TRANSLATE_DOMAIN ); ?></div>
+			<div class="tvd-col tvd-m4"><?php echo esc_html__( "Color", 'thrive-dash' ); ?></div>
 			<div class="tvd-col tvd-m8">
 				<input type="text" value="<?php if ( isset( $font['font_color'] ) ) {
 					echo esc_attr( $font['font_color'] );
@@ -170,7 +170,7 @@ if ( isset( $_GET['font_action'] ) && sanitize_text_field( $_GET['font_action'] 
 			</div>
 		</div>
 		<div class="tvd-row">
-			<div class="tvd-col tvd-m4"><?php echo esc_html__( "Custom CSS", TVE_DASH_TRANSLATE_DOMAIN ); ?></div>
+			<div class="tvd-col tvd-m4"><?php echo esc_html__( "Custom CSS", 'thrive-dash' ); ?></div>
 			<div class="tvd-col tvd-m8">
                 <textarea
 		                id="ttfm-custom-css"><?php if ( isset( $font['custom_css'] ) ) {
@@ -182,7 +182,7 @@ if ( isset( $_GET['font_action'] ) && sanitize_text_field( $_GET['font_action'] 
 	<hr>
 
 	<button id="ttfm_save_font_options"
-			class="tvd-waves-effect tvd-waves-light tvd-btn-small tvd-btn-green tvd-right"><?php echo esc_html__( "Save", TVE_DASH_TRANSLATE_DOMAIN ) ?></button>
+			class="tvd-waves-effect tvd-waves-light tvd-btn-small tvd-btn-green tvd-right"><?php echo esc_html__( "Save", 'thrive-dash' ) ?></button>
 
 	<div class="clear"></div>
 </div>

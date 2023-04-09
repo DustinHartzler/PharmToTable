@@ -81,7 +81,7 @@ class Main {
 	 * @return string|void
 	 */
 	public static function title() {
-		return __( 'WordPress Login Screen Branding', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'WordPress Login Screen Branding', 'thrive-dash' );
 	}
 
 	/**

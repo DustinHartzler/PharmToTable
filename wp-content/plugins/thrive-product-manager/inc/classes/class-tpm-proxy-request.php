@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class TPM_Proxy_Request {
 
-	const URL = 'http://service-api.thrivethemes.com';
+	const URL      = 'http://service-api.thrivethemes.com';
 	const API_PASS = '!!@#ThriveIsTheBest123$$@#';
-	const API_KEY = '@(#$*%)^SDFKNgjsdi870234521SADBNC#';
+	const API_KEY  = '@(#$*%)^SDFKNgjsdi870234521SADBNC#';
 
 	protected $secret_key = '@#$()%*%$^&*(#@$%@#$%93827456MASDFJIK3245';
 
@@ -31,9 +31,8 @@ class TPM_Proxy_Request {
 
 	public function execute( $route ) {
 
-		// Disable proxy request for localhost testing when debug is on
-		if ( Thrive_Product_Manager::is_debug_mode() && 'http://local.thrivethemes.com' === Thrive_Product_Manager::get_ttw_url() ) {
-
+		// Allow bypassing proxy server
+		if ( defined( 'TPM_BYPASS_PROXY' ) && TPM_BYPASS_PROXY ) {
 			return $this->request->execute();
 		}
 

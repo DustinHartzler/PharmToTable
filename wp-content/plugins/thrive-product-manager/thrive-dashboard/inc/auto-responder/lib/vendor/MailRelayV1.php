@@ -227,7 +227,7 @@ class Thrive_Dash_Api_MailRelayV1 {
 	protected function handle_response( $response ) {
 
 		if ( $response instanceof WP_Error ) {
-			throw new Thrive_Dash_Api_MailRelay_Exception( sprintf( __( 'Failed connecting: %s', TVE_DASH_TRANSLATE_DOMAIN ), $response->get_error_message() ) );
+			throw new Thrive_Dash_Api_MailRelay_Exception( sprintf( __( 'Failed connecting: %s', 'thrive-dash' ), $response->get_error_message() ) );
 		}
 
 		if ( isset( $response['response']['code'] ) ) {
@@ -238,13 +238,13 @@ class Thrive_Dash_Api_MailRelayV1 {
 					return $result;
 					break;
 				case 400:
-					throw new Thrive_Dash_Api_MailRelay_Exception( __( 'Missing a required parameter or calling invalid method', TVE_DASH_TRANSLATE_DOMAIN ) );
+					throw new Thrive_Dash_Api_MailRelay_Exception( __( 'Missing a required parameter or calling invalid method', 'thrive-dash' ) );
 					break;
 				case 401:
-					throw new Thrive_Dash_Api_MailRelay_Exception( __( 'Invalid API key provided!', TVE_DASH_TRANSLATE_DOMAIN ) );
+					throw new Thrive_Dash_Api_MailRelay_Exception( __( 'Invalid API key provided!', 'thrive-dash' ) );
 					break;
 				case 404:
-					throw new Thrive_Dash_Api_MailRelay_Exception( __( "Can't find requested items", TVE_DASH_TRANSLATE_DOMAIN ) );
+					throw new Thrive_Dash_Api_MailRelay_Exception( __( "Can't find requested items", 'thrive-dash' ) );
 					break;
 			}
 		}
@@ -263,7 +263,7 @@ class Thrive_Dash_Api_MailRelayV1 {
 		$senders = $this->get_senders();
 
 		if ( ! is_array( $senders ) || empty( $senders ) ) {
-			throw new Thrive_Dash_Api_MailRelay_Exception( __( 'No senders available', TVE_DASH_TRANSLATE_DOMAIN ), 400 );
+			throw new Thrive_Dash_Api_MailRelay_Exception( __( 'No senders available', 'thrive-dash' ), 400 );
 		}
 
 		$email_args = array(

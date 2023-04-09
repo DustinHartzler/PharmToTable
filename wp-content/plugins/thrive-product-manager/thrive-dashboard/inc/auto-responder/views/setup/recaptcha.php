@@ -3,7 +3,7 @@
 	<form class="tvd-col tvd-s12">
 		<input type="hidden" name="api" value="<?php echo esc_attr( $this->get_key() ); ?>"/>
 		<div class="tvd-row">
-			<div class="tvd-col tvd-s12 tvd-m6 tvd-no-padding tvd-browsing-history"><?php echo esc_html__( 'reCaptcha version', TVE_DASH_TRANSLATE_DOMAIN ) ?></div>
+			<div class="tvd-col tvd-s12 tvd-m6 tvd-no-padding tvd-browsing-history"><?php echo esc_html__( 'reCaptcha version', 'thrive-dash' ) ?></div>
 			<div class="tvd-col tvd-s12 tvd-m3 tvd-no-padding">
 				<p>
 					<input class="tvd-recaptcha-version" name="connection[version]" type="radio" value="v2"
@@ -21,7 +21,7 @@
 		</div>
 		<div class="tvd-row tvd-use-browsing-history"
 		<#= item && ( item.connection && item.connection.version !=='v3' ) ? 'style="display:none;"' : '' #> >
-		<div class="tvd-col tvd-s12 tvd-m9 tvd-no-padding "><?php echo esc_html__( 'Use browsing history to determine genuine traffic (recommended)', TVE_DASH_TRANSLATE_DOMAIN ) ?></div>
+		<div class="tvd-col tvd-s12 tvd-m9 tvd-no-padding "><?php echo esc_html__( 'Use browsing history to determine genuine traffic (recommended)', 'thrive-dash' ) ?></div>
 		<div class="tvd-col tvd-s12 tvd-m3 tvd-no-padding tvd-switch">
 			<label>
 				<input type="checkbox" name="connection[browsing_history]" value="1" <#- ! item || ( item && item.connection && item.connection.browsing_history ) ? 'checked="checked"':''#>>
@@ -30,7 +30,7 @@
 		</div>
 </div>
 <div class="tvd-row tvd-use-browsing-history" <#= item && ( item.connection && item.connection.version !=='v3' ) ?  'style="display:none;"' : '' #> >
-<div class="tvd-col tvd-s12 tvd-m9 tvd-no-padding "><?php echo esc_html__( 'Reject the scores below:', TVE_DASH_TRANSLATE_DOMAIN ) ?></div>
+<div class="tvd-col tvd-s12 tvd-m9 tvd-no-padding "><?php echo esc_html__( 'Reject the scores below:', 'thrive-dash' ) ?></div>
 <div class="tvd-row" style="margin-bottom: 0px;">
 	<div class="tvd-col tvd-m10">
 		<input type="range" id="rangeInputId" oninput="rangeOutputId.value = rangeInputId.value" name="connection[threshold]" min="0" max="1" step="0.1"
@@ -45,12 +45,12 @@
 <div class="tvd-input-field tvd-row">
 	<input id="tvd-rc-api-site-key" type="text" name="site_key"
 		   value="<#- item && item.site_key #>">
-	<label for="tvd-rc-api-site-key"><?php echo esc_html__( 'Site key', TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
+	<label for="tvd-rc-api-site-key"><?php echo esc_html__( 'Site key', 'thrive-dash' ) ?></label>
 </div>
 <div class="tvd-input-field tvd-row">
 	<input id="tvd-ac-api-secret-key" type="text" name="secret_key"
 		   value="<#- item && item.secret_key #>">
-	<label for="tvd-ac-api-secret-key"><?php echo esc_html__( 'Secret key', TVE_DASH_TRANSLATE_DOMAIN ) ?></label>
+	<label for="tvd-ac-api-secret-key"><?php echo esc_html__( 'Secret key', 'thrive-dash' ) ?></label>
 </div>
 <div class="tvd-row">
     <?php $this->display_video_link(); ?>
@@ -60,10 +60,10 @@
 <div class="tvd-card-action">
 	<div class="tvd-row tvd-no-margin">
 		<div class="tvd-col tvd-s12 tvd-m6">
-			<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-dark tvd-full-btn tvd-waves-effect"><?php echo esc_html__( 'Cancel', TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+			<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-dark tvd-full-btn tvd-waves-effect"><?php echo esc_html__( 'Cancel', 'thrive-dash' ) ?></a>
 		</div>
 		<div class="tvd-col tvd-s12 tvd-m6">
-			<a class="tvd-api-connect tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn"><?php echo esc_html__( 'Connect', TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+			<a class="tvd-api-connect tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn"><?php echo esc_html__( 'Connect', 'thrive-dash' ) ?></a>
 		</div>
 	</div>
 </div>

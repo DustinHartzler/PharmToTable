@@ -47,7 +47,7 @@ class Thrive_Dash_List_Connection_SendOwl extends Thrive_Dash_List_Connection_Ab
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid SendOwl key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid SendOwl key', 'thrive-dash' ) );
 		}
 
 		$url = self::sendowl_url;
@@ -57,7 +57,7 @@ class Thrive_Dash_List_Connection_SendOwl extends Thrive_Dash_List_Connection_Ab
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to SendOwl using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to SendOwl using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -65,7 +65,7 @@ class Thrive_Dash_List_Connection_SendOwl extends Thrive_Dash_List_Connection_Ab
 		 */
 		$this->save();
 
-		return $this->success( __( 'SendOwl connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SendOwl connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

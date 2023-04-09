@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: dan bilauca
- * Date: 19-Jul-19
- * Time: 09:26 AM
- */
 
 /**
  * Class TD_REST_Hook_Controller
@@ -128,7 +122,7 @@ class TD_REST_Hook_Controller extends TD_REST_Controller {
 				'id' => $this->_get_option_name(),
 			);
 		} else {
-			$result = new WP_Error( 'td_invalid_hook_url', __( 'Invalid Hook URL', TVE_DASH_TRANSLATE_DOMAIN ) );
+			$result = new WP_Error( 'td_invalid_hook_url', __( 'Invalid Hook URL', 'thrive-dash' ) );
 		}
 
 		return $result;

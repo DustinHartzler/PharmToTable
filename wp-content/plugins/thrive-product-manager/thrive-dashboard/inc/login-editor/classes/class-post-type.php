@@ -26,6 +26,16 @@ class Post_Type {
 	private static $_instance;
 
 	/**
+	 * @var \WP_Post
+	 */
+	private $post;
+
+	/**
+	 * @var int
+	 */
+	private $ID;
+
+	/**
 	 * Post_Type constructor.
 	 *
 	 * @param \WP_Post $post

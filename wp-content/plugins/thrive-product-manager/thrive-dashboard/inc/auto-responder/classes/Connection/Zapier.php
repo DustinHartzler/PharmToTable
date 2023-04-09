@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: dan bilauca
- * Date: 23-Jul-19
- * Time: 04:27 PM
- */
 class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -147,7 +141,7 @@ class Thrive_Dash_List_Connection_Zapier extends Thrive_Dash_List_Connection_Abs
 			return $this->get_api()->trigger_subscribe( $subscribe_url, $params );
 		}
 
-		return $this->error( __( 'There was an error sending your message, please make sure your Zap is activated or contact support.', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->error( __( 'There was an error sending your message, please make sure your Zap is activated or contact support.', 'thrive-dash' ) );
 	}
 
 	/**

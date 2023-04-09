@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 03.04.2015
- * Time: 19:44
- */
 class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -53,11 +47,11 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 		$version    = (string) ( isset( $connection['version'] ) ? $connection['version'] : '' );
 
 		if ( empty( $connection['key'] ) ) {
-			return $this->error( __( 'You must provide a valid GetResponse key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid GetResponse key', 'thrive-dash' ) );
 		}
 
 		if ( $version === '3' && empty( $connection['url'] ) ) {
-			return $this->error( __( 'You must provide a valid GetResponse V3 API URL', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid GetResponse V3 API URL', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $connection );
@@ -65,7 +59,7 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to GetResponse using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to GetResponse using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -73,7 +67,7 @@ class Thrive_Dash_List_Connection_GetResponse extends Thrive_Dash_List_Connectio
 		 */
 		$this->save();
 
-		return $this->success( __( 'GetResponse connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'GetResponse connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

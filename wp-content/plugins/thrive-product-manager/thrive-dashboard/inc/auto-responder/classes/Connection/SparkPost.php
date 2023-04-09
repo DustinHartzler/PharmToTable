@@ -47,11 +47,11 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 		$email = ! empty( $_POST['connection']['domain'] ) ? sanitize_text_field( $_POST['connection']['domain'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid SparkPost key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid SparkPost key', 'thrive-dash' ) );
 		}
 
 		if ( empty( $email ) ) {
-			return $this->error( __( 'Email field must not be empty', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Email field must not be empty', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -60,7 +60,7 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to SparkPost using the provided key. <strong>%s</strong>', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to SparkPost using the provided key. <strong>%s</strong>', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -68,7 +68,7 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 		 */
 		$this->save();
 
-		return $this->success( __( 'SparkPost connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'SparkPost connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -287,7 +287,7 @@ class Thrive_Dash_List_Connection_SparkPost extends Thrive_Dash_List_Connection_
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );

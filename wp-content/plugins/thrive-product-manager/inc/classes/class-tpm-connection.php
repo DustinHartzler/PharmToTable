@@ -263,6 +263,9 @@ class TPM_Connection {
 			add_filter( 'tpm_messages', array( tpm_cron(), 'push_message_event_unscheduled' ) );
 		}
 
+		tpm_delete_transient( 'td_ttw_licenses_details' );
+		tpm_delete_transient( 'td_ttw_connection_error' );
+
 		return true;
 	}
 
@@ -315,6 +318,8 @@ class TPM_Connection {
 
 		//save the connection data to be used at TPM deactivation plugin
 		update_option( 'tpm_bk_connection', $this->_data );
+		tpm_delete_transient( 'td_ttw_licenses_details' );
+		tpm_delete_transient( 'td_ttw_connection_error' );
 
 		return delete_option( self::NAME );
 	}

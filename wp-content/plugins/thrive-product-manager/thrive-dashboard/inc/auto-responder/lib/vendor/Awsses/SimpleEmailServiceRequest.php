@@ -139,7 +139,7 @@ final class Thrive_Dash_Api_Awsses_SimpleEmailServiceRequest {
 
 		// task 2 https://docs.aws.amazon.com/general/latest/gr/sigv4-create-string-to-sign.html
 		$credential_scope = $this->_date . '/' . $this->_region . '/' . self::SERVICE . '/aws4_request';
-		$string_to_sign   = self::ALGORITHM . "\n" . $this->_amz_date . "\n" . $credential_scope . "\n" . hash( 'sha256', $canonical_request );;
+		$string_to_sign   = self::ALGORITHM . "\n" . $this->_amz_date . "\n" . $credential_scope . "\n" . hash( 'sha256', $canonical_request );
 
 		// task 3 https://docs.aws.amazon.com/general/latest/gr/sigv4-calculate-signature.html
 		$signing_key = $this->_generateSignatureKey();

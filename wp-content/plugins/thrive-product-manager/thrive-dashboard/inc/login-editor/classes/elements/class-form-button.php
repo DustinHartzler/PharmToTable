@@ -23,7 +23,7 @@ class Form_Button extends \TCB_Element_Abstract {
 	 * @return string
 	 */
 	public function name() {
-		return __( 'Form button', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Form button', 'thrive-dash' );
 	}
 
 	/**

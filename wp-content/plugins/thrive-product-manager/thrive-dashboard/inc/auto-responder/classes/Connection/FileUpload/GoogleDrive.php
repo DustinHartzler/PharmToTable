@@ -91,7 +91,7 @@ class Thrive_Dash_List_Connection_FileUpload_GoogleDrive
 
 		$result = array(
 			'success' => true,
-			'message' => __( 'Connection works', TVE_DASH_TRANSLATE_DOMAIN ),
+			'message' => __( 'Connection works', 'thrive-dash' ),
 		);
 		try {
 			$this->get_api()->get_files();

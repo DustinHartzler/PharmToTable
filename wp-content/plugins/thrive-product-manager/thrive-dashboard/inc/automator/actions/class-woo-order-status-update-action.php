@@ -94,13 +94,12 @@ class Woo_Order_Status_Update extends Action {
 			return false;
 		}
 
-		$order = wc_get_order( $order_data->get_value( 'order_id' ) );
+		$order = wc_get_order( $order_data->get_value( Woo_Order_Id::get_id() ) );
 
 		if ( empty( $order ) ) {
 			return false;
 		}
-
-		$order->set_status( $this->status, '', true );
+		$order->update_status( $this->status, '', true );
 	}
 
 }

@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden
 }
 
-require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-singleton.php';
 require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-magic-methods.php';
 require_once TVE_DASH_PATH . '/inc/ttw-account/traits/trait-ttw-utils.php';
 
@@ -173,7 +172,18 @@ class TD_TTW_Update_Manager {
 			$themes_update['url']
 		);
 
-		$tpl = 'theme/update';
+		$template      = 'theme/update';
+		$template_data = array(
+			'name'        => $data['name'],
+			'version'     => $themes_update['new_version'],
+			'details_url' => $details_url,
+			'recheck_url' => add_query_arg(
+				array(
+					'theme' => 'thrive-theme',
+				),
+				TD_TTW_User_Licenses::get_instance()->get_recheck_url( 'themes.php' )
+			),
+		);
 
 		$membership = static::get_membership();
 		/** @var TD_TTW_User_Licenses $licenses */
@@ -181,23 +191,25 @@ class TD_TTW_Update_Manager {
 		$theme_license = $licenses->get_license( TD_TTW_User_Licenses::TTB_TAG );
 
 		if ( false === TD_TTW_Connection::get_instance()->is_connected() ) {
-			$tpl = 'theme/disconnected';
+			$template = 'theme/disconnected';
 		} elseif ( $membership && false === $membership->is_active() ) {
-			$tpl = 'theme/membership-expired';
+			$template = 'theme/membership-expired';
 		} elseif ( $theme_license && false === $theme_license->can_update() ) {
-			$tpl = 'theme/license-expired';
+			$template = 'theme/license-expired';
 		} elseif ( ! $membership && ! $theme_license ) {
-			$tpl = 'theme/no-license-found';
+			$template = 'theme/no-license-found';
+		}
+
+		$error = thrive_get_transient( 'td_ttw_connection_error' );
+		if ( ! empty( $error ) ) {
+			$template                       = 'error';
+			$template_data['error_message'] = $error;
 		}
 
 		return TD_TTW_Messages_Manager::render(
-			$tpl,
+			$template,
 			true,
-			array(
-				'name'        => $data['name'],
-				'version'     => $themes_update['new_version'],
-				'details_url' => $details_url,
-			)
+			$template_data
 		);
 	}
 
@@ -327,9 +339,9 @@ class TD_TTW_Update_Manager {
 		}
 
 		add_submenu_page(
-			null,
-			null,
-			null,
+			'',
+			'',
+			'',
 			'manage_options',
 			self::NAME,
 			array( $this, 'tve_dash_ttw_account' )

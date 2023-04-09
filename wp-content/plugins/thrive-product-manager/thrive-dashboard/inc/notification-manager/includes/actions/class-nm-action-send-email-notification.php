@@ -264,7 +264,7 @@ class TD_NM_Action_Send_Email_Notification extends TD_NM_Action_Abstract {
 			),
 			'quiz_user'     => array(
 				'Quiz Result'  => $user['points'],
-				'Email'        => ! empty( $user['email'] ) ? $user['email'] : __( 'unknown', TVE_DASH_TRANSLATE_DOMAIN ),
+				'Email'        => ! empty( $user['email'] ) ? $user['email'] : __( 'unknown', 'thrive-dash' ),
 				'Date started' => $user['date_started'],
 			),
 			'original_data' => $data,

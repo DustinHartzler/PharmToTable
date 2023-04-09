@@ -57,14 +57,14 @@ class Main {
 
 		foreach ( tve_dash_get_products( false ) as $product ) {
 			/* Skip old themes */
-			if ( $product->getType() === 'theme' ) {
+			if ( $product->get_type() === 'theme' ) {
 				continue;
 			}
-
-			$all_products[ $product->getTag() ] = array(
-				'name'            => $product->getTitle(),
-				'tag'             => $product->getTag(),
-				'logo'            => $product->getLogo(),
+			$tag                  = $product->get_tag();
+			$all_products[ $tag ] = array(
+				'name'            => $product->get_title(),
+				'tag'             => $tag,
+				'logo'            => $product->get_logo(),
 				'prod_capability' => $product->get_cap(),
 			);
 		}
@@ -102,11 +102,7 @@ class Main {
 	 * Hook based on the current screen
 	 */
 	public static function conditional_hooks() {
-		if ( ! $screen = get_current_screen() ) {
-			return;
-		}
-
-		if ( $screen->id === 'admin_page_tve_dash_access_manager' ) {
+		if ( tve_get_current_screen_key() === 'admin_page_tve_dash_access_manager' ) {
 			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'tve_dash_access_manager_include_scripts' ) );
 			add_action( 'admin_print_footer_scripts', array( __CLASS__, 'render_backbone_templates' ) );
 		}
@@ -159,7 +155,10 @@ class Main {
 	 * @return string[]
 	 */
 	public static function get_all_functionalities( $functionality_tag = null ) {
-		$functionalities = array( new \TVD\Dashboard\Access_Manager\Admin_Bar_Visibility(), new \TVD\Dashboard\Access_Manager\Login_Redirect() );
+		$functionalities = array(
+			new \TVD\Dashboard\Access_Manager\Admin_Bar_Visibility(),
+			new \TVD\Dashboard\Access_Manager\Login_Redirect()
+		);
 
 		if ( $functionality_tag ) {
 			$functionalities = current( array_filter( $functionalities,

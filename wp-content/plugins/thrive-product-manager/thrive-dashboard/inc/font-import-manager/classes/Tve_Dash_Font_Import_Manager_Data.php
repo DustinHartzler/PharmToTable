@@ -9,13 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 9/25/2015
- * Time: 1:42 PM
- */
-
 if ( class_exists( 'Tve_Dash_Font_Import_Manager_Data' ) ) {
 	return;
 }
@@ -135,7 +128,7 @@ class Tve_Dash_Font_Import_Manager_Data {
 		$files = glob( $dirPath . '*', GLOB_MARK );
 		foreach ( $files as $file ) {
 			if ( is_dir( $file ) ) {
-				self::deleteDir( $file );
+				static::deleteDir( $file );
 			} else {
 				unlink( $file );
 			}

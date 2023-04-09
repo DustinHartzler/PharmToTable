@@ -58,7 +58,7 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 		try {
 			$api->login();
 		} catch ( Thrive_Dash_Api_KlickTipp_Exception $e ) {
-			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', TVE_DASH_TRANSLATE_DOMAIN ), $e->getMessage() ) );
+			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', 'thrive-dash' ), $e->getMessage() ) );
 		}
 
 		foreach ( $tags as $key => $tag ) {
@@ -104,7 +104,7 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 		$password = ! empty( $_POST['connection']['kt_password'] ) ? sanitize_text_field( $_POST['connection']['kt_password'] ) : '';
 
 		if ( empty( $user ) || empty( $password ) ) {
-			return $this->error( __( 'Email and password are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Email and password are required', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( array(
@@ -121,7 +121,7 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 			$result = $this->test_connection();
 
 			if ( $result !== true ) {
-				return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data: %s', TVE_DASH_TRANSLATE_DOMAIN ), $this->_error ) );
+				return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data: %s', 'thrive-dash' ), $this->_error ) );
 			}
 
 			/**
@@ -129,10 +129,10 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 			 */
 			$this->save();
 
-			return $this->success( __( 'Klick Tipp connected successfully!', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->success( __( 'Klick Tipp connected successfully!', 'thrive-dash' ) );
 
 		} catch ( Thrive_Dash_Api_KlickTipp_Exception $e ) {
-			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', TVE_DASH_TRANSLATE_DOMAIN ), $e->getMessage() ) );
+			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', 'thrive-dash' ), $e->getMessage() ) );
 		}
 	}
 
@@ -166,7 +166,7 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 		try {
 			$api->login();
 		} catch ( Thrive_Dash_Api_KlickTipp_Exception $e ) {
-			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', TVE_DASH_TRANSLATE_DOMAIN ), $e->getMessage() ) );
+			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', 'thrive-dash' ), $e->getMessage() ) );
 		}
 
 		try {
@@ -205,7 +205,7 @@ class Thrive_Dash_List_Connection_KlickTipp extends Thrive_Dash_List_Connection_
 		try {
 			$api->login();
 		} catch ( Thrive_Dash_Api_KlickTipp_Exception $e ) {
-			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', TVE_DASH_TRANSLATE_DOMAIN ), $e->getMessage() ) );
+			return $this->error( sprintf( __( 'Could not connect to Klick Tipp using the provided data (%s)', 'thrive-dash' ), $e->getMessage() ) );
 		}
 
 		/**

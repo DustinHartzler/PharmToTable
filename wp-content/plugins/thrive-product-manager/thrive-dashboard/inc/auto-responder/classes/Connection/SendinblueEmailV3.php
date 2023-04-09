@@ -58,7 +58,7 @@ class Thrive_Dash_List_Connection_SendinblueEmailV3 extends Thrive_Dash_List_Con
 		if ( empty( $key ) ) {
 			$message = 'You must provide a valid SendinBlue V3 key';
 
-			return $ajax_call ? __( $message, TVE_DASH_TRANSLATE_DOMAIN ) : $this->error( __( $message, TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $ajax_call ? __( $message, 'thrive-dash' ) : $this->error( __( $message, 'thrive-dash' ) );
 		}
 		/* For V3 we need to add this on the credentials list */
 		$_POST['connection']['v3'] = true;
@@ -69,7 +69,7 @@ class Thrive_Dash_List_Connection_SendinblueEmailV3 extends Thrive_Dash_List_Con
 		if ( $result !== true ) {
 			$message = 'Could not connect to SendinBlue V3 using the provided key (<strong>%s</strong>)';
 
-			return $ajax_call ? sprintf( __( $message, TVE_DASH_TRANSLATE_DOMAIN ), $result ) : $this->error( sprintf( __( $message, TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $ajax_call ? sprintf( __( $message, 'thrive-dash' ), $result ) : $this->error( sprintf( __( $message, 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -96,7 +96,7 @@ class Thrive_Dash_List_Connection_SendinblueEmailV3 extends Thrive_Dash_List_Con
 			return $this->error( $response );
 		}
 
-		$this->success( __( 'SendinBlue connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'SendinBlue connected successfully', 'thrive-dash' ) );
 
 		if ( $ajax_call ) {
 			return true;
@@ -283,7 +283,7 @@ class Thrive_Dash_List_Connection_SendinblueEmailV3 extends Thrive_Dash_List_Con
 		$asset = get_post( $post_data['_asset_group'] );
 
 		if ( empty( $asset ) || ! ( $asset instanceof WP_Post ) || $asset->post_status !== 'publish' ) {
-			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', TVE_DASH_TRANSLATE_DOMAIN ), $post_data['_asset_group'] ) );
+			throw new Exception( sprintf( __( 'Invalid Asset Group: %s. Check if it exists or was trashed.', 'thrive-dash' ), $post_data['_asset_group'] ) );
 		}
 
 		$files   = get_post_meta( $post_data['_asset_group'], 'tve_asset_group_files', true );
@@ -380,7 +380,7 @@ class Thrive_Dash_List_Connection_SendinblueEmailV3 extends Thrive_Dash_List_Con
 
 			return $lists;
 		} catch ( Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', 'thrive-dash' );
 
 			return false;
 		}
@@ -418,9 +418,9 @@ class Thrive_Dash_List_Connection_SendinblueEmailV3 extends Thrive_Dash_List_Con
 
 			return true;
 		} catch ( Thrive_Dash_Api_SendinBlue_Exception $e ) {
-			return $e->getMessage() ?: __( 'Unknown SendinBlue Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ?: __( 'Unknown SendinBlue Error', 'thrive-dash' );
 		} catch ( Exception $e ) {
-			return $e->getMessage() ?: __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ?: __( 'Unknown Error', 'thrive-dash' );
 		}
 	}
 

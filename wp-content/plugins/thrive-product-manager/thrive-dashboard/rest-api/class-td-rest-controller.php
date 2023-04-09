@@ -8,12 +8,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
-/**
- * Created by PhpStorm.
- * User: dan bilauca
- * Date: 17-Jul-19
- * Time: 04:15 PM
- */
 
 /**
  * Class TD_REST_Controller
@@ -162,7 +156,7 @@ class TD_REST_Controller extends WP_REST_Controller {
 		} else {
 			$result = new WP_Error(
 				'wrong_api_key_provided',
-				__( 'Provided API Key is wrong', TVE_DASH_TRANSLATE_DOMAIN ),
+				__( 'Provided API Key is wrong', 'thrive-dash' ),
 				array(
 					'api_key' => $api_key,
 				)

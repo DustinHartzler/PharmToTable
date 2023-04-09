@@ -9,14 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-require_once dirname( __FILE__ ) . "/ConvertKit/Exception.php";
+require_once __DIR__ . "/ConvertKit/Exception.php";
 
 class Thrive_Dash_Api_ConvertKit {
 
-	protected $api_version = 'v3';
-	protected $api_url_base = 'https://api.convertkit.com/';
-	protected $resources = array();
-	protected $markup = array();
+	protected $api_version    = 'v3';
+	protected $api_url_base   = 'https://api.convertkit.com/';
+	protected $resources      = array();
+	protected $markup         = array();
 	protected $_existing_tags = array();
 
 	protected $key;
@@ -145,19 +145,18 @@ class Thrive_Dash_Api_ConvertKit {
 			throw new Thrive_Dash_Api_ConvertKit_Exception( 'Error from ConvertKit: ' . ( isset( $data['message'] ) ? $data['message'] : $data['error'] ) );
 		}
 
-		if ( ! empty( $data['subscription'] ) && ! empty( $data['subscription']['id'] ) ) {
-
-			/**
-			 * Handle tags
-			 */
-			if ( ! empty( $fields['convertkit_tags'] ) ) {
-				$tags = explode( ',', $fields['convertkit_tags'] );
-				try {
-					$this->addTagsToContact( $data['subscription']['id'], $args['email'], $tags );
-				} catch ( Thrive_Dash_Api_ConvertKit_Exception $e ) {
-				}
+		/**
+		 * Handle tags if they are set
+		 */
+		if ( ! empty( $fields['convertkit_tags'] ) ) {
+			$tags = explode( ',', $fields['convertkit_tags'] );
+			try {
+				$this->addTagsToContact( $args['email'], $tags );
+			} catch ( Thrive_Dash_Api_ConvertKit_Exception $e ) {
 			}
+		}
 
+		if ( ! empty( $data['subscription'] ) ) {
 			return $data['subscription'];
 		}
 
@@ -166,16 +165,15 @@ class Thrive_Dash_Api_ConvertKit {
 	}
 
 	/**
-	 * @param $list_id
 	 * @param $email_address
 	 * @param $tags
 	 *
 	 * @return bool
 	 * @throws Thrive_Dash_Api_ConvertKit_Exception
 	 */
-	public function addTagsToContact( $list_id, $email_address, $tags ) {
-		if ( ! $list_id || ! $email_address || ! $tags ) {
-			throw new Thrive_Dash_Api_ConvertKit_Exception( __( 'Missing required parameters for adding tags to ConvertKit contact', TVE_DASH_TRANSLATE_DOMAIN ) );
+	public function addTagsToContact( $email_address, $tags ) {
+		if ( ! $email_address || ! $tags ) {
+			throw new Thrive_Dash_Api_ConvertKit_Exception( __( 'Missing required parameters for adding tags to ConvertKit contact', 'thrive-dash' ) );
 
 			return false;
 		}
@@ -192,7 +190,7 @@ class Thrive_Dash_Api_ConvertKit {
 				if ( isset( $tag_exists['id'] ) ) {
 					// Assign existing tag to contact/subscriber
 					try {
-						$this->assignTag( $list_id, $tag_exists['id'], $email_address );
+						$this->assignTag( $tag_exists['id'], $email_address );
 					} catch ( Thrive_Dash_Api_ConvertKit_Exception $e ) {
 					}
 
@@ -201,7 +199,7 @@ class Thrive_Dash_Api_ConvertKit {
 
 				try {
 					// Create tag and assign it to contact/subscriber
-					$this->createAndAssignTag( $list_id, trim( $tag_name ), $email_address );
+					$this->createAndAssignTag( trim( $tag_name ), $email_address );
 				} catch ( Thrive_Dash_Api_ConvertKit_Exception $e ) {
 				}
 			}
@@ -244,16 +242,15 @@ class Thrive_Dash_Api_ConvertKit {
 	}
 
 	/**
-	 * @param $list_id
 	 * @param $tag_id
 	 * @param $email_address
 	 *
 	 * @return bool
 	 * @throws Thrive_Dash_Api_ConvertKit_Exception
 	 */
-	public function assignTag( $list_id, $tag_id, $email_address ) {
+	public function assignTag( $tag_id, $email_address ) {
 
-		if ( ! $list_id || ! $tag_id || ! $email_address ) {
+		if ( ! $tag_id || ! $email_address ) {
 			return false;
 		}
 
@@ -270,40 +267,38 @@ class Thrive_Dash_Api_ConvertKit {
 	}
 
 	/**
-	 * @param $list_id
 	 * @param $tag_name
 	 * @param $email_address
 	 *
 	 * @return bool
 	 * @throws Thrive_Dash_Api_ConvertKit_Exception
 	 */
-	public function createAndAssignTag( $list_id, $tag_name, $email_address ) {
-		if ( ! $list_id || ! $tag_name || ! $email_address ) {
+	public function createAndAssignTag( $tag_name, $email_address ) {
+		if ( ! $tag_name || ! $email_address ) {
 			return false;
 		}
 
 		try {
-			$created_tag = $this->createTag( $list_id, $tag_name, $email_address );
+			$created_tag = $this->createTag( $tag_name, $email_address );
 		} catch ( Thrive_Dash_Api_ConvertKit_Exception $e ) {
 		}
 
 		if ( is_array( $created_tag ) && ! empty( $created_tag['id'] ) ) {
-			return $this->assignTag( $list_id, $created_tag['id'], $email_address );
+			return $this->assignTag( $created_tag['id'], $email_address );
 		}
 
 		return false;
 	}
 
 	/**
-	 * @param $list_id
 	 * @param $tag_name
 	 * @param $email_address
 	 *
 	 * @return array|bool|mixed|object
 	 * @throws Thrive_Dash_Api_ConvertKit_Exception
 	 */
-	public function createTag( $list_id, $tag_name, $email_address ) {
-		if ( ! $list_id || ! $tag_name || ! $email_address ) {
+	public function createTag( $tag_name, $email_address ) {
+		if ( ! $tag_name || ! $email_address ) {
 			return false;
 		}
 
@@ -312,9 +307,8 @@ class Thrive_Dash_Api_ConvertKit {
 				'name' => $tag_name,
 			),
 		);
-		$tag  = $this->_call( 'tags', $args, 'POST' );
 
-		return $tag;
+		return $this->_call( 'tags', $args, 'POST' );
 	}
 
 	public function unsubscribeUser( $email_address, $arguments ) {
@@ -365,7 +359,7 @@ class Thrive_Dash_Api_ConvertKit {
 
 	/**
 	 * @param        $path
-	 * @param array $args
+	 * @param array  $args
 	 * @param string $method
 	 *
 	 * @return mixed
@@ -405,7 +399,7 @@ class Thrive_Dash_Api_ConvertKit {
 	 * Build the full request URL
 	 *
 	 * @param string $request Request path
-	 * @param array $args Request arguments
+	 * @param array  $args    Request arguments
 	 *
 	 * @return string          Request URL
 	 */

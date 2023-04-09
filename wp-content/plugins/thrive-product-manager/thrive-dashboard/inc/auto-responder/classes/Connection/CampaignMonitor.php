@@ -50,14 +50,14 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 		$email = ! empty( $_POST['connection']['email'] ) ? sanitize_email( $_POST['connection']['email'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Campaign Monitor key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Campaign Monitor key', 'thrive-dash' ) );
 		}
 		$this->set_credentials( compact( 'key', 'email' ) );
 
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Campaign Monitor using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Campaign Monitor using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -90,7 +90,7 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 			Thrive_Dash_List_Manager::save( $related_api );
 		}
 
-		return $this->success( __( 'Campaign Monitor connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Campaign Monitor connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -207,6 +207,9 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 			$_custom_fields = $this->_generate_custom_fields( array_merge( $arguments, array( 'list_id' => $list_identifier ) ) );
 
 			$subscriber['CustomFields'] = array_merge( $subscriber['CustomFields'], $_custom_fields );
+			if ( ! empty( $arguments['automator_custom_fields'] ) ) {
+				$subscriber['CustomFields'] = array_merge( $subscriber['CustomFields'], $arguments['automator_custom_fields'] );
+			}
 
 			$list->add_subscriber( $subscriber );
 		} catch ( Exception $e ) {
@@ -326,6 +329,25 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 			'type'  => ! empty( $field['DataType'] ) ? $field['DataType'] : '',
 			'label' => ! empty( $field['FieldName'] ) ? $field['FieldName'] : '',
 		);
+	}
+
+	/**
+	 * Build custom fields mapping for automations
+	 *
+	 * @param $automation_data
+	 *
+	 * @return array
+	 */
+	public function build_automation_custom_fields( $automation_data ) {
+		$mapped_data = [];
+		foreach ( $automation_data['api_fields'] as $pair ) {
+			$mapped_data[] = array(
+				'Key'   => $pair['key'],
+				'Value' => sanitize_text_field( $pair['value'] ),
+			);
+		}
+
+		return $mapped_data;
 	}
 
 
@@ -502,5 +524,13 @@ class Thrive_Dash_List_Connection_CampaignMonitor extends Thrive_Dash_List_Conne
 		}
 
 		return $prepared_fields;
+	}
+
+	public function has_custom_fields() {
+		return true;
+	}
+
+	public function get_automator_add_autoresponder_mapping_fields() {
+		return array( 'autoresponder' => array( 'mailing_list' => array( 'api_fields' ) ) );
 	}
 }

@@ -9,13 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 9/25/2015
- * Time: 10:29 AM
- */
-
 if ( class_exists( 'Tve_Dash_Font_Import_Manager_View' ) ) {
 	return;
 }
@@ -36,7 +29,7 @@ class Tve_Dash_Font_Import_Manager_View {
 		}
 
 		if ( ! is_file( $this->path . '/' . $file ) ) {
-			echo sprintf( esc_html__( "No template found for %s", TVE_DASH_TRANSLATE_DOMAIN ), esc_html( $file ) );
+			echo sprintf( esc_html__( "No template found for %s", 'thrive-dash' ), esc_html( $file ) );
 
 			return;
 		}

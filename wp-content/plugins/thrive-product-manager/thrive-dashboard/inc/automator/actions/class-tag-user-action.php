@@ -112,8 +112,6 @@ class Tag_User extends Action {
 		} elseif ( ! empty( $this->additional['tag_select'] ) ) {
 			$this->tags = $this->additional['tag_select'];
 		}
-
-
 	}
 
 	public function do_action( $data ) {
@@ -181,11 +179,11 @@ class Tag_User extends Action {
 
 		if ( empty( $available_data ) ) {
 			$valid = false;
-			tap_logger()->register( [
+			tap_logger( $this->aut_id )->register( [
 				'key'         => static::get_id(),
 				'id'          => 'data-not-provided-to-action',
 				'message'     => 'Data object required by ' . static::class . ' action is not provided by trigger',
-				'class-label' => tap_logger()->get_nice_class_name( static::class ),
+				'class-label' => tap_logger( $this->aut_id )->get_nice_class_name( static::class ),
 			] );
 		}
 

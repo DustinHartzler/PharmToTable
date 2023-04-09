@@ -42,13 +42,13 @@ class Thrive_Dash_List_Connection_Zoho extends Thrive_Dash_List_Connection_Abstr
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( __( 'Could not connect to Zoho using provided credentials.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Could not connect to Zoho using provided credentials.', 'thrive-dash' ) );
 		}
 
 		$this->_save();
 		$this->saveOauthCredentials();
 
-		return $this->success( __( 'Zozo connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Zozo connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

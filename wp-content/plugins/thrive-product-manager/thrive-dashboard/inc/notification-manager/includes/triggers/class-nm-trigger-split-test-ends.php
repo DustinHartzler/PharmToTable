@@ -43,27 +43,27 @@ class TD_NM_Trigger_Split_Test_Ends extends TD_NM_Trigger_Abstract {
 
 	protected function _is_tl_applicable() {
 
-		$plugin_active = is_plugin_active( 'thrive-leads/thrive-leads.php' );
+		$plugin_active = tve_dash_is_plugin_active( 'thrive-leads' );
 
 		return $plugin_active && ! empty( $this->settings['settings']['tl'] );
 	}
 
 	protected function _is_tho_applicable() {
 
-		$plugin_active = is_plugin_active( 'thrive-headline-optimizer/thrive-headline-optimizer.php' );
+		$plugin_active = tve_dash_is_plugin_active( 'thrive-headline-optimizer' );
 
 		return $plugin_active && ! empty( $this->settings['settings']['tho'] );
 	}
 
 	protected function _is_tqb_applicable() {
 
-		$plugin_active = is_plugin_active( 'thrive-quiz-builder/thrive-quiz-builder.php' );
+		$plugin_active = tve_dash_is_plugin_active( 'thrive-quiz-builder' );
 
 		return $plugin_active && ! empty( $this->settings['settings']['tqb'] );
 	}
 
 	protected function _is_tab_applicable() {
-		$plugin_active = is_plugin_active( 'thrive-ab-page-testing/thrive-ab-page-testing.php' );
+		$plugin_active = tve_dash_is_plugin_active( 'thrive-ab-page-testing' );
 
 		return $plugin_active && ! empty( $this->settings['settings']['tab'] );
 	}

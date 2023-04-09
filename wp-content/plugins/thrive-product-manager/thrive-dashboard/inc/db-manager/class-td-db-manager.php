@@ -241,10 +241,10 @@ class TD_DB_Manager {
 		// @codingStandardsIgnoreStart
 		echo '<div class="notice notice-error is-dismissible"><p>' .
 		     sprintf(
-			     __( 'There was an error while updating the database tables%s. Detailed error message: %s. If you continue seeing this message, please contact %s', TVE_DASH_TRANSLATE_DOMAIN ),
+			     __( 'There was an error while updating the database tables%s. Detailed error message: %s. If you continue seeing this message, please contact %s', 'thrive-dash' ),
 			     $this->_product_name ? " ({$this->_product_name})" : '',
 			     '<strong>' . $this->_last_db_error . '</strong>',
-			     '<a target="_blank" href="https://thrivethemes.com/forums/">' . __( 'Thrive Themes Support', TVE_DASH_TRANSLATE_DOMAIN ) . '</a>'
+			     '<a target="_blank" href="https://thrivethemes.com/forums/">' . __( 'Thrive Themes Support', 'thrive-dash' ) . '</a>'
 		     ) .
 		     '</p></div>';
 		// @codingStandardsIgnoreEnd
@@ -267,7 +267,7 @@ class TD_DB_Manager {
 			/* do nothing for now. better safe than sorry. each plugin should catch errors */
 		}
 
-		foreach ( self::$_instances as $instance ) {
+		foreach ( static::$_instances as $instance ) {
 			$instance->check();
 		}
 	}
@@ -283,6 +283,6 @@ class TD_DB_Manager {
 	 * @throws Exception
 	 */
 	public static function add_manager( $path, $option_name, $required_version, $product_name = '', $table_prefix = '', $reset_option_param = '' ) {
-		self::$_instances [] = new self( $path, $option_name, $required_version, $product_name, $table_prefix, $reset_option_param );
+		static::$_instances [] = new static( $path, $option_name, $required_version, $product_name, $table_prefix, $reset_option_param );
 	}
 }

@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Laura
- * Date: 09.09.2015
- * Time: 15:15
- */
 class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -53,7 +47,7 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 		$username = ! empty( $_POST['connection']['username'] ) ? sanitize_text_field( $_POST['connection']['username'] ) : '';
 
 		if ( empty( $key ) || empty( $username ) ) {
-			return $this->error( __( 'Username and API Key are required', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Username and API Key are required', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( array( 'key' => $key, 'username' => $username ) );
@@ -61,7 +55,7 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to MadMimi using the provided data', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to MadMimi using the provided data', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -69,7 +63,7 @@ class Thrive_Dash_List_Connection_MadMimi extends Thrive_Dash_List_Connection_Ab
 		 */
 		$this->save();
 
-		return $this->success( __( 'MadMimi connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'MadMimi connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

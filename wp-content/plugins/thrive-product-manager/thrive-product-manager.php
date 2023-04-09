@@ -4,13 +4,13 @@
  * Plugin Name: Thrive Product Manager
  * Plugin URI: http://thrivethemes.com
  * Description: Connect this site with Thrive Themes account to install and activate Thrive product.
- * Version: 1.3.0
+ * Version: 1.9
  * Author: Thrive Themes
  * Author URI: http://thrivethemes.com
  */
 class Thrive_Product_Manager {
 
-	const V = '1.3.0';
+	const V = '1.9';
 	const T = 'thrive_product_manager';
 
 	protected static $_instance;
@@ -100,6 +100,7 @@ class Thrive_Product_Manager {
 		require_once __DIR__ . '/inc/classes/class-tpm-product-list.php';
 		require_once __DIR__ . '/inc/classes/class-tpm-product.php';
 		require_once __DIR__ . '/inc/classes/class-tpm-product-plugin.php';
+		require_once __DIR__ . '/inc/classes/class-tpm-product-plugin-automator.php';
 		require_once __DIR__ . '/inc/classes/class-tpm-product-theme.php';
 		require_once __DIR__ . '/inc/classes/class-tpm-product-theme-builder.php';
 		require_once __DIR__ . '/inc/classes/class-tpm-product-skin.php';
@@ -252,6 +253,41 @@ class Thrive_Product_Manager {
 		}
 	}
 
+	/**
+	 * Get the min version of an asset file ( css or js )
+	 *
+	 * @param string $file
+	 *
+	 * @return string
+	 */
+	protected function asset_name( $file ) {
+		$min = defined( 'TVE_DEBUG' ) && TVE_DEBUG === true ? '' : 'min.';
+
+		$info = pathinfo( str_replace( [ '.min.js', '.min.css' ], [ '.js', '.css' ], $file ) );
+
+		if ( ! in_array( strtolower( $info['extension'] ), [ 'css', 'js' ], true ) ) {
+			return $file;
+		}
+
+		$path = '';
+		if ( ! empty( $info['dirname'] ) ) {
+			$path .= $info['dirname'] . '/';
+		}
+
+		return $path . $info['filename'] . '.' . $min . $info['extension'];
+	}
+
+	/**
+	 * Get an asset url for a css / js file
+	 *
+	 * @param string $file
+	 *
+	 * @return string
+	 */
+	protected function asset_url( $file ) {
+		return $this->url( $this->asset_name( $file ) );
+	}
+
 	public function enqueue_scripts() {
 
 		if ( ! $this->is_known_page() ) {
@@ -260,12 +296,12 @@ class Thrive_Product_Manager {
 
 		wp_enqueue_script( 'updates' );
 
+
 		wp_enqueue_style( 'tpm-style', $this->url( 'css/tpm-admin.css' ), array(), self::V );
 
-		$js_prefix = defined( 'TVE_DEBUG' ) === true && TVE_DEBUG === true ? '.js' : '.min.js';
 		wp_enqueue_script(
 			'thrive-product-manager',
-			$this->url( 'js/dist/tpm-admin' . $js_prefix ),
+			$this->asset_url( 'js/dist/tpm-admin.js' ),
 			array(
 				'jquery',
 				'backbone',
@@ -361,21 +397,27 @@ class Thrive_Product_Manager {
 		$tag          = $_REQUEST['tag'];
 		$product_list = TPM_Product_List::get_instance();
 		$product      = $product_list->get_product_instance( $tag );
+		$product_type = ( $product instanceof TPM_Product_Plugin ) ? 'plugins' : 'themes';
 
-		/* for installing plugins, user needs to have the `install_plugins` cap */
-		if ( $product instanceof TPM_Product_Plugin && ! current_user_can( 'install_plugins' ) ) {
-			wp_send_json_error( array(
-				'status' => 'failed',
-				'extra'  => 'You are not allowed to install/license plugins!',
-			) );
-		}
-
-		/* for installing themes, user needs to have the `install_themes` cap */
-		if ( $product instanceof TPM_Product_Theme && ! current_user_can( 'install_themes' ) ) {
-			wp_send_json_error( array(
-				'status' => 'failed',
-				'extra'  => 'You are not allowed to install/license themes!',
-			) );
+		/* Specialized permission checks */
+		if ( ! $product->is_installed() ) {
+			/* 1. if product is not installed, user needs to have the `install_plugins`/`install_themes` capability */
+			$capability = ( $product instanceof TPM_Product_Plugin ) ? 'install_plugins' : 'install_themes';
+			if ( ! current_user_can( $capability ) ) {
+				wp_send_json_error( array(
+					'status' => 'failed',
+					'extra'  => 'You are not allowed to install ' . $product_type . '!',
+				) );
+			}
+		} else {
+			/* 2. if product is installed, user needs to have the `activate_plugins`/`switch_themes` capability */
+			$capability = ( $product instanceof TPM_Product_Plugin ) ? 'activate_plugins' : 'switch_themes';
+			if ( ! current_user_can( $capability ) ) {
+				wp_send_json_error( array(
+					'status' => 'failed',
+					'extra'  => 'You are not allowed to activate/license ' . $product_type . '!',
+				) );
+			}
 		}
 
 		$data = array(
@@ -694,11 +736,16 @@ class Thrive_Product_Manager {
 
 		if ( ! class_exists( 'TVE_PluginUpdateChecker', false ) ) {
 			/* this is the case when no thrive plugins are installed / activated - use the contained version of the update manager */
-			require_once $this->path( 'plugin-updates/plugin-update-checker.php' );
+			require_once $this->path( 'thrive-dashboard/inc/plugin-updates/plugin-update-checker.php' );
 		}
 
 		if ( ! class_exists( 'TVE_PluginUpdateChecker', false ) ) {
 			return;
+		}
+
+		if ( ! function_exists( 'tvd_get_update_channel' ) ) {
+			/* this doesn't exist in case TPM is the only installed product and user has not connected his TTW account. */
+			require_once $this->path( 'thrive-dashboard/inc/functions.php' );
 		}
 
 		new TVE_PluginUpdateChecker(

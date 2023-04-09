@@ -67,6 +67,7 @@ class TD_TTW_Connection {
 
 		delete_option( static::NAME );
 		thrive_delete_transient( TD_TTW_User_Licenses::NAME );
+		thrive_delete_transient( 'td_ttw_connection_error' );
 	}
 
 	public function get_login_url() {
@@ -258,7 +259,7 @@ class TD_TTW_Connection {
 	 */
 	public function push_message( $str, $status ) {
 
-		$str = __( $str, TVE_DASH_TRANSLATE_DOMAIN );
+		$str = __( $str, 'thrive-dash' );
 
 		$this->_messages[] = array(
 			'message' => $str,
@@ -278,7 +279,7 @@ class TD_TTW_Connection {
 
 		if ( ! empty( $_REQUEST['td_token'] ) && ! $this->_is_valid_token( base64_decode( sanitize_text_field( $_REQUEST['td_token'] ) ) ) ) {
 
-			$this->_errors[] = __( 'Invalid token', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_errors[] = __( 'Invalid token', 'thrive-dash' );
 
 			return false;
 		}
@@ -287,7 +288,7 @@ class TD_TTW_Connection {
 
 		if ( ! $this->_is_valid_data( $data ) ) {
 
-			$this->_errors[] = __( 'Invalid data', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_errors[] = __( 'Invalid data', 'thrive-dash' );
 
 			return false;
 		}
@@ -305,6 +306,8 @@ class TD_TTW_Connection {
 		$data['status'] = static::CONNECTED;
 		$this->_data    = $data;
 		update_option( static::NAME, $data );
+		/* always delete the stored license details transient when a new connection is made */
+		thrive_delete_transient( TD_TTW_User_Licenses::NAME );
 
 		return true;
 	}

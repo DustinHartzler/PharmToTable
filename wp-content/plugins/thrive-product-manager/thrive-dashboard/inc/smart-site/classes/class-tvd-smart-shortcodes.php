@@ -90,4 +90,21 @@ final class TVD_Smart_Shortcodes {
 		return $data;
 	}
 
+	/**
+	 * Decode the link settings attributes into an array
+	 *
+	 * @param $link_attr
+	 *
+	 * @return array|mixed
+	 */
+	public static function tvd_decode_link_attributes( $link_attr ) {
+		$data = [];
+
+		if ( ! empty( $link_attr['static-link'] ) ) {
+			$data = json_decode( htmlspecialchars_decode( $link_attr['static-link'] ), true );
+		}
+
+		return $data;
+	}
+
 }

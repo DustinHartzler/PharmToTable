@@ -82,7 +82,7 @@ class TVD_Global_Shortcodes {
 				}
 			} elseif ( extension_loaded( 'dom' ) && isset( $link_attr['className'] ) && function_exists( 'mb_convert_encoding' ) ) {
 				/**
-				 * For elements already containing an a link just add the old classes (e.g global styles)
+				 * For elements already containing a link just add the old classes (e.g. global styles)
 				 */
 				$dom = new DOMDocument;
 				@$dom->loadHTML( mb_convert_encoding( $shortcode_content, 'HTML-ENTITIES', 'UTF-8' ) );
@@ -94,6 +94,10 @@ class TVD_Global_Shortcodes {
 					$link = $items->item( $i );
 					if ( $link ) {
 						$link->setAttribute( 'class', $link_attr['className'] );
+
+						if ( isset( $link_attr['data-css'] ) ) {
+							$link->setAttribute( 'data-css', $link_attr['data-css'] );
+						}
 					}
 				}
 
@@ -122,110 +126,110 @@ class TVD_Global_Shortcodes {
 		$shortcodes_without_params = array(
 			/* Content */
 			'the_ID'    => array(
-				'name'      => __( 'Post ID', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Post ID', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_content',
 				'fn'        => 'content_shortcode',
 				'group'     => 'Content',
 			),
 			'the_title' => array(
-				'name'      => __( 'Post title', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Post title', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_content',
 				'fn'        => 'content_shortcode',
 				'group'     => 'Content',
 			),
 			'post_type' => array(
-				'name'      => __( 'Post type', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Post type', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_content',
 				'fn'        => 'content_shortcode',
 				'group'     => 'Content',
 			),
 			'permalink' => array(
-				'name'      => __( 'Post URL', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Post URL', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_content',
 				'fn'        => 'content_shortcode',
 				'group'     => 'Content',
 			),
 			/* Time & date*/
 			'd M Y'     => array(
-				'name'      => esc_html__( 'Date (14 Aug 2029)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Date (14 Aug 2029)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'd.n.Y'     => array(
-				'name'      => esc_html__( 'Date (14.8.2029)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Date (14.8.2029)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'd-m-Y'     => array(
-				'name'      => esc_html__( 'Date (14-08-2029)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Date (14-08-2029)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'd/m/Y'     => array(
-				'name'      => esc_html__( 'Date (14/08/2029)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Date (14/08/2029)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'G:i:s'     => array(
-				'name'      => esc_html__( 'Time (23:59:59)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Time (23:59:59)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'G:i'       => array(
-				'name'      => esc_html__( 'Time (23:59)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Time (23:59)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'd'         => array(
-				'name'      => esc_html__( 'Day (01–31)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Day (01–31)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'jS'        => array(
-				'name'      => esc_html__( 'Day (1st, 2nd, 15th - 31st)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Day (1st, 2nd, 15th - 31st)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'l'         => array(
-				'name'      => esc_html__( 'Day of the week (Monday)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Day of the week (Monday)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'D'         => array(
-				'name'      => esc_html__( 'Day of the week (Mon)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Day of the week (Mon)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'm'         => array(
-				'name'      => esc_html__( 'Month (01-12)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Month (01-12)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'F'         => array(
-				'name'      => esc_html__( 'Month (January - December)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Month (January - December)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'M'         => array(
-				'name'      => esc_html__( 'Month (Jan – Dec)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Month (Jan – Dec)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
 			),
 			'Y'         => array(
-				'name'      => esc_html__( 'Year (2029)', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => esc_html__( 'Year (2029)', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_date',
 				'fn'        => 'date_shortcode',
 				'group'     => 'Time & date',
@@ -233,85 +237,85 @@ class TVD_Global_Shortcodes {
 		);
 
 		$resources = array(
-			'get'    => __( 'URL QueryString', TVE_DASH_TRANSLATE_DOMAIN ),
-			'post'   => __( 'POST variable', TVE_DASH_TRANSLATE_DOMAIN ),
-			'cookie' => __( 'Cookie', TVE_DASH_TRANSLATE_DOMAIN ),
+			'get'    => __( 'URL QueryString', 'thrive-dash' ),
+			'post'   => __( 'POST variable', 'thrive-dash' ),
+			'cookie' => __( 'Cookie', 'thrive-dash' ),
 		);
 
 		$shortcodes_with_default = array(
 			/* User Data */
 			'username'     => array(
-				'name'      => __( 'Wordpress username', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress username', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
-				'link'      => __( 'Link to user profile', TVE_DASH_TRANSLATE_DOMAIN ),
+				'link'      => __( 'Link to user profile', 'thrive-dash' ),
 			),
 			'user_email'   => array(
-				'name'      => __( 'Wordpress user email', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress user email', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
 			'role'         => array(
-				'name'      => __( 'Wordpress user role', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress user role', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
 			'first_name'   => array(
-				'name'      => __( 'Wordpress user first name', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress user first name', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
-				'link'      => __( 'Link to user profile', TVE_DASH_TRANSLATE_DOMAIN ),
+				'link'      => __( 'Link to user profile', 'thrive-dash' ),
 			),
 			'last_name'    => array(
-				'name'      => __( 'Wordpress user last name', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress user last name', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
-				'link'      => __( 'Link to user profile', TVE_DASH_TRANSLATE_DOMAIN ),
+				'link'      => __( 'Link to user profile', 'thrive-dash' ),
 			),
 			'nickname'     => array(
-				'name'      => __( 'Wordpress user nickname', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress user nickname', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
 			'display_name' => array(
-				'name'      => __( 'Wordpress user public name', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress user public name', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
 			'website'      => array(
-				'name'      => __( 'Wordpress user website', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress user website', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
 			'user_bio'     => array(
-				'name'      => __( 'Wordpress user bio', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Wordpress user bio', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
 			'ip'           => array(
-				'name'      => __( 'IP', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'IP', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
 			'browser'      => array(
-				'name'      => __( 'Browser', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Browser', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_user',
 				'fn'        => 'user_data_shortcode',
 				'group'     => 'User data',
 			),
 			/* Source */
 			'HTTP_REFERER' => array(
-				'name'      => __( 'Referring URL', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name'      => __( 'Referring URL', 'thrive-dash' ),
 				'shortcode' => 'thrv_dynamic_data_source',
 				'fn'        => 'source_shortcode',
 				'group'     => 'Source',
@@ -343,7 +347,7 @@ class TVD_Global_Shortcodes {
 				'input'       => array(
 					'default' => array(
 						'type'  => 'input',
-						'label' => __( 'Default Value', TVE_DASH_TRANSLATE_DOMAIN ),
+						'label' => __( 'Default Value', 'thrive-dash' ),
 						'value' => '',
 					),
 					'id'      => array(
@@ -396,12 +400,12 @@ class TVD_Global_Shortcodes {
 				'input'       => array(
 					'var_name' => array(
 						'type'  => 'input',
-						'label' => __( 'Variable name', TVE_DASH_TRANSLATE_DOMAIN ),
+						'label' => __( 'Variable name', 'thrive-dash' ),
 						'value' => '',
 					),
 					'default'  => array(
 						'type'  => 'input',
-						'label' => __( 'Default Value', TVE_DASH_TRANSLATE_DOMAIN ),
+						'label' => __( 'Default Value', 'thrive-dash' ),
 						'value' => '',
 					),
 					'id'       => array(
@@ -463,27 +467,27 @@ class TVD_Global_Shortcodes {
 		// phpcs:disable
 		return apply_filters( 'tvd_global_data', array(
 			array(
-				'name' => __( 'Homepage', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name' => __( 'Homepage', 'thrive-dash' ),
 				'url'  => get_home_url(),
 				'show' => true,
 			),
 			array(
-				'name' => __( 'Blog', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name' => __( 'Blog', 'thrive-dash' ),
 				'url'  => get_option( 'page_for_posts' ) ? get_permalink( get_option( 'page_for_posts' ) ) : get_home_url(),
 				'show' => true,
 			),
 			array(
-				'name' => __( 'RSS Feed', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name' => __( 'RSS Feed', 'thrive-dash' ),
 				'url'  => get_home_url() . '/feed',
 				'show' => true,
 			),
 			array(
-				'name' => __( 'Login', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name' => __( 'Login', 'thrive-dash' ),
 				'url'  => wp_login_url(),
 				'show' => true,
 			),
 			array(
-				'name' => __( 'Logout', TVE_DASH_TRANSLATE_DOMAIN ),
+				'name' => __( 'Logout', 'thrive-dash' ),
 				'url'  => wp_logout_url(),
 				'show' => true,
 			),

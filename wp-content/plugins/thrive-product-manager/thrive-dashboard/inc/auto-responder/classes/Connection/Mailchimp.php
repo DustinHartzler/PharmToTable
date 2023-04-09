@@ -10,12 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 02.04.2015
- * Time: 15:33
- */
 class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_Abstract {
 
 	/**
@@ -89,7 +83,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		}
 
 		if ( empty( $_POST['connection']['key'] ) ) {
-			return $this->error( __( 'You must provide a valid Mailchimp key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mailchimp key', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $connection );
@@ -97,7 +91,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Mailchimp using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Mailchimp using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -138,7 +132,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		 */
 		$this->get_api_custom_fields( array(), true, true );
 
-		return $this->success( __( 'Mailchimp connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Mailchimp connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -480,7 +474,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 		$arguments = (array) $arguments;
 
 		if ( empty( $list_identifier ) || empty( $arguments ) ) {
-			return __( 'Invalid arguments supplied in ' . __METHOD__, TVE_DASH_TRANSLATE_DOMAIN );
+			return __( 'Invalid arguments supplied in ' . __METHOD__, 'thrive-dash' );
 		}
 
 		// Build optin and status
@@ -526,9 +520,9 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 			}
 		} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
 			// mailchimp returns 404 if email contact already exists?
-			//$e->getMessage() ? $e->getMessage() : __( 'Unknown Mailchimp Error', TVE_DASH_TRANSLATE_DOMAIN );
+			//$e->getMessage() ? $e->getMessage() : __( 'Unknown Mailchimp Error', 'thrive-dash' );
 		} catch ( Exception $e ) {
-			return $e->getMessage() ?: __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ?: __( 'Unknown Error', 'thrive-dash' );
 		}
 
 		// Add tags for other optin beside double
@@ -537,7 +531,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 				$tags = explode( ',', $arguments['mailchimp_tags'] );
 				$this->addTagsToContact( $list_identifier, $email, $tags );
 			} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
-				return __( 'Assign tag error: ' . $e->getMessage(), TVE_DASH_TRANSLATE_DOMAIN );
+				return __( 'Assign tag error: ' . $e->getMessage(), 'thrive-dash' );
 			}
 		}
 
@@ -626,7 +620,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	 */
 	public function addTagsToContact( $list_id, $email_address, $tags ) {
 		if ( ! $list_id || ! $email_address || ! $tags ) {
-			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', 'thrive-dash' ) );
 		}
 
 		$list_tags = $this->getListTags( $list_id );
@@ -643,7 +637,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 					try {
 						$this->assignTag( $list_id, $tag_id, $email_address );
 					} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
-						$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', TVE_DASH_TRANSLATE_DOMAIN );
+						$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', 'thrive-dash' );
 					}
 
 					continue;
@@ -718,9 +712,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 	public function assignTag( $list_id, $tag_id, $email_address ) {
 
 		if ( ! $list_id || ! $tag_id || ! $email_address ) {
-			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', TVE_DASH_TRANSLATE_DOMAIN ) );
-
-			return false;
+			throw new Thrive_Dash_Api_Mailchimp_Exception( __( 'Missing required parameters for adding tags to contact', 'thrive-dash' ) );
 		}
 
 		$save_tag = $this->get_api()->request( 'lists/' . $list_id . '/segments/' . $tag_id . '/members', array( 'email_address' => $email_address ), 'POST' );
@@ -938,7 +930,7 @@ class Thrive_Dash_List_Connection_Mailchimp extends Thrive_Dash_List_Connection_
 
 			return $lists;
 		} catch ( Thrive_Dash_Api_Mailchimp_Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', 'thrive-dash' );
 
 			return false;
 		}

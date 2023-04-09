@@ -45,7 +45,7 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Zoom key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Zoom key', 'thrive-dash' ) );
 		}
 
 		$url = self::zoom_url;
@@ -55,7 +55,7 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Zoom using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to Zoom using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -63,7 +63,7 @@ class Thrive_Dash_List_Connection_Zoom extends Thrive_Dash_List_Connection_Abstr
 		 */
 		$this->save();
 
-		return $this->success( __( 'Zoom connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'Zoom connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

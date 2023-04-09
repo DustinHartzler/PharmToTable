@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 9/10/2015
- * Time: 4:59 PM
- */
 class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -51,7 +45,7 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 		$app_key = ! empty( $_POST['connection']['api_key'] ) ? sanitize_text_field( $_POST['connection']['api_key'] ) : '';
 
 		if ( empty( $url ) || empty( $app_key ) ) {
-			return $this->error( __( "Invalid URL or API key", TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( "Invalid URL or API key", 'thrive-dash' ) );
 		}
 
 		$lists = ! empty( $_POST['connection']['lists'] ) ? map_deep( $_POST['connection']['lists'], 'sanitize_text_field' ) : array();
@@ -59,7 +53,7 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 		$lists = array_filter( $lists );
 
 		if ( empty( $lists ) ) {
-			return $this->error( __( 'Please provide at least one list for your subscribers', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'Please provide at least one list for your subscribers', 'thrive-dash' ) );
 		}
 
 		$credentials = array( 'lists' => $lists, 'api_key' => $app_key, 'url' => $url );
@@ -67,12 +61,12 @@ class Thrive_Dash_List_Connection_ArpReach extends Thrive_Dash_List_Connection_A
 		$this->set_credentials( $credentials );
 
 		if ( $this->test_connection() !== true ) {
-			return $this->error( __( "Invalid URL or API key", TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( "Invalid URL or API key", 'thrive-dash' ) );
 		}
 
 		$this->save();
 
-		return $this->success( __( 'ArpReach connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'ArpReach connected successfully', 'thrive-dash' ) );
 	}
 
 	/**

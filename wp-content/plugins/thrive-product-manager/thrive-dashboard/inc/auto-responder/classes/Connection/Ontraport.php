@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Danut
- * Date: 4/9/2015
- * Time: 2:16 PM
- */
 class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -53,7 +47,7 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 		$app_id = ! empty( $_POST['connection']['app_id'] ) ? sanitize_text_field( $_POST['connection']['app_id'] ) : '';
 
 		if ( empty( $key ) || empty( $app_id ) ) {
-			return $this->error( __( 'You must provide a valid Ontraport AppID/APIKey', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Ontraport AppID/APIKey', 'thrive-dash' ) );
 		}
 
 		$this->set_credentials( $this->post( 'connection' ) );
@@ -61,14 +55,14 @@ class Thrive_Dash_List_Connection_Ontraport extends Thrive_Dash_List_Connection_
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to Ontraport: %s', TVE_DASH_TRANSLATE_DOMAIN ), $this->_error ) );
+			return $this->error( sprintf( __( 'Could not connect to Ontraport: %s', 'thrive-dash' ), $this->_error ) );
 		}
 
 		/**
 		 * finally, save the connection details
 		 */
 		$this->save();
-		$this->success( __( 'Ontraport connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		$this->success( __( 'Ontraport connected successfully', 'thrive-dash' ) );
 
 		return true;
 	}

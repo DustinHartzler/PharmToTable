@@ -45,9 +45,8 @@ class TD_TTW_Proxy_Request {
 	 */
 	public function execute( $route ) {
 
-		// Disable proxy request for localhost testing when debug is on
-		if ( 'http://local.thrivethemes.com' === TD_TTW_Connection::get_ttw_url() && TD_TTW_Connection::is_debug_mode() ) {
-
+		// Allow bypassing proxy server
+		if ( defined( 'TPM_BYPASS_PROXY' ) && TPM_BYPASS_PROXY ) {
 			return $this->request->execute();
 		}
 

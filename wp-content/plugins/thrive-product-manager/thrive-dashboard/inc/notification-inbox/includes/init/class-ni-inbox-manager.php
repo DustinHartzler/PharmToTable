@@ -52,11 +52,11 @@ class TVE_Dash_InboxManager {
 	 */
 	public static function instance() {
 
-		if ( empty( self::$_instance ) ) {
-			self::$_instance = new self();
+		if ( empty( static::$_instance ) ) {
+			static::$_instance = new self();
 		}
 
-		return self::$_instance;
+		return static::$_instance;
 	}
 
 	/**
@@ -67,7 +67,7 @@ class TVE_Dash_InboxManager {
 	public function set_read( $msg_id ) {
 
 		if ( empty( $msg_id ) ) {
-			throw new Exception( __( __METHOD__ . ' required message_id on updating notification status. ', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Exception( __( __METHOD__ . ' required message_id on updating notification status. ', 'thrive-dash' ) );
 		}
 
 		$this->_refresh_messages();
@@ -134,14 +134,14 @@ class TVE_Dash_InboxManager {
 	public function prepend( $message ) {
 
 		if ( ! $message instanceof TD_Inbox_Message ) {
-			throw new Exception( __( __METHOD__ . ' must be instanceof TD_Inbox_Message. ', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Exception( __( __METHOD__ . ' must be instanceof TD_Inbox_Message. ', 'thrive-dash' ) );
 		}
 
 		$message_id = $message->get_property( 'id' );
 
 		try {
 			if ( $this->_message_exists( $message_id ) ) {
-				throw new Exception( __METHOD__ . __( " Could not save, [{$message_id}] already exists.", TVE_DASH_TRANSLATE_DOMAIN ) );
+				throw new Exception( __METHOD__ . __( " Could not save, [{$message_id}] already exists.", 'thrive-dash' ) );
 			}
 		} catch ( Exception $e ) {
 			throw new Exception( ( $e->getMessage() ) );
@@ -160,14 +160,14 @@ class TVE_Dash_InboxManager {
 	public function append( $message ) {
 
 		if ( ! $message instanceof TD_Inbox_Message ) {
-			throw new Exception( __METHOD__ . __( ' message must be instanceof TD_Inbox_Message. ', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Exception( __METHOD__ . __( ' message must be instanceof TD_Inbox_Message. ', 'thrive-dash' ) );
 		}
 
 		$message_id = $message->get_property( 'id' );
 
 		try {
 			if ( $this->_message_exists( $message_id ) ) {
-				throw new Exception( __METHOD__ . __( " Could not save, [{$message_id}] already exists.", TVE_DASH_TRANSLATE_DOMAIN ) );
+				throw new Exception( __METHOD__ . __( " Could not save, [{$message_id}] already exists.", 'thrive-dash' ) );
 			}
 		} catch ( Exception $e ) {
 			throw new Exception( ( $e->getMessage() ) );
@@ -249,7 +249,7 @@ class TVE_Dash_InboxManager {
 	public function push_notifications() {
 
 		if ( empty( $this->list ) ) {
-			throw new Exception( __( 'Could not push_notification with empty arguments', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Exception( __( 'Could not push_notification with empty arguments', 'thrive-dash' ) );
 		}
 
 		return $this->_save();
@@ -308,7 +308,7 @@ class TVE_Dash_InboxManager {
 	private function _message_exists( $msg_id ) {
 
 		if ( ! $msg_id ) {
-			throw new Exception( __METHOD__ . __( ' $msg_id can\'t be empty.', TVE_DASH_TRANSLATE_DOMAIN ) );
+			throw new Exception( __METHOD__ . __( ' $msg_id can\'t be empty.', 'thrive-dash' ) );
 		}
 
 		// Set / refresh existing DB data to $_existing_list array

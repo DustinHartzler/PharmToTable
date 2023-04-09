@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: radu
- * Date: 02.04.2015
- * Time: 15:33
- */
 class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * Return the connection type
@@ -67,7 +61,7 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not test Mautic connection: %s', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not test Mautic connection: %s', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -92,15 +86,15 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 
 
 		if ( empty( $url ) ) {
-			return $this->error( __( 'You must provide a valid Mautic api url', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mautic api url', 'thrive-dash' ) );
 		}
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid Mautic Public Key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mautic Public Key', 'thrive-dash' ) );
 		}
 
 		if ( empty( $secret ) ) {
-			return $this->error( __( 'You must provide a valid Mautic Secret Key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid Mautic Secret Key', 'thrive-dash' ) );
 		}
 
 
@@ -194,7 +188,7 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 
 			return $lists;
 		} catch ( Exception $e ) {
-			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', TVE_DASH_TRANSLATE_DOMAIN );
+			$this->_error = $e->getMessage() . ' ' . __( 'Please re-check your API connection details.', 'thrive-dash' );
 
 			return false;
 		}
@@ -246,7 +240,7 @@ class Thrive_Dash_List_Connection_Mautic extends Thrive_Dash_List_Connection_Abs
 
 			return true;
 		} catch ( Exception $e ) {
-			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', TVE_DASH_TRANSLATE_DOMAIN );
+			return $e->getMessage() ? $e->getMessage() : __( 'Unknown Error', 'thrive-dash' );
 		}
 
 	}

@@ -16,22 +16,22 @@ $using_https = ( strpos( get_site_url(), 'https://' ) !== false ) && is_ssl() ? 
 
 <?php if ( ! $using_https ) : ?>
 	<div class="tvd-row tvd-text-red">
-		<p><?php echo esc_html__( 'In order to be able to create a connection between your website and Zapier, your website must be secure.', TVE_DASH_TRANSLATE_DOMAIN ); ?></p>
+		<p><?php echo esc_html__( 'In order to be able to create a connection between your website and Zapier, your website must be secure.', 'thrive-dash' ); ?></p>
 		<p>&nbsp;</p>
-		<p><?php echo esc_html__( 'Thus, for security reasons, please make sure that your website has a valid SSL certificate and it works properly on the "https" protocol.', TVE_DASH_TRANSLATE_DOMAIN ); ?></p>
+		<p><?php echo esc_html__( 'Thus, for security reasons, please make sure that your website has a valid SSL certificate and it works properly on the "https" protocol.', 'thrive-dash' ); ?></p>
 		<p>&nbsp;</p>
-		<p><?php echo sprintf( esc_html__( 'If you need more information on this matter, please read %s this article%s.', TVE_DASH_TRANSLATE_DOMAIN ), '<a href="https://thrivethemes.com/tkb_item/how-to-make-sure-your-website-is-secure-with-ssl-and-https/" target="_blank">', '</a>' ); ?></p>
+		<p><?php echo sprintf( esc_html__( 'If you need more information on this matter, please read %s this article%s.', 'thrive-dash' ), '<a href="https://thrivethemes.com/tkb_item/how-to-make-sure-your-website-is-secure-with-ssl-and-https/" target="_blank">', '</a>' ); ?></p>
 	</div>
 <?php else : ?>
 	<div class="tdz-mb20">
-		<p><?php echo esc_html__( 'Copy the API Key and the Blog URL from the fields below to connect to Zapier.', TVE_DASH_TRANSLATE_DOMAIN ); ?></p>
+		<p><?php echo esc_html__( 'Copy the API Key and the Blog URL from the fields below to connect to Zapier.', 'thrive-dash' ); ?></p>
 	</div>
 	<div class="tvd-row">
 		<form class="tvd-col tvd-s12 tvd-zapier-rel">
 			<input type="hidden" name="api" value="<?php echo esc_attr( $this->get_key() ); ?>"/>
 			<div class="tvd-input-field">
 				<input id="tvd-zapier-api-key" readonly type="text" name="connection[api_key]" value="<?php echo esc_attr( $this->get_api_key() ); ?>">
-				<label for="tvd-zapier-api-key"><?php echo esc_html__( 'API key', TVE_DASH_TRANSLATE_DOMAIN ); ?></label>
+				<label for="tvd-zapier-api-key"><?php echo esc_html__( 'API key', 'thrive-dash' ); ?></label>
 			</div>
 
 			<div class="tvd-row tvd-collapse tvd-copy-row">
@@ -51,7 +51,7 @@ $using_https = ( strpos( get_site_url(), 'https://' ) !== false ) && is_ssl() ? 
 
 			<div class="tvd-input-field">
 				<input id="tvd-zapier-api-blog_url" readonly type="text" name="connection[blog_url]" value="<?php echo esc_attr( $this->get_blog_url() ); ?>">
-				<label for="tvd-zapier-api-blog_url"><?php echo esc_html__( 'Blog URL', TVE_DASH_TRANSLATE_DOMAIN ); ?></label>
+				<label for="tvd-zapier-api-blog_url"><?php echo esc_html__( 'Blog URL', 'thrive-dash' ); ?></label>
 			</div>
 
 			<div class="tvd-row tvd-collapse tvd-copy-row">
@@ -76,10 +76,10 @@ $using_https = ( strpos( get_site_url(), 'https://' ) !== false ) && is_ssl() ? 
 	<div class="tvd-card-action">
 		<div class="tvd-row tvd-no-margin">
 			<div class="tvd-col tvd-s12 tvd-m6">
-				<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-dark tvd-full-btn tvd-waves-effect"><?php echo esc_html__( 'Cancel', TVE_DASH_TRANSLATE_DOMAIN ); ?></a>
+				<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-dark tvd-full-btn tvd-waves-effect"><?php echo esc_html__( 'Cancel', 'thrive-dash' ); ?></a>
 			</div>
 			<div class="tvd-col tvd-s12 tvd-m6">
-				<a class="tvd-api-connect tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn"><?php echo esc_html__( 'Connect', TVE_DASH_TRANSLATE_DOMAIN ); ?></a>
+				<a class="tvd-api-connect tvd-waves-effect tvd-waves-light tvd-btn tvd-btn-green tvd-full-btn"><?php echo esc_html__( 'Connect', 'thrive-dash' ); ?></a>
 			</div>
 		</div>
 	</div>

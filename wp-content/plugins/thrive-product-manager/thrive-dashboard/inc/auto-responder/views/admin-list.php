@@ -23,11 +23,11 @@ unset( $available_apis['zoom'] );
 <?php include TVE_DASH_PATH . '/templates/header.phtml'; ?>
 <div class="tvd-v-spacer"></div>
 <div class="tvd-container tvd-hide tvd-show-onload">
-	<h3 class="tvd-section-title"><?php echo esc_html__( "Active Connections", TVE_DASH_TRANSLATE_DOMAIN ) ?></h3>
+	<h3 class="tvd-section-title"><?php echo esc_html__( "Active Connections", 'thrive-dash' ) ?></h3>
 	<div class="tvd-row tvd-api-list"></div>
 
 	<?php if ( ! empty( Thrive_Dash_List_Manager::get_third_party_autoresponders() ) ) : ?>
-		<h3 class="tvd-section-title"><?php echo esc_html__( 'Third Party Connections', TVE_DASH_TRANSLATE_DOMAIN ) ?></h3>
+		<h3 class="tvd-section-title"><?php echo esc_html__( 'Third Party Connections', 'thrive-dash' ) ?></h3>
 		<div class="tvd-row tvd-third-party-api-list"></div>
 	<?php endif; ?>
 
@@ -37,17 +37,17 @@ unset( $available_apis['zoom'] );
 		</div>
 	</div>
 
-	<div class="tvd-row">
+	<div class="tvd-row tvd-connections-footer">
 		<div class="tvd-col tvd-s12 tvd-m6">
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=tve_dash_section' ) ); ?>"
 			   class="tvd-waves-effect tvd-waves-light tvd-btn-small tvd-btn-gray">
-				<?php echo esc_html__( "Back To Dashboard", TVE_DASH_TRANSLATE_DOMAIN ); ?>
+				<?php echo esc_html__( "Back To Dashboard", 'thrive-dash' ); ?>
 			</a>
 		</div>
 		<div class="tvd-col tvd-s12 tvd-m6">
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=tve_dash_api_error_log' ) ); ?>"
 			   class="tvd-btn-flat tvd-btn-flat-primary tvd-btn-flat-dark tvd-waves-effect tvd-right tvd-btn-small">
-				<?php echo esc_html__( "View Error Logs", TVE_DASH_TRANSLATE_DOMAIN ); ?>
+				<?php echo esc_html__( "View Error Logs", 'thrive-dash' ); ?>
 			</a>
 		</div>
 	</div>
@@ -70,19 +70,19 @@ unset( $available_apis['zoom'] );
 						<# if ( item.get('can_test') ) { #>
 						<a class="tvd-api-test tvd-btn tvd-btn-green tvd-btn-toggle">
 							<i class="tvd-icon-exchange tvd-left"></i>
-							<span class="tvd-btn-text"><?php echo esc_html__( "Test", TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
+							<span class="tvd-btn-text"><?php echo esc_html__( "Test", 'thrive-dash' ) ?></span>
 						</a>
 						<# } #>
 						<# if ( item.get('can_edit') ) { #>
 						<a class="tvd-api-edit tvd-btn tvd-btn-blue tvd-btn-toggle">
 							<i class="tvd-icon-pencil tvd-left"></i>
-							<span class="tvd-btn-text"><?php echo esc_html__( "Edit", TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
+							<span class="tvd-btn-text"><?php echo esc_html__( "Edit", 'thrive-dash' ) ?></span>
 						</a>
 						<# } #>
 						<# if ( item.get('can_delete') ) { #>
 						<a class="tvd-api-delete tvd-btn tvd-btn-red tvd-btn-toggle">
 							<i class="tvd-icon-trash-o tvd-left"></i>
-							<span class="tvd-btn-text"><?php echo esc_html__( "Delete", TVE_DASH_TRANSLATE_DOMAIN ) ?></span>
+							<span class="tvd-btn-text"><?php echo esc_html__( "Delete", 'thrive-dash' ) ?></span>
 						</a>
 						<# } #>
 						<#= item.get('status_icon') || '' #>
@@ -97,7 +97,7 @@ unset( $available_apis['zoom'] );
 	<div class="tvd-card tvd-small tvd-card-new tvd-valign-wrapper" id="tvd-add-new-api">
 		<div class="tvd-card-content tvd-valign tvd-center-align tvd-pointer">
 			<i class="tvd-icon-plus tvd-icon-rounded tvd-icon-medium"></i>
-			<h4><?php echo esc_html__( "Add new Connection", TVE_DASH_TRANSLATE_DOMAIN ) ?></h4>
+			<h4><?php echo esc_html__( "Add new Connection", 'thrive-dash' ) ?></h4>
 		</div>
 	</div>
 </script>
@@ -111,7 +111,7 @@ unset( $available_apis['zoom'] );
 						<select id="selected-api">
 							<optgroup label="" class="tvd-hide">
 								<option
-										value="none"><?php echo esc_html__( "- Select an app -", TVE_DASH_TRANSLATE_DOMAIN ) ?></option>
+										value="none"><?php echo esc_html__( "- Select an app -", 'thrive-dash' ) ?></option>
 							</optgroup>
 						</select>
 					</div>
@@ -133,19 +133,19 @@ unset( $available_apis['zoom'] );
 			<div class="tvd-center-align">
 				<i class="tvd-icon-close tvd-icon-big tvd-icon-border tvd-icon-rounded"></i>
 			</div>
-			<h3 class="tvd-card-title"><?php echo esc_html__( "The connection didn't work.", TVE_DASH_TRANSLATE_DOMAIN ) ?></h3>
+			<h3 class="tvd-card-title"><?php echo esc_html__( "The connection didn't work.", 'thrive-dash' ) ?></h3>
 			<p class="tvd-center tvd-card-spacer">
-				<?php echo esc_html__( "Error message:", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+				<?php echo esc_html__( "Error message:", 'thrive-dash' ) ?>
 				<#= item.get('response').message#>
 			</p>
 			<br><br>
 			<div class="tvd-card-action">
 				<div class="tvd-row tvd-no-margin">
 					<div class="tvd-col tvd-s12 tvd-m6">
-						<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-light tvd-waves-effect"><?php echo esc_html__( "Cancel", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+						<a class="tvd-api-cancel tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-light tvd-waves-effect"><?php echo esc_html__( "Cancel", 'thrive-dash' ) ?></a>
 					</div>
 					<div class="tvd-col tvd-s12 tvd-m6">
-						<a class="tvd-api-retry tvd-btn-flat tvd-btn-flat-primary tvd-btn-flat-light tvd-waves-effect"><?php echo esc_html__( "Retry", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+						<a class="tvd-api-retry tvd-btn-flat tvd-btn-flat-primary tvd-btn-flat-light tvd-waves-effect"><?php echo esc_html__( "Retry", 'thrive-dash' ) ?></a>
 					</div>
 				</div>
 			</div>
@@ -158,23 +158,23 @@ unset( $available_apis['zoom'] );
 		<div class="tvd-card-content tvd-center-align">
 			<i class="tvd-icon-check tvd-icon-big tvd-icon-border tvd-icon-rounded"></i>
 			<h3 class="tvd-modal-title">
-				<#= item.get('title') #><br/><?php echo esc_html__( "Connection Ready!", TVE_DASH_TRANSLATE_DOMAIN ) ?></h3>
+				<#= item.get('title') #><br/><?php echo esc_html__( "Connection Ready!", 'thrive-dash' ) ?></h3>
 			<p>
 				<# if(typeof item.get('success_message') !== 'undefined' && item.get('success_message') != '') { #>
 				<#= item.get('success_message') #>
 				<# } else { #>
 				<# if(item.get('key') === 'sendowl') { #>
-				<?php echo esc_html__( "You can now connect Thrive Apprentice to ", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+				<?php echo esc_html__( "You can now connect Thrive Apprentice to ", 'thrive-dash' ) ?>
 				<#= item.get('title') #>.
-				<a href="<?php echo esc_url( get_admin_url() . 'admin.php?page=tva_dashboard#sendowl_quick_start' ) ?>"><?php echo esc_html__( "Click here to discover the Quick Start Guide.", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+				<a href="<?php echo esc_url( get_admin_url() . 'admin.php?page=thrive_apprentice#settings/sendowl/quick-start' ) ?>"><?php echo esc_html__( "Click here to discover the Quick Start Guide.", 'thrive-dash' ) ?></a>
 				<# } else { #>
-				<?php echo esc_html__( "You can now connect your opt-in forms to ", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+				<?php echo esc_html__( "You can now connect your opt-in forms to ", 'thrive-dash' ) ?>
 				<#= item.get('title') #>.
 
 				<# if ( item.get('type') !== 'storage' ) { #>
 				<a class="wistia-popover[height=450,playerColor=2bb914,width=800]"
 				   href="//fast.wistia.net/embed/iframe/7sv6uvfshp?popover=true">
-					<?php echo esc_html__( "See how it's done.", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+					<?php echo esc_html__( "See how it's done.", 'thrive-dash' ) ?>
 				</a>
 				<# } #>
 
@@ -185,7 +185,7 @@ unset( $available_apis['zoom'] );
 			<div class="tvd-row">
 				<div class="tvd-col tvd-s12 tvd-m6 tvd-offset-m3">
 					<a href="javascript:void(0)"
-					   class="tvd-api-done tvd-btn-flat tvd-btn-flat-primary tvd-btn-flat-light tvd-full-btn tvd-btn-margin-top tvd-waves-effect"><?php echo esc_html__( "Done", TVE_DASH_TRANSLATE_DOMAIN ) ?></a>
+					   class="tvd-api-done tvd-btn-flat tvd-btn-flat-primary tvd-btn-flat-light tvd-full-btn tvd-btn-margin-top tvd-waves-effect"><?php echo esc_html__( "Done", 'thrive-dash' ) ?></a>
 				</div>
 			</div>
 		</div>
@@ -231,12 +231,12 @@ unset( $available_apis['zoom'] );
 				<i class="tvd-icon-close2"></i>
 			</a>
 			<i class="tvd-icon-exclamation tvd-icon-rounded tvd-icon-medium"></i>
-			<h4><?php echo esc_html__( "The connection failed.", TVE_DASH_TRANSLATE_DOMAIN ) ?></h4>
+			<h4><?php echo esc_html__( "The connection failed.", 'thrive-dash' ) ?></h4>
 			<p>
 				<#= item.get('response').message #>
 			</p>
 			<a class="tvd-btn-flat tvd-btn-flat-primary tvd-btn-flat-light tvd-api-edit tvd-waves-effect">
-				<?php echo esc_html__( "Edit settings", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+				<?php echo esc_html__( "Edit settings", 'thrive-dash' ) ?>
 			</a>
 		</div>
 	</div>
@@ -246,7 +246,7 @@ unset( $available_apis['zoom'] );
 	<div class="tvd-card tvd-small tvd-red">
 		<div class="tvd-card-content tvd-center-align">
 			<h4 class="tvd-margin-top">
-				<?php echo esc_html__( "Are you sure you want to delete this connection?", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+				<?php echo esc_html__( "Are you sure you want to delete this connection?", 'thrive-dash' ) ?>
 			</h4>
 		</div>
 		<div class="tvd-card-action">
@@ -254,12 +254,12 @@ unset( $available_apis['zoom'] );
 				<div class="tvd-col tvd-s12 tvd-m6">
 					<a class="tvd-api-delete-yes tvd-btn-flat tvd-btn-flat-secondary tvd-btn-flat-light tvd-left tvd-waves-effect"
 					   href="javascript:void(0)">
-						<?php echo esc_html__( "Yes, delete", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+						<?php echo esc_html__( "Yes, delete", 'thrive-dash' ) ?>
 					</a>
 				</div>
 				<div class="tvd-col tvd-s12 tvd-m6">
 					<a class="tvd-api-delete-no tvd-btn-flat tvd-btn-flat-primary tvd-btn-flat-light tvd-right tvd-waves-effect">
-						<?php echo esc_html__( "No, keep it", TVE_DASH_TRANSLATE_DOMAIN ) ?>
+						<?php echo esc_html__( "No, keep it", 'thrive-dash' ) ?>
 					</a>
 				</div>
 			</div>

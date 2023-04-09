@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Silence is golden!
 }
 
-/**
- * Created by PhpStorm.
- * User: Laura
- * Date: 21.09.2015
- * Time: 11:15
- */
 class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Abstract {
 	/**
 	 * @return string the API connection title
@@ -27,7 +21,7 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	 * @return string
 	 */
 	public function get_list_sub_title() {
-		return __( 'Choose from the following contact lists', TVE_DASH_TRANSLATE_DOMAIN );
+		return __( 'Choose from the following contact lists', 'thrive-dash' );
 	}
 
 	/**
@@ -47,18 +41,19 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	 * @return mixed
 	 */
 	public function read_credentials() {
-		$key = ! empty( $_POST['connection']['key'] ) ? sanitize_text_field( $_POST['connection']['key'] ) : '';
+		$connection = $this->post( 'connection' );
+		$key        = $connection['key'];
 
 		if ( empty( $key ) ) {
-			return $this->error( __( 'You must provide a valid HubSpot key', TVE_DASH_TRANSLATE_DOMAIN ) );
+			return $this->error( __( 'You must provide a valid HubSpot key', 'thrive-dash' ) );
 		}
 
-		$this->set_credentials( array( 'key' => $key ) );
+		$this->set_credentials( $connection );
 
 		$result = $this->test_connection();
 
 		if ( $result !== true ) {
-			return $this->error( sprintf( __( 'Could not connect to HubSpot using the provided key (<strong>%s</strong>)', TVE_DASH_TRANSLATE_DOMAIN ), $result ) );
+			return $this->error( sprintf( __( 'Could not connect to HubSpot using the provided key (<strong>%s</strong>)', 'thrive-dash' ), $result ) );
 		}
 
 		/**
@@ -66,7 +61,7 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 		 */
 		$this->save();
 
-		return $this->success( __( 'HubSpot connected successfully', TVE_DASH_TRANSLATE_DOMAIN ) );
+		return $this->success( __( 'HubSpot connected successfully', 'thrive-dash' ) );
 	}
 
 	/**
@@ -75,7 +70,6 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	 * @return bool|string true for success or error message for failure
 	 */
 	public function test_connection() {
-		/** @var Thrive_Dash_Api_HubSpot $api */
 		$api = $this->get_api();
 		/**
 		 * just try getting the static contact lists as a connection test
@@ -95,7 +89,14 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	 * @return mixed
 	 */
 	protected function get_api_instance() {
-		return new Thrive_Dash_Api_HubSpot( $this->param( 'key' ) );
+		$key     = $this->param( 'key' );
+		$version = $this->param( 'version' );
+
+		if ( ! empty( $version ) && $version == 2 ) {
+			return new Thrive_Dash_Api_HubSpotV2( $key );
+		}
+
+		return new Thrive_Dash_Api_HubSpot( $key );
 	}
 
 	/**
@@ -104,15 +105,16 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	 * @return array|bool for error
 	 */
 	protected function _get_lists() {
-		/** @var Thrive_Dash_Api_HubSpot $api */
 		$api = $this->get_api();
+
 		try {
 			$lists        = array();
 			$contactLists = $api->getContactLists();
 			foreach ( $contactLists as $key => $item ) {
 				$lists [] = array(
-					'id'   => $item['listId'],
-					'name' => $item['name'],
+					'id'      => $item['listId'],
+					'dynamic' => ! empty( $item['dynamic'] ),
+					'name'    => $item['name'],
 				);
 			}
 
@@ -133,9 +135,7 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	 * @return mixed
 	 */
 	public function add_subscriber( $list_identifier, $arguments ) {
-		/** @var Thrive_Dash_Api_HubSpot $api */
 		$api = $this->get_api();
-
 
 		try {
 			$name  = empty( $arguments['name'] ) ? '' : $arguments['name'];
@@ -158,5 +158,4 @@ class Thrive_Dash_List_Connection_HubSpot extends Thrive_Dash_List_Connection_Ab
 	public static function get_email_merge_tag() {
 		return '{{contact.email}}';
 	}
-
 }
