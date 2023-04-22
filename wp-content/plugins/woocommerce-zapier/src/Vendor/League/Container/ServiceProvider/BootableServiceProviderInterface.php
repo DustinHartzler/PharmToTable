@@ -1,8 +1,9 @@
 <?php
 
+declare (strict_types=1);
 namespace OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider;
 
-interface BootableServiceProviderInterface extends \OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderInterface
+interface BootableServiceProviderInterface extends ServiceProviderInterface
 {
     /**
      * Method will be invoked on registration of a service provider implementing
@@ -10,5 +11,5 @@ interface BootableServiceProviderInterface extends \OM4\WooCommerceZapier\Vendor
      *
      * @return void
      */
-    public function boot();
+    public function boot() : void;
 }

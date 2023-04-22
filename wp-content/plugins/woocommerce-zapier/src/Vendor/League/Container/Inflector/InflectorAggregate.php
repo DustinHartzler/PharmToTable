@@ -1,44 +1,36 @@
 <?php
 
+declare (strict_types=1);
 namespace OM4\WooCommerceZapier\Vendor\League\Container\Inflector;
 
-use OM4\WooCommerceZapier\Vendor\League\Container\ImmutableContainerAwareTrait;
-class InflectorAggregate implements \OM4\WooCommerceZapier\Vendor\League\Container\Inflector\InflectorAggregateInterface
+use Generator;
+use OM4\WooCommerceZapier\Vendor\League\Container\ContainerAwareTrait;
+class InflectorAggregate implements InflectorAggregateInterface
 {
-    use ImmutableContainerAwareTrait;
+    use ContainerAwareTrait;
     /**
-     * @var array
+     * @var Inflector[]
      */
     protected $inflectors = [];
-    /**
-     * {@inheritdoc}
-     */
-    public function add($type, callable $callback = null)
+    public function add(string $type, callable $callback = null) : Inflector
     {
-        if (\is_null($callback)) {
-            $inflector = new \OM4\WooCommerceZapier\Vendor\League\Container\Inflector\Inflector();
-            $this->inflectors[$type] = $inflector;
-            return $inflector;
-        }
-        $this->inflectors[$type] = $callback;
+        $inflector = new Inflector($type, $callback);
+        $this->inflectors[] = $inflector;
+        return $inflector;
     }
-    /**
-     * {@inheritdoc}
-     */
     public function inflect($object)
     {
-        foreach ($this->inflectors as $type => $inflector) {
-            if (!$object instanceof $type) {
-                continue;
-            }
-            if ($inflector instanceof \OM4\WooCommerceZapier\Vendor\League\Container\Inflector\Inflector) {
+        foreach ($this->getIterator() as $inflector) {
+            $type = $inflector->getType();
+            if ($object instanceof $type) {
                 $inflector->setContainer($this->getContainer());
                 $inflector->inflect($object);
-                continue;
             }
-            // must be dealing with a callable as the inflector
-            \call_user_func_array($inflector, [$object]);
         }
         return $object;
+    }
+    public function getIterator() : Generator
+    {
+        yield from $this->inflectors;
     }
 }

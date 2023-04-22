@@ -10,6 +10,7 @@ use OM4\WooCommerceZapier\Helper\FeatureChecker;
 use OM4\WooCommerceZapier\Helper\HTTPHeaders;
 use OM4\WooCommerceZapier\WooCommerceResource\Manager as ResourceManager;
 use WP_HTTP_Response;
+use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -123,6 +124,11 @@ class API {
 		sort( $controllers );
 
 		foreach ( $controllers as $controller_class ) {
+			/**
+			 * Controller instance.
+			 *
+			 * @var WP_REST_Controller $controller
+			 */
 			$controller = $this->container->get( $controller_class );
 			$controller->register_routes();
 			$this->controllers[] = $controller;
@@ -146,7 +152,7 @@ class API {
 	}
 
 	/**
-	 * For all WooCommerce Zapier REST API responses, include the our headers.
+	 * For all WooCommerce Zapier REST API responses, include our headers.
 	 *
 	 * @param WP_HTTP_Response $result Result to send to the client. Usually a WP_REST_Response.
 	 * @param WP_REST_Server   $server Server instance.

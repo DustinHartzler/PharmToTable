@@ -1,5 +1,40 @@
 === WooCommerce Zapier Changelog ===
 
+2023-04-17 - version 2.4.1
+* Fix: Avoid conflict with the "Subscriptions for WooCommerce: by WebToffee" plugin. PR #584
+* Change: Marked as compatible with WooCommerce 7.6.
+
+2023-04-13 - version 2.4.0
+* Full details: https://om4.io/?p=20328
+* New: "Order status changed to Cancelled" trigger rule. PR #566
+* New: "Order status changed to Completed" trigger rule. PR #566
+* New: "Order status changed to Failed" trigger rule. PR #566
+* New: "Order status changed to On" trigger rule. PR #566 hold
+* New: "Order status changed to Processing" trigger rule. PR #566
+* New: "Order status changed to Refunded" trigger rule. PR #566
+* New: "Booking status changed to Cancelled" trigger rule. PR #566
+* New: "Booking status changed to Complete" trigger rule. PR #566
+* New: "Booking status changed to Confirmed" trigger rule. PR #566
+* New: "Booking status changed to In Cart" trigger rule. PR #566
+* New: "Booking status changed to Paid" trigger rule. PR #566
+* New: "Booking status changed to Pending Confirmation" trigger rule. PR #566
+* New: "Subscription status changed to Active" trigger rule. PR #566
+* New: "Subscription status changed to Cancelled" trigger rule. PR #566
+* New: "Subscription status changed to Expired" trigger rule. PR #566
+* New: "Subscription status changed to On hold" trigger rule. PR #566
+* New: "Subscription status changed to Pending Cancellation" trigger rule. PR #566
+* Change: Rename "Order status changed" trigger rule to "Order status changed (any status)". PR #566
+* Change: Rename "Booking status changed" trigger rule to "Booking status changed (any status)". PR #566
+* Change: Rename "Subscription status changed" trigger rule to "Subscription status changed (any status)". PR #566
+* Change: Minimum required WordPress version is 5.7.0. PR #564
+* Change: Minimum required WooCommerce version is 6.0.0. PR #564
+* Change: Marked as compatible with WordPress 6.2. PR #564
+* Change: Marked as compatible with WooCommerce 7.5. PR #564
+* Change: Remove duplicate webhook delivery bug fix, as it is not required for WooCommerce version 4.0 and newer. PR #568
+* Dev: Use generics to document the return type of `ContainerService::get()` method. PR #570
+* Dev: Updated `league/container` dependency from 2.4.1 to 4.2.0. PR #572
+* Dev: Updated `psr/container` dependency from 1.0.0 to 1.1.1. PR #572
+
 2022-10-13 - version 2.3.1
 * Full details: https://om4.io/?p=20216
 * Change: Marked as compatible with WooCommerce 7.0. PR #557 PR #550, PR #549, PR #547

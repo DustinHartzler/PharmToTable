@@ -1,23 +1,23 @@
 <?php
 
+declare (strict_types=1);
 namespace OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider;
 
 use OM4\WooCommerceZapier\Vendor\League\Container\ContainerAwareTrait;
-abstract class AbstractServiceProvider implements \OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderInterface
+abstract class AbstractServiceProvider implements ServiceProviderInterface
 {
     use ContainerAwareTrait;
     /**
-     * @var array
+     * @var string
      */
-    protected $provides = [];
-    /**
-     * {@inheritdoc}
-     */
-    public function provides($alias = null)
+    protected $identifier;
+    public function getIdentifier() : string
     {
-        if (!\is_null($alias)) {
-            return \in_array($alias, $this->provides);
-        }
-        return $this->provides;
+        return $this->identifier ?? \get_class($this);
+    }
+    public function setIdentifier(string $id) : ServiceProviderInterface
+    {
+        $this->identifier = $id;
+        return $this;
     }
 }

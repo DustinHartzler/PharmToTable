@@ -1,241 +1,154 @@
 <?php
 
+declare (strict_types=1);
 namespace OM4\WooCommerceZapier\Vendor\League\Container;
 
-use OM4\WooCommerceZapier\Vendor\Interop\Container\ContainerInterface as InteropContainerInterface;
-use OM4\WooCommerceZapier\Vendor\League\Container\Argument\RawArgumentInterface;
-use OM4\WooCommerceZapier\Vendor\League\Container\Definition\DefinitionFactory;
-use OM4\WooCommerceZapier\Vendor\League\Container\Definition\DefinitionFactoryInterface;
+use OM4\WooCommerceZapier\Vendor\League\Container\Definition\DefinitionAggregate;
 use OM4\WooCommerceZapier\Vendor\League\Container\Definition\DefinitionInterface;
+use OM4\WooCommerceZapier\Vendor\League\Container\Definition\DefinitionAggregateInterface;
 use OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException;
+use OM4\WooCommerceZapier\Vendor\League\Container\Exception\ContainerException;
 use OM4\WooCommerceZapier\Vendor\League\Container\Inflector\InflectorAggregate;
+use OM4\WooCommerceZapier\Vendor\League\Container\Inflector\InflectorInterface;
 use OM4\WooCommerceZapier\Vendor\League\Container\Inflector\InflectorAggregateInterface;
 use OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderAggregate;
 use OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderAggregateInterface;
-class Container implements \OM4\WooCommerceZapier\Vendor\League\Container\ContainerInterface
+use OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderInterface;
+use OM4\WooCommerceZapier\Vendor\Psr\Container\ContainerInterface;
+class Container implements DefinitionContainerInterface
 {
     /**
-     * @var \League\Container\Definition\DefinitionFactoryInterface
+     * @var boolean
      */
-    protected $definitionFactory;
+    protected $defaultToShared = \false;
     /**
-     * @var \League\Container\Definition\DefinitionInterface[]
+     * @var DefinitionAggregateInterface
      */
-    protected $definitions = [];
+    protected $definitions;
     /**
-     * @var \League\Container\Definition\DefinitionInterface[]
-     */
-    protected $sharedDefinitions = [];
-    /**
-     * @var \League\Container\Inflector\InflectorAggregateInterface
-     */
-    protected $inflectors;
-    /**
-     * @var \League\Container\ServiceProvider\ServiceProviderAggregateInterface
+     * @var ServiceProviderAggregateInterface
      */
     protected $providers;
     /**
-     * @var array
+     * @var InflectorAggregateInterface
      */
-    protected $shared = [];
+    protected $inflectors;
     /**
-     * @var \Interop\Container\ContainerInterface[]
+     * @var ContainerInterface[]
      */
     protected $delegates = [];
-    /**
-     * Constructor.
-     *
-     * @param \League\Container\ServiceProvider\ServiceProviderAggregateInterface|null $providers
-     * @param \League\Container\Inflector\InflectorAggregateInterface|null             $inflectors
-     * @param \League\Container\Definition\DefinitionFactoryInterface|null             $definitionFactory
-     */
-    public function __construct(\OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderAggregateInterface $providers = null, \OM4\WooCommerceZapier\Vendor\League\Container\Inflector\InflectorAggregateInterface $inflectors = null, \OM4\WooCommerceZapier\Vendor\League\Container\Definition\DefinitionFactoryInterface $definitionFactory = null)
+    public function __construct(DefinitionAggregateInterface $definitions = null, ServiceProviderAggregateInterface $providers = null, InflectorAggregateInterface $inflectors = null)
     {
-        // set required dependencies
-        $this->providers = \is_null($providers) ? (new \OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderAggregate())->setContainer($this) : $providers->setContainer($this);
-        $this->inflectors = \is_null($inflectors) ? (new \OM4\WooCommerceZapier\Vendor\League\Container\Inflector\InflectorAggregate())->setContainer($this) : $inflectors->setContainer($this);
-        $this->definitionFactory = \is_null($definitionFactory) ? (new \OM4\WooCommerceZapier\Vendor\League\Container\Definition\DefinitionFactory())->setContainer($this) : $definitionFactory->setContainer($this);
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function get($alias, array $args = [])
-    {
-        try {
-            return $this->getFromThisContainer($alias, $args);
-        } catch (\OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException $exception) {
-            if ($this->providers->provides($alias)) {
-                $this->providers->register($alias);
-                return $this->getFromThisContainer($alias, $args);
-            }
-            $resolved = $this->getFromDelegate($alias, $args);
-            return $this->inflectors->inflect($resolved);
+        $this->definitions = $definitions ?? new DefinitionAggregate();
+        $this->providers = $providers ?? new ServiceProviderAggregate();
+        $this->inflectors = $inflectors ?? new InflectorAggregate();
+        if ($this->definitions instanceof ContainerAwareInterface) {
+            $this->definitions->setContainer($this);
+        }
+        if ($this->providers instanceof ContainerAwareInterface) {
+            $this->providers->setContainer($this);
+        }
+        if ($this->inflectors instanceof ContainerAwareInterface) {
+            $this->inflectors->setContainer($this);
         }
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function has($alias)
+    public function add(string $id, $concrete = null) : DefinitionInterface
     {
-        if (\array_key_exists($alias, $this->definitions) || $this->hasShared($alias)) {
-            return \true;
+        $concrete = $concrete ?? $id;
+        if (\true === $this->defaultToShared) {
+            return $this->addShared($id, $concrete);
         }
-        if ($this->providers->provides($alias)) {
-            return \true;
-        }
-        return $this->hasInDelegate($alias);
+        return $this->definitions->add($id, $concrete);
     }
-    /**
-     * Returns a boolean to determine if the container has a shared instance of an alias.
-     *
-     * @param  string  $alias
-     * @param  boolean $resolved
-     * @return boolean
-     */
-    public function hasShared($alias, $resolved = \false)
+    public function addShared(string $id, $concrete = null) : DefinitionInterface
     {
-        $shared = $resolved === \false ? \array_merge($this->shared, $this->sharedDefinitions) : $this->shared;
-        return \array_key_exists($alias, $shared);
+        $concrete = $concrete ?? $id;
+        return $this->definitions->addShared($id, $concrete);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function add($alias, $concrete = null, $share = \false)
+    public function defaultToShared(bool $shared = \true) : ContainerInterface
     {
-        unset($this->shared[$alias]);
-        unset($this->definitions[$alias]);
-        unset($this->sharedDefinitions[$alias]);
-        if (\is_null($concrete)) {
-            $concrete = $alias;
-        }
-        $definition = $this->definitionFactory->getDefinition($alias, $concrete);
-        if ($definition instanceof \OM4\WooCommerceZapier\Vendor\League\Container\Definition\DefinitionInterface) {
-            if ($share === \false) {
-                $this->definitions[$alias] = $definition;
-            } else {
-                $this->sharedDefinitions[$alias] = $definition;
-            }
-            return $definition;
-        }
-        // dealing with a value that cannot build a definition
-        $this->shared[$alias] = $concrete;
+        $this->defaultToShared = $shared;
+        return $this;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function share($alias, $concrete = null)
+    public function extend(string $id) : DefinitionInterface
     {
-        return $this->add($alias, $concrete, \true);
+        if ($this->providers->provides($id)) {
+            $this->providers->register($id);
+        }
+        if ($this->definitions->has($id)) {
+            return $this->definitions->getDefinition($id);
+        }
+        throw new NotFoundException(\sprintf('Unable to extend alias (%s) as it is not being managed as a definition', $id));
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function addServiceProvider($provider)
+    public function addServiceProvider(ServiceProviderInterface $provider) : DefinitionContainerInterface
     {
         $this->providers->add($provider);
         return $this;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function extend($alias)
+    public function get($id)
     {
-        if ($this->providers->provides($alias)) {
-            $this->providers->register($alias);
-        }
-        if (\array_key_exists($alias, $this->definitions)) {
-            return $this->definitions[$alias];
-        }
-        if (\array_key_exists($alias, $this->sharedDefinitions)) {
-            return $this->sharedDefinitions[$alias];
-        }
-        throw new \OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException(\sprintf('Unable to extend alias (%s) as it is not being managed as a definition', $alias));
+        return $this->resolve($id);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function inflector($type, callable $callback = null)
+    public function getNew($id)
     {
-        return $this->inflectors->add($type, $callback);
+        return $this->resolve($id, \true);
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function call(callable $callable, array $args = [])
+    public function has($id) : bool
     {
-        return (new \OM4\WooCommerceZapier\Vendor\League\Container\ReflectionContainer())->setContainer($this)->call($callable, $args);
-    }
-    /**
-     * Delegate a backup container to be checked for services if it
-     * cannot be resolved via this container.
-     *
-     * @param  \Interop\Container\ContainerInterface $container
-     * @return $this
-     */
-    public function delegate(\OM4\WooCommerceZapier\Vendor\Interop\Container\ContainerInterface $container)
-    {
-        $this->delegates[] = $container;
-        if ($container instanceof \OM4\WooCommerceZapier\Vendor\League\Container\ImmutableContainerAwareInterface) {
-            $container->setContainer($this);
+        if ($this->definitions->has($id)) {
+            return \true;
         }
-        return $this;
-    }
-    /**
-     * Returns true if service is registered in one of the delegated backup containers.
-     *
-     * @param  string $alias
-     * @return boolean
-     */
-    public function hasInDelegate($alias)
-    {
-        foreach ($this->delegates as $container) {
-            if ($container->has($alias)) {
+        if ($this->definitions->hasTag($id)) {
+            return \true;
+        }
+        if ($this->providers->provides($id)) {
+            return \true;
+        }
+        foreach ($this->delegates as $delegate) {
+            if ($delegate->has($id)) {
                 return \true;
             }
         }
         return \false;
     }
-    /**
-     * Attempt to get a service from the stack of delegated backup containers.
-     *
-     * @param  string $alias
-     * @param  array  $args
-     * @return mixed
-     */
-    protected function getFromDelegate($alias, array $args = [])
+    public function inflector(string $type, callable $callback = null) : InflectorInterface
     {
-        foreach ($this->delegates as $container) {
-            if ($container->has($alias)) {
-                return $container->get($alias, $args);
-            }
-            continue;
-        }
-        throw new \OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException(\sprintf('Alias (%s) is not being managed by the container', $alias));
+        return $this->inflectors->add($type, $callback);
     }
-    /**
-     * Get a service that has been registered in this container.
-     *
-     * @param  string $alias
-     * @param  array $args
-     * @return mixed
-     */
-    protected function getFromThisContainer($alias, array $args = [])
+    public function delegate(ContainerInterface $container) : self
     {
-        if ($this->hasShared($alias, \true)) {
-            $shared = $this->inflectors->inflect($this->shared[$alias]);
-            if ($shared instanceof \OM4\WooCommerceZapier\Vendor\League\Container\Argument\RawArgumentInterface) {
-                return $shared->getValue();
+        $this->delegates[] = $container;
+        if ($container instanceof ContainerAwareInterface) {
+            $container->setContainer($this);
+        }
+        return $this;
+    }
+    protected function resolve($id, bool $new = \false)
+    {
+        if ($this->definitions->has($id)) {
+            $resolved = \true === $new ? $this->definitions->resolveNew($id) : $this->definitions->resolve($id);
+            return $this->inflectors->inflect($resolved);
+        }
+        if ($this->definitions->hasTag($id)) {
+            $arrayOf = \true === $new ? $this->definitions->resolveTaggedNew($id) : $this->definitions->resolveTagged($id);
+            \array_walk($arrayOf, function (&$resolved) {
+                $resolved = $this->inflectors->inflect($resolved);
+            });
+            return $arrayOf;
+        }
+        if ($this->providers->provides($id)) {
+            $this->providers->register($id);
+            if (!$this->definitions->has($id) && !$this->definitions->hasTag($id)) {
+                throw new ContainerException(\sprintf('Service provider lied about providing (%s) service', $id));
             }
-            return $shared;
+            return $this->resolve($id, $new);
         }
-        if (\array_key_exists($alias, $this->sharedDefinitions)) {
-            $shared = $this->inflectors->inflect($this->sharedDefinitions[$alias]->build());
-            $this->shared[$alias] = $shared;
-            return $shared;
+        foreach ($this->delegates as $delegate) {
+            if ($delegate->has($id)) {
+                $resolved = $delegate->get($id);
+                return $this->inflectors->inflect($resolved);
+            }
         }
-        if (\array_key_exists($alias, $this->definitions)) {
-            return $this->inflectors->inflect($this->definitions[$alias]->build($args));
-        }
-        throw new \OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException(\sprintf('Alias (%s) is not being managed by the container', $alias));
+        throw new NotFoundException(\sprintf('Alias (%s) is not being managed by the container or delegates', $id));
     }
 }

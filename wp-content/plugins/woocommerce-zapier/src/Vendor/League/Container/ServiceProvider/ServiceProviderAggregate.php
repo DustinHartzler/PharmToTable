@@ -1,67 +1,63 @@
 <?php
 
+declare (strict_types=1);
 namespace OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider;
 
+use Generator;
+use OM4\WooCommerceZapier\Vendor\League\Container\Exception\ContainerException;
 use OM4\WooCommerceZapier\Vendor\League\Container\ContainerAwareInterface;
 use OM4\WooCommerceZapier\Vendor\League\Container\ContainerAwareTrait;
-class ServiceProviderAggregate implements \OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderAggregateInterface
+class ServiceProviderAggregate implements ServiceProviderAggregateInterface
 {
     use ContainerAwareTrait;
     /**
-     * @var array
+     * @var ServiceProviderInterface[]
      */
     protected $providers = [];
     /**
      * @var array
      */
     protected $registered = [];
-    /**
-     * {@inheritdoc}
-     */
-    public function add($provider)
+    public function add(ServiceProviderInterface $provider) : ServiceProviderAggregateInterface
     {
-        if (\is_string($provider) && \class_exists($provider)) {
-            $provider = new $provider();
-        }
-        if ($provider instanceof \OM4\WooCommerceZapier\Vendor\League\Container\ContainerAwareInterface) {
-            $provider->setContainer($this->getContainer());
-        }
-        if ($provider instanceof \OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\BootableServiceProviderInterface) {
-            $provider->boot();
-        }
-        if ($provider instanceof \OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\ServiceProviderInterface) {
-            foreach ($provider->provides() as $service) {
-                $this->providers[$service] = $provider;
-            }
+        if (\in_array($provider, $this->providers, \true)) {
             return $this;
         }
-        throw new \InvalidArgumentException('A service provider must be a fully qualified class name or instance ' . 'of (\\League\\Container\\ServiceProvider\\ServiceProviderInterface)');
+        if ($provider instanceof ContainerAwareInterface) {
+            $provider->setContainer($this->getContainer());
+        }
+        if ($provider instanceof BootableServiceProviderInterface) {
+            $provider->boot();
+        }
+        $this->providers[] = $provider;
+        return $this;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function provides($service)
+    public function provides(string $service) : bool
     {
-        return \array_key_exists($service, $this->providers);
+        foreach ($this->getIterator() as $provider) {
+            if ($provider->provides($service)) {
+                return \true;
+            }
+        }
+        return \false;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function register($service)
+    public function getIterator() : Generator
     {
-        if (!\array_key_exists($service, $this->providers)) {
-            throw new \InvalidArgumentException(\sprintf('(%s) is not provided by a service provider', $service));
+        yield from $this->providers;
+    }
+    public function register(string $service) : void
+    {
+        if (\false === $this->provides($service)) {
+            throw new ContainerException(\sprintf('(%s) is not provided by a service provider', $service));
         }
-        $provider = $this->providers[$service];
-        $signature = \get_class($provider);
-        if ($provider instanceof \OM4\WooCommerceZapier\Vendor\League\Container\ServiceProvider\SignatureServiceProviderInterface) {
-            $signature = $provider->getSignature();
+        foreach ($this->getIterator() as $provider) {
+            if (\in_array($provider->getIdentifier(), $this->registered, \true)) {
+                continue;
+            }
+            if ($provider->provides($service)) {
+                $provider->register();
+                $this->registered[] = $provider->getIdentifier();
+            }
         }
-        // ensure that the provider hasn't already been invoked by any other service request
-        if (\in_array($signature, $this->registered)) {
-            return;
-        }
-        $provider->register();
-        $this->registered[] = $signature;
     }
 }

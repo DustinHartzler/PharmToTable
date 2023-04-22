@@ -1,17 +1,17 @@
-# Copyright (C) 2022 OM4 Software
+# Copyright (C) 2023 OM4 Software
 # This file is distributed under the same license as the WooCommerce Zapier plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Zapier 2.3.1\n"
+"Project-Id-Version: WooCommerce Zapier 2.4.1\n"
 "Report-Msgid-Bugs-To: pluginsupport@om4.io\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-10-13T07:42:22+00:00\n"
+"POT-Creation-Date: 2023-04-17T06:25:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: woocommerce-zapier\n"
 
 #. Plugin Name of the plugin
@@ -388,52 +388,62 @@ msgstr ""
 msgid "WooCommerce Zapier is only compatible with %1$s version %2$s or later. Please update %3$s."
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:60
+#: src/Plugin/Bookings/BookingResource.php:61
 msgid "Booking"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:109
+#: src/Plugin/Bookings/BookingResource.php:111
 msgid "Booking created"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:125
+#: src/Plugin/Bookings/BookingResource.php:127
 msgid "Booking ordered"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:141
+#: src/Plugin/Bookings/BookingResource.php:143
 msgid "Booking deleted"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:157
+#: src/Plugin/Bookings/BookingResource.php:159
 msgid "Booking restored"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:173
-msgid "Booking status changed"
+#: src/Plugin/Bookings/BookingResource.php:175
+msgid "Booking status changed (any status)"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:189
+#: src/Plugin/Bookings/BookingResource.php:191
 msgid "Booking cancelled"
 msgstr ""
 
-#: src/Plugin/Bookings/BookingResource.php:207
+#: src/Plugin/Bookings/BookingResource.php:209
 msgid "Booking updated"
 msgstr ""
 
-#: src/Plugin/Subscriptions/SubscriptionResource.php:42
+#. Translators: Booking Status Name/Label.
+#: src/Plugin/Bookings/BookingResource.php:230
+msgid "Booking status changed to %s"
+msgstr ""
+
+#: src/Plugin/Subscriptions/SubscriptionResource.php:43
 msgid "Subscription"
 msgstr ""
 
-#: src/Plugin/Subscriptions/SubscriptionResource.php:86
-msgid "Subscription status changed"
+#: src/Plugin/Subscriptions/SubscriptionResource.php:88
+msgid "Subscription status changed (any status)"
 msgstr ""
 
-#: src/Plugin/Subscriptions/SubscriptionResource.php:92
+#: src/Plugin/Subscriptions/SubscriptionResource.php:94
 msgid "Subscription renewed"
 msgstr ""
 
-#: src/Plugin/Subscriptions/SubscriptionResource.php:98
+#: src/Plugin/Subscriptions/SubscriptionResource.php:100
 msgid "Subscription renewal failed"
+msgstr ""
+
+#. Translators: Subscription Status Name/Label.
+#: src/Plugin/Subscriptions/SubscriptionResource.php:122
+msgid "Subscription status changed to %s"
 msgstr ""
 
 #: src/Privacy.php:31
@@ -645,16 +655,21 @@ msgctxt "Resource definition description."
 msgid "%1$s %2$s"
 msgstr ""
 
-#: src/WooCommerceResource/Order/OrderResource.php:23
+#: src/WooCommerceResource/Order/OrderResource.php:25
 msgid "Order"
 msgstr ""
 
-#: src/WooCommerceResource/Order/OrderResource.php:34
-msgid "Order status changed"
+#: src/WooCommerceResource/Order/OrderResource.php:37
+msgid "Order status changed (any status)"
 msgstr ""
 
-#: src/WooCommerceResource/Order/OrderResource.php:40
+#: src/WooCommerceResource/Order/OrderResource.php:43
 msgid "Order paid"
+msgstr ""
+
+#. Translators: Order Status Name/Label.
+#: src/WooCommerceResource/Order/OrderResource.php:64
+msgid "Order status changed to %s"
 msgstr ""
 
 #: src/WooCommerceResource/Product/ProductResource.php:22

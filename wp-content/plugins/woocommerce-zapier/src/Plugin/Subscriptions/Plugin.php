@@ -144,12 +144,13 @@ class Plugin extends Base {
 	}
 
 	/**
-	 * Whether not not the user has the WooCommerce Subscriptions plugin active.
+	 * Whether the user has the WooCommerce Subscriptions plugin active.
 	 *
 	 * @return bool
 	 */
 	protected function is_active() {
-		return $this->checker->class_exists( '\WC_Subscriptions' );
+		return $this->checker->class_exists( '\WC_Subscriptions' ) &&
+			\is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' );
 	}
 
 }

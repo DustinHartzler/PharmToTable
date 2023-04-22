@@ -1,46 +1,55 @@
 <?php
 
+declare (strict_types=1);
 namespace OM4\WooCommerceZapier\Vendor\League\Container;
 
 use OM4\WooCommerceZapier\Vendor\League\Container\Argument\ArgumentResolverInterface;
 use OM4\WooCommerceZapier\Vendor\League\Container\Argument\ArgumentResolverTrait;
+use OM4\WooCommerceZapier\Vendor\League\Container\Exception\ContainerException;
 use OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException;
+use OM4\WooCommerceZapier\Vendor\Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;
-class ReflectionContainer implements \OM4\WooCommerceZapier\Vendor\League\Container\Argument\ArgumentResolverInterface, \OM4\WooCommerceZapier\Vendor\League\Container\ImmutableContainerInterface
+class ReflectionContainer implements ArgumentResolverInterface, ContainerInterface
 {
     use ArgumentResolverTrait;
-    use ImmutableContainerAwareTrait;
+    use ContainerAwareTrait;
     /**
-     * {@inheritdoc}
+     * @var boolean
      */
-    public function get($alias, array $args = [])
+    protected $cacheResolutions;
+    /**
+     * @var array
+     */
+    protected $cache = [];
+    public function __construct(bool $cacheResolutions = \false)
     {
-        if (!$this->has($alias)) {
-            throw new \OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException(\sprintf('Alias (%s) is not an existing class and therefore cannot be resolved', $alias));
+        $this->cacheResolutions = $cacheResolutions;
+    }
+    public function get($id, array $args = [])
+    {
+        if ($this->cacheResolutions === \true && \array_key_exists($id, $this->cache)) {
+            return $this->cache[$id];
         }
-        $reflector = new \ReflectionClass($alias);
+        if (!$this->has($id)) {
+            throw new NotFoundException(\sprintf('Alias (%s) is not an existing class and therefore cannot be resolved', $id));
+        }
+        $reflector = new ReflectionClass($id);
         $construct = $reflector->getConstructor();
-        if ($construct === null) {
-            return new $alias();
+        if ($construct && !$construct->isPublic()) {
+            throw new NotFoundException(\sprintf('Alias (%s) has a non-public constructor and therefore cannot be instantiated', $id));
         }
-        return $reflector->newInstanceArgs($this->reflectArguments($construct, $args));
+        $resolution = $construct === null ? new $id() : $reflector->newInstanceArgs($this->reflectArguments($construct, $args));
+        if ($this->cacheResolutions === \true) {
+            $this->cache[$id] = $resolution;
+        }
+        return $resolution;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function has($alias)
+    public function has($id) : bool
     {
-        return \class_exists($alias);
+        return \class_exists($id);
     }
-    /**
-     * Invoke a callable via the container.
-     *
-     * @param  callable $callable
-     * @param  array    $args
-     * @return mixed
-     */
     public function call(callable $callable, array $args = [])
     {
         if (\is_string($callable) && \strpos($callable, '::') !== \false) {
@@ -48,19 +57,24 @@ class ReflectionContainer implements \OM4\WooCommerceZapier\Vendor\League\Contai
         }
         if (\is_array($callable)) {
             if (\is_string($callable[0])) {
-                $callable[0] = $this->getContainer()->get($callable[0]);
+                // if we have a definition container, try that first, otherwise, reflect
+                try {
+                    $callable[0] = $this->getContainer()->get($callable[0]);
+                } catch (ContainerException $e) {
+                    $callable[0] = $this->get($callable[0]);
+                }
             }
-            $reflection = new \ReflectionMethod($callable[0], $callable[1]);
+            $reflection = new ReflectionMethod($callable[0], $callable[1]);
             if ($reflection->isStatic()) {
                 $callable[0] = null;
             }
             return $reflection->invokeArgs($callable[0], $this->reflectArguments($reflection, $args));
         }
         if (\is_object($callable)) {
-            $reflection = new \ReflectionMethod($callable, '__invoke');
+            $reflection = new ReflectionMethod($callable, '__invoke');
             return $reflection->invokeArgs($callable, $this->reflectArguments($reflection, $args));
         }
-        $reflection = new \ReflectionFunction($callable);
+        $reflection = new ReflectionFunction(\Closure::fromCallable($callable));
         return $reflection->invokeArgs($this->reflectArguments($reflection, $args));
     }
 }

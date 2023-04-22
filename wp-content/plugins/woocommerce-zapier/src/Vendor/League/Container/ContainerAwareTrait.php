@@ -1,31 +1,29 @@
 <?php
 
+declare (strict_types=1);
 namespace OM4\WooCommerceZapier\Vendor\League\Container;
 
+use BadMethodCallException;
+use OM4\WooCommerceZapier\Vendor\League\Container\Exception\ContainerException;
 trait ContainerAwareTrait
 {
     /**
-     * @var \League\Container\ContainerInterface
+     * @var ?DefinitionContainerInterface
      */
     protected $container;
-    /**
-     * Set a container.
-     *
-     * @param  \League\Container\ContainerInterface $container
-     * @return $this
-     */
-    public function setContainer(\OM4\WooCommerceZapier\Vendor\League\Container\ContainerInterface $container)
+    public function setContainer(DefinitionContainerInterface $container) : ContainerAwareInterface
     {
         $this->container = $container;
-        return $this;
+        if ($this instanceof ContainerAwareInterface) {
+            return $this;
+        }
+        throw new BadMethodCallException(\sprintf('Attempt to use (%s) while not implementing (%s)', ContainerAwareTrait::class, ContainerAwareInterface::class));
     }
-    /**
-     * Get the container.
-     *
-     * @return \League\Container\ContainerInterface
-     */
-    public function getContainer()
+    public function getContainer() : DefinitionContainerInterface
     {
-        return $this->container;
+        if ($this->container instanceof DefinitionContainerInterface) {
+            return $this->container;
+        }
+        throw new ContainerException('No container implementation has been set.');
     }
 }

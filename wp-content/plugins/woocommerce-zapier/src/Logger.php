@@ -67,7 +67,7 @@ class Logger {
 	 */
 	public function __construct( Settings $settings ) {
 		$this->settings  = $settings;
-		$this->wc_logger = wc_get_logger();
+		$this->wc_logger = \wc_get_logger();
 		$this->context   = array( 'source' => 'woocommerce-zapier' );
 	}
 

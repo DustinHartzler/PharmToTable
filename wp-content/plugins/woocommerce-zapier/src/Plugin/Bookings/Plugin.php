@@ -207,12 +207,13 @@ class Plugin extends Base {
 	}
 
 	/**
-	 * Whether not not the user has the WooCommerce Bookings plugin active.
+	 * Whether the user has the WooCommerce Bookings plugin active.
 	 *
 	 * @return bool
 	 */
 	protected function is_active() {
-		return $this->checker->class_exists( '\WC_Bookings' );
+		return $this->checker->class_exists( '\WC_Bookings' ) &&
+			\is_plugin_active( 'woocommerce-bookings/woocommerce-bookings.php' );
 	}
 
 }

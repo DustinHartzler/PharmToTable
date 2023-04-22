@@ -1,63 +1,87 @@
 <?php
 
+declare (strict_types=1);
 namespace OM4\WooCommerceZapier\Vendor\League\Container\Argument;
 
+use OM4\WooCommerceZapier\Vendor\League\Container\DefinitionContainerInterface;
+use OM4\WooCommerceZapier\Vendor\League\Container\Exception\ContainerException;
 use OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException;
 use OM4\WooCommerceZapier\Vendor\League\Container\ReflectionContainer;
+use OM4\WooCommerceZapier\Vendor\Psr\Container\ContainerInterface;
 use ReflectionFunctionAbstract;
-use ReflectionParameter;
+use ReflectionNamedType;
 trait ArgumentResolverTrait
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function resolveArguments(array $arguments)
+    public function resolveArguments(array $arguments) : array
     {
+        try {
+            $container = $this->getContainer();
+        } catch (ContainerException $e) {
+            $container = $this instanceof ReflectionContainer ? $this : null;
+        }
         foreach ($arguments as &$arg) {
-            if ($arg instanceof \OM4\WooCommerceZapier\Vendor\League\Container\Argument\RawArgumentInterface) {
+            // if we have a literal, we don't want to do anything more with it
+            if ($arg instanceof LiteralArgumentInterface) {
                 $arg = $arg->getValue();
                 continue;
             }
-            if (!\is_string($arg)) {
+            if ($arg instanceof ArgumentInterface) {
+                $argValue = $arg->getValue();
+            } else {
+                $argValue = $arg;
+            }
+            if (!\is_string($argValue)) {
                 continue;
             }
-            $container = $this->getContainer();
-            if (\is_null($container) && $this instanceof \OM4\WooCommerceZapier\Vendor\League\Container\ReflectionContainer) {
-                $container = $this;
-            }
-            if (!\is_null($container) && $container->has($arg)) {
-                $arg = $container->get($arg);
-                if ($arg instanceof \OM4\WooCommerceZapier\Vendor\League\Container\Argument\RawArgumentInterface) {
-                    $arg = $arg->getValue();
+            // resolve the argument from the container, if it happens to be another
+            // argument wrapper, use that value
+            if ($container instanceof ContainerInterface && $container->has($argValue)) {
+                try {
+                    $arg = $container->get($argValue);
+                    if ($arg instanceof ArgumentInterface) {
+                        $arg = $arg->getValue();
+                    }
+                    continue;
+                } catch (NotFoundException $e) {
                 }
-                continue;
+            }
+            // if we have a default value, we use that, no more resolution as
+            // we expect a default/optional argument value to be literal
+            if ($arg instanceof DefaultValueInterface) {
+                $arg = $arg->getDefaultValue();
             }
         }
         return $arguments;
     }
-    /**
-     * {@inheritdoc}
-     */
-    public function reflectArguments(\ReflectionFunctionAbstract $method, array $args = [])
+    public function reflectArguments(ReflectionFunctionAbstract $method, array $args = []) : array
     {
-        $arguments = \array_map(function (\ReflectionParameter $param) use($method, $args) {
+        $params = $method->getParameters();
+        $arguments = [];
+        foreach ($params as $param) {
             $name = $param->getName();
-            $class = $param->getClass();
+            // if we've been given a value for the argument, treat as literal
             if (\array_key_exists($name, $args)) {
-                return $args[$name];
+                $arguments[] = new LiteralArgument($args[$name]);
+                continue;
             }
-            if (!\is_null($class)) {
-                return $class->getName();
+            $type = $param->getType();
+            if ($type instanceof ReflectionNamedType) {
+                // in PHP 8, nullable arguments have "?" prefix
+                $typeHint = \ltrim($type->getName(), '?');
+                if ($param->isDefaultValueAvailable()) {
+                    $arguments[] = new DefaultValueArgument($typeHint, $param->getDefaultValue());
+                    continue;
+                }
+                $arguments[] = new ResolvableArgument($typeHint);
+                continue;
             }
             if ($param->isDefaultValueAvailable()) {
-                return $param->getDefaultValue();
+                $arguments[] = new LiteralArgument($param->getDefaultValue());
+                continue;
             }
-            throw new \OM4\WooCommerceZapier\Vendor\League\Container\Exception\NotFoundException(\sprintf('Unable to resolve a value for parameter (%s) in the function/method (%s)', $name, $method->getName()));
-        }, $method->getParameters());
+            throw new NotFoundException(\sprintf('Unable to resolve a value for parameter (%s) in the function/method (%s)', $name, $method->getName()));
+        }
         return $this->resolveArguments($arguments);
     }
-    /**
-     * @return \League\Container\ContainerInterface
-     */
-    public abstract function getContainer();
+    public abstract function getContainer() : DefinitionContainerInterface;
 }

@@ -22,12 +22,12 @@ use OM4\WooCommerceZapier\NewUser\NewUser;
 use OM4\WooCommerceZapier\NewUser\NewUserWelcomeNotice;
 use OM4\WooCommerceZapier\Plugin;
 use OM4\WooCommerceZapier\Plugin\Bookings\BookingResource;
-use OM4\WooCommerceZapier\Plugin\Bookings\V1Controller as BookingsV1Controller;
 use OM4\WooCommerceZapier\Plugin\Bookings\Plugin as BookingsPlugin;
+use OM4\WooCommerceZapier\Plugin\Bookings\V1Controller as BookingsV1Controller;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Controller as SubscriptionsController;
-use OM4\WooCommerceZapier\Plugin\Subscriptions\V1Controller as SubscriptionsV1Controller;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\Plugin as SubscriptionsPlugin;
 use OM4\WooCommerceZapier\Plugin\Subscriptions\SubscriptionResource;
+use OM4\WooCommerceZapier\Plugin\Subscriptions\V1Controller as SubscriptionsV1Controller;
 use OM4\WooCommerceZapier\Privacy;
 use OM4\WooCommerceZapier\SystemStatus\UI as SystemStatusUI;
 use OM4\WooCommerceZapier\TaskHistory\Installer as TaskHistoryInstaller;
@@ -193,7 +193,7 @@ class ContainerService {
 			}
 		);
 
-		$this->container->share(
+		$this->container->addShared(
 			ResourceManager::class,
 			function () {
 				return new ResourceManager(
@@ -545,13 +545,12 @@ class ContainerService {
 	/**
 	 * Retrieve an item/service from the container.
 	 *
-	 * @param string $alias Class name/alias.
-	 * @param array  $args Optional arguments.
-	 *
-	 * @return mixed|object
+	 * @template T of object
+	 * @param class-string<T> $alias Class name/alias.
+	 * @return T
 	 */
-	public function get( $alias, array $args = array() ) {
-		return $this->container->get( $alias, $args );
+	public function get( $alias ) {
+		return $this->container->get( $alias );
 	}
 
 }

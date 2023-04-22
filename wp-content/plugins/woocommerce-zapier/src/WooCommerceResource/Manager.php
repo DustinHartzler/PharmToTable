@@ -63,7 +63,7 @@ class Manager {
 		 * @internal
 		 * @since 2.0.0
 		 *
-		 * @param class-string[] $additional_resources Array of class names (FQN).
+		 * @param class-string[] $additional_resources Array of class names (FQCN).
 		 */
 		$additional_resources = apply_filters( 'wc_zapier_additional_resource_classes', array() );
 		foreach ( $additional_resources as $resource_class_name ) {

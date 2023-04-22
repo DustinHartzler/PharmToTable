@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 class Plugin {
 
 	/** The minimum WooCommerce version that this plugin supports. */
-	const MINIMUM_SUPPORTED_WOOCOMMERCE_VERSION = '4.2.0';
+	const MINIMUM_SUPPORTED_WOOCOMMERCE_VERSION = '6.0.0';
 
 	/** URL to the documentation for this plugin. */
 	const DOCUMENTATION_URL = 'https://docs.om4.io/woocommerce-zapier/';

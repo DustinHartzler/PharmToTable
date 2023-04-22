@@ -9,14 +9,14 @@ defined( 'ABSPATH' ) || exit;
 Plugin Name: WooCommerce Zapier
 Plugin URI: https://woocommerce.com/products/woocommerce-zapier/
 Description: Integrates WooCommerce with <a href="https://zapier.com/" target="_blank">Zapier</a>. Send WooCommerce data to 5000+ cloud services. Create or update WooCommerce data from 5000+ cloud services via Zaps.
-Version: 2.3.1
+Version: 2.4.1
 Author: OM4 Software
 Author URI: https://om4.io/
 Text Domain: woocommerce-zapier
 Domain Path: /languages/
 Woo: 243589:0782bdbe932c00f4978850268c6cfe40
-WC requires at least: 4.2
-WC tested up to: 7.0
+WC requires at least: 6.0
+WC tested up to: 7.6
 */
 
 /*
