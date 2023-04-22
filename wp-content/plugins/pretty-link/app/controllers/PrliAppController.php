@@ -331,7 +331,7 @@ class PrliAppController extends PrliBaseController {
 
     if($plp_update->is_installed_and_activated()) {
       $pllinks[] = '<a href="https://prettylinks.com/pl/plugin-actions/activated/docs" target="_blank">'.esc_html__('Docs', 'pretty-link').'</a>';
-      $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'">'.esc_html__('Activate', 'pretty-link').'</a>';
+      $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'">'.esc_html__('Manage License', 'pretty-link').'</a>';
     }
     else if($plp_update->is_installed()) {
       $pllinks[] = '<a href="'. esc_url( get_admin_url(null, 'admin.php?page=pretty-link-updates') ) .'" class="prli-menu-green">'.esc_html__('Activate Pro License', 'pretty-link').'</a>';
@@ -381,6 +381,8 @@ class PrliAppController extends PrliBaseController {
       wp_enqueue_style( 'prli-menu-styles', PRLI_CSS_URL.'/menu-styles.css',
                         array('prli-fontello-pretty-link'), PRLI_VERSION );
     }
+
+    wp_enqueue_style('prli-admin-global', PRLI_CSS_URL . '/admin_global.css', array(), PRLI_VERSION);
 
     $is_pl_page           = $this->is_pretty_link_page();
     $is_link_page         = $this->is_pretty_link_link_page();

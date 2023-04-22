@@ -6,6 +6,7 @@ class PrliPostsController extends PrliBaseController {
 
   public function load_hooks() {
     add_action('init', array($this, 'add_tinymce_buttons'));
+    add_action('add_meta_boxes', array($this, 'add_meta_box'));
     add_action('wp_ajax_prli_tinymce_form', array($this, 'display_tinymce_form'));
     add_action('wp_ajax_prli_tinymce_validate_slug', array($this, 'validate_tinymce_slug'));
     add_action('wp_ajax_prli_create_pretty_link', array($this, 'create_pretty_link'));
@@ -36,6 +37,45 @@ class PrliPostsController extends PrliBaseController {
       add_filter("mce_external_plugins", array($this, "add_tinymce_plugin"));
       add_filter('mce_buttons', array($this, 'register_buttons'));
     }
+  }
+
+  /**
+   * Adds a "Pretty Links" metabox to various post screens.
+   *
+   * @access public
+   * @return void
+   */
+  public function add_meta_box() {
+    global $plp_update;
+
+    if($plp_update->is_installed()) {
+      global $plp_options;
+
+      $post_types = $plp_options->get_post_types();
+    } else {
+      $post_types = array('post', 'page');
+    }
+
+    add_meta_box('pretty-links-sidebar', esc_html__('Pretty Links', 'pretty-link'), array($this, 'render_meta_box'), $post_types, 'side');
+  }
+
+  /**
+   * Renders the content for the "Pretty Links" metabox.
+   *
+   * @access public
+   * @return void
+   */
+  public function render_meta_box() {
+    global $plp_update;
+
+    if(!$plp_update->is_installed()) {
+      ?>
+      <p><?php esc_html_e('To get access to these advanced features, upgrade to Pretty Links Pro.', 'pretty-link'); ?></p>
+      <a href="https://prettylinks.com/pl/pro-feature-indicator/upgrade?pretty-link-metabox" target="_blank" class="pretty-link-cta-button"><?php esc_html_e('Upgrade to Pretty Links Pro now!', 'pretty-link'); ?></a>
+      <?php
+    }
+
+    do_action('prli_sidebar_meta_box');
   }
 
   //AJAX

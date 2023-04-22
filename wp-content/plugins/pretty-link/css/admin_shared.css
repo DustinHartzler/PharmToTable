@@ -398,18 +398,6 @@ img.prli_loader {
   padding: 20px;
 }
 
-.pretty-link-cta-button {
-  display: inline-block;
-  margin: 0 auto;
-  background-color: #FD9C27;
-  color: #fff;
-  padding: 15px 25px;
-  font-size: 18px;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 5px;
-}
-
 .pretty-link-upgrade-tr td {
   position: relative;
 }

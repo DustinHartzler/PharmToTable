@@ -11,14 +11,15 @@ class PrliToolsController extends PrliBaseController {
 
     $update_message = '';
     $action = isset($_GET['action']) ? $_GET['action'] : '';
+    $nonce = isset($_GET['_wpnonce']) ? $_GET['_wpnonce'] : '';
 
-    if($action == 'clear_all_clicks') {
+    if($action == 'clear_all_clicks' && wp_verify_nonce($nonce, 'prli-clear-clicks-all')) {
       $update_message = $this->clear_clicks();
     }
-    else if($action == 'clear_30day_clicks') {
+    else if($action == 'clear_30day_clicks' && wp_verify_nonce($nonce, 'prli-clear-clicks-30day')) {
       $update_message = $this->clear_clicks(30);
     }
-    else if($action == 'clear_90day_clicks') {
+    else if($action == 'clear_90day_clicks' && wp_verify_nonce($nonce, 'prli-clear-clicks-90day')) {
       $update_message = $this->clear_clicks(90);
     }
 

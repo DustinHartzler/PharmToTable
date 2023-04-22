@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Pretty Links plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pretty Links 3.4.0\n"
+"Project-Id-Version: Pretty Links 3.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pretty-link\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-03-22T10:03:12-05:00\n"
+"POT-Creation-Date: 2023-04-13T08:13:23-05:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: pretty-link\n"
@@ -18,6 +18,7 @@ msgstr ""
 #. Author of the plugin
 #: app/controllers/PrliLinksController.php:58
 #: app/controllers/PrliLinksController.php:507
+#: app/controllers/PrliPostsController.php:59
 #: pro/app/views/links/prettybar.php:68
 msgid "Pretty Links"
 msgstr ""
@@ -48,7 +49,6 @@ msgstr ""
 #: app/controllers/PrliAddonsController.php:30
 #: app/controllers/PrliAppController.php:188
 #: app/controllers/PrliAppController.php:191
-#: app/controllers/PrliAppController.php:334
 #: app/views/admin/addons/addon-page-lite.php:32
 #: app/views/admin/addons/addon-page-pro.php:90
 msgid "Activate"
@@ -204,9 +204,9 @@ msgstr ""
 #: app/models/PrliClick.php:256
 #: app/views/clicks/list.php:4
 #: app/views/groups/list.php:81
-#: pro/app/helpers/PlpPostsHelper.php:61
 #: pro/app/views/links/form.php:39
 #: pro/app/views/links/form.php:49
+#: pro/app/views/metaboxes/post-sidebar.php:33
 #: pro/app/views/reports/custom-report.php:31
 #: pro/app/views/reports/custom-report.php:64
 #: pro/app/views/reports/split-test-report.php:28
@@ -243,8 +243,13 @@ msgstr ""
 #: app/controllers/PrliAppController.php:333
 #: app/controllers/PrliAppController.php:339
 #: app/controllers/PrliAppController.php:344
-#: app/controllers/PrliAppController.php:820
+#: app/controllers/PrliAppController.php:822
 msgid "Docs"
+msgstr ""
+
+#: app/controllers/PrliAppController.php:334
+#: app/views/admin/update/ui.php:3
+msgid "Manage License"
 msgstr ""
 
 #: app/controllers/PrliAppController.php:337
@@ -262,72 +267,72 @@ msgstr ""
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:452
+#: app/controllers/PrliAppController.php:454
 #: app/views/groups/edit.php:72
 #: app/views/options/form.php:1189
 #: pro/app/views/reports/edit.php:66
 msgid "Update"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:454
+#: app/controllers/PrliAppController.php:456
 msgid "Copy to Clipboard"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:455
+#: app/controllers/PrliAppController.php:457
 msgid "Copied!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:456
+#: app/controllers/PrliAppController.php:458
 msgid "Oops, Copy Failed!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:480
+#: app/controllers/PrliAppController.php:482
 msgid "Are you sure you want to reset your Pretty Link? This will delete all of the statistical data about this Pretty Link in your database."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:483
+#: app/controllers/PrliAppController.php:485
 msgid "To access Link Health, upgrade to <a href=\"%s\">Pretty Links Pro.</a>"
 msgstr ""
 
 #. translators: %1$s: br tag, %2$s: open link tag, %3$s: close link tag
-#: app/controllers/PrliAppController.php:591
+#: app/controllers/PrliAppController.php:593
 msgid "You're almost done!%1$s%2$sFinish your Re-Install of Pretty Links Pro%3$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:606
+#: app/controllers/PrliAppController.php:608
 msgid "Pretty Links Pro Successfully Uninstalled."
 msgstr ""
 
-#: app/controllers/PrliAppController.php:655
+#: app/controllers/PrliAppController.php:657
 msgid "Invalid server response"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:656
+#: app/controllers/PrliAppController.php:658
 msgid "Ajax error"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:673
+#: app/controllers/PrliAppController.php:675
 msgid "Pretty Link Quick Add"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:712
+#: app/controllers/PrliAppController.php:714
 msgid "Your Pretty Links Pro installation isn't quite complete yet. %1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:733
+#: app/controllers/PrliAppController.php:735
 msgid "Your Pretty Links Pro installation isn't quite complete yet.<br/>%1$sAutomatically Upgrade to Enable Pretty Links Pro%2$s"
 msgstr ""
 
 #. translators: $1$s - Pretty Links plugin name; $2$s - WP.org review link; $3$s - WP.org review link.
-#: app/controllers/PrliAppController.php:781
+#: app/controllers/PrliAppController.php:783
 msgid "Enjoying %1$s? Please rate <a href=\"%2$s\" target=\"_blank\" rel=\"noopener noreferrer\">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href=\"%3$s\" target=\"_blank\" rel=\"noopener\">WordPress.org</a> to help us spread the word. Thanks from the Pretty Links team!"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:815
+#: app/controllers/PrliAppController.php:817
 msgid "Support"
 msgstr ""
 
-#: app/controllers/PrliAppController.php:825
+#: app/controllers/PrliAppController.php:827
 msgid "Made with ♥ by the Pretty Links Team"
 msgstr ""
 
@@ -654,6 +659,14 @@ msgstr ""
 msgid "The popup was successfully stopped"
 msgstr ""
 
+#: app/controllers/PrliPostsController.php:73
+msgid "To get access to these advanced features, upgrade to Pretty Links Pro."
+msgstr ""
+
+#: app/controllers/PrliPostsController.php:74
+msgid "Upgrade to Pretty Links Pro now!"
+msgstr ""
+
 #: app/controllers/PrliReviewNoticeController.php:74
 #: app/views/admin/popups/rating.php:8
 msgid "Are you enjoying using Pretty Links?"
@@ -687,15 +700,15 @@ msgstr ""
 msgid "No thanks"
 msgstr ""
 
-#: app/controllers/PrliToolsController.php:94
+#: app/controllers/PrliToolsController.php:95
 msgid "Click Database was Cleared."
 msgstr ""
 
-#: app/controllers/PrliToolsController.php:100
+#: app/controllers/PrliToolsController.php:101
 msgid "Clicks older than %1$d days (%2$d Clicks) were deleted"
 msgstr ""
 
-#: app/controllers/PrliToolsController.php:103
+#: app/controllers/PrliToolsController.php:104
 msgid "No clicks older than %1$d days were found, so nothing was deleted"
 msgstr ""
 
@@ -1055,7 +1068,7 @@ msgid "Unique hits"
 msgstr ""
 
 #: app/models/PrliClick.php:251
-#: pro/app/helpers/PlpPostsHelper.php:66
+#: pro/app/views/metaboxes/post-sidebar.php:38
 msgid "Pretty Link:"
 msgstr ""
 
@@ -1531,10 +1544,6 @@ msgstr ""
 
 #: app/views/admin/update/inactive_license.php:57
 msgid "Upgrade to Pro today!"
-msgstr ""
-
-#: app/views/admin/update/ui.php:3
-msgid "Activate Pretty Links Pro"
 msgstr ""
 
 #: app/views/admin/update/ui.php:16
@@ -3581,17 +3590,9 @@ msgstr ""
 msgid "Pretty Bar Attribution URL must be a correctly formatted URL"
 msgstr ""
 
-#: pro/app/controllers/PlpPostsController.php:50
-msgid "Pretty Links Pro"
-msgstr ""
-
-#: pro/app/controllers/PlpPostsController.php:54
-msgid "Pretty Links Pro Options"
-msgstr ""
-
-#: pro/app/controllers/PlpPostsController.php:139
-#: pro/app/controllers/PlpPostsController.php:155
-#: pro/app/controllers/PlpPostsController.php:237
+#: pro/app/controllers/PlpPostsController.php:136
+#: pro/app/controllers/PlpPostsController.php:152
+#: pro/app/controllers/PlpPostsController.php:234
 msgid "Untitled"
 msgstr ""
 
@@ -3678,46 +3679,6 @@ msgstr ""
 #: pro/app/helpers/PlpLinksHelper.php:18
 #: pro/app/views/links/form.php:226
 msgid "weight:"
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:19
-msgid "Hide Social Buttons on this post."
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:26
-msgid "Disable Keyword Replacements on this post."
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:44
-msgid "A Pretty Link will be created on Publish"
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:63
-#: pro/app/views/reports/custom-report.php:32
-#: pro/app/views/reports/custom-report.php:65
-#: pro/app/views/reports/split-test-report.php:29
-#: pro/app/views/reports/split-test-report.php:61
-msgid "Uniques"
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:68
-msgid "edit"
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:70
-msgid "Visit Pretty Link:"
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:70
-msgid "in a New Window"
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:70
-msgid "visit"
-msgstr ""
-
-#: pro/app/helpers/PlpPostsHelper.php:76
-msgid "A Pretty Link hasn't been generated for this entry yet. Click \"Update Post\" to generate."
 msgstr ""
 
 #: pro/app/models/PlpOptions.php:107
@@ -4281,6 +4242,67 @@ msgstr ""
 
 #: pro/app/views/links/time_row.php:43
 msgid "This is the URL that this Pretty Link will redirect to when the visitor visits the link in the associated time period."
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:11
+msgid "Statistics"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:17
+msgid "A Pretty Link will be created on Publish"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:35
+#: pro/app/views/reports/custom-report.php:32
+#: pro/app/views/reports/custom-report.php:65
+#: pro/app/views/reports/split-test-report.php:29
+#: pro/app/views/reports/split-test-report.php:61
+msgid "Uniques"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:40
+msgid "edit"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:42
+msgid "Visit Pretty Link:"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:42
+msgid "in a New Window"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:42
+msgid "visit"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:47
+msgid "A Pretty Link hasn't been generated for this entry yet. Click \"Update Post\" to generate."
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:56
+msgid "Shortlinks must be enabled for this post type to use this feature."
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:57
+#: pro/app/views/metaboxes/post-sidebar.php:89
+msgid "Get started now"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:65
+msgid "Replacements & Social Buttons"
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:72
+msgid "Hide Social Buttons on this post."
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:83
+msgid "Disable Keyword Replacements on this post."
+msgstr ""
+
+#: pro/app/views/metaboxes/post-sidebar.php:88
+msgid "Replacements must be enabled to use this feature."
 msgstr ""
 
 #: pro/app/views/options/autocreate.php:7

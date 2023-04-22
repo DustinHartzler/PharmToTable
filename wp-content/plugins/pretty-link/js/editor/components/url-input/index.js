@@ -310,7 +310,7 @@ export default compose(
   withSelect( ( select ) => {
     const { getSettings } = select( 'core/block-editor' );
     return {
-      fetchLinkSuggestions: getSettings().__experimentalFetchLinkSuggestions,
+      fetchLinkSuggestions: getSettings().fetchLinkSuggestions,
     };
   } )
 )( URLInput );
